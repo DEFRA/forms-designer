@@ -1,0 +1,25 @@
+{
+  "baseUrl": ".",
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "composite": true,
+    "declaration": true,
+    "declarationDir": "dist/types",
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "lib": ["DOM", "es2018.promise", "ES2019"]
+  },
+  "include": [
+    "server",
+    "client",
+    "test",
+    "package.json",
+    "new-form.json",
+    "client/i18n/translations/en.translation.json",
+    "test/helpers/window-stubbing.js"
+  ],
+  "paths": {
+    "*": ["node_modules/*", "../node_modules"]
+  }
+}

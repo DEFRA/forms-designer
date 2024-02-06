@@ -1,0 +1,108 @@
+{
+  "name": "digital-form-builder-mono",
+  "version": "2.0.0",
+  "description": "Mono repo for xgovformbuilder's designer, model and runner",
+  "repository": "https://github.com/XGovFormBuilder/digital-form-builder.git",
+  "author": "Jen <jen+git@cautionyourblast.com>",
+  "license": "MIT",
+  "private": true,
+  "engines": {
+    "node": ">=18"
+  },
+  "workspaces": [
+    "model",
+    "runner",
+    "designer",
+    "e2e",
+    "queue-model",
+    "submitter"
+  ],
+  "scripts": {
+    "setup": "yarn && yarn build",
+    "build": "yarn workspaces foreach run build",
+    "build:dependencies": "yarn model build && yarn queue-model build",
+    "lint": "yarn workspaces foreach run lint",
+    "test": "yarn workspaces foreach run test",
+    "fix-lint": "yarn workspaces foreach run fix-lint",
+    "watch": "yarn workspaces foreach -piva run watch",
+    "runner": "yarn workspace @xgovformbuilder/runner",
+    "designer": "yarn workspace @xgovformbuilder/designer",
+    "model": "yarn workspace @xgovformbuilder/model",
+    "e2e": "yarn workspace e2e",
+    "queue-model": "yarn workspace @xgovformbuilder/queue-model",
+    "submitter": "yarn workspace @xgovformbuilder/submitter",
+    "test-cov": "yarn workspaces foreach run test-cov",
+    "runner:start": "yarn workspace @xgovformbuilder/runner start",
+    "type-check": "yarn workspaces foreach run tsc --noEmit",
+    "type-check:watch": "yarn workspaces foreach run type-check --watch",
+    "generate-architecture-diagrams": "concurrently 'npx arkit -c ./docs/designer/arkit.json' 'npx arkit -c ./docs/model/arkit.json' 'npx arkit -c ./docs/runner/arkit.json'"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.23.3",
+    "@babel/core": "^7.23.3",
+    "@babel/eslint-parser": "^7.23.3",
+    "@babel/eslint-plugin": "^7.22.10",
+    "@babel/preset-env": "^7.23.3",
+    "@babel/preset-typescript": "^7.23.3",
+    "@typescript-eslint/eslint-plugin": "^4.10.0",
+    "@typescript-eslint/parser": "^4.10.0",
+    "concurrently": "^8.0.0",
+    "eslint": "^7.19.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-import-resolver-alias": "^1.1.2",
+    "eslint-import-resolver-workspaces": "^1.0.10",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-tsdoc": "^0.2.14",
+    "husky": "^4.3.0",
+    "lint-staged": "^10.4.2",
+    "magic-string": "^0.25.7",
+    "prettier": "2.1.2",
+    "prisma": "^5.1.1",
+    "typedoc": "~0.23.17",
+    "typescript": "4.9.5"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.21.0",
+    "govuk-frontend": "^4.3.1",
+    "hmpo-components": "^5.2.1"
+  },
+  "resolutions": {
+    "@babel/core": "^7.23.3",
+    "@babel/traverse": "^7.23.3",
+    "braces": "2.3.1",
+    "pathval": "1.1.1",
+    "y18n": "4.0.1",
+    "dot-prop": "^5.1.1",
+    "lodash": "~4.17.21",
+    "url-parse": "~1.5.0",
+    "css-what": "~6.0.1",
+    "elliptic": "~6.5.4",
+    "tmpl": "~1.0.5",
+    "underscore": "^1.12.1",
+    "tar": "^6.1.2",
+    "handlebars": "^4.7.7",
+    "moment": "^2.29.4",
+    "ssri": "~6.0.2",
+    "minimist": "~1.2.6",
+    "json-schema": "0.4.0",
+    "glob-parent": "5.1.2",
+    "follow-redirects": "~1.15.4",
+    "@xmldom/xmldom": "0.8.6",
+    "@cypress/request": "3.x.x",
+    "@adobe/css-tools": "4.3.1",
+    "kind-of": "6.0.3",
+    "semver": "7.5.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*": "prettier --write --ignore-unknown",
+    "*.{ts,tsx,js,jsx}": "eslint --fix"
+  }
+}

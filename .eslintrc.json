@@ -1,0 +1,57 @@
+{
+  "extends": ["plugin:json/recommended", "plugin:prettier/recommended"],
+  "plugins": ["@babel", "prettier"],
+  "parser": "@babel/eslint-parser",
+  "env": {
+    "browser": true,
+    "es6": true,
+    "node": true
+  },
+  "globals": {
+    "Atomics": "readonly",
+    "SharedArrayBuffer": "readonly"
+  },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 2018,
+    "allowImportExportEverywhere": true
+  },
+  "ignorePatterns": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/public/**",
+    "node_modules/**",
+    "dist/**",
+    "public/**",
+    "smoke-tests/designer/features/*.feature",
+    "*.md",
+    ".eslintrc.json",
+    "yarn.lock",
+    "*.scss"
+  ],
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "parser": "@typescript-eslint/parser",
+      "plugins": [
+        "@babel",
+        "prettier",
+        "@typescript-eslint",
+        "eslint-plugin-tsdoc"
+      ],
+      "parserOptions": {
+        "ecmaFeatures": { "jsx": true }
+      }
+    },
+    {
+      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+      "rules": {
+        "prettier/prettier": ["error"],
+        "tsdoc/syntax": "warn"
+      }
+    }
+  ],
+  "root": true
+}
