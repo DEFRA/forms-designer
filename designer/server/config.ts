@@ -35,6 +35,7 @@ const schema = joi.object({
     .string()
     .valid("development", "test", "production")
     .default("development"),
+  appPathPrefix: joi.string(),
   previewUrl: joi.string(),
   publishUrl: joi.string(),
   persistentBackend: joi.string().valid("s3", "blob", "preview").optional(),
@@ -55,12 +56,13 @@ const schema = joi.object({
 const config = {
   port: process.env.PORT,
   env: process.env.NODE_ENV,
-  previewUrl: process.env.PREVIEW_URL || "http://localhost:3009/forms-runner",
-  publishUrl: process.env.PUBLISH_URL || "http://localhost:3009/forms-runner",
+  appPathPrefix: process.env.APP_PATH_PREFIX || "/forms-designer",
+  previewUrl: process.env.PREVIEW_URL || "http://dev.cdp-int.defra.cloud/forms-runner/", // TODO set this to localhost and pull env vars from CDP
+  publishUrl: process.env.PUBLISH_URL || "http://dev.cdp-int.defra.cloud/forms-runner/", // TODO set this to localhost and pull env vars from CDP
   persistentBackend: process.env.PERSISTENT_BACKEND || "preview",
   s3Bucket: process.env.S3_BUCKET,
   logLevel: process.env.LOG_LEVEL || "error",
-  phase: process.env.PHASE || "alpha",
+  phase: process.env.PHASE || "beta",
   footerText: process.env.FOOTER_TEXT,
   lastCommit: process.env.LAST_COMMIT || process.env.LAST_COMMIT_GH,
   lastTag: process.env.LAST_TAG || process.env.LAST_TAG_GH,

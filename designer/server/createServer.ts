@@ -37,6 +37,10 @@ const serverOptions = () => {
   };
 };
 
+const registrationOptions = {
+  routes: { prefix: config.appPathPrefix }
+}
+
 export async function createServer() {
   const server = hapi.server(serverOptions());
   await server.register(inert);
