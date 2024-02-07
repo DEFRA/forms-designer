@@ -55,8 +55,8 @@ const schema = joi.object({
 const config = {
   port: process.env.PORT,
   env: process.env.NODE_ENV,
-  previewUrl: process.env.PREVIEW_URL || "http://localhost:3009",
-  publishUrl: process.env.PUBLISH_URL || "http://localhost:3009",
+  previewUrl: process.env.PREVIEW_URL || "http://localhost:3009/forms-runner",
+  publishUrl: process.env.PUBLISH_URL || "http://localhost:3009/forms-runner",
   persistentBackend: process.env.PERSISTENT_BACKEND || "preview",
   s3Bucket: process.env.S3_BUCKET,
   logLevel: process.env.LOG_LEVEL || "error",

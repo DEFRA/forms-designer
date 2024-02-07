@@ -40,7 +40,7 @@
     "@hapi/scooter": "6.0.0",
     "@hapi/wreck": "17.0.0",
     "@xgovformbuilder/govuk-react-jsx": "7.1.2",
-    "@xgovformbuilder/model": "3.0.0",
+    "@xgovformbuilder/model": "/tmp/xgov-model/model/",
     "aws-sdk": "^2.1083.0",
     "blankie": "5.0.0",
     "classnames": "^2.3.1",

@@ -5,7 +5,7 @@ import vision from "vision";
 
 import pkg from "../../package.json";
 
-const basedir = path.join(process.cwd(), "..");
+const basedir = path.join(process.cwd());
 
 export const viewPlugin = {
   plugin: vision,

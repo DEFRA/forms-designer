@@ -27,7 +27,7 @@ const client = {
   },
   resolve: {
     extensions: [".js", ".jsx", ".ts", ".tsx"],
-    modules: [path.resolve(__dirname, "../node_modules")],
+    modules: [path.resolve(__dirname, "node_modules")],
   },
   node: {
     __dirname: false,
@@ -136,7 +136,7 @@ const server = {
   },
   resolve: {
     extensions: [".js", ".jsx", ".ts", ".tsx"],
-    modules: [path.resolve(__dirname, "../node_modules")],
+    modules: [path.resolve(__dirname, "node_modules")],
   },
   node: {
     __dirname: false,
@@ -155,7 +155,7 @@ const server = {
   },
   externals: [
     nodeExternals({
-      modulesDir: path.resolve(__dirname, "../node_modules"),
+      modulesDir: path.resolve(__dirname, "node_modules"),
     }),
   ],
 };
