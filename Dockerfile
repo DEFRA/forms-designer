@@ -19,11 +19,11 @@ EXPOSE ${PORT} ${PORT_DEBUG}
 
 RUN npm install --global yarn
 
-COPY --chown=node:node package.json install_model.sh ./
+COPY --chown=node:node ./designer/package.json ./designer/install_model.sh ./
 RUN bash install_model.sh
 RUN yarn
 
-COPY --chown=node:node . ./
+COPY --chown=node:node ./designer/ ./
 RUN yarn
 
 CMD [ "yarn", "run", "dev" ]

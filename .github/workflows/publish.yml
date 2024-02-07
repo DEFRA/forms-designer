@@ -14,10 +14,6 @@ env:
   AWS_REGION: eu-west-2
   AWS_ACCOUNT_ID: "094954420758"
 
-defaults:
-  run:
-    working-directory: ./designer
-
 jobs:
   build:
     if: github.run_number != 1
