@@ -8,6 +8,7 @@ dotenv.config({ path: ".env" });
 export interface Config {
   env: "development" | "test" | "production";
   port: number;
+  appPathPrefix: string;
   previewUrl: string;
   publishUrl: string;
   persistentBackend: "s3" | "blob" | "preview";

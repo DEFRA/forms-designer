@@ -15,7 +15,7 @@ export const designerPlugin = {
         path: "/",
         options: {
           handler: async (_request, h) => {
-            return h.redirect("/app");
+            return h.redirect(`${config.appPathPrefix}/app`);
           },
         },
       });

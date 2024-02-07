@@ -1,7 +1,7 @@
 import logger from "../client/plugins/logger";
 export function fetchConfigurations() {
   return window
-    .fetch("/api/configurations", {
+    .fetch("/forms-designer/api/configurations", { // TODO make config driven
       method: "get",
       headers: {
         Accept: "application/json",

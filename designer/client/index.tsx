@@ -16,7 +16,7 @@ function NoMatch() {
 export class App extends React.Component {
   render() {
     return (
-      <Router basename="/app">
+      <Router basename="/forms-designer/app">
         <div id="app">
           <Switch>
             <Route path="/designer/:id" component={Designer} />

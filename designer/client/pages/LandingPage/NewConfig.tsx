@@ -119,7 +119,7 @@ export class NewConfig extends Component<Props, State> {
     }
 
     const newResponse = await window
-      .fetch("/api/new", {
+      .fetch("/forms-designer/api/new", {
         method: "POST",
         body: JSON.stringify({
           selected: { Key: "New" },

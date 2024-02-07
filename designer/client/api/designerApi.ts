@@ -3,7 +3,7 @@ import logger from "../plugins/logger";
 
 export class DesignerApi {
   async save(id: string, updatedData: FormDefinition): Promise<Response | any> {
-    const response = await window.fetch(`/api/${id}/data`, {
+    const response = await window.fetch(`/forms-designer/api/${id}/data`, { // TODO make config driven
       method: "put",
       body: JSON.stringify(updatedData),
       headers: {
@@ -19,7 +19,7 @@ export class DesignerApi {
 
   async fetchData(id: string) {
     try {
-      const response = await window.fetch(`/api/${id}/data`);
+      const response = await window.fetch(`/forms-designer/api/${id}/data`);
       return response.json();
     } catch (e) {
       logger.error("fetchData", e);

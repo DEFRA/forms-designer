@@ -7,7 +7,7 @@ export const redirectNewToApp: ServerRoute = {
   path: "/new",
   options: {
     handler: async (_request, h) => {
-      return h.redirect("/app").code(301);
+      return h.redirect(`${config.appPathPrefix}/app`).code(301);
     },
   },
 };
@@ -83,7 +83,7 @@ export const redirectOldUrlToDesigner: ServerRoute = {
   options: {
     handler: async (request, h) => {
       const { id } = request.params;
-      return h.redirect(`/app/designer/${id}`).code(301);
+      return h.redirect(`${config.appPathPrefix}/app/designer/${id}`).code(301);
     },
   },
 };

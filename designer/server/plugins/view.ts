@@ -5,6 +5,8 @@ import vision from "vision";
 
 import pkg from "../../package.json";
 
+import config from "../config";
+
 const basedir = path.join(process.cwd());
 
 export const viewPlugin = {
@@ -53,7 +55,7 @@ export const viewPlugin = {
     ],
     context: {
       appVersion: pkg.version,
-      assetPath: "/assets",
+      assetPath: `${config.appPathPrefix}/assets`,
     },
   },
 };

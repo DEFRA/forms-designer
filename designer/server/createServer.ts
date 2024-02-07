@@ -43,11 +43,11 @@ const registrationOptions = {
 
 export async function createServer() {
   const server = hapi.server(serverOptions());
-  await server.register(inert);
+  await server.register(inert, registrationOptions);
   await server.register(Scooter);
   await server.register(configureBlankiePlugin());
   await server.register(configureYarPlugin());
-  await server.register(viewPlugin);
+  await server.register(viewPlugin, registrationOptions);
   await server.register(Schmervice);
   (server as any).registerService([
     Schmervice.withName(
@@ -55,8 +55,8 @@ export async function createServer() {
       determinePersistenceService(config.persistentBackend, server)
     ),
   ]);
-  await server.register(designerPlugin);
-  await server.register(router);
+  await server.register(designerPlugin, registrationOptions);
+  await server.register(router, registrationOptions);
   await server.register(logging);
 
   return server;

@@ -108,7 +108,7 @@ export const Page = ({ page, previewUrl, id, layout }) => {
         </button>
         <a
           title={i18n("Preview page")}
-          href={new URL(`${id}${page.path}`, previewUrl).toString()}
+          href={new URL(`/forms-runner/${id}${page.path}`, previewUrl).toString()}
           target="_blank"
           rel="noreferrer"
         >
