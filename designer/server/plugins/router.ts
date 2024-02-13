@@ -1,4 +1,7 @@
 import { healthCheckRoute } from "./routes";
+import { login } from '../login'
+import { logout } from '../logout'
+import { auth } from '../auth'
 
 const routes = [
   healthCheckRoute,
@@ -34,8 +37,14 @@ const routes = [
 export default {
   plugin: {
     name: "router",
-    register: (server, _options) => {
-      server.route(routes);
+    register: async (server, _options) => {
+      await server.register([
+        auth,
+        login,
+        logout
+      ]);
+      
+      await server.route(routes);
     },
   },
 };

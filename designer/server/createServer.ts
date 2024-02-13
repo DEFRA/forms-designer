@@ -1,6 +1,7 @@
 import hapi from "@hapi/hapi";
 import inert from "@hapi/inert";
 import Scooter from "@hapi/scooter";
+import CatboxMemory from "@hapi/catbox-memory";
 import logging from "./plugins/logging";
 import router from "./plugins/router";
 import { viewPlugin } from "./plugins/view";
@@ -9,7 +10,10 @@ import Schmervice from "schmervice";
 import config from "./config";
 import { determinePersistenceService } from "./lib/persistence";
 import { configureBlankiePlugin } from "./plugins/blankie";
-import { configureYarPlugin } from "./plugins/session";
+import { azureOidc } from './common/helpers/auth/azure-oidc'
+import { authedFetcher } from './common/helpers/fetch/authed-fetcher'
+import { sessionManager } from './common/helpers/session-manager'
+import { sessionCookie } from './common/helpers/auth/session-cookie'
 
 const serverOptions = () => {
   return {
@@ -18,6 +22,9 @@ const serverOptions = () => {
       stripTrailingSlash: true,
     },
     routes: {
+      auth: {
+        mode: 'try'
+      },
       validate: {
         options: {
           abortEarly: false,
@@ -29,11 +36,19 @@ const serverOptions = () => {
           includeSubDomains: true,
           preload: false,
         },
-        xss: true,
+        xss: 'enabled',
         noSniff: true,
         xframe: true,
       },
     },
+    cache: [
+      {
+        name: 'session',
+        engine: new CatboxMemory.Engine({
+          partition: "cache"
+        })
+      }
+    ]
   };
 };
 
@@ -43,10 +58,16 @@ const registrationOptions = {
 
 export async function createServer() {
   const server = hapi.server(serverOptions());
+  server.decorate('request', 'authedFetcher', authedFetcher, {
+    apply: true
+  })
+
   await server.register(inert, registrationOptions);
+  await server.register(sessionManager);
+  await server.register(azureOidc);
+  await server.register(sessionCookie);
   await server.register(Scooter);
   await server.register(configureBlankiePlugin());
-  await server.register(configureYarPlugin());
   await server.register(viewPlugin, registrationOptions);
   await server.register(Schmervice);
   (server as any).registerService([
