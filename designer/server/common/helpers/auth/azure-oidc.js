@@ -20,10 +20,6 @@ const azureOidc = {
 
       server.auth.strategy('azure-oidc', 'bell', {
         location: (request) => {
-          if (request.info.referrer) {
-            request.yar.flash('referrer', request.info.referrer)
-          }
-
           return authCallbackUrl
         },
         provider: {
@@ -55,6 +51,9 @@ const azureOidc = {
         password: config.sessionCookiePassword,
         clientId: config.azureClientId,
         clientSecret: config.azureClientSecret,
+        providerParams: {
+          redirect_uri: authCallbackUrl
+        },
         cookie: 'bell-azure-oidc',
         isSecure: false,
         config: {

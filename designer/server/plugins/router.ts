@@ -2,6 +2,7 @@ import { healthCheckRoute } from "./routes";
 import { login } from '../login'
 import { logout } from '../logout'
 import { auth } from '../auth'
+import { home } from '../home'
 
 const routes = [
   healthCheckRoute,
@@ -41,8 +42,9 @@ export default {
       await server.register([
         auth,
         login,
-        logout
-      ]);
+        logout,
+        home
+      ], _options);
       
       await server.route(routes);
     },

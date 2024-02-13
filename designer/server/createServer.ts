@@ -14,6 +14,7 @@ import { azureOidc } from './common/helpers/auth/azure-oidc'
 import { authedFetcher } from './common/helpers/fetch/authed-fetcher'
 import { sessionManager } from './common/helpers/session-manager'
 import { sessionCookie } from './common/helpers/auth/session-cookie'
+import { getUserSession } from './common/helpers/auth/get-user-session'
 
 const serverOptions = () => {
   return {
@@ -61,6 +62,13 @@ export async function createServer() {
   server.decorate('request', 'authedFetcher', authedFetcher, {
     apply: true
   })
+
+  server.decorate('request', 'getUserSession', getUserSession)
+
+  server.app.cache = server.cache({
+    cache: 'session',
+    segment: "cache"
+  });
 
   await server.register(inert, registrationOptions);
   await server.register(sessionManager);

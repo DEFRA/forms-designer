@@ -2,16 +2,6 @@ import config from "../../config";
 import { ServerRoute } from "@hapi/hapi";
 import JSZip from "jszip";
 
-export const redirectNewToApp: ServerRoute = {
-  method: "get",
-  path: "/new",
-  options: {
-    handler: async (_request, h) => {
-      return h.redirect(`${config.appPathPrefix}/app`).code(301);
-    },
-  },
-};
-
 export const getApp: ServerRoute = {
   method: "get",
   path: "/app",

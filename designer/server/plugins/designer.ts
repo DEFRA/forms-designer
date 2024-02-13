@@ -10,19 +10,6 @@ export const designerPlugin = {
     multiple: true,
     dependencies: "vision",
     register: async (server) => {
-      server.route({
-        method: "get",
-        path: "/",
-        options: {
-          handler: async (_request, h) => {
-            return h.redirect(`${config.appPathPrefix}/app`);
-          },
-        },
-      });
-
-      // This is old url , redirecting it to new
-      server.route(app.redirectNewToApp);
-
       server.route(app.getApp);
 
       server.route(app.getAppChildRoutes);

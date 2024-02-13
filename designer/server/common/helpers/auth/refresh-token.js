@@ -15,7 +15,7 @@ async function refreshAccessToken(request) {
   params.append('refresh_token', refreshToken)
   params.append(
     'scope',
-    `api://${azureClientId}/cdp.user openid profile email offline_access user.read`
+    `api://${azureClientId}/forms.user openid profile email offline_access user.read`
   )
 
   request.logger.info('Azure OIDC access token expired, refreshing...')

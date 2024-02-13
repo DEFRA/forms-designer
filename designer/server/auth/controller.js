@@ -19,7 +19,7 @@ const authCallbackController = {
       request.cookieAuth.set({ sessionId })
     }
 
-    const redirect = request.yar.flash('referrer')?.at(0) ?? '/'
+    const redirect = request.yar.flash('referrer')?.at(0) ?? '/forms-designer'
 
     return h.redirect(redirect)
   }

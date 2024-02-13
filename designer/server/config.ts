@@ -28,6 +28,7 @@ export interface Config {
   azureClientId?: string;
   azureClientSecret?: string;
   oidcWellKnownConfigurationUrl?: string;
+  appBaseUrl: string;
 }
 
 // server-side storage expiration - defaults to 20 minutes
@@ -57,7 +58,8 @@ const schema = joi.object({
   sessionCookiePassword: joi.string().optional(),
   azureClientId: joi.string().optional(),
   azureClientSecret: joi.string().optional(),
-  oidcWellKnownConfigurationUrl: joi.string().optional()
+  oidcWellKnownConfigurationUrl: joi.string().optional(),
+  appBaseUrl: joi.string().optional().default("http://localhost:3000/forms-designer")
 });
 
 // Build config
@@ -78,7 +80,8 @@ const config = {
   sessionCookiePassword: process.env.SESSION_COOKIE_PASSWORD,
   azureClientId: process.env.AZURE_CLIENT_ID,
   azureClientSecret: process.env.AZURE_CLIENT_SECRET,
-  oidcWellKnownConfigurationUrl: process.env.OIDC_WELL_KNOWN_CONFIGURATION_URL
+  oidcWellKnownConfigurationUrl: process.env.OIDC_WELL_KNOWN_CONFIGURATION_URL,
+  appBaseUrl: process.env.APP_BASE_URL
 };
 
 // Validate config
