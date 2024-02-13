@@ -16,14 +16,18 @@ export interface Config {
   logLevel: "trace" | "info" | "debug" | "error";
   phase?: "alpha" | "beta";
   footerText?: string;
-  isProd: boolean;
-  isDev: boolean;
+  isProduction: boolean;
+  isDevelopment: boolean;
   isTest: boolean;
   lastCommit: string;
   lastTag: string;
   sessionTimeout: number;
-  sessionCookiePassword: string;
+  sessionCookieTtl?: string;
+  sessionCookiePassword?: string;
   awsCredentials?: CredentialsOptions;
+  azureClientId?: string;
+  azureClientSecret?: string;
+  oidcWellKnownConfigurationUrl?: string;
 }
 
 // server-side storage expiration - defaults to 20 minutes
@@ -51,6 +55,9 @@ const schema = joi.object({
   lastTag: joi.string().default("undefined"),
   sessionTimeout: joi.number().default(sessionSTimeoutInMilliseconds),
   sessionCookiePassword: joi.string().optional(),
+  azureClientId: joi.string().optional(),
+  azureClientSecret: joi.string().optional(),
+  oidcWellKnownConfigurationUrl: joi.string().optional()
 });
 
 // Build config
@@ -69,6 +76,9 @@ const config = {
   lastTag: process.env.LAST_TAG || process.env.LAST_TAG_GH,
   sessionTimeout: process.env.SESSION_TIMEOUT,
   sessionCookiePassword: process.env.SESSION_COOKIE_PASSWORD,
+  azureClientId: process.env.AZURE_CLIENT_ID,
+  azureClientSecret: process.env.AZURE_CLIENT_SECRET,
+  oidcWellKnownConfigurationUrl: process.env.OIDC_WELL_KNOWN_CONFIGURATION_URL
 };
 
 // Validate config
@@ -118,8 +128,8 @@ getAwsConfigCredentials()
     throw e;
   });
 
-value.isProd = value.env === "production";
-value.isDev = !value.isProd;
+value.isProduction = value.env === "production";
+value.isDevelopment = !value.isProduction;
 value.isTest = value.env === "test";
 
 export default value;
