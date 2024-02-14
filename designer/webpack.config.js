@@ -12,9 +12,7 @@ const devMode = process.env.NODE_ENV !== "production";
 const prodMode = process.env.NODE_ENV === "production";
 const environment = prodMode ? "production" : "development";
 const logLevel = process.env.REACT_LOG_LEVEL || (prodMode ? "warn" : "debug");
-const reactEnvVariables = new webpack.DefinePlugin({
-  ["REACT_LOG_LEVEL"]: JSON.stringify(`${logLevel}`),
-});
+
 const client = {
   target: "web",
   mode: environment,
@@ -37,13 +35,12 @@ const client = {
     rules: [
       {
         test: /\.(js|jsx|tsx|ts)$/,
-        exclude: [
-          {
-            test: /node_modules/,
-            exclude: /pino/,
-          },
-        ],
-        loader: "babel-loader",
+        use: {
+          loader: 'babel-loader'
+        },
+        resolve: {
+          fullySpecified: false,
+        }
       },
       {
         test: /\.(sa|sc|c)ss$/,
@@ -117,7 +114,9 @@ const client = {
       defaultSizes: "gzip",
       openAnalyzer: false,
     }),
-    reactEnvVariables,
+    new webpack.DefinePlugin({
+      'process.env': JSON.stringify(process.env)
+    })
   ],
   externals: {
     react: "React",
@@ -129,6 +128,7 @@ const server = {
   target: "node",
   mode: environment,
   watch: devMode,
+  devtool: 'source-map',
   entry: path.resolve(__dirname, "server", "index.ts"),
   output: {
     path: path.resolve(__dirname, "dist"),
@@ -146,6 +146,12 @@ const server = {
   },
   module: {
     rules: [
+      // TODO dev only
+      {
+        test: /\.js$/,
+        enforce: 'pre',
+        use: ['source-map-loader']
+      },
       {
         test: /\.(js|jsx|tsx|ts)$/,
         exclude: /node_modules/,
