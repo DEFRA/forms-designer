@@ -29,6 +29,12 @@ export interface Config {
   azureClientSecret?: string;
   oidcWellKnownConfigurationUrl?: string;
   appBaseUrl: string;
+  useSingleInstanceCache: boolean;
+  redisHost: string;
+  redisUsername: string;
+  redisPassword: string;
+  redisKeyPrefix: string;
+  redisTtl: number;
 }
 
 // server-side storage expiration - defaults to 20 minutes
@@ -55,11 +61,18 @@ const schema = joi.object({
   lastCommit: joi.string().default("undefined"),
   lastTag: joi.string().default("undefined"),
   sessionTimeout: joi.number().default(sessionSTimeoutInMilliseconds),
+  sessionCookieTtl: joi.string().optional(),
   sessionCookiePassword: joi.string().optional(),
   azureClientId: joi.string().optional(),
   azureClientSecret: joi.string().optional(),
   oidcWellKnownConfigurationUrl: joi.string().optional(),
-  appBaseUrl: joi.string().optional().default("http://localhost:3000/forms-designer")
+  appBaseUrl: joi.string().optional().default("http://localhost:3000/forms-designer"),
+  useSingleInstanceCache: joi.string().optional().default(false),
+  redisHost: joi.string().optional(),
+  redisUsername: joi.string().optional(),
+  redisPassword: joi.string().optional(),
+  redisKeyPrefix: joi.string().optional().default("forms-designer"),
+  redisTtl: joi.number().optional().default(2419200000) // one day
 });
 
 // Build config
@@ -78,10 +91,17 @@ const config = {
   lastTag: process.env.LAST_TAG || process.env.LAST_TAG_GH,
   sessionTimeout: process.env.SESSION_TIMEOUT,
   sessionCookiePassword: process.env.SESSION_COOKIE_PASSWORD,
+  sessionCookieTtl: process.env.SESSION_COOKIE_TTL,
   azureClientId: process.env.AZURE_CLIENT_ID,
   azureClientSecret: process.env.AZURE_CLIENT_SECRET,
   oidcWellKnownConfigurationUrl: process.env.OIDC_WELL_KNOWN_CONFIGURATION_URL,
-  appBaseUrl: process.env.APP_BASE_URL
+  appBaseUrl: process.env.APP_BASE_URL,
+  useSingleInstanceCache: process.env.USE_SINGLE_INSTANCE_CACHE,
+  redisHost: process.env.REDIS_HOST,
+  redisUsername: process.env.REDIS_USERNAME,
+  redisPassword: process.env.REDIS_PASSWORD,
+  redisKeyPrefix: process.env.REDIS_KEY_PREFIX,
+  redisTtl: process.env.REDIS_TTL
 };
 
 // Validate config

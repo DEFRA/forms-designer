@@ -1,7 +1,9 @@
 import hapi from "@hapi/hapi";
 import inert from "@hapi/inert";
 import Scooter from "@hapi/scooter";
-import CatboxMemory from "@hapi/catbox-memory";
+import { Engine as CatboxMemory } from "@hapi/catbox-memory";
+import { Engine as CatboxRedis } from '@hapi/catbox-redis'
+
 import logging from "./plugins/logging";
 import router from "./plugins/router";
 import { viewPlugin } from "./plugins/view";
@@ -15,6 +17,9 @@ import { authedFetcher } from './common/helpers/fetch/authed-fetcher'
 import { sessionManager } from './common/helpers/session-manager'
 import { sessionCookie } from './common/helpers/auth/session-cookie'
 import { getUserSession } from './common/helpers/auth/get-user-session'
+import { buildRedisClient } from './common/helpers/redis-client'
+
+const client = buildRedisClient()
 
 const serverOptions = () => {
   return {
@@ -43,10 +48,17 @@ const serverOptions = () => {
       },
     },
     cache: [
+      // {
+      //   name: 'session',
+      //   engine: new CatboxMemory.Engine({
+      //     partition: "cache"
+      //   })
+      // }
       {
         name: 'session',
-        engine: new CatboxMemory.Engine({
-          partition: "cache"
+        engine: new CatboxRedis({
+          partition: config.redisKeyPrefix,
+          client
         })
       }
     ]
@@ -59,16 +71,18 @@ const registrationOptions = {
 
 export async function createServer() {
   const server = hapi.server(serverOptions());
+  
+  server.app.cache = server.cache({
+    cache: 'session',
+    segment: config.redisKeyPrefix,
+    expiresIn: config.redisTtl
+  })
+
   server.decorate('request', 'authedFetcher', authedFetcher, {
     apply: true
   })
 
   server.decorate('request', 'getUserSession', getUserSession)
-
-  server.app.cache = server.cache({
-    cache: 'session',
-    segment: "cache"
-  });
 
   await server.register(inert, registrationOptions);
   await server.register(sessionManager);

@@ -1,0 +1,16 @@
+version: "2.4"
+services:
+  cache:
+    image: redis:7.0.7
+    restart: always
+    ports:
+      - '6379:6379'
+    environment:
+      - REDIS_PASSWORD=my-password
+      - REDIS_PORT=6379
+  # redisinsight:
+  #   image: redislabs/redisinsight:latest
+  #   ports:
+  #     - '8001:8001'
+  #   volumes:
+  #     - "/mnt/c/dev_data/redisinsight:/db"

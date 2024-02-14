@@ -1,14 +1,5 @@
 <h1>Welcome to Defra Forms</h1>
 
-1 {{ request.auth }}<br />
-2 {{ request.auth.credentials }}<br />
-3 {{ request.auth.credentials.profile }}<br />
-4 {{ request.auth.credentials.profile.displayName }}<br />
-5{{ authedUser }}<br />
-6{{ authedUser.displayName }}<br />
-<br />
-----<br />
-<br />
 {% if authedUser.displayName %}
 Hello, {{ authedUser.displayName }}.
 {% else %}
