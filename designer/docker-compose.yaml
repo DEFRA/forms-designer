@@ -1,6 +1,6 @@
-version: "2.4"
+version: "3.8"
 services:
-  cache:
+  redis:
     image: redis:7.0.7
     restart: always
     ports:
@@ -8,9 +8,25 @@ services:
     environment:
       - REDIS_PASSWORD=my-password
       - REDIS_PORT=6379
-  # redisinsight:
-  #   image: redislabs/redisinsight:latest
-  #   ports:
-  #     - '8001:8001'
-  #   volumes:
-  #     - "/mnt/c/dev_data/redisinsight:/db"
+  redisinsight:
+    image: redislabs/redisinsight:latest
+    ports:
+      - '5540:5540'
+    volumes:
+      - redisinsight:/data
+    depends_on:
+      - redis
+  keycloak:
+    image: quay.io/keycloak/keycloak:23.0.6
+    ports:
+      - 8080:8080
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+    command: start-dev
+    volumes:
+      - keycloak:/opt/keycloak/data/
+
+volumes:
+  keycloak:
+  redisinsight:
