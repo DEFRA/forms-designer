@@ -29,7 +29,7 @@ const serverOptions = () => {
     },
     routes: {
       auth: {
-        mode: 'try'
+        mode: 'required'
       },
       validate: {
         options: {

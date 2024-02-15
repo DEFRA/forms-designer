@@ -8,6 +8,11 @@ const home = {
         {
           method: 'GET',
           path: '/',
+          config : {
+            auth : {
+              mode: 'optional'
+            }
+          },
           ...homeController
         }
       ])
