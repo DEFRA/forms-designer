@@ -2,6 +2,11 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% block content %}
+  {% if authedUser.displayName %}
+  {{ appHeading({
+    text: "Welcome, " + authedUser.displayName + "."
+  }) }}
+  {% else %}
   {{ appHeading({
     text: "Sign in to Defa Forms"
   }) }}
@@ -13,5 +18,9 @@
       isStartButton: true
     }) }}
   {% endcall %}
+  {% endif %}
+
+
+  
 
 {% endblock %}
