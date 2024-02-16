@@ -10,7 +10,7 @@ const home = {
           path: '/',
           config : {
             auth : {
-              mode: 'optional'
+              mode: 'try'
             }
           },
           ...homeController

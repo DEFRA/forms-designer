@@ -8,7 +8,7 @@ export const designerPlugin = {
     name: pkg.name,
     version: pkg.version,
     multiple: true,
-    dependencies: "vision",
+    dependencies: "@hapi/vision",
     register: async (server) => {
       server.route(app.getApp);
 

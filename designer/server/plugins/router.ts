@@ -10,6 +10,9 @@ const routes = [
     method: "GET",
     path: "/robots.txt",
     options: {
+      auth : {
+        mode: 'try'
+      },
       handler: {
         file: "server/public/static/robots.txt",
       },
@@ -19,6 +22,9 @@ const routes = [
     method: "GET",
     path: "/assets/{path*}",
     options: {
+      auth : {
+        mode: 'try'
+      },
       handler: {
         directory: {
           path: "./dist/client/assets",
@@ -29,6 +35,11 @@ const routes = [
   {
     method: "GET",
     path: "/help/{filename}",
+    options : {
+      auth : {
+        mode: 'try'
+      }
+    },
     handler: function (request, h) {
       return h.view(`help/${request.params.filename}`);
     },

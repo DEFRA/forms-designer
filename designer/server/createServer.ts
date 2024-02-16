@@ -1,7 +1,7 @@
 import hapi from "@hapi/hapi";
 import inert from "@hapi/inert";
 import Scooter from "@hapi/scooter";
-import { Engine as CatboxMemory } from "@hapi/catbox-memory";
+//import { Engine as CatboxMemory } from "@hapi/catbox-memory";
 import { Engine as CatboxRedis } from '@hapi/catbox-redis'
 
 import logging from "./plugins/logging";
@@ -18,6 +18,7 @@ import { sessionManager } from './common/helpers/session-manager'
 import { sessionCookie } from './common/helpers/auth/session-cookie'
 import { getUserSession } from './common/helpers/auth/get-user-session'
 import { buildRedisClient } from './common/helpers/redis-client'
+import { nunjucksConfig } from './common/nunjucks';
 
 const client = buildRedisClient()
 
@@ -90,7 +91,8 @@ export async function createServer() {
   await server.register(sessionCookie);
   await server.register(Scooter);
   await server.register(configureBlankiePlugin());
-  await server.register(viewPlugin, registrationOptions);
+  //await server.register(viewPlugin, registrationOptions);
+  await server.register(nunjucksConfig, registrationOptions);
   await server.register(Schmervice);
   (server as any).registerService([
     Schmervice.withName(
