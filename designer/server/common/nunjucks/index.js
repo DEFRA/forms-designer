@@ -7,15 +7,19 @@ import { context } from './context'
 import * as filters from './filters'
 import * as globals from './globals'
 
+
 const nunjucksEnvironment = nunjucks.configure(
   [
+    // bodge for legacy views. TODO replace.
+    // always make sure this is first so it this generated file takes precedence over the static files
+    path.normalize(
+      path.resolve(__dirname, '..', 'dist', 'client', 'common', 'templates')
+    ),
     'node_modules/govuk-frontend/',
     path.normalize(
-      //path.resolve(__dirname, '..', '..', 'templates')
       path.resolve(__dirname, '..', 'server', 'common', 'templates')
     ),
     path.normalize(
-      //path.resolve(__dirname, '..', '..', 'components')
       path.resolve(__dirname, '..', 'server', 'common', 'components')
     )
   ],

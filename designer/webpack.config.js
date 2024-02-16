@@ -98,8 +98,8 @@ const formDesignerClient = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, "server", "common", "templates", "layouts", "old-layout.njk"),
-      filename: "server/common/templates/layouts/old-layout.njk",
+      template: path.resolve(__dirname, "server", "common", "templates", "layouts", "legacy-layout.njk"),
+      filename: "common/templates/layouts/legacy-layout.njk",
       minify: prodMode,
       scriptLoading: "defer",
       inject: "head",
@@ -116,7 +116,7 @@ const formDesignerClient = {
     new CopyPlugin({
       patterns: [
         { from: "client/i18n/translations", to: "assets/translations" },
-        { from: "server/views", to: "views" },
+        { from: "server/views", to: "views" }
       ],
     }),
     new BundleAnalyzerPlugin({
