@@ -98,8 +98,8 @@ const formDesignerClient = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, "server", "views", "layout.html"),
-      filename: "views/layout.html",
+      template: path.resolve(__dirname, "server", "common", "templates", "layouts", "old-layout.njk"),
+      filename: "server/common/templates/layouts/old-layout.njk",
       minify: prodMode,
       scriptLoading: "defer",
       inject: "head",
