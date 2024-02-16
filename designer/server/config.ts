@@ -72,7 +72,8 @@ const schema = joi.object({
   redisUsername: joi.string().optional(),
   redisPassword: joi.string().optional(),
   redisKeyPrefix: joi.string().optional().default("forms-designer"),
-  redisTtl: joi.number().optional().default(2419200000) // one day
+  redisTtl: joi.number().optional().default(2419200000), // one day
+  serviceName: joi.string()
 });
 
 // Build config
@@ -83,6 +84,7 @@ const config = {
   previewUrl: process.env.PREVIEW_URL || "http://dev.cdp-int.defra.cloud/forms-runner/", // TODO set this to localhost and pull env vars from CDP
   publishUrl: process.env.PUBLISH_URL || "http://dev.cdp-int.defra.cloud/forms-runner/", // TODO set this to localhost and pull env vars from CDP
   persistentBackend: process.env.PERSISTENT_BACKEND || "preview",
+  serviceName: "Defra Form Builder",
   s3Bucket: process.env.S3_BUCKET,
   logLevel: process.env.LOG_LEVEL || "error",
   phase: process.env.PHASE || "beta",

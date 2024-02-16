@@ -2,13 +2,28 @@ import config from '../../../config'
 
 const appPathPrefix = config.appPathPrefix
 
+
+function buildEntry(request, text, url) {
+  let appPathPrefixNoSlash = appPathPrefix;
+  
+  if(appPathPrefix.lastIndexOf("/") == appPathPrefix.length) {
+    appPathPrefixNoSlash = appPathPrefix.substring(0, appPathPrefix.length-1)
+  }
+
+  url = `${appPathPrefixNoSlash}${url}`
+  
+  return {
+    text: text,
+    url: url,
+    isActive: request.path === url
+  }
+}
+
+
 function buildNavigation(request) {
   return [
-    {
-      text: 'Home',
-      url: appPathPrefix,
-      isActive: request.path === appPathPrefix
-    }
+    buildEntry(request, "Home", ""),
+    buildEntry(request, "Form Builder", "/app")
   ]
 }
 

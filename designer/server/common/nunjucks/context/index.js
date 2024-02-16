@@ -35,6 +35,7 @@ function context(request) {
   return {
     serviceName: config.serviceName,
     breadcrumbs: [],
+    appPathPrefix: config.appPathPrefix,
     navigation: buildNavigation(request),
     getAssetPath: function (asset) {
       const webpackAssetPath = webpackManifest[asset];
