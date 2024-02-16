@@ -40,7 +40,8 @@ function context(request) {
       const webpackAssetPath = webpackManifest[asset];
 
       return `${appPathPrefix}/assets/${webpackAssetPath}`
-    }
+    },
+    legacyAssetPath: `${config.appPathPrefix}/assets`,
   }
 }
 
