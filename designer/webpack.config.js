@@ -7,19 +7,29 @@ const nodeExternals = require("webpack-node-externals");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
   .BundleAnalyzerPlugin;
 const autoprefixer = require("autoprefixer");
+const WebpackAssetsManifest = require('webpack-assets-manifest')
 
 const devMode = process.env.NODE_ENV !== "production";
 const prodMode = process.env.NODE_ENV === "production";
 const environment = prodMode ? "production" : "development";
 const logLevel = process.env.REACT_LOG_LEVEL || (prodMode ? "warn" : "debug");
 
-const client = {
+const webpackConfig = {
+  isDevelopment: process.env.NODE_ENV !== 'production',
+  stylesheets: {
+    components: path.resolve(__dirname, 'server', 'common', 'components')
+  }
+}
+
+const clientOutput = path.resolve(__dirname, "dist", "client");
+
+const formDesignerClient = {
   target: "web",
   mode: environment,
   watch: devMode,
   entry: path.resolve(__dirname, "client", "index.tsx"),
   output: {
-    path: path.resolve(__dirname, "dist", "client"),
+    path: clientOutput,
     filename: "assets/[name].js",
     publicPath: "/forms-designer/",
   },
@@ -124,6 +134,102 @@ const client = {
   },
 };
 
+const client = {
+  entry: {
+    application: './client/assets/javascripts/application.js'
+  },
+  mode: webpackConfig.isDevelopment ? 'development' : 'production',
+  ...(webpackConfig.isDevelopment && { devtool: 'source-map' }),
+  watchOptions: {
+    aggregateTimeout: 200,
+    poll: 1000
+  },
+  output: {
+    filename: 'js/[name].[fullhash].js',
+    path: path.join(clientOutput, "assets"),
+    library: '[name]'
+  },
+  module: {
+    rules: [
+      ...(webpackConfig.isDevelopment
+        ? [
+            {
+              test: /\.js$/,
+              enforce: 'pre',
+              use: ['source-map-loader']
+            }
+          ]
+        : []),
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: [['@babel/preset-env', { targets: 'defaults' }]]
+          }
+        }
+      },
+      {
+        test: /\.(?:s[ac]|c)ss$/i,
+        use: [
+          'style-loader',
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              publicPath: '../',
+              esModule: false
+            }
+          },
+          'css-loader',
+          ...(webpackConfig.isDevelopment ? ['resolve-url-loader'] : []),
+          {
+            loader: 'sass-loader',
+            options: {
+              ...(webpackConfig.isDevelopment && { sourceMap: true }),
+              sassOptions: {
+                outputStyle: 'compressed',
+                quietDeps: true,
+                includePaths: [webpackConfig.stylesheets.components]
+              }
+            }
+          }
+        ]
+      },
+      {
+        test: /\.(png|svg|jpe?g|gif)$/,
+        type: 'asset/resource',
+        generator: {
+          filename: 'images/[name].[contenthash][ext]'
+        }
+      },
+      {
+        test: /\.(ico)$/,
+        type: 'asset/resource',
+        generator: {
+          filename: 'images/[name][ext]'
+        }
+      },
+      {
+        test: /\.(woff|woff2|eot|ttf|otf)$/,
+        type: 'asset/resource',
+        generator: {
+          filename: 'fonts/[name].[contenthash][ext]'
+        }
+      }
+    ]
+  },
+  plugins: [
+    //new CleanWebpackPlugin(),
+    new WebpackAssetsManifest({
+      output: 'manifest.json'
+    }),
+    new MiniCssExtractPlugin({
+      filename: 'css/[name].[fullhash].css'
+    })
+  ]
+}
+
 const server = {
   target: "node",
   mode: environment,
@@ -166,4 +272,7 @@ const server = {
   ],
 };
 
-module.exports = [client, server];
+
+// FIXME migrate old form designer client to the new frontend stack
+// we might get collissions between the two otherwise. New client takes precedence.
+module.exports = [formDesignerClient, client, server];

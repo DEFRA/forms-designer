@@ -1,5 +1,5 @@
-{% from "header/macro.njk" import govukHeader -%}
-{% from "footer/macro.njk" import govukFooter -%}
+{% from "govuk/components/header/macro.njk" import govukHeader -%}
+{% from "govuk/components/footer/macro.njk" import govukFooter -%}
 
 <!DOCTYPE html>
 <html lang="{{ htmlLang | default('en') }}" class="{{ htmlClasses }}">
@@ -40,7 +40,7 @@
     </script>
 
     {% block header %}
-      {% include "includes/home-office-header.html" %}
+      {% include "../partials/old/home-office-header.html" %}
     {% endblock %}
 
     {% block content %}
@@ -48,7 +48,7 @@
     {% endblock %}
 
     {% block footer %}
-      {% include "includes/home-office-footer.html" %}
+      {% include "../partials/old/home-office-footer.html" %}
     {% endblock %}
 
   </body>
