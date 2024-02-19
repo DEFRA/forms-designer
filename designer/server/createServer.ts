@@ -17,6 +17,7 @@ import { authedFetcher } from './common/helpers/fetch/authed-fetcher'
 import { sessionManager } from './common/helpers/session-manager'
 import { sessionCookie } from './common/helpers/auth/session-cookie'
 import { getUserSession } from './common/helpers/auth/get-user-session'
+import { dropUserSession } from './common/helpers/auth/drop-user-session'
 import { buildRedisClient } from './common/helpers/redis-client'
 import { nunjucksConfig } from './common/nunjucks';
 
@@ -84,6 +85,7 @@ export async function createServer() {
   })
 
   server.decorate('request', 'getUserSession', getUserSession)
+  server.decorate('request', 'dropUserSession', dropUserSession)
 
   await server.register(inert, registrationOptions);
   await server.register(sessionManager);

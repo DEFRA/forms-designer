@@ -2,25 +2,28 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% block content %}
-  {% if authedUser.displayName %}
-  {{ appHeading({
-    text: "Welcome, " + authedUser.displayName + "."
-  }) }}
-  {% else %}
-  {{ appHeading({
-    text: "Sign in to Defra Forms"
-  }) }}
-
-  {% call appPageBody() %}
-    {{ govukButton({
-      text: "Sign in",
-      href: appPathPrefix + "/login",
-      isStartButton: true
+  {% if isAuthenticated %}
+    {{ appHeading({
+      text: "Welcome, " + authedUser.displayName + "."
     }) }}
-  {% endcall %}
+
+    {% call appPageBody() %}
+      {{ govukButton({
+        text: "Sign out",
+        href: appPathPrefix + "/logout"
+      })}}
+    {% endcall %}
+  {% else %}
+    {{ appHeading({
+      text: "Sign in to Defra Forms"
+    }) }}
+
+    {% call appPageBody() %}
+      {{ govukButton({
+        text: "Sign in",
+        href: appPathPrefix + "/login",
+        isStartButton: true
+      }) }}
+    {% endcall %}
   {% endif %}
-
-
-  
-
 {% endblock %}
