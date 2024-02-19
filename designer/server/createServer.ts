@@ -12,7 +12,7 @@ import Schmervice from "schmervice";
 import config from "./config";
 import { determinePersistenceService } from "./lib/persistence";
 import { configureBlankiePlugin } from "./plugins/blankie";
-import { azureOidc } from './common/helpers/auth/azure-oidc'
+import { azureOidc, azureOidcNoop } from './common/helpers/auth/azure-oidc'
 import { authedFetcher } from './common/helpers/fetch/authed-fetcher'
 import { sessionManager } from './common/helpers/session-manager'
 import { sessionCookie } from './common/helpers/auth/session-cookie'
@@ -30,9 +30,7 @@ const serverOptions = () => {
       stripTrailingSlash: true,
     },
     routes: {
-      auth: {
-        mode: 'required'
-      },
+      auth: { mode: 'required' },
       validate: {
         options: {
           abortEarly: false,
@@ -50,12 +48,6 @@ const serverOptions = () => {
       },
     },
     cache: [
-      // {
-      //   name: 'session',
-      //   engine: new CatboxMemory.Engine({
-      //     partition: "cache"
-      //   })
-      // }
       {
         name: 'session',
         engine: new CatboxRedis({
@@ -89,8 +81,15 @@ export async function createServer() {
 
   await server.register(inert, registrationOptions);
   await server.register(sessionManager);
-  await server.register(azureOidc);
+
+  if (config.oidcWellKnownConfigurationUrl) {
+    await server.register(azureOidc);
+  } else {
+    await server.register(azureOidcNoop);
+  }
+
   await server.register(sessionCookie);
+  
   await server.register(Scooter);
   await server.register(configureBlankiePlugin());
   //await server.register(viewPlugin, registrationOptions);

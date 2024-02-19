@@ -1766,6 +1766,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@hapi/basic@npm:^7.0.2":
+  version: 7.0.2
+  resolution: "@hapi/basic@npm:7.0.2"
+  dependencies:
+    "@hapi/boom": ^10.0.1
+    "@hapi/hoek": ^11.0.2
+  checksum: 1b25d28774e00b518d5cdb4347ae238a840d065c1a43812a633a70a220e7606b7bb3f5884f697f4b1689f52d6fb7d2c52d59d7d0b9137e68af2f784dd2261444
+  languageName: node
+  linkType: hard
+
 "@hapi/bell@npm:13.0.1":
   version: 13.0.1
   resolution: "@hapi/bell@npm:13.0.1"
@@ -4012,6 +4022,7 @@ __metadata:
     "@babel/register": ^7.22.15
     "@babel/runtime": ^7.23.3
     "@elastic/ecs-pino-format": 1.5.0
+    "@hapi/basic": ^7.0.2
     "@hapi/bell": 13.0.1
     "@hapi/catbox-memory": 6.0.0
     "@hapi/catbox-redis": 7.0.2
