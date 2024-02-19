@@ -31,7 +31,9 @@ try {
   logger.error('Webpack Manifest assets file not found')
 }
 
-function context(request) {
+async function context(request) {
+  const authedUser = await request.getUserSession()
+
   return {
     serviceName: config.serviceName,
     breadcrumbs: [],
@@ -43,6 +45,8 @@ function context(request) {
       return `${appPathPrefix}/assets/${webpackAssetPath}`
     },
     legacyAssetPath: `${config.appPathPrefix}/assets`,
+    isAuthenticated: authedUser?.isAuthenticated ?? false,
+    authedUser
   }
 }
 
