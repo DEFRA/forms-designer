@@ -1,4 +1,4 @@
-import Jwt from '@hapi/jwt'
+import jwt from '@hapi/jwt'
 import bell from '@hapi/bell'
 import basic from '@hapi/basic'
 
@@ -67,45 +67,6 @@ const azureOidc = {
     }
   }
 }
-
-// const azureOidcNoop = {
-//   plugin: {
-//     name: 'azure-oidc',
-//     register: async (server) => {
-//       logger.warn("SEVERE: Authentication is disabled. This feature flag should be removed once Azure is provisioned internally.")
-//       console.log("SEVERE: Authentication is disabled. This feature flag should be removed once Azure is provisioned internally.")
-//       // FIXME next review 2024-02-26
-//       await server.register(Jwt);
-
-//       server.auth.strategy('azure-oidc', 'jwt', {
-//         keys: ['none'],
-//         verify: {
-//           aud: 'urn:audience:test',
-//           iss: 'urn:issuer:test',
-//           sub: false,
-//           nbf: true,
-//           exp: true,
-//           maxAgeSec: 14400, // 4 hours
-//           timeSkewSec: 15
-//         },
-//         validate: (artifacts, request, h) => {
-//           return {
-//             isValid: true,
-//             credentials: {
-//               profile: {
-//                 id: "1234",
-//                 displayName: "Joe Bloggs",
-//                 email: "jbloggs@defra.gov.uk",
-//                 loginHint: "1234"
-//               }
-//             }
-//           };
-//         },
-//         cookieName: 'bell-azure-oidc'
-//       });
-//     }
-//   }
-// }
 
 const dummyUsers = {
   defra: {
