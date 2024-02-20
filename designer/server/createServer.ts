@@ -1,12 +1,9 @@
 import hapi from "@hapi/hapi";
 import inert from "@hapi/inert";
 import Scooter from "@hapi/scooter";
-//import { Engine as CatboxMemory } from "@hapi/catbox-memory";
 import { Engine as CatboxRedis } from '@hapi/catbox-redis'
 
-import logging from "./plugins/logging";
 import router from "./plugins/router";
-import { viewPlugin } from "./plugins/view";
 import { designerPlugin } from "./plugins/designer";
 import Schmervice from "schmervice";
 import config from "./config";
@@ -20,6 +17,7 @@ import { getUserSession } from './common/helpers/auth/get-user-session'
 import { dropUserSession } from './common/helpers/auth/drop-user-session'
 import { buildRedisClient } from './common/helpers/redis-client'
 import { nunjucksConfig } from './common/nunjucks';
+import { requestLogger } from "./common/helpers/logging/request-logger";
 
 const client = buildRedisClient()
 
@@ -103,7 +101,7 @@ export async function createServer() {
   ]);
   await server.register(designerPlugin, registrationOptions);
   await server.register(router, registrationOptions);
-  await server.register(logging);
+  await server.register(requestLogger);
 
   return server;
 }

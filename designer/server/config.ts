@@ -86,7 +86,7 @@ const config = {
   persistentBackend: process.env.PERSISTENT_BACKEND || "preview",
   serviceName: "Defra Form Builder",
   s3Bucket: process.env.S3_BUCKET,
-  logLevel: process.env.LOG_LEVEL || "error",
+  logLevel: process.env.LOG_LEVEL || "info",
   phase: process.env.PHASE || "beta",
   footerText: process.env.FOOTER_TEXT,
   lastCommit: process.env.LAST_COMMIT || process.env.LAST_COMMIT_GH,
