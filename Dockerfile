@@ -60,6 +60,7 @@ COPY --from=productionBuild /home/node/app/designer/package*.json ./
 COPY --from=productionBuild /home/node/app/designer/node_modules ./node_modules
 COPY --from=productionBuild /home/node/app/designer/dist ./dist
 COPY --from=productionBuild /home/node/app/designer/bin ./bin
+COPY --from=productionBuild /home/node/app/designer/server ./server
 
 ARG PORT
 ENV PORT ${PORT}
