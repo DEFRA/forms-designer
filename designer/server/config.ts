@@ -68,9 +68,9 @@ const schema = joi.object({
   oidcWellKnownConfigurationUrl: joi.string().optional(),
   appBaseUrl: joi.string().optional().default("http://localhost:3000/forms-designer"),
   useSingleInstanceCache: joi.string().optional().default(false),
-  redisHost: joi.string().optional(),
-  redisUsername: joi.string().optional(),
-  redisPassword: joi.string().optional(),
+  redisHost: joi.string(),
+  redisUsername: joi.string(),
+  redisPassword: joi.string(),
   redisKeyPrefix: joi.string().optional().default("forms-designer"),
   redisTtl: joi.number().optional().default(2419200000), // one day
   serviceName: joi.string()
