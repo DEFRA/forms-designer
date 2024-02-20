@@ -19,17 +19,25 @@ EXPOSE ${PORT} ${PORT_DEBUG}
 
 RUN npm install --global yarn
 
-COPY --chown=node:node ./designer/package.json ./designer/install_model.sh ./
+WORKDIR /home/node/app
+
+COPY --chown=node:node ./designer/package.json ./designer/yarn.lock ./designer/install_model.sh ./designer/
+WORKDIR /home/node/app/designer
+
 RUN bash install_model.sh
 RUN yarn
 
-COPY --chown=node:node ./designer/ ./
+WORKDIR /home/node/app
+COPY --chown=node:node ./ ./
+WORKDIR /home/node/app/designer
+
 RUN yarn
 
 CMD [ "yarn", "run", "dev" ]
 
 FROM development as productionBuild
 
+WORKDIR /home/node/app/designer
 ENV NODE_ENV production
 
 RUN yarn run build
@@ -48,10 +56,10 @@ USER node
 ARG PARENT_VERSION
 LABEL uk.gov.defra.ffc.parent-image=defradigital/node:${PARENT_VERSION}
 
-COPY --from=productionBuild /home/node/package*.json ./
-COPY --from=productionBuild /home/node/node_modules ./node_modules
-COPY --from=productionBuild /home/node/dist ./dist
-COPY --from=productionBuild /home/node/bin ./bin
+COPY --from=productionBuild /home/node/app/designer/package*.json ./
+COPY --from=productionBuild /home/node/app/designer/node_modules ./node_modules
+COPY --from=productionBuild /home/node/app/designer/dist ./dist
+COPY --from=productionBuild /home/node/app/designer/bin ./bin
 
 ARG PORT
 ENV PORT ${PORT}
