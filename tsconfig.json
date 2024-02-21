@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.base.json",
+  "files": [],
+  "references": [
+    {
+      "path": "./designer/tsconfig.json"
+    },
+    {
+      "path": "./model/tsconfig.json"
+    },
+    {
+      "path": "./queue-model/tsconfig.json"
+    }
+  ]
+}
