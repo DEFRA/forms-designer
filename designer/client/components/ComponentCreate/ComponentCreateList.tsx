@@ -1,5 +1,5 @@
 import React, { MouseEvent, useCallback } from "react";
-import { ComponentTypes, ComponentDef } from "@xgovformbuilder/model";
+import { ComponentTypes, ComponentDef } from "@defra/forms-model";
 import sortBy from "lodash/sortBy";
 
 import { i18n } from "../../i18n";

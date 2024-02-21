@@ -6,7 +6,7 @@ import {
   conditionValueFrom,
   getOperatorNames,
   clone,
-} from "@xgovformbuilder/model";
+} from "@defra/forms-model";
 import { i18n } from "../i18n";
 
 import { InlineConditionsDefinitionValue } from "./InlineConditionsDefinitionValue";

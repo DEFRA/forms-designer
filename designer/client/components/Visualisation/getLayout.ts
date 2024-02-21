@@ -1,5 +1,5 @@
 import dagre from "dagre";
-import { FormDefinition } from "@xgovformbuilder/model";
+import { FormDefinition } from "@defra/forms-model";
 
 export type Point = {
   node: {

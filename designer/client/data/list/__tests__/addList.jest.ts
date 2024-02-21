@@ -1,4 +1,4 @@
-import { FormDefinition } from "@xgovformbuilder/model";
+import { FormDefinition } from "@defra/forms-model";
 import { addList } from "../addList";
 
 const data: FormDefinition = {

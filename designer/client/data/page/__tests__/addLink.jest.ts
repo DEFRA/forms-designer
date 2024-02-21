@@ -1,4 +1,4 @@
-import { FormDefinition } from "@xgovformbuilder/model";
+import { FormDefinition } from "@defra/forms-model";
 import { addLink } from "..";
 
 const data: FormDefinition = {

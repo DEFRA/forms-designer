@@ -1,6 +1,6 @@
 import React from "react";
 import { Input } from "@govuk-jsx/input";
-import { clone } from "@xgovformbuilder/model";
+import { clone } from "@defra/forms-model";
 import randomId from "./randomId";
 
 import { toUrl } from "./helpers";

@@ -1,5 +1,5 @@
 import { Path } from "..";
-import { FormDefinition, Page } from "@xgovformbuilder/model";
+import { FormDefinition, Page } from "@defra/forms-model";
 
 export function updateLinksTo(
   data: FormDefinition,

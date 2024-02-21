@@ -1,4 +1,4 @@
-import { ConditionRawData, FormDefinition } from "@xgovformbuilder/model";
+import { ConditionRawData, FormDefinition } from "@defra/forms-model";
 import { Path } from "../../reducers/data/types";
 import { findPage } from "./findPage";
 

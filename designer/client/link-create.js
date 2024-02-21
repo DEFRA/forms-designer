@@ -1,7 +1,7 @@
 import React from "react";
 import SelectConditions from "./conditions/SelectConditions";
 import { ErrorMessage } from "@govuk-jsx/error-message";
-import { clone } from "@xgovformbuilder/model";
+import { clone } from "@defra/forms-model";
 import classNames from "classnames";
 
 import ErrorSummary from "./error-summary";

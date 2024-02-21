@@ -1,6 +1,6 @@
 import React, { useReducer } from "react";
 import { render } from "@testing-library/react";
-import { Data } from "@xgovformbuilder/model";
+import { Data } from "@defra/forms-model";
 import { DataContext } from "../context";
 import {
   ComponentContext,

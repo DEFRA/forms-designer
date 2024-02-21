@@ -2,7 +2,7 @@ import React from "react";
 import { render } from "@testing-library/react";
 import SelectConditions from "./../SelectConditions";
 import { DataContext } from "../../context";
-import { Data } from "@xgovformbuilder/model";
+import { Data } from "@defra/forms-model";
 
 const dataValue = {
   data: {

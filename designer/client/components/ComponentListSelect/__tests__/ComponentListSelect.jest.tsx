@@ -2,7 +2,7 @@ import React, { useReducer } from "react";
 import { render } from "@testing-library/react";
 import userEvent, { TargetElement } from "@testing-library/user-event";
 import { DataContext } from "../../../context";
-import { Data } from "@xgovformbuilder/model";
+import { Data } from "@defra/forms-model";
 import { ComponentListSelect } from "../ComponentListSelect";
 import {
   ComponentContext,

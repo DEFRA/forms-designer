@@ -1,4 +1,4 @@
-import { FormDefinition, Section } from "@xgovformbuilder/model";
+import { FormDefinition, Section } from "@defra/forms-model";
 import { addSection } from "../addSection";
 
 const data: FormDefinition = {

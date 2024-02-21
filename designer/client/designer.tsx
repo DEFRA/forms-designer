@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Menu from "./components/Menu/Menu";
 import { Visualisation } from "./components/Visualisation";
-import { FormDefinition } from "@xgovformbuilder/model";
+import { FormDefinition } from "@defra/forms-model";
 import { FlyoutContext, DataContext } from "./context";
 import { FeatureFlagProvider } from "./context/FeatureFlagContext";
 import { DesignerApi } from "./api/designerApi";

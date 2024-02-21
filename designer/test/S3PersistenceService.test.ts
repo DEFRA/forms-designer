@@ -4,7 +4,7 @@ import sinon from "sinon";
 
 import { S3PersistenceService } from "../server/lib/persistence/s3PersistenceService";
 
-import { FormConfiguration } from "@xgovformbuilder/model";
+import { FormConfiguration } from "@defra/forms-model";
 
 const { expect } = Code;
 const lab = Lab.script();

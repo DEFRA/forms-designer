@@ -10,7 +10,7 @@ import {
   ListsEditorStateActions,
 } from "../../reducers/list/listsEditorReducer";
 import classNames from "classnames";
-import { ListComponentsDef } from "@xgovformbuilder/model";
+import { ListComponentsDef } from "@defra/forms-model";
 import { findList } from "../../data";
 import { Actions as ComponentActions } from "./../../reducers/component/types";
 import logger from "../../plugins/logger";

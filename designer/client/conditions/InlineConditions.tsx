@@ -1,6 +1,6 @@
 import React, { MouseEvent, ChangeEvent } from "react";
 import classNames from "classnames";
-import { ConditionsModel, clone, Item } from "@xgovformbuilder/model";
+import { ConditionsModel, clone, Item } from "@defra/forms-model";
 
 import InlineConditionsDefinition from "./InlineConditionsDefinition";
 import InlineConditionsEdit from "./inline-conditions-edit";

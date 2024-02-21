@@ -1,6 +1,6 @@
 import { validateTitle } from "../../validations";
 import { isEmpty } from "../../helpers";
-import { ComponentTypeEnum as Types } from "@xgovformbuilder/model";
+import { ComponentTypeEnum as Types } from "@defra/forms-model";
 import { i18n } from "../../i18n";
 
 export interface ValidationError {

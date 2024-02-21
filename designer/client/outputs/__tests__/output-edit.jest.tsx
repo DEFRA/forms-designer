@@ -1,7 +1,7 @@
 import React from "react";
 import { render, fireEvent, waitFor } from "@testing-library/react";
 import { RenderWithContextAndDataContext } from "../../__tests__/helpers/renderers";
-import { Data } from "@xgovformbuilder/model";
+import { Data } from "@defra/forms-model";
 
 import OutputEdit from "../output-edit";
 

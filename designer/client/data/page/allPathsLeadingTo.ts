@@ -1,4 +1,4 @@
-import { FormDefinition, Page } from "@xgovformbuilder/model";
+import { FormDefinition, Page } from "@defra/forms-model";
 import dfs from "depth-first";
 
 export function allPathsLeadingTo(data: FormDefinition, path: Page["path"]) {

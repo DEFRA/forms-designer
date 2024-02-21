@@ -1,5 +1,5 @@
 import { allInputs } from "../inputs";
-import { FormDefinition } from "@xgovformbuilder/model";
+import { FormDefinition } from "@defra/forms-model";
 test("should return all inputs from the page model", () => {
   const data: FormDefinition = {
     pages: [

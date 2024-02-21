@@ -2,7 +2,7 @@ import React from "react";
 import { fireEvent, render } from "@testing-library/react";
 import ConditionsEdit from "../ConditionsEdit";
 import { DataContext, FlyoutContext } from "../../context";
-import { FormDefinition } from "@xgovformbuilder/model";
+import { FormDefinition } from "@defra/forms-model";
 
 const flyoutValue = {
   increment: jest.fn(),

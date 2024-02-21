@@ -1,5 +1,5 @@
 import { removeCondition } from "..";
-import { FormDefinition } from "@xgovformbuilder/model";
+import { FormDefinition } from "@defra/forms-model";
 
 const data: FormDefinition = {
   pages: [

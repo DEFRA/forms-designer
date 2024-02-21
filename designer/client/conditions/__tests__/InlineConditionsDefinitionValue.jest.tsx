@@ -7,7 +7,7 @@ import {
   dateUnits,
   relativeDateOrTimeOperatorNames,
   timeUnits,
-} from "@xgovformbuilder/model";
+} from "@defra/forms-model";
 import userEvent from "@testing-library/user-event";
 
 describe.skip("AbsoluteDateTimeValues", () => {

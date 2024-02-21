@@ -1,7 +1,7 @@
 import React, { ChangeEvent } from "react";
 import { Radios } from "@govuk-jsx/radios";
 import { Label } from "@govuk-jsx/label";
-import { Data } from "@xgovformbuilder/model";
+import { Data } from "@defra/forms-model";
 
 import { i18n } from "../../i18n";
 

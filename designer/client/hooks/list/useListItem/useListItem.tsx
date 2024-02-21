@@ -4,7 +4,7 @@ import {
   validateNotEmpty,
   validateTitle,
 } from "../../../validations";
-import { clone, FormDefinition } from "@xgovformbuilder/model";
+import { clone, FormDefinition } from "@defra/forms-model";
 import { ListItemHook } from "./types";
 import { addList, findList } from "../../../data";
 

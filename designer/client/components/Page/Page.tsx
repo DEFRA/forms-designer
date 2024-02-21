@@ -9,7 +9,7 @@ import { Flyout } from "../Flyout";
 import PageEdit from "../../page-edit";
 import { Component } from "../../component";
 import { ComponentCreate } from "./../ComponentCreate";
-import { ComponentTypes } from "@xgovformbuilder/model";
+import { ComponentTypes } from "@defra/forms-model";
 import { DataContext } from "../../context";
 import { PageLinkage } from "../PageLinkage";
 import { ComponentContextProvider } from "../../reducers/component";

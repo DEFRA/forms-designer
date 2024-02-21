@@ -7,7 +7,7 @@ import {
   initComponentState,
 } from "../reducers/component/componentReducer";
 import { DataContext } from "../context";
-import { Data } from "@xgovformbuilder/model";
+import { Data } from "@defra/forms-model";
 
 describe("ComponentTypeEdit", () => {
   let mockData: Data;

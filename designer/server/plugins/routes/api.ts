@@ -1,5 +1,5 @@
 import newFormJson from "../../../new-form.json";
-import { FormConfiguration, Schema } from "@xgovformbuilder/model";
+import { FormConfiguration, Schema } from "@defra/forms-model";
 import Wreck from "@hapi/wreck";
 import config from "../../config";
 import { publish } from "../../lib/publish";

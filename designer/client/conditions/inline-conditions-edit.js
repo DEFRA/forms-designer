@@ -3,7 +3,7 @@ import {
   ConditionGroupDef,
   toPresentationString,
   clone,
-} from "@xgovformbuilder/model";
+} from "@defra/forms-model";
 import InlineConditionsDefinition from "./InlineConditionsDefinition";
 import { EditIcon, MoveDownIcon, MoveUpIcon } from "../components/Icons";
 

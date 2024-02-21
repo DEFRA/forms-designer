@@ -5,7 +5,7 @@ import {
   ListsEditorStateActions,
 } from "../reducers/list/listsEditorReducer";
 import { DataContext } from "../context";
-import { clone } from "@xgovformbuilder/model";
+import { clone } from "@defra/forms-model";
 
 export function useWarning() {
   const { state, dispatch } = useContext(ListsEditorContext);

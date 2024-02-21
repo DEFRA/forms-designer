@@ -1,6 +1,6 @@
 import React from "react";
 import ComponentTypeEdit from "./ComponentTypeEdit";
-import { clone, ComponentTypes } from "@xgovformbuilder/model";
+import { clone, ComponentTypes } from "@defra/forms-model";
 import { DataContext } from "./context";
 import randomId from "./randomId";
 import { addComponent } from "./data/component";

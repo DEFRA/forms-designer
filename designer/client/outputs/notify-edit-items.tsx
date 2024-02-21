@@ -1,5 +1,5 @@
 import React, { MouseEvent, ChangeEvent } from "react";
-import { clone } from "@xgovformbuilder/model";
+import { clone } from "@defra/forms-model";
 import { DataContext } from "../context";
 import logger from "../plugins/logger";
 

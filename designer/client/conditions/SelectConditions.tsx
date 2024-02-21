@@ -1,6 +1,6 @@
 import React, { ChangeEvent } from "react";
 import InlineConditions from "./InlineConditions";
-import { Condition, ConditionsModel, Data } from "@xgovformbuilder/model";
+import { Condition, ConditionsModel, Data } from "@defra/forms-model";
 import { Flyout } from "../components/Flyout";
 import { Select } from "@govuk-jsx/select";
 import { Hint } from "@govuk-jsx/hint";

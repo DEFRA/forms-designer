@@ -1,7 +1,7 @@
 {
-  "name": "@xgovformbuilder/queue-model",
+  "name": "@defra/forms-queue-model",
   "version": "1.0.0",
-  "description": "A hapi plugin to provide the queue model for Xgov digital form builder based applications using the queue service",
+  "description": "A hapi plugin to provide the queue model for Defra form builder based applications using the queue service",
   "main": "dist/module/index.js",
   "engines": {
     "node": "^20.9.0",

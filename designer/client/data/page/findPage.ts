@@ -1,4 +1,4 @@
-import { FormDefinition, Page } from "@xgovformbuilder/model";
+import { FormDefinition, Page } from "@defra/forms-model";
 import { Found, Path } from "..";
 
 /**

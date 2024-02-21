@@ -7,7 +7,7 @@ import { fieldsReducer } from "./componentReducer.fields";
 
 import type { ComponentActions } from "./types";
 import { Meta, Schema, Fields, Options, Actions } from "./types";
-import { ComponentDef } from "@xgovformbuilder/model";
+import { ComponentDef } from "@defra/forms-model";
 import logger from "../../plugins/logger";
 
 type ComponentState = {

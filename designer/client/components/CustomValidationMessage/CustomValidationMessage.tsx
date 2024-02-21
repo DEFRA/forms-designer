@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { ComponentContext } from "../../reducers/component/componentReducer";
 import { Actions } from "../../reducers/component/types";
 import { i18n } from "../../i18n";
-import { TelephoneNumberFieldComponent } from "@xgovformbuilder/model";
+import { TelephoneNumberFieldComponent } from "@defra/forms-model";
 
 export function CustomValidationMessage() {
   const { state, dispatch } = useContext(ComponentContext);

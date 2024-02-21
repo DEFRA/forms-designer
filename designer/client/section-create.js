@@ -1,5 +1,5 @@
 import React from "react";
-import { clone } from "@xgovformbuilder/model";
+import { clone } from "@defra/forms-model";
 
 import { camelCase } from "./helpers";
 import { DataContext } from "./context";

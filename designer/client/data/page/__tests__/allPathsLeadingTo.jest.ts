@@ -1,4 +1,4 @@
-import { FormDefinition } from "@xgovformbuilder/model";
+import { FormDefinition } from "@defra/forms-model";
 import { allPathsLeadingTo } from "..";
 
 test("allPathsLeadingTo should work with cycle in paths", () => {

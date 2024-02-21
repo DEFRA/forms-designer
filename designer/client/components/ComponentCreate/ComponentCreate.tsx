@@ -5,7 +5,7 @@ import React, {
   useLayoutEffect,
   FormEvent,
 } from "react";
-import { ComponentDef, Page } from "@xgovformbuilder/model";
+import { ComponentDef, Page } from "@defra/forms-model";
 
 import { i18n } from "../../i18n";
 import { ErrorSummary } from "../../error-summary";

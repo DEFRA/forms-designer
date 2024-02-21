@@ -3,7 +3,7 @@ import { ComponentContext } from "../../reducers/component/componentReducer";
 import { DataContext } from "../../context";
 import Editor from "../../editor";
 import { Actions } from "../../reducers/component/types";
-import { ContentOptions } from "@xgovformbuilder/model";
+import { ContentOptions } from "@defra/forms-model";
 import { i18n } from "../../i18n";
 
 type Props = {

@@ -1,5 +1,5 @@
 import { customRenderForLists } from "./helpers";
-import { Data } from "@xgovformbuilder/model";
+import { Data } from "@defra/forms-model";
 import React from "react";
 import { Warning } from "../Warning";
 

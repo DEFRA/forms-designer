@@ -1,5 +1,5 @@
 import { Path } from "../types";
-import { ComponentDef } from "@xgovformbuilder/model";
+import { ComponentDef } from "@defra/forms-model";
 import { findPage } from "../page";
 
 export function updateComponent(

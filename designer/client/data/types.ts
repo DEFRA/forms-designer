@@ -6,7 +6,7 @@ import {
   InputFieldsComponentsDef,
   ListComponentsDef,
   Page,
-} from "@xgovformbuilder/model";
+} from "@defra/forms-model";
 
 export const isNotContentType = (
   obj: ComponentDef

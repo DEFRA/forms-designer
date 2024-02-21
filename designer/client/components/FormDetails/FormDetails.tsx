@@ -1,5 +1,5 @@
 import React, { Component, ChangeEvent, ContextType, FormEvent } from "react";
-import { FormConfiguration, FormDefinition } from "@xgovformbuilder/model";
+import { FormConfiguration, FormDefinition } from "@defra/forms-model";
 import isFunction from "lodash/isFunction";
 
 import { validateTitle, hasValidationErrors } from "../../validations";

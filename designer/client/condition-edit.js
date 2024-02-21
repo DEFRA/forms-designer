@@ -1,6 +1,6 @@
 import React from "react";
 import Editor from "./editor";
-import { clone, ConditionsWrapper } from "@xgovformbuilder/model";
+import { clone, ConditionsWrapper } from "@defra/forms-model";
 import { DataContext } from "./context";
 import { removeCondition, updateCondition } from "./data";
 import logger from "../client/plugins/logger";

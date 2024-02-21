@@ -1,4 +1,4 @@
-import { FormDefinition, List } from "@xgovformbuilder/model";
+import { FormDefinition, List } from "@defra/forms-model";
 
 export function addList(data: FormDefinition, list: List): FormDefinition {
   const index = data.lists.findIndex((l) => l.name === list.name);

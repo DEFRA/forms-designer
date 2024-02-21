@@ -5,7 +5,7 @@ import userEvent, { TargetElement } from "@testing-library/user-event";
 import { ComponentCreate } from "../ComponentCreate";
 import { ComponentContextProvider } from "../../../reducers/component";
 import { DataContext } from "../../../context";
-import { DetailsComponent } from "@xgovformbuilder/model";
+import { DetailsComponent } from "@defra/forms-model";
 import * as Data from "../../../data";
 import { addComponent } from "../../../data";
 

@@ -12,7 +12,7 @@ import {
 } from "../reducers/list/listsEditorReducer";
 
 import { DataContext } from "../context";
-import { clone } from "@xgovformbuilder/model";
+import { clone } from "@defra/forms-model";
 import { useListItem } from "../hooks/list/useListItem";
 import { ListContext } from "../reducers/listReducer";
 

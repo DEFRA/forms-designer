@@ -1,4 +1,4 @@
-import { FormDefinition } from "@xgovformbuilder/model";
+import { FormDefinition } from "@defra/forms-model";
 import { hasConditions } from "../hasConditions";
 
 test("hasCondition returns true when there are conditions", () => {

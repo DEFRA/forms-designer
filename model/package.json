@@ -1,5 +1,5 @@
 {
-  "name": "@xgovformbuilder/model",
+  "name": "@defra/forms-model",
   "version": "3.0.0",
   "description": "A hapi plugin providing the model for XGov digital form builder based applications",
   "main": "dist/module/index.js",

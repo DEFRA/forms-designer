@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState, useLayoutEffect } from "react";
-import { ComponentDef } from "@xgovformbuilder/model";
+import { ComponentDef } from "@defra/forms-model";
 
 import { i18n } from "../../i18n";
 import { ErrorSummary } from "../../error-summary";

@@ -1,6 +1,6 @@
 import React from "react";
 import Editor from "./editor";
-import { clone } from "@xgovformbuilder/model";
+import { clone } from "@defra/forms-model";
 
 import { DataContext } from "./context";
 import logger from "../client/plugins/logger";

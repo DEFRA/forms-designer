@@ -1,5 +1,5 @@
 {
-  "name": "@xgovformbuilder/designer",
+  "name": "@defra/forms-designer",
   "version": "3.0.0",
   "description": "Cross government digital form builder (designer)",
   "main": "server/index.js",
@@ -36,6 +36,7 @@
   },
   "license": "SEE LICENSE IN LICENSE",
   "dependencies": {
+    "@defra/forms-model": "*",
     "@elastic/ecs-pino-format": "1.5.0",
     "@hapi/basic": "^7.0.2",
     "@hapi/bell": "13.0.1",
@@ -50,7 +51,6 @@
     "@hapi/wreck": "17.0.0",
     "@hapi/yar": "11.0.1",
     "@xgovformbuilder/govuk-react-jsx": "7.1.2",
-    "@xgovformbuilder/model": "*",
     "aws-sdk": "^2.1083.0",
     "blankie": "5.0.0",
     "classnames": "^2.3.1",

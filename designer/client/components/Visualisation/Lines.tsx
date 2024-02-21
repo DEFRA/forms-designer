@@ -1,5 +1,5 @@
 import React from "react";
-import { Data } from "@xgovformbuilder/model";
+import { Data } from "@defra/forms-model";
 
 import { Flyout } from "../Flyout";
 import LinkEdit from "../../link-edit";

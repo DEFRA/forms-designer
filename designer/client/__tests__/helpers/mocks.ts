@@ -1,4 +1,4 @@
-import { Data } from "@xgovformbuilder/model";
+import { Data } from "@defra/forms-model";
 
 export function simplePageMock() {
   return {

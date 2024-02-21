@@ -1,5 +1,5 @@
 import { updateComponent } from "..";
-import { FormDefinition } from "@xgovformbuilder/model";
+import { FormDefinition } from "@defra/forms-model";
 
 test("updateComponent throws an error when the target component cannot be found", () => {
   const data: FormDefinition = {

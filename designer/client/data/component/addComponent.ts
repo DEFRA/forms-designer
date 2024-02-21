@@ -1,4 +1,4 @@
-import { ComponentDef, FormDefinition } from "@xgovformbuilder/model";
+import { ComponentDef, FormDefinition } from "@defra/forms-model";
 import { Path } from "../../reducers/data/types";
 import { findPage } from "../page";
 

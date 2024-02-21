@@ -5,7 +5,7 @@ import {
   getOperatorConfig,
   relativeDateOrTimeOperatorNames,
   ConditionValue,
-} from "@xgovformbuilder/model";
+} from "@defra/forms-model";
 import RelativeTimeValues from "./inline-conditions-relative-dates";
 import { AbsoluteDateValues } from "./AbsoluteDateValues";
 import { AbsoluteDateTimeValues } from "./AbsoluteDateTimeValues";
