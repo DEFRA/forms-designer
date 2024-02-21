@@ -12,11 +12,11 @@ Clone this repo
 
 Install dependencies
 
-`$ yarn`
+`$ npm ci`
 
 To run the server and client apps locally, for development:
 
-`$ yarn dev`
+`$ npm run dev`
 
 Open your browser at
 
@@ -28,7 +28,7 @@ If there is a .env file present, these will be loaded in first.
 
 To symlink an external .env file, for example inside a [Keybase](https://keybase.io) folder:
 
-`yarn run symlink-env /location/of/.env`.
+`npm run symlink-env /location/of/.env`.
 
 `symlink-config` accepts two variables, ENV_LOC and LINK_TO. If the file location is not passed in, you will be prompted for a location.
 LINK_TO is optional, it defaults to `./${PROJECT_DIR}`.
@@ -57,13 +57,13 @@ This project currently has a combination of tests written with Hapi helpers and 
 To watch the tests:
 
 ```sh
-yarn jest --watch
+npm run jest --watch
 ```
 
 or run this in the root of the project:
 
 ```sh
-yarn designer jest --watch
+npm run designer jest --watch
 ```
 
 # Test coverage threshold
