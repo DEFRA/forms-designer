@@ -1,6 +1,7 @@
 import IoRedis from 'ioredis'
 
 import config from '../../config'
+import { createLogger } from '../helpers/logging/logger'
 
 /**
  * Setup Redis and provide a redis client
@@ -11,6 +12,8 @@ import config from '../../config'
  * @returns {Cluster | Redis}
  */
 function buildRedisClient() {
+  const logger = createLogger()
+
   const port = 6379
   const db = 0
   let redisClient
@@ -45,16 +48,16 @@ function buildRedisClient() {
   // TODO add proper logger
 
   redisClient.on('connect', () => {
-    console.log('Connected to Redis server')
+    logger.info('Connected to Redis server')
   })
 
   redisClient.on('close', () => {
-    console.log('Redis connection closed attempting reconnect')
+    logger.info('Redis connection closed attempting reconnect')
     redisClient.connect()
   })
 
   redisClient.on('error', (error) => {
-    console.log(`Redis connection error ${error}`)
+    logger.error(`Redis connection error ${error}`)
   })
 
   return redisClient
