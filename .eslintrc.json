@@ -28,7 +28,6 @@
     "smoke-tests/designer/features/*.feature",
     "*.md",
     ".eslintrc.json",
-    "yarn.lock",
     "*.scss"
   ],
   "overrides": [

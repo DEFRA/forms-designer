@@ -6,8 +6,5 @@
 */README.md
 **/node_modules
 **/dist
-**/.yarn/build-state.yml
-**/.yarn/install-state.gz
-**/.yarn/cache
 *.jest.*
 jest
