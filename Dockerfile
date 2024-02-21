@@ -16,10 +16,9 @@ EXPOSE ${PORT} ${PORT_DEBUG}
 
 WORKDIR /home/node/app
 
-COPY --chown=node:node ./designer/package.json ./designer/install_model.sh ./designer/
+COPY --chown=node:node ./designer/package.json ./designer/
 WORKDIR /home/node/app/designer
 
-RUN bash install_model.sh
 RUN npm install
 
 WORKDIR /home/node/app
