@@ -63,7 +63,7 @@ function buildRedisClient() {
   })
 
   redisClient.on('error', (error) => {
-    logger.error(`Redis connection error ${error}`)
+    logger.error(error, `Redis connection error ${error}.`)
   })
 
   return redisClient
