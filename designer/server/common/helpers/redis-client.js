@@ -19,12 +19,18 @@ function buildRedisClient() {
   let redisClient
 
   if (config.useSingleInstanceCache) {
+    logger.info("Connecting to Redis using single instance");
+    
     redisClient = new IoRedis({
+      username: config.redisUsername,
+      password: config.redisPassword,
       port,
       host: config.redisHost,
       db
     })
   } else {
+    logger.info("Connecting to Redis using cluster");
+
     redisClient = new IoRedis.Cluster(
       [
         {
