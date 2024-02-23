@@ -16,22 +16,21 @@ EXPOSE ${PORT} ${PORT_DEBUG}
 
 WORKDIR /home/node/app
 
+COPY --chown=node:node ./packag*.json ./
 COPY --chown=node:node ./designer/package.json ./designer/
-WORKDIR /home/node/app/designer
+COPY --chown=node:node ./model/package.json ./model/
+COPY --chown=node:node ./queue-model/package.json ./queue-model/
 
-RUN npm install
+RUN npm ci
 
-WORKDIR /home/node/app
 COPY --chown=node:node ./ ./
-WORKDIR /home/node/app/designer
-
-RUN npm install
 
 CMD [ "npm", "run", "dev" ]
 
 FROM development as productionBuild
 
-WORKDIR /home/node/app/designer
+WORKDIR /home/node/app
+
 ENV NODE_ENV production
 
 RUN npm run build
@@ -50,11 +49,10 @@ USER node
 ARG PARENT_VERSION
 LABEL uk.gov.defra.ffc.parent-image=defradigital/node:${PARENT_VERSION}
 
-COPY --from=productionBuild /home/node/app/designer/package*.json ./
-COPY --from=productionBuild /home/node/app/designer/node_modules ./node_modules
-COPY --from=productionBuild /home/node/app/designer/dist ./dist
-COPY --from=productionBuild /home/node/app/designer/bin ./bin
-COPY --from=productionBuild /home/node/app/designer/server ./server
+COPY --from=productionBuild /home/node/app/packag*.json ./
+COPY --from=productionBuild /home/node/app/node_modules ./node_modules
+COPY --from=productionBuild /home/node/app/designer/dist ./designer/dist
+COPY --from=productionBuild /home/node/app/designer/package.json ./designer/package.json
 
 ARG PORT
 ENV PORT ${PORT}

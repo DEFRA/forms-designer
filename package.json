@@ -1,0 +1,24 @@
+{
+  "name": "forms-designer",
+  "private": true,
+  "description": "Defra forms designer",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DEFRA/forms-designer.git"
+  },
+  "license": "OGL-UK-3.0",
+  "workspaces": [
+    "model",
+    "queue-model",
+    "designer"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "dev": "npm run dev --workspace designer",
+    "start": "npm run start --workspace designer"
+  },
+  "engines": {
+    "node": "^20.9.0",
+    "npm": "^10.1.0"
+  }
+}

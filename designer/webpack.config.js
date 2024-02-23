@@ -35,7 +35,6 @@ const formDesignerClient = {
   },
   resolve: {
     extensions: [".js", ".jsx", ".ts", ".tsx"],
-    modules: [path.resolve(__dirname, "node_modules")],
   },
   node: {
     __dirname: false,
@@ -74,6 +73,7 @@ const formDesignerClient = {
             loader: "sass-loader",
             options: {
               sassOptions: {
+                includePaths: [__dirname, path.resolve(__dirname, "../")],
                 outputStyle: "expanded",
               },
             },
@@ -241,8 +241,7 @@ const server = {
     filename: "server.js",
   },
   resolve: {
-    extensions: [".js", ".jsx", ".ts", ".tsx"],
-    modules: [path.resolve(__dirname, "node_modules")],
+    extensions: [".js", ".jsx", ".ts", ".tsx"]
   },
   node: {
     __dirname: false,
@@ -267,10 +266,14 @@ const server = {
   },
   externals: [
     nodeExternals({
+      additionalModuleDirs: [path.resolve(__dirname, "../node_modules")],
       modulesDir: path.resolve(__dirname, "node_modules"),
       allowlist: [/^@defra\//],
     }),
   ],
+  externalsPresets: {
+    node: true,
+  },
 };
 
 

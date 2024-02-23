@@ -7,7 +7,6 @@ import { context } from './context'
 import * as filters from './filters'
 import * as globals from './globals'
 
-
 const nunjucksEnvironment = nunjucks.configure(
   [
     // bodge for legacy views. TODO replace.
@@ -15,7 +14,9 @@ const nunjucksEnvironment = nunjucks.configure(
     path.normalize(
       path.resolve(__dirname, '..', 'dist', 'client', 'common', 'templates')
     ),
-    'node_modules/govuk-frontend/',
+    path.normalize(
+      path.resolve(__dirname, '..', '..', 'node_modules', 'govuk-frontend')
+    ),
     path.normalize(
       path.resolve(__dirname, '..', 'server', 'common', 'templates')
     ),
