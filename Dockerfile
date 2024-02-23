@@ -1,13 +1,10 @@
-ARG PARENT_VERSION=2.2.0-node20.3.0
+ARG PARENT_VERSION=2.2.1-node20.9.0
 ARG PORT=3000
 ARG PORT_DEBUG=9229
 
 FROM defradigital/node-development:${PARENT_VERSION} AS development
 
 ENV TZ="Europe/London"
-
-# FIXME
-ENV NODE_OPTIONS="--openssl-legacy-provider"
 
 ARG PARENT_VERSION
 LABEL uk.gov.defra.ffc.parent-image=defradigital/node-development:${PARENT_VERSION}
