@@ -49,6 +49,8 @@ USER node
 ARG PARENT_VERSION
 LABEL uk.gov.defra.ffc.parent-image=defradigital/node:${PARENT_VERSION}
 
+WORKDIR /home/node/app
+
 COPY --from=productionBuild /home/node/app/packag*.json ./
 COPY --from=productionBuild /home/node/app/node_modules ./node_modules
 COPY --from=productionBuild /home/node/app/designer/dist ./designer/dist
