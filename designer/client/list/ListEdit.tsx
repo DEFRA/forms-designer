@@ -1,5 +1,5 @@
 import ListItems from "./ListItems";
-import { Input } from "@govuk-jsx/input";
+import { Input } from "@xgovformbuilder/govuk-react-jsx";
 import React, { useContext } from "react";
 import { ListActions } from "../reducers/listActions";
 import { i18n } from "../i18n";

@@ -1,6 +1,6 @@
 import React from "react";
 import SelectConditions from "./conditions/SelectConditions";
-import { ErrorMessage } from "@govuk-jsx/error-message";
+import { ErrorMessage } from "@xgovformbuilder/govuk-react-jsx";
 import { clone } from "@defra/forms-model";
 import classNames from "classnames";
 

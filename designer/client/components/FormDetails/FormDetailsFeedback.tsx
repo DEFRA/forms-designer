@@ -1,6 +1,5 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
-import { Radios } from "@govuk-jsx/radios";
-import { Label } from "@govuk-jsx/label";
+import { Label, Radios } from "@xgovformbuilder/govuk-react-jsx";
 import { FormConfiguration } from "@defra/forms-model";
 
 import { i18n } from "../../i18n";

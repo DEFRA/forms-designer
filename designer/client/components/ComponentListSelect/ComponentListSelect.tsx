@@ -2,7 +2,7 @@ import { ListActions } from "../../reducers/listActions";
 import { DataContext } from "../../context";
 import React, { useContext, useEffect, useState } from "react";
 import { ComponentContext } from "../../reducers/component/componentReducer";
-import { Label } from "@govuk-jsx/label";
+import { Label } from "@xgovformbuilder/govuk-react-jsx";
 import { i18n } from "../../i18n";
 import { ListContext } from "../../reducers/listReducer";
 import {

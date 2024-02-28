@@ -1,10 +1,5 @@
 const path = require("path");
 
-const reactJsxPath = path.join(
-  path.dirname(require.resolve("@xgovformbuilder/govuk-react-jsx")),
-  "/components"
-);
-
 module.exports = {
   sourceType: "unambiguous", // https://github.com/webpack/webpack/issues/4039#issuecomment-564812879
   presets: [
@@ -28,13 +23,5 @@ module.exports = {
     "@babel/plugin-transform-nullish-coalescing-operator",
     "@babel/plugin-transform-logical-assignment-operators",
     "@babel/plugin-transform-optional-chaining",
-    [
-      "module-resolver",
-      {
-        alias: {
-          "@govuk-jsx": reactJsxPath,
-        },
-      },
-    ],
   ],
 };

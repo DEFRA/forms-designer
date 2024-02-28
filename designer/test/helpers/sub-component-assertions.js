@@ -1,4 +1,4 @@
-import { Input } from "@govuk-jsx/input";
+import { Input } from "@xgovformbuilder/govuk-react-jsx";
 import * as Code from "@hapi/code";
 
 const { expect } = Code;

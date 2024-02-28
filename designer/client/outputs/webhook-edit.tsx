@@ -1,6 +1,6 @@
 import React from "react";
 import { ValidationErrors } from "./types";
-import { Input } from "@govuk-jsx/input";
+import { Input } from "@xgovformbuilder/govuk-react-jsx";
 
 type Props = {
   url: string;

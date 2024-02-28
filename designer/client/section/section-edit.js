@@ -1,8 +1,7 @@
 import React from "react";
 import randomId from "../randomId";
 import { i18n, withI18n } from "../i18n";
-import { Input } from "@govuk-jsx/input";
-import { Checkboxes } from "@xgovformbuilder/govuk-react-jsx";
+import { Checkboxes, Input } from "@xgovformbuilder/govuk-react-jsx";
 import {
   validateName,
   validateTitle,

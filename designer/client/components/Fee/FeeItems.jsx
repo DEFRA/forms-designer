@@ -1,6 +1,6 @@
 import React from "react";
 import { clone } from "@defra/forms-model";
-import { ErrorMessage } from "@govuk-jsx/error-message";
+import { ErrorMessage } from "@xgovformbuilder/govuk-react-jsx";
 import classNames from "classnames";
 
 import { isEmpty } from "../../helpers";

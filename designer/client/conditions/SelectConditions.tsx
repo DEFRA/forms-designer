@@ -2,8 +2,7 @@ import React, { ChangeEvent } from "react";
 import InlineConditions from "./InlineConditions";
 import { Condition, ConditionsModel, Data } from "@defra/forms-model";
 import { Flyout } from "../components/Flyout";
-import { Select } from "@govuk-jsx/select";
-import { Hint } from "@govuk-jsx/hint";
+import { Hint, Select } from "@xgovformbuilder/govuk-react-jsx";
 import { i18n } from "../i18n";
 import { DataContext } from "../context";
 import { RenderInPortal } from "../components/RenderInPortal";
@@ -20,6 +19,7 @@ import {
   getFieldNameSubstring,
   conditionsByType,
 } from "./select-condition-helpers";
+
 interface Props {
   path: string;
   data: Data;

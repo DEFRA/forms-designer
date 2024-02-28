@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { ComponentContext } from "../../reducers/component/componentReducer";
 import { Actions } from "../../reducers/component/types";
-import { Input } from "@govuk-jsx/input";
+import { Input } from "@xgovformbuilder/govuk-react-jsx";
 import { withI18n } from "../../i18n";
 import classNames from "classnames";
 import { ErrorMessage } from "../ErrorMessage";

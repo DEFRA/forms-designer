@@ -1,7 +1,7 @@
 import { FeeItems } from "./FeeItems";
 import React from "react";
 import { clone } from "@defra/forms-model";
-import { Input } from "@govuk-jsx/input";
+import { Input } from "@xgovformbuilder/govuk-react-jsx";
 
 import ErrorSummary from "./../../error-summary";
 import { DataContext } from "../../context";

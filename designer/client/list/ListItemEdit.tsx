@@ -1,9 +1,6 @@
 import React, { memo, useContext } from "react";
 import { i18n } from "./../i18n";
-import { Input } from "@govuk-jsx/input";
-import { Textarea } from "@govuk-jsx/textarea";
-import { Label } from "@govuk-jsx/label";
-import { Hint } from "@govuk-jsx/hint";
+import { Hint, Input, Label, Textarea } from "@xgovformbuilder/govuk-react-jsx";
 import { DataContext } from "../context";
 import {
   ListsEditorContext,

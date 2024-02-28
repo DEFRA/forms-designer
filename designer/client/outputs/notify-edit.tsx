@@ -2,9 +2,7 @@ import React, { Component } from "react";
 
 import NotifyEditItems from "./notify-edit-items";
 import { Output, NotifyOutputConfiguration, ValidationErrors } from "./types";
-import { Input } from "@govuk-jsx/input";
-import { Checkboxes } from "@govuk-jsx/checkboxes";
-import { ErrorMessage } from "@govuk-jsx/error-message";
+import { Checkboxes, ErrorMessage, Input } from "@xgovformbuilder/govuk-react-jsx";
 import classNames from "classnames";
 import { i18n } from "../i18n";
 import { allInputs } from "../data/component/inputs";

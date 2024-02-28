@@ -1,7 +1,7 @@
 import React, { ReactElement, useState } from "react";
 import { i18n } from "../../i18n";
 import { withRouter } from "react-router-dom";
-import { Radios } from "@govuk-jsx/radios";
+import { Radios } from "@xgovformbuilder/govuk-react-jsx";
 import "./LandingPage.scss";
 
 interface Props {

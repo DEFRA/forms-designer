@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import NotifyEdit from "./notify-edit";
 import EmailEdit from "./email-edit";
-import { Input } from "@govuk-jsx/input";
+import { Input } from "@xgovformbuilder/govuk-react-jsx";
 import WebhookEdit from "./webhook-edit";
 import {
   OutputType,

@@ -61,17 +61,6 @@ internals.transform = function (content, filename) {
       "@babel/plugin-transform-runtime",
       "@babel/plugin-syntax-dynamic-import",
       [
-        "module-resolver",
-        {
-          alias: {
-            "@govuk-jsx": path.join(
-              path.dirname(require.resolve("@xgovformbuilder/govuk-react-jsx")),
-              "/components"
-            ),
-          },
-        },
-      ],
-      [
         "babel-plugin-transform-import-ignore",
         {
           patterns: [".css", ".scss", "wildcard/*/match.css"],
