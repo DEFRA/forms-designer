@@ -108,10 +108,10 @@ const formDesignerClient = {
     new MiniCssExtractPlugin({
       filename: devMode
         ? "assets/css/[name].css"
-        : "assets/css/[name].[hash].css",
+        : "assets/css/[name].[contenthash].css",
       chunkFilename: devMode
         ? "assets/css/[id].css"
-        : "assets/css/[id].[hash].css",
+        : "assets/css/[id].[contenthash].css",
     }),
     new CopyPlugin({
       patterns: [
