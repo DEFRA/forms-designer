@@ -20,7 +20,9 @@ module.exports = (api) => {
         '@babel/preset-env',
         {
           browserslistEnv,
+          bugfixes: true,
           corejs: pkg.dependencies['core-js'],
+          modules: browserslistEnv === 'node' ? 'auto' : 'commonjs',
           useBuiltIns: 'usage'
         }
       ]
