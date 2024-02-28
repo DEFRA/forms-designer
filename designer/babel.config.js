@@ -1,17 +1,30 @@
 const pkg = require('./package.json')
 
-module.exports = {
-  presets: [
-    '@babel/typescript',
-    '@babel/preset-react',
-    [
-      '@babel/preset-env',
-      {
-        browserslistEnv: 'javascripts',
-        corejs: pkg.dependencies['core-js'],
-        useBuiltIns: 'usage'
-      }
-    ]
-  ],
-  plugins: ['@babel/plugin-transform-runtime']
+const { BABEL_ENV = 'node' } = process.env
+
+/**
+ * Babel config
+ *
+ * @satisfies {import('@babel/core').ConfigFunction}
+ */
+module.exports = (api) => {
+  const browserslistEnv = api.caller((caller) =>
+    caller?.target === 'web' ? 'javascripts' : BABEL_ENV
+  )
+
+  return {
+    presets: [
+      '@babel/typescript',
+      '@babel/preset-react',
+      [
+        '@babel/preset-env',
+        {
+          browserslistEnv,
+          corejs: pkg.dependencies['core-js'],
+          useBuiltIns: 'usage'
+        }
+      ]
+    ],
+    plugins: ['@babel/plugin-transform-runtime']
+  }
 }

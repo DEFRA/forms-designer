@@ -136,6 +136,7 @@ const formDesignerClient = {
 };
 
 const client = {
+  target: "web",
   entry: {
     application: './client/assets/javascripts/application.js'
   },
@@ -164,12 +165,7 @@ const client = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: [['@babel/preset-env', { targets: 'defaults' }]]
-          }
-        }
+        loader: 'babel-loader'
       },
       {
         test: /\.(?:s[ac]|c)ss$/i,
