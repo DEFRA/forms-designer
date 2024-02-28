@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "A hapi plugin to provide the queue model for Defra form builder based applications using the queue service",
   "main": "dist/module/index.js",
+  "types": "dist/module/index.d.ts",
   "engines": {
     "node": "^20.9.0",
     "npm": "^10.1.0"

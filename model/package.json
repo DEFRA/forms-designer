@@ -3,7 +3,8 @@
   "version": "3.0.0",
   "description": "A hapi plugin providing the model for XGov digital form builder based applications",
   "main": "dist/module/index.js",
-  "browser": "./dist/browser/index.js",
+  "browser": "dist/browser/index.js",
+  "types": "dist/module/index.d.ts",
   "engines": {
     "node": "^20.9.0",
     "npm": "^10.1.0"
