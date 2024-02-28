@@ -26,9 +26,9 @@ const sessionCookie = {
         validate: async (request, session) => {
           const authedUser = await request.getUserSession()
 
-          const tokenHasExpired = isPast(
-            subMinutes(parseISO(authedUser.expiresAt), 1)
-          )
+          const tokenHasExpired = authedUser?.expiresAt
+            ? isPast(subMinutes(parseISO(authedUser.expiresAt), 1))
+            : true
 
           if (tokenHasExpired) {
             const response = await refreshAccessToken(request)
