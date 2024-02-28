@@ -6,6 +6,9 @@ const { BABEL_ENV = 'node' } = process.env
  * @satisfies {import('@babel/core').TransformOptions}
  */
 module.exports = {
+  assumptions: {
+    enumerableModuleMeta: true
+  },
   presets: [
     '@babel/typescript',
     [
