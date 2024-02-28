@@ -75,6 +75,7 @@ const formDesignerClient = {
               sassOptions: {
                 includePaths: [__dirname, path.resolve(__dirname, "../")],
                 outputStyle: "expanded",
+                quietDeps: true
               },
             },
           },
