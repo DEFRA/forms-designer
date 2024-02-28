@@ -44,9 +44,8 @@ const formDesignerClient = {
     rules: [
       {
         test: /\.(js|jsx|tsx|ts)$/,
-        use: {
-          loader: 'babel-loader'
-        },
+        exclude: /node_modules\/(?!@xgovformbuilder\/)/,
+        loader: 'babel-loader',
         resolve: {
           fullySpecified: false,
         }
