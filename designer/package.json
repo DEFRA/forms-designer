@@ -89,7 +89,6 @@
     "@babel/preset-react": "^7.23.3",
     "@babel/preset-typescript": "^7.23.3",
     "@babel/register": "^7.22.15",
-    "@babel/runtime": "^7.23.3",
     "@hapi/code": "^8.0.7",
     "@hapi/eslint-plugin": "^6.0.0",
     "@hapi/lab": "^24.5.1",

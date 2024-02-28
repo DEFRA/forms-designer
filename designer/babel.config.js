@@ -26,7 +26,6 @@ module.exports = (api) => {
           useBuiltIns: 'usage'
         }
       ]
-    ],
-    plugins: ['@babel/plugin-transform-runtime']
+    ]
   }
 }
