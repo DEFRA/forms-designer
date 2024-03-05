@@ -66,7 +66,7 @@ const schema = joi.object({
   azureClientId: joi.string().optional(),
   azureClientSecret: joi.string().optional(),
   oidcWellKnownConfigurationUrl: joi.string().optional(),
-  appBaseUrl: joi.string().optional().default("http://localhost:3000/forms-designer"),
+  appBaseUrl: joi.string().optional().default("http://localhost:3000"),
   useSingleInstanceCache: joi.string().optional().default(false),
   redisHost: joi.string(),
   redisUsername: joi.string(),
