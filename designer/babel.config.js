@@ -22,7 +22,7 @@ module.exports = (api) => {
           browserslistEnv,
           bugfixes: true,
           corejs: pkg.dependencies['core-js'],
-          modules: browserslistEnv === 'node' ? 'auto' : 'commonjs',
+          modules: browserslistEnv === 'node' ? 'auto' : 'umd',
           useBuiltIns: 'usage'
         }
       ]
