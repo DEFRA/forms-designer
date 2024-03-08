@@ -16,7 +16,7 @@
     "build": "npm run build:prisma && npm run build:types && npm run build:node",
     "build:prisma": "prisma generate",
     "migrate": "prisma migrate dev",
-    "build:node": "BABEL_ENV=node babel --extensions '.ts' --ignore '**/*.(jt)est.*' src --out-dir dist/module --copy-files",
+    "build:node": "BABEL_ENV=node babel --extensions \".ts\" --ignore \"**/*.(jt)est.*\" src --out-dir dist/module --copy-files",
     "build:types": "tsc --emitDeclarationOnly"
   },
   "devDependencies": {
