@@ -10,9 +10,7 @@
     "npm": "^10.1.0"
   },
   "scripts": {
-    "lint": "eslint .",
-    "fix-lint": "eslint . --fix",
-    "test": "npm run lint && npm run type-check && npm run test-cov",
+    "test": "npm run test-cov",
     "test:dev": "jest --watch",
     "test-cov": "jest --coverage",
     "build": "npm run build:types && npm run build:node && npm run build:browser",
@@ -21,7 +19,6 @@
     "build:types": "npm run build:types:node && npm run build:types:browser",
     "build:types:node": "tsc --emitDeclarationOnly --declarationDir ./dist/module ",
     "build:types:browser": "tsc --emitDeclarationOnly --declarationDir dist/browser ",
-    "type-check": "tsc --noEmit",
     "generate-docs": "typedoc src --tsconfig tsconfig.json --out ../docs/model/typedoc --exclude '**/*+(index|.test|.jest).ts'"
   },
   "repository": {

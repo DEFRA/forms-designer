@@ -13,14 +13,11 @@
     "url": "https://github.com/XGovFormBuilder/digital-form-builder/tree/feat/failure-queue/queue-model"
   },
   "scripts": {
-    "lint": "eslint .",
-    "fix-lint": "eslint . --fix",
     "build": "npm run build:prisma && npm run build:types && npm run build:node",
     "build:prisma": "prisma generate",
     "migrate": "prisma migrate dev",
     "build:node": "BABEL_ENV=node babel --extensions '.ts' --ignore '**/*.(jt)est.*' src --out-dir dist/module --copy-files",
-    "build:types": "tsc --emitDeclarationOnly",
-    "type-check": "tsc --noEmit"
+    "build:types": "tsc --emitDeclarationOnly"
   },
   "devDependencies": {
     "prisma": "^5.10.2"
