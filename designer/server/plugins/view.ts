@@ -1,7 +1,7 @@
 import path from "path";
 import resolve from "resolve";
 import nunjucks from "nunjucks";
-import vision from "vision";
+import hapiVision from "@hapi/vision";
 
 import pkg from "../../package.json";
 
@@ -10,7 +10,7 @@ import config from "../config";
 const basedir = path.join(process.cwd());
 
 export const viewPlugin = {
-  plugin: vision,
+  plugin: hapiVision,
   options: {
     engines: {
       html: {

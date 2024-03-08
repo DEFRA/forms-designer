@@ -21,7 +21,7 @@ module.exports = (api) => {
         {
           browserslistEnv,
           bugfixes: true,
-          corejs: pkg.dependencies['core-js'],
+          corejs: pkg.devDependencies['core-js'],
           modules: browserslistEnv === 'node' ? 'auto' : 'commonjs',
           useBuiltIns: 'usage'
         }

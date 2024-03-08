@@ -56,9 +56,8 @@ const formDesignerClient = {
           {
             loader: MiniCssExtractPlugin.loader,
             options: {
-              hmr: devMode,
-              reloadAll: true,
               publicPath: "../../",
+              esModule: false
             },
           },
           {
