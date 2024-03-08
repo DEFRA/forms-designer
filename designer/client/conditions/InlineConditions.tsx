@@ -1,246 +1,241 @@
-import React, { MouseEvent, ChangeEvent } from "react";
-import classNames from "classnames";
-import { ConditionsModel, clone, Item } from "@defra/forms-model";
+import React, { MouseEvent, ChangeEvent } from 'react'
+import classNames from 'classnames'
+import { ConditionsModel, clone, Item } from '@defra/forms-model'
 
-import InlineConditionsDefinition from "./InlineConditionsDefinition";
-import InlineConditionsEdit from "./inline-conditions-edit";
-import { DataContext } from "../context";
-import ErrorSummary, { ErrorListItem } from "../error-summary";
-import { i18n } from "../i18n";
-import { ErrorMessage } from "../components/ErrorMessage";
+import InlineConditionsDefinition from './InlineConditionsDefinition'
+import InlineConditionsEdit from './inline-conditions-edit'
+import { DataContext } from '../context'
+import ErrorSummary, { ErrorListItem } from '../error-summary'
+import { i18n } from '../i18n'
+import { ErrorMessage } from '../components/ErrorMessage'
 import {
   addCondition,
   allInputs,
   findList,
   inputsAccessibleAt,
   removeCondition,
-  updateCondition,
-} from "../data";
-import randomId from "../randomId";
+  updateCondition
+} from '../data'
+import randomId from '../randomId'
 
 interface Props {
-  path: string;
-  condition?: any;
-  cancelCallback?: (event: MouseEvent) => void;
-  conditionsChange?: (event: MouseEvent) => void;
+  path: string
+  condition?: any
+  cancelCallback?: (event: MouseEvent) => void
+  conditionsChange?: (event: MouseEvent) => void
 }
 
 interface State {
-  editView?: boolean;
-  conditions: ConditionsModel;
-  fields: any;
-  conditionString: any;
-  validationErrors: ErrorListItem[];
+  editView?: boolean
+  conditions: ConditionsModel
+  fields: any
+  conditionString: any
+  validationErrors: ErrorListItem[]
 }
 
 const yesNoValues: Readonly<Item> = [
   {
-    text: "Yes",
-    value: true,
+    text: 'Yes',
+    value: true
   },
   {
-    text: "No",
-    value: false,
-  },
-];
+    text: 'No',
+    value: false
+  }
+]
 
 export class InlineConditions extends React.Component<Props, State> {
-  static contextType = DataContext;
+  static contextType = DataContext
 
   constructor(props, context) {
-    super(props, context);
-    const { path, condition } = this.props;
+    super(props, context)
+    const { path, condition } = this.props
 
     const conditions =
-      condition && typeof condition.value === "object"
+      condition && typeof condition.value === 'object'
         ? ConditionsModel.from(condition.value)
-        : new ConditionsModel();
+        : new ConditionsModel()
 
-    conditions.name &&= condition.displayName;
+    conditions.name &&= condition.displayName
 
     this.state = {
       validationErrors: [],
       conditions,
       fields: this.fieldsForPath(path),
-      conditionString: condition?.value,
-    };
+      conditionString: condition?.value
+    }
   }
 
   componentDidUpdate = (prevProps) => {
     if (this.props.path !== prevProps.path) {
-      const fields = this.fieldsForPath(this.props.path);
+      const fields = this.fieldsForPath(this.props.path)
 
       this.setState({
         conditions: new ConditionsModel(),
         fields,
-        editView: false,
-      });
+        editView: false
+      })
     }
-  };
+  }
 
   fieldsForPath = (path) => {
-    const { data } = this.context;
+    const { data } = this.context
 
-    const inputs = path ? inputsAccessibleAt(data, path) : allInputs(data);
+    const inputs = path ? inputsAccessibleAt(data, path) : allInputs(data)
 
     const fieldInputs = inputs.map((input) => {
       const label = [
         data.sections?.[input.page.section]?.title,
-        input.title ?? input.name,
+        input.title ?? input.name
       ]
         .filter((p) => p)
-        .join(" ");
+        .join(' ')
 
-      let list;
+      let list
       if (input.list) {
-        list = findList(data, input.list);
+        list = findList(data, input.list)
       }
 
-      const values =
-        `${input.type}` == "YesNoField" ? yesNoValues : list?.items;
+      const values = `${input.type}` == 'YesNoField' ? yesNoValues : list?.items
 
       return {
         label,
         name: input.propertyPath,
         type: input.type,
-        values,
-      };
-    });
+        values
+      }
+    })
     const conditionsInputs = data.conditions.map((condition) => ({
       label: condition.displayName,
       name: condition.name,
-      type: "Condition",
-    }));
+      type: 'Condition'
+    }))
 
     return fieldInputs.concat(conditionsInputs).reduce((obj, item) => {
-      obj[item.name] = item;
-      return obj;
-    }, {});
-  };
+      obj[item.name] = item
+      return obj
+    }, {})
+  }
 
   toggleEdit = () => {
     this.setState({
-      editView: !this.state.editView,
-    });
-  };
+      editView: !this.state.editView
+    })
+  }
 
   onClickCancel = (e: MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    const { cancelCallback } = this.props;
+    e.preventDefault()
+    const { cancelCallback } = this.props
     this.setState({
       conditions: this.state.conditions.clear(),
-      editView: false,
-    });
+      editView: false
+    })
     if (cancelCallback) {
-      cancelCallback(e);
+      cancelCallback(e)
     }
-  };
+  }
 
   onClickSave = async (event: MouseEvent<HTMLAnchorElement>) => {
-    event?.preventDefault();
-    const { conditionsChange, condition } = this.props;
-    const { data, save } = this.context;
-    const { conditions } = this.state;
+    event?.preventDefault()
+    const { conditionsChange, condition } = this.props
+    const { data, save } = this.context
+    const { conditions } = this.state
 
-    const nameError = this.validateName();
+    const nameError = this.validateName()
 
     if (nameError) {
-      return;
+      return
     }
 
     if (condition) {
-      const updatedData = updateCondition(data, condition.name, conditions);
-      await save(updatedData);
+      const updatedData = updateCondition(data, condition.name, conditions)
+      await save(updatedData)
       if (conditionsChange) {
-        conditionsChange(event);
+        conditionsChange(event)
       }
     } else if (conditions.hasConditions) {
       const updatedData = addCondition(data, {
         displayName: conditions.name!,
         name: randomId(),
-        value: conditions.toJSON(),
-      });
+        value: conditions.toJSON()
+      })
 
-      await save(updatedData);
+      await save(updatedData)
       if (conditionsChange) {
-        conditionsChange(event);
+        conditionsChange(event)
       }
     }
-  };
+  }
 
   onClickDelete = async (event: MouseEvent<HTMLAnchorElement>) => {
-    event?.preventDefault();
-    const { data, save } = this.context;
-    const { cancelCallback, condition } = this.props;
+    event?.preventDefault()
+    const { data, save } = this.context
+    const { cancelCallback, condition } = this.props
 
-    const updatedData = removeCondition(data, condition.name);
-    await save(updatedData);
+    const updatedData = removeCondition(data, condition.name)
+    await save(updatedData)
     if (cancelCallback) {
-      cancelCallback(event);
+      cancelCallback(event)
     }
-  };
+  }
 
   saveCondition = (condition) => {
     this.setState({
-      conditions: this.state.conditions.add(condition),
-    });
-  };
+      conditions: this.state.conditions.add(condition)
+    })
+  }
 
   editCallback = (conditions) => {
     this.setState({
-      conditions,
-    });
-  };
+      conditions
+    })
+  }
 
   onChangeDisplayName = (e: ChangeEvent<HTMLInputElement>) => {
-    const copy = clone(this.state.conditions);
-    copy.name = e.target.value;
+    const copy = clone(this.state.conditions)
+    copy.name = e.target.value
     this.setState({
-      conditions: copy,
-    });
-  };
+      conditions: copy
+    })
+  }
 
   validateName = () => {
     const nameError: ErrorListItem = {
-      href: "#cond-name",
-      children: i18n("conditions.enterName"),
-    };
-    const { validationErrors } = this.state;
+      href: '#cond-name',
+      children: i18n('conditions.enterName')
+    }
+    const { validationErrors } = this.state
     const otherErrors = validationErrors.filter(
       (error) => error.href !== nameError.href
-    );
+    )
 
     if (!this.state.conditions.name) {
       this.setState({
-        validationErrors: [...otherErrors, nameError],
-      });
+        validationErrors: [...otherErrors, nameError]
+      })
 
-      return true;
+      return true
     }
 
-    this.setState({ validationErrors: otherErrors });
-    return false;
-  };
+    this.setState({ validationErrors: otherErrors })
+    return false
+  }
 
   render() {
-    const {
-      conditions,
-      editView,
-      conditionString,
-      validationErrors,
-    } = this.state;
-    const hasConditions = conditions.hasConditions;
+    const { conditions, editView, conditionString, validationErrors } =
+      this.state
+    const hasConditions = conditions.hasConditions
 
     const nameError = validationErrors.filter(
-      (error) => error.href === "#cond-name"
-    )[0];
-    const hasErrors = !!validationErrors.length;
+      (error) => error.href === '#cond-name'
+    )[0]
+    const hasErrors = !!validationErrors.length
 
     return (
-      <div id="inline-conditions" data-testid={"inline-conditions"}>
+      <div id="inline-conditions" data-testid={'inline-conditions'}>
         <div id="inline-condition-header">
-          <div className="govuk-hint">{i18n("conditions.addOrEditHint")}</div>
-          {typeof conditionString === "string" && (
+          <div className="govuk-hint">{i18n('conditions.addOrEditHint')}</div>
+          {typeof conditionString === 'string' && (
             <div
               id="condition-string-edit-warning"
               className="govuk-warning-text"
@@ -250,10 +245,10 @@ export class InlineConditions extends React.Component<Props, State> {
               </span>
               <strong className="govuk-warning-text__text">
                 <span className="govuk-warning-text__assistive">
-                  {i18n("warning")}
+                  {i18n('warning')}
                 </span>
-                {i18n("conditions.youCannotEditWarning", {
-                  conditionString,
+                {i18n('conditions.youCannotEditWarning', {
+                  conditionString
                 })}
               </strong>
             </div>
@@ -261,20 +256,20 @@ export class InlineConditions extends React.Component<Props, State> {
           <div>
             {hasErrors && <ErrorSummary errorList={validationErrors} />}
             <div
-              className={classNames("govuk-form-group", {
-                "govuk-form-group--error": nameError,
+              className={classNames('govuk-form-group', {
+                'govuk-form-group--error': nameError
               })}
             >
               <label className="govuk-label govuk-label--s" htmlFor="cond-name">
-                {i18n("conditions.displayName")}
+                {i18n('conditions.displayName')}
               </label>
               <div className="govuk-hint">
-                {i18n("conditions.displayNameHint")}
+                {i18n('conditions.displayNameHint')}
               </div>
               {nameError && <ErrorMessage>{nameError?.children}</ErrorMessage>}
               <input
-                className={classNames("govuk-input govuk-input--width-20", {
-                  "govuk-input--error": nameError,
+                className={classNames('govuk-input govuk-input--width-20', {
+                  'govuk-input--error': nameError
                 })}
                 id="cond-name"
                 name="cond-name"
@@ -290,10 +285,10 @@ export class InlineConditions extends React.Component<Props, State> {
                 id="condition-string-label"
                 htmlFor="condition-string"
               >
-                {i18n("conditions.when")}
+                {i18n('conditions.when')}
               </label>
             </div>
-            <div className="govuk-hint">{i18n("conditions.whenHint")}</div>
+            <div className="govuk-hint">{i18n('conditions.whenHint')}</div>
           </div>
           {hasConditions && (
             <div id="conditions-display" className="govuk-body">
@@ -307,11 +302,11 @@ export class InlineConditions extends React.Component<Props, State> {
                     id="edit-conditions-link"
                     className="govuk-link"
                     onClick={(e) => {
-                      e.preventDefault();
-                      this.toggleEdit();
+                      e.preventDefault()
+                      this.toggleEdit()
                     }}
                   >
-                    {i18n("conditions.notWhatYouMean")}
+                    {i18n('conditions.notWhatYouMean')}
                   </a>
                 </div>
               )}
@@ -334,7 +329,7 @@ export class InlineConditions extends React.Component<Props, State> {
                     className="govuk-button"
                     onClick={this.onClickSave}
                   >
-                    {i18n("save")}
+                    {i18n('save')}
                   </a>
                   {this.props.condition && (
                     <a
@@ -343,7 +338,7 @@ export class InlineConditions extends React.Component<Props, State> {
                       className="govuk-button govuk-button--warning"
                       onClick={this.onClickDelete}
                     >
-                      {i18n("delete")}
+                      {i18n('delete')}
                     </a>
                   )}
                 </>
@@ -354,7 +349,7 @@ export class InlineConditions extends React.Component<Props, State> {
                 className="govuk-link"
                 onClick={this.onClickCancel}
               >
-                {i18n("cancel")}
+                {i18n('cancel')}
               </a>
             </div>
           </div>
@@ -368,8 +363,8 @@ export class InlineConditions extends React.Component<Props, State> {
           />
         )}
       </div>
-    );
+    )
   }
 }
-InlineConditions.contextType = DataContext;
-export default InlineConditions;
+InlineConditions.contextType = DataContext
+export default InlineConditions

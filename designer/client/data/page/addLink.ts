@@ -1,6 +1,6 @@
-import { FormDefinition, Link } from "@defra/forms-model";
-import { ConditionName, Path } from "../types";
-import { findPage } from "./findPage";
+import { FormDefinition, Link } from '@defra/forms-model'
+import { ConditionName, Path } from '../types'
+import { findPage } from './findPage'
 
 /**
  * @param data - Data from DataContext
@@ -16,33 +16,33 @@ export function addLink(
   condition?: ConditionName
 ): FormDefinition {
   if (from === to) {
-    throw Error("cannot link a page to itself");
+    throw Error('cannot link a page to itself')
   }
-  const [fromPage, index] = findPage(data, from);
-  findPage(data, to);
-  const pages = [...data.pages];
+  const [fromPage, index] = findPage(data, from)
+  findPage(data, to)
+  const pages = [...data.pages]
 
-  const existingLink = fromPage.next?.find((page) => page.path === to);
+  const existingLink = fromPage.next?.find((page) => page.path === to)
 
   if (!existingLink) {
     const link: Link = {
-      path: to,
-    };
+      path: to
+    }
 
     if (condition) {
-      link.condition = condition;
+      link.condition = condition
     }
 
     const updatedPage = {
       ...fromPage,
-      next: [...(fromPage.next ?? []), link],
-    };
+      next: [...(fromPage.next ?? []), link]
+    }
 
     return {
       ...data,
-      pages: pages.map((page, i) => (i === index ? updatedPage : page)),
-    };
+      pages: pages.map((page, i) => (i === index ? updatedPage : page))
+    }
   } else {
-    return data;
+    return data
   }
 }

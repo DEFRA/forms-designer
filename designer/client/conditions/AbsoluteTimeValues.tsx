@@ -1,32 +1,32 @@
-import React from "react";
-import { isInt } from "./inline-condition-helpers";
+import React from 'react'
+import { isInt } from './inline-condition-helpers'
 
 export interface HourMinute {
-  hour: number;
-  minute: number;
+  hour: number
+  minute: number
 }
 
 export interface HourMinuteOptional {
-  hour?: number;
-  minute?: number;
+  hour?: number
+  minute?: number
 }
 
 interface Props {
-  value: HourMinuteOptional;
-  updateValue: ({ hour, minute }: HourMinute) => void;
+  value: HourMinuteOptional
+  updateValue: ({ hour, minute }: HourMinute) => void
 }
 
 export const AbsoluteTimeValues = ({ value = {}, updateValue }: Props) => {
   const [hour, setHour] = React.useState(() =>
-    isInt(value.hour) ? (value.hour as number).toString() : ""
-  );
+    isInt(value.hour) ? (value.hour as number).toString() : ''
+  )
   const [minute, setMinute] = React.useState(() =>
-    isInt(value.minute) ? (value.minute as number).toString() : ""
-  );
+    isInt(value.minute) ? (value.minute as number).toString() : ''
+  )
 
   React.useEffect(() => {
-    const parsedHour = parseInt(hour as string, 10);
-    const parsedMinute = parseInt(minute as string, 10);
+    const parsedHour = parseInt(hour as string, 10)
+    const parsedMinute = parseInt(minute as string, 10)
     if (
       isInt(hour) &&
       isInt(minute) &&
@@ -34,13 +34,13 @@ export const AbsoluteTimeValues = ({ value = {}, updateValue }: Props) => {
     ) {
       return updateValue({
         hour: parsedHour,
-        minute: parsedMinute,
-      });
+        minute: parsedMinute
+      })
     }
-  }, [hour, minute]);
+  }, [hour, minute])
 
-  const hoursChanged = (e) => setHour(e.target.value);
-  const minutesChanged = (e) => setMinute(e.target.value);
+  const hoursChanged = (e) => setHour(e.target.value)
+  const minutesChanged = (e) => setMinute(e.target.value)
 
   return (
     <div className="govuk-date-input">
@@ -90,5 +90,5 @@ export const AbsoluteTimeValues = ({ value = {}, updateValue }: Props) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

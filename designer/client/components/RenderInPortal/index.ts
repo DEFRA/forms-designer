@@ -1,1 +1,1 @@
-export { RenderInPortal } from "./RenderInPortal";
+export { RenderInPortal } from './RenderInPortal'

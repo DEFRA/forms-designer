@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 
 export const ChevronRightIcon = (props: {}) => (
   <svg
@@ -13,4 +13,4 @@ export const ChevronRightIcon = (props: {}) => (
   >
     <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z" />
   </svg>
-);
+)

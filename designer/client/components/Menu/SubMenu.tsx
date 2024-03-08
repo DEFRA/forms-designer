@@ -1,58 +1,58 @@
-import React, { useContext, useRef } from "react";
-import { DataContext } from "../../context";
-import { whichMigrations } from "@defra/forms-model";
-import logger from "../../plugins/logger";
+import React, { useContext, useRef } from 'react'
+import { DataContext } from '../../context'
+import { whichMigrations } from '@defra/forms-model'
+import logger from '../../plugins/logger'
 
 export function migrate(form) {
-  const { version = 0 } = form;
-  const migrationList = whichMigrations(version);
+  const { version = 0 } = form
+  const migrationList = whichMigrations(version)
   try {
-    let migratedJson = { ...form };
+    let migratedJson = { ...form }
     migrationList.forEach((migration) => {
-      migratedJson = migration(migratedJson);
-    });
-    return migratedJson;
+      migratedJson = migration(migratedJson)
+    })
+    return migratedJson
   } catch (e) {
-    logger.error("SubMenu", "failed to migrate json");
+    logger.error('SubMenu', 'failed to migrate json')
   }
 }
 
 type Props = {
-  id?: string;
-  updateDownloadedAt?: (string) => void;
-};
+  id?: string
+  updateDownloadedAt?: (string) => void
+}
 
 export function SubMenu({ id, updateDownloadedAt }: Props) {
-  const { data, save } = useContext(DataContext);
-  const fileInput = useRef<HTMLInputElement>(null);
+  const { data, save } = useContext(DataContext)
+  const fileInput = useRef<HTMLInputElement>(null)
 
   const onClickUpload = () => {
-    fileInput.current!.click();
-  };
+    fileInput.current!.click()
+  }
 
   const onClickDownload = (e) => {
-    e.preventDefault();
+    e.preventDefault()
     const encodedData =
-      "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
-    updateDownloadedAt?.(new Date().toLocaleTimeString());
-    const link = document.createElement("a");
-    link.download = `${id}.json`;
-    link.href = `data:${encodedData}`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+      'text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data))
+    updateDownloadedAt?.(new Date().toLocaleTimeString())
+    const link = document.createElement('a')
+    link.download = `${id}.json`
+    link.href = `data:${encodedData}`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
 
   const onFileUpload = (e) => {
-    const file = e.target.files.item(0);
-    const reader = new window.FileReader();
-    reader.readAsText(file, "UTF-8");
+    const file = e.target.files.item(0)
+    const reader = new window.FileReader()
+    reader.readAsText(file, 'UTF-8')
     reader.onload = function (evt) {
-      const content = JSON.parse(evt.target.result);
-      const migrated = migrate(content);
-      save(migrated);
-    };
-  };
+      const content = JSON.parse(evt.target.result)
+      const migrated = migrate(content)
+      save(migrated)
+    }
+  }
 
   return (
     <div className="menu__row">
@@ -80,5 +80,5 @@ export function SubMenu({ id, updateDownloadedAt }: Props) {
         aria-label="Import saved form"
       />
     </div>
-  );
+  )
 }

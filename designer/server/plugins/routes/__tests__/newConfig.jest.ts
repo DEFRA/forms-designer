@@ -1,94 +1,92 @@
-import { createServer } from "../../../createServer";
+import { createServer } from '../../../createServer'
 
-import { publish } from "../../../lib/publish";
+import { publish } from '../../../lib/publish'
 
-jest.mock("../../../lib/publish");
+jest.mock('../../../lib/publish')
 
-describe("NewConfig tests", () => {
+describe('NewConfig tests', () => {
   const startServer = async (): Promise<hapi.Server> => {
-    const server = await createServer();
-    await server.start();
-    return server;
-  };
+    const server = await createServer()
+    await server.start()
+    return server
+  }
 
-  let server;
+  let server
 
   beforeAll(async () => {
-    server = await startServer();
-    const { persistenceService } = server.services();
+    server = await startServer()
+    const { persistenceService } = server.services()
     persistenceService.listAllConfigurations = () => {
-      return Promise.resolve([]);
-    };
+      return Promise.resolve([])
+    }
     persistenceService.copyConfiguration = () => {
-      return Promise.resolve([]);
-    };
+      return Promise.resolve([])
+    }
     persistenceService.uploadConfiguration = () => {
-      return Promise.resolve([]);
-    };
+      return Promise.resolve([])
+    }
     persistenceService.getConfiguration = () => {
-      return Promise.resolve([]);
-    };
-  });
+      return Promise.resolve([])
+    }
+  })
 
   afterAll(async () => {
-    await server.stop();
-  });
+    await server.stop()
+  })
 
-  test("POST /api/new with special characters result in bad request", async () => {
+  test('POST /api/new with special characters result in bad request', async () => {
     const options = {
-      method: "post",
-      url: "/api/new",
-      payload: { name: "A *& B", selected: { Key: "New" } },
-    };
+      method: 'post',
+      url: '/api/new',
+      payload: { name: 'A *& B', selected: { Key: 'New' } }
+    }
 
-    publish.mockImplementation(() => Promise.resolve([]));
-    const res = await server.inject(options);
+    publish.mockImplementation(() => Promise.resolve([]))
+    const res = await server.inject(options)
 
-    expect(res.statusCode).toEqual(400);
+    expect(res.statusCode).toEqual(400)
     expect(
-      res.result.indexOf("Form name should not contain special characters") > -1
-    ).toEqual(true);
-  });
+      res.result.indexOf('Form name should not contain special characters') > -1
+    ).toEqual(true)
+  })
 
-  test("POST /api/new with existing form should not result in bad request", async () => {
+  test('POST /api/new with existing form should not result in bad request', async () => {
     const options = {
-      method: "post",
-      url: "/api/new",
-      payload: { name: "", selected: { Key: "Test" } },
-    };
+      method: 'post',
+      url: '/api/new',
+      payload: { name: '', selected: { Key: 'Test' } }
+    }
 
-    publish.mockImplementation(() => Promise.resolve([]));
-    const res = await server.inject(options);
+    publish.mockImplementation(() => Promise.resolve([]))
+    const res = await server.inject(options)
 
-    expect(res.statusCode).toEqual(200);
-  });
+    expect(res.statusCode).toEqual(200)
+  })
 
   test("POST /api/new with '-' should not result in bad request", async () => {
     const options = {
-      method: "post",
-      url: "/api/new",
-      payload: { name: "a-b", selected: { Key: "New" } },
-    };
+      method: 'post',
+      url: '/api/new',
+      payload: { name: 'a-b', selected: { Key: 'New' } }
+    }
 
-    publish.mockImplementation(() => Promise.resolve([]));
-    const res = await server.inject(options);
+    publish.mockImplementation(() => Promise.resolve([]))
+    const res = await server.inject(options)
 
-    expect(res.statusCode).toEqual(200);
-  });
+    expect(res.statusCode).toEqual(200)
+  })
 
-  test("POST /api/new without runner running should result in bad request", async () => {
+  test('POST /api/new without runner running should result in bad request', async () => {
     const options = {
-      method: "post",
-      url: "/api/new",
-      payload: { name: "a-b", selected: { Key: "New" } },
-    };
+      method: 'post',
+      url: '/api/new',
+      payload: { name: 'a-b', selected: { Key: 'New' } }
+    }
 
-    publish.mockImplementation(() => Promise.reject());
-    const res = await server.inject(options);
+    publish.mockImplementation(() => Promise.reject())
+    const res = await server.inject(options)
 
-    expect(res.statusCode).toEqual(401);
-    expect(res.result).toMatch(
-      "Designer could not connect to runner instance."
-    );
-  });
-});
+    expect(res.statusCode).toEqual(401)
+    expect(res.result).toMatch('Designer could not connect to runner instance.')
+  })
+})

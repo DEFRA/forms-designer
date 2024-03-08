@@ -1,85 +1,85 @@
-import { ConditionField } from "./condition-field";
-import { ConditionGroupDef } from "./condition-group-def";
-import { Condition } from "./condition";
-import { ConditionRef } from "./condition-ref";
-import { ConditionGroup } from "./condition-group";
-import { conditionValueFrom } from "./condition-values";
-import { toPresentationString, toExpression } from "./helpers";
-import { Coordinator, ConditionsArray } from "./types";
+import { ConditionField } from './condition-field'
+import { ConditionGroupDef } from './condition-group-def'
+import { Condition } from './condition'
+import { ConditionRef } from './condition-ref'
+import { ConditionGroup } from './condition-group'
+import { conditionValueFrom } from './condition-values'
+import { toPresentationString, toExpression } from './helpers'
+import { Coordinator, ConditionsArray } from './types'
 
 type ConditionRawObject =
   | ConditionsModel
   | {
-      name: string;
-      conditions: Condition[];
-    };
+      name: string
+      conditions: Condition[]
+    }
 
 export class ConditionsModel {
-  #groupedConditions: ConditionsArray = [];
-  #userGroupedConditions: ConditionsArray = [];
-  #conditionName: string | undefined = undefined;
+  #groupedConditions: ConditionsArray = []
+  #userGroupedConditions: ConditionsArray = []
+  #conditionName: string | undefined = undefined
 
   constructor(_conditionsObject?: ConditionRawObject) {}
 
   clone() {
-    const toReturn = new ConditionsModel();
+    const toReturn = new ConditionsModel()
     toReturn.#groupedConditions = this.#groupedConditions.map((it) =>
       it.clone()
-    );
+    )
     toReturn.#userGroupedConditions = this.#userGroupedConditions.map((it) =>
       it.clone()
-    );
-    toReturn.#conditionName = this.#conditionName;
-    return toReturn;
+    )
+    toReturn.#conditionName = this.#conditionName
+    return toReturn
   }
 
   clear() {
-    this.#userGroupedConditions = [];
-    this.#groupedConditions = [];
-    this.#conditionName = undefined;
-    return this;
+    this.#userGroupedConditions = []
+    this.#groupedConditions = []
+    this.#conditionName = undefined
+    return this
   }
 
   set name(name) {
-    this.#conditionName = name;
+    this.#conditionName = name
   }
 
   get name() {
-    return this.#conditionName;
+    return this.#conditionName
   }
 
   add(condition: Condition) {
-    const coordinatorExpected = this.#userGroupedConditions.length !== 0;
+    const coordinatorExpected = this.#userGroupedConditions.length !== 0
 
     if (condition.getCoordinator() && !coordinatorExpected) {
-      throw Error("No coordinator allowed on the first condition");
+      throw Error('No coordinator allowed on the first condition')
     } else if (!condition.getCoordinator() && coordinatorExpected) {
-      throw Error("Coordinator must be present on subsequent conditions");
+      throw Error('Coordinator must be present on subsequent conditions')
     }
 
-    this.#userGroupedConditions.push(condition);
-    this.#groupedConditions = this._applyGroups(this.#userGroupedConditions);
+    this.#userGroupedConditions.push(condition)
+    this.#groupedConditions = this._applyGroups(this.#userGroupedConditions)
 
-    return this;
+    return this
   }
 
   replace(index: number, condition: Condition) {
-    const coordinatorExpected = index !== 0;
+    const coordinatorExpected = index !== 0
 
     if (condition.getCoordinator() && !coordinatorExpected) {
-      throw Error("No coordinator allowed on the first condition");
+      throw Error('No coordinator allowed on the first condition')
     } else if (!condition.getCoordinator() && coordinatorExpected) {
-      throw Error("Coordinator must be present on subsequent conditions");
+      throw Error('Coordinator must be present on subsequent conditions')
     } else if (index >= this.#userGroupedConditions.length) {
       throw Error(
         `Cannot replace condition ${index} as no such condition exists`
-      );
+      )
     }
 
-    this.#userGroupedConditions.splice(index, 1, condition);
-    this.#groupedConditions = this._applyGroups(this.#userGroupedConditions);
+    this.#userGroupedConditions.splice(index, 1, condition)
+    this.#groupedConditions = this._applyGroups(this.#userGroupedConditions)
 
-    return this;
+    return this
   }
 
   remove(indexes: number[]) {
@@ -87,28 +87,28 @@ export class ConditionsModel {
       .filter((_condition, index) => !indexes.includes(index))
       .map((condition, index) =>
         index === 0 ? condition.asFirstCondition() : condition
-      );
+      )
 
-    this.#groupedConditions = this._applyGroups(this.#userGroupedConditions);
-    return this;
+    this.#groupedConditions = this._applyGroups(this.#userGroupedConditions)
+    return this
   }
 
   addGroups(groupDefs: ConditionGroupDef[]) {
     this.#userGroupedConditions = this._group(
       this.#userGroupedConditions,
       groupDefs
-    );
-    this.#groupedConditions = this._applyGroups(this.#userGroupedConditions);
-    return this;
+    )
+    this.#groupedConditions = this._applyGroups(this.#userGroupedConditions)
+    return this
   }
 
   splitGroup(index: number) {
     this.#userGroupedConditions = this._ungroup(
       this.#userGroupedConditions,
       index
-    );
-    this.#groupedConditions = this._applyGroups(this.#userGroupedConditions);
-    return this;
+    )
+    this.#groupedConditions = this._applyGroups(this.#userGroupedConditions)
+    return this
   }
 
   moveEarlier(index: number) {
@@ -117,13 +117,13 @@ export class ConditionsModel {
         index - 1,
         0,
         this.#userGroupedConditions.splice(index, 1)[0]
-      );
+      )
       if (index === 1) {
-        this.switchCoordinators();
+        this.switchCoordinators()
       }
-      this.#groupedConditions = this._applyGroups(this.#userGroupedConditions);
+      this.#groupedConditions = this._applyGroups(this.#userGroupedConditions)
     }
-    return this;
+    return this
   }
 
   moveLater(index: number) {
@@ -132,44 +132,44 @@ export class ConditionsModel {
         index + 1,
         0,
         this.#userGroupedConditions.splice(index, 1)[0]
-      );
+      )
       if (index === 0) {
-        this.switchCoordinators();
+        this.switchCoordinators()
       }
-      this.#groupedConditions = this._applyGroups(this.#userGroupedConditions);
+      this.#groupedConditions = this._applyGroups(this.#userGroupedConditions)
     }
-    return this;
+    return this
   }
 
   switchCoordinators() {
     this.#userGroupedConditions[1].setCoordinator(
       this.#userGroupedConditions[0].getCoordinator()
-    );
-    this.#userGroupedConditions[0].setCoordinator(undefined);
+    )
+    this.#userGroupedConditions[0].setCoordinator(undefined)
   }
 
   get asPerUserGroupings() {
-    return [...this.#userGroupedConditions];
+    return [...this.#userGroupedConditions]
   }
 
   get hasConditions() {
-    return this.#userGroupedConditions.length > 0;
+    return this.#userGroupedConditions.length > 0
   }
 
   get lastIndex() {
-    return this.#userGroupedConditions.length - 1;
+    return this.#userGroupedConditions.length - 1
   }
 
   toPresentationString() {
     return this.#groupedConditions
       .map((condition) => toPresentationString(condition))
-      .join(" ");
+      .join(' ')
   }
 
   toExpression() {
     return this.#groupedConditions
       .map((condition) => toExpression(condition))
-      .join(" ");
+      .join(' ')
   }
 
   _applyGroups(
@@ -184,128 +184,125 @@ export class ConditionsModel {
             )
           )
         : condition
-    );
+    )
 
     return this._group(
       correctedUserGroups,
       this._autoGroupDefs(correctedUserGroups)
-    );
+    )
   }
 
   _group(conditions: ConditionsArray, groupDefs: ConditionGroupDef[]) {
     return conditions.reduce((groups, condition, index, conditions) => {
-      const groupDef = groupDefs.find((groupDef) => groupDef.contains(index));
+      const groupDef = groupDefs.find((groupDef) => groupDef.contains(index))
 
       if (groupDef) {
         if (groupDef.startsWith(index)) {
-          const groupConditions = groupDef.applyTo(conditions);
-          groups.push(new ConditionGroup(groupConditions));
+          const groupConditions = groupDef.applyTo(conditions)
+          groups.push(new ConditionGroup(groupConditions))
         }
       } else {
-        groups.push(condition);
+        groups.push(condition)
       }
 
-      return groups;
-    }, [] as ConditionsArray);
+      return groups
+    }, [] as ConditionsArray)
   }
 
   _ungroup(conditions: ConditionsArray, splitIndex: number) {
     if (conditions[splitIndex].isGroup()) {
-      const copy = [...conditions];
+      const copy = [...conditions]
       copy.splice(
         splitIndex,
         1,
         ...conditions[splitIndex].getGroupedConditions()
-      );
-      return copy;
+      )
+      return copy
     }
-    return conditions;
+    return conditions
   }
 
   _autoGroupDefs(conditions: ConditionsArray) {
-    const orPositions: number[] = [];
+    const orPositions: number[] = []
 
     conditions.forEach((condition, index) => {
       if (condition.getCoordinator() === Coordinator.OR) {
-        orPositions.push(index);
+        orPositions.push(index)
       }
-    });
+    })
 
-    const hasOr = orPositions.length > 0;
+    const hasOr = orPositions.length > 0
     const hasAnd = !!conditions.find(
       (condition) => condition.getCoordinator() === Coordinator.AND
-    );
+    )
 
     if (hasAnd && hasOr) {
-      let start = 0;
-      const groupDefs: ConditionGroupDef[] = [];
+      let start = 0
+      const groupDefs: ConditionGroupDef[] = []
       orPositions.forEach((position, index) => {
         if (start < position - 1) {
-          groupDefs.push(new ConditionGroupDef(start, position - 1));
+          groupDefs.push(new ConditionGroupDef(start, position - 1))
         }
-        const thisIsTheLastOr = orPositions.length === index + 1;
-        const thereAreMoreConditions = conditions.length - 1 > position;
+        const thisIsTheLastOr = orPositions.length === index + 1
+        const thereAreMoreConditions = conditions.length - 1 > position
         if (thisIsTheLastOr && thereAreMoreConditions) {
-          groupDefs.push(
-            new ConditionGroupDef(position, conditions.length - 1)
-          );
+          groupDefs.push(new ConditionGroupDef(position, conditions.length - 1))
         }
-        start = position;
-      });
-      return groupDefs;
+        start = position
+      })
+      return groupDefs
     }
 
-    return [];
+    return []
   }
 
   toJSON() {
-    const name = this.#conditionName;
-    const conditions = this.#userGroupedConditions;
+    const name = this.#conditionName
+    const conditions = this.#userGroupedConditions
     return {
       name,
-      conditions: conditions.map((it) => it.clone()),
-    };
+      conditions: conditions.map((it) => it.clone())
+    }
   }
 
   // TODO:- why is this not a constructor?
   static from(obj: ConditionRawObject | ConditionsModel) {
     if (obj instanceof ConditionsModel) {
-      return obj;
+      return obj
     }
-    const toReturn = new ConditionsModel();
-    toReturn.#conditionName = obj.name;
+    const toReturn = new ConditionsModel()
+    toReturn.#conditionName = obj.name
     toReturn.#userGroupedConditions = obj.conditions.map((condition) =>
       conditionFrom(condition)
-    );
+    )
     toReturn.#groupedConditions = toReturn._applyGroups(
       toReturn.#userGroupedConditions
-    );
-    return toReturn;
+    )
+    return toReturn
   }
 }
 
 interface ConditionFrom {
-  (it: Condition | ConditionRef | ConditionGroup):
-    | Condition
-    | ConditionRef
-    | ConditionGroup;
+  (
+    it: Condition | ConditionRef | ConditionGroup
+  ): Condition | ConditionRef | ConditionGroup
 }
 
 const conditionFrom: ConditionFrom = function (it) {
-  if ("conditions" in it) {
+  if ('conditions' in it) {
     return new ConditionGroup(
       (it as ConditionGroup).conditions.map((condition) =>
         conditionFrom(condition)
       )
-    );
+    )
   }
 
-  if ("conditionName" in it) {
+  if ('conditionName' in it) {
     return new ConditionRef(
       it.conditionName,
       it.conditionDisplayName,
       it.coordinator
-    );
+    )
   }
 
   return new Condition(
@@ -313,5 +310,5 @@ const conditionFrom: ConditionFrom = function (it) {
     it.operator,
     conditionValueFrom(it.value),
     it.coordinator
-  );
-};
+  )
+}

@@ -1,23 +1,23 @@
-import { render } from "@testing-library/react";
-import { DataContext, FlyoutContext } from "../../context";
-import React from "react";
-import { ListContext } from "../../reducers/listReducer";
+import { render } from '@testing-library/react'
+import { DataContext, FlyoutContext } from '../../context'
+import React from 'react'
+import { ListContext } from '../../reducers/listReducer'
 import {
   initListsEditingState,
-  ListsEditorContext,
-} from "../../reducers/list/listsEditorReducer";
+  ListsEditorContext
+} from '../../reducers/list/listsEditorReducer'
 
 const defaultFlyoutValue = {
   increment: jest.fn(),
   decrement: jest.fn(),
-  count: 0,
-};
-const defaultDataValue = { data: {}, save: jest.fn() };
+  count: 0
+}
+const defaultDataValue = { data: {}, save: jest.fn() }
 const defaultListsValue = {
   state: initListsEditingState(),
-  dispatch: jest.fn(),
-};
-const defaultListValue = { state: {}, dispatch: jest.fn() };
+  dispatch: jest.fn()
+}
+const defaultListValue = { state: {}, dispatch: jest.fn() }
 
 export const customRenderForLists = (
   children,
@@ -41,10 +41,10 @@ export const customRenderForLists = (
       <div id="portal-root" />
     </DataContext.Provider>,
     renderOptions
-  );
+  )
   return {
     ...rendered,
     rerender: (ui, options) =>
-      customRenderForLists(ui, { container: rendered.container, ...options }),
-  };
-};
+      customRenderForLists(ui, { container: rendered.container, ...options })
+  }
+}

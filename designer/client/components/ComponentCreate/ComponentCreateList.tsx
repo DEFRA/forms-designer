@@ -1,54 +1,54 @@
-import React, { MouseEvent, useCallback } from "react";
-import { ComponentTypes, ComponentDef } from "@defra/forms-model";
-import sortBy from "lodash/sortBy";
+import React, { MouseEvent, useCallback } from 'react'
+import { ComponentTypes, ComponentDef } from '@defra/forms-model'
+import sortBy from 'lodash/sortBy'
 
-import { i18n } from "../../i18n";
+import { i18n } from '../../i18n'
 
 const SelectionFieldsTypes = [
-  "CheckboxesField",
-  "RadiosField",
-  "SelectField",
-  "YesNoField",
-];
+  'CheckboxesField',
+  'RadiosField',
+  'SelectField',
+  'YesNoField'
+]
 
-const contentFields: ComponentDef[] = [];
-const selectionFields: ComponentDef[] = [];
-const inputFields: ComponentDef[] = [];
+const contentFields: ComponentDef[] = []
+const selectionFields: ComponentDef[] = []
+const inputFields: ComponentDef[] = []
 
-sortBy(ComponentTypes, ["type"]).forEach((component) => {
-  if (component.subType === "content") {
-    contentFields.push(component);
+sortBy(ComponentTypes, ['type']).forEach((component) => {
+  if (component.subType === 'content') {
+    contentFields.push(component)
   } else if (SelectionFieldsTypes.indexOf(component.type) > -1) {
-    selectionFields.push(component);
+    selectionFields.push(component)
   } else {
-    inputFields.push(component);
+    inputFields.push(component)
   }
-});
+})
 
 type Props = {
-  onSelectComponent: (type: ComponentDef) => void;
-};
+  onSelectComponent: (type: ComponentDef) => void
+}
 
 export const ComponentCreateList = ({ onSelectComponent }: Props) => {
   const selectComponent = useCallback(
     (event: MouseEvent<HTMLAnchorElement>, component: ComponentDef) => {
-      event.preventDefault();
-      onSelectComponent(component);
+      event.preventDefault()
+      onSelectComponent(component)
     },
     [onSelectComponent]
-  );
+  )
 
   return (
     <div
       className="govuk-form-group component-create__list"
       data-testid="component-create-list"
     >
-      <h1 className="govuk-hint">{i18n("component.create_info")}</h1>
+      <h1 className="govuk-hint">{i18n('component.create_info')}</h1>
       <ol className="govuk-list">
         <li className="component-create__list__item">
-          <h2 className="govuk-heading-s">{i18n("Content")}</h2>
+          <h2 className="govuk-heading-s">{i18n('Content')}</h2>
           <div className="govuk-hint">
-            {i18n("component.contentfields_info")}
+            {i18n('component.contentfields_info')}
           </div>
           <ol className="govuk-list">
             {contentFields.map((component) => (
@@ -69,8 +69,8 @@ export const ComponentCreateList = ({ onSelectComponent }: Props) => {
           <hr className="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
         </li>
         <li className="component-create__list__item">
-          <h2 className="govuk-heading-s">{i18n("Input fields")}</h2>
-          <div className="govuk-hint">{i18n("component.inputfields_info")}</div>
+          <h2 className="govuk-heading-s">{i18n('Input fields')}</h2>
+          <div className="govuk-hint">{i18n('component.inputfields_info')}</div>
           <ol className="govuk-list">
             {inputFields.map((component) => (
               <li key={component.type}>
@@ -90,9 +90,9 @@ export const ComponentCreateList = ({ onSelectComponent }: Props) => {
           <hr className="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
         </li>
         <li className="component-create__list__item">
-          <h2 className="govuk-heading-s">{i18n("Selection fields")}</h2>
+          <h2 className="govuk-heading-s">{i18n('Selection fields')}</h2>
           <div className="govuk-hint">
-            {i18n("component.selectfields_info")}
+            {i18n('component.selectfields_info')}
           </div>
           <ol className="govuk-list">
             {selectionFields.map((component) => (
@@ -113,5 +113,5 @@ export const ComponentCreateList = ({ onSelectComponent }: Props) => {
         </li>
       </ol>
     </div>
-  );
-};
+  )
+}

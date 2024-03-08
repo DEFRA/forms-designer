@@ -1,18 +1,20 @@
-import React from "react";
-import { Output, EmailOutputConfiguration, ValidationErrors } from "./types";
-import { Input } from "@xgovformbuilder/govuk-react-jsx";
+import React from 'react'
+import { Output, EmailOutputConfiguration, ValidationErrors } from './types'
+import { Input } from '@xgovformbuilder/govuk-react-jsx'
 
 type Props = {
-  output: Output;
-  errors: ValidationErrors;
-};
+  output: Output
+  errors: ValidationErrors
+}
 
 const EmailEdit = ({ output, errors = {} }: Props) => {
-  const outputConfiguration = (typeof output?.outputConfiguration === "object"
-    ? output?.outputConfiguration
-    : {
-        emailAddress: "",
-      }) as EmailOutputConfiguration;
+  const outputConfiguration = (
+    typeof output?.outputConfiguration === 'object'
+      ? output?.outputConfiguration
+      : {
+          emailAddress: ''
+        }
+  ) as EmailOutputConfiguration
 
   return (
     <div className="govuk-body email-edit">
@@ -20,8 +22,8 @@ const EmailEdit = ({ output, errors = {} }: Props) => {
         id="email-address"
         name="email-address"
         label={{
-          className: "govuk-label--s",
-          children: ["Email Address"],
+          className: 'govuk-label--s',
+          children: ['Email Address']
         }}
         defaultValue={outputConfiguration.emailAddress}
         errorMessage={
@@ -29,7 +31,7 @@ const EmailEdit = ({ output, errors = {} }: Props) => {
         }
       />
     </div>
-  );
-};
+  )
+}
 
-export default EmailEdit;
+export default EmailEdit

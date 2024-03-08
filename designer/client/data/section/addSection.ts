@@ -1,4 +1,4 @@
-import { FormDefinition, Section } from "@defra/forms-model";
+import { FormDefinition, Section } from '@defra/forms-model'
 
 /**
  * @param data - data from DataContext
@@ -10,10 +10,10 @@ export function addSection(
   section: Section
 ): FormDefinition {
   if (data.sections.find((s) => s.name === section.name)) {
-    throw Error(`A section with the name ${section.name} already exists`);
+    throw Error(`A section with the name ${section.name} already exists`)
   }
   return {
     ...data,
-    sections: [...data.sections, section],
-  };
+    sections: [...data.sections, section]
+  }
 }

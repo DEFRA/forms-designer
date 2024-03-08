@@ -1,69 +1,69 @@
-import React, { useEffect, useContext, useState, useLayoutEffect } from "react";
-import { ComponentDef } from "@defra/forms-model";
+import React, { useEffect, useContext, useState, useLayoutEffect } from 'react'
+import { ComponentDef } from '@defra/forms-model'
 
-import { i18n } from "../../i18n";
-import { ErrorSummary } from "../../error-summary";
-import { hasValidationErrors } from "../../validations";
-import ComponentTypeEdit from "../../ComponentTypeEdit";
-import { ComponentCreateList } from "./ComponentCreateList";
-import { BackLink } from "../BackLink";
-import "./ComponentCreate.scss";
-import { Actions } from "../../reducers/component/types";
-import { DataContext } from "../../context";
-import { ComponentContext } from "../../reducers/component/componentReducer";
-import { addComponent } from "../../data";
-import logger from "../../plugins/logger";
+import { i18n } from '../../i18n'
+import { ErrorSummary } from '../../error-summary'
+import { hasValidationErrors } from '../../validations'
+import ComponentTypeEdit from '../../ComponentTypeEdit'
+import { ComponentCreateList } from './ComponentCreateList'
+import { BackLink } from '../BackLink'
+import './ComponentCreate.scss'
+import { Actions } from '../../reducers/component/types'
+import { DataContext } from '../../context'
+import { ComponentContext } from '../../reducers/component/componentReducer'
+import { addComponent } from '../../data'
+import logger from '../../plugins/logger'
 
 function useComponentCreate(props) {
-  const { data, save } = useContext(DataContext);
-  const { state, dispatch } = useContext(ComponentContext);
-  const { selectedComponent, errors = {}, hasValidated } = state;
-  const { page, toggleAddComponent = () => {} } = props;
+  const { data, save } = useContext(DataContext)
+  const { state, dispatch } = useContext(ComponentContext)
+  const { selectedComponent, errors = {}, hasValidated } = state
+  const { page, toggleAddComponent = () => {} } = props
 
-  const [isSaving, setIsSaving] = useState(false);
-  const hasErrors = hasValidationErrors(errors);
+  const [isSaving, setIsSaving] = useState(false)
+  const hasErrors = hasValidationErrors(errors)
 
   useEffect(() => {
-    dispatch({ type: Actions.SET_PAGE, payload: page.path });
-  }, [dispatch, page.path]);
+    dispatch({ type: Actions.SET_PAGE, payload: page.path })
+  }, [dispatch, page.path])
 
   useLayoutEffect(() => {
     if (hasValidated && !hasErrors) {
       handleSubmit()
         .then()
         .catch((err) => {
-          logger.error("useComponentCreate", err);
-        });
+          logger.error('useComponentCreate', err)
+        })
     }
-  }, [hasValidated, hasErrors]);
+  }, [hasValidated, hasErrors])
 
   const handleSubmit = async (e?: Event) => {
-    e?.preventDefault();
+    e?.preventDefault()
 
     if (!hasValidated) {
-      dispatch({ type: Actions.VALIDATE });
-      return;
+      dispatch({ type: Actions.VALIDATE })
+      return
     }
 
     if (hasErrors) {
-      return;
+      return
     }
 
-    setIsSaving(true);
-    const { isNew, ...selectedComponent } = state.selectedComponent;
-    const updatedData = addComponent(data, page.path, selectedComponent);
-    await save(updatedData);
-    toggleAddComponent();
-  };
+    setIsSaving(true)
+    const { isNew, ...selectedComponent } = state.selectedComponent
+    const updatedData = addComponent(data, page.path, selectedComponent)
+    await save(updatedData)
+    toggleAddComponent()
+  }
 
   const handleTypeChange = (component: ComponentDef) => {
-    dispatch({ type: Actions.EDIT_TYPE, payload: component.type });
-  };
+    dispatch({ type: Actions.EDIT_TYPE, payload: component.type })
+  }
 
   const reset = (e) => {
-    e.preventDefault();
-    dispatch({ type: Actions.SET_COMPONENT });
-  };
+    e.preventDefault()
+    dispatch({ type: Actions.SET_COMPONENT })
+  }
 
   return {
     handleSubmit,
@@ -72,8 +72,8 @@ function useComponentCreate(props) {
     errors: Object.values(errors),
     component: selectedComponent,
     isSaving,
-    reset,
-  };
+    reset
+  }
 }
 
 export function ComponentCreate(props) {
@@ -84,21 +84,21 @@ export function ComponentCreate(props) {
     hasErrors,
     errors,
     component,
-    isSaving,
-  } = useComponentCreate(props);
-  const type = component?.type;
+    isSaving
+  } = useComponentCreate(props)
+  const type = component?.type
 
   return (
     <div className="component-create">
       {hasErrors && <ErrorSummary errorList={errors} />}
-      {!type && <h4 className="govuk-heading-m">{i18n("Create component")}</h4>}
+      {!type && <h4 className="govuk-heading-m">{i18n('Create component')}</h4>}
       {type && (
         <>
           <BackLink onClick={reset}>
-            {i18n("Back to create component list")}
+            {i18n('Back to create component list')}
           </BackLink>
           <h4 className="govuk-heading-m">
-            {component?.title} {i18n("component")}
+            {component?.title} {i18n('component')}
           </h4>
         </>
       )}
@@ -117,7 +117,7 @@ export function ComponentCreate(props) {
         </button>
       </form>
     </div>
-  );
+  )
 }
 
-export default ComponentCreate;
+export default ComponentCreate

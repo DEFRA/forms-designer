@@ -1,28 +1,28 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState } from 'react'
 import {
   SortableContainer,
   SortableElement,
-  arrayMove,
-} from "react-sortable-hoc";
+  arrayMove
+} from 'react-sortable-hoc'
 
-import { Flyout } from "../Flyout";
-import { Component } from "../../component";
-import { ComponentCreate } from "./../ComponentCreate";
-import { ComponentTypes } from "@defra/forms-model";
-import { DataContext } from "../../context";
-import { PageLinkage } from "../PageLinkage";
-import { ComponentContextProvider } from "../../reducers/component";
-import { findPage } from "../../data";
-import { i18n } from "../../i18n";
+import { Flyout } from '../Flyout'
+import { Component } from '../../component'
+import { ComponentCreate } from './../ComponentCreate'
+import { ComponentTypes } from '@defra/forms-model'
+import { DataContext } from '../../context'
+import { PageLinkage } from '../PageLinkage'
+import { ComponentContextProvider } from '../../reducers/component'
+import { findPage } from '../../data'
+import { i18n } from '../../i18n'
 
 const SortableItem = SortableElement(({ index, page, component, data }) => (
   <div className="component-item">
     <Component key={index} page={page} component={component} data={data} />
   </div>
-));
+))
 
 const SortableList = SortableContainer(({ page = {}, data }) => {
-  const { components = [] } = page;
+  const { components = [] } = page
   return (
     <div className="component-list">
       {components.map((component, index) => (
@@ -35,45 +35,45 @@ const SortableList = SortableContainer(({ page = {}, data }) => {
         />
       ))}
     </div>
-  );
-});
+  )
+})
 
 export const Page = ({ page, previewUrl, id, layout }) => {
-  const { data, save } = useContext(DataContext);
-  const [isEditingPage, setIsEditingPage] = useState(false);
-  const [isCreatingComponent, setIsCreatingComponent] = useState(false);
+  const { data, save } = useContext(DataContext)
+  const [isEditingPage, setIsEditingPage] = useState(false)
+  const [isCreatingComponent, setIsCreatingComponent] = useState(false)
 
   const onSortEnd = ({ oldIndex, newIndex }) => {
-    const copy = { ...data };
-    const [copyPage, index] = findPage(data, page.path);
-    copyPage.components = arrayMove(copyPage.components!, oldIndex, newIndex);
-    copy.pages[index] = copyPage;
-    save(copy);
-  };
+    const copy = { ...data }
+    const [copyPage, index] = findPage(data, page.path)
+    copyPage.components = arrayMove(copyPage.components!, oldIndex, newIndex)
+    copy.pages[index] = copyPage
+    save(copy)
+  }
 
   const onEditEnd = () => {
-    setIsEditingPage(false);
-  };
+    setIsEditingPage(false)
+  }
 
   const section = data.sections?.find(
     (section) => section.name === page.section
-  );
+  )
 
   const formComponents =
     page?.components?.filter(
       (comp) =>
         ComponentTypes.find((type) => type.name === comp.type)?.subType ===
-        "field"
-    ) ?? [];
+        'field'
+    ) ?? []
 
   const pageTitle =
     page.title ||
     (formComponents.length === 1 && page.components[0] === formComponents[0]
       ? formComponents[0].title
-      : page.title);
+      : page.title)
 
   return (
-    <div id={page.path} title={page.path} className={"page"} style={layout}>
+    <div id={page.path} title={page.path} className={'page'} style={layout}>
       <div className="page__heading">
         <h3>
           {section && <span>{section.title}</span>}
@@ -94,24 +94,27 @@ export const Page = ({ page, previewUrl, id, layout }) => {
 
       <div className="page__actions">
         <button
-          title={i18n("Edit page")}
+          title={i18n('Edit page')}
           onClick={() => setIsEditingPage(true)}
         >
-          {i18n("Edit page")}
+          {i18n('Edit page')}
         </button>
         <button
-          title={i18n("Create component")}
+          title={i18n('Create component')}
           onClick={() => setIsCreatingComponent(true)}
         >
-          {i18n("Create component")}
+          {i18n('Create component')}
         </button>
         <a
-          title={i18n("Preview page")}
-          href={new URL(`/forms-runner/${id}${page.path}`, previewUrl).toString()}
+          title={i18n('Preview page')}
+          href={new URL(
+            `/forms-runner/${id}${page.path}`,
+            previewUrl
+          ).toString()}
           target="_blank"
           rel="noreferrer"
         >
-          {i18n("Preview")}{" "}
+          {i18n('Preview')}{' '}
           <span className="govuk-visually-hidden">{pageTitle}</span>
         </a>
       </div>
@@ -127,7 +130,7 @@ export const Page = ({ page, previewUrl, id, layout }) => {
             <ComponentCreate
               renderInForm={true}
               toggleAddComponent={() => {
-                setIsCreatingComponent(false);
+                setIsCreatingComponent(false)
               }}
               page={page}
             />
@@ -135,5 +138,5 @@ export const Page = ({ page, previewUrl, id, layout }) => {
         </Flyout>
       )}
     </div>
-  );
-};
+  )
+}

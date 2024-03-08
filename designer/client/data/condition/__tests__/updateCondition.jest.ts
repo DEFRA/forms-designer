@@ -1,44 +1,44 @@
-import { FormDefinition } from "@defra/forms-model";
-import { updateCondition } from "..";
+import { FormDefinition } from '@defra/forms-model'
+import { updateCondition } from '..'
 
 const condition = {
-  displayName: "condition",
-  name: "isCatPerson",
-  value: { name: "newCondition", conditions: [] },
-};
+  displayName: 'condition',
+  name: 'isCatPerson',
+  value: { name: 'newCondition', conditions: [] }
+}
 const data: FormDefinition = {
   conditions: [{ ...condition }],
   lists: [],
-  name: "",
+  name: '',
   pages: [],
   sections: [],
-  startPage: "",
-};
-test("updateCondition throws if no condition could be found", () => {
-  expect(() => updateCondition(data, "isDogPerson", {})).toThrow();
-});
+  startPage: ''
+}
+test('updateCondition throws if no condition could be found', () => {
+  expect(() => updateCondition(data, 'isDogPerson', {})).toThrow()
+})
 
-test("updateCondition successfully updates a condition", () => {
+test('updateCondition successfully updates a condition', () => {
   expect(
-    updateCondition(data, "isCatPerson", {
-      displayName: "cats rule",
+    updateCondition(data, 'isCatPerson', {
+      displayName: 'cats rule',
       value: {
-        name: "valueName",
-        conditions: [],
-      },
+        name: 'valueName',
+        conditions: []
+      }
     })
   ).toEqual({
     conditions: [
       {
-        displayName: "cats rule",
-        name: "isCatPerson",
-        value: { name: "valueName", conditions: [] },
-      },
+        displayName: 'cats rule',
+        name: 'isCatPerson',
+        value: { name: 'valueName', conditions: [] }
+      }
     ],
     lists: [],
-    name: "",
+    name: '',
     pages: [],
     sections: [],
-    startPage: "",
-  });
-});
+    startPage: ''
+  })
+})

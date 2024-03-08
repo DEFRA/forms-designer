@@ -1,5 +1,5 @@
-import { Path } from "..";
-import { FormDefinition, Page } from "@defra/forms-model";
+import { Path } from '..'
+import { FormDefinition, Page } from '@defra/forms-model'
 
 export function updateLinksTo(
   data: FormDefinition,
@@ -15,9 +15,9 @@ export function updateLinksTo(
         next:
           page.next?.map((link) => ({
             ...link,
-            path: link.path === oldPath ? newPath : link.path,
-          })) ?? [],
+            path: link.path === oldPath ? newPath : link.path
+          })) ?? []
       })
-    ),
-  };
+    )
+  }
 }

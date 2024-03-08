@@ -1,2 +1,2 @@
-export * from "./findList";
-export * from "./addList";
+export * from './findList'
+export * from './addList'

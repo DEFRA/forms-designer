@@ -1,17 +1,17 @@
-import { MouseEvent, useState } from "react";
+import { MouseEvent, useState } from 'react'
 
 export enum Tabs {
   model,
   json,
-  summary,
+  summary
 }
 
 export function useTabs() {
-  const [selectedTab, setSelectedTab] = useState(Tabs.model);
+  const [selectedTab, setSelectedTab] = useState(Tabs.model)
   function handleTabChange(event: MouseEvent<HTMLButtonElement>, tab: Tabs) {
-    event.preventDefault();
-    setSelectedTab(tab);
+    event.preventDefault()
+    setSelectedTab(tab)
   }
 
-  return { selectedTab, handleTabChange };
+  return { selectedTab, handleTabChange }
 }

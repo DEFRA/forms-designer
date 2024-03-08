@@ -3,217 +3,217 @@ import React, {
   MouseEvent,
   ChangeEvent,
   FormEvent,
-  ReactNode,
-} from "react";
-import NotifyEdit from "./notify-edit";
-import EmailEdit from "./email-edit";
-import { Input } from "@xgovformbuilder/govuk-react-jsx";
-import WebhookEdit from "./webhook-edit";
+  ReactNode
+} from 'react'
+import NotifyEdit from './notify-edit'
+import EmailEdit from './email-edit'
+import { Input } from '@xgovformbuilder/govuk-react-jsx'
+import WebhookEdit from './webhook-edit'
 import {
   OutputType,
   OutputConfiguration,
   Output,
-  ValidationErrors,
-} from "./types";
-import { validateNotEmpty, hasValidationErrors } from "../validations";
-import ErrorSummary from "../error-summary";
-import { DataContext } from "../context";
-import logger from "../plugins/logger";
+  ValidationErrors
+} from './types'
+import { validateNotEmpty, hasValidationErrors } from '../validations'
+import ErrorSummary from '../error-summary'
+import { DataContext } from '../context'
+import logger from '../plugins/logger'
 
 type State = {
-  outputType: OutputType;
-  errors: ValidationErrors;
-};
+  outputType: OutputType
+  errors: ValidationErrors
+}
 
 type Props = {
-  onEdit: ({ data: any }) => void; // TODO: type
-  onCancel: (event: MouseEvent<HTMLAnchorElement>) => void;
-  data: any; // TODO: type
-  output: Output;
-};
+  onEdit: ({ data: any }) => void // TODO: type
+  onCancel: (event: MouseEvent<HTMLAnchorElement>) => void
+  data: any // TODO: type
+  output: Output
+}
 
 class OutputEdit extends Component<Props, State> {
-  static contextType = DataContext;
+  static contextType = DataContext
 
   constructor(props: Props) {
-    super(props);
+    super(props)
     this.state = {
       outputType: props.output?.type ?? OutputType.Email,
-      errors: {},
-    };
+      errors: {}
+    }
   }
 
   onSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const { data, save } = this.context;
-    let output = this.props.output || { name: "", type: "" };
-    const form = event.currentTarget;
-    const formData = new window.FormData(form);
-    const copy = { ...data };
+    event.preventDefault()
+    const { data, save } = this.context
+    let output = this.props.output || { name: '', type: '' }
+    const form = event.currentTarget
+    const formData = new window.FormData(form)
+    const copy = { ...data }
     const outputType: OutputType =
-      (formData.get("output-type") as OutputType) || output.type;
-    const outputName = formData.get("output-name") as string;
-    const outputTitle = formData.get("output-title") as string;
-    const validationErrors = this.validate(formData, outputType);
+      (formData.get('output-type') as OutputType) || output.type
+    const outputName = formData.get('output-name') as string
+    const outputTitle = formData.get('output-title') as string
+    const validationErrors = this.validate(formData, outputType)
 
-    if (hasValidationErrors(validationErrors)) return;
+    if (hasValidationErrors(validationErrors)) return
 
-    let outputIndex: number = -1;
+    let outputIndex: number = -1
 
     if (output.name) {
-      outputIndex = data.outputs.indexOf(output);
+      outputIndex = data.outputs.indexOf(output)
     }
 
     let outputConfiguration: OutputConfiguration =
-      output.outputConfiguration || {};
+      output.outputConfiguration || {}
 
     switch (outputType) {
       case OutputType.Email:
         outputConfiguration = {
-          emailAddress: formData.get("email-address") as string,
-        };
-        break;
+          emailAddress: formData.get('email-address') as string
+        }
+        break
       case OutputType.Notify:
         outputConfiguration = {
           personalisation: formData
-            .getAll("personalisation")
+            .getAll('personalisation')
             .map((t) => (t as string).trim()),
-          templateId: formData.get("template-id") as string,
-          apiKey: formData.get("api-key") as string,
-          emailField: formData.get("email-field") as string,
+          templateId: formData.get('template-id') as string,
+          apiKey: formData.get('api-key') as string,
+          emailField: formData.get('email-field') as string,
           addReferencesToPersonalisation:
-            formData.get("add-references-to-personalisation") === "true",
-        };
-        break;
+            formData.get('add-references-to-personalisation') === 'true'
+        }
+        break
       case OutputType.Webhook:
         outputConfiguration = {
-          url: formData.get("webhook-url") as string,
-          allowRetry: true,
-        };
-        break;
+          url: formData.get('webhook-url') as string,
+          allowRetry: true
+        }
+        break
     }
 
     output = {
       name: outputName.trim(),
       title: outputTitle.trim(),
       type: outputType,
-      outputConfiguration,
-    };
+      outputConfiguration
+    }
 
     if (outputIndex >= 0) {
-      copy.outputs[outputIndex] = output;
+      copy.outputs[outputIndex] = output
     } else {
-      copy.outputs = copy.outputs || [];
-      copy.outputs.push(output);
+      copy.outputs = copy.outputs || []
+      copy.outputs.push(output)
     }
 
     save(copy)
       .then((data) => {
-        this.props.onEdit({ data });
+        this.props.onEdit({ data })
       })
       .catch((err: Error) => {
-        logger.error("OutputEdit", err);
-      });
-  };
+        logger.error('OutputEdit', err)
+      })
+  }
 
   validate = (formData: FormData, outputType: OutputType) => {
-    const outputName = formData.get("output-name") as string;
-    const outputTitle = formData.get("output-title") as string;
-    const errors: ValidationErrors = {};
+    const outputName = formData.get('output-name') as string
+    const outputTitle = formData.get('output-title') as string
+    const errors: ValidationErrors = {}
 
     validateNotEmpty(
-      "output-title",
-      "output title",
-      "title",
+      'output-title',
+      'output title',
+      'title',
       outputTitle,
       errors
-    );
+    )
 
-    validateNotEmpty("output-name", "output name", "name", outputName, errors);
+    validateNotEmpty('output-name', 'output name', 'name', outputName, errors)
 
     switch (outputType) {
       case OutputType.Email:
-        const emailAddress = formData.get("email-address") as string;
+        const emailAddress = formData.get('email-address') as string
         validateNotEmpty(
-          "email-address",
-          "email address",
-          "email",
+          'email-address',
+          'email address',
+          'email',
           emailAddress,
           errors
-        );
-        break;
+        )
+        break
       case OutputType.Notify:
-        const templateId = formData.get("template-id") as string;
-        const apiKey = formData.get("api-key") as string;
-        const emailField = formData.get("email-field") as string;
+        const templateId = formData.get('template-id') as string
+        const apiKey = formData.get('api-key') as string
+        const emailField = formData.get('email-field') as string
         validateNotEmpty(
-          "template-id",
-          "template id",
-          "templateId",
+          'template-id',
+          'template id',
+          'templateId',
           templateId,
           errors
-        );
-        validateNotEmpty("api-key", "API key", "apiKey", apiKey, errors);
+        )
+        validateNotEmpty('api-key', 'API key', 'apiKey', apiKey, errors)
         validateNotEmpty(
-          "email-field",
-          "email address",
-          "email",
+          'email-field',
+          'email address',
+          'email',
           emailField,
           errors
-        );
-        break;
+        )
+        break
       case OutputType.Webhook:
-        const url = formData.get("webhook-url") as string;
+        const url = formData.get('webhook-url') as string
         if (!url) {
           errors.url = {
-            href: "#webhook-url",
-            children: "Not a valid url",
-          };
+            href: '#webhook-url',
+            children: 'Not a valid url'
+          }
         }
-        break;
+        break
     }
 
-    this.setState({ errors });
+    this.setState({ errors })
 
-    return errors;
-  };
+    return errors
+  }
 
   onChangeOutputType = (event: ChangeEvent<HTMLSelectElement>) => {
-    const outputType = event.currentTarget.value as OutputType;
-    this.setState({ outputType, errors: {} });
-  };
+    const outputType = event.currentTarget.value as OutputType
+    this.setState({ outputType, errors: {} })
+  }
 
   onClickDelete = (event: MouseEvent<HTMLAnchorElement>) => {
-    event.preventDefault();
+    event.preventDefault()
 
-    if (!window.confirm("Confirm delete")) {
-      return;
+    if (!window.confirm('Confirm delete')) {
+      return
     }
 
-    const { output } = this.props;
-    const { data, save } = this.context;
-    const copy = { ...data };
-    const outputIndex = data.outputs.indexOf(output);
-    copy.outputs.splice(outputIndex, 1);
+    const { output } = this.props
+    const { data, save } = this.context
+    const copy = { ...data }
+    const outputIndex = data.outputs.indexOf(output)
+    copy.outputs.splice(outputIndex, 1)
 
     save(copy)
       .then((data) => {
-        this.props.onEdit({ data });
+        this.props.onEdit({ data })
       })
       .catch((err: Error) => {
-        logger.error("OutputEdit", err);
-      });
-  };
+        logger.error('OutputEdit', err)
+      })
+  }
 
   handleOnClickBackLink = (e) => {
-    e.preventDefault();
-    this.props.onCancel(e);
-  };
+    e.preventDefault()
+    this.props.onCancel(e)
+  }
 
   render() {
-    const { outputType, errors } = this.state;
-    const { data, output } = this.props;
-    let outputEdit: ReactNode;
+    const { outputType, errors } = this.state
+    const { data, output } = this.props
+    let outputEdit: ReactNode
 
     if (outputType === OutputType.Notify) {
       outputEdit = (
@@ -223,16 +223,13 @@ class OutputEdit extends Component<Props, State> {
           onEdit={this.props.onEdit}
           errors={errors}
         />
-      );
+      )
     } else if (outputType === OutputType.Email) {
-      outputEdit = <EmailEdit output={output} errors={errors} />;
+      outputEdit = <EmailEdit output={output} errors={errors} />
     } else if (outputType === OutputType.Webhook) {
       outputEdit = (
-        <WebhookEdit
-          url={output?.outputConfiguration?.url}
-          errors={errors}
-        />
-      );
+        <WebhookEdit url={output?.outputConfiguration?.url} errors={errors} />
+      )
     }
     return (
       <>
@@ -253,10 +250,10 @@ class OutputEdit extends Component<Props, State> {
             id="output-title"
             name="output-title"
             label={{
-              className: "govuk-label--s",
-              children: ["Title"],
+              className: 'govuk-label--s',
+              children: ['Title']
             }}
-            defaultValue={output?.title ?? ""}
+            defaultValue={output?.title ?? ''}
             errorMessage={
               errors?.title ? { children: errors?.title.children } : undefined
             }
@@ -265,11 +262,11 @@ class OutputEdit extends Component<Props, State> {
             id="output-name"
             name="output-name"
             label={{
-              className: "govuk-label--s",
-              children: ["Name"],
+              className: 'govuk-label--s',
+              children: ['Name']
             }}
             pattern="^\S+"
-            defaultValue={output?.name ?? ""}
+            defaultValue={output?.name ?? ''}
             errorMessage={
               errors?.name ? { children: errors?.name.children } : undefined
             }
@@ -308,8 +305,8 @@ class OutputEdit extends Component<Props, State> {
           )}
         </form>
       </>
-    );
+    )
   }
 }
 
-export default OutputEdit;
+export default OutputEdit

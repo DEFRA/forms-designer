@@ -1,1 +1,1 @@
-export { CssClasses } from "./CssClasses";
+export { CssClasses } from './CssClasses'

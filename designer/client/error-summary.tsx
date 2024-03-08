@@ -1,47 +1,47 @@
-import React, { useEffect, useRef } from "react";
-import { i18n } from "./i18n";
+import React, { useEffect, useRef } from 'react'
+import { i18n } from './i18n'
 
 export interface ErrorListItem {
-  reactListKey?: string;
-  href?: string;
-  children: string;
+  reactListKey?: string
+  href?: string
+  children: string
 }
 
 interface ErrorSummaryProps {
-  className?: string;
-  descriptionChildren?: string;
-  errorList: Array<ErrorListItem>;
-  titleChildren?: string;
+  className?: string
+  descriptionChildren?: string
+  errorList: Array<ErrorListItem>
+  titleChildren?: string
 }
 
 export function ErrorSummary({
   className,
   descriptionChildren,
   errorList,
-  titleChildren = "There is a problem",
+  titleChildren = 'There is a problem'
 }: ErrorSummaryProps) {
-  const errorSummaryRef = useRef();
+  const errorSummaryRef = useRef()
 
   useEffect(() => {
-    errorSummaryRef.current.focus();
-  }, []);
+    errorSummaryRef.current.focus()
+  }, [])
 
-  let description;
+  let description
   if (descriptionChildren) {
-    description = <p>{descriptionChildren}</p>;
+    description = <p>{descriptionChildren}</p>
   }
 
   const handleClick = (id) => {
-    const element = document.getElementById(id.substring(1));
+    const element = document.getElementById(id.substring(1))
     if (element) {
-      element.scrollIntoView();
-      element.focus();
+      element.scrollIntoView()
+      element.focus()
     }
-  };
+  }
 
   return (
     <div
-      className={`govuk-error-summary ${className || ""}`}
+      className={`govuk-error-summary ${className || ''}`}
       aria-labelledby="error-summary-title"
       role="alert"
       tabIndex="-1"
@@ -60,8 +60,8 @@ export function ErrorSummary({
                 <a
                   href={error.href}
                   onClick={(e) => {
-                    e.preventDefault();
-                    handleClick(error.href);
+                    e.preventDefault()
+                    handleClick(error.href)
                   }}
                 >
                   {Array.isArray(error.children)
@@ -80,7 +80,7 @@ export function ErrorSummary({
         </ul>
       </div>
     </div>
-  );
+  )
 }
 
-export default ErrorSummary;
+export default ErrorSummary

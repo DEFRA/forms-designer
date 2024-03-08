@@ -1,33 +1,30 @@
-import { removeCondition } from "..";
-import { FormDefinition } from "@defra/forms-model";
+import { removeCondition } from '..'
+import { FormDefinition } from '@defra/forms-model'
 
 const data: FormDefinition = {
   pages: [
-    { next: [], path: "/" },
+    { next: [], path: '/' },
     {
-      path: "/badgers",
-      next: [
-        { path: "/summary" },
-        { path: "/disaster", condition: "someName" },
-      ],
-    },
+      path: '/badgers',
+      next: [{ path: '/summary' }, { path: '/disaster', condition: 'someName' }]
+    }
   ],
-  conditions: [{ name: "someName" }, { name: "anotherName" }],
-};
-test("removeCondition should remove conditions from the conditions key and in page links", () => {
-  const updated = removeCondition(data, "someName");
+  conditions: [{ name: 'someName' }, { name: 'anotherName' }]
+}
+test('removeCondition should remove conditions from the conditions key and in page links', () => {
+  const updated = removeCondition(data, 'someName')
   expect(updated).toEqual({
     pages: [
-      { next: [], path: "/" },
+      { next: [], path: '/' },
       {
-        path: "/badgers",
-        next: [{ path: "/summary" }, { path: "/disaster" }],
-      },
+        path: '/badgers',
+        next: [{ path: '/summary' }, { path: '/disaster' }]
+      }
     ],
-    conditions: [{ name: "anotherName" }],
-  });
-});
+    conditions: [{ name: 'anotherName' }]
+  })
+})
 
-test("removeCondition should do nothing if the condition does not exist", () => {
-  expect(removeCondition(data, "404")).toEqual(data);
-});
+test('removeCondition should do nothing if the condition does not exist', () => {
+  expect(removeCondition(data, '404')).toEqual(data)
+})

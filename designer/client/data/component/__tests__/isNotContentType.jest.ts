@@ -1,41 +1,41 @@
 import {
   ContentComponentsDef,
-  InputFieldsComponentsDef,
-} from "@defra/forms-model";
-import { isNotContentType } from "../../types";
-test("isNotContentType type guard catches content types", () => {
+  InputFieldsComponentsDef
+} from '@defra/forms-model'
+import { isNotContentType } from '../../types'
+test('isNotContentType type guard catches content types', () => {
   const contentBase: ContentComponentsDef = {
     options: {},
-    type: "Para",
-    content: "",
-    name: "",
+    type: 'Para',
+    content: '',
+    name: '',
     schema: {},
-    subType: "content",
-    title: "",
-  };
+    subType: 'content',
+    title: ''
+  }
 
   const inputBase: InputFieldsComponentsDef = {
-    hint: "",
-    name: "",
+    hint: '',
+    name: '',
     options: {},
     schema: {},
-    title: "",
-    type: "TextField",
-  };
+    title: '',
+    type: 'TextField'
+  }
 
-  expect(isNotContentType(contentBase)).toBe(false);
-  expect(isNotContentType({ ...contentBase, type: "Details" })).toBe(false);
-  expect(isNotContentType({ ...contentBase, type: "InsetText" })).toBe(false);
-  expect(isNotContentType({ ...contentBase, type: "Para" })).toBe(false);
-  expect(isNotContentType(inputBase)).toBe(true);
-  expect(isNotContentType({ ...inputBase, type: "TelephoneNumberField" })).toBe(
+  expect(isNotContentType(contentBase)).toBe(false)
+  expect(isNotContentType({ ...contentBase, type: 'Details' })).toBe(false)
+  expect(isNotContentType({ ...contentBase, type: 'InsetText' })).toBe(false)
+  expect(isNotContentType({ ...contentBase, type: 'Para' })).toBe(false)
+  expect(isNotContentType(inputBase)).toBe(true)
+  expect(isNotContentType({ ...inputBase, type: 'TelephoneNumberField' })).toBe(
     true
-  );
+  )
   expect(
     isNotContentType({
-      list: "",
+      list: '',
       ...inputBase,
-      type: "RadiosField",
+      type: 'RadiosField'
     })
-  ).toBe(true);
-});
+  ).toBe(true)
+})

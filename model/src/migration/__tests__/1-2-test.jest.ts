@@ -1,137 +1,137 @@
-import { migrate } from "../migration.1-2";
-jest.mock("../../utils/helpers", () => {
+import { migrate } from '../migration.1-2'
+jest.mock('../../utils/helpers', () => {
   return {
     __esModule: true,
-    nanoid: jest.fn().mockReturnValueOnce("id-1").mockReturnValueOnce("id-2"),
-  };
-});
-test("migrate from version 1 to 2", () => {
+    nanoid: jest.fn().mockReturnValueOnce('id-1').mockReturnValueOnce('id-2')
+  }
+})
+test('migrate from version 1 to 2', () => {
   const testData = {
     pages: [
       {
-        path: "/pg1",
+        path: '/pg1',
         components: [
           {},
           {
-            title: "my title",
-            name: "myName",
+            title: 'my title',
+            name: 'myName',
             values: {
-              type: "static",
+              type: 'static',
               items: [
                 {
-                  label: "A thing",
-                  value: "myThing",
-                  condition: "aCondition",
-                  hint: "Jobbie",
+                  label: 'A thing',
+                  value: 'myThing',
+                  condition: 'aCondition',
+                  hint: 'Jobbie'
                 },
                 {
-                  label: "Another thing",
-                  value: "myOtherThing",
-                  something: "Something else",
-                },
-              ],
-            },
-          },
-        ],
+                  label: 'Another thing',
+                  value: 'myOtherThing',
+                  something: 'Something else'
+                }
+              ]
+            }
+          }
+        ]
       },
       {
-        path: "/pg2",
+        path: '/pg2',
         components: [
           {
-            title: "other list",
-            name: "otherList",
+            title: 'other list',
+            name: 'otherList',
             values: {
-              type: "static",
+              type: 'static',
               items: [
                 {
-                  label: "aa",
-                  value: "aa",
-                  hint: "aahint",
+                  label: 'aa',
+                  value: 'aa',
+                  hint: 'aahint'
                 },
                 {
-                  label: "bb",
-                  value: "bb",
-                },
-              ],
-            },
+                  label: 'bb',
+                  value: 'bb'
+                }
+              ]
+            }
           },
           {
-            title: "countries question",
-            name: "cq",
+            title: 'countries question',
+            name: 'cq',
             values: {
-              type: "listRef",
-              list: "countries",
-            },
-          },
-        ],
-      },
-    ],
-  };
+              type: 'listRef',
+              list: 'countries'
+            }
+          }
+        ]
+      }
+    ]
+  }
 
   const expected = {
     lists: [
       {
         items: [
           {
-            conditions: "aCondition",
-            hint: "Jobbie",
-            title: "A thing",
-            value: "myThing",
+            conditions: 'aCondition',
+            hint: 'Jobbie',
+            title: 'A thing',
+            value: 'myThing'
           },
           {
-            title: "Another thing",
-            value: "myOtherThing",
-          },
+            title: 'Another thing',
+            value: 'myOtherThing'
+          }
         ],
-        name: "id-1",
-        title: "my title",
+        name: 'id-1',
+        title: 'my title'
       },
       {
         items: [
           {
-            hint: "aahint",
-            title: "aa",
-            value: "aa",
+            hint: 'aahint',
+            title: 'aa',
+            value: 'aa'
           },
           {
-            title: "bb",
-            value: "bb",
-          },
+            title: 'bb',
+            value: 'bb'
+          }
         ],
-        name: "id-2",
-        title: "other list",
-      },
+        name: 'id-2',
+        title: 'other list'
+      }
     ],
     pages: [
       {
-        path: "/pg1",
+        path: '/pg1',
         components: [
           {},
           {
-            list: "id-1",
-            name: "myName",
-            title: "my title",
-          },
-        ],
+            list: 'id-1',
+            name: 'myName',
+            title: 'my title'
+          }
+        ]
       },
       {
-        path: "/pg2",
+        path: '/pg2',
         components: [
           {
-            list: "id-2",
-            name: "otherList",
-            title: "other list",
+            list: 'id-2',
+            name: 'otherList',
+            title: 'other list'
           },
           {
-            list: "countries",
-            name: "cq",
-            title: "countries question",
-          },
-        ],
-      },
+            list: 'countries',
+            name: 'cq',
+            title: 'countries question'
+          }
+        ]
+      }
     ],
-    version: 2,
-  };
+    version: 2
+  }
 
-  expect(migrate(testData)).toEqual(expected);
-});
+  expect(migrate(testData)).toEqual(expected)
+})

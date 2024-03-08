@@ -1,68 +1,68 @@
-import React, { MouseEvent, ChangeEvent } from "react";
-import { clone } from "@defra/forms-model";
-import { DataContext } from "../context";
-import logger from "../plugins/logger";
+import React, { MouseEvent, ChangeEvent } from 'react'
+import { clone } from '@defra/forms-model'
+import { DataContext } from '../context'
+import logger from '../plugins/logger'
 
 type State = {
-  items: string[];
-};
+  items: string[]
+}
 
 type Props = {
-  data: any; // TODO: type
-  items?: string[];
-  onEdit: ({ data: any }) => void;
-  values: { name: string; display: string }[];
-};
+  data: any // TODO: type
+  items?: string[]
+  onEdit: ({ data: any }) => void
+  values: { name: string; display: string }[]
+}
 
 class NotifyItems extends React.Component<Props, State> {
-  static contextType = DataContext;
+  static contextType = DataContext
 
   constructor(props: Props) {
-    super(props);
+    super(props)
     this.state = {
-      items: props.items ? clone(props.items) : [],
-    };
+      items: props.items ? clone(props.items) : []
+    }
   }
 
   onClickAddItem = (e: MouseEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     this.setState((state) => ({
-      items: [...state.items, ""],
-    }));
-  };
+      items: [...state.items, '']
+    }))
+  }
 
   removeItem = (idx: number) => {
     this.setState({
-      items: this.state.items.filter((_s, i) => i !== idx),
-    });
-  };
+      items: this.state.items.filter((_s, i) => i !== idx)
+    })
+  }
 
   onClickDelete = (event: MouseEvent) => {
-    event.preventDefault();
+    event.preventDefault()
 
-    if (!window.confirm("Confirm delete")) {
-      return;
+    if (!window.confirm('Confirm delete')) {
+      return
     }
 
-    const { data } = this.props;
-    const { save } = this.context;
-    const copy = clone(data);
+    const { data } = this.props
+    const { save } = this.context
+    const copy = clone(data)
 
     save(copy)
       .then((data) => {
-        this.props.onEdit({ data });
+        this.props.onEdit({ data })
       })
       .catch((err) => {
-        logger.error("NotifyItems", err);
-      });
-  };
+        logger.error('NotifyItems', err)
+      })
+  }
 
   onChangeItem = (event: ChangeEvent<HTMLSelectElement>, index: number) => {
-    const { items } = this.state;
-    items[index] = event.target.value;
+    const { items } = this.state
+    items[index] = event.target.value
     this.setState({
-      items,
-    });
+      items
+    })
 
     if (
       items.find(
@@ -70,16 +70,16 @@ class NotifyItems extends React.Component<Props, State> {
       )
     ) {
       event.target.setCustomValidity(
-        "Duplicate conditions found in the list items"
-      );
+        'Duplicate conditions found in the list items'
+      )
     } else {
-      event.target.setCustomValidity("");
+      event.target.setCustomValidity('')
     }
-  };
+  }
 
   render() {
-    const { items } = this.state;
-    const { values } = this.props;
+    const { items } = this.state
+    const { values } = this.props
 
     return (
       <table className="govuk-table">
@@ -135,8 +135,8 @@ class NotifyItems extends React.Component<Props, State> {
                 <a
                   className="list-item-delete"
                   onClick={(e) => {
-                    e.preventDefault();
-                    this.removeItem(index);
+                    e.preventDefault()
+                    this.removeItem(index)
                   }}
                 >
                   &#128465;
@@ -146,8 +146,8 @@ class NotifyItems extends React.Component<Props, State> {
           ))}
         </tbody>
       </table>
-    );
+    )
   }
 }
 
-export default NotifyItems;
+export default NotifyItems

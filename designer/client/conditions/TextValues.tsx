@@ -1,14 +1,14 @@
-import React from "react";
-import { ConditionValue } from "@defra/forms-model";
+import React from 'react'
+import { ConditionValue } from '@defra/forms-model'
 
 export const TextValues = (props) => {
-  const { updateValue, value } = props;
+  const { updateValue, value } = props
 
   const onChangeTextInput = (e) => {
-    const input = e.target;
-    const newValue = input.value;
-    updateValue(new ConditionValue(newValue));
-  };
+    const input = e.target
+    const newValue = input.value
+    updateValue(new ConditionValue(newValue))
+  }
 
   return (
     <input
@@ -20,5 +20,5 @@ export const TextValues = (props) => {
       required
       onChange={onChangeTextInput}
     />
-  );
-};
+  )
+}

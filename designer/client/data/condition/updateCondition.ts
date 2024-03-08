@@ -1,4 +1,4 @@
-import { ConditionRawData, FormDefinition } from "@defra/forms-model";
+import { ConditionRawData, FormDefinition } from '@defra/forms-model'
 
 /**
  * @param data
@@ -7,32 +7,32 @@ import { ConditionRawData, FormDefinition } from "@defra/forms-model";
  */
 export function updateCondition(
   data: FormDefinition,
-  conditionName: ConditionRawData["name"],
-  updatedPartial: Partial<Omit<ConditionRawData, "name">>
+  conditionName: ConditionRawData['name'],
+  updatedPartial: Partial<Omit<ConditionRawData, 'name'>>
 ): FormDefinition {
-  const conditions = [...data.conditions!];
+  const conditions = [...data.conditions!]
   const conditionIndex = conditions.findIndex(
     (condition) => condition.name === conditionName
-  );
+  )
   if (conditionIndex < 0) {
-    throw Error(`No condition found with name ${conditionName}`);
+    throw Error(`No condition found with name ${conditionName}`)
   }
-  const condition = data.conditions[conditionIndex];
+  const condition = data.conditions[conditionIndex]
   const {
     displayName = condition.displayName,
-    value: conditionValue = condition.value,
-  } = updatedPartial;
+    value: conditionValue = condition.value
+  } = updatedPartial
 
   const updatedCondition = {
     ...condition,
     displayName,
-    value: conditionValue,
-  };
+    value: conditionValue
+  }
 
   return {
     ...data,
     conditions: conditions.map((condition, i) =>
       i === conditionIndex ? updatedCondition : condition
-    ),
-  };
+    )
+  }
 }

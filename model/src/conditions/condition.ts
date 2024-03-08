@@ -1,14 +1,14 @@
-import { ConditionField } from "./condition-field";
-import { ConditionAbstract } from "./condition-abstract";
-import { getExpression } from "./condition-operators";
-import { ConditionValue, RelativeTimeValue } from "./condition-values";
-import { ConditionValueAbstract } from "./condition-value-abstract";
-import { Coordinator } from "./types";
+import { ConditionField } from './condition-field'
+import { ConditionAbstract } from './condition-abstract'
+import { getExpression } from './condition-operators'
+import { ConditionValue, RelativeTimeValue } from './condition-values'
+import { ConditionValueAbstract } from './condition-value-abstract'
+import { Coordinator } from './types'
 
 export class Condition extends ConditionAbstract {
-  field: ConditionField;
-  operator: string;
-  value: ConditionValue | RelativeTimeValue;
+  field: ConditionField
+  operator: string
+  value: ConditionValue | RelativeTimeValue
 
   constructor(
     field: ConditionField,
@@ -16,32 +16,32 @@ export class Condition extends ConditionAbstract {
     value: ConditionValue | RelativeTimeValue,
     coordinator?: Coordinator
   ) {
-    super(coordinator);
+    super(coordinator)
 
     if (!(field instanceof ConditionField)) {
-      throw Error(`field ${field} is not a valid ConditionField object`);
+      throw Error(`field ${field} is not a valid ConditionField object`)
     }
-    if (typeof operator !== "string") {
-      throw Error(`operator ${operator} is not a valid operator`);
+    if (typeof operator !== 'string') {
+      throw Error(`operator ${operator} is not a valid operator`)
     }
     if (!(value instanceof ConditionValueAbstract)) {
-      throw Error(`value ${value} is not a valid value type`);
+      throw Error(`value ${value} is not a valid value type`)
     }
 
-    this.field = field;
-    this.operator = operator;
-    this.value = value;
+    this.field = field
+    this.operator = operator
+    this.value = value
   }
 
   asFirstCondition() {
-    this._asFirstCondition();
-    return this;
+    this._asFirstCondition()
+    return this
   }
 
   conditionString() {
     return `'${this.field.display}' ${
       this.operator
-    } '${this.value.toPresentationString()}'`;
+    } '${this.value.toPresentationString()}'`
   }
 
   conditionExpression() {
@@ -50,7 +50,7 @@ export class Condition extends ConditionAbstract {
       this.field.name,
       this.operator,
       this.value
-    );
+    )
   }
 
   clone() {
@@ -59,6 +59,6 @@ export class Condition extends ConditionAbstract {
       this.operator,
       this.value.clone(),
       this.coordinator
-    );
+    )
   }
 }

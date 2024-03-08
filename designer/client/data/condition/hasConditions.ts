@@ -1,5 +1,5 @@
-import { FormDefinition } from "@defra/forms-model";
+import { FormDefinition } from '@defra/forms-model'
 
 export function hasConditions(conditions: any[]): boolean {
-  return conditions.length > 0;
+  return conditions.length > 0
 }

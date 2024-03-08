@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 
 export function MoveUpIcon() {
   return (
@@ -6,14 +6,14 @@ export function MoveUpIcon() {
       <polyline
         points="1,9 10,2 19,9"
         style={{
-          fill: "none",
-          stroke: "grey",
+          fill: 'none',
+          stroke: 'grey',
           strokeWidth: 4,
-          strokeLinecap: "round",
-          strokeLinejoin: "round",
+          strokeLinecap: 'round',
+          strokeLinejoin: 'round'
         }}
       />
       Move up
     </svg>
-  );
+  )
 }

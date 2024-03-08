@@ -1,59 +1,65 @@
-import React, { Component } from "react";
+import React, { Component } from 'react'
 
-import NotifyEditItems from "./notify-edit-items";
-import { Output, NotifyOutputConfiguration, ValidationErrors } from "./types";
-import { Checkboxes, ErrorMessage, Input } from "@xgovformbuilder/govuk-react-jsx";
-import classNames from "classnames";
-import { i18n } from "../i18n";
-import { allInputs } from "../data/component/inputs";
+import NotifyEditItems from './notify-edit-items'
+import { Output, NotifyOutputConfiguration, ValidationErrors } from './types'
+import {
+  Checkboxes,
+  ErrorMessage,
+  Input
+} from '@xgovformbuilder/govuk-react-jsx'
+import classNames from 'classnames'
+import { i18n } from '../i18n'
+import { allInputs } from '../data/component/inputs'
 
-type State = {};
+type State = {}
 
 type Props = {
-  data: any; // TODO: type
-  output: Output;
-  onEdit: ({ data: any }) => void;
-  errors: ValidationErrors;
-};
+  data: any // TODO: type
+  output: Output
+  onEdit: ({ data: any }) => void
+  errors: ValidationErrors
+}
 
 class NotifyEdit extends Component<Props, State> {
-  usableKeys: { name: string; display: string }[];
+  usableKeys: { name: string; display: string }[]
 
   constructor(props: Props) {
-    super(props);
-    const { data } = this.props;
+    super(props)
+    const { data } = this.props
 
     this.usableKeys = allInputs(data).map((input) => ({
-      name: input.propertyPath || "",
-      display: input.title || "",
-    }));
+      name: input.propertyPath || '',
+      display: input.title || ''
+    }))
   }
 
   render() {
-    const { data, output, onEdit, errors } = this.props;
-    const { conditions, lists } = data;
-    const outputConfiguration = (typeof output.outputConfiguration === "object"
-      ? output.outputConfiguration
-      : {
-          templateId: "",
-          apiKey: "",
-          emailField: "",
-          personalisation: [],
-        }) as NotifyOutputConfiguration;
+    const { data, output, onEdit, errors } = this.props
+    const { conditions, lists } = data
+    const outputConfiguration = (
+      typeof output.outputConfiguration === 'object'
+        ? output.outputConfiguration
+        : {
+            templateId: '',
+            apiKey: '',
+            emailField: '',
+            personalisation: []
+          }
+    ) as NotifyOutputConfiguration
 
-    const { templateId, apiKey, emailField } = outputConfiguration;
-    const personalisation = outputConfiguration.personalisation;
+    const { templateId, apiKey, emailField } = outputConfiguration
+    const personalisation = outputConfiguration.personalisation
     const values = [
       ...conditions.map((condition) => ({
         name: condition.name,
-        display: condition.displayName,
+        display: condition.displayName
       })),
       ...lists.map((list) => ({
         name: list.name,
-        display: `${list.title} (List)`,
+        display: `${list.title} (List)`
       })),
-      ...this.usableKeys,
-    ];
+      ...this.usableKeys
+    ]
 
     return (
       <div className="govuk-body">
@@ -61,8 +67,8 @@ class NotifyEdit extends Component<Props, State> {
           id="template-id"
           name="template-id"
           label={{
-            className: "govuk-label--s",
-            children: ["Template ID"],
+            className: 'govuk-label--s',
+            children: ['Template ID']
           }}
           defaultValue={templateId}
           step="any"
@@ -76,8 +82,8 @@ class NotifyEdit extends Component<Props, State> {
           id="api-key"
           name="api-key"
           label={{
-            className: "govuk-label--s",
-            children: ["API Key"],
+            className: 'govuk-label--s',
+            children: ['API Key']
           }}
           defaultValue={apiKey}
           step="any"
@@ -87,8 +93,8 @@ class NotifyEdit extends Component<Props, State> {
         />
         <div
           className={classNames({
-            "govuk-form-group": true,
-            "govuk-form-group--error": errors?.email,
+            'govuk-form-group': true,
+            'govuk-form-group--error': errors?.email
           })}
         >
           <label className="govuk-label" htmlFor="email-field">
@@ -99,8 +105,8 @@ class NotifyEdit extends Component<Props, State> {
           )}
           <select
             className={classNames({
-              "govuk-select": true,
-              "govuk-input--error": errors?.email,
+              'govuk-select': true,
+              'govuk-input--error': errors?.email
             })}
             id="email-field"
             name="email-field"
@@ -125,21 +131,21 @@ class NotifyEdit extends Component<Props, State> {
               {
                 children: (
                   <strong>
-                    {i18n("outputEdit.notifyEdit.includeReferenceTitle")}
+                    {i18n('outputEdit.notifyEdit.includeReferenceTitle')}
                   </strong>
                 ),
                 hint: {
-                  children: i18n("outputEdit.notifyEdit.includeReferenceHint"),
+                  children: i18n('outputEdit.notifyEdit.includeReferenceHint')
                 },
-                value: true,
-              },
+                value: true
+              }
             ]}
             name="add-references-to-personalisation"
           />
         </div>
       </div>
-    );
+    )
   }
 }
 
-export default NotifyEdit;
+export default NotifyEdit

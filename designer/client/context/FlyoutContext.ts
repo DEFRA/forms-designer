@@ -1,7 +1,7 @@
-import { createContext } from "react";
+import { createContext } from 'react'
 
 export const FlyoutContext = createContext({
   count: 0,
   increment: () => {},
-  decrement: () => {},
-});
+  decrement: () => {}
+})

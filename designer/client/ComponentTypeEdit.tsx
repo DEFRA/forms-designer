@@ -1,16 +1,16 @@
-import React, { useContext } from "react";
-import { ComponentTypes } from "@defra/forms-model";
-import { ComponentContext } from "./reducers/component/componentReducer";
-import FieldEdit from "./field-edit";
-import ListFieldEdit from "./components/FieldEditors/list-field-edit";
-import SelectFieldEdit from "./components/FieldEditors/select-field-edit";
-import { TextFieldEdit } from "./components/FieldEditors/text-field-edit";
-import { MultilineTextFieldEdit } from "./multiline-text-field-edit";
-import { FileUploadFieldEdit } from "./file-upload-field-edit";
-import { NumberFieldEdit } from "./components/FieldEditors/number-field-edit";
-import { DateFieldEdit } from "./components/FieldEditors/date-field-edit";
-import { ParaEdit } from "./components/FieldEditors/para-edit";
-import DetailsEdit from "./components/FieldEditors/details-edit";
+import React, { useContext } from 'react'
+import { ComponentTypes } from '@defra/forms-model'
+import { ComponentContext } from './reducers/component/componentReducer'
+import FieldEdit from './field-edit'
+import ListFieldEdit from './components/FieldEditors/list-field-edit'
+import SelectFieldEdit from './components/FieldEditors/select-field-edit'
+import { TextFieldEdit } from './components/FieldEditors/text-field-edit'
+import { MultilineTextFieldEdit } from './multiline-text-field-edit'
+import { FileUploadFieldEdit } from './file-upload-field-edit'
+import { NumberFieldEdit } from './components/FieldEditors/number-field-edit'
+import { DateFieldEdit } from './components/FieldEditors/date-field-edit'
+import { ParaEdit } from './components/FieldEditors/para-edit'
+import DetailsEdit from './components/FieldEditors/details-edit'
 
 const componentTypeEditors = {
   TextField: TextFieldEdit,
@@ -33,32 +33,32 @@ const componentTypeEditors = {
   DatePartsField: DateFieldEdit,
   DateTimeField: DateFieldEdit,
   DateTimePartsField: DateFieldEdit,
-  DateField: DateFieldEdit,
-};
+  DateField: DateFieldEdit
+}
 
 function ComponentTypeEdit(props) {
-  const { context = ComponentContext, page } = props;
-  const { state } = useContext(context);
-  const { selectedComponent } = state;
+  const { context = ComponentContext, page } = props
+  const { state } = useContext(context)
+  const { selectedComponent } = state
   const type = ComponentTypes.find(
-    (t) => t.name === selectedComponent?.type ?? ""
-  );
+    (t) => t.name === selectedComponent?.type ?? ''
+  )
 
   const needsFieldInputs =
-    type?.subType !== "content" || ["FlashCard", "List"].includes(type?.name);
+    type?.subType !== 'content' || ['FlashCard', 'List'].includes(type?.name)
 
-  const TagName = componentTypeEditors[type?.name ?? ""];
+  const TagName = componentTypeEditors[type?.name ?? '']
   return (
     <div>
       {needsFieldInputs && (
         <FieldEdit
-          isContentField={type?.subType === "content"}
-          isListField={type?.subType === "listField"}
+          isContentField={type?.subType === 'content'}
+          isListField={type?.subType === 'listField'}
         />
       )}
       {TagName && <TagName page={page} />}
     </div>
-  );
+  )
 }
 
-export default ComponentTypeEdit;
+export default ComponentTypeEdit

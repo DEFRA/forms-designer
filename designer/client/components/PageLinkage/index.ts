@@ -1,1 +1,1 @@
-export { PageLinkage } from "./PageLinkage";
+export { PageLinkage } from './PageLinkage'

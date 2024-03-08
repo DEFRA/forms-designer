@@ -1,302 +1,302 @@
 export enum ComponentTypeEnum {
-  TextField = "TextField",
-  MultilineTextField = "MultilineTextField",
-  YesNoField = "YesNoField",
-  DateField = "DateField",
-  TimeField = "TimeField",
-  DateTimeField = "DateTimeField",
-  DatePartsField = "DatePartsField",
-  MonthYearField = "MonthYearField",
-  DateTimePartsField = "DateTimePartsField",
-  SelectField = "SelectField",
-  AutocompleteField = "AutocompleteField",
-  RadiosField = "RadiosField",
-  CheckboxesField = "CheckboxesField",
-  NumberField = "NumberField",
-  UkAddressField = "UkAddressField",
-  TelephoneNumberField = "TelephoneNumberField",
-  EmailAddressField = "EmailAddressField",
-  FileUploadField = "FileUploadField",
-  Para = "Para",
-  Html = "Html",
-  InsetText = "InsetText",
-  Details = "Details",
-  FlashCard = "FlashCard",
-  List = "List",
+  TextField = 'TextField',
+  MultilineTextField = 'MultilineTextField',
+  YesNoField = 'YesNoField',
+  DateField = 'DateField',
+  TimeField = 'TimeField',
+  DateTimeField = 'DateTimeField',
+  DatePartsField = 'DatePartsField',
+  MonthYearField = 'MonthYearField',
+  DateTimePartsField = 'DateTimePartsField',
+  SelectField = 'SelectField',
+  AutocompleteField = 'AutocompleteField',
+  RadiosField = 'RadiosField',
+  CheckboxesField = 'CheckboxesField',
+  NumberField = 'NumberField',
+  UkAddressField = 'UkAddressField',
+  TelephoneNumberField = 'TelephoneNumberField',
+  EmailAddressField = 'EmailAddressField',
+  FileUploadField = 'FileUploadField',
+  Para = 'Para',
+  Html = 'Html',
+  InsetText = 'InsetText',
+  Details = 'Details',
+  FlashCard = 'FlashCard',
+  List = 'List'
 }
 
 export type ComponentType =
-  | "TextField"
-  | "MultilineTextField"
-  | "YesNoField"
-  | "DateField"
-  | "TimeField"
-  | "DateTimeField"
-  | "MonthYearField"
-  | "DatePartsField"
-  | "DateTimePartsField"
-  | "SelectField"
-  | "AutocompleteField"
-  | "RadiosField"
-  | "CheckboxesField"
-  | "NumberField"
-  | "UkAddressField"
-  | "TelephoneNumberField"
-  | "EmailAddressField"
-  | "FileUploadField"
-  | "Para"
-  | "Html"
-  | "InsetText"
-  | "Details"
-  | "FlashCard"
-  | "List"
-  | "WebsiteField";
+  | 'TextField'
+  | 'MultilineTextField'
+  | 'YesNoField'
+  | 'DateField'
+  | 'TimeField'
+  | 'DateTimeField'
+  | 'MonthYearField'
+  | 'DatePartsField'
+  | 'DateTimePartsField'
+  | 'SelectField'
+  | 'AutocompleteField'
+  | 'RadiosField'
+  | 'CheckboxesField'
+  | 'NumberField'
+  | 'UkAddressField'
+  | 'TelephoneNumberField'
+  | 'EmailAddressField'
+  | 'FileUploadField'
+  | 'Para'
+  | 'Html'
+  | 'InsetText'
+  | 'Details'
+  | 'FlashCard'
+  | 'List'
+  | 'WebsiteField'
 
-export type ComponentSubType = "field" | "content";
+export type ComponentSubType = 'field' | 'content'
 
 export type ConditionalComponent = {
-  name: "TextField" | "NumberField";
-  title: string;
-  subType: "field";
-};
+  name: 'TextField' | 'NumberField'
+  title: string
+  subType: 'field'
+}
 
 export type ContentOptions = {
-  condition?: string;
-};
+  condition?: string
+}
 
 /**
  * Types for Components JSON structure which are expected by engine and turned into actual form input/content/lists
  */
 interface TextFieldBase {
-  subType?: "field";
-  type: string;
-  name: string;
-  title: string;
-  hint?: string;
+  subType?: 'field'
+  type: string
+  name: string
+  title: string
+  hint?: string
   options: {
-    hideTitle?: boolean;
-    required?: boolean;
-    optionalText?: boolean;
-    classes?: string;
-    allow?: string;
-    autocomplete?: string;
-    exposeToContext?: boolean;
-  };
+    hideTitle?: boolean
+    required?: boolean
+    optionalText?: boolean
+    classes?: string
+    allow?: string
+    autocomplete?: string
+    exposeToContext?: boolean
+  }
   schema: {
-    max?: number;
-    min?: number;
-    length?: number;
-    regex?: string;
-    error?: any; // TODO: in same cases this is a function e.g. addressLine1 in ukaddress
-  };
+    max?: number
+    min?: number
+    length?: number
+    regex?: string
+    error?: any // TODO: in same cases this is a function e.g. addressLine1 in ukaddress
+  }
 }
 
 interface NumberFieldBase {
-  subType?: "field";
-  type: string;
-  name: string;
-  title: string;
-  hint: string;
+  subType?: 'field'
+  type: string
+  name: string
+  title: string
+  hint: string
   options: {
-    prefix?: string;
-    suffix?: string;
-    exposeToContext?: boolean;
-  };
+    prefix?: string
+    suffix?: string
+    exposeToContext?: boolean
+  }
   schema: {
-    min?: number;
-    max?: number;
-    precision?: number;
-  };
+    min?: number
+    max?: number
+    precision?: number
+  }
 }
 
 interface ListFieldBase {
-  subType?: "listField" | "content";
-  type: string;
-  name: string;
-  title: string;
+  subType?: 'listField' | 'content'
+  type: string
+  name: string
+  title: string
   options: {
-    type?: string;
-    hideTitle?: boolean;
-    required?: boolean;
-    optionalText?: boolean;
-    classes?: string;
-    bold?: boolean;
-    exposeToContext?: boolean;
-    allowPrePopulation?: boolean;
-  };
-  list: string;
-  schema: {};
+    type?: string
+    hideTitle?: boolean
+    required?: boolean
+    optionalText?: boolean
+    classes?: string
+    bold?: boolean
+    exposeToContext?: boolean
+    allowPrePopulation?: boolean
+  }
+  list: string
+  schema: {}
 }
 
 interface ContentFieldBase {
-  subType?: "content";
-  type: string;
-  name: string;
-  title: string;
-  content: string;
-  options: ContentOptions;
-  schema: {};
+  subType?: 'content'
+  type: string
+  name: string
+  title: string
+  content: string
+  options: ContentOptions
+  schema: {}
 }
 
 interface DateFieldBase {
-  subType?: "field";
-  type: string;
-  name: string;
-  title: string;
-  hint: string;
+  subType?: 'field'
+  type: string
+  name: string
+  title: string
+  hint: string
   options: {
-    hideTitle?: boolean;
-    required?: boolean;
-    optionalText?: boolean;
-    maxDaysInFuture?: number;
-    maxDaysInPast?: number;
-    exposeToContext?: boolean;
-  };
-  schema: {};
+    hideTitle?: boolean
+    required?: boolean
+    optionalText?: boolean
+    maxDaysInFuture?: number
+    maxDaysInPast?: number
+    exposeToContext?: boolean
+  }
+  schema: {}
 }
 
 // Text Fields
 export interface TextFieldComponent extends TextFieldBase {
-  type: "TextField";
-  options: TextFieldBase["options"] & {
-    customValidationMessage?: string;
-  };
+  type: 'TextField'
+  options: TextFieldBase['options'] & {
+    customValidationMessage?: string
+  }
 }
 
 export interface EmailAddressFieldComponent extends TextFieldBase {
-  type: "EmailAddressField";
+  type: 'EmailAddressField'
 }
 
 export interface NumberFieldComponent extends NumberFieldBase {
-  type: "NumberField";
+  type: 'NumberField'
 }
 
 export interface WebsiteFieldComponent extends TextFieldBase {
-  type: "WebsiteField";
-  options: TextFieldBase["options"] & {
-    customValidationMessage?: string;
-  };
+  type: 'WebsiteField'
+  options: TextFieldBase['options'] & {
+    customValidationMessage?: string
+  }
 }
 
 export interface MultilineTextFieldComponent {
-  type: "MultilineTextField";
+  type: 'MultilineTextField'
 }
 
 export interface TelephoneNumberFieldComponent extends TextFieldBase {
-  type: "TelephoneNumberField";
-  options: TextFieldBase["options"] & {
-    customValidationMessage?: string;
-  };
+  type: 'TelephoneNumberField'
+  options: TextFieldBase['options'] & {
+    customValidationMessage?: string
+  }
 }
 
 export interface YesNoFieldComponent extends TextFieldBase {
-  type: "YesNoField";
+  type: 'YesNoField'
 }
 
 export interface MultilineTextFieldComponent extends TextFieldBase {
-  type: "MultilineTextField";
-  options: TextFieldBase["options"] & {
-    customValidationMessage?: string;
-    rows?: number;
-    maxWords?: number;
-  };
+  type: 'MultilineTextField'
+  options: TextFieldBase['options'] & {
+    customValidationMessage?: string
+    rows?: number
+    maxWords?: number
+  }
   schema: {
-    max?: number;
-    min?: number;
-  };
+    max?: number
+    min?: number
+  }
 }
 
 export interface FileUploadFieldComponent {
-  subType?: "field";
-  type: "FileUploadField";
-  name: string;
-  title: string;
-  hint: string;
+  subType?: 'field'
+  type: 'FileUploadField'
+  name: string
+  title: string
+  hint: string
   options: {
-    required?: boolean;
-    hideTitle?: boolean;
-    multiple?: boolean;
-    classes?: string;
-    exposeToContext?: boolean;
-    imageQualityPlayback?: boolean;
-  };
-  schema: {};
+    required?: boolean
+    hideTitle?: boolean
+    multiple?: boolean
+    classes?: string
+    exposeToContext?: boolean
+    imageQualityPlayback?: boolean
+  }
+  schema: {}
 }
 
 export interface UkAddressFieldComponent extends TextFieldBase {
-  type: "UkAddressField";
+  type: 'UkAddressField'
 }
 
 // Date Fields
 export interface DateFieldComponent extends DateFieldBase {
-  type: "DateField";
+  type: 'DateField'
 }
 
 export interface DateTimeFieldComponent extends DateFieldBase {
-  type: "DateTimeField";
+  type: 'DateTimeField'
 }
 
 export interface DatePartsFieldFieldComponent extends DateFieldBase {
-  type: "DatePartsField";
+  type: 'DatePartsField'
 }
 
 export interface MonthYearFieldComponent extends DateFieldBase {
-  type: "MonthYearField";
+  type: 'MonthYearField'
 }
 
 export interface DateTimePartsFieldComponent extends DateFieldBase {
-  type: "DateTimePartsField";
+  type: 'DateTimePartsField'
 }
 
 export interface TimeFieldComponent extends DateFieldBase {
-  type: "TimeField";
+  type: 'TimeField'
 }
 
 // Content Fields
 export interface ParaComponent extends ContentFieldBase {
-  type: "Para";
+  type: 'Para'
 }
 
 export interface DetailsComponent extends ContentFieldBase {
-  type: "Details";
+  type: 'Details'
 }
 
 export interface HtmlComponent extends ContentFieldBase {
-  type: "Html";
+  type: 'Html'
 }
 
 export interface InsetTextComponent extends ContentFieldBase {
-  type: "InsetText";
+  type: 'InsetText'
 }
 
 // List Fields
 export interface ListComponent extends ListFieldBase {
-  type: "List";
+  type: 'List'
 }
 
 export interface AutocompleteFieldComponent extends ListFieldBase {
-  type: "AutocompleteField";
-  subType?: "listField";
+  type: 'AutocompleteField'
+  subType?: 'listField'
 }
 
 export interface CheckboxesFieldComponent extends ListFieldBase {
-  type: "CheckboxesField";
-  subType?: "listField";
+  type: 'CheckboxesField'
+  subType?: 'listField'
 }
 
 export interface FlashCardComponent extends ListFieldBase {
-  type: "FlashCard";
+  type: 'FlashCard'
 }
 
 export interface RadiosFieldComponent extends ListFieldBase {
-  type: "RadiosField";
-  subType?: "listField";
+  type: 'RadiosField'
+  subType?: 'listField'
 }
 
 export interface SelectFieldComponent extends ListFieldBase {
-  type: "SelectField";
-  options: ListFieldBase["options"] & { autocomplete?: string };
-  subType?: "listField";
+  type: 'SelectField'
+  options: ListFieldBase['options'] & { autocomplete?: string }
+  subType?: 'listField'
 }
 
 export type ComponentDef =
@@ -324,7 +324,7 @@ export type ComponentDef =
   | TimeFieldComponent
   | UkAddressFieldComponent
   | YesNoFieldComponent
-  | WebsiteFieldComponent;
+  | WebsiteFieldComponent
 
 // Components that render inputs.
 export type InputFieldsComponentsDef =
@@ -341,7 +341,7 @@ export type InputFieldsComponentsDef =
   | MonthYearFieldComponent
   | TimeFieldComponent
   | UkAddressFieldComponent
-  | WebsiteFieldComponent;
+  | WebsiteFieldComponent
 
 // Components that render content.
 export type ContentComponentsDef =
@@ -350,7 +350,7 @@ export type ContentComponentsDef =
   | HtmlComponent
   | InsetTextComponent
   | ListComponent
-  | FlashCardComponent;
+  | FlashCardComponent
 
 // Components that render Lists
 export type ListComponentsDef =
@@ -359,4 +359,4 @@ export type ListComponentsDef =
   | CheckboxesFieldComponent
   | FlashCardComponent
   | RadiosFieldComponent
-  | SelectFieldComponent;
+  | SelectFieldComponent

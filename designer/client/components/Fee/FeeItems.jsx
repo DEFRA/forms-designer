@@ -1,151 +1,151 @@
-import React from "react";
-import { clone } from "@defra/forms-model";
-import { ErrorMessage } from "@xgovformbuilder/govuk-react-jsx";
-import classNames from "classnames";
+import React from 'react'
+import { clone } from '@defra/forms-model'
+import { ErrorMessage } from '@xgovformbuilder/govuk-react-jsx'
+import classNames from 'classnames'
 
-import { isEmpty } from "../../helpers";
-import { DataContext } from "../../context";
-import logger from "../../plugins/logger";
+import { isEmpty } from '../../helpers'
+import { DataContext } from '../../context'
+import logger from '../../plugins/logger'
 
 function isDuplicated(arr) {
-  return [...new Set(arr)].length !== arr.length;
+  return [...new Set(arr)].length !== arr.length
 }
 
-const MISSING_DESC = "missingDescription";
-const INVALID_AMOUNT = "invalidAmount";
-const MISSING_COND = "missingCondition";
-const DUP_CONDITIONS = "dupConditions";
+const MISSING_DESC = 'missingDescription'
+const INVALID_AMOUNT = 'invalidAmount'
+const MISSING_COND = 'missingCondition'
+const DUP_CONDITIONS = 'dupConditions'
 
 export class FeeItems extends React.Component {
-  static contextType = DataContext;
+  static contextType = DataContext
 
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       items: props.items ? clone(props.items) : [],
-      errors: {},
-    };
+      errors: {}
+    }
   }
 
   validate = (form) => {
-    const errors = {};
-    const formData = new window.FormData(form);
-    let missingDescription = false;
-    const missingDescriptions = {};
-    let amountInvalid = false;
-    const amountsInvalid = {};
-    let missingCondition = false;
-    const missingConditions = {};
-    formData.getAll("description").forEach((d, i) => {
+    const errors = {}
+    const formData = new window.FormData(form)
+    let missingDescription = false
+    const missingDescriptions = {}
+    let amountInvalid = false
+    const amountsInvalid = {}
+    let missingCondition = false
+    const missingConditions = {}
+    formData.getAll('description').forEach((d, i) => {
       if (isEmpty(d)) {
-        missingDescriptions[i] = true;
-        missingDescription = true;
+        missingDescriptions[i] = true
+        missingDescription = true
       }
-    });
+    })
     if (missingDescription) {
-      missingDescriptions.href = "#items-table";
-      missingDescriptions.children = "Enter description";
-      errors[MISSING_DESC] = missingDescriptions;
+      missingDescriptions.href = '#items-table'
+      missingDescriptions.children = 'Enter description'
+      errors[MISSING_DESC] = missingDescriptions
     }
 
-    formData.getAll("condition").forEach((d, i) => {
+    formData.getAll('condition').forEach((d, i) => {
       if (isEmpty(d)) {
-        missingDescriptions[i] = true;
-        missingCondition = true;
+        missingDescriptions[i] = true
+        missingCondition = true
       }
-    });
+    })
     if (missingCondition) {
-      missingConditions.href = "#items-table";
-      missingConditions.children = "Select a condition";
-      errors[MISSING_COND] = missingConditions;
+      missingConditions.href = '#items-table'
+      missingConditions.children = 'Select a condition'
+      errors[MISSING_COND] = missingConditions
     }
 
-    formData.getAll("amount").forEach((d, i) => {
+    formData.getAll('amount').forEach((d, i) => {
       if (d < 0) {
-        amountsInvalid[i] = true;
-        amountInvalid = true;
+        amountsInvalid[i] = true
+        amountInvalid = true
       }
-    });
+    })
     if (amountInvalid) {
-      amountsInvalid.href = "#items-table";
-      amountsInvalid.children = "Enter a valid amount";
-      errors[INVALID_AMOUNT] = amountsInvalid;
+      amountsInvalid.href = '#items-table'
+      amountsInvalid.children = 'Enter a valid amount'
+      errors[INVALID_AMOUNT] = amountsInvalid
     }
 
-    const descriptions = formData.getAll("description").map((t) => t.trim());
-    const conditions = formData.getAll("condition").map((t) => t.trim());
+    const descriptions = formData.getAll('description').map((t) => t.trim())
+    const conditions = formData.getAll('condition').map((t) => t.trim())
 
     // Only validate dupes if there is more than one item
     if (descriptions.length >= 2 && isDuplicated(conditions)) {
       errors[DUP_CONDITIONS] = {
-        href: "#items-table",
-        children: "Duplicate conditions found in the list items",
-      };
+        href: '#items-table',
+        children: 'Duplicate conditions found in the list items'
+      }
     }
 
     this.setState({
-      errors,
-    });
+      errors
+    })
 
-    return errors;
-  };
+    return errors
+  }
 
   onClickAddItem = (e) => {
-    e.preventDefault();
+    e.preventDefault()
     this.setState({
       items: this.state.items.concat({
-        description: "",
+        description: '',
         amount: 0,
-        condition: "",
-      }),
-    });
-  };
+        condition: ''
+      })
+    })
+  }
 
   removeItem = (idx) => {
     this.setState((prevState, props) => ({
       items: this.state.items.filter((s, i) => i !== idx),
-      errors: {},
-    }));
-  };
+      errors: {}
+    }))
+  }
 
   onClickDelete = (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
-    if (!window.confirm("Confirm delete")) {
-      return;
+    if (!window.confirm('Confirm delete')) {
+      return
     }
 
-    const { data, fee } = this.props;
-    const { save } = this.context;
-    const copy = clone(data);
+    const { data, fee } = this.props
+    const { save } = this.context
+    const copy = clone(data)
 
     // Remove the list
-    copy.fees.splice(data.fees.indexOf(fee), 1);
+    copy.fees.splice(data.fees.indexOf(fee), 1)
 
     save(copy)
       .then((data) => {
-        this.props.onEdit({ data });
+        this.props.onEdit({ data })
       })
       .catch((err) => {
-        logger.error("FeeItems", err);
-      });
-  };
+        logger.error('FeeItems', err)
+      })
+  }
 
   render() {
-    const { items, errors } = this.state;
-    const { conditions } = this.props;
+    const { items, errors } = this.state
+    const { conditions } = this.props
 
-    const hasValidationErrors = Object.keys(errors).length > 0;
+    const hasValidationErrors = Object.keys(errors).length > 0
 
     const errorMessages = Object.entries(errors).map(([key, value]) => {
-      return <ErrorMessage key={key}>{value?.children}</ErrorMessage>;
-    });
+      return <ErrorMessage key={key}>{value?.children}</ErrorMessage>
+    })
 
     return (
       <div
         className={classNames({
-          "govuk-form-group": true,
-          "govuk-form-group--error": hasValidationErrors,
+          'govuk-form-group': true,
+          'govuk-form-group--error': hasValidationErrors
         })}
       >
         {errorMessages}
@@ -184,8 +184,8 @@ export class FeeItems extends React.Component {
                 <td className="govuk-table__cell">
                   <input
                     className={classNames({
-                      "govuk-input": true,
-                      "govuk-input--error": errors?.[MISSING_DESC]?.[index],
+                      'govuk-input': true,
+                      'govuk-input--error': errors?.[MISSING_DESC]?.[index]
                     })}
                     name="description"
                     type="text"
@@ -195,8 +195,8 @@ export class FeeItems extends React.Component {
                 <td className="govuk-table__cell">
                   <input
                     className={classNames({
-                      "govuk-input": true,
-                      "govuk-input--error": errors?.[INVALID_AMOUNT]?.[index],
+                      'govuk-input': true,
+                      'govuk-input--error': errors?.[INVALID_AMOUNT]?.[index]
                     })}
                     name="amount"
                     type="number"
@@ -207,8 +207,8 @@ export class FeeItems extends React.Component {
                 <td className="govuk-table__cell">
                   <select
                     className={classNames({
-                      "govuk-select": true,
-                      "govuk-input--error": errors?.[MISSING_COND]?.[index],
+                      'govuk-select': true,
+                      'govuk-input--error': errors?.[MISSING_COND]?.[index]
                     })}
                     id="link-source"
                     name="condition"
@@ -234,6 +234,6 @@ export class FeeItems extends React.Component {
           </tbody>
         </table>
       </div>
-    );
+    )
   }
 }

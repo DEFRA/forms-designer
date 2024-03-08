@@ -1,47 +1,47 @@
-import { Fields } from "./types";
+import { Fields } from './types'
 
 export function fieldsReducer(
   state,
   action: {
-    type: Fields;
-    payload: any;
+    type: Fields
+    payload: any
   }
 ) {
-  const { type, payload } = action;
-  const { selectedComponent } = state;
+  const { type, payload } = action
+  const { selectedComponent } = state
 
   switch (type) {
     case Fields.EDIT_CONTENT:
       return {
-        selectedComponent: { ...selectedComponent, content: payload },
-      };
+        selectedComponent: { ...selectedComponent, content: payload }
+      }
     case Fields.EDIT_TITLE:
       return {
-        selectedComponent: { ...selectedComponent, title: payload },
-      };
+        selectedComponent: { ...selectedComponent, title: payload }
+      }
     case Fields.EDIT_NAME: {
       return {
         ...state,
         selectedComponent: {
           ...selectedComponent,
           name: payload,
-          nameHasError: /\s/g.test(payload),
-        },
-      };
+          nameHasError: /\s/g.test(payload)
+        }
+      }
     }
     case Fields.EDIT_TYPE: {
       return {
         ...state,
         selectedComponent: {
           ...selectedComponent,
-          ...payload,
-        },
-      };
+          ...payload
+        }
+      }
     }
     case Fields.EDIT_HELP:
       return {
         ...state,
-        selectedComponent: { ...selectedComponent, hint: payload },
-      };
+        selectedComponent: { ...selectedComponent, hint: payload }
+      }
   }
 }

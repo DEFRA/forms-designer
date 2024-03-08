@@ -4,48 +4,48 @@ import {
   dateTimeUnits,
   dateUnits,
   RelativeTimeValue,
-  timeUnits,
-} from "./inline-condition-values";
+  timeUnits
+} from './inline-condition-values'
 
 const defaultOperators = {
-  is: inline("=="),
-  "is not": inline("!="),
-};
+  is: inline('=='),
+  'is not': inline('!=')
+}
 
 function withDefaults(param) {
-  return Object.assign({}, param, defaultOperators);
+  return Object.assign({}, param, defaultOperators)
 }
 
 const textBasedFieldCustomisations = {
-  "is longer than": lengthIs(">"),
-  "is shorter than": lengthIs("<"),
-  "has length": lengthIs("=="),
-};
+  'is longer than': lengthIs('>'),
+  'is shorter than': lengthIs('<'),
+  'has length': lengthIs('==')
+}
 
 const absoluteDateTimeOperators = {
-  is: absoluteDateTime("=="),
-  "is not": absoluteDateTime("!="),
-  "is before": absoluteDateTime("<"),
-  "is after": absoluteDateTime(">"),
-};
+  is: absoluteDateTime('=='),
+  'is not': absoluteDateTime('!='),
+  'is before': absoluteDateTime('<'),
+  'is after': absoluteDateTime('>')
+}
 
 const relativeTimeOperators = (units) => ({
-  "is at least": relativeTime("<=", ">=", units),
-  "is at most": relativeTime(">=", "<=", units),
-  "is less than": relativeTime(">", "<", units),
-  "is more than": relativeTime("<", ">", units),
-});
+  'is at least': relativeTime('<=', '>=', units),
+  'is at most': relativeTime('>=', '<=', units),
+  'is less than': relativeTime('>', '<', units),
+  'is more than': relativeTime('<', '>', units)
+})
 
 export const customOperators = {
   CheckboxesField: {
-    contains: reverseInline("in"),
-    "does not contain": not(reverseInline("in")),
+    contains: reverseInline('in'),
+    'does not contain': not(reverseInline('in'))
   },
   NumberField: withDefaults({
-    "is at least": inline(">="),
-    "is at most": inline("<="),
-    "is less than": inline("<"),
-    "is more than": inline(">"),
+    'is at least': inline('>='),
+    'is at most': inline('<='),
+    'is less than': inline('<'),
+    'is more than': inline('>')
   }),
   DateField: Object.assign(
     {},
@@ -74,79 +74,79 @@ export const customOperators = {
   ),
   TextField: withDefaults(textBasedFieldCustomisations),
   MultilineTextField: withDefaults(textBasedFieldCustomisations),
-  EmailAddressField: withDefaults(textBasedFieldCustomisations),
-};
+  EmailAddressField: withDefaults(textBasedFieldCustomisations)
+}
 
 export function getOperatorNames(fieldType) {
-  return Object.keys(getConditionals(fieldType)).sort();
+  return Object.keys(getConditionals(fieldType)).sort()
 }
 
 export function getExpression(fieldType, fieldName, operator, value) {
   return getConditionals(fieldType)[operator].expression(
     { type: fieldType, name: fieldName },
     value
-  );
+  )
 }
 
 export function getOperatorConfig(fieldType, operator) {
-  return getConditionals(fieldType)[operator];
+  return getConditionals(fieldType)[operator]
 }
 
 function getConditionals(fieldType) {
-  return customOperators[fieldType] || defaultOperators;
+  return customOperators[fieldType] || defaultOperators
 }
 
 function inline(operator) {
   return {
     expression: (field, value) =>
-      `${field.name} ${operator} ${formatValue(field.type, value.value)}`,
-  };
+      `${field.name} ${operator} ${formatValue(field.type, value.value)}`
+  }
 }
 
 function lengthIs(operator) {
   return {
     expression: (field, value) =>
-      `length(${field.name}) ${operator} ${value.value}`,
-  };
+      `length(${field.name}) ${operator} ${value.value}`
+  }
 }
 
 function reverseInline(operator) {
   return {
     expression: (field, value) =>
-      `${formatValue(field.type, value.value)} ${operator} ${field.name}`,
-  };
+      `${formatValue(field.type, value.value)} ${operator} ${field.name}`
+  }
 }
 
 function not(operatorDefinition) {
   return {
     expression: (field, value) =>
-      `not (${operatorDefinition.expression(field, value)})`,
-  };
+      `not (${operatorDefinition.expression(field, value)})`
+  }
 }
 
 function formatValue(fieldType, value) {
-  if (fieldType === "NumberField" || fieldType === "YesNoField") {
-    return value;
+  if (fieldType === 'NumberField' || fieldType === 'YesNoField') {
+    return value
   }
-  return `'${value}'`;
+  return `'${value}'`
 }
 
 export const absoluteDateOrTimeOperatorNames = Object.keys(
   absoluteDateTimeOperators
-);
+)
 export const relativeDateOrTimeOperatorNames = Object.keys(
   relativeTimeOperators(dateTimeUnits)
-);
+)
 
 function absoluteDateTime(operator) {
   return {
     expression: (field, value) => {
       if (value instanceof ConditionValue) {
-        return `${field.name} ${operator} '${value.toExpression()}'`;
+        return `${field.name} ${operator} '${value.toExpression()}'`
       }
-      throw Error("only Value types are supported");
-    },
-  };
+      throw Error('only Value types are supported')
+    }
+  }
 }
 
 function relativeTime(pastOperator, futureOperator, units) {
@@ -157,10 +157,10 @@ function relativeTime(pastOperator, futureOperator, units) {
         const operator =
           value.direction === dateDirections.PAST
             ? pastOperator
-            : futureOperator;
-        return `${field.name} ${operator} ${value.toExpression()}`;
+            : futureOperator
+        return `${field.name} ${operator} ${value.toExpression()}`
       }
-      throw Error("time shift requires a TimeShiftValue");
-    },
-  };
+      throw Error('time shift requires a TimeShiftValue')
+    }
+  }
 }

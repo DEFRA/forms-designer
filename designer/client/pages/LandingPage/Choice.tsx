@@ -1,32 +1,32 @@
-import React, { ReactElement, useState } from "react";
-import { i18n } from "../../i18n";
-import { withRouter } from "react-router-dom";
-import { Radios } from "@xgovformbuilder/govuk-react-jsx";
-import "./LandingPage.scss";
+import React, { ReactElement, useState } from 'react'
+import { i18n } from '../../i18n'
+import { withRouter } from 'react-router-dom'
+import { Radios } from '@xgovformbuilder/govuk-react-jsx'
+import './LandingPage.scss'
 
 interface Props {
-  history: any;
+  history: any
 }
 
 export function LandingChoice({ history }: Props): ReactElement {
-  const [createNewFrom, setCreateNewForm] = useState(true);
+  const [createNewFrom, setCreateNewForm] = useState(true)
 
   const handleNext = function () {
-    if (createNewFrom) history.push("/new");
-    else history.push("/choose-existing");
-  };
+    if (createNewFrom) history.push('/new')
+    else history.push('/choose-existing')
+  }
 
   const handleChange = (e) => {
-    setCreateNewForm(e.target.value == "true");
-  };
+    setCreateNewForm(e.target.value == 'true')
+  }
 
   return (
     <div className="new-config">
       <div className="choice-wrapper">
         <h1 className="govuk-heading-xl govuk-heading-xl__lowmargin">
-          {i18n("landingPage.choice.heading")}
+          {i18n('landingPage.choice.heading')}
         </h1>
-        <p className="govuk-body">{i18n("landingPage.choice.intro")}</p>
+        <p className="govuk-body">{i18n('landingPage.choice.intro')}</p>
         <Radios
           className="govuk-radios--inline"
           name="newOrExisting"
@@ -36,18 +36,18 @@ export function LandingChoice({ history }: Props): ReactElement {
           fieldset={{
             legend: {
               isPageHeading: true,
-              children: [i18n("landingPage.choice.hint")],
-            },
+              children: [i18n('landingPage.choice.hint')]
+            }
           }}
           items={[
             {
-              children: [i18n("landingPage.choice.newform")],
-              value: true,
+              children: [i18n('landingPage.choice.newform')],
+              value: true
             },
             {
-              children: [i18n("landingPage.choice.existing")],
-              value: false,
-            },
+              children: [i18n('landingPage.choice.existing')],
+              value: false
+            }
           ]}
         />
         <button
@@ -55,11 +55,11 @@ export function LandingChoice({ history }: Props): ReactElement {
           onClick={handleNext}
           title="Next"
         >
-          {i18n("Next")}
+          {i18n('Next')}
         </button>
       </div>
     </div>
-  );
+  )
 }
 
-export default withRouter(LandingChoice);
+export default withRouter(LandingChoice)

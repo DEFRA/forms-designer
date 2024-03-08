@@ -1,1 +1,1 @@
-export type MigrationScript = (data: Object) => Object;
+export type MigrationScript = (data: Object) => Object

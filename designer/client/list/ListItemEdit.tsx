@@ -1,18 +1,18 @@
-import React, { memo, useContext } from "react";
-import { i18n } from "./../i18n";
-import { Hint, Input, Label, Textarea } from "@xgovformbuilder/govuk-react-jsx";
-import { DataContext } from "../context";
+import React, { memo, useContext } from 'react'
+import { i18n } from './../i18n'
+import { Hint, Input, Label, Textarea } from '@xgovformbuilder/govuk-react-jsx'
+import { DataContext } from '../context'
 import {
   ListsEditorContext,
-  ListsEditorStateActions,
-} from "../reducers/list/listsEditorReducer";
-import { useListItem } from "../hooks/list/useListItem";
-import { ListContext } from "../reducers/listReducer";
+  ListsEditorStateActions
+} from '../reducers/list/listsEditorReducer'
+import { useListItem } from '../hooks/list/useListItem'
+import { ListContext } from '../reducers/listReducer'
 
 export function ListItemEdit() {
-  const { dispatch: listsEditorDispatch } = useContext(ListsEditorContext);
-  const { state, dispatch } = useContext(ListContext);
-  const { data, save } = useContext(DataContext);
+  const { dispatch: listsEditorDispatch } = useContext(ListsEditorContext)
+  const { state, dispatch } = useContext(ListContext)
+  const { data, save } = useContext(DataContext)
 
   const {
     handleTitleChange,
@@ -24,19 +24,19 @@ export function ListItemEdit() {
     value,
     condition,
     title,
-    hint,
-  } = useListItem(state, dispatch);
+    hint
+  } = useListItem(state, dispatch)
 
-  const { conditions } = data;
-  const { listItemErrors: errors } = state;
+  const { conditions } = data
+  const { listItemErrors: errors } = state
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const copy = { ...data };
-    const hasErrors = validate(i18n);
-    if (hasErrors) return;
-    await save(prepareForSubmit(copy));
-    listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST_ITEM, false]);
-  };
+    e.preventDefault()
+    const copy = { ...data }
+    const hasErrors = validate(i18n)
+    if (hasErrors) return
+    await save(prepareForSubmit(copy))
+    listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST_ITEM, false])
+  }
 
   return (
     <>
@@ -46,10 +46,10 @@ export function ListItemEdit() {
           data-testid="list-item-text"
           name="list-item-text"
           label={{
-            className: "govuk-label--s",
-            children: [i18n("list.item.title")],
+            className: 'govuk-label--s',
+            children: [i18n('list.item.title')]
           }}
-          hint={{ children: i18n("list.item.titleHint") }}
+          hint={{ children: i18n('list.item.titleHint') }}
           value={title}
           onChange={handleTitleChange}
           errorMessage={
@@ -57,8 +57,8 @@ export function ListItemEdit() {
           }
         />
         <Textarea
-          label={{ children: i18n("list.item.help") }}
-          hint={{ children: i18n("list.item.helpHint") }}
+          label={{ children: i18n('list.item.help') }}
+          hint={{ children: i18n('list.item.helpHint') }}
           value={hint}
           data-testid="list-item-hint"
           name="list-item-hint"
@@ -66,8 +66,8 @@ export function ListItemEdit() {
           onChange={handleHintChange}
         />
         <Input
-          label={{ children: [i18n("list.item.value")] }}
-          hint={{ children: [i18n("list.item.valueHint")] }}
+          label={{ children: [i18n('list.item.value')] }}
+          hint={{ children: [i18n('list.item.valueHint')] }}
           id="value"
           data-testid="list-item-value"
           name="list-item-value"
@@ -77,8 +77,8 @@ export function ListItemEdit() {
           }
           onChange={handleValueChange}
         />
-        <Label for="options.condition">{i18n("list.item.conditions")}</Label>
-        <Hint>{i18n("list.item.conditionsHint")}</Hint>
+        <Label for="options.condition">{i18n('list.item.conditions')}</Label>
+        <Hint>{i18n('list.item.conditionsHint')}</Hint>
         <select
           className="govuk-select"
           id="condition"
@@ -99,19 +99,19 @@ export function ListItemEdit() {
           ))}
         </select>
         <hr />
-        <div className={"govuk-form-group"}>
+        <div className={'govuk-form-group'}>
           <button
             data-testid="save-list-item"
             className="govuk-button"
             type="submit"
             onClick={handleSubmit}
           >
-            {i18n("save")}
+            {i18n('save')}
           </button>
         </div>
       </form>
     </>
-  );
+  )
 }
 
-export default memo(ListItemEdit);
+export default memo(ListItemEdit)

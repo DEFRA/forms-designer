@@ -1,11 +1,11 @@
-import { Input, isNotContentType , Path } from "../types";
-import { allPathsLeadingTo } from "../page";
-import { FormDefinition } from "@defra/forms-model";
+import { Input, isNotContentType, Path } from '../types'
+import { allPathsLeadingTo } from '../page'
+import { FormDefinition } from '@defra/forms-model'
 
 export function allInputs(data: FormDefinition): Input[] {
-  const { pages = [] } = data;
+  const { pages = [] } = data
   return pages.flatMap((page) => {
-    const inputs = (page.components ?? []).filter(isNotContentType);
+    const inputs = (page.components ?? []).filter(isNotContentType)
     return inputs.map((input) => {
       return {
         name: input.name,
@@ -14,17 +14,17 @@ export function allInputs(data: FormDefinition): Input[] {
           ? `${page.section}.${input.name}`
           : input.name,
         title: input.title,
-        list: "list" in input ? input.list : undefined,
-        type: input.type,
-      };
-    });
-  });
+        list: 'list' in input ? input.list : undefined,
+        type: input.type
+      }
+    })
+  })
 }
 
 export function inputsAccessibleAt(data: FormDefinition, path: Path) {
-  const pages = allPathsLeadingTo(data, path);
+  const pages = allPathsLeadingTo(data, path)
   return allInputs({
     ...data,
-    pages: data.pages.filter((page) => pages.includes(page.path)),
-  });
+    pages: data.pages.filter((page) => pages.includes(page.path))
+  })
 }

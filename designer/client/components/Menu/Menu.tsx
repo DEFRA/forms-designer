@@ -1,79 +1,79 @@
-import React, { useContext } from "react";
-import { Flyout } from "../Flyout";
-import { FormDetails } from "../FormDetails";
-import PageCreate from "../../page-create";
-import LinkCreate from "../../link-create";
-import SectionsEdit from "../../section/sections-edit";
-import ConditionsEdit from "../../conditions/ConditionsEdit";
-import { i18n } from "../../i18n";
-import { ListsEditorContextProvider } from "../../reducers/list/listsEditorReducer";
-import { ListContextProvider } from "../../reducers/listReducer";
-import { FeeEdit } from "../Fee/FeeEdit";
-import DeclarationEdit from "../../declaration-edit";
-import OutputsEdit from "../../outputs/outputs-edit";
-import { DataContext } from "../../context";
-import { DataPrettyPrint } from "../DataPrettyPrint/DataPrettyPrint";
-import ListsEdit from "../../list/ListsEdit";
-import { useMenuItem } from "./useMenuItem";
-import { Tabs, useTabs } from "./useTabs";
-import { SubMenu } from "./SubMenu";
+import React, { useContext } from 'react'
+import { Flyout } from '../Flyout'
+import { FormDetails } from '../FormDetails'
+import PageCreate from '../../page-create'
+import LinkCreate from '../../link-create'
+import SectionsEdit from '../../section/sections-edit'
+import ConditionsEdit from '../../conditions/ConditionsEdit'
+import { i18n } from '../../i18n'
+import { ListsEditorContextProvider } from '../../reducers/list/listsEditorReducer'
+import { ListContextProvider } from '../../reducers/listReducer'
+import { FeeEdit } from '../Fee/FeeEdit'
+import DeclarationEdit from '../../declaration-edit'
+import OutputsEdit from '../../outputs/outputs-edit'
+import { DataContext } from '../../context'
+import { DataPrettyPrint } from '../DataPrettyPrint/DataPrettyPrint'
+import ListsEdit from '../../list/ListsEdit'
+import { useMenuItem } from './useMenuItem'
+import { Tabs, useTabs } from './useTabs'
+import { SubMenu } from './SubMenu'
 
 type Props = {
-  updateDownloadedAt?: (string) => void;
-  id: string;
-};
+  updateDownloadedAt?: (string) => void
+  id: string
+}
 
 export default function Menu({ updateDownloadedAt, id }: Props) {
-  const { data } = useContext(DataContext);
+  const { data } = useContext(DataContext)
 
-  const formDetails = useMenuItem();
-  const page = useMenuItem();
-  const link = useMenuItem();
-  const sections = useMenuItem();
-  const conditions = useMenuItem();
-  const lists = useMenuItem();
-  const outputs = useMenuItem();
-  const fees = useMenuItem();
-  const summaryBehaviour = useMenuItem();
-  const summary = useMenuItem();
+  const formDetails = useMenuItem()
+  const page = useMenuItem()
+  const link = useMenuItem()
+  const sections = useMenuItem()
+  const conditions = useMenuItem()
+  const lists = useMenuItem()
+  const outputs = useMenuItem()
+  const fees = useMenuItem()
+  const summaryBehaviour = useMenuItem()
+  const summary = useMenuItem()
 
-  const { selectedTab, handleTabChange } = useTabs();
+  const { selectedTab, handleTabChange } = useTabs()
 
   return (
     <nav className="menu">
       <div className="menu__row">
         <button data-testid="menu-form-details" onClick={formDetails.show}>
-          {i18n("menu.formDetails")}
+          {i18n('menu.formDetails')}
         </button>
         <button data-testid="menu-page" onClick={page.show}>
-          {i18n("menu.addPage")}
+          {i18n('menu.addPage')}
         </button>
         <button data-testid="menu-links" onClick={link.show}>
-          {i18n("menu.links")}
+          {i18n('menu.links')}
         </button>
         <button data-testid="menu-sections" onClick={sections.show}>
-          {i18n("menu.sections")}
+          {i18n('menu.sections')}
         </button>
         <button data-testid="menu-conditions" onClick={conditions.show}>
-          {i18n("menu.conditions")}
+          {i18n('menu.conditions')}
         </button>
         <button data-testid="menu-lists" onClick={lists.show}>
-          {i18n("menu.lists")}
+          {i18n('menu.lists')}
         </button>
         <button data-testid="menu-outputs" onClick={outputs.show}>
-          {i18n("menu.outputs")}
+          {i18n('menu.outputs')}
         </button>
         <button data-testid="menu-fees" onClick={fees.show}>
-          {i18n("menu.fees")}
+          {i18n('menu.fees')}
         </button>
         <button
           data-testid="menu-summary-behaviour"
           onClick={summaryBehaviour.show}
         >
-          {i18n("menu.summaryBehaviour")}
+          {i18n('menu.summaryBehaviour')}
         </button>
         <button onClick={summary.show} data-testid="menu-summary">
-          {i18n("menu.summary")}
+          {i18n('menu.summary')}
         </button>
       </div>
       {formDetails.isVisible && (
@@ -89,7 +89,7 @@ export default function Menu({ updateDownloadedAt, id }: Props) {
       )}
 
       {link.isVisible && (
-        <Flyout title={i18n("menu.links")} onHide={link.hide}>
+        <Flyout title={i18n('menu.links')} onHide={link.hide}>
           <LinkCreate onCreate={() => link.hide()} />
         </Flyout>
       )}
@@ -102,7 +102,7 @@ export default function Menu({ updateDownloadedAt, id }: Props) {
 
       {conditions.isVisible && (
         <Flyout
-          title={i18n("conditions.addOrEdit")}
+          title={i18n('conditions.addOrEdit')}
           onHide={conditions.hide}
           width="large"
         >
@@ -111,7 +111,7 @@ export default function Menu({ updateDownloadedAt, id }: Props) {
       )}
 
       {lists.isVisible && (
-        <Flyout title="Edit Lists" onHide={lists.hide} width={""}>
+        <Flyout title="Edit Lists" onHide={lists.hide} width={''}>
           <ListsEditorContextProvider>
             <ListContextProvider>
               <ListsEdit showEditLists={false} />
@@ -144,7 +144,7 @@ export default function Menu({ updateDownloadedAt, id }: Props) {
 
       {summary.isVisible && (
         <Flyout title="Summary" width="large" onHide={summary.hide}>
-          <div className="js-enabled" style={{ paddingTop: "3px" }}>
+          <div className="js-enabled" style={{ paddingTop: '3px' }}>
             <div className="govuk-tabs" data-module="tabs">
               <h2 className="govuk-tabs__title">Summary</h2>
               <ul className="govuk-tabs__list">
@@ -161,7 +161,7 @@ export default function Menu({ updateDownloadedAt, id }: Props) {
                   <button
                     className="govuk-tabs__tab"
                     aria-selected={selectedTab === Tabs.json}
-                    data-testid={"tab-json-button"}
+                    data-testid={'tab-json-button'}
                     onClick={(e) => handleTabChange(e, Tabs.json)}
                   >
                     JSON
@@ -209,5 +209,5 @@ export default function Menu({ updateDownloadedAt, id }: Props) {
 
       <SubMenu id={id} updateDownloadedAt={updateDownloadedAt} />
     </nav>
-  );
+  )
 }

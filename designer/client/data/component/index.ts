@@ -1,3 +1,3 @@
-export * from "./addComponent";
-export * from "./updateComponent";
-export * from "./inputs";
+export * from './addComponent'
+export * from './updateComponent'
+export * from './inputs'

@@ -1,31 +1,31 @@
-import { FormDefinition } from "@defra/forms-model";
-import { findList } from "../findList";
+import { FormDefinition } from '@defra/forms-model'
+import { findList } from '../findList'
 
 const data: FormDefinition = {
   conditions: [],
   lists: [
     {
-      name: "listA",
+      name: 'listA'
     },
     {
-      name: "listB",
-    },
+      name: 'listB'
+    }
   ],
   pages: [],
-  sections: [],
-};
+  sections: []
+}
 
-test("findList throws when no list can be found", () => {
-  expect(() => findList(data, "listC")).toThrowError(
+test('findList throws when no list can be found', () => {
+  expect(() => findList(data, 'listC')).toThrowError(
     /No list found with the name/
-  );
-});
+  )
+})
 
-test("findList returns a tuple of the list and the index", () => {
-  expect(findList(data, "listA")).toEqual([
+test('findList returns a tuple of the list and the index', () => {
+  expect(findList(data, 'listA')).toEqual([
     {
-      name: "listA",
+      name: 'listA'
     },
-    0,
-  ]);
-});
+    0
+  ])
+})

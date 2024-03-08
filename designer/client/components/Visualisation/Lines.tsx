@@ -1,60 +1,60 @@
-import React from "react";
-import { Data } from "@defra/forms-model";
+import React from 'react'
+import { Data } from '@defra/forms-model'
 
-import { Flyout } from "../Flyout";
-import LinkEdit from "../../link-edit";
-import { Layout, Edge } from "./getLayout";
-import { DataContext } from "../../context";
+import { Flyout } from '../Flyout'
+import LinkEdit from '../../link-edit'
+import { Layout, Edge } from './getLayout'
+import { DataContext } from '../../context'
 
 type Props = {
-  layout: Layout["pos"];
-  data: Data;
-  persona: any;
-};
+  layout: Layout['pos']
+  data: Data
+  persona: any
+}
 
 type State = {
-  showEditor: Edge | boolean;
-};
+  showEditor: Edge | boolean
+}
 
 export class Lines extends React.Component<Props, State> {
-  static contextType = DataContext;
+  static contextType = DataContext
 
   state = {
-    showEditor: false,
-  };
+    showEditor: false
+  }
 
   editLink = (edge: Edge) => {
     this.setState({
-      showEditor: edge,
-    });
-  };
+      showEditor: edge
+    })
+  }
 
   handlePolylineKeyPress = (event: React.KeyboardEvent, edge: Edge) => {
-    if (event.key === "Enter" || event.key == " ") {
-      this.editLink(edge);
+    if (event.key === 'Enter' || event.key == ' ') {
+      this.editLink(edge)
     }
-  };
+  }
 
   render() {
-    const { layout, persona } = this.props;
-    const { data } = this.context;
+    const { layout, persona } = this.props
+    const { data } = this.context
 
     return (
       <div>
         <svg height={layout.height} width={layout.width}>
           {layout.edges.map((edge) => {
-            const { source, target, points, label } = edge;
-            const pointsString = points.map((p) => `${p.x},${p.y}`).join(" ");
+            const { source, target, points, label } = edge
+            const pointsString = points.map((p) => `${p.x},${p.y}`).join(' ')
 
-            const xs = edge.points.map((p) => p.x);
-            const ys = edge.points.map((p) => p.y);
+            const xs = edge.points.map((p) => p.x)
+            const ys = edge.points.map((p) => p.y)
 
-            const textX = xs.reduce((a, b) => a + b, 0) / xs.length;
-            const textY = ys.reduce((a, b) => a + b, 0) / ys.length - 5;
+            const textX = xs.reduce((a, b) => a + b, 0) / xs.length
+            const textY = ys.reduce((a, b) => a + b, 0) / ys.length - 5
 
             const highlight = [source, target].every((path) =>
               persona?.paths?.includes(path)
-            );
+            )
             return (
               <g key={pointsString}>
                 <polyline
@@ -64,12 +64,12 @@ export class Lines extends React.Component<Props, State> {
                   }
                   tabIndex={0}
                   points={pointsString}
-                  className={`${highlight ? "highlight" : ""}`}
-                  data-testid={`${source}-${target}`.replace(/\//g, "")}
+                  className={`${highlight ? 'highlight' : ''}`}
+                  data-testid={`${source}-${target}`.replace(/\//g, '')}
                   role="button"
                 >
                   <title>
-                    {`Edit link from ${source} to ${target}`.replace(/\//g, "")}
+                    {`Edit link from ${source} to ${target}`.replace(/\//g, '')}
                   </title>
                 </polyline>
                 {label && (
@@ -84,7 +84,7 @@ export class Lines extends React.Component<Props, State> {
                   </text>
                 )}
               </g>
-            );
+            )
           })}
         </svg>
         {this.state.showEditor && (
@@ -100,6 +100,6 @@ export class Lines extends React.Component<Props, State> {
           </Flyout>
         )}
       </div>
-    );
+    )
   }
 }

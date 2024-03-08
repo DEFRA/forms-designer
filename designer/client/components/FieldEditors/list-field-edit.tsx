@@ -1,15 +1,15 @@
-import React from "react";
+import React from 'react'
 
-import ListsEdit from "../../list/ListsEdit";
-import { ListContextProvider } from "../../reducers/listReducer";
-import { ListsEditorContextProvider } from "../../reducers/list/listsEditorReducer";
-import { RenderInPortal } from "../RenderInPortal";
-import ComponentListSelect from "../ComponentListSelect/ComponentListSelect";
+import ListsEdit from '../../list/ListsEdit'
+import { ListContextProvider } from '../../reducers/listReducer'
+import { ListsEditorContextProvider } from '../../reducers/list/listsEditorReducer'
+import { RenderInPortal } from '../RenderInPortal'
+import ComponentListSelect from '../ComponentListSelect/ComponentListSelect'
 
 type Props = {
-  children: any; // TODO
-  page: any; // TODO
-};
+  children: any // TODO
+  page: any // TODO
+}
 
 function ListFieldEdit({ children, page }: Props) {
   return (
@@ -22,7 +22,7 @@ function ListFieldEdit({ children, page }: Props) {
         </RenderInPortal>
       </ListContextProvider>
     </ListsEditorContextProvider>
-  );
+  )
 }
 
-export default ListFieldEdit;
+export default ListFieldEdit

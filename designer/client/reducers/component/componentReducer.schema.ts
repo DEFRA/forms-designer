@@ -1,15 +1,15 @@
-import { Schema } from "./types";
+import { Schema } from './types'
 
 export function schemaReducer(
   state,
   action: {
-    type: Schema;
-    payload: any;
+    type: Schema
+    payload: any
   }
 ) {
-  const { type, payload } = action;
-  const { selectedComponent } = state;
-  const { schema = {} } = selectedComponent;
+  const { type, payload } = action
+  const { selectedComponent } = state
+  const { schema = {} } = selectedComponent
   switch (type) {
     case Schema.EDIT_SCHEMA_MIN:
       return {
@@ -18,43 +18,43 @@ export function schemaReducer(
           ...selectedComponent,
           schema: {
             ...schema,
-            min: payload,
-          },
-        },
-      };
+            min: payload
+          }
+        }
+      }
 
     case Schema.EDIT_SCHEMA_MAX:
       return {
         ...state,
         selectedComponent: {
           ...selectedComponent,
-          schema: { ...schema, max: payload },
-        },
-      };
+          schema: { ...schema, max: payload }
+        }
+      }
 
     case Schema.EDIT_SCHEMA_PRECISION:
       return {
         ...state,
         selectedComponent: {
           ...selectedComponent,
-          schema: { ...schema, precision: payload },
-        },
-      };
+          schema: { ...schema, precision: payload }
+        }
+      }
     case Schema.EDIT_SCHEMA_LENGTH:
       return {
         ...state,
         selectedComponent: {
           ...selectedComponent,
-          schema: { ...schema, length: payload },
-        },
-      };
+          schema: { ...schema, length: payload }
+        }
+      }
     case Schema.EDIT_SCHEMA_REGEX:
       return {
         ...state,
         selectedComponent: {
           ...selectedComponent,
-          schema: { ...schema, regex: payload },
-        },
-      };
+          schema: { ...schema, regex: payload }
+        }
+      }
   }
 }

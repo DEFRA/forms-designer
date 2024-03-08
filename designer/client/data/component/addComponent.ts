@@ -1,18 +1,18 @@
-import { ComponentDef, FormDefinition } from "@defra/forms-model";
-import { Path } from "../../reducers/data/types";
-import { findPage } from "../page";
+import { ComponentDef, FormDefinition } from '@defra/forms-model'
+import { Path } from '../../reducers/data/types'
+import { findPage } from '../page'
 
 export function addComponent(
   data: FormDefinition,
   pagePath: Path,
   component: ComponentDef
 ): FormDefinition {
-  const [page, index] = findPage(data, pagePath);
+  const [page, index] = findPage(data, pagePath)
 
-  const { components = [] } = page;
-  const updatedPage = { ...page, components: [...components, component] };
+  const { components = [] } = page
+  const updatedPage = { ...page, components: [...components, component] }
   return {
     ...data,
-    pages: data.pages.map((page, i) => (index === i ? updatedPage : page)),
-  };
+    pages: data.pages.map((page, i) => (index === i ? updatedPage : page))
+  }
 }

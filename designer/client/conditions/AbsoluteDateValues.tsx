@@ -1,103 +1,103 @@
-import React, { useEffect, useState, ChangeEvent } from "react";
-import isValid from "date-fns/isValid";
-import padStart from "lodash/padStart";
-import { isInt, tryParseInt } from "./inline-condition-helpers";
+import React, { useEffect, useState, ChangeEvent } from 'react'
+import isValid from 'date-fns/isValid'
+import padStart from 'lodash/padStart'
+import { isInt, tryParseInt } from './inline-condition-helpers'
 
 export interface YearMonthDay {
-  year: number;
-  month: number;
-  day: number;
+  year: number
+  month: number
+  day: number
 }
 
 export interface YearMonthDayOptional {
-  year?: number;
-  month?: number;
-  day?: number;
+  year?: number
+  month?: number
+  day?: number
 }
 
 interface Props {
-  value?: YearMonthDayOptional;
-  updateValue: ({ year, month, day }: YearMonthDay) => void;
+  value?: YearMonthDayOptional
+  updateValue: ({ year, month, day }: YearMonthDay) => void
 }
 
 function isValidateDate(props: {
-  year?: number | string;
-  month?: number | string;
-  day?: number | string;
+  year?: number | string
+  month?: number | string
+  day?: number | string
 }) {
-  const { year = 2020, month = 12, day = 1 } = props;
-  const parsedDate = Date.parse(`${year}-${month}-${day}`);
+  const { year = 2020, month = 12, day = 1 } = props
+  const parsedDate = Date.parse(`${year}-${month}-${day}`)
 
   if (isNaN(parsedDate)) {
-    return false;
+    return false
   }
 
-  return true;
+  return true
 }
 
 function isValidDay(day: string) {
-  return isValidateDate({ day });
+  return isValidateDate({ day })
 }
 function isValidMonth(month: string) {
-  return isValidateDate({ month });
+  return isValidateDate({ month })
 }
 function isValidYear(year: string) {
-  return year.length === 4 && isValidateDate({ year });
+  return year.length === 4 && isValidateDate({ year })
 }
 
 export const AbsoluteDateValues = ({ value = {}, updateValue }: Props) => {
   const [year, setYear] = useState<string>(() =>
-    isInt(value.year) ? (value.year as number).toString() : ""
-  );
+    isInt(value.year) ? (value.year as number).toString() : ''
+  )
 
   const [month, setMonth] = useState<string>(() =>
-    isInt(value.month) ? padStart(String(value.month), 2, "0") : ""
-  );
+    isInt(value.month) ? padStart(String(value.month), 2, '0') : ''
+  )
 
   const [day, setDay] = useState<string>(() =>
-    isInt(value.day) ? padStart(String(value.day), 2, "0") : ""
-  );
+    isInt(value.day) ? padStart(String(value.day), 2, '0') : ''
+  )
 
   useEffect(() => {
-    const parsedDay = tryParseInt(day)!;
-    const parsedMonth = tryParseInt(month)!;
-    const parsedYear = tryParseInt(year)!;
+    const parsedDay = tryParseInt(day)!
+    const parsedMonth = tryParseInt(month)!
+    const parsedYear = tryParseInt(year)!
 
     if (
       parsedDay === value.day &&
       parsedMonth === value.month &&
       parsedYear === value.year
     ) {
-      return;
+      return
     }
 
     if (!isValidDay(day) || !isValidMonth(month) || !isValidYear(year)) {
-      return;
+      return
     }
 
     if (isValid(new Date(parsedYear, parsedMonth - 1, parsedDay))) {
-      updateValue({ year: parsedYear, month: parsedMonth, day: parsedDay });
+      updateValue({ year: parsedYear, month: parsedMonth, day: parsedDay })
     }
-  }, [year, month, day]);
+  }, [year, month, day])
 
   const dayChanged = (e: ChangeEvent<HTMLInputElement>) => {
-    const day = e.target.value;
+    const day = e.target.value
     if (Number(day) <= 31) {
-      setDay(day);
+      setDay(day)
     }
-  };
+  }
 
   const monthChanged = (e: ChangeEvent<HTMLInputElement>) => {
-    const month = e.target.value;
+    const month = e.target.value
     if (Number(month) <= 12) {
-      setMonth(month);
+      setMonth(month)
     }
-  };
+  }
 
   const yearChanged = (e: ChangeEvent<HTMLInputElement>) => {
-    const year = e.target.value;
-    setYear(year);
-  };
+    const year = e.target.value
+    setYear(year)
+  }
 
   return (
     <div className="govuk-date-input">
@@ -169,5 +169,5 @@ export const AbsoluteDateValues = ({ value = {}, updateValue }: Props) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

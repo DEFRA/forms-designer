@@ -1,24 +1,24 @@
-import React, { useReducer } from "react";
-import { render } from "@testing-library/react";
-import ComponentTypeEdit from "../ComponentTypeEdit";
+import React, { useReducer } from 'react'
+import { render } from '@testing-library/react'
+import ComponentTypeEdit from '../ComponentTypeEdit'
 import {
   ComponentContext,
   componentReducer,
-  initComponentState,
-} from "../reducers/component/componentReducer";
-import { DataContext } from "../context";
-import { Data } from "@defra/forms-model";
+  initComponentState
+} from '../reducers/component/componentReducer'
+import { DataContext } from '../context'
+import { Data } from '@defra/forms-model'
 
-describe("ComponentTypeEdit", () => {
-  let mockData: Data;
+describe('ComponentTypeEdit', () => {
+  let mockData: Data
 
   const RenderWithContext = ({ children, stateProps = {} }) => {
     const [state, dispatch] = useReducer(
       componentReducer,
       initComponentState({
-        ...stateProps,
+        ...stateProps
       })
-    );
+    )
 
     return (
       <DataContext.Provider value={{ data: mockData, save: jest.fn() }}>
@@ -26,342 +26,342 @@ describe("ComponentTypeEdit", () => {
           {children}
         </ComponentContext.Provider>
       </DataContext.Provider>
-    );
-  };
+    )
+  }
 
   beforeEach(() => {
     mockData = {
       pages: [
         {
-          title: "First page",
-          path: "/first-page",
+          title: 'First page',
+          path: '/first-page',
           components: [],
-          controller: "./pages/summary.js",
-          section: "home",
-        },
+          controller: './pages/summary.js',
+          section: 'home'
+        }
       ],
-      lists: [],
-    };
-  });
+      lists: []
+    }
+  })
 
-  describe("Checkbox", () => {
-    let stateProps;
+  describe('Checkbox', () => {
+    let stateProps
 
     beforeEach(() => {
       stateProps = {
         component: {
-          type: "CheckboxesField",
-          name: "TestCheckbox",
-          options: {},
-        },
-      };
-    });
+          type: 'CheckboxesField',
+          name: 'TestCheckbox',
+          options: {}
+        }
+      }
+    })
 
-    test("title input hint text is rendered correctly", () => {
+    test('title input hint text is rendered correctly', () => {
       const { getByText } = render(
         <RenderWithContext stateProps={stateProps}>
           <ComponentTypeEdit page={mockData.pages[0]} />
         </RenderWithContext>
-      );
+      )
 
-      const text = "Enter the name to show for this field";
-      expect(getByText(text)).toBeInTheDocument();
-    });
+      const text = 'Enter the name to show for this field'
+      expect(getByText(text)).toBeInTheDocument()
+    })
 
-    test("help text input hint text is rendered correctly", () => {
+    test('help text input hint text is rendered correctly', () => {
       const { getByText } = render(
         <RenderWithContext stateProps={stateProps}>
           <ComponentTypeEdit page={mockData.pages[0]} />
         </RenderWithContext>
-      );
+      )
 
-      const text = "Enter the description to show for this field";
-      expect(getByText(text)).toBeInTheDocument();
-    });
+      const text = 'Enter the description to show for this field'
+      expect(getByText(text)).toBeInTheDocument()
+    })
 
-    test("hide title checkbox hint text is rendered correctly", () => {
+    test('hide title checkbox hint text is rendered correctly', () => {
       const { getByText } = render(
         <RenderWithContext stateProps={stateProps}>
           <ComponentTypeEdit page={mockData.pages[0]} />
         </RenderWithContext>
-      );
+      )
 
       const text =
-        "Tick this box if you do not want the title to show on the page";
-      expect(getByText(text)).toBeInTheDocument();
-    });
+        'Tick this box if you do not want the title to show on the page'
+      expect(getByText(text)).toBeInTheDocument()
+    })
 
-    test("component name input hint text is rendered correctly", () => {
+    test('component name input hint text is rendered correctly', () => {
       const { getByText } = render(
         <RenderWithContext stateProps={stateProps}>
           <ComponentTypeEdit page={mockData.pages[0]} />
         </RenderWithContext>
-      );
+      )
 
       const text =
-        "This is generated automatically and does not show on the page. Only change it if you are using an integration that requires you to, for example GOV.UK Notify. It must not contain spaces.";
-      expect(getByText(text)).toBeInTheDocument();
-    });
+        'This is generated automatically and does not show on the page. Only change it if you are using an integration that requires you to, for example GOV.UK Notify. It must not contain spaces.'
+      expect(getByText(text)).toBeInTheDocument()
+    })
 
-    test("make checkbox field optional hint text is rendered correctly", () => {
+    test('make checkbox field optional hint text is rendered correctly', () => {
       const { getByText } = render(
         <RenderWithContext stateProps={stateProps}>
           <ComponentTypeEdit page={mockData.pages[0]} />
         </RenderWithContext>
-      );
+      )
 
-      const labelText = "Make Checkboxes field optional";
+      const labelText = 'Make Checkboxes field optional'
       const hintText =
-        "Tick this box if users do not need to complete this field to progress through the form";
+        'Tick this box if users do not need to complete this field to progress through the form'
 
-      expect(getByText(labelText)).toBeInTheDocument();
-      expect(getByText(hintText)).toBeInTheDocument();
-    });
+      expect(getByText(labelText)).toBeInTheDocument()
+      expect(getByText(hintText)).toBeInTheDocument()
+    })
 
-    test("select list hint text is rendered correctly", () => {
+    test('select list hint text is rendered correctly', () => {
       const { getByText } = render(
         <RenderWithContext stateProps={stateProps}>
           <ComponentTypeEdit page={mockData.pages[0]} />
         </RenderWithContext>
-      );
+      )
 
       const text =
-        "Select an existing list to show in this field or add a new list";
-      expect(getByText(text)).toBeInTheDocument();
-    });
-  });
+        'Select an existing list to show in this field or add a new list'
+      expect(getByText(text)).toBeInTheDocument()
+    })
+  })
 
-  describe("Radios", () => {
-    let stateProps;
+  describe('Radios', () => {
+    let stateProps
 
     beforeEach(() => {
       stateProps = {
         component: {
-          type: "RadiosField",
-          name: "TestRadios",
-          options: {},
-        },
-      };
-    });
+          type: 'RadiosField',
+          name: 'TestRadios',
+          options: {}
+        }
+      }
+    })
 
-    test("title input hint text is rendered correctly", () => {
+    test('title input hint text is rendered correctly', () => {
       const { getByText } = render(
         <RenderWithContext stateProps={stateProps}>
           <ComponentTypeEdit page={mockData.pages[0]} />
         </RenderWithContext>
-      );
+      )
 
-      const text = "Enter the name to show for this field";
-      expect(getByText(text)).toBeInTheDocument();
-    });
+      const text = 'Enter the name to show for this field'
+      expect(getByText(text)).toBeInTheDocument()
+    })
 
-    test("help text input hint text is rendered correctly", () => {
+    test('help text input hint text is rendered correctly', () => {
       const { getByText } = render(
         <RenderWithContext stateProps={stateProps}>
           <ComponentTypeEdit page={mockData.pages[0]} />
         </RenderWithContext>
-      );
+      )
 
-      const text = "Enter the description to show for this field";
-      expect(getByText(text)).toBeInTheDocument();
-    });
+      const text = 'Enter the description to show for this field'
+      expect(getByText(text)).toBeInTheDocument()
+    })
 
-    test("hide title checkbox hint text is rendered correctly", () => {
+    test('hide title checkbox hint text is rendered correctly', () => {
       const { getByText } = render(
         <RenderWithContext stateProps={stateProps}>
           <ComponentTypeEdit page={mockData.pages[0]} />
         </RenderWithContext>
-      );
+      )
 
       const text =
-        "Tick this box if you do not want the title to show on the page";
-      expect(getByText(text)).toBeInTheDocument();
-    });
+        'Tick this box if you do not want the title to show on the page'
+      expect(getByText(text)).toBeInTheDocument()
+    })
 
-    test("component name input hint text is rendered correctly", () => {
+    test('component name input hint text is rendered correctly', () => {
       const { getByText } = render(
         <RenderWithContext stateProps={stateProps}>
           <ComponentTypeEdit page={mockData.pages[0]} />
         </RenderWithContext>
-      );
+      )
 
       const text =
-        "This is generated automatically and does not show on the page. Only change it if you are using an integration that requires you to, for example GOV.UK Notify. It must not contain spaces.";
-      expect(getByText(text)).toBeInTheDocument();
-    });
+        'This is generated automatically and does not show on the page. Only change it if you are using an integration that requires you to, for example GOV.UK Notify. It must not contain spaces.'
+      expect(getByText(text)).toBeInTheDocument()
+    })
 
-    test("make checkbox field optional hint text is rendered correctly", () => {
+    test('make checkbox field optional hint text is rendered correctly', () => {
       const { getByText } = render(
         <RenderWithContext stateProps={stateProps}>
           <ComponentTypeEdit page={mockData.pages[0]} />
         </RenderWithContext>
-      );
+      )
 
-      const labelText = "Make Radios field optional";
+      const labelText = 'Make Radios field optional'
       const hintText =
-        "Tick this box if users do not need to complete this field to progress through the form";
+        'Tick this box if users do not need to complete this field to progress through the form'
 
-      expect(getByText(labelText)).toBeInTheDocument();
-      expect(getByText(hintText)).toBeInTheDocument();
-    });
+      expect(getByText(labelText)).toBeInTheDocument()
+      expect(getByText(hintText)).toBeInTheDocument()
+    })
 
-    test("select list hint text is rendered correctly", () => {
+    test('select list hint text is rendered correctly', () => {
       const { getByText } = render(
         <RenderWithContext stateProps={stateProps}>
           <ComponentTypeEdit page={mockData.pages[0]} />
         </RenderWithContext>
-      );
+      )
 
       const text =
-        "Select an existing list to show in this field or add a new list";
-      expect(getByText(text)).toBeInTheDocument();
-    });
-  });
+        'Select an existing list to show in this field or add a new list'
+      expect(getByText(text)).toBeInTheDocument()
+    })
+  })
 
-  describe("Select", () => {
-    let stateProps;
+  describe('Select', () => {
+    let stateProps
 
     beforeEach(() => {
       stateProps = {
         component: {
-          type: "SelectField",
-          name: "TestSelect",
-          options: {},
-        },
-      };
-    });
+          type: 'SelectField',
+          name: 'TestSelect',
+          options: {}
+        }
+      }
+    })
 
-    test("title input hint text is rendered correctly", () => {
+    test('title input hint text is rendered correctly', () => {
       const { getByText } = render(
         <RenderWithContext stateProps={stateProps}>
           <ComponentTypeEdit page={mockData.pages[0]} />
         </RenderWithContext>
-      );
+      )
 
-      const text = "Enter the name to show for this field";
-      expect(getByText(text)).toBeInTheDocument();
-    });
+      const text = 'Enter the name to show for this field'
+      expect(getByText(text)).toBeInTheDocument()
+    })
 
-    test("help text input hint text is rendered correctly", () => {
+    test('help text input hint text is rendered correctly', () => {
       const { getByText } = render(
         <RenderWithContext stateProps={stateProps}>
           <ComponentTypeEdit page={mockData.pages[0]} />
         </RenderWithContext>
-      );
+      )
 
-      const text = "Enter the description to show for this field";
-      expect(getByText(text)).toBeInTheDocument();
-    });
+      const text = 'Enter the description to show for this field'
+      expect(getByText(text)).toBeInTheDocument()
+    })
 
-    test("hide title checkbox hint text is rendered correctly", () => {
+    test('hide title checkbox hint text is rendered correctly', () => {
       const { getByText } = render(
         <RenderWithContext stateProps={stateProps}>
           <ComponentTypeEdit page={mockData.pages[0]} />
         </RenderWithContext>
-      );
+      )
 
       const text =
-        "Tick this box if you do not want the title to show on the page";
-      expect(getByText(text)).toBeInTheDocument();
-    });
+        'Tick this box if you do not want the title to show on the page'
+      expect(getByText(text)).toBeInTheDocument()
+    })
 
-    test("component name input hint text is rendered correctly", () => {
+    test('component name input hint text is rendered correctly', () => {
       const { getByText } = render(
         <RenderWithContext stateProps={stateProps}>
           <ComponentTypeEdit page={mockData.pages[0]} />
         </RenderWithContext>
-      );
+      )
 
       const text =
-        "This is generated automatically and does not show on the page. Only change it if you are using an integration that requires you to, for example GOV.UK Notify. It must not contain spaces.";
-      expect(getByText(text)).toBeInTheDocument();
-    });
+        'This is generated automatically and does not show on the page. Only change it if you are using an integration that requires you to, for example GOV.UK Notify. It must not contain spaces.'
+      expect(getByText(text)).toBeInTheDocument()
+    })
 
-    test("make checkbox field optional hint text is rendered correctly", () => {
+    test('make checkbox field optional hint text is rendered correctly', () => {
       const { getByText } = render(
         <RenderWithContext stateProps={stateProps}>
           <ComponentTypeEdit page={mockData.pages[0]} />
         </RenderWithContext>
-      );
+      )
 
-      const labelText = "Make Select field optional";
+      const labelText = 'Make Select field optional'
       const hintText =
-        "Tick this box if users do not need to complete this field to progress through the form";
+        'Tick this box if users do not need to complete this field to progress through the form'
 
-      expect(getByText(labelText)).toBeInTheDocument();
-      expect(getByText(hintText)).toBeInTheDocument();
-    });
+      expect(getByText(labelText)).toBeInTheDocument()
+      expect(getByText(hintText)).toBeInTheDocument()
+    })
 
-    test("select list hint text is rendered correctly", () => {
+    test('select list hint text is rendered correctly', () => {
       const { getByText } = render(
         <RenderWithContext stateProps={stateProps}>
           <ComponentTypeEdit page={mockData.pages[0]} />
         </RenderWithContext>
-      );
+      )
 
       const text =
-        "Select an existing list to show in this field or add a new list";
-      expect(getByText(text)).toBeInTheDocument();
-    });
-  });
+        'Select an existing list to show in this field or add a new list'
+      expect(getByText(text)).toBeInTheDocument()
+    })
+  })
 
-  describe("YesNo", () => {
-    let stateProps;
+  describe('YesNo', () => {
+    let stateProps
 
     beforeEach(() => {
       stateProps = {
         component: {
-          type: "YesNoField",
-          name: "TestYesNo",
-          options: {},
-        },
-      };
-    });
+          type: 'YesNoField',
+          name: 'TestYesNo',
+          options: {}
+        }
+      }
+    })
 
-    test("title input hint text is rendered correctly", () => {
+    test('title input hint text is rendered correctly', () => {
       const { getByText } = render(
         <RenderWithContext stateProps={stateProps}>
           <ComponentTypeEdit page={mockData.pages[0]} />
         </RenderWithContext>
-      );
+      )
 
-      const text = "Enter the name to show for this field";
-      expect(getByText(text)).toBeInTheDocument();
-    });
+      const text = 'Enter the name to show for this field'
+      expect(getByText(text)).toBeInTheDocument()
+    })
 
-    test("help text input hint text is rendered correctly", () => {
+    test('help text input hint text is rendered correctly', () => {
       const { getByText } = render(
         <RenderWithContext stateProps={stateProps}>
           <ComponentTypeEdit page={mockData.pages[0]} />
         </RenderWithContext>
-      );
+      )
 
-      const text = "Enter the description to show for this field";
-      expect(getByText(text)).toBeInTheDocument();
-    });
+      const text = 'Enter the description to show for this field'
+      expect(getByText(text)).toBeInTheDocument()
+    })
 
-    test("hide title checkbox hint text is rendered correctly", () => {
+    test('hide title checkbox hint text is rendered correctly', () => {
       const { getByText } = render(
         <RenderWithContext stateProps={stateProps}>
           <ComponentTypeEdit page={mockData.pages[0]} />
         </RenderWithContext>
-      );
+      )
 
       const text =
-        "Tick this box if you do not want the title to show on the page";
-      expect(getByText(text)).toBeInTheDocument();
-    });
+        'Tick this box if you do not want the title to show on the page'
+      expect(getByText(text)).toBeInTheDocument()
+    })
 
-    test("component name input hint text is rendered correctly", () => {
+    test('component name input hint text is rendered correctly', () => {
       const { getByText } = render(
         <RenderWithContext stateProps={stateProps}>
           <ComponentTypeEdit page={mockData.pages[0]} />
         </RenderWithContext>
-      );
+      )
 
       const text =
-        "This is generated automatically and does not show on the page. Only change it if you are using an integration that requires you to, for example GOV.UK Notify. It must not contain spaces.";
-      expect(getByText(text)).toBeInTheDocument();
-    });
-  });
-});
+        'This is generated automatically and does not show on the page. Only change it if you are using an integration that requires you to, for example GOV.UK Notify. It must not contain spaces.'
+      expect(getByText(text)).toBeInTheDocument()
+    })
+  })
+})

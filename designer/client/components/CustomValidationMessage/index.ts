@@ -1,1 +1,1 @@
-export { CustomValidationMessage } from "./CustomValidationMessage";
+export { CustomValidationMessage } from './CustomValidationMessage'

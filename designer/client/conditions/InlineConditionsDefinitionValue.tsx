@@ -1,80 +1,80 @@
-import React from "react";
+import React from 'react'
 import {
   timeUnits,
   absoluteDateOrTimeOperatorNames,
   getOperatorConfig,
   relativeDateOrTimeOperatorNames,
-  ConditionValue,
-} from "@defra/forms-model";
-import RelativeTimeValues from "./inline-conditions-relative-dates";
-import { AbsoluteDateValues } from "./AbsoluteDateValues";
-import { AbsoluteDateTimeValues } from "./AbsoluteDateTimeValues";
-import { AbsoluteTimeValues } from "./AbsoluteTimeValues";
-import { TextValues } from "./TextValues";
-import { SelectValues } from "./SelectValues";
-import { tryParseInt } from "./inline-condition-helpers";
+  ConditionValue
+} from '@defra/forms-model'
+import RelativeTimeValues from './inline-conditions-relative-dates'
+import { AbsoluteDateValues } from './AbsoluteDateValues'
+import { AbsoluteDateTimeValues } from './AbsoluteDateTimeValues'
+import { AbsoluteTimeValues } from './AbsoluteTimeValues'
+import { TextValues } from './TextValues'
+import { SelectValues } from './SelectValues'
+import { tryParseInt } from './inline-condition-helpers'
 
 function DateTimeComponent(fieldType, operator) {
-  const operatorConfig = getOperatorConfig(fieldType, operator);
+  const operatorConfig = getOperatorConfig(fieldType, operator)
   const absoluteDateTimeRenderFunctions = {
     DateField: AbsoluteDateValues,
     DatePartsField: AbsoluteDateValues,
     DateTimeField: AbsoluteDateTimeValues,
     DateTimePartsField: AbsoluteDateTimeValues,
-    TimeField: AbsoluteTimeValues,
-  };
+    TimeField: AbsoluteTimeValues
+  }
   if (fieldType in absoluteDateTimeRenderFunctions) {
     if (absoluteDateOrTimeOperatorNames.includes(operator)) {
       // since these are all classes return a function which creates new class comp
-      const CustomRendering = absoluteDateTimeRenderFunctions[fieldType];
-      const pad = (num: number) => num.toString().padStart(2, "0");
+      const CustomRendering = absoluteDateTimeRenderFunctions[fieldType]
+      const pad = (num: number) => num.toString().padStart(2, '0')
 
       return function CustomRenderingWrapper({ value, updateValue }) {
         const transformUpdatedValue = (value) => {
-          let transformed;
+          let transformed
           switch (CustomRendering) {
             case AbsoluteDateTimeValues:
-              transformed = value.toISOString();
-              break;
+              transformed = value.toISOString()
+              break
             case AbsoluteDateValues:
-              const { year, month, day } = value;
-              transformed = `${pad(year)}-${pad(month)}-${pad(day)}`;
-              break;
+              const { year, month, day } = value
+              transformed = `${pad(year)}-${pad(month)}-${pad(day)}`
+              break
             case AbsoluteTimeValues:
-              const { hour, minute } = value;
-              transformed = `${pad(hour)}:${pad(minute)}`;
+              const { hour, minute } = value
+              transformed = `${pad(hour)}:${pad(minute)}`
           }
-          updateValue(new ConditionValue(transformed));
-        };
+          updateValue(new ConditionValue(transformed))
+        }
         const transformInputValue = (condition?: ConditionValue) => {
           if (condition && condition.value) {
             switch (CustomRendering) {
               case AbsoluteDateTimeValues:
                 // value should be an ISO format date string
-                return new Date(condition.value);
+                return new Date(condition.value)
               case AbsoluteDateValues:
-                const [year, month, day] = condition.value.split("-");
+                const [year, month, day] = condition.value.split('-')
                 return {
                   year: tryParseInt(year),
                   month: tryParseInt(month),
-                  day: tryParseInt(day),
-                };
+                  day: tryParseInt(day)
+                }
               case AbsoluteTimeValues:
-                const [hour, minute] = condition.value.split(":");
-                return { hour: tryParseInt(hour), minute: tryParseInt(minute) };
+                const [hour, minute] = condition.value.split(':')
+                return { hour: tryParseInt(hour), minute: tryParseInt(minute) }
             }
           }
-          return undefined;
-        };
+          return undefined
+        }
         return (
           <CustomRendering
             value={transformInputValue(value)}
             updateValue={transformUpdatedValue}
           />
-        );
-      };
+        )
+      }
     } else if (relativeDateOrTimeOperatorNames.includes(operator)) {
-      const units = operatorConfig.units;
+      const units = operatorConfig.units
       return function RelativeTimeValuesWrapper({ value, updateValue }) {
         return (
           <RelativeTimeValues
@@ -83,36 +83,36 @@ function DateTimeComponent(fieldType, operator) {
             units={units}
             timeOnly={units === timeUnits}
           />
-        );
-      };
+        )
+      }
     }
   }
-  return null;
+  return null
 }
 
 interface FieldDef {
-  label: string;
-  name: string;
-  type: string;
-  values?: any[];
+  label: string
+  name: string
+  type: string
+  values?: any[]
 }
 
 interface Props {
-  fieldDef: FieldDef;
-  operator: string;
-  value?: any;
-  updateValue: (any) => void;
+  fieldDef: FieldDef
+  operator: string
+  value?: any
+  updateValue: (any) => void
 }
 
 export const InlineConditionsDefinitionValue = ({
   fieldDef,
   operator,
   value,
-  updateValue,
+  updateValue
 }: Props) => {
-  const CustomComponent = DateTimeComponent(fieldDef.type, operator);
+  const CustomComponent = DateTimeComponent(fieldDef.type, operator)
   if (CustomComponent) {
-    return <CustomComponent value={value} updateValue={updateValue} />;
+    return <CustomComponent value={value} updateValue={updateValue} />
   }
   return (fieldDef?.values?.length ?? 0) > 0 ? (
     <SelectValues
@@ -128,5 +128,5 @@ export const InlineConditionsDefinitionValue = ({
       value={value}
       updateValue={updateValue}
     />
-  );
-};
+  )
+}

@@ -1,13 +1,13 @@
-import path from "path";
-import resolve from "resolve";
-import nunjucks from "nunjucks";
-import hapiVision from "@hapi/vision";
+import path from 'path'
+import resolve from 'resolve'
+import nunjucks from 'nunjucks'
+import hapiVision from '@hapi/vision'
 
-import pkg from "../../package.json";
+import pkg from '../../package.json'
 
-import config from "../config";
+import config from '../config'
 
-const basedir = path.join(process.cwd());
+const basedir = path.join(process.cwd())
 
 export const viewPlugin = {
   plugin: hapiVision,
@@ -15,47 +15,47 @@ export const viewPlugin = {
     engines: {
       html: {
         compile: (src, options) => {
-          const template = nunjucks.compile(src, options.environment);
+          const template = nunjucks.compile(src, options.environment)
           return (context) => {
             if (context.nonce) {
               delete Object.assign(context, {
-                script_nonce: context["script-nonce"],
-              })["script-nonce"];
+                script_nonce: context['script-nonce']
+              })['script-nonce']
               delete Object.assign(context, {
-                style_nonce: context.style_nonce,
-              }).style_nonce;
+                style_nonce: context.style_nonce
+              }).style_nonce
             }
 
             const html = template.render(
               context /* , function (err, value) {
               console.error(err)
             } */
-            );
-            return html;
-          };
+            )
+            return html
+          }
         },
         prepare: (options, next) => {
           options.compileOptions.environment = nunjucks.configure(
             options.path,
             {
               autoescape: true,
-              watch: false,
+              watch: false
             }
-          );
+          )
 
-          return next();
-        },
-      },
+          return next()
+        }
+      }
     },
     path: [
-      `${path.join("dist", "client", "views")}`,
-      `${path.join(__dirname, "..", "views")}`,
-      `${path.dirname(resolve.sync("govuk-frontend", { basedir }))}`,
-      `${path.dirname(resolve.sync("govuk-frontend", { basedir }))}/components`,
+      `${path.join('dist', 'client', 'views')}`,
+      `${path.join(__dirname, '..', 'views')}`,
+      `${path.dirname(resolve.sync('govuk-frontend', { basedir }))}`,
+      `${path.dirname(resolve.sync('govuk-frontend', { basedir }))}/components`
     ],
     context: {
       appVersion: pkg.version,
-      assetPath: `${config.appPathPrefix}/assets`,
-    },
-  },
-};
+      assetPath: `${config.appPathPrefix}/assets`
+    }
+  }
+}

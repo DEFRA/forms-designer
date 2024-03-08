@@ -1,7 +1,7 @@
 export function toPresentationString(condition) {
-  return `${condition.coordinatorString()}${condition.conditionString()}`;
+  return `${condition.coordinatorString()}${condition.conditionString()}`
 }
 
 export function toExpression(condition) {
-  return `${condition.coordinatorString()}${condition.conditionExpression()}`;
+  return `${condition.coordinatorString()}${condition.conditionExpression()}`
 }

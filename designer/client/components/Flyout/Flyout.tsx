@@ -3,89 +3,89 @@ import React, {
   ReactChildren,
   useContext,
   useLayoutEffect,
-  useState,
-} from "react";
-import FocusTrap from "focus-trap-react";
-import { FlyoutContext } from "../../context";
-import { i18n } from "../../i18n";
+  useState
+} from 'react'
+import FocusTrap from 'focus-trap-react'
+import { FlyoutContext } from '../../context'
+import { i18n } from '../../i18n'
 
-import "./Flyout.scss";
+import './Flyout.scss'
 
 interface Props {
-  style: string;
-  width?: string;
-  onHide: () => void;
-  closeOnEnter: (e) => void;
-  show: boolean;
-  offset: number;
-  title?: string;
-  children?: ReactChildren;
-  NEVER_UNMOUNTS?: boolean;
+  style: string
+  width?: string
+  onHide: () => void
+  closeOnEnter: (e) => void
+  show: boolean
+  offset: number
+  title?: string
+  children?: ReactChildren
+  NEVER_UNMOUNTS?: boolean
 }
 
 export function useFlyoutEffect(props: Props) {
-  const flyoutContext = useContext(FlyoutContext);
-  const [offset, setOffset] = useState(0);
-  const [style, setStyle] = useState<CSSProperties>();
-  const show = props.show ?? true;
+  const flyoutContext = useContext(FlyoutContext)
+  const [offset, setOffset] = useState(0)
+  const [style, setStyle] = useState<CSSProperties>()
+  const show = props.show ?? true
 
   /**
    * @code on component mount
    */
   useLayoutEffect(() => {
-    flyoutContext.increment();
+    flyoutContext.increment()
     return function cleanup() {
-      flyoutContext.decrement();
-    };
-  }, []);
+      flyoutContext.decrement()
+    }
+  }, [])
 
   useLayoutEffect(() => {
-    setOffset(flyoutContext.count);
-  }, []);
+    setOffset(flyoutContext.count)
+  }, [])
 
   useLayoutEffect(() => {
     if (offset > 0) {
       setStyle({
         paddingLeft: `${offset * 50}px`,
         transform: `translateX(${offset * -50}px)`,
-        position: "relative",
-      });
+        position: 'relative'
+      })
     }
-  }, [offset]);
+  }, [offset])
 
   const onHide = (e) => {
-    e?.preventDefault();
+    e?.preventDefault()
 
     if (props.onHide) {
-      props.onHide();
+      props.onHide()
 
       if (props.NEVER_UNMOUNTS) {
-        flyoutContext.decrement();
+        flyoutContext.decrement()
       }
     }
-  };
+  }
 
   const closeOnEnter = (e) => {
-    if (e.key === "Enter") {
-      onHide(e);
+    if (e.key === 'Enter') {
+      onHide(e)
     }
-  };
+  }
 
-  return { style, width: props?.width, closeOnEnter, onHide, offset, show };
+  return { style, width: props?.width, closeOnEnter, onHide, offset, show }
 }
 
 export function Flyout(props: Props) {
   const {
     style,
-    width = "",
+    width = '',
     onHide,
     closeOnEnter,
     show,
-    offset,
-  } = useFlyoutEffect(props);
+    offset
+  } = useFlyoutEffect(props)
 
   if (!show) {
-    return null;
+    return null
   }
 
   return (
@@ -99,7 +99,7 @@ export function Flyout(props: Props) {
             onClick={onHide}
             onKeyPress={closeOnEnter}
           >
-            {i18n("close")}
+            {i18n('close')}
           </a>
           <div className="panel panel--flyout">
             <div className="panel-header govuk-!-padding-top-4 govuk-!-padding-left-4">
@@ -118,5 +118,5 @@ export function Flyout(props: Props) {
         </div>
       </div>
     </FocusTrap>
-  );
+  )
 }

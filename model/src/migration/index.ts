@@ -1,1 +1,1 @@
-export { whichMigrations } from "./whichMigrations";
+export { whichMigrations } from './whichMigrations'

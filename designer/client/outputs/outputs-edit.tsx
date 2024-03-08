@@ -1,50 +1,50 @@
-import React, { MouseEvent } from "react";
-import { DataContext } from "../context";
-import randomId from "../randomId";
-import OutputEdit from "./output-edit";
-import { Output } from "./types";
+import React, { MouseEvent } from 'react'
+import { DataContext } from '../context'
+import randomId from '../randomId'
+import OutputEdit from './output-edit'
+import { Output } from './types'
 
-type Props = {};
+type Props = {}
 
 type State = {
-  showAddOutput: boolean;
-  output?: any; // TODO: type
-  id?: string;
-};
+  showAddOutput: boolean
+  output?: any // TODO: type
+  id?: string
+}
 
 class OutputsEdit extends React.Component<Props, State> {
-  static contextType = DataContext;
+  static contextType = DataContext
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       showAddOutput: false,
       output: undefined,
-      id: "",
-    };
+      id: ''
+    }
   }
 
   onClickOutput = (event: MouseEvent, output) => {
-    event.preventDefault();
+    event.preventDefault()
 
     this.setState({
-      output,
-    });
-  };
+      output
+    })
+  }
 
   onClickAddOutput = async (event: MouseEvent) => {
-    event.preventDefault();
+    event.preventDefault()
 
-    const id = randomId();
+    const id = randomId()
     this.setState({
       showAddOutput: true,
-      id,
-    });
-  };
+      id
+    })
+  }
 
   render() {
-    const data = this.context.data;
-    const { outputs } = data;
-    const { output, id, showAddOutput } = this.state;
+    const data = this.context.data
+    const { outputs } = data
+    const { output, id, showAddOutput } = this.state
 
     return (
       <div className="govuk-body">
@@ -88,8 +88,8 @@ class OutputsEdit extends React.Component<Props, State> {
           />
         )}
       </div>
-    );
+    )
   }
 }
 
-export default OutputsEdit;
+export default OutputsEdit

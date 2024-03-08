@@ -1,77 +1,77 @@
-import React, { useCallback, useState, Fragment, useContext } from "react";
-import { RenderInPortal } from "../RenderInPortal";
-import { DataContext } from "../../context";
-import { addLink } from "../../data/page";
+import React, { useCallback, useState, Fragment, useContext } from 'react'
+import { RenderInPortal } from '../RenderInPortal'
+import { DataContext } from '../../context'
+import { addLink } from '../../data/page'
 
 export function PageLinkage({ page, layout }) {
-  const { data, save } = useContext(DataContext);
-  const [lineStart, setLineStart] = useState(null);
-  const [lineEnd, setLineEnd] = useState(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const [isDraggingOver, setIsDraggingOver] = useState(false);
+  const { data, save } = useContext(DataContext)
+  const [lineStart, setLineStart] = useState(null)
+  const [lineEnd, setLineEnd] = useState(null)
+  const [isDragging, setIsDragging] = useState(false)
+  const [isDraggingOver, setIsDraggingOver] = useState(false)
 
   const reset = () => {
-    setIsDraggingOver(false);
-    setIsDragging(false);
-    setLineStart(null);
-    setLineEnd(null);
-  };
+    setIsDraggingOver(false)
+    setIsDragging(false)
+    setLineStart(null)
+    setLineEnd(null)
+  }
 
   const handleDragStart = useCallback((event) => {
-    const { pageX: x, pageY: y } = event;
+    const { pageX: x, pageY: y } = event
 
-    setIsDragging(true);
-    setLineEnd({ x, y });
-    setLineStart({ x, y });
-    event.dataTransfer.setData("linkingPage", JSON.stringify(page));
-  }, []);
+    setIsDragging(true)
+    setLineEnd({ x, y })
+    setLineStart({ x, y })
+    event.dataTransfer.setData('linkingPage', JSON.stringify(page))
+  }, [])
 
   const handleDrag = useCallback((event) => {
-    const { pageX: x, pageY: y } = event;
+    const { pageX: x, pageY: y } = event
 
     if (!x && !y) {
       // event might return 0 0 moved outside dom or drop occurs outside linkage
-      reset();
+      reset()
     } else {
-      setLineEnd({ x, y });
+      setLineEnd({ x, y })
     }
-  }, []);
+  }, [])
 
   const handleDragOver = useCallback((event) => {
-    event.preventDefault();
-    setIsDraggingOver(true);
-  }, []);
+    event.preventDefault()
+    setIsDraggingOver(true)
+  }, [])
 
   const handleDragLeave = useCallback((event) => {
-    event.preventDefault();
-    setIsDraggingOver(false);
-  }, []);
+    event.preventDefault()
+    setIsDraggingOver(false)
+  }, [])
 
   const handleDrop = useCallback(
     async (event) => {
-      event.preventDefault();
+      event.preventDefault()
 
-      const linkingPage = JSON.parse(event.dataTransfer.getData("linkingPage"));
+      const linkingPage = JSON.parse(event.dataTransfer.getData('linkingPage'))
       if (linkingPage.path !== page.path) {
-        const updatedData = addLink(data, linkingPage.path, page.path);
-        await save(updatedData);
+        const updatedData = addLink(data, linkingPage.path, page.path)
+        await save(updatedData)
       }
-      reset();
+      reset()
     },
     [data]
-  );
+  )
 
   const handleDragEnd = useCallback((event) => {
-    event.preventDefault();
-    reset();
-  }, []);
+    event.preventDefault()
+    reset()
+  }, [])
 
-  const showHighlight = isDragging || isDraggingOver;
+  const showHighlight = isDragging || isDraggingOver
 
   const pageNodeSize = {
     width: layout?.node?.width,
-    height: layout?.node?.height,
-  };
+    height: layout?.node?.height
+  }
 
   return (
     <Fragment>
@@ -119,5 +119,5 @@ export function PageLinkage({ page, layout }) {
         </RenderInPortal>
       )}
     </Fragment>
-  );
+  )
 }

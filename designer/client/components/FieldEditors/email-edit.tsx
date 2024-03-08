@@ -1,15 +1,15 @@
-import React from "react";
+import React from 'react'
 
 type Props = {
-  output: any; // TODO
-};
+  output: any // TODO
+}
 
 class EmailEdit extends React.Component<Props> {
   render() {
-    const { output } = this.props;
+    const { output } = this.props
     const outputConfiguration = output?.outputConfiguration ?? {
-      emailAddress: "",
-    };
+      emailAddress: ''
+    }
 
     return (
       <div className="govuk-body email-edit">
@@ -26,8 +26,8 @@ class EmailEdit extends React.Component<Props> {
           />
         </div>
       </div>
-    );
+    )
   }
 }
 
-export default EmailEdit;
+export default EmailEdit

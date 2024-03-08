@@ -1,16 +1,16 @@
-import { Data } from "@defra/forms-model";
+import { Data } from '@defra/forms-model'
 
 export function simplePageMock() {
   return {
     pages: [
       {
-        title: "First page",
-        path: "/first-page",
+        title: 'First page',
+        path: '/first-page',
         components: [],
-        controller: "./pages/summary.js",
-        section: "home",
-      },
+        controller: './pages/summary.js',
+        section: 'home'
+      }
     ],
-    lists: [],
-  };
+    lists: []
+  }
 }

@@ -1,8 +1,8 @@
-import { useFeatures } from "./hooks/featureToggling";
+import { useFeatures } from './hooks/featureToggling'
 
 const FeatureToggle = ({ feature, children }) => {
-  const features = useFeatures();
-  return features[feature] ? children : null;
-};
+  const features = useFeatures()
+  return features[feature] ? children : null
+}
 
-export default FeatureToggle;
+export default FeatureToggle

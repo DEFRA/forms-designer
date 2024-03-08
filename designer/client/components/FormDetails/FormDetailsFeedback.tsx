@@ -1,16 +1,16 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
-import { Label, Radios } from "@xgovformbuilder/govuk-react-jsx";
-import { FormConfiguration } from "@defra/forms-model";
+import React, { ChangeEvent, useEffect, useState } from 'react'
+import { Label, Radios } from '@xgovformbuilder/govuk-react-jsx'
+import { FormConfiguration } from '@defra/forms-model'
 
-import { i18n } from "../../i18n";
-import * as formConfigurationApi from "../../load-form-configurations";
+import { i18n } from '../../i18n'
+import * as formConfigurationApi from '../../load-form-configurations'
 
 interface Props {
-  feedbackForm: any;
-  handleIsFeedbackFormRadio: (event: ChangeEvent<HTMLSelectElement>) => void;
-  onSelectFeedbackForm: (event: ChangeEvent<HTMLSelectElement>) => void;
-  formConfigurations: FormConfiguration[];
-  selectedFeedbackForm: string | undefined;
+  feedbackForm: any
+  handleIsFeedbackFormRadio: (event: ChangeEvent<HTMLSelectElement>) => void
+  onSelectFeedbackForm: (event: ChangeEvent<HTMLSelectElement>) => void
+  formConfigurations: FormConfiguration[]
+  selectedFeedbackForm: string | undefined
 }
 
 export const FormDetailsFeedback = (props: Props) => {
@@ -18,20 +18,20 @@ export const FormDetailsFeedback = (props: Props) => {
     feedbackForm = false,
     handleIsFeedbackFormRadio,
     onSelectFeedbackForm,
-    selectedFeedbackForm,
-  } = props;
+    selectedFeedbackForm
+  } = props
 
-  const [configs, setConfigs] = useState<FormConfiguration[]>([]);
+  const [configs, setConfigs] = useState<FormConfiguration[]>([])
 
   useEffect(() => {
-    let isMounted = true;
+    let isMounted = true
     formConfigurationApi.loadConfigurations().then((result) => {
-      if (isMounted) setConfigs(result.filter((it) => it.feedbackForm));
-    });
+      if (isMounted) setConfigs(result.filter((it) => it.feedbackForm))
+    })
     return () => {
-      isMounted = false;
-    };
-  }, []);
+      isMounted = false
+    }
+  }, [])
 
   return (
     <div className="govuk-form-group form-details__feedback">
@@ -47,23 +47,23 @@ export const FormDetailsFeedback = (props: Props) => {
                 className="govuk-label--s"
                 htmlFor="#field-form-phase-banner"
               >
-                {i18n("formDetails.feedbackForm.fieldTitle")}
+                {i18n('formDetails.feedbackForm.fieldTitle')}
               </Label>
-            ),
-          },
+            )
+          }
         }}
         hint={{
-          children: [i18n("formDetails.feedbackForm.fieldHint")],
+          children: [i18n('formDetails.feedbackForm.fieldHint')]
         }}
         items={[
           {
-            children: [i18n("yes")],
-            value: true,
+            children: [i18n('yes')],
+            value: true
           },
           {
-            children: [i18n("no")],
-            value: false,
-          },
+            children: [i18n('no')],
+            value: false
+          }
         ]}
       />
       {feedbackForm === false && (
@@ -112,5 +112,5 @@ export const FormDetailsFeedback = (props: Props) => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}

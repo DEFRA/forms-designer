@@ -1,69 +1,69 @@
-import React, { Component } from "react";
-import * as formConfigurationApi from "../../load-form-configurations";
-import { i18n } from "../../i18n";
-import { withRouter } from "react-router-dom";
-import { BackLink } from "../../components/BackLink";
-import "./LandingPage.scss";
-import logger from "../../plugins/logger";
+import React, { Component } from 'react'
+import * as formConfigurationApi from '../../load-form-configurations'
+import { i18n } from '../../i18n'
+import { withRouter } from 'react-router-dom'
+import { BackLink } from '../../components/BackLink'
+import './LandingPage.scss'
+import logger from '../../plugins/logger'
 
 type Props = {
-  history: any;
-};
+  history: any
+}
 
 type State = {
-  configs: { Key: string; DisplayName: string }[];
-  loading?: boolean;
-};
+  configs: { Key: string; DisplayName: string }[]
+  loading?: boolean
+}
 
 export class ChooseExisting extends Component<Props, State> {
   constructor(props: Props) {
-    super(props);
+    super(props)
 
     this.state = {
       configs: [],
-      loading: true,
-    };
+      loading: true
+    }
   }
 
   componentDidMount() {
     formConfigurationApi.loadConfigurations().then((configs) => {
       this.setState({
         loading: false,
-        configs,
-      });
-    });
+        configs
+      })
+    })
   }
 
   selectForm = async (form) => {
     try {
-      const response = await window.fetch("forms-designer/api/new", {
-        method: "POST",
+      const response = await window.fetch('forms-designer/api/new', {
+        method: 'POST',
         body: JSON.stringify({
           selected: { Key: form },
-          name: "",
+          name: ''
         }),
         headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      });
-      const responseJson = await response.json();
-      this.props.history.push(`/designer/${responseJson.id}`);
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        }
+      })
+      const responseJson = await response.json()
+      this.props.history.push(`/designer/${responseJson.id}`)
     } catch (e) {
-      logger.error("ChooseExisting", e);
+      logger.error('ChooseExisting', e)
     }
-  };
+  }
 
   goBack = (event) => {
-    event.preventDefault();
-    this.props.history.goBack();
-  };
+    event.preventDefault()
+    this.props.history.goBack()
+  }
 
   render() {
-    const configs = this.state.configs || [];
-    const hasEditableForms = configs.length > 0;
+    const configs = this.state.configs || []
+    const hasEditableForms = configs.length > 0
     if (this.state.loading) {
-      return <p>Loading ...</p>;
+      return <p>Loading ...</p>
     }
 
     const formTable = configs.map((form) => (
@@ -73,25 +73,25 @@ export class ChooseExisting extends Component<Props, State> {
             className="govuk-link"
             href="#"
             onClick={(e) => {
-              e.preventDefault();
-              this.selectForm(form.Key);
+              e.preventDefault()
+              this.selectForm(form.Key)
             }}
           >
             {form.DisplayName}
           </a>
         </td>
       </tr>
-    ));
+    ))
 
     return (
       <div className="new-config">
         <div>
           <BackLink onClick={this.goBack}>
-            {i18n("Back to previous page")}
+            {i18n('Back to previous page')}
           </BackLink>
 
           <h1 className="govuk-heading-l">
-            {i18n("landingPage.existing.select")}
+            {i18n('landingPage.existing.select')}
           </h1>
 
           <div className="govuk-grid-row form-grid">
@@ -110,7 +110,7 @@ export class ChooseExisting extends Component<Props, State> {
                   ) : (
                     <tr className="govuk-table__row">
                       <td className="govuk-table__cell table__cell__noborder">
-                        {i18n("landingPage.existing.noforms")}
+                        {i18n('landingPage.existing.noforms')}
                       </td>
                     </tr>
                   )}
@@ -120,8 +120,8 @@ export class ChooseExisting extends Component<Props, State> {
           </div>
         </div>
       </div>
-    );
+    )
   }
 }
 
-export default withRouter(ChooseExisting);
+export default withRouter(ChooseExisting)

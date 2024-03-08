@@ -1,5 +1,5 @@
-import { ComponentType, ComponentDef } from "../components";
-import { ConditionValueAbstract } from "./condition-value-abstract";
+import { ComponentType, ComponentDef } from '../components'
+import { ConditionValueAbstract } from './condition-value-abstract'
 
 import {
   timeUnits,
@@ -7,50 +7,50 @@ import {
   dateTimeUnits,
   ConditionValue,
   DateDirections,
-  RelativeTimeValue,
-} from "./condition-values";
+  RelativeTimeValue
+} from './condition-values'
 
-type Operator = "==" | "!=" | ">=" | "<=" | "<" | ">";
+type Operator = '==' | '!=' | '>=' | '<=' | '<' | '>'
 
 const defaultOperators = {
-  is: inline("=="),
-  "is not": inline("!="),
-};
+  is: inline('=='),
+  'is not': inline('!=')
+}
 
 function withDefaults<T>(param: T) {
-  return Object.assign({}, param, defaultOperators);
+  return Object.assign({}, param, defaultOperators)
 }
 
 const textBasedFieldCustomisations = {
-  "is longer than": lengthIs(">"),
-  "is shorter than": lengthIs("<"),
-  "has length": lengthIs("=="),
-};
+  'is longer than': lengthIs('>'),
+  'is shorter than': lengthIs('<'),
+  'has length': lengthIs('==')
+}
 
 const absoluteDateTimeOperators = {
-  is: absoluteDateTime("=="),
-  "is not": absoluteDateTime("!="),
-  "is before": absoluteDateTime("<"),
-  "is after": absoluteDateTime(">"),
-};
+  is: absoluteDateTime('=='),
+  'is not': absoluteDateTime('!='),
+  'is before': absoluteDateTime('<'),
+  'is after': absoluteDateTime('>')
+}
 
 const relativeTimeOperators = (units) => ({
-  "is at least": relativeTime("<=", ">=", units),
-  "is at most": relativeTime(">=", "<=", units),
-  "is less than": relativeTime(">", "<", units),
-  "is more than": relativeTime("<", ">", units),
-});
+  'is at least': relativeTime('<=', '>=', units),
+  'is at most': relativeTime('>=', '<=', units),
+  'is less than': relativeTime('>', '<', units),
+  'is more than': relativeTime('<', '>', units)
+})
 
 export const customOperators = {
   CheckboxesField: {
-    contains: reverseInline("in"),
-    "does not contain": not(reverseInline("in")),
+    contains: reverseInline('in'),
+    'does not contain': not(reverseInline('in'))
   },
   NumberField: withDefaults({
-    "is at least": inline(">="),
-    "is at most": inline("<="),
-    "is less than": inline("<"),
-    "is more than": inline(">"),
+    'is at least': inline('>='),
+    'is at most': inline('<='),
+    'is less than': inline('<'),
+    'is more than': inline('>')
   }),
   DateField: Object.assign(
     {},
@@ -79,11 +79,11 @@ export const customOperators = {
   ),
   TextField: withDefaults(textBasedFieldCustomisations),
   MultilineTextField: withDefaults(textBasedFieldCustomisations),
-  EmailAddressField: withDefaults(textBasedFieldCustomisations),
-};
+  EmailAddressField: withDefaults(textBasedFieldCustomisations)
+}
 
 export function getOperatorNames(fieldType) {
-  return Object.keys(getConditionals(fieldType)).sort();
+  return Object.keys(getConditionals(fieldType)).sort()
 }
 
 export function getExpression(
@@ -95,68 +95,68 @@ export function getExpression(
   return getConditionals(fieldType)[operator].expression(
     { type: fieldType, name: fieldName },
     value
-  );
+  )
 }
 
 export function getOperatorConfig(fieldType: ComponentType, operator) {
-  return getConditionals(fieldType)[operator];
+  return getConditionals(fieldType)[operator]
 }
 
 function getConditionals(fieldType: ComponentType) {
-  return customOperators[fieldType] || defaultOperators;
+  return customOperators[fieldType] || defaultOperators
 }
 
 function inline(operator: Operator) {
   return {
     expression: (field: ComponentDef, value) =>
-      `${field.name} ${operator} ${formatValue(field.type, value.value)}`,
-  };
+      `${field.name} ${operator} ${formatValue(field.type, value.value)}`
+  }
 }
 
 function lengthIs(operator: Operator) {
   return {
     expression: (field: ComponentDef, value) =>
-      `length(${field.name}) ${operator} ${value.value}`,
-  };
+      `length(${field.name}) ${operator} ${value.value}`
+  }
 }
 
-function reverseInline(operator: "in") {
+function reverseInline(operator: 'in') {
   return {
     expression: (field: ComponentDef, value) =>
-      `${formatValue(field.type, value.value)} ${operator} ${field.name}`,
-  };
+      `${formatValue(field.type, value.value)} ${operator} ${field.name}`
+  }
 }
 
 function not(operatorDefinition) {
   return {
     expression: (field: ComponentDef, value) =>
-      `not (${operatorDefinition.expression(field, value)})`,
-  };
+      `not (${operatorDefinition.expression(field, value)})`
+  }
 }
 
 function formatValue(fieldType: ComponentType, value) {
-  if (fieldType === "NumberField" || fieldType === "YesNoField") {
-    return value;
+  if (fieldType === 'NumberField' || fieldType === 'YesNoField') {
+    return value
   }
-  return `'${value}'`;
+  return `'${value}'`
 }
 
 export const absoluteDateOrTimeOperatorNames = Object.keys(
   absoluteDateTimeOperators
-);
+)
 export const relativeDateOrTimeOperatorNames = Object.keys(
   relativeTimeOperators(dateTimeUnits)
-);
+)
 
 function absoluteDateTime(operator: Operator) {
   return {
     expression: (field: ComponentDef, value) => {
       if (value instanceof ConditionValue) {
-        return `${field.name} ${operator} '${value.toExpression()}'`;
+        return `${field.name} ${operator} '${value.toExpression()}'`
       }
-      throw Error("only Value types are supported");
-    },
-  };
+      throw Error('only Value types are supported')
+    }
+  }
 }
 
 function relativeTime(pastOperator, futureOperator, units) {
@@ -167,10 +167,10 @@ function relativeTime(pastOperator, futureOperator, units) {
         const operator =
           value.direction === DateDirections.PAST
             ? pastOperator
-            : futureOperator;
-        return `${field.name} ${operator} ${value.toExpression()}`;
+            : futureOperator
+        return `${field.name} ${operator} ${value.toExpression()}`
       }
-      throw Error("time shift requires a TimeShiftValue");
-    },
-  };
+      throw Error('time shift requires a TimeShiftValue')
+    }
+  }
 }

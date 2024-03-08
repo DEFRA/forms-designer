@@ -1,107 +1,107 @@
-import { FeeItems } from "./FeeItems";
-import React from "react";
-import { clone } from "@defra/forms-model";
-import { Input } from "@xgovformbuilder/govuk-react-jsx";
+import { FeeItems } from './FeeItems'
+import React from 'react'
+import { clone } from '@defra/forms-model'
+import { Input } from '@xgovformbuilder/govuk-react-jsx'
 
-import ErrorSummary from "./../../error-summary";
-import { DataContext } from "../../context";
-import logger from "../../plugins/logger";
+import ErrorSummary from './../../error-summary'
+import { DataContext } from '../../context'
+import logger from '../../plugins/logger'
 export class FeeEdit extends React.Component {
-  static contextType = DataContext;
+  static contextType = DataContext
 
   constructor(props) {
-    super(props);
-    this.feeItemsRef = React.createRef();
+    super(props)
+    this.feeItemsRef = React.createRef()
     this.state = {
-      errors: {},
-    };
+      errors: {}
+    }
   }
 
   onSubmit = (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const formData = new window.FormData(form);
-    const { data, save } = this.context;
+    e.preventDefault()
+    const form = e.target
+    const formData = new window.FormData(form)
+    const { data, save } = this.context
 
     // Items
-    const testPayApiKey = formData.get("test-pay-api-key").trim();
-    const prodPayApiKey = formData.get("prod-pay-api-key").trim();
-    const descriptions = formData.getAll("description").map((t) => t.trim());
-    const amount = formData.getAll("amount").map((t) => t.trim());
-    const conditions = formData.getAll("condition").map((t) => t.trim());
+    const testPayApiKey = formData.get('test-pay-api-key').trim()
+    const prodPayApiKey = formData.get('prod-pay-api-key').trim()
+    const descriptions = formData.getAll('description').map((t) => t.trim())
+    const amount = formData.getAll('amount').map((t) => t.trim())
+    const conditions = formData.getAll('condition').map((t) => t.trim())
 
-    const hasValidationErrors = this.validate(testPayApiKey, form);
-    if (hasValidationErrors) return;
+    const hasValidationErrors = this.validate(testPayApiKey, form)
+    if (hasValidationErrors) return
 
-    const copy = clone(data);
+    const copy = clone(data)
     copy.payApiKey = {
       test: testPayApiKey,
-      production: prodPayApiKey,
-    };
+      production: prodPayApiKey
+    }
     copy.fees = descriptions.map((description, i) => ({
       description,
       amount: amount[i],
-      condition: conditions[i],
-    }));
+      condition: conditions[i]
+    }))
 
     save(copy)
       .then((data) => {
-        this.props.onEdit({ data });
+        this.props.onEdit({ data })
       })
       .catch((err) => {
-        logger.error("FeeEdit", err);
-      });
-  };
+        logger.error('FeeEdit', err)
+      })
+  }
 
   validate = (payApiKey, form) => {
-    const apiKeyHasErrors = !payApiKey || payApiKey.length < 1;
-    const itemValidationErrors = this.feeItemsRef.current.validate(form);
+    const apiKeyHasErrors = !payApiKey || payApiKey.length < 1
+    const itemValidationErrors = this.feeItemsRef.current.validate(form)
     const hasValidationErrors =
-      apiKeyHasErrors || Object.keys(itemValidationErrors).length > 0;
-    const errors = {};
+      apiKeyHasErrors || Object.keys(itemValidationErrors).length > 0
+    const errors = {}
     if (apiKeyHasErrors) {
       errors.payapi = {
-        href: "#test-pay-api-key",
-        children: "Enter Pay API key",
-      };
+        href: '#test-pay-api-key',
+        children: 'Enter Pay API key'
+      }
     }
     this.setState({
       errors: {
         ...itemValidationErrors,
-        ...errors,
+        ...errors
       },
-      hasValidationErrors,
-    });
+      hasValidationErrors
+    })
 
-    return hasValidationErrors;
-  };
+    return hasValidationErrors
+  }
 
   onClickDelete = (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
-    if (!window.confirm("Confirm delete")) {
-      return;
+    if (!window.confirm('Confirm delete')) {
+      return
     }
 
-    const { save } = this.context;
-    const { data, fee } = this.props;
-    const copy = clone(data);
+    const { save } = this.context
+    const { data, fee } = this.props
+    const copy = clone(data)
 
-    copy.fees.splice(data.fees.indexOf(fee), 1);
+    copy.fees.splice(data.fees.indexOf(fee), 1)
 
     save(copy)
       .then((data) => {
-        this.props.onEdit({ data });
+        this.props.onEdit({ data })
       })
       .catch((err) => {
-        logger.error("FeeEdit", err);
-      });
-  };
+        logger.error('FeeEdit', err)
+      })
+  }
 
   render() {
-    const { data } = this.context;
-    const { fees, conditions, payApiKey } = data;
-    const { errors, hasValidationErrors } = this.state;
+    const { data } = this.context
+    const { fees, conditions, payApiKey } = data
+    const { errors, hasValidationErrors } = this.state
     return (
       <div className="govuk-body">
         <form onSubmit={(e) => this.onSubmit(e)} autoComplete="off">
@@ -115,8 +115,8 @@ export class FeeEdit extends React.Component {
             id="test-pay-api-key"
             name="test-pay-api-key"
             label={{
-              className: "govuk-label--s",
-              children: ["Test Pay API Key"],
+              className: 'govuk-label--s',
+              children: ['Test Pay API Key']
             }}
             defaultValue={payApiKey?.test ?? payApiKey?.production ?? payApiKey}
             errorMessage={
@@ -130,8 +130,8 @@ export class FeeEdit extends React.Component {
             id="prod-pay-api-key"
             name="prod-pay-api-key"
             label={{
-              className: "govuk-label--s",
-              children: ["Production Pay API Key"],
+              className: 'govuk-label--s',
+              children: ['Production Pay API Key']
             }}
             defaultValue={payApiKey?.production ?? payApiKey?.test ?? payApiKey}
           />
@@ -146,6 +146,6 @@ export class FeeEdit extends React.Component {
           </button>
         </form>
       </div>
-    );
+    )
   }
 }

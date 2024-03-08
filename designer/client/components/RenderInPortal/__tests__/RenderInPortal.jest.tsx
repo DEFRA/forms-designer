@@ -1,5 +1,5 @@
-test.todo("RenderInPortal renders a single component in portal");
-test.todo("RenderInPortal renders a multiple components in parallel");
+test.todo('RenderInPortal renders a single component in portal')
+test.todo('RenderInPortal renders a multiple components in parallel')
 /**
  suite("Component RenderInPortal", () => {
   test("renders paragraph inside portal", () => {

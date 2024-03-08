@@ -1,94 +1,94 @@
-import { addComponent } from "..";
-import { FormDefinition } from "@defra/forms-model";
+import { addComponent } from '..'
+import { FormDefinition } from '@defra/forms-model'
 
-test("addComponent throws an error when no page can be found", () => {
+test('addComponent throws an error when no page can be found', () => {
   const data: FormDefinition = {
     conditions: [],
     lists: [],
     pages: [],
-    sections: [],
-  };
+    sections: []
+  }
 
   expect(() => {
-    addComponent(data, "doesntExist", {});
-  }).toThrowError();
-});
+    addComponent(data, 'doesntExist', {})
+  }).toThrowError()
+})
 
-test("addComponent adds a component to the correct page", () => {
+test('addComponent adds a component to the correct page', () => {
   const data: FormDefinition = {
     conditions: [],
     lists: [],
     pages: [
       {
-        title: "first page",
-        path: "/1",
+        title: 'first page',
+        path: '/1',
         components: [
           {
-            type: "TextField",
-            name: "firstName",
-            title: "First name",
-            schema: {},
-          },
-        ],
+            type: 'TextField',
+            name: 'firstName',
+            title: 'First name',
+            schema: {}
+          }
+        ]
       },
       {
-        title: "second page",
-        path: "/2",
+        title: 'second page',
+        path: '/2',
         components: [
           {
-            type: "TextField",
-            name: "lastName",
-            title: "Surname",
-            schema: {},
-          },
-        ],
-      },
+            type: 'TextField',
+            name: 'lastName',
+            title: 'Surname',
+            schema: {}
+          }
+        ]
+      }
     ],
-    sections: [],
-  };
+    sections: []
+  }
 
   expect(
-    addComponent(data, "/1", {
-      type: "TextField",
-      name: "aNewComponent",
-      title: "new component",
-      schema: {},
+    addComponent(data, '/1', {
+      type: 'TextField',
+      name: 'aNewComponent',
+      title: 'new component',
+      schema: {}
     })
   ).toEqual({
     conditions: [],
     lists: [],
     pages: [
       {
-        title: "first page",
-        path: "/1",
+        title: 'first page',
+        path: '/1',
         components: [
           {
-            type: "TextField",
-            name: "firstName",
-            title: "First name",
-            schema: {},
+            type: 'TextField',
+            name: 'firstName',
+            title: 'First name',
+            schema: {}
           },
           {
-            name: "aNewComponent",
+            name: 'aNewComponent',
             schema: {},
-            title: "new component",
-            type: "TextField",
-          },
-        ],
+            title: 'new component',
+            type: 'TextField'
+          }
+        ]
       },
       {
-        title: "second page",
-        path: "/2",
+        title: 'second page',
+        path: '/2',
         components: [
           {
-            type: "TextField",
-            name: "lastName",
-            title: "Surname",
-            schema: {},
-          },
-        ],
-      },
+            type: 'TextField',
+            name: 'lastName',
+            title: 'Surname',
+            schema: {}
+          }
+        ]
+      }
     ],
-    sections: [],
-  });
-});
+    sections: []
+  })
+})

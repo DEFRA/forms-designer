@@ -1,24 +1,24 @@
-import React, { useContext } from "react";
+import React, { useContext } from 'react'
 import {
   SortableContainer,
   SortableElement,
-  SortableHandle,
-} from "react-sortable-hoc";
-import { i18n, withI18n } from "../i18n";
-import { ListActions } from "../reducers/listActions";
+  SortableHandle
+} from 'react-sortable-hoc'
+import { i18n, withI18n } from '../i18n'
+import { ListActions } from '../reducers/listActions'
 import {
   ListsEditorContext,
-  ListsEditorStateActions,
-} from "../reducers/list/listsEditorReducer";
+  ListsEditorStateActions
+} from '../reducers/list/listsEditorReducer'
 
-import { DataContext } from "../context";
-import { clone } from "@defra/forms-model";
-import { useListItem } from "../hooks/list/useListItem";
-import { ListContext } from "../reducers/listReducer";
+import { DataContext } from '../context'
+import { clone } from '@defra/forms-model'
+import { useListItem } from '../hooks/list/useListItem'
+import { ListContext } from '../reducers/listReducer'
 
 const DragHandle = SortableHandle(() => (
   <span className="drag-handle-list">&#9776;</span>
-));
+))
 
 const SortableItem = SortableElement(({ item, removeItem, selectListItem }) => {
   return (
@@ -31,8 +31,8 @@ const SortableItem = SortableElement(({ item, removeItem, selectListItem }) => {
         <a
           href="#"
           onClick={(e) => {
-            e?.preventDefault();
-            selectListItem(item);
+            e?.preventDefault()
+            selectListItem(item)
           }}
         >
           Edit
@@ -42,16 +42,16 @@ const SortableItem = SortableElement(({ item, removeItem, selectListItem }) => {
         <a
           href="#"
           onClick={(e) => {
-            e?.preventDefault();
-            removeItem();
+            e?.preventDefault()
+            removeItem()
           }}
         >
           Delete
         </a>
       </td>
     </tr>
-  );
-});
+  )
+})
 
 const SortableList = SortableContainer(
   ({ items, selectListItem, removeItem }) => {
@@ -67,47 +67,46 @@ const SortableList = SortableContainer(
           />
         ))}
       </tbody>
-    );
+    )
   }
-);
+)
 
 function ListItems() {
-  const { state: listEditorState, dispatch: listsEditorDispatch } = useContext(
-    ListsEditorContext
-  );
-  const { isEditingStatic } = listEditorState;
-  const { data, save } = useContext(DataContext);
-  const { state, dispatch } = useContext(ListContext);
-  const selectedList = state.selectedList;
+  const { state: listEditorState, dispatch: listsEditorDispatch } =
+    useContext(ListsEditorContext)
+  const { isEditingStatic } = listEditorState
+  const { data, save } = useContext(DataContext)
+  const { state, dispatch } = useContext(ListContext)
+  const selectedList = state.selectedList
 
   const selectListItem = (payload) => {
-    dispatch({ type: ListActions.EDIT_LIST_ITEM, payload });
-    listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST_ITEM, true]);
-  };
+    dispatch({ type: ListActions.EDIT_LIST_ITEM, payload })
+    listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST_ITEM, true])
+  }
 
-  const { prepareForDelete } = useListItem(state, dispatch);
+  const { prepareForDelete } = useListItem(state, dispatch)
 
   function removeItem(index: number) {
-    const copy = clone(data);
-    save(prepareForDelete(copy, index));
+    const copy = clone(data)
+    save(prepareForDelete(copy, index))
   }
 
   const onSortEnd = ({ oldIndex, newIndex }) => {
-    const payload = { oldIndex, newIndex };
+    const payload = { oldIndex, newIndex }
     if (!isEditingStatic) {
-      dispatch({ type: ListActions.SORT_LIST_ITEM, payload });
+      dispatch({ type: ListActions.SORT_LIST_ITEM, payload })
     }
-  };
+  }
 
-  const hasListItems = (selectedList?.items ?? []).length > 0;
+  const hasListItems = (selectedList?.items ?? []).length > 0
 
   return (
     <div>
       <table className="govuk-table">
-        <caption className={"govuk-table__caption"}>
-          {i18n("list.items.title")}
+        <caption className={'govuk-table__caption'}>
+          {i18n('list.items.title')}
           <span className="govuk-hint govuk-!-margin-bottom-0">
-            {i18n("list.items.hint")}
+            {i18n('list.items.hint')}
           </span>
         </caption>
 
@@ -123,7 +122,7 @@ function ListItems() {
         {!hasListItems && (
           <tbody className="govuk-table__body">
             <tr className="govuk-table__row" scope="row">
-              <td className="govuk-body">{i18n("list.items.hintNoItems")}</td>
+              <td className="govuk-body">{i18n('list.items.hintNoItems')}</td>
             </tr>
           </tbody>
         )}
@@ -141,7 +140,7 @@ function ListItems() {
         )}
       </table>
     </div>
-  );
+  )
 }
 
-export default withI18n(ListItems);
+export default withI18n(ListItems)

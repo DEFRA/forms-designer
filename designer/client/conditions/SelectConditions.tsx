@@ -1,116 +1,114 @@
-import React, { ChangeEvent } from "react";
-import InlineConditions from "./InlineConditions";
-import { Condition, ConditionsModel, Data } from "@defra/forms-model";
-import { Flyout } from "../components/Flyout";
-import { Hint, Select } from "@xgovformbuilder/govuk-react-jsx";
-import { i18n } from "../i18n";
-import { DataContext } from "../context";
-import { RenderInPortal } from "../components/RenderInPortal";
+import React, { ChangeEvent } from 'react'
+import InlineConditions from './InlineConditions'
+import { Condition, ConditionsModel, Data } from '@defra/forms-model'
+import { Flyout } from '../components/Flyout'
+import { Hint, Select } from '@xgovformbuilder/govuk-react-jsx'
+import { i18n } from '../i18n'
+import { DataContext } from '../context'
+import { RenderInPortal } from '../components/RenderInPortal'
 import {
   allInputs,
   inputsAccessibleAt,
-  hasConditions as dataHasConditions,
-} from "../data";
+  hasConditions as dataHasConditions
+} from '../data'
 import {
   isDuplicateCondition,
   hasConditionName,
   getFieldNameSubstring,
-  conditionsByType,
-} from "./select-condition-helpers";
+  conditionsByType
+} from './select-condition-helpers'
 
 interface Props {
-  path: string;
-  data: Data;
-  conditionsChange: (selectedCondition: string) => void;
-  hints: any[];
-  noFieldsHintText?: string;
+  path: string
+  data: Data
+  conditionsChange: (selectedCondition: string) => void
+  hints: any[]
+  noFieldsHintText?: string
 }
 
 interface State {
-  inline: boolean;
-  selectedCondition: string;
-  fields: any;
+  inline: boolean
+  selectedCondition: string
+  fields: any
 }
 
 type ConditionObject = {
-  name: string;
-  conditions: Condition[];
-};
+  name: string
+  conditions: Condition[]
+}
 
 export type ConditionData = {
-  name: string;
-  displayName: string;
-  value: string | ConditionObject;
-};
+  name: string
+  displayName: string
+  value: string | ConditionObject
+}
 
 class SelectConditions extends React.Component<Props, State> {
-  static contextType = DataContext;
+  static contextType = DataContext
 
   constructor(props, context) {
-    super(props, context);
+    super(props, context)
 
     this.state = {
       fields: this.fieldsForPath(props.path),
       inline: false,
-      selectedCondition: props.selectedCondition,
-    };
+      selectedCondition: props.selectedCondition
+    }
   }
 
   componentDidUpdate = (prevProps) => {
     if (this.props.path !== prevProps.path) {
-      const fields = this.fieldsForPath(this.props.path);
+      const fields = this.fieldsForPath(this.props.path)
 
       this.setState({
         conditions: new ConditionsModel(),
         fields,
-        editView: false,
-      });
+        editView: false
+      })
     }
-  };
+  }
 
   fieldsForPath(path: string) {
-    const { data } = this.context;
-    const inputs = path
-      ? inputsAccessibleAt(data, path)
-      : allInputs(data) ?? [];
+    const { data } = this.context
+    const inputs = path ? inputsAccessibleAt(data, path) : allInputs(data) ?? []
     return inputs
       .map((input) => ({
         label: input.title,
         name: this.trimSectionName(input.propertyPath),
-        type: input.type,
+        type: input.type
       }))
       .reduce((obj, item) => {
-        obj[item.name] = item;
-        return obj;
-      }, {});
+        obj[item.name] = item
+        return obj
+      }, {})
   }
 
   conditionsForPath(path: string) {
-    const { data } = this.context;
-    const fields: any = Object.values(this.fieldsForPath(path));
-    const { conditions = [] } = data;
-    const conditionsForPath: any[] = [];
-    const conditionsByTypeMap = conditionsByType(conditions);
+    const { data } = this.context
+    const fields: any = Object.values(this.fieldsForPath(path))
+    const { conditions = [] } = data
+    const conditionsForPath: any[] = []
+    const conditionsByTypeMap = conditionsByType(conditions)
 
     fields.forEach((field) => {
       this.handleStringConditions(
         conditionsByTypeMap.string,
         field.name,
         conditionsForPath
-      );
+      )
       this.handleConditions(
         conditionsByTypeMap.object,
         field.name,
         conditionsForPath
-      );
+      )
       this.handleNestedConditions(
         conditionsByTypeMap.nested,
         field.name,
         conditionsForPath
-      );
-    });
+      )
+    })
 
-    return conditionsForPath;
+    return conditionsForPath
   }
 
   handleConditions(
@@ -125,9 +123,9 @@ class SelectConditions extends React.Component<Props, State> {
           fieldName,
           getFieldNameSubstring(innerCondition.field.name),
           conditionsForPath
-        );
-      });
-    });
+        )
+      })
+    })
   }
 
   handleStringConditions(
@@ -135,24 +133,24 @@ class SelectConditions extends React.Component<Props, State> {
     fieldName: string,
     conditionsForPath: any[]
   ) {
-    const operators = ["==", "!=", ">", "<"];
+    const operators = ['==', '!=', '>', '<']
     const conditionsWithAcceptedOperators = stringConditions.filter(
       (condition) =>
         operators.some((operator) => condition.value.includes(operator))
-    );
+    )
     const conditionsWithFieldName = conditionsWithAcceptedOperators.map(
       (condition) => ({
         ...condition,
         conditionFieldName: condition.value
           .substring(
-            condition.value.indexOf(".") + 1,
+            condition.value.indexOf('.') + 1,
             condition.value.lastIndexOf(
               operators.filter((operator) => condition.value.includes(operator))
             )
           )
-          .trim(),
+          .trim()
       })
-    );
+    )
     conditionsWithFieldName.forEach((condition) =>
       this.checkAndAddCondition(
         condition,
@@ -160,7 +158,7 @@ class SelectConditions extends React.Component<Props, State> {
         condition.conditionFieldName,
         conditionsForPath
       )
-    );
+    )
   }
 
   // loops through nested conditions, checking the referenced condition against the current field
@@ -172,7 +170,7 @@ class SelectConditions extends React.Component<Props, State> {
     nestedConditions.forEach((condition) => {
       condition.value.conditions.forEach((innerCondition) => {
         // if the condition is already in the conditions array, skip the for each loop iteration
-        if (isDuplicateCondition(conditionsForPath, condition.name)) return;
+        if (isDuplicateCondition(conditionsForPath, condition.name)) return
         // if the inner condition isn't a nested condition, handle it in the standard way
         if (!hasConditionName(innerCondition)) {
           this.checkAndAddCondition(
@@ -180,8 +178,8 @@ class SelectConditions extends React.Component<Props, State> {
             fieldName,
             getFieldNameSubstring(innerCondition.field.name),
             conditionsForPath
-          );
-          return;
+          )
+          return
         }
         // if the inner condition is a nested condition,
         // check if that nested condition is already in the conditions array,
@@ -189,9 +187,9 @@ class SelectConditions extends React.Component<Props, State> {
         if (
           isDuplicateCondition(conditionsForPath, innerCondition.conditionName)
         )
-          conditionsForPath.push(condition);
-      });
-    });
+          conditionsForPath.push(condition)
+      })
+    })
   }
 
   checkAndAddCondition(
@@ -200,57 +198,57 @@ class SelectConditions extends React.Component<Props, State> {
     conditionFieldName: string,
     conditions: any[]
   ) {
-    if (isDuplicateCondition(conditions, conditionToAdd.name)) return;
-    if (fieldName === conditionFieldName) conditions.push(conditionToAdd);
+    if (isDuplicateCondition(conditions, conditionToAdd.name)) return
+    if (fieldName === conditionFieldName) conditions.push(conditionToAdd)
   }
 
   trimSectionName(fieldName: string) {
-    if (fieldName.includes(".")) {
-      return fieldName.substring(fieldName.indexOf(".") + 1);
+    if (fieldName.includes('.')) {
+      return fieldName.substring(fieldName.indexOf('.') + 1)
     }
-    return fieldName;
+    return fieldName
   }
 
   onClickDefineCondition = (e) => {
-    e.preventDefault();
+    e.preventDefault()
     this.setState({
-      inline: true,
-    });
-  };
+      inline: true
+    })
+  }
 
   setState(state, callback?: () => void) {
     if (state.selectedCondition !== undefined) {
-      this.props.conditionsChange(state.selectedCondition);
+      this.props.conditionsChange(state.selectedCondition)
     }
-    super.setState(state, callback);
+    super.setState(state, callback)
   }
 
   onChangeConditionSelection = (e: ChangeEvent<HTMLInputElement>) => {
-    const input = e.target;
+    const input = e.target
     this.setState({
-      selectedCondition: input.value,
-    });
-  };
+      selectedCondition: input.value
+    })
+  }
 
   onCancelInlineCondition = () => {
     this.setState({
-      inline: false,
-    });
-  };
+      inline: false
+    })
+  }
 
   onSaveInlineCondition = (createdCondition) => {
     this.setState({
       inline: false,
-      selectedCondition: createdCondition,
-    });
-  };
+      selectedCondition: createdCondition
+    })
+  }
 
   render() {
-    const { selectedCondition, inline } = this.state;
-    const { hints = [], noFieldsHintText } = this.props;
-    const conditions = this.conditionsForPath(this.props.path);
-    const hasConditions = dataHasConditions(conditions) || selectedCondition;
-    const hasFields = Object.keys(this.state.fields ?? {}).length > 0;
+    const { selectedCondition, inline } = this.state
+    const { hints = [], noFieldsHintText } = this.props
+    const conditions = this.conditionsForPath(this.props.path)
+    const hasConditions = dataHasConditions(conditions) || selectedCondition
+    const hasFields = Object.keys(this.state.fields ?? {}).length > 0
 
     return (
       <div className="conditions" data-testid="select-conditions">
@@ -259,7 +257,7 @@ class SelectConditions extends React.Component<Props, State> {
             className="govuk-label govuk-label--s"
             htmlFor="page-conditions"
           >
-            {i18n("conditions.optional")}
+            {i18n('conditions.optional')}
           </label>
           {hints.map((hint, index) => (
             <Hint key={`conditions-header-group-hint-${index}`}>{hint}</Hint>
@@ -272,20 +270,20 @@ class SelectConditions extends React.Component<Props, State> {
                 id="select-condition"
                 name="cond-select"
                 data-testid="select-condition"
-                value={selectedCondition ?? ""}
+                value={selectedCondition ?? ''}
                 items={[
                   {
-                    children: [""],
-                    value: "",
+                    children: [''],
+                    value: ''
                   },
                   ...conditions.map((it) => ({
                     children: [it.displayName],
-                    value: it.name,
-                  })),
+                    value: it.name
+                  }))
                 ]}
                 label={{
-                  className: "govuk-label--s",
-                  children: ["Select a condition"],
+                  className: 'govuk-label--s',
+                  children: ['Select a condition']
                 }}
                 onChange={this.onChangeConditionSelection}
                 required={false}
@@ -324,8 +322,8 @@ class SelectConditions extends React.Component<Props, State> {
           </div>
         )}
       </div>
-    );
+    )
   }
 }
 
-export default SelectConditions;
+export default SelectConditions
