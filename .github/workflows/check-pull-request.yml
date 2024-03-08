@@ -11,9 +11,7 @@ on:
       - synchronize
       - ready_for_review
 
-defaults:
-  run:
-    working-directory: ./designer
+  workflow_dispatch:
 
 jobs:
   pr-validator:
@@ -26,6 +24,6 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
-      #- run: npm run format:check
-      #- run: npm run lint
-      #- run: npm test
+      - run: npm run format:check
+      - run: npm run lint
+      - run: npm run test
