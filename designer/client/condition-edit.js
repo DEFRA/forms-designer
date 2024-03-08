@@ -1,6 +1,6 @@
 import React from "react";
 import Editor from "./editor";
-import { clone, ConditionsWrapper } from "@defra/forms-model";
+import { ConditionsWrapper } from "@defra/forms-model";
 import { DataContext } from "./context";
 import { removeCondition, updateCondition } from "./data";
 import logger from "../client/plugins/logger";
@@ -79,7 +79,7 @@ class ConditionEdit extends React.Component {
 
   onValueChange = (value) => {
     this.setState({
-      value: value,
+      value,
     });
   };
 

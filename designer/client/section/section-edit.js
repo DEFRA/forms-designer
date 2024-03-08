@@ -1,7 +1,7 @@
 import React from "react";
 import randomId from "../randomId";
-import { i18n, withI18n } from "../i18n";
-import { Checkboxes, Input } from "@xgovformbuilder/govuk-react-jsx";
+import { withI18n } from "../i18n";
+import { Input } from "@xgovformbuilder/govuk-react-jsx";
 import {
   validateName,
   validateTitle,
@@ -11,7 +11,6 @@ import ErrorSummary from "../error-summary";
 import { DataContext } from "../context";
 import { addSection } from "../data";
 import logger from "../plugins/logger";
-import { Actions } from "../reducers/component/types";
 
 class SectionEdit extends React.Component {
   static contextType = DataContext;
@@ -32,7 +31,7 @@ class SectionEdit extends React.Component {
 
   async onSubmit(e) {
     e.preventDefault();
-    let validationErrors = this.validate();
+    const validationErrors = this.validate();
 
     if (hasValidationErrors(validationErrors)) return;
 

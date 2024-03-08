@@ -20,7 +20,7 @@ describe("ChooseExisting", () => {
     );
 
     const push = jest.fn();
-    const history = { push: push };
+    const history = { push };
     const { asFragment } = render(<ChooseExisting history={history} />);
     expect(await screen.findByText(/Form name/i)).toBeInTheDocument();
     expect(asFragment()).toMatchSnapshot();
@@ -28,7 +28,7 @@ describe("ChooseExisting", () => {
 
   test("with existing configurations", async () => {
     const push = jest.fn();
-    const history = { push: push };
+    const history = { push };
     const { asFragment } = render(<ChooseExisting history={history} />);
     expect(await screen.findByText(/Form name/i)).toBeInTheDocument();
     expect(asFragment()).toMatchSnapshot();
@@ -41,7 +41,7 @@ describe("ChooseExisting", () => {
       })
     );
     const push = jest.fn();
-    const history = { push: push };
+    const history = { push };
 
     render(<ChooseExisting history={history} />);
     expect(await screen.findByText(/Form name/i)).toBeInTheDocument();

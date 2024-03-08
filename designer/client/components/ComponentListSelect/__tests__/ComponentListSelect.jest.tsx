@@ -13,7 +13,7 @@ import { ListsEditorContextProvider } from "../../../reducers/list/listsEditorRe
 import { ListContextProvider } from "../../../reducers/listReducer";
 
 describe("ComponentListSelect", () => {
-  let data = {
+  const data = {
     pages: [
       {
         title: "First page",
@@ -63,7 +63,7 @@ describe("ComponentListSelect", () => {
     errors,
   }: IContextProvider) => {
     const initComponentValue = (initialState: any) => {
-      return !!componentValue ? componentValue : initialState;
+      return componentValue || initialState;
     };
     const [state, dispatch] = useReducer(
       componentReducer,

@@ -21,6 +21,7 @@ export class StubPersistenceService implements PersistenceService {
   getConfiguration(_id: string) {
     return Promise.resolve("");
   }
+
   copyConfiguration(_configurationId: string, _newName: string) {
     return Promise.resolve("");
   }

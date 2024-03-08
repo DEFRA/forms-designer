@@ -28,14 +28,14 @@ export class FeeItems extends React.Component {
   }
 
   validate = (form) => {
-    let errors = {};
+    const errors = {};
     const formData = new window.FormData(form);
     let missingDescription = false;
-    let missingDescriptions = {};
+    const missingDescriptions = {};
     let amountInvalid = false;
-    let amountsInvalid = {};
+    const amountsInvalid = {};
     let missingCondition = false;
-    let missingConditions = {};
+    const missingConditions = {};
     formData.getAll("description").forEach((d, i) => {
       if (isEmpty(d)) {
         missingDescriptions[i] = true;
@@ -135,7 +135,7 @@ export class FeeItems extends React.Component {
     const { items, errors } = this.state;
     const { conditions } = this.props;
 
-    let hasValidationErrors = Object.keys(errors).length > 0;
+    const hasValidationErrors = Object.keys(errors).length > 0;
 
     const errorMessages = Object.entries(errors).map(([key, value]) => {
       return <ErrorMessage key={key}>{value?.children}</ErrorMessage>;

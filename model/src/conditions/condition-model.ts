@@ -262,12 +262,12 @@ export class ConditionsModel {
     const name = this.#conditionName;
     const conditions = this.#userGroupedConditions;
     return {
-      name: name,
+      name,
       conditions: conditions.map((it) => it.clone()),
     };
   }
 
-  //TODO:- why is this not a constructor?
+  // TODO:- why is this not a constructor?
   static from(obj: ConditionRawObject | ConditionsModel) {
     if (obj instanceof ConditionsModel) {
       return obj;

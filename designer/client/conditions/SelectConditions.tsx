@@ -12,8 +12,6 @@ import {
   hasConditions as dataHasConditions,
 } from "../data";
 import {
-  hasNestedCondition,
-  isObjectCondition,
   isDuplicateCondition,
   hasConditionName,
   getFieldNameSubstring,
@@ -64,7 +62,7 @@ class SelectConditions extends React.Component<Props, State> {
 
       this.setState({
         conditions: new ConditionsModel(),
-        fields: fields,
+        fields,
         editView: false,
       });
     }
@@ -91,7 +89,7 @@ class SelectConditions extends React.Component<Props, State> {
     const { data } = this.context;
     const fields: any = Object.values(this.fieldsForPath(path));
     const { conditions = [] } = data;
-    let conditionsForPath: any[] = [];
+    const conditionsForPath: any[] = [];
     const conditionsByTypeMap = conditionsByType(conditions);
 
     fields.forEach((field) => {
@@ -164,6 +162,7 @@ class SelectConditions extends React.Component<Props, State> {
       )
     );
   }
+
   // loops through nested conditions, checking the referenced condition against the current field
   handleNestedConditions(
     nestedConditions: ConditionData[],
@@ -184,9 +183,9 @@ class SelectConditions extends React.Component<Props, State> {
           );
           return;
         }
-        //if the inner condition is a nested condition,
-        //check if that nested condition is already in the conditions array,
-        //and if so, add this condition to the array
+        // if the inner condition is a nested condition,
+        // check if that nested condition is already in the conditions array,
+        // and if so, add this condition to the array
         if (
           isDuplicateCondition(conditionsForPath, innerCondition.conditionName)
         )

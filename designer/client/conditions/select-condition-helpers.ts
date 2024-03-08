@@ -35,7 +35,7 @@ export function conditionsByType(conditions: ConditionData[]) {
     (conditionsByType, currentValue) => {
       if (isStringCondition(currentValue)) {
         conditionsByType.string.push(currentValue);
-      } else if (!!hasNestedCondition(currentValue)) {
+      } else if (hasNestedCondition(currentValue)) {
         conditionsByType.nested.push(currentValue);
       } else if (isObjectCondition(currentValue)) {
         conditionsByType.object.push(currentValue);

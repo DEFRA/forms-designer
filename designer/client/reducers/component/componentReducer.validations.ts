@@ -10,7 +10,7 @@ export interface ValidationError {
 
 // TODO move validations to "../../validations"
 const validateName = ({ name }) => {
-  //TODO:- should also validate uniqueness.
+  // TODO:- should also validate uniqueness.
   const errors: any = {};
   const nameIsEmpty = isEmpty(name);
   const nameHasSpace = /\s/g.test(name);
@@ -89,7 +89,7 @@ export function fieldComponentValidations(component) {
   }
 
   const errors = validations.reduce((acc, error: ValidationError) => {
-    return !!error ? { ...acc, ...error } : acc;
+    return error ? { ...acc, ...error } : acc;
   }, {});
 
   return errors;

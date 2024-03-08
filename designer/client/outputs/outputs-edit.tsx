@@ -8,7 +8,7 @@ type Props = {};
 
 type State = {
   showAddOutput: boolean;
-  output?: any; //TODO: type
+  output?: any; // TODO: type
   id?: string;
 };
 

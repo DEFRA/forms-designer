@@ -110,7 +110,7 @@ test("Condition selection works correctly", () => {
       dataValue,
     }
   );
-  let options: HTMLOptionElement[] = getAllByTestId("list-condition-option");
+  const options: HTMLOptionElement[] = getAllByTestId("list-condition-option");
   expect(options[0].selected).toBeTruthy();
   expect(options[1].selected).toBeFalsy();
   fireEvent.change(getByTestId("list-condition-select"), {

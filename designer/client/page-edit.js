@@ -40,7 +40,7 @@ export class PageEdit extends React.Component {
     const { title, path, section, controller } = this.state;
     const { page } = this.props;
 
-    let validationErrors = this.validate(title, path);
+    const validationErrors = this.validate(title, path);
     if (hasValidationErrors(validationErrors)) return;
 
     let copy = { ...data };
@@ -145,7 +145,7 @@ export class PageEdit extends React.Component {
   onChangeTitle = (e) => {
     const title = e.target.value;
     this.setState({
-      title: title,
+      title,
       path: this.generatePath(title),
     });
   };

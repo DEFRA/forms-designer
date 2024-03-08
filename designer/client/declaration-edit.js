@@ -17,7 +17,6 @@ class DeclarationEdit extends React.Component {
     e.preventDefault();
     const form = e.target;
     const formData = new window.FormData(form);
-    const { toggleShowState } = this.props;
     const { save, data } = this.context;
     const copy = clone(data);
 
@@ -27,7 +26,7 @@ class DeclarationEdit extends React.Component {
     try {
       const savedData = await save(copy);
       this.props.onCreate({ data: savedData });
-    } catch {
+    } catch (err) {
       logger.error("DeclarationEdit", err);
     }
   };

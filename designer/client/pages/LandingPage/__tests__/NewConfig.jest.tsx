@@ -20,7 +20,7 @@ describe("Newconfig", () => {
       })
     );
     const push = jest.fn();
-    const history = { push: push };
+    const history = { push };
 
     render(<NewConfig history={history} />);
     expect(

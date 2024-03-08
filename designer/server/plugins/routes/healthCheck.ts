@@ -12,7 +12,7 @@ export const healthCheckRoute: ServerRoute = {
       lastCommit: config.lastCommit,
       lastTag: config.lastTag,
       time: date.toUTCString(),
-      uptime: uptime,
+      uptime,
     };
   },
 };

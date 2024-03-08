@@ -1,6 +1,5 @@
 import React from "react";
 import SelectConditions from "./conditions/SelectConditions";
-import { clone } from "@defra/forms-model";
 import { i18n } from "./i18n";
 
 import { DataContext } from "./context";
@@ -19,8 +18,8 @@ class LinkEdit extends React.Component {
     const link = page.next.find((n) => n.path === edge.target);
 
     this.state = {
-      page: page,
-      link: link,
+      page,
+      link,
       selectedCondition: link.condition,
     };
   }
@@ -138,7 +137,7 @@ class LinkEdit extends React.Component {
 
   conditionSelected = (selectedCondition) => {
     this.setState({
-      selectedCondition: selectedCondition,
+      selectedCondition,
     });
   };
 }

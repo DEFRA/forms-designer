@@ -6,7 +6,6 @@ import {
 } from "react-sortable-hoc";
 
 import { Flyout } from "../Flyout";
-import PageEdit from "../../page-edit";
 import { Component } from "../../component";
 import { ComponentCreate } from "./../ComponentCreate";
 import { ComponentTypes } from "@defra/forms-model";
@@ -67,7 +66,7 @@ export const Page = ({ page, previewUrl, id, layout }) => {
         "field"
     ) ?? [];
 
-  let pageTitle =
+  const pageTitle =
     page.title ||
     (formComponents.length === 1 && page.components[0] === formComponents[0]
       ? formComponents[0].title
@@ -96,13 +95,13 @@ export const Page = ({ page, previewUrl, id, layout }) => {
       <div className="page__actions">
         <button
           title={i18n("Edit page")}
-          onClick={(_e) => setIsEditingPage(true)}
+          onClick={() => setIsEditingPage(true)}
         >
           {i18n("Edit page")}
         </button>
         <button
           title={i18n("Create component")}
-          onClick={(_e) => setIsCreatingComponent(true)}
+          onClick={() => setIsCreatingComponent(true)}
         >
           {i18n("Create component")}
         </button>

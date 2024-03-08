@@ -34,7 +34,7 @@ const azureOidc = {
           token: oidc.token_endpoint,
           scope: [
             // TODO re-enable
-            //`api://${config.azureClientId}/forms.user`,
+            // `api://${config.azureClientId}/forms.user`,
             'openid',
             'profile',
             'email',

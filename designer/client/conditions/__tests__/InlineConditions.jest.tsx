@@ -4,7 +4,7 @@ import InlineConditions from "../InlineConditions";
 import { DataContext } from "../../context/DataContext";
 
 test("Strings are rendered correctly", () => {
-  let props = {
+  const props = {
     path: "/some-path",
     conditionsChange: jest.fn() as any,
     hints: [],

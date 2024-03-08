@@ -1,7 +1,6 @@
 import React from "react";
 import SelectConditions from "./conditions/SelectConditions";
 import { ErrorMessage } from "@xgovformbuilder/govuk-react-jsx";
-import { clone } from "@defra/forms-model";
 import classNames from "classnames";
 
 import ErrorSummary from "./error-summary";
@@ -13,10 +12,6 @@ import logger from "../client/plugins/logger";
 class LinkCreate extends React.Component {
   static contextType = DataContext;
   state = { errors: {} };
-
-  constructor(props, context) {
-    super(props, context);
-  }
 
   onSubmit = async (e) => {
     e.preventDefault();
@@ -39,7 +34,7 @@ class LinkCreate extends React.Component {
 
   conditionSelected = (selectedCondition) => {
     this.setState({
-      selectedCondition: selectedCondition,
+      selectedCondition,
     });
   };
 
@@ -52,7 +47,7 @@ class LinkCreate extends React.Component {
 
   validate = () => {
     const { from, to } = this.state;
-    let errors = {};
+    const errors = {};
     if (!from) {
       errors.from = { href: "#link-source", children: "Enter from" };
     }
@@ -69,7 +64,7 @@ class LinkCreate extends React.Component {
     const { data } = this.context;
     const { pages } = data;
     const { from, errors } = this.state;
-    let hasValidationErrors = Object.keys(errors).length > 0;
+    const hasValidationErrors = Object.keys(errors).length > 0;
 
     return (
       <>

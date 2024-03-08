@@ -2,12 +2,11 @@ import React from "react";
 import { render } from "@testing-library/react";
 import { ComponentContext } from "../../../reducers/component/componentReducer";
 import { ParaEdit } from "../para-edit";
-import { Data } from "@defra/forms-model";
 import { DataContext } from "../../../context";
 
 describe("para edit", () => {
   function TestComponentWithContext({ children }) {
-    let data = {
+    const data = {
       pages: [
         {
           title: "First page",

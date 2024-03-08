@@ -86,7 +86,7 @@ describe.skip("AbsoluteDateTimeValues", () => {
     const fieldDef = {
       label: "Something",
       name: "field1",
-      values: values,
+      values,
       type: "SelectField",
     };
     render(
@@ -111,7 +111,7 @@ describe.skip("AbsoluteDateTimeValues", () => {
     const fieldDef = {
       label: "Something",
       name: "field1",
-      values: values,
+      values,
       type: "SelectField",
     };
     const updateValueCallback = jest.fn();
@@ -140,7 +140,7 @@ describe.skip("AbsoluteDateTimeValues", () => {
     const fieldDef = {
       label: "Something",
       name: "field1",
-      values: values,
+      values,
       type: "SelectField",
     };
     const updateValueCallback = jest.fn();
@@ -169,7 +169,7 @@ describe.skip("AbsoluteDateTimeValues", () => {
     const fieldDef = {
       label: "Something",
       name: "field1",
-      values: values,
+      values,
       type: "SelectField",
     };
     const updateValueCallback = jest.fn();
@@ -198,7 +198,7 @@ describe.skip("AbsoluteDateTimeValues", () => {
     const fieldDef = {
       label: "Something",
       name: "field1",
-      values: values,
+      values,
       type: "SelectField",
     };
     const updateValueCallback = jest.fn();

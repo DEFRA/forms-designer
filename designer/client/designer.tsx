@@ -54,7 +54,7 @@ export default class Designer extends Component<Props, State> {
       await this.designerApi.save(this.id, toUpdate);
       this.setState(
         {
-          data: toUpdate, //optimistic save
+          data: toUpdate, // optimistic save
           updatedAt: new Date().toLocaleTimeString(),
           error: undefined,
         },

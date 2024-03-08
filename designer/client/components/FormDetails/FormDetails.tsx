@@ -64,7 +64,7 @@ export class FormDetails extends Component<Props, State> {
     const { phaseBanner = {} } = data;
     const { onCreate } = this.props;
 
-    let copy: FormDefinition = { ...data };
+    const copy: FormDefinition = { ...data };
     copy.name = title;
     copy.feedback = {
       feedbackForm,

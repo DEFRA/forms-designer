@@ -1,7 +1,5 @@
-import randomId from "../randomId";
-
 export const tryParseInt = (val) => {
-  let parsed = parseInt(val, 10);
+  const parsed = parseInt(val, 10);
   return isNaN(parsed) ? undefined : parsed;
 };
 

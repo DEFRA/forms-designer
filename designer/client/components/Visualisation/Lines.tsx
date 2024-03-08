@@ -23,10 +23,6 @@ export class Lines extends React.Component<Props, State> {
     showEditor: false,
   };
 
-  constructor(props, context) {
-    super(props, context);
-  }
-
   editLink = (edge: Edge) => {
     this.setState({
       showEditor: edge,

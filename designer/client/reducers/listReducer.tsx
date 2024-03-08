@@ -9,7 +9,7 @@ export interface ListState {
   selectedItem?: any; // TODO:- type
   selectedItemIndex?: number;
   isEditingFromComponent?: boolean;
-  selectedListItem?: any; //TODO:- type
+  selectedListItem?: any; // TODO:- type
   initialName?: string;
   initialTitle?: string;
   errors?: any;
@@ -42,7 +42,7 @@ export function listReducer(
           ...selectedList,
           items: selectedList.items.filter(
             (_item, index) =>
-              index !== (!!payload ? payload : selectedItemIndex)
+              index !== (payload || selectedItemIndex)
           ),
         },
       };

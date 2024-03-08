@@ -215,7 +215,7 @@ const client = {
     ]
   },
   plugins: [
-    //new CleanWebpackPlugin(),
+    // new CleanWebpackPlugin(),
     new WebpackAssetsManifest({
       output: 'manifest.json'
     }),

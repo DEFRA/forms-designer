@@ -33,7 +33,7 @@ type Item = {
 };
 
 function recastItem({ label, value, condition, hint }: StaticItem) {
-  let item: Item = {
+  const item: Item = {
     title: label,
     value,
   };

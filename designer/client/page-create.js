@@ -10,7 +10,7 @@ import { i18n, withI18n } from "./i18n";
 import ErrorSummary from "./error-summary";
 import { validateTitle, hasValidationErrors } from "./validations";
 import { DataContext } from "./context";
-import { addLink, findPage } from "./data";
+import { addLink } from "./data";
 import { addPage } from "./data/page/addPage";
 import randomId from "./randomId";
 import logger from "../client/plugins/logger";
@@ -43,7 +43,7 @@ class PageCreate extends React.Component {
     const selectedCondition = this.state.selectedCondition?.trim();
     const path = this.state.path;
 
-    let validationErrors = this.validate(title, path);
+    const validationErrors = this.validate(title, path);
     if (hasValidationErrors(validationErrors)) return;
 
     const value = {
@@ -132,7 +132,7 @@ class PageCreate extends React.Component {
     const input = e.target;
     const title = input.value;
     this.setState({
-      title: title,
+      title,
       path: this.generatePath(title, data),
     });
   };
@@ -148,7 +148,7 @@ class PageCreate extends React.Component {
 
   conditionSelected = (selectedCondition) => {
     this.setState({
-      selectedCondition: selectedCondition,
+      selectedCondition,
     });
   };
 

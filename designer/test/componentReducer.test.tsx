@@ -21,12 +21,12 @@ const { test, suite } = lab;
 
 suite("Component reducer", () => {
   test("getSubReducer returns correct reducer", () => {
-    const metaAction = Actions.NEW_COMPONENT,
-      schemaAction = Actions.EDIT_SCHEMA_MIN,
-      fieldsAction = Actions.EDIT_TITLE,
-      optionsAction = Actions.EDIT_OPTIONS_HIDE_TITLE,
-      listAction = Actions.EDIT_LIST,
-      listItemAction = Actions.STATIC_LIST_ITEM_EDIT_VALUE;
+    const metaAction = Actions.NEW_COMPONENT;
+      const schemaAction = Actions.EDIT_SCHEMA_MIN;
+      const fieldsAction = Actions.EDIT_TITLE;
+      const optionsAction = Actions.EDIT_OPTIONS_HIDE_TITLE;
+      const listAction = Actions.EDIT_LIST;
+      const listItemAction = Actions.STATIC_LIST_ITEM_EDIT_VALUE;
 
     expect(getSubReducer(metaAction)).to.equal(metaReducer);
     expect(getSubReducer(schemaAction)).to.equal(schemaReducer);

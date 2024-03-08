@@ -18,7 +18,7 @@ export function useWarning() {
     const selectedListIndex = copy.lists.findIndex(
       (list) => list.name === initialName
     );
-    if (!!selectedListIndex) {
+    if (selectedListIndex) {
       copy.lists.splice(selectedListIndex, 1);
       await save(copy);
     }

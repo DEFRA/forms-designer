@@ -25,8 +25,8 @@ function DateTimeComponent(fieldType, operator) {
   };
   if (fieldType in absoluteDateTimeRenderFunctions) {
     if (absoluteDateOrTimeOperatorNames.includes(operator)) {
-      //since these are all classes return a function which creates new class comp
-      let CustomRendering = absoluteDateTimeRenderFunctions[fieldType];
+      // since these are all classes return a function which creates new class comp
+      const CustomRendering = absoluteDateTimeRenderFunctions[fieldType];
       const pad = (num: number) => num.toString().padStart(2, "0");
 
       return function CustomRenderingWrapper({ value, updateValue }) {

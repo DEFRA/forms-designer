@@ -54,7 +54,7 @@ class OutputEdit extends Component<Props, State> {
       (formData.get("output-type") as OutputType) || output.type;
     const outputName = formData.get("output-name") as string;
     const outputTitle = formData.get("output-title") as string;
-    let validationErrors = this.validate(formData, outputType);
+    const validationErrors = this.validate(formData, outputType);
 
     if (hasValidationErrors(validationErrors)) return;
 
@@ -133,7 +133,7 @@ class OutputEdit extends Component<Props, State> {
 
     switch (outputType) {
       case OutputType.Email:
-        let emailAddress = formData.get("email-address") as string;
+        const emailAddress = formData.get("email-address") as string;
         validateNotEmpty(
           "email-address",
           "email address",
@@ -143,9 +143,9 @@ class OutputEdit extends Component<Props, State> {
         );
         break;
       case OutputType.Notify:
-        let templateId = formData.get("template-id") as string;
-        let apiKey = formData.get("api-key") as string;
-        let emailField = formData.get("email-field") as string;
+        const templateId = formData.get("template-id") as string;
+        const apiKey = formData.get("api-key") as string;
+        const emailField = formData.get("email-field") as string;
         validateNotEmpty(
           "template-id",
           "template id",
@@ -163,7 +163,7 @@ class OutputEdit extends Component<Props, State> {
         );
         break;
       case OutputType.Webhook:
-        let url = formData.get("webhook-url") as string;
+        const url = formData.get("webhook-url") as string;
         if (!url) {
           errors.url = {
             href: "#webhook-url",
@@ -173,7 +173,7 @@ class OutputEdit extends Component<Props, State> {
         break;
     }
 
-    this.setState({ errors: errors });
+    this.setState({ errors });
 
     return errors;
   };
@@ -229,7 +229,7 @@ class OutputEdit extends Component<Props, State> {
     } else if (outputType === OutputType.Webhook) {
       outputEdit = (
         <WebhookEdit
-          url={output?.outputConfiguration?.["url"]}
+          url={output?.outputConfiguration?.url}
           errors={errors}
         />
       );

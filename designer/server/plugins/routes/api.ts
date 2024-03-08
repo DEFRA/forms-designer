@@ -70,7 +70,7 @@ export const putFormWithId: ServerRoute = {
       } catch (err) {
         request.logger.error("Designer Server PUT /api/{id}/data error:", err);
         const errorSummary = {
-          id: id,
+          id,
           payload: request.payload,
           errorMessage: err.message,
           error: err.stack,
@@ -93,7 +93,7 @@ export const getAllPersistedConfigurations: ServerRoute = {
         return h.response(response).type("application/json");
       } catch (error) {
         request.server.log(["error", "/configurations"], error);
-        return;
+        
       }
     },
   },

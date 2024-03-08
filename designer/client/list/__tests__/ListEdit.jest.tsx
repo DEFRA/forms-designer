@@ -31,7 +31,7 @@ test("strings are rendered correctly", async () => {
     state: { selectedList: data.lists[0] },
     dispatch: jest.fn(),
   };
-  let listsValue = {
+  const listsValue = {
     state: { listEditContext: ListContext },
     dispatch: jest.fn(),
   };

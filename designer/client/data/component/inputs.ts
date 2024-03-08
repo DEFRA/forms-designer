@@ -1,6 +1,5 @@
-import { Input, isNotContentType } from "../types";
+import { Input, isNotContentType , Path } from "../types";
 import { allPathsLeadingTo } from "../page";
-import { Path } from "../types";
 import { FormDefinition } from "@defra/forms-model";
 
 export function allInputs(data: FormDefinition): Input[] {
@@ -11,7 +10,7 @@ export function allInputs(data: FormDefinition): Input[] {
       return {
         name: input.name,
         page: { path: page.path, section: page.section },
-        propertyPath: !!page.section
+        propertyPath: page.section
           ? `${page.section}.${input.name}`
           : input.name,
         title: input.title,

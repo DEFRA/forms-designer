@@ -31,12 +31,6 @@ export function ComponentEdit(props) {
   const hasErrors = hasValidationErrors(errors);
   const componentToSubmit = { ...selectedComponent };
 
-  useLayoutEffect(() => {
-    if (hasValidated && !hasErrors) {
-      handleSubmit();
-    }
-  }, [hasValidated]);
-
   const handleSubmit = async (e) => {
     e?.preventDefault();
 
@@ -82,6 +76,12 @@ export function ComponentEdit(props) {
     await save(copy);
     toggleShowEditor();
   };
+
+  useLayoutEffect(() => {
+    if (hasValidated && !hasErrors) {
+      handleSubmit();
+    }
+  }, [hasValidated]);
 
   return (
     <>

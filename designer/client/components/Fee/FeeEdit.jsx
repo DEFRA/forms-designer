@@ -30,7 +30,7 @@ export class FeeEdit extends React.Component {
     const amount = formData.getAll("amount").map((t) => t.trim());
     const conditions = formData.getAll("condition").map((t) => t.trim());
 
-    let hasValidationErrors = this.validate(testPayApiKey, form);
+    const hasValidationErrors = this.validate(testPayApiKey, form);
     if (hasValidationErrors) return;
 
     const copy = clone(data);
@@ -54,11 +54,11 @@ export class FeeEdit extends React.Component {
   };
 
   validate = (payApiKey, form) => {
-    let apiKeyHasErrors = !payApiKey || payApiKey.length < 1;
-    let itemValidationErrors = this.feeItemsRef.current.validate(form);
-    let hasValidationErrors =
+    const apiKeyHasErrors = !payApiKey || payApiKey.length < 1;
+    const itemValidationErrors = this.feeItemsRef.current.validate(form);
+    const hasValidationErrors =
       apiKeyHasErrors || Object.keys(itemValidationErrors).length > 0;
-    let errors = {};
+    const errors = {};
     if (apiKeyHasErrors) {
       errors.payapi = {
         href: "#test-pay-api-key",

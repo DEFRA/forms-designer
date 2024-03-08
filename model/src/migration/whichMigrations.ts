@@ -7,7 +7,7 @@ import { MigrationScript } from "./types";
  * @param version
  */
 export function whichMigrations(version: number) {
-  let migrations = new Set<MigrationScript>();
+  const migrations = new Set<MigrationScript>();
   switch (version) {
     case 0:
       migrations.add(V0_TO_V2);

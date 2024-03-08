@@ -139,7 +139,7 @@ export function ComponentCreate(props) {
             {i18n("Back to create component list")}
           </BackLink>
           <h4 className="govuk-heading-m">
-            {i18n(`fieldTypeToName.${component?.["type"]}`)}{" "}
+            {i18n(`fieldTypeToName.${component?.type}`)}{" "}
             {i18n("component.component")}
           </h4>
         </>

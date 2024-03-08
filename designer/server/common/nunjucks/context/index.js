@@ -25,7 +25,7 @@ const manifestPath = path.resolve(
 let webpackManifest
 
 try {
-  //webpackManifest = require(manifestPath)
+  // webpackManifest = require(manifestPath)
   webpackManifest = JSON.parse(fs.readFileSync(manifestPath).toString());
 } catch (error) {
   logger.error('Webpack Manifest assets file not found')

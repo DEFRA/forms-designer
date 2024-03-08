@@ -1,5 +1,4 @@
 import React from "react";
-import { clone } from "@defra/forms-model";
 
 import { camelCase } from "./helpers";
 import { DataContext } from "./context";
@@ -14,7 +13,6 @@ class SectionCreate extends React.Component {
     e.preventDefault();
     const { data, save } = this.context;
     const { name, title, generatedName } = this.state;
-    const copy = { ...data };
     const updated = addSection(data, {
       name: name ?? generatedName,
       title: title.trim(),

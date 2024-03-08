@@ -60,7 +60,7 @@ export class InlineConditions extends React.Component<Props, State> {
 
     this.state = {
       validationErrors: [],
-      conditions: conditions,
+      conditions,
       fields: this.fieldsForPath(path),
       conditionString: condition?.value,
     };
@@ -72,7 +72,7 @@ export class InlineConditions extends React.Component<Props, State> {
 
       this.setState({
         conditions: new ConditionsModel(),
-        fields: fields,
+        fields,
         editView: false,
       });
     }
@@ -81,7 +81,7 @@ export class InlineConditions extends React.Component<Props, State> {
   fieldsForPath = (path) => {
     const { data } = this.context;
 
-    const inputs = !!path ? inputsAccessibleAt(data, path) : allInputs(data);
+    const inputs = path ? inputsAccessibleAt(data, path) : allInputs(data);
 
     const fieldInputs = inputs.map((input) => {
       const label = [
@@ -188,7 +188,7 @@ export class InlineConditions extends React.Component<Props, State> {
 
   editCallback = (conditions) => {
     this.setState({
-      conditions: conditions,
+      conditions,
     });
   };
 

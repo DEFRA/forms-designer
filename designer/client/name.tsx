@@ -4,7 +4,7 @@ import { isEmpty } from "./helpers";
 import { withI18nRef, I18n } from "./i18n";
 
 type Props = {
-  updateModel?: (arg0: any) => {} | null | undefined;
+  updateModel?: (arg0: any) => object | null | undefined;
   hint: string | null | undefined;
   name: string;
   id: string;
@@ -23,7 +23,7 @@ export class Name extends React.Component<Props, State> {
     const { name } = props;
 
     this.state = {
-      name: name,
+      name,
       errors: {},
     };
   }

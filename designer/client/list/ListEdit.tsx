@@ -48,7 +48,7 @@ function useListEdit() {
     }
     if (!showWarning) {
       listsEditorDispatch([ListsEditorStateActions.SHOW_WARNING, true]);
-      return;
+      
     }
   };
 

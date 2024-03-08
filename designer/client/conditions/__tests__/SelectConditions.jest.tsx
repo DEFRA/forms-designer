@@ -2,7 +2,6 @@ import React from "react";
 import { render } from "@testing-library/react";
 import SelectConditions from "./../SelectConditions";
 import { DataContext } from "../../context";
-import { Data } from "@defra/forms-model";
 
 const dataValue = {
   data: {
@@ -44,7 +43,7 @@ describe("SelectConditions", () => {
 });
 
 test("SelectConditions renders available conditions", () => {
-  let data = {
+  const data = {
     lists: [],
     pages: [
       {

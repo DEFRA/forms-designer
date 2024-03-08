@@ -161,7 +161,7 @@ function absoluteDateTime(operator: Operator) {
 
 function relativeTime(pastOperator, futureOperator, units) {
   return {
-    units: units,
+    units,
     expression: (field: ComponentDef, value) => {
       if (value instanceof RelativeTimeValue) {
         const operator =

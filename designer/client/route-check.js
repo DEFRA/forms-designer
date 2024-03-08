@@ -1,4 +1,4 @@
-import React from "react"; //TODO:- remove this when implemented properly!
+import React from "react"; // TODO:- remove this when implemented properly!
 /* eslint-disable */ export default class RouteChecker extends React.Component {
   render() {
     const { data } = this.props;

@@ -1,6 +1,5 @@
 import React, { useReducer } from "react";
 import { render } from "@testing-library/react";
-import { Data } from "@defra/forms-model";
 import { DataContext } from "../context";
 import {
   ComponentContext,
@@ -10,7 +9,7 @@ import {
 import { FieldEdit } from "../field-edit";
 
 describe("Field Edit", () => {
-  let data = {
+  const data = {
     pages: [
       {
         title: "First page",
@@ -37,7 +36,7 @@ describe("Field Edit", () => {
     componentValue,
   }) => {
     const initComponentValue = (initialState: any) => {
-      return componentValue ? componentValue : initialState;
+      return componentValue || initialState;
     };
     const [state, dispatch] = useReducer(
       componentReducer,

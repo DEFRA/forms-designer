@@ -46,7 +46,7 @@ type GetLayout = (data: FormDefinition, el: HTMLDivElement) => Layout;
 
 export const getLayout: GetLayout = (data, el) => {
   // Create a new directed graph
-  var g = new dagre.graphlib.Graph();
+  const g = new dagre.graphlib.Graph();
 
   // Set an object for the graph label
   g.setGraph({

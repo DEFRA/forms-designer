@@ -22,6 +22,7 @@ export class ConditionValueAbstract {
       "Unsupported Operation. Method toPresentationString have not been implemented"
     );
   }
+
   toExpression() {
     throw new Error(
       "Unsupported Operation. Method toExpression have not been implemented"

@@ -14,7 +14,7 @@ describe("SaveErrorPage", () => {
 
   test("should render correctly", async () => {
     const push = jest.fn();
-    const history = { push: push };
+    const history = { push };
     const location = { state: { id: "testid" } };
     const { asFragment } = render(
       <SaveError history={history} location={location} />
@@ -54,7 +54,7 @@ describe("SaveErrorPage", () => {
 
   test("back link should take back to designer page", async () => {
     const push = jest.fn();
-    const history = { push: push };
+    const history = { push };
     const location = { state: { id: "testid" } };
     render(<SaveError history={history} location={location} />);
     expect(await screen.findByText(/Back to Designer/i)).toBeInTheDocument();

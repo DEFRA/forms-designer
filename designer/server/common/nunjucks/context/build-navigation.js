@@ -13,8 +13,8 @@ function buildEntry(request, text, url) {
   url = `${appPathPrefixNoSlash}${url}`
   
   return {
-    text: text,
-    url: url,
+    text,
+    url,
     isActive: request.path === url
   }
 }
