@@ -1,118 +1,118 @@
-import React from "react";
-import randomId from "../randomId";
-import { withI18n } from "../i18n";
-import { Input } from "@xgovformbuilder/govuk-react-jsx";
+import React from 'react'
+import randomId from '../randomId'
+import { withI18n } from '../i18n'
+import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import {
   validateName,
   validateTitle,
-  hasValidationErrors,
-} from "../validations";
-import ErrorSummary from "../error-summary";
-import { DataContext } from "../context";
-import { addSection } from "../data";
-import logger from "../plugins/logger";
+  hasValidationErrors
+} from '../validations'
+import ErrorSummary from '../error-summary'
+import { DataContext } from '../context'
+import { addSection } from '../data'
+import logger from '../plugins/logger'
 
 class SectionEdit extends React.Component {
-  static contextType = DataContext;
+  static contextType = DataContext
 
   constructor(props) {
-    super(props);
-    this.closeFlyout = props.closeFlyout;
-    const { section } = props;
-    this.isNewSection = !section?.name;
-    this.nameRef = React.createRef();
+    super(props)
+    this.closeFlyout = props.closeFlyout
+    const { section } = props
+    this.isNewSection = !section?.name
+    this.nameRef = React.createRef()
     this.state = {
       name: section?.name ?? randomId(),
-      title: section?.title ?? "",
+      title: section?.title ?? '',
       hideTitle: section?.hideTitle ?? false,
-      errors: {},
-    };
+      errors: {}
+    }
   }
 
   async onSubmit(e) {
-    e.preventDefault();
-    const validationErrors = this.validate();
+    e.preventDefault()
+    const validationErrors = this.validate()
 
-    if (hasValidationErrors(validationErrors)) return;
+    if (hasValidationErrors(validationErrors)) return
 
-    const { data, save } = this.context;
-    const { name, title, hideTitle } = this.state;
-    let updated = { ...data };
+    const { data, save } = this.context
+    const { name, title, hideTitle } = this.state
+    let updated = { ...data }
 
     if (this.isNewSection) {
-      updated = addSection(data, { name, title: title.trim(), hideTitle });
+      updated = addSection(data, { name, title: title.trim(), hideTitle })
     } else {
-      const previousName = this.props.section?.name;
-      const nameChanged = previousName !== name;
+      const previousName = this.props.section?.name
+      const nameChanged = previousName !== name
       const copySection = updated.sections.find(
         (section) => section.name === previousName
-      );
+      )
 
       if (nameChanged) {
-        copySection.name = name;
+        copySection.name = name
         /**
          * @code removing any references to the section
          */
         copy.pages.forEach((p) => {
           if (p.section === previousName) {
-            p.section = name;
+            p.section = name
           }
-        });
+        })
       }
-      copySection.title = title;
-      copySection.hideTitle = hideTitle;
+      copySection.title = title
+      copySection.hideTitle = hideTitle
     }
 
     try {
-      await save(updated);
-      this.closeFlyout(name);
+      await save(updated)
+      this.closeFlyout(name)
     } catch (err) {
-      logger.error("SectionEdit", err);
+      logger.error('SectionEdit', err)
     }
   }
 
   validate = () => {
-    const { i18n } = this.props;
-    const { name, title } = this.state;
-    const titleErrors = validateTitle("section-title", title, i18n);
-    const nameErrors = validateName("section-name", "section name", name, i18n);
-    const errors = { ...titleErrors, ...nameErrors };
-    this.setState({ errors });
-    return errors;
-  };
+    const { i18n } = this.props
+    const { name, title } = this.state
+    const titleErrors = validateTitle('section-title', title, i18n)
+    const nameErrors = validateName('section-name', 'section name', name, i18n)
+    const errors = { ...titleErrors, ...nameErrors }
+    this.setState({ errors })
+    return errors
+  }
 
   onClickDelete = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
-    if (!window.confirm("Confirm delete")) {
-      return;
+    if (!window.confirm('Confirm delete')) {
+      return
     }
 
-    const { save } = this.context;
-    const { data, section } = this.props;
-    const copy = { ...data };
-    const previousName = this.props.section?.name;
+    const { save } = this.context
+    const { data, section } = this.props
+    const copy = { ...data }
+    const previousName = this.props.section?.name
 
-    copy.sections.splice(copy.sections.indexOf(section), 1);
+    copy.sections.splice(copy.sections.indexOf(section), 1)
 
     // Update any references to the section
     copy.pages.forEach((p) => {
       if (p.section === previousName) {
-        delete p.section;
+        delete p.section
       }
-    });
+    })
 
     try {
-      await save(copy);
-      this.closeFlyout("");
+      await save(copy)
+      this.closeFlyout('')
     } catch (error) {
-      logger.error("SectionEdit", error);
+      logger.error('SectionEdit', error)
     }
-  };
+  }
 
   render() {
-    const { i18n } = this.props;
-    const { title, name, hideTitle, errors } = this.state;
+    const { i18n } = this.props
+    const { title, name, hideTitle, errors } = this.state
 
     return (
       <>
@@ -124,11 +124,11 @@ class SectionEdit extends React.Component {
             id="section-title"
             name="title"
             hint={{
-              children: [i18n("sectionEdit.titleField.helpText")],
+              children: [i18n('sectionEdit.titleField.helpText')]
             }}
             label={{
-              className: "govuk-label--s",
-              children: [i18n("sectionEdit.titleField.title")],
+              className: 'govuk-label--s',
+              children: [i18n('sectionEdit.titleField.title')]
             }}
             value={title}
             onChange={(e) => this.setState({ title: e.target.value })}
@@ -141,11 +141,11 @@ class SectionEdit extends React.Component {
             name="name"
             className="govuk-input--width-20"
             label={{
-              className: "govuk-label--s",
-              children: [i18n("sectionEdit.nameField.title")],
+              className: 'govuk-label--s',
+              children: [i18n('sectionEdit.nameField.title')]
             }}
             hint={{
-              children: [i18n("sectionEdit.nameField.helpText")],
+              children: [i18n('sectionEdit.nameField.helpText')]
             }}
             value={name}
             onChange={(e) => this.setState({ name: e.target.value })}
@@ -167,29 +167,29 @@ class SectionEdit extends React.Component {
                 className="govuk-label govuk-checkboxes__label"
                 htmlFor="section-hideTitle"
               >
-                {i18n("sectionEdit.hideTitleField.title")}
+                {i18n('sectionEdit.hideTitleField.title')}
               </label>
               <span className="govuk-hint govuk-checkboxes__hint">
-                {i18n("sectionEdit.hideTitleField.helpText")}
+                {i18n('sectionEdit.hideTitleField.helpText')}
               </span>
             </div>
           </div>
           <button className="govuk-button" type="submit">
             Save
-          </button>{" "}
+          </button>{' '}
           {!this.isNewSection && (
             <button
               className="govuk-button"
               type="button"
               onClick={this.onClickDelete}
             >
-              {i18n("delete")}
+              {i18n('delete')}
             </button>
           )}
         </form>
       </>
-    );
+    )
   }
 }
 
-export default withI18n(SectionEdit);
+export default withI18n(SectionEdit)

@@ -1,43 +1,41 @@
-import React from "react";
-import SectionEdit from "./section-edit";
-import { RenderInPortal } from "../components/RenderInPortal";
-import { Flyout } from "../components/Flyout";
-import { DataContext } from "../context";
+import React from 'react'
+import SectionEdit from './section-edit'
+import { RenderInPortal } from '../components/RenderInPortal'
+import { Flyout } from '../components/Flyout'
+import { DataContext } from '../context'
 
 class SectionsEdit extends React.Component {
-  static contextType = DataContext;
-  state = {};
+  static contextType = DataContext
+  state = {}
 
   onClickSection = (e, section) => {
-    e.preventDefault();
+    e.preventDefault()
     this.setState({
       section,
-      isEditingSection: true,
-    });
-  };
+      isEditingSection: true
+    })
+  }
 
   // TODO:- This is borrowed from page-edit.js. Needs refactor. (hooks hooks hooks)
   closeFlyout = (sectionName) => {
-    const propSection = this.state.section ?? this.props.page?.section ?? {};
+    const propSection = this.state.section ?? this.props.page?.section ?? {}
 
     this.setState({
       isEditingSection: false,
-      section: sectionName
-        ? this.findSectionWithName(sectionName)
-        : propSection,
-    });
-  };
+      section: sectionName ? this.findSectionWithName(sectionName) : propSection
+    })
+  }
 
   findSectionWithName(name) {
-    const { data } = this.context;
-    const { sections } = data;
-    return sections.find((section) => section.name === name);
+    const { data } = this.context
+    const { sections } = data
+    return sections.find((section) => section.name === name)
   }
 
   render() {
-    const { data } = this.context;
-    const { sections } = data;
-    const { section, isEditingSection } = this.state;
+    const { data } = this.context
+    const { sections } = data
+    const { section, isEditingSection } = this.state
 
     return (
       <div className="govuk-body">
@@ -61,7 +59,7 @@ class SectionsEdit extends React.Component {
           <RenderInPortal>
             <Flyout
               title={`${
-                section?.name ? `Editing ${section.name}` : "Add a new section"
+                section?.name ? `Editing ${section.name}` : 'Add a new section'
               }`}
               show={isEditingSection}
               onHide={this.closeFlyout}
@@ -77,8 +75,8 @@ class SectionsEdit extends React.Component {
           </RenderInPortal>
         )}
       </div>
-    );
+    )
   }
 }
 
-export default SectionsEdit;
+export default SectionsEdit

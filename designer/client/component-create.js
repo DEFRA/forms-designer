@@ -1,47 +1,47 @@
-import React from "react";
-import ComponentTypeEdit from "./ComponentTypeEdit";
-import { clone, ComponentTypes } from "@defra/forms-model";
-import { DataContext } from "./context";
-import randomId from "./randomId";
-import { addComponent } from "./data/component";
+import React from 'react'
+import ComponentTypeEdit from './ComponentTypeEdit'
+import { clone, ComponentTypes } from '@defra/forms-model'
+import { DataContext } from './context'
+import randomId from './randomId'
+import { addComponent } from './data/component'
 
 /**
  * @deprecated (keeping until tests are refactored)
  */
 class ComponentCreate extends React.Component {
-  static contextType = DataContext;
+  static contextType = DataContext
   state = {
-    isSaving: false,
-  };
+    isSaving: false
+  }
 
   async componentDidMount() {
-    this.setState({ name: randomId() });
+    this.setState({ name: randomId() })
   }
 
   async onSubmit(e) {
-    e.preventDefault();
+    e.preventDefault()
 
     if (this.state.isSaving) {
-      return;
+      return
     }
 
-    this.setState({ isSaving: true });
+    this.setState({ isSaving: true })
 
-    const { page } = this.props;
-    const { data, save } = this.context;
-    const { component } = this.state;
-    const updated = addComponent(data, page.path, component);
-    await save(updated);
-    this.setState({ isSaving: false });
+    const { page } = this.props
+    const { data, save } = this.context
+    const { component } = this.state
+    const updated = addComponent(data, page.path, component)
+    await save(updated)
+    this.setState({ isSaving: false })
   }
 
   storeComponent = (component) => {
-    this.setState({ component });
-  };
+    this.setState({ component })
+  }
 
   render() {
-    const { page, allowedTypes = ComponentTypes } = this.props;
-    const { isSaving } = this.state;
+    const { page, allowedTypes = ComponentTypes } = this.props
+    const { isSaving } = this.state
 
     return (
       <div>
@@ -61,13 +61,13 @@ class ComponentCreate extends React.Component {
             >
               <option />
               {allowedTypes
-                .sort((a, b) => (a.title ?? "").localeCompare(b.title))
+                .sort((a, b) => (a.title ?? '').localeCompare(b.title))
                 .map((type) => {
                   return (
                     <option key={type.name} value={type.name}>
                       {type.title}
                     </option>
-                  );
+                  )
                 })}
             </select>
           </div>
@@ -86,8 +86,8 @@ class ComponentCreate extends React.Component {
           )}
         </form>
       </div>
-    );
+    )
   }
 }
 
-export default ComponentCreate;
+export default ComponentCreate

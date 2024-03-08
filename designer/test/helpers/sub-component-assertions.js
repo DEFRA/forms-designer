@@ -1,17 +1,17 @@
-import { Input } from "@xgovformbuilder/govuk-react-jsx";
-import * as Code from "@hapi/code";
+import { Input } from '@xgovformbuilder/govuk-react-jsx'
+import * as Code from '@hapi/code'
 
-const { expect } = Code;
+const { expect } = Code
 
 export function assertInputControlValue({ wrapper, id, expectedValue }) {
-  return assertInputControlProp({ wrapper, id, prop: "value", expectedValue });
+  return assertInputControlProp({ wrapper, id, prop: 'value', expectedValue })
 }
 
 export function assertInputControlProp({ wrapper, id, prop, expectedValue }) {
   expect(
     wrapper
       .find(Input)
-      .filter("#" + id)
+      .filter('#' + id)
       .prop(prop)
-  ).to.equal(expectedValue);
+  ).to.equal(expectedValue)
 }

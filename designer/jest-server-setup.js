@@ -1,6 +1,6 @@
-import "@testing-library/jest-dom";
+import '@testing-library/jest-dom'
 
 beforeEach(() => {
-  jest.resetAllMocks();
-  expect.hasAssertions();
-});
+  jest.resetAllMocks()
+  expect.hasAssertions()
+})

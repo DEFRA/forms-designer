@@ -1,7 +1,7 @@
 import jwt from '@hapi/jwt'
 import { addSeconds } from 'date-fns'
 
-import config from "../../../config";
+import config from '../../../config'
 
 function removeUserSession(request) {
   request.dropUserSession()

@@ -1,13 +1,13 @@
-import React, { useContext } from "react";
-import { ComponentContext } from "./reducers/component/componentReducer";
-import { Actions } from "./reducers/component/types";
+import React, { useContext } from 'react'
+import { ComponentContext } from './reducers/component/componentReducer'
+import { Actions } from './reducers/component/types'
 
-import { TextFieldEdit } from "./components/FieldEditors/text-field-edit";
+import { TextFieldEdit } from './components/FieldEditors/text-field-edit'
 
 export function MultilineTextFieldEdit({ context = ComponentContext }) {
-  const { state, dispatch } = useContext(context);
-  const { selectedComponent } = state;
-  const { options = {} } = selectedComponent;
+  const { state, dispatch } = useContext(context)
+  const { selectedComponent } = state
+  const { options = {} } = selectedComponent
 
   return (
     <TextFieldEdit>
@@ -17,14 +17,14 @@ export function MultilineTextFieldEdit({ context = ComponentContext }) {
         name="options.rows"
         type="text"
         data-cast="number"
-        value={options.rows || ""}
+        value={options.rows || ''}
         onChange={(e) =>
           dispatch({
             type: Actions.EDIT_OPTIONS_ROWS,
-            payload: e.target.value,
+            payload: e.target.value
           })
         }
       />
     </TextFieldEdit>
-  );
+  )
 }

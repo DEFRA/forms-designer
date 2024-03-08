@@ -1,8 +1,8 @@
-import React from "react";
+import React from 'react'
 
 function Modal(props) {
   if (!props.show) {
-    return null;
+    return null
   }
 
   return (
@@ -12,8 +12,8 @@ function Modal(props) {
           title="Close"
           className="close govuk-body govuk-!-font-size-16"
           onClick={(e) => {
-            e.preventDefault();
-            props.onHide(e);
+            e.preventDefault()
+            props.onHide(e)
           }}
         >
           Close
@@ -21,6 +21,6 @@ function Modal(props) {
         {props.children}
       </div>
     </div>
-  );
+  )
 }
-export default Modal;
+export default Modal

@@ -1,178 +1,176 @@
-import React from "react";
-import { Input } from "@xgovformbuilder/govuk-react-jsx";
+import React from 'react'
+import { Input } from '@xgovformbuilder/govuk-react-jsx'
 
-import SelectConditions from "./conditions/SelectConditions";
-import { toUrl } from "./helpers";
-import { RenderInPortal } from "./components/RenderInPortal";
-import { Flyout } from "./components/Flyout";
-import SectionEdit from "./section/section-edit";
-import { i18n, withI18n } from "./i18n";
-import ErrorSummary from "./error-summary";
-import { validateTitle, hasValidationErrors } from "./validations";
-import { DataContext } from "./context";
-import { addLink } from "./data";
-import { addPage } from "./data/page/addPage";
-import randomId from "./randomId";
-import logger from "../client/plugins/logger";
+import SelectConditions from './conditions/SelectConditions'
+import { toUrl } from './helpers'
+import { RenderInPortal } from './components/RenderInPortal'
+import { Flyout } from './components/Flyout'
+import SectionEdit from './section/section-edit'
+import { i18n, withI18n } from './i18n'
+import ErrorSummary from './error-summary'
+import { validateTitle, hasValidationErrors } from './validations'
+import { DataContext } from './context'
+import { addLink } from './data'
+import { addPage } from './data/page/addPage'
+import randomId from './randomId'
+import logger from '../client/plugins/logger'
 
 class PageCreate extends React.Component {
-  static contextType = DataContext;
+  static contextType = DataContext
 
   constructor(props, context) {
-    super(props, context);
-    const { page } = this.props;
+    super(props, context)
+    const { page } = this.props
     this.state = {
-      path: "/",
-      controller: page?.controller ?? "",
+      path: '/',
+      controller: page?.controller ?? '',
       title: page?.title,
       section: page?.section ?? {},
       isEditingSection: false,
-      errors: {},
-    };
+      errors: {}
+    }
   }
 
   onSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
-    const { data, save } = this.context;
+    const { data, save } = this.context
 
-    const title = this.state.title?.trim();
-    const linkFrom = this.state.linkFrom?.trim();
-    const section = this.state.section?.name?.trim();
-    const pageType = this.state.pageType?.trim();
-    const selectedCondition = this.state.selectedCondition?.trim();
-    const path = this.state.path;
+    const title = this.state.title?.trim()
+    const linkFrom = this.state.linkFrom?.trim()
+    const section = this.state.section?.name?.trim()
+    const pageType = this.state.pageType?.trim()
+    const selectedCondition = this.state.selectedCondition?.trim()
+    const path = this.state.path
 
-    const validationErrors = this.validate(title, path);
-    if (hasValidationErrors(validationErrors)) return;
+    const validationErrors = this.validate(title, path)
+    if (hasValidationErrors(validationErrors)) return
 
     const value = {
       path,
       title,
       components: [],
-      next: [],
-    };
+      next: []
+    }
     if (section) {
-      value.section = section;
+      value.section = section
     }
     if (pageType) {
-      value.controller = pageType;
+      value.controller = pageType
     }
 
-    let copy = addPage({ ...data }, value);
+    let copy = addPage({ ...data }, value)
 
     if (linkFrom) {
-      copy = addLink(copy, linkFrom, path, selectedCondition);
+      copy = addLink(copy, linkFrom, path, selectedCondition)
     }
     try {
-      await save(copy);
-      this.props.onCreate({ value });
+      await save(copy)
+      this.props.onCreate({ value })
     } catch (err) {
-      logger.error("PageCreate", err);
+      logger.error('PageCreate', err)
     }
-  };
+  }
 
   validate = (title, path) => {
-    const { data } = this.context;
-    const titleErrors = validateTitle("page-title", title, i18n);
-    const errors = { ...titleErrors };
-    const alreadyExists = data.pages.find((page) => page.path === path);
+    const { data } = this.context
+    const titleErrors = validateTitle('page-title', title, i18n)
+    const errors = { ...titleErrors }
+    const alreadyExists = data.pages.find((page) => page.path === path)
     if (alreadyExists) {
       errors.path = {
-        href: "#page-path",
-        children: `Path '${path}' already exists`,
-      };
+        href: '#page-path',
+        children: `Path '${path}' already exists`
+      }
     }
 
-    this.setState({ errors });
+    this.setState({ errors })
 
-    return errors;
-  };
+    return errors
+  }
 
   generatePath(title, data) {
-    let path = toUrl(title);
+    let path = toUrl(title)
     if (
       title.length > 0 &&
       data.pages.find((page) => page.path.startsWith(path))
     ) {
-      path = `${path}-${randomId()}`;
+      path = `${path}-${randomId()}`
     }
 
-    return path;
+    return path
   }
 
   findSectionWithName(name) {
-    const { data } = this.context;
-    const { sections } = data;
-    return sections.find((section) => section.name === name);
+    const { data } = this.context
+    const { sections } = data
+    return sections.find((section) => section.name === name)
   }
 
   onChangeSection = (e) => {
     this.setState({
-      section: this.findSectionWithName(e.target.value),
-    });
-  };
+      section: this.findSectionWithName(e.target.value)
+    })
+  }
 
   onChangeLinkFrom = (e) => {
-    const input = e.target;
+    const input = e.target
     this.setState({
-      linkFrom: input.value,
-    });
-  };
+      linkFrom: input.value
+    })
+  }
 
   onChangePageType = (e) => {
-    const input = e.target;
+    const input = e.target
     this.setState({
-      pageType: input.value,
-    });
-  };
+      pageType: input.value
+    })
+  }
 
   onChangeTitle = (e) => {
-    const { data } = this.context;
-    const input = e.target;
-    const title = input.value;
+    const { data } = this.context
+    const input = e.target
+    const title = input.value
     this.setState({
       title,
-      path: this.generatePath(title, data),
-    });
-  };
+      path: this.generatePath(title, data)
+    })
+  }
 
   onChangePath = (e) => {
-    const input = e.target;
-    const path = input.value.startsWith("/") ? input.value : `/${input.value}`;
-    const sanitisedPath = path.replace(/\s/g, "-");
+    const input = e.target
+    const path = input.value.startsWith('/') ? input.value : `/${input.value}`
+    const sanitisedPath = path.replace(/\s/g, '-')
     this.setState({
-      path: sanitisedPath,
-    });
-  };
+      path: sanitisedPath
+    })
+  }
 
   conditionSelected = (selectedCondition) => {
     this.setState({
-      selectedCondition,
-    });
-  };
+      selectedCondition
+    })
+  }
 
   editSection = (e, section) => {
-    e.preventDefault();
+    e.preventDefault()
     this.setState({
       section,
-      isEditingSection: true,
-    });
-  };
+      isEditingSection: true
+    })
+  }
 
   closeFlyout = (sectionName) => {
-    const propSection = this.state.section ?? {};
+    const propSection = this.state.section ?? {}
     this.setState({
       isEditingSection: false,
-      section: sectionName
-        ? this.findSectionWithName(sectionName)
-        : propSection,
-    });
-  };
+      section: sectionName ? this.findSectionWithName(sectionName) : propSection
+    })
+  }
 
   render() {
-    const { data } = this.context;
-    const { sections, pages } = data;
+    const { data } = this.context
+    const { sections, pages } = data
     const {
       pageType,
       linkFrom,
@@ -180,8 +178,8 @@ class PageCreate extends React.Component {
       section,
       path,
       isEditingSection,
-      errors,
-    } = this.state;
+      errors
+    } = this.state
 
     return (
       <div>
@@ -191,10 +189,10 @@ class PageCreate extends React.Component {
         <form onSubmit={(e) => this.onSubmit(e)} autoComplete="off">
           <div className="govuk-form-group">
             <label className="govuk-label govuk-label--s" htmlFor="page-type">
-              {i18n("addPage.pageTypeOption.title")}
+              {i18n('addPage.pageTypeOption.title')}
             </label>
             <span className="govuk-hint">
-              {i18n("addPage.pageTypeOption.helpText")}
+              {i18n('addPage.pageTypeOption.helpText')}
             </span>
             <select
               className="govuk-select"
@@ -211,10 +209,10 @@ class PageCreate extends React.Component {
 
           <div className="govuk-form-group">
             <label className="govuk-label govuk-label--s" htmlFor="link-from">
-              {i18n("addPage.linkFromOption.title")}
+              {i18n('addPage.linkFromOption.title')}
             </label>
             <span className="govuk-hint">
-              {i18n("addPage.linkFromOption.helpText")}
+              {i18n('addPage.linkFromOption.helpText')}
             </span>
             <select
               className="govuk-select"
@@ -232,12 +230,12 @@ class PageCreate extends React.Component {
             </select>
           </div>
 
-          {linkFrom && linkFrom.trim() !== "" && (
+          {linkFrom && linkFrom.trim() !== '' && (
             <SelectConditions
               data={data}
               path={linkFrom}
               conditionsChange={this.conditionSelected}
-              noFieldsHintText={i18n("conditions.noFieldsAvailable")}
+              noFieldsHintText={i18n('conditions.noFieldsAvailable')}
             />
           )}
 
@@ -245,10 +243,10 @@ class PageCreate extends React.Component {
             id="page-title"
             name="title"
             label={{
-              className: "govuk-label--s",
-              children: [i18n("addPage.pageTitleField.title")],
+              className: 'govuk-label--s',
+              children: [i18n('addPage.pageTitleField.title')]
             }}
-            value={title || ""}
+            value={title || ''}
             onChange={this.onChangeTitle}
             errorMessage={
               errors?.title ? { children: errors?.title.children } : undefined
@@ -259,11 +257,11 @@ class PageCreate extends React.Component {
             id="page-path"
             name="path"
             label={{
-              className: "govuk-label--s",
-              children: [i18n("addPage.pathField.title")],
+              className: 'govuk-label--s',
+              children: [i18n('addPage.pathField.title')]
             }}
             hint={{
-              children: [i18n("addPage.pathField.helpText")],
+              children: [i18n('addPage.pathField.helpText')]
             }}
             value={path}
             onChange={this.onChangePath}
@@ -277,10 +275,10 @@ class PageCreate extends React.Component {
               className="govuk-label govuk-label--s"
               htmlFor="page-section"
             >
-              {i18n("addPage.sectionOption.title")}
+              {i18n('addPage.sectionOption.title')}
             </label>
             <span className="govuk-hint">
-              {i18n("addPage.sectionOption.helpText")}
+              {i18n('addPage.sectionOption.helpText')}
             </span>
             {sections?.length > 0 && (
               <select
@@ -324,7 +322,7 @@ class PageCreate extends React.Component {
           <RenderInPortal>
             <Flyout
               title={`${
-                section?.name ? `Editing ${section.name}` : "Add a new section"
+                section?.name ? `Editing ${section.name}` : 'Add a new section'
               }`}
               onHide={this.closeFlyout}
               show={true}
@@ -338,8 +336,8 @@ class PageCreate extends React.Component {
           </RenderInPortal>
         )}
       </div>
-    );
+    )
   }
 }
 
-export default withI18n(PageCreate);
+export default withI18n(PageCreate)

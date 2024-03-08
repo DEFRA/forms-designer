@@ -1,76 +1,76 @@
-import React from "react";
+import React from 'react'
 
-import { camelCase } from "./helpers";
-import { DataContext } from "./context";
-import { addSection } from "./data/section/addSection";
-import logger from "../client/plugins/logger";
+import { camelCase } from './helpers'
+import { DataContext } from './context'
+import { addSection } from './data/section/addSection'
+import logger from '../client/plugins/logger'
 
 class SectionCreate extends React.Component {
-  static contextType = DataContext;
-  state = {};
+  static contextType = DataContext
+  state = {}
 
   async onSubmit(e) {
-    e.preventDefault();
-    const { data, save } = this.context;
-    const { name, title, generatedName } = this.state;
+    e.preventDefault()
+    const { data, save } = this.context
+    const { name, title, generatedName } = this.state
     const updated = addSection(data, {
       name: name ?? generatedName,
-      title: title.trim(),
-    });
+      title: title.trim()
+    })
 
     try {
-      const savedData = await save(updated);
-      this.props.onCreate(savedData);
+      const savedData = await save(updated)
+      this.props.onCreate(savedData)
     } catch (err) {
-      logger.error("SectionCreate", err);
+      logger.error('SectionCreate', err)
     }
   }
 
   onBlurName = (e) => {
-    const input = e.target;
-    const newName = input.value.trim();
-    const { data } = this.props;
+    const input = e.target
+    const newName = input.value.trim()
+    const { data } = this.props
 
     // Validate it is unique
     if (data.sections.find((s) => s.name === newName)) {
-      input.setCustomValidity(`Name '${newName}' already exists`);
+      input.setCustomValidity(`Name '${newName}' already exists`)
     } else {
-      input.setCustomValidity("");
+      input.setCustomValidity('')
     }
     this.setState({
-      name: newName,
-    });
-  };
+      name: newName
+    })
+  }
 
   onChangeTitle = (e) => {
-    const input = e.target;
-    const { data } = this.props;
-    const newTitle = input.value;
-    const generatedName = camelCase(newTitle).trim();
-    let newName = generatedName;
+    const input = e.target
+    const { data } = this.props
+    const newTitle = input.value
+    const generatedName = camelCase(newTitle).trim()
+    let newName = generatedName
 
-    let i = 1;
+    let i = 1
     while (data.sections.find((s) => s.name === newName)) {
-      newName = generatedName + i;
-      i++;
+      newName = generatedName + i
+      i++
     }
 
     this.setState({
       generatedName: newName,
-      title: newTitle,
-    });
-  };
+      title: newTitle
+    })
+  }
 
   render() {
-    const { title, name, generatedName } = this.state;
+    const { title, name, generatedName } = this.state
     return (
       <form onSubmit={(e) => this.onSubmit(e)} autoComplete="off">
         <a
           className="govuk-back-link"
           href="#"
           onClick={(e) => {
-            e.preventDefault();
-            this.props.onCancel(e);
+            e.preventDefault()
+            this.props.onCancel(e)
           }}
         >
           Back
@@ -88,7 +88,7 @@ class SectionCreate extends React.Component {
             name="title"
             type="text"
             required
-            value={title || ""}
+            value={title || ''}
             onChange={this.onChangeTitle}
           />
         </div>
@@ -107,7 +107,7 @@ class SectionCreate extends React.Component {
             type="text"
             required
             pattern="^\S+"
-            defaultValue={name || generatedName || ""}
+            defaultValue={name || generatedName || ''}
             onBlur={this.onBlurName}
           />
         </div>
@@ -116,8 +116,8 @@ class SectionCreate extends React.Component {
           Save
         </button>
       </form>
-    );
+    )
   }
 }
 
-export default SectionCreate;
+export default SectionCreate

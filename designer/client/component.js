@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { SortableHandle } from "react-sortable-hoc";
-import { Flyout } from "./components/Flyout";
-import { SearchIcon } from "./components/Icons";
-import ComponentEdit from "./ComponentEdit";
-import { ComponentContextProvider } from "./reducers/component/componentReducer";
-import { i18n } from "./i18n";
+import React, { useState } from 'react'
+import { SortableHandle } from 'react-sortable-hoc'
+import { Flyout } from './components/Flyout'
+import { SearchIcon } from './components/Icons'
+import ComponentEdit from './ComponentEdit'
+import { ComponentContextProvider } from './reducers/component/componentReducer'
+import { i18n } from './i18n'
 
 export const componentTypes = {
   TextField,
@@ -32,15 +32,15 @@ export const componentTypes = {
   FlashCard,
   List,
   WarningText,
-  WebsiteField: TextField,
-};
+  WebsiteField: TextField
+}
 
 function Base(props) {
-  return <div>{props.children}</div>;
+  return <div>{props.children}</div>
 }
 
 function ComponentField(props) {
-  return <Base>{props.children}</Base>;
+  return <Base>{props.children}</Base>
 }
 
 function TextField() {
@@ -48,7 +48,7 @@ function TextField() {
     <ComponentField>
       <div className="box" />
     </ComponentField>
-  );
+  )
 }
 
 function TelephoneNumberField() {
@@ -56,7 +56,7 @@ function TelephoneNumberField() {
     <ComponentField>
       <div className="box tel" />
     </ComponentField>
-  );
+  )
 }
 
 function EmailAddressField() {
@@ -64,7 +64,7 @@ function EmailAddressField() {
     <ComponentField>
       <div className="box email" />
     </ComponentField>
-  );
+  )
 }
 
 function UkAddressField() {
@@ -75,7 +75,7 @@ function UkAddressField() {
         <SearchIcon width={20} height={20} />
       </span>
     </ComponentField>
-  );
+  )
 }
 
 function MultilineTextField() {
@@ -83,7 +83,7 @@ function MultilineTextField() {
     <ComponentField>
       <span className="box tall" />
     </ComponentField>
-  );
+  )
 }
 
 function NumberField() {
@@ -91,7 +91,7 @@ function NumberField() {
     <ComponentField>
       <div className="box number" />
     </ComponentField>
-  );
+  )
 }
 
 function DateField() {
@@ -101,7 +101,7 @@ function DateField() {
         <span className="govuk-body govuk-!-font-size-14">dd/mm/yyyy</span>
       </div>
     </ComponentField>
-  );
+  )
 }
 
 function DateTimeField() {
@@ -113,7 +113,7 @@ function DateTimeField() {
         </span>
       </div>
     </ComponentField>
-  );
+  )
 }
 
 function TimeField() {
@@ -123,7 +123,7 @@ function TimeField() {
         <span className="govuk-body govuk-!-font-size-14">hh:mm</span>
       </div>
     </ComponentField>
-  );
+  )
 }
 
 function DateTimePartsField() {
@@ -135,7 +135,7 @@ function DateTimePartsField() {
       <span className="box small govuk-!-margin-right-1" />
       <span className="box small" />
     </ComponentField>
-  );
+  )
 }
 
 function MonthYearField() {
@@ -144,7 +144,7 @@ function MonthYearField() {
       <span className="box small govuk-!-margin-left-1 govuk-!-margin-right-1" />
       <span className="box medium" />
     </ComponentField>
-  );
+  )
 }
 
 function DatePartsField() {
@@ -154,7 +154,7 @@ function DatePartsField() {
       <span className="box small govuk-!-margin-left-1 govuk-!-margin-right-1" />
       <span className="box medium" />
     </ComponentField>
-  );
+  )
 }
 
 function RadiosField() {
@@ -171,7 +171,7 @@ function RadiosField() {
       <span className="circle" />
       <span className="line short" />
     </ComponentField>
-  );
+  )
 }
 
 function CheckboxesField() {
@@ -188,7 +188,7 @@ function CheckboxesField() {
       <span className="check" />
       <span className="line short" />
     </ComponentField>
-  );
+  )
 }
 
 function SelectField() {
@@ -196,7 +196,7 @@ function SelectField() {
     <ComponentField>
       <div className="box dropdown" />
     </ComponentField>
-  );
+  )
 }
 
 function YesNoField() {
@@ -209,26 +209,26 @@ function YesNoField() {
       <span className="circle" />
       <span className="line short" />
     </ComponentField>
-  );
+  )
 }
 
 function FileUploadField() {
   return (
     <ComponentField>
       <div className="govuk-!-margin-bottom-1">
-        {"🗂"} <span className="line short" />
+        {'🗂'} <span className="line short" />
       </div>
     </ComponentField>
-  );
+  )
 }
 
 function Details() {
   return (
     <Base>
-      {"▶ "}
+      {'▶ '}
       <span className="line short" />
     </Base>
-  );
+  )
 }
 
 function InsetText() {
@@ -240,7 +240,7 @@ function InsetText() {
         <div className="line" />
       </div>
     </Base>
-  );
+  )
 }
 
 function WarningText() {
@@ -252,7 +252,7 @@ function WarningText() {
         <div className="line" />
       </div>
     </Base>
-  );
+  )
 }
 
 function Para() {
@@ -262,7 +262,7 @@ function Para() {
       <div className="line short govuk-!-margin-bottom-2 govuk-!-margin-top-2" />
       <div className="line" />
     </Base>
-  );
+  )
 }
 
 function FlashCard() {
@@ -271,7 +271,7 @@ function FlashCard() {
       <div className="line short govuk-!-margin-bottom-2 govuk-!-margin-top-2" />
       <div className="line" />
     </Base>
-  );
+  )
 }
 
 function List() {
@@ -281,7 +281,7 @@ function List() {
       <div className="line short govuk-!-margin-bottom-2 govuk-!-margin-top-2" />
       <div className="line short govuk-!-margin-bottom-2 govuk-!-margin-top-2" />
     </Base>
-  );
+  )
 }
 
 function Html() {
@@ -291,19 +291,19 @@ function Html() {
         <span className="line xshort govuk-!-margin-bottom-1 govuk-!-margin-top-1" />
       </div>
     </Base>
-  );
+  )
 }
 
 export function Component(props) {
-  const [showEditor, setShowEditor] = useState();
+  const [showEditor, setShowEditor] = useState()
   const toggleShowEditor = (value) => {
-    setShowEditor(value ?? !showEditor);
-  };
-  const { data, page, component } = props;
-  const TagName = componentTypes[`${component.type}`];
-  const editFlyoutTitle = i18n("component.edit", {
-    name: i18n(`fieldTypeToName.${component.type}`),
-  });
+    setShowEditor(value ?? !showEditor)
+  }
+  const { data, page, component } = props
+  const TagName = componentTypes[`${component.type}`]
+  const editFlyoutTitle = i18n('component.edit', {
+    name: i18n(`fieldTypeToName.${component.type}`)
+  })
 
   return (
     <div>
@@ -318,5 +318,5 @@ export function Component(props) {
         </Flyout>
       )}
     </div>
-  );
+  )
 }

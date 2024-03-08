@@ -48,7 +48,9 @@ const nunjucksConfig = {
     compileOptions: {
       environment: nunjucksEnvironment
     },
-    relativeTo: path.normalize(path.resolve(__dirname, '..', 'server', 'views')),
+    relativeTo: path.normalize(
+      path.resolve(__dirname, '..', 'server', 'views')
+    ),
     isCached: config.isProduction,
     context
   }

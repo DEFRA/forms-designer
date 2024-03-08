@@ -1,49 +1,49 @@
-import React from "react";
+import React from 'react'
 import {
   ConditionGroupDef,
   toPresentationString,
-  clone,
-} from "@defra/forms-model";
-import InlineConditionsDefinition from "./InlineConditionsDefinition";
-import { EditIcon, MoveDownIcon, MoveUpIcon } from "../components/Icons";
+  clone
+} from '@defra/forms-model'
+import InlineConditionsDefinition from './InlineConditionsDefinition'
+import { EditIcon, MoveDownIcon, MoveUpIcon } from '../components/Icons'
 
 class InlineConditionsEdit extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       conditions: props.conditions,
-      selectedConditions: [],
-    };
+      selectedConditions: []
+    }
   }
 
   onChangeCheckbox = (e) => {
-    let copy = clone(this.state.selectedConditions ?? []);
-    const index = Number(e.target.value);
+    let copy = clone(this.state.selectedConditions ?? [])
+    const index = Number(e.target.value)
     if (e.target.checked) {
-      copy.push(index);
+      copy.push(index)
     } else {
-      copy = copy.filter((it) => it !== index);
+      copy = copy.filter((it) => it !== index)
     }
     this.setState({
-      selectedConditions: copy,
-    });
-  };
+      selectedConditions: copy
+    })
+  }
 
   onClickGroup = (e) => {
-    e?.preventDefault();
+    e?.preventDefault()
     if (this.state.selectedConditions?.length < 2) {
       this.setState({
-        editingError: "Please select at least 2 items for grouping",
-      });
+        editingError: 'Please select at least 2 items for grouping'
+      })
     } else {
       const groups = this.groupWithConsecutiveConditions(
         this.state.selectedConditions
-      );
+      )
       if (groups.find((group) => group.length === 1)) {
         this.setState({
-          editingError: "Please select consecutive items to group",
-        });
+          editingError: 'Please select consecutive items to group'
+        })
       } else {
         this.setState({
           editingError: undefined,
@@ -54,110 +54,110 @@ class InlineConditionsEdit extends React.Component {
               .reduce((groupDefs, group) => {
                 groupDefs.push(
                   new ConditionGroupDef(group[0], group[group.length - 1])
-                );
-                return groupDefs;
+                )
+                return groupDefs
               }, [])
-          ),
-        });
+          )
+        })
       }
     }
-  };
+  }
 
   onClickRemove = (e) => {
-    e?.preventDefault();
+    e?.preventDefault()
     if (this.state.selectedConditions?.length < 1) {
       this.setState({
-        editingError: "Please select at least 1 item to remove",
-      });
+        editingError: 'Please select at least 1 item to remove'
+      })
     } else {
       this.setState({
         editingError: undefined,
         selectedConditions: [],
         conditions: this.state.conditions.remove(this.state.selectedConditions),
-        condition: undefined,
-      });
+        condition: undefined
+      })
     }
     if (!this.state.conditions.hasConditions) {
-      this.props.exitCallback();
+      this.props.exitCallback()
     }
-  };
+  }
 
   groupWithConsecutiveConditions(selectedConditions) {
-    const result = [];
-    selectedConditions.sort((a, b) => a - b);
+    const result = []
+    selectedConditions.sort((a, b) => a - b)
     selectedConditions.forEach((condition) => {
       const groupForCondition = result.find(
         (group) =>
           group.includes(condition - 1) || group.includes(condition + 1)
-      );
+      )
       if (groupForCondition) {
-        groupForCondition.push(condition);
+        groupForCondition.push(condition)
       } else {
-        result.push([condition]);
+        result.push([condition])
       }
-    });
-    return result;
+    })
+    return result
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.conditions !== this.props.conditions) {
       this.setState({
         conditions: this.props.conditions,
-        selectedConditions: [],
-      });
+        selectedConditions: []
+      })
     }
   }
 
   onClickCancelEditView = (e) => {
-    e?.preventDefault();
+    e?.preventDefault()
     this.setState({
       selectedConditions: [],
-      editingIndex: undefined,
-    });
-    this.props.exitCallback();
-  };
+      editingIndex: undefined
+    })
+    this.props.exitCallback()
+  }
 
   onClickSplit(index) {
     this.setState({
-      conditions: this.state.conditions.splitGroup(index),
-    });
+      conditions: this.state.conditions.splitGroup(index)
+    })
   }
 
   onClickEdit(index) {
-    const conditions = this.state.conditions.asPerUserGroupings;
+    const conditions = this.state.conditions.asPerUserGroupings
     if (conditions.length > index) {
       this.setState({
         editingIndex: index,
-        condition: Object.assign({}, conditions[index]),
-      });
+        condition: Object.assign({}, conditions[index])
+      })
     }
   }
 
   moveConditionEarlier = (event) => {
-    event.preventDefault();
-    const index = event.currentTarget.dataset.index;
-    const conditions = this.state.conditions.moveEarlier(index);
+    event.preventDefault()
+    const index = event.currentTarget.dataset.index
+    const conditions = this.state.conditions.moveEarlier(index)
     this.setState({
       conditions,
-      selectedConditions: [],
-    });
-  };
+      selectedConditions: []
+    })
+  }
 
   moveConditionLater = (event) => {
-    event.preventDefault();
-    const index = event.currentTarget.dataset.index;
-    const conditions = this.state.conditions.moveLater(index);
+    event.preventDefault()
+    const index = event.currentTarget.dataset.index
+    const conditions = this.state.conditions.moveLater(index)
     this.setState({
       conditions,
-      selectedConditions: [],
-    });
-  };
+      selectedConditions: []
+    })
+  }
 
   setState(state, callback) {
     if (state.conditions) {
-      this.props.saveCallback(state.conditions);
+      this.props.saveCallback(state.conditions)
     }
-    super.setState(state, callback);
+    super.setState(state, callback)
   }
 
   saveCondition = (condition) => {
@@ -167,9 +167,9 @@ class InlineConditionsEdit extends React.Component {
         condition
       ),
       condition: undefined,
-      editingIndex: undefined,
-    });
-  };
+      editingIndex: undefined
+    })
+  }
 
   render() {
     const {
@@ -177,8 +177,8 @@ class InlineConditionsEdit extends React.Component {
       condition,
       editingIndex,
       editingError,
-      selectedConditions,
-    } = this.state;
+      selectedConditions
+    } = this.state
 
     return (
       <div id="edit-conditions">
@@ -189,7 +189,7 @@ class InlineConditionsEdit extends React.Component {
             </legend>
             {editingError && (
               <span id="conditions-error" className="govuk-error-message">
-                <span className="govuk-visually-hidden">Error:</span>{" "}
+                <span className="govuk-visually-hidden">Error:</span>{' '}
                 {editingError}
               </span>
             )}
@@ -199,7 +199,7 @@ class InlineConditionsEdit extends React.Component {
                   <div
                     key={`condition-checkbox-${index}`}
                     className="govuk-checkboxes__item"
-                    style={{ display: "flex" }}
+                    style={{ display: 'flex' }}
                   >
                     <input
                       type="checkbox"
@@ -208,7 +208,7 @@ class InlineConditionsEdit extends React.Component {
                       name={`condition-${index}`}
                       value={index}
                       onChange={this.onChangeCheckbox}
-                      checked={selectedConditions?.includes(index) || ""}
+                      checked={selectedConditions?.includes(index) || ''}
                     />
                     <label
                       className="govuk-label govuk-checkboxes__label"
@@ -218,7 +218,7 @@ class InlineConditionsEdit extends React.Component {
                     </label>
                     <span
                       id={`condition-${index}-actions`}
-                      style={{ display: "inline-flex", flexGrow: 1 }}
+                      style={{ display: 'inline-flex', flexGrow: 1 }}
                     >
                       {condition.isGroup() && (
                         <span style={{ flexGrow: 1 }}>
@@ -227,8 +227,8 @@ class InlineConditionsEdit extends React.Component {
                             id={`condition-${index}-split`}
                             className="govuk-link"
                             onClick={(e) => {
-                              e.preventDefault();
-                              this.onClickSplit(index);
+                              e.preventDefault()
+                              this.onClickSplit(index)
                             }}
                           >
                             Split
@@ -242,8 +242,8 @@ class InlineConditionsEdit extends React.Component {
                             id={`condition-${index}-edit`}
                             className="govuk-link"
                             onClick={(e) => {
-                              e.preventDefault();
-                              this.onClickEdit(index);
+                              e.preventDefault()
+                              this.onClickEdit(index)
                             }}
                           >
                             <EditIcon bottom={true} />
@@ -277,7 +277,7 @@ class InlineConditionsEdit extends React.Component {
                       )}
                     </span>
                   </div>
-                );
+                )
               })}
             </div>
             <div className="govuk-form-group" id="group-and-remove">
@@ -290,7 +290,7 @@ class InlineConditionsEdit extends React.Component {
                     onClick={this.onClickGroup}
                   >
                     Group
-                  </a>{" "}
+                  </a>{' '}
                   /
                 </span>
               )}
@@ -326,8 +326,8 @@ class InlineConditionsEdit extends React.Component {
           </a>
         </div>
       </div>
-    );
+    )
   }
 }
 
-export default InlineConditionsEdit;
+export default InlineConditionsEdit

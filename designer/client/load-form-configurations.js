@@ -1,29 +1,30 @@
-import logger from "../client/plugins/logger";
+import logger from '../client/plugins/logger'
 export function fetchConfigurations() {
   return window
-    .fetch("/forms-designer/api/configurations", { // TODO make config driven
-      method: "get",
+    .fetch('/forms-designer/api/configurations', {
+      // TODO make config driven
+      method: 'get',
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
     })
     .then((res) => {
       if (res.ok) {
-        return res.json();
+        return res.json()
       } else {
-        throw res.error;
+        throw res.error
       }
-    });
+    })
 }
 
 export async function loadConfigurations() {
   return await fetchConfigurations()
     .then((data) => {
-      return Object.values(data) || [];
+      return Object.values(data) || []
     })
     .catch((error) => {
-      logger.error("loadConfigurations", error);
-      return [];
-    });
+      logger.error('loadConfigurations', error)
+      return []
+    })
 }

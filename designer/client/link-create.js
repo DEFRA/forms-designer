@@ -1,83 +1,78 @@
-import React from "react";
-import SelectConditions from "./conditions/SelectConditions";
-import { ErrorMessage } from "@xgovformbuilder/govuk-react-jsx";
-import classNames from "classnames";
+import React from 'react'
+import SelectConditions from './conditions/SelectConditions'
+import { ErrorMessage } from '@xgovformbuilder/govuk-react-jsx'
+import classNames from 'classnames'
 
-import ErrorSummary from "./error-summary";
-import { DataContext } from "./context";
-import { i18n } from "./i18n";
-import { addLink } from "./data/page";
-import logger from "../client/plugins/logger";
+import ErrorSummary from './error-summary'
+import { DataContext } from './context'
+import { i18n } from './i18n'
+import { addLink } from './data/page'
+import logger from '../client/plugins/logger'
 
 class LinkCreate extends React.Component {
-  static contextType = DataContext;
-  state = { errors: {} };
+  static contextType = DataContext
+  state = { errors: {} }
 
   onSubmit = async (e) => {
-    e.preventDefault();
-    const { data, save } = this.context;
-    const { from, to, selectedCondition } = this.state;
-    const hasValidationErrors = this.validate();
-    if (hasValidationErrors) return;
+    e.preventDefault()
+    const { data, save } = this.context
+    const { from, to, selectedCondition } = this.state
+    const hasValidationErrors = this.validate()
+    if (hasValidationErrors) return
 
-    const copy = { ...data };
-    const { error, ...updatedData } = addLink(
-      copy,
-      from,
-      to,
-      selectedCondition
-    );
-    error && logger.error("LinkCreate", error);
-    const savedData = await save(updatedData);
-    this.props.onCreate?.({ data: savedData });
-  };
+    const copy = { ...data }
+    const { error, ...updatedData } = addLink(copy, from, to, selectedCondition)
+    error && logger.error('LinkCreate', error)
+    const savedData = await save(updatedData)
+    this.props.onCreate?.({ data: savedData })
+  }
 
   conditionSelected = (selectedCondition) => {
     this.setState({
-      selectedCondition,
-    });
-  };
+      selectedCondition
+    })
+  }
 
   storeValue = (e, key) => {
-    const input = e.target;
-    const stateUpdate = {};
-    stateUpdate[key] = input.value;
-    this.setState(stateUpdate);
-  };
+    const input = e.target
+    const stateUpdate = {}
+    stateUpdate[key] = input.value
+    this.setState(stateUpdate)
+  }
 
   validate = () => {
-    const { from, to } = this.state;
-    const errors = {};
+    const { from, to } = this.state
+    const errors = {}
     if (!from) {
-      errors.from = { href: "#link-source", children: "Enter from" };
+      errors.from = { href: '#link-source', children: 'Enter from' }
     }
     if (!to) {
-      errors.to = { href: "#link-target", children: "Enter to" };
+      errors.to = { href: '#link-target', children: 'Enter to' }
     }
     this.setState({
-      errors,
-    });
-    return !from || !to;
-  };
+      errors
+    })
+    return !from || !to
+  }
 
   render() {
-    const { data } = this.context;
-    const { pages } = data;
-    const { from, errors } = this.state;
-    const hasValidationErrors = Object.keys(errors).length > 0;
+    const { data } = this.context
+    const { pages } = data
+    const { from, errors } = this.state
+    const hasValidationErrors = Object.keys(errors).length > 0
 
     return (
       <>
         {hasValidationErrors && (
           <ErrorSummary errorList={Object.values(errors)} />
         )}
-        <div className="govuk-hint">{i18n("addLink.hint1")}</div>
-        <div className="govuk-hint">{i18n("addLink.hint2")}</div>
+        <div className="govuk-hint">{i18n('addLink.hint1')}</div>
+        <div className="govuk-hint">{i18n('addLink.hint2')}</div>
         <form onSubmit={(e) => this.onSubmit(e)} autoComplete="off">
           <div
             className={classNames({
-              "govuk-form-group": true,
-              "govuk-form-group--error": errors?.from,
+              'govuk-form-group': true,
+              'govuk-form-group--error': errors?.from
             })}
           >
             <label className="govuk-label govuk-label--s" htmlFor="link-source">
@@ -88,13 +83,13 @@ class LinkCreate extends React.Component {
             )}
             <select
               className={classNames({
-                "govuk-select": true,
-                "govuk-input--error": errors?.from,
+                'govuk-select': true,
+                'govuk-input--error': errors?.from
               })}
               id="link-source"
               data-testid="link-source"
               name="path"
-              onChange={(e) => this.storeValue(e, "from")}
+              onChange={(e) => this.storeValue(e, 'from')}
             >
               <option />
               {pages.map((page) => (
@@ -111,8 +106,8 @@ class LinkCreate extends React.Component {
 
           <div
             className={classNames({
-              "govuk-form-group": true,
-              "govuk-form-group--error": errors?.to,
+              'govuk-form-group': true,
+              'govuk-form-group--error': errors?.to
             })}
           >
             <label className="govuk-label govuk-label--s" htmlFor="link-target">
@@ -121,13 +116,13 @@ class LinkCreate extends React.Component {
             {errors?.to && <ErrorMessage>{errors?.to.children}</ErrorMessage>}
             <select
               className={classNames({
-                "govuk-select": true,
-                "govuk-input--error": errors?.to,
+                'govuk-select': true,
+                'govuk-input--error': errors?.to
               })}
               id="link-target"
               data-testid="link-target"
               name="page"
-              onChange={(e) => this.storeValue(e, "to")}
+              onChange={(e) => this.storeValue(e, 'to')}
             >
               <option />
               {pages.map((page) => (
@@ -142,11 +137,11 @@ class LinkCreate extends React.Component {
             </select>
           </div>
 
-          {from && from.trim() !== "" && (
+          {from && from.trim() !== '' && (
             <SelectConditions
               path={from}
               conditionsChange={this.conditionSelected}
-              noFieldsHintText={i18n("addLink.noFieldsAvailable")}
+              noFieldsHintText={i18n('addLink.noFieldsAvailable')}
             />
           )}
 
@@ -155,8 +150,8 @@ class LinkCreate extends React.Component {
           </button>
         </form>
       </>
-    );
+    )
   }
 }
 
-export default LinkCreate;
+export default LinkCreate

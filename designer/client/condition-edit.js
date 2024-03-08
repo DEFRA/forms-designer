@@ -1,65 +1,65 @@
-import React from "react";
-import Editor from "./editor";
-import { ConditionsWrapper } from "@defra/forms-model";
-import { DataContext } from "./context";
-import { removeCondition, updateCondition } from "./data";
-import logger from "../client/plugins/logger";
+import React from 'react'
+import Editor from './editor'
+import { ConditionsWrapper } from '@defra/forms-model'
+import { DataContext } from './context'
+import { removeCondition, updateCondition } from './data'
+import logger from '../client/plugins/logger'
 
 class ConditionEdit extends React.Component {
-  static contextType = DataContext;
+  static contextType = DataContext
 
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       displayName: props.condition.displayName,
-      value: props.condition.value,
-    };
+      value: props.condition.value
+    }
   }
 
   onSubmit = async (e) => {
-    e.preventDefault();
-    const { save } = this.context;
-    const displayName = this.state.displayName;
-    const newValue = this.state.value;
-    const { data, condition } = this.props;
+    e.preventDefault()
+    const { save } = this.context
+    const displayName = this.state.displayName
+    const newValue = this.state.value
+    const { data, condition } = this.props
 
     const updated = updateCondition(data, condition.name, {
       displayName,
-      value: newValue,
-    });
+      value: newValue
+    })
 
     try {
-      const saved = await save(updated);
-      this.props.onEdit({ data: saved });
+      const saved = await save(updated)
+      this.props.onEdit({ data: saved })
     } catch (err) {
-      logger.error("ConditionEdit", err);
+      logger.error('ConditionEdit', err)
     }
-  };
+  }
 
   onClickDelete = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
-    if (!window.confirm("Confirm delete")) {
-      return;
+    if (!window.confirm('Confirm delete')) {
+      return
     }
 
-    const { data, save } = this.context;
-    const { condition } = this.props;
+    const { data, save } = this.context
+    const { condition } = this.props
 
     // Remove the condition
-    const updatedData = removeCondition(data, condition.name);
+    const updatedData = removeCondition(data, condition.name)
     try {
-      await save(updatedData);
-      this.props.onEdit({ data });
+      await save(updatedData)
+      this.props.onEdit({ data })
     } catch (e) {
-      logger.error("ConditionEdit", e);
+      logger.error('ConditionEdit', e)
     }
-  };
+  }
 
   onBlurName = (e) => {
-    const input = e.target;
-    const { data, condition } = this.props;
-    const newName = input.value.trim();
+    const input = e.target
+    const { data, condition } = this.props
+    const newName = input.value.trim()
 
     // Validate it is unique
     if (
@@ -67,25 +67,25 @@ class ConditionEdit extends React.Component {
         (s) => s.name !== condition.name && s.displayName === newName
       )
     ) {
-      input.setCustomValidity(`Display name '${newName}' already exists`);
+      input.setCustomValidity(`Display name '${newName}' already exists`)
     } else {
-      input.setCustomValidity("");
+      input.setCustomValidity('')
     }
 
     this.setState({
-      displayName: newName,
-    });
-  };
+      displayName: newName
+    })
+  }
 
   onValueChange = (value) => {
     this.setState({
-      value,
-    });
-  };
+      value
+    })
+  }
 
   render() {
-    const { condition } = this.props;
-    const wrappedCondition = new ConditionsWrapper(condition);
+    const { condition } = this.props
+    const wrappedCondition = new ConditionsWrapper(condition)
 
     return (
       <form onSubmit={(e) => this.onSubmit(e)} autoComplete="off">
@@ -93,8 +93,8 @@ class ConditionEdit extends React.Component {
           className="govuk-back-link"
           href="#"
           onClick={(e) => {
-            e.preventDefault();
-            this.props.onCancel(e);
+            e.preventDefault()
+            this.props.onCancel(e)
           }}
         >
           Back
@@ -132,7 +132,7 @@ class ConditionEdit extends React.Component {
         </div>
         <button className="govuk-button" type="submit">
           Save
-        </button>{" "}
+        </button>{' '}
         <button
           className="govuk-button"
           type="button"
@@ -141,8 +141,8 @@ class ConditionEdit extends React.Component {
           Delete
         </button>
       </form>
-    );
+    )
   }
 }
 
-export default ConditionEdit;
+export default ConditionEdit

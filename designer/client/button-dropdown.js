@@ -1,45 +1,45 @@
-import React from "react";
-import { withI18n } from "./i18n";
+import React from 'react'
+import { withI18n } from './i18n'
 
 class ButtonDropdown extends React.Component {
   /* TODO:- generalise this */
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       showPersonas: false,
-      value: {},
-    };
+      value: {}
+    }
   }
 
   handlePersonaChange = (e) => {
     this.setState({ value: JSON.parse(e.target.value) }, () => {
-      this.props.updatePersona(this.state.value);
-    });
-  };
+      this.props.updatePersona(this.state.value)
+    })
+  }
 
   render() {
-    const showPersonas = this.state.showPersonas;
-    const { value } = this.state;
-    const { i18n } = this.props;
+    const showPersonas = this.state.showPersonas
+    const { value } = this.state
+    const { i18n } = this.props
     const personas = [
       {
-        id: "a",
-        paths: ["/ceremony", "/no-civil-partnership"],
+        id: 'a',
+        paths: ['/ceremony', '/no-civil-partnership']
       },
       {
-        id: "b",
-        paths: ["/ceremony", "/opposite-or-same-sex", "/no-same-sex-marriage"],
+        id: 'b',
+        paths: ['/ceremony', '/opposite-or-same-sex', '/no-same-sex-marriage']
       },
       {
-        id: "c",
+        id: 'c',
         paths: [
-          "/ceremony",
-          "/opposite-or-same-sex",
-          "/complete-affirmation",
-          "/how-to-get-an-affirmation",
-        ],
-      },
-    ];
+          '/ceremony',
+          '/opposite-or-same-sex',
+          '/complete-affirmation',
+          '/how-to-get-an-affirmation'
+        ]
+      }
+    ]
 
     return (
       <div>
@@ -49,13 +49,13 @@ class ButtonDropdown extends React.Component {
             this.setState({ showPersonas: !this.state.showPersonas })
           }
         >
-          {i18n("Personas")} {!showPersonas ? "🔽" : "🔼"}
+          {i18n('Personas')} {!showPersonas ? '🔽' : '🔼'}
         </button>
         {showPersonas && (
           <div className="menu-dropdown">
             <div className="govuk-form-group">
               <label className="govuk-label govuk-label--s" htmlFor="persona">
-                {i18n("Persona")}
+                {i18n('Persona')}
               </label>
               <select
                 className="govuk-select"
@@ -76,8 +76,8 @@ class ButtonDropdown extends React.Component {
           </div>
         )}
       </div>
-    );
+    )
   }
 }
 
-export default withI18n(ButtonDropdown);
+export default withI18n(ButtonDropdown)

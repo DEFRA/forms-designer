@@ -1,24 +1,24 @@
-import React from "react";
-import { DateDirections, RelativeTimeValue } from "@defra/forms-model";
+import React from 'react'
+import { DateDirections, RelativeTimeValue } from '@defra/forms-model'
 
 class RelativeTimeValues extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       timePeriod: props.value?.timePeriod,
       timeUnits: props.value?.timeUnit,
-      direction: props.value?.direction,
-    };
+      direction: props.value?.direction
+    }
   }
 
   updateState(state) {
     this.setState(state, () => {
-      this.passValueToParentComponentIfComplete();
-    });
+      this.passValueToParentComponentIfComplete()
+    })
   }
 
   passValueToParentComponentIfComplete() {
-    const { timePeriod, timeUnits, direction } = this.state;
+    const { timePeriod, timeUnits, direction } = this.state
     if (timePeriod && timeUnits && direction) {
       this.props.updateValue(
         new RelativeTimeValue(
@@ -27,12 +27,12 @@ class RelativeTimeValues extends React.Component {
           direction,
           this.props.timeOnly || false
         )
-      );
+      )
     }
   }
 
   render() {
-    const { timePeriod, timeUnits, direction } = this.state;
+    const { timePeriod, timeUnits, direction } = this.state
 
     return (
       <div>
@@ -51,7 +51,7 @@ class RelativeTimeValues extends React.Component {
           className="govuk-select"
           id="cond-value-units"
           name="cond-value-units"
-          value={timeUnits ?? ""}
+          value={timeUnits ?? ''}
           onChange={(e) => this.updateState({ timeUnits: e.target.value })}
           data-testid="cond-value-units"
         >
@@ -61,7 +61,7 @@ class RelativeTimeValues extends React.Component {
               <option key={unit.value} value={unit.value}>
                 {unit.display}
               </option>
-            );
+            )
           })}
         </select>
 
@@ -69,7 +69,7 @@ class RelativeTimeValues extends React.Component {
           className="govuk-select"
           id="cond-value-direction"
           name="cond-value-direction"
-          value={direction ?? ""}
+          value={direction ?? ''}
           onChange={(e) => this.updateState({ direction: e.target.value })}
           data-testid="cond-value-direction"
         >
@@ -79,11 +79,11 @@ class RelativeTimeValues extends React.Component {
               <option key={direction} value={direction}>
                 {direction}
               </option>
-            );
+            )
           })}
         </select>
       </div>
-    );
+    )
   }
 }
-export default RelativeTimeValues;
+export default RelativeTimeValues

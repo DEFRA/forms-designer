@@ -1,12 +1,12 @@
-import React, { memo, useContext, useLayoutEffect } from "react";
-import ComponentTypeEdit from "./ComponentTypeEdit";
-import { DataContext } from "./context";
-import { ComponentContext } from "./reducers/component/componentReducer";
-import { Actions } from "./reducers/component/types";
-import ErrorSummary from "./error-summary";
-import { hasValidationErrors } from "./validations";
-import { ComponentTypeEnum as Types } from "@defra/forms-model";
-import { updateComponent } from "./data";
+import React, { memo, useContext, useLayoutEffect } from 'react'
+import ComponentTypeEdit from './ComponentTypeEdit'
+import { DataContext } from './context'
+import { ComponentContext } from './reducers/component/componentReducer'
+import { Actions } from './reducers/component/types'
+import ErrorSummary from './error-summary'
+import { hasValidationErrors } from './validations'
+import { ComponentTypeEnum as Types } from '@defra/forms-model'
+import { updateComponent } from './data'
 
 const LIST_TYPES = [
   Types.AutocompleteField,
@@ -14,44 +14,44 @@ const LIST_TYPES = [
   Types.RadiosField,
   Types.SelectField,
   Types.YesNoField,
-  Types.FlashCard,
-];
+  Types.FlashCard
+]
 
 export function ComponentEdit(props) {
-  const { data, save } = useContext(DataContext);
-  const { state, dispatch } = useContext(ComponentContext);
+  const { data, save } = useContext(DataContext)
+  const { state, dispatch } = useContext(ComponentContext)
   const {
     selectedComponent,
     initialName,
     errors = {},
     hasValidated,
-    selectedListName,
-  } = state;
-  const { page, toggleShowEditor } = props;
-  const hasErrors = hasValidationErrors(errors);
-  const componentToSubmit = { ...selectedComponent };
+    selectedListName
+  } = state
+  const { page, toggleShowEditor } = props
+  const hasErrors = hasValidationErrors(errors)
+  const componentToSubmit = { ...selectedComponent }
 
   const handleSubmit = async (e) => {
-    e?.preventDefault();
+    e?.preventDefault()
 
     if (!hasValidated) {
-      dispatch({ type: Actions.VALIDATE });
-      return;
+      dispatch({ type: Actions.VALIDATE })
+      return
     }
 
     if (hasErrors) {
-      return;
+      return
     }
 
     if (LIST_TYPES.includes(selectedComponent.type)) {
-      if (selectedListName !== "static") {
+      if (selectedListName !== 'static') {
         componentToSubmit.values = {
-          type: "listRef",
-          list: selectedListName,
-        };
-        delete componentToSubmit.items;
+          type: 'listRef',
+          list: selectedListName
+        }
+        delete componentToSubmit.items
       } else {
-        componentToSubmit.values.valueType = "static";
+        componentToSubmit.values.valueType = 'static'
       }
     }
 
@@ -60,28 +60,28 @@ export function ComponentEdit(props) {
       page.path,
       initialName,
       componentToSubmit
-    );
-    await save(updatedData);
-    toggleShowEditor();
-  };
+    )
+    await save(updatedData)
+    toggleShowEditor()
+  }
 
   const handleDelete = async (e) => {
-    e.preventDefault();
-    const copy = { ...data };
-    const indexOfPage = copy.pages.findIndex((p) => p.path === page.path);
+    e.preventDefault()
+    const copy = { ...data }
+    const indexOfPage = copy.pages.findIndex((p) => p.path === page.path)
     const indexOfComponent = copy.pages[indexOfPage]?.components.findIndex(
       (component) => component.name === selectedComponent.name
-    );
-    copy.pages[indexOfPage].components.splice(indexOfComponent, 1);
-    await save(copy);
-    toggleShowEditor();
-  };
+    )
+    copy.pages[indexOfPage].components.splice(indexOfComponent, 1)
+    await save(copy)
+    toggleShowEditor()
+  }
 
   useLayoutEffect(() => {
     if (hasValidated && !hasErrors) {
-      handleSubmit();
+      handleSubmit()
     }
-  }, [hasValidated]);
+  }, [hasValidated])
 
   return (
     <>
@@ -90,13 +90,13 @@ export function ComponentEdit(props) {
         <ComponentTypeEdit page={page} />
         <button className="govuk-button" type="submit">
           Save
-        </button>{" "}
+        </button>{' '}
         <a href="#" onClick={handleDelete} className="govuk-link">
           Delete
         </a>
       </form>
     </>
-  );
+  )
 }
 
-export default memo(ComponentEdit);
+export default memo(ComponentEdit)

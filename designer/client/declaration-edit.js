@@ -1,39 +1,39 @@
-import React from "react";
-import Editor from "./editor";
-import { clone } from "@defra/forms-model";
+import React from 'react'
+import Editor from './editor'
+import { clone } from '@defra/forms-model'
 
-import { DataContext } from "./context";
-import logger from "../client/plugins/logger";
+import { DataContext } from './context'
+import logger from '../client/plugins/logger'
 
 class DeclarationEdit extends React.Component {
-  static contextType = DataContext;
+  static contextType = DataContext
 
   constructor(props) {
-    super(props);
-    this.onSubmit = this.onSubmit.bind(this);
+    super(props)
+    this.onSubmit = this.onSubmit.bind(this)
   }
 
   onSubmit = async (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const formData = new window.FormData(form);
-    const { save, data } = this.context;
-    const copy = clone(data);
+    e.preventDefault()
+    const form = e.target
+    const formData = new window.FormData(form)
+    const { save, data } = this.context
+    const copy = clone(data)
 
-    copy.declaration = formData.get("declaration");
-    copy.skipSummary = formData.get("skip-summary") === "on";
+    copy.declaration = formData.get('declaration')
+    copy.skipSummary = formData.get('skip-summary') === 'on'
 
     try {
-      const savedData = await save(copy);
-      this.props.onCreate({ data: savedData });
+      const savedData = await save(copy)
+      this.props.onCreate({ data: savedData })
     } catch (err) {
-      logger.error("DeclarationEdit", err);
+      logger.error('DeclarationEdit', err)
     }
-  };
+  }
 
   render() {
-    const { data } = this.context;
-    const { declaration, skipSummary } = data;
+    const { data } = this.context
+    const { declaration, skipSummary } = data
 
     return (
       <div className="govuk-body">
@@ -81,8 +81,8 @@ class DeclarationEdit extends React.Component {
           </button>
         </form>
       </div>
-    );
+    )
   }
 }
 
-export default DeclarationEdit;
+export default DeclarationEdit

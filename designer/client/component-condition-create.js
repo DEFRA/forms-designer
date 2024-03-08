@@ -1,23 +1,23 @@
-import React from "react";
-import ComponentTypeEdit from "./component-type-edit";
-import { ConditionalComponentTypes } from "@defra/forms-model";
+import React from 'react'
+import ComponentTypeEdit from './component-type-edit'
+import { ConditionalComponentTypes } from '@defra/forms-model'
 
 class ComponentConditionCreate extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
 
-    const { conditional } = this.props;
-    const { components } = conditional || {};
+    const { conditional } = this.props
+    const { components } = conditional || {}
 
     this.state = {
-      component: components && components.length ? components[0] : null,
-    };
+      component: components && components.length ? components[0] : null
+    }
   }
 
   render() {
-    const { component } = this.state;
-    const { idHelper } = this.props;
-    const selectedType = component ? component.type : "";
+    const { component } = this.state
+    const { idHelper } = this.props
+    const selectedType = component ? component.type : ''
 
     return (
       <div>
@@ -27,7 +27,7 @@ class ComponentConditionCreate extends React.Component {
           </label>
           <select
             className="govuk-select"
-            id={`${idHelper || ""}'type`}
+            id={`${idHelper || ''}'type`}
             name="cond-type"
             defaultValue={selectedType}
             onChange={(e) =>
@@ -40,7 +40,7 @@ class ComponentConditionCreate extends React.Component {
                 <option key={type.name} value={type.name}>
                   {type.title}
                 </option>
-              );
+              )
             })}
           </select>
         </div>
@@ -53,8 +53,8 @@ class ComponentConditionCreate extends React.Component {
           </div>
         )}
       </div>
-    );
+    )
   }
 }
 
-export default ComponentConditionCreate;
+export default ComponentConditionCreate

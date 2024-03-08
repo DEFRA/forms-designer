@@ -1,18 +1,18 @@
-const path = require("path");
-const webpack = require("webpack");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const CopyPlugin = require("copy-webpack-plugin");
-const nodeExternals = require("webpack-node-externals");
-const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
-  .BundleAnalyzerPlugin;
-const autoprefixer = require("autoprefixer");
+const path = require('path')
+const webpack = require('webpack')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const CopyPlugin = require('copy-webpack-plugin')
+const nodeExternals = require('webpack-node-externals')
+const BundleAnalyzerPlugin =
+  require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+const autoprefixer = require('autoprefixer')
 const WebpackAssetsManifest = require('webpack-assets-manifest')
 
-const devMode = process.env.NODE_ENV !== "production";
-const prodMode = process.env.NODE_ENV === "production";
-const environment = prodMode ? "production" : "development";
-const logLevel = process.env.REACT_LOG_LEVEL || (prodMode ? "warn" : "debug");
+const devMode = process.env.NODE_ENV !== 'production'
+const prodMode = process.env.NODE_ENV === 'production'
+const environment = prodMode ? 'production' : 'development'
+const logLevel = process.env.REACT_LOG_LEVEL || (prodMode ? 'warn' : 'debug')
 
 const webpackConfig = {
   isDevelopment: process.env.NODE_ENV !== 'production',
@@ -21,25 +21,25 @@ const webpackConfig = {
   }
 }
 
-const clientOutput = path.resolve(__dirname, "dist", "client");
+const clientOutput = path.resolve(__dirname, 'dist', 'client')
 
 const formDesignerClient = {
-  target: "web",
+  target: 'web',
   mode: environment,
   watch: devMode,
-  entry: path.resolve(__dirname, "client", "index.tsx"),
+  entry: path.resolve(__dirname, 'client', 'index.tsx'),
   output: {
     path: clientOutput,
-    filename: "assets/[name].js",
-    publicPath: "/forms-designer/",
+    filename: 'assets/[name].js',
+    publicPath: '/forms-designer/'
   },
   resolve: {
-    extensions: [".js", ".jsx", ".ts", ".tsx"],
+    extensions: ['.js', '.jsx', '.ts', '.tsx']
   },
   node: {
-    __dirname: false,
+    __dirname: false
   },
-  devtool: "eval-cheap-module-source-map",
+  devtool: 'eval-cheap-module-source-map',
   module: {
     rules: [
       {
@@ -47,7 +47,7 @@ const formDesignerClient = {
         exclude: /node_modules\/(?!@xgovformbuilder\/)/,
         loader: 'babel-loader',
         resolve: {
-          fullySpecified: false,
+          fullySpecified: false
         }
       },
       {
@@ -56,85 +56,92 @@ const formDesignerClient = {
           {
             loader: MiniCssExtractPlugin.loader,
             options: {
-              publicPath: "../../",
+              publicPath: '../../',
               esModule: false
-            },
+            }
           },
           {
-            loader: "css-loader",
-            options: {},
+            loader: 'css-loader',
+            options: {}
           },
           {
-            loader: "postcss-loader",
+            loader: 'postcss-loader'
           },
           {
-            loader: "sass-loader",
+            loader: 'sass-loader',
             options: {
               sassOptions: {
-                includePaths: [__dirname, path.resolve(__dirname, "../")],
-                outputStyle: "expanded",
+                includePaths: [__dirname, path.resolve(__dirname, '../')],
+                outputStyle: 'expanded',
                 quietDeps: true
-              },
-            },
-          },
-        ],
+              }
+            }
+          }
+        ]
       },
       {
         test: /\.(png|svg|jpg|gif|ico)$/,
-        loader: "file-loader",
+        loader: 'file-loader',
         options: {
-          name: "assets/images/[name].[ext]",
-        },
+          name: 'assets/images/[name].[ext]'
+        }
       },
       {
         test: /\.(woff|woff2|eot|ttf|otf)$/,
-        loader: "file-loader",
+        loader: 'file-loader',
         options: {
-          name: "assets/fonts/[name].[ext]",
-        },
-      },
-    ],
+          name: 'assets/fonts/[name].[ext]'
+        }
+      }
+    ]
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, "server", "common", "templates", "layouts", "legacy-layout.njk"),
-      filename: "common/templates/layouts/legacy-layout.njk",
+      template: path.resolve(
+        __dirname,
+        'server',
+        'common',
+        'templates',
+        'layouts',
+        'legacy-layout.njk'
+      ),
+      filename: 'common/templates/layouts/legacy-layout.njk',
       minify: prodMode,
-      scriptLoading: "defer",
-      inject: "head",
-      hash: prodMode,
+      scriptLoading: 'defer',
+      inject: 'head',
+      hash: prodMode
     }),
     new MiniCssExtractPlugin({
       filename: devMode
-        ? "assets/css/[name].css"
-        : "assets/css/[name].[contenthash].css",
+        ? 'assets/css/[name].css'
+        : 'assets/css/[name].[contenthash].css',
       chunkFilename: devMode
-        ? "assets/css/[id].css"
-        : "assets/css/[id].[contenthash].css",
+        ? 'assets/css/[id].css'
+        : 'assets/css/[id].[contenthash].css'
     }),
     new CopyPlugin({
       patterns: [
-        { from: "client/i18n/translations", to: "assets/translations" },
-        { from: "server/views", to: "views" }
-      ],
+        { from: 'client/i18n/translations', to: 'assets/translations' },
+        { from: 'server/views', to: 'views' }
+      ]
     }),
     new BundleAnalyzerPlugin({
-      analyzerMode: "static",
-      defaultSizes: "gzip",
-      openAnalyzer: false,
+      analyzerMode: 'static',
+      defaultSizes: 'gzip',
+      openAnalyzer: false
     }),
     new webpack.DefinePlugin({
       'process.env': JSON.stringify(process.env)
     })
   ],
   externals: {
-    react: "React",
-    "react-dom": "ReactDOM",
-  },
-};
+    react: 'React',
+    'react-dom': 'ReactDOM'
+  }
+}
 
 const client = {
-  target: "web",
+  target: 'web',
   entry: {
     application: './client/assets/javascripts/application.js'
   },
@@ -146,7 +153,7 @@ const client = {
   },
   output: {
     filename: 'js/[name].[fullhash].js',
-    path: path.join(clientOutput, "assets"),
+    path: path.join(clientOutput, 'assets'),
     library: '[name]'
   },
   module: {
@@ -226,23 +233,23 @@ const client = {
 }
 
 const server = {
-  target: "node",
+  target: 'node',
   mode: environment,
   watch: devMode,
   devtool: 'source-map',
-  entry: path.resolve(__dirname, "server", "index.ts"),
+  entry: path.resolve(__dirname, 'server', 'index.ts'),
   output: {
-    path: path.resolve(__dirname, "dist"),
-    filename: "server.js",
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'server.js'
   },
   resolve: {
-    extensions: [".js", ".jsx", ".ts", ".tsx"]
+    extensions: ['.js', '.jsx', '.ts', '.tsx']
   },
   node: {
-    __dirname: false,
+    __dirname: false
   },
   watchOptions: {
-    poll: 1000, // enable polling since fsevents are not supported in docker
+    poll: 1000 // enable polling since fsevents are not supported in docker
   },
   module: {
     rules: [
@@ -255,23 +262,22 @@ const server = {
       {
         test: /\.(js|jsx|tsx|ts)$/,
         exclude: /node_modules/,
-        loader: "babel-loader",
-      },
-    ],
+        loader: 'babel-loader'
+      }
+    ]
   },
   externals: [
     nodeExternals({
-      additionalModuleDirs: [path.resolve(__dirname, "../node_modules")],
-      modulesDir: path.resolve(__dirname, "node_modules"),
-      allowlist: [/^@defra\//],
-    }),
+      additionalModuleDirs: [path.resolve(__dirname, '../node_modules')],
+      modulesDir: path.resolve(__dirname, 'node_modules'),
+      allowlist: [/^@defra\//]
+    })
   ],
   externalsPresets: {
-    node: true,
-  },
-};
-
+    node: true
+  }
+}
 
 // FIXME migrate old form designer client to the new frontend stack
 // we might get collissions between the two otherwise. New client takes precedence.
-module.exports = [formDesignerClient, client, server];
+module.exports = [formDesignerClient, client, server]

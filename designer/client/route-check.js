@@ -1,26 +1,26 @@
-import React from "react"; // TODO:- remove this when implemented properly!
+import React from 'react' // TODO:- remove this when implemented properly!
 /* eslint-disable */ export default class RouteChecker extends React.Component {
   render() {
-    const { data } = this.props;
+    const { data } = this.props
     const personas = [
       {
-        id: "a",
-        paths: ["/ceremony", "/no-civil-partnership"],
+        id: 'a',
+        paths: ['/ceremony', '/no-civil-partnership']
       },
       {
-        id: "b",
-        paths: ["/ceremony", "/opposite-or-same-sex", "/no-same-sex-marriage"],
+        id: 'b',
+        paths: ['/ceremony', '/opposite-or-same-sex', '/no-same-sex-marriage']
       },
       {
-        id: "c",
+        id: 'c',
         paths: [
-          "/ceremony",
-          "/opposite-or-same-sex",
-          "/complete-affirmation",
-          "/how-to-get-an-affirmation",
-        ],
-      },
-    ];
+          '/ceremony',
+          '/opposite-or-same-sex',
+          '/complete-affirmation',
+          '/how-to-get-an-affirmation'
+        ]
+      }
+    ]
 
     return (
       <form onSubmit={(e) => this.onSubmit(e)} autoComplete="off">
@@ -32,7 +32,7 @@ import React from "react"; // TODO:- remove this when implemented properly!
             className="govuk-select"
             id="link-source"
             name="path"
-            onChange={(e) => this.storeValue(e, "from")}
+            onChange={(e) => this.storeValue(e, 'from')}
             required
           >
             <option />
@@ -47,7 +47,7 @@ import React from "react"; // TODO:- remove this when implemented properly!
             className="govuk-select"
             id="link-target"
             name="page"
-            onChange={(e) => this.storeValue(e, "to")}
+            onChange={(e) => this.storeValue(e, 'to')}
             required
           >
             <option />
@@ -57,6 +57,6 @@ import React from "react"; // TODO:- remove this when implemented properly!
           Save
         </button>
       </form>
-    );
+    )
   }
 }
