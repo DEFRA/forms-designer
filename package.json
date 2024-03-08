@@ -23,7 +23,7 @@
     "lint:js": "eslint .",
     "lint:types": "npm exec --workspaces -- tsc --noEmit",
     "test": "npm run test --workspaces --if-present",
-    "prepare": "husky"
+    "prepare": "husky || true"
   },
   "devDependencies": {
     "@babel/cli": "^7.23.9",
