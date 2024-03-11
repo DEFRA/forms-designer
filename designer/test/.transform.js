@@ -1,86 +1,39 @@
-const Babel = require('@babel/core')
-let internals = {}
-const path = require('path')
+const { transformSync } = require('@babel/core')
 
-internals.transform = function (content, filename) {
-  const regexp = new RegExp('node_modules')
-  const isNodeModule = filename.indexOf('node_modules') > -1
-  const isGovUKFrontend = filename.indexOf('govuk-frontend') > -1
-  const isGovUKReactJsx = filename.indexOf('govuk-react-jsx') > -1
+/**
+ * Apply Babel transforms to tests and TypeScript imports
+ *
+ * @param {string} content - File content
+ * @param {string} filename - File name
+ * @returns {import('@babel/core').BabelFileResult["code"]}
+ */
+function transform(content, filename) {
+  const isTest = filename.match(/\.test\.m?[jt]s/)
+  const isDependency = filename.match(/node_modules/)
 
-  const stubber = (name) => {
-    return `
-      "use strict";
-      Object.defineProperty(exports, "__esModule", {
-        value: true
-      });
-      Object.defineProperty(exports, '${name}', {
-        enumerable: true,
-        get: function get() {
-          return function ${name}() { return '${name}' }
-        }
-      });
-    `
-  }
-
-  if (isGovUKReactJsx) {
-    if (filename.includes('radios')) {
-      return stubber('Radios')
-    } else if (filename.includes('select')) {
-      return stubber('Select')
-    }
-  }
-
-  if (isNodeModule) {
+  if (isDependency) {
     return content
   }
 
-  let transformed = Babel.transform(content, {
-    presets: [
-      '@babel/preset-react',
-      '@babel/typescript',
-      [
-        '@babel/preset-env',
-        {
-          targets: {
-            node: 12
-          }
-        }
-      ]
-    ],
+  // Apply Babel transforms
+  const transformed = transformSync(content, {
     filename: filename,
-    sourceMap: 'inline',
     sourceFileName: filename,
-    auxiliaryCommentBefore: '$lab:coverage:off$',
-    auxiliaryCommentAfter: '$lab:coverage:on$',
-    plugins: [
-      '@babel/plugin-proposal-export-default-from',
-      '@babel/plugin-transform-class-properties',
-      '@babel/plugin-transform-private-property-in-object',
-      '@babel/plugin-transform-private-methods',
-      '@babel/plugin-transform-runtime',
-      '@babel/plugin-syntax-dynamic-import',
-      [
-        'babel-plugin-transform-import-ignore',
-        {
-          patterns: ['.css', '.scss', 'wildcard/*/match.css']
-        }
-      ]
-    ],
-    exclude: ['node_modules/**'],
-    ignore: ['../node_modules', 'node_modules']
+    sourceMap: 'inline',
+
+    // Skip coverage for test files
+    auxiliaryCommentBefore: !isTest ? '$lab:coverage:off$' : undefined,
+    auxiliaryCommentAfter: !isTest ? '$lab:coverage:on$' : undefined
   })
 
-  return transformed.code
+  return transformed?.code ?? content
 }
 
-internals.extensions = ['.js', '.jsx', '.ts', '.tsx', 'es', 'es6']
-internals.methods = []
-for (let i = 0, il = internals.extensions.length; i < il; ++i) {
-  internals.methods.push({
-    ext: internals.extensions[i],
-    transform: internals.transform
-  })
-}
-
-module.exports = internals.methods
+/**
+ * Transformers for supported extensions
+ *
+ * @type {import('@hapi/lab').script.Transformer[]}
+ */
+module.exports = ['.cjs', '.js', '.jsx', '.mjs', '.ts', '.tsx'].map((ext) => {
+  return { ext, transform }
+})
