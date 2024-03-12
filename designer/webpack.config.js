@@ -160,11 +160,12 @@ const client = {
       ]
     }),
 
-    new BundleAnalyzerPlugin({
-      analyzerMode: 'static',
-      defaultSizes: 'gzip',
-      openAnalyzer: false
-    })
+    NODE_ENV === 'production' &&
+      new BundleAnalyzerPlugin({
+        analyzerMode: 'static',
+        defaultSizes: 'gzip',
+        openAnalyzer: false
+      })
   ],
   resolve: {
     alias: {
