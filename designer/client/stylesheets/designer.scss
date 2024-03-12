@@ -1,6 +1,6 @@
-$govuk-assets-path: "~govuk-frontend/govuk/assets/";
-@import "utils";
-@import "node_modules/govuk-frontend/govuk/all.scss";
+$govuk-assets-path: "/forms-designer/assets/";
+
+@import "govuk-frontend/govuk/all";
 
 $color-orange: #ffbf47;
 
@@ -93,11 +93,9 @@ button.govuk-link {
   }
 }
 
-.submenu {
-  @include e(link) {
-    @extend .govuk-body-s;
-    @extend .govuk-\!-margin-right-4;
-  }
+.submenu__link {
+  @extend .govuk-body-s;
+  @extend .govuk-\!-margin-right-4;
 }
 
 @include govuk-media-query($from: tablet) {
@@ -705,13 +703,11 @@ footer {
   }
 }
 
-.govuk-link {
-  @include m(v-centre) {
-    display: inline-block;
-    position: relative;
-    top: 1em;
-    transform: translateY(-50%);
-  }
+.govuk-link--v-centre {
+  display: inline-block;
+  position: relative;
+  top: 1em;
+  transform: translateY(-50%);
 }
 
 .warning {
@@ -722,20 +718,18 @@ footer {
 
   padding: 20px;
   background-color: $color-orange;
-  @include e(action) {
-    &:not(:first-of-type) {
-      margin-left: 10px;
-    }
+
+  &__action:not(:first-of-type) {
+    margin-left: 10px;
   }
-  @include e(title) {
+
+  &__title {
     margin-top: 0;
   }
 }
 
-.panel {
-  @include m(flyout) {
-    position: relative;
-  }
+.panel--flyout {
+  position: relative;
 }
 
 .checkbox-hint {

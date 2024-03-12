@@ -28,6 +28,34 @@ const routes = [
   },
   {
     method: 'GET',
+    path: '/javascripts/{path*}',
+    options: {
+      auth: {
+        mode: 'try'
+      },
+      handler: {
+        directory: {
+          path: join(distPath, 'client/javascripts')
+        }
+      }
+    }
+  },
+  {
+    method: 'GET',
+    path: '/stylesheets/{path*}',
+    options: {
+      auth: {
+        mode: 'try'
+      },
+      handler: {
+        directory: {
+          path: join(distPath, 'client/stylesheets')
+        }
+      }
+    }
+  },
+  {
+    method: 'GET',
     path: '/assets/{path*}',
     options: {
       auth: {

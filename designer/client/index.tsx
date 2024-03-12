@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { LandingChoice, NewConfig, ChooseExisting } from './pages/LandingPage'
-import './styles/index.scss'
+import './stylesheets/designer.scss'
 import { initI18n } from './i18n'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import Designer from './designer'
