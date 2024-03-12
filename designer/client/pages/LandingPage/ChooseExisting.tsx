@@ -36,7 +36,7 @@ export class ChooseExisting extends Component<Props, State> {
 
   selectForm = async (form) => {
     try {
-      const response = await window.fetch('forms-designer/api/new', {
+      const response = await window.fetch('/forms-designer/api/new', {
         method: 'POST',
         body: JSON.stringify({
           selected: { Key: form },
