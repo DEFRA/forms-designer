@@ -1,13 +1,13 @@
-import path from 'path'
-import resolve from 'resolve'
-import nunjucks from 'nunjucks'
+import { dirname, resolve } from 'node:path'
+import { cwd } from 'node:process'
+
 import hapiVision from '@hapi/vision'
+import nunjucks from 'nunjucks'
+import resolvePkg from 'resolve/sync'
 
 import pkg from '../../package.json'
 
 import config from '../config'
-
-const basedir = path.join(process.cwd())
 
 export const viewPlugin = {
   plugin: hapiVision,
@@ -48,10 +48,9 @@ export const viewPlugin = {
       }
     },
     path: [
-      `${path.join('dist', 'client', 'views')}`,
-      `${path.join(__dirname, '..', 'views')}`,
-      `${path.dirname(resolve.sync('govuk-frontend', { basedir }))}`,
-      `${path.dirname(resolve.sync('govuk-frontend', { basedir }))}/components`
+      resolve(cwd(), 'server/views'),
+      resolve(dirname(resolvePkg('govuk-frontend/package.json'))),
+      resolve(dirname(resolvePkg('govuk-frontend/package.json')), 'components')
     ],
     context: {
       appVersion: pkg.version,

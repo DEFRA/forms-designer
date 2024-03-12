@@ -1,28 +1,24 @@
-import path from 'path'
-import nunjucks from 'nunjucks'
+import { dirname, resolve } from 'node:path'
+import { cwd } from 'node:process'
+
 import hapiVision from '@hapi/vision'
+import nunjucks from 'nunjucks'
+import resolvePkg from 'resolve/sync'
 
 import config from '../../config'
 import { context } from './context'
 import * as filters from './filters'
 import * as globals from './globals'
 
+const distPath = config.isDevelopment
+  ? resolve(cwd(), 'dist') // npm run dev
+  : resolve(cwd()) // npm run build
+
 const nunjucksEnvironment = nunjucks.configure(
   [
-    // bodge for legacy views. TODO replace.
-    // always make sure this is first so it this generated file takes precedence over the static files
-    path.normalize(
-      path.resolve(__dirname, '..', 'dist', 'client', 'common', 'templates')
-    ),
-    path.normalize(
-      path.resolve(__dirname, '..', '..', 'node_modules', 'govuk-frontend')
-    ),
-    path.normalize(
-      path.resolve(__dirname, '..', 'server', 'common', 'templates')
-    ),
-    path.normalize(
-      path.resolve(__dirname, '..', 'server', 'common', 'components')
-    )
+    resolve(distPath, 'server/common/templates'),
+    resolve(distPath, 'server/common/components'),
+    dirname(resolvePkg('govuk-frontend/package.json'))
   ],
   {
     autoescape: true,
@@ -48,9 +44,7 @@ const nunjucksConfig = {
     compileOptions: {
       environment: nunjucksEnvironment
     },
-    relativeTo: path.normalize(
-      path.resolve(__dirname, '..', 'server', 'views')
-    ),
+    relativeTo: resolve(cwd(), 'server/views'),
     isCached: config.isProduction,
     context
   }

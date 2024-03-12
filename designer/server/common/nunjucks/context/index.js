@@ -1,50 +1,41 @@
-import path from 'path'
+import { readFileSync } from 'node:fs'
+import { basename, resolve } from 'node:path'
+import { cwd } from 'node:process'
 
 import config from '../../../config'
 import { createLogger } from '../../../common/helpers/logging/logger'
 import { buildNavigation } from '../../../common/nunjucks/context/build-navigation'
 
-import * as fs from 'fs'
-
 const logger = createLogger()
-const assetPath = config.assetPath
-const appPathPrefix = config.appPathPrefix
+const { appPathPrefix, isDevelopment, serviceName } = config
 
-// const manifestPath = path.resolve(
-//   path.normalize(path.join(__dirname, '..', '..')),
-//   'dist',
-//   'client',
-//   'assets',
-//   'manifest.json'
-// )
-
-const manifestPath = path.resolve(
-  path.normalize(path.join(__dirname, 'client', 'assets', 'manifest.json'))
-)
+const distPath = isDevelopment
+  ? resolve(cwd(), 'dist') // npm run dev
+  : resolve(cwd()) // npm run build
 
 let webpackManifest
 
-try {
-  // webpackManifest = require(manifestPath)
-  webpackManifest = JSON.parse(fs.readFileSync(manifestPath).toString())
-} catch (error) {
-  logger.error('Webpack Manifest assets file not found')
-}
-
 async function context(request) {
+  const manifestPath = resolve(distPath, 'client/assets/manifest.json')
+
+  if (!webpackManifest) {
+    try {
+      webpackManifest = JSON.parse(readFileSync(manifestPath))
+    } catch {
+      logger.error(`Webpack assets ${basename(manifestPath)} file not found`)
+    }
+  }
+
   const authedUser = await request.getUserSession()
 
   return {
-    serviceName: config.serviceName,
+    serviceName,
     breadcrumbs: [],
-    appPathPrefix: config.appPathPrefix,
+    appPathPrefix,
     navigation: buildNavigation(request),
-    getAssetPath: function (asset) {
-      const webpackAssetPath = webpackManifest[asset]
-
-      return `${appPathPrefix}/assets/${webpackAssetPath}`
-    },
-    legacyAssetPath: `${config.appPathPrefix}/assets`,
+    getAssetPath: (asset) =>
+      `${appPathPrefix}/${webpackManifest?.[asset] ?? asset}`,
+    legacyAssetPath: `${appPathPrefix}/assets`,
     isAuthenticated: authedUser?.isAuthenticated ?? false,
     authedUser
   }

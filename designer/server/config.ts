@@ -1,9 +1,11 @@
-import dotenv from 'dotenv'
+import { configDotenv } from 'dotenv'
 import joi from 'joi'
 import { CredentialsOptions } from 'aws-sdk/lib/credentials'
 import * as AWS from 'aws-sdk'
 
-dotenv.config({ path: '.env' })
+configDotenv({
+  path: ['.env', '../.env']
+})
 
 export interface Config {
   env: 'development' | 'test' | 'production'

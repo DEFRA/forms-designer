@@ -1,8 +1,16 @@
+import { join, resolve } from 'node:path'
+import { cwd } from 'node:process'
+
 import { healthCheckRoute } from './routes'
 import { login } from '../login'
 import { logout } from '../logout'
 import { auth } from '../auth'
 import { home } from '../home'
+import config from '../config'
+
+const distPath = config.isDevelopment
+  ? resolve(cwd(), 'dist') // npm run dev
+  : resolve(cwd()) // npm run build
 
 const routes = [
   healthCheckRoute,
@@ -27,7 +35,7 @@ const routes = [
       },
       handler: {
         directory: {
-          path: './dist/client/assets'
+          path: join(distPath, 'client/assets')
         }
       }
     }
