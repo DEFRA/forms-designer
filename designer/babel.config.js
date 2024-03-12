@@ -13,8 +13,9 @@ module.exports = (api) => {
   )
 
   return {
+    sourceType: 'unambiguous',
     presets: [
-      '@babel/typescript',
+      '@babel/preset-typescript',
       '@babel/preset-react',
       [
         '@babel/preset-env',
@@ -22,7 +23,6 @@ module.exports = (api) => {
           browserslistEnv,
           bugfixes: true,
           corejs: pkg.devDependencies['core-js'],
-          modules: browserslistEnv === 'node' ? 'auto' : 'commonjs',
           useBuiltIns: 'usage'
         }
       ]
