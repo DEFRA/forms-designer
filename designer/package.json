@@ -2,7 +2,7 @@
   "name": "@defra/forms-designer",
   "version": "3.0.0",
   "description": "Cross government digital form builder (designer)",
-  "main": "server/index.js",
+  "main": "server/dist/server/index.js",
   "engines": {
     "node": "^20.9.0",
     "npm": "^10.1.0"
@@ -10,7 +10,7 @@
   "scripts": {
     "watch": "NODE_ENV=development webpack",
     "build": "NODE_ENV=production webpack",
-    "start": "NODE_ENV=production node --enable-source-maps dist/server.js",
+    "start": "NODE_ENV=production node --enable-source-maps dist/server/index.js",
     "start:local": "NODE_ENV=development PERSISTENT_BACKEND=preview ts-node-dev --inspect --respawn --transpile-only server/index.ts",
     "dev": "concurrently \"npm run watch\" \"npm run start:local\"",
     "symlink-env": "./bin/symlink-config",
