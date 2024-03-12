@@ -10,7 +10,7 @@
   "scripts": {
     "watch": "NODE_ENV=development webpack",
     "build": "NODE_ENV=production webpack",
-    "start": "NODE_ENV=development node dist/server.js",
+    "start": "NODE_ENV=production node --enable-source-maps dist/server.js",
     "start:local": "NODE_ENV=development PERSISTENT_BACKEND=preview ts-node-dev --inspect --respawn --transpile-only server/index.ts",
     "dev": "concurrently \"npm run watch\" \"npm run start:local\"",
     "symlink-env": "./bin/symlink-config",
