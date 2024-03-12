@@ -1,5 +1,6 @@
 import 'whatwg-fetch'
-import { rest } from 'msw'
+import { http } from 'msw'
+// eslint-disable-next-line import/no-unresolved
 import { setupServer } from 'msw/node'
 
 const mockedFormConfigurations = [
@@ -16,17 +17,19 @@ const mockedFormConfigurations = [
 ]
 
 const server = setupServer(
-  rest.get('/api/configurations', (_req, res, ctx) => {
-    return res(ctx.json(mockedFormConfigurations))
+  http.get('/api/configurations', () => {
+    return new Response(JSON.stringify(mockedFormConfigurations), {
+      headers: { 'Content-Type': 'application/json' }
+    })
   }),
 
-  rest.get('*', (req, res, ctx) => {
-    console.error(`Please add request handler for ${req.url.toString()}`)
-    return res(
-      ctx.status(500),
-      ctx.json({ error: 'You must add request handler.' })
-    )
+  http.get('*', ({ request }) => {
+    console.error(`Please add request handler for ${request.url}`)
+    return new Response(JSON.stringify('You must add request handler.'), {
+      headers: { 'Content-Type': 'application/json' },
+      status: 500
+    })
   })
 )
 
-export { server, rest, mockedFormConfigurations }
+export { server, http, mockedFormConfigurations }

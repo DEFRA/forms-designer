@@ -1,4 +1,4 @@
-import { rest } from 'msw'
+import { http } from 'msw'
 import * as formConfigurationsApi from '../load-form-configurations'
 import { server } from '../../test/testServer'
 
@@ -10,8 +10,11 @@ describe('Load form configurations', () => {
   test('Should load configurations when returned', () => {
     const configurations = [{ myProperty: 'myValue' }]
     server.resetHandlers(
-      rest.get('/api/configurations', (req, res, ctx) => {
-        return res(ctx.status(200), ctx.json(configurations))
+      http.get('/api/configurations', () => {
+        return new Response(JSON.stringify(configurations), {
+          headers: { 'Content-Type': 'application/json' },
+          status: 200
+        })
       })
     )
     return formConfigurationsApi.loadConfigurations().then((data) => {
@@ -21,8 +24,11 @@ describe('Load form configurations', () => {
 
   test('Should return no configurations when an error occurs', () => {
     server.resetHandlers(
-      rest.get('/api/configurations', (req, res, ctx) => {
-        return res(ctx.status(500), ctx.json('Some error happened'))
+      http.get('/api/configurations', () => {
+        return new Response(JSON.stringify('Some error happened'), {
+          headers: { 'Content-Type': 'application/json' },
+          status: 500
+        })
       })
     )
     return formConfigurationsApi.loadConfigurations().then((data) => {

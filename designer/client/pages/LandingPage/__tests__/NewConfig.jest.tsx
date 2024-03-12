@@ -1,8 +1,9 @@
 import React from 'react'
 import { NewConfig } from '../NewConfig'
 import { render, fireEvent, screen, waitFor } from '@testing-library/react'
-import { server, rest } from '../../../../test/testServer'
+import { server, http } from '../../../../test/testServer'
 import { MemoryRouter } from 'react-router-dom'
+import type { FormConfiguration } from '@defra/forms-model'
 
 describe('Newconfig', () => {
   beforeAll(() => server.listen())
@@ -12,12 +13,18 @@ describe('Newconfig', () => {
   test('new configuration is submitted correctly', async () => {
     let postBodyMatched = false
     server.use(
-      rest.post('/api/new', (req, res, ctx) => {
-        // @ts-ignore
-        postBodyMatched =
-          req.body.name === 'test-form-a' && req.body.selected.Key === 'New'
-        return res(ctx.json({ id: 'somekey', previewUrl: '' }))
-      })
+      http.post<never, { name: string; selected: FormConfiguration }>(
+        '/api/new',
+        async ({ request }) => {
+          const { name, selected } = await request.json()
+          postBodyMatched = name === 'test-form-a' && selected.Key === 'New'
+
+          return new Response(
+            JSON.stringify({ id: 'somekey', previewUrl: '' }),
+            { headers: { 'Content-Type': 'application/json' } }
+          )
+        }
+      )
     )
     const push = jest.fn()
     const history = { push }
@@ -40,9 +47,11 @@ describe('Newconfig', () => {
   test('it will not submit when alreadyExistsError', async () => {
     let apiCalled = false
     server.use(
-      rest.post('/api/new', (req, res, ctx) => {
+      http.post('/api/new', () => {
         apiCalled = true
-        return res(ctx.json({ id: 'somekey', previewUrl: '' }))
+        return new Response(JSON.stringify({ id: 'somekey', previewUrl: '' }), {
+          headers: { 'Content-Type': 'application/json' }
+        })
       })
     )
     render(<NewConfig />, { wrapper: MemoryRouter })
@@ -77,9 +86,11 @@ describe('Newconfig', () => {
   test('Form name with special characters results in error', async () => {
     let apiCalled = false
     server.use(
-      rest.post('/api/new', (req, res, ctx) => {
+      http.post('/api/new', () => {
         apiCalled = true
-        return res(ctx.json({ id: 'somekey', previewUrl: '' }))
+        return new Response(JSON.stringify({ id: 'somekey', previewUrl: '' }), {
+          headers: { 'Content-Type': 'application/json' }
+        })
       })
     )
     render(<NewConfig />, { wrapper: MemoryRouter })

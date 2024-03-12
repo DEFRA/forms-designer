@@ -1,4 +1,4 @@
-import { rest } from 'msw'
+import { http, HttpResponse } from 'msw'
 import { FeatureToggleApi } from '../api/toggleApi'
 import { server } from '../../test/testServer'
 
@@ -12,8 +12,11 @@ describe('Toggle API', () => {
   test('Should fetch feature toggles', () => {
     const toggle = [{ ff_somevalue: 'false' }]
     server.resetHandlers(
-      rest.get(url, (req, res, ctx) => {
-        return res(ctx.status(200), ctx.json(toggle))
+      http.get(url, () => {
+        return new Response(JSON.stringify(toggle), {
+          headers: { 'Content-Type': 'application/json' },
+          status: 200
+        })
       })
     )
     return new FeatureToggleApi().fetch().then((data) => {
@@ -23,8 +26,11 @@ describe('Toggle API', () => {
 
   test('Should return nothing on server error', () => {
     server.resetHandlers(
-      rest.get(url, (req, res, ctx) => {
-        return res(ctx.status(500), ctx.json('Some error happened'))
+      http.get(url, () => {
+        return new Response(JSON.stringify('Some error happened'), {
+          headers: { 'Content-Type': 'application/json' },
+          status: 500
+        })
       })
     )
 
@@ -35,8 +41,8 @@ describe('Toggle API', () => {
 
   test('Should return nothing with get exception', () => {
     server.resetHandlers(
-      rest.get(url, (req, res, ctx) => {
-        return res.networkError('Failed to connect')
+      http.get(url, () => {
+        return HttpResponse.error()
       })
     )
 

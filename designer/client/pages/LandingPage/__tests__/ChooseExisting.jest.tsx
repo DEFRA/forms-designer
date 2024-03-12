@@ -3,7 +3,7 @@ import { ChooseExisting } from '../ChooseExisting'
 import { render, fireEvent, screen, waitFor } from '@testing-library/react'
 import {
   server,
-  rest,
+  http,
   mockedFormConfigurations
 } from '../../../../test/testServer'
 
@@ -14,8 +14,10 @@ describe('ChooseExisting', () => {
 
   test('no existing configurations', async () => {
     server.resetHandlers(
-      rest.get('/api/configurations', (_req, res, ctx) => {
-        return res(ctx.json([]))
+      http.get('/api/configurations', () => {
+        return new Response(JSON.stringify([]), {
+          headers: { 'Content-Type': 'application/json' }
+        })
       })
     )
 
@@ -36,8 +38,10 @@ describe('ChooseExisting', () => {
 
   test('should post to server and redirect to a new page on choosing a form', async () => {
     server.use(
-      rest.post('/api/new', (req, res, ctx) => {
-        return res(ctx.json({ id: 'somekey', previewUrl: '' }))
+      http.post('/api/new', () => {
+        return new Response(JSON.stringify({ id: 'somekey', previewUrl: '' }), {
+          headers: { 'Content-Type': 'application/json' }
+        })
       })
     )
     const push = jest.fn()
