@@ -24,11 +24,11 @@ const client = {
         './stylesheets/application.scss'
       ]
     },
-    designer: {
+    editor: {
       import: [
-        // React rendered form builder
+        // React rendered form editor
         './index.tsx',
-        './stylesheets/designer.scss'
+        './stylesheets/editor.scss'
       ]
     }
   },
