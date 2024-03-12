@@ -148,7 +148,7 @@ const client = {
       template: '../server/common/templates/layouts/legacy-layout.njk',
       hash: false,
       inject: 'body',
-      scriptLoading: 'defer'
+      scriptLoading: 'module'
     }),
 
     new CopyPlugin({
