@@ -1,198 +1,81 @@
-const path = require('path')
-const webpack = require('webpack')
+const { dirname, join, resolve } = require('node:path')
+
+const { EnvironmentPlugin } = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CopyPlugin = require('copy-webpack-plugin')
 const nodeExternals = require('webpack-node-externals')
-const BundleAnalyzerPlugin =
-  require('webpack-bundle-analyzer').BundleAnalyzerPlugin
-const autoprefixer = require('autoprefixer')
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const WebpackAssetsManifest = require('webpack-assets-manifest')
 
-const devMode = process.env.NODE_ENV !== 'production'
-const prodMode = process.env.NODE_ENV === 'production'
-const environment = prodMode ? 'production' : 'development'
-const logLevel = process.env.REACT_LOG_LEVEL || (prodMode ? 'warn' : 'debug')
+const { NODE_ENV = 'development', REACT_LOG_LEVEL } = process.env
 
-const webpackConfig = {
-  isDevelopment: process.env.NODE_ENV !== 'production',
-  stylesheets: {
-    components: path.resolve(__dirname, 'server', 'common', 'components')
-  }
-}
-
-const clientOutput = path.resolve(__dirname, 'dist', 'client')
-
-const formDesignerClient = {
-  target: 'web',
-  mode: environment,
-  watch: devMode,
-  entry: path.resolve(__dirname, 'client', 'index.tsx'),
-  output: {
-    path: clientOutput,
-    filename: 'assets/[name].js',
-    publicPath: '/forms-designer/'
-  },
-  resolve: {
-    extensions: ['.js', '.jsx', '.ts', '.tsx']
-  },
-  node: {
-    __dirname: false
-  },
-  devtool: 'eval-cheap-module-source-map',
-  module: {
-    rules: [
-      {
-        test: /\.(js|jsx|tsx|ts)$/,
-        exclude: /node_modules\/(?!@xgovformbuilder\/)/,
-        loader: 'babel-loader',
-        resolve: {
-          fullySpecified: false
-        }
-      },
-      {
-        test: /\.(sa|sc|c)ss$/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-            options: {
-              publicPath: '../../',
-              esModule: false
-            }
-          },
-          {
-            loader: 'css-loader',
-            options: {}
-          },
-          {
-            loader: 'postcss-loader'
-          },
-          {
-            loader: 'sass-loader',
-            options: {
-              sassOptions: {
-                includePaths: [__dirname, path.resolve(__dirname, '../')],
-                outputStyle: 'expanded',
-                quietDeps: true
-              }
-            }
-          }
-        ]
-      },
-      {
-        test: /\.(png|svg|jpg|gif|ico)$/,
-        loader: 'file-loader',
-        options: {
-          name: 'assets/images/[name].[ext]'
-        }
-      },
-      {
-        test: /\.(woff|woff2|eot|ttf|otf)$/,
-        loader: 'file-loader',
-        options: {
-          name: 'assets/fonts/[name].[ext]'
-        }
-      }
-    ]
-  },
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: path.resolve(
-        __dirname,
-        'server',
-        'common',
-        'templates',
-        'layouts',
-        'legacy-layout.njk'
-      ),
-      filename: 'common/templates/layouts/legacy-layout.njk',
-      minify: prodMode,
-      scriptLoading: 'defer',
-      inject: 'head',
-      hash: prodMode
-    }),
-    new MiniCssExtractPlugin({
-      filename: devMode
-        ? 'assets/css/[name].css'
-        : 'assets/css/[name].[contenthash].css',
-      chunkFilename: devMode
-        ? 'assets/css/[id].css'
-        : 'assets/css/[id].[contenthash].css'
-    }),
-    new CopyPlugin({
-      patterns: [
-        { from: 'client/i18n/translations', to: 'assets/translations' },
-        { from: 'server/views', to: 'views' }
+/**
+ * @satisfies {import('webpack').Configuration}
+ */
+const client = {
+  context: join(__dirname, 'client'),
+  devtool: NODE_ENV === 'production' ? 'source-map' : 'inline-source-map',
+  entry: {
+    application: {
+      import: [
+        // Nunjucks rendered application
+        './javascripts/application.js',
+        './stylesheets/application.scss'
       ]
-    }),
-    new BundleAnalyzerPlugin({
-      analyzerMode: 'static',
-      defaultSizes: 'gzip',
-      openAnalyzer: false
-    }),
-    new webpack.DefinePlugin({
-      'process.env': JSON.stringify(process.env)
-    })
-  ],
+    },
+    designer: {
+      import: [
+        // React rendered form builder
+        './index.tsx',
+        './stylesheets/designer.scss'
+      ]
+    }
+  },
   externals: {
     react: 'React',
     'react-dom': 'ReactDOM'
-  }
-}
-
-const client = {
-  target: 'web',
-  entry: {
-    application: './client/assets/javascripts/application.js'
   },
-  mode: webpackConfig.isDevelopment ? 'development' : 'production',
-  ...(webpackConfig.isDevelopment && { devtool: 'source-map' }),
-  watchOptions: {
-    aggregateTimeout: 200,
-    poll: 1000
-  },
-  output: {
-    filename: 'js/[name].[fullhash].js',
-    path: path.join(clientOutput, 'assets'),
-    library: '[name]'
-  },
+  mode: NODE_ENV,
   module: {
     rules: [
-      ...(webpackConfig.isDevelopment
-        ? [
-            {
-              test: /\.js$/,
-              enforce: 'pre',
-              use: ['source-map-loader']
-            }
-          ]
-        : []),
       {
         test: /\.js$/,
-        exclude: /node_modules/,
-        loader: 'babel-loader'
+        loader: 'source-map-loader',
+        enforce: 'pre'
       },
       {
-        test: /\.(?:s[ac]|c)ss$/i,
+        test: /\.(js|jsx|tsx|ts)$/,
+        loader: 'babel-loader',
+        exclude: {
+          and: [/node_modules/],
+          not: [/@xgovformbuilder\/govuk-react-jsx/]
+        },
+
+        // Fix missing file extensions in React components
+        resolve: { fullySpecified: false }
+      },
+      {
+        test: /\.scss$/,
         use: [
-          'style-loader',
+          MiniCssExtractPlugin.loader,
           {
-            loader: MiniCssExtractPlugin.loader,
+            loader: 'css-loader',
             options: {
-              publicPath: '../',
-              esModule: false
+              // Allow sass-loader to process CSS @import first
+              // before we use css-loader to extract `url()` etc
+              importLoaders: 2
             }
           },
-          'css-loader',
-          ...(webpackConfig.isDevelopment ? ['resolve-url-loader'] : []),
           {
             loader: 'sass-loader',
             options: {
-              ...(webpackConfig.isDevelopment && { sourceMap: true }),
               sassOptions: {
-                outputStyle: 'compressed',
-                quietDeps: true,
-                includePaths: [webpackConfig.stylesheets.components]
+                includePaths: [
+                  join(__dirname, '../node_modules'),
+                  join(__dirname, 'node_modules')
+                ],
+                quietDeps: true
               }
             }
           }
@@ -202,82 +85,165 @@ const client = {
         test: /\.(png|svg|jpe?g|gif)$/,
         type: 'asset/resource',
         generator: {
-          filename: 'images/[name].[contenthash][ext]'
+          filename:
+            NODE_ENV === 'production'
+              ? 'assets/images/[name].[contenthash:7][ext]'
+              : 'assets/images/[name][ext]'
         }
       },
       {
         test: /\.(ico)$/,
         type: 'asset/resource',
         generator: {
-          filename: 'images/[name][ext]'
+          filename: 'assets/images/[name][ext]'
         }
       },
       {
         test: /\.(woff|woff2|eot|ttf|otf)$/,
         type: 'asset/resource',
         generator: {
-          filename: 'fonts/[name].[contenthash][ext]'
+          filename: 'assets/fonts/[name][ext]'
         }
       }
     ]
   },
-  plugins: [
-    // new CleanWebpackPlugin(),
-    new WebpackAssetsManifest({
-      output: 'manifest.json'
-    }),
-    new MiniCssExtractPlugin({
-      filename: 'css/[name].[fullhash].css'
-    })
-  ]
-}
-
-const server = {
-  target: 'node',
-  mode: environment,
-  watch: devMode,
-  devtool: 'source-map',
-  entry: path.resolve(__dirname, 'server', 'index.ts'),
   output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'server.js'
+    path: join(__dirname, 'dist/client'),
+    publicPath: '/forms-designer/',
+
+    filename:
+      NODE_ENV === 'production'
+        ? 'javascripts/[name].[contenthash:7].min.js'
+        : 'javascripts/[name].js',
+
+    chunkFilename:
+      NODE_ENV === 'production'
+        ? 'javascripts/[name].[contenthash:7].min.js'
+        : 'javascripts/[name].js'
   },
+  plugins: [
+    new WebpackAssetsManifest({
+      output: 'assets/manifest.json'
+    }),
+
+    new MiniCssExtractPlugin({
+      filename:
+        NODE_ENV === 'production'
+          ? 'stylesheets/[name].[contenthash:7].min.css'
+          : 'stylesheets/[name].css',
+
+      chunkFilename:
+        NODE_ENV === 'production'
+          ? 'stylesheets/[name].[contenthash:7].min.css'
+          : 'stylesheets/[name].css'
+    }),
+
+    new EnvironmentPlugin({
+      REACT_LOG_LEVEL:
+        REACT_LOG_LEVEL || (NODE_ENV === 'production' ? 'warn' : 'debug')
+    }),
+
+    new HtmlWebpackPlugin({
+      filename: '../server/common/templates/layouts/legacy-layout.njk',
+      template: '../server/common/templates/layouts/legacy-layout.njk',
+      hash: false,
+      inject: 'body',
+      scriptLoading: 'defer'
+    }),
+
+    new CopyPlugin({
+      patterns: [
+        {
+          from: 'i18n/translations',
+          to: 'assets/translations'
+        }
+      ]
+    }),
+
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'static',
+      defaultSizes: 'gzip',
+      openAnalyzer: false
+    })
+  ],
   resolve: {
+    alias: {
+      '/forms-designer/assets': join(
+        dirname(require.resolve('govuk-frontend/package.json')),
+        'govuk/assets/'
+      )
+    },
     extensions: ['.js', '.jsx', '.ts', '.tsx']
   },
-  node: {
-    __dirname: false
-  },
-  watchOptions: {
-    poll: 1000 // enable polling since fsevents are not supported in docker
-  },
-  module: {
-    rules: [
-      // TODO dev only
-      {
-        test: /\.js$/,
-        enforce: 'pre',
-        use: ['source-map-loader']
-      },
-      {
-        test: /\.(js|jsx|tsx|ts)$/,
-        exclude: /node_modules/,
-        loader: 'babel-loader'
-      }
-    ]
-  },
+  target: 'web'
+}
+
+/**
+ * @satisfies {import('webpack').Configuration}
+ */
+const server = {
+  context: join(__dirname, 'server'),
+  devtool: 'source-map',
+  entry: './index.ts',
   externals: [
     nodeExternals({
-      additionalModuleDirs: [path.resolve(__dirname, '../node_modules')],
-      modulesDir: path.resolve(__dirname, 'node_modules'),
+      additionalModuleDirs: [resolve(__dirname, '../node_modules')],
+      modulesDir: join(__dirname, 'node_modules'),
       allowlist: [/^@defra\//]
     })
   ],
   externalsPresets: {
     node: true
-  }
+  },
+  mode: NODE_ENV,
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        loader: 'source-map-loader',
+        enforce: 'pre'
+      },
+      {
+        test: /\.(js|ts)$/,
+        loader: 'babel-loader',
+        exclude: /node_modules/
+      }
+    ]
+  },
+  node: {
+    global: false,
+    __filename: false,
+    __dirname: false
+  },
+  output: {
+    path: join(__dirname, 'dist/server'),
+    filename: 'index.js'
+  },
+  plugins: [
+    new CopyPlugin({
+      patterns: [
+        {
+          from: 'views',
+          to: 'views'
+        },
+        {
+          from: 'common/components',
+          to: 'common/components'
+        },
+        {
+          from: 'common/templates',
+          to: 'common/templates',
+
+          // Skip layout generated by client HtmlWebpackPlugin
+          globOptions: { ignore: ['**/layouts/legacy-layout.njk'] }
+        }
+      ]
+    })
+  ],
+  resolve: {
+    extensions: ['.js', '.ts']
+  },
+  target: 'node'
 }
 
-// FIXME migrate old form designer client to the new frontend stack
-// we might get collissions between the two otherwise. New client takes precedence.
-module.exports = [formDesignerClient, client, server]
+module.exports = [client, server]
