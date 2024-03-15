@@ -2,27 +2,27 @@
   "name": "@defra/forms-queue-model",
   "version": "1.0.0",
   "description": "A hapi plugin to provide the queue model for Defra form builder based applications using the queue service",
-  "main": "dist/module/index.js",
-  "types": "dist/module/index.d.ts",
-  "engines": {
-    "node": "^20.9.0",
-    "npm": "^10.1.0"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/XGovFormBuilder/digital-form-builder/tree/feat/failure-queue/queue-model"
   },
+  "main": "dist/module/index.js",
+  "types": "dist/module/index.d.ts",
   "scripts": {
     "build": "npm run build:prisma && npm run build:types && npm run build:node",
-    "build:prisma": "prisma generate",
-    "migrate": "prisma migrate dev",
     "build:node": "BABEL_ENV=node babel --extensions \".ts\" --ignore \"**/*.(jt)est.*\" src --out-dir dist/module --copy-files",
-    "build:types": "tsc --emitDeclarationOnly"
+    "build:prisma": "prisma generate",
+    "build:types": "tsc --emitDeclarationOnly",
+    "migrate": "prisma migrate dev"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.1.1"
   },
   "devDependencies": {
     "prisma": "^5.10.2"
   },
-  "dependencies": {
-    "@prisma/client": "^5.1.1"
+  "engines": {
+    "node": "^20.9.0",
+    "npm": "^10.1.0"
   }
 }
