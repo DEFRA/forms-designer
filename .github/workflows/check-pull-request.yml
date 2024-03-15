@@ -134,6 +134,10 @@ jobs:
     environment: production
     if: github.event.action == 'push' && github.ref == 'ref/head/main'
 
+    concurrency:
+      group: publish-packages
+      cancel-in-progress: false
+
     steps:
       - name: Check out code
         uses: actions/checkout@v4
