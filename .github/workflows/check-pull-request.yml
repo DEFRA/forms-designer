@@ -134,7 +134,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [install, build]
     environment: production
-    if: github.event.action == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     concurrency:
       group: publish-packages
