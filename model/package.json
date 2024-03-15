@@ -1,10 +1,12 @@
 {
   "name": "@defra/forms-model",
   "version": "3.0.0",
-  "description": "A hapi plugin providing the model for XGov digital form builder based applications",
+  "description": "A hapi plugin providing the model for Defra forms",
+  "homepage": "https://github.com/DEFRA/forms-designer/tree/main/model#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/XGovFormBuilder/digital-form-builder/tree/main/model"
+    "url": "git+https://github.com/DEFRA/forms-designer.git",
+    "directory": "model"
   },
   "license": "OGL-UK-3.0",
   "main": "dist/module/index.js",

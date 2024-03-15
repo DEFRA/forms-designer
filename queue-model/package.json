@@ -1,10 +1,12 @@
 {
   "name": "@defra/forms-queue-model",
   "version": "1.0.0",
-  "description": "A hapi plugin to provide the queue model for Defra form builder based applications using the queue service",
+  "description": "A hapi plugin providing the queue model for Defra forms",
+  "homepage": "https://github.com/DEFRA/forms-designer/tree/main/queue-model#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/XGovFormBuilder/digital-form-builder/tree/feat/failure-queue/queue-model"
+    "url": "git+https://github.com/DEFRA/forms-designer.git",
+    "directory": "queue-model"
   },
   "license": "OGL-UK-3.0",
   "main": "dist/module/index.js",

@@ -1,10 +1,10 @@
 {
   "name": "forms-designer",
   "private": true,
-  "description": "Defra forms designer",
+  "description": "Defra forms designer repository",
   "repository": {
     "type": "git",
-    "url": "https://github.com/DEFRA/forms-designer.git"
+    "url": "git+https://github.com/DEFRA/forms-designer.git"
   },
   "license": "OGL-UK-3.0",
   "workspaces": [
