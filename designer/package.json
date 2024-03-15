@@ -1,39 +1,37 @@
 {
   "name": "@defra/forms-designer",
   "version": "3.0.0",
-  "description": "Cross government digital form builder (designer)",
-  "main": "server/dist/server/index.js",
-  "engines": {
-    "node": "^20.9.0",
-    "npm": "^10.1.0"
+  "description": "Defra forms designer",
+  "homepage": "https://github.com/DEFRA/forms-designer/tree/main/designer#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DEFRA/forms-designer.git",
+    "directory": "designer"
   },
+  "license": "OGL-UK-3.0",
+  "main": "server/dist/server/index.js",
   "scripts": {
-    "watch": "NODE_ENV=development webpack",
+    "audit": "npm audit --audit-level=high",
     "build": "NODE_ENV=production webpack",
-    "start": "NODE_ENV=production node --enable-source-maps dist/server/index.js",
-    "start:local": "NODE_ENV=development PERSISTENT_BACKEND=preview ts-node-dev --inspect --respawn --transpile-only server/index.ts",
     "dev": "concurrently \"npm run watch\" \"npm run start:local\"",
-    "symlink-env": "./bin/symlink-config",
-    "test": "npm run test:dev && npm run jest",
-    "test-cov": "npm run test:dev && npm run jest",
-    "test:dev": "lab -T test/.transform.js test/.setup.js -v test -S -r console -o stdout -r html -o unit-test.html -I version -l --coverage-exclude client --coverage-exclude server --coverage-exclude config.js",
-    "test-lab": "lab -T test/.transform.js test/.setup.js -v test -S -r console -o stdout -r html -o unit-test.html -I version -l",
-    "test-lab-cov": "lab -T test/.transform.js test/.setup.js -v test -S -t 88 -r console -o stdout -r lcov -o test-coverage/lab/lcov.info -r html -o test-coverage/lab/unit-test.html -r junit -o test-results/lab/unit-test.xml -I version -l",
+    "generate-docs": "typedoc src --tsconfig tsconfig.json --out ../docs/designer/typedoc --exclude \"**/*+(index|.test|.jest).ts\"",
     "jest": "npm run jest:client && npm run jest:server",
     "jest:client": "jest --coverage --config=jest.client.config.js -w",
     "jest:server": "jest --coverage --config=jest.server.config.js --runInBand",
     "jest:watch": "jest --watch",
-    "audit": "npm audit --audit-level=high",
     "merge-coverage": "lcov-result-merger \"test-coverage/**/lcov.info\" \"test-coverage/lcov.info\"",
-    "generate-docs": "typedoc src --tsconfig tsconfig.json --out ../docs/designer/typedoc --exclude \"**/*+(index|.test|.jest).ts\""
+    "start": "NODE_ENV=production node --enable-source-maps dist/server/index.js",
+    "start:local": "NODE_ENV=development PERSISTENT_BACKEND=preview ts-node-dev --inspect --respawn --transpile-only server/index.ts",
+    "symlink-env": "./bin/symlink-config",
+    "test": "npm run test:dev && npm run jest",
+    "test-cov": "npm run test:dev && npm run jest",
+    "test-lab": "lab -T test/.transform.js test/.setup.js -v test -S -r console -o stdout -r html -o unit-test.html -I version -l",
+    "test-lab-cov": "lab -T test/.transform.js test/.setup.js -v test -S -t 88 -r console -o stdout -r lcov -o test-coverage/lab/lcov.info -r html -o test-coverage/lab/unit-test.html -r junit -o test-results/lab/unit-test.xml -I version -l",
+    "test:dev": "lab -T test/.transform.js test/.setup.js -v test -S -r console -o stdout -r html -o unit-test.html -I version -l --coverage-exclude client --coverage-exclude server --coverage-exclude config.js",
+    "watch": "NODE_ENV=development webpack"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/XGovFormBuilder/digital-form-builder/tree/main/designer"
-  },
-  "license": "SEE LICENSE IN LICENSE",
   "dependencies": {
-    "@defra/forms-model": "*",
+    "@defra/forms-model": "^3.0.0",
     "@elastic/ecs-pino-format": "^1.5.0",
     "@hapi/basic": "^7.0.2",
     "@hapi/bell": "^13.0.1",
@@ -111,5 +109,9 @@
     "webpack-cli": "^5.1.4",
     "webpack-node-externals": "^3.0.0",
     "whatwg-fetch": "^3.6.20"
+  },
+  "engines": {
+    "node": "^20.9.0",
+    "npm": "^10.1.0"
   }
 }

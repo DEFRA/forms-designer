@@ -1,33 +1,35 @@
 {
   "name": "@defra/forms-model",
   "version": "3.0.0",
-  "description": "A hapi plugin providing the model for XGov digital form builder based applications",
+  "description": "A hapi plugin providing the model for Defra forms",
+  "homepage": "https://github.com/DEFRA/forms-designer/tree/main/model#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DEFRA/forms-designer.git",
+    "directory": "model"
+  },
+  "license": "OGL-UK-3.0",
   "main": "dist/module/index.js",
   "browser": "dist/browser/index.js",
   "types": "dist/module/index.d.ts",
-  "engines": {
-    "node": "^20.9.0",
-    "npm": "^10.1.0"
-  },
   "scripts": {
-    "test": "npm run test-cov",
-    "test:dev": "jest --watch",
-    "test-cov": "jest --coverage",
     "build": "npm run build:types && npm run build:node && npm run build:browser",
-    "build:node": "BABEL_ENV=node babel --extensions \".ts\" --ignore \"**/*.(jt)est.*\" src --out-dir dist/module",
     "build:browser": "BABEL_ENV=javascripts babel --extensions \".ts\" --ignore \"**/*.(jt)est.*\" src --out-dir dist/browser",
+    "build:node": "BABEL_ENV=node babel --extensions \".ts\" --ignore \"**/*.(jt)est.*\" src --out-dir dist/module",
     "build:types": "npm run build:types:node && npm run build:types:browser",
-    "build:types:node": "tsc --emitDeclarationOnly --declarationDir ./dist/module ",
     "build:types:browser": "tsc --emitDeclarationOnly --declarationDir dist/browser ",
-    "generate-docs": "typedoc src --tsconfig tsconfig.json --out ../docs/model/typedoc --exclude \"**/*+(index|.test|.jest).ts\""
+    "build:types:node": "tsc --emitDeclarationOnly --declarationDir ./dist/module ",
+    "generate-docs": "typedoc src --tsconfig tsconfig.json --out ../docs/model/typedoc --exclude \"**/*+(index|.test|.jest).ts\"",
+    "test": "npm run test-cov",
+    "test-cov": "jest --coverage",
+    "test:dev": "jest --watch"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/XGovFormBuilder/digital-form-builder/tree/main/model"
-  },
-  "license": "SEE LICENSE IN LICENSE",
   "dependencies": {
     "joi": "17.2.1",
     "nanoid": "^3.3.4"
+  },
+  "engines": {
+    "node": "^20.9.0",
+    "npm": "^10.1.0"
   }
 }

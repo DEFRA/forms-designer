@@ -1,4 +1,4 @@
-# digital-form-builder-model
+# Defra forms model
 
 # Test coverage threshold
 

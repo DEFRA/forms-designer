@@ -2,7 +2,20 @@ name: Check Pull Request
 
 on:
   pull_request:
+
+  push:
+    branches:
+      - main
+
   workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'ref/head/main' }}
+
+permissions:
+  contents: write
+  packages: write
 
 jobs:
   install:
@@ -23,7 +36,6 @@ jobs:
       - name: Cache dependencies
         uses: actions/cache@v4
         id: npm-install-cache
-
         with:
           enableCrossOsArchive: true
           key: npm-install-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
@@ -35,10 +47,48 @@ jobs:
         with:
           cache: 'npm'
           node-version-file: .nvmrc
+          registry-url: https://npm.pkg.github.com
+          scope: '@defra'
 
       - name: Install dependencies
         if: steps.npm-install-cache.outputs.cache-hit != 'true'
         run: npm ci
+
+  build:
+    name: Build
+    runs-on: ${{ matrix.runner }}
+    needs: [install]
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        runner:
+          - ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Restore dependencies
+        uses: actions/cache/restore@v4
+        with:
+          enableCrossOsArchive: true
+          key: npm-install-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          path: node_modules
+
+      - name: Cache build
+        uses: actions/cache@v4
+        with:
+          enableCrossOsArchive: true
+          key: npm-build-${{ runner.os }}-${{ github.sha }}
+          path: |
+            designer/dist
+            model/dist
+            queue-model/dist
+
+      - name: Run build
+        run: npm run build
 
   tasks:
     name: ${{ matrix.task.description }} (${{ matrix.runner }})
@@ -71,7 +121,6 @@ jobs:
 
       - name: Restore dependencies
         uses: actions/cache/restore@v4
-
         with:
           enableCrossOsArchive: true
           key: npm-install-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
@@ -79,3 +128,59 @@ jobs:
 
       - name: Run task
         run: ${{ matrix.task.run }}
+
+  publish:
+    name: Publish
+    runs-on: ubuntu-latest
+    needs: [install, build]
+    environment: production
+    if: github.event.action == 'push' && github.ref == 'ref/head/main'
+
+    concurrency:
+      group: publish-packages
+      cancel-in-progress: false
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: main
+
+      - name: Restore dependencies
+        uses: actions/cache/restore@v4
+        with:
+          enableCrossOsArchive: true
+          key: npm-install-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          path: node_modules
+
+      - name: Restore build
+        uses: actions/cache/restore@v4
+        with:
+          enableCrossOsArchive: true
+          key: npm-build-${{ runner.os }}-${{ github.sha }}
+          path: |
+            designer/dist
+            model/dist
+            queue-model/dist
+
+      - name: Setup Node.js with GitHub Packages
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          registry-url: https://npm.pkg.github.com
+          scope: '@defra'
+
+      - name: Update package versions
+        run: npm version patch --workspaces --include-workspace-root --git-tag-version false --save
+
+      - name: Commit and push updates
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git commit -am "v$(npm pkg get version | tr -d \") [skip ci]" && git push
+
+      - name: Publish to GitHub Packages
+        run: npm publish --workspace model
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
