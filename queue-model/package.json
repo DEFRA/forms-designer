@@ -6,6 +6,7 @@
     "type": "git",
     "url": "https://github.com/XGovFormBuilder/digital-form-builder/tree/feat/failure-queue/queue-model"
   },
+  "license": "OGL-UK-3.0",
   "main": "dist/module/index.js",
   "types": "dist/module/index.d.ts",
   "scripts": {
