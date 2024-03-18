@@ -16,7 +16,6 @@ concurrency:
 permissions:
   contents: write
   packages: write
-  id-token: write
 
 jobs:
   install:
@@ -181,6 +180,6 @@ jobs:
           git commit -am "v$(npm pkg get version | tr -d \") [skip ci]" && git push
 
       - name: Publish to npm
-        run: npm publish --workspace model --provenance --access public
+        run: npm publish --workspace model --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
