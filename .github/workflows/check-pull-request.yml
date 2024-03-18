@@ -16,6 +16,7 @@ concurrency:
 permissions:
   contents: write
   packages: write
+  id-token: write
 
 jobs:
   install:
@@ -164,11 +165,11 @@ jobs:
             model/dist
             queue-model/dist
 
-      - name: Setup Node.js with GitHub Packages
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-          registry-url: https://npm.pkg.github.com
+          registry-url: https://registry.npmjs.org
           scope: '@defra'
 
       - name: Update package versions
@@ -180,7 +181,7 @@ jobs:
           git config user.email github-actions@github.com
           git commit -am "v$(npm pkg get version | tr -d \") [skip ci]" && git push
 
-      - name: Publish to GitHub Packages
-        run: npm publish --workspace model
+      - name: Publish to npm
+        run: npm publish --workspace model --provenance --access public
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
