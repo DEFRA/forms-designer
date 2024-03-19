@@ -19,7 +19,6 @@
     "build:types": "npm run build:types:node && npm run build:types:browser",
     "build:types:browser": "tsc --emitDeclarationOnly --declarationDir dist/browser ",
     "build:types:node": "tsc --emitDeclarationOnly --declarationDir ./dist/module ",
-    "generate-docs": "typedoc src --tsconfig tsconfig.json --out ../docs/model/typedoc --exclude \"**/*+(index|.test|.jest).ts\"",
     "test": "npm run test-cov",
     "test-cov": "jest --coverage",
     "test:dev": "jest --watch"

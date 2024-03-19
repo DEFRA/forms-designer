@@ -19,5 +19,4 @@ src/server/public/build
 .env
 
 */.pnp.*
-*/docs/**/typedoc
 *.tsbuildinfo
