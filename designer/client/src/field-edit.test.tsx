@@ -1,13 +1,24 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { FieldEdit } from './field-edit'
-import { simplePageMock } from '../../test/helpers/mocks'
 import { RenderWithContextAndDataContext } from '../../test/helpers/renderers'
 
 describe('Field edit', () => {
-  const mockData = simplePageMock()
   let stateProps
   let page
+
+  const mockData = {
+    pages: [
+      {
+        title: 'First page',
+        path: '/first-page',
+        components: [],
+        controller: './pages/summary.js',
+        section: 'home'
+      }
+    ],
+    lists: []
+  }
 
   beforeEach(() => {
     stateProps = {
