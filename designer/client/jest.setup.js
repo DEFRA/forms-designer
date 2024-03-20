@@ -4,6 +4,9 @@ const { ReadableStream, TransformStream } = require('node:stream/web')
 const { clearImmediate, setImmediate } = require('node:timers')
 const { TextDecoder, TextEncoder } = require('node:util')
 
+const Adapter = require('enzyme-adapter-react-16')
+const { configure } = require('enzyme')
+
 Object.defineProperties(globalThis, {
   clearImmediate: { value: clearImmediate },
   performance: { value: performance },
@@ -25,3 +28,5 @@ Object.defineProperties(globalThis, {
   Request: { value: Request },
   Response: { value: Response }
 })
+
+configure({ adapter: new Adapter() })
