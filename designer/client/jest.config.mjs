@@ -15,7 +15,10 @@ export default {
   collectCoverageFrom: ['<rootDir>/src/**/*.{cjs,js,mjs,ts}'],
 
   // Configure mock browser environment for React
+  setupFiles: ['<rootDir>/jest.setup.js'],
   setupFilesAfterEnv: ['<rootDir>/jest.environment.js'],
+  testEnvironment: 'jsdom',
+  testEnvironmentOptions: { customExportConditions: [''] },
 
   // Configure mocks for JavaScript imports
   moduleNameMapper: {
