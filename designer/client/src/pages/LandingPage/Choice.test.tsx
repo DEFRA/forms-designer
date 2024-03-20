@@ -3,7 +3,6 @@ import { LandingChoice } from './Choice'
 import { render, cleanup, fireEvent, screen } from '@testing-library/react'
 
 describe('LandingChoice', () => {
-  afterEach(() => jest.resetAllMocks())
   afterEach(cleanup)
 
   it('snapshot matches', () => {

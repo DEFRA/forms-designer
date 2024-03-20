@@ -9,7 +9,6 @@ import {
 } from '@testing-library/react'
 
 describe('SaveErrorPage', () => {
-  afterEach(() => jest.resetAllMocks())
   afterEach(cleanup)
 
   test('should render correctly', async () => {

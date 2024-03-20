@@ -11,8 +11,6 @@ import {
 import userEvent from '@testing-library/user-event'
 
 describe.skip('AbsoluteDateTimeValues', () => {
-  afterEach(() => jest.resetAllMocks())
-
   it('should display a text input for fields without custom mappings or options', async () => {
     const fieldDef = {
       label: 'Something',

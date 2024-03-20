@@ -7,8 +7,6 @@ import React from 'react'
 import { AbsoluteTimeValues } from './AbsoluteTimeValues'
 
 describe('AbsoluteTimeValues', () => {
-  afterEach(() => jest.resetAllMocks())
-
   it("renders out a time that's passed to it", async () => {
     render(
       <AbsoluteTimeValues

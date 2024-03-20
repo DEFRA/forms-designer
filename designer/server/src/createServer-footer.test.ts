@@ -19,7 +19,6 @@ describe('Footer', () => {
       ...OLD_ENV,
       FOOTER_TEXT: 'Footer Text Test'
     }
-    jest.resetModules()
 
     await import('./config')
     await import('./plugins/designer')

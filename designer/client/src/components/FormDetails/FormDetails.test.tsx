@@ -20,7 +20,6 @@ describe('FormDetails', () => {
 
   afterEach(() => {
     server.resetHandlers()
-    jest.resetAllMocks()
   })
 
   afterAll(() => {

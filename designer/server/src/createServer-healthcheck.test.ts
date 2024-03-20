@@ -13,7 +13,6 @@ describe(`/health-check Route`, () => {
       LAST_TAG: 'LAST TAG'
     }
 
-    jest.resetModules()
     await import('./config')
     const { createServer } = await import('./createServer')
 

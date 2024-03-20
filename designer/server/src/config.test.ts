@@ -10,7 +10,6 @@ describe('Config', () => {
       ...OLD_ENV,
       FOOTER_TEXT: 'Footer Text Test'
     }
-    jest.resetModules()
 
     const { default: config } = await import('./config')
     expect(config.footerText).toEqual('Footer Text Test')
@@ -22,8 +21,6 @@ describe('Config', () => {
       LAST_COMMIT: 'LAST COMMIT',
       LAST_TAG: 'LAST TAG'
     }
-
-    jest.resetModules()
 
     const { default: config } = await import('./config')
     expect(config.lastCommit).toEqual('LAST COMMIT')
@@ -39,8 +36,6 @@ describe('Config', () => {
       LAST_TAG_GH: 'LAST TAG'
     }
 
-    jest.resetModules()
-
     const { default: config } = await import('./config')
     expect(config.lastCommit).toEqual('LAST COMMIT')
     expect(config.lastTag).toEqual('LAST TAG')
@@ -53,7 +48,7 @@ describe('Config', () => {
       AWS_ACCESS_KEY_ID: undefined,
       AWS_ACCESS_SECRET_KEY: undefined
     }
-    jest.resetModules()
+
     try {
       import('./config')
     } catch (e) {
@@ -66,7 +61,7 @@ describe('Config', () => {
       AWS_ACCESS_KEY_ID: 'key',
       AWS_SECRET_ACCESS_KEY: 'secret'
     }
-    jest.resetModules()
+
     await expect(import('./config')).resolves.toBeTruthy()
   })
 })

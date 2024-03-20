@@ -7,8 +7,6 @@ import React from 'react'
 import { AbsoluteDateTimeValues } from './AbsoluteDateTimeValues'
 
 describe('AbsoluteDateTimeValues', () => {
-  afterEach(() => jest.resetAllMocks())
-
   it("renders out a date that's passed to it", async () => {
     const d = new Date('2020-01-31T12:10:35Z')
     render(<AbsoluteDateTimeValues updateValue={jest.fn()} value={d} />)
