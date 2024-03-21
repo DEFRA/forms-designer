@@ -1,10 +1,10 @@
 import { http } from 'msw'
 import * as formConfigurationsApi from './load-form-configurations'
-import { server } from '../../test/testServer'
+import { server, mockedFormHandlers } from '../../test/testServer'
 
 describe('Load form configurations', () => {
   beforeAll(() => server.listen())
-  afterEach(() => server.resetHandlers())
+  beforeEach(() => server.resetHandlers(...mockedFormHandlers))
   afterAll(() => server.close())
 
   test('Should load configurations when returned', () => {
@@ -17,9 +17,9 @@ describe('Load form configurations', () => {
         })
       })
     )
-    return formConfigurationsApi.loadConfigurations().then((data) => {
-      expect(data).toStrictEqual(configurations)
-    })
+
+    const loadConfiguration = formConfigurationsApi.loadConfigurations()
+    return expect(loadConfiguration).resolves.toStrictEqual(configurations)
   })
 
   test('Should return no configurations when an error occurs', () => {
@@ -31,8 +31,8 @@ describe('Load form configurations', () => {
         })
       })
     )
-    return formConfigurationsApi.loadConfigurations().then((data) => {
-      expect(data).toStrictEqual([])
-    })
+
+    const loadConfiguration = formConfigurationsApi.loadConfigurations()
+    return expect(loadConfiguration).resolves.toStrictEqual([])
   })
 })

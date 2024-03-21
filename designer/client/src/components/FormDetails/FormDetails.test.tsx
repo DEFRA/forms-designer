@@ -1,7 +1,11 @@
 import React from 'react'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { FormDetails } from './FormDetails'
-import { server, mockedFormConfigurations } from '../../../../test/testServer'
+import {
+  server,
+  mockedFormConfigurations,
+  mockedFormHandlers
+} from '../../../../test/testServer'
 import { DataContext } from '../../context'
 
 describe('FormDetails', () => {
@@ -16,10 +20,8 @@ describe('FormDetails', () => {
       },
       save: jest.fn()
     }
-  })
 
-  afterEach(() => {
-    server.resetHandlers()
+    server.resetHandlers(...mockedFormHandlers)
   })
 
   afterAll(() => {

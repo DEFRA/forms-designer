@@ -1,13 +1,13 @@
 import React from 'react'
 import { NewConfig } from './NewConfig'
 import { render, fireEvent, screen, waitFor } from '@testing-library/react'
-import { server, http } from '../../../../test/testServer'
+import { server, http, mockedFormHandlers } from '../../../../test/testServer'
 import { MemoryRouter } from 'react-router-dom'
 import type { FormConfiguration } from '@defra/forms-model'
 
 describe('Newconfig', () => {
   beforeAll(() => server.listen())
-  afterEach(() => server.resetHandlers())
+  beforeEach(() => server.resetHandlers(...mockedFormHandlers))
   afterAll(() => server.close())
 
   test('new configuration is submitted correctly', async () => {

@@ -4,12 +4,13 @@ import { render, fireEvent, screen, waitFor } from '@testing-library/react'
 import {
   server,
   http,
+  mockedFormHandlers,
   mockedFormConfigurations
 } from '../../../../test/testServer'
 
 describe('ChooseExisting', () => {
   beforeAll(() => server.listen())
-  afterEach(() => server.resetHandlers())
+  beforeEach(() => server.resetHandlers(...mockedFormHandlers))
   afterAll(() => server.close())
 
   test('no existing configurations', async () => {

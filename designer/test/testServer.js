@@ -2,7 +2,12 @@ import { http } from 'msw'
 // eslint-disable-next-line import/no-unresolved
 import { setupServer } from 'msw/node'
 
-const mockedFormConfigurations = [
+export { http } from 'msw'
+
+/**
+ * @satisfies {FormConfiguration[]}
+ */
+export const mockedFormConfigurations = [
   {
     Key: 'Not-a-feedback-form',
     DisplayName: 'Not a feedback form',
@@ -15,7 +20,10 @@ const mockedFormConfigurations = [
   }
 ]
 
-const server = setupServer(
+/**
+ * @satisfies {HttpHandler[]}
+ */
+export const mockedFormHandlers = [
   http.get('/forms-designer/api/configurations', () => {
     return new Response(JSON.stringify(mockedFormConfigurations), {
       headers: { 'Content-Type': 'application/json' }
@@ -29,6 +37,11 @@ const server = setupServer(
       status: 500
     })
   })
-)
+]
 
-export { server, http, mockedFormConfigurations }
+export const server = setupServer(...mockedFormHandlers)
+
+/**
+ * @typedef {import('@defra/forms-model').FormConfiguration} FormConfiguration
+ * @typedef {import('msw').HttpHandler} HttpHandler
+ */
