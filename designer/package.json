@@ -9,7 +9,7 @@
     "directory": "designer"
   },
   "license": "OGL-UK-3.0",
-  "main": "server/dist/server/index.js",
+  "main": "server/dist/index.js",
   "scripts": {
     "audit": "npm audit --audit-level=high",
     "build": "NODE_ENV=production webpack",
@@ -19,8 +19,8 @@
     "jest:server": "jest --coverage --config=jest.server.config.js --runInBand",
     "jest:watch": "jest --watch",
     "merge-coverage": "lcov-result-merger \"test-coverage/**/lcov.info\" \"test-coverage/lcov.info\"",
-    "start": "NODE_ENV=production node --enable-source-maps dist/server/index.js",
-    "start:local": "NODE_ENV=development PERSISTENT_BACKEND=preview ts-node-dev --inspect --respawn --transpile-only server/index.ts",
+    "start": "NODE_ENV=production node --enable-source-maps server/dist/index.js",
+    "start:local": "NODE_ENV=development PERSISTENT_BACKEND=preview ts-node-dev --inspect --respawn --transpile-only server/src/index.ts",
     "symlink-env": "./bin/symlink-config",
     "test": "npm run test:dev && npm run jest",
     "test-cov": "npm run test:dev && npm run jest",

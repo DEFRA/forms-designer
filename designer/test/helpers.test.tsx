@@ -1,6 +1,6 @@
 import * as Code from '@hapi/code'
 import * as Lab from '@hapi/lab'
-import { camelCase } from '../client/helpers'
+import { camelCase } from '../client/src/helpers'
 
 const { expect } = Code
 const lab = Lab.script()

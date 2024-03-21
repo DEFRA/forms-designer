@@ -3,9 +3,9 @@ import React from 'react'
 import { shallow, mount } from 'enzyme'
 import * as Code from '@hapi/code'
 import * as Lab from '@hapi/lab'
-import * as Component from '../client/reducers/component/componentReducer'
-import { TextFieldEdit } from '../client/components/FieldEditors/text-field-edit'
-import { MultilineTextFieldEdit } from '../client/multiline-text-field-edit'
+import * as Component from '../client/src/reducers/component/componentReducer'
+import { TextFieldEdit } from '../client/src/components/FieldEditors/text-field-edit'
+import { MultilineTextFieldEdit } from '../client/src/multiline-text-field-edit'
 const { expect } = Code
 const lab = Lab.script()
 exports.lab = lab

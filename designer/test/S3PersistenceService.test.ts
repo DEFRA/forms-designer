@@ -2,7 +2,7 @@ import * as Code from '@hapi/code'
 import * as Lab from '@hapi/lab'
 import sinon from 'sinon'
 
-import { S3PersistenceService } from '../server/lib/persistence/s3PersistenceService'
+import { S3PersistenceService } from '../server/src/lib/persistence/s3PersistenceService'
 
 import { FormConfiguration } from '@defra/forms-model'
 

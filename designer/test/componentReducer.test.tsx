@@ -3,8 +3,8 @@ import * as Lab from '@hapi/lab'
 import {
   componentReducer,
   getSubReducer
-} from '../client/reducers/component/componentReducer'
-import { Actions } from '../client/reducers/component/types'
+} from '../client/src/reducers/component/componentReducer'
+import { Actions } from '../client/src/reducers/component/types'
 import {
   metaReducer,
   optionsReducer,
@@ -12,7 +12,7 @@ import {
   schemaReducer,
   componentListReducer,
   componentListItemReducer
-} from '../client/reducers/component'
+} from '../client/src/reducers/component'
 
 const { expect } = Code
 const lab = Lab.script()

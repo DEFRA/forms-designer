@@ -2,7 +2,7 @@ import React from 'react'
 import { mount } from 'enzyme'
 import * as Code from '@hapi/code'
 import * as Lab from '@hapi/lab'
-import { Name } from '../client/name'
+import { Name } from '../client/src/name'
 import sinon from 'sinon'
 const { expect } = Code
 const lab = Lab.script()
