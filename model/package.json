@@ -19,9 +19,8 @@
     "build:types": "npm run build:types:node && npm run build:types:browser",
     "build:types:browser": "tsc --emitDeclarationOnly --declarationDir dist/browser ",
     "build:types:node": "tsc --emitDeclarationOnly --declarationDir ./dist/module ",
-    "test": "npm run test-cov",
-    "test-cov": "jest --coverage",
-    "test:dev": "jest --watch"
+    "test": "jest --color --coverage --verbose",
+    "test:watch": "jest --color --watch"
   },
   "dependencies": {
     "joi": "17.2.1",

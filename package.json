@@ -24,7 +24,8 @@
     "lint:types": "npm exec --workspaces -- tsc --noEmit",
     "prepare": "husky || true",
     "start": "npm run start --workspace designer",
-    "test": "npm run test --workspaces --if-present"
+    "test": "jest --color --coverage --verbose",
+    "test:watch": "jest --color --watch"
   },
   "devDependencies": {
     "@babel/cli": "^7.23.9",
@@ -47,7 +48,6 @@
     "jest": "^29.7.0",
     "lint-staged": "^15.2.2",
     "prettier": "^3.2.5",
-    "ts-jest": "^29.1.2",
     "typescript": "^5.4.2"
   },
   "optionalDependencies": {

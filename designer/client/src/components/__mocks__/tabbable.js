@@ -1,4 +1,5 @@
 const lib = jest.requireActual('tabbable')
+
 const tabbable = {
   ...lib,
   tabbable: (node, options) =>
