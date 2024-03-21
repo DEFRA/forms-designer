@@ -1,4 +1,4 @@
-import { Coordinator } from './types'
+import { Coordinator } from './enums'
 
 export class ConditionAbstract {
   coordinator: Coordinator | undefined

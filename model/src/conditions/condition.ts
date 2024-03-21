@@ -3,7 +3,7 @@ import { ConditionAbstract } from './condition-abstract'
 import { getExpression } from './condition-operators'
 import { ConditionValue, RelativeTimeValue } from './condition-values'
 import { ConditionValueAbstract } from './condition-value-abstract'
-import { Coordinator } from './types'
+import { Coordinator } from './enums'
 
 export class Condition extends ConditionAbstract {
   field: ConditionField

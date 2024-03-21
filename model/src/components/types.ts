@@ -1,30 +1,3 @@
-export enum ComponentTypeEnum {
-  TextField = 'TextField',
-  MultilineTextField = 'MultilineTextField',
-  YesNoField = 'YesNoField',
-  DateField = 'DateField',
-  TimeField = 'TimeField',
-  DateTimeField = 'DateTimeField',
-  DatePartsField = 'DatePartsField',
-  MonthYearField = 'MonthYearField',
-  DateTimePartsField = 'DateTimePartsField',
-  SelectField = 'SelectField',
-  AutocompleteField = 'AutocompleteField',
-  RadiosField = 'RadiosField',
-  CheckboxesField = 'CheckboxesField',
-  NumberField = 'NumberField',
-  UkAddressField = 'UkAddressField',
-  TelephoneNumberField = 'TelephoneNumberField',
-  EmailAddressField = 'EmailAddressField',
-  FileUploadField = 'FileUploadField',
-  Para = 'Para',
-  Html = 'Html',
-  InsetText = 'InsetText',
-  Details = 'Details',
-  FlashCard = 'FlashCard',
-  List = 'List'
-}
-
 export type ComponentType =
   | 'TextField'
   | 'MultilineTextField'
@@ -176,10 +149,6 @@ export interface WebsiteFieldComponent extends TextFieldBase {
   options: TextFieldBase['options'] & {
     customValidationMessage?: string
   }
-}
-
-export interface MultilineTextFieldComponent {
-  type: 'MultilineTextField'
 }
 
 export interface TelephoneNumberFieldComponent extends TextFieldBase {

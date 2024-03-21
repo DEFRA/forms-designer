@@ -4,8 +4,9 @@ import { Condition } from './condition'
 import { ConditionRef } from './condition-ref'
 import { ConditionGroup } from './condition-group'
 import { conditionValueFrom } from './condition-values'
+import { Coordinator } from './enums'
 import { toPresentationString, toExpression } from './helpers'
-import { Coordinator, ConditionsArray } from './types'
+import { ConditionsArray } from './types'
 
 type ConditionRawObject =
   | ConditionsModel
