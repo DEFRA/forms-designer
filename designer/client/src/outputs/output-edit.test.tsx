@@ -62,35 +62,35 @@ describe('OutputEdit', () => {
       )
 
       // change title
-      fireEvent.change(getByLabelText('Title'), {
+      await fireEvent.change(getByLabelText('Title'), {
         target: { value: 'NewTitle' }
       })
 
       // change name
-      fireEvent.change(getByLabelText('Name'), {
+      await fireEvent.change(getByLabelText('Name'), {
         target: { value: 'NewName' }
       })
 
       // change templateId
-      fireEvent.change(getByLabelText('Template ID'), {
+      await fireEvent.change(getByLabelText('Template ID'), {
         target: { value: 'NewTemplateId' }
       })
 
       // change apiKey
-      fireEvent.change(getByLabelText('API Key'), {
+      await fireEvent.change(getByLabelText('API Key'), {
         target: { value: 'NewAPIKey' }
       })
 
       // change email field
-      fireEvent.change(getByLabelText('Email field'), {
+      await fireEvent.change(getByLabelText('Email field'), {
         target: { value: '9WH4EX' }
       })
 
       // include references
-      fireEvent.click(getByText('Include webhook and payment references'))
+      await fireEvent.click(getByText('Include webhook and payment references'))
 
       // save
-      fireEvent.click(getByText('Save'))
+      await fireEvent.click(getByText('Save'))
 
       await waitFor(() => expect(mockSave).toHaveBeenCalledTimes(1))
 

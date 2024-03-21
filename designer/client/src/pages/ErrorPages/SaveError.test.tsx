@@ -58,7 +58,7 @@ describe('SaveErrorPage', () => {
     render(<SaveError history={history} location={location} />)
     expect(await screen.findByText(/Back to Designer/i)).toBeInTheDocument()
 
-    fireEvent.click(screen.getByText('Back to Designer'))
+    await fireEvent.click(screen.getByText('Back to Designer'))
     await waitFor(() => expect(push).toHaveBeenCalledTimes(1))
     expect(push).toBeCalledWith('designer/testid')
   })

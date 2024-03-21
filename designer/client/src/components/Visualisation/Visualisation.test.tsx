@@ -99,7 +99,7 @@ test('Links between pages are navigable via keyboard', async () => {
   // Check that link works when selected with the enter key
   expect(queryByTestId('flyout-0')).toBeNull()
 
-  fireEvent.keyPress(link, {
+  await fireEvent.keyPress(link, {
     key: 'Enter',
     code: 'Enter',
     charCode: 13
@@ -107,12 +107,12 @@ test('Links between pages are navigable via keyboard', async () => {
 
   expect(queryByTestId('flyout-0')).toBeInTheDocument()
 
-  fireEvent.click(getByText('Close'))
+  await fireEvent.click(getByText('Close'))
 
   // Check that link works when selected with the space key
   expect(queryByTestId('flyout-0')).toBeNull()
 
-  fireEvent.keyPress(link, {
+  await fireEvent.keyPress(link, {
     key: ' ',
     code: 'Space',
     charCode: 32

@@ -36,22 +36,22 @@ it('Renders button strings correctly', () => {
   expect(getByText('Summary')).toBeInTheDocument()
 })
 
-it('Can open flyouts and close them', () => {
+it('Can open flyouts and close them', async () => {
   const { getByText, queryByTestId } = customRender(<Menu />)
   expect(queryByTestId('flyout-1')).toBeNull()
-  fireEvent.click(getByText('Form details'))
+  await fireEvent.click(getByText('Form details'))
   expect(queryByTestId('flyout-1')).toBeInTheDocument()
-  fireEvent.click(getByText('Close'))
+  await fireEvent.click(getByText('Close'))
   expect(queryByTestId('flyout-1')).toBeNull()
 })
 
-it('clicking on a summary tab shows different tab content', () => {
+it('clicking on a summary tab shows different tab content', async () => {
   const { getByTestId, queryByTestId } = customRender(<Menu />)
-  fireEvent.click(getByTestId('menu-summary'))
+  await fireEvent.click(getByTestId('menu-summary'))
   expect(getByTestId('flyout-1')).toBeInTheDocument()
   expect(queryByTestId('tab-json')).toBeNull()
   expect(queryByTestId('tab-summary')).toBeNull()
-  fireEvent.click(getByTestId('tab-json-button'))
+  await fireEvent.click(getByTestId('tab-json-button'))
   expect(getByTestId('tab-json')).toBeInTheDocument()
   expect(queryByTestId('tab-summary')).toBeNull()
   expect(queryByTestId('tab-model')).toBeNull()
@@ -60,7 +60,7 @@ it('clicking on a summary tab shows different tab content', () => {
 it('flyouts close on Save', async () => {
   const { getByText, queryByTestId } = customRender(<Menu />)
 
-  fireEvent.click(getByText('Summary behaviour'))
+  await fireEvent.click(getByText('Summary behaviour'))
   expect(queryByTestId('flyout-1')).toBeInTheDocument()
 
   await fireEvent.click(getByText('Save'))

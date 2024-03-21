@@ -50,7 +50,9 @@ describe('ChooseExisting', () => {
     render(<ChooseExisting history={history} />)
     expect(await screen.findByText(/Form name/i)).toBeInTheDocument()
 
-    fireEvent.click(screen.getByText(mockedFormConfigurations[0].DisplayName))
+    await fireEvent.click(
+      screen.getByText(mockedFormConfigurations[0].DisplayName)
+    )
     await waitFor(() => expect(push).toHaveBeenCalledTimes(1))
     expect(push).toBeCalledWith('/designer/somekey')
   })

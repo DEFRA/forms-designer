@@ -101,7 +101,7 @@ test('strings are rendered correctly', async () => {
   ).toBeInTheDocument()
 })
 
-test('Condition selection works correctly', () => {
+test('Condition selection works correctly', async () => {
   const dataValue = { data, save: jest.fn() }
 
   const { getByTestId, getAllByTestId } = customRenderForLists(
@@ -113,7 +113,7 @@ test('Condition selection works correctly', () => {
   const options: HTMLOptionElement[] = getAllByTestId('list-condition-option')
   expect(options[0].selected).toBeTruthy()
   expect(options[1].selected).toBeFalsy()
-  fireEvent.change(getByTestId('list-condition-select'), {
+  await fireEvent.change(getByTestId('list-condition-select'), {
     target: { value: 'MYWwRN' }
   })
 

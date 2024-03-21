@@ -32,11 +32,11 @@ describe('CssClasses', () => {
       expect(page.getByText(hint)).toBeInTheDocument()
     })
 
-    test('value should change and be displayed correctly', () => {
+    test('value should change and be displayed correctly', async () => {
       const { getByLabelText } = page
       const input = getByLabelText('Validation message')
       expect(input.value).toBe('')
-      fireEvent.change(input, {
+      await fireEvent.change(input, {
         target: { value: "It's wrong!" }
       })
       expect(input.value).toBe("It's wrong!")

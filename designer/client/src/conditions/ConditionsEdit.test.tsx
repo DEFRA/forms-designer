@@ -95,12 +95,12 @@ describe('with existing conditions', () => {
     expect(queryByTestId('edit-conditions')).toBeNull()
   })
 
-  test('Clicking an edit link causes the edit view to be rendered and all other elements hidden', () => {
+  test('Clicking an edit link causes the edit view to be rendered and all other elements hidden', async () => {
     const { getByText, getByTestId } = customRender(<ConditionsEdit />, {
       ...props
     })
     const link = getByText(condition.displayName)
-    fireEvent.click(link)
+    await fireEvent.click(link)
     expect(getByTestId('edit-conditions')).toBeTruthy()
   })
 })

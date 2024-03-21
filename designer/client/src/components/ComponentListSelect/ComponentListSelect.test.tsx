@@ -1,6 +1,6 @@
 import React, { useReducer } from 'react'
 import { render } from '@testing-library/react'
-import userEvent, { TargetElement } from '@testing-library/user-event'
+import { userEvent } from '@testing-library/user-event'
 import { DataContext } from '../../context'
 import { Data } from '@defra/forms-model'
 import { ComponentListSelect } from './ComponentListSelect'
@@ -109,7 +109,7 @@ describe('ComponentListSelect', () => {
     })
   })
 
-  test('Selecting a different list changes the edit link', () => {
+  test('Selecting a different list changes the edit link', async () => {
     // - when
     const { container, getByText } = render(
       <TestComponentContextProvider
@@ -120,8 +120,8 @@ describe('ComponentListSelect', () => {
       </TestComponentContextProvider>
     )
 
-    const select = container.querySelector('select') as TargetElement
-    userEvent.selectOptions(select, 'myList')
+    const select = container.querySelector('select')!
+    await userEvent.selectOptions(select, 'myList')
 
     // - then
     expect(getByText('Edit My list')).toBeInTheDocument()
@@ -146,10 +146,10 @@ describe('ComponentListSelect', () => {
     expect(getByText(addNew)).toBeInTheDocument()
   })
 
-  test('should display list error when state has errors', () => {
+  test('should display list error when state has errors', async () => {
     // - when
     const errors = { list: 'Select a list' }
-    const { container, getByText } = render(
+    const { container } = render(
       <TestComponentContextProvider
         dataValue={dataValue}
         componentValue={false}
@@ -159,8 +159,8 @@ describe('ComponentListSelect', () => {
       </TestComponentContextProvider>
     )
 
-    const select = container.querySelector('select') as TargetElement
-    userEvent.selectOptions(select, 'Select a list')
+    const select = container.querySelector('select')!
+    await userEvent.selectOptions(select, 'Select a list')
 
     // - then
     expect(

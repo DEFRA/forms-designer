@@ -8,7 +8,7 @@ import {
   relativeDateOrTimeOperatorNames,
   timeUnits
 } from '@defra/forms-model'
-import userEvent from '@testing-library/user-event'
+import { userEvent } from '@testing-library/user-event'
 
 describe.skip('AbsoluteDateTimeValues', () => {
   it('should display a text input for fields without custom mappings or options', async () => {
@@ -46,8 +46,8 @@ describe.skip('AbsoluteDateTimeValues', () => {
       />
     )
     const input = await screen.findByDisplayValue('my-value')
-    userEvent.clear(input)
-    userEvent.type(input, 'new-value')
+    await userEvent.clear(input)
+    await userEvent.type(input, 'new-value')
     expect(updateValueCallback).toHaveBeenLastCalledWith({
       display: 'new-value',
       type: 'Value',
@@ -71,8 +71,8 @@ describe.skip('AbsoluteDateTimeValues', () => {
       />
     )
     const input = await screen.findByDisplayValue('my-value')
-    userEvent.clear(input)
-    userEvent.type(input, '')
+    await userEvent.clear(input)
+    await userEvent.type(input, '')
     expect(updateValueCallback).toHaveBeenLastCalledWith(undefined)
   })
 
@@ -122,7 +122,7 @@ describe.skip('AbsoluteDateTimeValues', () => {
       />
     )
     const select = await screen.findByTestId('cond-value')
-    userEvent.selectOptions(select, 'value1')
+    await userEvent.selectOptions(select, 'value1')
     expect(updateValueCallback).toHaveBeenLastCalledWith({
       display: 'Value 1',
       type: 'Value',
@@ -151,7 +151,7 @@ describe.skip('AbsoluteDateTimeValues', () => {
       />
     )
     const select = await screen.findByTestId('cond-value')
-    userEvent.selectOptions(select, 'true')
+    await userEvent.selectOptions(select, 'true')
     expect(updateValueCallback).toHaveBeenLastCalledWith({
       display: 'Value 1',
       type: 'Value',
@@ -180,7 +180,7 @@ describe.skip('AbsoluteDateTimeValues', () => {
       />
     )
     const select = await screen.findByTestId('cond-value')
-    userEvent.selectOptions(select, '42')
+    await userEvent.selectOptions(select, '42')
     expect(updateValueCallback).toHaveBeenLastCalledWith({
       display: 'Value 1',
       type: 'Value',
@@ -209,7 +209,7 @@ describe.skip('AbsoluteDateTimeValues', () => {
       />
     )
     const select = await screen.findByTestId('cond-value')
-    userEvent.selectOptions(select, '')
+    await userEvent.selectOptions(select, '')
     expect(updateValueCallback).toHaveBeenLastCalledWith(undefined)
   })
 

@@ -34,10 +34,10 @@ describe('Newconfig', () => {
       await screen.findByText(/Enter a name for your form/i)
     ).toBeInTheDocument()
 
-    fireEvent.change(screen.getByLabelText('Title'), {
+    await fireEvent.change(screen.getByLabelText('Title'), {
       target: { value: 'Test Form A' }
     })
-    fireEvent.click(screen.getByText('Next'))
+    await fireEvent.click(screen.getByText('Next'))
     await waitFor(() => expect(push).toHaveBeenCalledTimes(1))
     expect(push).toBeCalledWith('designer/somekey')
 
@@ -60,10 +60,10 @@ describe('Newconfig', () => {
       await screen.findByText(/Enter a name for your form/i)
     ).toBeInTheDocument()
 
-    fireEvent.change(screen.getByLabelText('Title'), {
+    await fireEvent.change(screen.getByLabelText('Title'), {
       target: { value: 'My feedback form' }
     })
-    fireEvent.click(screen.getByText('Next'))
+    await fireEvent.click(screen.getByText('Next'))
     expect(apiCalled).toBeFalsy()
     expect(await screen.findByText(/There is a problem/i)).toBeInTheDocument()
     expect(
@@ -78,7 +78,7 @@ describe('Newconfig', () => {
       await screen.findByText(/Enter a name for your form/i)
     ).toBeInTheDocument()
 
-    fireEvent.click(screen.getByText('Next'))
+    await fireEvent.click(screen.getByText('Next'))
     expect(await screen.findByText(/There is a problem/i)).toBeInTheDocument()
     expect(await screen.findAllByText(/Enter form name/i)).toHaveLength(2)
   })
@@ -99,10 +99,10 @@ describe('Newconfig', () => {
       await screen.findByText(/Enter a name for your form/i)
     ).toBeInTheDocument()
 
-    fireEvent.change(screen.getByLabelText('Title'), {
+    await fireEvent.change(screen.getByLabelText('Title'), {
       target: { value: 'Visa & Form' }
     })
-    fireEvent.click(screen.getByText('Next'))
+    await fireEvent.click(screen.getByText('Next'))
     expect(apiCalled).toBeFalsy()
     expect(await screen.findByText(/There is a problem/i)).toBeInTheDocument()
     expect(

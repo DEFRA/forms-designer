@@ -1,6 +1,6 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
-import userEvent, { TargetElement } from '@testing-library/user-event'
+import { userEvent } from '@testing-library/user-event'
 
 import { ComponentCreate } from './ComponentCreate'
 import { ComponentContextProvider } from '../../reducers/component'
@@ -42,7 +42,7 @@ describe('ComponentCreate:', () => {
     )
 
     expect(screen.queryByLabelText('Title')).toBeNull()
-    userEvent.click(getByText('Details'))
+    await userEvent.click(getByText('Details'))
 
     // - then
     const editForm = await screen.findByLabelText('Title')
@@ -58,17 +58,15 @@ describe('ComponentCreate:', () => {
       </WrappingComponent>
     )
 
-    userEvent.click(getByText('Details'))
+    await userEvent.click(getByText('Details'))
 
-    const titleInput = (await screen.findByLabelText('Title')) as TargetElement
-    const contentTextArea = container.querySelector(
-      '#field-content'
-    ) as TargetElement
-    const saveBtn = container.querySelector('button') as TargetElement
+    const titleInput = await screen.findByLabelText('Title')!
+    const contentTextArea = container.querySelector('#field-content')!
+    const saveBtn = container.querySelector('button')!
 
-    userEvent.type(titleInput, 'Details')
-    userEvent.type(contentTextArea, 'content')
-    userEvent.click(saveBtn)
+    await userEvent.type(titleInput, 'Details')
+    await userEvent.type(contentTextArea, 'content')
+    await userEvent.click(saveBtn)
 
     // - then
     const updatedData = spy.mock.calls[0][0]
@@ -80,7 +78,7 @@ describe('ComponentCreate:', () => {
     expect(newDetailsComp.content).toEqual('content')
   })
 
-  test("Should have functioning 'Back to create component list' link", () => {
+  test("Should have functioning 'Back to create component list' link", async () => {
     // - when
     const { queryByTestId, queryByText } = render(
       <WrappingComponent componentValue={false}>
@@ -91,13 +89,13 @@ describe('ComponentCreate:', () => {
 
     expect(queryByTestId('component-create-list')).toBeInTheDocument()
 
-    userEvent.click(queryByText('Details') as TargetElement)
+    await userEvent.click(queryByText('Details')!)
 
     // - then
     expect(queryByTestId('component-create-list')).toBeNull()
     expect(queryByText(backBtnTxt)).toBeInTheDocument()
 
-    userEvent.click(queryByText(backBtnTxt) as TargetElement)
+    await userEvent.click(queryByText(backBtnTxt)!)
 
     expect(queryByTestId('component-create-list')).toBeInTheDocument()
     expect(queryByText(backBtnTxt)).toBeNull()
@@ -113,9 +111,9 @@ describe('ComponentCreate:', () => {
 
     expect(queryByRole('alert')).toBeNull()
 
-    userEvent.click(getByText('Details') as TargetElement)
+    await userEvent.click(getByText('Details')!)
     await screen.findByLabelText('Title')
-    userEvent.click(container.querySelector('button') as TargetElement)
+    await userEvent.click(container.querySelector('button')!)
 
     // - then
     expect(queryByRole('alert')).toBeInTheDocument()

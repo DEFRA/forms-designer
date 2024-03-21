@@ -38,7 +38,7 @@ describe('FormDetails', () => {
   }
 
   describe('Title', () => {
-    it('updates the form title', () => {
+    it('updates the form title', async () => {
       renderWithDataContext(<FormDetails />, {
         providerProps
       })
@@ -46,10 +46,10 @@ describe('FormDetails', () => {
       const input = screen.getByLabelText('Title') as HTMLInputElement
       const saveButton = findSaveButton()
 
-      fireEvent.change(input, { target: { value: 'Test Form' } })
+      await fireEvent.change(input, { target: { value: 'Test Form' } })
       expect(input.value).toBe('Test Form')
 
-      fireEvent.click(saveButton)
+      await fireEvent.click(saveButton)
       expect(providerProps.save.mock.calls[0][0]).toMatchObject({
         name: 'Test Form',
         phaseBanner: { phase: undefined }
@@ -58,7 +58,7 @@ describe('FormDetails', () => {
   })
 
   describe('Phase banner', () => {
-    it('sets alpha phase', () => {
+    it('sets alpha phase', async () => {
       renderWithDataContext(<FormDetails />, {
         providerProps
       })
@@ -66,11 +66,11 @@ describe('FormDetails', () => {
       const alphaRadio = screen.getByLabelText('Alpha') as HTMLInputElement
       expect(alphaRadio.checked).toEqual(false)
 
-      fireEvent.click(alphaRadio, { target: { value: 'alpha' } })
+      await fireEvent.click(alphaRadio, { target: { value: 'alpha' } })
       expect(alphaRadio.checked).toEqual(true)
 
       const saveButton = findSaveButton()
-      fireEvent.click(saveButton)
+      await fireEvent.click(saveButton)
 
       expect(providerProps.save.mock.calls[0][0]).toMatchObject({
         name: 'Default Title',
@@ -78,7 +78,7 @@ describe('FormDetails', () => {
       })
     })
 
-    it('sets beta phase', () => {
+    it('sets beta phase', async () => {
       renderWithDataContext(<FormDetails />, {
         providerProps
       })
@@ -89,18 +89,18 @@ describe('FormDetails', () => {
       const betaRadio = screen.getByLabelText('Beta') as HTMLInputElement
       expect(betaRadio.checked).toEqual(false)
 
-      fireEvent.click(betaRadio, { target: { value: 'beta' } })
+      await fireEvent.click(betaRadio, { target: { value: 'beta' } })
       expect(betaRadio.checked).toEqual(true)
 
       const saveButton = findSaveButton()
-      fireEvent.click(saveButton)
+      await fireEvent.click(saveButton)
       expect(providerProps.save.mock.calls[0][0]).toMatchObject({
         name: 'Default Title',
         phaseBanner: { phase: 'beta' }
       })
     })
 
-    it('sets none phase', () => {
+    it('sets none phase', async () => {
       renderWithDataContext(<FormDetails />, {
         providerProps: {
           ...providerProps,
@@ -117,11 +117,11 @@ describe('FormDetails', () => {
       const noneRadio = screen.getByLabelText('None') as HTMLInputElement
       expect(noneRadio.checked).toEqual(false)
 
-      fireEvent.click(noneRadio)
+      await fireEvent.click(noneRadio)
       expect(noneRadio.checked).toEqual(true)
 
       const saveButton = findSaveButton()
-      fireEvent.click(saveButton, { target: { value: '' } })
+      await fireEvent.click(saveButton, { target: { value: '' } })
       expect(providerProps.save.mock.calls[0][0]).toMatchObject({
         name: 'Default Title',
         phaseBanner: { phase: undefined }
@@ -130,7 +130,7 @@ describe('FormDetails', () => {
   })
 
   describe('Feedback form', () => {
-    it('sets `Yes` feedback form', () => {
+    it('sets `Yes` feedback form', async () => {
       renderWithDataContext(<FormDetails />, {
         providerProps
       })
@@ -141,11 +141,11 @@ describe('FormDetails', () => {
       expect(yesFeedbackRadio.checked).toEqual(false)
       expect(noFeedbackRadio.checked).toEqual(true)
 
-      fireEvent.click(yesFeedbackRadio)
+      await fireEvent.click(yesFeedbackRadio)
       expect(yesFeedbackRadio.checked).toEqual(true)
 
       const saveButton = findSaveButton()
-      fireEvent.click(saveButton)
+      await fireEvent.click(saveButton)
       expect(providerProps.save.mock.calls[0][0]).toMatchObject({
         feedback: {
           feedbackForm: true,
@@ -156,7 +156,7 @@ describe('FormDetails', () => {
       })
     })
 
-    it('sets `No` feedback form', () => {
+    it('sets `No` feedback form', async () => {
       renderWithDataContext(<FormDetails />, {
         providerProps: {
           ...providerProps,
@@ -175,11 +175,11 @@ describe('FormDetails', () => {
       expect(yesFeedbackRadio.checked).toEqual(true)
       expect(noFeedbackRadio.checked).toEqual(false)
 
-      fireEvent.click(noFeedbackRadio)
+      await fireEvent.click(noFeedbackRadio)
       expect(noFeedbackRadio.checked).toEqual(true)
 
       const saveButton = findSaveButton()
-      fireEvent.click(saveButton)
+      await fireEvent.click(saveButton)
       expect(providerProps.save.mock.calls[0][0]).toMatchObject({
         name: 'Default Title',
         feedback: {
@@ -213,11 +213,11 @@ describe('FormDetails', () => {
       const targetFeedbackForm = await screen.findByTestId(
         'target-feedback-form'
       )
-      fireEvent.change(targetFeedbackForm, {
+      await fireEvent.change(targetFeedbackForm, {
         target: { value: feedbackFromKey }
       })
       const saveButton = findSaveButton()
-      fireEvent.click(saveButton)
+      await fireEvent.click(saveButton)
       expect(providerProps.save.mock.calls[0][0]).toMatchObject({
         feedback: {
           url: `/${feedbackFromKey}`

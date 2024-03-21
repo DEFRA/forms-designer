@@ -64,13 +64,13 @@ test('hint texts are rendered correctly', () => {
   expect(getByText(hint2)).toBeInTheDocument()
 })
 
-test('cannot add condition hint is rendered correctly', () => {
+test('cannot add condition hint is rendered correctly', async () => {
   const hint =
     'You cannot add any conditions as there are no components on the page you wish to link from. Add a component, such as an Input or a Selection field, and then add a condition.'
 
   const { getByLabelText, getByText } = customRender(<LinkCreate />)
 
-  fireEvent.change(getByLabelText('From'), {
+  await fireEvent.change(getByLabelText('From'), {
     target: { value: data.pages[1].path }
   })
 
@@ -87,16 +87,16 @@ test('Renders from and to inputs with the correct options', () => {
   expect(toInput.getByText(data.pages[1].title)).toBeInTheDocument()
 })
 
-test('Selecting a from value causes the SelectConditions component to be displayed', () => {
+test('Selecting a from value causes the SelectConditions component to be displayed', async () => {
   const { getByTestId, queryByTestId } = customRender(<LinkCreate />)
   expect(queryByTestId('select-conditions')).toBeNull()
-  fireEvent.change(getByTestId('link-source'), {
+  await fireEvent.change(getByTestId('link-source'), {
     target: { value: '/first-page' }
   })
   expect(getByTestId('select-conditions')).toBeInTheDocument()
 })
 
-test('links for older conditions are correctly generated when the form is submitted', () => {
+test('links for older conditions are correctly generated when the form is submitted', async () => {
   const data = {
     ...rawData,
     conditions: [
@@ -117,32 +117,32 @@ test('links for older conditions are correctly generated when the form is submit
     data,
     save
   })
-  fireEvent.change(getByTestId('link-source'), {
+  await fireEvent.change(getByTestId('link-source'), {
     target: { value: '/first-page' }
   })
-  fireEvent.change(getByTestId('link-target'), {
+  await fireEvent.change(getByTestId('link-target'), {
     target: { value: '/summary' }
   })
-  fireEvent.change(getByTestId('select-condition'), {
+  await fireEvent.change(getByTestId('select-condition'), {
     target: { value: 'hasUKPassport' }
   })
-  fireEvent.click(getByRole('button'))
+  await fireEvent.click(getByRole('button'))
   expect(save).toBeCalledTimes(1)
   expect(save.mock.calls[0][0].pages[0].next).toContainEqual({
     path: '/summary',
     condition: 'hasUKPassport'
   })
 
-  fireEvent.change(getByTestId('link-source'), {
+  await fireEvent.change(getByTestId('link-source'), {
     target: { value: '/summary' }
   })
-  fireEvent.change(getByTestId('link-target'), {
+  await fireEvent.change(getByTestId('link-target'), {
     target: { value: '/first-page' }
   })
-  fireEvent.change(getByTestId('select-condition'), {
+  await fireEvent.change(getByTestId('select-condition'), {
     target: { value: '' }
   })
-  fireEvent.click(getByRole('button'))
+  await fireEvent.click(getByRole('button'))
   expect(save).toBeCalledTimes(2)
 
   expect(save.mock.calls[1][0].pages[2].next).toContainEqual({
@@ -150,7 +150,7 @@ test('links for older conditions are correctly generated when the form is submit
   })
 })
 
-test('links are correctly generated when the form is submitted', () => {
+test('links are correctly generated when the form is submitted', async () => {
   const data = {
     ...rawData,
     conditions: [
@@ -205,32 +205,32 @@ test('links are correctly generated when the form is submitted', () => {
     data,
     save
   })
-  fireEvent.change(getByTestId('link-source'), {
+  await fireEvent.change(getByTestId('link-source'), {
     target: { value: '/first-page' }
   })
-  fireEvent.change(getByTestId('link-target'), {
+  await fireEvent.change(getByTestId('link-target'), {
     target: { value: '/summary' }
   })
-  fireEvent.change(getByTestId('select-condition'), {
+  await fireEvent.change(getByTestId('select-condition'), {
     target: { value: 'hasUKPassport' }
   })
-  fireEvent.click(getByRole('button'))
+  await fireEvent.click(getByRole('button'))
   expect(save).toBeCalledTimes(1)
   expect(save.mock.calls[0][0].pages[0].next).toContainEqual({
     path: '/summary',
     condition: 'hasUKPassport'
   })
 
-  fireEvent.change(getByTestId('link-source'), {
+  await fireEvent.change(getByTestId('link-source'), {
     target: { value: '/summary' }
   })
-  fireEvent.change(getByTestId('link-target'), {
+  await fireEvent.change(getByTestId('link-target'), {
     target: { value: '/first-page' }
   })
-  fireEvent.change(getByTestId('select-condition'), {
+  await fireEvent.change(getByTestId('select-condition'), {
     target: { value: 'hasUKPassport' }
   })
-  fireEvent.click(getByRole('button'))
+  await fireEvent.click(getByRole('button'))
   expect(save).toBeCalledTimes(2)
 
   expect(save.mock.calls[1][0].pages[2].next).toContainEqual({
@@ -238,7 +238,7 @@ test('links are correctly generated when the form is submitted', () => {
   })
 })
 
-test('Submitting without selecting to/from options shows the user an error', () => {
+test('Submitting without selecting to/from options shows the user an error', async () => {
   const data = {
     ...rawData
   }
@@ -247,7 +247,7 @@ test('Submitting without selecting to/from options shows the user an error', () 
     data,
     save
   })
-  fireEvent.click(getByRole('button'))
+  await fireEvent.click(getByRole('button'))
   expect(save).not.toBeCalled()
   const summary = within(getByRole('alert'))
   expect(summary.getByText('Enter from')).toBeInTheDocument()

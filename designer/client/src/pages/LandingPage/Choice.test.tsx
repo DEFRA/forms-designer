@@ -16,7 +16,7 @@ describe('LandingChoice', () => {
     const push = jest.fn()
     const history = { push }
     render(<LandingChoice history={history} />)
-    fireEvent.click(screen.getByTitle('Next'))
+    await fireEvent.click(screen.getByTitle('Next'))
     expect(push).toBeCalledWith('/new')
   })
 
@@ -24,8 +24,8 @@ describe('LandingChoice', () => {
     const push = jest.fn()
     const history = { push }
     render(<LandingChoice history={history} />)
-    fireEvent.click(screen.getByLabelText('Open an existing form'))
-    fireEvent.click(screen.getByTitle('Next'))
+    await fireEvent.click(screen.getByLabelText('Open an existing form'))
+    await fireEvent.click(screen.getByTitle('Next'))
     expect(push).toBeCalledWith('/choose-existing')
   })
 })
