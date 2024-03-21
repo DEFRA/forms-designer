@@ -1,6 +1,6 @@
 import * as Code from '@hapi/code'
 import * as Lab from '@hapi/lab'
-import { camelCase } from '../client/src/helpers'
+import { camelCase, isEmpty } from '../client/src/helpers'
 
 const { expect } = Code
 const lab = Lab.script()
@@ -31,6 +31,19 @@ suite('helpers', () => {
 
     test('should camel case string with apostrophes chars', () => {
       expect(camelCase("Bob's your uncle")).to.equal('bobsYourUncle')
+    })
+  })
+
+  describe('isEmpty', () => {
+    test('should return the correct value', () => {
+      expect(isEmpty(1)).toBeFalsy()
+      expect(isEmpty(0)).toBeFalsy()
+      expect(isEmpty(-0)).toBeFalsy()
+      expect(isEmpty('boop')).toBeFalsy()
+
+      expect(isEmpty('')).toBeTruthy()
+      expect(isEmpty(``)).toBeTruthy()
+      expect(isEmpty(undefined)).toBeTruthy()
     })
   })
 })
