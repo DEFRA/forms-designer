@@ -1,5 +1,6 @@
-import React, { MouseEvent, ChangeEvent } from 'react'
 import { clone } from '@defra/forms-model'
+import React, { type MouseEvent, type ChangeEvent } from 'react'
+
 import { DataContext } from '~/src/context/index.js'
 import logger from '~/src/plugins/logger.js'
 

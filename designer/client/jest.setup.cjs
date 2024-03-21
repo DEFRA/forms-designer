@@ -4,8 +4,8 @@ const { ReadableStream, TransformStream } = require('node:stream/web')
 const { clearImmediate, setImmediate } = require('node:timers')
 const { TextDecoder, TextEncoder } = require('node:util')
 
-const Adapter = require('enzyme-adapter-react-16')
 const { configure } = require('enzyme')
+const Adapter = require('enzyme-adapter-react-16')
 
 Object.defineProperties(globalThis, {
   clearImmediate: { value: clearImmediate },

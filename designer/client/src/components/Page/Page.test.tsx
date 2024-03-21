@@ -1,4 +1,4 @@
-import { FormDefinition } from '@defra/forms-model'
+import { type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import {
   act,
@@ -8,11 +8,12 @@ import {
   waitFor
 } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import { DataContext } from '~/src/context/index.js'
-import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 import React from 'react'
+import { Router } from 'react-router-dom'
+
 import { Page } from '~/src/components/Page/index.js'
+import { DataContext } from '~/src/context/index.js'
 const history = createMemoryHistory()
 history.push('')
 

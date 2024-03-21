@@ -1,5 +1,5 @@
+import { type FormDefinition } from '@defra/forms-model'
 import dagre from 'dagre'
-import { FormDefinition } from '@defra/forms-model'
 
 export type Point = {
   node: {

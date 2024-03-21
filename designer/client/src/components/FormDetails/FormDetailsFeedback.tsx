@@ -1,6 +1,6 @@
-import React, { ChangeEvent, useEffect, useState } from 'react'
+import { type FormConfiguration } from '@defra/forms-model'
 import { Label, Radios } from '@xgovformbuilder/govuk-react-jsx'
-import { FormConfiguration } from '@defra/forms-model'
+import React, { type ChangeEvent, useEffect, useState } from 'react'
 
 import { i18n } from '~/src/i18n/index.js'
 import * as formConfigurationApi from '~/src/load-form-configurations.js'

@@ -1,4 +1,4 @@
-import { FormDefinition, Section } from '@defra/forms-model'
+import { type FormDefinition, type Section } from '@defra/forms-model'
 
 /**
  * @param data - data from DataContext

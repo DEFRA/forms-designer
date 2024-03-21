@@ -1,4 +1,5 @@
-import { FormDefinition } from '@defra/forms-model'
+import { type FormDefinition } from '@defra/forms-model'
+
 import { updateCondition } from '~/src/data/index.js'
 
 const condition = {

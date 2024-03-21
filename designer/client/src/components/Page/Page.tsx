@@ -1,3 +1,4 @@
+import { ComponentTypes } from '@defra/forms-model'
 import React, { useContext, useState } from 'react'
 import {
   SortableContainer,
@@ -5,16 +6,15 @@ import {
   arrayMove
 } from 'react-sortable-hoc'
 
-import { Flyout } from '~/src/components/Flyout/index.js'
 import { Component } from '~/src/component.js'
 import { ComponentCreate } from '~/src/components/ComponentCreate/index.js'
-import { ComponentTypes } from '@defra/forms-model'
-import { DataContext } from '~/src/context/index.js'
-import PageEdit from '~/src/page-edit.js'
+import { Flyout } from '~/src/components/Flyout/index.js'
 import { PageLinkage } from '~/src/components/PageLinkage/index.js'
-import { ComponentContextProvider } from '~/src/reducers/component/index.js'
+import { DataContext } from '~/src/context/index.js'
 import { findPage } from '~/src/data/index.js'
 import { i18n } from '~/src/i18n/index.js'
+import PageEdit from '~/src/page-edit.js'
+import { ComponentContextProvider } from '~/src/reducers/component/index.js'
 
 const SortableItem = SortableElement(({ index, page, component, data }) => (
   <div className="component-item">

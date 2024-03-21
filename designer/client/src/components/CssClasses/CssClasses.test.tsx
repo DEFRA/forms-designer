@@ -1,6 +1,7 @@
-import React from 'react'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
+import React from 'react'
+
 import { CssClasses } from '~/src/components/CssClasses/index.js'
 import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 

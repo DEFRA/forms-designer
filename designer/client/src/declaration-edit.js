@@ -1,8 +1,8 @@
-import React from 'react'
-import Editor from '~/src/editor.js'
 import { clone } from '@defra/forms-model'
+import React from 'react'
 
 import { DataContext } from '~/src/context/index.js'
+import Editor from '~/src/editor.js'
 import logger from '~/src/plugins/logger.js'
 
 class DeclarationEdit extends React.Component {

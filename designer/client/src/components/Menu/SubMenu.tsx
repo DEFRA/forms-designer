@@ -1,6 +1,7 @@
-import React, { useContext, useRef } from 'react'
-import { DataContext } from '~/src/context/index.js'
 import { whichMigrations } from '@defra/forms-model'
+import React, { useContext, useRef } from 'react'
+
+import { DataContext } from '~/src/context/index.js'
 import logger from '~/src/plugins/logger.js'
 
 export function migrate(form) {

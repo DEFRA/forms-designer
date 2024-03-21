@@ -1,12 +1,12 @@
-import { ConditionField } from '~/src/conditions/condition-field.js'
 import { ConditionAbstract } from '~/src/conditions/condition-abstract.js'
+import { ConditionField } from '~/src/conditions/condition-field.js'
 import { getExpression } from '~/src/conditions/condition-operators.js'
-import {
-  ConditionValue,
-  RelativeTimeValue
-} from '~/src/conditions/condition-values.js'
 import { ConditionValueAbstract } from '~/src/conditions/condition-value-abstract.js'
-import { Coordinator } from '~/src/conditions/enums.js'
+import {
+  type ConditionValue,
+  type RelativeTimeValue
+} from '~/src/conditions/condition-values.js'
+import { type Coordinator } from '~/src/conditions/enums.js'
 
 export class Condition extends ConditionAbstract {
   field: ConditionField

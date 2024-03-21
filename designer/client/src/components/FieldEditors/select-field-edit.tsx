@@ -1,8 +1,8 @@
 import React from 'react'
 
-import { i18n } from '~/src/i18n/index.js'
 import { Autocomplete } from '~/src/components/Autocomplete/index.js'
 import ListFieldEdit from '~/src/components/FieldEditors/list-field-edit.jsx'
+import { i18n } from '~/src/i18n/index.js'
 
 type Props = {
   page: any // TODO

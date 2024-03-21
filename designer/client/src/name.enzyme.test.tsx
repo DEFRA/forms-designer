@@ -1,5 +1,6 @@
-import React from 'react'
 import { mount } from 'enzyme'
+import React from 'react'
+
 import { Name } from '~/src/name.jsx'
 
 describe('Name component', () => {

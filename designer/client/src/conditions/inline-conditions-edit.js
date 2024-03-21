@@ -1,15 +1,16 @@
-import React from 'react'
 import {
   ConditionGroupDef,
   toPresentationString,
   clone
 } from '@defra/forms-model'
-import InlineConditionsDefinition from '~/src/conditions/InlineConditionsDefinition.js'
+import React from 'react'
+
 import {
   EditIcon,
   MoveDownIcon,
   MoveUpIcon
 } from '~/src/components/Icons/index.js'
+import InlineConditionsDefinition from '~/src/conditions/InlineConditionsDefinition.js'
 
 class InlineConditionsEdit extends React.Component {
   constructor(props) {

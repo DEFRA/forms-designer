@@ -1,7 +1,8 @@
-import React from 'react'
 import { cleanup, render } from '@testing-library/react'
-import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
+import React from 'react'
+
 import DetailsEdit from '~/src/components/FieldEditors/details-edit.jsx'
+import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 
 describe('details-edit', () => {
   afterEach(cleanup)

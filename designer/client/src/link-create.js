@@ -1,12 +1,12 @@
-import React from 'react'
-import SelectConditions from '~/src/conditions/SelectConditions.jsx'
 import { ErrorMessage } from '@xgovformbuilder/govuk-react-jsx'
 import classNames from 'classnames'
+import React from 'react'
 
-import ErrorSummary from '~/src/error-summary.jsx'
+import SelectConditions from '~/src/conditions/SelectConditions.jsx'
 import { DataContext } from '~/src/context/index.js'
-import { i18n } from '~/src/i18n/index.js'
 import { addLink } from '~/src/data/index.js'
+import ErrorSummary from '~/src/error-summary.jsx'
+import { i18n } from '~/src/i18n/index.js'
 import logger from '~/src/plugins/logger.js'
 
 class LinkCreate extends React.Component {

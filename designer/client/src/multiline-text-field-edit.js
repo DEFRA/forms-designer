@@ -1,8 +1,8 @@
 import React, { useContext } from 'react'
-import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
-import { Actions } from '~/src/reducers/component/types.js'
 
 import { TextFieldEdit } from '~/src/components/FieldEditors/text-field-edit.jsx'
+import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
+import { Actions } from '~/src/reducers/component/types.js'
 
 export function MultilineTextFieldEdit({ context = ComponentContext }) {
   const { state, dispatch } = useContext(context)

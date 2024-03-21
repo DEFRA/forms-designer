@@ -1,4 +1,4 @@
-import { Coordinator } from '~/src/conditions/enums.js'
+import { type Coordinator } from '~/src/conditions/enums.js'
 import { toPresentationString, toExpression } from '~/src/conditions/helpers.js'
 import { type ConditionsArray } from '~/src/conditions/types.js'
 

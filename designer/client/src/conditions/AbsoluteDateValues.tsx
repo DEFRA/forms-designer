@@ -1,6 +1,7 @@
-import React, { useEffect, useState, ChangeEvent } from 'react'
 import isValid from 'date-fns/isValid'
 import padStart from 'lodash/padStart.js'
+import React, { useEffect, useState, type ChangeEvent } from 'react'
+
 import {
   isInt,
   tryParseInt

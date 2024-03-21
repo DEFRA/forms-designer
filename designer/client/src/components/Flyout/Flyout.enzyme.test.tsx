@@ -1,5 +1,6 @@
-import React from 'react'
 import { mount } from 'enzyme'
+import React from 'react'
+
 import { useFlyoutEffect } from '~/src/components/Flyout/Flyout.jsx'
 import { FlyoutContext } from '~/src/context/index.js'
 

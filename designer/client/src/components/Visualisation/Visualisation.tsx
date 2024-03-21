@@ -1,10 +1,13 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 
 import { Page } from '~/src/components/Page/index.js'
+import { Info } from '~/src/components/Visualisation/Info.jsx'
 import { Lines } from '~/src/components/Visualisation/Lines.jsx'
 import { Minimap } from '~/src/components/Visualisation/Minimap.jsx'
-import { Info } from '~/src/components/Visualisation/Info.jsx'
-import { getLayout, Pos } from '~/src/components/Visualisation/getLayout.js'
+import {
+  getLayout,
+  type Pos
+} from '~/src/components/Visualisation/getLayout.js'
 import { DataContext } from '~/src/context/index.js'
 import '~/src/components/Visualisation/visualisation.scss'
 

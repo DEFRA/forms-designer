@@ -1,10 +1,12 @@
+import { type ComponentDef } from '@defra/forms-model'
 import React, { useReducer, createContext } from 'react'
-import randomId from '~/src/randomId.js'
-import { schemaReducer } from '~/src/reducers/component/componentReducer.schema.js'
-import { optionsReducer } from '~/src/reducers/component/componentReducer.options.js'
-import { metaReducer } from '~/src/reducers/component/componentReducer.meta.js'
-import { fieldsReducer } from '~/src/reducers/component/componentReducer.fields.js'
 
+import logger from '~/src/plugins/logger.js'
+import randomId from '~/src/randomId.js'
+import { fieldsReducer } from '~/src/reducers/component/componentReducer.fields.js'
+import { metaReducer } from '~/src/reducers/component/componentReducer.meta.js'
+import { optionsReducer } from '~/src/reducers/component/componentReducer.options.js'
+import { schemaReducer } from '~/src/reducers/component/componentReducer.schema.js'
 import {
   type ComponentActions,
   Meta,
@@ -13,8 +15,6 @@ import {
   Options,
   Actions
 } from '~/src/reducers/component/types.js'
-import { ComponentDef } from '@defra/forms-model'
-import logger from '~/src/plugins/logger.js'
 
 type ComponentState = {
   selectedComponent: Partial<ComponentDef>

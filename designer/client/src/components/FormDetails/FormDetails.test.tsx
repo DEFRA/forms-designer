@@ -1,4 +1,3 @@
-import React from 'react'
 import { screen } from '@testing-library/dom'
 import {
   act,
@@ -9,13 +8,15 @@ import {
   waitFor
 } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
+import React from 'react'
+
 import { FormDetails } from '~/src/components/FormDetails/index.js'
+import { DataContext } from '~/src/context/index.js'
 import {
   server,
   mockedFormConfigurations,
   mockedFormHandlers
 } from '~/test/testServer.js'
-import { DataContext } from '~/src/context/index.js'
 
 describe('FormDetails', () => {
   const { findByTestId, findByText, getByLabelText, getByText, queryByText } =

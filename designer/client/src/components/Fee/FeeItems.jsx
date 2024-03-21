@@ -1,10 +1,10 @@
-import React from 'react'
 import { clone } from '@defra/forms-model'
 import { ErrorMessage } from '@xgovformbuilder/govuk-react-jsx'
 import classNames from 'classnames'
+import React from 'react'
 
-import { isEmpty } from '~/src/helpers.js'
 import { DataContext } from '~/src/context/index.js'
+import { isEmpty } from '~/src/helpers.js'
 import logger from '~/src/plugins/logger.js'
 
 function isDuplicated(arr) {

@@ -1,12 +1,13 @@
-import { ListActions } from '~/src/reducers/listActions.jsx'
-import { DataContext } from '~/src/context/index.js'
 import React, { useContext } from 'react'
+
+import { DataContext } from '~/src/context/index.js'
 import { i18n } from '~/src/i18n/index.js'
-import { ListContext } from '~/src/reducers/listReducer.jsx'
 import {
   ListsEditorContext,
   ListsEditorStateActions
 } from '~/src/reducers/list/listsEditorReducer.jsx'
+import { ListActions } from '~/src/reducers/listActions.jsx'
+import { ListContext } from '~/src/reducers/listReducer.jsx'
 
 export function ListSelect() {
   const { data } = useContext(DataContext)

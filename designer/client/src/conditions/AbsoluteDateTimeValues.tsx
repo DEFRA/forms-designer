@@ -1,15 +1,16 @@
+import isValid from 'date-fns/isValid'
 import React from 'react'
+
 import {
   AbsoluteDateValues,
-  YearMonthDay
+  type YearMonthDay
 } from '~/src/conditions/AbsoluteDateValues.jsx'
 import {
   AbsoluteTimeValues,
-  HourMinute
+  type HourMinute
 } from '~/src/conditions/AbsoluteTimeValues.jsx'
-import isValid from 'date-fns/isValid'
-import { i18n } from '~/src/i18n/index.js'
 import { isInt } from '~/src/conditions/inline-condition-helpers.js'
+import { i18n } from '~/src/i18n/index.js'
 
 interface Props {
   value?: Date

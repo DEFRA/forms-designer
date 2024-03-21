@@ -1,7 +1,8 @@
 import React from 'react'
+
 import { ErrorMessage } from '~/src/components/ErrorMessage/index.js'
 import { isEmpty } from '~/src/helpers.js'
-import { withI18nRef, I18n } from '~/src/i18n/index.js'
+import { withI18nRef, type I18n } from '~/src/i18n/index.js'
 
 type Props = {
   updateModel?: (arg0: any) => object | null | undefined

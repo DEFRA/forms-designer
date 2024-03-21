@@ -1,11 +1,12 @@
-import { NewConfig } from '~/src/pages/LandingPage/NewConfig.jsx'
+import type { FormConfiguration } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { act, cleanup, render, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React from 'react'
 import { MemoryRouter } from 'react-router-dom'
+
+import { NewConfig } from '~/src/pages/LandingPage/NewConfig.jsx'
 import { server, http, mockedFormHandlers } from '~/test/testServer.js'
-import type { FormConfiguration } from '@defra/forms-model'
 
 describe('Newconfig', () => {
   beforeAll(() => server.listen())

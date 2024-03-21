@@ -1,6 +1,7 @@
-import React from 'react'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
+import React from 'react'
+
 import PageCreate from '~/src/page-create.js'
 
 describe('page create fields text', () => {

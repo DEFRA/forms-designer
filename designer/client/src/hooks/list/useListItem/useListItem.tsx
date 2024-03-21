@@ -1,12 +1,13 @@
+import { type FormDefinition } from '@defra/forms-model'
+
+import { addList, findList } from '~/src/data/index.js'
+import { type ListItemHook } from '~/src/hooks/list/useListItem/types.js'
 import { ListActions } from '~/src/reducers/listActions.jsx'
 import {
   hasValidationErrors,
   validateNotEmpty,
   validateTitle
 } from '~/src/validations.js'
-import { FormDefinition } from '@defra/forms-model'
-import { ListItemHook } from '~/src/hooks/list/useListItem/types.js'
-import { addList, findList } from '~/src/data/index.js'
 
 export function useListItem(state, dispatch): ListItemHook {
   const { selectedItem = {} } = state

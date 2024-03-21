@@ -1,8 +1,5 @@
-import React from 'react'
-import { Visualisation } from '~/src/components/Visualisation/index.js'
-import { FormDefinition } from '@defra/forms-model'
+import { type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import { userEvent } from '@testing-library/user-event'
 import {
   act,
   cleanup,
@@ -10,9 +7,13 @@ import {
   waitFor,
   type RenderResult
 } from '@testing-library/react'
-import { DataContext } from '~/src/context/index.js'
-import { Router } from 'react-router-dom'
+import { userEvent } from '@testing-library/user-event'
 import { createMemoryHistory } from 'history'
+import React from 'react'
+import { Router } from 'react-router-dom'
+
+import { Visualisation } from '~/src/components/Visualisation/index.js'
+import { DataContext } from '~/src/context/index.js'
 
 const history = createMemoryHistory()
 history.push('')

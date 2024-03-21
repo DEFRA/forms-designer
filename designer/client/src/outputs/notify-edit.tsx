@@ -1,19 +1,19 @@
-import React, { Component } from 'react'
-
-import NotifyEditItems from '~/src/outputs/notify-edit-items.jsx'
-import {
-  Output,
-  NotifyOutputConfiguration,
-  ValidationErrors
-} from '~/src/outputs/types.js'
 import {
   Checkboxes,
   ErrorMessage,
   Input
 } from '@xgovformbuilder/govuk-react-jsx'
 import classNames from 'classnames'
-import { i18n } from '~/src/i18n/index.js'
+import React, { Component } from 'react'
+
 import { allInputs } from '~/src/data/index.js'
+import { i18n } from '~/src/i18n/index.js'
+import NotifyEditItems from '~/src/outputs/notify-edit-items.jsx'
+import {
+  type Output,
+  type NotifyOutputConfiguration,
+  type ValidationErrors
+} from '~/src/outputs/types.js'
 
 type State = {}
 

@@ -1,14 +1,15 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+
+import Designer from '~/src/designer.jsx'
+import { initI18n } from '~/src/i18n/index.js'
+import { SaveError } from '~/src/pages/ErrorPages/index.js'
 import {
   LandingChoice,
   NewConfig,
   ChooseExisting
 } from '~/src/pages/LandingPage/index.js'
-import { initI18n } from '~/src/i18n/index.js'
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
-import Designer from '~/src/designer.jsx'
-import { SaveError } from '~/src/pages/ErrorPages/index.js'
 
 initI18n()
 

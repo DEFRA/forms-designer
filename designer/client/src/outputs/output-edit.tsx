@@ -1,24 +1,25 @@
+import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import React, {
   Component,
-  MouseEvent,
-  ChangeEvent,
-  FormEvent,
-  ReactNode
+  type MouseEvent,
+  type ChangeEvent,
+  type FormEvent,
+  type ReactNode
 } from 'react'
-import NotifyEdit from '~/src/outputs/notify-edit.jsx'
+
+import { DataContext } from '~/src/context/index.js'
+import ErrorSummary from '~/src/error-summary.jsx'
 import EmailEdit from '~/src/outputs/email-edit.jsx'
-import { Input } from '@xgovformbuilder/govuk-react-jsx'
-import WebhookEdit from '~/src/outputs/webhook-edit.jsx'
+import NotifyEdit from '~/src/outputs/notify-edit.jsx'
 import {
   OutputType,
-  OutputConfiguration,
-  Output,
-  ValidationErrors
+  type OutputConfiguration,
+  type Output,
+  type ValidationErrors
 } from '~/src/outputs/types.js'
-import { validateNotEmpty, hasValidationErrors } from '~/src/validations.js'
-import ErrorSummary from '~/src/error-summary.jsx'
-import { DataContext } from '~/src/context/index.js'
+import WebhookEdit from '~/src/outputs/webhook-edit.jsx'
 import logger from '~/src/plugins/logger.js'
+import { validateNotEmpty, hasValidationErrors } from '~/src/validations.js'
 
 type State = {
   outputType: OutputType

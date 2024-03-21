@@ -1,11 +1,12 @@
+import FocusTrap from 'focus-trap-react'
 import React, {
-  CSSProperties,
-  ReactChildren,
+  type CSSProperties,
+  type ReactChildren,
   useContext,
   useLayoutEffect,
   useState
 } from 'react'
-import FocusTrap from 'focus-trap-react'
+
 import { FlyoutContext } from '~/src/context/index.js'
 import { i18n } from '~/src/i18n/index.js'
 

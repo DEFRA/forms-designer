@@ -1,5 +1,5 @@
-import React from 'react'
-import { FormDefinition } from '@defra/forms-model'
+import { type FormDefinition } from '@defra/forms-model'
+import { screen, within } from '@testing-library/dom'
 import {
   act,
   cleanup,
@@ -8,9 +8,10 @@ import {
   waitFor
 } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import LinkCreate from '~/src/link-create.js'
+import React from 'react'
+
 import { DataContext } from '~/src/context/index.js'
-import { screen, within } from '@testing-library/dom'
+import LinkCreate from '~/src/link-create.js'
 
 const rawData: FormDefinition = {
   lists: [],

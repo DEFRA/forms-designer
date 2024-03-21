@@ -1,4 +1,5 @@
 import { http, HttpResponse } from 'msw'
+
 import { FeatureToggleApi } from '~/src/api/toggleApi.js'
 import { server, mockedFormHandlers } from '~/test/testServer.js'
 

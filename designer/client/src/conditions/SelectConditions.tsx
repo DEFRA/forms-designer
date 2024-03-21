@@ -1,22 +1,27 @@
-import React, { ChangeEvent } from 'react'
-import InlineConditions from '~/src/conditions/InlineConditions.jsx'
-import { Condition, ConditionsModel, FormDefinition } from '@defra/forms-model'
-import { Flyout } from '~/src/components/Flyout/index.js'
-import { Hint, Select } from '@xgovformbuilder/govuk-react-jsx'
-import { i18n } from '~/src/i18n/index.js'
-import { DataContext } from '~/src/context/index.js'
-import { RenderInPortal } from '~/src/components/RenderInPortal/index.js'
 import {
-  allInputs,
-  inputsAccessibleAt,
-  hasConditions as dataHasConditions
-} from '~/src/data/index.js'
+  type Condition,
+  ConditionsModel,
+  type FormDefinition
+} from '@defra/forms-model'
+import { Hint, Select } from '@xgovformbuilder/govuk-react-jsx'
+import React, { type ChangeEvent } from 'react'
+
+import { Flyout } from '~/src/components/Flyout/index.js'
+import { RenderInPortal } from '~/src/components/RenderInPortal/index.js'
+import InlineConditions from '~/src/conditions/InlineConditions.jsx'
 import {
   isDuplicateCondition,
   hasConditionName,
   getFieldNameSubstring,
   conditionsByType
 } from '~/src/conditions/select-condition-helpers.js'
+import { DataContext } from '~/src/context/index.js'
+import {
+  allInputs,
+  inputsAccessibleAt,
+  hasConditions as dataHasConditions
+} from '~/src/data/index.js'
+import { i18n } from '~/src/i18n/index.js'
 
 interface Props {
   path: string
