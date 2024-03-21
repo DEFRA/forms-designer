@@ -1,9 +1,10 @@
+import { Input } from '@xgovformbuilder/govuk-react-jsx'
+import classNames from 'classnames'
 import React, { useContext } from 'react'
+
+import { withI18n } from '../../i18n'
 import { ComponentContext } from '../../reducers/component/componentReducer'
 import { Actions } from '../../reducers/component/types'
-import { Input } from '@xgovformbuilder/govuk-react-jsx'
-import { withI18n } from '../../i18n'
-import classNames from 'classnames'
 import { ErrorMessage } from '../ErrorMessage'
 
 type Props = {

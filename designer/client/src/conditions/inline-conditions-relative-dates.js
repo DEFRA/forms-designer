@@ -1,5 +1,5 @@
-import React from 'react'
 import { DateDirections, RelativeTimeValue } from '@defra/forms-model'
+import React from 'react'
 
 class RelativeTimeValues extends React.Component {
   constructor(props) {

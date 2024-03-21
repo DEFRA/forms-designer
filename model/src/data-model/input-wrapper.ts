@@ -1,6 +1,7 @@
+import { type ComponentDef } from '../components/types'
 import { clone } from '../utils/helpers'
-import { ComponentDef } from '../components/types'
-import { Page } from './types'
+
+import { type Page } from './types'
 
 export class InputWrapper {
   name: string | undefined = undefined

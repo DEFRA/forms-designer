@@ -1,26 +1,26 @@
+import { type ComponentDef, type Page } from '@defra/forms-model'
 import React, {
   useEffect,
   useContext,
   useState,
   useLayoutEffect,
-  FormEvent
+  type FormEvent
 } from 'react'
-import { ComponentDef, Page } from '@defra/forms-model'
 
-import { i18n } from '../../i18n'
-import { ErrorSummary } from '../../error-summary'
-import { hasValidationErrors } from '../../validations'
 import ComponentTypeEdit from '../../ComponentTypeEdit'
-import { ComponentCreateList } from './ComponentCreateList'
-import { BackLink } from '../BackLink'
-
-import { Actions } from '../../reducers/component/types'
 import { DataContext } from '../../context'
-import { ComponentContext } from '../../reducers/component/componentReducer'
 
 import './ComponentCreate.scss'
 import { addComponent } from '../../data/component'
+import { ErrorSummary } from '../../error-summary'
+import { i18n } from '../../i18n'
 import logger from '../../plugins/logger'
+import { ComponentContext } from '../../reducers/component/componentReducer'
+import { Actions } from '../../reducers/component/types'
+import { hasValidationErrors } from '../../validations'
+import { BackLink } from '../BackLink'
+
+import { ComponentCreateList } from './ComponentCreateList'
 function useComponentCreate(props) {
   const [renderTypeEdit, setRenderTypeEdit] = useState<boolean>(false)
   const { data, save } = useContext(DataContext)

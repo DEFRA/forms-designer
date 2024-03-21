@@ -1,4 +1,5 @@
-import hapi from '@hapi/hapi'
+import type hapi from '@hapi/hapi'
+
 import { createServer } from './createServer'
 
 describe('Server tests', () => {

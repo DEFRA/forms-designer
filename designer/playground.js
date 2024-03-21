@@ -1,5 +1,6 @@
-const joi = require('joi')
 const { schema } = require('@defra/forms-model')
+const joi = require('joi')
+
 const pkg = require('./package.json')
 
 module.exports = {

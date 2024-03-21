@@ -1,10 +1,12 @@
-import React from 'react'
+import { type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { act, cleanup, render, type RenderResult } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import ConditionsEdit from './ConditionsEdit'
+import React from 'react'
+
 import { DataContext, FlyoutContext } from '../context'
-import { FormDefinition } from '@defra/forms-model'
+
+import ConditionsEdit from './ConditionsEdit'
 
 const flyoutValue = {
   increment: jest.fn(),

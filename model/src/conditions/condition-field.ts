@@ -1,4 +1,4 @@
-import { ComponentTypes, ComponentType } from '../components'
+import { ComponentTypes, type ComponentType } from '../components'
 
 export class ConditionField {
   name: string

@@ -1,8 +1,10 @@
-import S3 from 'aws-sdk/clients/s3'
-import config from '../../config'
-import { PersistenceService } from './persistenceService'
-import { HapiServer } from '../../types'
 import { FormConfiguration } from '@defra/forms-model'
+import S3 from 'aws-sdk/clients/s3'
+
+import config from '../../config'
+import { type HapiServer } from '../../types'
+
+import { type PersistenceService } from './persistenceService'
 
 const TYPE_METADATA_KEY = 'x-amz-meta-type'
 

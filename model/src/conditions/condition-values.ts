@@ -1,6 +1,10 @@
 import { ConditionValueAbstract } from './condition-value-abstract'
 import { Registration } from './condition-value-registration'
-import { DateTimeUnitValues, DateUnits, TimeUnits } from './types'
+import {
+  type DateTimeUnitValues,
+  type DateUnits,
+  type TimeUnits
+} from './types'
 
 export class ConditionValue extends ConditionValueAbstract {
   value: string

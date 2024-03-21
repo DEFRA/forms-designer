@@ -1,9 +1,11 @@
-import React from 'react'
-import { FormDefinition } from '@defra/forms-model'
+import { type FormDefinition } from '@defra/forms-model'
 import { render } from '@testing-library/react'
-import { ComponentContext } from '../../reducers/component/componentReducer'
-import { ParaEdit } from './para-edit'
+import React from 'react'
+
 import { DataContext } from '../../context'
+import { ComponentContext } from '../../reducers/component/componentReducer'
+
+import { ParaEdit } from './para-edit'
 
 describe('ParaEdit', () => {
   function TestComponentWithContext({ children }) {

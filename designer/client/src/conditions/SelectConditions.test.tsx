@@ -1,9 +1,11 @@
-import React from 'react'
 import { type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { cleanup, render, type RenderResult } from '@testing-library/react'
-import SelectConditions from './SelectConditions'
+import React from 'react'
+
 import { DataContext } from '../context'
+
+import SelectConditions from './SelectConditions'
 
 describe('SelectConditions', () => {
   afterEach(cleanup)

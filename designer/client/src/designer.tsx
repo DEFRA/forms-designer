@@ -1,12 +1,13 @@
+import { type FormDefinition } from '@defra/forms-model'
 import React, { Component } from 'react'
+import { Prompt } from 'react-router-dom'
+
+import { DesignerApi } from './api/designerApi'
 import Menu from './components/Menu/Menu'
 import { Visualisation } from './components/Visualisation'
-import { FormDefinition } from '@defra/forms-model'
 import { FlyoutContext, DataContext } from './context'
 import { FeatureFlagProvider } from './context/FeatureFlagContext'
-import { DesignerApi } from './api/designerApi'
 import { i18n } from './i18n'
-import { Prompt } from 'react-router-dom'
 
 interface Props {
   match?: any

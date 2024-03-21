@@ -1,8 +1,10 @@
-import randomId from '../randomId'
 import React, { createContext, useContext, useReducer } from 'react'
+
 import { DataContext } from '../context'
-import { ListActions } from './listActions'
 import { arrayMove } from '../helpers'
+import randomId from '../randomId'
+
+import { ListActions } from './listActions'
 
 export interface ListState {
   selectedList?: any // TODO:- type

@@ -1,9 +1,9 @@
-import { ConditionField } from './condition-field'
 import { ConditionAbstract } from './condition-abstract'
+import { ConditionField } from './condition-field'
 import { getExpression } from './condition-operators'
-import { ConditionValue, RelativeTimeValue } from './condition-values'
 import { ConditionValueAbstract } from './condition-value-abstract'
-import { Coordinator } from './enums'
+import { type ConditionValue, type RelativeTimeValue } from './condition-values'
+import { type Coordinator } from './enums'
 
 export class Condition extends ConditionAbstract {
   field: ConditionField

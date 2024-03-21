@@ -1,5 +1,4 @@
 import { createServer } from '../../createServer'
-
 import { publish } from '../../lib/publish'
 
 jest.mock('../../lib/publish')

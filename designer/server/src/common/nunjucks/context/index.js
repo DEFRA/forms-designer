@@ -4,6 +4,7 @@ import { cwd } from 'node:process'
 
 import config from '../../../config'
 import { createLogger } from '../../helpers/logging/logger'
+
 import { buildNavigation } from './build-navigation'
 
 const logger = createLogger()

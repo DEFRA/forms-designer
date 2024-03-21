@@ -1,5 +1,6 @@
 import { shallow } from 'enzyme'
 import React from 'react'
+
 import { withI18n, i18n } from '.'
 
 describe('I18n', () => {

@@ -1,8 +1,9 @@
+import { type TelephoneNumberFieldComponent } from '@defra/forms-model'
 import React, { useContext } from 'react'
+
+import { i18n } from '../../i18n'
 import { ComponentContext } from '../../reducers/component/componentReducer'
 import { Actions } from '../../reducers/component/types'
-import { i18n } from '../../i18n'
-import { TelephoneNumberFieldComponent } from '@defra/forms-model'
 
 export function CustomValidationMessage() {
   const { state, dispatch } = useContext(ComponentContext)

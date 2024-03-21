@@ -1,4 +1,4 @@
-import { MouseEvent, useState } from 'react'
+import { type MouseEvent, useState } from 'react'
 
 export enum Tabs {
   model,

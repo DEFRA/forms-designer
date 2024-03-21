@@ -1,4 +1,5 @@
-import { FormDefinition } from '@defra/forms-model'
+import { type FormDefinition } from '@defra/forms-model'
+
 import { updateLinksTo } from './updateLinksTo'
 
 const data: FormDefinition = {

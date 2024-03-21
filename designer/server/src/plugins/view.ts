@@ -6,7 +6,6 @@ import nunjucks from 'nunjucks'
 import resolvePkg from 'resolve/sync'
 
 import pkg from '../../../package.json'
-
 import config from '../config'
 
 export const viewPlugin = {

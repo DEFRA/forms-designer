@@ -1,9 +1,11 @@
-import React from 'react'
-import { FormDefinition } from '@defra/forms-model'
+import { type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
-import InlineConditions from './InlineConditions'
+import React from 'react'
+
 import { DataContext } from '../context/DataContext'
+
+import InlineConditions from './InlineConditions'
 
 describe('InlineConditions', () => {
   afterEach(cleanup)

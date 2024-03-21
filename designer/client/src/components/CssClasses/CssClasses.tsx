@@ -1,7 +1,8 @@
 import React, { useContext } from 'react'
+
+import { i18n } from '../../i18n'
 import { ComponentContext } from '../../reducers/component/componentReducer'
 import { Actions } from '../../reducers/component/types'
-import { i18n } from '../../i18n'
 
 export function CssClasses() {
   const { state, dispatch } = useContext(ComponentContext)

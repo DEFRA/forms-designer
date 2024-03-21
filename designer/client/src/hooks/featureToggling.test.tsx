@@ -1,4 +1,5 @@
 import React from 'react'
+
 import { useFeatures } from './featureToggling'
 
 describe('FeatureToggleHook', () => {

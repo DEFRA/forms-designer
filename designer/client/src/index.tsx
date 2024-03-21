@@ -1,10 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { LandingChoice, NewConfig, ChooseExisting } from './pages/LandingPage'
-import { initI18n } from './i18n'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+
 import Designer from './designer'
+import { initI18n } from './i18n'
 import { SaveError } from './pages/ErrorPages'
+import { LandingChoice, NewConfig, ChooseExisting } from './pages/LandingPage'
 
 initI18n()
 

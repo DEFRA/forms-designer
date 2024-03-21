@@ -1,6 +1,6 @@
-import jwt from '@hapi/jwt'
-import bell from '@hapi/bell'
 import basic from '@hapi/basic'
+import bell from '@hapi/bell'
+import jwt from '@hapi/jwt'
 
 import config from '../../../config'
 import { createLogger } from '../logging/logger'

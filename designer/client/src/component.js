@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import { SortableHandle } from 'react-sortable-hoc'
+
+import ComponentEdit from './ComponentEdit'
 import { Flyout } from './components/Flyout'
 import { SearchIcon } from './components/Icons'
-import ComponentEdit from './ComponentEdit'
-import { ComponentContextProvider } from './reducers/component/componentReducer'
 import { i18n } from './i18n'
+import { ComponentContextProvider } from './reducers/component/componentReducer'
 
 export const componentTypes = {
   TextField,

@@ -1,10 +1,11 @@
-import React, { useContext } from 'react'
-import { ComponentContext } from './reducers/component/componentReducer'
 import { ComponentTypes } from '@defra/forms-model'
-import { Actions } from './reducers/component/types'
 import { Input, Textarea } from '@xgovformbuilder/govuk-react-jsx'
-import { i18n } from './i18n'
+import React, { useContext } from 'react'
+
 import { ErrorMessage } from './components/ErrorMessage'
+import { i18n } from './i18n'
+import { ComponentContext } from './reducers/component/componentReducer'
+import { Actions } from './reducers/component/types'
 
 type Props = {
   isContentField?: boolean

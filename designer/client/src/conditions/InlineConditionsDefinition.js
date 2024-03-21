@@ -1,4 +1,3 @@
-import React from 'react'
 import {
   Condition,
   ConditionField,
@@ -7,6 +6,8 @@ import {
   getOperatorNames,
   clone
 } from '@defra/forms-model'
+import React from 'react'
+
 import { i18n } from '../i18n'
 
 import { InlineConditionsDefinitionValue } from './InlineConditionsDefinitionValue'

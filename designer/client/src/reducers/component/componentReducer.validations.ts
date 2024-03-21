@@ -1,7 +1,8 @@
-import { validateTitle } from '../../validations'
-import { isEmpty } from '../../helpers'
 import { ComponentTypeEnum as Types } from '@defra/forms-model'
+
+import { isEmpty } from '../../helpers'
 import { i18n } from '../../i18n'
+import { validateTitle } from '../../validations'
 
 export interface ValidationError {
   href?: string

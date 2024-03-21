@@ -1,10 +1,10 @@
-import React, { useReducer } from 'react'
+import { type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { act, cleanup, render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
+import React, { useReducer } from 'react'
+
 import { DataContext } from '../../context'
-import { FormDefinition } from '@defra/forms-model'
-import { ComponentListSelect } from './ComponentListSelect'
 import {
   ComponentContext,
   componentReducer,
@@ -12,6 +12,8 @@ import {
 } from '../../reducers/component/componentReducer'
 import { ListsEditorContextProvider } from '../../reducers/list/listsEditorReducer'
 import { ListContextProvider } from '../../reducers/listReducer'
+
+import { ComponentListSelect } from './ComponentListSelect'
 
 describe('ComponentListSelect', () => {
   const { getByText } = screen

@@ -1,4 +1,5 @@
-import { ConditionRawData, FormDefinition } from '@defra/forms-model'
+import { type ConditionRawData, type FormDefinition } from '@defra/forms-model'
+
 import { addCondition } from './addCondition'
 const data: FormDefinition = {
   conditions: [

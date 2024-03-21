@@ -1,11 +1,12 @@
+import { clone } from '@defra/forms-model'
 import React, { useContext } from 'react'
+
+import { DataContext } from '../context'
 import { i18n } from '../i18n'
 import {
   ListsEditorContext,
   ListsEditorStateActions
 } from '../reducers/list/listsEditorReducer'
-import { DataContext } from '../context'
-import { clone } from '@defra/forms-model'
 
 export function useWarning() {
   const { state, dispatch } = useContext(ListsEditorContext)

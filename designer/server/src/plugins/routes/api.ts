@@ -1,9 +1,10 @@
-import newFormJson from '../../../../new-form.json'
-import { FormConfiguration, Schema } from '@defra/forms-model'
+import { type FormConfiguration, Schema } from '@defra/forms-model'
+import { type ServerRoute, type ResponseObject } from '@hapi/hapi'
 import Wreck from '@hapi/wreck'
+
+import newFormJson from '../../../../new-form.json'
 import config from '../../config'
 import { publish } from '../../lib/publish'
-import { ServerRoute, ResponseObject } from '@hapi/hapi'
 
 const getPublished = async function (id) {
   const { payload } = await Wreck.get<FormConfiguration>(

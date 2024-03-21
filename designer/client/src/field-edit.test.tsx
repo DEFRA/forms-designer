@@ -1,9 +1,11 @@
-import React from 'react'
-import { FormDefinition } from '@defra/forms-model'
+import { type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
-import { FieldEdit } from './field-edit'
+import React from 'react'
+
 import { RenderWithContextAndDataContext } from '../test/helpers/renderers'
+
+import { FieldEdit } from './field-edit'
 
 describe('Field edit', () => {
   const { getByText } = screen

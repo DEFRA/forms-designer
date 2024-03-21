@@ -1,4 +1,4 @@
-import { MigrationScript } from './types'
+import { type MigrationScript } from './types'
 
 function needsUpgrade(data) {
   return !!(data.pages ?? [])

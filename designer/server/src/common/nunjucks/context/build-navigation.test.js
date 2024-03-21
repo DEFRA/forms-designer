@@ -1,4 +1,5 @@
 import config from '../../../config'
+
 import { buildNavigation } from './build-navigation'
 
 const appPathPrefix = config.appPathPrefix

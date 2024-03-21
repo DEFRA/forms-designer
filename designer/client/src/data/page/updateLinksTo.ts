@@ -1,5 +1,6 @@
-import { Path } from '..'
-import { FormDefinition, Page } from '@defra/forms-model'
+import { type FormDefinition, type Page } from '@defra/forms-model'
+
+import { type Path } from '..'
 
 export function updateLinksTo(
   data: FormDefinition,

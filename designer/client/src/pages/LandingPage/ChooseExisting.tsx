@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
-import * as formConfigurationApi from '../../load-form-configurations'
-import { i18n } from '../../i18n'
 import { withRouter } from 'react-router-dom'
+
 import { BackLink } from '../../components/BackLink'
+import { i18n } from '../../i18n'
+import * as formConfigurationApi from '../../load-form-configurations'
 import './LandingPage.scss'
 import logger from '../../plugins/logger'
 

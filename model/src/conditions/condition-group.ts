@@ -1,6 +1,6 @@
-import { Coordinator } from './enums'
+import { type Coordinator } from './enums'
 import { toPresentationString, toExpression } from './helpers'
-import { ConditionsArray } from './types'
+import { type ConditionsArray } from './types'
 
 export class ConditionGroup {
   conditions: ConditionsArray

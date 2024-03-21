@@ -1,5 +1,7 @@
-import { ConditionRawData, FormDefinition } from '@defra/forms-model'
-import { Path } from '../../reducers/data/types'
+import { type ConditionRawData, type FormDefinition } from '@defra/forms-model'
+
+import { type Path } from '../../reducers/data/types'
+
 import { findPage } from './findPage'
 
 export function updateLink(

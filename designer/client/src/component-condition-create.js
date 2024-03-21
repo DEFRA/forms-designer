@@ -1,6 +1,7 @@
-import React from 'react'
-import ComponentTypeEdit from './component-type-edit'
 import { ConditionalComponentTypes } from '@defra/forms-model'
+import React from 'react'
+
+import ComponentTypeEdit from './component-type-edit'
 
 class ComponentConditionCreate extends React.Component {
   constructor(props) {

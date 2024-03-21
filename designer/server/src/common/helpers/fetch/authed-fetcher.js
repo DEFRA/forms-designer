@@ -1,8 +1,8 @@
+import Boom from '@hapi/boom'
 import fetch from 'node-fetch'
 
-import { removeUserSession, updateUserSession } from '../auth/user-session'
 import { refreshAccessToken } from '../auth/refresh-token'
-import Boom from '@hapi/boom'
+import { removeUserSession, updateUserSession } from '../auth/user-session'
 
 function authedFetcher(request) {
   return async (url, options = {}) => {

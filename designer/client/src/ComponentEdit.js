@@ -1,12 +1,13 @@
+import { ComponentTypeEnum as Types } from '@defra/forms-model'
 import React, { memo, useContext, useLayoutEffect } from 'react'
+
 import ComponentTypeEdit from './ComponentTypeEdit'
 import { DataContext } from './context'
+import { updateComponent } from './data'
+import ErrorSummary from './error-summary'
 import { ComponentContext } from './reducers/component/componentReducer'
 import { Actions } from './reducers/component/types'
-import ErrorSummary from './error-summary'
 import { hasValidationErrors } from './validations'
-import { ComponentTypeEnum as Types } from '@defra/forms-model'
-import { updateComponent } from './data'
 
 const LIST_TYPES = [
   Types.AutocompleteField,
