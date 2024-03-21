@@ -3,7 +3,7 @@ import { FeatureToggleApi } from './toggleApi'
 import { server } from '../../../test/testServer'
 
 describe('Toggle API', () => {
-  const url = '/feature-toggles'
+  const url = '/forms-designer/feature-toggles'
 
   beforeAll(() => server.listen())
   afterEach(() => server.resetHandlers())

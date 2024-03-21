@@ -16,7 +16,7 @@ const mockedFormConfigurations = [
 ]
 
 const server = setupServer(
-  http.get('/api/configurations', () => {
+  http.get('/forms-designer/api/configurations', () => {
     return new Response(JSON.stringify(mockedFormConfigurations), {
       headers: { 'Content-Type': 'application/json' }
     })

@@ -38,7 +38,7 @@ describe('Server API', () => {
   test('GET non-existing form data return correct new-form JSON', async () => {
     const options = {
       method: 'get',
-      url: '/api/test-form-id/data',
+      url: '/forms-designer/api/test-form-id/data',
       payload: { name: 'A *& B', selected: { Key: 'New' } }
     }
 
@@ -87,7 +87,7 @@ describe('Server API', () => {
   test('Failure to communicate with Runner should place error on session', async () => {
     const options = {
       method: 'put',
-      url: '/api/test-form-id/data',
+      url: '/forms-designer/api/test-form-id/data',
       payload: {
         metadata: {},
         startPage: '/first-page',
@@ -134,7 +134,7 @@ describe('Server API', () => {
   test('Schema validation failures should return 401', async () => {
     const options = {
       method: 'put',
-      url: '/api/test-form-id/data',
+      url: '/forms-designer/api/test-form-id/data',
       payload: {
         metadata: {},
         startPage: '/first-page',
@@ -178,7 +178,7 @@ describe('Server API', () => {
 
     const options = {
       method: 'put',
-      url: '/api/test-form-id/data',
+      url: '/forms-designer/api/test-form-id/data',
       payload: {
         metadata: {},
         startPage: '/first-page',

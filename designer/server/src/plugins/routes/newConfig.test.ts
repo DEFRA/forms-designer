@@ -37,7 +37,7 @@ describe('NewConfig tests', () => {
   test('POST /api/new with special characters result in bad request', async () => {
     const options = {
       method: 'post',
-      url: '/api/new',
+      url: '/forms-designer/api/new',
       payload: { name: 'A *& B', selected: { Key: 'New' } }
     }
 
@@ -53,7 +53,7 @@ describe('NewConfig tests', () => {
   test('POST /api/new with existing form should not result in bad request', async () => {
     const options = {
       method: 'post',
-      url: '/api/new',
+      url: '/forms-designer/api/new',
       payload: { name: '', selected: { Key: 'Test' } }
     }
 
@@ -66,7 +66,7 @@ describe('NewConfig tests', () => {
   test("POST /api/new with '-' should not result in bad request", async () => {
     const options = {
       method: 'post',
-      url: '/api/new',
+      url: '/forms-designer/api/new',
       payload: { name: 'a-b', selected: { Key: 'New' } }
     }
 
@@ -79,7 +79,7 @@ describe('NewConfig tests', () => {
   test('POST /api/new without runner running should result in bad request', async () => {
     const options = {
       method: 'post',
-      url: '/api/new',
+      url: '/forms-designer/api/new',
       payload: { name: 'a-b', selected: { Key: 'New' } }
     }
 

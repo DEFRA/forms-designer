@@ -10,7 +10,7 @@ describe('Load form configurations', () => {
   test('Should load configurations when returned', () => {
     const configurations = [{ myProperty: 'myValue' }]
     server.resetHandlers(
-      http.get('/api/configurations', () => {
+      http.get('/forms-designer/api/configurations', () => {
         return new Response(JSON.stringify(configurations), {
           headers: { 'Content-Type': 'application/json' },
           status: 200
@@ -24,7 +24,7 @@ describe('Load form configurations', () => {
 
   test('Should return no configurations when an error occurs', () => {
     server.resetHandlers(
-      http.get('/api/configurations', () => {
+      http.get('/forms-designer/api/configurations', () => {
         return new Response(JSON.stringify('Some error happened'), {
           headers: { 'Content-Type': 'application/json' },
           status: 500
