@@ -1,5 +1,6 @@
-import { fireEvent, render } from '@testing-library/react'
 import { screen } from '@testing-library/dom'
+import { act, render, waitFor } from '@testing-library/react'
+import { userEvent } from '@testing-library/user-event'
 import { DataContext } from '../../context'
 import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
@@ -70,8 +71,10 @@ const providerProps = {
 }
 
 describe('Page', () => {
+  const { findByTestId, getByText, queryByTestId } = screen
+
   test('PageEdit can be shown/hidden successfully', async () => {
-    const { findByText, getByText } = customRender(
+    customRender(
       <Page
         page={data.pages[0]}
         previewUrl={'https://localhost:3009'}
@@ -82,21 +85,22 @@ describe('Page', () => {
         providerProps
       }
     )
-    await fireEvent.click(getByText('Edit page'))
-    expect(screen.findByTestId('page-edit')).toBeTruthy()
 
-    await fireEvent.click(screen.getByText('Save'))
-    expect(screen.queryByTestId('page-edit')).toBeFalsy()
+    await act(() => userEvent.click(getByText('Edit page')))
+    await waitFor(() => findByTestId('page-edit'))
 
-    await fireEvent.click(await findByText('Edit page'))
-    expect(screen.findByTestId('Flyout-0')).toBeTruthy()
+    await act(() => userEvent.click(getByText('Save')))
+    expect(queryByTestId('page-edit')).not.toBeInTheDocument()
 
-    await fireEvent.click(screen.getByText('Close'))
-    expect(screen.queryByTestId('Flyout-0')).toBeFalsy()
+    await act(() => userEvent.click(getByText('Edit page')))
+    await waitFor(() => findByTestId('flyout-0'))
+
+    await act(() => userEvent.click(getByText('Close')))
+    expect(queryByTestId('flyout-0')).not.toBeInTheDocument()
   })
 
   test('AddComponent can be shown/hidden successfully', async () => {
-    const { getByText } = customRender(
+    customRender(
       <Page
         page={data.pages[0]}
         previewUrl={'https://localhost:3009'}
@@ -107,15 +111,16 @@ describe('Page', () => {
         providerProps
       }
     )
-    await fireEvent.click(getByText('Create component'))
-    expect(screen.findByTestId('component-create')).toBeTruthy()
 
-    await fireEvent.click(screen.getByText('Close'))
-    expect(screen.queryByTestId('Flyout-0')).toBeFalsy()
+    await act(() => userEvent.click(getByText('Create component')))
+    await waitFor(() => findByTestId('component-create'))
+
+    await act(() => userEvent.click(getByText('Close')))
+    expect(queryByTestId('flyout-0')).not.toBeInTheDocument()
   })
 
   test('Page actions contain expected call to actions', () => {
-    const { getByText } = customRender(
+    customRender(
       <Page
         page={data.pages[0]}
         previewUrl={'https://localhost:3009'}
@@ -132,7 +137,7 @@ describe('Page', () => {
   })
 
   test('Dragging component order saves successfully', async () => {
-    const { getByText } = customRender(
+    customRender(
       <Page
         page={data.pages[0]}
         previewUrl={'https://localhost:3009'}
@@ -143,10 +148,11 @@ describe('Page', () => {
         providerProps
       }
     )
-    await fireEvent.click(getByText('Create component'))
-    expect(screen.findByTestId('component-create')).toBeTruthy()
 
-    await fireEvent.click(screen.getByText('Close'))
-    expect(screen.queryByTestId('Flyout-0')).toBeFalsy()
+    await act(() => userEvent.click(getByText('Create component')))
+    await waitFor(() => findByTestId('component-create'))
+
+    await act(() => userEvent.click(getByText('Close')))
+    expect(queryByTestId('flyout-0')).not.toBeInTheDocument()
   })
 })
