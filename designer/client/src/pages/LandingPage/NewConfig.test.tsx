@@ -1,20 +1,20 @@
 import React from 'react'
 import { NewConfig } from './NewConfig'
 import { render, fireEvent, screen, waitFor } from '@testing-library/react'
-import { server, http } from '../../../../test/testServer'
+import { server, http, mockedFormHandlers } from '../../../../test/testServer'
 import { MemoryRouter } from 'react-router-dom'
 import type { FormConfiguration } from '@defra/forms-model'
 
 describe('Newconfig', () => {
   beforeAll(() => server.listen())
-  afterEach(() => server.resetHandlers())
+  beforeEach(() => server.resetHandlers(...mockedFormHandlers))
   afterAll(() => server.close())
 
   test('new configuration is submitted correctly', async () => {
     let postBodyMatched = false
     server.use(
       http.post<never, { name: string; selected: FormConfiguration }>(
-        '/api/new',
+        '/forms-designer/api/new',
         async ({ request }) => {
           const { name, selected } = await request.json()
           postBodyMatched = name === 'test-form-a' && selected.Key === 'New'
@@ -47,7 +47,7 @@ describe('Newconfig', () => {
   test('it will not submit when alreadyExistsError', async () => {
     let apiCalled = false
     server.use(
-      http.post('/api/new', () => {
+      http.post('/forms-designer/api/new', () => {
         apiCalled = true
         return new Response(JSON.stringify({ id: 'somekey', previewUrl: '' }), {
           headers: { 'Content-Type': 'application/json' }
@@ -86,7 +86,7 @@ describe('Newconfig', () => {
   test('Form name with special characters results in error', async () => {
     let apiCalled = false
     server.use(
-      http.post('/api/new', () => {
+      http.post('/forms-designer/api/new', () => {
         apiCalled = true
         return new Response(JSON.stringify({ id: 'somekey', previewUrl: '' }), {
           headers: { 'Content-Type': 'application/json' }

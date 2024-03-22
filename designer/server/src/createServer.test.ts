@@ -106,7 +106,7 @@ describe('Server tests', () => {
   test('Feature toggles api contains data', async () => {
     const options = {
       method: 'get',
-      url: '/feature-toggles'
+      url: '/forms-designer/feature-toggles'
     }
 
     const res = await server.inject(options)

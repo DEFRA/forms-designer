@@ -77,7 +77,7 @@ export function ListItemEdit() {
           }
           onChange={handleValueChange}
         />
-        <Label for="options.condition">{i18n('list.item.conditions')}</Label>
+        <Label htmlFor="condition">{i18n('list.item.conditions')}</Label>
         <Hint>{i18n('list.item.conditionsHint')}</Hint>
         <select
           className="govuk-select"

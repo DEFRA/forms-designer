@@ -104,7 +104,7 @@ describe('ComponentCreateList', () => {
       name: 'AutocompleteField',
       type: 'AutocompleteField',
       title: 'Autocomplete field',
-      subType: 'field',
+      subType: 'listField',
       options: {},
       schema: {},
       list: ''
@@ -145,7 +145,7 @@ describe('ComponentCreateList', () => {
       name: 'CheckboxesField',
       type: 'CheckboxesField',
       title: 'Checkboxes field',
-      subType: 'field',
+      subType: 'listField',
       options: {},
       schema: {},
       list: ''

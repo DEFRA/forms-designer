@@ -1,12 +1,12 @@
 import { http, HttpResponse } from 'msw'
 import { FeatureToggleApi } from './toggleApi'
-import { server } from '../../../test/testServer'
+import { server, mockedFormHandlers } from '../../../test/testServer'
 
 describe('Toggle API', () => {
-  const url = '/feature-toggles'
+  const url = '/forms-designer/feature-toggles'
 
   beforeAll(() => server.listen())
-  afterEach(() => server.resetHandlers())
+  beforeEach(() => server.resetHandlers(...mockedFormHandlers))
   afterAll(() => server.close())
 
   test('Should fetch feature toggles', () => {
@@ -19,9 +19,9 @@ describe('Toggle API', () => {
         })
       })
     )
-    return new FeatureToggleApi().fetch().then((data) => {
-      expect(data).toStrictEqual(toggle)
-    })
+
+    const fetchToggle = new FeatureToggleApi().fetch()
+    return expect(fetchToggle).resolves.toStrictEqual(toggle)
   })
 
   test('Should return nothing on server error', () => {
@@ -34,9 +34,8 @@ describe('Toggle API', () => {
       })
     )
 
-    return new FeatureToggleApi().fetch().then((data) => {
-      expect(data).toStrictEqual([])
-    })
+    const fetchToggle = new FeatureToggleApi().fetch()
+    return expect(fetchToggle).resolves.toStrictEqual([])
   })
 
   test('Should return nothing with get exception', () => {
@@ -46,8 +45,7 @@ describe('Toggle API', () => {
       })
     )
 
-    return new FeatureToggleApi().fetch().then((data) => {
-      expect(data).toStrictEqual([])
-    })
+    const fetchToggle = new FeatureToggleApi().fetch()
+    return expect(fetchToggle).resolves.toStrictEqual([])
   })
 })

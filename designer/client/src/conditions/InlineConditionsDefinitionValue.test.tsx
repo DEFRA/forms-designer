@@ -10,7 +10,7 @@ import {
 } from '@defra/forms-model'
 import { userEvent } from '@testing-library/user-event'
 
-describe.skip('AbsoluteDateTimeValues', () => {
+describe.skip('InlineConditionsDefinitionValue', () => {
   it('should display a text input for fields without custom mappings or options', async () => {
     const fieldDef = {
       label: 'Something',

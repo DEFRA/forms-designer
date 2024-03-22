@@ -17,13 +17,12 @@ Object.defineProperties(globalThis, {
   TextEncoder: { value: TextEncoder }
 })
 
-const { fetch, Headers, FormData, Request, Response } = require('undici')
+const { fetch, Headers, Request, Response } = require('undici')
 
 Object.defineProperties(globalThis, {
   fetch: { value: fetch, writable: true },
   Blob: { value: Blob },
   File: { value: File },
-  FormData: { value: FormData },
   Headers: { value: Headers },
   Request: { value: Request },
   Response: { value: Response }

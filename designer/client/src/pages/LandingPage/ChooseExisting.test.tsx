@@ -4,17 +4,18 @@ import { render, fireEvent, screen, waitFor } from '@testing-library/react'
 import {
   server,
   http,
+  mockedFormHandlers,
   mockedFormConfigurations
 } from '../../../../test/testServer'
 
 describe('ChooseExisting', () => {
   beforeAll(() => server.listen())
-  afterEach(() => server.resetHandlers())
+  beforeEach(() => server.resetHandlers(...mockedFormHandlers))
   afterAll(() => server.close())
 
   test('no existing configurations', async () => {
     server.resetHandlers(
-      http.get('/api/configurations', () => {
+      http.get('/forms-designer/api/configurations', () => {
         return new Response(JSON.stringify([]), {
           headers: { 'Content-Type': 'application/json' }
         })
@@ -38,7 +39,7 @@ describe('ChooseExisting', () => {
 
   test('should post to server and redirect to a new page on choosing a form', async () => {
     server.use(
-      http.post('/api/new', () => {
+      http.post('/forms-designer/api/new', () => {
         return new Response(JSON.stringify({ id: 'somekey', previewUrl: '' }), {
           headers: { 'Content-Type': 'application/json' }
         })
