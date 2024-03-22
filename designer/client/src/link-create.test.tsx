@@ -229,7 +229,7 @@ describe('LinkCreate', () => {
       target: { value: '/first-page' }
     })
     await fireEvent.change(getByTestId('select-condition'), {
-      target: { value: 'hasUKPassport' }
+      target: { value: '' }
     })
     await fireEvent.click(getByRole('button'))
     expect(save).toHaveBeenCalledTimes(2)
