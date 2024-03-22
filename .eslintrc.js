@@ -81,7 +81,9 @@ module.exports = {
       ],
       env: {
         jest: true
-      }
+      },
+      extends: ['plugin:jest/style'],
+      plugins: ['jest']
     }
   ],
   root: true
