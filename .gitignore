@@ -13,11 +13,8 @@ report.json
 unit-test.html
 /dist/
 */dist/
-src/server/public/build
-/public/build/
 
 .env
 
 */.pnp.*
-*/docs/**/typedoc
 *.tsbuildinfo

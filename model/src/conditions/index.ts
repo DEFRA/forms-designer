@@ -24,4 +24,4 @@ export { ConditionsModel } from './condition-model'
 export { ConditionGroupDef } from './condition-group-def'
 export { toExpression, toPresentationString } from './helpers'
 
-export { Coordinator } from './types'
+export { Coordinator } from './enums'

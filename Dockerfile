@@ -53,7 +53,9 @@ WORKDIR /home/node/app
 
 COPY --from=productionBuild /home/node/app/packag*.json ./
 COPY --from=productionBuild /home/node/app/node_modules ./node_modules
-COPY --from=productionBuild /home/node/app/designer/dist ./designer/dist
+COPY --from=productionBuild /home/node/app/designer/client/dist ./designer/client/dist
+COPY --from=productionBuild /home/node/app/designer/server/dist ./designer/server/dist
+COPY --from=productionBuild /home/node/app/designer/node_modules ./designer/node_modules
 COPY --from=productionBuild /home/node/app/designer/package.json ./designer/package.json
 
 ARG PORT

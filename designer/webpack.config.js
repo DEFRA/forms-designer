@@ -14,7 +14,7 @@ const { NODE_ENV = 'development', REACT_LOG_LEVEL } = process.env
  * @satisfies {import('webpack').Configuration}
  */
 const client = {
-  context: join(__dirname, 'client'),
+  context: join(__dirname, 'client/src'),
   devtool: NODE_ENV === 'production' ? 'source-map' : 'inline-source-map',
   entry: {
     application: {
@@ -108,7 +108,7 @@ const client = {
     ]
   },
   output: {
-    path: join(__dirname, 'dist/client'),
+    path: join(__dirname, 'client/dist'),
     publicPath: '/forms-designer/',
 
     filename:
@@ -144,8 +144,8 @@ const client = {
     }),
 
     new HtmlWebpackPlugin({
-      filename: '../server/common/templates/layouts/legacy-layout.njk',
-      template: '../server/common/templates/layouts/legacy-layout.njk',
+      filename: '../../server/dist/common/templates/layouts/legacy-layout.njk',
+      template: '../../server/src/common/templates/layouts/legacy-layout.njk',
       hash: false,
       inject: 'body',
       scriptLoading: 'module'
@@ -183,7 +183,7 @@ const client = {
  * @satisfies {import('webpack').Configuration}
  */
 const server = {
-  context: join(__dirname, 'server'),
+  context: join(__dirname, 'server/src'),
   devtool: 'source-map',
   entry: './index.ts',
   externals: [
@@ -217,7 +217,7 @@ const server = {
     __dirname: false
   },
   output: {
-    path: join(__dirname, 'dist/server'),
+    path: join(__dirname, 'server/dist'),
     filename: 'index.js'
   },
   plugins: [

@@ -1,5 +1,5 @@
 import { ConditionAbstract } from './condition-abstract'
-import { Coordinator } from './types'
+import { Coordinator } from './enums'
 
 export class ConditionRef extends ConditionAbstract {
   conditionName: string

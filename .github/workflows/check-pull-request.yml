@@ -39,7 +39,11 @@ jobs:
         with:
           enableCrossOsArchive: true
           key: npm-install-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-          path: node_modules
+          path: |
+            designer/node_modules
+            model/node_modules
+            queue-model/node_modules
+            node_modules
 
       - name: Setup Node.js
         if: steps.npm-install-cache.outputs.cache-hit != 'true'
@@ -74,7 +78,11 @@ jobs:
         with:
           enableCrossOsArchive: true
           key: npm-install-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-          path: node_modules
+          path: |
+            designer/node_modules
+            model/node_modules
+            queue-model/node_modules
+            node_modules
 
       - name: Cache build
         uses: actions/cache@v4
@@ -82,7 +90,8 @@ jobs:
           enableCrossOsArchive: true
           key: npm-build-${{ runner.os }}-${{ github.sha }}
           path: |
-            designer/dist
+            designer/client/dist
+            designer/server/dist
             model/dist
             queue-model/dist
 
@@ -92,7 +101,7 @@ jobs:
   tasks:
     name: ${{ matrix.task.description }} (${{ matrix.runner }})
     runs-on: ${{ matrix.runner }}
-    needs: [install]
+    needs: [install, build]
 
     strategy:
       fail-fast: false
@@ -123,7 +132,22 @@ jobs:
         with:
           enableCrossOsArchive: true
           key: npm-install-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-          path: node_modules
+          path: |
+            designer/node_modules
+            model/node_modules
+            queue-model/node_modules
+            node_modules
+
+      - name: Restore build
+        uses: actions/cache/restore@v4
+        with:
+          enableCrossOsArchive: true
+          key: npm-build-${{ runner.os }}-${{ github.sha }}
+          path: |
+            designer/client/dist
+            designer/server/dist
+            model/dist
+            queue-model/dist
 
       - name: Run task
         run: ${{ matrix.task.run }}
@@ -151,7 +175,11 @@ jobs:
         with:
           enableCrossOsArchive: true
           key: npm-install-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-          path: node_modules
+          path: |
+            designer/node_modules
+            model/node_modules
+            queue-model/node_modules
+            node_modules
 
       - name: Restore build
         uses: actions/cache/restore@v4
@@ -159,7 +187,8 @@ jobs:
           enableCrossOsArchive: true
           key: npm-build-${{ runner.os }}-${{ github.sha }}
           path: |
-            designer/dist
+            designer/client/dist
+            designer/server/dist
             model/dist
             queue-model/dist
 

@@ -16,7 +16,7 @@
     "test",
     "package.json",
     "new-form.json",
-    "client/i18n/translations/en.translation.json",
+    "client/src/i18n/translations/en.translation.json",
     "test/helpers/window-stubbing.js"
   ]
 }

@@ -73,7 +73,12 @@ module.exports = {
       }
     },
     {
-      files: ['**/*.jest.{ts,tsx}'],
+      files: [
+        '**/*.test.{cjs,js,mjs,ts,tsx}',
+        '**/__mocks__/**',
+        'jest.environment.js',
+        'jest.setup.js'
+      ],
       env: {
         jest: true
       }

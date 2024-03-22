@@ -1,5 +1,6 @@
 import { ConditionRawData } from '.'
 import { ComponentDef } from '../components/types'
+import { OutputType } from './enums'
 
 type Toggleable<T> = boolean | T
 
@@ -66,12 +67,6 @@ export type PhaseBanner = {
 export type MultipleApiKeys = {
   test?: string
   production?: string
-}
-
-export enum OutputType {
-  Email = 'email',
-  Notify = 'notify',
-  Webhook = 'webhook'
 }
 
 export type EmailOutputConfiguration = {

@@ -14,15 +14,13 @@
   "types": "dist/module/index.d.ts",
   "scripts": {
     "build": "npm run build:types && npm run build:node && npm run build:browser",
-    "build:browser": "BABEL_ENV=javascripts babel --extensions \".ts\" --ignore \"**/*.(jt)est.*\" src --out-dir dist/browser",
-    "build:node": "BABEL_ENV=node babel --extensions \".ts\" --ignore \"**/*.(jt)est.*\" src --out-dir dist/module",
+    "build:browser": "BABEL_ENV=javascripts babel --extensions \".ts\" --ignore \"**/*.test.*\" src --out-dir dist/browser",
+    "build:node": "BABEL_ENV=node babel --extensions \".ts\" --ignore \"**/*.test.*\" src --out-dir dist/module",
     "build:types": "npm run build:types:node && npm run build:types:browser",
     "build:types:browser": "tsc --emitDeclarationOnly --declarationDir dist/browser ",
     "build:types:node": "tsc --emitDeclarationOnly --declarationDir ./dist/module ",
-    "generate-docs": "typedoc src --tsconfig tsconfig.json --out ../docs/model/typedoc --exclude \"**/*+(index|.test|.jest).ts\"",
-    "test": "npm run test-cov",
-    "test-cov": "jest --coverage",
-    "test:dev": "jest --watch"
+    "test": "jest --color --coverage --verbose",
+    "test:watch": "jest --color --watch"
   },
   "dependencies": {
     "joi": "17.2.1",
