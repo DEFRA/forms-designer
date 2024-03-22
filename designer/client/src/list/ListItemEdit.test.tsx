@@ -80,44 +80,46 @@ const data = {
   ]
 }
 
-test('strings are rendered correctly', async () => {
-  const dataValue = { data, save: jest.fn() }
+describe('ListItemEdit', () => {
+  test('strings are rendered correctly', async () => {
+    const dataValue = { data, save: jest.fn() }
 
-  const { getByText } = customRenderForLists(<ListItemEdit />, {
-    dataValue
-  })
-
-  expect(getByText('Item text')).toBeInTheDocument()
-  expect(getByText('Enter the text you want to show')).toBeInTheDocument()
-  expect(
-    getByText(
-      'This determines the data format of the list item and does not show on the form. Unless you are using integrations and want to modify the payload, it should match the list item text.'
-    )
-  ).toBeInTheDocument()
-  expect(
-    getByText(
-      'Select a condition that determines whether to show this list item. You can create and edit conditions on the Conditions screen.'
-    )
-  ).toBeInTheDocument()
-})
-
-test('Condition selection works correctly', async () => {
-  const dataValue = { data, save: jest.fn() }
-
-  const { getByTestId, getAllByTestId } = customRenderForLists(
-    <ListItemEdit />,
-    {
+    const { getByText } = customRenderForLists(<ListItemEdit />, {
       dataValue
-    }
-  )
-  const options: HTMLOptionElement[] = getAllByTestId('list-condition-option')
-  expect(options[0].selected).toBeTruthy()
-  expect(options[1].selected).toBeFalsy()
-  await fireEvent.change(getByTestId('list-condition-select'), {
-    target: { value: 'MYWwRN' }
+    })
+
+    expect(getByText('Item text')).toBeInTheDocument()
+    expect(getByText('Enter the text you want to show')).toBeInTheDocument()
+    expect(
+      getByText(
+        'This determines the data format of the list item and does not show on the form. Unless you are using integrations and want to modify the payload, it should match the list item text.'
+      )
+    ).toBeInTheDocument()
+    expect(
+      getByText(
+        'Select a condition that determines whether to show this list item. You can create and edit conditions on the Conditions screen.'
+      )
+    ).toBeInTheDocument()
   })
 
-  expect(options[0].selected).toBeFalsy()
-  expect(options[1].selected).toBeTruthy()
-  expect(options[1].textContent).toBe('my condition')
+  test('Condition selection works correctly', async () => {
+    const dataValue = { data, save: jest.fn() }
+
+    const { getByTestId, getAllByTestId } = customRenderForLists(
+      <ListItemEdit />,
+      {
+        dataValue
+      }
+    )
+    const options: HTMLOptionElement[] = getAllByTestId('list-condition-option')
+    expect(options[0].selected).toBeTruthy()
+    expect(options[1].selected).toBeFalsy()
+    await fireEvent.change(getByTestId('list-condition-select'), {
+      target: { value: 'MYWwRN' }
+    })
+
+    expect(options[0].selected).toBeFalsy()
+    expect(options[1].selected).toBeTruthy()
+    expect(options[1].textContent).toBe('my condition')
+  })
 })

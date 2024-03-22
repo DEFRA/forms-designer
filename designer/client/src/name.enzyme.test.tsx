@@ -1,16 +1,9 @@
 import React from 'react'
 import { mount } from 'enzyme'
-import * as Code from '@hapi/code'
-import * as Lab from '@hapi/lab'
-import { Name } from '../client/src/name'
-import sinon from 'sinon'
-const { expect } = Code
-const lab = Lab.script()
-exports.lab = lab
-const { suite, test, describe } = lab
+import { Name } from './name'
 
-suite('Name component', () => {
-  const i18n = sinon.stub().returns('mockTranslation')
+describe('Name component', () => {
+  const i18n = jest.fn(() => 'mockTranslation')
 
   describe('update method', () => {
     test('update method is called with correct param', () => {
@@ -19,7 +12,7 @@ suite('Name component', () => {
         name: 'myComponent',
         title: 'My component'
       }
-      const updateModelSpy = sinon.spy()
+      const updateModelSpy = jest.fn()
       const wrapper = mount(
         <Name
           name="myComponent"
@@ -31,8 +24,8 @@ suite('Name component', () => {
       )
       const field = wrapper.find('#an-id').hostNodes()
       field.simulate('change', { target: { value: 'beepboop' } })
-      expect(updateModelSpy.calledOnce).to.equal(true)
-      expect(updateModelSpy.firstCall.firstArg).to.equal('beepboop')
+      expect(updateModelSpy).toHaveBeenCalledTimes(1)
+      expect(updateModelSpy.mock.calls[0][0]).toEqual('beepboop')
     })
     test('update method is not called when there is an error', () => {
       const component = {
@@ -40,7 +33,7 @@ suite('Name component', () => {
         name: 'myComponent',
         title: 'My component'
       }
-      const updateModelSpy = sinon.spy()
+      const updateModelSpy = jest.fn()
       const wrapper = mount(
         <Name
           name="myComponent"
@@ -52,7 +45,7 @@ suite('Name component', () => {
       )
       const field = wrapper.find('#an-id').hostNodes()
       field.simulate('change', { target: { value: 'beep boop' } })
-      expect(updateModelSpy.callCount).to.equal(0)
+      expect(updateModelSpy).not.toHaveBeenCalled()
     })
   })
   describe('Without update method', () => {
@@ -67,11 +60,11 @@ suite('Name component', () => {
         />
       )
       const field = wrapper.find('#an-id').hostNodes()
-      expect(field.exists()).to.equal(true)
-      expect(field.props().value).to.equal('myComponent')
-      expect(wrapper.find('.govuk-label').text()).to.equal('label text')
-      expect(wrapper.find('.govuk-hint').text()).to.equal('a hint')
-      expect(wrapper.state()).to.equal({
+      expect(field.exists()).toEqual(true)
+      expect(field.props().value).toEqual('myComponent')
+      expect(wrapper.find('.govuk-label').text()).toEqual('label text')
+      expect(wrapper.find('.govuk-hint').text()).toEqual('a hint')
+      expect(wrapper.state()).toEqual({
         name: 'myComponent',
         errors: {}
       })
@@ -95,9 +88,9 @@ suite('Name component', () => {
       }
     })
     wrapper.update()
-    expect(wrapper.find('.govuk-input--error').exists()).to.equal(true)
-    expect(wrapper.find('.govuk-form-group--error').exists()).to.equal(true)
-    expect(wrapper.find('.govuk-error-message').exists()).to.equal(true)
+    expect(wrapper.find('.govuk-input--error').exists()).toEqual(true)
+    expect(wrapper.find('.govuk-form-group--error').exists()).toEqual(true)
+    expect(wrapper.find('.govuk-error-message').exists()).toEqual(true)
   })
 })
 

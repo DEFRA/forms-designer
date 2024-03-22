@@ -54,6 +54,6 @@ describe('ChooseExisting', () => {
       screen.getByText(mockedFormConfigurations[0].DisplayName)
     )
     await waitFor(() => expect(push).toHaveBeenCalledTimes(1))
-    expect(push).toBeCalledWith('/designer/somekey')
+    expect(push).toHaveBeenCalledWith('/designer/somekey')
   })
 })

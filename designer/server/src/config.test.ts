@@ -12,7 +12,7 @@ describe('Config', () => {
     }
 
     const { default: config } = await import('./config')
-    expect(config.footerText).toEqual('Footer Text Test')
+    expect(config.footerText).toBe('Footer Text Test')
   })
 
   test('lastCommit and lastTag props are set correctly', async () => {
@@ -23,8 +23,8 @@ describe('Config', () => {
     }
 
     const { default: config } = await import('./config')
-    expect(config.lastCommit).toEqual('LAST COMMIT')
-    expect(config.lastTag).toEqual('LAST TAG')
+    expect(config.lastCommit).toBe('LAST COMMIT')
+    expect(config.lastTag).toBe('LAST TAG')
   })
 
   test('lastCommit and lastTag props are set correctly with GH variables', async () => {
@@ -37,8 +37,8 @@ describe('Config', () => {
     }
 
     const { default: config } = await import('./config')
-    expect(config.lastCommit).toEqual('LAST COMMIT')
-    expect(config.lastTag).toEqual('LAST TAG')
+    expect(config.lastCommit).toBe('LAST COMMIT')
+    expect(config.lastTag).toBe('LAST TAG')
   })
 
   test('Throws if S3 is required and no AWS config is found', async () => {

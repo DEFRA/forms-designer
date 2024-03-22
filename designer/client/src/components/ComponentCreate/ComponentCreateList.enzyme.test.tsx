@@ -1,30 +1,10 @@
-import React from 'react'
 import { shallow } from 'enzyme'
-import * as Code from '@hapi/code'
-import * as Lab from '@hapi/lab'
-import sinon from 'sinon'
+import React from 'react'
 
 import { ComponentCreateList } from './ComponentCreateList'
-import { initI18n } from '../../i18n/i18n'
 
-const { expect } = Code
-const lab = Lab.script()
-exports.lab = lab
-const { beforeEach, suite, test, after } = lab
-
-initI18n()
-
-suite('ComponentCreateList', () => {
-  let onSelectComponent
-
-  beforeEach(() => {
-    sinon.resetHistory()
-    onSelectComponent = sinon.stub()
-  })
-
-  after(() => {
-    sinon.restore()
-  })
+describe('ComponentCreateList', () => {
+  const onSelectComponent = jest.fn()
 
   test('it displays Content components list correctly', () => {
     const wrapper = shallow(
@@ -36,7 +16,7 @@ suite('ComponentCreateList', () => {
       .find('li')
       .map((c) => c.find('a').text())
 
-    expect(listItems).to.equal([
+    expect(listItems).toEqual([
       'Details',
       'Flash card',
       'HTML',
@@ -55,15 +35,15 @@ suite('ComponentCreateList', () => {
     const listItems = contentComponentsList.find('li')
 
     listItems.forEach((item) => {
-      expect(item.find('a').prop('onClick')).to.be.a.function()
+      expect(item.find('a').prop('onClick')).toBeInstanceOf(Function)
     })
 
     listItems.forEach((item) =>
-      item.find('a').simulate('click', { preventDefault: sinon.stub() })
+      item.find('a').simulate('click', { preventDefault: jest.fn() })
     )
 
-    expect(onSelectComponent.getCalls().length).to.equal(listItems.length)
-    expect(onSelectComponent.getCall(0).args[0]).to.equal({
+    expect(onSelectComponent.mock.calls.length).toEqual(listItems.length)
+    expect(onSelectComponent.mock.calls[0][0]).toEqual({
       name: 'Details',
       type: 'Details',
       title: 'Details',
@@ -84,7 +64,7 @@ suite('ComponentCreateList', () => {
       .find('li')
       .map((c) => c.find('a').text())
 
-    expect(listItems).to.equal([
+    expect(listItems).toEqual([
       'Autocomplete',
       'Date',
       'Date parts',
@@ -112,15 +92,15 @@ suite('ComponentCreateList', () => {
     const listItems = contentComponentsList.find('li')
 
     listItems.forEach((item) => {
-      expect(item.find('a').prop('onClick')).to.be.a.function()
+      expect(item.find('a').prop('onClick')).toBeInstanceOf(Function)
     })
 
     listItems.forEach((item) =>
-      item.find('a').simulate('click', { preventDefault: sinon.stub() })
+      item.find('a').simulate('click', { preventDefault: jest.fn() })
     )
 
-    expect(onSelectComponent.getCalls().length).to.equal(listItems.length)
-    expect(onSelectComponent.getCall(0).args[0]).to.equal({
+    expect(onSelectComponent.mock.calls.length).toEqual(listItems.length)
+    expect(onSelectComponent.mock.calls[0][0]).toEqual({
       name: 'AutocompleteField',
       type: 'AutocompleteField',
       title: 'Autocomplete field',
@@ -141,7 +121,7 @@ suite('ComponentCreateList', () => {
       .find('li')
       .map((c) => c.find('a').text())
 
-    expect(listItems).to.equal(['Checkboxes', 'Radios', 'Select', 'YesNo'])
+    expect(listItems).toEqual(['Checkboxes', 'Radios', 'Select', 'YesNo'])
   })
 
   test('it selects Selection fields on click', () => {
@@ -153,15 +133,15 @@ suite('ComponentCreateList', () => {
     const listItems = contentComponentsList.find('li')
 
     listItems.forEach((item) => {
-      expect(item.find('a').prop('onClick')).to.be.a.function()
+      expect(item.find('a').prop('onClick')).toBeInstanceOf(Function)
     })
 
     listItems.forEach((item) =>
-      item.find('a').simulate('click', { preventDefault: sinon.stub() })
+      item.find('a').simulate('click', { preventDefault: jest.fn() })
     )
 
-    expect(onSelectComponent.getCalls().length).to.equal(listItems.length)
-    expect(onSelectComponent.getCall(0).args[0]).to.equal({
+    expect(onSelectComponent.mock.calls.length).toEqual(listItems.length)
+    expect(onSelectComponent.mock.calls[0][0]).toEqual({
       name: 'CheckboxesField',
       type: 'CheckboxesField',
       title: 'Checkboxes field',

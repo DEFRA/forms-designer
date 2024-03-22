@@ -19,17 +19,19 @@ const data = {
   ]
 }
 
-test('strings are rendered correctly', async () => {
-  const dataValue = { data, save: jest.fn() }
+describe('Warning', () => {
+  test('strings are rendered correctly', async () => {
+    const dataValue = { data, save: jest.fn() }
 
-  const { getByText } = customRenderForLists(<Warning />, {
-    dataValue
+    const { getByText } = customRenderForLists(<Warning />, {
+      dataValue
+    })
+
+    expect(getByText('Delete list')).toBeInTheDocument()
+    expect(
+      getByText('You will no longer be able to edit or assign this list.')
+    ).toBeInTheDocument()
+    expect(getByText('Yes, delete this list')).toBeInTheDocument()
+    expect(getByText('No, keep it')).toBeInTheDocument()
   })
-
-  expect(getByText('Delete list')).toBeInTheDocument()
-  expect(
-    getByText('You will no longer be able to edit or assign this list.')
-  ).toBeInTheDocument()
-  expect(getByText('Yes, delete this list')).toBeInTheDocument()
-  expect(getByText('No, keep it')).toBeInTheDocument()
 })

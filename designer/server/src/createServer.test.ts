@@ -30,12 +30,12 @@ describe('Server tests', () => {
 
     const res = await server.inject(options)
 
-    expect(res.statusCode).toEqual(200)
+    expect(res.statusCode).toBe(200)
     expect(
       res.result.indexOf(
         '<h1 class="govuk-heading-xl">Accessibility Statement</h1>'
       ) > -1
-    ).toEqual(true)
+    ).toBe(true)
   })
 
   test('cookies page is served', async () => {
@@ -46,10 +46,10 @@ describe('Server tests', () => {
 
     const res = await server.inject(options)
 
-    expect(res.statusCode).toEqual(200)
+    expect(res.statusCode).toBe(200)
     expect(
       res.result.indexOf('<h1 class="govuk-heading-xl">Cookies</h1>') > -1
-    ).toEqual(true)
+    ).toBe(true)
   })
 
   test('terms and conditions page is served', async () => {
@@ -60,12 +60,12 @@ describe('Server tests', () => {
 
     const res = await server.inject(options)
 
-    expect(res.statusCode).toEqual(200)
+    expect(res.statusCode).toBe(200)
     expect(
       res.result.indexOf(
         '<h1 class="govuk-heading-xl">Terms and conditions</h1>'
       ) > -1
-    ).toEqual(true)
+    ).toBe(true)
   })
 
   test('Phase banner is present', async () => {
@@ -80,12 +80,12 @@ describe('Server tests', () => {
     }
 
     const res = await server.inject(options)
-    expect(res.statusCode).toEqual(200)
+    expect(res.statusCode).toBe(200)
     expect(
       res.result.indexOf(
         '<strong class="govuk-tag govuk-phase-banner__content__tag">'
       ) > -1
-    ).toEqual(true)
+    ).toBe(true)
   })
 
   test('Phase banner is present', async () => {
@@ -95,12 +95,12 @@ describe('Server tests', () => {
     }
 
     const res = await server.inject(options)
-    expect(res.statusCode).toEqual(200)
+    expect(res.statusCode).toBe(200)
     expect(
       res.result.indexOf(
         '<strong class="govuk-tag govuk-phase-banner__content__tag">'
       ) > -1
-    ).toEqual(true)
+    ).toBe(true)
   })
 
   test('Feature toggles api contains data', async () => {
@@ -110,10 +110,10 @@ describe('Server tests', () => {
     }
 
     const res = await server.inject(options)
-    expect(res.statusCode).toEqual(200)
+    expect(res.statusCode).toBe(200)
     expect(
       res.result.indexOf('{"featureEditPageDuplicateButton":false}') > -1
-    ).toEqual(true)
+    ).toBe(true)
   })
 
   test('security headers are present', async () => {
@@ -128,7 +128,7 @@ describe('Server tests', () => {
     }
 
     const res = await server.inject(options)
-    expect(res.statusCode).toEqual(200)
+    expect(res.statusCode).toBe(200)
     expect(res.headers['x-frame-options']).not.toBeNull()
     expect(res.headers['x-content-type-options']).not.toBeNull()
     expect(res.headers['x-frame-options']).not.toBeNull()

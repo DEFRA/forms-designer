@@ -28,7 +28,7 @@ test('allows feedback URL to be an empty string when feedbackForm is false', () 
     abortEarly: false
   })
 
-  expect(error).toEqual(undefined)
+  expect(error).toBeUndefined()
 })
 
 describe('payment configuration', () => {
@@ -42,7 +42,7 @@ describe('payment configuration', () => {
       abortEarly: false
     })
 
-    expect(error).toEqual(undefined)
+    expect(error).toBeUndefined()
   })
 
   test('feeOptions object creates itself from top level configurations if present', () => {
@@ -56,8 +56,8 @@ describe('payment configuration', () => {
       abortEarly: false
     })
 
-    expect(value.paymentReferenceFormat).toEqual('EGGS-')
-    expect(value.payApiKey).toEqual('ab-cd')
+    expect(value.paymentReferenceFormat).toBe('EGGS-')
+    expect(value.payApiKey).toBe('ab-cd')
 
     expect(value.feeOptions).toEqual({
       paymentReferenceFormat: 'EGGS-',

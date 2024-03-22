@@ -1,17 +1,10 @@
-import sinon from 'sinon'
 import React from 'react'
-import { shallow, mount } from 'enzyme'
-import * as Code from '@hapi/code'
-import * as Lab from '@hapi/lab'
+import { mount } from 'enzyme'
 import * as Component from '../../reducers/component/componentReducer'
 import { TextFieldEdit } from './text-field-edit'
 import { MultilineTextFieldEdit } from '../../multiline-text-field-edit'
-const { expect } = Code
-const lab = Lab.script()
-exports.lab = lab
-const { test, suite } = lab
 
-suite('TextField renders correctly when', () => {
+describe('TextField renders correctly when', () => {
   const wrapper = mount(
     <Component.ComponentContextProvider>
       <TextFieldEdit />
@@ -22,32 +15,32 @@ suite('TextField renders correctly when', () => {
     const field = () => wrapper.find('#field-schema-length').first()
     const length = 1337
     field().simulate('change', { target: { value: length } })
-    expect(field().props().value).to.equal(length)
+    expect(field().props().value).toBe(length)
   })
 
   test('schema min length changes', () => {
     const field = () => wrapper.find('#field-schema-min').first()
     const length = 42
     field().simulate('change', { target: { value: length } })
-    expect(field().props().value).to.equal(length)
+    expect(field().props().value).toBe(length)
   })
 
   test('schema max length changes', () => {
     const field = () => wrapper.find('#field-schema-max').first()
     const length = 42
     field().simulate('change', { target: { value: length } })
-    expect(field().props().value).to.equal(length)
+    expect(field().props().value).toBe(length)
   })
 
   test('schema regex changes', () => {
     const field = () => wrapper.find('#field-schema-regex')
     const regex = '/ab+c/'
     field().simulate('change', { target: { value: regex } })
-    expect(field().props().value).to.equal(regex)
+    expect(field().props().value).toBe(regex)
   })
 })
 
-suite('MutlilineTextFieldEdit renders correctly when', () => {
+describe('MutlilineTextFieldEdit renders correctly when', () => {
   const wrapper = mount(
     <Component.ComponentContextProvider>
       <MultilineTextFieldEdit />
@@ -57,6 +50,6 @@ suite('MutlilineTextFieldEdit renders correctly when', () => {
     const field = () => wrapper.find('#field-options-rows')
     const newRows = 42
     field().simulate('change', { target: { value: newRows } })
-    expect(field().props().value).to.equal(newRows)
+    expect(field().props().value).toBe(newRows)
   })
 })

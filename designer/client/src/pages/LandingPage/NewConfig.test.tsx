@@ -39,7 +39,7 @@ describe('Newconfig', () => {
     })
     await fireEvent.click(screen.getByText('Next'))
     await waitFor(() => expect(push).toHaveBeenCalledTimes(1))
-    expect(push).toBeCalledWith('designer/somekey')
+    expect(push).toHaveBeenCalledWith('designer/somekey')
 
     expect(postBodyMatched).toBe(true)
   })

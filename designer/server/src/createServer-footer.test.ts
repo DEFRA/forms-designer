@@ -34,6 +34,6 @@ describe('Footer', () => {
 
     const $ = cheerio.load(res.result)
     const footerText = $('.footer-message').find('p').text()
-    expect(footerText).toEqual('Footer Text Test')
+    expect(footerText).toBe('Footer Text Test')
   })
 })

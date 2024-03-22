@@ -1,5 +1,3 @@
-import * as Code from '@hapi/code'
-import * as Lab from '@hapi/lab'
 import { componentReducer, getSubReducer } from './componentReducer'
 import { Actions } from './types'
 import {
@@ -11,12 +9,7 @@ import {
   componentListItemReducer
 } from '.'
 
-const { expect } = Code
-const lab = Lab.script()
-exports.lab = lab
-const { test, suite } = lab
-
-suite('Component reducer', () => {
+describe('Component reducer', () => {
   test('getSubReducer returns correct reducer', () => {
     const metaAction = Actions.NEW_COMPONENT
     const schemaAction = Actions.EDIT_SCHEMA_MIN
@@ -25,12 +18,12 @@ suite('Component reducer', () => {
     const listAction = Actions.EDIT_LIST
     const listItemAction = Actions.STATIC_LIST_ITEM_EDIT_VALUE
 
-    expect(getSubReducer(metaAction)).to.equal(metaReducer)
-    expect(getSubReducer(schemaAction)).to.equal(schemaReducer)
-    expect(getSubReducer(optionsAction)).to.equal(optionsReducer)
-    expect(getSubReducer(fieldsAction)).to.equal(fieldsReducer)
-    expect(getSubReducer(listAction)).to.equal(componentListReducer)
-    expect(getSubReducer(listItemAction)).to.equal(componentListItemReducer)
+    expect(getSubReducer(metaAction)).toEqual(metaReducer)
+    expect(getSubReducer(schemaAction)).toEqual(schemaReducer)
+    expect(getSubReducer(optionsAction)).toEqual(optionsReducer)
+    expect(getSubReducer(fieldsAction)).toEqual(fieldsReducer)
+    expect(getSubReducer(listAction)).toEqual(componentListReducer)
+    expect(getSubReducer(listItemAction)).toEqual(componentListItemReducer)
   })
 
   test('componentReducer adds hasValidated flag correctly', () => {
@@ -39,8 +32,10 @@ suite('Component reducer', () => {
         {},
         { type: Actions.EDIT_TITLE, payload: 'changing title' }
       )
-    ).to.contain({
-      hasValidated: false
-    })
+    ).toEqual(
+      expect.objectContaining({
+        hasValidated: false
+      })
+    )
   })
 })

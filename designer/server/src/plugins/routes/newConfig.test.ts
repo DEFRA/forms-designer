@@ -44,10 +44,10 @@ describe('NewConfig tests', () => {
     publish.mockImplementation(() => Promise.resolve([]))
     const res = await server.inject(options)
 
-    expect(res.statusCode).toEqual(400)
+    expect(res.statusCode).toBe(400)
     expect(
       res.result.indexOf('Form name should not contain special characters') > -1
-    ).toEqual(true)
+    ).toBe(true)
   })
 
   test('POST /api/new with existing form should not result in bad request', async () => {
@@ -60,7 +60,7 @@ describe('NewConfig tests', () => {
     publish.mockImplementation(() => Promise.resolve([]))
     const res = await server.inject(options)
 
-    expect(res.statusCode).toEqual(200)
+    expect(res.statusCode).toBe(200)
   })
 
   test("POST /api/new with '-' should not result in bad request", async () => {
@@ -73,7 +73,7 @@ describe('NewConfig tests', () => {
     publish.mockImplementation(() => Promise.resolve([]))
     const res = await server.inject(options)
 
-    expect(res.statusCode).toEqual(200)
+    expect(res.statusCode).toBe(200)
   })
 
   test('POST /api/new without runner running should result in bad request', async () => {
@@ -86,7 +86,7 @@ describe('NewConfig tests', () => {
     publish.mockImplementation(() => Promise.reject())
     const res = await server.inject(options)
 
-    expect(res.statusCode).toEqual(401)
+    expect(res.statusCode).toBe(401)
     expect(res.result).toMatch('Designer could not connect to runner instance.')
   })
 })

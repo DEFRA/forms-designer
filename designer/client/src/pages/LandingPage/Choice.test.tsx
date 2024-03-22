@@ -17,7 +17,7 @@ describe('LandingChoice', () => {
     const history = { push }
     render(<LandingChoice history={history} />)
     await fireEvent.click(screen.getByTitle('Next'))
-    expect(push).toBeCalledWith('/new')
+    expect(push).toHaveBeenCalledWith('/new')
   })
 
   it("should push /choose-existing to history if 'Open an existing form' is selected", async () => {
@@ -26,6 +26,6 @@ describe('LandingChoice', () => {
     render(<LandingChoice history={history} />)
     await fireEvent.click(screen.getByLabelText('Open an existing form'))
     await fireEvent.click(screen.getByTitle('Next'))
-    expect(push).toBeCalledWith('/choose-existing')
+    expect(push).toHaveBeenCalledWith('/choose-existing')
   })
 })

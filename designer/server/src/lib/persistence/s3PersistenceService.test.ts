@@ -1,44 +1,28 @@
-import * as Code from '@hapi/code'
-import * as Lab from '@hapi/lab'
-import sinon from 'sinon'
-
 import { S3PersistenceService } from './s3PersistenceService'
 
 import { FormConfiguration } from '@defra/forms-model'
 
-const { expect } = Code
-const lab = Lab.script()
-exports.lab = lab
-const { beforeEach, describe, afterEach, suite, test } = lab
-const sandbox = sinon.createSandbox()
-const server = {
-  logger: {
-    warn: sandbox.spy(),
-    error: sandbox.spy(),
-    log: sandbox.spy()
+describe('s3PersistenceService', () => {
+  const server = {
+    logger: {
+      warn: jest.fn(),
+      error: jest.fn(),
+      log: jest.fn()
+    }
   }
-}
 
-suite('s3PersistenceService', () => {
   const underTest = new S3PersistenceService(server)
   underTest.bucket = {
-    listObjects: sinon.stub(),
-    getObject: sinon.stub(),
-    upload: sinon.stub(),
-    copyObject: sinon.stub(),
+    listObjects: jest.fn(),
+    getObject: jest.fn(),
+    upload: jest.fn(),
+    copyObject: jest.fn(),
     config: { params: { Bucket: 'myBucket' } }
   }
 
-  afterEach(() => {
-    underTest.bucket.listObjects.resetHistory()
-    underTest.bucket.getObject.resetHistory()
-    underTest.bucket.upload.resetHistory()
-    underTest.bucket.copyObject.resetHistory()
-  })
-
   describe('listAllConfigurations', () => {
     test('should return configured objects', async () => {
-      underTest.bucket.listObjects.returns({
+      underTest.bucket.listObjects.mockReturnValue({
         promise: () => ({
           Contents: [
             {
@@ -62,7 +46,7 @@ suite('s3PersistenceService', () => {
         })
       })
 
-      expect(await underTest.listAllConfigurations()).to.equal([
+      await expect(underTest.listAllConfigurations()).resolves.toEqual([
         new FormConfiguration('myForm', 'My form', '2019-03-12T01:00:32.999Z'),
         new FormConfiguration('anotherForm', 'Another form'),
         new FormConfiguration('feedbackForm', 'Feedback form', undefined, true),
@@ -71,11 +55,13 @@ suite('s3PersistenceService', () => {
     })
 
     test('should return error if one is returned', async () => {
-      underTest.bucket.listObjects.returns({
+      underTest.bucket.listObjects.mockReturnValue({
         promise: () => ({ error: 'some error' })
       })
 
-      expect(await underTest.listAllConfigurations()).to.equal('some error')
+      await expect(underTest.listAllConfigurations()).resolves.toBe(
+        'some error'
+      )
     })
   })
 
@@ -98,29 +84,29 @@ suite('s3PersistenceService', () => {
       }
     ].forEach((testCase) => {
       test(`should return configured objects when id is ${testCase.description}`, async () => {
-        underTest.bucket.getObject.returns({
+        underTest.bucket.getObject.mockReturnValue({
           promise: () => ({
             Body: 'Some content string'
           })
         })
 
-        expect(await underTest.getConfiguration(testCase.id)).to.equal(
+        await expect(underTest.getConfiguration(testCase.id)).resolves.toBe(
           'Some content string'
         )
 
-        expect(underTest.bucket.getObject.callCount).to.equal(1)
-        expect(underTest.bucket.getObject.firstCall.args[0]).to.equal({
+        expect(underTest.bucket.getObject).toHaveBeenCalledTimes(1)
+        expect(underTest.bucket.getObject.mock.calls[0][0]).toEqual({
           Key: testCase.expectedId
         })
       })
     })
 
     test('should return error if one is returned', async () => {
-      underTest.bucket.getObject.returns({
+      underTest.bucket.getObject.mockReturnValue({
         promise: () => ({ error: 'some error' })
       })
 
-      expect(await underTest.getConfiguration('efefsdasa')).to.equal(
+      await expect(underTest.getConfiguration('efefsdasa')).resolves.toBe(
         'some error'
       )
     })
@@ -146,15 +132,15 @@ suite('s3PersistenceService', () => {
     ].forEach((testCase) => {
       test(`should upload configuration with no display name when id is ${testCase.description}`, async () => {
         const response = {}
-        underTest.bucket.upload.returns({ promise: () => response })
+        underTest.bucket.upload.mockReturnValue({ promise: () => response })
         const configuration = JSON.stringify({ someKey: 'someValue' })
 
         expect(
           await underTest.uploadConfiguration(testCase.id, configuration)
-        ).to.equal(response)
+        ).toEqual(response)
 
-        expect(underTest.bucket.upload.callCount).to.equal(1)
-        expect(underTest.bucket.upload.firstCall.args[0]).to.equal({
+        expect(underTest.bucket.upload).toHaveBeenCalledTimes(1)
+        expect(underTest.bucket.upload.mock.calls[0][0]).toEqual({
           Key: testCase.expectedId,
           Body: configuration,
           Metadata: {}
@@ -164,7 +150,7 @@ suite('s3PersistenceService', () => {
       test(`should upload configuration with a display name when id is ${testCase.description}`, async () => {
         const response = {}
         const displayName = 'My form'
-        underTest.bucket.upload.returns({ promise: () => response })
+        underTest.bucket.upload.mockReturnValue({ promise: () => response })
         const configuration = JSON.stringify({
           someStuff: 'someValue',
           name: displayName
@@ -172,10 +158,10 @@ suite('s3PersistenceService', () => {
 
         expect(
           await underTest.uploadConfiguration(testCase.id, configuration)
-        ).to.equal(response)
+        ).toEqual(response)
 
-        expect(underTest.bucket.upload.callCount).to.equal(1)
-        expect(underTest.bucket.upload.firstCall.args[0]).to.equal({
+        expect(underTest.bucket.upload).toHaveBeenCalledTimes(1)
+        expect(underTest.bucket.upload.mock.calls[0][0]).toEqual({
           Key: testCase.expectedId,
           Body: configuration,
           Metadata: { 'x-amz-meta-name': displayName }
@@ -185,7 +171,7 @@ suite('s3PersistenceService', () => {
       test(`should upload configuration which is a feedback form when id is ${testCase.description}`, async () => {
         const response = {}
         const displayName = 'My form'
-        underTest.bucket.upload.returns({ promise: () => response })
+        underTest.bucket.upload.mockReturnValue({ promise: () => response })
         const configuration = JSON.stringify({
           someStuff: 'someValue',
           name: displayName,
@@ -194,10 +180,10 @@ suite('s3PersistenceService', () => {
 
         expect(
           await underTest.uploadConfiguration(testCase.id, configuration)
-        ).to.equal(response)
+        ).toEqual(response)
 
-        expect(underTest.bucket.upload.callCount).to.equal(1)
-        expect(underTest.bucket.upload.firstCall.args[0]).to.equal({
+        expect(underTest.bucket.upload).toHaveBeenCalledTimes(1)
+        expect(underTest.bucket.upload.mock.calls[0][0]).toEqual({
           Key: testCase.expectedId,
           Body: configuration,
           Metadata: {
@@ -209,7 +195,7 @@ suite('s3PersistenceService', () => {
     })
 
     test('should return error if one is returned', async () => {
-      underTest.bucket.upload.returns({
+      underTest.bucket.upload.mockReturnValue({
         promise: () => ({ error: 'some error' })
       })
 
@@ -217,7 +203,7 @@ suite('s3PersistenceService', () => {
 
       expect(
         await underTest.uploadConfiguration('my badger', configuration)
-      ).to.equal({ error: 'some error' })
+      ).toEqual({ error: 'some error' })
     })
   })
 
@@ -242,15 +228,15 @@ suite('s3PersistenceService', () => {
       test(`should copy configuration when id is ${testCase.description}`, async () => {
         const response = {}
         const newName = 'wqmqadda'
-        underTest.bucket.copyObject.returns({ promise: () => response })
+        underTest.bucket.copyObject.mockReturnValue({ promise: () => response })
 
-        expect(
-          await underTest.copyConfiguration(testCase.id, newName)
-        ).to.equal(response)
+        await expect(
+          underTest.copyConfiguration(testCase.id, newName)
+        ).resolves.toEqual(response)
 
-        expect(underTest.bucket.copyObject.callCount).to.equal(1)
+        expect(underTest.bucket.copyObject).toHaveBeenCalledTimes(1)
 
-        expect(underTest.bucket.copyObject.firstCall.args[0]).to.equal({
+        expect(underTest.bucket.copyObject.mock.calls[0][0]).toEqual({
           CopySource: encodeURI(`myBucket/${testCase.expectedId}`),
           Key: `${newName}.json`
         })
@@ -258,7 +244,7 @@ suite('s3PersistenceService', () => {
     })
 
     test('should return error if one is returned', async () => {
-      underTest.bucket.copyObject.returns({
+      underTest.bucket.copyObject.mockReturnValue({
         promise: () => ({ error: 'some error' })
       })
 
@@ -266,7 +252,7 @@ suite('s3PersistenceService', () => {
 
       expect(
         await underTest.copyConfiguration('my badger', configuration)
-      ).to.equal({ error: 'some error' })
+      ).toEqual({ error: 'some error' })
     })
   })
 })

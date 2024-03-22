@@ -9,7 +9,7 @@ describe('inline condition values', () => {
     }
     const returned = conditionValueFrom(value)
 
-    expect(returned instanceof ConditionValue).toEqual(true)
+    expect(returned instanceof ConditionValue).toBe(true)
     expect(returned).toEqual(new ConditionValue('badgers', 'Badgers'))
   })
 
@@ -21,7 +21,7 @@ describe('inline condition values', () => {
     }
     const returned = conditionValueFrom(value)
 
-    expect(returned instanceof ConditionValue).toEqual(true)
+    expect(returned instanceof ConditionValue).toBe(true)
     expect(returned).toEqual(new ConditionValue('badgers', 'Badgers'))
   })
 })

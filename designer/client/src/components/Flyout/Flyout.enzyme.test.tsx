@@ -1,15 +1,7 @@
 import React from 'react'
 import { mount } from 'enzyme'
-import * as Code from '@hapi/code'
-import * as Lab from '@hapi/lab'
 import { useFlyoutEffect } from './Flyout'
 import { FlyoutContext } from '../../context'
-import sinon from 'sinon'
-
-const { expect } = Code
-const lab = Lab.script()
-exports.lab = lab
-const { test, describe, beforeEach, afterEach } = lab
 
 function HookWrapper(props) {
   const hook = props.hook ? props.hook() : undefined
@@ -19,15 +11,9 @@ function HookWrapper(props) {
 }
 
 describe('useFlyoutContext', () => {
-  let increment
-  let decrement
+  const increment = jest.fn()
+  const decrement = jest.fn()
   let wrapper
-
-  beforeEach(() => {
-    sinon.restore()
-    increment = sinon.stub()
-    decrement = sinon.stub()
-  })
 
   afterEach(() => {
     wrapper?.exists() && wrapper.unmount()
@@ -40,8 +26,8 @@ describe('useFlyoutContext', () => {
         <HookWrapper hook={() => useFlyoutEffect({ show: true })} />
       </FlyoutContext.Provider>
     )
-    expect(increment.calledOnce).to.equal(true)
-    expect(decrement.notCalled).to.equal(true)
+    expect(increment).toHaveBeenCalledTimes(1)
+    expect(decrement).not.toHaveBeenCalled()
   })
 
   test('Decrement is called on unmount', () => {
@@ -53,17 +39,17 @@ describe('useFlyoutContext', () => {
     )
 
     wrapper.unmount()
-    expect(increment.calledOnce).to.equal(true)
-    expect(decrement.calledOnce).to.equal(true)
+    expect(increment).toHaveBeenCalledTimes(1)
+    expect(decrement).toHaveBeenCalledTimes(1)
   })
 
-  test.skip('flyout is offset by correct amount', () => {
+  test('flyout is offset by correct amount', () => {
     const flyoutContextProviderValue = {
       count: 1,
       increment,
       decrement
     }
-    expect(increment.notCalled).to.equal(true)
+    expect(increment).not.toHaveBeenCalled()
     wrapper = mount(
       <FlyoutContext.Provider value={flyoutContextProviderValue}>
         <HookWrapper hook={() => useFlyoutEffect({ show: true })} />
@@ -73,9 +59,9 @@ describe('useFlyoutContext', () => {
     const { hook } = wrapper.find('div').props()
     wrapper.mount()
     const { style } = hook
-    expect(increment.calledOnce).to.equal(true)
+    expect(increment).toHaveBeenCalledTimes(1)
 
-    expect(style).to.include({
+    expect(style).toEqual({
       paddingLeft: '50px',
       transform: 'translateX(-50px)',
       position: 'relative'

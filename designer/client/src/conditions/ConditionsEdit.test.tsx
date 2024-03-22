@@ -43,101 +43,103 @@ const customRender = (ui, { providerProps, ...renderOptions } = {}) => {
   )
 }
 
-describe('hint texts', () => {
-  test('main hint text is correct', () => {
-    const { getByText } = customRender(<ConditionsEdit />)
+describe('ConditionsEdit', () => {
+  describe('hint texts', () => {
+    test('main hint text is correct', () => {
+      const { getByText } = customRender(<ConditionsEdit />)
 
-    const hint =
-      'Set conditions for components and links to control the flow of a form. For example, a question page with a component for yes and no options could have link conditions based on which option a user selects.'
-    expect(getByText(hint)).toBeInTheDocument()
-  })
-
-  test('no field hint test is correct', () => {
-    const { getByText } = customRender(<ConditionsEdit />, {
-      providerProps: { data: { pages: [], conditions: [] }, save: jest.fn() }
-    })
-    const hint =
-      'You cannot add a condition as no components are available. Create a component on a page in the form. You can then add a condition.'
-    expect(getByText(hint)).toBeInTheDocument()
-  })
-})
-
-describe('with existing conditions', () => {
-  const condition = {
-    name: 'abdefg',
-    displayName: 'My condition',
-    value: 'badgers'
-  }
-  const condition2 = {
-    name: 'abdefgh',
-    displayName: 'My condition 2',
-    value: 'badgers again'
-  }
-
-  const providerData = {
-    data: {
-      ...data,
-      conditions: [condition, condition2]
-    },
-    save: jest.fn()
-  }
-
-  const props = {
-    providerProps: providerData
-  }
-
-  test('Renders edit links for each condition and add new condition ', () => {
-    const { getByText, queryByTestId } = customRender(<ConditionsEdit />, {
-      ...props
-    })
-    expect(getByText(condition.displayName)).toBeInTheDocument()
-    expect(getByText(condition2.displayName)).toBeInTheDocument()
-    expect(queryByTestId('edit-conditions')).toBeNull()
-  })
-
-  test('Clicking an edit link causes the edit view to be rendered and all other elements hidden', async () => {
-    const { getByText, getByTestId } = customRender(<ConditionsEdit />, {
-      ...props
-    })
-    const link = getByText(condition.displayName)
-    await fireEvent.click(link)
-    expect(getByTestId('edit-conditions')).toBeTruthy()
-  })
-})
-
-describe('without existing conditions', () => {
-  const providerData = {
-    data: {
-      ...data,
-      conditions: []
-    },
-    save: jest.fn()
-  }
-
-  const props = {
-    providerProps: providerData
-  }
-
-  test('Renders no edit condition links', () => {
-    const { queryAllByTestId } = customRender(<ConditionsEdit />, props)
-
-    const listItems = queryAllByTestId('conditions-list-items')
-    expect(listItems.length).toBe(0)
-  })
-
-  test('Renders add new condition link if inputs are available', () => {
-    const { queryByTestId } = customRender(<ConditionsEdit />, props)
-
-    expect(queryByTestId('add-condition-link')).toBeInTheDocument()
-  })
-
-  test('Renders no new condition message if there are no inputs available', () => {
-    const { getByText } = customRender(<ConditionsEdit />, {
-      providerProps: { data: { pages: [], conditions: [] }, save: jest.fn() }
+      const hint =
+        'Set conditions for components and links to control the flow of a form. For example, a question page with a component for yes and no options could have link conditions based on which option a user selects.'
+      expect(getByText(hint)).toBeInTheDocument()
     })
 
-    const hint =
-      'You cannot add a condition as no components are available. Create a component on a page in the form. You can then add a condition.'
-    expect(getByText(hint)).toBeInTheDocument()
+    test('no field hint test is correct', () => {
+      const { getByText } = customRender(<ConditionsEdit />, {
+        providerProps: { data: { pages: [], conditions: [] }, save: jest.fn() }
+      })
+      const hint =
+        'You cannot add a condition as no components are available. Create a component on a page in the form. You can then add a condition.'
+      expect(getByText(hint)).toBeInTheDocument()
+    })
+  })
+
+  describe('with existing conditions', () => {
+    const condition = {
+      name: 'abdefg',
+      displayName: 'My condition',
+      value: 'badgers'
+    }
+    const condition2 = {
+      name: 'abdefgh',
+      displayName: 'My condition 2',
+      value: 'badgers again'
+    }
+
+    const providerData = {
+      data: {
+        ...data,
+        conditions: [condition, condition2]
+      },
+      save: jest.fn()
+    }
+
+    const props = {
+      providerProps: providerData
+    }
+
+    test('Renders edit links for each condition and add new condition ', () => {
+      const { getByText, queryByTestId } = customRender(<ConditionsEdit />, {
+        ...props
+      })
+      expect(getByText(condition.displayName)).toBeInTheDocument()
+      expect(getByText(condition2.displayName)).toBeInTheDocument()
+      expect(queryByTestId('edit-conditions')).toBeNull()
+    })
+
+    test('Clicking an edit link causes the edit view to be rendered and all other elements hidden', async () => {
+      const { getByText, getByTestId } = customRender(<ConditionsEdit />, {
+        ...props
+      })
+      const link = getByText(condition.displayName)
+      await fireEvent.click(link)
+      expect(getByTestId('edit-conditions')).toBeTruthy()
+    })
+  })
+
+  describe('without existing conditions', () => {
+    const providerData = {
+      data: {
+        ...data,
+        conditions: []
+      },
+      save: jest.fn()
+    }
+
+    const props = {
+      providerProps: providerData
+    }
+
+    test('Renders no edit condition links', () => {
+      const { queryAllByTestId } = customRender(<ConditionsEdit />, props)
+
+      const listItems = queryAllByTestId('conditions-list-items')
+      expect(listItems.length).toBe(0)
+    })
+
+    test('Renders add new condition link if inputs are available', () => {
+      const { queryByTestId } = customRender(<ConditionsEdit />, props)
+
+      expect(queryByTestId('add-condition-link')).toBeInTheDocument()
+    })
+
+    test('Renders no new condition message if there are no inputs available', () => {
+      const { getByText } = customRender(<ConditionsEdit />, {
+        providerProps: { data: { pages: [], conditions: [] }, save: jest.fn() }
+      })
+
+      const hint =
+        'You cannot add a condition as no components are available. Create a component on a page in the form. You can then add a condition.'
+      expect(getByText(hint)).toBeInTheDocument()
+    })
   })
 })

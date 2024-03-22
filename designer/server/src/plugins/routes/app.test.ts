@@ -35,8 +35,8 @@ describe('App routes test', () => {
 
     const res = await server.inject(options)
 
-    expect(res.statusCode).toEqual(302)
-    expect(res.headers.location).toEqual('/app')
+    expect(res.statusCode).toBe(302)
+    expect(res.headers.location).toBe('/app')
   })
 
   test('GET /app should serve designer landing page', async () => {
@@ -47,8 +47,8 @@ describe('App routes test', () => {
 
     const res = await server.inject(options)
 
-    expect(res.statusCode).toEqual(200)
-    expect(res.result.indexOf('<main id="root">') > -1).toEqual(true)
+    expect(res.statusCode).toBe(200)
+    expect(res.result.indexOf('<main id="root">') > -1).toBe(true)
   })
 
   test('GET /app/* should serve designer landing page', async () => {
@@ -59,8 +59,8 @@ describe('App routes test', () => {
 
     const res = await server.inject(options)
 
-    expect(res.statusCode).toEqual(200)
-    expect(res.result.indexOf('<main id="root">') > -1).toEqual(true)
+    expect(res.statusCode).toBe(200)
+    expect(res.result.indexOf('<main id="root">') > -1).toBe(true)
   })
 
   test('GET /{id} should redirect to designer page', async () => {
@@ -71,8 +71,8 @@ describe('App routes test', () => {
 
     const res = await server.inject(options)
 
-    expect(res.statusCode).toEqual(301)
-    expect(res.headers.location).toEqual('/app/designer/test')
+    expect(res.statusCode).toBe(301)
+    expect(res.headers.location).toBe('/app/designer/test')
   })
 
   test('GET /new should redirect to /app', async () => {
@@ -83,7 +83,7 @@ describe('App routes test', () => {
 
     const res = await server.inject(options)
 
-    expect(res.statusCode).toEqual(301)
-    expect(res.headers.location).toEqual('/app')
+    expect(res.statusCode).toBe(301)
+    expect(res.headers.location).toBe('/app')
   })
 })

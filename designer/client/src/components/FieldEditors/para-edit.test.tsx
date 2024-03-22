@@ -4,7 +4,7 @@ import { ComponentContext } from '../../reducers/component/componentReducer'
 import { ParaEdit } from './para-edit'
 import { DataContext } from '../../context'
 
-describe('para edit', () => {
+describe('ParaEdit', () => {
   function TestComponentWithContext({ children }) {
     const data = {
       pages: [

@@ -119,7 +119,7 @@ describe('Server API', () => {
     }
 
     const result = await server.inject(options)
-    expect(result.statusCode).toEqual(401)
+    expect(result.statusCode).toBe(401)
 
     const optionsCrash = {
       method: 'get',
@@ -165,7 +165,7 @@ describe('Server API', () => {
     }
 
     const result = await server.inject(options)
-    expect(result.statusCode).toEqual(401)
+    expect(result.statusCode).toBe(401)
     expect(result.result.err.message).toMatch('Schema validation failed')
   })
 
@@ -213,7 +213,7 @@ describe('Server API', () => {
     const result = await server.inject(options)
 
     // Then
-    expect(result.statusCode).toEqual(401)
-    expect(result.result.err.message).toEqual('Error in persistence service')
+    expect(result.statusCode).toBe(401)
+    expect(result.result.err.message).toBe('Error in persistence service')
   })
 })

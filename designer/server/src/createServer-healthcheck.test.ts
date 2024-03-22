@@ -22,9 +22,9 @@ describe(`/health-check Route`, () => {
     await server.stop()
     process.env = OLD_ENV
 
-    expect(result?.status).toEqual('OK')
-    expect(result?.lastCommit).toEqual('LAST COMMIT')
-    expect(result?.lastTag).toEqual('LAST TAG')
+    expect(result?.status).toBe('OK')
+    expect(result?.lastCommit).toBe('LAST COMMIT')
+    expect(result?.lastTag).toBe('LAST TAG')
     expect(typeof result?.time).toBe('string')
   })
 })

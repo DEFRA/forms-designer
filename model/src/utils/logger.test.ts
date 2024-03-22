@@ -33,7 +33,7 @@ describe('logger', () => {
   })
 
   function assertMessageLoggedAt(level) {
-    expect(server.log.mock.calls.length).toEqual(1)
+    expect(server.log.mock.calls).toHaveLength(1)
     expect(server.log.mock.calls[0][0]).toEqual([level, identifier])
     expect(server.log.mock.calls[0][1]).toEqual(message)
   }

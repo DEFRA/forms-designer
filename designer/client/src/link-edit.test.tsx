@@ -28,14 +28,16 @@ export const customRender = (children, providerProps = dataValue) => {
   )
 }
 
-test('Submitting with a condition updates the link', async () => {
-  const save = jest.fn()
-  const { getByRole } = customRender(<LinkCreate />, {
-    data,
-    save
+describe('LinkEdit', () => {
+  test('Submitting with a condition updates the link', async () => {
+    const save = jest.fn()
+    const { getByRole } = customRender(<LinkCreate />, {
+      data,
+      save
+    })
+    await fireEvent.click(getByRole('button'))
+    const summary = within(getByRole('alert'))
+    expect(summary.getByText('Enter from')).toBeInTheDocument()
+    expect(summary.getByText('Enter to')).toBeInTheDocument()
   })
-  await fireEvent.click(getByRole('button'))
-  const summary = within(getByRole('alert'))
-  expect(summary.getByText('Enter from')).toBeInTheDocument()
-  expect(summary.getByText('Enter to')).toBeInTheDocument()
 })

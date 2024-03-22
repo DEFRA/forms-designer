@@ -1,16 +1,10 @@
 import React from 'react'
 import { render } from '@testing-library/react'
-import { act } from 'react-dom/test-utils'
 import { FeatureFlagContext, FeatureFlagProvider } from './FeatureFlagContext'
-import sinon from 'sinon'
 import { FeatureToggleApi } from '../api/toggleApi'
 import FeatureToggle from '../FeatureToggle'
 
 describe('FeatureFlagContext', () => {
-  beforeEach(() => {
-    sinon.restore()
-  })
-
   const WrappingComponent = ({ value, children }) => {
     return (
       <FeatureFlagContext.Provider value={value}>
@@ -54,11 +48,9 @@ describe('FeatureFlagContext', () => {
   })
 
   test('should feature toggle api only load once', async () => {
-    const stub = sinon
-      .stub(FeatureToggleApi.prototype, 'fetch')
-      .callsFake(async function () {
-        return { featureA: false, featureB: true, featureC: true }
-      })
+    const response = { featureA: false, featureB: true, featureC: true }
+
+    jest.spyOn(FeatureToggleApi.prototype, 'fetch').mockResolvedValue(response)
 
     render(
       <FeatureFlagProvider>
@@ -73,18 +65,15 @@ describe('FeatureFlagContext', () => {
         </FeatureToggle>
       </FeatureFlagProvider>
     )
-    await act(() => stub.getCall(0).returnValue)
 
-    expect(stub.calledOnce).toBeTruthy()
+    expect(FeatureToggleApi.prototype.fetch).toHaveBeenCalledTimes(1)
   })
 
   test('should not show element if features api fails', async () => {
     const { queryAllByText } = render(
       <WrappingComponent
-        value={() => {
-          return new Promise((_resolve, reject) => {
-            reject()
-          })
+        value={async () => {
+          throw new Error()
         }}
       >
         <FeatureToggle feature="featureEditPageDuplicateButton">

@@ -60,6 +60,6 @@ describe('SaveErrorPage', () => {
 
     await fireEvent.click(screen.getByText('Back to Designer'))
     await waitFor(() => expect(push).toHaveBeenCalledTimes(1))
-    expect(push).toBeCalledWith('designer/testid')
+    expect(push).toHaveBeenCalledWith('designer/testid')
   })
 })

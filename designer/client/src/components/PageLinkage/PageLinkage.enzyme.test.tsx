@@ -1,25 +1,19 @@
 import React from 'react'
 import { shallow } from 'enzyme'
-import * as Code from '@hapi/code'
-import * as Lab from '@hapi/lab'
-import sinon from 'sinon'
 
 import { PageLinkage } from '.'
 import { addLink } from '../../data/page/addLink'
 
-const { expect } = Code
-const lab = Lab.script()
-exports.lab = lab
-const { suite, test, after, before, beforeEach } = lab
+jest.mock('../../data/page/addLink')
 
-suite('Page Linkage', () => {
+describe('Page Linkage', () => {
   let page
   let data
   let layout
   let props
   let event
 
-  before(() => {
+  beforeAll(() => {
     window.pageYOffset = 10
   })
 
@@ -49,30 +43,30 @@ suite('Page Linkage', () => {
     event = {
       clientX: 100,
       clientY: 100,
-      preventDefault: sinon.stub(),
+      preventDefault: jest.fn(),
       dataTransfer: {
-        setData: sinon.stub(),
-        getData: sinon.stub().returns(JSON.stringify(page))
+        setData: jest.fn(),
+        getData: jest.fn(() => JSON.stringify(page))
       }
     }
 
     props = { page, data, layout }
   })
 
-  after(() => {
+  afterAll(() => {
     window.pageYOffset = 0
   })
 
   test('Drag area is rendered', () => {
     const wrapper = shallow(<PageLinkage {...props} />)
     const dragArea = wrapper.find('.page-linkage__drag-area').first()
-    expect(dragArea.exists()).to.be.true()
+    expect(dragArea.exists()).toBe(true)
   })
 
   test('Highlight area is not rendered', () => {
     const wrapper = shallow(<PageLinkage {...props} />)
     const highlightArea = wrapper.find('.page-linkage__highlight-area').first()
-    expect(highlightArea.exists()).to.be.false()
+    expect(highlightArea.exists()).toBe(false)
   })
 
   test('Highlight area is rendered on drag start', () => {
@@ -80,11 +74,11 @@ suite('Page Linkage', () => {
     const dragArea = wrapper.find('.page-linkage__drag-area').first()
     let highlightArea = wrapper.find('.page-linkage__highlight-area').first()
 
-    expect(highlightArea.exists()).to.be.false()
+    expect(highlightArea.exists()).toBe(false)
 
     dragArea.prop('onDragStart')(event)
     highlightArea = wrapper.find('.page-linkage__highlight-area').first()
-    expect(highlightArea.exists()).to.be.true()
+    expect(highlightArea.exists()).toBe(true)
   })
 
   test('Highlight area is rendered on drag over', () => {
@@ -92,12 +86,12 @@ suite('Page Linkage', () => {
     const dragArea = wrapper.find('.page-linkage__drag-area').first()
     let highlightArea = wrapper.find('.page-linkage__highlight-area').first()
 
-    expect(highlightArea.exists()).to.be.false()
+    expect(highlightArea.exists()).toBe(false)
 
     dragArea.prop('onDragOver')(event)
     highlightArea = wrapper.find('.page-linkage__highlight-area').first()
-    expect(highlightArea.exists()).to.be.true()
-    expect(event.preventDefault.called).to.be.true()
+    expect(highlightArea.exists()).toBe(true)
+    expect(event.preventDefault).toHaveBeenCalled()
   })
 
   test('Highlight area is removed on drop', async () => {
@@ -105,16 +99,16 @@ suite('Page Linkage', () => {
     const dragArea = wrapper.find('.page-linkage__drag-area').first()
     let highlightArea = wrapper.find('.page-linkage__highlight-area').first()
 
-    expect(highlightArea.exists()).to.be.false()
+    expect(highlightArea.exists()).toBe(false)
 
     dragArea.prop('onDragOver')(event)
     highlightArea = wrapper.find('.page-linkage__highlight-area').first()
-    expect(highlightArea.exists()).to.be.true()
-    expect(event.preventDefault.called).to.be.true()
+    expect(highlightArea.exists()).toBe(true)
+    expect(event.preventDefault).toHaveBeenCalled()
 
     await dragArea.prop('onDrop')(event)
     highlightArea = wrapper.find('.page-linkage__highlight-area').first()
-    expect(highlightArea.exists()).to.be.false()
+    expect(highlightArea.exists()).toBe(false)
   })
 
   test('Highlight area is removed on drag end', () => {
@@ -122,16 +116,16 @@ suite('Page Linkage', () => {
     const dragArea = wrapper.find('.page-linkage__drag-area').first()
     let highlightArea = wrapper.find('.page-linkage__highlight-area').first()
 
-    expect(highlightArea.exists()).to.be.false()
+    expect(highlightArea.exists()).toBe(false)
 
     dragArea.prop('onDragOver')(event)
     highlightArea = wrapper.find('.page-linkage__highlight-area').first()
-    expect(highlightArea.exists()).to.be.true()
-    expect(event.preventDefault.called).to.be.true()
+    expect(highlightArea.exists()).toBe(true)
+    expect(event.preventDefault).toHaveBeenCalled()
 
     dragArea.prop('onDragEnd')(event)
     highlightArea = wrapper.find('.page-linkage__highlight-area').first()
-    expect(highlightArea.exists()).to.be.false()
+    expect(highlightArea.exists()).toBe(false)
   })
 
   test('Arrow svg renders correctly on drag', () => {
@@ -142,12 +136,14 @@ suite('Page Linkage', () => {
     const svg = wrapper.find('RenderInPortal').first().children()
     const line = svg.find('line').first()
 
-    expect(line.props()).to.include({
-      x1: event.pageX,
-      y1: event.pageY,
-      x2: event.pageX,
-      y2: event.pageY
-    })
+    expect(line.props()).toEqual(
+      expect.objectContaining({
+        x1: event.pageX,
+        y1: event.pageY,
+        x2: event.pageX,
+        y2: event.pageY
+      })
+    )
   })
 
   test('Arrow svg updates correctly on drag move', () => {
@@ -158,23 +154,27 @@ suite('Page Linkage', () => {
     let svg = wrapper.find('RenderInPortal').first().children()
     let line = svg.find('line').first()
 
-    expect(line.props()).to.include({
-      x1: event.pageX,
-      y1: event.pageY,
-      x2: event.pageX,
-      y2: event.pageY
-    })
+    expect(line.props()).toEqual(
+      expect.objectContaining({
+        x1: event.pageX,
+        y1: event.pageY,
+        x2: event.pageX,
+        y2: event.pageY
+      })
+    )
 
     dragArea.prop('onDrag')({ pageX: 200, pageY: 200 })
     svg = wrapper.find('RenderInPortal').first().children()
     line = svg.find('line').first()
 
-    expect(line.props()).to.include({
-      x1: event.pageX,
-      y1: event.pageY,
-      x2: 200,
-      y2: 200
-    })
+    expect(line.props()).toEqual(
+      expect.objectContaining({
+        x1: event.pageX,
+        y1: event.pageY,
+        x2: 200,
+        y2: 200
+      })
+    )
   })
 
   test('Arrow svg is removed on drop', async () => {
@@ -183,11 +183,11 @@ suite('Page Linkage', () => {
     dragArea.prop('onDragStart')(event)
 
     let svg = wrapper.find('RenderInPortal').first().children()
-    expect(svg.exists()).to.be.true()
+    expect(svg.exists()).toBe(true)
 
     await dragArea.prop('onDrop')(event)
     svg = wrapper.find('RenderInPortal').first().children()
-    expect(svg.exists()).to.be.false()
+    expect(svg.exists()).toBe(false)
   })
 
   test('Arrow svg is removed on drag end', () => {
@@ -196,30 +196,29 @@ suite('Page Linkage', () => {
     dragArea.prop('onDragStart')(event)
 
     let svg = wrapper.find('RenderInPortal').first().children()
-    expect(svg.exists()).to.be.true()
+    expect(svg.exists()).toBe(true)
 
     dragArea.prop('onDragEnd')(event)
     svg = wrapper.find('RenderInPortal').first().children()
-    expect(svg.exists()).to.be.false()
+    expect(svg.exists()).toBe(false)
   })
 
   test('DragStart event correctly sets page data for transfer', () => {
     const wrapper = shallow(<PageLinkage {...props} />)
     const dragArea = wrapper.find('.page-linkage__drag-area').first()
     dragArea.prop('onDragStart')(event)
-    expect(event.dataTransfer.setData.getCall(0).args).to.equal([
+    expect(jest.mocked(event.dataTransfer.setData).mock.calls[0]).toEqual([
       'linkingPage',
       JSON.stringify(page)
     ])
   })
 
   test('Pages is not linked to itself', async () => {
-    const addLinkSpy = sinon.spy(addLink)
     const draggedPage = JSON.parse(event.dataTransfer.getData())
     const wrapper = shallow(<PageLinkage {...props} page={draggedPage} />)
     const dragArea = wrapper.find('.page-linkage__drag-area').first()
 
     await dragArea.prop('onDrop')(event)
-    expect(addLinkSpy.called).to.be.false()
+    expect(addLink).not.toHaveBeenCalled()
   })
 })

@@ -1,10 +1,8 @@
 import { migrate } from './migration.1-2'
-jest.mock('../utils/helpers', () => {
-  return {
-    __esModule: true,
-    nanoid: jest.fn().mockReturnValueOnce('id-1').mockReturnValueOnce('id-2')
-  }
-})
+import { nanoid } from '../utils/helpers'
+
+jest.mock('../utils/helpers')
+
 test('migrate from version 1 to 2', () => {
   const testData = {
     pages: [
@@ -132,6 +130,8 @@ test('migrate from version 1 to 2', () => {
     ],
     version: 2
   }
+
+  jest.mocked(nanoid).mockReturnValueOnce('id-1').mockReturnValueOnce('id-2')
 
   expect(migrate(testData)).toEqual(expected)
 })

@@ -1,34 +1,19 @@
-import * as Code from '@hapi/code'
-import * as Lab from '@hapi/lab'
-import sinon from 'sinon'
 import Wreck from '@hapi/wreck'
 import config from '../../config'
 
 import { PreviewPersistenceService } from './previewPersistenceService'
 
-const { expect } = Code
-const lab = Lab.script()
-exports.lab = lab
-const { beforeEach, afterEach, suite, test } = lab
-const sandbox = sinon.createSandbox()
+jest.mock('@hapi/wreck')
 
-suite('PreviewPersistenceService', () => {
+describe('PreviewPersistenceService', () => {
   const UPLOAD_RESPONSE = { result: 'UPLOAD RESPONSE' }
   const GET_RESPONSE = {
     payload: Buffer.from(JSON.stringify({ values: 'OK' }))
   }
 
-  beforeEach(async () => {
-    sandbox.stub(Wreck, 'get').callsFake(() => {
-      return Promise.resolve(GET_RESPONSE)
-    })
-    sandbox.stub(Wreck, 'post').callsFake((url) => {
-      return Promise.resolve(UPLOAD_RESPONSE)
-    })
-  })
-
-  afterEach(() => {
-    sandbox.restore()
+  beforeEach(() => {
+    jest.spyOn(Wreck, 'get').mockResolvedValue(GET_RESPONSE)
+    jest.spyOn(Wreck, 'post').mockResolvedValue(UPLOAD_RESPONSE)
   })
 
   test('it uploads configuration', async () => {
@@ -37,15 +22,14 @@ suite('PreviewPersistenceService', () => {
     const configuration = 'test'
     const result = await previewService.uploadConfiguration(id, configuration)
 
-    // @ts-ignore
-    expect(Wreck.post.getCall(0).args).to.equal([
+    expect(jest.mocked(Wreck.post).mock.calls[0]).toEqual([
       `${config.publishUrl}/publish`,
       {
         payload: JSON.stringify({ id, configuration })
       }
     ])
 
-    expect(result).to.equal(UPLOAD_RESPONSE as any)
+    expect(result).toBe(UPLOAD_RESPONSE)
   })
 
   test('it copies configuration', async () => {
@@ -54,26 +38,24 @@ suite('PreviewPersistenceService', () => {
     const newName = 'test'
     const result = await previewService.copyConfiguration(configId, newName)
 
-    // @ts-ignore
-    expect(Wreck.get.getCall(0).args).to.equal([
+    expect(jest.mocked(Wreck.get).mock.calls[0]).toEqual([
       `${config.publishUrl}/published/${configId}`
     ])
 
-    // @ts-ignore
-    expect(Wreck.post.getCall(0).args).to.equal([
+    expect(jest.mocked(Wreck.post).mock.calls[0]).toEqual([
       `${config.publishUrl}/publish`,
       {
         payload: JSON.stringify({ id: newName, configuration: 'OK' })
       }
     ])
 
-    expect(result).to.equal(UPLOAD_RESPONSE as any)
+    expect(result).toEqual(UPLOAD_RESPONSE)
   })
 
   test('it lists all configurations', async () => {
     const previewService = new PreviewPersistenceService()
     const result = await previewService.listAllConfigurations()
-    expect(result).to.equal(JSON.parse(GET_RESPONSE.payload.toString()))
+    expect(result).toEqual(JSON.parse(GET_RESPONSE.payload.toString()))
   })
 
   test('it gets a configuration', async () => {
@@ -81,11 +63,10 @@ suite('PreviewPersistenceService', () => {
     const previewService = new PreviewPersistenceService()
     const result = await previewService.getConfiguration(id)
 
-    // @ts-ignore
-    expect(Wreck.get.getCall(0).args).to.equal([
+    expect(jest.mocked(Wreck.get).mock.calls[0]).toEqual([
       `${config.publishUrl}/published/${id}`
     ])
 
-    expect(result).to.equal(GET_RESPONSE.payload.toString())
+    expect(result).toEqual(GET_RESPONSE.payload.toString())
   })
 })
