@@ -1,11 +1,13 @@
 import React from 'react'
-import { render } from '@testing-library/react'
+import { screen } from '@testing-library/dom'
+import { cleanup, render } from '@testing-library/react'
 import { Autocomplete } from './Autocomplete'
 import { RenderWithContext } from '../../../../test/helpers/renderers'
 
 describe('AutocompleteField', () => {
+  const { getByText } = screen
+
   let stateProps
-  let page
 
   beforeEach(() => {
     stateProps = {
@@ -16,21 +18,23 @@ describe('AutocompleteField', () => {
       }
     }
 
-    page = render(
+    render(
       <RenderWithContext stateProps={stateProps}>
         <Autocomplete />
       </RenderWithContext>
     )
   })
 
+  afterEach(cleanup)
+
   test('should display display correct title', () => {
     const text = 'Autocomplete'
-    expect(page.getByText(text)).toBeInTheDocument()
+    expect(getByText(text)).toBeInTheDocument()
   })
 
   test('should display display correct helptext', () => {
     const text =
       "Add the autocomplete attribute to this field. For example, 'on' or 'given-name'."
-    expect(page.getByText(text)).toBeInTheDocument()
+    expect(getByText(text)).toBeInTheDocument()
   })
 })

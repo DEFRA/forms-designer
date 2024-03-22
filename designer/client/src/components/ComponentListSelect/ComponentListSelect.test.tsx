@@ -1,5 +1,6 @@
 import React, { useReducer } from 'react'
-import { render } from '@testing-library/react'
+import { screen } from '@testing-library/dom'
+import { act, cleanup, render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import { DataContext } from '../../context'
 import { Data } from '@defra/forms-model'
@@ -13,6 +14,8 @@ import { ListsEditorContextProvider } from '../../reducers/list/listsEditorReduc
 import { ListContextProvider } from '../../reducers/listReducer'
 
 describe('ComponentListSelect', () => {
+  const { getByText } = screen
+
   const data = {
     pages: [
       {
@@ -47,6 +50,7 @@ describe('ComponentListSelect', () => {
       }
     ]
   }
+
   const dataValue = { data, save: jest.fn() }
 
   interface IContextProvider {
@@ -82,6 +86,8 @@ describe('ComponentListSelect', () => {
     )
   }
 
+  afterEach(cleanup)
+
   test('Lists all available lists', () => {
     // - when
     const { container } = render(
@@ -111,7 +117,7 @@ describe('ComponentListSelect', () => {
 
   test('Selecting a different list changes the edit link', async () => {
     // - when
-    const { container, getByText } = render(
+    const { container } = render(
       <TestComponentContextProvider
         dataValue={dataValue}
         componentValue={false}
@@ -121,14 +127,14 @@ describe('ComponentListSelect', () => {
     )
 
     const select = container.querySelector('select')!
-    await userEvent.selectOptions(select, 'myList')
+    await act(() => userEvent.selectOptions(select, 'myList'))
 
     // - then
     expect(getByText('Edit My list')).toBeInTheDocument()
   })
 
   test('should render strings correctly', () => {
-    const { getByText } = render(
+    render(
       <TestComponentContextProvider
         dataValue={dataValue}
         componentValue={false}
@@ -160,7 +166,7 @@ describe('ComponentListSelect', () => {
     )
 
     const select = container.querySelector('select')!
-    await userEvent.selectOptions(select, 'Select a list')
+    await act(() => userEvent.selectOptions(select, 'Select a list'))
 
     // - then
     expect(

@@ -1,12 +1,16 @@
 import React from 'react'
-import { render } from '@testing-library/react'
+import { screen } from '@testing-library/dom'
+import { cleanup, render } from '@testing-library/react'
 import { CssClasses } from './CssClasses'
 import { RenderWithContext } from '../../../../test/helpers/renderers'
 
 describe('CssClasses', () => {
+  afterEach(cleanup)
+
   describe('CssClassField', () => {
+    const { getByText } = screen
+
     let stateProps
-    let page
 
     beforeEach(() => {
       stateProps = {
@@ -17,7 +21,7 @@ describe('CssClasses', () => {
         }
       }
 
-      page = render(
+      render(
         <RenderWithContext stateProps={stateProps}>
           <CssClasses />
         </RenderWithContext>
@@ -26,13 +30,13 @@ describe('CssClasses', () => {
 
     test('should display display correct title', () => {
       const text = 'Classes'
-      expect(page.getByText(text)).toBeInTheDocument()
+      expect(getByText(text)).toBeInTheDocument()
     })
 
     test('should display display correct helptext', () => {
       const text =
         'Apply CSS classes to this field. For example, govuk-input govuk-!-width-full'
-      expect(page.getByText(text)).toBeInTheDocument()
+      expect(getByText(text)).toBeInTheDocument()
     })
   })
 })

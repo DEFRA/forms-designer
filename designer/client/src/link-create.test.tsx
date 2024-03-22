@@ -1,5 +1,12 @@
 import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
+import {
+  act,
+  cleanup,
+  render,
+  type RenderResult,
+  waitFor
+} from '@testing-library/react'
+import { userEvent } from '@testing-library/user-event'
 import LinkCreate from './link-create'
 import { DataContext } from './context'
 import { screen, within } from '@testing-library/dom'
@@ -40,27 +47,32 @@ const rawData = {
 }
 
 const data = { ...rawData }
-const dataValue = {
-  data,
-  save: jest.fn()
-}
-export const customRender = (children, providerProps = dataValue) => {
+const dataValue = { data, save: jest.fn() }
+
+function customRender(
+  element: React.JSX.Element,
+  providerProps = dataValue
+): RenderResult {
   return render(
     <DataContext.Provider value={providerProps}>
-      {children}
+      {element}
       <div id="portal-root" />
     </DataContext.Provider>
   )
 }
 
+afterEach(cleanup)
+
 describe('LinkCreate', () => {
+  const { getByRole, getByTestId, getByText, queryByTestId } = screen
+
   test('hint texts are rendered correctly', () => {
     const hint1 =
       'You can add links between different pages and set conditions for links to control the page that loads next. For example, a question page with a component for yes and no options could have link conditions based on which option a user selects.'
     const hint2 =
       'To add a link in the main screen, click and hold the title of a page and drag a line to the title of the page you want to link it to. To edit a link, select its line.'
 
-    const { getByText } = customRender(<LinkCreate />)
+    customRender(<LinkCreate />)
     expect(getByText(hint1)).toBeInTheDocument()
     expect(getByText(hint2)).toBeInTheDocument()
   })
@@ -69,32 +81,37 @@ describe('LinkCreate', () => {
     const hint =
       'You cannot add any conditions as there are no components on the page you wish to link from. Add a component, such as an Input or a Selection field, and then add a condition.'
 
-    const { getByLabelText, getByText } = customRender(<LinkCreate />)
+    customRender(<LinkCreate />)
 
-    await fireEvent.change(getByLabelText('From'), {
-      target: { value: data.pages[1].path }
-    })
+    const $source = getByTestId('link-source')
+    await act(() => userEvent.selectOptions($source, data.pages[1].path))
 
     expect(getByText(hint)).toBeInTheDocument()
   })
 
   test('Renders from and to inputs with the correct options', () => {
     customRender(<LinkCreate />)
-    const fromInput = within(screen.getByTestId('link-source'))
-    const toInput = within(screen.getByTestId('link-target'))
-    expect(fromInput.getByText(data.pages[0].title)).toBeInTheDocument()
-    expect(fromInput.getByText(data.pages[1].title)).toBeInTheDocument()
-    expect(toInput.getByText(data.pages[0].title)).toBeInTheDocument()
-    expect(toInput.getByText(data.pages[1].title)).toBeInTheDocument()
+
+    const $source = getByTestId('link-source')
+    const $target = getByTestId('link-target')
+
+    expect(within($source).getByText(data.pages[0].title)).toBeInTheDocument()
+    expect(within($source).getByText(data.pages[1].title)).toBeInTheDocument()
+    expect(within($target).getByText(data.pages[0].title)).toBeInTheDocument()
+    expect(within($target).getByText(data.pages[1].title)).toBeInTheDocument()
   })
 
   test('Selecting a from value causes the SelectConditions component to be displayed', async () => {
-    const { getByTestId, queryByTestId } = customRender(<LinkCreate />)
+    customRender(<LinkCreate />)
     expect(queryByTestId('select-conditions')).toBeNull()
-    await fireEvent.change(getByTestId('link-source'), {
-      target: { value: '/first-page' }
-    })
-    expect(getByTestId('select-conditions')).toBeInTheDocument()
+
+    const $source = getByTestId('link-source')
+    await act(() => userEvent.selectOptions($source, '/first-page'))
+
+    await waitFor(() => getByTestId('select-conditions'))
+    const $conditions = getByTestId('select-conditions')
+
+    expect($conditions).toBeInTheDocument()
   })
 
   test('links for older conditions are correctly generated when the form is submitted', async () => {
@@ -113,39 +130,39 @@ describe('LinkCreate', () => {
         }
       ]
     }
+
     const save = jest.fn()
-    const { getByTestId, getByRole } = customRender(<LinkCreate />, {
+
+    customRender(<LinkCreate />, {
       data,
       save
     })
-    await fireEvent.change(getByTestId('link-source'), {
-      target: { value: '/first-page' }
-    })
-    await fireEvent.change(getByTestId('link-target'), {
-      target: { value: '/summary' }
-    })
-    await fireEvent.change(getByTestId('select-condition'), {
-      target: { value: 'hasUKPassport' }
-    })
-    await fireEvent.click(getByRole('button'))
-    expect(save).toHaveBeenCalledTimes(1)
+
+    const $source = getByTestId('link-source')
+    const $target = getByTestId('link-target')
+    const $button = getByRole('button')
+
+    await act(() => userEvent.selectOptions($source, '/first-page'))
+    await act(() => userEvent.selectOptions($target, '/summary'))
+
+    await waitFor(() => getByTestId('select-condition'))
+    const $condition = getByTestId('select-condition')
+
+    await act(() => userEvent.selectOptions($condition, 'hasUKPassport'))
+    await act(() => userEvent.click($button))
+
+    await waitFor(() => expect(save).toHaveBeenCalledTimes(1))
     expect(save.mock.calls[0][0].pages[0].next).toContainEqual({
       path: '/summary',
       condition: 'hasUKPassport'
     })
 
-    await fireEvent.change(getByTestId('link-source'), {
-      target: { value: '/summary' }
-    })
-    await fireEvent.change(getByTestId('link-target'), {
-      target: { value: '/first-page' }
-    })
-    await fireEvent.change(getByTestId('select-condition'), {
-      target: { value: '' }
-    })
-    await fireEvent.click(getByRole('button'))
-    expect(save).toHaveBeenCalledTimes(2)
+    await act(() => userEvent.selectOptions($source, '/summary'))
+    await act(() => userEvent.selectOptions($target, '/first-page'))
+    await act(() => userEvent.selectOptions($condition, ''))
+    await act(() => userEvent.click($button))
 
+    expect(save).toHaveBeenCalledTimes(2)
     expect(save.mock.calls[1][0].pages[2].next).toContainEqual({
       path: '/first-page'
     })
@@ -201,39 +218,39 @@ describe('LinkCreate', () => {
         }
       ]
     }
+
     const save = jest.fn()
-    const { getByTestId, getByRole } = customRender(<LinkCreate />, {
+
+    customRender(<LinkCreate />, {
       data,
       save
     })
-    await fireEvent.change(getByTestId('link-source'), {
-      target: { value: '/first-page' }
-    })
-    await fireEvent.change(getByTestId('link-target'), {
-      target: { value: '/summary' }
-    })
-    await fireEvent.change(getByTestId('select-condition'), {
-      target: { value: 'hasUKPassport' }
-    })
-    await fireEvent.click(getByRole('button'))
+
+    const $source = getByTestId('link-source')
+    const $target = getByTestId('link-target')
+    const $button = getByRole('button')
+
+    await act(() => userEvent.selectOptions($source, '/first-page'))
+    await act(() => userEvent.selectOptions($target, '/summary'))
+
+    await waitFor(() => getByTestId('select-condition'))
+    const $condition = getByTestId('select-condition')
+
+    await act(() => userEvent.selectOptions($condition, 'hasUKPassport'))
+    await act(() => userEvent.click($button))
+
     expect(save).toHaveBeenCalledTimes(1)
     expect(save.mock.calls[0][0].pages[0].next).toContainEqual({
       path: '/summary',
       condition: 'hasUKPassport'
     })
 
-    await fireEvent.change(getByTestId('link-source'), {
-      target: { value: '/summary' }
-    })
-    await fireEvent.change(getByTestId('link-target'), {
-      target: { value: '/first-page' }
-    })
-    await fireEvent.change(getByTestId('select-condition'), {
-      target: { value: '' }
-    })
-    await fireEvent.click(getByRole('button'))
-    expect(save).toHaveBeenCalledTimes(2)
+    await act(() => userEvent.selectOptions($source, '/summary'))
+    await act(() => userEvent.selectOptions($target, '/first-page'))
+    await act(() => userEvent.selectOptions($condition, ''))
+    await act(() => userEvent.click($button))
 
+    expect(save).toHaveBeenCalledTimes(2)
     expect(save.mock.calls[1][0].pages[2].next).toContainEqual({
       path: '/first-page'
     })
@@ -244,12 +261,15 @@ describe('LinkCreate', () => {
       ...rawData
     }
     const save = jest.fn()
-    const { getByRole } = customRender(<LinkCreate />, {
+
+    customRender(<LinkCreate />, {
       data,
       save
     })
-    await fireEvent.click(getByRole('button'))
+
+    await act(() => userEvent.click(getByRole('button')))
     expect(save).not.toHaveBeenCalled()
+
     const summary = within(getByRole('alert'))
     expect(summary.getByText('Enter from')).toBeInTheDocument()
     expect(summary.getByText('Enter to')).toBeInTheDocument()

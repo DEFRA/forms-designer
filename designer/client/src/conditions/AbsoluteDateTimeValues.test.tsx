@@ -1,18 +1,21 @@
-import { render, screen } from '@testing-library/react'
+import { screen } from '@testing-library/dom'
+import { act, cleanup, render, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React from 'react'
 import { AbsoluteDateTimeValues } from './AbsoluteDateTimeValues'
 
 describe('AbsoluteDateTimeValues', () => {
+  afterEach(cleanup)
+
   const { findByLabelText } = screen
 
   it("renders out a date that's passed to it", async () => {
     const d = new Date('2020-01-31T12:10:35Z')
     render(<AbsoluteDateTimeValues updateValue={jest.fn()} value={d} />)
 
-    const $year = await findByLabelText('Year')
-    const $month = await findByLabelText('Month')
-    const $day = await findByLabelText('Day')
+    const $year = await waitFor(() => findByLabelText('Year'))
+    const $month = await waitFor(() => findByLabelText('Month'))
+    const $day = await waitFor(() => findByLabelText('Day'))
 
     expect($year?.getAttribute('value')).toEqual('2020')
     expect($month?.getAttribute('value')).toEqual('01')
@@ -23,8 +26,8 @@ describe('AbsoluteDateTimeValues', () => {
     const d = new Date('2020-01-31T12:10:35Z')
     render(<AbsoluteDateTimeValues updateValue={jest.fn()} value={d} />)
 
-    const $hours = await findByLabelText('HH')
-    const $minutes = await findByLabelText('mm')
+    const $hours = await waitFor(() => findByLabelText('HH'))
+    const $minutes = await waitFor(() => findByLabelText('mm'))
 
     expect($hours?.getAttribute('value')).toEqual('12')
     expect($minutes?.getAttribute('value')).toEqual('10')
@@ -34,17 +37,17 @@ describe('AbsoluteDateTimeValues', () => {
     const updateValue = jest.fn()
     render(<AbsoluteDateTimeValues updateValue={updateValue} />)
 
-    const $year = await findByLabelText('Year')
-    const $month = await findByLabelText('Month')
-    const $day = await findByLabelText('Day')
-    const $hours = await findByLabelText('HH')
-    const $minutes = await findByLabelText('mm')
+    const $year = await waitFor(() => findByLabelText('Year'))
+    const $month = await waitFor(() => findByLabelText('Month'))
+    const $day = await waitFor(() => findByLabelText('Day'))
+    const $hours = await waitFor(() => findByLabelText('HH'))
+    const $minutes = await waitFor(() => findByLabelText('mm'))
 
-    await userEvent.type($year, '2020')
-    await userEvent.type($month, '4')
-    await userEvent.type($day, '26')
-    await userEvent.type($hours, '10')
-    await userEvent.type($minutes, '57')
+    await act(() => userEvent.type($year, '2020'))
+    await act(() => userEvent.type($month, '4'))
+    await act(() => userEvent.type($day, '26'))
+    await act(() => userEvent.type($hours, '10'))
+    await act(() => userEvent.type($minutes, '57'))
 
     const d = updateValue.mock.calls.pop()[0]
     expect(d.toISOString()).toEqual('2020-04-26T10:57:00.000Z')
@@ -55,22 +58,22 @@ describe('AbsoluteDateTimeValues', () => {
     const d = new Date('2020-01-31T12:10:35Z')
     render(<AbsoluteDateTimeValues updateValue={updateValue} value={d} />)
 
-    const $year = await findByLabelText('Year')
-    const $month = await findByLabelText('Month')
-    const $day = await findByLabelText('Day')
-    const $hours = await findByLabelText('HH')
-    const $minutes = await findByLabelText('mm')
+    const $year = await waitFor(() => findByLabelText('Year'))
+    const $month = await waitFor(() => findByLabelText('Month'))
+    const $day = await waitFor(() => findByLabelText('Day'))
+    const $hours = await waitFor(() => findByLabelText('HH'))
+    const $minutes = await waitFor(() => findByLabelText('mm'))
 
     // Clear existing values
     await Promise.all(
       [$year, $month, $day, $hours, $minutes].map(userEvent.clear)
     )
 
-    await userEvent.type($year, '2020')
-    await userEvent.type($month, '4')
-    await userEvent.type($day, '26')
-    await userEvent.type($hours, '10')
-    await userEvent.type($minutes, '57')
+    await act(() => userEvent.type($year, '2020'))
+    await act(() => userEvent.type($month, '4'))
+    await act(() => userEvent.type($day, '26'))
+    await act(() => userEvent.type($hours, '10'))
+    await act(() => userEvent.type($minutes, '57'))
 
     const newDate = updateValue.mock.calls.pop()[0]
     expect(newDate.toISOString()).toEqual('2020-04-26T10:57:00.000Z')
@@ -80,15 +83,15 @@ describe('AbsoluteDateTimeValues', () => {
     const updateValue = jest.fn()
     render(<AbsoluteDateTimeValues updateValue={updateValue} />)
 
-    const $year = await findByLabelText('Year')
-    const $month = await findByLabelText('Month')
-    const $day = await findByLabelText('Day')
-    const $hours = await findByLabelText('HH')
+    const $year = await waitFor(() => findByLabelText('Year'))
+    const $month = await waitFor(() => findByLabelText('Month'))
+    const $day = await waitFor(() => findByLabelText('Day'))
+    const $hours = await waitFor(() => findByLabelText('HH'))
 
-    await userEvent.type($year, '2020')
-    await userEvent.type($month, '4')
-    await userEvent.type($day, '26')
-    await userEvent.type($hours, '40')
+    await act(() => userEvent.type($year, '2020'))
+    await act(() => userEvent.type($month, '4'))
+    await act(() => userEvent.type($day, '26'))
+    await act(() => userEvent.type($hours, '40'))
 
     expect(updateValue).not.toHaveBeenCalled()
   })
@@ -97,17 +100,17 @@ describe('AbsoluteDateTimeValues', () => {
     const updateValue = jest.fn()
     render(<AbsoluteDateTimeValues updateValue={updateValue} />)
 
-    const $year = await findByLabelText('Year')
-    const $month = await findByLabelText('Month')
-    const $day = await findByLabelText('Day')
-    const $hours = await findByLabelText('HH')
-    const $minutes = await findByLabelText('mm')
+    const $year = await waitFor(() => findByLabelText('Year'))
+    const $month = await waitFor(() => findByLabelText('Month'))
+    const $day = await waitFor(() => findByLabelText('Day'))
+    const $hours = await waitFor(() => findByLabelText('HH'))
+    const $minutes = await waitFor(() => findByLabelText('mm'))
 
-    await userEvent.type($year, '2020')
-    await userEvent.type($month, '4')
-    await userEvent.type($day, '26')
-    await userEvent.type($hours, '0')
-    await userEvent.type($minutes, '57')
+    await act(() => userEvent.type($year, '2020'))
+    await act(() => userEvent.type($month, '4'))
+    await act(() => userEvent.type($day, '26'))
+    await act(() => userEvent.type($hours, '0'))
+    await act(() => userEvent.type($minutes, '57'))
 
     const d = updateValue.mock.calls.pop()[0]
     expect(d.toISOString()).toEqual('2020-04-26T00:57:00.000Z')
@@ -117,17 +120,17 @@ describe('AbsoluteDateTimeValues', () => {
     const updateValue = jest.fn()
     render(<AbsoluteDateTimeValues updateValue={updateValue} />)
 
-    const $year = await findByLabelText('Year')
-    const $month = await findByLabelText('Month')
-    const $day = await findByLabelText('Day')
-    const $hours = await findByLabelText('HH')
-    const $minutes = await findByLabelText('mm')
+    const $year = await waitFor(() => findByLabelText('Year'))
+    const $month = await waitFor(() => findByLabelText('Month'))
+    const $day = await waitFor(() => findByLabelText('Day'))
+    const $hours = await waitFor(() => findByLabelText('HH'))
+    const $minutes = await waitFor(() => findByLabelText('mm'))
 
-    await userEvent.type($year, '2020')
-    await userEvent.type($month, '4')
-    await userEvent.type($day, '26')
-    await userEvent.type($hours, '14')
-    await userEvent.type($minutes, '0')
+    await act(() => userEvent.type($year, '2020'))
+    await act(() => userEvent.type($month, '4'))
+    await act(() => userEvent.type($day, '26'))
+    await act(() => userEvent.type($hours, '14'))
+    await act(() => userEvent.type($minutes, '0'))
 
     const d = updateValue.mock.calls.pop()[0]
     expect(d.toISOString()).toEqual('2020-04-26T14:00:00.000Z')

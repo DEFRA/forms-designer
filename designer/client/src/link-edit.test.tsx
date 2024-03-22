@@ -1,8 +1,9 @@
 import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
+import { screen, within } from '@testing-library/dom'
+import { act, cleanup, render, type RenderResult } from '@testing-library/react'
+import { userEvent } from '@testing-library/user-event'
 import LinkCreate from './link-create'
 import { DataContext } from './context'
-import { within } from '@testing-library/dom'
 
 const data = {
   pages: [
@@ -15,28 +16,31 @@ const data = {
   ]
 }
 
-const dataValue = {
-  data,
-  save: jest.fn()
-}
-export const customRender = (children, providerProps = dataValue) => {
+const dataValue = { data, save: jest.fn() }
+
+function customRender(
+  element: React.JSX.Element,
+  providerProps = dataValue
+): RenderResult {
   return render(
     <DataContext.Provider value={providerProps}>
-      {children}
+      {element}
       <div id="portal-root" />
     </DataContext.Provider>
   )
 }
 
+afterEach(cleanup)
+
 describe('LinkEdit', () => {
+  const { getByRole } = screen
+
   test('Submitting with a condition updates the link', async () => {
-    const save = jest.fn()
-    const { getByRole } = customRender(<LinkCreate />, {
-      data,
-      save
-    })
-    await fireEvent.click(getByRole('button'))
+    customRender(<LinkCreate />)
+
+    await act(() => userEvent.click(getByRole('button')))
     const summary = within(getByRole('alert'))
+
     expect(summary.getByText('Enter from')).toBeInTheDocument()
     expect(summary.getByText('Enter to')).toBeInTheDocument()
   })

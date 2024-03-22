@@ -1,8 +1,13 @@
 import React from 'react'
-import { render } from '@testing-library/react'
+import { screen } from '@testing-library/dom'
+import { cleanup, render } from '@testing-library/react'
 import PageCreate from './page-create'
 
 describe('page create fields text', () => {
+  afterEach(cleanup)
+
+  const { getByText } = screen
+
   test('displays field titles and help texts', () => {
     const props = {
       path: '/some-path',
@@ -12,7 +17,7 @@ describe('page create fields text', () => {
       }
     }
 
-    const { getByText } = render(<PageCreate {...props} />)
+    render(<PageCreate {...props} />)
     expect(getByText('Page type')).toBeInTheDocument()
     expect(
       getByText(

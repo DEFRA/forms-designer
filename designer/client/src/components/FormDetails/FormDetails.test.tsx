@@ -1,5 +1,14 @@
 import React from 'react'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { screen } from '@testing-library/dom'
+import {
+  act,
+  cleanup,
+  fireEvent,
+  render,
+  type RenderResult,
+  waitFor
+} from '@testing-library/react'
+import { userEvent } from '@testing-library/user-event'
 import { FormDetails } from './FormDetails'
 import {
   server,
@@ -9,6 +18,9 @@ import {
 import { DataContext } from '../../context'
 
 describe('FormDetails', () => {
+  const { findByTestId, findByText, getByLabelText, getByText, queryByText } =
+    screen
+
   let providerProps
 
   beforeAll(() => server.listen())
@@ -24,34 +36,38 @@ describe('FormDetails', () => {
     server.resetHandlers(...mockedFormHandlers)
   })
 
+  afterEach(cleanup)
+
   afterAll(() => {
     server.close()
   })
 
-  function renderWithDataContext(ui, { providerProps, ...renderOptions }) {
+  function customRender(
+    element: React.JSX.Element,
+    providerProps
+  ): RenderResult {
     return render(
-      <DataContext.Provider value={providerProps}>{ui}</DataContext.Provider>,
-      renderOptions
+      <DataContext.Provider value={providerProps}>
+        {element}
+      </DataContext.Provider>
     )
-  }
-
-  function findSaveButton() {
-    return screen.getByText('Save') as HTMLButtonElement
   }
 
   describe('Title', () => {
     it('updates the form title', async () => {
-      renderWithDataContext(<FormDetails />, {
-        providerProps
+      customRender(<FormDetails />, providerProps)
+
+      const $input = getByLabelText('Title')
+      const $button = getByText('Save')
+
+      await act(() => userEvent.clear($input))
+      await act(() => userEvent.type($input, 'Test Form'))
+
+      act(() => {
+        fireEvent.submit($button)
       })
 
-      const input = screen.getByLabelText('Title') as HTMLInputElement
-      const saveButton = findSaveButton()
-
-      await fireEvent.change(input, { target: { value: 'Test Form' } })
-      expect(input.value).toBe('Test Form')
-
-      await fireEvent.click(saveButton)
+      await waitFor(() => expect(providerProps.save).toHaveBeenCalled())
       expect(providerProps.save.mock.calls[0][0]).toMatchObject({
         name: 'Test Form',
         phaseBanner: { phase: undefined }
@@ -61,19 +77,24 @@ describe('FormDetails', () => {
 
   describe('Phase banner', () => {
     it('sets alpha phase', async () => {
-      renderWithDataContext(<FormDetails />, {
-        providerProps
+      customRender(<FormDetails />, providerProps)
+
+      const $radioAlpha = getByLabelText('Alpha') as HTMLInputElement
+      const $radioNone = getByLabelText('None') as HTMLInputElement
+      const $button = getByText('Save')
+
+      expect($radioAlpha.checked).toBe(false)
+      expect($radioNone.checked).toBe(true)
+
+      await act(() => userEvent.click($radioAlpha))
+      expect($radioAlpha.checked).toBe(true)
+      expect($radioNone.checked).toBe(false)
+
+      act(() => {
+        fireEvent.submit($button)
       })
 
-      const alphaRadio = screen.getByLabelText('Alpha') as HTMLInputElement
-      expect(alphaRadio.checked).toEqual(false)
-
-      await fireEvent.click(alphaRadio, { target: { value: 'alpha' } })
-      expect(alphaRadio.checked).toEqual(true)
-
-      const saveButton = findSaveButton()
-      await fireEvent.click(saveButton)
-
+      await waitFor(() => expect(providerProps.save).toHaveBeenCalled())
       expect(providerProps.save.mock.calls[0][0]).toMatchObject({
         name: 'Default Title',
         phaseBanner: { phase: 'alpha' }
@@ -81,21 +102,24 @@ describe('FormDetails', () => {
     })
 
     it('sets beta phase', async () => {
-      renderWithDataContext(<FormDetails />, {
-        providerProps
+      customRender(<FormDetails />, providerProps)
+
+      const $radioBeta = getByLabelText('Beta') as HTMLInputElement
+      const $radioNone = getByLabelText('None') as HTMLInputElement
+      const $button = getByText('Save')
+
+      expect($radioBeta.checked).toBe(false)
+      expect($radioNone.checked).toBe(true)
+
+      await act(() => userEvent.click($radioBeta))
+      expect($radioBeta.checked).toBe(true)
+      expect($radioNone.checked).toBe(false)
+
+      act(() => {
+        fireEvent.submit($button)
       })
 
-      const noneRadio = screen.getByLabelText('None') as HTMLInputElement
-      expect(noneRadio.checked).toEqual(true)
-
-      const betaRadio = screen.getByLabelText('Beta') as HTMLInputElement
-      expect(betaRadio.checked).toEqual(false)
-
-      await fireEvent.click(betaRadio, { target: { value: 'beta' } })
-      expect(betaRadio.checked).toEqual(true)
-
-      const saveButton = findSaveButton()
-      await fireEvent.click(saveButton)
+      await waitFor(() => expect(providerProps.save).toHaveBeenCalled())
       expect(providerProps.save.mock.calls[0][0]).toMatchObject({
         name: 'Default Title',
         phaseBanner: { phase: 'beta' }
@@ -103,27 +127,31 @@ describe('FormDetails', () => {
     })
 
     it('sets none phase', async () => {
-      renderWithDataContext(<FormDetails />, {
-        providerProps: {
-          ...providerProps,
-          data: {
-            ...providerProps.data,
-            phaseBanner: { phase: 'alpha' }
-          }
+      customRender(<FormDetails />, {
+        ...providerProps,
+        data: {
+          ...providerProps.data,
+          phaseBanner: { phase: 'alpha' }
         }
       })
 
-      const alphaRadio = screen.getByLabelText('Alpha') as HTMLInputElement
-      expect(alphaRadio.checked).toEqual(true)
+      const $radioAlpha = getByLabelText('Alpha') as HTMLInputElement
+      const $radioNone = getByLabelText('None') as HTMLInputElement
 
-      const noneRadio = screen.getByLabelText('None') as HTMLInputElement
-      expect(noneRadio.checked).toEqual(false)
+      expect($radioAlpha.checked).toBe(true)
+      expect($radioNone.checked).toBe(false)
 
-      await fireEvent.click(noneRadio)
-      expect(noneRadio.checked).toEqual(true)
+      await act(() => userEvent.click($radioNone))
+      expect($radioAlpha.checked).toBe(false)
+      expect($radioNone.checked).toBe(true)
 
-      const saveButton = findSaveButton()
-      await fireEvent.click(saveButton, { target: { value: '' } })
+      const $button = getByText('Save')
+
+      act(() => {
+        fireEvent.submit($button)
+      })
+
+      await waitFor(() => expect(providerProps.save).toHaveBeenCalled())
       expect(providerProps.save.mock.calls[0][0]).toMatchObject({
         name: 'Default Title',
         phaseBanner: { phase: undefined }
@@ -133,21 +161,24 @@ describe('FormDetails', () => {
 
   describe('Feedback form', () => {
     it('sets `Yes` feedback form', async () => {
-      renderWithDataContext(<FormDetails />, {
-        providerProps
+      customRender(<FormDetails />, providerProps)
+
+      const $radioFeedbackYes = getByLabelText('yes') as HTMLInputElement
+      const $radioFeedbackNo = getByLabelText('no') as HTMLInputElement
+      const $button = getByText('Save')
+
+      expect($radioFeedbackYes.checked).toBe(false)
+      expect($radioFeedbackNo.checked).toBe(true)
+
+      await act(() => userEvent.click($radioFeedbackYes))
+      expect($radioFeedbackYes.checked).toBe(true)
+      expect($radioFeedbackNo.checked).toBe(false)
+
+      act(() => {
+        fireEvent.submit($button)
       })
 
-      const yesFeedbackRadio = screen.getByLabelText('yes') as HTMLInputElement
-      const noFeedbackRadio = screen.getByLabelText('no') as HTMLInputElement
-
-      expect(yesFeedbackRadio.checked).toEqual(false)
-      expect(noFeedbackRadio.checked).toEqual(true)
-
-      await fireEvent.click(yesFeedbackRadio)
-      expect(yesFeedbackRadio.checked).toEqual(true)
-
-      const saveButton = findSaveButton()
-      await fireEvent.click(saveButton)
+      await waitFor(() => expect(providerProps.save).toHaveBeenCalled())
       expect(providerProps.save.mock.calls[0][0]).toMatchObject({
         feedback: {
           feedbackForm: true,
@@ -159,29 +190,32 @@ describe('FormDetails', () => {
     })
 
     it('sets `No` feedback form', async () => {
-      renderWithDataContext(<FormDetails />, {
-        providerProps: {
-          ...providerProps,
-          data: {
-            ...providerProps.data,
-            feedback: {
-              feedbackForm: true
-            }
+      customRender(<FormDetails />, {
+        ...providerProps,
+        data: {
+          ...providerProps.data,
+          feedback: {
+            feedbackForm: true
           }
         }
       })
 
-      const yesFeedbackRadio = screen.getByLabelText('yes') as HTMLInputElement
-      const noFeedbackRadio = screen.getByLabelText('no') as HTMLInputElement
+      const $radioFeedbackYes = getByLabelText('yes') as HTMLInputElement
+      const $radioFeedbackNo = getByLabelText('no') as HTMLInputElement
+      const $button = getByText('Save')
 
-      expect(yesFeedbackRadio.checked).toEqual(true)
-      expect(noFeedbackRadio.checked).toEqual(false)
+      expect($radioFeedbackYes.checked).toBe(true)
+      expect($radioFeedbackNo.checked).toBe(false)
 
-      await fireEvent.click(noFeedbackRadio)
-      expect(noFeedbackRadio.checked).toEqual(true)
+      await act(() => userEvent.click($radioFeedbackNo))
+      expect($radioFeedbackYes.checked).toBe(false)
+      expect($radioFeedbackNo.checked).toBe(true)
 
-      const saveButton = findSaveButton()
-      await fireEvent.click(saveButton)
+      act(() => {
+        fireEvent.submit($button)
+      })
+
+      await waitFor(() => expect(providerProps.save).toHaveBeenCalled())
       expect(providerProps.save.mock.calls[0][0]).toMatchObject({
         name: 'Default Title',
         feedback: {
@@ -192,37 +226,38 @@ describe('FormDetails', () => {
     })
 
     it('displays correct feedback form list', async () => {
-      renderWithDataContext(<FormDetails />, {
-        providerProps
-      })
+      customRender(<FormDetails />, providerProps)
 
-      const myFeedbackFromOption = (await screen.findByText(
-        mockedFormConfigurations[1].DisplayName
-      )) as HTMLInputElement
-      const notFeedbackFormOption = (await screen.queryByText(
-        mockedFormConfigurations[0].DisplayName
-      )) as HTMLInputElement
+      const formKey1 = mockedFormConfigurations[0].DisplayName
+      const formKey2 = mockedFormConfigurations[1].DisplayName
 
-      expect(myFeedbackFromOption).toBeTruthy()
-      expect(notFeedbackFormOption).toBeFalsy()
+      await waitFor(() => findByText(formKey2))
+
+      const $option1 = queryByText(formKey1)
+      const $option2 = queryByText(formKey2)
+
+      expect($option1).toBeFalsy()
+      expect($option2).toBeTruthy()
     })
 
     it('sets correct feedback url when target feedback form is selected', async () => {
-      renderWithDataContext(<FormDetails />, {
-        providerProps
+      customRender(<FormDetails />, providerProps)
+
+      const formKey = mockedFormConfigurations[1].Key
+
+      const $select = await waitFor(() => findByTestId('target-feedback-form'))
+      const $button = getByText('Save')
+
+      await act(() => userEvent.selectOptions($select, formKey))
+
+      act(() => {
+        fireEvent.submit($button)
       })
-      const feedbackFromKey = mockedFormConfigurations[1].Key
-      const targetFeedbackForm = await screen.findByTestId(
-        'target-feedback-form'
-      )
-      await fireEvent.change(targetFeedbackForm, {
-        target: { value: feedbackFromKey }
-      })
-      const saveButton = findSaveButton()
-      await fireEvent.click(saveButton)
+
+      await waitFor(() => expect(providerProps.save).toHaveBeenCalled())
       expect(providerProps.save.mock.calls[0][0]).toMatchObject({
         feedback: {
-          url: `/${feedbackFromKey}`
+          url: `/${formKey}`
         }
       })
     })

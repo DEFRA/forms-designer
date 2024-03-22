@@ -1,10 +1,15 @@
 import React from 'react'
-import { render } from '@testing-library/react'
+import { screen } from '@testing-library/dom'
+import { cleanup, render, waitFor } from '@testing-library/react'
 import { FeatureFlagContext, FeatureFlagProvider } from './FeatureFlagContext'
 import { FeatureToggleApi } from '../api/toggleApi'
 import FeatureToggle from '../FeatureToggle'
 
 describe('FeatureFlagContext', () => {
+  afterEach(cleanup)
+
+  const { findAllByText, queryByText } = screen
+
   const WrappingComponent = ({ value, children }) => {
     return (
       <FeatureFlagContext.Provider value={value}>
@@ -14,29 +19,33 @@ describe('FeatureFlagContext', () => {
   }
 
   test('should show element if feature is set', async () => {
-    const { findAllByText } = render(
+    render(
       <WrappingComponent value={{ featureEditPageDuplicateButton: true }}>
         <FeatureToggle feature="featureEditPageDuplicateButton">
           <button>Johnny Five Is Alive!</button>
         </FeatureToggle>
       </WrappingComponent>
     )
-    expect(await findAllByText('Johnny Five Is Alive!')).toBeTruthy()
+
+    const $button = await waitFor(() => findAllByText('Johnny Five Is Alive!'))
+    expect($button).toBeTruthy()
   })
 
   test('should not show element if feature is not set', async () => {
-    const { queryAllByText } = render(
+    render(
       <WrappingComponent value={{ featureEditPageDuplicateButton: false }}>
         <FeatureToggle feature="featureEditPageDuplicateButton">
           <button>Johnny Five Is Alive!</button>
         </FeatureToggle>
       </WrappingComponent>
     )
-    expect(await queryAllByText('Johnny Five Is Alive!')).toHaveLength(0)
+
+    const $button = queryByText('Johnny Five Is Alive!')
+    expect($button).toBeNull()
   })
 
   test('should not show element if feature is not defined', async () => {
-    const { queryAllByText } = render(
+    render(
       <WrappingComponent value={{ featureA: false }}>
         <FeatureToggle feature="featureB">
           <button>Johnny Five Is Alive!</button>
@@ -44,7 +53,8 @@ describe('FeatureFlagContext', () => {
       </WrappingComponent>
     )
 
-    expect(await queryAllByText('Johnny Five Is Alive!')).toHaveLength(0)
+    const $button = queryByText('Johnny Five Is Alive!')
+    expect($button).toBeNull()
   })
 
   test('should feature toggle api only load once', async () => {
@@ -66,11 +76,13 @@ describe('FeatureFlagContext', () => {
       </FeatureFlagProvider>
     )
 
-    expect(FeatureToggleApi.prototype.fetch).toHaveBeenCalledTimes(1)
+    await waitFor(() =>
+      expect(FeatureToggleApi.prototype.fetch).toHaveBeenCalledTimes(1)
+    )
   })
 
-  test('should not show element if features api fails', async () => {
-    const { queryAllByText } = render(
+  test('should not show element if features api fails', () => {
+    render(
       <WrappingComponent
         value={async () => {
           throw new Error()
@@ -81,6 +93,8 @@ describe('FeatureFlagContext', () => {
         </FeatureToggle>
       </WrappingComponent>
     )
-    expect(await queryAllByText('Johnny Five Is Alive!')).toHaveLength(0)
+
+    const $button = queryByText('Johnny Five Is Alive!')
+    expect($button).toBeNull()
   })
 })

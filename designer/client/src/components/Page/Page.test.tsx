@@ -1,5 +1,11 @@
 import { screen } from '@testing-library/dom'
-import { act, render, waitFor } from '@testing-library/react'
+import {
+  act,
+  cleanup,
+  render,
+  type RenderResult,
+  waitFor
+} from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import { DataContext } from '../../context'
 import { Router } from 'react-router-dom'
@@ -9,18 +15,14 @@ import { Page } from '.'
 const history = createMemoryHistory()
 history.push('')
 
-const customRender = (ui, { providerProps, ...renderOptions }) => {
-  const rendered = render(
+function customRender(element: React.JSX.Element, providerProps): RenderResult {
+  return render(
     <Router history={history}>
-      <DataContext.Provider value={providerProps}>{ui}</DataContext.Provider>
-    </Router>,
-    renderOptions
+      <DataContext.Provider value={providerProps}>
+        {element}
+      </DataContext.Provider>
+    </Router>
   )
-  return {
-    ...rendered,
-    rerender: (ui, options) =>
-      customRender(ui, { container: rendered.container, ...options })
-  }
 }
 
 const data = {
@@ -71,6 +73,8 @@ const providerProps = {
 }
 
 describe('Page', () => {
+  afterEach(cleanup)
+
   const { findByTestId, getByText, queryByTestId } = screen
 
   test('PageEdit can be shown/hidden successfully', async () => {
@@ -81,9 +85,7 @@ describe('Page', () => {
         id={'aa'}
         layout={{}}
       />,
-      {
-        providerProps
-      }
+      providerProps
     )
 
     await act(() => userEvent.click(getByText('Edit page')))
@@ -107,9 +109,7 @@ describe('Page', () => {
         id={'aa'}
         layout={{}}
       />,
-      {
-        providerProps
-      }
+      providerProps
     )
 
     await act(() => userEvent.click(getByText('Create component')))
@@ -127,10 +127,9 @@ describe('Page', () => {
         id={'aa'}
         layout={{}}
       />,
-      {
-        providerProps
-      }
+      providerProps
     )
+
     expect(getByText('Edit page')).toBeTruthy()
     expect(getByText('Create component')).toBeTruthy()
     expect(getByText('Preview')).toBeTruthy()
@@ -144,9 +143,7 @@ describe('Page', () => {
         id={'aa'}
         layout={{}}
       />,
-      {
-        providerProps
-      }
+      providerProps
     )
 
     await act(() => userEvent.click(getByText('Create component')))

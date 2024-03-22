@@ -1,12 +1,16 @@
 import React from 'react'
-import { render } from '@testing-library/react'
+import { screen } from '@testing-library/dom'
+import { cleanup, render } from '@testing-library/react'
 import { DateFieldEdit } from './date-field-edit'
 import { RenderWithContext } from '../../../../test/helpers/renderers'
 
 describe('date field edit', () => {
+  afterEach(cleanup)
+
+  const { getByText } = screen
+
   describe('date field edit fields', () => {
     let stateProps
-    let textFieldEditPage
 
     beforeEach(() => {
       stateProps = {
@@ -17,7 +21,7 @@ describe('date field edit', () => {
         }
       }
 
-      textFieldEditPage = render(
+      render(
         <RenderWithContext stateProps={stateProps}>
           <DateFieldEdit />
         </RenderWithContext>
@@ -26,27 +30,27 @@ describe('date field edit', () => {
 
     test('should display details link title', () => {
       const text = 'Additional settings'
-      expect(textFieldEditPage.getByText(text)).toBeInTheDocument()
+      expect(getByText(text)).toBeInTheDocument()
     })
 
     test('should display future title', () => {
       const text = 'Max days in the future'
-      expect(textFieldEditPage.getByText(text)).toBeInTheDocument()
+      expect(getByText(text)).toBeInTheDocument()
     })
 
     test('should display future help text ', () => {
       const text = 'Determines the latest date users can enter'
-      expect(textFieldEditPage.getByText(text)).toBeInTheDocument()
+      expect(getByText(text)).toBeInTheDocument()
     })
 
     test('should display past title', () => {
       const text = 'Max days in the past'
-      expect(textFieldEditPage.getByText(text)).toBeInTheDocument()
+      expect(getByText(text)).toBeInTheDocument()
     })
 
     test('should display past help text ', () => {
       const text = 'Determines the earliest date users can enter'
-      expect(textFieldEditPage.getByText(text)).toBeInTheDocument()
+      expect(getByText(text)).toBeInTheDocument()
     })
   })
 })

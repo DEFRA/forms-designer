@@ -1,12 +1,16 @@
 import React from 'react'
-import { render } from '@testing-library/react'
+import { screen } from '@testing-library/dom'
+import { cleanup, render } from '@testing-library/react'
 import { NumberFieldEdit } from './number-field-edit'
 import { RenderWithContext } from '../../../../test/helpers/renderers'
 
 describe('Number field edit', () => {
+  afterEach(cleanup)
+
   describe('Number field edit fields', () => {
+    const { getByText } = screen
+
     let stateProps
-    let textFieldEditPage
 
     beforeEach(() => {
       stateProps = {
@@ -17,7 +21,7 @@ describe('Number field edit', () => {
         }
       }
 
-      textFieldEditPage = render(
+      render(
         <RenderWithContext stateProps={stateProps}>
           <NumberFieldEdit />
         </RenderWithContext>
@@ -26,48 +30,48 @@ describe('Number field edit', () => {
 
     test('should display details link title', () => {
       const text = 'Additional settings'
-      expect(textFieldEditPage.getByText(text)).toBeInTheDocument()
+      expect(getByText(text)).toBeInTheDocument()
     })
 
     test('should display min title', () => {
       const text = 'Min'
-      expect(textFieldEditPage.getByText(text)).toBeInTheDocument()
+      expect(getByText(text)).toBeInTheDocument()
     })
 
     test('should display min help text ', () => {
       const text = 'Specifies the lowest number users can enter'
-      expect(textFieldEditPage.getByText(text)).toBeInTheDocument()
+      expect(getByText(text)).toBeInTheDocument()
     })
 
     test('should display max title', () => {
       const text = 'Max'
-      expect(textFieldEditPage.getByText(text)).toBeInTheDocument()
+      expect(getByText(text)).toBeInTheDocument()
     })
 
     test('should display max help text ', () => {
       const text = 'Specifies the highest number users can enter'
-      expect(textFieldEditPage.getByText(text)).toBeInTheDocument()
+      expect(getByText(text)).toBeInTheDocument()
     })
 
     test('should display precision title', () => {
       const text = 'Precision'
-      expect(textFieldEditPage.getByText(text)).toBeInTheDocument()
+      expect(getByText(text)).toBeInTheDocument()
     })
 
     test('should display precision help text ', () => {
       const text =
         'Specifies the number of decimal places users can enter. For example, to allow users to enter numbers with up to two decimal places, set this to 2'
-      expect(textFieldEditPage.getByText(text)).toBeInTheDocument()
+      expect(getByText(text)).toBeInTheDocument()
     })
 
     test('should display prefix help text ', () => {
       const text = 'Specifies the prefix of the field.'
-      expect(textFieldEditPage.getByText(text)).toBeInTheDocument()
+      expect(getByText(text)).toBeInTheDocument()
     })
 
     test('should display suffix help text ', () => {
       const text = 'Specifies the suffix of the field.'
-      expect(textFieldEditPage.getByText(text)).toBeInTheDocument()
+      expect(getByText(text)).toBeInTheDocument()
     })
   })
 })

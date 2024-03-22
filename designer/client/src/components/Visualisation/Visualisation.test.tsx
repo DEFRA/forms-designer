@@ -1,6 +1,14 @@
 import React from 'react'
 import { Visualisation } from './Visualisation'
-import { render, waitFor, fireEvent } from '@testing-library/react'
+import { screen } from '@testing-library/dom'
+import { userEvent } from '@testing-library/user-event'
+import {
+  act,
+  cleanup,
+  render,
+  waitFor,
+  type RenderResult
+} from '@testing-library/react'
 import { DataContext } from '../../context'
 import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
@@ -8,21 +16,29 @@ import { createMemoryHistory } from 'history'
 const history = createMemoryHistory()
 history.push('')
 
-const customRender = (ui, { providerProps, ...renderOptions }) => {
+function customRender(element: React.JSX.Element, providerProps): RenderResult {
   const rendered = render(
     <Router history={history}>
-      <DataContext.Provider value={providerProps}>{ui}</DataContext.Provider>
-    </Router>,
-    renderOptions
+      <DataContext.Provider value={providerProps}>
+        {element}
+      </DataContext.Provider>
+    </Router>
   )
+
   return {
     ...rendered,
-    rerender: (ui, options) =>
-      customRender(ui, { container: rendered.container, ...options })
+    rerender(this: typeof providerProps, element) {
+      customRender(element, this)
+    }
   }
 }
 
 describe('Visualisation', () => {
+  afterEach(cleanup)
+
+  const { findAllByText, findByText, getByText, queryByText, queryByTestId } =
+    screen
+
   test('Graph is rendered with correct number of pages and updates ', async () => {
     const data = {
       pages: [
@@ -38,33 +54,38 @@ describe('Visualisation', () => {
       save: jest.fn()
     }
 
-    const { rerender, findAllByText, queryAllByText } = customRender(
+    const { rerender } = customRender(
       <Visualisation previewUrl={'http://localhost:3000'} id={'aa'} />,
-      {
-        providerProps
-      }
+      providerProps
     )
-    expect(await findAllByText('my first page')).toBeTruthy()
-    expect(await findAllByText('my second page')).toBeTruthy()
-    const thirdPage = await queryAllByText('my third page')
-    expect(thirdPage.length).toBe(0)
+
+    await waitFor(() =>
+      expect(findAllByText('my first page')).resolves.toHaveLength(2)
+    )
+
+    await waitFor(() =>
+      expect(findAllByText('my second page')).resolves.toHaveLength(2)
+    )
+
+    const thirdPage = queryByText('my third page')
+    expect(thirdPage).not.toBeInTheDocument()
 
     const newPage = {
       title: 'my third page',
       path: '/3'
     }
 
-    await rerender(
-      <Visualisation previewUrl={'http://localhost:3000'} id={'aa'} />,
+    await rerender.call(
       {
-        providerProps: {
-          data: { ...data, pages: [...data.pages, newPage] },
-          save: jest.fn()
-        }
-      }
+        data: { ...data, pages: [...data.pages, newPage] },
+        save: jest.fn()
+      },
+      <Visualisation previewUrl={'http://localhost:3000'} id={'aa'} />
     )
 
-    await waitFor(() => expect(queryAllByText('my third page').length).toBe(2))
+    await waitFor(() =>
+      expect(findAllByText('my third page')).resolves.toHaveLength(2)
+    )
   })
 
   test('Links between pages are navigable via keyboard', async () => {
@@ -84,39 +105,34 @@ describe('Visualisation', () => {
       save: jest.fn()
     }
 
-    const { queryByTestId, queryAllByText, getByText } = customRender(
+    customRender(
       <Visualisation previewUrl={'http://localhost:3000'} id={'aa'} />,
-      {
-        providerProps
-      }
+      providerProps
     )
 
     // Check link exists and has the expected label
-    const link = await queryAllByText(
-      'Edit link from link-source to link-target'
-    )?.[0]
-    expect(link).toBeTruthy()
+    const $lineTitle = await waitFor(() =>
+      findByText('Edit link from link-source to link-target')
+    )
 
     // Check that link works when selected with the enter key
-    expect(queryByTestId('flyout-0')).toBeNull()
+    expect(queryByTestId('flyout-0')).not.toBeInTheDocument()
 
-    await fireEvent.keyPress(link, {
-      key: 'Enter',
-      code: 'Enter',
-      charCode: 13
+    await act(async () => {
+      $lineTitle.parentElement!.focus()
+      await userEvent.keyboard('[Enter]')
     })
 
     expect(queryByTestId('flyout-0')).toBeInTheDocument()
 
-    await fireEvent.click(getByText('Close'))
+    await act(() => userEvent.click(getByText('Close')))
 
     // Check that link works when selected with the space key
-    expect(queryByTestId('flyout-0')).toBeNull()
+    expect(queryByTestId('flyout-0')).not.toBeInTheDocument()
 
-    await fireEvent.keyPress(link, {
-      key: ' ',
-      code: 'Space',
-      charCode: 32
+    await act(async () => {
+      $lineTitle.parentElement!.focus()
+      await userEvent.keyboard('[Space]')
     })
 
     expect(queryByTestId('flyout-0')).toBeInTheDocument()

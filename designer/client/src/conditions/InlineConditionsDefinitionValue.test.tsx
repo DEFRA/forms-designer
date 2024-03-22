@@ -1,4 +1,6 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { screen } from '@testing-library/dom'
+import { act, cleanup, render, waitFor } from '@testing-library/react'
+import { userEvent } from '@testing-library/user-event'
 import React from 'react'
 import { InlineConditionsDefinitionValue } from './InlineConditionsDefinitionValue'
 import {
@@ -8,9 +10,12 @@ import {
   relativeDateOrTimeOperatorNames,
   timeUnits
 } from '@defra/forms-model'
-import { userEvent } from '@testing-library/user-event'
 
 describe.skip('InlineConditionsDefinitionValue', () => {
+  afterEach(cleanup)
+
+  const { findByDisplayValue, findByTestId, findByText } = screen
+
   it('should display a text input for fields without custom mappings or options', async () => {
     const fieldDef = {
       label: 'Something',
@@ -25,9 +30,10 @@ describe.skip('InlineConditionsDefinitionValue', () => {
         operator="is"
       />
     )
-    const input = await screen.findByDisplayValue('my-value')
-    expect(input).toBeInTheDocument()
-    expect(input).toHaveAttribute('type', 'text')
+
+    const $input = await waitFor(() => findByDisplayValue('my-value'))
+    expect($input).toBeInTheDocument()
+    expect($input).toHaveAttribute('type', 'text')
   })
 
   it('inputting a text value should call update value', async () => {
@@ -45,9 +51,10 @@ describe.skip('InlineConditionsDefinitionValue', () => {
         operator="is"
       />
     )
-    const input = await screen.findByDisplayValue('my-value')
-    await userEvent.clear(input)
-    await userEvent.type(input, 'new-value')
+
+    const $input = await waitFor(() => findByDisplayValue('my-value'))
+    await act(() => userEvent.clear($input))
+    await act(() => userEvent.type($input, 'new-value'))
     expect(updateValueCallback).toHaveBeenLastCalledWith({
       display: 'new-value',
       type: 'Value',
@@ -70,9 +77,10 @@ describe.skip('InlineConditionsDefinitionValue', () => {
         operator="is"
       />
     )
-    const input = await screen.findByDisplayValue('my-value')
-    await userEvent.clear(input)
-    await userEvent.type(input, '')
+
+    const $input = await waitFor(() => findByDisplayValue('my-value'))
+    await act(() => userEvent.clear($input))
+    await act(() => userEvent.type($input, ''))
     expect(updateValueCallback).toHaveBeenLastCalledWith(undefined)
   })
 
@@ -95,10 +103,15 @@ describe.skip('InlineConditionsDefinitionValue', () => {
         operator="is"
       />
     )
-    const select = await screen.findByTestId('cond-value')
-    expect(select).toBeInTheDocument()
-    expect(await screen.findByText('Value 1')).toBeInTheDocument()
-    expect(await screen.findByText('Value 2')).toBeInTheDocument()
+    await waitFor(() =>
+      expect(findByTestId('cond-value')).resolves.toBeInTheDocument()
+    )
+    await waitFor(() =>
+      expect(findByText('Value 1')).resolves.toBeInTheDocument()
+    )
+    await waitFor(() =>
+      expect(findByText('Value 2')).resolves.toBeInTheDocument()
+    )
   })
 
   it('selecting a value from the select list should call update value', async () => {
@@ -121,8 +134,10 @@ describe.skip('InlineConditionsDefinitionValue', () => {
         operator="is"
       />
     )
-    const select = await screen.findByTestId('cond-value')
-    await userEvent.selectOptions(select, 'value1')
+
+    const select = await waitFor(() => findByTestId('cond-value'))
+    await act(() => userEvent.selectOptions(select, 'value1'))
+
     expect(updateValueCallback).toHaveBeenLastCalledWith({
       display: 'Value 1',
       type: 'Value',
@@ -150,8 +165,10 @@ describe.skip('InlineConditionsDefinitionValue', () => {
         operator="is"
       />
     )
-    const select = await screen.findByTestId('cond-value')
-    await userEvent.selectOptions(select, 'true')
+
+    const select = await waitFor(() => findByTestId('cond-value'))
+    await act(() => userEvent.selectOptions(select, 'true'))
+
     expect(updateValueCallback).toHaveBeenLastCalledWith({
       display: 'Value 1',
       type: 'Value',
@@ -179,8 +196,10 @@ describe.skip('InlineConditionsDefinitionValue', () => {
         operator="is"
       />
     )
-    const select = await screen.findByTestId('cond-value')
-    await userEvent.selectOptions(select, '42')
+
+    const select = await waitFor(() => findByTestId('cond-value'))
+    await act(() => userEvent.selectOptions(select, '42'))
+
     expect(updateValueCallback).toHaveBeenLastCalledWith({
       display: 'Value 1',
       type: 'Value',
@@ -208,8 +227,10 @@ describe.skip('InlineConditionsDefinitionValue', () => {
         operator="is"
       />
     )
-    const select = await screen.findByTestId('cond-value')
-    await userEvent.selectOptions(select, '')
+
+    const select = await waitFor(() => findByTestId('cond-value'))
+    await act(() => userEvent.selectOptions(select, ''))
+
     expect(updateValueCallback).toHaveBeenLastCalledWith(undefined)
   })
 
@@ -230,28 +251,34 @@ describe.skip('InlineConditionsDefinitionValue', () => {
           type: mapping.type
         }
         const updateValueCallback = jest.fn()
-        const { findByDisplayValue } = render(
+        render(
           <InlineConditionsDefinitionValue
             updateValue={updateValueCallback}
             fieldDef={fieldDef}
             operator={operator}
           />
         )
-        expect(
-          await screen.findByTestId('cond-value-period')
-        ).toBeInTheDocument()
-        const units = await screen.findByTestId('cond-value-units')
+        await waitFor(() =>
+          expect(findByTestId('cond-value-period')).resolves.toBeInTheDocument()
+        )
+        const units = await waitFor(() => findByTestId('cond-value-units'))
         expect(units).toBeInTheDocument()
         waitFor(() =>
           Promise.all(
             Object.values(mapping.units).map(async (unit) =>
-              expect(await findByDisplayValue(unit.display)).toBeInTheDocument()
+              waitFor(() =>
+                expect(
+                  findByDisplayValue(unit.display)
+                ).resolves.toBeInTheDocument()
+              )
             )
           )
         )
-        expect(
-          await screen.findByTestId('cond-value-direction')
-        ).toBeInTheDocument()
+        await waitFor(() =>
+          expect(
+            findByTestId('cond-value-direction')
+          ).resolves.toBeInTheDocument()
+        )
       })
     })
   })

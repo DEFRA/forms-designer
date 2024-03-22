@@ -1,5 +1,7 @@
 import React from 'react'
-import { fireEvent, render } from '@testing-library/react'
+import { screen } from '@testing-library/dom'
+import { act, cleanup, render, type RenderResult } from '@testing-library/react'
+import { userEvent } from '@testing-library/user-event'
 import ConditionsEdit from './ConditionsEdit'
 import { DataContext, FlyoutContext } from '../context'
 import { FormDefinition } from '@defra/forms-model'
@@ -28,25 +30,30 @@ const data: FormDefinition = {
   conditions: []
 }
 
-const dataProviderProps = {
-  data,
-  save: jest.fn()
-}
+const dataValue = { data, save: jest.fn() }
 
-const customRender = (ui, { providerProps, ...renderOptions } = {}) => {
+function customRender(
+  element: React.JSX.Element,
+  providerProps = dataValue
+): RenderResult {
   return render(
-    <DataContext.Provider value={providerProps ?? dataProviderProps}>
-      <FlyoutContext.Provider value={flyoutValue}>{ui}</FlyoutContext.Provider>
+    <DataContext.Provider value={providerProps}>
+      <FlyoutContext.Provider value={flyoutValue}>
+        {element}
+      </FlyoutContext.Provider>
       <div id="portal-root" />
-    </DataContext.Provider>,
-    renderOptions
+    </DataContext.Provider>
   )
 }
 
 describe('ConditionsEdit', () => {
+  afterEach(cleanup)
+
+  const { getByTestId, getByText, queryByTestId } = screen
+
   describe('hint texts', () => {
     test('main hint text is correct', () => {
-      const { getByText } = customRender(<ConditionsEdit />)
+      customRender(<ConditionsEdit />)
 
       const hint =
         'Set conditions for components and links to control the flow of a form. For example, a question page with a component for yes and no options could have link conditions based on which option a user selects.'
@@ -54,8 +61,9 @@ describe('ConditionsEdit', () => {
     })
 
     test('no field hint test is correct', () => {
-      const { getByText } = customRender(<ConditionsEdit />, {
-        providerProps: { data: { pages: [], conditions: [] }, save: jest.fn() }
+      customRender(<ConditionsEdit />, {
+        data: { pages: [], conditions: [] },
+        save: jest.fn()
       })
       const hint =
         'You cannot add a condition as no components are available. Create a component on a page in the form. You can then add a condition.'
@@ -75,7 +83,7 @@ describe('ConditionsEdit', () => {
       value: 'badgers again'
     }
 
-    const providerData = {
+    const providerProps = {
       data: {
         ...data,
         conditions: [condition, condition2]
@@ -83,58 +91,43 @@ describe('ConditionsEdit', () => {
       save: jest.fn()
     }
 
-    const props = {
-      providerProps: providerData
-    }
-
     test('Renders edit links for each condition and add new condition ', () => {
-      const { getByText, queryByTestId } = customRender(<ConditionsEdit />, {
-        ...props
-      })
+      customRender(<ConditionsEdit />, providerProps)
       expect(getByText(condition.displayName)).toBeInTheDocument()
       expect(getByText(condition2.displayName)).toBeInTheDocument()
-      expect(queryByTestId('edit-conditions')).toBeNull()
+      expect(queryByTestId('edit-conditions')).not.toBeInTheDocument()
     })
 
     test('Clicking an edit link causes the edit view to be rendered and all other elements hidden', async () => {
-      const { getByText, getByTestId } = customRender(<ConditionsEdit />, {
-        ...props
-      })
-      const link = getByText(condition.displayName)
-      await fireEvent.click(link)
+      customRender(<ConditionsEdit />, providerProps)
+      const $link = getByText(condition.displayName)
+      await act(() => userEvent.click($link))
       expect(getByTestId('edit-conditions')).toBeTruthy()
     })
   })
 
   describe('without existing conditions', () => {
-    const providerData = {
-      data: {
-        ...data,
-        conditions: []
-      },
+    const providerProps = {
+      data: { ...data, conditions: [] },
       save: jest.fn()
     }
 
-    const props = {
-      providerProps: providerData
-    }
-
     test('Renders no edit condition links', () => {
-      const { queryAllByTestId } = customRender(<ConditionsEdit />, props)
+      customRender(<ConditionsEdit />, providerProps)
 
-      const listItems = queryAllByTestId('conditions-list-items')
-      expect(listItems.length).toBe(0)
+      const $listItem = queryByTestId('conditions-list-items')
+      expect($listItem).not.toBeInTheDocument()
     })
 
     test('Renders add new condition link if inputs are available', () => {
-      const { queryByTestId } = customRender(<ConditionsEdit />, props)
-
+      customRender(<ConditionsEdit />, providerProps)
       expect(queryByTestId('add-condition-link')).toBeInTheDocument()
     })
 
     test('Renders no new condition message if there are no inputs available', () => {
-      const { getByText } = customRender(<ConditionsEdit />, {
-        providerProps: { data: { pages: [], conditions: [] }, save: jest.fn() }
+      customRender(<ConditionsEdit />, {
+        data: { pages: [], conditions: [] },
+        save: jest.fn()
       })
 
       const hint =

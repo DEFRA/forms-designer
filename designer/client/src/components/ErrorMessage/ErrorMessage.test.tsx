@@ -1,13 +1,16 @@
 import React from 'react'
-import { render, cleanup, screen } from '@testing-library/react'
+import { screen } from '@testing-library/dom'
+import { render, cleanup } from '@testing-library/react'
 import { ErrorMessage } from '.'
 
 describe('ErrorMessage component', () => {
   afterEach(cleanup)
 
+  const { getByText } = screen
+
   it('renders children text', async () => {
     render(<ErrorMessage className="123">Error 123</ErrorMessage>)
-    expect(screen.findByText('Error 123')).toBeDefined()
+    expect(getByText('Error 123')).toBeDefined()
   })
 
   it('passed down className', async () => {
@@ -19,6 +22,6 @@ describe('ErrorMessage component', () => {
 
   it('renders hidden accessibility error span', () => {
     render(<ErrorMessage className="123">Error 123</ErrorMessage>)
-    expect(screen.getByText('Error:')).toHaveClass('govuk-visually-hidden')
+    expect(getByText('Error:')).toHaveClass('govuk-visually-hidden')
   })
 })

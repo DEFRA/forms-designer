@@ -1,5 +1,6 @@
-import { customRenderForLists } from '../../../test/helpers/renderers-lists'
 import { Data } from '@defra/forms-model'
+import { screen } from '@testing-library/dom'
+import { customRenderForLists } from '../../../test/helpers/renderers-lists'
 
 import React from 'react'
 import { ListSelect } from './ListSelect'
@@ -21,27 +22,20 @@ const data = {
   ]
 }
 
-describe('ListSelect', () => {
-  test('Lists all available lists and add list', async () => {
-    const dataValue = { data, save: jest.fn() }
+const dataValue = { data, save: jest.fn() }
 
-    const { queryAllByTestId, getByTestId } = customRenderForLists(
-      <ListSelect />,
-      {
-        dataValue
-      }
-    )
-    const editLinks = await queryAllByTestId('edit-list')
-    expect(editLinks.length).toBe(2)
+describe('ListSelect', () => {
+  const { getByTestId, getByText, queryAllByTestId } = screen
+
+  test('Lists all available lists and add list', () => {
+    customRenderForLists(<ListSelect />, { dataValue })
+    const $links = queryAllByTestId('edit-list')
+    expect($links).toHaveLength(2)
     expect(getByTestId('add-list')).toBeInTheDocument()
   })
 
   test('strings are rendered correctly', async () => {
-    const dataValue = { data, save: jest.fn() }
-
-    const { getByText } = customRenderForLists(<ListSelect />, {
-      dataValue
-    })
+    customRenderForLists(<ListSelect />, { dataValue })
 
     expect(
       getByText(

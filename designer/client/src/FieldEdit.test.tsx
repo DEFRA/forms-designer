@@ -1,5 +1,6 @@
 import React, { useReducer } from 'react'
-import { render } from '@testing-library/react'
+import { screen } from '@testing-library/dom'
+import { cleanup, render } from '@testing-library/react'
 import { DataContext } from './context'
 import {
   ComponentContext,
@@ -9,6 +10,8 @@ import {
 import { FieldEdit } from './field-edit'
 
 describe('Field Edit', () => {
+  const { getByText } = screen
+
   const data = {
     pages: [
       {
@@ -28,6 +31,7 @@ describe('Field Edit', () => {
       }
     ]
   }
+
   const dataValue = { data, save: jest.fn() }
 
   const TestComponentContextProvider = ({
@@ -52,8 +56,10 @@ describe('Field Edit', () => {
     )
   }
 
+  afterEach(cleanup)
+
   test('Help text changes', () => {
-    const { container, getByText } = render(
+    const { container } = render(
       <TestComponentContextProvider
         dataValue={dataValue}
         componentValue={false}
@@ -61,6 +67,7 @@ describe('Field Edit', () => {
         <FieldEdit />
       </TestComponentContextProvider>
     )
+
     expect(container).toHaveTextContent('Enter the name to show for this field')
 
     expect(container).toHaveTextContent(

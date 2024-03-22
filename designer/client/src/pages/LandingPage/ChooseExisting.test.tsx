@@ -1,6 +1,8 @@
+import { screen } from '@testing-library/dom'
+import { act, cleanup, render, waitFor } from '@testing-library/react'
+import { userEvent } from '@testing-library/user-event'
 import React from 'react'
 import { ChooseExisting } from './ChooseExisting'
-import { render, fireEvent, screen, waitFor } from '@testing-library/react'
 import {
   server,
   http,
@@ -11,7 +13,10 @@ import {
 describe('ChooseExisting', () => {
   beforeAll(() => server.listen())
   beforeEach(() => server.resetHandlers(...mockedFormHandlers))
+  afterEach(cleanup)
   afterAll(() => server.close())
+
+  const { findByText, getByText } = screen
 
   test('no existing configurations', async () => {
     server.resetHandlers(
@@ -25,7 +30,9 @@ describe('ChooseExisting', () => {
     const push = jest.fn()
     const history = { push }
     const { asFragment } = render(<ChooseExisting history={history} />)
-    expect(await screen.findByText(/Form name/i)).toBeInTheDocument()
+    await waitFor(() =>
+      expect(findByText(/Form name/i)).resolves.toBeInTheDocument()
+    )
     expect(asFragment()).toMatchSnapshot()
   })
 
@@ -33,7 +40,9 @@ describe('ChooseExisting', () => {
     const push = jest.fn()
     const history = { push }
     const { asFragment } = render(<ChooseExisting history={history} />)
-    expect(await screen.findByText(/Form name/i)).toBeInTheDocument()
+    await waitFor(() =>
+      expect(findByText(/Form name/i)).resolves.toBeInTheDocument()
+    )
     expect(asFragment()).toMatchSnapshot()
   })
 
@@ -49,12 +58,14 @@ describe('ChooseExisting', () => {
     const history = { push }
 
     render(<ChooseExisting history={history} />)
-    expect(await screen.findByText(/Form name/i)).toBeInTheDocument()
-
-    await fireEvent.click(
-      screen.getByText(mockedFormConfigurations[0].DisplayName)
+    await waitFor(() =>
+      expect(findByText(/Form name/i)).resolves.toBeInTheDocument()
     )
-    await waitFor(() => expect(push).toHaveBeenCalledTimes(1))
-    expect(push).toHaveBeenCalledWith('/designer/somekey')
+
+    await act(() =>
+      userEvent.click(getByText(mockedFormConfigurations[0].DisplayName))
+    )
+
+    await waitFor(() => expect(push).toHaveBeenCalledWith('/designer/somekey'))
   })
 })
