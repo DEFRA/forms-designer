@@ -1,51 +1,64 @@
 import React from 'react'
 import { SaveError } from './SaveError'
-import {
-  render,
-  cleanup,
-  fireEvent,
-  screen,
-  waitFor
-} from '@testing-library/react'
+import { screen } from '@testing-library/dom'
+import { act, render, cleanup, waitFor } from '@testing-library/react'
+import { userEvent } from '@testing-library/user-event'
 
 describe('SaveErrorPage', () => {
   afterEach(cleanup)
+
+  const { findByText, getByText } = screen
 
   test('should render correctly', async () => {
     const push = jest.fn()
     const history = { push }
     const location = { state: { id: 'testid' } }
-    const { asFragment } = render(
-      <SaveError history={history} location={location} />
+
+    render(<SaveError history={history} location={location} />)
+
+    await waitFor(() =>
+      expect(findByText('Back to Designer')).resolves.toBeInTheDocument()
     )
-    expect(await screen.findByText('Back to Designer')).toBeInTheDocument()
-    expect(
-      await screen.findByText('Sorry, there is a problem with the service')
-    ).toBeInTheDocument()
-    expect(
-      await screen.findByText('An error occurred while saving.')
-    ).toBeInTheDocument()
-    expect(
-      await screen.findByText(
-        'We saved the last valid version of your form. Return to the Designer to continue.'
-      )
-    ).toBeInTheDocument()
-    expect(
-      await screen.findByText(
-        'So we can check what went wrong, complete the following:'
-      )
-    ).toBeInTheDocument()
-    expect(
-      await screen.findByText('download your crash report')
-    ).toBeInTheDocument()
 
-    expect(
-      await screen.findByText('create an issue on GitHub')
-    ).toBeInTheDocument()
+    await waitFor(() =>
+      expect(
+        findByText('Sorry, there is a problem with the service')
+      ).resolves.toBeInTheDocument()
+    )
 
-    expect(
-      screen.getByText('create an issue on GitHub').closest('a')
-    ).toHaveAttribute(
+    await waitFor(() =>
+      expect(
+        findByText('An error occurred while saving.')
+      ).resolves.toBeInTheDocument()
+    )
+
+    await waitFor(() =>
+      expect(
+        findByText(
+          'We saved the last valid version of your form. Return to the Designer to continue.'
+        )
+      ).resolves.toBeInTheDocument()
+    )
+
+    await waitFor(() =>
+      expect(
+        findByText('So we can check what went wrong, complete the following:')
+      ).resolves.toBeInTheDocument()
+    )
+
+    await waitFor(() =>
+      expect(
+        findByText('download your crash report')
+      ).resolves.toBeInTheDocument()
+    )
+
+    await waitFor(() =>
+      expect(
+        findByText('create an issue on GitHub')
+      ).resolves.toBeInTheDocument()
+    )
+
+    expect(getByText('create an issue on GitHub').closest('a')).toHaveAttribute(
       'href',
       'https://github.com/XGovFormBuilder/digital-form-builder/issues/new?template=bug_report.md'
     )
@@ -56,10 +69,10 @@ describe('SaveErrorPage', () => {
     const history = { push }
     const location = { state: { id: 'testid' } }
     render(<SaveError history={history} location={location} />)
-    expect(await screen.findByText(/Back to Designer/i)).toBeInTheDocument()
 
-    await fireEvent.click(screen.getByText('Back to Designer'))
-    await waitFor(() => expect(push).toHaveBeenCalledTimes(1))
-    expect(push).toHaveBeenCalledWith('designer/testid')
+    const $backLink = await waitFor(() => findByText('Back to Designer'))
+
+    await act(() => userEvent.click($backLink!))
+    await waitFor(() => expect(push).toHaveBeenCalledWith('designer/testid'))
   })
 })

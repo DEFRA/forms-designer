@@ -1,9 +1,14 @@
 import React from 'react'
-import { render } from '@testing-library/react'
+import { screen } from '@testing-library/dom'
+import { cleanup, render } from '@testing-library/react'
 import InlineConditions from './InlineConditions'
 import { DataContext } from '../context/DataContext'
 
 describe('InlineConditions', () => {
+  afterEach(cleanup)
+
+  const { getByText } = screen
+
   test('Strings are rendered correctly', () => {
     const props = {
       path: '/some-path',
@@ -32,7 +37,7 @@ describe('InlineConditions', () => {
       conditions: []
     }
 
-    const { getByText } = render(
+    render(
       <DataContext.Provider value={{ data, save: jest.fn() }}>
         <InlineConditions {...props} />
       </DataContext.Provider>

@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react'
+import { render, type RenderResult } from '@testing-library/react'
 import { DataContext, FlyoutContext } from '../../client/src/context'
 import React from 'react'
 import { ListContext } from '../../client/src/reducers/listReducer'
@@ -19,8 +19,8 @@ const defaultListsValue = {
 }
 const defaultListValue = { state: {}, dispatch: jest.fn() }
 
-export const customRenderForLists = (
-  children,
+export function customRenderForLists(
+  element: React.JSX.Element,
   {
     dataValue = defaultDataValue,
     flyoutValue = defaultFlyoutValue,
@@ -28,13 +28,13 @@ export const customRenderForLists = (
     listValue = defaultListValue,
     ...renderOptions
   }
-) => {
+): RenderResult {
   const rendered = render(
     <DataContext.Provider value={dataValue}>
       <FlyoutContext.Provider value={flyoutValue}>
         <ListsEditorContext.Provider value={listsValue}>
           <ListContext.Provider value={listValue}>
-            {children}
+            {element}
           </ListContext.Provider>
         </ListsEditorContext.Provider>
       </FlyoutContext.Provider>
@@ -44,7 +44,8 @@ export const customRenderForLists = (
   )
   return {
     ...rendered,
-    rerender: (ui, options) =>
-      customRenderForLists(ui, { container: rendered.container, ...options })
+    rerender(this: Parameters<typeof customRenderForLists>[1], element) {
+      customRenderForLists(element, this)
+    }
   }
 }

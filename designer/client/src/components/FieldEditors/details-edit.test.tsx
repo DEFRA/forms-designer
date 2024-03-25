@@ -1,9 +1,11 @@
 import React from 'react'
-import { render } from '@testing-library/react'
+import { cleanup, render } from '@testing-library/react'
 import { ComponentContext } from '../../reducers/component/componentReducer'
 import DetailsEdit from './details-edit'
 
 describe('details-edit', () => {
+  afterEach(cleanup)
+
   function TestComponentWithContext({ children }) {
     return (
       <ComponentContext.Provider

@@ -1,9 +1,12 @@
-import { render, screen } from '@testing-library/react'
+import { screen } from '@testing-library/dom'
+import { act, cleanup, render, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React from 'react'
 import { AbsoluteDateValues } from './AbsoluteDateValues'
 
 describe('AbsoluteDateValues', () => {
+  afterEach(cleanup)
+
   const { findByLabelText } = screen
 
   it("renders out a date that's passed to it", async () => {
@@ -14,9 +17,9 @@ describe('AbsoluteDateValues', () => {
       />
     )
 
-    const $year = await findByLabelText('Year')
-    const $month = await findByLabelText('Month')
-    const $day = await findByLabelText('Day')
+    const $year = await waitFor(() => findByLabelText('Year'))
+    const $month = await waitFor(() => findByLabelText('Month'))
+    const $day = await waitFor(() => findByLabelText('Day'))
 
     expect($year?.getAttribute('value')).toEqual('1999')
     expect($month?.getAttribute('value')).toEqual('12')
@@ -27,15 +30,21 @@ describe('AbsoluteDateValues', () => {
     const updateValue = jest.fn()
     render(<AbsoluteDateValues updateValue={updateValue} value={{}} />)
 
-    const $year = await findByLabelText('Year')
-    const $month = await findByLabelText('Month')
-    const $day = await findByLabelText('Day')
+    const $year = await waitFor(() => findByLabelText('Year'))
+    const $month = await waitFor(() => findByLabelText('Month'))
+    const $day = await waitFor(() => findByLabelText('Day'))
 
-    await userEvent.type($year, '2020')
-    await userEvent.type($month, '4')
-    await userEvent.type($day, '26')
+    await act(() => userEvent.type($year, '2020'))
+    await act(() => userEvent.type($month, '4'))
+    await act(() => userEvent.type($day, '26'))
 
-    expect(updateValue).toHaveBeenCalledWith({ year: 2020, month: 4, day: 26 })
+    await waitFor(() =>
+      expect(updateValue).toHaveBeenCalledWith({
+        year: 2020,
+        month: 4,
+        day: 26
+      })
+    )
   })
 
   it('calls the updateValue prop if an existing date is edited', async () => {
@@ -47,31 +56,37 @@ describe('AbsoluteDateValues', () => {
       />
     )
 
-    const $year = await findByLabelText('Year')
-    const $month = await findByLabelText('Month')
-    const $day = await findByLabelText('Day')
+    const $year = await waitFor(() => findByLabelText('Year'))
+    const $month = await waitFor(() => findByLabelText('Month'))
+    const $day = await waitFor(() => findByLabelText('Day'))
 
     // Clear existing values
     await Promise.all([$year, $month, $day].map(userEvent.clear))
 
-    await userEvent.type($year, '2020')
-    await userEvent.type($month, '4')
-    await userEvent.type($day, '26')
+    await act(() => userEvent.type($year, '2020'))
+    await act(() => userEvent.type($month, '4'))
+    await act(() => userEvent.type($day, '26'))
 
-    expect(updateValue).toHaveBeenCalledWith({ year: 2020, month: 4, day: 26 })
+    await waitFor(() =>
+      expect(updateValue).toHaveBeenCalledWith({
+        year: 2020,
+        month: 4,
+        day: 26
+      })
+    )
   })
 
   it("doesn't call the updateValue prop if an valid day is not entered", async () => {
     const updateValue = jest.fn()
     render(<AbsoluteDateValues updateValue={updateValue} value={{}} />)
 
-    const $year = await findByLabelText('Year')
-    const $month = await findByLabelText('Month')
-    const $day = await findByLabelText('Day')
+    const $year = await waitFor(() => findByLabelText('Year'))
+    const $month = await waitFor(() => findByLabelText('Month'))
+    const $day = await waitFor(() => findByLabelText('Day'))
 
-    await userEvent.type($year, '2020')
-    await userEvent.type($month, '4')
-    await userEvent.type($day, '0')
+    await act(() => userEvent.type($year, '2020'))
+    await act(() => userEvent.type($month, '4'))
+    await act(() => userEvent.type($day, '0'))
 
     expect(updateValue).not.toHaveBeenCalled()
   })
@@ -80,11 +95,11 @@ describe('AbsoluteDateValues', () => {
     const updateValue = jest.fn()
     render(<AbsoluteDateValues updateValue={updateValue} value={{}} />)
 
-    const $year = await findByLabelText('Year')
-    const $month = await findByLabelText('Month')
+    const $year = await waitFor(() => findByLabelText('Year'))
+    const $month = await waitFor(() => findByLabelText('Month'))
 
-    await userEvent.type($year, '2020')
-    await userEvent.type($month, '4')
+    await act(() => userEvent.type($year, '2020'))
+    await act(() => userEvent.type($month, '4'))
 
     expect(updateValue).not.toHaveBeenCalled()
   })
@@ -93,11 +108,11 @@ describe('AbsoluteDateValues', () => {
     const updateValue = jest.fn()
     render(<AbsoluteDateValues updateValue={updateValue} value={{}} />)
 
-    const $year = await findByLabelText('Year')
-    const $day = await findByLabelText('Day')
+    const $year = await waitFor(() => findByLabelText('Year'))
+    const $day = await waitFor(() => findByLabelText('Day'))
 
-    await userEvent.type($year, '2020')
-    await userEvent.type($day, '7')
+    await act(() => userEvent.type($year, '2020'))
+    await act(() => userEvent.type($day, '7'))
 
     expect(updateValue).not.toHaveBeenCalled()
   })
@@ -106,11 +121,11 @@ describe('AbsoluteDateValues', () => {
     const updateValue = jest.fn()
     render(<AbsoluteDateValues updateValue={updateValue} value={{}} />)
 
-    const $month = await findByLabelText('Month')
-    const $day = await findByLabelText('Day')
+    const $month = await waitFor(() => findByLabelText('Month'))
+    const $day = await waitFor(() => findByLabelText('Day'))
 
-    await userEvent.type($month, '4')
-    await userEvent.type($day, '23')
+    await act(() => userEvent.type($month, '4'))
+    await act(() => userEvent.type($day, '23'))
 
     expect(updateValue).not.toHaveBeenCalled()
   })

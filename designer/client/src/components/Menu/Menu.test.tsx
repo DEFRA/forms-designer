@@ -1,19 +1,36 @@
 import { Menu } from '.'
-import { render, fireEvent, type RenderResult } from '@testing-library/react'
+import { screen } from '@testing-library/dom'
+import { userEvent } from '@testing-library/user-event'
+import {
+  act,
+  cleanup,
+  render,
+  type RenderResult,
+  waitFor
+} from '@testing-library/react'
 import { DataContext, FlyoutContext } from '../../context'
 import React from 'react'
 
 describe('Menu', () => {
-  const dataValue = { data: {}, save: jest.fn() }
+  const { getByText, getByTestId, queryByTestId } = screen
+
+  const dataValue = {
+    data: {},
+    save: jest.fn()
+  }
+
   const flyoutValue = {
     increment: jest.fn(),
     decrement: jest.fn(),
     count: 1
   }
 
-  function customRender(children: React.JSX.Element): RenderResult {
+  function customRender(
+    children: React.JSX.Element,
+    providerProps = dataValue
+  ): RenderResult {
     return render(
-      <DataContext.Provider value={dataValue}>
+      <DataContext.Provider value={providerProps}>
         <FlyoutContext.Provider value={flyoutValue}>
           {children}
         </FlyoutContext.Provider>
@@ -22,8 +39,10 @@ describe('Menu', () => {
     )
   }
 
+  afterEach(cleanup)
+
   it('Renders button strings correctly', () => {
-    const { getByText } = customRender(<Menu />)
+    customRender(<Menu />)
 
     expect(getByText('Form details')).toBeInTheDocument()
     expect(getByText('Add page')).toBeInTheDocument()
@@ -38,34 +57,39 @@ describe('Menu', () => {
   })
 
   it('Can open flyouts and close them', async () => {
-    const { getByText, queryByTestId } = customRender(<Menu />)
-    expect(queryByTestId('flyout-1')).toBeNull()
-    await fireEvent.click(getByText('Form details'))
+    customRender(<Menu />)
+    expect(queryByTestId('flyout-1')).not.toBeInTheDocument()
+
+    await act(() => userEvent.click(getByText('Form details')))
     expect(queryByTestId('flyout-1')).toBeInTheDocument()
-    await fireEvent.click(getByText('Close'))
-    expect(queryByTestId('flyout-1')).toBeNull()
+
+    await act(() => userEvent.click(getByText('Close')))
+    expect(queryByTestId('flyout-1')).not.toBeInTheDocument()
   })
 
   it('clicking on a summary tab shows different tab content', async () => {
-    const { getByTestId, queryByTestId } = customRender(<Menu />)
-    await fireEvent.click(getByTestId('menu-summary'))
+    customRender(<Menu />)
+
+    await act(() => userEvent.click(getByTestId('menu-summary')))
     expect(getByTestId('flyout-1')).toBeInTheDocument()
-    expect(queryByTestId('tab-json')).toBeNull()
-    expect(queryByTestId('tab-summary')).toBeNull()
-    await fireEvent.click(getByTestId('tab-json-button'))
+    expect(queryByTestId('tab-json')).not.toBeInTheDocument()
+    expect(queryByTestId('tab-summary')).not.toBeInTheDocument()
+
+    await act(() => userEvent.click(getByTestId('tab-json-button')))
     expect(getByTestId('tab-json')).toBeInTheDocument()
-    expect(queryByTestId('tab-summary')).toBeNull()
-    expect(queryByTestId('tab-model')).toBeNull()
+    expect(queryByTestId('tab-summary')).not.toBeInTheDocument()
+    expect(queryByTestId('tab-model')).not.toBeInTheDocument()
   })
 
   it('flyouts close on Save', async () => {
-    const { getByText, queryByTestId } = customRender(<Menu />)
+    customRender(<Menu />)
 
-    await fireEvent.click(getByText('Summary behaviour'))
+    await act(() => userEvent.click(getByText('Summary behaviour')))
     expect(queryByTestId('flyout-1')).toBeInTheDocument()
 
-    await fireEvent.click(getByText('Save'))
-    expect(dataValue.save).toHaveBeenCalledTimes(1)
-    expect(queryByTestId('flyout-1')).toBeNull()
+    await act(() => userEvent.click(getByText('Save')))
+    await waitFor(() => expect(dataValue.save).toHaveBeenCalledTimes(1))
+
+    expect(queryByTestId('flyout-1')).not.toBeInTheDocument()
   })
 })

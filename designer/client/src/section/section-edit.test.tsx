@@ -1,9 +1,14 @@
 import React from 'react'
-import { render } from '@testing-library/react'
+import { screen } from '@testing-library/dom'
+import { cleanup, render } from '@testing-library/react'
 import { RenderWithContext } from '../../../test/helpers/renderers'
 import SectionEdit from './section-edit'
 
 describe('Section edit fields', () => {
+  afterEach(cleanup)
+
+  const { getByText } = screen
+
   test('should display titles and help texts', () => {
     const stateProps = {
       component: {
@@ -13,7 +18,7 @@ describe('Section edit fields', () => {
       }
     }
 
-    const { getByText } = render(
+    render(
       <RenderWithContext stateProps={stateProps}>
         <SectionEdit />
       </RenderWithContext>

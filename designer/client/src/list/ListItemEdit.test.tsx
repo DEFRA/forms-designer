@@ -1,7 +1,9 @@
-import { customRenderForLists } from '../../../test/helpers/renderers-lists'
+import { screen } from '@testing-library/dom'
+import { act } from '@testing-library/react'
+import { userEvent } from '@testing-library/user-event'
 import React from 'react'
+import { customRenderForLists } from '../../../test/helpers/renderers-lists'
 import { ListItemEdit } from './ListItemEdit'
-import { fireEvent } from '@testing-library/react'
 
 const data = {
   pages: [
@@ -80,13 +82,13 @@ const data = {
   ]
 }
 
-describe('ListItemEdit', () => {
-  test('strings are rendered correctly', async () => {
-    const dataValue = { data, save: jest.fn() }
+const dataValue = { data, save: jest.fn() }
 
-    const { getByText } = customRenderForLists(<ListItemEdit />, {
-      dataValue
-    })
+describe('ListItemEdit', () => {
+  const { getByText, getByTestId, getAllByTestId } = screen
+
+  test('strings are rendered correctly', async () => {
+    customRenderForLists(<ListItemEdit />, { dataValue })
 
     expect(getByText('Item text')).toBeInTheDocument()
     expect(getByText('Enter the text you want to show')).toBeInTheDocument()
@@ -103,23 +105,20 @@ describe('ListItemEdit', () => {
   })
 
   test('Condition selection works correctly', async () => {
-    const dataValue = { data, save: jest.fn() }
+    customRenderForLists(<ListItemEdit />, { dataValue })
 
-    const { getByTestId, getAllByTestId } = customRenderForLists(
-      <ListItemEdit />,
-      {
-        dataValue
-      }
+    const $select = getByTestId('list-condition-select')
+    const $options: HTMLOptionElement[] = getAllByTestId(
+      'list-condition-option'
     )
-    const options: HTMLOptionElement[] = getAllByTestId('list-condition-option')
-    expect(options[0].selected).toBeTruthy()
-    expect(options[1].selected).toBeFalsy()
-    await fireEvent.change(getByTestId('list-condition-select'), {
-      target: { value: 'MYWwRN' }
-    })
 
-    expect(options[0].selected).toBeFalsy()
-    expect(options[1].selected).toBeTruthy()
-    expect(options[1].textContent).toBe('my condition')
+    expect($options[0].selected).toBeTruthy()
+    expect($options[1].selected).toBeFalsy()
+
+    await act(() => userEvent.selectOptions($select, 'MYWwRN'))
+
+    expect($options[0].selected).toBeFalsy()
+    expect($options[1].selected).toBeTruthy()
+    expect($options[1].textContent).toBe('my condition')
   })
 })

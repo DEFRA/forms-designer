@@ -1,12 +1,14 @@
 import React from 'react'
 import { type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import { type RenderResult, render } from '@testing-library/react'
+import { cleanup, render, type RenderResult } from '@testing-library/react'
 import SelectConditions from './SelectConditions'
 import { DataContext } from '../context'
 
 describe('SelectConditions', () => {
-  const { getByText, queryByText, getByTestId } = screen
+  afterEach(cleanup)
+
+  const { getByText, getByTestId, queryByText } = screen
 
   const data: FormDefinition = {
     lists: [],
@@ -21,12 +23,12 @@ describe('SelectConditions', () => {
   let props
 
   function customRender(
-    children: React.JSX.Element,
-    providerProps: DataContextProps = dataValue
+    element: React.JSX.Element,
+    providerProps = dataValue
   ): RenderResult {
     return render(
       <DataContext.Provider value={providerProps}>
-        {children}
+        {element}
         <div id="portal-root" />
       </DataContext.Provider>
     )
@@ -156,7 +158,9 @@ describe('SelectConditions', () => {
       (condition) => condition.displayName
     )
 
-    expect(queryByText('You cannot add any conditions as')).toBeNull()
+    expect(
+      queryByText('You cannot add any conditions as')
+    ).not.toBeInTheDocument()
     expect(getByTestId('select-conditions')).toBeInTheDocument()
 
     expectedConditions.forEach((condition) => {

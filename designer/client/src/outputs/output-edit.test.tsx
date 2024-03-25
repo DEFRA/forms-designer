@@ -1,11 +1,17 @@
 import React from 'react'
-import { render, fireEvent, waitFor } from '@testing-library/react'
+import { screen } from '@testing-library/dom'
+import { act, cleanup, render, waitFor } from '@testing-library/react'
+import { userEvent } from '@testing-library/user-event'
 import { RenderWithContextAndDataContext } from '../../../test/helpers/renderers'
 import { Data } from '@defra/forms-model'
 
 import OutputEdit from './output-edit'
 
 describe('OutputEdit', () => {
+  afterEach(cleanup)
+
+  const { getByText, getByLabelText } = screen
+
   let mockData: Data
   let mockSave: any
 
@@ -52,7 +58,7 @@ describe('OutputEdit', () => {
         }
       }
 
-      const { getByText, getByLabelText } = render(
+      render(
         <RenderWithContextAndDataContext
           mockData={mockData}
           mockSave={mockSave}
@@ -61,37 +67,38 @@ describe('OutputEdit', () => {
         </RenderWithContextAndDataContext>
       )
 
+      const $title = getByLabelText('Title')
+      const $name = getByLabelText('Name')
+      const $templateId = getByLabelText('Template ID')
+      const $apiKey = getByLabelText('API Key')
+      const $selectEmail = getByLabelText('Email field')
+      const $checkbox = getByText('Include webhook and payment references')
+      const $button = getByText('Save')
+
       // change title
-      await fireEvent.change(getByLabelText('Title'), {
-        target: { value: 'NewTitle' }
-      })
+      await act(() => userEvent.clear($title))
+      await act(() => userEvent.type($title, 'NewTitle'))
 
       // change name
-      await fireEvent.change(getByLabelText('Name'), {
-        target: { value: 'NewName' }
-      })
+      await act(() => userEvent.clear($name))
+      await act(() => userEvent.type($name, 'NewName'))
 
       // change templateId
-      await fireEvent.change(getByLabelText('Template ID'), {
-        target: { value: 'NewTemplateId' }
-      })
+      await act(() => userEvent.clear($templateId))
+      await act(() => userEvent.type($templateId, 'NewTemplateId'))
 
       // change apiKey
-      await fireEvent.change(getByLabelText('API Key'), {
-        target: { value: 'NewAPIKey' }
-      })
+      await act(() => userEvent.clear($apiKey))
+      await act(() => userEvent.type($apiKey, 'NewAPIKey'))
 
       // change email field
-      await fireEvent.change(getByLabelText('Email field'), {
-        target: { value: '9WH4EX' }
-      })
+      await act(() => userEvent.selectOptions($selectEmail, '9WH4EX'))
 
       // include references
-      await fireEvent.click(getByText('Include webhook and payment references'))
+      await act(() => userEvent.click($checkbox))
 
       // save
-      await fireEvent.click(getByText('Save'))
-
+      await act(() => userEvent.click($button))
       await waitFor(() => expect(mockSave).toHaveBeenCalledTimes(1))
 
       expect(mockSave.mock.calls[0][0].outputs).toEqual([

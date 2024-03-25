@@ -1,14 +1,19 @@
-import React from 'react'
 import { NewConfig } from './NewConfig'
-import { render, fireEvent, screen, waitFor } from '@testing-library/react'
-import { server, http, mockedFormHandlers } from '../../../../test/testServer'
+import { screen } from '@testing-library/dom'
+import { act, cleanup, render, waitFor } from '@testing-library/react'
+import { userEvent } from '@testing-library/user-event'
+import React from 'react'
 import { MemoryRouter } from 'react-router-dom'
+import { server, http, mockedFormHandlers } from '../../../../test/testServer'
 import type { FormConfiguration } from '@defra/forms-model'
 
 describe('Newconfig', () => {
   beforeAll(() => server.listen())
   beforeEach(() => server.resetHandlers(...mockedFormHandlers))
+  afterEach(cleanup)
   afterAll(() => server.close())
+
+  const { findAllByText, findByText, getByLabelText, getByText } = screen
 
   test('new configuration is submitted correctly', async () => {
     let postBodyMatched = false
@@ -30,17 +35,20 @@ describe('Newconfig', () => {
     const history = { push }
 
     render(<NewConfig history={history} />)
-    expect(
-      await screen.findByText(/Enter a name for your form/i)
-    ).toBeInTheDocument()
+    await waitFor(() =>
+      expect(
+        findByText(/Enter a name for your form/i)
+      ).resolves.toBeInTheDocument()
+    )
 
-    await fireEvent.change(screen.getByLabelText('Title'), {
-      target: { value: 'Test Form A' }
-    })
-    await fireEvent.click(screen.getByText('Next'))
-    await waitFor(() => expect(push).toHaveBeenCalledTimes(1))
-    expect(push).toHaveBeenCalledWith('designer/somekey')
+    const $input = getByLabelText('Title')
+    const $button = getByText('Next')
 
+    await act(() => userEvent.clear($input))
+    await act(() => userEvent.type($input, 'Test Form A'))
+    await act(() => userEvent.click($button))
+
+    await waitFor(() => expect(push).toHaveBeenCalledWith('designer/somekey'))
     expect(postBodyMatched).toBe(true)
   })
 
@@ -56,31 +64,51 @@ describe('Newconfig', () => {
     )
     render(<NewConfig />, { wrapper: MemoryRouter })
 
-    expect(
-      await screen.findByText(/Enter a name for your form/i)
-    ).toBeInTheDocument()
+    await waitFor(() =>
+      expect(
+        findByText(/Enter a name for your form/i)
+      ).resolves.toBeInTheDocument()
+    )
 
-    await fireEvent.change(screen.getByLabelText('Title'), {
-      target: { value: 'My feedback form' }
-    })
-    await fireEvent.click(screen.getByText('Next'))
+    const $input = getByLabelText('Title')
+    const $button = getByText('Next')
+
+    await act(() => userEvent.clear($input))
+    await act(() => userEvent.type($input, 'My feedback form'))
+    await act(() => userEvent.click($button))
+
     expect(apiCalled).toBeFalsy()
-    expect(await screen.findByText(/There is a problem/i)).toBeInTheDocument()
-    expect(
-      await screen.findAllByText(/A form with this name already exists/i)
-    ).toHaveLength(2)
+
+    await waitFor(() =>
+      expect(findByText(/There is a problem/i)).resolves.toBeInTheDocument()
+    )
+
+    await waitFor(() =>
+      expect(
+        findAllByText(/A form with this name already exists/i)
+      ).resolves.toHaveLength(2)
+    )
   })
 
   test('Enter form name error shown correctly', async () => {
     render(<NewConfig />, { wrapper: MemoryRouter })
 
-    expect(
-      await screen.findByText(/Enter a name for your form/i)
-    ).toBeInTheDocument()
+    await waitFor(() =>
+      expect(
+        findByText(/Enter a name for your form/i)
+      ).resolves.toBeInTheDocument()
+    )
 
-    await fireEvent.click(screen.getByText('Next'))
-    expect(await screen.findByText(/There is a problem/i)).toBeInTheDocument()
-    expect(await screen.findAllByText(/Enter form name/i)).toHaveLength(2)
+    const $button = getByText('Next')
+    await act(() => userEvent.click($button))
+
+    await waitFor(() =>
+      expect(findByText(/There is a problem/i)).resolves.toBeInTheDocument()
+    )
+
+    await waitFor(() =>
+      expect(findAllByText(/Enter form name/i)).resolves.toHaveLength(2)
+    )
   })
 
   test('Form name with special characters results in error', async () => {
@@ -95,20 +123,29 @@ describe('Newconfig', () => {
     )
     render(<NewConfig />, { wrapper: MemoryRouter })
 
-    expect(
-      await screen.findByText(/Enter a name for your form/i)
-    ).toBeInTheDocument()
+    await waitFor(() =>
+      expect(
+        findByText(/Enter a name for your form/i)
+      ).resolves.toBeInTheDocument()
+    )
 
-    await fireEvent.change(screen.getByLabelText('Title'), {
-      target: { value: 'Visa & Form' }
-    })
-    await fireEvent.click(screen.getByText('Next'))
+    const $input = getByLabelText('Title')
+    const $button = getByText('Next')
+
+    await act(() => userEvent.clear($input))
+    await act(() => userEvent.type($input, 'Visa & Form'))
+    await act(() => userEvent.click($button))
+
     expect(apiCalled).toBeFalsy()
-    expect(await screen.findByText(/There is a problem/i)).toBeInTheDocument()
-    expect(
-      await screen.findAllByText(
-        /Form name should not contain special characters/i
-      )
-    ).toHaveLength(2)
+
+    await waitFor(() =>
+      expect(findByText(/There is a problem/i)).resolves.toBeInTheDocument()
+    )
+
+    await waitFor(() =>
+      expect(
+        findAllByText(/Form name should not contain special characters/i)
+      ).resolves.toHaveLength(2)
+    )
   })
 })

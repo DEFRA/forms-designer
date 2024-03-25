@@ -1,5 +1,6 @@
 import React from 'react'
-import { render, screen } from '@testing-library/react'
+import { screen } from '@testing-library/dom'
+import { act, cleanup, render, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 
 import { ComponentCreate } from './ComponentCreate'
@@ -10,6 +11,15 @@ import * as Data from '../../data'
 import { addComponent } from '../../data'
 
 describe('ComponentCreate:', () => {
+  const {
+    findByLabelText,
+    getByText,
+    queryByLabelText,
+    queryByRole,
+    queryByTestId,
+    queryByText
+  } = screen
+
   const data = {
     pages: [{ path: '/1', title: '', controller: '', section: '' }],
     lists: [],
@@ -33,54 +43,56 @@ describe('ComponentCreate:', () => {
     )
   }
 
+  afterEach(cleanup)
+
   test('Selecting a component type should display the component edit form', async () => {
     // - when
-    const { getByText } = render(
+    render(
       <WrappingComponent componentValue={false}>
         <ComponentCreate page={page} />
       </WrappingComponent>
     )
 
-    expect(screen.queryByLabelText('Title')).toBeNull()
-    await userEvent.click(getByText('Details'))
+    expect(queryByLabelText('Title')).not.toBeInTheDocument()
+    await act(() => userEvent.click(getByText('Details')))
 
     // - then
-    const editForm = await screen.findByLabelText('Title')
-    expect(editForm).toBeInTheDocument()
+    const $input = await waitFor(() => findByLabelText('Title'))
+    expect($input).toBeInTheDocument()
   })
 
   test('Should store the populated component and call callback on submit', async () => {
     // - when
     const spy = jest.fn()
-    const { container, getByText } = render(
+    const { container } = render(
       <WrappingComponent dataValue={{ data, save: spy }} componentValue={false}>
         <ComponentCreate page={page} />
       </WrappingComponent>
     )
 
-    await userEvent.click(getByText('Details'))
+    await act(() => userEvent.click(getByText('Details')))
 
-    const titleInput = await screen.findByLabelText('Title')!
-    const contentTextArea = container.querySelector('#field-content')!
-    const saveBtn = container.querySelector('button')!
+    const $input = await waitFor(() => findByLabelText('Title'))
+    const $textarea = container.querySelector('#field-content')!
+    const $button = container.querySelector('button')!
 
-    await userEvent.type(titleInput, 'Details')
-    await userEvent.type(contentTextArea, 'content')
-    await userEvent.click(saveBtn)
+    await act(() => userEvent.type($input, 'Details'))
+    await act(() => userEvent.type($textarea, 'content'))
+    await act(() => userEvent.click($button))
 
     // - then
-    const updatedData = spy.mock.calls[0][0]
-
-    const newDetailsComp = updatedData.pages[0]
+    await waitFor(() => expect(spy).toHaveBeenCalled())
+    const newDetailsComp = spy.mock.calls[0][0].pages[0]
       .components?.[0] as DetailsComponent
-    expect(newDetailsComp.type).toEqual('Details')
-    expect(newDetailsComp.title).toEqual('Details')
-    expect(newDetailsComp.content).toEqual('content')
+
+    expect(newDetailsComp.type).toBe('Details')
+    expect(newDetailsComp.title).toBe('Details')
+    expect(newDetailsComp.content).toBe('content')
   })
 
   test("Should have functioning 'Back to create component list' link", async () => {
     // - when
-    const { queryByTestId, queryByText } = render(
+    render(
       <WrappingComponent componentValue={false}>
         <ComponentCreate page={page} />
       </WrappingComponent>
@@ -89,31 +101,31 @@ describe('ComponentCreate:', () => {
 
     expect(queryByTestId('component-create-list')).toBeInTheDocument()
 
-    await userEvent.click(queryByText('Details')!)
+    await act(() => userEvent.click(queryByText('Details')!))
 
     // - then
-    expect(queryByTestId('component-create-list')).toBeNull()
+    expect(queryByTestId('component-create-list')).not.toBeInTheDocument()
     expect(queryByText(backBtnTxt)).toBeInTheDocument()
 
-    await userEvent.click(queryByText(backBtnTxt)!)
+    await act(() => userEvent.click(queryByText(backBtnTxt)!))
 
     expect(queryByTestId('component-create-list')).toBeInTheDocument()
-    expect(queryByText(backBtnTxt)).toBeNull()
+    expect(queryByText(backBtnTxt)).not.toBeInTheDocument()
   })
 
   test('Should display ErrorSummary when validation fails', async () => {
     // - when
-    const { container, getByText, queryByRole } = render(
+    const { container } = render(
       <WrappingComponent componentValue={false}>
         <ComponentCreate page={page} />
       </WrappingComponent>
     )
 
-    expect(queryByRole('alert')).toBeNull()
+    expect(queryByRole('alert')).not.toBeInTheDocument()
 
-    await userEvent.click(getByText('Details')!)
-    await screen.findByLabelText('Title')
-    await userEvent.click(container.querySelector('button')!)
+    await act(() => userEvent.click(getByText('Details')!))
+    await waitFor(() => findByLabelText('Title'))
+    await act(() => userEvent.click(container.querySelector('button')!))
 
     // - then
     expect(queryByRole('alert')).toBeInTheDocument()

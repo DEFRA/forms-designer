@@ -1,6 +1,7 @@
-import { customRenderForLists } from '../../../test/helpers/renderers-lists'
 import { Data } from '@defra/forms-model'
+import { screen } from '@testing-library/dom'
 import React from 'react'
+import { customRenderForLists } from '../../../test/helpers/renderers-lists'
 import { Warning } from './Warning'
 
 const data = {
@@ -19,13 +20,13 @@ const data = {
   ]
 }
 
-describe('Warning', () => {
-  test('strings are rendered correctly', async () => {
-    const dataValue = { data, save: jest.fn() }
+const dataValue = { data, save: jest.fn() }
 
-    const { getByText } = customRenderForLists(<Warning />, {
-      dataValue
-    })
+describe('Warning', () => {
+  const { getByText } = screen
+
+  test('strings are rendered correctly', async () => {
+    customRenderForLists(<Warning />, { dataValue })
 
     expect(getByText('Delete list')).toBeInTheDocument()
     expect(

@@ -1,9 +1,13 @@
+import { screen } from '@testing-library/dom'
+import { act, render, cleanup, waitFor } from '@testing-library/react'
+import { userEvent } from '@testing-library/user-event'
 import React from 'react'
 import { LandingChoice } from './Choice'
-import { render, cleanup, fireEvent, screen } from '@testing-library/react'
 
 describe('LandingChoice', () => {
   afterEach(cleanup)
+
+  const { getByLabelText, getByTitle } = screen
 
   it('snapshot matches', () => {
     const push = jest.fn()
@@ -16,16 +20,16 @@ describe('LandingChoice', () => {
     const push = jest.fn()
     const history = { push }
     render(<LandingChoice history={history} />)
-    await fireEvent.click(screen.getByTitle('Next'))
-    expect(push).toHaveBeenCalledWith('/new')
+    await act(() => userEvent.click(getByTitle('Next')))
+    await waitFor(() => expect(push).toHaveBeenCalledWith('/new'))
   })
 
   it("should push /choose-existing to history if 'Open an existing form' is selected", async () => {
     const push = jest.fn()
     const history = { push }
     render(<LandingChoice history={history} />)
-    await fireEvent.click(screen.getByLabelText('Open an existing form'))
-    await fireEvent.click(screen.getByTitle('Next'))
-    expect(push).toHaveBeenCalledWith('/choose-existing')
+    await act(() => userEvent.click(getByLabelText('Open an existing form')))
+    await act(() => userEvent.click(getByTitle('Next')))
+    await waitFor(() => expect(push).toHaveBeenCalledWith('/choose-existing'))
   })
 })
