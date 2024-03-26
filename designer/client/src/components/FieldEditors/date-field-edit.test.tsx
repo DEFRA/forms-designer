@@ -2,7 +2,7 @@ import React from 'react'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
 import { DateFieldEdit } from './date-field-edit'
-import { RenderWithContext } from '../../../../test/helpers/renderers'
+import { RenderWithContext } from '../../../test/helpers/renderers'
 
 describe('date field edit', () => {
   afterEach(cleanup)

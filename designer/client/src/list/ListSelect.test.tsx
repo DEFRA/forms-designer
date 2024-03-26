@@ -1,6 +1,6 @@
 import { Data } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import { customRenderForLists } from '../../../test/helpers/renderers-lists'
+import { customRenderForLists } from '../../test/helpers/renderers-lists'
 
 import React from 'react'
 import { ListSelect } from './ListSelect'

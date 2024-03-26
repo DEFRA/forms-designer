@@ -2,7 +2,7 @@ import { screen } from '@testing-library/dom'
 import { act } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React from 'react'
-import { customRenderForLists } from '../../../test/helpers/renderers-lists'
+import { customRenderForLists } from '../../test/helpers/renderers-lists'
 import { ListItemEdit } from './ListItemEdit'
 
 const data = {
