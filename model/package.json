@@ -11,14 +11,12 @@
   "license": "OGL-UK-3.0",
   "main": "dist/module/index.js",
   "browser": "dist/browser/index.js",
-  "types": "dist/module/index.d.ts",
+  "types": "dist/types/index.d.ts",
   "scripts": {
     "build": "npm run build:types && npm run build:node && npm run build:browser",
     "build:browser": "BABEL_ENV=javascripts babel --extensions \".ts\" --ignore \"**/*.test.*\" src --out-dir dist/browser",
     "build:node": "BABEL_ENV=node babel --extensions \".ts\" --ignore \"**/*.test.*\" src --out-dir dist/module",
-    "build:types": "npm run build:types:node && npm run build:types:browser",
-    "build:types:browser": "tsc --emitDeclarationOnly --declarationDir dist/browser ",
-    "build:types:node": "tsc --emitDeclarationOnly --declarationDir ./dist/module ",
+    "build:types": "tsc --build --force tsconfig.build.json",
     "test": "jest --color --coverage --verbose",
     "test:watch": "jest --color --watch"
   },
