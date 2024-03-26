@@ -56,8 +56,11 @@
     "@types/hapi": "^18.0.14",
     "@types/jest": "^27.5.2",
     "@types/node": "^20.11.22",
+    "@types/node-fetch": "^2.6.11",
+    "@types/nunjucks": "^3.2.6",
     "@types/react": "^17.0.76",
-    "@types/react-dom": "^17.0.25"
+    "@types/react-dom": "^17.0.25",
+    "@types/resolve": "^1.20.6"
   },
   "engines": {
     "node": "^20.9.0",
