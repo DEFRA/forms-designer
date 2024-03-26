@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw'
 import { FeatureToggleApi } from './toggleApi'
-import { server, mockedFormHandlers } from '../../../test/testServer'
+import { server, mockedFormHandlers } from '../../test/testServer'
 
 describe('Toggle API', () => {
   const url = '/forms-designer/feature-toggles'
