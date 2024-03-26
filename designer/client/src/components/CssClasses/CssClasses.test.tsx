@@ -2,7 +2,7 @@ import React from 'react'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
 import { CssClasses } from './CssClasses'
-import { RenderWithContext } from '../../../../test/helpers/renderers'
+import { RenderWithContext } from '../../../test/helpers/renderers'
 
 describe('CssClasses', () => {
   afterEach(cleanup)

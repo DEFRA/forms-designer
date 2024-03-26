@@ -2,7 +2,7 @@ import React from 'react'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
 import { FieldEdit } from './field-edit'
-import { RenderWithContextAndDataContext } from '../../test/helpers/renderers'
+import { RenderWithContextAndDataContext } from '../test/helpers/renderers'
 
 describe('Field edit', () => {
   const { getByText } = screen

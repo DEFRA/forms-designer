@@ -14,7 +14,7 @@ import {
   server,
   mockedFormConfigurations,
   mockedFormHandlers
-} from '../../../../test/testServer'
+} from '../../../test/testServer'
 import { DataContext } from '../../context'
 
 describe('FormDetails', () => {

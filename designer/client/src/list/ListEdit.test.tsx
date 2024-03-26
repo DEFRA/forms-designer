@@ -1,4 +1,4 @@
-import { customRenderForLists } from '../../../test/helpers/renderers-lists'
+import { customRenderForLists } from '../../test/helpers/renderers-lists'
 import { Data } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import React from 'react'
