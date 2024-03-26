@@ -1,12 +1,12 @@
 const { dirname, join, resolve } = require('node:path')
 
-const { EnvironmentPlugin } = require('webpack')
+const CopyPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const CopyPlugin = require('copy-webpack-plugin')
-const nodeExternals = require('webpack-node-externals')
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
+const { EnvironmentPlugin } = require('webpack')
 const WebpackAssetsManifest = require('webpack-assets-manifest')
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
+const nodeExternals = require('webpack-node-externals')
 
 const { NODE_ENV = 'development', REACT_LOG_LEVEL } = process.env
 

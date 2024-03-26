@@ -2,6 +2,7 @@ import authCookie from '@hapi/cookie'
 import { isPast, parseISO, subMinutes } from 'date-fns'
 
 import config from '../../../config'
+
 import { refreshAccessToken } from './refresh-token'
 import { removeUserSession, updateUserSession } from './user-session'
 

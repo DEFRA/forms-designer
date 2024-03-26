@@ -1,5 +1,6 @@
-import React, { FC } from 'react'
 import classNames from 'classnames'
+import React, { type FC } from 'react'
+
 import { i18n } from '../../i18n'
 
 interface Props {

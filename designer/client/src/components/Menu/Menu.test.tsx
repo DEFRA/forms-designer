@@ -1,6 +1,4 @@
-import { Menu } from '.'
 import { screen } from '@testing-library/dom'
-import { userEvent } from '@testing-library/user-event'
 import {
   act,
   cleanup,
@@ -8,8 +6,12 @@ import {
   type RenderResult,
   waitFor
 } from '@testing-library/react'
-import { DataContext, FlyoutContext } from '../../context'
+import { userEvent } from '@testing-library/user-event'
 import React from 'react'
+
+import { DataContext, FlyoutContext } from '../../context'
+
+import { Menu } from '.'
 
 describe('Menu', () => {
   const { getByText, getByTestId, queryByTestId } = screen

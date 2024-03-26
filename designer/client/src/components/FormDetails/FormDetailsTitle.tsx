@@ -1,5 +1,6 @@
-import React, { ChangeEvent } from 'react'
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
+import React, { type ChangeEvent } from 'react'
+
 import { i18n } from '../../i18n'
 
 interface Props {

@@ -1,14 +1,15 @@
-import React from 'react'
+import { type DetailsComponent, type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { act, cleanup, render, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
+import React from 'react'
 
-import { ComponentCreate } from './ComponentCreate'
-import { ComponentContextProvider } from '../../reducers/component'
 import { DataContext } from '../../context'
-import { DetailsComponent, FormDefinition } from '@defra/forms-model'
 import * as Data from '../../data'
 import { addComponent } from '../../data'
+import { ComponentContextProvider } from '../../reducers/component'
+
+import { ComponentCreate } from './ComponentCreate'
 
 describe('ComponentCreate:', () => {
   const {

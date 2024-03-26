@@ -1,10 +1,11 @@
-import React from 'react'
-import { FormDefinition } from '@defra/forms-model'
+import { type FormDefinition } from '@defra/forms-model'
 import { screen, within } from '@testing-library/dom'
 import { act, cleanup, render, type RenderResult } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import LinkCreate from './link-create'
+import React from 'react'
+
 import { DataContext } from './context'
+import LinkCreate from './link-create'
 
 const data: FormDefinition = {
   pages: [

@@ -1,4 +1,4 @@
-import { FormDefinition, Page } from '@defra/forms-model'
+import { type FormDefinition, type Page } from '@defra/forms-model'
 
 export function addPage(data: FormDefinition, page: Page): FormDefinition {
   const index = data.pages.findIndex((pg) => pg.path === page.path)

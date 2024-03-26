@@ -1,6 +1,7 @@
-import config from '../../config'
-import { ServerRoute } from '@hapi/hapi'
+import { type ServerRoute } from '@hapi/hapi'
 import JSZip from 'jszip'
+
+import config from '../../config'
 
 export const getApp: ServerRoute = {
   method: 'get',

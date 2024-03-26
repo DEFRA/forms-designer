@@ -1,11 +1,11 @@
 import {
-  ComponentDef,
-  ConditionRawData,
-  ContentComponentsDef,
-  FormDefinition,
-  InputFieldsComponentsDef,
-  ListComponentsDef,
-  Page
+  type ComponentDef,
+  type ConditionRawData,
+  type ContentComponentsDef,
+  type FormDefinition,
+  type InputFieldsComponentsDef,
+  type ListComponentsDef,
+  type Page
 } from '@defra/forms-model'
 
 export const isNotContentType = (

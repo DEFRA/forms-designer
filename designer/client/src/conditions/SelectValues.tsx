@@ -1,5 +1,5 @@
-import React from 'react'
 import { ConditionValue } from '@defra/forms-model'
+import React from 'react'
 
 export const SelectValues = (props) => {
   const { fieldDef, updateValue, value } = props

@@ -1,4 +1,4 @@
-import { ConditionData } from './SelectConditions'
+import { type ConditionData } from './SelectConditions'
 
 export const isObjectCondition = (condition: ConditionData) => {
   return typeof condition.value !== 'string'

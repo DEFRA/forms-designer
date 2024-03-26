@@ -1,8 +1,10 @@
-import React from 'react'
-import { AbsoluteDateValues, YearMonthDay } from './AbsoluteDateValues'
-import { AbsoluteTimeValues, HourMinute } from './AbsoluteTimeValues'
 import isValid from 'date-fns/isValid'
+import React from 'react'
+
 import { i18n } from '../i18n'
+
+import { AbsoluteDateValues, type YearMonthDay } from './AbsoluteDateValues'
+import { AbsoluteTimeValues, type HourMinute } from './AbsoluteTimeValues'
 import { isInt } from './inline-condition-helpers'
 
 interface Props {

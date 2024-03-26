@@ -1,4 +1,4 @@
-import { Condition } from '../conditions/condition'
+import { type Condition } from '../conditions/condition'
 import { ConditionsModel } from '../conditions/condition-model'
 
 export type ConditionWrapperValue =

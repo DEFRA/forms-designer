@@ -9,6 +9,7 @@ import {
   RelativeTimeValue,
   ConditionValue
 } from '..'
+
 import { ConditionRef } from '.'
 
 describe('inline condition model', () => {

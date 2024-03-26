@@ -1,12 +1,13 @@
 import { join, resolve } from 'node:path'
 import { cwd } from 'node:process'
 
-import { healthCheckRoute } from './routes'
+import { auth } from '../auth'
+import config from '../config'
+import { home } from '../home'
 import { login } from '../login'
 import { logout } from '../logout'
-import { auth } from '../auth'
-import { home } from '../home'
-import config from '../config'
+
+import { healthCheckRoute } from './routes'
 
 const distPath = config.isDevelopment
   ? resolve(cwd(), '../dist') // npm run dev

@@ -1,16 +1,18 @@
-import React, { ChangeEvent } from 'react'
-import InlineConditions from './InlineConditions'
-import { Condition, ConditionsModel, Data } from '@defra/forms-model'
-import { Flyout } from '../components/Flyout'
+import { type Condition, ConditionsModel, type Data } from '@defra/forms-model'
 import { Hint, Select } from '@xgovformbuilder/govuk-react-jsx'
-import { i18n } from '../i18n'
-import { DataContext } from '../context'
+import React, { type ChangeEvent } from 'react'
+
+import { Flyout } from '../components/Flyout'
 import { RenderInPortal } from '../components/RenderInPortal'
+import { DataContext } from '../context'
 import {
   allInputs,
   inputsAccessibleAt,
   hasConditions as dataHasConditions
 } from '../data'
+import { i18n } from '../i18n'
+
+import InlineConditions from './InlineConditions'
 import {
   isDuplicateCondition,
   hasConditionName,

@@ -1,8 +1,3 @@
-import { screen } from '@testing-library/dom'
-import { act, cleanup, render, waitFor } from '@testing-library/react'
-import { userEvent } from '@testing-library/user-event'
-import React from 'react'
-import { InlineConditionsDefinitionValue } from './InlineConditionsDefinitionValue'
 import {
   ConditionValue,
   dateTimeUnits,
@@ -10,6 +5,12 @@ import {
   relativeDateOrTimeOperatorNames,
   timeUnits
 } from '@defra/forms-model'
+import { screen } from '@testing-library/dom'
+import { act, cleanup, render, waitFor } from '@testing-library/react'
+import { userEvent } from '@testing-library/user-event'
+import React from 'react'
+
+import { InlineConditionsDefinitionValue } from './InlineConditionsDefinitionValue'
 
 describe.skip('InlineConditionsDefinitionValue', () => {
   afterEach(cleanup)

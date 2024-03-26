@@ -1,6 +1,12 @@
-import { Request, ResponseObject, ResponseToolkit, Server } from '@hapi/hapi'
-import { PersistenceService } from './lib/persistence/persistenceService'
-import { Logger } from 'pino'
+import {
+  type Request,
+  type ResponseObject,
+  type ResponseToolkit,
+  type Server
+} from '@hapi/hapi'
+import { type Logger } from 'pino'
+
+import { type PersistenceService } from './lib/persistence/persistenceService'
 
 type Services = (services: string[]) => {
   persistenceService: PersistenceService

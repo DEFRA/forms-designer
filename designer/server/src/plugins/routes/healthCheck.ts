@@ -1,4 +1,5 @@
-import { ServerRoute } from '@hapi/hapi'
+import { type ServerRoute } from '@hapi/hapi'
+
 import config from '../../config'
 
 export const healthCheckRoute: ServerRoute = {

@@ -1,7 +1,7 @@
-import { S3PersistenceService } from './s3PersistenceService'
 import { BlobPersistenceService } from './blobPersistenceService'
 import { StubPersistenceService } from './persistenceService'
 import { PreviewPersistenceService } from './previewPersistenceService'
+import { S3PersistenceService } from './s3PersistenceService'
 
 type Name = 's3' | 'blob' | 'preview'
 

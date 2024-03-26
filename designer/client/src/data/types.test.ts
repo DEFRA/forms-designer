@@ -1,7 +1,8 @@
 import {
-  ContentComponentsDef,
-  InputFieldsComponentsDef
+  type ContentComponentsDef,
+  type InputFieldsComponentsDef
 } from '@defra/forms-model'
+
 import { isNotContentType } from './types'
 test('isNotContentType type guard catches content types', () => {
   const contentBase: ContentComponentsDef = {

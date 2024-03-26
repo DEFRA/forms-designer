@@ -1,6 +1,7 @@
 import IoRedis from 'ioredis'
 
 import config from '../../config'
+
 import { createLogger } from './logging/logger'
 
 /**

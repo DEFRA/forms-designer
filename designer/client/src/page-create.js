@@ -1,19 +1,19 @@
-import React from 'react'
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
+import React from 'react'
 
-import SelectConditions from './conditions/SelectConditions'
-import { toUrl } from './helpers'
-import { RenderInPortal } from './components/RenderInPortal'
 import { Flyout } from './components/Flyout'
-import SectionEdit from './section/section-edit'
-import { i18n, withI18n } from './i18n'
-import ErrorSummary from './error-summary'
-import { validateTitle, hasValidationErrors } from './validations'
+import { RenderInPortal } from './components/RenderInPortal'
+import SelectConditions from './conditions/SelectConditions'
 import { DataContext } from './context'
 import { addLink } from './data'
 import { addPage } from './data/page/addPage'
-import randomId from './randomId'
+import ErrorSummary from './error-summary'
+import { toUrl } from './helpers'
+import { i18n, withI18n } from './i18n'
 import logger from './plugins/logger'
+import randomId from './randomId'
+import SectionEdit from './section/section-edit'
+import { validateTitle, hasValidationErrors } from './validations'
 
 class PageCreate extends React.Component {
   static contextType = DataContext

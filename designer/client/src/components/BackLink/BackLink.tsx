@@ -1,4 +1,4 @@
-import React, { ReactNode, MouseEvent } from 'react'
+import React, { type ReactNode, type MouseEvent } from 'react'
 
 import './BackLink.scss'
 

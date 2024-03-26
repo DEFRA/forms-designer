@@ -1,9 +1,10 @@
 import React, { useContext } from 'react'
+
+import { i18n } from '../../i18n'
 import { ComponentContext } from '../../reducers/component/componentReducer'
 import { Actions } from '../../reducers/component/types'
-import { CssClasses } from '../CssClasses'
-import { i18n } from '../../i18n'
 import { Autocomplete } from '../Autocomplete'
+import { CssClasses } from '../CssClasses'
 import { CustomValidationMessage } from '../CustomValidationMessage'
 
 type Props = {

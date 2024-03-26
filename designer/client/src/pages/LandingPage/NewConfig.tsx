@@ -1,11 +1,14 @@
-import React, { Component, MouseEvent } from 'react'
-import * as formConfigurationApi from '../../load-form-configurations'
+import React, { Component, type MouseEvent } from 'react'
 import { withRouter } from 'react-router-dom'
+
 import { BackLink } from '../../components/BackLink'
 import { i18n } from '../../i18n'
+import * as formConfigurationApi from '../../load-form-configurations'
 import './LandingPage.scss'
 import { isEmpty } from '../../helpers'
+
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
+
 import ErrorSummary from '../../error-summary'
 
 type Props = {

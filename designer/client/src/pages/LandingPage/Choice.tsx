@@ -1,7 +1,8 @@
-import React, { ReactElement, useState } from 'react'
-import { i18n } from '../../i18n'
-import { withRouter } from 'react-router-dom'
 import { Radios } from '@xgovformbuilder/govuk-react-jsx'
+import React, { type ReactElement, useState } from 'react'
+import { withRouter } from 'react-router-dom'
+
+import { i18n } from '../../i18n'
 import './LandingPage.scss'
 
 interface Props {

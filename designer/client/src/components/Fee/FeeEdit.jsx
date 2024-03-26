@@ -1,11 +1,12 @@
-import { FeeItems } from './FeeItems'
-import React from 'react'
 import { clone } from '@defra/forms-model'
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
+import React from 'react'
 
-import ErrorSummary from './../../error-summary'
 import { DataContext } from '../../context'
 import logger from '../../plugins/logger'
+
+import ErrorSummary from './../../error-summary'
+import { FeeItems } from './FeeItems'
 export class FeeEdit extends React.Component {
   static contextType = DataContext
 

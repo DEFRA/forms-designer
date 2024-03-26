@@ -1,8 +1,9 @@
-import * as React from 'react'
-import i18next, { InitOptions, TOptions } from 'i18next'
+import i18next, { type InitOptions, type TOptions } from 'i18next'
 import Backend from 'i18next-http-backend'
-import enCommonTranslations from './translations/en.translation.json'
 import upperFirst from 'lodash/upperFirst'
+import * as React from 'react'
+
+import enCommonTranslations from './translations/en.translation.json'
 
 const interpolationFormats = {
   capitalise: (value) => upperFirst(value)

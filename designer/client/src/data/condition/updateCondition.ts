@@ -1,4 +1,4 @@
-import { ConditionRawData, FormDefinition } from '@defra/forms-model'
+import { type ConditionRawData, type FormDefinition } from '@defra/forms-model'
 
 /**
  * @param data

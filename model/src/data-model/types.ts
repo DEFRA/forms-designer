@@ -1,6 +1,8 @@
-import { ConditionRawData } from '.'
-import { ComponentDef } from '../components/types'
-import { OutputType } from './enums'
+import { type ComponentDef } from '../components/types'
+
+import { type OutputType } from './enums'
+
+import { type ConditionRawData } from '.'
 
 type Toggleable<T> = boolean | T
 

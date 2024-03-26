@@ -1,4 +1,5 @@
-import { FormDefinition } from '@defra/forms-model'
+import { type FormDefinition } from '@defra/forms-model'
+
 import { hasConditions } from './hasConditions'
 
 test('hasCondition returns true when there are conditions', () => {

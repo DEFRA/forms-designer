@@ -1,6 +1,6 @@
-import React, { MouseEvent, useCallback } from 'react'
-import { ComponentTypes, ComponentDef } from '@defra/forms-model'
+import { ComponentTypes, type ComponentDef } from '@defra/forms-model'
 import sortBy from 'lodash/sortBy'
+import React, { type MouseEvent, useCallback } from 'react'
 
 import { i18n } from '../../i18n'
 

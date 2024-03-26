@@ -1,5 +1,6 @@
-import { FormDefinition, Page } from '@defra/forms-model'
-import { Found, Path } from '..'
+import { type FormDefinition, type Page } from '@defra/forms-model'
+
+import { type Found, type Path } from '..'
 
 /**
  * @returns returns a tuple of [Page, number]

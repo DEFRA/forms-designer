@@ -1,7 +1,9 @@
+import { envStore, flagg } from 'flagg'
+
 import pkg from '../../../package.json'
 import config from '../config'
+
 import { newConfig, api, app } from './routes'
-import { envStore, flagg } from 'flagg'
 
 export const designerPlugin = {
   plugin: {

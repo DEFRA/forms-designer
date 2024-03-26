@@ -1,21 +1,20 @@
-import React from 'react'
-import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import { clone } from '@defra/forms-model'
-import randomId from './randomId'
-
-import { toUrl } from './helpers'
-import { RenderInPortal } from './components/RenderInPortal'
-import SectionEdit from './section/section-edit'
-import { Flyout } from './components/Flyout'
-import { withI18n } from './i18n'
-import ErrorSummary from './error-summary'
-import { validateTitle, hasValidationErrors } from './validations'
-import { DataContext } from './context'
+import { Input } from '@xgovformbuilder/govuk-react-jsx'
+import React from 'react'
 
 import FeatureToggle from './FeatureToggle'
+import { Flyout } from './components/Flyout'
+import { RenderInPortal } from './components/RenderInPortal'
+import { DataContext } from './context'
 import { FeatureFlags } from './context/FeatureFlagContext'
 import { findPage, updateLinksTo } from './data'
+import ErrorSummary from './error-summary'
+import { toUrl } from './helpers'
+import { withI18n } from './i18n'
 import logger from './plugins/logger'
+import randomId from './randomId'
+import SectionEdit from './section/section-edit'
+import { validateTitle, hasValidationErrors } from './validations'
 
 export class PageEdit extends React.Component {
   static contextType = DataContext

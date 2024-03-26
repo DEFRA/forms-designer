@@ -1,9 +1,10 @@
-import React from 'react'
+import { type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { act, cleanup, render, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
+import React from 'react'
+
 import { RenderWithContextAndDataContext } from '../../test/helpers/renderers'
-import { FormDefinition } from '@defra/forms-model'
 
 import OutputEdit from './output-edit'
 

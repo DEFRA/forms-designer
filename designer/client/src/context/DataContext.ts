@@ -1,5 +1,5 @@
+import { type FormDefinition } from '@defra/forms-model'
 import { createContext } from 'react'
-import { FormDefinition } from '@defra/forms-model'
 
 export const DataContext = createContext<{
   data: FormDefinition

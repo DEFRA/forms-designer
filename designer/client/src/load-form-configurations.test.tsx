@@ -1,6 +1,8 @@
 import { http } from 'msw'
-import * as formConfigurationsApi from './load-form-configurations'
+
 import { server, mockedFormHandlers } from '../test/testServer'
+
+import * as formConfigurationsApi from './load-form-configurations'
 
 describe('Load form configurations', () => {
   beforeAll(() => server.listen())

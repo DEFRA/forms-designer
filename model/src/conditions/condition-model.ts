@@ -1,12 +1,12 @@
-import { ConditionField } from './condition-field'
-import { ConditionGroupDef } from './condition-group-def'
 import { Condition } from './condition'
-import { ConditionRef } from './condition-ref'
+import { ConditionField } from './condition-field'
 import { ConditionGroup } from './condition-group'
+import { ConditionGroupDef } from './condition-group-def'
+import { ConditionRef } from './condition-ref'
 import { conditionValueFrom } from './condition-values'
 import { Coordinator } from './enums'
 import { toPresentationString, toExpression } from './helpers'
-import { ConditionsArray } from './types'
+import { type ConditionsArray } from './types'
 
 type ConditionRawObject =
   | ConditionsModel

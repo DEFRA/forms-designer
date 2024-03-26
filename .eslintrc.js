@@ -28,8 +28,21 @@ module.exports = {
             allowComputed: true
           }
         ],
+        'import/order': [
+          'error',
+          {
+            alphabetize: { order: 'asc' },
+            'newlines-between': 'always'
+          }
+        ],
         'no-unused-vars': 'off',
         'no-use-before-define': 'off',
+        '@typescript-eslint/consistent-type-imports': [
+          'error',
+          {
+            fixStyle: 'inline-type-imports'
+          }
+        ],
         '@typescript-eslint/no-explicit-any': 'off',
         '@typescript-eslint/no-unused-vars': ['error'],
         '@typescript-eslint/no-use-before-define': ['error', 'nofunc']
@@ -81,7 +94,9 @@ module.exports = {
       ],
       env: {
         jest: true
-      }
+      },
+      extends: ['plugin:jest/style'],
+      plugins: ['jest']
     }
   ],
   root: true

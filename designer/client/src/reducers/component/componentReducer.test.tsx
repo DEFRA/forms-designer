@@ -1,5 +1,6 @@
 import { componentReducer, getSubReducer } from './componentReducer'
 import { Actions } from './types'
+
 import {
   metaReducer,
   optionsReducer,

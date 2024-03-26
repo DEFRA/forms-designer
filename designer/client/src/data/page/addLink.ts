@@ -1,5 +1,7 @@
-import { FormDefinition, Link } from '@defra/forms-model'
-import { ConditionName, Path } from '../types'
+import { type FormDefinition, type Link } from '@defra/forms-model'
+
+import { type ConditionName, type Path } from '../types'
+
 import { findPage } from './findPage'
 
 /**

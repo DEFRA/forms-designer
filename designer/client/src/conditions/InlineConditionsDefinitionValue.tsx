@@ -1,4 +1,3 @@
-import React from 'react'
 import {
   timeUnits,
   absoluteDateOrTimeOperatorNames,
@@ -6,13 +5,15 @@ import {
   relativeDateOrTimeOperatorNames,
   ConditionValue
 } from '@defra/forms-model'
-import RelativeTimeValues from './inline-conditions-relative-dates'
-import { AbsoluteDateValues } from './AbsoluteDateValues'
+import React from 'react'
+
 import { AbsoluteDateTimeValues } from './AbsoluteDateTimeValues'
+import { AbsoluteDateValues } from './AbsoluteDateValues'
 import { AbsoluteTimeValues } from './AbsoluteTimeValues'
-import { TextValues } from './TextValues'
 import { SelectValues } from './SelectValues'
+import { TextValues } from './TextValues'
 import { tryParseInt } from './inline-condition-helpers'
+import RelativeTimeValues from './inline-conditions-relative-dates'
 
 function DateTimeComponent(fieldType, operator) {
   const operatorConfig = getOperatorConfig(fieldType, operator)
