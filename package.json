@@ -21,7 +21,7 @@
     "lint": "npm run lint:js && npm run lint:types",
     "lint:fix": "eslint . --fix",
     "lint:js": "eslint .",
-    "lint:types": "npm exec --workspaces -- tsc --noEmit",
+    "lint:types": "tsc --build tsconfig.json",
     "prepare": "husky || true",
     "start": "npm run start --workspace designer",
     "test": "jest --color --coverage --verbose",
