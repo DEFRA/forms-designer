@@ -170,7 +170,7 @@ describe('ComponentListSelect', () => {
 
     // - then
     expect(
-      container.getElementsByClassName('govuk-form-group--error').length
-    ).toBe(1)
+      container.getElementsByClassName('govuk-form-group--error')
+    ).toHaveLength(1)
   })
 })

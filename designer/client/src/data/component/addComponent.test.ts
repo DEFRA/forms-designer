@@ -11,7 +11,7 @@ test('addComponent throws an error when no page can be found', () => {
 
   expect(() => {
     addComponent(data, 'doesntExist', {})
-  }).toThrowError()
+  }).toThrow()
 })
 
 test('addComponent adds a component to the correct page', () => {
