@@ -1,4 +1,5 @@
 import React from 'react'
+import { FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
 import InlineConditions from './InlineConditions'
@@ -16,7 +17,7 @@ describe('InlineConditions', () => {
       hints: []
     }
 
-    const data = {
+    const data: FormDefinition = {
       pages: [
         { path: '/1', next: [{ path: '/2' }] },
         {

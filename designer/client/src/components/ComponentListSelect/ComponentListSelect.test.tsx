@@ -3,7 +3,7 @@ import { screen } from '@testing-library/dom'
 import { act, cleanup, render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import { DataContext } from '../../context'
-import { Data } from '@defra/forms-model'
+import { FormDefinition } from '@defra/forms-model'
 import { ComponentListSelect } from './ComponentListSelect'
 import {
   ComponentContext,
@@ -16,7 +16,7 @@ import { ListContextProvider } from '../../reducers/listReducer'
 describe('ComponentListSelect', () => {
   const { getByText } = screen
 
-  const data = {
+  const data: FormDefinition = {
     pages: [
       {
         title: 'First page',

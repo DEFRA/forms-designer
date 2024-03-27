@@ -1,6 +1,6 @@
 import React, { ChangeEvent } from 'react'
 import InlineConditions from './InlineConditions'
-import { Condition, ConditionsModel, Data } from '@defra/forms-model'
+import { Condition, ConditionsModel, FormDefinition } from '@defra/forms-model'
 import { Flyout } from '../components/Flyout'
 import { Hint, Select } from '@xgovformbuilder/govuk-react-jsx'
 import { i18n } from '../i18n'
@@ -20,7 +20,7 @@ import {
 
 interface Props {
   path: string
-  data: Data
+  data: FormDefinition
   conditionsChange: (selectedCondition: string) => void
   hints: any[]
   noFieldsHintText?: string

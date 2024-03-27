@@ -1,4 +1,5 @@
 import React from 'react'
+import { FormDefinition } from '@defra/forms-model'
 import { render } from '@testing-library/react'
 import { ComponentContext } from '../../reducers/component/componentReducer'
 import { ParaEdit } from './para-edit'
@@ -6,7 +7,7 @@ import { DataContext } from '../../context'
 
 describe('ParaEdit', () => {
   function TestComponentWithContext({ children }) {
-    const data = {
+    const data: FormDefinition = {
       pages: [
         {
           title: 'First page',

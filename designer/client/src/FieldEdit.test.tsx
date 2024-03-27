@@ -1,4 +1,5 @@
 import React, { useReducer } from 'react'
+import { FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
 import { DataContext } from './context'
@@ -12,7 +13,7 @@ import { FieldEdit } from './field-edit'
 describe('Field Edit', () => {
   const { getByText } = screen
 
-  const data = {
+  const data: FormDefinition = {
     pages: [
       {
         title: 'First page',

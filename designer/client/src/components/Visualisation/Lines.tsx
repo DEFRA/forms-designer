@@ -1,5 +1,5 @@
 import React from 'react'
-import { Data } from '@defra/forms-model'
+import { FormDefinition } from '@defra/forms-model'
 
 import { Flyout } from '../Flyout'
 import LinkEdit from '../../link-edit'
@@ -8,7 +8,7 @@ import { DataContext } from '../../context'
 
 type Props = {
   layout: Layout['pos']
-  data: Data
+  data: FormDefinition
   persona: any
 }
 

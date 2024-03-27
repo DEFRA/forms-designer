@@ -59,24 +59,24 @@ test('should return all inputs from the page model', () => {
 })
 
 test('should handle no pages', () => {
-  const data = { pages: [] }
+  const data: FormDefinition = { pages: [] }
   expect(allInputs(data)).toEqual([])
 })
 
 test('should handle undefined pages', () => {
-  const data = {}
+  const data: FormDefinition = {}
   expect(allInputs(data)).toEqual([])
 })
 
 test('should handle pages with undefined components', () => {
-  const data = {
+  const data: FormDefinition = {
     pages: [{}]
   }
   expect(allInputs(data)).toEqual([])
 })
 
 test('should handle pages with no components', () => {
-  const data = {
+  const data: FormDefinition = {
     pages: [{ components: [] }]
   }
   expect(allInputs(data)).toEqual([])
