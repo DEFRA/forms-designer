@@ -1,5 +1,5 @@
 import Wreck from '@hapi/wreck'
-import config from '../../config'
+import config from '~/src/config'
 
 export const publish = async function (id, configuration): Promise<any> {
   try {

@@ -5,7 +5,7 @@ import hapiVision from '@hapi/vision'
 import nunjucks from 'nunjucks'
 import resolvePkg from 'resolve/sync'
 
-import config from '../../config'
+import config from '~/src/config'
 import { context } from './context'
 import * as filters from './filters'
 import * as globals from './globals'

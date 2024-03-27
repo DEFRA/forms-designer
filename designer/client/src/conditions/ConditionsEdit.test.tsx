@@ -3,7 +3,7 @@ import { screen } from '@testing-library/dom'
 import { act, cleanup, render, type RenderResult } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import ConditionsEdit from './ConditionsEdit'
-import { DataContext, FlyoutContext } from '../context'
+import { DataContext, FlyoutContext } from '~/src/context'
 import { FormDefinition } from '@defra/forms-model'
 
 const flyoutValue = {

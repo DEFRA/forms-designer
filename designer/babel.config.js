@@ -14,6 +14,17 @@ module.exports = (api) => {
 
   return {
     sourceType: 'unambiguous',
+    plugins: [
+      [
+        'module-resolver',
+        {
+          root: ['./'],
+          alias: {
+            '~': '.'
+          }
+        }
+      ]
+    ],
     presets: [
       '@babel/preset-typescript',
       '@babel/preset-react',

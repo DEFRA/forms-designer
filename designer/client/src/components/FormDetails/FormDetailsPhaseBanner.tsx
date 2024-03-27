@@ -2,7 +2,7 @@ import React, { ChangeEvent } from 'react'
 import { Label, Radios } from '@xgovformbuilder/govuk-react-jsx'
 import { FormDefinition } from '@defra/forms-model'
 
-import { i18n } from '../../i18n'
+import { i18n } from '~/src/i18n'
 
 type PhaseBanner = Exclude<FormDefinition['phaseBanner'], undefined>
 type Phase = PhaseBanner['phase']

@@ -1,7 +1,7 @@
 import { FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import React from 'react'
-import { customRenderForLists } from '../../test/helpers/renderers-lists'
+import { customRenderForLists } from '~/test/helpers/renderers-lists'
 import { Warning } from './Warning'
 
 const data: FormDefinition = {

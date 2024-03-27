@@ -7,7 +7,7 @@ import {
   getOperatorNames,
   clone
 } from '@defra/forms-model'
-import { i18n } from '../i18n'
+import { i18n } from '~/src/i18n'
 
 import { InlineConditionsDefinitionValue } from './InlineConditionsDefinitionValue'
 

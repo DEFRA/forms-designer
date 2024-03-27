@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
-import { ComponentContext } from '../../reducers/component/componentReducer'
-import { Actions } from '../../reducers/component/types'
-import { i18n } from '../../i18n'
+import { ComponentContext } from '~/src/reducers/component/componentReducer'
+import { Actions } from '~/src/reducers/component/types'
+import { i18n } from '~/src/i18n'
 import { TelephoneNumberFieldComponent } from '@defra/forms-model'
 
 export function CustomValidationMessage() {

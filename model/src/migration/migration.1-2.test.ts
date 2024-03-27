@@ -1,5 +1,5 @@
 import { migrate } from './migration.1-2'
-import { nanoid } from '../utils/helpers'
+import { nanoid } from '~/src/utils/helpers'
 
 jest.mock('../utils/helpers')
 

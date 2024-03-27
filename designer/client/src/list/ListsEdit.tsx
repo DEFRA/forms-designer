@@ -1,16 +1,16 @@
 import React, { useContext } from 'react'
 import ListEdit from './ListEdit'
-import { RenderInPortal } from '../components/RenderInPortal'
-import { Flyout } from '../components/Flyout'
+import { RenderInPortal } from '~/src/components/RenderInPortal'
+import { Flyout } from '~/src/components/Flyout'
 import ListItemEdit from './ListItemEdit'
 import ListSelect from './ListSelect'
 import {
   ListsEditorContext,
   ListsEditorStateActions
-} from '../reducers/list/listsEditorReducer'
+} from '~/src/reducers/list/listsEditorReducer'
 import { Warning } from './Warning'
 import { i18n } from './../i18n'
-import { ListContext } from '../reducers/listReducer'
+import { ListContext } from '~/src/reducers/listReducer'
 
 type Props = {
   showEditLists: boolean

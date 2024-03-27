@@ -4,10 +4,10 @@ import { ConditionsModel, clone, Item } from '@defra/forms-model'
 
 import InlineConditionsDefinition from './InlineConditionsDefinition'
 import InlineConditionsEdit from './inline-conditions-edit'
-import { DataContext } from '../context'
+import { DataContext } from '~/src/context'
 import ErrorSummary, { ErrorListItem } from '../error-summary'
-import { i18n } from '../i18n'
-import { ErrorMessage } from '../components/ErrorMessage'
+import { i18n } from '~/src/i18n'
+import { ErrorMessage } from '~/src/components/ErrorMessage'
 import {
   addCondition,
   allInputs,
@@ -15,7 +15,7 @@ import {
   inputsAccessibleAt,
   removeCondition,
   updateCondition
-} from '../data'
+} from '~/src/data'
 import randomId from '../randomId'
 
 interface Props {

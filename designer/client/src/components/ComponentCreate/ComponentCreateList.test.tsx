@@ -1,6 +1,6 @@
 import React from 'react'
 import { cleanup, render } from '@testing-library/react'
-import { ComponentCreateList } from './ComponentCreateList'
+import { ComponentCreateList } from '~/src/components/ComponentCreate/ComponentCreateList'
 
 describe('ComponentCreateList', () => {
   afterEach(cleanup)

@@ -9,6 +9,17 @@ module.exports = {
   assumptions: {
     enumerableModuleMeta: true
   },
+  plugins: [
+    [
+      'module-resolver',
+      {
+        root: ['./'],
+        alias: {
+          '~': '.'
+        }
+      }
+    ]
+  ],
   presets: [
     '@babel/preset-typescript',
     [

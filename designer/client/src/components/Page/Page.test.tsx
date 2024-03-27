@@ -8,7 +8,7 @@ import {
   waitFor
 } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import { DataContext } from '../../context'
+import { DataContext } from '~/src/context'
 import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 import React from 'react'

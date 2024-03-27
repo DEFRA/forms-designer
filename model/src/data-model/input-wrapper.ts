@@ -1,5 +1,5 @@
-import { clone } from '../utils/helpers'
-import { ComponentDef } from '../components/types'
+import { clone } from '~/src/utils/helpers'
+import { ComponentDef } from '~/src/components/types'
 import { Page } from './types'
 
 export class InputWrapper {

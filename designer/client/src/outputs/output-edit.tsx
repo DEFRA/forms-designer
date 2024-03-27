@@ -15,10 +15,10 @@ import {
   Output,
   ValidationErrors
 } from './types'
-import { validateNotEmpty, hasValidationErrors } from '../validations'
-import ErrorSummary from '../error-summary'
-import { DataContext } from '../context'
-import logger from '../plugins/logger'
+import { validateNotEmpty, hasValidationErrors } from '~/src/validations'
+import ErrorSummary from '~/src/error-summary'
+import { DataContext } from '~/src/context'
+import logger from '~/src/plugins/logger'
 
 type State = {
   outputType: OutputType

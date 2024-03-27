@@ -1,9 +1,9 @@
-import config from '../../config'
-import newFormJson from '../../../../new-form.json'
+import config from '~/src/config'
+import newFormJson from '~/src/common/new-form.json'
 import { nanoid } from 'nanoid'
-import { publish } from '../../lib/publish'
+import { publish } from '~/src/lib/publish'
 import { ServerRoute } from '@hapi/hapi'
-import { HapiRequest } from '../../types'
+import { HapiRequest } from '~/src/types'
 
 export const registerNewFormWithRunner: ServerRoute = {
   method: 'post',

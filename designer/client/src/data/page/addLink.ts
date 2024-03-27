@@ -1,5 +1,5 @@
 import { FormDefinition, Link } from '@defra/forms-model'
-import { ConditionName, Path } from '../types'
+import { ConditionName, Path } from '~/src/types'
 import { findPage } from './findPage'
 
 /**

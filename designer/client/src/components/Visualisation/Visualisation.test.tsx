@@ -10,7 +10,7 @@ import {
   waitFor,
   type RenderResult
 } from '@testing-library/react'
-import { DataContext } from '../../context'
+import { DataContext } from '~/src/context'
 import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 

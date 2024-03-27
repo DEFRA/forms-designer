@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import classNames from 'classnames'
-import { i18n } from '../../i18n'
+import { i18n } from '~/src/i18n'
 
 interface Props {
   className?: string

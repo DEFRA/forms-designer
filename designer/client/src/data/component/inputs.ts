@@ -1,4 +1,4 @@
-import { Input, isNotContentType, Path } from '../types'
+import { Input, isNotContentType, Path } from '~/src/types'
 import { allPathsLeadingTo } from '../page'
 import { FormDefinition } from '@defra/forms-model'
 

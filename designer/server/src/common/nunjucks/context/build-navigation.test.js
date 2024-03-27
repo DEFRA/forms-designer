@@ -1,4 +1,4 @@
-import config from '../../../config'
+import config from '~/src/config'
 import { buildNavigation } from './build-navigation'
 
 const appPathPrefix = config.appPathPrefix

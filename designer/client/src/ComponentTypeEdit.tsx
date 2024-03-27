@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { ComponentTypes } from '@defra/forms-model'
-import { ComponentContext } from './reducers/component/componentReducer'
+import { ComponentContext } from '~/src/reducers/component/componentReducer'
 import FieldEdit from './field-edit'
 import ListFieldEdit from './components/FieldEditors/list-field-edit'
 import SelectFieldEdit from './components/FieldEditors/select-field-edit'

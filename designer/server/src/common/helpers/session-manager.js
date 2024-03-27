@@ -1,5 +1,5 @@
 import yar from '@hapi/yar'
-import config from '../../config'
+import config from '~/src/config'
 
 const sessionManager = {
   plugin: yar,

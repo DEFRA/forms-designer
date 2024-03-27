@@ -1,6 +1,9 @@
-import { ComponentTypes } from '../components/component-types'
-import { getExpression } from './inline-condition-operators'
-import { AbstractConditionValue, valueFrom } from './inline-condition-values'
+import { ComponentTypes } from '~/src/components/component-types'
+import { getExpression } from '~/src/conditions/inline-condition-operators'
+import {
+  AbstractConditionValue,
+  valueFrom
+} from '~/src/conditions/inline-condition-values'
 
 export const coordinators = {
   AND: 'and',

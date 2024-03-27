@@ -1,5 +1,5 @@
 import { ServerRoute } from '@hapi/hapi'
-import config from '../../config'
+import config from '~/src/config'
 
 export const healthCheckRoute: ServerRoute = {
   method: 'GET',
