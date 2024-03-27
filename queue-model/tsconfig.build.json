@@ -5,8 +5,16 @@
     "emitDeclarationOnly": true,
     "noEmit": false,
     "outDir": "./dist",
+    "paths": {
+      "~/*": ["./*"]
+    },
     "rootDir": "./src"
   },
   "exclude": ["**/*.test.*"],
-  "include": ["./src"]
+  "include": [
+    "./src/**/*.cjs",
+    "./src/**/*.js",
+    "./src/**/*.mjs",
+    "./src/**/*.ts"
+  ]
 }
