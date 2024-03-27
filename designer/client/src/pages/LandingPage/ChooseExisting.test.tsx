@@ -8,7 +8,7 @@ import {
   http,
   mockedFormHandlers,
   mockedFormConfigurations
-} from '../../../../test/testServer'
+} from '../../../test/testServer'
 
 describe('ChooseExisting', () => {
   beforeAll(() => server.listen())

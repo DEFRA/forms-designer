@@ -2,8 +2,8 @@ import React from 'react'
 import { screen } from '@testing-library/dom'
 import { act, cleanup, render, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import { RenderWithContextAndDataContext } from '../../../test/helpers/renderers'
-import { Data } from '@defra/forms-model'
+import { RenderWithContextAndDataContext } from '../../test/helpers/renderers'
+import { FormDefinition } from '@defra/forms-model'
 
 import OutputEdit from './output-edit'
 
@@ -12,7 +12,7 @@ describe('OutputEdit', () => {
 
   const { getByText, getByLabelText } = screen
 
-  let mockData: Data
+  let mockData: FormDefinition
   let mockSave: any
 
   beforeEach(() => {

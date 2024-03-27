@@ -1,3 +1,4 @@
+import { FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import {
   act,
@@ -25,7 +26,7 @@ function customRender(element: React.JSX.Element, providerProps): RenderResult {
   )
 }
 
-const data = {
+const data: FormDefinition = {
   pages: [
     {
       title: 'my first page',

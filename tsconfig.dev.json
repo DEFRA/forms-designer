@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": "./"
+  },
+  "include": [
+    "**/*.config.*",
+    "**/.eslintrc.js",
+    "**/.prettierrc.js",
+    "**/.lintstagedrc.mjs"
+  ]
+}

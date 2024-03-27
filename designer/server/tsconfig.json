@@ -1,11 +1,11 @@
 {
-  "extends": "../tsconfig.base.json",
+  "extends": "../../tsconfig.base.json",
   "exclude": ["dist"],
   "include": [
     "**/*.cjs",
     "**/*.js",
     "**/*.mjs",
     "**/*.ts",
-    "../jest.config.mjs"
+    "../../jest.config.mjs"
   ]
 }

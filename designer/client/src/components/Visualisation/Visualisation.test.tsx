@@ -1,5 +1,6 @@
 import React from 'react'
 import { Visualisation } from './Visualisation'
+import { FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { userEvent } from '@testing-library/user-event'
 import {
@@ -40,7 +41,7 @@ describe('Visualisation', () => {
     screen
 
   test('Graph is rendered with correct number of pages and updates ', async () => {
-    const data = {
+    const data: FormDefinition = {
       pages: [
         {
           title: 'my first page',
@@ -89,7 +90,7 @@ describe('Visualisation', () => {
   })
 
   test('Links between pages are navigable via keyboard', async () => {
-    const data = {
+    const data: FormDefinition = {
       pages: [
         {
           title: 'link source',

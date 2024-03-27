@@ -1,11 +1,12 @@
 import React from 'react'
+import { FormDefinition } from '@defra/forms-model'
 import { screen, within } from '@testing-library/dom'
 import { act, cleanup, render, type RenderResult } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import LinkCreate from './link-create'
 import { DataContext } from './context'
 
-const data = {
+const data: FormDefinition = {
   pages: [
     { path: '/1', title: 'Page 1', next: [{ path: '/2' }] },
     { path: '/2', title: 'Page 2' }
