@@ -7,7 +7,7 @@ import {
   ComponentContext,
   componentReducer,
   initComponentState
-} from './reducers/component/componentReducer'
+} from '~/src/reducers/component/componentReducer'
 import { FieldEdit } from './field-edit'
 
 describe('Field Edit', () => {

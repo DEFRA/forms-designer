@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
-import { SortableHandle } from 'react-sortable-hoc'
 import { Flyout } from './components/Flyout'
 import { SearchIcon } from './components/Icons'
-import ComponentEdit from './ComponentEdit'
-import { ComponentContextProvider } from './reducers/component/componentReducer'
+import ComponentEdit from '~/src/ComponentEdit'
+import { ComponentContextProvider } from '~/src/reducers/component/componentReducer'
 import { i18n } from './i18n'
 
 export const componentTypes = {

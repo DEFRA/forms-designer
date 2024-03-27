@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 
-import { Page } from '../Page'
+import { Page } from '~/src/components/Page'
 import { Lines } from './Lines'
 import { Minimap } from './Minimap'
 import { Info } from './Info'
 import { getLayout, Pos } from './getLayout'
-import { DataContext } from '../../context'
+import { DataContext } from '~/src/context'
 import './visualisation.scss'
 
 type Props = {

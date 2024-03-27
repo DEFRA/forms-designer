@@ -1,10 +1,10 @@
 import React, { useContext } from 'react'
-import { ComponentContext } from '../../reducers/component/componentReducer'
-import { DataContext } from '../../context'
-import Editor from '../../editor'
-import { Actions } from '../../reducers/component/types'
+import { ComponentContext } from '~/src/reducers/component/componentReducer'
+import { DataContext } from '~/src/context'
+import Editor from '~/src/editor'
+import { Actions } from '~/src/reducers/component/types'
 import { ContentOptions } from '@defra/forms-model'
-import { i18n } from '../../i18n'
+import { i18n } from '~/src/i18n'
 
 type Props = {
   context: any // TODO

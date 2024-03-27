@@ -2,8 +2,8 @@ import { readFileSync } from 'node:fs'
 import { basename, join, resolve } from 'node:path'
 import { cwd } from 'node:process'
 
-import config from '../../../config'
-import { createLogger } from '../../helpers/logging/logger'
+import config from '~/src/config'
+import { createLogger } from '~/src/helpers/logging/logger'
 import { buildNavigation } from './build-navigation'
 
 const logger = createLogger()

@@ -1,4 +1,4 @@
-import { Path } from '../types'
+import { Path } from '~/src/types'
 import { ComponentDef } from '@defra/forms-model'
 import { findPage } from '../page'
 

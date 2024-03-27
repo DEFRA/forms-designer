@@ -8,7 +8,7 @@ import {
   type RenderResult,
   waitFor
 } from '@testing-library/react'
-import { DataContext, FlyoutContext } from '../../context'
+import { DataContext, FlyoutContext } from '~/src/context'
 import React from 'react'
 
 describe('Menu', () => {

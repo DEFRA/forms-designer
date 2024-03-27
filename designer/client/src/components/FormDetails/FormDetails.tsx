@@ -2,17 +2,16 @@ import React, { Component, ChangeEvent, ContextType, FormEvent } from 'react'
 import { FormConfiguration, FormDefinition } from '@defra/forms-model'
 import isFunction from 'lodash/isFunction'
 
-import { validateTitle, hasValidationErrors } from '../../validations'
-import * as formConfigurationApi from '../../load-form-configurations'
-import ErrorSummary from '../../error-summary'
-import { DataContext } from '../../context'
-import { i18n } from '../../i18n'
+import { validateTitle, hasValidationErrors } from '~/src/validations'
+import ErrorSummary from '~/src/error-summary'
+import { DataContext } from '~/src/context'
+import { i18n } from '~/src/i18n'
 
 import { FormDetailsTitle } from './FormDetailsTitle'
 import { FormDetailsFeedback } from './FormDetailsFeedback'
 import { FormDetailsPhaseBanner } from './FormDetailsPhaseBanner'
 import './FormDetails.scss'
-import logger from '../../plugins/logger'
+import logger from '~/src/plugins/logger'
 type PhaseBanner = Exclude<FormDefinition['phaseBanner'], undefined>
 type Phase = PhaseBanner['phase']
 

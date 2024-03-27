@@ -3,7 +3,7 @@ import { FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
 import InlineConditions from './InlineConditions'
-import { DataContext } from '../context/DataContext'
+import { DataContext } from '~/src/context/DataContext'
 
 describe('InlineConditions', () => {
   afterEach(cleanup)

@@ -2,8 +2,8 @@ import React, { ChangeEvent, useEffect, useState } from 'react'
 import { Label, Radios } from '@xgovformbuilder/govuk-react-jsx'
 import { FormConfiguration } from '@defra/forms-model'
 
-import { i18n } from '../../i18n'
-import * as formConfigurationApi from '../../load-form-configurations'
+import { i18n } from '~/src/i18n'
+import * as formConfigurationApi from '~/src/load-form-configurations'
 
 interface Props {
   feedbackForm: any

@@ -3,9 +3,9 @@ import { clone } from '@defra/forms-model'
 import { ErrorMessage } from '@xgovformbuilder/govuk-react-jsx'
 import classNames from 'classnames'
 
-import { isEmpty } from '../../helpers'
-import { DataContext } from '../../context'
-import logger from '../../plugins/logger'
+import { isEmpty } from '~/src/helpers'
+import { DataContext } from '~/src/context'
+import logger from '~/src/plugins/logger'
 
 function isDuplicated(arr) {
   return [...new Set(arr)].length !== arr.length

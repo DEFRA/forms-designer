@@ -1,5 +1,5 @@
 import Wreck from '@hapi/wreck'
-import config from '../../config'
+import config from '~/src/config'
 
 import { PreviewPersistenceService } from './previewPersistenceService'
 

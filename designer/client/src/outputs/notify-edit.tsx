@@ -8,8 +8,8 @@ import {
   Input
 } from '@xgovformbuilder/govuk-react-jsx'
 import classNames from 'classnames'
-import { i18n } from '../i18n'
-import { allInputs } from '../data/component/inputs'
+import { i18n } from '~/src/i18n'
+import { allInputs } from '~/src/data/component/inputs'
 
 type State = {}
 

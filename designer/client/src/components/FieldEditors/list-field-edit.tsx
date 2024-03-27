@@ -1,8 +1,8 @@
 import React from 'react'
 
 import ListsEdit from '../../list/ListsEdit'
-import { ListContextProvider } from '../../reducers/listReducer'
-import { ListsEditorContextProvider } from '../../reducers/list/listsEditorReducer'
+import { ListContextProvider } from '~/src/reducers/listReducer'
+import { ListsEditorContextProvider } from '~/src/reducers/list/listsEditorReducer'
 import { RenderInPortal } from '../RenderInPortal'
 import ComponentListSelect from '../ComponentListSelect/ComponentListSelect'
 
