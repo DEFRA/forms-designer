@@ -8,12 +8,12 @@ import {
   initComponentState
 } from './reducers/component/componentReducer'
 import { DataContext } from './context'
-import { Data } from '@defra/forms-model'
+import { FormDefinition } from '@defra/forms-model'
 
 describe('ComponentTypeEdit', () => {
   const { getByText } = screen
 
-  let mockData: Data
+  let mockData: FormDefinition
 
   const RenderWithContext = ({ children, stateProps = {} }) => {
     const [state, dispatch] = useReducer(

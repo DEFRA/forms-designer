@@ -6,7 +6,7 @@ import { userEvent } from '@testing-library/user-event'
 import { ComponentCreate } from './ComponentCreate'
 import { ComponentContextProvider } from '../../reducers/component'
 import { DataContext } from '../../context'
-import { DetailsComponent } from '@defra/forms-model'
+import { DetailsComponent, FormDefinition } from '@defra/forms-model'
 import * as Data from '../../data'
 import { addComponent } from '../../data'
 
@@ -20,7 +20,7 @@ describe('ComponentCreate:', () => {
     queryByText
   } = screen
 
-  const data = {
+  const data: FormDefinition = {
     pages: [{ path: '/1', title: '', controller: '', section: '' }],
     lists: [],
     sections: [],

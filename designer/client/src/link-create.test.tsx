@@ -1,4 +1,5 @@
 import React from 'react'
+import { FormDefinition } from '@defra/forms-model'
 import {
   act,
   cleanup,
@@ -11,7 +12,7 @@ import LinkCreate from './link-create'
 import { DataContext } from './context'
 import { screen, within } from '@testing-library/dom'
 
-const rawData = {
+const rawData: FormDefinition = {
   lists: [],
   pages: [
     {
@@ -46,7 +47,7 @@ const rawData = {
   conditions: []
 }
 
-const data = { ...rawData }
+const data: FormDefinition = { ...rawData }
 const dataValue = { data, save: jest.fn() }
 
 function customRender(
@@ -115,7 +116,7 @@ describe('LinkCreate', () => {
   })
 
   test('links for older conditions are correctly generated when the form is submitted', async () => {
-    const data = {
+    const data: FormDefinition = {
       ...rawData,
       conditions: [
         {
@@ -169,7 +170,7 @@ describe('LinkCreate', () => {
   })
 
   test('links are correctly generated when the form is submitted', async () => {
-    const data = {
+    const data: FormDefinition = {
       ...rawData,
       conditions: [
         {
@@ -257,7 +258,7 @@ describe('LinkCreate', () => {
   })
 
   test('Submitting without selecting to/from options shows the user an error', async () => {
-    const data = {
+    const data: FormDefinition = {
       ...rawData
     }
     const save = jest.fn()
