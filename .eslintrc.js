@@ -4,7 +4,16 @@
  * @type {import('eslint').ESLint.ConfigData}
  */
 module.exports = {
-  ignorePatterns: ['**/dist/**', '**/public/**', 'node_modules'],
+  ignorePatterns: [
+    '**/coverage/**',
+    '**/dist/**',
+    '**/public/**',
+
+    // Enable dotfile linting
+    '!.*',
+    'node_modules',
+    'node_modules/.*'
+  ],
   overrides: [
     {
       extends: [
@@ -36,11 +45,25 @@ module.exports = {
       },
       settings: {
         'import/parsers': {
-          '@typescript-eslint/parser': ['.cjs', '.js', '.mjs', '.ts']
+          '@typescript-eslint/parser': [
+            '.cjs',
+            '.js',
+            '.jsx',
+            '.mjs',
+            '.ts',
+            '.tsx'
+          ]
         },
         'import/resolver': {
           typescript: {
-            alwaysTryTypes: true
+            alwaysTryTypes: true,
+            project: [
+              './tsconfig.dev.json',
+              './designer/client/tsconfig.json',
+              './designer/server/tsconfig.json',
+              './model/tsconfig.json',
+              './queue-model/tsconfig.json'
+            ]
           }
         }
       }
@@ -58,8 +81,8 @@ module.exports = {
       },
       extends: ['plugin:react/recommended', 'plugin:react-hooks/recommended'],
       parserOptions: {
-        ecmaFeatures: { jsx: true }
-        // sourceType: 'module'
+        ecmaFeatures: { jsx: true },
+        sourceType: 'module'
       },
       plugins: ['react', 'react-hooks'],
       rules: {
@@ -84,5 +107,15 @@ module.exports = {
       }
     }
   ],
+  parserOptions: {
+    project: [
+      './tsconfig.dev.json',
+      './designer/client/tsconfig.json',
+      './designer/server/tsconfig.json',
+      './model/tsconfig.json',
+      './queue-model/tsconfig.json'
+    ],
+    tsconfigRootDir: __dirname
+  },
   root: true
 }
