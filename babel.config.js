@@ -1,7 +1,7 @@
 /**
  * Babel config
  *
- * @satisfies {import('@babel/core').TransformOptions}
+ * @type {import('@babel/core').TransformOptions}
  */
 module.exports = {
   presets: [

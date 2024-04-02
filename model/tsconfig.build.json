@@ -5,7 +5,10 @@
     "emitDeclarationOnly": true,
     "noEmit": false,
     "noImplicitAny": false,
-    "outDir": "./dist",
+    "outDir": "./dist/module",
+    "paths": {
+      "~/src/*": ["./src/*"]
+    },
     "rootDir": "./src"
   },
   "exclude": ["**/*.test.*"],

@@ -169,6 +169,7 @@ const client = {
   ],
   resolve: {
     alias: {
+      '~': join(__dirname, 'client'),
       '/forms-designer/assets': join(
         dirname(require.resolve('govuk-frontend/package.json')),
         'govuk/assets/'
@@ -242,6 +243,9 @@ const server = {
     })
   ],
   resolve: {
+    alias: {
+      '~': join(__dirname, 'server')
+    },
     extensions: ['.js', '.ts']
   },
   target: 'node'

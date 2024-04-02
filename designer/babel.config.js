@@ -5,7 +5,7 @@ const { BABEL_ENV = 'node' } = process.env
 /**
  * Babel config
  *
- * @satisfies {import('@babel/core').ConfigFunction}
+ * @type {import('@babel/core').ConfigFunction}
  */
 module.exports = (api) => {
   const browserslistEnv = api.caller((caller) =>
@@ -13,7 +13,17 @@ module.exports = (api) => {
   )
 
   return {
-    sourceType: 'unambiguous',
+    plugins: [
+      [
+        'module-resolver',
+        {
+          root: ['./'],
+          alias: {
+            '~': '.'
+          }
+        }
+      ]
+    ],
     presets: [
       '@babel/preset-typescript',
       '@babel/preset-react',
@@ -26,6 +36,7 @@ module.exports = (api) => {
           useBuiltIns: 'usage'
         }
       ]
-    ]
+    ],
+    sourceType: 'unambiguous'
   }
 }

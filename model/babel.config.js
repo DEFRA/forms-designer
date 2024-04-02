@@ -3,12 +3,23 @@ const { BABEL_ENV = 'node' } = process.env
 /**
  * Babel config
  *
- * @satisfies {import('@babel/core').TransformOptions}
+ * @type {import('@babel/core').TransformOptions}
  */
 module.exports = {
   assumptions: {
     enumerableModuleMeta: true
   },
+  plugins: [
+    [
+      'module-resolver',
+      {
+        root: ['./'],
+        alias: {
+          '~': '.'
+        }
+      }
+    ]
+  ],
   presets: [
     '@babel/preset-typescript',
     [

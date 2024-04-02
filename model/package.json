@@ -16,7 +16,7 @@
     "build": "npm run build:types && npm run build:node && npm run build:browser",
     "build:browser": "BABEL_ENV=javascripts babel --extensions \".ts\" --ignore \"**/*.test.*\" src --out-dir dist/browser",
     "build:node": "BABEL_ENV=node babel --extensions \".ts\" --ignore \"**/*.test.*\" src --out-dir dist/module",
-    "build:types": "tsc --build --force tsconfig.build.json",
+    "build:types": "tsc --build --force tsconfig.build.json && tsc-alias --project tsconfig.build.json",
     "test": "jest --color --coverage --verbose",
     "test:watch": "jest --color --watch"
   },
