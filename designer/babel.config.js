@@ -9,12 +9,17 @@ module.exports = {
   plugins: [
     [
       'module-resolver',
-      {
-        root: ['./server'],
-        alias: {
-          '~': './server'
-        }
-      }
+      NODE_ENV === 'test'
+        ? {
+            // Relative to project
+            root: ['../../'],
+            alias: { '~': './designer/server' }
+          }
+        : {
+            // Relative to workspace
+            root: ['./server'],
+            alias: { '~': './server' }
+          }
     ]
   ],
   presets: [

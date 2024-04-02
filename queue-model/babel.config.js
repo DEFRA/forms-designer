@@ -1,3 +1,5 @@
+const { NODE_ENV } = process.env
+
 /**
  * Babel config
  *
@@ -10,12 +12,17 @@ module.exports = {
   plugins: [
     [
       'module-resolver',
-      {
-        root: ['./'],
-        alias: {
-          '~': '.'
-        }
-      }
+      NODE_ENV === 'test'
+        ? {
+            // Relative to project
+            root: ['../'],
+            alias: { '~': './queue-model' }
+          }
+        : {
+            // Relative to workspace
+            root: ['./'],
+            alias: { '~': '.' }
+          }
     ]
   ],
   presets: [
