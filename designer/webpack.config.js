@@ -51,6 +51,9 @@ const client = {
           and: [/node_modules/],
           not: [/@xgovformbuilder\/govuk-react-jsx/]
         },
+        options: {
+          extends: join(__dirname, 'client/babel.config.js')
+        },
 
         // Fix missing file extensions in React components
         resolve: { fullySpecified: false }
