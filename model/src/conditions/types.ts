@@ -12,13 +12,13 @@ export type DateTimeUnitValues =
   | 'minutes'
   | 'seconds'
 
-export type DateUnits = {
+export interface DateUnits {
   YEARS: { display: 'year(s)'; value: 'years' }
   MONTHS: { display: 'month(s)'; value: 'months' }
   DAYS: { display: 'day(s)'; value: 'days' }
 }
 
-export type TimeUnits = {
+export interface TimeUnits {
   HOURS: { display: 'hour(s)'; value: 'hours' }
   MINUTES: { display: 'minute(s)'; value: 'minutes' }
   SECONDS: { display: 'second(s)'; value: 'seconds' }

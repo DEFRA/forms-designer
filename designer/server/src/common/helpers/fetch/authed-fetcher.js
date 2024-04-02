@@ -16,7 +16,7 @@ function authedFetcher(request) {
       fetch(url, {
         ...options,
         headers: {
-          ...(options?.headers && options?.headers),
+          ...(options.headers && options.headers),
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
         }

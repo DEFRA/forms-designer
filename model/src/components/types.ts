@@ -27,13 +27,13 @@ export type ComponentType =
 
 export type ComponentSubType = 'field' | 'content'
 
-export type ConditionalComponent = {
+export interface ConditionalComponent {
   name: 'TextField' | 'NumberField'
   title: string
   subType: 'field'
 }
 
-export type ContentOptions = {
+export interface ContentOptions {
   condition?: string
 }
 

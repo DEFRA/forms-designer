@@ -80,8 +80,8 @@ describe('FormDetails', () => {
     it('sets alpha phase', async () => {
       customRender(<FormDetails />, providerProps)
 
-      const $radioAlpha = getByLabelText('Alpha') as HTMLInputElement
-      const $radioNone = getByLabelText('None') as HTMLInputElement
+      const $radioAlpha = getByLabelText('Alpha')
+      const $radioNone = getByLabelText('None')
       const $button = getByText('Save')
 
       expect($radioAlpha.checked).toBe(false)
@@ -105,8 +105,8 @@ describe('FormDetails', () => {
     it('sets beta phase', async () => {
       customRender(<FormDetails />, providerProps)
 
-      const $radioBeta = getByLabelText('Beta') as HTMLInputElement
-      const $radioNone = getByLabelText('None') as HTMLInputElement
+      const $radioBeta = getByLabelText('Beta')
+      const $radioNone = getByLabelText('None')
       const $button = getByText('Save')
 
       expect($radioBeta.checked).toBe(false)
@@ -136,8 +136,8 @@ describe('FormDetails', () => {
         }
       })
 
-      const $radioAlpha = getByLabelText('Alpha') as HTMLInputElement
-      const $radioNone = getByLabelText('None') as HTMLInputElement
+      const $radioAlpha = getByLabelText('Alpha')
+      const $radioNone = getByLabelText('None')
 
       expect($radioAlpha.checked).toBe(true)
       expect($radioNone.checked).toBe(false)
@@ -164,8 +164,8 @@ describe('FormDetails', () => {
     it('sets `Yes` feedback form', async () => {
       customRender(<FormDetails />, providerProps)
 
-      const $radioFeedbackYes = getByLabelText('yes') as HTMLInputElement
-      const $radioFeedbackNo = getByLabelText('no') as HTMLInputElement
+      const $radioFeedbackYes = getByLabelText('yes')
+      const $radioFeedbackNo = getByLabelText('no')
       const $button = getByText('Save')
 
       expect($radioFeedbackYes.checked).toBe(false)
@@ -201,8 +201,8 @@ describe('FormDetails', () => {
         }
       })
 
-      const $radioFeedbackYes = getByLabelText('yes') as HTMLInputElement
-      const $radioFeedbackNo = getByLabelText('no') as HTMLInputElement
+      const $radioFeedbackYes = getByLabelText('yes')
+      const $radioFeedbackNo = getByLabelText('no')
       const $button = getByText('Save')
 
       expect($radioFeedbackYes.checked).toBe(true)

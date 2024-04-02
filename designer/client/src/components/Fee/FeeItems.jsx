@@ -185,7 +185,7 @@ export class FeeItems extends React.Component {
                   <input
                     className={classNames({
                       'govuk-input': true,
-                      'govuk-input--error': errors?.[MISSING_DESC]?.[index]
+                      'govuk-input--error': errors[MISSING_DESC]?.[index]
                     })}
                     name="description"
                     type="text"
@@ -196,7 +196,7 @@ export class FeeItems extends React.Component {
                   <input
                     className={classNames({
                       'govuk-input': true,
-                      'govuk-input--error': errors?.[INVALID_AMOUNT]?.[index]
+                      'govuk-input--error': errors[INVALID_AMOUNT]?.[index]
                     })}
                     name="amount"
                     type="number"
@@ -208,7 +208,7 @@ export class FeeItems extends React.Component {
                   <select
                     className={classNames({
                       'govuk-select': true,
-                      'govuk-input--error': errors?.[MISSING_COND]?.[index]
+                      'govuk-input--error': errors[MISSING_COND]?.[index]
                     })}
                     id="link-source"
                     name="condition"

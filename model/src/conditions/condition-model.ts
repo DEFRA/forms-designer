@@ -194,20 +194,23 @@ export class ConditionsModel {
   }
 
   _group(conditions: ConditionsArray, groupDefs: ConditionGroupDef[]) {
-    return conditions.reduce((groups, condition, index, conditions) => {
-      const groupDef = groupDefs.find((groupDef) => groupDef.contains(index))
+    return conditions.reduce<ConditionsArray>(
+      (groups, condition, index, conditions) => {
+        const groupDef = groupDefs.find((groupDef) => groupDef.contains(index))
 
-      if (groupDef) {
-        if (groupDef.startsWith(index)) {
-          const groupConditions = groupDef.applyTo(conditions)
-          groups.push(new ConditionGroup(groupConditions))
+        if (groupDef) {
+          if (groupDef.startsWith(index)) {
+            const groupConditions = groupDef.applyTo(conditions)
+            groups.push(new ConditionGroup(groupConditions))
+          }
+        } else {
+          groups.push(condition)
         }
-      } else {
-        groups.push(condition)
-      }
 
-      return groups
-    }, [] as ConditionsArray)
+        return groups
+      },
+      []
+    )
   }
 
   _ungroup(conditions: ConditionsArray, splitIndex: number) {
@@ -283,18 +286,14 @@ export class ConditionsModel {
   }
 }
 
-interface ConditionFrom {
-  (
-    it: Condition | ConditionRef | ConditionGroup
-  ): Condition | ConditionRef | ConditionGroup
-}
+type ConditionFrom = (
+  it: Condition | ConditionRef | ConditionGroup
+) => Condition | ConditionRef | ConditionGroup
 
 const conditionFrom: ConditionFrom = function (it) {
   if ('conditions' in it) {
     return new ConditionGroup(
-      (it as ConditionGroup).conditions.map((condition) =>
-        conditionFrom(condition)
-      )
+      it.conditions.map((condition) => conditionFrom(condition))
     )
   }
 

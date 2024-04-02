@@ -19,10 +19,10 @@ export const isNotContentType = (
     'List',
     'FlashCard'
   ]
-  return !contentTypes.find((type) => `${type}` === `${obj.type}`)
+  return !contentTypes.find((type) => type === obj.type)
 }
 
-export type Input = {
+export interface Input {
   name: string
   page: { path: Page['path']; section: Page['section'] }
   propertyPath: string

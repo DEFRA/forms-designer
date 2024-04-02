@@ -19,7 +19,7 @@ import { ListsEditorContextProvider } from '~/src/reducers/list/listsEditorReduc
 import { ListContextProvider } from '~/src/reducers/listReducer.jsx'
 import SectionsEdit from '~/src/section/sections-edit.js'
 
-type Props = {
+interface Props {
   updateDownloadedAt?: (string) => void
   id: string
 }

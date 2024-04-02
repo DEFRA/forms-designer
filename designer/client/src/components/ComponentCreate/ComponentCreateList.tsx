@@ -18,14 +18,14 @@ const inputFields: ComponentDef[] = []
 sortBy(ComponentTypes, ['type']).forEach((component) => {
   if (component.subType === 'content') {
     contentFields.push(component)
-  } else if (SelectionFieldsTypes.indexOf(component.type) > -1) {
+  } else if (SelectionFieldsTypes.includes(component.type)) {
     selectionFields.push(component)
   } else {
     inputFields.push(component)
   }
 })
 
-type Props = {
+interface Props {
   onSelectComponent: (type: ComponentDef) => void
 }
 

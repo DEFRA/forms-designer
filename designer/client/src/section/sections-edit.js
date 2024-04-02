@@ -59,9 +59,9 @@ class SectionsEdit extends React.Component {
         {isEditingSection && (
           <RenderInPortal>
             <Flyout
-              title={`${
+              title={
                 section?.name ? `Editing ${section.name}` : 'Add a new section'
-              }`}
+              }
               show={isEditingSection}
               onHide={this.closeFlyout}
             >

@@ -3,7 +3,7 @@ import React from 'react'
 
 import { type ValidationErrors } from '~/src/outputs/types.js'
 
-type Props = {
+interface Props {
   url: string
   errors: ValidationErrors
 }
@@ -18,7 +18,7 @@ const WebhookEdit = ({ url = '', errors }: Props) => (
     }}
     defaultValue={url}
     pattern="^\S+"
-    errorMessage={errors?.url ? { children: errors?.url.children } : undefined}
+    errorMessage={errors.url ? { children: errors.url.children } : undefined}
   />
 )
 

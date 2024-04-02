@@ -244,7 +244,7 @@ export class PageEdit extends React.Component {
             value={title}
             onChange={this.onChangeTitle}
             errorMessage={
-              errors?.title ? { children: errors?.title.children } : undefined
+              errors.title ? { children: errors.title.children } : undefined
             }
           />
           <Input
@@ -260,7 +260,7 @@ export class PageEdit extends React.Component {
             value={path}
             onChange={this.onChangePath}
             errorMessage={
-              errors?.path ? { children: errors.path?.children } : undefined
+              errors.path ? { children: errors.path?.children } : undefined
             }
           />
           <div className="govuk-form-group">

@@ -39,7 +39,7 @@ describe('CssClasses', () => {
     })
 
     test('value should change and be displayed correctly', async () => {
-      const $input = getByLabelText('Validation message') as HTMLInputElement
+      const $input = getByLabelText('Validation message')
       expect($input.value).toBe('')
 
       await act(() => userEvent.clear($input))

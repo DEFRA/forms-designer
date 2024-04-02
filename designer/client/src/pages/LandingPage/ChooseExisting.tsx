@@ -7,11 +7,11 @@ import * as formConfigurationApi from '~/src/load-form-configurations.js'
 import './LandingPage.scss'
 import logger from '~/src/plugins/logger.js'
 
-type Props = {
+interface Props {
   history: any
 }
 
-type State = {
+interface State {
   configs: { Key: string; DisplayName: string }[]
   loading?: boolean
 }

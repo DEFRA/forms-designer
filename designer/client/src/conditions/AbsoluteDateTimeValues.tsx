@@ -20,11 +20,11 @@ interface Props {
 export const AbsoluteDateTimeValues = ({ value, updateValue }: Props) => {
   const [dateTimeParts, setDateTimeParts] = React.useState(() => {
     return {
-      year: value && value.getUTCFullYear(),
+      year: value?.getUTCFullYear(),
       month: value && value.getUTCMonth() + 1,
-      day: value && value.getUTCDate(),
-      hour: value && value.getUTCHours(),
-      minute: value && value.getUTCMinutes()
+      day: value?.getUTCDate(),
+      hour: value?.getUTCHours(),
+      minute: value?.getUTCMinutes()
     }
   })
 

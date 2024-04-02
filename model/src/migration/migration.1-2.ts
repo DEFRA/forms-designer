@@ -6,7 +6,7 @@ import { nanoid } from '~/src/utils/helpers.js'
  * StaticItem is a deprecated Type.
  * It should only be used for aiding migration scripts.
  */
-type StaticItem = {
+interface StaticItem {
   label: string
   value: string | number | boolean
   hint?: string
@@ -18,14 +18,14 @@ type StaticItem = {
  * StaticComponentValues is a deprecated Type.
  * It should only be used for aiding migration scripts.
  */
-type StaticComponentValues = {
+interface StaticComponentValues {
   list: any
   type: 'static' | 'listRef'
   valueType: string | number
   items: StaticItem[]
 }
 
-type Item = {
+interface Item {
   title: string
   value: any
   conditions?: any

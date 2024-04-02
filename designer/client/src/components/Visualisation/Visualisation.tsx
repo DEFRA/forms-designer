@@ -11,7 +11,7 @@ import {
 import { DataContext } from '~/src/context/index.js'
 import '~/src/components/Visualisation/visualisation.scss'
 
-type Props = {
+interface Props {
   updatedAt?: string
   downloadedAt?: string
   previewUrl?: string
@@ -24,7 +24,7 @@ export function useVisualisation(ref) {
   const [layout, setLayout] = useState<Pos>()
 
   useEffect(() => {
-    const layout = getLayout(data, ref.current!)
+    const layout = getLayout(data, ref.current)
     setLayout(layout.pos)
   }, [data, ref])
 
@@ -40,8 +40,8 @@ export function Visualisation(props: Props) {
   const { pages } = data
 
   const wrapperStyle = layout && {
-    width: layout?.width,
-    height: layout?.height
+    width: layout.width,
+    height: layout.height
   }
 
   return (

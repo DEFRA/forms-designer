@@ -2,7 +2,7 @@ import React, { type ReactNode, type MouseEvent } from 'react'
 
 import './BackLink.scss'
 
-type Props = {
+interface Props {
   children: ReactNode
   href?: string
   onClick?: (event: MouseEvent<HTMLAnchorElement>) => void

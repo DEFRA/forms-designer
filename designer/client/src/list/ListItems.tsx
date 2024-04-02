@@ -31,7 +31,7 @@ const SortableItem = SortableElement(({ item, removeItem, selectListItem }) => {
         <a
           href="#"
           onClick={(e) => {
-            e?.preventDefault()
+            e.preventDefault()
             selectListItem(item)
           }}
         >
@@ -42,7 +42,7 @@ const SortableItem = SortableElement(({ item, removeItem, selectListItem }) => {
         <a
           href="#"
           onClick={(e) => {
-            e?.preventDefault()
+            e.preventDefault()
             removeItem()
           }}
         >

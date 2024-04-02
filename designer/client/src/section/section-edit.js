@@ -134,7 +134,7 @@ class SectionEdit extends React.Component {
             value={title}
             onChange={(e) => this.setState({ title: e.target.value })}
             errorMessage={
-              errors?.title ? { children: errors?.title.children } : undefined
+              errors.title ? { children: errors.title.children } : undefined
             }
           />
           <Input
@@ -151,7 +151,7 @@ class SectionEdit extends React.Component {
             value={name}
             onChange={(e) => this.setState({ name: e.target.value })}
             errorMessage={
-              errors?.name ? { children: errors?.name.children } : undefined
+              errors.name ? { children: errors.name.children } : undefined
             }
           />
           <div className="govuk-checkboxes govuk-form-group">

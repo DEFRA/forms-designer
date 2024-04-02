@@ -98,7 +98,7 @@ export function ComponentCreate(props) {
             {i18n('Back to create component list')}
           </BackLink>
           <h4 className="govuk-heading-m">
-            {component?.title} {i18n('component')}
+            {component.title} {i18n('component')}
           </h4>
         </>
       )}

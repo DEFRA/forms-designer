@@ -73,7 +73,7 @@ describe('SaveErrorPage', () => {
 
     const $backLink = await waitFor(() => findByText('Back to Designer'))
 
-    await act(() => userEvent.click($backLink!))
+    await act(() => userEvent.click($backLink))
     await waitFor(() => expect(push).toHaveBeenCalledWith('designer/testid'))
   })
 })

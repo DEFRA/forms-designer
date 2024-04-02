@@ -49,7 +49,9 @@ describe('Visualisation', () => {
           path: '/1'
         },
         { title: 'my second page', path: '/2' }
-      ]
+      ],
+      conditions: [],
+      sections: []
     }
     const providerProps = {
       data,
@@ -100,7 +102,8 @@ describe('Visualisation', () => {
         },
         { title: 'link target', path: '/link-target' }
       ],
-      conditions: []
+      conditions: [],
+      sections: []
     }
     const providerProps = {
       data,

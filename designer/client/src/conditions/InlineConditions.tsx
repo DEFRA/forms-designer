@@ -96,7 +96,7 @@ export class InlineConditions extends React.Component<Props, State> {
         list = findList(data, input.list)
       }
 
-      const values = `${input.type}` == 'YesNoField' ? yesNoValues : list?.items
+      const values = input.type == 'YesNoField' ? yesNoValues : list?.items
 
       return {
         label,
@@ -136,7 +136,7 @@ export class InlineConditions extends React.Component<Props, State> {
   }
 
   onClickSave = async (event: MouseEvent<HTMLAnchorElement>) => {
-    event?.preventDefault()
+    event.preventDefault()
     const { conditionsChange, condition } = this.props
     const { data, save } = this.context
     const { conditions } = this.state
@@ -168,7 +168,7 @@ export class InlineConditions extends React.Component<Props, State> {
   }
 
   onClickDelete = async (event: MouseEvent<HTMLAnchorElement>) => {
-    event?.preventDefault()
+    event.preventDefault()
     const { data, save } = this.context
     const { cancelCallback, condition } = this.props
 
@@ -266,7 +266,7 @@ export class InlineConditions extends React.Component<Props, State> {
               <div className="govuk-hint">
                 {i18n('conditions.displayNameHint')}
               </div>
-              {nameError && <ErrorMessage>{nameError?.children}</ErrorMessage>}
+              {nameError && <ErrorMessage>{nameError.children}</ErrorMessage>}
               <input
                 className={classNames('govuk-input govuk-input--width-20', {
                   'govuk-input--error': nameError

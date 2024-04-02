@@ -13,7 +13,7 @@ import {
 } from '~/src/reducers/list/listsEditorReducer.jsx'
 import { ListContext } from '~/src/reducers/listReducer.jsx'
 
-type Props = {
+interface Props {
   showEditLists: boolean
 }
 

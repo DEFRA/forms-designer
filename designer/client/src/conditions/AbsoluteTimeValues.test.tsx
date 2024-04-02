@@ -21,8 +21,8 @@ describe('AbsoluteTimeValues', () => {
     const $hours = await waitFor(() => findByLabelText('HH'))
     const $minutes = await waitFor(() => findByLabelText('mm'))
 
-    expect($hours?.getAttribute('value')).toBe('0')
-    expect($minutes?.getAttribute('value')).toBe('34')
+    expect($hours.getAttribute('value')).toBe('0')
+    expect($minutes.getAttribute('value')).toBe('34')
   })
 
   it('calls the updateValue prop if a valid time is entered', async () => {

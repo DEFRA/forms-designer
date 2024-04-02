@@ -10,7 +10,7 @@ import fetch from 'node-fetch'
 async function fetcher(url, options = {}) {
   const response = await fetch(url, {
     ...options,
-    method: options?.method || 'get',
+    method: options.method || 'get',
     headers: {
       'Content-Type': 'application/json',
       ...(options.headers && { headers: options.headers })

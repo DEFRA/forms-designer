@@ -18,9 +18,9 @@ describe('AbsoluteDateTimeValues', () => {
     const $month = await waitFor(() => findByLabelText('Month'))
     const $day = await waitFor(() => findByLabelText('Day'))
 
-    expect($year?.getAttribute('value')).toBe('2020')
-    expect($month?.getAttribute('value')).toBe('01')
-    expect($day?.getAttribute('value')).toBe('31')
+    expect($year.getAttribute('value')).toBe('2020')
+    expect($month.getAttribute('value')).toBe('01')
+    expect($day.getAttribute('value')).toBe('31')
   })
 
   it("renders out a time that's passed to it", async () => {
@@ -30,8 +30,8 @@ describe('AbsoluteDateTimeValues', () => {
     const $hours = await waitFor(() => findByLabelText('HH'))
     const $minutes = await waitFor(() => findByLabelText('mm'))
 
-    expect($hours?.getAttribute('value')).toBe('12')
-    expect($minutes?.getAttribute('value')).toBe('10')
+    expect($hours.getAttribute('value')).toBe('12')
+    expect($minutes.getAttribute('value')).toBe('10')
   })
 
   it('calls the updateValue prop if a valid date and time are entered', async () => {

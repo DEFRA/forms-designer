@@ -6,7 +6,7 @@ import ListsEdit from '~/src/list/ListsEdit.jsx'
 import { ListsEditorContextProvider } from '~/src/reducers/list/listsEditorReducer.jsx'
 import { ListContextProvider } from '~/src/reducers/listReducer.jsx'
 
-type Props = {
+interface Props {
   children: any // TODO
   page: any // TODO
 }

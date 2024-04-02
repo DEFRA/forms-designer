@@ -11,7 +11,7 @@ class ComponentConditionCreate extends React.Component {
     const { components } = conditional || {}
 
     this.state = {
-      component: components && components.length ? components[0] : null
+      component: components?.length ? components[0] : null
     }
   }
 

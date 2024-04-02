@@ -47,7 +47,7 @@ export const Page = ({ page, previewUrl, id, layout }) => {
   const onSortEnd = ({ oldIndex, newIndex }) => {
     const copy = { ...data }
     const [copyPage, index] = findPage(data, page.path)
-    copyPage.components = arrayMove(copyPage.components!, oldIndex, newIndex)
+    copyPage.components = arrayMove(copyPage.components, oldIndex, newIndex)
     copy.pages[index] = copyPage
     save(copy)
   }
@@ -56,9 +56,7 @@ export const Page = ({ page, previewUrl, id, layout }) => {
     setIsEditingPage(false)
   }
 
-  const section = data.sections?.find(
-    (section) => section.name === page.section
-  )
+  const section = data.sections.find((section) => section.name === page.section)
 
   const formComponents =
     page?.components?.filter(

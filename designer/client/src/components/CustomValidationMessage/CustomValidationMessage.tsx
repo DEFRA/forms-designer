@@ -26,7 +26,7 @@ export function CustomValidationMessage() {
         id="field-options-custom-validation-message"
         name="options.customValidationMessage"
         type="text"
-        value={options?.customValidationMessage ?? ''}
+        value={options.customValidationMessage ?? ''}
         onChange={(e) =>
           dispatch({
             type: Actions.EDIT_OPTIONS_CUSTOM_MESSAGE,

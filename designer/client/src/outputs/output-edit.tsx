@@ -21,12 +21,12 @@ import WebhookEdit from '~/src/outputs/webhook-edit.jsx'
 import logger from '~/src/plugins/logger.js'
 import { validateNotEmpty, hasValidationErrors } from '~/src/validations.js'
 
-type State = {
+interface State {
   outputType: OutputType
   errors: ValidationErrors
 }
 
-type Props = {
+interface Props {
   onEdit: ({ data: any }) => void // TODO: type
   onCancel: (event: MouseEvent<HTMLAnchorElement>) => void
   data: any // TODO: type
@@ -39,7 +39,7 @@ class OutputEdit extends Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      outputType: props.output?.type ?? OutputType.Email,
+      outputType: props.output.type ?? OutputType.Email,
       errors: {}
     }
   }
@@ -59,7 +59,7 @@ class OutputEdit extends Component<Props, State> {
 
     if (hasValidationErrors(validationErrors)) return
 
-    let outputIndex: number = -1
+    let outputIndex = -1
 
     if (output.name) {
       outputIndex = data.outputs.indexOf(output)
@@ -229,7 +229,7 @@ class OutputEdit extends Component<Props, State> {
       outputEdit = <EmailEdit output={output} errors={errors} />
     } else if (outputType === OutputType.Webhook) {
       outputEdit = (
-        <WebhookEdit url={output?.outputConfiguration?.url} errors={errors} />
+        <WebhookEdit url={output.outputConfiguration.url} errors={errors} />
       )
     }
     return (
@@ -254,9 +254,9 @@ class OutputEdit extends Component<Props, State> {
               className: 'govuk-label--s',
               children: ['Title']
             }}
-            defaultValue={output?.title ?? ''}
+            defaultValue={output.title ?? ''}
             errorMessage={
-              errors?.title ? { children: errors?.title.children } : undefined
+              errors.title ? { children: errors.title.children } : undefined
             }
           />
           <Input
@@ -267,9 +267,9 @@ class OutputEdit extends Component<Props, State> {
               children: ['Name']
             }}
             pattern="^\S+"
-            defaultValue={output?.name ?? ''}
+            defaultValue={output.name ?? ''}
             errorMessage={
-              errors?.name ? { children: errors?.name.children } : undefined
+              errors.name ? { children: errors.name.children } : undefined
             }
           />
 
@@ -281,7 +281,7 @@ class OutputEdit extends Component<Props, State> {
               className="govuk-select"
               id="output-type"
               name="output-type"
-              disabled={!!output?.type}
+              disabled={!!output.type}
               value={outputType}
               onChange={this.onChangeOutputType}
             >

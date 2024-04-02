@@ -7,7 +7,7 @@ export function getFormData(form) {
 
   function cast(name, val) {
     const el = form.elements[name]
-    const cast = el && el.dataset.cast
+    const cast = el?.dataset.cast
 
     if (!val) {
       return undefined
@@ -69,6 +69,9 @@ export function camelCase(str) {
     .replace(/[^a-zA-Z0-9]/g, '')
 }
 
+/**
+ * @param {string | number} [str]
+ */
 export function isEmpty(str = '') {
   return `${str}`.trim().length < 1
 }

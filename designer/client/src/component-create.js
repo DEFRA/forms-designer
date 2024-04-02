@@ -73,7 +73,7 @@ class ComponentCreate extends React.Component {
             </select>
           </div>
 
-          {this.state?.component?.type && (
+          {this.state.component?.type && (
             <div>
               <ComponentTypeEdit page={page} />
               <button

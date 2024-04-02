@@ -19,21 +19,21 @@ interface Props {
 
 export const AbsoluteTimeValues = ({ value = {}, updateValue }: Props) => {
   const [hour, setHour] = React.useState(() =>
-    isInt(value.hour) ? (value.hour as number).toString() : ''
+    isInt(value.hour) ? value.hour.toString() : ''
   )
   const [minute, setMinute] = React.useState(() =>
-    isInt(value.minute) ? (value.minute as number).toString() : ''
+    isInt(value.minute) ? value.minute.toString() : ''
   )
 
   React.useEffect(() => {
-    const parsedHour = parseInt(hour as string, 10)
-    const parsedMinute = parseInt(minute as string, 10)
+    const parsedHour = parseInt(hour, 10)
+    const parsedMinute = parseInt(minute, 10)
     if (
       isInt(hour) &&
       isInt(minute) &&
       (parsedHour !== value.hour || parsedMinute !== value.minute)
     ) {
-      return updateValue({
+      updateValue({
         hour: parsedHour,
         minute: parsedMinute
       })

@@ -16,8 +16,8 @@ import {
   Actions
 } from '~/src/reducers/component/types.js'
 
-type ComponentState = {
-  selectedComponent: Partial<ComponentDef>
+interface ComponentState {
+  selectedComponent?: Partial<ComponentDef>
   isNew?: boolean
   initialName?: ComponentDef['name']
   pagePath?: string
@@ -49,7 +49,7 @@ const ActionsReducerCollection = [
 ]
 
 export function valueIsInEnum<T>(value: keyof ComponentActions, enumType: T) {
-  return Object.values(enumType).indexOf(value) !== -1
+  return Object.values(enumType).includes(value)
 }
 
 /**

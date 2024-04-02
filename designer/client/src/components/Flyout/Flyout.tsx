@@ -72,7 +72,7 @@ export function useFlyoutEffect(props: Props) {
     }
   }
 
-  return { style, width: props?.width, closeOnEnter, onHide, offset, show }
+  return { style, width: props.width, closeOnEnter, onHide, offset, show }
 }
 
 export function Flyout(props: Props) {

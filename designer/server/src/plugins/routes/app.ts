@@ -38,7 +38,7 @@ export const getErrorCrashReport: ServerRoute = {
     handler: async (request, h) => {
       try {
         const { id } = request.params
-        const error = request.yar.get(`error-summary-${id}`) as any
+        const error = request.yar.get(`error-summary-${id}`)
         const zip = new JSZip()
         zip.file(`${id}-crash-report.json`, JSON.stringify(error))
         const buffer = await zip.generateAsync({

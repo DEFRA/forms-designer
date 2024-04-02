@@ -48,7 +48,7 @@ function DateTimeComponent(fieldType, operator) {
           updateValue(new ConditionValue(transformed))
         }
         const transformInputValue = (condition?: ConditionValue) => {
-          if (condition && condition.value) {
+          if (condition?.value) {
             switch (CustomRendering) {
               case AbsoluteDateTimeValues:
                 // value should be an ISO format date string
@@ -115,7 +115,7 @@ export const InlineConditionsDefinitionValue = ({
   if (CustomComponent) {
     return <CustomComponent value={value} updateValue={updateValue} />
   }
-  return (fieldDef?.values?.length ?? 0) > 0 ? (
+  return (fieldDef.values.length ?? 0) > 0 ? (
     <SelectValues
       fieldDef={fieldDef}
       operator={operator}

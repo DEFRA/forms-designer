@@ -5,9 +5,9 @@ import OutputEdit from '~/src/outputs/output-edit.jsx'
 import { type Output } from '~/src/outputs/types.js'
 import randomId from '~/src/randomId.js'
 
-type Props = {}
+interface Props {}
 
-type State = {
+interface State {
   showAddOutput: boolean
   output?: any // TODO: type
   id?: string

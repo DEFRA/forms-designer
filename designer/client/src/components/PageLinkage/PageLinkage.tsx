@@ -112,8 +112,8 @@ export function PageLinkage({ page, layout }) {
             <line
               x1={lineStart?.x}
               y1={lineStart?.y}
-              x2={lineEnd?.x}
-              y2={lineEnd?.y}
+              x2={lineEnd.x}
+              y2={lineEnd.y}
               markerEnd="url(#arrow)"
             />
           </svg>

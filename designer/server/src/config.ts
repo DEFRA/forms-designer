@@ -132,7 +132,7 @@ const value: Config = result.value
 async function getAwsConfigCredentials(): Promise<CredentialsOptions | {}> {
   return new Promise(function (resolve, reject) {
     if (value.persistentBackend === 's3') {
-      return AWS.config.getCredentials(async function (err) {
+      AWS.config.getCredentials(async function (err) {
         if (err) {
           console.error('Error getting AWS credentials', err)
           reject(err)

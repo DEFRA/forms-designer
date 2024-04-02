@@ -248,7 +248,7 @@ class PageCreate extends React.Component {
             value={title || ''}
             onChange={this.onChangeTitle}
             errorMessage={
-              errors?.title ? { children: errors?.title.children } : undefined
+              errors.title ? { children: errors.title.children } : undefined
             }
           />
 
@@ -265,7 +265,7 @@ class PageCreate extends React.Component {
             value={path}
             onChange={this.onChangePath}
             errorMessage={
-              errors?.path ? { children: errors?.path?.children } : undefined
+              errors.path ? { children: errors.path?.children } : undefined
             }
           />
 
@@ -320,9 +320,9 @@ class PageCreate extends React.Component {
         {isEditingSection && (
           <RenderInPortal>
             <Flyout
-              title={`${
+              title={
                 section?.name ? `Editing ${section.name}` : 'Add a new section'
-              }`}
+              }
               onHide={this.closeFlyout}
               show={true}
             >

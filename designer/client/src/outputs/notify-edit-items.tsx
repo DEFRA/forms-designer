@@ -4,11 +4,11 @@ import React, { type MouseEvent, type ChangeEvent } from 'react'
 import { DataContext } from '~/src/context/index.js'
 import logger from '~/src/plugins/logger.js'
 
-type State = {
+interface State {
   items: string[]
 }
 
-type Props = {
+interface Props {
   data: any // TODO: type
   items?: string[]
   onEdit: ({ data: any }) => void

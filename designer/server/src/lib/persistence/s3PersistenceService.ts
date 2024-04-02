@@ -45,7 +45,7 @@ export class S3PersistenceService implements PersistenceService {
 
   async getConfiguration(id: string) {
     const response = await this.bucket
-      .getObject({ Key: `${this._ensureJsonExtension(id)}` })
+      .getObject({ Key: this._ensureJsonExtension(id) })
       .promise()
     if (response.error) {
       this.logger.error(

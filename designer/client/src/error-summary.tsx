@@ -11,7 +11,7 @@ export interface ErrorListItem {
 interface ErrorSummaryProps {
   className?: string
   descriptionChildren?: string
-  errorList: Array<ErrorListItem>
+  errorList: ErrorListItem[]
   titleChildren?: string
 }
 

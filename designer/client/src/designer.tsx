@@ -101,7 +101,7 @@ export default class Designer extends Component<Props, State> {
         <DataContext.Provider value={dataContextProviderValue}>
           <FlyoutContext.Provider value={flyoutContextProviderValue}>
             <div id="designer">
-              <Prompt when={!error} message={`${i18n('leaveDesigner')}`} />
+              <Prompt when={!error} message={i18n('leaveDesigner')} />
               <Menu
                 id={this.id}
                 updateDownloadedAt={this.updateDownloadedAt}

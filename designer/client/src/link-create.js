@@ -72,19 +72,17 @@ class LinkCreate extends React.Component {
           <div
             className={classNames({
               'govuk-form-group': true,
-              'govuk-form-group--error': errors?.from
+              'govuk-form-group--error': errors.from
             })}
           >
             <label className="govuk-label govuk-label--s" htmlFor="link-source">
               From
             </label>
-            {errors?.from && (
-              <ErrorMessage>{errors?.from.children}</ErrorMessage>
-            )}
+            {errors.from && <ErrorMessage>{errors.from.children}</ErrorMessage>}
             <select
               className={classNames({
                 'govuk-select': true,
-                'govuk-input--error': errors?.from
+                'govuk-input--error': errors.from
               })}
               id="link-source"
               data-testid="link-source"
@@ -107,17 +105,17 @@ class LinkCreate extends React.Component {
           <div
             className={classNames({
               'govuk-form-group': true,
-              'govuk-form-group--error': errors?.to
+              'govuk-form-group--error': errors.to
             })}
           >
             <label className="govuk-label govuk-label--s" htmlFor="link-target">
               To
             </label>
-            {errors?.to && <ErrorMessage>{errors?.to.children}</ErrorMessage>}
+            {errors.to && <ErrorMessage>{errors.to.children}</ErrorMessage>}
             <select
               className={classNames({
                 'govuk-select': true,
-                'govuk-input--error': errors?.to
+                'govuk-input--error': errors.to
               })}
               id="link-target"
               data-testid="link-target"

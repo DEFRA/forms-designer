@@ -7,7 +7,7 @@ import { withI18n } from '~/src/i18n/index.js'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 import { Actions } from '~/src/reducers/component/types.js'
 
-type Props = {
+interface Props {
   context: any // TODO
   i18n: any
 }

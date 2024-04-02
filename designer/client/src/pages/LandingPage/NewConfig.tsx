@@ -11,11 +11,11 @@ import { Input } from '@xgovformbuilder/govuk-react-jsx'
 
 import ErrorSummary from '~/src/error-summary.jsx'
 
-type Props = {
+interface Props {
   history: any
 }
 
-type State = {
+interface State {
   configs: { Key: string; DisplayName: string }[]
   newName: string
   errors?: any
@@ -90,7 +90,7 @@ export class NewConfig extends Component<Props, State> {
   }
 
   handleErrors = (errors) => {
-    return this.setState({
+    this.setState({
       errors
     })
   }
@@ -98,12 +98,13 @@ export class NewConfig extends Component<Props, State> {
   handleResponse = async (res) => {
     if (!res.ok) {
       const text = await res.text()
-      return this.handleErrors({
+      this.handleErrors({
         name: {
           href: '#formName',
           children: i18n(text)
         }
       })
+      return
     }
     return res.json()
   }
@@ -116,7 +117,8 @@ export class NewConfig extends Component<Props, State> {
     const { errors, hasErrors } = this.validate()
 
     if (hasErrors) {
-      return this.handleErrors(errors)
+      this.handleErrors(errors)
+      return
     } else {
       this.handleErrors(errors)
     }

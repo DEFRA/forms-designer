@@ -51,7 +51,7 @@ function isValidYear(year: string) {
 
 export const AbsoluteDateValues = ({ value = {}, updateValue }: Props) => {
   const [year, setYear] = useState<string>(() =>
-    isInt(value.year) ? (value.year as number).toString() : ''
+    isInt(value.year) ? value.year.toString() : ''
   )
 
   const [month, setMonth] = useState<string>(() =>

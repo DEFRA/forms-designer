@@ -37,12 +37,12 @@ interface State {
   fields: any
 }
 
-type ConditionObject = {
+interface ConditionObject {
   name: string
   conditions: Condition[]
 }
 
-export type ConditionData = {
+export interface ConditionData {
   name: string
   displayName: string
   value: string | ConditionObject

@@ -120,9 +120,7 @@ export class FeeEdit extends React.Component {
             }}
             defaultValue={payApiKey?.test ?? payApiKey?.production ?? payApiKey}
             errorMessage={
-              errors?.payapi
-                ? { children: errors?.payapi?.children }
-                : undefined
+              errors.payapi ? { children: errors.payapi?.children } : undefined
             }
           />
 

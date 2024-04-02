@@ -40,7 +40,7 @@ function useConditionsEditor() {
   }
 }
 
-type Props = {}
+interface Props {}
 
 export function ConditionsEdit({ path }: Props) {
   const {

@@ -16,7 +16,7 @@ export const hasNestedCondition = (condition: ConditionData) => {
   if (typeof condition.value === 'string') {
     return false
   }
-  return condition.value.conditions?.find?.(hasConditionName) ?? false
+  return condition.value.conditions.find(hasConditionName) ?? false
 }
 
 export const isDuplicateCondition = (
@@ -31,7 +31,7 @@ export const getFieldNameSubstring = (sectionFieldName: string) => {
 }
 
 export function conditionsByType(conditions: ConditionData[]) {
-  return conditions.reduce(
+  return conditions.reduce<ConditionByTypeMap>(
     (conditionsByType, currentValue) => {
       if (isStringCondition(currentValue)) {
         conditionsByType.string.push(currentValue)
@@ -46,11 +46,11 @@ export function conditionsByType(conditions: ConditionData[]) {
       string: [],
       nested: [],
       object: []
-    } as ConditionByTypeMap
+    }
   )
 }
 
-type ConditionByTypeMap = {
+interface ConditionByTypeMap {
   string: ConditionData[]
   nested: ConditionData[]
   object: ConditionData[]

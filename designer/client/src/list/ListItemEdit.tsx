@@ -89,7 +89,7 @@ export function ListItemEdit() {
           onChange={handleConditionChange}
         >
           <option value="" data-testid="list-condition-option" />
-          {conditions?.map((condition) => (
+          {conditions.map((condition) => (
             <option
               key={condition.name}
               value={condition.name}

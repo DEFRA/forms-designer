@@ -7,15 +7,15 @@ import {
   type ValidationErrors
 } from '~/src/outputs/types.js'
 
-type Props = {
+interface Props {
   output: Output
   errors: ValidationErrors
 }
 
 const EmailEdit = ({ output, errors = {} }: Props) => {
   const outputConfiguration = (
-    typeof output?.outputConfiguration === 'object'
-      ? output?.outputConfiguration
+    typeof output.outputConfiguration === 'object'
+      ? output.outputConfiguration
       : {
           emailAddress: ''
         }
@@ -32,7 +32,7 @@ const EmailEdit = ({ output, errors = {} }: Props) => {
         }}
         defaultValue={outputConfiguration.emailAddress}
         errorMessage={
-          errors?.email ? { children: errors?.email.children } : undefined
+          errors.email ? { children: errors.email.children } : undefined
         }
       />
     </div>

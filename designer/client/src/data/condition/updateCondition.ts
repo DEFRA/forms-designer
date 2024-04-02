@@ -10,7 +10,7 @@ export function updateCondition(
   conditionName: ConditionRawData['name'],
   updatedPartial: Partial<Omit<ConditionRawData, 'name'>>
 ): FormDefinition {
-  const conditions = [...data.conditions!]
+  const conditions = [...data.conditions]
   const conditionIndex = conditions.findIndex(
     (condition) => condition.name === conditionName
   )
