@@ -11,6 +11,6 @@
     "**/*.js",
     "**/*.mjs",
     "**/*.ts",
-    "../../jest.config.mjs"
+    "../../jest.config.js"
   ]
 }

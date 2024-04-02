@@ -3,12 +3,12 @@ import { cwd } from 'node:process'
 
 import hapiVision from '@hapi/vision'
 import nunjucks from 'nunjucks'
-import resolvePkg from 'resolve/sync'
+import resolvePkg from 'resolve/sync.js'
 
-import config from '~/src/config'
-import { context } from '~/src/common/nunjucks/context'
-import * as filters from '~/src/common/nunjucks/filters'
-import * as globals from '~/src/common/nunjucks/globals'
+import config from '~/src/config.js'
+import { context } from '~/src/common/nunjucks/context/index.js'
+import * as filters from '~/src/common/nunjucks/filters/index.js'
+import * as globals from '~/src/common/nunjucks/globals.js'
 
 const distPath = config.isDevelopment
   ? resolve(cwd(), '../dist') // npm run dev

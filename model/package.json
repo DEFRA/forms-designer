@@ -12,6 +12,7 @@
   "main": "dist/module/index.js",
   "browser": "dist/browser/index.js",
   "types": "dist/types/index.d.ts",
+  "type": "module",
   "scripts": {
     "build": "npm run build:types && npm run build:node && npm run build:browser",
     "build:browser": "BABEL_ENV=javascripts babel --delete-dir-on-start --extensions \".ts\" --ignore \"**/*.test.*\" --copy-files --no-copy-ignored --source-maps --out-dir ./dist/browser ./src",

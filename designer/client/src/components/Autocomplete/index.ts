@@ -1,1 +1,1 @@
-export { Autocomplete } from '~/src/components/Autocomplete/Autocomplete'
+export { Autocomplete } from '~/src/components/Autocomplete/Autocomplete.jsx'

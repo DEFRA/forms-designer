@@ -1,2 +1,2 @@
-export * from '~/src/data/list/findList'
-export * from '~/src/data/list/addList'
+export * from '~/src/data/list/findList.js'
+export * from '~/src/data/list/addList.js'

@@ -1,4 +1,4 @@
-import { projectDefaults } from '../../jest.config.mjs'
+import { projectDefaults } from '../../jest.config.js'
 
 /**
  * Jest project config
@@ -15,15 +15,15 @@ export default {
   collectCoverageFrom: ['<rootDir>/src/**/*.{cjs,js,mjs,ts}'],
 
   // Configure mock browser environment for React
-  setupFiles: ['<rootDir>/jest.setup.js'],
+  setupFiles: ['<rootDir>/jest.setup.cjs'],
   setupFilesAfterEnv: ['<rootDir>/jest.environment.js'],
   testEnvironment: 'jsdom',
   testEnvironmentOptions: { customExportConditions: [''] },
 
   // Configure mocks for JavaScript imports
   moduleNameMapper: {
-    '\\.(css|scss)$': '<rootDir>/test/mocks/webpack/stylesheet.js',
-    '\\.(ico|png|svg)$': '<rootDir>/test/mocks/webpack/image.js'
+    '\\.(css|scss)$': '<rootDir>/test/mocks/webpack/stylesheet.cjs',
+    '\\.(ico|png|svg)$': '<rootDir>/test/mocks/webpack/image.cjs'
   },
 
   // Transform React components to fix missing file extensions etc

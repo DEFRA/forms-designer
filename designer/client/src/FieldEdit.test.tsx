@@ -2,13 +2,13 @@ import React, { useReducer } from 'react'
 import { FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
-import { DataContext } from '~/src/context'
+import { DataContext } from '~/src/context/index.js'
 import {
   ComponentContext,
   componentReducer,
   initComponentState
-} from '~/src/reducers/component/componentReducer'
-import { FieldEdit } from '~/src/field-edit'
+} from '~/src/reducers/component/componentReducer.jsx'
+import { FieldEdit } from '~/src/field-edit.jsx'
 
 describe('Field Edit', () => {
   const { getByText } = screen

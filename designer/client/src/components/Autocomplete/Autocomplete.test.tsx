@@ -1,8 +1,8 @@
 import React from 'react'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
-import { Autocomplete } from '~/src/components/Autocomplete'
-import { RenderWithContext } from '~/test/helpers/renderers'
+import { Autocomplete } from '~/src/components/Autocomplete/index.js'
+import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
 describe('AutocompleteField', () => {
   const { getByText } = screen

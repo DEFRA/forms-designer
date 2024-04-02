@@ -4,7 +4,7 @@ describe('Footer', () => {
   const OLD_ENV = process.env
 
   const startServer = async (): Promise<any> => {
-    const { createServer } = await import('~/src/createServer')
+    const { createServer } = await import('~/src/createServer.js')
     const server = await createServer()
     await server.start()
     return server
@@ -20,8 +20,8 @@ describe('Footer', () => {
       FOOTER_TEXT: 'Footer Text Test'
     }
 
-    await import('~/src/config')
-    await import('~/src/plugins/designer')
+    await import('~/src/config.js')
+    await import('~/src/plugins/designer.js')
 
     const options = {
       method: 'GET',

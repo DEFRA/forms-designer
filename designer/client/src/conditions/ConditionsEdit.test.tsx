@@ -2,8 +2,8 @@ import React from 'react'
 import { screen } from '@testing-library/dom'
 import { act, cleanup, render, type RenderResult } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import ConditionsEdit from '~/src/conditions/ConditionsEdit'
-import { DataContext, FlyoutContext } from '~/src/context'
+import ConditionsEdit from '~/src/conditions/ConditionsEdit.jsx'
+import { DataContext, FlyoutContext } from '~/src/context/index.js'
 import { FormDefinition } from '@defra/forms-model'
 
 const flyoutValue = {

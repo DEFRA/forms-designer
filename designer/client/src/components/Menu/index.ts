@@ -1,1 +1,1 @@
-export { default as Menu } from '~/src/components/Menu/Menu'
+export { default as Menu } from '~/src/components/Menu/Menu.jsx'

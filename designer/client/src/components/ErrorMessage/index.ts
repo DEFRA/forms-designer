@@ -1,1 +1,1 @@
-export { ErrorMessage } from '~/src/components/ErrorMessage/ErrorMessage'
+export { ErrorMessage } from '~/src/components/ErrorMessage/ErrorMessage.jsx'

@@ -8,8 +8,8 @@ import {
   waitFor
 } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import LinkCreate from '~/src/link-create'
-import { DataContext } from '~/src/context'
+import LinkCreate from '~/src/link-create.js'
+import { DataContext } from '~/src/context/index.js'
 import { screen, within } from '@testing-library/dom'
 
 const rawData: FormDefinition = {

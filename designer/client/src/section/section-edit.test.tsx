@@ -1,8 +1,8 @@
 import React from 'react'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
-import { RenderWithContext } from '~/test/helpers/renderers'
-import SectionEdit from '~/src/section/section-edit'
+import { RenderWithContext } from '~/test/helpers/renderers.jsx'
+import SectionEdit from '~/src/section/section-edit.js'
 
 describe('Section edit fields', () => {
   afterEach(cleanup)

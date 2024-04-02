@@ -1,4 +1,4 @@
-import { Coordinator } from '~/src/conditions/enums'
+import { Coordinator } from '~/src/conditions/enums.js'
 
 export class ConditionAbstract {
   coordinator: Coordinator | undefined

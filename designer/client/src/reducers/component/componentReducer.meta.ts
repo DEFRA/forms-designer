@@ -1,7 +1,7 @@
-import { Meta } from '~/src/reducers/component/types'
+import { Meta } from '~/src/reducers/component/types.js'
 
-import { fieldComponentValidations } from '~/src/reducers/component/componentReducer.validations'
-import randomId from '~/src/randomId'
+import { fieldComponentValidations } from '~/src/reducers/component/componentReducer.validations.js'
+import randomId from '~/src/randomId.js'
 
 export function metaReducer(
   state,

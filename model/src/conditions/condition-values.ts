@@ -1,10 +1,10 @@
-import { ConditionValueAbstract } from '~/src/conditions/condition-value-abstract'
-import { Registration } from '~/src/conditions/condition-value-registration'
+import { ConditionValueAbstract } from '~/src/conditions/condition-value-abstract.js'
+import { Registration } from '~/src/conditions/condition-value-registration.js'
 import {
   type DateTimeUnitValues,
   type DateUnits,
   type TimeUnits
-} from '~/src/conditions/types'
+} from '~/src/conditions/types.js'
 
 export class ConditionValue extends ConditionValueAbstract {
   value: string

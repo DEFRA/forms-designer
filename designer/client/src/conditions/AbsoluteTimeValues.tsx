@@ -1,5 +1,5 @@
 import React from 'react'
-import { isInt } from '~/src/conditions/inline-condition-helpers'
+import { isInt } from '~/src/conditions/inline-condition-helpers.js'
 
 export interface HourMinute {
   hour: number

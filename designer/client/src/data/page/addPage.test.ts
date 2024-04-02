@@ -1,5 +1,5 @@
 import { FormDefinition } from '@defra/forms-model'
-import { addPage } from '~/src/data'
+import { addPage } from '~/src/data/index.js'
 
 const data: FormDefinition = {
   conditions: [],

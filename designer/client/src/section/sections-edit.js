@@ -1,8 +1,8 @@
 import React from 'react'
-import SectionEdit from '~/src/section/section-edit'
-import { RenderInPortal } from '~/src/components/RenderInPortal'
-import { Flyout } from '~/src/components/Flyout'
-import { DataContext } from '~/src/context'
+import SectionEdit from '~/src/section/section-edit.js'
+import { RenderInPortal } from '~/src/components/RenderInPortal/index.js'
+import { Flyout } from '~/src/components/Flyout/index.js'
+import { DataContext } from '~/src/context/index.js'
 
 class SectionsEdit extends React.Component {
   static contextType = DataContext

@@ -1,1 +1,1 @@
-export { FormDetails } from '~/src/components/FormDetails/FormDetails'
+export { FormDetails } from '~/src/components/FormDetails/FormDetails.jsx'

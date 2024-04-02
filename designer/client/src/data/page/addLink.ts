@@ -1,5 +1,5 @@
 import { FormDefinition, Link } from '@defra/forms-model'
-import { ConditionName, Path, findPage } from '~/src/data'
+import { ConditionName, Path, findPage } from '~/src/data/index.js'
 
 /**
  * @param data - Data from DataContext

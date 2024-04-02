@@ -1,5 +1,5 @@
 import React from 'react'
-import { Visualisation } from '~/src/components/Visualisation'
+import { Visualisation } from '~/src/components/Visualisation/index.js'
 import { FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { userEvent } from '@testing-library/user-event'
@@ -10,7 +10,7 @@ import {
   waitFor,
   type RenderResult
 } from '@testing-library/react'
-import { DataContext } from '~/src/context'
+import { DataContext } from '~/src/context/index.js'
 import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 

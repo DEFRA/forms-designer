@@ -1,7 +1,7 @@
 import Wreck from '@hapi/wreck'
-import config from '~/src/config'
+import config from '~/src/config.js'
 
-import { PreviewPersistenceService } from '~/src/lib/persistence/previewPersistenceService'
+import { PreviewPersistenceService } from '~/src/lib/persistence/previewPersistenceService.js'
 
 jest.mock('@hapi/wreck')
 

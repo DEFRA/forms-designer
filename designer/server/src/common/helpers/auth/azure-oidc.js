@@ -2,7 +2,7 @@ import jwt from '@hapi/jwt'
 import bell from '@hapi/bell'
 import basic from '@hapi/basic'
 
-import config from '~/src/config'
+import config from '~/src/config.js'
 
 const azureOidc = {
   plugin: {

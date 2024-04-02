@@ -3,9 +3,9 @@ import { screen } from '@testing-library/dom'
 import { act, cleanup, render, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 
-import { ComponentCreate } from '~/src/components/ComponentCreate'
-import { ComponentContextProvider } from '~/src/reducers/component'
-import { DataContext } from '~/src/context'
+import { ComponentCreate } from '~/src/components/ComponentCreate/index.js'
+import { ComponentContextProvider } from '~/src/reducers/component/index.js'
+import { DataContext } from '~/src/context/index.js'
 import { DetailsComponent, FormDefinition } from '@defra/forms-model'
 
 describe('ComponentCreate:', () => {

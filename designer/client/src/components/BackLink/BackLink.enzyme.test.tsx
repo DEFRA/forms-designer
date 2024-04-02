@@ -1,7 +1,7 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-import { BackLink } from '~/src/components/BackLink'
+import { BackLink } from '~/src/components/BackLink/index.js'
 
 describe('BackLink Component', () => {
   test('it renders correctly', () => {

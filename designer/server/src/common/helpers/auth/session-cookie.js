@@ -1,12 +1,12 @@
 import authCookie from '@hapi/cookie'
 import { isPast, parseISO, subMinutes } from 'date-fns'
 
-import config from '~/src/config'
-import { refreshAccessToken } from '~/src/common/helpers/auth/refresh-token'
+import config from '~/src/config.js'
+import { refreshAccessToken } from '~/src/common/helpers/auth/refresh-token.js'
 import {
   removeUserSession,
   updateUserSession
-} from '~/src/common/helpers/auth/user-session'
+} from '~/src/common/helpers/auth/user-session.js'
 
 const sessionCookie = {
   plugin: {

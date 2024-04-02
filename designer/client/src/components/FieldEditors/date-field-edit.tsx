@@ -1,8 +1,8 @@
 import React, { useContext } from 'react'
-import { ComponentContext } from '~/src/reducers/component/componentReducer'
-import { Actions } from '~/src/reducers/component/types'
-import { CssClasses } from '~/src/components/CssClasses'
-import { i18n } from '~/src/i18n'
+import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
+import { Actions } from '~/src/reducers/component/types.js'
+import { CssClasses } from '~/src/components/CssClasses/index.js'
+import { i18n } from '~/src/i18n/index.js'
 
 type Props = {
   context: any // TODO

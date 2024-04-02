@@ -1,3 +1,3 @@
-export * from '~/src/data/component/addComponent'
-export * from '~/src/data/component/updateComponent'
-export * from '~/src/data/component/inputs'
+export * from '~/src/data/component/addComponent.js'
+export * from '~/src/data/component/updateComponent.js'
+export * from '~/src/data/component/inputs.js'

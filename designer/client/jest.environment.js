@@ -1,6 +1,6 @@
-require('@testing-library/jest-dom')
-require('./test/testServer')
-const { initI18n } = require('./src/i18n')
+import '@testing-library/jest-dom'
+
+import { initI18n } from './src/i18n/index.js'
 
 initI18n()
 

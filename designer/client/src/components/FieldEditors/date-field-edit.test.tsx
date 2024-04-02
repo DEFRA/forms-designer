@@ -1,8 +1,8 @@
 import React from 'react'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
-import { DateFieldEdit } from '~/src/components/FieldEditors/date-field-edit'
-import { RenderWithContext } from '~/test/helpers/renderers'
+import { DateFieldEdit } from '~/src/components/FieldEditors/date-field-edit.jsx'
+import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
 describe('date field edit', () => {
   afterEach(cleanup)

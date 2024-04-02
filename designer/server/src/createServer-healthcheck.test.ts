@@ -13,8 +13,8 @@ describe(`/health-check Route`, () => {
       LAST_TAG: 'LAST TAG'
     }
 
-    await import('~/src/config')
-    const { createServer } = await import('~/src/createServer')
+    await import('~/src/config.js')
+    const { createServer } = await import('~/src/createServer.js')
 
     const server = await createServer()
     const { result } = (await server.inject(options)) as any

@@ -11,6 +11,7 @@
   "license": "OGL-UK-3.0",
   "main": "dist/module/index.js",
   "types": "dist/types/index.d.ts",
+  "type": "module",
   "scripts": {
     "build": "npm run build:prisma && npm run build:types && npm run build:node",
     "build:node": "BABEL_ENV=node babel --delete-dir-on-start --extensions \".ts\" --ignore \"**/*.test.*\" --copy-files --no-copy-ignored --source-maps --out-dir ./dist/module ./src",

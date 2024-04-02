@@ -1,7 +1,7 @@
 import React, { MouseEvent, ChangeEvent } from 'react'
 import { clone } from '@defra/forms-model'
-import { DataContext } from '~/src/context'
-import logger from '~/src/plugins/logger'
+import { DataContext } from '~/src/context/index.js'
+import logger from '~/src/plugins/logger.js'
 
 type State = {
   items: string[]

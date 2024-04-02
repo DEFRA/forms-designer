@@ -1,1 +1,1 @@
-export { whichMigrations } from '~/src/migration/whichMigrations'
+export { whichMigrations } from '~/src/migration/whichMigrations.js'

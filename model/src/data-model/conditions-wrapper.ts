@@ -1,8 +1,8 @@
-import { ConditionsModel } from '~/src/conditions/condition-model'
+import { ConditionsModel } from '~/src/conditions/condition-model.js'
 import {
   type ConditionRawData,
   type ConditionWrapperValue
-} from '~/src/data-model/types'
+} from '~/src/data-model/types.js'
 
 export class ConditionsWrapper {
   name: string

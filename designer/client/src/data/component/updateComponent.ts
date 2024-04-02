@@ -1,4 +1,4 @@
-import { Path, findPage } from '~/src/data'
+import { Path, findPage } from '~/src/data/index.js'
 import { ComponentDef } from '@defra/forms-model'
 
 export function updateComponent(

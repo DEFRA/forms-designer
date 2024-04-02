@@ -1,4 +1,4 @@
-import { createServer } from '~/src/createServer'
+import { createServer } from '~/src/createServer.js'
 
 export async function listen() {
   const server = await createServer()

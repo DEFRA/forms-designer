@@ -32,8 +32,23 @@ module.exports = {
       {
         browserslistEnv: BABEL_ENV,
         bugfixes: true,
-        modules: BABEL_ENV === 'node' ? 'auto' : 'umd'
+        modules: NODE_ENV === 'test' ? 'auto' : false
       }
     ]
-  ]
+  ],
+  env: {
+    test: {
+      plugins: [
+        [
+          'replace-import-extension',
+          {
+            extMapping: {
+              '.cjs': '',
+              '.js': ''
+            }
+          }
+        ]
+      ]
+    }
+  }
 }

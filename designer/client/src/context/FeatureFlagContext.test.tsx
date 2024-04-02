@@ -4,9 +4,9 @@ import { cleanup, render, waitFor } from '@testing-library/react'
 import {
   FeatureFlagContext,
   FeatureFlagProvider
-} from '~/src/context/FeatureFlagContext'
-import { FeatureToggleApi } from '~/src/api/toggleApi'
-import FeatureToggle from '~/src/FeatureToggle'
+} from '~/src/context/FeatureFlagContext.jsx'
+import { FeatureToggleApi } from '~/src/api/toggleApi.js'
+import FeatureToggle from '~/src/FeatureToggle.jsx'
 
 describe('FeatureFlagContext', () => {
   afterEach(cleanup)

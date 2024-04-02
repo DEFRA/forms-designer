@@ -5,20 +5,20 @@ import React, {
   FormEvent,
   ReactNode
 } from 'react'
-import NotifyEdit from '~/src/outputs/notify-edit'
-import EmailEdit from '~/src/outputs/email-edit'
+import NotifyEdit from '~/src/outputs/notify-edit.jsx'
+import EmailEdit from '~/src/outputs/email-edit.jsx'
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
-import WebhookEdit from '~/src/outputs/webhook-edit'
+import WebhookEdit from '~/src/outputs/webhook-edit.jsx'
 import {
   OutputType,
   OutputConfiguration,
   Output,
   ValidationErrors
-} from '~/src/outputs/types'
-import { validateNotEmpty, hasValidationErrors } from '~/src/validations'
-import ErrorSummary from '~/src/error-summary'
-import { DataContext } from '~/src/context'
-import logger from '~/src/plugins/logger'
+} from '~/src/outputs/types.js'
+import { validateNotEmpty, hasValidationErrors } from '~/src/validations.js'
+import ErrorSummary from '~/src/error-summary.jsx'
+import { DataContext } from '~/src/context/index.js'
+import logger from '~/src/plugins/logger.js'
 
 type State = {
   outputType: OutputType

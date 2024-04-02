@@ -8,11 +8,11 @@ import {
   waitFor
 } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import { DataContext } from '~/src/context'
+import { DataContext } from '~/src/context/index.js'
 import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 import React from 'react'
-import { Page } from '~/src/components/Page'
+import { Page } from '~/src/components/Page/index.js'
 const history = createMemoryHistory()
 history.push('')
 

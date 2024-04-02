@@ -1,4 +1,4 @@
-import { Fields } from '~/src/reducers/component/types'
+import { Fields } from '~/src/reducers/component/types.js'
 
 export function fieldsReducer(
   state,

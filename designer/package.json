@@ -10,6 +10,7 @@
   },
   "license": "OGL-UK-3.0",
   "main": "server/dist/index.js",
+  "type": "module",
   "scripts": {
     "audit": "npm audit --audit-level=high",
     "build": "npm run build:server && npm run build:client",

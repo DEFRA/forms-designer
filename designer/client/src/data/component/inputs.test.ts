@@ -1,4 +1,4 @@
-import { allInputs } from '~/src/data'
+import { allInputs } from '~/src/data/index.js'
 import { FormDefinition } from '@defra/forms-model'
 
 test('should return all inputs from the page model', () => {

@@ -1,5 +1,5 @@
-import config from '~/src/config'
-import { buildNavigation } from '~/src/common/nunjucks/context/build-navigation'
+import config from '~/src/config.js'
+import { buildNavigation } from '~/src/common/nunjucks/context/build-navigation.js'
 
 const appPathPrefix = config.appPathPrefix
 const mockRequest = ({ path = '' } = {}) => ({

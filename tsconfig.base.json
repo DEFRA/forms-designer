@@ -6,7 +6,7 @@
     "declaration": true,
     "declarationMap": true,
     "esModuleInterop": true,
-    "module": "CommonJS",
+    "module": "NodeNext",
     "noEmit": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,

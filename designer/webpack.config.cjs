@@ -52,7 +52,7 @@ module.exports = {
           not: [/@xgovformbuilder\/govuk-react-jsx/]
         },
         options: {
-          extends: join(__dirname, 'client/babel.config.js')
+          extends: join(__dirname, 'client/babel.config.cjs')
         },
 
         // Fix missing file extensions in React components
@@ -187,7 +187,12 @@ module.exports = {
         'govuk/assets/'
       )
     },
-    extensions: ['.js', '.jsx', '.ts', '.tsx']
+    extensionAlias: {
+      '.cjs': ['.cts', '.cjs'],
+      '.js': ['.ts', '.js'],
+      '.jsx': ['.tsx', '.jsx'],
+      '.mjs': ['.mts', '.mjs']
+    }
   },
   target: 'web'
 }

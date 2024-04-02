@@ -1,4 +1,4 @@
-import { Registration } from '~/src/conditions/condition-value-registration'
+import { Registration } from '~/src/conditions/condition-value-registration.js'
 
 export class ConditionValueAbstract {
   type: string

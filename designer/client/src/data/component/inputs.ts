@@ -1,4 +1,9 @@
-import { Input, isNotContentType, Path, allPathsLeadingTo } from '~/src/data'
+import {
+  Input,
+  isNotContentType,
+  Path,
+  allPathsLeadingTo
+} from '~/src/data/index.js'
 import { FormDefinition } from '@defra/forms-model'
 
 export function allInputs(data: FormDefinition): Input[] {

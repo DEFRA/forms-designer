@@ -1,4 +1,4 @@
-import { authScope } from '~/src/common/helpers/auth/auth-scope'
+import { authScope } from '~/src/common/helpers/auth/auth-scope.js'
 
 describe('#authScope', () => {
   test('Should add scope to route as expected', () => {

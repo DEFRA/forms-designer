@@ -1,5 +1,5 @@
 import { ConditionRawData, FormDefinition } from '@defra/forms-model'
-import { Path, findPage } from '~/src/data'
+import { Path, findPage } from '~/src/data/index.js'
 
 export function updateLink(
   data: FormDefinition,

@@ -1,17 +1,17 @@
 import React, { Component, ChangeEvent, ContextType, FormEvent } from 'react'
 import { FormConfiguration, FormDefinition } from '@defra/forms-model'
-import isFunction from 'lodash/isFunction'
+import isFunction from 'lodash/isFunction.js'
 
-import { validateTitle, hasValidationErrors } from '~/src/validations'
-import ErrorSummary from '~/src/error-summary'
-import { DataContext } from '~/src/context'
-import { i18n } from '~/src/i18n'
+import { validateTitle, hasValidationErrors } from '~/src/validations.js'
+import ErrorSummary from '~/src/error-summary.jsx'
+import { DataContext } from '~/src/context/index.js'
+import { i18n } from '~/src/i18n/index.js'
 
-import { FormDetailsTitle } from '~/src/components/FormDetails/FormDetailsTitle'
-import { FormDetailsFeedback } from '~/src/components/FormDetails/FormDetailsFeedback'
-import { FormDetailsPhaseBanner } from '~/src/components/FormDetails/FormDetailsPhaseBanner'
+import { FormDetailsTitle } from '~/src/components/FormDetails/FormDetailsTitle.jsx'
+import { FormDetailsFeedback } from '~/src/components/FormDetails/FormDetailsFeedback.jsx'
+import { FormDetailsPhaseBanner } from '~/src/components/FormDetails/FormDetailsPhaseBanner.jsx'
 import '~/src/components/FormDetails/FormDetails.scss'
-import logger from '~/src/plugins/logger'
+import logger from '~/src/plugins/logger.js'
 type PhaseBanner = Exclude<FormDefinition['phaseBanner'], undefined>
 type Phase = PhaseBanner['phase']
 

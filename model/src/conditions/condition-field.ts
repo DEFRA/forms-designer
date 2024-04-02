@@ -1,5 +1,5 @@
-import { ComponentTypes } from '~/src/components'
-import { type ComponentType } from '~/src/components/types'
+import { ComponentTypes } from '~/src/components/index.js'
+import { type ComponentType } from '~/src/components/types.js'
 
 export class ConditionField {
   name: string

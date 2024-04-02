@@ -1,7 +1,7 @@
 import React, { useCallback, useState, Fragment, useContext } from 'react'
-import { RenderInPortal } from '~/src/components/RenderInPortal'
-import { DataContext } from '~/src/context'
-import { addLink } from '~/src/data'
+import { RenderInPortal } from '~/src/components/RenderInPortal/index.js'
+import { DataContext } from '~/src/context/index.js'
+import { addLink } from '~/src/data/index.js'
 
 export function PageLinkage({ page, layout }) {
   const { data, save } = useContext(DataContext)

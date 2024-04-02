@@ -1,4 +1,4 @@
-import { Schema } from '~/src/reducers/component/types'
+import { Schema } from '~/src/reducers/component/types.js'
 
 export function schemaReducer(
   state,

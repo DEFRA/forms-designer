@@ -1,4 +1,4 @@
-import { Options } from '~/src/reducers/component/types'
+import { Options } from '~/src/reducers/component/types.js'
 
 interface ConditionAction {
   type: Options.EDIT_OPTIONS_CONDITION

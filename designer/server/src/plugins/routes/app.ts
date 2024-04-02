@@ -1,4 +1,4 @@
-import config from '~/src/config'
+import config from '~/src/config.js'
 import { ServerRoute } from '@hapi/hapi'
 import JSZip from 'jszip'
 

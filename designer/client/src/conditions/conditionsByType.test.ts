@@ -1,4 +1,4 @@
-import { conditionsByType } from '~/src/conditions/select-condition-helpers'
+import { conditionsByType } from '~/src/conditions/select-condition-helpers.js'
 
 const stringCondition = {
   name: 'likesScrambledEggs',

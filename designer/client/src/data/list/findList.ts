@@ -1,5 +1,5 @@
 import { FormDefinition, List } from '@defra/forms-model'
-import { Found } from '~/src/data'
+import { Found } from '~/src/data/index.js'
 
 export function findList(
   data: FormDefinition,

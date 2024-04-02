@@ -3,21 +3,24 @@ import inert from '@hapi/inert'
 import Scooter from '@hapi/scooter'
 import { Engine as CatboxRedis } from '@hapi/catbox-redis'
 
-import router from '~/src/plugins/router'
-import { designerPlugin } from '~/src/plugins/designer'
+import router from '~/src/plugins/router.js'
+import { designerPlugin } from '~/src/plugins/designer.js'
 import Schmervice from 'schmervice'
-import config from '~/src/config'
-import { determinePersistenceService } from '~/src/lib/persistence'
-import { configureBlankiePlugin } from '~/src/plugins/blankie'
-import { azureOidc, azureOidcNoop } from '~/src/common/helpers/auth/azure-oidc'
-import { authedFetcher } from '~/src/common/helpers/fetch/authed-fetcher'
-import { sessionManager } from '~/src/common/helpers/session-manager'
-import { sessionCookie } from '~/src/common/helpers/auth/session-cookie'
-import { getUserSession } from '~/src/common/helpers/auth/get-user-session'
-import { dropUserSession } from '~/src/common/helpers/auth/drop-user-session'
-import { buildRedisClient } from '~/src/common/helpers/redis-client'
-import { nunjucksConfig } from '~/src/common/nunjucks'
-import { requestLogger } from '~/src/common/helpers/logging/request-logger'
+import config from '~/src/config.js'
+import { determinePersistenceService } from '~/src/lib/persistence/index.js'
+import { configureBlankiePlugin } from '~/src/plugins/blankie.js'
+import {
+  azureOidc,
+  azureOidcNoop
+} from '~/src/common/helpers/auth/azure-oidc.js'
+import { authedFetcher } from '~/src/common/helpers/fetch/authed-fetcher.js'
+import { sessionManager } from '~/src/common/helpers/session-manager.js'
+import { sessionCookie } from '~/src/common/helpers/auth/session-cookie.js'
+import { getUserSession } from '~/src/common/helpers/auth/get-user-session.js'
+import { dropUserSession } from '~/src/common/helpers/auth/drop-user-session.js'
+import { buildRedisClient } from '~/src/common/helpers/redis-client.js'
+import { nunjucksConfig } from '~/src/common/nunjucks/index.js'
+import { requestLogger } from '~/src/common/helpers/logging/request-logger.js'
 
 const client = buildRedisClient()
 

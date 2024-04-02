@@ -1,4 +1,4 @@
-import logger from '~/src/plugins/logger'
+import logger from '~/src/plugins/logger.js'
 export function fetchConfigurations() {
   return window
     .fetch('/forms-designer/api/configurations', {

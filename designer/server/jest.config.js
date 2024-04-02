@@ -1,4 +1,4 @@
-import { projectDefaults } from '../../jest.config.mjs'
+import { projectDefaults } from '../../jest.config.js'
 
 /**
  * Jest project config

@@ -1,1 +1,1 @@
-export { ComponentCreate } from '~/src/components/ComponentCreate/ComponentCreate'
+export { ComponentCreate } from '~/src/components/ComponentCreate/ComponentCreate.jsx'

@@ -1,5 +1,5 @@
 import { FormDefinition } from '@defra/forms-model'
-import logger from '~/src/plugins/logger'
+import logger from '~/src/plugins/logger.js'
 
 export class DesignerApi {
   async save(id: string, updatedData: FormDefinition): Promise<Response | any> {

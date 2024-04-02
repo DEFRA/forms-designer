@@ -3,8 +3,8 @@ import { screen } from '@testing-library/dom'
 import { act } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React from 'react'
-import { customRenderForLists } from '~/test/helpers/renderers-lists'
-import { ListItemEdit } from '~/src/list/ListItemEdit'
+import { customRenderForLists } from '~/test/helpers/renderers-lists.jsx'
+import { ListItemEdit } from '~/src/list/ListItemEdit.jsx'
 
 const data: FormDefinition = {
   pages: [

@@ -2,13 +2,13 @@ import { screen } from '@testing-library/dom'
 import { act, cleanup, render, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React from 'react'
-import { ChooseExisting } from '~/src/pages/LandingPage/ChooseExisting'
+import { ChooseExisting } from '~/src/pages/LandingPage/ChooseExisting.jsx'
 import {
   server,
   http,
   mockedFormHandlers,
   mockedFormConfigurations
-} from '~/test/testServer'
+} from '~/test/testServer.js'
 
 describe('ChooseExisting', () => {
   beforeAll(() => server.listen())

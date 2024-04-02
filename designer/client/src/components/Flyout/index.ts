@@ -1,1 +1,1 @@
-export { Flyout } from '~/src/components/Flyout/Flyout'
+export { Flyout } from '~/src/components/Flyout/Flyout.jsx'

@@ -2,10 +2,10 @@ import React from 'react'
 import { screen } from '@testing-library/dom'
 import { act, cleanup, render, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import { RenderWithContextAndDataContext } from '~/test/helpers/renderers'
+import { RenderWithContextAndDataContext } from '~/test/helpers/renderers.jsx'
 import { FormDefinition } from '@defra/forms-model'
 
-import OutputEdit from '~/src/outputs/output-edit'
+import OutputEdit from '~/src/outputs/output-edit.jsx'
 
 describe('OutputEdit', () => {
   afterEach(cleanup)

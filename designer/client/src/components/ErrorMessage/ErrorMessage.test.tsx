@@ -1,7 +1,7 @@
 import React from 'react'
 import { screen } from '@testing-library/dom'
 import { render, cleanup } from '@testing-library/react'
-import { ErrorMessage } from '~/src/components/ErrorMessage'
+import { ErrorMessage } from '~/src/components/ErrorMessage/index.js'
 
 describe('ErrorMessage component', () => {
   afterEach(cleanup)

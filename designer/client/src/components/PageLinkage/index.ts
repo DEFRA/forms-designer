@@ -1,1 +1,1 @@
-export { PageLinkage } from '~/src/components/PageLinkage/PageLinkage'
+export { PageLinkage } from '~/src/components/PageLinkage/PageLinkage.jsx'

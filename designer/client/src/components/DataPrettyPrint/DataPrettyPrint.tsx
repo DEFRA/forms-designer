@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { DataContext } from '~/src/context'
+import { DataContext } from '~/src/context/index.js'
 
 const listTypes = [
   'SelectField',
