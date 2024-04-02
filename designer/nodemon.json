@@ -1,5 +1,5 @@
 {
-  "delay": "500",
-  "watch": ["dist"],
-  "legacyWatch": true
+  "watch": ["./server/src"],
+  "ignore": ["**/*.test.*"],
+  "ext": "js,json,ts"
 }

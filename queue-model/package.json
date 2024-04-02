@@ -13,7 +13,7 @@
   "types": "dist/types/index.d.ts",
   "scripts": {
     "build": "npm run build:prisma && npm run build:types && npm run build:node",
-    "build:node": "BABEL_ENV=node babel --extensions \".ts\" --ignore \"**/*.test.*\" src --out-dir dist/module --copy-files",
+    "build:node": "BABEL_ENV=node babel --delete-dir-on-start --extensions \".ts\" --ignore \"**/*.test.*\" --copy-files --no-copy-ignored --out-dir ./dist/module ./src",
     "build:prisma": "prisma generate",
     "build:types": "tsc --build --force tsconfig.build.json && tsc-alias --project tsconfig.build.json",
     "test": "jest --color --coverage --verbose",
