@@ -1,6 +1,6 @@
 import pino from 'pino'
 
-import { loggerOptions } from './logger-options'
+import { loggerOptions } from '~/src/common/helpers/logging/logger-options'
 
 function createLogger() {
   return pino(loggerOptions)

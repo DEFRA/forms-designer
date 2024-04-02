@@ -5,10 +5,10 @@ import hapiVision from '@hapi/vision'
 import nunjucks from 'nunjucks'
 import resolvePkg from 'resolve/sync'
 
-import config from '../../config'
-import { context } from './context'
-import * as filters from './filters'
-import * as globals from './globals'
+import config from '~/src/config'
+import { context } from '~/src/common/nunjucks/context'
+import * as filters from '~/src/common/nunjucks/filters'
+import * as globals from '~/src/common/nunjucks/globals'
 
 const distPath = config.isDevelopment
   ? resolve(cwd(), '../dist') // npm run dev

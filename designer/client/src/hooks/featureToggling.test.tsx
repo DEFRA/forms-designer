@@ -1,5 +1,5 @@
 import React from 'react'
-import { useFeatures } from './featureToggling'
+import { useFeatures } from '~/src/hooks/featureToggling'
 
 describe('FeatureToggleHook', () => {
   it('should return feature context value', () => {

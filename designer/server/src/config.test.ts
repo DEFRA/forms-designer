@@ -11,7 +11,7 @@ describe('Config', () => {
       FOOTER_TEXT: 'Footer Text Test'
     }
 
-    const { default: config } = await import('./config')
+    const { default: config } = await import('~/src/config')
     expect(config.footerText).toBe('Footer Text Test')
   })
 
@@ -22,7 +22,7 @@ describe('Config', () => {
       LAST_TAG: 'LAST TAG'
     }
 
-    const { default: config } = await import('./config')
+    const { default: config } = await import('~/src/config')
     expect(config.lastCommit).toBe('LAST COMMIT')
     expect(config.lastTag).toBe('LAST TAG')
   })
@@ -36,7 +36,7 @@ describe('Config', () => {
       LAST_TAG_GH: 'LAST TAG'
     }
 
-    const { default: config } = await import('./config')
+    const { default: config } = await import('~/src/config')
     expect(config.lastCommit).toBe('LAST COMMIT')
     expect(config.lastTag).toBe('LAST TAG')
   })
@@ -50,7 +50,7 @@ describe('Config', () => {
     }
 
     try {
-      import('./config')
+      import('~/src/config')
     } catch (e) {
       expect(e).toBeTruthy()
     }
@@ -62,6 +62,6 @@ describe('Config', () => {
       AWS_SECRET_ACCESS_KEY: 'secret'
     }
 
-    await expect(import('./config')).resolves.toBeTruthy()
+    await expect(import('~/src/config')).resolves.toBeTruthy()
   })
 })

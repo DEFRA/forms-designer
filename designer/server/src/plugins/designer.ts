@@ -1,6 +1,5 @@
 import pkg from '../../../package.json'
-import config from '../config'
-import { newConfig, api, app } from './routes'
+import { newConfig, api, app } from '~/src/plugins/routes'
 import { envStore, flagg } from 'flagg'
 
 export const designerPlugin = {

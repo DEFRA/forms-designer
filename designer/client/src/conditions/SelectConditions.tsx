@@ -1,22 +1,22 @@
 import React, { ChangeEvent } from 'react'
-import InlineConditions from './InlineConditions'
+import InlineConditions from '~/src/conditions/InlineConditions'
 import { Condition, ConditionsModel, FormDefinition } from '@defra/forms-model'
-import { Flyout } from '../components/Flyout'
+import { Flyout } from '~/src/components/Flyout'
 import { Hint, Select } from '@xgovformbuilder/govuk-react-jsx'
-import { i18n } from '../i18n'
-import { DataContext } from '../context'
-import { RenderInPortal } from '../components/RenderInPortal'
+import { i18n } from '~/src/i18n'
+import { DataContext } from '~/src/context'
+import { RenderInPortal } from '~/src/components/RenderInPortal'
 import {
   allInputs,
   inputsAccessibleAt,
   hasConditions as dataHasConditions
-} from '../data'
+} from '~/src/data'
 import {
   isDuplicateCondition,
   hasConditionName,
   getFieldNameSubstring,
   conditionsByType
-} from './select-condition-helpers'
+} from '~/src/conditions/select-condition-helpers'
 
 interface Props {
   path: string

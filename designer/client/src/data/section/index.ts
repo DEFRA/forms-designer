@@ -1,1 +1,1 @@
-export * from './addSection'
+export * from '~/src/data/section/addSection'

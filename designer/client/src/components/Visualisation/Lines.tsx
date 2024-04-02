@@ -1,10 +1,10 @@
 import React from 'react'
 import { FormDefinition } from '@defra/forms-model'
 
-import { Flyout } from '../Flyout'
-import LinkEdit from '../../link-edit'
-import { Layout, Edge } from './getLayout'
-import { DataContext } from '../../context'
+import { Flyout } from '~/src/components/Flyout'
+import LinkEdit from '~/src/link-edit'
+import { Layout, Edge } from '~/src/components/Visualisation/getLayout'
+import { DataContext } from '~/src/context'
 
 type Props = {
   layout: Layout['pos']

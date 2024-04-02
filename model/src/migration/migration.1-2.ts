@@ -1,5 +1,5 @@
-import { MigrationScript } from './types'
-import { nanoid } from '../utils/helpers'
+import { MigrationScript } from '~/src/migration/types'
+import { nanoid } from '~/src/utils/helpers'
 
 /**
  * @private

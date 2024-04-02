@@ -1,5 +1,6 @@
-import { allInputs } from './inputs'
+import { allInputs } from '~/src/data'
 import { FormDefinition } from '@defra/forms-model'
+
 test('should return all inputs from the page model', () => {
   const data: FormDefinition = {
     pages: [

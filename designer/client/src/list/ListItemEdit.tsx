@@ -1,13 +1,13 @@
 import React, { memo, useContext } from 'react'
-import { i18n } from './../i18n'
+import { i18n } from '~/src/i18n'
 import { Hint, Input, Label, Textarea } from '@xgovformbuilder/govuk-react-jsx'
-import { DataContext } from '../context'
+import { DataContext } from '~/src/context'
 import {
   ListsEditorContext,
   ListsEditorStateActions
-} from '../reducers/list/listsEditorReducer'
-import { useListItem } from '../hooks/list/useListItem'
-import { ListContext } from '../reducers/listReducer'
+} from '~/src/reducers/list/listsEditorReducer'
+import { useListItem } from '~/src/hooks/list/useListItem'
+import { ListContext } from '~/src/reducers/listReducer'
 
 export function ListItemEdit() {
   const { dispatch: listsEditorDispatch } = useContext(ListsEditorContext)

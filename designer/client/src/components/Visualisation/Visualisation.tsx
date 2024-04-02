@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 
-import { Page } from '../Page'
-import { Lines } from './Lines'
-import { Minimap } from './Minimap'
-import { Info } from './Info'
-import { getLayout, Pos } from './getLayout'
-import { DataContext } from '../../context'
-import './visualisation.scss'
+import { Page } from '~/src/components/Page'
+import { Lines } from '~/src/components/Visualisation/Lines'
+import { Minimap } from '~/src/components/Visualisation/Minimap'
+import { Info } from '~/src/components/Visualisation/Info'
+import { getLayout, Pos } from '~/src/components/Visualisation/getLayout'
+import { DataContext } from '~/src/context'
+import '~/src/components/Visualisation/visualisation.scss'
 
 type Props = {
   updatedAt?: string

@@ -1,5 +1,5 @@
 import { FormDefinition } from '@defra/forms-model'
-import { updateCondition } from '.'
+import { updateCondition } from '~/src/data'
 
 const condition = {
   displayName: 'condition',

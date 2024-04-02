@@ -1,2 +1,2 @@
-export * from './findList'
-export * from './addList'
+export * from '~/src/data/list/findList'
+export * from '~/src/data/list/addList'

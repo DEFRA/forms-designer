@@ -1,4 +1,4 @@
-import logger from '../plugins/logger'
+import logger from '~/src/plugins/logger'
 export class FeatureToggleApi {
   async fetch() {
     try {

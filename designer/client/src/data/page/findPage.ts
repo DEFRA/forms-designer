@@ -1,5 +1,5 @@
 import { FormDefinition, Page } from '@defra/forms-model'
-import { Found, Path } from '..'
+import { Found, Path } from '~/src/data'
 
 /**
  * @returns returns a tuple of [Page, number]

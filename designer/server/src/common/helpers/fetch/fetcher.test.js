@@ -1,8 +1,8 @@
 import nock from 'nock'
 
-import config from '../../../config'
+import config from '~/src/config'
 import { librariesFixture } from '~/src/__fixtures__/libraries' // FIXME
-import { fetcher } from './fetcher'
+import { fetcher } from '~/src/common/helpers/fetch/fetcher'
 
 describe('#fetchJson', () => {
   const librariesEndpoint = config.portalBackendApiUrl + '/libraries'

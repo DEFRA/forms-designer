@@ -1,7 +1,7 @@
 import * as React from 'react'
 import i18next, { InitOptions, TOptions } from 'i18next'
 import Backend from 'i18next-http-backend'
-import enCommonTranslations from './translations/en.translation.json'
+import enCommonTranslations from '~/src/i18n/translations/en.translation.json'
 import upperFirst from 'lodash/upperFirst'
 
 const interpolationFormats = {

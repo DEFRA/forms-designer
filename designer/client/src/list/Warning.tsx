@@ -1,10 +1,10 @@
 import React, { useContext } from 'react'
-import { i18n } from '../i18n'
+import { i18n } from '~/src/i18n'
 import {
   ListsEditorContext,
   ListsEditorStateActions
-} from '../reducers/list/listsEditorReducer'
-import { DataContext } from '../context'
+} from '~/src/reducers/list/listsEditorReducer'
+import { DataContext } from '~/src/context'
 import { clone } from '@defra/forms-model'
 
 export function useWarning() {

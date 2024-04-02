@@ -2,9 +2,9 @@ import { readFileSync } from 'node:fs'
 import { basename, join, resolve } from 'node:path'
 import { cwd } from 'node:process'
 
-import config from '../../../config'
-import { createLogger } from '../../helpers/logging/logger'
-import { buildNavigation } from './build-navigation'
+import config from '~/src/config'
+import { createLogger } from '~/src/common/helpers/logging/logger'
+import { buildNavigation } from '~/src/common/nunjucks/context/build-navigation'
 
 const logger = createLogger()
 const { appPathPrefix, isDevelopment, serviceName } = config

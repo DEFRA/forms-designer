@@ -1,12 +1,12 @@
-import { ListActions } from '../../../reducers/listActions'
+import { ListActions } from '~/src/reducers/listActions'
 import {
   hasValidationErrors,
   validateNotEmpty,
   validateTitle
-} from '../../../validations'
-import { clone, FormDefinition } from '@defra/forms-model'
-import { ListItemHook } from './types'
-import { addList, findList } from '../../../data'
+} from '~/src/validations'
+import { FormDefinition } from '@defra/forms-model'
+import { ListItemHook } from '~/src/hooks/list/useListItem/types'
+import { addList, findList } from '~/src/data'
 
 export function useListItem(state, dispatch): ListItemHook {
   const { selectedItem = {} } = state

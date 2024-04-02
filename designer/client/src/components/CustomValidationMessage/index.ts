@@ -1,1 +1,1 @@
-export { CustomValidationMessage } from './CustomValidationMessage'
+export { CustomValidationMessage } from '~/src/components/CustomValidationMessage/CustomValidationMessage'

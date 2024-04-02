@@ -1,4 +1,4 @@
-import { createServer } from '../../createServer'
+import { createServer } from '~/src/createServer'
 
 jest.mock('@hapi/wreck', () => ({
   get: async () => ({

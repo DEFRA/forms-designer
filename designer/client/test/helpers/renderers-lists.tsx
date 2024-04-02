@@ -1,11 +1,11 @@
 import { render, type RenderResult } from '@testing-library/react'
-import { DataContext, FlyoutContext } from '../../src/context'
+import { DataContext, FlyoutContext } from '~/src/context'
 import React from 'react'
-import { ListContext } from '../../src/reducers/listReducer'
+import { ListContext } from '~/src/reducers/listReducer'
 import {
   initListsEditingState,
   ListsEditorContext
-} from '../../src/reducers/list/listsEditorReducer'
+} from '~/src/reducers/list/listsEditorReducer'
 
 const defaultFlyoutValue = {
   increment: jest.fn(),

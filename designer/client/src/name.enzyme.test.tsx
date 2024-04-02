@@ -1,6 +1,6 @@
 import React from 'react'
 import { mount } from 'enzyme'
-import { Name } from './name'
+import { Name } from '~/src/name'
 
 describe('Name component', () => {
   const i18n = jest.fn(() => 'mockTranslation')

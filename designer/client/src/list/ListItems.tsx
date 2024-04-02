@@ -4,17 +4,17 @@ import {
   SortableElement,
   SortableHandle
 } from 'react-sortable-hoc'
-import { i18n, withI18n } from '../i18n'
-import { ListActions } from '../reducers/listActions'
+import { i18n, withI18n } from '~/src/i18n'
+import { ListActions } from '~/src/reducers/listActions'
 import {
   ListsEditorContext,
   ListsEditorStateActions
-} from '../reducers/list/listsEditorReducer'
+} from '~/src/reducers/list/listsEditorReducer'
 
-import { DataContext } from '../context'
+import { DataContext } from '~/src/context'
 import { clone } from '@defra/forms-model'
-import { useListItem } from '../hooks/list/useListItem'
-import { ListContext } from '../reducers/listReducer'
+import { useListItem } from '~/src/hooks/list/useListItem'
+import { ListContext } from '~/src/reducers/listReducer'
 
 const DragHandle = SortableHandle(() => (
   <span className="drag-handle-list">&#9776;</span>

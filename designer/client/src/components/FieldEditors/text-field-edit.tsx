@@ -1,10 +1,10 @@
 import React, { useContext } from 'react'
-import { ComponentContext } from '../../reducers/component/componentReducer'
-import { Actions } from '../../reducers/component/types'
-import { CssClasses } from '../CssClasses'
-import { i18n } from '../../i18n'
-import { Autocomplete } from '../Autocomplete'
-import { CustomValidationMessage } from '../CustomValidationMessage'
+import { ComponentContext } from '~/src/reducers/component/componentReducer'
+import { Actions } from '~/src/reducers/component/types'
+import { CssClasses } from '~/src/components/CssClasses'
+import { i18n } from '~/src/i18n'
+import { Autocomplete } from '~/src/components/Autocomplete'
+import { CustomValidationMessage } from '~/src/components/CustomValidationMessage'
 
 type Props = {
   context: any // TODO

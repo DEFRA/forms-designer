@@ -1,14 +1,14 @@
-export { Schema, componentSchema } from './schema'
-export { ConditionRawData, ConditionsWrapper, OutputType } from './data-model'
-export { Logger } from './utils/logger'
-export { FormConfiguration } from './form'
+export { Schema, componentSchema } from '~/src/schema'
 export {
-  ComponentTypeEnum,
-  ComponentTypes,
-  ConditionalComponentTypes
-} from './components'
-export * from './conditions'
-export * from './utils/helpers'
-export * from './migration'
-export type * from './components/types'
-export type * from './data-model/types'
+  ConditionRawData,
+  ConditionsWrapper,
+  OutputType
+} from '~/src/data-model'
+export { Logger } from '~/src/utils/logger'
+export { FormConfiguration } from '~/src/form'
+export { ComponentTypeEnum } from '~/src/components'
+export * from '~/src/conditions'
+export * from '~/src/utils/helpers'
+export * from '~/src/migration'
+export type * from '~/src/components/types'
+export type * from '~/src/data-model/types'

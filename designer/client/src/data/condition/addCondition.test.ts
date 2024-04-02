@@ -1,5 +1,6 @@
 import { ConditionRawData, FormDefinition } from '@defra/forms-model'
-import { addCondition } from './addCondition'
+import { addCondition } from '~/src/data'
+
 const data: FormDefinition = {
   conditions: [
     {

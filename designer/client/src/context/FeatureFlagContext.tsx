@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react'
-import { FeatureToggleApi } from '../api/toggleApi'
+import { FeatureToggleApi } from '~/src/api/toggleApi'
 
 export enum FeatureFlags {
   FEATURE_EDIT_PAGE_DUPLICATE_BUTTON = 'featureEditPageDuplicateButton'

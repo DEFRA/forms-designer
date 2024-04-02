@@ -1,9 +1,9 @@
 import React from 'react'
-import Editor from './editor'
+import Editor from '~/src/editor'
 import { clone } from '@defra/forms-model'
 
-import { DataContext } from './context'
-import logger from './plugins/logger'
+import { DataContext } from '~/src/context'
+import logger from '~/src/plugins/logger'
 
 class DeclarationEdit extends React.Component {
   static contextType = DataContext

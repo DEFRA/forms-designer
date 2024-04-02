@@ -1,4 +1,4 @@
-import { Menu } from '.'
+import { Menu } from '~/src/components/Menu'
 import { screen } from '@testing-library/dom'
 import { userEvent } from '@testing-library/user-event'
 import {
@@ -8,7 +8,7 @@ import {
   type RenderResult,
   waitFor
 } from '@testing-library/react'
-import { DataContext, FlyoutContext } from '../../context'
+import { DataContext, FlyoutContext } from '~/src/context'
 import React from 'react'
 
 describe('Menu', () => {

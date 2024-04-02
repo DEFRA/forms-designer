@@ -2,7 +2,7 @@ import { screen } from '@testing-library/dom'
 import { act, cleanup, render, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React from 'react'
-import { InlineConditionsDefinitionValue } from './InlineConditionsDefinitionValue'
+import { InlineConditionsDefinitionValue } from '~/src/conditions/InlineConditionsDefinitionValue'
 import {
   ConditionValue,
   dateTimeUnits,

@@ -1,7 +1,7 @@
 import { shallow } from 'enzyme'
 import React from 'react'
 
-import { ComponentCreateList } from './ComponentCreateList'
+import { ComponentCreateList } from '~/src/components/ComponentCreate/ComponentCreateList'
 
 describe('ComponentCreateList', () => {
   const onSelectComponent = jest.fn()

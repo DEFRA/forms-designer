@@ -9,13 +9,13 @@ import {
   waitFor
 } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import { FormDetails } from './FormDetails'
+import { FormDetails } from '~/src/components/FormDetails'
 import {
   server,
   mockedFormConfigurations,
   mockedFormHandlers
-} from '../../../test/testServer'
-import { DataContext } from '../../context'
+} from '~/test/testServer'
+import { DataContext } from '~/src/context'
 
 describe('FormDetails', () => {
   const { findByTestId, findByText, getByLabelText, getByText, queryByText } =

@@ -1,4 +1,4 @@
-import { removeCondition } from '.'
+import { removeCondition } from '~/src/data'
 import { FormDefinition } from '@defra/forms-model'
 
 const data: FormDefinition = {

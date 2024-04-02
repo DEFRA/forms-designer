@@ -1,10 +1,10 @@
 import React from 'react'
 
-import ListsEdit from '../../list/ListsEdit'
-import { ListContextProvider } from '../../reducers/listReducer'
-import { ListsEditorContextProvider } from '../../reducers/list/listsEditorReducer'
-import { RenderInPortal } from '../RenderInPortal'
-import ComponentListSelect from '../ComponentListSelect/ComponentListSelect'
+import ListsEdit from '~/src/list/ListsEdit'
+import { ListContextProvider } from '~/src/reducers/listReducer'
+import { ListsEditorContextProvider } from '~/src/reducers/list/listsEditorReducer'
+import { RenderInPortal } from '~/src/components/RenderInPortal'
+import ComponentListSelect from '~/src/components/ComponentListSelect/ComponentListSelect'
 
 type Props = {
   children: any // TODO

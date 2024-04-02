@@ -1,4 +1,4 @@
-import { tryParseInt, isInt } from './inline-condition-helpers'
+import { tryParseInt, isInt } from '~/src/conditions/inline-condition-helpers'
 
 describe('tryParseInt', () => {
   it('it returns a valid integer if one can be parsed', () => {

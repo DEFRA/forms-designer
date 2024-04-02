@@ -1,10 +1,10 @@
-import { NewConfig } from './NewConfig'
+import { NewConfig } from '~/src/pages/LandingPage/NewConfig'
 import { screen } from '@testing-library/dom'
 import { act, cleanup, render, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React from 'react'
 import { MemoryRouter } from 'react-router-dom'
-import { server, http, mockedFormHandlers } from '../../../test/testServer'
+import { server, http, mockedFormHandlers } from '~/test/testServer'
 import type { FormConfiguration } from '@defra/forms-model'
 
 describe('Newconfig', () => {

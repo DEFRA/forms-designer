@@ -3,9 +3,9 @@
  * They were written FP style. When {@link FormDefinition} is passed in, it will be copied via destructuring `{...data}`, and the mutation applied.
  */
 
-export * from './types'
-export * from './component'
-export * from './list'
-export * from './page'
-export * from './section'
-export * from './condition'
+export * from '~/src/data/types'
+export * from '~/src/data/component'
+export * from '~/src/data/list'
+export * from '~/src/data/page'
+export * from '~/src/data/section'
+export * from '~/src/data/condition'

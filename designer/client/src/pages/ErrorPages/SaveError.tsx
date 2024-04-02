@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
 import { withRouter } from 'react-router-dom'
-import { BackLink } from '../../components/BackLink'
-import { i18n } from '../../i18n'
+import { BackLink } from '~/src/components/BackLink'
+import { i18n } from '~/src/i18n'
 import './ErrorPage.scss'
 
 interface Props {

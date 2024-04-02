@@ -1,6 +1,6 @@
-import { migrate as V0_TO_V2 } from './migration.0-2'
-import { migrate as V1_TO_V2 } from './migration.1-2'
-import { MigrationScript } from './types'
+import { migrate as V0_TO_V2 } from '~/src/migration/migration.0-2'
+import { migrate as V1_TO_V2 } from '~/src/migration/migration.1-2'
+import { MigrationScript } from '~/src/migration/types'
 
 /**
  * Returns which migrations that should be run against your Object with the given version

@@ -2,8 +2,8 @@ import React from 'react'
 import { screen } from '@testing-library/dom'
 import { act, cleanup, render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import { CustomValidationMessage } from './CustomValidationMessage'
-import { RenderWithContext } from '../../../test/helpers/renderers'
+import { CustomValidationMessage } from '~/src/components/CustomValidationMessage'
+import { RenderWithContext } from '~/test/helpers/renderers'
 
 describe('CssClasses', () => {
   afterEach(cleanup)

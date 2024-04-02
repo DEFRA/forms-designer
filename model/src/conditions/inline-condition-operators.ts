@@ -5,7 +5,7 @@ import {
   dateUnits,
   RelativeTimeValue,
   timeUnits
-} from './inline-condition-values'
+} from '~/src/conditions/inline-condition-values'
 
 const defaultOperators = {
   is: inline('=='),

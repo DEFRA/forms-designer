@@ -1,4 +1,4 @@
-import { ConditionsArray } from './types'
+import { ConditionsArray } from '~/src/conditions/types'
 
 export class ConditionGroupDef {
   first: number

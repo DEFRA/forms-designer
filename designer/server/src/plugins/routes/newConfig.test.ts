@@ -1,6 +1,6 @@
-import { createServer } from '../../createServer'
+import { createServer } from '~/src/createServer'
 
-import { publish } from '../../lib/publish'
+import { publish } from '~/src/lib/publish'
 
 jest.mock('../../lib/publish')
 

@@ -1,5 +1,5 @@
 import { FormDefinition } from '@defra/forms-model'
-import { updateLink } from '.'
+import { updateLink } from '~/src/data'
 
 const data: FormDefinition = {
   pages: [

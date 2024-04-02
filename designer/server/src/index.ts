@@ -4,7 +4,7 @@ import { chdir } from 'node:process'
 // Move working directory to build output
 chdir(dirname(__filename))
 
-import('./server')
+import('~/src/server')
   .then((server) => server.listen())
   .catch((err) => {
     console.error(err)

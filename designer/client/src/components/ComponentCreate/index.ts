@@ -1,1 +1,1 @@
-export { ComponentCreate } from './ComponentCreate'
+export { ComponentCreate } from '~/src/components/ComponentCreate/ComponentCreate'

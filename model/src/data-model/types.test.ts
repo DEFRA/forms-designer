@@ -1,4 +1,4 @@
-import { isMultipleApiKey } from './types'
+import { isMultipleApiKey } from '~/src/data-model/types'
 
 test('isMultipleApiKey correctly typeguards', () => {
   expect(isMultipleApiKey('abc')).toBeFalsy()

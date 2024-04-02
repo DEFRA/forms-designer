@@ -1,9 +1,9 @@
 import React, { useContext } from 'react'
-import { ComponentContext } from './reducers/component/componentReducer'
-import { Actions } from './reducers/component/types'
+import { ComponentContext } from '~/src/reducers/component/componentReducer'
+import { Actions } from '~/src/reducers/component/types'
 
-import { CssClasses } from './components/CssClasses'
-import { i18n } from './i18n'
+import { CssClasses } from '~/src/components/CssClasses'
+import { i18n } from '~/src/i18n'
 
 const defaultOptions = {
   multiple: false,

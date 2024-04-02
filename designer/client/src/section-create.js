@@ -1,9 +1,9 @@
 import React from 'react'
 
-import { camelCase } from './helpers'
-import { DataContext } from './context'
-import { addSection } from './data/section/addSection'
-import logger from './plugins/logger'
+import { camelCase } from '~/src/helpers'
+import { DataContext } from '~/src/context'
+import { addSection } from '~/src/data'
+import logger from '~/src/plugins/logger'
 
 class SectionCreate extends React.Component {
   static contextType = DataContext
