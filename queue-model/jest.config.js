@@ -1,4 +1,4 @@
-import { projectDefaults } from '../jest.config.mjs'
+import { projectDefaults } from '../jest.config.js'
 
 /**
  * Jest project config
@@ -7,7 +7,7 @@ import { projectDefaults } from '../jest.config.mjs'
  */
 export default {
   ...projectDefaults,
-  displayName: '@defra/forms-model',
+  displayName: '@defra/forms-queue-model',
 
   // Configure test files and coverage
   testMatch: ['<rootDir>/**/*.test.{cjs,js,mjs,ts}'],

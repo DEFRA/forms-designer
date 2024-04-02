@@ -8,6 +8,7 @@
     "url": "git+https://github.com/DEFRA/forms-designer.git"
   },
   "license": "OGL-UK-3.0",
+  "type": "module",
   "workspaces": [
     "model",
     "queue-model",

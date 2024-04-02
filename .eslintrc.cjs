@@ -69,13 +69,13 @@ module.exports = {
       }
     },
     {
-      files: ['**/*.js'],
+      files: ['**/*.cjs'],
       rules: {
         '@typescript-eslint/no-var-requires': 'off'
       }
     },
     {
-      files: ['*.jsx', '*.tsx'],
+      files: ['**/*.{jsx,tsx}'],
       env: {
         browser: true
       },
@@ -99,8 +99,8 @@ module.exports = {
       files: [
         '**/*.test.{cjs,js,mjs,ts,tsx}',
         '**/__mocks__/**',
-        'jest.environment.js',
-        'jest.setup.js'
+        'jest.environment.*',
+        'jest.setup.*'
       ],
       env: {
         jest: true

@@ -6,11 +6,5 @@
     }
   },
   "exclude": ["dist"],
-  "include": [
-    "**/*.cjs",
-    "**/*.js",
-    "**/*.mjs",
-    "**/*.ts",
-    "../jest.config.mjs"
-  ]
+  "include": ["**/*.cjs", "**/*.js", "**/*.mjs", "**/*.ts", "../jest.config.js"]
 }

@@ -52,7 +52,7 @@ module.exports = {
           not: [/@xgovformbuilder\/govuk-react-jsx/]
         },
         options: {
-          extends: join(__dirname, 'client/babel.config.js')
+          extends: join(__dirname, 'client/babel.config.cjs')
         },
 
         // Fix missing file extensions in React components
