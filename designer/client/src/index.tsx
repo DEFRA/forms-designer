@@ -4,11 +4,11 @@ import {
   LandingChoice,
   NewConfig,
   ChooseExisting
-} from '~/src/pages/LandingPage'
-import { initI18n } from '~/src/i18n'
+} from '~/src/pages/LandingPage/index.js'
+import { initI18n } from '~/src/i18n/index.js'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
-import Designer from '~/src/designer'
-import { SaveError } from '~/src/pages/ErrorPages'
+import Designer from '~/src/designer.jsx'
+import { SaveError } from '~/src/pages/ErrorPages/index.js'
 
 initI18n()
 

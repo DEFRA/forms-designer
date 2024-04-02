@@ -1,19 +1,19 @@
-import { ListActions } from '~/src/reducers/listActions'
-import { DataContext } from '~/src/context'
+import { ListActions } from '~/src/reducers/listActions.jsx'
+import { DataContext } from '~/src/context/index.js'
 import React, { useContext, useEffect, useState } from 'react'
-import { ComponentContext } from '~/src/reducers/component/componentReducer'
+import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 import { Label } from '@xgovformbuilder/govuk-react-jsx'
-import { i18n } from '~/src/i18n'
-import { ListContext } from '~/src/reducers/listReducer'
+import { i18n } from '~/src/i18n/index.js'
+import { ListContext } from '~/src/reducers/listReducer.jsx'
 import {
   ListsEditorContext,
   ListsEditorStateActions
-} from '~/src/reducers/list/listsEditorReducer'
+} from '~/src/reducers/list/listsEditorReducer.jsx'
 import classNames from 'classnames'
 import { ListComponentsDef } from '@defra/forms-model'
-import { findList } from '~/src/data'
-import { Actions as ComponentActions } from '~/src/reducers/component/types'
-import logger from '~/src/plugins/logger'
+import { findList } from '~/src/data/index.js'
+import { Actions as ComponentActions } from '~/src/reducers/component/types.js'
+import logger from '~/src/plugins/logger.js'
 export function ComponentListSelect() {
   const { data } = useContext(DataContext)
   const { state: listsEditorState, dispatch: listsEditorDispatch } =

@@ -1,6 +1,6 @@
 import crumb from '@hapi/crumb'
 
-import config from '~/src/config'
+import config from '~/src/config.js'
 
 const csrf = {
   plugin: {

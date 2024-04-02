@@ -1,6 +1,6 @@
 import fetch from 'node-fetch'
 
-import config from '~/src/config'
+import config from '~/src/config.js'
 
 async function refreshAccessToken(request) {
   const authedUser = await request.getUserSession()

@@ -1,5 +1,5 @@
 import React from 'react'
-import { withI18n } from '~/src/i18n'
+import { withI18n } from '~/src/i18n/index.js'
 
 class ButtonDropdown extends React.Component {
   /* TODO:- generalise this */

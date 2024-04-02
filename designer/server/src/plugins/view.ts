@@ -3,11 +3,11 @@ import { cwd } from 'node:process'
 
 import hapiVision from '@hapi/vision'
 import nunjucks from 'nunjucks'
-import resolvePkg from 'resolve/sync'
+import resolvePkg from 'resolve/sync.js'
 
 import pkg from '../../../package.json' with { type: 'json' }
 
-import config from '~/src/config'
+import config from '~/src/config.js'
 
 export const viewPlugin = {
   plugin: hapiVision,

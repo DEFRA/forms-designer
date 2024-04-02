@@ -1,6 +1,6 @@
-import type { PersistenceService } from '~/src/lib/persistence/persistenceService'
+import type { PersistenceService } from '~/src/lib/persistence/persistenceService.js'
 import Wreck from '@hapi/wreck'
-import config from '~/src/config'
+import config from '~/src/config.js'
 
 /**
  * Persistence service that relies on the runner for storing

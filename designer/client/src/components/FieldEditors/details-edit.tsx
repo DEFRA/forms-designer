@@ -1,10 +1,10 @@
 import React, { useContext } from 'react'
-import { ComponentContext } from '~/src/reducers/component/componentReducer'
-import { Actions } from '~/src/reducers/component/types'
+import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
+import { Actions } from '~/src/reducers/component/types.js'
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
-import { withI18n } from '~/src/i18n'
+import { withI18n } from '~/src/i18n/index.js'
 import classNames from 'classnames'
-import { ErrorMessage } from '~/src/components/ErrorMessage'
+import { ErrorMessage } from '~/src/components/ErrorMessage/index.js'
 
 type Props = {
   context: any // TODO

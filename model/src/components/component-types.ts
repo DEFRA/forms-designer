@@ -1,4 +1,4 @@
-import { type ComponentDef } from '~/src/components/types'
+import { type ComponentDef } from '~/src/components/types.js'
 
 export const ComponentTypes: ComponentDef[] = [
   {

@@ -1,12 +1,12 @@
 import React, { memo, useContext, useLayoutEffect } from 'react'
-import ComponentTypeEdit from '~/src/ComponentTypeEdit'
-import { DataContext } from '~/src/context'
-import { ComponentContext } from '~/src/reducers/component/componentReducer'
-import { Actions } from '~/src/reducers/component/types'
-import ErrorSummary from '~/src/error-summary'
-import { hasValidationErrors } from '~/src/validations'
+import ComponentTypeEdit from '~/src/ComponentTypeEdit.jsx'
+import { DataContext } from '~/src/context/index.js'
+import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
+import { Actions } from '~/src/reducers/component/types.js'
+import ErrorSummary from '~/src/error-summary.jsx'
+import { hasValidationErrors } from '~/src/validations.js'
 import { ComponentTypeEnum as Types } from '@defra/forms-model'
-import { updateComponent } from '~/src/data'
+import { updateComponent } from '~/src/data/index.js'
 
 const LIST_TYPES = [
   Types.AutocompleteField,

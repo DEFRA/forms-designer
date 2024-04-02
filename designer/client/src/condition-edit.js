@@ -1,9 +1,9 @@
 import React from 'react'
-import Editor from '~/src/editor'
+import Editor from '~/src/editor.js'
 import { ConditionsWrapper } from '@defra/forms-model'
-import { DataContext } from '~/src/context'
-import { removeCondition, updateCondition } from '~/src/data'
-import logger from '~/src/plugins/logger'
+import { DataContext } from '~/src/context/index.js'
+import { removeCondition, updateCondition } from '~/src/data/index.js'
+import logger from '~/src/plugins/logger.js'
 
 class ConditionEdit extends React.Component {
   static contextType = DataContext

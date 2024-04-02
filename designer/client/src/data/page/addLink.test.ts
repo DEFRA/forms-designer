@@ -1,5 +1,5 @@
 import { FormDefinition } from '@defra/forms-model'
-import { addLink } from '~/src/data'
+import { addLink } from '~/src/data/index.js'
 
 const data: FormDefinition = {
   conditions: [],

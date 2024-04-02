@@ -9,7 +9,7 @@ import {
   dateUnits,
   RelativeTimeValue,
   ConditionValue
-} from '~/src/conditions'
+} from '~/src/conditions/index.js'
 
 describe('inline condition model', () => {
   let underTest

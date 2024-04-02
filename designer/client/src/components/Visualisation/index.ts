@@ -1,1 +1,1 @@
-export { Visualisation } from '~/src/components/Visualisation/Visualisation'
+export { Visualisation } from '~/src/components/Visualisation/Visualisation.jsx'

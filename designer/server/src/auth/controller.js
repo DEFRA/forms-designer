@@ -1,7 +1,7 @@
 import Boom from '@hapi/boom'
 import { v4 as uuidv4 } from 'uuid'
 
-import { createUserSession } from '~/src/common/helpers/auth/user-session'
+import { createUserSession } from '~/src/common/helpers/auth/user-session.js'
 
 const authCallbackController = {
   options: {

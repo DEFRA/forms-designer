@@ -24,4 +24,4 @@ export const isFocusable = (node, options) =>
 export const isTabbable = (node, options) =>
   lib.isTabbable(node, { ...options, displayCheck: 'none' })
 
-module.exports = tabbable
+export default tabbable

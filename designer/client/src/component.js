@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import { Flyout } from '~/src/components/Flyout'
-import { SearchIcon } from '~/src/components/Icons'
-import ComponentEdit from '~/src/ComponentEdit'
-import { ComponentContextProvider } from '~/src/reducers/component/componentReducer'
-import { i18n } from '~/src/i18n'
+import { Flyout } from '~/src/components/Flyout/index.js'
+import { SearchIcon } from '~/src/components/Icons/index.js'
+import ComponentEdit from '~/src/ComponentEdit.js'
+import { ComponentContextProvider } from '~/src/reducers/component/componentReducer.jsx'
+import { i18n } from '~/src/i18n/index.js'
 
 export const componentTypes = {
   TextField,

@@ -2,16 +2,16 @@ import React, { useReducer } from 'react'
 import { screen } from '@testing-library/dom'
 import { act, cleanup, render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import { DataContext } from '~/src/context'
+import { DataContext } from '~/src/context/index.js'
 import { FormDefinition } from '@defra/forms-model'
-import { ComponentListSelect } from '~/src/components/ComponentListSelect/ComponentListSelect'
+import { ComponentListSelect } from '~/src/components/ComponentListSelect/ComponentListSelect.jsx'
 import {
   ComponentContext,
   componentReducer,
   initComponentState
-} from '~/src/reducers/component/componentReducer'
-import { ListsEditorContextProvider } from '~/src/reducers/list/listsEditorReducer'
-import { ListContextProvider } from '~/src/reducers/listReducer'
+} from '~/src/reducers/component/componentReducer.jsx'
+import { ListsEditorContextProvider } from '~/src/reducers/list/listsEditorReducer.jsx'
+import { ListContextProvider } from '~/src/reducers/listReducer.jsx'
 
 describe('ComponentListSelect', () => {
   const { getByText } = screen

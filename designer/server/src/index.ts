@@ -1,10 +1,9 @@
-import { dirname } from 'node:path'
 import { chdir } from 'node:process'
 
 // Move working directory to build output
-chdir(dirname(__filename))
+chdir(import.meta.dirname)
 
-import('~/src/server')
+import('~/src/server.js')
   .then((server) => server.listen())
   .catch((err) => {
     console.error(err)

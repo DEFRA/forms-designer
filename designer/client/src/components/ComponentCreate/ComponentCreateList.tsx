@@ -1,8 +1,8 @@
 import React, { MouseEvent, useCallback } from 'react'
 import { ComponentTypes, ComponentDef } from '@defra/forms-model'
-import sortBy from 'lodash/sortBy'
+import sortBy from 'lodash/sortBy.js'
 
-import { i18n } from '~/src/i18n'
+import { i18n } from '~/src/i18n/index.js'
 
 const SelectionFieldsTypes = [
   'CheckboxesField',

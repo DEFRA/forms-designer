@@ -1,8 +1,8 @@
 import newFormJson from '~/src/common/new-form.json' with { type: 'json' }
 import { FormConfiguration, Schema } from '@defra/forms-model'
 import Wreck from '@hapi/wreck'
-import config from '~/src/config'
-import { publish } from '~/src/lib/publish'
+import config from '~/src/config.js'
+import { publish } from '~/src/lib/publish/index.js'
 import { ServerRoute, ResponseObject } from '@hapi/hapi'
 
 const getPublished = async function (id) {

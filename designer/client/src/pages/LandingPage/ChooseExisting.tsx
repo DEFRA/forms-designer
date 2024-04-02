@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import * as formConfigurationApi from '~/src/load-form-configurations'
-import { i18n } from '~/src/i18n'
+import * as formConfigurationApi from '~/src/load-form-configurations.js'
+import { i18n } from '~/src/i18n/index.js'
 import { withRouter } from 'react-router-dom'
-import { BackLink } from '~/src/components/BackLink'
+import { BackLink } from '~/src/components/BackLink/index.js'
 import './LandingPage.scss'
-import logger from '~/src/plugins/logger'
+import logger from '~/src/plugins/logger.js'
 
 type Props = {
   history: any

@@ -1,8 +1,8 @@
 import React, { MouseEvent } from 'react'
-import { DataContext } from '~/src/context'
-import randomId from '~/src/randomId'
-import OutputEdit from '~/src/outputs/output-edit'
-import { Output } from '~/src/outputs/types'
+import { DataContext } from '~/src/context/index.js'
+import randomId from '~/src/randomId.js'
+import OutputEdit from '~/src/outputs/output-edit.jsx'
+import { Output } from '~/src/outputs/types.js'
 
 type Props = {}
 

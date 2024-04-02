@@ -1,1 +1,1 @@
-export { default as SaveError } from '~/src/pages/ErrorPages/SaveError'
+export { default as SaveError } from '~/src/pages/ErrorPages/SaveError.jsx'

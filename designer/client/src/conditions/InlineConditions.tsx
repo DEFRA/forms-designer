@@ -2,12 +2,12 @@ import React, { MouseEvent, ChangeEvent } from 'react'
 import classNames from 'classnames'
 import { ConditionsModel, clone, Item } from '@defra/forms-model'
 
-import InlineConditionsDefinition from '~/src/conditions/InlineConditionsDefinition'
-import InlineConditionsEdit from '~/src/conditions/inline-conditions-edit'
-import { DataContext } from '~/src/context'
-import ErrorSummary, { ErrorListItem } from '~/src/error-summary'
-import { i18n } from '~/src/i18n'
-import { ErrorMessage } from '~/src/components/ErrorMessage'
+import InlineConditionsDefinition from '~/src/conditions/InlineConditionsDefinition.js'
+import InlineConditionsEdit from '~/src/conditions/inline-conditions-edit.js'
+import { DataContext } from '~/src/context/index.js'
+import ErrorSummary, { ErrorListItem } from '~/src/error-summary.jsx'
+import { i18n } from '~/src/i18n/index.js'
+import { ErrorMessage } from '~/src/components/ErrorMessage/index.js'
 import {
   addCondition,
   allInputs,
@@ -15,8 +15,8 @@ import {
   inputsAccessibleAt,
   removeCondition,
   updateCondition
-} from '~/src/data'
-import randomId from '~/src/randomId'
+} from '~/src/data/index.js'
+import randomId from '~/src/randomId.js'
 
 interface Props {
   path: string

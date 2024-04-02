@@ -1,5 +1,5 @@
 import React from 'react'
-import ComponentTypeEdit from '~/src/ComponentTypeEdit'
+import ComponentTypeEdit from '~/src/ComponentTypeEdit.jsx'
 import { ConditionalComponentTypes } from '@defra/forms-model'
 
 class ComponentConditionCreate extends React.Component {

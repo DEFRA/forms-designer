@@ -1,6 +1,6 @@
 import { configDotenv } from 'dotenv'
 import joi from 'joi'
-import { CredentialsOptions } from 'aws-sdk/lib/credentials'
+import { CredentialsOptions } from 'aws-sdk/lib/credentials.js'
 import * as AWS from 'aws-sdk'
 
 configDotenv({

@@ -1,7 +1,10 @@
 import React, { useEffect, useState, ChangeEvent } from 'react'
 import isValid from 'date-fns/isValid'
-import padStart from 'lodash/padStart'
-import { isInt, tryParseInt } from '~/src/conditions/inline-condition-helpers'
+import padStart from 'lodash/padStart.js'
+import {
+  isInt,
+  tryParseInt
+} from '~/src/conditions/inline-condition-helpers.js'
 
 export interface YearMonthDay {
   year: number

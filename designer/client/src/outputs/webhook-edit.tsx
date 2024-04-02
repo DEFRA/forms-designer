@@ -1,5 +1,5 @@
 import React from 'react'
-import { ValidationErrors } from '~/src/outputs/types'
+import { ValidationErrors } from '~/src/outputs/types.js'
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
 
 type Props = {

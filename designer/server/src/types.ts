@@ -1,5 +1,5 @@
 import { Request, ResponseObject, ResponseToolkit, Server } from '@hapi/hapi'
-import { PersistenceService } from '~/src/lib/persistence/persistenceService'
+import { PersistenceService } from '~/src/lib/persistence/persistenceService.js'
 import { Logger } from 'pino'
 
 type Services = (services: string[]) => {

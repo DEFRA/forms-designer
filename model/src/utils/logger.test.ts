@@ -1,4 +1,4 @@
-import { Logger } from '~/src/utils/logger'
+import { Logger } from '~/src/utils/logger.js'
 
 describe('logger', () => {
   const server = {

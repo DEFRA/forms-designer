@@ -1,6 +1,6 @@
-import { type ComponentDef } from '~/src/components/types'
-import { type Condition } from '~/src/conditions/condition'
-import { type OutputType } from '~/src/data-model/enums'
+import { type ComponentDef } from '~/src/components/types.js'
+import { type Condition } from '~/src/conditions/condition.js'
+import { type OutputType } from '~/src/data-model/enums.js'
 
 type Toggleable<T> = boolean | T
 

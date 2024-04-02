@@ -1,4 +1,4 @@
-import { ConditionValue, conditionValueFrom } from '~/src/conditions'
+import { ConditionValue, conditionValueFrom } from '~/src/conditions/index.js'
 
 describe('inline condition values', () => {
   test('can deserialize a Value object from plain old JSON', () => {

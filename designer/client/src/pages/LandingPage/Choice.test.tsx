@@ -2,7 +2,7 @@ import { screen } from '@testing-library/dom'
 import { act, render, cleanup, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React from 'react'
-import { LandingChoice } from '~/src/pages/LandingPage/Choice'
+import { LandingChoice } from '~/src/pages/LandingPage/Choice.jsx'
 
 describe('LandingChoice', () => {
   afterEach(cleanup)

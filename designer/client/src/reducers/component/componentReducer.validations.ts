@@ -1,7 +1,7 @@
-import { validateTitle } from '~/src/validations'
-import { isEmpty } from '~/src/helpers'
+import { validateTitle } from '~/src/validations.js'
+import { isEmpty } from '~/src/helpers.js'
 import { ComponentTypeEnum as Types } from '@defra/forms-model'
-import { i18n } from '~/src/i18n'
+import { i18n } from '~/src/i18n/index.js'
 
 export interface ValidationError {
   href?: string

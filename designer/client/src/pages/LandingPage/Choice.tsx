@@ -1,5 +1,5 @@
 import React, { ReactElement, useState } from 'react'
-import { i18n } from '~/src/i18n'
+import { i18n } from '~/src/i18n/index.js'
 import { withRouter } from 'react-router-dom'
 import { Radios } from '@xgovformbuilder/govuk-react-jsx'
 import './LandingPage.scss'

@@ -3,7 +3,7 @@ import {
   Output,
   EmailOutputConfiguration,
   ValidationErrors
-} from '~/src/outputs/types'
+} from '~/src/outputs/types.js'
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
 
 type Props = {

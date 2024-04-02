@@ -1,4 +1,4 @@
-import { createServer } from '~/src/createServer'
+import { createServer } from '~/src/createServer.js'
 
 describe('App routes test', () => {
   const startServer = async (): Promise<hapi.Server> => {

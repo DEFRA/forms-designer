@@ -1,5 +1,5 @@
 import hapi from '@hapi/hapi'
-import { createServer } from '~/src/createServer'
+import { createServer } from '~/src/createServer.js'
 
 describe('Server tests', () => {
   const startServer = async (): Promise<hapi.Server> => {

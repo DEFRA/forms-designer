@@ -3,8 +3,8 @@ import fetch from 'node-fetch'
 import {
   removeUserSession,
   updateUserSession
-} from '~/src/common/helpers/auth/user-session'
-import { refreshAccessToken } from '~/src/common/helpers/auth/refresh-token'
+} from '~/src/common/helpers/auth/user-session.js'
+import { refreshAccessToken } from '~/src/common/helpers/auth/refresh-token.js'
 import Boom from '@hapi/boom'
 
 function authedFetcher(request) {
