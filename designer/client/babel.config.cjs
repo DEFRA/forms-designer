@@ -38,5 +38,21 @@ module.exports = {
       }
     ]
   ],
-  sourceType: 'unambiguous'
+  sourceType: 'unambiguous',
+  env: {
+    test: {
+      plugins: [
+        [
+          'replace-import-extension',
+          {
+            extMapping: {
+              '.cjs': '',
+              '.js': '',
+              '.jsx': ''
+            }
+          }
+        ]
+      ]
+    }
+  }
 }

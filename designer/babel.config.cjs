@@ -33,5 +33,20 @@ module.exports = {
         modules: NODE_ENV === 'test' ? 'auto' : false
       }
     ]
-  ]
+  ],
+  env: {
+    test: {
+      plugins: [
+        [
+          'replace-import-extension',
+          {
+            extMapping: {
+              '.cjs': '',
+              '.js': ''
+            }
+          }
+        ]
+      ]
+    }
+  }
 }
