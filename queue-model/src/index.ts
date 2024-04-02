@@ -1,4 +1,4 @@
-import * as path from 'path'
+import { join } from 'node:path'
 
-export { PrismaClient, Prisma, Submission } from '@prisma/client'
-export const SCHEMA_LOCATION = path.resolve(__dirname, 'schema.prisma')
+export { type PrismaClient, type Prisma, type Submission } from '@prisma/client'
+export const SCHEMA_LOCATION = join(import.meta.dirname, 'schema.prisma')
