@@ -1,4 +1,4 @@
-import newFormJson from '~/src/common/new-form.json'
+import newFormJson from '~/src/common/new-form.json' with { type: 'json' }
 import { FormConfiguration, Schema } from '@defra/forms-model'
 import Wreck from '@hapi/wreck'
 import config from '~/src/config'

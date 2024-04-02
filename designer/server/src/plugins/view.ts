@@ -5,7 +5,7 @@ import hapiVision from '@hapi/vision'
 import nunjucks from 'nunjucks'
 import resolvePkg from 'resolve/sync'
 
-import pkg from '../../../package.json'
+import pkg from '../../../package.json' with { type: 'json' }
 
 import config from '~/src/config'
 
