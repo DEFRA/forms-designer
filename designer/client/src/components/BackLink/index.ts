@@ -1,1 +1,1 @@
-export { BackLink } from './BackLink'
+export { BackLink } from '~/src/components/BackLink/BackLink'

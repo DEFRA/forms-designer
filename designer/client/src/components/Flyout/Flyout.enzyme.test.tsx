@@ -1,7 +1,7 @@
 import React from 'react'
 import { mount } from 'enzyme'
-import { useFlyoutEffect } from './Flyout'
-import { FlyoutContext } from '../../context'
+import { useFlyoutEffect } from '~/src/components/Flyout/Flyout'
+import { FlyoutContext } from '~/src/context'
 
 function HookWrapper(props) {
   const hook = props.hook ? props.hook() : undefined

@@ -1,5 +1,5 @@
 import { FormDefinition } from '@defra/forms-model'
-import { findList } from './findList'
+import { findList } from '~/src/data'
 
 const data: FormDefinition = {
   conditions: [],

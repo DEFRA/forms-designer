@@ -5,16 +5,16 @@ import {
   arrayMove
 } from 'react-sortable-hoc'
 
-import { Flyout } from '../Flyout'
-import { Component } from '../../component'
-import { ComponentCreate } from '../ComponentCreate'
+import { Flyout } from '~/src/components/Flyout'
+import { Component } from '~/src/component'
+import { ComponentCreate } from '~/src/components/ComponentCreate'
 import { ComponentTypes } from '@defra/forms-model'
-import { DataContext } from '../../context'
-import PageEdit from '../../page-edit'
-import { PageLinkage } from '../PageLinkage'
-import { ComponentContextProvider } from '../../reducers/component'
-import { findPage } from '../../data'
-import { i18n } from '../../i18n'
+import { DataContext } from '~/src/context'
+import PageEdit from '~/src/page-edit'
+import { PageLinkage } from '~/src/components/PageLinkage'
+import { ComponentContextProvider } from '~/src/reducers/component'
+import { findPage } from '~/src/data'
+import { i18n } from '~/src/i18n'
 
 const SortableItem = SortableElement(({ index, page, component, data }) => (
   <div className="component-item">

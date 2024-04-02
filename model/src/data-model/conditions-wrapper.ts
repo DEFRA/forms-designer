@@ -1,18 +1,8 @@
-import { Condition } from '../conditions/condition'
-import { ConditionsModel } from '../conditions/condition-model'
-
-export type ConditionWrapperValue =
-  | string
-  | {
-      name: string
-      conditions: Condition[]
-    }
-
-export type ConditionRawData = {
-  name: string
-  displayName: string
-  value: ConditionWrapperValue
-}
+import { ConditionsModel } from '~/src/conditions/condition-model'
+import {
+  type ConditionRawData,
+  type ConditionWrapperValue
+} from '~/src/data-model/types'
 
 export class ConditionsWrapper {
   name: string

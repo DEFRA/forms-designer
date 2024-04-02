@@ -3,8 +3,8 @@ import {
   ComponentContext,
   componentReducer,
   initComponentState
-} from '../../src/reducers/component/componentReducer'
-import { DataContext } from '../../src/context'
+} from '~/src/reducers/component/componentReducer'
+import { DataContext } from '~/src/context'
 
 export function RenderWithContext({ children, stateProps = {} }) {
   const [state, dispatch] = useReducer(

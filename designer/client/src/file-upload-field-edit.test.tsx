@@ -1,8 +1,8 @@
 import React from 'react'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
-import { FileUploadFieldEdit } from './file-upload-field-edit'
-import { RenderWithContext } from '../test/helpers/renderers'
+import { FileUploadFieldEdit } from '~/src/file-upload-field-edit'
+import { RenderWithContext } from '~/test/helpers/renderers'
 
 describe('File upload', () => {
   const { getByText } = screen

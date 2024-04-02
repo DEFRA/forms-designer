@@ -1,5 +1,5 @@
 import React from 'react'
-import { SaveError } from './SaveError'
+import { SaveError } from '~/src/pages/ErrorPages/SaveError'
 import { screen } from '@testing-library/dom'
 import { act, render, cleanup, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'

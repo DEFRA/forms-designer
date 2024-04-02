@@ -51,6 +51,9 @@ const client = {
           and: [/node_modules/],
           not: [/@xgovformbuilder\/govuk-react-jsx/]
         },
+        options: {
+          extends: join(__dirname, 'client/babel.config.js')
+        },
 
         // Fix missing file extensions in React components
         resolve: { fullySpecified: false }
@@ -169,6 +172,7 @@ const client = {
   ],
   resolve: {
     alias: {
+      '~': join(__dirname, 'client'),
       '/forms-designer/assets': join(
         dirname(require.resolve('govuk-frontend/package.json')),
         'govuk/assets/'
@@ -242,6 +246,9 @@ const server = {
     })
   ],
   resolve: {
+    alias: {
+      '~': join(__dirname, 'server')
+    },
     extensions: ['.js', '.ts']
   },
   target: 'node'

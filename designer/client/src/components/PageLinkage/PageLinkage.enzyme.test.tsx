@@ -1,8 +1,8 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-import { PageLinkage } from '.'
-import { addLink } from '../../data/page/addLink'
+import { PageLinkage } from '~/src/components/PageLinkage'
+import { addLink } from '~/src/data'
 
 jest.mock('../../data/page/addLink')
 

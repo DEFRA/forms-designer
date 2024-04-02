@@ -1,4 +1,4 @@
-import { provideAuthedUser } from '../common/helpers/auth/pre/provide-authed-user'
+import { provideAuthedUser } from '~/src/common/helpers/auth/pre/provide-authed-user'
 
 const logoutController = {
   options: {

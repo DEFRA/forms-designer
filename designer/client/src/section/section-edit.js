@@ -1,16 +1,16 @@
 import React from 'react'
-import randomId from '../randomId'
-import { withI18n } from '../i18n'
+import randomId from '~/src/randomId'
+import { withI18n } from '~/src/i18n'
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import {
   validateName,
   validateTitle,
   hasValidationErrors
-} from '../validations'
-import ErrorSummary from '../error-summary'
-import { DataContext } from '../context'
-import { addSection } from '../data'
-import logger from '../plugins/logger'
+} from '~/src/validations'
+import ErrorSummary from '~/src/error-summary'
+import { DataContext } from '~/src/context'
+import { addSection } from '~/src/data'
+import logger from '~/src/plugins/logger'
 
 class SectionEdit extends React.Component {
   static contextType = DataContext

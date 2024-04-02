@@ -7,7 +7,7 @@ import resolvePkg from 'resolve/sync'
 
 import pkg from '../../../package.json'
 
-import config from '../config'
+import config from '~/src/config'
 
 export const viewPlugin = {
   plugin: hapiVision,

@@ -1,7 +1,7 @@
-import { S3PersistenceService } from './s3PersistenceService'
-import { BlobPersistenceService } from './blobPersistenceService'
-import { StubPersistenceService } from './persistenceService'
-import { PreviewPersistenceService } from './previewPersistenceService'
+import { S3PersistenceService } from '~/src/lib/persistence/s3PersistenceService'
+import { BlobPersistenceService } from '~/src/lib/persistence/blobPersistenceService'
+import { StubPersistenceService } from '~/src/lib/persistence/persistenceService'
+import { PreviewPersistenceService } from '~/src/lib/persistence/previewPersistenceService'
 
 type Name = 's3' | 'blob' | 'preview'
 

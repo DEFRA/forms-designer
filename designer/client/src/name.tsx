@@ -1,7 +1,7 @@
 import React from 'react'
-import { ErrorMessage } from './components/ErrorMessage'
-import { isEmpty } from './helpers'
-import { withI18nRef, I18n } from './i18n'
+import { ErrorMessage } from '~/src/components/ErrorMessage'
+import { isEmpty } from '~/src/helpers'
+import { withI18nRef, I18n } from '~/src/i18n'
 
 type Props = {
   updateModel?: (arg0: any) => object | null | undefined

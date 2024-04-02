@@ -4,9 +4,9 @@
     "declarationDir": "./dist/types",
     "emitDeclarationOnly": true,
     "noEmit": false,
-    "outDir": "./dist",
+    "outDir": "./dist/module",
     "paths": {
-      "~/*": ["./*"]
+      "~/src/*": ["./src/*"]
     },
     "rootDir": "./src"
   },

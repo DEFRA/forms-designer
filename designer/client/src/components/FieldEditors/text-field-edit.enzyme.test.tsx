@@ -1,8 +1,8 @@
 import React from 'react'
 import { mount } from 'enzyme'
-import * as Component from '../../reducers/component/componentReducer'
-import { TextFieldEdit } from './text-field-edit'
-import { MultilineTextFieldEdit } from '../../multiline-text-field-edit'
+import * as Component from '~/src/reducers/component/componentReducer'
+import { TextFieldEdit } from '~/src/components/FieldEditors/text-field-edit'
+import { MultilineTextFieldEdit } from '~/src/multiline-text-field-edit'
 
 describe('TextField renders correctly when', () => {
   const wrapper = mount(

@@ -2,10 +2,7 @@ import jwt from '@hapi/jwt'
 import bell from '@hapi/bell'
 import basic from '@hapi/basic'
 
-import config from '../../../config'
-import { createLogger } from '../logging/logger'
-
-const logger = createLogger()
+import config from '~/src/config'
 
 const azureOidc = {
   plugin: {

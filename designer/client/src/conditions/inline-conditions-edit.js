@@ -4,8 +4,8 @@ import {
   toPresentationString,
   clone
 } from '@defra/forms-model'
-import InlineConditionsDefinition from './InlineConditionsDefinition'
-import { EditIcon, MoveDownIcon, MoveUpIcon } from '../components/Icons'
+import InlineConditionsDefinition from '~/src/conditions/InlineConditionsDefinition'
+import { EditIcon, MoveDownIcon, MoveUpIcon } from '~/src/components/Icons'
 
 class InlineConditionsEdit extends React.Component {
   constructor(props) {

@@ -1,4 +1,4 @@
-import { formatCurrency } from './format-currency'
+import { formatCurrency } from '~/src/common/nunjucks/filters'
 
 describe('#formatCurrency', () => {
   describe('With defaults', () => {

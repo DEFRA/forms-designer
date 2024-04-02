@@ -1,7 +1,7 @@
 import IoRedis from 'ioredis'
 
-import config from '../../config'
-import { createLogger } from './logging/logger'
+import config from '~/src/config'
+import { createLogger } from '~/src/common/helpers/logging/logger'
 
 /**
  * Setup Redis and provide a redis client

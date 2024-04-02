@@ -1,4 +1,4 @@
-import { PersistenceService } from './persistenceService'
+import { PersistenceService } from '~/src/lib/persistence/persistenceService'
 
 export class BlobPersistenceService implements PersistenceService {
   logger: any

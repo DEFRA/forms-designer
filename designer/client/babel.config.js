@@ -1,3 +1,5 @@
+const pkg = require('../package.json')
+
 const { NODE_ENV } = process.env
 
 /**
@@ -13,24 +15,28 @@ module.exports = {
         ? {
             // Relative to project
             root: ['../../'],
-            alias: { '~': './designer/server' }
+            alias: { '~': './designer/client' }
           }
         : {
             // Relative to workspace
-            root: ['./server'],
-            alias: { '~': './server' }
+            root: ['./client'],
+            alias: { '~': './client' }
           }
     ]
   ],
   presets: [
     '@babel/preset-typescript',
+    '@babel/preset-react',
     [
       '@babel/preset-env',
       {
-        browserslistEnv: 'node',
+        browserslistEnv: 'javascripts',
         bugfixes: true,
-        modules: NODE_ENV === 'test' ? 'auto' : false
+        corejs: pkg.devDependencies['core-js'],
+        modules: NODE_ENV === 'test' ? 'auto' : 'umd',
+        useBuiltIns: 'usage'
       }
     ]
-  ]
+  ],
+  sourceType: 'unambiguous'
 }

@@ -1,4 +1,4 @@
-import { Path } from '..'
+import { Path } from '~/src/data'
 import { FormDefinition, Page } from '@defra/forms-model'
 
 export function updateLinksTo(

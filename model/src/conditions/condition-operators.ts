@@ -1,6 +1,5 @@
-import { ComponentType, ComponentDef } from '../components'
-import { ConditionValueAbstract } from './condition-value-abstract'
-
+import { type ComponentType, type ComponentDef } from '~/src/components/types'
+import { ConditionValueAbstract } from '~/src/conditions/condition-value-abstract'
 import {
   timeUnits,
   dateUnits,
@@ -8,7 +7,7 @@ import {
   ConditionValue,
   DateDirections,
   RelativeTimeValue
-} from './condition-values'
+} from '~/src/conditions/condition-values'
 
 type Operator = '==' | '!=' | '>=' | '<=' | '<' | '>'
 

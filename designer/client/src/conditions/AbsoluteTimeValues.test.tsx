@@ -2,7 +2,7 @@ import { screen } from '@testing-library/dom'
 import { act, cleanup, render, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React from 'react'
-import { AbsoluteTimeValues } from './AbsoluteTimeValues'
+import { AbsoluteTimeValues } from '~/src/conditions/AbsoluteTimeValues'
 
 describe('AbsoluteTimeValues', () => {
   afterEach(cleanup)

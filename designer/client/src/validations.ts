@@ -1,5 +1,5 @@
-import { isEmpty } from './helpers'
-import { i18n } from './i18n'
+import { isEmpty } from '~/src/helpers'
+import { i18n } from '~/src/i18n'
 
 export function hasValidationErrors(errors = {}) {
   return Object.keys(errors).length > 0

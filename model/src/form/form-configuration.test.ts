@@ -1,4 +1,4 @@
-import { FormConfiguration } from '.'
+import { FormConfiguration } from '~/src/form'
 
 describe('Form configuration', () => {
   test('should return provided items if provided', () => {

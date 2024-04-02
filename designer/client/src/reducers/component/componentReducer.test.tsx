@@ -1,5 +1,8 @@
-import { componentReducer, getSubReducer } from './componentReducer'
-import { Actions } from './types'
+import {
+  componentReducer,
+  getSubReducer
+} from '~/src/reducers/component/componentReducer'
+import { Actions } from '~/src/reducers/component/types'
 import {
   metaReducer,
   optionsReducer,
@@ -7,7 +10,7 @@ import {
   schemaReducer,
   componentListReducer,
   componentListItemReducer
-} from '.'
+} from '~/src/reducers/component'
 
 describe('Component reducer', () => {
   test('getSubReducer returns correct reducer', () => {

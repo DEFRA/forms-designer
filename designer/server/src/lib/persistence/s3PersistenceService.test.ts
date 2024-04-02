@@ -1,4 +1,4 @@
-import { S3PersistenceService } from './s3PersistenceService'
+import { S3PersistenceService } from '~/src/lib/persistence/s3PersistenceService'
 
 import { FormConfiguration } from '@defra/forms-model'
 

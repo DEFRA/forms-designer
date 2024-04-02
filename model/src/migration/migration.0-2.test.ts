@@ -1,4 +1,4 @@
-import { migrate } from './migration.0-2'
+import { migrate } from '~/src/migration/migration.0-2'
 
 test('v0 form with list(s) is migrated to v2 successfully', () => {
   const testData = {

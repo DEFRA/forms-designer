@@ -1,1 +1,1 @@
-export { FormConfiguration } from './form-configuration'
+export { FormConfiguration } from '~/src/form/form-configuration'

@@ -1,12 +1,12 @@
 import React, { Component, MouseEvent } from 'react'
-import * as formConfigurationApi from '../../load-form-configurations'
+import * as formConfigurationApi from '~/src/load-form-configurations'
 import { withRouter } from 'react-router-dom'
-import { BackLink } from '../../components/BackLink'
-import { i18n } from '../../i18n'
+import { BackLink } from '~/src/components/BackLink'
+import { i18n } from '~/src/i18n'
 import './LandingPage.scss'
-import { isEmpty } from '../../helpers'
+import { isEmpty } from '~/src/helpers'
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
-import ErrorSummary from '../../error-summary'
+import ErrorSummary from '~/src/error-summary'
 
 type Props = {
   history: any

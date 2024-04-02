@@ -1,17 +1,17 @@
-import ListItems from './ListItems'
+import ListItems from '~/src/list/ListItems'
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import React, { useContext } from 'react'
-import { ListActions } from '../reducers/listActions'
-import { i18n } from '../i18n'
+import { ListActions } from '~/src/reducers/listActions'
+import { i18n } from '~/src/i18n'
 import {
   ListsEditorContext,
   ListsEditorStateActions
-} from '../reducers/list/listsEditorReducer'
-import { DataContext } from '../context'
-import { hasValidationErrors, validateTitle } from '../validations'
-import ErrorSummary from '../error-summary'
-import { ListContext } from '../reducers/listReducer'
-import { addList } from '../data'
+} from '~/src/reducers/list/listsEditorReducer'
+import { DataContext } from '~/src/context'
+import { hasValidationErrors, validateTitle } from '~/src/validations'
+import ErrorSummary from '~/src/error-summary'
+import { ListContext } from '~/src/reducers/listReducer'
+import { addList } from '~/src/data'
 
 const useListItemActions = (state, dispatch) => {
   const { dispatch: listsEditorDispatch } = useContext(ListsEditorContext)

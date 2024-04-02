@@ -1,10 +1,10 @@
 import React, { useContext, useState } from 'react'
-import InlineConditions from './InlineConditions'
-import { Flyout } from './../components/Flyout'
-import { DataContext } from '../context'
-import { RenderInPortal } from '../components/RenderInPortal'
-import { i18n } from '../i18n'
-import { allInputs } from '../data'
+import InlineConditions from '~/src/conditions/InlineConditions'
+import { Flyout } from '~/src/components/Flyout'
+import { DataContext } from '~/src/context'
+import { RenderInPortal } from '~/src/components/RenderInPortal'
+import { i18n } from '~/src/i18n'
+import { allInputs } from '~/src/data'
 
 function useConditionsEditor() {
   const [editingCondition, setEditingCondition] = useState(null)

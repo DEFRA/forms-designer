@@ -1,9 +1,9 @@
 import { FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import { customRenderForLists } from '../../test/helpers/renderers-lists'
+import { customRenderForLists } from '~/test/helpers/renderers-lists'
 
 import React from 'react'
-import { ListSelect } from './ListSelect'
+import { ListSelect } from '~/src/list/ListSelect'
 
 const data: FormDefinition = {
   lists: [

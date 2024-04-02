@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import Menu from './components/Menu/Menu'
-import { Visualisation } from './components/Visualisation'
+import Menu from '~/src/components/Menu/Menu'
+import { Visualisation } from '~/src/components/Visualisation'
 import { FormDefinition } from '@defra/forms-model'
-import { FlyoutContext, DataContext } from './context'
-import { FeatureFlagProvider } from './context/FeatureFlagContext'
-import { DesignerApi } from './api/designerApi'
-import { i18n } from './i18n'
+import { FlyoutContext, DataContext } from '~/src/context'
+import { FeatureFlagProvider } from '~/src/context/FeatureFlagContext'
+import { DesignerApi } from '~/src/api/designerApi'
+import { i18n } from '~/src/i18n'
 import { Prompt } from 'react-router-dom'
 
 interface Props {

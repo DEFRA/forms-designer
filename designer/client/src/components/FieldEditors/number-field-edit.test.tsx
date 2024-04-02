@@ -1,8 +1,8 @@
 import React from 'react'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
-import { NumberFieldEdit } from './number-field-edit'
-import { RenderWithContext } from '../../../test/helpers/renderers'
+import { NumberFieldEdit } from '~/src/components/FieldEditors/number-field-edit'
+import { RenderWithContext } from '~/test/helpers/renderers'
 
 describe('Number field edit', () => {
   afterEach(cleanup)

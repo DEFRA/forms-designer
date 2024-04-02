@@ -1,9 +1,9 @@
 import React from 'react'
-import ComponentTypeEdit from './ComponentTypeEdit'
-import { clone, ComponentTypes } from '@defra/forms-model'
-import { DataContext } from './context'
-import randomId from './randomId'
-import { addComponent } from './data/component'
+import ComponentTypeEdit from '~/src/ComponentTypeEdit'
+import { ComponentTypes } from '@defra/forms-model'
+import { DataContext } from '~/src/context'
+import randomId from '~/src/randomId'
+import { addComponent } from '~/src/data'
 
 /**
  * @deprecated (keeping until tests are refactored)

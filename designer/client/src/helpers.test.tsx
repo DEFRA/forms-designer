@@ -1,4 +1,4 @@
-import { camelCase, isEmpty } from './helpers'
+import { camelCase, isEmpty } from '~/src/helpers'
 
 describe('helpers', () => {
   describe('camelCase', () => {

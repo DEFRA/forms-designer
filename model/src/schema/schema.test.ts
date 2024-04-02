@@ -1,4 +1,4 @@
-import { Schema } from './schema'
+import { Schema } from '~/src/schema'
 
 const baseConfiguration = {
   metadata: {},

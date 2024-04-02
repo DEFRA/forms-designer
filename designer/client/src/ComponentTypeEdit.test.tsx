@@ -1,13 +1,13 @@
 import React, { useReducer } from 'react'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
-import ComponentTypeEdit from './ComponentTypeEdit'
+import ComponentTypeEdit from '~/src/ComponentTypeEdit'
 import {
   ComponentContext,
   componentReducer,
   initComponentState
-} from './reducers/component/componentReducer'
-import { DataContext } from './context'
+} from '~/src/reducers/component/componentReducer'
+import { DataContext } from '~/src/context'
 import { FormDefinition } from '@defra/forms-model'
 
 describe('ComponentTypeEdit', () => {

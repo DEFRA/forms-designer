@@ -1,1 +1,1 @@
-export { FormDetails } from './FormDetails'
+export { FormDetails } from '~/src/components/FormDetails/FormDetails'

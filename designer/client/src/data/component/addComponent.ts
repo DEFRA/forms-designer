@@ -1,6 +1,5 @@
 import { ComponentDef, FormDefinition } from '@defra/forms-model'
-import { Path } from '../../reducers/data/types'
-import { findPage } from '../page'
+import { Path, findPage } from '~/src/data'
 
 export function addComponent(
   data: FormDefinition,

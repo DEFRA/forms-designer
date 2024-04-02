@@ -1,5 +1,9 @@
 import React from 'react'
-import { Output, EmailOutputConfiguration, ValidationErrors } from './types'
+import {
+  Output,
+  EmailOutputConfiguration,
+  ValidationErrors
+} from '~/src/outputs/types'
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
 
 type Props = {

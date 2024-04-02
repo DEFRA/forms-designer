@@ -4,12 +4,12 @@ import {
   Condition,
   ConditionField,
   ConditionGroupDef,
+  ConditionRef,
   DateDirections,
   dateUnits,
   RelativeTimeValue,
   ConditionValue
-} from '..'
-import { ConditionRef } from '.'
+} from '~/src/conditions'
 
 describe('inline condition model', () => {
   let underTest

@@ -6,13 +6,13 @@ import {
   relativeDateOrTimeOperatorNames,
   ConditionValue
 } from '@defra/forms-model'
-import RelativeTimeValues from './inline-conditions-relative-dates'
-import { AbsoluteDateValues } from './AbsoluteDateValues'
-import { AbsoluteDateTimeValues } from './AbsoluteDateTimeValues'
-import { AbsoluteTimeValues } from './AbsoluteTimeValues'
-import { TextValues } from './TextValues'
-import { SelectValues } from './SelectValues'
-import { tryParseInt } from './inline-condition-helpers'
+import RelativeTimeValues from '~/src/conditions/inline-conditions-relative-dates'
+import { AbsoluteDateValues } from '~/src/conditions/AbsoluteDateValues'
+import { AbsoluteDateTimeValues } from '~/src/conditions/AbsoluteDateTimeValues'
+import { AbsoluteTimeValues } from '~/src/conditions/AbsoluteTimeValues'
+import { TextValues } from '~/src/conditions/TextValues'
+import { SelectValues } from '~/src/conditions/SelectValues'
+import { tryParseInt } from '~/src/conditions/inline-condition-helpers'
 
 function DateTimeComponent(fieldType, operator) {
   const operatorConfig = getOperatorConfig(fieldType, operator)

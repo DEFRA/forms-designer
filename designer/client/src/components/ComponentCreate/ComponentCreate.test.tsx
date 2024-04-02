@@ -3,12 +3,10 @@ import { screen } from '@testing-library/dom'
 import { act, cleanup, render, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 
-import { ComponentCreate } from './ComponentCreate'
-import { ComponentContextProvider } from '../../reducers/component'
-import { DataContext } from '../../context'
+import { ComponentCreate } from '~/src/components/ComponentCreate'
+import { ComponentContextProvider } from '~/src/reducers/component'
+import { DataContext } from '~/src/context'
 import { DetailsComponent, FormDefinition } from '@defra/forms-model'
-import * as Data from '../../data'
-import { addComponent } from '../../data'
 
 describe('ComponentCreate:', () => {
   const {

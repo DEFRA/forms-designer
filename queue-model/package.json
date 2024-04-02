@@ -15,7 +15,7 @@
     "build": "npm run build:prisma && npm run build:types && npm run build:node",
     "build:node": "BABEL_ENV=node babel --extensions \".ts\" --ignore \"**/*.test.*\" src --out-dir dist/module --copy-files",
     "build:prisma": "prisma generate",
-    "build:types": "tsc --build --force tsconfig.build.json",
+    "build:types": "tsc --build --force tsconfig.build.json && tsc-alias --project tsconfig.build.json",
     "test": "jest --color --coverage --verbose",
     "test:watch": "jest --color --watch",
     "migrate": "prisma migrate dev"

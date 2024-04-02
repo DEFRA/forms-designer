@@ -1,6 +1,6 @@
-import { Condition } from './condition'
-import { ConditionRef } from './condition-ref'
-import { ConditionGroup } from './condition-group'
+import { type Condition } from '~/src/conditions/condition'
+import { type ConditionRef } from '~/src/conditions/condition-ref'
+import { type ConditionGroup } from '~/src/conditions/condition-group'
 
 export type ConditionsArray = (Condition | ConditionGroup | ConditionRef)[]
 

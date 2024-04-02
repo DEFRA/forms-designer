@@ -3,6 +3,9 @@
   "compilerOptions": {
     "jsx": "react",
     "lib": ["DOM", "ES2015"],
+    "paths": {
+      "~/*": ["./*"]
+    },
     "types": ["@testing-library/jest-dom"]
   },
   "exclude": ["dist"],

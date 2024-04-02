@@ -1,11 +1,10 @@
 import React from 'react'
-import SelectConditions from './conditions/SelectConditions'
-import { i18n } from './i18n'
+import SelectConditions from '~/src/conditions/SelectConditions'
+import { i18n } from '~/src/i18n'
 
-import { DataContext } from './context'
-import { findPage } from './data'
-import { updateLink } from './data/page'
-import logger from './plugins/logger'
+import { DataContext } from '~/src/context'
+import { findPage, updateLink } from '~/src/data'
+import logger from '~/src/plugins/logger'
 
 class LinkEdit extends React.Component {
   static contextType = DataContext
