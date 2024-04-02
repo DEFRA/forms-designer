@@ -20,7 +20,8 @@ module.exports = {
             root: ['./server'],
             alias: { '~': './server' }
           }
-    ]
+    ],
+    '@babel/plugin-syntax-import-attributes'
   ],
   presets: [
     '@babel/preset-typescript',

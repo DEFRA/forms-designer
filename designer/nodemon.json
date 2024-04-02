@@ -1,5 +1,7 @@
 {
-  "delay": "500",
-  "watch": ["dist"],
-  "legacyWatch": true
+  "watch": ["./server/dist"],
+  "execMap": {
+    "js": "node --enable-source-maps --no-warnings"
+  },
+  "ext": "js,json"
 }

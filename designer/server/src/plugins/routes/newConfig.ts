@@ -1,5 +1,5 @@
 import config from '~/src/config'
-import newFormJson from '~/src/common/new-form.json'
+import newFormJson from '~/src/common/new-form.json' with { type: 'json' }
 import { nanoid } from 'nanoid'
 import { publish } from '~/src/lib/publish'
 import { ServerRoute } from '@hapi/hapi'

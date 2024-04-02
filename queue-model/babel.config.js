@@ -33,6 +33,5 @@ module.exports = {
         bugfixes: true
       }
     ]
-  ],
-  sourceMaps: true
+  ]
 }

@@ -35,6 +35,5 @@ module.exports = {
         modules: BABEL_ENV === 'node' ? 'auto' : 'umd'
       }
     ]
-  ],
-  sourceMaps: true
+  ]
 }
