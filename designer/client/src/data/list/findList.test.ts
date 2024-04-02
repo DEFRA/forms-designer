@@ -16,9 +16,7 @@ const data: FormDefinition = {
 }
 
 test('findList throws when no list can be found', () => {
-  expect(() => findList(data, 'listC')).toThrowError(
-    /No list found with the name/
-  )
+  expect(() => findList(data, 'listC')).toThrow(/No list found with the name/)
 })
 
 test('findList returns a tuple of the list and the index', () => {

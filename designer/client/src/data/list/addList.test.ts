@@ -18,7 +18,7 @@ const data: FormDefinition = {
 test('findList throws when a list with the same name already exists', () => {
   expect(() =>
     addList(data, { name: 'listA', title: 'list a', items: [], type: 'string' })
-  ).toThrowError(/A list with the name/)
+  ).toThrow(/A list with the name/)
 })
 
 test('addList returns a tuple of the list and the index', () => {

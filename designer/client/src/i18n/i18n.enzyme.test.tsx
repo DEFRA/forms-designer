@@ -10,7 +10,7 @@ describe('I18n', () => {
 
     const WithI18nComponent = withI18n(Component)
     const wrapper = shallow(<WithI18nComponent />)
-    expect(wrapper.find(Component).prop('i18n')).not.toBeUndefined()
+    expect(wrapper.find(Component).prop('i18n')).toBeDefined()
   })
 
   test('withI18n translation is correct', () => {
