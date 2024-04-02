@@ -8,7 +8,6 @@ import config from '~/src/config.js'
  *
  * Local development - 1 Redis instance
  * Out in the wild - Elasticache / Redis Cluster with username and password
- *
  * @returns {Cluster | Redis}
  */
 function buildRedisClient() {

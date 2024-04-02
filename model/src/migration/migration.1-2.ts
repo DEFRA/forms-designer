@@ -2,9 +2,9 @@ import { type MigrationScript } from '~/src/migration/types.js'
 import { nanoid } from '~/src/utils/helpers.js'
 
 /**
- * @private
  * StaticItem is a deprecated Type.
  * It should only be used for aiding migration scripts.
+ * @private
  */
 interface StaticItem {
   label: string
@@ -14,9 +14,9 @@ interface StaticItem {
 }
 
 /**
- * @private
  * StaticComponentValues is a deprecated Type.
  * It should only be used for aiding migration scripts.
+ * @private
  */
 interface StaticComponentValues {
   list: any

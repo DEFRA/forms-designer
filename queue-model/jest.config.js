@@ -2,7 +2,6 @@ import { projectDefaults } from '../jest.config.js'
 
 /**
  * Jest project config
- *
  * @type {typeof projectDefaults}
  */
 export default {
