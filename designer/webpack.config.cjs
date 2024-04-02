@@ -187,7 +187,12 @@ module.exports = {
         'govuk/assets/'
       )
     },
-    extensions: ['.js', '.jsx', '.ts', '.tsx']
+    extensionAlias: {
+      '.cjs': ['.cts', '.cjs'],
+      '.js': ['.ts', '.js'],
+      '.jsx': ['.tsx', '.jsx'],
+      '.mjs': ['.mts', '.mjs']
+    }
   },
   target: 'web'
 }
