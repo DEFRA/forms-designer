@@ -1,5 +1,7 @@
 {
-  "watch": ["./server/src"],
-  "ignore": ["**/*.test.*"],
-  "ext": "js,json,ts"
+  "watch": ["./server/dist"],
+  "execMap": {
+    "js": "node --enable-source-maps --no-warnings"
+  },
+  "ext": "js,json"
 }

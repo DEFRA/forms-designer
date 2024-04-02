@@ -1,4 +1,5 @@
 const { dirname, join } = require('node:path')
+const { existsSync, unlinkSync } = require('node:fs')
 
 const { EnvironmentPlugin } = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -10,7 +11,7 @@ const WebpackAssetsManifest = require('webpack-assets-manifest')
 const { NODE_ENV = 'development', REACT_LOG_LEVEL } = process.env
 
 /**
- * @satisfies {import('webpack').Configuration}
+ * @type {import('webpack').Configuration}
  */
 module.exports = {
   context: join(__dirname, 'client/src'),
@@ -125,6 +126,15 @@ module.exports = {
   },
   plugins: [
     new WebpackAssetsManifest({
+      apply() {
+        const manifestPath = join(__dirname, 'client/dist/assets/manifest.json')
+
+        // Delete manifest.json before build to delay
+        // nodemon startup via `npm run dev` wait-on
+        if (existsSync(manifestPath)) {
+          unlinkSync(manifestPath)
+        }
+      },
       output: 'assets/manifest.json'
     }),
 
