@@ -1,7 +1,5 @@
 /**
  * ESLint config
- *
- * @type {import('eslint').ESLint.ConfigData}
  */
 module.exports = {
   ignorePatterns: [
@@ -20,6 +18,7 @@ module.exports = {
         'standard',
         'eslint:recommended',
         'plugin:import/recommended',
+        'plugin:jsdoc/recommended',
         'plugin:n/recommended',
         'plugin:prettier/recommended',
         'plugin:promise/recommended',
@@ -35,7 +34,14 @@ module.exports = {
         tsconfigRootDir: __dirname,
         EXPERIMENTAL_useProjectService: true
       },
-      plugins: ['@typescript-eslint', 'import', 'n', 'prettier', 'promise'],
+      plugins: [
+        '@typescript-eslint',
+        'import',
+        'jsdoc',
+        'n',
+        'prettier',
+        'promise'
+      ],
       rules: {
         'prettier/prettier': 'error',
         'no-console': 'error',
@@ -89,6 +95,41 @@ module.exports = {
           }
         ],
 
+        // Check for valid formatting
+        'jsdoc/check-line-alignment': [
+          'warn',
+          'never',
+          {
+            tags: ['param', 'property', 'typedef', 'returns']
+          }
+        ],
+
+        // Require hyphens before param description
+        // Aligns with TSDoc style: https://tsdoc.org/pages/tags/param/
+        'jsdoc/require-hyphen-before-param-description': [
+          'warn',
+          'always',
+          {
+            tags: {
+              param: 'always',
+              property: 'always',
+              returns: 'always'
+            }
+          }
+        ],
+
+        // JSDoc blocks are optional by default
+        'jsdoc/require-jsdoc': 'off',
+
+        // JSDoc @param description is optional
+        'jsdoc/require-param-description': 'off',
+        'jsdoc/require-param': 'off',
+
+        // JSDoc @returns description is optional
+        'jsdoc/require-returns-description': 'off',
+        'jsdoc/require-returns-type': 'off',
+        'jsdoc/require-returns': 'off',
+
         // Skip rules handled by import plugin
         'n/no-extraneous-require': 'off',
         'n/no-extraneous-import': 'off',
@@ -124,6 +165,35 @@ module.exports = {
             ]
           }
         }
+      }
+    },
+    {
+      extends: ['plugin:jsdoc/recommended-typescript-flavor'],
+      files: ['**/*.{cjs,js,mjs}'],
+      plugins: ['jsdoc'],
+      rules: {
+        // JSDoc blocks are mandatory for JavaScript classes and methods
+        'jsdoc/require-jsdoc': [
+          'error',
+          {
+            enableFixer: false,
+            require: {
+              ClassDeclaration: true,
+              ClassExpression: true,
+              FunctionExpression: false,
+              MethodDefinition: true
+            }
+          }
+        ],
+
+        // JSDoc @param is mandatory for JavaScript
+        'jsdoc/require-param-description': 'off',
+        'jsdoc/require-param': 'off',
+
+        // JSDoc @returns description is optional
+        'jsdoc/require-returns-description': 'off',
+        'jsdoc/require-returns-type': 'off',
+        'jsdoc/require-returns': 'off'
       }
     },
     {
