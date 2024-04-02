@@ -1,4 +1,4 @@
-import { ConditionalComponent } from '~/src/components/types'
+import { type ConditionalComponent } from '~/src/components/types'
 
 export const ConditionalComponentTypes: ConditionalComponent[] = [
   {

@@ -1,4 +1,4 @@
-import { ComponentType, ComponentDef } from '~/src/components'
+import { type ComponentType, type ComponentDef } from '~/src/components/types'
 import { ConditionValueAbstract } from '~/src/conditions/condition-value-abstract'
 import {
   timeUnits,

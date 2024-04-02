@@ -1,6 +1,6 @@
-import { ConditionRawData } from '~/src/data-model'
-import { ComponentDef } from '~/src/components/types'
-import { OutputType } from '~/src/data-model/enums'
+import { type ComponentDef } from '~/src/components/types'
+import { type Condition } from '~/src/conditions/condition'
+import { type OutputType } from '~/src/data-model/enums'
 
 type Toggleable<T> = boolean | T
 
@@ -148,6 +148,19 @@ export type FeeOptions = {
   maxAttempts: number
   customPayErrorMessage?: string
   showPaymentSkippedWarningPage: boolean
+}
+
+export type ConditionWrapperValue =
+  | string
+  | {
+      name: string
+      conditions: Condition[]
+    }
+
+export type ConditionRawData = {
+  name: string
+  displayName: string
+  value: ConditionWrapperValue
 }
 
 /**

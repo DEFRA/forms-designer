@@ -6,7 +6,7 @@ import { ConditionGroup } from '~/src/conditions/condition-group'
 import { conditionValueFrom } from '~/src/conditions/condition-values'
 import { Coordinator } from '~/src/conditions/enums'
 import { toPresentationString, toExpression } from '~/src/conditions/helpers'
-import { ConditionsArray } from '~/src/conditions/types'
+import { type ConditionsArray } from '~/src/conditions/types'
 
 type ConditionRawObject =
   | ConditionsModel

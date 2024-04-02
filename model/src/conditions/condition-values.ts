@@ -1,9 +1,9 @@
 import { ConditionValueAbstract } from '~/src/conditions/condition-value-abstract'
 import { Registration } from '~/src/conditions/condition-value-registration'
 import {
-  DateTimeUnitValues,
-  DateUnits,
-  TimeUnits
+  type DateTimeUnitValues,
+  type DateUnits,
+  type TimeUnits
 } from '~/src/conditions/types'
 
 export class ConditionValue extends ConditionValueAbstract {
