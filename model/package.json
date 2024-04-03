@@ -10,12 +10,10 @@
   },
   "license": "OGL-UK-3.0",
   "main": "dist/module/index.js",
-  "browser": "dist/browser/index.js",
   "types": "dist/types/index.d.ts",
   "type": "module",
   "scripts": {
-    "build": "npm run build:types && npm run build:node && npm run build:browser",
-    "build:browser": "BABEL_ENV=javascripts babel --delete-dir-on-start --extensions \".ts\" --ignore \"**/*.test.*\" --copy-files --no-copy-ignored --source-maps --out-dir ./dist/browser ./src",
+    "build": "npm run build:types && npm run build:node",
     "build:node": "BABEL_ENV=node babel --delete-dir-on-start --extensions \".ts\" --ignore \"**/*.test.*\" --copy-files --no-copy-ignored --source-maps --out-dir ./dist/module ./src",
     "build:types": "tsc --build --force tsconfig.build.json && tsc-alias --project tsconfig.build.json",
     "test": "jest --color --coverage --verbose",
