@@ -1,5 +1,8 @@
 {
   "watch": ["./server/dist"],
+  "env": {
+    "NODE_ENV": "development"
+  },
   "execMap": {
     "js": "node --enable-source-maps --no-warnings"
   },
