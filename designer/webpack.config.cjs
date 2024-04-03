@@ -194,5 +194,5 @@ module.exports = {
       '.mjs': ['.mts', '.mjs']
     }
   },
-  target: 'web'
+  target: 'browserslist:javascripts'
 }

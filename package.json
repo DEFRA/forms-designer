@@ -16,6 +16,7 @@
   ],
   "scripts": {
     "build": "npm run build --workspaces",
+    "predev": "npm run build --workspace model",
     "dev": "npm run dev --workspace designer",
     "format": "prettier --write \"**/*.{cjs,js,jsx,json,md,mjs,scss,ts,tsx}\"",
     "format:check": "prettier --check \"**/*.{cjs,js,jsx,json,md,mjs,scss,ts,tsx}\"",

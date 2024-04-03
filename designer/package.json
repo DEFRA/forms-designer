@@ -9,21 +9,20 @@
     "directory": "designer"
   },
   "license": "OGL-UK-3.0",
-  "main": "server/dist/index.js",
   "type": "module",
   "scripts": {
     "audit": "npm audit --audit-level=high",
     "build": "npm run build:server && npm run build:client",
-    "build:client": "NODE_ENV=production webpack",
+    "build:client": "NODE_ENV=${NODE_ENV:-production} webpack",
     "build:server": "BABEL_ENV=node babel --delete-dir-on-start --extensions \".js\",\".ts\" --ignore \"**/*.test.*\" --ignore \"**/layouts/legacy-layout.njk\" --copy-files --no-copy-ignored --source-maps --out-dir ./server/dist ./server/src",
     "dev": "concurrently \"npm run build:server -- --watch\" \"npm run client:watch\" \"npm run server:watch\"",
     "symlink-env": "./bin/symlink-config",
     "test": "jest --color --coverage --verbose",
     "test:watch": "jest --color --watch",
-    "client:watch": "NODE_ENV=development webpack --watch",
+    "client:watch": "NODE_ENV=development npm run build:client --watch",
     "server:watch": "PERSISTENT_BACKEND=preview wait-on --delay 2000 ./client/dist/assets/manifest.json && nodemon",
     "prestart": "npm run build",
-    "start": "NODE_ENV=production node --enable-source-maps ./server/dist/index.js"
+    "start": "NODE_ENV=${NODE_ENV:-production} node --enable-source-maps ./server/dist/index.js"
   },
   "dependencies": {
     "@defra/forms-model": "^3.0.11",
