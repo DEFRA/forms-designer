@@ -1,5 +1,5 @@
-import fetch from 'node-fetch'
 import Boom from '@hapi/boom'
+import fetch from 'node-fetch'
 
 /**
  *
@@ -10,7 +10,7 @@ import Boom from '@hapi/boom'
 async function fetcher(url, options = {}) {
   const response = await fetch(url, {
     ...options,
-    method: options?.method || 'get',
+    method: options.method || 'get',
     headers: {
       'Content-Type': 'application/json',
       ...(options.headers && { headers: options.headers })

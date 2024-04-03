@@ -1,6 +1,6 @@
-import { S3PersistenceService } from '~/src/lib/persistence/s3PersistenceService.js'
-
 import { FormConfiguration } from '@defra/forms-model'
+
+import { S3PersistenceService } from '~/src/lib/persistence/s3PersistenceService.js'
 
 describe('s3PersistenceService', () => {
   const server = {

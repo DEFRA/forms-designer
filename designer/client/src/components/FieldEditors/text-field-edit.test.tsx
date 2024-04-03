@@ -1,6 +1,7 @@
-import React from 'react'
 import { screen } from '@testing-library/dom'
 import { render } from '@testing-library/react'
+import React from 'react'
+
 import { TextFieldEdit } from '~/src/components/FieldEditors/text-field-edit.jsx'
 import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 

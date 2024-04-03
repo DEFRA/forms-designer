@@ -1,8 +1,9 @@
 import React, { useContext } from 'react'
+
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 import { Actions } from '~/src/reducers/component/types.js'
 
-type Props = {
+interface Props {
   context: any // TODO
 }
 

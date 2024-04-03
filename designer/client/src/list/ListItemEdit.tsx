@@ -1,12 +1,13 @@
-import React, { memo, useContext } from 'react'
-import { i18n } from '~/src/i18n/index.js'
 import { Hint, Input, Label, Textarea } from '@xgovformbuilder/govuk-react-jsx'
+import React, { memo, useContext } from 'react'
+
 import { DataContext } from '~/src/context/index.js'
+import { useListItem } from '~/src/hooks/list/useListItem/index.jsx'
+import { i18n } from '~/src/i18n/index.js'
 import {
   ListsEditorContext,
   ListsEditorStateActions
 } from '~/src/reducers/list/listsEditorReducer.jsx'
-import { useListItem } from '~/src/hooks/list/useListItem/index.jsx'
 import { ListContext } from '~/src/reducers/listReducer.jsx'
 
 export function ListItemEdit() {
@@ -88,7 +89,7 @@ export function ListItemEdit() {
           onChange={handleConditionChange}
         >
           <option value="" data-testid="list-condition-option" />
-          {conditions?.map((condition) => (
+          {conditions.map((condition) => (
             <option
               key={condition.name}
               value={condition.name}

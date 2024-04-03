@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react'
+
 import { i18n } from '~/src/i18n/index.js'
 
 export interface ErrorListItem {
@@ -10,7 +11,7 @@ export interface ErrorListItem {
 interface ErrorSummaryProps {
   className?: string
   descriptionChildren?: string
-  errorList: Array<ErrorListItem>
+  errorList: ErrorListItem[]
   titleChildren?: string
 }
 

@@ -1,18 +1,18 @@
+import { type ComponentDef } from '@defra/forms-model'
 import React, { useEffect, useContext, useState, useLayoutEffect } from 'react'
-import { ComponentDef } from '@defra/forms-model'
 
-import { i18n } from '~/src/i18n/index.js'
-import { ErrorSummary } from '~/src/error-summary.jsx'
-import { hasValidationErrors } from '~/src/validations.js'
 import ComponentTypeEdit from '~/src/ComponentTypeEdit.jsx'
-import { ComponentCreateList } from '~/src/components/ComponentCreate/ComponentCreateList.jsx'
 import { BackLink } from '~/src/components/BackLink/index.js'
+import { ComponentCreateList } from '~/src/components/ComponentCreate/ComponentCreateList.jsx'
 import './ComponentCreate.scss'
-import { Actions } from '~/src/reducers/component/types.js'
 import { DataContext } from '~/src/context/index.js'
-import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 import { addComponent } from '~/src/data/index.js'
+import { ErrorSummary } from '~/src/error-summary.jsx'
+import { i18n } from '~/src/i18n/index.js'
 import logger from '~/src/plugins/logger.js'
+import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
+import { Actions } from '~/src/reducers/component/types.js'
+import { hasValidationErrors } from '~/src/validations.js'
 
 function useComponentCreate(props) {
   const { data, save } = useContext(DataContext)
@@ -98,7 +98,7 @@ export function ComponentCreate(props) {
             {i18n('Back to create component list')}
           </BackLink>
           <h4 className="govuk-heading-m">
-            {component?.title} {i18n('component')}
+            {component.title} {i18n('component')}
           </h4>
         </>
       )}

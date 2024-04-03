@@ -1,17 +1,21 @@
-import React, { Component, ChangeEvent, ContextType, FormEvent } from 'react'
-import { FormConfiguration, FormDefinition } from '@defra/forms-model'
+import { type FormConfiguration, type FormDefinition } from '@defra/forms-model'
 import isFunction from 'lodash/isFunction.js'
+import React, {
+  Component,
+  type ChangeEvent,
+  type ContextType,
+  type FormEvent
+} from 'react'
 
-import { validateTitle, hasValidationErrors } from '~/src/validations.js'
-import ErrorSummary from '~/src/error-summary.jsx'
-import { DataContext } from '~/src/context/index.js'
-import { i18n } from '~/src/i18n/index.js'
-
-import { FormDetailsTitle } from '~/src/components/FormDetails/FormDetailsTitle.jsx'
 import { FormDetailsFeedback } from '~/src/components/FormDetails/FormDetailsFeedback.jsx'
 import { FormDetailsPhaseBanner } from '~/src/components/FormDetails/FormDetailsPhaseBanner.jsx'
+import { FormDetailsTitle } from '~/src/components/FormDetails/FormDetailsTitle.jsx'
+import { DataContext } from '~/src/context/index.js'
+import ErrorSummary from '~/src/error-summary.jsx'
+import { i18n } from '~/src/i18n/index.js'
 import '~/src/components/FormDetails/FormDetails.scss'
 import logger from '~/src/plugins/logger.js'
+import { validateTitle, hasValidationErrors } from '~/src/validations.js'
 type PhaseBanner = Exclude<FormDefinition['phaseBanner'], undefined>
 type Phase = PhaseBanner['phase']
 

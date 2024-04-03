@@ -1,6 +1,7 @@
-import React, { useEffect, useState, ChangeEvent } from 'react'
 import isValid from 'date-fns/isValid'
 import padStart from 'lodash/padStart.js'
+import React, { useEffect, useState, type ChangeEvent } from 'react'
+
 import {
   isInt,
   tryParseInt
@@ -50,7 +51,7 @@ function isValidYear(year: string) {
 
 export const AbsoluteDateValues = ({ value = {}, updateValue }: Props) => {
   const [year, setYear] = useState<string>(() =>
-    isInt(value.year) ? (value.year as number).toString() : ''
+    isInt(value.year) ? value.year.toString() : ''
   )
 
   const [month, setMonth] = useState<string>(() =>

@@ -1,6 +1,4 @@
-import { Menu } from '~/src/components/Menu/index.js'
 import { screen } from '@testing-library/dom'
-import { userEvent } from '@testing-library/user-event'
 import {
   act,
   cleanup,
@@ -8,8 +6,11 @@ import {
   type RenderResult,
   waitFor
 } from '@testing-library/react'
-import { DataContext, FlyoutContext } from '~/src/context/index.js'
+import { userEvent } from '@testing-library/user-event'
 import React from 'react'
+
+import { Menu } from '~/src/components/Menu/index.js'
+import { DataContext, FlyoutContext } from '~/src/context/index.js'
 
 describe('Menu', () => {
   const { getByText, getByTestId, queryByTestId } = screen

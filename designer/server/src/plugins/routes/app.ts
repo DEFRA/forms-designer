@@ -1,6 +1,7 @@
-import config from '~/src/config.js'
-import { ServerRoute } from '@hapi/hapi'
+import { type ServerRoute } from '@hapi/hapi'
 import JSZip from 'jszip'
+
+import config from '~/src/config.js'
 
 export const getApp: ServerRoute = {
   method: 'get',
@@ -37,7 +38,7 @@ export const getErrorCrashReport: ServerRoute = {
     handler: async (request, h) => {
       try {
         const { id } = request.params
-        const error = request.yar.get(`error-summary-${id}`) as any
+        const error = request.yar.get(`error-summary-${id}`)
         const zip = new JSZip()
         zip.file(`${id}-crash-report.json`, JSON.stringify(error))
         const buffer = await zip.generateAsync({

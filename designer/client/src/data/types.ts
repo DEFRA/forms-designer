@@ -1,11 +1,11 @@
 import {
-  ComponentDef,
-  ConditionRawData,
-  ContentComponentsDef,
-  FormDefinition,
-  InputFieldsComponentsDef,
-  ListComponentsDef,
-  Page
+  type ComponentDef,
+  type ConditionRawData,
+  type ContentComponentsDef,
+  type FormDefinition,
+  type InputFieldsComponentsDef,
+  type ListComponentsDef,
+  type Page
 } from '@defra/forms-model'
 
 export const isNotContentType = (
@@ -19,10 +19,10 @@ export const isNotContentType = (
     'List',
     'FlashCard'
   ]
-  return !contentTypes.find((type) => `${type}` === `${obj.type}`)
+  return !contentTypes.find((type) => type === obj.type)
 }
 
-export type Input = {
+export interface Input {
   name: string
   page: { path: Page['path']; section: Page['section'] }
   propertyPath: string

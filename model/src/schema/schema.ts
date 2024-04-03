@@ -297,4 +297,4 @@ export const Schema = joi
  *  2 - 2023-05-04 `feeOptions` has been introduced. paymentReferenceFormat and payApiKey can be configured in top level or feeOptions. feeOptions will take precedent.
  *      if feeOptions are empty, it will pull values from the top level keys.
  *      WARN: Fee/GOV.UK pay configurations (apart from fees) should no longer be stored in the top level, always within feeOptions.
- **/
+ */

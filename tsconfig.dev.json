@@ -5,8 +5,8 @@
   },
   "include": [
     "**/*.config.*",
-    "**/.eslintrc.js",
-    "**/.prettierrc.js",
-    "**/.lintstagedrc.mjs"
+    "**/.eslintrc.*",
+    "**/.prettierrc.*",
+    "**/.lintstagedrc.*"
   ]
 }

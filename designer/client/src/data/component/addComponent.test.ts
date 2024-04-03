@@ -1,5 +1,6 @@
+import { type FormDefinition } from '@defra/forms-model'
+
 import { addComponent } from '~/src/data/index.js'
-import { FormDefinition } from '@defra/forms-model'
 
 test('addComponent throws an error when no page can be found', () => {
   const data: FormDefinition = {
@@ -11,7 +12,7 @@ test('addComponent throws an error when no page can be found', () => {
 
   expect(() => {
     addComponent(data, 'doesntExist', {})
-  }).toThrowError()
+  }).toThrow()
 })
 
 test('addComponent adds a component to the correct page', () => {

@@ -1,23 +1,23 @@
-import React, { Component } from 'react'
-
-import NotifyEditItems from '~/src/outputs/notify-edit-items.jsx'
-import {
-  Output,
-  NotifyOutputConfiguration,
-  ValidationErrors
-} from '~/src/outputs/types.js'
 import {
   Checkboxes,
   ErrorMessage,
   Input
 } from '@xgovformbuilder/govuk-react-jsx'
 import classNames from 'classnames'
-import { i18n } from '~/src/i18n/index.js'
+import React, { Component } from 'react'
+
 import { allInputs } from '~/src/data/index.js'
+import { i18n } from '~/src/i18n/index.js'
+import NotifyEditItems from '~/src/outputs/notify-edit-items.jsx'
+import {
+  type Output,
+  type NotifyOutputConfiguration,
+  type ValidationErrors
+} from '~/src/outputs/types.js'
 
-type State = {}
+interface State {}
 
-type Props = {
+interface Props {
   data: any // TODO: type
   output: Output
   onEdit: ({ data: any }) => void
@@ -77,8 +77,8 @@ class NotifyEdit extends Component<Props, State> {
           defaultValue={templateId}
           step="any"
           errorMessage={
-            errors?.templateId
-              ? { children: errors?.templateId.children }
+            errors.templateId
+              ? { children: errors.templateId.children }
               : undefined
           }
         />
@@ -92,25 +92,23 @@ class NotifyEdit extends Component<Props, State> {
           defaultValue={apiKey}
           step="any"
           errorMessage={
-            errors?.apiKey ? { children: errors?.apiKey.children } : undefined
+            errors.apiKey ? { children: errors.apiKey.children } : undefined
           }
         />
         <div
           className={classNames({
             'govuk-form-group': true,
-            'govuk-form-group--error': errors?.email
+            'govuk-form-group--error': errors.email
           })}
         >
           <label className="govuk-label" htmlFor="email-field">
             Email field
           </label>
-          {errors?.email && (
-            <ErrorMessage>{errors?.email.children}</ErrorMessage>
-          )}
+          {errors.email && <ErrorMessage>{errors.email.children}</ErrorMessage>}
           <select
             className={classNames({
               'govuk-select': true,
-              'govuk-input--error': errors?.email
+              'govuk-input--error': errors.email
             })}
             id="email-field"
             name="email-field"

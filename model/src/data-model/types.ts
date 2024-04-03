@@ -59,28 +59,26 @@ export interface Feedback {
   emailAddress?: string
 }
 
-export type PhaseBanner = {
+export interface PhaseBanner {
   phase?: 'alpha' | 'beta'
   feedbackUrl?: string
 }
 
-export type MultipleApiKeys = {
+export interface MultipleApiKeys {
   test?: string
   production?: string
 }
 
-export type EmailOutputConfiguration = {
+export interface EmailOutputConfiguration {
   emailAddress: string
 }
 
-export type NotifyOutputConfiguration = {
+export interface NotifyOutputConfiguration {
   apiKey: string
   templateId: string
   emailField: string
   personalisation: string[]
-  personalisationFieldCustomisation?: {
-    [personalisationName: string]: string[]
-  }
+  personalisationFieldCustomisation?: Record<string, string[]>
   addReferencesToPersonalisation?: boolean
   emailReplyToIdConfiguration?: {
     emailReplyToId: string
@@ -88,7 +86,7 @@ export type NotifyOutputConfiguration = {
   }[]
 }
 
-export type WebhookOutputConfiguration = {
+export interface WebhookOutputConfiguration {
   url: string
 }
 
@@ -97,14 +95,14 @@ export type OutputConfiguration =
   | NotifyOutputConfiguration
   | WebhookOutputConfiguration
 
-export type Output = {
+export interface Output {
   name: string
   title: string
   type: OutputType
   outputConfiguration: OutputConfiguration
 }
 
-export type ConfirmationPage = {
+export interface ConfirmationPage {
   customText: {
     title: string
     paymentSkipped: Toggleable<string>
@@ -113,7 +111,7 @@ export type ConfirmationPage = {
   components: ComponentDef[]
 }
 
-export type PaymentSkippedWarningPage = {
+export interface PaymentSkippedWarningPage {
   customText: {
     title: string
     caption: string
@@ -121,7 +119,7 @@ export type PaymentSkippedWarningPage = {
   }
 }
 
-export type SpecialPages = {
+export interface SpecialPages {
   confirmationPage?: ConfirmationPage
   paymentSkippedWarningPage?: PaymentSkippedWarningPage
 }
@@ -133,7 +131,7 @@ export function isMultipleApiKey(
   return obj.test !== undefined || obj.production !== undefined
 }
 
-export type Fee = {
+export interface Fee {
   description: string
   amount: number
   multiplier?: string
@@ -141,7 +139,7 @@ export type Fee = {
   prefix?: string
 }
 
-export type FeeOptions = {
+export interface FeeOptions {
   paymentReferenceFormat?: string
   payReturnUrl?: string
   allowSubmissionWithoutPayment: boolean
@@ -157,7 +155,7 @@ export type ConditionWrapperValue =
       conditions: Condition[]
     }
 
-export type ConditionRawData = {
+export interface ConditionRawData {
   name: string
   displayName: string
   value: ConditionWrapperValue
@@ -166,8 +164,8 @@ export type ConditionRawData = {
 /**
  * `FormDefinition` is a typescript representation of `Schema`
  */
-export type FormDefinition = {
-  pages: Array<Page | RepeatingFieldPage>
+export interface FormDefinition {
+  pages: (Page | RepeatingFieldPage)[]
   conditions: ConditionRawData[]
   lists: List[]
   sections: Section[]

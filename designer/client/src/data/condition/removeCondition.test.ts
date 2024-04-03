@@ -1,5 +1,6 @@
+import { type FormDefinition } from '@defra/forms-model'
+
 import { removeCondition } from '~/src/data/index.js'
-import { FormDefinition } from '@defra/forms-model'
 
 const data: FormDefinition = {
   pages: [

@@ -6,6 +6,7 @@
     "declaration": true,
     "declarationMap": true,
     "esModuleInterop": true,
+    "incremental": true,
     "module": "NodeNext",
     "noEmit": true,
     "resolveJsonModule": true,

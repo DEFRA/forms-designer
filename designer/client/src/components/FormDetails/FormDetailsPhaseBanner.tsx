@@ -1,6 +1,6 @@
-import React, { ChangeEvent } from 'react'
+import { type FormDefinition } from '@defra/forms-model'
 import { Label, Radios } from '@xgovformbuilder/govuk-react-jsx'
-import { FormDefinition } from '@defra/forms-model'
+import React, { type ChangeEvent } from 'react'
 
 import { i18n } from '~/src/i18n/index.js'
 

@@ -1,8 +1,9 @@
-import React from 'react'
-import { ValidationErrors } from '~/src/outputs/types.js'
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
+import React from 'react'
 
-type Props = {
+import { type ValidationErrors } from '~/src/outputs/types.js'
+
+interface Props {
   url: string
   errors: ValidationErrors
 }
@@ -17,7 +18,7 @@ const WebhookEdit = ({ url = '', errors }: Props) => (
     }}
     defaultValue={url}
     pattern="^\S+"
-    errorMessage={errors?.url ? { children: errors?.url.children } : undefined}
+    errorMessage={errors.url ? { children: errors.url.children } : undefined}
   />
 )
 

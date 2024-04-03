@@ -2,6 +2,7 @@ import { screen } from '@testing-library/dom'
 import { act, cleanup, render, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React from 'react'
+
 import { AbsoluteTimeValues } from '~/src/conditions/AbsoluteTimeValues.jsx'
 
 describe('AbsoluteTimeValues', () => {
@@ -20,8 +21,8 @@ describe('AbsoluteTimeValues', () => {
     const $hours = await waitFor(() => findByLabelText('HH'))
     const $minutes = await waitFor(() => findByLabelText('mm'))
 
-    expect($hours?.getAttribute('value')).toEqual('0')
-    expect($minutes?.getAttribute('value')).toEqual('34')
+    expect($hours.getAttribute('value')).toBe('0')
+    expect($minutes.getAttribute('value')).toBe('34')
   })
 
   it('calls the updateValue prop if a valid time is entered', async () => {

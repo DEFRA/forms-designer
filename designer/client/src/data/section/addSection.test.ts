@@ -1,4 +1,5 @@
-import { FormDefinition, Section } from '@defra/forms-model'
+import { type FormDefinition, type Section } from '@defra/forms-model'
+
 import { addSection } from '~/src/data/index.js'
 
 const data: FormDefinition = {

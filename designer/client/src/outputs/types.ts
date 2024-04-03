@@ -4,11 +4,11 @@ export enum OutputType {
   Webhook = 'webhook'
 }
 
-export type EmailOutputConfiguration = {
+export interface EmailOutputConfiguration {
   emailAddress: string
 }
 
-export type NotifyOutputConfiguration = {
+export interface NotifyOutputConfiguration {
   apiKey: string
   templateId: string
   emailField: string
@@ -16,7 +16,7 @@ export type NotifyOutputConfiguration = {
   addReferencesToPersonalisation?: boolean
 }
 
-export type WebhookOutputConfiguration = {
+export interface WebhookOutputConfiguration {
   url: string
   allowRetry: boolean
 }
@@ -26,7 +26,7 @@ export type OutputConfiguration =
   | NotifyOutputConfiguration
   | WebhookOutputConfiguration
 
-export type Output = {
+export interface Output {
   name: string
   title: string
   type: OutputType
@@ -38,7 +38,7 @@ export interface ValidationError {
   children: string
 }
 
-export type ValidationErrors = {
+export interface ValidationErrors {
   title?: ValidationError
   name?: ValidationError
   email?: ValidationError

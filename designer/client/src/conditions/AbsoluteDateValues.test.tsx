@@ -2,6 +2,7 @@ import { screen } from '@testing-library/dom'
 import { act, cleanup, render, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React from 'react'
+
 import { AbsoluteDateValues } from '~/src/conditions/AbsoluteDateValues.jsx'
 
 describe('AbsoluteDateValues', () => {
@@ -21,9 +22,9 @@ describe('AbsoluteDateValues', () => {
     const $month = await waitFor(() => findByLabelText('Month'))
     const $day = await waitFor(() => findByLabelText('Day'))
 
-    expect($year?.getAttribute('value')).toEqual('1999')
-    expect($month?.getAttribute('value')).toEqual('12')
-    expect($day?.getAttribute('value')).toEqual('31')
+    expect($year.getAttribute('value')).toBe('1999')
+    expect($month.getAttribute('value')).toBe('12')
+    expect($day.getAttribute('value')).toBe('31')
   })
 
   it('calls the updateValue prop if a valid date is entered', async () => {

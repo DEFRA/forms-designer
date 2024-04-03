@@ -1,5 +1,6 @@
 import { shallow } from 'enzyme'
 import React from 'react'
+
 import { withI18n, i18n } from '~/src/i18n/index.js'
 
 describe('I18n', () => {
@@ -10,7 +11,7 @@ describe('I18n', () => {
 
     const WithI18nComponent = withI18n(Component)
     const wrapper = shallow(<WithI18nComponent />)
-    expect(wrapper.find(Component).prop('i18n')).not.toBeUndefined()
+    expect(wrapper.find(Component).prop('i18n')).toBeDefined()
   })
 
   test('withI18n translation is correct', () => {

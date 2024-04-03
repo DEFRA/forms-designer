@@ -1,15 +1,16 @@
-import React from 'react'
 import {
   ConditionGroupDef,
   toPresentationString,
   clone
 } from '@defra/forms-model'
-import InlineConditionsDefinition from '~/src/conditions/InlineConditionsDefinition.js'
+import React from 'react'
+
 import {
   EditIcon,
   MoveDownIcon,
   MoveUpIcon
 } from '~/src/components/Icons/index.js'
+import InlineConditionsDefinition from '~/src/conditions/InlineConditionsDefinition.js'
 
 class InlineConditionsEdit extends React.Component {
   constructor(props) {
@@ -36,7 +37,7 @@ class InlineConditionsEdit extends React.Component {
 
   onClickGroup = (e) => {
     e?.preventDefault()
-    if (this.state.selectedConditions?.length < 2) {
+    if (this.state.selectedConditions.length < 2) {
       this.setState({
         editingError: 'Please select at least 2 items for grouping'
       })
@@ -69,7 +70,7 @@ class InlineConditionsEdit extends React.Component {
 
   onClickRemove = (e) => {
     e?.preventDefault()
-    if (this.state.selectedConditions?.length < 1) {
+    if (this.state.selectedConditions.length < 1) {
       this.setState({
         editingError: 'Please select at least 1 item to remove'
       })
@@ -212,7 +213,7 @@ class InlineConditionsEdit extends React.Component {
                       name={`condition-${index}`}
                       value={index}
                       onChange={this.onChangeCheckbox}
-                      checked={selectedConditions?.includes(index) || ''}
+                      checked={selectedConditions.includes(index) || ''}
                     />
                     <label
                       className="govuk-label govuk-checkboxes__label"
@@ -285,7 +286,7 @@ class InlineConditionsEdit extends React.Component {
               })}
             </div>
             <div className="govuk-form-group" id="group-and-remove">
-              {selectedConditions?.length > 1 && (
+              {selectedConditions.length > 1 && (
                 <span>
                   <a
                     href="#"
@@ -298,7 +299,7 @@ class InlineConditionsEdit extends React.Component {
                   /
                 </span>
               )}
-              {selectedConditions?.length > 0 && (
+              {selectedConditions.length > 0 && (
                 <a
                   href="#"
                   id="remove-conditions"

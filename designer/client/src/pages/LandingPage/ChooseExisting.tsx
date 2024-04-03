@@ -1,16 +1,17 @@
 import React, { Component } from 'react'
-import * as formConfigurationApi from '~/src/load-form-configurations.js'
-import { i18n } from '~/src/i18n/index.js'
 import { withRouter } from 'react-router-dom'
+
 import { BackLink } from '~/src/components/BackLink/index.js'
+import { i18n } from '~/src/i18n/index.js'
+import * as formConfigurationApi from '~/src/load-form-configurations.js'
 import './LandingPage.scss'
 import logger from '~/src/plugins/logger.js'
 
-type Props = {
+interface Props {
   history: any
 }
 
-type State = {
+interface State {
   configs: { Key: string; DisplayName: string }[]
   loading?: boolean
 }

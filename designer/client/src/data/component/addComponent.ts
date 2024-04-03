@@ -1,5 +1,6 @@
-import { ComponentDef, FormDefinition } from '@defra/forms-model'
-import { Path, findPage } from '~/src/data/index.js'
+import { type ComponentDef, type FormDefinition } from '@defra/forms-model'
+
+import { type Path, findPage } from '~/src/data/index.js'
 
 export function addComponent(
   data: FormDefinition,

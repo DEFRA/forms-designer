@@ -2,7 +2,7 @@ import {
   type ComponentType,
   type ComponentDef
 } from '~/src/components/types.js'
-import { ConditionValueAbstract } from '~/src/conditions/condition-value-abstract.js'
+import { type ConditionValueAbstract } from '~/src/conditions/condition-value-abstract.js'
 import {
   timeUnits,
   dateUnits,

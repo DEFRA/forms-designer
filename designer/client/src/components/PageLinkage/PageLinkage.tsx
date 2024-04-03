@@ -1,4 +1,5 @@
 import React, { useCallback, useState, Fragment, useContext } from 'react'
+
 import { RenderInPortal } from '~/src/components/RenderInPortal/index.js'
 import { DataContext } from '~/src/context/index.js'
 import { addLink } from '~/src/data/index.js'
@@ -111,8 +112,8 @@ export function PageLinkage({ page, layout }) {
             <line
               x1={lineStart?.x}
               y1={lineStart?.y}
-              x2={lineEnd?.x}
-              y2={lineEnd?.y}
+              x2={lineEnd.x}
+              y2={lineEnd.y}
               markerEnd="url(#arrow)"
             />
           </svg>

@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react'
+
 import { FeatureToggleApi } from '~/src/api/toggleApi.js'
 
 export enum FeatureFlags {

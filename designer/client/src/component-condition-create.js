@@ -1,6 +1,7 @@
-import React from 'react'
-import ComponentTypeEdit from '~/src/ComponentTypeEdit.jsx'
 import { ConditionalComponentTypes } from '@defra/forms-model'
+import React from 'react'
+
+import ComponentTypeEdit from '~/src/ComponentTypeEdit.jsx'
 
 class ComponentConditionCreate extends React.Component {
   constructor(props) {
@@ -10,7 +11,7 @@ class ComponentConditionCreate extends React.Component {
     const { components } = conditional || {}
 
     this.state = {
-      component: components && components.length ? components[0] : null
+      component: components?.length ? components[0] : null
     }
   }
 

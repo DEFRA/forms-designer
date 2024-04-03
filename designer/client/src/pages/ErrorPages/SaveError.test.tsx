@@ -1,8 +1,9 @@
-import React from 'react'
-import { SaveError } from '~/src/pages/ErrorPages/SaveError.jsx'
 import { screen } from '@testing-library/dom'
 import { act, render, cleanup, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
+import React from 'react'
+
+import { SaveError } from '~/src/pages/ErrorPages/SaveError.jsx'
 
 describe('SaveErrorPage', () => {
   afterEach(cleanup)
@@ -72,7 +73,7 @@ describe('SaveErrorPage', () => {
 
     const $backLink = await waitFor(() => findByText('Back to Designer'))
 
-    await act(() => userEvent.click($backLink!))
+    await act(() => userEvent.click($backLink))
     await waitFor(() => expect(push).toHaveBeenCalledWith('designer/testid'))
   })
 })

@@ -1,7 +1,8 @@
-import React from 'react'
 import { type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { cleanup, render, type RenderResult } from '@testing-library/react'
+import React from 'react'
+
 import SelectConditions from '~/src/conditions/SelectConditions.jsx'
 import { DataContext } from '~/src/context/index.js'
 

@@ -4,7 +4,6 @@ import { type MigrationScript } from '~/src/migration/types.js'
 
 /**
  * Returns which migrations that should be run against your Object with the given version
- * @param version
  */
 export function whichMigrations(version: number) {
   const migrations = new Set<MigrationScript>()

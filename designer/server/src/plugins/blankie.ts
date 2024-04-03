@@ -1,5 +1,5 @@
+import { type ServerRegisterPluginObject } from '@hapi/hapi'
 import Blankie from 'blankie'
-import { ServerRegisterPluginObject } from '@hapi/hapi'
 
 export const configureBlankiePlugin =
   (): ServerRegisterPluginObject<Blankie> => {

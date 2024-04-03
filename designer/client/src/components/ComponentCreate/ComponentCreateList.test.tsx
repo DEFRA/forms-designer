@@ -1,5 +1,6 @@
-import React from 'react'
 import { cleanup, render } from '@testing-library/react'
+import React from 'react'
+
 import { ComponentCreateList } from '~/src/components/ComponentCreate/ComponentCreateList.jsx'
 
 describe('ComponentCreateList', () => {

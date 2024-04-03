@@ -1,9 +1,10 @@
-import { customRenderForLists } from '~/test/helpers/renderers-lists.jsx'
-import { FormDefinition } from '@defra/forms-model'
+import { type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import React from 'react'
+
 import { ListEdit } from '~/src/list/ListEdit.jsx'
 import { ListContext } from '~/src/reducers/listReducer.jsx'
+import { customRenderForLists } from '~/test/helpers/renderers-lists.jsx'
 
 const data: FormDefinition = {
   pages: [],

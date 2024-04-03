@@ -1,21 +1,20 @@
-import React from 'react'
-import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import { clone } from '@defra/forms-model'
-import randomId from '~/src/randomId.js'
-
-import { toUrl } from '~/src/helpers.js'
-import { RenderInPortal } from '~/src/components/RenderInPortal/index.js'
-import SectionEdit from '~/src/section/section-edit.js'
-import { Flyout } from '~/src/components/Flyout/index.js'
-import { withI18n } from '~/src/i18n/index.js'
-import ErrorSummary from '~/src/error-summary.jsx'
-import { validateTitle, hasValidationErrors } from '~/src/validations.js'
-import { DataContext } from '~/src/context/index.js'
+import { Input } from '@xgovformbuilder/govuk-react-jsx'
+import React from 'react'
 
 import FeatureToggle from '~/src/FeatureToggle.jsx'
+import { Flyout } from '~/src/components/Flyout/index.js'
+import { RenderInPortal } from '~/src/components/RenderInPortal/index.js'
 import { FeatureFlags } from '~/src/context/FeatureFlagContext.jsx'
+import { DataContext } from '~/src/context/index.js'
 import { findPage, updateLinksTo } from '~/src/data/index.js'
+import ErrorSummary from '~/src/error-summary.jsx'
+import { toUrl } from '~/src/helpers.js'
+import { withI18n } from '~/src/i18n/index.js'
 import logger from '~/src/plugins/logger.js'
+import randomId from '~/src/randomId.js'
+import SectionEdit from '~/src/section/section-edit.js'
+import { validateTitle, hasValidationErrors } from '~/src/validations.js'
 
 export class PageEdit extends React.Component {
   static contextType = DataContext
@@ -245,7 +244,7 @@ export class PageEdit extends React.Component {
             value={title}
             onChange={this.onChangeTitle}
             errorMessage={
-              errors?.title ? { children: errors?.title.children } : undefined
+              errors.title ? { children: errors.title.children } : undefined
             }
           />
           <Input
@@ -261,7 +260,7 @@ export class PageEdit extends React.Component {
             value={path}
             onChange={this.onChangePath}
             errorMessage={
-              errors?.path ? { children: errors.path?.children } : undefined
+              errors.path ? { children: errors.path?.children } : undefined
             }
           />
           <div className="govuk-form-group">

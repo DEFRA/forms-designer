@@ -1,6 +1,7 @@
-import React, { useContext, useRef } from 'react'
-import { DataContext } from '~/src/context/index.js'
 import { whichMigrations } from '@defra/forms-model'
+import React, { useContext, useRef } from 'react'
+
+import { DataContext } from '~/src/context/index.js'
 import logger from '~/src/plugins/logger.js'
 
 export function migrate(form) {
@@ -17,7 +18,7 @@ export function migrate(form) {
   }
 }
 
-type Props = {
+interface Props {
   id?: string
   updateDownloadedAt?: (string) => void
 }
@@ -34,7 +35,7 @@ export function SubMenu({ id, updateDownloadedAt }: Props) {
     e.preventDefault()
     const encodedData =
       'text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data))
-    updateDownloadedAt?.(new Date().toLocaleTimeString())
+    updateDownloadedAt(new Date().toLocaleTimeString())
     const link = document.createElement('a')
     link.download = `${id}.json`
     link.href = `data:${encodedData}`

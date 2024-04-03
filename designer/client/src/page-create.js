@@ -1,18 +1,18 @@
-import React from 'react'
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
+import React from 'react'
 
-import SelectConditions from '~/src/conditions/SelectConditions.jsx'
-import { toUrl } from '~/src/helpers.js'
-import { RenderInPortal } from '~/src/components/RenderInPortal/index.js'
 import { Flyout } from '~/src/components/Flyout/index.js'
-import SectionEdit from '~/src/section/section-edit.js'
-import { i18n, withI18n } from '~/src/i18n/index.js'
-import ErrorSummary from '~/src/error-summary.jsx'
-import { validateTitle, hasValidationErrors } from '~/src/validations.js'
+import { RenderInPortal } from '~/src/components/RenderInPortal/index.js'
+import SelectConditions from '~/src/conditions/SelectConditions.jsx'
 import { DataContext } from '~/src/context/index.js'
 import { addLink, addPage } from '~/src/data/index.js'
-import randomId from '~/src/randomId.js'
+import ErrorSummary from '~/src/error-summary.jsx'
+import { toUrl } from '~/src/helpers.js'
+import { i18n, withI18n } from '~/src/i18n/index.js'
 import logger from '~/src/plugins/logger.js'
+import randomId from '~/src/randomId.js'
+import SectionEdit from '~/src/section/section-edit.js'
+import { validateTitle, hasValidationErrors } from '~/src/validations.js'
 
 class PageCreate extends React.Component {
   static contextType = DataContext
@@ -248,7 +248,7 @@ class PageCreate extends React.Component {
             value={title || ''}
             onChange={this.onChangeTitle}
             errorMessage={
-              errors?.title ? { children: errors?.title.children } : undefined
+              errors.title ? { children: errors.title.children } : undefined
             }
           />
 
@@ -265,7 +265,7 @@ class PageCreate extends React.Component {
             value={path}
             onChange={this.onChangePath}
             errorMessage={
-              errors?.path ? { children: errors?.path?.children } : undefined
+              errors.path ? { children: errors.path?.children } : undefined
             }
           />
 
@@ -320,9 +320,9 @@ class PageCreate extends React.Component {
         {isEditingSection && (
           <RenderInPortal>
             <Flyout
-              title={`${
+              title={
                 section?.name ? `Editing ${section.name}` : 'Add a new section'
-              }`}
+              }
               onHide={this.closeFlyout}
               show={true}
             >

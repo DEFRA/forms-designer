@@ -1,5 +1,6 @@
-import React, { ReactElement } from 'react'
+import React, { type ReactElement } from 'react'
 import { withRouter } from 'react-router-dom'
+
 import { BackLink } from '~/src/components/BackLink/index.js'
 import { i18n } from '~/src/i18n/index.js'
 import './ErrorPage.scss'

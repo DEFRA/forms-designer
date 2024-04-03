@@ -1,12 +1,12 @@
-import { nanoid } from '~/src/utils/helpers.js'
 import { type MigrationScript } from '~/src/migration/types.js'
+import { nanoid } from '~/src/utils/helpers.js'
 
 /**
- * @private
  * StaticItem is a deprecated Type.
  * It should only be used for aiding migration scripts.
+ * @private
  */
-type StaticItem = {
+interface StaticItem {
   label: string
   value: string | number | boolean
   hint?: string
@@ -14,18 +14,18 @@ type StaticItem = {
 }
 
 /**
- * @private
  * StaticComponentValues is a deprecated Type.
  * It should only be used for aiding migration scripts.
+ * @private
  */
-type StaticComponentValues = {
+interface StaticComponentValues {
   list: any
   type: 'static' | 'listRef'
   valueType: string | number
   items: StaticItem[]
 }
 
-type Item = {
+interface Item {
   title: string
   value: any
   conditions?: any

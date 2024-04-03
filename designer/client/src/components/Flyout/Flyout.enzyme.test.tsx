@@ -1,11 +1,12 @@
-import React from 'react'
 import { mount } from 'enzyme'
+import React from 'react'
+
 import { useFlyoutEffect } from '~/src/components/Flyout/Flyout.jsx'
 import { FlyoutContext } from '~/src/context/index.js'
 
 function HookWrapper(props) {
   const hook = props.hook ? props.hook() : undefined
-  // @ts-ignore
+  // @ts-expect-error
   // eslint-disable-next-line react/no-unknown-property
   return <div hook={hook} />
 }

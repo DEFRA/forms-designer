@@ -1,4 +1,5 @@
 import yar from '@hapi/yar'
+
 import config from '~/src/config.js'
 
 const sessionManager = {

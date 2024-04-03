@@ -2,7 +2,6 @@ import {
   componentReducer,
   getSubReducer
 } from '~/src/reducers/component/componentReducer.jsx'
-import { Actions } from '~/src/reducers/component/types.js'
 import {
   metaReducer,
   optionsReducer,
@@ -11,6 +10,7 @@ import {
   componentListReducer,
   componentListItemReducer
 } from '~/src/reducers/component/index.js'
+import { Actions } from '~/src/reducers/component/types.js'
 
 describe('Component reducer', () => {
   test('getSubReducer returns correct reducer', () => {

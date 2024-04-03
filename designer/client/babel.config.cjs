@@ -4,7 +4,6 @@ const { NODE_ENV } = process.env
 
 /**
  * Babel config
- *
  * @type {import('@babel/core').TransformOptions}
  */
 module.exports = {

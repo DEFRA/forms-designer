@@ -42,7 +42,7 @@ describe('ComponentCreateList', () => {
       item.find('a').simulate('click', { preventDefault: jest.fn() })
     )
 
-    expect(onSelectComponent.mock.calls.length).toEqual(listItems.length)
+    expect(onSelectComponent.mock.calls).toHaveLength(listItems.length)
     expect(onSelectComponent.mock.calls[0][0]).toEqual({
       name: 'Details',
       type: 'Details',
@@ -99,7 +99,7 @@ describe('ComponentCreateList', () => {
       item.find('a').simulate('click', { preventDefault: jest.fn() })
     )
 
-    expect(onSelectComponent.mock.calls.length).toEqual(listItems.length)
+    expect(onSelectComponent.mock.calls).toHaveLength(listItems.length)
     expect(onSelectComponent.mock.calls[0][0]).toEqual({
       name: 'AutocompleteField',
       type: 'AutocompleteField',
@@ -140,7 +140,7 @@ describe('ComponentCreateList', () => {
       item.find('a').simulate('click', { preventDefault: jest.fn() })
     )
 
-    expect(onSelectComponent.mock.calls.length).toEqual(listItems.length)
+    expect(onSelectComponent.mock.calls).toHaveLength(listItems.length)
     expect(onSelectComponent.mock.calls[0][0]).toEqual({
       name: 'CheckboxesField',
       type: 'CheckboxesField',

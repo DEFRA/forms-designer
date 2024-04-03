@@ -1,18 +1,19 @@
 import React, { useContext } from 'react'
-import ListEdit from '~/src/list/ListEdit.jsx'
-import { RenderInPortal } from '~/src/components/RenderInPortal/index.js'
+
 import { Flyout } from '~/src/components/Flyout/index.js'
+import { RenderInPortal } from '~/src/components/RenderInPortal/index.js'
+import { i18n } from '~/src/i18n/index.js'
+import ListEdit from '~/src/list/ListEdit.jsx'
 import ListItemEdit from '~/src/list/ListItemEdit.jsx'
 import ListSelect from '~/src/list/ListSelect.jsx'
+import { Warning } from '~/src/list/Warning.jsx'
 import {
   ListsEditorContext,
   ListsEditorStateActions
 } from '~/src/reducers/list/listsEditorReducer.jsx'
-import { Warning } from '~/src/list/Warning.jsx'
-import { i18n } from '~/src/i18n/index.js'
 import { ListContext } from '~/src/reducers/listReducer.jsx'
 
-type Props = {
+interface Props {
   showEditLists: boolean
 }
 

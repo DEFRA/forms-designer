@@ -1,4 +1,3 @@
-import React from 'react'
 import {
   Condition,
   ConditionField,
@@ -7,9 +6,10 @@ import {
   getOperatorNames,
   clone
 } from '@defra/forms-model'
-import { i18n } from '~/src/i18n/index.js'
+import React from 'react'
 
 import { InlineConditionsDefinitionValue } from '~/src/conditions/InlineConditionsDefinitionValue.jsx'
+import { i18n } from '~/src/i18n/index.js'
 
 function isCondition(fieldDef) {
   return fieldDef?.type === 'Condition'

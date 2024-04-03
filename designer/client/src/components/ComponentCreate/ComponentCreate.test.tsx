@@ -1,12 +1,12 @@
-import React from 'react'
+import { type DetailsComponent, type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { act, cleanup, render, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
+import React from 'react'
 
 import { ComponentCreate } from '~/src/components/ComponentCreate/index.js'
-import { ComponentContextProvider } from '~/src/reducers/component/index.js'
 import { DataContext } from '~/src/context/index.js'
-import { DetailsComponent, FormDefinition } from '@defra/forms-model'
+import { ComponentContextProvider } from '~/src/reducers/component/index.js'
 
 describe('ComponentCreate:', () => {
   const {
@@ -95,17 +95,17 @@ describe('ComponentCreate:', () => {
         <ComponentCreate page={page} />
       </WrappingComponent>
     )
-    const backBtnTxt: string = 'Back to create component list'
+    const backBtnTxt = 'Back to create component list'
 
     expect(queryByTestId('component-create-list')).toBeInTheDocument()
 
-    await act(() => userEvent.click(queryByText('Details')!))
+    await act(() => userEvent.click(queryByText('Details')))
 
     // - then
     expect(queryByTestId('component-create-list')).not.toBeInTheDocument()
     expect(queryByText(backBtnTxt)).toBeInTheDocument()
 
-    await act(() => userEvent.click(queryByText(backBtnTxt)!))
+    await act(() => userEvent.click(queryByText(backBtnTxt)))
 
     expect(queryByTestId('component-create-list')).toBeInTheDocument()
     expect(queryByText(backBtnTxt)).not.toBeInTheDocument()
@@ -121,9 +121,9 @@ describe('ComponentCreate:', () => {
 
     expect(queryByRole('alert')).not.toBeInTheDocument()
 
-    await act(() => userEvent.click(getByText('Details')!))
+    await act(() => userEvent.click(getByText('Details')))
     await waitFor(() => findByLabelText('Title'))
-    await act(() => userEvent.click(container.querySelector('button')!))
+    await act(() => userEvent.click(container.querySelector('button')))
 
     // - then
     expect(queryByRole('alert')).toBeInTheDocument()

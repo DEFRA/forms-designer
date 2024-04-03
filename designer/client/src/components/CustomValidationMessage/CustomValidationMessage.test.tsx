@@ -1,7 +1,8 @@
-import React from 'react'
 import { screen } from '@testing-library/dom'
 import { act, cleanup, render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
+import React from 'react'
+
 import { CustomValidationMessage } from '~/src/components/CustomValidationMessage/index.js'
 import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
@@ -38,7 +39,7 @@ describe('CssClasses', () => {
     })
 
     test('value should change and be displayed correctly', async () => {
-      const $input = getByLabelText('Validation message') as HTMLInputElement
+      const $input = getByLabelText('Validation message')
       expect($input.value).toBe('')
 
       await act(() => userEvent.clear($input))

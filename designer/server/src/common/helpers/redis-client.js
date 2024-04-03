@@ -1,14 +1,13 @@
 import IoRedis from 'ioredis'
 
-import config from '~/src/config.js'
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
+import config from '~/src/config.js'
 
 /**
  * Setup Redis and provide a redis client
  *
  * Local development - 1 Redis instance
  * Out in the wild - Elasticache / Redis Cluster with username and password
- *
  * @returns {Cluster | Redis}
  */
 function buildRedisClient() {

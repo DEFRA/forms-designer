@@ -1,5 +1,6 @@
-import { Path, findPage } from '~/src/data/index.js'
-import { ComponentDef } from '@defra/forms-model'
+import { type ComponentDef } from '@defra/forms-model'
+
+import { type Path, findPage } from '~/src/data/index.js'
 
 export function updateComponent(
   data,

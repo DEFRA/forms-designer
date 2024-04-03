@@ -1,4 +1,5 @@
-import { FormDefinition } from '@defra/forms-model'
+import { type FormDefinition } from '@defra/forms-model'
+
 import { findList } from '~/src/data/index.js'
 
 const data: FormDefinition = {
@@ -16,9 +17,7 @@ const data: FormDefinition = {
 }
 
 test('findList throws when no list can be found', () => {
-  expect(() => findList(data, 'listC')).toThrowError(
-    /No list found with the name/
-  )
+  expect(() => findList(data, 'listC')).toThrow(/No list found with the name/)
 })
 
 test('findList returns a tuple of the list and the index', () => {

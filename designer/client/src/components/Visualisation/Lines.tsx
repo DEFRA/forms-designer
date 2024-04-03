@@ -1,18 +1,21 @@
+import { type FormDefinition } from '@defra/forms-model'
 import React from 'react'
-import { FormDefinition } from '@defra/forms-model'
 
 import { Flyout } from '~/src/components/Flyout/index.js'
-import LinkEdit from '~/src/link-edit.js'
-import { Layout, Edge } from '~/src/components/Visualisation/getLayout.js'
+import {
+  type Layout,
+  type Edge
+} from '~/src/components/Visualisation/getLayout.js'
 import { DataContext } from '~/src/context/index.js'
+import LinkEdit from '~/src/link-edit.js'
 
-type Props = {
+interface Props {
   layout: Layout['pos']
   data: FormDefinition
   persona: any
 }
 
-type State = {
+interface State {
   showEditor: Edge | boolean
 }
 
@@ -64,7 +67,7 @@ export class Lines extends React.Component<Props, State> {
                   }
                   tabIndex={0}
                   points={pointsString}
-                  className={`${highlight ? 'highlight' : ''}`}
+                  className={highlight ? 'highlight' : ''}
                   data-testid={`${source}-${target}`.replace(/\//g, '')}
                   role="button"
                 >

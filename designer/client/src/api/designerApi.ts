@@ -1,4 +1,5 @@
-import { FormDefinition } from '@defra/forms-model'
+import { type FormDefinition } from '@defra/forms-model'
+
 import logger from '~/src/plugins/logger.js'
 
 export class DesignerApi {

@@ -1,16 +1,17 @@
-import React from 'react'
-import randomId from '~/src/randomId.js'
-import { withI18n } from '~/src/i18n/index.js'
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
+import React from 'react'
+
+import { DataContext } from '~/src/context/index.js'
+import { addSection } from '~/src/data/index.js'
+import ErrorSummary from '~/src/error-summary.jsx'
+import { withI18n } from '~/src/i18n/index.js'
+import logger from '~/src/plugins/logger.js'
+import randomId from '~/src/randomId.js'
 import {
   validateName,
   validateTitle,
   hasValidationErrors
 } from '~/src/validations.js'
-import ErrorSummary from '~/src/error-summary.jsx'
-import { DataContext } from '~/src/context/index.js'
-import { addSection } from '~/src/data/index.js'
-import logger from '~/src/plugins/logger.js'
 
 class SectionEdit extends React.Component {
   static contextType = DataContext
@@ -133,7 +134,7 @@ class SectionEdit extends React.Component {
             value={title}
             onChange={(e) => this.setState({ title: e.target.value })}
             errorMessage={
-              errors?.title ? { children: errors?.title.children } : undefined
+              errors.title ? { children: errors.title.children } : undefined
             }
           />
           <Input
@@ -150,7 +151,7 @@ class SectionEdit extends React.Component {
             value={name}
             onChange={(e) => this.setState({ name: e.target.value })}
             errorMessage={
-              errors?.name ? { children: errors?.name.children } : undefined
+              errors.name ? { children: errors.name.children } : undefined
             }
           />
           <div className="govuk-checkboxes govuk-form-group">

@@ -1,7 +1,8 @@
-import React from 'react'
-import { FormDefinition } from '@defra/forms-model'
+import { type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
+import React from 'react'
+
 import { FieldEdit } from '~/src/field-edit.jsx'
 import { RenderWithContextAndDataContext } from '~/test/helpers/renderers.jsx'
 

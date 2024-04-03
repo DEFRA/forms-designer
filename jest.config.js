@@ -1,6 +1,5 @@
 /**
  * Jest config defaults
- *
  * @type {Partial<import('@jest/types').Config.InitialOptions>}
  */
 export const defaults = {
@@ -10,7 +9,6 @@ export const defaults = {
 
 /**
  * Jest project config defaults
- *
  * @type {Partial<import('@jest/types').Config.InitialProjectOptions>}
  */
 export const projectDefaults = {
@@ -31,7 +29,6 @@ export const projectDefaults = {
 
 /**
  * Jest config
- *
  * @type {import('@jest/types').Config.InitialOptions}
  */
 export default {

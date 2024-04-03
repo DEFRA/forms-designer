@@ -1,7 +1,7 @@
+import { type FormDefinition } from '@defra/forms-model'
 import dagre from 'dagre'
-import { FormDefinition } from '@defra/forms-model'
 
-export type Point = {
+export interface Point {
   node: {
     x: number
     y: number
@@ -20,7 +20,7 @@ export type Point = {
   left: string
 }
 
-export type Edge = {
+export interface Edge {
   source: string
   target: string
   label: string
@@ -30,15 +30,15 @@ export type Edge = {
   }[]
 }
 
-export type Pos = {
+export interface Pos {
   nodes: Point[]
   edges: Edge[]
   width: string
   height: string
 }
 
-export type Layout = {
-  g: dagre.graphlib.Graph<{}>
+export interface Layout {
+  g: dagre.graphlib.Graph
   pos: Pos
 }
 

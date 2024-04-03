@@ -8,14 +8,13 @@
     },
     "types": ["@testing-library/jest-dom"]
   },
-  "exclude": ["dist"],
+  "exclude": ["dist", "node_modules"],
   "include": [
     "**/*.cjs",
     "**/*.js",
     "**/*.jsx",
     "**/*.mjs",
     "**/*.ts",
-    "**/*.tsx",
-    "../../jest.config.js"
+    "**/*.tsx"
   ]
 }

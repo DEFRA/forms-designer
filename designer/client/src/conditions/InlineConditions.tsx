@@ -1,13 +1,11 @@
-import React, { MouseEvent, ChangeEvent } from 'react'
+import { ConditionsModel, clone, type Item } from '@defra/forms-model'
 import classNames from 'classnames'
-import { ConditionsModel, clone, Item } from '@defra/forms-model'
+import React, { type MouseEvent, type ChangeEvent } from 'react'
 
+import { ErrorMessage } from '~/src/components/ErrorMessage/index.js'
 import InlineConditionsDefinition from '~/src/conditions/InlineConditionsDefinition.js'
 import InlineConditionsEdit from '~/src/conditions/inline-conditions-edit.js'
 import { DataContext } from '~/src/context/index.js'
-import ErrorSummary, { ErrorListItem } from '~/src/error-summary.jsx'
-import { i18n } from '~/src/i18n/index.js'
-import { ErrorMessage } from '~/src/components/ErrorMessage/index.js'
 import {
   addCondition,
   allInputs,
@@ -16,6 +14,8 @@ import {
   removeCondition,
   updateCondition
 } from '~/src/data/index.js'
+import ErrorSummary, { type ErrorListItem } from '~/src/error-summary.jsx'
+import { i18n } from '~/src/i18n/index.js'
 import randomId from '~/src/randomId.js'
 
 interface Props {
@@ -96,7 +96,7 @@ export class InlineConditions extends React.Component<Props, State> {
         list = findList(data, input.list)
       }
 
-      const values = `${input.type}` == 'YesNoField' ? yesNoValues : list?.items
+      const values = input.type == 'YesNoField' ? yesNoValues : list?.items
 
       return {
         label,
@@ -136,7 +136,7 @@ export class InlineConditions extends React.Component<Props, State> {
   }
 
   onClickSave = async (event: MouseEvent<HTMLAnchorElement>) => {
-    event?.preventDefault()
+    event.preventDefault()
     const { conditionsChange, condition } = this.props
     const { data, save } = this.context
     const { conditions } = this.state
@@ -168,7 +168,7 @@ export class InlineConditions extends React.Component<Props, State> {
   }
 
   onClickDelete = async (event: MouseEvent<HTMLAnchorElement>) => {
-    event?.preventDefault()
+    event.preventDefault()
     const { data, save } = this.context
     const { cancelCallback, condition } = this.props
 
@@ -266,7 +266,7 @@ export class InlineConditions extends React.Component<Props, State> {
               <div className="govuk-hint">
                 {i18n('conditions.displayNameHint')}
               </div>
-              {nameError && <ErrorMessage>{nameError?.children}</ErrorMessage>}
+              {nameError && <ErrorMessage>{nameError.children}</ErrorMessage>}
               <input
                 className={classNames('govuk-input govuk-input--width-20', {
                   'govuk-input--error': nameError

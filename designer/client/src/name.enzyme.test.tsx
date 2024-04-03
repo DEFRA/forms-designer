@@ -1,5 +1,6 @@
-import React from 'react'
 import { mount } from 'enzyme'
+import React from 'react'
+
 import { Name } from '~/src/name.jsx'
 
 describe('Name component', () => {
@@ -25,7 +26,7 @@ describe('Name component', () => {
       const field = wrapper.find('#an-id').hostNodes()
       field.simulate('change', { target: { value: 'beepboop' } })
       expect(updateModelSpy).toHaveBeenCalledTimes(1)
-      expect(updateModelSpy.mock.calls[0][0]).toEqual('beepboop')
+      expect(updateModelSpy.mock.calls[0][0]).toBe('beepboop')
     })
     test('update method is not called when there is an error', () => {
       const component = {
@@ -60,10 +61,10 @@ describe('Name component', () => {
         />
       )
       const field = wrapper.find('#an-id').hostNodes()
-      expect(field.exists()).toEqual(true)
-      expect(field.props().value).toEqual('myComponent')
-      expect(wrapper.find('.govuk-label').text()).toEqual('label text')
-      expect(wrapper.find('.govuk-hint').text()).toEqual('a hint')
+      expect(field.exists()).toBe(true)
+      expect(field.props().value).toBe('myComponent')
+      expect(wrapper.find('.govuk-label').text()).toBe('label text')
+      expect(wrapper.find('.govuk-hint').text()).toBe('a hint')
       expect(wrapper.state()).toEqual({
         name: 'myComponent',
         errors: {}
@@ -88,9 +89,9 @@ describe('Name component', () => {
       }
     })
     wrapper.update()
-    expect(wrapper.find('.govuk-input--error').exists()).toEqual(true)
-    expect(wrapper.find('.govuk-form-group--error').exists()).toEqual(true)
-    expect(wrapper.find('.govuk-error-message').exists()).toEqual(true)
+    expect(wrapper.find('.govuk-input--error').exists()).toBe(true)
+    expect(wrapper.find('.govuk-form-group--error').exists()).toBe(true)
+    expect(wrapper.find('.govuk-error-message').exists()).toBe(true)
   })
 })
 

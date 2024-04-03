@@ -1,9 +1,10 @@
 import React from 'react'
+
 import { ErrorMessage } from '~/src/components/ErrorMessage/index.js'
 import { isEmpty } from '~/src/helpers.js'
-import { withI18nRef, I18n } from '~/src/i18n/index.js'
+import { withI18nRef, type I18n } from '~/src/i18n/index.js'
 
-type Props = {
+interface Props {
   updateModel?: (arg0: any) => object | null | undefined
   hint: string | null | undefined
   name: string
@@ -12,7 +13,7 @@ type Props = {
   i18n: I18n
 }
 
-type State = {
+interface State {
   name: string | undefined
   errors: any
 }

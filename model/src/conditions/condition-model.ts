@@ -1,9 +1,9 @@
 import { ConditionField } from '~/src/conditions/condition-field.js'
 import { ConditionGroupDef } from '~/src/conditions/condition-group-def.js'
-import { Condition } from '~/src/conditions/condition.js'
-import { ConditionRef } from '~/src/conditions/condition-ref.js'
 import { ConditionGroup } from '~/src/conditions/condition-group.js'
+import { ConditionRef } from '~/src/conditions/condition-ref.js'
 import { conditionValueFrom } from '~/src/conditions/condition-values.js'
+import { Condition } from '~/src/conditions/condition.js'
 import { Coordinator } from '~/src/conditions/enums.js'
 import { toPresentationString, toExpression } from '~/src/conditions/helpers.js'
 import { type ConditionsArray } from '~/src/conditions/types.js'
@@ -194,20 +194,23 @@ export class ConditionsModel {
   }
 
   _group(conditions: ConditionsArray, groupDefs: ConditionGroupDef[]) {
-    return conditions.reduce((groups, condition, index, conditions) => {
-      const groupDef = groupDefs.find((groupDef) => groupDef.contains(index))
+    return conditions.reduce<ConditionsArray>(
+      (groups, condition, index, conditions) => {
+        const groupDef = groupDefs.find((groupDef) => groupDef.contains(index))
 
-      if (groupDef) {
-        if (groupDef.startsWith(index)) {
-          const groupConditions = groupDef.applyTo(conditions)
-          groups.push(new ConditionGroup(groupConditions))
+        if (groupDef) {
+          if (groupDef.startsWith(index)) {
+            const groupConditions = groupDef.applyTo(conditions)
+            groups.push(new ConditionGroup(groupConditions))
+          }
+        } else {
+          groups.push(condition)
         }
-      } else {
-        groups.push(condition)
-      }
 
-      return groups
-    }, [] as ConditionsArray)
+        return groups
+      },
+      []
+    )
   }
 
   _ungroup(conditions: ConditionsArray, splitIndex: number) {
@@ -283,18 +286,14 @@ export class ConditionsModel {
   }
 }
 
-interface ConditionFrom {
-  (
-    it: Condition | ConditionRef | ConditionGroup
-  ): Condition | ConditionRef | ConditionGroup
-}
+type ConditionFrom = (
+  it: Condition | ConditionRef | ConditionGroup
+) => Condition | ConditionRef | ConditionGroup
 
 const conditionFrom: ConditionFrom = function (it) {
   if ('conditions' in it) {
     return new ConditionGroup(
-      (it as ConditionGroup).conditions.map((condition) =>
-        conditionFrom(condition)
-      )
+      it.conditions.map((condition) => conditionFrom(condition))
     )
   }
 

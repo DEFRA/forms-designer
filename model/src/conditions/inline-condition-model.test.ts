@@ -1182,7 +1182,7 @@ describe('inline condition model', () => {
       })
 
       test('should throw an error on value creation if no value provided', () => {
-        // @ts-ignore
+        // @ts-expect-error
         expect(() => new ConditionValue()).toThrow(Error)
       })
 
@@ -1247,7 +1247,7 @@ describe('inline condition model', () => {
 
     describe('invalid group def', () => {
       test('should throw error if there is no last value', () => {
-        // @ts-ignore
+        // @ts-expect-error
         expect(() => new ConditionGroupDef(3)).toThrow(Error)
       })
 

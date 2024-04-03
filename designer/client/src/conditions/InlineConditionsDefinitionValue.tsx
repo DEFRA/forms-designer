@@ -1,4 +1,3 @@
-import React from 'react'
 import {
   timeUnits,
   absoluteDateOrTimeOperatorNames,
@@ -6,13 +5,15 @@ import {
   relativeDateOrTimeOperatorNames,
   ConditionValue
 } from '@defra/forms-model'
-import RelativeTimeValues from '~/src/conditions/inline-conditions-relative-dates.js'
-import { AbsoluteDateValues } from '~/src/conditions/AbsoluteDateValues.jsx'
+import React from 'react'
+
 import { AbsoluteDateTimeValues } from '~/src/conditions/AbsoluteDateTimeValues.jsx'
+import { AbsoluteDateValues } from '~/src/conditions/AbsoluteDateValues.jsx'
 import { AbsoluteTimeValues } from '~/src/conditions/AbsoluteTimeValues.jsx'
-import { TextValues } from '~/src/conditions/TextValues.jsx'
 import { SelectValues } from '~/src/conditions/SelectValues.jsx'
+import { TextValues } from '~/src/conditions/TextValues.jsx'
 import { tryParseInt } from '~/src/conditions/inline-condition-helpers.js'
+import RelativeTimeValues from '~/src/conditions/inline-conditions-relative-dates.js'
 
 function DateTimeComponent(fieldType, operator) {
   const operatorConfig = getOperatorConfig(fieldType, operator)
@@ -47,7 +48,7 @@ function DateTimeComponent(fieldType, operator) {
           updateValue(new ConditionValue(transformed))
         }
         const transformInputValue = (condition?: ConditionValue) => {
-          if (condition && condition.value) {
+          if (condition?.value) {
             switch (CustomRendering) {
               case AbsoluteDateTimeValues:
                 // value should be an ISO format date string
@@ -114,7 +115,7 @@ export const InlineConditionsDefinitionValue = ({
   if (CustomComponent) {
     return <CustomComponent value={value} updateValue={updateValue} />
   }
-  return (fieldDef?.values?.length ?? 0) > 0 ? (
+  return (fieldDef.values.length ?? 0) > 0 ? (
     <SelectValues
       fieldDef={fieldDef}
       operator={operator}

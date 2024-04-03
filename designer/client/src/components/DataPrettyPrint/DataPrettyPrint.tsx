@@ -1,4 +1,5 @@
 import React, { useContext } from 'react'
+
 import { DataContext } from '~/src/context/index.js'
 
 const listTypes = [
@@ -32,9 +33,9 @@ export function DataPrettyPrint(props) {
             model[section.name] = {}
           }
 
-          model[section.name][component.name] = `${component.type}`
+          model[section.name][component.name] = component.type
         } else {
-          model[component.name] = `${component.type}`
+          model[component.name] = component.type
         }
       }
     })

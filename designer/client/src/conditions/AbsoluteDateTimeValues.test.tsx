@@ -2,6 +2,7 @@ import { screen } from '@testing-library/dom'
 import { act, cleanup, render, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React from 'react'
+
 import { AbsoluteDateTimeValues } from '~/src/conditions/AbsoluteDateTimeValues.jsx'
 
 describe('AbsoluteDateTimeValues', () => {
@@ -17,9 +18,9 @@ describe('AbsoluteDateTimeValues', () => {
     const $month = await waitFor(() => findByLabelText('Month'))
     const $day = await waitFor(() => findByLabelText('Day'))
 
-    expect($year?.getAttribute('value')).toEqual('2020')
-    expect($month?.getAttribute('value')).toEqual('01')
-    expect($day?.getAttribute('value')).toEqual('31')
+    expect($year.getAttribute('value')).toBe('2020')
+    expect($month.getAttribute('value')).toBe('01')
+    expect($day.getAttribute('value')).toBe('31')
   })
 
   it("renders out a time that's passed to it", async () => {
@@ -29,8 +30,8 @@ describe('AbsoluteDateTimeValues', () => {
     const $hours = await waitFor(() => findByLabelText('HH'))
     const $minutes = await waitFor(() => findByLabelText('mm'))
 
-    expect($hours?.getAttribute('value')).toEqual('12')
-    expect($minutes?.getAttribute('value')).toEqual('10')
+    expect($hours.getAttribute('value')).toBe('12')
+    expect($minutes.getAttribute('value')).toBe('10')
   })
 
   it('calls the updateValue prop if a valid date and time are entered', async () => {
@@ -50,7 +51,7 @@ describe('AbsoluteDateTimeValues', () => {
     await act(() => userEvent.type($minutes, '57'))
 
     const d = updateValue.mock.calls.pop()[0]
-    expect(d.toISOString()).toEqual('2020-04-26T10:57:00.000Z')
+    expect(d.toISOString()).toBe('2020-04-26T10:57:00.000Z')
   })
 
   it('calls the updateValue prop if an existing valid date and time are edited', async () => {
@@ -76,7 +77,7 @@ describe('AbsoluteDateTimeValues', () => {
     await act(() => userEvent.type($minutes, '57'))
 
     const newDate = updateValue.mock.calls.pop()[0]
-    expect(newDate.toISOString()).toEqual('2020-04-26T10:57:00.000Z')
+    expect(newDate.toISOString()).toBe('2020-04-26T10:57:00.000Z')
   })
 
   it("doesn't call the updateValue prop if a valid date and time are not entered", async () => {
@@ -113,7 +114,7 @@ describe('AbsoluteDateTimeValues', () => {
     await act(() => userEvent.type($minutes, '57'))
 
     const d = updateValue.mock.calls.pop()[0]
-    expect(d.toISOString()).toEqual('2020-04-26T00:57:00.000Z')
+    expect(d.toISOString()).toBe('2020-04-26T00:57:00.000Z')
   })
 
   it('allows a zero value for minutes', async () => {
@@ -133,6 +134,6 @@ describe('AbsoluteDateTimeValues', () => {
     await act(() => userEvent.type($minutes, '0'))
 
     const d = updateValue.mock.calls.pop()[0]
-    expect(d.toISOString()).toEqual('2020-04-26T14:00:00.000Z')
+    expect(d.toISOString()).toBe('2020-04-26T14:00:00.000Z')
   })
 })

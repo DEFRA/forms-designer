@@ -1,6 +1,6 @@
-import { FormDefinition } from '@defra/forms-model'
+import { type FormDefinition } from '@defra/forms-model'
 
-export type ListItemHook = {
+export interface ListItemHook {
   handleTitleChange: (e) => void
   handleConditionChange: (e) => void
   handleValueChange: (e) => void
