@@ -33,7 +33,6 @@ module.exports = {
         browserslistEnv: 'javascripts',
         bugfixes: true,
         corejs: pkg.devDependencies['core-js'],
-        modules: NODE_ENV === 'test' ? 'auto' : 'umd',
         useBuiltIns: 'usage'
       }
     ]
