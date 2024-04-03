@@ -9,7 +9,6 @@
     "directory": "designer"
   },
   "license": "OGL-UK-3.0",
-  "main": "server/dist/index.js",
   "type": "module",
   "scripts": {
     "audit": "npm audit --audit-level=high",
