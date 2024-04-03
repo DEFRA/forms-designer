@@ -108,14 +108,10 @@ module.exports = {
     }
   ],
   parserOptions: {
-    project: [
-      './tsconfig.dev.json',
-      './designer/client/tsconfig.json',
-      './designer/server/tsconfig.json',
-      './model/tsconfig.json',
-      './queue-model/tsconfig.json'
-    ],
-    tsconfigRootDir: __dirname
+    allowAutomaticSingleRunInference: true,
+    project: ['./tsconfig.json', './tsconfig.dev.json'],
+    tsconfigRootDir: __dirname,
+    EXPERIMENTAL_useProjectService: true
   },
   root: true
 }
