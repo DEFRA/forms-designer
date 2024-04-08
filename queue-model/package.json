@@ -1,6 +1,6 @@
 {
   "name": "@defra/forms-queue-model",
-  "version": "3.0.17",
+  "version": "3.0.18",
   "description": "A hapi plugin providing the queue model for Defra forms",
   "homepage": "https://github.com/DEFRA/forms-designer/tree/main/queue-model#readme",
   "repository": {
