@@ -4,7 +4,7 @@ export default [
   {
     method: 'GET',
     path: '/library',
-    handler: async (request, h) => {
+    async handler(request, h) {
       const model = await listLibraryViewModel()
 
       return h.view('library', model)

@@ -5,7 +5,7 @@ import { createUserSession } from '../common/helpers/auth/user-session.js'
 export default {
   method: ['GET', 'POST'],
   path: '/auth/callback',
-  handler: async (request, h) => {
+  async handler(request, h) {
     if (request.auth.isAuthenticated) {
       const sessionId = uuidv4()
 

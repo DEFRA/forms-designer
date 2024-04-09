@@ -7,7 +7,7 @@ export const getApp: ServerRoute = {
   method: 'get',
   path: '/app',
   options: {
-    handler: async (_request, h) => {
+    handler(request, h) {
       return h.view('designer', {
         phase: config.phase,
         previewUrl: config.previewUrl,
@@ -21,7 +21,7 @@ export const getAppChildRoutes: ServerRoute = {
   method: 'get',
   path: '/app/{path*}',
   options: {
-    handler: async (_request, h) => {
+    handler(request, h) {
       return h.view('designer', {
         phase: config.phase,
         previewUrl: config.previewUrl,
@@ -35,7 +35,7 @@ export const getErrorCrashReport: ServerRoute = {
   method: 'get',
   path: '/error/crashreport/{id}',
   options: {
-    handler: async (request, h) => {
+    async handler(request, h) {
       try {
         const { id } = request.params
         const error = request.yar.get(`error-summary-${id}`)

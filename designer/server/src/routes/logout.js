@@ -3,7 +3,7 @@ import { provideAuthedUser } from '../common/helpers/auth/pre/provide-authed-use
 export default {
   method: 'GET',
   path: '/logout',
-  handler: (request, h) => {
+  handler(request, h) {
     const authedUser = request.pre.authedUser
 
     if (!authedUser) {

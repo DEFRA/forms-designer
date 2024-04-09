@@ -22,7 +22,7 @@ export const designerPlugin = {
         method: 'GET',
         path: '/feature-toggles',
         options: {
-          handler: async (request, h) => {
+          handler(request, h) {
             const featureFlags = flagg({
               store: envStore(process.env),
               definitions: {
