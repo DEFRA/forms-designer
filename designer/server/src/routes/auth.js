@@ -1,15 +1,10 @@
-import Boom from '@hapi/boom'
+import boom from '@hapi/boom'
 import { v4 as uuidv4 } from 'uuid'
+import { createUserSession } from '../common/helpers/auth/user-session.js'
 
-import { createUserSession } from '~/src/common/helpers/auth/user-session.js'
-
-const authCallbackController = {
-  options: {
-    auth: 'azure-oidc',
-    response: {
-      failAction: () => Boom.boomify(Boom.unauthorized())
-    }
-  },
+export default {
+  method: ['GET', 'POST'],
+  path: '/auth/callback',
   handler: async (request, h) => {
     if (request.auth.isAuthenticated) {
       const sessionId = uuidv4()
@@ -22,7 +17,11 @@ const authCallbackController = {
     const redirect = request.yar.flash('referrer')?.at(0) ?? '/forms-designer'
 
     return h.redirect(redirect)
+  },
+  options: {
+    auth: 'azure-oidc',
+    response: {
+      failAction: () => boom.boomify(boom.unauthorized())
+    }
   }
 }
-
-export { authCallbackController }

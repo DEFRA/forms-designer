@@ -21,6 +21,7 @@ export interface Config {
   clientDir: string
   previewUrl: string
   publishUrl: string
+  managerUrl: string
   persistentBackend: 's3' | 'blob' | 'preview'
   serviceName: string
   s3Bucket?: string
@@ -58,6 +59,9 @@ const schema = joi.object({
   clientDir: joi
     .string()
     .default(resolve(dirname(configPath), '../../client/dist')),
+  managerUrl: joi
+    .string()
+    .default('http://dev.cdp-int.defra.cloud/forms-manager/'),
   previewUrl: joi
     .string()
     .default('http://dev.cdp-int.defra.cloud/forms-runner/'),
@@ -120,6 +124,7 @@ const result = schema.validate(
     port: process.env.PORT,
     env: process.env.NODE_ENV,
     appPathPrefix: process.env.APP_PATH_PREFIX,
+    managerUrl: process.env.MANAGER_URL,
     previewUrl: process.env.PREVIEW_URL,
     publishUrl: process.env.PUBLISH_URL,
     persistentBackend: process.env.PERSISTENT_BACKEND,
