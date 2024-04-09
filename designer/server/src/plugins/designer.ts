@@ -1,3 +1,4 @@
+import { type ServerRegisterPluginObject } from '@hapi/hapi'
 import { envStore, flagg } from 'flagg'
 
 import pkg from '../../../package.json' with { type: 'json' }
@@ -46,4 +47,4 @@ export const designerPlugin = {
       server.route(api.log)
     }
   }
-}
+} as ServerRegisterPluginObject<void>

@@ -1,14 +1,8 @@
-import {
-  type Request,
-  type ResponseObject,
-  type ResponseToolkit,
-  type Server
-} from '@hapi/hapi'
 import { type Logger } from 'pino'
 
 import { type PersistenceService } from '~/src/lib/persistence/persistenceService.js'
 
-type Services = (services: string[]) => {
+type Services = () => {
   persistenceService: PersistenceService
 }
 
@@ -20,21 +14,9 @@ declare module '@hapi/hapi' {
     logger: Logger
   }
 
-  interface Response {}
-
   interface Server {
     logger: Logger
     services: Services // plugin schmervice
-    registerService: (services: any[]) => void // plugin schmervice
-    // log: (tags: string | string[], data?: any) => void;
-  }
-
-  interface ResponseToolkit {
-    // view: (viewName: string, data?: { [prop: string]: any }) => any; // plugin view
+    registerService: (services: unknown[]) => void // plugin schmervice
   }
 }
-
-export type HapiRequest = Request
-export type HapiResponseToolkit = ResponseToolkit
-export type HapiServer = Server
-export type HapiResponseObject = ResponseObject

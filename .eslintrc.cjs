@@ -118,8 +118,16 @@ module.exports = {
           }
         ],
 
-        // JSDoc blocks are optional by default
-        'jsdoc/require-jsdoc': 'off',
+        // JSDoc blocks are optional but must be valid
+        'jsdoc/require-jsdoc': [
+          'error',
+          {
+            enableFixer: false,
+            require: {
+              FunctionDeclaration: false
+            }
+          }
+        ],
 
         // JSDoc @param description is optional
         'jsdoc/require-param-description': 'off',
@@ -154,6 +162,7 @@ module.exports = {
           ]
         },
         'import/resolver': {
+          node: true,
           typescript: {
             alwaysTryTypes: true,
             project: [
@@ -172,16 +181,13 @@ module.exports = {
       files: ['**/*.{cjs,js,mjs}'],
       plugins: ['jsdoc'],
       rules: {
-        // JSDoc blocks are mandatory for JavaScript classes and methods
+        // JSDoc blocks are optional but must be valid
         'jsdoc/require-jsdoc': [
           'error',
           {
             enableFixer: false,
             require: {
-              ClassDeclaration: true,
-              ClassExpression: true,
-              FunctionExpression: false,
-              MethodDefinition: true
+              FunctionDeclaration: false
             }
           }
         ],

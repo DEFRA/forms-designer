@@ -2,6 +2,9 @@ import crumb from '@hapi/crumb'
 
 import config from '~/src/config.js'
 
+/**
+ * @type {ServerRegisterPluginObject}
+ */
 const csrf = {
   plugin: {
     name: 'csrf',
@@ -23,3 +26,8 @@ const csrf = {
 }
 
 export { csrf }
+
+/**
+ * @template {object | void} [PluginOptions=void]
+ * @typedef {import('@hapi/hapi').ServerRegisterPluginObject<PluginOptions>} ServerRegisterPluginObject
+ */

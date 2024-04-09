@@ -8,6 +8,9 @@ import {
 } from '~/src/common/helpers/auth/user-session.js'
 import config from '~/src/config.js'
 
+/**
+ * @type {ServerRegisterPluginObject}
+ */
 const sessionCookie = {
   plugin: {
     name: 'user-session',
@@ -70,3 +73,8 @@ const sessionCookie = {
 }
 
 export { sessionCookie }
+
+/**
+ * @template {object | void} [PluginOptions=void]
+ * @typedef {import('@hapi/hapi').ServerRegisterPluginObject<PluginOptions>} ServerRegisterPluginObject
+ */

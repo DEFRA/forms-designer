@@ -1,9 +1,9 @@
 import { FormConfiguration } from '@defra/forms-model'
+import { type Server } from '@hapi/hapi'
 import S3 from 'aws-sdk/clients/s3.js'
 
 import config from '~/src/config.js'
 import { type PersistenceService } from '~/src/lib/persistence/persistenceService.js'
-import { type HapiServer } from '~/src/types.js'
 
 const TYPE_METADATA_KEY = 'x-amz-meta-type'
 
@@ -12,10 +12,10 @@ const FEEDBACK_TYPE = 'feedback'
 const DISPLAY_NAME_METADATA_KEY = 'x-amz-meta-name'
 
 export class S3PersistenceService implements PersistenceService {
-  logger: HapiServer['logger']
+  logger: Server['logger']
   bucket: any
 
-  constructor(server: HapiServer) {
+  constructor(server: Server) {
     this.logger = server.logger
 
     this.bucket = new S3({
