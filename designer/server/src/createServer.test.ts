@@ -32,11 +32,9 @@ describe('Server tests', () => {
     const res = await server.inject(options)
 
     expect(res.statusCode).toBe(200)
-    expect(
-      res.result.indexOf(
-        '<h1 class="govuk-heading-xl">Accessibility Statement</h1>'
-      ) > -1
-    ).toBe(true)
+    expect(res.result).toContain(
+      '<h1 class="govuk-heading-xl">Accessibility Statement</h1>'
+    )
   })
 
   test('cookies page is served', async () => {
@@ -48,9 +46,7 @@ describe('Server tests', () => {
     const res = await server.inject(options)
 
     expect(res.statusCode).toBe(200)
-    expect(
-      res.result.indexOf('<h1 class="govuk-heading-xl">Cookies</h1>') > -1
-    ).toBe(true)
+    expect(res.result).toContain('<h1 class="govuk-heading-xl">Cookies</h1>')
   })
 
   test('terms and conditions page is served', async () => {
@@ -62,11 +58,9 @@ describe('Server tests', () => {
     const res = await server.inject(options)
 
     expect(res.statusCode).toBe(200)
-    expect(
-      res.result.indexOf(
-        '<h1 class="govuk-heading-xl">Terms and conditions</h1>'
-      ) > -1
-    ).toBe(true)
+    expect(res.result).toContain(
+      '<h1 class="govuk-heading-xl">Terms and conditions</h1>'
+    )
   })
 
   test('Phase banner is present', async () => {
@@ -82,11 +76,9 @@ describe('Server tests', () => {
 
     const res = await server.inject(options)
     expect(res.statusCode).toBe(200)
-    expect(
-      res.result.indexOf(
-        '<strong class="govuk-tag govuk-phase-banner__content__tag">'
-      ) > -1
-    ).toBe(true)
+    expect(res.result).toContain(
+      '<strong class="govuk-tag govuk-phase-banner__content__tag">'
+    )
   })
 
   test('Phase banner is present', async () => {
@@ -97,11 +89,9 @@ describe('Server tests', () => {
 
     const res = await server.inject(options)
     expect(res.statusCode).toBe(200)
-    expect(
-      res.result.indexOf(
-        '<strong class="govuk-tag govuk-phase-banner__content__tag">'
-      ) > -1
-    ).toBe(true)
+    expect(res.result).toContain(
+      '<strong class="govuk-tag govuk-phase-banner__content__tag">'
+    )
   })
 
   test('Feature toggles api contains data', async () => {
@@ -112,9 +102,7 @@ describe('Server tests', () => {
 
     const res = await server.inject(options)
     expect(res.statusCode).toBe(200)
-    expect(
-      res.result.indexOf('{"featureEditPageDuplicateButton":false}') > -1
-    ).toBe(true)
+    expect(res.result).toContain('{"featureEditPageDuplicateButton":false}')
   })
 
   test('security headers are present', async () => {

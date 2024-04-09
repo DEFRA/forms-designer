@@ -46,9 +46,9 @@ describe('NewConfig tests', () => {
     const res = await server.inject(options)
 
     expect(res.statusCode).toBe(400)
-    expect(
-      res.result.indexOf('Form name should not contain special characters') > -1
-    ).toBe(true)
+    expect(res.result).toContain(
+      'Form name should not contain special characters'
+    )
   })
 
   test('POST /api/new with existing form should not result in bad request', async () => {

@@ -50,7 +50,7 @@ describe('App routes test', () => {
     const res = await server.inject(options)
 
     expect(res.statusCode).toBe(200)
-    expect(res.result.indexOf('<main id="root">') > -1).toBe(true)
+    expect(res.result).toContain('<main id="root">')
   })
 
   test('GET /app/* should serve designer landing page', async () => {
@@ -62,7 +62,7 @@ describe('App routes test', () => {
     const res = await server.inject(options)
 
     expect(res.statusCode).toBe(200)
-    expect(res.result.indexOf('<main id="root">') > -1).toBe(true)
+    expect(res.result).toContain('<main id="root">')
   })
 
   test('GET /{id} should redirect to designer page', async () => {
