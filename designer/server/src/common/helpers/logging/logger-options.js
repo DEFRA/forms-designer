@@ -1,17 +1,22 @@
-import ecsFormat from '@elastic/ecs-pino-format'
+import { ecsFormat } from '@elastic/ecs-pino-format'
 
 import config from '~/src/config.js'
 
-const loggerOptions = {
+/**
+ * @type {import('pino').LoggerOptions}
+ */
+export const loggerOptions = {
   enabled: !config.isTest,
   redact: {
     paths: ['req.headers.authorization', 'req.headers.cookie', 'res.headers'],
     remove: true
   },
   level: config.logLevel,
-  ...(config.isDevelopment
-    ? { transport: { target: 'pino-pretty' } }
-    : ecsFormat())
+  ...(config.isProduction
+    ? ecsFormat()
+    : {
+        transport: {
+          target: 'pino-pretty'
+        }
+      })
 }
-
-export { loggerOptions }
