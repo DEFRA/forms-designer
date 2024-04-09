@@ -1,6 +1,5 @@
-import config from '../config.js'
-
-import { getJson } from './fetch.js'
+import config from '~/src/config.js'
+import { getJson } from '~/src/lib/fetch.js'
 
 const endpoint = `${config.managerUrl}/forms-manager/forms`
 

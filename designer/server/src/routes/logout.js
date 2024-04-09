@@ -1,4 +1,4 @@
-import { provideAuthedUser } from '../common/helpers/auth/pre/provide-authed-user.js'
+import { provideAuthedUser } from '~/src/common/helpers/auth/pre/provide-authed-user.js'
 
 export default {
   method: 'GET',

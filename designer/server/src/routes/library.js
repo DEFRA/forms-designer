@@ -1,4 +1,4 @@
-import { listLibraryViewModel } from '../models/library.js'
+import { listLibraryViewModel } from '~/src/models/library.js'
 
 export default [
   {

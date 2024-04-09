@@ -1,4 +1,4 @@
-import { homeViewModel } from '../models/home.js'
+import { homeViewModel } from '~/src/models/home.js'
 
 export default {
   method: 'GET',

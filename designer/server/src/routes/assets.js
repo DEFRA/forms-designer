@@ -1,6 +1,7 @@
-import { cwd } from 'node:process'
 import { join, resolve } from 'node:path'
-import config from '../config.js'
+import { cwd } from 'node:process'
+
+import config from '~/src/config.js'
 
 export default [
   {

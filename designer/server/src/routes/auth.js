@@ -1,7 +1,7 @@
 import boom from '@hapi/boom'
 import { v4 as uuidv4 } from 'uuid'
 
-import { createUserSession } from '../common/helpers/auth/user-session.js'
+import { createUserSession } from '~/src/common/helpers/auth/user-session.js'
 
 export default {
   method: ['GET', 'POST'],
