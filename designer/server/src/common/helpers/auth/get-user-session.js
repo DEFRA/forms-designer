@@ -1,15 +1,6 @@
 /**
- * @typedef {object} userSession
- * @property {string} userSession.id
- * @property {string} userSession.email
- * @property {string} userSession.displayName
- * @property {string} userSession.loginHint
- * @property {boolean} userSession.isAuthenticated
- * @property {string} userSession.token
- * @property {string} userSession.refreshToken
- * @property {boolean} userSession.user - is this a user that is in a service tea
- * @property {Date} userSession.expiresAt
- * @returns {Promise<userSession|{}>}
+ * @this {{ server: import('@hapi/hapi').Server, state?: { userSession?: { sessionId?: string } } }}
+ * @returns {Promise<UserSession | undefined>}
  */
 async function getUserSession() {
   return this.state?.userSession?.sessionId
@@ -18,3 +9,16 @@ async function getUserSession() {
 }
 
 export { getUserSession }
+
+/**
+ * @typedef {object} UserSession
+ * @property {string} id - User ID
+ * @property {string} email - User email address
+ * @property {string} displayName - User display name
+ * @property {string} loginHint - User login hint
+ * @property {boolean} isAuthenticated - User is authenticated
+ * @property {string} token - User token
+ * @property {string} refreshToken - User refresh token
+ * @property {number} expiresIn - User session expiry time remaining
+ * @property {Date} expiresAt - User session expiry time
+ */
