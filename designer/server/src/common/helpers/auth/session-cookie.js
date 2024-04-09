@@ -14,7 +14,7 @@ import config from '~/src/config.js'
 const sessionCookie = {
   plugin: {
     name: 'user-session',
-    register: async (server) => {
+    async register(server) {
       await server.register(authCookie)
 
       server.auth.strategy('session', 'cookie', {

@@ -10,7 +10,7 @@ import config from '~/src/config.js'
 const azureOidc = {
   plugin: {
     name: 'azure-oidc',
-    register: async (server) => {
+    async register(server) {
       await server.register(bell)
 
       const oidc = await fetch(config.oidcWellKnownConfigurationUrl).then(
@@ -84,7 +84,7 @@ const dummyUsers = {
 const azureOidcNoop = {
   plugin: {
     name: 'azure-oidc',
-    register: async (server) => {
+    async register(server) {
       await server.register(basic)
 
       server.auth.strategy('azure-oidc', 'basic', {

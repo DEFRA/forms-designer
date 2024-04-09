@@ -5,7 +5,7 @@ import config from '~/src/config.js'
 export const healthCheckRoute: ServerRoute = {
   method: 'GET',
   path: '/health-check',
-  handler: function () {
+  handler() {
     const date = new Date()
     const uptime = process.uptime()
     return {

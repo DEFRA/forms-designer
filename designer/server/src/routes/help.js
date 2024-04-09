@@ -3,7 +3,7 @@ import joi from 'joi'
 export default {
   method: 'GET',
   path: '/help/{filename}',
-  handler: function (request, h) {
+  handler(request, h) {
     return h.view(`help/${request.params.filename}`)
   },
   options: {

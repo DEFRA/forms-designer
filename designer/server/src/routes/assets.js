@@ -7,7 +7,7 @@ export default [
   {
     method: 'GET',
     path: '/health-check',
-    handler: function () {
+    handler() {
       const date = new Date()
       const uptime = process.uptime()
       return {

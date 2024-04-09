@@ -11,7 +11,7 @@ export const designerPlugin = {
     version: pkg.version,
     multiple: true,
     dependencies: '@hapi/vision',
-    register: async (server) => {
+    register(server) {
       server.route(app.getApp)
 
       server.route(app.getAppChildRoutes)
