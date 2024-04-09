@@ -1,3 +1,5 @@
+import { type ServerRegisterPluginObject } from '@hapi/hapi'
+
 import routes from '~/src/routes/index.js'
 
 export default {
@@ -7,4 +9,4 @@ export default {
       server.route(routes)
     }
   }
-}
+} as ServerRegisterPluginObject<void>

@@ -1,5 +1,8 @@
 import config from '~/src/config.js'
 
+/**
+ * @type {ServerRoute}
+ */
 export default {
   method: 'GET',
   path: '/login',
@@ -13,3 +16,7 @@ export default {
     }
   }
 }
+
+/**
+ * @typedef {import('@hapi/hapi').ServerRoute} ServerRoute
+ */

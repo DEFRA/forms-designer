@@ -1,5 +1,8 @@
 import { homeViewModel } from '~/src/models/home.js'
 
+/**
+ * @type {ServerRoute}
+ */
 export default {
   method: 'GET',
   path: '/',
@@ -12,3 +15,7 @@ export default {
     }
   }
 }
+
+/**
+ * @typedef {import('@hapi/hapi').ServerRoute} ServerRoute
+ */

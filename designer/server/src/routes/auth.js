@@ -3,6 +3,9 @@ import { v4 as uuidv4 } from 'uuid'
 
 import { createUserSession } from '~/src/common/helpers/auth/user-session.js'
 
+/**
+ * @type {ServerRoute}
+ */
 export default {
   method: ['GET', 'POST'],
   path: '/auth/callback',
@@ -26,3 +29,7 @@ export default {
     }
   }
 }
+
+/**
+ * @typedef {import('@hapi/hapi').ServerRoute} ServerRoute
+ */

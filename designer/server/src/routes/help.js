@@ -1,5 +1,8 @@
 import joi from 'joi'
 
+/**
+ * @type {ServerRoute}
+ */
 export default {
   method: 'GET',
   path: '/help/{filename}',
@@ -17,3 +20,7 @@ export default {
     }
   }
 }
+
+/**
+ * @typedef {import('@hapi/hapi').ServerRoute} ServerRoute
+ */

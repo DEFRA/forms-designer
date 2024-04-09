@@ -1,5 +1,8 @@
 import { listLibraryViewModel } from '~/src/models/library.js'
 
+/**
+ * @type {ServerRoute[]}
+ */
 export default [
   {
     method: 'GET',
@@ -16,3 +19,7 @@ export default [
     }
   }
 ]
+
+/**
+ * @typedef {import('@hapi/hapi').ServerRoute} ServerRoute
+ */

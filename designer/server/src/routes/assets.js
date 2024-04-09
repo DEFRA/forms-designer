@@ -3,6 +3,9 @@ import { cwd } from 'node:process'
 
 import config from '~/src/config.js'
 
+/**
+ * @type {ServerRoute[]}
+ */
 export default [
   {
     method: 'GET',
@@ -74,3 +77,7 @@ export default [
     }
   }
 ]
+
+/**
+ * @typedef {import('@hapi/hapi').ServerRoute} ServerRoute
+ */
