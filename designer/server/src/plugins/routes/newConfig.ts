@@ -4,14 +4,13 @@ import { nanoid } from 'nanoid'
 import newFormJson from '~/src/common/new-form.json' with { type: 'json' }
 import config from '~/src/config.js'
 import { publish } from '~/src/lib/publish/index.js'
-import { type HapiRequest } from '~/src/types.js'
 
 export const registerNewFormWithRunner: ServerRoute = {
   method: 'post',
   path: '/api/new',
   options: {
-    handler: async (request: HapiRequest, h) => {
-      const { persistenceService } = request.services([])
+    async handler(request, h) {
+      const { persistenceService } = request.services()
       const { selected, name } = request.payload
 
       if (name && name !== '' && !name.match(/^[a-zA-Z0-9 _-]+$/)) {

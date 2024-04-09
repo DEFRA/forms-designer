@@ -1,13 +1,15 @@
+import { type Server } from '@hapi/hapi'
+
 import { createServer } from '~/src/createServer.js'
 
 describe('App routes test', () => {
-  const startServer = async (): Promise<hapi.Server> => {
+  const startServer = async (): Promise<Server> => {
     const server = await createServer()
     await server.start()
     return server
   }
 
-  let server
+  let server: Server
 
   beforeAll(async () => {
     server = await startServer()

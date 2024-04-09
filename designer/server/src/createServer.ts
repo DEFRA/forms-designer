@@ -1,5 +1,5 @@
 import { Engine as CatboxRedis } from '@hapi/catbox-redis'
-import hapi from '@hapi/hapi'
+import hapi, { type ServerOptions } from '@hapi/hapi'
 import inert from '@hapi/inert'
 import Scooter from '@hapi/scooter'
 import Schmervice from 'schmervice'
@@ -24,7 +24,7 @@ import router from '~/src/plugins/router.js'
 
 const client = buildRedisClient()
 
-const serverOptions = () => {
+const serverOptions = (): ServerOptions => {
   return {
     port: process.env.PORT || 3000,
     router: {
@@ -43,7 +43,7 @@ const serverOptions = () => {
           includeSubDomains: true,
           preload: false
         },
-        xss: true,
+        xss: 'enabled',
         noSniff: true,
         xframe: true
       }
@@ -96,7 +96,7 @@ export async function createServer() {
   // await server.register(viewPlugin, registrationOptions);
   await server.register(nunjucksConfig, registrationOptions)
   await server.register(Schmervice)
-  ;(server as any).registerService([
+  server.registerService([
     Schmervice.withName(
       'persistenceService',
       determinePersistenceService(config.persistentBackend, server)

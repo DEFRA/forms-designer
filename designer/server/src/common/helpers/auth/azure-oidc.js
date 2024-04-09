@@ -4,6 +4,9 @@ import jwt from '@hapi/jwt'
 
 import config from '~/src/config.js'
 
+/**
+ * @type {ServerRegisterPluginObject}
+ */
 const azureOidc = {
   plugin: {
     name: 'azure-oidc',
@@ -75,6 +78,9 @@ const dummyUsers = {
   }
 }
 
+/**
+ * @type {ServerRegisterPluginObject}
+ */
 const azureOidcNoop = {
   plugin: {
     name: 'azure-oidc',
@@ -109,3 +115,8 @@ const azureOidcNoop = {
 }
 
 export { azureOidc, azureOidcNoop }
+
+/**
+ * @template {object | void} [PluginOptions=void]
+ * @typedef {import('@hapi/hapi').ServerRegisterPluginObject<PluginOptions>} ServerRegisterPluginObject
+ */
