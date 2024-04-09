@@ -1,4 +1,4 @@
-export const homeViewModel = async () => {
+export function homeViewModel() {
   return {
     pageTitle: 'Home'
   }

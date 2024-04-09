@@ -1,6 +1,6 @@
 import * as forms from '../lib/forms.js'
 
-export const listLibraryViewModel = async () => {
+export async function listLibraryViewModel() {
   const list = await forms.list()
   const pageTitle = 'Form library'
   const head = [{ text: 'Name' }, { text: 'Last updated' } ]
