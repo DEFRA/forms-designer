@@ -18,9 +18,6 @@ export const designerPlugin = {
 
       server.route(app.getErrorCrashReport)
 
-      // This is old url , redirecting it to new
-      server.route(app.redirectOldUrlToDesigner)
-
       server.route({
         method: 'GET',
         path: '/feature-toggles',

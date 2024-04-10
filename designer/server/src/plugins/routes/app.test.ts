@@ -30,19 +30,6 @@ describe('App routes test', () => {
     await server.stop()
   })
 
-  test('GET / should redirect to /app', async () => {
-    const options = {
-      method: 'get',
-      url: '/',
-      auth
-    }
-
-    const res = await server.inject(options)
-
-    expect(res.statusCode).toBe(302)
-    expect(res.headers.location).toBe('/app')
-  })
-
   test('GET /app should serve designer landing page', async () => {
     const options = {
       method: 'get',
@@ -67,31 +54,5 @@ describe('App routes test', () => {
 
     expect(res.statusCode).toBe(200)
     expect(res.result).toContain('<main id="root">')
-  })
-
-  test('GET /{id} should redirect to designer page', async () => {
-    const options = {
-      method: 'get',
-      url: '/test',
-      auth
-    }
-
-    const res = await server.inject(options)
-
-    expect(res.statusCode).toBe(301)
-    expect(res.headers.location).toBe('/app/designer/test')
-  })
-
-  test('GET /new should redirect to /app', async () => {
-    const options = {
-      method: 'get',
-      url: '/new',
-      auth
-    }
-
-    const res = await server.inject(options)
-
-    expect(res.statusCode).toBe(301)
-    expect(res.headers.location).toBe('/app')
   })
 })
