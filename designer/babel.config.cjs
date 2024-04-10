@@ -44,7 +44,8 @@ module.exports = {
               '.js': ''
             }
           }
-        ]
+        ],
+        'babel-plugin-transform-import-meta'
       ]
     }
   }
