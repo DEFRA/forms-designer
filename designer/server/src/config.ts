@@ -60,6 +60,9 @@ const schema = joi.object({
     .default('debug'),
   phase: joi.string().valid('alpha', 'beta').optional(),
   footerText: joi.string().optional(),
+  isProduction: joi.boolean().default(false),
+  isDevelopment: joi.boolean().default(true),
+  isTest: joi.boolean().default(false),
   lastCommit: joi.string().default('undefined'),
   lastTag: joi.string().default('undefined'),
   sessionTimeout: joi.number().default(sessionSTimeoutInMilliseconds),
@@ -78,45 +81,71 @@ const schema = joi.object({
   serviceName: joi.string()
 })
 
+const {
+  APP_BASE_URL,
+  APP_PATH_PREFIX = '/forms-designer',
+  AZURE_CLIENT_ID,
+  AZURE_CLIENT_SECRET,
+  FOOTER_TEXT,
+  LAST_COMMIT,
+  LAST_COMMIT_GH,
+  LAST_TAG,
+  LAST_TAG_GH,
+  LOG_LEVEL = 'info',
+  NODE_ENV = 'development',
+  OIDC_WELL_KNOWN_CONFIGURATION_URL,
+  PERSISTENT_BACKEND = 'preview',
+  PHASE = 'beta',
+  PORT = '3000',
+  PREVIEW_URL = 'http://dev.cdp-int.defra.cloud/forms-runner/',
+  PUBLISH_URL = 'http://dev.cdp-int.defra.cloud/forms-runner/',
+  REDIS_HOST,
+  REDIS_KEY_PREFIX,
+  REDIS_PASSWORD,
+  REDIS_TTL,
+  REDIS_USERNAME,
+  SESSION_COOKIE_PASSWORD,
+  SESSION_COOKIE_TTL = '1800',
+  SESSION_TIMEOUT,
+  S3_BUCKET,
+  USE_SINGLE_INSTANCE_CACHE
+} = process.env
+
 // Build config
 const config = {
-  port: process.env.PORT,
-  env: process.env.NODE_ENV,
-  appPathPrefix: process.env.APP_PATH_PREFIX || '/forms-designer',
-  previewUrl:
-    process.env.PREVIEW_URL || 'http://dev.cdp-int.defra.cloud/forms-runner/', // TODO set this to localhost and pull env vars from CDP
-  publishUrl:
-    process.env.PUBLISH_URL || 'http://dev.cdp-int.defra.cloud/forms-runner/', // TODO set this to localhost and pull env vars from CDP
-  persistentBackend: process.env.PERSISTENT_BACKEND || 'preview',
+  port: PORT,
+  env: NODE_ENV,
+  appPathPrefix: APP_PATH_PREFIX,
+  previewUrl: PREVIEW_URL,
+  publishUrl: PUBLISH_URL,
+  persistentBackend: PERSISTENT_BACKEND,
   serviceName: 'Defra Form Builder',
-  s3Bucket: process.env.S3_BUCKET,
-  logLevel: process.env.LOG_LEVEL || 'info',
-  phase: process.env.PHASE || 'beta',
-  footerText: process.env.FOOTER_TEXT,
-  lastCommit: process.env.LAST_COMMIT || process.env.LAST_COMMIT_GH,
-  lastTag: process.env.LAST_TAG || process.env.LAST_TAG_GH,
-  sessionTimeout: process.env.SESSION_TIMEOUT,
-  sessionCookiePassword: process.env.SESSION_COOKIE_PASSWORD,
-  sessionCookieTtl: process.env.SESSION_COOKIE_TTL ?? '1800',
-  azureClientId: process.env.AZURE_CLIENT_ID,
-  azureClientSecret: process.env.AZURE_CLIENT_SECRET,
-  oidcWellKnownConfigurationUrl: process.env.OIDC_WELL_KNOWN_CONFIGURATION_URL,
-  appBaseUrl: process.env.APP_BASE_URL,
-  useSingleInstanceCache: process.env.USE_SINGLE_INSTANCE_CACHE,
-  redisHost: process.env.REDIS_HOST,
-  redisUsername: process.env.REDIS_USERNAME,
-  redisPassword: process.env.REDIS_PASSWORD,
-  redisKeyPrefix: process.env.REDIS_KEY_PREFIX,
-  redisTtl: process.env.REDIS_TTL
+  s3Bucket: S3_BUCKET,
+  logLevel: LOG_LEVEL,
+  phase: PHASE,
+  footerText: FOOTER_TEXT,
+  isProduction: NODE_ENV === 'production',
+  isDevelopment: !['production', 'test'].includes(NODE_ENV),
+  isTest: NODE_ENV === 'test',
+  lastCommit: LAST_COMMIT ?? LAST_COMMIT_GH,
+  lastTag: LAST_TAG ?? LAST_TAG_GH,
+  sessionTimeout: SESSION_TIMEOUT,
+  sessionCookiePassword: SESSION_COOKIE_PASSWORD,
+  sessionCookieTtl: SESSION_COOKIE_TTL,
+  azureClientId: AZURE_CLIENT_ID,
+  azureClientSecret: AZURE_CLIENT_SECRET,
+  oidcWellKnownConfigurationUrl: OIDC_WELL_KNOWN_CONFIGURATION_URL,
+  appBaseUrl: APP_BASE_URL,
+  useSingleInstanceCache: USE_SINGLE_INSTANCE_CACHE,
+  redisHost: REDIS_HOST,
+  redisUsername: REDIS_USERNAME,
+  redisPassword: REDIS_PASSWORD,
+  redisKeyPrefix: REDIS_KEY_PREFIX,
+  redisTtl: REDIS_TTL
 }
 
 // Validate config
-const result = schema.validate(
-  {
-    ...config
-  },
-  { abortEarly: false }
-)
+const result = schema.validate(config, { abortEarly: false })
 
 // Throw if config is invalid
 if (result.error) {
@@ -156,9 +185,5 @@ getAwsConfigCredentials()
   .catch((e) => {
     throw e
   })
-
-value.isProduction = value.env === 'production'
-value.isDevelopment = !value.isProduction
-value.isTest = value.env === 'test'
 
 export default value
