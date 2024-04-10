@@ -36,7 +36,6 @@ export interface Config {
   redisUsername: string
   redisPassword: string
   redisKeyPrefix: string
-  redisTtl: number
 }
 
 // server-side storage expiration - defaults to 20 minutes
@@ -65,7 +64,7 @@ const schema = joi.object({
   isTest: joi.boolean().default(false),
   lastCommit: joi.string().default('undefined'),
   lastTag: joi.string().default('undefined'),
-  sessionTimeout: joi.number().default(sessionSTimeoutInMilliseconds),
+  sessionTimeout: joi.number(),
   sessionCookieTtl: joi.string().optional(),
   sessionCookiePassword: joi.string().optional(),
   azureClientId: joi.string().optional(),
@@ -77,7 +76,6 @@ const schema = joi.object({
   redisUsername: joi.string(),
   redisPassword: joi.string(),
   redisKeyPrefix: joi.string().optional().default('forms-designer'),
-  redisTtl: joi.number().optional().default(2419200000), // one day
   serviceName: joi.string()
 })
 
@@ -102,7 +100,6 @@ const {
   REDIS_HOST,
   REDIS_KEY_PREFIX,
   REDIS_PASSWORD,
-  REDIS_TTL,
   REDIS_USERNAME,
   SESSION_COOKIE_PASSWORD,
   SESSION_COOKIE_TTL = '1800',
@@ -129,7 +126,9 @@ const config = {
   isTest: NODE_ENV === 'test',
   lastCommit: LAST_COMMIT ?? LAST_COMMIT_GH,
   lastTag: LAST_TAG ?? LAST_TAG_GH,
-  sessionTimeout: SESSION_TIMEOUT,
+  sessionTimeout: SESSION_TIMEOUT
+    ? parseInt(SESSION_TIMEOUT)
+    : sessionSTimeoutInMilliseconds,
   sessionCookiePassword: SESSION_COOKIE_PASSWORD,
   sessionCookieTtl: SESSION_COOKIE_TTL,
   azureClientId: AZURE_CLIENT_ID,
@@ -140,8 +139,7 @@ const config = {
   redisHost: REDIS_HOST,
   redisUsername: REDIS_USERNAME,
   redisPassword: REDIS_PASSWORD,
-  redisKeyPrefix: REDIS_KEY_PREFIX,
-  redisTtl: REDIS_TTL
+  redisKeyPrefix: REDIS_KEY_PREFIX
 }
 
 // Validate config
