@@ -66,6 +66,14 @@ const schema = joi.object({
   sessionTtl: joi.number(),
   sessionCookieTtl: joi.number().optional(),
   sessionCookiePassword: joi.string().optional(),
+  awsCredentials: joi
+    .object()
+    .keys({
+      accessKeyId: joi.string(),
+      secretAccessKey: joi.string(),
+      sessionToken: joi.string().optional()
+    })
+    .optional(),
   azureClientId: joi.string().optional(),
   azureClientSecret: joi.string().optional(),
   oidcWellKnownConfigurationUrl: joi.string().optional(),
