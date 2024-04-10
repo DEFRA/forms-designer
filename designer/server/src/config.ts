@@ -23,7 +23,7 @@ export interface Config {
   isTest: boolean
   lastCommit: string
   lastTag: string
-  sessionTimeout: number
+  sessionTtl: number
   sessionCookieTtl?: string
   sessionCookiePassword?: string
   awsCredentials?: CredentialsOptions
@@ -64,7 +64,7 @@ const schema = joi.object({
   isTest: joi.boolean().default(false),
   lastCommit: joi.string().default('undefined'),
   lastTag: joi.string().default('undefined'),
-  sessionTimeout: joi.number(),
+  sessionTtl: joi.number(),
   sessionCookieTtl: joi.string().optional(),
   sessionCookiePassword: joi.string().optional(),
   azureClientId: joi.string().optional(),
@@ -103,7 +103,7 @@ const {
   REDIS_USERNAME,
   SESSION_COOKIE_PASSWORD,
   SESSION_COOKIE_TTL = '1800',
-  SESSION_TIMEOUT,
+  SESSION_TTL,
   S3_BUCKET,
   USE_SINGLE_INSTANCE_CACHE
 } = process.env
@@ -126,8 +126,8 @@ const config = {
   isTest: NODE_ENV === 'test',
   lastCommit: LAST_COMMIT ?? LAST_COMMIT_GH,
   lastTag: LAST_TAG ?? LAST_TAG_GH,
-  sessionTimeout: SESSION_TIMEOUT
-    ? parseInt(SESSION_TIMEOUT)
+  sessionTtl: SESSION_TTL
+    ? parseInt(SESSION_TTL)
     : sessionSTimeoutInMilliseconds,
   sessionCookiePassword: SESSION_COOKIE_PASSWORD,
   sessionCookieTtl: SESSION_COOKIE_TTL,

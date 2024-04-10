@@ -71,7 +71,7 @@ export async function createServer() {
   server.app.cache = server.cache({
     cache: 'session',
     segment: config.redisKeyPrefix,
-    expiresIn: config.sessionTimeout
+    expiresIn: config.sessionTtl
   })
 
   server.decorate('request', 'authedFetcher', authedFetcher, {
