@@ -15,6 +15,7 @@ export interface Config {
   previewUrl: string
   publishUrl: string
   persistentBackend: 's3' | 'blob' | 'preview'
+  serviceName: string
   s3Bucket?: string
   logLevel: 'trace' | 'info' | 'debug' | 'error'
   phase?: 'alpha' | 'beta'
@@ -49,6 +50,7 @@ const schema = joi.object({
   previewUrl: joi.string(),
   publishUrl: joi.string(),
   persistentBackend: joi.string().valid('s3', 'blob', 'preview').optional(),
+  serviceName: joi.string(),
   s3Bucket: joi.string().optional(),
   logLevel: joi
     .string()
@@ -71,8 +73,7 @@ const schema = joi.object({
   redisHost: joi.string(),
   redisUsername: joi.string(),
   redisPassword: joi.string(),
-  redisKeyPrefix: joi.string().optional().default('forms-designer'),
-  serviceName: joi.string()
+  redisKeyPrefix: joi.string().optional().default('forms-designer')
 })
 
 const {
