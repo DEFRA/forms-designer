@@ -131,7 +131,7 @@ describe('Server API', () => {
 
     const optionsCrash = {
       method: 'get',
-      url: '/error/crashreport/test-form-id',
+      url: '/forms-designer/error/crashreport/test-form-id',
       auth
     }
 

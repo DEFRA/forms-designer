@@ -30,10 +30,10 @@ describe('App routes test', () => {
     await server.stop()
   })
 
-  test('GET /app should serve designer landing page', async () => {
+  test('GET /forms-designer/app should serve designer landing page', async () => {
     const options = {
       method: 'get',
-      url: '/app',
+      url: '/forms-designer/app',
       auth
     }
 
@@ -43,10 +43,10 @@ describe('App routes test', () => {
     expect(res.result).toContain('<main id="root">')
   })
 
-  test('GET /app/* should serve designer landing page', async () => {
+  test('GET /forms-designer/app/* should serve designer landing page', async () => {
     const options = {
       method: 'get',
-      url: '/app/designer/test',
+      url: '/forms-designer/app/designer/test',
       auth
     }
 

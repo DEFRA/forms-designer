@@ -6,7 +6,7 @@ describe('/health-check Route', () => {
   test('/health-check route response is correct', async () => {
     const options = {
       method: 'GET',
-      url: '/health-check',
+      url: '/forms-designer/health-check',
       auth
     }
 

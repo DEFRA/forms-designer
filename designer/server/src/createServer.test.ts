@@ -27,7 +27,7 @@ describe('Server tests', () => {
   test('accessibility statement page is served', async () => {
     const options = {
       method: 'GET',
-      url: '/help/accessibility-statement',
+      url: '/forms-designer/help/accessibility-statement',
       auth
     }
 
@@ -42,7 +42,7 @@ describe('Server tests', () => {
   test('cookies page is served', async () => {
     const options = {
       method: 'GET',
-      url: '/help/cookies',
+      url: '/forms-designer/help/cookies',
       auth
     }
 
@@ -55,7 +55,7 @@ describe('Server tests', () => {
   test('terms and conditions page is served', async () => {
     const options = {
       method: 'GET',
-      url: '/help/terms-and-conditions',
+      url: '/forms-designer/help/terms-and-conditions',
       auth
     }
 
@@ -75,7 +75,7 @@ describe('Server tests', () => {
 
     const options = {
       method: 'get',
-      url: '/app',
+      url: '/forms-designer/app',
       auth
     }
 
@@ -89,7 +89,7 @@ describe('Server tests', () => {
   test('Phase banner is present', async () => {
     const options = {
       method: 'get',
-      url: '/app',
+      url: '/forms-designer/app',
       auth
     }
 
@@ -120,7 +120,7 @@ describe('Server tests', () => {
 
     const options = {
       method: 'get',
-      url: '/app',
+      url: '/forms-designer/app',
       auth
     }
 
