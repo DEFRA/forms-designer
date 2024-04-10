@@ -1,5 +1,5 @@
-import { resolve } from 'node:path'
-import { cwd } from 'node:process'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 import * as AWS from 'aws-sdk'
 import { type CredentialsOptions } from 'aws-sdk/lib/credentials.js'
@@ -7,8 +7,10 @@ import { configDotenv } from 'dotenv'
 import joi from 'joi'
 import { Duration } from 'luxon'
 
+const configPath = fileURLToPath(import.meta.url)
+
 configDotenv({
-  path: ['../../.env']
+  path: [resolve(dirname(configPath), '../../.env')]
 })
 
 export interface Config {
@@ -44,11 +46,6 @@ export interface Config {
   redisKeyPrefix: string
 }
 
-const appDir =
-  process.env.NODE_ENV === 'production'
-    ? resolve(cwd()) // npm run build
-    : resolve(cwd(), '../dist') // npm run dev
-
 // Define config schema
 const schema = joi.object({
   port: joi.number().default(3000),
@@ -56,9 +53,11 @@ const schema = joi.object({
     .string()
     .valid('development', 'test', 'production')
     .default('development'),
-  appDir: joi.string().default(appDir),
+  appDir: joi.string().default(resolve(dirname(configPath), '../dist')),
   appPathPrefix: joi.string().default('/forms-designer'),
-  clientDir: joi.string().default(resolve(appDir, '../../client/dist')),
+  clientDir: joi
+    .string()
+    .default(resolve(dirname(configPath), '../../client/dist')),
   previewUrl: joi
     .string()
     .default('http://dev.cdp-int.defra.cloud/forms-runner/'),
