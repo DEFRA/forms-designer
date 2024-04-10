@@ -2,6 +2,7 @@ import * as AWS from 'aws-sdk'
 import { type CredentialsOptions } from 'aws-sdk/lib/credentials.js'
 import { configDotenv } from 'dotenv'
 import joi from 'joi'
+import { Duration } from 'luxon'
 
 configDotenv({
   path: ['../../.env']
@@ -24,7 +25,7 @@ export interface Config {
   lastCommit: string
   lastTag: string
   sessionTtl: number
-  sessionCookieTtl?: string
+  sessionCookieTtl?: number
   sessionCookiePassword?: string
   awsCredentials?: CredentialsOptions
   azureClientId?: string
@@ -37,9 +38,6 @@ export interface Config {
   redisPassword: string
   redisKeyPrefix: string
 }
-
-// server-side storage expiration - defaults to 20 minutes
-const sessionSTimeoutInMilliseconds = 20 * 60 * 1000
 
 // Define config schema
 const schema = joi.object({
@@ -65,7 +63,7 @@ const schema = joi.object({
   lastCommit: joi.string().default('undefined'),
   lastTag: joi.string().default('undefined'),
   sessionTtl: joi.number(),
-  sessionCookieTtl: joi.string().optional(),
+  sessionCookieTtl: joi.number().optional(),
   sessionCookiePassword: joi.string().optional(),
   azureClientId: joi.string().optional(),
   azureClientSecret: joi.string().optional(),
@@ -102,7 +100,7 @@ const {
   REDIS_PASSWORD,
   REDIS_USERNAME,
   SESSION_COOKIE_PASSWORD,
-  SESSION_COOKIE_TTL = '1800',
+  SESSION_COOKIE_TTL,
   SESSION_TTL,
   S3_BUCKET,
   USE_SINGLE_INSTANCE_CACHE
@@ -128,9 +126,11 @@ const config = {
   lastTag: LAST_TAG ?? LAST_TAG_GH,
   sessionTtl: SESSION_TTL
     ? parseInt(SESSION_TTL)
-    : sessionSTimeoutInMilliseconds,
+    : Duration.fromObject({ days: 1 }).as('milliseconds'),
   sessionCookiePassword: SESSION_COOKIE_PASSWORD,
-  sessionCookieTtl: SESSION_COOKIE_TTL,
+  sessionCookieTtl: SESSION_COOKIE_TTL
+    ? parseInt(SESSION_COOKIE_TTL)
+    : Duration.fromObject({ minutes: 30 }).as('milliseconds'),
   azureClientId: AZURE_CLIENT_ID,
   azureClientSecret: AZURE_CLIENT_SECRET,
   oidcWellKnownConfigurationUrl: OIDC_WELL_KNOWN_CONFIGURATION_URL,
