@@ -32,7 +32,6 @@ export interface Config {
   azureClientSecret?: string
   oidcWellKnownConfigurationUrl?: string
   appBaseUrl: string
-  useSingleInstanceCache: boolean
   redisHost: string
   redisUsername: string
   redisPassword: string
@@ -69,7 +68,6 @@ const schema = joi.object({
   azureClientSecret: joi.string().optional(),
   oidcWellKnownConfigurationUrl: joi.string().optional(),
   appBaseUrl: joi.string().optional().default('http://localhost:3000'),
-  useSingleInstanceCache: joi.string().optional().default(false),
   redisHost: joi.string(),
   redisUsername: joi.string(),
   redisPassword: joi.string(),
@@ -102,8 +100,7 @@ const {
   SESSION_COOKIE_PASSWORD,
   SESSION_COOKIE_TTL,
   SESSION_TTL,
-  S3_BUCKET,
-  USE_SINGLE_INSTANCE_CACHE
+  S3_BUCKET
 } = process.env
 
 // Build config
@@ -135,7 +132,6 @@ const config = {
   azureClientSecret: AZURE_CLIENT_SECRET,
   oidcWellKnownConfigurationUrl: OIDC_WELL_KNOWN_CONFIGURATION_URL,
   appBaseUrl: APP_BASE_URL,
-  useSingleInstanceCache: USE_SINGLE_INSTANCE_CACHE,
   redisHost: REDIS_HOST,
   redisUsername: REDIS_USERNAME,
   redisPassword: REDIS_PASSWORD,
