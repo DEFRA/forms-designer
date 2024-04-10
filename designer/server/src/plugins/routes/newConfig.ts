@@ -10,7 +10,7 @@ export const registerNewFormWithRunner: ServerRoute = {
   path: '/api/new',
   options: {
     async handler(request, h) {
-      const { persistenceService } = request.services()
+      const { persistenceService } = request.services([])
       const { selected, name } = request.payload
 
       if (name && name !== '' && !name.match(/^[a-zA-Z0-9 _-]+$/)) {

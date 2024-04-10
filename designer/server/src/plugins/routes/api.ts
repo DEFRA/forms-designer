@@ -47,7 +47,7 @@ export const putFormWithId: ServerRoute = {
     },
     handler: async (request, h) => {
       const { id } = request.params
-      const { persistenceService } = request.services()
+      const { persistenceService } = request.services([])
 
       try {
         const { value, error } = Schema.validate(request.payload, {
@@ -88,7 +88,7 @@ export const getAllPersistedConfigurations: ServerRoute = {
   path: '/api/configurations',
   options: {
     async handler(request, h): Promise<ResponseObject | undefined> {
-      const { persistenceService } = request.services()
+      const { persistenceService } = request.services([])
       try {
         const response = await persistenceService.listAllConfigurations()
         return h.response(response).type('application/json')

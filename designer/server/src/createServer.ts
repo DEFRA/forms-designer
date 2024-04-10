@@ -3,7 +3,7 @@ import { Engine as CatboxRedis } from '@hapi/catbox-redis'
 import hapi, { type ServerOptions } from '@hapi/hapi'
 import inert from '@hapi/inert'
 import Scooter from '@hapi/scooter'
-import Schmervice from 'schmervice'
+import Schmervice from '@hapipal/schmervice'
 
 import {
   azureOidc,
@@ -100,6 +100,7 @@ export async function createServer() {
   server.registerService([
     Schmervice.withName(
       'persistenceService',
+      {},
       determinePersistenceService(config.persistentBackend, server)
     )
   ])

@@ -1,6 +1,7 @@
 import { type FormConfiguration } from '@defra/forms-model'
+import { Service } from '@hapipal/schmervice'
 
-export interface PersistenceService {
+export interface PersistenceService extends Service {
   logger: any
   listAllConfigurations(): Promise<FormConfiguration[]>
   getConfiguration(id: string): Promise<string>
@@ -8,7 +9,10 @@ export interface PersistenceService {
   copyConfiguration(configurationId: string, newName: string): Promise<any>
 }
 
-export class StubPersistenceService implements PersistenceService {
+export class StubPersistenceService
+  extends Service
+  implements PersistenceService
+{
   logger: any
   uploadConfiguration(_id: string, _configuration: any) {
     return Promise.resolve(undefined)
