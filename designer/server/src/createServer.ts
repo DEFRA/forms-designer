@@ -1,3 +1,4 @@
+import { Engine as CatboxMemory } from '@hapi/catbox-memory'
 import { Engine as CatboxRedis } from '@hapi/catbox-redis'
 import hapi, { type ServerOptions } from '@hapi/hapi'
 import inert from '@hapi/inert'
@@ -21,8 +22,6 @@ import { determinePersistenceService } from '~/src/lib/persistence/index.js'
 import { configureBlankiePlugin } from '~/src/plugins/blankie.js'
 import { designerPlugin } from '~/src/plugins/designer.js'
 import router from '~/src/plugins/router.js'
-
-const client = buildRedisClient()
 
 const serverOptions = (): ServerOptions => {
   return {
@@ -51,10 +50,12 @@ const serverOptions = (): ServerOptions => {
     cache: [
       {
         name: 'session',
-        engine: new CatboxRedis({
-          partition: config.redisKeyPrefix,
-          client
-        })
+        engine: config.isTest
+          ? new CatboxMemory()
+          : new CatboxRedis({
+              partition: config.redisKeyPrefix,
+              client: buildRedisClient()
+            })
       }
     ]
   }

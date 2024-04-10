@@ -1,9 +1,10 @@
-import pino from 'pino'
+import { pino } from 'pino'
 
 import { loggerOptions } from '~/src/common/helpers/logging/logger-options.js'
 
-function createLogger() {
+/**
+ * @returns {import('pino').Logger}
+ */
+export function createLogger() {
   return pino(loggerOptions)
 }
-
-export { createLogger }

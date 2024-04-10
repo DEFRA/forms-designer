@@ -11,5 +11,8 @@ export default {
   // Configure test files and coverage
   moduleFileExtensions: ['js', 'ts'],
   testMatch: ['<rootDir>/**/*.test.{cjs,js,mjs,ts}'],
-  collectCoverageFrom: ['<rootDir>/src/**/*.{cjs,js,mjs,ts}']
+  collectCoverageFrom: ['<rootDir>/src/**/*.{cjs,js,mjs,ts}'],
+
+  // Configure Node.js environment
+  setupFiles: ['<rootDir>/jest.setup.cjs']
 }

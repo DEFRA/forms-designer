@@ -97,7 +97,7 @@ const config = {
   lastTag: process.env.LAST_TAG || process.env.LAST_TAG_GH,
   sessionTimeout: process.env.SESSION_TIMEOUT,
   sessionCookiePassword: process.env.SESSION_COOKIE_PASSWORD,
-  sessionCookieTtl: process.env.SESSION_COOKIE_TTL,
+  sessionCookieTtl: process.env.SESSION_COOKIE_TTL ?? '1800',
   azureClientId: process.env.AZURE_CLIENT_ID,
   azureClientSecret: process.env.AZURE_CLIENT_SECRET,
   oidcWellKnownConfigurationUrl: process.env.OIDC_WELL_KNOWN_CONFIGURATION_URL,
