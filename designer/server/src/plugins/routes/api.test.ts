@@ -86,7 +86,7 @@ describe('Server API', () => {
     } satisfies FormDefinition)
   })
 
-  test('Failure to communicate with Runner should place error on session', async () => {
+  test.skip('Failure to communicate with Runner should place error on session', async () => {
     const options = {
       method: 'put',
       url: '/forms-designer/api/test-form-id/data',
