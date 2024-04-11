@@ -1,10 +1,13 @@
-describe(`/health-check Route`, () => {
+import { auth } from '~/test/fixtures/auth.js'
+
+describe('/health-check Route', () => {
   const OLD_ENV = process.env
 
   test('/health-check route response is correct', async () => {
     const options = {
       method: 'GET',
-      url: '/health-check'
+      url: '/health-check',
+      auth
     }
 
     process.env = {

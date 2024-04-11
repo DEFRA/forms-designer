@@ -1,6 +1,7 @@
 import { type Server } from '@hapi/hapi'
 
 import { createServer } from '~/src/createServer.js'
+import { auth } from '~/test/fixtures/auth.js'
 
 describe('Server tests', () => {
   const startServer = async (): Promise<Server> => {
@@ -26,7 +27,8 @@ describe('Server tests', () => {
   test('accessibility statement page is served', async () => {
     const options = {
       method: 'GET',
-      url: `/help/accessibility-statement`
+      url: '/help/accessibility-statement',
+      auth
     }
 
     const res = await server.inject(options)
@@ -40,7 +42,8 @@ describe('Server tests', () => {
   test('cookies page is served', async () => {
     const options = {
       method: 'GET',
-      url: `/help/cookies`
+      url: '/help/cookies',
+      auth
     }
 
     const res = await server.inject(options)
@@ -52,7 +55,8 @@ describe('Server tests', () => {
   test('terms and conditions page is served', async () => {
     const options = {
       method: 'GET',
-      url: `/help/terms-and-conditions`
+      url: '/help/terms-and-conditions',
+      auth
     }
 
     const res = await server.inject(options)
@@ -71,7 +75,8 @@ describe('Server tests', () => {
 
     const options = {
       method: 'get',
-      url: '/app'
+      url: '/app',
+      auth
     }
 
     const res = await server.inject(options)
@@ -84,7 +89,8 @@ describe('Server tests', () => {
   test('Phase banner is present', async () => {
     const options = {
       method: 'get',
-      url: '/app'
+      url: '/app',
+      auth
     }
 
     const res = await server.inject(options)
@@ -97,7 +103,8 @@ describe('Server tests', () => {
   test('Feature toggles api contains data', async () => {
     const options = {
       method: 'get',
-      url: '/forms-designer/feature-toggles'
+      url: '/forms-designer/feature-toggles',
+      auth
     }
 
     const res = await server.inject(options)
@@ -113,7 +120,8 @@ describe('Server tests', () => {
 
     const options = {
       method: 'get',
-      url: '/app'
+      url: '/app',
+      auth
     }
 
     const res = await server.inject(options)

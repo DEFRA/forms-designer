@@ -2,6 +2,7 @@ import { type Server } from '@hapi/hapi'
 
 import { createServer } from '~/src/createServer.js'
 import { publish } from '~/src/lib/publish/index.js'
+import { auth } from '~/test/fixtures/auth.js'
 
 jest.mock('../../lib/publish')
 
@@ -39,7 +40,11 @@ describe('NewConfig tests', () => {
     const options = {
       method: 'post',
       url: '/forms-designer/api/new',
-      payload: { name: 'A *& B', selected: { Key: 'New' } }
+      auth,
+      payload: {
+        name: 'A *& B',
+        selected: { Key: 'New' }
+      }
     }
 
     publish.mockImplementation(() => Promise.resolve([]))
@@ -55,7 +60,11 @@ describe('NewConfig tests', () => {
     const options = {
       method: 'post',
       url: '/forms-designer/api/new',
-      payload: { name: '', selected: { Key: 'Test' } }
+      auth,
+      payload: {
+        name: '',
+        selected: { Key: 'Test' }
+      }
     }
 
     publish.mockImplementation(() => Promise.resolve([]))
@@ -68,7 +77,11 @@ describe('NewConfig tests', () => {
     const options = {
       method: 'post',
       url: '/forms-designer/api/new',
-      payload: { name: 'a-b', selected: { Key: 'New' } }
+      auth,
+      payload: {
+        name: 'a-b',
+        selected: { Key: 'New' }
+      }
     }
 
     publish.mockImplementation(() => Promise.resolve([]))
@@ -81,7 +94,11 @@ describe('NewConfig tests', () => {
     const options = {
       method: 'post',
       url: '/forms-designer/api/new',
-      payload: { name: 'a-b', selected: { Key: 'New' } }
+      auth,
+      payload: {
+        name: 'a-b',
+        selected: { Key: 'New' }
+      }
     }
 
     publish.mockImplementation(() => Promise.reject())

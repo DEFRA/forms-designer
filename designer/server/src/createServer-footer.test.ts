@@ -1,5 +1,7 @@
 import cheerio from 'cheerio'
 
+import { auth } from '~/test/fixtures/auth.js'
+
 describe('Footer', () => {
   const OLD_ENV = process.env
 
@@ -25,7 +27,8 @@ describe('Footer', () => {
 
     const options = {
       method: 'GET',
-      url: `/app`
+      url: '/app',
+      auth
     }
 
     const server = await startServer()

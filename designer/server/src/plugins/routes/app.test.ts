@@ -1,6 +1,7 @@
 import { type Server } from '@hapi/hapi'
 
 import { createServer } from '~/src/createServer.js'
+import { auth } from '~/test/fixtures/auth.js'
 
 describe('App routes test', () => {
   const startServer = async (): Promise<Server> => {
@@ -32,7 +33,8 @@ describe('App routes test', () => {
   test('GET / should redirect to /app', async () => {
     const options = {
       method: 'get',
-      url: '/'
+      url: '/',
+      auth
     }
 
     const res = await server.inject(options)
@@ -44,7 +46,8 @@ describe('App routes test', () => {
   test('GET /app should serve designer landing page', async () => {
     const options = {
       method: 'get',
-      url: '/app'
+      url: '/app',
+      auth
     }
 
     const res = await server.inject(options)
@@ -56,7 +59,8 @@ describe('App routes test', () => {
   test('GET /app/* should serve designer landing page', async () => {
     const options = {
       method: 'get',
-      url: '/app/designer/test'
+      url: '/app/designer/test',
+      auth
     }
 
     const res = await server.inject(options)
@@ -68,7 +72,8 @@ describe('App routes test', () => {
   test('GET /{id} should redirect to designer page', async () => {
     const options = {
       method: 'get',
-      url: '/test'
+      url: '/test',
+      auth
     }
 
     const res = await server.inject(options)
@@ -80,7 +85,8 @@ describe('App routes test', () => {
   test('GET /new should redirect to /app', async () => {
     const options = {
       method: 'get',
-      url: '/new'
+      url: '/new',
+      auth
     }
 
     const res = await server.inject(options)
