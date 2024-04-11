@@ -10,14 +10,10 @@ import * as filters from '~/src/common/nunjucks/filters/index.js'
 import * as globals from '~/src/common/nunjucks/globals.js'
 import config from '~/src/config.js'
 
-const distPath = config.isDevelopment
-  ? resolve(cwd(), '../dist') // npm run dev
-  : resolve(cwd()) // npm run build
-
 const nunjucksEnvironment = nunjucks.configure(
   [
-    resolve(distPath, 'common/templates'),
-    resolve(distPath, 'common/components'),
+    resolve(config.appDir, 'common/templates'),
+    resolve(config.appDir, 'common/components'),
     dirname(resolvePkg('govuk-frontend/package.json'))
   ],
   {
@@ -44,7 +40,7 @@ const nunjucksConfig = {
     compileOptions: {
       environment: nunjucksEnvironment
     },
-    relativeTo: resolve(cwd(), 'views'),
+    relativeTo: resolve(config.appDir, 'views'),
     isCached: config.isProduction,
     context
   }

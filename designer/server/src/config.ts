@@ -1,3 +1,6 @@
+import { resolve } from 'node:path'
+import { cwd } from 'node:process'
+
 import * as AWS from 'aws-sdk'
 import { type CredentialsOptions } from 'aws-sdk/lib/credentials.js'
 import { configDotenv } from 'dotenv'
@@ -11,7 +14,9 @@ configDotenv({
 export interface Config {
   env: 'development' | 'test' | 'production'
   port: number
+  appDir: string
   appPathPrefix: string
+  clientDir: string
   previewUrl: string
   publishUrl: string
   persistentBackend: 's3' | 'blob' | 'preview'
@@ -39,6 +44,11 @@ export interface Config {
   redisKeyPrefix: string
 }
 
+const appDir =
+  process.env.NODE_ENV === 'production'
+    ? resolve(cwd()) // npm run build
+    : resolve(cwd(), '../dist') // npm run dev
+
 // Define config schema
 const schema = joi.object({
   port: joi.number().default(3000),
@@ -46,7 +56,9 @@ const schema = joi.object({
     .string()
     .valid('development', 'test', 'production')
     .default('development'),
+  appDir: joi.string().default(appDir),
   appPathPrefix: joi.string().default('/forms-designer'),
+  clientDir: joi.string().default(resolve(appDir, '../../client/dist')),
   previewUrl: joi
     .string()
     .default('http://dev.cdp-int.defra.cloud/forms-runner/'),

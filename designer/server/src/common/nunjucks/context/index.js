@@ -1,23 +1,17 @@
 import { readFileSync } from 'node:fs'
-import { basename, join, resolve } from 'node:path'
-import { cwd } from 'node:process'
+import { basename, join } from 'node:path'
 
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
 import { buildNavigation } from '~/src/common/nunjucks/context/build-navigation.js'
 import config from '~/src/config.js'
 
 const logger = createLogger()
-const { appPathPrefix, isDevelopment, serviceName } = config
-
-const distPath = isDevelopment
-  ? resolve(cwd(), '../dist') // npm run dev
-  : resolve(cwd()) // npm run build
+const { appPathPrefix, serviceName } = config
 
 let webpackManifest
 
 async function context(request) {
-  const assetsPath = resolve(distPath, '../../client/dist/assets')
-  const manifestPath = join(assetsPath, 'manifest.json')
+  const manifestPath = join(config.clientDir, 'assets/manifest.json')
 
   if (!webpackManifest) {
     try {
