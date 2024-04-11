@@ -72,8 +72,12 @@ const schema = joi.object({
   s3Bucket: joi.string().optional(),
   logLevel: joi
     .string()
-    .valid('fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent')
-    .default('info'),
+    .default('info')
+    .when('env', {
+      is: 'test',
+      then: joi.string().default('silent')
+    })
+    .valid('fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent'),
   phase: joi.string().valid('alpha', 'beta', 'live').default('beta'),
   footerText: joi.string().optional(),
   isProduction: joi.boolean().default(false),
