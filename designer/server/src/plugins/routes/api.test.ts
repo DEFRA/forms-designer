@@ -1,3 +1,4 @@
+import { type FormDefinition } from '@defra/forms-model'
 import { type Server } from '@hapi/hapi'
 
 import { auth } from '~/test/fixtures/auth.js'
@@ -89,7 +90,7 @@ describe('Server API', () => {
       fees: [],
       outputs: [],
       version: 2
-    })
+    } satisfies FormDefinition)
   })
 
   test('Failure to communicate with Runner should place error on session', async () => {
