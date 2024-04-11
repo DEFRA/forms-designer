@@ -1,1 +1,1 @@
-process.env.SESSION_COOKIE_PASSWORD = 'test-session-cookie-password'
+process.env.SESSION_COOKIE_PASSWORD = 'test-env-session-cookie-password'
