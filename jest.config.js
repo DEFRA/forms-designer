@@ -3,6 +3,7 @@
  * @type {Partial<import('@jest/types').Config.InitialOptions>}
  */
 export const defaults = {
+  maxWorkers: '50%',
   reporters: ['default', ['github-actions', { silent: false }], 'summary'],
   silent: true
 }
