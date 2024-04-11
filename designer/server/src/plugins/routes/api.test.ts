@@ -1,15 +1,8 @@
 import { type FormDefinition } from '@defra/forms-model'
 import { type Server } from '@hapi/hapi'
+import Wreck from '@hapi/wreck'
 
 import { auth } from '~/test/fixtures/auth.js'
-
-jest.mock('@hapi/wreck', () => ({
-  get: async () => ({
-    payload: {
-      toString: () => '{}'
-    }
-  })
-}))
 
 describe('Server API', () => {
   const startServer = async (): Promise<Server> => {
@@ -128,6 +121,10 @@ describe('Server API', () => {
       }
     }
 
+    jest.spyOn(Wreck, 'get').mockResolvedValue({
+      payload: Buffer.from(JSON.stringify({}))
+    })
+
     const result = await server.inject(options)
     expect(result.statusCode).toBe(401)
 
@@ -177,9 +174,9 @@ describe('Server API', () => {
       }
     }
 
-    const result = await server.inject(options)
+    const result = await server.inject<{ err: Error }>(options)
     expect(result.statusCode).toBe(401)
-    expect(result.result.err.message).toMatch('Schema validation failed')
+    expect(result.result?.err.message).toMatch('Schema validation failed')
   })
 
   test('persistence service errors should return 401', async () => {
@@ -224,10 +221,10 @@ describe('Server API', () => {
     }
 
     // When
-    const result = await server.inject(options)
+    const result = await server.inject<{ err: Error }>(options)
 
     // Then
     expect(result.statusCode).toBe(401)
-    expect(result.result.err.message).toBe('Error in persistence service')
+    expect(result.result?.err.message).toBe('Error in persistence service')
   })
 })
