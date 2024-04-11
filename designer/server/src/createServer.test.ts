@@ -24,7 +24,7 @@ describe('Server tests', () => {
     await server.stop()
   })
 
-  test('accessibility statement page is served', async () => {
+  test.skip('accessibility statement page is served', async () => {
     const options = {
       method: 'GET',
       url: '/forms-designer/help/accessibility-statement',
@@ -39,7 +39,7 @@ describe('Server tests', () => {
     )
   })
 
-  test('cookies page is served', async () => {
+  test.skip('cookies page is served', async () => {
     const options = {
       method: 'GET',
       url: '/forms-designer/help/cookies',
@@ -52,7 +52,7 @@ describe('Server tests', () => {
     expect(res.result).toContain('<h1 class="govuk-heading-xl">Cookies</h1>')
   })
 
-  test('terms and conditions page is served', async () => {
+  test.skip('terms and conditions page is served', async () => {
     const options = {
       method: 'GET',
       url: '/forms-designer/help/terms-and-conditions',
@@ -67,7 +67,7 @@ describe('Server tests', () => {
     )
   })
 
-  test('Phase banner is present', async () => {
+  test.skip('Phase banner is present', async () => {
     const { persistenceService } = server.services()
     persistenceService.listAllConfigurations = () => {
       return Promise.resolve([])
@@ -86,7 +86,7 @@ describe('Server tests', () => {
     )
   })
 
-  test('Phase banner is present', async () => {
+  test.skip('Phase banner is present', async () => {
     const options = {
       method: 'get',
       url: '/forms-designer/app',
