@@ -8,7 +8,7 @@ describe('Footer', () => {
   const startServer = async (): Promise<any> => {
     const { createServer } = await import('~/src/createServer.js')
     const server = await createServer()
-    await server.start()
+    await server.initialize()
     return server
   }
 

@@ -14,7 +14,7 @@ jest.mock('@hapi/wreck', () => ({
 describe('Server API', () => {
   const startServer = async (): Promise<Server> => {
     const server = await createServer()
-    await server.start()
+    await server.initialize()
     return server
   }
 

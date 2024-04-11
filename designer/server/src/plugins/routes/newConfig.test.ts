@@ -9,7 +9,7 @@ jest.mock('../../lib/publish')
 describe('NewConfig tests', () => {
   const startServer = async (): Promise<Server> => {
     const server = await createServer()
-    await server.start()
+    await server.initialize()
     return server
   }
 

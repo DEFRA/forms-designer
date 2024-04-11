@@ -6,7 +6,7 @@ import { auth } from '~/test/fixtures/auth.js'
 describe('App routes test', () => {
   const startServer = async (): Promise<Server> => {
     const server = await createServer()
-    await server.start()
+    await server.initialize()
     return server
   }
 
