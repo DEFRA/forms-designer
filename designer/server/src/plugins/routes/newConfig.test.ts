@@ -1,13 +1,14 @@
 import { type Server } from '@hapi/hapi'
 
-import { createServer } from '~/src/createServer.js'
 import { publish } from '~/src/lib/publish/index.js'
 import { auth } from '~/test/fixtures/auth.js'
 
-jest.mock('../../lib/publish')
+jest.mock('~/src/lib/publish')
 
 describe('NewConfig tests', () => {
   const startServer = async (): Promise<Server> => {
+    const { createServer } = await import('~/src/createServer.js')
+
     const server = await createServer()
     await server.initialize()
     return server
@@ -47,7 +48,7 @@ describe('NewConfig tests', () => {
       }
     }
 
-    publish.mockImplementation(() => Promise.resolve([]))
+    jest.mocked(publish).mockImplementation(() => Promise.resolve([]))
     const res = await server.inject(options)
 
     expect(res.statusCode).toBe(400)
@@ -67,7 +68,7 @@ describe('NewConfig tests', () => {
       }
     }
 
-    publish.mockImplementation(() => Promise.resolve([]))
+    jest.mocked(publish).mockImplementation(() => Promise.resolve([]))
     const res = await server.inject(options)
 
     expect(res.statusCode).toBe(200)
@@ -84,7 +85,7 @@ describe('NewConfig tests', () => {
       }
     }
 
-    publish.mockImplementation(() => Promise.resolve([]))
+    jest.mocked(publish).mockImplementation(() => Promise.resolve([]))
     const res = await server.inject(options)
 
     expect(res.statusCode).toBe(200)
@@ -101,7 +102,7 @@ describe('NewConfig tests', () => {
       }
     }
 
-    publish.mockImplementation(() => Promise.reject())
+    jest.mocked(publish).mockImplementation(() => Promise.reject())
     const res = await server.inject(options)
 
     expect(res.statusCode).toBe(401)

@@ -1,29 +1,30 @@
-import cheerio from 'cheerio'
+import { type Server } from '@hapi/hapi'
+import { JSDOM } from 'jsdom'
 
 import { auth } from '~/test/fixtures/auth.js'
 
 describe('Footer', () => {
-  const OLD_ENV = process.env
+  const OLD_ENV = { ...process.env }
 
-  const startServer = async (): Promise<any> => {
+  const startServer = async (): Promise<Server> => {
     const { createServer } = await import('~/src/createServer.js')
+
     const server = await createServer()
     await server.initialize()
     return server
   }
 
-  afterAll(() => {
+  let server: Server
+
+  afterAll(async () => {
     process.env = OLD_ENV
+    await server.stop()
   })
 
   test('footer set is set by environmental variable', async () => {
-    process.env = {
-      ...OLD_ENV,
-      FOOTER_TEXT: 'Footer Text Test'
-    }
+    process.env.FOOTER_TEXT = 'Footer Text Test'
 
-    await import('~/src/config.js')
-    await import('~/src/plugins/designer.js')
+    server = await startServer()
 
     const options = {
       method: 'GET',
@@ -31,12 +32,10 @@ describe('Footer', () => {
       auth
     }
 
-    const server = await startServer()
-    const res = await server.inject(options)
-    server.stop()
+    const { result } = await server.inject<string>(options)
+    const { document } = new JSDOM(result).window
 
-    const $ = cheerio.load(res.result)
-    const footerText = $('.footer-message').find('p').text()
-    expect(footerText).toBe('Footer Text Test')
+    const $footerMessage = document.querySelector('.footer-message')
+    expect($footerMessage).toContainHTML('<p>Footer Text Test</p>')
   })
 })

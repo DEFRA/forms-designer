@@ -4,7 +4,7 @@ import React from 'react'
 import { PageLinkage } from '~/src/components/PageLinkage/index.js'
 import { addLink } from '~/src/data/index.js'
 
-jest.mock('../../data/page/addLink')
+jest.mock('~/src/data/page/addLink')
 
 describe('Page Linkage', () => {
   let page

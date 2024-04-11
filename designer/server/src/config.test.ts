@@ -6,21 +6,15 @@ describe('Config', () => {
   })
 
   test('footerText prop is set correctly', async () => {
-    process.env = {
-      ...OLD_ENV,
-      FOOTER_TEXT: 'Footer Text Test'
-    }
+    process.env.FOOTER_TEXT = 'Footer Text Test'
 
     const { default: config } = await import('~/src/config.js')
     expect(config.footerText).toBe('Footer Text Test')
   })
 
   test('lastCommit and lastTag props are set correctly', async () => {
-    process.env = {
-      ...OLD_ENV,
-      LAST_COMMIT: 'LAST COMMIT',
-      LAST_TAG: 'LAST TAG'
-    }
+    process.env.LAST_COMMIT = 'LAST COMMIT'
+    process.env.LAST_TAG = 'LAST TAG'
 
     const { default: config } = await import('~/src/config.js')
     expect(config.lastCommit).toBe('LAST COMMIT')
@@ -28,13 +22,10 @@ describe('Config', () => {
   })
 
   test('lastCommit and lastTag props are set correctly with GH variables', async () => {
-    process.env = {
-      ...OLD_ENV,
-      LAST_COMMIT: undefined,
-      LAST_TAG: undefined,
-      LAST_COMMIT_GH: 'LAST COMMIT',
-      LAST_TAG_GH: 'LAST TAG'
-    }
+    process.env.LAST_COMMIT = undefined
+    process.env.LAST_TAG = undefined
+    process.env.LAST_COMMIT_GH = 'LAST COMMIT'
+    process.env.LAST_TAG_GH = 'LAST TAG'
 
     const { default: config } = await import('~/src/config.js')
     expect(config.lastCommit).toBe('LAST COMMIT')
@@ -42,12 +33,9 @@ describe('Config', () => {
   })
 
   test('Throws if S3 is required and no AWS config is found', async () => {
-    process.env = {
-      ...OLD_ENV,
-      PERSISTENT_BACKEND: 's3',
-      AWS_ACCESS_KEY_ID: undefined,
-      AWS_ACCESS_SECRET_KEY: undefined
-    }
+    process.env.PERSISTENT_BACKEND = 's3'
+    process.env.AWS_ACCESS_KEY_ID = undefined
+    process.env.AWS_ACCESS_SECRET_KEY = undefined
 
     try {
       import('~/src/config.js')
@@ -55,12 +43,8 @@ describe('Config', () => {
       expect(e).toBeTruthy()
     }
 
-    process.env = {
-      ...OLD_ENV,
-      PERSISTENT_BACKEND: 's3',
-      AWS_ACCESS_KEY_ID: 'key',
-      AWS_SECRET_ACCESS_KEY: 'secret'
-    }
+    process.env.AWS_ACCESS_KEY_ID = 'key'
+    process.env.AWS_ACCESS_SECRET_KEY = 'secret'
 
     await expect(import('~/src/config.js')).resolves.toBeTruthy()
   })

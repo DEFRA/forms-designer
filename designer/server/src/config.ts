@@ -24,7 +24,7 @@ export interface Config {
   persistentBackend: 's3' | 'blob' | 'preview'
   serviceName: string
   s3Bucket?: string
-  logLevel: 'trace' | 'info' | 'debug' | 'error'
+  logLevel: 'fatal' | 'error' | 'warn' | 'info' | 'debug' | 'trace' | 'silent'
   phase: 'alpha' | 'beta' | 'live'
   footerText?: string
   isProduction: boolean
@@ -72,8 +72,16 @@ const schema = joi.object({
   s3Bucket: joi.string().optional(),
   logLevel: joi
     .string()
-    .valid('trace', 'info', 'debug', 'error')
-    .default('info'),
+    .default('info')
+    .when('env', {
+      is: 'development',
+      then: joi.string().default('error')
+    })
+    .when('env', {
+      is: 'test',
+      then: joi.string().default('silent')
+    })
+    .valid('fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent'),
   phase: joi.string().valid('alpha', 'beta', 'live').default('beta'),
   footerText: joi.string().optional(),
   isProduction: joi.boolean().default(false),

@@ -3,7 +3,8 @@
   "compilerOptions": {
     "paths": {
       "~/*": ["./*"]
-    }
+    },
+    "types": ["@testing-library/jest-dom"]
   },
   "exclude": ["dist", "node_modules"],
   "include": ["**/*.cjs", "**/*.js", "**/*.mjs", "**/*.ts"]
