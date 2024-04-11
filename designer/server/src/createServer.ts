@@ -25,7 +25,7 @@ import router from '~/src/plugins/router.js'
 
 const serverOptions = (): ServerOptions => {
   return {
-    port: process.env.PORT || 3000,
+    port: config.port,
     router: {
       stripTrailingSlash: true
     },
@@ -71,7 +71,7 @@ export async function createServer() {
   server.app.cache = server.cache({
     cache: 'session',
     segment: config.redisKeyPrefix,
-    expiresIn: config.redisTtl
+    expiresIn: config.sessionTtl
   })
 
   server.decorate('request', 'authedFetcher', authedFetcher, {

@@ -48,7 +48,7 @@ export const viewPlugin = {
       }
     },
     path: [
-      resolve(cwd(), 'views'),
+      resolve(config.appDir, 'views'),
       resolve(dirname(resolvePkg('govuk-frontend/package.json'))),
       resolve(dirname(resolvePkg('govuk-frontend/package.json')), 'components')
     ],

@@ -46,7 +46,7 @@ LINK_TO is optional, it defaults to `./${PROJECT_DIR}`.
 | AWS_SECRET_ACCESS_KEY   | AWS Access Key if AWS services required                    | no <hr> **yes** if PERSISTENT_BACKEND is `s3` |                |                             |
 | LOG_LEVEL               | Log level                                                  | no                                            | debug          | trace,debug,info,error      |
 | FOOTER_TEXT             | Text displayed on the left side of the footer              | no                                            |                |                             |
-| SESSION_TIMEOUT         | server-side storage expiration time - in milliseconds      | no                                            |                |                             |
+| SESSION_TTL             | server-side storage expiration time - in milliseconds      | no                                            |                |                             |
 | SESSION_COOKIE_PASSWORD | at least 32 char long string for session cookie encryption | no                                            |                |                             |
 | REACT_LOG_LEVEL         | Log level for client-side designer logging                 | no                                            | debug          | trace,debug,info,warn,error |
 
