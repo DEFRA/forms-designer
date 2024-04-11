@@ -1,11 +1,12 @@
 import { type Server } from '@hapi/hapi'
 
 import { createServer } from '~/src/createServer.js'
+import { auth } from '~/test/fixtures/auth.js'
 
 describe('App routes test', () => {
   const startServer = async (): Promise<Server> => {
     const server = await createServer()
-    await server.start()
+    await server.initialize()
     return server
   }
 
@@ -29,63 +30,29 @@ describe('App routes test', () => {
     await server.stop()
   })
 
-  test('GET / should redirect to /app', async () => {
+  test('GET /forms-designer/app should serve designer landing page', async () => {
     const options = {
       method: 'get',
-      url: '/'
-    }
-
-    const res = await server.inject(options)
-
-    expect(res.statusCode).toBe(302)
-    expect(res.headers.location).toBe('/app')
-  })
-
-  test('GET /app should serve designer landing page', async () => {
-    const options = {
-      method: 'get',
-      url: '/app'
+      url: '/forms-designer/app',
+      auth
     }
 
     const res = await server.inject(options)
 
     expect(res.statusCode).toBe(200)
-    expect(res.result.indexOf('<main id="root">') > -1).toBe(true)
+    expect(res.result).toContain('<main id="root">')
   })
 
-  test('GET /app/* should serve designer landing page', async () => {
+  test('GET /forms-designer/app/* should serve designer landing page', async () => {
     const options = {
       method: 'get',
-      url: '/app/designer/test'
+      url: '/forms-designer/app/designer/test',
+      auth
     }
 
     const res = await server.inject(options)
 
     expect(res.statusCode).toBe(200)
-    expect(res.result.indexOf('<main id="root">') > -1).toBe(true)
-  })
-
-  test('GET /{id} should redirect to designer page', async () => {
-    const options = {
-      method: 'get',
-      url: '/test'
-    }
-
-    const res = await server.inject(options)
-
-    expect(res.statusCode).toBe(301)
-    expect(res.headers.location).toBe('/app/designer/test')
-  })
-
-  test('GET /new should redirect to /app', async () => {
-    const options = {
-      method: 'get',
-      url: '/new'
-    }
-
-    const res = await server.inject(options)
-
-    expect(res.statusCode).toBe(301)
-    expect(res.headers.location).toBe('/app')
+    expect(res.result).toContain('<main id="root">')
   })
 })

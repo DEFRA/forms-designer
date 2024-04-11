@@ -67,14 +67,3 @@ export const getErrorCrashReport: ServerRoute = {
     }
   }
 }
-
-export const redirectOldUrlToDesigner: ServerRoute = {
-  method: 'get',
-  path: '/{id}',
-  options: {
-    handler: async (request, h) => {
-      const { id } = request.params
-      return h.redirect(`${config.appPathPrefix}/app/designer/${id}`).code(301)
-    }
-  }
-}

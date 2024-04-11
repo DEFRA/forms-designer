@@ -1,11 +1,12 @@
 import { type Server } from '@hapi/hapi'
 
 import { createServer } from '~/src/createServer.js'
+import { auth } from '~/test/fixtures/auth.js'
 
 describe('Server tests', () => {
   const startServer = async (): Promise<Server> => {
     const server = await createServer()
-    await server.start()
+    await server.initialize()
     return server
   }
 
@@ -26,47 +27,44 @@ describe('Server tests', () => {
   test('accessibility statement page is served', async () => {
     const options = {
       method: 'GET',
-      url: `/help/accessibility-statement`
+      url: '/forms-designer/help/accessibility-statement',
+      auth
     }
 
     const res = await server.inject(options)
 
     expect(res.statusCode).toBe(200)
-    expect(
-      res.result.indexOf(
-        '<h1 class="govuk-heading-xl">Accessibility Statement</h1>'
-      ) > -1
-    ).toBe(true)
+    expect(res.result).toContain(
+      '<h1 class="govuk-heading-xl">Accessibility Statement</h1>'
+    )
   })
 
   test('cookies page is served', async () => {
     const options = {
       method: 'GET',
-      url: `/help/cookies`
+      url: '/forms-designer/help/cookies',
+      auth
     }
 
     const res = await server.inject(options)
 
     expect(res.statusCode).toBe(200)
-    expect(
-      res.result.indexOf('<h1 class="govuk-heading-xl">Cookies</h1>') > -1
-    ).toBe(true)
+    expect(res.result).toContain('<h1 class="govuk-heading-xl">Cookies</h1>')
   })
 
   test('terms and conditions page is served', async () => {
     const options = {
       method: 'GET',
-      url: `/help/terms-and-conditions`
+      url: '/forms-designer/help/terms-and-conditions',
+      auth
     }
 
     const res = await server.inject(options)
 
     expect(res.statusCode).toBe(200)
-    expect(
-      res.result.indexOf(
-        '<h1 class="govuk-heading-xl">Terms and conditions</h1>'
-      ) > -1
-    ).toBe(true)
+    expect(res.result).toContain(
+      '<h1 class="govuk-heading-xl">Terms and conditions</h1>'
+    )
   })
 
   test('Phase banner is present', async () => {
@@ -77,44 +75,41 @@ describe('Server tests', () => {
 
     const options = {
       method: 'get',
-      url: '/app'
+      url: '/forms-designer/app',
+      auth
     }
 
     const res = await server.inject(options)
     expect(res.statusCode).toBe(200)
-    expect(
-      res.result.indexOf(
-        '<strong class="govuk-tag govuk-phase-banner__content__tag">'
-      ) > -1
-    ).toBe(true)
+    expect(res.result).toContain(
+      '<strong class="govuk-tag govuk-phase-banner__content__tag">'
+    )
   })
 
   test('Phase banner is present', async () => {
     const options = {
       method: 'get',
-      url: '/app'
+      url: '/forms-designer/app',
+      auth
     }
 
     const res = await server.inject(options)
     expect(res.statusCode).toBe(200)
-    expect(
-      res.result.indexOf(
-        '<strong class="govuk-tag govuk-phase-banner__content__tag">'
-      ) > -1
-    ).toBe(true)
+    expect(res.result).toContain(
+      '<strong class="govuk-tag govuk-phase-banner__content__tag">'
+    )
   })
 
   test('Feature toggles api contains data', async () => {
     const options = {
       method: 'get',
-      url: '/forms-designer/feature-toggles'
+      url: '/forms-designer/feature-toggles',
+      auth
     }
 
     const res = await server.inject(options)
     expect(res.statusCode).toBe(200)
-    expect(
-      res.result.indexOf('{"featureEditPageDuplicateButton":false}') > -1
-    ).toBe(true)
+    expect(res.result).toContain('{"featureEditPageDuplicateButton":false}')
   })
 
   test('security headers are present', async () => {
@@ -125,7 +120,8 @@ describe('Server tests', () => {
 
     const options = {
       method: 'get',
-      url: '/app'
+      url: '/forms-designer/app',
+      auth
     }
 
     const res = await server.inject(options)

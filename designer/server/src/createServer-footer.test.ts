@@ -1,12 +1,14 @@
 import cheerio from 'cheerio'
 
+import { auth } from '~/test/fixtures/auth.js'
+
 describe('Footer', () => {
   const OLD_ENV = process.env
 
   const startServer = async (): Promise<any> => {
     const { createServer } = await import('~/src/createServer.js')
     const server = await createServer()
-    await server.start()
+    await server.initialize()
     return server
   }
 
@@ -25,7 +27,8 @@ describe('Footer', () => {
 
     const options = {
       method: 'GET',
-      url: `/app`
+      url: '/forms-designer/app',
+      auth
     }
 
     const server = await startServer()

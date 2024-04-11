@@ -1,6 +1,7 @@
 import { type Server } from '@hapi/hapi'
 
 import { createServer } from '~/src/createServer.js'
+import { auth } from '~/test/fixtures/auth.js'
 
 jest.mock('@hapi/wreck', () => ({
   get: async () => ({
@@ -13,7 +14,7 @@ jest.mock('@hapi/wreck', () => ({
 describe('Server API', () => {
   const startServer = async (): Promise<Server> => {
     const server = await createServer()
-    await server.start()
+    await server.initialize()
     return server
   }
 
@@ -41,7 +42,11 @@ describe('Server API', () => {
     const options = {
       method: 'get',
       url: '/forms-designer/api/test-form-id/data',
-      payload: { name: 'A *& B', selected: { Key: 'New' } }
+      auth,
+      payload: {
+        name: 'A *& B',
+        selected: { Key: 'New' }
+      }
     }
 
     const { result } = await server.inject(options)
@@ -90,6 +95,7 @@ describe('Server API', () => {
     const options = {
       method: 'put',
       url: '/forms-designer/api/test-form-id/data',
+      auth,
       payload: {
         metadata: {},
         startPage: '/first-page',
@@ -125,8 +131,10 @@ describe('Server API', () => {
 
     const optionsCrash = {
       method: 'get',
-      url: '/error/crashreport/test-form-id'
+      url: '/forms-designer/error/crashreport/test-form-id',
+      auth
     }
+
     const resultCrash = await server.inject(optionsCrash)
     expect(resultCrash.headers['content-disposition']).toContain(
       'attachment; filename=test-form-id-crash-report'
@@ -137,6 +145,7 @@ describe('Server API', () => {
     const options = {
       method: 'put',
       url: '/forms-designer/api/test-form-id/data',
+      auth,
       payload: {
         metadata: {},
         startPage: '/first-page',
@@ -181,6 +190,7 @@ describe('Server API', () => {
     const options = {
       method: 'put',
       url: '/forms-designer/api/test-form-id/data',
+      auth,
       payload: {
         metadata: {},
         startPage: '/first-page',
