@@ -1,4 +1,5 @@
 import { type Server } from '@hapi/hapi'
+import { DateTime } from 'luxon'
 
 import { auth } from '~/test/fixtures/auth.js'
 
@@ -34,9 +35,11 @@ describe('/health-check Route', () => {
 
     const { result } = await server.inject(options)
 
-    expect(result?.status).toBe('OK')
-    expect(result?.lastCommit).toBe('LAST COMMIT')
-    expect(result?.lastTag).toBe('LAST TAG')
-    expect(typeof result?.time).toBe('string')
+    expect(result).toMatchObject({
+      status: 'OK',
+      lastCommit: 'LAST COMMIT',
+      lastTag: 'LAST TAG',
+      time: expect.any(String)
+    })
   })
 })

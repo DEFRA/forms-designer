@@ -246,7 +246,11 @@ module.exports = {
         'jest.environment.*',
         'jest.setup.*'
       ],
-      plugins: ['jest']
+      plugins: ['jest'],
+      rules: {
+        // Turn off warnings for jest.Expect 'any' types
+        '@typescript-eslint/no-unsafe-assignment': 'off'
+      }
     }
   ],
   parserOptions: {
