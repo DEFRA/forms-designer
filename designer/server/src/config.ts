@@ -74,6 +74,10 @@ const schema = joi.object({
     .string()
     .default('info')
     .when('env', {
+      is: 'development',
+      then: joi.string().default('error')
+    })
+    .when('env', {
       is: 'test',
       then: joi.string().default('silent')
     })
