@@ -1,4 +1,4 @@
-import cheerio from 'cheerio'
+import { JSDOM } from 'jsdom'
 
 import { auth } from '~/test/fixtures/auth.js'
 
@@ -12,8 +12,11 @@ describe('Footer', () => {
     return server
   }
 
-  afterAll(() => {
+  let server: Server
+
+  afterAll(async () => {
     process.env = OLD_ENV
+    await server.stop()
   })
 
   test('footer set is set by environmental variable', async () => {
@@ -22,8 +25,7 @@ describe('Footer', () => {
       FOOTER_TEXT: 'Footer Text Test'
     }
 
-    await import('~/src/config.js')
-    await import('~/src/plugins/designer.js')
+    server = await startServer()
 
     const options = {
       method: 'GET',
@@ -31,12 +33,10 @@ describe('Footer', () => {
       auth
     }
 
-    const server = await startServer()
-    const res = await server.inject(options)
-    server.stop()
+    const { result } = await server.inject<string>(options)
+    const { document } = new JSDOM(result).window
 
-    const $ = cheerio.load(res.result)
-    const footerText = $('.footer-message').find('p').text()
-    expect(footerText).toBe('Footer Text Test')
+    const $footerMessage = document.querySelector('.footer-message')
+    expect($footerMessage).toContainHTML('<p>Footer Text Test</p>')
   })
 })

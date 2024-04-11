@@ -14,5 +14,6 @@ export default {
   collectCoverageFrom: ['<rootDir>/src/**/*.{cjs,js,mjs,ts}'],
 
   // Configure Node.js environment
-  setupFiles: ['<rootDir>/jest.setup.cjs']
+  setupFiles: ['<rootDir>/jest.setup.cjs'],
+  setupFilesAfterEnv: ['<rootDir>/jest.environment.js']
 }
