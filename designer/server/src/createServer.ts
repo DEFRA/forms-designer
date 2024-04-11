@@ -25,7 +25,7 @@ import router from '~/src/plugins/router.js'
 
 const serverOptions = (): ServerOptions => {
   return {
-    port: process.env.PORT || 3000,
+    port: config.port,
     router: {
       stripTrailingSlash: true
     },

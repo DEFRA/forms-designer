@@ -30,8 +30,8 @@ describe('Config', () => {
   test('lastCommit and lastTag props are set correctly with GH variables', async () => {
     process.env = {
       ...OLD_ENV,
-      LAST_COMMIT: '',
-      LAST_TAG: '',
+      LAST_COMMIT: undefined,
+      LAST_TAG: undefined,
       LAST_COMMIT_GH: 'LAST COMMIT',
       LAST_TAG_GH: 'LAST TAG'
     }

@@ -18,16 +18,16 @@ export interface Config {
   serviceName: string
   s3Bucket?: string
   logLevel: 'trace' | 'info' | 'debug' | 'error'
-  phase?: 'alpha' | 'beta'
+  phase: 'alpha' | 'beta' | 'live'
   footerText?: string
   isProduction: boolean
   isDevelopment: boolean
   isTest: boolean
-  lastCommit: string
-  lastTag: string
+  lastCommit?: string
+  lastTag?: string
   sessionTtl: number
-  sessionCookieTtl?: number
-  sessionCookiePassword?: string
+  sessionCookieTtl: number
+  sessionCookiePassword: string
   awsCredentials?: CredentialsOptions
   azureClientId?: string
   azureClientSecret?: string
@@ -46,26 +46,37 @@ const schema = joi.object({
     .string()
     .valid('development', 'test', 'production')
     .default('development'),
-  appPathPrefix: joi.string(),
-  previewUrl: joi.string(),
-  publishUrl: joi.string(),
-  persistentBackend: joi.string().valid('s3', 'blob', 'preview').optional(),
+  appPathPrefix: joi.string().default('/forms-designer'),
+  previewUrl: joi
+    .string()
+    .default('http://dev.cdp-int.defra.cloud/forms-runner/'),
+  publishUrl: joi
+    .string()
+    .default('http://dev.cdp-int.defra.cloud/forms-runner/'),
+  persistentBackend: joi
+    .string()
+    .valid('s3', 'blob', 'preview')
+    .default('preview'),
   serviceName: joi.string(),
   s3Bucket: joi.string().optional(),
   logLevel: joi
     .string()
     .valid('trace', 'info', 'debug', 'error')
-    .default('debug'),
-  phase: joi.string().valid('alpha', 'beta').optional(),
+    .default('info'),
+  phase: joi.string().valid('alpha', 'beta', 'live').default('beta'),
   footerText: joi.string().optional(),
   isProduction: joi.boolean().default(false),
   isDevelopment: joi.boolean().default(true),
   isTest: joi.boolean().default(false),
-  lastCommit: joi.string().default('undefined'),
-  lastTag: joi.string().default('undefined'),
-  sessionTtl: joi.number(),
-  sessionCookieTtl: joi.number().optional(),
-  sessionCookiePassword: joi.string().optional(),
+  lastCommit: joi.string().optional(),
+  lastTag: joi.string().optional(),
+  sessionTtl: joi
+    .number()
+    .default(Duration.fromObject({ days: 1 }).as('milliseconds')),
+  sessionCookieTtl: joi
+    .number()
+    .default(Duration.fromObject({ minutes: 30 }).as('milliseconds')),
+  sessionCookiePassword: joi.string().allow('').default(''),
   awsCredentials: joi
     .object()
     .keys({
@@ -77,78 +88,47 @@ const schema = joi.object({
   azureClientId: joi.string().optional(),
   azureClientSecret: joi.string().optional(),
   oidcWellKnownConfigurationUrl: joi.string().optional(),
-  appBaseUrl: joi.string().optional().default('http://localhost:3000'),
-  redisHost: joi.string(),
-  redisUsername: joi.string(),
-  redisPassword: joi.string(),
-  redisKeyPrefix: joi.string().optional().default('forms-designer')
+  appBaseUrl: joi.string().default('http://localhost:3000'),
+  redisHost: joi.string().default('localhost'),
+  redisUsername: joi.string().default('default'),
+  redisPassword: joi.string().default('my-password'),
+  redisKeyPrefix: joi.string().default('forms-designer')
 })
 
-const {
-  APP_BASE_URL,
-  APP_PATH_PREFIX = '/forms-designer',
-  AZURE_CLIENT_ID,
-  AZURE_CLIENT_SECRET,
-  FOOTER_TEXT,
-  LAST_COMMIT,
-  LAST_COMMIT_GH,
-  LAST_TAG,
-  LAST_TAG_GH,
-  LOG_LEVEL = 'info',
-  NODE_ENV = 'development',
-  OIDC_WELL_KNOWN_CONFIGURATION_URL,
-  PERSISTENT_BACKEND = 'preview',
-  PHASE = 'beta',
-  PORT = '3000',
-  PREVIEW_URL = 'http://dev.cdp-int.defra.cloud/forms-runner/',
-  PUBLISH_URL = 'http://dev.cdp-int.defra.cloud/forms-runner/',
-  REDIS_HOST,
-  REDIS_KEY_PREFIX,
-  REDIS_PASSWORD,
-  REDIS_USERNAME,
-  SESSION_COOKIE_PASSWORD,
-  SESSION_COOKIE_TTL,
-  SESSION_TTL,
-  S3_BUCKET
-} = process.env
-
-// Build config
-const config = {
-  port: PORT,
-  env: NODE_ENV,
-  appPathPrefix: APP_PATH_PREFIX,
-  previewUrl: PREVIEW_URL,
-  publishUrl: PUBLISH_URL,
-  persistentBackend: PERSISTENT_BACKEND,
-  serviceName: 'Defra Form Builder',
-  s3Bucket: S3_BUCKET,
-  logLevel: LOG_LEVEL,
-  phase: PHASE,
-  footerText: FOOTER_TEXT,
-  isProduction: NODE_ENV === 'production',
-  isDevelopment: !['production', 'test'].includes(NODE_ENV),
-  isTest: NODE_ENV === 'test',
-  lastCommit: LAST_COMMIT ?? LAST_COMMIT_GH,
-  lastTag: LAST_TAG ?? LAST_TAG_GH,
-  sessionTtl: SESSION_TTL
-    ? parseInt(SESSION_TTL)
-    : Duration.fromObject({ days: 1 }).as('milliseconds'),
-  sessionCookiePassword: SESSION_COOKIE_PASSWORD,
-  sessionCookieTtl: SESSION_COOKIE_TTL
-    ? parseInt(SESSION_COOKIE_TTL)
-    : Duration.fromObject({ minutes: 30 }).as('milliseconds'),
-  azureClientId: AZURE_CLIENT_ID,
-  azureClientSecret: AZURE_CLIENT_SECRET,
-  oidcWellKnownConfigurationUrl: OIDC_WELL_KNOWN_CONFIGURATION_URL,
-  appBaseUrl: APP_BASE_URL,
-  redisHost: REDIS_HOST,
-  redisUsername: REDIS_USERNAME,
-  redisPassword: REDIS_PASSWORD,
-  redisKeyPrefix: REDIS_KEY_PREFIX
-}
-
 // Validate config
-const result = schema.validate(config, { abortEarly: false })
+const result = schema.validate(
+  {
+    port: process.env.PORT,
+    env: process.env.NODE_ENV,
+    appPathPrefix: process.env.APP_PATH_PREFIX,
+    previewUrl: process.env.PREVIEW_URL,
+    publishUrl: process.env.PUBLISH_URL,
+    persistentBackend: process.env.PERSISTENT_BACKEND,
+    serviceName: 'Defra Form Builder',
+    s3Bucket: process.env.S3_BUCKET,
+    logLevel: process.env.LOG_LEVEL,
+    phase: process.env.PHASE,
+    footerText: process.env.FOOTER_TEXT,
+    isProduction: process.env.NODE_ENV === 'production',
+    isDevelopment: !['production', 'test'].includes(`${process.env.NODE_ENV}`),
+    isTest: process.env.NODE_ENV === 'test',
+    lastCommit: process.env.LAST_COMMIT ?? process.env.LAST_COMMIT_GH,
+    lastTag: process.env.LAST_TAG ?? process.env.LAST_TAG_GH,
+    sessionTtl: process.env.SESSION_TTL,
+    sessionCookiePassword: process.env.SESSION_COOKIE_PASSWORD,
+    sessionCookieTtl: process.env.SESSION_COOKIE_TTL,
+    azureClientId: process.env.AZURE_CLIENT_ID,
+    azureClientSecret: process.env.AZURE_CLIENT_SECRET,
+    oidcWellKnownConfigurationUrl:
+      process.env.OIDC_WELL_KNOWN_CONFIGURATION_URL,
+    appBaseUrl: process.env.APP_BASE_URL,
+    redisHost: process.env.REDIS_HOST,
+    redisUsername: process.env.REDIS_USERNAME,
+    redisPassword: process.env.REDIS_PASSWORD,
+    redisKeyPrefix: process.env.REDIS_KEY_PREFIX
+  },
+  { abortEarly: false }
+)
 
 // Throw if config is invalid
 if (result.error) {
@@ -156,7 +136,7 @@ if (result.error) {
 }
 
 // Use the joi validated value
-const value: Config = result.value
+const value = result.value as Config
 
 /**
  * TODO:- replace this with a top-level await when upgraded to node 16

@@ -21,7 +21,7 @@
     "test": "jest --color --coverage --verbose",
     "test:watch": "jest --color --watch",
     "client:watch": "NODE_ENV=development npm run build:client --watch",
-    "server:watch": "PERSISTENT_BACKEND=preview wait-on --delay 2000 ./client/dist/assets/manifest.json && nodemon",
+    "server:watch": "wait-on --delay 2000 ./client/dist/assets/manifest.json && nodemon",
     "prestart": "npm run build",
     "start": "NODE_ENV=${NODE_ENV:-production} node --enable-source-maps ./server/dist/index.js"
   },
