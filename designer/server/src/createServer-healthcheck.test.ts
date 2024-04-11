@@ -1,29 +1,41 @@
+import { type Server } from '@hapi/hapi'
+
 import { auth } from '~/test/fixtures/auth.js'
 
 describe('/health-check Route', () => {
   const OLD_ENV = process.env
 
-  test('/health-check route response is correct', async () => {
-    const options = {
-      method: 'GET',
-      url: '/forms-designer/health-check',
-      auth
-    }
+  const startServer = async (): Promise<Server> => {
+    const { createServer } = await import('~/src/createServer.js')
 
+    const server = await createServer()
+    await server.initialize()
+    return server
+  }
+
+  let server: Server
+
+  afterAll(async () => {
+    process.env = OLD_ENV
+    await server.stop()
+  })
+
+  test('/health-check route response is correct', async () => {
     process.env = {
       ...OLD_ENV,
       LAST_COMMIT: 'LAST COMMIT',
       LAST_TAG: 'LAST TAG'
     }
 
-    await import('~/src/config.js')
-    const { createServer } = await import('~/src/createServer.js')
+    server = await startServer()
 
-    const server = await createServer()
-    const { result } = (await server.inject(options)) as any
+    const options = {
+      method: 'GET',
+      url: '/forms-designer/health-check',
+      auth
+    }
 
-    await server.stop()
-    process.env = OLD_ENV
+    const { result } = await server.inject(options)
 
     expect(result?.status).toBe('OK')
     expect(result?.lastCommit).toBe('LAST COMMIT')

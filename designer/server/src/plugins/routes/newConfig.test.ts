@@ -1,6 +1,5 @@
 import { type Server } from '@hapi/hapi'
 
-import { createServer } from '~/src/createServer.js'
 import { publish } from '~/src/lib/publish/index.js'
 import { auth } from '~/test/fixtures/auth.js'
 
@@ -8,6 +7,8 @@ jest.mock('~/src/lib/publish')
 
 describe('NewConfig tests', () => {
   const startServer = async (): Promise<Server> => {
+    const { createServer } = await import('~/src/createServer.js')
+
     const server = await createServer()
     await server.initialize()
     return server

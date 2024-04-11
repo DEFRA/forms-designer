@@ -1,3 +1,4 @@
+import { type Server } from '@hapi/hapi'
 import { JSDOM } from 'jsdom'
 
 import { auth } from '~/test/fixtures/auth.js'
@@ -5,8 +6,9 @@ import { auth } from '~/test/fixtures/auth.js'
 describe('Footer', () => {
   const OLD_ENV = process.env
 
-  const startServer = async (): Promise<any> => {
+  const startServer = async (): Promise<Server> => {
     const { createServer } = await import('~/src/createServer.js')
+
     const server = await createServer()
     await server.initialize()
     return server
