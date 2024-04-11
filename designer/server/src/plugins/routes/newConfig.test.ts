@@ -47,7 +47,7 @@ describe('NewConfig tests', () => {
       }
     }
 
-    publish.mockImplementation(() => Promise.resolve([]))
+    jest.mocked(publish).mockImplementation(() => Promise.resolve([]))
     const res = await server.inject(options)
 
     expect(res.statusCode).toBe(400)
@@ -67,7 +67,7 @@ describe('NewConfig tests', () => {
       }
     }
 
-    publish.mockImplementation(() => Promise.resolve([]))
+    jest.mocked(publish).mockImplementation(() => Promise.resolve([]))
     const res = await server.inject(options)
 
     expect(res.statusCode).toBe(200)
@@ -84,7 +84,7 @@ describe('NewConfig tests', () => {
       }
     }
 
-    publish.mockImplementation(() => Promise.resolve([]))
+    jest.mocked(publish).mockImplementation(() => Promise.resolve([]))
     const res = await server.inject(options)
 
     expect(res.statusCode).toBe(200)
@@ -101,7 +101,7 @@ describe('NewConfig tests', () => {
       }
     }
 
-    publish.mockImplementation(() => Promise.reject())
+    jest.mocked(publish).mockImplementation(() => Promise.reject())
     const res = await server.inject(options)
 
     expect(res.statusCode).toBe(401)
