@@ -30,7 +30,10 @@ const serverOptions = (): ServerOptions => {
       stripTrailingSlash: true
     },
     routes: {
-      auth: { mode: 'required' },
+      auth: {
+        mode: 'required',
+        strategy: 'session'
+      },
       validate: {
         options: {
           abortEarly: false

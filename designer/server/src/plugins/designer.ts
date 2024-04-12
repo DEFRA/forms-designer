@@ -11,7 +11,7 @@ export const designerPlugin = {
     version: pkg.version,
     multiple: true,
     dependencies: '@hapi/vision',
-    register: async (server) => {
+    register(server) {
       server.route(app.getApp)
 
       server.route(app.getAppChildRoutes)
@@ -22,7 +22,7 @@ export const designerPlugin = {
         method: 'GET',
         path: '/feature-toggles',
         options: {
-          handler: async (request, h) => {
+          handler(request, h) {
             const featureFlags = flagg({
               store: envStore(process.env),
               definitions: {

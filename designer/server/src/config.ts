@@ -21,6 +21,7 @@ export interface Config {
   clientDir: string
   previewUrl: string
   publishUrl: string
+  managerUrl: string
   persistentBackend: 's3' | 'blob' | 'preview'
   serviceName: string
   s3Bucket?: string
@@ -58,6 +59,9 @@ const schema = joi.object({
   clientDir: joi
     .string()
     .default(resolve(dirname(configPath), '../../client/dist')),
+  managerUrl: joi
+    .string()
+    .default('http://dev.cdp-int.defra.cloud/forms-manager/'),
   previewUrl: joi
     .string()
     .default('http://dev.cdp-int.defra.cloud/forms-runner/'),
@@ -68,7 +72,7 @@ const schema = joi.object({
     .string()
     .valid('s3', 'blob', 'preview')
     .default('preview'),
-  serviceName: joi.string(),
+  serviceName: joi.string().required(),
   s3Bucket: joi.string().optional(),
   logLevel: joi
     .string()
@@ -99,8 +103,8 @@ const schema = joi.object({
   awsCredentials: joi
     .object()
     .keys({
-      accessKeyId: joi.string(),
-      secretAccessKey: joi.string(),
+      accessKeyId: joi.string().required(),
+      secretAccessKey: joi.string().required(),
       sessionToken: joi.string().optional()
     })
     .optional(),
@@ -120,6 +124,7 @@ const result = schema.validate(
     port: process.env.PORT,
     env: process.env.NODE_ENV,
     appPathPrefix: process.env.APP_PATH_PREFIX,
+    managerUrl: process.env.MANAGER_URL,
     previewUrl: process.env.PREVIEW_URL,
     publishUrl: process.env.PUBLISH_URL,
     persistentBackend: process.env.PERSISTENT_BACKEND,
@@ -163,7 +168,7 @@ const value = result.value as Config
 async function getAwsConfigCredentials(): Promise<CredentialsOptions | {}> {
   return new Promise(function (resolve, reject) {
     if (value.persistentBackend === 's3') {
-      AWS.config.getCredentials(async function (err) {
+      AWS.config.getCredentials(function (err) {
         if (err) {
           console.error('Error getting AWS credentials', err)
           reject(err)

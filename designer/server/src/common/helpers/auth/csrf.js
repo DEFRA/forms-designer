@@ -8,7 +8,7 @@ import config from '~/src/config.js'
 const csrf = {
   plugin: {
     name: 'csrf',
-    register: async (server) => {
+    async register(server) {
       await server.register({
         plugin: crumb,
         options: {

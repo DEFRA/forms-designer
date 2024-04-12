@@ -1,10 +1,12 @@
 import { provideAuthedUser } from '~/src/common/helpers/auth/pre/provide-authed-user.js'
 
-const logoutController = {
-  options: {
-    pre: [provideAuthedUser]
-  },
-  handler: (request, h) => {
+/**
+ * @type {ServerRoute}
+ */
+export default {
+  method: 'GET',
+  path: '/logout',
+  handler(request, h) {
     const authedUser = request.pre.authedUser
 
     if (!authedUser) {
@@ -23,7 +25,12 @@ const logoutController = {
     request.cookieAuth.clear()
 
     return h.redirect(logoutUrl)
+  },
+  options: {
+    pre: [provideAuthedUser]
   }
 }
 
-export { logoutController }
+/**
+ * @typedef {import('@hapi/hapi').ServerRoute} ServerRoute
+ */

@@ -18,7 +18,7 @@ export const getFormWithId: ServerRoute = {
   method: 'GET',
   path: '/api/{id}/data',
   options: {
-    handler: async (request, h) => {
+    async handler(request, h) {
       const { id } = request.params
       let formJson = newFormJson
       try {
@@ -45,7 +45,7 @@ export const putFormWithId: ServerRoute = {
     payload: {
       parse: true
     },
-    handler: async (request, h) => {
+    async handler(request, h) {
       const { id } = request.params
       const { persistenceService } = request.services([])
 
