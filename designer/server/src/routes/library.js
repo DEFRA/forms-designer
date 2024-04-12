@@ -11,11 +11,6 @@ export default [
       const model = await listLibraryViewModel()
 
       return h.view('library', model)
-    },
-    options: {
-      auth: {
-        mode: 'try'
-      }
     }
   }
 ]
