@@ -1,4 +1,4 @@
-import { join, resolve } from 'node:path'
+import { join } from 'node:path'
 
 import config from '~/src/config.js'
 
