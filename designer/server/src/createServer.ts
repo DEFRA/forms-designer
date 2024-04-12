@@ -84,11 +84,11 @@ export async function createServer() {
   await server.register(inert, registrationOptions)
   await server.register(sessionManager)
 
-  if (config.oidcWellKnownConfigurationUrl) {
-    await server.register(azureOidc)
-  } else {
-    await server.register(azureOidcNoop)
-  }
+  await server.register(
+    config.isTest
+      ? azureOidcNoop // Mock auth for tests
+      : azureOidc // OpenID Connect (OIDC) auth
+  )
 
   await server.register(sessionCookie)
 
