@@ -8,11 +8,6 @@ export default {
   path: '/',
   handler(request, h) {
     return h.view('home', homeViewModel())
-  },
-  options: {
-    auth: {
-      mode: 'try'
-    }
   }
 }
 
