@@ -72,7 +72,7 @@ const schema = joi.object({
     .string()
     .valid('s3', 'blob', 'preview')
     .default('preview'),
-  serviceName: joi.string(),
+  serviceName: joi.string().required(),
   s3Bucket: joi.string().optional(),
   logLevel: joi
     .string()
@@ -103,8 +103,8 @@ const schema = joi.object({
   awsCredentials: joi
     .object()
     .keys({
-      accessKeyId: joi.string(),
-      secretAccessKey: joi.string(),
+      accessKeyId: joi.string().required(),
+      secretAccessKey: joi.string().required(),
       sessionToken: joi.string().optional()
     })
     .optional(),
@@ -168,7 +168,7 @@ const value = result.value as Config
 async function getAwsConfigCredentials(): Promise<CredentialsOptions | {}> {
   return new Promise(function (resolve, reject) {
     if (value.persistentBackend === 's3') {
-      AWS.config.getCredentials(async function (err) {
+      AWS.config.getCredentials(function (err) {
         if (err) {
           console.error('Error getting AWS credentials', err)
           reject(err)
