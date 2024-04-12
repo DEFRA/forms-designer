@@ -12,7 +12,6 @@ import {
 import { dropUserSession } from '~/src/common/helpers/auth/drop-user-session.js'
 import { getUserSession } from '~/src/common/helpers/auth/get-user-session.js'
 import { sessionCookie } from '~/src/common/helpers/auth/session-cookie.js'
-import { authedFetcher } from '~/src/common/helpers/fetch/authed-fetcher.js'
 import { requestLogger } from '~/src/common/helpers/logging/request-logger.js'
 import { buildRedisClient } from '~/src/common/helpers/redis-client.js'
 import { sessionManager } from '~/src/common/helpers/session-manager.js'
@@ -75,10 +74,6 @@ export async function createServer() {
     cache: 'session',
     segment: config.redisKeyPrefix,
     expiresIn: config.sessionTtl
-  })
-
-  server.decorate('request', 'authedFetcher', authedFetcher, {
-    apply: true
   })
 
   server.decorate('request', 'getUserSession', getUserSession)
