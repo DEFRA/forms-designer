@@ -1,9 +1,8 @@
 import { dirname, resolve } from 'node:path'
-import { cwd } from 'node:process'
 
 import hapiVision from '@hapi/vision'
 import nunjucks from 'nunjucks'
-import resolvePkg from 'resolve/sync.js'
+import resolvePkg from 'resolve'
 
 import { context } from '~/src/common/nunjucks/context/index.js'
 import * as filters from '~/src/common/nunjucks/filters/index.js'
@@ -14,7 +13,7 @@ const nunjucksEnvironment = nunjucks.configure(
   [
     resolve(config.appDir, 'common/templates'),
     resolve(config.appDir, 'common/components'),
-    dirname(resolvePkg('govuk-frontend/package.json'))
+    dirname(resolvePkg.sync('govuk-frontend/package.json'))
   ],
   {
     autoescape: true,
