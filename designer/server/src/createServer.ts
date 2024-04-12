@@ -92,7 +92,6 @@ export async function createServer() {
 
   await server.register(Scooter)
   await server.register(configureBlankiePlugin())
-  // await server.register(viewPlugin, registrationOptions);
   await server.register(nunjucksConfig, registrationOptions)
   await server.register(Schmervice)
   server.registerService([
