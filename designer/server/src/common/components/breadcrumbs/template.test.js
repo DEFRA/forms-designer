@@ -1,45 +1,55 @@
-import { renderComponent } from '~/test-helpers/component-helpers.js'
+import { renderMacro } from '~/test/helpers/component-helpers.js'
 
 describe('Breadcrumbs Component', () => {
-  let $breadcrumbs
+  let $breadcrumbs = /** @type {Element | null} */ (null)
 
   beforeEach(() => {
-    $breadcrumbs = renderComponent('breadcrumbs', {
-      items: [
-        {
-          text: 'Deployments',
-          href: '/deployments'
-        },
-        {
-          text: 'Magic service'
+    const { document } = renderMacro(
+      'appBreadcrumbs',
+      'breadcrumbs/macro.njk',
+      {
+        params: {
+          items: [
+            {
+              text: 'Deployments',
+              href: '/deployments'
+            },
+            {
+              text: 'Magic service'
+            }
+          ]
         }
-      ]
-    })('[data-testid="app-breadcrumbs"]').first()
+      }
+    )
+
+    $breadcrumbs = document.querySelector('[data-testid="app-breadcrumbs"]')
   })
 
   test('Should render expected number of breadcrumbs', () => {
     expect(
-      $breadcrumbs.find('[data-testid="app-breadcrumbs-list-item"]')
+      $breadcrumbs?.querySelectorAll(
+        '[data-testid="app-breadcrumbs-list-item"]'
+      )
     ).toHaveLength(2)
   })
 
   test('First breadcrumb should be a link', () => {
     const $firstBreadcrumbLink = $breadcrumbs
-      .find('[data-testid="app-breadcrumbs-list-item"]')
-      .first()
-      .find('[data-testid="app-breadcrumbs-link"]')
+      ?.querySelector('[data-testid="app-breadcrumbs-list-item"]')
+      ?.querySelector('[data-testid="app-breadcrumbs-link"]')
 
-    expect($firstBreadcrumbLink.attr('href')).toBe('/deployments')
-    expect($firstBreadcrumbLink.attr('class')).toBe('app-breadcrumbs__link')
+    expect($firstBreadcrumbLink).toHaveAttribute('href', '/deployments')
+    expect($firstBreadcrumbLink).toHaveAttribute(
+      'class',
+      'app-breadcrumbs__link'
+    )
   })
 
   test('Last breadcrumb should not be a link', () => {
-    const $lastBreadcrumb = $breadcrumbs
-      .find('[data-testid="app-breadcrumbs-list-item"]')
-      .last()
-
-    expect($lastBreadcrumb.html()).not.toContain(
-      `class="app-breadcrumbs__link"`
+    const $lastBreadcrumb = $breadcrumbs?.querySelector(
+      '[data-testid="app-breadcrumbs-list-item"]:last-of-type'
     )
+
+    expect($lastBreadcrumb).not.toContainHTML('class="app-breadcrumbs__link"')
   })
 })

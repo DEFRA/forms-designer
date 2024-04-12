@@ -1,7 +1,7 @@
 import { type Server } from '@hapi/hapi'
-import { JSDOM } from 'jsdom'
 
 import { auth } from '~/test/fixtures/auth.js'
+import { renderDOM } from '~/test/helpers/component-helpers.js'
 
 describe('Footer', () => {
   const OLD_ENV = { ...process.env }
@@ -33,7 +33,7 @@ describe('Footer', () => {
     }
 
     const { result } = await server.inject<string>(options)
-    const { document } = new JSDOM(result).window
+    const { document } = renderDOM(result)
 
     const $footerMessage = document.querySelector('.footer-message')
     expect($footerMessage).toContainHTML('<p>Footer Text Test</p>')

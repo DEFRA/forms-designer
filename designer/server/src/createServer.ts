@@ -12,11 +12,10 @@ import {
 import { dropUserSession } from '~/src/common/helpers/auth/drop-user-session.js'
 import { getUserSession } from '~/src/common/helpers/auth/get-user-session.js'
 import { sessionCookie } from '~/src/common/helpers/auth/session-cookie.js'
-import { authedFetcher } from '~/src/common/helpers/fetch/authed-fetcher.js'
 import { requestLogger } from '~/src/common/helpers/logging/request-logger.js'
 import { buildRedisClient } from '~/src/common/helpers/redis-client.js'
 import { sessionManager } from '~/src/common/helpers/session-manager.js'
-import { nunjucksConfig } from '~/src/common/nunjucks/index.js'
+import * as nunjucks from '~/src/common/nunjucks/index.js'
 import config from '~/src/config.js'
 import { determinePersistenceService } from '~/src/lib/persistence/index.js'
 import { configureBlankiePlugin } from '~/src/plugins/blankie.js'
@@ -77,10 +76,6 @@ export async function createServer() {
     expiresIn: config.sessionTtl
   })
 
-  server.decorate('request', 'authedFetcher', authedFetcher, {
-    apply: true
-  })
-
   server.decorate('request', 'getUserSession', getUserSession)
   server.decorate('request', 'dropUserSession', dropUserSession)
 
@@ -97,8 +92,7 @@ export async function createServer() {
 
   await server.register(Scooter)
   await server.register(configureBlankiePlugin())
-  // await server.register(viewPlugin, registrationOptions);
-  await server.register(nunjucksConfig, registrationOptions)
+  await server.register(nunjucks.plugin, registrationOptions)
   await server.register(Schmervice)
   server.registerService([
     Schmervice.withName(
