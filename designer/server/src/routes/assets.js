@@ -1,5 +1,4 @@
 import { join, resolve } from 'node:path'
-import { cwd } from 'node:process'
 
 import config from '~/src/config.js'
 
@@ -26,9 +25,7 @@ export default [
     method: 'GET',
     path: '/robots.txt',
     options: {
-      auth: {
-        mode: 'try'
-      },
+      auth: false,
       handler: {
         file: 'server/public/static/robots.txt'
       }
@@ -38,9 +35,7 @@ export default [
     method: 'GET',
     path: '/javascripts/{path*}',
     options: {
-      auth: {
-        mode: 'try'
-      },
+      auth: false,
       handler: {
         directory: {
           path: join(config.clientDir, 'javascripts')
@@ -52,9 +47,7 @@ export default [
     method: 'GET',
     path: '/stylesheets/{path*}',
     options: {
-      auth: {
-        mode: 'try'
-      },
+      auth: false,
       handler: {
         directory: {
           path: join(config.clientDir, 'stylesheets')
@@ -66,9 +59,7 @@ export default [
     method: 'GET',
     path: '/assets/{path*}',
     options: {
-      auth: {
-        mode: 'try'
-      },
+      auth: false,
       handler: {
         directory: {
           path: join(config.clientDir, 'assets')
