@@ -33,7 +33,6 @@ describe('Config', () => {
   })
 
   test('Throws if S3 is required and no AWS config is found', async () => {
-    process.env.PERSISTENT_BACKEND = 's3'
     process.env.AWS_ACCESS_KEY_ID = undefined
     process.env.AWS_ACCESS_SECRET_KEY = undefined
 

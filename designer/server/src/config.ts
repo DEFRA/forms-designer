@@ -22,7 +22,6 @@ export interface Config {
   previewUrl: string
   publishUrl: string
   managerUrl: string
-  persistentBackend: 's3' | 'blob' | 'preview'
   serviceName: string
   s3Bucket?: string
   logLevel: 'fatal' | 'error' | 'warn' | 'info' | 'debug' | 'trace' | 'silent'
@@ -68,10 +67,6 @@ const schema = joi.object({
   publishUrl: joi
     .string()
     .default('http://dev.cdp-int.defra.cloud/forms-runner/'),
-  persistentBackend: joi
-    .string()
-    .valid('s3', 'blob', 'preview')
-    .default('preview'),
   serviceName: joi.string().required(),
   s3Bucket: joi.string().optional(),
   logLevel: joi
@@ -127,7 +122,6 @@ const result = schema.validate(
     managerUrl: process.env.MANAGER_URL,
     previewUrl: process.env.PREVIEW_URL,
     publishUrl: process.env.PUBLISH_URL,
-    persistentBackend: process.env.PERSISTENT_BACKEND,
     serviceName: 'Defra Form Builder',
     s3Bucket: process.env.S3_BUCKET,
     logLevel: process.env.LOG_LEVEL,

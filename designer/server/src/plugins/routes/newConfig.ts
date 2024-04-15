@@ -24,12 +24,6 @@ export const registerNewFormWithRunner: ServerRoute = {
 
       try {
         if (selected.Key === 'New') {
-          if (config.persistentBackend !== 'preview') {
-            await persistenceService.uploadConfiguration(
-              `${newName}.json`,
-              JSON.stringify(newFormJson)
-            )
-          }
           await publish(newName, newFormJson)
         } else {
           await persistenceService.copyConfiguration(`${selected.Key}`, newName)
