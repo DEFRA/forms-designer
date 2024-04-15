@@ -44,7 +44,6 @@
     "@hapi/yar": "^11.0.2",
     "@hapipal/schmervice": "^3.0.0",
     "@xgovformbuilder/govuk-react-jsx": "^7.1.2",
-    "aws-sdk": "^2.1568.0",
     "blankie": "^5.0.0",
     "classnames": "^2.5.1",
     "depth-first": "^4.0.0",

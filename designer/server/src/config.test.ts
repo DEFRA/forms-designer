@@ -31,20 +31,4 @@ describe('Config', () => {
     expect(config.lastCommit).toBe('LAST COMMIT')
     expect(config.lastTag).toBe('LAST TAG')
   })
-
-  test('Throws if S3 is required and no AWS config is found', async () => {
-    process.env.AWS_ACCESS_KEY_ID = undefined
-    process.env.AWS_ACCESS_SECRET_KEY = undefined
-
-    try {
-      import('~/src/config.js')
-    } catch (e) {
-      expect(e).toBeTruthy()
-    }
-
-    process.env.AWS_ACCESS_KEY_ID = 'key'
-    process.env.AWS_ACCESS_SECRET_KEY = 'secret'
-
-    await expect(import('~/src/config.js')).resolves.toBeTruthy()
-  })
 })

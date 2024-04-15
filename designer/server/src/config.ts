@@ -1,8 +1,6 @@
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-import * as AWS from 'aws-sdk'
-import { type CredentialsOptions } from 'aws-sdk/lib/credentials.js'
 import { configDotenv } from 'dotenv'
 import joi from 'joi'
 import { Duration } from 'luxon'
@@ -23,7 +21,6 @@ export interface Config {
   publishUrl: string
   managerUrl: string
   serviceName: string
-  s3Bucket?: string
   logLevel: 'fatal' | 'error' | 'warn' | 'info' | 'debug' | 'trace' | 'silent'
   phase: 'alpha' | 'beta' | 'live'
   footerText?: string
@@ -35,7 +32,6 @@ export interface Config {
   sessionTtl: number
   sessionCookieTtl: number
   sessionCookiePassword: string
-  awsCredentials?: CredentialsOptions
   azureClientId?: string
   azureClientSecret?: string
   oidcWellKnownConfigurationUrl?: string
@@ -68,7 +64,6 @@ const schema = joi.object({
     .string()
     .default('http://dev.cdp-int.defra.cloud/forms-runner/'),
   serviceName: joi.string().required(),
-  s3Bucket: joi.string().optional(),
   logLevel: joi
     .string()
     .default('info')
@@ -95,14 +90,6 @@ const schema = joi.object({
     .number()
     .default(Duration.fromObject({ minutes: 30 }).as('milliseconds')),
   sessionCookiePassword: joi.string().allow('').default(''),
-  awsCredentials: joi
-    .object()
-    .keys({
-      accessKeyId: joi.string().required(),
-      secretAccessKey: joi.string().required(),
-      sessionToken: joi.string().optional()
-    })
-    .optional(),
   azureClientId: joi.string().optional(),
   azureClientSecret: joi.string().optional(),
   oidcWellKnownConfigurationUrl: joi.string().optional(),
@@ -123,7 +110,6 @@ const result = schema.validate(
     previewUrl: process.env.PREVIEW_URL,
     publishUrl: process.env.PUBLISH_URL,
     serviceName: 'Defra Form Builder',
-    s3Bucket: process.env.S3_BUCKET,
     logLevel: process.env.LOG_LEVEL,
     phase: process.env.PHASE,
     footerText: process.env.FOOTER_TEXT,
@@ -154,37 +140,4 @@ if (result.error) {
 }
 
 // Use the joi validated value
-const value = result.value as Config
-
-/**
- * TODO:- replace this with a top-level await when upgraded to node 16
- */
-async function getAwsConfigCredentials(): Promise<CredentialsOptions | {}> {
-  return new Promise(function (resolve, reject) {
-    if (value.persistentBackend === 's3') {
-      AWS.config.getCredentials(function (err) {
-        if (err) {
-          console.error('Error getting AWS credentials', err)
-          reject(err)
-        } else {
-          resolve({
-            accessKeyId: AWS.config.credentials.accessKeyId,
-            secretAccessKey: AWS.config.credentials.secretAccessKey
-          })
-        }
-      })
-    } else {
-      resolve({})
-    }
-  })
-}
-
-getAwsConfigCredentials()
-  .then((awsConfig) => {
-    value.awsCredentials = awsConfig
-  })
-  .catch((e) => {
-    throw e
-  })
-
-export default value
+export default result.value as Config
