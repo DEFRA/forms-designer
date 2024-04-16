@@ -124,13 +124,6 @@ export interface SpecialPages {
   paymentSkippedWarningPage?: PaymentSkippedWarningPage
 }
 
-export function isMultipleApiKey(
-  payApiKey: string | MultipleApiKeys | undefined
-): payApiKey is MultipleApiKeys {
-  const obj = payApiKey as MultipleApiKeys
-  return obj.test !== undefined || obj.production !== undefined
-}
-
 export interface Fee {
   description: string
   amount: number
@@ -177,7 +170,7 @@ export interface FormDefinition {
   skipSummary?: boolean | undefined
   outputs: Output[]
   declaration?: string | undefined
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
   payApiKey?: string | MultipleApiKeys | undefined
   specialPages?: SpecialPages
   paymentReferenceFormat?: string
