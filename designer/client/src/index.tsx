@@ -8,10 +8,6 @@ import { SaveError } from '~/src/pages/ErrorPages/index.js'
 
 initI18n()
 
-function NoMatch() {
-  return <div>404 Not found</div>
-}
-
 export class App extends React.Component {
   render() {
     return (
