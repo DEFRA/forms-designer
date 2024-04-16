@@ -1,14 +1,13 @@
-import { type FormConfiguration, Schema } from '@defra/forms-model'
+import { Schema, FormDefinition } from '@defra/forms-model'
 import { type ServerRoute, type ResponseObject } from '@hapi/hapi'
 import Wreck from '@hapi/wreck'
 
-import newFormJson from '~/src/common/new-form.json' with { type: 'json' }
 import config from '~/src/config.js'
 import { publish } from '~/src/lib/publish/index.js'
 
 const getPublished = async function (id) {
-  const { payload } = await Wreck.get<FormConfiguration>(
-    `${config.publishUrl}/published/${id}`
+  const { payload } = await Wreck.get<FormDefinition>(
+    `${config.publishUrl}/forms/${id}/definition`
   )
   return payload.toString()
 }
@@ -20,16 +19,13 @@ export const getFormWithId: ServerRoute = {
   options: {
     async handler(request, h) {
       const { id } = request.params
-      let formJson = newFormJson
+      let formJson = undefined
       try {
         const response = await getPublished(id)
-        const { values } = JSON.parse(response)
-
-        if (values) {
-          formJson = values
-        }
+        formJson = JSON.parse(response)
       } catch (error) {
         request.logger.error(['GET /api/{id}/data', 'getFormWithId'], error)
+        throw error
       }
 
       return h.response(formJson).type('application/json')
