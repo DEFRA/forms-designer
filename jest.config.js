@@ -37,7 +37,6 @@ export default {
   projects: [
     '<rootDir>/designer/client',
     '<rootDir>/designer/server',
-    '<rootDir>/model',
-    '<rootDir>/queue-model'
+    '<rootDir>/model'
   ]
 }

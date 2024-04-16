@@ -11,7 +11,6 @@
   "type": "module",
   "workspaces": [
     "model",
-    "queue-model",
     "designer"
   ],
   "scripts": {

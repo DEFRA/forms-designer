@@ -170,8 +170,7 @@ module.exports = {
               './tsconfig.dev.json',
               './designer/client/tsconfig.json',
               './designer/server/tsconfig.json',
-              './model/tsconfig.json',
-              './queue-model/tsconfig.json'
+              './model/tsconfig.json'
             ]
           }
         }
