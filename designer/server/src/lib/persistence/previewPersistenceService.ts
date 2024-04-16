@@ -1,7 +1,8 @@
+import { type FormConfiguration } from '@defra/forms-model'
 import Wreck from '@hapi/wreck'
+import { Service } from '@hapipal/schmervice'
 
 import config from '~/src/config.js'
-import type { PersistenceService } from '~/src/lib/persistence/persistenceService.js'
 
 /**
  * Persistence service that relies on the runner for storing
@@ -9,9 +10,7 @@ import type { PersistenceService } from '~/src/lib/persistence/persistenceServic
  * This should likely never be used in production but is a handy
  * development utility.
  */
-export class PreviewPersistenceService implements PersistenceService {
-  logger: any
-
+export class PreviewPersistenceService extends Service {
   async uploadConfiguration(id: string, configuration: string) {
     return Wreck.post(`${config.publishUrl}/publish`, {
       payload: JSON.stringify({ id, configuration })
@@ -23,7 +22,7 @@ export class PreviewPersistenceService implements PersistenceService {
     return this.uploadConfiguration(newName, JSON.parse(configuration).values)
   }
 
-  async listAllConfigurations() {
+  async listAllConfigurations(): Promise<FormConfiguration[]> {
     const { payload } = await Wreck.get(`${config.publishUrl}/published`)
     return JSON.parse(payload.toString())
   }
