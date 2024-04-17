@@ -187,5 +187,9 @@ module.exports = {
       '.mjs': ['.mts', '.mjs']
     }
   },
+  stats: {
+    errorDetails: true,
+    preset: 'minimal'
+  },
   target: 'browserslist:javascripts'
 }
