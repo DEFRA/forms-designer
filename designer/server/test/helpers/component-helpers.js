@@ -19,9 +19,28 @@ export function renderView(...args) {
 }
 
 /**
+ * Render HTTP response
+ * @param {Server} server
+ * @param {ServerInjectOptions} options
+ */
+export async function renderResponse(server, options) {
+  const { result } = /** @type {ServerInjectResponse} */ (
+    await server.inject(options)
+  )
+
+  return renderDOM(result)
+}
+
+/**
  * Render DOM
  * @param {string | Buffer} [html]
  */
 export function renderDOM(html) {
   return new JSDOM(html).window
 }
+
+/**
+ * @typedef {import('@hapi/hapi').Server} Server
+ * @typedef {import('@hapi/hapi').ServerInjectOptions} ServerInjectOptions
+ * @typedef {import('@hapi/hapi').ServerInjectResponse<string>} ServerInjectResponse
+ */
