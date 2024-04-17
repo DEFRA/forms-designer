@@ -20,9 +20,7 @@
   {% endif %}
 {% endblock %}
 
-{% block pageTitle %}
-  {{ pageTitle }} | {{ serviceName }}
-{% endblock %}
+{% block pageTitle %}{{ pageTitle }} - {{ serviceName }}{% endblock %}
 
 {% block beforeContent %}
   {% if breadcrumbs.length > 1 %}
