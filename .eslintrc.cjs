@@ -18,6 +18,7 @@ module.exports = {
         'standard',
         'eslint:recommended',
         'plugin:import/recommended',
+        'plugin:import/typescript',
         'plugin:jsdoc/recommended',
         'plugin:n/recommended',
         'plugin:prettier/recommended',
