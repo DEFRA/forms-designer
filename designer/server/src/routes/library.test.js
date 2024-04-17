@@ -16,7 +16,7 @@ describe('Forms library routes', () => {
   const okStatusCode = 200
   const htmlContentType = 'text/html'
 
-  test('Testing forms library list page', async () => {
+  test('Testing Forms library list page', async () => {
     const title = 'Form 1'
 
     // Mock the api call to forms-manager

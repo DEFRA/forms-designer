@@ -21,7 +21,7 @@ function buildEntry(request, text, url) {
 function buildNavigation(request) {
   return [
     buildEntry(request, 'Home', ''),
-    buildEntry(request, 'Forms Library', '/library')
+    buildEntry(request, 'Forms library', '/library')
   ]
 }
 
