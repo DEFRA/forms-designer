@@ -9,11 +9,6 @@
   }) }}
 
   {% call appPageBody() %}
-    {{ govukButton({
-      text: "Create a form",
-      href: appPathPrefix + "/app/new"
-    }) }}
-
     {{ govukTable({
       head: head,
       rows: rows
