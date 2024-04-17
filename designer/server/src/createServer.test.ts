@@ -1,6 +1,7 @@
 import { type Server } from '@hapi/hapi'
 
 import { auth } from '~/test/fixtures/auth.js'
+import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 describe('Server tests', () => {
   const startServer = async (): Promise<Server> => {
@@ -25,32 +26,34 @@ describe('Server tests', () => {
     await server.stop()
   })
 
-  test.skip('accessibility statement page is served', async () => {
+  test('accessibility statement page is served', async () => {
     const options = {
       method: 'GET',
       url: '/forms-designer/help/accessibility-statement',
       auth
     }
 
-    const res = await server.inject(options)
+    const { document } = await renderResponse(server, options)
+    const $heading = document.querySelector('h1')
 
-    expect(res.statusCode).toBe(200)
-    expect(res.result).toContain(
-      '<h1 class="govuk-heading-xl">Accessibility Statement</h1>'
+    expect($heading).toHaveClass('govuk-heading-xl')
+    expect($heading).toHaveTextContent(
+      'Accessibility statement for [website name]'
     )
   })
 
-  test.skip('cookies page is served', async () => {
+  test('cookies page is served', async () => {
     const options = {
       method: 'GET',
       url: '/forms-designer/help/cookies',
       auth
     }
 
-    const res = await server.inject(options)
+    const { document } = await renderResponse(server, options)
+    const $heading = document.querySelector('h1')
 
-    expect(res.statusCode).toBe(200)
-    expect(res.result).toContain('<h1 class="govuk-heading-xl">Cookies</h1>')
+    expect($heading).toHaveClass('govuk-heading-xl')
+    expect($heading).toHaveTextContent('Cookies')
   })
 
   test.skip('Phase banner is present', async () => {
@@ -93,9 +96,8 @@ describe('Server tests', () => {
       auth
     }
 
-    const res = await server.inject(options)
-    expect(res.statusCode).toBe(200)
-    expect(res.result).toContain('{"featureEditPageDuplicateButton":false}')
+    const { result } = await server.inject(options)
+    expect(result).toContain('{"featureEditPageDuplicateButton":false}')
   })
 
   test('security headers are present', async () => {
@@ -110,10 +112,11 @@ describe('Server tests', () => {
       auth
     }
 
-    const res = await server.inject(options)
-    expect(res.statusCode).toBe(200)
-    expect(res.headers['x-frame-options']).not.toBeNull()
-    expect(res.headers['x-content-type-options']).not.toBeNull()
-    expect(res.headers['x-frame-options']).not.toBeNull()
+    const { headers, statusCode } = await server.inject(options)
+
+    expect(statusCode).toBe(200)
+    expect(headers['x-frame-options']).toBe('DENY')
+    expect(headers['x-content-type-options']).toBe('nosniff')
+    expect(headers['x-xss-protection']).toBe('1; mode=block')
   })
 })
