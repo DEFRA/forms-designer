@@ -1,7 +1,11 @@
 import { createServer } from '~/src/createServer.js'
+import * as forms from '~/src/lib/forms.js'
 import { auth } from '~/test/fixtures/auth.js'
 
+jest.mock('~/src/lib/forms.js')
+
 describe('Form library routes', () => {
+  /** @type {import('@hapi/hapi').Server} */
   let server
 
   beforeAll(async () => {
@@ -13,6 +17,19 @@ describe('Form library routes', () => {
   const htmlContentType = 'text/html'
 
   test('Testing form library list page', async () => {
+    const title = 'Form 1'
+
+    // Mock the api call to forms-manager
+    jest.mocked(forms.list).mockResolvedValueOnce([
+      {
+        id: '661e4ca5039739ef2902b214',
+        title,
+        organisation: 'DEFRA',
+        teamName: 'Forms',
+        teamEmail: 'defraforms@defra.gov.uk'
+      }
+    ])
+
     const res = await server.inject({
       method: 'GET',
       url: '/forms-designer/library',
@@ -25,5 +42,6 @@ describe('Form library routes', () => {
       `<h1 class="govuk-heading-xl govuk-!-margin-bottom-2"
         data-testid="app-heading-title">Form library</h1>`
     )
+    expect(res.result).toContain(`<td class="govuk-table__cell">${title}</td>`)
   })
 })
