@@ -31,23 +31,10 @@ describe('App routes test', () => {
     await server.stop()
   })
 
-  test('GET /forms-designer/app should serve designer landing page', async () => {
+  test('GET /forms-designer/editor/{:id}/ should serve designer editor page', async () => {
     const options = {
       method: 'get',
-      url: '/forms-designer/app',
-      auth
-    }
-
-    const res = await server.inject(options)
-
-    expect(res.statusCode).toBe(200)
-    expect(res.result).toContain('<main id="root">')
-  })
-
-  test('GET /forms-designer/app/* should serve designer landing page', async () => {
-    const options = {
-      method: 'get',
-      url: '/forms-designer/app/designer/test',
+      url: '/forms-designer/editor/my-form-id',
       auth
     }
 

@@ -8,15 +8,22 @@ import { SaveError } from '~/src/pages/ErrorPages/index.js'
 
 initI18n()
 
+function NoMatch() {
+  return <div>404 Not found</div>
+}
+
 export class App extends React.Component {
   render() {
     return (
-      <Router basename="/forms-designer/app">
+      <Router basename="/forms-designer/editor">
         <div id="app">
           <Switch>
-            <Route path="/:id/editor" component={Designer} />
+            <Route path="/:id" component={Designer} />
             <Route path="/save-error" exact>
               <SaveError />
+            </Route>
+            <Route path="*">
+              <NoMatch />
             </Route>
           </Switch>
         </div>

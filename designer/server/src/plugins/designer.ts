@@ -12,7 +12,6 @@ export const designerPlugin = {
     multiple: true,
     dependencies: '@hapi/vision',
     register(server) {
-      server.route(app.getApp)
 
       server.route(app.getAppChildRoutes)
 

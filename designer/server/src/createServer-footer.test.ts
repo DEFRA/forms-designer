@@ -28,7 +28,7 @@ describe('Footer', () => {
 
     const options = {
       method: 'GET',
-      url: '/forms-designer/app',
+      url: '/forms-designer/editor',
       auth
     }
 

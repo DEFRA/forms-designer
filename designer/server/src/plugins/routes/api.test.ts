@@ -1,4 +1,3 @@
-import { type FormDefinition } from '@defra/forms-model'
 import { type Server } from '@hapi/hapi'
 import Wreck from '@hapi/wreck'
 
@@ -31,59 +30,6 @@ describe('Server API', () => {
 
   afterAll(async () => {
     await server.stop()
-  })
-
-  test('GET non-existing form data return correct new-form JSON', async () => {
-    const options = {
-      method: 'get',
-      url: '/forms-designer/api/test-form-id/data',
-      auth,
-      payload: {
-        name: 'A *& B',
-        selected: { Key: 'New' }
-      }
-    }
-
-    const { result } = await server.inject(options)
-
-    expect(result).toEqual({
-      metadata: {},
-      startPage: '/first-page',
-      pages: [
-        {
-          title: 'First page',
-          path: '/first-page',
-          components: [],
-          next: [
-            {
-              path: '/second-page'
-            }
-          ]
-        },
-        {
-          path: '/second-page',
-          title: 'Second page',
-          components: [],
-          next: [
-            {
-              path: '/summary'
-            }
-          ]
-        },
-        {
-          title: 'Summary',
-          path: '/summary',
-          controller: './pages/summary.js',
-          components: []
-        }
-      ],
-      lists: [],
-      sections: [],
-      conditions: [],
-      fees: [],
-      outputs: [],
-      version: 2
-    } satisfies FormDefinition)
   })
 
   test.skip('Failure to communicate with Runner should place error on session', async () => {

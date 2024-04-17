@@ -21,7 +21,7 @@ function buildEntry(request, text, url) {
 function buildNavigation(request) {
   return [
     buildEntry(request, 'Home', ''),
-    buildEntry(request, 'Form Builder', '/app')
+    buildEntry(request, 'Form Builder', '/editor/dummy-id-for-demo')
   ]
 }
 
