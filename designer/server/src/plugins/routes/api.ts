@@ -24,7 +24,7 @@ export const getFormWithId: ServerRoute = {
         const response = await getPublished(id)
         const formJson = JSON.parse(response)
 
-        return h.response(formJson).type('application/json')
+        return h.response(formJson)
       } catch (error) {
         request.logger.error(['GET /api/{id}/data', 'getFormWithId'], error)
         throw error
