@@ -5,7 +5,7 @@ const appPathPrefix = config.appPathPrefix
 function buildEntry(request, text, url) {
   let appPathPrefixNoSlash = appPathPrefix
 
-  if (appPathPrefix.lastIndexOf('/') == appPathPrefix.length) {
+  if (appPathPrefix.lastIndexOf('/') === appPathPrefix.length) {
     appPathPrefixNoSlash = appPathPrefix.substring(0, appPathPrefix.length - 1)
   }
 
@@ -21,7 +21,7 @@ function buildEntry(request, text, url) {
 function buildNavigation(request) {
   return [
     buildEntry(request, 'Home', ''),
-    buildEntry(request, 'Form Builder', '/editor/dummy-id-for-demo')
+    buildEntry(request, 'Form Library', '/library')
   ]
 }
 
