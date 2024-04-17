@@ -1,15 +1,16 @@
-import { Schema, FormDefinition } from '@defra/forms-model'
+//import { Schema, FormDefinition } from '@defra/forms-model'
+import { FormDefinition } from '@defra/forms-model'
 import { type ServerRoute, type ResponseObject } from '@hapi/hapi'
 import Wreck from '@hapi/wreck'
 
 import config from '~/src/config.js'
-import { publish } from '~/src/lib/publish/index.js'
+// import { publish } from '~/src/lib/publish/index.js'
 
-const getPublished = async function (id) {
+const getPublished = async function (id: string) {
   const { payload } = await Wreck.get<FormDefinition>(
     `${config.managerUrl}/forms/${id}/definition`
   )
-  return payload.toString()
+  return payload
 }
 
 export const getFormWithId: ServerRoute = {

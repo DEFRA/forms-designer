@@ -12,7 +12,6 @@ export const designerPlugin = {
     multiple: true,
     dependencies: '@hapi/vision',
     register(server) {
-
       server.route(app.getAppChildRoutes)
 
       server.route(app.getErrorCrashReport)
@@ -38,6 +37,7 @@ export const designerPlugin = {
 
       server.route(api.getFormWithId)
       //server.route(api.putFormWithId)
+
       server.route(api.getAllPersistedConfigurations)
       server.route(api.log)
     }
