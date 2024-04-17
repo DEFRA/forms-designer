@@ -83,10 +83,7 @@ button.govuk-link {
 
 @include govuk-media-query($from: tablet) {
   .menu {
-    position: fixed;
-    top: 46px;
     padding: 8px;
-    z-index: 999;
     background-color: #fff;
     width: 100%;
     button {
@@ -217,22 +214,8 @@ button.govuk-link {
   }
 }
 
-.drag-handle {
-  display: none;
-  cursor: pointer;
-  position: absolute;
-  right: 2px;
-  top: 50%;
-  margin-top: -13px;
-}
-
 .component-item {
   position: relative;
-  &:hover {
-    .drag-handle {
-      display: inline;
-    }
-  }
 }
 
 .dragging {
@@ -320,29 +303,6 @@ button.govuk-link {
     font-size: 150%;
     margin: 0 0 15px;
     color: #333333;
-  }
-}
-
-// Tooltip
-.tooltip {
-  &:before {
-    display: none;
-    width: 120px;
-    background-color: black;
-    color: #fff;
-    text-align: center;
-    padding: 5px 0;
-    border-radius: 6px;
-    content: attr(data-title);
-    /* Position the tooltip text - see examples below! */
-    position: absolute;
-    z-index: 1;
-  }
-
-  &:hover {
-    &:before {
-      display: inline-block;
-    }
   }
 }
 
@@ -500,18 +460,4 @@ polyline {
 
 .panel--flyout {
   position: relative;
-}
-
-.checkbox-hint {
-  padding-left: govuk-spacing(3);
-}
-
-.govuk-phase-banner--solid {
-  background-color: #fff;
-  z-index: 999;
-  position: fixed;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #b1b4b6;
-  width: 100%;
 }
