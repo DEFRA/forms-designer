@@ -2,7 +2,7 @@ import * as forms from '~/src/lib/forms.js'
 
 export async function listLibraryViewModel() {
   const list = await forms.list()
-  const pageTitle = 'Form library'
+  const pageTitle = 'Forms library'
   const head = [{ text: 'Name' }, { text: 'Last updated' }, { text: 'Actions' }]
   const rows = list.map((form) => [
     { text: form.title },

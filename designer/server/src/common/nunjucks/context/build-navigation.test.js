@@ -16,7 +16,7 @@ describe('#buildNavigation', () => {
       },
       {
         isActive: false,
-        text: 'Form Library',
+        text: 'Forms Library',
         url: `${appPathPrefix}/library`
       }
     ])
@@ -28,7 +28,7 @@ describe('#buildNavigation', () => {
       url: appPathPrefix
     },
     {
-      text: 'Form Library',
+      text: 'Forms Library',
       url: `${appPathPrefix}/library`
     }
   ])('Should provide expected highlighted navigation details', (fixture) => {
