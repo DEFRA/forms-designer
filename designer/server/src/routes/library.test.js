@@ -20,7 +20,15 @@ describe('Form library routes', () => {
     const title = 'Form 1'
 
     // Mock the api call to forms-manager
-    forms.list.mockResolvedValueOnce([{ title }])
+    jest.mocked(forms.list).mockResolvedValueOnce([
+      {
+        id: '661e4ca5039739ef2902b214',
+        title,
+        organisation: 'DEFRA',
+        teamName: 'Forms',
+        teamEmail: 'defraforms@defra.gov.uk'
+      }
+    ])
 
     const res = await server.inject({
       method: 'GET',
