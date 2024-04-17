@@ -57,9 +57,6 @@ export function SubMenu({ id, updateDownloadedAt }: Props) {
 
   return (
     <div className="menu__row">
-      <a href="/forms-designer/app" className="govuk-link submenu__link">
-        Create new form
-      </a>
       <button
         className="govuk-body govuk-link submenu__link"
         onClick={onClickUpload}

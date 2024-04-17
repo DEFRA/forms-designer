@@ -52,7 +52,8 @@ export default class Designer extends Component<Props, State> {
 
   save = async (toUpdate, callback = () => {}) => {
     try {
-      await this.designerApi.save(this.id, toUpdate)
+      // TODO update once forms manager support this functionality, for now leave it client-side
+      // await this.designerApi.save(this.id, toUpdate)
       this.setState(
         {
           data: toUpdate, // optimistic save

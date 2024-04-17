@@ -3,23 +3,9 @@ import JSZip from 'jszip'
 
 import config from '~/src/config.js'
 
-export const getApp: ServerRoute = {
-  method: 'get',
-  path: '/app',
-  options: {
-    handler(request, h) {
-      return h.view('designer', {
-        phase: config.phase,
-        previewUrl: config.previewUrl,
-        footerText: config.footerText
-      })
-    }
-  }
-}
-
 export const getAppChildRoutes: ServerRoute = {
   method: 'get',
-  path: '/app/{path*}',
+  path: '/editor/{path*}',
   options: {
     handler(request, h) {
       return h.view('designer', {

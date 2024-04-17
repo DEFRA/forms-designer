@@ -1,7 +1,7 @@
 import config from '~/src/config.js'
 import { getJson } from '~/src/lib/fetch.js'
 
-const endpoint = `${config.managerUrl}/forms-manager/forms`
+const endpoint = `${config.managerUrl}/forms`
 
 /**
  * List forms

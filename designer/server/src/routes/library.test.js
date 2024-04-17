@@ -4,7 +4,7 @@ import { auth } from '~/test/fixtures/auth.js'
 
 jest.mock('~/src/lib/forms.js')
 
-describe('Form library routes', () => {
+describe('Forms library routes', () => {
   /** @type {import('@hapi/hapi').Server} */
   let server
 
@@ -16,7 +16,7 @@ describe('Form library routes', () => {
   const okStatusCode = 200
   const htmlContentType = 'text/html'
 
-  test('Testing form library list page', async () => {
+  test('Testing Forms library list page', async () => {
     const title = 'Form 1'
 
     // Mock the api call to forms-manager
@@ -40,7 +40,7 @@ describe('Form library routes', () => {
     expect(res.headers['content-type']).toContain(htmlContentType)
     expect(res.result).toContain(
       `<h1 class="govuk-heading-xl govuk-!-margin-bottom-2"
-        data-testid="app-heading-title">Form library</h1>`
+        data-testid="app-heading-title">Forms library</h1>`
     )
     expect(res.result).toContain(`<td class="govuk-table__cell">${title}</td>`)
   })

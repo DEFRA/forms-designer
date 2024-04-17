@@ -3,7 +3,7 @@ import { envStore, flagg } from 'flagg'
 
 import pkg from '../../../package.json' with { type: 'json' }
 
-import { newConfig, api, app } from '~/src/plugins/routes/index.js'
+import { api, app } from '~/src/plugins/routes/index.js'
 
 export const designerPlugin = {
   plugin: {
@@ -12,8 +12,6 @@ export const designerPlugin = {
     multiple: true,
     dependencies: '@hapi/vision',
     register(server) {
-      server.route(app.getApp)
-
       server.route(app.getAppChildRoutes)
 
       server.route(app.getErrorCrashReport)
@@ -37,9 +35,9 @@ export const designerPlugin = {
         }
       })
 
-      server.route(newConfig.registerNewFormWithRunner)
       server.route(api.getFormWithId)
-      server.route(api.putFormWithId)
+      //server.route(api.putFormWithId)
+
       server.route(api.getAllPersistedConfigurations)
       server.route(api.log)
     }

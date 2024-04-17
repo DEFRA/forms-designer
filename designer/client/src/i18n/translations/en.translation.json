@@ -231,19 +231,6 @@
       "hint": "A phase banner includes a link for users to give feedback on your form."
     }
   },
-  "landingPage": {
-    "choice": {
-      "existing": "Open an existing form",
-      "heading": "Design and prototype forms",
-      "hint": "Select an option",
-      "intro": "Use the form designer to easily create,edit forms and test ideas",
-      "newform": "Create a new form"
-    },
-    "existing": {
-      "noforms": "You do not have any existing forms",
-      "select": "Select an existing form"
-    }
-  },
   "leaveDesigner": "Are you sure you want to leave the Designer? If you have unsaved changes they will be lost.",
   "list": {
     "add": "Add list",

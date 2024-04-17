@@ -76,7 +76,7 @@ describe('Server tests', () => {
 
     const options = {
       method: 'get',
-      url: '/forms-designer/app',
+      url: '/forms-designer/editor/dummy-id-for-demo',
       auth
     }
 
@@ -90,7 +90,7 @@ describe('Server tests', () => {
   test.skip('Phase banner is present', async () => {
     const options = {
       method: 'get',
-      url: '/forms-designer/app',
+      url: '/forms-designer/editor/dummy-id-for-demo',
       auth
     }
 
@@ -121,7 +121,7 @@ describe('Server tests', () => {
 
     const options = {
       method: 'get',
-      url: '/forms-designer/app',
+      url: '/forms-designer/editor/dummy-id-for-demo',
       auth
     }
 

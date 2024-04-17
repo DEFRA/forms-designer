@@ -16,8 +16,8 @@ describe('#buildNavigation', () => {
       },
       {
         isActive: false,
-        text: 'Form Builder',
-        url: `${appPathPrefix}/app`
+        text: 'Forms library',
+        url: `${appPathPrefix}/library`
       }
     ])
   })
@@ -28,8 +28,8 @@ describe('#buildNavigation', () => {
       url: appPathPrefix
     },
     {
-      text: 'Form Builder',
-      url: `${appPathPrefix}/app`
+      text: 'Forms library',
+      url: `${appPathPrefix}/library`
     }
   ])('Should provide expected highlighted navigation details', (fixture) => {
     expect(buildNavigation(mockRequest({ path: fixture.url }))).toEqual(

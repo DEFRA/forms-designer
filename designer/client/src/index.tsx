@@ -5,11 +5,6 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import Designer from '~/src/designer.jsx'
 import { initI18n } from '~/src/i18n/index.js'
 import { SaveError } from '~/src/pages/ErrorPages/index.js'
-import {
-  LandingChoice,
-  NewConfig,
-  ChooseExisting
-} from '~/src/pages/LandingPage/index.js'
 
 initI18n()
 
@@ -20,19 +15,10 @@ function NoMatch() {
 export class App extends React.Component {
   render() {
     return (
-      <Router basename="/forms-designer/app">
+      <Router basename="/forms-designer/editor">
         <div id="app">
           <Switch>
-            <Route path="/designer/:id" component={Designer} />
-            <Route path="/" exact>
-              <LandingChoice />
-            </Route>
-            <Route path="/new" exact>
-              <NewConfig />
-            </Route>
-            <Route path="/choose-existing" exact>
-              <ChooseExisting />
-            </Route>
+            <Route path="/:id" component={Designer} />
             <Route path="/save-error" exact>
               <SaveError />
             </Route>
