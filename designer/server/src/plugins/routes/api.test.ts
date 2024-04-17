@@ -87,92 +87,92 @@ describe('Server API', () => {
   })
 
   // TODO re-enable once the forms manager supports this
-  // test('Schema validation failures should return 401', async () => {
-  //   const options = {
-  //     method: 'put',
-  //     url: '/forms-designer/api/test-form-id/data',
-  //     auth,
-  //     payload: {
-  //       metadata: {},
-  //       startPage: '/first-page',
-  //       pages: [
-  //         {
-  //           title: 'First page',
-  //           path: '/first-page',
-  //           components: [],
-  //           next: [
-  //             {
-  //               path: '/summary'
-  //             }
-  //           ]
-  //         },
-  //         {
-  //           title: 'Summary',
-  //           path: '/summary',
-  //           controller: './pages/summary.js',
-  //           components: []
-  //         }
-  //       ],
-  //       lists: [],
-  //       conditions: [],
-  //       fees: [],
-  //       outputs: [],
-  //       version: 2
-  //     }
-  //   }
+  test.skip('Schema validation failures should return 401', async () => {
+    const options = {
+      method: 'put',
+      url: '/forms-designer/api/test-form-id/data',
+      auth,
+      payload: {
+        metadata: {},
+        startPage: '/first-page',
+        pages: [
+          {
+            title: 'First page',
+            path: '/first-page',
+            components: [],
+            next: [
+              {
+                path: '/summary'
+              }
+            ]
+          },
+          {
+            title: 'Summary',
+            path: '/summary',
+            controller: './pages/summary.js',
+            components: []
+          }
+        ],
+        lists: [],
+        conditions: [],
+        fees: [],
+        outputs: [],
+        version: 2
+      }
+    }
 
-  //   const result = await server.inject<{ err: Error }>(options)
-  //   expect(result.statusCode).toBe(401)
-  //   expect(result.result?.err.message).toMatch('Schema validation failed')
-  // })
+    const result = await server.inject<{ err: Error }>(options)
+    expect(result.statusCode).toBe(401)
+    expect(result.result?.err.message).toMatch('Schema validation failed')
+  })
 
   // TODO re-enable once the forms manager supports this
-  // test('persistence service errors should return 401', async () => {
-  //   // Given
-  //   const { persistenceService } = server.services()
-  //   persistenceService.uploadConfiguration = () => {
-  //     return Promise.reject(new Error('Error in persistence service'))
-  //   }
+  test.skip('persistence service errors should return 401', async () => {
+    // Given
+    const { persistenceService } = server.services()
+    persistenceService.uploadConfiguration = () => {
+      return Promise.reject(new Error('Error in persistence service'))
+    }
 
-  //   const options = {
-  //     method: 'put',
-  //     url: '/forms-designer/api/test-form-id/data',
-  //     auth,
-  //     payload: {
-  //       metadata: {},
-  //       startPage: '/first-page',
-  //       pages: [
-  //         {
-  //           title: 'First page',
-  //           path: '/first-page',
-  //           components: [],
-  //           next: [
-  //             {
-  //               path: '/summary'
-  //             }
-  //           ]
-  //         },
-  //         {
-  //           title: 'Summary',
-  //           path: '/summary',
-  //           controller: './pages/summary.js',
-  //           components: []
-  //         }
-  //       ],
-  //       lists: [],
-  //       sections: [],
-  //       conditions: [],
-  //       fees: [],
-  //       outputs: [],
-  //       version: 2
-  //     }
-  //   }
+    const options = {
+      method: 'put',
+      url: '/forms-designer/api/test-form-id/data',
+      auth,
+      payload: {
+        metadata: {},
+        startPage: '/first-page',
+        pages: [
+          {
+            title: 'First page',
+            path: '/first-page',
+            components: [],
+            next: [
+              {
+                path: '/summary'
+              }
+            ]
+          },
+          {
+            title: 'Summary',
+            path: '/summary',
+            controller: './pages/summary.js',
+            components: []
+          }
+        ],
+        lists: [],
+        sections: [],
+        conditions: [],
+        fees: [],
+        outputs: [],
+        version: 2
+      }
+    }
 
-  //   // When
-  //   const result = await server.inject<{ err: Error }>(options)
+    // When
+    const result = await server.inject<{ err: Error }>(options)
 
-  //   // Then
-  //   expect(result.statusCode).toBe(401)
-  //   expect(result.result?.err.message).toBe('Error in persistence service')
-  // })
+    // Then
+    expect(result.statusCode).toBe(401)
+    expect(result.result?.err.message).toBe('Error in persistence service')
+  })
 })
