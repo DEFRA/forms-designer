@@ -33,51 +33,51 @@ export const getFormWithId: ServerRoute = {
   }
 }
 
-export const putFormWithId: ServerRoute = {
-  // SAVE DATA
-  method: 'PUT',
-  path: '/api/{id}/data',
-  options: {
-    payload: {
-      parse: true
-    },
-    async handler(request, h) {
-      const { id } = request.params
-      const { persistenceService } = request.services([])
+// export const putFormWithId: ServerRoute = {
+//   // SAVE DATA
+//   method: 'PUT',
+//   path: '/api/{id}/data',
+//   options: {
+//     payload: {
+//       parse: true
+//     },
+//     async handler(request, h) {
+//       const { id } = request.params
+//       const { persistenceService } = request.services([])
 
-      try {
-        const { value, error } = Schema.validate(request.payload, {
-          abortEarly: false
-        })
+//       try {
+//         const { value, error } = Schema.validate(request.payload, {
+//           abortEarly: false
+//         })
 
-        if (error) {
-          request.logger.error(
-            ['error', `/api/${id}/data`],
-            [error, request.payload]
-          )
+//         if (error) {
+//           request.logger.error(
+//             ['error', `/api/${id}/data`],
+//             [error, request.payload]
+//           )
 
-          throw new Error(`Schema validation failed, reason: ${error.message}`)
-        }
-        await persistenceService.uploadConfiguration(
-          `${id}`,
-          JSON.stringify(value)
-        )
-        await publish(id, value)
-        return h.response({ ok: true }).code(204)
-      } catch (err) {
-        request.logger.error('Designer Server PUT /api/{id}/data error:', err)
-        const errorSummary = {
-          id,
-          payload: request.payload,
-          errorMessage: err.message,
-          error: err.stack
-        }
-        request.yar.set(`error-summary-${id}`, errorSummary)
-        return h.response({ ok: false, err }).code(401)
-      }
-    }
-  }
-}
+//           throw new Error(`Schema validation failed, reason: ${error.message}`)
+//         }
+//         await persistenceService.uploadConfiguration(
+//           `${id}`,
+//           JSON.stringify(value)
+//         )
+//         await publish(id, value)
+//         return h.response({ ok: true }).code(204)
+//       } catch (err) {
+//         request.logger.error('Designer Server PUT /api/{id}/data error:', err)
+//         const errorSummary = {
+//           id,
+//           payload: request.payload,
+//           errorMessage: err.message,
+//           error: err.stack
+//         }
+//         request.yar.set(`error-summary-${id}`, errorSummary)
+//         return h.response({ ok: false, err }).code(401)
+//       }
+//     }
+//   }
+// }
 
 export const getAllPersistedConfigurations: ServerRoute = {
   method: 'GET',
