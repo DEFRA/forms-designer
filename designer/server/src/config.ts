@@ -107,7 +107,7 @@ const result = schema.validate(
     managerUrl: process.env.MANAGER_URL,
     previewUrl: process.env.PREVIEW_URL,
     publishUrl: process.env.PUBLISH_URL,
-    serviceName: 'Defra Form Builder',
+    serviceName: 'Submit a form to Defra',
     logLevel: process.env.LOG_LEVEL,
     phase: process.env.PHASE,
     isProduction: process.env.NODE_ENV === 'production',
