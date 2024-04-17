@@ -85,6 +85,7 @@ module.exports = {
                 ],
                 quietDeps: true
               },
+              api: 'modern-compiler',
               warnRuleAsWarning: true
             }
           }
