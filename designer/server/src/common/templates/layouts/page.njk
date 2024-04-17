@@ -4,8 +4,6 @@
 {% from "breadcrumbs/macro.njk" import appBreadcrumbs %}
 {% from "heading/macro.njk" import appHeading %}
 
-{% set mainClasses = "app-main-wrapper" %}
-
 {% block head %}
   <link href="{{ getAssetPath("application.css") }}" rel="stylesheet">
 {% endblock %}
@@ -13,8 +11,6 @@
 {% block header %}
   {{ govukHeader({
     homepageUrl: "https://www.gov.uk/",
-    classes: "app-header",
-    containerClasses: "govuk-width-container",
     serviceName: serviceName,
     serviceUrl: "/",
     useTudorCrown: true
