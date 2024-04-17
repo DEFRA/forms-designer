@@ -7,7 +7,7 @@ import { publish } from '~/src/lib/publish/index.js'
 
 const getPublished = async function (id) {
   const { payload } = await Wreck.get<FormDefinition>(
-    `${config.publishUrl}/forms/${id}/definition`
+    `${config.managerUrl}/forms/${id}/definition`
   )
   return payload.toString()
 }
@@ -19,16 +19,15 @@ export const getFormWithId: ServerRoute = {
   options: {
     async handler(request, h) {
       const { id } = request.params
-      let formJson = undefined
       try {
         const response = await getPublished(id)
-        formJson = JSON.parse(response)
+        const formJson = JSON.parse(response)
+
+        return h.response(formJson).type('application/json')
       } catch (error) {
         request.logger.error(['GET /api/{id}/data', 'getFormWithId'], error)
         throw error
       }
-
-      return h.response(formJson).type('application/json')
     }
   }
 }
