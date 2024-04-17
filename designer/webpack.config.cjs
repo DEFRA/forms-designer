@@ -84,7 +84,8 @@ module.exports = {
                   join(__dirname, '../node_modules')
                 ],
                 quietDeps: true
-              }
+              },
+              warnRuleAsWarning: true
             }
           }
         ]
@@ -189,6 +190,7 @@ module.exports = {
   },
   stats: {
     errorDetails: true,
+    loggingDebug: ['sass-loader'],
     preset: 'minimal'
   },
   target: 'browserslist:javascripts'
