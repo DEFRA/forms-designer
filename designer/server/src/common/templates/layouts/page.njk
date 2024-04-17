@@ -27,7 +27,9 @@
     serviceUrl: "/",
     useTudorCrown: true
   }) }}
+  {% if isAuthenticated %}
   {% include "partials/navigation.njk" %}
+  {% endif %}
 {% endblock %}
 
 {% block pageTitle %}
