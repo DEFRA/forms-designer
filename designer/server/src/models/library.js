@@ -1,3 +1,4 @@
+import config from '~/src/config.js'
 import * as forms from '~/src/lib/forms.js'
 
 export async function listLibraryViewModel() {
@@ -8,7 +9,7 @@ export async function listLibraryViewModel() {
     { text: form.title },
     { text: '9 Apr 2024' },
     {
-      html: `<a href="/forms-designer/editor/${form.id}" role="button" draggable="false" class="govuk-button" data-module="govuk-button">Edit</a>`
+      html: `<a href="${config.appPathPrefix}/editor/${form.id}" role="button" draggable="false" class="govuk-button" data-module="govuk-button">Edit</a>`
     }
   ])
 
