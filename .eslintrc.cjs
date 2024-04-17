@@ -18,6 +18,7 @@ module.exports = {
         'standard',
         'eslint:recommended',
         'plugin:import/recommended',
+        'plugin:import/typescript',
         'plugin:jsdoc/recommended',
         'plugin:n/recommended',
         'plugin:prettier/recommended',
@@ -169,8 +170,7 @@ module.exports = {
               './tsconfig.dev.json',
               './designer/client/tsconfig.json',
               './designer/server/tsconfig.json',
-              './model/tsconfig.json',
-              './queue-model/tsconfig.json'
+              './model/tsconfig.json'
             ]
           }
         }

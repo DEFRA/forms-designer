@@ -19,7 +19,6 @@ WORKDIR /home/node/app
 COPY --chown=node:node ./packag*.json ./
 COPY --chown=node:node ./designer/package.json ./designer/
 COPY --chown=node:node ./model/package.json ./model/
-COPY --chown=node:node ./queue-model/package.json ./queue-model/
 
 RUN npm ci
 

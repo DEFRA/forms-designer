@@ -10,9 +10,6 @@
     },
     {
       "path": "./model/tsconfig.json"
-    },
-    {
-      "path": "./queue-model/tsconfig.json"
     }
   ]
 }

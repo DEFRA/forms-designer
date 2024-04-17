@@ -1,4 +1,0 @@
-/*.config.*
-*.{jest,test}?(.d).{js,ts}?(.map)
-.*
-tsconfig.*
