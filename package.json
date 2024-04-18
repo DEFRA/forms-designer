@@ -76,7 +76,7 @@
     "@types/node-fetch": "^2.6.11",
     "@types/nunjucks": "^3.2.6",
     "@types/react": "^17.0.76",
-    "@types/react-dom": "^17.0.25",
+    "@types/react-dom": "^18.2.25",
     "@types/resolve": "^1.20.6",
     "@types/uuid": "^9.0.8",
     "@types/webpack-assets-manifest": "^5.1.4",
