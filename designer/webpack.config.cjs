@@ -94,10 +94,7 @@ module.exports = {
         test: /\.(png|svg|jpe?g|gif)$/,
         type: 'asset/resource',
         generator: {
-          filename:
-            NODE_ENV === 'production'
-              ? 'assets/images/[name].[contenthash:7][ext]'
-              : 'assets/images/[name][ext]'
+          filename: 'assets/images/[name][ext]'
         }
       },
       {
