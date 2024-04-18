@@ -3,30 +3,30 @@ Component options:
   - serviceName (string): The name of the service. The service navigation bar will not render unless serviceName is specified
   - navigationItems (array): An array of objects representing service navigation links.
     Each link object contains the following fields:
-      - href (string – indicates the link destination),
-      - text (string, is the text being displayed),
-      - id (string – this should be a unique identifier as it is used to set the active link)
+      - url (string – indicates the link destination),
+      - text (string – the text being displayed),
+      - isActive (boolean – whether the link is active)
     Example of navigationItems structure:
     [{
-      href: "#",
-      text: 'service link 1',
-      id: 'servicelink1'
+      url: "#",
+      text: "service link 1",
+      isActive: true
     },{
-      href: "#",
-      text: 'service link 2',
-      id: 'servicelink2'
+      url: "#",
+      text: "service link 2",
+      isActive: false
     },{
-      href: "#",
-      text: 'service link 3',
-      id: 'servicelink3'
+      url: "#",
+      text: "service link 3",
+      isActive: false
     }]
-  - activeLinkId (string): The id of the link that is currently active
-  - oneLoginLink (string): Option to overwrite the default One Login Home link. Defaults to "https://home.account.gov.uk/"
+  - accountName (string): The signed in user account name (optional)
+  - accountLink (string): Option to overwrite the default account home link. Defaults to "https://home.account.gov.uk/"
   - signOutLink (string): Option to overwrite the default signed out page. Defaults to "https://home.account.gov.uk/sign-out"
   - homepageLink (string): Option to overwrite the default GOV.UK link. Defaults to "https://home.account.gov.uk/"
 #}
 
-{%- set oneLoginLink = params.oneLoginLink if params.oneLoginLink else "https://home.account.gov.uk/" -%}
+{%- set accountLink = params.accountLink if params.accountLink else "https://home.account.gov.uk/" -%}
 {%- set homepageLink = params.homepageLink if params.homepageLink else "https://www.gov.uk/" -%}
 {%- set signOutLink = params.signOutLink if params.signOutLink else "https://home.account.gov.uk/sign-out" -%}
 {%- macro littlePersonIcon(modifier="default") -%}
@@ -70,33 +70,34 @@ Component options:
       </div>
       <button type="button"
         aria-controls="one-login-header__nav"
-        aria-label="Show GOV.UK One Login menu"
+        aria-label="Show account menu"
         data-open-class="cross-service-header__button--open"
-        data-label-for-show="Show GOV.UK One Login menu"
-        data-label-for-hide="Hide GOV.UK One Login menu"
+        data-label-for-show="Show account menu"
+        data-label-for-hide="Hide account menu"
         aria-expanded="false"
         class="cross-service-header__button cross-service-header__button--one-login js-x-header-toggle">
-        <span class="cross-service-header__button-content">One Login</span>
+        <span class="cross-service-header__button-content">Account</span>
           {{ littlePersonIcon() }}
           {{ littlePersonIcon("focus") }}
       </button>
-      <nav aria-label="GOV.UK One Login menu" class="one-login-header__nav" data-open-class="one-login-header__nav--open" id="one-login-header__nav">
+      <nav aria-label="Account menu" class="one-login-header__nav" data-open-class="one-login-header__nav--open" id="one-login-header__nav">
         <ul class="one-login-header__nav__list">
           <li class="one-login-header__nav__list-item">
-            <a class="one-login-header__nav__link one-login-header__nav__link--one-login" href="{{ oneLoginLink }}">
+            <a class="one-login-header__nav__link one-login-header__nav__link--one-login" href="{{ accountLink }}">
               <span class="one-login-header__nav__link-content">
-                GOV.UK One Login
+                {{ params.accountName | default("Account", true) }}
               </span>
               {{ littlePersonIcon() }}
               {{ littlePersonIcon("focus") }}
             </a>
           </li>
+          {% if params.accountName %}
           <li class="one-login-header__nav__list-item">
-            <!-- REPLACE SIGN OUT URL PLACEHOLDER WITH SIGN OUT PAGE FOR YOUR SERVICE -->
             <a class="one-login-header__nav__link" href="{{ signOutLink }}">
               Sign out
             </a>
           </li>
+          {% endif %}
         </ul>
       </nav>
     </div>
@@ -128,12 +129,12 @@ Component options:
             <ul class="service-header__nav-list service-header__nav" id="service-header__nav" data-open-class="service-header__nav--open">
               {%- for item in params.navigationItems %}
               <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
-              <li class="service-header__nav-list-item {{ 'service-header__nav-list-item--active' if (item.id == params.activeLinkId) else '' }}">
+              <li class="service-header__nav-list-item {{- " service-header__nav-list-item--active" if item.isActive else "" }}">
                 <!-- Use the aria-current="page" attribute on the anchor tag -->
                 <a class="service-header__nav-list-item-link"
-                  {%- if (item.id == params.activeLinkId) -%} aria-current="page" {%- endif %}
-                  href="{{item.href}}">
-                  {{item.text}}
+                  {%- if (item.isActive) -%} aria-current="page" {%- endif %}
+                  href="{{ item.url }}">
+                  {{ item.text }}
                 </a>
               </li>
               {%- endfor %}
