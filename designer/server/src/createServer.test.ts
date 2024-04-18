@@ -55,7 +55,17 @@ describe('Server tests', () => {
     expect($heading).toHaveTextContent('Cookies')
   })
 
-  test.skip('Phase banner is present', async () => {
+  test.each([
+    {
+      phase: 'alpha',
+      phaseText: 'Alpha'
+    },
+    {
+      phase: 'beta',
+      phaseText: 'Beta'
+    }
+  ])('Phase banner is present (alpha, beta)', async ({ phase, phaseText }) => {
+    process.env.PHASE = phase
     server = await startServer()
 
     const options = {
@@ -64,14 +74,17 @@ describe('Server tests', () => {
       auth
     }
 
-    const res = await server.inject(options)
-    expect(res.statusCode).toBe(200)
-    expect(res.result).toContain(
-      '<strong class="govuk-tag govuk-phase-banner__content__tag">'
-    )
+    const { document } = await renderResponse(server, options)
+
+    const $phaseBanner = document.querySelector('.govuk-phase-banner')
+    const $phaseBannerTag = $phaseBanner?.querySelector('.govuk-tag')
+
+    expect($phaseBanner).toBeInTheDocument()
+    expect($phaseBannerTag).toHaveTextContent(phaseText)
   })
 
-  test.skip('Phase banner is present', async () => {
+  test('Phase banner is not present (live)', async () => {
+    process.env.PHASE = 'live'
     server = await startServer()
 
     const options = {
@@ -80,11 +93,10 @@ describe('Server tests', () => {
       auth
     }
 
-    const res = await server.inject(options)
-    expect(res.statusCode).toBe(200)
-    expect(res.result).toContain(
-      '<strong class="govuk-tag govuk-phase-banner__content__tag">'
-    )
+    const { document } = await renderResponse(server, options)
+
+    const $phaseBanner = document.querySelector('.govuk-phase-banner')
+    expect($phaseBanner).not.toBeInTheDocument()
   })
 
   test('Feature toggles api contains data', async () => {

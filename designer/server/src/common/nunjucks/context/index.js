@@ -6,7 +6,7 @@ import { buildNavigation } from '~/src/common/nunjucks/context/build-navigation.
 import config from '~/src/config.js'
 
 const logger = createLogger()
-const { appPathPrefix, serviceName } = config
+const { appPathPrefix, phase, serviceName } = config
 
 /** @type {Record<string, string> | undefined} */
 let webpackManifest
@@ -29,6 +29,7 @@ async function context(request) {
     breadcrumbs: [],
     config: {
       appPathPrefix,
+      phase,
       serviceName
     },
     navigation: buildNavigation(request),

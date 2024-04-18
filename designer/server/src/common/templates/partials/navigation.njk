@@ -9,3 +9,12 @@
   signOutLink: "/forms-designer/logout",
   homepageLink: "/forms-designer"
 }) }}
+
+{% if ["alpha", "beta"].includes(config.phase) %}
+<div class="govuk-width-container">
+  {{ govukPhaseBanner({
+    tag: { text: config.phase | title },
+    html: 'This is a new service – your <a class="govuk-link" href="' + config.appPathPrefix + '/help/feedback">feedback</a> will help us to improve it.'
+  }) }}
+</div>
+{% endif %}
