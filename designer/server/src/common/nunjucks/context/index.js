@@ -30,6 +30,7 @@ async function context(request) {
     navigation: buildNavigation(request),
     getAssetPath: (asset) =>
       `${appPathPrefix}/${webpackManifest?.[asset] ?? asset}`,
+    assetPath: `${appPathPrefix}/assets`,
     legacyAssetPath: `${appPathPrefix}/assets`,
     isAuthenticated: authedUser?.isAuthenticated ?? false,
     authedUser

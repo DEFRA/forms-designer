@@ -169,6 +169,10 @@ module.exports = {
     new CopyPlugin({
       patterns: [
         {
+          from: join(govukFrontendPath, 'govuk/assets'),
+          to: 'assets'
+        },
+        {
           from: 'i18n/translations',
           to: 'assets/translations'
         }
