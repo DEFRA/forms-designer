@@ -8,14 +8,16 @@ import config from '~/src/config.js'
 const logger = createLogger()
 const { appPathPrefix, serviceName } = config
 
+/** @type {Record<string, string> | undefined} */
 let webpackManifest
 
 async function context(request) {
-  const manifestPath = join(config.clientDir, 'assets/manifest.json')
+  const manifestPath = join(config.clientDir, 'assets-manifest.json')
 
   if (!webpackManifest) {
     try {
-      webpackManifest = JSON.parse(readFileSync(manifestPath))
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Allow JSON type 'any'
+      webpackManifest = JSON.parse(readFileSync(manifestPath, 'utf-8'))
     } catch {
       logger.error(`Webpack assets ${basename(manifestPath)} file not found`)
     }
@@ -28,7 +30,7 @@ async function context(request) {
     breadcrumbs: [],
     appPathPrefix,
     navigation: buildNavigation(request),
-    getAssetPath: (asset) =>
+    getAssetPath: (asset = '') =>
       `${appPathPrefix}/${webpackManifest?.[asset] ?? asset}`,
     assetPath: `${appPathPrefix}/assets`,
     legacyAssetPath: `${appPathPrefix}/assets`,

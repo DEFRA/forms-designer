@@ -43,7 +43,6 @@ updates:
           - 'jest'
           - 'jest-*'
           - 'nodemon'
-          - 'wait-on'
 
       types:
         patterns:
