@@ -5,11 +5,9 @@ $govuk-assets-path: "/forms-designer/assets/";
 .visualisation {
   position: relative;
   flex: 1;
-  padding-top: 110px;
 
   &__pages-wrapper {
     position: relative;
-    margin-bottom: 80px;
   }
 
   .page {
