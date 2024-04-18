@@ -1,4 +1,3 @@
-const { existsSync, unlinkSync } = require('node:fs')
 const { dirname, join } = require('node:path')
 
 const CopyPlugin = require('copy-webpack-plugin')
@@ -129,15 +128,6 @@ module.exports = {
   },
   plugins: [
     new WebpackAssetsManifest({
-      apply() {
-        const manifestPath = join(__dirname, 'client/dist/assets/manifest.json')
-
-        // Delete manifest.json before build to delay
-        // nodemon startup via `npm run dev` wait-on
-        if (existsSync(manifestPath)) {
-          unlinkSync(manifestPath)
-        }
-      },
       output: 'assets/manifest.json'
     }),
 
