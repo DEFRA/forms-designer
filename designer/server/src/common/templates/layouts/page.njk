@@ -9,15 +9,7 @@
 {% endblock %}
 
 {% block header %}
-  {{ govukHeader({
-    homepageUrl: "/forms-designer",
-    serviceName: serviceName,
-    serviceUrl: "/forms-designer",
-    useTudorCrown: true
-  }) }}
-  {% if isAuthenticated %}
   {% include "partials/navigation.njk" %}
-  {% endif %}
 {% endblock %}
 
 {% block pageTitle %}{{ pageTitle }} - {{ serviceName }}{% endblock %}
