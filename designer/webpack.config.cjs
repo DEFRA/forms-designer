@@ -10,6 +10,12 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 
 const { NODE_ENV = 'development', REACT_LOG_LEVEL } = process.env
 
+const govukFrontendPath = dirname(
+  require.resolve('govuk-frontend/package.json', {
+    paths: [__dirname]
+  })
+)
+
 /**
  * @type {import('webpack').Configuration}
  */
@@ -75,8 +81,8 @@ module.exports = {
             options: {
               sassOptions: {
                 includePaths: [
-                  join(__dirname, '../node_modules'),
-                  join(__dirname, 'node_modules')
+                  join(__dirname, 'node_modules'),
+                  join(__dirname, '../node_modules')
                 ],
                 quietDeps: true
               }
@@ -88,10 +94,7 @@ module.exports = {
         test: /\.(png|svg|jpe?g|gif)$/,
         type: 'asset/resource',
         generator: {
-          filename:
-            NODE_ENV === 'production'
-              ? 'assets/images/[name].[contenthash:7][ext]'
-              : 'assets/images/[name][ext]'
+          filename: 'assets/images/[name][ext]'
         }
       },
       {
@@ -166,6 +169,10 @@ module.exports = {
     new CopyPlugin({
       patterns: [
         {
+          from: join(govukFrontendPath, 'govuk/assets'),
+          to: 'assets'
+        },
+        {
           from: 'i18n/translations',
           to: 'assets/translations'
         }
@@ -182,10 +189,8 @@ module.exports = {
   resolve: {
     alias: {
       '~': join(__dirname, 'client'),
-      '/forms-designer/assets': join(
-        dirname(require.resolve('govuk-frontend/package.json')),
-        'govuk/assets/'
-      )
+      'govuk-frontend': govukFrontendPath,
+      '/forms-designer/assets': join(govukFrontendPath, 'govuk/assets/')
     },
     extensionAlias: {
       '.cjs': ['.cts', '.cjs'],
