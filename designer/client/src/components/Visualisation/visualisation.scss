@@ -53,7 +53,6 @@ $govuk-assets-path: "/forms-designer/assets/";
       flex-direction: column;
 
       & > * {
-        width: 100%;
         @include govuk-responsive-padding(1, "top");
         @include govuk-responsive-padding(2, "right");
         @include govuk-responsive-padding(1, "bottom");
