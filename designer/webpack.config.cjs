@@ -10,6 +10,12 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 
 const { NODE_ENV = 'development', REACT_LOG_LEVEL } = process.env
 
+const govukFrontendPath = dirname(
+  require.resolve('govuk-frontend/package.json', {
+    paths: [__dirname]
+  })
+)
+
 /**
  * @type {import('webpack').Configuration}
  */
@@ -182,10 +188,8 @@ module.exports = {
   resolve: {
     alias: {
       '~': join(__dirname, 'client'),
-      '/forms-designer/assets': join(
-        dirname(require.resolve('govuk-frontend/package.json')),
-        'govuk/assets/'
-      )
+      'govuk-frontend': govukFrontendPath,
+      '/forms-designer/assets': join(govukFrontendPath, 'govuk/assets/')
     },
     extensionAlias: {
       '.cjs': ['.cts', '.cjs'],
