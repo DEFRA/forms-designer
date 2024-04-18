@@ -75,8 +75,8 @@ module.exports = {
             options: {
               sassOptions: {
                 includePaths: [
-                  join(__dirname, '../node_modules'),
-                  join(__dirname, 'node_modules')
+                  join(__dirname, 'node_modules'),
+                  join(__dirname, '../node_modules')
                 ],
                 quietDeps: true
               }
