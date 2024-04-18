@@ -127,9 +127,7 @@ module.exports = {
         : 'javascripts/[name].js'
   },
   plugins: [
-    new WebpackAssetsManifest({
-      output: 'assets/manifest.json'
-    }),
+    new WebpackAssetsManifest(),
 
     new MiniCssExtractPlugin({
       filename:
