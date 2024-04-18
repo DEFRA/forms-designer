@@ -84,7 +84,9 @@ module.exports = {
                   join(__dirname, '../node_modules')
                 ],
                 quietDeps: true
-              }
+              },
+              api: 'modern-compiler',
+              warnRuleAsWarning: true
             }
           }
         ]
@@ -186,6 +188,11 @@ module.exports = {
       '.jsx': ['.tsx', '.jsx'],
       '.mjs': ['.mts', '.mjs']
     }
+  },
+  stats: {
+    errorDetails: true,
+    loggingDebug: ['sass-loader'],
+    preset: 'minimal'
   },
   target: 'browserslist:javascripts'
 }
