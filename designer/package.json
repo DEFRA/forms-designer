@@ -65,7 +65,7 @@
     "prismjs": "^1.29.0",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
-    "react-router-dom": "^5.3.4",
+    "react-router-dom": "^6.22.3",
     "react-simple-code-editor": "^0.11.3",
     "react-sortable-hoc": "^1.11.0",
     "resolve": "^1.22.8",
