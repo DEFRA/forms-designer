@@ -86,8 +86,7 @@ describe('Server API', () => {
     )
   })
 
-  // TODO re-enable once the forms manager supports this
-  test.skip('Schema validation failures should return 401', async () => {
+  test('Schema validation failures should return 401', async () => {
     const options = {
       method: 'put',
       url: '/forms-designer/api/test-form-id/data',
@@ -126,8 +125,7 @@ describe('Server API', () => {
     expect(result.result?.err.message).toMatch('Schema validation failed')
   })
 
-  // TODO re-enable once the forms manager supports this
-  test.skip('persistence service errors should return 401', async () => {
+  test('persistence service errors should return 401', async () => {
     // Given
     const { persistenceService } = server.services()
     persistenceService.uploadConfiguration = () => {
