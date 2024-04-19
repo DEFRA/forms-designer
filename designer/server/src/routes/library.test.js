@@ -1,6 +1,7 @@
 import { createServer } from '~/src/createServer.js'
 import * as forms from '~/src/lib/forms.js'
 import { auth } from '~/test/fixtures/auth.js'
+import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/forms.js')
 
@@ -13,10 +14,7 @@ describe('Forms library routes', () => {
     await server.initialize()
   })
 
-  const okStatusCode = 200
-  const htmlContentType = 'text/html'
-
-  test('Testing Forms library list page', async () => {
+  test('Forms library list page', async () => {
     const title = 'Form 1'
 
     // Mock the api call to forms-manager
@@ -30,18 +28,19 @@ describe('Forms library routes', () => {
       }
     ])
 
-    const res = await server.inject({
+    const options = {
       method: 'GET',
       url: '/forms-designer/library',
       auth
-    })
+    }
 
-    expect(res.statusCode).toBe(okStatusCode)
-    expect(res.headers['content-type']).toContain(htmlContentType)
-    expect(res.result).toContain(
-      `<h1 class="govuk-heading-xl govuk-!-margin-bottom-2"
-        data-testid="app-heading-title">Forms library</h1>`
-    )
-    expect(res.result).toContain(`<td class="govuk-table__cell">${title}</td>`)
+    const { document } = await renderResponse(server, options)
+
+    const $heading = document.querySelector('h1')
+    expect($heading).toHaveClass('govuk-heading-xl')
+    expect($heading).toHaveTextContent('Forms library')
+
+    const $table = document.querySelector('table')
+    expect($table).toContainHTML(`<td class="govuk-table__cell">${title}</td>`)
   })
 })

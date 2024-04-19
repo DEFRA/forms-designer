@@ -1,6 +1,7 @@
 import { type Server } from '@hapi/hapi'
 
 import { auth } from '~/test/fixtures/auth.js'
+import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 describe('App routes test', () => {
   const startServer = async (): Promise<Server> => {
@@ -38,10 +39,8 @@ describe('App routes test', () => {
       auth
     }
 
-    const res = await server.inject(options)
-
-    expect(res.statusCode).toBe(200)
-    expect(res.result).toContain(
+    const { document } = await renderResponse(server, options)
+    expect(document.body).toContainHTML(
       '<div class="govuk-grid-column-full app-editor"></div>'
     )
   })
