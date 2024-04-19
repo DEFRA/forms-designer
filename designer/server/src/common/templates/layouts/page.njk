@@ -4,19 +4,15 @@
 {% from "breadcrumbs/macro.njk" import appBreadcrumbs %}
 {% from "heading/macro.njk" import appHeading %}
 
-{% set mainClasses = "app-main-wrapper" %}
-
 {% block head %}
   <link href="{{ getAssetPath("application.css") }}" rel="stylesheet">
 {% endblock %}
 
 {% block header %}
   {{ govukHeader({
-    homepageUrl: "https://www.gov.uk/",
-    classes: "app-header",
-    containerClasses: "govuk-width-container",
+    homepageUrl: "/forms-designer",
     serviceName: serviceName,
-    serviceUrl: "/",
+    serviceUrl: "/forms-designer",
     useTudorCrown: true
   }) }}
   {% if isAuthenticated %}
@@ -24,9 +20,7 @@
   {% endif %}
 {% endblock %}
 
-{% block pageTitle %}
-  {{ pageTitle }} | {{ serviceName }}
-{% endblock %}
+{% block pageTitle %}{{ pageTitle }} - {{ serviceName }}{% endblock %}
 
 {% block beforeContent %}
   {% if breadcrumbs.length > 1 %}
@@ -43,16 +37,16 @@
     meta: {
       items: [
         {
-          href: "https://www.gov.uk/help/privacy-notice",
-          text: "Privacy"
+          href: appPathPrefix + "/help/accessibility-statement",
+          text: "Accessibility statement"
         },
         {
-          href: "https://www.gov.uk/help/cookies",
+          href: appPathPrefix + "/help/cookies",
           text: "Cookies"
         },
         {
-          href: "https://www.gov.uk/help/accessibility-statement",
-          text: "Accessibility statement"
+          href: "https://www.gov.uk/help/privacy-notice",
+          text: "Privacy"
         }
       ]
     }

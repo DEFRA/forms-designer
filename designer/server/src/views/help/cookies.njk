@@ -1,0 +1,70 @@
+{% extends "layouts/page.njk" %}
+
+{% from "govuk/components/table/macro.njk" import govukTable %}
+
+{% set pageTitle = "Cookies" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-xl">Cookies</h1>
+      <p class="govuk-body">
+        <a href="{{ appPathPrefix }}" class="govuk-link">{{ serviceName }}</a>
+        puts small files (known as ‘cookies’) on your computer.
+      </p>
+
+      <p class="govuk-body">
+        These cookies are used across the {{ serviceName }} website.
+      </p>
+
+      <p class="govuk-body">
+        We only set cookies when JavaScript is running in your browser and
+        you’ve accepted them. If you choose not to run Javascript, the
+        information on this page will not apply to you.
+      </p>
+
+      <p class="govuk-body">
+        Find out
+        <a
+          rel="external"
+          href="https://ico.org.uk/for-the-public/online/cookies"
+          class="govuk-link">
+          how to manage cookies
+        </a>
+        from the Information Commissioner's Office.
+      </p>
+
+      <h2 class="govuk-heading-l govuk-!-margin-top-6">
+        Essential cookies (strictly necessary)
+      </h2>
+
+      <p class="govuk-body">
+        We use an essential cookie to remember your progress through the forms.
+        These cookies do not store your personal data and are deleted once
+        you’ve completed the transaction.
+      </p>
+
+      {{ govukTable({
+        firstCellIsHeader: true,
+        caption: "Essential cookies we use",
+        head: [
+          { text: "Name" },
+          { text: "Purpose"},
+          { text: "Expires"}
+        ],
+        rows: [
+          [
+            { text: "seen_cookie" },
+            { text: "Saves your cookie consent settings" },
+            { text: "28 days" }
+          ],
+          [
+            { text: "crumb" },
+            { text: "Helps us to prevent cross site scripting attacks" },
+            { text: "When you close your browser" }
+          ]
+        ]
+      }) }}
+    </div>
+  </div>
+{% endblock %}
