@@ -20,11 +20,10 @@ import { ListContextProvider } from '~/src/reducers/listReducer.jsx'
 import SectionsEdit from '~/src/section/sections-edit.js'
 
 interface Props {
-  updateDownloadedAt?: (string) => void
   id: string
 }
 
-export default function Menu({ updateDownloadedAt, id }: Props) {
+export default function Menu({ id }: Props) {
   const { data } = useContext(DataContext)
 
   const formDetails = useMenuItem()
@@ -43,37 +42,74 @@ export default function Menu({ updateDownloadedAt, id }: Props) {
   return (
     <nav className="menu">
       <div className="menu__row">
-        <button data-testid="menu-form-details" onClick={formDetails.show}>
+        <button
+          className="govuk-button"
+          data-testid="menu-form-details"
+          onClick={formDetails.show}
+        >
           {i18n('menu.formDetails')}
         </button>
-        <button data-testid="menu-page" onClick={page.show}>
+        <button
+          className="govuk-button"
+          data-testid="menu-page"
+          onClick={page.show}
+        >
           {i18n('menu.addPage')}
         </button>
-        <button data-testid="menu-links" onClick={link.show}>
+        <button
+          className="govuk-button"
+          data-testid="menu-links"
+          onClick={link.show}
+        >
           {i18n('menu.links')}
         </button>
-        <button data-testid="menu-sections" onClick={sections.show}>
+        <button
+          className="govuk-button"
+          data-testid="menu-sections"
+          onClick={sections.show}
+        >
           {i18n('menu.sections')}
         </button>
-        <button data-testid="menu-conditions" onClick={conditions.show}>
+        <button
+          className="govuk-button"
+          data-testid="menu-conditions"
+          onClick={conditions.show}
+        >
           {i18n('menu.conditions')}
         </button>
-        <button data-testid="menu-lists" onClick={lists.show}>
+        <button
+          className="govuk-button"
+          data-testid="menu-lists"
+          onClick={lists.show}
+        >
           {i18n('menu.lists')}
         </button>
-        <button data-testid="menu-outputs" onClick={outputs.show}>
+        <button
+          className="govuk-button"
+          data-testid="menu-outputs"
+          onClick={outputs.show}
+        >
           {i18n('menu.outputs')}
         </button>
-        <button data-testid="menu-fees" onClick={fees.show}>
+        <button
+          className="govuk-button"
+          data-testid="menu-fees"
+          onClick={fees.show}
+        >
           {i18n('menu.fees')}
         </button>
         <button
+          className="govuk-button"
           data-testid="menu-summary-behaviour"
           onClick={summaryBehaviour.show}
         >
           {i18n('menu.summaryBehaviour')}
         </button>
-        <button onClick={summary.show} data-testid="menu-summary">
+        <button
+          className="govuk-button"
+          onClick={summary.show}
+          data-testid="menu-summary"
+        >
           {i18n('menu.summary')}
         </button>
       </div>
@@ -208,7 +244,7 @@ export default function Menu({ updateDownloadedAt, id }: Props) {
         </Flyout>
       )}
 
-      <SubMenu id={id} updateDownloadedAt={updateDownloadedAt} />
+      <SubMenu id={id} />
     </nav>
   )
 }

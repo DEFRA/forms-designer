@@ -1,0 +1,30 @@
+{% extends "layouts/page.njk" %}
+
+{% set pageTitle -%}
+  Form editor | {{ serviceName }}
+{%- endset %}
+
+{% block head %}
+  {{ super() }}
+  <link href="{{ getAssetPath("editor.css") }}" rel="stylesheet">
+{% endblock %}
+
+{% block bodyStart %}
+  <script type="module">
+    window.previewUrl = '{{ previewUrl }}'
+  </script>
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full app-editor"></div>
+  </div>
+  <div id="portal-root"></div>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script type="module" src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script type="module" src="{{ getAssetPath("editor.js") }}"></script>
+{% endblock %}

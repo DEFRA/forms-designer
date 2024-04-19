@@ -9,27 +9,35 @@ import { SaveError } from '~/src/pages/ErrorPages/index.js'
 initI18n()
 
 function NoMatch() {
-  return <div>404 Not found</div>
+  return (
+    <>
+      <h1 className="govuk-heading-l">Page not found</h1>
+      <p className="govuk-body">
+        If you typed the web address, check it is correct.
+      </p>
+      <p className="govuk-body">
+        If you pasted the web address, check you copied the entire address.
+      </p>
+    </>
+  )
 }
 
 export class App extends React.Component {
   render() {
     return (
       <Router basename="/forms-designer/editor">
-        <div id="app">
-          <Switch>
-            <Route path="/:id" component={Designer} />
-            <Route path="/save-error" exact>
-              <SaveError />
-            </Route>
-            <Route path="*">
-              <NoMatch />
-            </Route>
-          </Switch>
-        </div>
+        <Switch>
+          <Route path="/:id" component={Designer} />
+          <Route path="/save-error" exact>
+            <SaveError />
+          </Route>
+          <Route path="*">
+            <NoMatch />
+          </Route>
+        </Switch>
       </Router>
     )
   }
 }
 
-ReactDOM.render(<App />, document.getElementById('root'))
+ReactDOM.render(<App />, document.querySelector('.app-editor'))

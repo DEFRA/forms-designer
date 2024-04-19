@@ -23,7 +23,6 @@ export interface Config {
   serviceName: string
   logLevel: 'fatal' | 'error' | 'warn' | 'info' | 'debug' | 'trace' | 'silent'
   phase: 'alpha' | 'beta' | 'live'
-  footerText?: string
   isProduction: boolean
   isDevelopment: boolean
   isTest: boolean
@@ -77,7 +76,6 @@ const schema = joi.object({
     })
     .valid('fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent'),
   phase: joi.string().valid('alpha', 'beta', 'live').default('beta'),
-  footerText: joi.string().optional(),
   isProduction: joi.boolean().default(false),
   isDevelopment: joi.boolean().default(true),
   isTest: joi.boolean().default(false),
@@ -112,7 +110,6 @@ const result = schema.validate(
     serviceName: 'Defra Form Builder',
     logLevel: process.env.LOG_LEVEL,
     phase: process.env.PHASE,
-    footerText: process.env.FOOTER_TEXT,
     isProduction: process.env.NODE_ENV === 'production',
     isDevelopment: !['production', 'test'].includes(`${process.env.NODE_ENV}`),
     isTest: process.env.NODE_ENV === 'test',
