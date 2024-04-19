@@ -10,8 +10,7 @@ export const getAppChildRoutes: ServerRoute = {
     handler(request, h) {
       return h.view('editor', {
         phase: config.phase,
-        previewUrl: config.previewUrl,
-        footerText: config.footerText
+        previewUrl: config.previewUrl
       })
     }
   }

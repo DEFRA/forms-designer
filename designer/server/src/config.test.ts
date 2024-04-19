@@ -5,13 +5,6 @@ describe('Config', () => {
     process.env = OLD_ENV
   })
 
-  test('footerText prop is set correctly', async () => {
-    process.env.FOOTER_TEXT = 'Footer Text Test'
-
-    const { default: config } = await import('~/src/config.js')
-    expect(config.footerText).toBe('Footer Text Test')
-  })
-
   test('lastCommit and lastTag props are set correctly', async () => {
     process.env.LAST_COMMIT = 'LAST COMMIT'
     process.env.LAST_TAG = 'LAST TAG'
