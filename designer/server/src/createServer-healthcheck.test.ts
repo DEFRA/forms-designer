@@ -1,5 +1,4 @@
 import { type Server } from '@hapi/hapi'
-import { DateTime } from 'luxon'
 
 import { auth } from '~/test/fixtures/auth.js'
 
@@ -16,7 +15,7 @@ describe('/health-check Route', () => {
 
   let server: Server
 
-  afterAll(async () => {
+  afterEach(async () => {
     process.env = OLD_ENV
     await server.stop()
   })
