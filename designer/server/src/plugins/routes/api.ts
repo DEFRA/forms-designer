@@ -1,9 +1,5 @@
-import { formDefinitionSchema, type FormDefinition } from '@defra/forms-model'
+import { formDefinitionSchema } from '@defra/forms-model'
 import { type ServerRoute, type ResponseObject } from '@hapi/hapi'
-import Wreck from '@hapi/wreck'
-
-import config from '~/src/config.js'
-// import { publish } from '~/src/lib/publish/index.js'
 
 export const getFormWithId: ServerRoute = {
   // GET DATA
@@ -12,7 +8,7 @@ export const getFormWithId: ServerRoute = {
   options: {
     async handler(request, h) {
       const { id } = request.params
-      const { persistenceService } = request.services()
+      const { persistenceService } = request.services([])
       try {
         const response = await persistenceService.getDraftFormDefinition(id)
         const formJson = JSON.parse(response)
@@ -54,7 +50,10 @@ export const putFormWithId: ServerRoute = {
 
           throw new Error(`Schema validation failed, reason: ${error.message}`)
         }
-        await persistenceService.updateDraftFormDefinition(id, JSON.stringify(value))
+        await persistenceService.updateDraftFormDefinition(
+          id,
+          JSON.stringify(value)
+        )
         return h.response({ ok: true }).code(204)
       } catch (err) {
         request.logger.error('Designer Server PUT /api/{id}/data error:', err)
