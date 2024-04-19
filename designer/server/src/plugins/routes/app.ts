@@ -8,7 +8,7 @@ export const getAppChildRoutes: ServerRoute = {
   path: '/editor/{path*}',
   options: {
     handler(request, h) {
-      return h.view('designer', {
+      return h.view('editor', {
         phase: config.phase,
         previewUrl: config.previewUrl,
         footerText: config.footerText
