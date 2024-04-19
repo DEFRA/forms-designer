@@ -4,6 +4,8 @@ import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 describe('Server tests', () => {
+  const OLD_ENV = { ...process.env }
+
   const startServer = async (): Promise<Server> => {
     const { createServer } = await import('~/src/createServer.js')
 
@@ -14,19 +16,14 @@ describe('Server tests', () => {
 
   let server: Server
 
-  beforeAll(async () => {
-    server = await startServer()
-    const { persistenceService } = server.services()
-    persistenceService.listAllConfigurations = () => {
-      return Promise.resolve([])
-    }
-  })
-
-  afterAll(async () => {
+  afterEach(async () => {
+    process.env = OLD_ENV
     await server.stop()
   })
 
   test('accessibility statement page is served', async () => {
+    server = await startServer()
+
     const options = {
       method: 'GET',
       url: '/forms-designer/help/accessibility-statement',
@@ -43,6 +40,8 @@ describe('Server tests', () => {
   })
 
   test('cookies page is served', async () => {
+    server = await startServer()
+
     const options = {
       method: 'GET',
       url: '/forms-designer/help/cookies',
@@ -56,11 +55,18 @@ describe('Server tests', () => {
     expect($heading).toHaveTextContent('Cookies')
   })
 
-  test.skip('Phase banner is present', async () => {
-    const { persistenceService } = server.services()
-    persistenceService.listAllConfigurations = () => {
-      return Promise.resolve([])
+  test.each([
+    {
+      phase: 'alpha',
+      phaseText: 'Alpha'
+    },
+    {
+      phase: 'beta',
+      phaseText: 'Beta'
     }
+  ])('Phase banner is present (alpha, beta)', async ({ phase, phaseText }) => {
+    process.env.PHASE = phase
+    server = await startServer()
 
     const options = {
       method: 'get',
@@ -68,28 +74,34 @@ describe('Server tests', () => {
       auth
     }
 
-    const res = await server.inject(options)
-    expect(res.statusCode).toBe(200)
-    expect(res.result).toContain(
-      '<strong class="govuk-tag govuk-phase-banner__content__tag">'
-    )
+    const { document } = await renderResponse(server, options)
+
+    const $phaseBanner = document.querySelector('.govuk-phase-banner')
+    const $phaseBannerTag = $phaseBanner?.querySelector('.govuk-tag')
+
+    expect($phaseBanner).toBeInTheDocument()
+    expect($phaseBannerTag).toHaveTextContent(phaseText)
   })
 
-  test.skip('Phase banner is present', async () => {
+  test('Phase banner is not present (live)', async () => {
+    process.env.PHASE = 'live'
+    server = await startServer()
+
     const options = {
       method: 'get',
       url: '/forms-designer/editor/dummy-id-for-demo',
       auth
     }
 
-    const res = await server.inject(options)
-    expect(res.statusCode).toBe(200)
-    expect(res.result).toContain(
-      '<strong class="govuk-tag govuk-phase-banner__content__tag">'
-    )
+    const { document } = await renderResponse(server, options)
+
+    const $phaseBanner = document.querySelector('.govuk-phase-banner')
+    expect($phaseBanner).not.toBeInTheDocument()
   })
 
   test('Feature toggles api contains data', async () => {
+    server = await startServer()
+
     const options = {
       method: 'get',
       url: '/forms-designer/feature-toggles',
@@ -101,10 +113,7 @@ describe('Server tests', () => {
   })
 
   test('security headers are present', async () => {
-    const { persistenceService } = server.services()
-    persistenceService.listAllConfigurations = () => {
-      return Promise.resolve([])
-    }
+    server = await startServer()
 
     const options = {
       method: 'get',
