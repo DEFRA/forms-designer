@@ -1,30 +1,14 @@
 $govuk-assets-path: "/forms-designer/assets/";
 
-@import "govuk-frontend/govuk/all";
+@import "govuk-frontend/govuk/base";
 
-$color-orange: #ffbf47;
-
-* {
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  position: relative;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  min-height: 100vh;
-  flex-direction: column;
-}
-
-main {
-  flex: 1;
-  display: flex;
-  padding-top: 15px;
+%app-button-link {
+  @include govuk-link-common;
+  @include govuk-link-style-default;
+  @include govuk-link-print-friendly;
+  color: $govuk-link-colour;
+  background-color: transparent;
+  border: none;
 }
 
 .pull-right {
@@ -41,7 +25,7 @@ main {
   cursor: pointer;
 
   &.active:hover {
-    background-color: $color-orange;
+    background-color: govuk-colour("yellow");
   }
 
   &.search {
@@ -57,13 +41,12 @@ main {
 }
 
 button.govuk-link {
-  @extend .govuk-link, :link;
-  text-decoration: underline;
+  @extend %app-button-link;
+
   &:hover {
     cursor: pointer;
   }
-  background-color: transparent;
-  border: none;
+
   .govuk-form-group & {
     display: block;
   }
@@ -76,26 +59,26 @@ button.govuk-link {
 
   &__row {
     a {
-      @extend .govuk-body-s;
-      @extend .govuk-\!-margin-right-4;
+      @include govuk-font($size: 16);
+      @include govuk-responsive-margin(4, "right");
     }
     &:first-child {
       button {
-        @extend .govuk-\!-font-size-14;
-        @extend .govuk-button;
-        @extend .govuk-\!-margin-bottom-1, .govuk-\!-margin-right-1;
+        @include govuk-font($size: 16);
+        @include govuk-responsive-margin(1, "right");
+        @include govuk-responsive-margin(1, "bottom");
       }
     }
   }
 
   &__row:not(:first-child) {
-    @extend .govuk-\!-margin-top-4;
+    @include govuk-responsive-margin(4, "top");
   }
 }
 
 .submenu__link {
-  @extend .govuk-body-s;
-  @extend .govuk-\!-margin-right-4;
+  @include govuk-typography-responsive($size: 16);
+  @include govuk-responsive-margin(4, "right");
 }
 
 @include govuk-media-query($from: tablet) {
@@ -118,7 +101,7 @@ button.govuk-link {
   // padding: 6px;
 
   &:hover {
-    background-color: $color-orange;
+    background-color: govuk-colour("yellow");
   }
 
   .line {
@@ -253,13 +236,13 @@ button.govuk-link {
 }
 
 .dragging {
-  background-color: $color-orange;
+  background-color: govuk-colour("yellow");
 }
 
 .dragging-on-modal {
   z-index: 1000;
   box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.25);
-  background-color: $color-orange;
+  background-color: govuk-colour("yellow");
 }
 
 .govuk-table__row {
@@ -371,7 +354,7 @@ polyline {
   stroke: #000000;
 
   &:hover {
-    stroke: $color-orange;
+    stroke: govuk-colour("yellow");
     opacity: 1;
   }
 
@@ -382,7 +365,7 @@ polyline {
 
 /* Syntax highlighting */
 .editor textarea:focus {
-  outline: 3px solid $color-orange;
+  outline: 3px solid govuk-colour("yellow");
   outline-offset: 2px;
 }
 
@@ -472,12 +455,12 @@ polyline {
     left: -2px;
     z-index: -1;
     background-color: #fceabe;
-    box-shadow: 0px 0px 0px 6px $color-orange;
+    box-shadow: 0px 0px 0px 6px govuk-colour("yellow");
   }
 
   &__line {
-    fill: $color-orange;
-    stroke: $color-orange;
+    fill: govuk-colour("yellow");
+    stroke: govuk-colour("yellow");
     stroke-width: 4;
     position: absolute;
     top: 0;
@@ -717,7 +700,7 @@ footer {
   left: 0;
 
   padding: 20px;
-  background-color: $color-orange;
+  background-color: govuk-colour("yellow");
 
   &__action:not(:first-of-type) {
     margin-left: 10px;

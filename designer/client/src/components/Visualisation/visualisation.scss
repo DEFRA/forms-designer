@@ -1,4 +1,6 @@
-@import "./../../stylesheets/editor.scss";
+$govuk-assets-path: "/forms-designer/assets/";
+
+@import "govuk-frontend/govuk/base";
 
 .visualisation {
   position: relative;
@@ -20,29 +22,29 @@
     border-bottom: solid 2px #000;
     border-left: solid 2px #000;
 
-    &--selected {
-      -webkit-box-shadow: 0px 0px 0px 6px $color-orange;
-      -moz-box-shadow: 0px 0px 0px 6px $color-orange;
-      box-shadow: 0px 0px 0px 6px $color-orange;
-    }
-
+    &--selected,
     &:hover {
-      -webkit-box-shadow: 0px 0px 0px 6px $color-orange;
-      -moz-box-shadow: 0px 0px 0px 6px $color-orange;
-      box-shadow: 0px 0px 0px 6px $color-orange;
+      box-shadow: 0 0 0 6px govuk-colour("yellow");
     }
 
     &__heading {
       position: relative;
       min-height: 2.8em;
-      @extend .govuk-\!-padding-2;
+      @include govuk-responsive-padding(2);
 
       h3 {
-        @extend .govuk-heading-s;
+        display: block;
+        margin-top: 0;
+        @include govuk-responsive-margin(4, "bottom");
+        @include govuk-font($size: 19, $weight: bold);
+        @include govuk-text-colour;
       }
 
       span {
-        @extend .govuk-caption-m, .govuk-\!-font-size-14;
+        display: block;
+        color: $govuk-secondary-text-colour;
+        @include govuk-font($size: 19);
+        @include govuk-typography-responsive($size: 14);
       }
     }
 
@@ -52,11 +54,11 @@
 
       & > * {
         width: 100%;
-        @include govuk-font(14);
-        @extend .govuk-\!-padding-top-1,
-          .govuk-\!-padding-bottom-1,
-          .govuk-\!-padding-left-2,
-          .govuk-\!-padding-right-2;
+        @include govuk-responsive-padding(1, "top");
+        @include govuk-responsive-padding(2, "right");
+        @include govuk-responsive-padding(1, "bottom");
+        @include govuk-responsive-padding(2, "left");
+        @include govuk-typography-responsive($size: 14);
         border: none;
         box-shadow: none;
         text-decoration: none;
@@ -65,7 +67,7 @@
         color: govuk-colour("white");
 
         &:hover {
-          background-color: $color-orange;
+          background-color: govuk-colour("yellow");
           color: govuk-colour("black");
           cursor: pointer;
         }
@@ -106,7 +108,7 @@
       stroke-width: 1;
     }
     rect:hover {
-      fill: $color-orange;
+      fill: govuk-colour("yellow");
     }
   }
 }
