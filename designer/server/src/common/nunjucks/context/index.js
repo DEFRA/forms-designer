@@ -33,7 +33,6 @@ async function context(request) {
     getAssetPath: (asset = '') =>
       `${appPathPrefix}/${webpackManifest?.[asset] ?? asset}`,
     assetPath: `${appPathPrefix}/assets`,
-    legacyAssetPath: `${appPathPrefix}/assets`,
     isAuthenticated: authedUser?.isAuthenticated ?? false,
     authedUser
   }

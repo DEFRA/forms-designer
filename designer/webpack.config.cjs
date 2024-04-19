@@ -1,7 +1,6 @@
 const { dirname, join } = require('node:path')
 
 const CopyPlugin = require('copy-webpack-plugin')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const { EnvironmentPlugin } = require('webpack')
 const WebpackAssetsManifest = require('webpack-assets-manifest')
@@ -146,14 +145,6 @@ module.exports = {
     new EnvironmentPlugin({
       REACT_LOG_LEVEL:
         REACT_LOG_LEVEL || (NODE_ENV === 'production' ? 'warn' : 'debug')
-    }),
-
-    new HtmlWebpackPlugin({
-      filename: '../../server/dist/common/templates/layouts/legacy-layout.njk',
-      template: '../../server/src/common/templates/layouts/legacy-layout.njk',
-      hash: false,
-      inject: 'body',
-      scriptLoading: 'module'
     }),
 
     new CopyPlugin({

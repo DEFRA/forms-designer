@@ -53,21 +53,6 @@ describe('Server tests', () => {
     expect(res.result).toContain('<h1 class="govuk-heading-xl">Cookies</h1>')
   })
 
-  test.skip('terms and conditions page is served', async () => {
-    const options = {
-      method: 'GET',
-      url: '/forms-designer/help/terms-and-conditions',
-      auth
-    }
-
-    const res = await server.inject(options)
-
-    expect(res.statusCode).toBe(200)
-    expect(res.result).toContain(
-      '<h1 class="govuk-heading-xl">Terms and conditions</h1>'
-    )
-  })
-
   test.skip('Phase banner is present', async () => {
     const { persistenceService } = server.services()
     persistenceService.listAllConfigurations = () => {
