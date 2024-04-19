@@ -17,7 +17,7 @@ import { buildRedisClient } from '~/src/common/helpers/redis-client.js'
 import { sessionManager } from '~/src/common/helpers/session-manager.js'
 import * as nunjucks from '~/src/common/nunjucks/index.js'
 import config from '~/src/config.js'
-import { PreviewPersistenceService } from '~/src/lib/persistence/previewPersistenceService.js'
+import { FormsManagerPersistenceService } from '~/src/lib/persistence/managerPersistenceService.js'
 import { configureBlankiePlugin } from '~/src/plugins/blankie.js'
 import { designerPlugin } from '~/src/plugins/designer.js'
 import router from '~/src/plugins/router.js'
@@ -95,7 +95,11 @@ export async function createServer() {
   await server.register(nunjucks.plugin, registrationOptions)
   await server.register(Schmervice)
   server.registerService([
-    Schmervice.withName('persistenceService', {}, PreviewPersistenceService)
+    Schmervice.withName(
+      'persistenceService',
+      {},
+      FormsManagerPersistenceService
+    )
   ])
   await server.register(designerPlugin, registrationOptions)
   await server.register(router, registrationOptions)

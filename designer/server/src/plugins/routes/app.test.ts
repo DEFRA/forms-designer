@@ -17,13 +17,7 @@ describe('App routes test', () => {
   beforeAll(async () => {
     server = await startServer()
     const { persistenceService } = server.services()
-    persistenceService.listAllConfigurations = () => {
-      return Promise.resolve([])
-    }
-    persistenceService.copyConfiguration = () => {
-      return Promise.resolve([])
-    }
-    persistenceService.uploadConfiguration = () => {
+    persistenceService.updateDraftFormDefinition = () => {
       return Promise.resolve([])
     }
   })

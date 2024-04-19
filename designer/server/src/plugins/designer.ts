@@ -37,8 +37,6 @@ export const designerPlugin = {
 
       server.route(api.getFormWithId)
       server.route(api.putFormWithId)
-
-      server.route(api.getAllPersistedConfigurations)
       server.route(api.log)
     }
   }

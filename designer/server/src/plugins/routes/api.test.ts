@@ -17,13 +17,10 @@ describe('Server API', () => {
   beforeAll(async () => {
     server = await startServer()
     const { persistenceService } = server.services()
-    persistenceService.listAllConfigurations = () => {
+    persistenceService.getDraftFormDefinition = () => {
       return Promise.resolve([])
     }
-    persistenceService.copyConfiguration = () => {
-      return Promise.resolve([])
-    }
-    persistenceService.uploadConfiguration = () => {
+    persistenceService.updateDraftFormDefinition = () => {
       return Promise.resolve([])
     }
   })
@@ -127,8 +124,8 @@ describe('Server API', () => {
 
   test('persistence service errors should return 401', async () => {
     // Given
-    const { persistenceService } = server.services()
-    persistenceService.uploadConfiguration = () => {
+    const { persistenceService } = server.services();
+    persistenceService.updateDraftFormDefinition = () => {
       return Promise.reject(new Error('Error in persistence service'))
     }
 

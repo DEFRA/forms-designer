@@ -5,19 +5,6 @@ import Wreck from '@hapi/wreck'
 import config from '~/src/config.js'
 // import { publish } from '~/src/lib/publish/index.js'
 
-async function getDraftFormDefinition(id: string): Promise<FormDefinition> {
-  const { payload } = await Wreck.get<FormDefinition>(
-    `${config.managerUrl}/forms/${id}/definition/draft`
-  )
-  return payload
-}
-
-async function updateDraftFormDefinition(id: string, configuration: string) {
-  return Wreck.post(`${config.managerUrl}/forms/${id}/definition/draft`, {
-    payload: configuration
-  })
-}
-
 export const getFormWithId: ServerRoute = {
   // GET DATA
   method: 'GET',
@@ -25,8 +12,9 @@ export const getFormWithId: ServerRoute = {
   options: {
     async handler(request, h) {
       const { id } = request.params
+      const { persistenceService } = request.services()
       try {
-        const response = await getDraftFormDefinition(id)
+        const response = await persistenceService.getDraftFormDefinition(id)
         const formJson = JSON.parse(response)
 
         return h.response(formJson)
@@ -48,6 +36,7 @@ export const putFormWithId: ServerRoute = {
     },
     async handler(request, h) {
       const { id } = request.params
+      const { persistenceService } = request.services([])
 
       try {
         const { value, error } = formDefinitionSchema.validate(
@@ -65,7 +54,7 @@ export const putFormWithId: ServerRoute = {
 
           throw new Error(`Schema validation failed, reason: ${error.message}`)
         }
-        await updateDraftFormDefinition(id, JSON.stringify(value))
+        await persistenceService.updateDraftFormDefinition(id, JSON.stringify(value))
         return h.response({ ok: true }).code(204)
       } catch (err) {
         request.logger.error('Designer Server PUT /api/{id}/data error:', err)
@@ -77,22 +66,6 @@ export const putFormWithId: ServerRoute = {
         }
         request.yar.set(`error-summary-${id}`, errorSummary)
         return h.response({ ok: false, err }).code(401)
-      }
-    }
-  }
-}
-
-export const getAllPersistedConfigurations: ServerRoute = {
-  method: 'GET',
-  path: '/api/configurations',
-  options: {
-    async handler(request, h): Promise<ResponseObject | undefined> {
-      const { persistenceService } = request.services([])
-      try {
-        const response = await persistenceService.listAllConfigurations()
-        return h.response(response).type('application/json')
-      } catch (error) {
-        request.server.log(['error', '/configurations'], error)
       }
     }
   }

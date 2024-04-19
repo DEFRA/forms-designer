@@ -45,7 +45,6 @@ describe('Menu', () => {
   it('Renders button strings correctly', () => {
     customRender(<Menu />)
 
-    expect(getByText('Form details')).toBeInTheDocument()
     expect(getByText('Add page')).toBeInTheDocument()
     expect(getByText('Add link')).toBeInTheDocument()
     expect(getByText('Sections')).toBeInTheDocument()
@@ -61,7 +60,7 @@ describe('Menu', () => {
     customRender(<Menu />)
     expect(queryByTestId('flyout-1')).not.toBeInTheDocument()
 
-    await act(() => userEvent.click(getByText('Form details')))
+    await act(() => userEvent.click(getByText('Summary behaviour')))
     expect(queryByTestId('flyout-1')).toBeInTheDocument()
 
     await act(() => userEvent.click(getByText('Close')))
