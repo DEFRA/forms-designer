@@ -14,12 +14,17 @@
       })}}
     {% endcall %}
   {% else %}
+    {{ appHeading({
+      text: "You have signed out"
+    }) }}
+
     {% call appPageBody() %}
+      <p class="govuk-body-l">Sign in to {{ config.serviceName }} to access and create forms.</p>
+
       {{ govukButton({
-        text: "Sign in",
-        href: config.appPathPrefix + "/login",
-        isStartButton: true
-      }) }}
+        text: "Continue",
+        href: config.appPathPrefix + "/login"
+      })}}
     {% endcall %}
   {% endif %}
 {% endblock %}
