@@ -16,20 +16,18 @@ export class App extends React.Component {
   render() {
     return (
       <Router basename="/forms-designer/editor">
-        <div id="app">
-          <Switch>
-            <Route path="/:id" component={Designer} />
-            <Route path="/save-error" exact>
-              <SaveError />
-            </Route>
-            <Route path="*">
-              <NoMatch />
-            </Route>
-          </Switch>
-        </div>
+        <Switch>
+          <Route path="/:id" component={Designer} />
+          <Route path="/save-error" exact>
+            <SaveError />
+          </Route>
+          <Route path="*">
+            <NoMatch />
+          </Route>
+        </Switch>
       </Router>
     )
   }
 }
 
-ReactDOM.render(<App />, document.getElementById('root'))
+ReactDOM.render(<App />, document.querySelector('.app-editor'))

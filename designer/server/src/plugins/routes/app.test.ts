@@ -41,6 +41,8 @@ describe('App routes test', () => {
     const res = await server.inject(options)
 
     expect(res.statusCode).toBe(200)
-    expect(res.result).toContain('<main id="root">')
+    expect(res.result).toContain(
+      '<div class="govuk-grid-column-full app-editor"></div>'
+    )
   })
 })

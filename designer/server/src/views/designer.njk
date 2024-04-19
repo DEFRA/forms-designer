@@ -1,33 +1,30 @@
-{% extends 'layouts/legacy-layout.njk' %}
+{% extends "layouts/page.njk" %}
 
-{% block pageTitle %}
-    GOV.UK Site - Designer
+{% set pageTitle -%}
+  Form editor | {{ serviceName }}
+{%- endset %}
+
+{% block head %}
+  {{ super() }}
+  <link href="{{ getAssetPath("editor.css") }}" rel="stylesheet">
 {% endblock %}
 
-{% block header %}
-    <!-- no header -->
+{% block bodyStart %}
+  <script type="module">
+    window.previewUrl = '{{ previewUrl }}'
+  </script>
 {% endblock %}
 
 {% block content %}
-    {% if (phase) %}
-    <div class="govuk-phase-banner govuk-phase-banner--solid" role="banner">
-      <p class="govuk-phase-banner__content">
-        <strong class="govuk-tag govuk-phase-banner__content__tag">
-        {{ phase }}
-        </strong>
-        <span class="govuk-phase-banner__text">
-        This service is currently in development
-        </span>
-      </p>
-    </div>
-    {% endif %}
-    
-    <main id="root"></main>
-    <div id="portal-root"></div>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full app-editor"></div>
+  </div>
+  <div id="portal-root"></div>
 {% endblock %}
 
-{% block footer %}
-    <div class="designer-footer">
-        {% include "partials/old/home-office-footer.html" %}
-    </div>
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script type="module" src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script type="module" src="{{ getAssetPath("editor.js") }}"></script>
 {% endblock %}
