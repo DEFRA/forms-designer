@@ -12,7 +12,7 @@
   {% include "partials/navigation.njk" %}
 {% endblock %}
 
-{% block pageTitle %}{{ pageTitle }} - {{ serviceName }}{% endblock %}
+{% block pageTitle %}{{ pageTitle }} - {{ config.serviceName }}{% endblock %}
 
 {% block beforeContent %}
   {% if breadcrumbs.length > 1 %}
@@ -29,11 +29,11 @@
     meta: {
       items: [
         {
-          href: appPathPrefix + "/help/accessibility-statement",
+          href: config.appPathPrefix + "/help/accessibility-statement",
           text: "Accessibility statement"
         },
         {
-          href: appPathPrefix + "/help/cookies",
+          href: config.appPathPrefix + "/help/cookies",
           text: "Cookies"
         },
         {

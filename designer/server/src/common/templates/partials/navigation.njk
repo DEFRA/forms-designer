@@ -2,7 +2,7 @@
 {% from "service-header/macro.njk" import appServiceHeader %}
 
 {{ appServiceHeader({
-  serviceName: serviceName,
+  serviceName: config.serviceName,
   navigationItems: navigation if isAuthenticated,
   accountName: authedUser.displayName if isAuthenticated,
   accountLink: "/forms-designer/login",

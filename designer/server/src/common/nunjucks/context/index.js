@@ -26,9 +26,11 @@ async function context(request) {
   const authedUser = await request.getUserSession()
 
   return {
-    serviceName,
     breadcrumbs: [],
-    appPathPrefix,
+    config: {
+      appPathPrefix,
+      serviceName
+    },
     navigation: buildNavigation(request),
     getAssetPath: (asset = '') =>
       `${appPathPrefix}/${webpackManifest?.[asset] ?? asset}`,
