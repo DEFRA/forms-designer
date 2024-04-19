@@ -20,11 +20,10 @@ import { ListContextProvider } from '~/src/reducers/listReducer.jsx'
 import SectionsEdit from '~/src/section/sections-edit.js'
 
 interface Props {
-  updateDownloadedAt?: (string) => void
   id: string
 }
 
-export default function Menu({ updateDownloadedAt, id }: Props) {
+export default function Menu({ id }: Props) {
   const { data } = useContext(DataContext)
 
   const formDetails = useMenuItem()
@@ -245,7 +244,7 @@ export default function Menu({ updateDownloadedAt, id }: Props) {
         </Flyout>
       )}
 
-      <SubMenu id={id} updateDownloadedAt={updateDownloadedAt} />
+      <SubMenu id={id} />
     </nav>
   )
 }

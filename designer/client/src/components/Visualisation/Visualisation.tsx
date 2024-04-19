@@ -1,9 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 
 import { Page } from '~/src/components/Page/index.js'
-import { Info } from '~/src/components/Visualisation/Info.jsx'
 import { Lines } from '~/src/components/Visualisation/Lines.jsx'
-import { Minimap } from '~/src/components/Visualisation/Minimap.jsx'
 import {
   getLayout,
   type Pos
@@ -12,8 +10,6 @@ import { DataContext } from '~/src/context/index.js'
 import '~/src/components/Visualisation/visualisation.scss'
 
 interface Props {
-  updatedAt?: string
-  downloadedAt?: string
   previewUrl?: string
   persona?: any
   id?: string
@@ -36,7 +32,7 @@ export function Visualisation(props: Props) {
   const { layout } = useVisualisation(ref)
   const { data } = useContext(DataContext)
 
-  const { updatedAt, downloadedAt, previewUrl, persona, id } = props
+  const { previewUrl, persona, id } = props
   const { pages } = data
 
   const wrapperStyle = layout && {
@@ -62,10 +58,6 @@ export function Visualisation(props: Props) {
             {layout && <Lines layout={layout} data={data} persona={persona} />}
           </div>
         </div>
-
-        {layout && <Info downloadedAt={downloadedAt} updatedAt={updatedAt} />}
-
-        {layout && <Minimap layout={layout} />}
       </div>
     </>
   )

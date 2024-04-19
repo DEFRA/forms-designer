@@ -20,10 +20,9 @@ export function migrate(form) {
 
 interface Props {
   id?: string
-  updateDownloadedAt?: (string) => void
 }
 
-export function SubMenu({ id, updateDownloadedAt }: Props) {
+export function SubMenu({ id }: Props) {
   const { data, save } = useContext(DataContext)
   const fileInput = useRef<HTMLInputElement>(null)
 
@@ -33,9 +32,7 @@ export function SubMenu({ id, updateDownloadedAt }: Props) {
 
   const onClickDownload = (e) => {
     e.preventDefault()
-    const encodedData =
-      'text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data))
-    updateDownloadedAt(new Date().toLocaleTimeString())
+    const encodedData = `text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(data))}`
     const link = document.createElement('a')
     link.download = `${id}.json`
     link.href = `data:${encodedData}`

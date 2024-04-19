@@ -23,8 +23,6 @@ interface State {
   newConfig?: boolean // TODO - is this required?
   data?: FormDefinition
   page?: any
-  updatedAt?: any
-  downloadedAt?: any
 }
 
 export default class Designer extends Component<Props, State> {
@@ -34,10 +32,6 @@ export default class Designer extends Component<Props, State> {
 
   get id() {
     return this.props.match?.params?.id
-  }
-
-  updateDownloadedAt = (time) => {
-    this.setState({ downloadedAt: time })
   }
 
   incrementFlyoutCounter = (callback = () => {}) => {
@@ -57,7 +51,6 @@ export default class Designer extends Component<Props, State> {
       this.setState(
         {
           data: toUpdate, // optimistic save
-          updatedAt: new Date().toLocaleTimeString(),
           error: undefined
         },
         callback()
@@ -103,14 +96,8 @@ export default class Designer extends Component<Props, State> {
           <FlyoutContext.Provider value={flyoutContextProviderValue}>
             <div id="designer">
               <Prompt when={!error} message={i18n('leaveDesigner')} />
-              <Menu
-                id={this.id}
-                updateDownloadedAt={this.updateDownloadedAt}
-                updatePersona={this.updatePersona}
-              />
+              <Menu id={this.id} updatePersona={this.updatePersona} />
               <Visualisation
-                downloadedAt={this.state.downloadedAt}
-                updatedAt={this.state.updatedAt}
                 persona={this.state.persona}
                 id={this.id}
                 previewUrl={previewUrl}

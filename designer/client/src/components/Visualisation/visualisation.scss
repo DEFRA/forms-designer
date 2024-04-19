@@ -81,33 +81,4 @@ $govuk-assets-path: "/forms-designer/assets/";
       margin-bottom: 0;
     }
   }
-
-  .notification {
-    position: fixed;
-    bottom: 80px;
-    width: 100%;
-    background-color: white;
-    padding-left: 8px;
-  }
-
-  .minimap {
-    position: fixed;
-    right: 0;
-    bottom: 85px;
-    z-index: 998;
-    background: lightgray;
-    padding: 5px;
-    max-width: 50%;
-    max-height: 25%;
-    overflow: auto;
-    border-top: solid 1px #000;
-    border-left: solid 1px #000;
-
-    polyline {
-      stroke-width: 1;
-    }
-    rect:hover {
-      fill: govuk-colour("yellow");
-    }
-  }
 }
