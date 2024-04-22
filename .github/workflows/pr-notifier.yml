@@ -9,6 +9,10 @@ on:
       - reopened
       - closed
 
+  pull_request_review:
+    types:
+      - submitted
+
 env:
   CONFIG: |
     {
@@ -28,8 +32,12 @@ env:
         "icon": ":recycle:",
         "status": "reopened"
       },
+      "submitted": {
+        "icon": "${{ github.event.review.state == 'approved' && ':white_check_mark:' || ':speech_bubble:' }}",
+        "status": "${{ github.event.review.state == 'approved' && 'code review approved' || 'code review changes requested' }}"
+      },
       "closed": {
-        "icon": "${{ github.event.pull_request.merged && ':white_check_mark:' || ':wastebasket:' }}",
+        "icon": "${{ github.event.pull_request.merged && ':rocket:' || ':wastebasket:' }}",
         "status": "${{ github.event.pull_request.merged && 'merged' || 'closed' }}"
       }
     }
