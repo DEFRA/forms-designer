@@ -17,27 +17,27 @@ env:
   CONFIG: |
     {
       "opened": {
-        "icon": "${{ github.event.pull_request.draft && ':pencil:' || ':new:' }}",
+        "icon": "${{ github.event.pull_request.draft && '📝' || '🆕' }}",
         "status": "${{ github.event.pull_request.draft && 'opened as draft' || 'opened' }}"
       },
       "converted_to_draft": {
-        "icon": ":pencil:",
+        "icon": "📝",
         "status": "converted to draft"
       },
       "ready_for_review": {
-        "icon": ":eyes:",
+        "icon": "👀",
         "status": "ready for review"
       },
       "reopened": {
-        "icon": ":recycle:",
+        "icon": "🔄",
         "status": "reopened"
       },
       "submitted": {
-        "icon": "${{ github.event.review.state == 'approved' && ':white_check_mark:' || ':speech_bubble:' }}",
-        "status": "${{ github.event.review.state == 'approved' && 'code review approved' || 'code review changes requested' }}"
+        "icon": "${{ github.event.review.state == 'approved' && '✅' || '💬' }}",
+        "status": "${{ github.event.review.state == 'approved' && 'code review approved' || 'code review comments' }}"
       },
       "closed": {
-        "icon": "${{ github.event.pull_request.merged && ':rocket:' || ':wastebasket:' }}",
+        "icon": "${{ github.event.pull_request.merged && '🚀' || '🗑️' }}",
         "status": "${{ github.event.pull_request.merged && 'merged' || 'closed' }}"
       }
     }
