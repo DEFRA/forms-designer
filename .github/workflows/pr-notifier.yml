@@ -52,7 +52,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "${{ env.ACTION_ICON }} *${{ github.event.repository.name }}:* Pull request ${{ env.ACTION_STATUS }}\n<${{ github.event.pull_request.html_url }}>"
+                    "text": "${{ github.repository_owner }}/*${{ github.event.repository.name }}*: <${{ github.event.pull_request.html_url }}|*${{ github.event.pull_request.title }}* #${{ github.event.pull_request.number }}> by <${{ github.event.pull_request.user.html_url }}|@${{ github.event.pull_request.user.login }}> ${{ env.ACTION_ICON }} ${{ env.ACTION_STATUS }}"
                   }
                 }
               ]
