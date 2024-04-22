@@ -12,15 +12,15 @@ env:
   CONFIG: |
     {
       "opened": {
-        "icon": ":large_yellow_circle:",
+        "icon": ":new:",
         "status": "opened"
       },
       "ready_for_review": {
-        "icon": ":large_yellow_circle:",
+        "icon": ":eyes:",
         "status": "ready for review"
       },
       "reopened": {
-        "icon": ":large_yellow_circle:",
+        "icon": ":recycle:",
         "status": "reopened"
       },
       "closed": {
