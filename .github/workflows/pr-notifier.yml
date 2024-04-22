@@ -4,6 +4,7 @@ on:
   pull_request:
     types:
       - opened
+      - converted_to_draft
       - ready_for_review
       - reopened
       - closed
@@ -12,8 +13,12 @@ env:
   CONFIG: |
     {
       "opened": {
-        "icon": ":new:",
-        "status": "opened"
+        "icon": "${{ github.event.pull_request.draft && ':pencil:' || ':new:' }}",
+        "status": "${{ github.event.pull_request.draft && 'opened as draft' || 'opened' }}"
+      },
+      "converted_to_draft": {
+        "icon": ":pencil:",
+        "status": "converted to draft"
       },
       "ready_for_review": {
         "icon": ":eyes:",
