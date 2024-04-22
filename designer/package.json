@@ -41,7 +41,7 @@
     "@hapi/jwt": "^3.2.0",
     "@hapi/scooter": "^7.0.0",
     "@hapi/vision": "^7.0.3",
-    "@hapi/wreck": "^18.0.1",
+    "@hapi/wreck": "^18.1.0",
     "@hapi/yar": "^11.0.2",
     "@hapipal/schmervice": "^3.0.0",
     "@xgovformbuilder/govuk-react-jsx": "^7.1.2",
