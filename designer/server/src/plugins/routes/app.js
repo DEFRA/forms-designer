@@ -1,9 +1,15 @@
-import { type ServerRoute } from '@hapi/hapi'
 import JSZip from 'jszip'
 
 import config from '~/src/config.js'
 
-export const getAppChildRoutes: ServerRoute = {
+/**
+ * @typedef {import('@hapi/hapi').ServerRoute} ServerRoute
+ */
+
+/**
+ * @type {ServerRoute}
+ */
+export const getAppChildRoutes = {
   method: 'get',
   path: '/editor/{path*}',
   options: {
@@ -16,7 +22,10 @@ export const getAppChildRoutes: ServerRoute = {
   }
 }
 
-export const getErrorCrashReport: ServerRoute = {
+/**
+ * @type {ServerRoute}
+ */
+export const getErrorCrashReport = {
   method: 'get',
   path: '/error/crashreport/{id}',
   options: {

@@ -1,10 +1,16 @@
 import { formDefinitionSchema } from '@defra/forms-model'
-import { type ServerRoute, type ResponseObject } from '@hapi/hapi'
 
 import * as persistenceService from '~/src/lib/formPersistenceService.js'
 
-export const getFormWithId: ServerRoute = {
-  // GET DATA
+/**
+ * @typedef {import('@hapi/hapi').ServerRoute} ServerRoute
+ * @typedef {import('@hapi/hapi').ResponseObject} ResponseObject
+ */
+
+/**
+ * @type {ServerRoute}
+ */
+export const getFormWithId = {
   method: 'GET',
   path: '/api/{id}/data',
   options: {
@@ -23,8 +29,10 @@ export const getFormWithId: ServerRoute = {
   }
 }
 
-export const putFormWithId: ServerRoute = {
-  // SAVE DATA
+/**
+ * @type {ServerRoute}
+ */
+export const putFormWithId = {
   method: 'PUT',
   path: '/api/{id}/data',
   options: {
@@ -49,10 +57,12 @@ export const putFormWithId: ServerRoute = {
 
           throw new Error(`Schema validation failed, reason: ${error.message}`)
         }
+
         await persistenceService.updateDraftFormDefinition(
           id,
           JSON.stringify(value)
         )
+
         return h.response({ ok: true }).code(204)
       } catch (err) {
         request.logger.error('Designer Server PUT /api/{id}/data error:', err)
@@ -69,11 +79,14 @@ export const putFormWithId: ServerRoute = {
   }
 }
 
-export const log: ServerRoute = {
+/**
+ * @type {ServerRoute}
+ */
+export const log = {
   method: 'POST',
   path: '/api/log',
   options: {
-    handler(request, h): ResponseObject | undefined {
+    handler(request, h) {
       try {
         request.server.log(request.payload.toString())
         return h.response({ ok: true }).code(204)
