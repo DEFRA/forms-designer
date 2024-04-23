@@ -54,10 +54,10 @@ const schema = joi.object({
     .default(resolve(dirname(configPath), '../../client/dist')),
   managerUrl: joi
     .string()
-    .default('http://dev.cdp-int.defra.cloud/forms-manager/'),
+    .default('http://forms-manager.dev.cdp-int.defra.cloud/'),
   previewUrl: joi
     .string()
-    .default('http://dev.cdp-int.defra.cloud/forms-runner/'),
+    .default('http://forms-runner.dev.cdp-int.defra.cloud/'),
   serviceName: joi.string().required(),
   logLevel: joi
     .string()
