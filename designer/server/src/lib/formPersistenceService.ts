@@ -12,10 +12,7 @@ export async function getDraftFormDefinition(
   return payload
 }
 
-export  function updateDraftFormDefinition(
-  id: string,
-  configuration: string
-) {
+export function updateDraftFormDefinition(id: string, configuration: string) {
   return Wreck.post(`${config.managerUrl}/forms/${id}/definition/draft`, {
     payload: configuration
   })
