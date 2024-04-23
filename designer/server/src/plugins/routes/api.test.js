@@ -61,7 +61,7 @@ describe('Server API', () => {
       )
 
     const result = await server.inject(options)
-    expect(result.statusCode).toBe(401)
+    expect(result.statusCode).toBe(500)
 
     const optionsCrash = {
       method: 'get',
@@ -75,7 +75,7 @@ describe('Server API', () => {
     )
   })
 
-  test('Schema validation failures should return 401', async () => {
+  test('Schema validation failures should return 500', async () => {
     const options = {
       method: 'put',
       url: '/forms-designer/api/test-form-id/data',
@@ -118,7 +118,7 @@ describe('Server API', () => {
     expect(result.result?.err.message).toMatch('Schema validation failed')
   })
 
-  test('persistence service errors should return 401', async () => {
+  test('persistence service errors should return 500', async () => {
     // Given
     jest
       .mocked(persistenceService.updateDraftFormDefinition)
