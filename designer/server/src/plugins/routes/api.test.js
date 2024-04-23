@@ -1,4 +1,3 @@
-
 import { createServer } from '~/src/createServer.js'
 import * as persistenceService from '~/src/lib/formPersistenceService.js'
 import { auth } from '~/test/fixtures/auth.js'
@@ -53,7 +52,6 @@ describe('Server API', () => {
       }
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     jest
       .mocked(persistenceService.getDraftFormDefinition)
       .mockReturnValue(
@@ -111,14 +109,17 @@ describe('Server API', () => {
       }
     }
 
-    const result = await server.inject(options)
+    const result =
+      /** @type {import('@hapi/hapi').ServerInjectResponse<{ err: Error }>}) */ (
+        await server.inject(options)
+      )
+
     expect(result.statusCode).toBe(500)
     expect(result.result?.err.message).toMatch('Schema validation failed')
   })
 
   test('persistence service errors should return 401', async () => {
     // Given
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     jest
       .mocked(persistenceService.updateDraftFormDefinition)
       .mockImplementation(() =>
