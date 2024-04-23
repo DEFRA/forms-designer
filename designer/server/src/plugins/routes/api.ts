@@ -1,6 +1,8 @@
 import { formDefinitionSchema } from '@defra/forms-model'
 import { type ServerRoute, type ResponseObject } from '@hapi/hapi'
 
+import * as persistenceService from '~/src/lib/formPersistenceService.js'
+
 export const getFormWithId: ServerRoute = {
   // GET DATA
   method: 'GET',
@@ -8,7 +10,6 @@ export const getFormWithId: ServerRoute = {
   options: {
     async handler(request, h) {
       const { id } = request.params
-      const { persistenceService } = request.services([])
       try {
         const response = await persistenceService.getDraftFormDefinition(id)
         const formJson = JSON.parse(response)
@@ -32,8 +33,6 @@ export const putFormWithId: ServerRoute = {
     },
     async handler(request, h) {
       const { id } = request.params
-      const { persistenceService } = request.services([])
-
       try {
         const { value, error } = formDefinitionSchema.validate(
           request.payload,
@@ -64,7 +63,7 @@ export const putFormWithId: ServerRoute = {
           error: err.stack
         }
         request.yar.set(`error-summary-${id}`, errorSummary)
-        return h.response({ ok: false, err }).code(401)
+        return h.response({ ok: false, err }).code(500)
       }
     }
   }

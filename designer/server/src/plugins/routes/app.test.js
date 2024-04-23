@@ -1,25 +1,17 @@
-import { type Server } from '@hapi/hapi'
 
+import { createServer } from '~/src/createServer.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
+jest.mock('~/src/lib/formPersistenceService')
+
 describe('App routes test', () => {
-  const startServer = async (): Promise<Server> => {
-    const { createServer } = await import('~/src/createServer.js')
-
-    const server = await createServer()
-    await server.initialize()
-    return server
-  }
-
-  let server: Server
+  /** @type {import('@hapi/hapi').Server} */
+  let server
 
   beforeAll(async () => {
-    server = await startServer()
-    const { persistenceService } = server.services()
-    persistenceService.updateDraftFormDefinition = () => {
-      return Promise.resolve([])
-    }
+    server = await createServer()
+    await server.initialize()
   })
 
   afterAll(async () => {

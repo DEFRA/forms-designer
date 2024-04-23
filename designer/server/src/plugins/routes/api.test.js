@@ -1,28 +1,17 @@
-import { type Server } from '@hapi/hapi'
-import Wreck from '@hapi/wreck'
 
+import { createServer } from '~/src/createServer.js'
+import * as persistenceService from '~/src/lib/formPersistenceService.js'
 import { auth } from '~/test/fixtures/auth.js'
 
+jest.mock('~/src/lib/formPersistenceService')
+
 describe('Server API', () => {
-  const startServer = async (): Promise<Server> => {
-    const { createServer } = await import('~/src/createServer.js')
-
-    const server = await createServer()
-    await server.initialize()
-    return server
-  }
-
-  let server: Server
+  /** @type {import('@hapi/hapi').Server} */
+  let server
 
   beforeAll(async () => {
-    server = await startServer()
-    const { persistenceService } = server.services()
-    persistenceService.getDraftFormDefinition = () => {
-      return Promise.resolve([])
-    }
-    persistenceService.updateDraftFormDefinition = () => {
-      return Promise.resolve([])
-    }
+    server = await createServer()
+    await server.initialize()
   })
 
   afterAll(async () => {
@@ -64,9 +53,14 @@ describe('Server API', () => {
       }
     }
 
-    jest.spyOn(Wreck, 'get').mockResolvedValue({
-      payload: Buffer.from(JSON.stringify({}))
-    })
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    jest
+      .mocked(persistenceService.getDraftFormDefinition)
+      .mockReturnValue(
+        Promise.resolve(
+          /** @type {import('@defra/forms-model').FormDefinition} */ ({})
+        )
+      )
 
     const result = await server.inject(options)
     expect(result.statusCode).toBe(401)
@@ -117,17 +111,19 @@ describe('Server API', () => {
       }
     }
 
-    const result = await server.inject<{ err: Error }>(options)
-    expect(result.statusCode).toBe(401)
+    const result = await server.inject(options)
+    expect(result.statusCode).toBe(500)
     expect(result.result?.err.message).toMatch('Schema validation failed')
   })
 
   test('persistence service errors should return 401', async () => {
     // Given
-    const { persistenceService } = server.services();
-    persistenceService.updateDraftFormDefinition = () => {
-      return Promise.reject(new Error('Error in persistence service'))
-    }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    jest
+      .mocked(persistenceService.updateDraftFormDefinition)
+      .mockImplementation(() =>
+        Promise.reject(new Error('Error in persistence service'))
+      )
 
     const options = {
       method: 'put',
@@ -164,10 +160,13 @@ describe('Server API', () => {
     }
 
     // When
-    const result = await server.inject<{ err: Error }>(options)
+    const result =
+      /** @type {import('@hapi/hapi').ServerInjectResponse<{ err: Error }>}) */ (
+        await server.inject(options)
+      )
 
     // Then
-    expect(result.statusCode).toBe(401)
+    expect(result.statusCode).toBe(500)
     expect(result.result?.err.message).toBe('Error in persistence service')
   })
 })
