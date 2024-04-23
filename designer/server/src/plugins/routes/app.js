@@ -3,10 +3,6 @@ import JSZip from 'jszip'
 import config from '~/src/config.js'
 
 /**
- * @typedef {import('@hapi/hapi').ServerRoute} ServerRoute
- */
-
-/**
  * @type {ServerRoute}
  */
 export const getAppChildRoutes = {
@@ -61,3 +57,7 @@ export const getErrorCrashReport = {
     }
   }
 }
+
+/**
+ * @typedef {import('@hapi/hapi').ServerRoute} ServerRoute
+ */

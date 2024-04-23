@@ -3,11 +3,6 @@ import { formDefinitionSchema } from '@defra/forms-model'
 import * as persistenceService from '~/src/lib/formPersistenceService.js'
 
 /**
- * @typedef {import('@hapi/hapi').ServerRoute} ServerRoute
- * @typedef {import('@hapi/hapi').ResponseObject} ResponseObject
- */
-
-/**
  * @type {ServerRoute}
  */
 export const getFormWithId = {
@@ -97,3 +92,8 @@ export const log = {
     }
   }
 }
+
+/**
+ * @typedef {import('@hapi/hapi').ServerRoute} ServerRoute
+ * @typedef {import('@hapi/hapi').ResponseObject} ResponseObject
+ */
