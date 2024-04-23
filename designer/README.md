@@ -38,7 +38,6 @@ LINK_TO is optional, it defaults to `./${PROJECT_DIR}`.
 | NODE_ENV                | Node environment                                           | no       | development    | development,test,production |
 | PORT                    | Port number                                                | no       | 3000           |                             |
 | PREVIEW_URL             | Base URL for links to preview forms in user's web browser  | no       | localhost:3009 |                             |
-| PUBLISH_URL             | Base URL used by designer to POST and GET runner's API     | no       | localhost:3009 |                             |
 | LOG_LEVEL               | Log level                                                  | no       | debug          | trace,debug,info,error      |
 | SESSION_TTL             | server-side storage expiration time - in milliseconds      | no       |                |                             |
 | SESSION_COOKIE_PASSWORD | at least 32 char long string for session cookie encryption | no       |                |                             |

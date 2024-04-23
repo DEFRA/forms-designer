@@ -18,7 +18,6 @@ export interface Config {
   appPathPrefix: string
   clientDir: string
   previewUrl: string
-  publishUrl: string
   managerUrl: string
   serviceName: string
   logLevel: 'fatal' | 'error' | 'warn' | 'info' | 'debug' | 'trace' | 'silent'
@@ -57,9 +56,6 @@ const schema = joi.object({
     .string()
     .default('http://dev.cdp-int.defra.cloud/forms-manager/'),
   previewUrl: joi
-    .string()
-    .default('http://dev.cdp-int.defra.cloud/forms-runner/'),
-  publishUrl: joi
     .string()
     .default('http://dev.cdp-int.defra.cloud/forms-runner/'),
   serviceName: joi.string().required(),
@@ -106,7 +102,6 @@ const result = schema.validate(
     appPathPrefix: process.env.APP_PATH_PREFIX,
     managerUrl: process.env.MANAGER_URL,
     previewUrl: process.env.PREVIEW_URL,
-    publishUrl: process.env.PUBLISH_URL,
     serviceName: 'Submit a form to Defra',
     logLevel: process.env.LOG_LEVEL,
     phase: process.env.PHASE,
