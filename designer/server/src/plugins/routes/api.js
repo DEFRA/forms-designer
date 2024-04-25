@@ -1,4 +1,5 @@
 import { formDefinitionSchema } from '@defra/forms-model'
+import Joi from 'joi'
 
 import * as forms from '~/src/lib/forms.js'
 
@@ -9,16 +10,16 @@ export const getFormWithId = {
   method: 'GET',
   path: '/api/{id}/data',
   options: {
-    async handler(request, h) {
-      const { id } = request.params
-      try {
-        const formJson = await forms.getDraftFormDefinition(id)
-
-        return h.response(/** @type {object} */ (formJson))
-      } catch (error) {
-        request.logger.error(['GET /api/{id}/data', 'getFormWithId'], error)
-        throw error
-      }
+    /**
+     * @param {RequestFormById} request
+     */
+    handler(request) {
+      return forms.getDraftFormDefinition(request.params.id)
+    },
+    validate: {
+      params: Joi.object({
+        id: Joi.string().required()
+      })
     }
   }
 }
@@ -92,4 +93,8 @@ export const log = {
 /**
  * @typedef {import('@hapi/hapi').ServerRoute} ServerRoute
  * @typedef {import('@hapi/hapi').ResponseObject} ResponseObject
+ */
+
+/**
+ * @typedef {import('~/src/newTypes.js').RequestFormById} RequestFormById
  */
