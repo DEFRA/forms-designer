@@ -270,7 +270,7 @@ const feeOptionSchema = joi
  * Joi schema for `FormDefinition` interface
  * @see {@link FormDefinition}
  */
-export const Schema = joi
+export const formDefinitionSchema = joi
   .object()
   .required()
   .keys({
@@ -293,6 +293,10 @@ export const Schema = joi
     specialPages: specialPagesSchema.optional(),
     feeOptions: feeOptionSchema
   })
+
+// Maintain compatibility with legacy named export
+// E.g. `import { Schema } from '@defra/forms-model'`
+export const Schema = formDefinitionSchema
 
 /**
  *  Schema versions:

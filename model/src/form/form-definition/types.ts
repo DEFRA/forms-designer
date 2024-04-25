@@ -1,4 +1,4 @@
-import { Schema } from './index.js'
+import { formDefinitionSchema } from './index.js'
 
 import { type ComponentDef } from '~/src/components/types.js'
 import { type Condition } from '~/src/conditions/condition.js'
@@ -158,8 +158,8 @@ export interface ConditionRawData {
 }
 
 /**
- * Interface for `Schema` Joi schema
- * @see {@link Schema}
+ * Interface for `formDefinitionSchema` Joi schema
+ * @see {@link formDefinitionSchema}
  */
 export interface FormDefinition {
   pages: (Page | RepeatingFieldPage)[]
