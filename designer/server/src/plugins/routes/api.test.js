@@ -109,10 +109,9 @@ describe('Server API', () => {
       }
     }
 
-    const result =
-      /** @type {import('@hapi/hapi').ServerInjectResponse<{ err: Error }>}) */ (
-        await server.inject(options)
-      )
+    const result = /** @type {ServerInjectResponse<{ err: Error }>}) */ (
+      await server.inject(options)
+    )
 
     expect(result.statusCode).toBe(500)
     expect(result.result?.err.message).toMatch('Schema validation failed')
@@ -161,13 +160,17 @@ describe('Server API', () => {
     }
 
     // When
-    const result =
-      /** @type {import('@hapi/hapi').ServerInjectResponse<{ err: Error }>}) */ (
-        await server.inject(options)
-      )
+    const result = /** @type {ServerInjectResponse<{ err: Error }>}) */ (
+      await server.inject(options)
+    )
 
     // Then
     expect(result.statusCode).toBe(500)
     expect(result.result?.err.message).toBe('Error in persistence service')
   })
 })
+
+/**
+ * @template {object} Result
+ * @typedef {import('@hapi/hapi').ServerInjectResponse<Result>} ServerInjectResponse
+ */
