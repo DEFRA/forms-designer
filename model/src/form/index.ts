@@ -1,1 +1,2 @@
-export { FormConfiguration } from '~/src/form/form-configuration.js'
+export * from '~/src/form/form-configuration/index.js'
+export * from '~/src/form/form-definition/index.js'

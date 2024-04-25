@@ -1,3 +1,5 @@
+import { Schema } from './index.js'
+
 import { type ComponentDef } from '~/src/components/types.js'
 import { type Condition } from '~/src/conditions/condition.js'
 import { type OutputType } from '~/src/data-model/enums.js'
@@ -8,6 +10,7 @@ export interface Next {
   path: string
   condition?: string
 }
+
 export type Link = Next
 
 export interface Page {
@@ -155,7 +158,8 @@ export interface ConditionRawData {
 }
 
 /**
- * `FormDefinition` is a typescript representation of `Schema`
+ * Interface for `Schema` Joi schema
+ * @see {@link Schema}
  */
 export interface FormDefinition {
   pages: (Page | RepeatingFieldPage)[]

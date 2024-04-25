@@ -1,5 +1,5 @@
-//import { Schema, FormDefinition } from '@defra/forms-model'
-import { FormDefinition } from '@defra/forms-model'
+// import { Schema, type FormDefinition } from '@defra/forms-model'
+import { type FormDefinition } from '@defra/forms-model'
 import { type ServerRoute, type ResponseObject } from '@hapi/hapi'
 import Wreck from '@hapi/wreck'
 

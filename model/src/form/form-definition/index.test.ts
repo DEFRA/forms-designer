@@ -1,4 +1,4 @@
-import { Schema } from '~/src/schema/index.js'
+import { Schema } from '~/src/form/form-definition/index.js'
 
 const baseConfiguration = {
   metadata: {},
@@ -24,7 +24,7 @@ test('allows feedback URL to be an empty string when feedbackForm is false', () 
     name: 'Schema fix 3'
   }
 
-  const { value, error } = Schema.validate(goodConfiguration, {
+  const { error } = Schema.validate(goodConfiguration, {
     abortEarly: false
   })
 
