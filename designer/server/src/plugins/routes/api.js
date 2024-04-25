@@ -4,14 +4,14 @@ import Joi from 'joi'
 import * as forms from '~/src/lib/forms.js'
 
 /**
- * @type {ServerRoute}
+ * @type {ServerRoute<{ Params: FormByIdInput }>}
  */
 export const getFormWithId = {
   method: 'GET',
   path: '/api/{id}/data',
   options: {
     /**
-     * @param {RequestFormById} request
+     * @param {FormByIdInput} request
      */
     handler(request) {
       return forms.getDraftFormDefinition(request.params.id)
@@ -25,7 +25,7 @@ export const getFormWithId = {
 }
 
 /**
- * @type {ServerRoute}
+ * @type {ServerRoute<{ Params: FormByIdInput, Payload: FormDefinition }>}
  */
 export const putFormWithId = {
   method: 'PUT',
@@ -53,7 +53,7 @@ export const putFormWithId = {
           throw new Error(`Schema validation failed, reason: ${error.message}`)
         }
 
-        await forms.updateDraftFormDefinition(id, JSON.stringify(value))
+        await forms.updateDraftFormDefinition(id, value)
 
         return h.response({ ok: true }).code(204)
       } catch (err) {
@@ -91,10 +91,11 @@ export const log = {
 }
 
 /**
- * @typedef {import('@hapi/hapi').ServerRoute} ServerRoute
- * @typedef {import('@hapi/hapi').ResponseObject} ResponseObject
+ * @template {import('@hapi/hapi').ReqRef} [ReqRef=import('@hapi/hapi').ReqRefDefaults]
+ * @typedef {import('@hapi/hapi').ServerRoute<ReqRef>} ServerRoute
  */
 
 /**
- * @typedef {import('~/src/newTypes.js').RequestFormById} RequestFormById
+ * @typedef {import('@defra/forms-model').FormByIdInput} FormByIdInput
+ * @typedef {import('@defra/forms-model').FormDefinition} FormDefinition
  */

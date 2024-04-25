@@ -64,7 +64,6 @@ export async function remove(id) {
 /**
  * Get draft form definition
  * @param {string} id
- * @returns {Promise<import('@defra/forms-model').FormDefinition | null>}
  */
 export async function getDraftFormDefinition(id) {
   const endpoint = getDraftFormDefinitionEndpoint(id)
