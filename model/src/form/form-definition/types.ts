@@ -16,7 +16,7 @@ export type Link = Next
 export interface Page {
   title: string
   path: string
-  controller: string
+  controller?: string
   components?: ComponentDef[]
   section: string // the section ID
   next?: Next[]
@@ -41,7 +41,7 @@ export interface RepeatingFieldPage extends Page {
 export interface Section {
   name: string
   title: string
-  hideTitle: boolean
+  hideTitle?: boolean
 }
 
 export interface Item {
@@ -88,7 +88,7 @@ export interface NotifyOutputConfiguration {
   addReferencesToPersonalisation?: boolean
   emailReplyToIdConfiguration?: {
     emailReplyToId: string
-    condition?: string | undefined
+    condition?: string
   }[]
 }
 
@@ -171,18 +171,18 @@ export interface FormDefinition {
   conditions: ConditionRawData[]
   lists: List[]
   sections: Section[]
-  startPage?: Page['path'] | undefined
-  name?: string | undefined
+  startPage?: Page['path']
+  name?: string
   feedback?: Feedback
   phaseBanner?: PhaseBanner
   fees: Fee[]
-  skipSummary?: boolean | undefined
+  skipSummary?: boolean
   outputs: Output[]
-  declaration?: string | undefined
+  declaration?: string
   metadata?: Record<string, unknown>
-  payApiKey?: string | MultipleApiKeys | undefined
+  payApiKey?: string | MultipleApiKeys
   specialPages?: SpecialPages
   paymentReferenceFormat?: string
-  feeOptions: FeeOptions
+  feeOptions?: FeeOptions
   version?: number
 }
