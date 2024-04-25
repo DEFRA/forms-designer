@@ -96,7 +96,7 @@ export const componentSchema = Joi.object()
 const nextSchema = Joi.object().keys({
   path: Joi.string().required(),
   condition: Joi.string().allow('').optional(),
-  redirect: Joi.string().uri().optional()
+  redirect: Joi.string().optional()
 })
 
 /**
