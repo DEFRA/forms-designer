@@ -1,4 +1,4 @@
-import joi from 'joi'
+import Joi from 'joi'
 
 import { type FormDefinition } from '~/src/form/form-definition/types.js'
 
@@ -8,230 +8,221 @@ import { type FormDefinition } from '~/src/form/form-definition/types.js'
  */
 export const CURRENT_VERSION = 2
 
-const sectionsSchema = joi.object().keys({
-  name: joi.string().required(),
-  title: joi.string().required(),
-  hideTitle: joi.boolean().default(false)
+const sectionsSchema = Joi.object().keys({
+  name: Joi.string().required(),
+  title: Joi.string().required(),
+  hideTitle: Joi.boolean().default(false)
 })
 
-const conditionFieldSchema = joi.object().keys({
-  name: joi.string().required(),
-  type: joi.string().required(),
-  display: joi.string().required()
+const conditionFieldSchema = Joi.object().keys({
+  name: Joi.string().required(),
+  type: Joi.string().required(),
+  display: Joi.string().required()
 })
 
-const conditionValueSchema = joi.object().keys({
-  type: joi.string().required(),
-  value: joi.string().required(),
-  display: joi.string().required()
+const conditionValueSchema = Joi.object().keys({
+  type: Joi.string().required(),
+  value: Joi.string().required(),
+  display: Joi.string().required()
 })
 
-const relativeTimeValueSchema = joi.object().keys({
-  type: joi.string().required(),
-  timePeriod: joi.string().required(),
-  timeUnit: joi.string().required(),
-  direction: joi.string().required(),
-  timeOnly: joi.boolean().required()
+const relativeTimeValueSchema = Joi.object().keys({
+  type: Joi.string().required(),
+  timePeriod: Joi.string().required(),
+  timeUnit: Joi.string().required(),
+  direction: Joi.string().required(),
+  timeOnly: Joi.boolean().required()
 })
 
-const conditionRefSchema = joi.object().keys({
-  conditionName: joi.string().required(),
-  conditionDisplayName: joi.string().required(),
-  coordinator: joi.string().optional()
+const conditionRefSchema = Joi.object().keys({
+  conditionName: Joi.string().required(),
+  conditionDisplayName: Joi.string().required(),
+  coordinator: Joi.string().optional()
 })
 
-const conditionSchema = joi.object().keys({
+const conditionSchema = Joi.object().keys({
   field: conditionFieldSchema,
-  operator: joi.string().required(),
-  value: joi.alternatives().try(conditionValueSchema, relativeTimeValueSchema),
-  coordinator: joi.string().optional()
+  operator: Joi.string().required(),
+  value: Joi.alternatives().try(conditionValueSchema, relativeTimeValueSchema),
+  coordinator: Joi.string().optional()
 })
 
-const conditionGroupSchema = joi.object().keys({
-  conditions: joi
-    .array()
-    .items(
-      joi
-        .alternatives()
-        .try(
-          conditionSchema,
-          conditionRefSchema,
-          joi.any() /** Should be a joi.link('#conditionGroupSchema') */
-        )
+const conditionGroupSchema = Joi.object().keys({
+  conditions: Joi.array().items(
+    Joi.alternatives().try(
+      conditionSchema,
+      conditionRefSchema,
+      Joi.any() /** Should be a joi.link('#conditionGroupSchema') */
     )
+  )
 })
 
-const conditionsModelSchema = joi.object().keys({
-  name: joi.string().required(),
-  conditions: joi
-    .array()
-    .items(
-      joi
-        .alternatives()
-        .try(conditionSchema, conditionRefSchema, conditionGroupSchema)
+const conditionsModelSchema = Joi.object().keys({
+  name: Joi.string().required(),
+  conditions: Joi.array().items(
+    Joi.alternatives().try(
+      conditionSchema,
+      conditionRefSchema,
+      conditionGroupSchema
     )
+  )
 })
 
-const conditionsSchema = joi.object().keys({
-  name: joi.string().required(),
-  displayName: joi.string(),
-  value: joi.alternatives().try(joi.string(), conditionsModelSchema).required()
+const conditionsSchema = Joi.object().keys({
+  name: Joi.string().required(),
+  displayName: Joi.string(),
+  value: Joi.alternatives().try(Joi.string(), conditionsModelSchema).required()
 })
 
-const localisedString = joi
-  .alternatives()
-  .try(joi.object({ a: joi.any() }).unknown(), joi.string().allow(''))
+const localisedString = Joi.alternatives().try(
+  Joi.object({ a: Joi.any() }).unknown(),
+  Joi.string().allow('')
+)
 
-export const componentSchema = joi
-  .object()
+export const componentSchema = Joi.object()
   .keys({
-    type: joi.string().required(),
-    name: joi.string(),
+    type: Joi.string().required(),
+    name: Joi.string(),
     title: localisedString,
     hint: localisedString.optional(),
-    options: joi.object().default({}),
-    schema: joi
-      .object({ min: joi.number(), max: joi.number() })
+    options: Joi.object().default({}),
+    schema: Joi.object({ min: Joi.number(), max: Joi.number() })
       .unknown(true)
       .default({}),
-    list: joi.string().optional()
+    list: Joi.string().optional()
   })
   .unknown(true)
 
-const nextSchema = joi.object().keys({
-  path: joi.string().required(),
-  condition: joi.string().allow('').optional(),
-  redirect: joi.string().uri().optional()
+const nextSchema = Joi.object().keys({
+  path: Joi.string().required(),
+  condition: Joi.string().allow('').optional(),
+  redirect: Joi.string().uri().optional()
 })
 
 /**
  * `/status` is a special route for providing a user's application status.
  *  It should not be configured via the designer.
  */
-const pageSchema = joi.object().keys({
-  path: joi.string().required().disallow('/status'),
+const pageSchema = Joi.object().keys({
+  path: Joi.string().required().disallow('/status'),
   title: localisedString,
-  section: joi.string(),
-  controller: joi.string(),
-  components: joi.array().items(componentSchema),
-  next: joi.array().items(nextSchema),
-  repeatField: joi.string().optional(),
-  options: joi.object().optional(),
-  backLinkFallback: joi.string().optional()
+  section: Joi.string(),
+  controller: Joi.string(),
+  components: Joi.array().items(componentSchema),
+  next: Joi.array().items(nextSchema),
+  repeatField: Joi.string().optional(),
+  options: Joi.object().optional(),
+  backLinkFallback: Joi.string().optional()
 })
 
-const toggleableString = joi.alternatives().try(joi.boolean(), joi.string())
+const toggleableString = Joi.alternatives().try(Joi.boolean(), Joi.string())
 
-const confirmationPageSchema = joi.object({
-  customText: joi
-    .object({
-      title: joi.string().default('Application complete'),
-      paymentSkipped: toggleableString.default(
-        'Someone will be in touch to make a payment.'
-      ),
-      nextSteps: toggleableString.default(
-        'You will receive an email with details with the next steps.'
-      )
-    })
-    .default(),
-  components: joi.array().items(componentSchema)
+const confirmationPageSchema = Joi.object({
+  customText: Joi.object({
+    title: Joi.string().default('Application complete'),
+    paymentSkipped: toggleableString.default(
+      'Someone will be in touch to make a payment.'
+    ),
+    nextSteps: toggleableString.default(
+      'You will receive an email with details with the next steps.'
+    )
+  }).default(),
+  components: Joi.array().items(componentSchema)
 })
 
-const paymentSkippedWarningPage = joi.object({
-  customText: joi.object({
-    title: joi.string().default('Pay for your application').optional(),
-    caption: joi.string().default('Payment').optional(),
-    body: joi.string().default('').optional()
+const paymentSkippedWarningPage = Joi.object({
+  customText: Joi.object({
+    title: Joi.string().default('Pay for your application').optional(),
+    caption: Joi.string().default('Payment').optional(),
+    body: Joi.string().default('').optional()
   })
 })
 
-const specialPagesSchema = joi.object().keys({
+const specialPagesSchema = Joi.object().keys({
   confirmationPage: confirmationPageSchema.optional(),
   paymentSkippedWarningPage: paymentSkippedWarningPage.optional()
 })
 
-const listItemSchema = joi.object().keys({
+const listItemSchema = Joi.object().keys({
   text: localisedString,
-  value: joi.alternatives().try(joi.number(), joi.string()),
+  value: Joi.alternatives().try(Joi.number(), Joi.string()),
   description: localisedString.optional(),
-  conditional: joi
-    .object()
+  conditional: Joi.object()
     .keys({
-      components: joi
-        .array()
+      components: Joi.array()
         .required()
         .items(componentSchema.unknown(true))
         .unique('name')
     })
     .allow(null)
     .optional(),
-  condition: joi.string().allow(null, '').optional()
+  condition: Joi.string().allow(null, '').optional()
 })
 
-const listSchema = joi.object().keys({
-  name: joi.string().required(),
+const listSchema = Joi.object().keys({
+  name: Joi.string().required(),
   title: localisedString,
-  type: joi.string().required().valid('string', 'number'),
-  items: joi.array().items(listItemSchema)
+  type: Joi.string().required().valid('string', 'number'),
+  items: Joi.array().items(listItemSchema)
 })
 
-const feeSchema = joi.object().keys({
-  description: joi.string().required(),
-  amount: joi.number().required(),
-  multiplier: joi.string().optional(),
-  condition: joi.string().optional(),
-  prefix: joi.string().optional()
+const feeSchema = Joi.object().keys({
+  description: Joi.string().required(),
+  amount: Joi.number().required(),
+  multiplier: Joi.string().optional(),
+  condition: Joi.string().optional(),
+  prefix: Joi.string().optional()
 })
 
-const multiApiKeySchema = joi.object({
-  test: joi.string().optional(),
-  production: joi.string().optional()
+const multiApiKeySchema = Joi.object({
+  test: Joi.string().optional(),
+  production: Joi.string().optional()
 })
 
-const replyToConfigurationSchema = joi.object({
-  emailReplyToId: joi.string(),
-  condition: joi.string().allow('').optional()
+const replyToConfigurationSchema = Joi.object({
+  emailReplyToId: Joi.string(),
+  condition: Joi.string().allow('').optional()
 })
 
-const notifySchema = joi.object().keys({
-  apiKey: [joi.string().allow('').optional(), multiApiKeySchema],
-  templateId: joi.string(),
-  emailField: joi.string(),
-  personalisation: joi.array().items(joi.string()),
-  personalisationFieldCustomisation: joi
-    .object()
-    .pattern(/./, joi.array().items(joi.string()))
+const notifySchema = Joi.object().keys({
+  apiKey: [Joi.string().allow('').optional(), multiApiKeySchema],
+  templateId: Joi.string(),
+  emailField: Joi.string(),
+  personalisation: Joi.array().items(Joi.string()),
+  personalisationFieldCustomisation: Joi.object()
+    .pattern(/./, Joi.array().items(Joi.string()))
     .optional(),
-  addReferencesToPersonalisation: joi.boolean().optional(),
-  emailReplyToIdConfiguration: joi.array().items(replyToConfigurationSchema)
+  addReferencesToPersonalisation: Joi.boolean().optional(),
+  emailReplyToIdConfiguration: Joi.array().items(replyToConfigurationSchema)
 })
 
-const emailSchema = joi.object().keys({
-  emailAddress: joi.string()
+const emailSchema = Joi.object().keys({
+  emailAddress: Joi.string()
 })
 
-const webhookSchema = joi.object().keys({
-  url: joi.string(),
-  allowRetry: joi.boolean().default(true)
+const webhookSchema = Joi.object().keys({
+  url: Joi.string(),
+  allowRetry: Joi.boolean().default(true)
 })
 
-const outputSchema = joi.object().keys({
-  name: joi.string(),
-  title: joi.string().optional(),
-  type: joi.string().allow('notify', 'email', 'webhook', 'sheets'),
-  outputConfiguration: joi
-    .alternatives()
-    .try(notifySchema, emailSchema, webhookSchema)
+const outputSchema = Joi.object().keys({
+  name: Joi.string(),
+  title: Joi.string().optional(),
+  type: Joi.string().allow('notify', 'email', 'webhook', 'sheets'),
+  outputConfiguration: Joi.alternatives().try(
+    notifySchema,
+    emailSchema,
+    webhookSchema
+  )
 })
 
-const feedbackSchema = joi.object().keys({
-  feedbackForm: joi.boolean().default(false),
-  url: joi.when('feedbackForm', {
-    is: joi.boolean().valid(false),
-    then: joi.string().optional().allow('')
+const feedbackSchema = Joi.object().keys({
+  feedbackForm: Joi.boolean().default(false),
+  url: Joi.when('feedbackForm', {
+    is: Joi.boolean().valid(false),
+    then: Joi.string().optional().allow('')
   }),
-  emailAddress: joi
-    .string()
+  emailAddress: Joi.string()
     .email({
       tlds: {
         allow: false
@@ -240,23 +231,22 @@ const feedbackSchema = joi.object().keys({
     .optional()
 })
 
-const phaseBannerSchema = joi.object().keys({
-  phase: joi.string().valid('alpha', 'beta')
+const phaseBannerSchema = Joi.object().keys({
+  phase: Joi.string().valid('alpha', 'beta')
 })
 
-const feeOptionSchema = joi
-  .object()
+const feeOptionSchema = Joi.object()
   .keys({
-    payApiKey: [joi.string().allow('').optional(), multiApiKeySchema],
-    paymentReferenceFormat: [joi.string().optional()],
-    payReturnUrl: joi.string().optional(),
-    allowSubmissionWithoutPayment: joi.boolean().optional().default(true),
-    maxAttempts: joi.number().optional().default(3),
-    customPayErrorMessage: joi.string().optional(),
-    showPaymentSkippedWarningPage: joi.when('allowSubmissionWithoutPayment', {
+    payApiKey: [Joi.string().allow('').optional(), multiApiKeySchema],
+    paymentReferenceFormat: [Joi.string().optional()],
+    payReturnUrl: Joi.string().optional(),
+    allowSubmissionWithoutPayment: Joi.boolean().optional().default(true),
+    maxAttempts: Joi.number().optional().default(3),
+    customPayErrorMessage: Joi.string().optional(),
+    showPaymentSkippedWarningPage: Joi.when('allowSubmissionWithoutPayment', {
       is: true,
-      then: joi.boolean().valid(true, false).default(false),
-      otherwise: joi.boolean().valid(false).default(false)
+      then: Joi.boolean().valid(true, false).default(false),
+      otherwise: Joi.boolean().valid(false).default(false)
     })
   })
   .default(({ payApiKey, paymentReferenceFormat }) => {
@@ -270,25 +260,24 @@ const feeOptionSchema = joi
  * Joi schema for `FormDefinition` interface
  * @see {@link FormDefinition}
  */
-export const formDefinitionSchema = joi
-  .object()
+export const formDefinitionSchema = Joi.object()
   .required()
   .keys({
     name: localisedString.optional(),
     feedback: feedbackSchema,
-    startPage: joi.string().required(),
-    pages: joi.array().required().items(pageSchema).unique('path'),
-    sections: joi.array().items(sectionsSchema).unique('name').required(),
-    conditions: joi.array().items(conditionsSchema).unique('name'),
-    lists: joi.array().items(listSchema).unique('name'),
-    fees: joi.array().items(feeSchema).optional(),
-    paymentReferenceFormat: joi.string().optional(),
-    metadata: joi.object({ a: joi.any() }).unknown().optional(),
-    declaration: joi.string().allow('').optional(),
-    outputs: joi.array().items(outputSchema),
-    payApiKey: [joi.string().allow('').optional(), multiApiKeySchema],
-    skipSummary: joi.boolean().default(false),
-    version: joi.number().default(CURRENT_VERSION),
+    startPage: Joi.string().required(),
+    pages: Joi.array().required().items(pageSchema).unique('path'),
+    sections: Joi.array().items(sectionsSchema).unique('name').required(),
+    conditions: Joi.array().items(conditionsSchema).unique('name'),
+    lists: Joi.array().items(listSchema).unique('name'),
+    fees: Joi.array().items(feeSchema).optional(),
+    paymentReferenceFormat: Joi.string().optional(),
+    metadata: Joi.object({ a: Joi.any() }).unknown().optional(),
+    declaration: Joi.string().allow('').optional(),
+    outputs: Joi.array().items(outputSchema),
+    payApiKey: [Joi.string().allow('').optional(), multiApiKeySchema],
+    skipSummary: Joi.boolean().default(false),
+    version: Joi.number().default(CURRENT_VERSION),
     phaseBanner: phaseBannerSchema,
     specialPages: specialPagesSchema.optional(),
     feeOptions: feeOptionSchema
