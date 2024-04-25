@@ -1,4 +1,4 @@
-import wreck from '@hapi/wreck'
+import Wreck from '@hapi/wreck'
 
 /**
  * @template {object} [BodyType=Buffer]
@@ -7,14 +7,14 @@ import wreck from '@hapi/wreck'
  * @param {RequestOptions} options
  */
 export async function request(method, url, options) {
-  const response = await wreck.request(method, url, options)
+  const response = await Wreck.request(method, url, options)
 
   if (response.statusCode !== 200) {
     throw new Error(response.statusMessage)
   }
 
   /** @type {BodyType} */
-  const body = await wreck.read(response, options)
+  const body = await Wreck.read(response, options)
 
   return { response, body }
 }
@@ -80,5 +80,5 @@ export function postJson(url, options = {}) {
 }
 
 /**
- * @typedef {Parameters<typeof wreck.defaults>[0]} RequestOptions
+ * @typedef {Parameters<typeof Wreck.defaults>[0]} RequestOptions
  */

@@ -1,8 +1,8 @@
 import { createServer } from '~/src/createServer.js'
-import * as persistenceService from '~/src/lib/formPersistenceService.js'
+import * as forms from '~/src/lib/forms.js'
 import { auth } from '~/test/fixtures/auth.js'
 
-jest.mock('~/src/lib/formPersistenceService')
+jest.mock('~/src/lib/forms.js')
 
 describe('Server API', () => {
   /** @type {import('@hapi/hapi').Server} */
@@ -53,7 +53,7 @@ describe('Server API', () => {
     }
 
     jest
-      .mocked(persistenceService.getDraftFormDefinition)
+      .mocked(forms.getDraftFormDefinition)
       .mockReturnValue(
         Promise.resolve(
           /** @type {import('@defra/forms-model').FormDefinition} */ ({})
@@ -120,7 +120,7 @@ describe('Server API', () => {
   test('persistence service errors should return 500', async () => {
     // Given
     jest
-      .mocked(persistenceService.updateDraftFormDefinition)
+      .mocked(forms.updateDraftFormDefinition)
       .mockImplementation(() =>
         Promise.reject(new Error('Error in persistence service'))
       )

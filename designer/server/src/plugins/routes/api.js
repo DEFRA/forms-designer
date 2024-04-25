@@ -1,6 +1,6 @@
 import { formDefinitionSchema } from '@defra/forms-model'
 
-import * as persistenceService from '~/src/lib/formPersistenceService.js'
+import * as forms from '~/src/lib/forms.js'
 
 /**
  * @type {ServerRoute}
@@ -12,10 +12,9 @@ export const getFormWithId = {
     async handler(request, h) {
       const { id } = request.params
       try {
-        const response = await persistenceService.getDraftFormDefinition(id)
-        const formJson = JSON.parse(response)
+        const formJson = await forms.getDraftFormDefinition(id)
 
-        return h.response(formJson)
+        return h.response(/** @type {object} */ (formJson))
       } catch (error) {
         request.logger.error(['GET /api/{id}/data', 'getFormWithId'], error)
         throw error
@@ -53,10 +52,7 @@ export const putFormWithId = {
           throw new Error(`Schema validation failed, reason: ${error.message}`)
         }
 
-        await persistenceService.updateDraftFormDefinition(
-          id,
-          JSON.stringify(value)
-        )
+        await forms.updateDraftFormDefinition(id, JSON.stringify(value))
 
         return h.response({ ok: true }).code(204)
       } catch (err) {
