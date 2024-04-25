@@ -8,6 +8,7 @@ type Toggleable<T> = boolean | T
 export interface Next {
   path: string
   condition?: string
+  redirect?: string
 }
 
 export type Link = Next
@@ -18,7 +19,9 @@ export interface Page {
   controller: string
   components?: ComponentDef[]
   section: string // the section ID
-  next?: { path: string; condition?: string }[]
+  next?: Next[]
+  repeatField?: string
+  backLinkFallback?: string
 }
 
 export interface RepeatingFieldPage extends Page {
@@ -45,7 +48,8 @@ export interface Item {
   text: string
   value: string | number | boolean
   description?: string
-  condition?: string
+  conditional?: { components: ComponentDef[] } | null
+  condition?: string | null
 }
 
 export interface List {
@@ -90,6 +94,7 @@ export interface NotifyOutputConfiguration {
 
 export interface WebhookOutputConfiguration {
   url: string
+  allowRetry?: boolean
 }
 
 export type OutputConfiguration =
@@ -135,6 +140,7 @@ export interface Fee {
 }
 
 export interface FeeOptions {
+  payApiKey?: string | MultipleApiKeys
   paymentReferenceFormat?: string
   payReturnUrl?: string
   allowSubmissionWithoutPayment: boolean
@@ -178,4 +184,5 @@ export interface FormDefinition {
   specialPages?: SpecialPages
   paymentReferenceFormat?: string
   feeOptions: FeeOptions
+  version?: number
 }
