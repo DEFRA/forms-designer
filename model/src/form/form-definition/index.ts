@@ -32,7 +32,7 @@ export const CURRENT_VERSION = 2
 const sectionsSchema = Joi.object<Section>().keys({
   name: Joi.string().required(),
   title: Joi.string().required(),
-  hideTitle: Joi.boolean().default(false)
+  hideTitle: Joi.boolean().optional().default(false)
 })
 
 const conditionFieldSchema = Joi.object().keys({
@@ -128,7 +128,7 @@ const pageSchema = Joi.object<Page | RepeatingFieldPage>().keys({
   path: Joi.string().required().disallow('/status'),
   title: localisedString,
   section: Joi.string(),
-  controller: Joi.string(),
+  controller: Joi.string().optional(),
   components: Joi.array<ComponentDef>().items(componentSchema),
   next: Joi.array<Next>().items(nextSchema),
   repeatField: Joi.string().optional(),
@@ -218,12 +218,12 @@ const notifySchema = Joi.object<NotifyOutputConfiguration>().keys({
 })
 
 const emailSchema = Joi.object<EmailOutputConfiguration>().keys({
-  emailAddress: Joi.string()
+  emailAddress: Joi.string().required()
 })
 
 const webhookSchema = Joi.object<WebhookOutputConfiguration>().keys({
   url: Joi.string(),
-  allowRetry: Joi.boolean().default(true)
+  allowRetry: Joi.boolean().optional().default(true)
 })
 
 const outputSchema = Joi.object<Output>().keys({
@@ -286,7 +286,7 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
   .required()
   .keys({
     name: localisedString.optional(),
-    feedback: feedbackSchema,
+    feedback: feedbackSchema.optional(),
     startPage: Joi.string().required(),
     pages: Joi.array<Page | RepeatingFieldPage>()
       .required()
@@ -306,11 +306,11 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
     declaration: Joi.string().allow('').optional(),
     outputs: Joi.array<Output>().items(outputSchema),
     payApiKey: [Joi.string().allow('').optional(), multiApiKeySchema],
-    skipSummary: Joi.boolean().default(false),
-    version: Joi.number().default(CURRENT_VERSION),
+    skipSummary: Joi.boolean().optional().default(false),
+    version: Joi.number().optional().default(CURRENT_VERSION),
     phaseBanner: phaseBannerSchema,
     specialPages: specialPagesSchema.optional(),
-    feeOptions: feeOptionSchema
+    feeOptions: feeOptionSchema.optional()
   })
 
 // Maintain compatibility with legacy named export
