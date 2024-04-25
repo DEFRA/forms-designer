@@ -1,8 +1,7 @@
-import { formDefinitionSchema } from './index.js'
-
 import { type ComponentDef } from '~/src/components/types.js'
 import { type Condition } from '~/src/conditions/condition.js'
 import { type OutputType } from '~/src/data-model/enums.js'
+import { formDefinitionSchema } from '~/src/form/form-definition/index.js'
 
 type Toggleable<T> = boolean | T
 

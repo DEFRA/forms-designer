@@ -7,9 +7,7 @@ const endpoint = `${config.managerUrl}/forms`
  * List forms
  */
 export async function list() {
-  const getJsonByType = /** @type {typeof getJson<FormConfiguration[]>} */ (
-    getJson
-  )
+  const getJsonByType = /** @type {typeof getJson<FormMetadata[]>} */ (getJson)
 
   const { body } = await getJsonByType(endpoint)
 
@@ -22,28 +20,28 @@ export async function list() {
  */
 export async function get(id) {
   // TODO
-  const form = /** @type {FormConfiguration} */ ({})
+  const form = /** @type {FormMetadata} */ ({})
   return Promise.resolve(form)
 }
 
 /**
  * Create form
- * @param {FormConfigurationInput} data
+ * @param {FormMetadataInput} data
  */
 export async function create(data) {
   // TODO
-  const form = /** @type {FormConfiguration} */ ({})
+  const form = /** @type {FormMetadata} */ ({})
   return Promise.resolve(form)
 }
 
 /**
  * Update form by ID
  * @param {string} id
- * @param {Partial<FormConfigurationInput>} data
+ * @param {Partial<FormMetadataInput>} data
  */
 export async function update(id, data) {
   // TODO
-  const form = /** @type {FormConfiguration} */ ({})
+  const form = /** @type {FormMetadata} */ ({})
   return Promise.resolve(form)
 }
 
@@ -57,16 +55,6 @@ export async function remove(id) {
 }
 
 /**
- * @todo Export from @defra/forms-manager
- * @typedef {object} FormConfiguration
- * @property {string} id - The id of the form
- * @property {string} title - The human-readable title of the form
- * @property {string} organisation - The organisation this form belongs to
- * @property {string} teamName - The name of the team who own this form
- * @property {string} teamEmail - The email of the team who own this form
- */
-
-/**
- * @todo Export from @defra/forms-manager
- * @typedef {Omit<FormConfiguration, 'id'>} FormConfigurationInput
+ * @typedef {import('@defra/forms-model').FormMetadata} FormMetadata
+ * @typedef {import('@defra/forms-model').FormMetadataInput} FormMetadataInput
  */
