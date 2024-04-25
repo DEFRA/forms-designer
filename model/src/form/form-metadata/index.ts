@@ -6,7 +6,7 @@ import { type FormMetadata } from '~/src/form/form-metadata/types.js'
  * Joi schema for `FormMetadata` interface
  * @see {@link FormMetadata}
  */
-export const formMetadataSchema = Joi.object()
+export const formMetadataSchema = Joi.object<FormMetadata>()
   .keys({
     title: Joi.string().max(250).trim().required(),
     organisation: Joi.string().max(100).trim().required(),
