@@ -1,4 +1,4 @@
-import { type MultipleApiKeys } from '~/src/data-model/types.js'
+import { type MultipleApiKeys } from '~/src/form/types.js'
 
 export function isMultipleApiKey(
   payApiKey: string | MultipleApiKeys | undefined

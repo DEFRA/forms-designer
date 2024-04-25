@@ -1,6 +1,7 @@
 import { type ComponentDef } from '~/src/components/types.js'
 import { type Condition } from '~/src/conditions/condition.js'
 import { type OutputType } from '~/src/data-model/enums.js'
+import { formDefinitionSchema } from '~/src/form/form-definition/index.js'
 
 type Toggleable<T> = boolean | T
 
@@ -8,6 +9,7 @@ export interface Next {
   path: string
   condition?: string
 }
+
 export type Link = Next
 
 export interface Page {
@@ -155,7 +157,8 @@ export interface ConditionRawData {
 }
 
 /**
- * `FormDefinition` is a typescript representation of `Schema`
+ * Interface for `formDefinitionSchema` Joi schema
+ * @see {@link formDefinitionSchema}
  */
 export interface FormDefinition {
   pages: (Page | RepeatingFieldPage)[]

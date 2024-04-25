@@ -1,5 +1,5 @@
-//import { Schema, FormDefinition } from '@defra/forms-model'
-import { FormDefinition } from '@defra/forms-model'
+// import { formDefinitionSchema, type FormDefinition } from '@defra/forms-model'
+import { type FormDefinition } from '@defra/forms-model'
 import { type ServerRoute, type ResponseObject } from '@hapi/hapi'
 import Wreck from '@hapi/wreck'
 
@@ -46,7 +46,7 @@ export const getFormWithId: ServerRoute = {
 //       const { persistenceService } = request.services([])
 
 //       try {
-//         const { value, error } = Schema.validate(request.payload, {
+//         const { value, error } = formDefinitionSchema.validate(request.payload, {
 //           abortEarly: false
 //         })
 

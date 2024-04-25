@@ -1,4 +1,4 @@
-import { Schema } from '~/src/schema/index.js'
+import { formDefinitionSchema } from '~/src/form/form-definition/index.js'
 
 const baseConfiguration = {
   metadata: {},
@@ -24,7 +24,7 @@ test('allows feedback URL to be an empty string when feedbackForm is false', () 
     name: 'Schema fix 3'
   }
 
-  const { value, error } = Schema.validate(goodConfiguration, {
+  const { error } = formDefinitionSchema.validate(goodConfiguration, {
     abortEarly: false
   })
 
@@ -38,7 +38,7 @@ describe('payment configuration', () => {
       paymentReferenceFormat: 'EGGS-'
     }
 
-    const { error } = Schema.validate(configuration, {
+    const { error } = formDefinitionSchema.validate(configuration, {
       abortEarly: false
     })
 
@@ -52,7 +52,7 @@ describe('payment configuration', () => {
       payApiKey: 'ab-cd'
     }
 
-    const { value } = Schema.validate(configuration, {
+    const { value } = formDefinitionSchema.validate(configuration, {
       abortEarly: false
     })
 
@@ -76,7 +76,7 @@ describe('payment configuration', () => {
       }
     }
 
-    const { value } = Schema.validate(configuration, {
+    const { value } = formDefinitionSchema.validate(configuration, {
       abortEarly: false
     })
 
@@ -101,7 +101,7 @@ describe('payment configuration', () => {
       }
     }
 
-    const { value } = Schema.validate(configuration, {
+    const { value } = formDefinitionSchema.validate(configuration, {
       abortEarly: false
     })
 
