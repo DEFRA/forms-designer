@@ -10,9 +10,6 @@ export const getFormWithId = {
   method: 'GET',
   path: '/api/{id}/data',
   options: {
-    /**
-     * @param {FormByIdInput} request
-     */
     handler(request) {
       return forms.getDraftFormDefinition(request.params.id)
     },
