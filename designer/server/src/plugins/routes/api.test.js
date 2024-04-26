@@ -121,9 +121,7 @@ describe('Server API', () => {
     // Given
     jest
       .mocked(forms.updateDraftFormDefinition)
-      .mockImplementation(() =>
-        Promise.reject(new Error('Error in persistence service'))
-      )
+      .mockRejectedValueOnce(new Error('Error in persistence service'))
 
     const options = {
       method: 'put',
