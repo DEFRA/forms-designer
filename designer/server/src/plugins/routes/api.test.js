@@ -54,10 +54,8 @@ describe('Server API', () => {
 
     jest
       .mocked(forms.getDraftFormDefinition)
-      .mockReturnValue(
-        Promise.resolve(
-          /** @type {import('@defra/forms-model').FormDefinition} */ ({})
-        )
+      .mockRejectedValueOnce(
+        /** @type {import('@defra/forms-model').FormDefinition} */ ({})
       )
 
     const result = await server.inject(options)
