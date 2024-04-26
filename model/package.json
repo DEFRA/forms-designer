@@ -20,7 +20,7 @@
     "test:watch": "jest --color --watch"
   },
   "dependencies": {
-    "joi": "17.12.3",
+    "joi": "17.13.0",
     "nanoid": "^3.3.4"
   },
   "engines": {
