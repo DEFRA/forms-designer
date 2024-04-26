@@ -76,7 +76,7 @@ export async function getDraftFormDefinition(id) {
 /**
  * Update draft form definition
  * @param {string} id
- * @param {FormDefinition} definition - form definition as string in JSON format
+ * @param {FormDefinition} definition - form definition
  */
 export async function updateDraftFormDefinition(id, definition) {
   const endpoint = getDraftFormDefinitionEndpoint(id)
