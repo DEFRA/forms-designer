@@ -7,7 +7,7 @@ const formsEndpoint = `${config.managerUrl}/forms`
  * @param {string} id - form ID
  */
 function getDraftFormDefinitionEndpoint(id) {
-  return `${config.managerUrl}/forms/${id}/definition/draft`
+  return `${formsEndpoint}/${id}/definition/draft`
 }
 
 /**
