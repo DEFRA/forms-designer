@@ -97,7 +97,7 @@
     "sass-loader": "^14.2.1",
     "source-map-loader": "^5.0.0",
     "style-loader": "^4.0.0",
-    "undici": "^6.11.1",
+    "undici": "^6.14.1",
     "webpack": "^5.91.0",
     "webpack-assets-manifest": "^5.2.1",
     "webpack-bundle-analyzer": "^4.10.2",
