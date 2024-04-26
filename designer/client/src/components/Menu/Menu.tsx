@@ -3,7 +3,6 @@ import React, { useContext } from 'react'
 import { DataPrettyPrint } from '~/src/components/DataPrettyPrint/DataPrettyPrint.jsx'
 import { FeeEdit } from '~/src/components/Fee/FeeEdit.jsx'
 import { Flyout } from '~/src/components/Flyout/index.js'
-import { FormDetails } from '~/src/components/FormDetails/index.js'
 import { SubMenu } from '~/src/components/Menu/SubMenu.jsx'
 import { useMenuItem } from '~/src/components/Menu/useMenuItem.jsx'
 import { Tabs, useTabs } from '~/src/components/Menu/useTabs.jsx'
@@ -26,7 +25,6 @@ interface Props {
 export default function Menu({ id }: Props) {
   const { data } = useContext(DataContext)
 
-  const formDetails = useMenuItem()
   const page = useMenuItem()
   const link = useMenuItem()
   const sections = useMenuItem()
@@ -42,13 +40,6 @@ export default function Menu({ id }: Props) {
   return (
     <nav className="menu">
       <div className="menu__row">
-        <button
-          className="govuk-button"
-          data-testid="menu-form-details"
-          onClick={formDetails.show}
-        >
-          {i18n('menu.formDetails')}
-        </button>
         <button
           className="govuk-button"
           data-testid="menu-page"
@@ -113,11 +104,6 @@ export default function Menu({ id }: Props) {
           {i18n('menu.summary')}
         </button>
       </div>
-      {formDetails.isVisible && (
-        <Flyout title="Form Details" onHide={formDetails.hide}>
-          <FormDetails onCreate={() => formDetails.hide()} />
-        </Flyout>
-      )}
 
       {page.isVisible && (
         <Flyout title="Add Page" onHide={page.hide}>

@@ -218,19 +218,6 @@
       "title": "Enable playback page for image quality checking"
     }
   },
-  "formDetails": {
-    "alpha": "Alpha",
-    "beta": "Beta",
-    "feedbackForm": {
-      "fieldTitle": "Is this a feedback form?"
-    },
-    "none": "None",
-    "phaseBanner": {
-      "fieldHint": "A feedback form is used to gather feedback from users about another form",
-      "fieldTitle": "Select a phase banner to add or change to your form",
-      "hint": "A phase banner includes a link for users to give feedback on your form."
-    }
-  },
   "leaveDesigner": "Are you sure you want to leave the Designer? If you have unsaved changes they will be lost.",
   "list": {
     "add": "Add list",
@@ -284,7 +271,6 @@
     "addPage": "Add page",
     "conditions": "Conditions",
     "fees": "Fees",
-    "formDetails": "Form details",
     "links": "Add link",
     "lists": "Lists",
     "outputs": "Outputs",

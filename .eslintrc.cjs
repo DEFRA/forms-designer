@@ -114,7 +114,7 @@ module.exports = {
             tags: {
               param: 'always',
               property: 'always',
-              returns: 'always'
+              returns: 'never'
             }
           }
         ],

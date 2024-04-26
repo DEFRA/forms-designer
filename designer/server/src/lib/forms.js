@@ -1,7 +1,14 @@
 import config from '~/src/config.js'
-import { getJson } from '~/src/lib/fetch.js'
+import { getJson, postJson } from '~/src/lib/fetch.js'
 
-const endpoint = `${config.managerUrl}/forms`
+const formsEndpoint = `${config.managerUrl}/forms`
+
+/**
+ * @param {string} id - form ID
+ */
+function getDraftFormDefinitionEndpoint(id) {
+  return `${formsEndpoint}/${id}/definition/draft`
+}
 
 /**
  * List forms
@@ -9,7 +16,7 @@ const endpoint = `${config.managerUrl}/forms`
 export async function list() {
   const getJsonByType = /** @type {typeof getJson<FormMetadata[]>} */ (getJson)
 
-  const { body } = await getJsonByType(endpoint)
+  const { body } = await getJsonByType(formsEndpoint)
 
   return body
 }
@@ -55,6 +62,34 @@ export async function remove(id) {
 }
 
 /**
+ * Get draft form definition
+ * @param {string} id
+ */
+export async function getDraftFormDefinition(id) {
+  const endpoint = getDraftFormDefinitionEndpoint(id)
+  const getJsonByType = /** @type {typeof getJson<FormDefinition>} */ (getJson)
+  const { body } = await getJsonByType(endpoint)
+
+  return body
+}
+
+/**
+ * Update draft form definition
+ * @param {string} id
+ * @param {FormDefinition} definition - form definition
+ */
+export async function updateDraftFormDefinition(id, definition) {
+  const endpoint = getDraftFormDefinitionEndpoint(id)
+  const postJsonByType = /** @type {typeof postJson<FormDefinition>} */ (
+    postJson
+  )
+  const { body } = await postJsonByType(endpoint, { payload: definition })
+
+  return body
+}
+
+/**
+ * @typedef {import('@defra/forms-model').FormDefinition} FormDefinition
  * @typedef {import('@defra/forms-model').FormMetadata} FormMetadata
  * @typedef {import('@defra/forms-model').FormMetadataInput} FormMetadataInput
  */

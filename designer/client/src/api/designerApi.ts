@@ -3,22 +3,21 @@ import { type FormDefinition } from '@defra/forms-model'
 import logger from '~/src/plugins/logger.js'
 
 export class DesignerApi {
-  // TODO re-enable save once forms manager supports this functionality
-  // async save(id: string, updatedData: FormDefinition): Promise<Response | any> {
-  //   const response = await window.fetch(`/forms-designer/api/${id}/data`, {
-  //     // TODO make config driven
-  //     method: 'put',
-  //     body: JSON.stringify(updatedData),
-  //     headers: {
-  //       Accept: 'application/json',
-  //       'Content-Type': 'application/json'
-  //     }
-  //   })
-  //   if (!response.ok) {
-  //     throw Error(response.statusText)
-  //   }
-  //   return response
-  // }
+  async save(id: string, updatedData: FormDefinition): Promise<Response | any> {
+    const response = await window.fetch(`/forms-designer/api/${id}/data`, {
+      // TODO make config driven
+      method: 'put',
+      body: JSON.stringify(updatedData),
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+    if (!response.ok) {
+      throw Error(response.statusText)
+    }
+    return response
+  }
 
   async fetchData(id: string) {
     try {

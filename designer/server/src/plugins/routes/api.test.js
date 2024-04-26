@@ -1,31 +1,16 @@
-import { type Server } from '@hapi/hapi'
-import Wreck from '@hapi/wreck'
-
+import { createServer } from '~/src/createServer.js'
+import * as forms from '~/src/lib/forms.js'
 import { auth } from '~/test/fixtures/auth.js'
 
+jest.mock('~/src/lib/forms.js')
+
 describe('Server API', () => {
-  const startServer = async (): Promise<Server> => {
-    const { createServer } = await import('~/src/createServer.js')
-
-    const server = await createServer()
-    await server.initialize()
-    return server
-  }
-
-  let server: Server
+  /** @type {import('@hapi/hapi').Server} */
+  let server
 
   beforeAll(async () => {
-    server = await startServer()
-    const { persistenceService } = server.services()
-    persistenceService.listAllConfigurations = () => {
-      return Promise.resolve([])
-    }
-    persistenceService.copyConfiguration = () => {
-      return Promise.resolve([])
-    }
-    persistenceService.uploadConfiguration = () => {
-      return Promise.resolve([])
-    }
+    server = await createServer()
+    await server.initialize()
   })
 
   afterAll(async () => {
@@ -67,12 +52,14 @@ describe('Server API', () => {
       }
     }
 
-    jest.spyOn(Wreck, 'get').mockResolvedValue({
-      payload: Buffer.from(JSON.stringify({}))
-    })
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockRejectedValueOnce(
+        /** @type {import('@defra/forms-model').FormDefinition} */ ({})
+      )
 
     const result = await server.inject(options)
-    expect(result.statusCode).toBe(401)
+    expect(result.statusCode).toBe(500)
 
     const optionsCrash = {
       method: 'get',
@@ -86,8 +73,7 @@ describe('Server API', () => {
     )
   })
 
-  // TODO re-enable once the forms manager supports this
-  test.skip('Schema validation failures should return 401', async () => {
+  test('Schema validation failures should return 500', async () => {
     const options = {
       method: 'put',
       url: '/forms-designer/api/test-form-id/data',
@@ -121,18 +107,19 @@ describe('Server API', () => {
       }
     }
 
-    const result = await server.inject<{ err: Error }>(options)
-    expect(result.statusCode).toBe(401)
+    const result = /** @type {ServerInjectResponse<{ err: Error }>}) */ (
+      await server.inject(options)
+    )
+
+    expect(result.statusCode).toBe(500)
     expect(result.result?.err.message).toMatch('Schema validation failed')
   })
 
-  // TODO re-enable once the forms manager supports this
-  test.skip('persistence service errors should return 401', async () => {
+  test('persistence service errors should return 500', async () => {
     // Given
-    const { persistenceService } = server.services()
-    persistenceService.uploadConfiguration = () => {
-      return Promise.reject(new Error('Error in persistence service'))
-    }
+    jest
+      .mocked(forms.updateDraftFormDefinition)
+      .mockRejectedValueOnce(new Error('Error in persistence service'))
 
     const options = {
       method: 'put',
@@ -169,10 +156,17 @@ describe('Server API', () => {
     }
 
     // When
-    const result = await server.inject<{ err: Error }>(options)
+    const result = /** @type {ServerInjectResponse<{ err: Error }>}) */ (
+      await server.inject(options)
+    )
 
     // Then
-    expect(result.statusCode).toBe(401)
+    expect(result.statusCode).toBe(500)
     expect(result.result?.err.message).toBe('Error in persistence service')
   })
 })
+
+/**
+ * @template {object} Result
+ * @typedef {import('@hapi/hapi').ServerInjectResponse<Result>} ServerInjectResponse
+ */
