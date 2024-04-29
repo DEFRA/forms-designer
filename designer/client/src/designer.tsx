@@ -19,7 +19,6 @@ interface State {
   id?: any
   flyoutCount?: number
   loading?: boolean
-  error?: string // not using as of now
   newConfig?: boolean // TODO - is this required?
   data?: FormDefinition
   page?: any
@@ -45,23 +44,12 @@ export default class Designer extends Component<Props, State> {
   }
 
   save = async (toUpdate, callback = () => {}) => {
-    try {
-      await this.designerApi.save(this.id, toUpdate)
-      this.setState(
-        {
-          data: toUpdate, // optimistic save
-          error: undefined
-        },
-        callback()
-      )
-      return toUpdate
-    } catch (e) {
-      this.setState({ error: e.message })
-      this.props.history.push({
-        pathname: '/save-error',
-        state: { id: this.id }
-      })
-    }
+    await this.designerApi.save(this.id, toUpdate)
+    this.setState(
+      { data: toUpdate }, // optimistic save
+      callback()
+    )
+    return toUpdate
   }
 
   updatePageContext = (page) => {
@@ -77,7 +65,7 @@ export default class Designer extends Component<Props, State> {
   }
 
   render() {
-    const { flyoutCount, data, loading, error } = this.state
+    const { flyoutCount, data, loading } = this.state
     const { previewUrl } = window
     if (loading) {
       return <p>Loading ...</p>
@@ -94,7 +82,7 @@ export default class Designer extends Component<Props, State> {
         <DataContext.Provider value={dataContextProviderValue}>
           <FlyoutContext.Provider value={flyoutContextProviderValue}>
             <div id="designer">
-              <Prompt when={!error} message={i18n('leaveDesigner')} />
+              <Prompt message={i18n('leaveDesigner')} />
               <Menu id={this.id} updatePersona={this.updatePersona} />
               <Visualisation
                 persona={this.state.persona}

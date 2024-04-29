@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 
 import Designer from '~/src/designer.jsx'
 import { initI18n } from '~/src/i18n/index.js'
-import { SaveError } from '~/src/pages/ErrorPages/index.js'
 
 initI18n()
 
@@ -28,9 +27,6 @@ export class App extends React.Component {
       <Router basename="/editor">
         <Switch>
           <Route path="/:id" component={Designer} />
-          <Route path="/save-error" exact>
-            <SaveError />
-          </Route>
           <Route path="*">
             <NoMatch />
           </Route>

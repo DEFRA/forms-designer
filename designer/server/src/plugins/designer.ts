@@ -14,8 +14,6 @@ export const designerPlugin = {
     register(server) {
       server.route(app.getAppChildRoutes)
 
-      server.route(app.getErrorCrashReport)
-
       server.route({
         method: 'GET',
         path: '/feature-toggles',
