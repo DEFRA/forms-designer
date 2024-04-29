@@ -15,7 +15,6 @@ import { buildRedisClient } from '~/src/common/helpers/redis-client.js'
 import { sessionManager } from '~/src/common/helpers/session-manager.js'
 import * as nunjucks from '~/src/common/nunjucks/index.js'
 import config from '~/src/config.js'
-import { designerPlugin } from '~/src/plugins/designer.js'
 import router from '~/src/plugins/router.js'
 
 const serverOptions = (): ServerOptions => {
@@ -82,7 +81,6 @@ export async function createServer() {
 
   await server.register(sessionCookie)
   await server.register(nunjucks.plugin)
-  await server.register(designerPlugin)
   await server.register(router)
   await server.register(requestLogger)
 

@@ -4,9 +4,9 @@ import Joi from 'joi'
 import * as forms from '~/src/lib/forms.js'
 
 /**
- * @type {ServerRoute<{ Params: FormByIdInput }>}
+ * @satisfies {ServerRoute<{ Params: FormByIdInput }>}
  */
-export const getFormWithId = {
+const getFormWithId = {
   method: 'GET',
   path: '/api/{id}/data',
   options: {
@@ -22,9 +22,9 @@ export const getFormWithId = {
 }
 
 /**
- * @type {ServerRoute<{ Params: FormByIdInput, Payload: FormDefinition }>}
+ * @satisfies {ServerRoute<{ Params: FormByIdInput, Payload: FormDefinition }>}
  */
-export const putFormWithId = {
+const putFormWithId = {
   method: 'PUT',
   path: '/api/{id}/data',
   options: {
@@ -69,9 +69,9 @@ export const putFormWithId = {
 }
 
 /**
- * @type {ServerRoute}
+ * @satisfies {ServerRoute}
  */
-export const log = {
+const log = {
   method: 'POST',
   path: '/api/log',
   options: {
@@ -86,6 +86,8 @@ export const log = {
     }
   }
 }
+
+export default [getFormWithId, putFormWithId, log]
 
 /**
  * @template {import('@hapi/hapi').ReqRef} [ReqRef=import('@hapi/hapi').ReqRefDefaults]
