@@ -99,19 +99,6 @@ describe('Server tests', () => {
     expect($phaseBanner).not.toBeInTheDocument()
   })
 
-  test('Feature toggles api contains data', async () => {
-    server = await startServer()
-
-    const options = {
-      method: 'get',
-      url: '/feature-toggles',
-      auth
-    }
-
-    const { result } = await server.inject(options)
-    expect(result).toContain('{"featureEditPageDuplicateButton":false}')
-  })
-
   test('security headers are present', async () => {
     server = await startServer()
 

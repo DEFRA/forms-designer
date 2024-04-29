@@ -1,5 +1,4 @@
 import { type ServerRegisterPluginObject } from '@hapi/hapi'
-import { envStore, flagg } from 'flagg'
 
 import pkg from '../../../package.json' with { type: 'json' }
 
@@ -13,26 +12,6 @@ export const designerPlugin = {
     dependencies: '@hapi/vision',
     register(server) {
       server.route(app.getAppChildRoutes)
-
-      server.route({
-        method: 'GET',
-        path: '/feature-toggles',
-        options: {
-          handler(request, h) {
-            const featureFlags = flagg({
-              store: envStore(process.env),
-              definitions: {
-                featureEditPageDuplicateButton: { default: false }
-              }
-            })
-
-            return h
-              .response(JSON.stringify(featureFlags.getAllResolved()))
-              .code(200)
-          }
-        }
-      })
-
       server.route(api.getFormWithId)
       server.route(api.putFormWithId)
       server.route(api.log)

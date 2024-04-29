@@ -5,7 +5,6 @@ import { Prompt } from 'react-router-dom'
 import { DesignerApi } from '~/src/api/designerApi.js'
 import Menu from '~/src/components/Menu/Menu.jsx'
 import { Visualisation } from '~/src/components/Visualisation/index.js'
-import { FeatureFlagProvider } from '~/src/context/FeatureFlagContext.jsx'
 import { FlyoutContext, DataContext } from '~/src/context/index.js'
 import { i18n } from '~/src/i18n/index.js'
 
@@ -78,21 +77,19 @@ export default class Designer extends Component<Props, State> {
     }
     const dataContextProviderValue = { data, save: this.save }
     return (
-      <FeatureFlagProvider>
-        <DataContext.Provider value={dataContextProviderValue}>
-          <FlyoutContext.Provider value={flyoutContextProviderValue}>
-            <div id="designer">
-              <Prompt message={i18n('leaveDesigner')} />
-              <Menu id={this.id} updatePersona={this.updatePersona} />
-              <Visualisation
-                persona={this.state.persona}
-                id={this.id}
-                previewUrl={previewUrl}
-              />
-            </div>
-          </FlyoutContext.Provider>
-        </DataContext.Provider>
-      </FeatureFlagProvider>
-    ) //
+      <DataContext.Provider value={dataContextProviderValue}>
+        <FlyoutContext.Provider value={flyoutContextProviderValue}>
+          <div id="designer">
+            <Prompt message={i18n('leaveDesigner')} />
+            <Menu id={this.id} updatePersona={this.updatePersona} />
+            <Visualisation
+              persona={this.state.persona}
+              id={this.id}
+              previewUrl={previewUrl}
+            />
+          </div>
+        </FlyoutContext.Provider>
+      </DataContext.Provider>
+    )
   }
 }
