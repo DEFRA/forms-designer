@@ -1,5 +1,3 @@
-import config from '~/src/config.js'
-
 /**
  * @type {ServerRoute}
  */
@@ -7,7 +5,7 @@ export default {
   method: 'GET',
   path: '/login',
   handler(request, h) {
-    return h.redirect(config.appPathPrefix)
+    return h.redirect('/')
   },
   options: {
     auth: {

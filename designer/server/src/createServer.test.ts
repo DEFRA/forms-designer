@@ -26,7 +26,7 @@ describe('Server tests', () => {
 
     const options = {
       method: 'GET',
-      url: '/forms-designer/help/accessibility-statement',
+      url: '/help/accessibility-statement',
       auth
     }
 
@@ -44,7 +44,7 @@ describe('Server tests', () => {
 
     const options = {
       method: 'GET',
-      url: '/forms-designer/help/cookies',
+      url: '/help/cookies',
       auth
     }
 
@@ -70,7 +70,7 @@ describe('Server tests', () => {
 
     const options = {
       method: 'get',
-      url: '/forms-designer/editor/dummy-id-for-demo',
+      url: '/editor/dummy-id-for-demo',
       auth
     }
 
@@ -89,7 +89,7 @@ describe('Server tests', () => {
 
     const options = {
       method: 'get',
-      url: '/forms-designer/editor/dummy-id-for-demo',
+      url: '/editor/dummy-id-for-demo',
       auth
     }
 
@@ -104,7 +104,7 @@ describe('Server tests', () => {
 
     const options = {
       method: 'get',
-      url: '/forms-designer/feature-toggles',
+      url: '/feature-toggles',
       auth
     }
 
@@ -117,7 +117,7 @@ describe('Server tests', () => {
 
     const options = {
       method: 'get',
-      url: '/forms-designer/editor/dummy-id-for-demo',
+      url: '/editor/dummy-id-for-demo',
       auth
     }
 

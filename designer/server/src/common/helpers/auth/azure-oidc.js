@@ -17,8 +17,7 @@ const azureOidc = {
         (res) => res.json()
       )
 
-      const authCallbackUrl =
-        config.appBaseUrl + config.appPathPrefix + '/auth/callback'
+      const authCallbackUrl = config.appBaseUrl + '/auth/callback'
 
       // making the OIDC config available to server
       server.app.oidc = oidc

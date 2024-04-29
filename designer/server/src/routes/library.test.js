@@ -22,6 +22,7 @@ describe('Forms library routes', () => {
       {
         id: '661e4ca5039739ef2902b214',
         title,
+        slug: 'form-1',
         organisation: 'DEFRA',
         teamName: 'Forms',
         teamEmail: 'defraforms@defra.gov.uk'
@@ -30,7 +31,7 @@ describe('Forms library routes', () => {
 
     const options = {
       method: 'GET',
-      url: '/forms-designer/library',
+      url: '/library',
       auth
     }
 

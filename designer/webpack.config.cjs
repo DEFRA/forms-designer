@@ -115,8 +115,6 @@ module.exports = {
   },
   output: {
     path: join(__dirname, 'client/dist'),
-    publicPath: '/forms-designer/',
-
     filename:
       NODE_ENV === 'production'
         ? 'javascripts/[name].[contenthash:7].min.js'
@@ -171,7 +169,7 @@ module.exports = {
     alias: {
       '~': join(__dirname, 'client'),
       'govuk-frontend': govukFrontendPath,
-      '/forms-designer/assets': join(govukFrontendPath, 'govuk/assets/')
+      '/assets': join(govukFrontendPath, 'govuk/assets/')
     },
     extensionAlias: {
       '.cjs': ['.cts', '.cjs'],

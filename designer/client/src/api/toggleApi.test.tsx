@@ -4,7 +4,7 @@ import { FeatureToggleApi } from '~/src/api/toggleApi.js'
 import { server, mockedFormHandlers } from '~/test/testServer.js'
 
 describe('Toggle API', () => {
-  const url = '/forms-designer/feature-toggles'
+  const url = '/feature-toggles'
 
   beforeAll(() => server.listen())
   beforeEach(() => server.resetHandlers(...mockedFormHandlers))

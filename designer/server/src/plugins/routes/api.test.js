@@ -20,7 +20,7 @@ describe('Server API', () => {
   test.skip('Failure to communicate with Runner should place error on session', async () => {
     const options = {
       method: 'put',
-      url: '/forms-designer/api/test-form-id/data',
+      url: '/api/test-form-id/data',
       auth,
       payload: {
         metadata: {},
@@ -63,7 +63,7 @@ describe('Server API', () => {
 
     const optionsCrash = {
       method: 'get',
-      url: '/forms-designer/error/crashreport/test-form-id',
+      url: '/error/crashreport/test-form-id',
       auth
     }
 
@@ -76,7 +76,7 @@ describe('Server API', () => {
   test('Schema validation failures should return 500', async () => {
     const options = {
       method: 'put',
-      url: '/forms-designer/api/test-form-id/data',
+      url: '/api/test-form-id/data',
       auth,
       payload: {
         metadata: {},
@@ -112,7 +112,7 @@ describe('Server API', () => {
     )
 
     expect(result.statusCode).toBe(500)
-    expect(result.result?.err.message).toMatch('Schema validation failed')
+    expect(result.result.err.message).toMatch('Schema validation failed')
   })
 
   test('persistence service errors should return 500', async () => {
@@ -123,7 +123,7 @@ describe('Server API', () => {
 
     const options = {
       method: 'put',
-      url: '/forms-designer/api/test-form-id/data',
+      url: '/api/test-form-id/data',
       auth,
       payload: {
         metadata: {},
@@ -162,7 +162,7 @@ describe('Server API', () => {
 
     // Then
     expect(result.statusCode).toBe(500)
-    expect(result.result?.err.message).toBe('Error in persistence service')
+    expect(result.result.err.message).toBe('Error in persistence service')
   })
 })
 

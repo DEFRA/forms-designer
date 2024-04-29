@@ -2,7 +2,7 @@ import logger from '~/src/plugins/logger.js'
 export class FeatureToggleApi {
   async fetch() {
     try {
-      const response = await window.fetch('/forms-designer/feature-toggles')
+      const response = await window.fetch('/feature-toggles')
       if (response.status == 200) {
         return response.json()
       } else {

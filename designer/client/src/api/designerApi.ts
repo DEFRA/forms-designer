@@ -4,7 +4,7 @@ import logger from '~/src/plugins/logger.js'
 
 export class DesignerApi {
   async save(id: string, updatedData: FormDefinition): Promise<Response | any> {
-    const response = await window.fetch(`/forms-designer/api/${id}/data`, {
+    const response = await window.fetch(`/api/${id}/data`, {
       // TODO make config driven
       method: 'put',
       body: JSON.stringify(updatedData),
@@ -21,7 +21,7 @@ export class DesignerApi {
 
   async fetchData(id: string) {
     try {
-      const response = await window.fetch(`/forms-designer/api/${id}/data`)
+      const response = await window.fetch(`/api/${id}/data`)
       return response.json()
     } catch (e) {
       logger.error('fetchData', e)

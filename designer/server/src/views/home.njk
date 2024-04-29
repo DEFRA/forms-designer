@@ -10,7 +10,7 @@
     {% call appPageBody() %}
       {{ govukButton({
         text: "Sign out",
-        href: config.appPathPrefix + "/logout"
+        href: "/logout"
       })}}
     {% endcall %}
   {% else %}
@@ -23,7 +23,7 @@
 
       {{ govukButton({
         text: "Continue",
-        href: config.appPathPrefix + "/login"
+        href: "/login"
       })}}
     {% endcall %}
   {% endif %}
