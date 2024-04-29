@@ -2,10 +2,8 @@ import { clone } from '@defra/forms-model'
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import React from 'react'
 
-import FeatureToggle from '~/src/FeatureToggle.jsx'
 import { Flyout } from '~/src/components/Flyout/index.js'
 import { RenderInPortal } from '~/src/components/RenderInPortal/index.js'
-import { FeatureFlags } from '~/src/context/FeatureFlagContext.jsx'
 import { DataContext } from '~/src/context/index.js'
 import { findPage, updateLinksTo } from '~/src/data/index.js'
 import ErrorSummary from '~/src/error-summary.jsx'
@@ -118,24 +116,6 @@ export class PageEdit extends React.Component {
       await save(copy)
     } catch (error) {
       logger.error('PageEdit', error)
-    }
-  }
-
-  onClickDuplicate = async (e) => {
-    e.preventDefault()
-    const { page } = this.props
-    const { data, save } = this.context
-    const copy = clone(data)
-    const duplicatedPage = clone(page)
-    duplicatedPage.path = `${duplicatedPage.path}-${randomId()}`
-    duplicatedPage.components.forEach((component) => {
-      component.name = `${duplicatedPage.path}-${randomId()}`
-    })
-    copy.pages.push(duplicatedPage)
-    try {
-      await save(copy)
-    } catch (err) {
-      logger.error('PageEdit', err)
     }
   }
 
@@ -309,17 +289,6 @@ export class PageEdit extends React.Component {
           <button className="govuk-button" type="submit">
             {i18n('save')}
           </button>{' '}
-          <FeatureToggle
-            feature={FeatureFlags.FEATURE_EDIT_PAGE_DUPLICATE_BUTTON}
-          >
-            <button
-              className="govuk-button"
-              type="button"
-              onClick={this.onClickDuplicate}
-            >
-              {i18n('duplicate')}
-            </button>{' '}
-          </FeatureToggle>
           <button
             className="govuk-button"
             type="button"
