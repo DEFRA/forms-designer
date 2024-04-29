@@ -28,9 +28,6 @@
     "test": "jest --color --coverage --verbose",
     "test:watch": "jest --color --watch"
   },
-  "dependencies": {
-    "semver": "5.5.x"
-  },
   "devDependencies": {
     "@babel/cli": "^7.24.1",
     "@babel/core": "^7.24.4",
