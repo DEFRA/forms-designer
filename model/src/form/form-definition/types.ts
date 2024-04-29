@@ -8,6 +8,7 @@ type Toggleable<T> = boolean | T
 export interface Next {
   path: string
   condition?: string
+  redirect?: string
 }
 
 export type Link = Next
@@ -15,10 +16,12 @@ export type Link = Next
 export interface Page {
   title: string
   path: string
-  controller: string
+  controller?: string
   components?: ComponentDef[]
   section: string // the section ID
-  next?: { path: string; condition?: string }[]
+  next?: Next[]
+  repeatField?: string
+  backLinkFallback?: string
 }
 
 export interface RepeatingFieldPage extends Page {
@@ -38,14 +41,15 @@ export interface RepeatingFieldPage extends Page {
 export interface Section {
   name: string
   title: string
-  hideTitle: boolean
+  hideTitle?: boolean
 }
 
 export interface Item {
   text: string
   value: string | number | boolean
   description?: string
-  condition?: string
+  conditional?: { components: ComponentDef[] } | null
+  condition?: string | null
 }
 
 export interface List {
@@ -84,12 +88,13 @@ export interface NotifyOutputConfiguration {
   addReferencesToPersonalisation?: boolean
   emailReplyToIdConfiguration?: {
     emailReplyToId: string
-    condition?: string | undefined
+    condition?: string
   }[]
 }
 
 export interface WebhookOutputConfiguration {
   url: string
+  allowRetry?: boolean
 }
 
 export type OutputConfiguration =
@@ -135,6 +140,7 @@ export interface Fee {
 }
 
 export interface FeeOptions {
+  payApiKey?: string | MultipleApiKeys
   paymentReferenceFormat?: string
   payReturnUrl?: string
   allowSubmissionWithoutPayment: boolean
@@ -165,17 +171,18 @@ export interface FormDefinition {
   conditions: ConditionRawData[]
   lists: List[]
   sections: Section[]
-  startPage?: Page['path'] | undefined
-  name?: string | undefined
+  startPage?: Page['path']
+  name?: string
   feedback?: Feedback
   phaseBanner?: PhaseBanner
   fees: Fee[]
-  skipSummary?: boolean | undefined
+  skipSummary?: boolean
   outputs: Output[]
-  declaration?: string | undefined
+  declaration?: string
   metadata?: Record<string, unknown>
-  payApiKey?: string | MultipleApiKeys | undefined
+  payApiKey?: string | MultipleApiKeys
   specialPages?: SpecialPages
   paymentReferenceFormat?: string
-  feeOptions: FeeOptions
+  feeOptions?: FeeOptions
+  version?: number
 }

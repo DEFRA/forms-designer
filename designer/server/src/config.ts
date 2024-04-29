@@ -41,7 +41,7 @@ export interface Config {
 }
 
 // Define config schema
-const schema = joi.object({
+const schema = joi.object<Config>({
   port: joi.number().default(3000),
   env: joi
     .string()
@@ -132,4 +132,4 @@ if (result.error) {
 }
 
 // Use the joi validated value
-export default result.value as Config
+export default result.value
