@@ -8,7 +8,8 @@ export default [
     method: 'GET',
     path: '/',
     handler(request, h) {
-      return h.view('home', homeViewModel())
+      const model = homeViewModel()
+      return h.view('generic/views/home', model)
     },
     options: {
       auth: {

@@ -1,10 +1,7 @@
-export { default as api } from './api.js'
-export { default as assets } from './assets.js'
-export { default as auth } from './auth.js'
-export { default as create } from './create.js'
-export { default as editor } from './editor.js'
-export { default as help } from './help.js'
-export { default as home } from './home.js'
-export { default as library } from './library.js'
-export { default as login } from './login.js'
-export { default as logout } from './logout.js'
+import account from './account/index.js'
+import api from './api.js'
+import assets from './assets.js'
+import forms from './forms/index.js'
+import generic from './generic/index.js'
+
+export default [account, api, assets, forms, generic].flat()
