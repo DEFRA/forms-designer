@@ -1,10 +1,10 @@
 import config from '~/src/config.js'
 
-/**
- * @type {ServerRoute[]}
- */
 export default [
-  {
+  /**
+   * @satisfies {ServerRoute}
+   */
+  ({
     method: 'get',
     path: '/editor/{path*}',
     options: {
@@ -15,7 +15,7 @@ export default [
         })
       }
     }
-  }
+  })
 ]
 
 /**

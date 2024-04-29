@@ -2,11 +2,11 @@ import { join } from 'node:path'
 
 import config from '~/src/config.js'
 
-/**
- * @type {ServerRoute[]}
- */
 export default [
-  {
+  /**
+   * @satisfies {ServerRoute}
+   */
+  ({
     method: 'GET',
     path: '/health-check',
     handler() {
@@ -20,8 +20,12 @@ export default [
         uptime
       }
     }
-  },
-  {
+  }),
+
+  /**
+   * @satisfies {ServerRoute}
+   */
+  ({
     method: 'GET',
     path: '/robots.txt',
     options: {
@@ -30,8 +34,12 @@ export default [
         file: 'server/public/static/robots.txt'
       }
     }
-  },
-  {
+  }),
+
+  /**
+   * @satisfies {ServerRoute}
+   */
+  ({
     method: 'GET',
     path: '/javascripts/{path*}',
     options: {
@@ -42,8 +50,12 @@ export default [
         }
       }
     }
-  },
-  {
+  }),
+
+  /**
+   * @satisfies {ServerRoute}
+   */
+  ({
     method: 'GET',
     path: '/stylesheets/{path*}',
     options: {
@@ -54,8 +66,12 @@ export default [
         }
       }
     }
-  },
-  {
+  }),
+
+  /**
+   * @satisfies {ServerRoute}
+   */
+  ({
     method: 'GET',
     path: '/assets/{path*}',
     options: {
@@ -66,7 +82,7 @@ export default [
         }
       }
     }
-  }
+  })
 ]
 
 /**
