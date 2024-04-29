@@ -132,7 +132,6 @@
     }
   },
   "delete": "Delete",
-  "duplicate": "Duplicate",
   "edit": "edit {{noun}}",
   "enterDateTimeAsGmt": "Dates and times should be GMT timezone",
   "error": "Error:",
