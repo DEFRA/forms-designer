@@ -112,7 +112,6 @@ describe('Server API', () => {
     )
 
     expect(result.statusCode).toBe(500)
-    console.log(result.result)
     expect(result.result.err.message).toMatch('Schema validation failed')
   })
 
