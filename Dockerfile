@@ -22,17 +22,10 @@ COPY --chown=node:node ./model/package.json ./model/
 
 RUN npm ci
 
-COPY --chown=node:node ./ ./
+COPY --chown=node:node . .
+RUN npm run build
 
 CMD [ "npm", "run", "dev" ]
-
-FROM development as productionBuild
-
-WORKDIR /home/node/app
-
-ENV NODE_ENV production
-
-RUN npm run build
 
 FROM defradigital/node:${PARENT_VERSION} AS production
 
@@ -50,14 +43,9 @@ LABEL uk.gov.defra.ffc.parent-image=defradigital/node:${PARENT_VERSION}
 
 WORKDIR /home/node/app
 
-COPY --from=productionBuild /home/node/app/packag*.json ./
-COPY --from=productionBuild /home/node/app/node_modules ./node_modules
-COPY --from=productionBuild /home/node/app/designer/client/dist ./designer/client/dist
-COPY --from=productionBuild /home/node/app/designer/server/dist ./designer/server/dist
-COPY --from=productionBuild /home/node/app/designer/node_modules ./designer/node_modules
-COPY --from=productionBuild /home/node/app/designer/package.json ./designer/package.json
-COPY --from=productionBuild /home/node/app/model/package.json ./model/
-COPY --from=productionBuild /home/node/app/model/dist ./model/dist
+COPY --from=development /home/node/app/ ./
+
+RUN npm ci --omit=dev
 
 ARG PORT
 ENV PORT ${PORT}
