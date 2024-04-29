@@ -27,6 +27,14 @@ RUN npm run build
 
 CMD [ "npm", "run", "dev" ]
 
+FROM development as productionBuild
+
+WORKDIR /home/node/app
+
+ENV NODE_ENV production
+
+RUN npm run build
+
 FROM defradigital/node:${PARENT_VERSION} AS production
 
 ENV TZ="Europe/London"
@@ -43,9 +51,18 @@ LABEL uk.gov.defra.ffc.parent-image=defradigital/node:${PARENT_VERSION}
 
 WORKDIR /home/node/app
 
-COPY --from=development /home/node/app/ ./
+COPY --from=productionBuild /home/node/app/packag*.json ./
 
+COPY --from=productionBuild /home/node/app/model/package.json ./model/
+COPY --from=productionBuild /home/node/app/model/dist ./model/dist
+
+COPY --from=productionBuild /home/node/app/designer/package.json ./designer/package.json
+COPY --from=productionBuild /home/node/app/designer/client/dist ./designer/client/dist
+COPY --from=productionBuild /home/node/app/designer/server/dist ./designer/server/dist
+
+USER root
 RUN npm ci --omit=dev
+USER node
 
 ARG PORT
 ENV PORT ${PORT}
