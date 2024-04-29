@@ -1,7 +1,5 @@
 import { buildNavigation } from '~/src/common/nunjucks/context/build-navigation.js'
-import config from '~/src/config.js'
 
-const appPathPrefix = config.appPathPrefix
 const mockRequest = ({ path = '' } = {}) => ({
   path
 })
@@ -12,12 +10,12 @@ describe('#buildNavigation', () => {
       {
         isActive: false,
         text: 'Home',
-        url: appPathPrefix
+        url: '/'
       },
       {
         isActive: false,
         text: 'Forms library',
-        url: `${appPathPrefix}/library`
+        url: '/library'
       }
     ])
   })
@@ -25,11 +23,11 @@ describe('#buildNavigation', () => {
   test.each([
     {
       text: 'Home',
-      url: appPathPrefix
+      url: '/'
     },
     {
       text: 'Forms library',
-      url: `${appPathPrefix}/library`
+      url: '/library'
     }
   ])('Should provide expected highlighted navigation details', (fixture) => {
     expect(buildNavigation(mockRequest({ path: fixture.url }))).toEqual(

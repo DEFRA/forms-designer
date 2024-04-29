@@ -28,7 +28,7 @@ describe('/health-check Route', () => {
 
     const options = {
       method: 'GET',
-      url: '/forms-designer/health-check',
+      url: '/health-check',
       auth
     }
 

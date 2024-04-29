@@ -15,10 +15,10 @@ describe('App routes test', () => {
     await server.stop()
   })
 
-  test('GET /forms-designer/editor/{:id}/ should serve designer editor page', async () => {
+  test('GET /editor/{:id}/ should serve designer editor page', async () => {
     const options = {
       method: 'get',
-      url: '/forms-designer/editor/my-form-id',
+      url: '/editor/my-form-id',
       auth
     }
 

@@ -18,7 +18,7 @@ export default {
       request.cookieAuth.set({ sessionId })
     }
 
-    const redirect = request.yar.flash('referrer')?.at(0) ?? '/forms-designer'
+    const redirect = request.yar.flash('referrer').at(0) ?? '/'
 
     return h.redirect(redirect)
   },

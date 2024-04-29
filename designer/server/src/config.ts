@@ -15,7 +15,6 @@ export interface Config {
   env: 'development' | 'test' | 'production'
   port: number
   appDir: string
-  appPathPrefix: string
   clientDir: string
   previewUrl: string
   managerUrl: string
@@ -48,7 +47,6 @@ const schema = joi.object({
     .valid('development', 'test', 'production')
     .default('development'),
   appDir: joi.string().default(resolve(dirname(configPath), '../dist')),
-  appPathPrefix: joi.string().default('/forms-designer'),
   clientDir: joi
     .string()
     .default(resolve(dirname(configPath), '../../client/dist')),
@@ -99,7 +97,6 @@ const result = schema.validate(
   {
     port: process.env.PORT,
     env: process.env.NODE_ENV,
-    appPathPrefix: process.env.APP_PATH_PREFIX,
     managerUrl: process.env.MANAGER_URL,
     previewUrl: process.env.PREVIEW_URL,
     serviceName: 'Submit a form to Defra',

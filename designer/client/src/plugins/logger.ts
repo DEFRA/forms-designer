@@ -8,7 +8,7 @@ export default pino({
     transmit: {
       level: logLevel,
       send: async function (_level, logEvent) {
-        const newResponse = await window.fetch('/forms-designer/api/log', {
+        const newResponse = await window.fetch('/api/log', {
           method: 'POST',
           body: JSON.stringify(logEvent),
           headers: {

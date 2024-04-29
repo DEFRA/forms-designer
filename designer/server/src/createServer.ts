@@ -61,10 +61,6 @@ const serverOptions = (): ServerOptions => {
   }
 }
 
-const registrationOptions = {
-  routes: { prefix: config.appPathPrefix }
-}
-
 export async function createServer() {
   const server = hapi.server(serverOptions())
 
@@ -77,7 +73,7 @@ export async function createServer() {
   server.decorate('request', 'getUserSession', getUserSession)
   server.decorate('request', 'dropUserSession', dropUserSession)
 
-  await server.register(inert, registrationOptions)
+  await server.register(inert)
   await server.register(sessionManager)
 
   await server.register(
@@ -90,9 +86,9 @@ export async function createServer() {
 
   await server.register(Scooter)
   await server.register(configureBlankiePlugin())
-  await server.register(nunjucks.plugin, registrationOptions)
-  await server.register(designerPlugin, registrationOptions)
-  await server.register(router, registrationOptions)
+  await server.register(nunjucks.plugin)
+  await server.register(designerPlugin)
+  await server.register(router)
   await server.register(requestLogger)
 
   return server
