@@ -11,6 +11,9 @@ export const formMetadataSchema = Joi.object<FormMetadata>()
     title: Joi.string().max(250).trim().required(),
     organisation: Joi.string().max(100).trim().required(),
     teamName: Joi.string().max(100).trim().required(),
-    teamEmail: Joi.string().email().trim().required()
+    teamEmail: Joi.string()
+      .email({ tlds: { allow: ['uk'] } })
+      .trim()
+      .required()
   })
   .required()
