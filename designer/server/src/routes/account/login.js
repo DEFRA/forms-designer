@@ -1,21 +1,16 @@
-export default [
-  /**
-   * @satisfies {ServerRoute}
-   */
-  ({
-    method: 'GET',
-    path: '/login',
-    handler(request, h) {
-      return h.redirect('/')
-    },
-    options: {
-      auth: {
-        mode: 'optional',
-        strategy: 'azure-oidc'
-      }
+export default /** @satisfies {ServerRoute} */ ({
+  method: 'GET',
+  path: '/login',
+  handler(request, h) {
+    return h.redirect('/')
+  },
+  options: {
+    auth: {
+      mode: 'optional',
+      strategy: 'azure-oidc'
     }
-  })
-]
+  }
+})
 
 /**
  * @typedef {import('@hapi/hapi').ServerRoute} ServerRoute
