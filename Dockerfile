@@ -56,6 +56,8 @@ COPY --from=productionBuild /home/node/app/designer/client/dist ./designer/clien
 COPY --from=productionBuild /home/node/app/designer/server/dist ./designer/server/dist
 COPY --from=productionBuild /home/node/app/designer/node_modules ./designer/node_modules
 COPY --from=productionBuild /home/node/app/designer/package.json ./designer/package.json
+COPY --from=productionBuild /home/node/app/model/package.json ./model/
+COPY --from=productionBuild /home/node/app/model/dist ./model/dist
 
 ARG PORT
 ENV PORT ${PORT}
