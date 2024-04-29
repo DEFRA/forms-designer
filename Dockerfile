@@ -20,7 +20,7 @@ COPY --chown=node:node ./packag*.json ./
 COPY --chown=node:node ./designer/package.json ./designer/
 COPY --chown=node:node ./model/package.json ./model/
 
-RUN npm ci
+RUN npm ci --omit=dev
 
 COPY --chown=node:node ./ ./
 
