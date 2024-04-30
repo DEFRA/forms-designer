@@ -1,5 +1,11 @@
 {
   "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "paths": {
+      "~/*": ["./server/*", "../model/*"],
+      "@defra/forms-model": ["../model/src/index.ts"]
+    }
+  },
   "files": [],
   "references": [
     {

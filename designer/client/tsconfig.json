@@ -4,7 +4,8 @@
     "jsx": "react",
     "lib": ["DOM", "ES2015"],
     "paths": {
-      "~/*": ["./*"]
+      "~/*": ["./*", "../../model/*"],
+      "@defra/forms-model": ["../../model/src/index.ts"]
     },
     "types": ["@testing-library/jest-dom"]
   },
