@@ -1,4 +1,4 @@
-import { listLibraryViewModel } from '~/src/models/library.js'
+import * as library from '~/src/models/forms/library.js'
 
 export default [
   /**
@@ -8,7 +8,7 @@ export default [
     method: 'GET',
     path: '/library',
     async handler(request, h) {
-      const model = await listLibraryViewModel()
+      const model = await library.listViewModel()
       return h.view('forms/library', model)
     }
   })

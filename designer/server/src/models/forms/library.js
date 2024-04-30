@@ -1,6 +1,6 @@
 import * as forms from '~/src/lib/forms.js'
 
-export async function listLibraryViewModel() {
+export async function listViewModel() {
   const pageTitle = 'Forms library'
   const results = await forms.list()
 

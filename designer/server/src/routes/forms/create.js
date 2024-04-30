@@ -8,7 +8,7 @@ import Joi from 'joi'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
-import * as create from '~/src/models/create.js'
+import * as create from '~/src/models/forms/create.js'
 
 export default [
   /**
