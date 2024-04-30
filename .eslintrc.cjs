@@ -79,13 +79,13 @@ module.exports = {
           }
         ],
 
-        // Check namespace import members
-        'import/namespace': [
-          'error',
-          {
-            allowComputed: true
-          }
-        ],
+        // Skip rules handled by TypeScript compiler
+        'import/default': 'off',
+        'import/extensions': 'off',
+        'import/named': 'off',
+        'import/namespace': 'off',
+        'import/no-named-as-default-member': 'off',
+        'import/no-unresolved': 'off',
 
         // Check import or require statements are A-Z ordered
         'import/order': [
@@ -139,7 +139,7 @@ module.exports = {
         'jsdoc/require-returns-type': 'off',
         'jsdoc/require-returns': 'off',
 
-        // Skip rules handled by import plugin
+        // Skip rules handled by TypeScript compiler
         'n/no-extraneous-require': 'off',
         'n/no-extraneous-import': 'off',
         'n/no-missing-require': 'off',
