@@ -17,6 +17,8 @@ updates:
           - 'autoprefixer'
           - 'babel-*'
           - 'core-js'
+          - 'i18next'
+          - 'i18next-*'
           - 'postcss'
           - 'sass'
           - 'tsc-alias'
