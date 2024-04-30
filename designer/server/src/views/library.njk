@@ -10,6 +10,12 @@
   }) }}
 
   {% call appPageBody() %}
+    <h2 class="govuk-heading-m">
+      {{ formItems | length + (" form" if formItems | length == 1 else " forms" ) }}
+    </h2>
+
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+
     {% set formRows = [] %}
 
     {% for formItem in formItems %}
