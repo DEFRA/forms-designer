@@ -32,9 +32,7 @@ const DEFAULT_SETTINGS: InitOptions = {
 export const initI18n = (
   i18n: typeof i18next = i18next,
   settings = DEFAULT_SETTINGS
-): void => {
-  i18n.use(Backend).init(settings)
-}
+) => i18n.use(Backend).init(settings)
 
 export type I18n = (text: string, options?: any) => string
 
