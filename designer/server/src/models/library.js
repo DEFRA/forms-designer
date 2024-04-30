@@ -9,7 +9,8 @@ export async function listLibraryViewModel() {
     href: `/editor/${form.id}`,
     status: 'draft',
     updated: {
-      date: '9 Apr 2024'
+      date: '9 Apr 2024',
+      name: 'Enrique Chase'
     }
   }))
 

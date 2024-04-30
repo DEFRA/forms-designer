@@ -27,7 +27,8 @@
       {% endset %}
 
       {% set formUpdated %}
-        <span class="app-display-until-desktop">Updated </span>{{ formItem.updated.date }}
+        <span class="app-display-until-desktop">Updated </span>{{ formItem.updated.date }}<br>
+        by {{ formItem.updated.name }}
       {% endset %}
 
       {% set formNameUpdated %}
