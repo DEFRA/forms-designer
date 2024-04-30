@@ -67,7 +67,7 @@ export default class Designer extends Component<Props, State> {
     const { flyoutCount, data, loading } = this.state
     const { previewUrl } = window
     if (loading) {
-      return <p>Loading ...</p>
+      return <p className="govuk-body">Loading ...</p>
     }
 
     const flyoutContextProviderValue = {

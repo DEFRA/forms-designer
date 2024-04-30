@@ -29,7 +29,7 @@ export function ErrorSummary({
 
   let description
   if (descriptionChildren) {
-    description = <p>{descriptionChildren}</p>
+    description = <p className="govuk-body">{descriptionChildren}</p>
   }
 
   const handleClick = (id) => {
