@@ -8,25 +8,6 @@ export default [
    */
   ({
     method: 'GET',
-    path: '/health-check',
-    handler() {
-      const date = new Date()
-      const uptime = process.uptime()
-      return {
-        status: 'OK',
-        lastCommit: config.lastCommit,
-        lastTag: config.lastTag,
-        time: date.toUTCString(),
-        uptime
-      }
-    }
-  }),
-
-  /**
-   * @satisfies {ServerRoute}
-   */
-  ({
-    method: 'GET',
     path: '/robots.txt',
     options: {
       auth: false,
