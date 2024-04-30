@@ -2,7 +2,6 @@ import { Engine as CatboxMemory } from '@hapi/catbox-memory'
 import { Engine as CatboxRedis } from '@hapi/catbox-redis'
 import hapi, { type ServerOptions } from '@hapi/hapi'
 import inert from '@hapi/inert'
-import Scooter from '@hapi/scooter'
 
 import {
   azureOidc,
@@ -16,7 +15,6 @@ import { buildRedisClient } from '~/src/common/helpers/redis-client.js'
 import { sessionManager } from '~/src/common/helpers/session-manager.js'
 import * as nunjucks from '~/src/common/nunjucks/index.js'
 import config from '~/src/config.js'
-import { configureBlankiePlugin } from '~/src/plugins/blankie.js'
 import { designerPlugin } from '~/src/plugins/designer.js'
 import router from '~/src/plugins/router.js'
 
@@ -83,9 +81,6 @@ export async function createServer() {
   )
 
   await server.register(sessionCookie)
-
-  await server.register(Scooter)
-  await server.register(configureBlankiePlugin())
   await server.register(nunjucks.plugin)
   await server.register(designerPlugin)
   await server.register(router)

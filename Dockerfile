@@ -50,12 +50,16 @@ LABEL uk.gov.defra.ffc.parent-image=defradigital/node:${PARENT_VERSION}
 
 WORKDIR /home/node/app
 
-COPY --from=productionBuild /home/node/app/packag*.json ./
-COPY --from=productionBuild /home/node/app/node_modules ./node_modules
-COPY --from=productionBuild /home/node/app/designer/client/dist ./designer/client/dist
-COPY --from=productionBuild /home/node/app/designer/server/dist ./designer/server/dist
-COPY --from=productionBuild /home/node/app/designer/node_modules ./designer/node_modules
-COPY --from=productionBuild /home/node/app/designer/package.json ./designer/package.json
+COPY --from=productionBuild --chown=node:node /home/node/app/packag*.json ./
+
+COPY --from=productionBuild --chown=node:node /home/node/app/model/package.json ./model/
+COPY --from=productionBuild --chown=node:node /home/node/app/model/dist ./model/dist
+
+COPY --from=productionBuild --chown=node:node /home/node/app/designer/package.json ./designer/package.json
+COPY --from=productionBuild --chown=node:node /home/node/app/designer/client/dist ./designer/client/dist
+COPY --from=productionBuild --chown=node:node /home/node/app/designer/server/dist ./designer/server/dist
+
+RUN npm ci --omit=dev
 
 ARG PORT
 ENV PORT ${PORT}
