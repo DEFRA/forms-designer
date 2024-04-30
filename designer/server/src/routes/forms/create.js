@@ -36,7 +36,7 @@ export default [
       const validation = yar.flash(sessionNames.validationFailure).at(0)
 
       return h.view(
-        'forms/views/question-input',
+        'forms/question-input',
         create.titleViewModel(metadata, validation)
       )
     }
@@ -98,7 +98,7 @@ export default [
       const validation = yar.flash(sessionNames.validationFailure).at(0)
 
       return h.view(
-        'forms/views/question-radios',
+        'forms/question-radios',
         create.organisationViewModel(metadata, validation)
       )
     }
@@ -160,7 +160,7 @@ export default [
       const validation = yar.flash(sessionNames.validationFailure).at(0)
 
       return h.view(
-        'forms/views/question-inputs',
+        'forms/question-inputs',
         create.teamViewModel(metadata, validation)
       )
     }

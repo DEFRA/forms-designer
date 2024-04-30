@@ -25,7 +25,7 @@ export const plugin = {
       }
     },
     compileOptions: { environment },
-    relativeTo: join(config.appDir, 'routes'),
+    relativeTo: join(config.appDir, 'views'),
     isCached: config.isProduction,
     context
   }

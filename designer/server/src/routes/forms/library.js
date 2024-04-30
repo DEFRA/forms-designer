@@ -9,7 +9,7 @@ export default [
     path: '/library',
     async handler(request, h) {
       const model = await listLibraryViewModel()
-      return h.view('forms/views/library', model)
+      return h.view('forms/library', model)
     }
   })
 ]

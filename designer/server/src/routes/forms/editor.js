@@ -9,7 +9,7 @@ export default [
     path: '/editor/{path*}',
     options: {
       handler(request, h) {
-        return h.view('forms/views/editor', {
+        return h.view('forms/editor', {
           phase: config.phase,
           previewUrl: config.previewUrl
         })
