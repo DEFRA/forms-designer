@@ -1,0 +1,11 @@
+@include govuk-media-query($from: desktop) {
+  .app-display-until-desktop {
+    display: none;
+  }
+}
+
+@include govuk-media-query($until: desktop) {
+  .app-display-from-desktop {
+    display: none;
+  }
+}

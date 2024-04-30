@@ -16,7 +16,8 @@
 
     <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
-    {% set formRows = [] %}
+    {% set formRowsMobile = [] %}
+    {% set formRowsDesktop = [] %}
 
     {% for formItem in formItems %}
       {% set formName %}
@@ -26,7 +27,7 @@
       {% endset %}
 
       {% set formUpdated %}
-        Updated </span>{{ formItem.updated.date }}
+        <span class="app-display-until-desktop">Updated </span>{{ formItem.updated.date }}
       {% endset %}
 
       {% set formNameUpdated %}
@@ -50,7 +51,16 @@
         {% endswitch %}
       {% endset %}
 
-      {% set formRows = (formRows.push([
+      {% set formRowsMobile = (formRowsMobile.push([
+        {
+          html: formNameUpdated
+        },
+        {
+          html: formStatus
+        }
+      ]), formRowsMobile) %}
+
+      {% set formRowsDesktop = (formRowsDesktop.push([
         {
           html: formName
         },
@@ -60,10 +70,25 @@
         {
           html: formStatus
         }
-      ]), formRows) %}
+      ]), formRowsDesktop) %}
     {% endfor %}
 
     {{ govukTable({
+      classes: "app-display-until-desktop",
+      head: [
+        {
+          text: "Name",
+          classes: "govuk-!-width-three-quarters"
+        },
+        {
+          text: "Status"
+        }
+      ],
+      rows: formRowsMobile
+    }) }}
+
+    {{ govukTable({
+      classes: "app-display-from-desktop",
       head: [
         {
           text: "Name",
@@ -76,7 +101,7 @@
           text: "Status"
         }
       ],
-      rows: formRows
+      rows: formRowsDesktop
     }) }}
   {% endcall %}
 {% endblock %}
