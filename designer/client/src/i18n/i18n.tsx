@@ -25,7 +25,7 @@ const DEFAULT_SETTINGS: InitOptions = {
     }
   },
   backend: {
-    loadPath: '/forms-runner/assets/translations/{{lng}}.{{ns}}.json'
+    loadPath: '/assets/translations/{{lng}}.{{ns}}.json'
   }
 }
 
