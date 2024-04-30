@@ -1,19 +1,22 @@
-import { type ServerRoute } from '@hapi/hapi'
+import { uptime } from 'process'
 
 import config from '~/src/config.js'
 
-export const healthCheckRoute: ServerRoute = {
+export default /** @type {ServerRoute} */ ({
   method: 'GET',
   path: '/health-check',
   handler() {
     const date = new Date()
-    const uptime = process.uptime()
     return {
       status: 'OK',
       lastCommit: config.lastCommit,
       lastTag: config.lastTag,
       time: date.toUTCString(),
-      uptime
+      uptime: uptime()
     }
   }
-}
+})
+
+/**
+ * @typedef {import('@hapi/hapi').ServerRoute} ServerRoute
+ */
