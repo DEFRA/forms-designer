@@ -21,7 +21,6 @@ module.exports = {
         'plugin:import/typescript',
         'plugin:jsdoc/recommended',
         'plugin:n/recommended',
-        'plugin:prettier/recommended',
         'plugin:promise/recommended',
         'plugin:@typescript-eslint/strict-type-checked',
         'plugin:@typescript-eslint/stylistic-type-checked',
@@ -39,16 +38,8 @@ module.exports = {
         ],
         tsconfigRootDir: __dirname
       },
-      plugins: [
-        '@typescript-eslint',
-        'import',
-        'jsdoc',
-        'n',
-        'prettier',
-        'promise'
-      ],
+      plugins: ['@typescript-eslint', 'import', 'jsdoc', 'n', 'promise'],
       rules: {
-        'prettier/prettier': 'error',
         'no-console': 'error',
 
         // Check import or require statements are A-Z ordered
