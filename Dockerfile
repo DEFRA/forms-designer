@@ -22,8 +22,7 @@ COPY --chown=node:node ./model/package.json ./model/
 
 RUN npm ci
 
-COPY --chown=node:node . .
-RUN npm run build
+COPY --chown=node:node ./ ./
 
 CMD [ "npm", "run", "dev" ]
 
