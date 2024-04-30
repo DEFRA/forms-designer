@@ -31,9 +31,13 @@ module.exports = {
       parser: '@typescript-eslint/parser',
       parserOptions: {
         ecmaVersion: 'latest',
-        project: ['./tsconfig.json', './tsconfig.dev.json'],
-        tsconfigRootDir: __dirname,
-        EXPERIMENTAL_useProjectService: true
+        project: [
+          './tsconfig.dev.json',
+          './designer/client/tsconfig.json',
+          './designer/server/tsconfig.json',
+          './model/tsconfig.json'
+        ],
+        tsconfigRootDir: __dirname
       },
       plugins: [
         '@typescript-eslint',
@@ -164,15 +168,7 @@ module.exports = {
         },
         'import/resolver': {
           node: true,
-          typescript: {
-            alwaysTryTypes: true,
-            project: [
-              './tsconfig.dev.json',
-              './designer/client/tsconfig.json',
-              './designer/server/tsconfig.json',
-              './model/tsconfig.json'
-            ]
-          }
+          typescript: true
         }
       }
     },
