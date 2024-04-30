@@ -17,11 +17,13 @@
     "build:client": "NODE_ENV=${NODE_ENV:-production} webpack",
     "build:server": "BABEL_ENV=node babel --delete-dir-on-start --extensions \".js\",\".ts\" --ignore \"**/*.test.*\" --copy-files --no-copy-ignored --source-maps --out-dir ./server/dist ./server/src",
     "dev": "concurrently \"npm run client:watch\" \"npm run server:watch\"",
+    "dev:debug": "concurrently \"npm run client:watch\" \"npm run server:debug\"",
     "symlink-env": "./bin/symlink-config",
     "test": "jest --color --coverage --verbose",
     "test:watch": "jest --color --watch",
     "client:watch": "NODE_ENV=development npm run build:client -- --watch",
     "server:watch": "nodemon --exec tsx --enable-source-maps ./server/src",
+    "server:debug": "nodemon --exec tsx --enable-source-maps --inspect ./server/src",
     "prestart": "npm run build",
     "start": "NODE_ENV=${NODE_ENV:-production} node --enable-source-maps ./server/dist/index.js"
   },

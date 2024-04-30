@@ -16,7 +16,9 @@
   "scripts": {
     "build": "npm run build --workspaces",
     "predev": "npm run build --workspace model",
+    "predev:debug": "npm run predev",
     "dev": "npm run dev --workspace designer",
+    "dev:debug": "npm run dev:debug --workspace designer",
     "format": "npm run format:check -- --write",
     "format:check": "prettier --cache --cache-location .cache/prettier --cache-strategy content --check \"**/*.{cjs,js,jsx,json,md,mjs,scss,ts,tsx}\"",
     "lint": "npm run lint:js && npm run lint:types",
