@@ -21,7 +21,6 @@ module.exports = {
         'plugin:import/typescript',
         'plugin:jsdoc/recommended',
         'plugin:n/recommended',
-        'plugin:prettier/recommended',
         'plugin:promise/recommended',
         'plugin:@typescript-eslint/strict-type-checked',
         'plugin:@typescript-eslint/stylistic-type-checked',
@@ -31,20 +30,16 @@ module.exports = {
       parser: '@typescript-eslint/parser',
       parserOptions: {
         ecmaVersion: 'latest',
-        project: ['./tsconfig.json', './tsconfig.dev.json'],
-        tsconfigRootDir: __dirname,
-        EXPERIMENTAL_useProjectService: true
+        project: [
+          './tsconfig.dev.json',
+          './designer/client/tsconfig.json',
+          './designer/server/tsconfig.json',
+          './model/tsconfig.json'
+        ],
+        tsconfigRootDir: __dirname
       },
-      plugins: [
-        '@typescript-eslint',
-        'import',
-        'jsdoc',
-        'n',
-        'prettier',
-        'promise'
-      ],
+      plugins: ['@typescript-eslint', 'import', 'jsdoc', 'n', 'promise'],
       rules: {
-        'prettier/prettier': 'error',
         'no-console': 'error',
 
         // Check import or require statements are A-Z ordered
@@ -79,13 +74,13 @@ module.exports = {
           }
         ],
 
-        // Check namespace import members
-        'import/namespace': [
-          'error',
-          {
-            allowComputed: true
-          }
-        ],
+        // Skip rules handled by TypeScript compiler
+        'import/default': 'off',
+        'import/extensions': 'off',
+        'import/named': 'off',
+        'import/namespace': 'off',
+        'import/no-named-as-default-member': 'off',
+        'import/no-unresolved': 'off',
 
         // Check import or require statements are A-Z ordered
         'import/order': [
@@ -139,7 +134,7 @@ module.exports = {
         'jsdoc/require-returns-type': 'off',
         'jsdoc/require-returns': 'off',
 
-        // Skip rules handled by import plugin
+        // Skip rules handled by TypeScript compiler
         'n/no-extraneous-require': 'off',
         'n/no-extraneous-import': 'off',
         'n/no-missing-require': 'off',
@@ -164,15 +159,7 @@ module.exports = {
         },
         'import/resolver': {
           node: true,
-          typescript: {
-            alwaysTryTypes: true,
-            project: [
-              './tsconfig.dev.json',
-              './designer/client/tsconfig.json',
-              './designer/server/tsconfig.json',
-              './model/tsconfig.json'
-            ]
-          }
+          typescript: true
         }
       }
     },
