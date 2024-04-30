@@ -7,7 +7,7 @@ describe('Page Body Component', () => {
     beforeEach(() => {
       const { document } = renderMacro('appPageBody', 'page-body/macro.njk', {
         callBlock:
-          '<p>Used digger, digs great and is lots of fun to dig huge holes with. Comes with heater, comfy seat and radio.</p>'
+          '<p class="govuk-body">Used digger, digs great and is lots of fun to dig huge holes with. Comes with heater, comfy seat and radio.</p>'
       })
 
       $pageBody = document.querySelector('[data-testid="app-page-body"]')
@@ -15,7 +15,7 @@ describe('Page Body Component', () => {
 
     test('Should render expected page body', () => {
       expect($pageBody).toContainHTML(
-        '<p>Used digger, digs great and is lots of fun to dig huge holes with. Comes with heater, comfy seat and radio.</p>'
+        '<p class="govuk-body">Used digger, digs great and is lots of fun to dig huge holes with. Comes with heater, comfy seat and radio.</p>'
       )
     })
   })
@@ -42,7 +42,7 @@ describe('Page Body Component', () => {
     beforeEach(() => {
       const { document } = renderMacro('appPageBody', 'page-body/macro.njk', {
         params: {
-          html: '<p>Used digger, digs great and is lots of fun to dig huge holes with. Comes with heater, comfy seat and radio.</p>'
+          html: '<p class="govuk-body">Used digger, digs great and is lots of fun to dig huge holes with. Comes with heater, comfy seat and radio.</p>'
         }
       })
 
@@ -51,7 +51,7 @@ describe('Page Body Component', () => {
 
     test('Should render expected page body', () => {
       expect($pageBody).toContainHTML(
-        '<p>Used digger, digs great and is lots of fun to dig huge holes with. Comes with heater, comfy seat and radio.</p>'
+        '<p class="govuk-body">Used digger, digs great and is lots of fun to dig huge holes with. Comes with heater, comfy seat and radio.</p>'
       )
     })
   })

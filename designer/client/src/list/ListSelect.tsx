@@ -26,8 +26,8 @@ export function ListSelect() {
   return (
     <>
       <div className="govuk-body govuk-hint">
-        <p>{i18n('list.hint.description')}</p>
-        <p>{i18n('list.hint.manage')}</p>
+        <p className="govuk-body">{i18n('list.hint.description')}</p>
+        <p className="govuk-body">{i18n('list.hint.manage')}</p>
       </div>
       <ul className="govuk-list">
         {data.lists.map((list) => (

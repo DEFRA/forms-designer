@@ -95,18 +95,21 @@ export const Page = ({ page, previewUrl, id, layout }) => {
         <button
           title={i18n('Edit page')}
           onClick={() => setIsEditingPage(true)}
+          className="govuk-link"
         >
           {i18n('Edit page')}
         </button>
         <button
           title={i18n('Create component')}
           onClick={() => setIsCreatingComponent(true)}
+          className="govuk-link"
         >
           {i18n('Create component')}
         </button>
         <a
           title={i18n('Preview page')}
           href={new URL(`/${id}${page.path}`, previewUrl).toString()}
+          className="govuk-link"
           target="_blank"
           rel="noreferrer"
         >

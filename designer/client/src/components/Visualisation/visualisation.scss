@@ -50,28 +50,32 @@ $govuk-assets-path: "/assets/";
       display: flex;
       flex-direction: column;
 
-      & > * {
+      button {
+        border: none;
+        box-shadow: none;
+        text-align: left;
+      }
+
+      .govuk-link {
         @include govuk-responsive-padding(1, "top");
         @include govuk-responsive-padding(2, "right");
         @include govuk-responsive-padding(1, "bottom");
         @include govuk-responsive-padding(2, "left");
         @include govuk-typography-responsive($size: 14);
-        border: none;
-        box-shadow: none;
         text-decoration: none;
-        text-align: left;
         background-color: govuk-colour("black");
         color: govuk-colour("white");
 
-        &:hover {
+        &:hover,
+        &:focus {
           background-color: govuk-colour("yellow");
           color: govuk-colour("black");
           cursor: pointer;
         }
-      }
 
-      & > *:not(:last-child) {
-        border-bottom: 1px solid #ffffff;
+        &:not(:last-child) {
+          border-bottom: 1px solid #ffffff;
+        }
       }
     }
 
