@@ -1,0 +1,35 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+{% block beforeContent %}
+  {{ govukBackLink({
+    href: backLink
+  }) }}
+{% endblock %}
+
+{% block content %}
+  <form method="post" novalidate>
+    {% call appPageBody() %}
+      {{ govukRadios({
+        fieldset: {
+          legend: {
+            text: field.legend.text,
+            isPageHeading: true,
+            classes: "govuk-fieldset__legend--l"
+          }
+        },
+        name: field.name,
+        idPrefix: field.id,
+        items: field.items,
+        value: field.value
+      }) }}
+
+      {{ govukButton({
+        text: buttonText
+      }) }}
+    </form>
+  {% endcall %}
+{% endblock %}

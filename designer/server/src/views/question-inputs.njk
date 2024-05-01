@@ -1,0 +1,38 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% block beforeContent %}
+  {{ govukBackLink({
+    href: backLink
+  }) }}
+{% endblock %}
+
+{% block content %}
+  {{ appHeading({
+    text: pageHeading or pageTitle
+  }) }}
+
+  {% call appPageBody() %}
+    <form method="post" novalidate>
+      {% for field in fields %}
+        {{ govukInput({
+          label: field.label,
+          hint: field.hint,
+          id: field.id,
+          name: field.name,
+          value: field.value,
+          autocapitalize: field.autocapitalize,
+          autocomplete: field.autocomplete,
+          spellcheck: field.spellcheck
+        }) }}
+      {% endfor %}
+
+      {{ govukButton({
+        text: buttonText
+      }) }}
+    </form>
+  {% endcall %}
+{% endblock %}
