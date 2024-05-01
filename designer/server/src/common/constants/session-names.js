@@ -1,3 +1,3 @@
 export const sessionNames = {
-  validationFailure: 'validationFailure'
+  validationFailure: /** @type {const} */ ('validationFailure')
 }
