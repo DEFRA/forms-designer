@@ -22,8 +22,14 @@ export default [
     handler(request, h) {
       const { yar } = request
 
+      // Form metadata, validation errors
       const metadata = yar.get(sessionNames.create)
-      return h.view('question-input', create.titleViewModel(metadata))
+      const validation = yar.flash(sessionNames.validationFailure).at(0)
+
+      return h.view(
+        'question-input',
+        create.titleViewModel(metadata, validation)
+      )
     }
   }),
 
@@ -36,8 +42,14 @@ export default [
     handler(request, h) {
       const { yar } = request
 
+      // Form metadata, validation errors
       const metadata = yar.get(sessionNames.create)
-      return h.view('question-radios', create.organisationViewModel(metadata))
+      const validation = yar.flash(sessionNames.validationFailure).at(0)
+
+      return h.view(
+        'question-radios',
+        create.organisationViewModel(metadata, validation)
+      )
     }
   }),
 
@@ -50,8 +62,14 @@ export default [
     handler(request, h) {
       const { yar } = request
 
+      // Form metadata, validation errors
       const metadata = yar.get(sessionNames.create)
-      return h.view('question-inputs', create.teamViewModel(metadata))
+      const validation = yar.flash(sessionNames.validationFailure).at(0)
+
+      return h.view(
+        'question-inputs',
+        create.teamViewModel(metadata, validation)
+      )
     }
   })
 ]

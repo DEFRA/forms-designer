@@ -3,6 +3,11 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "error-summary/macro.njk" import appErrorSummary %}
+
+{% if formErrors | length %}
+  {% set pageTitle = "Error: " + pageTitle %}
+{% endif %}
 
 {% block beforeContent %}
   {{ govukBackLink({
@@ -17,6 +22,12 @@
 
   {% call appPageBody() %}
     <form method="post" novalidate>
+      {% if formErrors | length %}
+        {{ appErrorSummary({
+          formErrors: formErrors
+        }) }}
+      {% endif %}
+
       {% for field in fields %}
         {{ govukInput({
           label: field.label,
@@ -24,6 +35,9 @@
           id: field.id,
           name: field.name,
           value: field.value,
+          errorMessage: {
+            text: formErrors[field.name].message
+          } if formErrors[field.name],
           autocapitalize: field.autocapitalize,
           autocomplete: field.autocomplete,
           spellcheck: field.spellcheck

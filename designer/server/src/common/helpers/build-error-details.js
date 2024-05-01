@@ -13,7 +13,18 @@ export function buildErrorDetails(errorDetails) {
 }
 
 /**
- * @typedef {import('@hapi/hapi').Request["payload"]} Payload
  * @typedef {import('joi').ValidationErrorItem} ValidationErrorItem
  * @typedef {Record<string, { message: string }>} ErrorDetails
+ */
+
+/**
+ * @template {object} Schema
+ * @typedef {import('@hapi/hapi').Request<{ Payload: Schema }>["payload"]} Payload
+ */
+
+/**
+ * @template {object} [Schema=object]
+ * @typedef {object} ValidationFailure
+ * @property {ErrorDetails} formErrors - Formatted errors for error summary
+ * @property {Payload<Schema>} formValues - Form POST payload from Hapi request
  */

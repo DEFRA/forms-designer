@@ -1,10 +1,12 @@
 /**
- * @param {Partial<FormMetadata>} [metadata]
+ * @param {Partial<FormMetadataInput>} [metadata]
+ * @param {ValidationFailure} [validation]
  */
-export function titleViewModel(metadata) {
+export function titleViewModel(metadata, validation) {
   return {
     backLink: '/library',
     pageTitle: 'Enter a name for your form',
+    formErrors: validation?.formErrors,
     field: {
       id: 'title',
       name: 'title',
@@ -20,12 +22,14 @@ export function titleViewModel(metadata) {
 }
 
 /**
- * @param {Partial<FormMetadata>} [metadata]
+ * @param {Partial<FormMetadataInput>} [metadata]
+ * @param {ValidationFailure} [validation]
  */
-export function organisationViewModel(metadata) {
+export function organisationViewModel(metadata, validation) {
   return {
     backLink: '/create/title',
     pageTitle: 'Choose a lead organisation for this form',
+    formErrors: validation?.formErrors,
     field: {
       id: 'organisation',
       name: 'organisation',
@@ -78,13 +82,15 @@ export function organisationViewModel(metadata) {
 }
 
 /**
- * @param {Partial<FormMetadata>} [metadata]
+ * @param {Partial<FormMetadataInput>} [metadata]
+ * @param {ValidationFailure} [validation]
  */
-export function teamViewModel(metadata) {
+export function teamViewModel(metadata, validation) {
   return {
     backLink: '/create/organisation',
     pageTitle: 'Team details',
     pageHeading: 'Team details',
+    formErrors: validation?.formErrors,
     fields: [
       {
         id: 'teamName',
@@ -115,5 +121,6 @@ export function teamViewModel(metadata) {
 }
 
 /**
- * @typedef {import('@defra/forms-model').FormMetadata} FormMetadata
+ * @typedef {import('@defra/forms-model').FormMetadataInput} FormMetadataInput
+ * @typedef {import("~/src/common/helpers/build-error-details.js").ValidationFailure<FormMetadataInput>} ValidationFailure
  */
