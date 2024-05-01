@@ -1,4 +1,7 @@
-export function titleViewModel() {
+/**
+ * @param {Partial<FormMetadata>} [metadata]
+ */
+export function titleViewModel(metadata) {
   return {
     backLink: '/library',
     pageTitle: 'Enter a name for your form',
@@ -8,7 +11,7 @@ export function titleViewModel() {
       label: {
         text: 'Enter a name for your form'
       },
-      value: '',
+      value: metadata?.title,
       autocapitalize: true,
       spellcheck: true
     },
@@ -16,7 +19,10 @@ export function titleViewModel() {
   }
 }
 
-export function organisationViewModel() {
+/**
+ * @param {Partial<FormMetadata>} [metadata]
+ */
+export function organisationViewModel(metadata) {
   return {
     backLink: '/create/title',
     pageTitle: 'Choose a lead organisation for this form',
@@ -65,13 +71,16 @@ export function organisationViewModel() {
           value: 'Veterinary Medicines Directorate – VMD'
         }
       ],
-      value: ''
+      value: metadata?.organisation
     },
     buttonText: 'Continue'
   }
 }
 
-export function teamViewModel() {
+/**
+ * @param {Partial<FormMetadata>} [metadata]
+ */
+export function teamViewModel(metadata) {
   return {
     backLink: '/create/organisation',
     pageTitle: 'Team details',
@@ -86,7 +95,7 @@ export function teamViewModel() {
         hint: {
           text: 'Enter the name of the policy team or business area responsible for this form'
         },
-        value: '',
+        value: metadata?.teamName,
         autocapitalize: true,
         spellcheck: true
       },
@@ -96,7 +105,7 @@ export function teamViewModel() {
         label: {
           text: 'Shared team email address'
         },
-        value: '',
+        value: metadata?.teamEmail,
         autocomplete: 'email',
         spellcheck: false
       }
@@ -104,3 +113,7 @@ export function teamViewModel() {
     buttonText: 'Save and continue'
   }
 }
+
+/**
+ * @typedef {import('@defra/forms-model').FormMetadata} FormMetadata
+ */

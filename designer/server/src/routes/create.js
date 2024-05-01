@@ -1,3 +1,4 @@
+import { sessionNames } from '~/src/common/constants/session-names.js'
 import * as create from '~/src/models/create.js'
 
 export default [
@@ -19,8 +20,10 @@ export default [
     method: 'GET',
     path: '/create/title',
     handler(request, h) {
-      const model = create.titleViewModel()
-      return h.view('question-input', model)
+      const { yar } = request
+
+      const metadata = yar.get(sessionNames.create)
+      return h.view('question-input', create.titleViewModel(metadata))
     }
   }),
 
@@ -31,8 +34,10 @@ export default [
     method: 'GET',
     path: '/create/organisation',
     handler(request, h) {
-      const model = create.organisationViewModel()
-      return h.view('question-radios', model)
+      const { yar } = request
+
+      const metadata = yar.get(sessionNames.create)
+      return h.view('question-radios', create.organisationViewModel(metadata))
     }
   }),
 
@@ -43,12 +48,19 @@ export default [
     method: 'GET',
     path: '/create/team',
     handler(request, h) {
-      const model = create.teamViewModel()
-      return h.view('question-inputs', model)
+      const { yar } = request
+
+      const metadata = yar.get(sessionNames.create)
+      return h.view('question-inputs', create.teamViewModel(metadata))
     }
   })
 ]
 
 /**
- * @typedef {import('@hapi/hapi').ServerRoute} ServerRoute
+ * @typedef {import('@defra/forms-model').FormMetadataInput} FormMetadataInput
+ */
+
+/**
+ * @template {import('@hapi/hapi').ReqRef} [ReqRef=import('@hapi/hapi').ReqRefDefaults]
+ * @typedef {import('@hapi/hapi').ServerRoute<ReqRef>} ServerRoute
  */
