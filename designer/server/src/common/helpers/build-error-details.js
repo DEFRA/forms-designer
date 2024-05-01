@@ -1,12 +1,18 @@
-function buildErrorDetails(errorDetails) {
+/**
+ * @param {ValidationErrorItem[]} errorDetails
+ */
+export function buildErrorDetails(errorDetails) {
   return errorDetails.reduce((errors, detail) => {
     return {
-      [detail.context.key]: {
+      [detail.context?.key ?? 'unknown']: {
         message: detail.message
       },
       ...errors
     }
-  }, {})
+  }, /** @type {ErrorDetails} */ ({}))
 }
 
-export { buildErrorDetails }
+/**
+ * @typedef {import('joi').ValidationErrorItem} ValidationErrorItem
+ * @typedef {Record<string, { message: string }>} ErrorDetails
+ */
