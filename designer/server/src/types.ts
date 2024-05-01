@@ -33,5 +33,13 @@ declare module '@hapi/yar' {
      * Get form metadata from the session
      */
     get(type: CreateKey): Partial<FormMetadataInput> | undefined
+
+    /**
+     * Set form metadata on the session
+     */
+    set<Schema = FormMetadataInput>(
+      type: CreateKey,
+      metadata: Partial<Schema>
+    ): Partial<Schema>
   }
 }
