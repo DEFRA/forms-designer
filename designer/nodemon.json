@@ -1,7 +1,7 @@
 {
-  "watch": ["./server/dist"],
+  "watch": ["./server/src", "../model/src"],
   "env": {
     "NODE_ENV": "development"
   },
-  "ext": "js,json"
+  "ext": "js,json,ts"
 }
