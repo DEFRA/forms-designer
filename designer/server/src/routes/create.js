@@ -1,4 +1,13 @@
+import {
+  organisationSchema,
+  teamEmailSchema,
+  teamNameSchema,
+  titleSchema
+} from '@defra/forms-model'
+import Joi from 'joi'
+
 import { sessionNames } from '~/src/common/constants/session-names.js'
+import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
 import * as create from '~/src/models/create.js'
 
 export default [
@@ -49,6 +58,29 @@ export default [
       })
 
       return h.redirect('/create/organisation').temporary()
+    },
+    options: {
+      validate: {
+        payload: Joi.object().keys({
+          title: titleSchema.messages({
+            'string.empty': 'Enter your form name',
+            'string.max': 'Form name must be 250 characters or less'
+          })
+        }),
+
+        failAction(request, h, error) {
+          const { payload, yar } = request
+
+          if (error instanceof Joi.ValidationError) {
+            yar.flash('validationFailure', {
+              formErrors: buildErrorDetails(error.details),
+              formValues: payload
+            })
+          }
+
+          return h.redirect('/create/title').temporary().takeover()
+        }
+      }
     }
   }),
 
@@ -88,6 +120,29 @@ export default [
       })
 
       return h.redirect('/create/team').temporary()
+    },
+    options: {
+      validate: {
+        payload: Joi.object().keys({
+          organisation: organisationSchema.messages({
+            'any.required': 'Select a lead organisation',
+            'string.max': 'Lead organisation must be 100 characters or less'
+          })
+        }),
+
+        failAction(request, h, error) {
+          const { payload, yar } = request
+
+          if (error instanceof Joi.ValidationError) {
+            yar.flash('validationFailure', {
+              formErrors: buildErrorDetails(error.details),
+              formValues: payload
+            })
+          }
+
+          return h.redirect('/create/organisation').temporary().takeover()
+        }
+      }
     }
   }),
 
@@ -127,8 +182,44 @@ export default [
         teamEmail: payload.teamEmail
       })
 
-      /** @todo Submit new form metadata */
+      /**
+       * @todo Submit new form metadata
+       * @todo Clear saved form metadata
+       */
       return h.redirect('/create/team').temporary()
+    },
+    options: {
+      validate: {
+        payload: Joi.object().keys({
+          teamName: teamNameSchema.messages({
+            'string.empty': 'Enter your team name',
+            'string.max': 'Team name must be 100 characters or less'
+          }),
+          teamEmail: teamEmailSchema.messages({
+            'string.empty': 'Enter your shared team email address',
+            'string.email':
+              'Enter your shared team email address in the correct format, like name@example.gov.uk'
+          })
+        }),
+
+        failAction(request, h, error) {
+          const { payload, yar } = request
+
+          if (error instanceof Joi.ValidationError) {
+            const formErrors = buildErrorDetails(error.details)
+
+            yar.flash('validationFailure', {
+              formErrors: {
+                teamName: formErrors.teamName,
+                teamEmail: formErrors.teamEmail
+              },
+              formValues: payload
+            })
+          }
+
+          return h.redirect('/create/team').temporary().takeover()
+        }
+      }
     }
   })
 ]
