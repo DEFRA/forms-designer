@@ -7,13 +7,14 @@ export function titleViewModel(metadata, validation) {
     backLink: '/library',
     pageTitle: 'Enter a name for your form',
     formErrors: validation?.formErrors,
+    formValues: validation?.formValues,
     field: {
       id: 'title',
       name: 'title',
       label: {
         text: 'Enter a name for your form'
       },
-      value: metadata?.title,
+      value: validation?.formValues.title ?? metadata?.title,
       autocapitalize: true,
       spellcheck: true
     },
@@ -30,6 +31,7 @@ export function organisationViewModel(metadata, validation) {
     backLink: '/create/title',
     pageTitle: 'Choose a lead organisation for this form',
     formErrors: validation?.formErrors,
+    formValues: validation?.formValues,
     field: {
       id: 'organisation',
       name: 'organisation',
@@ -75,7 +77,7 @@ export function organisationViewModel(metadata, validation) {
           value: 'Veterinary Medicines Directorate – VMD'
         }
       ],
-      value: metadata?.organisation
+      value: validation?.formValues.organisation ?? metadata?.organisation
     },
     buttonText: 'Continue'
   }
@@ -91,6 +93,7 @@ export function teamViewModel(metadata, validation) {
     pageTitle: 'Team details',
     pageHeading: 'Team details',
     formErrors: validation?.formErrors,
+    formValues: validation?.formValues,
     fields: [
       {
         id: 'teamName',
@@ -101,7 +104,7 @@ export function teamViewModel(metadata, validation) {
         hint: {
           text: 'Enter the name of the policy team or business area responsible for this form'
         },
-        value: metadata?.teamName,
+        value: validation?.formValues.teamName ?? metadata?.teamName,
         autocapitalize: true,
         spellcheck: true
       },
@@ -111,7 +114,7 @@ export function teamViewModel(metadata, validation) {
         label: {
           text: 'Shared team email address'
         },
-        value: metadata?.teamEmail,
+        value: validation?.formValues.teamEmail ?? metadata?.teamEmail,
         autocomplete: 'email',
         spellcheck: false
       }
