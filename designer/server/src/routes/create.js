@@ -116,7 +116,7 @@ export default [
       // Update form metadata, redirect to next step
       yar.set(sessionNames.create, {
         ...yar.get(sessionNames.create),
-        title: payload.organisation
+        organisation: payload.organisation
       })
 
       return h.redirect('/create/team').temporary()
