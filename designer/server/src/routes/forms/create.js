@@ -1,13 +1,16 @@
 import {
+  formMetadataSchema,
   organisationSchema,
   teamEmailSchema,
   teamNameSchema,
   titleSchema
 } from '@defra/forms-model'
+import Boom from '@hapi/boom'
 import Joi from 'joi'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
+import * as forms from '~/src/lib/forms.js'
 import * as create from '~/src/models/forms/create.js'
 
 export default [
@@ -18,7 +21,14 @@ export default [
     method: 'GET',
     path: '/create',
     handler(request, h) {
-      return h.redirect('/create/title').permanent()
+      const { yar } = request
+
+      // Clear previous form data
+      yar.clear(sessionNames.create)
+      yar.clear(sessionNames.validationFailure)
+
+      // Redirect to first step
+      return h.redirect('/create/title').code(303)
     }
   }),
 
@@ -57,7 +67,7 @@ export default [
         title: payload.title
       })
 
-      return h.redirect('/create/organisation').temporary()
+      return h.redirect('/create/organisation').code(303)
     },
     options: {
       validate: {
@@ -78,7 +88,7 @@ export default [
             })
           }
 
-          return h.redirect('/create/title').temporary().takeover()
+          return h.redirect('/create/title').code(303).takeover()
         }
       }
     }
@@ -119,7 +129,7 @@ export default [
         organisation: payload.organisation
       })
 
-      return h.redirect('/create/team').temporary()
+      return h.redirect('/create/team').code(303)
     },
     options: {
       validate: {
@@ -140,7 +150,7 @@ export default [
             })
           }
 
-          return h.redirect('/create/organisation').temporary().takeover()
+          return h.redirect('/create/organisation').code(303).takeover()
         }
       }
     }
@@ -172,21 +182,46 @@ export default [
   ({
     method: 'POST',
     path: '/create/team',
-    handler(request, h) {
+    async handler(request, h) {
       const { payload, yar } = request
 
-      // Update form metadata, redirect to new form
-      yar.set(sessionNames.create, {
+      // Update form metadata
+      const metadata = yar.set(sessionNames.create, {
         ...yar.get(sessionNames.create),
         teamName: payload.teamName,
         teamEmail: payload.teamEmail
       })
 
+      // Check form metadata is complete
+      const result = formMetadataSchema.validate(metadata)
+
+      // Submit new form metadata
+      try {
+        if (!result.error) {
+          await forms.create(result.value)
+
+          // Clear form metadata
+          yar.clear(sessionNames.create)
+
+          /**
+           * Temporarily redirect to library
+           * @todo Redirect to new form
+           */
+          return h.redirect('/library').code(303)
+        }
+      } catch (cause) {
+        return Boom.internal(
+          new Error('Failed to create new form', {
+            cause
+          })
+        )
+      }
+
       /**
-       * @todo Submit new form metadata
-       * @todo Clear saved form metadata
+       * Form metadata is incomplete
+       * @todo Redirect to step with validation errors
        */
-      return h.redirect('/create/team').temporary()
+      return h.redirect('/create/team').code(303)
     },
     options: {
       validate: {
@@ -217,7 +252,7 @@ export default [
             })
           }
 
-          return h.redirect('/create/team').temporary().takeover()
+          return h.redirect('/create/team').code(303).takeover()
         }
       }
     }
