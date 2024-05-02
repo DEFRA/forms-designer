@@ -126,7 +126,7 @@ export default [
         payload: Joi.object().keys({
           organisation: organisationSchema.messages({
             'any.required': 'Select a lead organisation',
-            'string.max': 'Lead organisation must be 100 characters or less'
+            'any.only': 'Select a lead organisation'
           })
         }),
 

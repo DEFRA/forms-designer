@@ -1,3 +1,5 @@
+import { organisations } from '@defra/forms-model'
+
 /**
  * @param {Partial<FormMetadataInput>} [metadata]
  * @param {ValidationFailure} [validation]
@@ -38,45 +40,10 @@ export function organisationViewModel(metadata, validation) {
       legend: {
         text: 'Choose a lead organisation for this form'
       },
-      items: [
-        {
-          text: 'Animal and Plant Health Agency – APHA',
-          value: 'Animal and Plant Health Agency – APHA'
-        },
-        {
-          text: 'Centre for Environment, Fisheries and Aquaculture Science – Cefas',
-          value:
-            'Centre for Environment, Fisheries and Aquaculture Science – Cefas'
-        },
-        {
-          text: 'Defra',
-          value: 'Defra'
-        },
-        {
-          text: 'Environment Agency',
-          value: 'Environment Agency'
-        },
-        {
-          text: 'Forestry Commission',
-          value: 'Forestry Commission'
-        },
-        {
-          text: 'Marine Management Organisation – MMO',
-          value: 'Marine Management Organisation – MMO'
-        },
-        {
-          text: 'Natural England',
-          value: 'Natural England'
-        },
-        {
-          text: 'Rural Payments Agency – RPA',
-          value: 'Rural Payments Agency – RPA'
-        },
-        {
-          text: 'Veterinary Medicines Directorate – VMD',
-          value: 'Veterinary Medicines Directorate – VMD'
-        }
-      ],
+      items: organisations.map((organisation) => ({
+        text: organisation,
+        value: organisation
+      })),
       value: validation?.formValues.organisation ?? metadata?.organisation
     },
     buttonText: 'Continue'
