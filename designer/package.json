@@ -22,8 +22,8 @@
     "test": "jest --color --coverage --verbose",
     "test:watch": "jest --color --watch",
     "client:watch": "NODE_ENV=development npm run build:client -- --watch",
-    "server:watch": "nodemon",
-    "server:debug": "nodemon --inspect",
+    "server:watch": "nodemon ./server/src/index.ts",
+    "server:debug": "nodemon --inspect ./server/src/index.ts",
     "prestart": "npm run build",
     "start": "NODE_ENV=${NODE_ENV:-production} node --enable-source-maps ./server/dist/index.js"
   },
