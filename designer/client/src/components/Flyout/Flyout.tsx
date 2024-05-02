@@ -1,6 +1,8 @@
 import FocusTrap from 'focus-trap-react'
 import React, {
   type CSSProperties,
+  type KeyboardEvent,
+  type MouseEvent,
   type ReactChildren,
   useContext,
   useLayoutEffect,
@@ -13,12 +15,14 @@ import { i18n } from '~/src/i18n/index.js'
 import './Flyout.scss'
 
 interface Props {
-  style: string
+  style?: string
   width?: string
-  onHide: () => void
-  closeOnEnter: (e) => void
-  show: boolean
-  offset: number
+  onHide?: (
+    e?: KeyboardEvent<HTMLAnchorElement> | MouseEvent<HTMLAnchorElement>
+  ) => void
+  closeOnEnter?: (e: KeyboardEvent<HTMLAnchorElement>) => void
+  show?: boolean
+  offset?: number
   title?: string
   children?: ReactChildren
   NEVER_UNMOUNTS?: boolean
@@ -31,7 +35,7 @@ export function useFlyoutEffect(props: Props) {
   const show = props.show ?? true
 
   /**
-   * @code on component mount
+   * Run on component mount
    */
   useLayoutEffect(() => {
     flyoutContext.increment()
@@ -54,7 +58,7 @@ export function useFlyoutEffect(props: Props) {
     }
   }, [offset])
 
-  const onHide = (e) => {
+  const onHide: Props['onHide'] = (e) => {
     e?.preventDefault()
 
     if (props.onHide) {
@@ -66,7 +70,7 @@ export function useFlyoutEffect(props: Props) {
     }
   }
 
-  const closeOnEnter = (e) => {
+  const closeOnEnter: Props['closeOnEnter'] = (e) => {
     if (e.key === 'Enter') {
       onHide(e)
     }
