@@ -18,6 +18,13 @@ export default [
     method: 'GET',
     path: '/create',
     handler(request, h) {
+      const { yar } = request
+
+      // Clear previous form data
+      yar.clear(sessionNames.create)
+      yar.clear(sessionNames.validationFailure)
+
+      // Redirect to first step
       return h.redirect('/create/title').code(303)
     }
   }),
