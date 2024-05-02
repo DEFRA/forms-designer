@@ -14,7 +14,7 @@ import { i18n } from '~/src/i18n/index.js'
 
 interface Props {
   value?: Date
-  updateValue: (date) => void
+  updateValue: (date: Date) => void
 }
 
 export const AbsoluteDateTimeValues = ({ value, updateValue }: Props) => {
