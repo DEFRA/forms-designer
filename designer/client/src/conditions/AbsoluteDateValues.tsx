@@ -1,4 +1,4 @@
-import isValid from 'date-fns/isValid'
+import { isValid } from 'date-fns'
 import padStart from 'lodash/padStart.js'
 import React, { useEffect, useState, type ChangeEvent } from 'react'
 
