@@ -1,20 +1,19 @@
-import { mount } from 'enzyme'
+import { type ReactWrapper, mount } from 'enzyme'
 import React from 'react'
 
 import { useFlyoutEffect } from '~/src/components/Flyout/Flyout.jsx'
 import { FlyoutContext } from '~/src/context/index.js'
 
-function HookWrapper(props) {
-  const hook = props.hook ? props.hook() : undefined
-  // @ts-expect-error
-  // eslint-disable-next-line react/no-unknown-property
-  return <div hook={hook} />
+function HookWrapper(props: {
+  hook: () => ReturnType<typeof useFlyoutEffect>
+}) {
+  return <div style={props.hook().style} />
 }
 
 describe('useFlyoutContext', () => {
   const increment = jest.fn()
   const decrement = jest.fn()
-  let wrapper
+  let wrapper: ReactWrapper | undefined
 
   afterEach(() => {
     wrapper?.exists() && wrapper.unmount()
@@ -22,17 +21,20 @@ describe('useFlyoutContext', () => {
 
   test('Increment is called on mount', () => {
     const flyoutContextProviderValue = { count: 0, increment, decrement }
+
     wrapper = mount(
       <FlyoutContext.Provider value={flyoutContextProviderValue}>
         <HookWrapper hook={() => useFlyoutEffect({ show: true })} />
       </FlyoutContext.Provider>
     )
+
     expect(increment).toHaveBeenCalledTimes(1)
     expect(decrement).not.toHaveBeenCalled()
   })
 
   test('Decrement is called on unmount', () => {
     const flyoutContextProviderValue = { count: 0, increment, decrement }
+
     wrapper = mount(
       <FlyoutContext.Provider value={flyoutContextProviderValue}>
         <HookWrapper hook={() => useFlyoutEffect({ show: true })} />
@@ -50,19 +52,17 @@ describe('useFlyoutContext', () => {
       increment,
       decrement
     }
+
     expect(increment).not.toHaveBeenCalled()
+
     wrapper = mount(
       <FlyoutContext.Provider value={flyoutContextProviderValue}>
         <HookWrapper hook={() => useFlyoutEffect({ show: true })} />
       </FlyoutContext.Provider>
     )
 
-    const { hook } = wrapper.find('div').props()
-    wrapper.mount()
-    const { style } = hook
     expect(increment).toHaveBeenCalledTimes(1)
-
-    expect(style).toEqual({
+    expect(wrapper.find('div').props().style).toEqual({
       paddingLeft: '50px',
       transform: 'translateX(-50px)',
       position: 'relative'
