@@ -18,7 +18,7 @@ export default [
     method: 'GET',
     path: '/create',
     handler(request, h) {
-      return h.redirect('/create/title').permanent()
+      return h.redirect('/create/title').code(303)
     }
   }),
 
@@ -57,7 +57,7 @@ export default [
         title: payload.title
       })
 
-      return h.redirect('/create/organisation').temporary()
+      return h.redirect('/create/organisation').code(303)
     },
     options: {
       validate: {
@@ -78,7 +78,7 @@ export default [
             })
           }
 
-          return h.redirect('/create/title').temporary().takeover()
+          return h.redirect('/create/title').code(303).takeover()
         }
       }
     }
@@ -119,7 +119,7 @@ export default [
         organisation: payload.organisation
       })
 
-      return h.redirect('/create/team').temporary()
+      return h.redirect('/create/team').code(303)
     },
     options: {
       validate: {
@@ -140,7 +140,7 @@ export default [
             })
           }
 
-          return h.redirect('/create/organisation').temporary().takeover()
+          return h.redirect('/create/organisation').code(303).takeover()
         }
       }
     }
@@ -186,7 +186,7 @@ export default [
        * @todo Submit new form metadata
        * @todo Clear saved form metadata
        */
-      return h.redirect('/create/team').temporary()
+      return h.redirect('/create/team').code(303)
     },
     options: {
       validate: {
@@ -217,7 +217,7 @@ export default [
             })
           }
 
-          return h.redirect('/create/team').temporary().takeover()
+          return h.redirect('/create/team').code(303).takeover()
         }
       }
     }
