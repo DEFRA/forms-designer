@@ -46,7 +46,7 @@ const schema = joi.object<Config>({
     .string()
     .valid('development', 'test', 'production')
     .default('development'),
-  appDir: joi.string().default(resolve(dirname(configPath), '../dist')),
+  appDir: joi.string().default(dirname(configPath)),
   clientDir: joi
     .string()
     .default(resolve(dirname(configPath), '../../client/dist')),

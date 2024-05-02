@@ -16,6 +16,11 @@
 
     <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
+    {{ govukButton({
+      text: "Create new form",
+      href: "/create"
+    }) }}
+
     {% set formRowsMobile = [] %}
     {% set formRowsDesktop = [] %}
 
