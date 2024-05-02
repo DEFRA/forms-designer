@@ -125,6 +125,36 @@ jobs:
           - description: TypeScript compiler
             run: npm run lint:types
 
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Restore dependencies
+        uses: actions/cache/restore@v4
+        with:
+          enableCrossOsArchive: true
+          key: npm-install-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          path: |
+            designer/node_modules
+            model/node_modules
+            node_modules
+
+      - name: Run lint task
+        run: ${{ matrix.task.run }}
+
+  tasks:
+    name: ${{ matrix.task.description }} (${{ matrix.runner }})
+    runs-on: ${{ matrix.runner }}
+    needs: [install, build]
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        runner:
+          - ubuntu-latest
+
+        task:
           - description: Unit tests
             run: npm run test
 
@@ -142,7 +172,17 @@ jobs:
             model/node_modules
             node_modules
 
-      - name: Run lint task
+      - name: Restore build
+        uses: actions/cache/restore@v4
+        with:
+          enableCrossOsArchive: true
+          key: npm-build-${{ runner.os }}-${{ github.sha }}
+          path: |
+            designer/client/dist
+            designer/server/dist
+            model/dist
+
+      - name: Run task
         run: ${{ matrix.task.run }}
 
   publish:
