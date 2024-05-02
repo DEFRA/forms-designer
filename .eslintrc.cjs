@@ -240,8 +240,5 @@ module.exports = {
       }
     }
   ],
-  parserOptions: {
-    allowAutomaticSingleRunInference: true
-  },
   root: true
 }
