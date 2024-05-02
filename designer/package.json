@@ -22,8 +22,8 @@
     "test": "jest --color --coverage --verbose",
     "test:watch": "jest --color --watch",
     "client:watch": "NODE_ENV=development npm run build:client -- --watch",
-    "server:watch": "nodemon --exec tsx --enable-source-maps ./server/src",
-    "server:debug": "nodemon --exec tsx --enable-source-maps --inspect ./server/src",
+    "server:watch": "nodemon --exec tsx --env-file=../.env --enable-source-maps ./server/src",
+    "server:debug": "nodemon --exec tsx --env-file=../.env --enable-source-maps --inspect ./server/src",
     "prestart": "npm run build",
     "start": "NODE_ENV=${NODE_ENV:-production} node --enable-source-maps ./server/dist/index.js"
   },
@@ -47,7 +47,6 @@
     "classnames": "^2.5.1",
     "date-fns": "^2.30.0",
     "depth-first": "^4.0.0",
-    "dotenv": "^16.4.5",
     "focus-trap-react": "^8.11.3",
     "govuk-frontend": "^4.8.0",
     "hapi-pino": "^12.1.0",
