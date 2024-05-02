@@ -6,7 +6,7 @@ export default [
     method: 'GET',
     path: '/help/accessibility-statement',
     handler(request, h) {
-      return h.view('generic/accessibility-statement')
+      return h.view('accessibility-statement')
     },
     options: {
       auth: {
@@ -22,7 +22,7 @@ export default [
     method: 'GET',
     path: '/help/cookies',
     handler(request, h) {
-      return h.view('generic/cookies')
+      return h.view('cookies')
     },
     options: {
       auth: {
@@ -38,7 +38,7 @@ export default [
     method: 'GET',
     path: '/help/feedback',
     handler(request, h) {
-      return h.view('generic/feedback')
+      return h.view('feedback')
     },
     options: {
       auth: {

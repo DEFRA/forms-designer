@@ -5,7 +5,7 @@ export default /** @satisfies {ServerRoute} */ ({
   path: '/',
   handler(request, h) {
     const model = homeViewModel()
-    return h.view('generic/home', model)
+    return h.view('home', model)
   },
   options: {
     auth: {
