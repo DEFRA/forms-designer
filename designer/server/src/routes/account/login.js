@@ -1,7 +1,4 @@
-/**
- * @type {ServerRoute}
- */
-export default {
+export default /** @satisfies {ServerRoute} */ ({
   method: 'GET',
   path: '/login',
   handler(request, h) {
@@ -13,7 +10,7 @@ export default {
       strategy: 'azure-oidc'
     }
   }
-}
+})
 
 /**
  * @typedef {import('@hapi/hapi').ServerRoute} ServerRoute

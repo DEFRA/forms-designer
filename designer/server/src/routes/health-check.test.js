@@ -1,11 +1,9 @@
-import { type Server } from '@hapi/hapi'
-
 import { auth } from '~/test/fixtures/auth.js'
 
-describe('/health-check Route', () => {
+describe('Health check route', () => {
   const OLD_ENV = { ...process.env }
 
-  const startServer = async (): Promise<Server> => {
+  const startServer = async () => {
     const { createServer } = await import('~/src/createServer.js')
 
     const server = await createServer()
@@ -13,7 +11,8 @@ describe('/health-check Route', () => {
     return server
   }
 
-  let server: Server
+  /** @type {import('@hapi/hapi').Server} */
+  let server
 
   afterEach(async () => {
     process.env = OLD_ENV

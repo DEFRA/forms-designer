@@ -8,7 +8,7 @@ import Joi from 'joi'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
-import * as create from '~/src/models/create.js'
+import * as create from '~/src/models/forms/create.js'
 
 export default [
   /**
@@ -36,7 +36,7 @@ export default [
       const validation = yar.flash(sessionNames.validationFailure).at(0)
 
       return h.view(
-        'question-input',
+        'forms/question-input',
         create.titleViewModel(metadata, validation)
       )
     }
@@ -98,7 +98,7 @@ export default [
       const validation = yar.flash(sessionNames.validationFailure).at(0)
 
       return h.view(
-        'question-radios',
+        'forms/question-radios',
         create.organisationViewModel(metadata, validation)
       )
     }
@@ -160,7 +160,7 @@ export default [
       const validation = yar.flash(sessionNames.validationFailure).at(0)
 
       return h.view(
-        'question-inputs',
+        'forms/question-inputs',
         create.teamViewModel(metadata, validation)
       )
     }

@@ -1,20 +1,18 @@
 import { homeViewModel } from '~/src/models/home.js'
 
-/**
- * @type {ServerRoute}
- */
-export default {
+export default /** @satisfies {ServerRoute} */ ({
   method: 'GET',
   path: '/',
   handler(request, h) {
-    return h.view('home', homeViewModel())
+    const model = homeViewModel()
+    return h.view('home', model)
   },
   options: {
     auth: {
       mode: 'try'
     }
   }
-}
+})
 
 /**
  * @typedef {import('@hapi/hapi').ServerRoute} ServerRoute

@@ -1,9 +1,6 @@
 import { provideAuthedUser } from '~/src/common/helpers/auth/pre/provide-authed-user.js'
 
-/**
- * @type {ServerRoute}
- */
-export default {
+export default /** @satisfies {ServerRoute} */ ({
   method: 'GET',
   path: '/logout',
   handler(request, h) {
@@ -29,7 +26,7 @@ export default {
   options: {
     pre: [provideAuthedUser]
   }
-}
+})
 
 /**
  * @typedef {import('@hapi/hapi').ServerRoute} ServerRoute

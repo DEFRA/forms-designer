@@ -1,26 +1,54 @@
-import joi from 'joi'
-
-/**
- * @type {ServerRoute}
- */
-export default {
-  method: 'GET',
-  path: '/help/{filename}',
-  handler(request, h) {
-    return h.view(`help/${request.params.filename}`)
-  },
-  options: {
-    auth: {
-      mode: 'try'
+export default [
+  /**
+   * @satisfies {ServerRoute}
+   */
+  ({
+    method: 'GET',
+    path: '/help/accessibility-statement',
+    handler(request, h) {
+      return h.view('accessibility-statement')
     },
-    validate: {
-      params: joi.object().keys({
-        filename: joi.string().required()
-      })
+    options: {
+      auth: {
+        mode: 'try'
+      }
     }
-  }
-}
+  }),
+
+  /**
+   * @satisfies {ServerRoute}
+   */
+  ({
+    method: 'GET',
+    path: '/help/cookies',
+    handler(request, h) {
+      return h.view('cookies')
+    },
+    options: {
+      auth: {
+        mode: 'try'
+      }
+    }
+  }),
+
+  /**
+   * @satisfies {ServerRoute}
+   */
+  ({
+    method: 'GET',
+    path: '/help/feedback',
+    handler(request, h) {
+      return h.view('feedback')
+    },
+    options: {
+      auth: {
+        mode: 'try'
+      }
+    }
+  })
+]
 
 /**
+ * @typedef {import('@hapi/hapi').RouteOptions} RouteOptions
  * @typedef {import('@hapi/hapi').ServerRoute} ServerRoute
  */
