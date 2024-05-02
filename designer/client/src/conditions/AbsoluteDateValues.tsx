@@ -1,4 +1,4 @@
-import isValid from 'date-fns/isValid'
+import { isValid } from 'date-fns'
 import padStart from 'lodash/padStart.js'
 import React, { useEffect, useState, type ChangeEvent } from 'react'
 
@@ -39,19 +39,19 @@ function isValidateDate(props: {
   return true
 }
 
-function isValidDay(day: string) {
+function isValidDay(day?: number): day is number {
   return isValidateDate({ day })
 }
-function isValidMonth(month: string) {
+function isValidMonth(month?: number): month is number {
   return isValidateDate({ month })
 }
-function isValidYear(year: string) {
-  return year.length === 4 && isValidateDate({ year })
+function isValidYear(year = 0): year is number {
+  return year >= 1000 && isValidateDate({ year })
 }
 
 export const AbsoluteDateValues = ({ value = {}, updateValue }: Props) => {
   const [year, setYear] = useState<string>(() =>
-    isInt(value.year) ? value.year.toString() : ''
+    value.year && isInt(value.year) ? value.year.toString() : ''
   )
 
   const [month, setMonth] = useState<string>(() =>
@@ -63,9 +63,9 @@ export const AbsoluteDateValues = ({ value = {}, updateValue }: Props) => {
   )
 
   useEffect(() => {
-    const parsedDay = tryParseInt(day)!
-    const parsedMonth = tryParseInt(month)!
-    const parsedYear = tryParseInt(year)!
+    const parsedDay = tryParseInt(day)
+    const parsedMonth = tryParseInt(month)
+    const parsedYear = tryParseInt(year)
 
     if (
       parsedDay === value.day &&
@@ -75,7 +75,11 @@ export const AbsoluteDateValues = ({ value = {}, updateValue }: Props) => {
       return
     }
 
-    if (!isValidDay(day) || !isValidMonth(month) || !isValidYear(year)) {
+    if (
+      !isValidDay(parsedDay) ||
+      !isValidMonth(parsedMonth) ||
+      !isValidYear(parsedYear)
+    ) {
       return
     }
 
