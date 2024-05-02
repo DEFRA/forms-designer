@@ -25,21 +25,6 @@ export function titleViewModel(metadata, validation) {
 }
 
 /**
- * Text and Value Item
- * @typedef {object} Item
- * @property {string} text - The item text
- * @property {string} value - The item value
- */
-
-/**
- * @type {Item[]}
- */
-const organisationItems = organisations.map((organisation) => ({
-  text: organisation,
-  value: organisation
-}))
-
-/**
  * @param {Partial<FormMetadataInput>} [metadata]
  * @param {ValidationFailure} [validation]
  */
@@ -55,7 +40,10 @@ export function organisationViewModel(metadata, validation) {
       legend: {
         text: 'Choose a lead organisation for this form'
       },
-      items: organisationItems,
+      items: organisations.map((organisation) => ({
+        text: organisation,
+        value: organisation
+      })),
       value: validation?.formValues.organisation ?? metadata?.organisation
     },
     buttonText: 'Continue'
