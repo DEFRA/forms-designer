@@ -1,15 +1,10 @@
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-import { configDotenv } from 'dotenv'
 import joi from 'joi'
 import { Duration } from 'luxon'
 
 const configPath = fileURLToPath(import.meta.url)
-
-configDotenv({
-  path: [resolve(dirname(configPath), '../../.env')]
-})
 
 export interface Config {
   env: 'development' | 'test' | 'production'
