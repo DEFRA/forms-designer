@@ -16,8 +16,6 @@ export const organisations = [
 
 export const titleSchema = Joi.string().max(250).trim().required()
 export const organisationSchema = Joi.string()
-  .max(100)
-  .trim()
   .valid(...organisations)
   .required()
 export const teamNameSchema = Joi.string().max(100).trim().required()
