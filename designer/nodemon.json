@@ -3,5 +3,6 @@
   "env": {
     "NODE_ENV": "development"
   },
-  "ext": "js,json,ts"
+  "ext": "js,json,ts",
+  "exec": "tsx --env-file=.env --enable-source-maps ./server/src"
 }
