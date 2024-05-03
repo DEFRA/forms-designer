@@ -1,4 +1,7 @@
 import { DateTime } from 'luxon'
+// import jwt from '@hapi/jwt'
+// import { addSeconds } from 'date-fns'
+import { getScopesForUserProfile } from './azure-oidc.js'
 
 import {
   getUser,

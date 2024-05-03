@@ -4,9 +4,32 @@ import Boom from '@hapi/boom'
 import { token } from '@hapi/jwt'
 import { DateTime } from 'luxon'
 
+import * as rbac from '~/src/common/constants/rbac.js'
 import config from '~/src/config.js'
 
 const authCallbackUrl = new URL(`/auth/callback`, config.appBaseUrl)
+const adGroupsToScopes = {
+  [config.formsEditorAdGroupName]: rbac.ROLE_FORMS_EDITOR
+}
+
+/**
+ * Returns the scopes assigned to a user, given their profile with an AD group assigned.
+ * @param {Array<string>} activeDirectoryGroups - names of the AD groups the user is a member of
+ * @returns {Array<string>} - array of scopes assigned to the user
+ */
+export function getScopesForUserProfile(activeDirectoryGroups) {
+  let assignedScopes = /** @type {Set<string>} */ (new Set())
+
+  for (const [key, value] of Object.entries(adGroupsToScopes)) {
+    if (activeDirectoryGroups.includes(key)) {
+      const scopesToAssign = rbac.rolesToScopes[value]
+
+      assignedScopes = new Set([...assignedScopes, ...scopesToAssign])
+    }
+  }
+
+  return Array.from(assignedScopes)
+}
 
 /**
  * @type {ServerRegisterPluginObject}
@@ -48,11 +71,26 @@ export const azureOidc = {
               'offline_access',
               'user.read'
             ],
-            profile(credentials) {
+            /**
+             *
+             * @param {object} credentials - creds
+             * @param {string} credentials.token - access token
+             * @param {object} credentials.profile - object
+             * @param {Array<string>} credentials.scope - object
+             * @param {object} params - additional parameters
+             * @param {string} params.id_token
+             */
+            profile(credentials, params) {
               const artifacts = token.decode(credentials.token)
+              const idToken = params.id_token
 
               token.verifyTime(artifacts)
               token.verifyPayload(artifacts)
+
+              const idTokenPayload = /** @type {{payload: idTokenPayload}} */ (token.decode(idToken).decoded).payload
+              const assignedScopes = getScopesForUserProfile(idTokenPayload.groups ?? [])
+
+              credentials.scope = assignedScopes
 
               return Promise.resolve()
             }
@@ -137,4 +175,18 @@ export const azureOidcNoop = {
  * @typedef {import('oidc-client-ts').SigninResponse} SigninResponse - Provider sign in artifacts
  * @typedef {import('oidc-client-ts').OidcMetadata} OidcMetadata - OpenID Connect (OIDC) metadata
  * @typedef {import('oidc-client-ts').UserProfile} UserProfile - User profile
+ */
+
+/**
+ * @typedef {object} accessTokenPayload
+ * @property {object} oid - a unique identifier for the user
+ * @property {string} name - display name of the user
+ * @property {string | undefined } upn - user principal name
+ * @property {string} preferred_username - human-readable username for the user
+ * @property {string} login_hint - a reliable hint for the user
+ */
+
+/**
+ * @typedef {object} idTokenPayload
+ * @property {Array<string> | undefined} groups - list of active directory groups the user is a member of
  */
