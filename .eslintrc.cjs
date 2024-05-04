@@ -42,7 +42,7 @@ module.exports = {
       rules: {
         'no-console': 'error',
 
-        // Check import or require statements are A-Z ordered
+        // Check type imports are identified
         '@typescript-eslint/consistent-type-imports': [
           'error',
           {
@@ -81,6 +81,9 @@ module.exports = {
         'import/namespace': 'off',
         'import/no-named-as-default-member': 'off',
         'import/no-unresolved': 'off',
+
+        // Check type imports are annotated inline
+        'import/consistent-type-specifier-style': ['error', 'prefer-inline'],
 
         // Check import or require statements are A-Z ordered
         'import/order': [
