@@ -20,7 +20,11 @@ async function refreshAccessToken(request) {
 
   request.logger.info('Azure OIDC access token expired, refreshing...')
 
-  return await fetch(request.server.app.oidc.token_endpoint, {
+  const oidc = await fetch(config.oidcWellKnownConfigurationUrl).then(
+    (response) => /** @type {Promise<OidcMetadata>} */ (response.json())
+  )
+
+  return fetch(oidc.token_endpoint, {
     method: 'post',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',

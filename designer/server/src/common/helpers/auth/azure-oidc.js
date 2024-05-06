@@ -28,9 +28,6 @@ export const azureOidc = {
         (response) => /** @type {Promise<OidcMetadata>} */ (response.json())
       )
 
-      // making the OIDC config available to server
-      server.app.oidc = oidc
-
       server.auth.strategy(
         'azure-oidc',
         'bell',
