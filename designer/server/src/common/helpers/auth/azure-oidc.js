@@ -81,10 +81,7 @@ export const azureOidc = {
             redirect_uri: authCallbackUrl.href
           },
           cookie: 'bell-azure-oidc',
-          isSecure: false,
-          config: {
-            tenant: config.azureTenantId
-          }
+          isSecure: false
         })
       )
     }
