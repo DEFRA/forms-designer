@@ -26,7 +26,9 @@ export default [
       return h.redirect(redirect)
     },
     options: {
-      auth: 'azure-oidc',
+      auth: {
+        strategies: ['azure-oidc']
+      },
       response: {
         failAction: () => boom.boomify(boom.unauthorized())
       }

@@ -47,7 +47,9 @@ const sessionCookie = {
         }
       })
 
-      server.auth.default('session')
+      server.auth.default({
+        strategies: ['azure-oidc', 'session']
+      })
     }
   }
 }

@@ -26,7 +26,7 @@ const serverOptions = (): ServerOptions => {
     routes: {
       auth: {
         mode: 'required',
-        strategy: 'session'
+        strategies: ['session']
       },
       validate: {
         options: {

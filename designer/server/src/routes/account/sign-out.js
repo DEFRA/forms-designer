@@ -25,6 +25,11 @@ export default /** @satisfies {ServerRoute} */ ({
     request.cookieAuth.clear()
 
     return h.redirect(logoutUrl)
+  },
+  options: {
+    auth: {
+      mode: 'try'
+    }
   }
 })
 
