@@ -41,7 +41,7 @@ describe('Visualisation', () => {
   const { findAllByText, findByText, getByText, queryByText, queryByTestId } =
     screen
 
-  test('Graph is rendered with correct number of pages and updates ', async () => {
+  test('Graph is rendered with correct number of pages and updates', async () => {
     const data: FormDefinition = {
       pages: [
         {

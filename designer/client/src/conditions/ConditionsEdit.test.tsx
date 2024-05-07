@@ -92,7 +92,7 @@ describe('ConditionsEdit', () => {
       save: jest.fn()
     }
 
-    test('Renders edit links for each condition and add new condition ', () => {
+    test('Renders edit links for each condition and add new condition', () => {
       customRender(<ConditionsEdit />, providerProps)
       expect(getByText(condition.displayName)).toBeInTheDocument()
       expect(getByText(condition2.displayName)).toBeInTheDocument()

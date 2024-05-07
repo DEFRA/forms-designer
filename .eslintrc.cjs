@@ -42,7 +42,7 @@ module.exports = {
       rules: {
         'no-console': 'error',
 
-        // Check import or require statements are A-Z ordered
+        // Check type imports are identified
         '@typescript-eslint/consistent-type-imports': [
           'error',
           {
@@ -81,6 +81,9 @@ module.exports = {
         'import/namespace': 'off',
         'import/no-named-as-default-member': 'off',
         'import/no-unresolved': 'off',
+
+        // Check type imports are annotated inline
+        'import/consistent-type-specifier-style': ['error', 'prefer-inline'],
 
         // Check import or require statements are A-Z ordered
         'import/order': [
@@ -125,11 +128,12 @@ module.exports = {
           }
         ],
 
-        // JSDoc @param description is optional
+        // JSDoc @param is optional
         'jsdoc/require-param-description': 'off',
+        'jsdoc/require-param-type': 'off',
         'jsdoc/require-param': 'off',
 
-        // JSDoc @returns description is optional
+        // JSDoc @returns is optional
         'jsdoc/require-returns-description': 'off',
         'jsdoc/require-returns-type': 'off',
         'jsdoc/require-returns': 'off',
@@ -179,11 +183,12 @@ module.exports = {
           }
         ],
 
-        // JSDoc @param is mandatory for JavaScript
+        // JSDoc @param types are mandatory for JavaScript
         'jsdoc/require-param-description': 'off',
+        'jsdoc/require-param-type': 'error',
         'jsdoc/require-param': 'off',
 
-        // JSDoc @returns description is optional
+        // JSDoc @returns is optional
         'jsdoc/require-returns-description': 'off',
         'jsdoc/require-returns-type': 'off',
         'jsdoc/require-returns': 'off'
@@ -224,9 +229,9 @@ module.exports = {
     },
     {
       env: {
-        jest: true
+        'jest/globals': true
       },
-      extends: ['plugin:jest/style'],
+      extends: ['plugin:jest/recommended', 'plugin:jest/style'],
       files: [
         '**/*.test.{cjs,js,mjs,ts,tsx}',
         '**/__mocks__/**',
@@ -237,7 +242,11 @@ module.exports = {
       rules: {
         // Turn off warnings for jest.Expect 'any' types
         '@typescript-eslint/no-unsafe-assignment': 'off',
-        '@typescript-eslint/no-unsafe-argument': 'off'
+        '@typescript-eslint/no-unsafe-argument': 'off',
+
+        // Allow Jest to assert on mocked unbound methods
+        '@typescript-eslint/unbound-method': 'off',
+        'jest/unbound-method': 'error'
       }
     }
   ],
