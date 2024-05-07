@@ -1,24 +1,69 @@
+import { token } from '@hapi/jwt'
+
 /**
- * @this {{ server: import('@hapi/hapi').Server, state?: { userSession?: { sessionId?: string } } }}
- * @returns {Promise<UserSession | undefined>}
+ * @param {Request} request
+ * @param {{ sessionId: string, user: UserCredentials }} [session] - Session cookie state
  */
-async function getUserSession() {
-  return this.state?.userSession?.sessionId
-    ? await this.server.app.cache.get(this.state.userSession.sessionId)
-    : {}
+export async function getUserSession(request, session) {
+  const { auth, server } = request
+
+  // Check for existing user
+  if (getUser(auth.credentials)) {
+    return auth.credentials
+  }
+
+  // Prefer Session ID from cookie state
+  let sessionId = session?.sessionId
+
+  // Fall back to OpenID Connect (OIDC) claim
+  if (!sessionId) {
+    const claims = getUserClaims(auth.credentials)
+
+    if (claims?.sub) {
+      sessionId = claims.sub
+    }
+  }
+
+  // Retrieve user session from Redis
+  if (sessionId) {
+    return server.methods.session.get(sessionId)
+  }
 }
 
-export { getUserSession }
+/**
+ * @param {AuthCredentials | null} [credentials]
+ */
+export function getUserClaims(credentials) {
+  if (!credentials?.token) {
+    return
+  }
+
+  const { decoded } = /** @type {UserToken<UserProfile>} */ (
+    token.decode(credentials.token)
+  )
+
+  return decoded.payload
+}
 
 /**
- * @typedef {object} UserSession
- * @property {string} id - User ID
- * @property {string} email - User email address
- * @property {string} displayName - User display name
- * @property {string} loginHint - User login hint
- * @property {boolean} isAuthenticated - User is authenticated
- * @property {string} token - User token
- * @property {string} refreshToken - User refresh token
- * @property {number} expiresIn - User session expiry time remaining
- * @property {Date} expiresAt - User session expiry time
+ * @param {AuthCredentials | null} [credentials]
+ */
+export function getUser(credentials) {
+  if (!credentials?.user) {
+    return
+  }
+
+  return credentials.user
+}
+
+/**
+ * @typedef {import('@hapi/hapi').Request} Request
+ * @typedef {import('@hapi/hapi').AuthCredentials} AuthCredentials
+ * @typedef {import('@hapi/hapi').UserCredentials} UserCredentials
+ * @typedef {import('~/src/common/helpers/auth/azure-oidc.js').UserProfile} UserProfile
+ */
+
+/**
+ * @template {object} Payload
+ * @typedef {import('@hapi/jwt').HapiJwt.Artifacts<{ JwtPayload?: Payload }>} UserToken
  */

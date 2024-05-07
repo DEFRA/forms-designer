@@ -1,53 +1,49 @@
-import jwt from '@hapi/jwt'
-import { addSeconds } from 'date-fns'
+import { DateTime } from 'luxon'
 
-function removeUserSession(request) {
-  request.dropUserSession()
-  request.cookieAuth.clear()
-}
+import {
+  getUser,
+  getUserClaims
+} from '~/src/common/helpers/auth/get-user-session.js'
 
-async function createUserSession(request, sessionId) {
-  const expiresInSeconds = request.auth.credentials.expiresIn
-  const expiresInMilliSeconds = expiresInSeconds * 1000
-  const expiresAt = addSeconds(new Date(), expiresInSeconds)
+/**
+ * @param {AuthCredentials | null} [credentials]
+ */
+export function createUser(credentials) {
+  const claims = getUserClaims(credentials)
 
-  const { profile } = request.auth.credentials
+  if (!claims) {
+    return
+  }
 
-  await request.server.app.cache.set(sessionId, {
-    id: profile.id,
-    email: profile.email,
-    displayName: profile.displayName,
-    loginHint: profile.loginHint,
-    isAuthenticated: request.auth.isAuthenticated,
-    token: request.auth.credentials.token,
-    refreshToken: request.auth.credentials.refreshToken,
-    expiresIn: expiresInMilliSeconds,
-    expiresAt
+  return /** @satisfies {UserCredentials} */ ({
+    id: claims.sub,
+    email: claims.email ?? '',
+    displayName: claims.name ?? '',
+    issuedAt: DateTime.fromSeconds(claims.iat).toUTC().toISO(),
+    expiresAt: DateTime.fromSeconds(claims.exp).toUTC().toISO()
   })
 }
 
-async function updateUserSession(request, refreshedSession) {
-  const refreshedPayload = jwt.token.decode(refreshedSession.access_token)
-    .decoded.payload
+/**
+ * @param {Request} request
+ */
+export async function createUserSession(request) {
+  const { auth, server } = request
 
-  // Update userSession with new access token and new expiry details
-  const expiresInSeconds = refreshedSession.expires_in
-  const expiresInMilliSeconds = expiresInSeconds * 1000
-  const expiresAt = addSeconds(new Date(), expiresInSeconds)
+  // Optionally create user object (e.g. signed in token but no session)
+  const user = !getUser(auth.credentials)
+    ? createUser(auth.credentials)
+    : auth.credentials.user
 
-  await request.server.app.cache.set(request.state.userSession.sessionId, {
-    id: refreshedPayload.oid,
-    email: refreshedPayload.preferred_username,
-    displayName: refreshedPayload.name,
-    loginHint: refreshedPayload.login_hint,
-    isAuthenticated: true,
-    token: refreshedSession.access_token,
-    refreshToken: refreshedSession.refresh_token,
-    expiresIn: expiresInMilliSeconds,
-    expiresAt
-  })
-
-  return await request.getUserSession()
+  // Create and retrieve user session from Redis
+  if (user?.id) {
+    await server.methods.session.set(user.id, { ...auth.credentials, user })
+    return server.methods.session.get(user.id)
+  }
 }
 
-export { createUserSession, updateUserSession, removeUserSession }
+/**
+ * @typedef {import('@hapi/hapi').Request} Request
+ * @typedef {import('@hapi/hapi').AuthCredentials} AuthCredentials
+ * @typedef {import('@hapi/hapi').UserCredentials} UserCredentials
+ */

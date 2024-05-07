@@ -1,11 +1,6 @@
 import authCookie from '@hapi/cookie'
-import { isPast, parseISO, subMinutes } from 'date-fns'
 
-import { refreshAccessToken } from '~/src/common/helpers/auth/refresh-token.js'
-import {
-  removeUserSession,
-  updateUserSession
-} from '~/src/common/helpers/auth/user-session.js'
+import { getUserSession } from '~/src/common/helpers/auth/get-user-session.js'
 import config from '~/src/config.js'
 
 /**
@@ -36,49 +31,26 @@ const sessionCookie = {
 
         /**
          * Validate session using auth credentials
+         * @param {Request} [request]
+         * @param {{ sessionId: string, user: UserCredentials }} [session] - Session cookie state
          */
         async validate(request, session) {
-          const authedUser = await request.getUserSession()
-
-          const tokenHasExpired = authedUser?.expiresAt
-            ? isPast(subMinutes(parseISO(authedUser.expiresAt), 1))
-            : true
-
-          if (tokenHasExpired) {
-            const response = await refreshAccessToken(request)
-            const refreshAccessTokenJson = await response.json()
-
-            if (!response.ok) {
-              removeUserSession(request)
-
-              return { isValid: false }
-            }
-
-            const updatedSession = await updateUserSession(
-              request,
-              refreshAccessTokenJson
-            )
-
-            return {
-              isValid: true,
-              credentials: updatedSession
-            }
+          if (!request) {
+            return { isValid: false }
           }
 
-          const userSession = await server.app.cache.get(session.sessionId)
+          const credentials = await getUserSession(request, session)
 
-          if (userSession) {
-            return {
-              isValid: true,
-              credentials: userSession
-            }
+          return {
+            credentials,
+            isValid: !!credentials
           }
-
-          return { isValid: false }
         }
       })
 
-      server.auth.default('session')
+      server.auth.default({
+        strategies: ['azure-oidc', 'session']
+      })
     }
   }
 }
@@ -88,4 +60,9 @@ export { sessionCookie }
 /**
  * @template {object | void} [PluginOptions=void]
  * @typedef {import('@hapi/hapi').ServerRegisterPluginObject<PluginOptions>} ServerRegisterPluginObject
+ */
+
+/**
+ * @typedef {import('@hapi/hapi').Request} Request
+ * @typedef {import('@hapi/hapi').UserCredentials} UserCredentials
  */

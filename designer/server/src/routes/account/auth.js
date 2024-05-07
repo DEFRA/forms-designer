@@ -1,5 +1,4 @@
-import boom from '@hapi/boom'
-import { v4 as uuidv4 } from 'uuid'
+import Boom from '@hapi/boom'
 
 import { createUserSession } from '~/src/common/helpers/auth/user-session.js'
 
@@ -11,24 +10,30 @@ export default [
     method: ['GET', 'POST'],
     path: '/auth/callback',
     async handler(request, h) {
-      const { auth, cookieAuth, yar } = request
+      const { cookieAuth, yar } = request
 
-      if (auth.isAuthenticated) {
-        const sessionId = uuidv4()
+      // Create user session
+      const credentials = await createUserSession(request)
 
-        await createUserSession(request, sessionId)
-
-        cookieAuth.set({ sessionId })
+      if (!credentials?.user) {
+        return Boom.unauthorized()
       }
 
-      const redirect = yar.flash('referrer').at(0) ?? '/library'
+      // Add to authentication cookie for session validation
+      cookieAuth.set({ sessionId: credentials.user.id })
 
+      const redirect = yar.flash('referrer').at(0) ?? '/library'
       return h.redirect(redirect)
     },
     options: {
-      auth: 'azure-oidc',
+      auth: {
+        strategies: ['azure-oidc']
+      },
+
       response: {
-        failAction: () => boom.boomify(boom.unauthorized())
+        failAction(request, h, error) {
+          return Boom.unauthorized(error)
+        }
       }
     }
   })

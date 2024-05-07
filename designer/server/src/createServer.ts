@@ -7,8 +7,6 @@ import {
   azureOidc,
   azureOidcNoop
 } from '~/src/common/helpers/auth/azure-oidc.js'
-import { dropUserSession } from '~/src/common/helpers/auth/drop-user-session.js'
-import { getUserSession } from '~/src/common/helpers/auth/get-user-session.js'
 import { sessionCookie } from '~/src/common/helpers/auth/session-cookie.js'
 import { requestLogger } from '~/src/common/helpers/logging/request-logger.js'
 import { buildRedisClient } from '~/src/common/helpers/redis-client.js'
@@ -26,7 +24,7 @@ const serverOptions = (): ServerOptions => {
     routes: {
       auth: {
         mode: 'required',
-        strategy: 'session'
+        strategies: ['session']
       },
       validate: {
         options: {
@@ -61,14 +59,15 @@ const serverOptions = (): ServerOptions => {
 export async function createServer() {
   const server = hapi.server(serverOptions())
 
-  server.app.cache = server.cache({
+  const cache = server.cache({
     cache: 'session',
     segment: config.redisKeyPrefix,
     expiresIn: config.sessionTtl
   })
 
-  server.decorate('request', 'getUserSession', getUserSession)
-  server.decorate('request', 'dropUserSession', dropUserSession)
+  server.method('session.get', (id) => cache.get(id))
+  server.method('session.set', (id, value) => cache.set(id, value))
+  server.method('session.drop', (id) => cache.drop(id))
 
   await server.register(inert)
   await server.register(sessionManager)
