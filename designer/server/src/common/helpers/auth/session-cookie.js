@@ -26,7 +26,18 @@ const sessionCookie = {
           ttl: config.sessionCookieTtl
         },
         keepAlive: true,
-        validate: async (request, session) => {
+
+        /**
+         * Redirect invalid session to callback route
+         */
+        redirectTo() {
+          return '/auth/callback'
+        },
+
+        /**
+         * Validate session using auth credentials
+         */
+        async validate(request, session) {
           const authedUser = await request.getUserSession()
 
           const tokenHasExpired = authedUser?.expiresAt
