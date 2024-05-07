@@ -2,12 +2,12 @@ import { provideAuthedUser } from '~/src/common/helpers/auth/pre/provide-authed-
 
 export default /** @satisfies {ServerRoute} */ ({
   method: 'GET',
-  path: '/logout',
+  path: '/auth/sign-out',
   handler(request, h) {
     const authedUser = request.pre.authedUser
 
     if (!authedUser) {
-      return h.redirect('/')
+      return h.redirect('/library')
     }
 
     const logoutBaseUrl = request.server.app.oidc.end_session_endpoint

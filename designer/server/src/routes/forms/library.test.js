@@ -38,7 +38,7 @@ describe('Forms library routes', () => {
     const { document } = await renderResponse(server, options)
 
     const $heading = document.querySelector('h1')
-    expect($heading).toHaveClass('govuk-heading-xl')
+    expect($heading).toHaveClass('govuk-heading-l')
     expect($heading).toHaveTextContent('Forms library')
 
     const $table = document.querySelector('table')

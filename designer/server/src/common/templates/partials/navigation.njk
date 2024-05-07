@@ -5,9 +5,9 @@
   serviceName: config.serviceName,
   navigationItems: navigation if isAuthenticated,
   accountName: authedUser.displayName if isAuthenticated,
-  accountLink: "/login",
-  signOutLink: "/logout",
-  homepageLink: "/"
+  accountLink: "/library",
+  signOutLink: "/auth/sign-out",
+  homepageLink: "/library"
 }) }}
 
 {% if ["alpha", "beta"].includes(config.phase) %}

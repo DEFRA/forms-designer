@@ -20,9 +20,16 @@ declare module '@hapi/hapi' {
 
 declare module '@hapi/yar' {
   type CreateKey = (typeof sessionNames)['create']
+  type ReferrerKey = (typeof sessionNames)['referrer']
   type ValidationKey = (typeof sessionNames)['validationFailure']
 
   interface Yar {
+    /**
+     * Get temporary redirect path for after sign in
+     * (Deleted when read, e.g. after a redirect)
+     */
+    flash(type: ReferrerKey): string
+
     /**
      * Get temporary error messages from the session
      * (Deleted when read, e.g. after a redirect)

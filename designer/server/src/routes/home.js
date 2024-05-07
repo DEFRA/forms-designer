@@ -1,15 +1,19 @@
-import { homeViewModel } from '~/src/models/home.js'
+import * as auth from '~/src/models/account/auth.js'
 
 export default /** @satisfies {ServerRoute} */ ({
   method: 'GET',
   path: '/',
   handler(request, h) {
-    const model = homeViewModel()
-    return h.view('home', model)
+    if (request.auth.isAuthenticated) {
+      return h.redirect('/library')
+    }
+
+    const model = auth.signedOutViewModel()
+    return h.view('account/signed-out', model)
   },
   options: {
     auth: {
-      mode: 'try'
+      mode: 'optional'
     }
   }
 })

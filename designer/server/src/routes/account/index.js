@@ -1,5 +1,4 @@
 import auth from './auth.js'
-import login from './login.js'
-import logout from './logout.js'
+import signOut from './sign-out.js'
 
-export default [auth, login, logout].flat()
+export default [auth, signOut].flat()

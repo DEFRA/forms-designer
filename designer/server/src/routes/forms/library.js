@@ -10,6 +10,11 @@ export default [
     async handler(request, h) {
       const model = await library.listViewModel()
       return h.view('forms/library', model)
+    },
+    options: {
+      auth: {
+        mode: 'required'
+      }
     }
   })
 ]
