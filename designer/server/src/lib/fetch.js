@@ -3,11 +3,11 @@ import Wreck from '@hapi/wreck'
 /**
  * @template {object} [BodyType=Buffer]
  * @param {string} method
- * @param {string} url
+ * @param {URL} url
  * @param {RequestOptions} options
  */
 export async function request(method, url, options) {
-  const response = await Wreck.request(method, url, options)
+  const response = await Wreck.request(method, url.href, options)
 
   if (response.statusCode !== 200) {
     throw new Error(response.statusMessage)
@@ -21,7 +21,7 @@ export async function request(method, url, options) {
 
 /**
  * @template {object} [BodyType=Buffer]
- * @param {string} url
+ * @param {URL} url
  * @param {RequestOptions} options
  */
 export function get(url, options) {
@@ -31,7 +31,7 @@ export function get(url, options) {
 
 /**
  * @template {object} [BodyType=Buffer]
- * @param {string} url
+ * @param {URL} url
  * @param {RequestOptions} options
  */
 export function post(url, options) {
@@ -41,7 +41,7 @@ export function post(url, options) {
 
 /**
  * @template {object} [BodyType=Buffer]
- * @param {string} url
+ * @param {URL} url
  * @param {RequestOptions} options
  */
 export function put(url, options) {
@@ -51,7 +51,7 @@ export function put(url, options) {
 
 /**
  * @template {object} [BodyType=Buffer]
- * @param {string} url
+ * @param {URL} url
  * @param {RequestOptions} options
  */
 export function del(url, options) {
@@ -61,7 +61,7 @@ export function del(url, options) {
 
 /**
  * @template {object} [BodyType=Buffer]
- * @param {string} url
+ * @param {URL} url
  * @param {RequestOptions} options
  */
 export function getJson(url, options = {}) {
@@ -71,7 +71,7 @@ export function getJson(url, options = {}) {
 
 /**
  * @template {object} [BodyType=Buffer]
- * @param {string} url
+ * @param {URL} url
  * @param {RequestOptions} options
  */
 export function postJson(url, options = {}) {
