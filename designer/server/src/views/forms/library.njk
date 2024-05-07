@@ -11,11 +11,13 @@
   }) }}
 
   {% call appPageBody() %}
-    <h2 class="govuk-heading-m">
-      {{ formItems | length + (" form" if formItems | length == 1 else " forms" ) }}
-    </h2>
+    {% if formItems | length %}
+      <h2 class="govuk-heading-m">
+        {{ formItems | length + (" form" if formItems | length == 1 else " forms" ) }}
+      </h2>
 
-    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+      <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+    {% endif %}
 
     {{ govukButton({
       text: "Create new form",
@@ -80,35 +82,39 @@
       ]), formRowsDesktop) %}
     {% endfor %}
 
-    {{ govukTable({
-      classes: "app-display-until-desktop",
-      head: [
-        {
-          text: "Name",
-          classes: "govuk-!-width-three-quarters"
-        },
-        {
-          text: "Status"
-        }
-      ],
-      rows: formRowsMobile
-    }) }}
+    {% if formRowsMobile | length %}
+      {{ govukTable({
+        classes: "app-display-until-desktop" if formRowsDesktop | length,
+        head: [
+          {
+            text: "Name",
+            classes: "govuk-!-width-three-quarters"
+          },
+          {
+            text: "Status"
+          }
+        ],
+        rows: formRowsMobile
+      }) }}
+    {% endif %}
 
-    {{ govukTable({
-      classes: "app-display-from-desktop",
-      head: [
-        {
-          text: "Name",
-          classes: "govuk-!-width-one-half"
-        },
-        {
-          text: "Last updated"
-        },
-        {
-          text: "Status"
-        }
-      ],
-      rows: formRowsDesktop
-    }) }}
+    {% if formRowsDesktop | length %}
+      {{ govukTable({
+        classes: "app-display-from-desktop" if formRowsMobile | length,
+        head: [
+          {
+            text: "Name",
+            classes: "govuk-!-width-one-half"
+          },
+          {
+            text: "Last updated"
+          },
+          {
+            text: "Status"
+          }
+        ],
+        rows: formRowsDesktop
+      }) }}
+    {% endif %}
   {% endcall %}
 {% endblock %}
