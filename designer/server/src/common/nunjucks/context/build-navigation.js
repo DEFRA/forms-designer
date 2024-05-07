@@ -15,10 +15,7 @@ function buildEntry(request, text, url) {
  * @param {Partial<Request> | null} request
  */
 export function buildNavigation(request) {
-  return [
-    buildEntry(request, 'Home', '/'),
-    buildEntry(request, 'Forms library', '/library')
-  ]
+  return [buildEntry(request, 'Forms library', '/library')]
 }
 
 /**

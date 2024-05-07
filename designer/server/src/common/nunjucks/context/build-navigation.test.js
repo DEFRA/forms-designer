@@ -9,11 +9,6 @@ describe('#buildNavigation', () => {
     expect(buildNavigation(mockRequest())).toEqual([
       {
         isActive: false,
-        text: 'Home',
-        url: '/'
-      },
-      {
-        isActive: false,
         text: 'Forms library',
         url: '/library'
       }
@@ -22,22 +17,31 @@ describe('#buildNavigation', () => {
 
   test.each([
     {
-      text: 'Home',
-      url: '/'
+      path: '/',
+      entries: [
+        {
+          text: 'Forms library',
+          url: '/library',
+          isActive: false
+        }
+      ]
     },
     {
-      text: 'Forms library',
-      url: '/library'
+      path: '/library',
+      entries: [
+        {
+          text: 'Forms library',
+          url: '/library',
+          isActive: true
+        }
+      ]
     }
-  ])('Should provide expected highlighted navigation details', (fixture) => {
-    expect(buildNavigation(mockRequest({ path: fixture.url }))).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          isActive: true,
-          text: fixture.text,
-          url: fixture.url
-        })
-      ])
-    )
-  })
+  ])(
+    'Should provide expected highlighted navigation details',
+    ({ path, entries }) => {
+      expect(buildNavigation(mockRequest({ path }))).toEqual(
+        expect.arrayContaining(entries)
+      )
+    }
+  )
 })
