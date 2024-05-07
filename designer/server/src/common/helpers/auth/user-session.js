@@ -1,4 +1,3 @@
-import jwt from '@hapi/jwt'
 import { addSeconds } from 'date-fns'
 
 function removeUserSession(request) {
@@ -26,28 +25,4 @@ async function createUserSession(request, sessionId) {
   })
 }
 
-async function updateUserSession(request, refreshedSession) {
-  const refreshedPayload = jwt.token.decode(refreshedSession.access_token)
-    .decoded.payload
-
-  // Update userSession with new access token and new expiry details
-  const expiresInSeconds = refreshedSession.expires_in
-  const expiresInMilliSeconds = expiresInSeconds * 1000
-  const expiresAt = addSeconds(new Date(), expiresInSeconds)
-
-  await request.server.app.cache.set(request.state.userSession.sessionId, {
-    id: refreshedPayload.oid,
-    email: refreshedPayload.preferred_username,
-    displayName: refreshedPayload.name,
-    loginHint: refreshedPayload.login_hint,
-    isAuthenticated: true,
-    token: refreshedSession.access_token,
-    refreshToken: refreshedSession.refresh_token,
-    expiresIn: expiresInMilliSeconds,
-    expiresAt
-  })
-
-  return await request.getUserSession()
-}
-
-export { createUserSession, updateUserSession, removeUserSession }
+export { createUserSession, removeUserSession }
