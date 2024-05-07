@@ -17,7 +17,8 @@
 
 {% block content %}
   {{ appHeading({
-    text: pageHeading or pageTitle
+    text: pageHeading or pageTitle,
+    classes: "govuk-heading-l"
   }) }}
 
   {% call appPageBody() %}

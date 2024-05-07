@@ -1,6 +1,6 @@
 <div class="govuk-grid-row app-heading" data-testid="app-heading">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl govuk-!-margin-bottom-2" data-testid="app-heading-title">
+    <h1 class="{{ params.classes if params.classes else "govuk-heading-xl" }}" data-testid="app-heading-title">
       {{ params.text }}
     </h1>
 

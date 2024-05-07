@@ -4,7 +4,8 @@
 {% block content %}
   {% if isAuthenticated %}
     {{ appHeading({
-      text: "Welcome, " + authedUser.displayName + "."
+      text: "Welcome, " + authedUser.displayName + ".",
+      classes: "govuk-heading-l"
     }) }}
 
     {% call appPageBody() %}
@@ -15,7 +16,8 @@
     {% endcall %}
   {% else %}
     {{ appHeading({
-      text: "You have signed out"
+      text: "You have signed out",
+      classes: "govuk-heading-l"
     }) }}
 
     {% call appPageBody() %}
