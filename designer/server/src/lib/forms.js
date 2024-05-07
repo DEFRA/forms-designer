@@ -29,23 +29,32 @@ export async function get(id) {
 
 /**
  * Create form
- * @param {FormMetadataInput} data
+ * @param {FormMetadataInput} metadata
  */
-export async function create(data) {
-  // TODO
-  const form = /** @type {FormMetadata} */ ({})
-  return Promise.resolve(form)
+export async function create(metadata) {
+  const postJsonByType = /** @type {typeof postJson<FormMetadata>} */ (postJson)
+
+  const { body } = await postJsonByType(formsEndpoint, {
+    payload: metadata
+  })
+
+  return body
 }
 
 /**
  * Update form by ID
  * @param {string} id
- * @param {Partial<FormMetadataInput>} data
+ * @param {Partial<FormMetadataInput>} metadata
  */
-export async function update(id, data) {
-  // TODO
-  const form = /** @type {FormMetadata} */ ({})
-  return Promise.resolve(form)
+export async function update(id, metadata) {
+  const postJsonByType = /** @type {typeof postJson<FormMetadata>} */ (postJson)
+
+  const requestUrl = new URL(`./${id}`, formsEndpoint)
+  const { body } = await postJsonByType(requestUrl, {
+    payload: metadata
+  })
+
+  return body
 }
 
 /**
