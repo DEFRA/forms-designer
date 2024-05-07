@@ -71,15 +71,6 @@ export const azureOidc = {
               'offline_access',
               'user.read'
             ],
-            /**
-             *
-             * @param {object} credentials - creds
-             * @param {string} credentials.token - access token
-             * @param {object} credentials.profile - object
-             * @param {Array<string>} credentials.scope - object
-             * @param {object} params - additional parameters
-             * @param {string} params.id_token
-             */
             profile(credentials, params) {
               const artifacts = token.decode(credentials.token)
               const idToken = params.id_token
@@ -87,8 +78,12 @@ export const azureOidc = {
               token.verifyTime(artifacts)
               token.verifyPayload(artifacts)
 
-              const idTokenPayload = /** @type {{payload: idTokenPayload}} */ (token.decode(idToken).decoded).payload
-              const assignedScopes = getScopesForUserProfile(idTokenPayload.groups ?? [])
+              const idTokenPayload = /** @type {{payload: idTokenPayload}} */ (
+                token.decode(idToken).decoded
+              ).payload
+              const assignedScopes = getScopesForUserProfile(
+                idTokenPayload.groups ?? []
+              )
 
               credentials.scope = assignedScopes
 
@@ -175,15 +170,6 @@ export const azureOidcNoop = {
  * @typedef {import('oidc-client-ts').SigninResponse} SigninResponse - Provider sign in artifacts
  * @typedef {import('oidc-client-ts').OidcMetadata} OidcMetadata - OpenID Connect (OIDC) metadata
  * @typedef {import('oidc-client-ts').UserProfile} UserProfile - User profile
- */
-
-/**
- * @typedef {object} accessTokenPayload
- * @property {object} oid - a unique identifier for the user
- * @property {string} name - display name of the user
- * @property {string | undefined } upn - user principal name
- * @property {string} preferred_username - human-readable username for the user
- * @property {string} login_hint - a reliable hint for the user
  */
 
 /**
