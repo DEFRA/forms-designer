@@ -12,10 +12,9 @@ export default /** @satisfies {ServerRoute} */ ({
 
     const logoutBaseUrl = request.server.app.oidc.end_session_endpoint
     const referrer = request.info.referrer
-    const loginHint = authedUser.loginHint
 
     const logoutUrl = encodeURI(
-      `${logoutBaseUrl}?logout_hint=${loginHint}&post_logout_redirect_uri=${referrer}`
+      `${logoutBaseUrl}?post_logout_redirect_uri=${referrer}`
     )
 
     request.dropUserSession()
