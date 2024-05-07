@@ -1,5 +1,6 @@
 import authCookie from '@hapi/cookie'
 
+import { getUserSession } from '~/src/common/helpers/auth/get-user-session.js'
 import config from '~/src/config.js'
 
 /**
@@ -30,20 +31,20 @@ const sessionCookie = {
 
         /**
          * Validate session using auth credentials
+         * @param {Request} [request]
+         * @param {{ sessionId: string, user: UserCredentials }} [session] - Session cookie state
          */
         async validate(request, session) {
-          const authedUser = await request.getUserSession()
-
-          const userSession = await server.app.cache.get(session.sessionId)
-
-          if (userSession) {
-            return {
-              isValid: true,
-              credentials: userSession
-            }
+          if (!request) {
+            return { isValid: false }
           }
 
-          return { isValid: false }
+          const credentials = await getUserSession(request, session)
+
+          return {
+            credentials,
+            isValid: !!credentials
+          }
         }
       })
 
@@ -59,4 +60,9 @@ export { sessionCookie }
 /**
  * @template {object | void} [PluginOptions=void]
  * @typedef {import('@hapi/hapi').ServerRegisterPluginObject<PluginOptions>} ServerRegisterPluginObject
+ */
+
+/**
+ * @typedef {import('@hapi/hapi').Request} Request
+ * @typedef {import('@hapi/hapi').UserCredentials} UserCredentials
  */

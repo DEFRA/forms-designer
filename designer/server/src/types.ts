@@ -5,6 +5,10 @@ import { type RequestAuth } from '@hapi/hapi'
 import { type Logger } from 'pino'
 
 import { type sessionNames } from '~/src/common/constants/session-names.js'
+import {
+  type Credentials,
+  type UserProfile
+} from '~/src/common/helpers/auth/azure-oidc.js'
 import { type ValidationFailure } from '~/src/common/helpers/build-error-details.js'
 
 interface SessionCache {
@@ -29,6 +33,41 @@ declare module '@hapi/hapi' {
 
   interface ServerMethods {
     session: SessionCache
+  }
+
+  interface AuthCredentials {
+    provider: 'azure-oidc'
+    query: Credentials['query']
+    token: Credentials['token']
+    refreshToken: Credentials['refreshToken']
+    expiresIn: Credentials['expiresIn']
+  }
+
+  interface UserCredentials {
+    /**
+     * User ID
+     */
+    id: UserProfile['sub']
+
+    /**
+     * User email address
+     */
+    email: UserProfile['email']
+
+    /**
+     * User display name
+     */
+    displayName?: UserProfile['name']
+
+    /**
+     * Session issued time (ISO 8601)
+     */
+    issuedAt?: string
+
+    /**
+     * Session expiry time (ISO 8601)
+     */
+    expiresAt?: string
   }
 }
 

@@ -2,6 +2,7 @@ import Basic from '@hapi/basic'
 import Bell from '@hapi/bell'
 import Boom from '@hapi/boom'
 import { token } from '@hapi/jwt'
+import { DateTime } from 'luxon'
 
 import config from '~/src/config.js'
 
@@ -48,22 +49,10 @@ export const azureOidc = {
               'user.read'
             ],
             profile(credentials) {
-              const { decoded } = /** @type {UserToken} */ (
-                token.decode(credentials.token)
-              )
+              const artifacts = token.decode(credentials.token)
 
-              if (!decoded.payload) {
-                throw Boom.unauthorized()
-              }
-
-              const { payload } = decoded
-
-              credentials.profile = {
-                id: payload.oid,
-                displayName: payload.name,
-                email: payload.upn ?? payload.preferred_username,
-                loginHint: payload.login_hint
-              }
+              token.verifyTime(artifacts)
+              token.verifyPayload(artifacts)
 
               return Promise.resolve()
             }
@@ -86,14 +75,18 @@ export const azureOidc = {
 }
 
 /**
- * @type {Partial<Record<string, { username: string, password: string, name: string, id: string }>>}
+ * @type {Partial<Record<string, { password: string, user: UserCredentials }>>}
  */
 const dummyUsers = {
   defra: {
-    username: 'defra',
     password: 'testing', // 'secret'
-    name: 'Joe Bloggs',
-    id: '2133d32a'
+    user: {
+      id: 'dummy-id',
+      email: 'dummy@defra.gov.uk',
+      displayName: 'John Smith',
+      issuedAt: DateTime.now().minus({ minutes: 30 }).toUTC().toISO(),
+      expiresAt: DateTime.now().plus({ minutes: 30 }).toUTC().toISO()
+    }
   }
 }
 
@@ -111,25 +104,17 @@ export const azureOidcNoop = {
         'basic',
         /** @type {ProviderBasic} */ ({
           validate(request, username, password) {
-            const user = dummyUsers[username]
+            const credentials = dummyUsers[username]
 
-            if (!user || user.password !== password) {
-              return Promise.resolve({
-                isValid: false
-              })
+            // No matching user found
+            if (!credentials || credentials.password !== password) {
+              return Promise.resolve({ isValid: false })
             }
 
-            const credentials = {
-              profile: {
-                id: user.id,
-                displayName: user.name,
-                email: `dummy@defra.gov.uk`,
-                loginHint: '1234'
-              }
-            }
+            const { user } = credentials
 
             return Promise.resolve({
-              credentials,
+              credentials: { user },
               isValid: true
             })
           }
@@ -147,7 +132,9 @@ export const azureOidcNoop = {
 /**
  * @typedef {{ validate: import('@hapi/basic').Validate }} ProviderBasic - Basic provider options
  * @typedef {import('@hapi/bell').BellOptions} ProviderBell - Bell provider options
+ * @typedef {import('@hapi/bell').Credentials2} Credentials - Provider OAuth2 credentials
+ * @typedef {import('@hapi/hapi').UserCredentials} UserCredentials - User credentials
+ * @typedef {import('oidc-client-ts').SigninResponse} SigninResponse - Provider sign in artifacts
  * @typedef {import('oidc-client-ts').OidcMetadata} OidcMetadata - OpenID Connect (OIDC) metadata
  * @typedef {import('oidc-client-ts').UserProfile} UserProfile - User profile
- * @typedef {import('@hapi/jwt').HapiJwt.Artifacts<{ JwtPayload?: UserProfile }>} UserToken - User token
  */

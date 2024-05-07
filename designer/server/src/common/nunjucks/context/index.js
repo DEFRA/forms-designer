@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { basename, join } from 'node:path'
 
+import { getUserSession } from '~/src/common/helpers/auth/get-user-session.js'
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
 import { buildNavigation } from '~/src/common/nunjucks/context/build-navigation.js'
 import config from '~/src/config.js'
@@ -26,7 +27,7 @@ export async function context(request) {
     }
   }
 
-  const authedUser = await request?.getUserSession()
+  const credentials = request ? await getUserSession(request) : undefined
 
   return {
     breadcrumbs: [],
@@ -37,8 +38,8 @@ export async function context(request) {
     navigation: buildNavigation(request),
     getAssetPath: (asset = '') => `/${webpackManifest?.[asset] ?? asset}`,
     assetPath: '/assets',
-    isAuthenticated: authedUser?.isAuthenticated ?? false,
-    authedUser
+    isAuthenticated: request?.auth.isAuthenticated ?? false,
+    authedUser: credentials?.user
   }
 }
 

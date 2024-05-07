@@ -1,7 +1,22 @@
-async function dropUserSession() {
-  if (this?.state?.userSession?.sessionId) {
-    await this.server.methods.session.drop(this.state.userSession.sessionId)
+import { getUserSession } from '~/src/common/helpers/auth/get-user-session.js'
+
+/**
+ * @param {Request} request
+ */
+export async function dropUserSession(request) {
+  const { cookieAuth, server } = request
+
+  const credentials = await getUserSession(request)
+
+  // Remove user session from Redis
+  if (credentials?.user?.id) {
+    await server.methods.session.drop(credentials.user.id)
   }
+
+  // Clear authentication cookie
+  cookieAuth.clear()
 }
 
-export { dropUserSession }
+/**
+ * @typedef {import('@hapi/hapi').Request} Request
+ */
