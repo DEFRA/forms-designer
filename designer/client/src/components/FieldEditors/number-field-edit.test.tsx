@@ -39,7 +39,7 @@ describe('Number field edit', () => {
       expect(getByText(text)).toBeInTheDocument()
     })
 
-    test('should display min help text ', () => {
+    test('should display min help text', () => {
       const text = 'Specifies the lowest number users can enter'
       expect(getByText(text)).toBeInTheDocument()
     })
@@ -49,7 +49,7 @@ describe('Number field edit', () => {
       expect(getByText(text)).toBeInTheDocument()
     })
 
-    test('should display max help text ', () => {
+    test('should display max help text', () => {
       const text = 'Specifies the highest number users can enter'
       expect(getByText(text)).toBeInTheDocument()
     })
@@ -59,18 +59,18 @@ describe('Number field edit', () => {
       expect(getByText(text)).toBeInTheDocument()
     })
 
-    test('should display precision help text ', () => {
+    test('should display precision help text', () => {
       const text =
         'Specifies the number of decimal places users can enter. For example, to allow users to enter numbers with up to two decimal places, set this to 2'
       expect(getByText(text)).toBeInTheDocument()
     })
 
-    test('should display prefix help text ', () => {
+    test('should display prefix help text', () => {
       const text = 'Specifies the prefix of the field.'
       expect(getByText(text)).toBeInTheDocument()
     })
 
-    test('should display suffix help text ', () => {
+    test('should display suffix help text', () => {
       const text = 'Specifies the suffix of the field.'
       expect(getByText(text)).toBeInTheDocument()
     })

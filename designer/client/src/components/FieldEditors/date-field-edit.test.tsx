@@ -39,7 +39,7 @@ describe('date field edit', () => {
       expect(getByText(text)).toBeInTheDocument()
     })
 
-    test('should display future help text ', () => {
+    test('should display future help text', () => {
       const text = 'Determines the latest date users can enter'
       expect(getByText(text)).toBeInTheDocument()
     })
@@ -49,7 +49,7 @@ describe('date field edit', () => {
       expect(getByText(text)).toBeInTheDocument()
     })
 
-    test('should display past help text ', () => {
+    test('should display past help text', () => {
       const text = 'Determines the earliest date users can enter'
       expect(getByText(text)).toBeInTheDocument()
     })

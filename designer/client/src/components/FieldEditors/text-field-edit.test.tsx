@@ -37,7 +37,7 @@ describe('Text field edit', () => {
       expect(getByText(text)).toBeInTheDocument()
     })
 
-    test('should display min length help text ', () => {
+    test('should display min length help text', () => {
       const text = 'Specifies the minimum number of characters users can enter'
       expect(getByText(text)).toBeInTheDocument()
     })
@@ -47,7 +47,7 @@ describe('Text field edit', () => {
       expect(getByText(text)).toBeInTheDocument()
     })
 
-    test('should display max length help text ', () => {
+    test('should display max length help text', () => {
       const text = 'Specifies the maximum number of characters users can enter'
       expect(getByText(text)).toBeInTheDocument()
     })
@@ -57,7 +57,7 @@ describe('Text field edit', () => {
       expect(getByText(text)).toBeInTheDocument()
     })
 
-    test('should display length help text ', () => {
+    test('should display length help text', () => {
       const text =
         'Specifies the exact character length users must enter. Using this setting negates any values you set for Min length or Max length.'
       expect(getByText(text)).toBeInTheDocument()
@@ -68,7 +68,7 @@ describe('Text field edit', () => {
       expect(getByText(text)).toBeInTheDocument()
     })
 
-    test('should display regex help text ', () => {
+    test('should display regex help text', () => {
       const text =
         "Specifies a regular expression to validate users' inputs. Use JavaScript syntax."
       expect(getByText(text)).toBeInTheDocument()
@@ -79,7 +79,7 @@ describe('Text field edit', () => {
       expect(getByText(text)).toBeInTheDocument()
     })
 
-    test('should display autocomplete help text ', () => {
+    test('should display autocomplete help text', () => {
       const text =
         "Add the autocomplete attribute to this field. For example, 'on' or 'given-name'."
       expect(getByText(text)).toBeInTheDocument()
