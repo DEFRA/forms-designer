@@ -1,4 +1,3 @@
-import { provideAuthedUser } from '~/src/common/helpers/auth/pre/provide-authed-user.js'
 import config from '~/src/config.js'
 
 export default /** @satisfies {ServerRoute} */ ({
@@ -26,9 +25,6 @@ export default /** @satisfies {ServerRoute} */ ({
     request.cookieAuth.clear()
 
     return h.redirect(logoutUrl)
-  },
-  options: {
-    pre: [provideAuthedUser]
   }
 })
 
