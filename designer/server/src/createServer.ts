@@ -61,7 +61,7 @@ const serverOptions = (): ServerOptions => {
 export async function createServer() {
   const server = hapi.server(serverOptions())
 
-  server.app.cache = server.cache({
+  const cache = server.cache({
     cache: 'session',
     segment: config.redisKeyPrefix,
     expiresIn: config.sessionTtl
@@ -69,6 +69,9 @@ export async function createServer() {
 
   server.decorate('request', 'getUserSession', getUserSession)
   server.decorate('request', 'dropUserSession', dropUserSession)
+  server.method('session.get', (id) => cache.get(id))
+  server.method('session.set', (id, value) => cache.set(id, value))
+  server.method('session.drop', (id) => cache.drop(id))
 
   await server.register(inert)
   await server.register(sessionManager)

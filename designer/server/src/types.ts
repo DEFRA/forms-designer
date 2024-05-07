@@ -1,10 +1,17 @@
 /* eslint-disable @typescript-eslint/unified-signatures */
 
 import { type FormMetadataInput } from '@defra/forms-model'
+import { type RequestAuth } from '@hapi/hapi'
 import { type Logger } from 'pino'
 
 import { type sessionNames } from '~/src/common/constants/session-names.js'
 import { type ValidationFailure } from '~/src/common/helpers/build-error-details.js'
+
+interface SessionCache {
+  drop: (key: string) => Promise<void>
+  get: (key: string) => Promise<RequestAuth['credentials'] | undefined>
+  set: (key: string, credentials: RequestAuth['credentials']) => Promise<void>
+}
 
 declare module '@hapi/hapi' {
   // Here we are decorating Hapi interface types with
@@ -15,6 +22,13 @@ declare module '@hapi/hapi' {
 
   interface Server {
     logger: Logger
+    method(name: 'session.drop', method: SessionCache['drop']): void
+    method(name: 'session.get', method: SessionCache['get']): void
+    method(name: 'session.set', method: SessionCache['set']): void
+  }
+
+  interface ServerMethods {
+    session: SessionCache
   }
 }
 

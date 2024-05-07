@@ -12,7 +12,7 @@ async function createUserSession(request, sessionId) {
 
   const { profile } = request.auth.credentials
 
-  await request.server.app.cache.set(sessionId, {
+  await request.server.methods.session.set(sessionId, {
     id: profile.id,
     email: profile.email,
     displayName: profile.displayName,

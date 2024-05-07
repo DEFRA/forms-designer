@@ -1,6 +1,6 @@
-function dropUserSession() {
+async function dropUserSession() {
   if (this?.state?.userSession?.sessionId) {
-    this.server.app.cache.drop(this.state.userSession.sessionId)
+    await this.server.methods.session.drop(this.state.userSession.sessionId)
   }
 }
 
