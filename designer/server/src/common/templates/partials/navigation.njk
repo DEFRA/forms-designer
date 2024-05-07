@@ -6,8 +6,8 @@
   navigationItems: navigation if isAuthenticated,
   accountName: authedUser.displayName if isAuthenticated,
   accountLink: "/library",
-  signOutLink: "/logout",
-  homepageLink: "/"
+  signOutLink: "/auth/sign-out",
+  homepageLink: "/library"
 }) }}
 
 {% if ["alpha", "beta"].includes(config.phase) %}

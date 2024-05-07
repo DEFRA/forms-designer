@@ -13,8 +13,7 @@ export default [
     },
     options: {
       auth: {
-        mode: 'optional',
-        strategy: 'azure-oidc'
+        mode: 'required'
       }
     }
   })

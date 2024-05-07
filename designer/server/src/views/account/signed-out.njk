@@ -1,0 +1,18 @@
+{% extends 'layouts/page.njk' %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+  {{ appHeading({
+    text: "You have signed out",
+    classes: "govuk-heading-l"
+  }) }}
+
+  {% call appPageBody() %}
+    <p class="govuk-body-l">Sign in to {{ config.serviceName }} to access and create forms.</p>
+
+    {{ govukButton({
+      text: "Continue",
+      href: "/library"
+    })}}
+  {% endcall %}
+{% endblock %}
