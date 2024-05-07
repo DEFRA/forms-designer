@@ -11,7 +11,10 @@ const { phase, serviceName } = config
 /** @type {Record<string, string> | undefined} */
 let webpackManifest
 
-async function context(request) {
+/**
+ * @param {Request | null} request
+ */
+export async function context(request) {
   const manifestPath = join(config.clientDir, 'assets-manifest.json')
 
   if (!webpackManifest) {
@@ -23,7 +26,7 @@ async function context(request) {
     }
   }
 
-  const authedUser = await request.getUserSession()
+  const authedUser = await request?.getUserSession()
 
   return {
     breadcrumbs: [],
@@ -39,4 +42,6 @@ async function context(request) {
   }
 }
 
-export { context }
+/**
+ * @typedef {import('@hapi/hapi').Request} Request
+ */
