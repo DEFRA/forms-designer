@@ -7,7 +7,7 @@ export default /** @satisfies {ServerRoute} */ ({
     const authedUser = request.pre.authedUser
 
     if (!authedUser) {
-      return h.redirect('/')
+      return h.redirect('/library')
     }
 
     const logoutBaseUrl = request.server.app.oidc.end_session_endpoint

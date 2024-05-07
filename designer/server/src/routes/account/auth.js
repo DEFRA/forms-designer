@@ -11,15 +11,17 @@ export default [
     method: ['GET', 'POST'],
     path: '/auth/callback',
     async handler(request, h) {
-      if (request.auth.isAuthenticated) {
+      const { auth, cookieAuth, yar } = request
+
+      if (auth.isAuthenticated) {
         const sessionId = uuidv4()
 
         await createUserSession(request, sessionId)
 
-        request.cookieAuth.set({ sessionId })
+        cookieAuth.set({ sessionId })
       }
 
-      const redirect = request.yar.flash('referrer').at(0) ?? '/'
+      const redirect = yar.flash('referrer').at(0) ?? '/library'
 
       return h.redirect(redirect)
     },
