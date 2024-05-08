@@ -1,11 +1,12 @@
-export const ROLE_FORMS_EDITOR = 'forms-editor'
+import config from '~/src/config.js'
 
 export const SCOPE_READ = 'read'
 export const SCOPE_WRITE = 'write'
 
 /**
+ * Maps a group a user is a member of to the scopes they have access to.
  * @type {{[key: string]: Array<string>}}
  */
-export const rolesToScopes = {
-  [ROLE_FORMS_EDITOR]: [ SCOPE_READ, SCOPE_WRITE ]
+export const groupsToScopes = {
+  [config.formsEditorAdGroupId]: [SCOPE_READ, SCOPE_WRITE]
 }

@@ -8,21 +8,18 @@ import * as rbac from '~/src/common/constants/rbac.js'
 import config from '~/src/config.js'
 
 const authCallbackUrl = new URL(`/auth/callback`, config.appBaseUrl)
-const adGroupsToScopes = {
-  [config.formsEditorAdGroupId]: rbac.ROLE_FORMS_EDITOR
-}
 
 /**
- * Returns the scopes assigned to a user, given their profile with an AD group assigned.
- * @param {Array<string>} activeDirectoryGroups - names of the AD groups the user is a member of
+ * Returns the scopes assigned to a user, given their profile with a group assigned.
+ * @param {Array<string>} groups - groups the user is a member of
  * @returns {Array<string>} - array of scopes assigned to the user
  */
-export function getScopesForUserProfile(activeDirectoryGroups) {
+export function getScopesForUserProfile(groups) {
   let assignedScopes = /** @type {Set<string>} */ (new Set())
 
-  for (const [key, value] of Object.entries(adGroupsToScopes)) {
-    if (activeDirectoryGroups.includes(key)) {
-      const scopesToAssign = rbac.rolesToScopes[value]
+  for (const [key, value] of Object.entries(groups)) {
+    if (groups.includes(key)) {
+      const scopesToAssign = rbac.groupsToScopes[value]
 
       assignedScopes = new Set([...assignedScopes, ...scopesToAssign])
     }
