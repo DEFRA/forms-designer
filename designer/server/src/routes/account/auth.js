@@ -27,7 +27,7 @@ export default [
         yar.flash('userFailedAuthorisation', true)
         await dropUserSession(request)
 
-        return h.redirect('/auth/sign-in')
+        return h.redirect('/')
       }
 
       // Add to authentication cookie for session validation
