@@ -5,11 +5,11 @@ import * as forms from '~/src/lib/forms.js'
 
 export default [
   /**
-   * @satisfies {ServerRoute<{ Params: { id: string } }>}
+   * @satisfies {ServerRoute<{ Params: { slug: string } }>}
    */
   ({
     method: 'get',
-    path: '/editor/{id*}',
+    path: '/editor/{slug*}',
     options: {
       async handler(request, h) {
         const { params } = request
@@ -19,9 +19,9 @@ export default [
 
         // Retrieve form by slug
         try {
-          form = await forms.get(params.id)
+          form = await forms.get(params.slug)
         } catch (error) {
-          return Boom.notFound(`Form with id '${params.id}' not found`)
+          return Boom.notFound(`Form with slug '${params.slug}' not found`)
         }
 
         return h.view('forms/editor', {

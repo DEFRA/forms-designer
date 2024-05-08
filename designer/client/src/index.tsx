@@ -41,7 +41,7 @@ export class App extends React.Component {
       <Router basename="/editor">
         <Switch>
           <Route
-            path="/:id"
+            path="/:slug"
             render={() => (
               <Designer id={id} slug={slug} previewUrl={previewUrl} />
             )}

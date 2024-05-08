@@ -19,7 +19,7 @@ describe('App routes test', () => {
     await server.stop()
   })
 
-  test('GET /editor/{id*}/ should serve designer editor page', async () => {
+  test('GET /editor/{slug*}/ should serve designer editor page', async () => {
     const id = '661e4ca5039739ef2902b214'
     const slug = 'my-form-slug'
 
@@ -41,7 +41,7 @@ describe('App routes test', () => {
 
     const options = {
       method: 'get',
-      url: '/editor/my-form-id',
+      url: '/editor/my-form-slug',
       auth
     }
 

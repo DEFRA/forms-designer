@@ -15,13 +15,13 @@ export async function list() {
 }
 
 /**
- * Get form by ID
- * @param {string} id
+ * Get form by slug
+ * @param {string} slug
  */
-export async function get(id) {
+export async function get(slug) {
   const getJsonByType = /** @type {typeof getJson<FormMetadata>} */ (getJson)
 
-  const requestUrl = new URL(`./${id}`, formsEndpoint)
+  const requestUrl = new URL(`./slug/${slug}`, formsEndpoint)
   const { body } = await getJsonByType(requestUrl)
 
   return body
