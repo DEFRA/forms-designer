@@ -1,5 +1,5 @@
 import auth from './auth.js'
-import signIn from './sign-in.js'
 import signOut from './sign-out.js'
+import signedOut from './signed-out.js'
 
-export default [auth, signIn, signOut].flat()
+export default [auth, signOut, signedOut].flat()
