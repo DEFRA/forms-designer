@@ -27,16 +27,16 @@
     {% set formRowsMobile = [] %}
     {% set formRowsDesktop = [] %}
 
-    {% for formItem in formItems %}
+    {% for form in formItems %}
       {% set formName %}
-        <a href="{{ formItem.href }}" class="govuk-link govuk-link--no-visited-state">
-          {{ formItem.title }}
+        <a href="/editor/{{ form.id | urlencode }}" class="govuk-link govuk-link--no-visited-state">
+          {{ form.title }}
         </a>
       {% endset %}
 
       {% set formUpdated %}
-        <span class="app-display-until-desktop">Updated </span>{{ formItem.updated.date }}<br>
-        by {{ formItem.updated.name }}
+        <span class="app-display-until-desktop">Updated </span>{{ form.draft.updatedAt }}<br>
+        by {{ form.draft.updatedBy }}
       {% endset %}
 
       {% set formNameUpdated %}
@@ -50,14 +50,13 @@
         {% set tagDraft = govukTag({ text: "Draft", classes: "govuk-tag--orange govuk-!-margin-bottom-1" }) %}
         {% set tagLive = govukTag({ text: "Live", classes: "govuk-tag--green govuk-!-margin-top-1" }) %}
 
-        {% switch formItem.status %}
-          {% case "draft" %}
-            {{ tagDraft }}
-          {% case "draft-live" %}
-            {{ tagDraft }} {{ tagLive }}
-          {% case "live" %}
-            {{ tagLive }}
-        {% endswitch %}
+        {% if form.draft | length and form.live | length %}
+          {{ tagDraft }} {{ tagLive }}
+        {% elseif form.live | length %}
+          {{ tagLive }}
+        {% elseif form.draft | length %}
+          {{ tagDraft }}
+        {% endif %}
       {% endset %}
 
       {% set formRowsMobile = (formRowsMobile.push([
