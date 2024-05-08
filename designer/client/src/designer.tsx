@@ -9,13 +9,12 @@ import { FlyoutContext, DataContext } from '~/src/context/index.js'
 import { i18n } from '~/src/i18n/index.js'
 
 interface Props {
-  match?: any
-  location?: any
-  history?: any
+  id: string
+  slug: string
+  previewUrl: string
 }
 
 interface State {
-  id?: any
   flyoutCount?: number
   loading?: boolean
   newConfig?: boolean // TODO - is this required?
@@ -24,12 +23,20 @@ interface State {
 }
 
 export default class Designer extends Component<Props, State> {
-  state = { loading: true, flyoutCount: 0 }
+  state: State = { loading: true, flyoutCount: 0 }
 
   designerApi = new DesignerApi()
 
   get id() {
-    return this.props.match?.params?.id
+    return this.props.id
+  }
+
+  get slug() {
+    return this.props.slug
+  }
+
+  get previewUrl() {
+    return this.props.previewUrl
   }
 
   incrementFlyoutCounter = (callback = () => {}) => {
@@ -56,16 +63,13 @@ export default class Designer extends Component<Props, State> {
   }
 
   componentDidMount() {
-    const id = this.props.match?.params?.id
-    this.setState({ id })
-    this.designerApi.fetchData(id).then((data) => {
+    this.designerApi.fetchData(this.id).then((data) => {
       this.setState({ loading: false, data })
     })
   }
 
   render() {
     const { flyoutCount, data, loading } = this.state
-    const { previewUrl } = window
     if (loading) {
       return <p className="govuk-body">Loading ...</p>
     }
@@ -83,9 +87,10 @@ export default class Designer extends Component<Props, State> {
             <Prompt message={i18n('leaveDesigner')} />
             <Menu id={this.id} updatePersona={this.updatePersona} />
             <Visualisation
-              persona={this.state.persona}
               id={this.id}
-              previewUrl={previewUrl}
+              slug={this.slug}
+              previewUrl={this.previewUrl}
+              persona={this.state.persona}
             />
           </div>
         </FlyoutContext.Provider>

@@ -10,9 +10,10 @@ import { DataContext } from '~/src/context/index.js'
 import '~/src/components/Visualisation/visualisation.scss'
 
 interface Props {
-  previewUrl?: string
+  id: string
+  slug: string
+  previewUrl: string
   persona?: any
-  id?: string
 }
 
 export function useVisualisation(ref) {

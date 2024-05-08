@@ -7,15 +7,9 @@
   <link href="{{ getAssetPath("editor.css") }}" rel="stylesheet">
 {% endblock %}
 
-{% block bodyStart %}
-  <script type="module">
-    window.previewUrl = '{{ previewUrl }}'
-  </script>
-{% endblock %}
-
 {% block content %}
   <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full app-editor"></div>
+    <div class="govuk-grid-column-full app-editor" data-id="{{ form.id }}" data-slug="{{ form.slug }}" data-preview-url="{{ previewUrl }}"></div>
   </div>
   <div id="portal-root"></div>
 {% endblock %}

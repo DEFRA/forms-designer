@@ -21,12 +21,31 @@ function NoMatch() {
   )
 }
 
+const container = document.querySelector('.app-editor')
+
 export class App extends React.Component {
   render() {
+    if (
+      !(container instanceof HTMLElement) ||
+      !container.dataset.id ||
+      !container.dataset.slug ||
+      !container.dataset.previewUrl
+    ) {
+      return <NoMatch />
+    }
+
+    // Extract from HTML data-* attributes
+    const { id, slug, previewUrl } = container.dataset
+
     return (
       <Router basename="/editor">
         <Switch>
-          <Route path="/:id" component={Designer} />
+          <Route
+            path="/:id"
+            render={() => (
+              <Designer id={id} slug={slug} previewUrl={previewUrl} />
+            )}
+          />
           <Route path="*">
             <NoMatch />
           </Route>
@@ -36,4 +55,4 @@ export class App extends React.Component {
   }
 }
 
-ReactDOM.render(<App />, document.querySelector('.app-editor'))
+ReactDOM.render(<App />, container)
