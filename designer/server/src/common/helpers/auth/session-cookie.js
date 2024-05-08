@@ -25,9 +25,7 @@ const sessionCookie = {
         /**
          * Redirect invalid session to callback route
          */
-        redirectTo() {
-          return '/auth/callback'
-        },
+        redirectTo: '/auth/callback',
 
         /**
          * Validate session using auth credentials
