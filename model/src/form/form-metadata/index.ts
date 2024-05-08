@@ -34,7 +34,7 @@ export const teamEmailSchema = Joi.string()
  * Joi schema for `FormMetadataInput` interface
  * @see {@link FormMetadataInput}
  */
-export const formMetadataInputSchema = Joi.object<FormMetadata>()
+export const formMetadataInputSchema = Joi.object<FormMetadataInput>()
   .keys({
     title: titleSchema,
     organisation: organisationSchema,
@@ -56,7 +56,7 @@ export const formMetadataStateSchema = Joi.object<FormMetadataState>().keys({
  * Joi schema for `FormMetadata` interface
  * @see {@link FormMetadata}
  */
-export const formMetadataSchema = formMetadataInputSchema.append({
+export const formMetadataSchema = formMetadataInputSchema.append<FormMetadata>({
   id: idSchema,
   slug: slugSchema,
   draft: formMetadataStateSchema.required(),
