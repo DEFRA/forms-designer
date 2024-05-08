@@ -54,7 +54,7 @@
           {{ tagDraft }} {{ tagLive }}
         {% elseif form.live | length %}
           {{ tagLive }}
-        {% elseif form.draft | length %}
+        {% else %}
           {{ tagDraft }}
         {% endif %}
       {% endset %}
