@@ -35,8 +35,8 @@
       {% endset %}
 
       {% set formUpdated %}
-        <span class="app-display-until-desktop">Updated </span>{{ form.draft.updatedAt }}<br>
-        by {{ form.draft.updatedBy }}
+        <span class="app-display-until-desktop">Updated </span>{{ form.draft.updatedAt if form.draft.updatedAt else "2024-04-09" }}<br>
+        by {{ form.draft.updatedBy if form.draft.updatedBy else "Enrique Chase" }}
       {% endset %}
 
       {% set formNameUpdated %}
