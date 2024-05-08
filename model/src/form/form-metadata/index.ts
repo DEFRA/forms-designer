@@ -48,8 +48,8 @@ export const formMetadataInputSchema = Joi.object<FormMetadata>()
  * @see {@link FormMetadataState}
  */
 export const formMetadataStateSchema = Joi.object<FormMetadataState>().keys({
-  createdAt: Joi.date().required(),
-  updatedAt: Joi.date().required()
+  createdAt: Joi.date().iso().required(),
+  updatedAt: Joi.date().iso().required()
 })
 
 /**
