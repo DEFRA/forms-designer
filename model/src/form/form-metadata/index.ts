@@ -2,7 +2,8 @@ import Joi from 'joi'
 
 import {
   type FormMetadataState,
-  type FormMetadata
+  type FormMetadata,
+  type FormMetadataInput
 } from '~/src/form/form-metadata/types.js'
 
 export const organisations = [
@@ -30,10 +31,10 @@ export const teamEmailSchema = Joi.string()
   .required()
 
 /**
- * Joi schema for `FormMetadata` interface
- * @see {@link FormMetadata}
+ * Joi schema for `FormMetadataInput` interface
+ * @see {@link FormMetadataInput}
  */
-export const formMetadataCreateSchema = Joi.object<FormMetadata>()
+export const formMetadataInputSchema = Joi.object<FormMetadata>()
   .keys({
     title: titleSchema,
     organisation: organisationSchema,
@@ -43,7 +44,7 @@ export const formMetadataCreateSchema = Joi.object<FormMetadata>()
   .required()
 
 /**
- * Joi schema for `FormMetadataState` i nterface
+ * Joi schema for `FormMetadataState` interface
  * @see {@link FormMetadataState}
  */
 export const formMetadataStateSchema = Joi.object<FormMetadataState>().keys({
@@ -55,7 +56,7 @@ export const formMetadataStateSchema = Joi.object<FormMetadataState>().keys({
  * Joi schema for `FormMetadata` interface
  * @see {@link FormMetadata}
  */
-export const formMetadataSchema = formMetadataCreateSchema.append({
+export const formMetadataSchema = formMetadataInputSchema.append({
   id: idSchema,
   slug: slugSchema,
   draft: formMetadataStateSchema.required(),

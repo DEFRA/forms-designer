@@ -1,5 +1,5 @@
 import {
-  formMetadataCreateSchema,
+  formMetadataInputSchema,
   organisationSchema,
   teamEmailSchema,
   teamNameSchema,
@@ -193,7 +193,7 @@ export default [
       })
 
       // Check form metadata is complete
-      const result = formMetadataCreateSchema.validate(metadata)
+      const result = formMetadataInputSchema.validate(metadata)
 
       // Submit new form metadata
       try {
