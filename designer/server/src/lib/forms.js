@@ -58,15 +58,6 @@ export async function update(id, metadata) {
 }
 
 /**
- * Remove form by ID
- * @param {string} id
- */
-export async function remove(id) {
-  // TODO
-  return Promise.resolve(true)
-}
-
-/**
  * Get draft form definition
  * @param {string} id
  */
