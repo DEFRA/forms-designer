@@ -9,7 +9,7 @@ import config from '~/src/config.js'
 
 const authCallbackUrl = new URL(`/auth/callback`, config.appBaseUrl)
 const adGroupsToScopes = {
-  [config.formsEditorAdGroupName]: rbac.ROLE_FORMS_EDITOR
+  [config.formsEditorAdGroupId]: rbac.ROLE_FORMS_EDITOR
 }
 
 /**

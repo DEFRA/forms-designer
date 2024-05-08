@@ -31,8 +31,8 @@ export interface Config {
   redisHost: string
   redisUsername: string
   redisPassword: string
-  redisKeyPrefix: string,
-  formsEditorAdGroupName: string
+  redisKeyPrefix: string
+  formsEditorAdGroupId: string
 }
 
 // Define config schema
@@ -86,7 +86,7 @@ const schema = joi.object<Config>({
   redisUsername: joi.string().default('default'),
   redisPassword: joi.string().default('my-password'),
   redisKeyPrefix: joi.string().default('forms-designer'),
-  formsEditorAdGroupName: joi.string().default('AG-APP-CDP-FORMS')
+  formsEditorAdGroupId: joi.string()
 })
 
 // Validate config
@@ -116,7 +116,7 @@ const result = schema.validate(
     redisUsername: process.env.REDIS_USERNAME,
     redisPassword: process.env.REDIS_PASSWORD,
     redisKeyPrefix: process.env.REDIS_KEY_PREFIX,
-    formsEditorAdGroupName: process.env.FORMS_EDITOR_AD_GROUP_NAME
+    formsEditorAdGroupId: process.env.FORMS_EDITOR_AD_GROUP_ID
   },
   { abortEarly: false }
 )
