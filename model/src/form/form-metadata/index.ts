@@ -1,6 +1,10 @@
 import Joi from 'joi'
 
-import { type FormMetadata } from '~/src/form/form-metadata/types.js'
+import {
+  type FormMetadataState,
+  type FormMetadata,
+  type FormMetadataInput
+} from '~/src/form/form-metadata/types.js'
 
 export const organisations = [
   'Animal and Plant Health Agency – APHA',
@@ -14,7 +18,9 @@ export const organisations = [
   'Veterinary Medicines Directorate – VMD'
 ]
 
+export const idSchema = Joi.string().hex().length(24).required()
 export const titleSchema = Joi.string().max(250).trim().required()
+export const slugSchema = Joi.string().required()
 export const organisationSchema = Joi.string()
   .valid(...organisations)
   .required()
@@ -25,10 +31,10 @@ export const teamEmailSchema = Joi.string()
   .required()
 
 /**
- * Joi schema for `FormMetadata` interface
- * @see {@link FormMetadata}
+ * Joi schema for `FormMetadataInput` interface
+ * @see {@link FormMetadataInput}
  */
-export const formMetadataSchema = Joi.object<FormMetadata>()
+export const formMetadataInputSchema = Joi.object<FormMetadataInput>()
   .keys({
     title: titleSchema,
     organisation: organisationSchema,
@@ -36,3 +42,23 @@ export const formMetadataSchema = Joi.object<FormMetadata>()
     teamEmail: teamEmailSchema
   })
   .required()
+
+/**
+ * Joi schema for `FormMetadataState` interface
+ * @see {@link FormMetadataState}
+ */
+export const formMetadataStateSchema = Joi.object<FormMetadataState>().keys({
+  createdAt: Joi.date().iso().required(),
+  updatedAt: Joi.date().iso().required()
+})
+
+/**
+ * Joi schema for `FormMetadata` interface
+ * @see {@link FormMetadata}
+ */
+export const formMetadataSchema = formMetadataInputSchema.append<FormMetadata>({
+  id: idSchema,
+  slug: slugSchema,
+  draft: formMetadataStateSchema.required(),
+  live: formMetadataStateSchema
+})

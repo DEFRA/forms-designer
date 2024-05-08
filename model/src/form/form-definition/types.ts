@@ -18,7 +18,7 @@ export interface Page {
   path: string
   controller?: string
   components?: ComponentDef[]
-  section: string // the section ID
+  section?: string // the section ID
   next?: Next[]
   repeatField?: string
   backLinkFallback?: string
