@@ -7,7 +7,7 @@ export function signedOutViewModel() {
 }
 
 /**
- *  @param {boolean} userFailedAuthorisation - indicates the user has failed authorisation, but authentication was successful
+ * @param {boolean} userFailedAuthorisation - indicates the user has failed authorisation, but authentication was successful
  */
 export function signInViewModel(userFailedAuthorisation) {
   const errorList = []
