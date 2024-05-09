@@ -12,9 +12,7 @@ describe('#formatDate', () => {
 
   describe('With defaults', () => {
     test('Date should be in expected format', () => {
-      expect(formatDate('2022-01-17T11:40:02.242Z')).toBe(
-        'Mon 17th January 2022'
-      )
+      expect(formatDate('2022-01-17T11:40:02.242Z')).toBe('17 Jan 2022')
     })
   })
 
