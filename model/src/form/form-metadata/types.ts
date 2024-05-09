@@ -1,4 +1,22 @@
-import { formMetadataSchema } from '~/src/form/form-metadata/index.js'
+import {
+  formMetadataSchema,
+  formMetadataAuthorInputSchema
+} from '~/src/form/form-metadata/index.js'
+
+/**
+ * Interface for author (createdBy and updatedBy)
+ */
+export interface FormMetadataStateAuthor {
+  /**
+   * The ID of the user
+   */
+  id: string
+
+  /**
+   * The display name of the user
+   */
+  displayName: string
+}
 
 /**
  * Interface for metadata state (draft & live)
@@ -10,9 +28,19 @@ export interface FormMetadataState {
   createdAt: Date
 
   /**
+   * The author who created the state
+   */
+  createdBy: FormMetadataStateAuthor
+
+  /**
    * The date the form state was last updated
    */
   updatedAt: Date
+
+  /**
+   * The author who last updated the state
+   */
+  updatedBy: FormMetadataStateAuthor
 }
 
 /**
@@ -59,6 +87,22 @@ export interface FormMetadata {
    * The live state of the form
    */
   live?: FormMetadataState
+}
+
+/**
+ * Interface for `formMetadataAuthorInputSchema` Joi schema
+ * @see {@link formMetadataAuthorInputSchema}
+ */
+export interface FormMetadataAuthorInput {
+  /**
+   * The form metadata
+   */
+  metadata: FormMetadataInput
+
+  /**
+   * The author of the state
+   */
+  author: FormMetadataStateAuthor
 }
 
 export type FormByIdInput = Pick<FormMetadata, 'id'>

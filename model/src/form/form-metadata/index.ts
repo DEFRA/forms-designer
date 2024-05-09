@@ -3,7 +3,9 @@ import Joi from 'joi'
 import {
   type FormMetadataState,
   type FormMetadata,
-  type FormMetadataInput
+  type FormMetadataInput,
+  type FormMetadataStateAuthor,
+  type FormMetadataAuthorInput
 } from '~/src/form/form-metadata/types.js'
 
 export const organisations = [
@@ -30,6 +32,9 @@ export const teamEmailSchema = Joi.string()
   .trim()
   .required()
 
+export const authorId = Joi.string().uuid().trim().required()
+export const authorDisplayName = Joi.string().trim().required()
+
 /**
  * Joi schema for `FormMetadataInput` interface
  * @see {@link FormMetadataInput}
@@ -42,6 +47,26 @@ export const formMetadataInputSchema = Joi.object<FormMetadataInput>()
     teamEmail: teamEmailSchema
   })
   .required()
+
+export const formMetadataStateAuthorSchema =
+  Joi.object<FormMetadataStateAuthor>()
+    .keys({
+      id: authorId,
+      displayName: authorDisplayName
+    })
+    .required()
+
+/**
+ * Joi schema for `FormMetadataAuthorInput` interface
+ * @see {@link FormMetadataAuthorInput}
+ */
+export const formMetadataAuthorInputSchema =
+  Joi.object<FormMetadataAuthorInput>()
+    .keys({
+      metadata: formMetadataInputSchema,
+      author: formMetadataStateAuthorSchema
+    })
+    .required()
 
 /**
  * Joi schema for `FormMetadataState` interface
