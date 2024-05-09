@@ -73,7 +73,7 @@ export default [
       validate: {
         payload: Joi.object().keys({
           title: titleSchema.messages({
-            'string.empty': 'Enter your form name',
+            'string.empty': 'Enter a form name',
             'string.max': 'Form name must be 250 characters or less'
           })
         }),
@@ -231,13 +231,13 @@ export default [
       validate: {
         payload: Joi.object().keys({
           teamName: teamNameSchema.messages({
-            'string.empty': 'Enter your team name',
-            'string.max': 'Team name must be 100 characters or less'
+            'string.empty': 'Enter name of team',
+            'string.max': 'Name of team must be 100 characters or less'
           }),
           teamEmail: teamEmailSchema.messages({
-            'string.empty': 'Enter your shared team email address',
+            'string.empty': 'Enter a shared team email address',
             'string.email':
-              'Enter your shared team email address in the correct format, like name@example.gov.uk'
+              'Enter a shared team email address in the correct format, like name@example.gov.uk'
           })
         }),
 
