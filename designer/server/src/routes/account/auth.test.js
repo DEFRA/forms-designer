@@ -1,5 +1,3 @@
-import setCookieParser from 'set-cookie-parser'
-
 import { createServer } from '~/src/createServer.js'
 import { auth, authNoScopes } from '~/test/fixtures/auth.js'
 
@@ -30,13 +28,9 @@ describe('Auth test', () => {
 
     const result = await server.inject(options)
 
-    const cookies = setCookieParser.parse(result.headers['set-cookie'] ?? [], {
-      map: true
-    })
-
-    expect(
-      /** @type {CookieAuthResponse} */ (cookies).userSession?.value
-    ).toBeFalsy()
+    expect(result.headers['set-cookie']).toMatchObject(
+      expect.arrayContaining([expect.stringMatching(/userSession=\S*;/)]) // userSession must be populated with the token
+    )
     expect(result.headers.location).toBe('/')
   })
 
@@ -51,13 +45,9 @@ describe('Auth test', () => {
 
     const result = await server.inject(options)
 
-    const cookies = setCookieParser.parse(result.headers['set-cookie'] ?? [], {
-      map: true
-    })
-
-    expect(
-      /** @type {CookieAuthResponse} */ (cookies).userSession?.value
-    ).toBeTruthy()
+    expect(result.headers['set-cookie']).toMatchObject(
+      expect.arrayContaining([expect.stringContaining('userSession=')])
+    )
     expect(result.headers.location).toBe('/library')
   })
 })
