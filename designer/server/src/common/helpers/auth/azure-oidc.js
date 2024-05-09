@@ -17,10 +17,10 @@ const authCallbackUrl = new URL(`/auth/callback`, config.appBaseUrl)
 export function getScopesForUserProfile(groups) {
   let assignedScopes = /** @type {Set<string>} */ (new Set())
 
-  for (const [key, value] of Object.entries(groups)) {
-    if (groups.includes(key)) {
-      const scopesToAssign = scopes.groupsToScopes[value]
+  for (const group of groups) {
+    const scopesToAssign = scopes.groupsToScopes[group]
 
+    if (scopesToAssign.length > 0) {
       assignedScopes = new Set([...assignedScopes, ...scopesToAssign])
     }
   }
