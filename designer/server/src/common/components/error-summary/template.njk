@@ -1,6 +1,6 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
-{% set errorList = [] %}
+{% set errorList = params.errorList | default([], true) %}
 
 {% for key, error in params.formErrors %}
   {% set errorList = (errorList.push({
