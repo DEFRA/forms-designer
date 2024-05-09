@@ -14,13 +14,9 @@ export default [
       async handler(request, h) {
         const { params } = request
 
-        /** @type {FormMetadata | undefined} */
-        let form
-
         // Retrieve form by slug
-        try {
-          form = await forms.get(params.slug)
-        } catch (error) {
+        const form = await forms.get(params.slug)
+        if (!form) {
           return Boom.notFound(`Form with slug '${params.slug}' not found`)
         }
 

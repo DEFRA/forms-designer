@@ -9,6 +9,10 @@ import Wreck from '@hapi/wreck'
 export async function request(method, url, options) {
   const response = await Wreck.request(method, url.href, options)
 
+  if (response.statusCode === 404) {
+    return { response, body: undefined }
+  }
+
   if (response.statusCode !== 200) {
     throw new Error(response.statusMessage)
   }
