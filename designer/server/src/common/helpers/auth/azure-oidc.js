@@ -4,7 +4,7 @@ import Boom from '@hapi/boom'
 import { token } from '@hapi/jwt'
 import { DateTime } from 'luxon'
 
-import * as rbac from '~/src/common/constants/rbac.js'
+import * as scopes from '~/src/common/constants/scopes.js'
 import config from '~/src/config.js'
 
 const authCallbackUrl = new URL(`/auth/callback`, config.appBaseUrl)
@@ -19,7 +19,7 @@ export function getScopesForUserProfile(groups) {
 
   for (const [key, value] of Object.entries(groups)) {
     if (groups.includes(key)) {
-      const scopesToAssign = rbac.groupsToScopes[value]
+      const scopesToAssign = scopes.groupsToScopes[value]
 
       assignedScopes = new Set([...assignedScopes, ...scopesToAssign])
     }

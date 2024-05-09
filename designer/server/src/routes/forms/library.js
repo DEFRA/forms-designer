@@ -1,4 +1,4 @@
-import * as rbac from '~/src/common/constants/rbac.js'
+import * as scopes from '~/src/common/constants/scopes.js'
 import * as library from '~/src/models/forms/library.js'
 
 export default [
@@ -16,9 +16,9 @@ export default [
       auth: {
         mode: 'required',
         access: {
-          scope: [`+${rbac.SCOPE_READ}`]
+          scope: [`+${scopes.SCOPE_READ}`]
         }
-      },
+      }
     }
   })
 ]

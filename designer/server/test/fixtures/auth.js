@@ -1,6 +1,6 @@
 import { DateTime, Duration } from 'luxon'
 
-import * as rbac from '~/src/common/constants/rbac.js'
+import * as scopes from '~/src/common/constants/scopes.js'
 
 /**
  * @satisfies {ServerInjectOptions['auth']}
@@ -20,7 +20,7 @@ export const auth = {
       issuedAt: DateTime.now().minus({ minutes: 30 }).toUTC().toISO(),
       expiresAt: DateTime.now().plus({ minutes: 30 }).toUTC().toISO()
     },
-    scope: [rbac.SCOPE_READ, rbac.SCOPE_WRITE]
+    scope: [scopes.SCOPE_READ, scopes.SCOPE_WRITE]
   }
 }
 
