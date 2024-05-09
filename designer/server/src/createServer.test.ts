@@ -70,7 +70,7 @@ describe('Server tests', () => {
 
     const options = {
       method: 'get',
-      url: '/editor/dummy-id-for-demo',
+      url: '/help/cookies',
       auth
     }
 
@@ -89,7 +89,7 @@ describe('Server tests', () => {
 
     const options = {
       method: 'get',
-      url: '/editor/dummy-id-for-demo',
+      url: '/help/cookies',
       auth
     }
 
@@ -104,7 +104,7 @@ describe('Server tests', () => {
 
     const options = {
       method: 'get',
-      url: '/editor/dummy-id-for-demo',
+      url: '/help/cookies',
       auth
     }
 

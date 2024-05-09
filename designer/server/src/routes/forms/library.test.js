@@ -15,17 +15,21 @@ describe('Forms library routes', () => {
   })
 
   test('Forms library list page', async () => {
-    const title = 'Form 1'
+    const title = 'My form slug'
 
     // Mock the api call to forms-manager
     jest.mocked(forms.list).mockResolvedValueOnce([
       {
         id: '661e4ca5039739ef2902b214',
         title,
-        slug: 'form-1',
-        organisation: 'DEFRA',
+        slug: 'my-form-slug',
+        organisation: 'Defra',
         teamName: 'Forms',
-        teamEmail: 'defraforms@defra.gov.uk'
+        teamEmail: 'defraforms@defra.gov.uk',
+        draft: {
+          createdAt: new Date(),
+          updatedAt: new Date()
+        }
       }
     ])
 
