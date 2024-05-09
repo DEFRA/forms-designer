@@ -1,7 +1,19 @@
+import { formMetadataSchema, formMetadataStateSchema } from '@defra/forms-model'
+import Joi from 'joi'
+
 import config from '~/src/config.js'
 import { getJson, postJson } from '~/src/lib/fetch.js'
 
 const formsEndpoint = new URL('/forms/', config.managerUrl)
+
+// Temp schema used while we don't the have DELETE api
+const tempSchema = formMetadataSchema.keys({
+  draft: formMetadataStateSchema.default({
+    createdAt: new Date(),
+    updatedAt: new Date()
+  })
+})
+const formMetadataListSchema = Joi.array().items(tempSchema)
 
 /**
  * List forms
@@ -11,7 +23,13 @@ export async function list() {
 
   const { body } = await getJsonByType(formsEndpoint)
 
-  return body
+  const { value, error } = formMetadataListSchema.validate(body)
+
+  if (error) {
+    throw error
+  }
+
+  return value
 }
 
 /**
