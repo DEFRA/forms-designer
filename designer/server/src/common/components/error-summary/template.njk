@@ -10,6 +10,6 @@
 {% endfor %}
 
 {{ govukErrorSummary({
-  titleText: "There is a problem",
+  titleText: params.titleText | default("There is a problem", true),
   errorList: errorList
 }) }}
