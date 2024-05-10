@@ -172,6 +172,9 @@ module.exports = {
       files: ['**/*.{cjs,js,mjs}'],
       plugins: ['jsdoc'],
       rules: {
+        // Promise.prototype.catch() errors cannot be typed in JavaScript
+        '@typescript-eslint/use-unknown-in-catch-callback-variable': 'off',
+
         // JSDoc blocks are optional but must be valid
         'jsdoc/require-jsdoc': [
           'error',
