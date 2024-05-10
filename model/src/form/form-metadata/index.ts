@@ -21,10 +21,18 @@ export const organisations = [
 
 export const idSchema = Joi.string().hex().length(24).required()
 export const titleSchema = Joi.string().max(250).trim().required()
-export const slugSchema = Joi.string().required()
+export const slugSchema = Joi.string()
+  .lowercase()
+  .trim()
+  .replace(/[\s–—]/g, '-') // replace spaces, en-dashes and em-dashes with hyphens
+  .replace(/[^a-z0-9-]/g, '') // remove non-matching characters except spaces
+  .replace(/-+/g, '-') // replace multiple hyphens with a single hyphen
+  .required()
+
 export const organisationSchema = Joi.string()
   .valid(...organisations)
   .required()
+
 export const teamNameSchema = Joi.string().max(100).trim().required()
 export const teamEmailSchema = Joi.string()
   .email({ tlds: { allow: ['uk'] } })
