@@ -1,10 +1,10 @@
 import Joi from 'joi'
 
 import {
-  type FormMetadataState,
   type FormMetadata,
   type FormMetadataInput,
-  type FormMetadataAuthorInput
+  type FormMetadataState,
+  type FormMetadataAuthor
 } from '~/src/form/form-metadata/types.js'
 
 export const organisations = [
@@ -47,24 +47,16 @@ export const formMetadataInputSchema = Joi.object<FormMetadataInput>()
   })
   .required()
 
+/**
+ * Joi schema for `FormMetadataAuthor` interface
+ * @see {@link FormMetadataAuthor}
+ */
 export const formMetadataAuthorSchema = Joi.object<FormMetadataAuthor>()
   .keys({
     id: authorId,
     displayName: authorDisplayName
   })
   .required()
-
-/**
- * Joi schema for `FormMetadataAuthorInput` interface
- * @see {@link FormMetadataAuthorInput}
- */
-export const formMetadataAuthorInputSchema =
-  Joi.object<FormMetadataAuthorInput>()
-    .keys({
-      metadata: formMetadataInputSchema,
-      author: formMetadataAuthorSchema
-    })
-    .required()
 
 /**
  * Joi schema for `FormMetadataState` interface
