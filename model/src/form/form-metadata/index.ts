@@ -31,8 +31,9 @@ export const teamEmailSchema = Joi.string()
   .trim()
   .required()
 
-export const authorId = Joi.string().uuid().trim().required()
-export const authorDisplayName = Joi.string().trim().required()
+export const authoredAtSchema = Joi.date().iso().required()
+export const authorIdSchema = Joi.string().uuid().trim().required()
+export const authorDisplayNameSchema = Joi.string().trim().required()
 
 /**
  * Joi schema for `FormMetadataInput` interface
@@ -53,8 +54,8 @@ export const formMetadataInputSchema = Joi.object<FormMetadataInput>()
  */
 export const formMetadataAuthorSchema = Joi.object<FormMetadataAuthor>()
   .keys({
-    id: authorId,
-    displayName: authorDisplayName
+    id: authorIdSchema,
+    displayName: authorDisplayNameSchema
   })
   .required()
 
@@ -63,8 +64,10 @@ export const formMetadataAuthorSchema = Joi.object<FormMetadataAuthor>()
  * @see {@link FormMetadataState}
  */
 export const formMetadataStateSchema = Joi.object<FormMetadataState>().keys({
-  createdAt: Joi.date().iso().required(),
-  updatedAt: Joi.date().iso().required()
+  createdAt: authoredAtSchema,
+  createdBy: formMetadataAuthorSchema,
+  updatedAt: authoredAtSchema,
+  updatedBy: formMetadataAuthorSchema
 })
 
 /**
