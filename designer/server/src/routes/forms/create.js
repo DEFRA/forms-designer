@@ -202,10 +202,7 @@ export default [
           const { id, displayName } = credentials.user
 
           // Create the form
-          await forms.create({
-            metadata: result.value,
-            author: { id, displayName }
-          })
+          await forms.create(result.value, { id, displayName })
 
           // Clear form metadata
           yar.clear(sessionNames.create)

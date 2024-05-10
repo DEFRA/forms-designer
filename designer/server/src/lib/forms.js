@@ -29,13 +29,14 @@ export async function get(slug) {
 
 /**
  * Create form
- * @param {{ metadata: FormMetadataInput, author: FormMetadataAuthor }} input
+ * @param {FormMetadataInput} metadata
+ * @param {FormMetadataAuthor} author
  */
-export async function create(input) {
+export async function create(metadata, author) {
   const postJsonByType = /** @type {typeof postJson<FormMetadata>} */ (postJson)
 
   const { body } = await postJsonByType(formsEndpoint, {
-    payload: input
+    payload: { metadata, author }
   })
 
   return body
