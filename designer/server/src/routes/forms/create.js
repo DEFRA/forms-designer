@@ -1,6 +1,7 @@
 import {
   formMetadataInputSchema,
   organisationSchema,
+  slugSchema,
   teamEmailSchema,
   teamNameSchema,
   titleSchema
@@ -72,10 +73,35 @@ export default [
     options: {
       validate: {
         payload: Joi.object().keys({
-          title: titleSchema.messages({
-            'string.empty': 'Enter a form name',
-            'string.max': 'Form name must be 250 characters or less'
-          })
+          title: titleSchema
+            .external(
+              /**
+               * Allow only unique form slugs
+               */
+              async (title, helpers) => {
+                const titleToSlug = slugSchema.validate(title)
+
+                // Check only valid slugs
+                if (!titleToSlug.error) {
+                  const { value: slug } = titleToSlug
+
+                  // Retrieve form by slug
+                  const form = await forms.get(slug)
+                  if (!form) {
+                    return
+                  }
+
+                  // Show error for non-unique slugs
+                  return helpers.message({
+                    external: 'Form name you entered already exists'
+                  })
+                }
+              }
+            )
+            .messages({
+              'string.empty': 'Enter a form name',
+              'string.max': 'Form name must be 250 characters or less'
+            })
         }),
 
         failAction(request, h, error) {
