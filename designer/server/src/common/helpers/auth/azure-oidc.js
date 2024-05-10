@@ -142,8 +142,3 @@ export const azureOidcNoop = {
  * @typedef {import('oidc-client-ts').OidcMetadata} OidcMetadata - OpenID Connect (OIDC) metadata
  * @typedef {import('oidc-client-ts').UserProfile} UserProfile - User profile
  */
-
-/**
- * @typedef {object} idTokenPayload
- * @property {Array<string> | undefined} groups - list of active directory groups the user is a member of
- */
