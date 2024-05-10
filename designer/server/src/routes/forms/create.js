@@ -13,15 +13,6 @@ import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
 import * as forms from '~/src/lib/forms.js'
 import * as create from '~/src/models/forms/create.js'
 
-/**
- * Gets the author from the auth credentials
- * @param {import('@hapi/hapi').UserCredentials | undefined} user
- */
-function getAuthor(user) {
-  // @ts-expect-error - user is not undefined
-  return { id: user.id, displayName: user.displayName }
-}
-
 export default [
   /**
    * @satisfies {ServerRoute}
@@ -208,12 +199,12 @@ export default [
       // Submit new form metadata
       try {
         if (!result.error && credentials.user) {
-          const { user } = credentials
+          const { id, displayName } = credentials.user
 
           // Create the form
           await forms.create({
             metadata: result.value,
-            author: getAuthor(user)
+            author: { id, displayName }
           })
 
           // Clear form metadata
