@@ -30,12 +30,13 @@ export async function get(slug) {
 /**
  * Create form
  * @param {FormMetadataInput} metadata
+ * @param {FormMetadataAuthor} author
  */
-export async function create(metadata) {
+export async function create(metadata, author) {
   const postJsonByType = /** @type {typeof postJson<FormMetadata>} */ (postJson)
 
   const { body } = await postJsonByType(formsEndpoint, {
-    payload: metadata
+    payload: { metadata, author }
   })
 
   return body
@@ -90,4 +91,5 @@ export async function updateDraftFormDefinition(id, definition) {
  * @typedef {import('@defra/forms-model').FormDefinition} FormDefinition
  * @typedef {import('@defra/forms-model').FormMetadata} FormMetadata
  * @typedef {import('@defra/forms-model').FormMetadataInput} FormMetadataInput
+ * @typedef {import('@defra/forms-model').FormMetadataAuthor} FormMetadataAuthor
  */

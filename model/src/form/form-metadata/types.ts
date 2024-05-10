@@ -1,6 +1,21 @@
 import { formMetadataSchema } from '~/src/form/form-metadata/index.js'
 
 /**
+ * Interface for author (createdBy and updatedBy)
+ */
+export interface FormMetadataAuthor {
+  /**
+   * The ID of the user
+   */
+  id: string
+
+  /**
+   * The display name of the user
+   */
+  displayName: string
+}
+
+/**
  * Interface for metadata state (draft & live)
  */
 export interface FormMetadataState {
@@ -10,9 +25,19 @@ export interface FormMetadataState {
   createdAt: Date
 
   /**
+   * The author who created the state
+   */
+  createdBy: FormMetadataAuthor
+
+  /**
    * The date the form state was last updated
    */
   updatedAt: Date
+
+  /**
+   * The author who last updated the state
+   */
+  updatedBy: FormMetadataAuthor
 }
 
 /**

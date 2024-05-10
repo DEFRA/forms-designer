@@ -183,7 +183,8 @@ export default [
     method: 'POST',
     path: '/create/team',
     async handler(request, h) {
-      const { payload, yar } = request
+      const { auth, payload, yar } = request
+      const { credentials } = auth
 
       // Update form metadata
       const metadata = yar.set(sessionNames.create, {
@@ -197,8 +198,11 @@ export default [
 
       // Submit new form metadata
       try {
-        if (!result.error) {
-          await forms.create(result.value)
+        if (!result.error && credentials.user) {
+          const { id, displayName } = credentials.user
+
+          // Create the form
+          await forms.create(result.value, { id, displayName })
 
           // Clear form metadata
           yar.clear(sessionNames.create)

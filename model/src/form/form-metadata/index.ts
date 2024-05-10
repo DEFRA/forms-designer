@@ -1,9 +1,10 @@
 import Joi from 'joi'
 
 import {
-  type FormMetadataState,
   type FormMetadata,
-  type FormMetadataInput
+  type FormMetadataInput,
+  type FormMetadataState,
+  type FormMetadataAuthor
 } from '~/src/form/form-metadata/types.js'
 
 export const organisations = [
@@ -30,6 +31,10 @@ export const teamEmailSchema = Joi.string()
   .trim()
   .required()
 
+export const authoredAtSchema = Joi.date().iso().required()
+export const authorIdSchema = Joi.string().uuid().trim().required()
+export const authorDisplayNameSchema = Joi.string().trim().required()
+
 /**
  * Joi schema for `FormMetadataInput` interface
  * @see {@link FormMetadataInput}
@@ -44,12 +49,25 @@ export const formMetadataInputSchema = Joi.object<FormMetadataInput>()
   .required()
 
 /**
+ * Joi schema for `FormMetadataAuthor` interface
+ * @see {@link FormMetadataAuthor}
+ */
+export const formMetadataAuthorSchema = Joi.object<FormMetadataAuthor>()
+  .keys({
+    id: authorIdSchema,
+    displayName: authorDisplayNameSchema
+  })
+  .required()
+
+/**
  * Joi schema for `FormMetadataState` interface
  * @see {@link FormMetadataState}
  */
 export const formMetadataStateSchema = Joi.object<FormMetadataState>().keys({
-  createdAt: Joi.date().iso().required(),
-  updatedAt: Joi.date().iso().required()
+  createdAt: authoredAtSchema,
+  createdBy: formMetadataAuthorSchema,
+  updatedAt: authoredAtSchema,
+  updatedBy: formMetadataAuthorSchema
 })
 
 /**
