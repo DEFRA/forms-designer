@@ -4,29 +4,9 @@ import Boom from '@hapi/boom'
 import { token } from '@hapi/jwt'
 import { DateTime } from 'luxon'
 
-import * as scopes from '~/src/common/constants/scopes.js'
 import config from '~/src/config.js'
 
 const authCallbackUrl = new URL(`/auth/callback`, config.appBaseUrl)
-
-/**
- * Returns the scopes assigned to a user, given their profile with a group assigned.
- * @param {Array<string>} groups - groups the user is a member of
- * @returns {Array<string>} - array of scopes assigned to the user
- */
-export function getScopesForUserProfile(groups) {
-  let assignedScopes = /** @type {Set<string>} */ (new Set())
-
-  for (const group of groups) {
-    const scopesToAssign = scopes.groupsToScopes[group]
-
-    if (scopesToAssign.length > 0) {
-      assignedScopes = new Set([...assignedScopes, ...scopesToAssign])
-    }
-  }
-
-  return Array.from(assignedScopes)
-}
 
 /**
  * @type {ServerRegisterPluginObject}
@@ -70,19 +50,13 @@ export const azureOidc = {
             ],
             profile(credentials, params) {
               const artifacts = token.decode(credentials.token)
-              const idToken = params.id_token
+              const idToken = token.decode(params.id_token)
 
               token.verifyTime(artifacts)
               token.verifyPayload(artifacts)
 
-              const idTokenPayload = /** @type {{payload: idTokenPayload}} */ (
-                token.decode(idToken).decoded
-              ).payload
-              const assignedScopes = getScopesForUserProfile(
-                idTokenPayload.groups ?? []
-              )
-
-              credentials.scope = assignedScopes
+              token.verifyTime(idToken)
+              token.verifyPayload(idToken)
 
               return Promise.resolve()
             }
