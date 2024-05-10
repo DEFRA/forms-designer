@@ -200,12 +200,13 @@ export default [
       // Submit new form metadata
       try {
         if (!result.error) {
+          // @ts-expect-error - user is not undefined
+          const author = { id: user.id, displayName: user.displayName }
+
+          // Create the user
           await forms.create({
             metadata: result.value,
-            author: {
-              id: user.id,
-              displayName: user.displayName
-            }
+            author
           })
 
           // Clear form metadata

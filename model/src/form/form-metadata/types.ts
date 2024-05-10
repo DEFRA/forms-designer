@@ -6,7 +6,7 @@ import {
 /**
  * Interface for author (createdBy and updatedBy)
  */
-export interface FormMetadataStateAuthor {
+export interface FormMetadataAuthor {
   /**
    * The ID of the user
    */
@@ -30,7 +30,7 @@ export interface FormMetadataState {
   /**
    * The author who created the state
    */
-  createdBy: FormMetadataStateAuthor
+  createdBy: FormMetadataAuthor
 
   /**
    * The date the form state was last updated
@@ -40,7 +40,7 @@ export interface FormMetadataState {
   /**
    * The author who last updated the state
    */
-  updatedBy: FormMetadataStateAuthor
+  updatedBy: FormMetadataAuthor
 }
 
 /**
@@ -102,7 +102,7 @@ export interface FormMetadataAuthorInput {
   /**
    * The author of the state
    */
-  author: FormMetadataStateAuthor
+  author: FormMetadataAuthor
 }
 
 export type FormByIdInput = Pick<FormMetadata, 'id'>

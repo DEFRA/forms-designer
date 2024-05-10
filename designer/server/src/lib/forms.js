@@ -29,7 +29,7 @@ export async function get(slug) {
 
 /**
  * Create form
- * @param {FormMetadataAuthorInput} input
+ * @param {{ metadata: FormMetadataInput, author: FormMetadataAuthor }} input
  */
 export async function create(input) {
   const postJsonByType = /** @type {typeof postJson<FormMetadata>} */ (postJson)
@@ -89,6 +89,6 @@ export async function updateDraftFormDefinition(id, definition) {
 /**
  * @typedef {import('@defra/forms-model').FormDefinition} FormDefinition
  * @typedef {import('@defra/forms-model').FormMetadata} FormMetadata
- * @typedef {import('@defra/forms-model').FormMetadataAuthorInput} FormMetadataAuthorInput
  * @typedef {import('@defra/forms-model').FormMetadataInput} FormMetadataInput
+ * @typedef {import('@defra/forms-model').FormMetadataAuthor} FormMetadataAuthor
  */
