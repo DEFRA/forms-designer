@@ -11,8 +11,11 @@ import Joi from 'joi'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
+import { createLogger } from '~/src/common/helpers/logging/logger.js'
 import * as forms from '~/src/lib/forms.js'
 import * as create from '~/src/models/forms/create.js'
+
+const logger = createLogger()
 
 export default [
   /**
@@ -86,7 +89,7 @@ export default [
                   const { value: slug } = titleToSlug
 
                   // Retrieve form by slug
-                  const form = await forms.get(slug)
+                  const form = await forms.get(slug).catch(logger.error)
                   if (!form) {
                     return
                   }
