@@ -71,9 +71,11 @@ function getScopesFromGroups(idToken) {
     token.decode(idToken)
   )
 
-  const userGroups = decoded.payload?.groups
+  const userGroups = /** @type {Array<string> | undefined} */ (
+    decoded.payload?.groups
+  )
 
-  if (!userGroups || !Array.isArray(userGroups)) {
+  if (!Array.isArray(userGroups)) {
     logger.error('id_token.groups is missing or not an array')
     return []
   }
@@ -81,7 +83,7 @@ function getScopesFromGroups(idToken) {
   let assignedScopes = /** @type {Set<string>} */ (new Set())
 
   for (const group of userGroups) {
-    const scopesToAssign = scopes.groupsToScopes[group]
+    const scopesToAssign = scopes.groupsToScopes[group] ?? []
 
     if (scopesToAssign.length > 0) {
       assignedScopes = new Set([...assignedScopes, ...scopesToAssign])
