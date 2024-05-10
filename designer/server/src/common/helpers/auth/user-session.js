@@ -35,16 +35,11 @@ export function createUser(credentials) {
  */
 export async function createUserSession(request) {
   const { auth, server } = request
-
-  // Optionally create user object (e.g. signed in token but no session)
-  const user = !getUser(auth.credentials)
-    ? createUser(auth.credentials)
-    : auth.credentials.user
+  const { credentials } = auth
+  const { yar } = request
 
   if (auth.artifacts.id_token && typeof auth.artifacts.id_token === 'string') {
-    request.auth.credentials.scope = getScopesFromGroups(
-      auth.artifacts.id_token
-    )
+    credentials.scope = getScopesFromGroups(auth.artifacts.id_token)
   } else {
     // we might want read-only access in the future, so this isn't a show-stopping error
     // but we can't grant permissions now. Log the error but leave the app to redirect back
@@ -53,6 +48,19 @@ export async function createUserSession(request) {
       'id_token has not been returned by the oauth2 provider. Scopes cannot be granted.'
     )
   }
+
+  if ((credentials.scope ?? []).length === 0) {
+    // temporarily kick the user out to allow them to sign back in again if they gain permission
+    // long term we'd like to let users view the app in a read-only mode, but this isn't a current
+    // requirement.
+    yar.flash('userFailedAuthorisation', true)
+    return
+  }
+
+  // Optionally create user object (e.g. signed in token but no session)
+  const user = !getUser(auth.credentials)
+    ? createUser(auth.credentials)
+    : auth.credentials.user
 
   // Create and retrieve user session from Redis
   if (user?.id) {

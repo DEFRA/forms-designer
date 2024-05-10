@@ -1,6 +1,5 @@
 import Boom from '@hapi/boom'
 
-import { dropUserSession } from '~/src/common/helpers/auth/drop-user-session.js'
 import { createUserSession } from '~/src/common/helpers/auth/user-session.js'
 
 export default [
@@ -16,18 +15,12 @@ export default [
       // Create user session
       const credentials = await createUserSession(request)
 
-      if (!credentials?.user) {
-        return Boom.unauthorized()
+      if (!credentials?.scope) {
+        return h.redirect('/')
       }
 
-      if ((credentials.scope ?? []).length === 0) {
-        // temporarily drop the user session to allow them to sign back in again if they gain permission
-        // ideally though we'd let them progress into the app and just restrict the data we show them
-        // `credentials` essentially serves a short-lived helper to build out the scopes
-        yar.flash('userFailedAuthorisation', true)
-        await dropUserSession(request)
-
-        return h.redirect('/')
+      if (!credentials.user) {
+        return Boom.unauthorized()
       }
 
       // Add to authentication cookie for session validation
