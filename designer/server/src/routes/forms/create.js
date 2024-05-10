@@ -194,7 +194,6 @@ export default [
     async handler(request, h) {
       const { auth, payload, yar } = request
       const { credentials } = auth
-      const { user } = credentials
 
       // Update form metadata
       const metadata = yar.set(sessionNames.create, {
@@ -208,7 +207,9 @@ export default [
 
       // Submit new form metadata
       try {
-        if (!result.error) {
+        if (!result.error && credentials.user) {
+          const { user } = credentials
+
           // Create the form
           await forms.create({
             metadata: result.value,
