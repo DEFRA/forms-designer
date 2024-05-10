@@ -4,7 +4,6 @@ import {
   type FormMetadataState,
   type FormMetadata,
   type FormMetadataInput,
-  type FormMetadataStateAuthor,
   type FormMetadataAuthorInput
 } from '~/src/form/form-metadata/types.js'
 
@@ -48,13 +47,12 @@ export const formMetadataInputSchema = Joi.object<FormMetadataInput>()
   })
   .required()
 
-export const formMetadataStateAuthorSchema =
-  Joi.object<FormMetadataStateAuthor>()
-    .keys({
-      id: authorId,
-      displayName: authorDisplayName
-    })
-    .required()
+export const formMetadataAuthorSchema = Joi.object<FormMetadataAuthor>()
+  .keys({
+    id: authorId,
+    displayName: authorDisplayName
+  })
+  .required()
 
 /**
  * Joi schema for `FormMetadataAuthorInput` interface
@@ -64,7 +62,7 @@ export const formMetadataAuthorInputSchema =
   Joi.object<FormMetadataAuthorInput>()
     .keys({
       metadata: formMetadataInputSchema,
-      author: formMetadataStateAuthorSchema
+      author: formMetadataAuthorSchema
     })
     .required()
 
