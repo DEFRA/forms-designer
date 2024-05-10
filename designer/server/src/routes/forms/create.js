@@ -1,6 +1,7 @@
 import {
   formMetadataInputSchema,
   organisationSchema,
+  slugSchema,
   teamEmailSchema,
   teamNameSchema,
   titleSchema
@@ -10,8 +11,11 @@ import Joi from 'joi'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
+import { createLogger } from '~/src/common/helpers/logging/logger.js'
 import * as forms from '~/src/lib/forms.js'
 import * as create from '~/src/models/forms/create.js'
+
+const logger = createLogger()
 
 export default [
   /**
@@ -72,10 +76,35 @@ export default [
     options: {
       validate: {
         payload: Joi.object().keys({
-          title: titleSchema.messages({
-            'string.empty': 'Enter your form name',
-            'string.max': 'Form name must be 250 characters or less'
-          })
+          title: titleSchema
+            .external(
+              /**
+               * Allow only unique form slugs
+               */
+              async (title, helpers) => {
+                const titleToSlug = slugSchema.validate(title)
+
+                // Check only valid slugs
+                if (!titleToSlug.error) {
+                  const { value: slug } = titleToSlug
+
+                  // Retrieve form by slug
+                  const form = await forms.get(slug).catch(logger.error)
+                  if (!form) {
+                    return
+                  }
+
+                  // Show error for non-unique slugs
+                  return helpers.message({
+                    external: 'Form name you entered already exists'
+                  })
+                }
+              }
+            )
+            .messages({
+              'string.empty': 'Enter a form name',
+              'string.max': 'Form name must be 250 characters or less'
+            })
         }),
 
         failAction(request, h, error) {
@@ -231,13 +260,13 @@ export default [
       validate: {
         payload: Joi.object().keys({
           teamName: teamNameSchema.messages({
-            'string.empty': 'Enter your team name',
-            'string.max': 'Team name must be 100 characters or less'
+            'string.empty': 'Enter name of team',
+            'string.max': 'Name of team must be 100 characters or less'
           }),
           teamEmail: teamEmailSchema.messages({
-            'string.empty': 'Enter your shared team email address',
+            'string.empty': 'Enter a shared team email address',
             'string.email':
-              'Enter your shared team email address in the correct format, like name@example.gov.uk'
+              'Enter a shared team email address in the correct format, like name@example.gov.uk'
           })
         }),
 
