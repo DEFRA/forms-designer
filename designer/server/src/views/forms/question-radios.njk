@@ -2,8 +2,8 @@
 
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
-{% from "error-summary/macro.njk" import appErrorSummary %}
 
 {% block beforeContent %}
   {{ govukBackLink({
@@ -14,7 +14,8 @@
 {% block content %}
   <form method="post" novalidate>
     {% if errorList | length %}
-      {{ appErrorSummary({
+      {{ govukErrorSummary({
+        titleText: "There is a problem",
         errorList: errorList
       }) }}
     {% endif %}
