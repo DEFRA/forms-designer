@@ -2,13 +2,6 @@
 
 {% set errorList = params.errorList | default([], true) %}
 
-{% for key, error in params.formErrors %}
-  {% set errorList = (errorList.push({
-    text: error.message,
-    href: "#" + key
-  }), errorList) %}
-{% endfor %}
-
 {{ govukErrorSummary({
   titleText: params.titleText | default("There is a problem", true),
   errorList: errorList

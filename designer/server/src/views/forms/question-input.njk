@@ -5,7 +5,7 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "error-summary/macro.njk" import appErrorSummary %}
 
-{% if formErrors | length %}
+{% if errorList | length %}
   {% set pageTitle = "Error: " + pageTitle %}
 {% endif %}
 
@@ -18,9 +18,9 @@
 {% block content %}
   <form method="post" novalidate>
     {% call appPageBody() %}
-      {% if formErrors | length %}
+      {% if errorList | length %}
         {{ appErrorSummary({
-          formErrors: formErrors
+          errorList: errorList
         }) }}
       {% endif %}
 
@@ -34,7 +34,7 @@
         name: field.name,
         value: field.value,
         errorMessage: {
-          text: formErrors[field.name].message
+          text: formErrors[field.name].text
         } if formErrors[field.name],
         autocapitalize: field.autocapitalize,
         autocomplete: field.autocomplete,

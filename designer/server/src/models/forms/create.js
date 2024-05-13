@@ -1,13 +1,18 @@
 import { organisations } from '@defra/forms-model'
 
+import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
+
 /**
  * @param {Partial<FormMetadataInput>} [metadata]
  * @param {ValidationFailure} [validation]
  */
 export function titleViewModel(metadata, validation) {
+  const { formValues, formErrors } = validation ?? {}
+
   return {
     backLink: '/library',
     pageTitle: 'Enter a name for your form',
+    errorList: buildErrorList(formErrors),
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
     field: {
@@ -16,7 +21,7 @@ export function titleViewModel(metadata, validation) {
       label: {
         text: 'Enter a name for your form'
       },
-      value: validation?.formValues.title ?? metadata?.title,
+      value: formValues?.title ?? metadata?.title,
       autocapitalize: true,
       spellcheck: true
     },
@@ -29,9 +34,12 @@ export function titleViewModel(metadata, validation) {
  * @param {ValidationFailure} [validation]
  */
 export function organisationViewModel(metadata, validation) {
+  const { formValues, formErrors } = validation ?? {}
+
   return {
     backLink: '/create/title',
     pageTitle: 'Choose a lead organisation for this form',
+    errorList: buildErrorList(formErrors),
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
     field: {
@@ -44,7 +52,7 @@ export function organisationViewModel(metadata, validation) {
         text: organisation,
         value: organisation
       })),
-      value: validation?.formValues.organisation ?? metadata?.organisation
+      value: formValues?.organisation ?? metadata?.organisation
     },
     buttonText: 'Continue'
   }
@@ -55,10 +63,13 @@ export function organisationViewModel(metadata, validation) {
  * @param {ValidationFailure} [validation]
  */
 export function teamViewModel(metadata, validation) {
+  const { formValues, formErrors } = validation ?? {}
+
   return {
     backLink: '/create/organisation',
     pageTitle: 'Team details',
     pageHeading: 'Team details',
+    errorList: buildErrorList(formErrors),
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
     fields: [
@@ -71,7 +82,7 @@ export function teamViewModel(metadata, validation) {
         hint: {
           text: 'Enter the name of the policy team or business area responsible for this form'
         },
-        value: validation?.formValues.teamName ?? metadata?.teamName,
+        value: formValues?.teamName ?? metadata?.teamName,
         autocapitalize: true,
         spellcheck: true
       },
@@ -81,7 +92,7 @@ export function teamViewModel(metadata, validation) {
         label: {
           text: 'Shared team email address'
         },
-        value: validation?.formValues.teamEmail ?? metadata?.teamEmail,
+        value: formValues?.teamEmail ?? metadata?.teamEmail,
         autocomplete: 'email',
         spellcheck: false
       }

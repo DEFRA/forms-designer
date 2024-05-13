@@ -5,7 +5,7 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "error-summary/macro.njk" import appErrorSummary %}
 
-{% if formErrors | length %}
+{% if errorList | length %}
   {% set pageTitle = "Error: " + pageTitle %}
 {% endif %}
 
@@ -17,9 +17,9 @@
 
 {% block content %}
   <form method="post" novalidate>
-    {% if formErrors | length %}
+    {% if errorList | length %}
       {{ appErrorSummary({
-        formErrors: formErrors
+        errorList: errorList
       }) }}
     {% endif %}
 
@@ -37,7 +37,7 @@
         items: field.items,
         value: field.value,
         errorMessage: {
-          text: formErrors[field.name].message
+          text: formErrors[field.name].text
         } if formErrors[field.name]
       }) }}
 
