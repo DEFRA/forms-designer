@@ -3,14 +3,10 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
 {% block content %}
-  {% if userFailedAuthorisation %}
+  {% if errorList | length %}
     {{ govukErrorSummary({
       titleText: "There is a problem",
-      errorList: [
-        {
-          html: "We couldn't sign you in. Please contact the system administrator for help, <a href=\"mailto:steven.thomas@defra.gov.uk\">steven.thomas@defra.gov.uk</a>."
-        }
-      ]
+      errorList: errorList
     }) }}
   {% endif %}
 
