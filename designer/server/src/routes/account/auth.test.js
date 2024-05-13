@@ -28,8 +28,8 @@ describe('Auth test', () => {
 
     const result = await server.inject(options)
 
-    expect(result.headers['set-cookie']).toMatchObject(
-      expect.arrayContaining([expect.stringMatching(/userSession=\S*;/)]) // userSession must be populated with the token
+    expect(result.headers['set-cookie']).not.toMatchObject(
+      expect.arrayContaining([expect.stringContaining('userSession=')])
     )
     expect(result.headers.location).toBe('/')
   })

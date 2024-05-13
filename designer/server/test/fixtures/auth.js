@@ -1,6 +1,5 @@
+import { token } from '@hapi/jwt'
 import { DateTime, Duration } from 'luxon'
-
-import * as scopes from '~/src/common/constants/scopes.js'
 
 /**
  * @satisfies {ServerInjectOptions['auth']}
@@ -19,8 +18,15 @@ export const auth = {
       displayName: 'John Smith',
       issuedAt: DateTime.now().minus({ minutes: 30 }).toUTC().toISO(),
       expiresAt: DateTime.now().plus({ minutes: 30 }).toUTC().toISO()
-    },
-    scope: [scopes.SCOPE_READ, scopes.SCOPE_WRITE]
+    }
+  },
+  artifacts: {
+    id_token: token.generate(
+      {
+        groups: ['valid-test-group']
+      },
+      'testSecret'
+    )
   }
 }
 
@@ -42,6 +48,14 @@ export const authNoScopes = {
       issuedAt: DateTime.now().minus({ minutes: 30 }).toUTC().toISO(),
       expiresAt: DateTime.now().plus({ minutes: 30 }).toUTC().toISO()
     }
+  },
+  artifacts: {
+    id_token: token.generate(
+      {
+        groups: []
+      },
+      'testSecret'
+    )
   }
 }
 
