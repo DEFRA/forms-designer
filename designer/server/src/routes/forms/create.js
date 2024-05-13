@@ -73,7 +73,7 @@ export default [
       yar.clear(sessionNames.validationFailure)
 
       // Redirect to first step
-      return h.redirect('/create/title').code(303)
+      return h.redirect('/create/title').temporary()
     }
   }),
 
@@ -112,6 +112,7 @@ export default [
         title: payload.title
       })
 
+      // Redirect POST to GET without resubmit on back button
       return h.redirect('/create/organisation').code(303)
     },
     options: {
@@ -121,7 +122,8 @@ export default [
         }),
 
         failAction(request, h, error) {
-          const { payload, yar } = request
+          const { payload, yar, url } = request
+          const { pathname: redirectTo } = url
 
           if (error instanceof Joi.ValidationError) {
             yar.flash('validationFailure', {
@@ -130,7 +132,8 @@ export default [
             })
           }
 
-          return h.redirect('/create/title').code(303).takeover()
+          // Redirect POST to GET without resubmit on back button
+          return h.redirect(redirectTo).code(303).takeover()
         }
       }
     }
@@ -171,6 +174,7 @@ export default [
         organisation: payload.organisation
       })
 
+      // Redirect POST to GET without resubmit on back button
       return h.redirect('/create/team').code(303)
     },
     options: {
@@ -180,7 +184,8 @@ export default [
         }),
 
         failAction(request, h, error) {
-          const { payload, yar } = request
+          const { payload, yar, url } = request
+          const { pathname: redirectTo } = url
 
           if (error instanceof Joi.ValidationError) {
             yar.flash('validationFailure', {
@@ -189,7 +194,8 @@ export default [
             })
           }
 
-          return h.redirect('/create/organisation').code(303).takeover()
+          // Redirect POST to GET without resubmit on back button
+          return h.redirect(redirectTo).code(303).takeover()
         }
       }
     }
@@ -240,8 +246,8 @@ export default [
         yar.clear(sessionNames.create)
 
         /**
-         * Temporarily redirect to library
-         * @todo Redirect to new form
+         * Redirect POST to GET without resubmit on back button
+         * @todo Redirect to new form instead of library
          */
         return h.redirect('/library').code(303)
       } catch (cause) {
@@ -257,7 +263,8 @@ export default [
         payload: schema,
 
         failAction(request, h, error) {
-          const { payload, yar } = request
+          const { payload, yar, url } = request
+          const { pathname: redirectTo } = url
 
           if (error instanceof Joi.ValidationError) {
             const formErrors = buildErrorDetails(error)
@@ -271,7 +278,8 @@ export default [
             })
           }
 
-          return h.redirect('/create/team').code(303).takeover()
+          // Redirect POST to GET without resubmit on back button
+          return h.redirect(redirectTo).code(303).takeover()
         }
       }
     }
