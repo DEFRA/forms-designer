@@ -264,10 +264,17 @@ export default [
 
         failAction(request, h, error) {
           const { payload, yar, url } = request
-          const { pathname: redirectTo } = url
+          let { pathname: redirectTo } = url
 
           if (error instanceof Joi.ValidationError) {
             const formErrors = buildErrorDetails(error)
+
+            // Optionally redirect to errors on previous steps
+            if ('title' in formErrors) {
+              redirectTo = '/create/title'
+            } else if ('organisation' in formErrors) {
+              redirectTo = '/create/organisation'
+            }
 
             yar.flash('validationFailure', {
               formErrors: {
