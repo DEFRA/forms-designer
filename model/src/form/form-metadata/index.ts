@@ -85,6 +85,6 @@ export const formMetadataStateSchema = Joi.object<FormMetadataState>().keys({
 export const formMetadataSchema = formMetadataInputSchema.append<FormMetadata>({
   id: idSchema,
   slug: slugSchema,
-  draft: formMetadataStateSchema.required(),
+  draft: formMetadataStateSchema,
   live: formMetadataStateSchema
 })

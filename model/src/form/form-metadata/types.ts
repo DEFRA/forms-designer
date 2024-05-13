@@ -78,7 +78,7 @@ export interface FormMetadata {
   /**
    * The draft state of the form
    */
-  draft: FormMetadataState
+  draft?: FormMetadataState
 
   /**
    * The live state of the form
