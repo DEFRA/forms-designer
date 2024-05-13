@@ -5,10 +5,6 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "error-summary/macro.njk" import appErrorSummary %}
 
-{% if errorList | length %}
-  {% set pageTitle = "Error: " + pageTitle %}
-{% endif %}
-
 {% block beforeContent %}
   {{ govukBackLink({
     href: backLink

@@ -12,7 +12,9 @@
   {% include "partials/navigation.njk" %}
 {% endblock %}
 
-{% block pageTitle %}{{ pageTitle }} - {{ config.serviceName }}{% endblock %}
+{% block pageTitle -%}
+  {{ "Error: " if errorList | length }}{{ pageTitle }} - {{ config.serviceName }}
+{%- endblock %}
 
 {% block beforeContent %}
   {% if breadcrumbs.length > 1 %}

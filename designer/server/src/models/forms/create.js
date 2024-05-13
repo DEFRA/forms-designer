@@ -68,7 +68,6 @@ export function teamViewModel(metadata, validation) {
   return {
     backLink: '/create/organisation',
     pageTitle: 'Team details',
-    pageHeading: 'Team details',
     errorList: buildErrorList(formErrors),
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
