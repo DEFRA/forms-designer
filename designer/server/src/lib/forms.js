@@ -1,3 +1,6 @@
+import Boom from '@hapi/boom'
+
+import { getUser } from '~/src/common/helpers/auth/get-user-session.js'
 import config from '~/src/config.js'
 import { getJson, postJson } from '~/src/lib/fetch.js'
 
@@ -88,8 +91,24 @@ export async function updateDraftFormDefinition(id, definition) {
 }
 
 /**
+ * @param {AuthCredentials | null} [credentials]
+ * @returns {FormMetadataAuthor}
+ */
+export function getAuthor(credentials) {
+  const user = getUser(credentials)
+
+  if (!user) {
+    throw Boom.unauthorized('Failed to get author from auth credentials')
+  }
+
+  const { id, displayName } = user
+  return { id, displayName }
+}
+
+/**
  * @typedef {import('@defra/forms-model').FormDefinition} FormDefinition
  * @typedef {import('@defra/forms-model').FormMetadata} FormMetadata
  * @typedef {import('@defra/forms-model').FormMetadataInput} FormMetadataInput
  * @typedef {import('@defra/forms-model').FormMetadataAuthor} FormMetadataAuthor
+ * @typedef {import('@hapi/hapi').AuthCredentials} AuthCredentials
  */
