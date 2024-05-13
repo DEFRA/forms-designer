@@ -17,6 +17,47 @@ import { getAuthor } from '~/src/lib/forms.js'
 import * as create from '~/src/models/forms/create.js'
 
 const logger = createLogger()
+const schema = Joi.object().keys({
+  title: titleSchema
+    .external(
+      /**
+       * Allow only unique form slugs
+       * @param {string} title
+       * @param {ExternalHelpers} helpers
+       */
+      async (title, helpers) => {
+        const slug = slugify(title)
+
+        // Retrieve form by slug
+        const form = await forms.get(slug).catch(logger.error)
+        if (!form) {
+          return
+        }
+
+        // Show error for non-unique slugs
+        return helpers.message({
+          external: 'Form name you entered already exists'
+        })
+      }
+    )
+    .messages({
+      'string.empty': 'Enter a form name',
+      'string.max': 'Form name must be 250 characters or less'
+    }),
+  organisation: organisationSchema.messages({
+    'any.required': 'Select a lead organisation',
+    'any.only': 'Select a lead organisation'
+  }),
+  teamName: teamNameSchema.messages({
+    'string.empty': 'Enter name of team',
+    'string.max': 'Name of team must be 100 characters or less'
+  }),
+  teamEmail: teamEmailSchema.messages({
+    'string.empty': 'Enter a shared team email address',
+    'string.email':
+      'Enter a shared team email address in the correct format, like name@example.gov.uk'
+  })
+})
 
 export default [
   /**
@@ -77,32 +118,7 @@ export default [
     options: {
       validate: {
         payload: Joi.object().keys({
-          title: titleSchema
-            .external(
-              /**
-               * Allow only unique form slugs
-               * @param {string} title
-               * @param {ExternalHelpers} helpers
-               */
-              async (title, helpers) => {
-                const slug = slugify(title)
-
-                // Retrieve form by slug
-                const form = await forms.get(slug).catch(logger.error)
-                if (!form) {
-                  return
-                }
-
-                // Show error for non-unique slugs
-                return helpers.message({
-                  external: 'Form name you entered already exists'
-                })
-              }
-            )
-            .messages({
-              'string.empty': 'Enter a form name',
-              'string.max': 'Form name must be 250 characters or less'
-            })
+          title: schema.extract('title')
         }),
 
         failAction(request, h, error) {
@@ -161,10 +177,7 @@ export default [
     options: {
       validate: {
         payload: Joi.object().keys({
-          organisation: organisationSchema.messages({
-            'any.required': 'Select a lead organisation',
-            'any.only': 'Select a lead organisation'
-          })
+          organisation: schema.extract('organisation')
         }),
 
         failAction(request, h, error) {
@@ -254,15 +267,8 @@ export default [
     options: {
       validate: {
         payload: Joi.object().keys({
-          teamName: teamNameSchema.messages({
-            'string.empty': 'Enter name of team',
-            'string.max': 'Name of team must be 100 characters or less'
-          }),
-          teamEmail: teamEmailSchema.messages({
-            'string.empty': 'Enter a shared team email address',
-            'string.email':
-              'Enter a shared team email address in the correct format, like name@example.gov.uk'
-          })
+          teamName: schema.extract('teamName'),
+          teamEmail: schema.extract('teamEmail')
         }),
 
         failAction(request, h, error) {
