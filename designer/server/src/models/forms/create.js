@@ -73,6 +73,16 @@ export function teamViewModel(metadata, validation) {
     formValues: validation?.formValues,
     fields: [
       {
+        type: 'hidden',
+        name: 'title',
+        value: metadata?.title
+      },
+      {
+        type: 'hidden',
+        name: 'organisation',
+        value: metadata?.organisation
+      },
+      {
         id: 'teamName',
         name: 'teamName',
         label: {

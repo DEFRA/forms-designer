@@ -1,5 +1,4 @@
 import {
-  formMetadataInputSchema,
   organisationSchema,
   slugify,
   teamEmailSchema,
@@ -217,7 +216,7 @@ export default [
   }),
 
   /**
-   * @satisfies {ServerRoute<{ Payload: Pick<FormMetadataInput, 'teamName' | 'teamEmail'> }>}
+   * @satisfies {ServerRoute<{ Payload: FormMetadataInput }>}
    */
   ({
     method: 'POST',
@@ -227,29 +226,24 @@ export default [
       const author = getAuthor(auth.credentials)
 
       // Update form metadata
-      const metadata = yar.set(sessionNames.create, {
+      yar.set(sessionNames.create, {
         ...yar.get(sessionNames.create),
         teamName: payload.teamName,
         teamEmail: payload.teamEmail
       })
 
-      // Check form metadata is complete
-      const result = formMetadataInputSchema.validate(metadata)
-
       // Create the form
       try {
-        if (!result.error) {
-          await forms.create(result.value, author)
+        await forms.create(payload, author)
 
-          // Clear form metadata
-          yar.clear(sessionNames.create)
+        // Clear form metadata
+        yar.clear(sessionNames.create)
 
-          /**
-           * Temporarily redirect to library
-           * @todo Redirect to new form
-           */
-          return h.redirect('/library').code(303)
-        }
+        /**
+         * Temporarily redirect to library
+         * @todo Redirect to new form
+         */
+        return h.redirect('/library').code(303)
       } catch (cause) {
         return Boom.internal(
           new Error('Failed to create new form', {
@@ -257,19 +251,10 @@ export default [
           })
         )
       }
-
-      /**
-       * Form metadata is incomplete
-       * @todo Redirect to step with validation errors
-       */
-      return h.redirect('/create/team').code(303)
     },
     options: {
       validate: {
-        payload: Joi.object().keys({
-          teamName: schema.extract('teamName'),
-          teamEmail: schema.extract('teamEmail')
-        }),
+        payload: schema,
 
         failAction(request, h, error) {
           const { payload, yar } = request
