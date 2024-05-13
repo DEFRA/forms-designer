@@ -1,4 +1,5 @@
 import { customAlphabet } from 'nanoid'
+import slug from 'slug'
 
 export const serialiseAndDeserialise = <T>(obj: T): T => {
   if (typeof obj === 'object' && obj !== null) {
@@ -32,6 +33,15 @@ export function filter<T extends Record<string, unknown>>(
   }
 
   return result
+}
+
+/**
+ * Replace spaces, en-dashes and em-dashes with hyphens
+ * before running through the slug package
+ */
+export function slugify(input = '') {
+  const string = input.trim().replace(/[\s–—]/g, '-')
+  return slug(string, { lower: true })
 }
 
 export const nanoid = customAlphabet('0123456789_abcdefghijklmnopqrstuvwxyz', 6)

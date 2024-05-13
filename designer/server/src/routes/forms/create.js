@@ -1,7 +1,7 @@
 import {
   formMetadataInputSchema,
   organisationSchema,
-  slugSchema,
+  slugify,
   teamEmailSchema,
   teamNameSchema,
   titleSchema
@@ -80,25 +80,22 @@ export default [
             .external(
               /**
                * Allow only unique form slugs
+               * @param {string} title
+               * @param {ExternalHelpers} helpers
                */
               async (title, helpers) => {
-                const titleToSlug = slugSchema.validate(title)
+                const slug = slugify(title)
 
-                // Check only valid slugs
-                if (!titleToSlug.error) {
-                  const { value: slug } = titleToSlug
-
-                  // Retrieve form by slug
-                  const form = await forms.get(slug).catch(logger.error)
-                  if (!form) {
-                    return
-                  }
-
-                  // Show error for non-unique slugs
-                  return helpers.message({
-                    external: 'Form name you entered already exists'
-                  })
+                // Retrieve form by slug
+                const form = await forms.get(slug).catch(logger.error)
+                if (!form) {
+                  return
                 }
+
+                // Show error for non-unique slugs
+                return helpers.message({
+                  external: 'Form name you entered already exists'
+                })
               }
             )
             .messages({
@@ -294,6 +291,7 @@ export default [
 
 /**
  * @typedef {import('@defra/forms-model').FormMetadataInput} FormMetadataInput
+ * @typedef {import('joi').ExternalHelpers} ExternalHelpers
  */
 
 /**

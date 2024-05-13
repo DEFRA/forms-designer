@@ -1,7 +1,7 @@
-import { slugSchema } from '~/src/form/form-metadata/index.js'
+import { slugify } from '~/src/utils/helpers.js'
 
-describe('Form metadata schema', () => {
-  describe('Slug schema', () => {
+describe('Helpers', () => {
+  describe('Slugify', () => {
     it.each([
       {
         title: 'This is a form title',
@@ -32,10 +32,7 @@ describe('Form metadata schema', () => {
         slug: 'with-something-in-brackets-surprise'
       }
     ])("formats '$title' to '$slug'", ({ title, slug }) => {
-      const result = slugSchema.validate(title)
-
-      expect(result).toMatchObject({ value: slug })
-      expect(result.error).toBeUndefined()
+      expect(slugify(title)).toBe(slug)
     })
   })
 })

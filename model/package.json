@@ -19,6 +19,9 @@
     "test": "jest --color --coverage --verbose",
     "test:watch": "jest --color --watch"
   },
+  "dependencies": {
+    "slug": "^9.0.0"
+  },
   "devDependencies": {
     "joi": "^17.13.1",
     "nanoid": "^3.3.7"
