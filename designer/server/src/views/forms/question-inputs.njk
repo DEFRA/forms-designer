@@ -27,19 +27,23 @@
       {% endif %}
 
       {% for field in fields %}
-        {{ govukInput({
-          label: field.label,
-          hint: field.hint,
-          id: field.id,
-          name: field.name,
-          value: field.value,
-          errorMessage: {
-            text: formErrors[field.name].text
-          } if formErrors[field.name],
-          autocapitalize: field.autocapitalize,
-          autocomplete: field.autocomplete,
-          spellcheck: field.spellcheck
-        }) }}
+        {% if field.type === "hidden" %}
+          <input type="hidden" name="{{ field.name }}" value="{{ field.value }}">
+        {% else %}
+          {{ govukInput({
+            label: field.label,
+            hint: field.hint,
+            id: field.id,
+            name: field.name,
+            value: field.value,
+            errorMessage: {
+              text: formErrors[field.name].text
+            } if formErrors[field.name],
+            autocapitalize: field.autocapitalize,
+            autocomplete: field.autocomplete,
+            spellcheck: field.spellcheck
+          }) }}
+        {% endif %}
       {% endfor %}
 
       {{ govukButton({
