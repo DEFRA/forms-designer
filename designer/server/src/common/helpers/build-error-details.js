@@ -19,13 +19,16 @@ export function buildErrorDetails(error) {
 
 /**
  * @param {ErrorDetails | undefined} errorDetails
+ * @param {string[]} [names] - Field names to filter error list by
  */
-export function buildErrorList(errorDetails) {
+export function buildErrorList(errorDetails, names) {
   if (!errorDetails) {
     return []
   }
 
-  return Object.entries(errorDetails).map(([, message]) => message)
+  return Object.entries(errorDetails)
+    .filter(([key]) => names?.includes(key) ?? true)
+    .map(([, message]) => message)
 }
 
 /**
