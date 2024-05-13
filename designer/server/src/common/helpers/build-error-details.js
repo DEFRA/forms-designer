@@ -1,11 +1,16 @@
 /**
- * @param {ValidationErrorItem[]} errorDetails
+ * @param {ValidationError} error
  */
-export function buildErrorDetails(errorDetails) {
-  return errorDetails.reduce((errors, detail) => {
+export function buildErrorDetails(error) {
+  return error.details.reduce((errors, { context, message }) => {
+    if (!context?.key) {
+      return errors
+    }
+
     return {
-      [detail.context?.key ?? 'unknown']: {
-        message: detail.message
+      [context.key]: {
+        text: message,
+        href: `#${context.key}`
       },
       ...errors
     }
@@ -13,8 +18,19 @@ export function buildErrorDetails(errorDetails) {
 }
 
 /**
- * @typedef {import('joi').ValidationErrorItem} ValidationErrorItem
- * @typedef {Record<string, { message: string }>} ErrorDetails
+ * @param {ErrorDetails | undefined} errorDetails
+ */
+export function buildErrorList(errorDetails) {
+  if (!errorDetails) {
+    return []
+  }
+
+  return Object.entries(errorDetails).map(([, message]) => message)
+}
+
+/**
+ * @typedef {import('joi').ValidationError} ValidationError
+ * @typedef {Record<string, { text: string, href: string }>} ErrorDetails
  */
 
 /**

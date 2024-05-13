@@ -109,7 +109,7 @@ export default [
 
           if (error instanceof Joi.ValidationError) {
             yar.flash('validationFailure', {
-              formErrors: buildErrorDetails(error.details),
+              formErrors: buildErrorDetails(error),
               formValues: payload
             })
           }
@@ -171,7 +171,7 @@ export default [
 
           if (error instanceof Joi.ValidationError) {
             yar.flash('validationFailure', {
-              formErrors: buildErrorDetails(error.details),
+              formErrors: buildErrorDetails(error),
               formValues: payload
             })
           }
@@ -271,7 +271,7 @@ export default [
           const { payload, yar } = request
 
           if (error instanceof Joi.ValidationError) {
-            const formErrors = buildErrorDetails(error.details)
+            const formErrors = buildErrorDetails(error)
 
             yar.flash('validationFailure', {
               formErrors: {

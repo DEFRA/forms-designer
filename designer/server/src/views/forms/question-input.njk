@@ -2,12 +2,8 @@
 
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
-{% from "error-summary/macro.njk" import appErrorSummary %}
-
-{% if formErrors | length %}
-  {% set pageTitle = "Error: " + pageTitle %}
-{% endif %}
 
 {% block beforeContent %}
   {{ govukBackLink({
@@ -18,9 +14,10 @@
 {% block content %}
   <form method="post" novalidate>
     {% call appPageBody() %}
-      {% if formErrors | length %}
-        {{ appErrorSummary({
-          formErrors: formErrors
+      {% if errorList | length %}
+        {{ govukErrorSummary({
+          titleText: "There is a problem",
+          errorList: errorList
         }) }}
       {% endif %}
 
@@ -34,7 +31,7 @@
         name: field.name,
         value: field.value,
         errorMessage: {
-          text: formErrors[field.name].message
+          text: formErrors[field.name].text
         } if formErrors[field.name],
         autocapitalize: field.autocapitalize,
         autocomplete: field.autocomplete,
