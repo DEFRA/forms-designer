@@ -22,11 +22,7 @@ export const organisations = [
 export const idSchema = Joi.string().hex().length(24).required()
 export const titleSchema = Joi.string().max(250).trim().required()
 export const slugSchema = Joi.string()
-  .lowercase()
-  .trim()
-  .replace(/[\s–—]/g, '-') // replace spaces, en-dashes and em-dashes with hyphens
-  .replace(/[^a-z0-9-]/g, '') // remove non-matching characters except spaces
-  .replace(/-+/g, '-') // replace multiple hyphens with a single hyphen
+  .pattern(/^[a-z0-9-]+$/, { name: 'letters, numbers and hyphens only' })
   .required()
 
 export const organisationSchema = Joi.string()
