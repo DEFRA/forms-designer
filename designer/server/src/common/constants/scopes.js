@@ -5,7 +5,6 @@ export const SCOPE_WRITE = 'write'
 
 /**
  * Maps a group a user is a member of to the scopes they have access to.
- * @type {{[key: string]: Array<string> | undefined}}
  */
 export const groupsToScopes = {
   [config.formsEditorAdGroupId]: [SCOPE_READ, SCOPE_WRITE]
