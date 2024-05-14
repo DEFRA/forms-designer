@@ -7,6 +7,10 @@ export function editorViewModel(metadata) {
   const pageTitle = metadata.title
 
   return {
+    backLink: {
+      text: 'Back to form library',
+      href: '/library'
+    },
     pageTitle,
     form: metadata,
     previewUrl: config.previewUrl
