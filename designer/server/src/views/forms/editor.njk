@@ -1,5 +1,8 @@
 {% extends "layouts/page.njk" %}
 
+{% from "page-body/macro.njk" import appPageBody %}
+{% from "heading/macro.njk" import appHeading %}
+
 {% set pageTitle = "Form editor" %}
 
 {% block head %}
@@ -8,9 +11,20 @@
 {% endblock %}
 
 {% block content %}
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full app-editor" data-id="{{ form.id }}" data-slug="{{ form.slug }}" data-preview-url="{{ previewUrl }}"></div>
-  </div>
+  {{ appHeading({
+    text: pageTitle,
+    classes: "govuk-heading-l"
+  }) }}
+
+  {{ appPageBody({
+    classes: "govuk-grid-column-full app-editor",
+    attributes: {
+      "data-id": form.id,
+      "data-slug": form.slug,
+      "data-preview-url": previewUrl
+    }
+  }) }}
+
   <div id="portal-root"></div>
 {% endblock %}
 
