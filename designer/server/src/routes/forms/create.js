@@ -232,14 +232,16 @@ export default [
       const author = getAuthor(auth.credentials)
 
       // Update form metadata
-      yar.set(sessionNames.create, {
+      const metadata = yar.set(sessionNames.create, {
         ...yar.get(sessionNames.create),
         teamName: payload.teamName,
         teamEmail: payload.teamEmail
       })
 
-      // Create the form
       try {
+        const slug = slugify(metadata.title)
+
+        // Create the form
         await forms.create(payload, author)
 
         // Clear form metadata
@@ -247,9 +249,9 @@ export default [
 
         /**
          * Redirect POST to GET without resubmit on back button
-         * @todo Redirect to new form instead of library
+         * @todo Redirect to form overview instead of editor
          */
-        return h.redirect('/library').code(303)
+        return h.redirect(`/editor/${slug}`).code(303)
       } catch (cause) {
         return Boom.internal(
           new Error('Failed to create new form', {
