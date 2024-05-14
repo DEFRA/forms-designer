@@ -46,7 +46,9 @@ export function hasAuthenticated(credentials) {
  */
 export function getUserClaims(credentials) {
   const tokens = /** @satisfies {[keyof Tokens, string][]} */ ([
-    ['token', 'access token']
+    ['token', 'access token'],
+    ['idToken', 'ID token'],
+    ['refreshToken', 'refresh token']
   ])
 
   /**
