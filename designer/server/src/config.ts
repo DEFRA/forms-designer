@@ -15,7 +15,7 @@ export interface Config {
   managerUrl: string
   serviceName: string
   logLevel: 'fatal' | 'error' | 'warn' | 'info' | 'debug' | 'trace' | 'silent'
-  phase: 'alpha' | 'beta' | 'live'
+  phase?: 'alpha' | 'beta' | 'live'
   isProduction: boolean
   isDevelopment: boolean
   isTest: boolean
@@ -64,7 +64,7 @@ const schema = joi.object<Config>({
       then: joi.string().default('silent')
     })
     .valid('fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent'),
-  phase: joi.string().valid('alpha', 'beta', 'live').default('beta'),
+  phase: joi.string().valid('alpha', 'beta', 'live').optional(),
   isProduction: joi.boolean().default(false),
   isDevelopment: joi.boolean().default(true),
   isTest: joi.boolean().default(false),

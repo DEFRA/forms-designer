@@ -99,6 +99,22 @@ describe('Server tests', () => {
     expect($phaseBanner).not.toBeInTheDocument()
   })
 
+
+  test('Phase banner is not present by default', async () => {
+    server = await startServer()
+
+    const options = {
+      method: 'get',
+      url: '/help/cookies',
+      auth
+    }
+
+    const { document } = await renderResponse(server, options)
+
+    const $phaseBanner = document.querySelector('.govuk-phase-banner')
+    expect($phaseBanner).not.toBeInTheDocument()
+  })
+
   test('security headers are present', async () => {
     server = await startServer()
 
