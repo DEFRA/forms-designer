@@ -81,7 +81,11 @@ export const Page = (props: {
   }) => {
     const copy = { ...data }
     const [copyPage, index] = findPage(data, page.path)
+
+    if (copyPage.components?.length) {
       copyPage.components = arrayMove(copyPage.components, oldIndex, newIndex)
+    }
+
     copy.pages[index] = copyPage
     save(copy)
   }
@@ -93,7 +97,7 @@ export const Page = (props: {
   const section = data.sections.find((section) => section.name === page.section)
 
   const formComponents =
-    page?.components?.filter(
+    page.components?.filter(
       (comp) =>
         ComponentTypes.find((type) => type.name === comp.type)?.subType ===
         'field'
@@ -101,7 +105,7 @@ export const Page = (props: {
 
   const pageTitle =
     page.title ||
-    (formComponents.length === 1 && page.components[0] === formComponents[0]
+    (formComponents.length === 1 && page.components?.[0] === formComponents[0]
       ? formComponents[0].title
       : page.title)
 
