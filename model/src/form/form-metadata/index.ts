@@ -36,7 +36,7 @@ export const teamEmailSchema = Joi.string()
   .required()
 
 export const authoredAtSchema = Joi.date().iso().required()
-export const authorIdSchema = Joi.string().uuid().trim().required()
+export const authorIdSchema = Joi.string().trim().required()
 export const authorDisplayNameSchema = Joi.string().trim().required()
 
 /**
