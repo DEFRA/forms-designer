@@ -6,9 +6,7 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 
 {% block beforeContent %}
-  {{ govukBackLink({
-    href: backLink
-  }) }}
+  {{ govukBackLink(backLink) }}
 {% endblock %}
 
 {% block content %}

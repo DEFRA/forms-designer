@@ -16,11 +16,20 @@ export function createUser(credentials) {
 
   const claims = getUserClaims(credentials)
 
+  const {
+    name, // Lastname, firstname
+    given_name: firstName,
+    family_name: lastName
+  } = claims
+
+  // Improve display name formatting
+  const displayName = firstName && lastName ? `${firstName} ${lastName}` : name
+
   // Create user object (e.g. signed in token but no session)
   return /** @satisfies {UserCredentials} */ ({
     id: claims.sub,
     email: claims.email ?? '',
-    displayName: claims.name ?? '',
+    displayName: displayName ?? '',
     issuedAt: DateTime.fromSeconds(claims.iat).toUTC().toISO(),
     expiresAt: DateTime.fromSeconds(claims.exp).toUTC().toISO()
   })

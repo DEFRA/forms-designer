@@ -46,8 +46,10 @@ describe('App routes test', () => {
     }
 
     const { document } = await renderResponse(server, options)
-    expect(document.body).toContainHTML(
-      `<div class="govuk-grid-column-full app-editor" data-id="${id}" data-slug="${slug}" data-preview-url="${config.previewUrl}"></div>`
-    )
+
+    const $editor = document.querySelector('.app-editor')
+    expect($editor).toHaveAttribute('data-id', id)
+    expect($editor).toHaveAttribute('data-slug', slug)
+    expect($editor).toHaveAttribute('data-preview-url', config.previewUrl)
   })
 })
