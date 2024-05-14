@@ -6,6 +6,11 @@ describe('Page Body Component', () => {
   describe('With child content', () => {
     beforeEach(() => {
       const { document } = renderMacro('appPageBody', 'page-body/macro.njk', {
+        params: {
+          attributes: {
+            'data-testid': 'app-page-body'
+          }
+        },
         callBlock:
           '<p class="govuk-body">Used digger, digs great and is lots of fun to dig huge holes with. Comes with heater, comfy seat and radio.</p>'
       })
@@ -24,7 +29,10 @@ describe('Page Body Component', () => {
     beforeEach(() => {
       const { document } = renderMacro('appPageBody', 'page-body/macro.njk', {
         params: {
-          text: 'Used digger, digs great and is lots of fun to dig huge holes with. Comes with heater, comfy seat and radio.'
+          text: 'Used digger, digs great and is lots of fun to dig huge holes with. Comes with heater, comfy seat and radio.',
+          attributes: {
+            'data-testid': 'app-page-body'
+          }
         }
       })
 
@@ -42,7 +50,10 @@ describe('Page Body Component', () => {
     beforeEach(() => {
       const { document } = renderMacro('appPageBody', 'page-body/macro.njk', {
         params: {
-          html: '<p class="govuk-body">Used digger, digs great and is lots of fun to dig huge holes with. Comes with heater, comfy seat and radio.</p>'
+          html: '<p class="govuk-body">Used digger, digs great and is lots of fun to dig huge holes with. Comes with heater, comfy seat and radio.</p>',
+          attributes: {
+            'data-testid': 'app-page-body'
+          }
         }
       })
 

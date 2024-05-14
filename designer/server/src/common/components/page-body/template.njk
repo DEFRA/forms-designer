@@ -1,7 +1,8 @@
 {% set content = params.html | safe if params.html else params.text %}
 
 <div class="govuk-grid-row">
-  <div class="{{ params.classes if params.classes else "govuk-grid-column-two-thirds" }}" data-testid="app-page-body">
+  <div class="{{ params.classes if params.classes else "govuk-grid-column-two-thirds" }}"
+    {%- for attribute, value in params.attributes %} {{ attribute }}="{{ value }}"{% endfor %}>
     {{ caller() if caller else content }}
   </div>
 </div>
