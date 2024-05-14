@@ -47,8 +47,7 @@ export function hasAuthenticated(credentials) {
 export function getUserClaims(credentials) {
   const tokens = /** @satisfies {[keyof Tokens, string][]} */ ([
     ['token', 'access token'],
-    ['idToken', 'ID token'],
-    ['refreshToken', 'refresh token']
+    ['idToken', 'ID token']
   ])
 
   /**
@@ -87,7 +86,7 @@ export function hasUser(credentials) {
  */
 
 /**
- * @typedef {Pick<AuthCredentials, 'token' | 'idToken' | 'refreshToken'>} Tokens - Known tokens
+ * @typedef {Pick<AuthCredentials, 'token' | 'idToken'>} Tokens - Known tokens
  * @typedef {Extract<AuthCredentials, Required<Tokens>>} AuthWithTokens - Auth credentials with tokens (but maybe no user session)
  * @typedef {Required<AuthCredentials>} AuthSignedIn - Auth credentials with tokens and user session
  */
