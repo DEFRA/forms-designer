@@ -33,7 +33,7 @@ export function Visualisation(props: Props) {
   const { layout } = useVisualisation(ref)
   const { data } = useContext(DataContext)
 
-  const { previewUrl, persona, id } = props
+  const { previewUrl, persona, id, slug } = props
   const { pages } = data
 
   const wrapperStyle = layout && {
@@ -53,6 +53,7 @@ export function Visualisation(props: Props) {
                 previewUrl={previewUrl}
                 layout={layout?.nodes[index]}
                 id={id}
+                slug={slug}
               />
             ))}
 

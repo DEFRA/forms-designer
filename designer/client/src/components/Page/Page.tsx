@@ -64,9 +64,10 @@ export const Page = (props: {
   page: PageType | RepeatingFieldPage
   previewUrl: string
   id: string
+  slug: string
   layout?: CSSProperties
 }) => {
-  const { page, previewUrl, id, layout } = props
+  const { page, previewUrl, slug, layout } = props
 
   const { data, save } = useContext(DataContext)
   const [isEditingPage, setIsEditingPage] = useState(false)
@@ -146,7 +147,7 @@ export const Page = (props: {
         </button>
         <a
           title={i18n('Preview page')}
-          href={new URL(`/${id}${page.path}`, previewUrl).toString()}
+          href={new URL(`/${slug}${page.path}`, previewUrl).toString()}
           className="govuk-link"
           target="_blank"
           rel="noreferrer"
