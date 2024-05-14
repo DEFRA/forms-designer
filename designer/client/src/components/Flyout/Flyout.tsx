@@ -24,7 +24,7 @@ interface Props {
   show?: boolean
   offset?: number
   title?: string
-  children?: ReactChildren
+  children?: ReactChildren | React.JSX.Element
   NEVER_UNMOUNTS?: boolean
 }
 

@@ -1,5 +1,11 @@
-import { ComponentTypes } from '@defra/forms-model'
-import React, { useContext, useState } from 'react'
+import {
+  ComponentTypes,
+  type ComponentDef,
+  type Page as PageType,
+  type RepeatingFieldPage,
+  type FormDefinition
+} from '@defra/forms-model'
+import React, { useContext, useState, type CSSProperties } from 'react'
 import {
   SortableContainer,
   SortableElement,
@@ -16,38 +22,71 @@ import { i18n } from '~/src/i18n/index.js'
 import PageEdit from '~/src/page-edit.js'
 import { ComponentContextProvider } from '~/src/reducers/component/index.js'
 
-const SortableItem = SortableElement(({ index, page, component, data }) => (
-  <div className="component-item">
-    <Component key={index} page={page} component={component} data={data} />
-  </div>
-))
+const SortableItem = SortableElement(
+  (props: {
+    index: number
+    page: PageType | RepeatingFieldPage
+    component: ComponentDef
+    data: FormDefinition
+  }) => {
+    const { index, page, component, data } = props
 
-const SortableList = SortableContainer(({ page = {}, data }) => {
-  const { components = [] } = page
-  return (
-    <div className="component-list">
-      {components.map((component, index) => (
-        <SortableItem
-          key={index}
-          index={index}
-          page={page}
-          component={component}
-          data={data}
-        />
-      ))}
-    </div>
-  )
-})
+    return (
+      <div className="component-item">
+        <Component key={index} page={page} component={component} data={data} />
+      </div>
+    )
+  }
+)
 
-export const Page = ({ page, previewUrl, id, layout }) => {
+const SortableList = SortableContainer(
+  (props: { page: PageType | RepeatingFieldPage; data: FormDefinition }) => {
+    const { page, data } = props
+    const { components = [] } = page
+
+    return (
+      <div className="component-list">
+        {components.map((component, index) => (
+          <SortableItem
+            key={index}
+            index={index}
+            page={page}
+            component={component}
+            data={data}
+          />
+        ))}
+      </div>
+    )
+  }
+)
+
+export const Page = (props: {
+  page: PageType | RepeatingFieldPage
+  previewUrl: string
+  id: string
+  slug: string
+  layout?: CSSProperties
+}) => {
+  const { page, previewUrl, slug, layout } = props
+
   const { data, save } = useContext(DataContext)
   const [isEditingPage, setIsEditingPage] = useState(false)
   const [isCreatingComponent, setIsCreatingComponent] = useState(false)
 
-  const onSortEnd = ({ oldIndex, newIndex }) => {
+  const onSortEnd = ({
+    oldIndex,
+    newIndex
+  }: {
+    oldIndex: number
+    newIndex: number
+  }) => {
     const copy = { ...data }
     const [copyPage, index] = findPage(data, page.path)
-    copyPage.components = arrayMove(copyPage.components, oldIndex, newIndex)
+
+    if (copyPage.components?.length) {
+      copyPage.components = arrayMove(copyPage.components, oldIndex, newIndex)
+    }
+
     copy.pages[index] = copyPage
     save(copy)
   }
@@ -59,7 +98,7 @@ export const Page = ({ page, previewUrl, id, layout }) => {
   const section = data.sections.find((section) => section.name === page.section)
 
   const formComponents =
-    page?.components?.filter(
+    page.components?.filter(
       (comp) =>
         ComponentTypes.find((type) => type.name === comp.type)?.subType ===
         'field'
@@ -67,7 +106,7 @@ export const Page = ({ page, previewUrl, id, layout }) => {
 
   const pageTitle =
     page.title ||
-    (formComponents.length === 1 && page.components[0] === formComponents[0]
+    (formComponents.length === 1 && page.components?.[0] === formComponents[0]
       ? formComponents[0].title
       : page.title)
 
@@ -108,7 +147,7 @@ export const Page = ({ page, previewUrl, id, layout }) => {
         </button>
         <a
           title={i18n('Preview page')}
-          href={new URL(`/${id}${page.path}`, previewUrl).toString()}
+          href={new URL(`/${slug}${page.path}`, previewUrl).toString()}
           className="govuk-link"
           target="_blank"
           rel="noreferrer"
