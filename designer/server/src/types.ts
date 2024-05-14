@@ -48,9 +48,9 @@ declare module '@hapi/hapi' {
   interface AuthCredentials {
     provider: 'azure-oidc'
     query: Credentials['query']
-    token: Credentials['token']
-    refreshToken: Credentials['refreshToken']
-    expiresIn: Credentials['expiresIn']
+    token: string
+    refreshToken: string
+    expiresIn: number
   }
 
   interface UserCredentials {
