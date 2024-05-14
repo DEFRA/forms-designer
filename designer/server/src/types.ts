@@ -49,6 +49,7 @@ declare module '@hapi/hapi' {
     provider: 'azure-oidc'
     query: Credentials['query']
     token: string
+    idToken: string
     refreshToken: string
     expiresIn: number
   }

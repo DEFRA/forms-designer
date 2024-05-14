@@ -29,15 +29,19 @@ export function createUser(credentials) {
  */
 export async function createUserSession(request) {
   const { auth, server } = request
+  const { artifacts, credentials } = auth
+
+  // Patch missing properties using Bell artifacts
+  credentials.idToken = artifacts.id_token
 
   // Optionally create user object (e.g. signed in token but no session)
-  const user = !getUser(auth.credentials)
-    ? createUser(auth.credentials)
-    : auth.credentials.user
+  const user = !getUser(credentials)
+    ? createUser(credentials)
+    : credentials.user
 
   // Create and retrieve user session from Redis
   if (user?.id) {
-    await server.methods.session.set(user.id, { ...auth.credentials, user })
+    await server.methods.session.set(user.id, { ...credentials, user })
     return server.methods.session.get(user.id)
   }
 }
