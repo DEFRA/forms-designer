@@ -1,6 +1,9 @@
 import authCookie from '@hapi/cookie'
 
-import { getUserSession } from '~/src/common/helpers/auth/get-user-session.js'
+import {
+  getUserSession,
+  hasUser
+} from '~/src/common/helpers/auth/get-user-session.js'
 import config from '~/src/config.js'
 
 /**
@@ -43,7 +46,7 @@ const sessionCookie = {
 
           return {
             credentials,
-            isValid: !!credentials
+            isValid: hasUser(credentials)
           }
         }
       })

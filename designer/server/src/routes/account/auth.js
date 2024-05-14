@@ -1,5 +1,6 @@
 import Boom from '@hapi/boom'
 
+import { hasUser } from '~/src/common/helpers/auth/get-user-session.js'
 import { createUserSession } from '~/src/common/helpers/auth/user-session.js'
 
 export default [
@@ -15,7 +16,7 @@ export default [
       // Create user session
       const credentials = await createUserSession(request)
 
-      if (!credentials?.user) {
+      if (!hasUser(credentials)) {
         return Boom.unauthorized()
       }
 

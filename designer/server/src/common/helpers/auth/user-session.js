@@ -1,20 +1,22 @@
 import { DateTime } from 'luxon'
 
 import {
-  getUser,
-  getUserClaims
+  getUserClaims,
+  hasUser,
+  hasAuthenticated
 } from '~/src/common/helpers/auth/get-user-session.js'
 
 /**
- * @param {AuthCredentials | null} [credentials]
+ * @param {AuthWithTokens} credentials
  */
 export function createUser(credentials) {
-  const claims = getUserClaims(credentials)
-
-  if (!claims) {
-    return
+  if (hasUser(credentials)) {
+    return credentials.user
   }
 
+  const claims = getUserClaims(credentials)
+
+  // Create user object (e.g. signed in token but no session)
   return /** @satisfies {UserCredentials} */ ({
     id: claims.sub,
     email: claims.email ?? '',
@@ -34,22 +36,21 @@ export async function createUserSession(request) {
   // Patch missing properties using Bell artifacts
   credentials.idToken = artifacts.id_token
 
-  // Optionally create user object (e.g. signed in token but no session)
-  const user = !getUser(credentials)
-    ? createUser(credentials)
-    : credentials.user
+  if (!hasAuthenticated(credentials)) {
+    throw new Error('Missing user authentication tokens')
+  }
+
+  const user = createUser(credentials)
 
   // Create and retrieve user session from Redis
-  if (user?.id) {
-    await server.methods.session.set(user.id, { ...credentials, user })
-    return server.methods.session.get(user.id)
-  }
+  await server.methods.session.set(user.id, { ...credentials, user })
+  return server.methods.session.get(user.id)
 }
 
 /**
  * @typedef {import('@hapi/hapi').AuthArtifacts} AuthArtifacts
- * @typedef {import('@hapi/hapi').AuthCredentials} AuthCredentials
  * @typedef {import('@hapi/hapi').UserCredentials} UserCredentials
+ * @typedef {import('~/src/common/helpers/auth/get-user-session.js').AuthWithTokens} AuthWithTokens
  */
 
 /**

@@ -6,22 +6,21 @@ import { token } from '@hapi/jwt'
  */
 export async function getUserSession(request, session) {
   const { auth, server } = request
+  const { credentials } = auth
 
   // Check for existing user
-  if (getUser(auth.credentials)) {
-    return auth.credentials
+  if (hasUser(credentials)) {
+    return credentials
   }
 
   // Prefer Session ID from cookie state
   let sessionId = session?.sessionId
 
   // Fall back to OpenID Connect (OIDC) claim
-  if (!sessionId) {
-    const claims = getUserClaims(auth.credentials)
+  if (!sessionId && hasAuthenticated(credentials)) {
+    const { accessToken } = getUserClaims(credentials)
 
-    if (claims?.sub) {
-      sessionId = claims.sub
-    }
+    sessionId = accessToken.sub
   }
 
   // Retrieve user session from Redis
@@ -43,18 +42,26 @@ export function hasAuthenticated(credentials) {
 }
 
 /**
- * @param {AuthCredentials | null} [credentials]
+ * @param {AuthWithTokens} credentials
  */
 export function getUserClaims(credentials) {
-  if (!credentials?.token) {
-    return
-  }
-
   const { decoded } = /** @type {UserToken<UserProfile>} */ (
     token.decode(credentials.token)
   )
 
+  if (!decoded.payload) {
+    throw new Error('Failed to decode access token')
+  }
+
   return decoded.payload
+}
+
+/**
+ * @param {AuthCredentials | null} [credentials]
+ * @returns {credentials is AuthSignedIn}
+ */
+export function hasUser(credentials) {
+  return hasAuthenticated(credentials) && !!credentials.user
 }
 
 /**
@@ -66,14 +73,6 @@ export function getUser(credentials) {
   }
 
   return credentials.user
-}
-
-/**
- * @param {AuthCredentials | null} [credentials]
- * @returns {credentials is AuthSignedIn}
- */
-export function hasUser(credentials) {
-  return hasAuthenticated(credentials) && !!credentials.user
 }
 
 /**

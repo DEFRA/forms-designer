@@ -1,6 +1,6 @@
 import Boom from '@hapi/boom'
 
-import { getUser } from '~/src/common/helpers/auth/get-user-session.js'
+import { hasUser } from '~/src/common/helpers/auth/get-user-session.js'
 import config from '~/src/config.js'
 import { getJson, postJson } from '~/src/lib/fetch.js'
 
@@ -95,13 +95,11 @@ export async function updateDraftFormDefinition(id, definition) {
  * @returns {FormMetadataAuthor}
  */
 export function getAuthor(credentials) {
-  const user = getUser(credentials)
-
-  if (!user) {
+  if (!hasUser(credentials)) {
     throw Boom.unauthorized('Failed to get author from auth credentials')
   }
 
-  const { id, displayName } = user
+  const { id, displayName } = credentials.user
   return { id, displayName }
 }
 
