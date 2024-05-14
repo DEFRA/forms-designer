@@ -18,9 +18,9 @@ export async function getUserSession(request, session) {
 
   // Fall back to OpenID Connect (OIDC) claim
   if (!sessionId && hasAuthenticated(credentials)) {
-    const claims = getUserClaims(credentials)
+    const { token } = getUserClaims(credentials)
 
-    sessionId = claims.sub
+    sessionId = token.sub
   }
 
   // Retrieve user session from Redis
@@ -45,15 +45,28 @@ export function hasAuthenticated(credentials) {
  * @param {AuthWithTokens} credentials
  */
 export function getUserClaims(credentials) {
-  const { decoded } = /** @type {UserToken<UserProfile>} */ (
-    token.decode(credentials.token)
+  const tokens = /** @satisfies {[keyof Tokens, string][]} */ ([
+    ['token', 'access token']
+  ])
+
+  /**
+   * @satisfies {[keyof Tokens, UserProfile][]}
+   */
+  const entries = tokens.map(([key, description]) => {
+    const { decoded } = token.decode(credentials[key])
+
+    if (!decoded.payload) {
+      throw new Error(
+        `Failed to decode ${description}: auth.credentials.${key}`
+      )
+    }
+
+    return [key, decoded.payload]
+  })
+
+  return /** @type {Record<keyof Tokens, UserProfile>} */ (
+    Object.fromEntries(entries)
   )
-
-  if (!decoded.payload) {
-    throw new Error('Failed to decode access token')
-  }
-
-  return decoded.payload
 }
 
 /**
