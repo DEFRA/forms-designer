@@ -3,8 +3,6 @@
 {% from "page-body/macro.njk" import appPageBody %}
 {% from "heading/macro.njk" import appHeading %}
 
-{% set pageTitle = "Form editor" %}
-
 {% block head %}
   {{ super() }}
   <link href="{{ getAssetPath("editor.css") }}" rel="stylesheet">
