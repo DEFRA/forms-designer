@@ -85,10 +85,12 @@ Component options:
           <li class="one-login-header__nav__list-item">
             <a class="one-login-header__nav__link one-login-header__nav__link--one-login" href="{{ accountLink }}">
               <span class="one-login-header__nav__link-content">
-                {{ params.accountName | default("Account", true) }}
+                {{ params.accountName | default("Sign in", true) }}
               </span>
-              {{ littlePersonIcon() }}
-              {{ littlePersonIcon("focus") }}
+              {% if params.accountName %}
+                {{ littlePersonIcon() }}
+                {{ littlePersonIcon("focus") }}
+              {% endif %}
             </a>
           </li>
           {% if params.accountName %}
