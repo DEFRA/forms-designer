@@ -65,17 +65,6 @@ export function hasUser(credentials) {
 }
 
 /**
- * @param {AuthCredentials | null} [credentials]
- */
-export function getUser(credentials) {
-  if (!credentials?.user) {
-    return
-  }
-
-  return credentials.user
-}
-
-/**
  * @typedef {import('@hapi/hapi').Request} Request
  * @typedef {import('@hapi/hapi').AuthCredentials} AuthCredentials
  * @typedef {import('@hapi/hapi').UserCredentials} UserCredentials
