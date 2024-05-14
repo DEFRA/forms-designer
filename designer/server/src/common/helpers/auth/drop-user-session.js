@@ -1,4 +1,7 @@
-import { getUserSession } from '~/src/common/helpers/auth/get-user-session.js'
+import {
+  getUserSession,
+  hasUser
+} from '~/src/common/helpers/auth/get-user-session.js'
 
 /**
  * @param {Request} request
@@ -9,7 +12,7 @@ export async function dropUserSession(request) {
   const credentials = await getUserSession(request)
 
   // Remove user session from Redis
-  if (credentials?.user?.id) {
+  if (hasUser(credentials)) {
     await server.methods.session.drop(credentials.user.id)
   }
 

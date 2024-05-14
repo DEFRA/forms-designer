@@ -35,12 +35,23 @@ declare module '@hapi/hapi' {
     session: SessionCache
   }
 
+  interface AuthArtifacts {
+    token_type: 'Bearer'
+    scope: string
+    expires_in: number
+    ext_expires_in: number
+    access_token: string
+    refresh_token: string
+    id_token: string
+  }
+
   interface AuthCredentials {
     provider: 'azure-oidc'
     query: Credentials['query']
-    token: Credentials['token']
-    refreshToken: Credentials['refreshToken']
-    expiresIn: Credentials['expiresIn']
+    token: string
+    idToken: string
+    refreshToken: string
+    expiresIn: number
   }
 
   interface UserCredentials {

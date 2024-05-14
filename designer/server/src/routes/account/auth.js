@@ -1,10 +1,11 @@
 import Boom from '@hapi/boom'
 
+import { hasUser } from '~/src/common/helpers/auth/get-user-session.js'
 import { createUserSession } from '~/src/common/helpers/auth/user-session.js'
 
 export default [
   /**
-   * @satisfies {ServerRoute}
+   * @satisfies {ServerRoute<{ AuthArtifactsExtra: AuthArtifacts }>}
    */
   ({
     method: ['GET', 'POST'],
@@ -15,7 +16,7 @@ export default [
       // Create user session
       const credentials = await createUserSession(request)
 
-      if (!credentials?.user) {
+      if (!hasUser(credentials)) {
         return Boom.unauthorized()
       }
 
@@ -40,5 +41,10 @@ export default [
 ]
 
 /**
- * @typedef {import('@hapi/hapi').ServerRoute} ServerRoute
+ * @typedef {import('@hapi/hapi').AuthArtifacts} AuthArtifacts
+ */
+
+/**
+ * @template {import('@hapi/hapi').ReqRef} [ReqRef=import('@hapi/hapi').ReqRefDefaults]
+ * @typedef {import('@hapi/hapi').ServerRoute<ReqRef>} ServerRoute
  */

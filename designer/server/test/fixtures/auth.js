@@ -8,6 +8,7 @@ export const auth = {
   credentials: {
     provider: 'azure-oidc',
     query: {},
+    idToken: 'dummy-id-token',
     refreshToken: 'dummy-refresh-token',
     token: 'dummy-token',
     expiresIn: Duration.fromObject({ minutes: 30 }).as('seconds'),
