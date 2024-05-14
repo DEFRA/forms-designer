@@ -32,6 +32,18 @@ export async function getUserSession(request, session) {
 
 /**
  * @param {AuthCredentials | null} [credentials]
+ * @returns {credentials is AuthWithTokens}
+ */
+export function hasAuthenticated(credentials) {
+  return !!(
+    credentials?.token &&
+    credentials.idToken &&
+    credentials.refreshToken
+  )
+}
+
+/**
+ * @param {AuthCredentials | null} [credentials]
  */
 export function getUserClaims(credentials) {
   if (!credentials?.token) {
@@ -54,6 +66,14 @@ export function getUser(credentials) {
   }
 
   return credentials.user
+}
+
+/**
+ * @param {AuthCredentials | null} [credentials]
+ * @returns {credentials is AuthSignedIn}
+ */
+export function hasUser(credentials) {
+  return hasAuthenticated(credentials) && !!credentials.user
 }
 
 /**
