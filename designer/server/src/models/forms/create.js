@@ -10,7 +10,10 @@ export function titleViewModel(metadata, validation) {
   const { formValues, formErrors } = validation ?? {}
 
   return {
-    backLink: '/library',
+    backLink: {
+      text: 'Back to form library',
+      href: '/library'
+    },
     pageTitle: 'Enter a name for your form',
     errorList: buildErrorList(formErrors, ['title']),
     formErrors: validation?.formErrors,
@@ -37,7 +40,9 @@ export function organisationViewModel(metadata, validation) {
   const { formValues, formErrors } = validation ?? {}
 
   return {
-    backLink: '/create/title',
+    backLink: {
+      href: '/create/title'
+    },
     pageTitle: 'Choose a lead organisation for this form',
     errorList: buildErrorList(formErrors, ['organisation']),
     formErrors: validation?.formErrors,
@@ -66,7 +71,9 @@ export function teamViewModel(metadata, validation) {
   const { formValues, formErrors } = validation ?? {}
 
   return {
-    backLink: '/create/organisation',
+    backLink: {
+      href: '/create/organisation'
+    },
     pageTitle: 'Team details',
     errorList: buildErrorList(formErrors, ['teamName', 'teamEmail']),
     formErrors: validation?.formErrors,
