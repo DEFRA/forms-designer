@@ -64,6 +64,12 @@ export function getUser(credentials) {
  */
 
 /**
+ * @typedef {Pick<AuthCredentials, 'token' | 'idToken' | 'refreshToken'>} Tokens - Known tokens
+ * @typedef {Extract<AuthCredentials, Required<Tokens>>} AuthWithTokens - Auth credentials with tokens (but maybe no user session)
+ * @typedef {Required<AuthCredentials>} AuthSignedIn - Auth credentials with tokens and user session
+ */
+
+/**
  * @template {object} Payload
  * @typedef {import('@hapi/jwt').HapiJwt.Artifacts<{ JwtPayload?: Payload }>} UserToken
  */
