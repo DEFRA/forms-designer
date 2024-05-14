@@ -1,5 +1,4 @@
 import {
-  formMetadataInputSchema,
   organisationSchema,
   slugify,
   teamEmailSchema,
@@ -17,6 +16,47 @@ import { getAuthor } from '~/src/lib/forms.js'
 import * as create from '~/src/models/forms/create.js'
 
 const logger = createLogger()
+const schema = Joi.object().keys({
+  title: titleSchema
+    .external(
+      /**
+       * Allow only unique form slugs
+       * @param {string} title
+       * @param {ExternalHelpers} helpers
+       */
+      async (title, helpers) => {
+        const slug = slugify(title)
+
+        // Retrieve form by slug
+        const form = await forms.get(slug).catch(logger.error)
+        if (!form) {
+          return
+        }
+
+        // Show error for non-unique slugs
+        return helpers.message({
+          external: 'Form name you entered already exists'
+        })
+      }
+    )
+    .messages({
+      'string.empty': 'Enter a form name',
+      'string.max': 'Form name must be 250 characters or less'
+    }),
+  organisation: organisationSchema.messages({
+    'any.required': 'Select a lead organisation',
+    'any.only': 'Select a lead organisation'
+  }),
+  teamName: teamNameSchema.messages({
+    'string.empty': 'Enter name of team',
+    'string.max': 'Name of team must be 100 characters or less'
+  }),
+  teamEmail: teamEmailSchema.messages({
+    'string.empty': 'Enter a shared team email address',
+    'string.email':
+      'Enter a shared team email address in the correct format, like name@example.gov.uk'
+  })
+})
 
 export default [
   /**
@@ -33,7 +73,7 @@ export default [
       yar.clear(sessionNames.validationFailure)
 
       // Redirect to first step
-      return h.redirect('/create/title').code(303)
+      return h.redirect('/create/title').temporary()
     }
   }),
 
@@ -72,41 +112,18 @@ export default [
         title: payload.title
       })
 
+      // Redirect POST to GET without resubmit on back button
       return h.redirect('/create/organisation').code(303)
     },
     options: {
       validate: {
         payload: Joi.object().keys({
-          title: titleSchema
-            .external(
-              /**
-               * Allow only unique form slugs
-               * @param {string} title
-               * @param {ExternalHelpers} helpers
-               */
-              async (title, helpers) => {
-                const slug = slugify(title)
-
-                // Retrieve form by slug
-                const form = await forms.get(slug).catch(logger.error)
-                if (!form) {
-                  return
-                }
-
-                // Show error for non-unique slugs
-                return helpers.message({
-                  external: 'Form name you entered already exists'
-                })
-              }
-            )
-            .messages({
-              'string.empty': 'Enter a form name',
-              'string.max': 'Form name must be 250 characters or less'
-            })
+          title: schema.extract('title')
         }),
 
         failAction(request, h, error) {
-          const { payload, yar } = request
+          const { payload, yar, url } = request
+          const { pathname: redirectTo } = url
 
           if (error instanceof Joi.ValidationError) {
             yar.flash('validationFailure', {
@@ -115,7 +132,8 @@ export default [
             })
           }
 
-          return h.redirect('/create/title').code(303).takeover()
+          // Redirect POST to GET without resubmit on back button
+          return h.redirect(redirectTo).code(303).takeover()
         }
       }
     }
@@ -156,19 +174,18 @@ export default [
         organisation: payload.organisation
       })
 
+      // Redirect POST to GET without resubmit on back button
       return h.redirect('/create/team').code(303)
     },
     options: {
       validate: {
         payload: Joi.object().keys({
-          organisation: organisationSchema.messages({
-            'any.required': 'Select a lead organisation',
-            'any.only': 'Select a lead organisation'
-          })
+          organisation: schema.extract('organisation')
         }),
 
         failAction(request, h, error) {
-          const { payload, yar } = request
+          const { payload, yar, url } = request
+          const { pathname: redirectTo } = url
 
           if (error instanceof Joi.ValidationError) {
             yar.flash('validationFailure', {
@@ -177,7 +194,8 @@ export default [
             })
           }
 
-          return h.redirect('/create/organisation').code(303).takeover()
+          // Redirect POST to GET without resubmit on back button
+          return h.redirect(redirectTo).code(303).takeover()
         }
       }
     }
@@ -204,7 +222,7 @@ export default [
   }),
 
   /**
-   * @satisfies {ServerRoute<{ Payload: Pick<FormMetadataInput, 'teamName' | 'teamEmail'> }>}
+   * @satisfies {ServerRoute<{ Payload: FormMetadataInput }>}
    */
   ({
     method: 'POST',
@@ -214,29 +232,24 @@ export default [
       const author = getAuthor(auth.credentials)
 
       // Update form metadata
-      const metadata = yar.set(sessionNames.create, {
+      yar.set(sessionNames.create, {
         ...yar.get(sessionNames.create),
         teamName: payload.teamName,
         teamEmail: payload.teamEmail
       })
 
-      // Check form metadata is complete
-      const result = formMetadataInputSchema.validate(metadata)
-
       // Create the form
       try {
-        if (!result.error) {
-          await forms.create(result.value, author)
+        await forms.create(payload, author)
 
-          // Clear form metadata
-          yar.clear(sessionNames.create)
+        // Clear form metadata
+        yar.clear(sessionNames.create)
 
-          /**
-           * Temporarily redirect to library
-           * @todo Redirect to new form
-           */
-          return h.redirect('/library').code(303)
-        }
+        /**
+         * Redirect POST to GET without resubmit on back button
+         * @todo Redirect to new form instead of library
+         */
+        return h.redirect('/library').code(303)
       } catch (cause) {
         return Boom.internal(
           new Error('Failed to create new form', {
@@ -244,32 +257,24 @@ export default [
           })
         )
       }
-
-      /**
-       * Form metadata is incomplete
-       * @todo Redirect to step with validation errors
-       */
-      return h.redirect('/create/team').code(303)
     },
     options: {
       validate: {
-        payload: Joi.object().keys({
-          teamName: teamNameSchema.messages({
-            'string.empty': 'Enter name of team',
-            'string.max': 'Name of team must be 100 characters or less'
-          }),
-          teamEmail: teamEmailSchema.messages({
-            'string.empty': 'Enter a shared team email address',
-            'string.email':
-              'Enter a shared team email address in the correct format, like name@example.gov.uk'
-          })
-        }),
+        payload: schema,
 
         failAction(request, h, error) {
-          const { payload, yar } = request
+          const { payload, yar, url } = request
+          let { pathname: redirectTo } = url
 
           if (error instanceof Joi.ValidationError) {
             const formErrors = buildErrorDetails(error)
+
+            // Optionally redirect to errors on previous steps
+            if ('title' in formErrors) {
+              redirectTo = '/create/title'
+            } else if ('organisation' in formErrors) {
+              redirectTo = '/create/organisation'
+            }
 
             yar.flash('validationFailure', {
               formErrors: {
@@ -280,7 +285,8 @@ export default [
             })
           }
 
-          return h.redirect('/create/team').code(303).takeover()
+          // Redirect POST to GET without resubmit on back button
+          return h.redirect(redirectTo).code(303).takeover()
         }
       }
     }
