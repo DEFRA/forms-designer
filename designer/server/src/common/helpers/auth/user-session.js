@@ -25,7 +25,7 @@ export function createUser(credentials) {
 }
 
 /**
- * @param {Request} request
+ * @param {Request<{ AuthArtifactsExtra: AuthArtifacts }>} request
  */
 export async function createUserSession(request) {
   const { auth, server } = request
@@ -43,7 +43,12 @@ export async function createUserSession(request) {
 }
 
 /**
- * @typedef {import('@hapi/hapi').Request} Request
+ * @typedef {import('@hapi/hapi').AuthArtifacts} AuthArtifacts
  * @typedef {import('@hapi/hapi').AuthCredentials} AuthCredentials
  * @typedef {import('@hapi/hapi').UserCredentials} UserCredentials
+ */
+
+/**
+ * @template {import('@hapi/hapi').ReqRef} [ReqRef=import('@hapi/hapi').ReqRefDefaults]
+ * @typedef {import('@hapi/hapi').Request<ReqRef>} Request
  */
