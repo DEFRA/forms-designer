@@ -1,7 +1,7 @@
 import Boom from '@hapi/boom'
 
-import config from '~/src/config.js'
 import * as forms from '~/src/lib/forms.js'
+import * as editor from '~/src/models/forms/editor.js'
 
 export default [
   /**
@@ -20,14 +20,8 @@ export default [
           return Boom.notFound(`Form with slug '${params.slug}' not found`)
         }
 
-        return h.view('forms/editor', {
-          phase: config.phase,
-          previewUrl: config.previewUrl,
-          form: {
-            id: form.id,
-            slug: form.slug
-          }
-        })
+        const model = editor.editorViewModel(form)
+        return h.view('forms/editor', model)
       }
     }
   })
