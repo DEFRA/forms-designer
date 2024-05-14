@@ -68,7 +68,7 @@ declare module '@hapi/hapi' {
     /**
      * User display name
      */
-    displayName: NonNullable<UserProfile['name']>
+    displayName: string
 
     /**
      * Session issued time (ISO 8601)
