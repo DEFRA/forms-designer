@@ -1,3 +1,4 @@
+import config from '~/src/config.js'
 import * as forms from '~/src/lib/forms.js'
 
 export async function listViewModel() {
@@ -6,3 +7,41 @@ export async function listViewModel() {
 
   return { pageTitle, formItems }
 }
+
+/**
+ * @param {FormMetadata} metadata
+ */
+export function overviewViewModel(metadata) {
+  const pageTitle = metadata.title
+
+  return {
+    backLink: {
+      text: 'Back to forms library',
+      href: '/library'
+    },
+    pageTitle,
+    form: metadata,
+    previewUrl: config.previewUrl
+  }
+}
+
+/**
+ * @param {FormMetadata} metadata
+ */
+export function editorViewModel(metadata) {
+  const pageTitle = metadata.title
+
+  return {
+    backLink: {
+      text: 'Back to form overview',
+      href: `/library/${metadata.slug}`
+    },
+    pageTitle,
+    form: metadata,
+    previewUrl: config.previewUrl
+  }
+}
+
+/**
+ * @typedef {import('~/src/lib/forms.js').FormMetadata} FormMetadata
+ */

@@ -249,9 +249,8 @@ export default [
 
         /**
          * Redirect POST to GET without resubmit on back button
-         * @todo Redirect to form overview instead of editor
          */
-        return h.redirect(`/editor/${slug}`).code(303)
+        return h.redirect(`/library/${slug}`).code(303)
       } catch (cause) {
         return Boom.internal(
           new Error('Failed to create new form', {

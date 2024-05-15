@@ -38,10 +38,10 @@ export class App extends React.Component {
     const { id, slug, previewUrl } = container.dataset
 
     return (
-      <Router basename="/editor">
+      <Router basename={`/library/${slug}`}>
         <Switch>
           <Route
-            path="/:slug"
+            path="/editor"
             render={() => (
               <Designer id={id} slug={slug} previewUrl={previewUrl} />
             )}
