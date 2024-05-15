@@ -5,6 +5,7 @@
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "page-body/macro.njk" import appPageBody %}
 {% from "heading/macro.njk" import appHeading %}
+{% from "form-card/macro.njk" import appFormCard %}
 {% from "form-status/macro.njk" import appFormStatus %}
 
 {% block beforeContent %}
@@ -35,6 +36,11 @@
 {% endset %}
 
 {% set formDetails %}
+  {{ appHeading({
+    text: pageTitle,
+    size: "large"
+  }) }}
+
   {{ govukSummaryList({
     rows: [
       {
@@ -107,25 +113,7 @@
   }) }}
 {% endset %}
 
-{% set formManagement %}
-  {{ appHeading({
-    text: "Form management",
-    size: "medium"
-  }) }}
-
-  {{ govukButton({
-    text: "Edit draft ",
-    href: "/library/" + form.slug | urlencode + "/editor",
-    classes: "govuk-button--secondary"
-  }) }}
-{% endset %}
-
 {% block content %}
-  {{ appHeading({
-    text: pageTitle,
-    size: "large"
-  }) }}
-
   {{ appPageBody([
     [
       {
@@ -133,7 +121,7 @@
         classes: "govuk-grid-column-two-thirds-from-desktop"
       },
       {
-        html: formManagement,
+        html: appFormCard(formManagement),
         classes: "govuk-grid-column-one-third-from-desktop"
       }
     ]

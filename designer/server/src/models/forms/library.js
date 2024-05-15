@@ -30,6 +30,20 @@ export function overviewViewModel(metadata) {
     navigation,
     pageTitle,
     form: metadata,
+    formManagement: {
+      heading: {
+        text: 'Form management',
+        size: 'medium',
+        level: '3'
+      },
+      buttons: [
+        {
+          text: 'Edit draft',
+          href: `${formPath}/editor`,
+          classes: 'govuk-button--secondary-quiet'
+        }
+      ]
+    },
     previewUrl: config.previewUrl
   }
 }
