@@ -26,6 +26,28 @@ export default [
    */
   ({
     method: 'get',
+    path: '/library/{slug}',
+    options: {
+      async handler(request, h) {
+        const { params } = request
+
+        // Retrieve form by slug
+        const form = await forms.get(params.slug)
+        if (!form) {
+          return Boom.notFound(`Form with slug '${params.slug}' not found`)
+        }
+
+        const model = library.overviewViewModel(form)
+        return h.view('forms/overview', model)
+      }
+    }
+  }),
+
+  /**
+   * @satisfies {ServerRoute<{ Params: { slug: string } }>}
+   */
+  ({
+    method: 'get',
     path: '/library/{slug}/editor',
     options: {
       async handler(request, h) {
