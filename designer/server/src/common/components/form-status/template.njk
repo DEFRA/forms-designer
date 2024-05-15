@@ -1,0 +1,12 @@
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+
+{% set tagDraft = govukTag({ text: "Draft", classes: "govuk-tag--orange govuk-!-margin-bottom-1" }) %}
+{% set tagLive = govukTag({ text: "Live", classes: "govuk-tag--green govuk-!-margin-top-1" }) %}
+
+{% if params.metadata.draft | length and params.metadata.live | length %}
+  {{ tagDraft }} {{ tagLive }}
+{% elseif params.metadata.live | length %}
+  {{ tagLive }}
+{% else %}
+  {{ tagDraft }}
+{% endif %}
