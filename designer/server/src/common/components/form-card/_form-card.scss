@@ -1,0 +1,12 @@
+.app-form-card {
+  background-color: govuk-colour("light-grey");
+  padding: govuk-spacing(3);
+}
+
+.app-form-card .govuk-button {
+  width: 100%;
+}
+
+.app-form-card :last-child {
+  margin-bottom: 0;
+}
