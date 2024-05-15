@@ -8,11 +8,13 @@
   }) }}
 
   {% call appPageBody() %}
-    <p class="govuk-body-l">Sign in to {{ config.serviceName }} to access and create forms.</p>
+    <p class="govuk-body-l">
+      Sign in to {{ config.serviceName }} to access and create forms.
+    </p>
 
     {{ govukButton({
       text: "Continue",
       href: "/library"
-    })}}
+    }) }}
   {% endcall %}
 {% endblock %}
