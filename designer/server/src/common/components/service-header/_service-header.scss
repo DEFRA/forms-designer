@@ -169,6 +169,15 @@ $govuk-header-link-underline-thickness: 3px;
   }
 }
 
+.one-login-header__logotype-text {
+  margin: 0 5px 0 2px;
+}
+
+.one-login-header__product-name {
+  @include govuk-font($size: 24, $line-height: 1);
+  display: inline-table;
+}
+
 .one-login-header__link,
 .one-login-header__nav__link {
   &:link,
