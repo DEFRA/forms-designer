@@ -30,7 +30,7 @@
 
     {% for form in formItems %}
       {% set formName %}
-        <a href="/library/{{ form.slug | urlencode }}/editor" class="govuk-link govuk-link--no-visited-state">
+        <a href="/library/{{ form.slug | urlencode }}" class="govuk-link govuk-link--no-visited-state">
           {{ form.title }}
         </a>
       {% endset %}
