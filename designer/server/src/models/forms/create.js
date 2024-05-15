@@ -11,7 +11,7 @@ export function titleViewModel(metadata, validation) {
 
   return {
     backLink: {
-      text: 'Back to form library',
+      text: 'Back to forms library',
       href: '/library'
     },
     pageTitle: 'Enter a name for your form',

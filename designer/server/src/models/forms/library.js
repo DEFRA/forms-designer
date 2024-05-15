@@ -16,7 +16,7 @@ export function overviewViewModel(metadata) {
 
   return {
     backLink: {
-      text: 'Back to form library',
+      text: 'Back to forms library',
       href: '/library'
     },
     pageTitle,
