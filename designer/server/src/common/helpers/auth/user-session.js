@@ -8,30 +8,31 @@ import {
 
 /**
  * @param {AuthWithTokens} credentials
+ * @param {ReturnType<typeof getUserClaims>} [claims]
  */
-export function createUser(credentials) {
+export function createUser(credentials, claims) {
   if (hasUser(credentials)) {
     return credentials.user
   }
 
-  const claims = getUserClaims(credentials)
+  const { token } = claims ?? getUserClaims(credentials)
 
   const {
     name, // Lastname, firstname
     given_name: firstName,
     family_name: lastName
-  } = claims
+  } = token
 
   // Improve display name formatting
   const displayName = firstName && lastName ? `${firstName} ${lastName}` : name
 
   // Create user object (e.g. signed in token but no session)
   return /** @satisfies {UserCredentials} */ ({
-    id: claims.sub,
-    email: claims.email ?? '',
+    id: token.sub,
+    email: token.email ?? '',
     displayName: displayName ?? '',
-    issuedAt: DateTime.fromSeconds(claims.iat).toUTC().toISO(),
-    expiresAt: DateTime.fromSeconds(claims.exp).toUTC().toISO()
+    issuedAt: DateTime.fromSeconds(token.iat).toUTC().toISO(),
+    expiresAt: DateTime.fromSeconds(token.exp).toUTC().toISO()
   })
 }
 
@@ -49,7 +50,8 @@ export async function createUserSession(request) {
     throw new Error('Missing user authentication tokens')
   }
 
-  const user = createUser(credentials)
+  const claims = getUserClaims(credentials)
+  const user = createUser(credentials, claims)
 
   // Create and retrieve user session from Redis
   await server.methods.session.set(user.id, { ...credentials, user })
