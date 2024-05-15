@@ -1,13 +1,13 @@
 /**
- * @param {Partial<Request> | null} request
  * @param {string} text
  * @param {string} url
+ * @param {{ isActive: boolean }} [options]
  */
-function buildEntry(request, text, url) {
+export function buildEntry(text, url, options) {
   return {
     text,
     url,
-    isActive: request?.path === url
+    isActive: !!options?.isActive
   }
 }
 
@@ -15,7 +15,11 @@ function buildEntry(request, text, url) {
  * @param {Partial<Request> | null} request
  */
 export function buildNavigation(request) {
-  return [buildEntry(request, 'Forms library', '/library')]
+  return [
+    buildEntry('Forms library', '/library', {
+      isActive: request?.path === '/library'
+    })
+  ]
 }
 
 /**
