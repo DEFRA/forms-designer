@@ -17,13 +17,10 @@
 <div class="govuk-grid-row app-heading" data-testid="app-heading">
   <div class="govuk-grid-column-two-thirds">
     <h{{ headingLevel }} class="{{ headingClass + " " + params.classes if params.classes else headingClass }}" data-testid="app-heading-title">
+      {% if params.caption -%}
+        <span class="{{ captionClass }}">{{ params.caption }}</span>
+      {% endif -%}
       {{ params.html | safe | indent(6) if params.html else params.text }}
     </h{{ headingLevel }}>
-
-  {% if params.caption %}
-    <span class="{{ captionClass }}" data-testid="app-heading-caption">
-      {{ params.caption }}
-    </span>
-  {% endif %}
   </div>
 </div>

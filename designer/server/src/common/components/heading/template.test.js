@@ -27,7 +27,7 @@ describe('Heading Component', () => {
 
     test('Should have expected heading caption', () => {
       expect(
-        $heading?.querySelector('[data-testid="app-heading-caption"]')
+        $heading?.querySelector("[class^='govuk-caption']")
       ).toHaveTextContent('A page showing available services')
     })
   })
