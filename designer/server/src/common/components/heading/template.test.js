@@ -12,7 +12,7 @@ describe('Heading Component', () => {
         }
       })
 
-      $heading = document.querySelector('[data-testid="app-heading"]')
+      $heading = document.querySelector('h1')
     })
 
     test('Should render app heading component', () => {
@@ -20,9 +20,7 @@ describe('Heading Component', () => {
     })
 
     test('Should contain expected heading', () => {
-      expect(
-        $heading?.querySelector('[data-testid="app-heading-title"]')
-      ).toHaveTextContent('Services')
+      expect($heading).toHaveTextContent('Services')
     })
 
     test('Should have expected heading caption', () => {
