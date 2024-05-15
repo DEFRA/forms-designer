@@ -1,3 +1,4 @@
+import { buildEntry } from '~/src/common/nunjucks/context/build-navigation.js'
 import config from '~/src/config.js'
 import * as forms from '~/src/lib/forms.js'
 
@@ -13,12 +14,20 @@ export async function listViewModel() {
  */
 export function overviewViewModel(metadata) {
   const pageTitle = metadata.title
+  const formPath = `/library/${metadata.slug}`
+
+  const navigation = [
+    buildEntry('Forms library', `/library`),
+    buildEntry('Overview', formPath, { isActive: true }),
+    buildEntry('Editor', `${formPath}/editor`)
+  ]
 
   return {
     backLink: {
       text: 'Back to forms library',
       href: '/library'
     },
+    navigation,
     pageTitle,
     form: metadata,
     previewUrl: config.previewUrl
@@ -30,12 +39,20 @@ export function overviewViewModel(metadata) {
  */
 export function editorViewModel(metadata) {
   const pageTitle = metadata.title
+  const formPath = `/library/${metadata.slug}`
+
+  const navigation = [
+    buildEntry('Forms library', `/library`),
+    buildEntry('Overview', formPath),
+    buildEntry('Editor', `${formPath}/editor`, { isActive: true })
+  ]
 
   return {
     backLink: {
       text: 'Back to form overview',
       href: `/library/${metadata.slug}`
     },
+    navigation,
     pageTitle,
     form: metadata,
     previewUrl: config.previewUrl
