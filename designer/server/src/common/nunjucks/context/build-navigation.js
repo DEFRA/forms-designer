@@ -17,7 +17,7 @@ export function buildEntry(text, url, options) {
 export function buildNavigation(request) {
   return [
     buildEntry('Forms library', '/library', {
-      isActive: request?.path === '/library'
+      isActive: !!request?.path?.startsWith('/library')
     })
   ]
 }
