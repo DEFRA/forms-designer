@@ -7,5 +7,6 @@
     "js": "node --enable-source-maps --env-file=.env",
     "ts": "node --enable-source-maps --env-file=.env --import tsx"
   },
-  "ext": "js,json,ts"
+  "ext": "js,json,ts",
+  "signal": "SIGINT"
 }
