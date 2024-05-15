@@ -2,12 +2,13 @@
 {% from "service-header/macro.njk" import appServiceHeader %}
 
 {{ appServiceHeader({
-  serviceName: config.serviceName,
+  organisationName: "Defra",
+  productName: "Forms Designer",
   navigationItems: navigation if isAuthenticated,
   accountName: authedUser.displayName if isAuthenticated,
   accountLink: "/library",
   signOutLink: "/auth/sign-out",
-  homepageLink: "/library"
+  homepageLink: "/"
 }) }}
 
 {% if ["alpha", "beta"].includes(config.phase) %}

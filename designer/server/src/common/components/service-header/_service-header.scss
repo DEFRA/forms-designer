@@ -5,6 +5,12 @@
 // start mixins and variables
 $govuk-header-link-underline-thickness: 3px;
 
+$defra-brand-colour: govuk-organisation-colour(department-for-environment-food-rural-affairs);
+$defra-brand-colour-high-contrast: #008531;
+
+$defra-link-colour: govuk-shade($defra-brand-colour-high-contrast, 25%);
+$defra-link-colour-hover: govuk-shade($defra-link-colour, 50%);
+
 @mixin toggle-button-focus($default-text-colour) {
   color: $default-text-colour;
   // apply focus style on :focus for browsers which support :focus but not :focus-visible
@@ -146,7 +152,7 @@ $govuk-header-link-underline-thickness: 3px;
   @include govuk-font($size: 19);
   color: govuk-colour("white");
   background: govuk-colour("black");
-  border-bottom: govuk-spacing(2) solid $govuk-link-colour;
+  border-bottom: govuk-spacing(2) solid $defra-brand-colour;
   position: relative;
 }
 
@@ -167,6 +173,15 @@ $govuk-header-link-underline-thickness: 3px;
     width: 33.33%;
     padding-right: govuk-spacing(3);
   }
+}
+
+.one-login-header__logotype-text {
+  margin: 0 5px 0 2px;
+}
+
+.one-login-header__product-name {
+  @include govuk-font($size: 24, $line-height: 1);
+  display: inline-table;
 }
 
 .one-login-header__link,
@@ -394,7 +409,7 @@ $govuk-header-link-underline-thickness: 3px;
 
   &.service-header__nav-list-item--active {
     padding-left: govuk-spacing(3);
-    border-left: govuk-spacing(1) solid $govuk-link-colour;
+    border-left: govuk-spacing(1) solid $defra-brand-colour;
   }
 
   @include govuk-media-query($from: tablet) {
@@ -409,7 +424,7 @@ $govuk-header-link-underline-thickness: 3px;
     &.service-header__nav-list-item--active {
       border-left: 0;
       padding-left: 0;
-      border-bottom: govuk-spacing(1) solid $govuk-link-colour;
+      border-bottom: govuk-spacing(1) solid $defra-brand-colour;
     }
   }
 }
@@ -418,6 +433,19 @@ $govuk-header-link-underline-thickness: 3px;
   @include govuk-link-common;
   @include govuk-link-style-default;
   @include govuk-link-style-no-visited-state;
+
+  &:link,
+  &:visited {
+    color: $defra-link-colour;
+  }
+
+  &:hover {
+    color: $defra-link-colour-hover;
+  }
+
+  &:focus {
+    color: $govuk-focus-text-colour;
+  }
 
   &:not(:hover) {
     text-decoration: none;
