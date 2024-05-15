@@ -78,6 +78,40 @@
       ]
     }) }}
 
+    {{ appHeading({
+      text: "Organisation details",
+      classes: "govuk-heading-m"
+    }) }}
+
+    {{ govukSummaryList({
+      rows: [
+        {
+          key: {
+            text: "Form name"
+          },
+          value: {
+            html: form.title
+          }
+        },
+        {
+          key: {
+            text: "Lead organisation"
+          },
+          value: {
+            html: form.organisation
+          }
+        },
+        {
+          key: {
+            text: "Team name"
+          },
+          value: {
+            html: form.teamName
+          }
+        }
+      ]
+    }) }}
+
     {{ govukButton({
       text: "Edit draft ",
       href: "/library/" + form.slug | urlencode + "/editor",
