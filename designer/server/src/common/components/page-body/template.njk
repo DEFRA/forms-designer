@@ -1,8 +1,28 @@
-{% set content = params.html | safe if params.html else params.text %}
+{% set rows = [params] if params is mapping else params %}
 
+{%- if caller %}
+  {% set rows = [{
+    html: caller(),
+    classes: params.classes,
+    attributes: params.attributes
+  }] %}
+{% endif %}
+
+{%- macro appGridRow(columns) %}
 <div class="govuk-grid-row">
-  <div class="{{ params.classes if params.classes else "govuk-grid-column-two-thirds" }}"
-    {%- for attribute, value in params.attributes %} {{ attribute }}="{{ value }}"{% endfor %}>
-    {{ caller() if caller else content }}
-  </div>
+  {% for column in [columns] if columns is mapping else columns %}
+    {{- appGridColumn(column) | trim | indent(2, true) }}
+  {% endfor %}
 </div>
+{% endmacro %}
+
+{%- macro appGridColumn(column) %}
+<div class="{{ column.classes if column.classes else "govuk-grid-column-two-thirds" }}"
+  {%- for attribute, value in column.attributes %} {{ attribute }}="{{ value }}"{% endfor %}>
+  {{ column.html | safe | indent(2) if column.html else column.text }}
+</div>
+{% endmacro %}
+
+{%- for columns in rows %}
+  {{- appGridRow(columns) | trim }}
+{% endfor %}
