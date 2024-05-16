@@ -1,9 +1,19 @@
 {% from "grid-layout/macro.njk" import appGridLayout %}
+{% from "heading/macro.njk" import appHeading %}
 
 {% macro appPageBody(params) %}
-  {{- appGridLayout({
+  {%- set rows = [{
     html: caller(),
     classes: params.classes,
     attributes: params.attributes
-  } if caller else params) -}}
+  }] if caller else [params] %}
+
+  {%- if params.heading %}
+    {% set rows = (rows.unshift({
+      html: appHeading(params.heading) | trim,
+      classes: "govuk-grid-column-two-thirds"
+    }), rows) %}
+  {% endif %}
+
+  {{- appGridLayout(rows) -}}
 {% endmacro %}
