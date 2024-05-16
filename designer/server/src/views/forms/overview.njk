@@ -30,7 +30,7 @@
 
 {% set formLink %}
   {% set linkHref = previewUrl + "/" + form.slug | urlencode %}
-  <a href="{{ linkHref }}" class="govuk-link govuk-link--no-visited-state">
+  <a href="{{ linkHref }}" class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noreferrer">
     {{ linkHref }}
   </a>
 {% endset %}
