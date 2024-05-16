@@ -6,11 +6,10 @@
 {% from "form-status/macro.njk" import appFormStatus %}
 
 {% block content %}
-  {{ appHeading({
-    text: pageTitle
-  }) }}
-
   {% call appPageBody({
+    heading: {
+      text: pageTitle
+    },
     classes: "govuk-grid-column-two-thirds-from-desktop"
   }) %}
     {% if formItems | length %}

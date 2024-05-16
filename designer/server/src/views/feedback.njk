@@ -6,11 +6,11 @@
 {% set pageTitle = "Give feedback" %}
 
 {% block content %}
-  {{ appHeading({
-    text: pageTitle
-  }) }}
-
-  {% call appPageBody() %}
+  {% call appPageBody({
+    heading: {
+      text: pageTitle
+    }
+  }) %}
     <form method="post" novalidate>
       {{ govukCharacterCount({
         name: "feedback",

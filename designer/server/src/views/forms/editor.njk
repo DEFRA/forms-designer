@@ -2,7 +2,6 @@
 
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "page-body/macro.njk" import appPageBody %}
-{% from "heading/macro.njk" import appHeading %}
 
 {% block head %}
   {{ super() }}
@@ -14,12 +13,11 @@
 {% endblock %}
 
 {% block content %}
-  {{ appHeading({
-    text: pageTitle,
-    size: "large"
-  }) }}
-
   {{ appPageBody({
+    heading: {
+      text: pageTitle,
+      size: "large"
+    },
     classes: "govuk-grid-column-full app-editor",
     attributes: {
       "data-id": form.id,
