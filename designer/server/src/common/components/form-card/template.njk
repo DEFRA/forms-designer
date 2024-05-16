@@ -1,0 +1,9 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "heading/macro.njk" import appHeading %}
+
+<aside class="app-form-card">
+  {{ appHeading(params.heading) }}
+  {% for button in params.buttons %}
+    {{ govukButton(button) }}
+  {% endfor %}
+</aside>

@@ -1,0 +1,21 @@
+.govuk-button--secondary-quiet {
+  box-shadow: none;
+  background-color: govuk-colour("white");
+  border-color: govuk-colour("dark-grey");
+
+  &,
+  &:link,
+  &:visited,
+  &:active,
+  &:hover {
+    color: govuk-colour("dark-grey");
+  }
+
+  &:hover {
+    background-color: govuk-colour("light-grey");
+
+    &[disabled] {
+      background-color: govuk-colour("white");
+    }
+  }
+}

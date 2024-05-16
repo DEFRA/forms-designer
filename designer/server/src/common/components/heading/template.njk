@@ -1,13 +1,22 @@
-<div class="govuk-grid-row app-heading" data-testid="app-heading">
-  <div class="govuk-grid-column-two-thirds">
-    <h1 class="{{ params.classes if params.classes else "govuk-heading-xl" }}" data-testid="app-heading-title">
-      {{ params.text }}
-    </h1>
+{% set headingLevel = params.level if params.level else 1 -%}
+{% set headingClass = "govuk-heading-xl" -%}
+{% set captionClass = "govuk-caption-xl" -%}
 
-  {% if params.caption %}
-    <span class="govuk-caption-m" data-testid="app-heading-caption">
-      {{ params.caption }}
-    </span>
-  {% endif %}
-  </div>
-</div>
+{% switch params.size %}
+  {% case "small" %}
+    {% set headingClass = "govuk-heading-s" %}
+    {% set captionClass = "govuk-caption-s" %}
+  {% case "medium" %}
+    {% set headingClass = "govuk-heading-m" %}
+    {% set captionClass = "govuk-caption-m" %}
+  {% case "large" %}
+    {% set headingClass = "govuk-heading-l" %}
+    {% set captionClass = "govuk-caption-l" %}
+{% endswitch -%}
+
+<h{{ headingLevel }} class="{{ headingClass + " " + params.classes if params.classes else headingClass }}">
+  {% if params.caption -%}
+    <span class="{{ captionClass }}">{{ params.caption }}</span>
+  {% endif -%}
+  {{ params.html | safe | indent(2) if params.html else params.text }}
+</h{{ headingLevel }}>

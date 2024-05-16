@@ -5,117 +5,127 @@
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "page-body/macro.njk" import appPageBody %}
 {% from "heading/macro.njk" import appHeading %}
+{% from "form-card/macro.njk" import appFormCard %}
 {% from "form-status/macro.njk" import appFormStatus %}
 
 {% block beforeContent %}
   {{ govukBackLink(backLink) }}
 {% endblock %}
 
-{% block content %}
+{% set formStatus %}
+  {{ appFormStatus({
+    metadata: form
+  }) }}
+{% endset %}
+
+{% set formUpdated %}
+  {{ (form.draft.updatedAt if form.draft.updatedAt else "2024-04-09") | formatDate }}
+  by {{ form.draft.updatedBy.displayName | default("Enrique Chase", true) }}
+{% endset %}
+
+{% set formCreated %}
+  {{ (form.draft.createdAt if form.draft.createdAt else "2024-03-01") | formatDate }}
+  by {{ form.draft.createdBy.displayName | default("Nathanael Booker", true) }}
+{% endset %}
+
+{% set formLink %}
+  {% set linkHref = previewUrl + "/" + form.slug | urlencode %}
+  <a href="{{ linkHref }}" class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noreferrer">
+    {{ linkHref }}
+  </a>
+{% endset %}
+
+{% set formDetails %}
   {{ appHeading({
     text: pageTitle,
-    classes: "govuk-heading-l"
+    size: "large"
   }) }}
 
-  {% set formStatus %}
-    {{ appFormStatus({
-      metadata: form
-    }) }}
-  {% endset %}
-
-  {% set formUpdated %}
-    {{ (form.draft.updatedAt if form.draft.updatedAt else "2024-04-09") | formatDate }}
-    by {{ form.draft.updatedBy.displayName | default("Enrique Chase", true) }}
-  {% endset %}
-
-  {% set formCreated %}
-    {{ (form.draft.createdAt if form.draft.createdAt else "2024-03-01") | formatDate }}
-    by {{ form.draft.createdBy.displayName | default("Nathanael Booker", true) }}
-  {% endset %}
-
-  {% set formLink %}
-    {% set linkHref = previewUrl + "/" + form.slug | urlencode %}
-    <a href="{{ linkHref }}" class="govuk-link govuk-link--no-visited-state">
-      {{ linkHref }}
-    </a>
-  {% endset %}
-
-  {% call appPageBody() %}
-    {{ govukSummaryList({
-      rows: [
-        {
-          key: {
-            text: "Status"
-          },
-          value: {
-            html: formStatus
-          }
+  {{ govukSummaryList({
+    rows: [
+      {
+        key: {
+          text: "Status"
         },
-        {
-          key: {
-            text: "Updated"
-          },
-          value: {
-            text: formUpdated
-          }
-        },
-        {
-          key: {
-            text: "Created"
-          },
-          value: {
-            text: formCreated
-          }
-        },
-        {
-          key: {
-            text: "Preview link"
-          },
-          value: {
-            text: formLink | safe
-          }
+        value: {
+          html: formStatus
         }
-      ]
-    }) }}
-
-    {{ appHeading({
-      text: "Organisation details",
-      classes: "govuk-heading-m"
-    }) }}
-
-    {{ govukSummaryList({
-      rows: [
-        {
-          key: {
-            text: "Form name"
-          },
-          value: {
-            html: form.title
-          }
+      },
+      {
+        key: {
+          text: "Updated"
         },
-        {
-          key: {
-            text: "Lead organisation"
-          },
-          value: {
-            html: form.organisation
-          }
-        },
-        {
-          key: {
-            text: "Team name"
-          },
-          value: {
-            html: form.teamName
-          }
+        value: {
+          text: formUpdated
         }
-      ]
-    }) }}
+      },
+      {
+        key: {
+          text: "Created"
+        },
+        value: {
+          text: formCreated
+        }
+      },
+      {
+        key: {
+          text: "Preview link"
+        },
+        value: {
+          text: formLink | safe
+        }
+      }
+    ]
+  }) }}
 
-    {{ govukButton({
-      text: "Edit draft ",
-      href: "/library/" + form.slug | urlencode + "/editor",
-      classes: "govuk-button--secondary"
-    }) }}
-  {% endcall %}
+  {{ appHeading({
+    text: "Organisation details",
+    size: "medium",
+    classes: "govuk-!-margin-top-8"
+  }) }}
+
+  {{ govukSummaryList({
+    classes: "govuk-!-margin-bottom-8",
+    rows: [
+      {
+        key: {
+          text: "Form name"
+        },
+        value: {
+          html: form.title
+        }
+      },
+      {
+        key: {
+          text: "Lead organisation"
+        },
+        value: {
+          html: form.organisation
+        }
+      },
+      {
+        key: {
+          text: "Team name"
+        },
+        value: {
+          html: form.teamName
+        }
+      }
+    ]
+  }) }}
+{% endset %}
+
+{% block content %}
+  {{ appPageBody([
+    [
+      {
+        html: formDetails,
+        classes: "govuk-grid-column-two-thirds-from-desktop"
+      },
+      {
+        html: appFormCard(formManagement),
+        classes: "govuk-grid-column-one-third-from-desktop"
+      }
+    ]
+  ]) }}
 {% endblock %}
