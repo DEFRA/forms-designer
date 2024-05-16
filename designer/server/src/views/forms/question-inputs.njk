@@ -11,10 +11,7 @@
 
 {% block content %}
   {% call appPageBody({
-    heading: {
-      text: pageTitle,
-      size: "large"
-    }
+    heading: pageHeading
   }) %}
     <form method="post" novalidate>
       {% if errorList | length %}

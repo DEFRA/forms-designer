@@ -3,10 +3,7 @@
 
 {% block content %}
   {% call appPageBody({
-    heading: {
-      text: "You have signed out",
-      size: "large"
-    }
+    heading: pageHeading
   }) %}
     <p class="govuk-body-l">
       Sign in to {{ config.serviceName }} to access and create forms.

@@ -14,10 +14,7 @@
 
 {% block content %}
   {{ appPageBody({
-    heading: {
-      text: pageTitle,
-      size: "large"
-    },
+    heading: pageHeading,
     classes: "govuk-grid-column-full app-editor",
     attributes: {
       "data-id": form.id,

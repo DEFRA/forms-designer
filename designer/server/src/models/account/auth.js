@@ -1,5 +1,11 @@
 export function signedOutViewModel() {
+  const pageTitle = 'You have signed out'
+
   return {
-    pageTitle: 'You have signed out'
+    pageTitle,
+    pageHeading: {
+      text: pageTitle,
+      size: 'large'
+    }
   }
 }
