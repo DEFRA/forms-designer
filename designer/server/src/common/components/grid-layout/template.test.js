@@ -1,9 +1,6 @@
 import { renderMacro } from '~/test/helpers/component-helpers.js'
 
 describe('Grid layout component', () => {
-  /** @type {HTMLElement | null} */
-  let $pageBody = null
-
   /** @type {NodeListOf<HTMLElement>} */
   let $rows
 
@@ -16,21 +13,17 @@ describe('Grid layout component', () => {
         'appGridLayout',
         'grid-layout/macro.njk',
         {
-          params: {
-            attributes: {
-              'data-testid': 'app-page-body'
-            }
-          },
           callBlock:
             '<p class="govuk-body">Used digger, digs great and is lots of fun to dig huge holes with. Comes with heater, comfy seat and radio.</p>'
         }
       )
 
-      $pageBody = document.querySelector('[data-testid="app-page-body"]')
+      $rows = document.querySelectorAll('.govuk-grid-row')
+      $columns = document.querySelectorAll("[class^='govuk-grid-column']")
     })
 
-    test('Should render expected page body', () => {
-      expect($pageBody).toContainHTML(
+    test('Should render expected contents', () => {
+      expect($columns[0]).toContainHTML(
         '<p class="govuk-body">Used digger, digs great and is lots of fun to dig huge holes with. Comes with heater, comfy seat and radio.</p>'
       )
     })
@@ -43,19 +36,17 @@ describe('Grid layout component', () => {
         'grid-layout/macro.njk',
         {
           params: {
-            text: 'Used digger, digs great and is lots of fun to dig huge holes with. Comes with heater, comfy seat and radio.',
-            attributes: {
-              'data-testid': 'app-page-body'
-            }
+            text: 'Used digger, digs great and is lots of fun to dig huge holes with. Comes with heater, comfy seat and radio.'
           }
         }
       )
 
-      $pageBody = document.querySelector('[data-testid="app-page-body"]')
+      $rows = document.querySelectorAll('.govuk-grid-row')
+      $columns = document.querySelectorAll("[class^='govuk-grid-column']")
     })
 
-    test('Should render expected page body', () => {
-      expect($pageBody).toHaveTextContent(
+    test('Should render expected contents', () => {
+      expect($columns[0]).toHaveTextContent(
         'Used digger, digs great and is lots of fun to dig huge holes with. Comes with heater, comfy seat and radio.'
       )
     })
@@ -68,19 +59,17 @@ describe('Grid layout component', () => {
         'grid-layout/macro.njk',
         {
           params: {
-            html: '<p class="govuk-body">Used digger, digs great and is lots of fun to dig huge holes with. Comes with heater, comfy seat and radio.</p>',
-            attributes: {
-              'data-testid': 'app-page-body'
-            }
+            html: '<p class="govuk-body">Used digger, digs great and is lots of fun to dig huge holes with. Comes with heater, comfy seat and radio.</p>'
           }
         }
       )
 
-      $pageBody = document.querySelector('[data-testid="app-page-body"]')
+      $rows = document.querySelectorAll('.govuk-grid-row')
+      $columns = document.querySelectorAll("[class^='govuk-grid-column']")
     })
 
-    test('Should render expected page body', () => {
-      expect($pageBody).toContainHTML(
+    test('Should render expected contents', () => {
+      expect($columns[0]).toContainHTML(
         '<p class="govuk-body">Used digger, digs great and is lots of fun to dig huge holes with. Comes with heater, comfy seat and radio.</p>'
       )
     })
