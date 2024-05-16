@@ -35,12 +35,14 @@
   </a>
 {% endset %}
 
-{% set formDetails %}
+{% set formTitle %}
   {{ appHeading({
     text: pageTitle,
     size: "large"
   }) }}
+{% endset %}
 
+{% set formDetails %}
   {{ govukSummaryList({
     rows: [
       {
@@ -119,7 +121,16 @@
   {{ appGridLayout([
     [
       {
-        html: formDetails,
+        html: appGridLayout([
+          {
+            html: formTitle,
+            classes: "govuk-grid-column-two-thirds govuk-grid-column-full-from-desktop"
+          },
+          {
+            html: formDetails,
+            classes: "govuk-grid-column-full"
+          }
+        ]),
         classes: "govuk-grid-column-two-thirds-from-desktop"
       },
       {
