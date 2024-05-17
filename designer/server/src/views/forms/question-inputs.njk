@@ -10,12 +10,9 @@
 {% endblock %}
 
 {% block content %}
-  {{ appHeading({
-    text: pageTitle,
-    size: "large"
-  }) }}
-
-  {% call appPageBody() %}
+  {% call appPageBody({
+    heading: pageHeading
+  }) %}
     <form method="post" novalidate>
       {% if errorList | length %}
         {{ govukErrorSummary({

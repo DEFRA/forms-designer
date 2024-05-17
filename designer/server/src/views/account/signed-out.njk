@@ -2,12 +2,9 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% block content %}
-  {{ appHeading({
-    text: "You have signed out",
-    size: "large"
-  }) }}
-
-  {% call appPageBody() %}
+  {% call appPageBody({
+    heading: pageHeading
+  }) %}
     <p class="govuk-body-l">
       Sign in to {{ config.serviceName }} to access and create forms.
     </p>

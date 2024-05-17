@@ -7,6 +7,7 @@ import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
  * @param {ValidationFailure} [validation]
  */
 export function titleViewModel(metadata, validation) {
+  const pageTitle = 'Enter a name for your form'
   const { formValues, formErrors } = validation ?? {}
 
   return {
@@ -14,7 +15,7 @@ export function titleViewModel(metadata, validation) {
       text: 'Back to forms library',
       href: '/library'
     },
-    pageTitle: 'Enter a name for your form',
+    pageTitle,
     errorList: buildErrorList(formErrors, ['title']),
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
@@ -37,13 +38,14 @@ export function titleViewModel(metadata, validation) {
  * @param {ValidationFailure} [validation]
  */
 export function organisationViewModel(metadata, validation) {
+  const pageTitle = 'Choose a lead organisation for this form'
   const { formValues, formErrors } = validation ?? {}
 
   return {
     backLink: {
       href: '/create/title'
     },
-    pageTitle: 'Choose a lead organisation for this form',
+    pageTitle,
     errorList: buildErrorList(formErrors, ['organisation']),
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
@@ -68,13 +70,18 @@ export function organisationViewModel(metadata, validation) {
  * @param {ValidationFailure} [validation]
  */
 export function teamViewModel(metadata, validation) {
+  const pageTitle = 'Team details'
   const { formValues, formErrors } = validation ?? {}
 
   return {
     backLink: {
       href: '/create/organisation'
     },
-    pageTitle: 'Team details',
+    pageTitle,
+    pageHeading: {
+      text: pageTitle,
+      size: 'large'
+    },
     errorList: buildErrorList(formErrors, ['teamName', 'teamEmail']),
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,

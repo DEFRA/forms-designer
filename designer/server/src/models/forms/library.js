@@ -6,7 +6,13 @@ export async function listViewModel() {
   const pageTitle = 'Forms library'
   const formItems = await forms.list()
 
-  return { pageTitle, formItems }
+  return {
+    pageTitle,
+    pageHeading: {
+      text: pageTitle
+    },
+    formItems
+  }
 }
 
 /**
@@ -29,6 +35,10 @@ export function overviewViewModel(metadata) {
     },
     navigation,
     pageTitle,
+    pageHeading: {
+      text: pageTitle,
+      size: 'large'
+    },
     form: metadata,
     formManagement: {
       heading: {
@@ -68,6 +78,10 @@ export function editorViewModel(metadata) {
     },
     navigation,
     pageTitle,
+    pageHeading: {
+      text: pageTitle,
+      size: 'large'
+    },
     form: metadata,
     previewUrl: config.previewUrl
   }

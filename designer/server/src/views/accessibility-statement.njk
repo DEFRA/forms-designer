@@ -3,11 +3,11 @@
 {% set pageTitle = "Accessibility statement" %}
 
 {% block content %}
-  {{ appHeading({
-    text: "Accessibility statement for [website name]"
-  }) }}
-
-  {% call appPageBody() %}
+  {% call appPageBody({
+    heading: {
+      text: "Accessibility statement for [website name]"
+    }
+  }) %}
     <p class="govuk-body">
       This accessibility statement applies to [scope of statement, for
       example, website or domain to which the statement applies].

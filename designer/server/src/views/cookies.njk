@@ -5,11 +5,11 @@
 {% set pageTitle = "Cookies" %}
 
 {% block content %}
-  {{ appHeading({
-    text: pageTitle
-  }) }}
-
-  {% call appPageBody() %}
+  {% call appPageBody({
+    heading: {
+      text: pageTitle
+    }
+  }) %}
     <p class="govuk-body">
       <a href="/" class="govuk-link">{{ config.serviceName }}</a>
       puts small files (known as ‘cookies’) on your computer.

@@ -36,11 +36,6 @@
 {% endset %}
 
 {% set formDetails %}
-  {{ appHeading({
-    text: pageTitle,
-    size: "large"
-  }) }}
-
   {{ govukSummaryList({
     rows: [
       {
@@ -81,6 +76,7 @@
   {{ appHeading({
     text: "Organisation details",
     size: "medium",
+    level: '2',
     classes: "govuk-!-margin-top-8"
   }) }}
 
@@ -119,7 +115,16 @@
   {{ appGridLayout([
     [
       {
-        html: formDetails,
+        html: appGridLayout([
+          {
+            html: appHeading(pageHeading),
+            classes: "govuk-grid-column-two-thirds govuk-grid-column-full-from-desktop"
+          },
+          {
+            html: formDetails,
+            classes: "govuk-grid-column-full"
+          }
+        ]),
         classes: "govuk-grid-column-two-thirds-from-desktop"
       },
       {
