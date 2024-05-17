@@ -1,3 +1,9 @@
+{% from "grid-layout/macro.njk" import appGridLayout %}
+
 {% macro appPageBody(params) %}
-  {%- include "./template.njk" -%}
+  {{- appGridLayout({
+    html: caller(),
+    classes: params.classes,
+    attributes: params.attributes
+  } if caller else params) -}}
 {% endmacro %}

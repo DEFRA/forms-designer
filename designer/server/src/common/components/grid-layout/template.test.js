@@ -1,6 +1,6 @@
 import { renderMacro } from '~/test/helpers/component-helpers.js'
 
-describe('Page Body Component', () => {
+describe('Grid layout component', () => {
   /** @type {HTMLElement | null} */
   let $pageBody = null
 
@@ -12,15 +12,19 @@ describe('Page Body Component', () => {
 
   describe('With child content', () => {
     beforeEach(() => {
-      const { document } = renderMacro('appPageBody', 'page-body/macro.njk', {
-        params: {
-          attributes: {
-            'data-testid': 'app-page-body'
-          }
-        },
-        callBlock:
-          '<p class="govuk-body">Used digger, digs great and is lots of fun to dig huge holes with. Comes with heater, comfy seat and radio.</p>'
-      })
+      const { document } = renderMacro(
+        'appGridLayout',
+        'grid-layout/macro.njk',
+        {
+          params: {
+            attributes: {
+              'data-testid': 'app-page-body'
+            }
+          },
+          callBlock:
+            '<p class="govuk-body">Used digger, digs great and is lots of fun to dig huge holes with. Comes with heater, comfy seat and radio.</p>'
+        }
+      )
 
       $pageBody = document.querySelector('[data-testid="app-page-body"]')
     })
@@ -34,14 +38,18 @@ describe('Page Body Component', () => {
 
   describe('With text param', () => {
     beforeEach(() => {
-      const { document } = renderMacro('appPageBody', 'page-body/macro.njk', {
-        params: {
-          text: 'Used digger, digs great and is lots of fun to dig huge holes with. Comes with heater, comfy seat and radio.',
-          attributes: {
-            'data-testid': 'app-page-body'
+      const { document } = renderMacro(
+        'appGridLayout',
+        'grid-layout/macro.njk',
+        {
+          params: {
+            text: 'Used digger, digs great and is lots of fun to dig huge holes with. Comes with heater, comfy seat and radio.',
+            attributes: {
+              'data-testid': 'app-page-body'
+            }
           }
         }
-      })
+      )
 
       $pageBody = document.querySelector('[data-testid="app-page-body"]')
     })
@@ -55,14 +63,18 @@ describe('Page Body Component', () => {
 
   describe('With html param', () => {
     beforeEach(() => {
-      const { document } = renderMacro('appPageBody', 'page-body/macro.njk', {
-        params: {
-          html: '<p class="govuk-body">Used digger, digs great and is lots of fun to dig huge holes with. Comes with heater, comfy seat and radio.</p>',
-          attributes: {
-            'data-testid': 'app-page-body'
+      const { document } = renderMacro(
+        'appGridLayout',
+        'grid-layout/macro.njk',
+        {
+          params: {
+            html: '<p class="govuk-body">Used digger, digs great and is lots of fun to dig huge holes with. Comes with heater, comfy seat and radio.</p>',
+            attributes: {
+              'data-testid': 'app-page-body'
+            }
           }
         }
-      })
+      )
 
       $pageBody = document.querySelector('[data-testid="app-page-body"]')
     })
@@ -76,16 +88,20 @@ describe('Page Body Component', () => {
 
   describe('With multiple rows', () => {
     beforeEach(() => {
-      const { document } = renderMacro('appPageBody', 'page-body/macro.njk', {
-        params: [
-          {
-            text: 'Row 1, Column 1'
-          },
-          {
-            text: 'Row 2, Column 1'
-          }
-        ]
-      })
+      const { document } = renderMacro(
+        'appGridLayout',
+        'grid-layout/macro.njk',
+        {
+          params: [
+            {
+              text: 'Row 1, Column 1'
+            },
+            {
+              text: 'Row 2, Column 1'
+            }
+          ]
+        }
+      )
 
       $rows = document.querySelectorAll('.govuk-grid-row')
       $columns = document.querySelectorAll("[class^='govuk-grid-column']")
@@ -110,26 +126,30 @@ describe('Page Body Component', () => {
 
   describe('With multiple rows and columns', () => {
     beforeEach(() => {
-      const { document } = renderMacro('appPageBody', 'page-body/macro.njk', {
-        params: [
-          [
-            {
-              text: 'Row 1, Column 1'
-            },
-            {
-              text: 'Row 1, Column 2'
-            }
-          ],
-          [
-            {
-              text: 'Row 2, Column 1'
-            },
-            {
-              text: 'Row 2, Column 2'
-            }
+      const { document } = renderMacro(
+        'appGridLayout',
+        'grid-layout/macro.njk',
+        {
+          params: [
+            [
+              {
+                text: 'Row 1, Column 1'
+              },
+              {
+                text: 'Row 1, Column 2'
+              }
+            ],
+            [
+              {
+                text: 'Row 2, Column 1'
+              },
+              {
+                text: 'Row 2, Column 2'
+              }
+            ]
           ]
-        ]
-      })
+        }
+      )
 
       $rows = document.querySelectorAll('.govuk-grid-row')
       $columns = document.querySelectorAll("[class^='govuk-grid-column']")
