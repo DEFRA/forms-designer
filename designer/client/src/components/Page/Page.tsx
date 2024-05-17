@@ -147,7 +147,10 @@ export const Page = (props: {
         </button>
         <a
           title={i18n('Preview page')}
-          href={new URL(`/${slug}${page.path}`, previewUrl).toString()}
+          href={new URL(
+            `/preview/draft/${slug}${page.path}`,
+            previewUrl
+          ).toString()}
           className="govuk-link"
           target="_blank"
           rel="noreferrer"
