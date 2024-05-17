@@ -14,9 +14,11 @@
     {% set captionClass = "govuk-caption-l" %}
 {% endswitch -%}
 
+{%- macro caption(text) %}
+  <span class="{{ captionClass }}">{{ text }}</span>
+{% endmacro -%}
+
 <h{{ headingLevel }} class="{{ headingClass + " " + params.classes if params.classes else headingClass }}">
-  {% if params.caption -%}
-    <span class="{{ captionClass }}">{{ params.caption }}</span>
-  {% endif -%}
+  {% if params.caption %}{{ caption(params.caption) }}{% endif %}
   {{ params.html | safe | indent(2) if params.html else params.text }}
 </h{{ headingLevel }}>
