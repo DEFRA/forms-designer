@@ -6,72 +6,20 @@
 {% from "grid-layout/macro.njk" import appGridLayout %}
 {% from "heading/macro.njk" import appHeading %}
 {% from "form-card/macro.njk" import appFormCard %}
-{% from "form-status/macro.njk" import appFormStatus %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
 
 {% block beforeContent %}
   {{ govukBackLink(backLink) }}
 {% endblock %}
 
-{% set formStatus %}
-  {{ appFormStatus({
-    metadata: form
-  }) }}
-{% endset %}
-
-{% set formUpdated %}
-  {{ (form.draft.updatedAt if form.draft.updatedAt else "2024-04-09") | formatDate }}
-  by {{ form.draft.updatedBy.displayName | default("Enrique Chase", true) }}
-{% endset %}
-
-{% set formCreated %}
-  {{ (form.draft.createdAt if form.draft.createdAt else "2024-03-01") | formatDate }}
-  by {{ form.draft.createdBy.displayName | default("Nathanael Booker", true) }}
-{% endset %}
-
-{% set formLink %}
-  {% set linkHref = previewUrl + "/" + form.slug | urlencode %}
-  <a href="{{ linkHref }}" class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noreferrer">
-    {{ linkHref }}
-  </a>
-{% endset %}
-
 {% set formDetails %}
-  {{ govukSummaryList({
-    rows: [
-      {
-        key: {
-          text: "Status"
-        },
-        value: {
-          html: formStatus
-        }
-      },
-      {
-        key: {
-          text: "Updated"
-        },
-        value: {
-          text: formUpdated
-        }
-      },
-      {
-        key: {
-          text: "Created"
-        },
-        value: {
-          text: formCreated
-        }
-      },
-      {
-        key: {
-          text: "Preview link"
-        },
-        value: {
-          text: formLink | safe
-        }
-      }
-    ]
-  }) }}
+  {% if form.draft %}
+    {% include "forms/partials/overview-draft.njk" %}
+  {% endif %}
+
+  {% if form.live %}
+    {% include "forms/partials/overview-live.njk" %}
+  {% endif %}
 
   {{ appHeading({
     text: "Organisation details",
