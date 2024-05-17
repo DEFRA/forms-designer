@@ -44,10 +44,7 @@ export default [
 
           if (result.error) {
             const error = result.error
-            request.logger.error(
-              ['error', `/api/${id}/data`],
-              [error, request.payload]
-            )
+            request.logger.error(['error', `/api/${id}/data`], [error, payload])
 
             throw new Error(
               `Schema validation failed, reason: ${error.message}`
@@ -64,7 +61,7 @@ export default [
           request.logger.error('Designer Server PUT /api/{id}/data error:', err)
           const errorSummary = {
             id,
-            payload: request.payload,
+            payload,
             errorMessage: err.message,
             error: err.stack
           }
