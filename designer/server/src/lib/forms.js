@@ -78,14 +78,17 @@ export async function getDraftFormDefinition(id) {
  * Update draft form definition
  * @param {string} id
  * @param {FormDefinition} definition - form definition
+ * @param {FormMetadataAuthor} author
  */
-export async function updateDraftFormDefinition(id, definition) {
+export async function updateDraftFormDefinition(id, definition, author) {
   const postJsonByType = /** @type {typeof postJson<FormDefinition>} */ (
     postJson
   )
 
   const requestUrl = new URL(`./${id}/definition/draft`, formsEndpoint)
-  const { body } = await postJsonByType(requestUrl, { payload: definition })
+  const { body } = await postJsonByType(requestUrl, {
+    payload: { definition, author }
+  })
 
   return body
 }

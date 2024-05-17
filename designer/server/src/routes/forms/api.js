@@ -33,16 +33,17 @@ export default [
         parse: true
       },
       async handler(request, h) {
-        const { id } = request.params
-        try {
-          const { value, error } = formDefinitionSchema.validate(
-            request.payload,
-            {
-              abortEarly: false
-            }
-          )
+        const { auth, params, payload } = request
+        const { id } = params
+        const author = forms.getAuthor(auth.credentials)
 
-          if (error) {
+        try {
+          const result = formDefinitionSchema.validate(payload, {
+            abortEarly: false
+          })
+
+          if (result.error) {
+            const error = result.error
             request.logger.error(
               ['error', `/api/${id}/data`],
               [error, request.payload]
@@ -53,7 +54,10 @@ export default [
             )
           }
 
-          await forms.updateDraftFormDefinition(id, value)
+          const value = result.value
+
+          // Update the form definition
+          await forms.updateDraftFormDefinition(id, value, author)
 
           return h.response({ ok: true }).code(204)
         } catch (err) {
