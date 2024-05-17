@@ -1,0 +1,61 @@
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+
+{% set formStatus %}
+  {{ govukTag({ text: "Live", classes: "govuk-tag--green" }) }}
+{% endset %}
+
+{% set formCreated %}
+  {{ (form.live.createdAt if form.live.createdAt else "2024-03-01") | formatDate }}
+  by {{ form.live.createdBy.displayName | default("Nathanael Booker", true) }}
+{% endset %}
+
+{% set formPreviewLink %}
+  {% set linkHref = previewUrl + "/preview/live/" + form.slug | urlencode %}
+  <a href="{{ linkHref }}" class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noreferrer noopener">
+    {{ linkHref }} (opens in a new tab)
+  </a>
+{% endset %}
+
+{% set formLink %}
+  {% set linkHref = previewUrl + "/" + form.slug | urlencode %}
+  <a href="{{ linkHref }}" class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noreferrer noopener">
+    {{ linkHref }} (opens in a new tab)
+  </a>
+{% endset %}
+
+{{ govukSummaryList({
+  rows: [
+    {
+      key: {
+        text: "Status"
+      },
+      value: {
+        html: formStatus
+      }
+    },
+    {
+      key: {
+        text: "Went live"
+      },
+      value: {
+        text: formCreated
+      }
+    },
+    {
+      key: {
+        text: "Preview link"
+      },
+      value: {
+        text: formPreviewLink | safe
+      }
+    },
+    {
+      key: {
+        text: "Live link"
+      },
+      value: {
+        text: formLink | safe
+      }
+    }
+  ]
+}) }}

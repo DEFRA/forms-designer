@@ -9,6 +9,7 @@ import config from '~/src/config.js'
 
 export const environment = nunjucks.configure(
   [
+    join(config.appDir, 'views'),
     join(config.appDir, 'common/templates'),
     join(config.appDir, 'common/components'),
     dirname(resolvePkg.sync('govuk-frontend/package.json'))
