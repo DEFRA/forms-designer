@@ -9,11 +9,11 @@
 {% endblock %}
 
 {% block content %}
-  {% call appPageBody({
-    errorList: errorList,
-    heading: pageHeading
-  }) %}
-    <form method="post" novalidate>
+  <form method="post" novalidate>
+    {% call appPageBody({
+      errorList: errorList,
+      heading: pageHeading
+    }) %}
       {% for field in fields %}
         {% if field.type === "hidden" %}
           <input type="hidden" name="{{ field.name }}" value="{{ field.value }}">
@@ -37,6 +37,6 @@
       {{ govukButton({
         text: buttonText
       }) }}
-    </form>
-  {% endcall %}
+    {% endcall %}
+  </form>
 {% endblock %}
