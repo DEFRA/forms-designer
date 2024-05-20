@@ -17,7 +17,8 @@ export const profile = {
   email: 'dummy@defra.gov.uk',
   given_name: 'John',
   family_name: 'Smith',
-  sub: 'dummy_session_id'
+  sub: 'dummy_session_id',
+  groups: ['valid-test-group']
 }
 
 /**
@@ -49,6 +50,7 @@ export const artifacts = {
  */
 export const credentials = {
   provider: 'azure-oidc',
+  scope: ['read', 'write'],
   user,
   query: {},
   token: artifacts.access_token,
