@@ -1,5 +1,7 @@
 import { token } from '@hapi/jwt'
 
+import { groupsToScopes } from '~/src/common/constants/scopes.js'
+
 /**
  * @param {Request | Request<{ AuthArtifactsExtra: AuthArtifacts }>} request
  * @param {{ sessionId: string, user: UserCredentials }} [session] - Session cookie state
@@ -68,6 +70,28 @@ export function getUserClaims(credentials) {
   return /** @type {Record<keyof Tokens, UserProfile>} */ (
     Object.fromEntries(entries)
   )
+}
+
+/**
+ * @param {AuthWithTokens} credentials
+ * @param {ReturnType<typeof getUserClaims>} [claims]
+ * @returns Array of scopes assigned to the user
+ */
+export function getUserScopes(credentials, claims) {
+  const { idToken } = claims ?? getUserClaims(credentials)
+  const { groups } = idToken
+
+  // No groups assigned to the user
+  if (!groups?.length) {
+    return []
+  }
+
+  // Filter groups to assigned scopes
+  const assignedScopes = Object.entries(groupsToScopes)
+    .filter(([group]) => groups.includes(group))
+    .flatMap(([, scopes]) => scopes)
+
+  return assignedScopes
 }
 
 /**
