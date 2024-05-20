@@ -1,6 +1,7 @@
 import Boom from '@hapi/boom'
 
 import * as scopes from '~/src/common/constants/scopes.js'
+import { dropUserSession } from '~/src/common/helpers/auth/drop-user-session.js'
 import { hasUser } from '~/src/common/helpers/auth/get-user-session.js'
 import { createUserSession } from '~/src/common/helpers/auth/user-session.js'
 
@@ -24,8 +25,15 @@ export default [
       // Add to authentication cookie for session validation
       cookieAuth.set({ sessionId: credentials.user.id })
 
-      // Redirect users to the home page when scopes are missing
+      /**
+       * Drop user sessions when scopes are missing but let users sign back in
+       * @todo Keep users signed in but restrict route access by scope
+       */
       if (!credentials.scope.includes(scopes.SCOPE_WRITE)) {
+        await dropUserSession(request)
+
+        // Redirect users to a help message
+        yar.flash('userAuthFailed', true)
         return h.redirect('/')
       }
 

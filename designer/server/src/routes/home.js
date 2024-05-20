@@ -5,7 +5,7 @@ export default /** @satisfies {ServerRoute} */ ({
   method: 'GET',
   path: '/',
   handler(request, h) {
-    const { auth } = request
+    const { auth, yar } = request
     const { isAuthenticated, isAuthorized } = auth
 
     if (isAuthenticated && isAuthorized) {
@@ -13,7 +13,8 @@ export default /** @satisfies {ServerRoute} */ ({
     }
 
     const model = signInViewModel({
-      hasFailedAuthorisation: isAuthenticated && !isAuthorized
+      hasFailedAuthorisation:
+        (isAuthenticated && !isAuthorized) || yar.flash('userAuthFailed').at(0)
     })
 
     return h.view('account/sign-in', model)

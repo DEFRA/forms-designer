@@ -69,13 +69,10 @@ describe('Authentiation', () => {
       expect(headers.location).toBe('/')
     })
 
-    it('should set the user session cookie', () => {
+    it('should clear the user session cookie', () => {
       const { headers } = response
       expect(headers['set-cookie']).toMatchObject(
-        expect.arrayContaining([
-          expect.stringMatching(/^userSession=[a-z]/i),
-          expect.not.stringContaining('userSession=;')
-        ])
+        expect.arrayContaining([expect.stringContaining('userSession=;')])
       )
     })
   })
@@ -99,13 +96,10 @@ describe('Authentiation', () => {
       expect(headers.location).toBe('/')
     })
 
-    it('should set the user session cookie', () => {
+    it('should clear the user session cookie', () => {
       const { headers } = response
       expect(headers['set-cookie']).toMatchObject(
-        expect.arrayContaining([
-          expect.stringMatching(/^userSession=[a-z]/i),
-          expect.not.stringContaining('userSession=;')
-        ])
+        expect.arrayContaining([expect.stringContaining('userSession=;')])
       )
     })
   })
