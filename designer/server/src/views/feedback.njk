@@ -6,12 +6,13 @@
 {% set pageTitle = "Give feedback" %}
 
 {% block content %}
-  {% call appPageBody({
-    heading: {
-      text: pageTitle
-    }
-  }) %}
-    <form method="post" novalidate>
+  <form method="post" novalidate>
+    {% call appPageBody({
+      errorList: errorList,
+      heading: {
+        text: pageTitle
+      }
+    }) %}
       {{ govukCharacterCount({
         name: "feedback",
         id: "feedback",
@@ -36,6 +37,6 @@
           classes: "govuk-button--secondary"
         }) }}
       </div>
-    </form>
-  {% endcall %}
+    {% endcall %}
+  </form>
 {% endblock %}

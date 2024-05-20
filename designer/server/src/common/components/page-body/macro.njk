@@ -1,16 +1,30 @@
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "grid-layout/macro.njk" import appGridLayout %}
 {% from "heading/macro.njk" import appHeading %}
 
 {% macro appPageBody(params) %}
+  {% set beforeContent = "" %}
+
   {%- set rows = [{
     html: caller(),
     classes: params.classes,
     attributes: params.attributes
   }] if caller else [params] %}
 
+  {% if params.errorList | length %}
+    {% set beforeContent = beforeContent + govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: params.errorList
+    }) %}
+  {% endif %}
+
   {%- if params.heading %}
+    {% set beforeContent = beforeContent + appHeading(params.heading) %}
+  {% endif %}
+
+  {%- if beforeContent %}
     {% set rows = (rows.unshift({
-      html: appHeading(params.heading) | trim,
+      html: beforeContent | trim,
       classes: "govuk-grid-column-two-thirds"
     }), rows) %}
   {% endif %}
