@@ -1,21 +1,30 @@
-import * as auth from '~/src/models/account/auth.js'
+import * as scopes from '~/src/common/constants/scopes.js'
+import { signInViewModel } from '~/src/models/account/auth.js'
 
 export default /** @satisfies {ServerRoute} */ ({
   method: 'GET',
   path: '/',
   handler(request, h) {
-    if (request.auth.isAuthenticated) {
+    const { auth, yar } = request
+    const { isAuthenticated, isAuthorized } = auth
+
+    if (isAuthenticated && isAuthorized) {
       return h.redirect('/library')
     }
 
-    const model = auth.signedOutViewModel()
-    return h.view('account/signed-out', model)
+    const model = signInViewModel({
+      hasFailedAuthorisation:
+        (isAuthenticated && !isAuthorized) || yar.flash('userAuthFailed').at(0)
+    })
+
+    return h.view('account/sign-in', model)
   },
   options: {
     auth: {
       mode: 'try',
       access: {
-        entity: 'user'
+        entity: 'user',
+        scope: [`+${scopes.SCOPE_READ}`]
       }
     }
   }

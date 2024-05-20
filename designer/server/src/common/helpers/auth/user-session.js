@@ -2,6 +2,7 @@ import { DateTime } from 'luxon'
 
 import {
   getUserClaims,
+  getUserScopes,
   hasUser,
   hasAuthenticated
 } from '~/src/common/helpers/auth/get-user-session.js'
@@ -52,6 +53,9 @@ export async function createUserSession(request) {
 
   const claims = getUserClaims(credentials)
   const user = createUser(credentials, claims)
+
+  // Add user scopes to credentials
+  credentials.scope = getUserScopes(credentials, claims)
 
   // Create and retrieve user session from Redis
   await server.methods.session.set(user.id, { ...credentials, user })

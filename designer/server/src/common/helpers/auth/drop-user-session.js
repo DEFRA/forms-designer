@@ -4,7 +4,7 @@ import {
 } from '~/src/common/helpers/auth/get-user-session.js'
 
 /**
- * @param {Request} request
+ * @param {Request | Request<{ AuthArtifactsExtra: AuthArtifacts }>} request
  */
 export async function dropUserSession(request) {
   const { cookieAuth, server } = request
@@ -21,5 +21,10 @@ export async function dropUserSession(request) {
 }
 
 /**
- * @typedef {import('@hapi/hapi').Request} Request
+ * @typedef {import('@hapi/hapi').AuthArtifacts} AuthArtifacts
+ */
+
+/**
+ * @template {import('@hapi/hapi').ReqRef} [ReqRef=import('@hapi/hapi').ReqRefDefaults]
+ * @typedef {import('@hapi/hapi').Request<ReqRef>} Request
  */

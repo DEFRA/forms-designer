@@ -1,7 +1,9 @@
 import { token } from '@hapi/jwt'
 
+import { groupsToScopes } from '~/src/common/constants/scopes.js'
+
 /**
- * @param {Request} request
+ * @param {Request | Request<{ AuthArtifactsExtra: AuthArtifacts }>} request
  * @param {{ sessionId: string, user: UserCredentials }} [session] - Session cookie state
  */
 export async function getUserSession(request, session) {
@@ -71,6 +73,28 @@ export function getUserClaims(credentials) {
 }
 
 /**
+ * @param {AuthWithTokens} credentials
+ * @param {ReturnType<typeof getUserClaims>} [claims]
+ * @returns Array of scopes assigned to the user
+ */
+export function getUserScopes(credentials, claims) {
+  const { idToken } = claims ?? getUserClaims(credentials)
+  const { groups } = idToken
+
+  // No groups assigned to the user
+  if (!groups?.length) {
+    return []
+  }
+
+  // Filter groups to assigned scopes
+  const assignedScopes = Object.entries(groupsToScopes)
+    .filter(([group]) => groups.includes(group))
+    .flatMap(([, scopes]) => scopes)
+
+  return assignedScopes
+}
+
+/**
  * @param {AuthCredentials | null} [credentials]
  * @returns {credentials is AuthSignedIn}
  */
@@ -79,7 +103,7 @@ export function hasUser(credentials) {
 }
 
 /**
- * @typedef {import('@hapi/hapi').Request} Request
+ * @typedef {import('@hapi/hapi').AuthArtifacts} AuthArtifacts
  * @typedef {import('@hapi/hapi').AuthCredentials} AuthCredentials
  * @typedef {import('@hapi/hapi').UserCredentials} UserCredentials
  * @typedef {import('~/src/common/helpers/auth/azure-oidc.js').UserProfile} UserProfile
@@ -89,6 +113,11 @@ export function hasUser(credentials) {
  * @typedef {Pick<AuthCredentials, 'token' | 'idToken'>} Tokens - Known tokens
  * @typedef {Extract<AuthCredentials, Required<Tokens>>} AuthWithTokens - Auth credentials with tokens (but maybe no user session)
  * @typedef {Required<AuthCredentials>} AuthSignedIn - Auth credentials with tokens and user session
+ */
+
+/**
+ * @template {import('@hapi/hapi').ReqRef} [ReqRef=import('@hapi/hapi').ReqRefDefaults]
+ * @typedef {import('@hapi/hapi').Request<ReqRef>} Request
  */
 
 /**

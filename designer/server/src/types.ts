@@ -86,19 +86,26 @@ declare module '@hapi/yar' {
   type CreateKey = (typeof sessionNames)['create']
   type ReferrerKey = (typeof sessionNames)['referrer']
   type ValidationKey = (typeof sessionNames)['validationFailure']
+  type UserAuthFailedKey = (typeof sessionNames)['userAuthFailed']
 
   interface Yar {
     /**
      * Get temporary redirect path for after sign in
      * (Deleted when read, e.g. after a redirect)
      */
-    flash(type: ReferrerKey): string
+    flash(type: ReferrerKey): string[]
 
     /**
      * Get temporary error messages from the session
      * (Deleted when read, e.g. after a redirect)
      */
     flash(type: ValidationKey): ValidationFailure<FormMetadataInput>[]
+
+    /**
+     * Get temporary flag that user failed authorisation
+     * (Deleted when read, e.g. after a redirect)
+     */
+    flash(type: UserAuthFailedKey): true[]
 
     /**
      * Get form metadata from the session
