@@ -5,7 +5,9 @@ export default /** @satisfies {ServerRoute} */ ({
   method: 'GET',
   path: '/',
   handler(request, h) {
-    if (request.auth.isAuthenticated) {
+    const { isAuthenticated, isAuthorized } = request.auth
+
+    if (isAuthenticated && isAuthorized) {
       return h.redirect('/library')
     }
 
