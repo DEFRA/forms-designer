@@ -8,8 +8,8 @@ export default /** @satisfies {ServerRoute} */ ({
       return h.redirect('/library')
     }
 
-    const model = auth.signedOutViewModel()
-    return h.view('account/signed-out', model)
+    const model = auth.signInViewModel()
+    return h.view('account/sign-in', model)
   },
   options: {
     auth: {
