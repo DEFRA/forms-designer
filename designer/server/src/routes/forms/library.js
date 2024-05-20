@@ -16,7 +16,10 @@ export default [
     },
     options: {
       auth: {
-        mode: 'required'
+        mode: 'required',
+        access: {
+          entity: 'user'
+        }
       }
     }
   }),
@@ -39,6 +42,12 @@ export default [
 
         const model = library.overviewViewModel(form)
         return h.view('forms/overview', model)
+      },
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user'
+        }
       }
     }
   }),
@@ -61,6 +70,12 @@ export default [
 
         const model = library.editorViewModel(form)
         return h.view('forms/editor', model)
+      },
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user'
+        }
       }
     }
   })

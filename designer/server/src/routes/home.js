@@ -13,7 +13,10 @@ export default /** @satisfies {ServerRoute} */ ({
   },
   options: {
     auth: {
-      mode: 'optional'
+      mode: 'try',
+      access: {
+        entity: 'user'
+      }
     }
   }
 })
