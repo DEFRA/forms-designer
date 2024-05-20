@@ -1,17 +1,21 @@
 import * as scopes from '~/src/common/constants/scopes.js'
-import * as auth from '~/src/models/account/auth.js'
+import { signInViewModel } from '~/src/models/account/auth.js'
 
 export default /** @satisfies {ServerRoute} */ ({
   method: 'GET',
   path: '/',
   handler(request, h) {
-    const { isAuthenticated, isAuthorized } = request.auth
+    const { auth } = request
+    const { isAuthenticated, isAuthorized } = auth
 
     if (isAuthenticated && isAuthorized) {
       return h.redirect('/library')
     }
 
-    const model = auth.signInViewModel()
+    const model = signInViewModel({
+      hasFailedAuthorisation: isAuthenticated && !isAuthorized
+    })
+
     return h.view('account/sign-in', model)
   },
   options: {
