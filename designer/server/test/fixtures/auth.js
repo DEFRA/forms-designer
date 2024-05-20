@@ -77,6 +77,16 @@ const claims = {
   idToken: profile({ groups: ['valid-test-group'] })
 }
 
+const claimsGroupsInvalid = {
+  token: profile(),
+  idToken: profile({ groups: ['invalid-test-group'] })
+}
+
+const claimsGroupsEmpty = {
+  token: profile(),
+  idToken: profile({ groups: [] })
+}
+
 /**
  * Request auth with scopes for Hapi `server.inject()`
  * @satisfies {ServerInjectOptions['auth']}
@@ -88,6 +98,31 @@ export const auth = {
     claims,
     user: user(claims.idToken),
     scope: [SCOPE_READ, SCOPE_WRITE]
+  })
+}
+
+/**
+ * Request auth with invalid groups for Hapi `server.inject()`
+ * @satisfies {ServerInjectOptions['auth']}
+ */
+export const authGroupsInvalid = {
+  strategy: 'azure-oidc',
+  artifacts: artifacts(claimsGroupsInvalid),
+  credentials: credentials({
+    claims: claimsGroupsInvalid,
+    user: user(claimsGroupsInvalid.idToken)
+  })
+}
+
+/**
+ * Request auth without without scopes for Hapi `server.inject()`
+ * @satisfies {ServerInjectOptions['auth']}
+ */
+export const authScopesEmpty = {
+  strategy: 'azure-oidc',
+  artifacts: artifacts(claimsGroupsEmpty),
+  credentials: credentials({
+    claims: claimsGroupsEmpty
   })
 }
 

@@ -1,5 +1,6 @@
 import Boom from '@hapi/boom'
 
+import * as scopes from '~/src/common/constants/scopes.js'
 import { hasUser } from '~/src/common/helpers/auth/get-user-session.js'
 import { createUserSession } from '~/src/common/helpers/auth/user-session.js'
 
@@ -22,6 +23,11 @@ export default [
 
       // Add to authentication cookie for session validation
       cookieAuth.set({ sessionId: credentials.user.id })
+
+      // Redirect users to the home page when scopes are missing
+      if (!credentials.scope.includes(scopes.SCOPE_WRITE)) {
+        return h.redirect('/')
+      }
 
       const redirect = yar.flash('referrer').at(0) ?? '/library'
       return h.redirect(redirect)
