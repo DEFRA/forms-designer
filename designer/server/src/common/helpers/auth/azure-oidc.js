@@ -48,11 +48,15 @@ export const azureOidc = {
               'offline_access',
               'user.read'
             ],
-            profile(credentials) {
+            profile(credentials, params) {
               const artifacts = token.decode(credentials.token)
+              const idToken = token.decode(params.id_token)
 
               token.verifyTime(artifacts)
               token.verifyPayload(artifacts)
+
+              token.verifyTime(idToken)
+              token.verifyPayload(idToken)
 
               return Promise.resolve()
             }
