@@ -1,3 +1,4 @@
+import * as scopes from '~/src/common/constants/scopes.js'
 import * as auth from '~/src/models/account/auth.js'
 
 export default /** @satisfies {ServerRoute} */ ({
@@ -15,7 +16,8 @@ export default /** @satisfies {ServerRoute} */ ({
     auth: {
       mode: 'try',
       access: {
-        entity: 'user'
+        entity: 'user',
+        scope: [`+${scopes.SCOPE_READ}`]
       }
     }
   }

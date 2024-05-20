@@ -1,5 +1,6 @@
 import Boom from '@hapi/boom'
 
+import * as scopes from '~/src/common/constants/scopes.js'
 import * as forms from '~/src/lib/forms.js'
 import * as library from '~/src/models/forms/library.js'
 
@@ -18,7 +19,8 @@ export default [
       auth: {
         mode: 'required',
         access: {
-          entity: 'user'
+          entity: 'user',
+          scope: [`+${scopes.SCOPE_READ}`]
         }
       }
     }
@@ -46,7 +48,8 @@ export default [
       auth: {
         mode: 'required',
         access: {
-          entity: 'user'
+          entity: 'user',
+          scope: [`+${scopes.SCOPE_READ}`]
         }
       }
     }
@@ -74,7 +77,8 @@ export default [
       auth: {
         mode: 'required',
         access: {
-          entity: 'user'
+          entity: 'user',
+          scope: [`+${scopes.SCOPE_READ}`]
         }
       }
     }

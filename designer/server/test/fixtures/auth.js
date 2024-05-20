@@ -1,6 +1,8 @@
 import { token } from '@hapi/jwt'
 import { DateTime, Duration } from 'luxon'
 
+import * as scopes from '~/src/common/constants/scopes.js'
+
 const issuedAt = DateTime.now().minus({ minutes: 30 })
 const expiresAt = DateTime.now().plus({ minutes: 30 })
 
@@ -46,11 +48,12 @@ export const artifacts = {
 }
 
 /**
+ * Credentials with tokens, user session and editor scopes
  * @satisfies {AuthCredentials}
  */
 export const credentials = {
   provider: 'azure-oidc',
-  scope: ['read', 'write'],
+  scope: [scopes.SCOPE_READ, scopes.SCOPE_WRITE],
   user,
   query: {},
   token: artifacts.access_token,
@@ -60,12 +63,23 @@ export const credentials = {
 }
 
 /**
+ * Request auth with scopes for Hapi `server.inject()`
  * @satisfies {ServerInjectOptions['auth']}
  */
 export const auth = {
   strategy: 'azure-oidc',
-  credentials,
-  artifacts
+  artifacts,
+  credentials
+}
+
+/**
+ * Request auth without scopes for Hapi `server.inject()`
+ * @satisfies {ServerInjectOptions['auth']}
+ */
+export const authNoScopes = {
+  strategy: 'azure-oidc',
+  artifacts,
+  credentials: { ...credentials, scope: [] }
 }
 
 /**
