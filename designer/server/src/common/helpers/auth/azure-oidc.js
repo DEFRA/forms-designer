@@ -64,11 +64,11 @@ export const azureOidc = {
           location() {
             return authCallbackUrl.href
           },
-          password: config.sessionCookiePassword,
           clientId: config.azureClientId,
           clientSecret: config.azureClientSecret,
           cookie: 'bell-azure-oidc',
-          isSecure: false
+          isSecure: config.isProduction,
+          password: config.sessionCookiePassword
         })
       )
     }
