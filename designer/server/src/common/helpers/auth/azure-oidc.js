@@ -64,14 +64,11 @@ export const azureOidc = {
           location() {
             return authCallbackUrl.href
           },
-          password: config.sessionCookiePassword,
           clientId: config.azureClientId,
           clientSecret: config.azureClientSecret,
-          providerParams: {
-            redirect_uri: authCallbackUrl.href
-          },
           cookie: 'bell-azure-oidc',
-          isSecure: false
+          isSecure: config.isProduction,
+          password: config.sessionCookiePassword
         })
       )
     }
@@ -140,5 +137,5 @@ export const azureOidcNoop = {
  * @typedef {import('@hapi/hapi').UserCredentials} UserCredentials - User credentials
  * @typedef {import('oidc-client-ts').OidcMetadata} OidcMetadata - OpenID Connect (OIDC) metadata
  * @typedef {import('oidc-client-ts').SigninResponse} SigninResponse - Provider sign in artifacts
- * @typedef {import('oidc-client-ts').UserProfile & { groups?: string[] }} UserProfile - User profile
+ * @typedef {import('oidc-client-ts').UserProfile & { groups?: string[], unique_name?: string }} UserProfile - User profile
  */

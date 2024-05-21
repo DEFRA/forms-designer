@@ -30,7 +30,7 @@ export function createUser(credentials, claims) {
   // Create user object (e.g. signed in token but no session)
   return /** @satisfies {UserCredentials} */ ({
     id: token.sub,
-    email: token.email ?? '',
+    email: token.email ?? token.unique_name ?? '',
     displayName: displayName ?? '',
     issuedAt: DateTime.fromSeconds(token.iat).toUTC().toISO(),
     expiresAt: DateTime.fromSeconds(token.exp).toUTC().toISO()
