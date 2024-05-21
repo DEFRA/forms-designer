@@ -6,6 +6,8 @@ import { dropUserSession } from '~/src/common/helpers/auth/drop-user-session.js'
 import { hasUser } from '~/src/common/helpers/auth/get-user-session.js'
 import config from '~/src/config.js'
 
+const redirectUrl = new URL(`/account/signed-out`, config.appBaseUrl)
+
 export default /** @satisfies {ServerRoute} */ ({
   method: 'GET',
   path: '/auth/sign-out',
@@ -30,6 +32,7 @@ export default /** @satisfies {ServerRoute} */ ({
     // Build end session URL
     const endSessionUrl = new URL(oidc.end_session_endpoint)
     endSessionUrl.searchParams.set('client_id', config.azureClientId)
+    endSessionUrl.searchParams.set('post_logout_redirect_uri', redirectUrl.href)
 
     await dropUserSession(request)
 
