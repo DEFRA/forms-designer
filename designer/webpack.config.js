@@ -3,6 +3,7 @@ import { dirname, join } from 'node:path'
 import CopyPlugin from 'copy-webpack-plugin'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 import resolvePkg from 'resolve'
+import TerserPlugin from 'terser-webpack-plugin'
 import webpack from 'webpack'
 import WebpackAssetsManifest from 'webpack-assets-manifest'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
@@ -113,7 +114,22 @@ export default /** @type {import('webpack').Configuration} */ ({
     ]
   },
   optimization: {
-    minimize: NODE_ENV === 'production'
+    minimize: NODE_ENV === 'production',
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          // Use webpack default compress options
+          // https://webpack.js.org/configuration/optimization/#optimizationminimizer
+          compress: { passes: 2 },
+
+          // Allow Terser to remove @preserve comments
+          format: { comments: false },
+
+          // Compatibility workarounds
+          safari10: true
+        }
+      })
+    ]
   },
   output: {
     path: join(import.meta.dirname, 'client/dist'),

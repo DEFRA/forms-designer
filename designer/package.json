@@ -93,6 +93,7 @@
     "sass-loader": "^14.2.1",
     "source-map-loader": "^5.0.0",
     "style-loader": "^4.0.0",
+    "terser-webpack-plugin": "^5.3.10",
     "tsx": "^4.7.3",
     "webpack": "^5.91.0",
     "webpack-assets-manifest": "^5.2.1",
