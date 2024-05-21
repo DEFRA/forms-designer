@@ -42,7 +42,7 @@ $govuk-assets-path: "/assets/";
 
 button.govuk-link {
   @extend %app-button-link;
-  @include govuk-font($size: 16);
+  @include govuk-font-size($size: 16);
   padding: 0;
 
   &:hover {
@@ -58,7 +58,7 @@ button.govuk-link {
   .govuk-button {
     @include govuk-responsive-margin(1, "right");
     @include govuk-responsive-margin(1, "bottom");
-    @include govuk-font($size: 16);
+    @include govuk-font-size($size: 16);
   }
 
   &__row:not(:first-child) {
@@ -67,7 +67,7 @@ button.govuk-link {
 }
 
 .submenu__link {
-  @include govuk-font($size: 16);
+  @include govuk-font-size($size: 16);
   @include govuk-responsive-margin(4, "right");
 }
 
