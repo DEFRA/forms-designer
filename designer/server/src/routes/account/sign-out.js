@@ -32,6 +32,7 @@ export default /** @satisfies {ServerRoute} */ ({
     // Build end session URL
     const endSessionUrl = new URL(oidc.end_session_endpoint)
     endSessionUrl.searchParams.set('client_id', config.azureClientId)
+    endSessionUrl.searchParams.set('id_token_hint', credentials.idToken)
     endSessionUrl.searchParams.set('post_logout_redirect_uri', redirectUrl.href)
 
     await dropUserSession(request)
