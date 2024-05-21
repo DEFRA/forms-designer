@@ -55,22 +55,10 @@ button.govuk-link {
 }
 
 .menu {
-  padding: 8px;
-  background-color: #ffffff;
-  padding-top: 35px;
-
-  &__row {
-    a {
-      @include govuk-font($size: 16);
-      @include govuk-responsive-margin(4, "right");
-    }
-    &:first-child {
-      button {
-        @include govuk-font($size: 16);
-        @include govuk-responsive-margin(1, "right");
-        @include govuk-responsive-margin(1, "bottom");
-      }
-    }
+  .govuk-button {
+    @include govuk-responsive-margin(1, "right");
+    @include govuk-responsive-margin(1, "bottom");
+    @include govuk-font($size: 16);
   }
 
   &__row:not(:first-child) {
@@ -81,17 +69,6 @@ button.govuk-link {
 .submenu__link {
   @include govuk-font($size: 16);
   @include govuk-responsive-margin(4, "right");
-}
-
-@include govuk-media-query($from: tablet) {
-  .menu {
-    padding: 8px;
-    background-color: #fff;
-    width: 100%;
-    button {
-      margin-bottom: 0;
-    }
-  }
 }
 
 .component {
