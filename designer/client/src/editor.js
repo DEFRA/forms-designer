@@ -29,9 +29,10 @@ class Editor extends React.Component {
         required={this.props.required}
         highlight={(code) => highlight(code, languages.html, 'html')}
         onValueChange={(value) => this.setState({ value })}
-        padding={5}
+        padding={10}
         style={{
-          fontFamily: '"Fira code", "Fira Mono", monospace',
+          fontFamily:
+            'ui-monospace, menlo, "Cascadia Mono", "Segoe UI Mono", consolas, "Liberation Mono", monospace',
           border: '2px solid #0b0c0c',
           fontSize: 16
         }}
