@@ -1,4 +1,4 @@
-import { dirname, join } from 'node:path'
+import { dirname, join, resolve } from 'node:path'
 
 import CopyPlugin from 'copy-webpack-plugin'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
@@ -13,6 +13,12 @@ const { NODE_ENV = 'development', REACT_LOG_LEVEL } = process.env
 const govukFrontendPath = dirname(
   resolvePkg.sync('govuk-frontend/package.json', {
     basedir: import.meta.dirname
+  })
+)
+
+const govukFrontendLegacyPath = dirname(
+  resolvePkg.sync('govuk-frontend/package.json', {
+    basedir: resolve(import.meta.dirname, '../')
   })
 )
 
@@ -169,7 +175,13 @@ export default /** @type {import('webpack').Configuration} */ ({
       patterns: [
         {
           from: join(govukFrontendPath, 'dist/govuk/assets'),
-          to: 'assets'
+          to: 'assets',
+          priority: 2
+        },
+        {
+          from: join(govukFrontendLegacyPath, 'govuk/assets'),
+          to: 'assets',
+          priority: 1
         },
         {
           from: 'i18n/translations',
@@ -182,7 +194,10 @@ export default /** @type {import('webpack').Configuration} */ ({
     alias: {
       '~': join(import.meta.dirname, 'client'),
       'govuk-frontend/dist': join(govukFrontendPath, 'dist'),
-      'govuk-frontend/govuk': join(govukFrontendPath, 'dist/govuk'),
+      'govuk-frontend/govuk': [
+        join(govukFrontendPath, 'dist/govuk'),
+        join(govukFrontendLegacyPath, 'govuk')
+      ],
       '/assets': join(govukFrontendPath, 'dist/govuk/assets')
     },
     extensions: ['.js', '.json', '.mjs'],
