@@ -6,7 +6,6 @@ import resolvePkg from 'resolve'
 import TerserPlugin from 'terser-webpack-plugin'
 import webpack from 'webpack'
 import WebpackAssetsManifest from 'webpack-assets-manifest'
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 
 const { EnvironmentPlugin } = webpack
 const { NODE_ENV = 'development', REACT_LOG_LEVEL } = process.env
@@ -177,14 +176,7 @@ export default /** @type {import('webpack').Configuration} */ ({
           to: 'assets/translations'
         }
       ]
-    }),
-
-    NODE_ENV === 'production' &&
-      new BundleAnalyzerPlugin({
-        analyzerMode: 'static',
-        defaultSizes: 'gzip',
-        openAnalyzer: false
-      })
+    })
   ],
   resolve: {
     alias: {
