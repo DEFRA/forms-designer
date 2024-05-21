@@ -78,6 +78,7 @@
     "@types/node": "^20.12.8",
     "@types/node-fetch": "^2.6.11",
     "@types/nunjucks": "^3.2.6",
+    "@types/prismjs": "^1.26.4",
     "@types/react": "^17.0.76",
     "@types/react-dom": "^17.0.25",
     "@types/resolve": "^1.20.6",
