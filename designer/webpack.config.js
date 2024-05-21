@@ -39,10 +39,6 @@ export default /** @type {import('webpack').Configuration} */ ({
   experiments: {
     outputModule: true
   },
-  externals: {
-    react: 'React',
-    'react-dom': 'ReactDOM'
-  },
   mode: NODE_ENV,
   module: {
     rules: [
