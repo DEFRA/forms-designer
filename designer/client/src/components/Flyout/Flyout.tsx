@@ -18,9 +18,9 @@ interface Props {
   style?: string
   width?: string
   onHide?: (
-    e?: KeyboardEvent<HTMLAnchorElement> | MouseEvent<HTMLAnchorElement>
+    e?: KeyboardEvent<HTMLButtonElement> | MouseEvent<HTMLButtonElement>
   ) => void
-  closeOnEnter?: (e: KeyboardEvent<HTMLAnchorElement>) => void
+  closeOnEnter?: (e: KeyboardEvent<HTMLButtonElement>) => void
   show?: boolean
   offset?: number
   title?: string
@@ -97,15 +97,13 @@ export function Flyout(props: Props) {
     <FocusTrap>
       <div className="flyout show" data-testid={`flyout-${offset}`}>
         <div className={`flyout__container ${width}`} style={style}>
-          <a
-            tabIndex={0}
-            title="Close"
-            className="flyout__button-close govuk-body govuk-!-font-size-16"
+          <button
+            className="flyout__button-close govuk-link"
             onClick={onHide}
             onKeyPress={closeOnEnter}
           >
             {i18n('close')}
-          </a>
+          </button>
           <div className="panel panel--flyout">
             <div className="panel-header govuk-!-padding-top-4 govuk-!-padding-left-4">
               {props.title && (
