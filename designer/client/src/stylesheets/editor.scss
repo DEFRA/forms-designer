@@ -77,7 +77,7 @@ button.govuk-link {
 }
 
 .submenu__link {
-  @include govuk-typography-responsive($size: 16);
+  @include govuk-font($size: 16);
   @include govuk-responsive-margin(4, "right");
 }
 
