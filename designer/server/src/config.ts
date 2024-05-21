@@ -86,7 +86,7 @@ const schema = joi.object<Config>({
   redisUsername: joi.string().default('default'),
   redisPassword: joi.string().default('my-password'),
   redisKeyPrefix: joi.string().default('forms-designer'),
-  roleEditorGroupId: joi.string()
+  roleEditorGroupId: joi.string().required()
 })
 
 // Validate config
