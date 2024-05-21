@@ -3,16 +3,18 @@ import { URL } from 'node:url'
 import Boom from '@hapi/boom'
 
 import { dropUserSession } from '~/src/common/helpers/auth/drop-user-session.js'
+import { hasUser } from '~/src/common/helpers/auth/get-user-session.js'
 import config from '~/src/config.js'
 
 export default /** @satisfies {ServerRoute} */ ({
   method: 'GET',
   path: '/auth/sign-out',
   async handler(request, h) {
-    await dropUserSession(request)
+    const { credentials } = request.auth
 
-    // Skip OpenID Connect (OIDC) in tests
-    if (config.isTest) {
+    // Skip OpenID Connect (OIDC) when not authenticated
+    if (!hasUser(credentials) || config.isTest) {
+      await dropUserSession(request)
       return h.redirect('/')
     }
 
@@ -28,6 +30,8 @@ export default /** @satisfies {ServerRoute} */ ({
     // Build end session URL
     const endSessionUrl = new URL(oidc.end_session_endpoint)
     endSessionUrl.searchParams.set('client_id', config.azureClientId)
+
+    await dropUserSession(request)
 
     // Redirect to end session URL
     return h.redirect(endSessionUrl.href)
