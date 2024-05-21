@@ -1,24 +1,23 @@
-const { dirname, join } = require('node:path')
+import { dirname, join } from 'node:path'
 
-const CopyPlugin = require('copy-webpack-plugin')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const { EnvironmentPlugin } = require('webpack')
-const WebpackAssetsManifest = require('webpack-assets-manifest')
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
+import CopyPlugin from 'copy-webpack-plugin'
+import MiniCssExtractPlugin from 'mini-css-extract-plugin'
+import resolvePkg from 'resolve'
+import webpack from 'webpack'
+import WebpackAssetsManifest from 'webpack-assets-manifest'
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 
+const { EnvironmentPlugin } = webpack
 const { NODE_ENV = 'development', REACT_LOG_LEVEL } = process.env
 
 const govukFrontendPath = dirname(
-  require.resolve('govuk-frontend/package.json', {
-    paths: [__dirname]
+  resolvePkg.sync('govuk-frontend/package.json', {
+    paths: [import.meta.dirname]
   })
 )
 
-/**
- * @type {import('webpack').Configuration}
- */
-module.exports = {
-  context: join(__dirname, 'client/src'),
+export default /** @type {import('webpack').Configuration} */ ({
+  context: join(import.meta.dirname, 'client/src'),
   devtool: NODE_ENV === 'production' ? 'source-map' : 'inline-source-map',
   entry: {
     application: {
@@ -56,7 +55,7 @@ module.exports = {
           not: [/@xgovformbuilder\/govuk-react-jsx/]
         },
         options: {
-          extends: join(__dirname, 'client/babel.config.cjs')
+          extends: join(import.meta.dirname, 'client/babel.config.cjs')
         },
 
         // Fix missing file extensions in React components
@@ -79,8 +78,8 @@ module.exports = {
             options: {
               sassOptions: {
                 includePaths: [
-                  join(__dirname, 'node_modules'),
-                  join(__dirname, '../node_modules')
+                  join(import.meta.dirname, 'node_modules'),
+                  join(import.meta.dirname, '../node_modules')
                 ],
                 quietDeps: true
               },
@@ -114,7 +113,7 @@ module.exports = {
     ]
   },
   output: {
-    path: join(__dirname, 'client/dist'),
+    path: join(import.meta.dirname, 'client/dist'),
     filename:
       NODE_ENV === 'production'
         ? 'javascripts/[name].[contenthash:7].min.js'
@@ -142,7 +141,7 @@ module.exports = {
 
     new EnvironmentPlugin({
       REACT_LOG_LEVEL:
-        REACT_LOG_LEVEL || (NODE_ENV === 'production' ? 'warn' : 'debug')
+        REACT_LOG_LEVEL ?? (NODE_ENV === 'production' ? 'warn' : 'debug')
     }),
 
     new CopyPlugin({
@@ -167,7 +166,7 @@ module.exports = {
   ],
   resolve: {
     alias: {
-      '~': join(__dirname, 'client'),
+      '~': join(import.meta.dirname, 'client'),
       'govuk-frontend': govukFrontendPath,
       '/assets': join(govukFrontendPath, 'govuk/assets/')
     },
@@ -184,4 +183,4 @@ module.exports = {
     preset: 'minimal'
   },
   target: 'browserslist:javascripts'
-}
+})
