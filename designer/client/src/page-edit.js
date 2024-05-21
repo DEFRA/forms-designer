@@ -267,6 +267,8 @@ export class PageEdit extends React.Component {
                 ))}
               </select>
             )}
+          </div>
+          <p className="govuk-body">
             {section && (
               <a
                 href="#"
@@ -285,7 +287,7 @@ export class PageEdit extends React.Component {
                 {i18n('section.create')}
               </a>
             )}
-          </div>
+          </p>
           <button className="govuk-button" type="submit">
             {i18n('save')}
           </button>{' '}

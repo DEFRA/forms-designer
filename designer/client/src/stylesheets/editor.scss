@@ -42,6 +42,8 @@ $govuk-assets-path: "/assets/";
 
 button.govuk-link {
   @extend %app-button-link;
+  @include govuk-font($size: 16);
+  padding: 0;
 
   &:hover {
     cursor: pointer;

@@ -295,6 +295,8 @@ class PageCreate extends React.Component {
                 ))}
               </select>
             )}
+          </div>
+          <p className="govuk-body">
             {section?.name && (
               <a
                 href="#"
@@ -311,7 +313,7 @@ class PageCreate extends React.Component {
             >
               Create section
             </a>
-          </div>
+          </p>
 
           <button type="submit" className="govuk-button">
             Save
