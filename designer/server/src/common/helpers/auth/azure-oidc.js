@@ -67,9 +67,6 @@ export const azureOidc = {
           password: config.sessionCookiePassword,
           clientId: config.azureClientId,
           clientSecret: config.azureClientSecret,
-          providerParams: {
-            redirect_uri: authCallbackUrl.href
-          },
           cookie: 'bell-azure-oidc',
           isSecure: false
         })
