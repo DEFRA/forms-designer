@@ -33,34 +33,35 @@ export default [
         parse: true
       },
       async handler(request, h) {
-        const { id } = request.params
-        try {
-          const { value, error } = formDefinitionSchema.validate(
-            request.payload,
-            {
-              abortEarly: false
-            }
-          )
+        const { auth, params, payload } = request
+        const { id } = params
+        const author = forms.getAuthor(auth.credentials)
 
-          if (error) {
-            request.logger.error(
-              ['error', `/api/${id}/data`],
-              [error, request.payload]
-            )
+        try {
+          const result = formDefinitionSchema.validate(payload, {
+            abortEarly: false
+          })
+
+          if (result.error) {
+            const error = result.error
+            request.logger.error(['error', `/api/${id}/data`], [error, payload])
 
             throw new Error(
               `Schema validation failed, reason: ${error.message}`
             )
           }
 
-          await forms.updateDraftFormDefinition(id, value)
+          const value = result.value
+
+          // Update the form definition
+          await forms.updateDraftFormDefinition(id, value, author)
 
           return h.response({ ok: true }).code(204)
         } catch (err) {
           request.logger.error('Designer Server PUT /api/{id}/data error:', err)
           const errorSummary = {
             id,
-            payload: request.payload,
+            payload,
             errorMessage: err.message,
             error: err.stack
           }
