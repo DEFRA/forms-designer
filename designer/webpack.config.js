@@ -112,6 +112,9 @@ export default /** @type {import('webpack').Configuration} */ ({
       }
     ]
   },
+  optimization: {
+    minimize: NODE_ENV === 'production'
+  },
   output: {
     path: join(import.meta.dirname, 'client/dist'),
     filename:
