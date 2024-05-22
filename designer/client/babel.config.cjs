@@ -25,7 +25,14 @@ module.exports = {
   ],
   presets: [
     '@babel/preset-typescript',
-    '@babel/preset-react',
+    [
+      '@babel/preset-react',
+      {
+        development: NODE_ENV === 'development',
+        runtime: 'automatic',
+        useBuiltIns: true
+      }
+    ],
     [
       '@babel/preset-env',
       {

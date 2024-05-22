@@ -129,6 +129,11 @@ export default /** @type {import('webpack').Configuration} */ ({
           // Allow Terser to remove @preserve comments
           format: { comments: false },
 
+          // Include sources content from dependency source maps
+          sourceMap: {
+            includeSources: true
+          },
+
           // Compatibility workarounds
           safari10: true
         }
