@@ -1,24 +1,23 @@
-const { dirname, join } = require('node:path')
+import { dirname, join } from 'node:path'
 
-const CopyPlugin = require('copy-webpack-plugin')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const { EnvironmentPlugin } = require('webpack')
-const WebpackAssetsManifest = require('webpack-assets-manifest')
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
+import CopyPlugin from 'copy-webpack-plugin'
+import MiniCssExtractPlugin from 'mini-css-extract-plugin'
+import resolvePkg from 'resolve'
+import TerserPlugin from 'terser-webpack-plugin'
+import webpack from 'webpack'
+import WebpackAssetsManifest from 'webpack-assets-manifest'
 
+const { EnvironmentPlugin } = webpack
 const { NODE_ENV = 'development', REACT_LOG_LEVEL } = process.env
 
 const govukFrontendPath = dirname(
-  require.resolve('govuk-frontend/package.json', {
-    paths: [__dirname]
+  resolvePkg.sync('govuk-frontend/package.json', {
+    basedir: import.meta.dirname
   })
 )
 
-/**
- * @type {import('webpack').Configuration}
- */
-module.exports = {
-  context: join(__dirname, 'client/src'),
+export default /** @type {import('webpack').Configuration} */ ({
+  context: join(import.meta.dirname, 'client/src'),
   devtool: NODE_ENV === 'production' ? 'source-map' : 'inline-source-map',
   entry: {
     application: {
@@ -36,9 +35,8 @@ module.exports = {
       ]
     }
   },
-  externals: {
-    react: 'React',
-    'react-dom': 'ReactDOM'
+  experiments: {
+    outputModule: true
   },
   mode: NODE_ENV,
   module: {
@@ -49,14 +47,14 @@ module.exports = {
         enforce: 'pre'
       },
       {
-        test: /\.(js|jsx|tsx|ts)$/,
+        test: /\.(js|jsx|mjs|tsx|ts)$/,
         loader: 'babel-loader',
         exclude: {
           and: [/node_modules/],
           not: [/@xgovformbuilder\/govuk-react-jsx/]
         },
         options: {
-          extends: join(__dirname, 'client/babel.config.cjs')
+          extends: join(import.meta.dirname, 'client/babel.config.cjs')
         },
 
         // Fix missing file extensions in React components
@@ -79,8 +77,8 @@ module.exports = {
             options: {
               sassOptions: {
                 includePaths: [
-                  join(__dirname, 'node_modules'),
-                  join(__dirname, '../node_modules')
+                  join(import.meta.dirname, 'node_modules'),
+                  join(import.meta.dirname, '../node_modules')
                 ],
                 quietDeps: true
               },
@@ -113,8 +111,28 @@ module.exports = {
       }
     ]
   },
+  optimization: {
+    minimize: NODE_ENV === 'production',
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          // Use webpack default compress options
+          // https://webpack.js.org/configuration/optimization/#optimizationminimizer
+          compress: { passes: 2 },
+
+          // Allow Terser to remove @preserve comments
+          format: { comments: false },
+
+          // Compatibility workarounds
+          safari10: true
+        }
+      })
+    ],
+    concatenateModules: true,
+    usedExports: true
+  },
   output: {
-    path: join(__dirname, 'client/dist'),
+    path: join(import.meta.dirname, 'client/dist'),
     filename:
       NODE_ENV === 'production'
         ? 'javascripts/[name].[contenthash:7].min.js'
@@ -123,7 +141,9 @@ module.exports = {
     chunkFilename:
       NODE_ENV === 'production'
         ? 'javascripts/[name].[contenthash:7].min.js'
-        : 'javascripts/[name].js'
+        : 'javascripts/[name].js',
+    libraryTarget: 'module',
+    module: true
   },
   plugins: [
     new WebpackAssetsManifest(),
@@ -142,7 +162,7 @@ module.exports = {
 
     new EnvironmentPlugin({
       REACT_LOG_LEVEL:
-        REACT_LOG_LEVEL || (NODE_ENV === 'production' ? 'warn' : 'debug')
+        REACT_LOG_LEVEL ?? (NODE_ENV === 'production' ? 'warn' : 'debug')
     }),
 
     new CopyPlugin({
@@ -156,21 +176,15 @@ module.exports = {
           to: 'assets/translations'
         }
       ]
-    }),
-
-    NODE_ENV === 'production' &&
-      new BundleAnalyzerPlugin({
-        analyzerMode: 'static',
-        defaultSizes: 'gzip',
-        openAnalyzer: false
-      })
+    })
   ],
   resolve: {
     alias: {
-      '~': join(__dirname, 'client'),
+      '~': join(import.meta.dirname, 'client'),
       'govuk-frontend': govukFrontendPath,
       '/assets': join(govukFrontendPath, 'govuk/assets/')
     },
+    extensions: ['.js', '.json', '.mjs'],
     extensionAlias: {
       '.cjs': ['.cts', '.cjs'],
       '.js': ['.ts', '.js'],
@@ -184,4 +198,4 @@ module.exports = {
     preset: 'minimal'
   },
   target: 'browserslist:javascripts'
-}
+})
