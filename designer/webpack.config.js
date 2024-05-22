@@ -13,7 +13,7 @@ const { NODE_ENV = 'development', REACT_LOG_LEVEL } = process.env
 
 const govukFrontendPath = dirname(
   resolvePkg.sync('govuk-frontend/package.json', {
-    paths: [import.meta.dirname]
+    basedir: import.meta.dirname
   })
 )
 
@@ -36,6 +36,9 @@ export default /** @type {import('webpack').Configuration} */ ({
       ]
     }
   },
+  experiments: {
+    outputModule: true
+  },
   externals: {
     react: 'React',
     'react-dom': 'ReactDOM'
@@ -49,7 +52,7 @@ export default /** @type {import('webpack').Configuration} */ ({
         enforce: 'pre'
       },
       {
-        test: /\.(js|jsx|tsx|ts)$/,
+        test: /\.(js|jsx|mjs|tsx|ts)$/,
         loader: 'babel-loader',
         exclude: {
           and: [/node_modules/],
@@ -129,7 +132,9 @@ export default /** @type {import('webpack').Configuration} */ ({
           safari10: true
         }
       })
-    ]
+    ],
+    concatenateModules: true,
+    usedExports: true
   },
   output: {
     path: join(import.meta.dirname, 'client/dist'),
@@ -141,7 +146,9 @@ export default /** @type {import('webpack').Configuration} */ ({
     chunkFilename:
       NODE_ENV === 'production'
         ? 'javascripts/[name].[contenthash:7].min.js'
-        : 'javascripts/[name].js'
+        : 'javascripts/[name].js',
+    libraryTarget: 'module',
+    module: true
   },
   plugins: [
     new WebpackAssetsManifest(),
@@ -189,6 +196,7 @@ export default /** @type {import('webpack').Configuration} */ ({
       'govuk-frontend': govukFrontendPath,
       '/assets': join(govukFrontendPath, 'govuk/assets/')
     },
+    extensions: ['.js', '.json', '.mjs'],
     extensionAlias: {
       '.cjs': ['.cts', '.cjs'],
       '.js': ['.ts', '.js'],
