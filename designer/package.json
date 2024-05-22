@@ -48,7 +48,7 @@
     "date-fns": "^3.6.0",
     "depth-first": "^4.0.0",
     "focus-trap-react": "^8.11.3",
-    "govuk-frontend": "^4.8.0",
+    "govuk-frontend": "^5.4.0",
     "hapi-pino": "^12.1.0",
     "i18next": "^23.11.4",
     "i18next-http-backend": "^2.5.1",

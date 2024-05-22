@@ -42,7 +42,7 @@ export default /** @type {import('webpack').Configuration} */ ({
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.(js|mjs)$/,
         loader: 'source-map-loader',
         enforce: 'pre'
       },
@@ -168,7 +168,7 @@ export default /** @type {import('webpack').Configuration} */ ({
     new CopyPlugin({
       patterns: [
         {
-          from: join(govukFrontendPath, 'govuk/assets'),
+          from: join(govukFrontendPath, 'dist/govuk/assets'),
           to: 'assets'
         },
         {
@@ -181,8 +181,9 @@ export default /** @type {import('webpack').Configuration} */ ({
   resolve: {
     alias: {
       '~': join(import.meta.dirname, 'client'),
-      'govuk-frontend': govukFrontendPath,
-      '/assets': join(govukFrontendPath, 'govuk/assets/')
+      'govuk-frontend/dist': join(govukFrontendPath, 'dist'),
+      'govuk-frontend/govuk': join(govukFrontendPath, 'dist/govuk'),
+      '/assets': join(govukFrontendPath, 'dist/govuk/assets')
     },
     extensions: ['.js', '.json', '.mjs'],
     extensionAlias: {

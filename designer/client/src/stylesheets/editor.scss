@@ -1,6 +1,6 @@
 $govuk-assets-path: "/assets/";
 
-@import "govuk-frontend/govuk/base";
+@import "govuk-frontend/dist/govuk/base";
 
 %app-button-link {
   @include govuk-link-common;

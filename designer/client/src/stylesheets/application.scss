@@ -1,6 +1,6 @@
 $govuk-assets-path: "/assets/";
 
-@import "govuk-frontend/govuk/all";
+@import "govuk-frontend/dist/govuk/all";
 
 @import "variables/all";
 @import "helpers/all";

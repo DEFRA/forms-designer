@@ -1,6 +1,6 @@
-@import "govuk-frontend/govuk/base";
+@import "govuk-frontend/dist/govuk/base";
 
 .component-create .govuk-back-link {
   margin-top: 0;
-  @include govuk-responsive-margin(7, "bottom");
+  @include govuk-responsive-margin(6, "bottom");
 }
