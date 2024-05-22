@@ -1,8 +1,7 @@
-import core from 'prismjs/components/prism-core'
+import { highlight, languages } from 'prismjs'
 import React from 'react'
 import SimpleEditor from 'react-simple-code-editor'
-import 'prismjs/components/prism-clike'
-import 'prismjs/components/prism-javascript'
+import 'prismjs/components/prism-markup.js'
 
 class Editor extends React.Component {
   constructor(props) {
@@ -28,11 +27,12 @@ class Editor extends React.Component {
         className="editor"
         value={this.state.value}
         required={this.props.required}
-        highlight={(code) => core.highlight(code, core.languages.js)}
+        highlight={(code) => highlight(code, languages.html, 'html')}
         onValueChange={(value) => this.setState({ value })}
-        padding={5}
+        padding={10}
         style={{
-          fontFamily: '"Fira code", "Fira Mono", monospace',
+          fontFamily:
+            'ui-monospace, menlo, "Cascadia Mono", "Segoe UI Mono", consolas, "Liberation Mono", monospace',
           border: '2px solid #0b0c0c',
           fontSize: 16
         }}

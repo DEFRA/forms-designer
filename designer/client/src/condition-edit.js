@@ -3,7 +3,7 @@ import React from 'react'
 
 import { DataContext } from '~/src/context/index.js'
 import { removeCondition, updateCondition } from '~/src/data/index.js'
-import Editor from '~/src/editor.js'
+import Editor from '~/src/editor.jsx'
 import logger from '~/src/plugins/logger.js'
 
 class ConditionEdit extends React.Component {

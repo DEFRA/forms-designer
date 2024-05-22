@@ -30,7 +30,12 @@ module.exports = {
       '@babel/preset-env',
       {
         browserslistEnv: BABEL_ENV,
+
+        // Apply bug fixes to avoid transforms
         bugfixes: true,
+
+        // Apply ES module transforms for Jest
+        // https://jestjs.io/docs/ecmascript-modules
         modules: NODE_ENV === 'test' ? 'auto' : false
       }
     ]
