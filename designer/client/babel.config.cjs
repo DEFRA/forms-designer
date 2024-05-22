@@ -34,6 +34,10 @@ module.exports = {
         // Apply bug fixes to avoid transforms
         bugfixes: true,
 
+        // Apply ES module transforms for Jest
+        // https://jestjs.io/docs/ecmascript-modules
+        modules: NODE_ENV === 'test' ? 'auto' : false,
+
         // Add polyfills by Browserslist environment
         corejs: pkg.devDependencies['core-js'],
         useBuiltIns: 'usage'
