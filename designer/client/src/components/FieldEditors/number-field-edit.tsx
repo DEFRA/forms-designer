@@ -32,9 +32,9 @@ export function NumberFieldEdit({ context = ComponentContext }: Props) {
         >
           {i18n('numberFieldEditComponent.minField.title')}
         </label>
-        <span className="govuk-hint">
+        <div className="govuk-hint">
           {i18n('numberFieldEditComponent.minField.helpText')}
-        </span>
+        </div>
         <input
           className="govuk-input govuk-input--width-3"
           data-cast="number"
@@ -58,9 +58,9 @@ export function NumberFieldEdit({ context = ComponentContext }: Props) {
         >
           {i18n('numberFieldEditComponent.prefixField.title')}
         </label>
-        <span className="govuk-hint">
+        <div className="govuk-hint">
           {i18n('numberFieldEditComponent.prefixField.helpText')}
-        </span>
+        </div>
         <input
           className="govuk-input govuk-input--width-3"
           data-cast="string"
@@ -84,9 +84,9 @@ export function NumberFieldEdit({ context = ComponentContext }: Props) {
         >
           {i18n('numberFieldEditComponent.suffixField.title')}
         </label>
-        <span className="govuk-hint">
+        <div className="govuk-hint">
           {i18n('numberFieldEditComponent.suffixField.helpText')}
-        </span>
+        </div>
         <input
           className="govuk-input govuk-input--width-3"
           data-cast="string"
@@ -110,9 +110,9 @@ export function NumberFieldEdit({ context = ComponentContext }: Props) {
         >
           {i18n('numberFieldEditComponent.maxField.title')}
         </label>
-        <span className="govuk-hint">
+        <div className="govuk-hint">
           {i18n('numberFieldEditComponent.maxField.helpText')}
-        </span>
+        </div>
         <input
           className="govuk-input govuk-input--width-3"
           data-cast="number"
@@ -136,9 +136,9 @@ export function NumberFieldEdit({ context = ComponentContext }: Props) {
         >
           {i18n('numberFieldEditComponent.precisionField.title')}
         </label>
-        <span className="govuk-hint">
+        <div className="govuk-hint">
           {i18n('numberFieldEditComponent.precisionField.helpText')}
-        </span>
+        </div>
         <input
           className="govuk-input govuk-input--width-3"
           data-cast="number"

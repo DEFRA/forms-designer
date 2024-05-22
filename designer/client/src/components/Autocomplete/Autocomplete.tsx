@@ -17,7 +17,7 @@ export function Autocomplete() {
       >
         {i18n('common.autocomplete.title')}
       </label>
-      <span className="govuk-hint">{i18n('common.autocomplete.helpText')}</span>
+      <div className="govuk-hint">{i18n('common.autocomplete.helpText')}</div>
       <input
         className="govuk-input"
         id="field-options-autocomplete"

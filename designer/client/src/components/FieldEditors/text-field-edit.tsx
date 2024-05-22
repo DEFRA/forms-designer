@@ -34,9 +34,9 @@ export function TextFieldEdit({ children, context = ComponentContext }: Props) {
         >
           {i18n('textFieldEditComponent.minLengthField.title')}
         </label>
-        <span className="govuk-hint">
+        <div className="govuk-hint">
           {i18n('textFieldEditComponent.minLengthField.helpText')}
-        </span>
+        </div>
         <input
           className="govuk-input govuk-input--width-3"
           data-cast="number"
@@ -60,9 +60,9 @@ export function TextFieldEdit({ children, context = ComponentContext }: Props) {
         >
           {i18n('textFieldEditComponent.maxLengthField.title')}
         </label>
-        <span className="govuk-hint">
+        <div className="govuk-hint">
           {i18n('textFieldEditComponent.maxLengthField.helpText')}
-        </span>
+        </div>
         <input
           className="govuk-input govuk-input--width-3"
           data-cast="number"
@@ -86,9 +86,9 @@ export function TextFieldEdit({ children, context = ComponentContext }: Props) {
         >
           {i18n('textFieldEditComponent.maxWordField.title')}
         </label>
-        <span className="govuk-hint">
+        <div className="govuk-hint">
           {i18n('textFieldEditComponent.maxWordField.helpText')}
-        </span>
+        </div>
         <input
           className="govuk-input govuk-input--width-3"
           data-cast="number"
@@ -112,9 +112,9 @@ export function TextFieldEdit({ children, context = ComponentContext }: Props) {
         >
           {i18n('textFieldEditComponent.lengthField.title')}
         </label>
-        <span className="govuk-hint">
+        <div className="govuk-hint">
           {i18n('textFieldEditComponent.lengthField.helpText')}
-        </span>
+        </div>
         <input
           className="govuk-input govuk-input--width-3"
           data-cast="number"
@@ -138,9 +138,9 @@ export function TextFieldEdit({ children, context = ComponentContext }: Props) {
         >
           {i18n('textFieldEditComponent.regexField.title')}
         </label>
-        <span className="govuk-hint">
+        <div className="govuk-hint">
           {i18n('textFieldEditComponent.regexField.helpText')}
-        </span>
+        </div>
         <input
           className="govuk-input"
           id="field-schema-regex"

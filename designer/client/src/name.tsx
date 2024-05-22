@@ -88,7 +88,7 @@ export class Name extends React.Component<Props, State> {
         <label className="govuk-label govuk-label--s" htmlFor={id}>
           {labelText}
         </label>
-        <span className="govuk-hint">{hint || i18n('name.hint')}</span>
+        <div className="govuk-hint">{hint || i18n('name.hint')}</div>
         {errors?.name && <ErrorMessage>{errors?.name.children}</ErrorMessage>}
         <input
           className={`govuk-input govuk-input--width-20 ${

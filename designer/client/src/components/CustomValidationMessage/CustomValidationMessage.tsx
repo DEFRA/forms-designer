@@ -18,9 +18,9 @@ export function CustomValidationMessage() {
       >
         {i18n('common.customValidationMessage.title')}
       </label>
-      <span className="govuk-hint">
+      <div className="govuk-hint">
         {i18n('common.customValidationMessage.helpText')}
-      </span>
+      </div>
       <input
         className="govuk-input"
         id="field-options-custom-validation-message"

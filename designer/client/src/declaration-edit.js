@@ -40,11 +40,11 @@ class DeclarationEdit extends React.Component {
         <form onSubmit={(e) => this.onSubmit(e)} autoComplete="off">
           <div className="govuk-checkboxes govuk-form-group">
             <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">
-              <p className="govuk-fieldset__heading">Skip summary page? </p>
-              <span className="govuk-hint">
+              <p className="govuk-fieldset__heading">Skip summary page?</p>
+              <div className="govuk-hint">
                 The user will not be shown a summary page, and will continue to
                 pay and/or the application complete page.
-              </span>
+              </div>
             </legend>
             <div className="govuk-checkboxes__item">
               <input
@@ -68,11 +68,11 @@ class DeclarationEdit extends React.Component {
             <label className="govuk-label" htmlFor="declaration">
               Declaration
             </label>
-            <span className="govuk-hint">
+            <div className="govuk-hint">
               The declaration can include HTML and the `govuk-prose-scope` css
               class is available. Use this on a wrapping element to apply
               default govuk styles.
-            </span>
+            </div>
             <Editor name="declaration" value={declaration} />
           </div>
 

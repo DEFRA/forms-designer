@@ -92,7 +92,7 @@ export function ComponentListSelect() {
         <Label htmlFor="field-options-list" className="govuk-label--s">
           {i18n('list.select.title')}
         </Label>
-        <span className="govuk-hint">{i18n('list.select.helpText')}</span>
+        <div className="govuk-hint">{i18n('list.select.helpText')}</div>
         <select
           className="govuk-select govuk-input--width-10"
           id="field-options-list"

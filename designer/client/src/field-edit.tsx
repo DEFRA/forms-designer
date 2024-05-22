@@ -99,9 +99,9 @@ export function FieldEdit({
             >
               {i18n('common.hideTitleOption.title')}
             </label>
-            <span className="govuk-hint govuk-checkboxes__hint">
+            <div className="govuk-hint govuk-checkboxes__hint">
               {i18n('common.hideTitleOption.helpText')}
-            </span>
+            </div>
           </div>
         </div>
         <div
@@ -115,7 +115,7 @@ export function FieldEdit({
           {errors?.name && (
             <ErrorMessage>{i18n('name.errors.whitespace')}</ErrorMessage>
           )}
-          <span className="govuk-hint">{i18n('name.hint')}</span>
+          <div className="govuk-hint">{i18n('name.hint')}</div>
           <input
             className={`govuk-input govuk-input--width-20 ${
               errors?.name ? 'govuk-input--error' : ''
@@ -161,9 +161,9 @@ export function FieldEdit({
                     )?.title ?? ''
                 })}
               </label>
-              <span className="govuk-hint govuk-checkboxes__hint">
+              <div className="govuk-hint govuk-checkboxes__hint">
                 {i18n('common.componentOptionalOption.helpText')}
-              </span>
+              </div>
             </div>
           </div>
         )}
@@ -192,9 +192,9 @@ export function FieldEdit({
             >
               {i18n('common.hideOptionalTextOption.title')}
             </label>
-            <span className="govuk-hint govuk-checkboxes__hint">
+            <div className="govuk-hint govuk-checkboxes__hint">
               {i18n('common.hideOptionalTextOption.helpText')}
-            </span>
+            </div>
           </div>
         </div>
         <div
@@ -221,9 +221,9 @@ export function FieldEdit({
             >
               {i18n('common.exposeToContextOption.title')}
             </label>
-            <span className="govuk-hint govuk-checkboxes__hint">
+            <div className="govuk-hint govuk-checkboxes__hint">
               {i18n('common.exposeToContextOption.helpText')}
-            </span>
+            </div>
           </div>
         </div>
         {isListField && (
@@ -253,9 +253,9 @@ export function FieldEdit({
                     )?.title ?? ''
                 })}
               </label>
-              <span className="govuk-hint govuk-checkboxes__hint">
+              <div className="govuk-hint govuk-checkboxes__hint">
                 {i18n('common.allowPrePopulationOption.helpText')}
-              </span>
+              </div>
             </div>
           </div>
         )}
