@@ -9,6 +9,8 @@ module.exports = {
       '@babel/preset-env',
       {
         browserslistEnv: 'node',
+
+        // Apply bug fixes to avoid transforms
         bugfixes: true
       }
     ]

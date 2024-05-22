@@ -30,7 +30,11 @@ module.exports = {
       '@babel/preset-env',
       {
         browserslistEnv: 'javascripts',
+
+        // Apply bug fixes to avoid transforms
         bugfixes: true,
+
+        // Add polyfills by Browserslist environment
         corejs: pkg.devDependencies['core-js'],
         useBuiltIns: 'usage'
       }
