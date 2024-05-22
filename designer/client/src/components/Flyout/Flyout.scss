@@ -1,3 +1,4 @@
+@import "govuk-frontend/govuk/base";
 @import "../../stylesheets/editor-colours.scss";
 
 .flyout {
@@ -12,22 +13,13 @@
   z-index: 1000;
 
   &__button-close {
-    cursor: pointer;
-    color: #aaa;
     position: absolute;
-    right: 10px;
+    right: 15px;
     top: 20px;
     z-index: 100;
 
-    &:hover,
-    &:focus {
-      outline: 3px solid transparent;
-      color: #0b0c0c;
-      background-color: govuk-colour("yellow");
-      box-shadow:
-        0 -2px govuk-colour("yellow"),
-        0 4px #0b0c0c;
-      text-decoration: none;
+    @include govuk-media-query($from: tablet) {
+      right: 20px;
     }
   }
 

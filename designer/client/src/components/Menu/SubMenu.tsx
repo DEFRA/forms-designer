@@ -54,17 +54,10 @@ export function SubMenu({ id }: Props) {
 
   return (
     <div className="menu__row">
-      <button
-        className="govuk-body govuk-link submenu__link"
-        onClick={onClickUpload}
-      >
+      <button className="govuk-link submenu__link" onClick={onClickUpload}>
         Import saved form
       </button>
-      <button
-        className="govuk-body govuk-link submenu__link"
-        onClick={onClickDownload}
-        href="#"
-      >
+      <button className="govuk-link submenu__link" onClick={onClickDownload}>
         Download form
       </button>
       <input

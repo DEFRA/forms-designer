@@ -53,14 +53,16 @@ export const ComponentCreateList = ({ onSelectComponent }: Props) => {
           <ol className="govuk-list">
             {contentFields.map((component) => (
               <li key={component.name}>
-                <a
-                  className="govuk-link"
-                  href="#0"
-                  onClick={(e) => selectComponent(e, component)}
-                >
-                  {i18n(`fieldTypeToName.${component.type}`)}
-                </a>
-                <div className="govuk-hint">
+                <p className="govuk-body govuk-!-margin-bottom-2">
+                  <a
+                    className="govuk-link"
+                    href="#0"
+                    onClick={(e) => selectComponent(e, component)}
+                  >
+                    {i18n(`fieldTypeToName.${component.type}`)}
+                  </a>
+                </p>
+                <div className="govuk-hint govuk-!-margin-top-2">
                   {i18n(`fieldTypeToName.${component.type}_info`)}
                 </div>
               </li>
@@ -74,14 +76,16 @@ export const ComponentCreateList = ({ onSelectComponent }: Props) => {
           <ol className="govuk-list">
             {inputFields.map((component) => (
               <li key={component.type}>
-                <a
-                  href="#0"
-                  className="govuk-link"
-                  onClick={(e) => selectComponent(e, component)}
-                >
-                  {i18n(`fieldTypeToName.${component.type}`)}
-                </a>
-                <div className="govuk-hint">
+                <p className="govuk-body govuk-!-margin-bottom-2">
+                  <a
+                    href="#0"
+                    className="govuk-link"
+                    onClick={(e) => selectComponent(e, component)}
+                  >
+                    {i18n(`fieldTypeToName.${component.type}`)}
+                  </a>
+                </p>
+                <div className="govuk-hint govuk-!-margin-top-2">
                   {i18n(`fieldTypeToName.${component.type}_info`)}
                 </div>
               </li>
@@ -97,14 +101,16 @@ export const ComponentCreateList = ({ onSelectComponent }: Props) => {
           <ol className="govuk-list">
             {selectionFields.map((component) => (
               <li key={component.type}>
-                <a
-                  href="#0"
-                  className="govuk-link"
-                  onClick={(e) => selectComponent(e, component)}
-                >
-                  {i18n(`fieldTypeToName.${component.type}`)}
-                </a>
-                <div className="govuk-hint">
+                <p className="govuk-body govuk-!-margin-bottom-2">
+                  <a
+                    href="#0"
+                    className="govuk-link"
+                    onClick={(e) => selectComponent(e, component)}
+                  >
+                    {i18n(`fieldTypeToName.${component.type}`)}
+                  </a>
+                </p>
+                <div className="govuk-hint govuk-!-margin-top-2">
                   {i18n(`fieldTypeToName.${component.type}_info`)}
                 </div>
               </li>

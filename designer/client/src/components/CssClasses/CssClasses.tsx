@@ -17,7 +17,7 @@ export function CssClasses() {
       >
         {i18n('common.classes.title')}
       </label>
-      <span className="govuk-hint">{i18n('common.classes.helpText')}</span>
+      <div className="govuk-hint">{i18n('common.classes.helpText')}</div>
       <input
         className="govuk-input"
         id="field-options-classes"

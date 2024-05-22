@@ -113,8 +113,8 @@ export const Page = (props: {
   return (
     <div id={page.path} title={page.path} className={'page'} style={layout}>
       <div className="page__heading">
-        <h3>
-          {section && <span>{section.title}</span>}
+        <h3 className="govuk-heading-m">
+          {section && <span className="govuk-caption-m">{section.title}</span>}
           {page.title}
         </h3>
         <PageLinkage page={page} layout={layout} />

@@ -53,7 +53,7 @@ function DetailsEdit({ i18n, context = ComponentContext }: Props) {
         <label className="govuk-label govuk-label--s" htmlFor="details-content">
           Content
         </label>
-        <span className="govuk-hint">{i18n('fieldEdit.details.hint')}</span>
+        <div className="govuk-hint">{i18n('fieldEdit.details.hint')}</div>
         {errors?.content && (
           <ErrorMessage>{i18n(...errors.content.children)}</ErrorMessage>
         )}

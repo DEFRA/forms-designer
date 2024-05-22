@@ -1,7 +1,5 @@
 import React, { type ReactNode, type MouseEvent } from 'react'
 
-import './BackLink.scss'
-
 interface Props {
   children: ReactNode
   href?: string
@@ -9,7 +7,7 @@ interface Props {
 }
 
 export const BackLink = ({ children, ...otherProps }: Props) => (
-  <a className="back-link govuk-back-link" {...otherProps}>
+  <a className="govuk-back-link" {...otherProps}>
     {children}
   </a>
 )

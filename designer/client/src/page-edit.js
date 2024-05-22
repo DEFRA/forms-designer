@@ -197,7 +197,7 @@ export class PageEdit extends React.Component {
             <label className="govuk-label govuk-label--s" htmlFor="page-type">
               {i18n('page.type')}
             </label>
-            <span className="govuk-hint">{i18n('page.typeHint')}</span>
+            <div className="govuk-hint">{i18n('page.typeHint')}</div>
             <select
               className="govuk-select"
               id="page-type"
@@ -250,7 +250,7 @@ export class PageEdit extends React.Component {
             >
               {i18n('page.section')}
             </label>
-            <span className="govuk-hint">{i18n('page.sectionHint')}</span>
+            <div className="govuk-hint">{i18n('page.sectionHint')}</div>
             {sections.length > 0 && (
               <select
                 className="govuk-select"
@@ -267,6 +267,8 @@ export class PageEdit extends React.Component {
                 ))}
               </select>
             )}
+          </div>
+          <p className="govuk-body">
             {section && (
               <a
                 href="#"
@@ -285,7 +287,7 @@ export class PageEdit extends React.Component {
                 {i18n('section.create')}
               </a>
             )}
-          </div>
+          </p>
           <button className="govuk-button" type="submit">
             {i18n('save')}
           </button>{' '}

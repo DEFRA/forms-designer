@@ -170,9 +170,9 @@ class SectionEdit extends React.Component {
               >
                 {i18n('sectionEdit.hideTitleField.title')}
               </label>
-              <span className="govuk-hint govuk-checkboxes__hint">
+              <div className="govuk-hint govuk-checkboxes__hint">
                 {i18n('sectionEdit.hideTitleField.helpText')}
-              </span>
+              </div>
             </div>
           </div>
           <button className="govuk-button" type="submit">

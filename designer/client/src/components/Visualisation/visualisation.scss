@@ -29,39 +29,20 @@ $govuk-assets-path: "/assets/";
       position: relative;
       min-height: 2.8em;
       @include govuk-responsive-padding(2);
-
-      h3 {
-        display: block;
-        margin-top: 0;
-        @include govuk-responsive-margin(4, "bottom");
-        @include govuk-font($size: 19, $weight: bold);
-        @include govuk-text-colour;
-      }
-
-      span {
-        display: block;
-        color: $govuk-secondary-text-colour;
-        @include govuk-font($size: 19);
-        @include govuk-typography-responsive($size: 14);
-      }
     }
 
     &__actions {
       display: flex;
       flex-direction: column;
 
-      button {
+      button.govuk-link {
         border: none;
         box-shadow: none;
         text-align: left;
       }
 
       .govuk-link {
-        @include govuk-responsive-padding(1, "top");
-        @include govuk-responsive-padding(2, "right");
-        @include govuk-responsive-padding(1, "bottom");
-        @include govuk-responsive-padding(2, "left");
-        @include govuk-typography-responsive($size: 14);
+        @include govuk-responsive-padding(2);
         text-decoration: none;
         background-color: govuk-colour("black");
         color: govuk-colour("white");
@@ -77,10 +58,6 @@ $govuk-assets-path: "/assets/";
           border-bottom: 1px solid #ffffff;
         }
       }
-    }
-
-    h3.govuk-heading-s {
-      margin-bottom: 0;
     }
   }
 }

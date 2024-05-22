@@ -138,18 +138,19 @@ export function ListEdit() {
         )}
 
         <ListItems />
-        <a
-          className="govuk-link govuk-body govuk-!-display-block govuk-!-margin-bottom-1"
-          href="#createItem"
-          data-testid="add-list-item"
-          onClick={(e) => {
-            e.preventDefault()
-            createItem()
-          }}
-        >
-          {i18n('list.item.add')}
-        </a>
-        <>
+
+        <p className="govuk-body">
+          <a
+            className="govuk-link govuk-!-display-block govuk-!-margin-bottom-1"
+            href="#createItem"
+            data-testid="add-list-item"
+            onClick={(e) => {
+              e.preventDefault()
+              createItem()
+            }}
+          >
+            {i18n('list.item.add')}
+          </a>
           <button
             data-testid="save-list"
             className="govuk-button"
@@ -160,7 +161,7 @@ export function ListEdit() {
           </button>
           <a
             href="#"
-            className="govuk-link govuk-body govuk-link--v-centre govuk-!-margin-left-2"
+            className="govuk-link govuk-link--v-centre govuk-!-margin-left-2"
             onClick={(e) => {
               e.preventDefault()
               handleDelete(selectedList?.isNew)
@@ -168,7 +169,7 @@ export function ListEdit() {
           >
             {i18n(selectedList?.isNew ? 'cancel' : 'delete')}
           </a>
-        </>
+        </p>
       </form>
     </>
   )

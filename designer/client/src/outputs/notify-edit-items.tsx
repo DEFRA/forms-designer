@@ -86,10 +86,10 @@ class NotifyItems extends React.Component<Props, State> {
       <table className="govuk-table">
         <caption className="govuk-table__caption">
           Notify personalisations
-          <span className="govuk-hint">
+          <div className="govuk-hint">
             Notify template keys must match the personalisations in the GOV.UK
             Notify template.
-          </span>
+          </div>
         </caption>
         <thead className="govuk-table__head">
           <tr className="govuk-table__row">

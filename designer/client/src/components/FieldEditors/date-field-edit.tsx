@@ -31,9 +31,9 @@ export function DateFieldEdit({ context = ComponentContext }: Props) {
         >
           {i18n('dateFieldEditComponent.maxDaysInPastField.title')}
         </label>
-        <span className="govuk-hint">
+        <div className="govuk-hint">
           {i18n('dateFieldEditComponent.maxDaysInPastField.helpText')}
-        </span>
+        </div>
         <input
           className="govuk-input govuk-input--width-3"
           data-cast="number"
@@ -57,9 +57,9 @@ export function DateFieldEdit({ context = ComponentContext }: Props) {
         >
           {i18n('dateFieldEditComponent.maxDaysInFutureField.title')}
         </label>
-        <span className="govuk-hint">
+        <div className="govuk-hint">
           {i18n('dateFieldEditComponent.maxDaysInFutureField.helpText')}
-        </span>
+        </div>
         <input
           className="govuk-input govuk-input--width-3"
           data-cast="number"

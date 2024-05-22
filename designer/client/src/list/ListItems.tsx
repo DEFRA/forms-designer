@@ -105,9 +105,9 @@ function ListItems() {
       <table className="govuk-table">
         <caption className={'govuk-table__caption'}>
           {i18n('list.items.title')}
-          <span className="govuk-hint govuk-!-margin-bottom-0">
+          <div className="govuk-hint govuk-!-margin-bottom-0">
             {i18n('list.items.hint')}
-          </span>
+          </div>
         </caption>
 
         <thead className="govuk-table__head">

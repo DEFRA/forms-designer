@@ -44,9 +44,9 @@ export function FileUploadFieldEdit() {
           >
             {i18n('fileUploadFieldEditPage.multipleFilesOption.title')}
           </label>
-          <span className="govuk-hint govuk-checkboxes__hint">
+          <div className="govuk-hint govuk-checkboxes__hint">
             {i18n('fileUploadFieldEditPage.multipleFilesOption.helpText')}
-          </span>
+          </div>
         </div>
       </div>
 
@@ -71,11 +71,11 @@ export function FileUploadFieldEdit() {
           >
             {i18n('fileUploadFieldEditPage.imageQualityPlaybackOption.title')}
           </label>
-          <span className="govuk-hint govuk-checkboxes__hint">
+          <div className="govuk-hint govuk-checkboxes__hint">
             {i18n(
               'fileUploadFieldEditPage.imageQualityPlaybackOption.helpText'
             )}
-          </span>
+          </div>
         </div>
       </div>
 

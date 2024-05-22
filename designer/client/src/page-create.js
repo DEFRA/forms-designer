@@ -190,9 +190,9 @@ class PageCreate extends React.Component {
             <label className="govuk-label govuk-label--s" htmlFor="page-type">
               {i18n('addPage.pageTypeOption.title')}
             </label>
-            <span className="govuk-hint">
+            <div className="govuk-hint">
               {i18n('addPage.pageTypeOption.helpText')}
-            </span>
+            </div>
             <select
               className="govuk-select"
               id="page-type"
@@ -210,9 +210,9 @@ class PageCreate extends React.Component {
             <label className="govuk-label govuk-label--s" htmlFor="link-from">
               {i18n('addPage.linkFromOption.title')}
             </label>
-            <span className="govuk-hint">
+            <div className="govuk-hint">
               {i18n('addPage.linkFromOption.helpText')}
-            </span>
+            </div>
             <select
               className="govuk-select"
               id="link-from"
@@ -276,9 +276,9 @@ class PageCreate extends React.Component {
             >
               {i18n('addPage.sectionOption.title')}
             </label>
-            <span className="govuk-hint">
+            <div className="govuk-hint">
               {i18n('addPage.sectionOption.helpText')}
-            </span>
+            </div>
             {sections?.length > 0 && (
               <select
                 className="govuk-select"
@@ -295,6 +295,8 @@ class PageCreate extends React.Component {
                 ))}
               </select>
             )}
+          </div>
+          <p className="govuk-body">
             {section?.name && (
               <a
                 href="#"
@@ -311,7 +313,7 @@ class PageCreate extends React.Component {
             >
               Create section
             </a>
-          </div>
+          </p>
 
           <button type="submit" className="govuk-button">
             Save
