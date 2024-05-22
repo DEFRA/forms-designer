@@ -3,6 +3,8 @@
   "compilerOptions": {
     "jsx": "react",
     "lib": ["DOM", "ES2015"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "paths": {
       "~/*": ["./*", "../../model/*"],
       "@defra/forms-model": ["../../model/src/index.ts"]
