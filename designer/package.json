@@ -52,7 +52,7 @@
     "cssnano-preset-default": "^7.0.5",
     "date-fns": "^3.6.0",
     "depth-first": "^4.0.0",
-    "focus-trap-react": "^8.11.3",
+    "focus-trap-react": "^10.2.3",
     "govuk-frontend": "^5.5.0",
     "hapi-pino": "^12.1.0",
     "http-status-codes": "^2.3.0",
