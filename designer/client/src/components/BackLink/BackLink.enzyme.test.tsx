@@ -9,7 +9,7 @@ describe('BackLink Component', () => {
     expect(wrapper.text()).toBe('Go Back')
     expect(wrapper.props()).toEqual(
       expect.objectContaining({
-        className: 'back-link govuk-back-link'
+        className: 'govuk-back-link'
       })
     )
   })

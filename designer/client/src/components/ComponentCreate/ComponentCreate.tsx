@@ -135,7 +135,7 @@ export function ComponentCreate(props) {
       {!type && <h4 className="govuk-heading-m">{i18n('component.create')}</h4>}
       {type && (
         <>
-          <BackLink onClick={reset}>
+          <BackLink onClick={reset} href="#">
             {i18n('Back to create component list')}
           </BackLink>
           <h4 className="govuk-heading-m">
