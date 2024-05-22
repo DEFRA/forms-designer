@@ -1,3 +1,4 @@
+@import "govuk-frontend/govuk/base";
 @import "../../stylesheets/editor-colours.scss";
 
 .flyout {
@@ -13,9 +14,13 @@
 
   &__button-close {
     position: absolute;
-    right: 10px;
+    right: 15px;
     top: 20px;
     z-index: 100;
+
+    @include govuk-media-query($from: tablet) {
+      right: 20px;
+    }
   }
 
   &__container {
