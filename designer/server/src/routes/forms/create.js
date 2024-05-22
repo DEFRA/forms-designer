@@ -53,8 +53,7 @@ const schema = Joi.object().keys({
   }),
   teamEmail: teamEmailSchema.messages({
     'string.empty': 'Enter a shared team email address',
-    'string.email':
-      'Enter a shared team email address in the correct format, like name@example.gov.uk'
+    'string.email': 'Enter a shared team email address in the correct format'
   })
 })
 
