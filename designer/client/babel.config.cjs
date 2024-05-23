@@ -40,6 +40,7 @@ module.exports = {
 
         // Add polyfills by Browserslist environment
         corejs: pkg.devDependencies['core-js'],
+        shippedProposals: true,
         useBuiltIns: 'usage'
       }
     ],
