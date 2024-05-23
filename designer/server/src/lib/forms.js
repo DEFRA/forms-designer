@@ -99,6 +99,7 @@ export async function updateDraftFormDefinition(id, definition, token) {
 
 /**
  * @param {string} token
+ * @returns {RequestOptions}
  */
 function getAuthOptions(token) {
   return { headers: { Authorization: `Bearer ${token}` } }
@@ -109,4 +110,5 @@ function getAuthOptions(token) {
  * @typedef {import('@defra/forms-model').FormMetadata} FormMetadata
  * @typedef {import('@defra/forms-model').FormMetadataInput} FormMetadataInput
  * @typedef {import('@hapi/hapi').AuthCredentials} AuthCredentials
+ * @typedef {import('~/src/lib/fetch.js').RequestOptions} RequestOptions
  */
