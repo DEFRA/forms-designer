@@ -8,6 +8,7 @@ module.exports = {
   assumptions: {
     enumerableModuleMeta: true
   },
+  browserslistEnv: BABEL_ENV,
   plugins: [
     [
       'module-resolver',
@@ -29,8 +30,6 @@ module.exports = {
     [
       '@babel/preset-env',
       {
-        browserslistEnv: BABEL_ENV,
-
         // Apply bug fixes to avoid transforms
         bugfixes: true,
 

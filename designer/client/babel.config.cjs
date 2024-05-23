@@ -7,6 +7,7 @@ const { NODE_ENV } = process.env
  * @type {import('@babel/core').TransformOptions}
  */
 module.exports = {
+  browserslistEnv: 'javascripts',
   plugins: [
     [
       'module-resolver',
@@ -36,8 +37,6 @@ module.exports = {
     [
       '@babel/preset-env',
       {
-        browserslistEnv: 'javascripts',
-
         // Apply bug fixes to avoid transforms
         bugfixes: true,
 
