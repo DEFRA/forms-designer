@@ -12,7 +12,6 @@ import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
 import * as forms from '~/src/lib/forms.js'
-import { getAuthor } from '~/src/lib/forms.js'
 import * as create from '~/src/models/forms/create.js'
 
 const logger = createLogger()
@@ -221,7 +220,6 @@ export default [
     path: '/create/team',
     async handler(request, h) {
       const { auth, payload, yar } = request
-      const author = getAuthor(auth.credentials)
       const token = auth.credentials.token
 
       // Update form metadata
@@ -233,7 +231,7 @@ export default [
 
       try {
         // Create the form
-        const result = await forms.create(payload, author, token)
+        const result = await forms.create(payload, token)
 
         // Clear form metadata
         yar.clear(sessionNames.create)

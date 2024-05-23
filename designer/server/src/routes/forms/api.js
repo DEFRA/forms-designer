@@ -37,7 +37,6 @@ export default [
       async handler(request, h) {
         const { auth, params, payload } = request
         const { id } = params
-        const author = forms.getAuthor(auth.credentials)
         const token = auth.credentials.token
 
         try {
@@ -57,7 +56,7 @@ export default [
           const value = result.value
 
           // Update the form definition
-          await forms.updateDraftFormDefinition(id, value, author, token)
+          await forms.updateDraftFormDefinition(id, value, token)
 
           return h.response({ ok: true }).code(204)
         } catch (err) {
