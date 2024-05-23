@@ -48,7 +48,12 @@ module.exports = {
         useBuiltIns: true
       }
     ],
-    '@babel/preset-typescript'
+    [
+      '@babel/preset-typescript',
+      {
+        allowDeclareFields: true
+      }
+    ]
   ],
   sourceType: 'unambiguous',
   env: {
