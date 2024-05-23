@@ -17,32 +17,10 @@ import * as create from '~/src/models/forms/create.js'
 
 const logger = createLogger()
 const schema = Joi.object().keys({
-  title: titleSchema
-    .external(
-      /**
-       * Allow only unique form slugs
-       * @param {string} title
-       * @param {ExternalHelpers} helpers
-       */
-      async (title, helpers) => {
-        const slug = slugify(title)
-
-        // Retrieve form by slug
-        const form = await forms.get(slug).catch(logger.error)
-        if (!form) {
-          return
-        }
-
-        // Show error for non-unique slugs
-        return helpers.message({
-          external: 'Form name you entered already exists'
-        })
-      }
-    )
-    .messages({
-      'string.empty': 'Enter a form name',
-      'string.max': 'Form name must be 250 characters or less'
-    }),
+  title: titleSchema.messages({
+    'string.empty': 'Enter a form name',
+    'string.max': 'Form name must be 250 characters or less'
+  }),
   organisation: organisationSchema.messages({
     'any.required': 'Select a lead organisation',
     'any.only': 'Select a lead organisation'
@@ -103,8 +81,22 @@ export default [
   ({
     method: 'POST',
     path: '/create/title',
-    handler(request, h) {
-      const { payload, yar } = request
+    async handler(request, h) {
+      const { auth, payload, yar } = request
+      const { title } = payload
+      const token = auth.credentials.token
+      const slug = slugify(title)
+      const form = await forms.get(slug, token).catch(logger.error)
+
+      if (form) {
+        yar.flash('validationFailure', {
+          formErrors: create.titleFormErrors,
+          formValues: payload
+        })
+
+        // Redirect POST to GET without resubmit on back button
+        return h.redirect(request.url.pathname).code(303).takeover()
+      }
 
       // Update form metadata, redirect to next step
       yar.set(sessionNames.create, {
@@ -230,19 +222,18 @@ export default [
     async handler(request, h) {
       const { auth, payload, yar } = request
       const author = getAuthor(auth.credentials)
+      const token = auth.credentials.token
 
       // Update form metadata
-      const metadata = yar.set(sessionNames.create, {
+      yar.set(sessionNames.create, {
         ...yar.get(sessionNames.create),
         teamName: payload.teamName,
         teamEmail: payload.teamEmail
       })
 
       try {
-        const slug = slugify(metadata.title)
-
         // Create the form
-        await forms.create(payload, author)
+        const result = await forms.create(payload, author, token)
 
         // Clear form metadata
         yar.clear(sessionNames.create)
@@ -250,11 +241,21 @@ export default [
         /**
          * Redirect POST to GET without resubmit on back button
          */
-        return h.redirect(`/library/${slug}`).code(303)
-      } catch (cause) {
+        return h.redirect(`/library/${result?.slug}`).code(303)
+      } catch (err) {
+        if (Boom.isBoom(err) && err.data?.error === 'FormAlreadyExistsError') {
+          yar.flash('validationFailure', {
+            formErrors: create.titleFormErrors,
+            formValues: payload
+          })
+
+          // Redirect POST to GET without resubmit on back button
+          return h.redirect('/create/title').code(303).takeover()
+        }
+
         return Boom.internal(
           new Error('Failed to create new form', {
-            cause
+            cause: err
           })
         )
       }
@@ -296,7 +297,6 @@ export default [
 
 /**
  * @typedef {import('@defra/forms-model').FormMetadataInput} FormMetadataInput
- * @typedef {import('joi').ExternalHelpers} ExternalHelpers
  */
 
 /**

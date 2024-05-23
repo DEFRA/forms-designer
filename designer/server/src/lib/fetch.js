@@ -1,3 +1,4 @@
+import Boom from '@hapi/boom'
 import Wreck from '@hapi/wreck'
 
 /**
@@ -13,12 +14,15 @@ export async function request(method, url, options) {
     return { response, body: undefined }
   }
 
-  if (response.statusCode !== 200) {
-    throw new Error(response.statusMessage)
-  }
-
   /** @type {BodyType} */
   const body = await Wreck.read(response, options)
+
+  if (response.statusCode !== 200) {
+    const statusCode = response.statusCode
+    const err = new Error(`HTTP status code ${statusCode}`)
+
+    throw Boom.boomify(err, { statusCode, data: body })
+  }
 
   return { response, body }
 }

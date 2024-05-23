@@ -12,7 +12,9 @@ export default [
     path: '/api/{id}/data',
     options: {
       handler(request) {
-        return forms.getDraftFormDefinition(request.params.id)
+        const { auth, params } = request
+
+        return forms.getDraftFormDefinition(params.id, auth.credentials.token)
       },
       validate: {
         params: Joi.object({
@@ -36,6 +38,7 @@ export default [
         const { auth, params, payload } = request
         const { id } = params
         const author = forms.getAuthor(auth.credentials)
+        const token = auth.credentials.token
 
         try {
           const result = formDefinitionSchema.validate(payload, {
@@ -54,7 +57,7 @@ export default [
           const value = result.value
 
           // Update the form definition
-          await forms.updateDraftFormDefinition(id, value, author)
+          await forms.updateDraftFormDefinition(id, value, author, token)
 
           return h.response({ ok: true }).code(204)
         } catch (err) {
