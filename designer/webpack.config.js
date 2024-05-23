@@ -60,6 +60,7 @@ export default /** @type {import('webpack').Configuration} */ ({
           not: [/@xgovformbuilder\/govuk-react-jsx/]
         },
         options: {
+          cacheDirectory: true,
           extends: join(import.meta.dirname, 'client/babel.config.cjs')
         },
 
