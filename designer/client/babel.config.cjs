@@ -25,15 +25,6 @@ module.exports = {
     ]
   ],
   presets: [
-    '@babel/preset-typescript',
-    [
-      '@babel/preset-react',
-      {
-        development: NODE_ENV === 'development',
-        runtime: 'automatic',
-        useBuiltIns: true
-      }
-    ],
     [
       '@babel/preset-env',
       {
@@ -48,7 +39,16 @@ module.exports = {
         corejs: pkg.devDependencies['core-js'],
         useBuiltIns: 'usage'
       }
-    ]
+    ],
+    [
+      '@babel/preset-react',
+      {
+        development: NODE_ENV === 'development',
+        runtime: 'automatic',
+        useBuiltIns: true
+      }
+    ],
+    '@babel/preset-typescript'
   ],
   sourceType: 'unambiguous',
   env: {

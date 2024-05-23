@@ -26,7 +26,6 @@ module.exports = {
     ]
   ],
   presets: [
-    '@babel/preset-typescript',
     [
       '@babel/preset-env',
       {
@@ -37,7 +36,8 @@ module.exports = {
         // https://jestjs.io/docs/ecmascript-modules
         modules: NODE_ENV === 'test' ? 'auto' : false
       }
-    ]
+    ],
+    '@babel/preset-typescript'
   ],
   env: {
     test: {
