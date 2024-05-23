@@ -5,9 +5,6 @@ const { BABEL_ENV = 'node', NODE_ENV } = process.env
  * @type {import('@babel/core').TransformOptions}
  */
 module.exports = {
-  assumptions: {
-    enumerableModuleMeta: true
-  },
   browserslistEnv: BABEL_ENV,
   plugins: [
     [
