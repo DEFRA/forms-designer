@@ -143,7 +143,18 @@ export default /** @type {import('webpack').Configuration} */ ({
         }
       })
     ],
-    concatenateModules: true,
+
+    // Apply cache groups in production
+    splitChunks: {
+      cacheGroups: {
+        shared: {
+          chunks: 'all',
+          name: 'shared',
+          test: /node_modules/,
+          usedExports: true
+        }
+      }
+    },
 
     // Skip bundling unused modules
     providedExports: true,
@@ -159,7 +170,7 @@ export default /** @type {import('webpack').Configuration} */ ({
 
     chunkFilename:
       NODE_ENV === 'production'
-        ? 'javascripts/[name].[contenthash:7].min.js'
+        ? 'javascripts/[name].[chunkhash:7].min.js'
         : 'javascripts/[name].js',
     libraryTarget: 'module',
     module: true
