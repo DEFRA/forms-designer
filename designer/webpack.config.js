@@ -65,7 +65,10 @@ export default /** @type {import('webpack').Configuration} */ ({
         },
 
         // Fix missing file extensions in React components
-        resolve: { fullySpecified: false }
+        resolve: { fullySpecified: false },
+
+        // Flag loaded modules as side effect free
+        sideEffects: false
       },
       {
         test: /\.scss$/,
@@ -141,6 +144,10 @@ export default /** @type {import('webpack').Configuration} */ ({
       })
     ],
     concatenateModules: true,
+
+    // Skip bundling unused modules
+    providedExports: true,
+    sideEffects: true,
     usedExports: true
   },
   output: {
