@@ -31,6 +31,9 @@ module.exports = {
         // Apply bug fixes to avoid transforms
         bugfixes: true,
 
+        // Apply smaller "loose" transforms for browsers
+        loose: true,
+
         // Apply ES module transforms for Jest
         // https://jestjs.io/docs/ecmascript-modules
         modules: NODE_ENV === 'test' ? 'auto' : false,
