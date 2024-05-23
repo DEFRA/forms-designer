@@ -38,7 +38,7 @@ export default [
     options: {
       async handler(request, h) {
         const { auth, params } = request
-        const token = auth.credentials.idToken
+        const { token } = auth.credentials
 
         // Retrieve form by slug
         const form = await forms.get(params.slug, token)
@@ -68,7 +68,7 @@ export default [
     options: {
       async handler(request, h) {
         const { auth, params } = request
-        const token = auth.credentials.token
+        const { token } = auth.credentials
 
         // Retrieve form by slug
         const form = await forms.get(params.slug, token)

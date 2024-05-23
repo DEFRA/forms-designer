@@ -83,7 +83,7 @@ export default [
     async handler(request, h) {
       const { auth, payload, yar } = request
       const { title } = payload
-      const token = auth.credentials.token
+      const { token } = auth.credentials
       const slug = slugify(title)
       const form = await forms.get(slug, token).catch(logger.error)
 
