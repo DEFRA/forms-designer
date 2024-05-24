@@ -19,8 +19,6 @@ export interface Config {
   isProduction: boolean
   isDevelopment: boolean
   isTest: boolean
-  lastCommit?: string
-  lastTag?: string
   sessionTtl: number
   sessionCookieTtl: number
   sessionCookiePassword: string
@@ -69,8 +67,6 @@ const schema = joi.object<Config>({
   isProduction: joi.boolean().default(false),
   isDevelopment: joi.boolean().default(true),
   isTest: joi.boolean().default(false),
-  lastCommit: joi.string().optional(),
-  lastTag: joi.string().optional(),
   sessionTtl: joi
     .number()
     .default(Duration.fromObject({ days: 1 }).as('milliseconds')),
@@ -102,8 +98,6 @@ const result = schema.validate(
     isProduction: process.env.NODE_ENV === 'production',
     isDevelopment: !['production', 'test'].includes(`${process.env.NODE_ENV}`),
     isTest: process.env.NODE_ENV === 'test',
-    lastCommit: process.env.LAST_COMMIT ?? process.env.LAST_COMMIT_GH,
-    lastTag: process.env.LAST_TAG ?? process.env.LAST_TAG_GH,
     sessionTtl: process.env.SESSION_TTL,
     sessionCookiePassword: process.env.SESSION_COOKIE_PASSWORD,
     sessionCookieTtl: process.env.SESSION_COOKIE_TTL,
