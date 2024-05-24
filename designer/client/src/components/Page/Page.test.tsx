@@ -4,26 +4,24 @@ import {
   act,
   cleanup,
   render,
-  type RenderResult,
-  waitFor
+  waitFor,
+  type RenderResult
 } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import { createMemoryHistory } from 'history'
-import React from 'react'
-import { Router } from 'react-router-dom'
+import React, { type JSX } from 'react'
 
 import { Page } from '~/src/components/Page/index.js'
 import { DataContext } from '~/src/context/index.js'
-const history = createMemoryHistory()
-history.push('')
 
-function customRender(element: React.JSX.Element, providerProps): RenderResult {
+function customRender(
+  element: JSX.Element,
+  providerProps: {
+    data: FormDefinition
+    save: jest.Mock
+  }
+): RenderResult {
   return render(
-    <Router history={history}>
-      <DataContext.Provider value={providerProps}>
-        {element}
-      </DataContext.Provider>
-    </Router>
+    <DataContext.Provider value={providerProps}>{element}</DataContext.Provider>
   )
 }
 
