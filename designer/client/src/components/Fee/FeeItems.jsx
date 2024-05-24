@@ -1,8 +1,8 @@
 import { clone } from '@defra/forms-model'
-import { ErrorMessage } from '@xgovformbuilder/govuk-react-jsx'
 import classNames from 'classnames'
 import React from 'react'
 
+import { ErrorMessage } from '~/src/components/ErrorMessage/index.js'
 import { DataContext } from '~/src/context/index.js'
 import { isEmpty } from '~/src/helpers.js'
 import logger from '~/src/plugins/logger.js'

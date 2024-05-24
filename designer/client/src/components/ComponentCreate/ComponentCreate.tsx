@@ -11,8 +11,6 @@ import ComponentTypeEdit from '~/src/ComponentTypeEdit.jsx'
 import { BackLink } from '~/src/components/BackLink/index.js'
 import { ComponentCreateList } from '~/src/components/ComponentCreate/ComponentCreateList.jsx'
 import { DataContext } from '~/src/context/index.js'
-
-import './ComponentCreate.scss'
 import { addComponent } from '~/src/data/index.js'
 import { ErrorSummary } from '~/src/error-summary.jsx'
 import { i18n } from '~/src/i18n/index.js'

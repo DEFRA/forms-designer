@@ -7,7 +7,6 @@ import {
   type Pos
 } from '~/src/components/Visualisation/getLayout.js'
 import { DataContext } from '~/src/context/index.js'
-import '~/src/components/Visualisation/visualisation.scss'
 
 interface Props {
   id: string

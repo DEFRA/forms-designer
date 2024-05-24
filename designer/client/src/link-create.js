@@ -1,7 +1,7 @@
-import { ErrorMessage } from '@xgovformbuilder/govuk-react-jsx'
 import classNames from 'classnames'
 import React from 'react'
 
+import { ErrorMessage } from '~/src/components/ErrorMessage/index.js'
 import SelectConditions from '~/src/conditions/SelectConditions.jsx'
 import { DataContext } from '~/src/context/index.js'
 import { addLink } from '~/src/data/index.js'

@@ -1,5 +1,4 @@
 import { ComponentTypes, type ComponentDef } from '@defra/forms-model'
-import sortBy from 'lodash/sortBy.js'
 import React, { type MouseEvent, useCallback } from 'react'
 
 import { i18n } from '~/src/i18n/index.js'
@@ -15,7 +14,11 @@ const contentFields: ComponentDef[] = []
 const selectionFields: ComponentDef[] = []
 const inputFields: ComponentDef[] = []
 
-sortBy(ComponentTypes, ['type']).forEach((component) => {
+const ComponentTypesSorted = ComponentTypes.sort(
+  ({ type: typeA }, { type: typeB }) => typeA.localeCompare(typeB)
+)
+
+for (const component of ComponentTypesSorted) {
   if (component.subType === 'content') {
     contentFields.push(component)
   } else if (SelectionFieldsTypes.includes(component.type)) {
@@ -23,7 +26,7 @@ sortBy(ComponentTypes, ['type']).forEach((component) => {
   } else {
     inputFields.push(component)
   }
-})
+}
 
 interface Props {
   onSelectComponent: (type: ComponentDef) => void

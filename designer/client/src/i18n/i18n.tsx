@@ -1,12 +1,11 @@
 import i18next, { type InitOptions, type TOptions } from 'i18next'
 import Backend from 'i18next-http-backend'
-import upperFirst from 'lodash/upperFirst.js'
 import * as React from 'react'
 
 import enCommonTranslations from '~/src/i18n/translations/en.translation.json'
 
 const interpolationFormats = {
-  capitalise: (value) => upperFirst(value)
+  capitalise: (value: string) => value.charAt(0).toUpperCase() + value.slice(1)
 }
 
 const DEFAULT_SETTINGS: InitOptions = {
@@ -50,17 +49,4 @@ export const withI18n = <P extends WithI18nProps>(
   return function WithI18n(props: Omit<P, keyof WithI18nProps>) {
     return <Component {...(props as P)} i18n={i18n} />
   }
-}
-
-export const withI18nRef = (WrappedComponent) => {
-  function WithI18n({ forwardedRef, ...rest }) {
-    return <WrappedComponent {...rest} i18n={i18n} ref={forwardedRef} />
-  }
-
-  const forwardRef = (props, ref) =>
-    React.createElement(
-      WithI18n,
-      Object.assign({}, props, { forwardedRef: ref })
-    )
-  return React.forwardRef(forwardRef)
 }
