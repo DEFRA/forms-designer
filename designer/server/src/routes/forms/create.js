@@ -90,13 +90,7 @@ export default [
         .catch((err) => logger.error(err))
 
       if (form) {
-        yar.flash('validationFailure', {
-          formErrors: create.titleFormErrors,
-          formValues: payload
-        })
-
-        // Redirect POST to GET without resubmit on back button
-        return h.redirect(request.url.pathname).code(303).takeover()
+        return redirectToTitleWithErrors(request, h)
       }
 
       // Update form metadata, redirect to next step
@@ -244,13 +238,7 @@ export default [
         return h.redirect(`/library/${result.slug}`).code(303)
       } catch (err) {
         if (Boom.isBoom(err) && err.data?.error === 'FormAlreadyExistsError') {
-          yar.flash('validationFailure', {
-            formErrors: create.titleFormErrors,
-            formValues: payload
-          })
-
-          // Redirect POST to GET without resubmit on back button
-          return h.redirect('/create/title').code(303).takeover()
+          return redirectToTitleWithErrors(request, h)
         }
 
         return Boom.internal(
@@ -296,10 +284,36 @@ export default [
 ]
 
 /**
+ * @param {RequestWithPayload} request
+ * @param {ResponseToolkit} h
+ */
+function redirectToTitleWithErrors(request, h) {
+  const { yar, payload } = request
+
+  yar.flash('validationFailure', {
+    formErrors: create.titleFormErrors,
+    formValues: payload
+  })
+
+  // Redirect POST to GET without resubmit on back button
+  return h.redirect('/create/title').code(303).takeover()
+}
+
+/**
  * @typedef {import('@defra/forms-model').FormMetadataInput} FormMetadataInput
  */
 
 /**
  * @template {import('@hapi/hapi').ReqRef} [ReqRef=import('@hapi/hapi').ReqRefDefaults]
  * @typedef {import('@hapi/hapi').ServerRoute<ReqRef>} ServerRoute
+ */
+
+/**
+ * @template {import('@hapi/hapi').ReqRef} [ReqRef=import('@hapi/hapi').ReqRefDefaults]
+ * @typedef {import('@hapi/hapi').Request<ReqRef>} Request
+ */
+
+/**
+ * @typedef {import('@hapi/hapi').ResponseToolkit<any>} ResponseToolkit
+ * @typedef {Request<{ Payload: any }>} RequestWithPayload
  */
