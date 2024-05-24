@@ -1,6 +1,5 @@
 import Basic from '@hapi/basic'
 import Bell from '@hapi/bell'
-import Boom from '@hapi/boom'
 import { token } from '@hapi/jwt'
 import { DateTime } from 'luxon'
 
@@ -24,14 +23,6 @@ export const azureOidc = {
     name: 'azure-oidc',
     async register(server) {
       await server.register(Bell)
-
-      if (
-        !config.azureClientId ||
-        !config.azureClientSecret ||
-        !config.oidcWellKnownConfigurationUrl
-      ) {
-        throw Boom.unauthorized()
-      }
 
       const oidc = await fetch(config.oidcWellKnownConfigurationUrl).then(
         (response) => /** @type {Promise<OidcMetadata>} */ (response.json())
