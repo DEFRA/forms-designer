@@ -1,12 +1,11 @@
 import i18next, { type InitOptions, type TOptions } from 'i18next'
 import Backend from 'i18next-http-backend'
-import upperFirst from 'lodash/upperFirst.js'
 import * as React from 'react'
 
 import enCommonTranslations from '~/src/i18n/translations/en.translation.json'
 
 const interpolationFormats = {
-  capitalise: (value) => upperFirst(value)
+  capitalise: (value: string) => value.charAt(0).toUpperCase() + value.slice(1)
 }
 
 const DEFAULT_SETTINGS: InitOptions = {

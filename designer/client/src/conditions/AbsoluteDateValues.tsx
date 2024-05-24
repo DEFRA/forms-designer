@@ -1,5 +1,4 @@
 import { isValid } from 'date-fns'
-import padStart from 'lodash/padStart.js'
 import React, { useEffect, useState, type ChangeEvent } from 'react'
 
 import {
@@ -55,11 +54,11 @@ export const AbsoluteDateValues = ({ value = {}, updateValue }: Props) => {
   )
 
   const [month, setMonth] = useState<string>(() =>
-    isInt(value.month) ? padStart(String(value.month), 2, '0') : ''
+    isInt(value.month) ? `${value.month}`.padStart(2, '0') : ''
   )
 
   const [day, setDay] = useState<string>(() =>
-    isInt(value.day) ? padStart(String(value.day), 2, '0') : ''
+    isInt(value.day) ? `${value.day}`.padStart(2, '0') : ''
   )
 
   useEffect(() => {
