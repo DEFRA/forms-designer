@@ -2,9 +2,12 @@ import { buildEntry } from '~/src/common/nunjucks/context/build-navigation.js'
 import config from '~/src/config.js'
 import * as forms from '~/src/lib/forms.js'
 
-export async function listViewModel() {
+/**
+ * @param {string} token
+ */
+export async function listViewModel(token) {
   const pageTitle = 'Forms library'
-  const formItems = await forms.list()
+  const formItems = await forms.list(token)
 
   return {
     pageTitle,

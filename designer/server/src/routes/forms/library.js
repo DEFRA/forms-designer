@@ -12,7 +12,10 @@ export default [
     method: 'GET',
     path: '/library',
     async handler(request, h) {
-      const model = await library.listViewModel()
+      const { auth } = request
+      const token = auth.credentials.token
+      const model = await library.listViewModel(token)
+
       return h.view('forms/library', model)
     },
     options: {
@@ -34,15 +37,13 @@ export default [
     path: '/library/{slug}',
     options: {
       async handler(request, h) {
-        const { params } = request
+        const { auth, params } = request
+        const { token } = auth.credentials
 
         // Retrieve form by slug
-        const form = await forms.get(params.slug)
-        if (!form) {
-          return Boom.notFound(`Form with slug '${params.slug}' not found`)
-        }
-
+        const form = await forms.get(params.slug, token)
         const model = library.overviewViewModel(form)
+
         return h.view('forms/overview', model)
       },
       auth: {
@@ -63,15 +64,13 @@ export default [
     path: '/library/{slug}/editor',
     options: {
       async handler(request, h) {
-        const { params } = request
+        const { auth, params } = request
+        const { token } = auth.credentials
 
         // Retrieve form by slug
-        const form = await forms.get(params.slug)
-        if (!form) {
-          return Boom.notFound(`Form with slug '${params.slug}' not found`)
-        }
-
+        const form = await forms.get(params.slug, token)
         const model = library.editorViewModel(form)
+
         return h.view('forms/editor', model)
       },
       auth: {

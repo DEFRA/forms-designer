@@ -40,13 +40,11 @@ export const azureOidc = {
             auth: oidc.authorization_endpoint,
             token: oidc.token_endpoint,
             scope: [
-              // TODO re-enable
-              // `api://${config.azureClientId}/forms.user`,
+              `api://${config.azureClientId}/forms.user`,
               'openid',
               'profile',
               'email',
-              'offline_access',
-              'user.read'
+              'offline_access'
             ],
             profile(credentials, params) {
               const artifacts = token.decode(credentials.token)

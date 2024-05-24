@@ -128,6 +128,17 @@ export function teamViewModel(metadata, validation) {
 }
 
 /**
+ * @type {ErrorDetails}
+ */
+export const titleFormErrors = {
+  title: {
+    text: 'Form name you entered already exists',
+    href: '#title'
+  }
+}
+
+/**
  * @typedef {import('@defra/forms-model').FormMetadataInput} FormMetadataInput
  * @typedef {import("~/src/common/helpers/build-error-details.js").ValidationFailure<FormMetadataInput>} ValidationFailure
+ * @typedef {import('~/src/common/helpers/build-error-details.js').ErrorDetails} ErrorDetails
  */

@@ -12,37 +12,14 @@ import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
 import * as forms from '~/src/lib/forms.js'
-import { getAuthor } from '~/src/lib/forms.js'
 import * as create from '~/src/models/forms/create.js'
 
 const logger = createLogger()
 const schema = Joi.object().keys({
-  title: titleSchema
-    .external(
-      /**
-       * Allow only unique form slugs
-       * @param {string} title
-       * @param {ExternalHelpers} helpers
-       */
-      async (title, helpers) => {
-        const slug = slugify(title)
-
-        // Retrieve form by slug
-        const form = await forms.get(slug).catch(logger.error)
-        if (!form) {
-          return
-        }
-
-        // Show error for non-unique slugs
-        return helpers.message({
-          external: 'Form name you entered already exists'
-        })
-      }
-    )
-    .messages({
-      'string.empty': 'Enter a form name',
-      'string.max': 'Form name must be 250 characters or less'
-    }),
+  title: titleSchema.messages({
+    'string.empty': 'Enter a form name',
+    'string.max': 'Form name must be 250 characters or less'
+  }),
   organisation: organisationSchema.messages({
     'any.required': 'Select a lead organisation',
     'any.only': 'Select a lead organisation'
@@ -102,8 +79,18 @@ export default [
   ({
     method: 'POST',
     path: '/create/title',
-    handler(request, h) {
-      const { payload, yar } = request
+    async handler(request, h) {
+      const { auth, payload, yar } = request
+      const { title } = payload
+      const { token } = auth.credentials
+      const slug = slugify(title)
+      const form = await forms
+        .get(slug, token)
+        .catch((err) => logger.error(err))
+
+      if (form) {
+        return redirectToTitleWithErrors(request, h)
+      }
 
       // Update form metadata, redirect to next step
       yar.set(sessionNames.create, {
@@ -228,20 +215,18 @@ export default [
     path: '/create/team',
     async handler(request, h) {
       const { auth, payload, yar } = request
-      const author = getAuthor(auth.credentials)
+      const { token } = auth.credentials
 
       // Update form metadata
-      const metadata = yar.set(sessionNames.create, {
+      yar.set(sessionNames.create, {
         ...yar.get(sessionNames.create),
         teamName: payload.teamName,
         teamEmail: payload.teamEmail
       })
 
       try {
-        const slug = slugify(metadata.title)
-
         // Create the form
-        await forms.create(payload, author)
+        const result = await forms.create(payload, token)
 
         // Clear form metadata
         yar.clear(sessionNames.create)
@@ -249,11 +234,15 @@ export default [
         /**
          * Redirect POST to GET without resubmit on back button
          */
-        return h.redirect(`/library/${slug}`).code(303)
-      } catch (cause) {
+        return h.redirect(`/library/${result.slug}`).code(303)
+      } catch (err) {
+        if (Boom.isBoom(err) && err.data?.error === 'FormAlreadyExistsError') {
+          return redirectToTitleWithErrors(request, h)
+        }
+
         return Boom.internal(
           new Error('Failed to create new form', {
-            cause
+            cause: err
           })
         )
       }
@@ -294,11 +283,36 @@ export default [
 ]
 
 /**
+ * @param {RequestWithPayload} request
+ * @param {ResponseToolkit} h
+ */
+function redirectToTitleWithErrors(request, h) {
+  const { yar, payload } = request
+
+  yar.flash('validationFailure', {
+    formErrors: create.titleFormErrors,
+    formValues: payload
+  })
+
+  // Redirect POST to GET without resubmit on back button
+  return h.redirect('/create/title').code(303).takeover()
+}
+
+/**
  * @typedef {import('@defra/forms-model').FormMetadataInput} FormMetadataInput
- * @typedef {import('joi').ExternalHelpers} ExternalHelpers
  */
 
 /**
  * @template {import('@hapi/hapi').ReqRef} [ReqRef=import('@hapi/hapi').ReqRefDefaults]
  * @typedef {import('@hapi/hapi').ServerRoute<ReqRef>} ServerRoute
+ */
+
+/**
+ * @template {import('@hapi/hapi').ReqRef} [ReqRef=import('@hapi/hapi').ReqRefDefaults]
+ * @typedef {import('@hapi/hapi').Request<ReqRef>} Request
+ */
+
+/**
+ * @typedef {import('@hapi/hapi').ResponseToolkit<any>} ResponseToolkit
+ * @typedef {Request<{ Payload: any }>} RequestWithPayload
  */
