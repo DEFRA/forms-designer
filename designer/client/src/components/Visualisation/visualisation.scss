@@ -15,14 +15,13 @@ $govuk-assets-path: "/assets/";
     width: 240px;
     margin-bottom: 10px;
     box-sizing: border-box;
-    border-top: solid 2px #000;
-    border-right: solid 2px #000;
-    border-bottom: solid 2px #000;
-    border-left: solid 2px #000;
+    background-color: govuk-colour("white");
+    border: 2px solid govuk-colour("black");
 
     &--selected,
-    &:hover {
-      box-shadow: 0 0 0 6px govuk-colour("yellow");
+    &:hover,
+    &:focus-within {
+      box-shadow: 0 0 0 6px $govuk-focus-colour;
     }
 
     &__heading {
