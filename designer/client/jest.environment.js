@@ -14,7 +14,18 @@ Object.defineProperty(window, 'matchMedia', {
   }))
 })
 
-beforeAll(initI18n)
+beforeAll(async () => {
+  const { style } = document.documentElement
+
+  // Add styles for GOV.UK Frontend checks
+  style.setProperty('--govuk-frontend-breakpoint-mobile', '40em')
+  style.setProperty('--govuk-frontend-breakpoint-tablet', '80em')
+
+  // Flag GOV.UK Frontend as supported
+  document.body.classList.add('govuk-frontend-supported')
+
+  await initI18n()
+})
 
 beforeEach(() => {
   document.body.innerHTML = `
