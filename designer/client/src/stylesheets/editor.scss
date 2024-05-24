@@ -240,9 +240,9 @@ polyline {
   stroke-width: 4;
   stroke: #000000;
 
-  &:hover {
-    stroke: govuk-colour("yellow");
-    opacity: 1;
+  &:hover,
+  &:focus {
+    outline: 6px solid $govuk-focus-colour;
   }
 
   :after {
