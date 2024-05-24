@@ -73,18 +73,18 @@ export function credentials(options) {
 }
 
 const claims = {
-  token: profile(),
-  idToken: profile({ groups: ['valid-test-group'] })
+  token: profile({ groups: ['valid-test-group'] }),
+  idToken: profile()
 }
 
 const claimsGroupsInvalid = {
-  token: profile(),
-  idToken: profile({ groups: ['invalid-test-group'] })
+  token: profile({ groups: ['invalid-test-group'] }),
+  idToken: profile()
 }
 
 const claimsGroupsEmpty = {
-  token: profile(),
-  idToken: profile({ groups: [] })
+  token: profile({ groups: [] }),
+  idToken: profile()
 }
 
 /**
@@ -96,7 +96,7 @@ export const auth = {
   artifacts: artifacts(claims),
   credentials: credentials({
     claims,
-    user: user(claims.idToken),
+    user: user(claims.token),
     scope: [SCOPE_READ, SCOPE_WRITE]
   })
 }
@@ -110,7 +110,7 @@ export const authGroupsInvalid = {
   artifacts: artifacts(claimsGroupsInvalid),
   credentials: credentials({
     claims: claimsGroupsInvalid,
-    user: user(claimsGroupsInvalid.idToken)
+    user: user(claimsGroupsInvalid.token)
   })
 }
 

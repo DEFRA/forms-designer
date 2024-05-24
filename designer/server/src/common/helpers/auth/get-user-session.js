@@ -78,8 +78,8 @@ export function getUserClaims(credentials) {
  * @returns Array of scopes assigned to the user
  */
 export function getUserScopes(credentials, claims) {
-  const { idToken } = claims ?? getUserClaims(credentials)
-  const { groups } = idToken
+  const { token } = claims ?? getUserClaims(credentials)
+  const { groups } = token
 
   // No groups assigned to the user
   if (!groups?.length) {
