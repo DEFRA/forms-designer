@@ -307,9 +307,9 @@ export function Component(props) {
 
   return (
     <div>
-      <div className="component govuk-!-padding-2" onClick={toggleShowEditor}>
+      <button className="component govuk-link" onClick={toggleShowEditor}>
         <TagName />
-      </div>
+      </button>
       {showEditor && (
         <Flyout title={editFlyoutTitle} show={true} onHide={toggleShowEditor}>
           <ComponentContextProvider pagePath={page.path} component={component}>
