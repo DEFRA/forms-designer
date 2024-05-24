@@ -76,13 +76,22 @@ button.govuk-link {
   @include govuk-responsive-margin(4, "right");
 }
 
-.component {
-  cursor: pointer;
-  // margin-bottom: 4px;
-  // padding: 6px;
+.component.govuk-link {
+  display: block;
+  width: 100%;
+  @include govuk-responsive-padding(2);
+  text-decoration: none;
+  text-align: left;
 
-  &:hover {
+  &:hover,
+  &:focus {
     background-color: govuk-colour("yellow");
+    box-shadow: none;
+    cursor: pointer;
+  }
+
+  > div {
+    pointer-events: none;
   }
 
   .line {
