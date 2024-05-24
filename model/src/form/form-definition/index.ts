@@ -5,8 +5,6 @@ import {
   type ConditionRawData,
   type ConfirmationPage,
   type EmailOutputConfiguration,
-  type Fee,
-  type FeeOptions,
   type FormDefinition,
   type Item,
   type List,
@@ -15,7 +13,6 @@ import {
   type NotifyOutputConfiguration,
   type Output,
   type Page,
-  type PaymentSkippedWarningPage,
   type PhaseBanner,
   type RepeatingFieldPage,
   type Section,
@@ -141,9 +138,6 @@ const toggleableString = Joi.alternatives().try(Joi.boolean(), Joi.string())
 const confirmationPageSchema = Joi.object<ConfirmationPage>({
   customText: Joi.object<ConfirmationPage['customText']>({
     title: Joi.string().default('Application complete'),
-    paymentSkipped: toggleableString.default(
-      'Someone will be in touch to make a payment.'
-    ),
     nextSteps: toggleableString.default(
       'You will receive an email with details with the next steps.'
     )
@@ -151,17 +145,8 @@ const confirmationPageSchema = Joi.object<ConfirmationPage>({
   components: Joi.array<ComponentDef>().items(componentSchema)
 })
 
-const paymentSkippedWarningPage = Joi.object<PaymentSkippedWarningPage>({
-  customText: Joi.object({
-    title: Joi.string().default('Pay for your application').optional(),
-    caption: Joi.string().default('Payment').optional(),
-    body: Joi.string().default('').optional()
-  })
-})
-
 const specialPagesSchema = Joi.object<SpecialPages>().keys({
-  confirmationPage: confirmationPageSchema.optional(),
-  paymentSkippedWarningPage: paymentSkippedWarningPage.optional()
+  confirmationPage: confirmationPageSchema.optional()
 })
 
 const listItemSchema = Joi.object<Item>().keys({
@@ -185,14 +170,6 @@ const listSchema = Joi.object<List>().keys({
   title: localisedString,
   type: Joi.string().required().valid('string', 'number'),
   items: Joi.array<Item>().items(listItemSchema)
-})
-
-const feeSchema = Joi.object<Fee>().keys({
-  description: Joi.string().required(),
-  amount: Joi.number().required(),
-  multiplier: Joi.string().optional(),
-  condition: Joi.string().optional(),
-  prefix: Joi.string().optional()
 })
 
 const multiApiKeySchema = Joi.object<MultipleApiKeys>({
@@ -256,28 +233,6 @@ const phaseBannerSchema = Joi.object<PhaseBanner>().keys({
   phase: Joi.string().valid('alpha', 'beta')
 })
 
-const feeOptionSchema = Joi.object<FeeOptions>()
-  .keys({
-    payApiKey: [Joi.string().allow('').optional(), multiApiKeySchema],
-    paymentReferenceFormat: [Joi.string().optional()],
-    payReturnUrl: Joi.string().optional(),
-    allowSubmissionWithoutPayment: Joi.boolean().optional().default(true),
-    maxAttempts: Joi.number().optional().default(3),
-    customPayErrorMessage: Joi.string().optional(),
-    showPaymentSkippedWarningPage: Joi.when('allowSubmissionWithoutPayment', {
-      is: true,
-      then: Joi.boolean().valid(true, false).default(false),
-      otherwise: Joi.boolean().valid(false).default(false)
-    })
-  })
-  .default()
-  .default(({ payApiKey, paymentReferenceFormat }: FeeOptions) => {
-    return {
-      ...(payApiKey && { payApiKey }),
-      ...(paymentReferenceFormat && { paymentReferenceFormat })
-    }
-  })
-
 /**
  * Joi schema for `FormDefinition` interface
  * @see {@link FormDefinition}
@@ -300,31 +255,15 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
       .items(conditionsSchema)
       .unique('name'),
     lists: Joi.array<List>().items(listSchema).unique('name'),
-    fees: Joi.array<Fee>().items(feeSchema).optional(),
-    paymentReferenceFormat: Joi.string().optional(),
     metadata: Joi.object({ a: Joi.any() }).unknown().optional(),
     declaration: Joi.string().allow('').optional(),
     outputs: Joi.array<Output>().items(outputSchema),
-    payApiKey: [Joi.string().allow('').optional(), multiApiKeySchema],
     skipSummary: Joi.boolean().optional().default(false),
     version: Joi.number().optional().default(CURRENT_VERSION),
     phaseBanner: phaseBannerSchema,
-    specialPages: specialPagesSchema.optional(),
-    feeOptions: feeOptionSchema.optional()
+    specialPages: specialPagesSchema.optional()
   })
 
 // Maintain compatibility with legacy named export
 // E.g. `import { Schema } from '@defra/forms-model'`
 export const Schema = formDefinitionSchema
-
-/**
- *  Schema versions:
- *  Undefined / 0 - initial version as at 28/8/20. Conditions may be in object structure or string form.
- *  1 - Relevant components (radio, checkbox, select, autocomplete) now contain
- *      options as 'values' rather than referencing a data list
- *  2 - Reverse v1. Values populating radio, checkboxes, select, autocomplete are defined in Lists only.
- *  TODO:- merge fees and paymentReferenceFormat
- *  2 - 2023-05-04 `feeOptions` has been introduced. paymentReferenceFormat and payApiKey can be configured in top level or feeOptions. feeOptions will take precedent.
- *      if feeOptions are empty, it will pull values from the top level keys.
- *      WARN: Fee/GOV.UK pay configurations (apart from fees) should no longer be stored in the top level, always within feeOptions.
- */
