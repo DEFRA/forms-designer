@@ -2,6 +2,18 @@ import '@testing-library/jest-dom'
 
 import { initI18n } from './src/i18n/index.js'
 
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: jest.fn().mockImplementation((query) => ({
+    matches: true,
+    media: query,
+    onchange: null,
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+    dispatchEvent: jest.fn()
+  }))
+})
+
 beforeAll(initI18n)
 
 beforeEach(() => {
