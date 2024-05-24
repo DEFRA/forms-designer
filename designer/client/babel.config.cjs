@@ -7,6 +7,7 @@ const { NODE_ENV } = process.env
  * @type {import('@babel/core').TransformOptions}
  */
 module.exports = {
+  browserslistEnv: 'javascripts',
   plugins: [
     [
       'module-resolver',
@@ -24,7 +25,25 @@ module.exports = {
     ]
   ],
   presets: [
-    '@babel/preset-typescript',
+    [
+      '@babel/preset-env',
+      {
+        // Apply bug fixes to avoid transforms
+        bugfixes: true,
+
+        // Apply smaller "loose" transforms for browsers
+        loose: true,
+
+        // Apply ES module transforms for Jest
+        // https://jestjs.io/docs/ecmascript-modules
+        modules: NODE_ENV === 'test' ? 'auto' : false,
+
+        // Add polyfills by Browserslist environment
+        corejs: pkg.devDependencies['core-js'],
+        shippedProposals: true,
+        useBuiltIns: 'usage'
+      }
+    ],
     [
       '@babel/preset-react',
       {
@@ -34,20 +53,9 @@ module.exports = {
       }
     ],
     [
-      '@babel/preset-env',
+      '@babel/preset-typescript',
       {
-        browserslistEnv: 'javascripts',
-
-        // Apply bug fixes to avoid transforms
-        bugfixes: true,
-
-        // Apply ES module transforms for Jest
-        // https://jestjs.io/docs/ecmascript-modules
-        modules: NODE_ENV === 'test' ? 'auto' : false,
-
-        // Add polyfills by Browserslist environment
-        corejs: pkg.devDependencies['core-js'],
-        useBuiltIns: 'usage'
+        allowDeclareFields: true
       }
     ]
   ],

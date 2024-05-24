@@ -60,11 +60,18 @@ export default /** @type {import('webpack').Configuration} */ ({
           not: [/@xgovformbuilder\/govuk-react-jsx/]
         },
         options: {
+          cacheDirectory: true,
           extends: join(import.meta.dirname, 'client/babel.config.cjs')
         },
 
         // Fix missing file extensions in React components
-        resolve: { fullySpecified: false }
+        resolve: {
+          fullySpecified: false,
+          symlinks: false
+        },
+
+        // Flag loaded modules as side effect free
+        sideEffects: false
       },
       {
         test: /\.scss$/,
@@ -139,7 +146,22 @@ export default /** @type {import('webpack').Configuration} */ ({
         }
       })
     ],
-    concatenateModules: true,
+
+    // Apply cache groups in production
+    splitChunks: {
+      cacheGroups: {
+        shared: {
+          chunks: 'all',
+          name: 'shared',
+          test: /node_modules/,
+          usedExports: true
+        }
+      }
+    },
+
+    // Skip bundling unused modules
+    providedExports: true,
+    sideEffects: true,
     usedExports: true
   },
   output: {
@@ -151,7 +173,7 @@ export default /** @type {import('webpack').Configuration} */ ({
 
     chunkFilename:
       NODE_ENV === 'production'
-        ? 'javascripts/[name].[contenthash:7].min.js'
+        ? 'javascripts/[name].[chunkhash:7].min.js'
         : 'javascripts/[name].js',
     libraryTarget: 'module',
     module: true

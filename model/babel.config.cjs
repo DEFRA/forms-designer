@@ -5,9 +5,7 @@ const { BABEL_ENV = 'node', NODE_ENV } = process.env
  * @type {import('@babel/core').TransformOptions}
  */
 module.exports = {
-  assumptions: {
-    enumerableModuleMeta: true
-  },
+  browserslistEnv: BABEL_ENV,
   plugins: [
     [
       'module-resolver',
@@ -25,18 +23,21 @@ module.exports = {
     ]
   ],
   presets: [
-    '@babel/preset-typescript',
     [
       '@babel/preset-env',
       {
-        browserslistEnv: BABEL_ENV,
-
         // Apply bug fixes to avoid transforms
         bugfixes: true,
 
         // Apply ES module transforms for Jest
         // https://jestjs.io/docs/ecmascript-modules
         modules: NODE_ENV === 'test' ? 'auto' : false
+      }
+    ],
+    [
+      '@babel/preset-typescript',
+      {
+        allowDeclareFields: true
       }
     ]
   ],
