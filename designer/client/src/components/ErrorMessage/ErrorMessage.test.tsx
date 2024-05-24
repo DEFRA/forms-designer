@@ -9,12 +9,12 @@ describe('ErrorMessage component', () => {
 
   const { getByText } = screen
 
-  it('renders children text', async () => {
+  it('renders children text', () => {
     render(<ErrorMessage className="123">Error 123</ErrorMessage>)
     expect(getByText('Error 123')).toBeDefined()
   })
 
-  it('passed down className', async () => {
+  it('passed down className', () => {
     const { container } = render(
       <ErrorMessage className="123">Error 123</ErrorMessage>
     )

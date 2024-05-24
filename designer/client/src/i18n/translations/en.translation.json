@@ -134,7 +134,7 @@
   "delete": "Delete",
   "edit": "edit {{noun}}",
   "enterDateTimeAsGmt": "Dates and times should be GMT timezone",
-  "error": "Error:",
+  "error": "Error",
   "errors": {
     "field": "Enter {{field, capitalise}}",
     "required": "This field is required"
