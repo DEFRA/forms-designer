@@ -51,16 +51,3 @@ export const withI18n = <P extends WithI18nProps>(
     return <Component {...(props as P)} i18n={i18n} />
   }
 }
-
-export const withI18nRef = (WrappedComponent) => {
-  function WithI18n({ forwardedRef, ...rest }) {
-    return <WrappedComponent {...rest} i18n={i18n} ref={forwardedRef} />
-  }
-
-  const forwardRef = (props, ref) =>
-    React.createElement(
-      WithI18n,
-      Object.assign({}, props, { forwardedRef: ref })
-    )
-  return React.forwardRef(forwardRef)
-}
