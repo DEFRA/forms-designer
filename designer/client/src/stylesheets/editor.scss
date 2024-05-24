@@ -3,6 +3,10 @@ $govuk-assets-path: "/assets/";
 @import "govuk-frontend/dist/govuk/base";
 @import "prismjs/themes/prism.min.css";
 
+@import "../components/ComponentCreate/ComponentCreate.scss";
+@import "../components/Flyout/Flyout.scss";
+@import "../components/Visualisation/visualisation.scss";
+
 %app-button-link {
   @include govuk-link-common;
   @include govuk-link-style-default;

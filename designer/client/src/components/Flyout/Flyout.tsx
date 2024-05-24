@@ -12,8 +12,6 @@ import React, {
 import { FlyoutContext } from '~/src/context/index.js'
 import { i18n } from '~/src/i18n/index.js'
 
-import './Flyout.scss'
-
 interface Props {
   style?: string
   width?: string
