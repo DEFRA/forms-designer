@@ -1,5 +1,5 @@
+import { graphlib, layout } from '@dagrejs/dagre'
 import { type FormDefinition } from '@defra/forms-model'
-import dagre from 'dagre'
 
 export interface Point {
   node: {
@@ -38,7 +38,7 @@ export interface Pos {
 }
 
 export interface Layout {
-  g: dagre.graphlib.Graph
+  g: graphlib.Graph
   pos: Pos
 }
 
@@ -46,7 +46,7 @@ type GetLayout = (data: FormDefinition, el: HTMLDivElement) => Layout
 
 export const getLayout: GetLayout = (data, el) => {
   // Create a new directed graph
-  const g = new dagre.graphlib.Graph()
+  const g = new graphlib.Graph()
 
   // Set an object for the graph label
   g.setGraph({
@@ -90,7 +90,7 @@ export const getLayout: GetLayout = (data, el) => {
     }
   })
 
-  dagre.layout(g)
+  layout(g)
 
   const output = g.graph()
 

@@ -1,12 +1,10 @@
 import { type FormDefinition } from '@defra/forms-model'
 import React, { Component } from 'react'
-import { Prompt } from 'react-router-dom'
 
 import { DesignerApi } from '~/src/api/designerApi.js'
 import Menu from '~/src/components/Menu/Menu.jsx'
 import { Visualisation } from '~/src/components/Visualisation/index.js'
 import { FlyoutContext, DataContext } from '~/src/context/index.js'
-import { i18n } from '~/src/i18n/index.js'
 
 interface Props {
   id: string
@@ -84,7 +82,6 @@ export default class Designer extends Component<Props, State> {
       <DataContext.Provider value={dataContextProviderValue}>
         <FlyoutContext.Provider value={flyoutContextProviderValue}>
           <div id="designer">
-            <Prompt message={i18n('leaveDesigner')} />
             <Menu id={this.id} updatePersona={this.updatePersona} />
             <Visualisation
               id={this.id}
