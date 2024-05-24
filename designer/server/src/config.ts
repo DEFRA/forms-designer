@@ -2,7 +2,6 @@ import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import joi from 'joi'
-import { Duration } from 'luxon'
 
 const configPath = fileURLToPath(import.meta.url)
 
@@ -22,9 +21,9 @@ export interface Config {
   sessionTtl: number
   sessionCookieTtl: number
   sessionCookiePassword: string
-  azureClientId?: string
-  azureClientSecret?: string
-  oidcWellKnownConfigurationUrl?: string
+  azureClientId: string
+  azureClientSecret: string
+  oidcWellKnownConfigurationUrl: string
   appBaseUrl: string
   redisHost: string
   redisUsername: string
@@ -44,12 +43,8 @@ const schema = joi.object<Config>({
   clientDir: joi
     .string()
     .default(resolve(dirname(configPath), '../../client/dist')),
-  managerUrl: joi
-    .string()
-    .default('https://forms-manager.dev.cdp-int.defra.cloud/'),
-  previewUrl: joi
-    .string()
-    .default('https://forms-runner.dev.cdp-int.defra.cloud/'),
+  managerUrl: joi.string().required(),
+  previewUrl: joi.string().required(),
   serviceName: joi.string().required(),
   logLevel: joi
     .string()
@@ -67,21 +62,17 @@ const schema = joi.object<Config>({
   isProduction: joi.boolean().default(false),
   isDevelopment: joi.boolean().default(true),
   isTest: joi.boolean().default(false),
-  sessionTtl: joi
-    .number()
-    .default(Duration.fromObject({ days: 1 }).as('milliseconds')),
-  sessionCookieTtl: joi
-    .number()
-    .default(Duration.fromObject({ minutes: 30 }).as('milliseconds')),
-  sessionCookiePassword: joi.string().allow('').default(''),
-  azureClientId: joi.string().optional(),
-  azureClientSecret: joi.string().optional(),
-  oidcWellKnownConfigurationUrl: joi.string().optional(),
-  appBaseUrl: joi.string().default('http://localhost:3000'),
-  redisHost: joi.string().default('localhost'),
-  redisUsername: joi.string().default('default'),
-  redisPassword: joi.string().default('my-password'),
-  redisKeyPrefix: joi.string().default('forms-designer'),
+  sessionTtl: joi.number().required(),
+  sessionCookieTtl: joi.number().required(),
+  sessionCookiePassword: joi.string().required(),
+  azureClientId: joi.string().required(),
+  azureClientSecret: joi.string().required(),
+  oidcWellKnownConfigurationUrl: joi.string().required(),
+  appBaseUrl: joi.string().required(),
+  redisHost: joi.string().required(),
+  redisUsername: joi.string().required(),
+  redisPassword: joi.string().required(),
+  redisKeyPrefix: joi.string().required(),
   roleEditorGroupId: joi.string().required()
 })
 
