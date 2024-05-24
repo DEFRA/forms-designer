@@ -85,7 +85,9 @@ export default [
       const { title } = payload
       const { token } = auth.credentials
       const slug = slugify(title)
-      const form = await forms.get(slug, token).catch(logger.error)
+      const form = await forms
+        .get(slug, token)
+        .catch((err) => logger.error(err))
 
       if (form) {
         yar.flash('validationFailure', {
@@ -220,7 +222,7 @@ export default [
     path: '/create/team',
     async handler(request, h) {
       const { auth, payload, yar } = request
-      const token = auth.credentials.token
+      const { token } = auth.credentials
 
       // Update form metadata
       yar.set(sessionNames.create, {
@@ -239,7 +241,7 @@ export default [
         /**
          * Redirect POST to GET without resubmit on back button
          */
-        return h.redirect(`/library/${result?.slug}`).code(303)
+        return h.redirect(`/library/${result.slug}`).code(303)
       } catch (err) {
         if (Boom.isBoom(err) && err.data?.error === 'FormAlreadyExistsError') {
           yar.flash('validationFailure', {

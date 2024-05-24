@@ -42,11 +42,8 @@ export default [
 
         // Retrieve form by slug
         const form = await forms.get(params.slug, token)
-        if (!form) {
-          return Boom.notFound(`Form with slug '${params.slug}' not found`)
-        }
-
         const model = library.overviewViewModel(form)
+
         return h.view('forms/overview', model)
       },
       auth: {
@@ -72,11 +69,8 @@ export default [
 
         // Retrieve form by slug
         const form = await forms.get(params.slug, token)
-        if (!form) {
-          return Boom.notFound(`Form with slug '${params.slug}' not found`)
-        }
-
         const model = library.editorViewModel(form)
+
         return h.view('forms/editor', model)
       },
       auth: {
