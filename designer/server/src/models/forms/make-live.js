@@ -1,18 +1,17 @@
 /**
  * Model to represent confirmation page dialog for a given form.
- * @param {string} formTitle - the form title
- * @param {string} formSlug - the form slug
+ * @param {import("./library.js").FormMetadata} form
  */
-export function confirmationPageViewModel(formTitle, formSlug) {
+export function confirmationPageViewModel(form) {
   const pageTitle = 'Are you sure you want to make this form live?'
 
   return {
     pageTitle,
     pageHeading: {
       text: pageTitle,
-      caption: formTitle
+      caption: form.title
     },
-    bodyText: 'Completed forms will be sent to PolicyTeam@defra.gov.uk',
-    cancelLink: `/library/${formSlug}`
+    bodyText: `Completed forms will be sent to ${form.teamEmail}`,
+    cancelLink: `/library/${form.slug}`
   }
 }

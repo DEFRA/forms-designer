@@ -18,10 +18,7 @@ export default [
       const { token } = request.auth.credentials
       const form = await forms.get(request.params.slug, token)
 
-      return h.view(
-        'forms/make-live',
-        makeLive.confirmationPageViewModel(form.title, form.slug)
-      )
+      return h.view('forms/make-live', makeLive.confirmationPageViewModel(form))
     },
     options: {
       auth: {
