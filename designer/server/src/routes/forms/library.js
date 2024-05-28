@@ -42,7 +42,8 @@ export default [
         const form = await forms.get(params.slug, token)
         const model = library.overviewViewModel(
           form,
-          yar.flash('formMakeLiveSuccess').at(0) ?? false
+          /** @type {boolean} */ (yar.flash('formMakeLiveSuccess').at(0)) ??
+            false
         )
 
         return h.view('forms/overview', model)
