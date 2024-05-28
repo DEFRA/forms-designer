@@ -112,41 +112,13 @@ export interface Output {
 export interface ConfirmationPage {
   customText: {
     title: string
-    paymentSkipped: Toggleable<string>
     nextSteps: Toggleable<string>
   }
   components: ComponentDef[]
 }
 
-export interface PaymentSkippedWarningPage {
-  customText: {
-    title: string
-    caption: string
-    body: string
-  }
-}
-
 export interface SpecialPages {
   confirmationPage?: ConfirmationPage
-  paymentSkippedWarningPage?: PaymentSkippedWarningPage
-}
-
-export interface Fee {
-  description: string
-  amount: number
-  multiplier?: string
-  condition?: string
-  prefix?: string
-}
-
-export interface FeeOptions {
-  payApiKey?: string | MultipleApiKeys
-  paymentReferenceFormat?: string
-  payReturnUrl?: string
-  allowSubmissionWithoutPayment: boolean
-  maxAttempts: number
-  customPayErrorMessage?: string
-  showPaymentSkippedWarningPage: boolean
 }
 
 export type ConditionWrapperValue =
@@ -175,14 +147,10 @@ export interface FormDefinition {
   name?: string
   feedback?: Feedback
   phaseBanner?: PhaseBanner
-  fees: Fee[]
   skipSummary?: boolean
   outputs: Output[]
   declaration?: string
   metadata?: Record<string, unknown>
-  payApiKey?: string | MultipleApiKeys
   specialPages?: SpecialPages
-  paymentReferenceFormat?: string
-  feeOptions?: FeeOptions
   version?: number
 }

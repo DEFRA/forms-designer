@@ -45,7 +45,6 @@ describe('Server API', () => {
         ],
         lists: [],
         conditions: [],
-        fees: [],
         outputs: [],
         version: 2
       }
@@ -93,7 +92,6 @@ describe('Server API', () => {
         lists: [],
         sections: [],
         conditions: [],
-        fees: [],
         outputs: [],
         version: 2
       }

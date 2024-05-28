@@ -1,7 +1,6 @@
 import React, { useContext } from 'react'
 
 import { DataPrettyPrint } from '~/src/components/DataPrettyPrint/DataPrettyPrint.jsx'
-import { FeeEdit } from '~/src/components/Fee/FeeEdit.jsx'
 import { Flyout } from '~/src/components/Flyout/index.js'
 import { SubMenu } from '~/src/components/Menu/SubMenu.jsx'
 import { useMenuItem } from '~/src/components/Menu/useMenuItem.jsx'
@@ -31,7 +30,6 @@ export default function Menu({ id }: Props) {
   const conditions = useMenuItem()
   const lists = useMenuItem()
   const outputs = useMenuItem()
-  const fees = useMenuItem()
   const summaryBehaviour = useMenuItem()
   const summary = useMenuItem()
 
@@ -81,13 +79,6 @@ export default function Menu({ id }: Props) {
           onClick={outputs.show}
         >
           {i18n('menu.outputs')}
-        </button>
-        <button
-          className="govuk-button"
-          data-testid="menu-fees"
-          onClick={fees.show}
-        >
-          {i18n('menu.fees')}
         </button>
         <button
           className="govuk-button"
@@ -146,12 +137,6 @@ export default function Menu({ id }: Props) {
       {outputs.isVisible && (
         <Flyout title="Edit Outputs" onHide={outputs.hide} width="xlarge">
           <OutputsEdit />
-        </Flyout>
-      )}
-
-      {fees.isVisible && (
-        <Flyout title="Edit Fees" onHide={fees.hide} width="xlarge">
-          <FeeEdit onEdit={() => fees.hide()} />
         </Flyout>
       )}
 
