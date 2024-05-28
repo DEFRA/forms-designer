@@ -14,7 +14,7 @@ export default [
 
       return h.view(
         'forms/make-live',
-        makeLive.confirmationPageViewModel(form.slug)
+        makeLive.confirmationPageViewModel(form.title, form.slug)
       )
     }
   })

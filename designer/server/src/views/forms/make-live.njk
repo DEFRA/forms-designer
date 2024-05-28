@@ -18,6 +18,16 @@
     }) %}
 
     <p class="govuk-body">{{ bodyText }}</p>
+
+    {{ govukButton({
+      text: "Make form live"
+    }) }}
+
+    {{ govukButton({
+     text: "Cancel",
+     href: cancelLink,
+     classes: "govuk-button--secondary"
+    }) }}
     </form>
   {% endcall %}
 {% endblock %}
