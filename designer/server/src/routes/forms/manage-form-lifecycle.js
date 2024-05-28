@@ -45,8 +45,31 @@ export default [
         throw Boom.internal()
       }
 
-      yar.flash('formMakeLiveSuccess', true)
+      yar.flash('displayCreateLiveSuccess', true)
       return h.redirect(`/library/${form.slug}`)
+    }
+  }),
+  /**
+   * @satisfies {ServerRoute}
+   */
+  ({
+    method: 'GET',
+    path: '/library/{slug}/create-draft-from-live',
+    async handler(request, h) {
+      const { yar } = request
+      const { token } = request.auth.credentials
+      const { slug } = request.params
+
+      const form = await forms.get(slug, token)
+      const formDraftResponse = await forms.createDraft(form.id, token)
+
+      if (formDraftResponse.statusCode !== 200) {
+        logger.error(`Failed to create a draft form for form ID ${form.id}`)
+        throw Boom.internal()
+      }
+
+      yar.flash('displayCreateDraftSuccess', true)
+      return h.redirect(`/library/${slug}`)
     }
   })
 ]

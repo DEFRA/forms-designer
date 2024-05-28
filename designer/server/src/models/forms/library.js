@@ -20,10 +20,14 @@ export async function listViewModel(token) {
 
 /**
  * @param {FormMetadata} metadata
- * @param {boolean} formMakeLiveSuccess - indicating if a success
- * message should be shown if form created successfully
+ * @param {boolean} [displayCreateLiveSuccess] - indicating if the form was successfully promoted to live
+ * @param {boolean} [displayCreateDraftSuccess] - indicating if a draft form was successfully created
  */
-export function overviewViewModel(metadata, formMakeLiveSuccess) {
+export function overviewViewModel(
+  metadata,
+  displayCreateLiveSuccess = false,
+  displayCreateDraftSuccess = false
+) {
   const pageTitle = metadata.title
   const formPath = `/library/${metadata.slug}`
 
@@ -33,13 +37,10 @@ export function overviewViewModel(metadata, formMakeLiveSuccess) {
     buildEntry('Editor', `${formPath}/editor`)
   ]
 
-  /**
-   * @type {any[]}
-   */
   const buttons = []
 
   if (metadata.draft) {
-    buttons.concat([
+    buttons.push(
       {
         text: 'Edit draft',
         href: `${formPath}/editor`,
@@ -49,7 +50,12 @@ export function overviewViewModel(metadata, formMakeLiveSuccess) {
         text: 'Make draft live',
         href: `${formPath}/make-draft-live`
       }
-    ])
+    )
+  } else if (metadata.live) {
+    buttons.push({
+      text: 'Create draft to edit',
+      href: `${formPath}/create-draft-from-live`
+    })
   }
 
   return {
@@ -73,7 +79,10 @@ export function overviewViewModel(metadata, formMakeLiveSuccess) {
       buttons
     },
     previewUrl: config.previewUrl,
-    formMakeLiveSuccess
+    successNotifications: {
+      live: displayCreateLiveSuccess,
+      draft: displayCreateDraftSuccess
+    }
   }
 }
 

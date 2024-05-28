@@ -42,8 +42,8 @@ export default [
         const form = await forms.get(params.slug, token)
         const model = library.overviewViewModel(
           form,
-          /** @type {boolean} */ (yar.flash('formMakeLiveSuccess').at(0)) ??
-            false
+          getFlashFlag(yar, 'displayCreateLiveSuccess'),
+          getFlashFlag(yar, 'displayCreateDraftSuccess')
         )
 
         return h.view('forms/overview', model)
@@ -85,6 +85,16 @@ export default [
     }
   })
 ]
+
+/**
+ * Get a success flag from yar, defaulting to false.
+ * @param {import('@hapi/yar').Yar} yar
+ * @param {string} key
+ * @returns {boolean}
+ */
+function getFlashFlag(yar, key) {
+  return /** @type {boolean} */ (yar.flash(key).at(0)) ?? false
+}
 
 /**
  * @typedef {import('@defra/forms-model').FormMetadata} FormMetadata

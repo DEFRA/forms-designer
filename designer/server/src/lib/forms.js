@@ -114,6 +114,22 @@ export async function makeDraftFormLive(id, token) {
 }
 
 /**
+ * Create a draft form
+ * @param {string} id - form ID
+ * @param {string} token - auth token
+ */
+export async function createDraft(id, token) {
+  const postJsonByType = /** @type {typeof postJson} */ (postJson)
+
+  const requestUrl = new URL(`./${id}/create-draft`, formsEndpoint)
+  const { response } = await postJsonByType(requestUrl, {
+    ...getAuthOptions(token)
+  })
+
+  return response
+}
+
+/**
  * @param {string} token
  * @returns {RequestOptions}
  */

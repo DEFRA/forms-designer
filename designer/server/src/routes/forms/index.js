@@ -1,6 +1,6 @@
 import api from './api.js'
 import create from './create.js'
 import library from './library.js'
-import makeLive from './make-live.js'
+import manageFormLifecycle from './manage-form-lifecycle.js'
 
-export default [api, create, library, makeLive].flat()
+export default [api, create, library, manageFormLifecycle].flat()

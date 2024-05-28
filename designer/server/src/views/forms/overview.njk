@@ -67,12 +67,20 @@
   }) }}
 {% endset %}
 
-{% block content %}
-  {% if formMakeLiveSuccess %}
-    {{ govukNotificationBanner({
-      html: "<p class=\"govuk-notification-banner__heading\">This form is now live</p>",
+{% macro notificationWithHeading(heading) %}
+  {{ govukNotificationBanner({
+      html: "<p class=\"govuk-notification-banner__heading\">" + heading + "</p>",
       type: "success"
     }) }}
+{% endmacro %}
+
+{% block content %}
+  {% if successNotifications.live %}
+    {{ notificationWithHeading("This form is now live") }}
+  {% endif %}
+
+  {% if successNotifications.draft %}
+    {{ notificationWithHeading("New draft created") }}
   {% endif %}
 
   {{ appGridLayout([
