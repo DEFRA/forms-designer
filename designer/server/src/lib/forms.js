@@ -98,6 +98,22 @@ export async function updateDraftFormDefinition(id, definition, token) {
 }
 
 /**
+ * Update draft form definition
+ * @param {string} id - form ID
+ * @param {string} token - auth token
+ */
+export async function makeDraftFormLive(id, token) {
+  const postJsonByType = /** @type {typeof postJson} */ (postJson)
+
+  const requestUrl = new URL(`./${id}/create-live`, formsEndpoint)
+  const { response } = await postJsonByType(requestUrl, {
+    ...getAuthOptions(token)
+  })
+
+  return response
+}
+
+/**
  * @param {string} token
  * @returns {RequestOptions}
  */
