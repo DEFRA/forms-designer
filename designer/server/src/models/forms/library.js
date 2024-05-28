@@ -56,6 +56,10 @@ export function overviewViewModel(metadata, formMakeLiveSuccess) {
           text: 'Edit draft',
           href: `${formPath}/editor`,
           classes: 'govuk-button--secondary-quiet'
+        },
+        {
+          text: 'Make draft live',
+          href: `${formPath}/make-draft-live`
         }
       ]
     },

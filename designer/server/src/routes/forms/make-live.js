@@ -12,7 +12,7 @@ export default [
    */
   ({
     method: 'GET',
-    path: '/library/{slug}/make-form-live',
+    path: '/library/{slug}/make-draft-live',
     async handler(request, h) {
       const { token } = request.auth.credentials
       const form = await forms.get(request.params.slug, token)
@@ -28,7 +28,7 @@ export default [
    */
   ({
     method: 'POST',
-    path: '/library/{slug}/make-form-live',
+    path: '/library/{slug}/make-draft-live',
     async handler(request, h) {
       const { yar } = request
       const { token } = request.auth.credentials
