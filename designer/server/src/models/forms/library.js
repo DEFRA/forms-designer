@@ -33,6 +33,25 @@ export function overviewViewModel(metadata, formMakeLiveSuccess) {
     buildEntry('Editor', `${formPath}/editor`)
   ]
 
+  /**
+   * @type {any[]}
+   */
+  const buttons = []
+
+  if (metadata.draft) {
+    buttons.concat([
+      {
+        text: 'Edit draft',
+        href: `${formPath}/editor`,
+        classes: 'govuk-button--secondary-quiet'
+      },
+      {
+        text: 'Make draft live',
+        href: `${formPath}/make-draft-live`
+      }
+    ])
+  }
+
   return {
     backLink: {
       text: 'Back to forms library',
@@ -51,17 +70,7 @@ export function overviewViewModel(metadata, formMakeLiveSuccess) {
         size: 'medium',
         level: '3'
       },
-      buttons: [
-        {
-          text: 'Edit draft',
-          href: `${formPath}/editor`,
-          classes: 'govuk-button--secondary-quiet'
-        },
-        {
-          text: 'Make draft live',
-          href: `${formPath}/make-draft-live`
-        }
-      ]
+      buttons
     },
     previewUrl: config.previewUrl,
     formMakeLiveSuccess
