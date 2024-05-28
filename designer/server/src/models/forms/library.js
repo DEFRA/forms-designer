@@ -20,8 +20,10 @@ export async function listViewModel(token) {
 
 /**
  * @param {FormMetadata} metadata
+ * @param {boolean} formMakeLiveSuccess - indicating if a success
+ * message should be shown if form created successfully
  */
-export function overviewViewModel(metadata) {
+export function overviewViewModel(metadata, formMakeLiveSuccess) {
   const pageTitle = metadata.title
   const formPath = `/library/${metadata.slug}`
 
@@ -57,7 +59,8 @@ export function overviewViewModel(metadata) {
         }
       ]
     },
-    previewUrl: config.previewUrl
+    previewUrl: config.previewUrl,
+    formMakeLiveSuccess
   }
 }
 

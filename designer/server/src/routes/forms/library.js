@@ -1,5 +1,3 @@
-import Boom from '@hapi/boom'
-
 import * as scopes from '~/src/common/constants/scopes.js'
 import * as forms from '~/src/lib/forms.js'
 import * as library from '~/src/models/forms/library.js'
@@ -37,12 +35,15 @@ export default [
     path: '/library/{slug}',
     options: {
       async handler(request, h) {
-        const { auth, params } = request
+        const { auth, params, yar } = request
         const { token } = auth.credentials
 
         // Retrieve form by slug
         const form = await forms.get(params.slug, token)
-        const model = library.overviewViewModel(form)
+        const model = library.overviewViewModel(
+          form,
+          yar.flash('formMakeLiveSuccess').at(0) ?? false
+        )
 
         return h.view('forms/overview', model)
       },
