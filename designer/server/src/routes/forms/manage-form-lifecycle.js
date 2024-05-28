@@ -1,5 +1,6 @@
 import Boom from '@hapi/boom'
 
+import * as scopes from '~/src/common/constants/scopes.js'
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
 import * as forms from '~/src/lib/forms.js'
 import * as makeLive from '~/src/models/forms/make-live.js'
@@ -8,7 +9,7 @@ const logger = createLogger()
 
 export default [
   /**
-   * @satisfies {ServerRoute}
+   * @satisfies {ServerRoute<{ Params: FormBySlugInput }>}}
    */
   ({
     method: 'GET',
@@ -21,10 +22,19 @@ export default [
         'forms/make-live',
         makeLive.confirmationPageViewModel(form.title, form.slug)
       )
+    },
+    options: {
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${scopes.SCOPE_WRITE}`]
+        }
+      }
     }
   }),
   /**
-   * @satisfies {ServerRoute}
+   * @satisfies {ServerRoute<{ Params: FormBySlugInput }>}}
    */
   ({
     method: 'POST',
@@ -47,10 +57,19 @@ export default [
 
       yar.flash('displayCreateLiveSuccess', true)
       return h.redirect(`/library/${form.slug}`)
+    },
+    options: {
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${scopes.SCOPE_WRITE}`]
+        }
+      }
     }
   }),
   /**
-   * @satisfies {ServerRoute}
+   * @satisfies {ServerRoute<{ Params: FormBySlugInput }>}}
    */
   ({
     method: 'GET',
@@ -70,9 +89,22 @@ export default [
 
       yar.flash('displayCreateDraftSuccess', true)
       return h.redirect(`/library/${slug}`)
+    },
+    options: {
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${scopes.SCOPE_WRITE}`]
+        }
+      }
     }
   })
 ]
+
+/**
+ * @typedef {import('@defra/forms-model').FormBySlugInput} FormBySlugInput
+ */
 
 /**
  * @template {import('@hapi/hapi').ReqRef} [ReqRef=import('@hapi/hapi').ReqRefDefaults]
