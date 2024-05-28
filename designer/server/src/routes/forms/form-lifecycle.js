@@ -3,7 +3,7 @@ import Boom from '@hapi/boom'
 import * as scopes from '~/src/common/constants/scopes.js'
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
 import * as forms from '~/src/lib/forms.js'
-import * as makeLive from '~/src/models/forms/make-live.js'
+import * as formLifecycle from '~/src/models/forms/form-lifecycle.js'
 
 const logger = createLogger()
 
@@ -18,7 +18,10 @@ export default [
       const { token } = request.auth.credentials
       const form = await forms.get(request.params.slug, token)
 
-      return h.view('forms/make-live', makeLive.confirmationPageViewModel(form))
+      return h.view(
+        'forms/make-draft-live',
+        formLifecycle.confirmationPageViewModel(form)
+      )
     },
     options: {
       auth: {
