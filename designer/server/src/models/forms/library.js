@@ -39,7 +39,7 @@ export function overviewViewModel(
 
   const buttons = getFormManagementButtons(metadata, formPath)
 
-  const notifications = getFormOverviewNotifications(
+  const notification = getFormOverviewNotification(
     displayCreateLiveSuccess,
     displayCreateDraftSuccess
   )
@@ -65,7 +65,7 @@ export function overviewViewModel(
       buttons
     },
     previewUrl: config.previewUrl,
-    notifications
+    notification
   }
 }
 
@@ -73,26 +73,23 @@ export function overviewViewModel(
  * @param {boolean} displayCreateLiveSuccess - wwhether to display form live success message
  * @param {boolean} displayCreateDraftSuccess - whether to display draft created success message
  */
-function getFormOverviewNotifications(
+function getFormOverviewNotification(
   displayCreateLiveSuccess,
   displayCreateDraftSuccess
 ) {
-  const notifications = []
-
   if (displayCreateLiveSuccess) {
-    notifications.push({
+    return {
       text: 'This form is now live',
       type: 'success'
-    })
+    }
   }
 
   if (displayCreateDraftSuccess) {
-    notifications.push({
+    return {
       text: 'New draft created',
       type: 'success'
-    })
+    }
   }
-  return notifications
 }
 
 /**

@@ -67,22 +67,15 @@
   }) }}
 {% endset %}
 
-{% macro notificationWithHeading(heading) %}
-
-{% endmacro %}
-
 {% block content %}
-  {% if notifications | length %}
-    {% for notification in notifications %}
-      {{ govukNotificationBanner({
-        html: "<p class=\"govuk-notification-banner__heading\">" + notification.text + "</p>",
-        type: notification.type
-      }) }}
-    {% endfor %}
-  {% endif %}
-
   {{ appGridLayout([
     [
+      {
+        html: govukNotificationBanner({
+          html: "<p class=\"govuk-notification-banner__heading\">" + notification.text + "</p>",
+          type: notification.type
+        })
+      } if notification | length,
       {
         html: appGridLayout([
           {
