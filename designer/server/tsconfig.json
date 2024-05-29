@@ -2,8 +2,7 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "paths": {
-      "~/*": ["./*", "../../model/*"],
-      "@defra/forms-model": ["../../model/src/index.ts"]
+      "~/*": ["./*", "../../model/*"]
     },
     "types": ["@testing-library/jest-dom"]
   },
