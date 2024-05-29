@@ -8,17 +8,19 @@
       heading: pageHeading
     }) %}
 
-    <p class="govuk-body">{{ bodyText | safe }}</p>
+    <p class="govuk-body-l">{{ bodyText | safe }}</p>
 
-    {{ govukButton({
-      text: "Make form live"
-    }) }}
+    <div class="govuk-button-group">
+      {{ govukButton({
+        text: "Make form live"
+      }) }}
 
-    {{ govukButton({
-     text: "Cancel",
-     href: cancelLink,
-     classes: "govuk-button--secondary"
-    }) }}
+      {{ govukButton({
+        text: "Cancel",
+        href: cancelLink,
+        classes: "govuk-button--secondary"
+      }) }}
+    </div>
     </form>
   {% endcall %}
 {% endblock %}
