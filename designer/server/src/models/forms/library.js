@@ -58,6 +58,22 @@ export function overviewViewModel(
     })
   }
 
+  const notifications = []
+
+  if (displayCreateLiveSuccess) {
+    notifications.push({
+      text: 'This form is now live',
+      type: 'success'
+    })
+  }
+
+  if (displayCreateDraftSuccess) {
+    notifications.push({
+      text: 'New draft created',
+      type: 'success'
+    })
+  }
+
   return {
     backLink: {
       text: 'Back to forms library',
@@ -79,10 +95,7 @@ export function overviewViewModel(
       buttons
     },
     previewUrl: config.previewUrl,
-    successNotifications: {
-      live: displayCreateLiveSuccess,
-      draft: displayCreateDraftSuccess
-    }
+    notifications
   }
 }
 

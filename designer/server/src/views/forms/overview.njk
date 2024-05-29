@@ -68,19 +68,17 @@
 {% endset %}
 
 {% macro notificationWithHeading(heading) %}
-  {{ govukNotificationBanner({
-      html: "<p class=\"govuk-notification-banner__heading\">" + heading + "</p>",
-      type: "success"
-    }) }}
+
 {% endmacro %}
 
 {% block content %}
-  {% if successNotifications.live %}
-    {{ notificationWithHeading("This form is now live") }}
-  {% endif %}
-
-  {% if successNotifications.draft %}
-    {{ notificationWithHeading("New draft created") }}
+  {% if notifications | length %}
+    {% for notification in notifications %}
+      {{ govukNotificationBanner({
+        html: "<p class=\"govuk-notification-banner__heading\">" + notification.text + "</p>",
+        type: notification.type
+      }) }}
+    {% endfor %}
   {% endif %}
 
   {{ appGridLayout([
