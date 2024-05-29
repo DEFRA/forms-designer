@@ -259,7 +259,6 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
     declaration: Joi.string().allow('').optional(),
     outputs: Joi.array<Output>().items(outputSchema),
     skipSummary: Joi.boolean().optional().default(false),
-    version: Joi.number().optional().default(CURRENT_VERSION),
     phaseBanner: phaseBannerSchema,
     specialPages: specialPagesSchema.optional()
   })

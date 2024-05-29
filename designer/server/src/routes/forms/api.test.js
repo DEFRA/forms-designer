@@ -68,7 +68,7 @@ describe('Server API', () => {
       method: 'put',
       url: '/api/test-form-id/data',
       auth,
-      payload: {
+      payload: /** @satisfies {FormDefinition} */ ({
         metadata: {},
         startPage: '/first-page',
         pages: [
@@ -92,9 +92,8 @@ describe('Server API', () => {
         lists: [],
         sections: [],
         conditions: [],
-        outputs: [],
-        version: 2
-      }
+        outputs: []
+      })
     }
 
     // When
@@ -107,6 +106,10 @@ describe('Server API', () => {
     expect(result.result.err.message).toBe('Error in persistence service')
   })
 })
+
+/**
+ * @typedef {import('@defra/forms-model').FormDefinition} FormDefinition
+ */
 
 /**
  * @template {object} Result
