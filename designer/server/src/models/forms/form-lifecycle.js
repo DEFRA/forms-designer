@@ -11,7 +11,7 @@ export function confirmationPageViewModel(form) {
       text: pageTitle,
       caption: form.title
     },
-    bodyText: `Completed forms will be sent to ${form.teamEmail}`,
+    bodyText: `Completed forms will be sent to <a href="mailto:${form.teamEmail}" class="govuk-link govuk-link--no-visited-state">${form.teamEmail}</a>.`,
     cancelLink: `/library/${form.slug}`
   }
 }

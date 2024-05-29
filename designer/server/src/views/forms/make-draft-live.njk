@@ -8,7 +8,7 @@
       heading: pageHeading
     }) %}
 
-    <p class="govuk-body">{{ bodyText }}</p>
+    <p class="govuk-body">{{ bodyText | safe }}</p>
 
     {{ govukButton({
       text: "Make form live"
