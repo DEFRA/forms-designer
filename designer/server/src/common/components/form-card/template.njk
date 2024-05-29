@@ -3,7 +3,9 @@
 
 <aside class="app-form-card">
   {{ appHeading(params.heading) }}
-  {% for button in params.buttons %}
-    {{ govukButton(button) }}
-  {% endfor %}
+  <div class="govuk-button-group">
+    {% for button in params.buttons %}
+      {{ govukButton(button) }}
+    {% endfor %}
+  </div>
 </aside>
