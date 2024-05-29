@@ -67,14 +67,19 @@
   }) }}
 {% endset %}
 
+{% set formHeading %}
+  {% call govukNotificationBanner({
+    type: "success"
+  }) %}
+    <p class="govuk-notification-banner__heading">{{ notification }}</p>
+  {% endcall %}
+{% endset %}
+
 {% block content %}
   {{ appGridLayout([
     [
       {
-        html: govukNotificationBanner({
-          html: "<p class=\"govuk-notification-banner__heading\">" + notification + "</p>",
-          type: "success"
-        })
+        html: formHeading
       } if notification | length,
       {
         html: appGridLayout([
