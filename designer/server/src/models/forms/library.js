@@ -31,11 +31,7 @@ export function overviewViewModel(
   const pageTitle = metadata.title
   const formPath = `/library/${metadata.slug}`
 
-  const navigation = [
-    buildEntry('Forms library', `/library`),
-    buildEntry('Overview', formPath, { isActive: true }),
-    buildEntry('Editor', `${formPath}/editor`)
-  ]
+  const navigation = getFormSpecificNavigation(formPath, 'Overview')
 
   const buttons = getFormManagementButtons(metadata, formPath)
 
@@ -121,11 +117,7 @@ export function editorViewModel(metadata) {
   const pageTitle = metadata.title
   const formPath = `/library/${metadata.slug}`
 
-  const navigation = [
-    buildEntry('Forms library', `/library`),
-    buildEntry('Overview', formPath),
-    buildEntry('Editor', `${formPath}/editor`, { isActive: true })
-  ]
+  const navigation = getFormSpecificNavigation(formPath, 'Editor')
 
   return {
     backLink: {
@@ -141,6 +133,22 @@ export function editorViewModel(metadata) {
     form: metadata,
     previewUrl: config.previewUrl
   }
+}
+
+/**
+ * Returns the navigation bar items as an array. Where activePage matches
+ * a page, that page will have isActive:true set.
+ * @param {string} formPath
+ * @param {string} activePage
+ */
+export function getFormSpecificNavigation(formPath, activePage = '') {
+  return [
+    ['Forms library', '/library'],
+    ['Overview', formPath],
+    ['Editor', `${formPath}/editor`]
+  ].map((item) =>
+    buildEntry(item[0], item[1], { isActive: item[0] === activePage })
+  )
 }
 
 /**
