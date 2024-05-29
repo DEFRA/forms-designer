@@ -17,14 +17,18 @@ describe('ParaEdit', () => {
             {
               name: 'IDDQl4',
               title: 'abc',
-              schema: {},
+              type: 'Para',
+              content: '',
               options: {},
-              type: 'Para'
+              schema: {}
             }
           ]
         }
       ],
-      conditions: []
+      lists: [],
+      sections: [],
+      conditions: [],
+      outputs: []
     }
     const dataValue = { data, save: jest.fn() }
     const compContextValue = {

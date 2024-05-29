@@ -19,7 +19,10 @@ describe('Field edit', () => {
         section: 'home'
       }
     ],
-    lists: []
+    lists: [],
+    sections: [],
+    conditions: [],
+    outputs: []
   }
 
   let stateProps

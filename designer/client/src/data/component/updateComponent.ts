@@ -1,9 +1,9 @@
-import { type ComponentDef } from '@defra/forms-model'
+import { type FormDefinition, type ComponentDef } from '@defra/forms-model'
 
 import { type Path, findPage } from '~/src/data/index.js'
 
 export function updateComponent(
-  data,
+  data: FormDefinition,
   pagePath: Path,
   componentName: ComponentDef['name'],
   component: ComponentDef

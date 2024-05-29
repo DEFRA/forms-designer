@@ -11,7 +11,8 @@ const data: FormDefinition = {
       title: 'your details',
       name: 'yourDetails'
     }
-  ]
+  ],
+  outputs: []
 }
 test('addSection throws if a section with the same name already exists', () => {
   expect(() =>

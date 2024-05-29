@@ -27,11 +27,16 @@ describe('Field Edit', () => {
             options: {
               required: true
             },
-            type: 'List'
+            type: 'List',
+            list: 'myList'
           }
         ]
       }
-    ]
+    ],
+    lists: [],
+    sections: [],
+    conditions: [],
+    outputs: []
   }
 
   const dataValue = { data, save: jest.fn() }

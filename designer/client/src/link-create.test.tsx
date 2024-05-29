@@ -14,7 +14,6 @@ import { DataContext } from '~/src/context/index.js'
 import LinkCreate from '~/src/link-create.js'
 
 const rawData: FormDefinition = {
-  lists: [],
   pages: [
     {
       title: 'First page',
@@ -24,7 +23,7 @@ const rawData: FormDefinition = {
           type: 'YesNoField',
           name: 'ukPassport',
           title: 'Do you have a UK passport?',
-          option: {
+          options: {
             required: true
           },
           schema: {}
@@ -43,9 +42,10 @@ const rawData: FormDefinition = {
       components: []
     }
   ],
+  lists: [],
   sections: [],
-  startPage: '',
-  conditions: []
+  conditions: [],
+  outputs: []
 }
 
 const data: FormDefinition = { ...rawData }

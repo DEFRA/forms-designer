@@ -1,6 +1,9 @@
 import { type FormDefinition } from '@defra/forms-model'
 
-export function removeCondition(data: FormDefinition, name) {
+export function removeCondition(
+  data: FormDefinition,
+  name: string
+): FormDefinition {
   const pages = [...data.pages].map((page) => {
     return {
       ...page,

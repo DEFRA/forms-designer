@@ -1,85 +1,159 @@
 import { type FormDefinition } from '@defra/forms-model'
 
-import { allInputs } from '~/src/data/index.js'
+import { allInputs, type Input } from '~/src/data/index.js'
 
 test('should return all inputs from the page model', () => {
   const data: FormDefinition = {
     pages: [
       {
-        path: 'page1',
+        title: 'page1',
+        path: '/1',
         section: 'section1',
         components: [
-          { name: 'name1', type: 'RadiosField' },
-          { name: 'name2', type: 'RadiosField' }
+          {
+            name: 'name1',
+            type: 'RadiosField',
+            title: 'Radios',
+            list: 'radios',
+            options: {},
+            schema: {}
+          },
+          {
+            name: 'name2',
+            type: 'RadiosField',
+            title: 'Radios',
+            list: 'radios',
+            options: {},
+            schema: {}
+          }
         ]
       },
       {
-        path: 'page2',
+        title: 'page2',
+        path: '/2',
         section: 'section1',
         components: [
-          { name: 'name3', type: 'RadiosField' },
-          { name: 'name4', type: 'RadiosField' }
+          {
+            name: 'name3',
+            type: 'RadiosField',
+            title: 'Radios',
+            list: 'radios',
+            options: {},
+            schema: {}
+          },
+          {
+            name: 'name4',
+            type: 'RadiosField',
+            title: 'Radios',
+            list: 'radios',
+            options: {},
+            schema: {}
+          }
         ]
       }
-    ]
+    ],
+    lists: [],
+    sections: [],
+    conditions: [],
+    outputs: []
   }
 
-  expect(allInputs(data)).toEqual([
+  expect(allInputs(data)).toEqual<Input[]>([
     {
       name: 'name1',
-      page: { path: 'page1', section: 'section1' },
+      page: {
+        path: '/1',
+        section: 'section1'
+      },
       propertyPath: 'section1.name1',
-      list: undefined,
-      title: undefined,
-      type: 'RadiosField'
+      type: 'RadiosField',
+      title: 'Radios',
+      list: 'radios'
     },
     {
       name: 'name2',
-      page: { path: 'page1', section: 'section1' },
+      page: {
+        path: '/1',
+        section: 'section1'
+      },
       propertyPath: 'section1.name2',
-      list: undefined,
-      title: undefined,
-      type: 'RadiosField'
+      type: 'RadiosField',
+      title: 'Radios',
+      list: 'radios'
     },
     {
       name: 'name3',
-      page: { path: 'page2', section: 'section1' },
+      page: {
+        path: '/2',
+        section: 'section1'
+      },
       propertyPath: 'section1.name3',
-      list: undefined,
-      title: undefined,
-      type: 'RadiosField'
+      type: 'RadiosField',
+      title: 'Radios',
+      list: 'radios'
     },
     {
       name: 'name4',
-      page: { path: 'page2', section: 'section1' },
+      page: {
+        path: '/2',
+        section: 'section1'
+      },
       propertyPath: 'section1.name4',
-      list: undefined,
-      title: undefined,
-      type: 'RadiosField'
+      type: 'RadiosField',
+      title: 'Radios',
+      list: 'radios'
     }
   ])
 })
 
 test('should handle no pages', () => {
-  const data: FormDefinition = { pages: [] }
+  const data: FormDefinition = {
+    pages: [],
+    lists: [],
+    sections: [],
+    conditions: [],
+    outputs: []
+  }
   expect(allInputs(data)).toEqual([])
 })
 
 test('should handle undefined pages', () => {
-  const data: FormDefinition = {}
+  const data: FormDefinition = {
+    // @ts-expect-error - Allow invalid property for test
+    pages: undefined,
+    lists: [],
+    sections: [],
+    conditions: [],
+    outputs: []
+  }
   expect(allInputs(data)).toEqual([])
 })
 
 test('should handle pages with undefined components', () => {
   const data: FormDefinition = {
-    pages: [{}]
+    // @ts-expect-error - Allow invalid property for test
+    pages: [{}],
+    lists: [],
+    sections: [],
+    conditions: [],
+    outputs: []
   }
   expect(allInputs(data)).toEqual([])
 })
 
 test('should handle pages with no components', () => {
   const data: FormDefinition = {
-    pages: [{ components: [] }]
+    pages: [
+      {
+        title: 'No components',
+        path: '/start',
+        components: []
+      }
+    ],
+    lists: [],
+    sections: [],
+    conditions: [],
+    outputs: []
   }
   expect(allInputs(data)).toEqual([])
 })

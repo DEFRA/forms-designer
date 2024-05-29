@@ -1,6 +1,7 @@
 import { formDefinitionSchema } from '~/src/form/form-definition/index.js'
+import { type FormDefinition } from '~/src/form/form-definition/types.js'
 
-const baseConfiguration = {
+const baseConfiguration: FormDefinition = {
   metadata: {},
   startPage: '/first-page',
   pages: [],
@@ -8,7 +9,6 @@ const baseConfiguration = {
   sections: [],
   conditions: [],
   outputs: [],
-  version: 2,
   skipSummary: false,
   phaseBanner: {}
 }

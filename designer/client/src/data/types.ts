@@ -24,7 +24,10 @@ export const isNotContentType = (
 
 export interface Input {
   name: string
-  page: { path: Page['path']; section: Page['section'] }
+  page: {
+    path: Page['path']
+    section: Page['section']
+  }
   propertyPath: string
   list: string | undefined
   title: string

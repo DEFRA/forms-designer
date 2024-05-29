@@ -3,32 +3,53 @@ import { type FormDefinition } from '@defra/forms-model'
 import { addList } from '~/src/data/index.js'
 
 const data: FormDefinition = {
-  conditions: [],
+  pages: [],
   lists: [
     {
-      name: 'listA'
+      name: 'listA',
+      title: 'List A',
+      type: 'string',
+      items: []
     },
     {
-      name: 'listB'
+      name: 'listB',
+      title: 'List B',
+      type: 'string',
+      items: []
     }
   ],
-  pages: [],
-  sections: []
+  sections: [],
+  conditions: [],
+  outputs: []
 }
 
 test('findList throws when a list with the same name already exists', () => {
   expect(() =>
-    addList(data, { name: 'listA', title: 'list a', items: [], type: 'string' })
+    addList(data, {
+      name: 'listA',
+      title: 'list a',
+      type: 'string',
+      items: []
+    })
   ).toThrow(/A list with the name/)
 })
 
 test('addList returns a tuple of the list and the index', () => {
   expect(
-    addList(data, { name: 'pokedex', title: '151', items: [], type: 'number' })
-      .lists
+    addList(data, {
+      name: 'pokedex',
+      title: '151',
+      type: 'number',
+      items: []
+    }).lists
   ).toEqual([
-    { name: 'listA' },
-    { name: 'listB' },
-    { items: [], name: 'pokedex', title: '151', type: 'number' }
+    expect.objectContaining({ name: 'listA' }),
+    expect.objectContaining({ name: 'listB' }),
+    expect.objectContaining({
+      name: 'pokedex',
+      title: '151',
+      type: 'number',
+      items: []
+    })
   ])
 })

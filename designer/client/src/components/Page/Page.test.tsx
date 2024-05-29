@@ -62,9 +62,15 @@ const data: FormDefinition = {
         }
       ]
     },
-    { title: 'my second page', path: '/2' }
+    {
+      title: 'my second page',
+      path: '/2'
+    }
   ],
-  sections: []
+  lists: [],
+  sections: [],
+  conditions: [],
+  outputs: []
 }
 
 const providerProps = {

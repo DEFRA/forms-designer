@@ -4,28 +4,75 @@ import { removeCondition } from '~/src/data/index.js'
 
 const data: FormDefinition = {
   pages: [
-    { next: [], path: '/' },
     {
+      title: 'start',
+      next: [],
+      path: '/'
+    },
+    {
+      title: 'badgers',
       path: '/badgers',
-      next: [{ path: '/summary' }, { path: '/disaster', condition: 'someName' }]
+      next: [
+        {
+          path: '/summary'
+        },
+        {
+          path: '/disaster',
+          condition: 'someName'
+        }
+      ]
     }
   ],
-  conditions: [{ name: 'someName' }, { name: 'anotherName' }]
+  lists: [],
+  sections: [],
+  conditions: [
+    {
+      displayName: 'Some name',
+      name: 'someName',
+      value: 'true'
+    },
+    {
+      displayName: 'Another name',
+      name: 'anotherName',
+      value: 'true'
+    }
+  ],
+  outputs: []
 }
+
 test('removeCondition should remove conditions from the conditions key and in page links', () => {
   const updated = removeCondition(data, 'someName')
-  expect(updated).toEqual({
+  expect(updated).toEqual<FormDefinition>({
     pages: [
-      { next: [], path: '/' },
       {
+        title: 'start',
+        next: [],
+        path: '/'
+      },
+      {
+        title: 'badgers',
         path: '/badgers',
-        next: [{ path: '/summary' }, { path: '/disaster' }]
+        next: [
+          expect.objectContaining({
+            path: '/summary'
+          }),
+          expect.objectContaining({
+            path: '/disaster'
+          })
+        ]
       }
     ],
-    conditions: [{ name: 'anotherName' }]
+    lists: [],
+    sections: [],
+    conditions: [
+      expect.objectContaining({
+        name: 'anotherName'
+      })
+    ],
+    outputs: []
   })
 })
 
 test('removeCondition should do nothing if the condition does not exist', () => {
-  expect(removeCondition(data, '404')).toEqual(data)
+  expect(removeCondition(data, '404')).toEqual<FormDefinition>(data)
 })

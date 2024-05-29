@@ -12,11 +12,11 @@ describe('SelectConditions', () => {
   const { getByText, getByTestId, queryByText } = screen
 
   const data: FormDefinition = {
-    lists: [],
     pages: [],
+    lists: [],
     sections: [],
-    startPage: '',
-    conditions: []
+    conditions: [],
+    outputs: []
   }
 
   const dataValue = { data, save: jest.fn() }

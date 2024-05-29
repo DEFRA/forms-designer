@@ -5,16 +5,20 @@ import { updateCondition } from '~/src/data/index.js'
 const condition = {
   displayName: 'condition',
   name: 'isCatPerson',
-  value: { name: 'newCondition', conditions: [] }
+  value: {
+    name: 'newCondition',
+    conditions: []
+  }
 }
+
 const data: FormDefinition = {
-  conditions: [{ ...condition }],
-  lists: [],
-  name: '',
   pages: [],
+  lists: [],
   sections: [],
-  startPage: ''
+  conditions: [{ ...condition }],
+  outputs: []
 }
+
 test('updateCondition throws if no condition could be found', () => {
   expect(() => updateCondition(data, 'isDogPerson', {})).toThrow()
 })
@@ -28,7 +32,10 @@ test('updateCondition successfully updates a condition', () => {
         conditions: []
       }
     })
-  ).toEqual({
+  ).toEqual<FormDefinition>({
+    pages: [],
+    lists: [],
+    sections: [],
     conditions: [
       {
         displayName: 'cats rule',
@@ -36,10 +43,6 @@ test('updateCondition successfully updates a condition', () => {
         value: { name: 'valueName', conditions: [] }
       }
     ],
-    lists: [],
-    name: '',
-    pages: [],
-    sections: [],
-    startPage: ''
+    outputs: []
   })
 })

@@ -12,10 +12,21 @@ const data: FormDefinition = {
     { path: '/1', title: 'Page 1', next: [{ path: '/2' }] },
     { path: '/2', title: 'Page 2' }
   ],
+  lists: [],
+  sections: [],
   conditions: [
-    { name: 'someCondition', displayName: 'My condition' },
-    { name: 'anotherCondition', displayName: 'Another condition' }
-  ]
+    {
+      name: 'someCondition',
+      displayName: 'My condition',
+      value: 'true'
+    },
+    {
+      name: 'anotherCondition',
+      displayName: 'Another condition',
+      value: 'true'
+    }
+  ],
+  outputs: []
 }
 
 const dataValue = { data, save: jest.fn() }

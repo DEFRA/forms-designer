@@ -1,3 +1,6 @@
+import { Coordinator } from '@defra/forms-model'
+
+import { type ConditionData } from '~/src/conditions/SelectConditions.js'
 import { conditionsByType } from '~/src/conditions/select-condition-helpers.js'
 
 const stringCondition = {
@@ -40,13 +43,21 @@ const nestedCondition = {
         conditionName: 'likesScrambledEggs',
         conditionDisplayName: 'likes scrambled eggs'
       },
-      { coordinator: 'and', ...objectCondition }
+      {
+        coordinator: Coordinator.AND,
+        ...objectCondition
+      }
     ]
   }
 }
 
 test('conditionsByType', () => {
-  const conditions = [stringCondition, objectCondition, nestedCondition]
+  const conditions: ConditionData[] = [
+    stringCondition,
+    objectCondition,
+    nestedCondition
+  ]
+
   expect(conditionsByType(conditions)).toEqual({
     string: [stringCondition],
     nested: [nestedCondition],

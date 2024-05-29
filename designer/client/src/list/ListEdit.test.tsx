@@ -8,12 +8,11 @@ import { customRenderForLists } from '~/test/helpers/renderers-lists.jsx'
 
 const data: FormDefinition = {
   pages: [],
-  sections: [],
-  startPage: '',
   lists: [
     {
       name: 'myList',
       title: 'My list',
+      type: 'string',
       items: [
         { text: 'text a', description: 'desc a', value: 'value a' },
         { text: 'text b', description: 'desc b', value: 'value b' }
@@ -22,9 +21,13 @@ const data: FormDefinition = {
     {
       name: 'myEmptyList',
       title: 'My empty list',
+      type: 'string',
       items: []
     }
-  ]
+  ],
+  sections: [],
+  conditions: [],
+  outputs: []
 }
 
 const dataValue = { data, save: jest.fn() }
