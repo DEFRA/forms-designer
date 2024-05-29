@@ -34,7 +34,7 @@ export default [
         await dropUserSession(request)
 
         // Redirect users to a help message
-        yar.flash('userAuthFailed', true)
+        yar.flash(sessionNames.userAuthFailed, true)
         return h.redirect('/')
       }
 

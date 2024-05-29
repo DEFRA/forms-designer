@@ -1,6 +1,7 @@
 import Boom from '@hapi/boom'
 
 import * as scopes from '~/src/common/constants/scopes.js'
+import { sessionNames } from '~/src/common/constants/session-names.js'
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
 import * as forms from '~/src/lib/forms.js'
 import * as formLifecycle from '~/src/models/forms/form-lifecycle.js'
@@ -55,7 +56,7 @@ export default [
         throw Boom.internal()
       }
 
-      yar.flash('displayCreateLiveSuccess', true)
+      yar.flash(sessionNames.displayCreateLiveSuccess, true)
       return h.redirect(`/library/${form.slug}`)
     },
     options: {
@@ -87,7 +88,7 @@ export default [
         throw Boom.internal()
       }
 
-      yar.flash('displayCreateDraftSuccess', true)
+      yar.flash(sessionNames.displayCreateDraftSuccess, true)
       return h.redirect(`/library/${slug}`)
     },
     options: {

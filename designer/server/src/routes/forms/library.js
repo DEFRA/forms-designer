@@ -1,4 +1,5 @@
 import * as scopes from '~/src/common/constants/scopes.js'
+import { sessionNames } from '~/src/common/constants/session-names.js'
 import * as forms from '~/src/lib/forms.js'
 import * as library from '~/src/models/forms/library.js'
 
@@ -42,8 +43,8 @@ export default [
         const form = await forms.get(params.slug, token)
         const model = library.overviewViewModel(
           form,
-          getFlashFlag(yar, 'displayCreateLiveSuccess'),
-          getFlashFlag(yar, 'displayCreateDraftSuccess')
+          yar.flash(sessionNames.displayCreateLiveSuccess).at(0),
+          yar.flash(sessionNames.displayCreateDraftSuccess).at(0)
         )
 
         return h.view('forms/overview', model)
@@ -85,16 +86,6 @@ export default [
     }
   })
 ]
-
-/**
- * Get a success flag from yar, defaulting to false.
- * @param {import('@hapi/yar').Yar} yar
- * @param {string} key
- * @returns {boolean}
- */
-function getFlashFlag(yar, key) {
-  return /** @type {boolean} */ (yar.flash(key).at(0)) ?? false
-}
 
 /**
  * @typedef {import('@defra/forms-model').FormMetadata} FormMetadata
