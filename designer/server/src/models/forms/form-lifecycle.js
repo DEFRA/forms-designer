@@ -3,7 +3,7 @@
  * @param {import("./library.js").FormMetadata} form
  */
 export function confirmationPageViewModel(form) {
-  const pageTitle = 'Are you sure you want to make this form live?'
+  const pageTitle = 'Are you sure you want to make the draft live?'
 
   return {
     pageTitle,
