@@ -72,8 +72,8 @@
     [
       {
         html: govukNotificationBanner({
-          html: "<p class=\"govuk-notification-banner__heading\">" + notification.text + "</p>",
-          type: notification.type
+          html: "<p class=\"govuk-notification-banner__heading\">" + notification + "</p>",
+          type: "success"
         })
       } if notification | length,
       {

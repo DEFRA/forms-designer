@@ -78,17 +78,11 @@ function getFormOverviewNotification(
   displayCreateDraftSuccess
 ) {
   if (displayCreateLiveSuccess) {
-    return {
-      text: 'This form is now live',
-      type: 'success'
-    }
+    return 'This form is now live'
   }
 
   if (displayCreateDraftSuccess) {
-    return {
-      text: 'New draft created',
-      type: 'success'
-    }
+    return 'New draft created'
   }
 }
 
