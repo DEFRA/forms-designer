@@ -13,7 +13,7 @@ import { Menu } from '~/src/components/Menu/index.js'
 import { DataContext, FlyoutContext } from '~/src/context/index.js'
 
 describe('Menu', () => {
-  const { getByText, getByTestId, queryByTestId } = screen
+  const { getByText, getByTestId, queryByTestId, queryAllByRole } = screen
 
   const dataValue = {
     data: {},
@@ -69,15 +69,29 @@ describe('Menu', () => {
   it('clicking on a summary tab shows different tab content', async () => {
     customRender(<Menu />)
 
-    await act(() => userEvent.click(getByTestId('menu-summary')))
-    expect(getByTestId('flyout-1')).toBeInTheDocument()
-    expect(queryByTestId('tab-json')).not.toBeInTheDocument()
-    expect(queryByTestId('tab-summary')).not.toBeInTheDocument()
+    await act(() => userEvent.click(getByText('Summary')))
+    expect(getByTestId('flyout-1')).toBeVisible()
 
-    await act(() => userEvent.click(getByTestId('tab-json-button')))
-    expect(getByTestId('tab-json')).toBeInTheDocument()
-    expect(queryByTestId('tab-summary')).not.toBeInTheDocument()
-    expect(queryByTestId('tab-model')).not.toBeInTheDocument()
+    const $tabs = queryAllByRole('tab')
+    const $panels = queryAllByRole('tabpanel')
+
+    // All tabs links are visible
+    expect($tabs[0]).toBeVisible()
+    expect($tabs[1]).toBeVisible()
+    expect($tabs[2]).toBeVisible()
+
+    // Only first tab panel (Data model) is visible
+    expect($panels[0]).not.toHaveClass('govuk-tabs__panel--hidden')
+    expect($panels[1]).toHaveClass('govuk-tabs__panel--hidden')
+    expect($panels[2]).toHaveClass('govuk-tabs__panel--hidden')
+
+    // Click JSON tab link
+    await act(() => userEvent.click($tabs[1]))
+
+    // Only second tab panel (JSON) is visible
+    expect($panels[0]).toHaveClass('govuk-tabs__panel--hidden')
+    expect($panels[1]).not.toHaveClass('govuk-tabs__panel--hidden')
+    expect($panels[2]).toHaveClass('govuk-tabs__panel--hidden')
   })
 
   it('flyouts close on Save', async () => {
