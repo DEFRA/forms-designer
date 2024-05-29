@@ -37,42 +37,12 @@ export function overviewViewModel(
     buildEntry('Editor', `${formPath}/editor`)
   ]
 
-  const buttons = []
+  const buttons = getFormManagementButtons(metadata, formPath)
 
-  if (metadata.draft) {
-    buttons.push(
-      {
-        text: 'Edit draft',
-        href: `${formPath}/editor`,
-        classes: 'govuk-button--secondary-quiet'
-      },
-      {
-        text: 'Make draft live',
-        href: `${formPath}/make-draft-live`
-      }
-    )
-  } else if (metadata.live) {
-    buttons.push({
-      text: 'Create draft to edit',
-      href: `${formPath}/create-draft-from-live`
-    })
-  }
-
-  const notifications = []
-
-  if (displayCreateLiveSuccess) {
-    notifications.push({
-      text: 'This form is now live',
-      type: 'success'
-    })
-  }
-
-  if (displayCreateDraftSuccess) {
-    notifications.push({
-      text: 'New draft created',
-      type: 'success'
-    })
-  }
+  const notifications = getFormOverviewNotifications(
+    displayCreateLiveSuccess,
+    displayCreateDraftSuccess
+  )
 
   return {
     backLink: {
@@ -97,6 +67,60 @@ export function overviewViewModel(
     previewUrl: config.previewUrl,
     notifications
   }
+}
+
+/**
+ * @param {boolean} displayCreateLiveSuccess - wwhether to display form live success message
+ * @param {boolean} displayCreateDraftSuccess - whether to display draft created success message
+ */
+function getFormOverviewNotifications(
+  displayCreateLiveSuccess,
+  displayCreateDraftSuccess
+) {
+  const notifications = []
+
+  if (displayCreateLiveSuccess) {
+    notifications.push({
+      text: 'This form is now live',
+      type: 'success'
+    })
+  }
+
+  if (displayCreateDraftSuccess) {
+    notifications.push({
+      text: 'New draft created',
+      type: 'success'
+    })
+  }
+  return notifications
+}
+
+/**
+ * @param {FormMetadata} metadata
+ * @param {string} baseUrl
+ */
+function getFormManagementButtons(metadata, baseUrl) {
+  const buttons = []
+
+  if (metadata.draft) {
+    buttons.push(
+      {
+        text: 'Edit draft',
+        href: `${baseUrl}/editor`,
+        classes: 'govuk-button--secondary-quiet'
+      },
+      {
+        text: 'Make draft live',
+        href: `${baseUrl}/make-draft-live`
+      }
+    )
+  } else if (metadata.live) {
+    buttons.push({
+      text: 'Create draft to edit',
+      href: `${baseUrl}/create-draft-from-live`
+    })
+  }
+  return buttons
 }
 
 /**
@@ -129,5 +153,5 @@ export function editorViewModel(metadata) {
 }
 
 /**
- * @typedef {import('~/src/lib/forms.js').FormMetadata} FormMetadata
+ * @typedef {import('@defra/forms-model').FormMetadata} FormMetadata
  */
