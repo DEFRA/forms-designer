@@ -58,7 +58,7 @@ export function overviewViewModel(
     form: metadata,
     formManagement: {
       heading: {
-        text: 'Form management',
+        text: 'Manage form',
         size: 'medium',
         level: '3'
       },
