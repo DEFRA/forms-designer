@@ -11,8 +11,8 @@ import {
   ConditionValue
 } from '~/src/conditions/index.js'
 
-describe('inline condition model', () => {
-  let underTest
+describe('condition model', () => {
+  let underTest: ConditionsModel
 
   beforeEach(() => {
     underTest = new ConditionsModel()

@@ -1,6 +1,6 @@
 import { ConditionValue, conditionValueFrom } from '~/src/conditions/index.js'
 
-describe('inline condition values', () => {
+describe('condition values', () => {
   test('can deserialize a Value object from plain old JSON', () => {
     const value = {
       type: 'Value',
