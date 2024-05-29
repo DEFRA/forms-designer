@@ -1,15 +1,6 @@
 {% extends "layouts/page.njk" %}
 
-{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
-{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
-{% from "grid-layout/macro.njk" import appGridLayout %}
-{% from "heading/macro.njk" import appHeading %}
-{% from "form-card/macro.njk" import appFormCard %}
-
-{% block beforeContent %}
-  {{ govukBackLink(backLink) }}
-{% endblock %}
 
 {% block content %}
   <form method="post" novalidate>
