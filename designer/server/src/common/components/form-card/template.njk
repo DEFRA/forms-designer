@@ -16,10 +16,7 @@
     <form method="post" action="{{ button.href }}" novalidate>
       <div class="govuk-button-group"> {# adding a button group for each fixes width/spacing #}
         {# don't pass the full button to govukButton, as passing href will stop it being a submit #}
-        {{ govukButton({
-          text: button.text,
-          type: button.submit
-        }) }}
+        {{ govukButton({ text: button.text }) }}
       </div>
     </form>
   {% endfor %}
