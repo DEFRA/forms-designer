@@ -116,9 +116,12 @@ describe('Forms library routes', () => {
 
     const { document } = await renderResponse(server, options)
 
-    const buttons = getAppFormCardButtonTexts(document)
+    const $buttons = document.querySelectorAll(
+      '.app-form-card > div > a[role=button]'
+    )
 
-    expect(buttons).toEqual(['Create draft to edit'])
+    expect($buttons).toHaveLength(1)
+    expect($buttons[0]).toHaveTextContent('Create draft to edit')
   })
 
   test('Form overview has live buttons in side bar', async () => {
@@ -155,25 +158,12 @@ describe('Forms library routes', () => {
 
     const { document } = await renderResponse(server, options)
 
-    const buttons = getAppFormCardButtonTexts(document)
+    const $buttons = document.querySelectorAll(
+      '.app-form-card > div > a[role=button]'
+    )
 
-    expect(buttons).toEqual(['Edit draft', 'Make draft live'])
+    expect($buttons).toHaveLength(2)
+    expect($buttons[0]).toHaveTextContent('Edit draft')
+    expect($buttons[1]).toHaveTextContent('Make draft live')
   })
 })
-
-/**
- * @param {Document} document
- */
-function getAppFormCardButtonTexts(document) {
-  const buttons = Array.from(
-    document.querySelectorAll('.app-form-card > a[role=button]')
-  )
-
-  return buttons.map((button) => {
-    if (!button.textContent) {
-      throw Error("Button doesn't have text content")
-    }
-
-    return button.textContent.trim()
-  })
-}
