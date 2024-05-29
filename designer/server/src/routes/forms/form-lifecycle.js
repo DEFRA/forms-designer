@@ -73,7 +73,7 @@ export default [
    * @satisfies {ServerRoute<{ Params: FormBySlugInput }>}}
    */
   ({
-    method: 'GET',
+    method: 'POST',
     path: '/library/{slug}/create-draft-from-live',
     async handler(request, h) {
       const { yar } = request

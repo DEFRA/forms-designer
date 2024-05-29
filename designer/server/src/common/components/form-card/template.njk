@@ -3,9 +3,25 @@
 
 <aside class="app-form-card">
   {{ appHeading(params.heading) }}
-  <div class="govuk-button-group">
+
+  {% if params.buttons | length %}
+    <div class="govuk-button-group">
     {% for button in params.buttons %}
       {{ govukButton(button) }}
     {% endfor %}
+    </div>
+  {% endif %}
+
+  {% for button in params.submitButtons %}
+    <form method="post" action="{{ button.href }}" novalidate>
+      <div class="govuk-button-group"> {# adding a button group for each fixes width/spacing #}
+        {# don't pass the full button to govukButton, as passing href will stop it being a submit #}
+        {{ govukButton({
+          text: button.text,
+          type: button.submit
+        }) }}
+      </div>
+    </form>
+  {% endfor %}
   </div>
 </aside>

@@ -117,7 +117,7 @@ describe('Forms library routes', () => {
     const { document } = await renderResponse(server, options)
 
     const $buttons = document.querySelectorAll(
-      '.app-form-card > div > a[role=button]'
+      '.app-form-card button[type=submit]'
     )
 
     expect($buttons).toHaveLength(1)
@@ -158,9 +158,7 @@ describe('Forms library routes', () => {
 
     const { document } = await renderResponse(server, options)
 
-    const $buttons = document.querySelectorAll(
-      '.app-form-card > div > a[role=button]'
-    )
+    const $buttons = document.querySelectorAll('.app-form-card a[role=button]')
 
     expect($buttons).toHaveLength(2)
     expect($buttons[0]).toHaveTextContent('Edit draft')

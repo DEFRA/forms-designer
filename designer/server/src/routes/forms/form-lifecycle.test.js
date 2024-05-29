@@ -122,7 +122,7 @@ describe('Test form draft and live creation route handlers', () => {
     })
 
     const options = {
-      method: 'GET',
+      method: 'POST',
       url: '/library/my-form/create-draft-from-live',
       auth
     }
@@ -143,7 +143,7 @@ describe('Test form draft and live creation route handlers', () => {
     })
 
     const options = {
-      method: 'GET',
+      method: 'POST',
       url: '/library/my-form/create-draft-from-live',
       auth
     }

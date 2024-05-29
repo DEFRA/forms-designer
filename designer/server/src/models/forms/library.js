@@ -33,7 +33,10 @@ export function overviewViewModel(
 
   const navigation = getFormSpecificNavigation(formPath, 'Overview')
 
-  const buttons = getFormManagementButtons(metadata, formPath)
+  const { buttons, submitButtons } = getFormManagementButtons(
+    metadata,
+    formPath
+  )
 
   const notification = getFormOverviewNotification(
     displayCreateLiveSuccess,
@@ -58,7 +61,8 @@ export function overviewViewModel(
         size: 'medium',
         level: '3'
       },
-      buttons
+      buttons,
+      submitButtons
     },
     previewUrl: config.previewUrl,
     notification
@@ -88,6 +92,7 @@ function getFormOverviewNotification(
  */
 function getFormManagementButtons(metadata, baseUrl) {
   const buttons = []
+  const submitButtons = []
 
   if (metadata.draft) {
     buttons.push(
@@ -102,12 +107,13 @@ function getFormManagementButtons(metadata, baseUrl) {
       }
     )
   } else if (metadata.live) {
-    buttons.push({
+    submitButtons.push({
       text: 'Create draft to edit',
       href: `${baseUrl}/create-draft-from-live`
     })
   }
-  return buttons
+
+  return { buttons, submitButtons }
 }
 
 /**
