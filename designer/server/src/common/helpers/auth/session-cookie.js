@@ -2,6 +2,7 @@ import authCookie from '@hapi/cookie'
 
 import {
   getUserSession,
+  hasExpired,
   hasUser
 } from '~/src/common/helpers/auth/get-user-session.js'
 import config from '~/src/config.js'
@@ -56,8 +57,8 @@ const sessionCookie = {
             const credentials = await getUserSession(request, session)
 
             return {
-              credentials,
-              isValid: hasUser(credentials)
+              isValid: !hasExpired(credentials),
+              credentials
             }
           }
         })
