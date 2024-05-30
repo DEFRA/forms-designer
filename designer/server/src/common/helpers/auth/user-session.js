@@ -34,13 +34,20 @@ export function createUser(credentials, claims) {
 
 /**
  * @param {Request<{ AuthArtifactsExtra: AuthArtifacts }>} request
+ * @param {AuthArtifacts} [artifacts] - Sign in response using refresh token
  */
-export async function createUserSession(request) {
+export async function createUserSession(request, artifacts) {
   const { auth, server } = request
-  const { artifacts, credentials } = auth
+  const { credentials } = auth
 
-  // Patch missing properties using Bell artifacts
+  // Prefer refreshed artifacts
+  artifacts ??= auth.artifacts
+
+  // Update credentials using artifacts
+  credentials.token = artifacts.access_token
   credentials.idToken = artifacts.id_token
+  credentials.refreshToken = artifacts.refresh_token
+  credentials.expiresIn = artifacts.expires_in
 
   if (!hasAuthenticated(credentials)) {
     throw new Error('Missing user authentication tokens')
