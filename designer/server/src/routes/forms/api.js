@@ -41,7 +41,8 @@ export default [
 
         try {
           const result = formDefinitionSchema.validate(payload, {
-            abortEarly: false
+            abortEarly: false,
+            stripUnknown: true
           })
 
           if (result.error) {
