@@ -28,12 +28,8 @@ describe('Test form draft and live creation route handlers', () => {
         id: '1234'
       }
     }
-    jest.mocked(forms.get).mockResolvedValueOnce(dummyForm)
 
-    // @ts-expect-error we don't care about the full response
-    jest.mocked(forms.makeDraftFormLive).mockResolvedValueOnce({
-      statusCode: 200
-    })
+    jest.mocked(forms.get).mockResolvedValueOnce(dummyForm)
 
     const options = {
       method: 'GET',
@@ -52,11 +48,6 @@ describe('Test form draft and live creation route handlers', () => {
 
   test("When a live form is not about to be overwritten, don't warn thh user", async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(getDummyForm())
-
-    // @ts-expect-error we don't care about the full response
-    jest.mocked(forms.makeDraftFormLive).mockResolvedValueOnce({
-      statusCode: 200
-    })
 
     const options = {
       method: 'GET',
