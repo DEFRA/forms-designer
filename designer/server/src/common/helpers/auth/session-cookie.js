@@ -15,41 +15,45 @@ const sessionCookie = {
     async register(server) {
       await server.register(authCookie)
 
-      server.auth.strategy('session', 'cookie', {
-        cookie: {
-          name: 'userSession',
-          path: '/',
-          password: config.sessionCookiePassword,
-          isSecure: config.isProduction,
-          ttl: config.sessionCookieTtl
-        },
-        keepAlive: true,
+      server.auth.strategy(
+        'session',
+        'cookie',
+        /** @type {ProviderCookie} */ ({
+          cookie: {
+            name: 'userSession',
+            path: '/',
+            password: config.sessionCookiePassword,
+            isSecure: config.isProduction,
+            ttl: config.sessionCookieTtl
+          },
+          keepAlive: true,
 
-        /**
-         * Redirect invalid session to callback route
-         */
-        redirectTo() {
-          return '/auth/callback'
-        },
+          /**
+           * Redirect invalid session to callback route
+           */
+          redirectTo() {
+            return '/auth/callback'
+          },
 
-        /**
-         * Validate session using auth credentials
-         * @param {Request} [request]
-         * @param {{ sessionId: string, user: UserCredentials }} [session] - Session cookie state
-         */
-        async validate(request, session) {
-          if (!request) {
-            return { isValid: false }
+          /**
+           * Validate session using auth credentials
+           * @param {Request} [request]
+           * @param {{ sessionId: string, user: UserCredentials }} [session] - Session cookie state
+           */
+          async validate(request, session) {
+            if (!request) {
+              return { isValid: false }
+            }
+
+            const credentials = await getUserSession(request, session)
+
+            return {
+              credentials,
+              isValid: hasUser(credentials)
+            }
           }
-
-          const credentials = await getUserSession(request, session)
-
-          return {
-            credentials,
-            isValid: hasUser(credentials)
-          }
-        }
-      })
+        })
+      )
 
       server.auth.default({
         strategies: ['azure-oidc', 'session']
@@ -66,6 +70,7 @@ export { sessionCookie }
  */
 
 /**
+ * @typedef {import('@hapi/cookie').Options} ProviderCookie
  * @typedef {import('@hapi/hapi').Request} Request
  * @typedef {import('@hapi/hapi').UserCredentials} UserCredentials
  */
