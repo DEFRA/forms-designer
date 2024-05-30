@@ -200,15 +200,6 @@ export const ComponentTypes: ComponentDef[] = [
     schema: {}
   },
   {
-    name: 'FlashCard',
-    type: 'FlashCard',
-    title: 'Flash card',
-    subType: 'content',
-    options: {},
-    schema: {},
-    list: ''
-  },
-  {
     name: 'List',
     type: 'List',
     title: 'List',

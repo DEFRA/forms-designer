@@ -174,8 +174,6 @@
     "EmailAddressField_info": "A text box that users can enter an email address into",
     "FileUploadField": "File upload",
     "FileUploadField_info": "Allows users to upload files from the device they are using",
-    "FlashCard": "Flash card",
-    "FlashCard_info": "A panel of text that can include a list",
     "Html": "HTML",
     "Html_info": "A block of text that you can apply basic HTML to, such as text formatting and hyperlinks",
     "InsetText": "Inset text",

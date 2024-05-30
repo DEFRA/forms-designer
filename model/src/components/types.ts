@@ -21,7 +21,6 @@ export type ComponentType =
   | 'Html'
   | 'InsetText'
   | 'Details'
-  | 'FlashCard'
   | 'List'
   | 'WebsiteField'
 
@@ -253,10 +252,6 @@ export interface CheckboxesFieldComponent extends ListFieldBase {
   subType?: 'listField'
 }
 
-export interface FlashCardComponent extends ListFieldBase {
-  type: 'FlashCard'
-}
-
 export interface RadiosFieldComponent extends ListFieldBase {
   type: 'RadiosField'
   subType?: 'listField'
@@ -280,7 +275,6 @@ export type ComponentDef =
   | DetailsComponent
   | EmailAddressFieldComponent
   | FileUploadFieldComponent
-  | FlashCardComponent
   | HtmlComponent
   | ListComponent
   | MultilineTextFieldComponent
@@ -319,13 +313,11 @@ export type ContentComponentsDef =
   | HtmlComponent
   | InsetTextComponent
   | ListComponent
-  | FlashCardComponent
 
 // Components that render Lists
 export type ListComponentsDef =
   | ListComponent
   | AutocompleteFieldComponent
   | CheckboxesFieldComponent
-  | FlashCardComponent
   | RadiosFieldComponent
   | SelectFieldComponent

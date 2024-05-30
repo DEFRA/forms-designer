@@ -14,8 +14,7 @@ const LIST_TYPES = [
   Types.List,
   Types.RadiosField,
   Types.SelectField,
-  Types.YesNoField,
-  Types.FlashCard
+  Types.YesNoField
 ]
 
 export function ComponentEdit(props) {
