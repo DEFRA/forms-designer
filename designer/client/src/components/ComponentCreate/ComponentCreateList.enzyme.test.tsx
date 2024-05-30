@@ -42,15 +42,19 @@ describe('ComponentCreateList', () => {
     )
 
     expect(onSelectComponent.mock.calls).toHaveLength(listItems.length)
-    expect(onSelectComponent.mock.calls[0][0]).toEqual({
-      name: 'Details',
-      type: 'Details',
-      title: 'Details',
-      subType: 'content',
-      content: '',
-      options: {},
-      schema: {}
-    })
+    expect(onSelectComponent.mock.calls[0]).toEqual(
+      expect.arrayContaining([
+        {
+          name: 'Details',
+          type: 'Details',
+          title: 'Details',
+          subType: 'content',
+          content: '',
+          options: {},
+          schema: {}
+        }
+      ])
+    )
   })
 
   test('it displays Input fields list correctly', () => {
@@ -99,15 +103,19 @@ describe('ComponentCreateList', () => {
     )
 
     expect(onSelectComponent.mock.calls).toHaveLength(listItems.length)
-    expect(onSelectComponent.mock.calls[0][0]).toEqual({
-      name: 'AutocompleteField',
-      type: 'AutocompleteField',
-      title: 'Autocomplete field',
-      subType: 'listField',
-      options: {},
-      schema: {},
-      list: ''
-    })
+    expect(onSelectComponent.mock.calls[0]).toEqual(
+      expect.arrayContaining([
+        {
+          name: 'AutocompleteField',
+          type: 'AutocompleteField',
+          title: 'Autocomplete field',
+          subType: 'listField',
+          options: {},
+          schema: {},
+          list: ''
+        }
+      ])
+    )
   })
 
   test('it displays Selection fields list correctly', () => {
@@ -140,14 +148,18 @@ describe('ComponentCreateList', () => {
     )
 
     expect(onSelectComponent.mock.calls).toHaveLength(listItems.length)
-    expect(onSelectComponent.mock.calls[0][0]).toEqual({
-      name: 'CheckboxesField',
-      type: 'CheckboxesField',
-      title: 'Checkboxes field',
-      subType: 'listField',
-      options: {},
-      schema: {},
-      list: ''
-    })
+    expect(onSelectComponent.mock.calls[0]).toEqual(
+      expect.arrayContaining([
+        {
+          name: 'CheckboxesField',
+          type: 'CheckboxesField',
+          title: 'Checkboxes field',
+          subType: 'listField',
+          options: {},
+          schema: {},
+          list: ''
+        }
+      ])
+    )
   })
 })

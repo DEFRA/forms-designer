@@ -90,12 +90,27 @@ describe('ComponentCreate:', () => {
     await act(() => userEvent.click($button))
 
     await waitFor(() => expect(providerProps.save).toHaveBeenCalled())
-    const newDetailsComp = providerProps.save.mock.calls[0][0].pages[0]
-      .components?.[0] as DetailsComponent
 
-    expect(newDetailsComp.type).toBe('Details')
-    expect(newDetailsComp.title).toBe('Details')
-    expect(newDetailsComp.content).toBe('content')
+    expect(providerProps.save.mock.calls[0]).toEqual(
+      expect.arrayContaining([
+        {
+          ...data,
+          pages: [
+            expect.objectContaining({
+              components: [
+                {
+                  title: 'Details',
+                  type: 'Details',
+                  name: expect.any(String),
+                  content: 'content',
+                  options: {}
+                }
+              ]
+            })
+          ]
+        }
+      ])
+    )
   })
 
   test("Should have functioning 'Back to create component list' link", async () => {
