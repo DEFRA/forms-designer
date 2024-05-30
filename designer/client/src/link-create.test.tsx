@@ -154,20 +154,63 @@ describe('LinkCreate', () => {
     await act(() => userEvent.click($button))
 
     await waitFor(() => expect(save).toHaveBeenCalledTimes(1))
-    expect(save.mock.calls[0][0].pages[0].next).toContainEqual({
-      path: '/summary',
-      condition: 'hasUKPassport'
-    })
+
+    expect(save.mock.calls[0]).toEqual(
+      expect.arrayContaining([
+        {
+          ...data,
+          pages: [
+            expect.objectContaining({
+              title: 'First page',
+              path: '/first-page',
+
+              // Paths and conditions are correctly generated
+              next: [{ path: '/summary', condition: 'hasUKPassport' }]
+            }),
+            expect.objectContaining({
+              title: 'Second page',
+              path: '/second-page'
+            }),
+            expect.objectContaining({
+              title: 'Summary',
+              path: '/summary'
+            })
+          ]
+        }
+      ])
+    )
 
     await act(() => userEvent.selectOptions($source, '/summary'))
     await act(() => userEvent.selectOptions($target, '/first-page'))
     await act(() => userEvent.selectOptions($condition, ''))
     await act(() => userEvent.click($button))
 
-    expect(save).toHaveBeenCalledTimes(2)
-    expect(save.mock.calls[1][0].pages[2].next).toContainEqual({
-      path: '/first-page'
-    })
+    await waitFor(() => expect(save).toHaveBeenCalledTimes(2))
+
+    expect(save.mock.calls[1]).toEqual(
+      expect.arrayContaining([
+        {
+          ...data,
+          pages: [
+            expect.objectContaining({
+              title: 'First page',
+              path: '/first-page'
+            }),
+            expect.objectContaining({
+              title: 'Second page',
+              path: '/second-page'
+            }),
+            expect.objectContaining({
+              title: 'Summary',
+              path: '/summary',
+
+              // Paths are correctly generated
+              next: [{ path: '/first-page' }]
+            })
+          ]
+        }
+      ])
+    )
   })
 
   test('links are correctly generated when the form is submitted', async () => {
@@ -241,21 +284,64 @@ describe('LinkCreate', () => {
     await act(() => userEvent.selectOptions($condition, 'hasUKPassport'))
     await act(() => userEvent.click($button))
 
-    expect(save).toHaveBeenCalledTimes(1)
-    expect(save.mock.calls[0][0].pages[0].next).toContainEqual({
-      path: '/summary',
-      condition: 'hasUKPassport'
-    })
+    await waitFor(() => expect(save).toHaveBeenCalledTimes(1))
+
+    expect(save.mock.calls[0]).toEqual(
+      expect.arrayContaining([
+        {
+          ...data,
+          pages: [
+            expect.objectContaining({
+              title: 'First page',
+              path: '/first-page',
+
+              // Paths and conditions are correctly generated
+              next: [{ path: '/summary', condition: 'hasUKPassport' }]
+            }),
+            expect.objectContaining({
+              title: 'Second page',
+              path: '/second-page'
+            }),
+            expect.objectContaining({
+              title: 'Summary',
+              path: '/summary'
+            })
+          ]
+        }
+      ])
+    )
 
     await act(() => userEvent.selectOptions($source, '/summary'))
     await act(() => userEvent.selectOptions($target, '/first-page'))
     await act(() => userEvent.selectOptions($condition, ''))
     await act(() => userEvent.click($button))
 
-    expect(save).toHaveBeenCalledTimes(2)
-    expect(save.mock.calls[1][0].pages[2].next).toContainEqual({
-      path: '/first-page'
-    })
+    await waitFor(() => expect(save).toHaveBeenCalledTimes(2))
+
+    expect(save.mock.calls[1]).toEqual(
+      expect.arrayContaining([
+        {
+          ...data,
+          pages: [
+            expect.objectContaining({
+              title: 'First page',
+              path: '/first-page'
+            }),
+            expect.objectContaining({
+              title: 'Second page',
+              path: '/second-page'
+            }),
+            expect.objectContaining({
+              title: 'Summary',
+              path: '/summary',
+
+              // Paths are correctly generated
+              next: [{ path: '/first-page' }]
+            })
+          ]
+        }
+      ])
+    )
   })
 
   test('Submitting without selecting to/from options shows the user an error', async () => {
@@ -270,7 +356,8 @@ describe('LinkCreate', () => {
     })
 
     await act(() => userEvent.click(getByRole('button')))
-    expect(save).not.toHaveBeenCalled()
+
+    await waitFor(() => expect(save).not.toHaveBeenCalled())
 
     const summary = within(getByRole('alert'))
     expect(summary.getByText('Enter from')).toBeInTheDocument()

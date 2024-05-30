@@ -13,7 +13,7 @@ describe('OutputEdit', () => {
   const { getByText, getByLabelText } = screen
 
   let mockData: FormDefinition
-  let mockSave: any
+  let mockSave: jest.Mock
 
   beforeEach(() => {
     mockSave = jest.fn().mockResolvedValue(mockData)
@@ -103,20 +103,27 @@ describe('OutputEdit', () => {
       await act(() => userEvent.click($button))
       await waitFor(() => expect(mockSave).toHaveBeenCalledTimes(1))
 
-      expect(mockSave.mock.calls[0][0].outputs).toEqual([
-        {
-          name: 'NewName',
-          title: 'NewTitle',
-          type: 'notify',
-          outputConfiguration: {
-            personalisation: [],
-            templateId: 'NewTemplateId',
-            apiKey: 'NewAPIKey',
-            emailField: '9WH4EX',
-            addReferencesToPersonalisation: true
+      expect(mockSave.mock.calls[0]).toEqual(
+        expect.arrayContaining([
+          {
+            ...mockData,
+            outputs: [
+              {
+                name: 'NewName',
+                title: 'NewTitle',
+                type: 'notify',
+                outputConfiguration: {
+                  personalisation: [],
+                  templateId: 'NewTemplateId',
+                  apiKey: 'NewAPIKey',
+                  emailField: '9WH4EX',
+                  addReferencesToPersonalisation: true
+                }
+              }
+            ]
           }
-        }
-      ])
+        ])
+      )
     })
   })
 })
