@@ -1,6 +1,8 @@
 import { formDefinitionSchema } from '@defra/forms-model'
 import Joi from 'joi'
 
+import { sessionNames } from '~/src/common/constants/session-names.js'
+import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
 import * as forms from '~/src/lib/forms.js'
 
 export default [
@@ -35,39 +37,38 @@ export default [
         parse: true
       },
       async handler(request, h) {
-        const { auth, params, payload } = request
+        const { auth, params, payload, yar } = request
         const { id } = params
         const token = auth.credentials.token
 
         try {
           const result = formDefinitionSchema.validate(payload, {
-            abortEarly: false
+            abortEarly: false,
+            stripUnknown: true
           })
 
           if (result.error) {
-            const error = result.error
-            request.logger.error(['error', `/api/${id}/data`], [error, payload])
+            const { error } = result
+
+            yar.flash(sessionNames.validationFailure, {
+              formErrors: buildErrorDetails(error),
+              formValues: payload
+            })
 
             throw new Error(
-              `Schema validation failed, reason: ${error.message}`
+              `Schema validation failed, reason: ${error.message}`,
+              { cause: error }
             )
           }
 
-          const value = result.value
+          const { value } = result
 
           // Update the form definition
           await forms.updateDraftFormDefinition(id, value, token)
 
           return h.response({ ok: true }).code(204)
         } catch (err) {
-          request.logger.error('Designer Server PUT /api/{id}/data error:', err)
-          const errorSummary = {
-            id,
-            payload,
-            errorMessage: err.message,
-            error: err.stack
-          }
-          request.yar.set(`error-summary-${id}`, errorSummary)
+          request.logger.error(err, 'Designer Server PUT /api/{id}/data error')
           return h.response({ ok: false, err }).code(500)
         }
       }
