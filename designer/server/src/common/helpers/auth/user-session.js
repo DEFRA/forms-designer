@@ -3,7 +3,6 @@ import { DateTime } from 'luxon'
 import {
   getUserClaims,
   getUserScopes,
-  hasUser,
   hasAuthenticated
 } from '~/src/common/helpers/auth/get-user-session.js'
 
@@ -12,10 +11,6 @@ import {
  * @param {ReturnType<typeof getUserClaims>} [claims]
  */
 export function createUser(credentials, claims) {
-  if (hasUser(credentials)) {
-    return credentials.user
-  }
-
   const { token } = claims ?? getUserClaims(credentials)
 
   const {
