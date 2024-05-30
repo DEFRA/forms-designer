@@ -21,6 +21,5 @@ export enum ComponentTypeEnum {
   Html = 'Html',
   InsetText = 'InsetText',
   Details = 'Details',
-  FlashCard = 'FlashCard',
   List = 'List'
 }

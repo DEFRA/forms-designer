@@ -23,7 +23,6 @@ const componentTypeEditors = {
   SelectField: SelectFieldEdit,
   RadiosField: ListFieldEdit,
   CheckboxesField: ListFieldEdit,
-  FlashCard: ListFieldEdit,
   List: ListFieldEdit,
   Details: DetailsEdit,
   Para: ParaEdit,
@@ -45,8 +44,7 @@ function ComponentTypeEdit(props) {
     (t) => t.name === selectedComponent?.type ?? ''
   )
 
-  const needsFieldInputs =
-    type?.subType !== 'content' || ['FlashCard', 'List'].includes(type.name)
+  const needsFieldInputs = type?.subType !== 'content' || type.name === 'List'
 
   const TagName = componentTypeEditors[type?.name ?? '']
   return (

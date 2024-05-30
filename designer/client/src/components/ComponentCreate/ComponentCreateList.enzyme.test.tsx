@@ -18,7 +18,6 @@ describe('ComponentCreateList', () => {
 
     expect(listItems).toEqual([
       'Details',
-      'Flash card',
       'HTML',
       'Inset text',
       'List',
