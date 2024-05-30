@@ -46,11 +46,11 @@ export default [
           })
 
           if (result.error) {
-            const error = result.error
-            request.logger.error(['error', `/api/${id}/data`], [error, payload])
+            const { error } = result
 
             throw new Error(
-              `Schema validation failed, reason: ${error.message}`
+              `Schema validation failed, reason: ${error.message}`,
+              { cause: error }
             )
           }
 
@@ -61,7 +61,7 @@ export default [
 
           return h.response({ ok: true }).code(204)
         } catch (err) {
-          request.logger.error('Designer Server PUT /api/{id}/data error:', err)
+          request.logger.error(err, 'Designer Server PUT /api/{id}/data error')
           const errorSummary = {
             id,
             payload,
