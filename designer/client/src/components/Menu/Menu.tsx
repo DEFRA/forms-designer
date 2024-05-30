@@ -4,7 +4,7 @@ import { DataPrettyPrint } from '~/src/components/DataPrettyPrint/DataPrettyPrin
 import { Flyout } from '~/src/components/Flyout/index.js'
 import { SubMenu } from '~/src/components/Menu/SubMenu.jsx'
 import { useMenuItem } from '~/src/components/Menu/useMenuItem.jsx'
-import { Tabs, useTabs } from '~/src/components/Menu/useTabs.jsx'
+import { Tabs } from '~/src/components/Tabs/index.js'
 import ConditionsEdit from '~/src/conditions/ConditionsEdit.jsx'
 import { DataContext } from '~/src/context/index.js'
 import DeclarationEdit from '~/src/declaration-edit.js'
@@ -32,8 +32,40 @@ export default function Menu({ id }: Props) {
   const outputs = useMenuItem()
   const summaryBehaviour = useMenuItem()
   const summary = useMenuItem()
-
-  const { selectedTab, handleTabChange } = useTabs()
+  const summaryTabs = [
+    {
+      label: 'Data model',
+      id: 'tab-model',
+      panel: {
+        children: <DataPrettyPrint />,
+        'data-testid': 'tab-model'
+      }
+    },
+    {
+      label: 'JSON',
+      id: 'tab-json',
+      panel: {
+        children: <pre>{JSON.stringify(data, null, 2)}</pre>,
+        'data-testid': 'tab-json'
+      }
+    },
+    {
+      label: 'Summary',
+      id: 'tab-summary',
+      panel: {
+        children: (
+          <pre>
+            {JSON.stringify(
+              'pages' in data ? data.pages.map((page) => page.path) : [],
+              null,
+              2
+            )}
+          </pre>
+        ),
+        'data-testid': 'tab-summary'
+      }
+    }
+  ]
 
   return (
     <nav className="menu">
@@ -152,66 +184,7 @@ export default function Menu({ id }: Props) {
 
       {summary.isVisible && (
         <Flyout title="Summary" width="large" onHide={summary.hide}>
-          <div className="js-enabled" style={{ paddingTop: '3px' }}>
-            <div className="govuk-tabs" data-module="tabs">
-              <h2 className="govuk-tabs__title">Summary</h2>
-              <ul className="govuk-tabs__list">
-                <li className="govuk-tabs__list-item">
-                  <button
-                    className="govuk-tabs__tab"
-                    aria-selected={selectedTab === Tabs.model}
-                    onClick={(e) => handleTabChange(e, Tabs.model)}
-                  >
-                    Data Model
-                  </button>
-                </li>
-                <li className="govuk-tabs__list-item">
-                  <button
-                    className="govuk-tabs__tab"
-                    aria-selected={selectedTab === Tabs.json}
-                    data-testid={'tab-json-button'}
-                    onClick={(e) => handleTabChange(e, Tabs.json)}
-                  >
-                    JSON
-                  </button>
-                </li>
-                <li className="govuk-tabs__list-item">
-                  <button
-                    className="govuk-tabs__tab"
-                    aria-selected={selectedTab === Tabs.summary}
-                    data-testid="tab-summary-button"
-                    onClick={(e) => handleTabChange(e, Tabs.summary)}
-                  >
-                    Summary
-                  </button>
-                </li>
-              </ul>
-              {selectedTab === Tabs.model && (
-                <section className="govuk-tabs__panel" data-testid="tab-model">
-                  <DataPrettyPrint />
-                </section>
-              )}
-              {selectedTab === Tabs.json && (
-                <section className="govuk-tabs__panel" data-testid="tab-json">
-                  <pre>{JSON.stringify(data, null, 2)}</pre>
-                </section>
-              )}
-              {selectedTab === Tabs.summary && (
-                <section
-                  className="govuk-tabs__panel"
-                  data-testid="tab-summary"
-                >
-                  <pre>
-                    {JSON.stringify(
-                      data.pages.map((page) => page.path),
-                      null,
-                      2
-                    )}
-                  </pre>
-                </section>
-              )}
-            </div>
-          </div>
+          <Tabs title="Summary" items={summaryTabs}></Tabs>
         </Flyout>
       )}
 

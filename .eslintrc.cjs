@@ -147,7 +147,10 @@ module.exports = {
         // Prefer rules that are type aware
         'no-unused-vars': 'off',
         'no-use-before-define': 'off',
-        '@typescript-eslint/no-unused-vars': ['error'],
+        '@typescript-eslint/no-unused-vars': [
+          'error',
+          { ignoreRestSiblings: true }
+        ],
         '@typescript-eslint/no-use-before-define': ['error', 'nofunc']
       },
       settings: {
