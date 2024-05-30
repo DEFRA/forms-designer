@@ -14,6 +14,10 @@ describe('Test form draft and live creation route handlers', () => {
     await server.initialize()
   })
 
+  afterAll(async () => {
+    await server.stop()
+  })
+
   test('When a live form is about to be overwritten, warn the user ahead of time', async () => {
     const dummyForm = getDummyForm()
     dummyForm.live = {
