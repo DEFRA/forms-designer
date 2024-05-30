@@ -1,22 +1,6 @@
-import { whichMigrations } from '@defra/forms-model'
 import React, { useContext, useRef } from 'react'
 
 import { DataContext } from '~/src/context/index.js'
-import logger from '~/src/plugins/logger.js'
-
-export function migrate(form) {
-  const { version = 0 } = form
-  const migrationList = whichMigrations(version)
-  try {
-    let migratedJson = { ...form }
-    migrationList.forEach((migration) => {
-      migratedJson = migration(migratedJson)
-    })
-    return migratedJson
-  } catch (e) {
-    logger.error('SubMenu', 'failed to migrate json')
-  }
-}
 
 interface Props {
   id?: string
@@ -27,7 +11,7 @@ export function SubMenu({ id }: Props) {
   const fileInput = useRef<HTMLInputElement>(null)
 
   const onClickUpload = () => {
-    fileInput.current!.click()
+    fileInput.current?.click()
   }
 
   const onClickDownload = (e) => {
@@ -47,8 +31,7 @@ export function SubMenu({ id }: Props) {
     reader.readAsText(file, 'UTF-8')
     reader.onload = function (evt) {
       const content = JSON.parse(evt.target.result)
-      const migrated = migrate(content)
-      save(migrated)
+      save(content)
     }
   }
 
