@@ -70,7 +70,7 @@ export function overviewViewModel(
 }
 
 /**
- * @param {boolean} displayCreateLiveSuccess - wwhether to display form live success message
+ * @param {boolean} displayCreateLiveSuccess - whether to display form live success message
  * @param {boolean} displayCreateDraftSuccess - whether to display draft created success message
  */
 function getFormOverviewNotification(
