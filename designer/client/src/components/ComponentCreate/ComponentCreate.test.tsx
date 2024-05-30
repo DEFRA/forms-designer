@@ -1,6 +1,12 @@
-import { type DetailsComponent, type FormDefinition } from '@defra/forms-model'
+import { type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import { act, cleanup, render, waitFor } from '@testing-library/react'
+import {
+  act,
+  cleanup,
+  render,
+  waitFor,
+  type RenderResult
+} from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React from 'react'
 
@@ -10,12 +16,12 @@ import { ComponentContextProvider } from '~/src/reducers/component/index.js'
 
 describe('ComponentCreate:', () => {
   const {
-    findByLabelText,
-    getByText,
+    findByRole,
+    getByLabelText,
+    getByRole,
+    getByTestId,
     queryByLabelText,
-    queryByRole,
-    queryByTestId,
-    queryByText
+    queryByTestId
   } = screen
 
   const data: FormDefinition = {
@@ -28,16 +34,13 @@ describe('ComponentCreate:', () => {
 
   const page = { path: '/1' }
 
-  const WrappingComponent = ({
-    dataValue = { data, save: jest.fn() },
-    componentValue,
-    children
-  }) => {
-    return (
-      <DataContext.Provider value={dataValue}>
-        <ComponentContextProvider {...componentValue}>
-          {children}
-        </ComponentContextProvider>
+  function customRender(
+    element: JSX.Element,
+    providerProps = { data, save: jest.fn() }
+  ): RenderResult {
+    return render(
+      <DataContext.Provider value={providerProps}>
+        <ComponentContextProvider>{element}</ComponentContextProvider>
       </DataContext.Provider>
     )
   }
@@ -45,43 +48,49 @@ describe('ComponentCreate:', () => {
   afterEach(cleanup)
 
   test('Selecting a component type should display the component edit form', async () => {
-    // - when
-    render(
-      <WrappingComponent componentValue={false}>
-        <ComponentCreate page={page} />
-      </WrappingComponent>
-    )
+    customRender(<ComponentCreate page={page} />)
+
+    const $componentLink = await findByRole('link', {
+      name: 'Details'
+    })
 
     expect(queryByLabelText('Title')).not.toBeInTheDocument()
-    await act(() => userEvent.click(getByText('Details')))
+    expect(queryByLabelText('Content')).not.toBeInTheDocument()
 
-    // - then
-    const $input = await waitFor(() => findByLabelText('Title'))
+    await act(() => userEvent.click($componentLink))
+
+    const $input = await waitFor(() => getByLabelText('Title'))
+    const $textarea = await waitFor(() => getByLabelText('Content'))
+
     expect($input).toBeInTheDocument()
+    expect($textarea).toBeInTheDocument()
   })
 
   test('Should store the populated component and call callback on submit', async () => {
-    // - when
-    const spy = jest.fn()
-    const { container } = render(
-      <WrappingComponent dataValue={{ data, save: spy }} componentValue={false}>
-        <ComponentCreate page={page} />
-      </WrappingComponent>
-    )
+    const providerProps = {
+      data,
+      save: jest.fn()
+    }
 
-    await act(() => userEvent.click(getByText('Details')))
+    customRender(<ComponentCreate page={page} />, providerProps)
 
-    const $input = await waitFor(() => findByLabelText('Title'))
-    const $textarea = container.querySelector('#field-content')!
-    const $button = container.querySelector('button')!
+    const $componentLink = await findByRole('link', {
+      name: 'Details'
+    })
+
+    await act(() => userEvent.click($componentLink))
+    await waitFor(() => getByTestId('component-create'))
+
+    const $input = await waitFor(() => getByLabelText('Title'))
+    const $textarea = await waitFor(() => getByLabelText('Content'))
+    const $button = await waitFor(() => getByRole('button'))
 
     await act(() => userEvent.type($input, 'Details'))
     await act(() => userEvent.type($textarea, 'content'))
     await act(() => userEvent.click($button))
 
-    // - then
-    await waitFor(() => expect(spy).toHaveBeenCalled())
-    const newDetailsComp = spy.mock.calls[0][0].pages[0]
+    await waitFor(() => expect(providerProps.save).toHaveBeenCalled())
+    const newDetailsComp = providerProps.save.mock.calls[0][0].pages[0]
       .components?.[0] as DetailsComponent
 
     expect(newDetailsComp.type).toBe('Details')
@@ -90,43 +99,53 @@ describe('ComponentCreate:', () => {
   })
 
   test("Should have functioning 'Back to create component list' link", async () => {
-    // - when
-    render(
-      <WrappingComponent componentValue={false}>
-        <ComponentCreate page={page} />
-      </WrappingComponent>
-    )
-    const backBtnTxt = 'Back to create component list'
+    customRender(<ComponentCreate page={page} />)
 
-    expect(queryByTestId('component-create-list')).toBeInTheDocument()
+    const $componentLink = await findByRole('link', {
+      name: 'Details'
+    })
 
-    await act(() => userEvent.click(queryByText('Details')))
-
-    // - then
+    // Clicking into component will hide the list
+    await act(() => userEvent.click($componentLink))
     expect(queryByTestId('component-create-list')).not.toBeInTheDocument()
-    expect(queryByText(backBtnTxt)).toBeInTheDocument()
 
-    await act(() => userEvent.click(queryByText(backBtnTxt)))
+    const $backLink = await findByRole('link', {
+      name: 'Back to create component list'
+    })
 
+    // Clicking the back link component will show the list
+    await act(() => userEvent.click($backLink))
     expect(queryByTestId('component-create-list')).toBeInTheDocument()
-    expect(queryByText(backBtnTxt)).not.toBeInTheDocument()
   })
 
   test('Should display ErrorSummary when validation fails', async () => {
-    // - when
-    const { container } = render(
-      <WrappingComponent componentValue={false}>
-        <ComponentCreate page={page} />
-      </WrappingComponent>
+    customRender(<ComponentCreate page={page} />)
+
+    const $componentLink = await findByRole('link', {
+      name: 'Details'
+    })
+
+    await act(() => userEvent.click($componentLink))
+
+    await waitFor(() => getByLabelText('Title'))
+    await waitFor(() => getByLabelText('Content'))
+
+    const $button = await findByRole('button', {
+      name: 'Save'
+    })
+
+    await act(() => userEvent.click($button))
+
+    const $errorSummary = await findByRole('alert', {
+      name: 'There is a problem'
+    })
+
+    expect($errorSummary).toContainHTML(
+      '<a href="#field-title">Enter Title</a>'
     )
 
-    expect(queryByRole('alert')).not.toBeInTheDocument()
-
-    await act(() => userEvent.click(getByText('Details')))
-    await waitFor(() => findByLabelText('Title'))
-    await act(() => userEvent.click(container.querySelector('button')))
-
-    // - then
-    expect(queryByRole('alert')).toBeInTheDocument()
+    expect($errorSummary).toContainHTML(
+      '<a href="#field-content">Enter Content</a>'
+    )
   })
 })
