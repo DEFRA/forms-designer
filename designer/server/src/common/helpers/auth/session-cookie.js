@@ -5,6 +5,8 @@ import {
   hasExpired,
   hasUser
 } from '~/src/common/helpers/auth/get-user-session.js'
+import { refreshAccessToken } from '~/src/common/helpers/auth/refresh-token.js'
+import { createUserSession } from '~/src/common/helpers/auth/user-session.js'
 import config from '~/src/config.js'
 
 /**
@@ -46,7 +48,7 @@ const sessionCookie = {
 
           /**
            * Validate session using auth credentials
-           * @param {Request} [request]
+           * @param {Request<{ AuthArtifactsExtra: AuthArtifacts }>} [request]
            * @param {{ sessionId: string, user: UserCredentials }} [session] - Session cookie state
            */
           async validate(request, session) {
@@ -54,7 +56,20 @@ const sessionCookie = {
               return { isValid: false }
             }
 
-            const credentials = await getUserSession(request, session)
+            let credentials = await getUserSession(request, session)
+
+            if (hasUser(credentials)) {
+              const { auth } = request
+
+              // Rebuild credentials from Redis session
+              auth.credentials = credentials
+
+              // Refresh session when token has expired
+              if (hasExpired(credentials)) {
+                const token = await refreshAccessToken(request)
+                credentials = await createUserSession(request, token)
+              }
+            }
 
             return {
               isValid: !hasExpired(credentials),
@@ -79,7 +94,12 @@ export { sessionCookie }
  */
 
 /**
+ * @template {import('@hapi/hapi').ReqRef} [ReqRef=import('@hapi/hapi').ReqRefDefaults]
+ * @typedef {import('@hapi/hapi').Request<ReqRef>} Request
+ */
+
+/**
  * @typedef {import('@hapi/cookie').Options} ProviderCookie
- * @typedef {import('@hapi/hapi').Request} Request
+ * @typedef {import('@hapi/hapi').AuthArtifacts} AuthArtifacts
  * @typedef {import('@hapi/hapi').UserCredentials} UserCredentials
  */

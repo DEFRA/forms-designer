@@ -3,13 +3,15 @@ import fetch from 'node-fetch'
 
 import { scope } from '~/src/common/helpers/auth/azure-oidc.js'
 import { dropUserSession } from '~/src/common/helpers/auth/drop-user-session.js'
+import { hasAuthenticated } from '~/src/common/helpers/auth/get-user-session.js'
 import config from '~/src/config.js'
 
 /**
- * @param {Request} request
+ * @param {Request | Request<{ AuthArtifactsExtra: AuthArtifacts }>} request
  */
 export async function refreshAccessToken(request) {
-  const { auth, logger } = request
+  const { auth } = request
+  const { credentials } = auth
 
   const { azureClientId, azureClientSecret, oidcWellKnownConfigurationUrl } =
     config
@@ -18,7 +20,7 @@ export async function refreshAccessToken(request) {
     !azureClientId ||
     !azureClientSecret ||
     !oidcWellKnownConfigurationUrl ||
-    !auth.credentials.refreshToken
+    !hasAuthenticated(credentials)
   ) {
     throw Boom.unauthorized()
   }
@@ -28,31 +30,40 @@ export async function refreshAccessToken(request) {
   params.append('client_id', azureClientId)
   params.append('client_secret', azureClientSecret)
   params.append('grant_type', 'refresh_token')
-  params.append('refresh_token', auth.credentials.refreshToken)
+  params.append('refresh_token', credentials.refreshToken)
   params.append('scope', scope.join(' '))
-
-  logger.info('Azure OIDC access token expired, refreshing...')
 
   const oidc = await fetch(oidcWellKnownConfigurationUrl).then(
     (response) => /** @type {Promise<OidcMetadata>} */ (response.json())
   )
 
-  return fetch(oidc.token_endpoint, {
+  const response = await fetch(oidc.token_endpoint, {
     method: 'post',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
       'Cache-Control': 'no-cache'
     },
     body: params
-  }).then(async (response) =>
-    response.ok
-      ? /** @type {Promise<SigninResponse>} */ (response.json())
-      : await dropUserSession(request)
+  })
+
+  if (!response.ok) {
+    await dropUserSession(request)
+    throw Boom.unauthorized()
+  }
+
+  const artifacts = await /** @type {Promise<AuthArtifacts>} */ (
+    response.json()
   )
+
+  return artifacts
 }
 
 /**
- * @typedef {import('@hapi/hapi').Request} Request
+ * @template {import('@hapi/hapi').ReqRef} [ReqRef=import('@hapi/hapi').ReqRefDefaults]
+ * @typedef {import('@hapi/hapi').Request<ReqRef>} Request
+ */
+
+/**
+ * @typedef {import('@hapi/hapi').AuthArtifacts} AuthArtifacts
  * @typedef {import('~/src/common/helpers/auth/azure-oidc.js').OidcMetadata} OidcMetadata
- * @typedef {import('~/src/common/helpers/auth/azure-oidc.js').SigninResponse} SigninResponse
  */
