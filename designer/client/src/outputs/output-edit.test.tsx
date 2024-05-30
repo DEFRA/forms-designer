@@ -25,17 +25,19 @@ describe('OutputEdit', () => {
           components: [
             {
               name: '9WH4EX',
-              options: {},
               type: 'TextField',
-              title: 'Email'
+              title: 'Email',
+              options: {},
+              schema: {}
             }
           ],
           controller: './pages/summary.js'
         }
       ],
-      outputs: [],
+      lists: [],
+      sections: [],
       conditions: [],
-      lists: []
+      outputs: []
     }
   })
 

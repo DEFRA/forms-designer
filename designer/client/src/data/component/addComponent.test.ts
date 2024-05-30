@@ -4,21 +4,19 @@ import { addComponent } from '~/src/data/index.js'
 
 test('addComponent throws an error when no page can be found', () => {
   const data: FormDefinition = {
-    conditions: [],
-    lists: [],
     pages: [],
-    sections: []
+    lists: [],
+    sections: [],
+    conditions: [],
+    outputs: []
   }
 
-  expect(() => {
-    addComponent(data, 'doesntExist', {})
-  }).toThrow()
+  // @ts-expect-error - Allow invalid component for test
+  expect(() => addComponent(data, 'doesntExist', {})).toThrow()
 })
 
 test('addComponent adds a component to the correct page', () => {
   const data: FormDefinition = {
-    conditions: [],
-    lists: [],
     pages: [
       {
         title: 'first page',
@@ -28,6 +26,7 @@ test('addComponent adds a component to the correct page', () => {
             type: 'TextField',
             name: 'firstName',
             title: 'First name',
+            options: {},
             schema: {}
           }
         ]
@@ -40,12 +39,16 @@ test('addComponent adds a component to the correct page', () => {
             type: 'TextField',
             name: 'lastName',
             title: 'Surname',
+            options: {},
             schema: {}
           }
         ]
       }
     ],
-    sections: []
+    lists: [],
+    sections: [],
+    conditions: [],
+    outputs: []
   }
 
   expect(
@@ -53,11 +56,10 @@ test('addComponent adds a component to the correct page', () => {
       type: 'TextField',
       name: 'aNewComponent',
       title: 'new component',
+      options: {},
       schema: {}
     })
-  ).toEqual({
-    conditions: [],
-    lists: [],
+  ).toEqual<FormDefinition>({
     pages: [
       {
         title: 'first page',
@@ -67,13 +69,15 @@ test('addComponent adds a component to the correct page', () => {
             type: 'TextField',
             name: 'firstName',
             title: 'First name',
+            options: {},
             schema: {}
           },
           {
+            type: 'TextField',
             name: 'aNewComponent',
-            schema: {},
             title: 'new component',
-            type: 'TextField'
+            options: {},
+            schema: {}
           }
         ]
       },
@@ -85,11 +89,15 @@ test('addComponent adds a component to the correct page', () => {
             type: 'TextField',
             name: 'lastName',
             title: 'Surname',
+            options: {},
             schema: {}
           }
         ]
       }
     ],
-    sections: []
+    lists: [],
+    sections: [],
+    conditions: [],
+    outputs: []
   })
 })

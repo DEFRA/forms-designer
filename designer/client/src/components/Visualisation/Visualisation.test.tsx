@@ -47,8 +47,10 @@ describe('Visualisation', () => {
         },
         { title: 'my second page', path: '/2' }
       ],
+      lists: [],
+      sections: [],
       conditions: [],
-      sections: []
+      outputs: []
     }
     const providerProps = {
       data,
@@ -97,10 +99,15 @@ describe('Visualisation', () => {
           path: '/link-source',
           next: [{ path: '/link-target' }]
         },
-        { title: 'link target', path: '/link-target' }
+        {
+          title: 'link target',
+          path: '/link-target'
+        }
       ],
+      lists: [],
+      sections: [],
       conditions: [],
-      sections: []
+      outputs: []
     }
     const providerProps = {
       data,

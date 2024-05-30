@@ -14,21 +14,50 @@ const flyoutValue = {
 }
 const data: FormDefinition = {
   pages: [
-    { path: '/1', next: [{ path: '/2' }] },
     {
+      title: 'page1',
+      path: '/1',
+      next: [{ path: '/2' }]
+    },
+    {
+      title: 'page2',
       path: '/2',
-      components: [{ type: 'TextField', name: 'field1', title: 'Something' }],
+      components: [
+        {
+          type: 'TextField',
+          name: 'field1',
+          title: 'Something',
+          options: {},
+          schema: {}
+        }
+      ],
       next: [{ path: '/3' }]
     },
     {
+      title: 'page3',
       path: '/3',
       components: [
-        { type: 'TextField', name: 'field2', title: 'Something else' },
-        { type: 'TextField', name: 'field3', title: 'beep' }
+        {
+          type: 'TextField',
+          name: 'field2',
+          title: 'Something else',
+          options: {},
+          schema: {}
+        },
+        {
+          type: 'TextField',
+          name: 'field3',
+          title: 'beep',
+          options: {},
+          schema: {}
+        }
       ]
     }
   ],
-  conditions: []
+  lists: [],
+  sections: [],
+  conditions: [],
+  outputs: []
 }
 
 const dataValue = { data, save: jest.fn() }
@@ -63,7 +92,13 @@ describe('ConditionsEdit', () => {
 
     test('no field hint test is correct', () => {
       customRender(<ConditionsEdit />, {
-        data: { pages: [], conditions: [] },
+        data: {
+          pages: [],
+          lists: [],
+          sections: [],
+          conditions: [],
+          outputs: []
+        },
         save: jest.fn()
       })
       const hint =
@@ -127,7 +162,13 @@ describe('ConditionsEdit', () => {
 
     test('Renders no new condition message if there are no inputs available', () => {
       customRender(<ConditionsEdit />, {
-        data: { pages: [], conditions: [] },
+        data: {
+          pages: [],
+          lists: [],
+          sections: [],
+          conditions: [],
+          outputs: []
+        },
         save: jest.fn()
       })
 

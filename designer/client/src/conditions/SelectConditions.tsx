@@ -1,5 +1,6 @@
 import {
   type Condition,
+  type ConditionRef,
   ConditionsModel,
   type FormDefinition
 } from '@defra/forms-model'
@@ -39,7 +40,7 @@ interface State {
 
 interface ConditionObject {
   name: string
-  conditions: Condition[]
+  conditions: ConditionRef[]
 }
 
 export interface ConditionData {

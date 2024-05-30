@@ -5,19 +5,66 @@ import { updateLink } from '~/src/data/index.js'
 const data: FormDefinition = {
   pages: [
     {
+      title: 'page1',
       path: '/1',
       next: [{ path: '/2', condition: 'badgers' }],
-      components: [{ name: 'name1' }, { name: 'name2' }]
+      components: [
+        {
+          type: 'TextField',
+          name: 'name1',
+          title: 'Name 1',
+          options: {},
+          schema: {}
+        },
+        {
+          type: 'TextField',
+          name: 'name2',
+          title: 'Name 2',
+          options: {},
+          schema: {}
+        }
+      ]
     },
     {
+      title: 'page2',
       path: '/2',
-      components: [{ name: 'name3' }, { name: 'name4' }]
+      components: [
+        {
+          type: 'TextField',
+          name: 'name3',
+          title: 'Name 3',
+          options: {},
+          schema: {}
+        },
+        {
+          type: 'TextField',
+          name: 'name4',
+          title: 'Name 4',
+          options: {},
+          schema: {}
+        }
+      ]
     },
     {
+      title: 'page3',
       path: '/3'
     }
   ],
-  conditions: [{ name: 'badgers' }, { name: 'isKangaroo' }]
+  lists: [],
+  sections: [],
+  conditions: [
+    {
+      displayName: 'Badgers',
+      name: 'badgers',
+      value: 'true'
+    },
+    {
+      displayName: 'Kangaroos',
+      name: 'isKangaroo',
+      value: 'true'
+    }
+  ],
+  outputs: []
 }
 
 test('updateLink throws if from, to, or there is no existing link', () => {
@@ -27,11 +74,13 @@ test('updateLink throws if from, to, or there is no existing link', () => {
 })
 
 test('updateLink should remove a condition from a link to the next page', () => {
-  expect(updateLink(data, '/1', '/2').pages[0].next).toEqual([{ path: '/2' }])
+  expect(updateLink(data, '/1', '/2').pages[0].next).toEqual([
+    expect.objectContaining({ path: '/2' })
+  ])
 })
 
 test('updateLink should add a condition to a link to the next page', () => {
   expect(updateLink(data, '/1', '/2', 'isKangaroos').pages[0].next).toEqual([
-    { path: '/2', condition: 'isKangaroos' }
+    expect.objectContaining({ path: '/2', condition: 'isKangaroos' })
   ])
 })

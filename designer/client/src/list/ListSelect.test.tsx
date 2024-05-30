@@ -6,6 +6,7 @@ import { ListSelect } from '~/src/list/ListSelect.jsx'
 import { customRenderForLists } from '~/test/helpers/renderers-lists.jsx'
 
 const data: FormDefinition = {
+  pages: [],
   lists: [
     {
       name: 'myList',
@@ -19,7 +20,10 @@ const data: FormDefinition = {
       type: 'string',
       items: [{ text: 'An item', description: 'A hint', value: 12 }]
     }
-  ]
+  ],
+  sections: [],
+  conditions: [],
+  outputs: []
 }
 
 const dataValue = { data, save: jest.fn() }

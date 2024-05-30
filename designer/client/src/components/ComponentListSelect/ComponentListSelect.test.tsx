@@ -49,7 +49,10 @@ describe('ComponentListSelect', () => {
         type: 'string',
         items: [{ text: 'An item', description: 'A hint', value: '12' }]
       }
-    ]
+    ],
+    sections: [],
+    conditions: [],
+    outputs: []
   }
 
   const dataValue = { data, save: jest.fn() }

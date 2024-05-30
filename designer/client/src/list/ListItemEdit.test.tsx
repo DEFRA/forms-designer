@@ -40,7 +40,7 @@ const data: FormDefinition = {
           options: {
             required: true
           },
-          type: '',
+          type: 'SelectField',
           list: 'myList'
         }
       ]
@@ -52,6 +52,7 @@ const data: FormDefinition = {
     {
       name: 'myList',
       title: 'My list',
+      type: 'string',
       items: [
         { text: 'text a', description: 'desc a', value: 'value a' },
         { text: 'text b', description: 'desc b', value: 'value b' }

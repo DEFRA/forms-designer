@@ -3,9 +3,6 @@ import { type FormDefinition } from '@defra/forms-model'
 import { addLink } from '~/src/data/index.js'
 
 const data: FormDefinition = {
-  conditions: [],
-  lists: [],
-  name: '',
   pages: [
     {
       title: 'scrambled',
@@ -15,8 +12,10 @@ const data: FormDefinition = {
     { title: 'poached', path: '/poached' },
     { title: 'sunny', path: '/sunny' }
   ],
+  lists: [],
   sections: [],
-  startPage: ''
+  conditions: [],
+  outputs: []
 }
 
 test('addLink throws if to, from or both are not found', () => {
@@ -32,10 +31,7 @@ test('addLink throws if to and from are equal', () => {
 })
 
 test('addLink successfully adds a new link', () => {
-  expect(addLink(data, '/poached', '/sunny')).toEqual({
-    conditions: [],
-    lists: [],
-    name: '',
+  expect(addLink(data, '/poached', '/sunny')).toEqual<FormDefinition>({
     pages: [
       {
         title: 'scrambled',
@@ -45,16 +41,15 @@ test('addLink successfully adds a new link', () => {
       { title: 'poached', path: '/poached', next: [{ path: '/sunny' }] },
       { title: 'sunny', path: '/sunny' }
     ],
+    lists: [],
     sections: [],
-    startPage: ''
+    conditions: [],
+    outputs: []
   })
 })
 
 test('addLink does nothing happens if the link already exists', () => {
   expect(addLink(data, '/scrambled', '/poached')).toEqual({
-    conditions: [],
-    lists: [],
-    name: '',
     pages: [
       {
         title: 'scrambled',
@@ -64,7 +59,9 @@ test('addLink does nothing happens if the link already exists', () => {
       { title: 'poached', path: '/poached' },
       { title: 'sunny', path: '/sunny' }
     ],
+    lists: [],
     sections: [],
-    startPage: ''
+    conditions: [],
+    outputs: []
   })
 })

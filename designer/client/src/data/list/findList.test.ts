@@ -3,17 +3,24 @@ import { type FormDefinition } from '@defra/forms-model'
 import { findList } from '~/src/data/index.js'
 
 const data: FormDefinition = {
-  conditions: [],
+  pages: [],
   lists: [
     {
-      name: 'listA'
+      name: 'listA',
+      title: 'List A',
+      type: 'string',
+      items: []
     },
     {
-      name: 'listB'
+      name: 'listB',
+      title: 'List B',
+      type: 'string',
+      items: []
     }
   ],
-  pages: [],
-  sections: []
+  sections: [],
+  conditions: [],
+  outputs: []
 }
 
 test('findList throws when no list can be found', () => {
@@ -22,9 +29,9 @@ test('findList throws when no list can be found', () => {
 
 test('findList returns a tuple of the list and the index', () => {
   expect(findList(data, 'listA')).toEqual([
-    {
+    expect.objectContaining({
       name: 'listA'
-    },
+    }),
     0
   ])
 })

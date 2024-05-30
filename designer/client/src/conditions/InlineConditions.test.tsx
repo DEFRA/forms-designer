@@ -20,23 +20,50 @@ describe('InlineConditions', () => {
 
     const data: FormDefinition = {
       pages: [
-        { path: '/1', next: [{ path: '/2' }] },
         {
+          title: 'page1',
+          path: '/1',
+          next: [{ path: '/2' }]
+        },
+        {
+          title: 'page2',
           path: '/2',
           components: [
-            { type: 'TextField', name: 'field1', title: 'Something' }
+            {
+              type: 'TextField',
+              name: 'field1',
+              title: 'Something',
+              options: {},
+              schema: {}
+            }
           ],
           next: [{ path: '/3' }]
         },
         {
+          title: 'page3',
           path: '/3',
           components: [
-            { type: 'TextField', name: 'field2', title: 'Something else' },
-            { type: 'TextField', name: 'field3', title: 'beep' }
+            {
+              type: 'TextField',
+              name: 'field2',
+              title: 'Something else',
+              options: {},
+              schema: {}
+            },
+            {
+              type: 'TextField',
+              name: 'field3',
+              title: 'beep',
+              options: {},
+              schema: {}
+            }
           ]
         }
       ],
-      conditions: []
+      lists: [],
+      sections: [],
+      conditions: [],
+      outputs: []
     }
 
     render(
