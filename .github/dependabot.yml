@@ -36,6 +36,13 @@ updates:
           - 'lint-staged'
           - 'prettier'
 
+      logging:
+        patterns:
+          - '*-pino'
+          - '*-pino-format'
+          - 'pino'
+          - 'pino-*'
+
       tools:
         patterns:
           - '@testing-library/*'
