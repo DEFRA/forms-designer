@@ -31,7 +31,15 @@ const sessionCookie = {
           /**
            * Redirect invalid session to callback route
            */
-          redirectTo() {
+          redirectTo(request) {
+            if (request) {
+              const { url, yar } = request
+
+              // Remember current location for later
+              yar.flash('redirectTo', url.pathname)
+            }
+
+            // Redirect to callback route
             return '/auth/callback'
           },
 
