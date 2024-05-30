@@ -132,8 +132,3 @@ export function hasUser(credentials) {
  * @template {import('@hapi/hapi').ReqRef} [ReqRef=import('@hapi/hapi').ReqRefDefaults]
  * @typedef {import('@hapi/hapi').Request<ReqRef>} Request
  */
-
-/**
- * @template {object} Payload
- * @typedef {import('@hapi/jwt').HapiJwt.Artifacts<{ JwtPayload?: Payload }>} UserToken
- */

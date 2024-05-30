@@ -136,6 +136,5 @@ export const azureOidcNoop = {
  * @typedef {import('@hapi/bell').Credentials2} Credentials - Provider OAuth2 credentials
  * @typedef {import('@hapi/hapi').UserCredentials} UserCredentials - User credentials
  * @typedef {import('oidc-client-ts').OidcMetadata} OidcMetadata - OpenID Connect (OIDC) metadata
- * @typedef {import('oidc-client-ts').SigninResponse} SigninResponse - Provider sign in artifacts
  * @typedef {import('oidc-client-ts').UserProfile & { groups?: string[], unique_name?: string }} UserProfile - User profile
  */
