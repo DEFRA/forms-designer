@@ -8,6 +8,14 @@ import config from '~/src/config.js'
 
 const authCallbackUrl = new URL(`/auth/callback`, config.appBaseUrl)
 
+export const scope = [
+  `api://${config.azureClientId}/forms.user`,
+  'openid',
+  'profile',
+  'email',
+  'offline_access'
+]
+
 /**
  * @type {ServerRegisterPluginObject}
  */
@@ -39,13 +47,7 @@ export const azureOidc = {
             useParamsAuth: true,
             auth: oidc.authorization_endpoint,
             token: oidc.token_endpoint,
-            scope: [
-              `api://${config.azureClientId}/forms.user`,
-              'openid',
-              'profile',
-              'email',
-              'offline_access'
-            ],
+            scope,
             profile(credentials, params) {
               const artifacts = token.decode(credentials.token)
               const idToken = token.decode(params.id_token)

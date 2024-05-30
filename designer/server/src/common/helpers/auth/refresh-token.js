@@ -1,6 +1,7 @@
 import Boom from '@hapi/boom'
 import fetch from 'node-fetch'
 
+import { scope } from '~/src/common/helpers/auth/azure-oidc.js'
 import { dropUserSession } from '~/src/common/helpers/auth/drop-user-session.js'
 import config from '~/src/config.js'
 
@@ -28,10 +29,7 @@ export async function refreshAccessToken(request) {
   params.append('client_secret', azureClientSecret)
   params.append('grant_type', 'refresh_token')
   params.append('refresh_token', auth.credentials.refreshToken)
-  params.append(
-    'scope',
-    `api://${azureClientId}/forms.user openid profile email offline_access user.read`
-  )
+  params.append('scope', scope.join(' '))
 
   logger.info('Azure OIDC access token expired, refreshing...')
 
