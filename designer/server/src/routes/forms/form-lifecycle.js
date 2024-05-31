@@ -1,16 +1,11 @@
-import Boom from '@hapi/boom'
-
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
-import { createLogger } from '~/src/common/helpers/logging/logger.js'
 import * as forms from '~/src/lib/forms.js'
 import * as formLifecycle from '~/src/models/forms/form-lifecycle.js'
 
-const logger = createLogger()
-
 export default [
   /**
-   * @satisfies {ServerRoute<{ Params: FormBySlugInput }>}}
+   * @satisfies {ServerRoute<{ Params: FormBySlugInput }>}
    */
   ({
     method: 'GET',
@@ -35,7 +30,7 @@ export default [
     }
   }),
   /**
-   * @satisfies {ServerRoute<{ Params: FormBySlugInput }>}}
+   * @satisfies {ServerRoute<{ Params: FormBySlugInput }>}
    */
   ({
     method: 'POST',
@@ -46,15 +41,7 @@ export default [
 
       const form = await forms.get(request.params.slug, token)
 
-      const formLiveResponse = await forms.makeDraftFormLive(
-        form.id,
-        request.auth.credentials.token
-      )
-
-      if (formLiveResponse.statusCode !== 200) {
-        logger.error(`Failed to make form '${form.slug}' live`)
-        throw Boom.internal()
-      }
+      await forms.makeDraftFormLive(form.id, token)
 
       yar.flash(sessionNames.displayCreateLiveSuccess, true)
       return h.redirect(`/library/${form.slug}`)
@@ -70,7 +57,7 @@ export default [
     }
   }),
   /**
-   * @satisfies {ServerRoute<{ Params: FormBySlugInput }>}}
+   * @satisfies {ServerRoute<{ Params: FormBySlugInput }>}
    */
   ({
     method: 'POST',
@@ -81,12 +68,7 @@ export default [
       const { slug } = request.params
 
       const form = await forms.get(slug, token)
-      const formDraftResponse = await forms.createDraft(form.id, token)
-
-      if (formDraftResponse.statusCode !== 200) {
-        logger.error(`Failed to create a draft form for form ID ${form.id}`)
-        throw Boom.internal()
-      }
+      await forms.createDraft(form.id, token)
 
       yar.flash(sessionNames.displayCreateDraftSuccess, true)
       return h.redirect(`/library/${slug}`)

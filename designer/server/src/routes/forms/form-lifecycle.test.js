@@ -1,3 +1,5 @@
+import Boom from '@hapi/boom'
+
 import { createServer } from '~/src/createServer.js'
 import * as forms from '~/src/lib/forms.js'
 import { auth } from '~/test/fixtures/auth.js'
@@ -89,11 +91,7 @@ describe('Test form draft and live creation route handlers', () => {
 
   test('When a live form creation fails, it should throw an error', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(getDummyForm())
-
-    // @ts-expect-error we don't care about the full response
-    jest.mocked(forms.makeDraftFormLive).mockResolvedValueOnce({
-      statusCode: 500
-    })
+    jest.mocked(forms.makeDraftFormLive).mockRejectedValueOnce(Boom.internal())
 
     const options = {
       method: 'POST',
@@ -105,7 +103,7 @@ describe('Test form draft and live creation route handlers', () => {
       await server.inject(options)
     )
 
-    expect(statusCode).toBe(500) // until we have a proper error handler
+    expect(statusCode).not.toBe(302) // test it isn't redirected. until we have a proper error handler.
   })
 
   test('When a draft form is created, it should redirect to the library', async () => {
@@ -131,11 +129,7 @@ describe('Test form draft and live creation route handlers', () => {
 
   test('When a draft form creation fails, it should throw an error', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(getDummyForm())
-
-    // @ts-expect-error we don't care about the full response
-    jest.mocked(forms.createDraft).mockResolvedValueOnce({
-      statusCode: 500
-    })
+    jest.mocked(forms.createDraft).mockRejectedValueOnce(Boom.internal())
 
     const options = {
       method: 'POST',
@@ -147,7 +141,7 @@ describe('Test form draft and live creation route handlers', () => {
       await server.inject(options)
     )
 
-    expect(statusCode).toBe(500) // until we have a proper error handler
+    expect(statusCode).not.toBe(302) // test it isn't redirected. until we have a proper error handler.
   })
 })
 

@@ -103,10 +103,8 @@ export async function updateDraftFormDefinition(id, definition, token) {
  * @param {string} token - auth token
  */
 export async function makeDraftFormLive(id, token) {
-  const postJsonByType = /** @type {typeof postJson} */ (postJson)
-
   const requestUrl = new URL(`./${id}/create-live`, formsEndpoint)
-  const { response } = await postJsonByType(requestUrl, {
+  const { response } = await postJson(requestUrl, {
     ...getAuthOptions(token)
   })
 
@@ -119,10 +117,8 @@ export async function makeDraftFormLive(id, token) {
  * @param {string} token - auth token
  */
 export async function createDraft(id, token) {
-  const postJsonByType = /** @type {typeof postJson} */ (postJson)
-
   const requestUrl = new URL(`./${id}/create-draft`, formsEndpoint)
-  const { response } = await postJsonByType(requestUrl, {
+  const { response } = await postJson(requestUrl, {
     ...getAuthOptions(token)
   })
 
