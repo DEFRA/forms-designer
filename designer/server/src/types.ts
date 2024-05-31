@@ -84,7 +84,7 @@ declare module '@hapi/hapi' {
 
 declare module '@hapi/yar' {
   type CreateKey = (typeof sessionNames)['create']
-  type ReferrerKey = (typeof sessionNames)['referrer']
+  type RedirectToKey = (typeof sessionNames)['redirectTo']
   type ValidationKey = (typeof sessionNames)['validationFailure']
   type UserAuthFailedKey = (typeof sessionNames)['userAuthFailed']
 
@@ -93,7 +93,7 @@ declare module '@hapi/yar' {
      * Get temporary redirect path for after sign in
      * (Deleted when read, e.g. after a redirect)
      */
-    flash(type: ReferrerKey): string[]
+    flash(type: RedirectToKey): string[]
 
     /**
      * Get temporary error messages from the session

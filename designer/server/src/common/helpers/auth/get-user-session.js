@@ -1,4 +1,5 @@
 import { token } from '@hapi/jwt'
+import { isPast, parseISO, subMinutes } from 'date-fns'
 
 import { groupsToScopes } from '~/src/common/constants/scopes.js'
 
@@ -41,6 +42,18 @@ export function hasAuthenticated(credentials) {
     credentials.idToken &&
     credentials.refreshToken
   )
+}
+
+/**
+ * @param {AuthCredentials | null} [credentials]
+ */
+export function hasExpired(credentials) {
+  if (!hasUser(credentials)) {
+    return true
+  }
+
+  const { user } = credentials
+  return !!user.expiresAt && isPast(subMinutes(parseISO(user.expiresAt), 1))
 }
 
 /**
@@ -118,9 +131,4 @@ export function hasUser(credentials) {
 /**
  * @template {import('@hapi/hapi').ReqRef} [ReqRef=import('@hapi/hapi').ReqRefDefaults]
  * @typedef {import('@hapi/hapi').Request<ReqRef>} Request
- */
-
-/**
- * @template {object} Payload
- * @typedef {import('@hapi/jwt').HapiJwt.Artifacts<{ JwtPayload?: Payload }>} UserToken
  */
