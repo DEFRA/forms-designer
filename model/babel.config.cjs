@@ -1,11 +1,11 @@
-const { BABEL_ENV = 'node', NODE_ENV } = process.env
+const { NODE_ENV } = process.env
 
 /**
  * Babel config
  * @type {import('@babel/core').TransformOptions}
  */
 module.exports = {
-  browserslistEnv: BABEL_ENV,
+  browserslistEnv: 'node',
   plugins: [
     [
       'module-resolver',
