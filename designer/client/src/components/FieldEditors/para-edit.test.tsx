@@ -17,7 +17,7 @@ describe('ParaEdit', () => {
             {
               name: 'IDDQl4',
               title: 'abc',
-              type: 'Para',
+              type: 'Html',
               content: '',
               options: {},
               schema: {}

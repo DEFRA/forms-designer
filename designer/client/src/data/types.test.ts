@@ -6,15 +6,14 @@ import {
 import { isNotContentType } from '~/src/data/index.js'
 
 test('isNotContentType type guard catches content types', () => {
-  const contentBase: ContentComponentsDef = {
+  const contentBase = {
     options: {},
-    type: 'Para',
     content: '',
     name: '',
     schema: {},
     subType: 'content',
     title: ''
-  }
+  } satisfies Partial<ContentComponentsDef>
 
   const inputBase: InputFieldsComponentsDef = {
     hint: '',
@@ -25,10 +24,9 @@ test('isNotContentType type guard catches content types', () => {
     type: 'TextField'
   }
 
-  expect(isNotContentType(contentBase)).toBe(false)
   expect(isNotContentType({ ...contentBase, type: 'Details' })).toBe(false)
   expect(isNotContentType({ ...contentBase, type: 'InsetText' })).toBe(false)
-  expect(isNotContentType({ ...contentBase, type: 'Para' })).toBe(false)
+  expect(isNotContentType({ ...contentBase, type: 'Html' })).toBe(false)
   expect(isNotContentType(inputBase)).toBe(true)
   expect(isNotContentType({ ...inputBase, type: 'TelephoneNumberField' })).toBe(
     true
