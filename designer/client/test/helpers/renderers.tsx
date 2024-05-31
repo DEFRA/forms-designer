@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals'
 import React, { useReducer } from 'react'
 
 import { DataContext } from '~/src/context/index.js'

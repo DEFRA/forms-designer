@@ -1,4 +1,5 @@
-import '@testing-library/jest-dom'
+import '@testing-library/jest-dom/jest-globals'
+import { beforeAll, beforeEach, jest } from '@jest/globals'
 
 import { initI18n } from './src/i18n/index.js'
 

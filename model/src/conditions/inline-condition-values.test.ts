@@ -1,3 +1,5 @@
+import { describe, expect, test } from '@jest/globals'
+
 import { ConditionValue, conditionValueFrom } from '~/src/conditions/index.js'
 
 describe('inline condition values', () => {

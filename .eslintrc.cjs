@@ -235,7 +235,7 @@ module.exports = {
     },
     {
       env: {
-        'jest/globals': true
+        'jest/globals': false
       },
       extends: ['plugin:jest/recommended', 'plugin:jest/style'],
       files: [
@@ -252,7 +252,10 @@ module.exports = {
 
         // Allow Jest to assert on mocked unbound methods
         '@typescript-eslint/unbound-method': 'off',
-        'jest/unbound-method': 'error'
+        'jest/unbound-method': 'error',
+
+        // Use Jest imports for ES modules support
+        'jest/prefer-importing-jest-globals': 'error'
       }
     }
   ],

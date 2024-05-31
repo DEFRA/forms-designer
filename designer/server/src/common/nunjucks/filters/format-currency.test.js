@@ -1,3 +1,5 @@
+import { describe, expect, test } from '@jest/globals'
+
 import { formatCurrency } from '~/src/common/nunjucks/filters/index.js'
 
 describe('#formatCurrency', () => {

@@ -1,3 +1,5 @@
+import { describe, expect, it } from '@jest/globals'
+
 import { slugify } from '~/src/utils/helpers.js'
 
 describe('Helpers', () => {

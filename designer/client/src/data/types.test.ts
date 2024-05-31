@@ -2,6 +2,7 @@ import {
   type ContentComponentsDef,
   type InputFieldsComponentsDef
 } from '@defra/forms-model'
+import { expect, test } from '@jest/globals'
 
 import { isNotContentType } from '~/src/data/index.js'
 

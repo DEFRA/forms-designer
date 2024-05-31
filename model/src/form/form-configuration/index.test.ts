@@ -1,3 +1,5 @@
+import { describe, expect, test } from '@jest/globals'
+
 import { FormConfiguration } from '~/src/form/index.js'
 
 describe('Form configuration', () => {

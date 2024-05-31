@@ -1,3 +1,12 @@
+import {
+  afterAll,
+  beforeAll,
+  describe,
+  expect,
+  jest,
+  test
+} from '@jest/globals'
+
 import { createServer } from '~/src/createServer.js'
 import * as forms from '~/src/lib/forms.js'
 import { auth } from '~/test/fixtures/auth.js'

@@ -1,4 +1,5 @@
 import { type FormDefinition } from '@defra/forms-model'
+import { expect, test } from '@jest/globals'
 
 import { addComponent } from '~/src/data/index.js'
 
