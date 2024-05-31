@@ -65,10 +65,7 @@ export default /** @type {import('webpack').Configuration} */ ({
         },
 
         // Fix missing file extensions in React components
-        resolve: {
-          fullySpecified: false,
-          symlinks: false
-        },
+        resolve: { fullySpecified: false },
 
         // Flag loaded modules as side effect free
         sideEffects: false
