@@ -7,13 +7,15 @@ import {
   jest,
   test
 } from '@jest/globals'
-import { shallow } from 'enzyme'
+import enzyme from 'enzyme'
 import React from 'react'
 
 import { PageLinkage } from '~/src/components/PageLinkage/index.js'
 import { addLink } from '~/src/data/index.js'
 
 jest.mock('~/src/data/page/addLink')
+
+const { shallow } = enzyme
 
 describe('Page Linkage', () => {
   let page

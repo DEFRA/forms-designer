@@ -1,8 +1,10 @@
 import { describe, expect, test } from '@jest/globals'
-import { mount } from 'enzyme'
+import enzyme from 'enzyme'
 import React from 'react'
 
 import { RenderInPortal } from '~/src/components/RenderInPortal/index.js'
+
+const { mount } = enzyme
 
 describe('RenderInPortal component', () => {
   test('renders paragraph inside portal', () => {

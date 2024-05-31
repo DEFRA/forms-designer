@@ -1,8 +1,10 @@
 import { describe, expect, jest, test } from '@jest/globals'
-import { shallow } from 'enzyme'
+import enzyme from 'enzyme'
 import React from 'react'
 
 import { BackLink } from '~/src/components/BackLink/index.js'
+
+const { shallow } = enzyme
 
 describe('BackLink Component', () => {
   test('it renders correctly', () => {

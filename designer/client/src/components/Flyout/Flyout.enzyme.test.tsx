@@ -1,9 +1,11 @@
 import { afterEach, describe, expect, jest, test } from '@jest/globals'
-import { type ReactWrapper, mount } from 'enzyme'
+import enzyme, { type ReactWrapper } from 'enzyme'
 import React from 'react'
 
 import { useFlyoutEffect } from '~/src/components/Flyout/Flyout.jsx'
 import { FlyoutContext } from '~/src/context/index.js'
+
+const { mount } = enzyme
 
 function HookWrapper(props: {
   hook: () => ReturnType<typeof useFlyoutEffect>

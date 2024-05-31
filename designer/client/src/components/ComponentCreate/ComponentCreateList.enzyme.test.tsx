@@ -1,8 +1,10 @@
 import { describe, expect, jest, test } from '@jest/globals'
-import { shallow } from 'enzyme'
+import enzyme from 'enzyme'
 import React from 'react'
 
 import { ComponentCreateList } from '~/src/components/ComponentCreate/ComponentCreateList.jsx'
+
+const { shallow } = enzyme
 
 describe('ComponentCreateList', () => {
   const onSelectComponent = jest.fn()

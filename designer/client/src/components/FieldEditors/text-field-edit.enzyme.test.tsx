@@ -1,10 +1,12 @@
 import { describe, expect, test } from '@jest/globals'
-import { mount } from 'enzyme'
+import enzyme from 'enzyme'
 import React from 'react'
 
 import { TextFieldEdit } from '~/src/components/FieldEditors/text-field-edit.jsx'
 import { MultilineTextFieldEdit } from '~/src/multiline-text-field-edit.js'
 import * as Component from '~/src/reducers/component/componentReducer.jsx'
+
+const { mount } = enzyme
 
 describe('TextField renders correctly when', () => {
   const wrapper = mount(

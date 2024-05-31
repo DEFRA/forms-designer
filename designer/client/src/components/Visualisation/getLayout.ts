@@ -1,5 +1,7 @@
-import { graphlib, layout } from '@dagrejs/dagre'
+import dagre from '@dagrejs/dagre'
 import { type FormDefinition } from '@defra/forms-model'
+
+const { graphlib, layout } = dagre
 
 export interface Point {
   node: {
