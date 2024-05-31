@@ -17,7 +17,6 @@ export type ComponentType =
   | 'TelephoneNumberField'
   | 'EmailAddressField'
   | 'FileUploadField'
-  | 'Para'
   | 'Html'
   | 'InsetText'
   | 'Details'
@@ -221,10 +220,6 @@ export interface TimeFieldComponent extends DateFieldBase {
 }
 
 // Content Fields
-export interface ParaComponent extends ContentFieldBase {
-  type: 'Para'
-}
-
 export interface DetailsComponent extends ContentFieldBase {
   type: 'Details'
 }
@@ -279,7 +274,6 @@ export type ComponentDef =
   | ListComponent
   | MultilineTextFieldComponent
   | NumberFieldComponent
-  | ParaComponent
   | RadiosFieldComponent
   | SelectFieldComponent
   | TelephoneNumberFieldComponent
@@ -308,7 +302,6 @@ export type InputFieldsComponentsDef =
 
 // Components that render content.
 export type ContentComponentsDef =
-  | ParaComponent
   | DetailsComponent
   | HtmlComponent
   | InsetTextComponent

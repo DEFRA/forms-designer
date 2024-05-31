@@ -25,7 +25,6 @@ const componentTypeEditors = {
   CheckboxesField: ListFieldEdit,
   List: ListFieldEdit,
   Details: DetailsEdit,
-  Para: ParaEdit,
   Html: ParaEdit,
   InsetText: ParaEdit,
   WarningText: ParaEdit,
