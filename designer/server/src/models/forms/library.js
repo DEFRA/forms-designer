@@ -55,7 +55,7 @@ export function overviewViewModel(
       size: 'large'
     },
     form: metadata,
-    formManagement: {
+    formManage: {
       heading: {
         text: 'Manage form',
         size: 'medium',
