@@ -23,7 +23,7 @@ export const environment = nunjucks.configure(
 )
 
 for (const [name, nunjucksGlobal] of Object.entries(globals)) {
-  environment.addFilter(name, nunjucksGlobal)
+  environment.addGlobal(name, nunjucksGlobal)
 }
 
 for (const [name, nunjucksFilter] of Object.entries(filters)) {
