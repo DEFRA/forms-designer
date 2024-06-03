@@ -11,9 +11,42 @@ describe('Test form draft and live creation route handlers', () => {
   /** @type {import('@hapi/hapi').Server} */
   let server
 
+  /** @type {Date} */
+  let now
+
+  /** @type {FormMetadataAuthor} */
+  let author
+
+  /** @type {FormMetadata} */
+  let metadata
+
   beforeAll(async () => {
     server = await createServer()
     await server.initialize()
+  })
+
+  beforeEach(() => {
+    now = new Date()
+
+    author = {
+      id: '1234',
+      displayName: 'Joe Bloggs'
+    }
+
+    metadata = {
+      id: '1234',
+      slug: 'my-form',
+      title: 'My form',
+      organisation: 'Defra',
+      teamName: 'Forms',
+      teamEmail: 'defraforms@defra.gov.uk',
+      draft: {
+        createdAt: now,
+        createdBy: author,
+        updatedAt: now,
+        updatedBy: author
+      }
+    }
   })
 
   afterAll(async () => {
@@ -21,21 +54,14 @@ describe('Test form draft and live creation route handlers', () => {
   })
 
   test('When a live form is about to be overwritten, warn the user ahead of time', async () => {
-    const dummyForm = getDummyForm()
-    dummyForm.live = {
-      createdAt: new Date(),
-      createdBy: {
-        displayName: 'Joe Bloggs',
-        id: '1234'
-      },
-      updatedAt: new Date(),
-      updatedBy: {
-        displayName: 'Joe Bloggs',
-        id: '1234'
-      }
+    metadata.live = {
+      createdAt: now,
+      createdBy: author,
+      updatedAt: now,
+      updatedBy: author
     }
 
-    jest.mocked(forms.get).mockResolvedValueOnce(dummyForm)
+    jest.mocked(forms.get).mockResolvedValueOnce(metadata)
 
     const options = {
       method: 'GET',
@@ -53,7 +79,7 @@ describe('Test form draft and live creation route handlers', () => {
   })
 
   test("When a live form is not about to be overwritten, don't warn the user", async () => {
-    jest.mocked(forms.get).mockResolvedValueOnce(getDummyForm())
+    jest.mocked(forms.get).mockResolvedValueOnce(metadata)
 
     const options = {
       method: 'GET',
@@ -69,7 +95,7 @@ describe('Test form draft and live creation route handlers', () => {
   })
 
   test('When a live form is created, it should redirect to the library', async () => {
-    jest.mocked(forms.get).mockResolvedValueOnce(getDummyForm())
+    jest.mocked(forms.get).mockResolvedValueOnce(metadata)
 
     // @ts-expect-error we don't care about the full response
     jest.mocked(forms.makeDraftFormLive).mockResolvedValueOnce({
@@ -90,7 +116,7 @@ describe('Test form draft and live creation route handlers', () => {
   })
 
   test('When a live form creation fails, it should throw an error', async () => {
-    jest.mocked(forms.get).mockResolvedValueOnce(getDummyForm())
+    jest.mocked(forms.get).mockResolvedValueOnce(metadata)
     jest.mocked(forms.makeDraftFormLive).mockRejectedValueOnce(Boom.internal())
 
     const options = {
@@ -107,7 +133,7 @@ describe('Test form draft and live creation route handlers', () => {
   })
 
   test('When a draft form is created, it should redirect to the library', async () => {
-    jest.mocked(forms.get).mockResolvedValueOnce(getDummyForm())
+    jest.mocked(forms.get).mockResolvedValueOnce(metadata)
 
     // @ts-expect-error we don't care about the full response
     jest.mocked(forms.createDraft).mockResolvedValueOnce({
@@ -128,7 +154,7 @@ describe('Test form draft and live creation route handlers', () => {
   })
 
   test('When a draft form creation fails, it should throw an error', async () => {
-    jest.mocked(forms.get).mockResolvedValueOnce(getDummyForm())
+    jest.mocked(forms.get).mockResolvedValueOnce(metadata)
     jest.mocked(forms.createDraft).mockRejectedValueOnce(Boom.internal())
 
     const options = {
@@ -146,32 +172,8 @@ describe('Test form draft and live creation route handlers', () => {
 })
 
 /**
- * @returns {import('@defra/forms-model').FormMetadata}
- */
-function getDummyForm() {
-  return {
-    id: '1234',
-    slug: 'my-form',
-    title: 'My form',
-    organisation: 'Defra',
-    teamName: 'Forms',
-    teamEmail: 'defraforms@defra.gov.uk',
-    draft: {
-      createdAt: new Date(),
-      createdBy: {
-        displayName: 'Joe Bloggs',
-        id: '1234'
-      },
-      updatedAt: new Date(),
-      updatedBy: {
-        displayName: 'Joe Bloggs',
-        id: '1234'
-      }
-    }
-  }
-}
-
-/**
+ * @typedef {import('@defra/forms-model').FormMetadata} FormMetadata
+ * @typedef {import('@defra/forms-model').FormMetadataAuthor} FormMetadataAuthor
  * @typedef {import('@hapi/hapi').Server} Server
  * @typedef {import('@hapi/hapi').ServerInjectOptions} ServerInjectOptions
  * @typedef {import('@hapi/hapi').ServerInjectResponse<string>} ServerInjectResponse
