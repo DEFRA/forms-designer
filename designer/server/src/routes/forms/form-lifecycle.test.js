@@ -52,7 +52,7 @@ describe('Test form draft and live creation route handlers', () => {
     )
   })
 
-  test("When a live form is not about to be overwritten, don't warn thh user", async () => {
+  test("When a live form is not about to be overwritten, don't warn the user", async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(getDummyForm())
 
     const options = {
