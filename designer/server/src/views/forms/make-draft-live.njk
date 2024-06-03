@@ -8,26 +8,27 @@
     {% call appPageBody({
       heading: pageHeading
     }) %}
+      {% if warningText %}
+        {{ govukWarningText({
+          text: warningText
+        }) }}
+      {% endif %}
 
-    {% if warningText %}
-      {{ govukWarningText({
-        text: warningText
-      }) }}
-    {% endif %}
+      <p class="govuk-body-l">
+        {{ bodyText | safe }}
+      </p>
 
-    <p class="govuk-body-l">{{ bodyText | safe }}</p>
+      <div class="govuk-button-group">
+        {{ govukButton({
+          text: "Make draft live"
+        }) }}
 
-    <div class="govuk-button-group">
-      {{ govukButton({
-        text: "Make draft live"
-      }) }}
-
-      {{ govukButton({
-        text: "Cancel",
-        href: cancelLink,
-        classes: "govuk-button--secondary"
-      }) }}
-    </div>
-    </form>
-  {% endcall %}
+        {{ govukButton({
+          text: "Cancel",
+          href: cancelLink,
+          classes: "govuk-button--secondary"
+        }) }}
+      </div>
+    {% endcall %}
+  </form>
 {% endblock %}
