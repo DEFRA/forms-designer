@@ -1,5 +1,7 @@
 import { getFormSpecificNavigation } from './library.js'
 
+import { render } from '~/src/common/nunjucks/index.js'
+
 /**
  * Model to represent confirmation page dialog for a given form.
  * @param {import("./library.js").FormMetadata} form
@@ -20,7 +22,11 @@ export function confirmationPageViewModel(form) {
     warningText: form.live
       ? `It will replace the form that is currently live.`
       : '',
-    bodyText: `Completed forms will be sent to <a href="mailto:${form.teamEmail}" class="govuk-link govuk-link--no-visited-state">${form.teamEmail}</a>.`,
+
+    bodyText: render.string(
+      'Completed forms will be sent to <a href="mailto:{{ teamEmail | urlencode }}" class="govuk-link">{{ teamEmail }}</a>.',
+      { context: form }
+    ),
     cancelLink: `/library/${form.slug}`
   }
 }
