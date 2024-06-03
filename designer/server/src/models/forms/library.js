@@ -33,11 +33,6 @@ export function overviewViewModel(
 
   const navigation = getFormSpecificNavigation(formPath, 'Overview')
 
-  const { buttons, submitButtons } = getFormManagementButtons(
-    metadata,
-    formPath
-  )
-
   const notification = getFormOverviewNotification(
     displayCreateLiveSuccess,
     displayCreateDraftSuccess
@@ -61,8 +56,33 @@ export function overviewViewModel(
         size: 'medium',
         level: '3'
       },
-      buttons,
-      submitButtons
+
+      // Adjust default action when draft is available
+      ...(!metadata.draft
+        ? {
+            action: `${formPath}/create-draft-from-live`,
+            method: 'POST'
+          }
+        : {
+            action: `${formPath}/editor`,
+            method: 'GET'
+          }),
+
+      // Adjust buttons when draft is available
+      buttons: !metadata.draft
+        ? [{ text: 'Create draft to edit' }]
+        : [
+            {
+              text: 'Edit draft',
+              classes: 'govuk-button--secondary-quiet'
+            },
+            {
+              text: 'Make draft live',
+              attributes: {
+                formaction: `${formPath}/make-draft-live`
+              }
+            }
+          ]
     },
     previewUrl: config.previewUrl,
     notification
@@ -84,36 +104,6 @@ function getFormOverviewNotification(
   if (displayCreateDraftSuccess) {
     return 'New draft created'
   }
-}
-
-/**
- * @param {FormMetadata} metadata
- * @param {string} baseUrl
- */
-function getFormManagementButtons(metadata, baseUrl) {
-  const buttons = []
-  const submitButtons = []
-
-  if (metadata.draft) {
-    buttons.push(
-      {
-        text: 'Edit draft',
-        href: `${baseUrl}/editor`,
-        classes: 'govuk-button--secondary-quiet'
-      },
-      {
-        text: 'Make draft live',
-        href: `${baseUrl}/make-draft-live`
-      }
-    )
-  } else if (metadata.live) {
-    submitButtons.push({
-      text: 'Create draft to edit',
-      href: `${baseUrl}/create-draft-from-live`
-    })
-  }
-
-  return { buttons, submitButtons }
 }
 
 /**

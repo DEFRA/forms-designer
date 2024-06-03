@@ -116,12 +116,11 @@ describe('Forms library routes', () => {
 
     const { document } = await renderResponse(server, options)
 
-    const $buttons = document.querySelectorAll(
-      '.app-form-card button[type=submit]'
-    )
+    const $card = document.querySelector('.app-form-card')
+    const $buttons = $card?.querySelectorAll('.govuk-button')
 
     expect($buttons).toHaveLength(1)
-    expect($buttons[0]).toHaveTextContent('Create draft to edit')
+    expect($buttons?.[0]).toHaveTextContent('Create draft to edit')
   })
 
   test('Form overview has live buttons in side bar', async () => {
@@ -158,10 +157,11 @@ describe('Forms library routes', () => {
 
     const { document } = await renderResponse(server, options)
 
-    const $buttons = document.querySelectorAll('.app-form-card a[role=button]')
+    const $card = document.querySelector('.app-form-card')
+    const $buttons = $card?.querySelectorAll('.govuk-button')
 
     expect($buttons).toHaveLength(2)
-    expect($buttons[0]).toHaveTextContent('Edit draft')
-    expect($buttons[1]).toHaveTextContent('Make draft live')
+    expect($buttons?.[0]).toHaveTextContent('Edit draft')
+    expect($buttons?.[1]).toHaveTextContent('Make draft live')
   })
 })

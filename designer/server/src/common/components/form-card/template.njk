@@ -1,24 +1,20 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "heading/macro.njk" import appHeading %}
 
-<aside class="app-form-card">
-  {{ appHeading(params.heading) }}
-
-  {% if params.buttons | length %}
-    <div class="govuk-button-group">
-    {% for button in params.buttons %}
-      {{ govukButton(button) }}
+{%- macro appFormButtons(params) %}
+  <div class="govuk-button-group">
+    {% for button in params.items %}
+      {{- govukButton(button) | indent(4, true) }}
     {% endfor %}
-    </div>
-  {% endif %}
-
-  {% for button in params.submitButtons %}
-    <form method="post" action="{{ button.href }}" novalidate>
-      <div class="govuk-button-group"> {# adding a button group for each fixes width/spacing #}
-        {# don't pass the full button to govukButton, as passing href will stop it being a submit #}
-        {{ govukButton({ text: button.text }) }}
-      </div>
-    </form>
-  {% endfor %}
   </div>
+{% endmacro %}
+
+<aside class="app-form-card">
+  {{ appHeading(params.heading) | trim | indent(2) }}
+
+  <form action="{{ params.action }}" method="{{ params.method }}" novalidate>
+    {{ appFormButtons({
+      items: params.buttons
+    }) | trim | indent(2) }}
+  </form>
 </aside>
