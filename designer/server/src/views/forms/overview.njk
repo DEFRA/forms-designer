@@ -3,6 +3,7 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 {% from "grid-layout/macro.njk" import appGridLayout %}
 {% from "heading/macro.njk" import appHeading %}
 {% from "form-card/macro.njk" import appFormCard %}
@@ -59,16 +60,27 @@
           text: "Shared team email address"
         },
         value: {
-          html: form.teamEmail
+          html: '<a href="mailto:' + form.teamEmail + '" class="govuk-link govuk-link--no-visited-state">' + form.teamEmail + '</a>'
         }
       }
     ]
   }) }}
 {% endset %}
 
+{% set formHeading %}
+  {% call govukNotificationBanner({
+    type: "success"
+  }) %}
+    <p class="govuk-notification-banner__heading">{{ notification }}</p>
+  {% endcall %}
+{% endset %}
+
 {% block content %}
   {{ appGridLayout([
     [
+      {
+        html: formHeading
+      } if notification | length,
       {
         html: appGridLayout([
           {
@@ -83,7 +95,7 @@
         classes: "govuk-grid-column-two-thirds-from-desktop"
       },
       {
-        html: appFormCard(formManagement),
+        html: appFormCard(formManage),
         classes: "govuk-grid-column-one-third-from-desktop"
       }
     ]

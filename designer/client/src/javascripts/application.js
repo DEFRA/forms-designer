@@ -4,12 +4,14 @@ import {
   Button,
   ErrorSummary,
   CharacterCount,
-  Radios
+  Radios,
+  NotificationBanner
 } from 'govuk-frontend'
 
 createAll(Button)
 createAll(CharacterCount)
 createAll(ErrorSummary)
 createAll(Radios)
+createAll(NotificationBanner)
 
 new ServiceHeader(document.querySelector("[data-module='one-login-header']"))

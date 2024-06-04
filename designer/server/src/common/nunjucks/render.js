@@ -16,7 +16,16 @@ export function macro(macroName, macroPath, options) {
     macroString += `{{- ${macroName}(${macroParams}) -}}`
   }
 
-  return environment.renderString(macroString, options?.context ?? {})
+  return string(macroString, options)
+}
+
+/**
+ * Render Nunjucks code
+ * @param {string} string - Nunjucks string to render
+ * @param {RenderOptions} [options]
+ */
+export function string(string, options) {
+  return environment.renderString(string, options?.context ?? {})
 }
 
 /**

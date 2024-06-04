@@ -1,4 +1,5 @@
 import * as scopes from '~/src/common/constants/scopes.js'
+import { sessionNames } from '~/src/common/constants/session-names.js'
 import { signInViewModel } from '~/src/models/account/auth.js'
 
 export default /** @satisfies {ServerRoute} */ ({
@@ -14,7 +15,8 @@ export default /** @satisfies {ServerRoute} */ ({
 
     const model = signInViewModel({
       hasFailedAuthorisation:
-        (isAuthenticated && !isAuthorized) || yar.flash('userAuthFailed').at(0)
+        (isAuthenticated && !isAuthorized) ||
+        yar.flash(sessionNames.userAuthFailed).at(0)
     })
 
     return h.view('account/sign-in', model)

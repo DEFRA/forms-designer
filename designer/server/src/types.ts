@@ -87,6 +87,10 @@ declare module '@hapi/yar' {
   type RedirectToKey = (typeof sessionNames)['redirectTo']
   type ValidationKey = (typeof sessionNames)['validationFailure']
   type UserAuthFailedKey = (typeof sessionNames)['userAuthFailed']
+  type DisplayCreateLiveSuccessKey =
+    (typeof sessionNames)['displayCreateLiveSuccess']
+  type DisplayCreatDraftSuccessKey =
+    (typeof sessionNames)['displayCreateDraftSuccess']
 
   interface Yar {
     /**
@@ -106,6 +110,18 @@ declare module '@hapi/yar' {
      * (Deleted when read, e.g. after a redirect)
      */
     flash(type: UserAuthFailedKey): true[]
+
+    /**
+     * Get temporary flag that a live form definition was successfully created
+     * (Deleted when read, e.g. after a redirect)
+     */
+    flash(type: DisplayCreateLiveSuccessKey): true[]
+
+    /**
+     * Get temporary flag that a live form definition was successfully created
+     * (Deleted when read, e.g. after a redirect)
+     */
+    flash(type: DisplayCreatDraftSuccessKey): true[]
 
     /**
      * Get form metadata from the session

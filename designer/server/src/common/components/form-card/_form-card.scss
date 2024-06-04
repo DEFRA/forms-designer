@@ -1,12 +1,18 @@
 .app-form-card {
   background-color: govuk-colour("light-grey");
   padding: govuk-spacing(3);
-}
+  padding-bottom: 0;
 
-.app-form-card .govuk-button {
-  width: 100%;
-}
+  @include govuk-media-query($from: tablet) {
+    .govuk-button-group {
+      margin-right: 0;
+      flex-direction: column;
+      flex-wrap: nowrap;
+    }
 
-.app-form-card :last-child {
-  margin-bottom: 0;
+    .govuk-button {
+      width: 100%;
+      margin-right: 0;
+    }
+  }
 }
