@@ -78,7 +78,7 @@ This project currently has a combination of tests written with Hapi helpers and 
 To watch the tests:
 
 ```sh
-npm run test --watch
+npm run test:watch
 ```
 
 ## License
