@@ -13,9 +13,9 @@ process.env.REDIS_PASSWORD = 'dummy'
 process.env.REDIS_USERNAME = 'dummy'
 process.env.ROLE_EDITOR_GROUP_ID = 'valid-test-group'
 process.env.SESSION_COOKIE_PASSWORD = 'test-env-session-cookie-password'
-process.env.SESSION_COOKIE_TTL = Duration.fromObject({ minutes: 30 })
+process.env.SESSION_COOKIE_TTL = Duration.fromObject({ days: 1 })
   .as('milliseconds')
   .toString()
-process.env.SESSION_TTL = Duration.fromObject({ days: 1 })
+process.env.SESSION_TTL = Duration.fromObject({ days: 28 })
   .as('milliseconds')
   .toString()
