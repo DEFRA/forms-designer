@@ -1,22 +1,24 @@
 # Defra forms designer
 
-A hapi plugin providing a visual designer for [digital form builder](https://github.com/DEFRA/digital-form-builder) based applications.
+A hapi-based application providing a visual designer for [forms-runner](https://github.com/DEFRA/forms-runner) applications.
 
 ### Clone and build
 
 Clone this repo
 
-`$ git clone https://github.com/XGovFormBuilder/digital-form-builder`
+`$ git clone https://github.com/DEFRA/forms-designer`
 
-`$ cd digital-form-builder/designer/`
+`$ cd designer/`
 
-Install dependencies
+Launch the developer environment: `$ docker compose up`
 
-`$ npm ci`
+Build and launch the app:
 
-To run the server and client apps locally, for development:
-
-`$ npm run dev`
+```sh
+nvm use
+npm ci
+npm run dev
+```
 
 Open your browser at
 
@@ -24,24 +26,50 @@ Open your browser at
 
 # Environment variables
 
-If there is a .env file present, these will be loaded in first.
+If there is a .env file present, these will be loaded in first for local development. In a deployed environment, env vars are used.
 
-To symlink an external .env file, for example inside a [Keybase](https://keybase.io) folder:
+Base URLs should should include protocol, hostname, port number, e.g. `http://localhost:3000`.
 
-`npm run symlink-env /location/of/.env`.
+| name                              | description                                                                             | required | default | valid                       |
+| --------------------------------- | --------------------------------------------------------------------------------------- | :------- | ------- | :-------------------------- |
+| APP_BASE_URL                      | Base URL for each request.                                                              | yes      |         |                             |
+| AZURE_CLIENT_ID                   | Client ID of the Azure app registration.                                                | yes      |         |                             |
+| AZURE_CLIENT_SECRET               | Client secret of the Azure app registration.                                            | yes      |         |                             |
+| LOG_LEVEL                         | Log level                                                                               | yes      | info    | trace,debug,info,error      |
+| MANAGER_URL                       | Base URL of the forms-manager API.                                                      | yes      |         |                             |
+| NODE_ENV                          | Node environment                                                                        | yes      |         | development,test,production |
+| OIDC_WELL_KNOWN_CONFIGURATION_URL | OIDC Well known configuration URL for the Azure tenant containing the app registration. | yes      |         |                             |
+| PORT                              | Port number                                                                             | yes      | 3000    |                             |
+| PREVIEW_URL                       | Base URL for links to preview forms in user's web browser (forms-runner).               | yes      |         |                             |
+| REACT_LOG_LEVEL                   | Log level for client-side designer logging                                              | yes      | debug   | trace,debug,info,warn,error |
+| SESSION_COOKIE_PASSWORD           | at least 32 char long string for session cookie encryption                              | yes      |         |                             |
+| SESSION_COOKIE_TTL                | server-side storage expiration time for sessions - in milliseconds                      | yes      |         |                             |
+| SESSION_TTL                       | server-side storage expiration time - in milliseconds                                   | yes      |         |                             |
+| USE_SINGLE_INSTANCE_CACHE         | If true, disables the redis cluster connection and uses a single node.                  | yes      |         |                             |
 
-`symlink-config` accepts two variables, ENV_LOC and LINK_TO. If the file location is not passed in, you will be prompted for a location.
-LINK_TO is optional, it defaults to `./${PROJECT_DIR}`.
+## Local development .env file
 
-| name                    | description                                                | required | default        | valid                       |
-| ----------------------- | ---------------------------------------------------------- | :------- | -------------- | :-------------------------- |
-| NODE_ENV                | Node environment                                           | no       | development    | development,test,production |
-| PORT                    | Port number                                                | no       | 3000           |                             |
-| PREVIEW_URL             | Base URL for links to preview forms in user's web browser  | no       | localhost:3009 |                             |
-| LOG_LEVEL               | Log level                                                  | no       | debug          | trace,debug,info,error      |
-| SESSION_TTL             | server-side storage expiration time - in milliseconds      | no       |                |                             |
-| SESSION_COOKIE_PASSWORD | at least 32 char long string for session cookie encryption | no       |                |                             |
-| REACT_LOG_LEVEL         | Log level for client-side designer logging                 | no       | debug          | trace,debug,info,warn,error |
+All values assume you are using the docker compose setup.
+
+```
+APP_BASE_URL=http://localhost:3000
+AZURE_CLIENT_ID="<OBTAIN VALUE FROM DEV TEAM>"
+AZURE_CLIENT_SECRET="<OBTAIN VALUE FROM DEV TEAM>"
+MANAGER_URL=http://localhost:3001
+NODE_ENV=development
+OIDC_WELL_KNOWN_CONFIGURATION_URL="<OBTAIN VALUE FROM DEV TEAM>"
+PREVIEW_URL=http://localhost:3009
+REACT_LOG_LEVEL=info
+REDIS_PASSWORD=my-password
+REDIS_USERNAME=default
+REDIS_HOST=localhost
+REDIS_KEY_PREFIX=forms-designer
+ROLE_EDITOR_GROUP_ID="<OBTAIN VALUE FROM DEV TEAM>"
+SESSION_COOKIE_PASSWORD="948ltmkivpetvv9j673i38c81rlc8nu5"
+SESSION_COOKIE_TTL=2419200000
+SESSION_TTL=86400000
+USE_SINGLE_INSTANCE_CACHE=true
+```
 
 ## Unit tests
 
@@ -50,25 +78,8 @@ This project currently has a combination of tests written with Hapi helpers and 
 To watch the tests:
 
 ```sh
-npm run jest --watch
+npm run test:watch
 ```
-
-or run this in the root of the project:
-
-```sh
-npm run designer jest --watch
-```
-
-# Test coverage threshold
-
-Designer has 2 test frameworks, lab from hapi and jest.
-Unit test coverage threshold, code coverage below which build will fail is set separately for different frameworks
-
-lab - test threshold is configured using lab's switch -t COVERAGE_THRESHOLD, at the moment it is set as 89, see test-lab-cov script in [package.json](package.json)
-
-jest - test thresholds are configured in [jest.client.config.js](jest.client.config.js) ,[jest.server.config.js](jest.server.config.js), at the moment line coverage thresholds for client and server are 40 and 56 respectively
-
-Note - jest is breaking builds strictly, only for line coverage, other coverage thresholds may not result in a broken build, if the coverage is not met
 
 ## License
 
