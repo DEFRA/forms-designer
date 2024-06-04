@@ -1,7 +1,5 @@
 import { URL } from 'node:url'
 
-import Boom from '@hapi/boom'
-
 import { dropUserSession } from '~/src/common/helpers/auth/drop-user-session.js'
 import { hasUser } from '~/src/common/helpers/auth/get-user-session.js'
 import config from '~/src/config.js'
@@ -18,11 +16,6 @@ export default /** @satisfies {ServerRoute} */ ({
     if (!hasUser(credentials) || config.isTest) {
       await dropUserSession(request)
       return h.redirect('/')
-    }
-
-    // Otherwise require OpenID Connect (OIDC) configuration
-    if (!config.azureClientId || !config.oidcWellKnownConfigurationUrl) {
-      return Boom.unauthorized()
     }
 
     const oidc = await fetch(config.oidcWellKnownConfigurationUrl).then(
