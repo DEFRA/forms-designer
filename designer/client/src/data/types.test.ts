@@ -1,43 +1,84 @@
-import {
-  type ContentComponentsDef,
-  type InputFieldsComponentsDef
-} from '@defra/forms-model'
+import { type ComponentDef } from '@defra/forms-model'
 
 import { isNotContentType } from '~/src/data/index.js'
 
-test('isNotContentType type guard catches content types', () => {
-  const contentBase: ContentComponentsDef = {
-    options: {},
-    type: 'Para',
-    content: '',
-    name: '',
-    schema: {},
-    subType: 'content',
-    title: ''
-  }
+describe('Type guards', () => {
+  describe('isNotContentType', () => {
+    it.each([
+      {
+        type: 'TextField',
+        title: 'Input',
+        name: 'field',
+        options: {},
+        schema: {}
+      } satisfies ComponentDef,
+      {
+        type: 'RadiosField',
+        subType: 'listField',
+        title: 'Radios',
+        list: 'items',
+        name: 'field',
+        options: {},
+        schema: {}
+      } satisfies ComponentDef,
+      {
+        type: 'CheckboxesField',
+        subType: 'listField',
+        title: 'Checkboxes',
+        list: 'items',
+        name: 'field',
+        options: {},
+        schema: {}
+      } satisfies ComponentDef
+    ])('should allow non-content types', (component) => {
+      const { type } = component
 
-  const inputBase: InputFieldsComponentsDef = {
-    hint: '',
-    name: '',
-    options: {},
-    schema: {},
-    title: '',
-    type: 'TextField'
-  }
-
-  expect(isNotContentType(contentBase)).toBe(false)
-  expect(isNotContentType({ ...contentBase, type: 'Details' })).toBe(false)
-  expect(isNotContentType({ ...contentBase, type: 'InsetText' })).toBe(false)
-  expect(isNotContentType({ ...contentBase, type: 'Para' })).toBe(false)
-  expect(isNotContentType(inputBase)).toBe(true)
-  expect(isNotContentType({ ...inputBase, type: 'TelephoneNumberField' })).toBe(
-    true
-  )
-  expect(
-    isNotContentType({
-      list: '',
-      ...inputBase,
-      type: 'RadiosField'
+      expect({ isNotContentType: true, type }).toEqual({
+        isNotContentType: isNotContentType(component),
+        type
+      })
     })
-  ).toBe(true)
+
+    it.each([
+      {
+        type: 'Details',
+        title: 'Help with nationality',
+        content: 'We need to know your nationality so we can work out…',
+        name: 'content',
+        options: {},
+        schema: {}
+      } satisfies ComponentDef,
+      {
+        type: 'Html',
+        title: 'HTML',
+        content: '<p class="govuk-body">Some content</p>',
+        name: 'content',
+        options: {},
+        schema: {}
+      } satisfies ComponentDef,
+      {
+        type: 'InsetText',
+        title: '',
+        content: 'It can take up to 8 weeks to register a lasting power of…',
+        name: 'content',
+        options: {},
+        schema: {}
+      } satisfies ComponentDef,
+      {
+        type: 'List',
+        title: 'Items',
+        list: 'items',
+        name: 'field',
+        options: {},
+        schema: {}
+      } satisfies ComponentDef
+    ])('should prevent content types', (component) => {
+      const { type } = component
+
+      expect({ isNotContentType: false, type }).toEqual({
+        isNotContentType: isNotContentType(component),
+        type
+      })
+    })
+  })
 })

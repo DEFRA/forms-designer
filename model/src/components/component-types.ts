@@ -164,15 +164,6 @@ export const ComponentTypes: ComponentDef[] = [
     schema: {}
   },
   {
-    name: 'Para',
-    type: 'Para',
-    title: 'Paragraph',
-    subType: 'content',
-    content: '',
-    options: {},
-    schema: {}
-  },
-  {
     name: 'Html',
     type: 'Html',
     title: 'Html',

@@ -16,13 +16,7 @@ describe('ComponentCreateList', () => {
       .find('li')
       .map((c) => c.find('a').text())
 
-    expect(listItems).toEqual([
-      'Details',
-      'HTML',
-      'Inset text',
-      'List',
-      'Paragraph'
-    ])
+    expect(listItems).toEqual(['Details', 'HTML', 'Inset text', 'List'])
   })
 
   test('it selects Content components on click', () => {

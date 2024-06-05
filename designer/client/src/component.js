@@ -25,7 +25,6 @@ export const componentTypes = {
   YesNoField,
   UkAddressField,
   FileUploadField,
-  Para,
   Details,
   Html,
   InsetText,
@@ -250,16 +249,6 @@ function WarningText() {
         <div className="line short govuk-!-margin-bottom-2 govuk-!-margin-top-2" />
         <div className="line" />
       </div>
-    </Base>
-  )
-}
-
-function Para() {
-  return (
-    <Base>
-      <div className="line" />
-      <div className="line short govuk-!-margin-bottom-2 govuk-!-margin-top-2" />
-      <div className="line" />
     </Base>
   )
 }

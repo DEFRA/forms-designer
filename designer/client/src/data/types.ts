@@ -12,7 +12,6 @@ export const isNotContentType = (
   obj: ComponentDef
 ): obj is InputFieldsComponentsDef | ListComponentsDef => {
   const contentTypes: ContentComponentsDef['type'][] = [
-    'Para',
     'Details',
     'Html',
     'InsetText',

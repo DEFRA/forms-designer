@@ -17,7 +17,6 @@ export enum ComponentTypeEnum {
   TelephoneNumberField = 'TelephoneNumberField',
   EmailAddressField = 'EmailAddressField',
   FileUploadField = 'FileUploadField',
-  Para = 'Para',
   Html = 'Html',
   InsetText = 'InsetText',
   Details = 'Details',

@@ -55,13 +55,8 @@ const validateList = (component) => {
   return errors
 }
 
-const ComponentsWithoutTitleField = [Types.InsetText, Types.Html, Types.Para]
-const ComponentsWithContentField = [
-  Types.InsetText,
-  Types.Html,
-  Types.Para,
-  Types.Details
-]
+const ComponentsWithoutTitleField = [Types.InsetText, Types.Html]
+const ComponentsWithContentField = [Types.InsetText, Types.Html, Types.Details]
 const ComponentsWithListField = [
   Types.AutocompleteField,
   Types.List,

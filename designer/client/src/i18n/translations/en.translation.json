@@ -186,8 +186,6 @@
     "MultilineTextField_info": "A text box for users to enter multiple lines of text into, for example as 'Additional info'",
     "NumberField": "Number",
     "NumberField_info": "A text box that users can only enter numbers into",
-    "Para": "Paragraph",
-    "Para_info": "A block of text",
     "RadiosField": "Radios",
     "RadiosField_info": "A list for users to select one answer",
     "SelectField": "Select",

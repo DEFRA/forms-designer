@@ -82,14 +82,14 @@ describe('SelectConditions', () => {
         {
           path: '/no-uk-passport',
           title: "You're not eligible for this service",
-          component: [
+          components: [
             {
-              type: 'Para',
+              type: 'Html',
+              title: '',
+              name: 'notEligible',
               content:
-                "If you still think you're eligible please contact the Foreign and Commonwealth Office.",
-              options: {
-                required: true
-              },
+                '<p class="govuk-body">If you still think you’re eligible please contact the Foreign and Commonwealth Office.</p>',
+              options: {},
               schema: {}
             }
           ],
