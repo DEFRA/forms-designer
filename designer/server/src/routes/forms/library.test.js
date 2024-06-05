@@ -15,6 +15,15 @@ describe('Forms library routes', () => {
     await server.initialize()
   })
 
+  const now = new Date()
+  const authorId = 'f50ceeed-b7a4-47cf-a498-094efc99f8bc'
+  const authorDisplayName = 'Enrique Chase'
+
+  /**
+   * @satisfies {FormMetadataAuthor}
+   */
+  const author = { id: authorId, displayName: authorDisplayName }
+
   test('Forms library list page', async () => {
     const title = 'My form slug'
 
@@ -28,8 +37,10 @@ describe('Forms library routes', () => {
         teamName: 'Forms',
         teamEmail: 'defraforms@defra.gov.uk',
         draft: {
-          createdAt: new Date(),
-          updatedAt: new Date()
+          createdAt: now,
+          createdBy: author,
+          updatedAt: now,
+          updatedBy: author
         }
       }
     ])
@@ -63,8 +74,10 @@ describe('Forms library routes', () => {
       teamName: 'Forms',
       teamEmail: 'defraforms@defra.gov.uk',
       draft: {
-        createdAt: new Date(),
-        updatedAt: new Date()
+        createdAt: now,
+        createdBy: author,
+        updatedAt: now,
+        updatedBy: author
       }
     })
 
@@ -165,3 +178,7 @@ describe('Forms library routes', () => {
     expect($buttons?.[1]).toHaveTextContent('Make draft live')
   })
 })
+
+/**
+ * @typedef {import('@defra/forms-model').FormMetadataAuthor} FormMetadataAuthor
+ */
