@@ -1,5 +1,6 @@
 /**
  * ESLint config
+ * @type {import('eslint').ESLint.ConfigData}
  */
 module.exports = {
   ignorePatterns: [
@@ -55,6 +56,16 @@ module.exports = {
           'error',
           {
             ignoreArrowShorthand: true
+          }
+        ],
+
+        // Allow void return in async JSX attributes
+        '@typescript-eslint/no-misused-promises': [
+          'error',
+          {
+            checksVoidReturn: {
+              attributes: false
+            }
           }
         ],
 
