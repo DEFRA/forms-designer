@@ -50,15 +50,8 @@ function buildRedisClient() {
     )
   }
 
-  // TODO add proper logger
-
   redisClient.on('connect', () => {
     logger.info('Connected to Redis server')
-  })
-
-  redisClient.on('close', () => {
-    logger.info('Redis connection closed attempting reconnect')
-    redisClient.connect()
   })
 
   redisClient.on('error', (error) => {
