@@ -1,6 +1,6 @@
 import i18next, { type InitOptions, type TOptions } from 'i18next'
 import Backend from 'i18next-http-backend'
-import * as React from 'react'
+import React, { type ComponentType } from 'react'
 
 import enCommonTranslations from '~/src/i18n/translations/en.translation.json'
 
@@ -44,7 +44,7 @@ export interface WithI18nProps {
 }
 
 export const withI18n = <P extends WithI18nProps>(
-  Component: React.ComponentType<P>
+  Component: ComponentType<P>
 ) => {
   return function WithI18n(props: Omit<P, keyof WithI18nProps>) {
     return <Component {...(props as P)} i18n={i18n} />

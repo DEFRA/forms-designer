@@ -8,7 +8,7 @@ import {
   waitFor
 } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import React from 'react'
+import React, { type ReactElement } from 'react'
 
 import { DataContext } from '~/src/context/index.js'
 import LinkCreate from '~/src/link-create.js'
@@ -52,7 +52,7 @@ const data: FormDefinition = { ...rawData }
 const dataValue = { data, save: jest.fn() }
 
 function customRender(
-  element: React.JSX.Element,
+  element: ReactElement,
   providerProps = dataValue
 ): RenderResult {
   return render(

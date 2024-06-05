@@ -1,9 +1,9 @@
 import { highlight, languages } from 'prismjs'
-import React from 'react'
+import React, { Component } from 'react'
 import SimpleEditor from 'react-simple-code-editor'
 import 'prismjs/components/prism-markup.js'
 
-class Editor extends React.Component {
+class Editor extends Component {
   constructor(props) {
     super(props)
 

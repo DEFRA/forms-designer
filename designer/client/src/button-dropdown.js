@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { Component } from 'react'
 
 import { withI18n } from '~/src/i18n/index.js'
 
-class ButtonDropdown extends React.Component {
+class ButtonDropdown extends Component {
   /* TODO:- generalise this */
   constructor(props) {
     super(props)

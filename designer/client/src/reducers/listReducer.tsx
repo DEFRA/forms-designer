@@ -1,4 +1,11 @@
-import React, { createContext, useContext, useReducer } from 'react'
+import { type List } from '@defra/forms-model'
+import React, {
+  createContext,
+  useContext,
+  useReducer,
+  type Dispatch,
+  type ReactNode
+} from 'react'
 
 import { DataContext } from '~/src/context/index.js'
 import { arrayMove } from '~/src/helpers.js'
@@ -19,7 +26,7 @@ export interface ListState {
 
 export const ListContext = createContext<{
   state: ListState
-  dispatch: React.Dispatch<any>
+  dispatch: Dispatch<any>
 }>({
   state: {},
   dispatch: () => {}
@@ -172,7 +179,10 @@ export function listReducer(
 /**
  * Allows components to retrieve {@link ListState} and {@link dispatch} from any component nested within `<ListContextProvider>`
  */
-export const ListContextProvider = (props) => {
+export const ListContextProvider = (props: {
+  children?: ReactNode
+  selectedListName?: string
+}) => {
   let init: ListState = {}
   const { selectedListName } = props
   const { data } = useContext(DataContext)

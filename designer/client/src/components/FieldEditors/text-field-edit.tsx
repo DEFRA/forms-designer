@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, type ReactNode } from 'react'
 
 import { Autocomplete } from '~/src/components/Autocomplete/index.js'
 import { CssClasses } from '~/src/components/CssClasses/index.js'
@@ -9,7 +9,7 @@ import { Actions } from '~/src/reducers/component/types.js'
 
 interface Props {
   context: any // TODO
-  children: React.ReactNode
+  children: ReactNode
 }
 
 export function TextFieldEdit({ children, context = ComponentContext }: Props) {

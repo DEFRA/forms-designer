@@ -7,7 +7,7 @@ import {
   waitFor
 } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import React from 'react'
+import React, { type ReactNode } from 'react'
 
 import { Menu } from '~/src/components/Menu/index.js'
 import { DataContext, FlyoutContext } from '~/src/context/index.js'
@@ -27,7 +27,7 @@ describe('Menu', () => {
   }
 
   function customRender(
-    children: React.JSX.Element,
+    children: ReactNode,
     providerProps = dataValue
   ): RenderResult {
     return render(

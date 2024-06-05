@@ -1,6 +1,6 @@
 import { clone } from '@defra/forms-model'
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
-import React from 'react'
+import React, { Component, createRef } from 'react'
 
 import { Flyout } from '~/src/components/Flyout/index.js'
 import { RenderInPortal } from '~/src/components/RenderInPortal/index.js'
@@ -14,7 +14,7 @@ import randomId from '~/src/randomId.js'
 import SectionEdit from '~/src/section/section-edit.js'
 import { validateTitle, hasValidationErrors } from '~/src/validations.js'
 
-export class PageEdit extends React.Component {
+export class PageEdit extends Component {
   static contextType = DataContext
 
   constructor(props) {
@@ -28,7 +28,7 @@ export class PageEdit extends React.Component {
       isEditingSection: false,
       errors: {}
     }
-    this.formEditSection = React.createRef()
+    this.formEditSection = createRef()
   }
 
   onSubmit = async (e) => {

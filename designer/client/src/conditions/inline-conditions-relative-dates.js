@@ -1,7 +1,7 @@
 import { DateDirections, RelativeTimeValue } from '@defra/forms-model'
-import React from 'react'
+import React, { Component } from 'react'
 
-class RelativeTimeValues extends React.Component {
+class RelativeTimeValues extends Component {
   constructor(props) {
     super(props)
     this.state = {

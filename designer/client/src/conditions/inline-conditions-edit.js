@@ -3,7 +3,7 @@ import {
   toPresentationString,
   clone
 } from '@defra/forms-model'
-import React from 'react'
+import React, { Component } from 'react'
 
 import {
   EditIcon,
@@ -12,7 +12,7 @@ import {
 } from '~/src/components/Icons/index.js'
 import InlineConditionsDefinition from '~/src/conditions/InlineConditionsDefinition.js'
 
-class InlineConditionsEdit extends React.Component {
+class InlineConditionsEdit extends Component {
   constructor(props) {
     super(props)
 

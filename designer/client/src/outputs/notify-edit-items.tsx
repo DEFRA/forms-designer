@@ -1,5 +1,5 @@
 import { clone } from '@defra/forms-model'
-import React, { type MouseEvent, type ChangeEvent } from 'react'
+import React, { Component, type MouseEvent, type ChangeEvent } from 'react'
 
 import { DataContext } from '~/src/context/index.js'
 import logger from '~/src/plugins/logger.js'
@@ -15,7 +15,7 @@ interface Props {
   values: { name: string; display: string }[]
 }
 
-class NotifyItems extends React.Component<Props, State> {
+class NotifyItems extends Component<Props, State> {
   static contextType = DataContext
 
   constructor(props: Props) {

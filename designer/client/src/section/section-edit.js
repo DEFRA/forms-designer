@@ -1,5 +1,5 @@
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
-import React from 'react'
+import React, { createRef, Component } from 'react'
 
 import { DataContext } from '~/src/context/index.js'
 import { addSection } from '~/src/data/index.js'
@@ -13,7 +13,7 @@ import {
   hasValidationErrors
 } from '~/src/validations.js'
 
-class SectionEdit extends React.Component {
+class SectionEdit extends Component {
   static contextType = DataContext
 
   constructor(props) {
@@ -21,7 +21,7 @@ class SectionEdit extends React.Component {
     this.closeFlyout = props.closeFlyout
     const { section } = props
     this.isNewSection = !section?.name
-    this.nameRef = React.createRef()
+    this.nameRef = createRef()
     this.state = {
       name: section?.name ?? randomId(),
       title: section?.title ?? '',

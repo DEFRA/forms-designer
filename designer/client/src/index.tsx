@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 
 import Designer from '~/src/designer.jsx'
@@ -8,7 +8,7 @@ initI18n()
 
 const container = document.querySelector('.app-editor')
 
-export class App extends React.Component {
+export class App extends Component {
   render() {
     if (
       !(container instanceof HTMLElement) ||

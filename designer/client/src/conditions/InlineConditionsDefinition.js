@@ -6,7 +6,7 @@ import {
   getOperatorNames,
   clone
 } from '@defra/forms-model'
-import React from 'react'
+import React, { Component } from 'react'
 
 import { InlineConditionsDefinitionValue } from '~/src/conditions/InlineConditionsDefinitionValue.jsx'
 import { i18n } from '~/src/i18n/index.js'
@@ -15,7 +15,7 @@ function isCondition(fieldDef) {
   return fieldDef?.type === 'Condition'
 }
 
-class InlineConditionsDefinition extends React.Component {
+class InlineConditionsDefinition extends Component {
   constructor(props) {
     super(props)
     this.state = {

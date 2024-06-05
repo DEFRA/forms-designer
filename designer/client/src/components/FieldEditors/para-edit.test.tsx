@@ -1,13 +1,13 @@
 import { type FormDefinition } from '@defra/forms-model'
 import { render } from '@testing-library/react'
-import React from 'react'
+import React, { type ReactNode } from 'react'
 
 import { ParaEdit } from '~/src/components/FieldEditors/para-edit.jsx'
 import { DataContext } from '~/src/context/index.js'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 
 describe('ParaEdit', () => {
-  function TestComponentWithContext({ children }) {
+  function TestComponentWithContext({ children }: { children: ReactNode }) {
     const data: FormDefinition = {
       pages: [
         {

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { type ReactNode } from 'react'
 
 import ComponentListSelect from '~/src/components/ComponentListSelect/ComponentListSelect.jsx'
 import { RenderInPortal } from '~/src/components/RenderInPortal/index.js'
@@ -7,7 +7,7 @@ import { ListsEditorContextProvider } from '~/src/reducers/list/listsEditorReduc
 import { ListContextProvider } from '~/src/reducers/listReducer.jsx'
 
 interface Props {
-  children: any // TODO
+  children: ReactNode
   page: any // TODO
 }
 

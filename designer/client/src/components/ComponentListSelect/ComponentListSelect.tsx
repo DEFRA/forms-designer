@@ -1,7 +1,14 @@
 import { type ListComponentsDef } from '@defra/forms-model'
 import { Label } from '@xgovformbuilder/govuk-react-jsx'
 import classNames from 'classnames'
-import React, { useContext, useEffect, useState } from 'react'
+import React, {
+  useContext,
+  useEffect,
+  useState,
+  type ChangeEvent,
+  type MouseEvent,
+  type ReactNode
+} from 'react'
 
 import { DataContext } from '~/src/context/index.js'
 import { findList } from '~/src/data/index.js'
@@ -62,19 +69,19 @@ export function ComponentListSelect() {
     }
   }, [listsEditorState.isEditingList, selectedList?.name, isAddingNew])
 
-  const editList = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const editList = (e: ChangeEvent<HTMLSelectElement>) => {
     dispatch({
       type: ComponentActions.SET_SELECTED_LIST,
       payload: e.target.value
     })
   }
 
-  const handleEditListClick = (e: React.MouseEvent) => {
+  const handleEditListClick = (e: MouseEvent) => {
     e.preventDefault()
     listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST, true])
   }
 
-  const handleAddListClick = (e: React.MouseEvent) => {
+  const handleAddListClick = (e: MouseEvent) => {
     e.preventDefault()
     setIsAddingNew(true)
     listDispatch({ type: ListActions.ADD_NEW_LIST })
@@ -105,7 +112,7 @@ export function ComponentListSelect() {
             (
               list: {
                 name: string | number | readonly string[] | undefined
-                title: React.ReactNode
+                title: ReactNode
               },
               index: number
             ) => {

@@ -2,7 +2,7 @@ import { type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { act, cleanup, render, type RenderResult } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import React from 'react'
+import React, { type ReactElement } from 'react'
 
 import ConditionsEdit from '~/src/conditions/ConditionsEdit.jsx'
 import { DataContext, FlyoutContext } from '~/src/context/index.js'
@@ -63,7 +63,7 @@ const data: FormDefinition = {
 const dataValue = { data, save: jest.fn() }
 
 function customRender(
-  element: React.JSX.Element,
+  element: ReactElement,
   providerProps = dataValue
 ): RenderResult {
   return render(

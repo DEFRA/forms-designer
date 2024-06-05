@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 
 import SelectConditions from '~/src/conditions/SelectConditions.jsx'
 import { DataContext } from '~/src/context/index.js'
@@ -6,7 +6,7 @@ import { findPage, updateLink } from '~/src/data/index.js'
 import { i18n } from '~/src/i18n/index.js'
 import logger from '~/src/plugins/logger.js'
 
-class LinkEdit extends React.Component {
+class LinkEdit extends Component {
   static contextType = DataContext
 
   constructor(props, context) {

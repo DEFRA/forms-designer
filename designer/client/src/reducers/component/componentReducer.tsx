@@ -1,5 +1,5 @@
 import { type ComponentDef } from '@defra/forms-model'
-import React, { useReducer, createContext } from 'react'
+import React, { useReducer, createContext, type Dispatch } from 'react'
 
 import logger from '~/src/plugins/logger.js'
 import randomId from '~/src/randomId.js'
@@ -32,7 +32,10 @@ const defaultValues = {
  */
 export const ComponentContext = createContext<{
   state: ComponentState
-  dispatch: React.Dispatch<any>
+  dispatch: Dispatch<{
+    type: string
+    payload?: string
+  }>
 }>({
   state: defaultValues,
   dispatch: () => {}

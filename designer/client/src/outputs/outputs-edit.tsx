@@ -1,4 +1,4 @@
-import React, { type MouseEvent } from 'react'
+import React, { Component, type MouseEvent } from 'react'
 
 import { DataContext } from '~/src/context/index.js'
 import OutputEdit from '~/src/outputs/output-edit.jsx'
@@ -13,7 +13,7 @@ interface State {
   id?: string
 }
 
-class OutputsEdit extends React.Component<Props, State> {
+class OutputsEdit extends Component<Props, State> {
   static contextType = DataContext
   constructor(props) {
     super(props)

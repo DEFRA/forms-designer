@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { Component } from 'react'
 
 interface Props {
   output: any // TODO
 }
 
-class EmailEdit extends React.Component<Props> {
+class EmailEdit extends Component<Props> {
   render() {
     const { output } = this.props
     const outputConfiguration = output?.outputConfiguration ?? {

@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { Component } from 'react'
 
 import { Flyout } from '~/src/components/Flyout/index.js'
 import { RenderInPortal } from '~/src/components/RenderInPortal/index.js'
 import { DataContext } from '~/src/context/index.js'
 import SectionEdit from '~/src/section/section-edit.js'
 
-class SectionsEdit extends React.Component {
+class SectionsEdit extends Component {
   static contextType = DataContext
   state = {}
 

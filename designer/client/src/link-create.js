@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import React from 'react'
+import React, { Component } from 'react'
 
 import { ErrorMessage } from '~/src/components/ErrorMessage/index.js'
 import SelectConditions from '~/src/conditions/SelectConditions.jsx'
@@ -9,7 +9,7 @@ import ErrorSummary from '~/src/error-summary.jsx'
 import { i18n } from '~/src/i18n/index.js'
 import logger from '~/src/plugins/logger.js'
 
-class LinkCreate extends React.Component {
+class LinkCreate extends Component {
   static contextType = DataContext
   state = { errors: {} }
 

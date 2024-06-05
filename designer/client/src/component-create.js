@@ -1,5 +1,5 @@
 import { ComponentTypes } from '@defra/forms-model'
-import React from 'react'
+import React, { Component } from 'react'
 
 import ComponentTypeEdit from '~/src/ComponentTypeEdit.jsx'
 import { DataContext } from '~/src/context/index.js'
@@ -9,7 +9,7 @@ import randomId from '~/src/randomId.js'
 /**
  * @deprecated (keeping until tests are refactored)
  */
-class ComponentCreate extends React.Component {
+class ComponentCreate extends Component {
   static contextType = DataContext
   state = {
     isSaving: false

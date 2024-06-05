@@ -1,12 +1,12 @@
 import FocusTrap from 'focus-trap-react'
 import React, {
+  useContext,
+  useLayoutEffect,
+  useState,
   type CSSProperties,
   type KeyboardEvent,
   type MouseEvent,
-  type ReactChildren,
-  useContext,
-  useLayoutEffect,
-  useState
+  type ReactNode
 } from 'react'
 
 import { FlyoutContext } from '~/src/context/index.js'
@@ -22,7 +22,7 @@ interface Props {
   show?: boolean
   offset?: number
   title?: string
-  children?: ReactChildren | React.JSX.Element
+  children?: ReactNode
   NEVER_UNMOUNTS?: boolean
 }
 

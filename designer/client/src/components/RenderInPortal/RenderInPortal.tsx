@@ -1,7 +1,7 @@
-import React from 'react'
+import { Component } from 'react'
 import ReactDOM from 'react-dom'
 
-export class RenderInPortal extends React.Component {
+export class RenderInPortal extends Component {
   wrapper = document.createElement('div')
   portalRoot = document.getElementById('portal-root')
 

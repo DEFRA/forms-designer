@@ -1,5 +1,5 @@
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
-import React from 'react'
+import React, { Component } from 'react'
 
 import { Flyout } from '~/src/components/Flyout/index.js'
 import { RenderInPortal } from '~/src/components/RenderInPortal/index.js'
@@ -14,7 +14,7 @@ import randomId from '~/src/randomId.js'
 import SectionEdit from '~/src/section/section-edit.js'
 import { validateTitle, hasValidationErrors } from '~/src/validations.js'
 
-class PageCreate extends React.Component {
+class PageCreate extends Component {
   static contextType = DataContext
 
   constructor(props, context) {

@@ -8,7 +8,7 @@ import {
   type RenderResult
 } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import React from 'react'
+import React, { type ReactElement } from 'react'
 
 import { ComponentCreate } from '~/src/components/ComponentCreate/index.js'
 import { DataContext } from '~/src/context/index.js'
@@ -35,7 +35,7 @@ describe('ComponentCreate:', () => {
   const page = { path: '/1' }
 
   function customRender(
-    element: JSX.Element,
+    element: ReactElement,
     providerProps = { data, save: jest.fn() }
   ): RenderResult {
     return render(

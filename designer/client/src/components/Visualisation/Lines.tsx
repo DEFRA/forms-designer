@@ -1,5 +1,5 @@
 import { type FormDefinition } from '@defra/forms-model'
-import React from 'react'
+import React, { Component, type KeyboardEvent } from 'react'
 
 import { Flyout } from '~/src/components/Flyout/index.js'
 import {
@@ -19,7 +19,7 @@ interface State {
   showEditor: Edge | boolean
 }
 
-export class Lines extends React.Component<Props, State> {
+export class Lines extends Component<Props, State> {
   static contextType = DataContext
 
   state = {
@@ -32,7 +32,7 @@ export class Lines extends React.Component<Props, State> {
     })
   }
 
-  handlePolylineKeyPress = (event: React.KeyboardEvent, edge: Edge) => {
+  handlePolylineKeyPress = (event: KeyboardEvent, edge: Edge) => {
     if (event.key === 'Enter' || event.key == ' ') {
       this.editLink(edge)
     }

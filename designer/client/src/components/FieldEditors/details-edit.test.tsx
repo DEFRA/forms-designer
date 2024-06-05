@@ -1,5 +1,5 @@
 import { cleanup, render } from '@testing-library/react'
-import React from 'react'
+import React, { type ReactNode } from 'react'
 
 import DetailsEdit from '~/src/components/FieldEditors/details-edit.jsx'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
@@ -7,7 +7,7 @@ import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 describe('details-edit', () => {
   afterEach(cleanup)
 
-  function TestComponentWithContext({ children }) {
+  function TestComponentWithContext({ children }: { children: ReactNode }) {
     return (
       <ComponentContext.Provider
         value={{ state: { selectedComponent: {} }, dispatch: jest.fn() }}

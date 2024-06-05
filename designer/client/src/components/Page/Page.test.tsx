@@ -8,13 +8,13 @@ import {
   type RenderResult
 } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import React, { type JSX } from 'react'
+import React, { type ReactElement } from 'react'
 
 import { Page } from '~/src/components/Page/index.js'
 import { DataContext } from '~/src/context/index.js'
 
 function customRender(
-  element: JSX.Element,
+  element: ReactElement,
   providerProps: {
     data: FormDefinition
     save: jest.Mock
