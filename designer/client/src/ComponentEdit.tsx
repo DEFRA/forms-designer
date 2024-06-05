@@ -1,5 +1,5 @@
 import { ComponentTypeEnum as Types } from '@defra/forms-model'
-import React, { memo, useContext, useLayoutEffect } from 'react'
+import React, { useContext, useLayoutEffect } from 'react'
 
 import ComponentTypeEdit from '~/src/ComponentTypeEdit.jsx'
 import ErrorSummary from '~/src/ErrorSummary.jsx'
@@ -17,7 +17,7 @@ const LIST_TYPES = [
   Types.YesNoField
 ]
 
-export function ComponentEdit(props) {
+export default function ComponentEdit(props) {
   const { data, save } = useContext(DataContext)
   const { state, dispatch } = useContext(ComponentContext)
   const {
@@ -98,5 +98,3 @@ export function ComponentEdit(props) {
     </>
   )
 }
-
-export default memo(ComponentEdit)

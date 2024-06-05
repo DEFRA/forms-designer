@@ -3,16 +3,15 @@ import classNames from 'classnames'
 import React, { useContext } from 'react'
 
 import { ErrorMessage } from '~/src/components/ErrorMessage/ErrorMessage.jsx'
-import { withI18n } from '~/src/i18n/i18n.jsx'
+import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 import { Actions } from '~/src/reducers/component/types.js'
 
 interface Props {
   context: any // TODO
-  i18n: any
 }
 
-function DetailsEdit({ i18n, context = ComponentContext }: Props) {
+export default function DetailsEdit({ context = ComponentContext }: Props) {
   // If you are editing a component, the default context will be ComponentContext because props.context is undefined,
   // but if you editing a component which is a children of a list based component, then the props.context is the ListContext.
   const { state, dispatch } = useContext(context)
@@ -74,5 +73,3 @@ function DetailsEdit({ i18n, context = ComponentContext }: Props) {
     </div>
   )
 }
-
-export default withI18n(DetailsEdit)

@@ -9,7 +9,7 @@ import { DataContext } from '~/src/context/DataContext.js'
 import { findPage } from '~/src/data/page/findPage.js'
 import { updateLinksTo } from '~/src/data/page/updateLinksTo.js'
 import { toUrl } from '~/src/helpers.js'
-import { withI18n } from '~/src/i18n/i18n.jsx'
+import { i18n } from '~/src/i18n/i18n.jsx'
 import logger from '~/src/plugins/logger.js'
 import randomId from '~/src/randomId.js'
 import SectionEdit from '~/src/section/SectionEdit.jsx'
@@ -67,7 +67,7 @@ export class PageEdit extends Component {
   }
 
   validate = (title, path) => {
-    const { page, i18n } = this.props
+    const { page } = this.props
     const { data } = this.context
     const titleErrors = validateTitle('page-title', title, i18n)
     const errors = { ...titleErrors }
@@ -175,7 +175,6 @@ export class PageEdit extends Component {
   }
 
   render() {
-    const { i18n } = this.props
     const { data } = this.context
     const { sections } = data
     const {
@@ -323,5 +322,3 @@ export class PageEdit extends Component {
     )
   }
 }
-
-export default withI18n(PageEdit)

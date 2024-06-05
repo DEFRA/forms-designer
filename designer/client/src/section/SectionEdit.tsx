@@ -4,7 +4,7 @@ import React, { createRef, Component } from 'react'
 import ErrorSummary from '~/src/ErrorSummary.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { addSection } from '~/src/data/section/addSection.js'
-import { withI18n } from '~/src/i18n/i18n.jsx'
+import { i18n } from '~/src/i18n/i18n.jsx'
 import logger from '~/src/plugins/logger.js'
 import randomId from '~/src/randomId.js'
 import {
@@ -13,7 +13,7 @@ import {
   hasValidationErrors
 } from '~/src/validations.js'
 
-class SectionEdit extends Component {
+export default class SectionEdit extends Component {
   static contextType = DataContext
 
   constructor(props) {
@@ -73,7 +73,6 @@ class SectionEdit extends Component {
   }
 
   validate = () => {
-    const { i18n } = this.props
     const { name, title } = this.state
     const titleErrors = validateTitle('section-title', title, i18n)
     const nameErrors = validateName('section-name', 'section name', name, i18n)
@@ -112,7 +111,6 @@ class SectionEdit extends Component {
   }
 
   render() {
-    const { i18n } = this.props
     const { title, name, hideTitle, errors } = this.state
 
     return (
@@ -192,5 +190,3 @@ class SectionEdit extends Component {
     )
   }
 }
-
-export default withI18n(SectionEdit)

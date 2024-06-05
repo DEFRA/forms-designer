@@ -1,5 +1,5 @@
 import { Hint, Input, Label, Textarea } from '@xgovformbuilder/govuk-react-jsx'
-import React, { memo, useContext, type FormEvent } from 'react'
+import React, { useContext, type FormEvent } from 'react'
 
 import { DataContext } from '~/src/context/DataContext.js'
 import { useListItem } from '~/src/hooks/list/useListItem/useListItem.jsx'
@@ -10,7 +10,7 @@ import {
 } from '~/src/reducers/list/listsEditorReducer.jsx'
 import { ListContext } from '~/src/reducers/listReducer.jsx'
 
-export function ListItemEdit() {
+export default function ListItemEdit() {
   const { dispatch: listsEditorDispatch } = useContext(ListsEditorContext)
   const { state, dispatch } = useContext(ListContext)
   const { data, save } = useContext(DataContext)
@@ -114,5 +114,3 @@ export function ListItemEdit() {
     </>
   )
 }
-
-export default memo(ListItemEdit)

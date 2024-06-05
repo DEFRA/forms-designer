@@ -9,13 +9,13 @@ import { DataContext } from '~/src/context/DataContext.js'
 import { addLink } from '~/src/data/page/addLink.js'
 import { addPage } from '~/src/data/page/addPage.js'
 import { toUrl } from '~/src/helpers.js'
-import { i18n, withI18n } from '~/src/i18n/i18n.jsx'
+import { i18n } from '~/src/i18n/i18n.jsx'
 import logger from '~/src/plugins/logger.js'
 import randomId from '~/src/randomId.js'
 import SectionEdit from '~/src/section/SectionEdit.jsx'
 import { validateTitle, hasValidationErrors } from '~/src/validations.js'
 
-class PageCreate extends Component {
+export default class PageCreate extends Component {
   static contextType = DataContext
 
   constructor(props, context) {
@@ -341,5 +341,3 @@ class PageCreate extends Component {
     )
   }
 }
-
-export default withI18n(PageCreate)

@@ -1,6 +1,5 @@
 import i18next, { type InitOptions, type TOptions } from 'i18next'
 import Backend from 'i18next-http-backend'
-import React, { type ComponentType } from 'react'
 
 import enCommonTranslations from '~/src/i18n/translations/en.translation.json'
 
@@ -33,20 +32,6 @@ export const initI18n = (
   settings = DEFAULT_SETTINGS
 ) => i18n.use(Backend).init(settings)
 
-export type I18n = (text: string, options?: any) => string
-
-export const i18n: I18n = (text: string, options: TOptions) => {
+export const i18n = (text: string, options?: TOptions) => {
   return i18next.t(text, options)
-}
-
-export interface WithI18nProps {
-  i18n: I18n
-}
-
-export const withI18n = <P extends WithI18nProps>(
-  Component: ComponentType<P>
-) => {
-  return function WithI18n(props: Omit<P, keyof WithI18nProps>) {
-    return <Component {...(props as P)} i18n={i18n} />
-  }
 }
