@@ -13,6 +13,7 @@ export const defaults = {
  * @type {Partial<import('@jest/types').Config.InitialProjectOptions>}
  */
 export const projectDefaults = {
+  extensionsToTreatAsEsm: ['.jsx', '.ts', '.tsx'],
   clearMocks: true,
   coverageDirectory: '<rootDir>/coverage',
   modulePathIgnorePatterns: ['<rootDir>/coverage/', '<rootDir>/dist/'],
