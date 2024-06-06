@@ -26,6 +26,10 @@ export class ConditionValueAbstract {
   toExpression() {
     throw new Error(
       'Unsupported Operation. Method toExpression have not been implemented'
+
+  clone() {
+    throw new Error(
+      'Unsupported Operation. Method clone has not been implemented'
     )
   }
 }
