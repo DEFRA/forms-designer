@@ -14,11 +14,11 @@ export class ConditionValue extends ConditionValueAbstract {
     super(valueType)
 
     if (!value || typeof value !== 'string') {
-      throw Error(`value ${value} is not valid`)
+      throw new Error("ConditionValue param 'value' must be a string")
     }
 
     if (display && typeof display !== 'string') {
-      throw Error(`display ${display} is not valid`)
+      throw new Error("ConditionValue param 'display' must be a string")
     }
 
     this.value = value
@@ -84,7 +84,7 @@ export class RelativeTimeValue extends ConditionValueAbstract {
     super(relativeTimeValueType)
 
     if (typeof timePeriod !== 'string') {
-      throw Error(`time period ${timePeriod} is not valid`)
+      throw new Error("RelativeTimeValue param 'timePeriod' must be a string")
     }
 
     if (
@@ -92,11 +92,15 @@ export class RelativeTimeValue extends ConditionValueAbstract {
         .map((unit) => unit.value)
         .includes(timeUnit)
     ) {
-      throw Error(`time unit ${timeUnit} is not valid`)
+      throw new Error(
+        "RelativeTimeValue param 'dateTimeUnits' must only include DateTimeUnitValues keys"
+      )
     }
 
     if (!Object.values(DateDirections).includes(direction)) {
-      throw Error(`direction ${direction} is not valid`)
+      throw new Error(
+        "RelativeTimeValue param 'direction' must be from enum DateDirections"
+      )
     }
 
     this.timePeriod = timePeriod

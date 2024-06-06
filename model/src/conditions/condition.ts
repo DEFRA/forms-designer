@@ -14,22 +14,24 @@ export class Condition extends ConditionAbstract {
   value: ConditionValue | RelativeTimeValue
 
   constructor(
-    field: ConditionField,
-    operator: string,
-    value: ConditionValue | RelativeTimeValue,
+    field?: ConditionField,
+    operator?: string,
+    value?: ConditionValue | RelativeTimeValue,
     coordinator?: Coordinator
   ) {
-    super(coordinator)
-
     if (!(field instanceof ConditionField)) {
-      throw Error(`field ${field} is not a valid ConditionField object`)
+      throw new Error("Condition param 'field' must be ConditionField instance")
     }
     if (typeof operator !== 'string') {
-      throw Error(`operator ${operator} is not a valid operator`)
+      throw new Error("Condition param 'operator' must be a string")
     }
     if (!(value instanceof ConditionValueAbstract)) {
-      throw Error(`value ${value} is not a valid value type`)
+      throw new Error(
+        "Condition param 'field' must be ConditionValueAbstract instance"
+      )
     }
+
+    super(coordinator)
 
     this.field = field
     this.operator = operator
