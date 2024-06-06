@@ -1,10 +1,10 @@
 import { type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { cleanup, render, type RenderResult } from '@testing-library/react'
-import React from 'react'
+import React, { type ReactElement } from 'react'
 
-import SelectConditions from '~/src/conditions/SelectConditions.jsx'
-import { DataContext } from '~/src/context/index.js'
+import { SelectConditions } from '~/src/conditions/SelectConditions.jsx'
+import { DataContext } from '~/src/context/DataContext.js'
 
 describe('SelectConditions', () => {
   afterEach(cleanup)
@@ -24,7 +24,7 @@ describe('SelectConditions', () => {
   let props
 
   function customRender(
-    element: React.JSX.Element,
+    element: ReactElement,
     providerProps = dataValue
   ): RenderResult {
     return render(

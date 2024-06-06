@@ -1,13 +1,11 @@
+import { fieldsReducer } from '~/src/reducers/component/componentReducer.fields.js'
 import {
   componentReducer,
   getSubReducer
 } from '~/src/reducers/component/componentReducer.jsx'
-import {
-  metaReducer,
-  optionsReducer,
-  fieldsReducer,
-  schemaReducer
-} from '~/src/reducers/component/index.js'
+import { metaReducer } from '~/src/reducers/component/componentReducer.meta.js'
+import { optionsReducer } from '~/src/reducers/component/componentReducer.options.js'
+import { schemaReducer } from '~/src/reducers/component/componentReducer.schema.js'
 import { Actions } from '~/src/reducers/component/types.js'
 
 describe('Component reducer', () => {

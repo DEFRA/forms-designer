@@ -6,9 +6,9 @@ import {
   SortableHandle
 } from 'react-sortable-hoc'
 
-import { DataContext } from '~/src/context/index.js'
-import { useListItem } from '~/src/hooks/list/useListItem/index.jsx'
-import { i18n, withI18n } from '~/src/i18n/index.js'
+import { DataContext } from '~/src/context/DataContext.js'
+import { useListItem } from '~/src/hooks/list/useListItem/useListItem.jsx'
+import { i18n } from '~/src/i18n/i18n.jsx'
 import {
   ListsEditorContext,
   ListsEditorStateActions
@@ -71,7 +71,7 @@ const SortableList = SortableContainer(
   }
 )
 
-function ListItems() {
+export function ListItems() {
   const { state: listEditorState, dispatch: listsEditorDispatch } =
     useContext(ListsEditorContext)
   const { isEditingStatic } = listEditorState
@@ -142,5 +142,3 @@ function ListItems() {
     </div>
   )
 }
-
-export default withI18n(ListItems)

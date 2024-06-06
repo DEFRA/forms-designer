@@ -5,8 +5,7 @@ import React, {
   useRef,
   type FunctionComponent,
   type HTMLAttributes,
-  type JSX,
-  type ReactChildren
+  type ReactNode
 } from 'react'
 
 interface Props extends HTMLAttributes<HTMLParagraphElement> {
@@ -17,7 +16,7 @@ interface Props extends HTMLAttributes<HTMLParagraphElement> {
     id?: string
     label: string
     panel: {
-      children: ReactChildren | JSX.Element | string
+      children: ReactNode
     } & HTMLAttributes<HTMLDivElement>
   } & HTMLAttributes<HTMLAnchorElement>)[]
   title?: string

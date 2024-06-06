@@ -1,28 +1,24 @@
 import {
-  type Condition,
-  type ConditionRef,
   ConditionsModel,
+  type ConditionRef,
   type FormDefinition
 } from '@defra/forms-model'
 import { Hint, Select } from '@xgovformbuilder/govuk-react-jsx'
-import React, { type ChangeEvent } from 'react'
+import React, { Component, type ChangeEvent } from 'react'
 
-import { Flyout } from '~/src/components/Flyout/index.js'
-import { RenderInPortal } from '~/src/components/RenderInPortal/index.js'
-import InlineConditions from '~/src/conditions/InlineConditions.jsx'
+import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
+import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
+import { InlineConditions } from '~/src/conditions/InlineConditions.jsx'
 import {
   isDuplicateCondition,
   hasConditionName,
   getFieldNameSubstring,
   conditionsByType
 } from '~/src/conditions/select-condition-helpers.js'
-import { DataContext } from '~/src/context/index.js'
-import {
-  allInputs,
-  inputsAccessibleAt,
-  hasConditions as dataHasConditions
-} from '~/src/data/index.js'
-import { i18n } from '~/src/i18n/index.js'
+import { DataContext } from '~/src/context/DataContext.js'
+import { allInputs, inputsAccessibleAt } from '~/src/data/component/inputs.js'
+import { hasConditions as dataHasConditions } from '~/src/data/condition/hasConditions.js'
+import { i18n } from '~/src/i18n/i18n.jsx'
 
 interface Props {
   path: string
@@ -49,7 +45,7 @@ export interface ConditionData {
   value: string | ConditionObject
 }
 
-class SelectConditions extends React.Component<Props, State> {
+export class SelectConditions extends Component<Props, State> {
   static contextType = DataContext
 
   constructor(props, context) {
@@ -331,5 +327,3 @@ class SelectConditions extends React.Component<Props, State> {
     )
   }
 }
-
-export default SelectConditions

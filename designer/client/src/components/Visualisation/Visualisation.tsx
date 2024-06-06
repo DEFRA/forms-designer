@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 
-import { Page } from '~/src/components/Page/index.js'
+import { Page } from '~/src/components/Page/Page.jsx'
 import { Lines } from '~/src/components/Visualisation/Lines.jsx'
 import {
   getLayout,
   type Pos
 } from '~/src/components/Visualisation/getLayout.js'
-import { DataContext } from '~/src/context/index.js'
+import { DataContext } from '~/src/context/DataContext.js'
 
 interface Props {
   id: string

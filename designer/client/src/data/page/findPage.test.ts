@@ -1,6 +1,6 @@
 import { type FormDefinition } from '@defra/forms-model'
 
-import { findPage } from '~/src/data/index.js'
+import { findPage } from '~/src/data/page/findPage.js'
 
 const data: FormDefinition = {
   pages: [

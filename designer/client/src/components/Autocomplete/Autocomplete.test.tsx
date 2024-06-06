@@ -2,7 +2,7 @@ import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
 import React from 'react'
 
-import { Autocomplete } from '~/src/components/Autocomplete/index.js'
+import { Autocomplete } from '~/src/components/Autocomplete/Autocomplete.jsx'
 import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
 describe('AutocompleteField', () => {

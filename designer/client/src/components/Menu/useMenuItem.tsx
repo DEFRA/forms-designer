@@ -1,21 +1,25 @@
-import type React from 'react'
+import { type MouseEvent, type KeyboardEvent } from 'react'
 import { useState } from 'react'
 
 interface MenuItemHook {
   isVisible: boolean
-  show: (e?: React.MouseEvent<HTMLButtonElement>) => void
-  hide: (e?: React.MouseEvent<HTMLButtonElement>) => void
+  show: (
+    e?: KeyboardEvent<HTMLButtonElement> | MouseEvent<HTMLButtonElement>
+  ) => void
+  hide: (
+    e?: KeyboardEvent<HTMLButtonElement> | MouseEvent<HTMLButtonElement>
+  ) => void
 }
 
 export function useMenuItem(): MenuItemHook {
   const [isVisible, setIsVisible] = useState(false)
 
-  function show(e) {
+  const show: MenuItemHook['show'] = (e) => {
     e?.preventDefault()
     setIsVisible(true)
   }
 
-  function hide(e) {
+  const hide: MenuItemHook['hide'] = (e) => {
     e?.preventDefault()
     setIsVisible(false)
   }

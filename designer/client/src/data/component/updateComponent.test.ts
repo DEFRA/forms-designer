@@ -1,6 +1,6 @@
 import { type FormDefinition } from '@defra/forms-model'
 
-import { updateComponent } from '~/src/data/index.js'
+import { updateComponent } from '~/src/data/component/updateComponent.js'
 
 test('updateComponent throws an error when the target component cannot be found', () => {
   const data: FormDefinition = {

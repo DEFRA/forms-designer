@@ -3,8 +3,8 @@ import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
 import React, { useReducer } from 'react'
 
-import { DataContext } from '~/src/context/index.js'
-import { FieldEdit } from '~/src/field-edit.jsx'
+import { FieldEdit } from '~/src/FieldEdit.jsx'
+import { DataContext } from '~/src/context/DataContext.js'
 import {
   ComponentContext,
   componentReducer,

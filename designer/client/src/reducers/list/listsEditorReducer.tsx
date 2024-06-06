@@ -1,4 +1,4 @@
-import React, { createContext, useReducer } from 'react'
+import React, { createContext, useReducer, type Dispatch } from 'react'
 
 export enum ListsEditorStateActions {
   IS_EDITING_LIST = 'IS_EDITING_LIST',
@@ -28,7 +28,7 @@ export function initListsEditingState(): ListsEditorState {
 
 export const ListsEditorContext = createContext<{
   state: ListsEditorState
-  dispatch: React.Dispatch<any>
+  dispatch: Dispatch<any>
 }>({
   state: initListsEditingState(),
   dispatch: () => {}

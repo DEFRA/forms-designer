@@ -1,6 +1,7 @@
 import { type FormDefinition } from '@defra/forms-model'
 
-import { addList, findList } from '~/src/data/index.js'
+import { addList } from '~/src/data/list/addList.js'
+import { findList } from '~/src/data/list/findList.js'
 import { type ListItemHook } from '~/src/hooks/list/useListItem/types.js'
 import { ListActions } from '~/src/reducers/listActions.jsx'
 import {

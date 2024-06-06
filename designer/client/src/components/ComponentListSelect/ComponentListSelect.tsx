@@ -1,11 +1,18 @@
 import { type ListComponentsDef } from '@defra/forms-model'
 import { Label } from '@xgovformbuilder/govuk-react-jsx'
 import classNames from 'classnames'
-import React, { useContext, useEffect, useState } from 'react'
+import React, {
+  useContext,
+  useEffect,
+  useState,
+  type ChangeEvent,
+  type MouseEvent,
+  type ReactNode
+} from 'react'
 
-import { DataContext } from '~/src/context/index.js'
-import { findList } from '~/src/data/index.js'
-import { i18n } from '~/src/i18n/index.js'
+import { DataContext } from '~/src/context/DataContext.js'
+import { findList } from '~/src/data/list/findList.js'
+import { i18n } from '~/src/i18n/i18n.jsx'
 import logger from '~/src/plugins/logger.js'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 import { Actions as ComponentActions } from '~/src/reducers/component/types.js'
@@ -15,6 +22,7 @@ import {
 } from '~/src/reducers/list/listsEditorReducer.jsx'
 import { ListActions } from '~/src/reducers/listActions.jsx'
 import { ListContext } from '~/src/reducers/listReducer.jsx'
+
 export function ComponentListSelect() {
   const { data } = useContext(DataContext)
   const { state: listsEditorState, dispatch: listsEditorDispatch } =
@@ -62,19 +70,19 @@ export function ComponentListSelect() {
     }
   }, [listsEditorState.isEditingList, selectedList?.name, isAddingNew])
 
-  const editList = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const editList = (e: ChangeEvent<HTMLSelectElement>) => {
     dispatch({
       type: ComponentActions.SET_SELECTED_LIST,
       payload: e.target.value
     })
   }
 
-  const handleEditListClick = (e: React.MouseEvent) => {
+  const handleEditListClick = (e: MouseEvent) => {
     e.preventDefault()
     listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST, true])
   }
 
-  const handleAddListClick = (e: React.MouseEvent) => {
+  const handleAddListClick = (e: MouseEvent) => {
     e.preventDefault()
     setIsAddingNew(true)
     listDispatch({ type: ListActions.ADD_NEW_LIST })
@@ -105,7 +113,7 @@ export function ComponentListSelect() {
             (
               list: {
                 name: string | number | readonly string[] | undefined
-                title: React.ReactNode
+                title: ReactNode
               },
               index: number
             ) => {
@@ -140,5 +148,3 @@ export function ComponentListSelect() {
     </>
   )
 }
-
-export default ComponentListSelect

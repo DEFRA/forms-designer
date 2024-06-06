@@ -7,13 +7,13 @@ import React, {
   type FormEvent
 } from 'react'
 
-import ComponentTypeEdit from '~/src/ComponentTypeEdit.jsx'
-import { BackLink } from '~/src/components/BackLink/index.js'
+import { ComponentTypeEdit } from '~/src/ComponentTypeEdit.jsx'
+import { ErrorSummary } from '~/src/ErrorSummary.jsx'
+import { BackLink } from '~/src/components/BackLink/BackLink.jsx'
 import { ComponentCreateList } from '~/src/components/ComponentCreate/ComponentCreateList.jsx'
-import { DataContext } from '~/src/context/index.js'
-import { addComponent } from '~/src/data/index.js'
-import { ErrorSummary } from '~/src/error-summary.jsx'
-import { i18n } from '~/src/i18n/index.js'
+import { DataContext } from '~/src/context/DataContext.js'
+import { addComponent } from '~/src/data/component/addComponent.js'
+import { i18n } from '~/src/i18n/i18n.jsx'
 import logger from '~/src/plugins/logger.js'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 import { Actions } from '~/src/reducers/component/types.js'
@@ -155,5 +155,3 @@ export function ComponentCreate(props) {
     </div>
   )
 }
-
-export default ComponentCreate

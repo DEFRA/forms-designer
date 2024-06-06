@@ -1,4 +1,4 @@
-import { FormConfiguration } from '~/src/form/index.js'
+import { FormConfiguration } from '~/src/form/form-configuration/index.js'
 
 describe('Form configuration', () => {
   test('should return provided items if provided', () => {

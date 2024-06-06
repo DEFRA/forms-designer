@@ -2,10 +2,10 @@ import { type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { act, cleanup, render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import React, { useReducer } from 'react'
+import React, { useReducer, type ReactNode } from 'react'
 
 import { ComponentListSelect } from '~/src/components/ComponentListSelect/ComponentListSelect.jsx'
-import { DataContext } from '~/src/context/index.js'
+import { DataContext } from '~/src/context/DataContext.js'
 import {
   ComponentContext,
   componentReducer,
@@ -58,7 +58,7 @@ describe('ComponentListSelect', () => {
   const dataValue = { data, save: jest.fn() }
 
   interface IContextProvider {
-    children?: any
+    children?: ReactNode
     dataValue: any
     componentValue: any
     errors?: any

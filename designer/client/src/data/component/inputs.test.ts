@@ -1,6 +1,7 @@
 import { type FormDefinition } from '@defra/forms-model'
 
-import { allInputs, type Input } from '~/src/data/index.js'
+import { allInputs } from '~/src/data/component/inputs.js'
+import { type Input } from '~/src/data/types.js'
 
 test('should return all inputs from the page model', () => {
   const data: FormDefinition = {

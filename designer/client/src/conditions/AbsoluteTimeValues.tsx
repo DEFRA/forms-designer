@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { isInt } from '~/src/conditions/inline-condition-helpers.js'
 
@@ -18,14 +18,14 @@ interface Props {
 }
 
 export const AbsoluteTimeValues = ({ value = {}, updateValue }: Props) => {
-  const [hour, setHour] = React.useState(() =>
+  const [hour, setHour] = useState(() =>
     isInt(value.hour) ? value.hour.toString() : ''
   )
-  const [minute, setMinute] = React.useState(() =>
+  const [minute, setMinute] = useState(() =>
     isInt(value.minute) ? value.minute.toString() : ''
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     const parsedHour = parseInt(hour, 10)
     const parsedMinute = parseInt(minute, 10)
     if (

@@ -1,5 +1,5 @@
 import { isValid } from 'date-fns'
-import React from 'react'
+import React, { useState } from 'react'
 
 import {
   AbsoluteDateValues,
@@ -10,7 +10,7 @@ import {
   type HourMinute
 } from '~/src/conditions/AbsoluteTimeValues.jsx'
 import { isInt } from '~/src/conditions/inline-condition-helpers.js'
-import { i18n } from '~/src/i18n/index.js'
+import { i18n } from '~/src/i18n/i18n.jsx'
 
 interface Props {
   value?: Date
@@ -18,7 +18,7 @@ interface Props {
 }
 
 export const AbsoluteDateTimeValues = ({ value, updateValue }: Props) => {
-  const [dateTimeParts, setDateTimeParts] = React.useState(() => {
+  const [dateTimeParts, setDateTimeParts] = useState(() => {
     return {
       year: value?.getUTCFullYear(),
       month: value && value.getUTCMonth() + 1,

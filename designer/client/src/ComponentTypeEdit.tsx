@@ -1,16 +1,16 @@
 import { ComponentTypes } from '@defra/forms-model'
 import React, { useContext } from 'react'
 
-import { DateFieldEdit } from '~/src/components/FieldEditors/date-field-edit.jsx'
-import DetailsEdit from '~/src/components/FieldEditors/details-edit.jsx'
-import ListFieldEdit from '~/src/components/FieldEditors/list-field-edit.jsx'
-import { NumberFieldEdit } from '~/src/components/FieldEditors/number-field-edit.jsx'
-import { ParaEdit } from '~/src/components/FieldEditors/para-edit.jsx'
-import SelectFieldEdit from '~/src/components/FieldEditors/select-field-edit.jsx'
-import { TextFieldEdit } from '~/src/components/FieldEditors/text-field-edit.jsx'
-import FieldEdit from '~/src/field-edit.jsx'
-import { FileUploadFieldEdit } from '~/src/file-upload-field-edit.jsx'
-import { MultilineTextFieldEdit } from '~/src/multiline-text-field-edit.js'
+import { FieldEdit } from '~/src/FieldEdit.jsx'
+import { FileUploadFieldEdit } from '~/src/FileUploadFieldEdit.jsx'
+import { MultilineTextFieldEdit } from '~/src/MultilineTextFieldEdit.jsx'
+import { DateFieldEdit } from '~/src/components/FieldEditors/DateFieldEdit.jsx'
+import { DetailsEdit } from '~/src/components/FieldEditors/DetailsEdit.jsx'
+import { ListFieldEdit } from '~/src/components/FieldEditors/ListFieldEdit.jsx'
+import { NumberFieldEdit } from '~/src/components/FieldEditors/NumberFieldEdit.jsx'
+import { ParaEdit } from '~/src/components/FieldEditors/ParaEdit.jsx'
+import { SelectFieldEdit } from '~/src/components/FieldEditors/SelectFieldEdit.jsx'
+import { TextFieldEdit } from '~/src/components/FieldEditors/TextFieldEdit.jsx'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 
 const componentTypeEditors = {
@@ -35,7 +35,7 @@ const componentTypeEditors = {
   DateField: DateFieldEdit
 }
 
-function ComponentTypeEdit(props) {
+export function ComponentTypeEdit(props) {
   const { context = ComponentContext, page } = props
   const { state } = useContext(context)
   const { selectedComponent } = state
@@ -58,5 +58,3 @@ function ComponentTypeEdit(props) {
     </div>
   )
 }
-
-export default ComponentTypeEdit

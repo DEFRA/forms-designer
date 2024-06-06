@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom'
 
-import { initI18n } from './src/i18n/index.js'
+import { initI18n } from './src/i18n/i18n.jsx'
 
 Object.defineProperty(window, 'matchMedia', {
   writable: true,

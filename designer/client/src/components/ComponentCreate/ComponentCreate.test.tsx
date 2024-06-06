@@ -8,11 +8,11 @@ import {
   type RenderResult
 } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import React from 'react'
+import React, { type ReactElement } from 'react'
 
-import { ComponentCreate } from '~/src/components/ComponentCreate/index.js'
-import { DataContext } from '~/src/context/index.js'
-import { ComponentContextProvider } from '~/src/reducers/component/index.js'
+import { ComponentCreate } from '~/src/components/ComponentCreate/ComponentCreate.jsx'
+import { DataContext } from '~/src/context/DataContext.js'
+import { ComponentContextProvider } from '~/src/reducers/component/componentReducer.jsx'
 
 describe('ComponentCreate:', () => {
   const {
@@ -35,7 +35,7 @@ describe('ComponentCreate:', () => {
   const page = { path: '/1' }
 
   function customRender(
-    element: JSX.Element,
+    element: ReactElement,
     providerProps = { data, save: jest.fn() }
   ): RenderResult {
     return render(
