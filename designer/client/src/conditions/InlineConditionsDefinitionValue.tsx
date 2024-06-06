@@ -115,7 +115,7 @@ export const InlineConditionsDefinitionValue = ({
   if (CustomComponent) {
     return <CustomComponent value={value} updateValue={updateValue} />
   }
-  return (fieldDef.values.length ?? 0) > 0 ? (
+  return (fieldDef.values?.length ?? 0) > 0 ? (
     <SelectValues
       fieldDef={fieldDef}
       operator={operator}
