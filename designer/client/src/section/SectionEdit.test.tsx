@@ -2,7 +2,7 @@ import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
 import React from 'react'
 
-import SectionEdit from '~/src/section/SectionEdit.jsx'
+import { SectionEdit } from '~/src/section/SectionEdit.jsx'
 import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
 describe('Section edit fields', () => {

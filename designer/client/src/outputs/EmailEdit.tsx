@@ -12,7 +12,7 @@ interface Props {
   errors: ValidationErrors
 }
 
-const EmailEdit = ({ output, errors = {} }: Props) => {
+export const EmailEdit = ({ output, errors = {} }: Props) => {
   const outputConfiguration = (
     typeof output.outputConfiguration === 'object'
       ? output.outputConfiguration
@@ -38,5 +38,3 @@ const EmailEdit = ({ output, errors = {} }: Props) => {
     </div>
   )
 }
-
-export default EmailEdit

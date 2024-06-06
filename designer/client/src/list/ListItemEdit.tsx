@@ -10,7 +10,7 @@ import {
 } from '~/src/reducers/list/listsEditorReducer.jsx'
 import { ListContext } from '~/src/reducers/listReducer.jsx'
 
-export default function ListItemEdit() {
+export function ListItemEdit() {
   const { dispatch: listsEditorDispatch } = useContext(ListsEditorContext)
   const { state, dispatch } = useContext(ListContext)
   const { data, save } = useContext(DataContext)

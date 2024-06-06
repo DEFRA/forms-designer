@@ -1,7 +1,7 @@
 import { type FormDefinition } from '@defra/forms-model'
 import React, { Component, type KeyboardEvent } from 'react'
 
-import LinkEdit from '~/src/LinkEdit.jsx'
+import { LinkEdit } from '~/src/LinkEdit.jsx'
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import {
   type Layout,

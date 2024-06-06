@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import ComponentEdit from '~/src/ComponentEdit.jsx'
+import { ComponentEdit } from '~/src/ComponentEdit.jsx'
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import { SearchIcon } from '~/src/components/Icons/SearchIcon.jsx'
 import { i18n } from '~/src/i18n/i18n.jsx'

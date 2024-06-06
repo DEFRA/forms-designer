@@ -1,14 +1,14 @@
 import React from 'react'
 
 import { Autocomplete } from '~/src/components/Autocomplete/Autocomplete.jsx'
-import ListFieldEdit from '~/src/components/FieldEditors/ListFieldEdit.jsx'
+import { ListFieldEdit } from '~/src/components/FieldEditors/ListFieldEdit.jsx'
 import { i18n } from '~/src/i18n/i18n.jsx'
 
 interface Props {
   page: any // TODO
 }
 
-function SelectFieldEdit({ page }: Props) {
+export function SelectFieldEdit({ page }: Props) {
   return (
     <ListFieldEdit page={page}>
       <details className="govuk-details">
@@ -23,5 +23,3 @@ function SelectFieldEdit({ page }: Props) {
     </ListFieldEdit>
   )
 }
-
-export default SelectFieldEdit

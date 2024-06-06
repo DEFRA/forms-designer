@@ -1,7 +1,7 @@
 import React, { Component, type MouseEvent } from 'react'
 
 import { DataContext } from '~/src/context/DataContext.js'
-import OutputEdit from '~/src/outputs/OutputEdit.jsx'
+import { OutputEdit } from '~/src/outputs/OutputEdit.jsx'
 import { type Output } from '~/src/outputs/types.js'
 import randomId from '~/src/randomId.js'
 
@@ -13,7 +13,7 @@ interface State {
   id?: string
 }
 
-class OutputsEdit extends Component<Props, State> {
+export class OutputsEdit extends Component<Props, State> {
   static contextType = DataContext
   constructor(props) {
     super(props)
@@ -92,5 +92,3 @@ class OutputsEdit extends Component<Props, State> {
     )
   }
 }
-
-export default OutputsEdit

@@ -1,7 +1,7 @@
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import React, { createRef, Component } from 'react'
 
-import ErrorSummary from '~/src/ErrorSummary.jsx'
+import { ErrorSummary } from '~/src/ErrorSummary.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { addSection } from '~/src/data/section/addSection.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
@@ -13,7 +13,7 @@ import {
   hasValidationErrors
 } from '~/src/validations.js'
 
-export default class SectionEdit extends Component {
+export class SectionEdit extends Component {
   static contextType = DataContext
 
   constructor(props) {

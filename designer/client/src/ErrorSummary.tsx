@@ -83,5 +83,3 @@ export function ErrorSummary({
     </div>
   )
 }
-
-export default ErrorSummary

@@ -71,7 +71,7 @@ const SortableList = SortableContainer(
   }
 )
 
-export default function ListItems() {
+export function ListItems() {
   const { state: listEditorState, dispatch: listsEditorDispatch } =
     useContext(ListsEditorContext)
   const { isEditingStatic } = listEditorState

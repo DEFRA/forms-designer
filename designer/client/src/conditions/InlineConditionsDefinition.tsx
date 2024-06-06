@@ -15,7 +15,7 @@ function isCondition(fieldDef) {
   return fieldDef?.type === 'Condition'
 }
 
-class InlineConditionsDefinition extends Component {
+export class InlineConditionsDefinition extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -238,5 +238,3 @@ class InlineConditionsDefinition extends Component {
     )
   }
 }
-
-export default InlineConditionsDefinition

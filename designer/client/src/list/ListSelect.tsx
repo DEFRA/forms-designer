@@ -63,4 +63,3 @@ export function ListSelect() {
     </>
   )
 }
-export default ListSelect

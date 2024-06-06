@@ -8,7 +8,7 @@ interface Props {
   errors: ValidationErrors
 }
 
-const WebhookEdit = ({ url = '', errors }: Props) => (
+export const WebhookEdit = ({ url = '', errors }: Props) => (
   <Input
     id="webhook-url"
     name="webhook-url"
@@ -21,5 +21,3 @@ const WebhookEdit = ({ url = '', errors }: Props) => (
     errorMessage={errors.url ? { children: errors.url.children } : undefined}
   />
 )
-
-export default WebhookEdit

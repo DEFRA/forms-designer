@@ -8,7 +8,7 @@ import React, { Component, type ChangeEvent } from 'react'
 
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
-import InlineConditions from '~/src/conditions/InlineConditions.jsx'
+import { InlineConditions } from '~/src/conditions/InlineConditions.jsx'
 import {
   isDuplicateCondition,
   hasConditionName,
@@ -45,7 +45,7 @@ export interface ConditionData {
   value: string | ConditionObject
 }
 
-class SelectConditions extends Component<Props, State> {
+export class SelectConditions extends Component<Props, State> {
   static contextType = DataContext
 
   constructor(props, context) {
@@ -327,5 +327,3 @@ class SelectConditions extends Component<Props, State> {
     )
   }
 }
-
-export default SelectConditions

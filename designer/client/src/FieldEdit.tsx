@@ -263,4 +263,3 @@ export function FieldEdit({
     </div>
   )
 }
-export default FieldEdit

@@ -4,7 +4,7 @@ import { act, cleanup, render, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React from 'react'
 
-import OutputEdit from '~/src/outputs/OutputEdit.jsx'
+import { OutputEdit } from '~/src/outputs/OutputEdit.jsx'
 import { RenderWithContextAndDataContext } from '~/test/helpers/renderers.jsx'
 
 describe('OutputEdit', () => {

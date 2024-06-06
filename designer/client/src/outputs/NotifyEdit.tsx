@@ -5,7 +5,7 @@ import React, { Component } from 'react'
 import { ErrorMessage } from '~/src/components/ErrorMessage/ErrorMessage.jsx'
 import { allInputs } from '~/src/data/component/inputs.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
-import NotifyEditItems from '~/src/outputs/NotifyEditItems.jsx'
+import { NotifyEditItems } from '~/src/outputs/NotifyEditItems.jsx'
 import {
   type Output,
   type NotifyOutputConfiguration,
@@ -21,7 +21,7 @@ interface Props {
   errors: ValidationErrors
 }
 
-class NotifyEdit extends Component<Props, State> {
+export class NotifyEdit extends Component<Props, State> {
   usableKeys: { name: string; display: string }[]
 
   constructor(props: Props) {
@@ -146,5 +146,3 @@ class NotifyEdit extends Component<Props, State> {
     )
   }
 }
-
-export default NotifyEdit

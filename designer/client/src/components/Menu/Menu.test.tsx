@@ -9,7 +9,7 @@ import {
 import { userEvent } from '@testing-library/user-event'
 import React, { type ReactNode } from 'react'
 
-import Menu from '~/src/components/Menu/Menu.jsx'
+import { Menu } from '~/src/components/Menu/Menu.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { FlyoutContext } from '~/src/context/FlyoutContext.js'
 

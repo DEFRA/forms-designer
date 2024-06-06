@@ -2,7 +2,7 @@ import { type FormDefinition } from '@defra/forms-model'
 import React, { Component } from 'react'
 
 import { DesignerApi } from '~/src/api/designerApi.js'
-import Menu from '~/src/components/Menu/Menu.jsx'
+import { Menu } from '~/src/components/Menu/Menu.jsx'
 import { Visualisation } from '~/src/components/Visualisation/Visualisation.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { FlyoutContext } from '~/src/context/FlyoutContext.js'
@@ -21,7 +21,7 @@ interface State {
   page?: any
 }
 
-export default class Designer extends Component<Props, State> {
+export class Designer extends Component<Props, State> {
   state: State = { loading: true, flyoutCount: 0 }
 
   designerApi = new DesignerApi()

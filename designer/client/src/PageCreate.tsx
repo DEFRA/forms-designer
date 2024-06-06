@@ -1,10 +1,10 @@
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import React, { Component } from 'react'
 
-import ErrorSummary from '~/src/ErrorSummary.jsx'
+import { ErrorSummary } from '~/src/ErrorSummary.jsx'
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
-import SelectConditions from '~/src/conditions/SelectConditions.jsx'
+import { SelectConditions } from '~/src/conditions/SelectConditions.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { addLink } from '~/src/data/page/addLink.js'
 import { addPage } from '~/src/data/page/addPage.js'
@@ -12,10 +12,10 @@ import { toUrl } from '~/src/helpers.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import logger from '~/src/plugins/logger.js'
 import randomId from '~/src/randomId.js'
-import SectionEdit from '~/src/section/SectionEdit.jsx'
+import { SectionEdit } from '~/src/section/SectionEdit.jsx'
 import { validateTitle, hasValidationErrors } from '~/src/validations.js'
 
-export default class PageCreate extends Component {
+export class PageCreate extends Component {
   static contextType = DataContext
 
   constructor(props, context) {

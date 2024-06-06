@@ -1,15 +1,15 @@
 import classNames from 'classnames'
 import React, { Component } from 'react'
 
-import ErrorSummary from '~/src/ErrorSummary.jsx'
+import { ErrorSummary } from '~/src/ErrorSummary.jsx'
 import { ErrorMessage } from '~/src/components/ErrorMessage/ErrorMessage.jsx'
-import SelectConditions from '~/src/conditions/SelectConditions.jsx'
+import { SelectConditions } from '~/src/conditions/SelectConditions.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { addLink } from '~/src/data/page/addLink.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import logger from '~/src/plugins/logger.js'
 
-class LinkCreate extends Component {
+export class LinkCreate extends Component {
   static contextType = DataContext
   state = { errors: {} }
 
@@ -151,5 +151,3 @@ class LinkCreate extends Component {
     )
   }
 }
-
-export default LinkCreate

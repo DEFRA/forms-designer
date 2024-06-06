@@ -4,7 +4,7 @@ import { act, cleanup, render, type RenderResult } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React, { type ReactElement } from 'react'
 
-import ConditionsEdit from '~/src/conditions/ConditionsEdit.jsx'
+import { ConditionsEdit } from '~/src/conditions/ConditionsEdit.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { FlyoutContext } from '~/src/context/FlyoutContext.js'
 

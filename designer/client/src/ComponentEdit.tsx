@@ -1,8 +1,8 @@
 import { ComponentTypeEnum as Types } from '@defra/forms-model'
 import React, { useContext, useLayoutEffect } from 'react'
 
-import ComponentTypeEdit from '~/src/ComponentTypeEdit.jsx'
-import ErrorSummary from '~/src/ErrorSummary.jsx'
+import { ComponentTypeEdit } from '~/src/ComponentTypeEdit.jsx'
+import { ErrorSummary } from '~/src/ErrorSummary.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { updateComponent } from '~/src/data/component/updateComponent.js'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
@@ -17,7 +17,7 @@ const LIST_TYPES = [
   Types.YesNoField
 ]
 
-export default function ComponentEdit(props) {
+export function ComponentEdit(props) {
   const { data, save } = useContext(DataContext)
   const { state, dispatch } = useContext(ComponentContext)
   const {

@@ -3,9 +3,9 @@ import React, { Component } from 'react'
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
-import SectionEdit from '~/src/section/SectionEdit.jsx'
+import { SectionEdit } from '~/src/section/SectionEdit.jsx'
 
-class SectionsEdit extends Component {
+export class SectionsEdit extends Component {
   static contextType = DataContext
   state = {}
 
@@ -79,5 +79,3 @@ class SectionsEdit extends Component {
     )
   }
 }
-
-export default SectionsEdit

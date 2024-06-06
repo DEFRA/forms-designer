@@ -1,7 +1,7 @@
 import { cleanup, render } from '@testing-library/react'
 import React, { type ReactNode } from 'react'
 
-import DetailsEdit from '~/src/components/FieldEditors/DetailsEdit.jsx'
+import { DetailsEdit } from '~/src/components/FieldEditors/DetailsEdit.jsx'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 
 describe('details-edit', () => {

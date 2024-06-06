@@ -13,7 +13,7 @@ import {
 } from 'react-sortable-hoc'
 
 import { Component } from '~/src/Component.jsx'
-import PageEdit from '~/src/PageEdit.jsx'
+import { PageEdit } from '~/src/PageEdit.jsx'
 import { ComponentCreate } from '~/src/components/ComponentCreate/ComponentCreate.jsx'
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import { PageLinkage } from '~/src/components/PageLinkage/PageLinkage.jsx'

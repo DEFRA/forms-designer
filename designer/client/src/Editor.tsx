@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import SimpleEditor from 'react-simple-code-editor'
 import 'prismjs/components/prism-markup.js'
 
-class Editor extends Component {
+export class Editor extends Component {
   constructor(props) {
     super(props)
 
@@ -40,5 +40,3 @@ class Editor extends Component {
     )
   }
 }
-
-export default Editor

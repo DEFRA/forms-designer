@@ -1,7 +1,7 @@
 import { type ContentOptions } from '@defra/forms-model'
 import React, { useContext } from 'react'
 
-import Editor from '~/src/Editor.jsx'
+import { Editor } from '~/src/Editor.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'

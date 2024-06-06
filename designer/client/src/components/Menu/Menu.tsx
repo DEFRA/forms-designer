@@ -1,27 +1,27 @@
 import React, { useContext } from 'react'
 
-import DeclarationEdit from '~/src/DeclarationEdit.jsx'
-import LinkCreate from '~/src/LinkCreate.jsx'
-import PageCreate from '~/src/PageCreate.jsx'
+import { DeclarationEdit } from '~/src/DeclarationEdit.jsx'
+import { LinkCreate } from '~/src/LinkCreate.jsx'
+import { PageCreate } from '~/src/PageCreate.jsx'
 import { DataPrettyPrint } from '~/src/components/DataPrettyPrint/DataPrettyPrint.jsx'
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import { SubMenu } from '~/src/components/Menu/SubMenu.jsx'
 import { useMenuItem } from '~/src/components/Menu/useMenuItem.jsx'
 import { Tabs } from '~/src/components/Tabs/Tabs.jsx'
-import ConditionsEdit from '~/src/conditions/ConditionsEdit.jsx'
+import { ConditionsEdit } from '~/src/conditions/ConditionsEdit.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
-import ListsEdit from '~/src/list/ListsEdit.jsx'
-import OutputsEdit from '~/src/outputs/OutputsEdit.jsx'
+import { ListsEdit } from '~/src/list/ListsEdit.jsx'
+import { OutputsEdit } from '~/src/outputs/OutputsEdit.jsx'
 import { ListsEditorContextProvider } from '~/src/reducers/list/listsEditorReducer.jsx'
 import { ListContextProvider } from '~/src/reducers/listReducer.jsx'
-import SectionsEdit from '~/src/section/SectionsEdit.jsx'
+import { SectionsEdit } from '~/src/section/SectionsEdit.jsx'
 
 interface Props {
   id: string
 }
 
-export default function Menu({ id }: Props) {
+export function Menu({ id }: Props) {
   const { data } = useContext(DataContext)
 
   const page = useMenuItem()

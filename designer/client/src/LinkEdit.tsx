@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 
-import SelectConditions from '~/src/conditions/SelectConditions.jsx'
+import { SelectConditions } from '~/src/conditions/SelectConditions.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { findPage } from '~/src/data/page/findPage.js'
 import { updateLink } from '~/src/data/page/updateLink.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import logger from '~/src/plugins/logger.js'
 
-class LinkEdit extends Component {
+export class LinkEdit extends Component {
   static contextType = DataContext
 
   constructor(props, context) {
@@ -141,5 +141,3 @@ class LinkEdit extends Component {
     })
   }
 }
-
-export default LinkEdit

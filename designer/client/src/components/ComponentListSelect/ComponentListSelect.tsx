@@ -22,6 +22,7 @@ import {
 } from '~/src/reducers/list/listsEditorReducer.jsx'
 import { ListActions } from '~/src/reducers/listActions.jsx'
 import { ListContext } from '~/src/reducers/listReducer.jsx'
+
 export function ComponentListSelect() {
   const { data } = useContext(DataContext)
   const { state: listsEditorState, dispatch: listsEditorDispatch } =
@@ -147,5 +148,3 @@ export function ComponentListSelect() {
     </>
   )
 }
-
-export default ComponentListSelect

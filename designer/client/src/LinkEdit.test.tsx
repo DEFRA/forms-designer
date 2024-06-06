@@ -4,7 +4,7 @@ import { act, cleanup, render, type RenderResult } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React, { type ReactElement } from 'react'
 
-import LinkCreate from '~/src/LinkCreate.jsx'
+import { LinkCreate } from '~/src/LinkCreate.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 
 const data: FormDefinition = {

@@ -2,7 +2,7 @@ import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
 import React from 'react'
 
-import PageCreate from '~/src/PageCreate.jsx'
+import { PageCreate } from '~/src/PageCreate.jsx'
 
 describe('page create fields text', () => {
   afterEach(cleanup)

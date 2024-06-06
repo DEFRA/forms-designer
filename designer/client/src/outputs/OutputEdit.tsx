@@ -7,11 +7,11 @@ import React, {
   type ReactNode
 } from 'react'
 
-import ErrorSummary from '~/src/ErrorSummary.jsx'
+import { ErrorSummary } from '~/src/ErrorSummary.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
-import EmailEdit from '~/src/outputs/EmailEdit.jsx'
-import NotifyEdit from '~/src/outputs/NotifyEdit.jsx'
-import WebhookEdit from '~/src/outputs/WebhookEdit.jsx'
+import { EmailEdit } from '~/src/outputs/EmailEdit.jsx'
+import { NotifyEdit } from '~/src/outputs/NotifyEdit.jsx'
+import { WebhookEdit } from '~/src/outputs/WebhookEdit.jsx'
 import {
   OutputType,
   type OutputConfiguration,
@@ -33,7 +33,7 @@ interface Props {
   output: Output
 }
 
-class OutputEdit extends Component<Props, State> {
+export class OutputEdit extends Component<Props, State> {
   static contextType = DataContext
 
   constructor(props: Props) {
@@ -309,5 +309,3 @@ class OutputEdit extends Component<Props, State> {
     )
   }
 }
-
-export default OutputEdit

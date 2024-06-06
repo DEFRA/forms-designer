@@ -4,7 +4,7 @@ interface Props {
   output: any // TODO
 }
 
-class EmailEdit extends Component<Props> {
+export class EmailEdit extends Component<Props> {
   render() {
     const { output } = this.props
     const outputConfiguration = output?.outputConfiguration ?? {
@@ -29,5 +29,3 @@ class EmailEdit extends Component<Props> {
     )
   }
 }
-
-export default EmailEdit

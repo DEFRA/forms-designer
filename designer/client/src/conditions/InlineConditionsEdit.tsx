@@ -8,9 +8,9 @@ import React, { Component } from 'react'
 import { EditIcon } from '~/src/components/Icons/EditIcon.jsx'
 import { MoveDownIcon } from '~/src/components/Icons/MoveDownIcon.jsx'
 import { MoveUpIcon } from '~/src/components/Icons/MoveUpIcon.jsx'
-import InlineConditionsDefinition from '~/src/conditions/InlineConditionsDefinition.jsx'
+import { InlineConditionsDefinition } from '~/src/conditions/InlineConditionsDefinition.jsx'
 
-class InlineConditionsEdit extends Component {
+export class InlineConditionsEdit extends Component {
   constructor(props) {
     super(props)
 
@@ -332,5 +332,3 @@ class InlineConditionsEdit extends Component {
     )
   }
 }
-
-export default InlineConditionsEdit

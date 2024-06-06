@@ -7,7 +7,7 @@ import React, {
   type FormEvent
 } from 'react'
 
-import ComponentTypeEdit from '~/src/ComponentTypeEdit.jsx'
+import { ComponentTypeEdit } from '~/src/ComponentTypeEdit.jsx'
 import { ErrorSummary } from '~/src/ErrorSummary.jsx'
 import { BackLink } from '~/src/components/BackLink/BackLink.jsx'
 import { ComponentCreateList } from '~/src/components/ComponentCreate/ComponentCreateList.jsx'
@@ -155,5 +155,3 @@ export function ComponentCreate(props) {
     </div>
   )
 }
-
-export default ComponentCreate
