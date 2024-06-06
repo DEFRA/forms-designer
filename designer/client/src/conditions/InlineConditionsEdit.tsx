@@ -10,7 +10,7 @@ import {
   MoveDownIcon,
   MoveUpIcon
 } from '~/src/components/Icons/index.js'
-import InlineConditionsDefinition from '~/src/conditions/InlineConditionsDefinition.js'
+import InlineConditionsDefinition from '~/src/conditions/InlineConditionsDefinition.jsx'
 
 class InlineConditionsEdit extends Component {
   constructor(props) {

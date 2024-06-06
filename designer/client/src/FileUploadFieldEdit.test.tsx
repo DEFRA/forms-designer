@@ -2,7 +2,7 @@ import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
 import React from 'react'
 
-import { FileUploadFieldEdit } from '~/src/file-upload-field-edit.jsx'
+import { FileUploadFieldEdit } from '~/src/FileUploadFieldEdit.jsx'
 import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
 describe('File upload', () => {

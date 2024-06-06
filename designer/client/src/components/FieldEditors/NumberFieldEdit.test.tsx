@@ -2,7 +2,7 @@ import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
 import React from 'react'
 
-import { NumberFieldEdit } from '~/src/components/FieldEditors/number-field-edit.jsx'
+import { NumberFieldEdit } from '~/src/components/FieldEditors/NumberFieldEdit.jsx'
 import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
 describe('Number field edit', () => {

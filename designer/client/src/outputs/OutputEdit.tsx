@@ -7,17 +7,17 @@ import React, {
   type ReactNode
 } from 'react'
 
+import ErrorSummary from '~/src/ErrorSummary.jsx'
 import { DataContext } from '~/src/context/index.js'
-import ErrorSummary from '~/src/error-summary.jsx'
-import EmailEdit from '~/src/outputs/email-edit.jsx'
-import NotifyEdit from '~/src/outputs/notify-edit.jsx'
+import EmailEdit from '~/src/outputs/EmailEdit.jsx'
+import NotifyEdit from '~/src/outputs/NotifyEdit.jsx'
+import WebhookEdit from '~/src/outputs/WebhookEdit.jsx'
 import {
   OutputType,
   type OutputConfiguration,
   type Output,
   type ValidationErrors
 } from '~/src/outputs/types.js'
-import WebhookEdit from '~/src/outputs/webhook-edit.jsx'
 import logger from '~/src/plugins/logger.js'
 import { validateNotEmpty, hasValidationErrors } from '~/src/validations.js'
 

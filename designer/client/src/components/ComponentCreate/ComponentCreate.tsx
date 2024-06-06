@@ -8,11 +8,11 @@ import React, {
 } from 'react'
 
 import ComponentTypeEdit from '~/src/ComponentTypeEdit.jsx'
+import { ErrorSummary } from '~/src/ErrorSummary.jsx'
 import { BackLink } from '~/src/components/BackLink/index.js'
 import { ComponentCreateList } from '~/src/components/ComponentCreate/ComponentCreateList.jsx'
 import { DataContext } from '~/src/context/index.js'
 import { addComponent } from '~/src/data/index.js'
-import { ErrorSummary } from '~/src/error-summary.jsx'
 import { i18n } from '~/src/i18n/index.js'
 import logger from '~/src/plugins/logger.js'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'

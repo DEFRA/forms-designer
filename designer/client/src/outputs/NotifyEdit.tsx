@@ -5,7 +5,7 @@ import React, { Component } from 'react'
 import { ErrorMessage } from '~/src/components/ErrorMessage/index.js'
 import { allInputs } from '~/src/data/index.js'
 import { i18n } from '~/src/i18n/index.js'
-import NotifyEditItems from '~/src/outputs/notify-edit-items.jsx'
+import NotifyEditItems from '~/src/outputs/NotifyEditItems.jsx'
 import {
   type Output,
   type NotifyOutputConfiguration,

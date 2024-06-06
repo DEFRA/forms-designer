@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { Autocomplete } from '~/src/components/Autocomplete/index.js'
-import ListFieldEdit from '~/src/components/FieldEditors/list-field-edit.jsx'
+import ListFieldEdit from '~/src/components/FieldEditors/ListFieldEdit.jsx'
 import { i18n } from '~/src/i18n/index.js'
 
 interface Props {

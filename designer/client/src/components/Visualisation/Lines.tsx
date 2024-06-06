@@ -1,13 +1,13 @@
 import { type FormDefinition } from '@defra/forms-model'
 import React, { Component, type KeyboardEvent } from 'react'
 
+import LinkEdit from '~/src/LinkEdit.jsx'
 import { Flyout } from '~/src/components/Flyout/index.js'
 import {
   type Layout,
   type Edge
 } from '~/src/components/Visualisation/getLayout.js'
 import { DataContext } from '~/src/context/index.js'
-import LinkEdit from '~/src/link-edit.js'
 
 interface Props {
   layout: Layout['pos']

@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 
-import { TextFieldEdit } from '~/src/components/FieldEditors/text-field-edit.jsx'
+import { TextFieldEdit } from '~/src/components/FieldEditors/TextFieldEdit.jsx'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 import { Actions } from '~/src/reducers/component/types.js'
 

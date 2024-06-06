@@ -1,6 +1,6 @@
 import { Coordinator } from '@defra/forms-model'
 
-import { type ConditionData } from '~/src/conditions/SelectConditions.js'
+import { type ConditionData } from '~/src/conditions/SelectConditions.jsx'
 import { conditionsByType } from '~/src/conditions/select-condition-helpers.js'
 
 const stringCondition = {

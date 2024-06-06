@@ -1,17 +1,17 @@
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import React, { Component } from 'react'
 
+import ErrorSummary from '~/src/ErrorSummary.jsx'
 import { Flyout } from '~/src/components/Flyout/index.js'
 import { RenderInPortal } from '~/src/components/RenderInPortal/index.js'
 import SelectConditions from '~/src/conditions/SelectConditions.jsx'
 import { DataContext } from '~/src/context/index.js'
 import { addLink, addPage } from '~/src/data/index.js'
-import ErrorSummary from '~/src/error-summary.jsx'
 import { toUrl } from '~/src/helpers.js'
 import { i18n, withI18n } from '~/src/i18n/index.js'
 import logger from '~/src/plugins/logger.js'
 import randomId from '~/src/randomId.js'
-import SectionEdit from '~/src/section/section-edit.js'
+import SectionEdit from '~/src/section/SectionEdit.jsx'
 import { validateTitle, hasValidationErrors } from '~/src/validations.js'
 
 class PageCreate extends Component {

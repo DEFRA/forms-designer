@@ -2,16 +2,16 @@ import { clone } from '@defra/forms-model'
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import React, { Component, createRef } from 'react'
 
+import ErrorSummary from '~/src/ErrorSummary.jsx'
 import { Flyout } from '~/src/components/Flyout/index.js'
 import { RenderInPortal } from '~/src/components/RenderInPortal/index.js'
 import { DataContext } from '~/src/context/index.js'
 import { findPage, updateLinksTo } from '~/src/data/index.js'
-import ErrorSummary from '~/src/error-summary.jsx'
 import { toUrl } from '~/src/helpers.js'
 import { withI18n } from '~/src/i18n/index.js'
 import logger from '~/src/plugins/logger.js'
 import randomId from '~/src/randomId.js'
-import SectionEdit from '~/src/section/section-edit.js'
+import SectionEdit from '~/src/section/SectionEdit.jsx'
 import { validateTitle, hasValidationErrors } from '~/src/validations.js'
 
 export class PageEdit extends Component {

@@ -2,7 +2,7 @@ import { type FormDefinition } from '@defra/forms-model'
 import { render } from '@testing-library/react'
 import React, { type ReactNode } from 'react'
 
-import { ParaEdit } from '~/src/components/FieldEditors/para-edit.jsx'
+import { ParaEdit } from '~/src/components/FieldEditors/ParaEdit.jsx'
 import { DataContext } from '~/src/context/index.js'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 

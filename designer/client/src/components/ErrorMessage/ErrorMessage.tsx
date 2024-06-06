@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 import React, { type FunctionComponent, type HTMLAttributes } from 'react'
 
-import { type ErrorListItem } from '~/src/error-summary'
+import { type ErrorListItem } from '~/src/ErrorSummary.jsx'
 import { i18n } from '~/src/i18n/index.js'
 
 interface Props extends HTMLAttributes<HTMLParagraphElement> {

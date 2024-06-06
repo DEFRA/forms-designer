@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import { Flyout } from '~/src/components/Flyout/index.js'
 import { RenderInPortal } from '~/src/components/RenderInPortal/index.js'
 import { DataContext } from '~/src/context/index.js'
-import SectionEdit from '~/src/section/section-edit.js'
+import SectionEdit from '~/src/section/SectionEdit.jsx'
 
 class SectionsEdit extends Component {
   static contextType = DataContext
@@ -17,7 +17,7 @@ class SectionsEdit extends Component {
     })
   }
 
-  // TODO:- This is borrowed from page-edit.js. Needs refactor. (hooks hooks hooks)
+  // TODO:- This is borrowed from PageEdit.jsx. Needs refactor. (hooks hooks hooks)
   closeFlyout = (sectionName) => {
     const propSection = this.state.section ?? this.props.page?.section ?? {}
 

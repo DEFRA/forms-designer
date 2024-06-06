@@ -15,7 +15,7 @@ interface Props {
   values: { name: string; display: string }[]
 }
 
-class NotifyItems extends Component<Props, State> {
+class NotifyEditItems extends Component<Props, State> {
   static contextType = DataContext
 
   constructor(props: Props) {
@@ -151,4 +151,4 @@ class NotifyItems extends Component<Props, State> {
   }
 }
 
-export default NotifyItems
+export default NotifyEditItems

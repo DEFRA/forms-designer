@@ -2,9 +2,10 @@ import { ConditionsModel, clone, type Item } from '@defra/forms-model'
 import classNames from 'classnames'
 import React, { Component, type MouseEvent, type ChangeEvent } from 'react'
 
+import ErrorSummary, { type ErrorListItem } from '~/src/ErrorSummary.jsx'
 import { ErrorMessage } from '~/src/components/ErrorMessage/index.js'
-import InlineConditionsDefinition from '~/src/conditions/InlineConditionsDefinition.js'
-import InlineConditionsEdit from '~/src/conditions/inline-conditions-edit.js'
+import InlineConditionsDefinition from '~/src/conditions/InlineConditionsDefinition.jsx'
+import InlineConditionsEdit from '~/src/conditions/InlineConditionsEdit.jsx'
 import { DataContext } from '~/src/context/index.js'
 import {
   addCondition,
@@ -14,7 +15,6 @@ import {
   removeCondition,
   updateCondition
 } from '~/src/data/index.js'
-import ErrorSummary, { type ErrorListItem } from '~/src/error-summary.jsx'
 import { i18n } from '~/src/i18n/index.js'
 import randomId from '~/src/randomId.js'
 
