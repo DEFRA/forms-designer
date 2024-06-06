@@ -1,8 +1,8 @@
 import React, { useContext } from 'react'
 
-import { Flyout } from '~/src/components/Flyout/index.js'
-import { RenderInPortal } from '~/src/components/RenderInPortal/index.js'
-import { i18n } from '~/src/i18n/index.js'
+import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
+import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
+import { i18n } from '~/src/i18n/i18n.jsx'
 import ListEdit from '~/src/list/ListEdit.jsx'
 import ListItemEdit from '~/src/list/ListItemEdit.jsx'
 import ListSelect from '~/src/list/ListSelect.jsx'

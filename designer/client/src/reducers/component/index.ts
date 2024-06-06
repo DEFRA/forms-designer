@@ -1,5 +1,0 @@
-export { metaReducer } from '~/src/reducers/component/componentReducer.meta.js'
-export { optionsReducer } from '~/src/reducers/component/componentReducer.options.js'
-export { fieldsReducer } from '~/src/reducers/component/componentReducer.fields.js'
-export { schemaReducer } from '~/src/reducers/component/componentReducer.schema.js'
-export { ComponentContextProvider } from '~/src/reducers/component/componentReducer.jsx'

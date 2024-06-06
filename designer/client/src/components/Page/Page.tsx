@@ -14,13 +14,13 @@ import {
 
 import { Component } from '~/src/Component.jsx'
 import PageEdit from '~/src/PageEdit.jsx'
-import { ComponentCreate } from '~/src/components/ComponentCreate/index.js'
-import { Flyout } from '~/src/components/Flyout/index.js'
-import { PageLinkage } from '~/src/components/PageLinkage/index.js'
-import { DataContext } from '~/src/context/index.js'
-import { findPage } from '~/src/data/index.js'
-import { i18n } from '~/src/i18n/index.js'
-import { ComponentContextProvider } from '~/src/reducers/component/index.js'
+import { ComponentCreate } from '~/src/components/ComponentCreate/ComponentCreate.jsx'
+import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
+import { PageLinkage } from '~/src/components/PageLinkage/PageLinkage.jsx'
+import { DataContext } from '~/src/context/DataContext.js'
+import { findPage } from '~/src/data/page/findPage.js'
+import { i18n } from '~/src/i18n/i18n.jsx'
+import { ComponentContextProvider } from '~/src/reducers/component/componentReducer.jsx'
 
 const SortableItem = SortableElement(
   (props: {

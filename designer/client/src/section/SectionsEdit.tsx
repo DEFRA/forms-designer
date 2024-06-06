@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 
-import { Flyout } from '~/src/components/Flyout/index.js'
-import { RenderInPortal } from '~/src/components/RenderInPortal/index.js'
-import { DataContext } from '~/src/context/index.js'
+import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
+import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
+import { DataContext } from '~/src/context/DataContext.js'
 import SectionEdit from '~/src/section/SectionEdit.jsx'
 
 class SectionsEdit extends Component {

@@ -1,7 +1,8 @@
 import { render, type RenderResult } from '@testing-library/react'
 import React, { type ReactElement } from 'react'
 
-import { DataContext, FlyoutContext } from '~/src/context/index.js'
+import { DataContext } from '~/src/context/DataContext.js'
+import { FlyoutContext } from '~/src/context/FlyoutContext.js'
 import {
   initListsEditingState,
   ListsEditorContext

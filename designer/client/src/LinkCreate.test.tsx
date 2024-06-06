@@ -11,7 +11,7 @@ import { userEvent } from '@testing-library/user-event'
 import React, { type ReactElement } from 'react'
 
 import LinkCreate from '~/src/LinkCreate.jsx'
-import { DataContext } from '~/src/context/index.js'
+import { DataContext } from '~/src/context/DataContext.js'
 
 const rawData: FormDefinition = {
   pages: [

@@ -1,6 +1,6 @@
 import { type FormDefinition, type Page } from '@defra/forms-model'
 
-import { type Found, type Path } from '~/src/data/index.js'
+import { type Found, type Path } from '~/src/data/types.js'
 
 /**
  * @returns returns a tuple of [Page, number]

@@ -8,7 +8,7 @@ import React, {
 } from 'react'
 
 import ErrorSummary from '~/src/ErrorSummary.jsx'
-import { DataContext } from '~/src/context/index.js'
+import { DataContext } from '~/src/context/DataContext.js'
 import EmailEdit from '~/src/outputs/EmailEdit.jsx'
 import NotifyEdit from '~/src/outputs/NotifyEdit.jsx'
 import WebhookEdit from '~/src/outputs/WebhookEdit.jsx'

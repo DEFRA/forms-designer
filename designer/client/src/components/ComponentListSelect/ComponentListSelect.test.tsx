@@ -5,7 +5,7 @@ import { userEvent } from '@testing-library/user-event'
 import React, { useReducer, type ReactNode } from 'react'
 
 import { ComponentListSelect } from '~/src/components/ComponentListSelect/ComponentListSelect.jsx'
-import { DataContext } from '~/src/context/index.js'
+import { DataContext } from '~/src/context/DataContext.js'
 import {
   ComponentContext,
   componentReducer,

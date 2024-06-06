@@ -5,7 +5,8 @@ import { userEvent } from '@testing-library/user-event'
 import React, { type ReactElement } from 'react'
 
 import ConditionsEdit from '~/src/conditions/ConditionsEdit.jsx'
-import { DataContext, FlyoutContext } from '~/src/context/index.js'
+import { DataContext } from '~/src/context/DataContext.js'
+import { FlyoutContext } from '~/src/context/FlyoutContext.js'
 
 const flyoutValue = {
   increment: jest.fn(),

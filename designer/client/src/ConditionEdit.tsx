@@ -2,8 +2,9 @@ import { ConditionsWrapper } from '@defra/forms-model'
 import React, { Component } from 'react'
 
 import Editor from '~/src/Editor.jsx'
-import { DataContext } from '~/src/context/index.js'
-import { removeCondition, updateCondition } from '~/src/data/index.js'
+import { DataContext } from '~/src/context/DataContext.js'
+import { removeCondition } from '~/src/data/condition/removeCondition.js'
+import { updateCondition } from '~/src/data/condition/updateCondition.js'
 import logger from '~/src/plugins/logger.js'
 
 class ConditionEdit extends Component {

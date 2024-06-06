@@ -10,8 +10,8 @@ import {
 import { userEvent } from '@testing-library/user-event'
 import React, { type ReactElement } from 'react'
 
-import { Visualisation } from '~/src/components/Visualisation/index.js'
-import { DataContext } from '~/src/context/index.js'
+import { Visualisation } from '~/src/components/Visualisation/Visualisation.jsx'
+import { DataContext } from '~/src/context/DataContext.js'
 
 function customRender(
   element: ReactElement,

@@ -1,6 +1,6 @@
 import { type ComponentDef } from '@defra/forms-model'
 
-import { isNotContentType } from '~/src/data/index.js'
+import { isNotContentType } from '~/src/data/helpers.js'
 
 describe('Type guards', () => {
   describe('isNotContentType', () => {

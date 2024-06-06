@@ -3,7 +3,7 @@ import { render } from '@testing-library/react'
 import React, { type ReactNode } from 'react'
 
 import { ParaEdit } from '~/src/components/FieldEditors/ParaEdit.jsx'
-import { DataContext } from '~/src/context/index.js'
+import { DataContext } from '~/src/context/DataContext.js'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 
 describe('ParaEdit', () => {

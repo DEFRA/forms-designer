@@ -9,7 +9,7 @@ import {
 import React, { Component } from 'react'
 
 import { InlineConditionsDefinitionValue } from '~/src/conditions/InlineConditionsDefinitionValue.jsx'
-import { i18n } from '~/src/i18n/index.js'
+import { i18n } from '~/src/i18n/i18n.jsx'
 
 function isCondition(fieldDef) {
   return fieldDef?.type === 'Condition'

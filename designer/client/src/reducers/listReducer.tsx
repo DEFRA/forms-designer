@@ -7,7 +7,7 @@ import React, {
   type ReactNode
 } from 'react'
 
-import { DataContext } from '~/src/context/index.js'
+import { DataContext } from '~/src/context/DataContext.js'
 import { arrayMove } from '~/src/helpers.js'
 import randomId from '~/src/randomId.js'
 import { ListActions } from '~/src/reducers/listActions.jsx'

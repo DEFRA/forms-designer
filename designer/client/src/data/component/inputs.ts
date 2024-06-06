@@ -1,11 +1,8 @@
 import { type FormDefinition } from '@defra/forms-model'
 
-import {
-  type Input,
-  isNotContentType,
-  type Path,
-  allPathsLeadingTo
-} from '~/src/data/index.js'
+import { isNotContentType } from '~/src/data/helpers.js'
+import { allPathsLeadingTo } from '~/src/data/page/allPathsLeadingTo.js'
+import { type Input, type Path } from '~/src/data/types.js'
 
 export function allInputs(data: FormDefinition): Input[] {
   const { pages = [] } = data

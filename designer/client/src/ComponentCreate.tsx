@@ -2,8 +2,8 @@ import { ComponentTypes } from '@defra/forms-model'
 import React, { Component } from 'react'
 
 import ComponentTypeEdit from '~/src/ComponentTypeEdit.jsx'
-import { DataContext } from '~/src/context/index.js'
-import { addComponent } from '~/src/data/index.js'
+import { DataContext } from '~/src/context/DataContext.js'
+import { addComponent } from '~/src/data/component/addComponent.js'
 import randomId from '~/src/randomId.js'
 
 /**

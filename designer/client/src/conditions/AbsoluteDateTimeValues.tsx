@@ -10,7 +10,7 @@ import {
   type HourMinute
 } from '~/src/conditions/AbsoluteTimeValues.jsx'
 import { isInt } from '~/src/conditions/inline-condition-helpers.js'
-import { i18n } from '~/src/i18n/index.js'
+import { i18n } from '~/src/i18n/i18n.jsx'
 
 interface Props {
   value?: Date

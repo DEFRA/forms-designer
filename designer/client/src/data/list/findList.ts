@@ -1,6 +1,6 @@
 import { type FormDefinition, type List } from '@defra/forms-model'
 
-import { type Found } from '~/src/data/index.js'
+import { type Found } from '~/src/data/types.js'
 
 export function findList(
   data: FormDefinition,

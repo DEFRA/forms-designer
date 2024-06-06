@@ -2,9 +2,9 @@ import { Checkboxes, Input } from '@xgovformbuilder/govuk-react-jsx'
 import classNames from 'classnames'
 import React, { Component } from 'react'
 
-import { ErrorMessage } from '~/src/components/ErrorMessage/index.js'
-import { allInputs } from '~/src/data/index.js'
-import { i18n } from '~/src/i18n/index.js'
+import { ErrorMessage } from '~/src/components/ErrorMessage/ErrorMessage.jsx'
+import { allInputs } from '~/src/data/component/inputs.js'
+import { i18n } from '~/src/i18n/i18n.jsx'
 import NotifyEditItems from '~/src/outputs/NotifyEditItems.jsx'
 import {
   type Output,

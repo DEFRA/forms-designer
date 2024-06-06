@@ -10,9 +10,9 @@ import {
 import { userEvent } from '@testing-library/user-event'
 import React, { type ReactElement } from 'react'
 
-import { ComponentCreate } from '~/src/components/ComponentCreate/index.js'
-import { DataContext } from '~/src/context/index.js'
-import { ComponentContextProvider } from '~/src/reducers/component/index.js'
+import { ComponentCreate } from '~/src/components/ComponentCreate/ComponentCreate.jsx'
+import { DataContext } from '~/src/context/DataContext.js'
+import { ComponentContextProvider } from '~/src/reducers/component/componentReducer.jsx'
 
 describe('ComponentCreate:', () => {
   const {

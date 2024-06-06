@@ -4,7 +4,7 @@ import { cleanup, render, type RenderResult } from '@testing-library/react'
 import React, { type ReactElement } from 'react'
 
 import SelectConditions from '~/src/conditions/SelectConditions.jsx'
-import { DataContext } from '~/src/context/index.js'
+import { DataContext } from '~/src/context/DataContext.js'
 
 describe('SelectConditions', () => {
   afterEach(cleanup)

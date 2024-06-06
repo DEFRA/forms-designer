@@ -1,7 +1,7 @@
 import { shallow } from 'enzyme'
 import React from 'react'
 
-import { withI18n, i18n } from '~/src/i18n/index.js'
+import { withI18n, i18n } from '~/src/i18n/i18n.jsx'
 
 describe('I18n', () => {
   test('withI18n HOC passes down i18n translation function', () => {

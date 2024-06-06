@@ -1,7 +1,7 @@
 import { mount } from 'enzyme'
 import React from 'react'
 
-import { RenderInPortal } from '~/src/components/RenderInPortal/index.js'
+import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
 
 describe('RenderInPortal component', () => {
   test('renders paragraph inside portal', () => {

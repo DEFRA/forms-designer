@@ -2,7 +2,7 @@ import { ConditionsModel } from '~/src/conditions/condition-model.js'
 import {
   type ConditionRawData,
   type ConditionWrapperValue
-} from '~/src/form/types.js'
+} from '~/src/form/form-definition/types.js'
 
 export class ConditionsWrapper {
   name: string

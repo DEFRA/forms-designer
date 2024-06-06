@@ -1,5 +1,5 @@
 import { isEmpty } from '~/src/helpers.js'
-import { i18n } from '~/src/i18n/index.js'
+import { i18n } from '~/src/i18n/i18n.jsx'
 
 export function hasValidationErrors(errors = {}) {
   return Object.keys(errors).length > 0

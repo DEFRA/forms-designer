@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 
 import ComponentEdit from '~/src/ComponentEdit.jsx'
-import { Flyout } from '~/src/components/Flyout/index.js'
-import { SearchIcon } from '~/src/components/Icons/index.js'
-import { i18n } from '~/src/i18n/index.js'
+import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
+import { SearchIcon } from '~/src/components/Icons/SearchIcon.jsx'
+import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContextProvider } from '~/src/reducers/component/componentReducer.jsx'
 
 export const componentTypes = {

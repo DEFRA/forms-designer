@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 
-import { i18n } from '~/src/i18n/index.js'
+import { i18n } from '~/src/i18n/i18n.jsx'
 
 export interface ErrorListItem {
   reactListKey?: string

@@ -1,9 +1,9 @@
 import { Hint, Input, Label, Textarea } from '@xgovformbuilder/govuk-react-jsx'
 import React, { memo, useContext, type FormEvent } from 'react'
 
-import { DataContext } from '~/src/context/index.js'
-import { useListItem } from '~/src/hooks/list/useListItem/index.jsx'
-import { i18n } from '~/src/i18n/index.js'
+import { DataContext } from '~/src/context/DataContext.js'
+import { useListItem } from '~/src/hooks/list/useListItem/useListItem.jsx'
+import { i18n } from '~/src/i18n/i18n.jsx'
 import {
   ListsEditorContext,
   ListsEditorStateActions

@@ -5,11 +5,9 @@ import {
 } from '@defra/forms-model'
 import React, { Component } from 'react'
 
-import {
-  EditIcon,
-  MoveDownIcon,
-  MoveUpIcon
-} from '~/src/components/Icons/index.js'
+import { EditIcon } from '~/src/components/Icons/EditIcon.jsx'
+import { MoveDownIcon } from '~/src/components/Icons/MoveDownIcon.jsx'
+import { MoveUpIcon } from '~/src/components/Icons/MoveUpIcon.jsx'
 import InlineConditionsDefinition from '~/src/conditions/InlineConditionsDefinition.jsx'
 
 class InlineConditionsEdit extends Component {

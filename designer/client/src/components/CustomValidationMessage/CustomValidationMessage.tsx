@@ -1,7 +1,7 @@
 import { type TelephoneNumberFieldComponent } from '@defra/forms-model'
 import React, { useContext } from 'react'
 
-import { i18n } from '~/src/i18n/index.js'
+import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 import { Actions } from '~/src/reducers/component/types.js'
 

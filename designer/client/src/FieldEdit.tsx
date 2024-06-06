@@ -2,8 +2,8 @@ import { ComponentTypes } from '@defra/forms-model'
 import { Input, Textarea } from '@xgovformbuilder/govuk-react-jsx'
 import React, { useContext } from 'react'
 
-import { ErrorMessage } from '~/src/components/ErrorMessage/index.js'
-import { i18n } from '~/src/i18n/index.js'
+import { ErrorMessage } from '~/src/components/ErrorMessage/ErrorMessage.jsx'
+import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 import { Actions } from '~/src/reducers/component/types.js'
 

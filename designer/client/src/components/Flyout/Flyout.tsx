@@ -9,8 +9,8 @@ import React, {
   type ReactNode
 } from 'react'
 
-import { FlyoutContext } from '~/src/context/index.js'
-import { i18n } from '~/src/i18n/index.js'
+import { FlyoutContext } from '~/src/context/FlyoutContext.js'
+import { i18n } from '~/src/i18n/i18n.jsx'
 
 interface Props {
   style?: string

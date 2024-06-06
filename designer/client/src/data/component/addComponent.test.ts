@@ -1,6 +1,6 @@
 import { type FormDefinition } from '@defra/forms-model'
 
-import { addComponent } from '~/src/data/index.js'
+import { addComponent } from '~/src/data/component/addComponent.js'
 
 test('addComponent throws an error when no page can be found', () => {
   const data: FormDefinition = {

@@ -1,5 +1,5 @@
 import { type ComponentDef } from '~/src/components/types.js'
-import { type Page } from '~/src/form/types.js'
+import { type Page } from '~/src/form/form-definition/types.js'
 import { clone } from '~/src/utils/helpers.js'
 
 export class InputWrapper {

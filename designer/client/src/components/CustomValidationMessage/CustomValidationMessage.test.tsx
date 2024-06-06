@@ -3,7 +3,7 @@ import { act, cleanup, render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React from 'react'
 
-import { CustomValidationMessage } from '~/src/components/CustomValidationMessage/index.js'
+import { CustomValidationMessage } from '~/src/components/CustomValidationMessage/CustomValidationMessage.jsx'
 import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
 describe('CssClasses', () => {

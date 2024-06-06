@@ -4,7 +4,7 @@ import { cleanup, render } from '@testing-library/react'
 import React, { useReducer } from 'react'
 
 import ComponentTypeEdit from '~/src/ComponentTypeEdit.jsx'
-import { DataContext } from '~/src/context/index.js'
+import { DataContext } from '~/src/context/DataContext.js'
 import {
   ComponentContext,
   componentReducer,

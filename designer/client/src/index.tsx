@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 
 import Designer from '~/src/Designer.jsx'
-import { initI18n } from '~/src/i18n/index.js'
+import { initI18n } from '~/src/i18n/i18n.jsx'
 
 initI18n()
 

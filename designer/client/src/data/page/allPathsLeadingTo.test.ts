@@ -1,6 +1,6 @@
 import { type FormDefinition } from '@defra/forms-model'
 
-import { allPathsLeadingTo } from '~/src/data/index.js'
+import { allPathsLeadingTo } from '~/src/data/page/allPathsLeadingTo.js'
 
 test('allPathsLeadingTo should work with cycle in paths', () => {
   const data: FormDefinition = {

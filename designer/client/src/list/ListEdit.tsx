@@ -2,9 +2,9 @@ import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import React, { useContext } from 'react'
 
 import ErrorSummary from '~/src/ErrorSummary.jsx'
-import { DataContext } from '~/src/context/index.js'
-import { addList } from '~/src/data/index.js'
-import { i18n } from '~/src/i18n/index.js'
+import { DataContext } from '~/src/context/DataContext.js'
+import { addList } from '~/src/data/list/addList.js'
+import { i18n } from '~/src/i18n/i18n.jsx'
 import ListItems from '~/src/list/ListItems.jsx'
 import {
   ListsEditorContext,

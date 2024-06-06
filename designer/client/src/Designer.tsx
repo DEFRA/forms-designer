@@ -3,8 +3,9 @@ import React, { Component } from 'react'
 
 import { DesignerApi } from '~/src/api/designerApi.js'
 import Menu from '~/src/components/Menu/Menu.jsx'
-import { Visualisation } from '~/src/components/Visualisation/index.js'
-import { FlyoutContext, DataContext } from '~/src/context/index.js'
+import { Visualisation } from '~/src/components/Visualisation/Visualisation.jsx'
+import { DataContext } from '~/src/context/DataContext.js'
+import { FlyoutContext } from '~/src/context/FlyoutContext.js'
 
 interface Props {
   id: string

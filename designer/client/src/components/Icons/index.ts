@@ -1,5 +1,0 @@
-export { ChevronRightIcon } from '~/src/components/Icons/ChevronRightIcon.jsx'
-export { EditIcon } from '~/src/components/Icons/EditIcon.jsx'
-export { MoveDownIcon } from '~/src/components/Icons/MoveDownIcon.jsx'
-export { MoveUpIcon } from '~/src/components/Icons/MoveUpIcon.jsx'
-export { SearchIcon } from '~/src/components/Icons/SearchIcon.jsx'

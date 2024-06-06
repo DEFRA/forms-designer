@@ -2,8 +2,8 @@ import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import classNames from 'classnames'
 import React, { useContext } from 'react'
 
-import { ErrorMessage } from '~/src/components/ErrorMessage/index.js'
-import { withI18n } from '~/src/i18n/index.js'
+import { ErrorMessage } from '~/src/components/ErrorMessage/ErrorMessage.jsx'
+import { withI18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 import { Actions } from '~/src/reducers/component/types.js'
 
