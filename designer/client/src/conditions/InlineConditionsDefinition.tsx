@@ -4,7 +4,8 @@ import {
   ConditionRef,
   conditionValueFrom,
   getOperatorNames,
-  clone
+  clone,
+  Coordinator
 } from '@defra/forms-model'
 import React, { Component } from 'react'
 
@@ -154,9 +155,12 @@ export class InlineConditionsDefinition extends Component {
     const fieldDef = fields[condition.field?.name]
 
     return (
-      <div className="govuk-form-group" id="condition-definition-group">
+      <div id="condition-definition-group" className="govuk-!-margin-bottom-6">
         {expectsCoordinator && (
-          <div className="govuk-form-group" id="cond-coordinator-group">
+          <div className="govuk-form-group govuk-!-margin-bottom-3">
+            <label className="govuk-label" htmlFor="cond-coordinator">
+              {i18n('conditions.conditionCoordinator')}
+            </label>
             <select
               className="govuk-select"
               id="cond-coordinator"
@@ -165,74 +169,87 @@ export class InlineConditionsDefinition extends Component {
               onChange={this.onChangeCoordinator}
             >
               <option />
-              <option key="and" value="and">
+              <option key="and" value={Coordinator.AND}>
                 And
               </option>
-              <option key="or" value="or">
+              <option key="or" value={Coordinator.OR}>
                 Or
               </option>
             </select>
           </div>
         )}
         {(condition.coordinator || !expectsCoordinator) && (
-          <div id="condition-definition-inputs">
-            <select
-              className="govuk-select"
-              id="cond-field"
-              name="cond-field"
-              value={condition?.field?.name ?? ''}
-              onChange={this.onChangeField}
-            >
-              <option />
-              {Object.values(this.props.fields).map((field, index) => (
-                <option key={`${field.name}-${index}`} value={field.name}>
-                  {field.label}
-                </option>
-              ))}
-            </select>
-
-            {fieldDef && !isCondition(fieldDef) && (
+          <>
+            <div className="govuk-form-group govuk-!-margin-bottom-3">
+              <label className="govuk-label" htmlFor="cond-field">
+                {i18n('conditions.conditionField')}
+              </label>
               <select
                 className="govuk-select"
-                id="cond-operator"
-                name="cond-operator"
-                value={condition.operator ?? ''}
-                onChange={this.onChangeOperator}
+                id="cond-field"
+                name="cond-field"
+                value={condition?.field?.name ?? ''}
+                onChange={this.onChangeField}
               >
                 <option />
-                {getOperatorNames(fieldDef.type).map((conditional) => {
-                  return (
-                    <option
-                      key={`${condition.field}-${conditional}`}
-                      value={conditional}
-                    >
-                      {conditional}
-                    </option>
-                  )
-                })}
+                {Object.values(this.props.fields).map((field, index) => (
+                  <option key={`${field.name}-${index}`} value={field.name}>
+                    {field.label}
+                  </option>
+                ))}
               </select>
+            </div>
+
+            {fieldDef && !isCondition(fieldDef) && (
+              <div className="govuk-form-group govuk-!-margin-bottom-3">
+                <label className="govuk-label" htmlFor="cond-operator">
+                  {i18n('conditions.conditionOperator')}
+                </label>
+                <select
+                  className="govuk-select"
+                  id="cond-operator"
+                  name="cond-operator"
+                  value={condition.operator ?? ''}
+                  onChange={this.onChangeOperator}
+                >
+                  <option />
+                  {getOperatorNames(fieldDef.type).map((conditional) => {
+                    return (
+                      <option
+                        key={`${condition.field}-${conditional}`}
+                        value={conditional}
+                      >
+                        {conditional}
+                      </option>
+                    )
+                  })}
+                </select>
+              </div>
             )}
 
             {condition.operator && (
-              <InlineConditionsDefinitionValue
-                fieldDef={fieldDef}
-                value={condition.value}
-                operator={condition.operator}
-                updateValue={this.updateValue}
-              />
+              <div className="govuk-form-group govuk-!-margin-bottom-3">
+                <InlineConditionsDefinitionValue
+                  fieldDef={fieldDef}
+                  value={condition.value}
+                  operator={condition.operator}
+                  updateValue={this.updateValue}
+                />
+              </div>
             )}
             {(condition.value || isCondition(fieldDef)) && (
-              <div className="govuk-form-group">
+              <div className="govuk-button-group">
                 <button
                   id="save-condition"
-                  className="govuk-link"
+                  className="govuk-button govuk-button--secondary"
+                  type="button"
                   onClick={this.onClickFinalise}
                 >
                   {i18n('add')}
                 </button>
               </div>
             )}
-          </div>
+          </>
         )}
       </div>
     )

@@ -132,7 +132,7 @@ export class InlineConditions extends Component<Props, State> {
     }
   }
 
-  onClickSave = async (event: MouseEvent<HTMLAnchorElement>) => {
+  onClickSave = async (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
     const { conditionsChange, condition } = this.props
     const { data, save } = this.context
@@ -164,7 +164,7 @@ export class InlineConditions extends Component<Props, State> {
     }
   }
 
-  onClickDelete = async (event: MouseEvent<HTMLAnchorElement>) => {
+  onClickDelete = async (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
     const { data, save } = this.context
     const { cancelCallback, condition } = this.props
@@ -242,12 +242,8 @@ export class InlineConditions extends Component<Props, State> {
                 !
               </span>
               <strong className="govuk-warning-text__text">
-                <span className="govuk-warning-text__assistive">
-                  {i18n('warning')}
-                </span>
-                {i18n('conditions.youCannotEditWarning', {
-                  conditionString
-                })}
+                <span className="govuk-visually-hidden">{i18n('warning')}</span>
+                {i18n('conditions.youCannotEditWarning', { conditionString })}
               </strong>
             </div>
           )}
@@ -277,34 +273,38 @@ export class InlineConditions extends Component<Props, State> {
                 onChange={this.onChangeDisplayName}
               />
             </div>
-            <label
-              className="govuk-label govuk-label--s"
-              id="condition-string-label"
-              htmlFor="condition-string"
-            >
-              {i18n('conditions.when')}
-            </label>
-            <div className="govuk-hint">{i18n('conditions.whenHint')}</div>
+            <h4 className="govuk-heading-s govuk-!-margin-bottom-1">
+              {i18n('conditions.condition')}
+            </h4>
+            <p className="govuk-hint govuk-!-margin-top-0">
+              {i18n('conditions.conditionHint')}
+            </p>
           </>
           {hasConditions && (
-            <div id="conditions-display">
-              <div key="condition-string" id="condition-string">
-                {conditions.toPresentationString()}
-              </div>
-              {!editView && (
-                  <a
-                    href="#"
-                    id="edit-conditions-link"
-                    className="govuk-link"
-                    onClick={(e) => {
-                      e.preventDefault()
-                      this.toggleEdit()
-                    }}
-                  >
-                    {i18n('conditions.notWhatYouMean')}
-                  </a>
-              )}
-            </div>
+            <ul
+              className="govuk-list govuk-list--bullet"
+              id="conditions-display"
+            >
+              <li key="condition-string" id="condition-string">
+                <strong>{conditions.toPresentationString()}</strong>
+                {!editView && (
+                  <>
+                    <br />
+                    <a
+                      href="#"
+                      id="edit-conditions-link"
+                      className="govuk-link"
+                      onClick={(e) => {
+                        e.preventDefault()
+                        this.toggleEdit()
+                      }}
+                    >
+                      {i18n('conditions.edit')}
+                    </a>
+                  </>
+                )}
+              </li>
+            </ul>
           )}
         </div>
         {!editView && (
@@ -317,23 +317,23 @@ export class InlineConditions extends Component<Props, State> {
             <div className="govuk-button-group">
               {hasConditions && (
                 <>
-                  <a
-                    href="#"
+                  <button
                     id="save-inline-conditions"
                     className="govuk-button"
+                    type="button"
                     onClick={this.onClickSave}
                   >
                     {i18n('save')}
-                  </a>
+                  </button>
                   {this.props.condition && (
-                    <a
-                      href="#"
+                    <button
                       id="delete-inline-conditions"
                       className="govuk-button govuk-button--warning"
+                      type="button"
                       onClick={this.onClickDelete}
                     >
                       {i18n('delete')}
-                    </a>
+                    </button>
                   )}
                 </>
               )}

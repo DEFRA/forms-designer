@@ -3,8 +3,10 @@ import {
   toPresentationString,
   clone
 } from '@defra/forms-model'
-import React, { Component } from 'react'
+import classNames from 'classnames'
+import React, { Component, Fragment } from 'react'
 
+import { ErrorMessage } from '~/src/components/ErrorMessage/ErrorMessage.jsx'
 import { EditIcon } from '~/src/components/Icons/EditIcon.jsx'
 import { MoveDownIcon } from '~/src/components/Icons/MoveDownIcon.jsx'
 import { MoveUpIcon } from '~/src/components/Icons/MoveUpIcon.jsx'
@@ -66,20 +68,14 @@ export class InlineConditionsEdit extends Component {
     }
   }
 
-  onClickRemove = (e) => {
-    e?.preventDefault()
-    if (this.state.selectedConditions.length < 1) {
-      this.setState({
-        editingError: 'Please select at least 1 item to remove'
-      })
-    } else {
-      this.setState({
-        editingError: undefined,
-        selectedConditions: [],
-        conditions: this.state.conditions.remove(this.state.selectedConditions),
-        condition: undefined
-      })
-    }
+  onClickRemove = (index) => {
+    this.setState({
+      editingError: undefined,
+      selectedConditions: [],
+      conditions: this.state.conditions.remove([index]),
+      condition: undefined
+    })
+
     if (!this.state.conditions.hasConditions) {
       this.props.exitCallback()
     }
@@ -166,104 +162,102 @@ export class InlineConditionsEdit extends Component {
     return (
       <div id="edit-conditions">
         {!editingIndex && editingIndex !== 0 && (
-          <fieldset className="govuk-fieldset">
-            <legend className="govuk-fieldset__legend govuk-fieldset__legend--l">
-              Amend conditions
-            </legend>
-            {editingError && (
-              <span id="conditions-error" className="govuk-error-message">
-                <span className="govuk-visually-hidden">Error:</span>{' '}
-                {editingError}
-              </span>
-            )}
-            <div id="editing-checkboxes" className="govuk-checkboxes">
-              {conditions.asPerUserGroupings.map((condition, index) => {
-                return (
-                  <div
-                    key={`condition-checkbox-${index}`}
-                    className="govuk-checkboxes__item"
-                    style={{ display: 'flex' }}
-                  >
-                    <input
-                      type="checkbox"
-                      className="govuk-checkboxes__input"
-                      id={`condition-${index}`}
-                      name={`condition-${index}`}
-                      value={index}
-                      onChange={this.onChangeCheckbox}
-                      checked={selectedConditions.includes(index) || ''}
-                    />
-                    <label
-                      className="govuk-label govuk-checkboxes__label"
-                      htmlFor={`condition-${index}`}
+          <div className="govuk-form-group">
+            <fieldset className="govuk-fieldset">
+              <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">
+                Amend conditions
+              </legend>
+              {editingError && <ErrorMessage>{editingError}</ErrorMessage>}
+              <div
+                id="editing-checkboxes"
+                className="govuk-checkboxes govuk-checkboxes--small"
+              >
+                {conditions.asPerUserGroupings.map((condition, index) => {
+                  const isChecked = selectedConditions.includes(index)
+
+                  return (
+                    <Fragment key={`condition-checkbox-${index}`}>
+                      <div className="govuk-checkboxes__item">
+                        <input
+                          type="checkbox"
+                          className="govuk-checkboxes__input"
+                          id={`condition-${index}`}
+                          name={`condition-${index}`}
+                          value={index}
+                          onChange={this.onChangeCheckbox}
+                          checked={isChecked ?? undefined}
+                        />
+                        <label
+                          className="govuk-label govuk-checkboxes__label"
+                          htmlFor={`condition-${index}`}
+                        >
+                          {toPresentationString(condition)}
+                        </label>
+                      </div>
+                      <div
+                        className={classNames(
+                          'govuk-checkboxes__conditional',
+                          !isChecked
+                            ? 'govuk-checkboxes__conditional--hidden'
+                            : undefined
+                        )}
+                      >
+                        <div className="govuk-button-group">
+                          {condition.isGroup() && (
+                            <a
+                              href="#"
+                              className="govuk-link govuk-!-margin-bottom-2"
+                              onClick={(e) => {
+                                e.preventDefault()
+                                this.onClickSplit(index)
+                              }}
+                            >
+                              Split
+                            </a>
+                          )}
+                          {!condition.isGroup() && (
+                            <a
+                              href="#"
+                              className="govuk-link govuk-!-margin-bottom-2"
+                              onClick={(e) => {
+                                e.preventDefault()
+                                this.onClickEdit(index)
+                              }}
+                            >
+                              Edit
+                            </a>
+                          )}
+                          {!selectedConditions.length || (
+                            <a
+                              href="#"
+                              className="govuk-link govuk-!-margin-bottom-2"
+                              onClick={(e) => {
+                                e.preventDefault()
+                                this.onClickRemove(index)
+                              }}
+                            >
+                              Remove
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    </Fragment>
+                  )
+                })}
+                {selectedConditions.length > 1 && (
+                  <div className="govuk-button-group">
+                    <a
+                      href="#"
+                      className="govuk-link"
+                      onClick={this.onClickGroup}
                     >
-                      {toPresentationString(condition)}
-                    </label>
-                    <span
-                      id={`condition-${index}-actions`}
-                      style={{ display: 'inline-flex', flexGrow: 1 }}
-                    >
-                      {condition.isGroup() && (
-                        <span style={{ flexGrow: 1 }}>
-                          <a
-                            href="#"
-                            id={`condition-${index}-split`}
-                            className="govuk-link"
-                            onClick={(e) => {
-                              e.preventDefault()
-                              this.onClickSplit(index)
-                            }}
-                          >
-                            Split
-                          </a>
-                        </span>
-                      )}
-                      {!condition.isGroup() && (
-                        <span style={{ flexGrow: 1 }}>
-                          <a
-                            href="#"
-                            id={`condition-${index}-edit`}
-                            className="govuk-link"
-                            onClick={(e) => {
-                              e.preventDefault()
-                              this.onClickEdit(index)
-                            }}
-                          >
-                            <EditIcon bottom={true} />
-                          </a>
-                        </span>
-                      )}
-                    </span>
+                      Group selected conditions
+                    </a>
                   </div>
-                )
-              })}
-            </div>
-            <div className="govuk-form-group" id="group-and-remove">
-              {selectedConditions.length > 1 && (
-                <span>
-                  <a
-                    href="#"
-                    id="group-conditions"
-                    className="govuk-link"
-                    onClick={this.onClickGroup}
-                  >
-                    Group
-                  </a>{' '}
-                  /
-                </span>
-              )}
-              {selectedConditions.length > 0 && (
-                <a
-                  href="#"
-                  id="remove-conditions"
-                  className="govuk-link"
-                  onClick={this.onClickRemove}
-                >
-                  Remove
-                </a>
-              )}
-            </div>
-          </fieldset>
+                )}
+              </div>
+            </fieldset>
+          </div>
         )}
         {editingIndex >= 0 && (
           <InlineConditionsDefinition
@@ -273,15 +267,15 @@ export class InlineConditionsEdit extends Component {
             saveCallback={this.saveCondition}
           />
         )}
-        <div className="govuk-form-group">
-          <a
-            href="#"
+        <div className="govuk-button-group">
+          <button
             id="cancel-edit-inline-conditions-link"
-            className="govuk-link"
+            className="govuk-button"
+            type="button"
             onClick={this.onClickCancelEditView}
           >
             Finished editing
-          </a>
+          </button>
         </div>
       </div>
     )

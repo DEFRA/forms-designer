@@ -39,31 +39,33 @@ export function ParaEdit({ context = ComponentContext }: Props) {
           }}
         />
       </div>
-      <div className="govuk-form-group">
-        <label className="govuk-label govuk-label--s" htmlFor="condition">
-          Condition (optional)
-        </label>
-        <div className="govuk-hint">{i18n('fieldEdit.conditions.hint')} </div>
-        <select
-          className="govuk-select"
-          id="condition"
-          name="options.condition"
-          value={options.condition}
-          onChange={(e) =>
-            dispatch({
-              type: Actions.EDIT_OPTIONS_CONDITION,
-              payload: e.target.value
-            })
-          }
-        >
-          <option value="" />
-          {conditions.map((condition) => (
-            <option key={condition.name} value={condition.name}>
-              {condition.displayName}
-            </option>
-          ))}
-        </select>
-      </div>
+      {!conditions.length || (
+        <div className="govuk-form-group">
+          <label className="govuk-label govuk-label--s" htmlFor="condition">
+            Condition (optional)
+          </label>
+          <div className="govuk-hint">{i18n('fieldEdit.conditions.hint')} </div>
+          <select
+            className="govuk-select"
+            id="condition"
+            name="options.condition"
+            value={options.condition}
+            onChange={(e) =>
+              dispatch({
+                type: Actions.EDIT_OPTIONS_CONDITION,
+                payload: e.target.value
+              })
+            }
+          >
+            <option value="" />
+            {conditions.map((condition) => (
+              <option key={condition.name} value={condition.name}>
+                {condition.displayName}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
     </>
   )
 }

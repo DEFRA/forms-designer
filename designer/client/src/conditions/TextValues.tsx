@@ -1,6 +1,8 @@
 import { ConditionValue } from '@defra/forms-model'
 import React from 'react'
 
+import { i18n } from '~/src/i18n/i18n.jsx'
+
 export const TextValues = (props) => {
   const { updateValue, value } = props
 
@@ -11,14 +13,19 @@ export const TextValues = (props) => {
   }
 
   return (
-    <input
-      className="govuk-input govuk-input--width-20"
-      id="cond-value"
-      name="cond-value"
-      type="text"
-      defaultValue={value?.value}
-      required
-      onChange={onChangeTextInput}
-    />
+    <>
+      <label className="govuk-label" htmlFor="cond-value">
+        {i18n('conditions.conditionValue')}
+      </label>
+      <input
+        className="govuk-input govuk-input--width-20"
+        id="cond-value"
+        name="cond-value"
+        type="text"
+        defaultValue={value?.value}
+        required
+        onChange={onChangeTextInput}
+      />
+    </>
   )
 }

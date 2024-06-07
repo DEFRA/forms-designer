@@ -292,7 +292,7 @@ export class SelectConditions extends Component<Props, State> {
               />
             )}
             {!inline && (
-              <div className="govuk-form-group">
+              <p className="govuk-body">
                 <a
                   href="#"
                   id="inline-conditions-link"
@@ -301,7 +301,7 @@ export class SelectConditions extends Component<Props, State> {
                 >
                   Define a new condition
                 </a>
-              </div>
+              </p>
             )}
             {inline && (
               <RenderInPortal>

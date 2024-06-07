@@ -47,6 +47,8 @@ export const AbsoluteDateTimeValues = ({ value, updateValue }: Props) => {
   const { year, month, day, hour, minute } = dateTimeParts
   return (
     <div className="govuk-form-group">
+      <p className="govuk-body">{i18n('enterDateTimeAsGmt')}</p>
+
       <AbsoluteDateValues
         value={{ year, month, day }}
         updateValue={dateTimeChanged}
@@ -55,7 +57,6 @@ export const AbsoluteDateTimeValues = ({ value, updateValue }: Props) => {
         value={{ hour, minute }}
         updateValue={dateTimeChanged}
       />
-      <div>{i18n('enterDateTimeAsGmt')}</div>
     </div>
   )
 }
