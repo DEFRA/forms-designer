@@ -1,4 +1,9 @@
-import { type FormDefinition } from '@defra/forms-model'
+import {
+  ComponentSubType,
+  ComponentType,
+  ConditionType,
+  type FormDefinition
+} from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { act } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
@@ -16,11 +21,11 @@ const data: FormDefinition = {
         {
           name: 'text',
           title: 'text',
+          type: ComponentType.TextField,
           schema: {},
           options: {
             required: true
-          },
-          type: 'TextField'
+          }
         }
       ],
       next: [
@@ -36,12 +41,13 @@ const data: FormDefinition = {
         {
           name: 'IDDQl4',
           title: 'abc',
+          list: 'myList',
+          type: ComponentType.SelectField,
+          subType: ComponentSubType.ListField,
           schema: {},
           options: {
             required: true
-          },
-          type: 'SelectField',
-          list: 'myList'
+          }
         }
       ]
     }
@@ -69,12 +75,12 @@ const data: FormDefinition = {
           {
             field: {
               name: 'text',
-              type: 'TextField',
+              type: ComponentType.TextField,
               display: 'text'
             },
             operator: 'is',
             value: {
-              type: 'Value',
+              type: ConditionType.Value,
               value: 'hello',
               display: 'hello'
             }

@@ -1,3 +1,8 @@
+import {
+  ComponentType,
+  ComponentSubType,
+  type ComponentDef
+} from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
 import React from 'react'
@@ -14,10 +19,14 @@ describe('File upload', () => {
     beforeEach(() => {
       stateProps = {
         component: {
-          type: 'FileUploadField',
           name: 'TestFileUpload',
-          options: {}
-        }
+          title: 'Test file upload',
+          hint: 'Text file upload hint',
+          type: ComponentType.FileUploadField,
+          subType: ComponentSubType.Field,
+          options: {},
+          schema: {}
+        } satisfies ComponentDef
       }
 
       render(

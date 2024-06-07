@@ -1,4 +1,4 @@
-import { type FormDefinition } from '@defra/forms-model'
+import { ComponentType, type FormDefinition } from '@defra/forms-model'
 import { render } from '@testing-library/react'
 import React, { type ReactNode } from 'react'
 
@@ -17,7 +17,7 @@ describe('ParaEdit', () => {
             {
               name: 'IDDQl4',
               title: 'abc',
-              type: 'Html',
+              type: ComponentType.Html,
               content: '',
               options: {},
               schema: {}

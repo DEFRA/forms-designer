@@ -1,4 +1,4 @@
-import { type FormDefinition } from '@defra/forms-model'
+import { ComponentType, type FormDefinition } from '@defra/forms-model'
 
 import { addComponent } from '~/src/data/component/addComponent.js'
 
@@ -23,9 +23,9 @@ test('addComponent adds a component to the correct page', () => {
         path: '/1',
         components: [
           {
-            type: 'TextField',
             name: 'firstName',
             title: 'First name',
+            type: ComponentType.TextField,
             options: {},
             schema: {}
           }
@@ -36,9 +36,9 @@ test('addComponent adds a component to the correct page', () => {
         path: '/2',
         components: [
           {
-            type: 'TextField',
             name: 'lastName',
             title: 'Surname',
+            type: ComponentType.TextField,
             options: {},
             schema: {}
           }
@@ -53,9 +53,9 @@ test('addComponent adds a component to the correct page', () => {
 
   expect(
     addComponent(data, '/1', {
-      type: 'TextField',
       name: 'aNewComponent',
       title: 'new component',
+      type: ComponentType.TextField,
       options: {},
       schema: {}
     })
@@ -66,16 +66,16 @@ test('addComponent adds a component to the correct page', () => {
         path: '/1',
         components: [
           {
-            type: 'TextField',
             name: 'firstName',
             title: 'First name',
+            type: ComponentType.TextField,
             options: {},
             schema: {}
           },
           {
-            type: 'TextField',
             name: 'aNewComponent',
             title: 'new component',
+            type: ComponentType.TextField,
             options: {},
             schema: {}
           }
@@ -86,9 +86,9 @@ test('addComponent adds a component to the correct page', () => {
         path: '/2',
         components: [
           {
-            type: 'TextField',
             name: 'lastName',
             title: 'Surname',
+            type: ComponentType.TextField,
             options: {},
             schema: {}
           }

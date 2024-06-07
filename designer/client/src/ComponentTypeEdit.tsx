@@ -1,4 +1,8 @@
-import { ComponentTypes } from '@defra/forms-model'
+import {
+  ComponentSubType,
+  ComponentType,
+  ComponentTypes
+} from '@defra/forms-model'
 import React, { useContext } from 'react'
 
 import { FieldEdit } from '~/src/FieldEdit.jsx'
@@ -43,15 +47,17 @@ export function ComponentTypeEdit(props) {
     (t) => t.name === selectedComponent?.type ?? ''
   )
 
-  const needsFieldInputs = type?.subType !== 'content' || type.name === 'List'
+  const needsFieldInputs =
+    type?.subType !== ComponentSubType.Content ||
+    type.name === ComponentType.List.toString()
 
   const TagName = componentTypeEditors[type?.name ?? '']
   return (
     <div>
       {needsFieldInputs && (
         <FieldEdit
-          isContentField={type?.subType === 'content'}
-          isListField={type?.subType === 'listField'}
+          isContentField={type?.subType === ComponentSubType.Content}
+          isListField={type?.subType === ComponentSubType.ListField}
         />
       )}
       {TagName && <TagName page={page} />}

@@ -1,4 +1,4 @@
-import { type FormDefinition } from '@defra/forms-model'
+import { ComponentType, type FormDefinition } from '@defra/forms-model'
 
 import { findPage } from '~/src/data/page/findPage.js'
 
@@ -11,16 +11,16 @@ const data: FormDefinition = {
       next: [{ path: '/2' }],
       components: [
         {
-          type: 'TextField',
           name: 'name1',
           title: 'Name 1',
+          type: ComponentType.TextField,
           options: {},
           schema: {}
         },
         {
-          type: 'TextField',
           name: 'name2',
           title: 'Name 2',
+          type: ComponentType.TextField,
           options: {},
           schema: {}
         }
@@ -33,16 +33,16 @@ const data: FormDefinition = {
       next: [{ path: '/3' }],
       components: [
         {
-          type: 'TextField',
           name: 'name3',
           title: 'Name 3',
+          type: ComponentType.TextField,
           options: {},
           schema: {}
         },
         {
-          type: 'TextField',
           name: 'name4',
           title: 'Name 4',
+          type: ComponentType.TextField,
           options: {},
           schema: {}
         }

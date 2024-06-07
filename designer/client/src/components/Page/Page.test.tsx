@@ -1,4 +1,4 @@
-import { type FormDefinition } from '@defra/forms-model'
+import { ComponentType, type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import {
   act,
@@ -32,29 +32,29 @@ const data: FormDefinition = {
       path: '/1',
       components: [
         {
-          type: 'TextField',
           name: 'firstName',
           title: 'First name',
+          type: ComponentType.TextField,
           options: {
             required: true
           },
           schema: {}
         },
         {
+          name: 'middleName',
+          title: 'Middle name',
+          type: ComponentType.TextField,
+          hint: 'If you have a middle name on your passport you must include it here',
           options: {
             required: false,
             optionalText: false
           },
-          type: 'TextField',
-          name: 'middleName',
-          title: 'Middle name',
-          hint: 'If you have a middle name on your passport you must include it here',
           schema: {}
         },
         {
-          type: 'TextField',
           name: 'lastName',
           title: 'Surname',
+          type: ComponentType.TextField,
           options: {
             required: true
           },

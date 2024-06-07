@@ -1,5 +1,5 @@
 import { ComponentTypes } from '~/src/components/component-types.js'
-import { type ComponentType } from '~/src/components/types.js'
+import { type ComponentType } from '~/src/components/enums.js'
 
 export class ConditionField {
   name: string

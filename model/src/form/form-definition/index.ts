@@ -1,8 +1,13 @@
 import Joi from 'joi'
 
+import {
+  type ComponentSubType,
+  type ComponentType
+} from '~/src/components/enums.js'
 import { type ComponentDef } from '~/src/components/types.js'
 import {
   type ConditionRawData,
+  type ConditionWrapperValue,
   type ConfirmationPage,
   type EmailOutputConfiguration,
   type FormDefinition,
@@ -75,21 +80,24 @@ const conditionGroupSchema = Joi.object().keys({
   )
 })
 
-const conditionsModelSchema = Joi.object().keys({
-  name: Joi.string().required(),
-  conditions: Joi.array().items(
-    Joi.alternatives().try(
-      conditionSchema,
-      conditionRefSchema,
-      conditionGroupSchema
+const conditionsModelSchema = Joi.alternatives<ConditionWrapperValue>().try(
+  Joi.string(),
+  Joi.object().keys({
+    name: Joi.string().required(),
+    conditions: Joi.array().items(
+      Joi.alternatives().try(
+        conditionSchema,
+        conditionRefSchema,
+        conditionGroupSchema
+      )
     )
-  )
-})
+  })
+)
 
 const conditionsSchema = Joi.object<ConditionRawData>().keys({
   name: Joi.string().required(),
   displayName: Joi.string(),
-  value: Joi.alternatives().try(Joi.string(), conditionsModelSchema).required()
+  value: conditionsModelSchema.required()
 })
 
 const localisedString = Joi.alternatives().try(
@@ -99,7 +107,8 @@ const localisedString = Joi.alternatives().try(
 
 export const componentSchema = Joi.object<ComponentDef>()
   .keys({
-    type: Joi.string().required(),
+    subType: Joi.string<ComponentSubType>().optional(),
+    type: Joi.string<ComponentType>().required(),
     name: Joi.string(),
     title: localisedString,
     hint: localisedString.optional(),

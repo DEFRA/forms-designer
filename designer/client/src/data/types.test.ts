@@ -1,4 +1,8 @@
-import { type ComponentDef } from '@defra/forms-model'
+import {
+  ComponentSubType,
+  ComponentType,
+  type ComponentDef
+} from '@defra/forms-model'
 
 import { isNotContentType } from '~/src/data/helpers.js'
 
@@ -6,27 +10,27 @@ describe('Type guards', () => {
   describe('isNotContentType', () => {
     it.each([
       {
-        type: 'TextField',
+        name: 'field',
         title: 'Input',
-        name: 'field',
+        type: ComponentType.TextField,
         options: {},
         schema: {}
       } satisfies ComponentDef,
       {
-        type: 'RadiosField',
-        subType: 'listField',
+        name: 'field',
         title: 'Radios',
+        type: ComponentType.RadiosField,
+        subType: ComponentSubType.ListField,
         list: 'items',
-        name: 'field',
         options: {},
         schema: {}
       } satisfies ComponentDef,
       {
-        type: 'CheckboxesField',
-        subType: 'listField',
-        title: 'Checkboxes',
-        list: 'items',
         name: 'field',
+        title: 'Checkboxes',
+        type: ComponentType.CheckboxesField,
+        subType: ComponentSubType.ListField,
+        list: 'items',
         options: {},
         schema: {}
       } satisfies ComponentDef
@@ -41,34 +45,34 @@ describe('Type guards', () => {
 
     it.each([
       {
-        type: 'Details',
+        name: 'content',
         title: 'Help with nationality',
+        type: ComponentType.Details,
         content: 'We need to know your nationality so we can work out…',
-        name: 'content',
         options: {},
         schema: {}
       } satisfies ComponentDef,
       {
-        type: 'Html',
+        name: 'content',
         title: 'HTML',
+        type: ComponentType.Html,
         content: '<p class="govuk-body">Some content</p>',
-        name: 'content',
         options: {},
         schema: {}
       } satisfies ComponentDef,
       {
-        type: 'InsetText',
+        name: 'content',
         title: '',
+        type: ComponentType.InsetText,
         content: 'It can take up to 8 weeks to register a lasting power of…',
-        name: 'content',
         options: {},
         schema: {}
       } satisfies ComponentDef,
       {
-        type: 'List',
-        title: 'Items',
-        list: 'items',
         name: 'field',
+        title: 'Items',
+        type: ComponentType.List,
+        list: 'items',
         options: {},
         schema: {}
       } satisfies ComponentDef

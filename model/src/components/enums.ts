@@ -1,4 +1,4 @@
-export enum ComponentTypeEnum {
+export enum ComponentType {
   TextField = 'TextField',
   MultilineTextField = 'MultilineTextField',
   YesNoField = 'YesNoField',
@@ -20,5 +20,12 @@ export enum ComponentTypeEnum {
   Html = 'Html',
   InsetText = 'InsetText',
   Details = 'Details',
-  List = 'List'
+  List = 'List',
+  WebsiteField = 'WebsiteField'
+}
+
+export enum ComponentSubType {
+  Content = 'content',
+  Field = 'field',
+  ListField = 'listField'
 }

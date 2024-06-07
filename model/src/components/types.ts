@@ -1,34 +1,12 @@
-export type ComponentType =
-  | 'TextField'
-  | 'MultilineTextField'
-  | 'YesNoField'
-  | 'DateField'
-  | 'TimeField'
-  | 'DateTimeField'
-  | 'MonthYearField'
-  | 'DatePartsField'
-  | 'DateTimePartsField'
-  | 'SelectField'
-  | 'AutocompleteField'
-  | 'RadiosField'
-  | 'CheckboxesField'
-  | 'NumberField'
-  | 'UkAddressField'
-  | 'TelephoneNumberField'
-  | 'EmailAddressField'
-  | 'FileUploadField'
-  | 'Html'
-  | 'InsetText'
-  | 'Details'
-  | 'List'
-  | 'WebsiteField'
-
-export type ComponentSubType = 'field' | 'content'
+import {
+  type ComponentSubType,
+  type ComponentType
+} from '~/src/components/enums.js'
 
 export interface ConditionalComponent {
-  name: 'TextField' | 'NumberField'
+  name: string
   title: string
-  subType: 'field'
+  subType: ComponentSubType.Field
 }
 
 export interface ContentOptions {
@@ -39,8 +17,16 @@ export interface ContentOptions {
  * Types for Components JSON structure which are expected by engine and turned into actual form input/content/lists
  */
 interface TextFieldBase {
-  subType?: 'field'
-  type: string
+  type:
+    | ComponentType.EmailAddressField
+    | ComponentType.MultilineTextField
+    | ComponentType.NumberField
+    | ComponentType.TelephoneNumberField
+    | ComponentType.TextField
+    | ComponentType.UkAddressField
+    | ComponentType.WebsiteField
+    | ComponentType.YesNoField
+  subType?: ComponentSubType.Field
   name: string
   title: string
   hint?: string
@@ -58,13 +44,13 @@ interface TextFieldBase {
     min?: number
     length?: number
     regex?: string
-    error?: any // TODO: in same cases this is a function e.g. addressLine1 in ukaddress
+    error?: unknown
   }
 }
 
 interface NumberFieldBase {
-  subType?: 'field'
-  type: string
+  type: ComponentType
+  subType?: ComponentSubType.Field
   name: string
   title: string
   hint: string
@@ -81,8 +67,13 @@ interface NumberFieldBase {
 }
 
 interface ListFieldBase {
-  subType?: 'listField' | 'content'
-  type: string
+  type:
+    | ComponentType.AutocompleteField
+    | ComponentType.CheckboxesField
+    | ComponentType.List
+    | ComponentType.RadiosField
+    | ComponentType.SelectField
+  subType?: ComponentSubType.Content | ComponentSubType.ListField
   name: string
   title: string
   options: {
@@ -96,22 +87,28 @@ interface ListFieldBase {
     allowPrePopulation?: boolean
   }
   list: string
-  schema: {}
+  schema: object
 }
 
 interface ContentFieldBase {
-  subType?: 'content'
-  type: string
+  type: ComponentType.Details | ComponentType.Html | ComponentType.InsetText
+  subType?: ComponentSubType.Content
   name: string
   title: string
   content: string
   options: ContentOptions
-  schema: {}
+  schema?: object
 }
 
 interface DateFieldBase {
-  subType?: 'field'
-  type: string
+  type:
+    | ComponentType.DateField
+    | ComponentType.DatePartsField
+    | ComponentType.DateTimeField
+    | ComponentType.DateTimePartsField
+    | ComponentType.MonthYearField
+    | ComponentType.TimeField
+  subType?: ComponentSubType.Field
   name: string
   title: string
   hint: string
@@ -123,45 +120,45 @@ interface DateFieldBase {
     maxDaysInPast?: number
     exposeToContext?: boolean
   }
-  schema: {}
+  schema: object
 }
 
 // Text Fields
 export interface TextFieldComponent extends TextFieldBase {
-  type: 'TextField'
+  type: ComponentType.TextField
   options: TextFieldBase['options'] & {
     customValidationMessage?: string
   }
 }
 
 export interface EmailAddressFieldComponent extends TextFieldBase {
-  type: 'EmailAddressField'
+  type: ComponentType.EmailAddressField
 }
 
 export interface NumberFieldComponent extends NumberFieldBase {
-  type: 'NumberField'
+  type: ComponentType.NumberField
 }
 
 export interface WebsiteFieldComponent extends TextFieldBase {
-  type: 'WebsiteField'
+  type: ComponentType.WebsiteField
   options: TextFieldBase['options'] & {
     customValidationMessage?: string
   }
 }
 
 export interface TelephoneNumberFieldComponent extends TextFieldBase {
-  type: 'TelephoneNumberField'
+  type: ComponentType.TelephoneNumberField
   options: TextFieldBase['options'] & {
     customValidationMessage?: string
   }
 }
 
 export interface YesNoFieldComponent extends TextFieldBase {
-  type: 'YesNoField'
+  type: ComponentType.YesNoField
 }
 
 export interface MultilineTextFieldComponent extends TextFieldBase {
-  type: 'MultilineTextField'
+  type: ComponentType.MultilineTextField
   options: TextFieldBase['options'] & {
     customValidationMessage?: string
     rows?: number
@@ -174,8 +171,8 @@ export interface MultilineTextFieldComponent extends TextFieldBase {
 }
 
 export interface FileUploadFieldComponent {
-  subType?: 'field'
-  type: 'FileUploadField'
+  type: ComponentType.FileUploadField
+  subType?: ComponentSubType.Field
   name: string
   title: string
   hint: string
@@ -187,75 +184,75 @@ export interface FileUploadFieldComponent {
     exposeToContext?: boolean
     imageQualityPlayback?: boolean
   }
-  schema: {}
+  schema: object
 }
 
 export interface UkAddressFieldComponent extends TextFieldBase {
-  type: 'UkAddressField'
+  type: ComponentType.UkAddressField
 }
 
 // Date Fields
 export interface DateFieldComponent extends DateFieldBase {
-  type: 'DateField'
+  type: ComponentType.DateField
 }
 
 export interface DateTimeFieldComponent extends DateFieldBase {
-  type: 'DateTimeField'
+  type: ComponentType.DateTimeField
 }
 
 export interface DatePartsFieldFieldComponent extends DateFieldBase {
-  type: 'DatePartsField'
+  type: ComponentType.DatePartsField
 }
 
 export interface MonthYearFieldComponent extends DateFieldBase {
-  type: 'MonthYearField'
+  type: ComponentType.MonthYearField
 }
 
 export interface DateTimePartsFieldComponent extends DateFieldBase {
-  type: 'DateTimePartsField'
+  type: ComponentType.DateTimePartsField
 }
 
 export interface TimeFieldComponent extends DateFieldBase {
-  type: 'TimeField'
+  type: ComponentType.TimeField
 }
 
 // Content Fields
 export interface DetailsComponent extends ContentFieldBase {
-  type: 'Details'
+  type: ComponentType.Details
 }
 
 export interface HtmlComponent extends ContentFieldBase {
-  type: 'Html'
+  type: ComponentType.Html
 }
 
 export interface InsetTextComponent extends ContentFieldBase {
-  type: 'InsetText'
+  type: ComponentType.InsetText
 }
 
 // List Fields
 export interface ListComponent extends ListFieldBase {
-  type: 'List'
+  type: ComponentType.List
 }
 
 export interface AutocompleteFieldComponent extends ListFieldBase {
-  type: 'AutocompleteField'
-  subType?: 'listField'
+  type: ComponentType.AutocompleteField
+  subType?: ComponentSubType.ListField
 }
 
 export interface CheckboxesFieldComponent extends ListFieldBase {
-  type: 'CheckboxesField'
-  subType?: 'listField'
+  type: ComponentType.CheckboxesField
+  subType?: ComponentSubType.ListField
 }
 
 export interface RadiosFieldComponent extends ListFieldBase {
-  type: 'RadiosField'
-  subType?: 'listField'
+  type: ComponentType.RadiosField
+  subType?: ComponentSubType.ListField
 }
 
 export interface SelectFieldComponent extends ListFieldBase {
-  type: 'SelectField'
+  type: ComponentType.SelectField
+  subType?: ComponentSubType.ListField
   options: ListFieldBase['options'] & { autocomplete?: string }
-  subType?: 'listField'
 }
 
 export type ComponentDef =
