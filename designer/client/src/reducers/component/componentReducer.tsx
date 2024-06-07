@@ -97,7 +97,11 @@ export const initComponentState = (props) => {
   const selectedComponent = props?.component
   const newName = randomId()
   return {
-    selectedComponent: selectedComponent ?? { name: newName, options: {} },
+    selectedComponent: selectedComponent ?? {
+      name: newName,
+      options: {},
+      schema: {}
+    },
     initialName: selectedComponent?.name ?? newName,
     pagePath: props?.pagePath,
     isNew: props?.isNew || ((selectedComponent?.name && false) ?? true),
