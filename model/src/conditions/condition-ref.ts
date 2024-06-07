@@ -13,11 +13,13 @@ export class ConditionRef extends ConditionAbstract {
     super(coordinator)
 
     if (typeof conditionName !== 'string') {
-      throw Error(`condition name ${conditionName} is not valid`)
+      throw new Error("ConditionRef param 'conditionName' must be a string")
     }
 
     if (typeof conditionDisplayName !== 'string') {
-      throw Error(`condition display name ${conditionDisplayName} is not valid`)
+      throw new Error(
+        "ConditionRef param 'conditionDisplayName' must be a string"
+      )
     }
 
     this.conditionName = conditionName

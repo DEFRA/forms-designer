@@ -1,28 +1,32 @@
 import { ConditionValueAbstract } from '~/src/conditions/condition-value-abstract.js'
-import { Registration } from '~/src/conditions/condition-value-registration.js'
 import {
   type DateTimeUnitValues,
   type DateUnits,
   type TimeUnits
 } from '~/src/conditions/types.js'
 
-export class ConditionValue extends ConditionValueAbstract {
+export class ConditionValue
+  extends ConditionValueAbstract
+  implements ConditionValueFrom
+{
+  type: 'Value'
   value: string
   display: string
 
   constructor(value: string, display?: string) {
-    super(valueType)
-
     if (!value || typeof value !== 'string') {
-      throw Error(`value ${value} is not valid`)
+      throw new Error("ConditionValue param 'value' must be a string")
     }
 
     if (display && typeof display !== 'string') {
-      throw Error(`display ${display} is not valid`)
+      throw new Error("ConditionValue param 'display' must be a string")
     }
 
+    super()
+
+    this.type = 'Value'
     this.value = value
-    this.display = display || value
+    this.display = display ?? value
   }
 
   toPresentationString() {
@@ -33,7 +37,7 @@ export class ConditionValue extends ConditionValueAbstract {
     return this.value
   }
 
-  static from(obj: { value: string; display?: string }) {
+  static from(obj: ConditionValue | ConditionValueFrom) {
     return new ConditionValue(obj.value, obj.display)
   }
 
@@ -42,9 +46,10 @@ export class ConditionValue extends ConditionValueAbstract {
   }
 }
 
-const valueType = Registration.register('Value', (obj) =>
-  ConditionValue.from(obj)
-)
+export interface ConditionValueFrom {
+  value: string
+  display?: string
+}
 
 export enum DateDirections {
   FUTURE = 'in the future',
@@ -69,7 +74,11 @@ export const dateTimeUnits: DateUnits & TimeUnits = Object.assign(
   timeUnits
 )
 
-export class RelativeTimeValue extends ConditionValueAbstract {
+export class RelativeTimeValue
+  extends ConditionValueAbstract
+  implements RelativeTimeValueFrom
+{
+  type: 'RelativeTime'
   timePeriod: string
   timeUnit: DateTimeUnitValues
   direction: DateDirections
@@ -81,10 +90,8 @@ export class RelativeTimeValue extends ConditionValueAbstract {
     direction: DateDirections,
     timeOnly = false
   ) {
-    super(relativeTimeValueType)
-
     if (typeof timePeriod !== 'string') {
-      throw Error(`time period ${timePeriod} is not valid`)
+      throw new Error("RelativeTimeValue param 'timePeriod' must be a string")
     }
 
     if (
@@ -92,13 +99,20 @@ export class RelativeTimeValue extends ConditionValueAbstract {
         .map((unit) => unit.value)
         .includes(timeUnit)
     ) {
-      throw Error(`time unit ${timeUnit} is not valid`)
+      throw new Error(
+        "RelativeTimeValue param 'dateTimeUnits' must only include DateTimeUnitValues keys"
+      )
     }
 
     if (!Object.values(DateDirections).includes(direction)) {
-      throw Error(`direction ${direction} is not valid`)
+      throw new Error(
+        "RelativeTimeValue param 'direction' must be from enum DateDirections"
+      )
     }
 
+    super()
+
+    this.type = 'RelativeTime'
     this.timePeriod = timePeriod
     this.timeUnit = timeUnit
     this.direction = direction
@@ -119,7 +133,7 @@ export class RelativeTimeValue extends ConditionValueAbstract {
       : `dateForComparison(${timePeriod}, '${this.timeUnit}')`
   }
 
-  static from(obj) {
+  static from(obj: RelativeTimeValue | RelativeTimeValueFrom) {
     return new RelativeTimeValue(
       obj.timePeriod,
       obj.timeUnit,
@@ -133,18 +147,25 @@ export class RelativeTimeValue extends ConditionValueAbstract {
   }
 }
 
-export const relativeTimeValueType = Registration.register(
-  'RelativeTime',
-  (obj): RelativeTimeValue => RelativeTimeValue.from(obj)
-)
+export interface RelativeTimeValueFrom {
+  timePeriod: string
+  timeUnit: DateTimeUnitValues
+  direction: DateDirections
+  timeOnly: boolean
+}
 
-type ConditionValueFrom =
-  | Pick<ConditionValue, 'type' | 'value' | 'display'>
-  | Pick<
-      RelativeTimeValue,
-      'type' | 'timePeriod' | 'timeUnit' | 'direction' | 'timeOnly'
-    >
+export function conditionValueFrom(
+  obj:
+    | ConditionValue
+    | RelativeTimeValue
+    | ({ type: 'Value' } & ConditionValueFrom)
+    | ({ type: 'RelativeTime' } & RelativeTimeValueFrom)
+) {
+  switch (obj.type) {
+    case 'Value':
+      return ConditionValue.from(obj)
 
-export function conditionValueFrom(obj: ConditionValueFrom) {
-  return Registration.conditionValueFrom(obj)
+    case 'RelativeTime':
+      return RelativeTimeValue.from(obj)
+  }
 }
