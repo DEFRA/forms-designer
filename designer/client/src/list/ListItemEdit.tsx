@@ -101,7 +101,7 @@ export function ListItemEdit() {
             </option>
           ))}
         </select>
-        <hr />
+        <hr className="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
         <div className="govuk-button-group">
           <button
             data-testid="save-list-item"

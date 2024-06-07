@@ -40,7 +40,7 @@ export function ListSelect() {
           </li>
         ))}
       </ul>
-      <hr />
+      <hr className="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
       <div className="govuk-button-group">
         <button
           className="govuk-button"

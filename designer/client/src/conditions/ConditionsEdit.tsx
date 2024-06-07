@@ -95,7 +95,7 @@ export function ConditionsEdit({ path }: Props) {
               </li>
             ))}
           </ul>
-          <hr />
+          <hr className="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
           {inputs.length > 0 && (
             <button
               id="add-condition-link"
