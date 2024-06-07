@@ -288,16 +288,18 @@ export class PageEdit extends Component {
               </a>
             )}
           </p>
-          <button className="govuk-button" type="submit">
-            {i18n('save')}
-          </button>{' '}
-          <button
-            className="govuk-button"
-            type="button"
-            onClick={this.onClickDelete}
-          >
-            {i18n('delete')}
-          </button>
+          <div className="govuk-button-group">
+            <button className="govuk-button" type="submit">
+              {i18n('save')}
+            </button>
+            <button
+              className="govuk-button govuk-button--warning"
+              type="button"
+              onClick={this.onClickDelete}
+            >
+              {i18n('delete')}
+            </button>
+          </div>
         </form>
         {isEditingSection && (
           <RenderInPortal>

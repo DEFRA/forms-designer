@@ -120,17 +120,18 @@ export class LinkEdit extends Component {
           conditionsChange={this.conditionSelected}
           noFieldsHintText={i18n('addLink.noFieldsAvailable')}
         />
-        <button className="govuk-button" type="submit">
-          Save
-        </button>
-        &nbsp;
-        <button
-          className="govuk-button"
-          type="button"
-          onClick={this.onClickDelete}
-        >
-          Delete
-        </button>
+        <div className="govuk-button-group">
+          <button className="govuk-button" type="submit">
+            Save
+          </button>
+          <button
+            className="govuk-button govuk-button--warning"
+            type="button"
+            onClick={this.onClickDelete}
+          >
+            Delete
+          </button>
+        </div>
       </form>
     )
   }

@@ -40,21 +40,29 @@ export class SectionsEdit extends Component {
 
     return (
       <>
-        <ul className="govuk-list">
+        <ul className="govuk-list govuk-list--bullet">
           {sections.map((section) => (
             <li key={section.name}>
-              <a href="#" onClick={(e) => this.onClickSection(e, section)}>
+              <a
+                className="govuk-link"
+                href="#"
+                onClick={(e) => this.onClickSection(e, section)}
+              >
                 {section.title}
               </a>
             </li>
           ))}
-          <li>
-            <hr />
-            <a href="#" onClick={(e) => this.onClickSection(e)}>
-              Add section
-            </a>
-          </li>
         </ul>
+        <hr />
+        <div className="govuk-button-group">
+          <button
+            className="govuk-button"
+            type="button"
+            onClick={(e) => this.onClickSection(e)}
+          >
+            Add section
+          </button>
+        </div>
 
         {isEditingSection && (
           <RenderInPortal>
