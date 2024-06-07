@@ -152,4 +152,5 @@ export interface FormDefinition {
   declaration?: string
   metadata?: Record<string, unknown>
   specialPages?: SpecialPages
+  outputEmail?: string
 }
