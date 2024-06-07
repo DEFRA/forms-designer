@@ -8,6 +8,7 @@ import { InlineConditionsDefinition } from '~/src/conditions/InlineConditionsDef
 import { InlineConditionsEdit } from '~/src/conditions/InlineConditionsEdit.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { allInputs, inputsAccessibleAt } from '~/src/data/component/inputs.js'
+import { addCondition } from '~/src/data/condition/addCondition.js'
 import { removeCondition } from '~/src/data/condition/removeCondition.js'
 import { updateCondition } from '~/src/data/condition/updateCondition.js'
 import { findList } from '~/src/data/list/findList.js'
