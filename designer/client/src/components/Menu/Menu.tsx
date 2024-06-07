@@ -68,65 +68,68 @@ export function Menu({ id }: Props) {
   ]
 
   return (
-    <nav className="menu">
-      <div className="menu__row">
-        <button
-          className="govuk-button"
-          data-testid="menu-page"
-          onClick={page.show}
-        >
-          {i18n('menu.addPage')}
-        </button>
-        <button
-          className="govuk-button"
-          data-testid="menu-links"
-          onClick={link.show}
-        >
-          {i18n('menu.links')}
-        </button>
-        <button
-          className="govuk-button"
-          data-testid="menu-sections"
-          onClick={sections.show}
-        >
-          {i18n('menu.sections')}
-        </button>
-        <button
-          className="govuk-button"
-          data-testid="menu-conditions"
-          onClick={conditions.show}
-        >
-          {i18n('menu.conditions')}
-        </button>
-        <button
-          className="govuk-button"
-          data-testid="menu-lists"
-          onClick={lists.show}
-        >
-          {i18n('menu.lists')}
-        </button>
-        <button
-          className="govuk-button"
-          data-testid="menu-outputs"
-          onClick={outputs.show}
-        >
-          {i18n('menu.outputs')}
-        </button>
-        <button
-          className="govuk-button"
-          data-testid="menu-summary-behaviour"
-          onClick={summaryBehaviour.show}
-        >
-          {i18n('menu.summaryBehaviour')}
-        </button>
-        <button
-          className="govuk-button"
-          onClick={summary.show}
-          data-testid="menu-summary"
-        >
-          {i18n('menu.summary')}
-        </button>
-      </div>
+    <>
+      <nav className="menu">
+        <div className="menu__row">
+          <button
+            className="govuk-button"
+            data-testid="menu-page"
+            onClick={page.show}
+          >
+            {i18n('menu.addPage')}
+          </button>
+          <button
+            className="govuk-button"
+            data-testid="menu-links"
+            onClick={link.show}
+          >
+            {i18n('menu.links')}
+          </button>
+          <button
+            className="govuk-button"
+            data-testid="menu-sections"
+            onClick={sections.show}
+          >
+            {i18n('menu.sections')}
+          </button>
+          <button
+            className="govuk-button"
+            data-testid="menu-conditions"
+            onClick={conditions.show}
+          >
+            {i18n('menu.conditions')}
+          </button>
+          <button
+            className="govuk-button"
+            data-testid="menu-lists"
+            onClick={lists.show}
+          >
+            {i18n('menu.lists')}
+          </button>
+          <button
+            className="govuk-button"
+            data-testid="menu-outputs"
+            onClick={outputs.show}
+          >
+            {i18n('menu.outputs')}
+          </button>
+          <button
+            className="govuk-button"
+            data-testid="menu-summary-behaviour"
+            onClick={summaryBehaviour.show}
+          >
+            {i18n('menu.summaryBehaviour')}
+          </button>
+          <button
+            className="govuk-button"
+            onClick={summary.show}
+            data-testid="menu-summary"
+          >
+            {i18n('menu.summary')}
+          </button>
+        </div>
+        <SubMenu id={id} />
+      </nav>
 
       {page.isVisible && (
         <Flyout title="Add Page" onHide={page.hide}>
@@ -157,7 +160,7 @@ export function Menu({ id }: Props) {
       )}
 
       {lists.isVisible && (
-        <Flyout title="Edit Lists" onHide={lists.hide} width={''}>
+        <Flyout title="Edit Lists" onHide={lists.hide}>
           <ListsEditorContextProvider>
             <ListContextProvider>
               <ListsEdit showEditLists={false} />
@@ -173,11 +176,7 @@ export function Menu({ id }: Props) {
       )}
 
       {summaryBehaviour.isVisible && (
-        <Flyout
-          title="Edit Summary behaviour"
-          onHide={summaryBehaviour.hide}
-          width="xlarge"
-        >
+        <Flyout title="Edit Summary behaviour" onHide={summaryBehaviour.hide}>
           <DeclarationEdit onCreate={() => summaryBehaviour.hide()} />
         </Flyout>
       )}
@@ -187,8 +186,6 @@ export function Menu({ id }: Props) {
           <Tabs title="Summary" items={summaryTabs}></Tabs>
         </Flyout>
       )}
-
-      <SubMenu id={id} />
-    </nav>
+    </>
   )
 }
