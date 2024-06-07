@@ -55,7 +55,7 @@ export function ConditionsEdit({ path }: Props) {
   const { conditions } = data
   const inputs = allInputs(data)
   return (
-    <div className="govuk-body">
+    <>
       <div className="govuk-hint">{i18n('conditions.hint')}</div>
 
       {!editingCondition && (
@@ -101,10 +101,8 @@ export function ConditionsEdit({ path }: Props) {
                 </a>
               )}
               {inputs.length <= 0 && (
-                <div className="govuk-body">
-                  <div className="govuk-hint">
-                    {i18n('conditions.noFieldsAvailable')}
-                  </div>
+                <div className="govuk-hint">
+                  {i18n('conditions.noFieldsAvailable')}
                 </div>
               )}
             </li>
@@ -125,6 +123,6 @@ export function ConditionsEdit({ path }: Props) {
           </div>
         </RenderInPortal>
       )}
-    </div>
+    </>
   )
 }

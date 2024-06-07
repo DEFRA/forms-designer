@@ -63,7 +63,7 @@ export class NotifyEdit extends Component<Props, State> {
     ]
 
     return (
-      <div className="govuk-body">
+      <>
         <Input
           id="template-id"
           name="template-id"
@@ -124,25 +124,23 @@ export class NotifyEdit extends Component<Props, State> {
           data={data}
           onEdit={onEdit}
         />
-        <div className="govuk-form-group">
-          <Checkboxes
-            items={[
-              {
-                children: (
-                  <strong>
-                    {i18n('outputEdit.notifyEdit.includeReferenceTitle')}
-                  </strong>
-                ),
-                hint: {
-                  children: i18n('outputEdit.notifyEdit.includeReferenceHint')
-                },
-                value: true
-              }
-            ]}
-            name="add-references-to-personalisation"
-          />
-        </div>
-      </div>
+        <Checkboxes
+          items={[
+            {
+              children: (
+                <strong>
+                  {i18n('outputEdit.notifyEdit.includeReferenceTitle')}
+                </strong>
+              ),
+              hint: {
+                children: i18n('outputEdit.notifyEdit.includeReferenceHint')
+              },
+              value: true
+            }
+          ]}
+          name="add-references-to-personalisation"
+        />
+      </>
     )
   }
 }

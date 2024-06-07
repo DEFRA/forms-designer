@@ -39,7 +39,7 @@ export class SectionsEdit extends Component {
     const { section, isEditingSection } = this.state
 
     return (
-      <div className="govuk-body">
+      <>
         <ul className="govuk-list">
           {sections.map((section) => (
             <li key={section.name}>
@@ -65,17 +65,15 @@ export class SectionsEdit extends Component {
               show={isEditingSection}
               onHide={this.closeFlyout}
             >
-              <form>
-                <SectionEdit
-                  section={section}
-                  data={data}
-                  closeFlyout={this.closeFlyout}
-                />
-              </form>
+              <SectionEdit
+                section={section}
+                data={data}
+                closeFlyout={this.closeFlyout}
+              />
             </Flyout>
           </RenderInPortal>
         )}
-      </div>
+      </>
     )
   }
 }

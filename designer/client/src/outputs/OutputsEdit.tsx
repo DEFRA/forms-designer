@@ -48,9 +48,9 @@ export class OutputsEdit extends Component<Props, State> {
     const { output, id, showAddOutput } = this.state
 
     return (
-      <div className="govuk-body">
+      <>
         {!output ? (
-          <div>
+          <>
             {showAddOutput ? (
               <OutputEdit
                 data={data}
@@ -79,7 +79,7 @@ export class OutputsEdit extends Component<Props, State> {
                 </li>
               </ul>
             )}
-          </div>
+          </>
         ) : (
           <OutputEdit
             output={output}
@@ -88,7 +88,7 @@ export class OutputsEdit extends Component<Props, State> {
             onCancel={() => this.setState({ output: null })}
           />
         )}
-      </div>
+      </>
     )
   }
 }

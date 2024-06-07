@@ -41,9 +41,5 @@ export function DataPrettyPrint(props) {
     })
   })
 
-  return (
-    <div>
-      <pre>{JSON.stringify(model, null, 2)}</pre>
-    </div>
-  )
+  return <pre>{JSON.stringify(model, null, 2)}</pre>
 }

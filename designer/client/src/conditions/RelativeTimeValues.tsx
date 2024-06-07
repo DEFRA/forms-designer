@@ -35,7 +35,7 @@ export class RelativeTimeValues extends Component {
     const { timePeriod, timeUnits, direction } = this.state
 
     return (
-      <div>
+      <>
         <input
           className="govuk-input govuk-input--width-20"
           id="cond-value-period"
@@ -82,7 +82,7 @@ export class RelativeTimeValues extends Component {
             )
           })}
         </select>
-      </div>
+      </>
     )
   }
 }

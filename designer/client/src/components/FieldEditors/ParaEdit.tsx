@@ -21,7 +21,7 @@ export function ParaEdit({ context = ComponentContext }: Props) {
   const { conditions } = data
 
   return (
-    <div>
+    <>
       <div className="govuk-form-group">
         <label className="govuk-label govuk-label--s" htmlFor="para-content">
           Content
@@ -64,6 +64,6 @@ export function ParaEdit({ context = ComponentContext }: Props) {
           ))}
         </select>
       </div>
-    </div>
+    </>
   )
 }

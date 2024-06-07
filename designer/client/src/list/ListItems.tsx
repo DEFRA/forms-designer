@@ -22,7 +22,7 @@ const DragHandle = SortableHandle(() => (
 
 const SortableItem = SortableElement(({ item, removeItem, selectListItem }) => {
   return (
-    <tr className="govuk-table__row" scope="row">
+    <tr className="govuk-table__row">
       <td className="govuk-table__cell" width="20px">
         <DragHandle />
       </td>
@@ -101,44 +101,44 @@ export function ListItems() {
   const hasListItems = (selectedList?.items ?? []).length > 0
 
   return (
-    <div>
-      <table className="govuk-table">
-        <caption className={'govuk-table__caption'}>
-          {i18n('list.items.title')}
-          <div className="govuk-hint govuk-!-margin-bottom-0">
-            {i18n('list.items.hint')}
-          </div>
-        </caption>
+    <table className="govuk-table">
+      <caption className={'govuk-table__caption'}>
+        {i18n('list.items.title')}
+        <div className="govuk-hint govuk-!-margin-bottom-0">
+          {i18n('list.items.hint')}
+        </div>
+      </caption>
 
-        <thead className="govuk-table__head">
+      <thead className="govuk-table__head">
+        <tr className="govuk-table__row">
+          <th className="govuk-table__header" scope="col" />
+          <th className="govuk-table__header" scope="col" />
+          <th className="govuk-table__header" scope="col" />
+          <th className="govuk-table__header" scope="col" />
+        </tr>
+      </thead>
+
+      {!hasListItems && (
+        <tbody className="govuk-table__body">
           <tr className="govuk-table__row">
-            <th className="govuk-table__header" scope="col" />
-            <th className="govuk-table__header" scope="col" />
-            <th className="govuk-table__header" scope="col" />
-            <th className="govuk-table__header" scope="col" />
+            <td className="govuk-table__cell">
+              {i18n('list.items.hintNoItems')}
+            </td>
           </tr>
-        </thead>
-
-        {!hasListItems && (
-          <tbody className="govuk-table__body">
-            <tr className="govuk-table__row" scope="row">
-              <td className="govuk-body">{i18n('list.items.hintNoItems')}</td>
-            </tr>
-          </tbody>
-        )}
-        {hasListItems && (
-          <SortableList
-            items={selectedList?.items ?? []}
-            selectListItem={selectListItem}
-            removeItem={removeItem}
-            onSortEnd={onSortEnd}
-            helperClass="dragging-on-modal"
-            hideSortableGhost={false}
-            lockToContainerEdges
-            useDragHandle
-          />
-        )}
-      </table>
-    </div>
+        </tbody>
+      )}
+      {hasListItems && (
+        <SortableList
+          items={selectedList?.items ?? []}
+          selectListItem={selectListItem}
+          removeItem={removeItem}
+          onSortEnd={onSortEnd}
+          helperClass="dragging-on-modal"
+          hideSortableGhost={false}
+          lockToContainerEdges
+          useDragHandle
+        />
+      )}
+    </table>
   )
 }

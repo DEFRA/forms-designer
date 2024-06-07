@@ -266,7 +266,7 @@ export class SelectConditions extends Component<Props, State> {
           ))}
         </div>
         {hasFields || hasConditions ? (
-          <div>
+          <>
             {hasConditions && (
               <Select
                 id="select-condition"
@@ -317,11 +317,9 @@ export class SelectConditions extends Component<Props, State> {
                 </Flyout>
               </RenderInPortal>
             )}
-          </div>
+          </>
         ) : (
-          <div className="govuk-body">
-            <div className="govuk-hint">{noFieldsHintText}</div>
-          </div>
+          <p className="govuk-body">{noFieldsHintText}</p>
         )}
       </div>
     )

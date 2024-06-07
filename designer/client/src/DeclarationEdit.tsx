@@ -36,51 +36,49 @@ export class DeclarationEdit extends Component {
     const { declaration, skipSummary } = data
 
     return (
-      <div className="govuk-body">
-        <form onSubmit={(e) => this.onSubmit(e)} autoComplete="off">
-          <div className="govuk-checkboxes govuk-form-group">
-            <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">
-              <p className="govuk-fieldset__heading">Skip summary page?</p>
-              <div className="govuk-hint">
-                The user will not be shown a summary page, and will continue to
-                pay and/or the application complete page.
-              </div>
-            </legend>
-            <div className="govuk-checkboxes__item">
-              <input
-                className="govuk-checkboxes__input"
-                id="skip-summary"
-                data-cast="boolean"
-                name="skip-summary"
-                type="checkbox"
-                defaultChecked={skipSummary}
-              />
-              <label
-                className="govuk-label govuk-checkboxes__label"
-                htmlFor="skip-summary"
-              >
-                Skip summary
-              </label>
-            </div>
-          </div>
-
-          <div className="govuk-form-group">
-            <label className="govuk-label" htmlFor="declaration">
-              Declaration
-            </label>
+      <form onSubmit={(e) => this.onSubmit(e)} autoComplete="off">
+        <div className="govuk-checkboxes govuk-form-group">
+          <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">
+            <p className="govuk-fieldset__heading">Skip summary page?</p>
             <div className="govuk-hint">
-              The declaration can include HTML and the `govuk-prose-scope` css
-              class is available. Use this on a wrapping element to apply
-              default govuk styles.
+              The user will not be shown a summary page, and will continue to
+              pay and/or the application complete page.
             </div>
-            <Editor name="declaration" value={declaration} />
+          </legend>
+          <div className="govuk-checkboxes__item">
+            <input
+              className="govuk-checkboxes__input"
+              id="skip-summary"
+              data-cast="boolean"
+              name="skip-summary"
+              type="checkbox"
+              defaultChecked={skipSummary}
+            />
+            <label
+              className="govuk-label govuk-checkboxes__label"
+              htmlFor="skip-summary"
+            >
+              Skip summary
+            </label>
           </div>
+        </div>
 
-          <button className="govuk-button" type="submit">
-            Save
-          </button>
-        </form>
-      </div>
+        <div className="govuk-form-group">
+          <label className="govuk-label" htmlFor="declaration">
+            Declaration
+          </label>
+          <div className="govuk-hint">
+            The declaration can include HTML and the `govuk-prose-scope` css
+            class is available. Use this on a wrapping element to apply default
+            govuk styles.
+          </div>
+          <Editor name="declaration" value={declaration} />
+        </div>
+
+        <button className="govuk-button" type="submit">
+          Save
+        </button>
+      </form>
     )
   }
 }

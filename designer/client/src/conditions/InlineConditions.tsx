@@ -250,7 +250,7 @@ export class InlineConditions extends Component<Props, State> {
               </strong>
             </div>
           )}
-          <div>
+          <>
             {hasErrors && <ErrorSummary errorList={validationErrors} />}
             <div
               className={classNames('govuk-form-group', {
@@ -276,24 +276,21 @@ export class InlineConditions extends Component<Props, State> {
                 onChange={this.onChangeDisplayName}
               />
             </div>
-            <div>
-              <label
-                className="govuk-label govuk-label--s"
-                id="condition-string-label"
-                htmlFor="condition-string"
-              >
-                {i18n('conditions.when')}
-              </label>
-            </div>
+            <label
+              className="govuk-label govuk-label--s"
+              id="condition-string-label"
+              htmlFor="condition-string"
+            >
+              {i18n('conditions.when')}
+            </label>
             <div className="govuk-hint">{i18n('conditions.whenHint')}</div>
-          </div>
+          </>
           {hasConditions && (
-            <div id="conditions-display" className="govuk-body">
+            <div id="conditions-display">
               <div key="condition-string" id="condition-string">
                 {conditions.toPresentationString()}
               </div>
               {!editView && (
-                <div>
                   <a
                     href="#"
                     id="edit-conditions-link"
@@ -305,13 +302,12 @@ export class InlineConditions extends Component<Props, State> {
                   >
                     {i18n('conditions.notWhatYouMean')}
                   </a>
-                </div>
               )}
             </div>
           )}
         </div>
         {!editView && (
-          <div>
+          <>
             <InlineConditionsDefinition
               expectsCoordinator={hasConditions}
               fields={this.state.fields}
@@ -349,7 +345,7 @@ export class InlineConditions extends Component<Props, State> {
                 {i18n('cancel')}
               </a>
             </div>
-          </div>
+          </>
         )}
         {editView && (
           <InlineConditionsEdit

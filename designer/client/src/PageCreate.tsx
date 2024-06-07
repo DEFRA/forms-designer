@@ -182,7 +182,7 @@ export class PageCreate extends Component {
     } = this.state
 
     return (
-      <div>
+      <>
         {hasValidationErrors(errors) > 0 && (
           <ErrorSummary errorList={Object.values(errors)} />
         )}
@@ -337,7 +337,7 @@ export class PageCreate extends Component {
             </Flyout>
           </RenderInPortal>
         )}
-      </div>
+      </>
     )
   }
 }
