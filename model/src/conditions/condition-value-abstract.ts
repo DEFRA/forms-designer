@@ -17,15 +17,17 @@ export class ConditionValueAbstract {
     this.type = registration.type
   }
 
-  toPresentationString() {
+  toPresentationString(): string {
     throw new Error(
-      'Unsupported Operation. Method toPresentationString have not been implemented'
+      'Unsupported Operation. Method toPresentationString has not been implemented'
     )
   }
 
-  toExpression() {
+  toExpression(): string {
     throw new Error(
-      'Unsupported Operation. Method toExpression have not been implemented'
+      'Unsupported Operation. Method toExpression has not been implemented'
+    )
+  }
 
   clone() {
     throw new Error(
