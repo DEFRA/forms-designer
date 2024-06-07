@@ -260,7 +260,10 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
     outputs: Joi.array<Output>().items(outputSchema),
     skipSummary: Joi.boolean().optional().default(false),
     phaseBanner: phaseBannerSchema,
-    specialPages: specialPagesSchema.optional()
+    specialPages: specialPagesSchema.optional(),
+    outputEmail: Joi.string()
+      .email({ tlds: { allow: ['uk'] } })
+      .optional()
   })
 
 // Maintain compatibility with legacy named export
