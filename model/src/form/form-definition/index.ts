@@ -263,6 +263,7 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
     specialPages: specialPagesSchema.optional(),
     outputEmail: Joi.string()
       .email({ tlds: { allow: ['uk'] } })
+      .trim()
       .optional()
   })
 
