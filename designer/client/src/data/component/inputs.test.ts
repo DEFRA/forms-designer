@@ -1,4 +1,8 @@
-import { type FormDefinition } from '@defra/forms-model'
+import {
+  ComponentSubType,
+  ComponentType,
+  type FormDefinition
+} from '@defra/forms-model'
 
 import { allInputs } from '~/src/data/component/inputs.js'
 import { type Input } from '~/src/data/types.js'
@@ -13,16 +17,18 @@ test('should return all inputs from the page model', () => {
         components: [
           {
             name: 'name1',
-            type: 'RadiosField',
             title: 'Radios',
+            type: ComponentType.RadiosField,
+            subType: ComponentSubType.ListField,
             list: 'radios',
             options: {},
             schema: {}
           },
           {
             name: 'name2',
-            type: 'RadiosField',
             title: 'Radios',
+            type: ComponentType.RadiosField,
+            subType: ComponentSubType.ListField,
             list: 'radios',
             options: {},
             schema: {}
@@ -36,16 +42,18 @@ test('should return all inputs from the page model', () => {
         components: [
           {
             name: 'name3',
-            type: 'RadiosField',
             title: 'Radios',
+            type: ComponentType.RadiosField,
+            subType: ComponentSubType.ListField,
             list: 'radios',
             options: {},
             schema: {}
           },
           {
             name: 'name4',
-            type: 'RadiosField',
             title: 'Radios',
+            type: ComponentType.RadiosField,
+            subType: ComponentSubType.ListField,
             list: 'radios',
             options: {},
             schema: {}
@@ -67,8 +75,8 @@ test('should return all inputs from the page model', () => {
         section: 'section1'
       },
       propertyPath: 'section1.name1',
-      type: 'RadiosField',
       title: 'Radios',
+      type: ComponentType.RadiosField,
       list: 'radios'
     },
     {
@@ -78,8 +86,8 @@ test('should return all inputs from the page model', () => {
         section: 'section1'
       },
       propertyPath: 'section1.name2',
-      type: 'RadiosField',
       title: 'Radios',
+      type: ComponentType.RadiosField,
       list: 'radios'
     },
     {
@@ -89,8 +97,8 @@ test('should return all inputs from the page model', () => {
         section: 'section1'
       },
       propertyPath: 'section1.name3',
-      type: 'RadiosField',
       title: 'Radios',
+      type: ComponentType.RadiosField,
       list: 'radios'
     },
     {
@@ -100,8 +108,8 @@ test('should return all inputs from the page model', () => {
         section: 'section1'
       },
       propertyPath: 'section1.name4',
-      type: 'RadiosField',
       title: 'Radios',
+      type: ComponentType.RadiosField,
       list: 'radios'
     }
   ])

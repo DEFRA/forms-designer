@@ -1,4 +1,8 @@
-import { type FormDefinition } from '@defra/forms-model'
+import {
+  ComponentSubType,
+  ComponentType,
+  type FormDefinition
+} from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { act, cleanup, render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
@@ -26,12 +30,13 @@ describe('ComponentListSelect', () => {
           {
             name: 'IDDQl4',
             title: 'abc',
-            schema: {},
+            list: 'myList',
+            type: ComponentType.RadiosField,
+            subType: ComponentSubType.ListField,
             options: {
               required: true
             },
-            type: 'RadiosField',
-            list: 'myList'
+            schema: {}
           }
         ]
       }

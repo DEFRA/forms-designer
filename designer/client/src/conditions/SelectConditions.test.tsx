@@ -1,4 +1,8 @@
-import { type FormDefinition } from '@defra/forms-model'
+import {
+  ComponentSubType,
+  ComponentType,
+  type FormDefinition
+} from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { cleanup, render, type RenderResult } from '@testing-library/react'
 import React, { type ReactElement } from 'react'
@@ -38,7 +42,7 @@ describe('SelectConditions', () => {
   beforeEach(() => {
     props = {
       path: '/some-path',
-      conditionsChange: jest.fn() as any,
+      conditionsChange: jest.fn(),
       hints: [],
       noFieldsHintText: 'NoFieldsHintText'
     }
@@ -53,15 +57,14 @@ describe('SelectConditions', () => {
 
   test('SelectConditions renders available conditions', () => {
     const data: FormDefinition = {
-      lists: [],
       pages: [
         {
           path: '/uk-passport',
           components: [
             {
-              type: 'YesNoField',
               name: 'ukPassport',
               title: 'Do you have a UK passport?',
+              type: ComponentType.YesNoField,
               options: {
                 required: true
               },
@@ -84,7 +87,7 @@ describe('SelectConditions', () => {
           title: "You're not eligible for this service",
           components: [
             {
-              type: 'Html',
+              type: ComponentType.Html,
               title: '',
               name: 'notEligible',
               content:
@@ -99,14 +102,16 @@ describe('SelectConditions', () => {
           path: '/how-many-people',
           components: [
             {
+              name: 'numberOfApplicants',
+              title: 'How many applicants are there?',
+              type: ComponentType.SelectField,
+              subType: ComponentSubType.ListField,
+              list: 'numberOfApplicants',
               options: {
                 classes: 'govuk-input--width-10',
                 required: true
               },
-              type: 'SelectField',
-              name: 'numberOfApplicants',
-              title: 'How many applicants are there?',
-              list: 'numberOfApplicants'
+              schema: {}
             }
           ],
           next: [
@@ -117,8 +122,8 @@ describe('SelectConditions', () => {
           title: 'How many applicants are there?'
         }
       ],
+      lists: [],
       sections: [],
-      startPage: '',
       conditions: [
         {
           name: 'hasUKPassport',
@@ -145,7 +150,8 @@ describe('SelectConditions', () => {
           displayName: 'moreThanThreeApplicants',
           value: 'applicantDetails.numberOfApplicants > 3'
         }
-      ]
+      ],
+      outputs: []
     }
 
     const providerProps = {

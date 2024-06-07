@@ -1,7 +1,5 @@
-import {
-  type ComponentType,
-  type ComponentDef
-} from '~/src/components/types.js'
+import { ComponentType } from '~/src/components/enums.js'
+import { type ComponentDef } from '~/src/components/types.js'
 import { type ConditionValueAbstract } from '~/src/conditions/condition-value-abstract.js'
 import {
   timeUnits,
@@ -44,44 +42,46 @@ const relativeTimeOperators = (units) => ({
 })
 
 export const customOperators = {
-  CheckboxesField: {
+  [ComponentType.CheckboxesField]: {
     contains: reverseInline('in'),
     'does not contain': not(reverseInline('in'))
   },
-  NumberField: withDefaults({
+  [ComponentType.NumberField]: withDefaults({
     'is at least': inline('>='),
     'is at most': inline('<='),
     'is less than': inline('<'),
     'is more than': inline('>')
   }),
-  DateField: Object.assign(
+  [ComponentType.DateField]: Object.assign(
     {},
     absoluteDateTimeOperators,
     relativeTimeOperators(dateUnits)
   ),
-  TimeField: Object.assign(
+  [ComponentType.TimeField]: Object.assign(
     {},
     absoluteDateTimeOperators,
     relativeTimeOperators(timeUnits)
   ),
-  DatePartsField: Object.assign(
+  [ComponentType.DatePartsField]: Object.assign(
     {},
     absoluteDateTimeOperators,
     relativeTimeOperators(dateUnits)
   ),
-  DateTimeField: Object.assign(
+  [ComponentType.DateTimeField]: Object.assign(
     {},
     absoluteDateTimeOperators,
     relativeTimeOperators(dateTimeUnits)
   ),
-  DateTimePartsField: Object.assign(
+  [ComponentType.DateTimePartsField]: Object.assign(
     {},
     absoluteDateTimeOperators,
     relativeTimeOperators(dateTimeUnits)
   ),
-  TextField: withDefaults(textBasedFieldCustomisations),
-  MultilineTextField: withDefaults(textBasedFieldCustomisations),
-  EmailAddressField: withDefaults(textBasedFieldCustomisations)
+  [ComponentType.TextField]: withDefaults(textBasedFieldCustomisations),
+  [ComponentType.MultilineTextField]: withDefaults(
+    textBasedFieldCustomisations
+  ),
+  [ComponentType.EmailAddressField]: withDefaults(textBasedFieldCustomisations)
 }
 
 export function getOperatorNames(fieldType) {
@@ -137,9 +137,13 @@ function not(operatorDefinition) {
 }
 
 function formatValue(fieldType: ComponentType, value) {
-  if (fieldType === 'NumberField' || fieldType === 'YesNoField') {
+  if (
+    fieldType === ComponentType.YesNoField ||
+    fieldType === ComponentType.NumberField
+  ) {
     return value
   }
+
   return `'${value}'`
 }
 

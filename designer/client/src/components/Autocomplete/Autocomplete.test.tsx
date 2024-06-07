@@ -1,3 +1,8 @@
+import {
+  ComponentSubType,
+  ComponentType,
+  type ComponentDef
+} from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
 import React from 'react'
@@ -13,10 +18,14 @@ describe('AutocompleteField', () => {
   beforeEach(() => {
     stateProps = {
       component: {
-        type: 'AutocompleteField',
         name: 'TestCssClass',
-        options: {}
-      }
+        title: 'Test CSS class',
+        list: 'Test list',
+        type: ComponentType.AutocompleteField,
+        subType: ComponentSubType.ListField,
+        options: {},
+        schema: {}
+      } satisfies ComponentDef
     }
 
     render(

@@ -1,4 +1,9 @@
-import { type FormDefinition } from '@defra/forms-model'
+import {
+  ComponentSubType,
+  ComponentType,
+  type ComponentDef,
+  type FormDefinition
+} from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
 import React, { useReducer } from 'react'
@@ -59,10 +64,14 @@ describe('ComponentTypeEdit', () => {
     beforeEach(() => {
       stateProps = {
         component: {
-          type: 'CheckboxesField',
-          name: 'TestCheckbox',
-          options: {}
-        }
+          name: 'TestCheckboxes',
+          title: 'Test checkboxes',
+          list: 'TestList',
+          type: ComponentType.CheckboxesField,
+          subType: ComponentSubType.ListField,
+          options: {},
+          schema: {}
+        } satisfies ComponentDef
       }
     })
 
@@ -146,10 +155,14 @@ describe('ComponentTypeEdit', () => {
     beforeEach(() => {
       stateProps = {
         component: {
-          type: 'RadiosField',
           name: 'TestRadios',
-          options: {}
-        }
+          title: 'Test radios',
+          list: 'TestList',
+          type: ComponentType.RadiosField,
+          subType: ComponentSubType.ListField,
+          options: {},
+          schema: {}
+        } satisfies ComponentDef
       }
     })
 
@@ -233,10 +246,14 @@ describe('ComponentTypeEdit', () => {
     beforeEach(() => {
       stateProps = {
         component: {
-          type: 'SelectField',
           name: 'TestSelect',
-          options: {}
-        }
+          title: 'Test select',
+          list: 'TestList',
+          type: ComponentType.SelectField,
+          subType: ComponentSubType.ListField,
+          options: {},
+          schema: {}
+        } satisfies ComponentDef
       }
     })
 
@@ -320,10 +337,12 @@ describe('ComponentTypeEdit', () => {
     beforeEach(() => {
       stateProps = {
         component: {
-          type: 'YesNoField',
           name: 'TestYesNo',
-          options: {}
-        }
+          title: 'Test yes/no',
+          type: ComponentType.YesNoField,
+          options: {},
+          schema: {}
+        } satisfies ComponentDef
       }
     })
 

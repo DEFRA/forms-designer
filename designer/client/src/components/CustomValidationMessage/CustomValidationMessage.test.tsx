@@ -1,3 +1,4 @@
+import { type ComponentDef, ComponentType } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { act, cleanup, render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
@@ -17,10 +18,12 @@ describe('CssClasses', () => {
     beforeEach(() => {
       stateProps = {
         component: {
-          type: 'TelephoneNumberField',
-          name: 'testTelephone',
-          options: {}
-        }
+          name: 'TelephoneNumberField',
+          title: 'Telephone number field',
+          type: ComponentType.TelephoneNumberField,
+          options: {},
+          schema: {}
+        } satisfies ComponentDef
       }
 
       render(
@@ -39,7 +42,7 @@ describe('CssClasses', () => {
     })
 
     test('value should change and be displayed correctly', async () => {
-      const $input = getByLabelText('Validation message')
+      const $input = getByLabelText<HTMLInputElement>('Validation message')
       expect($input.value).toBe('')
 
       await act(() => userEvent.clear($input))

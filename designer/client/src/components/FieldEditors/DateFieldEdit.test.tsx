@@ -1,3 +1,4 @@
+import { ComponentType, type ComponentDef } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
 import React from 'react'
@@ -16,10 +17,13 @@ describe('date field edit', () => {
     beforeEach(() => {
       stateProps = {
         component: {
-          type: 'dateFieldEdit',
-          name: 'dateFieldEditClass',
-          options: {}
-        }
+          name: 'DateFieldEditClass',
+          title: 'Date field edit class',
+          hint: 'Date field hint',
+          type: ComponentType.DateField,
+          options: {},
+          schema: {}
+        } satisfies ComponentDef
       }
 
       render(

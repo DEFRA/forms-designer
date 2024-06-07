@@ -1,4 +1,4 @@
-import { type FormDefinition } from '@defra/forms-model'
+import { ComponentType, type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
 import React from 'react'
@@ -14,7 +14,7 @@ describe('InlineConditions', () => {
   test('Strings are rendered correctly', () => {
     const props = {
       path: '/some-path',
-      conditionsChange: jest.fn() as any,
+      conditionsChange: jest.fn(),
       hints: []
     }
 
@@ -30,9 +30,9 @@ describe('InlineConditions', () => {
           path: '/2',
           components: [
             {
-              type: 'TextField',
               name: 'field1',
               title: 'Something',
+              type: ComponentType.TextField,
               options: {},
               schema: {}
             }
@@ -44,16 +44,16 @@ describe('InlineConditions', () => {
           path: '/3',
           components: [
             {
-              type: 'TextField',
               name: 'field2',
               title: 'Something else',
+              type: ComponentType.TextField,
               options: {},
               schema: {}
             },
             {
-              type: 'TextField',
               name: 'field3',
               title: 'beep',
+              type: ComponentType.TextField,
               options: {},
               schema: {}
             }

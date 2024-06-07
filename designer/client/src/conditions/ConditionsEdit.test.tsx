@@ -1,4 +1,4 @@
-import { type FormDefinition } from '@defra/forms-model'
+import { ComponentType, type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { act, cleanup, render, type RenderResult } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
@@ -25,9 +25,9 @@ const data: FormDefinition = {
       path: '/2',
       components: [
         {
-          type: 'TextField',
           name: 'field1',
           title: 'Something',
+          type: ComponentType.TextField,
           options: {},
           schema: {}
         }
@@ -39,16 +39,16 @@ const data: FormDefinition = {
       path: '/3',
       components: [
         {
-          type: 'TextField',
           name: 'field2',
           title: 'Something else',
+          type: ComponentType.TextField,
           options: {},
           schema: {}
         },
         {
-          type: 'TextField',
           name: 'field3',
           title: 'beep',
+          type: ComponentType.TextField,
           options: {},
           schema: {}
         }

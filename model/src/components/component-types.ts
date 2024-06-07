@@ -1,209 +1,210 @@
+import { ComponentSubType, ComponentType } from '~/src/components/enums.js'
 import { type ComponentDef } from '~/src/components/types.js'
 
 export const ComponentTypes: ComponentDef[] = [
   {
     name: 'TextField',
-    type: 'TextField',
+    type: ComponentType.TextField,
     title: 'Text field',
-    subType: 'field',
+    subType: ComponentSubType.Field,
     hint: '',
     options: {},
     schema: {}
   },
   {
     name: 'MultilineTextField',
-    type: 'MultilineTextField',
+    type: ComponentType.MultilineTextField,
     title: 'Multiline text field',
-    subType: 'field',
+    subType: ComponentSubType.Field,
     hint: '',
     options: {},
     schema: {}
   },
   {
     name: 'YesNoField',
-    type: 'YesNoField',
+    type: ComponentType.YesNoField,
     title: 'Yes/No field',
-    subType: 'field',
+    subType: ComponentSubType.Field,
     hint: '',
     options: {},
     schema: {}
   },
   {
     name: 'DateField',
-    type: 'DateField',
+    type: ComponentType.DateField,
     title: 'Date field',
-    subType: 'field',
+    subType: ComponentSubType.Field,
     hint: '',
     options: {},
     schema: {}
   },
   {
     name: 'TimeField',
-    type: 'TimeField',
+    type: ComponentType.TimeField,
     title: 'Time field',
-    subType: 'field',
+    subType: ComponentSubType.Field,
     hint: '',
     options: {},
     schema: {}
   },
   {
     name: 'DateTimeField',
-    type: 'DateTimeField',
+    type: ComponentType.DateTimeField,
     title: 'Date time field',
-    subType: 'field',
+    subType: ComponentSubType.Field,
     hint: '',
     options: {},
     schema: {}
   },
   {
     name: 'DatePartsField',
-    type: 'DatePartsField',
+    type: ComponentType.DatePartsField,
     title: 'Date parts field',
-    subType: 'field',
+    subType: ComponentSubType.Field,
     hint: '',
     options: {},
     schema: {}
   },
   {
     name: 'DateTimePartsField',
-    type: 'DateTimePartsField',
+    type: ComponentType.DateTimePartsField,
     title: 'Date time parts field',
-    subType: 'field',
+    subType: ComponentSubType.Field,
     hint: '',
     options: {},
     schema: {}
   },
   {
     name: 'MonthYearField',
-    type: 'MonthYearField',
+    type: ComponentType.MonthYearField,
     title: 'Month year field',
-    subType: 'field',
+    subType: ComponentSubType.Field,
     hint: '',
     options: {},
     schema: {}
   },
   {
     name: 'SelectField',
-    type: 'SelectField',
+    type: ComponentType.SelectField,
     title: 'Select field',
-    subType: 'listField',
+    subType: ComponentSubType.ListField,
     options: {},
     schema: {},
     list: ''
   },
   {
     name: 'AutocompleteField',
-    type: 'AutocompleteField',
+    type: ComponentType.AutocompleteField,
     title: 'Autocomplete field',
-    subType: 'listField',
+    subType: ComponentSubType.ListField,
     options: {},
     schema: {},
     list: ''
   },
   {
     name: 'RadiosField',
-    type: 'RadiosField',
+    type: ComponentType.RadiosField,
     title: 'Radios field',
-    subType: 'listField',
+    subType: ComponentSubType.ListField,
     options: {},
     schema: {},
     list: ''
   },
   {
     name: 'CheckboxesField',
-    type: 'CheckboxesField',
+    type: ComponentType.CheckboxesField,
     title: 'Checkboxes field',
-    subType: 'listField',
+    subType: ComponentSubType.ListField,
     options: {},
     schema: {},
     list: ''
   },
   {
     name: 'NumberField',
-    type: 'NumberField',
+    type: ComponentType.NumberField,
     title: 'Number field',
-    subType: 'field',
+    subType: ComponentSubType.Field,
     hint: '',
     options: {},
     schema: {}
   },
   {
     name: 'UkAddressField',
-    type: 'UkAddressField',
+    type: ComponentType.UkAddressField,
     title: 'UK address field',
-    subType: 'field',
+    subType: ComponentSubType.Field,
     hint: '',
     options: {},
     schema: {}
   },
   {
     name: 'TelephoneNumberField',
-    type: 'TelephoneNumberField',
+    type: ComponentType.TelephoneNumberField,
     title: 'Telephone number field',
-    subType: 'field',
+    subType: ComponentSubType.Field,
     hint: '',
     options: {},
     schema: {}
   },
   {
     name: 'EmailAddressField',
-    type: 'EmailAddressField',
+    type: ComponentType.EmailAddressField,
     title: 'Email address field',
-    subType: 'field',
+    subType: ComponentSubType.Field,
     hint: '',
     options: {},
     schema: {}
   },
   {
     name: 'FileUploadField',
-    type: 'FileUploadField',
+    type: ComponentType.FileUploadField,
     title: 'File upload field',
-    subType: 'field',
+    subType: ComponentSubType.Field,
     hint: '',
     options: {},
     schema: {}
   },
   {
     name: 'Html',
-    type: 'Html',
+    type: ComponentType.Html,
     title: 'Html',
-    subType: 'content',
+    subType: ComponentSubType.Content,
     content: '',
     options: {},
     schema: {}
   },
   {
     name: 'InsetText',
-    type: 'InsetText',
+    type: ComponentType.InsetText,
     title: 'Inset text',
-    subType: 'content',
+    subType: ComponentSubType.Content,
     content: '',
     options: {},
     schema: {}
   },
   {
     name: 'Details',
-    type: 'Details',
+    type: ComponentType.Details,
     title: 'Details',
-    subType: 'content',
+    subType: ComponentSubType.Content,
     content: '',
     options: {},
     schema: {}
   },
   {
     name: 'List',
-    type: 'List',
+    type: ComponentType.List,
     title: 'List',
-    subType: 'content',
+    subType: ComponentSubType.Content,
     options: {},
     schema: {},
     list: ''
   },
   {
     name: 'WebsiteField',
-    type: 'WebsiteField',
+    type: ComponentType.WebsiteField,
     title: 'Website field',
-    subType: 'field',
+    subType: ComponentSubType.Field,
     hint: '',
     options: {},
     schema: {}

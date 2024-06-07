@@ -1,3 +1,4 @@
+import { ComponentType, type ComponentDef } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
 import React from 'react'
@@ -16,10 +17,13 @@ describe('Number field edit', () => {
     beforeEach(() => {
       stateProps = {
         component: {
-          type: 'numberFieldEdit',
-          name: 'numberFieldEditClass',
-          options: {}
-        }
+          name: 'NumberFieldEditClass',
+          title: 'Number field edit class',
+          hint: 'Number field hint',
+          type: ComponentType.NumberField,
+          options: {},
+          schema: {}
+        } satisfies ComponentDef
       }
 
       render(

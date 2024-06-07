@@ -1,4 +1,5 @@
 import {
+  ComponentType,
   ConditionValue,
   dateTimeUnits,
   dateUnits,
@@ -21,7 +22,7 @@ describe.skip('InlineConditionsDefinitionValue', () => {
     const fieldDef = {
       label: 'Something',
       name: 'field1',
-      type: 'TextField'
+      type: ComponentType.TextField
     }
     render(
       <InlineConditionsDefinitionValue
@@ -41,7 +42,7 @@ describe.skip('InlineConditionsDefinitionValue', () => {
     const fieldDef = {
       label: 'Something',
       name: 'field1',
-      type: 'TextField'
+      type: ComponentType.TextField
     }
     const updateValueCallback = jest.fn()
     render(
@@ -67,7 +68,7 @@ describe.skip('InlineConditionsDefinitionValue', () => {
     const fieldDef = {
       label: 'Something',
       name: 'field1',
-      type: 'TextField'
+      type: ComponentType.TextField
     }
     const updateValueCallback = jest.fn()
     render(
@@ -94,7 +95,7 @@ describe.skip('InlineConditionsDefinitionValue', () => {
       label: 'Something',
       name: 'field1',
       values,
-      type: 'SelectField'
+      type: ComponentType.SelectField
     }
     render(
       <InlineConditionsDefinitionValue
@@ -124,7 +125,7 @@ describe.skip('InlineConditionsDefinitionValue', () => {
       label: 'Something',
       name: 'field1',
       values,
-      type: 'SelectField'
+      type: ComponentType.SelectField
     }
     const updateValueCallback = jest.fn()
     render(
@@ -155,7 +156,7 @@ describe.skip('InlineConditionsDefinitionValue', () => {
       label: 'Something',
       name: 'field1',
       values,
-      type: 'SelectField'
+      type: ComponentType.SelectField
     }
     const updateValueCallback = jest.fn()
     render(
@@ -186,7 +187,7 @@ describe.skip('InlineConditionsDefinitionValue', () => {
       label: 'Something',
       name: 'field1',
       values,
-      type: 'SelectField'
+      type: ComponentType.SelectField
     }
     const updateValueCallback = jest.fn()
     render(
@@ -217,7 +218,7 @@ describe.skip('InlineConditionsDefinitionValue', () => {
       label: 'Something',
       name: 'field1',
       values,
-      type: 'SelectField'
+      type: ComponentType.SelectField
     }
     const updateValueCallback = jest.fn()
     render(
@@ -236,11 +237,11 @@ describe.skip('InlineConditionsDefinitionValue', () => {
   })
 
   const dateAndTimeMappings = [
-    { type: 'DateField', units: dateUnits },
-    { type: 'DatePartsField', units: dateUnits },
-    { type: 'TimeField', units: timeUnits, timeOnly: true },
-    { type: 'DateTimeField', units: dateTimeUnits },
-    { type: 'DateTimePartsField', units: dateTimeUnits }
+    { type: ComponentType.DateField, units: dateUnits },
+    { type: ComponentType.DatePartsField, units: dateUnits },
+    { type: ComponentType.TimeField, units: timeUnits, timeOnly: true },
+    { type: ComponentType.DateTimeField, units: dateTimeUnits },
+    { type: ComponentType.DateTimePartsField, units: dateTimeUnits }
   ]
 
   dateAndTimeMappings.forEach((mapping) => {

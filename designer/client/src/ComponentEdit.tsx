@@ -1,4 +1,4 @@
-import { ComponentTypeEnum as Types } from '@defra/forms-model'
+import { ComponentType as Types } from '@defra/forms-model'
 import React, { useContext, useLayoutEffect } from 'react'
 
 import { ComponentTypeEdit } from '~/src/ComponentTypeEdit.jsx'

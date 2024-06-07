@@ -1,4 +1,4 @@
-import { type FormDefinition } from '@defra/forms-model'
+import { ComponentType, type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import {
   act,
@@ -96,14 +96,15 @@ describe('ComponentCreate:', () => {
         {
           ...data,
           pages: [
-            expect.objectContaining({
+            expect.objectContaining<Partial<FormDefinition['pages'][0]>>({
               components: [
                 {
                   title: 'Details',
-                  type: 'Details',
+                  type: ComponentType.Details,
                   name: expect.any(String),
                   content: 'content',
-                  options: {}
+                  options: {},
+                  schema: {}
                 }
               ]
             })

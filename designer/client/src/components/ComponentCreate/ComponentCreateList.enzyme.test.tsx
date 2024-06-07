@@ -1,3 +1,4 @@
+import { ComponentType, ComponentSubType } from '@defra/forms-model'
 import { shallow } from 'enzyme'
 import React from 'react'
 
@@ -40,9 +41,9 @@ describe('ComponentCreateList', () => {
       expect.arrayContaining([
         {
           name: 'Details',
-          type: 'Details',
           title: 'Details',
-          subType: 'content',
+          type: ComponentType.Details,
+          subType: ComponentSubType.Content,
           content: '',
           options: {},
           schema: {}
@@ -101,12 +102,12 @@ describe('ComponentCreateList', () => {
       expect.arrayContaining([
         {
           name: 'AutocompleteField',
-          type: 'AutocompleteField',
           title: 'Autocomplete field',
-          subType: 'listField',
+          list: '',
+          type: ComponentType.AutocompleteField,
+          subType: ComponentSubType.ListField,
           options: {},
-          schema: {},
-          list: ''
+          schema: {}
         }
       ])
     )
@@ -146,12 +147,12 @@ describe('ComponentCreateList', () => {
       expect.arrayContaining([
         {
           name: 'CheckboxesField',
-          type: 'CheckboxesField',
           title: 'Checkboxes field',
-          subType: 'listField',
+          list: '',
+          type: ComponentType.CheckboxesField,
+          subType: ComponentSubType.ListField,
           options: {},
-          schema: {},
-          list: ''
+          schema: {}
         }
       ])
     )

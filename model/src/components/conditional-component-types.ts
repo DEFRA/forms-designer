@@ -1,14 +1,15 @@
+import { ComponentSubType } from '~/src/components/enums.js'
 import { type ConditionalComponent } from '~/src/components/types.js'
 
-export const ConditionalComponentTypes: ConditionalComponent[] = [
+export const ConditionalComponentTypes = [
   {
     name: 'TextField',
     title: 'Text field',
-    subType: 'field'
+    subType: ComponentSubType.Field
   },
   {
     name: 'NumberField',
     title: 'Number field',
-    subType: 'field'
+    subType: ComponentSubType.Field
   }
-]
+] satisfies ConditionalComponent[]

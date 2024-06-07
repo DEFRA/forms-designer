@@ -1,3 +1,4 @@
+import { ComponentType, type ComponentDef } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { render } from '@testing-library/react'
 import React from 'react'
@@ -14,10 +15,12 @@ describe('Text field edit', () => {
     beforeEach(() => {
       stateProps = {
         component: {
-          type: 'textFieldEdit',
           name: 'TextFieldEditClass',
-          options: {}
-        }
+          title: 'Text field edit class',
+          type: ComponentType.TextField,
+          options: {},
+          schema: {}
+        } satisfies ComponentDef
       }
 
       render(

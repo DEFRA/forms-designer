@@ -1,4 +1,4 @@
-import { type FormDefinition } from '@defra/forms-model'
+import { ComponentType, type FormDefinition } from '@defra/forms-model'
 
 import { updateComponent } from '~/src/data/component/updateComponent.js'
 
@@ -10,9 +10,9 @@ test('updateComponent throws an error when the target component cannot be found'
         path: '/1',
         components: [
           {
-            type: 'TextField',
             name: 'firstName',
             title: 'First name',
+            type: ComponentType.TextField,
             options: {},
             schema: {}
           }
@@ -41,9 +41,9 @@ test('addComponent adds a component to the correct page', () => {
         path: '/1',
         components: [
           {
-            type: 'TextField',
             name: 'firstName',
             title: 'First name',
+            type: ComponentType.TextField,
             options: {},
             schema: {}
           }
@@ -54,9 +54,9 @@ test('addComponent adds a component to the correct page', () => {
         path: '/2',
         components: [
           {
-            type: 'TextField',
             name: 'lastName',
             title: 'Surname',
+            type: ComponentType.TextField,
             options: {},
             schema: {}
           }
@@ -71,9 +71,9 @@ test('addComponent adds a component to the correct page', () => {
 
   expect(
     updateComponent(data, '/1', 'firstName', {
-      type: 'TextField',
       name: 'fullName',
       title: 'full name',
+      type: ComponentType.TextField,
       options: {},
       schema: {}
     })
@@ -84,9 +84,9 @@ test('addComponent adds a component to the correct page', () => {
         path: '/1',
         components: [
           {
-            type: 'TextField',
             name: 'fullName',
             title: 'full name',
+            type: ComponentType.TextField,
             options: {},
             schema: {}
           }
@@ -97,9 +97,9 @@ test('addComponent adds a component to the correct page', () => {
         path: '/2',
         components: [
           {
-            type: 'TextField',
             name: 'lastName',
             title: 'Surname',
+            type: ComponentType.TextField,
             options: {},
             schema: {}
           }

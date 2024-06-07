@@ -1,4 +1,4 @@
-import { type FormDefinition } from '@defra/forms-model'
+import { ComponentType, type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
 import React, { useReducer } from 'react'
@@ -23,12 +23,12 @@ describe('Field Edit', () => {
           {
             name: 'IDDQl4',
             title: 'abc',
-            schema: {},
+            list: 'myList',
+            type: ComponentType.List,
             options: {
               required: true
             },
-            type: 'List',
-            list: 'myList'
+            schema: {}
           }
         ]
       }

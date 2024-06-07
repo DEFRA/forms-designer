@@ -1,4 +1,4 @@
-import { type FormDefinition } from '@defra/forms-model'
+import { ComponentType, type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { act, cleanup, render, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
@@ -25,8 +25,8 @@ describe('OutputEdit', () => {
           components: [
             {
               name: '9WH4EX',
-              type: 'TextField',
               title: 'Email',
+              type: ComponentType.TextField,
               options: {},
               schema: {}
             }

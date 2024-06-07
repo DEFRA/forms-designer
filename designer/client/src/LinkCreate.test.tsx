@@ -1,4 +1,4 @@
-import { type FormDefinition } from '@defra/forms-model'
+import { ComponentType, type FormDefinition } from '@defra/forms-model'
 import { screen, within } from '@testing-library/dom'
 import {
   act,
@@ -20,7 +20,7 @@ const rawData: FormDefinition = {
       path: '/first-page',
       components: [
         {
-          type: 'YesNoField',
+          type: ComponentType.YesNoField,
           name: 'ukPassport',
           title: 'Do you have a UK passport?',
           options: {
@@ -226,7 +226,7 @@ describe('LinkCreate', () => {
               {
                 field: {
                   name: 'ukPassport',
-                  type: 'YesNoField',
+                  type: ComponentType.YesNoField,
                   display: 'Do you have a UK passport?'
                 },
                 operator: 'is',
@@ -248,7 +248,7 @@ describe('LinkCreate', () => {
               {
                 field: {
                   name: 'ukPassport',
-                  type: 'YesNoField',
+                  type: ComponentType.YesNoField,
                   display: 'Do you have a UK passport?'
                 },
                 operator: 'is',

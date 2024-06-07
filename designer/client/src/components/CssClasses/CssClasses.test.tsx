@@ -1,3 +1,4 @@
+import { ComponentType, type ComponentDef } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
 import React from 'react'
@@ -16,10 +17,12 @@ describe('CssClasses', () => {
     beforeEach(() => {
       stateProps = {
         component: {
-          type: 'CssClassField',
           name: 'TestCssClass',
-          options: {}
-        }
+          title: 'Test CSS class',
+          type: ComponentType.TextField,
+          options: {},
+          schema: {}
+        } satisfies ComponentDef
       }
 
       render(
