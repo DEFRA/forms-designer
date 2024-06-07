@@ -222,9 +222,10 @@ export class InlineConditions extends Component<Props, State> {
       this.state
     const hasConditions = conditions.hasConditions
 
-    const nameError = validationErrors.filter(
-      (error) => error.href === '#cond-name'
-    )[0]
+    const nameError = validationErrors
+      .filter((error) => error.href === '#cond-name')
+      .at(0)
+
     const hasErrors = !!validationErrors.length
 
     return (
