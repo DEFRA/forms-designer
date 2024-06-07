@@ -20,5 +20,6 @@ export enum ComponentTypeEnum {
   Html = 'Html',
   InsetText = 'InsetText',
   Details = 'Details',
-  List = 'List'
+  List = 'List',
+  WebsiteField = 'WebsiteField'
 }
