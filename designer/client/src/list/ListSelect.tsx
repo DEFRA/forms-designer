@@ -33,6 +33,7 @@ export function ListSelect() {
             <a
               data-testid="edit-list"
               href="#"
+              className="govuk-link"
               onClick={(e) => editList(e, list)}
             >
               {list.title || list.name}
