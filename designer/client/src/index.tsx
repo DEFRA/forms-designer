@@ -3,8 +3,11 @@ import ReactDOM from 'react-dom'
 
 import { Designer } from '~/src/Designer.jsx'
 import { initI18n } from '~/src/i18n/i18n.jsx'
+import logger from '~/src/plugins/logger.js'
 
-initI18n()
+initI18n().catch((err: unknown) => {
+  logger.error('I18n', err)
+})
 
 const container = document.querySelector('.app-editor')
 

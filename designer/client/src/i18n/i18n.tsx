@@ -3,7 +3,7 @@ import Backend from 'i18next-http-backend'
 
 import enCommonTranslations from '~/src/i18n/translations/en.translation.json'
 
-const interpolationFormats = {
+const interpolationFormats: Record<string, (value: string) => string> = {
   capitalise: (value: string) => value.charAt(0).toUpperCase() + value.slice(1)
 }
 
@@ -13,8 +13,12 @@ const DEFAULT_SETTINGS: InitOptions = {
   debug: false,
   interpolation: {
     escapeValue: false,
-    format: function (value, format, lng) {
-      return interpolationFormats[format]?.(value) ?? value
+    format(value: string, format) {
+      if (format && format in interpolationFormats) {
+        return interpolationFormats[format](value)
+      }
+
+      return value
     }
   },
   resources: {
@@ -27,10 +31,8 @@ const DEFAULT_SETTINGS: InitOptions = {
   }
 }
 
-export const initI18n = (
-  i18n: typeof i18next = i18next,
-  settings = DEFAULT_SETTINGS
-) => i18n.use(Backend).init(settings)
+export const initI18n = (settings = DEFAULT_SETTINGS) =>
+  i18next.use(Backend).init(settings)
 
 export const i18n = (text: string, options?: TOptions) => {
   return i18next.t(text, options)
