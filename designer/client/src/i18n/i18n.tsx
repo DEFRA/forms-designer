@@ -19,7 +19,8 @@ const DEFAULT_SETTINGS: InitOptions = {
       }
 
       return value
-    }
+    },
+    skipOnVariables: false
   },
   resources: {
     en: {

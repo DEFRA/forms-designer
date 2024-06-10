@@ -44,9 +44,17 @@ export function useListItem(state, dispatch): ListItemHook {
 
   function validate(i18nProp) {
     const title = state.selectedItem.text || ''
+
     const errors = {
-      ...validateTitle('title', title, i18nProp),
-      ...validateNotEmpty('value', 'value', 'value', value)
+      ...validateTitle(
+        'title',
+        'title',
+        '$t(list.item.title)',
+        title,
+        i18nProp
+      ),
+
+      ...validateNotEmpty('value', 'value', '$t(list.item.value)', value)
     }
 
     const valErrors = hasValidationErrors(errors)

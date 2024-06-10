@@ -65,12 +65,21 @@ function useListEdit() {
 
   const validate = () => {
     const { selectedList } = state
-    const errors = validateTitle('list-title', selectedList.title, i18n)
+
+    const errors = validateTitle(
+      'title',
+      'list-title',
+      '$t(list.title)',
+      selectedList.title,
+      i18n
+    )
+
     if (selectedList.items.length <= 0) {
       errors.listItems = {
         children: ['list.errors.empty']
       }
     }
+
     return errors
   }
 
@@ -131,6 +140,7 @@ export function ListEdit() {
         {selectedList && (
           <Input
             id="list-title"
+            name="title"
             hint={{ children: i18n('list.titleHint') }}
             label={{
               className: 'govuk-label--s',

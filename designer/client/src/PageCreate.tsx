@@ -74,8 +74,17 @@ export class PageCreate extends Component {
 
   validate = (title, path): ErrorList => {
     const { data } = this.context
-    const titleErrors = validateTitle('page-title', title, i18n)
+
+    const titleErrors = validateTitle(
+      'title',
+      'page-title',
+      '$t(page.title)',
+      title,
+      i18n
+    )
+
     const errors = { ...titleErrors }
+
     const alreadyExists = data.pages.find((page) => page.path === path)
     if (alreadyExists) {
       errors.path = {

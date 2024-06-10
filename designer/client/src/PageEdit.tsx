@@ -69,12 +69,20 @@ export class PageEdit extends Component {
   validate = (title, path): ErrorList => {
     const { page } = this.props
     const { data } = this.context
-    const titleErrors = validateTitle('page-title', title, i18n)
+
+    const titleErrors = validateTitle(
+      'title',
+      'page-title',
+      '$t(page.title)',
+      title,
+      i18n
+    )
+
     const errors = { ...titleErrors }
 
-    let pathHasErrors = false
-    if (path !== page.path)
-      pathHasErrors = data.pages.find((page) => page.path === path)
+    const pathHasErrors =
+      path !== page.path ? data.pages.some((page) => page.path === path) : false
+
     if (pathHasErrors) {
       errors.path = {
         href: '#page-path',

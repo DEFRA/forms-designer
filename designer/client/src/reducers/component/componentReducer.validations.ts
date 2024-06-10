@@ -69,7 +69,9 @@ export function fieldComponentValidations(component) {
   const validations = [validateName(component)]
 
   if (hasTitle) {
-    validations.push(validateTitle('field-title', component.title, i18n))
+    validations.push(
+      validateTitle('title', 'field-title', '$t(title)', component.title, i18n)
+    )
   }
 
   if (hasContentField) {
