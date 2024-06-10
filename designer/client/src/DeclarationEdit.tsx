@@ -72,7 +72,7 @@ export class DeclarationEdit extends Component {
             class is available. Use this on a wrapping element to apply default
             govuk styles.
           </div>
-          <Editor name="declaration" value={declaration} />
+          <Editor id="declaration" name="declaration" value={declaration} />
         </div>
 
         <button className="govuk-button" type="submit">
