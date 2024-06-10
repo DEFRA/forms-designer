@@ -252,8 +252,6 @@
       "valueHint": "This determines the data format of the list item and does not show on the form. Unless you are using integrations and want to modify the payload, it should match the list item text."
     },
     "items": {
-      "hint": "Use the drag handles to reorder your list",
-      "hintNoItems": "This list does not have any list items",
       "title": "List items"
     },
     "newTitle": "Add a new list",

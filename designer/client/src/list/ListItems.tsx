@@ -1,10 +1,5 @@
 import { clone } from '@defra/forms-model'
 import React, { useContext } from 'react'
-import {
-  SortableContainer,
-  SortableElement,
-  SortableHandle
-} from 'react-sortable-hoc'
 
 import { DataContext } from '~/src/context/DataContext.js'
 import { useListItem } from '~/src/hooks/list/useListItem/useListItem.jsx'
@@ -16,20 +11,16 @@ import {
 import { ListActions } from '~/src/reducers/listActions.jsx'
 import { ListContext } from '~/src/reducers/listReducer.jsx'
 
-const DragHandle = SortableHandle(() => (
-  <span className="drag-handle-list">&#9776;</span>
-))
-
-const SortableItem = SortableElement(({ item, removeItem, selectListItem }) => {
+const ListItem = ({ item, removeItem, selectListItem }) => {
   return (
     <tr className="govuk-table__row">
-      <td className="govuk-table__cell" width="20px">
-        <DragHandle />
+      <td className="govuk-table__cell govuk-!-width-full">
+        {item.text ?? item.label}
       </td>
-      <td className="govuk-table__cell">{item.text ?? item.label}</td>
-      <td className="govuk-table__cell" width="50px">
+      <td className="govuk-table__cell">
         <a
           href="#"
+          className="govuk-link"
           onClick={(e) => {
             e.preventDefault()
             selectListItem(item)
@@ -38,9 +29,10 @@ const SortableItem = SortableElement(({ item, removeItem, selectListItem }) => {
           Edit
         </a>
       </td>
-      <td className="govuk-table__cell" width="50px">
+      <td className="govuk-table__cell">
         <a
           href="#"
+          className="govuk-link"
           onClick={(e) => {
             e.preventDefault()
             removeItem()
@@ -51,25 +43,7 @@ const SortableItem = SortableElement(({ item, removeItem, selectListItem }) => {
       </td>
     </tr>
   )
-})
-
-const SortableList = SortableContainer(
-  ({ items, selectListItem, removeItem }) => {
-    return (
-      <tbody className="govuk-table__body">
-        {items.map((item, idx) => (
-          <SortableItem
-            key={`item-${idx}`}
-            item={item}
-            index={idx}
-            selectListItem={selectListItem}
-            removeItem={() => removeItem(idx)}
-          />
-        ))}
-      </tbody>
-    )
-  }
-)
+}
 
 export function ListItems() {
   const { state: listEditorState, dispatch: listsEditorDispatch } =
@@ -77,7 +51,6 @@ export function ListItems() {
   const { isEditingStatic } = listEditorState
   const { data, save } = useContext(DataContext)
   const { state, dispatch } = useContext(ListContext)
-  const selectedList = state.selectedList
 
   const selectListItem = (payload) => {
     dispatch({ type: ListActions.EDIT_LIST_ITEM, payload })
@@ -91,54 +64,26 @@ export function ListItems() {
     save(prepareForDelete(copy, index))
   }
 
-  const onSortEnd = ({ oldIndex, newIndex }) => {
-    const payload = { oldIndex, newIndex }
-    if (!isEditingStatic) {
-      dispatch({ type: ListActions.SORT_LIST_ITEM, payload })
-    }
+  const { selectedList } = state
+  if (!selectedList?.items?.length) {
+    return null
   }
 
-  const hasListItems = (selectedList?.items ?? []).length > 0
-
   return (
-    <table className="govuk-table">
+    <table className="govuk-table govuk-!-margin-bottom-2">
       <caption className={'govuk-table__caption'}>
         {i18n('list.items.title')}
-        <div className="govuk-hint govuk-!-margin-bottom-0">
-          {i18n('list.items.hint')}
-        </div>
       </caption>
-
-      <thead className="govuk-table__head">
-        <tr className="govuk-table__row">
-          <th className="govuk-table__header" scope="col" />
-          <th className="govuk-table__header" scope="col" />
-          <th className="govuk-table__header" scope="col" />
-          <th className="govuk-table__header" scope="col" />
-        </tr>
-      </thead>
-
-      {!hasListItems && (
-        <tbody className="govuk-table__body">
-          <tr className="govuk-table__row">
-            <td className="govuk-table__cell">
-              {i18n('list.items.hintNoItems')}
-            </td>
-          </tr>
-        </tbody>
-      )}
-      {hasListItems && (
-        <SortableList
-          items={selectedList?.items ?? []}
-          selectListItem={selectListItem}
-          removeItem={removeItem}
-          onSortEnd={onSortEnd}
-          helperClass="dragging-on-modal"
-          hideSortableGhost={false}
-          lockToContainerEdges
-          useDragHandle
-        />
-      )}
+      <tbody className="govuk-table__body">
+        {selectedList.items.map((item, idx) => (
+          <ListItem
+            key={`item-${idx}`}
+            item={item}
+            selectListItem={selectListItem}
+            removeItem={() => removeItem(idx)}
+          />
+        ))}
+      </tbody>
     </table>
   )
 }
