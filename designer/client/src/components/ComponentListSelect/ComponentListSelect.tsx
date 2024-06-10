@@ -1,5 +1,4 @@
 import { type ListComponentsDef } from '@defra/forms-model'
-import { Label } from '@xgovformbuilder/govuk-react-jsx'
 import classNames from 'classnames'
 import React, {
   useContext,
@@ -97,9 +96,12 @@ export function ComponentListSelect() {
           'govuk-form-group--error': errors?.list
         })}
       >
-        <Label htmlFor="field-options-list" className="govuk-label--s">
+        <label
+          className="govuk-label govuk-label--s"
+          htmlFor="field-options-list"
+        >
           {i18n('list.select.title')}
-        </Label>
+        </label>
         <div className="govuk-hint">{i18n('list.select.helpText')}</div>
         <select
           className="govuk-select govuk-input--width-10"

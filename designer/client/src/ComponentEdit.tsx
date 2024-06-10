@@ -67,6 +67,11 @@ export function ComponentEdit(props) {
 
   const handleDelete = async (e) => {
     e.preventDefault()
+
+    if (!window.confirm('Confirm delete')) {
+      return
+    }
+
     const copy = { ...data }
     const indexOfPage = copy.pages.findIndex((p) => p.path === page.path)
     const indexOfComponent = copy.pages[indexOfPage]?.components.findIndex(

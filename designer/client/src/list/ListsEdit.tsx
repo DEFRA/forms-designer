@@ -20,7 +20,7 @@ interface Props {
 const useListsEdit = () => {
   const { state: listEditState, dispatch: listsEditorDispatch } =
     useContext(ListsEditorContext)
-  const { isEditingList, isEditingListItem, showWarning } = listEditState
+  const { isEditingList, isEditingListItem } = listEditState
   const { state } = useContext(ListContext)
   const { selectedList, selectedItem } = state
 
@@ -43,7 +43,6 @@ const useListsEdit = () => {
   return {
     isEditingList,
     isEditingListItem,
-    showWarning,
     selectedList,
     selectedItem,
     closeFlyout,
@@ -56,7 +55,6 @@ export function ListsEdit({ showEditLists = false }: Props) {
   const {
     isEditingList,
     isEditingListItem,
-    showWarning,
     closeFlyout,
     listTitle,
     itemTitle
@@ -73,7 +71,6 @@ export function ListsEdit({ showEditLists = false }: Props) {
             onHide={closeFlyout(ListsEditorStateActions.IS_EDITING_LIST)}
             width={''}
           >
-            {showWarning && <Warning />}
             <ListEdit />
           </Flyout>
         </RenderInPortal>

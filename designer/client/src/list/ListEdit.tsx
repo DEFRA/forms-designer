@@ -1,5 +1,6 @@
+import { clone } from '@defra/forms-model'
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
-import React, { useContext } from 'react'
+import React, { useContext, type FormEvent, type MouseEvent } from 'react'
 
 import { ErrorSummary } from '~/src/ErrorSummary.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
@@ -40,15 +41,26 @@ function useListEdit() {
   const { state: listEditorState, dispatch: listsEditorDispatch } =
     useContext(ListsEditorContext)
   const { state, dispatch } = useContext(ListContext)
-  const { showWarning } = listEditorState
   const { data, save } = useContext(DataContext)
-  const handleDelete = (isNewList) => {
-    if (isNewList) {
-      listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST, false])
+
+  const handleDelete = async (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+
+    if (window.confirm('Confirm delete')) {
+      const { initialName } = listEditorState
+      const copy = clone(data)
+
+      const selectedListIndex = copy.lists.findIndex(
+        (list) => list.name === initialName
+      )
+
+      if (selectedListIndex) {
+        copy.lists.splice(selectedListIndex, 1)
+        await save(copy)
+      }
     }
-    if (!showWarning) {
-      listsEditorDispatch([ListsEditorStateActions.SHOW_WARNING, true])
-    }
+
+    listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST, false])
   }
 
   const validate = () => {
@@ -62,8 +74,8 @@ function useListEdit() {
     return errors
   }
 
-  const handleSubmit = async (e) => {
-    e?.preventDefault()
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
     const { selectedList, initialName } = state
     const errors = validate()
     if (hasValidationErrors(errors)) {
@@ -141,8 +153,8 @@ export function ListEdit() {
 
         <p className="govuk-body">
           <a
-            className="govuk-link govuk-!-display-block govuk-!-margin-bottom-1"
             href="#createItem"
+            className="govuk-link"
             data-testid="add-list-item"
             onClick={(e) => {
               e.preventDefault()
@@ -158,20 +170,19 @@ export function ListEdit() {
             data-testid="save-list"
             className="govuk-button"
             type="submit"
-            onClick={handleSubmit}
           >
             {i18n('save')}
           </button>
-          <button
-            className="govuk-button govuk-button--warning"
-            type="button"
-            onClick={(e) => {
-              e.preventDefault()
-              handleDelete(selectedList?.isNew)
-            }}
-          >
-            {i18n(selectedList?.isNew ? 'cancel' : 'delete')}
-          </button>
+
+          {selectedList?.isNew || (
+            <button
+              className="govuk-button govuk-button--warning"
+              type="button"
+              onClick={handleDelete}
+            >
+              {i18n('delete')}
+            </button>
+          )}
         </div>
       </form>
     </>

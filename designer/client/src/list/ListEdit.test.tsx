@@ -33,9 +33,9 @@ const data: FormDefinition = {
 const dataValue = { data, save: jest.fn() }
 
 describe('ListEdit', () => {
-  const { getByText, queryByText } = screen
+  const { getByText } = screen
 
-  test('strings are rendered correctly', async () => {
+  test('strings are rendered correctly', () => {
     const listValue = {
       state: { selectedList: data.lists[0] },
       dispatch: jest.fn()
@@ -45,7 +45,7 @@ describe('ListEdit', () => {
       dispatch: jest.fn()
     }
 
-    const { rerender } = customRenderForLists(<ListEdit />, {
+    customRenderForLists(<ListEdit />, {
       dataValue,
       listsValue,
       listValue
@@ -53,29 +53,6 @@ describe('ListEdit', () => {
 
     expect(getByText('List items')).toBeInTheDocument()
     expect(getByText('Enter a unique name for your list')).toBeInTheDocument()
-    expect(
-      getByText('Use the drag handles to reorder your list')
-    ).toBeInTheDocument()
     expect(getByText('Add list item')).toBeInTheDocument()
-    expect(
-      queryByText('This list does not have any list items')
-    ).not.toBeInTheDocument()
-
-    const emptyList = {
-      state: { selectedList: data.lists[1], isNew: true },
-      dispatch: jest.fn()
-    }
-
-    await rerender.call(
-      {
-        dataValue,
-        listsValue,
-        listValue: emptyList
-      },
-      <ListEdit />
-    )
-    expect(
-      getByText('This list does not have any list items')
-    ).toBeInTheDocument()
   })
 })

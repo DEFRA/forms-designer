@@ -1,4 +1,4 @@
-import { Hint, Input, Label, Textarea } from '@xgovformbuilder/govuk-react-jsx'
+import { Input, Textarea } from '@xgovformbuilder/govuk-react-jsx'
 import React, { useContext, type FormEvent, type MouseEvent } from 'react'
 
 import { DataContext } from '~/src/context/DataContext.js'
@@ -80,8 +80,10 @@ export function ListItemEdit() {
           }
           onChange={handleValueChange}
         />
-        <Label htmlFor="condition">{i18n('list.item.conditions')}</Label>
-        <Hint>{i18n('list.item.conditionsHint')}</Hint>
+        <label className="govuk-label" htmlFor="condition">
+          {i18n('list.item.conditions')}
+        </label>
+        <div className="govuk-hint">{i18n('list.item.conditionsHint')}</div>
         <select
           className="govuk-select"
           id="condition"

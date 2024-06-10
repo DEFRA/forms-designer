@@ -3,7 +3,7 @@ import {
   type ConditionRef,
   type FormDefinition
 } from '@defra/forms-model'
-import { Hint, Select } from '@xgovformbuilder/govuk-react-jsx'
+import { Select } from '@xgovformbuilder/govuk-react-jsx'
 import React, { Component, type ChangeEvent } from 'react'
 
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'

@@ -6,11 +6,6 @@ import {
   type FormDefinition
 } from '@defra/forms-model'
 import React, { useContext, useState, type CSSProperties } from 'react'
-import {
-  SortableContainer,
-  SortableElement,
-  arrayMove
-} from 'react-sortable-hoc'
 
 import { Component } from '~/src/Component.jsx'
 import { PageEdit } from '~/src/PageEdit.jsx'
@@ -18,47 +13,45 @@ import { ComponentCreate } from '~/src/components/ComponentCreate/ComponentCreat
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import { PageLinkage } from '~/src/components/PageLinkage/PageLinkage.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
-import { findPage } from '~/src/data/page/findPage.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContextProvider } from '~/src/reducers/component/componentReducer.jsx'
 
-const SortableItem = SortableElement(
-  (props: {
-    index: number
-    page: PageType | RepeatingFieldPage
-    component: ComponentDef
-    data: FormDefinition
-  }) => {
-    const { index, page, component, data } = props
+const ComponentItem = (props: {
+  index: number
+  page: PageType | RepeatingFieldPage
+  component: ComponentDef
+  data: FormDefinition
+}) => {
+  const { index, page, component, data } = props
 
-    return (
-      <div className="component-item">
-        <Component key={index} page={page} component={component} data={data} />
-      </div>
-    )
-  }
-)
+  return (
+    <div className="component-item">
+      <Component key={index} page={page} component={component} data={data} />
+    </div>
+  )
+}
 
-const SortableList = SortableContainer(
-  (props: { page: PageType | RepeatingFieldPage; data: FormDefinition }) => {
-    const { page, data } = props
-    const { components = [] } = page
+const ComponentList = (props: {
+  page: PageType | RepeatingFieldPage
+  data: FormDefinition
+}) => {
+  const { page, data } = props
+  const { components = [] } = page
 
-    return (
-      <div className="component-list">
-        {components.map((component, index) => (
-          <SortableItem
-            key={index}
-            index={index}
-            page={page}
-            component={component}
-            data={data}
-          />
-        ))}
-      </div>
-    )
-  }
-)
+  return (
+    <div className="component-list">
+      {components.map((component, index) => (
+        <ComponentItem
+          key={index}
+          index={index}
+          page={page}
+          component={component}
+          data={data}
+        />
+      ))}
+    </div>
+  )
+}
 
 export const Page = (props: {
   page: PageType | RepeatingFieldPage
@@ -72,24 +65,6 @@ export const Page = (props: {
   const { data, save } = useContext(DataContext)
   const [isEditingPage, setIsEditingPage] = useState(false)
   const [isCreatingComponent, setIsCreatingComponent] = useState(false)
-
-  const onSortEnd = ({
-    oldIndex,
-    newIndex
-  }: {
-    oldIndex: number
-    newIndex: number
-  }) => {
-    const copy = { ...data }
-    const [copyPage, index] = findPage(data, page.path)
-
-    if (copyPage.components?.length) {
-      copyPage.components = arrayMove(copyPage.components, oldIndex, newIndex)
-    }
-
-    copy.pages[index] = copyPage
-    save(copy)
-  }
 
   const onEditEnd = () => {
     setIsEditingPage(false)
@@ -120,15 +95,7 @@ export const Page = (props: {
         <PageLinkage page={page} layout={layout} />
       </div>
 
-      <SortableList
-        page={page}
-        data={data}
-        pressDelay={90}
-        onSortEnd={onSortEnd}
-        lockAxis="y"
-        helperClass="dragging"
-        lockToContainerEdges
-      />
+      <ComponentList page={page} data={data} />
 
       <div className="page__actions">
         <button

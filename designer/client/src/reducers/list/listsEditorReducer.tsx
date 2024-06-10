@@ -6,7 +6,6 @@ export enum ListsEditorStateActions {
   SET_LIST_TITLE = 'SET_LIST_TITLE',
   SET_LIST_ITEM_TITLE = 'SET_LIST_ITEM_TITLE',
   SET_CONTEXT = 'SET_CONTEXT',
-  SHOW_WARNING = 'SHOW_WARNING',
   RESET = 'RESET'
 }
 
@@ -15,7 +14,6 @@ export interface ListsEditorState {
   isEditingListItem: boolean
   listTitle?: string
   listItemTitle?: string
-  showWarning?: boolean
   initialName?: string
 }
 
@@ -52,14 +50,9 @@ export function listsEditorReducer(
     case ListsEditorStateActions.SET_LIST_ITEM_TITLE:
       return { ...state, listItemTitle: payload }
     case ListsEditorStateActions.IS_EDITING_LIST:
-      return { ...state, isEditingList: payload, showWarning: false }
+      return { ...state, isEditingList: payload }
     case ListsEditorStateActions.IS_EDITING_LIST_ITEM:
       return { ...state, isEditingListItem: payload }
-    case ListsEditorStateActions.SHOW_WARNING:
-      return {
-        ...state,
-        showWarning: payload
-      }
     case ListsEditorStateActions.RESET:
       return initListsEditingState()
   }
