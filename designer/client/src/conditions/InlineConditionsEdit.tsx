@@ -136,26 +136,6 @@ export class InlineConditionsEdit extends Component {
     }
   }
 
-  moveConditionEarlier = (event) => {
-    event.preventDefault()
-    const index = event.currentTarget.dataset.index
-    const conditions = this.state.conditions.moveEarlier(index)
-    this.setState({
-      conditions,
-      selectedConditions: []
-    })
-  }
-
-  moveConditionLater = (event) => {
-    event.preventDefault()
-    const index = event.currentTarget.dataset.index
-    const conditions = this.state.conditions.moveLater(index)
-    this.setState({
-      conditions,
-      selectedConditions: []
-    })
-  }
-
   setState(state, callback) {
     if (state.conditions) {
       this.props.saveCallback(state.conditions)
@@ -250,31 +230,6 @@ export class InlineConditionsEdit extends Component {
                             }}
                           >
                             <EditIcon bottom={true} />
-                          </a>
-                        </span>
-                      )}
-                      {index > 0 && (
-                        <span>
-                          <a
-                            href="#"
-                            id={`condition-${index}-move-earlier`}
-                            data-index={index}
-                            onClick={this.moveConditionEarlier}
-                          >
-                            <MoveUpIcon />
-                          </a>
-                        </span>
-                      )}
-                      {index < conditions.lastIndex && (
-                        <span>
-                          <a
-                            href="#"
-                            className="govuk-link"
-                            id={`condition-${index}-move-later`}
-                            data-index={index}
-                            onClick={this.moveConditionLater}
-                          >
-                            <MoveDownIcon />
                           </a>
                         </span>
                       )}
