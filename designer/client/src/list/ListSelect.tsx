@@ -25,11 +25,9 @@ export function ListSelect() {
 
   return (
     <>
-      <div className="govuk-body govuk-hint">
-        <p className="govuk-body">{i18n('list.hint.description')}</p>
-        <p className="govuk-body">{i18n('list.hint.manage')}</p>
-      </div>
-      <ul className="govuk-list">
+      <p className="govuk-body">{i18n('list.hint.description')}</p>
+      <p className="govuk-body">{i18n('list.hint.manage')}</p>
+      <ul className="govuk-list govuk-list--bullet">
         {data.lists.map((list) => (
           <li key={list.name}>
             <a
@@ -41,25 +39,22 @@ export function ListSelect() {
             </a>
           </li>
         ))}
-        <li>
-          <hr />
-          <a
-            href="#"
-            className="govuk-link"
-            data-testid="add-list"
-            onClick={(e) => {
-              e.preventDefault()
-              listDispatch({ type: ListActions.ADD_NEW_LIST })
-              listsEditorDispatch([
-                ListsEditorStateActions.IS_EDITING_LIST,
-                true
-              ])
-            }}
-          >
-            {i18n('list.newTitle')}
-          </a>
-        </li>
       </ul>
+      <hr className="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
+      <div className="govuk-button-group">
+        <button
+          className="govuk-button"
+          type="button"
+          data-testid="add-list"
+          onClick={(e) => {
+            e.preventDefault()
+            listDispatch({ type: ListActions.ADD_NEW_LIST })
+            listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST, true])
+          }}
+        >
+          {i18n('list.newTitle')}
+        </button>
+      </div>
     </>
   )
 }

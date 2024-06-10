@@ -41,10 +41,10 @@ export function Warning() {
       <h2 className="warning__title">{i18n('list.deleteWarning.title')}</h2>
       <p className="warning__message">{i18n('list.deleteWarning.message')}</p>
       <div className="warning__actions">
-        <a href="#" onClick={confirm} className={'warning__action'}>
+        <a href="#" onClick={confirm} className="warning__action govuk-link">
           {i18n('list.deleteWarning.confirm')}
         </a>
-        <a href="#" onClick={keep} className={'warning__action'}>
+        <a href="#" onClick={keep} className="warning__action govuk-link">
           {i18n('list.deleteWarning.keep')}
         </a>
       </div>

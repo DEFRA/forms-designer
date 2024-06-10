@@ -43,7 +43,7 @@ export class Lines extends Component<Props, State> {
     const { data } = this.context
 
     return (
-      <div>
+      <>
         <svg height={layout.height} width={layout.width}>
           {layout.edges.map((edge) => {
             const { source, target, points, label } = edge
@@ -102,7 +102,7 @@ export class Lines extends Component<Props, State> {
             />
           </Flyout>
         )}
-      </div>
+      </>
     )
   }
 }

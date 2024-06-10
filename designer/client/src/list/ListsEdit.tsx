@@ -63,7 +63,7 @@ export function ListsEdit({ showEditLists = false }: Props) {
   } = useListsEdit()
 
   return (
-    <div className="govuk-body">
+    <>
       {!showEditLists && <ListSelect />}
 
       {isEditingList && (
@@ -90,6 +90,6 @@ export function ListsEdit({ showEditLists = false }: Props) {
           </Flyout>
         </RenderInPortal>
       )}
-    </div>
+    </>
   )
 }

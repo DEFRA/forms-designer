@@ -1,6 +1,8 @@
 import { ConditionValue } from '@defra/forms-model'
 import React from 'react'
 
+import { i18n } from '~/src/i18n/i18n.jsx'
+
 export const SelectValues = (props) => {
   const { fieldDef, updateValue, value } = props
 
@@ -19,22 +21,27 @@ export const SelectValues = (props) => {
   }
 
   return (
-    <select
-      className="govuk-select"
-      id="cond-value"
-      name="cond-value"
-      value={value?.value ?? ''}
-      onChange={onChangeSelect}
-      data-testid={'cond-value'}
-    >
-      <option />
-      {fieldDef.values.map((option) => {
-        return (
-          <option key={option.value} value={option.value}>
-            {option.text}
-          </option>
-        )
-      })}
-    </select>
+    <>
+      <label className="govuk-label" htmlFor="cond-value">
+        {i18n('conditions.conditionValue')}
+      </label>
+      <select
+        className="govuk-select"
+        id="cond-value"
+        name="cond-value"
+        value={value?.value ?? ''}
+        onChange={onChangeSelect}
+        data-testid={'cond-value'}
+      >
+        <option />
+        {fieldDef.values.map((option) => {
+          return (
+            <option key={option.value} value={option.value}>
+              {option.text}
+            </option>
+          )
+        })}
+      </select>
+    </>
   )
 }

@@ -8,6 +8,7 @@ import { InlineConditionsDefinition } from '~/src/conditions/InlineConditionsDef
 import { InlineConditionsEdit } from '~/src/conditions/InlineConditionsEdit.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { allInputs, inputsAccessibleAt } from '~/src/data/component/inputs.js'
+import { addCondition } from '~/src/data/condition/addCondition.js'
 import { removeCondition } from '~/src/data/condition/removeCondition.js'
 import { updateCondition } from '~/src/data/condition/updateCondition.js'
 import { findList } from '~/src/data/list/findList.js'
@@ -131,7 +132,7 @@ export class InlineConditions extends Component<Props, State> {
     }
   }
 
-  onClickSave = async (event: MouseEvent<HTMLAnchorElement>) => {
+  onClickSave = async (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
     const { conditionsChange, condition } = this.props
     const { data, save } = this.context
@@ -163,7 +164,7 @@ export class InlineConditions extends Component<Props, State> {
     }
   }
 
-  onClickDelete = async (event: MouseEvent<HTMLAnchorElement>) => {
+  onClickDelete = async (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
     const { data, save } = this.context
     const { cancelCallback, condition } = this.props
@@ -241,16 +242,12 @@ export class InlineConditions extends Component<Props, State> {
                 !
               </span>
               <strong className="govuk-warning-text__text">
-                <span className="govuk-warning-text__assistive">
-                  {i18n('warning')}
-                </span>
-                {i18n('conditions.youCannotEditWarning', {
-                  conditionString
-                })}
+                <span className="govuk-visually-hidden">{i18n('warning')}</span>
+                {i18n('conditions.youCannotEditWarning', { conditionString })}
               </strong>
             </div>
           )}
-          <div>
+          <>
             {hasErrors && <ErrorSummary errorList={validationErrors} />}
             <div
               className={classNames('govuk-form-group', {
@@ -276,42 +273,42 @@ export class InlineConditions extends Component<Props, State> {
                 onChange={this.onChangeDisplayName}
               />
             </div>
-            <div>
-              <label
-                className="govuk-label govuk-label--s"
-                id="condition-string-label"
-                htmlFor="condition-string"
-              >
-                {i18n('conditions.when')}
-              </label>
-            </div>
-            <div className="govuk-hint">{i18n('conditions.whenHint')}</div>
-          </div>
+            <h4 className="govuk-heading-s govuk-!-margin-bottom-1">
+              {i18n('conditions.condition')}
+            </h4>
+            <p className="govuk-hint govuk-!-margin-top-0">
+              {i18n('conditions.conditionHint')}
+            </p>
+          </>
           {hasConditions && (
-            <div id="conditions-display" className="govuk-body">
-              <div key="condition-string" id="condition-string">
-                {conditions.toPresentationString()}
-              </div>
-              {!editView && (
-                <div>
-                  <a
-                    href="#"
-                    id="edit-conditions-link"
-                    className="govuk-link"
-                    onClick={(e) => {
-                      e.preventDefault()
-                      this.toggleEdit()
-                    }}
-                  >
-                    {i18n('conditions.notWhatYouMean')}
-                  </a>
-                </div>
-              )}
-            </div>
+            <ul
+              className="govuk-list govuk-list--bullet"
+              id="conditions-display"
+            >
+              <li key="condition-string" id="condition-string">
+                <strong>{conditions.toPresentationString()}</strong>
+                {!editView && (
+                  <>
+                    <br />
+                    <a
+                      href="#"
+                      id="edit-conditions-link"
+                      className="govuk-link"
+                      onClick={(e) => {
+                        e.preventDefault()
+                        this.toggleEdit()
+                      }}
+                    >
+                      {i18n('conditions.edit')}
+                    </a>
+                  </>
+                )}
+              </li>
+            </ul>
           )}
         </div>
         {!editView && (
-          <div>
+          <>
             <InlineConditionsDefinition
               expectsCoordinator={hasConditions}
               fields={this.state.fields}
@@ -320,23 +317,23 @@ export class InlineConditions extends Component<Props, State> {
             <div className="govuk-button-group">
               {hasConditions && (
                 <>
-                  <a
-                    href="#"
+                  <button
                     id="save-inline-conditions"
                     className="govuk-button"
+                    type="button"
                     onClick={this.onClickSave}
                   >
                     {i18n('save')}
-                  </a>
+                  </button>
                   {this.props.condition && (
-                    <a
-                      href="#"
+                    <button
                       id="delete-inline-conditions"
                       className="govuk-button govuk-button--warning"
+                      type="button"
                       onClick={this.onClickDelete}
                     >
                       {i18n('delete')}
-                    </a>
+                    </button>
                   )}
                 </>
               )}
@@ -349,7 +346,7 @@ export class InlineConditions extends Component<Props, State> {
                 {i18n('cancel')}
               </a>
             </div>
-          </div>
+          </>
         )}
         {editView && (
           <InlineConditionsEdit

@@ -1,5 +1,5 @@
 import { Hint, Input, Label, Textarea } from '@xgovformbuilder/govuk-react-jsx'
-import React, { useContext, type FormEvent } from 'react'
+import React, { useContext, type FormEvent, type MouseEvent } from 'react'
 
 import { DataContext } from '~/src/context/DataContext.js'
 import { useListItem } from '~/src/hooks/list/useListItem/useListItem.jsx'
@@ -30,7 +30,9 @@ export function ListItemEdit() {
 
   const { conditions } = data
   const { listItemErrors: errors } = state
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (
+    e: FormEvent<HTMLFormElement> | MouseEvent<HTMLButtonElement>
+  ) => {
     e.preventDefault()
     const copy = { ...data }
     const hasErrors = validate(i18n)
@@ -99,8 +101,8 @@ export function ListItemEdit() {
             </option>
           ))}
         </select>
-        <hr />
-        <div className={'govuk-form-group'}>
+        <hr className="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
+        <div className="govuk-button-group">
           <button
             data-testid="save-list-item"
             className="govuk-button"

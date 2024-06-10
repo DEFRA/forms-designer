@@ -53,7 +53,7 @@ export function ComponentTypeEdit(props) {
 
   const TagName = componentTypeEditors[type?.name ?? '']
   return (
-    <div>
+    <>
       {needsFieldInputs && (
         <FieldEdit
           isContentField={type?.subType === ComponentSubType.Content}
@@ -61,6 +61,6 @@ export function ComponentTypeEdit(props) {
         />
       )}
       {TagName && <TagName page={page} />}
-    </div>
+    </>
   )
 }

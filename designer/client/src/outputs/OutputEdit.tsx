@@ -292,18 +292,20 @@ export class OutputEdit extends Component<Props, State> {
           </div>
 
           {outputEdit}
-          <div className="govuk-form-group">
+          <div className="govuk-button-group">
             <button className="govuk-button" type="submit">
               Save
             </button>
-          </div>
-          {output && (
-            <div className="govuk-form-group">
-              <a onClick={this.onClickDelete} href="#">
+            {output && (
+              <button
+                className="govuk-button govuk-button--warning"
+                onClick={this.onClickDelete}
+                type="button"
+              >
                 Delete
-              </a>
-            </div>
-          )}
+              </button>
+            )}
+          </div>
         </form>
       </>
     )

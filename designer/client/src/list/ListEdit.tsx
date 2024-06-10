@@ -151,6 +151,9 @@ export function ListEdit() {
           >
             {i18n('list.item.add')}
           </a>
+        </p>
+
+        <div className="govuk-button-group">
           <button
             data-testid="save-list"
             className="govuk-button"
@@ -159,17 +162,17 @@ export function ListEdit() {
           >
             {i18n('save')}
           </button>
-          <a
-            href="#"
-            className="govuk-link govuk-link--v-centre govuk-!-margin-left-2"
+          <button
+            className="govuk-button govuk-button--warning"
+            type="button"
             onClick={(e) => {
               e.preventDefault()
               handleDelete(selectedList?.isNew)
             }}
           >
             {i18n(selectedList?.isNew ? 'cancel' : 'delete')}
-          </a>
-        </p>
+          </button>
+        </div>
       </form>
     </>
   )

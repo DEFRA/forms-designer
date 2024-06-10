@@ -18,7 +18,7 @@ export function DetailsEdit({ context = ComponentContext }: Props) {
   const { selectedComponent, errors = {} } = state
 
   return (
-    <div>
+    <>
       <Input
         id="details-title"
         name="title"
@@ -70,6 +70,6 @@ export function DetailsEdit({ context = ComponentContext }: Props) {
           }
         />
       </div>
-    </div>
+    </>
   )
 }

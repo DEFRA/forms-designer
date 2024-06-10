@@ -173,18 +173,20 @@ export class SectionEdit extends Component {
               </div>
             </div>
           </div>
-          <button className="govuk-button" type="submit">
-            Save
-          </button>{' '}
-          {!this.isNewSection && (
-            <button
-              className="govuk-button"
-              type="button"
-              onClick={this.onClickDelete}
-            >
-              {i18n('delete')}
+          <div className="govuk-button-group">
+            <button className="govuk-button" type="submit">
+              Save
             </button>
-          )}
+            {!this.isNewSection && (
+              <button
+                className="govuk-button govuk-button--warning"
+                type="button"
+                onClick={this.onClickDelete}
+              >
+                {i18n('delete')}
+              </button>
+            )}
+          </div>
         </form>
       </>
     )

@@ -88,12 +88,19 @@ export function ComponentEdit(props) {
       {hasErrors && <ErrorSummary errorList={Object.values(errors)} />}
       <form autoComplete="off" onSubmit={handleSubmit}>
         <ComponentTypeEdit page={page} />
-        <button className="govuk-button" type="submit">
-          Save
-        </button>{' '}
-        <a href="#" onClick={handleDelete} className="govuk-link">
-          Delete
-        </a>
+
+        <div className="govuk-button-group">
+          <button className="govuk-button" type="submit">
+            Save
+          </button>
+          <button
+            className="govuk-button govuk-button--warning"
+            type="button"
+            onClick={handleDelete}
+          >
+            Delete
+          </button>
+        </div>
       </form>
     </>
   )

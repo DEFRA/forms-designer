@@ -55,7 +55,7 @@ export function ConditionsEdit({ path }: Props) {
   const { conditions } = data
   const inputs = allInputs(data)
   return (
-    <div className="govuk-body">
+    <>
       <div className="govuk-hint">{i18n('conditions.hint')}</div>
 
       {!editingCondition && (
@@ -75,10 +75,17 @@ export function ConditionsEdit({ path }: Props) {
             </RenderInPortal>
           )}
 
-          <ul className="govuk-list" data-testid="conditions-list">
+          <ul
+            className="govuk-list govuk-list--bullet"
+            data-testid="conditions-list"
+          >
             {conditions.map((condition) => (
               <li key={condition.name} data-testid="conditions-list-item">
-                <a href="#" onClick={(e) => onClickCondition(e, condition)}>
+                <a
+                  className="govuk-link"
+                  href="#"
+                  onClick={(e) => onClickCondition(e, condition)}
+                >
                   {condition.displayName}
                 </a>{' '}
                 <small>{condition.name}</small>
@@ -87,28 +94,24 @@ export function ConditionsEdit({ path }: Props) {
                 {')'}
               </li>
             ))}
-            <li>
-              <hr />
-              {inputs.length > 0 && (
-                <a
-                  href="#"
-                  id="add-condition-link"
-                  className="govuk-button"
-                  data-testid={'add-condition-link'}
-                  onClick={onClickAddCondition}
-                >
-                  {i18n('conditions.add')}
-                </a>
-              )}
-              {inputs.length <= 0 && (
-                <div className="govuk-body">
-                  <div className="govuk-hint">
-                    {i18n('conditions.noFieldsAvailable')}
-                  </div>
-                </div>
-              )}
-            </li>
           </ul>
+          <hr className="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
+          {inputs.length > 0 && (
+            <button
+              id="add-condition-link"
+              className="govuk-button"
+              type="button"
+              data-testid={'add-condition-link'}
+              onClick={onClickAddCondition}
+            >
+              {i18n('conditions.add')}
+            </button>
+          )}
+          {inputs.length <= 0 && (
+            <div className="govuk-hint">
+              {i18n('conditions.noFieldsAvailable')}
+            </div>
+          )}
         </>
       )}
       {editingCondition && (
@@ -125,6 +128,6 @@ export function ConditionsEdit({ path }: Props) {
           </div>
         </RenderInPortal>
       )}
-    </div>
+    </>
   )
 }

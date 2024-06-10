@@ -34,7 +34,7 @@ export const componentTypes = {
 }
 
 function Base(props) {
-  return <div>{props.children}</div>
+  return <>{props.children}</>
 }
 
 function ComponentField(props) {
@@ -285,7 +285,7 @@ export function Component(props) {
   })
 
   return (
-    <div>
+    <>
       <button className="component govuk-link" onClick={toggleShowEditor}>
         <TagName />
       </button>
@@ -296,6 +296,6 @@ export function Component(props) {
           </ComponentContextProvider>
         </Flyout>
       )}
-    </div>
+    </>
   )
 }

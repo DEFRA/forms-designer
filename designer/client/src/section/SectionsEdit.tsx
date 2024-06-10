@@ -39,22 +39,30 @@ export class SectionsEdit extends Component {
     const { section, isEditingSection } = this.state
 
     return (
-      <div className="govuk-body">
-        <ul className="govuk-list">
+      <>
+        <ul className="govuk-list govuk-list--bullet">
           {sections.map((section) => (
             <li key={section.name}>
-              <a href="#" onClick={(e) => this.onClickSection(e, section)}>
+              <a
+                className="govuk-link"
+                href="#"
+                onClick={(e) => this.onClickSection(e, section)}
+              >
                 {section.title}
               </a>
             </li>
           ))}
-          <li>
-            <hr />
-            <a href="#" onClick={(e) => this.onClickSection(e)}>
-              Add section
-            </a>
-          </li>
         </ul>
+        <hr className="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
+        <div className="govuk-button-group">
+          <button
+            className="govuk-button"
+            type="button"
+            onClick={(e) => this.onClickSection(e)}
+          >
+            Add section
+          </button>
+        </div>
 
         {isEditingSection && (
           <RenderInPortal>
@@ -65,17 +73,15 @@ export class SectionsEdit extends Component {
               show={isEditingSection}
               onHide={this.closeFlyout}
             >
-              <form>
-                <SectionEdit
-                  section={section}
-                  data={data}
-                  closeFlyout={this.closeFlyout}
-                />
-              </form>
+              <SectionEdit
+                section={section}
+                data={data}
+                closeFlyout={this.closeFlyout}
+              />
             </Flyout>
           </RenderInPortal>
         )}
-      </div>
+      </>
     )
   }
 }

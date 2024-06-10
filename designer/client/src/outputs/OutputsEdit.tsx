@@ -48,9 +48,9 @@ export class OutputsEdit extends Component<Props, State> {
     const { output, id, showAddOutput } = this.state
 
     return (
-      <div className="govuk-body">
+      <>
         {!output ? (
-          <div>
+          <>
             {showAddOutput ? (
               <OutputEdit
                 data={data}
@@ -59,27 +59,34 @@ export class OutputsEdit extends Component<Props, State> {
                 onCancel={() => this.setState({ showAddOutput: false })}
               />
             ) : (
-              <ul className="govuk-list">
-                {(outputs || []).map((output) => (
-                  <li key={output.name}>
-                    <a href="#" onClick={(e) => this.onClickOutput(e, output)}>
-                      {output.title || output.name}
-                    </a>
-                  </li>
-                ))}
-                <li>
-                  <hr />
-                  <a
+              <>
+                <ul className="govuk-list govuk-list--bullet">
+                  {(outputs || []).map((output) => (
+                    <li key={output.name}>
+                      <a
+                        className="govuk-link"
+                        href="#"
+                        onClick={(e) => this.onClickOutput(e, output)}
+                      >
+                        {output.title || output.name}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+                <hr className="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
+                <div className="govuk-button-group">
+                  <button
+                    className="govuk-button"
                     data-testid="add-output"
-                    href="#"
+                    type="button"
                     onClick={this.onClickAddOutput}
                   >
                     Add output
-                  </a>
-                </li>
-              </ul>
+                  </button>
+                </div>
+              </>
             )}
-          </div>
+          </>
         ) : (
           <OutputEdit
             output={output}
@@ -88,7 +95,7 @@ export class OutputsEdit extends Component<Props, State> {
             onCancel={() => this.setState({ output: null })}
           />
         )}
-      </div>
+      </>
     )
   }
 }
