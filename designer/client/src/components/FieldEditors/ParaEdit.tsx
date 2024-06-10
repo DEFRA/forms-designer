@@ -31,7 +31,7 @@ export function ParaEdit({ context = ComponentContext }: Props) {
           id="field-content"
           name="content"
           value={selectedComponent.content}
-          valueCallback={(content) => {
+          onValueChange={(content) => {
             dispatch({
               type: Actions.EDIT_CONTENT,
               payload: content
