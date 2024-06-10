@@ -19,8 +19,7 @@ describe('SelectConditions', () => {
     pages: [],
     lists: [],
     sections: [],
-    conditions: [],
-    outputs: []
+    conditions: []
   }
 
   const dataValue = { data, save: jest.fn() }
@@ -150,8 +149,7 @@ describe('SelectConditions', () => {
           displayName: 'moreThanThreeApplicants',
           value: 'applicantDetails.numberOfApplicants > 3'
         }
-      ],
-      outputs: []
+      ]
     }
 
     const providerProps = {

@@ -19,8 +19,7 @@ const data: FormDefinition = {
     }
   ],
   sections: [],
-  conditions: [],
-  outputs: []
+  conditions: []
 }
 
 test('findList throws when a list with the same name already exists', () => {

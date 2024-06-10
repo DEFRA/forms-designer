@@ -9,20 +9,15 @@ import {
   type ConditionRawData,
   type ConditionWrapperValue,
   type ConfirmationPage,
-  type EmailOutputConfiguration,
   type FormDefinition,
   type Item,
   type List,
-  type MultipleApiKeys,
   type Next,
-  type NotifyOutputConfiguration,
-  type Output,
   type Page,
   type PhaseBanner,
   type RepeatingFieldPage,
   type Section,
-  type SpecialPages,
-  type WebhookOutputConfiguration
+  type SpecialPages
 } from '~/src/form/form-definition/types.js'
 
 /**
@@ -181,48 +176,6 @@ const listSchema = Joi.object<List>().keys({
   items: Joi.array<Item>().items(listItemSchema)
 })
 
-const multiApiKeySchema = Joi.object<MultipleApiKeys>({
-  test: Joi.string().optional(),
-  production: Joi.string().optional()
-})
-
-const replyToConfigurationSchema = Joi.object({
-  emailReplyToId: Joi.string(),
-  condition: Joi.string().allow('').optional()
-})
-
-const notifySchema = Joi.object<NotifyOutputConfiguration>().keys({
-  apiKey: [Joi.string().allow('').optional(), multiApiKeySchema],
-  templateId: Joi.string(),
-  emailField: Joi.string(),
-  personalisation: Joi.array<string>().items(Joi.string()),
-  personalisationFieldCustomisation: Joi.object()
-    .pattern(/./, Joi.array<string>().items(Joi.string()))
-    .optional(),
-  addReferencesToPersonalisation: Joi.boolean().optional(),
-  emailReplyToIdConfiguration: Joi.array().items(replyToConfigurationSchema)
-})
-
-const emailSchema = Joi.object<EmailOutputConfiguration>().keys({
-  emailAddress: Joi.string().required()
-})
-
-const webhookSchema = Joi.object<WebhookOutputConfiguration>().keys({
-  url: Joi.string(),
-  allowRetry: Joi.boolean().optional().default(true)
-})
-
-const outputSchema = Joi.object<Output>().keys({
-  name: Joi.string(),
-  title: Joi.string().optional(),
-  type: Joi.string().allow('notify', 'email', 'webhook', 'sheets'),
-  outputConfiguration: Joi.alternatives().try(
-    notifySchema,
-    emailSchema,
-    webhookSchema
-  )
-})
-
 const feedbackSchema = Joi.object<FormDefinition['feedback']>().keys({
   feedbackForm: Joi.boolean().default(false),
   url: Joi.when('feedbackForm', {
@@ -266,7 +219,6 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
     lists: Joi.array<List>().items(listSchema).unique('name'),
     metadata: Joi.object({ a: Joi.any() }).unknown().optional(),
     declaration: Joi.string().allow('').optional(),
-    outputs: Joi.array<Output>().items(outputSchema),
     skipSummary: Joi.boolean().optional().default(false),
     phaseBanner: phaseBannerSchema,
     specialPages: specialPagesSchema.optional(),

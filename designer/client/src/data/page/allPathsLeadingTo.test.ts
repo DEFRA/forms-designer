@@ -22,8 +22,7 @@ test('allPathsLeadingTo should work with cycle in paths', () => {
     ],
     lists: [],
     sections: [],
-    conditions: [],
-    outputs: []
+    conditions: []
   }
   const paths = allPathsLeadingTo(data, '/2')
   expect(paths).toEqual(['/2', '/1'])
@@ -49,8 +48,7 @@ test('allPathsLeadingTo should work with single parents', () => {
     ],
     lists: [],
     sections: [],
-    conditions: [],
-    outputs: []
+    conditions: []
   }
   expect(allPathsLeadingTo(data, '/3')).toEqual(['/3', '/2', '/1'])
 })
@@ -80,8 +78,7 @@ test('allPathsLeadingTo should work with multiple parents', () => {
     ],
     lists: [],
     sections: [],
-    conditions: [],
-    outputs: []
+    conditions: []
   }
 
   expect(allPathsLeadingTo(data, '/4')).toEqual(['/4', '/2', '/1', '/3'])

@@ -14,8 +14,7 @@ const data: FormDefinition = {
   ],
   lists: [],
   sections: [],
-  conditions: [],
-  outputs: []
+  conditions: []
 }
 
 test('addPage throws if a page with the same path already exists', () => {

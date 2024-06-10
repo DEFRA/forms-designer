@@ -69,8 +69,7 @@ const data: FormDefinition = {
   ],
   lists: [],
   sections: [],
-  conditions: [],
-  outputs: []
+  conditions: []
 }
 
 const providerProps = {

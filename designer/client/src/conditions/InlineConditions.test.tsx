@@ -62,8 +62,7 @@ describe('InlineConditions', () => {
       ],
       lists: [],
       sections: [],
-      conditions: [],
-      outputs: []
+      conditions: []
     }
 
     render(

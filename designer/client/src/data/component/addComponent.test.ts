@@ -7,8 +7,7 @@ test('addComponent throws an error when no page can be found', () => {
     pages: [],
     lists: [],
     sections: [],
-    conditions: [],
-    outputs: []
+    conditions: []
   }
 
   // @ts-expect-error - Allow invalid component for test
@@ -47,8 +46,7 @@ test('addComponent adds a component to the correct page', () => {
     ],
     lists: [],
     sections: [],
-    conditions: [],
-    outputs: []
+    conditions: []
   }
 
   expect(
@@ -97,7 +95,6 @@ test('addComponent adds a component to the correct page', () => {
     ],
     lists: [],
     sections: [],
-    conditions: [],
-    outputs: []
+    conditions: []
   })
 })

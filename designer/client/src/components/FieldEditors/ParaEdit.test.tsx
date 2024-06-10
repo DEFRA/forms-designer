@@ -27,8 +27,7 @@ describe('ParaEdit', () => {
       ],
       lists: [],
       sections: [],
-      conditions: [],
-      outputs: []
+      conditions: []
     }
     const dataValue = { data, save: jest.fn() }
     const compContextValue = {

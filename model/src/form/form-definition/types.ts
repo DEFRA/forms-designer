@@ -1,6 +1,5 @@
 import { type ComponentDef } from '~/src/components/types.js'
 import { type Condition } from '~/src/conditions/condition.js'
-import { type OutputType } from '~/src/data-model/enums.js'
 import { formDefinitionSchema } from '~/src/form/form-definition/index.js'
 
 type Toggleable<T> = boolean | T
@@ -70,45 +69,6 @@ export interface PhaseBanner {
   feedbackUrl?: string
 }
 
-export interface MultipleApiKeys {
-  test?: string
-  production?: string
-}
-
-export interface EmailOutputConfiguration {
-  emailAddress: string
-}
-
-export interface NotifyOutputConfiguration {
-  apiKey: string
-  templateId: string
-  emailField: string
-  personalisation: string[]
-  personalisationFieldCustomisation?: Record<string, string[]>
-  addReferencesToPersonalisation?: boolean
-  emailReplyToIdConfiguration?: {
-    emailReplyToId: string
-    condition?: string
-  }[]
-}
-
-export interface WebhookOutputConfiguration {
-  url: string
-  allowRetry?: boolean
-}
-
-export type OutputConfiguration =
-  | EmailOutputConfiguration
-  | NotifyOutputConfiguration
-  | WebhookOutputConfiguration
-
-export interface Output {
-  name: string
-  title: string
-  type: OutputType
-  outputConfiguration: OutputConfiguration
-}
-
 export interface ConfirmationPage {
   customText: {
     title: string
@@ -148,7 +108,6 @@ export interface FormDefinition {
   feedback?: Feedback
   phaseBanner?: PhaseBanner
   skipSummary?: boolean
-  outputs: Output[]
   declaration?: string
   metadata?: Record<string, unknown>
   specialPages?: SpecialPages

@@ -22,8 +22,7 @@ const data: FormDefinition = {
     }
   ],
   sections: [],
-  conditions: [],
-  outputs: []
+  conditions: []
 }
 
 const dataValue = { data, save: jest.fn() }

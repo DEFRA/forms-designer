@@ -25,8 +25,7 @@ const data: FormDefinition = {
       displayName: 'Another condition',
       value: 'true'
     }
-  ],
-  outputs: []
+  ]
 }
 
 const dataValue = { data, save: jest.fn() }

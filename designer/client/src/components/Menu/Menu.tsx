@@ -12,7 +12,6 @@ import { ConditionsEdit } from '~/src/conditions/ConditionsEdit.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ListsEdit } from '~/src/list/ListsEdit.jsx'
-import { OutputsEdit } from '~/src/outputs/OutputsEdit.jsx'
 import { ListsEditorContextProvider } from '~/src/reducers/list/listsEditorReducer.jsx'
 import { ListContextProvider } from '~/src/reducers/listReducer.jsx'
 import { SectionsEdit } from '~/src/section/SectionsEdit.jsx'
@@ -29,7 +28,6 @@ export function Menu({ id }: Props) {
   const sections = useMenuItem()
   const conditions = useMenuItem()
   const lists = useMenuItem()
-  const outputs = useMenuItem()
   const summaryBehaviour = useMenuItem()
   const summary = useMenuItem()
   const summaryTabs = [
@@ -108,13 +106,6 @@ export function Menu({ id }: Props) {
           </button>
           <button
             className="govuk-button"
-            data-testid="menu-outputs"
-            onClick={outputs.show}
-          >
-            {i18n('menu.outputs')}
-          </button>
-          <button
-            className="govuk-button"
             data-testid="menu-summary-behaviour"
             onClick={summaryBehaviour.show}
           >
@@ -166,12 +157,6 @@ export function Menu({ id }: Props) {
               <ListsEdit showEditLists={false} />
             </ListContextProvider>
           </ListsEditorContextProvider>
-        </Flyout>
-      )}
-
-      {outputs.isVisible && (
-        <Flyout title="Edit Outputs" onHide={outputs.hide} width="xlarge">
-          <OutputsEdit />
         </Flyout>
       )}
 

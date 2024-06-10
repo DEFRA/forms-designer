@@ -16,8 +16,7 @@ test('hasCondition returns true when there are conditions', () => {
           conditions: []
         }
       }
-    ],
-    outputs: []
+    ]
   }
   expect(hasConditions(data.conditions)).toBe(true)
 })
@@ -27,8 +26,7 @@ test("hasCondition returns false when there aren't any conditions", () => {
     pages: [],
     lists: [],
     sections: [],
-    conditions: [],
-    outputs: []
+    conditions: []
   }
   expect(hasConditions(data.conditions)).toBe(false)
 })

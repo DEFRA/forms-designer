@@ -19,8 +19,7 @@ const data: FormDefinition = {
     }
   ],
   sections: [],
-  conditions: [],
-  outputs: []
+  conditions: []
 }
 
 test('findList throws when no list can be found', () => {

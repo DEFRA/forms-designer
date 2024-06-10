@@ -15,8 +15,7 @@ const data: FormDefinition = {
   pages: [],
   lists: [],
   sections: [],
-  conditions: [{ ...condition }],
-  outputs: []
+  conditions: [{ ...condition }]
 }
 
 test('updateCondition throws if no condition could be found', () => {
@@ -42,7 +41,6 @@ test('updateCondition successfully updates a condition', () => {
         name: 'isCatPerson',
         value: { name: 'valueName', conditions: [] }
       }
-    ],
-    outputs: []
+    ]
   })
 })
