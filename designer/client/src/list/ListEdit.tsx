@@ -44,7 +44,7 @@ function useListEdit() {
   const { data, save } = useContext(DataContext)
 
   const handleDelete = async (isNewList: boolean) => {
-    if (!isNewList) {
+    if (!isNewList && window.confirm('Confirm delete')) {
       const { initialName } = listEditorState
       const copy = clone(data)
 

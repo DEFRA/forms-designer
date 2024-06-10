@@ -166,6 +166,11 @@ export class InlineConditions extends Component<Props, State> {
 
   onClickDelete = async (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
+
+    if (!window.confirm('Confirm delete')) {
+      return
+    }
+
     const { data, save } = this.context
     const { cancelCallback, condition } = this.props
 
