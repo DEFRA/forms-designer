@@ -1,3 +1,4 @@
+import { clone } from '@defra/forms-model'
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import React, { useContext } from 'react'
 
@@ -40,15 +41,24 @@ function useListEdit() {
   const { state: listEditorState, dispatch: listsEditorDispatch } =
     useContext(ListsEditorContext)
   const { state, dispatch } = useContext(ListContext)
-  const { showWarning } = listEditorState
   const { data, save } = useContext(DataContext)
-  const handleDelete = (isNewList) => {
-    if (isNewList) {
-      listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST, false])
+
+  const handleDelete = async (isNewList: boolean) => {
+    if (!isNewList) {
+      const { initialName } = listEditorState
+      const copy = clone(data)
+
+      const selectedListIndex = copy.lists.findIndex(
+        (list) => list.name === initialName
+      )
+
+      if (selectedListIndex) {
+        copy.lists.splice(selectedListIndex, 1)
+        await save(copy)
+      }
     }
-    if (!showWarning) {
-      listsEditorDispatch([ListsEditorStateActions.SHOW_WARNING, true])
-    }
+
+    listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST, false])
   }
 
   const validate = () => {

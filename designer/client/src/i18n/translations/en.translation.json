@@ -221,12 +221,6 @@
     "add": "Add list",
     "addNew": "Add a new list",
     "addOrEdit": "Add or edit lists",
-    "deleteWarning": {
-      "confirm": "Yes, delete this list",
-      "keep": "No, keep it",
-      "message": "You will no longer be able to edit or assign this list.",
-      "title": "Delete list"
-    },
     "edit": "Edit {{title}}",
     "errors": {
       "empty": "The list must have list items",
