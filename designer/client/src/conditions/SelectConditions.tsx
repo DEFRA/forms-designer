@@ -24,7 +24,6 @@ interface Props {
   path: string
   data: FormDefinition
   conditionsChange: (selectedCondition: string) => void
-  hints: any[]
   noFieldsHintText?: string
 }
 
@@ -247,7 +246,7 @@ export class SelectConditions extends Component<Props, State> {
 
   render() {
     const { selectedCondition, inline } = this.state
-    const { hints = [], noFieldsHintText } = this.props
+    const { noFieldsHintText } = this.props
     const conditions = this.conditionsForPath(this.props.path)
     const hasConditions = dataHasConditions(conditions) || selectedCondition
     const hasFields = Object.keys(this.state.fields ?? {}).length > 0
@@ -261,9 +260,6 @@ export class SelectConditions extends Component<Props, State> {
           >
             {i18n('conditions.optional')}
           </label>
-          {hints.map((hint, index) => (
-            <Hint key={`conditions-header-group-hint-${index}`}>{hint}</Hint>
-          ))}
         </div>
         {hasFields || hasConditions ? (
           <>
