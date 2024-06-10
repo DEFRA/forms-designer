@@ -1,6 +1,6 @@
 import { clone } from '@defra/forms-model'
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
-import React, { useContext } from 'react'
+import React, { useContext, type FormEvent, type MouseEvent } from 'react'
 
 import { ErrorSummary } from '~/src/ErrorSummary.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
@@ -43,8 +43,10 @@ function useListEdit() {
   const { state, dispatch } = useContext(ListContext)
   const { data, save } = useContext(DataContext)
 
-  const handleDelete = async (isNewList: boolean) => {
-    if (!isNewList && window.confirm('Confirm delete')) {
+  const handleDelete = async (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+
+    if (window.confirm('Confirm delete')) {
       const { initialName } = listEditorState
       const copy = clone(data)
 
@@ -72,8 +74,8 @@ function useListEdit() {
     return errors
   }
 
-  const handleSubmit = async (e) => {
-    e?.preventDefault()
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
     const { selectedList, initialName } = state
     const errors = validate()
     if (hasValidationErrors(errors)) {
@@ -168,33 +170,18 @@ export function ListEdit() {
             data-testid="save-list"
             className="govuk-button"
             type="submit"
-            onClick={handleSubmit}
           >
             {i18n('save')}
           </button>
 
-          {!selectedList?.isNew ? (
+          {selectedList?.isNew || (
             <button
               className="govuk-button govuk-button--warning"
               type="button"
-              onClick={(e) => {
-                e.preventDefault()
-                handleDelete(false)
-              }}
+              onClick={handleDelete}
             >
               {i18n('delete')}
             </button>
-          ) : (
-            <a
-              href="#"
-              className="govuk-link"
-              onClick={(e) => {
-                e.preventDefault()
-                handleDelete(true)
-              }}
-            >
-              {i18n('cancel')}
-            </a>
           )}
         </div>
       </form>

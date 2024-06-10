@@ -342,14 +342,6 @@ export class InlineConditions extends Component<Props, State> {
                   )}
                 </>
               )}
-              <a
-                href="#"
-                id="cancel-inline-conditions-link"
-                className="govuk-link"
-                onClick={this.onClickCancel}
-              >
-                {i18n('cancel')}
-              </a>
             </div>
           </>
         )}
