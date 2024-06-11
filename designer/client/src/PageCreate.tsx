@@ -1,7 +1,7 @@
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import React, { Component } from 'react'
 
-import { ErrorSummary } from '~/src/ErrorSummary.jsx'
+import { type ErrorList, ErrorSummary } from '~/src/ErrorSummary.jsx'
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
 import { SelectConditions } from '~/src/conditions/SelectConditions.jsx'
@@ -72,7 +72,7 @@ export class PageCreate extends Component {
     }
   }
 
-  validate = (title, path) => {
+  validate = (title, path): ErrorList => {
     const { data } = this.context
     const titleErrors = validateTitle('page-title', title, i18n)
     const errors = { ...titleErrors }

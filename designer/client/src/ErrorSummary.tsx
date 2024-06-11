@@ -1,12 +1,14 @@
+import { type TOptions } from 'i18next'
 import React, { useEffect, useRef } from 'react'
 
 import { i18n } from '~/src/i18n/i18n.jsx'
 
 export interface ErrorListItem {
-  reactListKey?: string
   href?: string
-  children: string
+  children: string | [string, TOptions?]
 }
+
+export type ErrorList<Key extends string = string> = Record<Key, ErrorListItem>
 
 interface ErrorSummaryProps {
   className?: string
@@ -21,10 +23,10 @@ export function ErrorSummary({
   errorList,
   titleChildren = 'There is a problem'
 }: ErrorSummaryProps) {
-  const errorSummaryRef = useRef()
+  const errorSummaryRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    errorSummaryRef.current.focus()
+    errorSummaryRef.current?.focus()
   }, [])
 
   let description
@@ -32,20 +34,22 @@ export function ErrorSummary({
     description = <p className="govuk-body">{descriptionChildren}</p>
   }
 
-  const handleClick = (id) => {
-    const element = document.getElementById(id.substring(1))
-    if (element) {
-      element.scrollIntoView()
-      element.focus()
+  const handleClick = (selector?: string) => {
+    if (!selector) {
+      return
     }
+
+    const $element = document.querySelector<HTMLElement>(selector)
+    $element?.scrollIntoView()
+    $element?.focus()
   }
 
   return (
     <div
-      className={`govuk-error-summary ${className || ''}`}
+      className={`govuk-error-summary ${className ?? ''}`}
       aria-labelledby="error-summary-title"
       role="alert"
-      tabIndex="-1"
+      tabIndex={-1}
       data-module="govuk-error-summary"
       ref={errorSummaryRef}
     >

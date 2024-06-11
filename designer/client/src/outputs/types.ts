@@ -1,3 +1,5 @@
+import { type ErrorList } from '~/src/ErrorSummary.jsx'
+
 export enum OutputType {
   Email = 'email',
   Notify = 'notify',
@@ -33,16 +35,6 @@ export interface Output {
   outputConfiguration: OutputConfiguration
 }
 
-export interface ValidationError {
-  href?: string
-  children: string
-}
-
-export interface ValidationErrors {
-  title?: ValidationError
-  name?: ValidationError
-  email?: ValidationError
-  templateId?: ValidationError
-  apiKey?: ValidationError
-  url?: ValidationError
-}
+export type ValidationErrors = Partial<
+  ErrorList<'title' | 'name' | 'email' | 'templateId' | 'apiKey' | 'url'>
+>

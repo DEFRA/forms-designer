@@ -2,7 +2,7 @@ import { clone } from '@defra/forms-model'
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import React, { Component, createRef } from 'react'
 
-import { ErrorSummary } from '~/src/ErrorSummary.jsx'
+import { type ErrorList, ErrorSummary } from '~/src/ErrorSummary.jsx'
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
@@ -66,7 +66,7 @@ export class PageEdit extends Component {
     }
   }
 
-  validate = (title, path) => {
+  validate = (title, path): ErrorList => {
     const { page } = this.props
     const { data } = this.context
     const titleErrors = validateTitle('page-title', title, i18n)
