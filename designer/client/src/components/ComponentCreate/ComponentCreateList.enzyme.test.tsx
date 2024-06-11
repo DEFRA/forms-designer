@@ -17,7 +17,7 @@ describe('ComponentCreateList', () => {
       .find('li')
       .map((c) => c.find('a').text())
 
-    expect(listItems).toEqual(['Details', 'HTML', 'Inset text', 'List'])
+    expect(listItems).toEqual(['Details', 'Guidance', 'Inset text', 'List'])
   })
 
   test('it selects Content components on click', () => {
@@ -67,10 +67,10 @@ describe('ComponentCreateList', () => {
       'Date',
       'Email address',
       'Month & year',
-      'Multiline text',
+      'Textarea',
       'Number',
       'Telephone number',
-      'Text',
+      'Text input',
       'Time',
       'UK address'
     ])

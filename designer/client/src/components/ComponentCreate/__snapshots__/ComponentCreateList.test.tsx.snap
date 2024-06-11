@@ -55,7 +55,7 @@ exports[`ComponentCreateList should match snapshot 1`] = `
                 class="govuk-link"
                 href="#0"
               >
-                HTML
+                Guidance
               </a>
             </p>
             <div
@@ -195,7 +195,7 @@ exports[`ComponentCreateList should match snapshot 1`] = `
                 class="govuk-link"
                 href="#0"
               >
-                Multiline text
+                Textarea
               </a>
             </p>
             <div
@@ -246,7 +246,7 @@ exports[`ComponentCreateList should match snapshot 1`] = `
                 class="govuk-link"
                 href="#0"
               >
-                Text
+                Text input
               </a>
             </p>
             <div
