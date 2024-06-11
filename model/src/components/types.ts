@@ -6,10 +6,7 @@ import {
 export type ConditionalComponentType = Extract<
   ComponentType,
   | typeof ComponentType.CheckboxesField
-  | typeof ComponentType.DateField
   | typeof ComponentType.DatePartsField
-  | typeof ComponentType.DateTimeField
-  | typeof ComponentType.DateTimePartsField
   | typeof ComponentType.EmailAddressField
   | typeof ComponentType.MultilineTextField
   | typeof ComponentType.NumberField
@@ -111,10 +108,7 @@ interface ContentFieldBase {
 
 interface DateFieldBase {
   type:
-    | ComponentType.DateField
     | ComponentType.DatePartsField
-    | ComponentType.DateTimeField
-    | ComponentType.DateTimePartsField
     | ComponentType.MonthYearField
     | ComponentType.TimeField
   subType?: ComponentSubType.Field
@@ -201,24 +195,12 @@ export interface UkAddressFieldComponent extends TextFieldBase {
 }
 
 // Date Fields
-export interface DateFieldComponent extends DateFieldBase {
-  type: ComponentType.DateField
-}
-
-export interface DateTimeFieldComponent extends DateFieldBase {
-  type: ComponentType.DateTimeField
-}
-
 export interface DatePartsFieldFieldComponent extends DateFieldBase {
   type: ComponentType.DatePartsField
 }
 
 export interface MonthYearFieldComponent extends DateFieldBase {
   type: ComponentType.MonthYearField
-}
-
-export interface DateTimePartsFieldComponent extends DateFieldBase {
-  type: ComponentType.DateTimePartsField
 }
 
 export interface TimeFieldComponent extends DateFieldBase {
@@ -268,11 +250,8 @@ export type ComponentDef =
   | InsetTextComponent
   | AutocompleteFieldComponent
   | CheckboxesFieldComponent
-  | DateFieldComponent
   | DatePartsFieldFieldComponent
   | MonthYearFieldComponent
-  | DateTimeFieldComponent
-  | DateTimePartsFieldComponent
   | DetailsComponent
   | EmailAddressFieldComponent
   | FileUploadFieldComponent
@@ -298,9 +277,6 @@ export type InputFieldsComponentsDef =
   | TelephoneNumberFieldComponent
   | YesNoFieldComponent
   | FileUploadFieldComponent
-  | DateFieldComponent
-  | DateTimeFieldComponent
-  | DateTimePartsFieldComponent
   | MonthYearFieldComponent
   | TimeFieldComponent
   | UkAddressFieldComponent
@@ -330,9 +306,6 @@ export type EditorComponentsDef =
   | InsetTextComponent
   | FileUploadFieldComponent
   | DatePartsFieldFieldComponent
-  | DateTimeFieldComponent
-  | DateTimePartsFieldComponent
-  | DateFieldComponent
 
 // Components that render lists
 export type ListComponentsDef =
@@ -352,10 +325,7 @@ export type SelectionComponentsDef =
 // Components that have custom condition operators
 export type ConditionalComponentsDef =
   | CheckboxesFieldComponent
-  | DateFieldComponent
   | DatePartsFieldFieldComponent
-  | DateTimeFieldComponent
-  | DateTimePartsFieldComponent
   | EmailAddressFieldComponent
   | MultilineTextFieldComponent
   | NumberFieldComponent

@@ -35,10 +35,7 @@ const componentTypeEditors = {
   [ComponentType.Html]: ParaEdit,
   [ComponentType.InsetText]: ParaEdit,
   [ComponentType.FileUploadField]: FileUploadFieldEdit,
-  [ComponentType.DatePartsField]: DateFieldEdit,
-  [ComponentType.DateTimeField]: DateFieldEdit,
-  [ComponentType.DateTimePartsField]: DateFieldEdit,
-  [ComponentType.DateField]: DateFieldEdit
+  [ComponentType.DatePartsField]: DateFieldEdit
 }
 
 export interface Props {

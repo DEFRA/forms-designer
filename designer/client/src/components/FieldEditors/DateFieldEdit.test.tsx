@@ -20,7 +20,7 @@ describe('date field edit', () => {
           name: 'DateFieldEditClass',
           title: 'Date field edit class',
           hint: 'Date field hint',
-          type: ComponentType.DateField,
+          type: ComponentType.DatePartsField,
           options: {},
           schema: {}
         } satisfies ComponentDef

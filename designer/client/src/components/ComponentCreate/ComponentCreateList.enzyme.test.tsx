@@ -65,12 +65,9 @@ describe('ComponentCreateList', () => {
     expect(listItems).toEqual([
       'Autocomplete',
       'Date',
-      'Date parts',
-      'Date time',
-      'Date time parts',
       'Email address',
       'File upload',
-      'Month year parts',
+      'Month & year',
       'Multiline text',
       'Number',
       'Telephone number',
