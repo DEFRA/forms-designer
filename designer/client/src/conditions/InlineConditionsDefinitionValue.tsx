@@ -3,7 +3,10 @@ import {
   absoluteDateOrTimeOperatorNames,
   getOperatorConfig,
   relativeDateOrTimeOperatorNames,
-  ConditionValue
+  ComponentType,
+  ConditionValue,
+  type ConditionalComponentType,
+  type OperatorName
 } from '@defra/forms-model'
 import React from 'react'
 
@@ -15,15 +18,20 @@ import { SelectValues } from '~/src/conditions/SelectValues.jsx'
 import { TextValues } from '~/src/conditions/TextValues.jsx'
 import { tryParseInt } from '~/src/conditions/inline-condition-helpers.js'
 
-function DateTimeComponent(fieldType, operator) {
+function DateTimeComponent(
+  fieldType: ConditionalComponentType,
+  operator: OperatorName
+) {
   const operatorConfig = getOperatorConfig(fieldType, operator)
+
   const absoluteDateTimeRenderFunctions = {
-    DateField: AbsoluteDateValues,
-    DatePartsField: AbsoluteDateValues,
-    DateTimeField: AbsoluteDateTimeValues,
-    DateTimePartsField: AbsoluteDateTimeValues,
-    TimeField: AbsoluteTimeValues
+    [ComponentType.DateField]: AbsoluteDateValues,
+    [ComponentType.DatePartsField]: AbsoluteDateValues,
+    [ComponentType.DateTimeField]: AbsoluteDateTimeValues,
+    [ComponentType.DateTimePartsField]: AbsoluteDateTimeValues,
+    [ComponentType.TimeField]: AbsoluteTimeValues
   }
+
   if (fieldType in absoluteDateTimeRenderFunctions) {
     if (absoluteDateOrTimeOperatorNames.includes(operator)) {
       // since these are all classes return a function which creates new class comp
@@ -94,13 +102,13 @@ function DateTimeComponent(fieldType, operator) {
 interface FieldDef {
   label: string
   name: string
-  type: string
+  type: ConditionalComponentType
   values?: any[]
 }
 
 interface Props {
   fieldDef: FieldDef
-  operator: string
+  operator: OperatorName
   value?: any
   updateValue: (any) => void
 }

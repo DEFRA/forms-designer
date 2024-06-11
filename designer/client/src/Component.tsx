@@ -1,4 +1,10 @@
-import React, { useState } from 'react'
+import {
+  ComponentType,
+  type ComponentDef,
+  type Page,
+  type RepeatingFieldPage
+} from '@defra/forms-model'
+import React, { useState, type FunctionComponent } from 'react'
 
 import { ComponentEdit } from '~/src/ComponentEdit.jsx'
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
@@ -6,41 +12,15 @@ import { SearchIcon } from '~/src/components/Icons/SearchIcon.jsx'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContextProvider } from '~/src/reducers/component/componentReducer.jsx'
 
-export const componentTypes = {
-  TextField,
-  TelephoneNumberField,
-  NumberField,
-  EmailAddressField,
-  TimeField,
-  DateField,
-  DateTimeField,
-  DatePartsField,
-  DateTimePartsField,
-  MonthYearField,
-  MultilineTextField,
-  RadiosField,
-  CheckboxesField,
-  AutocompleteField: SelectField,
-  SelectField,
-  YesNoField,
-  UkAddressField,
-  FileUploadField,
-  Details,
-  Html,
-  InsetText,
-  List,
-  WebsiteField: TextField
-}
-
-function Base(props) {
+export const Base: FunctionComponent = (props) => {
   return <>{props.children}</>
 }
 
-function ComponentField(props) {
+export const ComponentField: FunctionComponent = (props) => {
   return <Base>{props.children}</Base>
 }
 
-function TextField() {
+export const TextField: FunctionComponent = () => {
   return (
     <ComponentField>
       <div className="box" />
@@ -48,7 +28,7 @@ function TextField() {
   )
 }
 
-function TelephoneNumberField() {
+export const TelephoneNumberField: FunctionComponent = () => {
   return (
     <ComponentField>
       <div className="box tel" />
@@ -56,7 +36,7 @@ function TelephoneNumberField() {
   )
 }
 
-function EmailAddressField() {
+export const EmailAddressField: FunctionComponent = () => {
   return (
     <ComponentField>
       <div className="box email" />
@@ -64,7 +44,7 @@ function EmailAddressField() {
   )
 }
 
-function UkAddressField() {
+export const UkAddressField: FunctionComponent = () => {
   return (
     <ComponentField>
       <span className="box" />
@@ -75,7 +55,7 @@ function UkAddressField() {
   )
 }
 
-function MultilineTextField() {
+export const MultilineTextField: FunctionComponent = () => {
   return (
     <ComponentField>
       <span className="box tall" />
@@ -83,7 +63,7 @@ function MultilineTextField() {
   )
 }
 
-function NumberField() {
+export const NumberField: FunctionComponent = () => {
   return (
     <ComponentField>
       <div className="box number" />
@@ -91,7 +71,7 @@ function NumberField() {
   )
 }
 
-function DateField() {
+export const DateField: FunctionComponent = () => {
   return (
     <ComponentField>
       <div className="box dropdown">
@@ -101,7 +81,7 @@ function DateField() {
   )
 }
 
-function DateTimeField() {
+export const DateTimeField: FunctionComponent = () => {
   return (
     <ComponentField>
       <div className="box large dropdown">
@@ -113,7 +93,7 @@ function DateTimeField() {
   )
 }
 
-function TimeField() {
+export const TimeField: FunctionComponent = () => {
   return (
     <ComponentField>
       <div className="box">
@@ -123,7 +103,7 @@ function TimeField() {
   )
 }
 
-function DateTimePartsField() {
+export const DateTimePartsField: FunctionComponent = () => {
   return (
     <ComponentField>
       <span className="box small" />
@@ -135,7 +115,7 @@ function DateTimePartsField() {
   )
 }
 
-function MonthYearField() {
+export const MonthYearField: FunctionComponent = () => {
   return (
     <ComponentField>
       <span className="box small govuk-!-margin-left-1 govuk-!-margin-right-1" />
@@ -144,7 +124,7 @@ function MonthYearField() {
   )
 }
 
-function DatePartsField() {
+export const DatePartsField: FunctionComponent = () => {
   return (
     <ComponentField>
       <span className="box small" />
@@ -154,7 +134,7 @@ function DatePartsField() {
   )
 }
 
-function RadiosField() {
+export const RadiosField: FunctionComponent = () => {
   return (
     <ComponentField>
       <div className="govuk-!-margin-bottom-1">
@@ -171,7 +151,7 @@ function RadiosField() {
   )
 }
 
-function CheckboxesField() {
+export const CheckboxesField: FunctionComponent = () => {
   return (
     <ComponentField>
       <div className="govuk-!-margin-bottom-1">
@@ -188,7 +168,7 @@ function CheckboxesField() {
   )
 }
 
-function SelectField() {
+export const SelectField: FunctionComponent = () => {
   return (
     <ComponentField>
       <div className="box dropdown" />
@@ -196,7 +176,7 @@ function SelectField() {
   )
 }
 
-function YesNoField() {
+export const YesNoField: FunctionComponent = () => {
   return (
     <ComponentField>
       <div className="govuk-!-margin-bottom-1">
@@ -209,7 +189,7 @@ function YesNoField() {
   )
 }
 
-function FileUploadField() {
+export const FileUploadField: FunctionComponent = () => {
   return (
     <ComponentField>
       <div className="govuk-!-margin-bottom-1">
@@ -219,7 +199,7 @@ function FileUploadField() {
   )
 }
 
-function Details() {
+export const Details: FunctionComponent = () => {
   return (
     <Base>
       {'▶ '}
@@ -228,7 +208,7 @@ function Details() {
   )
 }
 
-function InsetText() {
+export const InsetText: FunctionComponent = () => {
   return (
     <Base>
       <div className="inset govuk-!-padding-left-2">
@@ -240,19 +220,7 @@ function InsetText() {
   )
 }
 
-function WarningText() {
-  return (
-    <Base>
-      <div className="warning govuk-!-padding-left-2">
-        <div className="line" />
-        <div className="line short govuk-!-margin-bottom-2 govuk-!-margin-top-2" />
-        <div className="line" />
-      </div>
-    </Base>
-  )
-}
-
-function List() {
+export const List: FunctionComponent = () => {
   return (
     <Base>
       <div className="line short govuk-!-margin-bottom-2 govuk-!-margin-top-2" />
@@ -262,7 +230,7 @@ function List() {
   )
 }
 
-function Html() {
+export const Html: FunctionComponent = () => {
   return (
     <Base>
       <div className="html">
@@ -272,15 +240,46 @@ function Html() {
   )
 }
 
-export function Component(props) {
-  const [showEditor, setShowEditor] = useState()
-  const toggleShowEditor = (value) => {
-    setShowEditor(value ?? !showEditor)
-  }
-  const { data, page, component } = props
-  const TagName = componentTypes[`${component.type}`]
+export const componentTypes = {
+  [ComponentType.TextField]: TextField,
+  [ComponentType.TelephoneNumberField]: TelephoneNumberField,
+  [ComponentType.NumberField]: NumberField,
+  [ComponentType.EmailAddressField]: EmailAddressField,
+  [ComponentType.TimeField]: TimeField,
+  [ComponentType.DateField]: DateField,
+  [ComponentType.DateTimeField]: DateTimeField,
+  [ComponentType.DatePartsField]: DatePartsField,
+  [ComponentType.DateTimePartsField]: DateTimePartsField,
+  [ComponentType.MonthYearField]: MonthYearField,
+  [ComponentType.MultilineTextField]: MultilineTextField,
+  [ComponentType.RadiosField]: RadiosField,
+  [ComponentType.CheckboxesField]: CheckboxesField,
+  [ComponentType.AutocompleteField]: SelectField,
+  [ComponentType.SelectField]: SelectField,
+  [ComponentType.YesNoField]: YesNoField,
+  [ComponentType.UkAddressField]: UkAddressField,
+  [ComponentType.FileUploadField]: FileUploadField,
+  [ComponentType.Details]: Details,
+  [ComponentType.Html]: Html,
+  [ComponentType.InsetText]: InsetText,
+  [ComponentType.List]: List,
+  [ComponentType.WebsiteField]: TextField
+}
+
+export interface Props {
+  page: Page | RepeatingFieldPage
+  component: ComponentDef
+}
+
+export const Component: FunctionComponent<Props> = (props) => {
+  const { page, component } = props
+
+  const [showEditor, setShowEditor] = useState<boolean>(false)
+  const toggleShowEditor = () => setShowEditor(!showEditor)
+
+  const TagName = componentTypes[component.type]
   const editFlyoutTitle = i18n('component.edit', {
-    name: i18n(`fieldTypeToName.${component.type}`)
+    name: `$t(fieldTypeToName.${component.type})`
   })
 
   return (
