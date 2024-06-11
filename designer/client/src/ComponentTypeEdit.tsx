@@ -59,7 +59,10 @@ export const ComponentTypeEdit: FunctionComponent<Props> = (props) => {
     component?.type === ComponentType.List ||
     component?.subType !== ComponentSubType.Content
 
-  const TagName = componentTypeEditors[component?.type ?? '']
+  const TagName = hasEditor(component)
+    ? componentTypeEditors[component.type]
+    : undefined
+
   return (
     <>
       {needsFieldInputs && (

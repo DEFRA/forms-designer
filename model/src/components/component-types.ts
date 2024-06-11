@@ -1,8 +1,6 @@
 import { ComponentSubType, ComponentType } from '~/src/components/enums.js'
-import {
-  type ComponentDef,
-  type ConditionalComponentsDef
-} from '~/src/components/types.js'
+import { hasConditionSupport } from '~/src/components/helpers.js'
+import { type ComponentDef } from '~/src/components/types.js'
 
 export const ComponentTypes: ComponentDef[] = [
   {
@@ -214,22 +212,5 @@ export const ComponentTypes: ComponentDef[] = [
   }
 ]
 
-export const ConditionalComponentTypes = ComponentTypes.filter(
-  (component): component is ConditionalComponentsDef => {
-    const allowedTypes = [
-      ComponentType.CheckboxesField,
-      ComponentType.DateField,
-      ComponentType.DatePartsField,
-      ComponentType.DateTimeField,
-      ComponentType.DateTimePartsField,
-      ComponentType.EmailAddressField,
-      ComponentType.MultilineTextField,
-      ComponentType.NumberField,
-      ComponentType.TextField,
-      ComponentType.TimeField,
-      ComponentType.YesNoField
-    ]
-
-    return allowedTypes.includes(component.type)
-  }
-)
+export const ConditionalComponentTypes =
+  ComponentTypes.filter(hasConditionSupport)

@@ -1,4 +1,4 @@
-import { ComponentType as Types } from '@defra/forms-model'
+import { hasListField } from '@defra/forms-model'
 import React, { useContext, useLayoutEffect } from 'react'
 
 import { ComponentTypeEdit } from '~/src/ComponentTypeEdit.jsx'
@@ -8,14 +8,6 @@ import { updateComponent } from '~/src/data/component/updateComponent.js'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 import { Actions } from '~/src/reducers/component/types.js'
 import { hasValidationErrors } from '~/src/validations.js'
-
-const LIST_TYPES = [
-  Types.AutocompleteField,
-  Types.List,
-  Types.RadiosField,
-  Types.SelectField,
-  Types.YesNoField
-]
 
 export function ComponentEdit(props) {
   const { data, save } = useContext(DataContext)
@@ -43,7 +35,7 @@ export function ComponentEdit(props) {
       return
     }
 
-    if (LIST_TYPES.includes(selectedComponent.type)) {
+    if (hasListField(selectedComponent)) {
       if (selectedListName !== 'static') {
         componentToSubmit.values = {
           type: 'listRef',
