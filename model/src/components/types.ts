@@ -165,23 +165,6 @@ export interface MultilineTextFieldComponent extends TextFieldBase {
   }
 }
 
-export interface FileUploadFieldComponent {
-  type: ComponentType.FileUploadField
-  subType?: ComponentSubType.Field
-  name: string
-  title: string
-  hint: string
-  options: {
-    required?: boolean
-    hideTitle?: boolean
-    multiple?: boolean
-    classes?: string
-    exposeToContext?: boolean
-    imageQualityPlayback?: boolean
-  }
-  schema: object
-}
-
 export interface UkAddressFieldComponent extends TextFieldBase {
   type: ComponentType.UkAddressField
 }
@@ -246,7 +229,6 @@ export type ComponentDef =
   | MonthYearFieldComponent
   | DetailsComponent
   | EmailAddressFieldComponent
-  | FileUploadFieldComponent
   | HtmlComponent
   | ListComponent
   | MultilineTextFieldComponent
@@ -267,7 +249,6 @@ export type InputFieldsComponentsDef =
   | MultilineTextFieldComponent
   | TelephoneNumberFieldComponent
   | YesNoFieldComponent
-  | FileUploadFieldComponent
   | MonthYearFieldComponent
   | TimeFieldComponent
   | UkAddressFieldComponent
@@ -294,7 +275,6 @@ export type EditorComponentsDef =
   | DetailsComponent
   | HtmlComponent
   | InsetTextComponent
-  | FileUploadFieldComponent
   | DatePartsFieldFieldComponent
 
 // Components that render lists

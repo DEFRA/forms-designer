@@ -9,7 +9,6 @@ import {
 import React, { useContext, type FunctionComponent } from 'react'
 
 import { FieldEdit } from '~/src/FieldEdit.jsx'
-import { FileUploadFieldEdit } from '~/src/FileUploadFieldEdit.jsx'
 import { MultilineTextFieldEdit } from '~/src/MultilineTextFieldEdit.jsx'
 import { DateFieldEdit } from '~/src/components/FieldEditors/DateFieldEdit.jsx'
 import { DetailsEdit } from '~/src/components/FieldEditors/DetailsEdit.jsx'
@@ -34,7 +33,6 @@ const componentTypeEditors = {
   [ComponentType.Details]: DetailsEdit,
   [ComponentType.Html]: ParaEdit,
   [ComponentType.InsetText]: ParaEdit,
-  [ComponentType.FileUploadField]: FileUploadFieldEdit,
   [ComponentType.DatePartsField]: DateFieldEdit
 }
 

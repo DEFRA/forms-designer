@@ -66,7 +66,6 @@ describe('ComponentCreateList', () => {
       'Autocomplete',
       'Date',
       'Email address',
-      'File upload',
       'Month & year',
       'Multiline text',
       'Number',

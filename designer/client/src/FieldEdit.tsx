@@ -27,7 +27,6 @@ export function FieldEdit({
     exposeToContext = false,
     allowPrePopulation = false
   } = options
-  const isFileUploadField = selectedComponent.type === 'FileUploadField'
   const fieldTitle =
     ComponentTypes.find((componentType) => componentType.name === type)
       ?.title ?? ''
@@ -137,9 +136,7 @@ export function FieldEdit({
             <input
               type="checkbox"
               id="field-options-required"
-              className={`govuk-checkboxes__input ${
-                isFileUploadField ? 'disabled' : ''
-              }`}
+              className="govuk-checkboxes__input"
               name="options.required"
               checked={!required}
               onChange={(e) =>

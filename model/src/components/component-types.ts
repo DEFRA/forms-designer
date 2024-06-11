@@ -130,15 +130,6 @@ export const ComponentTypes: ComponentDef[] = [
     schema: {}
   },
   {
-    name: 'FileUploadField',
-    type: ComponentType.FileUploadField,
-    title: 'File upload field',
-    subType: ComponentSubType.Field,
-    hint: '',
-    options: {},
-    schema: {}
-  },
-  {
     name: 'Html',
     type: ComponentType.Html,
     title: 'Html',

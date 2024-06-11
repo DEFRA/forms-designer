@@ -155,16 +155,6 @@ export const YesNoField: FunctionComponent = () => {
   )
 }
 
-export const FileUploadField: FunctionComponent = () => {
-  return (
-    <ComponentField>
-      <div className="govuk-!-margin-bottom-1">
-        {'🗂'} <span className="line short" />
-      </div>
-    </ComponentField>
-  )
-}
-
 export const Details: FunctionComponent = () => {
   return (
     <Base>
@@ -221,7 +211,6 @@ export const componentTypes = {
   [ComponentType.SelectField]: SelectField,
   [ComponentType.YesNoField]: YesNoField,
   [ComponentType.UkAddressField]: UkAddressField,
-  [ComponentType.FileUploadField]: FileUploadField,
   [ComponentType.Details]: Details,
   [ComponentType.Html]: Html,
   [ComponentType.InsetText]: InsetText,

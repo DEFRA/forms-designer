@@ -67,7 +67,6 @@ export function hasEditor(
     ComponentType.Details,
     ComponentType.Html,
     ComponentType.InsetText,
-    ComponentType.FileUploadField,
     ComponentType.DatePartsField
   ]
 
@@ -87,7 +86,6 @@ export function hasInputField(
     ComponentType.MultilineTextField,
     ComponentType.TelephoneNumberField,
     ComponentType.YesNoField,
-    ComponentType.FileUploadField,
     ComponentType.MonthYearField,
     ComponentType.TimeField,
     ComponentType.UkAddressField

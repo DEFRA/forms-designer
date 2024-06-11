@@ -178,23 +178,6 @@ exports[`ComponentCreateList should match snapshot 1`] = `
                 class="govuk-link"
                 href="#0"
               >
-                File upload
-              </a>
-            </p>
-            <div
-              class="govuk-hint govuk-!-margin-top-2"
-            >
-              Allows users to upload files from the device they are using
-            </div>
-          </li>
-          <li>
-            <p
-              class="govuk-body govuk-!-margin-bottom-2"
-            >
-              <a
-                class="govuk-link"
-                href="#0"
-              >
                 Month & year
               </a>
             </p>
