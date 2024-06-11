@@ -12,8 +12,7 @@ const data: FormDefinition = {
       name: 'isCondition',
       value: { name: 'name', conditions: [] }
     }
-  ],
-  outputs: []
+  ]
 }
 
 test('addCondition adds a condition to the list', () => {
@@ -30,8 +29,7 @@ test('addCondition adds a condition to the list', () => {
     pages: [],
     lists: [],
     sections: [],
-    conditions: [...data.conditions, condition],
-    outputs: []
+    conditions: [...data.conditions, condition]
   })
 })
 

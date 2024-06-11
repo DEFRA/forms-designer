@@ -78,8 +78,7 @@ const data: FormDefinition = {
   ],
   lists: [],
   sections: [],
-  conditions: [],
-  outputs: []
+  conditions: []
 }
 test('updateLinksTo should update all links pointing to the specified path to the new path', () => {
   const returned = updateLinksTo(data, '/2', '/7')
@@ -136,7 +135,6 @@ test('updateLinksTo should update all links pointing to the specified path to th
     ],
     lists: [],
     sections: [],
-    conditions: [],
-    outputs: []
+    conditions: []
   })
 })

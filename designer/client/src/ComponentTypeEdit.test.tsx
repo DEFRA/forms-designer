@@ -51,8 +51,7 @@ describe('ComponentTypeEdit', () => {
       ],
       lists: [],
       sections: [],
-      conditions: [],
-      outputs: []
+      conditions: []
     }
   })
 

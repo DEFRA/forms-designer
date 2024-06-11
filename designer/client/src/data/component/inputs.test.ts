@@ -63,8 +63,7 @@ test('should return all inputs from the page model', () => {
     ],
     lists: [],
     sections: [],
-    conditions: [],
-    outputs: []
+    conditions: []
   }
 
   expect(allInputs(data)).toEqual<Input[]>([
@@ -120,8 +119,7 @@ test('should handle no pages', () => {
     pages: [],
     lists: [],
     sections: [],
-    conditions: [],
-    outputs: []
+    conditions: []
   }
   expect(allInputs(data)).toEqual([])
 })
@@ -132,8 +130,7 @@ test('should handle undefined pages', () => {
     pages: undefined,
     lists: [],
     sections: [],
-    conditions: [],
-    outputs: []
+    conditions: []
   }
   expect(allInputs(data)).toEqual([])
 })
@@ -144,8 +141,7 @@ test('should handle pages with undefined components', () => {
     pages: [{}],
     lists: [],
     sections: [],
-    conditions: [],
-    outputs: []
+    conditions: []
   }
   expect(allInputs(data)).toEqual([])
 })
@@ -161,8 +157,7 @@ test('should handle pages with no components', () => {
     ],
     lists: [],
     sections: [],
-    conditions: [],
-    outputs: []
+    conditions: []
   }
   expect(allInputs(data)).toEqual([])
 })

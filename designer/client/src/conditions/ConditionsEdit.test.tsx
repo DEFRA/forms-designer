@@ -57,8 +57,7 @@ const data: FormDefinition = {
   ],
   lists: [],
   sections: [],
-  conditions: [],
-  outputs: []
+  conditions: []
 }
 
 const dataValue = { data, save: jest.fn() }
@@ -97,8 +96,7 @@ describe('ConditionsEdit', () => {
           pages: [],
           lists: [],
           sections: [],
-          conditions: [],
-          outputs: []
+          conditions: []
         },
         save: jest.fn()
       })
@@ -167,8 +165,7 @@ describe('ConditionsEdit', () => {
           pages: [],
           lists: [],
           sections: [],
-          conditions: [],
-          outputs: []
+          conditions: []
         },
         save: jest.fn()
       })

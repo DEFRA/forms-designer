@@ -28,8 +28,7 @@ describe('ComponentCreate:', () => {
     pages: [{ path: '/1', title: '', controller: '', section: '' }],
     lists: [],
     sections: [],
-    conditions: [],
-    outputs: []
+    conditions: []
   }
 
   const page = { path: '/1' }

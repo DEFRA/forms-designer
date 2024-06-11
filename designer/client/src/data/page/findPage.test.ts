@@ -51,8 +51,7 @@ const data: FormDefinition = {
   ],
   lists: [],
   sections: [],
-  conditions: [],
-  outputs: []
+  conditions: []
 }
 test('findPage should throw if the page does not exist', () => {
   expect(() => findPage(data, '/404')).toThrow()

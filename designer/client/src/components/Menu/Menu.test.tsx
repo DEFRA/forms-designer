@@ -51,7 +51,6 @@ describe('Menu', () => {
     expect(getByText('Sections')).toBeInTheDocument()
     expect(getByText('Conditions')).toBeInTheDocument()
     expect(getByText('Lists')).toBeInTheDocument()
-    expect(getByText('Outputs')).toBeInTheDocument()
     expect(getByText('Summary behaviour')).toBeInTheDocument()
     expect(getByText('Summary')).toBeInTheDocument()
   })

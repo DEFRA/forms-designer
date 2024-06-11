@@ -63,8 +63,7 @@ const data: FormDefinition = {
       name: 'isKangaroo',
       value: 'true'
     }
-  ],
-  outputs: []
+  ]
 }
 
 test('updateLink throws if from, to, or there is no existing link', () => {

@@ -44,8 +44,7 @@ const rawData: FormDefinition = {
   ],
   lists: [],
   sections: [],
-  conditions: [],
-  outputs: []
+  conditions: []
 }
 
 const data: FormDefinition = { ...rawData }

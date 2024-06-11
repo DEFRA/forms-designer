@@ -36,8 +36,7 @@ const data: FormDefinition = {
       name: 'anotherName',
       value: 'true'
     }
-  ],
-  outputs: []
+  ]
 }
 
 test('removeCondition should remove conditions from the conditions key and in page links', () => {
@@ -68,8 +67,7 @@ test('removeCondition should remove conditions from the conditions key and in pa
       expect.objectContaining({
         name: 'anotherName'
       })
-    ],
-    outputs: []
+    ]
   })
 })
 

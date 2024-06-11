@@ -49,8 +49,7 @@ describe('Visualisation', () => {
       ],
       lists: [],
       sections: [],
-      conditions: [],
-      outputs: []
+      conditions: []
     }
     const providerProps = {
       data,
@@ -106,8 +105,7 @@ describe('Visualisation', () => {
       ],
       lists: [],
       sections: [],
-      conditions: [],
-      outputs: []
+      conditions: []
     }
     const providerProps = {
       data,

@@ -14,8 +14,7 @@ const data: FormDefinition = {
   ],
   lists: [],
   sections: [],
-  conditions: [],
-  outputs: []
+  conditions: []
 }
 
 test('addLink throws if to, from or both are not found', () => {
@@ -43,8 +42,7 @@ test('addLink successfully adds a new link', () => {
     ],
     lists: [],
     sections: [],
-    conditions: [],
-    outputs: []
+    conditions: []
   })
 })
 
@@ -61,7 +59,6 @@ test('addLink does nothing happens if the link already exists', () => {
     ],
     lists: [],
     sections: [],
-    conditions: [],
-    outputs: []
+    conditions: []
   })
 })
