@@ -1,4 +1,4 @@
-import { Coordinator } from '@defra/forms-model'
+import { ConditionType, Coordinator, OperatorName } from '@defra/forms-model'
 
 import { type ConditionData } from '~/src/conditions/SelectConditions.jsx'
 import { conditionsByType } from '~/src/conditions/select-condition-helpers.js'
@@ -24,8 +24,8 @@ const objectCondition = {
             type: 'string',
             display: 'Do you like fried eggs?'
           },
-          operator: 'is',
-          type: 'Value',
+          operator: OperatorName.Is,
+          type: ConditionType.Value,
           value: 'true',
           display: 'true'
         }

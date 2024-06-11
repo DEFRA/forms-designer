@@ -1,6 +1,12 @@
+import { type ConditionalComponentsDef } from '~/src/components/types.js'
 import { type ConditionGroup } from '~/src/conditions/condition-group.js'
 import { type ConditionRef } from '~/src/conditions/condition-ref.js'
+import {
+  type ConditionValue,
+  type RelativeTimeValue
+} from '~/src/conditions/condition-values.js'
 import { type Condition } from '~/src/conditions/condition.js'
+import { type OperatorName } from '~/src/conditions/enums.js'
 
 export type ConditionsArray = (Condition | ConditionGroup | ConditionRef)[]
 
@@ -23,3 +29,13 @@ export interface TimeUnits {
   MINUTES: { display: 'minute(s)'; value: 'minutes' }
   SECONDS: { display: 'second(s)'; value: 'seconds' }
 }
+
+export interface OperatorDefinition {
+  units?: DateUnits | TimeUnits
+  expression: (
+    component: Pick<ConditionalComponentsDef, 'type' | 'name'>,
+    conditionValue: ConditionValue | RelativeTimeValue
+  ) => string
+}
+
+export type Conditionals = Record<OperatorName, OperatorDefinition>

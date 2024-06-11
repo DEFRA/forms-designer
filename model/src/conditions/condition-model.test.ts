@@ -1,15 +1,17 @@
 import { ComponentType } from '~/src/components/enums.js'
 import {
-  Coordinator,
-  ConditionsModel,
   Condition,
   ConditionField,
   ConditionGroupDef,
   ConditionRef,
+  ConditionsModel,
+  ConditionType,
+  ConditionValue,
+  Coordinator,
   DateDirections,
   dateUnits,
-  RelativeTimeValue,
-  ConditionValue
+  OperatorName,
+  RelativeTimeValue
 } from '~/src/conditions/index.js'
 
 describe('condition model', () => {
@@ -38,7 +40,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('badger', ComponentType.TextField, 'Badger'),
-          'is',
+          OperatorName.Is,
           new ConditionValue('Monkeys')
         )
       )
@@ -53,9 +55,9 @@ describe('condition model', () => {
             type: ComponentType.TextField,
             display: 'Badger'
           },
-          operator: 'is',
+          operator: OperatorName.Is,
           value: {
-            type: 'Value',
+            type: ConditionType.Value,
             value: 'Monkeys',
             display: 'Monkeys'
           }
@@ -81,14 +83,14 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('badger', ComponentType.TextField, 'Badger'),
-          'is',
+          OperatorName.Is,
           new ConditionValue('Monkeys')
         )
       )
       underTest.add(
         new Condition(
           new ConditionField('monkeys', ComponentType.TextField, 'Monkeys'),
-          'is not',
+          OperatorName.IsNot,
           new ConditionValue('Giraffes'),
           Coordinator.AND
         )
@@ -96,7 +98,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('squiffy', ComponentType.TextField, 'Squiffy'),
-          'is not',
+          OperatorName.IsNot,
           new ConditionValue('Donkeys'),
           Coordinator.AND
         )
@@ -112,37 +114,37 @@ describe('condition model', () => {
             type: ComponentType.TextField,
             name: 'badger'
           },
-          operator: 'is',
+          operator: OperatorName.Is,
           value: {
-            type: 'Value',
+            type: ConditionType.Value,
             value: 'Monkeys',
             display: 'Monkeys'
           }
         },
         {
-          coordinator: 'and',
+          coordinator: Coordinator.AND,
           field: {
             display: 'Monkeys',
             type: ComponentType.TextField,
             name: 'monkeys'
           },
-          operator: 'is not',
+          operator: OperatorName.IsNot,
           value: {
-            type: 'Value',
+            type: ConditionType.Value,
             value: 'Giraffes',
             display: 'Giraffes'
           }
         },
         {
-          coordinator: 'and',
+          coordinator: Coordinator.AND,
           field: {
             display: 'Squiffy',
             type: ComponentType.TextField,
             name: 'squiffy'
           },
-          operator: 'is not',
+          operator: OperatorName.IsNot,
           value: {
-            type: 'Value',
+            type: ConditionType.Value,
             value: 'Donkeys',
             display: 'Donkeys'
           }
@@ -172,14 +174,14 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('badger', ComponentType.TextField, 'Badger'),
-          'is',
+          OperatorName.Is,
           new ConditionValue('Monkeys')
         )
       )
       underTest.add(
         new Condition(
           new ConditionField('monkeys', ComponentType.TextField, 'Monkeys'),
-          'is not',
+          OperatorName.IsNot,
           new ConditionValue('Giraffes'),
           Coordinator.OR
         )
@@ -187,7 +189,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('squiffy', ComponentType.TextField, 'Squiffy'),
-          'is not',
+          OperatorName.IsNot,
           new ConditionValue('Donkeys'),
           Coordinator.OR
         )
@@ -203,37 +205,37 @@ describe('condition model', () => {
             type: ComponentType.TextField,
             name: 'badger'
           },
-          operator: 'is',
+          operator: OperatorName.Is,
           value: {
-            type: 'Value',
+            type: ConditionType.Value,
             value: 'Monkeys',
             display: 'Monkeys'
           }
         },
         {
-          coordinator: 'or',
+          coordinator: Coordinator.OR,
           field: {
             display: 'Monkeys',
             type: ComponentType.TextField,
             name: 'monkeys'
           },
-          operator: 'is not',
+          operator: OperatorName.IsNot,
           value: {
-            type: 'Value',
+            type: ConditionType.Value,
             value: 'Giraffes',
             display: 'Giraffes'
           }
         },
         {
-          coordinator: 'or',
+          coordinator: Coordinator.OR,
           field: {
             display: 'Squiffy',
             type: ComponentType.TextField,
             name: 'squiffy'
           },
-          operator: 'is not',
+          operator: OperatorName.IsNot,
           value: {
-            type: 'Value',
+            type: ConditionType.Value,
             value: 'Donkeys',
             display: 'Donkeys'
           }
@@ -259,14 +261,14 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('badger', ComponentType.TextField, 'Badger'),
-          'is',
+          OperatorName.Is,
           new ConditionValue('Zebras')
         )
       )
       underTest.add(
         new Condition(
           new ConditionField('monkeys', ComponentType.TextField, 'Monkeys'),
-          'is',
+          OperatorName.Is,
           new ConditionValue('Giraffes'),
           Coordinator.OR
         )
@@ -274,7 +276,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('squiffy', ComponentType.TextField, 'Squiffy'),
-          'is not',
+          OperatorName.IsNot,
           new ConditionValue('Donkeys'),
           Coordinator.AND
         )
@@ -293,14 +295,14 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('badger', ComponentType.TextField, 'Badger'),
-          'is',
+          OperatorName.Is,
           new ConditionValue('Zebras')
         )
       )
       underTest.add(
         new Condition(
           new ConditionField('squiffy', ComponentType.TextField, 'Squiffy'),
-          'is not',
+          OperatorName.IsNot,
           new ConditionValue('Donkeys'),
           Coordinator.AND
         )
@@ -308,7 +310,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('monkeys', ComponentType.TextField, 'Monkeys'),
-          'is',
+          OperatorName.Is,
           new ConditionValue('Giraffes'),
           Coordinator.OR
         )
@@ -327,7 +329,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('badger', ComponentType.TextField, 'Badger'),
-          'is',
+          OperatorName.Is,
           new ConditionValue('Zebras')
         )
       )
@@ -335,7 +337,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('squiffy', ComponentType.TextField, 'Squiffy'),
-          'is',
+          OperatorName.Is,
           new ConditionValue('Donkeys'),
           Coordinator.AND
         )
@@ -343,7 +345,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('duration', ComponentType.NumberField, 'Duration'),
-          'is at least',
+          OperatorName.IsAtLeast,
           new ConditionValue('10'),
           Coordinator.OR
         )
@@ -351,7 +353,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('birthday', ComponentType.DateField, 'Birthday'),
-          'is at least',
+          OperatorName.IsAtLeast,
           new RelativeTimeValue('10', 'days', DateDirections.PAST),
           Coordinator.OR
         )
@@ -359,7 +361,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('squiffy', ComponentType.TextField, 'Squiffy'),
-          'is not',
+          OperatorName.IsNot,
           new ConditionValue('Donkeys'),
           Coordinator.AND
         )
@@ -379,12 +381,12 @@ describe('condition model', () => {
     })
   })
 
-  describe(ComponentType.YesNoField, () => {
+  describe('YesNoField', () => {
     beforeEach(() => {
       underTest.add(
         new Condition(
           new ConditionField('badger', ComponentType.YesNoField, 'Badger'),
-          'is',
+          OperatorName.Is,
           new ConditionValue('true')
         )
       )
@@ -400,14 +402,14 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('badger', ComponentType.TextField, 'Badger'),
-          'is',
+          OperatorName.Is,
           new ConditionValue('Monkeys')
         )
       )
       underTest.add(
         new Condition(
           new ConditionField('monkeys', ComponentType.TextField, 'Monkeys'),
-          'is not',
+          OperatorName.IsNot,
           new ConditionValue('Giraffes'),
           Coordinator.AND
         )
@@ -415,7 +417,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('squiffy', ComponentType.TextField, 'Squiffy'),
-          'is not',
+          OperatorName.IsNot,
           new ConditionValue('Donkeys'),
           Coordinator.AND
         )
@@ -427,7 +429,7 @@ describe('condition model', () => {
         0,
         new Condition(
           new ConditionField('badger', ComponentType.TextField, 'Badger'),
-          'is',
+          OperatorName.Is,
           new ConditionValue('Giraffes')
         )
       )
@@ -441,7 +443,7 @@ describe('condition model', () => {
         2,
         new Condition(
           new ConditionField('badger', ComponentType.TextField, 'Badger'),
-          'is',
+          OperatorName.Is,
           new ConditionValue('Giraffes'),
           Coordinator.AND
         )
@@ -457,7 +459,7 @@ describe('condition model', () => {
           0,
           new Condition(
             new ConditionField('badger', ComponentType.TextField, 'Badger'),
-            'is',
+            OperatorName.Is,
             new ConditionValue('Giraffes'),
             Coordinator.AND
           )
@@ -471,7 +473,7 @@ describe('condition model', () => {
           3,
           new Condition(
             new ConditionField('badger', ComponentType.TextField, 'Badger'),
-            'is',
+            OperatorName.Is,
             new ConditionValue('Giraffes'),
             Coordinator.AND
           )
@@ -485,7 +487,7 @@ describe('condition model', () => {
           4,
           new Condition(
             new ConditionField('badger', ComponentType.TextField, 'Badger'),
-            'is',
+            OperatorName.Is,
             new ConditionValue('Giraffes'),
             Coordinator.AND
           )
@@ -499,7 +501,7 @@ describe('condition model', () => {
           2,
           new Condition(
             new ConditionField('badger', ComponentType.TextField, 'Badger'),
-            'is',
+            OperatorName.Is,
             new ConditionValue('Giraffes')
           )
         )
@@ -512,7 +514,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('badger', ComponentType.TextField, 'Badger'),
-          'is',
+          OperatorName.Is,
           new ConditionValue('Zebras')
         )
       )
@@ -520,7 +522,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('squiffy', ComponentType.TextField, 'Squiffy'),
-          'is',
+          OperatorName.Is,
           new ConditionValue('Donkeys'),
           Coordinator.AND
         )
@@ -528,7 +530,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('duration', ComponentType.NumberField, 'Duration'),
-          'is at least',
+          OperatorName.IsAtLeast,
           new ConditionValue('10'),
           Coordinator.OR
         )
@@ -536,7 +538,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('birthday', ComponentType.DateField, 'Birthday'),
-          'is',
+          OperatorName.Is,
           new ConditionValue('10/10/2019'),
           Coordinator.OR
         )
@@ -544,7 +546,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('squiffy', ComponentType.TextField, 'Squiffy'),
-          'is not',
+          OperatorName.IsNot,
           new ConditionValue('Donkeys'),
           Coordinator.AND
         )
@@ -614,6 +616,7 @@ describe('condition model', () => {
     test('user groupings, but not automatic groupings, should be returned from asPerUserGroupings', () => {
       underTest.addGroups([new ConditionGroupDef(0, 1)])
       underTest.addGroups([new ConditionGroupDef(0, 1)])
+
       const returned = underTest.asPerUserGroupings
       expect(returned).toEqual([
         {
@@ -627,30 +630,30 @@ describe('condition model', () => {
                     type: ComponentType.TextField,
                     name: 'badger'
                   },
-                  operator: 'is',
+                  operator: OperatorName.Is,
                   value: {
-                    type: 'Value',
+                    type: ConditionType.Value,
                     value: 'Zebras',
                     display: 'Zebras'
                   }
                 },
                 {
-                  coordinator: 'or',
+                  coordinator: Coordinator.OR,
                   conditionName: 'under18',
                   conditionDisplayName: 'Under 18'
                 }
               ]
             },
             {
-              coordinator: 'and',
+              coordinator: Coordinator.AND,
               field: {
                 display: 'Squiffy',
                 type: ComponentType.TextField,
                 name: 'squiffy'
               },
-              operator: 'is',
+              operator: OperatorName.Is,
               value: {
-                type: 'Value',
+                type: ConditionType.Value,
                 value: 'Donkeys',
                 display: 'Donkeys'
               }
@@ -658,43 +661,43 @@ describe('condition model', () => {
           ]
         },
         {
-          coordinator: 'or',
+          coordinator: Coordinator.OR,
           field: {
             display: 'Duration',
             type: ComponentType.NumberField,
             name: 'duration'
           },
-          operator: 'is at least',
+          operator: OperatorName.IsAtLeast,
           value: {
-            type: 'Value',
+            type: ConditionType.Value,
             value: '10',
             display: '10'
           }
         },
         {
-          coordinator: 'or',
+          coordinator: Coordinator.OR,
           field: {
             display: 'Birthday',
             type: ComponentType.DateField,
             name: 'birthday'
           },
-          operator: 'is',
+          operator: OperatorName.Is,
           value: {
-            type: 'Value',
+            type: ConditionType.Value,
             value: '10/10/2019',
             display: '10/10/2019'
           }
         },
         {
-          coordinator: 'and',
+          coordinator: Coordinator.AND,
           field: {
             display: 'Squiffy',
             type: ComponentType.TextField,
             name: 'squiffy'
           },
-          operator: 'is not',
+          operator: OperatorName.IsNot,
           value: {
-            type: 'Value',
+            type: ConditionType.Value,
             value: 'Donkeys',
             display: 'Donkeys'
           }
@@ -708,7 +711,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('badger', ComponentType.TextField, 'Badger'),
-          'is',
+          OperatorName.Is,
           new ConditionValue('Zebras')
         )
       )
@@ -716,7 +719,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('squiffy', ComponentType.TextField, 'Squiffy'),
-          'is',
+          OperatorName.Is,
           new ConditionValue('Donkeys'),
           Coordinator.AND
         )
@@ -724,7 +727,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('duration', ComponentType.NumberField, 'Duration'),
-          'is at least',
+          OperatorName.IsAtLeast,
           new ConditionValue('10'),
           Coordinator.OR
         )
@@ -732,7 +735,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('birthday', ComponentType.DateField, 'Birthday'),
-          'is',
+          OperatorName.Is,
           new ConditionValue('10/10/2019'),
           Coordinator.OR
         )
@@ -740,7 +743,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('squiffy', ComponentType.TextField, 'Squiffy'),
-          'is not',
+          OperatorName.IsNot,
           new ConditionValue('Donkeys'),
           Coordinator.AND
         )
@@ -777,7 +780,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('badger', ComponentType.TextField, 'Badger'),
-          'is',
+          OperatorName.Is,
           new ConditionValue('Zebras')
         )
       )
@@ -785,7 +788,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('squiffy', ComponentType.TextField, 'Squiffy'),
-          'is',
+          OperatorName.Is,
           new ConditionValue('Donkeys'),
           Coordinator.AND
         )
@@ -793,7 +796,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('duration', ComponentType.NumberField, 'Duration'),
-          'is at least',
+          OperatorName.IsAtLeast,
           new ConditionValue('10'),
           Coordinator.OR
         )
@@ -801,7 +804,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('birthday', ComponentType.DateField, 'Birthday'),
-          'is',
+          OperatorName.Is,
           new ConditionValue('10/10/2019'),
           Coordinator.OR
         )
@@ -809,7 +812,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('squiffy', ComponentType.TextField, 'Squiffy'),
-          'is not',
+          OperatorName.IsNot,
           new ConditionValue('Donkeys'),
           Coordinator.AND
         )
@@ -896,7 +899,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('badger', ComponentType.TextField, 'Badger'),
-          'is',
+          OperatorName.Is,
           new ConditionValue('Zebras')
         )
       )
@@ -904,7 +907,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('squiffy', ComponentType.TextField, 'Squiffy'),
-          'is',
+          OperatorName.Is,
           new ConditionValue('Donkeys'),
           Coordinator.AND
         )
@@ -912,7 +915,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('duration', ComponentType.NumberField, 'Duration'),
-          'is at least',
+          OperatorName.IsAtLeast,
           new ConditionValue('10'),
           Coordinator.OR
         )
@@ -920,7 +923,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('birthday', ComponentType.DateField, 'Birthday'),
-          'is',
+          OperatorName.Is,
           new ConditionValue('10/10/2019'),
           Coordinator.OR
         )
@@ -928,7 +931,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('squiffy', ComponentType.TextField, 'Squiffy'),
-          'is not',
+          OperatorName.IsNot,
           new ConditionValue('Donkeys'),
           Coordinator.AND
         )
@@ -937,15 +940,15 @@ describe('condition model', () => {
 
     test('should be cloned', () => {
       const returned = underTest.clone()
-      expect(returned === underTest).toBe(false)
-      expect(returned).toEqual(underTest)
+      const returnedCondition1 = returned.asPerUserGroupings[0] as Condition
+      const underTestCondition1 = underTest.asPerUserGroupings[0] as Condition
 
-      const returnedCondition1 = returned.asPerUserGroupings[0]
-      const underTestCondition1 = underTest.asPerUserGroupings[0]
-      returnedCondition1.coordinator = 'or'
+      returnedCondition1.coordinator = Coordinator.OR
       underTestCondition1.coordinator = undefined
+
+      expect(returned).toStrictEqual(underTest)
+      expect(returned).not.toBe(underTest)
       expect(returnedCondition1).not.toEqual(underTestCondition1)
-      expect(returned).toEqual(underTest)
     })
   })
 
@@ -955,7 +958,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('badger', ComponentType.TextField, 'Badger'),
-          'is',
+          OperatorName.Is,
           new ConditionValue('Zebras')
         )
       )
@@ -963,7 +966,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('squiffy', ComponentType.TextField, 'Squiffy'),
-          'is',
+          OperatorName.Is,
           new ConditionValue('Donkeys'),
           Coordinator.AND
         )
@@ -971,7 +974,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('duration', ComponentType.NumberField, 'Duration'),
-          'is at least',
+          OperatorName.IsAtLeast,
           new ConditionValue('10'),
           Coordinator.OR
         )
@@ -979,7 +982,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('birthday', ComponentType.DateField, 'Birthday'),
-          'is',
+          OperatorName.Is,
           new ConditionValue('10/10/2019'),
           Coordinator.OR
         )
@@ -987,7 +990,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('squiffy', ComponentType.TextField, 'Squiffy'),
-          'is not',
+          OperatorName.IsNot,
           new ConditionValue('Donkeys'),
           Coordinator.AND
         )
@@ -1010,7 +1013,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('badger', ComponentType.TextField, 'Badger'),
-          'is',
+          OperatorName.Is,
           new ConditionValue('Zebras')
         )
       )
@@ -1018,7 +1021,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('squiffy', ComponentType.TextField, 'Squiffy'),
-          'is',
+          OperatorName.Is,
           new ConditionValue('Donkeys'),
           Coordinator.AND
         )
@@ -1026,7 +1029,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('duration', ComponentType.NumberField, 'Duration'),
-          'is at least',
+          OperatorName.IsAtLeast,
           new ConditionValue('10'),
           Coordinator.OR
         )
@@ -1034,7 +1037,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('birthday', ComponentType.DateField, 'Birthday'),
-          'is',
+          OperatorName.Is,
           new ConditionValue('10/10/2019'),
           Coordinator.OR
         )
@@ -1042,7 +1045,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('squiffy', ComponentType.TextField, 'Squiffy'),
-          'is not',
+          OperatorName.IsNot,
           new ConditionValue('Donkeys'),
           Coordinator.AND
         )
@@ -1167,24 +1170,21 @@ describe('condition model', () => {
   describe('invalid configuration', () => {
     describe('invalid operator', () => {
       test('should throw an error on condition creation if no operator provided', () => {
-        expect(
-          () =>
-            new Condition(
-              new ConditionField('badger', ComponentType.TextField, 'Badger'),
-              null,
-              new ConditionValue('Monkeys')
-            )
-        ).toThrow(Error)
+        const type = ComponentType.TextField
+        const field = new ConditionField('badger', type, 'Badger')
+        const value = new ConditionValue('Monkeys')
+
+        expect(() => new Condition(field, undefined, value)).toThrow(Error)
       })
 
       test('should throw an error on condition creation if non-string operator provided', () => {
+        const type = ComponentType.TextField
+        const field = new ConditionField('badger', type, 'Badger')
+        const value = new ConditionValue('Monkeys')
+
         expect(
-          () =>
-            new Condition(
-              new ConditionField('badger', ComponentType.TextField, 'Badger'),
-              {} as string,
-              new ConditionValue('Monkeys')
-            )
+          // @ts-expect-error - Allow invalid param for test
+          () => new Condition(field, {}, value)
         ).toThrow(Error)
       })
     })
@@ -1192,24 +1192,27 @@ describe('condition model', () => {
     describe('invalid field', () => {
       test('should throw an error on condition creation if no field provided', () => {
         expect(
-          () => new Condition(null, 'is', new ConditionValue('Monkeys'))
-        ).toThrow(Error)
-      })
-
-      test('should throw an error on condition creation if field is not a ConditionField type', () => {
-        expect(
           () =>
             new Condition(
-              {} as ConditionField,
-              'is',
+              undefined,
+              OperatorName.Is,
               new ConditionValue('Monkeys')
             )
         ).toThrow(Error)
       })
 
+      test('should throw an error on condition creation if field is not a ConditionField type', () => {
+        const value = new ConditionValue('Monkeys')
+
+        expect(
+          // @ts-expect-error - Allow invalid param for test
+          () => new Condition({}, OperatorName.Is, value)
+        ).toThrow(Error)
+      })
+
       test('should throw an error on field creation if no value provided', () => {
         expect(
-          () => new ConditionField(null, ComponentType.TextField, 'Badger')
+          () => new ConditionField(undefined, ComponentType.TextField, 'Badger')
         ).toThrow(Error)
       })
 
@@ -1221,133 +1224,127 @@ describe('condition model', () => {
 
       test('should throw an error on field creation if invalid type provided', () => {
         expect(
-          () => new ConditionField('badger', 'MadeUpType' as any, 'Badger')
+          // @ts-expect-error - Allow invalid param for test
+          () => new ConditionField('badger', 'MadeUpType', 'Badger')
         ).toThrow(Error)
       })
 
       test('should throw an error on field creation if invalid name value type provided', () => {
         expect(
-          () =>
-            new ConditionField({} as string, ComponentType.TextField, 'Badger')
+          // @ts-expect-error - Allow invalid param for test
+          () => new ConditionField({}, ComponentType.TextField, 'Badger')
         ).toThrow(Error)
       })
 
       test('should throw an error on field creation if invalid display value type provided', () => {
         expect(
-          () =>
-            new ConditionField('Badger', ComponentType.TextField, {} as string)
+          // @ts-expect-error - Allow invalid param for test
+          () => new ConditionField('Badger', ComponentType.TextField, {})
         ).toThrow(Error)
       })
 
       test('should throw an error on field creation if no display value provided', () => {
         expect(
-          () => new ConditionField('badger', ComponentType.TextField, null)
+          () => new ConditionField('badger', ComponentType.TextField, undefined)
         ).toThrow(Error)
       })
 
       test('should throw errors from factory method', () => {
-        expect(() => ConditionField.from({ name: 'badger' } as any)).toThrow(
-          Error
-        )
+        expect(
+          // @ts-expect-error - Allow missing properties for test
+          () => ConditionField.from({ name: 'badger' })
+        ).toThrow(Error)
       })
     })
 
     describe('invalid value', () => {
       test('should throw an error on condition creation if no value provided', () => {
+        const type = ComponentType.TextField
+        const field = new ConditionField('badger', type, 'Badger')
         expect(
-          () =>
-            new Condition(
-              new ConditionField('badger', ComponentType.TextField, 'Badger'),
-              'is',
-              undefined,
-              undefined
-            )
+          () => new Condition(field, OperatorName.Is, undefined, undefined)
         ).toThrow(Error)
       })
 
       test('should throw an error on condition creation if value is not a Value type', () => {
+        const field = { value: 'badger', display: 'Badger' }
+
         expect(
-          () =>
-            new Condition(
-              { value: 'badger', display: 'Badger' } as any,
-              'is',
-              'Monkeys' as any
-            )
+          // @ts-expect-error - Allow invalid param for test
+          () => new Condition(field, OperatorName.Is, 'Monkeys')
         ).toThrow(Error)
       })
 
       test('should throw an error on value creation if no value provided', () => {
-        // @ts-expect-error
+        // @ts-expect-error - Allow missing params for test
         expect(() => new ConditionValue()).toThrow(Error)
       })
 
       test('should throw an error on value creation if display value is provided and is not a string', () => {
-        expect(() => new ConditionValue('badger', {} as any)).toThrow(Error)
+        expect(
+          // @ts-expect-error - Allow invalid param for test
+          () => new ConditionValue('badger', {})
+        ).toThrow(Error)
       })
 
       test('should throw an error on value creation if value is provided and is not a string', () => {
-        expect(() => new ConditionValue({} as any, 'Badger')).toThrow(Error)
+        expect(
+          // @ts-expect-error - Allow invalid param for test
+          () => new ConditionValue({}, 'Badger')
+        ).toThrow(Error)
       })
 
       test('should throw errors from factory method', () => {
-        expect(() => ConditionValue.from({} as any)).toThrow(Error)
+        expect(
+          // @ts-expect-error - Allow invalid param for test
+          () => ConditionValue.from({})
+        ).toThrow(Error)
       })
     })
 
     describe('invalid coordinator', () => {
       test('should throw an error on condition creation if invalid coordinator provided', () => {
+        const type = ComponentType.TextField
+        const field = new ConditionField('badger', type, 'Badger')
+        const value = new ConditionValue('Monkeys')
+
         expect(
-          () =>
-            new Condition(
-              new ConditionField('badger', ComponentType.TextField, 'Badger'),
-              'is',
-              new ConditionValue('Monkeys'),
-              'is' as Coordinator
-            )
+          // @ts-expect-error - Allow invalid param for test
+          () => new Condition(field, OperatorName.Is, value, OperatorName.Is)
         ).toThrow(Error)
       })
 
       test('should throw an error on adding first condition if a coordinator is provided', () => {
+        const type = ComponentType.TextField
+        const field = new ConditionField('badger', type, 'Badger')
+        const value = new ConditionValue('Monkeys')
+
         expect(() =>
           underTest.add(
-            new Condition(
-              new ConditionField('badger', ComponentType.TextField, 'Badger'),
-              'is',
-              new ConditionValue('Monkeys'),
-              Coordinator.OR
-            )
+            new Condition(field, OperatorName.Is, value, Coordinator.OR)
           )
         ).toThrow(Error)
       })
 
       test('should throw an error on adding subsequent condition if no coordinator is provided', () => {
-        underTest.add(
-          new Condition(
-            new ConditionField('badger', ComponentType.TextField, 'Badger'),
-            'is',
-            new ConditionValue('Monkeys')
-          )
-        )
-        expect(() =>
-          underTest.add(
-            new Condition(
-              new ConditionField('badger', ComponentType.TextField, 'Badger'),
-              'is',
-              new ConditionValue('Monkeys')
-            )
-          )
-        ).toThrow(Error)
+        const type = ComponentType.TextField
+        const field = new ConditionField('badger', type, 'Badger')
+        const value = new ConditionValue('Monkeys')
+
+        expect(() => {
+          underTest.add(new Condition(field, OperatorName.Is, value))
+          underTest.add(new Condition(field, OperatorName.Is, value))
+        }).toThrow(Error)
       })
     })
 
     describe('invalid group def', () => {
       test('should throw error if there is no last value', () => {
-        // @ts-expect-error
         expect(() => new ConditionGroupDef(3)).toThrow(Error)
       })
 
       test('should throw error if there is no first value', () => {
-        expect(() => new ConditionGroupDef(null, 3)).toThrow(Error)
+        expect(() => new ConditionGroupDef(undefined, 3)).toThrow(Error)
       })
 
       test('should throw error if first > last', () => {
@@ -1366,14 +1363,14 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('badger', ComponentType.TextField, 'Badger'),
-          'is',
+          OperatorName.Is,
           new ConditionValue('Zebras')
         )
       )
       underTest.add(
         new Condition(
           new ConditionField('monkeys', ComponentType.TextField, 'Monkeys'),
-          'is',
+          OperatorName.Is,
           new ConditionValue('giraffes', 'Giraffes'),
           Coordinator.OR
         )
@@ -1381,7 +1378,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('squiffy', ComponentType.TextField, 'Squiffy'),
-          'is',
+          OperatorName.Is,
           new ConditionValue('Donkeys'),
           Coordinator.AND
         )
@@ -1389,7 +1386,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('duration', ComponentType.NumberField, 'Duration'),
-          'is at least',
+          OperatorName.IsAtLeast,
           new ConditionValue('10'),
           Coordinator.OR
         )
@@ -1397,7 +1394,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('birthday', ComponentType.DateField, 'Birthday'),
-          'is',
+          OperatorName.Is,
           new ConditionValue('10/10/2019'),
           Coordinator.OR
         )
@@ -1405,7 +1402,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('reported', ComponentType.DateField, 'Reported'),
-          'is more than',
+          OperatorName.IsMoreThan,
           new RelativeTimeValue(
             '10',
             dateUnits.DAYS.value,
@@ -1417,7 +1414,7 @@ describe('condition model', () => {
       underTest.add(
         new Condition(
           new ConditionField('squiffy', ComponentType.TextField, 'Squiffy'),
-          'is not',
+          OperatorName.IsNot,
           new ConditionValue('Donkeys'),
           Coordinator.AND
         )
@@ -1444,37 +1441,37 @@ describe('condition model', () => {
                   type: ComponentType.TextField,
                   display: 'Badger'
                 },
-                operator: 'is',
+                operator: OperatorName.Is,
                 value: {
-                  type: 'Value',
+                  type: ConditionType.Value,
                   value: 'Zebras',
                   display: 'Zebras'
                 }
               },
               {
-                coordinator: 'or',
+                coordinator: Coordinator.OR,
                 field: {
                   name: 'monkeys',
                   type: ComponentType.TextField,
                   display: 'Monkeys'
                 },
-                operator: 'is',
+                operator: OperatorName.Is,
                 value: {
-                  type: 'Value',
+                  type: ConditionType.Value,
                   value: 'giraffes',
                   display: 'Giraffes'
                 }
               },
               {
-                coordinator: 'and',
+                coordinator: Coordinator.AND,
                 field: {
                   name: 'squiffy',
                   type: ComponentType.TextField,
                   display: 'Squiffy'
                 },
-                operator: 'is',
+                operator: OperatorName.Is,
                 value: {
-                  type: 'Value',
+                  type: ConditionType.Value,
                   value: 'Donkeys',
                   display: 'Donkeys'
                 }
@@ -1482,43 +1479,43 @@ describe('condition model', () => {
             ]
           },
           {
-            coordinator: 'or',
+            coordinator: Coordinator.OR,
             field: {
               name: 'duration',
               type: ComponentType.NumberField,
               display: 'Duration'
             },
-            operator: 'is at least',
+            operator: OperatorName.IsAtLeast,
             value: {
-              type: 'Value',
+              type: ConditionType.Value,
               value: '10',
               display: '10'
             }
           },
           {
-            coordinator: 'or',
+            coordinator: Coordinator.OR,
             field: {
               name: 'birthday',
               type: ComponentType.DateField,
               display: 'Birthday'
             },
-            operator: 'is',
+            operator: OperatorName.Is,
             value: {
-              type: 'Value',
+              type: ConditionType.Value,
               value: '10/10/2019',
               display: '10/10/2019'
             }
           },
           {
-            coordinator: 'and',
+            coordinator: Coordinator.AND,
             field: {
               name: 'reported',
               type: ComponentType.DateField,
               display: 'Reported'
             },
-            operator: 'is more than',
+            operator: OperatorName.IsMoreThan,
             value: {
-              type: 'RelativeTime',
+              type: ConditionType.RelativeTime,
               timePeriod: '10',
               timeUnit: dateUnits.DAYS.value,
               direction: DateDirections.PAST,
@@ -1526,26 +1523,27 @@ describe('condition model', () => {
             }
           },
           {
-            coordinator: 'and',
+            coordinator: Coordinator.AND,
             field: {
               name: 'squiffy',
               type: ComponentType.TextField,
               display: 'Squiffy'
             },
-            operator: 'is not',
+            operator: OperatorName.IsNot,
             value: {
-              type: 'Value',
+              type: ConditionType.Value,
               value: 'Donkeys',
               display: 'Donkeys'
             }
           },
           {
-            coordinator: 'or',
+            coordinator: Coordinator.OR,
             conditionName: 'anotherCondition',
             conditionDisplayName: 'Another condition'
           }
-        ]
+        ] satisfies ConditionsArray
       }
+
       expect(JSON.stringify(underTest)).toEqual(JSON.stringify(expected))
     })
 
@@ -1553,19 +1551,21 @@ describe('condition model', () => {
       const returned = ConditionsModel.from(
         JSON.parse(JSON.stringify(underTest))
       )
-      expect(returned).toEqual(underTest)
-      expect(returned.asPerUserGroupings).toEqual(underTest.asPerUserGroupings)
+
+      expect(returned).toStrictEqual(underTest)
+      expect(returned).not.toBe(underTest)
+
       expect(returned.toExpression()).toEqual(underTest.toExpression())
       expect(returned.toPresentationString()).toEqual(
         underTest.toPresentationString()
       )
-      expect(returned === underTest).toBe(false)
     })
 
     test('ConditionsModel.from with existing conditions model returns the passed object', () => {
       const returned = ConditionsModel.from(underTest)
-      expect(returned).toEqual(underTest)
-      expect(returned === underTest).toBe(true)
+
+      expect(returned).toStrictEqual(underTest)
+      expect(returned).toBe(underTest)
     })
   })
 })

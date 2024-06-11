@@ -6,16 +6,16 @@ import {
   type ConditionValue,
   type RelativeTimeValue
 } from '~/src/conditions/condition-values.js'
-import { type Coordinator } from '~/src/conditions/enums.js'
+import { type Coordinator, type OperatorName } from '~/src/conditions/enums.js'
 
 export class Condition extends ConditionAbstract {
-  field: ConditionField
-  operator: string
-  value: ConditionValue | RelativeTimeValue
+  field
+  operator
+  value
 
   constructor(
     field?: ConditionField,
-    operator?: string,
+    operator?: OperatorName,
     value?: ConditionValue | RelativeTimeValue,
     coordinator?: Coordinator
   ) {
