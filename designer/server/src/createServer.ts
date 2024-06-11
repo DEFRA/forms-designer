@@ -48,7 +48,6 @@ const serverOptions = (): ServerOptions => {
         engine: config.isTest
           ? new CatboxMemory()
           : new CatboxRedis({
-              partition: config.redisKeyPrefix,
               client: buildRedisClient()
             })
       }
@@ -61,7 +60,7 @@ export async function createServer() {
 
   const cache = server.cache({
     cache: 'session',
-    segment: config.redisKeyPrefix,
+    segment: 'session',
     expiresIn: config.sessionTtl
   })
 
