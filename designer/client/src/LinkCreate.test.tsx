@@ -1,11 +1,16 @@
-import { ComponentType, type FormDefinition } from '@defra/forms-model'
+import {
+  OperatorName,
+  ComponentType,
+  ConditionType,
+  type FormDefinition
+} from '@defra/forms-model'
 import { screen, within } from '@testing-library/dom'
 import {
   act,
   cleanup,
   render,
-  type RenderResult,
-  waitFor
+  waitFor,
+  type RenderResult
 } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React, { type ReactElement } from 'react'
@@ -228,9 +233,9 @@ describe('LinkCreate', () => {
                   type: ComponentType.YesNoField,
                   display: 'Do you have a UK passport?'
                 },
-                operator: 'is',
+                operator: OperatorName.Is,
                 value: {
-                  type: 'Value',
+                  type: ConditionType.Value,
                   value: 'yes',
                   display: 'Yes, I have a UK passport'
                 }
@@ -250,9 +255,9 @@ describe('LinkCreate', () => {
                   type: ComponentType.YesNoField,
                   display: 'Do you have a UK passport?'
                 },
-                operator: 'is',
+                operator: OperatorName.Is,
                 value: {
-                  type: 'Value',
+                  type: ConditionType.Value,
                   value: 'no',
                   display: 'No, I do not have a UK passport'
                 }

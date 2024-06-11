@@ -3,11 +3,20 @@ import {
   type ComponentType
 } from '~/src/components/enums.js'
 
-export interface ConditionalComponent {
-  name: string
-  title: string
-  subType: ComponentSubType.Field
-}
+export type ConditionalComponentType = Extract<
+  ComponentType,
+  | typeof ComponentType.CheckboxesField
+  | typeof ComponentType.DateField
+  | typeof ComponentType.DatePartsField
+  | typeof ComponentType.DateTimeField
+  | typeof ComponentType.DateTimePartsField
+  | typeof ComponentType.EmailAddressField
+  | typeof ComponentType.MultilineTextField
+  | typeof ComponentType.NumberField
+  | typeof ComponentType.TextField
+  | typeof ComponentType.TimeField
+  | typeof ComponentType.YesNoField
+>
 
 export interface ContentOptions {
   condition?: string
@@ -311,3 +320,17 @@ export type ListComponentsDef =
   | CheckboxesFieldComponent
   | RadiosFieldComponent
   | SelectFieldComponent
+
+// Components that have custom condition operators
+export type ConditionalComponentsDef =
+  | CheckboxesFieldComponent
+  | DateFieldComponent
+  | DatePartsFieldFieldComponent
+  | DateTimeFieldComponent
+  | DateTimePartsFieldComponent
+  | EmailAddressFieldComponent
+  | MultilineTextFieldComponent
+  | NumberFieldComponent
+  | TextFieldComponent
+  | TimeFieldComponent
+  | YesNoFieldComponent

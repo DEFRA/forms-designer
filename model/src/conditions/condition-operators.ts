@@ -1,182 +1,227 @@
 import { ComponentType } from '~/src/components/enums.js'
-import { type ComponentDef } from '~/src/components/types.js'
-import { type ConditionValueAbstract } from '~/src/conditions/condition-value-abstract.js'
+import {
+  type ConditionalComponentType,
+  type ComponentDef
+} from '~/src/components/types.js'
 import {
   timeUnits,
   dateUnits,
   dateTimeUnits,
   ConditionValue,
-  DateDirections,
   RelativeTimeValue
 } from '~/src/conditions/condition-values.js'
-
-type Operator = '==' | '!=' | '>=' | '<=' | '<' | '>'
+import {
+  DateDirections,
+  Operator,
+  OperatorName
+} from '~/src/conditions/enums.js'
+import {
+  type Conditionals,
+  type DateUnits,
+  type OperatorDefinition,
+  type TimeUnits
+} from '~/src/conditions/types.js'
 
 const defaultOperators = {
-  is: inline('=='),
-  'is not': inline('!=')
+  [OperatorName.Is]: inline(Operator.Is),
+  [OperatorName.IsNot]: inline(Operator.IsNot)
 }
 
 function withDefaults<T>(param: T) {
   return Object.assign({}, param, defaultOperators)
 }
 
-const textBasedFieldCustomisations = {
-  'is longer than': lengthIs('>'),
-  'is shorter than': lengthIs('<'),
-  'has length': lengthIs('==')
+const textFieldOperators = {
+  [OperatorName.IsLongerThan]: lengthIs(Operator.IsMoreThan),
+  [OperatorName.IsShorterThan]: lengthIs(Operator.IsLessThan),
+  [OperatorName.HasLength]: lengthIs(Operator.Is)
 }
 
 const absoluteDateTimeOperators = {
-  is: absoluteDateTime('=='),
-  'is not': absoluteDateTime('!='),
-  'is before': absoluteDateTime('<'),
-  'is after': absoluteDateTime('>')
+  [OperatorName.Is]: absoluteDateTime(Operator.Is),
+  [OperatorName.IsNot]: absoluteDateTime(Operator.IsNot),
+  [OperatorName.IsBefore]: absoluteDateTime(Operator.IsLessThan),
+  [OperatorName.IsAfter]: absoluteDateTime(Operator.IsMoreThan)
 }
 
-const relativeTimeOperators = (units) => ({
-  'is at least': relativeTime('<=', '>=', units),
-  'is at most': relativeTime('>=', '<=', units),
-  'is less than': relativeTime('>', '<', units),
-  'is more than': relativeTime('<', '>', units)
+const relativeTimeOperators = (units: DateUnits | TimeUnits) => ({
+  [OperatorName.IsAtLeast]: relativeTime(
+    Operator.IsAtMost,
+    Operator.IsAtLeast,
+    units
+  ),
+  [OperatorName.IsAtMost]: relativeTime(
+    Operator.IsAtLeast,
+    Operator.IsAtMost,
+    units
+  ),
+  [OperatorName.IsLessThan]: relativeTime(
+    Operator.IsMoreThan,
+    Operator.IsLessThan,
+    units
+  ),
+  [OperatorName.IsMoreThan]: relativeTime(
+    Operator.IsLessThan,
+    Operator.IsMoreThan,
+    units
+  )
 })
 
 export const customOperators = {
   [ComponentType.CheckboxesField]: {
-    contains: reverseInline('in'),
-    'does not contain': not(reverseInline('in'))
+    [OperatorName.Contains]: reverseInline(Operator.Contains),
+    [OperatorName.DoesNotContain]: not(reverseInline(Operator.Contains))
   },
   [ComponentType.NumberField]: withDefaults({
-    'is at least': inline('>='),
-    'is at most': inline('<='),
-    'is less than': inline('<'),
-    'is more than': inline('>')
+    [OperatorName.IsAtLeast]: inline(Operator.IsAtLeast),
+    [OperatorName.IsAtMost]: inline(Operator.IsAtMost),
+    [OperatorName.IsLessThan]: inline(Operator.IsLessThan),
+    [OperatorName.IsMoreThan]: inline(Operator.IsMoreThan)
   }),
-  [ComponentType.DateField]: Object.assign(
-    {},
-    absoluteDateTimeOperators,
-    relativeTimeOperators(dateUnits)
-  ),
-  [ComponentType.TimeField]: Object.assign(
-    {},
-    absoluteDateTimeOperators,
-    relativeTimeOperators(timeUnits)
-  ),
-  [ComponentType.DatePartsField]: Object.assign(
-    {},
-    absoluteDateTimeOperators,
-    relativeTimeOperators(dateUnits)
-  ),
-  [ComponentType.DateTimeField]: Object.assign(
-    {},
-    absoluteDateTimeOperators,
-    relativeTimeOperators(dateTimeUnits)
-  ),
-  [ComponentType.DateTimePartsField]: Object.assign(
-    {},
-    absoluteDateTimeOperators,
-    relativeTimeOperators(dateTimeUnits)
-  ),
-  [ComponentType.TextField]: withDefaults(textBasedFieldCustomisations),
-  [ComponentType.MultilineTextField]: withDefaults(
-    textBasedFieldCustomisations
-  ),
-  [ComponentType.EmailAddressField]: withDefaults(textBasedFieldCustomisations)
-}
+  [ComponentType.DateField]: {
+    ...absoluteDateTimeOperators,
+    ...relativeTimeOperators(dateUnits)
+  },
+  [ComponentType.TimeField]: {
+    ...absoluteDateTimeOperators,
+    ...relativeTimeOperators(timeUnits)
+  },
+  [ComponentType.DatePartsField]: {
+    ...absoluteDateTimeOperators,
+    ...relativeTimeOperators(dateUnits)
+  },
+  [ComponentType.DateTimeField]: {
+    ...absoluteDateTimeOperators,
+    ...relativeTimeOperators(dateTimeUnits)
+  },
+  [ComponentType.DateTimePartsField]: {
+    ...absoluteDateTimeOperators,
+    ...relativeTimeOperators(dateTimeUnits)
+  },
+  [ComponentType.TextField]: withDefaults(textFieldOperators),
+  [ComponentType.MultilineTextField]: withDefaults(textFieldOperators),
+  [ComponentType.EmailAddressField]: withDefaults(textFieldOperators),
+  [ComponentType.YesNoField]: defaultOperators
+} as const satisfies Record<ConditionalComponentType, Partial<Conditionals>>
 
-export function getOperatorNames(fieldType) {
+export function getOperatorNames(fieldType: ConditionalComponentType) {
   return Object.keys(getConditionals(fieldType)).sort()
 }
 
 export function getExpression(
-  fieldType: ComponentType,
+  fieldType: ConditionalComponentType,
   fieldName: string,
-  operator: string,
-  value: ConditionValueAbstract
+  operator: OperatorName,
+  value: ConditionValue | RelativeTimeValue
 ) {
-  return getConditionals(fieldType)[operator].expression(
+  return getConditionals(fieldType)[operator]?.expression(
     { type: fieldType, name: fieldName },
     value
   )
 }
 
-export function getOperatorConfig(fieldType: ComponentType, operator) {
+export function getOperatorConfig(
+  fieldType: ConditionalComponentType,
+  operator: OperatorName
+) {
   return getConditionals(fieldType)[operator]
 }
 
-function getConditionals(fieldType: ComponentType) {
-  return customOperators[fieldType] || defaultOperators
+function getConditionals(
+  fieldType: ConditionalComponentType
+): Partial<Conditionals> {
+  if (fieldType in customOperators) {
+    return customOperators[fieldType]
+  }
+
+  return defaultOperators
 }
 
-function inline(operator: Operator) {
+function inline(operator: Operator): OperatorDefinition {
   return {
-    expression: (field: ComponentDef, value) =>
-      `${field.name} ${operator} ${formatValue(field.type, value.value)}`
+    expression(field, value) {
+      return `${field.name} ${operator} ${formatValue(field, value)}`
+    }
   }
 }
 
-function lengthIs(operator: Operator) {
+function lengthIs(operator: Operator): OperatorDefinition {
   return {
-    expression: (field: ComponentDef, value) =>
-      `length(${field.name}) ${operator} ${value.value}`
+    expression(field, value) {
+      return `length(${field.name}) ${operator} ${formatValue(field, value)}`
+    }
   }
 }
 
-function reverseInline(operator: 'in') {
+function reverseInline(operator: Operator.Contains): OperatorDefinition {
   return {
-    expression: (field: ComponentDef, value) =>
-      `${formatValue(field.type, value.value)} ${operator} ${field.name}`
+    expression(field, value) {
+      return `${formatValue(field, value)} ${operator} ${field.name}`
+    }
   }
 }
 
-function not(operatorDefinition) {
+function not(operatorDefinition: OperatorDefinition): OperatorDefinition {
   return {
-    expression: (field: ComponentDef, value) =>
-      `not (${operatorDefinition.expression(field, value)})`
+    expression(field, value) {
+      return `not (${operatorDefinition.expression(field, value)})`
+    }
   }
 }
 
-function formatValue(fieldType: ComponentType, value) {
+function formatValue(
+  field: Pick<ComponentDef, 'type'>,
+  value: ConditionValue | RelativeTimeValue
+) {
   if (
-    fieldType === ComponentType.YesNoField ||
-    fieldType === ComponentType.NumberField
+    'value' in value &&
+    (field.type === ComponentType.YesNoField ||
+      field.type === ComponentType.NumberField)
   ) {
-    return value
+    return value.value
   }
 
-  return `'${value}'`
+  return `'${value.toExpression()}'`
 }
 
 export const absoluteDateOrTimeOperatorNames = Object.keys(
   absoluteDateTimeOperators
 )
+
 export const relativeDateOrTimeOperatorNames = Object.keys(
   relativeTimeOperators(dateTimeUnits)
 )
 
-function absoluteDateTime(operator: Operator) {
+function absoluteDateTime(operator: Operator): OperatorDefinition {
   return {
-    expression: (field: ComponentDef, value) => {
-      if (value instanceof ConditionValue) {
-        return `${field.name} ${operator} '${value.toExpression()}'`
+    expression(field, value) {
+      if (!(value instanceof ConditionValue)) {
+        throw new Error(
+          "Expression param 'value' must be ConditionValue instance"
+        )
       }
-      throw Error('only Value types are supported')
+
+      return `${field.name} ${operator} '${formatValue(field, value)}'`
     }
   }
 }
 
-function relativeTime(pastOperator, futureOperator, units) {
+function relativeTime(
+  pastOperator: Operator,
+  futureOperator: Operator,
+  units: DateUnits | TimeUnits
+): OperatorDefinition {
   return {
     units,
-    expression: (field: ComponentDef, value) => {
-      if (value instanceof RelativeTimeValue) {
-        const operator =
-          value.direction === DateDirections.PAST
-            ? pastOperator
-            : futureOperator
-        return `${field.name} ${operator} ${value.toExpression()}`
+    expression(field, value) {
+      if (!(value instanceof RelativeTimeValue)) {
+        throw new Error(
+          "Expression param 'value' must be RelativeTimeValue instance"
+        )
       }
-      throw Error('time shift requires a TimeShiftValue')
+
+      const isPast = value.direction === DateDirections.PAST
+      return `${field.name} ${isPast ? pastOperator : futureOperator} ${value.toExpression()}`
     }
   }
 }

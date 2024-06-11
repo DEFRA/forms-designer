@@ -1,5 +1,6 @@
 import {
   ComponentType,
+  ConditionType,
   ConditionValue,
   dateTimeUnits,
   dateUnits,
@@ -59,7 +60,7 @@ describe.skip('InlineConditionsDefinitionValue', () => {
     await act(() => userEvent.type($input, 'new-value'))
     expect(updateValueCallback).toHaveBeenLastCalledWith({
       display: 'new-value',
-      type: 'Value',
+      type: ConditionType.Value,
       value: 'new-value'
     })
   })
@@ -142,7 +143,7 @@ describe.skip('InlineConditionsDefinitionValue', () => {
 
     expect(updateValueCallback).toHaveBeenLastCalledWith({
       display: 'Value 1',
-      type: 'Value',
+      type: ConditionType.Value,
       value: 'value1'
     })
   })
@@ -173,7 +174,7 @@ describe.skip('InlineConditionsDefinitionValue', () => {
 
     expect(updateValueCallback).toHaveBeenLastCalledWith({
       display: 'Value 1',
-      type: 'Value',
+      type: ConditionType.Value,
       value: 'true'
     })
   })
@@ -204,7 +205,7 @@ describe.skip('InlineConditionsDefinitionValue', () => {
 
     expect(updateValueCallback).toHaveBeenLastCalledWith({
       display: 'Value 1',
-      type: 'Value',
+      type: ConditionType.Value,
       value: '42'
     })
   })

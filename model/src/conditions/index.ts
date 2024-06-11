@@ -11,7 +11,6 @@ export {
   dateUnits,
   dateTimeUnits,
   ConditionValue,
-  DateDirections,
   RelativeTimeValue,
   conditionValueFrom
 } from '~/src/conditions/condition-values.js'
@@ -24,4 +23,10 @@ export { ConditionsModel } from '~/src/conditions/condition-model.js'
 export { ConditionGroupDef } from '~/src/conditions/condition-group-def.js'
 export { toExpression, toPresentationString } from '~/src/conditions/helpers.js'
 
-export { ConditionType, Coordinator } from '~/src/conditions/enums.js'
+export {
+  ConditionType,
+  Coordinator,
+  DateDirections,
+  Operator,
+  OperatorName
+} from '~/src/conditions/enums.js'

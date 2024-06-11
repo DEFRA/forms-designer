@@ -1,4 +1,5 @@
 import { ConditionValueAbstract } from '~/src/conditions/condition-value-abstract.js'
+import { ConditionType, DateDirections } from '~/src/conditions/enums.js'
 import {
   type DateTimeUnitValues,
   type DateUnits,
@@ -9,7 +10,7 @@ export class ConditionValue
   extends ConditionValueAbstract
   implements ConditionValueFrom
 {
-  type: 'Value'
+  type: ConditionType.Value
   value: string
   display: string
 
@@ -24,7 +25,7 @@ export class ConditionValue
 
     super()
 
-    this.type = 'Value'
+    this.type = ConditionType.Value
     this.value = value
     this.display = display ?? value
   }
@@ -51,34 +52,28 @@ export interface ConditionValueFrom {
   display?: string
 }
 
-export enum DateDirections {
-  FUTURE = 'in the future',
-  PAST = 'in the past'
-}
-
 export const dateUnits: DateUnits = {
   YEARS: { display: 'year(s)', value: 'years' },
   MONTHS: { display: 'month(s)', value: 'months' },
   DAYS: { display: 'day(s)', value: 'days' }
-}
+} as const
 
 export const timeUnits: TimeUnits = {
   HOURS: { display: 'hour(s)', value: 'hours' },
   MINUTES: { display: 'minute(s)', value: 'minutes' },
   SECONDS: { display: 'second(s)', value: 'seconds' }
-}
+} as const
 
-export const dateTimeUnits: DateUnits & TimeUnits = Object.assign(
-  {},
-  dateUnits,
-  timeUnits
-)
+export const dateTimeUnits: DateUnits & TimeUnits = {
+  ...dateUnits,
+  ...timeUnits
+} as const
 
 export class RelativeTimeValue
   extends ConditionValueAbstract
   implements RelativeTimeValueFrom
 {
-  type: 'RelativeTime'
+  type: ConditionType.RelativeTime
   timePeriod: string
   timeUnit: DateTimeUnitValues
   direction: DateDirections
@@ -112,7 +107,7 @@ export class RelativeTimeValue
 
     super()
 
-    this.type = 'RelativeTime'
+    this.type = ConditionType.RelativeTime
     this.timePeriod = timePeriod
     this.timeUnit = timeUnit
     this.direction = direction
@@ -158,14 +153,14 @@ export function conditionValueFrom(
   obj:
     | ConditionValue
     | RelativeTimeValue
-    | ({ type: 'Value' } & ConditionValueFrom)
-    | ({ type: 'RelativeTime' } & RelativeTimeValueFrom)
+    | ({ type: ConditionType.Value } & ConditionValueFrom)
+    | ({ type: ConditionType.RelativeTime } & RelativeTimeValueFrom)
 ) {
   switch (obj.type) {
-    case 'Value':
+    case ConditionType.Value:
       return ConditionValue.from(obj)
 
-    case 'RelativeTime':
+    case ConditionType.RelativeTime:
       return RelativeTimeValue.from(obj)
   }
 }
