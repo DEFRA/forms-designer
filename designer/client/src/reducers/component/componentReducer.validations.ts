@@ -1,4 +1,11 @@
-import { ComponentType as Types } from '@defra/forms-model'
+import {
+  hasContentField,
+  hasListField,
+  hasTitle,
+  type ComponentDef,
+  type ContentComponentsDef,
+  type ListComponentsDef
+} from '@defra/forms-model'
 
 import { type ErrorList } from '~/src/ErrorSummary.jsx'
 import { isEmpty } from '~/src/helpers.js'
@@ -6,11 +13,13 @@ import { i18n } from '~/src/i18n/i18n.jsx'
 import { validateTitle } from '~/src/validations.js'
 
 // TODO move validations to "../../validations"
-const validateName = ({ name }) => {
-  // TODO:- should also validate uniqueness.
+const validateName = ({ name }: ComponentDef) => {
   const errors: ErrorList = {}
+
+  // TODO:- should also validate uniqueness.
   const nameIsEmpty = isEmpty(name)
   const nameHasSpace = /\s/g.test(name)
+
   if (nameHasSpace) {
     errors.name = {
       href: `#field-name`,
@@ -26,11 +35,10 @@ const validateName = ({ name }) => {
   return errors
 }
 
-const validateContent = ({ content }) => {
+const validateContent = (component: ContentComponentsDef) => {
   const errors: ErrorList = {}
-  const contentIsEmpty = isEmpty(content)
 
-  if (contentIsEmpty) {
+  if (!('content' in component) || isEmpty(component.content)) {
     errors.content = {
       href: `#field-content`,
       children: ['errors.field', { field: 'Content' }]
@@ -40,56 +48,44 @@ const validateContent = ({ content }) => {
   return errors
 }
 
-const validateList = (component) => {
+const validateList = (component: ListComponentsDef) => {
   const errors: ErrorList = {}
-  if ((component?.list ?? '-1') === '-1') {
+
+  if (!('list' in component)) {
     errors.list = {
       href: `#field-options-list`,
       children: ['list.errors.select']
     }
   }
+
   return errors
 }
 
-const ComponentsWithoutTitleField = [Types.InsetText, Types.Html]
-const ComponentsWithContentField = [Types.InsetText, Types.Html, Types.Details]
-const ComponentsWithListField = [
-  Types.AutocompleteField,
-  Types.List,
-  Types.RadiosField,
-  Types.SelectField,
-  Types.CheckboxesField
-]
-
-export function fieldComponentValidations(component) {
-  const hasTitle = !ComponentsWithoutTitleField.includes(component.type)
-  const hasContentField = ComponentsWithContentField.includes(component.type)
-  const hasListField = ComponentsWithListField.includes(component.type)
-
+export function fieldComponentValidations(component: ComponentDef) {
   const validations = [validateName(component)]
 
-  if (hasTitle) {
+  if (hasTitle(component)) {
     validations.push(
       validateTitle('title', 'field-title', '$t(title)', component.title, i18n)
     )
   }
 
-  if (hasContentField) {
+  if (hasContentField(component)) {
     validations.push(validateContent(component))
   }
 
-  if (hasListField) {
+  if (hasListField(component)) {
     validations.push(validateList(component))
   }
 
   const errors = validations.reduce((acc, error) => {
-    return error ? { ...acc, ...error } : acc
+    return Object.keys(error).length ? { ...acc, ...error } : acc
   }, {})
 
   return errors
 }
 
-export function validateComponent(selectedComponent) {
+export function validateComponent(selectedComponent: ComponentDef) {
   return {
     errors: fieldComponentValidations(selectedComponent)
   }

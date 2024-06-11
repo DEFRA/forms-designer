@@ -289,7 +289,7 @@ export type ComponentDef =
   | YesNoFieldComponent
   | WebsiteFieldComponent
 
-// Components that render inputs.
+// Components that render inputs
 export type InputFieldsComponentsDef =
   | TextFieldComponent
   | EmailAddressFieldComponent
@@ -306,20 +306,48 @@ export type InputFieldsComponentsDef =
   | UkAddressFieldComponent
   | WebsiteFieldComponent
 
-// Components that render content.
+// Components that render content
 export type ContentComponentsDef =
   | DetailsComponent
   | HtmlComponent
   | InsetTextComponent
   | ListComponent
 
-// Components that render Lists
+// Components with editors
+export type EditorComponentsDef =
+  | TextFieldComponent
+  | EmailAddressFieldComponent
+  | TelephoneNumberFieldComponent
+  | MultilineTextFieldComponent
+  | NumberFieldComponent
+  | AutocompleteFieldComponent
+  | SelectFieldComponent
+  | RadiosFieldComponent
+  | CheckboxesFieldComponent
+  | ListComponent
+  | DetailsComponent
+  | HtmlComponent
+  | InsetTextComponent
+  | FileUploadFieldComponent
+  | DatePartsFieldFieldComponent
+  | DateTimeFieldComponent
+  | DateTimePartsFieldComponent
+  | DateFieldComponent
+
+// Components that render lists
 export type ListComponentsDef =
   | ListComponent
   | AutocompleteFieldComponent
   | CheckboxesFieldComponent
   | RadiosFieldComponent
   | SelectFieldComponent
+
+// Components that have selection fields
+export type SelectionComponentsDef =
+  | CheckboxesFieldComponent
+  | RadiosFieldComponent
+  | SelectFieldComponent
+  | YesNoFieldComponent
 
 // Components that have custom condition operators
 export type ConditionalComponentsDef =

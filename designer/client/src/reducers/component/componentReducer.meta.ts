@@ -34,13 +34,6 @@ export function metaReducer(
       return { ...state, selectedComponent: payload, errors: {} }
     case Meta.SET_PAGE:
       return { ...state, pagePath: payload }
-    case Meta.DELETE:
-      if (state.showDeleteWarning) {
-        delete state.selectedComponent
-      } else {
-        return { ...state, showDeleteWarning: true }
-      }
-      break
     case Meta.VALIDATE:
       return {
         ...state,

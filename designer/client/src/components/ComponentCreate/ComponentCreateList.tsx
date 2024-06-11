@@ -1,22 +1,17 @@
 import {
-  ComponentSubType,
-  ComponentType,
   ComponentTypes,
-  type ComponentDef
+  hasContentField,
+  hasSelectionFields,
+  type ComponentDef,
+  type ContentComponentsDef,
+  type SelectionComponentsDef
 } from '@defra/forms-model'
 import React, { type MouseEvent, useCallback } from 'react'
 
 import { i18n } from '~/src/i18n/i18n.jsx'
 
-const SelectionFieldsTypes = [
-  ComponentType.CheckboxesField,
-  ComponentType.RadiosField,
-  ComponentType.SelectField,
-  ComponentType.YesNoField
-]
-
-const contentFields: ComponentDef[] = []
-const selectionFields: ComponentDef[] = []
+const contentFields: ContentComponentsDef[] = []
+const selectionFields: SelectionComponentsDef[] = []
 const inputFields: ComponentDef[] = []
 
 const ComponentTypesSorted = ComponentTypes.sort(
@@ -24,9 +19,9 @@ const ComponentTypesSorted = ComponentTypes.sort(
 )
 
 for (const component of ComponentTypesSorted) {
-  if (component.subType === ComponentSubType.Content) {
+  if (hasContentField(component)) {
     contentFields.push(component)
-  } else if (SelectionFieldsTypes.includes(component.type)) {
+  } else if (hasSelectionFields(component)) {
     selectionFields.push(component)
   } else {
     inputFields.push(component)
