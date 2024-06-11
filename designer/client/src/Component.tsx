@@ -225,8 +225,7 @@ export const componentTypes = {
   [ComponentType.Details]: Details,
   [ComponentType.Html]: Html,
   [ComponentType.InsetText]: InsetText,
-  [ComponentType.List]: List,
-  [ComponentType.WebsiteField]: TextField
+  [ComponentType.List]: List
 }
 
 export interface Props {

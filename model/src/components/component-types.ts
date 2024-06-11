@@ -173,15 +173,6 @@ export const ComponentTypes: ComponentDef[] = [
     options: {},
     schema: {},
     list: ''
-  },
-  {
-    name: 'WebsiteField',
-    type: ComponentType.WebsiteField,
-    title: 'Website field',
-    subType: ComponentSubType.Field,
-    hint: '',
-    options: {},
-    schema: {}
   }
 ]
 

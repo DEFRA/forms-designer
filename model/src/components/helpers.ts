@@ -90,8 +90,7 @@ export function hasInputField(
     ComponentType.FileUploadField,
     ComponentType.MonthYearField,
     ComponentType.TimeField,
-    ComponentType.UkAddressField,
-    ComponentType.WebsiteField
+    ComponentType.UkAddressField
   ]
 
   return !!component?.type && allowedTypes.includes(component.type)

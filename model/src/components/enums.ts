@@ -17,8 +17,7 @@ export enum ComponentType {
   Html = 'Html',
   InsetText = 'InsetText',
   Details = 'Details',
-  List = 'List',
-  WebsiteField = 'WebsiteField'
+  List = 'List'
 }
 
 export enum ComponentSubType {

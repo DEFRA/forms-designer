@@ -73,8 +73,7 @@ describe('ComponentCreateList', () => {
       'Telephone number',
       'Text',
       'Time',
-      'UK address',
-      'Website'
+      'UK address'
     ])
   })
 

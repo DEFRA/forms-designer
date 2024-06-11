@@ -30,7 +30,6 @@ interface TextFieldBase {
     | ComponentType.TelephoneNumberField
     | ComponentType.TextField
     | ComponentType.UkAddressField
-    | ComponentType.WebsiteField
     | ComponentType.YesNoField
   subType?: ComponentSubType.Field
   name: string
@@ -140,13 +139,6 @@ export interface EmailAddressFieldComponent extends TextFieldBase {
 
 export interface NumberFieldComponent extends NumberFieldBase {
   type: ComponentType.NumberField
-}
-
-export interface WebsiteFieldComponent extends TextFieldBase {
-  type: ComponentType.WebsiteField
-  options: TextFieldBase['options'] & {
-    customValidationMessage?: string
-  }
 }
 
 export interface TelephoneNumberFieldComponent extends TextFieldBase {
@@ -266,7 +258,6 @@ export type ComponentDef =
   | TimeFieldComponent
   | UkAddressFieldComponent
   | YesNoFieldComponent
-  | WebsiteFieldComponent
 
 // Components that render inputs
 export type InputFieldsComponentsDef =
@@ -280,7 +271,6 @@ export type InputFieldsComponentsDef =
   | MonthYearFieldComponent
   | TimeFieldComponent
   | UkAddressFieldComponent
-  | WebsiteFieldComponent
 
 // Components that render content
 export type ContentComponentsDef =
