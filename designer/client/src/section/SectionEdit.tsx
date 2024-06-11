@@ -1,7 +1,7 @@
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import React, { createRef, Component } from 'react'
 
-import { ErrorSummary } from '~/src/ErrorSummary.jsx'
+import { type ErrorList, ErrorSummary } from '~/src/ErrorSummary.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { addSection } from '~/src/data/section/addSection.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
@@ -72,11 +72,29 @@ export class SectionEdit extends Component {
     }
   }
 
-  validate = () => {
+  validate = (): ErrorList => {
     const { name, title } = this.state
-    const titleErrors = validateTitle('section-title', title, i18n)
-    const nameErrors = validateName('section-name', 'section name', name, i18n)
-    const errors = { ...titleErrors, ...nameErrors }
+    const titleErrors = validateTitle(
+      'title',
+      'section-title',
+      '$t(titleField.title)',
+      title,
+      i18n
+    )
+
+    const nameErrors = validateName(
+      'name',
+      'section-name',
+      '$t(nameField.title)',
+      name,
+      i18n
+    )
+
+    const errors = {
+      ...titleErrors,
+      ...nameErrors
+    }
+
     this.setState({ errors })
     return errors
   }

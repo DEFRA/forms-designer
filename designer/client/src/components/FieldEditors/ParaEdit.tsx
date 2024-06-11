@@ -23,7 +23,7 @@ export function ParaEdit({ context = ComponentContext }: Props) {
   return (
     <>
       <div className="govuk-form-group">
-        <label className="govuk-label govuk-label--s" htmlFor="para-content">
+        <label className="govuk-label govuk-label--s" htmlFor="field-content">
           Content
         </label>
         <div className="govuk-hint">{i18n('fieldEdit.para.hint')}</div>
@@ -31,7 +31,7 @@ export function ParaEdit({ context = ComponentContext }: Props) {
           id="field-content"
           name="content"
           value={selectedComponent.content}
-          valueCallback={(content) => {
+          onValueChange={(content) => {
             dispatch({
               type: Actions.EDIT_CONTENT,
               payload: content

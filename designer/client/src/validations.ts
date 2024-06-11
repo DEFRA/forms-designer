@@ -1,3 +1,4 @@
+import { type ErrorList } from '~/src/ErrorSummary.jsx'
 import { isEmpty } from '~/src/helpers.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 
@@ -5,68 +6,86 @@ export function hasValidationErrors(errors = {}) {
   return Object.keys(errors).length > 0
 }
 
-export function validateNotEmpty(
+export function validateNotEmpty<Key extends string>(
+  name: Key,
   id: string,
-  fieldName: string,
-  key: string,
+  description: string,
   value: string,
-  existingErrors = {}
+  existingErrors: ErrorList = {}
 ) {
   const hasErrors = isEmpty(value)
   const errors = existingErrors
 
   if (hasErrors) {
-    errors[key] = {
+    errors[name] = {
       href: `#${id}`,
-      children: [i18n('errors.field', { field: fieldName })]
+      children: [
+        i18n('errors.field', {
+          field: description
+        })
+      ]
     }
   }
+
   return errors
 }
 
-export function validateName(
+export function validateName<Key extends string>(
+  name: Key,
   id: string,
-  fieldName: string,
+  description: string,
   value: string,
-  i18nProp?: any
+  i18nProp?: typeof i18n
 ) {
   const translate = i18nProp ?? i18n
+
   const namesIsEmpty = isEmpty(value)
   const nameHasErrors = /\s/g.test(value)
-  const errors: any = {}
+  const errors: Partial<ErrorList<Key>> = {}
+
   if (nameHasErrors) {
-    const message = translate
-      ? translate('name.errors.whitespace')
-      : 'Name must not contain spaces'
-    errors.name = {
+    const message = translate('name.errors.whitespace')
+
+    errors[name] = {
       href: `#${id}`,
       children: [message]
     }
   } else if (namesIsEmpty) {
-    const message = translate
-      ? translate('errors.field', { field: fieldName })
-      : 'Enter Name'
-    errors.name = {
+    const message = translate('errors.field', {
+      field: description
+    })
+
+    errors[name] = {
       href: `#${id}`,
       children: [message]
     }
   }
+
   return errors
 }
 
-export function validateTitle(id: string, value: string, i18nProp?: any) {
+export function validateTitle<Key extends string>(
+  name: Key,
+  id: string,
+  description: string,
+  value: string,
+  i18nProp?: typeof i18n
+) {
   const translate = i18nProp ?? i18n
-  const titleHasErrors = isEmpty(value)
-  const errors: any = {}
-  if (titleHasErrors) {
-    const message = translate
-      ? translate('errors.field', { field: '$t(title)' })
-      : 'Enter title'
 
-    errors.title = {
+  const titleIsEmpty = isEmpty(value)
+  const errors: Partial<ErrorList<Key>> = {}
+
+  if (titleIsEmpty) {
+    const message = translate('errors.field', {
+      field: description
+    })
+
+    errors[name] = {
       href: `#${id}`,
       children: [message]
     }
   }
+
   return errors
 }

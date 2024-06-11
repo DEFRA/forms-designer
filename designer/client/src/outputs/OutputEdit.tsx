@@ -123,22 +123,22 @@ export class OutputEdit extends Component<Props, State> {
     const errors: ValidationErrors = {}
 
     validateNotEmpty(
+      'title',
       'output-title',
       'output title',
-      'title',
       outputTitle,
       errors
     )
 
-    validateNotEmpty('output-name', 'output name', 'name', outputName, errors)
+    validateNotEmpty('name', 'output-name', 'output name', outputName, errors)
 
     switch (outputType) {
       case OutputType.Email:
         const emailAddress = formData.get('email-address') as string
         validateNotEmpty(
+          'email',
           'email-address',
           'email address',
-          'email',
           emailAddress,
           errors
         )
@@ -154,11 +154,11 @@ export class OutputEdit extends Component<Props, State> {
           templateId,
           errors
         )
-        validateNotEmpty('api-key', 'API key', 'apiKey', apiKey, errors)
+        validateNotEmpty('apiKey', 'api-key', 'API key', apiKey, errors)
         validateNotEmpty(
+          'email',
           'email-field',
           'email address',
-          'email',
           emailField,
           errors
         )

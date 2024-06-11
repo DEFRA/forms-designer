@@ -1,18 +1,14 @@
 import { ComponentType as Types } from '@defra/forms-model'
 
+import { type ErrorList } from '~/src/ErrorSummary.jsx'
 import { isEmpty } from '~/src/helpers.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { validateTitle } from '~/src/validations.js'
 
-export interface ValidationError {
-  href?: string
-  children: string | [string, Record<string, string>]
-}
-
 // TODO move validations to "../../validations"
 const validateName = ({ name }) => {
   // TODO:- should also validate uniqueness.
-  const errors: any = {}
+  const errors: ErrorList = {}
   const nameIsEmpty = isEmpty(name)
   const nameHasSpace = /\s/g.test(name)
   if (nameHasSpace) {
@@ -31,7 +27,7 @@ const validateName = ({ name }) => {
 }
 
 const validateContent = ({ content }) => {
-  const errors: any = {}
+  const errors: ErrorList = {}
   const contentIsEmpty = isEmpty(content)
 
   if (contentIsEmpty) {
@@ -45,7 +41,7 @@ const validateContent = ({ content }) => {
 }
 
 const validateList = (component) => {
-  const errors: any = {}
+  const errors: ErrorList = {}
   if ((component?.list ?? '-1') === '-1') {
     errors.list = {
       href: `#field-options-list`,
@@ -73,7 +69,9 @@ export function fieldComponentValidations(component) {
   const validations = [validateName(component)]
 
   if (hasTitle) {
-    validations.push(validateTitle('field-title', component.title, i18n))
+    validations.push(
+      validateTitle('title', 'field-title', '$t(title)', component.title, i18n)
+    )
   }
 
   if (hasContentField) {
@@ -84,7 +82,7 @@ export function fieldComponentValidations(component) {
     validations.push(validateList(component))
   }
 
-  const errors = validations.reduce((acc, error: ValidationError) => {
+  const errors = validations.reduce((acc, error) => {
     return error ? { ...acc, ...error } : acc
   }, {})
 

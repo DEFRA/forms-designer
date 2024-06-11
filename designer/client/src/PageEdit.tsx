@@ -2,7 +2,7 @@ import { clone } from '@defra/forms-model'
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import React, { Component, createRef } from 'react'
 
-import { ErrorSummary } from '~/src/ErrorSummary.jsx'
+import { type ErrorList, ErrorSummary } from '~/src/ErrorSummary.jsx'
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
@@ -66,15 +66,23 @@ export class PageEdit extends Component {
     }
   }
 
-  validate = (title, path) => {
+  validate = (title, path): ErrorList => {
     const { page } = this.props
     const { data } = this.context
-    const titleErrors = validateTitle('page-title', title, i18n)
+
+    const titleErrors = validateTitle(
+      'title',
+      'page-title',
+      '$t(page.title)',
+      title,
+      i18n
+    )
+
     const errors = { ...titleErrors }
 
-    let pathHasErrors = false
-    if (path !== page.path)
-      pathHasErrors = data.pages.find((page) => page.path === path)
+    const pathHasErrors =
+      path !== page.path ? data.pages.some((page) => page.path === path) : false
+
     if (pathHasErrors) {
       errors.path = {
         href: '#page-path',
