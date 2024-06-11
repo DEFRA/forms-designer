@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { type FunctionComponent, type SVGAttributes } from 'react'
 
-export function SearchIcon(props) {
+export type Props = SVGAttributes<SVGSVGElement>
+
+export const SearchIcon: FunctionComponent<Props> = (props) => {
   return (
     <svg
       version="1.1"

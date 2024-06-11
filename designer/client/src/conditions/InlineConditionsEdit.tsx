@@ -7,9 +7,6 @@ import classNames from 'classnames'
 import React, { Component, Fragment } from 'react'
 
 import { ErrorMessage } from '~/src/components/ErrorMessage/ErrorMessage.jsx'
-import { EditIcon } from '~/src/components/Icons/EditIcon.jsx'
-import { MoveDownIcon } from '~/src/components/Icons/MoveDownIcon.jsx'
-import { MoveUpIcon } from '~/src/components/Icons/MoveUpIcon.jsx'
 import { InlineConditionsDefinition } from '~/src/conditions/InlineConditionsDefinition.jsx'
 
 export class InlineConditionsEdit extends Component {
