@@ -29,7 +29,6 @@ export const componentTypes = {
   Html,
   InsetText,
   List,
-  WarningText,
   WebsiteField: TextField
 }
 

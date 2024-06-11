@@ -31,7 +31,6 @@ const componentTypeEditors = {
   Details: DetailsEdit,
   Html: ParaEdit,
   InsetText: ParaEdit,
-  WarningText: ParaEdit,
   FileUploadField: FileUploadFieldEdit,
   DatePartsField: DateFieldEdit,
   DateTimeField: DateFieldEdit,
