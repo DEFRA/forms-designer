@@ -31,15 +31,6 @@ export const ComponentTypes: ComponentDef[] = [
     schema: {}
   },
   {
-    name: 'DateField',
-    type: ComponentType.DateField,
-    title: 'Date field',
-    subType: ComponentSubType.Field,
-    hint: '',
-    options: {},
-    schema: {}
-  },
-  {
     name: 'TimeField',
     type: ComponentType.TimeField,
     title: 'Time field',
@@ -49,27 +40,9 @@ export const ComponentTypes: ComponentDef[] = [
     schema: {}
   },
   {
-    name: 'DateTimeField',
-    type: ComponentType.DateTimeField,
-    title: 'Date time field',
-    subType: ComponentSubType.Field,
-    hint: '',
-    options: {},
-    schema: {}
-  },
-  {
     name: 'DatePartsField',
     type: ComponentType.DatePartsField,
-    title: 'Date parts field',
-    subType: ComponentSubType.Field,
-    hint: '',
-    options: {},
-    schema: {}
-  },
-  {
-    name: 'DateTimePartsField',
-    type: ComponentType.DateTimePartsField,
-    title: 'Date time parts field',
+    title: 'Date field',
     subType: ComponentSubType.Field,
     hint: '',
     options: {},
@@ -78,7 +51,7 @@ export const ComponentTypes: ComponentDef[] = [
   {
     name: 'MonthYearField',
     type: ComponentType.MonthYearField,
-    title: 'Month year field',
+    title: 'Month & year field',
     subType: ComponentSubType.Field,
     hint: '',
     options: {},
@@ -157,15 +130,6 @@ export const ComponentTypes: ComponentDef[] = [
     schema: {}
   },
   {
-    name: 'FileUploadField',
-    type: ComponentType.FileUploadField,
-    title: 'File upload field',
-    subType: ComponentSubType.Field,
-    hint: '',
-    options: {},
-    schema: {}
-  },
-  {
     name: 'Html',
     type: ComponentType.Html,
     title: 'Html',
@@ -200,15 +164,6 @@ export const ComponentTypes: ComponentDef[] = [
     options: {},
     schema: {},
     list: ''
-  },
-  {
-    name: 'WebsiteField',
-    type: ComponentType.WebsiteField,
-    title: 'Website field',
-    subType: ComponentSubType.Field,
-    hint: '',
-    options: {},
-    schema: {}
   }
 ]
 

@@ -2,12 +2,9 @@ export enum ComponentType {
   TextField = 'TextField',
   MultilineTextField = 'MultilineTextField',
   YesNoField = 'YesNoField',
-  DateField = 'DateField',
   TimeField = 'TimeField',
-  DateTimeField = 'DateTimeField',
   DatePartsField = 'DatePartsField',
   MonthYearField = 'MonthYearField',
-  DateTimePartsField = 'DateTimePartsField',
   SelectField = 'SelectField',
   AutocompleteField = 'AutocompleteField',
   RadiosField = 'RadiosField',
@@ -16,12 +13,10 @@ export enum ComponentType {
   UkAddressField = 'UkAddressField',
   TelephoneNumberField = 'TelephoneNumberField',
   EmailAddressField = 'EmailAddressField',
-  FileUploadField = 'FileUploadField',
   Html = 'Html',
   InsetText = 'InsetText',
   Details = 'Details',
-  List = 'List',
-  WebsiteField = 'WebsiteField'
+  List = 'List'
 }
 
 export enum ComponentSubType {

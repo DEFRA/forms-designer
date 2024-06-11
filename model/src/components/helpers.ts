@@ -19,10 +19,7 @@ export function hasConditionSupport(
 ): component is ConditionalComponentsDef {
   const allowedTypes = [
     ComponentType.CheckboxesField,
-    ComponentType.DateField,
     ComponentType.DatePartsField,
-    ComponentType.DateTimeField,
-    ComponentType.DateTimePartsField,
     ComponentType.EmailAddressField,
     ComponentType.MultilineTextField,
     ComponentType.NumberField,
@@ -70,11 +67,7 @@ export function hasEditor(
     ComponentType.Details,
     ComponentType.Html,
     ComponentType.InsetText,
-    ComponentType.FileUploadField,
-    ComponentType.DatePartsField,
-    ComponentType.DateTimeField,
-    ComponentType.DateTimePartsField,
-    ComponentType.DateField
+    ComponentType.DatePartsField
   ]
 
   return !!component?.type && allowedTypes.includes(component.type)
@@ -93,14 +86,9 @@ export function hasInputField(
     ComponentType.MultilineTextField,
     ComponentType.TelephoneNumberField,
     ComponentType.YesNoField,
-    ComponentType.FileUploadField,
-    ComponentType.DateField,
-    ComponentType.DateTimeField,
-    ComponentType.DateTimePartsField,
     ComponentType.MonthYearField,
     ComponentType.TimeField,
-    ComponentType.UkAddressField,
-    ComponentType.WebsiteField
+    ComponentType.UkAddressField
   ]
 
   return !!component?.type && allowedTypes.includes(component.type)

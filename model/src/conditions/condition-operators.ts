@@ -78,10 +78,6 @@ export const customOperators = {
     [OperatorName.IsLessThan]: inline(Operator.IsLessThan),
     [OperatorName.IsMoreThan]: inline(Operator.IsMoreThan)
   }),
-  [ComponentType.DateField]: {
-    ...absoluteDateTimeOperators,
-    ...relativeTimeOperators(dateUnits)
-  },
   [ComponentType.TimeField]: {
     ...absoluteDateTimeOperators,
     ...relativeTimeOperators(timeUnits)
@@ -89,14 +85,6 @@ export const customOperators = {
   [ComponentType.DatePartsField]: {
     ...absoluteDateTimeOperators,
     ...relativeTimeOperators(dateUnits)
-  },
-  [ComponentType.DateTimeField]: {
-    ...absoluteDateTimeOperators,
-    ...relativeTimeOperators(dateTimeUnits)
-  },
-  [ComponentType.DateTimePartsField]: {
-    ...absoluteDateTimeOperators,
-    ...relativeTimeOperators(dateTimeUnits)
   },
   [ComponentType.TextField]: withDefaults(textFieldOperators),
   [ComponentType.MultilineTextField]: withDefaults(textFieldOperators),

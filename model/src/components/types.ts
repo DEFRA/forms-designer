@@ -6,10 +6,7 @@ import {
 export type ConditionalComponentType = Extract<
   ComponentType,
   | typeof ComponentType.CheckboxesField
-  | typeof ComponentType.DateField
   | typeof ComponentType.DatePartsField
-  | typeof ComponentType.DateTimeField
-  | typeof ComponentType.DateTimePartsField
   | typeof ComponentType.EmailAddressField
   | typeof ComponentType.MultilineTextField
   | typeof ComponentType.NumberField
@@ -33,7 +30,6 @@ interface TextFieldBase {
     | ComponentType.TelephoneNumberField
     | ComponentType.TextField
     | ComponentType.UkAddressField
-    | ComponentType.WebsiteField
     | ComponentType.YesNoField
   subType?: ComponentSubType.Field
   name: string
@@ -111,10 +107,7 @@ interface ContentFieldBase {
 
 interface DateFieldBase {
   type:
-    | ComponentType.DateField
     | ComponentType.DatePartsField
-    | ComponentType.DateTimeField
-    | ComponentType.DateTimePartsField
     | ComponentType.MonthYearField
     | ComponentType.TimeField
   subType?: ComponentSubType.Field
@@ -148,13 +141,6 @@ export interface NumberFieldComponent extends NumberFieldBase {
   type: ComponentType.NumberField
 }
 
-export interface WebsiteFieldComponent extends TextFieldBase {
-  type: ComponentType.WebsiteField
-  options: TextFieldBase['options'] & {
-    customValidationMessage?: string
-  }
-}
-
 export interface TelephoneNumberFieldComponent extends TextFieldBase {
   type: ComponentType.TelephoneNumberField
   options: TextFieldBase['options'] & {
@@ -179,46 +165,17 @@ export interface MultilineTextFieldComponent extends TextFieldBase {
   }
 }
 
-export interface FileUploadFieldComponent {
-  type: ComponentType.FileUploadField
-  subType?: ComponentSubType.Field
-  name: string
-  title: string
-  hint: string
-  options: {
-    required?: boolean
-    hideTitle?: boolean
-    multiple?: boolean
-    classes?: string
-    exposeToContext?: boolean
-    imageQualityPlayback?: boolean
-  }
-  schema: object
-}
-
 export interface UkAddressFieldComponent extends TextFieldBase {
   type: ComponentType.UkAddressField
 }
 
 // Date Fields
-export interface DateFieldComponent extends DateFieldBase {
-  type: ComponentType.DateField
-}
-
-export interface DateTimeFieldComponent extends DateFieldBase {
-  type: ComponentType.DateTimeField
-}
-
 export interface DatePartsFieldFieldComponent extends DateFieldBase {
   type: ComponentType.DatePartsField
 }
 
 export interface MonthYearFieldComponent extends DateFieldBase {
   type: ComponentType.MonthYearField
-}
-
-export interface DateTimePartsFieldComponent extends DateFieldBase {
-  type: ComponentType.DateTimePartsField
 }
 
 export interface TimeFieldComponent extends DateFieldBase {
@@ -268,14 +225,10 @@ export type ComponentDef =
   | InsetTextComponent
   | AutocompleteFieldComponent
   | CheckboxesFieldComponent
-  | DateFieldComponent
   | DatePartsFieldFieldComponent
   | MonthYearFieldComponent
-  | DateTimeFieldComponent
-  | DateTimePartsFieldComponent
   | DetailsComponent
   | EmailAddressFieldComponent
-  | FileUploadFieldComponent
   | HtmlComponent
   | ListComponent
   | MultilineTextFieldComponent
@@ -287,7 +240,6 @@ export type ComponentDef =
   | TimeFieldComponent
   | UkAddressFieldComponent
   | YesNoFieldComponent
-  | WebsiteFieldComponent
 
 // Components that render inputs
 export type InputFieldsComponentsDef =
@@ -297,14 +249,9 @@ export type InputFieldsComponentsDef =
   | MultilineTextFieldComponent
   | TelephoneNumberFieldComponent
   | YesNoFieldComponent
-  | FileUploadFieldComponent
-  | DateFieldComponent
-  | DateTimeFieldComponent
-  | DateTimePartsFieldComponent
   | MonthYearFieldComponent
   | TimeFieldComponent
   | UkAddressFieldComponent
-  | WebsiteFieldComponent
 
 // Components that render content
 export type ContentComponentsDef =
@@ -328,11 +275,7 @@ export type EditorComponentsDef =
   | DetailsComponent
   | HtmlComponent
   | InsetTextComponent
-  | FileUploadFieldComponent
   | DatePartsFieldFieldComponent
-  | DateTimeFieldComponent
-  | DateTimePartsFieldComponent
-  | DateFieldComponent
 
 // Components that render lists
 export type ListComponentsDef =
@@ -352,10 +295,7 @@ export type SelectionComponentsDef =
 // Components that have custom condition operators
 export type ConditionalComponentsDef =
   | CheckboxesFieldComponent
-  | DateFieldComponent
   | DatePartsFieldFieldComponent
-  | DateTimeFieldComponent
-  | DateTimePartsFieldComponent
   | EmailAddressFieldComponent
   | MultilineTextFieldComponent
   | NumberFieldComponent

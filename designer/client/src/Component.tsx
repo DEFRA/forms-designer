@@ -71,46 +71,12 @@ export const NumberField: FunctionComponent = () => {
   )
 }
 
-export const DateField: FunctionComponent = () => {
-  return (
-    <ComponentField>
-      <div className="box dropdown">
-        <span className="govuk-body govuk-!-font-size-14">dd/mm/yyyy</span>
-      </div>
-    </ComponentField>
-  )
-}
-
-export const DateTimeField: FunctionComponent = () => {
-  return (
-    <ComponentField>
-      <div className="box large dropdown">
-        <span className="govuk-body govuk-!-font-size-14">
-          dd/mm/yyyy hh:mm
-        </span>
-      </div>
-    </ComponentField>
-  )
-}
-
 export const TimeField: FunctionComponent = () => {
   return (
     <ComponentField>
       <div className="box">
         <span className="govuk-body govuk-!-font-size-14">hh:mm</span>
       </div>
-    </ComponentField>
-  )
-}
-
-export const DateTimePartsField: FunctionComponent = () => {
-  return (
-    <ComponentField>
-      <span className="box small" />
-      <span className="box small govuk-!-margin-left-1 govuk-!-margin-right-1" />
-      <span className="box medium govuk-!-margin-right-1" />
-      <span className="box small govuk-!-margin-right-1" />
-      <span className="box small" />
     </ComponentField>
   )
 }
@@ -189,16 +155,6 @@ export const YesNoField: FunctionComponent = () => {
   )
 }
 
-export const FileUploadField: FunctionComponent = () => {
-  return (
-    <ComponentField>
-      <div className="govuk-!-margin-bottom-1">
-        {'🗂'} <span className="line short" />
-      </div>
-    </ComponentField>
-  )
-}
-
 export const Details: FunctionComponent = () => {
   return (
     <Base>
@@ -246,10 +202,7 @@ export const componentTypes = {
   [ComponentType.NumberField]: NumberField,
   [ComponentType.EmailAddressField]: EmailAddressField,
   [ComponentType.TimeField]: TimeField,
-  [ComponentType.DateField]: DateField,
-  [ComponentType.DateTimeField]: DateTimeField,
   [ComponentType.DatePartsField]: DatePartsField,
-  [ComponentType.DateTimePartsField]: DateTimePartsField,
   [ComponentType.MonthYearField]: MonthYearField,
   [ComponentType.MultilineTextField]: MultilineTextField,
   [ComponentType.RadiosField]: RadiosField,
@@ -258,12 +211,10 @@ export const componentTypes = {
   [ComponentType.SelectField]: SelectField,
   [ComponentType.YesNoField]: YesNoField,
   [ComponentType.UkAddressField]: UkAddressField,
-  [ComponentType.FileUploadField]: FileUploadField,
   [ComponentType.Details]: Details,
   [ComponentType.Html]: Html,
   [ComponentType.InsetText]: InsetText,
-  [ComponentType.List]: List,
-  [ComponentType.WebsiteField]: TextField
+  [ComponentType.List]: List
 }
 
 export interface Props {

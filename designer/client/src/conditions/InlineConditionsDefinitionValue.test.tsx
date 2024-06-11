@@ -238,11 +238,8 @@ describe.skip('InlineConditionsDefinitionValue', () => {
   })
 
   const dateAndTimeMappings = [
-    { type: ComponentType.DateField, units: dateUnits },
     { type: ComponentType.DatePartsField, units: dateUnits },
-    { type: ComponentType.TimeField, units: timeUnits, timeOnly: true },
-    { type: ComponentType.DateTimeField, units: dateTimeUnits },
-    { type: ComponentType.DateTimePartsField, units: dateTimeUnits }
+    { type: ComponentType.TimeField, units: timeUnits, timeOnly: true }
   ]
 
   dateAndTimeMappings.forEach((mapping) => {

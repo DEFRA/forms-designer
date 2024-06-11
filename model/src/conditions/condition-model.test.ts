@@ -352,7 +352,11 @@ describe('condition model', () => {
       )
       underTest.add(
         new Condition(
-          new ConditionField('birthday', ComponentType.DateField, 'Birthday'),
+          new ConditionField(
+            'birthday',
+            ComponentType.DatePartsField,
+            'Birthday'
+          ),
           OperatorName.IsAtLeast,
           new RelativeTimeValue('10', 'days', DateDirections.PAST),
           Coordinator.OR
@@ -537,7 +541,11 @@ describe('condition model', () => {
       )
       underTest.add(
         new Condition(
-          new ConditionField('birthday', ComponentType.DateField, 'Birthday'),
+          new ConditionField(
+            'birthday',
+            ComponentType.DatePartsField,
+            'Birthday'
+          ),
           OperatorName.Is,
           new ConditionValue('10/10/2019'),
           Coordinator.OR
@@ -678,7 +686,7 @@ describe('condition model', () => {
           coordinator: Coordinator.OR,
           field: {
             display: 'Birthday',
-            type: ComponentType.DateField,
+            type: ComponentType.DatePartsField,
             name: 'birthday'
           },
           operator: OperatorName.Is,
@@ -734,7 +742,11 @@ describe('condition model', () => {
       )
       underTest.add(
         new Condition(
-          new ConditionField('birthday', ComponentType.DateField, 'Birthday'),
+          new ConditionField(
+            'birthday',
+            ComponentType.DatePartsField,
+            'Birthday'
+          ),
           OperatorName.Is,
           new ConditionValue('10/10/2019'),
           Coordinator.OR
@@ -803,7 +815,11 @@ describe('condition model', () => {
       )
       underTest.add(
         new Condition(
-          new ConditionField('birthday', ComponentType.DateField, 'Birthday'),
+          new ConditionField(
+            'birthday',
+            ComponentType.DatePartsField,
+            'Birthday'
+          ),
           OperatorName.Is,
           new ConditionValue('10/10/2019'),
           Coordinator.OR
@@ -922,7 +938,11 @@ describe('condition model', () => {
       )
       underTest.add(
         new Condition(
-          new ConditionField('birthday', ComponentType.DateField, 'Birthday'),
+          new ConditionField(
+            'birthday',
+            ComponentType.DatePartsField,
+            'Birthday'
+          ),
           OperatorName.Is,
           new ConditionValue('10/10/2019'),
           Coordinator.OR
@@ -981,7 +1001,11 @@ describe('condition model', () => {
       )
       underTest.add(
         new Condition(
-          new ConditionField('birthday', ComponentType.DateField, 'Birthday'),
+          new ConditionField(
+            'birthday',
+            ComponentType.DatePartsField,
+            'Birthday'
+          ),
           OperatorName.Is,
           new ConditionValue('10/10/2019'),
           Coordinator.OR
@@ -1036,7 +1060,11 @@ describe('condition model', () => {
       )
       underTest.add(
         new Condition(
-          new ConditionField('birthday', ComponentType.DateField, 'Birthday'),
+          new ConditionField(
+            'birthday',
+            ComponentType.DatePartsField,
+            'Birthday'
+          ),
           OperatorName.Is,
           new ConditionValue('10/10/2019'),
           Coordinator.OR
@@ -1393,7 +1421,11 @@ describe('condition model', () => {
       )
       underTest.add(
         new Condition(
-          new ConditionField('birthday', ComponentType.DateField, 'Birthday'),
+          new ConditionField(
+            'birthday',
+            ComponentType.DatePartsField,
+            'Birthday'
+          ),
           OperatorName.Is,
           new ConditionValue('10/10/2019'),
           Coordinator.OR
@@ -1401,7 +1433,11 @@ describe('condition model', () => {
       )
       underTest.add(
         new Condition(
-          new ConditionField('reported', ComponentType.DateField, 'Reported'),
+          new ConditionField(
+            'reported',
+            ComponentType.DatePartsField,
+            'Reported'
+          ),
           OperatorName.IsMoreThan,
           new RelativeTimeValue(
             '10',
@@ -1496,7 +1532,7 @@ describe('condition model', () => {
             coordinator: Coordinator.OR,
             field: {
               name: 'birthday',
-              type: ComponentType.DateField,
+              type: ComponentType.DatePartsField,
               display: 'Birthday'
             },
             operator: OperatorName.Is,
@@ -1510,7 +1546,7 @@ describe('condition model', () => {
             coordinator: Coordinator.AND,
             field: {
               name: 'reported',
-              type: ComponentType.DateField,
+              type: ComponentType.DatePartsField,
               display: 'Reported'
             },
             operator: OperatorName.IsMoreThan,
