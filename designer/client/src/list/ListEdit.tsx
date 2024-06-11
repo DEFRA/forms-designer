@@ -2,7 +2,7 @@ import { clone } from '@defra/forms-model'
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import React, { useContext, type FormEvent, type MouseEvent } from 'react'
 
-import { ErrorSummary } from '~/src/ErrorSummary.jsx'
+import { ErrorSummary, type ErrorList } from '~/src/ErrorSummary.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { addList } from '~/src/data/list/addList.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
@@ -118,7 +118,7 @@ function useListEdit() {
   }
 }
 
-function validate(errors: any, selectedList: any) {
+function validate(errors: ErrorList, selectedList: any) {
   if (selectedList.items.length > 0) {
     return {}
   }

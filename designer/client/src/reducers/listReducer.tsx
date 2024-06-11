@@ -7,6 +7,7 @@ import React, {
   type ReactNode
 } from 'react'
 
+import { type ErrorList } from '~/src/ErrorSummary.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { arrayMove } from '~/src/helpers.js'
 import randomId from '~/src/randomId.js'
@@ -21,7 +22,7 @@ export interface ListState {
   initialName?: string
   initialTitle?: string
   errors?: any
-  listItemErrors?: any
+  listItemErrors?: ErrorList
 }
 
 export const ListContext = createContext<{
