@@ -80,7 +80,7 @@
     "@types/nunjucks": "^3.2.6",
     "@types/prismjs": "^1.26.4",
     "@types/react": "^17.0.76",
-    "@types/react-dom": "^17.0.25",
+    "@types/react-dom": "^18.3.0",
     "@types/resolve": "^1.20.6",
     "@types/slug": "^5.0.8",
     "@types/uuid": "^9.0.8",
