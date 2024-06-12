@@ -26,8 +26,8 @@ export class DeclarationEdit extends Component {
     try {
       const savedData = await save(copy)
       this.props.onCreate({ data: savedData })
-    } catch (err) {
-      logger.error('DeclarationEdit', err)
+    } catch (error) {
+      logger.error(error, 'DeclarationEdit')
     }
   }
 

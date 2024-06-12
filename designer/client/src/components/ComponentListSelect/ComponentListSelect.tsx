@@ -50,8 +50,8 @@ export function ComponentListSelect() {
         type: ListActions.SET_SELECTED_LIST,
         payload: foundList
       })
-    } catch (e) {
-      logger.error('ComponentListSelect', e)
+    } catch (error) {
+      logger.error(error, 'ComponentListSelect')
     }
   }, [data.lists, list])
 

@@ -67,8 +67,8 @@ export class PageCreate extends Component {
     try {
       await save(copy)
       this.props.onCreate({ value })
-    } catch (err) {
-      logger.error('PageCreate', err)
+    } catch (error) {
+      logger.error(error, 'PageCreate')
     }
   }
 

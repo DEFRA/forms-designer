@@ -61,8 +61,8 @@ export class PageEdit extends Component {
     try {
       await save(copy)
       this.props.onEdit()
-    } catch (err) {
-      logger.error('PageEdit', err)
+    } catch (error) {
+      logger.error(error, 'PageEdit')
     }
   }
 
@@ -124,7 +124,7 @@ export class PageEdit extends Component {
     try {
       await save(copy)
     } catch (error) {
-      logger.error('PageEdit', error)
+      logger.error(error, 'PageEdit')
     }
   }
 

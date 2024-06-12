@@ -38,8 +38,8 @@ export class LinkEdit extends Component {
     try {
       await save(updatedData)
       this.props.onEdit()
-    } catch (err) {
-      logger.error('LinkEdit', err)
+    } catch (error) {
+      logger.error(error, 'LinkEdit')
     }
   }
 
@@ -65,8 +65,8 @@ export class LinkEdit extends Component {
       .then((data) => {
         this.props.onEdit({ data })
       })
-      .catch((err) => {
-        logger.error('LinkEdit', err)
+      .catch((error: unknown) => {
+        logger.error(error, 'LinkEdit')
       })
   }
 

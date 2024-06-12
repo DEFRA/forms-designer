@@ -23,8 +23,8 @@ export class DesignerApi {
     try {
       const response = await window.fetch(`/api/${id}/data`)
       return response.json()
-    } catch (e) {
-      logger.error('fetchData', e)
+    } catch (error) {
+      logger.error(error, 'fetchData')
     }
   }
 }

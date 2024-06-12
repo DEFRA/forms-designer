@@ -67,8 +67,8 @@ export class SectionEdit extends Component {
     try {
       await save(updated)
       this.closeFlyout(name)
-    } catch (err) {
-      logger.error('SectionEdit', err)
+    } catch (error) {
+      logger.error(error, 'SectionEdit')
     }
   }
 
@@ -124,7 +124,7 @@ export class SectionEdit extends Component {
       await save(copy)
       this.closeFlyout('')
     } catch (error) {
-      logger.error('SectionEdit', error)
+      logger.error(error, 'SectionEdit')
     }
   }
 

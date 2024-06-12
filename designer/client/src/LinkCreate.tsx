@@ -22,7 +22,7 @@ export class LinkCreate extends Component {
 
     const copy = { ...data }
     const { error, ...updatedData } = addLink(copy, from, to, selectedCondition)
-    error && logger.error('LinkCreate', error)
+    error && logger.error(error, 'LinkCreate')
     const savedData = await save(updatedData)
     this.props.onCreate?.({ data: savedData })
   }
