@@ -88,7 +88,7 @@ export function componentReducer(
       ...subReducer(state, action)
     }
   } else {
-    logger.log('Unrecognised action:', action.type)
+    logger.warn(`Unrecognised action: ${action.type}`)
     return { ...state, selectedComponent }
   }
 }
