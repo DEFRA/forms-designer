@@ -76,18 +76,19 @@ export default [
   }),
 
   /**
-   * @satisfies {ServerRoute}
+   * @satisfies {ServerRoute<{ Payload: { messages: LogMessages, level: Level } }>}
    */
   ({
     method: 'POST',
     path: '/api/log',
     options: {
       handler(request, h) {
+        const { level, messages } = request.payload
+
         try {
-          request.server.log(request.payload.toString())
-          return h.response({ ok: true }).code(204)
+          request.logger[level](...messages)
         } catch (error) {
-          request.server.error(request.payload.toString())
+          request.logger.error(error)
           return h.response({ ok: false }).code(500)
         }
       }
@@ -103,4 +104,7 @@ export default [
 /**
  * @typedef {import('@defra/forms-model').FormByIdInput} FormByIdInput
  * @typedef {import('@defra/forms-model').FormDefinition} FormDefinition
+ * @typedef {import('pino').Level} Level
+ * @typedef {import('pino').SerializedError} LogError
+ * @typedef {[message: string, ...args: any[]]} LogMessages
  */
