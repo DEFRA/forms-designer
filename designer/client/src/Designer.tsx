@@ -15,12 +15,11 @@ interface Props {
 
 interface State {
   flyoutCount?: number
-  loading?: boolean
   data?: FormDefinition
 }
 
 export class Designer extends Component<Props, State> {
-  state: State = { loading: true, flyoutCount: 0 }
+  state: State = { flyoutCount: 0 }
 
   get id() {
     return this.props.id
@@ -61,17 +60,10 @@ export class Designer extends Component<Props, State> {
 
   async componentDidMount() {
     await this.get()
-
-    this.setState({
-      loading: false
-    })
   }
 
   render() {
-    const { flyoutCount, data, loading } = this.state
-    if (loading) {
-      return <p className="govuk-body">Loading ...</p>
-    }
+    const { flyoutCount, data } = this.state
 
     const flyoutContextProviderValue = {
       count: flyoutCount,
