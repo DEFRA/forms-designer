@@ -16,9 +16,7 @@ interface Props {
 interface State {
   flyoutCount?: number
   loading?: boolean
-  newConfig?: boolean // TODO - is this required?
   data?: FormDefinition
-  page?: any
 }
 
 export class Designer extends Component<Props, State> {
@@ -38,27 +36,22 @@ export class Designer extends Component<Props, State> {
     return this.props.previewUrl
   }
 
-  incrementFlyoutCounter = (callback = () => {}) => {
+  incrementFlyoutCounter = () => {
     let currentCount = this.state.flyoutCount
-    this.setState({ flyoutCount: ++currentCount }, callback())
+    this.setState({ flyoutCount: ++currentCount })
   }
 
-  decrementFlyoutCounter = (callback = () => {}) => {
+  decrementFlyoutCounter = () => {
     let currentCount = this.state.flyoutCount
-    this.setState({ flyoutCount: --currentCount }, callback())
+    this.setState({ flyoutCount: --currentCount })
   }
 
   save = async (toUpdate, callback = () => {}) => {
     await this.designerApi.save(this.id, toUpdate)
     this.setState(
-      { data: toUpdate }, // optimistic save
-      callback()
+      { data: toUpdate } // optimistic save
     )
     return toUpdate
-  }
-
-  updatePageContext = (page) => {
-    this.setState({ page })
   }
 
   componentDidMount() {
@@ -83,12 +76,11 @@ export class Designer extends Component<Props, State> {
       <DataContext.Provider value={dataContextProviderValue}>
         <FlyoutContext.Provider value={flyoutContextProviderValue}>
           <div id="designer">
-            <Menu id={this.id} updatePersona={this.updatePersona} />
+            <Menu id={this.id} />
             <Visualisation
               id={this.id}
               slug={this.slug}
               previewUrl={this.previewUrl}
-              persona={this.state.persona}
             />
           </div>
         </FlyoutContext.Provider>

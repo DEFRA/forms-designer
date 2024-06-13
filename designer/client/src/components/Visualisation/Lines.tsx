@@ -12,7 +12,6 @@ import { DataContext } from '~/src/context/DataContext.js'
 interface Props {
   layout: Layout['pos']
   data: FormDefinition
-  persona: any
 }
 
 interface State {
@@ -39,7 +38,7 @@ export class Lines extends Component<Props, State> {
   }
 
   render() {
-    const { layout, persona } = this.props
+    const { layout } = this.props
     const { data } = this.context
 
     return (
@@ -55,9 +54,6 @@ export class Lines extends Component<Props, State> {
             const textX = xs.reduce((a, b) => a + b, 0) / xs.length
             const textY = ys.reduce((a, b) => a + b, 0) / ys.length - 5
 
-            const highlight = [source, target].every((path) =>
-              persona?.paths?.includes(path)
-            )
             return (
               <g key={pointsString}>
                 <polyline
@@ -67,7 +63,6 @@ export class Lines extends Component<Props, State> {
                   }
                   tabIndex={0}
                   points={pointsString}
-                  className={highlight ? 'highlight' : ''}
                   data-testid={`${source}-${target}`.replace(/\//g, '')}
                   role="button"
                 >
