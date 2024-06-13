@@ -43,16 +43,6 @@ export const ComponentContext = createContext<{
 })
 
 /**
- * Action types combined
- */
-export const actionTypes = {
-  ...Meta,
-  ...Schema,
-  ...Fields,
-  ...Options
-}
-
-/**
  * Reducers mapped by action type
  */
 const reducerByActionType = [
@@ -73,10 +63,6 @@ export function getSubReducer(type: Action) {
   return reducerByActionType.find((a) => valueIsInEnum(type, a[0]))?.[1]
 }
 
-const isNotValidate = (type: Action) => {
-  return Object.values(actionTypes).includes(type)
-}
-
 export function componentReducer(
   state,
   action: {
@@ -87,7 +73,7 @@ export function componentReducer(
   const { type } = action
   const { selectedComponent } = state
 
-  if (isNotValidate(type)) {
+  if (type !== Meta.VALIDATE) {
     state.hasValidated = false
   }
 

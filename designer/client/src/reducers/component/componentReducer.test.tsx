@@ -1,3 +1,5 @@
+import { ComponentType, type ComponentDef } from '@defra/forms-model'
+
 import { fieldsReducer } from '~/src/reducers/component/componentReducer.fields.js'
 import {
   componentReducer,
@@ -14,6 +16,14 @@ import {
 } from '~/src/reducers/component/types.js'
 
 describe('Component reducer', () => {
+  const component: ComponentDef = {
+    name: 'field',
+    title: 'Title',
+    type: ComponentType.TextField,
+    options: {},
+    schema: {}
+  }
+
   test('getSubReducer returns correct reducer', () => {
     const metaAction = Meta.NEW_COMPONENT
     const schemaAction = Schema.EDIT_SCHEMA_MIN
@@ -26,16 +36,39 @@ describe('Component reducer', () => {
     expect(getSubReducer(fieldsAction)).toEqual(fieldsReducer)
   })
 
-  test('componentReducer adds hasValidated flag correctly', () => {
-    expect(
-      componentReducer(
-        {},
-        { type: Fields.EDIT_TITLE, payload: 'changing title' }
-      )
-    ).toEqual(
-      expect.objectContaining({
-        hasValidated: false
-      })
-    )
+  test('componentReducer sets hasValidated: false', () => {
+    const title = 'Updated title'
+
+    const action = {
+      type: Fields.EDIT_TITLE,
+      payload: title
+    }
+
+    const state = {
+      selectedComponent: component,
+      hasValidated: true
+    }
+
+    expect(componentReducer(state, action)).toEqual({
+      selectedComponent: { ...component, title },
+      hasValidated: false
+    })
+  })
+
+  test('componentReducer sets hasValidated: true', () => {
+    const action = {
+      type: Meta.VALIDATE
+    }
+
+    const state = {
+      selectedComponent: component,
+      hasValidated: false
+    }
+
+    expect(componentReducer(state, action)).toEqual({
+      selectedComponent: component,
+      errors: expect.any(Object),
+      hasValidated: true
+    })
   })
 })
