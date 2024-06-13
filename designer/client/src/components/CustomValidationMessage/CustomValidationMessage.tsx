@@ -3,7 +3,7 @@ import React, { useContext } from 'react'
 
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
-import { Actions } from '~/src/reducers/component/types.js'
+import { Options } from '~/src/reducers/component/types.js'
 
 export function CustomValidationMessage() {
   const { state, dispatch } = useContext(ComponentContext)
@@ -29,7 +29,7 @@ export function CustomValidationMessage() {
         value={options.customValidationMessage ?? ''}
         onChange={(e) =>
           dispatch({
-            type: Actions.EDIT_OPTIONS_CUSTOM_MESSAGE,
+            type: Options.EDIT_OPTIONS_CUSTOM_MESSAGE,
             payload: e.target.value
           })
         }

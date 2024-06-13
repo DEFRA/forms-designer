@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
-import { Actions } from '~/src/reducers/component/types.js'
+import { Options } from '~/src/reducers/component/types.js'
 
 export function Autocomplete() {
   const { state, dispatch } = useContext(ComponentContext)
@@ -26,7 +26,7 @@ export function Autocomplete() {
         value={options.autocomplete || ''}
         onChange={(e) =>
           dispatch({
-            type: Actions.EDIT_OPTIONS_AUTOCOMPLETE,
+            type: Options.EDIT_OPTIONS_AUTOCOMPLETE,
             payload: e.target.value
           })
         }

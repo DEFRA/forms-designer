@@ -3,7 +3,7 @@ import React, { useContext } from 'react'
 import { CssClasses } from '~/src/components/CssClasses/CssClasses.jsx'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
-import { Actions } from '~/src/reducers/component/types.js'
+import { Options, Schema } from '~/src/reducers/component/types.js'
 
 interface Props {
   context: any // TODO
@@ -44,7 +44,7 @@ export function NumberFieldEdit({ context = ComponentContext }: Props) {
           type="number"
           onChange={(e) =>
             dispatch({
-              type: Actions.EDIT_SCHEMA_MIN,
+              type: Schema.EDIT_SCHEMA_MIN,
               payload: e.target.value
             })
           }
@@ -70,7 +70,7 @@ export function NumberFieldEdit({ context = ComponentContext }: Props) {
           type="string"
           onBlur={(e) =>
             dispatch({
-              type: Actions.EDIT_OPTIONS_PREFIX,
+              type: Options.EDIT_OPTIONS_PREFIX,
               payload: e.target.value
             })
           }
@@ -96,7 +96,7 @@ export function NumberFieldEdit({ context = ComponentContext }: Props) {
           type="string"
           onBlur={(e) =>
             dispatch({
-              type: Actions.EDIT_OPTIONS_SUFFIX,
+              type: Options.EDIT_OPTIONS_SUFFIX,
               payload: e.target.value
             })
           }
@@ -122,7 +122,7 @@ export function NumberFieldEdit({ context = ComponentContext }: Props) {
           type="number"
           onBlur={(e) =>
             dispatch({
-              type: Actions.EDIT_SCHEMA_MAX,
+              type: Schema.EDIT_SCHEMA_MAX,
               payload: e.target.value
             })
           }
@@ -148,7 +148,7 @@ export function NumberFieldEdit({ context = ComponentContext }: Props) {
           type="number"
           onBlur={(e) =>
             dispatch({
-              type: Actions.EDIT_SCHEMA_PRECISION,
+              type: Schema.EDIT_SCHEMA_PRECISION,
               payload: e.target.value
             })
           }

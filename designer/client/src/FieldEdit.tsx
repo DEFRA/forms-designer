@@ -5,7 +5,7 @@ import React, { useContext } from 'react'
 import { ErrorMessage } from '~/src/components/ErrorMessage/ErrorMessage.jsx'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
-import { Actions } from '~/src/reducers/component/types.js'
+import { Fields, Options } from '~/src/reducers/component/types.js'
 
 interface Props {
   isContentField?: boolean
@@ -45,7 +45,7 @@ export function FieldEdit({
         value={title || ''}
         onChange={(e) => {
           dispatch({
-            type: Actions.EDIT_TITLE,
+            type: Fields.EDIT_TITLE,
             payload: e.target.value
           })
         }}
@@ -70,7 +70,7 @@ export function FieldEdit({
         value={hint}
         onChange={(e) => {
           dispatch({
-            type: Actions.EDIT_HELP,
+            type: Fields.EDIT_HELP,
             payload: e.target.value
           })
         }}
@@ -86,7 +86,7 @@ export function FieldEdit({
             checked={hideTitle}
             onChange={(e) =>
               dispatch({
-                type: Actions.EDIT_OPTIONS_HIDE_TITLE,
+                type: Options.EDIT_OPTIONS_HIDE_TITLE,
                 payload: e.target.checked
               })
             }
@@ -124,7 +124,7 @@ export function FieldEdit({
           value={name || ''}
           onChange={(e) => {
             dispatch({
-              type: Actions.EDIT_NAME,
+              type: Fields.EDIT_NAME,
               payload: e.target.value
             })
           }}
@@ -141,7 +141,7 @@ export function FieldEdit({
               checked={!required}
               onChange={(e) =>
                 dispatch({
-                  type: Actions.EDIT_OPTIONS_REQUIRED,
+                  type: Options.EDIT_OPTIONS_REQUIRED,
                   payload: !e.target.checked
                 })
               }
@@ -177,7 +177,7 @@ export function FieldEdit({
             checked={optionalText}
             onChange={(e) =>
               dispatch({
-                type: Actions.EDIT_OPTIONS_HIDE_OPTIONAL,
+                type: Options.EDIT_OPTIONS_HIDE_OPTIONAL,
                 payload: e.target.checked
               })
             }
@@ -206,7 +206,7 @@ export function FieldEdit({
             checked={exposeToContext}
             onChange={(e) =>
               dispatch({
-                type: Actions.EDIT_OPTIONS_EXPOSE_TO_CONTEXT,
+                type: Options.EDIT_OPTIONS_EXPOSE_TO_CONTEXT,
                 payload: e.target.checked
               })
             }
@@ -233,7 +233,7 @@ export function FieldEdit({
               checked={allowPrePopulation}
               onChange={(e) =>
                 dispatch({
-                  type: Actions.EDIT_OPTIONS_ALLOW_PRE_POPULATION,
+                  type: Options.EDIT_OPTIONS_ALLOW_PRE_POPULATION,
                   payload: e.target.checked
                 })
               }

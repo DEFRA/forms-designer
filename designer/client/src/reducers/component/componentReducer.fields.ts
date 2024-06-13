@@ -4,7 +4,7 @@ export function fieldsReducer(
   state,
   action: {
     type: Fields
-    payload: any
+    payload?: unknown
   }
 ) {
   const { type, payload } = action

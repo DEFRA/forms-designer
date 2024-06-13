@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
-import { Actions } from '~/src/reducers/component/types.js'
+import { Options } from '~/src/reducers/component/types.js'
 
 interface Props {
   context: any // TODO
@@ -26,7 +26,7 @@ export function ListContentEdit({ context = ComponentContext }: Props) {
           checked={options.type === 'numbered'}
           onChange={() =>
             dispatch({
-              type: Actions.EDIT_OPTIONS_TYPE,
+              type: Options.EDIT_OPTIONS_TYPE,
               payload: options.type === 'numbered' ? undefined : 'numbered'
             })
           }

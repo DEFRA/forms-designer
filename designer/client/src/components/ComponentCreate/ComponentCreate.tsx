@@ -16,7 +16,7 @@ import { DataContext } from '~/src/context/DataContext.js'
 import { addComponent } from '~/src/data/component/addComponent.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
-import { Actions } from '~/src/reducers/component/types.js'
+import { Fields, Meta } from '~/src/reducers/component/types.js'
 import { hasValidationErrors } from '~/src/validations.js'
 
 function useComponentCreate(props) {
@@ -51,15 +51,15 @@ function useComponentCreate(props) {
   }, [selectedComponent?.type])
 
   useEffect(() => {
-    dispatch({ type: Actions.SET_PAGE, payload: page.path })
+    dispatch({ type: Meta.SET_PAGE, payload: page.path })
   }, [page.path])
 
   useLayoutEffect(() => {
     if (hasValidated && !hasErrors) {
       handleSubmit()
         .then()
-        .catch((err) => {
-          logger.error('ComponentCreate', err)
+        .catch((error: unknown) => {
+          logger.error(error, 'ComponentCreate')
         })
     }
   }, [hasValidated, hasErrors])
@@ -68,7 +68,7 @@ function useComponentCreate(props) {
     e?.preventDefault()
 
     if (!hasValidated) {
-      dispatch({ type: Actions.VALIDATE })
+      dispatch({ type: Meta.VALIDATE })
       return
     }
 
@@ -90,7 +90,7 @@ function useComponentCreate(props) {
 
   const handleTypeChange = (component: ComponentDef) => {
     dispatch({
-      type: Actions.EDIT_TYPE,
+      type: Fields.EDIT_TYPE,
       payload: {
         type: component.type
       }
@@ -99,7 +99,7 @@ function useComponentCreate(props) {
 
   const reset = (e) => {
     e.preventDefault()
-    dispatch({ type: Actions.SET_COMPONENT })
+    dispatch({ type: Meta.SET_COMPONENT })
   }
 
   return {

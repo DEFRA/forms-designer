@@ -53,10 +53,10 @@ export enum Options {
   EDIT_OPTIONS_ALLOW_PRE_POPULATION = 'EDIT_OPTIONS_ALLOW_PRE_POPULATION'
 }
 
-export const Actions = {
-  ...Meta,
-  ...Schema,
-  ...Fields,
-  ...Options
-}
-export type ComponentActions = typeof Actions
+export type Action = Fields | Meta | Options | Schema
+
+export type Actions =
+  | typeof Fields
+  | typeof Meta
+  | typeof Options
+  | typeof Schema

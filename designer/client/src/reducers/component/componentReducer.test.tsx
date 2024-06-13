@@ -6,14 +6,19 @@ import {
 import { metaReducer } from '~/src/reducers/component/componentReducer.meta.js'
 import { optionsReducer } from '~/src/reducers/component/componentReducer.options.js'
 import { schemaReducer } from '~/src/reducers/component/componentReducer.schema.js'
-import { Actions } from '~/src/reducers/component/types.js'
+import {
+  Fields,
+  Meta,
+  Options,
+  Schema
+} from '~/src/reducers/component/types.js'
 
 describe('Component reducer', () => {
   test('getSubReducer returns correct reducer', () => {
-    const metaAction = Actions.NEW_COMPONENT
-    const schemaAction = Actions.EDIT_SCHEMA_MIN
-    const fieldsAction = Actions.EDIT_TITLE
-    const optionsAction = Actions.EDIT_OPTIONS_HIDE_TITLE
+    const metaAction = Meta.NEW_COMPONENT
+    const schemaAction = Schema.EDIT_SCHEMA_MIN
+    const fieldsAction = Fields.EDIT_TITLE
+    const optionsAction = Options.EDIT_OPTIONS_HIDE_TITLE
 
     expect(getSubReducer(metaAction)).toEqual(metaReducer)
     expect(getSubReducer(schemaAction)).toEqual(schemaReducer)
@@ -25,7 +30,7 @@ describe('Component reducer', () => {
     expect(
       componentReducer(
         {},
-        { type: Actions.EDIT_TITLE, payload: 'changing title' }
+        { type: Fields.EDIT_TITLE, payload: 'changing title' }
       )
     ).toEqual(
       expect.objectContaining({

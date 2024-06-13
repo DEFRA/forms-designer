@@ -14,7 +14,7 @@ import { DataContext } from '~/src/context/DataContext.js'
 import { findList } from '~/src/data/list/findList.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
-import { Actions as ComponentActions } from '~/src/reducers/component/types.js'
+import { Meta } from '~/src/reducers/component/types.js'
 import {
   ListsEditorContext,
   ListsEditorStateActions
@@ -62,7 +62,7 @@ export function ComponentListSelect() {
   useEffect(() => {
     if (!listsEditorState.isEditingList && isAddingNew) {
       dispatch({
-        type: ComponentActions.SET_SELECTED_LIST,
+        type: Meta.SET_SELECTED_LIST,
         payload: selectedList.name
       })
       setIsAddingNew(false)
@@ -71,7 +71,7 @@ export function ComponentListSelect() {
 
   const editList = (e: ChangeEvent<HTMLSelectElement>) => {
     dispatch({
-      type: ComponentActions.SET_SELECTED_LIST,
+      type: Meta.SET_SELECTED_LIST,
       payload: e.target.value
     })
   }
