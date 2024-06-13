@@ -1,8 +1,8 @@
-import { pino, stdSerializers, type LogEvent } from 'pino'
+import { stdSerializers, type LogEvent, type LoggerOptions } from 'pino'
 
 const logLevel = process.env.REACT_LOG_LEVEL
 
-export default pino({
+export const loggerOptions = {
   browser: {
     asObject: false,
     serialize: false,
@@ -35,7 +35,7 @@ export default pino({
       }
     }
   }
-})
+} satisfies LoggerOptions
 
 type LogEventBrowser = Omit<LogEvent, 'messages'> &
   ({ messages: string[] } | { messages: [Error, string] })

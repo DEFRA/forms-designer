@@ -9,10 +9,10 @@ import React, {
   type ReactNode
 } from 'react'
 
+import { logger } from '~/src/common/helpers/logging/logger.js'
 import { DataContext } from '~/src/context/DataContext.js'
 import { findList } from '~/src/data/list/findList.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
-import logger from '~/src/plugins/logger.js'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 import { Actions as ComponentActions } from '~/src/reducers/component/types.js'
 import {

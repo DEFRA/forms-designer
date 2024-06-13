@@ -2,10 +2,10 @@ import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import React, { createRef, Component } from 'react'
 
 import { type ErrorList, ErrorSummary } from '~/src/ErrorSummary.jsx'
+import { logger } from '~/src/common/helpers/logging/logger.js'
 import { DataContext } from '~/src/context/DataContext.js'
 import { addSection } from '~/src/data/section/addSection.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
-import logger from '~/src/plugins/logger.js'
 import randomId from '~/src/randomId.js'
 import {
   validateName,

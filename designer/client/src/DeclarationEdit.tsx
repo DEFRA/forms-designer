@@ -2,8 +2,8 @@ import { clone } from '@defra/forms-model'
 import React, { Component } from 'react'
 
 import { Editor } from '~/src/Editor.jsx'
+import { logger } from '~/src/common/helpers/logging/logger.js'
 import { DataContext } from '~/src/context/DataContext.js'
-import logger from '~/src/plugins/logger.js'
 
 export class DeclarationEdit extends Component {
   static contextType = DataContext

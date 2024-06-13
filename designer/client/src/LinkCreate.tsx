@@ -2,12 +2,12 @@ import classNames from 'classnames'
 import React, { Component } from 'react'
 
 import { ErrorSummary } from '~/src/ErrorSummary.jsx'
+import { logger } from '~/src/common/helpers/logging/logger.js'
 import { ErrorMessage } from '~/src/components/ErrorMessage/ErrorMessage.jsx'
 import { SelectConditions } from '~/src/conditions/SelectConditions.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { addLink } from '~/src/data/page/addLink.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
-import logger from '~/src/plugins/logger.js'
 
 export class LinkCreate extends Component {
   static contextType = DataContext

@@ -1,7 +1,7 @@
 import { type ComponentDef } from '@defra/forms-model'
 import React, { useReducer, createContext, type Dispatch } from 'react'
 
-import logger from '~/src/plugins/logger.js'
+import { logger } from '~/src/common/helpers/logging/logger.js'
 import randomId from '~/src/randomId.js'
 import { fieldsReducer } from '~/src/reducers/component/componentReducer.fields.js'
 import { metaReducer } from '~/src/reducers/component/componentReducer.meta.js'

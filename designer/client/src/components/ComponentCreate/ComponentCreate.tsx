@@ -9,12 +9,12 @@ import React, {
 
 import { ComponentTypeEdit } from '~/src/ComponentTypeEdit.jsx'
 import { ErrorSummary } from '~/src/ErrorSummary.jsx'
+import { logger } from '~/src/common/helpers/logging/logger.js'
 import { BackLink } from '~/src/components/BackLink/BackLink.jsx'
 import { ComponentCreateList } from '~/src/components/ComponentCreate/ComponentCreateList.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { addComponent } from '~/src/data/component/addComponent.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
-import logger from '~/src/plugins/logger.js'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 import { Actions } from '~/src/reducers/component/types.js'
 import { hasValidationErrors } from '~/src/validations.js'
