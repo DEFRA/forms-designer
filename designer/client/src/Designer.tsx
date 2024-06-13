@@ -1,11 +1,11 @@
 import { type FormDefinition } from '@defra/forms-model'
 import React, { Component } from 'react'
 
-import { DesignerApi } from '~/src/api/designerApi.js'
 import { Menu } from '~/src/components/Menu/Menu.jsx'
 import { Visualisation } from '~/src/components/Visualisation/Visualisation.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { FlyoutContext } from '~/src/context/FlyoutContext.js'
+import * as form from '~/src/lib/form.js'
 
 interface Props {
   id: string
@@ -21,8 +21,6 @@ interface State {
 
 export class Designer extends Component<Props, State> {
   state: State = { loading: true, flyoutCount: 0 }
-
-  designerApi = new DesignerApi()
 
   get id() {
     return this.props.id
@@ -46,16 +44,18 @@ export class Designer extends Component<Props, State> {
     this.setState({ flyoutCount: --currentCount })
   }
 
-  save = async (toUpdate, callback = () => {}) => {
-    await this.designerApi.save(this.id, toUpdate)
+  save = async (toUpdate: FormDefinition) => {
+    await form.save(this.id, toUpdate)
+
     this.setState(
       { data: toUpdate } // optimistic save
     )
+
     return toUpdate
   }
 
   componentDidMount() {
-    this.designerApi.fetchData(this.id).then((data) => {
+    form.get(this.id).then((data) => {
       this.setState({ loading: false, data })
     })
   }
