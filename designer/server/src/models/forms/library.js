@@ -108,8 +108,9 @@ function getFormOverviewNotification(
 
 /**
  * @param {FormMetadata} metadata
+ * @param {FormDefinition} definition
  */
-export function editorViewModel(metadata) {
+export function editorViewModel(metadata, definition) {
   const pageTitle = metadata.title
   const formPath = `/library/${metadata.slug}`
 
@@ -127,6 +128,7 @@ export function editorViewModel(metadata) {
       size: 'large'
     },
     form: metadata,
+    formDefinition: definition,
     previewUrl: config.previewUrl
   }
 }
@@ -149,4 +151,5 @@ export function getFormSpecificNavigation(formPath, activePage = '') {
 
 /**
  * @typedef {import('@defra/forms-model').FormMetadata} FormMetadata
+ * @typedef {import('@defra/forms-model').FormDefinition} FormDefinition
  */

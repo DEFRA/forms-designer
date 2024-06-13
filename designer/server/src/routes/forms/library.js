@@ -74,9 +74,9 @@ export default [
         const form = await forms.get(params.slug, token)
 
         // Retrieve definition by ID
-        await forms.getDraftFormDefinition(form.id, token)
+        const definition = await forms.getDraftFormDefinition(form.id, token)
 
-        const model = library.editorViewModel(form)
+        const model = library.editorViewModel(form, definition)
         return h.view('forms/editor', model)
       },
       auth: {

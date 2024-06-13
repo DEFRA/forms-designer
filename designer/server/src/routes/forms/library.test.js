@@ -45,6 +45,17 @@ describe('Forms library routes', () => {
     }
   }
 
+  /**
+   * @satisfies {FormDefinition}
+   */
+  const formDefinition = {
+    name: 'Test form',
+    pages: [],
+    conditions: [],
+    sections: [],
+    lists: []
+  }
+
   test('Forms library list page', async () => {
     const { title } = formMetadata
 
@@ -67,9 +78,10 @@ describe('Forms library routes', () => {
   })
 
   test('Form editor page', async () => {
-    const { id, slug } = formMetadata
-
     jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(formDefinition)
 
     const options = {
       method: 'get',
@@ -79,10 +91,29 @@ describe('Forms library routes', () => {
 
     const { document } = await renderResponse(server, options)
 
-    const $editor = document.querySelector('.app-editor')
-    expect($editor).toHaveAttribute('data-id', id)
-    expect($editor).toHaveAttribute('data-slug', slug)
+    const $editor = document.querySelector('.app-form-editor')
+    const $metadata = document.querySelector('.app-form-metadata')
+    const $definition = document.querySelector('.app-form-definition')
+
     expect($editor).toHaveAttribute('data-preview-url', config.previewUrl)
+
+    expect(
+      $metadata?.textContent && JSON.parse($metadata.textContent)
+    ).toMatchObject({
+      ...formMetadata,
+
+      draft: {
+        ...formMetadata.draft,
+
+        // Dates in JSON are stringified
+        createdAt: now.toISOString(),
+        updatedAt: now.toISOString()
+      }
+    })
+
+    expect(
+      $definition?.textContent && JSON.parse($definition.textContent)
+    ).toMatchObject(formDefinition)
   })
 
   test('Form overview has draft buttons in side bar', async () => {
@@ -130,6 +161,7 @@ describe('Forms library routes', () => {
 })
 
 /**
+ * @typedef {import('@defra/forms-model').FormDefinition} FormDefinition
  * @typedef {import('@defra/forms-model').FormMetadata} FormMetadata
  * @typedef {import('@defra/forms-model').FormMetadataAuthor} FormMetadataAuthor
  */
