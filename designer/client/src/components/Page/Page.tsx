@@ -56,7 +56,6 @@ const ComponentList = (props: {
 export const Page = (props: {
   page: PageType | RepeatingFieldPage
   previewUrl: string
-  id: string
   slug: string
   layout?: CSSProperties
 }) => {
