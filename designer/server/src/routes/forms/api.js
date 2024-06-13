@@ -76,17 +76,21 @@ export default [
   }),
 
   /**
-   * @satisfies {ServerRoute<{ Payload: { messages: LogMessages, level: Level } }>}
+   * @satisfies {ServerRoute<{ Payload: { messages: LogMessages, level: Level, error:? LogError } }>}
    */
   ({
     method: 'POST',
     path: '/api/log',
     options: {
       handler(request, h) {
-        const { level, messages } = request.payload
+        const { level, messages, error } = request.payload
 
         try {
-          request.logger[level](...messages)
+          error // Include error if present
+            ? request.logger[level](error, ...messages)
+            : request.logger[level](...messages)
+
+          return h.response({ ok: true }).code(204)
         } catch (error) {
           request.logger.error(error)
           return h.response({ ok: false }).code(500)
