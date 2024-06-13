@@ -82,6 +82,7 @@
     "@types/react": "^17.0.76",
     "@types/react-dom": "^17.0.25",
     "@types/resolve": "^1.20.6",
+    "@types/serialize-javascript": "^5.0.4",
     "@types/slug": "^5.0.8",
     "@types/uuid": "^9.0.8",
     "@types/webpack-assets-manifest": "^5.1.4",
