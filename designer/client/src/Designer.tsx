@@ -44,19 +44,26 @@ export class Designer extends Component<Props, State> {
     this.setState({ flyoutCount: --currentCount })
   }
 
-  save = async (toUpdate: FormDefinition) => {
-    await form.save(this.id, toUpdate)
+  get = async () => {
+    const definition = await form.get(this.id)
 
-    this.setState(
-      { data: toUpdate } // optimistic save
-    )
+    this.setState({
+      data: definition
+    })
 
-    return toUpdate
+    return definition
   }
 
-  componentDidMount() {
-    form.get(this.id).then((data) => {
-      this.setState({ loading: false, data })
+  save = async (definition: FormDefinition) => {
+    await form.save(this.id, definition)
+    return this.get()
+  }
+
+  async componentDidMount() {
+    await this.get()
+
+    this.setState({
+      loading: false
     })
   }
 
