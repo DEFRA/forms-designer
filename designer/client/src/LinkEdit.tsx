@@ -10,6 +10,7 @@ import { logger } from '~/src/common/helpers/logging/logger.js'
 import { type Edge } from '~/src/components/Visualisation/getLayout.js'
 import { SelectConditions } from '~/src/conditions/SelectConditions.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
+import { deleteLink } from '~/src/data/page/deleteLink.js'
 import { findPage } from '~/src/data/page/findPage.js'
 import { updateLink } from '~/src/data/page/updateLink.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
@@ -82,22 +83,7 @@ export class LinkEdit extends Component<Props, State> {
     const { link, page } = this.state
     const { data, save } = this.context
 
-    const [fromPage] = findPage(data, page.path)
-
-    const toLinkIndex =
-      fromPage.next?.findIndex((n) => n.path === link.path) ?? -1
-
-    if (!fromPage.next || toLinkIndex < 0) {
-      throw Error('Could not find page or links to delete')
-    }
-
-    fromPage.next.splice(toLinkIndex, 1)
-
-    const pages = [...data.pages].map((page) =>
-      page.path === fromPage.path ? fromPage : page
-    )
-
-    const updatedData = { ...data, pages }
+    const updatedData = deleteLink(data, page.path, link.path)
 
     try {
       await save(updatedData)
