@@ -5,8 +5,7 @@ import {
   relativeDateOrTimeOperatorNames,
   ComponentType,
   ConditionValue,
-  type OperatorName,
-  type ConditionalComponentType
+  type OperatorName
 } from '@defra/forms-model'
 import React from 'react'
 
@@ -17,10 +16,7 @@ import { SelectValues } from '~/src/conditions/SelectValues.jsx'
 import { TextValues } from '~/src/conditions/TextValues.jsx'
 import { tryParseInt } from '~/src/conditions/inline-condition-helpers.js'
 
-function DateTimeComponent(
-  fieldType: ConditionalComponentType,
-  operator: OperatorName
-) {
+function DateTimeComponent(fieldType: ComponentType, operator: OperatorName) {
   const operatorConfig = getOperatorConfig(fieldType, operator)
 
   let CustomRendering:
@@ -111,7 +107,7 @@ function DateTimeComponent(
 interface FieldDef {
   label: string
   name: string
-  type: ConditionalComponentType
+  type: ComponentType
   values?: any[]
 }
 

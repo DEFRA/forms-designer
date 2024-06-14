@@ -1,28 +1,18 @@
-import { ConditionalComponentTypes } from '~/src/components/component-types.js'
-import { type ConditionalComponentType } from '~/src/components/types.js'
+import { type ComponentType } from '~/src/components/enums.js'
+import { isConditionalType } from '~/src/components/helpers.js'
 
 export class ConditionField {
   name
   type
   display
 
-  constructor(
-    name?: string,
-    type?: ConditionalComponentType,
-    display?: string
-  ) {
+  constructor(name?: string, type?: ComponentType, display?: string) {
     if (!name || typeof name !== 'string') {
       throw new Error("ConditionField param 'name' must be a string")
     }
 
-    if (
-      !ConditionalComponentTypes.find(
-        (componentType) => componentType.type === type
-      )
-    ) {
-      throw new Error(
-        "ConditionField param 'type' must be from enum ConditionalComponentTypes"
-      )
+    if (!isConditionalType(type)) {
+      throw new Error("ConditionField param 'type' must support conditions")
     }
 
     if (!display || typeof display !== 'string') {
@@ -34,11 +24,7 @@ export class ConditionField {
     this.display = display
   }
 
-  static from(obj: {
-    name: string
-    type: ConditionalComponentType
-    display: string
-  }) {
+  static from(obj: { name: string; type: ComponentType; display: string }) {
     return new ConditionField(obj.name, obj.type, obj.display)
   }
 }

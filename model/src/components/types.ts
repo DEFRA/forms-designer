@@ -3,17 +3,15 @@ import {
   type ComponentType
 } from '~/src/components/enums.js'
 
-export type ConditionalComponentType = Extract<
-  ComponentType,
-  | typeof ComponentType.CheckboxesField
-  | typeof ComponentType.DatePartsField
-  | typeof ComponentType.EmailAddressField
-  | typeof ComponentType.MultilineTextField
-  | typeof ComponentType.NumberField
-  | typeof ComponentType.TextField
-  | typeof ComponentType.TimeField
-  | typeof ComponentType.YesNoField
->
+export type ConditionalComponentType =
+  | ComponentType.CheckboxesField
+  | ComponentType.DatePartsField
+  | ComponentType.EmailAddressField
+  | ComponentType.MultilineTextField
+  | ComponentType.NumberField
+  | ComponentType.TextField
+  | ComponentType.TimeField
+  | ComponentType.YesNoField
 
 export interface ContentOptions {
   condition?: string

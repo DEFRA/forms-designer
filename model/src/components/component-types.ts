@@ -1,5 +1,4 @@
 import { ComponentSubType, ComponentType } from '~/src/components/enums.js'
-import { hasConditionSupport } from '~/src/components/helpers.js'
 import { type ComponentDef } from '~/src/components/types.js'
 
 export const ComponentTypes: ComponentDef[] = [
@@ -166,6 +165,3 @@ export const ComponentTypes: ComponentDef[] = [
     list: ''
   }
 ]
-
-export const ConditionalComponentTypes =
-  ComponentTypes.filter(hasConditionSupport)
