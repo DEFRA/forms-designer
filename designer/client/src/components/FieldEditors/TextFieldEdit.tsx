@@ -27,144 +27,146 @@ export function TextFieldEdit({ children, context = ComponentContext }: Props) {
         </span>
       </summary>
 
-      <div className="govuk-form-group">
-        <label
-          className="govuk-label govuk-label--s"
-          htmlFor="field-schema-min"
-        >
-          {i18n('textFieldEditComponent.minLengthField.title')}
-        </label>
-        <div className="govuk-hint">
-          {i18n('textFieldEditComponent.minLengthField.helpText')}
+      <div className="govuk-details__text">
+        <div className="govuk-form-group">
+          <label
+            className="govuk-label govuk-label--s"
+            htmlFor="field-schema-min"
+          >
+            {i18n('textFieldEditComponent.minLengthField.title')}
+          </label>
+          <div className="govuk-hint">
+            {i18n('textFieldEditComponent.minLengthField.helpText')}
+          </div>
+          <input
+            className="govuk-input govuk-input--width-3"
+            data-cast="number"
+            id="field-schema-min"
+            name="schema.min"
+            value={schema.min || ''}
+            type="number"
+            onChange={(e) =>
+              dispatch({
+                type: Schema.EDIT_SCHEMA_MIN,
+                payload: e.target.value
+              })
+            }
+          />
         </div>
-        <input
-          className="govuk-input govuk-input--width-3"
-          data-cast="number"
-          id="field-schema-min"
-          name="schema.min"
-          value={schema.min || ''}
-          type="number"
-          onChange={(e) =>
-            dispatch({
-              type: Schema.EDIT_SCHEMA_MIN,
-              payload: e.target.value
-            })
-          }
-        />
-      </div>
 
-      <div className="govuk-form-group">
-        <label
-          className="govuk-label govuk-label--s"
-          htmlFor="field-schema-max"
-        >
-          {i18n('textFieldEditComponent.maxLengthField.title')}
-        </label>
-        <div className="govuk-hint">
-          {i18n('textFieldEditComponent.maxLengthField.helpText')}
+        <div className="govuk-form-group">
+          <label
+            className="govuk-label govuk-label--s"
+            htmlFor="field-schema-max"
+          >
+            {i18n('textFieldEditComponent.maxLengthField.title')}
+          </label>
+          <div className="govuk-hint">
+            {i18n('textFieldEditComponent.maxLengthField.helpText')}
+          </div>
+          <input
+            className="govuk-input govuk-input--width-3"
+            data-cast="number"
+            id="field-schema-max"
+            name="schema.max"
+            value={schema.max || ''}
+            type="number"
+            onChange={(e) =>
+              dispatch({
+                type: Schema.EDIT_SCHEMA_MAX,
+                payload: e.target.value
+              })
+            }
+          />
         </div>
-        <input
-          className="govuk-input govuk-input--width-3"
-          data-cast="number"
-          id="field-schema-max"
-          name="schema.max"
-          value={schema.max || ''}
-          type="number"
-          onChange={(e) =>
-            dispatch({
-              type: Schema.EDIT_SCHEMA_MAX,
-              payload: e.target.value
-            })
-          }
-        />
-      </div>
 
-      <div className="govuk-form-group">
-        <label
-          className="govuk-label govuk-label--s"
-          htmlFor="field-schema-maxwords"
-        >
-          {i18n('textFieldEditComponent.maxWordField.title')}
-        </label>
-        <div className="govuk-hint">
-          {i18n('textFieldEditComponent.maxWordField.helpText')}
+        <div className="govuk-form-group">
+          <label
+            className="govuk-label govuk-label--s"
+            htmlFor="field-schema-maxwords"
+          >
+            {i18n('textFieldEditComponent.maxWordField.title')}
+          </label>
+          <div className="govuk-hint">
+            {i18n('textFieldEditComponent.maxWordField.helpText')}
+          </div>
+          <input
+            className="govuk-input govuk-input--width-3"
+            data-cast="number"
+            id="field-schema-maxwords"
+            name="schema.maxwords"
+            value={options.maxWords || ''}
+            type="number"
+            onChange={(e) =>
+              dispatch({
+                type: Options.EDIT_OPTIONS_MAX_WORDS,
+                payload: e.target.value
+              })
+            }
+          />
         </div>
-        <input
-          className="govuk-input govuk-input--width-3"
-          data-cast="number"
-          id="field-schema-maxwords"
-          name="schema.maxwords"
-          value={options.maxWords || ''}
-          type="number"
-          onChange={(e) =>
-            dispatch({
-              type: Options.EDIT_OPTIONS_MAX_WORDS,
-              payload: e.target.value
-            })
-          }
-        />
-      </div>
 
-      <div className="govuk-form-group">
-        <label
-          className="govuk-label govuk-label--s"
-          htmlFor="field-schema-length"
-        >
-          {i18n('textFieldEditComponent.lengthField.title')}
-        </label>
-        <div className="govuk-hint">
-          {i18n('textFieldEditComponent.lengthField.helpText')}
+        <div className="govuk-form-group">
+          <label
+            className="govuk-label govuk-label--s"
+            htmlFor="field-schema-length"
+          >
+            {i18n('textFieldEditComponent.lengthField.title')}
+          </label>
+          <div className="govuk-hint">
+            {i18n('textFieldEditComponent.lengthField.helpText')}
+          </div>
+          <input
+            className="govuk-input govuk-input--width-3"
+            data-cast="number"
+            id="field-schema-length"
+            name="schema.length"
+            value={schema.length || ''}
+            type="number"
+            onChange={(e) =>
+              dispatch({
+                type: Schema.EDIT_SCHEMA_LENGTH,
+                payload: e.target.value
+              })
+            }
+          />
         </div>
-        <input
-          className="govuk-input govuk-input--width-3"
-          data-cast="number"
-          id="field-schema-length"
-          name="schema.length"
-          value={schema.length || ''}
-          type="number"
-          onChange={(e) =>
-            dispatch({
-              type: Schema.EDIT_SCHEMA_LENGTH,
-              payload: e.target.value
-            })
-          }
-        />
-      </div>
 
-      {children}
+        {children}
 
-      <div className="govuk-form-group">
-        <label
-          className="govuk-label govuk-label--s"
-          htmlFor="field-schema-regex"
-        >
-          {i18n('textFieldEditComponent.regexField.title')}
-        </label>
-        <div className="govuk-hint">
-          {i18n('textFieldEditComponent.regexField.helpText')}
+        <div className="govuk-form-group">
+          <label
+            className="govuk-label govuk-label--s"
+            htmlFor="field-schema-regex"
+          >
+            {i18n('textFieldEditComponent.regexField.title')}
+          </label>
+          <div className="govuk-hint">
+            {i18n('textFieldEditComponent.regexField.helpText')}
+          </div>
+          <input
+            className="govuk-input"
+            id="field-schema-regex"
+            name="schema.regex"
+            value={schema.regex || ''}
+            onChange={(e) =>
+              dispatch({
+                type: Schema.EDIT_SCHEMA_REGEX,
+                payload: e.target.value
+              })
+            }
+          />
         </div>
-        <input
-          className="govuk-input"
-          id="field-schema-regex"
-          name="schema.regex"
-          value={schema.regex || ''}
-          onChange={(e) =>
-            dispatch({
-              type: Schema.EDIT_SCHEMA_REGEX,
-              payload: e.target.value
-            })
-          }
-        />
+
+        <Autocomplete />
+
+        <CssClasses />
+
+        {selectedComponent.type === 'TelephoneNumberField' && (
+          // Remove type check when fully integrated into all runner components
+          <CustomValidationMessage />
+        )}
       </div>
-
-      <Autocomplete />
-
-      <CssClasses />
-
-      {selectedComponent.type === 'TelephoneNumberField' && (
-        // Remove type check when fully integrated into all runner components
-        <CustomValidationMessage />
-      )}
     </details>
   )
 }

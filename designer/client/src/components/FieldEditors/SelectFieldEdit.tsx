@@ -18,7 +18,9 @@ export function SelectFieldEdit({ page }: Props) {
           </span>
         </summary>
 
-        <Autocomplete />
+        <div className="govuk-details__text">
+          <Autocomplete />
+        </div>
       </details>
     </ListFieldEdit>
   )
