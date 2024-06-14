@@ -245,6 +245,12 @@
     "summary": "Summary",
     "summaryBehaviour": "Summary behaviour"
   },
+  "multilineTextFieldEditComponent": {
+    "rowsField": {
+      "helpText": "Specifies the number of textarea rows (default is 5 rows).",
+      "title": "Rows"
+    }
+  },
   "name": {
     "errors": {
       "whitespace": "Name must not contain spaces"

@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 
 import { TextFieldEdit } from '~/src/components/FieldEditors/TextFieldEdit.jsx'
+import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 import { Options } from '~/src/reducers/component/types.js'
 
@@ -11,20 +12,31 @@ export function MultilineTextFieldEdit({ context = ComponentContext }) {
 
   return (
     <TextFieldEdit>
-      <input
-        className="govuk-input govuk-input--width-3"
-        id="field-options-rows"
-        name="options.rows"
-        type="text"
-        data-cast="number"
-        value={options.rows || ''}
-        onChange={(e) =>
-          dispatch({
-            type: Options.EDIT_OPTIONS_ROWS,
-            payload: e.target.value
-          })
-        }
-      />
+      <div className="govuk-form-group">
+        <label
+          className="govuk-label govuk-label--s"
+          htmlFor="field-options-rows"
+        >
+          {i18n('multilineTextFieldEditComponent.rowsField.title')}
+        </label>
+        <div className="govuk-hint">
+          {i18n('multilineTextFieldEditComponent.rowsField.helpText')}
+        </div>
+        <input
+          className="govuk-input govuk-input--width-3"
+          id="field-options-rows"
+          name="options.rows"
+          type="text"
+          data-cast="number"
+          value={options.rows || ''}
+          onChange={(e) =>
+            dispatch({
+              type: Options.EDIT_OPTIONS_ROWS,
+              payload: e.target.value
+            })
+          }
+        />
+      </div>
     </TextFieldEdit>
   )
 }

@@ -131,6 +131,8 @@ export function TextFieldEdit({ children, context = ComponentContext }: Props) {
         />
       </div>
 
+      {children}
+
       <div className="govuk-form-group">
         <label
           className="govuk-label govuk-label--s"
@@ -154,8 +156,6 @@ export function TextFieldEdit({ children, context = ComponentContext }: Props) {
           }
         />
       </div>
-
-      {children}
 
       <Autocomplete />
 
