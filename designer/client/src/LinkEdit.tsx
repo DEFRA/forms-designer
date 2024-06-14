@@ -1,17 +1,35 @@
-import React, { Component, type ContextType } from 'react'
+import { type Next, type Page } from '@defra/forms-model'
+import React, {
+  Component,
+  type ContextType,
+  type FormEvent,
+  type MouseEvent
+} from 'react'
 
 import { logger } from '~/src/common/helpers/logging/logger.js'
+import { type Edge } from '~/src/components/Visualisation/getLayout.js'
 import { SelectConditions } from '~/src/conditions/SelectConditions.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { findPage } from '~/src/data/page/findPage.js'
 import { updateLink } from '~/src/data/page/updateLink.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 
-export class LinkEdit extends Component {
+interface Props {
+  edge: Edge
+  onEdit: () => void
+}
+
+interface State {
+  page: Page
+  link: Next
+  selectedCondition?: string
+}
+
+export class LinkEdit extends Component<Props, State> {
   declare context: ContextType<typeof DataContext>
   static contextType = DataContext
 
-  constructor(props, context: typeof DataContext) {
+  constructor(props: Props, context: typeof DataContext) {
     super(props, context)
 
     const { edge } = this.props
@@ -27,7 +45,7 @@ export class LinkEdit extends Component {
     }
   }
 
-  onSubmit = async (e) => {
+  onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     const { link, page, selectedCondition } = this.state
@@ -48,7 +66,7 @@ export class LinkEdit extends Component {
     }
   }
 
-  onClickDelete = (e) => {
+  onClickDelete = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
 
     if (!window.confirm('Confirm delete')) {
@@ -66,13 +84,12 @@ export class LinkEdit extends Component {
       page.path === copyPage.path ? copyPage : page
     )
 
-    save(copy)
-      .then((data) => {
-        this.props.onEdit({ data })
-      })
-      .catch((error: unknown) => {
-        logger.error(error, 'LinkEdit')
-      })
+    try {
+      await save(copy)
+      this.props.onEdit()
+    } catch (error) {
+      logger.error(error, 'LinkEdit')
+    }
   }
 
   render() {
@@ -82,7 +99,7 @@ export class LinkEdit extends Component {
     const { pages } = data
 
     return (
-      <form onSubmit={(e) => this.onSubmit(e)} autoComplete="off">
+      <form onSubmit={this.onSubmit} autoComplete="off">
         <div className="govuk-form-group">
           <label className="govuk-label govuk-label--s" htmlFor="link-source">
             From
@@ -143,7 +160,7 @@ export class LinkEdit extends Component {
     )
   }
 
-  conditionSelected = (selectedCondition) => {
+  conditionSelected = (selectedCondition: string) => {
     this.setState({
       selectedCondition
     })

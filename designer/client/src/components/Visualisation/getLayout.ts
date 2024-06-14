@@ -37,14 +37,7 @@ export interface Pos {
   height: string
 }
 
-export interface Layout {
-  g: graphlib.Graph
-  pos: Pos
-}
-
-type GetLayout = (data: FormDefinition, el: HTMLDivElement) => Layout
-
-export const getLayout: GetLayout = (data, el) => {
+export const getLayout = (data: FormDefinition, el: HTMLDivElement) => {
   // Create a new directed graph
   const g = new graphlib.Graph()
 
@@ -97,16 +90,16 @@ export const getLayout: GetLayout = (data, el) => {
   const pos: Pos = {
     nodes: [],
     edges: [],
-    width: output.width + 'px',
-    height: output.height + 'px'
+    width: `${output.width}px`,
+    height: `${output.height}px`
   }
 
   g.nodes().forEach((v) => {
     const node = g.node(v)
     const pt: Point = {
       node,
-      top: node.y - node.height / 2 + 'px',
-      left: node.x - node.width / 2 + 'px'
+      top: `${node.y - node.height / 2}px`,
+      left: `${node.x - node.width / 2}px`
     }
     pos.nodes.push(pt)
   })
@@ -116,7 +109,7 @@ export const getLayout: GetLayout = (data, el) => {
     pos.edges.push({
       source: e.v,
       target: e.w,
-      label: edge.condition || '',
+      label: typeof edge.condition === 'string' ? edge.condition : '',
       points: edge.points.map((p) => {
         return {
           y: p.y,

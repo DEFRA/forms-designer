@@ -1,38 +1,34 @@
-import React, { Component, type KeyboardEvent } from 'react'
+import React, { Component, type ContextType } from 'react'
 
 import { LinkEdit } from '~/src/LinkEdit.jsx'
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import {
-  type Layout,
-  type Edge
+  type Edge,
+  type Pos
 } from '~/src/components/Visualisation/getLayout.js'
 import { DataContext } from '~/src/context/DataContext.js'
 
 interface Props {
-  layout: Layout['pos']
+  layout: Pos
 }
 
 interface State {
-  showEditor: Edge | boolean
+  edge?: Edge
 }
 
 export class Lines extends Component<Props, State> {
   declare context: ContextType<typeof DataContext>
   static contextType = DataContext
 
-  state = {
-    showEditor: false
-  }
+  state: State = {}
 
   editLink = (edge: Edge) => {
-    this.setState({
-      showEditor: edge
-    })
+    this.setState({ edge })
   }
 
-  handlePolylineKeyPress = (event: KeyboardEvent, edge: Edge) => {
-    if (event.key === 'Enter' || event.key == ' ') {
-      this.editLink(edge)
+  handleEnterOrSpace = (key: string, handler: () => void) => {
+    if (key === 'Enter' || key === ' ') {
+      handler()
     }
   }
 
@@ -56,8 +52,10 @@ export class Lines extends Component<Props, State> {
               <g key={pointsString}>
                 <polyline
                   onClick={() => this.editLink(edge)}
-                  onKeyPress={(event) =>
-                    this.handlePolylineKeyPress(event, edge)
+                  onKeyDown={(event) =>
+                    this.handleEnterOrSpace(event.key, () =>
+                      this.editLink(edge)
+                    )
                   }
                   tabIndex={0}
                   points={pointsString}
@@ -83,14 +81,14 @@ export class Lines extends Component<Props, State> {
             )
           })}
         </svg>
-        {this.state.showEditor && (
+        {this.state.edge && (
           <Flyout
             title="Edit Link"
-            onHide={() => this.setState({ showEditor: false })}
+            onHide={() => this.setState({ edge: undefined })}
           >
             <LinkEdit
-              edge={this.state.showEditor}
-              onEdit={() => this.setState({ showEditor: false })}
+              edge={this.state.edge}
+              onEdit={() => this.setState({ edge: undefined })}
             />
           </Flyout>
         )}
