@@ -1,4 +1,10 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, {
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  type RefObject
+} from 'react'
 
 import { Page } from '~/src/components/Page/Page.jsx'
 import { Lines } from '~/src/components/Visualisation/Lines.jsx'
@@ -13,11 +19,15 @@ interface Props {
   previewUrl: string
 }
 
-export function useVisualisation(ref) {
+export function useVisualisation(ref: RefObject<HTMLDivElement>) {
   const { data } = useContext(DataContext)
   const [layout, setLayout] = useState<Pos>()
 
   useEffect(() => {
+    if (!ref.current) {
+      return
+    }
+
     const layout = getLayout(data, ref.current)
     setLayout(layout.pos)
   }, [data, ref])
@@ -26,7 +36,7 @@ export function useVisualisation(ref) {
 }
 
 export function Visualisation(props: Props) {
-  const ref = useRef(null)
+  const ref = useRef<HTMLDivElement>(null)
   const { layout } = useVisualisation(ref)
   const { data } = useContext(DataContext)
 
