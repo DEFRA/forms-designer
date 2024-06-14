@@ -1,4 +1,4 @@
-import { type ConditionalComponentsDef } from '~/src/components/types.js'
+import { type ComponentDef } from '~/src/components/types.js'
 import { type ConditionGroup } from '~/src/conditions/condition-group.js'
 import { type ConditionRef } from '~/src/conditions/condition-ref.js'
 import {
@@ -33,7 +33,7 @@ export interface TimeUnits {
 export interface OperatorDefinition {
   units?: DateUnits | TimeUnits
   expression: (
-    component: Pick<ConditionalComponentsDef, 'type' | 'name'>,
+    component: Pick<ComponentDef, 'type' | 'name'>,
     conditionValue: ConditionValue | RelativeTimeValue
   ) => string
 }

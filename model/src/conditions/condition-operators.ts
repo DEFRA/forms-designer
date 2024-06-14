@@ -1,8 +1,7 @@
+import { isConditionalType } from '../components/helpers.js'
+
 import { ComponentType } from '~/src/components/enums.js'
-import {
-  type ConditionalComponentType,
-  type ComponentDef
-} from '~/src/components/types.js'
+import { type ComponentDef } from '~/src/components/types.js'
 import {
   timeUnits,
   dateUnits,
@@ -90,39 +89,51 @@ export const customOperators = {
   [ComponentType.MultilineTextField]: withDefaults(textFieldOperators),
   [ComponentType.EmailAddressField]: withDefaults(textFieldOperators),
   [ComponentType.YesNoField]: defaultOperators
-} as const satisfies Record<ConditionalComponentType, Partial<Conditionals>>
+}
 
-export function getOperatorNames(fieldType: ConditionalComponentType) {
-  return Object.keys(getConditionals(fieldType)).sort()
+export function getOperatorNames(fieldType: ComponentType) {
+  const conditionals = getConditionals(fieldType)
+  if (!conditionals) {
+    return []
+  }
+
+  return Object.keys(conditionals).sort()
 }
 
 export function getExpression(
-  fieldType: ConditionalComponentType,
+  fieldType: ComponentType,
   fieldName: string,
   operator: OperatorName,
   value: ConditionValue | RelativeTimeValue
 ) {
-  return getConditionals(fieldType)[operator]?.expression(
+  const conditionals = getConditionals(fieldType)
+  if (!conditionals) {
+    return
+  }
+
+  return conditionals[operator]?.expression(
     { type: fieldType, name: fieldName },
     value
   )
 }
 
 export function getOperatorConfig(
-  fieldType: ConditionalComponentType,
+  fieldType: ComponentType,
   operator: OperatorName
 ) {
-  return getConditionals(fieldType)[operator]
+  return getConditionals(fieldType)?.[operator]
 }
 
 function getConditionals(
-  fieldType: ConditionalComponentType
-): Partial<Conditionals> {
-  if (fieldType in customOperators) {
-    return customOperators[fieldType]
+  fieldType: ComponentType
+): Partial<Conditionals> | undefined {
+  if (!isConditionalType(fieldType)) {
+    return
   }
 
-  return defaultOperators
+  return fieldType in customOperators
+    ? customOperators[fieldType]
+    : defaultOperators
 }
 
 function inline(operator: Operator): OperatorDefinition {

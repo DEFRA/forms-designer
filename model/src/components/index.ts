@@ -1,7 +1,4 @@
-export {
-  ComponentTypes,
-  ConditionalComponentTypes
-} from '~/src/components/component-types.js'
+export { ComponentTypes } from '~/src/components/component-types.js'
 export {
   hasConditionSupport,
   hasContentField,
