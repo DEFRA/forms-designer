@@ -5,7 +5,8 @@ import {
   relativeDateOrTimeOperatorNames,
   ComponentType,
   ConditionValue,
-  type OperatorName
+  type OperatorName,
+  type ConditionalComponentType
 } from '@defra/forms-model'
 import React from 'react'
 
@@ -17,22 +18,34 @@ import { TextValues } from '~/src/conditions/TextValues.jsx'
 import { tryParseInt } from '~/src/conditions/inline-condition-helpers.js'
 
 function DateTimeComponent(
-  fieldType: ComponentType.DatePartsField | ComponentType.TimeField,
+  fieldType: ConditionalComponentType,
   operator: OperatorName
 ) {
   const operatorConfig = getOperatorConfig(fieldType, operator)
 
-  const absoluteDateTimeRenderFunctions = {
-    [ComponentType.DatePartsField]: AbsoluteDateValues,
-    [ComponentType.TimeField]: AbsoluteTimeValues
-  }
+  let CustomRendering:
+    | typeof AbsoluteDateValues
+    | typeof AbsoluteTimeValues
+    | undefined
 
-  const CustomRendering = absoluteDateTimeRenderFunctions[fieldType]
+  switch (fieldType) {
+    case ComponentType.DatePartsField:
+      CustomRendering = AbsoluteDateValues
+      break
+
+    case ComponentType.TimeField:
+      CustomRendering = AbsoluteTimeValues
+      break
+  }
 
   if (absoluteDateOrTimeOperatorNames.includes(operator)) {
     const pad = (num: number) => num.toString().padStart(2, '0')
 
     return function CustomRenderingWrapper({ value, updateValue }) {
+      if (!CustomRendering) {
+        return null
+      }
+
       const transformUpdatedValue = (value) => {
         let transformed
         switch (fieldType) {
