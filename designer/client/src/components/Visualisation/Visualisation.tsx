@@ -9,7 +9,6 @@ import {
 import { DataContext } from '~/src/context/DataContext.js'
 
 interface Props {
-  id: string
   slug: string
   previewUrl: string
 }
@@ -31,7 +30,7 @@ export function Visualisation(props: Props) {
   const { layout } = useVisualisation(ref)
   const { data } = useContext(DataContext)
 
-  const { previewUrl, id, slug } = props
+  const { previewUrl, slug } = props
   const { pages } = data
 
   const wrapperStyle = layout && {
@@ -50,7 +49,6 @@ export function Visualisation(props: Props) {
                 page={page}
                 previewUrl={previewUrl}
                 layout={layout?.nodes[index]}
-                id={id}
                 slug={slug}
               />
             ))}

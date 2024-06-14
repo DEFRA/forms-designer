@@ -44,7 +44,7 @@ describe('Menu', () => {
   afterEach(cleanup)
 
   it('Renders button strings correctly', () => {
-    customRender(<Menu />)
+    customRender(<Menu id="1234" />)
 
     expect(getByText('Add page')).toBeInTheDocument()
     expect(getByText('Add link')).toBeInTheDocument()
@@ -56,7 +56,7 @@ describe('Menu', () => {
   })
 
   it('Can open flyouts and close them', async () => {
-    customRender(<Menu />)
+    customRender(<Menu id="1234" />)
     expect(queryByTestId('flyout-1')).not.toBeInTheDocument()
 
     await act(() => userEvent.click(getByText('Summary behaviour')))
@@ -67,7 +67,7 @@ describe('Menu', () => {
   })
 
   it('clicking on a summary tab shows different tab content', async () => {
-    customRender(<Menu />)
+    customRender(<Menu id="1234" />)
 
     await act(() => userEvent.click(getByText('Summary')))
     expect(getByTestId('flyout-1')).toBeVisible()
@@ -95,7 +95,7 @@ describe('Menu', () => {
   })
 
   it('flyouts close on Save', async () => {
-    customRender(<Menu />)
+    customRender(<Menu id="1234" />)
 
     await act(() => userEvent.click(getByText('Summary behaviour')))
     expect(queryByTestId('flyout-1')).toBeInTheDocument()

@@ -87,7 +87,7 @@ describe('Page', () => {
       <Page
         page={data.pages[0]}
         previewUrl={'https://localhost:3009'}
-        id={'aa'}
+        slug={'aa'}
         layout={{}}
       />,
       providerProps
@@ -111,7 +111,7 @@ describe('Page', () => {
       <Page
         page={data.pages[0]}
         previewUrl={'https://localhost:3009'}
-        id={'aa'}
+        slug={'aa'}
         layout={{}}
       />,
       providerProps
@@ -129,7 +129,7 @@ describe('Page', () => {
       <Page
         page={data.pages[0]}
         previewUrl={'https://localhost:3009'}
-        id={'aa'}
+        slug={'aa'}
         layout={{}}
       />,
       providerProps
@@ -145,7 +145,7 @@ describe('Page', () => {
       <Page
         page={data.pages[0]}
         previewUrl={'https://localhost:3009'}
-        id={'aa'}
+        slug={'aa'}
         layout={{}}
       />,
       providerProps

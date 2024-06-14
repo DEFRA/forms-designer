@@ -22,28 +22,44 @@ describe('Forms library routes', () => {
   /**
    * @satisfies {FormMetadataAuthor}
    */
-  const author = { id: authorId, displayName: authorDisplayName }
+  const author = {
+    id: authorId,
+    displayName: authorDisplayName
+  }
+
+  /**
+   * @satisfies {FormMetadata}
+   */
+  const formMetadata = {
+    id: '661e4ca5039739ef2902b214',
+    slug: 'my-form-slug',
+    title: 'Test form',
+    organisation: 'Defra',
+    teamName: 'Defra Forms',
+    teamEmail: 'defraforms@defra.gov.uk',
+    draft: {
+      createdAt: now,
+      createdBy: author,
+      updatedAt: now,
+      updatedBy: author
+    }
+  }
+
+  /**
+   * @satisfies {FormDefinition}
+   */
+  const formDefinition = {
+    name: 'Test form',
+    pages: [],
+    conditions: [],
+    sections: [],
+    lists: []
+  }
 
   test('Forms library list page', async () => {
-    const title = 'My form slug'
+    const { title } = formMetadata
 
-    // Mock the api call to forms-manager
-    jest.mocked(forms.list).mockResolvedValueOnce([
-      {
-        id: '661e4ca5039739ef2902b214',
-        title,
-        slug: 'my-form-slug',
-        organisation: 'Defra',
-        teamName: 'Forms',
-        teamEmail: 'defraforms@defra.gov.uk',
-        draft: {
-          createdAt: now,
-          createdBy: author,
-          updatedAt: now,
-          updatedBy: author
-        }
-      }
-    ])
+    jest.mocked(forms.list).mockResolvedValueOnce([formMetadata])
 
     const options = {
       method: 'GET',
@@ -62,24 +78,10 @@ describe('Forms library routes', () => {
   })
 
   test('Form editor page', async () => {
-    const id = '661e4ca5039739ef2902b214'
-    const slug = 'my-form-slug'
-
-    // Mock the api call to forms-manager
-    jest.mocked(forms.get).mockResolvedValueOnce({
-      id,
-      slug,
-      title: 'My form slug',
-      organisation: 'Defra',
-      teamName: 'Forms',
-      teamEmail: 'defraforms@defra.gov.uk',
-      draft: {
-        createdAt: now,
-        createdBy: author,
-        updatedAt: now,
-        updatedBy: author
-      }
-    })
+    jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(formDefinition)
 
     const options = {
       method: 'get',
@@ -89,36 +91,38 @@ describe('Forms library routes', () => {
 
     const { document } = await renderResponse(server, options)
 
-    const $editor = document.querySelector('.app-editor')
-    expect($editor).toHaveAttribute('data-id', id)
-    expect($editor).toHaveAttribute('data-slug', slug)
+    const $editor = document.querySelector('.app-form-editor')
+    const $metadata = document.querySelector('.app-form-metadata')
+    const $definition = document.querySelector('.app-form-definition')
+
     expect($editor).toHaveAttribute('data-preview-url', config.previewUrl)
+
+    expect(
+      $metadata?.textContent && JSON.parse($metadata.textContent)
+    ).toMatchObject({
+      ...formMetadata,
+
+      draft: {
+        ...formMetadata.draft,
+
+        // Dates in JSON are stringified
+        createdAt: now.toISOString(),
+        updatedAt: now.toISOString()
+      }
+    })
+
+    expect(
+      $definition?.textContent && JSON.parse($definition.textContent)
+    ).toMatchObject(formDefinition)
   })
 
   test('Form overview has draft buttons in side bar', async () => {
-    const id = '661e4ca5039739ef2902b214'
-    const slug = 'my-form-slug'
-
-    // Mock the api call to forms-manager
     jest.mocked(forms.get).mockResolvedValueOnce({
-      id,
-      slug,
-      title: 'My form slug',
-      organisation: 'Defra',
-      teamName: 'Forms',
-      teamEmail: 'defraforms@defra.gov.uk',
-      live: {
-        createdAt: new Date(),
-        createdBy: {
-          displayName: 'Joe Bloggs',
-          id: '1234'
-        },
-        updatedAt: new Date(),
-        updatedBy: {
-          displayName: 'Joe Bloggs',
-          id: '1234'
-        }
-      }
+      ...formMetadata,
+
+      // Switch draft with live for test
+      live: formMetadata.draft,
+      draft: undefined
     })
 
     const options = {
@@ -137,30 +141,7 @@ describe('Forms library routes', () => {
   })
 
   test('Form overview has live buttons in side bar', async () => {
-    const id = '661e4ca5039739ef2902b214'
-    const slug = 'my-form-slug'
-
-    // Mock the api call to forms-manager
-    jest.mocked(forms.get).mockResolvedValueOnce({
-      id,
-      slug,
-      title: 'My form slug',
-      organisation: 'Defra',
-      teamName: 'Forms',
-      teamEmail: 'defraforms@defra.gov.uk',
-      draft: {
-        createdAt: new Date(),
-        createdBy: {
-          displayName: 'Joe Bloggs',
-          id: '1234'
-        },
-        updatedAt: new Date(),
-        updatedBy: {
-          displayName: 'Joe Bloggs',
-          id: '1234'
-        }
-      }
-    })
+    jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
 
     const options = {
       method: 'get',
@@ -180,5 +161,7 @@ describe('Forms library routes', () => {
 })
 
 /**
+ * @typedef {import('@defra/forms-model').FormDefinition} FormDefinition
+ * @typedef {import('@defra/forms-model').FormMetadata} FormMetadata
  * @typedef {import('@defra/forms-model').FormMetadataAuthor} FormMetadataAuthor
  */

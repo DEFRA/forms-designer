@@ -1,4 +1,4 @@
-import { type FormDefinition } from '@defra/forms-model'
+import { type FormDefinition, type FormMetadata } from '@defra/forms-model'
 import React, { Component } from 'react'
 
 import { Menu } from '~/src/components/Menu/Menu.jsx'
@@ -8,30 +8,26 @@ import { FlyoutContext } from '~/src/context/FlyoutContext.js'
 import * as form from '~/src/lib/form.js'
 
 interface Props {
-  id: string
-  slug: string
+  metadata: FormMetadata
+  definition: FormDefinition
   previewUrl: string
 }
 
 interface State {
   flyoutCount?: number
-  loading?: boolean
   data?: FormDefinition
 }
 
 export class Designer extends Component<Props, State> {
-  state: State = { loading: true, flyoutCount: 0 }
+  constructor(props: Props) {
+    super(props)
 
-  get id() {
-    return this.props.id
-  }
+    const { definition } = this.props
 
-  get slug() {
-    return this.props.slug
-  }
-
-  get previewUrl() {
-    return this.props.previewUrl
+    this.state = {
+      data: definition,
+      flyoutCount: 0
+    }
   }
 
   incrementFlyoutCounter = () => {
@@ -45,7 +41,8 @@ export class Designer extends Component<Props, State> {
   }
 
   get = async () => {
-    const definition = await form.get(this.id)
+    const { metadata } = this.props
+    const definition = await form.get(metadata.id)
 
     this.setState({
       data: definition
@@ -55,23 +52,15 @@ export class Designer extends Component<Props, State> {
   }
 
   save = async (definition: FormDefinition) => {
-    await form.save(this.id, definition)
+    const { metadata } = this.props
+
+    await form.save(metadata.id, definition)
     return this.get()
   }
 
-  async componentDidMount() {
-    await this.get()
-
-    this.setState({
-      loading: false
-    })
-  }
-
   render() {
-    const { flyoutCount, data, loading } = this.state
-    if (loading) {
-      return <p className="govuk-body">Loading ...</p>
-    }
+    const { metadata, previewUrl } = this.props
+    const { data, flyoutCount } = this.state
 
     const flyoutContextProviderValue = {
       count: flyoutCount,
@@ -83,12 +72,8 @@ export class Designer extends Component<Props, State> {
       <DataContext.Provider value={dataContextProviderValue}>
         <FlyoutContext.Provider value={flyoutContextProviderValue}>
           <div id="designer">
-            <Menu id={this.id} />
-            <Visualisation
-              id={this.id}
-              slug={this.slug}
-              previewUrl={this.previewUrl}
-            />
+            <Menu id={metadata.id} />
+            <Visualisation slug={metadata.slug} previewUrl={previewUrl} />
           </div>
         </FlyoutContext.Provider>
       </DataContext.Provider>

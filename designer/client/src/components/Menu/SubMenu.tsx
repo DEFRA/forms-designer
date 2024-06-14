@@ -3,7 +3,7 @@ import React, { useContext, useRef } from 'react'
 import { DataContext } from '~/src/context/DataContext.js'
 
 interface Props {
-  id?: string
+  id: string
 }
 
 export function SubMenu({ id }: Props) {

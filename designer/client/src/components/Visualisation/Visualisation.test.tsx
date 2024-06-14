@@ -57,7 +57,7 @@ describe('Visualisation', () => {
     }
 
     const { rerender } = customRender(
-      <Visualisation previewUrl={'http://localhost:3000'} id={'aa'} />,
+      <Visualisation previewUrl={'http://localhost:3000'} slug={'aa'} />,
       providerProps
     )
 
@@ -77,12 +77,12 @@ describe('Visualisation', () => {
       path: '/3'
     }
 
-    await rerender.call(
+    rerender.call(
       {
         data: { ...data, pages: [...data.pages, newPage] },
         save: jest.fn()
       },
-      <Visualisation previewUrl={'http://localhost:3000'} id={'aa'} />
+      <Visualisation previewUrl={'http://localhost:3000'} slug={'aa'} />
     )
 
     await waitFor(() =>
@@ -113,7 +113,7 @@ describe('Visualisation', () => {
     }
 
     customRender(
-      <Visualisation previewUrl={'http://localhost:3000'} id={'aa'} />,
+      <Visualisation previewUrl={'http://localhost:3000'} slug={'aa'} />,
       providerProps
     )
 
@@ -126,7 +126,7 @@ describe('Visualisation', () => {
     expect(queryByTestId('flyout-0')).not.toBeInTheDocument()
 
     await act(async () => {
-      $lineTitle.parentElement!.focus()
+      $lineTitle.parentElement?.focus()
       await userEvent.keyboard('[Enter]')
     })
 

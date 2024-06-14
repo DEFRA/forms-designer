@@ -15,10 +15,8 @@
 {% block content %}
   {{ appPageBody({
     heading: pageHeading,
-    classes: "govuk-grid-column-full app-editor",
+    classes: "govuk-grid-column-full app-form-editor",
     attributes: {
-      "data-id": form.id,
-      "data-slug": form.slug,
       "data-preview-url": previewUrl
     }
   }) }}
@@ -29,4 +27,14 @@
 {% block bodyEnd %}
   {{ super() }}
   <script type="module" src="{{ getAssetPath("editor.js") }}"></script>
+
+  <!-- Form metadata JSON -->
+  <script type="application/json" class="app-form-metadata">
+    {{ form | formatJSON | safe | indent(4) }}
+  </script>
+
+  <!-- Form definition JSON -->
+  <script type="application/json" class="app-form-definition">
+    {{ formDefinition | formatJSON | safe | indent(4) }}
+  </script>
 {% endblock %}

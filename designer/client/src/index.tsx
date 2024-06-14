@@ -1,3 +1,4 @@
+import { type FormMetadata, type FormDefinition } from '@defra/forms-model'
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 
@@ -9,23 +10,44 @@ initI18n().catch((error: unknown) => {
   logger.error(error, 'I18n')
 })
 
-const container = document.querySelector('.app-editor')
+const $container = document.querySelector('.app-form-editor')
+const $definition = document.querySelector('.app-form-definition')
+const $metadata = document.querySelector('.app-form-metadata')
 
 export class App extends Component {
   render() {
     if (
-      !(container instanceof HTMLElement) ||
-      !container.dataset.id ||
-      !container.dataset.slug ||
-      !container.dataset.previewUrl
+      !($container instanceof HTMLElement) ||
+      !($metadata instanceof HTMLScriptElement) ||
+      !($definition instanceof HTMLScriptElement) ||
+      !$container.dataset.previewUrl ||
+      !$definition.textContent ||
+      !$metadata.textContent
     ) {
-      throw new Error('Missing form data attributes')
+      throw new Error('Missing form data')
+    }
+
+    let definition: FormDefinition | undefined
+    let metadata: FormMetadata | undefined
+
+    try {
+      definition = JSON.parse($definition.textContent) as FormDefinition
+      metadata = JSON.parse($metadata.textContent) as FormMetadata
+    } catch (error) {
+      logger.error(error, 'App')
+      throw error
     }
 
     // Extract from HTML data-* attributes
-    const { id, slug, previewUrl } = container.dataset
-    return <Designer id={id} slug={slug} previewUrl={previewUrl} />
+    const { previewUrl } = $container.dataset
+    return (
+      <Designer
+        metadata={metadata}
+        definition={definition}
+        previewUrl={previewUrl}
+      />
+    )
   }
 }
 
-ReactDOM.render(<App />, container)
+ReactDOM.render(<App />, $container)
