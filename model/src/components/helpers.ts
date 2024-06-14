@@ -3,6 +3,7 @@ import {
   type InputFieldsComponentsDef,
   type ComponentDef,
   type ConditionalComponentsDef,
+  type ConditionalComponentType,
   type ContentComponentsDef,
   type HtmlComponent,
   type InsetTextComponent,
@@ -17,6 +18,12 @@ import {
 export function hasConditionSupport(
   component?: Partial<ComponentDef>
 ): component is ConditionalComponentsDef {
+  return isConditionalType(component?.type)
+}
+
+export function isConditionalType(
+  type?: ComponentType
+): type is ConditionalComponentType {
   const allowedTypes = [
     ComponentType.CheckboxesField,
     ComponentType.DatePartsField,
@@ -28,7 +35,7 @@ export function hasConditionSupport(
     ComponentType.YesNoField
   ]
 
-  return !!component?.type && allowedTypes.includes(component.type)
+  return !!type && allowedTypes.includes(type)
 }
 
 /**
