@@ -2,11 +2,11 @@ import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 
 import { Designer } from '~/src/Designer.jsx'
+import { logger } from '~/src/common/helpers/logging/logger.js'
 import { initI18n } from '~/src/i18n/i18n.jsx'
-import logger from '~/src/plugins/logger.js'
 
-initI18n().catch((err: unknown) => {
-  logger.error('I18n', err)
+initI18n().catch((error: unknown) => {
+  logger.error(error, 'I18n')
 })
 
 const container = document.querySelector('.app-editor')

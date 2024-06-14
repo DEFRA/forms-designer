@@ -1,6 +1,6 @@
 import { type FormDefinition } from '@defra/forms-model'
 
-import logger from '~/src/plugins/logger.js'
+import { logger } from '~/src/common/helpers/logging/logger.js'
 
 export class DesignerApi {
   async save(id: string, updatedData: FormDefinition): Promise<Response | any> {
@@ -23,8 +23,8 @@ export class DesignerApi {
     try {
       const response = await window.fetch(`/api/${id}/data`)
       return response.json()
-    } catch (e) {
-      logger.error('fetchData', e)
+    } catch (error) {
+      logger.error(error, 'fetchData')
     }
   }
 }
