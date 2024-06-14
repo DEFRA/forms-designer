@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 
 import { TextFieldEdit } from '~/src/components/FieldEditors/TextFieldEdit.jsx'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
-import { Actions } from '~/src/reducers/component/types.js'
+import { Options } from '~/src/reducers/component/types.js'
 
 export function MultilineTextFieldEdit({ context = ComponentContext }) {
   const { state, dispatch } = useContext(context)
@@ -20,7 +20,7 @@ export function MultilineTextFieldEdit({ context = ComponentContext }) {
         value={options.rows || ''}
         onChange={(e) =>
           dispatch({
-            type: Actions.EDIT_OPTIONS_ROWS,
+            type: Options.EDIT_OPTIONS_ROWS,
             payload: e.target.value
           })
         }

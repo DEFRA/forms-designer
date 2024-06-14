@@ -5,7 +5,7 @@ import { CssClasses } from '~/src/components/CssClasses/CssClasses.jsx'
 import { CustomValidationMessage } from '~/src/components/CustomValidationMessage/CustomValidationMessage.jsx'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
-import { Actions } from '~/src/reducers/component/types.js'
+import { Options, Schema } from '~/src/reducers/component/types.js'
 
 interface Props {
   context: any // TODO
@@ -46,7 +46,7 @@ export function TextFieldEdit({ children, context = ComponentContext }: Props) {
           type="number"
           onChange={(e) =>
             dispatch({
-              type: Actions.EDIT_SCHEMA_MIN,
+              type: Schema.EDIT_SCHEMA_MIN,
               payload: e.target.value
             })
           }
@@ -72,7 +72,7 @@ export function TextFieldEdit({ children, context = ComponentContext }: Props) {
           type="number"
           onChange={(e) =>
             dispatch({
-              type: Actions.EDIT_SCHEMA_MAX,
+              type: Schema.EDIT_SCHEMA_MAX,
               payload: e.target.value
             })
           }
@@ -98,7 +98,7 @@ export function TextFieldEdit({ children, context = ComponentContext }: Props) {
           type="number"
           onChange={(e) =>
             dispatch({
-              type: Actions.EDIT_OPTIONS_MAX_WORDS,
+              type: Options.EDIT_OPTIONS_MAX_WORDS,
               payload: e.target.value
             })
           }
@@ -124,7 +124,7 @@ export function TextFieldEdit({ children, context = ComponentContext }: Props) {
           type="number"
           onChange={(e) =>
             dispatch({
-              type: Actions.EDIT_SCHEMA_LENGTH,
+              type: Schema.EDIT_SCHEMA_LENGTH,
               payload: e.target.value
             })
           }
@@ -148,7 +148,7 @@ export function TextFieldEdit({ children, context = ComponentContext }: Props) {
           value={schema.regex || ''}
           onChange={(e) =>
             dispatch({
-              type: Actions.EDIT_SCHEMA_REGEX,
+              type: Schema.EDIT_SCHEMA_REGEX,
               payload: e.target.value
             })
           }

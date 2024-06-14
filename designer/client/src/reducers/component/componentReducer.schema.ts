@@ -4,7 +4,7 @@ export function schemaReducer(
   state,
   action: {
     type: Schema
-    payload: any
+    payload?: unknown
   }
 ) {
   const { type, payload } = action

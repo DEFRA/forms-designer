@@ -3,7 +3,7 @@ import React, { useContext } from 'react'
 import { CssClasses } from '~/src/components/CssClasses/CssClasses.jsx'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
-import { Actions } from '~/src/reducers/component/types.js'
+import { Options } from '~/src/reducers/component/types.js'
 
 interface Props {
   context: any // TODO
@@ -43,7 +43,7 @@ export function DateFieldEdit({ context = ComponentContext }: Props) {
           type="number"
           onChange={(e) =>
             dispatch({
-              type: Actions.EDIT_OPTIONS_MAX_DAYS_IN_PAST,
+              type: Options.EDIT_OPTIONS_MAX_DAYS_IN_PAST,
               payload: e.target.value
             })
           }
@@ -69,7 +69,7 @@ export function DateFieldEdit({ context = ComponentContext }: Props) {
           type="number"
           onChange={(e) =>
             dispatch({
-              type: Actions.EDIT_OPTIONS_MAX_DAYS_IN_FUTURE,
+              type: Options.EDIT_OPTIONS_MAX_DAYS_IN_FUTURE,
               payload: e.target.value
             })
           }

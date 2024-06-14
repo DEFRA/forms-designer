@@ -7,7 +7,7 @@ interface ConditionAction {
 
 interface AnyAction {
   type: Options
-  payload: any
+  payload?: unknown
 }
 
 type OptionsActions = ConditionAction | AnyAction

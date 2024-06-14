@@ -38,7 +38,10 @@ export const ListContext = createContext<{
  */
 export function listReducer(
   state: ListState = {},
-  action: { type: ListActions; payload: any }
+  action: {
+    type: ListActions
+    payload?: unknown
+  }
 ): ListState {
   const { type, payload } = action
   const { selectedList, selectedItem, selectedItemIndex } = state
@@ -178,7 +181,7 @@ export function listReducer(
 }
 
 /**
- * Allows components to retrieve {@link ListState} and {@link dispatch} from any component nested within `<ListContextProvider>`
+ * Allows components to retrieve {@link ListState} and {@link Dispatch} from any component nested within `<ListContextProvider>`
  */
 export const ListContextProvider = (props: {
   children?: ReactNode

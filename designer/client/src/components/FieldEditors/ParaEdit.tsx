@@ -5,7 +5,7 @@ import { Editor } from '~/src/Editor.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
-import { Actions } from '~/src/reducers/component/types.js'
+import { Fields, Options } from '~/src/reducers/component/types.js'
 
 interface Props {
   context: any // TODO
@@ -33,7 +33,7 @@ export function ParaEdit({ context = ComponentContext }: Props) {
           value={selectedComponent.content}
           onValueChange={(content) => {
             dispatch({
-              type: Actions.EDIT_CONTENT,
+              type: Fields.EDIT_CONTENT,
               payload: content
             })
           }}
@@ -52,7 +52,7 @@ export function ParaEdit({ context = ComponentContext }: Props) {
             value={options.condition}
             onChange={(e) =>
               dispatch({
-                type: Actions.EDIT_OPTIONS_CONDITION,
+                type: Options.EDIT_OPTIONS_CONDITION,
                 payload: e.target.value
               })
             }

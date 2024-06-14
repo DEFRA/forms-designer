@@ -5,7 +5,7 @@ import React, { useContext } from 'react'
 import { ErrorMessage } from '~/src/components/ErrorMessage/ErrorMessage.jsx'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
-import { Actions } from '~/src/reducers/component/types.js'
+import { Fields } from '~/src/reducers/component/types.js'
 
 interface Props {
   context: any // TODO
@@ -32,7 +32,7 @@ export function DetailsEdit({ context = ComponentContext }: Props) {
         value={selectedComponent.title}
         onChange={(e) =>
           dispatch({
-            type: Actions.EDIT_TITLE,
+            type: Fields.EDIT_TITLE,
             payload: e.target.value
           })
         }
@@ -64,7 +64,7 @@ export function DetailsEdit({ context = ComponentContext }: Props) {
           rows="10"
           onChange={(e) =>
             dispatch({
-              type: Actions.EDIT_CONTENT,
+              type: Fields.EDIT_CONTENT,
               payload: e.target.value
             })
           }

@@ -6,7 +6,7 @@ export function metaReducer(
   state,
   action: {
     type: Meta
-    payload: any
+    payload?: unknown
   }
 ) {
   const { type, payload } = action

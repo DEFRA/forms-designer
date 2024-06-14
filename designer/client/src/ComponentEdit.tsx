@@ -6,7 +6,7 @@ import { ErrorSummary } from '~/src/ErrorSummary.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { updateComponent } from '~/src/data/component/updateComponent.js'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
-import { Actions } from '~/src/reducers/component/types.js'
+import { Meta } from '~/src/reducers/component/types.js'
 import { hasValidationErrors } from '~/src/validations.js'
 
 export function ComponentEdit(props) {
@@ -27,7 +27,7 @@ export function ComponentEdit(props) {
     e?.preventDefault()
 
     if (!hasValidated) {
-      dispatch({ type: Actions.VALIDATE })
+      dispatch({ type: Meta.VALIDATE })
       return
     }
 
