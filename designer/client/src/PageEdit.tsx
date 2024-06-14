@@ -127,6 +127,7 @@ export class PageEdit extends Component {
     copy.pages.splice(copyPageIdx, 1)
     try {
       await save(copy)
+      this.props.onEdit()
     } catch (error) {
       logger.error(error, 'PageEdit')
     }
