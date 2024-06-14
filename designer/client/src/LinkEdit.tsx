@@ -76,9 +76,11 @@ export class LinkEdit extends Component {
   }
 
   render() {
-    const { data, edge } = this.props
-    const { pages } = data
+    const { edge } = this.props
+    const { data } = this.context
     const { selectedCondition } = this.state
+    const { pages } = data
+
     return (
       <form onSubmit={(e) => this.onSubmit(e)} autoComplete="off">
         <div className="govuk-form-group">

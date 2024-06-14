@@ -39,13 +39,14 @@ export class SectionEdit extends Component {
     if (hasValidationErrors(validationErrors)) return
 
     const { data, save } = this.context
+    const { section } = this.props
     const { name, title, hideTitle } = this.state
     let updated = { ...data }
 
     if (this.isNewSection) {
       updated = addSection(data, { name, title: title.trim(), hideTitle })
     } else {
-      const previousName = this.props.section?.name
+      const previousName = section?.name
       const nameChanged = previousName !== name
       const copySection = updated.sections.find(
         (section) => section.name === previousName
@@ -108,10 +109,11 @@ export class SectionEdit extends Component {
       return
     }
 
-    const { save } = this.context
-    const { data, section } = this.props
+    const { data, save } = this.context
+    const { section } = this.props
+
     const copy = { ...data }
-    const previousName = this.props.section?.name
+    const previousName = section?.name
 
     copy.sections.splice(copy.sections.indexOf(section), 1)
 

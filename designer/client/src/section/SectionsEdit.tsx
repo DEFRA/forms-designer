@@ -75,11 +75,7 @@ export class SectionsEdit extends Component {
               show={isEditingSection}
               onHide={this.closeFlyout}
             >
-              <SectionEdit
-                section={section}
-                data={data}
-                closeFlyout={this.closeFlyout}
-              />
+              <SectionEdit section={section} closeFlyout={this.closeFlyout} />
             </Flyout>
           </RenderInPortal>
         )}
