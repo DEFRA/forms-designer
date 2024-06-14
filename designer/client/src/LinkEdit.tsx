@@ -36,7 +36,13 @@ export class LinkEdit extends Component<Props, State> {
     const { data } = this.context
 
     const [page] = findPage(data, edge.source)
-    const link = page.next.find((n) => n.path === edge.target)
+    const link = page.next?.find((n) => n.path === edge.target)
+
+    if (!link) {
+      throw new Error(
+        `Link not found from '${edge.source}' to '${edge.target}'`
+      )
+    }
 
     this.state = {
       page,
@@ -76,16 +82,25 @@ export class LinkEdit extends Component<Props, State> {
     const { link, page } = this.state
     const { data, save } = this.context
 
-    const copy = { ...data }
-    const [copyPage] = findPage(data, page.path)
-    const copyLinkIdx = copyPage.next.findIndex((n) => n.path === link.path)
-    copyPage.next.splice(copyLinkIdx, 1)
-    copy.pages = copy.pages.map((page) =>
-      page.path === copyPage.path ? copyPage : page
+    const [fromPage] = findPage(data, page.path)
+
+    const toLinkIndex =
+      fromPage.next?.findIndex((n) => n.path === link.path) ?? -1
+
+    if (!fromPage.next || toLinkIndex < 0) {
+      throw Error('Could not find page or links to delete')
+    }
+
+    fromPage.next.splice(toLinkIndex, 1)
+
+    const pages = [...data.pages].map((page) =>
+      page.path === fromPage.path ? fromPage : page
     )
 
+    const updatedData = { ...data, pages }
+
     try {
-      await save(copy)
+      await save(updatedData)
       this.props.onEdit()
     } catch (error) {
       logger.error(error, 'LinkEdit')
