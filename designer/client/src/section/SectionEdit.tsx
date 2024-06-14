@@ -1,5 +1,5 @@
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
-import React, { createRef, Component } from 'react'
+import React, { createRef, Component, type ContextType } from 'react'
 
 import { type ErrorList, ErrorSummary } from '~/src/ErrorSummary.jsx'
 import { logger } from '~/src/common/helpers/logging/logger.js'
@@ -14,10 +14,12 @@ import {
 } from '~/src/validations.js'
 
 export class SectionEdit extends Component {
+  declare context: ContextType<typeof DataContext>
   static contextType = DataContext
 
-  constructor(props) {
-    super(props)
+  constructor(props, context) {
+    super(props, context)
+
     this.closeFlyout = props.closeFlyout
     const { section } = props
     this.isNewSection = !section?.name

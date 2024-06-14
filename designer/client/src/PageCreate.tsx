@@ -1,5 +1,5 @@
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
-import React, { Component } from 'react'
+import React, { Component, type ContextType } from 'react'
 
 import { type ErrorList, ErrorSummary } from '~/src/ErrorSummary.jsx'
 import { logger } from '~/src/common/helpers/logging/logger.js'
@@ -16,11 +16,14 @@ import { SectionEdit } from '~/src/section/SectionEdit.jsx'
 import { validateTitle, hasValidationErrors } from '~/src/validations.js'
 
 export class PageCreate extends Component {
+  declare context: ContextType<typeof DataContext>
   static contextType = DataContext
 
   constructor(props, context) {
     super(props, context)
+
     const { page } = this.props
+
     this.state = {
       path: '/',
       controller: page?.controller ?? '',

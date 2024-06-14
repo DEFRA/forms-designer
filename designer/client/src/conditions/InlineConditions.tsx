@@ -1,6 +1,11 @@
 import { ConditionsModel, clone, type Item } from '@defra/forms-model'
 import classNames from 'classnames'
-import React, { Component, type MouseEvent, type ChangeEvent } from 'react'
+import React, {
+  Component,
+  type ChangeEvent,
+  type ContextType,
+  type MouseEvent
+} from 'react'
 
 import { ErrorSummary, type ErrorListItem } from '~/src/ErrorSummary.jsx'
 import { ErrorMessage } from '~/src/components/ErrorMessage/ErrorMessage.jsx'
@@ -42,10 +47,12 @@ const yesNoValues: Readonly<Item> = [
 ]
 
 export class InlineConditions extends Component<Props, State> {
+  declare context: ContextType<typeof DataContext>
   static contextType = DataContext
 
   constructor(props, context) {
     super(props, context)
+
     const { path, condition } = this.props
 
     const conditions =

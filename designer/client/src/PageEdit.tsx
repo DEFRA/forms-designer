@@ -1,6 +1,6 @@
 import { clone } from '@defra/forms-model'
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
-import React, { Component, createRef } from 'react'
+import React, { Component, createRef, type ContextType } from 'react'
 
 import { type ErrorList, ErrorSummary } from '~/src/ErrorSummary.jsx'
 import { logger } from '~/src/common/helpers/logging/logger.js'
@@ -16,11 +16,14 @@ import { SectionEdit } from '~/src/section/SectionEdit.jsx'
 import { validateTitle, hasValidationErrors } from '~/src/validations.js'
 
 export class PageEdit extends Component {
+  declare context: ContextType<typeof DataContext>
   static contextType = DataContext
 
-  constructor(props) {
-    super(props)
+  constructor(props, context) {
+    super(props, context)
+
     const { page } = this.props
+
     this.state = {
       path: page?.path ?? this.generatePath(page.title),
       controller: page?.controller ?? '',
@@ -29,6 +32,7 @@ export class PageEdit extends Component {
       isEditingSection: false,
       errors: {}
     }
+
     this.formEditSection = createRef()
   }
 

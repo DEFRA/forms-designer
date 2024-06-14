@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, type ContextType } from 'react'
 
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
@@ -6,7 +6,9 @@ import { DataContext } from '~/src/context/DataContext.js'
 import { SectionEdit } from '~/src/section/SectionEdit.jsx'
 
 export class SectionsEdit extends Component {
+  declare context: ContextType<typeof DataContext>
   static contextType = DataContext
+
   state = {}
 
   onClickSection = (e, section) => {

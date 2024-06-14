@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import React, { Component } from 'react'
+import React, { Component, type ContextType } from 'react'
 
 import { ErrorSummary } from '~/src/ErrorSummary.jsx'
 import { logger } from '~/src/common/helpers/logging/logger.js'
@@ -10,7 +10,9 @@ import { addLink } from '~/src/data/page/addLink.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 
 export class LinkCreate extends Component {
+  declare context: ContextType<typeof DataContext>
   static contextType = DataContext
+
   state = { errors: {} }
 
   onSubmit = async (e) => {

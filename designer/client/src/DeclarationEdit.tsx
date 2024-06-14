@@ -1,15 +1,17 @@
 import { clone } from '@defra/forms-model'
-import React, { Component } from 'react'
+import React, { Component, type ContextType } from 'react'
 
 import { Editor } from '~/src/Editor.jsx'
 import { logger } from '~/src/common/helpers/logging/logger.js'
 import { DataContext } from '~/src/context/DataContext.js'
 
 export class DeclarationEdit extends Component {
+  declare context: ContextType<typeof DataContext>
   static contextType = DataContext
 
-  constructor(props) {
-    super(props)
+  constructor(props, context) {
+    super(props, context)
+
     this.onSubmit = this.onSubmit.bind(this)
   }
 

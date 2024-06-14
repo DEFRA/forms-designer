@@ -4,7 +4,7 @@ import {
   type FormDefinition
 } from '@defra/forms-model'
 import { Select } from '@xgovformbuilder/govuk-react-jsx'
-import React, { Component, type ChangeEvent } from 'react'
+import React, { Component, type ChangeEvent, type ContextType } from 'react'
 
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
@@ -45,6 +45,7 @@ export interface ConditionData {
 }
 
 export class SelectConditions extends Component<Props, State> {
+  declare context: ContextType<typeof DataContext>
   static contextType = DataContext
 
   constructor(props, context) {
