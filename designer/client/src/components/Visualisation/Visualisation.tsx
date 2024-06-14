@@ -12,7 +12,6 @@ interface Props {
   id: string
   slug: string
   previewUrl: string
-  persona?: any
 }
 
 export function useVisualisation(ref) {
@@ -32,7 +31,7 @@ export function Visualisation(props: Props) {
   const { layout } = useVisualisation(ref)
   const { data } = useContext(DataContext)
 
-  const { previewUrl, persona, id, slug } = props
+  const { previewUrl, id, slug } = props
   const { pages } = data
 
   const wrapperStyle = layout && {
@@ -56,7 +55,7 @@ export function Visualisation(props: Props) {
               />
             ))}
 
-            {layout && <Lines layout={layout} data={data} persona={persona} />}
+            {layout && <Lines layout={layout} data={data} />}
           </div>
         </div>
       </div>

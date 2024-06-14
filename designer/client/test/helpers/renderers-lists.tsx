@@ -14,12 +14,20 @@ const defaultFlyoutValue = {
   decrement: jest.fn(),
   count: 0
 }
-const defaultDataValue = { data: {}, save: jest.fn() }
+
+const defaultDataValue = {
+  save: jest.fn()
+}
+
 const defaultListsValue = {
   state: initListsEditingState(),
   dispatch: jest.fn()
 }
-const defaultListValue = { state: {}, dispatch: jest.fn() }
+
+const defaultListValue = {
+  state: {},
+  dispatch: jest.fn()
+}
 
 export function customRenderForLists(
   element: ReactElement,

@@ -1,5 +1,7 @@
 import { stdSerializers, type LogEvent, type LoggerOptions } from 'pino'
 
+import * as form from '~/src/lib/form.js'
+
 const logLevel = process.env.REACT_LOG_LEVEL
 
 export const loggerOptions = {
@@ -20,18 +22,7 @@ export const loggerOptions = {
             }
 
         // Submit log event request
-        const response = await window.fetch('/api/log', {
-          method: 'POST',
-          body: JSON.stringify({ level, ...body }),
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json'
-          }
-        })
-
-        if (!response.ok) {
-          throw Error(response.statusText)
-        }
+        return form.log(level, body)
       }
     }
   }
