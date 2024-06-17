@@ -98,7 +98,7 @@ describe('updateStartPage', () => {
     expect(returned.startPage).toBeUndefined()
   })
 
-  it('should skip start page update when multiple journeys are possible', () => {
+  it('should remove start page update when multiple journeys are possible', () => {
     const pages = structuredClone(data.pages)
 
     pages[0].next = [{ path: pages[2].path }]
@@ -112,11 +112,11 @@ describe('updateStartPage', () => {
 
     const returned = updateStartPage(updated)
 
-    expect(returned).toEqual(updated)
-    expect(returned).toBe(updated)
+    expect(returned.pages).toBe(updated.pages)
+    expect(returned.startPage).toBeUndefined()
   })
 
-  it('should skip start page update when no journeys are possible', () => {
+  it('should remove start page when no journeys are possible', () => {
     const pages = structuredClone(data.pages)
 
     delete pages[0].next
@@ -130,8 +130,8 @@ describe('updateStartPage', () => {
 
     const returned = updateStartPage(updated)
 
-    expect(returned).toEqual(updated)
-    expect(returned).toBe(updated)
+    expect(returned.pages).toBe(updated.pages)
+    expect(returned.startPage).toBeUndefined()
   })
 
   it('should skip start page update without changes', () => {

@@ -13,7 +13,7 @@ import { type FormDefinition } from '~/src/form/form-definition/types.js'
  * @param data - Form definition
  */
 export function findStartPage(data: FormDefinition) {
-  const { pages, startPage } = data
+  const { pages } = data
 
   // Get a unique list of all pages that are linked to by other pages
   const pageReferences = new Set(
@@ -27,5 +27,7 @@ export function findStartPage(data: FormDefinition) {
     .filter((page) => !pageReferences.has(page))
 
   // We can only set the start page if there is a single one, else the user has made an error
-  return startPages.length === 1 ? startPages[0] : startPage
+  if (startPages.length === 1) {
+    return startPages[0]
+  }
 }
