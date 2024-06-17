@@ -1,6 +1,7 @@
 import {
   ComponentType,
   type ComponentDef,
+  type FormDefinition,
   type Page,
   type RepeatingFieldPage
 } from '@defra/forms-model'
@@ -218,12 +219,13 @@ export const componentTypes = {
 }
 
 export interface Props {
+  data: FormDefinition
   page: Page | RepeatingFieldPage
   component: ComponentDef
 }
 
 export const Component: FunctionComponent<Props> = (props) => {
-  const { page, component } = props
+  const { data, page, component } = props
 
   const [showEditor, setShowEditor] = useState<boolean>(false)
   const toggleShowEditor = () => setShowEditor(!showEditor)
@@ -240,7 +242,11 @@ export const Component: FunctionComponent<Props> = (props) => {
       </button>
       {showEditor && (
         <Flyout title={editFlyoutTitle} show={true} onHide={toggleShowEditor}>
-          <ComponentContextProvider pagePath={page.path} component={component}>
+          <ComponentContextProvider
+            pagePath={page.path}
+            component={component}
+            data={data}
+          >
             <ComponentEdit page={page} toggleShowEditor={toggleShowEditor} />
           </ComponentContextProvider>
         </Flyout>

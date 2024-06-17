@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, type ContextType } from 'react'
 
 import { logger } from '~/src/common/helpers/logging/logger.js'
 import { SelectConditions } from '~/src/conditions/SelectConditions.jsx'
@@ -8,12 +8,15 @@ import { updateLink } from '~/src/data/page/updateLink.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 
 export class LinkEdit extends Component {
+  declare context: ContextType<typeof DataContext>
   static contextType = DataContext
 
-  constructor(props, context) {
+  constructor(props, context: typeof DataContext) {
     super(props, context)
-    const { data } = this.context
+
     const { edge } = this.props
+    const { data } = this.context
+
     const [page] = findPage(data, edge.source)
     const link = page.next.find((n) => n.path === edge.target)
 
@@ -26,8 +29,10 @@ export class LinkEdit extends Component {
 
   onSubmit = async (e) => {
     e.preventDefault()
+
     const { link, page, selectedCondition } = this.state
     const { data, save } = this.context
+
     const updatedData = updateLink(
       data,
       page.path,
@@ -71,9 +76,11 @@ export class LinkEdit extends Component {
   }
 
   render() {
-    const { data, edge } = this.props
-    const { pages } = data
+    const { edge } = this.props
+    const { data } = this.context
     const { selectedCondition } = this.state
+    const { pages } = data
+
     return (
       <form onSubmit={(e) => this.onSubmit(e)} autoComplete="off">
         <div className="govuk-form-group">

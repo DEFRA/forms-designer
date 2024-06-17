@@ -1,4 +1,3 @@
-import { type FormDefinition } from '@defra/forms-model'
 import React, { Component, type KeyboardEvent } from 'react'
 
 import { LinkEdit } from '~/src/LinkEdit.jsx'
@@ -11,7 +10,6 @@ import { DataContext } from '~/src/context/DataContext.js'
 
 interface Props {
   layout: Layout['pos']
-  data: FormDefinition
 }
 
 interface State {
@@ -19,6 +17,7 @@ interface State {
 }
 
 export class Lines extends Component<Props, State> {
+  declare context: ContextType<typeof DataContext>
   static contextType = DataContext
 
   state = {
@@ -39,7 +38,6 @@ export class Lines extends Component<Props, State> {
 
   render() {
     const { layout } = this.props
-    const { data } = this.context
 
     return (
       <>
@@ -92,7 +90,6 @@ export class Lines extends Component<Props, State> {
           >
             <LinkEdit
               edge={this.state.showEditor}
-              data={data}
               onEdit={() => this.setState({ showEditor: false })}
             />
           </Flyout>

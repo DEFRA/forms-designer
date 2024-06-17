@@ -53,7 +53,7 @@ export function Visualisation(props: Props) {
               />
             ))}
 
-            {layout && <Lines layout={layout} data={data} />}
+            {layout && <Lines layout={layout} />}
           </div>
         </div>
       </div>
