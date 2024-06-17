@@ -5,8 +5,7 @@
 {% endset %}
 
 {% set formCreated %}
-  {{ (form.live.createdAt if form.live.createdAt else "2024-03-01") | formatDate }}
-  by {{ form.live.createdBy.displayName | default("Nathanael Booker", true) }}
+  {{ form.live.createdAt | formatDate }} by {{ form.live.createdBy.displayName }}
 {% endset %}
 
 {% set formPreviewLink %}
