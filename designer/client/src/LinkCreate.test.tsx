@@ -72,15 +72,12 @@ afterEach(cleanup)
 describe('LinkCreate', () => {
   const { getByRole, getByTestId, getByText, queryByTestId } = screen
 
-  test('hint texts are rendered correctly', () => {
-    const hint1 =
+  test('hint text is rendered correctly', () => {
+    const hint =
       'You can add links between different pages and set conditions for links to control the page that loads next. For example, a question page with a component for yes and no options could have link conditions based on which option a user selects.'
-    const hint2 =
-      'To add a link in the main screen, click and hold the title of a page and drag a line to the title of the page you want to link it to. To edit a link, select its line.'
 
     customRender(<LinkCreate />)
-    expect(getByText(hint1)).toBeInTheDocument()
-    expect(getByText(hint2)).toBeInTheDocument()
+    expect(getByText(hint)).toBeInTheDocument()
   })
 
   test('cannot add condition hint is rendered correctly', async () => {
