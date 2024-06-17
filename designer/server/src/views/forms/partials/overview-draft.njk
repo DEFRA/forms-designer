@@ -5,13 +5,11 @@
 {% endset %}
 
 {% set formUpdated %}
-  {{ (form.draft.updatedAt if form.draft.updatedAt else "2024-04-09") | formatDate }}
-  by {{ form.draft.updatedBy.displayName | default("Enrique Chase", true) }}
+  {{ form.draft.updatedAt | formatDate }} by {{ form.draft.updatedBy.displayName }}
 {% endset %}
 
 {% set formCreated %}
-  {{ (form.draft.createdAt if form.draft.createdAt else "2024-03-01") | formatDate }}
-  by {{ form.draft.createdBy.displayName | default("Nathanael Booker", true) }}
+  {{ form.draft.createdAt | formatDate }} by {{ form.draft.createdBy.displayName }}
 {% endset %}
 
 {% set formPreviewLink %}
