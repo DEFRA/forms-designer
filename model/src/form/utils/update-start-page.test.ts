@@ -12,6 +12,7 @@ describe('updateStartPage', () => {
         {
           title: 'First page',
           path: '/first-page',
+          next: [{ path: '/second-page' }],
           components: [
             {
               type: ComponentType.YesNoField,
@@ -27,6 +28,7 @@ describe('updateStartPage', () => {
         {
           title: 'Second page',
           path: '/second-page',
+          next: [{ path: '/summary' }],
           components: []
         },
         {

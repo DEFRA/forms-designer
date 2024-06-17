@@ -4,10 +4,12 @@ import { updateComponent } from '~/src/data/component/updateComponent.js'
 
 test('updateComponent throws an error when the target component cannot be found', () => {
   const data: FormDefinition = {
+    startPage: '/1',
     pages: [
       {
         title: 'first page',
         path: '/1',
+        next: [{ path: '/2' }],
         components: [
           {
             name: 'firstName',
@@ -34,10 +36,12 @@ test('updateComponent throws an error when the target component cannot be found'
 
 test('addComponent adds a component to the correct page', () => {
   const data: FormDefinition = {
+    startPage: '/1',
     pages: [
       {
         title: 'first page',
         path: '/1',
+        next: [{ path: '/2' }],
         components: [
           {
             name: 'firstName',
@@ -76,10 +80,12 @@ test('addComponent adds a component to the correct page', () => {
       schema: {}
     })
   ).toEqual<FormDefinition>({
+    startPage: '/1',
     pages: [
       {
         title: 'first page',
         path: '/1',
+        next: [{ path: '/2' }],
         components: [
           {
             name: 'fullName',
