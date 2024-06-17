@@ -16,14 +16,6 @@ $govuk-assets-path: "/assets/";
   border: none;
 }
 
-.pull-right {
-  float: right;
-}
-
-.pull-left {
-  float: left;
-}
-
 .button {
   width: 30%;
   height: 24px;
@@ -191,10 +183,6 @@ button.govuk-link {
     border-left: 6px solid #bfc1c3;
   }
 
-  .warning {
-    border-left: 6px solid #bfc1c3;
-  }
-
   .html {
     &:before {
       content: "⟨";
@@ -209,27 +197,6 @@ button.govuk-link {
 
 .component-item {
   position: relative;
-}
-
-.govuk-table__row {
-  .list-item-delete {
-    cursor: pointer;
-    visibility: hidden;
-  }
-
-  .list-item-component-add {
-    cursor: pointer;
-    visibility: hidden;
-  }
-
-  &:hover {
-    .list-item-delete {
-      visibility: visible;
-    }
-    .list-item-component-add {
-      visibility: visible;
-    }
-  }
 }
 
 polyline {
@@ -263,24 +230,6 @@ polyline {
     & + .govuk-checkboxes__label {
       opacity: 0.5;
     }
-  }
-}
-
-.warning {
-  width: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-
-  padding: 20px;
-  background-color: govuk-colour("yellow");
-
-  &__action:not(:first-of-type) {
-    margin-left: 10px;
-  }
-
-  &__title {
-    margin-top: 0;
   }
 }
 
