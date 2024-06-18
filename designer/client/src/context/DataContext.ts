@@ -1,10 +1,12 @@
 import { type FormDefinition } from '@defra/forms-model'
 import { createContext } from 'react'
 
-export const DataContext = createContext<{
+export interface DataContextType {
   data: FormDefinition
-  save: (toUpdate: FormDefinition) => Promise<false>
-}>({
-  data: {} as FormDefinition,
-  save: async (_data: FormDefinition) => false
+  save: (definition: FormDefinition) => Promise<FormDefinition>
+}
+
+export const DataContext = createContext<DataContextType>({
+  data: {} as DataContextType['data'],
+  save: () => Promise.resolve({} as DataContextType['data'])
 })

@@ -86,25 +86,25 @@ describe('Visualisation', () => {
     )
 
     // Check that link works when selected with the enter key
-    expect(queryByTestId('flyout-0')).not.toBeInTheDocument()
+    expect(queryByTestId('flyout-1')).not.toBeInTheDocument()
 
     await act(async () => {
       $lineTitle.parentElement?.focus()
       await userEvent.keyboard('[Enter]')
     })
 
-    expect(queryByTestId('flyout-0')).toBeInTheDocument()
+    expect(queryByTestId('flyout-1')).toBeInTheDocument()
 
     await act(() => userEvent.click(getByText('Close')))
 
     // Check that link works when selected with the space key
-    expect(queryByTestId('flyout-0')).not.toBeInTheDocument()
+    expect(queryByTestId('flyout-1')).not.toBeInTheDocument()
 
     await act(async () => {
       $lineTitle.parentElement?.focus()
       await userEvent.keyboard('[Space]')
     })
 
-    expect(queryByTestId('flyout-0')).toBeInTheDocument()
+    expect(queryByTestId('flyout-1')).toBeInTheDocument()
   })
 })

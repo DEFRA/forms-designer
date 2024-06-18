@@ -25,12 +25,14 @@ export interface ListState {
   listItemErrors?: Partial<ErrorList<'title' | 'value'>>
 }
 
-export const ListContext = createContext<{
+export interface ListContextType {
   state: ListState
-  dispatch: Dispatch<any>
-}>({
+  dispatch: Dispatch<Parameters<typeof listReducer>[1]>
+}
+
+export const ListContext = createContext<ListContextType>({
   state: {},
-  dispatch: () => {}
+  dispatch: () => ({})
 })
 
 /**
