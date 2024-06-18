@@ -11,7 +11,6 @@ import { Component } from '~/src/Component.jsx'
 import { PageEdit } from '~/src/PageEdit.jsx'
 import { ComponentCreate } from '~/src/components/ComponentCreate/ComponentCreate.jsx'
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
-import { PageLinkage } from '~/src/components/PageLinkage/PageLinkage.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContextProvider } from '~/src/reducers/component/componentReducer.jsx'
@@ -91,7 +90,6 @@ export const Page = (props: {
           {section && <span className="govuk-caption-m">{section.title}</span>}
           {page.title}
         </h3>
-        <PageLinkage page={page} layout={layout} />
       </div>
 
       <ComponentList page={page} data={data} />

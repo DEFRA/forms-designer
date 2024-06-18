@@ -16,14 +16,6 @@ $govuk-assets-path: "/assets/";
   border: none;
 }
 
-.pull-right {
-  float: right;
-}
-
-.pull-left {
-  float: left;
-}
-
 .button {
   width: 30%;
   height: 24px;
@@ -191,10 +183,6 @@ button.govuk-link {
     border-left: 6px solid #bfc1c3;
   }
 
-  .warning {
-    border-left: 6px solid #bfc1c3;
-  }
-
   .html {
     &:before {
       content: "⟨";
@@ -209,37 +197,6 @@ button.govuk-link {
 
 .component-item {
   position: relative;
-}
-
-.dragging {
-  background-color: govuk-colour("yellow");
-}
-
-.dragging-on-modal {
-  z-index: 1000;
-  box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.25);
-  background-color: govuk-colour("yellow");
-}
-
-.govuk-table__row {
-  .list-item-delete {
-    cursor: pointer;
-    visibility: hidden;
-  }
-
-  .list-item-component-add {
-    cursor: pointer;
-    visibility: hidden;
-  }
-
-  &:hover {
-    .list-item-delete {
-      visibility: visible;
-    }
-    .list-item-component-add {
-      visibility: visible;
-    }
-  }
 }
 
 polyline {
@@ -273,58 +230,6 @@ polyline {
     & + .govuk-checkboxes__label {
       opacity: 0.5;
     }
-  }
-}
-
-.page-linkage {
-  &__drag-area {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 10;
-    width: 100%;
-    height: 100%;
-  }
-
-  &__highlight-area {
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    z-index: -1;
-    background-color: #fceabe;
-    box-shadow: 0px 0px 0px 6px govuk-colour("yellow");
-  }
-
-  &__line {
-    fill: govuk-colour("yellow");
-    stroke: govuk-colour("yellow");
-    stroke-width: 4;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 50;
-
-    pointer-events: none;
-  }
-}
-
-.warning {
-  width: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-
-  padding: 20px;
-  background-color: govuk-colour("yellow");
-
-  &__action:not(:first-of-type) {
-    margin-left: 10px;
-  }
-
-  &__title {
-    margin-top: 0;
   }
 }
 
