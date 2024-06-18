@@ -1,29 +1,11 @@
 import { ComponentType, type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import {
-  act,
-  cleanup,
-  render,
-  waitFor,
-  type RenderResult
-} from '@testing-library/react'
+import { act, cleanup, render, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import React, { type ReactElement } from 'react'
+import React from 'react'
 
 import { Page } from '~/src/components/Page/Page.jsx'
-import { DataContext } from '~/src/context/DataContext.js'
-
-function customRender(
-  element: ReactElement,
-  providerProps: {
-    data: FormDefinition
-    save: jest.Mock
-  }
-): RenderResult {
-  return render(
-    <DataContext.Provider value={providerProps}>{element}</DataContext.Provider>
-  )
-}
+import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
 const data: FormDefinition = {
   pages: [
@@ -72,25 +54,21 @@ const data: FormDefinition = {
   conditions: []
 }
 
-const providerProps = {
-  data,
-  save: jest.fn()
-}
-
 describe('Page', () => {
   afterEach(cleanup)
 
   const { findByTestId, getByText, queryByTestId } = screen
 
   test('PageEdit can be shown/hidden successfully', async () => {
-    customRender(
-      <Page
-        page={data.pages[0]}
-        previewUrl={'https://localhost:3009'}
-        slug={'aa'}
-        layout={{}}
-      />,
-      providerProps
+    render(
+      <RenderWithContext data={data}>
+        <Page
+          page={data.pages[0]}
+          previewUrl={'https://localhost:3009'}
+          slug={'aa'}
+          layout={{}}
+        />
+      </RenderWithContext>
     )
 
     await act(() => userEvent.click(getByText('Edit page')))
@@ -100,39 +78,41 @@ describe('Page', () => {
     expect(queryByTestId('page-edit')).not.toBeInTheDocument()
 
     await act(() => userEvent.click(getByText('Edit page')))
-    await waitFor(() => findByTestId('flyout-0'))
+    await waitFor(() => findByTestId('flyout-1'))
 
     await act(() => userEvent.click(getByText('Close')))
-    expect(queryByTestId('flyout-0')).not.toBeInTheDocument()
+    expect(queryByTestId('flyout-1')).not.toBeInTheDocument()
   })
 
   test('AddComponent can be shown/hidden successfully', async () => {
-    customRender(
-      <Page
-        page={data.pages[0]}
-        previewUrl={'https://localhost:3009'}
-        slug={'aa'}
-        layout={{}}
-      />,
-      providerProps
+    render(
+      <RenderWithContext data={data}>
+        <Page
+          page={data.pages[0]}
+          previewUrl={'https://localhost:3009'}
+          slug={'aa'}
+          layout={{}}
+        />
+      </RenderWithContext>
     )
 
     await act(() => userEvent.click(getByText('Add component')))
     await waitFor(() => findByTestId('component-create'))
 
     await act(() => userEvent.click(getByText('Close')))
-    expect(queryByTestId('flyout-0')).not.toBeInTheDocument()
+    expect(queryByTestId('flyout-1')).not.toBeInTheDocument()
   })
 
   test('Page actions contain expected call to actions', () => {
-    customRender(
-      <Page
-        page={data.pages[0]}
-        previewUrl={'https://localhost:3009'}
-        slug={'aa'}
-        layout={{}}
-      />,
-      providerProps
+    render(
+      <RenderWithContext data={data}>
+        <Page
+          page={data.pages[0]}
+          previewUrl={'https://localhost:3009'}
+          slug={'aa'}
+          layout={{}}
+        />
+      </RenderWithContext>
     )
 
     expect(getByText('Edit page')).toBeTruthy()
@@ -141,20 +121,21 @@ describe('Page', () => {
   })
 
   test('Dragging component order saves successfully', async () => {
-    customRender(
-      <Page
-        page={data.pages[0]}
-        previewUrl={'https://localhost:3009'}
-        slug={'aa'}
-        layout={{}}
-      />,
-      providerProps
+    render(
+      <RenderWithContext data={data}>
+        <Page
+          page={data.pages[0]}
+          previewUrl={'https://localhost:3009'}
+          slug={'aa'}
+          layout={{}}
+        />
+      </RenderWithContext>
     )
 
     await act(() => userEvent.click(getByText('Add component')))
     await waitFor(() => findByTestId('component-create'))
 
     await act(() => userEvent.click(getByText('Close')))
-    expect(queryByTestId('flyout-0')).not.toBeInTheDocument()
+    expect(queryByTestId('flyout-1')).not.toBeInTheDocument()
   })
 })

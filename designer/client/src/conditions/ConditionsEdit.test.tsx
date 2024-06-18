@@ -1,88 +1,71 @@
 import { ComponentType, type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import { act, cleanup, render, type RenderResult } from '@testing-library/react'
+import { act, cleanup, render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import React, { type ReactElement } from 'react'
+import React from 'react'
 
 import { ConditionsEdit } from '~/src/conditions/ConditionsEdit.jsx'
-import { DataContext } from '~/src/context/DataContext.js'
-import { FlyoutContext } from '~/src/context/FlyoutContext.js'
-
-const flyoutValue = {
-  increment: jest.fn(),
-  decrement: jest.fn(),
-  count: 0
-}
-const data: FormDefinition = {
-  pages: [
-    {
-      title: 'page1',
-      path: '/1',
-      next: [{ path: '/2' }]
-    },
-    {
-      title: 'page2',
-      path: '/2',
-      components: [
-        {
-          name: 'field1',
-          title: 'Something',
-          type: ComponentType.TextField,
-          options: {},
-          schema: {}
-        }
-      ],
-      next: [{ path: '/3' }]
-    },
-    {
-      title: 'page3',
-      path: '/3',
-      components: [
-        {
-          name: 'field2',
-          title: 'Something else',
-          type: ComponentType.TextField,
-          options: {},
-          schema: {}
-        },
-        {
-          name: 'field3',
-          title: 'beep',
-          type: ComponentType.TextField,
-          options: {},
-          schema: {}
-        }
-      ]
-    }
-  ],
-  lists: [],
-  sections: [],
-  conditions: []
-}
-
-const dataValue = { data, save: jest.fn() }
-
-function customRender(
-  element: ReactElement,
-  providerProps = dataValue
-): RenderResult {
-  return render(
-    <DataContext.Provider value={providerProps}>
-      <FlyoutContext.Provider value={flyoutValue}>
-        {element}
-      </FlyoutContext.Provider>
-    </DataContext.Provider>
-  )
-}
+import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
 describe('ConditionsEdit', () => {
+  const data: FormDefinition = {
+    pages: [
+      {
+        title: 'page1',
+        path: '/1',
+        next: [{ path: '/2' }]
+      },
+      {
+        title: 'page2',
+        path: '/2',
+        components: [
+          {
+            name: 'field1',
+            title: 'Something',
+            type: ComponentType.TextField,
+            options: {},
+            schema: {}
+          }
+        ],
+        next: [{ path: '/3' }]
+      },
+      {
+        title: 'page3',
+        path: '/3',
+        components: [
+          {
+            name: 'field2',
+            title: 'Something else',
+            type: ComponentType.TextField,
+            options: {},
+            schema: {}
+          },
+          {
+            name: 'field3',
+            title: 'beep',
+            type: ComponentType.TextField,
+            options: {},
+            schema: {}
+          }
+        ]
+      }
+    ],
+    lists: [],
+    sections: [],
+    conditions: []
+  }
+
   afterEach(cleanup)
 
   const { getByTestId, getByText, queryByTestId } = screen
 
   describe('hint texts', () => {
     test('main hint text is correct', () => {
-      customRender(<ConditionsEdit />)
+      render(
+        <RenderWithContext data={data}>
+          <ConditionsEdit />
+        </RenderWithContext>
+      )
 
       const hint =
         'Set conditions for components and links to control the flow of a form. For example, a question page with a component for yes and no options could have link conditions based on which option a user selects.'
@@ -90,15 +73,19 @@ describe('ConditionsEdit', () => {
     })
 
     test('no field hint test is correct', () => {
-      customRender(<ConditionsEdit />, {
-        data: {
-          pages: [],
-          lists: [],
-          sections: [],
-          conditions: []
-        },
-        save: jest.fn()
-      })
+      const updated: FormDefinition = {
+        pages: [],
+        lists: [],
+        sections: [],
+        conditions: []
+      }
+
+      render(
+        <RenderWithContext data={updated}>
+          <ConditionsEdit />
+        </RenderWithContext>
+      )
+
       const hint =
         'You cannot add a condition as no components are available. Create a component on a page in the form. You can then add a condition.'
       expect(getByText(hint)).toBeInTheDocument()
@@ -111,63 +98,89 @@ describe('ConditionsEdit', () => {
       displayName: 'My condition',
       value: 'badgers'
     }
+
     const condition2 = {
       name: 'abdefgh',
       displayName: 'My condition 2',
       value: 'badgers again'
     }
 
-    const providerProps = {
-      data: {
-        ...data,
-        conditions: [condition, condition2]
-      },
-      save: jest.fn()
+    const updated: FormDefinition = {
+      ...data,
+      conditions: [condition, condition2]
     }
 
     test('Renders edit links for each condition and add new condition', () => {
-      customRender(<ConditionsEdit />, providerProps)
+      render(
+        <RenderWithContext data={updated}>
+          <ConditionsEdit />
+        </RenderWithContext>
+      )
+
       expect(getByText(condition.displayName)).toBeInTheDocument()
       expect(getByText(condition2.displayName)).toBeInTheDocument()
-      expect(queryByTestId('flyout-0')).not.toBeInTheDocument()
+      expect(queryByTestId('flyout-1')).not.toBeInTheDocument()
     })
 
     test('Clicking an edit link causes the edit view to be rendered and all other elements hidden', async () => {
-      customRender(<ConditionsEdit />, providerProps)
+      render(
+        <RenderWithContext data={updated}>
+          <ConditionsEdit />
+        </RenderWithContext>
+      )
+
       const $link = getByText(condition.displayName)
       await act(() => userEvent.click($link))
-      expect(getByTestId('flyout-0')).toBeTruthy()
+      expect(getByTestId('flyout-1')).toBeTruthy()
     })
   })
 
   describe('without existing conditions', () => {
-    const providerProps = {
-      data: { ...data, conditions: [] },
-      save: jest.fn()
+    const updated: FormDefinition = {
+      ...data,
+      conditions: []
     }
 
+    render(
+      <RenderWithContext data={updated}>
+        <ConditionsEdit />
+      </RenderWithContext>
+    )
+
     test('Renders no edit condition links', () => {
-      customRender(<ConditionsEdit />, providerProps)
+      render(
+        <RenderWithContext data={updated}>
+          <ConditionsEdit />
+        </RenderWithContext>
+      )
 
       const $listItem = queryByTestId('conditions-list-items')
       expect($listItem).not.toBeInTheDocument()
     })
 
     test('Renders add new condition link if inputs are available', () => {
-      customRender(<ConditionsEdit />, providerProps)
+      render(
+        <RenderWithContext data={updated}>
+          <ConditionsEdit />
+        </RenderWithContext>
+      )
+
       expect(queryByTestId('add-condition-link')).toBeInTheDocument()
     })
 
     test('Renders no new condition message if there are no inputs available', () => {
-      customRender(<ConditionsEdit />, {
-        data: {
-          pages: [],
-          lists: [],
-          sections: [],
-          conditions: []
-        },
-        save: jest.fn()
-      })
+      const updated: FormDefinition = {
+        pages: [],
+        lists: [],
+        sections: [],
+        conditions: []
+      }
+
+      render(
+        <RenderWithContext data={updated}>
+          <ConditionsEdit />
+        </RenderWithContext>
+      )
 
       const hint =
         'You cannot add a condition as no components are available. Create a component on a page in the form. You can then add a condition.'

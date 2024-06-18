@@ -10,10 +10,10 @@ describe('Text field edit', () => {
   const { getByText } = screen
 
   describe('Text field edit fields', () => {
-    let stateProps
+    let state
 
     beforeEach(() => {
-      stateProps = {
+      state = {
         component: {
           name: 'TextFieldEditClass',
           title: 'Text field edit class',
@@ -24,7 +24,7 @@ describe('Text field edit', () => {
       }
 
       render(
-        <RenderWithContext stateProps={stateProps}>
+        <RenderWithContext state={state}>
           <TextFieldEdit />
         </RenderWithContext>
       )

@@ -1,49 +1,22 @@
 import { screen } from '@testing-library/dom'
-import {
-  act,
-  cleanup,
-  render,
-  type RenderResult,
-  waitFor
-} from '@testing-library/react'
+import { act, cleanup, render, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import React, { type ReactNode } from 'react'
+import React from 'react'
 
 import { Menu } from '~/src/components/Menu/Menu.jsx'
-import { DataContext } from '~/src/context/DataContext.js'
-import { FlyoutContext } from '~/src/context/FlyoutContext.js'
+import { RenderWithContext } from '~/test/helpers/renderers'
 
 describe('Menu', () => {
   const { getByText, getByTestId, queryByTestId, queryAllByRole } = screen
 
-  const dataValue = {
-    data: {},
-    save: jest.fn()
-  }
-
-  const flyoutValue = {
-    increment: jest.fn(),
-    decrement: jest.fn(),
-    count: 1
-  }
-
-  function customRender(
-    children: ReactNode,
-    providerProps = dataValue
-  ): RenderResult {
-    return render(
-      <DataContext.Provider value={providerProps}>
-        <FlyoutContext.Provider value={flyoutValue}>
-          {children}
-        </FlyoutContext.Provider>
-      </DataContext.Provider>
-    )
-  }
-
   afterEach(cleanup)
 
   it('Renders button strings correctly', () => {
-    customRender(<Menu slug="example" />)
+    render(
+      <RenderWithContext>
+        <Menu slug="example" />
+      </RenderWithContext>
+    )
 
     expect(getByText('Add page')).toBeInTheDocument()
     expect(getByText('Add link')).toBeInTheDocument()
@@ -55,7 +28,12 @@ describe('Menu', () => {
   })
 
   it('Can open flyouts and close them', async () => {
-    customRender(<Menu slug="example" />)
+    render(
+      <RenderWithContext>
+        <Menu slug="example" />
+      </RenderWithContext>
+    )
+
     expect(queryByTestId('flyout-1')).not.toBeInTheDocument()
 
     await act(() => userEvent.click(getByText('Summary behaviour')))
@@ -66,7 +44,11 @@ describe('Menu', () => {
   })
 
   it('clicking on a summary tab shows different tab content', async () => {
-    customRender(<Menu slug="example" />)
+    render(
+      <RenderWithContext>
+        <Menu slug="example" />
+      </RenderWithContext>
+    )
 
     await act(() => userEvent.click(getByText('Summary')))
     expect(getByTestId('flyout-1')).toBeVisible()
@@ -94,13 +76,19 @@ describe('Menu', () => {
   })
 
   it('flyouts close on Save', async () => {
-    customRender(<Menu slug="example" />)
+    const save = jest.fn()
+
+    render(
+      <RenderWithContext save={save}>
+        <Menu slug="example" />
+      </RenderWithContext>
+    )
 
     await act(() => userEvent.click(getByText('Summary behaviour')))
     expect(queryByTestId('flyout-1')).toBeInTheDocument()
 
     await act(() => userEvent.click(getByText('Save')))
-    await waitFor(() => expect(dataValue.save).toHaveBeenCalledTimes(1))
+    await waitFor(() => expect(save).toHaveBeenCalledTimes(1))
 
     expect(queryByTestId('flyout-1')).not.toBeInTheDocument()
   })

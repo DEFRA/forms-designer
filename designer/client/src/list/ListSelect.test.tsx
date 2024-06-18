@@ -1,9 +1,10 @@
 import { type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
+import { render } from '@testing-library/react'
 import React from 'react'
 
 import { ListSelect } from '~/src/list/ListSelect.jsx'
-import { customRenderForLists } from '~/test/helpers/renderers-lists.jsx'
+import { RenderListEditorWithContext } from '~/test/helpers/renderers-lists.jsx'
 
 const data: FormDefinition = {
   pages: [],
@@ -25,20 +26,27 @@ const data: FormDefinition = {
   conditions: []
 }
 
-const dataValue = { data, save: jest.fn() }
-
 describe('ListSelect', () => {
   const { getByTestId, getByText, queryAllByTestId } = screen
 
   test('Lists all available lists and add list', () => {
-    customRenderForLists(<ListSelect />, { dataValue })
+    render(
+      <RenderListEditorWithContext data={data}>
+        <ListSelect />
+      </RenderListEditorWithContext>
+    )
+
     const $links = queryAllByTestId('edit-list')
     expect($links).toHaveLength(2)
     expect(getByTestId('add-list')).toBeInTheDocument()
   })
 
-  test('strings are rendered correctly', async () => {
-    customRenderForLists(<ListSelect />, { dataValue })
+  test('strings are rendered correctly', () => {
+    render(
+      <RenderListEditorWithContext data={data}>
+        <ListSelect />
+      </RenderListEditorWithContext>
+    )
 
     expect(
       getByText(

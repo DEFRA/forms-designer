@@ -1,36 +1,11 @@
 import { type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import {
-  act,
-  cleanup,
-  render,
-  waitFor,
-  type RenderResult
-} from '@testing-library/react'
+import { act, cleanup, render, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import React, { type ReactElement } from 'react'
+import React from 'react'
 
 import { Visualisation } from '~/src/components/Visualisation/Visualisation.jsx'
-import { DataContext } from '~/src/context/DataContext.js'
-
-function customRender(
-  element: ReactElement,
-  providerProps: {
-    data: FormDefinition
-    save: jest.Mock
-  }
-): RenderResult {
-  const rendered = render(
-    <DataContext.Provider value={providerProps}>{element}</DataContext.Provider>
-  )
-
-  return {
-    ...rendered,
-    rerender(this: typeof providerProps, element) {
-      customRender(element, this)
-    }
-  }
-}
+import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
 describe('Visualisation', () => {
   afterEach(cleanup)
@@ -50,31 +25,32 @@ describe('Visualisation', () => {
       sections: [],
       conditions: []
     }
-    const providerProps = {
-      data,
-      save: jest.fn()
-    }
 
-    const { rerender } = customRender(
-      <Visualisation previewUrl={'http://localhost:3000'} slug={'aa'} />,
-      providerProps
+    render(
+      <RenderWithContext data={data}>
+        <Visualisation previewUrl={'http://localhost:3000'} slug={'aa'} />
+      </RenderWithContext>
     )
 
     expect(queryByText('my first page')).toBeInTheDocument()
     expect(queryByText('my second page')).toBeInTheDocument()
     expect(queryByText('my third page')).not.toBeInTheDocument()
 
-    const newPage = {
-      title: 'my third page',
-      path: '/3'
+    const updated: FormDefinition = {
+      ...data,
+      pages: [
+        ...data.pages,
+        {
+          title: 'my third page',
+          path: '/3'
+        }
+      ]
     }
 
-    rerender.call(
-      {
-        data: { ...data, pages: [...data.pages, newPage] },
-        save: jest.fn()
-      },
-      <Visualisation previewUrl={'http://localhost:3000'} slug={'aa'} />
+    render(
+      <RenderWithContext data={updated}>
+        <Visualisation previewUrl={'http://localhost:3000'} slug={'aa'} />
+      </RenderWithContext>
     )
 
     expect(queryByText('my third page')).toBeInTheDocument()
@@ -97,14 +73,11 @@ describe('Visualisation', () => {
       sections: [],
       conditions: []
     }
-    const providerProps = {
-      data,
-      save: jest.fn()
-    }
 
-    customRender(
-      <Visualisation previewUrl={'http://localhost:3000'} slug={'aa'} />,
-      providerProps
+    render(
+      <RenderWithContext data={data}>
+        <Visualisation previewUrl={'http://localhost:3000'} slug={'aa'} />
+      </RenderWithContext>
     )
 
     // Check link exists and has the expected label

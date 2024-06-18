@@ -11,7 +11,7 @@ describe('Section edit fields', () => {
   const { getByText } = screen
 
   test('should display titles and help texts', () => {
-    const stateProps = {
+    const state = {
       component: {
         type: 'sectionFieldEdit',
         name: 'sectionFieldEditClass',
@@ -20,7 +20,7 @@ describe('Section edit fields', () => {
     }
 
     render(
-      <RenderWithContext stateProps={stateProps}>
+      <RenderWithContext state={state}>
         <SectionEdit />
       </RenderWithContext>
     )

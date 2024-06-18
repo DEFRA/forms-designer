@@ -6,40 +6,19 @@ import {
 } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
-import React, { useReducer } from 'react'
+import React from 'react'
 
 import { ComponentTypeEdit } from '~/src/ComponentTypeEdit.jsx'
-import { DataContext } from '~/src/context/DataContext.js'
-import {
-  ComponentContext,
-  componentReducer,
-  initComponentState
-} from '~/src/reducers/component/componentReducer.jsx'
+import { type ComponentState } from '~/src/reducers/component/componentReducer.jsx'
+import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
 describe('ComponentTypeEdit', () => {
   const { getByText } = screen
 
-  let mockData: FormDefinition
-
-  const RenderWithContext = ({ children, stateProps = {} }) => {
-    const [state, dispatch] = useReducer(
-      componentReducer,
-      initComponentState({
-        ...stateProps
-      })
-    )
-
-    return (
-      <DataContext.Provider value={{ data: mockData, save: jest.fn() }}>
-        <ComponentContext.Provider value={{ state, dispatch }}>
-          {children}
-        </ComponentContext.Provider>
-      </DataContext.Provider>
-    )
-  }
+  let data: FormDefinition
 
   beforeEach(() => {
-    mockData = {
+    data = {
       pages: [
         {
           title: 'First page',
@@ -58,10 +37,10 @@ describe('ComponentTypeEdit', () => {
   afterEach(cleanup)
 
   describe('Checkbox', () => {
-    let stateProps
+    let state: ComponentState
 
     beforeEach(() => {
-      stateProps = {
+      state = {
         component: {
           name: 'TestCheckboxes',
           title: 'Test checkboxes',
@@ -76,8 +55,8 @@ describe('ComponentTypeEdit', () => {
 
     test('title input hint text is rendered correctly', () => {
       render(
-        <RenderWithContext stateProps={stateProps}>
-          <ComponentTypeEdit page={mockData.pages[0]} />
+        <RenderWithContext data={data} state={state}>
+          <ComponentTypeEdit page={data.pages[0]} />
         </RenderWithContext>
       )
 
@@ -87,8 +66,8 @@ describe('ComponentTypeEdit', () => {
 
     test('help text input hint text is rendered correctly', () => {
       render(
-        <RenderWithContext stateProps={stateProps}>
-          <ComponentTypeEdit page={mockData.pages[0]} />
+        <RenderWithContext data={data} state={state}>
+          <ComponentTypeEdit page={data.pages[0]} />
         </RenderWithContext>
       )
 
@@ -98,8 +77,8 @@ describe('ComponentTypeEdit', () => {
 
     test('hide title checkbox hint text is rendered correctly', () => {
       render(
-        <RenderWithContext stateProps={stateProps}>
-          <ComponentTypeEdit page={mockData.pages[0]} />
+        <RenderWithContext data={data} state={state}>
+          <ComponentTypeEdit page={data.pages[0]} />
         </RenderWithContext>
       )
 
@@ -110,8 +89,8 @@ describe('ComponentTypeEdit', () => {
 
     test('component name input hint text is rendered correctly', () => {
       render(
-        <RenderWithContext stateProps={stateProps}>
-          <ComponentTypeEdit page={mockData.pages[0]} />
+        <RenderWithContext data={data} state={state}>
+          <ComponentTypeEdit page={data.pages[0]} />
         </RenderWithContext>
       )
 
@@ -122,8 +101,8 @@ describe('ComponentTypeEdit', () => {
 
     test('make checkbox field optional hint text is rendered correctly', () => {
       render(
-        <RenderWithContext stateProps={stateProps}>
-          <ComponentTypeEdit page={mockData.pages[0]} />
+        <RenderWithContext data={data} state={state}>
+          <ComponentTypeEdit page={data.pages[0]} />
         </RenderWithContext>
       )
 
@@ -137,8 +116,8 @@ describe('ComponentTypeEdit', () => {
 
     test('select list hint text is rendered correctly', () => {
       render(
-        <RenderWithContext stateProps={stateProps}>
-          <ComponentTypeEdit page={mockData.pages[0]} />
+        <RenderWithContext data={data} state={state}>
+          <ComponentTypeEdit page={data.pages[0]} />
         </RenderWithContext>
       )
 
@@ -149,10 +128,10 @@ describe('ComponentTypeEdit', () => {
   })
 
   describe('Radios', () => {
-    let stateProps
+    let state: ComponentState
 
     beforeEach(() => {
-      stateProps = {
+      state = {
         component: {
           name: 'TestRadios',
           title: 'Test radios',
@@ -167,8 +146,8 @@ describe('ComponentTypeEdit', () => {
 
     test('title input hint text is rendered correctly', () => {
       render(
-        <RenderWithContext stateProps={stateProps}>
-          <ComponentTypeEdit page={mockData.pages[0]} />
+        <RenderWithContext data={data} state={state}>
+          <ComponentTypeEdit page={data.pages[0]} />
         </RenderWithContext>
       )
 
@@ -178,8 +157,8 @@ describe('ComponentTypeEdit', () => {
 
     test('help text input hint text is rendered correctly', () => {
       render(
-        <RenderWithContext stateProps={stateProps}>
-          <ComponentTypeEdit page={mockData.pages[0]} />
+        <RenderWithContext data={data} state={state}>
+          <ComponentTypeEdit page={data.pages[0]} />
         </RenderWithContext>
       )
 
@@ -189,8 +168,8 @@ describe('ComponentTypeEdit', () => {
 
     test('hide title checkbox hint text is rendered correctly', () => {
       render(
-        <RenderWithContext stateProps={stateProps}>
-          <ComponentTypeEdit page={mockData.pages[0]} />
+        <RenderWithContext data={data} state={state}>
+          <ComponentTypeEdit page={data.pages[0]} />
         </RenderWithContext>
       )
 
@@ -201,8 +180,8 @@ describe('ComponentTypeEdit', () => {
 
     test('component name input hint text is rendered correctly', () => {
       render(
-        <RenderWithContext stateProps={stateProps}>
-          <ComponentTypeEdit page={mockData.pages[0]} />
+        <RenderWithContext data={data} state={state}>
+          <ComponentTypeEdit page={data.pages[0]} />
         </RenderWithContext>
       )
 
@@ -213,8 +192,8 @@ describe('ComponentTypeEdit', () => {
 
     test('make checkbox field optional hint text is rendered correctly', () => {
       render(
-        <RenderWithContext stateProps={stateProps}>
-          <ComponentTypeEdit page={mockData.pages[0]} />
+        <RenderWithContext data={data} state={state}>
+          <ComponentTypeEdit page={data.pages[0]} />
         </RenderWithContext>
       )
 
@@ -228,8 +207,8 @@ describe('ComponentTypeEdit', () => {
 
     test('select list hint text is rendered correctly', () => {
       render(
-        <RenderWithContext stateProps={stateProps}>
-          <ComponentTypeEdit page={mockData.pages[0]} />
+        <RenderWithContext data={data} state={state}>
+          <ComponentTypeEdit page={data.pages[0]} />
         </RenderWithContext>
       )
 
@@ -240,10 +219,10 @@ describe('ComponentTypeEdit', () => {
   })
 
   describe('Select', () => {
-    let stateProps
+    let state: ComponentState
 
     beforeEach(() => {
-      stateProps = {
+      state = {
         component: {
           name: 'TestSelect',
           title: 'Test select',
@@ -258,8 +237,8 @@ describe('ComponentTypeEdit', () => {
 
     test('title input hint text is rendered correctly', () => {
       render(
-        <RenderWithContext stateProps={stateProps}>
-          <ComponentTypeEdit page={mockData.pages[0]} />
+        <RenderWithContext data={data} state={state}>
+          <ComponentTypeEdit page={data.pages[0]} />
         </RenderWithContext>
       )
 
@@ -269,8 +248,8 @@ describe('ComponentTypeEdit', () => {
 
     test('help text input hint text is rendered correctly', () => {
       render(
-        <RenderWithContext stateProps={stateProps}>
-          <ComponentTypeEdit page={mockData.pages[0]} />
+        <RenderWithContext data={data} state={state}>
+          <ComponentTypeEdit page={data.pages[0]} />
         </RenderWithContext>
       )
 
@@ -280,8 +259,8 @@ describe('ComponentTypeEdit', () => {
 
     test('hide title checkbox hint text is rendered correctly', () => {
       render(
-        <RenderWithContext stateProps={stateProps}>
-          <ComponentTypeEdit page={mockData.pages[0]} />
+        <RenderWithContext data={data} state={state}>
+          <ComponentTypeEdit page={data.pages[0]} />
         </RenderWithContext>
       )
 
@@ -292,8 +271,8 @@ describe('ComponentTypeEdit', () => {
 
     test('component name input hint text is rendered correctly', () => {
       render(
-        <RenderWithContext stateProps={stateProps}>
-          <ComponentTypeEdit page={mockData.pages[0]} />
+        <RenderWithContext data={data} state={state}>
+          <ComponentTypeEdit page={data.pages[0]} />
         </RenderWithContext>
       )
 
@@ -304,8 +283,8 @@ describe('ComponentTypeEdit', () => {
 
     test('make checkbox field optional hint text is rendered correctly', () => {
       render(
-        <RenderWithContext stateProps={stateProps}>
-          <ComponentTypeEdit page={mockData.pages[0]} />
+        <RenderWithContext data={data} state={state}>
+          <ComponentTypeEdit page={data.pages[0]} />
         </RenderWithContext>
       )
 
@@ -319,8 +298,8 @@ describe('ComponentTypeEdit', () => {
 
     test('select list hint text is rendered correctly', () => {
       render(
-        <RenderWithContext stateProps={stateProps}>
-          <ComponentTypeEdit page={mockData.pages[0]} />
+        <RenderWithContext data={data} state={state}>
+          <ComponentTypeEdit page={data.pages[0]} />
         </RenderWithContext>
       )
 
@@ -331,10 +310,10 @@ describe('ComponentTypeEdit', () => {
   })
 
   describe('YesNo', () => {
-    let stateProps
+    let state: ComponentState
 
     beforeEach(() => {
-      stateProps = {
+      state = {
         component: {
           name: 'TestYesNo',
           title: 'Test yes/no',
@@ -347,8 +326,8 @@ describe('ComponentTypeEdit', () => {
 
     test('title input hint text is rendered correctly', () => {
       render(
-        <RenderWithContext stateProps={stateProps}>
-          <ComponentTypeEdit page={mockData.pages[0]} />
+        <RenderWithContext data={data} state={state}>
+          <ComponentTypeEdit page={data.pages[0]} />
         </RenderWithContext>
       )
 
@@ -358,8 +337,8 @@ describe('ComponentTypeEdit', () => {
 
     test('help text input hint text is rendered correctly', () => {
       render(
-        <RenderWithContext stateProps={stateProps}>
-          <ComponentTypeEdit page={mockData.pages[0]} />
+        <RenderWithContext data={data} state={state}>
+          <ComponentTypeEdit page={data.pages[0]} />
         </RenderWithContext>
       )
 
@@ -369,8 +348,8 @@ describe('ComponentTypeEdit', () => {
 
     test('hide title checkbox hint text is rendered correctly', () => {
       render(
-        <RenderWithContext stateProps={stateProps}>
-          <ComponentTypeEdit page={mockData.pages[0]} />
+        <RenderWithContext data={data} state={state}>
+          <ComponentTypeEdit page={data.pages[0]} />
         </RenderWithContext>
       )
 
@@ -381,8 +360,8 @@ describe('ComponentTypeEdit', () => {
 
     test('component name input hint text is rendered correctly', () => {
       render(
-        <RenderWithContext stateProps={stateProps}>
-          <ComponentTypeEdit page={mockData.pages[0]} />
+        <RenderWithContext data={data} state={state}>
+          <ComponentTypeEdit page={data.pages[0]} />
         </RenderWithContext>
       )
 
