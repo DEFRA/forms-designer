@@ -322,7 +322,6 @@ export class PageEdit extends Component {
             >
               <SectionEdit
                 section={isNewSection ? {} : this.findSectionWithName(section)}
-                data={data}
                 closeFlyout={this.closeFlyout}
               />
             </Flyout>

@@ -244,7 +244,6 @@ export class PageCreate extends Component {
 
           {linkFrom && linkFrom.trim() !== '' && (
             <SelectConditions
-              data={data}
               path={linkFrom}
               conditionsChange={this.conditionSelected}
               noFieldsHintText={i18n('conditions.noFieldsAvailable')}
@@ -336,11 +335,7 @@ export class PageCreate extends Component {
               }
               onHide={this.closeFlyout}
             >
-              <SectionEdit
-                section={section}
-                data={data}
-                closeFlyout={this.closeFlyout}
-              />
+              <SectionEdit section={section} closeFlyout={this.closeFlyout} />
             </Flyout>
           </RenderInPortal>
         )}

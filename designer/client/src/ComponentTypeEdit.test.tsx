@@ -56,7 +56,7 @@ describe('ComponentTypeEdit', () => {
     test('title input hint text is rendered correctly', () => {
       render(
         <RenderWithContext data={data} state={state}>
-          <ComponentTypeEdit page={data.pages[0]} />
+          <ComponentTypeEdit />
         </RenderWithContext>
       )
 
@@ -67,7 +67,7 @@ describe('ComponentTypeEdit', () => {
     test('help text input hint text is rendered correctly', () => {
       render(
         <RenderWithContext data={data} state={state}>
-          <ComponentTypeEdit page={data.pages[0]} />
+          <ComponentTypeEdit />
         </RenderWithContext>
       )
 
@@ -78,7 +78,7 @@ describe('ComponentTypeEdit', () => {
     test('hide title checkbox hint text is rendered correctly', () => {
       render(
         <RenderWithContext data={data} state={state}>
-          <ComponentTypeEdit page={data.pages[0]} />
+          <ComponentTypeEdit />
         </RenderWithContext>
       )
 
@@ -90,7 +90,7 @@ describe('ComponentTypeEdit', () => {
     test('component name input hint text is rendered correctly', () => {
       render(
         <RenderWithContext data={data} state={state}>
-          <ComponentTypeEdit page={data.pages[0]} />
+          <ComponentTypeEdit />
         </RenderWithContext>
       )
 
@@ -102,7 +102,7 @@ describe('ComponentTypeEdit', () => {
     test('make checkbox field optional hint text is rendered correctly', () => {
       render(
         <RenderWithContext data={data} state={state}>
-          <ComponentTypeEdit page={data.pages[0]} />
+          <ComponentTypeEdit />
         </RenderWithContext>
       )
 
@@ -117,7 +117,7 @@ describe('ComponentTypeEdit', () => {
     test('select list hint text is rendered correctly', () => {
       render(
         <RenderWithContext data={data} state={state}>
-          <ComponentTypeEdit page={data.pages[0]} />
+          <ComponentTypeEdit />
         </RenderWithContext>
       )
 
@@ -147,7 +147,7 @@ describe('ComponentTypeEdit', () => {
     test('title input hint text is rendered correctly', () => {
       render(
         <RenderWithContext data={data} state={state}>
-          <ComponentTypeEdit page={data.pages[0]} />
+          <ComponentTypeEdit />
         </RenderWithContext>
       )
 
@@ -158,7 +158,7 @@ describe('ComponentTypeEdit', () => {
     test('help text input hint text is rendered correctly', () => {
       render(
         <RenderWithContext data={data} state={state}>
-          <ComponentTypeEdit page={data.pages[0]} />
+          <ComponentTypeEdit />
         </RenderWithContext>
       )
 
@@ -169,7 +169,7 @@ describe('ComponentTypeEdit', () => {
     test('hide title checkbox hint text is rendered correctly', () => {
       render(
         <RenderWithContext data={data} state={state}>
-          <ComponentTypeEdit page={data.pages[0]} />
+          <ComponentTypeEdit />
         </RenderWithContext>
       )
 
@@ -181,7 +181,7 @@ describe('ComponentTypeEdit', () => {
     test('component name input hint text is rendered correctly', () => {
       render(
         <RenderWithContext data={data} state={state}>
-          <ComponentTypeEdit page={data.pages[0]} />
+          <ComponentTypeEdit />
         </RenderWithContext>
       )
 
@@ -193,7 +193,7 @@ describe('ComponentTypeEdit', () => {
     test('make checkbox field optional hint text is rendered correctly', () => {
       render(
         <RenderWithContext data={data} state={state}>
-          <ComponentTypeEdit page={data.pages[0]} />
+          <ComponentTypeEdit />
         </RenderWithContext>
       )
 
@@ -208,7 +208,7 @@ describe('ComponentTypeEdit', () => {
     test('select list hint text is rendered correctly', () => {
       render(
         <RenderWithContext data={data} state={state}>
-          <ComponentTypeEdit page={data.pages[0]} />
+          <ComponentTypeEdit />
         </RenderWithContext>
       )
 
@@ -238,7 +238,7 @@ describe('ComponentTypeEdit', () => {
     test('title input hint text is rendered correctly', () => {
       render(
         <RenderWithContext data={data} state={state}>
-          <ComponentTypeEdit page={data.pages[0]} />
+          <ComponentTypeEdit />
         </RenderWithContext>
       )
 
@@ -249,7 +249,7 @@ describe('ComponentTypeEdit', () => {
     test('help text input hint text is rendered correctly', () => {
       render(
         <RenderWithContext data={data} state={state}>
-          <ComponentTypeEdit page={data.pages[0]} />
+          <ComponentTypeEdit />
         </RenderWithContext>
       )
 
@@ -260,7 +260,7 @@ describe('ComponentTypeEdit', () => {
     test('hide title checkbox hint text is rendered correctly', () => {
       render(
         <RenderWithContext data={data} state={state}>
-          <ComponentTypeEdit page={data.pages[0]} />
+          <ComponentTypeEdit />
         </RenderWithContext>
       )
 
@@ -272,7 +272,7 @@ describe('ComponentTypeEdit', () => {
     test('component name input hint text is rendered correctly', () => {
       render(
         <RenderWithContext data={data} state={state}>
-          <ComponentTypeEdit page={data.pages[0]} />
+          <ComponentTypeEdit />
         </RenderWithContext>
       )
 
@@ -284,7 +284,7 @@ describe('ComponentTypeEdit', () => {
     test('make checkbox field optional hint text is rendered correctly', () => {
       render(
         <RenderWithContext data={data} state={state}>
-          <ComponentTypeEdit page={data.pages[0]} />
+          <ComponentTypeEdit />
         </RenderWithContext>
       )
 
@@ -299,7 +299,7 @@ describe('ComponentTypeEdit', () => {
     test('select list hint text is rendered correctly', () => {
       render(
         <RenderWithContext data={data} state={state}>
-          <ComponentTypeEdit page={data.pages[0]} />
+          <ComponentTypeEdit />
         </RenderWithContext>
       )
 
@@ -327,7 +327,7 @@ describe('ComponentTypeEdit', () => {
     test('title input hint text is rendered correctly', () => {
       render(
         <RenderWithContext data={data} state={state}>
-          <ComponentTypeEdit page={data.pages[0]} />
+          <ComponentTypeEdit />
         </RenderWithContext>
       )
 
@@ -338,7 +338,7 @@ describe('ComponentTypeEdit', () => {
     test('help text input hint text is rendered correctly', () => {
       render(
         <RenderWithContext data={data} state={state}>
-          <ComponentTypeEdit page={data.pages[0]} />
+          <ComponentTypeEdit />
         </RenderWithContext>
       )
 
@@ -349,7 +349,7 @@ describe('ComponentTypeEdit', () => {
     test('hide title checkbox hint text is rendered correctly', () => {
       render(
         <RenderWithContext data={data} state={state}>
-          <ComponentTypeEdit page={data.pages[0]} />
+          <ComponentTypeEdit />
         </RenderWithContext>
       )
 
@@ -361,7 +361,7 @@ describe('ComponentTypeEdit', () => {
     test('component name input hint text is rendered correctly', () => {
       render(
         <RenderWithContext data={data} state={state}>
-          <ComponentTypeEdit page={data.pages[0]} />
+          <ComponentTypeEdit />
         </RenderWithContext>
       )
 

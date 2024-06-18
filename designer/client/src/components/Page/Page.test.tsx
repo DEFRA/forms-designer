@@ -66,7 +66,6 @@ describe('Page', () => {
           page={data.pages[0]}
           previewUrl={'https://localhost:3009'}
           slug={'aa'}
-          layout={{}}
         />
       </RenderWithContext>
     )
@@ -91,7 +90,6 @@ describe('Page', () => {
           page={data.pages[0]}
           previewUrl={'https://localhost:3009'}
           slug={'aa'}
-          layout={{}}
         />
       </RenderWithContext>
     )
@@ -110,7 +108,6 @@ describe('Page', () => {
           page={data.pages[0]}
           previewUrl={'https://localhost:3009'}
           slug={'aa'}
-          layout={{}}
         />
       </RenderWithContext>
     )
@@ -127,7 +124,6 @@ describe('Page', () => {
           page={data.pages[0]}
           previewUrl={'https://localhost:3009'}
           slug={'aa'}
-          layout={{}}
         />
       </RenderWithContext>
     )

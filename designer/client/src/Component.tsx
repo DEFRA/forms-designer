@@ -226,7 +226,7 @@ export interface Props {
 }
 
 export const Component: FunctionComponent<Props> = (props) => {
-  const { data, page, component } = props
+  const { page, component } = props
 
   const [showEditor, setShowEditor] = useState<boolean>(false)
   const toggleShowEditor = () => setShowEditor(!showEditor)
@@ -247,7 +247,6 @@ export const Component: FunctionComponent<Props> = (props) => {
             <ComponentContextProvider
               pagePath={page.path}
               component={component}
-              data={data}
             >
               <ComponentEdit page={page} toggleShowEditor={toggleShowEditor} />
             </ComponentContextProvider>
