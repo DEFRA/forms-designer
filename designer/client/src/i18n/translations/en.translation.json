@@ -148,10 +148,6 @@
     "details": {
       "hint": "Enter the text you want to show when users expand the title. You can apply basic HTML, such as text formatting and hyperlinks."
     },
-    "hideTitle": "Hide title",
-    "hideTitleHint": "Tick this box if you do not want the title to show on the page",
-    "optional": "Make {{fieldTitle}} optional",
-    "optionalHint": "Tick this box if users do not need to complete this field to progress through the form",
     "para": {
       "hint": "Enter the text you want to show. You can apply basic HTML, such as text formatting and hyperlinks."
     }
