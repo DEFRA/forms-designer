@@ -1,5 +1,12 @@
-import React, { useContext, useRef } from 'react'
+import { type FormDefinition } from '@defra/forms-model'
+import React, {
+  useContext,
+  useRef,
+  type ChangeEvent,
+  type MouseEvent
+} from 'react'
 
+import { logger } from '~/src/common/helpers/logging/logger.js'
 import { DataContext } from '~/src/context/DataContext.js'
 
 interface Props {
@@ -10,11 +17,11 @@ export function SubMenu({ slug }: Props) {
   const { data, save } = useContext(DataContext)
   const fileInput = useRef<HTMLInputElement>(null)
 
-  const onClickUpload = () => {
+  function onClickUpload() {
     fileInput.current?.click()
   }
 
-  const onClickDownload = (e) => {
+  function onClickDownload(e: MouseEvent<HTMLButtonElement>) {
     e.preventDefault()
 
     const link = document.createElement('a')
@@ -26,17 +33,21 @@ export function SubMenu({ slug }: Props) {
     document.body.appendChild(link)
 
     link.click()
-    document.body.removeChild(link)
+    link.remove()
   }
 
-  const onFileUpload = (e) => {
-    const file = e.target.files.item(0)
+  function onFileUpload(e: ChangeEvent<HTMLInputElement>) {
+    const { files } = e.target
+
     const reader = new window.FileReader()
-    reader.readAsText(file, 'UTF-8')
-    reader.onload = function (evt) {
-      const content = JSON.parse(evt.target.result)
-      save(content)
-    }
+    reader.addEventListener('load', onFileUploaded)
+    reader.readAsText(files[0], 'UTF-8')
+  }
+
+  function onFileUploaded(e: ProgressEvent<FileReader>) {
+    const { result } = e.target ?? {}
+    const content = JSON.parse(result) as FormDefinition
+    save(content)
   }
 
   return (
