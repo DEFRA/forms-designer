@@ -16,11 +16,15 @@ export function SubMenu({ slug }: Props) {
 
   const onClickDownload = (e) => {
     e.preventDefault()
-    const encodedData = `text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(data))}`
+
     const link = document.createElement('a')
+    const contents = JSON.stringify(data, undefined, 2)
+
     link.download = `${slug}.json`
-    link.href = `data:${encodedData}`
+    link.href = `data:text/json;charset=utf-8,${encodeURIComponent(contents)}`
+
     document.body.appendChild(link)
+
     link.click()
     document.body.removeChild(link)
   }
