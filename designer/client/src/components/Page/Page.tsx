@@ -96,30 +96,24 @@ export const Page = (props: {
       <ComponentList page={page} data={data} />
 
       <div className="page__actions">
-        <button
-          title={i18n('Edit page')}
-          onClick={() => setIsEditingPage(true)}
-          className="govuk-link"
-        >
+        <button onClick={() => setIsEditingPage(true)} className="govuk-link">
           {i18n('Edit page')}
         </button>
-        <button
-          title={i18n('Create component')}
-          onClick={() => setIsCreatingComponent(true)}
-          className="govuk-link"
-        >
-          {i18n('Create component')}
-        </button>
         <a
-          title={i18n('Preview page')}
           href={new URL(`/preview/draft/${slug}${page.path}`, previewUrl).href}
           className="govuk-link"
           target="_blank"
           rel="noreferrer"
+          aria-label={`${i18n('Preview')} ${pageTitle}`}
         >
-          {i18n('Preview')}{' '}
-          <span className="govuk-visually-hidden">{pageTitle}</span>
+          {i18n('Preview page')}
         </a>
+        <button
+          onClick={() => setIsCreatingComponent(true)}
+          className="govuk-link"
+        >
+          {i18n('component.create')}
+        </button>
       </div>
       {isEditingPage && (
         <RenderInPortal>

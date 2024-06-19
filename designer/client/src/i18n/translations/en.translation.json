@@ -95,7 +95,7 @@
   "component": {
     "component": "component",
     "contentfields_info": "Content components allow you to add information to your page",
-    "create": "Create component",
+    "create": "Add component",
     "create_info": "Select a component to add to your page. If your page has only one component, the component title does not show on the page. To name or describe the component, use the page title instead.",
     "edit": "Edit {{name}} component",
     "inputfields_info": "Input fields allow you to ask users to enter information",
