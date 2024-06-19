@@ -1,4 +1,4 @@
-import { type FormDefinition } from '@defra/forms-model'
+import { type FormDefinition } from '~/src/form/form-definition/types.js'
 
 /**
  * Find correct start page for form definition

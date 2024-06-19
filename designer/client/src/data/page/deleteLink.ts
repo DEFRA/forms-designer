@@ -1,4 +1,4 @@
-import { type FormDefinition } from '@defra/forms-model'
+import { updateStartPage, type FormDefinition } from '@defra/forms-model'
 
 import { findPage } from '~/src/data/page/findPage.js'
 import { type Path } from '~/src/data/types.js'

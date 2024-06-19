@@ -1,6 +1,5 @@
-import { type FormDefinition } from '@defra/forms-model'
-
-import { findStartPage } from '~/src/data/page/findStartPage.js'
+import { type FormDefinition } from '~/src/form/form-definition/types.js'
+import { findStartPage } from '~/src/form/utils/find-start-page.js'
 
 /**
  * Update start page when pages are modified

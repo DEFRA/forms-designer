@@ -1,6 +1,6 @@
-import { ComponentType, type FormDefinition } from '@defra/forms-model'
-
-import { updateStartPage } from '~/src/data/page/updateStartPage.js'
+import { ComponentType } from '~/src/components/enums.js'
+import { type FormDefinition } from '~/src/form/form-definition/types.js'
+import { updateStartPage } from '~/src/form/utils/update-start-page.js'
 
 describe('updateStartPage', () => {
   let data: FormDefinition

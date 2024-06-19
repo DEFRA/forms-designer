@@ -1,11 +1,14 @@
-import { type FormDefinition, type FormMetadata } from '@defra/forms-model'
+import {
+  updateStartPage,
+  type FormDefinition,
+  type FormMetadata
+} from '@defra/forms-model'
 import React, { Component } from 'react'
 
 import { Menu } from '~/src/components/Menu/Menu.jsx'
 import { Visualisation } from '~/src/components/Visualisation/Visualisation.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { FlyoutContext } from '~/src/context/FlyoutContext.js'
-import { updateStartPage } from '~/src/data/page/updateStartPage.js'
 import * as form from '~/src/lib/form.js'
 
 interface Props {

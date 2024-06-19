@@ -1,4 +1,8 @@
-import { type ConditionRawData, type FormDefinition } from '@defra/forms-model'
+import {
+  updateStartPage,
+  type ConditionRawData,
+  type FormDefinition
+} from '@defra/forms-model'
 
 import { findPage } from '~/src/data/page/findPage.js'
 import { type Path } from '~/src/data/types.js'
