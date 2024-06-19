@@ -3,11 +3,12 @@ import { ComponentType, type FormDefinition } from '@defra/forms-model'
 import { updateLinksTo } from '~/src/data/page/updateLinksTo.js'
 
 const data: FormDefinition = {
+  startPage: '/0',
   pages: [
     {
       title: 'page0',
       path: '/0',
-      next: [{ path: '/2', condition: 'badgers' }],
+      next: [{ path: '/1', condition: 'badgers' }],
       components: [
         {
           name: 'name1',
@@ -73,6 +74,13 @@ const data: FormDefinition = {
       title: 'page3',
       section: 'section1',
       path: '/3',
+      next: [{ path: '/summary' }],
+      components: []
+    },
+    {
+      title: 'summary',
+      path: '/summary',
+      controller: './pages/summary.js',
       components: []
     }
   ],
@@ -81,13 +89,14 @@ const data: FormDefinition = {
   conditions: []
 }
 test('updateLinksTo should update all links pointing to the specified path to the new path', () => {
-  const returned = updateLinksTo(data, '/2', '/7')
+  const returned = updateLinksTo(data, '/2', '/3')
   expect(returned).toEqual<FormDefinition>({
+    startPage: '/0',
     pages: [
       {
         title: 'page0',
         path: '/0',
-        next: [{ path: '/7', condition: 'badgers' }],
+        next: [{ path: '/1', condition: 'badgers' }],
         components: [
           expect.objectContaining({
             name: 'name1'
@@ -101,7 +110,7 @@ test('updateLinksTo should update all links pointing to the specified path to th
         title: 'page1',
         section: 'section1',
         path: '/1',
-        next: [{ path: '/7' }],
+        next: [{ path: '/3' }],
         components: [
           expect.objectContaining({
             name: 'name1'
@@ -114,7 +123,7 @@ test('updateLinksTo should update all links pointing to the specified path to th
       {
         title: 'page2',
         section: 'section1',
-        path: '/7',
+        path: '/3',
         next: [{ path: '/3' }],
         components: [
           expect.objectContaining({
@@ -129,6 +138,13 @@ test('updateLinksTo should update all links pointing to the specified path to th
         title: 'page3',
         section: 'section1',
         path: '/3',
+        components: [],
+        next: [{ path: '/summary' }]
+      },
+      {
+        title: 'summary',
+        path: '/summary',
+        controller: './pages/summary.js',
         components: [],
         next: []
       }

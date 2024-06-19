@@ -1,4 +1,8 @@
-import { type FormDefinition, type FormMetadata } from '@defra/forms-model'
+import {
+  updateStartPage,
+  type FormDefinition,
+  type FormMetadata
+} from '@defra/forms-model'
 import React, { Component } from 'react'
 
 import { Menu } from '~/src/components/Menu/Menu.jsx'
@@ -54,7 +58,11 @@ export class Designer extends Component<Props, State> {
   save = async (definition: FormDefinition) => {
     const { metadata } = this.props
 
-    await form.save(metadata.id, definition)
+    // Fix incorrect start page
+    const updated = updateStartPage(definition)
+
+    // Save and return form definition
+    await form.save(metadata.id, updated)
     return this.get()
   }
 
