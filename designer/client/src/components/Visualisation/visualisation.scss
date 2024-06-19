@@ -57,4 +57,40 @@ $govuk-assets-path: "/assets/";
       }
     }
   }
+
+  .line__condition {
+    display: flex;
+
+    height: 100%;
+    padding: 0 govuk-spacing(6);
+
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    @include govuk-font-size($size: 16);
+
+    .govuk-tag {
+      max-width: 75%;
+      font-size: inherit;
+    }
+
+    :last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  polyline {
+    cursor: pointer;
+
+    fill: none;
+    stroke-width: 4;
+    stroke: govuk-colour("black");
+    stroke-linecap: square;
+
+    &:hover,
+    &:focus {
+      outline: 6px solid $govuk-focus-colour;
+    }
+  }
 }

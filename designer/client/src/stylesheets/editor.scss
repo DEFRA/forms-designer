@@ -199,23 +199,6 @@ button.govuk-link {
   position: relative;
 }
 
-polyline {
-  cursor: pointer;
-
-  fill: none;
-  stroke-width: 4;
-  stroke: #000000;
-
-  &:hover,
-  &:focus {
-    outline: 6px solid $govuk-focus-colour;
-  }
-
-  :after {
-    content: "sada";
-  }
-}
-
 /* Syntax highlighting */
 .editor:focus-within {
   outline: $govuk-focus-width solid $govuk-focus-colour;

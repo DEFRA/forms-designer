@@ -29,9 +29,12 @@ export const getLayout = (data: FormDefinition, el: HTMLDivElement) => {
   // Set an object for the graph label
   g.setGraph({
     rankdir: 'LR',
+    align: 'UL',
     marginx: 50,
     marginy: 100,
-    ranksep: 160
+    edgesep: 80,
+    nodesep: 80,
+    ranksep: 80
   })
 
   // Default to assigning a new object as a label for each new edge.
@@ -66,7 +69,8 @@ export const getLayout = (data: FormDefinition, el: HTMLDivElement) => {
       const condition = conditions.find(({ name }) => name === next.condition)
 
       g.setEdge(page.path, next.path, {
-        label: condition?.displayName
+        label: condition?.displayName,
+        width: condition?.displayName ? 270 : undefined
       })
     })
   })
