@@ -52,9 +52,6 @@ export class PageEdit extends Component {
     if (pathChanged) {
       copy = updateLinksTo(data, page.path, path)
       copyPage.path = path
-      if (copyIndex === 0) {
-        copy.startPage = path
-      }
     }
 
     copyPage.title = title
@@ -62,6 +59,7 @@ export class PageEdit extends Component {
     controller ? (copyPage.controller = controller) : delete copyPage.controller
 
     copy.pages[copyIndex] = copyPage
+
     try {
       await save(copy)
       this.props.onEdit()
@@ -125,6 +123,7 @@ export class PageEdit extends Component {
     })
 
     copy.pages.splice(copyPageIdx, 1)
+
     try {
       await save(copy)
       this.props.onEdit()

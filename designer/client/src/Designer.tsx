@@ -5,6 +5,7 @@ import { Menu } from '~/src/components/Menu/Menu.jsx'
 import { Visualisation } from '~/src/components/Visualisation/Visualisation.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { FlyoutContext } from '~/src/context/FlyoutContext.js'
+import { updateStartPage } from '~/src/data/page/updateStartPage.js'
 import * as form from '~/src/lib/form.js'
 
 interface Props {
@@ -54,7 +55,11 @@ export class Designer extends Component<Props, State> {
   save = async (definition: FormDefinition) => {
     const { metadata } = this.props
 
-    await form.save(metadata.id, definition)
+    // Fix incorrect start page
+    const updated = updateStartPage(definition)
+
+    // Save and return form definition
+    await form.save(metadata.id, updated)
     return this.get()
   }
 
