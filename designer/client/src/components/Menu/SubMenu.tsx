@@ -1,38 +1,70 @@
-import React, { useContext, useRef } from 'react'
+import { type FormDefinition } from '@defra/forms-model'
+import React, {
+  useContext,
+  useRef,
+  type ChangeEvent,
+  type MouseEvent
+} from 'react'
 
+import { logger } from '~/src/common/helpers/logging/logger.js'
 import { DataContext } from '~/src/context/DataContext.js'
 
 interface Props {
-  id: string
+  slug: string
 }
 
-export function SubMenu({ id }: Props) {
+export function SubMenu({ slug }: Props) {
   const { data, save } = useContext(DataContext)
   const fileInput = useRef<HTMLInputElement>(null)
 
-  const onClickUpload = () => {
+  function onClickUpload() {
     fileInput.current?.click()
   }
 
-  const onClickDownload = (e) => {
+  function onClickDownload(e: MouseEvent<HTMLButtonElement>) {
     e.preventDefault()
-    const encodedData = `text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(data))}`
+
     const link = document.createElement('a')
-    link.download = `${id}.json`
-    link.href = `data:${encodedData}`
+    const contents = JSON.stringify(data, undefined, 2)
+
+    link.download = `${slug}.json`
+    link.href = `data:text/json;charset=utf-8,${encodeURIComponent(contents)}`
+
     document.body.appendChild(link)
+
     link.click()
-    document.body.removeChild(link)
+    link.remove()
   }
 
-  const onFileUpload = (e) => {
-    const file = e.target.files.item(0)
-    const reader = new window.FileReader()
-    reader.readAsText(file, 'UTF-8')
-    reader.onload = function (evt) {
-      const content = JSON.parse(evt.target.result)
-      save(content)
+  function onFileUpload(e: ChangeEvent<HTMLInputElement>) {
+    const { files } = e.target
+
+    if (!files?.length) {
+      logger.warn('Upload file not found')
+      return
     }
+
+    // Reset input for next upload
+    if (fileInput.current) {
+      fileInput.current.value = ''
+    }
+
+    const reader = new window.FileReader()
+    reader.addEventListener('load', onFileUploaded)
+    reader.readAsText(files[0], 'UTF-8')
+  }
+
+  function onFileUploaded(e: ProgressEvent<FileReader>) {
+    const { result } = e.target ?? {}
+
+    if (typeof result !== 'string') {
+      logger.warn('Upload file contents must be a string')
+      return
+    }
+
+    save(JSON.parse(result) as FormDefinition).catch((error: unknown) =>
+      logger.error(error, 'Upload file failed')
+    )
   }
 
   return (
