@@ -7,6 +7,7 @@ import { DataPrettyPrint } from '~/src/components/DataPrettyPrint/DataPrettyPrin
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import { SubMenu } from '~/src/components/Menu/SubMenu.jsx'
 import { useMenuItem } from '~/src/components/Menu/useMenuItem.jsx'
+import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
 import { Tabs } from '~/src/components/Tabs/Tabs.jsx'
 import { ConditionsEdit } from '~/src/conditions/ConditionsEdit.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
@@ -123,53 +124,67 @@ export function Menu({ slug }: Props) {
       </nav>
 
       {page.isVisible && (
-        <Flyout title="Add Page" onHide={page.hide}>
-          <PageCreate onCreate={() => page.hide()} />
-        </Flyout>
+        <RenderInPortal>
+          <Flyout title="Add Page" onHide={page.hide}>
+            <PageCreate onCreate={() => page.hide()} />
+          </Flyout>
+        </RenderInPortal>
       )}
 
       {link.isVisible && (
-        <Flyout title={i18n('menu.links')} onHide={link.hide}>
-          <LinkCreate onCreate={() => link.hide()} />
-        </Flyout>
+        <RenderInPortal>
+          <Flyout title={i18n('menu.links')} onHide={link.hide}>
+            <LinkCreate onCreate={() => link.hide()} />
+          </Flyout>
+        </RenderInPortal>
       )}
 
       {sections.isVisible && (
-        <Flyout title="Edit Sections" onHide={sections.hide}>
-          <SectionsEdit />
-        </Flyout>
+        <RenderInPortal>
+          <Flyout title="Edit Sections" onHide={sections.hide}>
+            <SectionsEdit />
+          </Flyout>
+        </RenderInPortal>
       )}
 
       {conditions.isVisible && (
-        <Flyout
-          title={i18n('conditions.addOrEdit')}
-          onHide={conditions.hide}
-          width="large"
-        >
-          <ConditionsEdit />
-        </Flyout>
+        <RenderInPortal>
+          <Flyout
+            title={i18n('conditions.addOrEdit')}
+            onHide={conditions.hide}
+            width="large"
+          >
+            <ConditionsEdit />
+          </Flyout>
+        </RenderInPortal>
       )}
 
       {lists.isVisible && (
-        <Flyout title="Edit Lists" onHide={lists.hide}>
-          <ListsEditorContextProvider>
-            <ListContextProvider>
-              <ListsEdit showEditLists={false} />
-            </ListContextProvider>
-          </ListsEditorContextProvider>
-        </Flyout>
+        <RenderInPortal>
+          <Flyout title="Edit Lists" onHide={lists.hide}>
+            <ListsEditorContextProvider>
+              <ListContextProvider>
+                <ListsEdit showEditLists={false} />
+              </ListContextProvider>
+            </ListsEditorContextProvider>
+          </Flyout>
+        </RenderInPortal>
       )}
 
       {summaryBehaviour.isVisible && (
-        <Flyout title="Edit Summary behaviour" onHide={summaryBehaviour.hide}>
-          <DeclarationEdit onCreate={() => summaryBehaviour.hide()} />
-        </Flyout>
+        <RenderInPortal>
+          <Flyout title="Edit Summary behaviour" onHide={summaryBehaviour.hide}>
+            <DeclarationEdit onCreate={() => summaryBehaviour.hide()} />
+          </Flyout>
+        </RenderInPortal>
       )}
 
       {summary.isVisible && (
-        <Flyout title="Summary" width="large" onHide={summary.hide}>
-          <Tabs title="Summary" items={summaryTabs}></Tabs>
-        </Flyout>
+        <RenderInPortal>
+          <Flyout title="Summary" width="large" onHide={summary.hide}>
+            <Tabs title="Summary" items={summaryTabs}></Tabs>
+          </Flyout>
+        </RenderInPortal>
       )}
     </>
   )

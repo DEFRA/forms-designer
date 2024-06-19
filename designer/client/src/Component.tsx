@@ -10,6 +10,7 @@ import React, { useState, type FunctionComponent } from 'react'
 import { ComponentEdit } from '~/src/ComponentEdit.jsx'
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import { SearchIcon } from '~/src/components/Icons/SearchIcon.jsx'
+import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContextProvider } from '~/src/reducers/component/componentReducer.jsx'
 
@@ -241,15 +242,17 @@ export const Component: FunctionComponent<Props> = (props) => {
         <TagName />
       </button>
       {showEditor && (
-        <Flyout title={editFlyoutTitle} show={true} onHide={toggleShowEditor}>
-          <ComponentContextProvider
-            pagePath={page.path}
-            component={component}
-            data={data}
-          >
-            <ComponentEdit page={page} toggleShowEditor={toggleShowEditor} />
-          </ComponentContextProvider>
-        </Flyout>
+        <RenderInPortal>
+          <Flyout title={editFlyoutTitle} onHide={toggleShowEditor}>
+            <ComponentContextProvider
+              pagePath={page.path}
+              component={component}
+              data={data}
+            >
+              <ComponentEdit page={page} toggleShowEditor={toggleShowEditor} />
+            </ComponentContextProvider>
+          </Flyout>
+        </RenderInPortal>
       )}
     </>
   )

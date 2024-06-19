@@ -11,6 +11,7 @@ import { Component } from '~/src/Component.jsx'
 import { PageEdit } from '~/src/PageEdit.jsx'
 import { ComponentCreate } from '~/src/components/ComponentCreate/ComponentCreate.jsx'
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
+import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContextProvider } from '~/src/reducers/component/componentReducer.jsx'
@@ -121,23 +122,27 @@ export const Page = (props: {
         </a>
       </div>
       {isEditingPage && (
-        <Flyout title="Edit Page" onHide={setIsEditingPage}>
-          <PageEdit page={page} onEdit={onEditEnd} />
-        </Flyout>
+        <RenderInPortal>
+          <Flyout title="Edit Page" onHide={setIsEditingPage}>
+            <PageEdit page={page} onEdit={onEditEnd} />
+          </Flyout>
+        </RenderInPortal>
       )}
 
       {isCreatingComponent && (
-        <Flyout show={true} onHide={setIsCreatingComponent}>
-          <ComponentContextProvider>
-            <ComponentCreate
-              renderInForm={true}
-              toggleAddComponent={() => {
-                setIsCreatingComponent(false)
-              }}
-              page={page}
-            />
-          </ComponentContextProvider>
-        </Flyout>
+        <RenderInPortal>
+          <Flyout onHide={setIsCreatingComponent}>
+            <ComponentContextProvider>
+              <ComponentCreate
+                renderInForm={true}
+                toggleAddComponent={() => {
+                  setIsCreatingComponent(false)
+                }}
+                page={page}
+              />
+            </ComponentContextProvider>
+          </Flyout>
+        </RenderInPortal>
       )}
     </div>
   )

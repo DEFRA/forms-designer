@@ -1,24 +1,30 @@
+import { type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
 import React from 'react'
 
 import { PageCreate } from '~/src/PageCreate.jsx'
+import { RenderWithContextAndDataContext } from '~/test/helpers/renderers.jsx'
 
 describe('page create fields text', () => {
+  const data: FormDefinition = {
+    pages: [],
+    lists: [],
+    sections: [],
+    conditions: []
+  }
+
   afterEach(cleanup)
 
   const { getByText } = screen
 
   test('displays field titles and help texts', () => {
-    const props = {
-      path: '/some-path',
-      data: {
-        sections: [],
-        pages: []
-      }
-    }
+    render(
+      <RenderWithContextAndDataContext mockData={data}>
+        <PageCreate page={{ path: '/some-path' }} />
+      </RenderWithContextAndDataContext>
+    )
 
-    render(<PageCreate {...props} />)
     expect(getByText('Page type')).toBeInTheDocument()
     expect(
       getByText(

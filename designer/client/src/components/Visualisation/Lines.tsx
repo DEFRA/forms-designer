@@ -2,6 +2,7 @@ import React, { Component, type ContextType } from 'react'
 
 import { LinkEdit } from '~/src/LinkEdit.jsx'
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
+import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
 import {
   type Edge,
   type Pos
@@ -96,15 +97,17 @@ export class Lines extends Component<Props, State> {
           })}
         </svg>
         {this.state.edge && (
-          <Flyout
-            title="Edit Link"
-            onHide={() => this.setState({ edge: undefined })}
-          >
-            <LinkEdit
-              edge={this.state.edge}
-              onEdit={() => this.setState({ edge: undefined })}
-            />
-          </Flyout>
+          <RenderInPortal>
+            <Flyout
+              title="Edit Link"
+              onHide={() => this.setState({ edge: undefined })}
+            >
+              <LinkEdit
+                edge={this.state.edge}
+                onEdit={() => this.setState({ edge: undefined })}
+              />
+            </Flyout>
+          </RenderInPortal>
         )}
       </>
     )
