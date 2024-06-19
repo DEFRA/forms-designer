@@ -39,6 +39,11 @@ export function SubMenu({ slug }: Props) {
   function onFileUpload(e: ChangeEvent<HTMLInputElement>) {
     const { files } = e.target
 
+    if (!files?.length) {
+      logger.warn('Upload file not found')
+      return
+    }
+
     const reader = new window.FileReader()
     reader.addEventListener('load', onFileUploaded)
     reader.readAsText(files[0], 'UTF-8')
@@ -46,8 +51,15 @@ export function SubMenu({ slug }: Props) {
 
   function onFileUploaded(e: ProgressEvent<FileReader>) {
     const { result } = e.target ?? {}
-    const content = JSON.parse(result) as FormDefinition
-    save(content)
+
+    if (typeof result !== 'string') {
+      logger.warn('Upload file contents must be a string')
+      return
+    }
+
+    save(JSON.parse(result) as FormDefinition).catch((error: unknown) =>
+      logger.error(error, 'Upload file failed')
+    )
   }
 
   return (
