@@ -3,10 +3,10 @@ import React, { useContext, useRef } from 'react'
 import { DataContext } from '~/src/context/DataContext.js'
 
 interface Props {
-  id: string
+  slug: string
 }
 
-export function SubMenu({ id }: Props) {
+export function SubMenu({ slug }: Props) {
   const { data, save } = useContext(DataContext)
   const fileInput = useRef<HTMLInputElement>(null)
 
@@ -18,7 +18,7 @@ export function SubMenu({ id }: Props) {
     e.preventDefault()
     const encodedData = `text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(data))}`
     const link = document.createElement('a')
-    link.download = `${id}.json`
+    link.download = `${slug}.json`
     link.href = `data:${encodedData}`
     document.body.appendChild(link)
     link.click()

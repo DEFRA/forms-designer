@@ -17,10 +17,10 @@ import { ListContextProvider } from '~/src/reducers/listReducer.jsx'
 import { SectionsEdit } from '~/src/section/SectionsEdit.jsx'
 
 interface Props {
-  id: string
+  slug: string
 }
 
-export function Menu({ id }: Props) {
+export function Menu({ slug }: Props) {
   const { data } = useContext(DataContext)
 
   const page = useMenuItem()
@@ -119,7 +119,7 @@ export function Menu({ id }: Props) {
             {i18n('menu.summary')}
           </button>
         </div>
-        <SubMenu id={id} />
+        <SubMenu slug={slug} />
       </nav>
 
       {page.isVisible && (
