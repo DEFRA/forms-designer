@@ -90,7 +90,7 @@ export class LinkCreate extends Component {
               name="path"
               onChange={(e) => this.storeValue(e, 'from')}
             >
-              <option />
+              <option value="" />
               {pages.map((page) => (
                 <option
                   key={page.path}
@@ -123,7 +123,7 @@ export class LinkCreate extends Component {
               name="page"
               onChange={(e) => this.storeValue(e, 'to')}
             >
-              <option />
+              <option value="" />
               {pages.map((page) => (
                 <option
                   key={page.path}

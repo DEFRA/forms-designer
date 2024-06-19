@@ -112,7 +112,7 @@ export class LinkEdit extends Component<Props, State> {
             name="link-source"
             disabled
           >
-            <option />
+            <option value="" />
             {pages.map((page) => (
               <option key={page.path} value={page.path}>
                 {page.title}
@@ -131,7 +131,7 @@ export class LinkEdit extends Component<Props, State> {
             name="link-target"
             disabled
           >
-            <option />
+            <option value="" />
             {pages.map((page) => (
               <option key={page.path} value={page.path}>
                 {page.title}

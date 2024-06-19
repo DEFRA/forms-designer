@@ -33,7 +33,7 @@ export const SelectValues = (props) => {
         onChange={onChangeSelect}
         data-testid={'cond-value'}
       >
-        <option />
+        <option value="" />
         {fieldDef.values.map((option) => {
           return (
             <option key={option.value} value={option.value}>

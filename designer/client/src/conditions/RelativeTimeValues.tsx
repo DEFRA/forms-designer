@@ -55,7 +55,7 @@ export class RelativeTimeValues extends Component {
           onChange={(e) => this.updateState({ timeUnits: e.target.value })}
           data-testid="cond-value-units"
         >
-          <option />
+          <option value="" />
           {Object.values(this.props.units).map((unit) => {
             return (
               <option key={unit.value} value={unit.value}>
@@ -73,7 +73,7 @@ export class RelativeTimeValues extends Component {
           onChange={(e) => this.updateState({ direction: e.target.value })}
           data-testid="cond-value-direction"
         >
-          <option />
+          <option value="" />
           {Object.values(DateDirections).map((direction) => {
             return (
               <option key={direction} value={direction}>

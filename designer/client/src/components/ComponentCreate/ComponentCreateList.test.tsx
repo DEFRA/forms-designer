@@ -6,7 +6,7 @@ import { ComponentCreateList } from '~/src/components/ComponentCreate/ComponentC
 describe('ComponentCreateList', () => {
   afterEach(cleanup)
 
-  test('should match snapshot', async () => {
+  test('should match snapshot', () => {
     const onSelectComponent = jest.fn()
     const { asFragment } = render(
       <ComponentCreateList onSelectComponent={onSelectComponent} />

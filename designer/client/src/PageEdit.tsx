@@ -271,7 +271,7 @@ export class PageEdit extends Component {
                 value={section}
                 onChange={this.onChangeSection}
               >
-                <option />
+                <option value="" />
                 {sections.map((section) => (
                   <option key={section.name} value={section.name}>
                     {section.title}

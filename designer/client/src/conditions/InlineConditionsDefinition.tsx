@@ -168,7 +168,7 @@ export class InlineConditionsDefinition extends Component {
               value={condition?.coordinator ?? ''}
               onChange={this.onChangeCoordinator}
             >
-              <option />
+              <option value="" />
               <option key="and" value={Coordinator.AND}>
                 And
               </option>
@@ -191,7 +191,7 @@ export class InlineConditionsDefinition extends Component {
                 value={condition?.field?.name ?? ''}
                 onChange={this.onChangeField}
               >
-                <option />
+                <option value="" />
                 {Object.values(this.props.fields).map((field, index) => (
                   <option key={`${field.name}-${index}`} value={field.name}>
                     {field.label}
@@ -212,7 +212,7 @@ export class InlineConditionsDefinition extends Component {
                   value={condition.operator ?? ''}
                   onChange={this.onChangeOperator}
                 >
-                  <option />
+                  <option value="" />
                   {getOperatorNames(fieldDef.type).map((conditional) => {
                     return (
                       <option

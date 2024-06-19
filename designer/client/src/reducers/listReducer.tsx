@@ -21,7 +21,7 @@ export interface ListState {
   selectedListItem?: any // TODO:- type
   initialName?: string
   initialTitle?: string
-  errors?: any
+  errors?: ErrorList
   listItemErrors?: ErrorList
 }
 
@@ -50,7 +50,7 @@ export function listReducer(
       delete state.selectedListItem
       return {
         ...state,
-        selectedList: {
+        selectedList: selectedList && {
           ...selectedList,
           items: selectedList.items.filter(
             (_item, index) => index !== (payload || selectedItemIndex)
@@ -100,10 +100,10 @@ export function listReducer(
     case ListActions.EDIT_LIST_ITEM: {
       let selectedItem, selectedItemIndex
       if (typeof payload === 'number') {
-        selectedItem = selectedList.items[payload]
+        selectedItem = selectedList?.items[payload]
       } else {
         selectedItem = payload
-        selectedItemIndex = selectedList.items.findIndex(
+        selectedItemIndex = selectedList?.items.findIndex(
           (item) => item === payload
         )
       }
@@ -187,17 +187,20 @@ export const ListContextProvider = (props: {
   children?: ReactNode
   selectedListName?: string
 }) => {
-  let init: ListState = {}
   const { selectedListName } = props
   const { data } = useContext(DataContext)
 
+  let init: ListState = {}
+
   if (selectedListName) {
+    const selectedList = data.lists.find(
+      ({ name }) => name === selectedListName
+    )
+
     init = {
-      selectedList: data.lists.find(
-        (list) => list.name === props.selectedListName
-      ),
+      selectedList,
       initialName: selectedListName,
-      initialTitle: data.lists.find(selectedListName)?.title,
+      initialTitle: selectedList?.title,
       isEditingFromComponent: true
     }
   }
