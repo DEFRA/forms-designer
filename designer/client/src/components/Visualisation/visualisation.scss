@@ -1,10 +1,26 @@
 $govuk-assets-path: "/assets/";
 
+$govuk-breakpoints: (
+  mobile: 320px,
+  tablet: 641px,
+  desktop: 769px,
+  wide: 1020px
+);
+
 @import "govuk-frontend/dist/govuk/base";
 
 .visualisation {
   position: relative;
   flex: 1;
+
+  @include govuk-responsive-padding(6, "top");
+  @include govuk-responsive-padding(9, "bottom");
+  overflow-x: auto;
+
+  @include govuk-media-query($from: wide) {
+    margin-left: (calc($govuk-page-width / 2) + govuk-spacing(5)) * -1;
+    padding-left: 50%;
+  }
 
   &__pages-wrapper {
     position: relative;

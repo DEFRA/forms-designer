@@ -30,8 +30,8 @@ export const getLayout = (data: FormDefinition, el: HTMLDivElement) => {
   g.setGraph({
     rankdir: 'LR',
     align: 'UL',
-    marginx: 50,
-    marginy: 100,
+    marginx: 30,
+    marginy: 0,
     edgesep: 80,
     nodesep: 80,
     ranksep: 80

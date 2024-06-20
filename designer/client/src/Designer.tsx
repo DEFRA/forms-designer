@@ -79,10 +79,10 @@ export class Designer extends Component<Props, State> {
     return (
       <DataContext.Provider value={dataContextProviderValue}>
         <FlyoutContext.Provider value={flyoutContextProviderValue}>
-          <div id="designer">
+          <div className="govuk-width-container">
             <Menu slug={metadata.slug} />
-            <Visualisation slug={metadata.slug} previewUrl={previewUrl} />
           </div>
+          <Visualisation slug={metadata.slug} previewUrl={previewUrl} />
         </FlyoutContext.Provider>
       </DataContext.Provider>
     )
