@@ -20,7 +20,7 @@ export function DetailsEdit({ context = ComponentContext }: Props) {
   return (
     <>
       <Input
-        id="details-title"
+        id="field-title"
         name="title"
         label={{
           className: 'govuk-label--s',
