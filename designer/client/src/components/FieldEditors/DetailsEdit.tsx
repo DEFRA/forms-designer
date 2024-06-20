@@ -36,11 +36,7 @@ export function DetailsEdit({ context = ComponentContext }: Props) {
             payload: e.target.value
           })
         }
-        errorMessage={
-          errors.title
-            ? { children: i18n(...errors.title.children) }
-            : undefined
-        }
+        errorMessage={errors.title}
       />
 
       <div
@@ -54,7 +50,7 @@ export function DetailsEdit({ context = ComponentContext }: Props) {
         </label>
         <div className="govuk-hint">{i18n('fieldEdit.details.hint')}</div>
         {errors.content && (
-          <ErrorMessage>{i18n(...errors.content.children)}</ErrorMessage>
+          <ErrorMessage>{errors.content.children}</ErrorMessage>
         )}
         <textarea
           className="govuk-textarea"

@@ -21,8 +21,8 @@ export interface ListState {
   selectedListItem?: any // TODO:- type
   initialName?: string
   initialTitle?: string
-  errors?: ErrorList
-  listItemErrors?: ErrorList
+  errors?: Partial<ErrorList<'title' | 'name' | 'content' | 'list'>>
+  listItemErrors?: Partial<ErrorList<'title' | 'value'>>
 }
 
 export const ListContext = createContext<{

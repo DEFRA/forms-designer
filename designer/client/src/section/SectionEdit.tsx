@@ -153,9 +153,7 @@ export class SectionEdit extends Component {
             }}
             value={title}
             onChange={(e) => this.setState({ title: e.target.value })}
-            errorMessage={
-              errors.title ? { children: errors.title.children } : undefined
-            }
+            errorMessage={errors.name}
           />
           <Input
             id="section-name"
@@ -170,9 +168,7 @@ export class SectionEdit extends Component {
             }}
             value={name}
             onChange={(e) => this.setState({ name: e.target.value })}
-            errorMessage={
-              errors.name ? { children: errors.name.children } : undefined
-            }
+            errorMessage={errors.name}
           />
           <div className="govuk-checkboxes govuk-form-group">
             <div className="govuk-checkboxes__item">

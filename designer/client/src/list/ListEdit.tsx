@@ -158,9 +158,7 @@ export function ListEdit() {
                 payload: e.target.value
               })
             }
-            errorMessage={
-              errors.title ? { children: errors.title.children } : undefined
-            }
+            errorMessage={errors.title}
           />
         )}
 

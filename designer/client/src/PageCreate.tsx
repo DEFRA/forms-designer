@@ -260,9 +260,7 @@ export class PageCreate extends Component {
             }}
             value={title || ''}
             onChange={this.onChangeTitle}
-            errorMessage={
-              errors.title ? { children: errors.title.children } : undefined
-            }
+            errorMessage={errors.title}
           />
 
           <Input
@@ -277,9 +275,7 @@ export class PageCreate extends Component {
             }}
             value={path}
             onChange={this.onChangePath}
-            errorMessage={
-              errors.path ? { children: errors.path?.children } : undefined
-            }
+            errorMessage={errors.path}
           />
 
           <div className="govuk-form-group">

@@ -18,7 +18,7 @@ const validateContent = (component: ContentComponentsDef) => {
   if (!('content' in component) || isEmpty(component.content)) {
     errors.content = {
       href: `#field-content`,
-      children: ['errors.field', { field: 'Content' }]
+      children: [i18n('errors.field', { field: 'Content' })]
     }
   }
 
@@ -31,7 +31,7 @@ const validateList = (component: ListComponentsDef) => {
   if (!('list' in component)) {
     errors.list = {
       href: `#field-options-list`,
-      children: ['list.errors.select']
+      children: [i18n('list.errors.select')]
     }
   }
 

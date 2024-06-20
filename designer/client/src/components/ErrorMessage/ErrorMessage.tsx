@@ -1,11 +1,9 @@
 import classNames from 'classnames'
 import React, { type FunctionComponent, type HTMLAttributes } from 'react'
 
-import { type ErrorListItem } from '~/src/ErrorSummary.jsx'
 import { i18n } from '~/src/i18n/i18n.jsx'
 
 interface Props extends HTMLAttributes<HTMLParagraphElement> {
-  children: ErrorListItem['children']
   className?: string
   visuallyHiddenText?: string
 }

@@ -50,9 +50,7 @@ export function FieldEdit({
             payload: e.target.value
           })
         }}
-        errorMessage={
-          errors.title ? { children: errors.title.children } : undefined
-        }
+        errorMessage={errors.title}
       />
       <Textarea
         id="field-hint"

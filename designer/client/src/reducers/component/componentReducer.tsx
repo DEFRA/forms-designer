@@ -22,8 +22,8 @@ interface ComponentState {
   isNew?: boolean
   initialName?: ComponentDef['name']
   pagePath?: string
-  errors?: ErrorList
-  listItemErrors?: ErrorList
+  errors?: Partial<ErrorList<'title' | 'name' | 'content' | 'list'>>
+  listItemErrors?: Partial<ErrorList<'title' | 'value'>>
 }
 
 const defaultValues = {
