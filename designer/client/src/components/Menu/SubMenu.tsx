@@ -44,11 +44,6 @@ export function SubMenu({ slug }: Props) {
       return
     }
 
-    // Reset input for next upload
-    if (fileInput.current) {
-      fileInput.current.value = ''
-    }
-
     const reader = new window.FileReader()
     reader.addEventListener('load', onFileUploaded)
     reader.readAsText(files[0], 'UTF-8')
@@ -56,6 +51,11 @@ export function SubMenu({ slug }: Props) {
 
   function onFileUploaded(e: ProgressEvent<FileReader>) {
     const { result } = e.target ?? {}
+
+    // Reset input for next upload
+    if (fileInput.current) {
+      fileInput.current.value = ''
+    }
 
     if (typeof result !== 'string') {
       logger.warn('Upload file contents must be a string')
