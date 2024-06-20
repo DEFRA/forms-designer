@@ -159,7 +159,12 @@ export class InlineConditionsEdit extends Component {
     return (
       <div id="edit-conditions">
         {!editingIndex && editingIndex !== 0 && (
-          <div className="govuk-form-group">
+          <div
+            className={classNames({
+              'govuk-form-group': true,
+              'govuk-form-group--error': editingError
+            })}
+          >
             <fieldset className="govuk-fieldset">
               <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">
                 Amend conditions

@@ -1,5 +1,6 @@
 import { ComponentTypes } from '@defra/forms-model'
 import { Input, Textarea } from '@xgovformbuilder/govuk-react-jsx'
+import classNames from 'classnames'
 import React, { useContext } from 'react'
 
 import { ErrorMessage } from '~/src/components/ErrorMessage/ErrorMessage.jsx'
@@ -100,9 +101,10 @@ export function FieldEdit({
         </div>
       </div>
       <div
-        className={`govuk-form-group ${
-          errors.name ? 'govuk-form-group--error' : ''
-        }`}
+        className={classNames({
+          'govuk-form-group': true,
+          'govuk-form-group--error': errors.name
+        })}
       >
         <label className="govuk-label govuk-label--s" htmlFor="field-name">
           {i18n('common.componentNameField.title')}
