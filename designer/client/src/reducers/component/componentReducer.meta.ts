@@ -10,7 +10,7 @@ export function metaReducer(
   }
 ) {
   const { type, payload } = action
-  const { selectedComponent } = state
+  const { selectedComponent = {} } = state
   switch (type) {
     case Meta.SET_SELECTED_LIST:
       return {

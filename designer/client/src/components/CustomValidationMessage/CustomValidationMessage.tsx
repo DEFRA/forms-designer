@@ -1,4 +1,3 @@
-import { type TelephoneNumberFieldComponent } from '@defra/forms-model'
 import React, { useContext } from 'react'
 
 import { i18n } from '~/src/i18n/i18n.jsx'
@@ -7,8 +6,8 @@ import { Options } from '~/src/reducers/component/types.js'
 
 export function CustomValidationMessage() {
   const { state, dispatch } = useContext(ComponentContext)
-  const { selectedComponent } = state
-  const { options = {} } = selectedComponent as TelephoneNumberFieldComponent
+  const { selectedComponent = {} } = state
+  const { options = {} } = selectedComponent
 
   return (
     <div className="govuk-form-group">

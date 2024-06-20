@@ -71,7 +71,7 @@ export function componentReducer(
   }
 ) {
   const { type } = action
-  const { selectedComponent } = state
+  const { selectedComponent = {} } = state
 
   if (type !== Meta.VALIDATE) {
     state.hasValidated = false
@@ -101,7 +101,7 @@ export const initComponentState = (props) => {
     },
     initialName: selectedComponent?.name ?? newName,
     pagePath: props?.pagePath,
-    isNew: props?.isNew || ((selectedComponent?.name && false) ?? true),
+    isNew: props?.isNew ?? !selectedComponent?.name,
     listItemErrors: {}
   }
 }

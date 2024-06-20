@@ -29,7 +29,7 @@ export function ListItemEdit() {
   } = useListItem(state, dispatch)
 
   const { conditions } = data
-  const { listItemErrors: errors } = state
+  const { listItemErrors: errors = {} } = state
   const handleSubmit = async (
     e: FormEvent<HTMLFormElement> | MouseEvent<HTMLButtonElement>
   ) => {
@@ -56,7 +56,7 @@ export function ListItemEdit() {
           value={title}
           onChange={handleTitleChange}
           errorMessage={
-            errors?.title ? { children: errors?.title.children } : undefined
+            errors.title ? { children: errors.title.children } : undefined
           }
         />
         <Textarea
@@ -76,7 +76,7 @@ export function ListItemEdit() {
           name="list-item-value"
           value={value}
           errorMessage={
-            errors?.value ? { children: errors?.value.children } : undefined
+            errors.value ? { children: errors.value.children } : undefined
           }
           onChange={handleValueChange}
         />

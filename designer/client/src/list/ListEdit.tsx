@@ -63,20 +63,24 @@ function useListEdit() {
     listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST, false])
   }
 
-  const validate = () => {
+  const validate = (): Partial<ErrorList<'title' | 'listItems'>> => {
     const { selectedList } = state
 
-    const errors = validateTitle(
+    const titleErrors = validateTitle(
       'title',
       'list-title',
       '$t(list.title)',
-      selectedList.title,
+      selectedList?.title,
       i18n
     )
 
-    if (selectedList.items.length <= 0) {
+    const errors: ReturnType<typeof validate> = {
+      ...titleErrors
+    }
+
+    if (!selectedList?.items.length) {
       errors.listItems = {
-        children: ['list.errors.empty']
+        children: [i18n('list.errors.empty')]
       }
     }
 
@@ -95,7 +99,7 @@ function useListEdit() {
       return
     }
     let copy = { ...data }
-    if (selectedList.isNew) {
+    if (selectedList?.isNew) {
       delete selectedList.isNew
       copy = addList(copy, selectedList)
     } else {
@@ -122,7 +126,8 @@ function validate(errors: ErrorList, selectedList: any) {
   if (selectedList.items.length > 0) {
     return {}
   }
-  return errors
+
+  return errors ?? {}
 }
 
 export function ListEdit() {
@@ -130,7 +135,7 @@ export function ListEdit() {
 
   const { state, dispatch } = useContext(ListContext)
   const { selectedList, createItem } = useListItemActions(state, dispatch)
-  let { errors } = state
+  let { errors = {} } = state
   errors = validate(errors, selectedList)
   const validationErrors = hasValidationErrors(errors)
   return (
@@ -154,7 +159,7 @@ export function ListEdit() {
               })
             }
             errorMessage={
-              errors?.title ? { children: errors?.title.children } : undefined
+              errors.title ? { children: errors.title.children } : undefined
             }
           />
         )}

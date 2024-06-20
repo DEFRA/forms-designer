@@ -60,7 +60,7 @@ export class LinkCreate extends Component {
   render() {
     const { data } = this.context
     const { pages } = data
-    const { from, errors } = this.state
+    const { from, errors = {} } = this.state
     const hasValidationErrors = Object.keys(errors).length > 0
 
     return (

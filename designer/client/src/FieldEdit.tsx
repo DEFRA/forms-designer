@@ -17,7 +17,7 @@ export function FieldEdit({
   isListField = false
 }: Props) {
   const { state, dispatch } = useContext(ComponentContext)
-  const { selectedComponent, errors } = state
+  const { selectedComponent = {}, errors = {} } = state
 
   const { name, title, hint, attrs, type, options = {} } = selectedComponent
   const {
@@ -28,8 +28,9 @@ export function FieldEdit({
     allowPrePopulation = false
   } = options
   const fieldTitle =
-    ComponentTypes.find((componentType) => componentType.name === type)
+    ComponentTypes.find((componentType) => componentType.type === type)
       ?.title ?? ''
+
   return (
     <div data-test-id="standard-inputs">
       <Input
@@ -42,7 +43,7 @@ export function FieldEdit({
         hint={{
           children: [i18n('common.titleField.helpText')]
         }}
-        value={title || ''}
+        value={title ?? fieldTitle}
         onChange={(e) => {
           dispatch({
             type: Fields.EDIT_TITLE,
@@ -50,9 +51,7 @@ export function FieldEdit({
           })
         }}
         errorMessage={
-          errors?.title
-            ? { children: i18n(errors.title[0], errors.title[1]) }
-            : undefined
+          errors.title ? { children: errors.title.children } : undefined
         }
       />
       <Textarea
@@ -104,19 +103,19 @@ export function FieldEdit({
       </div>
       <div
         className={`govuk-form-group ${
-          errors?.name ? 'govuk-form-group--error' : ''
+          errors.name ? 'govuk-form-group--error' : ''
         }`}
       >
         <label className="govuk-label govuk-label--s" htmlFor="field-name">
           {i18n('common.componentNameField.title')}
         </label>
-        {errors?.name && (
+        {errors.name && (
           <ErrorMessage>{i18n('name.errors.whitespace')}</ErrorMessage>
         )}
         <div className="govuk-hint">{i18n('name.hint')}</div>
         <input
           className={`govuk-input govuk-input--width-20 ${
-            errors?.name ? 'govuk-input--error' : ''
+            errors.name ? 'govuk-input--error' : ''
           }`}
           id="field-name"
           name="name"

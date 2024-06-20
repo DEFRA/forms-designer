@@ -8,7 +8,7 @@ export function fieldsReducer(
   }
 ) {
   const { type, payload } = action
-  const { selectedComponent } = state
+  const { selectedComponent = {} } = state
 
   switch (type) {
     case Fields.EDIT_CONTENT:

@@ -8,7 +8,7 @@ export function schemaReducer(
   }
 ) {
   const { type, payload } = action
-  const { selectedComponent } = state
+  const { selectedComponent = {} } = state
   const { schema = {} } = selectedComponent
   switch (type) {
     case Schema.EDIT_SCHEMA_MIN:

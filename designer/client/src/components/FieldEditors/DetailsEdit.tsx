@@ -15,7 +15,7 @@ export function DetailsEdit({ context = ComponentContext }: Props) {
   // If you are editing a component, the default context will be ComponentContext because props.context is undefined,
   // but if you editing a component which is a children of a list based component, then the props.context is the ListContext.
   const { state, dispatch } = useContext(context)
-  const { selectedComponent, errors = {} } = state
+  const { selectedComponent = {}, errors = {} } = state
 
   return (
     <>
@@ -37,7 +37,7 @@ export function DetailsEdit({ context = ComponentContext }: Props) {
           })
         }
         errorMessage={
-          errors?.title
+          errors.title
             ? { children: i18n(...errors.title.children) }
             : undefined
         }
@@ -46,14 +46,14 @@ export function DetailsEdit({ context = ComponentContext }: Props) {
       <div
         className={classNames({
           'govuk-form-group': true,
-          'govuk-form-group--error': errors?.content
+          'govuk-form-group--error': errors.content
         })}
       >
         <label className="govuk-label govuk-label--s" htmlFor="field-content">
           Content
         </label>
         <div className="govuk-hint">{i18n('fieldEdit.details.hint')}</div>
-        {errors?.content && (
+        {errors.content && (
           <ErrorMessage>{i18n(...errors.content.children)}</ErrorMessage>
         )}
         <textarea

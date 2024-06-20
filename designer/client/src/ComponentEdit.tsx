@@ -13,7 +13,7 @@ export function ComponentEdit(props) {
   const { data, save } = useContext(DataContext)
   const { state, dispatch } = useContext(ComponentContext)
   const {
-    selectedComponent,
+    selectedComponent = {},
     initialName,
     errors = {},
     hasValidated,

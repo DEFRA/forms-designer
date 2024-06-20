@@ -6,7 +6,7 @@ import { Options } from '~/src/reducers/component/types.js'
 
 export function Autocomplete() {
   const { state, dispatch } = useContext(ComponentContext)
-  const { selectedComponent } = state
+  const { selectedComponent = {} } = state
   const { options = {} } = selectedComponent
 
   return (
