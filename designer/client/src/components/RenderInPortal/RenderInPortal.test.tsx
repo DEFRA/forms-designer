@@ -7,7 +7,7 @@ describe('RenderInPortal component', () => {
   let portalRoot: HTMLElement | null
 
   beforeEach(() => {
-    portalRoot = document.getElementById('portal-root')
+    portalRoot = document.querySelector('.app-form-portal')
   })
 
   test('renders paragraph inside portal', () => {

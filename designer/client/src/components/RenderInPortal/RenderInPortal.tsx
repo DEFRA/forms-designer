@@ -13,7 +13,7 @@ export class RenderInPortal extends Component<Props> {
     super(props)
 
     const $wrapper = document.createElement('div')
-    const $root = document.getElementById('portal-root')
+    const $root = document.querySelector('.app-form-portal')
 
     if (!($root instanceof HTMLElement)) {
       throw new Error('Missing portal root')
