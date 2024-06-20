@@ -22,8 +22,9 @@ describe('Server API', () => {
       method: 'put',
       url: '/api/test-form-id/data',
       auth,
-      payload: /** @satisfies {FormDefinition} */ ({
-        pages: [],
+
+      // Allow missing missing `pages` property for test
+      payload: /** @satisfies {Omit<FormDefinition, 'pages'>} */ ({
         lists: [],
         sections: [],
         conditions: []
@@ -35,7 +36,7 @@ describe('Server API', () => {
     )
 
     expect(result.statusCode).toBe(500)
-    expect(result.result.err.message).toMatch('Schema validation failed')
+    expect(result.result?.err.message).toMatch('Schema validation failed')
   })
 
   test('persistence service errors should return 500', async () => {
@@ -82,7 +83,7 @@ describe('Server API', () => {
 
     // Then
     expect(result.statusCode).toBe(500)
-    expect(result.result.err.message).toBe('Error in persistence service')
+    expect(result.result?.err.message).toBe('Error in persistence service')
   })
 })
 
