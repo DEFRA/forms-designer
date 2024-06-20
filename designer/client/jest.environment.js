@@ -29,9 +29,6 @@ beforeAll(async () => {
 
 beforeEach(() => {
   document.body.innerHTML = `
-    <div>
-      <main id="root"></main>
-      <div id="portal-root"></div>
-    </div>
+    <div id="portal-root"></div>
   `
 })

@@ -60,10 +60,7 @@ function customRender(
   providerProps = dataValue
 ): RenderResult {
   return render(
-    <DataContext.Provider value={providerProps}>
-      {element}
-      <div id="portal-root" />
-    </DataContext.Provider>
+    <DataContext.Provider value={providerProps}>{element}</DataContext.Provider>
   )
 }
 

@@ -71,7 +71,6 @@ function customRender(
       <FlyoutContext.Provider value={flyoutValue}>
         {element}
       </FlyoutContext.Provider>
-      <div id="portal-root" />
     </DataContext.Provider>
   )
 }
@@ -130,14 +129,14 @@ describe('ConditionsEdit', () => {
       customRender(<ConditionsEdit />, providerProps)
       expect(getByText(condition.displayName)).toBeInTheDocument()
       expect(getByText(condition2.displayName)).toBeInTheDocument()
-      expect(queryByTestId('edit-conditions')).not.toBeInTheDocument()
+      expect(queryByTestId('flyout-0')).not.toBeInTheDocument()
     })
 
     test('Clicking an edit link causes the edit view to be rendered and all other elements hidden', async () => {
       customRender(<ConditionsEdit />, providerProps)
       const $link = getByText(condition.displayName)
       await act(() => userEvent.click($link))
-      expect(getByTestId('edit-conditions')).toBeTruthy()
+      expect(getByTestId('flyout-0')).toBeTruthy()
     })
   })
 

@@ -36,7 +36,6 @@ describe('Menu', () => {
         <FlyoutContext.Provider value={flyoutValue}>
           {children}
         </FlyoutContext.Provider>
-        <div id="portal-root" />
       </DataContext.Provider>
     )
   }
