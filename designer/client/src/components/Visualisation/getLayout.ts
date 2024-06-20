@@ -1,33 +1,16 @@
-import { graphlib, layout } from '@dagrejs/dagre'
+import { graphlib, layout, type GraphEdge, type Node } from '@dagrejs/dagre'
 import { type FormDefinition } from '@defra/forms-model'
 
 export interface Point {
-  node: {
-    x: number
-    y: number
-    width: number
-    height: number
-    class?: string | undefined
-    label?: string | undefined
-    padding?: number | undefined
-    paddingX?: number | undefined
-    paddingY?: number | undefined
-    rx?: number | undefined
-    ry?: number | undefined
-    shape?: string | undefined
-  }
+  node: Node
   top: string
   left: string
 }
 
-export interface Edge {
+export interface Edge extends GraphEdge {
   source: string
   target: string
   label: string
-  points: {
-    y: number
-    x: number
-  }[]
 }
 
 export interface Pos {
