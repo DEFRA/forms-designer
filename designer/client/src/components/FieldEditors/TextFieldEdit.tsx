@@ -1,3 +1,4 @@
+import { ComponentType } from '@defra/forms-model'
 import React, { useContext, type ReactNode } from 'react'
 
 import { Autocomplete } from '~/src/components/Autocomplete/Autocomplete.jsx'
@@ -162,7 +163,7 @@ export function TextFieldEdit({ children, context = ComponentContext }: Props) {
 
         <CssClasses />
 
-        {selectedComponent.type === 'TelephoneNumberField' && (
+        {selectedComponent.type === ComponentType.TelephoneNumberField && (
           // Remove type check when fully integrated into all runner components
           <CustomValidationMessage />
         )}

@@ -66,8 +66,8 @@ export function ComponentEdit(props) {
 
     const copy = { ...data }
     const indexOfPage = copy.pages.findIndex((p) => p.path === page.path)
-    const indexOfComponent = copy.pages[indexOfPage]?.components.findIndex(
-      (component) => component.name === selectedComponent.name
+    const indexOfComponent = copy.pages[indexOfPage]?.components?.findIndex(
+      (component) => component.type === selectedComponent.type
     )
     copy.pages[indexOfPage].components.splice(indexOfComponent, 1)
     await save(copy)

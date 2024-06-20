@@ -152,7 +152,7 @@ export function FieldEdit({
               {i18n('common.componentOptionalOption.title', {
                 component:
                   ComponentTypes.find(
-                    (componentType) => componentType.name === type
+                    (componentType) => componentType.type === type
                   )?.title ?? ''
               })}
             </label>
@@ -244,7 +244,7 @@ export function FieldEdit({
               {i18n('common.allowPrePopulationOption.title', {
                 component:
                   ComponentTypes.find(
-                    (componentType) => componentType.name === type
+                    (componentType) => componentType.type === type
                   )?.title ?? ''
               })}
             </label>
