@@ -11,8 +11,7 @@ export const isNotContentType = (
   const contentTypes: ContentComponentsDef['type'][] = [
     'Details',
     'Html',
-    'InsetText',
-    'List'
+    'InsetText'
   ]
   return !contentTypes.find((type) => type === obj.type)
 }

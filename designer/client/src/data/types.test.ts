@@ -33,6 +33,14 @@ describe('Type guards', () => {
         list: 'items',
         options: {},
         schema: {}
+      } satisfies ComponentDef,
+      {
+        name: 'field',
+        title: 'Items',
+        type: ComponentType.List,
+        list: 'items',
+        options: {},
+        schema: {}
       } satisfies ComponentDef
     ])('should allow non-content types', (component) => {
       const { type } = component
@@ -65,14 +73,6 @@ describe('Type guards', () => {
         title: '',
         type: ComponentType.InsetText,
         content: 'It can take up to 8 weeks to register a lasting power of…',
-        options: {},
-        schema: {}
-      } satisfies ComponentDef,
-      {
-        name: 'field',
-        title: 'Items',
-        type: ComponentType.List,
-        list: 'items',
         options: {},
         schema: {}
       } satisfies ComponentDef

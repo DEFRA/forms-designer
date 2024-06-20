@@ -256,7 +256,6 @@ export type ContentComponentsDef =
   | DetailsComponent
   | HtmlComponent
   | InsetTextComponent
-  | ListComponent
 
 // Components with editors
 export type EditorComponentsDef =

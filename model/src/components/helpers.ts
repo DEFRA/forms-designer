@@ -47,15 +47,14 @@ export function hasContentField(
   const allowedTypes = [
     ComponentType.Details,
     ComponentType.Html,
-    ComponentType.InsetText,
-    ComponentType.List
+    ComponentType.InsetText
   ]
 
   return !!component?.type && allowedTypes.includes(component.type)
 }
 
 /**
- * Filter known components with text editor
+ * Filter known components with text editor or list select
  */
 export function hasEditor(
   component?: Partial<ComponentDef>
