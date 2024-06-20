@@ -1,19 +1,37 @@
-import { Component } from 'react'
-import ReactDOM from 'react-dom'
+import { Component, type ReactNode } from 'react'
+import { createPortal } from 'react-dom'
 
-export class RenderInPortal extends Component {
-  wrapper = document.createElement('div')
-  portalRoot = document.getElementById('portal-root')
+interface Props {
+  children: ReactNode
+}
+
+export class RenderInPortal extends Component<Props> {
+  $root: HTMLElement
+  $wrapper: HTMLElement
+
+  constructor(props: Props) {
+    super(props)
+
+    const $wrapper = document.createElement('div')
+    const $root = document.getElementById('portal-root')
+
+    if (!($root instanceof HTMLElement)) {
+      throw new Error('Missing portal root')
+    }
+
+    this.$wrapper = $wrapper
+    this.$root = $root
+  }
 
   componentDidMount() {
-    this.portalRoot?.appendChild(this.wrapper)
+    this.$root.appendChild(this.$wrapper)
   }
 
   componentWillUnmount() {
-    this.portalRoot?.removeChild(this.wrapper)
+    this.$root.removeChild(this.$wrapper)
   }
 
   render() {
-    return ReactDOM.createPortal(this.props.children, this.wrapper)
+    return createPortal(this.props.children, this.$wrapper)
   }
 }
