@@ -80,7 +80,7 @@ export class SectionEdit extends Component {
     const titleErrors = validateTitle(
       'title',
       'section-title',
-      '$t(titleField.title)',
+      '$t(sectionEdit.titleField.title)',
       title,
       i18n
     )
@@ -88,7 +88,7 @@ export class SectionEdit extends Component {
     const nameErrors = validateName(
       'name',
       'section-name',
-      '$t(nameField.title)',
+      '$t(sectionEdit.nameField.title)',
       name,
       i18n
     )

@@ -43,12 +43,24 @@ export function fieldComponentValidations(component: ComponentDef) {
 
   if (hasTitle(component)) {
     validations.push(
-      validateTitle('title', 'field-title', '$t(title)', component.title, i18n)
+      validateTitle(
+        'title',
+        'field-title',
+        '$t(common.titleField.title)',
+        component.title,
+        i18n
+      )
     )
   }
 
   validations.push(
-    validateName('name', 'field-name', '$t(name)', component.name, i18n)
+    validateName(
+      'name',
+      'field-name',
+      '$t(common.componentNameField.title)',
+      component.name,
+      i18n
+    )
   )
 
   if (hasContentField(component)) {
