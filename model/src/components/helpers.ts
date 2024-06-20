@@ -25,6 +25,7 @@ export function isConditionalType(
   type?: ComponentType
 ): type is ConditionalComponentType {
   const allowedTypes = [
+    ComponentType.RadiosField,
     ComponentType.CheckboxesField,
     ComponentType.DatePartsField,
     ComponentType.EmailAddressField,

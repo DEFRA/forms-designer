@@ -67,6 +67,7 @@ const relativeTimeOperators = (units: DateUnits | TimeUnits) => ({
 })
 
 export const customOperators = {
+  [ComponentType.RadiosField]: defaultOperators,
   [ComponentType.CheckboxesField]: {
     [OperatorName.Contains]: reverseInline(Operator.Contains),
     [OperatorName.DoesNotContain]: not(reverseInline(Operator.Contains))
