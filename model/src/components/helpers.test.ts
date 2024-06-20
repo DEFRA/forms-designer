@@ -4,10 +4,10 @@ import {
   type ComponentDef
 } from '@defra/forms-model'
 
-import { isNotContentType } from '~/src/data/helpers.js'
+import { hasContentField } from '~/src/components/helpers.js'
 
 describe('Type guards', () => {
-  describe('isNotContentType', () => {
+  describe('hasContentField', () => {
     it.each([
       {
         name: 'field',
@@ -45,8 +45,8 @@ describe('Type guards', () => {
     ])('should allow non-content types', (component) => {
       const { type } = component
 
-      expect({ isNotContentType: true, type }).toEqual({
-        isNotContentType: isNotContentType(component),
+      expect({ hasContentField: false, type }).toEqual({
+        hasContentField: hasContentField(component),
         type
       })
     })
@@ -79,8 +79,8 @@ describe('Type guards', () => {
     ])('should prevent content types', (component) => {
       const { type } = component
 
-      expect({ isNotContentType: false, type }).toEqual({
-        isNotContentType: isNotContentType(component),
+      expect({ hasContentField: true, type }).toEqual({
+        hasContentField: hasContentField(component),
         type
       })
     })
