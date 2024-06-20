@@ -204,7 +204,7 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
   .keys({
     name: localisedString.optional(),
     feedback: feedbackSchema.optional(),
-    startPage: Joi.string().required(),
+    startPage: Joi.string().optional(),
     pages: Joi.array<Page | RepeatingFieldPage>()
       .required()
       .items(pageSchema)
