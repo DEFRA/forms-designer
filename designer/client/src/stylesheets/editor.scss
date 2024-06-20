@@ -183,13 +183,23 @@ button.govuk-link {
   }
 
   .html {
-    &:before {
-      content: "⟨";
-      font-size: 20px;
-    }
+    width: 78%;
+    font-weight: bold;
+    font-size: 20px;
+
+    &:before,
     &:after {
+      position: relative;
+    }
+
+    &:before {
+      left: -1px;
+      content: "⟨";
+    }
+
+    &:after {
+      right: -1px;
       content: "⟩";
-      font-size: 20px;
     }
   }
 }
