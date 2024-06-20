@@ -30,7 +30,11 @@ export function ParaEdit({ context = ComponentContext }: Props) {
         <Editor
           id="field-content"
           name="content"
-          value={selectedComponent.content}
+          value={
+            'content' in selectedComponent
+              ? selectedComponent.content
+              : undefined
+          }
           onValueChange={(content) => {
             dispatch({
               type: Fields.EDIT_CONTENT,
@@ -49,7 +53,7 @@ export function ParaEdit({ context = ComponentContext }: Props) {
             className="govuk-select"
             id="condition"
             name="options.condition"
-            value={options.condition}
+            value={'condition' in options ? options.condition : undefined}
             onChange={(e) =>
               dispatch({
                 type: Options.EDIT_OPTIONS_CONDITION,

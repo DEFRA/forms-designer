@@ -14,6 +14,8 @@ export function ListContentEdit({ context = ComponentContext }: Props) {
   const { selectedComponent } = state
   const { options = {} } = selectedComponent
 
+  const checked = 'type' in options && options.type === 'numbered'
+
   return (
     <div className="govuk-checkboxes govuk-form-group">
       <div className="govuk-checkboxes__item">
@@ -23,11 +25,11 @@ export function ListContentEdit({ context = ComponentContext }: Props) {
           name="options.type"
           value="numbered"
           type="checkbox"
-          checked={options.type === 'numbered'}
+          checked={checked}
           onChange={() =>
             dispatch({
               type: Options.EDIT_OPTIONS_TYPE,
-              payload: options.type === 'numbered' ? undefined : 'numbered'
+              payload: checked ? undefined : 'numbered'
             })
           }
         />

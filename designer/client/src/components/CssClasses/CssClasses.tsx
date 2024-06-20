@@ -23,7 +23,7 @@ export function CssClasses() {
         id="field-options-classes"
         name="options.classes"
         type="text"
-        value={options.classes || ''}
+        value={'classes' in options ? options.classes : undefined}
         onChange={(e) =>
           dispatch({
             type: Options.EDIT_OPTIONS_CLASSES,

@@ -40,7 +40,9 @@ export function DateFieldEdit({ context = ComponentContext }: Props) {
             data-cast="number"
             id="field-options-maxDaysInPast"
             name="options.maxDaysInPast"
-            value={options.maxDaysInPast}
+            value={
+              'maxDaysInPast' in options ? options.maxDaysInPast : undefined
+            }
             type="number"
             onChange={(e) =>
               dispatch({
@@ -66,7 +68,9 @@ export function DateFieldEdit({ context = ComponentContext }: Props) {
             data-cast="number"
             id="field-options-maxDaysInFuture"
             name="options.maxDaysInFuture"
-            value={options.maxDaysInFuture}
+            value={
+              'maxDaysInFuture' in options ? options.maxDaysInFuture : undefined
+            }
             type="number"
             onChange={(e) =>
               dispatch({

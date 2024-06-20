@@ -23,7 +23,7 @@ export function Autocomplete() {
         id="field-options-autocomplete"
         name="options.autocomplete"
         type="text"
-        value={options.autocomplete || ''}
+        value={'autocomplete' in options ? options.autocomplete : undefined}
         onChange={(e) =>
           dispatch({
             type: Options.EDIT_OPTIONS_AUTOCOMPLETE,

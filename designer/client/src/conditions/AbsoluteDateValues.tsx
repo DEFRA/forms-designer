@@ -49,16 +49,16 @@ function isValidYear(year = 0): year is number {
 }
 
 export const AbsoluteDateValues = ({ value = {}, updateValue }: Props) => {
-  const [year, setYear] = useState<string>(() =>
-    value.year && isInt(value.year) ? value.year.toString() : ''
+  const [year, setYear] = useState(() =>
+    value.year && isInt(value.year) ? value.year.toString() : undefined
   )
 
-  const [month, setMonth] = useState<string>(() =>
-    isInt(value.month) ? `${value.month}`.padStart(2, '0') : ''
+  const [month, setMonth] = useState(() =>
+    isInt(value.month) ? `${value.month}`.padStart(2, '0') : undefined
   )
 
-  const [day, setDay] = useState<string>(() =>
-    isInt(value.day) ? `${value.day}`.padStart(2, '0') : ''
+  const [day, setDay] = useState(() =>
+    isInt(value.day) ? `${value.day}`.padStart(2, '0') : undefined
   )
 
   useEffect(() => {

@@ -60,8 +60,12 @@ export function DetailsEdit({ context = ComponentContext }: Props) {
           className="govuk-textarea"
           id="field-content"
           name="content"
-          defaultValue={selectedComponent.content}
-          rows="10"
+          defaultValue={
+            'content' in selectedComponent
+              ? selectedComponent.content
+              : undefined
+          }
+          rows={10}
           onChange={(e) =>
             dispatch({
               type: Fields.EDIT_CONTENT,

@@ -43,7 +43,7 @@ export function TextFieldEdit({ children, context = ComponentContext }: Props) {
             data-cast="number"
             id="field-schema-min"
             name="schema.min"
-            value={schema.min || ''}
+            value={'min' in schema ? schema.min : undefined}
             type="number"
             onChange={(e) =>
               dispatch({
@@ -69,7 +69,7 @@ export function TextFieldEdit({ children, context = ComponentContext }: Props) {
             data-cast="number"
             id="field-schema-max"
             name="schema.max"
-            value={schema.max || ''}
+            value={'max' in schema ? schema.max : undefined}
             type="number"
             onChange={(e) =>
               dispatch({
@@ -95,7 +95,7 @@ export function TextFieldEdit({ children, context = ComponentContext }: Props) {
             data-cast="number"
             id="field-schema-maxwords"
             name="schema.maxwords"
-            value={options.maxWords || ''}
+            value={'maxwords' in options ? options.maxwords : undefined}
             type="number"
             onChange={(e) =>
               dispatch({
@@ -121,7 +121,7 @@ export function TextFieldEdit({ children, context = ComponentContext }: Props) {
             data-cast="number"
             id="field-schema-length"
             name="schema.length"
-            value={schema.length || ''}
+            value={'length' in schema ? schema.length : undefined}
             type="number"
             onChange={(e) =>
               dispatch({
@@ -148,7 +148,7 @@ export function TextFieldEdit({ children, context = ComponentContext }: Props) {
             className="govuk-input"
             id="field-schema-regex"
             name="schema.regex"
-            value={schema.regex || ''}
+            value={'regex' in schema ? schema.regex : undefined}
             onChange={(e) =>
               dispatch({
                 type: Schema.EDIT_SCHEMA_REGEX,

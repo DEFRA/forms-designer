@@ -28,7 +28,7 @@ export function MultilineTextFieldEdit({ context = ComponentContext }) {
           name="options.rows"
           type="text"
           data-cast="number"
-          value={options.rows || ''}
+          value={'rows' in options ? options.rows : undefined}
           onChange={(e) =>
             dispatch({
               type: Options.EDIT_OPTIONS_ROWS,
