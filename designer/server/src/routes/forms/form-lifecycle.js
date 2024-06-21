@@ -1,4 +1,5 @@
 import Boom from '@hapi/boom'
+import { StatusCodes } from 'http-status-codes'
 
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
@@ -56,7 +57,10 @@ export default [
         yar.flash(sessionNames.displayCreateLiveSuccess, true)
         return h.redirect(`/library/${form.slug}`)
       } catch (err) {
-        if (Boom.isBoom(err) && err.output.statusCode === 400) {
+        if (
+          Boom.isBoom(err) &&
+          err.output.statusCode === StatusCodes.BAD_REQUEST.valueOf()
+        ) {
           yar.flash(sessionNames.errorList, buildSimpleErrorList([err.message]))
 
           return h.redirect(`/library/${form.slug}/make-draft-live`)
