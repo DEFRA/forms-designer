@@ -34,14 +34,14 @@ function DateTimeComponent(fieldType: ComponentType, operator: OperatorName) {
       break
   }
 
+  if (!CustomRendering) {
+    return null
+  }
+
   if (absoluteDateOrTimeOperatorNames.includes(operator)) {
     const pad = (num: number) => num.toString().padStart(2, '0')
 
     return function CustomRenderingWrapper({ value, updateValue }) {
-      if (!CustomRendering) {
-        return null
-      }
-
       const transformUpdatedValue = (value) => {
         let transformed
         switch (fieldType) {

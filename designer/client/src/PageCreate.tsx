@@ -233,7 +233,7 @@ export class PageCreate extends Component {
               value={linkFrom}
               onChange={this.onChangeLinkFrom}
             >
-              <option />
+              <option value="" />
               {pages.map((page) => (
                 <option key={page.path} value={page.path}>
                   {page.path}
@@ -260,9 +260,7 @@ export class PageCreate extends Component {
             }}
             value={title || ''}
             onChange={this.onChangeTitle}
-            errorMessage={
-              errors.title ? { children: errors.title.children } : undefined
-            }
+            errorMessage={errors.title}
           />
 
           <Input
@@ -277,9 +275,7 @@ export class PageCreate extends Component {
             }}
             value={path}
             onChange={this.onChangePath}
-            errorMessage={
-              errors.path ? { children: errors.path?.children } : undefined
-            }
+            errorMessage={errors.path}
           />
 
           <div className="govuk-form-group">
@@ -300,7 +296,7 @@ export class PageCreate extends Component {
                 value={section?.name}
                 onChange={this.onChangeSection}
               >
-                <option />
+                <option value="" />
                 {sections.map((section) => (
                   <option key={section.name} value={section.name}>
                     {section.title}

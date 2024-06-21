@@ -4,6 +4,7 @@ import {
 } from '~/src/components/enums.js'
 
 export type ConditionalComponentType =
+  | ComponentType.RadiosField
   | ComponentType.CheckboxesField
   | ComponentType.DatePartsField
   | ComponentType.EmailAddressField
@@ -256,7 +257,6 @@ export type ContentComponentsDef =
   | DetailsComponent
   | HtmlComponent
   | InsetTextComponent
-  | ListComponent
 
 // Components with editors
 export type EditorComponentsDef =

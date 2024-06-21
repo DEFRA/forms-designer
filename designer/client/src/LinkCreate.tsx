@@ -60,7 +60,7 @@ export class LinkCreate extends Component {
   render() {
     const { data } = this.context
     const { pages } = data
-    const { from, errors } = this.state
+    const { from, errors = {} } = this.state
     const hasValidationErrors = Object.keys(errors).length > 0
 
     return (
@@ -90,7 +90,7 @@ export class LinkCreate extends Component {
               name="path"
               onChange={(e) => this.storeValue(e, 'from')}
             >
-              <option />
+              <option value="" />
               {pages.map((page) => (
                 <option
                   key={page.path}
@@ -123,7 +123,7 @@ export class LinkCreate extends Component {
               name="page"
               onChange={(e) => this.storeValue(e, 'to')}
             >
-              <option />
+              <option value="" />
               {pages.map((page) => (
                 <option
                   key={page.path}

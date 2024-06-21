@@ -13,7 +13,7 @@ export function DateFieldEdit({ context = ComponentContext }: Props) {
   // If you are editing a component, the default context will be ComponentContext because props.context is undefined,
   // but if you editing a component which is a children of a list based component, then the props.context is the ListContext.
   const { state, dispatch } = useContext(context)
-  const { selectedComponent } = state
+  const { selectedComponent = {} } = state
   const { options = {} } = selectedComponent
 
   return (
@@ -40,7 +40,9 @@ export function DateFieldEdit({ context = ComponentContext }: Props) {
             data-cast="number"
             id="field-options-maxDaysInPast"
             name="options.maxDaysInPast"
-            value={options.maxDaysInPast}
+            value={
+              'maxDaysInPast' in options ? options.maxDaysInPast : undefined
+            }
             type="number"
             onChange={(e) =>
               dispatch({
@@ -66,7 +68,9 @@ export function DateFieldEdit({ context = ComponentContext }: Props) {
             data-cast="number"
             id="field-options-maxDaysInFuture"
             name="options.maxDaysInFuture"
-            value={options.maxDaysInFuture}
+            value={
+              'maxDaysInFuture' in options ? options.maxDaysInFuture : undefined
+            }
             type="number"
             onChange={(e) =>
               dispatch({

@@ -1,3 +1,4 @@
+import { ComponentType } from '@defra/forms-model'
 import React, { useContext, type ReactNode } from 'react'
 
 import { Autocomplete } from '~/src/components/Autocomplete/Autocomplete.jsx'
@@ -16,7 +17,7 @@ export function TextFieldEdit({ children, context = ComponentContext }: Props) {
   // If you are editing a component, the default context will be ComponentContext because props.context is undefined,
   // but if you editing a component which is a children of a list based component, then the props.context is the ListContext.
   const { state, dispatch } = useContext(context)
-  const { selectedComponent } = state
+  const { selectedComponent = {} } = state
   const { schema = {}, options = {} } = selectedComponent
 
   return (
@@ -43,7 +44,7 @@ export function TextFieldEdit({ children, context = ComponentContext }: Props) {
             data-cast="number"
             id="field-schema-min"
             name="schema.min"
-            value={schema.min || ''}
+            value={'min' in schema ? schema.min : undefined}
             type="number"
             onChange={(e) =>
               dispatch({
@@ -69,7 +70,7 @@ export function TextFieldEdit({ children, context = ComponentContext }: Props) {
             data-cast="number"
             id="field-schema-max"
             name="schema.max"
-            value={schema.max || ''}
+            value={'max' in schema ? schema.max : undefined}
             type="number"
             onChange={(e) =>
               dispatch({
@@ -95,7 +96,7 @@ export function TextFieldEdit({ children, context = ComponentContext }: Props) {
             data-cast="number"
             id="field-schema-maxwords"
             name="schema.maxwords"
-            value={options.maxWords || ''}
+            value={'maxwords' in options ? options.maxwords : undefined}
             type="number"
             onChange={(e) =>
               dispatch({
@@ -121,7 +122,7 @@ export function TextFieldEdit({ children, context = ComponentContext }: Props) {
             data-cast="number"
             id="field-schema-length"
             name="schema.length"
-            value={schema.length || ''}
+            value={'length' in schema ? schema.length : undefined}
             type="number"
             onChange={(e) =>
               dispatch({
@@ -148,7 +149,7 @@ export function TextFieldEdit({ children, context = ComponentContext }: Props) {
             className="govuk-input"
             id="field-schema-regex"
             name="schema.regex"
-            value={schema.regex || ''}
+            value={'regex' in schema ? schema.regex : undefined}
             onChange={(e) =>
               dispatch({
                 type: Schema.EDIT_SCHEMA_REGEX,
@@ -162,7 +163,7 @@ export function TextFieldEdit({ children, context = ComponentContext }: Props) {
 
         <CssClasses />
 
-        {selectedComponent.type === 'TelephoneNumberField' && (
+        {selectedComponent.type === ComponentType.TelephoneNumberField && (
           // Remove type check when fully integrated into all runner components
           <CustomValidationMessage />
         )}

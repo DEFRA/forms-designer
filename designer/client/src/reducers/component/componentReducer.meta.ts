@@ -1,5 +1,5 @@
 import randomId from '~/src/randomId.js'
-import { fieldComponentValidations } from '~/src/reducers/component/componentReducer.validations.js'
+import { validateComponent } from '~/src/reducers/component/componentReducer.validations.js'
 import { Meta } from '~/src/reducers/component/types.js'
 
 export function metaReducer(
@@ -10,7 +10,7 @@ export function metaReducer(
   }
 ) {
   const { type, payload } = action
-  const { selectedComponent } = state
+  const { selectedComponent = {} } = state
   switch (type) {
     case Meta.SET_SELECTED_LIST:
       return {
@@ -37,8 +37,7 @@ export function metaReducer(
     case Meta.VALIDATE:
       return {
         ...state,
-        errors: fieldComponentValidations(selectedComponent),
-        hasValidated: true
+        ...validateComponent(selectedComponent)
       }
   }
 }

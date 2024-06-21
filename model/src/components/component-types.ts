@@ -159,7 +159,6 @@ export const ComponentTypes: ComponentDef[] = [
     name: 'List',
     type: ComponentType.List,
     title: 'List',
-    subType: ComponentSubType.Content,
     options: {},
     schema: {},
     list: ''

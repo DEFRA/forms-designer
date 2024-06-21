@@ -15,12 +15,12 @@ export function DetailsEdit({ context = ComponentContext }: Props) {
   // If you are editing a component, the default context will be ComponentContext because props.context is undefined,
   // but if you editing a component which is a children of a list based component, then the props.context is the ListContext.
   const { state, dispatch } = useContext(context)
-  const { selectedComponent, errors = {} } = state
+  const { selectedComponent = {}, errors = {} } = state
 
   return (
     <>
       <Input
-        id="details-title"
+        id="field-title"
         name="title"
         label={{
           className: 'govuk-label--s',
@@ -36,32 +36,32 @@ export function DetailsEdit({ context = ComponentContext }: Props) {
             payload: e.target.value
           })
         }
-        errorMessage={
-          errors?.title
-            ? { children: i18n(...errors.title.children) }
-            : undefined
-        }
+        errorMessage={errors.title}
       />
 
       <div
         className={classNames({
           'govuk-form-group': true,
-          'govuk-form-group--error': errors?.content
+          'govuk-form-group--error': errors.content
         })}
       >
         <label className="govuk-label govuk-label--s" htmlFor="field-content">
           Content
         </label>
         <div className="govuk-hint">{i18n('fieldEdit.details.hint')}</div>
-        {errors?.content && (
-          <ErrorMessage>{i18n(...errors.content.children)}</ErrorMessage>
+        {errors.content && (
+          <ErrorMessage>{errors.content.children}</ErrorMessage>
         )}
         <textarea
           className="govuk-textarea"
           id="field-content"
           name="content"
-          defaultValue={selectedComponent.content}
-          rows="10"
+          defaultValue={
+            'content' in selectedComponent
+              ? selectedComponent.content
+              : undefined
+          }
+          rows={10}
           onChange={(e) =>
             dispatch({
               type: Fields.EDIT_CONTENT,

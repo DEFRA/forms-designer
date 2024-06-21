@@ -10,30 +10,7 @@ import {
 import { type ErrorList } from '~/src/ErrorSummary.jsx'
 import { isEmpty } from '~/src/helpers.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
-import { validateTitle } from '~/src/validations.js'
-
-// TODO move validations to "../../validations"
-const validateName = ({ name }: ComponentDef) => {
-  const errors: ErrorList = {}
-
-  // TODO:- should also validate uniqueness.
-  const nameIsEmpty = isEmpty(name)
-  const nameHasSpace = /\s/g.test(name)
-
-  if (nameHasSpace) {
-    errors.name = {
-      href: `#field-name`,
-      children: ['name.errors.whitespace']
-    }
-  } else if (nameIsEmpty) {
-    errors.name = {
-      href: `#field-name`,
-      children: ['errors.field', { field: 'Component name' }]
-    }
-  }
-
-  return errors
-}
+import { validateName, validateTitle } from '~/src/validations.js'
 
 const validateContent = (component: ContentComponentsDef) => {
   const errors: ErrorList = {}
@@ -41,7 +18,7 @@ const validateContent = (component: ContentComponentsDef) => {
   if (!('content' in component) || isEmpty(component.content)) {
     errors.content = {
       href: `#field-content`,
-      children: ['errors.field', { field: 'Content' }]
+      children: [i18n('errors.field', { field: 'Content' })]
     }
   }
 
@@ -54,7 +31,7 @@ const validateList = (component: ListComponentsDef) => {
   if (!('list' in component)) {
     errors.list = {
       href: `#field-options-list`,
-      children: ['list.errors.select']
+      children: [i18n('list.errors.select')]
     }
   }
 
@@ -62,13 +39,29 @@ const validateList = (component: ListComponentsDef) => {
 }
 
 export function fieldComponentValidations(component: ComponentDef) {
-  const validations = [validateName(component)]
+  const validations: ErrorList[] = []
 
   if (hasTitle(component)) {
     validations.push(
-      validateTitle('title', 'field-title', '$t(title)', component.title, i18n)
+      validateTitle(
+        'title',
+        'field-title',
+        '$t(common.titleField.title)',
+        component.title,
+        i18n
+      )
     )
   }
+
+  validations.push(
+    validateName(
+      'name',
+      'field-name',
+      '$t(common.componentNameField.title)',
+      component.name,
+      i18n
+    )
+  )
 
   if (hasContentField(component)) {
     validations.push(validateContent(component))
@@ -87,6 +80,7 @@ export function fieldComponentValidations(component: ComponentDef) {
 
 export function validateComponent(selectedComponent: ComponentDef) {
   return {
-    errors: fieldComponentValidations(selectedComponent)
+    errors: fieldComponentValidations(selectedComponent),
+    hasValidated: true
   }
 }

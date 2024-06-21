@@ -80,7 +80,7 @@ export class SectionEdit extends Component {
     const titleErrors = validateTitle(
       'title',
       'section-title',
-      '$t(titleField.title)',
+      '$t(sectionEdit.titleField.title)',
       title,
       i18n
     )
@@ -88,7 +88,7 @@ export class SectionEdit extends Component {
     const nameErrors = validateName(
       'name',
       'section-name',
-      '$t(nameField.title)',
+      '$t(sectionEdit.nameField.title)',
       name,
       i18n
     )
@@ -153,9 +153,7 @@ export class SectionEdit extends Component {
             }}
             value={title}
             onChange={(e) => this.setState({ title: e.target.value })}
-            errorMessage={
-              errors.title ? { children: errors.title.children } : undefined
-            }
+            errorMessage={errors.name}
           />
           <Input
             id="section-name"
@@ -170,9 +168,7 @@ export class SectionEdit extends Component {
             }}
             value={name}
             onChange={(e) => this.setState({ name: e.target.value })}
-            errorMessage={
-              errors.name ? { children: errors.name.children } : undefined
-            }
+            errorMessage={errors.name}
           />
           <div className="govuk-checkboxes govuk-form-group">
             <div className="govuk-checkboxes__item">

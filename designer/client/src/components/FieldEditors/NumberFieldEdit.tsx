@@ -13,7 +13,7 @@ export function NumberFieldEdit({ context = ComponentContext }: Props) {
   // If you are editing a component, the default context will be ComponentContext because props.context is undefined,
   // but if you editing a component which is a children of a list based component, then the props.context is the ListContext.
   const { state, dispatch } = useContext(context)
-  const { selectedComponent } = state
+  const { selectedComponent = {} } = state
   const { schema = {} } = selectedComponent
   const { options = {} } = selectedComponent
 
@@ -41,7 +41,7 @@ export function NumberFieldEdit({ context = ComponentContext }: Props) {
             data-cast="number"
             id="field-schema-min"
             name="schema.min"
-            value={schema.min}
+            value={'min' in schema ? schema.min : undefined}
             type="number"
             onChange={(e) =>
               dispatch({
@@ -67,7 +67,7 @@ export function NumberFieldEdit({ context = ComponentContext }: Props) {
             data-cast="string"
             id="field-options-prefix"
             name="opions.prefix"
-            value={options.prefix}
+            value={'prefix' in options ? options.prefix : undefined}
             type="string"
             onBlur={(e) =>
               dispatch({
@@ -93,7 +93,7 @@ export function NumberFieldEdit({ context = ComponentContext }: Props) {
             data-cast="string"
             id="field-options-suffix"
             name="options.suffix"
-            value={options.suffix}
+            value={'suffix' in options ? options.suffix : undefined}
             type="string"
             onBlur={(e) =>
               dispatch({
@@ -119,7 +119,7 @@ export function NumberFieldEdit({ context = ComponentContext }: Props) {
             data-cast="number"
             id="field-schema-max"
             name="schema.max"
-            value={schema.max}
+            value={'max' in schema ? schema.max : undefined}
             type="number"
             onBlur={(e) =>
               dispatch({
@@ -145,7 +145,7 @@ export function NumberFieldEdit({ context = ComponentContext }: Props) {
             data-cast="number"
             id="field-schema-precision"
             name="schema.precision"
-            value={schema.precision || 0}
+            value={'precision' in schema ? schema.precision : undefined}
             type="number"
             onBlur={(e) =>
               dispatch({

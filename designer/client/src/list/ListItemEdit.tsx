@@ -29,7 +29,7 @@ export function ListItemEdit() {
   } = useListItem(state, dispatch)
 
   const { conditions } = data
-  const { listItemErrors: errors } = state
+  const { listItemErrors: errors = {} } = state
   const handleSubmit = async (
     e: FormEvent<HTMLFormElement> | MouseEvent<HTMLButtonElement>
   ) => {
@@ -55,9 +55,7 @@ export function ListItemEdit() {
           hint={{ children: i18n('list.item.titleHint') }}
           value={title}
           onChange={handleTitleChange}
-          errorMessage={
-            errors?.title ? { children: errors?.title.children } : undefined
-          }
+          errorMessage={errors.title}
         />
         <Textarea
           label={{ children: i18n('list.item.help') }}
@@ -75,9 +73,7 @@ export function ListItemEdit() {
           data-testid="list-item-value"
           name="list-item-value"
           value={value}
-          errorMessage={
-            errors?.value ? { children: errors?.value.children } : undefined
-          }
+          errorMessage={errors.value}
           onChange={handleValueChange}
         />
         <label className="govuk-label" htmlFor="condition">

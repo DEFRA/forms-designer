@@ -1,12 +1,10 @@
-import { type ListComponentsDef } from '@defra/forms-model'
 import classNames from 'classnames'
 import React, {
   useContext,
   useEffect,
   useState,
   type ChangeEvent,
-  type MouseEvent,
-  type ReactNode
+  type MouseEvent
 } from 'react'
 
 import { logger } from '~/src/common/helpers/logging/logger.js'
@@ -28,8 +26,8 @@ export function ComponentListSelect() {
     useContext(ListsEditorContext)
 
   const { state, dispatch } = useContext(ComponentContext)
-  const { selectedComponent, errors = {} } = state
-  const { list } = selectedComponent as ListComponentsDef
+  const { selectedComponent = {}, errors = {} } = state
+  const list = 'list' in selectedComponent ? selectedComponent.list : ''
 
   const { state: listState, dispatch: listDispatch } = useContext(ListContext)
   const { selectedList } = listState
@@ -41,7 +39,7 @@ export function ComponentListSelect() {
   const [isAddingNew, setIsAddingNew] = useState(false)
 
   useEffect(() => {
-    if (selectedList?.isNew) {
+    if (selectedList?.isNew ?? !list) {
       return
     }
     try {
@@ -63,7 +61,7 @@ export function ComponentListSelect() {
     if (!listsEditorState.isEditingList && isAddingNew) {
       dispatch({
         type: Meta.SET_SELECTED_LIST,
-        payload: selectedList.name
+        payload: selectedList?.name
       })
       setIsAddingNew(false)
     }
@@ -93,7 +91,7 @@ export function ComponentListSelect() {
       <div
         className={classNames({
           'govuk-form-group': true,
-          'govuk-form-group--error': errors?.list
+          'govuk-form-group--error': errors.list
         })}
       >
         <label
@@ -110,22 +108,14 @@ export function ComponentListSelect() {
           value={list}
           onChange={editList}
         >
-          <option value="-1">{i18n('list.select.option')}</option>
-          {data.lists.map(
-            (
-              list: {
-                name: string | number | readonly string[] | undefined
-                title: ReactNode
-              },
-              index: number
-            ) => {
-              return (
-                <option key={`${list.name}-${index}`} value={list.name}>
-                  {list.title}
-                </option>
-              )
-            }
-          )}
+          <option value="">{i18n('list.select.option')}</option>
+          {data.lists.map((list, index) => {
+            return (
+              <option key={`${list.name}-${index}`} value={list.name}>
+                {list.title}
+              </option>
+            )
+          })}
         </select>
       </div>
       <p className="govuk-body">

@@ -23,7 +23,7 @@ function useComponentCreate(props) {
   const [renderTypeEdit, setRenderTypeEdit] = useState<boolean>(false)
   const { data, save } = useContext(DataContext)
   const { state, dispatch } = useContext(ComponentContext)
-  const { selectedComponent, errors = {}, hasValidated } = state
+  const { selectedComponent = {}, errors = {}, hasValidated } = state
   const { page, toggleAddComponent = () => {} } = props
 
   const [isSaving, setIsSaving] = useState(false)
@@ -37,7 +37,7 @@ function useComponentCreate(props) {
     // then the component edit screen renders already scrolled to the bottom
     let isMounted = true
 
-    if (selectedComponent?.type) {
+    if (selectedComponent.type) {
       window.requestAnimationFrame(() => {
         if (isMounted) setRenderTypeEdit(true)
       })
@@ -48,7 +48,7 @@ function useComponentCreate(props) {
     return () => {
       isMounted = false
     }
-  }, [selectedComponent?.type])
+  }, [selectedComponent.type])
 
   useEffect(() => {
     dispatch({ type: Meta.SET_PAGE, payload: page.path })
@@ -126,7 +126,7 @@ export function ComponentCreate(props) {
     renderTypeEdit
   } = useComponentCreate(props)
 
-  const type = component?.type
+  const type = component.type
 
   return (
     <div className="component-create" data-testid={'component-create'}>
@@ -146,7 +146,7 @@ export function ComponentCreate(props) {
       {!type && <ComponentCreateList onSelectComponent={handleTypeChange} />}
       {type && renderTypeEdit && (
         <form onSubmit={handleSubmit}>
-          {type && <ComponentTypeEdit />}
+          <ComponentTypeEdit />
           <button type="submit" className="govuk-button" disabled={isSaving}>
             Save
           </button>

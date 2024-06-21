@@ -93,8 +93,9 @@ export class InlineConditionsDefinition extends Component {
           delete c.operator
         } else {
           if (
+            fieldDef &&
             currentField &&
-            this.props.fields[currentField].values !== fieldDef.values
+            this.props.fields[currentField]?.values !== fieldDef.values
           ) {
             delete c.value
           }
@@ -107,8 +108,8 @@ export class InlineConditionsDefinition extends Component {
         }
         c.field = {
           name: fieldName,
-          display: fieldDef.label,
-          type: fieldDef.type
+          display: fieldDef?.label,
+          type: fieldDef?.type
         }
       } else {
         delete c.field
@@ -168,7 +169,7 @@ export class InlineConditionsDefinition extends Component {
               value={condition?.coordinator ?? ''}
               onChange={this.onChangeCoordinator}
             >
-              <option />
+              <option value="" />
               <option key="and" value={Coordinator.AND}>
                 And
               </option>
@@ -191,7 +192,7 @@ export class InlineConditionsDefinition extends Component {
                 value={condition?.field?.name ?? ''}
                 onChange={this.onChangeField}
               >
-                <option />
+                <option value="" />
                 {Object.values(this.props.fields).map((field, index) => (
                   <option key={`${field.name}-${index}`} value={field.name}>
                     {field.label}
@@ -212,7 +213,7 @@ export class InlineConditionsDefinition extends Component {
                   value={condition.operator ?? ''}
                   onChange={this.onChangeOperator}
                 >
-                  <option />
+                  <option value="" />
                   {getOperatorNames(fieldDef.type).map((conditional) => {
                     return (
                       <option
@@ -227,7 +228,7 @@ export class InlineConditionsDefinition extends Component {
               </div>
             )}
 
-            {condition.operator && (
+            {fieldDef && condition.operator && (
               <div className="govuk-form-group govuk-!-margin-bottom-3">
                 <InlineConditionsDefinitionValue
                   fieldDef={fieldDef}
@@ -237,6 +238,7 @@ export class InlineConditionsDefinition extends Component {
                 />
               </div>
             )}
+
             {(condition.value || isCondition(fieldDef)) && (
               <div className="govuk-button-group">
                 <button

@@ -1,5 +1,5 @@
 import { type ErrorList } from '~/src/ErrorSummary.jsx'
-import { isEmpty } from '~/src/helpers.js'
+import { hasSpaces, isEmpty } from '~/src/helpers.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 
 export function hasValidationErrors(errors = {}) {
@@ -10,7 +10,7 @@ export function validateNotEmpty<Key extends string>(
   name: Key,
   id: string,
   description: string,
-  value: string,
+  value?: string,
   existingErrors: ErrorList = {}
 ) {
   const hasErrors = isEmpty(value)
@@ -34,13 +34,13 @@ export function validateName<Key extends string>(
   name: Key,
   id: string,
   description: string,
-  value: string,
+  value?: string,
   i18nProp?: typeof i18n
 ) {
   const translate = i18nProp ?? i18n
 
   const namesIsEmpty = isEmpty(value)
-  const nameHasErrors = /\s/g.test(value)
+  const nameHasErrors = !namesIsEmpty && hasSpaces(value)
   const errors: Partial<ErrorList<Key>> = {}
 
   if (nameHasErrors) {
@@ -68,7 +68,7 @@ export function validateTitle<Key extends string>(
   name: Key,
   id: string,
   description: string,
-  value: string,
+  value?: string,
   i18nProp?: typeof i18n
 ) {
   const translate = i18nProp ?? i18n

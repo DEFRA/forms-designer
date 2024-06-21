@@ -1,6 +1,7 @@
 import { type ComponentDef } from '@defra/forms-model'
 import React, { useReducer, createContext, type Dispatch } from 'react'
 
+import { type ErrorList } from '~/src/ErrorSummary.jsx'
 import { logger } from '~/src/common/helpers/logging/logger.js'
 import randomId from '~/src/randomId.js'
 import { fieldsReducer } from '~/src/reducers/component/componentReducer.fields.js'
@@ -21,7 +22,8 @@ interface ComponentState {
   isNew?: boolean
   initialName?: ComponentDef['name']
   pagePath?: string
-  listItemErrors?: {}
+  errors?: Partial<ErrorList<'title' | 'name' | 'content' | 'list'>>
+  listItemErrors?: Partial<ErrorList<'title' | 'value'>>
 }
 
 const defaultValues = {
@@ -71,7 +73,7 @@ export function componentReducer(
   }
 ) {
   const { type } = action
-  const { selectedComponent } = state
+  const { selectedComponent = {} } = state
 
   if (type !== Meta.VALIDATE) {
     state.hasValidated = false
@@ -101,7 +103,8 @@ export const initComponentState = (props) => {
     },
     initialName: selectedComponent?.name ?? newName,
     pagePath: props?.pagePath,
-    isNew: props?.isNew || ((selectedComponent?.name && false) ?? true),
+    isNew: props?.isNew ?? !selectedComponent?.name,
+    errors: props?.errors ?? {},
     listItemErrors: {}
   }
 }

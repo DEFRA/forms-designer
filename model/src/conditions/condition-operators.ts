@@ -67,6 +67,7 @@ const relativeTimeOperators = (units: DateUnits | TimeUnits) => ({
 })
 
 export const customOperators = {
+  [ComponentType.RadiosField]: defaultOperators,
   [ComponentType.CheckboxesField]: {
     [OperatorName.Contains]: reverseInline(Operator.Contains),
     [OperatorName.DoesNotContain]: not(reverseInline(Operator.Contains))
@@ -91,7 +92,7 @@ export const customOperators = {
   [ComponentType.YesNoField]: defaultOperators
 }
 
-export function getOperatorNames(fieldType: ComponentType) {
+export function getOperatorNames(fieldType?: ComponentType) {
   const conditionals = getConditionals(fieldType)
   if (!conditionals) {
     return []
@@ -125,9 +126,9 @@ export function getOperatorConfig(
 }
 
 function getConditionals(
-  fieldType: ComponentType
+  fieldType?: ComponentType
 ): Partial<Conditionals> | undefined {
-  if (!isConditionalType(fieldType)) {
+  if (!fieldType || !isConditionalType(fieldType)) {
     return
   }
 

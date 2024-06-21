@@ -1,4 +1,5 @@
 import {
+  ComponentSubType,
   ComponentTypes,
   type ComponentDef,
   type Page as PageType,
@@ -61,7 +62,7 @@ export const Page = (props: {
 }) => {
   const { page, previewUrl, slug, layout } = props
 
-  const { data, save } = useContext(DataContext)
+  const { data } = useContext(DataContext)
   const [isEditingPage, setIsEditingPage] = useState(false)
   const [isCreatingComponent, setIsCreatingComponent] = useState(false)
 
@@ -74,8 +75,8 @@ export const Page = (props: {
   const formComponents =
     page.components?.filter(
       (comp) =>
-        ComponentTypes.find((type) => type.name === comp.type)?.subType ===
-        'field'
+        ComponentTypes.find((componentType) => componentType.type === comp.type)
+          ?.subType === ComponentSubType.Field
     ) ?? []
 
   const pageTitle =

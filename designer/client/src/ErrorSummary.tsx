@@ -1,11 +1,8 @@
-import { type TOptions } from 'i18next'
-import React, { useEffect, useRef } from 'react'
-
-import { i18n } from '~/src/i18n/i18n.jsx'
+import React, { useEffect, useRef, type ReactNode } from 'react'
 
 export interface ErrorListItem {
   href?: string
-  children: string | [string, TOptions?]
+  children: ReactNode
 }
 
 export type ErrorList<Key extends string = string> = Record<Key, ErrorListItem>
@@ -69,16 +66,10 @@ export function ErrorSummary({
                     handleClick(error.href)
                   }}
                 >
-                  {Array.isArray(error.children)
-                    ? i18n(...error.children)
-                    : error.children}
+                  {error.children}
                 </a>
               ) : (
-                <>
-                  {Array.isArray(error.children)
-                    ? i18n(...error.children)
-                    : error.children}
-                </>
+                error.children
               )}
             </li>
           ))}
