@@ -33,7 +33,6 @@ describe('SelectConditions', () => {
     return render(
       <DataContext.Provider value={providerProps}>
         {element}
-        <div id="portal-root" />
       </DataContext.Provider>
     )
   }

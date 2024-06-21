@@ -11,6 +11,7 @@ import { Component } from '~/src/Component.jsx'
 import { PageEdit } from '~/src/PageEdit.jsx'
 import { ComponentCreate } from '~/src/components/ComponentCreate/ComponentCreate.jsx'
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
+import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContextProvider } from '~/src/reducers/component/componentReducer.jsx'
@@ -95,49 +96,47 @@ export const Page = (props: {
       <ComponentList page={page} data={data} />
 
       <div className="page__actions">
-        <button
-          title={i18n('Edit page')}
-          onClick={() => setIsEditingPage(true)}
-          className="govuk-link"
-        >
+        <button onClick={() => setIsEditingPage(true)} className="govuk-link">
           {i18n('Edit page')}
         </button>
-        <button
-          title={i18n('Create component')}
-          onClick={() => setIsCreatingComponent(true)}
-          className="govuk-link"
-        >
-          {i18n('Create component')}
-        </button>
         <a
-          title={i18n('Preview page')}
           href={new URL(`/preview/draft/${slug}${page.path}`, previewUrl).href}
           className="govuk-link"
           target="_blank"
           rel="noreferrer"
+          aria-label={`${i18n('Preview')} ${pageTitle}`}
         >
-          {i18n('Preview')}{' '}
-          <span className="govuk-visually-hidden">{pageTitle}</span>
+          {i18n('Preview page')}
         </a>
+        <button
+          onClick={() => setIsCreatingComponent(true)}
+          className="govuk-link"
+        >
+          {i18n('component.create')}
+        </button>
       </div>
       {isEditingPage && (
-        <Flyout title="Edit Page" onHide={setIsEditingPage}>
-          <PageEdit page={page} onEdit={onEditEnd} />
-        </Flyout>
+        <RenderInPortal>
+          <Flyout title="Edit Page" onHide={setIsEditingPage}>
+            <PageEdit page={page} onEdit={onEditEnd} />
+          </Flyout>
+        </RenderInPortal>
       )}
 
       {isCreatingComponent && (
-        <Flyout show={true} onHide={setIsCreatingComponent}>
-          <ComponentContextProvider>
-            <ComponentCreate
-              renderInForm={true}
-              toggleAddComponent={() => {
-                setIsCreatingComponent(false)
-              }}
-              page={page}
-            />
-          </ComponentContextProvider>
-        </Flyout>
+        <RenderInPortal>
+          <Flyout onHide={setIsCreatingComponent}>
+            <ComponentContextProvider>
+              <ComponentCreate
+                renderInForm={true}
+                toggleAddComponent={() => {
+                  setIsCreatingComponent(false)
+                }}
+                page={page}
+              />
+            </ComponentContextProvider>
+          </Flyout>
+        </RenderInPortal>
       )}
     </div>
   )

@@ -117,7 +117,7 @@ describe('Page', () => {
       providerProps
     )
 
-    await act(() => userEvent.click(getByText('Create component')))
+    await act(() => userEvent.click(getByText('Add component')))
     await waitFor(() => findByTestId('component-create'))
 
     await act(() => userEvent.click(getByText('Close')))
@@ -136,8 +136,8 @@ describe('Page', () => {
     )
 
     expect(getByText('Edit page')).toBeTruthy()
-    expect(getByText('Create component')).toBeTruthy()
-    expect(getByText('Preview')).toBeTruthy()
+    expect(getByText('Preview page')).toBeTruthy()
+    expect(getByText('Add component')).toBeTruthy()
   })
 
   test('Dragging component order saves successfully', async () => {
@@ -151,7 +151,7 @@ describe('Page', () => {
       providerProps
     )
 
-    await act(() => userEvent.click(getByText('Create component')))
+    await act(() => userEvent.click(getByText('Add component')))
     await waitFor(() => findByTestId('component-create'))
 
     await act(() => userEvent.click(getByText('Close')))

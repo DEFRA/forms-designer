@@ -1,33 +1,16 @@
-import { graphlib, layout } from '@dagrejs/dagre'
+import { graphlib, layout, type GraphEdge, type Node } from '@dagrejs/dagre'
 import { type FormDefinition } from '@defra/forms-model'
 
 export interface Point {
-  node: {
-    x: number
-    y: number
-    width: number
-    height: number
-    class?: string | undefined
-    label?: string | undefined
-    padding?: number | undefined
-    paddingX?: number | undefined
-    paddingY?: number | undefined
-    rx?: number | undefined
-    ry?: number | undefined
-    shape?: string | undefined
-  }
+  node: Node
   top: string
   left: string
 }
 
-export interface Edge {
+export interface Edge extends GraphEdge {
   source: string
   target: string
   label: string
-  points: {
-    y: number
-    x: number
-  }[]
 }
 
 export interface Pos {
@@ -38,15 +21,20 @@ export interface Pos {
 }
 
 export const getLayout = (data: FormDefinition, el: HTMLDivElement) => {
+  const { conditions, pages } = data
+
   // Create a new directed graph
   const g = new graphlib.Graph()
 
   // Set an object for the graph label
   g.setGraph({
     rankdir: 'LR',
-    marginx: 50,
-    marginy: 100,
-    ranksep: 160
+    align: 'UL',
+    marginx: 30,
+    marginy: 0,
+    edgesep: 80,
+    nodesep: 80,
+    ranksep: 80
   })
 
   // Default to assigning a new object as a label for each new edge.
@@ -56,7 +44,7 @@ export const getLayout = (data: FormDefinition, el: HTMLDivElement) => {
 
   // Add nodes to the graph. The first argument is the node id. The second is
   // metadata about the node. In this case we're going to add labels to each node
-  data.pages.forEach((page, index) => {
+  pages.forEach((page, index) => {
     const pageEl = el.children[index] as HTMLDivElement
 
     g.setNode(page.path, {
@@ -67,20 +55,24 @@ export const getLayout = (data: FormDefinition, el: HTMLDivElement) => {
   })
 
   // Add edges to the graph.
-  data.pages.forEach((page) => {
-    if (Array.isArray(page.next)) {
-      page.next.forEach((next) => {
-        // The linked node (next page) may not exist if it's filtered
-        const exists = data.pages.find((page) => page.path === next.path)
-        if (exists) {
-          g.setEdge(page.path, next.path, {
-            condition: data.conditions.find(
-              (condition) => condition.name === next.condition
-            )?.displayName
-          })
-        }
-      })
+  pages.forEach((page) => {
+    if (!Array.isArray(page.next)) {
+      return
     }
+
+    page.next.forEach((next) => {
+      const hasNext = pages.some(({ path }) => path === next.path)
+      if (!hasNext) {
+        return
+      }
+
+      const condition = conditions.find(({ name }) => name === next.condition)
+
+      g.setEdge(page.path, next.path, {
+        label: condition?.displayName,
+        width: condition?.displayName ? 270 : undefined
+      })
+    })
   })
 
   layout(g)
@@ -101,6 +93,7 @@ export const getLayout = (data: FormDefinition, el: HTMLDivElement) => {
       top: `${node.y - node.height / 2}px`,
       left: `${node.x - node.width / 2}px`
     }
+
     pos.nodes.push(pt)
   })
 
@@ -109,7 +102,7 @@ export const getLayout = (data: FormDefinition, el: HTMLDivElement) => {
     pos.edges.push({
       source: e.v,
       target: e.w,
-      label: typeof edge.condition === 'string' ? edge.condition : '',
+      label: typeof edge.label === 'string' ? edge.label : '',
       points: edge.points.map((p) => {
         return {
           y: p.y,

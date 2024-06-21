@@ -234,7 +234,7 @@ export class PageCreate extends Component {
               onChange={this.onChangeLinkFrom}
             >
               <option />
-              {pages?.map((page) => (
+              {pages.map((page) => (
                 <option key={page.path} value={page.path}>
                   {page.path}
                 </option>
@@ -292,7 +292,7 @@ export class PageCreate extends Component {
             <div className="govuk-hint">
               {i18n('addPage.sectionOption.helpText')}
             </div>
-            {sections?.length > 0 && (
+            {sections.length > 0 && (
               <select
                 className="govuk-select"
                 id="page-section"
@@ -339,7 +339,6 @@ export class PageCreate extends Component {
                 section?.name ? `Editing ${section.name}` : 'Add a new section'
               }
               onHide={this.closeFlyout}
-              show={true}
             >
               <SectionEdit
                 section={section}

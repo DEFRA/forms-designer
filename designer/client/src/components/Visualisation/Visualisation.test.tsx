@@ -35,8 +35,7 @@ function customRender(
 describe('Visualisation', () => {
   afterEach(cleanup)
 
-  const { findAllByText, findByText, getByText, queryByText, queryByTestId } =
-    screen
+  const { findByText, getByText, queryByText, queryByTestId } = screen
 
   test('Graph is rendered with correct number of pages and updates', async () => {
     const data: FormDefinition = {
@@ -61,16 +60,9 @@ describe('Visualisation', () => {
       providerProps
     )
 
-    await waitFor(() =>
-      expect(findAllByText('my first page')).resolves.toHaveLength(2)
-    )
-
-    await waitFor(() =>
-      expect(findAllByText('my second page')).resolves.toHaveLength(2)
-    )
-
-    const thirdPage = queryByText('my third page')
-    expect(thirdPage).not.toBeInTheDocument()
+    expect(queryByText('my first page')).toBeInTheDocument()
+    expect(queryByText('my second page')).toBeInTheDocument()
+    expect(queryByText('my third page')).not.toBeInTheDocument()
 
     const newPage = {
       title: 'my third page',
@@ -85,9 +77,7 @@ describe('Visualisation', () => {
       <Visualisation previewUrl={'http://localhost:3000'} slug={'aa'} />
     )
 
-    await waitFor(() =>
-      expect(findAllByText('my third page')).resolves.toHaveLength(2)
-    )
+    expect(queryByText('my third page')).toBeInTheDocument()
   })
 
   test('Links between pages are navigable via keyboard', async () => {
@@ -138,7 +128,7 @@ describe('Visualisation', () => {
     expect(queryByTestId('flyout-0')).not.toBeInTheDocument()
 
     await act(async () => {
-      $lineTitle.parentElement!.focus()
+      $lineTitle.parentElement?.focus()
       await userEvent.keyboard('[Space]')
     })
 

@@ -2,6 +2,7 @@ import React, { Component, type ContextType } from 'react'
 
 import { LinkEdit } from '~/src/LinkEdit.jsx'
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
+import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
 import {
   type Edge,
   type Pos
@@ -37,16 +38,23 @@ export class Lines extends Component<Props, State> {
 
     return (
       <>
-        <svg height={layout.height} width={layout.width}>
+        <svg height={layout.height} width={layout.width} className="line">
           {layout.edges.map((edge) => {
             const { source, target, points, label } = edge
+
             const pointsString = points.map((p) => `${p.x},${p.y}`).join(' ')
 
             const xs = edge.points.map((p) => p.x)
             const ys = edge.points.map((p) => p.y)
 
+            const textWidth = Math.max(...xs) - Math.min(...xs)
+            const textHeight = Math.max(...ys) - Math.min(...ys)
+
             const textX = xs.reduce((a, b) => a + b, 0) / xs.length
-            const textY = ys.reduce((a, b) => a + b, 0) / ys.length - 5
+            const textY = ys.reduce((a, b) => a + b, 0) / ys.length
+
+            const translateX = Math.round(textX - textWidth / 2)
+            const translateY = Math.round(textY - textHeight / 2)
 
             return (
               <g key={pointsString}>
@@ -67,30 +75,39 @@ export class Lines extends Component<Props, State> {
                   </title>
                 </polyline>
                 {label && (
-                  <text
-                    textAnchor="middle"
-                    x={textX}
-                    y={textY}
-                    fill="black"
-                    pointerEvents="none"
+                  <foreignObject
+                    width={textWidth}
+                    height={textHeight}
+                    style={{
+                      overflow: 'auto',
+                      pointerEvents: 'none',
+                      textAlign: 'center'
+                    }}
+                    transform={`translate(${translateX}, ${translateY})`}
                   >
-                    {label}
-                  </text>
+                    <div className="line__condition">
+                      <strong className="govuk-tag govuk-tag--green">
+                        {label}
+                      </strong>
+                    </div>
+                  </foreignObject>
                 )}
               </g>
             )
           })}
         </svg>
         {this.state.edge && (
-          <Flyout
-            title="Edit Link"
-            onHide={() => this.setState({ edge: undefined })}
-          >
-            <LinkEdit
-              edge={this.state.edge}
-              onEdit={() => this.setState({ edge: undefined })}
-            />
-          </Flyout>
+          <RenderInPortal>
+            <Flyout
+              title="Edit Link"
+              onHide={() => this.setState({ edge: undefined })}
+            >
+              <LinkEdit
+                edge={this.state.edge}
+                onEdit={() => this.setState({ edge: undefined })}
+              />
+            </Flyout>
+          </RenderInPortal>
         )}
       </>
     )

@@ -116,16 +116,14 @@ export function ConditionsEdit({ path }: Props) {
       )}
       {editingCondition && (
         <RenderInPortal>
-          <div id="edit-conditions" data-testid="edit-conditions">
-            <Flyout title={i18n('conditions.addOrEdit')} onHide={editFinished}>
-              <InlineConditions
-                path={path}
-                condition={editingCondition}
-                conditionsChange={editFinished}
-                cancelCallback={editFinished}
-              />
-            </Flyout>
-          </div>
+          <Flyout title={i18n('conditions.addOrEdit')} onHide={editFinished}>
+            <InlineConditions
+              path={path}
+              condition={editingCondition}
+              conditionsChange={editFinished}
+              cancelCallback={editFinished}
+            />
+          </Flyout>
         </RenderInPortal>
       )}
     </>

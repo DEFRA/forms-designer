@@ -48,7 +48,6 @@ export function customRenderForLists(
           </ListContext.Provider>
         </ListsEditorContext.Provider>
       </FlyoutContext.Provider>
-      <div id="portal-root" />
     </DataContext.Provider>,
     renderOptions
   )
