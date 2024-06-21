@@ -1,15 +1,10 @@
 import { ComponentType, type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
-import React, { useReducer } from 'react'
+import React from 'react'
 
 import { FieldEdit } from '~/src/FieldEdit.jsx'
-import { DataContext } from '~/src/context/DataContext.js'
-import {
-  ComponentContext,
-  componentReducer,
-  initComponentState
-} from '~/src/reducers/component/componentReducer.jsx'
+import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
 describe('Field Edit', () => {
   const { getByText } = screen
@@ -38,40 +33,13 @@ describe('Field Edit', () => {
     conditions: []
   }
 
-  const dataValue = { data, save: jest.fn() }
-
-  const TestComponentContextProvider = ({
-    children,
-    dataValue,
-    componentValue
-  }) => {
-    const initComponentValue = (initialState: any) => {
-      return componentValue || initialState
-    }
-    const [state, dispatch] = useReducer(
-      componentReducer,
-      initComponentState({ component: dataValue.data.pages[0].components[0] }),
-      initComponentValue
-    )
-    return (
-      <DataContext.Provider value={dataValue}>
-        <ComponentContext.Provider value={{ state, dispatch }}>
-          {children}
-        </ComponentContext.Provider>
-      </DataContext.Provider>
-    )
-  }
-
   afterEach(cleanup)
 
   test('Help text changes', () => {
     const { container } = render(
-      <TestComponentContextProvider
-        dataValue={dataValue}
-        componentValue={false}
-      >
+      <RenderWithContext data={data}>
         <FieldEdit />
-      </TestComponentContextProvider>
+      </RenderWithContext>
     )
 
     expect(container).toHaveTextContent('Enter the name to show for this field')
@@ -97,12 +65,9 @@ describe('Field Edit', () => {
 
   test('Content fields should not have optional checkbox', () => {
     const { container } = render(
-      <TestComponentContextProvider
-        dataValue={dataValue}
-        componentValue={false}
-      >
+      <RenderWithContext data={data}>
         <FieldEdit isContentField={true} />
-      </TestComponentContextProvider>
+      </RenderWithContext>
     )
     expect(container).toHaveTextContent('Enter the name to show for this field')
 

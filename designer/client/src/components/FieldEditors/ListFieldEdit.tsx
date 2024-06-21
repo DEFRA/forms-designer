@@ -8,17 +8,16 @@ import { ListContextProvider } from '~/src/reducers/listReducer.jsx'
 
 interface Props {
   children: ReactNode
-  page: any // TODO
 }
 
-export function ListFieldEdit({ children, page }: Props) {
+export function ListFieldEdit({ children }: Props) {
   return (
     <ListsEditorContextProvider>
       <ListContextProvider>
         <ComponentListSelect />
         {children}
         <RenderInPortal>
-          <ListsEdit showEditLists={true} page={page} />
+          <ListsEdit showEditLists={true} />
         </RenderInPortal>
       </ListContextProvider>
     </ListsEditorContextProvider>

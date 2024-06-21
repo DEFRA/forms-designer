@@ -4,11 +4,14 @@ import {
   type FormDefinition
 } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import { cleanup, render, type RenderResult } from '@testing-library/react'
-import React, { type ReactElement } from 'react'
+import { cleanup, render } from '@testing-library/react'
+import React from 'react'
 
-import { SelectConditions } from '~/src/conditions/SelectConditions.jsx'
-import { DataContext } from '~/src/context/DataContext.js'
+import {
+  SelectConditions,
+  type Props
+} from '~/src/conditions/SelectConditions.jsx'
+import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
 describe('SelectConditions', () => {
   afterEach(cleanup)
@@ -22,32 +25,22 @@ describe('SelectConditions', () => {
     conditions: []
   }
 
-  const dataValue = { data, save: jest.fn() }
-
-  let props
-
-  function customRender(
-    element: ReactElement,
-    providerProps = dataValue
-  ): RenderResult {
-    return render(
-      <DataContext.Provider value={providerProps}>
-        {element}
-      </DataContext.Provider>
-    )
-  }
+  let props: Props
 
   beforeEach(() => {
     props = {
       path: '/some-path',
       conditionsChange: jest.fn(),
-      hints: [],
       noFieldsHintText: 'NoFieldsHintText'
     }
   })
 
   test('noFieldsAvailable hint text is rendered correctly', () => {
-    customRender(<SelectConditions {...props} />)
+    render(
+      <RenderWithContext data={data}>
+        <SelectConditions {...props} />
+      </RenderWithContext>
+    )
 
     const hint = 'NoFieldsHintText'
     expect(getByText(hint)).toBeInTheDocument()
@@ -151,12 +144,16 @@ describe('SelectConditions', () => {
       ]
     }
 
-    const providerProps = {
-      data,
-      save: jest.fn()
+    props = {
+      conditionsChange: jest.fn(),
+      noFieldsHintText: 'NoFieldsHintText'
     }
 
-    customRender(<SelectConditions />, providerProps)
+    render(
+      <RenderWithContext data={data}>
+        <SelectConditions {...props} />
+      </RenderWithContext>
+    )
 
     const expectedConditions = data.conditions.map(
       (condition) => condition.displayName

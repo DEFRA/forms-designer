@@ -1,10 +1,10 @@
 import { type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
+import { render } from '@testing-library/react'
 import React from 'react'
 
 import { ListEdit } from '~/src/list/ListEdit.jsx'
-import { ListContext } from '~/src/reducers/listReducer.jsx'
-import { customRenderForLists } from '~/test/helpers/renderers-lists.jsx'
+import { RenderListEditorWithContext } from '~/test/helpers/renderers-lists.jsx'
 
 const data: FormDefinition = {
   pages: [],
@@ -29,26 +29,20 @@ const data: FormDefinition = {
   conditions: []
 }
 
-const dataValue = { data, save: jest.fn() }
-
 describe('ListEdit', () => {
   const { getByText } = screen
 
   test('strings are rendered correctly', () => {
-    const listValue = {
-      state: { selectedList: data.lists[0] },
-      dispatch: jest.fn()
-    }
-    const listsValue = {
-      state: { listEditContext: ListContext },
-      dispatch: jest.fn()
-    }
+    const selectedListName = data.lists[0].name
 
-    customRenderForLists(<ListEdit />, {
-      dataValue,
-      listsValue,
-      listValue
-    })
+    render(
+      <RenderListEditorWithContext
+        data={data}
+        selectedListName={selectedListName}
+      >
+        <ListEdit />
+      </RenderListEditorWithContext>
+    )
 
     expect(getByText('List items')).toBeInTheDocument()
     expect(getByText('Enter a unique name for your list')).toBeInTheDocument()

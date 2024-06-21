@@ -4,7 +4,7 @@ import { cleanup, render } from '@testing-library/react'
 import React from 'react'
 
 import { PageCreate } from '~/src/PageCreate.jsx'
-import { RenderWithContextAndDataContext } from '~/test/helpers/renderers.jsx'
+import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
 describe('page create fields text', () => {
   const data: FormDefinition = {
@@ -20,9 +20,9 @@ describe('page create fields text', () => {
 
   test('displays field titles and help texts', () => {
     render(
-      <RenderWithContextAndDataContext mockData={data}>
-        <PageCreate page={{ path: '/some-path' }} />
-      </RenderWithContextAndDataContext>
+      <RenderWithContext data={data}>
+        <PageCreate />
+      </RenderWithContext>
     )
 
     expect(getByText('Page type')).toBeInTheDocument()

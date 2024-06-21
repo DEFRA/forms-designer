@@ -1,18 +1,11 @@
 import { ComponentType, type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import {
-  act,
-  cleanup,
-  render,
-  waitFor,
-  type RenderResult
-} from '@testing-library/react'
+import { act, cleanup, render, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import React, { type ReactElement } from 'react'
+import React from 'react'
 
 import { ComponentCreate } from '~/src/components/ComponentCreate/ComponentCreate.jsx'
-import { DataContext } from '~/src/context/DataContext.js'
-import { ComponentContextProvider } from '~/src/reducers/component/componentReducer.jsx'
+import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
 describe('ComponentCreate:', () => {
   const {
@@ -33,21 +26,14 @@ describe('ComponentCreate:', () => {
 
   const page = { path: '/1' }
 
-  function customRender(
-    element: ReactElement,
-    providerProps = { data, save: jest.fn() }
-  ): RenderResult {
-    return render(
-      <DataContext.Provider value={providerProps}>
-        <ComponentContextProvider>{element}</ComponentContextProvider>
-      </DataContext.Provider>
-    )
-  }
-
   afterEach(cleanup)
 
   test('Selecting a component type should display the component edit form', async () => {
-    customRender(<ComponentCreate page={page} />)
+    render(
+      <RenderWithContext data={data}>
+        <ComponentCreate page={page} />
+      </RenderWithContext>
+    )
 
     const $componentLink = await findByRole('link', {
       name: 'Details'
@@ -66,12 +52,13 @@ describe('ComponentCreate:', () => {
   })
 
   test('Should store the populated component and call callback on submit', async () => {
-    const providerProps = {
-      data,
-      save: jest.fn()
-    }
+    const save = jest.fn()
 
-    customRender(<ComponentCreate page={page} />, providerProps)
+    render(
+      <RenderWithContext data={data} save={save}>
+        <ComponentCreate page={page} />
+      </RenderWithContext>
+    )
 
     const $componentLink = await findByRole('link', {
       name: 'Details'
@@ -88,9 +75,9 @@ describe('ComponentCreate:', () => {
     await act(() => userEvent.type($textarea, 'content'))
     await act(() => userEvent.click($button))
 
-    await waitFor(() => expect(providerProps.save).toHaveBeenCalled())
+    await waitFor(() => expect(save).toHaveBeenCalled())
 
-    expect(providerProps.save.mock.calls[0]).toEqual(
+    expect(save.mock.calls[0]).toEqual(
       expect.arrayContaining([
         {
           ...data,
@@ -114,7 +101,11 @@ describe('ComponentCreate:', () => {
   })
 
   test("Should have functioning 'Back to create component list' link", async () => {
-    customRender(<ComponentCreate page={page} />)
+    render(
+      <RenderWithContext data={data}>
+        <ComponentCreate page={page} />
+      </RenderWithContext>
+    )
 
     const $componentLink = await findByRole('link', {
       name: 'Details'
@@ -134,7 +125,11 @@ describe('ComponentCreate:', () => {
   })
 
   test('Should display ErrorSummary when validation fails', async () => {
-    customRender(<ComponentCreate page={page} />)
+    render(
+      <RenderWithContext data={data}>
+        <ComponentCreate page={page} />
+      </RenderWithContext>
+    )
 
     const $componentLink = await findByRole('link', {
       name: 'Details'

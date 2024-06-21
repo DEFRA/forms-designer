@@ -13,10 +13,10 @@ describe('CssClasses', () => {
   describe('CssClassField', () => {
     const { getByLabelText, getByText } = screen
 
-    let stateProps
+    let state
 
     beforeEach(() => {
-      stateProps = {
+      state = {
         component: {
           name: 'TelephoneNumberField',
           title: 'Telephone number field',
@@ -27,7 +27,7 @@ describe('CssClasses', () => {
       }
 
       render(
-        <RenderWithContext stateProps={stateProps}>
+        <RenderWithContext state={state}>
           <CustomValidationMessage />
         </RenderWithContext>
       )

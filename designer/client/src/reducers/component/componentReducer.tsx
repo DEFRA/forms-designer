@@ -26,22 +26,27 @@ interface ComponentState {
   listItemErrors?: Partial<ErrorList<'title' | 'value'>>
 }
 
-const defaultValues = {
+export type ReducerActions =
+  | Parameters<typeof metaReducer>[1]
+  | Parameters<typeof optionsReducer>[1]
+  | Parameters<typeof fieldsReducer>[1]
+  | Parameters<typeof schemaReducer>[1]
+
+const defaultValues: ComponentState = {
   selectedComponent: {}
+}
+
+export interface ComponentContextType {
+  state: ComponentState
+  dispatch: Dispatch<ReducerActions>
 }
 
 /**
  * Context providing the {@link ComponentState} and {@link Dispatch} for changing any values specified by the enum type
  */
-export const ComponentContext = createContext<{
-  state: ComponentState
-  dispatch: Dispatch<{
-    type: Action
-    payload?: string
-  }>
-}>({
+export const ComponentContext = createContext<ComponentContextType>({
   state: defaultValues,
-  dispatch: () => {}
+  dispatch: () => ({})
 })
 
 /**
@@ -66,12 +71,9 @@ export function getSubReducer(type: Action) {
 }
 
 export function componentReducer(
-  state,
-  action: {
-    type: Action
-    payload?: unknown
-  }
-) {
+  state: ComponentState,
+  action: ReducerActions
+): ComponentState {
   const { type } = action
   const { selectedComponent = {} } = state
 
@@ -92,7 +94,7 @@ export function componentReducer(
   }
 }
 
-export const initComponentState = (props) => {
+export const initComponentState = (props?: ComponentState): ComponentState => {
   const selectedComponent = props?.component
   const newName = randomId()
   return {
@@ -112,7 +114,9 @@ export const initComponentState = (props) => {
 /**
  * Allows components to retrieve {@link ComponentState} and {@link Dispatch} from any component nested within `<ComponentContextProvider>`
  */
-export const ComponentContextProvider = (props) => {
+export const ComponentContextProvider = (
+  props: ComponentState & { children: ReactNode }
+) => {
   const { children, ...rest } = props
   const [state, dispatch] = useReducer(
     componentReducer,

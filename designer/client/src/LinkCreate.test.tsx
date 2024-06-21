@@ -17,8 +17,9 @@ import React, { type ReactElement } from 'react'
 
 import { LinkCreate } from '~/src/LinkCreate.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
+import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
-const rawData: FormDefinition = {
+const data: FormDefinition = {
   pages: [
     {
       title: 'First page',
@@ -52,18 +53,6 @@ const rawData: FormDefinition = {
   conditions: []
 }
 
-const data: FormDefinition = { ...rawData }
-const dataValue = { data, save: jest.fn() }
-
-function customRender(
-  element: ReactElement,
-  providerProps = dataValue
-): RenderResult {
-  return render(
-    <DataContext.Provider value={providerProps}>{element}</DataContext.Provider>
-  )
-}
-
 afterEach(cleanup)
 
 describe('LinkCreate', () => {
@@ -73,7 +62,12 @@ describe('LinkCreate', () => {
     const hint =
       'You can add links between different pages and set conditions for links to control the page that loads next. For example, a question page with a component for yes and no options could have link conditions based on which option a user selects.'
 
-    customRender(<LinkCreate />)
+    render(
+      <RenderWithContext data={data}>
+        <LinkCreate />
+      </RenderWithContext>
+    )
+
     expect(getByText(hint)).toBeInTheDocument()
   })
 
@@ -81,7 +75,11 @@ describe('LinkCreate', () => {
     const hint =
       'You cannot add any conditions as there are no components on the page you wish to link from. Add a component, such as an Input or a Selection field, and then add a condition.'
 
-    customRender(<LinkCreate />)
+    render(
+      <RenderWithContext data={data}>
+        <LinkCreate />
+      </RenderWithContext>
+    )
 
     const $source = getByTestId('link-source')
     await act(() => userEvent.selectOptions($source, data.pages[1].path))
@@ -90,7 +88,11 @@ describe('LinkCreate', () => {
   })
 
   test('Renders from and to inputs with the correct options', () => {
-    customRender(<LinkCreate />)
+    render(
+      <RenderWithContext data={data}>
+        <LinkCreate />
+      </RenderWithContext>
+    )
 
     const $source = getByTestId('link-source')
     const $target = getByTestId('link-target')
@@ -102,7 +104,12 @@ describe('LinkCreate', () => {
   })
 
   test('Selecting a from value causes the SelectConditions component to be displayed', async () => {
-    customRender(<LinkCreate />)
+    render(
+      <RenderWithContext data={data}>
+        <LinkCreate />
+      </RenderWithContext>
+    )
+
     expect(queryByTestId('select-conditions')).toBeNull()
 
     const $source = getByTestId('link-source')
@@ -115,8 +122,8 @@ describe('LinkCreate', () => {
   })
 
   test('links for older conditions are correctly generated when the form is submitted', async () => {
-    const data: FormDefinition = {
-      ...rawData,
+    const updated: FormDefinition = {
+      ...data,
       conditions: [
         {
           name: 'hasUKPassport',
@@ -133,10 +140,11 @@ describe('LinkCreate', () => {
 
     const save = jest.fn()
 
-    customRender(<LinkCreate />, {
-      data,
-      save
-    })
+    render(
+      <RenderWithContext data={updated} save={save}>
+        <LinkCreate />
+      </RenderWithContext>
+    )
 
     const $source = getByTestId('link-source')
     const $target = getByTestId('link-target')
@@ -156,7 +164,7 @@ describe('LinkCreate', () => {
     expect(save.mock.calls[0]).toEqual(
       expect.arrayContaining([
         {
-          ...data,
+          ...updated,
           pages: [
             expect.objectContaining({
               title: 'First page',
@@ -188,7 +196,7 @@ describe('LinkCreate', () => {
     expect(save.mock.calls[1]).toEqual(
       expect.arrayContaining([
         {
-          ...data,
+          ...updated,
           pages: [
             expect.objectContaining({
               title: 'First page',
@@ -212,8 +220,8 @@ describe('LinkCreate', () => {
   })
 
   test('links are correctly generated when the form is submitted', async () => {
-    const data: FormDefinition = {
-      ...rawData,
+    const updated: FormDefinition = {
+      ...data,
       conditions: [
         {
           name: 'hasUKPassport',
@@ -264,10 +272,11 @@ describe('LinkCreate', () => {
 
     const save = jest.fn()
 
-    customRender(<LinkCreate />, {
-      data,
-      save
-    })
+    render(
+      <RenderWithContext data={updated} save={save}>
+        <LinkCreate />
+      </RenderWithContext>
+    )
 
     const $source = getByTestId('link-source')
     const $target = getByTestId('link-target')
@@ -287,7 +296,7 @@ describe('LinkCreate', () => {
     expect(save.mock.calls[0]).toEqual(
       expect.arrayContaining([
         {
-          ...data,
+          ...updated,
           pages: [
             expect.objectContaining({
               title: 'First page',
@@ -311,6 +320,7 @@ describe('LinkCreate', () => {
 
     await act(() => userEvent.selectOptions($source, '/summary'))
     await act(() => userEvent.selectOptions($target, '/first-page'))
+
     await act(() => userEvent.selectOptions($condition, ''))
     await act(() => userEvent.click($button))
 
@@ -319,7 +329,7 @@ describe('LinkCreate', () => {
     expect(save.mock.calls[1]).toEqual(
       expect.arrayContaining([
         {
-          ...data,
+          ...updated,
           pages: [
             expect.objectContaining({
               title: 'First page',
@@ -343,15 +353,13 @@ describe('LinkCreate', () => {
   })
 
   test('Submitting without selecting to/from options shows the user an error', async () => {
-    const data: FormDefinition = {
-      ...rawData
-    }
     const save = jest.fn()
 
-    customRender(<LinkCreate />, {
-      data,
-      save
-    })
+    render(
+      <RenderWithContext data={data} save={save}>
+        <LinkCreate />
+      </RenderWithContext>
+    )
 
     await act(() => userEvent.click(getByRole('button')))
 

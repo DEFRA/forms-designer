@@ -18,8 +18,8 @@ interface Props {
 }
 
 interface State {
-  flyoutCount?: number
-  data?: FormDefinition
+  flyoutCount: number
+  data: FormDefinition
 }
 
 export class Designer extends Component<Props, State> {
@@ -75,7 +75,12 @@ export class Designer extends Component<Props, State> {
       increment: this.incrementFlyoutCounter,
       decrement: this.decrementFlyoutCounter
     }
-    const dataContextProviderValue = { data, save: this.save }
+
+    const dataContextProviderValue = {
+      data,
+      save: this.save
+    }
+
     return (
       <DataContext.Provider value={dataContextProviderValue}>
         <FlyoutContext.Provider value={flyoutContextProviderValue}>

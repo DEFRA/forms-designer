@@ -12,10 +12,10 @@ describe('CssClasses', () => {
   describe('CssClassField', () => {
     const { getByText } = screen
 
-    let stateProps
+    let state
 
     beforeEach(() => {
-      stateProps = {
+      state = {
         component: {
           name: 'TestCssClass',
           title: 'Test CSS class',
@@ -26,7 +26,7 @@ describe('CssClasses', () => {
       }
 
       render(
-        <RenderWithContext stateProps={stateProps}>
+        <RenderWithContext state={state}>
           <CssClasses />
         </RenderWithContext>
       )

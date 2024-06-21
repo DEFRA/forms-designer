@@ -24,13 +24,16 @@ export function initListsEditingState(): ListsEditorState {
   }
 }
 
-export const ListsEditorContext = createContext<{
+export interface ListsEditorContextType {
   state: ListsEditorState
-  dispatch: Dispatch<any>
-}>({
+  dispatch: Dispatch<[ListsEditorStateActions, boolean | string]>
+}
+
+export const ListsEditorContext = createContext<ListsEditorContextType>({
   state: initListsEditingState(),
-  dispatch: () => {}
+  dispatch: () => ({})
 })
+
 ListsEditorContext.displayName = 'ListsEditorContext'
 
 /**

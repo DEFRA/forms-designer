@@ -13,10 +13,10 @@ import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 describe('AutocompleteField', () => {
   const { getByText } = screen
 
-  let stateProps
+  let state
 
   beforeEach(() => {
-    stateProps = {
+    state = {
       component: {
         name: 'TestCssClass',
         title: 'Test CSS class',
@@ -29,7 +29,7 @@ describe('AutocompleteField', () => {
     }
 
     render(
-      <RenderWithContext stateProps={stateProps}>
+      <RenderWithContext state={state}>
         <Autocomplete />
       </RenderWithContext>
     )

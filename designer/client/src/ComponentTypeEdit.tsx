@@ -2,9 +2,7 @@ import {
   ComponentSubType,
   ComponentType,
   ComponentTypes,
-  hasEditor,
-  type Page,
-  type RepeatingFieldPage
+  hasEditor
 } from '@defra/forms-model'
 import React, { useContext, type FunctionComponent } from 'react'
 
@@ -38,11 +36,10 @@ const componentTypeEditors = {
 
 export interface Props {
   context?: typeof ComponentContext
-  page: Page | RepeatingFieldPage
 }
 
 export const ComponentTypeEdit: FunctionComponent<Props> = (props) => {
-  const { context = ComponentContext, page } = props
+  const { children, context = ComponentContext } = props
   const { state } = useContext(context)
   const { selectedComponent } = state
 
@@ -66,7 +63,7 @@ export const ComponentTypeEdit: FunctionComponent<Props> = (props) => {
           isListField={component?.subType === ComponentSubType.ListField}
         />
       )}
-      {TagName && <TagName page={page} />}
+      {TagName && <TagName>{children}</TagName>}
     </>
   )
 }

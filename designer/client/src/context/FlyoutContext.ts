@@ -1,7 +1,13 @@
 import { createContext } from 'react'
 
-export const FlyoutContext = createContext({
-  count: 0,
-  increment: () => {},
-  decrement: () => {}
+export interface FlyoutContextType {
+  count: number
+  increment: () => void
+  decrement: () => void
+}
+
+export const FlyoutContext = createContext<FlyoutContextType>({
+  count: 1,
+  increment: () => undefined,
+  decrement: () => undefined
 })

@@ -5,12 +5,12 @@ import {
   type FormDefinition
 } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import { act } from '@testing-library/react'
+import { act, render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React from 'react'
 
 import { ListItemEdit } from '~/src/list/ListItemEdit.jsx'
-import { customRenderForLists } from '~/test/helpers/renderers-lists.jsx'
+import { RenderListEditorWithContext } from '~/test/helpers/renderers-lists.jsx'
 
 const data: FormDefinition = {
   pages: [
@@ -91,13 +91,15 @@ const data: FormDefinition = {
   ]
 }
 
-const dataValue = { data, save: jest.fn() }
-
 describe('ListItemEdit', () => {
   const { getByText, getByTestId, getAllByTestId } = screen
 
-  test('strings are rendered correctly', async () => {
-    customRenderForLists(<ListItemEdit />, { dataValue })
+  test('strings are rendered correctly', () => {
+    render(
+      <RenderListEditorWithContext data={data}>
+        <ListItemEdit />
+      </RenderListEditorWithContext>
+    )
 
     expect(getByText('Item text')).toBeInTheDocument()
     expect(getByText('Enter the text you want to show')).toBeInTheDocument()
@@ -114,7 +116,11 @@ describe('ListItemEdit', () => {
   })
 
   test('Condition selection works correctly', async () => {
-    customRenderForLists(<ListItemEdit />, { dataValue })
+    render(
+      <RenderListEditorWithContext data={data}>
+        <ListItemEdit />
+      </RenderListEditorWithContext>
+    )
 
     const $select = getByTestId('list-condition-select')
     const $options: HTMLOptionElement[] = getAllByTestId(
