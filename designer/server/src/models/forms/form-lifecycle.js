@@ -5,7 +5,7 @@ import { render } from '~/src/common/nunjucks/index.js'
 /**
  * Model to represent confirmation page dialog for a given form.
  * @param {FormMetadata} form
- * @param {string[]} errorList - list of errors to display to the user
+ * @param {import('~/src/common/helpers/build-error-details.js').ErrorDetailsItem[]} errorList - list of errors to display to the user
  */
 export function confirmationPageViewModel(form, errorList) {
   const pageTitle = 'Are you sure you want to make the draft live?'

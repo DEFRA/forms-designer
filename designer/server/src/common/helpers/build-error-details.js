@@ -19,6 +19,7 @@ export function buildErrorDetails(error) {
 
 /**
  * @param {string[]} errorList
+ * @returns {ErrorDetailsItem[]}
  */
 export function buildSimpleErrorList(errorList) {
   return errorList.map((message) => {
@@ -42,7 +43,8 @@ export function buildErrorList(errorDetails, names) {
 
 /**
  * @typedef {import('joi').ValidationError} ValidationError
- * @typedef {Record<string, { text: string, href: string }>} ErrorDetails
+ * @typedef {{ text: string, href?: string }} ErrorDetailsItem
+ * @typedef {Record<string, ErrorDetailsItem>} ErrorDetails
  */
 
 /**

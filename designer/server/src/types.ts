@@ -9,7 +9,10 @@ import {
   type Credentials,
   type UserProfile
 } from '~/src/common/helpers/auth/azure-oidc.js'
-import { type ValidationFailure } from '~/src/common/helpers/build-error-details.js'
+import {
+  type ErrorDetailsItem,
+  type ValidationFailure
+} from '~/src/common/helpers/build-error-details.js'
 
 interface SessionCache {
   drop: (key: string) => Promise<void>
@@ -109,7 +112,7 @@ declare module '@hapi/yar' {
     /**
      * Get temporary error messages relating to the current page.
      */
-    flash(type: ErrorListKey): string[]
+    flash(type: ErrorListKey): ErrorDetailsItem[]
 
     /**
      * Get temporary flag that user failed authorisation

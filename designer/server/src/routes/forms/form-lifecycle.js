@@ -56,11 +56,8 @@ export default [
         yar.flash(sessionNames.displayCreateLiveSuccess, true)
         return h.redirect(`/library/${form.slug}`)
       } catch (err) {
-        if (Boom.isBoom(err)) {
-          yar.flash(
-            sessionNames.errorList,
-            buildSimpleErrorList([err.data.message])
-          )
+        if (Boom.isBoom(err) && err.output.statusCode === 400) {
+          yar.flash(sessionNames.errorList, buildSimpleErrorList([err.message]))
 
           return h.redirect(`/library/${form.slug}/make-draft-live`)
         }

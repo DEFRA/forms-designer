@@ -15,7 +15,13 @@ export async function request(method, url, options) {
 
   if (response.statusCode !== 200) {
     const statusCode = response.statusCode
-    const err = new Error(`HTTP status code ${statusCode}`)
+    let err
+
+    if ('message' in body && typeof body.message === 'string' && body.message) {
+      err = new Error(body.message)
+    } else {
+      err = new Error(`HTTP status code ${statusCode}`)
+    }
 
     throw Boom.boomify(err, { statusCode, data: body })
   }
