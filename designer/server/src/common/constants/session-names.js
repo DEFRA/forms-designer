@@ -4,5 +4,6 @@ export const sessionNames = {
   userAuthFailed: /** @type {const} */ ('userAuthFailed'),
   validationFailure: /** @type {const} */ ('validationFailure'),
   displayCreateLiveSuccess: /** @type {const} */ ('displayCreateLiveSuccess'),
-  displayCreateDraftSuccess: /** @type {const} */ ('displayCreateDraftSuccess')
+  displayCreateDraftSuccess: /** @type {const} */ ('displayCreateDraftSuccess'),
+  errorList: /** @type {const} */ ('errorList')
 }

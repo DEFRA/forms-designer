@@ -18,6 +18,15 @@ export function buildErrorDetails(error) {
 }
 
 /**
+ * @param {string[]} errorList
+ */
+export function buildSimpleErrorList(errorList) {
+  return errorList.map((message) => {
+    return { text: message }
+  })
+}
+
+/**
  * @param {ErrorDetails | undefined} errorDetails
  * @param {string[]} [names] - Field names to filter error list by
  */

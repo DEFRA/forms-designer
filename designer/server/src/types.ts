@@ -91,6 +91,7 @@ declare module '@hapi/yar' {
     (typeof sessionNames)['displayCreateLiveSuccess']
   type DisplayCreatDraftSuccessKey =
     (typeof sessionNames)['displayCreateDraftSuccess']
+  type ErrorListKey = (typeof sessionNames)['errorList']
 
   interface Yar {
     /**
@@ -104,6 +105,11 @@ declare module '@hapi/yar' {
      * (Deleted when read, e.g. after a redirect)
      */
     flash(type: ValidationKey): ValidationFailure<FormMetadataInput>[]
+
+    /**
+     * Get temporary error messages relating to the current page.
+     */
+    flash(type: ErrorListKey): string[]
 
     /**
      * Get temporary flag that user failed authorisation
