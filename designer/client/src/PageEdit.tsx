@@ -1,4 +1,4 @@
-import { clone, updateStartPage } from '@defra/forms-model'
+import { clone } from '@defra/forms-model'
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import React, { Component, createRef, type ContextType } from 'react'
 

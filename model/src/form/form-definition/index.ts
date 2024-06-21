@@ -204,7 +204,7 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
   .keys({
     name: localisedString.optional(),
     feedback: feedbackSchema.optional(),
-    startPage: Joi.string().required(),
+    startPage: Joi.string().optional(),
     pages: Joi.array<Page | RepeatingFieldPage>()
       .required()
       .items(pageSchema)
@@ -220,7 +220,7 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
     metadata: Joi.object({ a: Joi.any() }).unknown().optional(),
     declaration: Joi.string().allow('').optional(),
     skipSummary: Joi.boolean().optional().default(false),
-    phaseBanner: phaseBannerSchema,
+    phaseBanner: phaseBannerSchema.optional(),
     specialPages: specialPagesSchema.optional(),
     outputEmail: Joi.string()
       .email({ tlds: { allow: ['uk'] } })
