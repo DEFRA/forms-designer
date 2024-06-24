@@ -136,6 +136,7 @@ export interface EmailAddressFieldComponent extends TextFieldBase {
   type: ComponentType.EmailAddressField
   options: TextFieldBase['options'] & {
     condition?: string
+    customValidationMessage?: string
   }
 }
 
@@ -143,6 +144,7 @@ export interface NumberFieldComponent extends NumberFieldBase {
   type: ComponentType.NumberField
   options: NumberFieldBase['options'] & {
     condition?: string
+    customValidationMessage?: string
   }
 }
 
@@ -188,6 +190,9 @@ export interface DatePartsFieldFieldComponent extends DateFieldBase {
 
 export interface MonthYearFieldComponent extends DateFieldBase {
   type: ComponentType.MonthYearField
+  options: DateFieldBase['options'] & {
+    customValidationMessage?: string
+  }
 }
 
 export interface TimeFieldComponent extends DateFieldBase {
