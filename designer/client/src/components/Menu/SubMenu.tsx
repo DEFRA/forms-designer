@@ -62,7 +62,16 @@ export function SubMenu({ slug }: Props) {
       return
     }
 
-    save(JSON.parse(result) as FormDefinition).catch((error: unknown) =>
+    let definition: FormDefinition | undefined
+
+    try {
+      definition = JSON.parse(result) as FormDefinition
+    } catch (error: unknown) {
+      logger.error(error, 'Upload file contents invalid')
+      return
+    }
+
+    save(definition).catch((error: unknown) =>
       logger.error(error, 'Upload file failed')
     )
   }
