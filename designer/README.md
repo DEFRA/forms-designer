@@ -46,9 +46,9 @@ Base URLs should should include protocol, hostname, port number, e.g. `http://lo
 | SESSION_COOKIE_TTL                | server-side storage expiration time for sessions - in milliseconds                      | yes      |         |                             |
 | SESSION_TTL                       | server-side storage expiration time - in milliseconds                                   | yes      |         |                             |
 | USE_SINGLE_INSTANCE_CACHE         | If true, disables the redis cluster connection and uses a single node.                  | yes      |         |                             |
-| http_proxy                        | HTTP proxy to use, e.g. the one from CDP. Currently used for Hapi Wreck.                | no       |         |                             |
-| https_proxy                       | HTTPS proxy to use, e.g. the one from CDP. Currently used for Hapi Wreck.               | no       |         |                             |
-| no_proxy                          | HTTP proxy to use, e.g. the one from CDP. Currently used for Hapi Wreck.                | no       |         |                             |
+| HTTP_PROXY                        | HTTP proxy to use, e.g. the one from CDP. Currently used for Hapi Wreck.                | no       |         |                             |
+| HTTPS_PROXY                       | HTTPS proxy to use, e.g. the one from CDP. Currently used for Hapi Wreck.               | no       |         |                             |
+| NO_PROXY                          | HTTP proxy to use, e.g. the one from CDP. Currently used for Hapi Wreck.                | no       |         |                             |
 
 For proxy options, see https://www.npmjs.com/package/proxy-from-env which is used by https://github.com/TooTallNate/proxy-agents/tree/main/packages/proxy-agent.
 
