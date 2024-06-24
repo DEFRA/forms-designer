@@ -59,6 +59,7 @@ interface NumberFieldBase {
   title: string
   hint: string
   options: {
+    required?: boolean
     prefix?: string
     suffix?: string
     exposeToContext?: boolean
