@@ -51,14 +51,19 @@ export function SubMenu({ slug }: Props) {
 
   function onFileUploaded(e: ProgressEvent<FileReader>) {
     const { result } = e.target ?? {}
+    const { current: input } = fileInput
 
-    // Reset input for next upload
-    if (fileInput.current) {
-      fileInput.current.value = ''
+    // Default filename for logging
+    let filename = 'file'
+
+    // Update filename and reset input for next upload
+    if (input?.files?.length) {
+      filename += ` '${input.files[0].name}'`
+      input.value = ''
     }
 
     if (typeof result !== 'string') {
-      logger.warn('Upload file contents must be a string')
+      logger.warn(`Upload ${filename} contents must be a string`)
       return
     }
 
@@ -67,12 +72,12 @@ export function SubMenu({ slug }: Props) {
     try {
       definition = JSON.parse(result) as FormDefinition
     } catch (error: unknown) {
-      logger.error(error, 'Upload file contents invalid')
+      logger.error(error, `Upload ${filename} contents invalid`)
       return
     }
 
     save(definition).catch((error: unknown) =>
-      logger.error(error, 'Upload file failed')
+      logger.error(error, `Upload ${filename} failed`)
     )
   }
 
