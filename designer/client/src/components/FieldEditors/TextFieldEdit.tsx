@@ -96,7 +96,7 @@ export function TextFieldEdit({ children, context = ComponentContext }: Props) {
             data-cast="number"
             id="field-schema-maxwords"
             name="schema.maxwords"
-            value={'maxwords' in options ? options.maxwords : undefined}
+            value={'maxWords' in options ? options.maxWords : undefined}
             type="number"
             onChange={(e) =>
               dispatch({
