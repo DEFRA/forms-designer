@@ -2,6 +2,8 @@ import { Engine as CatboxMemory } from '@hapi/catbox-memory'
 import { Engine as CatboxRedis } from '@hapi/catbox-redis'
 import hapi, { type ServerOptions } from '@hapi/hapi'
 import inert from '@hapi/inert'
+import Wreck from '@hapi/wreck'
+import { ProxyAgent } from 'proxy-agent'
 
 import {
   azureOidc,
@@ -14,6 +16,14 @@ import { sessionManager } from '~/src/common/helpers/session-manager.js'
 import * as nunjucks from '~/src/common/nunjucks/index.js'
 import config from '~/src/config.js'
 import router from '~/src/plugins/router.js'
+
+const proxyAgent = new ProxyAgent()
+
+Wreck.agents = {
+  https: proxyAgent,
+  http: proxyAgent,
+  httpsAllowUnauthorized: proxyAgent
+}
 
 const serverOptions = (): ServerOptions => {
   return {
