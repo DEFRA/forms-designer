@@ -14,10 +14,6 @@ export type ConditionalComponentType =
   | ComponentType.TimeField
   | ComponentType.YesNoField
 
-export interface ContentOptions {
-  condition?: string
-}
-
 /**
  * Types for Components JSON structure which are expected by engine and turned into actual form input/content/lists
  */
@@ -101,7 +97,9 @@ interface ContentFieldBase {
   name: string
   title: string
   content: string
-  options: ContentOptions
+  options: {
+    condition?: string
+  }
   schema?: object
 }
 
@@ -129,16 +127,23 @@ interface DateFieldBase {
 export interface TextFieldComponent extends TextFieldBase {
   type: ComponentType.TextField
   options: TextFieldBase['options'] & {
+    condition?: string
     customValidationMessage?: string
   }
 }
 
 export interface EmailAddressFieldComponent extends TextFieldBase {
   type: ComponentType.EmailAddressField
+  options: TextFieldBase['options'] & {
+    condition?: string
+  }
 }
 
 export interface NumberFieldComponent extends NumberFieldBase {
   type: ComponentType.NumberField
+  options: NumberFieldBase['options'] & {
+    condition?: string
+  }
 }
 
 export interface TelephoneNumberFieldComponent extends TextFieldBase {
@@ -150,11 +155,15 @@ export interface TelephoneNumberFieldComponent extends TextFieldBase {
 
 export interface YesNoFieldComponent extends TextFieldBase {
   type: ComponentType.YesNoField
+  options: TextFieldBase['options'] & {
+    condition?: string
+  }
 }
 
 export interface MultilineTextFieldComponent extends TextFieldBase {
   type: ComponentType.MultilineTextField
   options: TextFieldBase['options'] & {
+    condition?: string
     customValidationMessage?: string
     rows?: number
     maxWords?: number
@@ -172,6 +181,9 @@ export interface UkAddressFieldComponent extends TextFieldBase {
 // Date Fields
 export interface DatePartsFieldFieldComponent extends DateFieldBase {
   type: ComponentType.DatePartsField
+  options: DateFieldBase['options'] & {
+    condition?: string
+  }
 }
 
 export interface MonthYearFieldComponent extends DateFieldBase {
@@ -180,6 +192,9 @@ export interface MonthYearFieldComponent extends DateFieldBase {
 
 export interface TimeFieldComponent extends DateFieldBase {
   type: ComponentType.TimeField
+  options: DateFieldBase['options'] & {
+    condition?: string
+  }
 }
 
 // Content Fields
@@ -208,11 +223,17 @@ export interface AutocompleteFieldComponent extends ListFieldBase {
 export interface CheckboxesFieldComponent extends ListFieldBase {
   type: ComponentType.CheckboxesField
   subType?: ComponentSubType.ListField
+  options: ListFieldBase['options'] & {
+    condition?: string
+  }
 }
 
 export interface RadiosFieldComponent extends ListFieldBase {
   type: ComponentType.RadiosField
   subType?: ComponentSubType.ListField
+  options: ListFieldBase['options'] & {
+    condition?: string
+  }
 }
 
 export interface SelectFieldComponent extends ListFieldBase {
