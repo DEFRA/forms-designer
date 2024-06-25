@@ -24,7 +24,7 @@
     "slug": "^9.1.0"
   },
   "devDependencies": {
-    "joi": "^17.13.1",
+    "joi": "^17.13.3",
     "nanoid": "^3.3.7"
   },
   "peerDependencies": {
