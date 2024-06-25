@@ -1,10 +1,10 @@
 import Basic from '@hapi/basic'
 import Bell from '@hapi/bell'
 import { token } from '@hapi/jwt'
-import Wreck from '@hapi/wreck'
 import { DateTime } from 'luxon'
 
 import config from '~/src/config.js'
+import * as oidc from '~/src/lib/oidc.js'
 
 const authCallbackUrl = new URL(`/auth/callback`, config.appBaseUrl)
 
@@ -25,9 +25,7 @@ export const azureOidc = {
     async register(server) {
       await server.register(Bell)
 
-      const oidc = await Wreck.get(config.oidcWellKnownConfigurationUrl, {
-        json: true
-      }).then((response) => /** @type {OidcMetadata} */ (response.payload))
+      const wellKnownConfiguration = await oidc.getWellKnownConfiguration()
 
       server.auth.strategy(
         'azure-oidc',
@@ -37,8 +35,8 @@ export const azureOidc = {
             name: 'azure-oidc',
             protocol: 'oauth2',
             useParamsAuth: true,
-            auth: oidc.authorization_endpoint,
-            token: oidc.token_endpoint,
+            auth: wellKnownConfiguration.authorization_endpoint,
+            token: wellKnownConfiguration.token_endpoint,
             scope,
             profile(credentials, params) {
               const artifacts = token.decode(credentials.token)

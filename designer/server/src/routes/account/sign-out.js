@@ -1,10 +1,9 @@
 import { URL } from 'node:url'
 
-import Wreck from '@hapi/wreck'
-
 import { dropUserSession } from '~/src/common/helpers/auth/drop-user-session.js'
 import { hasUser } from '~/src/common/helpers/auth/get-user-session.js'
 import config from '~/src/config.js'
+import * as oidc from '~/src/lib/oidc.js'
 
 const redirectUrl = new URL(`/account/signed-out`, config.appBaseUrl)
 
@@ -20,12 +19,10 @@ export default /** @satisfies {ServerRoute} */ ({
       return h.redirect('/')
     }
 
-    const oidc = await Wreck.get(config.oidcWellKnownConfigurationUrl, {
-      json: true
-    }).then((response) => /** @type {OidcMetadata} */ (response.payload))
+    const wellKnownConfiguration = await oidc.getWellKnownConfiguration()
 
     // Build end session URL
-    const endSessionUrl = new URL(oidc.end_session_endpoint)
+    const endSessionUrl = new URL(wellKnownConfiguration.end_session_endpoint)
     endSessionUrl.searchParams.set('client_id', config.azureClientId)
     endSessionUrl.searchParams.set('id_token_hint', credentials.idToken)
     endSessionUrl.searchParams.set('post_logout_redirect_uri', redirectUrl.href)
