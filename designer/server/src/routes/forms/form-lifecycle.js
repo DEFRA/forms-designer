@@ -1,5 +1,9 @@
+import Boom from '@hapi/boom'
+import { StatusCodes } from 'http-status-codes'
+
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
+import { buildSimpleErrorList } from '~/src/common/helpers/build-error-details.js'
 import * as forms from '~/src/lib/forms.js'
 import * as formLifecycle from '~/src/models/forms/form-lifecycle.js'
 
@@ -11,12 +15,18 @@ export default [
     method: 'GET',
     path: '/library/{slug}/make-draft-live',
     async handler(request, h) {
+      const { yar } = request
       const { token } = request.auth.credentials
       const form = await forms.get(request.params.slug, token)
 
+      const formPromotionValidationFailure = yar.flash(sessionNames.errorList)
+
       return h.view(
         'forms/make-draft-live',
-        formLifecycle.confirmationPageViewModel(form)
+        formLifecycle.confirmationPageViewModel(
+          form,
+          formPromotionValidationFailure
+        )
       )
     },
     options: {
@@ -41,10 +51,23 @@ export default [
 
       const form = await forms.get(request.params.slug, token)
 
-      await forms.makeDraftFormLive(form.id, token)
+      try {
+        await forms.makeDraftFormLive(form.id, token)
 
-      yar.flash(sessionNames.displayCreateLiveSuccess, true)
-      return h.redirect(`/library/${form.slug}`)
+        yar.flash(sessionNames.displayCreateLiveSuccess, true)
+        return h.redirect(`/library/${form.slug}`)
+      } catch (err) {
+        if (
+          Boom.isBoom(err) &&
+          err.output.statusCode === StatusCodes.BAD_REQUEST.valueOf()
+        ) {
+          yar.flash(sessionNames.errorList, buildSimpleErrorList([err.message]))
+
+          return h.redirect(`/library/${form.slug}/make-draft-live`)
+        }
+
+        throw err
+      }
     },
     options: {
       auth: {

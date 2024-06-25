@@ -5,8 +5,9 @@ import { render } from '~/src/common/nunjucks/index.js'
 /**
  * Model to represent confirmation page dialog for a given form.
  * @param {FormMetadata} form
+ * @param {ErrorDetailsItem[]} errorList - list of errors to display to the user
  */
-export function confirmationPageViewModel(form) {
+export function confirmationPageViewModel(form, errorList) {
   const pageTitle = 'Are you sure you want to make the draft live?'
 
   const formPath = `/library/${form.slug}`
@@ -19,6 +20,8 @@ export function confirmationPageViewModel(form) {
       text: pageTitle,
       caption: form.title
     },
+
+    errorList,
 
     warning: form.live
       ? { text: `It will replace the form that is currently live.` }
@@ -44,4 +47,5 @@ export function confirmationPageViewModel(form) {
 
 /**
  * @typedef {import("./library.js").FormMetadata} FormMetadata
+ * @typedef {import('~/src/common/helpers/build-error-details.js').ErrorDetailsItem} ErrorDetailsItem
  */

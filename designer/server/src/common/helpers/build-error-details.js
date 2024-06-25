@@ -18,6 +18,16 @@ export function buildErrorDetails(error) {
 }
 
 /**
+ * @param {string[]} errorList
+ * @returns {ErrorDetailsItem[]}
+ */
+export function buildSimpleErrorList(errorList) {
+  return errorList.map((message) => {
+    return { text: message }
+  })
+}
+
+/**
  * @param {ErrorDetails | undefined} errorDetails
  * @param {string[]} [names] - Field names to filter error list by
  */
@@ -33,7 +43,8 @@ export function buildErrorList(errorDetails, names) {
 
 /**
  * @typedef {import('joi').ValidationError} ValidationError
- * @typedef {Record<string, { text: string, href: string }>} ErrorDetails
+ * @typedef {{ text: string, href?: string }} ErrorDetailsItem
+ * @typedef {Record<string, ErrorDetailsItem>} ErrorDetails
  */
 
 /**

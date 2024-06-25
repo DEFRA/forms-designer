@@ -6,7 +6,8 @@
 {% block content %}
   <form method="post" novalidate>
     {% call appPageBody({
-      heading: pageHeading
+      heading: pageHeading,
+      errorList: errorList
     }) %}
       {% if warning %}
         {{ govukWarningText(warning) }}
