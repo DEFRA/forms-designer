@@ -1,5 +1,5 @@
 import Boom from '@hapi/boom'
-import fetch from 'node-fetch'
+import Wreck from '@hapi/wreck'
 
 import { scope } from '~/src/common/helpers/auth/azure-oidc.js'
 import { dropUserSession } from '~/src/common/helpers/auth/drop-user-session.js'
@@ -33,26 +33,25 @@ export async function refreshAccessToken(request) {
   params.append('refresh_token', credentials.refreshToken)
   params.append('scope', scope.join(' '))
 
-  const oidc = await fetch(oidcWellKnownConfigurationUrl).then(
-    (response) => /** @type {Promise<OidcMetadata>} */ (response.json())
-  )
+  const oidc = await Wreck.get(config.oidcWellKnownConfigurationUrl, {
+    json: true
+  }).then((response) => /** @type {OidcMetadata} */ (response.payload))
 
-  const response = await fetch(oidc.token_endpoint, {
-    method: 'post',
+  const response = await Wreck.post(oidc.token_endpoint, {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
       'Cache-Control': 'no-cache'
     },
-    body: params
+    payload: params
   })
 
-  if (!response.ok) {
+  if (!response.res.statusCode) {
     await dropUserSession(request)
     throw Boom.unauthorized()
   }
 
   const artifacts = await /** @type {Promise<AuthArtifacts>} */ (
-    response.json()
+    response.payload
   )
 
   return artifacts

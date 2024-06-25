@@ -1,5 +1,7 @@
 import { URL } from 'node:url'
 
+import Wreck from '@hapi/wreck'
+
 import { dropUserSession } from '~/src/common/helpers/auth/drop-user-session.js'
 import { hasUser } from '~/src/common/helpers/auth/get-user-session.js'
 import config from '~/src/config.js'
@@ -18,9 +20,9 @@ export default /** @satisfies {ServerRoute} */ ({
       return h.redirect('/')
     }
 
-    const oidc = await fetch(config.oidcWellKnownConfigurationUrl).then(
-      (response) => /** @type {Promise<OidcMetadata>} */ (response.json())
-    )
+    const oidc = await Wreck.get(config.oidcWellKnownConfigurationUrl, {
+      json: true
+    }).then((response) => /** @type {OidcMetadata} */ (response.payload))
 
     // Build end session URL
     const endSessionUrl = new URL(oidc.end_session_endpoint)

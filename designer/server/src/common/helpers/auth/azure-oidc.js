@@ -1,6 +1,7 @@
 import Basic from '@hapi/basic'
 import Bell from '@hapi/bell'
 import { token } from '@hapi/jwt'
+import Wreck from '@hapi/wreck'
 import { DateTime } from 'luxon'
 
 import config from '~/src/config.js'
@@ -24,9 +25,9 @@ export const azureOidc = {
     async register(server) {
       await server.register(Bell)
 
-      const oidc = await fetch(config.oidcWellKnownConfigurationUrl).then(
-        (response) => /** @type {Promise<OidcMetadata>} */ (response.json())
-      )
+      const oidc = await Wreck.get(config.oidcWellKnownConfigurationUrl, {
+        json: true
+      }).then((response) => /** @type {OidcMetadata} */ (response.payload))
 
       server.auth.strategy(
         'azure-oidc',
