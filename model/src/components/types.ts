@@ -53,7 +53,7 @@ interface NumberFieldBase {
   subType?: ComponentSubType.Field
   name: string
   title: string
-  hint: string
+  hint?: string
   options: {
     required?: boolean
     optionalText?: boolean
@@ -113,7 +113,7 @@ interface DateFieldBase {
   subType?: ComponentSubType.Field
   name: string
   title: string
-  hint: string
+  hint?: string
   options: {
     hideTitle?: boolean
     required?: boolean
