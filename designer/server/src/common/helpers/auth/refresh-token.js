@@ -34,7 +34,7 @@ export async function refreshAccessToken(request) {
   params.append('scope', scope.join(' '))
 
   try {
-    return oidc.getToken(params)
+    return await oidc.getToken(params)
   } catch (err) {
     await dropUserSession(request)
     throw Boom.unauthorized()
