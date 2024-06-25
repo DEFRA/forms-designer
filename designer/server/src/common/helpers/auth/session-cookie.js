@@ -66,8 +66,8 @@ const sessionCookie = {
 
               // Refresh session when token has expired
               if (hasExpired(credentials)) {
-                const token = await refreshAccessToken(request)
-                credentials = await createUserSession(request, token)
+                const { body: artifacts } = await refreshAccessToken(request)
+                credentials = await createUserSession(request, artifacts)
               }
             }
 

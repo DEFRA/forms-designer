@@ -1,5 +1,6 @@
 import Boom from '@hapi/boom'
 import Wreck from '@hapi/wreck'
+import { StatusCodes } from 'http-status-codes'
 
 /**
  * @template {object} [BodyType=Buffer]
@@ -13,7 +14,7 @@ export async function request(method, url, options) {
   /** @type {BodyType} */
   const body = await Wreck.read(response, options)
 
-  if (response.statusCode !== 200) {
+  if (response.statusCode !== StatusCodes.OK) {
     const statusCode = response.statusCode
     const err = new Error(`HTTP status code ${statusCode}`)
 
