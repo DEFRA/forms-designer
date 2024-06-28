@@ -379,5 +379,20 @@ describe('ComponentTypeEdit', () => {
         'This is generated automatically and does not show on the page. Only change it if you are using an integration that requires you to, for example GOV.UK Notify. It must not contain spaces.'
       expect(getByText(text)).toBeInTheDocument()
     })
+
+    test('make yes/no field optional hint text is rendered correctly', () => {
+      render(
+        <RenderWithContext data={data} state={state}>
+          <ComponentTypeEdit />
+        </RenderWithContext>
+      )
+
+      const labelText = 'Make Yes/No field optional'
+      const hintText =
+        'Tick this box if users do not need to complete this field to progress through the form'
+
+      expect(getByText(labelText)).toBeInTheDocument()
+      expect(getByText(hintText)).toBeInTheDocument()
+    })
   })
 })
