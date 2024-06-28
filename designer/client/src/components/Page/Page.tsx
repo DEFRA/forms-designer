@@ -20,14 +20,19 @@ import { ComponentContextProvider } from '~/src/reducers/component/componentRedu
 const ComponentItem = (props: {
   index: number
   page: PageType | RepeatingFieldPage
-  component: ComponentDef
+  selectedComponent: ComponentDef
   data: FormDefinition
 }) => {
-  const { index, page, component, data } = props
+  const { index, page, selectedComponent, data } = props
 
   return (
     <div className="component-item">
-      <Component key={index} page={page} component={component} data={data} />
+      <Component
+        key={index}
+        page={page}
+        data={data}
+        selectedComponent={selectedComponent}
+      />
     </div>
   )
 }
@@ -46,8 +51,8 @@ const ComponentList = (props: {
           key={index}
           index={index}
           page={page}
-          component={component}
           data={data}
+          selectedComponent={component}
         />
       ))}
     </div>

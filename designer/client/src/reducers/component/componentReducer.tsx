@@ -1,5 +1,10 @@
 import { type ComponentDef } from '@defra/forms-model'
-import React, { useReducer, createContext, type Dispatch } from 'react'
+import React, {
+  useReducer,
+  createContext,
+  type Dispatch,
+  type ReactNode
+} from 'react'
 
 import { type ErrorList } from '~/src/ErrorSummary.jsx'
 import { logger } from '~/src/common/helpers/logging/logger.js'
@@ -17,7 +22,7 @@ import {
   type Actions
 } from '~/src/reducers/component/types.js'
 
-interface ComponentState {
+export interface ComponentState {
   selectedComponent?: Partial<ComponentDef>
   isNew?: boolean
   initialName?: ComponentDef['name']
@@ -95,17 +100,21 @@ export function componentReducer(
 }
 
 export const initComponentState = (props?: ComponentState): ComponentState => {
-  const selectedComponent = props?.component
   const newName = randomId()
-  return {
-    selectedComponent: selectedComponent ?? {
+
+  const {
+    selectedComponent = {
       name: newName,
       options: {},
       schema: {}
-    },
-    initialName: selectedComponent?.name ?? newName,
+    }
+  } = props ?? {}
+
+  return {
+    selectedComponent,
+    initialName: selectedComponent.name ?? newName,
     pagePath: props?.pagePath,
-    isNew: props?.isNew ?? !selectedComponent?.name,
+    isNew: props?.isNew ?? !selectedComponent.name,
     errors: props?.errors ?? {},
     listItemErrors: {}
   }

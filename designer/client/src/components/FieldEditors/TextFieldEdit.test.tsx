@@ -14,7 +14,7 @@ describe('Text field edit', () => {
 
     beforeEach(() => {
       state = {
-        component: {
+        selectedComponent: {
           name: 'TextFieldEditClass',
           title: 'Text field edit class',
           type: ComponentType.TextField,

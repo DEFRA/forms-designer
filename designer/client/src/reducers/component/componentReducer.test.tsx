@@ -3,7 +3,8 @@ import { ComponentType, type ComponentDef } from '@defra/forms-model'
 import { fieldsReducer } from '~/src/reducers/component/componentReducer.fields.js'
 import {
   componentReducer,
-  getSubReducer
+  getSubReducer,
+  type ComponentState
 } from '~/src/reducers/component/componentReducer.jsx'
 import { metaReducer } from '~/src/reducers/component/componentReducer.meta.js'
 import { optionsReducer } from '~/src/reducers/component/componentReducer.options.js'
@@ -44,7 +45,7 @@ describe('Component reducer', () => {
       payload: title
     }
 
-    const state = {
+    const state: ComponentState = {
       selectedComponent: component,
       hasValidated: true
     }
@@ -60,7 +61,7 @@ describe('Component reducer', () => {
       type: Meta.VALIDATE
     }
 
-    const state = {
+    const state: ComponentState = {
       selectedComponent: component,
       hasValidated: false
     }

@@ -41,7 +41,7 @@ describe('ComponentTypeEdit', () => {
 
     beforeEach(() => {
       state = {
-        component: {
+        selectedComponent: {
           name: 'TestCheckboxes',
           title: 'Test checkboxes',
           list: 'TestList',
@@ -132,7 +132,7 @@ describe('ComponentTypeEdit', () => {
 
     beforeEach(() => {
       state = {
-        component: {
+        selectedComponent: {
           name: 'TestRadios',
           title: 'Test radios',
           list: 'TestList',
@@ -223,7 +223,7 @@ describe('ComponentTypeEdit', () => {
 
     beforeEach(() => {
       state = {
-        component: {
+        selectedComponent: {
           name: 'TestSelect',
           title: 'Test select',
           list: 'TestList',
@@ -314,7 +314,7 @@ describe('ComponentTypeEdit', () => {
 
     beforeEach(() => {
       state = {
-        component: {
+        selectedComponent: {
           name: 'TestYesNo',
           title: 'Test yes/no',
           type: ComponentType.YesNoField,
