@@ -1,4 +1,4 @@
-import { ComponentTypes } from '@defra/forms-model'
+import { ComponentType, ComponentTypes } from '@defra/forms-model'
 import { Input, Textarea } from '@xgovformbuilder/govuk-react-jsx'
 import classNames from 'classnames'
 import React, { useContext } from 'react'
@@ -74,32 +74,35 @@ export function FieldEdit({
         }}
         {...attrs}
       />
-      <div className="govuk-checkboxes govuk-form-group">
-        <div className="govuk-checkboxes__item">
-          <input
-            className="govuk-checkboxes__input"
-            id="field-options-hideTitle"
-            name="options.hideTitle"
-            type="checkbox"
-            checked={hideTitle}
-            onChange={(e) =>
-              dispatch({
-                type: Options.EDIT_OPTIONS_HIDE_TITLE,
-                payload: e.target.checked
-              })
-            }
-          />
-          <label
-            className="govuk-label govuk-checkboxes__label"
-            htmlFor="field-options-hideTitle"
-          >
-            {i18n('common.hideTitleOption.title')}
-          </label>
-          <div className="govuk-hint govuk-checkboxes__hint">
-            {i18n('common.hideTitleOption.helpText')}
+      {selectedComponent.type &&
+        [ComponentType.UkAddressField].includes(selectedComponent.type) && (
+          <div className="govuk-checkboxes govuk-form-group">
+            <div className="govuk-checkboxes__item">
+              <input
+                className="govuk-checkboxes__input"
+                id="field-options-hideTitle"
+                name="options.hideTitle"
+                type="checkbox"
+                checked={hideTitle}
+                onChange={(e) =>
+                  dispatch({
+                    type: Options.EDIT_OPTIONS_HIDE_TITLE,
+                    payload: e.target.checked
+                  })
+                }
+              />
+              <label
+                className="govuk-label govuk-checkboxes__label"
+                htmlFor="field-options-hideTitle"
+              >
+                {i18n('common.hideTitleOption.title')}
+              </label>
+              <div className="govuk-hint govuk-checkboxes__hint">
+                {i18n('common.hideTitleOption.helpText')}
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        )}
       <div
         className={classNames({
           'govuk-form-group': true,

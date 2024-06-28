@@ -31,7 +31,6 @@ interface TextFieldBase {
   title: string
   hint?: string
   options: {
-    hideTitle?: boolean
     required?: boolean
     optionalText?: boolean
     classes?: string
@@ -81,7 +80,6 @@ interface ListFieldBase {
   title: string
   options: {
     type?: string
-    hideTitle?: boolean
     required?: boolean
     optionalText?: boolean
     classes?: string
@@ -115,7 +113,6 @@ interface DateFieldBase {
   title: string
   hint?: string
   options: {
-    hideTitle?: boolean
     required?: boolean
     optionalText?: boolean
     maxDaysInFuture?: number
@@ -180,6 +177,9 @@ export interface MultilineTextFieldComponent extends TextFieldBase {
 
 export interface UkAddressFieldComponent extends TextFieldBase {
   type: ComponentType.UkAddressField
+  options: TextFieldBase['options'] & {
+    hideTitle?: boolean
+  }
 }
 
 // Date Fields
