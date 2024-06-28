@@ -190,7 +190,7 @@ describe('ComponentTypeEdit', () => {
       expect(getByText(text)).toBeInTheDocument()
     })
 
-    test('make checkbox field optional hint text is rendered correctly', () => {
+    test('make radios field optional hint text is rendered correctly', () => {
       render(
         <RenderWithContext data={data} state={state}>
           <ComponentTypeEdit />
@@ -281,7 +281,7 @@ describe('ComponentTypeEdit', () => {
       expect(getByText(text)).toBeInTheDocument()
     })
 
-    test('make checkbox field optional hint text is rendered correctly', () => {
+    test('make select field optional hint text is rendered correctly', () => {
       render(
         <RenderWithContext data={data} state={state}>
           <ComponentTypeEdit />
