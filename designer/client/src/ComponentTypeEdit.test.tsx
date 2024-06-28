@@ -28,7 +28,17 @@ describe('ComponentTypeEdit', () => {
           section: 'home'
         }
       ],
-      lists: [],
+      lists: [
+        {
+          name: 'myList',
+          title: 'My list',
+          type: 'string',
+          items: [
+            { text: 'text a', description: 'desc a', value: 'value a' },
+            { text: 'text b', description: 'desc b', value: 'value b' }
+          ]
+        }
+      ],
       sections: [],
       conditions: []
     }
@@ -44,7 +54,7 @@ describe('ComponentTypeEdit', () => {
         selectedComponent: {
           name: 'TestCheckboxes',
           title: 'Test checkboxes',
-          list: 'TestList',
+          list: 'myList',
           type: ComponentType.CheckboxesField,
           subType: ComponentSubType.ListField,
           options: {},
@@ -135,7 +145,7 @@ describe('ComponentTypeEdit', () => {
         selectedComponent: {
           name: 'TestRadios',
           title: 'Test radios',
-          list: 'TestList',
+          list: 'myList',
           type: ComponentType.RadiosField,
           subType: ComponentSubType.ListField,
           options: {},
@@ -226,7 +236,7 @@ describe('ComponentTypeEdit', () => {
         selectedComponent: {
           name: 'TestSelect',
           title: 'Test select',
-          list: 'TestList',
+          list: 'myList',
           type: ComponentType.SelectField,
           subType: ComponentSubType.ListField,
           options: {},
