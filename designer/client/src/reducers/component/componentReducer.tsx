@@ -26,6 +26,8 @@ export interface ComponentState {
   selectedComponent?: Partial<ComponentDef>
   isNew?: boolean
   initialName?: ComponentDef['name']
+  hasValidated?: boolean
+  showDeleteWarning?: boolean
   pagePath?: string
   errors?: Partial<ErrorList<'title' | 'name' | 'content' | 'list'>>
   listItemErrors?: Partial<ErrorList<'title' | 'value'>>
