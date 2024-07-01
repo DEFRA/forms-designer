@@ -29,7 +29,7 @@
     "start": "NODE_ENV=${NODE_ENV:-production} node --enable-source-maps ./server/dist/index.js"
   },
   "dependencies": {
-    "@dagrejs/dagre": "^1.1.2",
+    "@dagrejs/dagre": "^1.1.3",
     "@defra/forms-model": "^3.0.212",
     "@elastic/ecs-pino-format": "^1.5.0",
     "@hapi/basic": "^7.0.2",
