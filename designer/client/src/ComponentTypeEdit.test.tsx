@@ -13,7 +13,7 @@ import { type ComponentState } from '~/src/reducers/component/componentReducer.j
 import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
 describe('ComponentTypeEdit', () => {
-  const { getByText } = screen
+  const { getByText, queryByText } = screen
 
   let data: FormDefinition
 
@@ -28,7 +28,17 @@ describe('ComponentTypeEdit', () => {
           section: 'home'
         }
       ],
-      lists: [],
+      lists: [
+        {
+          name: 'myList',
+          title: 'My list',
+          type: 'string',
+          items: [
+            { text: 'text a', description: 'desc a', value: 'value a' },
+            { text: 'text b', description: 'desc b', value: 'value b' }
+          ]
+        }
+      ],
       sections: [],
       conditions: []
     }
@@ -41,10 +51,10 @@ describe('ComponentTypeEdit', () => {
 
     beforeEach(() => {
       state = {
-        component: {
+        selectedComponent: {
           name: 'TestCheckboxes',
           title: 'Test checkboxes',
-          list: 'TestList',
+          list: 'myList',
           type: ComponentType.CheckboxesField,
           subType: ComponentSubType.ListField,
           options: {},
@@ -75,7 +85,7 @@ describe('ComponentTypeEdit', () => {
       expect(getByText(text)).toBeInTheDocument()
     })
 
-    test('hide title checkbox hint text is rendered correctly', () => {
+    test('hide title checkbox hint text is not rendered', () => {
       render(
         <RenderWithContext data={data} state={state}>
           <ComponentTypeEdit />
@@ -84,7 +94,7 @@ describe('ComponentTypeEdit', () => {
 
       const text =
         'Tick this box if you do not want the title to show on the page'
-      expect(getByText(text)).toBeInTheDocument()
+      expect(queryByText(text)).not.toBeInTheDocument()
     })
 
     test('component name input hint text is rendered correctly', () => {
@@ -132,10 +142,10 @@ describe('ComponentTypeEdit', () => {
 
     beforeEach(() => {
       state = {
-        component: {
+        selectedComponent: {
           name: 'TestRadios',
           title: 'Test radios',
-          list: 'TestList',
+          list: 'myList',
           type: ComponentType.RadiosField,
           subType: ComponentSubType.ListField,
           options: {},
@@ -166,7 +176,7 @@ describe('ComponentTypeEdit', () => {
       expect(getByText(text)).toBeInTheDocument()
     })
 
-    test('hide title checkbox hint text is rendered correctly', () => {
+    test('hide title checkbox hint text is not rendered', () => {
       render(
         <RenderWithContext data={data} state={state}>
           <ComponentTypeEdit />
@@ -175,7 +185,7 @@ describe('ComponentTypeEdit', () => {
 
       const text =
         'Tick this box if you do not want the title to show on the page'
-      expect(getByText(text)).toBeInTheDocument()
+      expect(queryByText(text)).not.toBeInTheDocument()
     })
 
     test('component name input hint text is rendered correctly', () => {
@@ -190,7 +200,7 @@ describe('ComponentTypeEdit', () => {
       expect(getByText(text)).toBeInTheDocument()
     })
 
-    test('make checkbox field optional hint text is rendered correctly', () => {
+    test('make radios field optional hint text is rendered correctly', () => {
       render(
         <RenderWithContext data={data} state={state}>
           <ComponentTypeEdit />
@@ -223,10 +233,10 @@ describe('ComponentTypeEdit', () => {
 
     beforeEach(() => {
       state = {
-        component: {
+        selectedComponent: {
           name: 'TestSelect',
           title: 'Test select',
-          list: 'TestList',
+          list: 'myList',
           type: ComponentType.SelectField,
           subType: ComponentSubType.ListField,
           options: {},
@@ -257,7 +267,7 @@ describe('ComponentTypeEdit', () => {
       expect(getByText(text)).toBeInTheDocument()
     })
 
-    test('hide title checkbox hint text is rendered correctly', () => {
+    test('hide title checkbox hint text is not rendered', () => {
       render(
         <RenderWithContext data={data} state={state}>
           <ComponentTypeEdit />
@@ -266,7 +276,7 @@ describe('ComponentTypeEdit', () => {
 
       const text =
         'Tick this box if you do not want the title to show on the page'
-      expect(getByText(text)).toBeInTheDocument()
+      expect(queryByText(text)).not.toBeInTheDocument()
     })
 
     test('component name input hint text is rendered correctly', () => {
@@ -281,7 +291,7 @@ describe('ComponentTypeEdit', () => {
       expect(getByText(text)).toBeInTheDocument()
     })
 
-    test('make checkbox field optional hint text is rendered correctly', () => {
+    test('make select field optional hint text is rendered correctly', () => {
       render(
         <RenderWithContext data={data} state={state}>
           <ComponentTypeEdit />
@@ -314,10 +324,89 @@ describe('ComponentTypeEdit', () => {
 
     beforeEach(() => {
       state = {
-        component: {
+        selectedComponent: {
           name: 'TestYesNo',
           title: 'Test yes/no',
           type: ComponentType.YesNoField,
+          options: {},
+          schema: {}
+        } satisfies ComponentDef
+      }
+    })
+
+    test('title input hint text is rendered correctly', () => {
+      render(
+        <RenderWithContext data={data} state={state}>
+          <ComponentTypeEdit />
+        </RenderWithContext>
+      )
+
+      const text = 'Enter the name to show for this field'
+      expect(getByText(text)).toBeInTheDocument()
+    })
+
+    test('help text input hint text is rendered correctly', () => {
+      render(
+        <RenderWithContext data={data} state={state}>
+          <ComponentTypeEdit />
+        </RenderWithContext>
+      )
+
+      const text = 'Enter the description to show for this field'
+      expect(getByText(text)).toBeInTheDocument()
+    })
+
+    test('hide title checkbox hint text is not rendered', () => {
+      render(
+        <RenderWithContext data={data} state={state}>
+          <ComponentTypeEdit />
+        </RenderWithContext>
+      )
+
+      const text =
+        'Tick this box if you do not want the title to show on the page'
+      expect(queryByText(text)).not.toBeInTheDocument()
+    })
+
+    test('component name input hint text is rendered correctly', () => {
+      render(
+        <RenderWithContext data={data} state={state}>
+          <ComponentTypeEdit />
+        </RenderWithContext>
+      )
+
+      const text =
+        'This is generated automatically and does not show on the page. Only change it if you are using an integration that requires you to, for example GOV.UK Notify. It must not contain spaces.'
+      expect(getByText(text)).toBeInTheDocument()
+    })
+
+    test('make yes/no field optional hint text is rendered correctly', () => {
+      render(
+        <RenderWithContext data={data} state={state}>
+          <ComponentTypeEdit />
+        </RenderWithContext>
+      )
+
+      const labelText = 'Make Yes/No field optional'
+      const hintText =
+        'Tick this box if users do not need to complete this field to progress through the form'
+
+      expect(getByText(labelText)).toBeInTheDocument()
+      expect(getByText(hintText)).toBeInTheDocument()
+    })
+  })
+
+  describe('UK address', () => {
+    let state: ComponentState
+
+    beforeEach(() => {
+      state = {
+        selectedComponent: {
+          name: 'TestUkAddress',
+          title: 'Test UK address',
+          type: ComponentType.UkAddressField,
+          subType: ComponentSubType.Field,
+          hint: '',
           options: {},
           schema: {}
         } satisfies ComponentDef
@@ -368,6 +457,21 @@ describe('ComponentTypeEdit', () => {
       const text =
         'This is generated automatically and does not show on the page. Only change it if you are using an integration that requires you to, for example GOV.UK Notify. It must not contain spaces.'
       expect(getByText(text)).toBeInTheDocument()
+    })
+
+    test('make UK address field optional hint text is rendered correctly', () => {
+      render(
+        <RenderWithContext data={data} state={state}>
+          <ComponentTypeEdit />
+        </RenderWithContext>
+      )
+
+      const labelText = 'Make UK address field optional'
+      const hintText =
+        'Tick this box if users do not need to complete this field to progress through the form'
+
+      expect(getByText(labelText)).toBeInTheDocument()
+      expect(getByText(hintText)).toBeInTheDocument()
     })
   })
 })

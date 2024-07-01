@@ -16,7 +16,7 @@ describe('Number field edit', () => {
 
     beforeEach(() => {
       state = {
-        component: {
+        selectedComponent: {
           name: 'NumberFieldEditClass',
           title: 'Number field edit class',
           hint: 'Number field hint',

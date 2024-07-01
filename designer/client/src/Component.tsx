@@ -222,18 +222,18 @@ export const componentTypes = {
 export interface Props {
   data: FormDefinition
   page: Page | RepeatingFieldPage
-  component: ComponentDef
+  selectedComponent: ComponentDef
 }
 
 export const Component: FunctionComponent<Props> = (props) => {
-  const { page, component } = props
+  const { page, selectedComponent } = props
 
   const [showEditor, setShowEditor] = useState<boolean>(false)
   const toggleShowEditor = () => setShowEditor(!showEditor)
 
-  const TagName = componentTypes[component.type]
+  const TagName = componentTypes[selectedComponent.type]
   const editFlyoutTitle = i18n('component.edit', {
-    name: `$t(fieldTypeToName.${component.type})`
+    name: `$t(fieldTypeToName.${selectedComponent.type})`
   })
 
   return (
@@ -246,7 +246,7 @@ export const Component: FunctionComponent<Props> = (props) => {
           <Flyout title={editFlyoutTitle} onHide={toggleShowEditor}>
             <ComponentContextProvider
               pagePath={page.path}
-              component={component}
+              selectedComponent={selectedComponent}
             >
               <ComponentEdit page={page} toggleShowEditor={toggleShowEditor} />
             </ComponentContextProvider>

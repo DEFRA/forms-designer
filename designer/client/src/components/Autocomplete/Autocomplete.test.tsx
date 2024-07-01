@@ -17,7 +17,7 @@ describe('AutocompleteField', () => {
 
   beforeEach(() => {
     state = {
-      component: {
+      selectedComponent: {
         name: 'TestCssClass',
         title: 'Test CSS class',
         list: 'Test list',

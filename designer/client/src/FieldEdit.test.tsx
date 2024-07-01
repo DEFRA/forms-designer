@@ -1,4 +1,9 @@
-import { ComponentType, type FormDefinition } from '@defra/forms-model'
+import {
+  ComponentSubType,
+  ComponentType,
+  type ComponentDef,
+  type FormDefinition
+} from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
 import React from 'react'
@@ -9,23 +14,22 @@ import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 describe('Field Edit', () => {
   const { getByText } = screen
 
+  const selectedComponent: ComponentDef = {
+    name: 'IDDQl4',
+    type: ComponentType.UkAddressField,
+    title: 'UK address field',
+    subType: ComponentSubType.Field,
+    hint: '',
+    options: {},
+    schema: {}
+  }
+
   const data: FormDefinition = {
     pages: [
       {
         title: 'First page',
         path: '/first-page',
-        components: [
-          {
-            name: 'IDDQl4',
-            title: 'abc',
-            list: 'myList',
-            type: ComponentType.List,
-            options: {
-              required: true
-            },
-            schema: {}
-          }
-        ]
+        components: [selectedComponent]
       }
     ],
     lists: [],
@@ -37,7 +41,7 @@ describe('Field Edit', () => {
 
   test('Help text changes', () => {
     const { container } = render(
-      <RenderWithContext data={data}>
+      <RenderWithContext data={data} state={{ selectedComponent }}>
         <FieldEdit />
       </RenderWithContext>
     )
@@ -65,7 +69,7 @@ describe('Field Edit', () => {
 
   test('Content fields should not have optional checkbox', () => {
     const { container } = render(
-      <RenderWithContext data={data}>
+      <RenderWithContext data={data} state={{ selectedComponent }}>
         <FieldEdit isContentField={true} />
       </RenderWithContext>
     )

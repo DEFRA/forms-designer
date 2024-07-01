@@ -9,8 +9,8 @@ import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 import { Options, Schema } from '~/src/reducers/component/types.js'
 
 interface Props {
-  context: any // TODO
-  children: ReactNode
+  context?: typeof ComponentContext
+  children?: ReactNode
 }
 
 export function TextFieldEdit({ children, context = ComponentContext }: Props) {
@@ -96,7 +96,7 @@ export function TextFieldEdit({ children, context = ComponentContext }: Props) {
             data-cast="number"
             id="field-schema-maxwords"
             name="schema.maxwords"
-            value={'maxwords' in options ? options.maxwords : undefined}
+            value={'maxWords' in options ? options.maxWords : undefined}
             type="number"
             onChange={(e) =>
               dispatch({
@@ -163,10 +163,15 @@ export function TextFieldEdit({ children, context = ComponentContext }: Props) {
 
         <CssClasses />
 
-        {selectedComponent.type === ComponentType.TelephoneNumberField && (
-          // Remove type check when fully integrated into all runner components
-          <CustomValidationMessage />
-        )}
+        {selectedComponent.type &&
+          [
+            ComponentType.EmailAddressField,
+            ComponentType.MonthYearField,
+            ComponentType.MultilineTextField,
+            ComponentType.NumberField,
+            ComponentType.TelephoneNumberField,
+            ComponentType.TextField
+          ].includes(selectedComponent.type) && <CustomValidationMessage />}
       </div>
     </details>
   )

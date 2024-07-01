@@ -77,10 +77,10 @@ describe('ComponentListSelect', () => {
   })
 
   test('Selecting a different list changes the edit link', async () => {
-    const component = data.pages[0].components[0]
+    const selectedComponent = data.pages[0].components[0]
 
     render(
-      <RenderListEditorWithContext data={data} state={{ component }}>
+      <RenderListEditorWithContext data={data} state={{ selectedComponent }}>
         <ComponentListSelect />
       </RenderListEditorWithContext>
     )
@@ -109,11 +109,14 @@ describe('ComponentListSelect', () => {
   })
 
   test('should display list error when state has errors', async () => {
-    const component = data.pages[0].components[0]
+    const selectedComponent = data.pages[0].components[0]
     const errors = { list: { children: 'Select a list' } }
 
     const { container } = render(
-      <RenderListEditorWithContext data={data} state={{ component, errors }}>
+      <RenderListEditorWithContext
+        data={data}
+        state={{ selectedComponent, errors }}
+      >
         <ComponentListSelect />
       </RenderListEditorWithContext>
     )

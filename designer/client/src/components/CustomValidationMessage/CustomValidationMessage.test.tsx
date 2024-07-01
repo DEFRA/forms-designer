@@ -17,7 +17,7 @@ describe('CssClasses', () => {
 
     beforeEach(() => {
       state = {
-        component: {
+        selectedComponent: {
           name: 'TelephoneNumberField',
           title: 'Telephone number field',
           type: ComponentType.TelephoneNumberField,

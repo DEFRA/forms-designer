@@ -16,7 +16,7 @@ describe('CssClasses', () => {
 
     beforeEach(() => {
       state = {
-        component: {
+        selectedComponent: {
           name: 'TestCssClass',
           title: 'Test CSS class',
           type: ComponentType.TextField,

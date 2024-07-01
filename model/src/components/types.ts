@@ -14,10 +14,6 @@ export type ConditionalComponentType =
   | ComponentType.TimeField
   | ComponentType.YesNoField
 
-export interface ContentOptions {
-  condition?: string
-}
-
 /**
  * Types for Components JSON structure which are expected by engine and turned into actual form input/content/lists
  */
@@ -35,7 +31,6 @@ interface TextFieldBase {
   title: string
   hint?: string
   options: {
-    hideTitle?: boolean
     required?: boolean
     optionalText?: boolean
     classes?: string
@@ -57,8 +52,11 @@ interface NumberFieldBase {
   subType?: ComponentSubType.Field
   name: string
   title: string
-  hint: string
+  hint?: string
   options: {
+    required?: boolean
+    optionalText?: boolean
+    classes?: string
     prefix?: string
     suffix?: string
     exposeToContext?: boolean
@@ -82,7 +80,6 @@ interface ListFieldBase {
   title: string
   options: {
     type?: string
-    hideTitle?: boolean
     required?: boolean
     optionalText?: boolean
     classes?: string
@@ -100,7 +97,9 @@ interface ContentFieldBase {
   name: string
   title: string
   content: string
-  options: ContentOptions
+  options: {
+    condition?: string
+  }
   schema?: object
 }
 
@@ -112,9 +111,8 @@ interface DateFieldBase {
   subType?: ComponentSubType.Field
   name: string
   title: string
-  hint: string
+  hint?: string
   options: {
-    hideTitle?: boolean
     required?: boolean
     optionalText?: boolean
     maxDaysInFuture?: number
@@ -128,16 +126,25 @@ interface DateFieldBase {
 export interface TextFieldComponent extends TextFieldBase {
   type: ComponentType.TextField
   options: TextFieldBase['options'] & {
+    condition?: string
     customValidationMessage?: string
   }
 }
 
 export interface EmailAddressFieldComponent extends TextFieldBase {
   type: ComponentType.EmailAddressField
+  options: TextFieldBase['options'] & {
+    condition?: string
+    customValidationMessage?: string
+  }
 }
 
 export interface NumberFieldComponent extends NumberFieldBase {
   type: ComponentType.NumberField
+  options: NumberFieldBase['options'] & {
+    condition?: string
+    customValidationMessage?: string
+  }
 }
 
 export interface TelephoneNumberFieldComponent extends TextFieldBase {
@@ -149,11 +156,15 @@ export interface TelephoneNumberFieldComponent extends TextFieldBase {
 
 export interface YesNoFieldComponent extends TextFieldBase {
   type: ComponentType.YesNoField
+  options: TextFieldBase['options'] & {
+    condition?: string
+  }
 }
 
 export interface MultilineTextFieldComponent extends TextFieldBase {
   type: ComponentType.MultilineTextField
   options: TextFieldBase['options'] & {
+    condition?: string
     customValidationMessage?: string
     rows?: number
     maxWords?: number
@@ -166,19 +177,31 @@ export interface MultilineTextFieldComponent extends TextFieldBase {
 
 export interface UkAddressFieldComponent extends TextFieldBase {
   type: ComponentType.UkAddressField
+  options: TextFieldBase['options'] & {
+    hideTitle?: boolean
+  }
 }
 
 // Date Fields
 export interface DatePartsFieldFieldComponent extends DateFieldBase {
   type: ComponentType.DatePartsField
+  options: DateFieldBase['options'] & {
+    condition?: string
+  }
 }
 
 export interface MonthYearFieldComponent extends DateFieldBase {
   type: ComponentType.MonthYearField
+  options: DateFieldBase['options'] & {
+    customValidationMessage?: string
+  }
 }
 
 export interface TimeFieldComponent extends DateFieldBase {
   type: ComponentType.TimeField
+  options: DateFieldBase['options'] & {
+    condition?: string
+  }
 }
 
 // Content Fields
@@ -207,11 +230,17 @@ export interface AutocompleteFieldComponent extends ListFieldBase {
 export interface CheckboxesFieldComponent extends ListFieldBase {
   type: ComponentType.CheckboxesField
   subType?: ComponentSubType.ListField
+  options: ListFieldBase['options'] & {
+    condition?: string
+  }
 }
 
 export interface RadiosFieldComponent extends ListFieldBase {
   type: ComponentType.RadiosField
   subType?: ComponentSubType.ListField
+  options: ListFieldBase['options'] & {
+    condition?: string
+  }
 }
 
 export interface SelectFieldComponent extends ListFieldBase {
