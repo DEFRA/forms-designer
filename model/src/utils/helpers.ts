@@ -1,4 +1,3 @@
-import { customAlphabet } from 'nanoid'
 import slug from 'slug'
 
 export const serialiseAndDeserialise = <T>(obj: T): T => {
@@ -43,5 +42,3 @@ export function slugify(input = '') {
   const string = input.trim().replace(/[\s–—]/g, '-')
   return slug(string, { lower: true })
 }
-
-export const nanoid = customAlphabet('0123456789_abcdefghijklmnopqrstuvwxyz', 6)
