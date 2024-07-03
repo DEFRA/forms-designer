@@ -44,7 +44,7 @@
     "babel-plugin-replace-import-extension": "^1.1.4",
     "babel-plugin-transform-import-meta": "^2.2.1",
     "editorconfig-checker": "^5.1.8",
-    "eslint": "^9.6.0",
+    "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-config-standard": "^17.1.0",
     "eslint-import-resolver-typescript": "^3.6.1",
