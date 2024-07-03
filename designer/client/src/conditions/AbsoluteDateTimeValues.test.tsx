@@ -8,15 +8,13 @@ import { AbsoluteDateTimeValues } from '~/src/conditions/AbsoluteDateTimeValues.
 describe('AbsoluteDateTimeValues', () => {
   afterEach(cleanup)
 
-  const { findByLabelText } = screen
-
   it("renders out a date that's passed to it", async () => {
     const d = new Date('2020-01-31T12:10:35Z')
     render(<AbsoluteDateTimeValues updateValue={jest.fn()} value={d} />)
 
-    const $year = await waitFor(() => findByLabelText('Year'))
-    const $month = await waitFor(() => findByLabelText('Month'))
-    const $day = await waitFor(() => findByLabelText('Day'))
+    const $year = await waitFor(() => screen.findByLabelText('Year'))
+    const $month = await waitFor(() => screen.findByLabelText('Month'))
+    const $day = await waitFor(() => screen.findByLabelText('Day'))
 
     expect($year.getAttribute('value')).toBe('2020')
     expect($month.getAttribute('value')).toBe('01')
@@ -27,8 +25,8 @@ describe('AbsoluteDateTimeValues', () => {
     const d = new Date('2020-01-31T12:10:35Z')
     render(<AbsoluteDateTimeValues updateValue={jest.fn()} value={d} />)
 
-    const $hours = await waitFor(() => findByLabelText('HH'))
-    const $minutes = await waitFor(() => findByLabelText('mm'))
+    const $hours = await waitFor(() => screen.findByLabelText('HH'))
+    const $minutes = await waitFor(() => screen.findByLabelText('mm'))
 
     expect($hours.getAttribute('value')).toBe('12')
     expect($minutes.getAttribute('value')).toBe('10')
@@ -38,11 +36,11 @@ describe('AbsoluteDateTimeValues', () => {
     const updateValue = jest.fn()
     render(<AbsoluteDateTimeValues updateValue={updateValue} />)
 
-    const $year = await waitFor(() => findByLabelText('Year'))
-    const $month = await waitFor(() => findByLabelText('Month'))
-    const $day = await waitFor(() => findByLabelText('Day'))
-    const $hours = await waitFor(() => findByLabelText('HH'))
-    const $minutes = await waitFor(() => findByLabelText('mm'))
+    const $year = await waitFor(() => screen.findByLabelText('Year'))
+    const $month = await waitFor(() => screen.findByLabelText('Month'))
+    const $day = await waitFor(() => screen.findByLabelText('Day'))
+    const $hours = await waitFor(() => screen.findByLabelText('HH'))
+    const $minutes = await waitFor(() => screen.findByLabelText('mm'))
 
     await act(() => userEvent.type($year, '2020'))
     await act(() => userEvent.type($month, '4'))
@@ -59,11 +57,11 @@ describe('AbsoluteDateTimeValues', () => {
     const d = new Date('2020-01-31T12:10:35Z')
     render(<AbsoluteDateTimeValues updateValue={updateValue} value={d} />)
 
-    const $year = await waitFor(() => findByLabelText('Year'))
-    const $month = await waitFor(() => findByLabelText('Month'))
-    const $day = await waitFor(() => findByLabelText('Day'))
-    const $hours = await waitFor(() => findByLabelText('HH'))
-    const $minutes = await waitFor(() => findByLabelText('mm'))
+    const $year = await waitFor(() => screen.findByLabelText('Year'))
+    const $month = await waitFor(() => screen.findByLabelText('Month'))
+    const $day = await waitFor(() => screen.findByLabelText('Day'))
+    const $hours = await waitFor(() => screen.findByLabelText('HH'))
+    const $minutes = await waitFor(() => screen.findByLabelText('mm'))
 
     // Clear existing values
     await Promise.all(
@@ -84,10 +82,10 @@ describe('AbsoluteDateTimeValues', () => {
     const updateValue = jest.fn()
     render(<AbsoluteDateTimeValues updateValue={updateValue} />)
 
-    const $year = await waitFor(() => findByLabelText('Year'))
-    const $month = await waitFor(() => findByLabelText('Month'))
-    const $day = await waitFor(() => findByLabelText('Day'))
-    const $hours = await waitFor(() => findByLabelText('HH'))
+    const $year = await waitFor(() => screen.findByLabelText('Year'))
+    const $month = await waitFor(() => screen.findByLabelText('Month'))
+    const $day = await waitFor(() => screen.findByLabelText('Day'))
+    const $hours = await waitFor(() => screen.findByLabelText('HH'))
 
     await act(() => userEvent.type($year, '2020'))
     await act(() => userEvent.type($month, '4'))
@@ -101,11 +99,11 @@ describe('AbsoluteDateTimeValues', () => {
     const updateValue = jest.fn()
     render(<AbsoluteDateTimeValues updateValue={updateValue} />)
 
-    const $year = await waitFor(() => findByLabelText('Year'))
-    const $month = await waitFor(() => findByLabelText('Month'))
-    const $day = await waitFor(() => findByLabelText('Day'))
-    const $hours = await waitFor(() => findByLabelText('HH'))
-    const $minutes = await waitFor(() => findByLabelText('mm'))
+    const $year = await waitFor(() => screen.findByLabelText('Year'))
+    const $month = await waitFor(() => screen.findByLabelText('Month'))
+    const $day = await waitFor(() => screen.findByLabelText('Day'))
+    const $hours = await waitFor(() => screen.findByLabelText('HH'))
+    const $minutes = await waitFor(() => screen.findByLabelText('mm'))
 
     await act(() => userEvent.type($year, '2020'))
     await act(() => userEvent.type($month, '4'))
@@ -121,11 +119,11 @@ describe('AbsoluteDateTimeValues', () => {
     const updateValue = jest.fn()
     render(<AbsoluteDateTimeValues updateValue={updateValue} />)
 
-    const $year = await waitFor(() => findByLabelText('Year'))
-    const $month = await waitFor(() => findByLabelText('Month'))
-    const $day = await waitFor(() => findByLabelText('Day'))
-    const $hours = await waitFor(() => findByLabelText('HH'))
-    const $minutes = await waitFor(() => findByLabelText('mm'))
+    const $year = await waitFor(() => screen.findByLabelText('Year'))
+    const $month = await waitFor(() => screen.findByLabelText('Month'))
+    const $day = await waitFor(() => screen.findByLabelText('Day'))
+    const $hours = await waitFor(() => screen.findByLabelText('HH'))
+    const $minutes = await waitFor(() => screen.findByLabelText('mm'))
 
     await act(() => userEvent.type($year, '2020'))
     await act(() => userEvent.type($month, '4'))

@@ -16,7 +16,7 @@ export function componentToString(component) {
   return `${component.type}`
 }
 
-export function DataPrettyPrint(props) {
+export function DataPrettyPrint() {
   const { data } = useContext(DataContext)
   const { sections = [], pages = [] } = data
 

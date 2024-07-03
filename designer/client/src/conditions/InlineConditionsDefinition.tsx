@@ -24,7 +24,7 @@ export class InlineConditionsDefinition extends Component {
     }
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
+  componentDidUpdate(prevProps) {
     if (
       this.props.expectsCoordinator !== prevProps.expectsCoordinator ||
       this.props.fields !== prevProps.fields

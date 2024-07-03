@@ -95,7 +95,7 @@ export class InlineConditionsEdit extends Component {
     return result
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
+  componentDidUpdate(prevProps) {
     if (prevProps.conditions !== this.props.conditions) {
       this.setState({
         conditions: this.props.conditions,

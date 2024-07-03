@@ -11,8 +11,6 @@ import { Autocomplete } from '~/src/components/Autocomplete/Autocomplete.jsx'
 import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
 describe('AutocompleteField', () => {
-  const { getByText } = screen
-
   let state
 
   beforeEach(() => {
@@ -39,12 +37,12 @@ describe('AutocompleteField', () => {
 
   test('should display display correct title', () => {
     const text = 'Autocomplete'
-    expect(getByText(text)).toBeInTheDocument()
+    expect(screen.getByText(text)).toBeInTheDocument()
   })
 
   test('should display display correct helptext', () => {
     const text =
       "Add the autocomplete attribute to this field. For example, 'on' or 'given-name'."
-    expect(getByText(text)).toBeInTheDocument()
+    expect(screen.getByText(text)).toBeInTheDocument()
   })
 })

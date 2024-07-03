@@ -12,8 +12,6 @@ import { ComponentListSelect } from '~/src/components/ComponentListSelect/Compon
 import { RenderListEditorWithContext } from '~/test/helpers/renderers-lists.jsx'
 
 describe('ComponentListSelect', () => {
-  const { getByLabelText, getByText } = screen
-
   const data = {
     pages: [
       {
@@ -85,10 +83,10 @@ describe('ComponentListSelect', () => {
       </RenderListEditorWithContext>
     )
 
-    const $select = await waitFor(() => getByLabelText('Select list'))
+    const $select = await waitFor(() => screen.getByLabelText('Select list'))
     await act(() => userEvent.selectOptions($select, 'myList'))
 
-    expect(getByText('Edit My list')).toBeInTheDocument()
+    expect(screen.getByText('Edit My list')).toBeInTheDocument()
   })
 
   test('should render strings correctly', () => {
@@ -103,9 +101,9 @@ describe('ComponentListSelect', () => {
       'Select an existing list to show in this field or add a new list'
     const addNew = 'Add a new list'
 
-    expect(getByText(title)).toBeInTheDocument()
-    expect(getByText(help)).toBeInTheDocument()
-    expect(getByText(addNew)).toBeInTheDocument()
+    expect(screen.getByText(title)).toBeInTheDocument()
+    expect(screen.getByText(help)).toBeInTheDocument()
+    expect(screen.getByText(addNew)).toBeInTheDocument()
   })
 
   test('should display list error when state has errors', async () => {
@@ -121,7 +119,7 @@ describe('ComponentListSelect', () => {
       </RenderListEditorWithContext>
     )
 
-    const $select = await waitFor(() => getByLabelText('Select list'))
+    const $select = await waitFor(() => screen.getByLabelText('Select list'))
     await act(() => userEvent.selectOptions($select, 'Select a list'))
 
     expect(

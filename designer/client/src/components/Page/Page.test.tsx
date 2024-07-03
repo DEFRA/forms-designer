@@ -57,8 +57,6 @@ const data: FormDefinition = {
 describe('Page', () => {
   afterEach(cleanup)
 
-  const { findByTestId, getByText, queryByTestId } = screen
-
   test('PageEdit can be shown/hidden successfully', async () => {
     render(
       <RenderWithContext data={data}>
@@ -70,17 +68,17 @@ describe('Page', () => {
       </RenderWithContext>
     )
 
-    await act(() => userEvent.click(getByText('Edit page')))
-    await waitFor(() => findByTestId('page-edit'))
+    await act(() => userEvent.click(screen.getByText('Edit page')))
+    await waitFor(() => screen.findByTestId('page-edit'))
 
-    await act(() => userEvent.click(getByText('Save')))
-    expect(queryByTestId('page-edit')).not.toBeInTheDocument()
+    await act(() => userEvent.click(screen.getByText('Save')))
+    expect(screen.queryByTestId('page-edit')).not.toBeInTheDocument()
 
-    await act(() => userEvent.click(getByText('Edit page')))
-    await waitFor(() => findByTestId('flyout-1'))
+    await act(() => userEvent.click(screen.getByText('Edit page')))
+    await waitFor(() => screen.findByTestId('flyout-1'))
 
-    await act(() => userEvent.click(getByText('Close')))
-    expect(queryByTestId('flyout-1')).not.toBeInTheDocument()
+    await act(() => userEvent.click(screen.getByText('Close')))
+    expect(screen.queryByTestId('flyout-1')).not.toBeInTheDocument()
   })
 
   test('AddComponent can be shown/hidden successfully', async () => {
@@ -94,11 +92,11 @@ describe('Page', () => {
       </RenderWithContext>
     )
 
-    await act(() => userEvent.click(getByText('Add component')))
-    await waitFor(() => findByTestId('component-create'))
+    await act(() => userEvent.click(screen.getByText('Add component')))
+    await waitFor(() => screen.findByTestId('component-create'))
 
-    await act(() => userEvent.click(getByText('Close')))
-    expect(queryByTestId('flyout-1')).not.toBeInTheDocument()
+    await act(() => userEvent.click(screen.getByText('Close')))
+    expect(screen.queryByTestId('flyout-1')).not.toBeInTheDocument()
   })
 
   test('Page actions contain expected call to actions', () => {
@@ -112,9 +110,9 @@ describe('Page', () => {
       </RenderWithContext>
     )
 
-    expect(getByText('Edit page')).toBeTruthy()
-    expect(getByText('Preview page')).toBeTruthy()
-    expect(getByText('Add component')).toBeTruthy()
+    expect(screen.getByText('Edit page')).toBeTruthy()
+    expect(screen.getByText('Preview page')).toBeTruthy()
+    expect(screen.getByText('Add component')).toBeTruthy()
   })
 
   test('Dragging component order saves successfully', async () => {
@@ -128,10 +126,10 @@ describe('Page', () => {
       </RenderWithContext>
     )
 
-    await act(() => userEvent.click(getByText('Add component')))
-    await waitFor(() => findByTestId('component-create'))
+    await act(() => userEvent.click(screen.getByText('Add component')))
+    await waitFor(() => screen.findByTestId('component-create'))
 
-    await act(() => userEvent.click(getByText('Close')))
-    expect(queryByTestId('flyout-1')).not.toBeInTheDocument()
+    await act(() => userEvent.click(screen.getByText('Close')))
+    expect(screen.queryByTestId('flyout-1')).not.toBeInTheDocument()
   })
 })

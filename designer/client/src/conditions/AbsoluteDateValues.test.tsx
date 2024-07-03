@@ -8,8 +8,6 @@ import { AbsoluteDateValues } from '~/src/conditions/AbsoluteDateValues.jsx'
 describe('AbsoluteDateValues', () => {
   afterEach(cleanup)
 
-  const { findByLabelText } = screen
-
   it("renders out a date that's passed to it", async () => {
     render(
       <AbsoluteDateValues
@@ -18,9 +16,9 @@ describe('AbsoluteDateValues', () => {
       />
     )
 
-    const $year = await waitFor(() => findByLabelText('Year'))
-    const $month = await waitFor(() => findByLabelText('Month'))
-    const $day = await waitFor(() => findByLabelText('Day'))
+    const $year = await waitFor(() => screen.findByLabelText('Year'))
+    const $month = await waitFor(() => screen.findByLabelText('Month'))
+    const $day = await waitFor(() => screen.findByLabelText('Day'))
 
     expect($year.getAttribute('value')).toBe('1999')
     expect($month.getAttribute('value')).toBe('12')
@@ -31,9 +29,9 @@ describe('AbsoluteDateValues', () => {
     const updateValue = jest.fn()
     render(<AbsoluteDateValues updateValue={updateValue} value={{}} />)
 
-    const $year = await waitFor(() => findByLabelText('Year'))
-    const $month = await waitFor(() => findByLabelText('Month'))
-    const $day = await waitFor(() => findByLabelText('Day'))
+    const $year = await waitFor(() => screen.findByLabelText('Year'))
+    const $month = await waitFor(() => screen.findByLabelText('Month'))
+    const $day = await waitFor(() => screen.findByLabelText('Day'))
 
     await act(() => userEvent.type($year, '2020'))
     await act(() => userEvent.type($month, '4'))
@@ -57,9 +55,9 @@ describe('AbsoluteDateValues', () => {
       />
     )
 
-    const $year = await waitFor(() => findByLabelText('Year'))
-    const $month = await waitFor(() => findByLabelText('Month'))
-    const $day = await waitFor(() => findByLabelText('Day'))
+    const $year = await waitFor(() => screen.findByLabelText('Year'))
+    const $month = await waitFor(() => screen.findByLabelText('Month'))
+    const $day = await waitFor(() => screen.findByLabelText('Day'))
 
     // Clear existing values
     await Promise.all([$year, $month, $day].map(userEvent.clear))
@@ -81,9 +79,9 @@ describe('AbsoluteDateValues', () => {
     const updateValue = jest.fn()
     render(<AbsoluteDateValues updateValue={updateValue} value={{}} />)
 
-    const $year = await waitFor(() => findByLabelText('Year'))
-    const $month = await waitFor(() => findByLabelText('Month'))
-    const $day = await waitFor(() => findByLabelText('Day'))
+    const $year = await waitFor(() => screen.findByLabelText('Year'))
+    const $month = await waitFor(() => screen.findByLabelText('Month'))
+    const $day = await waitFor(() => screen.findByLabelText('Day'))
 
     await act(() => userEvent.type($year, '2020'))
     await act(() => userEvent.type($month, '4'))
@@ -96,8 +94,8 @@ describe('AbsoluteDateValues', () => {
     const updateValue = jest.fn()
     render(<AbsoluteDateValues updateValue={updateValue} value={{}} />)
 
-    const $year = await waitFor(() => findByLabelText('Year'))
-    const $month = await waitFor(() => findByLabelText('Month'))
+    const $year = await waitFor(() => screen.findByLabelText('Year'))
+    const $month = await waitFor(() => screen.findByLabelText('Month'))
 
     await act(() => userEvent.type($year, '2020'))
     await act(() => userEvent.type($month, '4'))
@@ -109,8 +107,8 @@ describe('AbsoluteDateValues', () => {
     const updateValue = jest.fn()
     render(<AbsoluteDateValues updateValue={updateValue} value={{}} />)
 
-    const $year = await waitFor(() => findByLabelText('Year'))
-    const $day = await waitFor(() => findByLabelText('Day'))
+    const $year = await waitFor(() => screen.findByLabelText('Year'))
+    const $day = await waitFor(() => screen.findByLabelText('Day'))
 
     await act(() => userEvent.type($year, '2020'))
     await act(() => userEvent.type($day, '7'))
@@ -122,8 +120,8 @@ describe('AbsoluteDateValues', () => {
     const updateValue = jest.fn()
     render(<AbsoluteDateValues updateValue={updateValue} value={{}} />)
 
-    const $month = await waitFor(() => findByLabelText('Month'))
-    const $day = await waitFor(() => findByLabelText('Day'))
+    const $month = await waitFor(() => screen.findByLabelText('Month'))
+    const $day = await waitFor(() => screen.findByLabelText('Day'))
 
     await act(() => userEvent.type($month, '4'))
     await act(() => userEvent.type($day, '23'))

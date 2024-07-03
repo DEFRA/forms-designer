@@ -5,18 +5,11 @@ import {
   type FormDefinition
 } from '@defra/forms-model'
 import { screen, within } from '@testing-library/dom'
-import {
-  act,
-  cleanup,
-  render,
-  waitFor,
-  type RenderResult
-} from '@testing-library/react'
+import { act, cleanup, render, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import React, { type ReactElement } from 'react'
+import React from 'react'
 
 import { LinkCreate } from '~/src/LinkCreate.jsx'
-import { DataContext } from '~/src/context/DataContext.js'
 import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
 const data: FormDefinition = {
@@ -56,8 +49,6 @@ const data: FormDefinition = {
 afterEach(cleanup)
 
 describe('LinkCreate', () => {
-  const { getByRole, getByTestId, getByText, queryByTestId } = screen
-
   test('hint text is rendered correctly', () => {
     const hint =
       'You can add links between different pages and set conditions for links to control the page that loads next. For example, a question page with a component for yes and no options could have link conditions based on which option a user selects.'
@@ -68,11 +59,11 @@ describe('LinkCreate', () => {
       </RenderWithContext>
     )
 
-    expect(getByText(hint)).toBeInTheDocument()
+    expect(screen.getByText(hint)).toBeInTheDocument()
   })
 
   test('cannot add condition hint is rendered correctly', async () => {
-    const hint =
+    const hintText =
       'You cannot add any conditions as there are no components on the page you wish to link from. Add a component, such as an Input or a Selection field, and then add a condition.'
 
     render(
@@ -81,10 +72,10 @@ describe('LinkCreate', () => {
       </RenderWithContext>
     )
 
-    const $source = getByTestId('link-source')
+    const $source = screen.getByTestId('link-source')
     await act(() => userEvent.selectOptions($source, data.pages[1].path))
 
-    expect(getByText(hint)).toBeInTheDocument()
+    expect(screen.getByText(hintText)).toBeInTheDocument()
   })
 
   test('Renders from and to inputs with the correct options', () => {
@@ -94,8 +85,8 @@ describe('LinkCreate', () => {
       </RenderWithContext>
     )
 
-    const $source = getByTestId('link-source')
-    const $target = getByTestId('link-target')
+    const $source = screen.getByTestId('link-source')
+    const $target = screen.getByTestId('link-target')
 
     expect(within($source).getByText(data.pages[0].title)).toBeInTheDocument()
     expect(within($source).getByText(data.pages[1].title)).toBeInTheDocument()
@@ -110,13 +101,13 @@ describe('LinkCreate', () => {
       </RenderWithContext>
     )
 
-    expect(queryByTestId('select-conditions')).toBeNull()
+    expect(screen.queryByTestId('select-conditions')).toBeNull()
 
-    const $source = getByTestId('link-source')
+    const $source = screen.getByTestId('link-source')
     await act(() => userEvent.selectOptions($source, '/first-page'))
 
-    await waitFor(() => getByTestId('select-conditions'))
-    const $conditions = getByTestId('select-conditions')
+    await waitFor(() => screen.getByTestId('select-conditions'))
+    const $conditions = screen.getByTestId('select-conditions')
 
     expect($conditions).toBeInTheDocument()
   })
@@ -146,15 +137,15 @@ describe('LinkCreate', () => {
       </RenderWithContext>
     )
 
-    const $source = getByTestId('link-source')
-    const $target = getByTestId('link-target')
-    const $button = getByRole('button')
+    const $source = screen.getByTestId('link-source')
+    const $target = screen.getByTestId('link-target')
+    const $button = screen.getByRole('button')
 
     await act(() => userEvent.selectOptions($source, '/first-page'))
     await act(() => userEvent.selectOptions($target, '/summary'))
 
-    await waitFor(() => getByTestId('select-condition'))
-    const $condition = getByTestId('select-condition')
+    await waitFor(() => screen.getByTestId('select-condition'))
+    const $condition = screen.getByTestId('select-condition')
 
     await act(() => userEvent.selectOptions($condition, 'hasUKPassport'))
     await act(() => userEvent.click($button))
@@ -278,15 +269,15 @@ describe('LinkCreate', () => {
       </RenderWithContext>
     )
 
-    const $source = getByTestId('link-source')
-    const $target = getByTestId('link-target')
-    const $button = getByRole('button')
+    const $source = screen.getByTestId('link-source')
+    const $target = screen.getByTestId('link-target')
+    const $button = screen.getByRole('button')
 
     await act(() => userEvent.selectOptions($source, '/first-page'))
     await act(() => userEvent.selectOptions($target, '/summary'))
 
-    await waitFor(() => getByTestId('select-condition'))
-    const $condition = getByTestId('select-condition')
+    await waitFor(() => screen.getByTestId('select-condition'))
+    const $condition = screen.getByTestId('select-condition')
 
     await act(() => userEvent.selectOptions($condition, 'hasUKPassport'))
     await act(() => userEvent.click($button))
@@ -361,11 +352,11 @@ describe('LinkCreate', () => {
       </RenderWithContext>
     )
 
-    await act(() => userEvent.click(getByRole('button')))
+    await act(() => userEvent.click(screen.getByRole('button')))
 
     await waitFor(() => expect(save).not.toHaveBeenCalled())
 
-    const summary = within(getByRole('alert'))
+    const summary = within(screen.getByRole('alert'))
     expect(summary.getByText('Enter from')).toBeInTheDocument()
     expect(summary.getByText('Enter to')).toBeInTheDocument()
   })

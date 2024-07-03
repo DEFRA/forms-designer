@@ -7,11 +7,9 @@ import { ErrorMessage } from '~/src/components/ErrorMessage/ErrorMessage.jsx'
 describe('ErrorMessage component', () => {
   afterEach(cleanup)
 
-  const { getByText } = screen
-
   it('renders children text', () => {
     render(<ErrorMessage className="123">Error 123</ErrorMessage>)
-    expect(getByText('Error 123')).toBeDefined()
+    expect(screen.getByText('Error 123')).toBeDefined()
   })
 
   it('passed down className', () => {
@@ -23,6 +21,6 @@ describe('ErrorMessage component', () => {
 
   it('renders hidden accessibility error span', () => {
     render(<ErrorMessage className="123">Error 123</ErrorMessage>)
-    expect(getByText('Error:')).toHaveClass('govuk-visually-hidden')
+    expect(screen.getByText('Error:')).toHaveClass('govuk-visually-hidden')
   })
 })

@@ -20,7 +20,7 @@ import { allInputs, inputsAccessibleAt } from '~/src/data/component/inputs.js'
 import { hasConditions as dataHasConditions } from '~/src/data/condition/hasConditions.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 
-interface Props {
+export interface Props {
   path: string
   data: FormDefinition
   conditionsChange: (selectedCondition: string) => void

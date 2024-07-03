@@ -57,8 +57,6 @@ describe('ConditionsEdit', () => {
 
   afterEach(cleanup)
 
-  const { getByTestId, getByText, queryByTestId } = screen
-
   describe('hint texts', () => {
     test('main hint text is correct', () => {
       render(
@@ -69,7 +67,7 @@ describe('ConditionsEdit', () => {
 
       const hint =
         'Set conditions for components and links to control the flow of a form. For example, a question page with a component for yes and no options could have link conditions based on which option a user selects.'
-      expect(getByText(hint)).toBeInTheDocument()
+      expect(screen.getByText(hint)).toBeInTheDocument()
     })
 
     test('no field hint test is correct', () => {
@@ -88,7 +86,7 @@ describe('ConditionsEdit', () => {
 
       const hint =
         'You cannot add a condition as no components are available. Create a component on a page in the form. You can then add a condition.'
-      expect(getByText(hint)).toBeInTheDocument()
+      expect(screen.getByText(hint)).toBeInTheDocument()
     })
   })
 
@@ -117,9 +115,9 @@ describe('ConditionsEdit', () => {
         </RenderWithContext>
       )
 
-      expect(getByText(condition.displayName)).toBeInTheDocument()
-      expect(getByText(condition2.displayName)).toBeInTheDocument()
-      expect(queryByTestId('flyout-1')).not.toBeInTheDocument()
+      expect(screen.getByText(condition.displayName)).toBeInTheDocument()
+      expect(screen.getByText(condition2.displayName)).toBeInTheDocument()
+      expect(screen.queryByTestId('flyout-1')).not.toBeInTheDocument()
     })
 
     test('Clicking an edit link causes the edit view to be rendered and all other elements hidden', async () => {
@@ -129,9 +127,9 @@ describe('ConditionsEdit', () => {
         </RenderWithContext>
       )
 
-      const $link = getByText(condition.displayName)
+      const $link = screen.getByText(condition.displayName)
       await act(() => userEvent.click($link))
-      expect(getByTestId('flyout-1')).toBeTruthy()
+      expect(screen.getByTestId('flyout-1')).toBeTruthy()
     })
   })
 
@@ -154,7 +152,7 @@ describe('ConditionsEdit', () => {
         </RenderWithContext>
       )
 
-      const $listItem = queryByTestId('conditions-list-items')
+      const $listItem = screen.queryByTestId('conditions-list-items')
       expect($listItem).not.toBeInTheDocument()
     })
 
@@ -165,7 +163,7 @@ describe('ConditionsEdit', () => {
         </RenderWithContext>
       )
 
-      expect(queryByTestId('add-condition-link')).toBeInTheDocument()
+      expect(screen.queryByTestId('add-condition-link')).toBeInTheDocument()
     })
 
     test('Renders no new condition message if there are no inputs available', () => {
@@ -184,7 +182,7 @@ describe('ConditionsEdit', () => {
 
       const hint =
         'You cannot add a condition as no components are available. Create a component on a page in the form. You can then add a condition.'
-      expect(getByText(hint)).toBeInTheDocument()
+      expect(screen.getByText(hint)).toBeInTheDocument()
     })
   })
 })
