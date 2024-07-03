@@ -89,7 +89,7 @@ export class InlineConditions extends Component<Props, State> {
 
     const fieldInputs = inputs.map((input) => {
       const label = [
-        data.sections?.[input.page.section]?.title,
+        data.sections[input.page.section]?.title,
         input.title ?? input.name
       ]
         .filter((p) => p)
