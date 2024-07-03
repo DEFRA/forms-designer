@@ -2,7 +2,6 @@ import {
   ComponentType,
   ConditionType,
   ConditionValue,
-  dateTimeUnits,
   dateUnits,
   OperatorName,
   relativeDateOrTimeOperatorNames,

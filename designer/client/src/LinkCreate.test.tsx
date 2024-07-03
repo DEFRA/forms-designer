@@ -5,18 +5,11 @@ import {
   type FormDefinition
 } from '@defra/forms-model'
 import { screen, within } from '@testing-library/dom'
-import {
-  act,
-  cleanup,
-  render,
-  waitFor,
-  type RenderResult
-} from '@testing-library/react'
+import { act, cleanup, render, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import React, { type ReactElement } from 'react'
+import React from 'react'
 
 import { LinkCreate } from '~/src/LinkCreate.jsx'
-import { DataContext } from '~/src/context/DataContext.js'
 import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
 const data: FormDefinition = {

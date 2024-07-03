@@ -20,8 +20,6 @@ export class ConditionsModel {
   #userGroupedConditions: ConditionsArray = []
   #conditionName: string | undefined = undefined
 
-  constructor(_conditionsObject?: ConditionRawObject) {}
-
   clone() {
     const toReturn = new ConditionsModel()
     toReturn.#groupedConditions = this.#groupedConditions.map((it) =>

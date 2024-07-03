@@ -46,9 +46,7 @@ const ListItem = ({ item, removeItem, selectListItem }) => {
 }
 
 export function ListItems() {
-  const { state: listEditorState, dispatch: listsEditorDispatch } =
-    useContext(ListsEditorContext)
-  const { isEditingStatic } = listEditorState
+  const { dispatch: listsEditorDispatch } = useContext(ListsEditorContext)
   const { data, save } = useContext(DataContext)
   const { state, dispatch } = useContext(ListContext)
 
