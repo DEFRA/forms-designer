@@ -11,8 +11,6 @@ describe('CssClasses', () => {
   afterEach(cleanup)
 
   describe('CssClassField', () => {
-    const { getByLabelText, getByText } = screen
-
     let state
 
     beforeEach(() => {
@@ -37,12 +35,13 @@ describe('CssClasses', () => {
       const title = 'Validation message'
       const hint =
         'Enter the validation message to show when a validation error occurs'
-      expect(getByText(title)).toBeInTheDocument()
-      expect(getByText(hint)).toBeInTheDocument()
+      expect(screen.getByText(title)).toBeInTheDocument()
+      expect(screen.getByText(hint)).toBeInTheDocument()
     })
 
     test('value should change and be displayed correctly', async () => {
-      const $input = getByLabelText<HTMLInputElement>('Validation message')
+      const $input =
+        screen.getByLabelText<HTMLInputElement>('Validation message')
       expect($input.value).toBe('')
 
       await act(() => userEvent.clear($input))

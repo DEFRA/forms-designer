@@ -92,8 +92,6 @@ const data: FormDefinition = {
 }
 
 describe('ListItemEdit', () => {
-  const { getByText, getByTestId, getAllByTestId } = screen
-
   test('strings are rendered correctly', () => {
     render(
       <RenderListEditorWithContext data={data}>
@@ -101,18 +99,21 @@ describe('ListItemEdit', () => {
       </RenderListEditorWithContext>
     )
 
-    expect(getByText('Item text')).toBeInTheDocument()
-    expect(getByText('Enter the text you want to show')).toBeInTheDocument()
-    expect(
-      getByText(
-        'This determines the data format of the list item and does not show on the form. Unless you are using integrations and want to modify the payload, it should match the list item text.'
-      )
-    ).toBeInTheDocument()
-    expect(
-      getByText(
-        'Select a condition that determines whether to show this list item. You can create and edit conditions on the Conditions screen.'
-      )
-    ).toBeInTheDocument()
+    const $itemLabel = screen.getByText('Item text')
+    const $itemHint = screen.getByText('Enter the text you want to show')
+
+    const $itemValueHint = screen.getByText(
+      'This determines the data format of the list item and does not show on the form. Unless you are using integrations and want to modify the payload, it should match the list item text.'
+    )
+
+    const $itemConditionsHint = screen.getByText(
+      'Select a condition that determines whether to show this list item. You can create and edit conditions on the Conditions screen.'
+    )
+
+    expect($itemLabel).toBeInTheDocument()
+    expect($itemHint).toBeInTheDocument()
+    expect($itemValueHint).toBeInTheDocument()
+    expect($itemConditionsHint).toBeInTheDocument()
   })
 
   test('Condition selection works correctly', async () => {
@@ -122,8 +123,8 @@ describe('ListItemEdit', () => {
       </RenderListEditorWithContext>
     )
 
-    const $select = getByTestId('list-condition-select')
-    const $options: HTMLOptionElement[] = getAllByTestId(
+    const $select = screen.getByTestId('list-condition-select')
+    const $options: HTMLOptionElement[] = screen.getAllByTestId(
       'list-condition-option'
     )
 

@@ -10,8 +10,6 @@ import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 describe('Visualisation', () => {
   afterEach(cleanup)
 
-  const { findByText, getByText, queryByText, queryByTestId } = screen
-
   test('Graph is rendered with correct number of pages and updates', async () => {
     const data: FormDefinition = {
       pages: [
@@ -32,9 +30,9 @@ describe('Visualisation', () => {
       </RenderWithContext>
     )
 
-    expect(queryByText('my first page')).toBeInTheDocument()
-    expect(queryByText('my second page')).toBeInTheDocument()
-    expect(queryByText('my third page')).not.toBeInTheDocument()
+    expect(screen.queryByText('my first page')).toBeInTheDocument()
+    expect(screen.queryByText('my second page')).toBeInTheDocument()
+    expect(screen.queryByText('my third page')).not.toBeInTheDocument()
 
     const updated: FormDefinition = {
       ...data,
@@ -53,7 +51,7 @@ describe('Visualisation', () => {
       </RenderWithContext>
     )
 
-    expect(queryByText('my third page')).toBeInTheDocument()
+    expect(screen.queryByText('my third page')).toBeInTheDocument()
   })
 
   test('Links between pages are navigable via keyboard', async () => {
@@ -82,29 +80,29 @@ describe('Visualisation', () => {
 
     // Check link exists and has the expected label
     const $lineTitle = await waitFor(() =>
-      findByText('Edit link from link-source to link-target')
+      screen.findByText('Edit link from link-source to link-target')
     )
 
     // Check that link works when selected with the enter key
-    expect(queryByTestId('flyout-1')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('flyout-1')).not.toBeInTheDocument()
 
     await act(async () => {
       $lineTitle.parentElement?.focus()
       await userEvent.keyboard('[Enter]')
     })
 
-    expect(queryByTestId('flyout-1')).toBeInTheDocument()
+    expect(screen.queryByTestId('flyout-1')).toBeInTheDocument()
 
-    await act(() => userEvent.click(getByText('Close')))
+    await act(() => userEvent.click(screen.getByText('Close')))
 
     // Check that link works when selected with the space key
-    expect(queryByTestId('flyout-1')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('flyout-1')).not.toBeInTheDocument()
 
     await act(async () => {
       $lineTitle.parentElement?.focus()
       await userEvent.keyboard('[Space]')
     })
 
-    expect(queryByTestId('flyout-1')).toBeInTheDocument()
+    expect(screen.queryByTestId('flyout-1')).toBeInTheDocument()
   })
 })

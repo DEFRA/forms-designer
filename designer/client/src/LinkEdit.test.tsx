@@ -31,8 +31,6 @@ describe('LinkEdit', () => {
 
   afterEach(cleanup)
 
-  const { getByRole } = screen
-
   test('Submitting with a condition updates the link', async () => {
     render(
       <RenderWithContext data={data}>
@@ -40,8 +38,8 @@ describe('LinkEdit', () => {
       </RenderWithContext>
     )
 
-    await act(() => userEvent.click(getByRole('button')))
-    const summary = within(getByRole('alert'))
+    await act(() => userEvent.click(screen.getByRole('button')))
+    const summary = within(screen.getByRole('alert'))
 
     expect(summary.getByText('Enter from')).toBeInTheDocument()
     expect(summary.getByText('Enter to')).toBeInTheDocument()

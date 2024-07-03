@@ -12,8 +12,6 @@ import { FieldEdit } from '~/src/FieldEdit.jsx'
 import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
 describe('Field Edit', () => {
-  const { getByText } = screen
-
   const selectedComponent: ComponentDef = {
     name: 'IDDQl4',
     type: ComponentType.UkAddressField,
@@ -61,7 +59,7 @@ describe('Field Edit', () => {
     )
 
     expect(
-      getByText(
+      screen.getByText(
         'Tick this box if users do not need to complete this field to progress through the form'
       )
     ).toBeInTheDocument()

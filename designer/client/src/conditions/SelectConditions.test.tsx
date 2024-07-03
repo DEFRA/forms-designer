@@ -16,8 +16,6 @@ import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 describe('SelectConditions', () => {
   afterEach(cleanup)
 
-  const { getByText, getByTestId, queryByText } = screen
-
   const data: FormDefinition = {
     pages: [],
     lists: [],
@@ -43,7 +41,7 @@ describe('SelectConditions', () => {
     )
 
     const hint = 'NoFieldsHintText'
-    expect(getByText(hint)).toBeInTheDocument()
+    expect(screen.getByText(hint)).toBeInTheDocument()
   })
 
   test('SelectConditions renders available conditions', () => {
@@ -159,13 +157,14 @@ describe('SelectConditions', () => {
       (condition) => condition.displayName
     )
 
-    expect(
-      queryByText('You cannot add any conditions as')
-    ).not.toBeInTheDocument()
-    expect(getByTestId('select-conditions')).toBeInTheDocument()
+    const $hint = screen.queryByText('You cannot add any conditions as')
+    const $select = screen.getByTestId('select-conditions')
+
+    expect($hint).not.toBeInTheDocument()
+    expect($select).toBeInTheDocument()
 
     expectedConditions.forEach((condition) => {
-      expect(getByText(condition)).toBeInTheDocument()
+      expect(screen.getByText(condition)).toBeInTheDocument()
     })
   })
 })

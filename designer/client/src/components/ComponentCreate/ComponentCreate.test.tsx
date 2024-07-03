@@ -8,15 +8,6 @@ import { ComponentCreate } from '~/src/components/ComponentCreate/ComponentCreat
 import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
 describe('ComponentCreate:', () => {
-  const {
-    findByRole,
-    getByLabelText,
-    getByRole,
-    getByTestId,
-    queryByLabelText,
-    queryByTestId
-  } = screen
-
   const data: FormDefinition = {
     pages: [{ path: '/1', title: '', controller: '', section: '' }],
     lists: [],
@@ -35,17 +26,17 @@ describe('ComponentCreate:', () => {
       </RenderWithContext>
     )
 
-    const $componentLink = await findByRole('link', {
+    const $componentLink = await screen.findByRole('link', {
       name: 'Details'
     })
 
-    expect(queryByLabelText('Title')).not.toBeInTheDocument()
-    expect(queryByLabelText('Content')).not.toBeInTheDocument()
+    expect(screen.queryByLabelText('Title')).not.toBeInTheDocument()
+    expect(screen.queryByLabelText('Content')).not.toBeInTheDocument()
 
     await act(() => userEvent.click($componentLink))
 
-    const $input = await waitFor(() => getByLabelText('Title'))
-    const $textarea = await waitFor(() => getByLabelText('Content'))
+    const $input = await waitFor(() => screen.getByLabelText('Title'))
+    const $textarea = await waitFor(() => screen.getByLabelText('Content'))
 
     expect($input).toBeInTheDocument()
     expect($textarea).toBeInTheDocument()
@@ -60,16 +51,16 @@ describe('ComponentCreate:', () => {
       </RenderWithContext>
     )
 
-    const $componentLink = await findByRole('link', {
+    const $componentLink = await screen.findByRole('link', {
       name: 'Details'
     })
 
     await act(() => userEvent.click($componentLink))
-    await waitFor(() => getByTestId('component-create'))
+    await waitFor(() => screen.getByTestId('component-create'))
 
-    const $input = await waitFor(() => getByLabelText('Title'))
-    const $textarea = await waitFor(() => getByLabelText('Content'))
-    const $button = await waitFor(() => getByRole('button'))
+    const $input = await waitFor(() => screen.getByLabelText('Title'))
+    const $textarea = await waitFor(() => screen.getByLabelText('Content'))
+    const $button = await waitFor(() => screen.getByRole('button'))
 
     await act(() => userEvent.type($input, 'Details'))
     await act(() => userEvent.type($textarea, 'content'))
@@ -107,21 +98,23 @@ describe('ComponentCreate:', () => {
       </RenderWithContext>
     )
 
-    const $componentLink = await findByRole('link', {
+    const $componentLink = await screen.findByRole('link', {
       name: 'Details'
     })
 
     // Clicking into component will hide the list
     await act(() => userEvent.click($componentLink))
-    expect(queryByTestId('component-create-list')).not.toBeInTheDocument()
+    expect(
+      screen.queryByTestId('component-create-list')
+    ).not.toBeInTheDocument()
 
-    const $backLink = await findByRole('link', {
+    const $backLink = await screen.findByRole('link', {
       name: 'Back to create component list'
     })
 
     // Clicking the back link component will show the list
     await act(() => userEvent.click($backLink))
-    expect(queryByTestId('component-create-list')).toBeInTheDocument()
+    expect(screen.queryByTestId('component-create-list')).toBeInTheDocument()
   })
 
   test('Should display ErrorSummary when validation fails', async () => {
@@ -131,22 +124,22 @@ describe('ComponentCreate:', () => {
       </RenderWithContext>
     )
 
-    const $componentLink = await findByRole('link', {
+    const $componentLink = await screen.findByRole('link', {
       name: 'Details'
     })
 
     await act(() => userEvent.click($componentLink))
 
-    await waitFor(() => getByLabelText('Title'))
-    await waitFor(() => getByLabelText('Content'))
+    await waitFor(() => screen.getByLabelText('Title'))
+    await waitFor(() => screen.getByLabelText('Content'))
 
-    const $button = await findByRole('button', {
+    const $button = await screen.findByRole('button', {
       name: 'Save'
     })
 
     await act(() => userEvent.click($button))
 
-    const $errorSummary = await findByRole('alert', {
+    const $errorSummary = await screen.findByRole('alert', {
       name: 'There is a problem'
     })
 

@@ -30,8 +30,6 @@ const data: FormDefinition = {
 }
 
 describe('ListEdit', () => {
-  const { getByText } = screen
-
   test('strings are rendered correctly', () => {
     const selectedListName = data.lists[0].name
 
@@ -44,8 +42,12 @@ describe('ListEdit', () => {
       </RenderListEditorWithContext>
     )
 
-    expect(getByText('List items')).toBeInTheDocument()
-    expect(getByText('Enter a unique name for your list')).toBeInTheDocument()
-    expect(getByText('Add list item')).toBeInTheDocument()
+    const $listCaption = screen.getByText('List items')
+    const $listHint = screen.getByText('Enter a unique name for your list')
+    const $listLink = screen.getByText('Add list item')
+
+    expect($listCaption).toBeInTheDocument()
+    expect($listHint).toBeInTheDocument()
+    expect($listLink).toBeInTheDocument()
   })
 })

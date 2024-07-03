@@ -8,8 +8,6 @@ import { AbsoluteTimeValues } from '~/src/conditions/AbsoluteTimeValues.jsx'
 describe('AbsoluteTimeValues', () => {
   afterEach(cleanup)
 
-  const { findByLabelText } = screen
-
   it("renders out a time that's passed to it", async () => {
     render(
       <AbsoluteTimeValues
@@ -18,8 +16,8 @@ describe('AbsoluteTimeValues', () => {
       />
     )
 
-    const $hours = await waitFor(() => findByLabelText('HH'))
-    const $minutes = await waitFor(() => findByLabelText('mm'))
+    const $hours = await waitFor(() => screen.findByLabelText('HH'))
+    const $minutes = await waitFor(() => screen.findByLabelText('mm'))
 
     expect($hours.getAttribute('value')).toBe('0')
     expect($minutes.getAttribute('value')).toBe('34')
@@ -28,8 +26,8 @@ describe('AbsoluteTimeValues', () => {
   it('calls the updateValue prop if a valid time is entered', async () => {
     const updateValue = jest.fn()
     render(<AbsoluteTimeValues updateValue={updateValue} value={{}} />)
-    const $hours = await waitFor(() => findByLabelText('HH'))
-    const $minutes = await waitFor(() => findByLabelText('mm'))
+    const $hours = await waitFor(() => screen.findByLabelText('HH'))
+    const $minutes = await waitFor(() => screen.findByLabelText('mm'))
 
     await act(() => userEvent.type($hours, '14'))
     await act(() => userEvent.type($minutes, '20'))
@@ -51,8 +49,8 @@ describe('AbsoluteTimeValues', () => {
       />
     )
 
-    const $hours = await waitFor(() => findByLabelText('HH'))
-    const $minutes = await waitFor(() => findByLabelText('mm'))
+    const $hours = await waitFor(() => screen.findByLabelText('HH'))
+    const $minutes = await waitFor(() => screen.findByLabelText('mm'))
 
     // Clear existing values
     await Promise.all([$hours, $minutes].map(userEvent.clear))
@@ -71,7 +69,7 @@ describe('AbsoluteTimeValues', () => {
   it("doesn't call the updateValue prop if a minutes value is not entered", async () => {
     const updateValue = jest.fn()
     render(<AbsoluteTimeValues updateValue={updateValue} value={{}} />)
-    const $hours = await waitFor(() => findByLabelText('HH'))
+    const $hours = await waitFor(() => screen.findByLabelText('HH'))
     await act(() => userEvent.type($hours, '3'))
     expect(updateValue).not.toHaveBeenCalled()
   })
@@ -79,7 +77,7 @@ describe('AbsoluteTimeValues', () => {
   it("doesn't call the updateValue prop if an hours value is not entered", async () => {
     const updateValue = jest.fn()
     render(<AbsoluteTimeValues updateValue={updateValue} value={{}} />)
-    const $minutes = await waitFor(() => findByLabelText('mm'))
+    const $minutes = await waitFor(() => screen.findByLabelText('mm'))
     await act(() => userEvent.type($minutes, '20'))
     expect(updateValue).not.toHaveBeenCalled()
   })

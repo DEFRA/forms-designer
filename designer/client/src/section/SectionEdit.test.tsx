@@ -9,8 +9,6 @@ import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 describe('Section edit fields', () => {
   afterEach(cleanup)
 
-  const { getByText } = screen
-
   test('should display titles and help texts', () => {
     const state: ComponentState = {
       selectedComponent: {
@@ -26,17 +24,20 @@ describe('Section edit fields', () => {
       </RenderWithContext>
     )
 
-    expect(getByText('Section title')).toBeInTheDocument()
-    expect(
-      getByText(
-        'Appears above the page title. However, if these titles are the same, the form will only show the page title.'
-      )
-    ).toBeInTheDocument()
-    expect(getByText('Section name')).toBeInTheDocument()
-    expect(
-      getByText(
-        'Automatically populated. It does not show on the page. You usually do not need to change it unless an integration requires it. It must not contain spaces.'
-      )
-    ).toBeInTheDocument()
+    const $sectionTitleLabel = screen.getByText('Section title')
+    const $sectionTitleContent = screen.getByText(
+      'Appears above the page title. However, if these titles are the same, the form will only show the page title.'
+    )
+
+    expect($sectionTitleLabel).toBeInTheDocument()
+    expect($sectionTitleContent).toBeInTheDocument()
+
+    const $sectionNameLabel = screen.getByText('Section name')
+    const $sectionNameContent = screen.getByText(
+      'Automatically populated. It does not show on the page. You usually do not need to change it unless an integration requires it. It must not contain spaces.'
+    )
+
+    expect($sectionNameLabel).toBeInTheDocument()
+    expect($sectionNameContent).toBeInTheDocument()
   })
 })

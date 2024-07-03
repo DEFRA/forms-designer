@@ -10,8 +10,6 @@ describe('CssClasses', () => {
   afterEach(cleanup)
 
   describe('CssClassField', () => {
-    const { getByText } = screen
-
     let state
 
     beforeEach(() => {
@@ -34,13 +32,13 @@ describe('CssClasses', () => {
 
     test('should display display correct title', () => {
       const text = 'Classes'
-      expect(getByText(text)).toBeInTheDocument()
+      expect(screen.getByText(text)).toBeInTheDocument()
     })
 
     test('should display display correct helptext', () => {
       const text =
         'Apply CSS classes to this field. For example, govuk-input govuk-!-width-full'
-      expect(getByText(text)).toBeInTheDocument()
+      expect(screen.getByText(text)).toBeInTheDocument()
     })
   })
 })
