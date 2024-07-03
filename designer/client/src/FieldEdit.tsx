@@ -123,7 +123,7 @@ export function FieldEdit({
           id="field-name"
           name="name"
           type="text"
-          value={name || ''}
+          value={name ?? ''}
           onChange={(e) => {
             dispatch({
               type: Fields.EDIT_NAME,
