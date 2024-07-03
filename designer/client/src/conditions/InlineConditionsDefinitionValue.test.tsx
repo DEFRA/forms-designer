@@ -4,6 +4,7 @@ import {
   ConditionValue,
   dateTimeUnits,
   dateUnits,
+  OperatorName,
   relativeDateOrTimeOperatorNames,
   timeUnits
 } from '@defra/forms-model'
@@ -30,7 +31,7 @@ describe.skip('InlineConditionsDefinitionValue', () => {
         updateValue={jest.fn()}
         value={new ConditionValue('my-value')}
         fieldDef={fieldDef}
-        operator="is"
+        operator={OperatorName.Is}
       />
     )
 
@@ -51,7 +52,7 @@ describe.skip('InlineConditionsDefinitionValue', () => {
         updateValue={updateValueCallback}
         value={new ConditionValue('my-value')}
         fieldDef={fieldDef}
-        operator="is"
+        operator={OperatorName.Is}
       />
     )
 
@@ -77,7 +78,7 @@ describe.skip('InlineConditionsDefinitionValue', () => {
         updateValue={updateValueCallback}
         value={new ConditionValue('my-value')}
         fieldDef={fieldDef}
-        operator="is"
+        operator={OperatorName.Is}
       />
     )
 
@@ -103,7 +104,7 @@ describe.skip('InlineConditionsDefinitionValue', () => {
         updateValue={jest.fn()}
         value={new ConditionValue('my-value')}
         fieldDef={fieldDef}
-        operator="is"
+        operator={OperatorName.Is}
       />
     )
     await waitFor(() =>
@@ -134,7 +135,7 @@ describe.skip('InlineConditionsDefinitionValue', () => {
         updateValue={updateValueCallback}
         value={new ConditionValue('my-value')}
         fieldDef={fieldDef}
-        operator="is"
+        operator={OperatorName.Is}
       />
     )
 
@@ -165,7 +166,7 @@ describe.skip('InlineConditionsDefinitionValue', () => {
         updateValue={updateValueCallback}
         value={new ConditionValue('my-value')}
         fieldDef={fieldDef}
-        operator="is"
+        operator={OperatorName.Is}
       />
     )
 
@@ -196,7 +197,7 @@ describe.skip('InlineConditionsDefinitionValue', () => {
         updateValue={updateValueCallback}
         value={new ConditionValue('my-value')}
         fieldDef={fieldDef}
-        operator="is"
+        operator={OperatorName.Is}
       />
     )
 
@@ -227,7 +228,7 @@ describe.skip('InlineConditionsDefinitionValue', () => {
         updateValue={updateValueCallback}
         value={new ConditionValue('my-value')}
         fieldDef={fieldDef}
-        operator="is"
+        operator={OperatorName.Is}
       />
     )
 

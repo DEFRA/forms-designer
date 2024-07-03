@@ -186,11 +186,11 @@ function formatValue(
 
 export const absoluteDateOrTimeOperatorNames = Object.keys(
   absoluteDateTimeOperators
-)
+) as OperatorName[]
 
 export const relativeDateOrTimeOperatorNames = Object.keys(
   relativeTimeOperators(dateTimeUnits)
-)
+) as OperatorName[]
 
 function absoluteDateTime(operator: Operator): OperatorDefinition {
   return {
