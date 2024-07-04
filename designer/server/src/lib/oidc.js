@@ -1,6 +1,5 @@
-import { getJson, postJson } from './fetch.js'
-
 import config from '~/src/config.js'
+import { getJson, postJson } from '~/src/lib/fetch.js'
 
 /**
  * Fetch the Well-Known Configuration for the OpenID Connect (OIDC) provider
