@@ -12,7 +12,7 @@ import {
 
 export interface RenderWithContextProps {
   children?: ReactElement
-  state?: ComponentContextType['state']
+  state?: Omit<ComponentContextType['state'], 'initialName'>
   data?: DataContextType['data']
   save?: DataContextType['save']
 }

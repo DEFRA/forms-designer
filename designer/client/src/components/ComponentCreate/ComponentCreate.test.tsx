@@ -66,8 +66,15 @@ describe('ComponentCreate:', () => {
     const $textarea = await waitFor(() => screen.getByLabelText('Content'))
     const $button = await waitFor(() => screen.getByRole('button'))
 
+    // Ensure fields are empty
+    await act(() => userEvent.clear($input))
+    await act(() => userEvent.clear($textarea))
+
+    // Populate fields
     await act(() => userEvent.type($input, 'Details'))
     await act(() => userEvent.type($textarea, 'content'))
+
+    // Submit the form
     await act(() => userEvent.click($button))
 
     await waitFor(() => expect(save).toHaveBeenCalled())
@@ -82,6 +89,7 @@ describe('ComponentCreate:', () => {
                 {
                   title: 'Details',
                   type: ComponentType.Details,
+                  subType: ComponentSubType.Content,
                   name: expect.any(String),
                   content: 'content',
                   options: {},
@@ -121,7 +129,7 @@ describe('ComponentCreate:', () => {
     expect(screen.queryByTestId('component-create-list')).toBeInTheDocument()
   })
 
-  test('Should display ErrorSummary when validation fails', async () => {
+  test('Should display error summary when validation fails', async () => {
     render(
       <RenderWithContext data={data}>
         <ComponentCreate page={page} />
@@ -134,13 +142,15 @@ describe('ComponentCreate:', () => {
 
     await act(() => userEvent.click($componentLink))
 
-    await waitFor(() => screen.getByLabelText('Title'))
-    await waitFor(() => screen.getByLabelText('Content'))
+    const $input = await waitFor(() => screen.getByLabelText('Title'))
+    const $textarea = await waitFor(() => screen.getByLabelText('Content'))
+    const $button = await waitFor(() => screen.getByRole('button'))
 
-    const $button = await screen.findByRole('button', {
-      name: 'Save'
-    })
+    // Ensure fields are empty
+    await act(() => userEvent.clear($input))
+    await act(() => userEvent.clear($textarea))
 
+    // Submit the form
     await act(() => userEvent.click($button))
 
     const $errorSummary = await screen.findByRole('alert', {

@@ -15,7 +15,7 @@ export interface RenderListEditorWithContextProps {
   selectedListName?: string
   data: DataContextType['data']
   save?: DataContextType['save']
-  state?: ComponentContextType['state']
+  state?: Omit<ComponentContextType['state'], 'initialName'>
 }
 
 export function RenderListEditorWithContext({

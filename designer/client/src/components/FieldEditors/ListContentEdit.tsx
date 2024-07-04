@@ -4,7 +4,7 @@ import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 import { Options } from '~/src/reducers/component/types.js'
 
 interface Props {
-  context: any // TODO
+  context?: typeof ComponentContext
 }
 
 export function ListContentEdit({ context = ComponentContext }: Props) {

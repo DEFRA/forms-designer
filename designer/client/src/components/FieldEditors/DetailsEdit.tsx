@@ -8,7 +8,7 @@ import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 import { Fields } from '~/src/reducers/component/types.js'
 
 interface Props {
-  context: any // TODO
+  context?: typeof ComponentContext
 }
 
 export function DetailsEdit({ context = ComponentContext }: Props) {

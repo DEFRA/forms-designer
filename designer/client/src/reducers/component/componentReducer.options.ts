@@ -1,21 +1,17 @@
+import { type ComponentState } from '~/src/reducers/component/componentReducer.jsx'
 import { Options } from '~/src/reducers/component/types.js'
 
-interface ConditionAction {
-  type: Options.EDIT_OPTIONS_CONDITION
-  payload: string
-}
-
-interface AnyAction {
-  type: Options
-  payload?: unknown
-}
-
-type OptionsActions = ConditionAction | AnyAction
-
-export function optionsReducer(state, action: OptionsActions) {
+export function optionsReducer(
+  state: ComponentState,
+  action: {
+    type: Options
+    payload?: unknown
+  }
+): ComponentState {
   const { type, payload } = action
-  const { selectedComponent = {} } = state
-  const { options } = selectedComponent
+  const { selectedComponent } = state
+  const { options = {} } = selectedComponent ?? {}
+
   switch (type) {
     case Options.EDIT_OPTIONS_HIDE_TITLE:
       return {
