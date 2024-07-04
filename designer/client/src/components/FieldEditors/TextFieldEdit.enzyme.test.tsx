@@ -1,18 +1,37 @@
-import { mount } from 'enzyme'
+import { ComponentSubType, ComponentType } from '@defra/forms-model'
+import { mount, type ReactWrapper } from 'enzyme'
 import React from 'react'
 
-import { MultilineTextFieldEdit } from '~/src/MultilineTextFieldEdit.jsx'
 import { TextFieldEdit } from '~/src/components/FieldEditors/TextFieldEdit.jsx'
-import * as Component from '~/src/reducers/component/componentReducer.jsx'
+import {
+  RenderWithContext,
+  type RenderWithContextProps
+} from '~/test/helpers/renderers.jsx'
 
 describe('TextField renders correctly when', () => {
-  const wrapper = mount(
-    <Component.ComponentContextProvider>
-      <TextFieldEdit />
-    </Component.ComponentContextProvider>
-  )
+  let state: RenderWithContextProps['state']
+  let wrapper: ReactWrapper
 
-  test('schema max length changes', () => {
+  beforeEach(() => {
+    state = {
+      selectedComponent: {
+        name: 'TextFieldEditClass',
+        title: 'Text field edit class',
+        type: ComponentType.TextField,
+        subType: ComponentSubType.Field,
+        options: {},
+        schema: {}
+      }
+    }
+
+    wrapper = mount(
+      <RenderWithContext state={state}>
+        <TextFieldEdit />
+      </RenderWithContext>
+    )
+  })
+
+  test('schema length changes', () => {
     const field = () => wrapper.find('#field-schema-length').first()
     const length = 1337
     field().simulate('change', { target: { value: length } })
@@ -38,19 +57,5 @@ describe('TextField renders correctly when', () => {
     const regex = '/ab+c/'
     field().simulate('change', { target: { value: regex } })
     expect(field().props().value).toBe(regex)
-  })
-})
-
-describe('MutlilineTextFieldEdit renders correctly when', () => {
-  const wrapper = mount(
-    <Component.ComponentContextProvider>
-      <MultilineTextFieldEdit />
-    </Component.ComponentContextProvider>
-  )
-  test('schema rows changes', () => {
-    const field = () => wrapper.find('#field-options-rows')
-    const newRows = 42
-    field().simulate('change', { target: { value: newRows } })
-    expect(field().props().value).toBe(newRows)
   })
 })
