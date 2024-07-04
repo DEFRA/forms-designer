@@ -18,9 +18,13 @@ export function FieldEdit({
   isListField = false
 }: Props) {
   const { state, dispatch } = useContext(ComponentContext)
-  const { selectedComponent = {}, errors = {} } = state
+  const { selectedComponent, errors = {} } = state
 
-  const { name, title, hint, attrs, type, options = {} } = selectedComponent
+  if (!selectedComponent) {
+    return null
+  }
+
+  const { name, title, hint, attrs, type, options } = selectedComponent
   const {
     hideTitle = false,
     optionalText = false,
@@ -74,35 +78,34 @@ export function FieldEdit({
         }}
         {...attrs}
       />
-      {selectedComponent.type &&
-        [ComponentType.UkAddressField].includes(selectedComponent.type) && (
-          <div className="govuk-checkboxes govuk-form-group">
-            <div className="govuk-checkboxes__item">
-              <input
-                className="govuk-checkboxes__input"
-                id="field-options-hideTitle"
-                name="options.hideTitle"
-                type="checkbox"
-                checked={hideTitle}
-                onChange={(e) =>
-                  dispatch({
-                    type: Options.EDIT_OPTIONS_HIDE_TITLE,
-                    payload: e.target.checked
-                  })
-                }
-              />
-              <label
-                className="govuk-label govuk-checkboxes__label"
-                htmlFor="field-options-hideTitle"
-              >
-                {i18n('common.hideTitleOption.title')}
-              </label>
-              <div className="govuk-hint govuk-checkboxes__hint">
-                {i18n('common.hideTitleOption.helpText')}
-              </div>
+      {[ComponentType.UkAddressField].includes(selectedComponent.type) && (
+        <div className="govuk-checkboxes govuk-form-group">
+          <div className="govuk-checkboxes__item">
+            <input
+              className="govuk-checkboxes__input"
+              id="field-options-hideTitle"
+              name="options.hideTitle"
+              type="checkbox"
+              checked={hideTitle}
+              onChange={(e) =>
+                dispatch({
+                  type: Options.EDIT_OPTIONS_HIDE_TITLE,
+                  payload: e.target.checked
+                })
+              }
+            />
+            <label
+              className="govuk-label govuk-checkboxes__label"
+              htmlFor="field-options-hideTitle"
+            >
+              {i18n('common.hideTitleOption.title')}
+            </label>
+            <div className="govuk-hint govuk-checkboxes__hint">
+              {i18n('common.hideTitleOption.helpText')}
             </div>
           </div>
-        )}
+        </div>
+      )}
       <div
         className={classNames({
           'govuk-form-group': true,

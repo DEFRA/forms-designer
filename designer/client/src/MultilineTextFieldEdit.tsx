@@ -7,8 +7,13 @@ import { Options } from '~/src/reducers/component/types.js'
 
 export function MultilineTextFieldEdit({ context = ComponentContext }) {
   const { state, dispatch } = useContext(context)
-  const { selectedComponent = {} } = state
-  const { options = {} } = selectedComponent
+  const { selectedComponent } = state
+
+  if (!selectedComponent) {
+    return null
+  }
+
+  const { options } = selectedComponent
 
   return (
     <TextFieldEdit>
