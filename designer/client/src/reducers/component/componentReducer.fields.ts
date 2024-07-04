@@ -33,16 +33,6 @@ export function fieldsReducer(
       }
     }
 
-    case Fields.EDIT_TYPE: {
-      return {
-        ...state,
-        selectedComponent: {
-          ...selectedComponent,
-          ...payload
-        }
-      }
-    }
-
     case Fields.EDIT_HELP:
       return {
         ...state,
