@@ -1,6 +1,7 @@
 import {
   ComponentSubType,
   ComponentType,
+  type ComponentDef,
   type FormDefinition
 } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
@@ -19,7 +20,7 @@ describe('Field Edit', () => {
     hint: '',
     options: {},
     schema: {}
-  }
+  } satisfies ComponentDef
 
   const data = {
     pages: [

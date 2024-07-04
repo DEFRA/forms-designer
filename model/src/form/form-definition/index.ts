@@ -102,6 +102,7 @@ const localisedString = Joi.alternatives().try(
 
 export const componentSchema = Joi.object<ComponentDef>()
   .keys({
+    // TODO: Make required once all components are updated
     subType: Joi.string<ComponentSubType>().optional(),
     type: Joi.string<ComponentType>().required(),
     name: Joi.string(),

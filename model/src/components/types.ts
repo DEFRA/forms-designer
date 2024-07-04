@@ -26,7 +26,7 @@ interface TextFieldBase {
     | ComponentType.TextField
     | ComponentType.UkAddressField
     | ComponentType.YesNoField
-  subType?: ComponentSubType.Field
+  subType: ComponentSubType.Field
   name: string
   title: string
   hint?: string
@@ -49,7 +49,7 @@ interface TextFieldBase {
 
 interface NumberFieldBase {
   type: ComponentType
-  subType?: ComponentSubType.Field
+  subType: ComponentSubType.Field
   name: string
   title: string
   hint?: string
@@ -75,7 +75,7 @@ interface ListFieldBase {
     | ComponentType.List
     | ComponentType.RadiosField
     | ComponentType.SelectField
-  subType?: ComponentSubType.Content | ComponentSubType.ListField
+  subType: ComponentSubType.Content | ComponentSubType.ListField
   name: string
   title: string
   options: {
@@ -93,14 +93,14 @@ interface ListFieldBase {
 
 interface ContentFieldBase {
   type: ComponentType.Details | ComponentType.Html | ComponentType.InsetText
-  subType?: ComponentSubType.Content
+  subType: ComponentSubType.Content
   name: string
   title: string
   content: string
   options: {
     condition?: string
   }
-  schema?: object
+  schema: object
 }
 
 interface DateFieldBase {
@@ -108,7 +108,7 @@ interface DateFieldBase {
     | ComponentType.DatePartsField
     | ComponentType.MonthYearField
     | ComponentType.TimeField
-  subType?: ComponentSubType.Field
+  subType: ComponentSubType.Field
   name: string
   title: string
   hint?: string
@@ -220,16 +220,17 @@ export interface InsetTextComponent extends ContentFieldBase {
 // List Fields
 export interface ListComponent extends ListFieldBase {
   type: ComponentType.List
+  subType: ComponentSubType.Content
 }
 
 export interface AutocompleteFieldComponent extends ListFieldBase {
   type: ComponentType.AutocompleteField
-  subType?: ComponentSubType.ListField
+  subType: ComponentSubType.ListField
 }
 
 export interface CheckboxesFieldComponent extends ListFieldBase {
   type: ComponentType.CheckboxesField
-  subType?: ComponentSubType.ListField
+  subType: ComponentSubType.ListField
   options: ListFieldBase['options'] & {
     condition?: string
   }
@@ -237,7 +238,7 @@ export interface CheckboxesFieldComponent extends ListFieldBase {
 
 export interface RadiosFieldComponent extends ListFieldBase {
   type: ComponentType.RadiosField
-  subType?: ComponentSubType.ListField
+  subType: ComponentSubType.ListField
   options: ListFieldBase['options'] & {
     condition?: string
   }
@@ -245,7 +246,7 @@ export interface RadiosFieldComponent extends ListFieldBase {
 
 export interface SelectFieldComponent extends ListFieldBase {
   type: ComponentType.SelectField
-  subType?: ComponentSubType.ListField
+  subType: ComponentSubType.ListField
   options: ListFieldBase['options'] & { autocomplete?: string }
 }
 
