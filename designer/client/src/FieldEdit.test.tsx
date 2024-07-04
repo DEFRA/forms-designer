@@ -1,7 +1,6 @@
 import {
   ComponentSubType,
   ComponentType,
-  type ComponentDef,
   type FormDefinition
 } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
@@ -12,7 +11,7 @@ import { FieldEdit } from '~/src/FieldEdit.jsx'
 import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
 describe('Field Edit', () => {
-  const selectedComponent: ComponentDef = {
+  const selectedComponent = {
     name: 'IDDQl4',
     type: ComponentType.UkAddressField,
     title: 'UK address field',
@@ -22,7 +21,7 @@ describe('Field Edit', () => {
     schema: {}
   }
 
-  const data: FormDefinition = {
+  const data = {
     pages: [
       {
         title: 'First page',
@@ -33,7 +32,7 @@ describe('Field Edit', () => {
     lists: [],
     sections: [],
     conditions: []
-  }
+  } satisfies FormDefinition
 
   afterEach(cleanup)
 

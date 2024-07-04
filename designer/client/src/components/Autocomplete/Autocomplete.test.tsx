@@ -1,17 +1,16 @@
-import {
-  ComponentSubType,
-  ComponentType,
-  type ComponentDef
-} from '@defra/forms-model'
+import { ComponentSubType, ComponentType } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
 import React from 'react'
 
 import { Autocomplete } from '~/src/components/Autocomplete/Autocomplete.jsx'
-import { RenderWithContext } from '~/test/helpers/renderers.jsx'
+import {
+  RenderWithContext,
+  type RenderWithContextProps
+} from '~/test/helpers/renderers.jsx'
 
 describe('AutocompleteField', () => {
-  let state
+  let state: RenderWithContextProps['state']
 
   beforeEach(() => {
     state = {
@@ -23,7 +22,7 @@ describe('AutocompleteField', () => {
         subType: ComponentSubType.ListField,
         options: {},
         schema: {}
-      } satisfies ComponentDef
+      }
     }
 
     render(

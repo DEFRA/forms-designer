@@ -1,17 +1,20 @@
-import { type ComponentDef, ComponentType } from '@defra/forms-model'
+import { ComponentSubType, ComponentType } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { act, cleanup, render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React from 'react'
 
 import { CustomValidationMessage } from '~/src/components/CustomValidationMessage/CustomValidationMessage.jsx'
-import { RenderWithContext } from '~/test/helpers/renderers.jsx'
+import {
+  RenderWithContext,
+  type RenderWithContextProps
+} from '~/test/helpers/renderers.jsx'
 
 describe('CssClasses', () => {
   afterEach(cleanup)
 
   describe('CssClassField', () => {
-    let state
+    let state: RenderWithContextProps['state']
 
     beforeEach(() => {
       state = {
@@ -19,9 +22,10 @@ describe('CssClasses', () => {
           name: 'TelephoneNumberField',
           title: 'Telephone number field',
           type: ComponentType.TelephoneNumberField,
+          subType: ComponentSubType.Field,
           options: {},
           schema: {}
-        } satisfies ComponentDef
+        }
       }
 
       render(

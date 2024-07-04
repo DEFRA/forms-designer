@@ -2,7 +2,7 @@ import { type FormDefinition } from '@defra/forms-model'
 
 import { addLink } from '~/src/data/page/addLink.js'
 
-const data: FormDefinition = {
+const data = {
   pages: [
     {
       title: 'scrambled',
@@ -15,7 +15,7 @@ const data: FormDefinition = {
   lists: [],
   sections: [],
   conditions: []
-}
+} satisfies FormDefinition
 
 test('addLink throws if to, from or both are not found', () => {
   expect(() => addLink(data, '404', '4004')).toThrow(/no page found/)

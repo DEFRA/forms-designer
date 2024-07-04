@@ -1,4 +1,8 @@
-import { ComponentType, type ComponentDef } from '@defra/forms-model'
+import {
+  ComponentSubType,
+  ComponentType,
+  type ComponentDef
+} from '@defra/forms-model'
 
 import { fieldsReducer } from '~/src/reducers/component/componentReducer.fields.js'
 import {
@@ -21,6 +25,7 @@ describe('Component reducer', () => {
     name: 'field',
     title: 'Title',
     type: ComponentType.TextField,
+    subType: ComponentSubType.Field,
     options: {},
     schema: {}
   }

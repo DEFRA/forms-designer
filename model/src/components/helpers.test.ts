@@ -13,6 +13,7 @@ describe('Type guards', () => {
         name: 'field',
         title: 'Input',
         type: ComponentType.TextField,
+        subType: ComponentSubType.Field,
         options: {},
         schema: {}
       } satisfies ComponentDef,
@@ -38,6 +39,7 @@ describe('Type guards', () => {
         name: 'field',
         title: 'Items',
         type: ComponentType.List,
+        subType: ComponentSubType.Content,
         list: 'items',
         options: {},
         schema: {}
@@ -56,6 +58,7 @@ describe('Type guards', () => {
         name: 'content',
         title: 'Help with nationality',
         type: ComponentType.Details,
+        subType: ComponentSubType.Content,
         content: 'We need to know your nationality so we can work out…',
         options: {},
         schema: {}
@@ -64,6 +67,7 @@ describe('Type guards', () => {
         name: 'content',
         title: 'HTML',
         type: ComponentType.Html,
+        subType: ComponentSubType.Content,
         content: '<p class="govuk-body">Some content</p>',
         options: {},
         schema: {}
@@ -72,6 +76,7 @@ describe('Type guards', () => {
         name: 'content',
         title: '',
         type: ComponentType.InsetText,
+        subType: ComponentSubType.Content,
         content: 'It can take up to 8 weeks to register a lasting power of…',
         options: {},
         schema: {}

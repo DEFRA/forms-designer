@@ -6,7 +6,7 @@ import React from 'react'
 import { ListSelect } from '~/src/list/ListSelect.jsx'
 import { RenderListEditorWithContext } from '~/test/helpers/renderers-lists.jsx'
 
-const data: FormDefinition = {
+const data = {
   pages: [],
   lists: [
     {
@@ -24,7 +24,7 @@ const data: FormDefinition = {
   ],
   sections: [],
   conditions: []
-}
+} satisfies FormDefinition
 
 describe('ListSelect', () => {
   test('Lists all available lists and add list', () => {

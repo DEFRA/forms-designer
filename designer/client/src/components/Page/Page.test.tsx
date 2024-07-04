@@ -1,4 +1,8 @@
-import { ComponentType, type FormDefinition } from '@defra/forms-model'
+import {
+  ComponentSubType,
+  ComponentType,
+  type FormDefinition
+} from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { act, cleanup, render, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
@@ -7,7 +11,7 @@ import React from 'react'
 import { Page } from '~/src/components/Page/Page.jsx'
 import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
-const data: FormDefinition = {
+const data = {
   pages: [
     {
       title: 'my first page',
@@ -17,6 +21,7 @@ const data: FormDefinition = {
           name: 'firstName',
           title: 'First name',
           type: ComponentType.TextField,
+          subType: ComponentSubType.Field,
           options: {
             required: true
           },
@@ -26,6 +31,7 @@ const data: FormDefinition = {
           name: 'middleName',
           title: 'Middle name',
           type: ComponentType.TextField,
+          subType: ComponentSubType.Field,
           hint: 'If you have a middle name on your passport you must include it here',
           options: {
             required: false,
@@ -37,6 +43,7 @@ const data: FormDefinition = {
           name: 'lastName',
           title: 'Surname',
           type: ComponentType.TextField,
+          subType: ComponentSubType.Field,
           options: {
             required: true
           },
@@ -52,7 +59,7 @@ const data: FormDefinition = {
   lists: [],
   sections: [],
   conditions: []
-}
+} satisfies FormDefinition
 
 describe('Page', () => {
   afterEach(cleanup)

@@ -2,7 +2,7 @@ import { type FormDefinition } from '@defra/forms-model'
 
 import { addList } from '~/src/data/list/addList.js'
 
-const data: FormDefinition = {
+const data = {
   pages: [],
   lists: [
     {
@@ -20,7 +20,7 @@ const data: FormDefinition = {
   ],
   sections: [],
   conditions: []
-}
+} satisfies FormDefinition
 
 test('findList throws when a list with the same name already exists', () => {
   expect(() =>

@@ -2,6 +2,7 @@ import {
   ComponentSubType,
   ComponentType,
   ConditionType,
+  OperatorName,
   type FormDefinition
 } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
@@ -12,7 +13,7 @@ import React from 'react'
 import { ListItemEdit } from '~/src/list/ListItemEdit.jsx'
 import { RenderListEditorWithContext } from '~/test/helpers/renderers-lists.jsx'
 
-const data: FormDefinition = {
+const data = {
   pages: [
     {
       title: 'start',
@@ -22,6 +23,7 @@ const data: FormDefinition = {
           name: 'text',
           title: 'text',
           type: ComponentType.TextField,
+          subType: ComponentSubType.Field,
           schema: {},
           options: {
             required: true
@@ -78,7 +80,7 @@ const data: FormDefinition = {
               type: ComponentType.TextField,
               display: 'text'
             },
-            operator: 'is',
+            operator: OperatorName.Is,
             value: {
               type: ConditionType.Value,
               value: 'hello',
@@ -89,7 +91,7 @@ const data: FormDefinition = {
       }
     }
   ]
-}
+} satisfies FormDefinition
 
 describe('ListItemEdit', () => {
   test('strings are rendered correctly', () => {

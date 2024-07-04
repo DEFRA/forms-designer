@@ -7,15 +7,17 @@ import {
   ComponentContext,
   componentReducer,
   initComponentState,
-  type ComponentState
+  type ComponentContextType
 } from '~/src/reducers/component/componentReducer.jsx'
 
-export function RenderWithContext(props: {
+export interface RenderWithContextProps {
   children?: ReactElement
-  state?: ComponentState
+  state?: ComponentContextType['state']
   data?: DataContextType['data']
   save?: DataContextType['save']
-}) {
+}
+
+export function RenderWithContext(props: RenderWithContextProps) {
   const [state, dispatch] = useReducer(
     componentReducer,
     initComponentState(props.state)

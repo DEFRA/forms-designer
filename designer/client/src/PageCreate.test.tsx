@@ -7,12 +7,12 @@ import { PageCreate } from '~/src/PageCreate.jsx'
 import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
 describe('page create fields text', () => {
-  const data: FormDefinition = {
+  const data = {
     pages: [],
     lists: [],
     sections: [],
     conditions: []
-  }
+  } satisfies FormDefinition
 
   afterEach(cleanup)
 

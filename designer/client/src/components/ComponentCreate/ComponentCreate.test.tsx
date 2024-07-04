@@ -1,4 +1,8 @@
-import { ComponentType, type FormDefinition } from '@defra/forms-model'
+import {
+  ComponentSubType,
+  ComponentType,
+  type FormDefinition
+} from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { act, cleanup, render, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
@@ -8,14 +12,14 @@ import { ComponentCreate } from '~/src/components/ComponentCreate/ComponentCreat
 import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
 describe('ComponentCreate:', () => {
-  const data: FormDefinition = {
+  const data = {
     pages: [{ path: '/1', title: '', controller: '', section: '' }],
     lists: [],
     sections: [],
     conditions: []
-  }
+  } satisfies FormDefinition
 
-  const page = { path: '/1' }
+  const page = data.pages[0]
 
   afterEach(cleanup)
 

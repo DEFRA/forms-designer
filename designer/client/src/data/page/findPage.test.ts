@@ -1,8 +1,12 @@
-import { ComponentType, type FormDefinition } from '@defra/forms-model'
+import {
+  ComponentSubType,
+  ComponentType,
+  type FormDefinition
+} from '@defra/forms-model'
 
 import { findPage } from '~/src/data/page/findPage.js'
 
-const data: FormDefinition = {
+const data = {
   pages: [
     {
       title: 'page1',
@@ -14,6 +18,7 @@ const data: FormDefinition = {
           name: 'name1',
           title: 'Name 1',
           type: ComponentType.TextField,
+          subType: ComponentSubType.Field,
           options: {},
           schema: {}
         },
@@ -21,6 +26,7 @@ const data: FormDefinition = {
           name: 'name2',
           title: 'Name 2',
           type: ComponentType.TextField,
+          subType: ComponentSubType.Field,
           options: {},
           schema: {}
         }
@@ -36,6 +42,7 @@ const data: FormDefinition = {
           name: 'name3',
           title: 'Name 3',
           type: ComponentType.TextField,
+          subType: ComponentSubType.Field,
           options: {},
           schema: {}
         },
@@ -43,6 +50,7 @@ const data: FormDefinition = {
           name: 'name4',
           title: 'Name 4',
           type: ComponentType.TextField,
+          subType: ComponentSubType.Field,
           options: {},
           schema: {}
         }
@@ -52,7 +60,8 @@ const data: FormDefinition = {
   lists: [],
   sections: [],
   conditions: []
-}
+} satisfies FormDefinition
+
 test('findPage should throw if the page does not exist', () => {
   expect(() => findPage(data, '/404')).toThrow()
 })

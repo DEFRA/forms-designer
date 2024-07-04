@@ -1,4 +1,9 @@
-import { ComponentType, type FormDefinition } from '@defra/forms-model'
+import {
+  ComponentType,
+  ComponentSubType,
+  type ComponentDef,
+  type FormDefinition
+} from '@defra/forms-model'
 import { render } from '@testing-library/react'
 import React from 'react'
 
@@ -6,31 +11,32 @@ import { ParaEdit } from '~/src/components/FieldEditors/ParaEdit.jsx'
 import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
 describe('ParaEdit', () => {
-  const data: FormDefinition = {
+  const selectedComponent = {
+    name: 'IDDQl4',
+    title: 'abc',
+    type: ComponentType.Html,
+    subType: ComponentSubType.Content,
+    content: '',
+    options: {},
+    schema: {}
+  } satisfies ComponentDef
+
+  const data = {
     pages: [
       {
         title: 'First page',
         path: '/first-page',
-        components: [
-          {
-            name: 'IDDQl4',
-            title: 'abc',
-            type: ComponentType.Html,
-            content: '',
-            options: {},
-            schema: {}
-          }
-        ]
+        components: [selectedComponent]
       }
     ],
     lists: [],
     sections: [],
     conditions: []
-  }
+  } satisfies FormDefinition
 
   it('Should render with correct screen text', () => {
     const { container } = render(
-      <RenderWithContext data={data}>
+      <RenderWithContext data={data} state={{ selectedComponent }}>
         <ParaEdit />
       </RenderWithContext>
     )

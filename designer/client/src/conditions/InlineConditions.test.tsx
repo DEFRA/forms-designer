@@ -1,4 +1,8 @@
-import { ComponentType, type FormDefinition } from '@defra/forms-model'
+import {
+  ComponentSubType,
+  ComponentType,
+  type FormDefinition
+} from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
 import React from 'react'
@@ -16,7 +20,7 @@ describe('InlineConditions', () => {
       hints: []
     }
 
-    const data: FormDefinition = {
+    const data = {
       pages: [
         {
           title: 'page1',
@@ -31,6 +35,7 @@ describe('InlineConditions', () => {
               name: 'field1',
               title: 'Something',
               type: ComponentType.TextField,
+              subType: ComponentSubType.Field,
               options: {},
               schema: {}
             }
@@ -45,6 +50,7 @@ describe('InlineConditions', () => {
               name: 'field2',
               title: 'Something else',
               type: ComponentType.TextField,
+              subType: ComponentSubType.Field,
               options: {},
               schema: {}
             },
@@ -52,6 +58,7 @@ describe('InlineConditions', () => {
               name: 'field3',
               title: 'beep',
               type: ComponentType.TextField,
+              subType: ComponentSubType.Field,
               options: {},
               schema: {}
             }
@@ -61,7 +68,7 @@ describe('InlineConditions', () => {
       lists: [],
       sections: [],
       conditions: []
-    }
+    } satisfies FormDefinition
 
     render(
       <DataContext.Provider value={{ data, save: jest.fn() }}>

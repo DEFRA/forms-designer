@@ -1,16 +1,19 @@
-import { ComponentType, type ComponentDef } from '@defra/forms-model'
+import { ComponentSubType, ComponentType } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
 import React from 'react'
 
 import { DateFieldEdit } from '~/src/components/FieldEditors/DateFieldEdit.jsx'
-import { RenderWithContext } from '~/test/helpers/renderers.jsx'
+import {
+  RenderWithContext,
+  type RenderWithContextProps
+} from '~/test/helpers/renderers.jsx'
 
 describe('date field edit', () => {
   afterEach(cleanup)
 
   describe('date field edit fields', () => {
-    let state
+    let state: RenderWithContextProps['state']
 
     beforeEach(() => {
       state = {
@@ -19,9 +22,10 @@ describe('date field edit', () => {
           title: 'Date field edit class',
           hint: 'Date field hint',
           type: ComponentType.DatePartsField,
+          subType: ComponentSubType.Field,
           options: {},
           schema: {}
-        } satisfies ComponentDef
+        }
       }
 
       render(

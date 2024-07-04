@@ -1,9 +1,13 @@
-import { ComponentType, type FormDefinition } from '@defra/forms-model'
+import {
+  ComponentSubType,
+  ComponentType,
+  type FormDefinition
+} from '@defra/forms-model'
 
 import { updateComponent } from '~/src/data/component/updateComponent.js'
 
 test('updateComponent throws an error when the target component cannot be found', () => {
-  const data: FormDefinition = {
+  const data = {
     startPage: '/1',
     pages: [
       {
@@ -15,6 +19,7 @@ test('updateComponent throws an error when the target component cannot be found'
             name: 'firstName',
             title: 'First name',
             type: ComponentType.TextField,
+            subType: ComponentSubType.Field,
             options: {},
             schema: {}
           }
@@ -25,7 +30,7 @@ test('updateComponent throws an error when the target component cannot be found'
     lists: [],
     sections: [],
     conditions: []
-  }
+  } satisfies FormDefinition
 
   // @ts-expect-error - Allow invalid component for test
   expect(() => updateComponent(data, '/2', 'doesntExist', {})).toThrow()
@@ -35,7 +40,7 @@ test('updateComponent throws an error when the target component cannot be found'
 })
 
 test('addComponent adds a component to the correct page', () => {
-  const data: FormDefinition = {
+  const data = {
     startPage: '/1',
     pages: [
       {
@@ -47,6 +52,7 @@ test('addComponent adds a component to the correct page', () => {
             name: 'firstName',
             title: 'First name',
             type: ComponentType.TextField,
+            subType: ComponentSubType.Field,
             options: {},
             schema: {}
           }
@@ -60,6 +66,7 @@ test('addComponent adds a component to the correct page', () => {
             name: 'lastName',
             title: 'Surname',
             type: ComponentType.TextField,
+            subType: ComponentSubType.Field,
             options: {},
             schema: {}
           }
@@ -69,13 +76,14 @@ test('addComponent adds a component to the correct page', () => {
     lists: [],
     sections: [],
     conditions: []
-  }
+  } satisfies FormDefinition
 
   expect(
     updateComponent(data, '/1', 'firstName', {
       name: 'fullName',
       title: 'full name',
       type: ComponentType.TextField,
+      subType: ComponentSubType.Field,
       options: {},
       schema: {}
     })
@@ -91,6 +99,7 @@ test('addComponent adds a component to the correct page', () => {
             name: 'fullName',
             title: 'full name',
             type: ComponentType.TextField,
+            subType: ComponentSubType.Field,
             options: {},
             schema: {}
           }
@@ -104,6 +113,7 @@ test('addComponent adds a component to the correct page', () => {
             name: 'lastName',
             title: 'Surname',
             type: ComponentType.TextField,
+            subType: ComponentSubType.Field,
             options: {},
             schema: {}
           }

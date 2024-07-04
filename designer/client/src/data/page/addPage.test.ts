@@ -2,7 +2,7 @@ import { type FormDefinition } from '@defra/forms-model'
 
 import { addPage } from '~/src/data/page/addPage.js'
 
-const data: FormDefinition = {
+const data = {
   pages: [
     {
       title: 'scrambled',
@@ -15,7 +15,7 @@ const data: FormDefinition = {
   lists: [],
   sections: [],
   conditions: []
-}
+} satisfies FormDefinition
 
 test('addPage throws if a page with the same path already exists', () => {
   expect(() =>

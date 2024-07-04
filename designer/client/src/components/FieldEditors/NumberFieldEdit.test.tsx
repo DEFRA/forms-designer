@@ -1,16 +1,19 @@
-import { ComponentType, type ComponentDef } from '@defra/forms-model'
+import { ComponentSubType, ComponentType } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
 import React from 'react'
 
 import { NumberFieldEdit } from '~/src/components/FieldEditors/NumberFieldEdit.jsx'
-import { RenderWithContext } from '~/test/helpers/renderers.jsx'
+import {
+  RenderWithContext,
+  type RenderWithContextProps
+} from '~/test/helpers/renderers.jsx'
 
 describe('Number field edit', () => {
   afterEach(cleanup)
 
   describe('Number field edit fields', () => {
-    let state
+    let state: RenderWithContextProps['state']
 
     beforeEach(() => {
       state = {
@@ -19,9 +22,10 @@ describe('Number field edit', () => {
           title: 'Number field edit class',
           hint: 'Number field hint',
           type: ComponentType.NumberField,
+          subType: ComponentSubType.Field,
           options: {},
           schema: {}
-        } satisfies ComponentDef
+        }
       }
 
       render(

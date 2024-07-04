@@ -16,12 +16,12 @@ import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 describe('SelectConditions', () => {
   afterEach(cleanup)
 
-  const data: FormDefinition = {
+  const data = {
     pages: [],
     lists: [],
     sections: [],
     conditions: []
-  }
+  } satisfies FormDefinition
 
   let props: Props
 
@@ -45,7 +45,7 @@ describe('SelectConditions', () => {
   })
 
   test('SelectConditions renders available conditions', () => {
-    const data: FormDefinition = {
+    const data = {
       pages: [
         {
           path: '/uk-passport',
@@ -54,6 +54,7 @@ describe('SelectConditions', () => {
               name: 'ukPassport',
               title: 'Do you have a UK passport?',
               type: ComponentType.YesNoField,
+              subType: ComponentSubType.Field,
               options: {
                 required: true
               },
@@ -76,9 +77,10 @@ describe('SelectConditions', () => {
           title: "You're not eligible for this service",
           components: [
             {
-              type: ComponentType.Html,
-              title: '',
               name: 'notEligible',
+              title: '',
+              type: ComponentType.Html,
+              subType: ComponentSubType.Content,
               content:
                 '<p class="govuk-body">If you still think you’re eligible please contact the Foreign and Commonwealth Office.</p>',
               options: {},
@@ -140,7 +142,7 @@ describe('SelectConditions', () => {
           value: 'applicantDetails.numberOfApplicants > 3'
         }
       ]
-    }
+    } satisfies FormDefinition
 
     props = {
       conditionsChange: jest.fn(),
