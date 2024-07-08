@@ -182,8 +182,14 @@ const listSchema = Joi.object<List>().keys({
   type: Joi.string().required().valid('string', 'number'),
   items: Joi.when('type', {
     is: 'string',
-    then: Joi.array().items(stringListItemSchema).unique('text').unique('value'),
-    otherwise: Joi.array().items(numberListItemSchema).unique('text').unique('value')
+    then: Joi.array()
+      .items(stringListItemSchema)
+      .unique('text')
+      .unique('value'),
+    otherwise: Joi.array()
+      .items(numberListItemSchema)
+      .unique('text')
+      .unique('value')
   })
 })
 
