@@ -4,8 +4,9 @@ import {
   type ComponentDef,
   type FormDefinition
 } from '@defra/forms-model'
-import { screen } from '@testing-library/dom'
-import { cleanup, render } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/dom'
+import { act, cleanup, render } from '@testing-library/react'
+import { userEvent } from '@testing-library/user-event'
 import React from 'react'
 
 import { ComponentTypeEdit } from '~/src/ComponentTypeEdit.jsx'
@@ -352,10 +353,57 @@ describe('ComponentTypeEdit', () => {
         expect($checkbox).toBeInTheDocument()
         expect($checkbox?.checked).toBe(false)
       })
+
+      it('should render "Hide \'(optional)\' text" checkbox when optional', async () => {
+        const $checkbox1 = screen.getByRole<HTMLInputElement>('checkbox', {
+          name: `Make ${selectedComponent?.title} optional`
+        })
+
+        expect($checkbox1).toBeInTheDocument()
+        expect($checkbox1.checked).toBe(false)
+
+        // Mark field as optional
+        await act(() => userEvent.click($checkbox1))
+        expect($checkbox1.checked).toBe(true)
+
+        const $checkbox2 = await waitFor(() =>
+          screen.getByRole<HTMLInputElement>('checkbox', {
+            name: "Hide '(optional)' text",
+            description:
+              'Tick this box if you do not want the title to indicate that this field is optional'
+          })
+        )
+
+        expect($checkbox2).toBeInTheDocument()
+        expect($checkbox2.checked).toBe(false)
+      })
+
+      it('should not render "Hide \'(optional)\' text" checkbox when required', () => {
+        const $checkbox1 = screen.getByRole<HTMLInputElement>('checkbox', {
+          name: `Make ${selectedComponent?.title} optional`
+        })
+
+        expect($checkbox1).toBeInTheDocument()
+        expect($checkbox1.checked).toBe(false)
+
+        const $checkbox2 = screen.queryByRole('checkbox', {
+          name: "Hide '(optional)' text"
+        })
+
+        expect($checkbox2).not.toBeInTheDocument()
+      })
     } else {
       it("should not render 'Make {{component}} optional' checkbox", () => {
         const $checkbox = screen.queryByRole('checkbox', {
           name: `Make ${selectedComponent?.title} optional`
+        })
+
+        expect($checkbox).not.toBeInTheDocument()
+      })
+
+      it('should not render "Hide \'(optional)\' text" checkbox', () => {
+        const $checkbox = screen.queryByRole('checkbox', {
+          name: "Hide '(optional)' text"
         })
 
         expect($checkbox).not.toBeInTheDocument()
