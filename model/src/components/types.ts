@@ -32,7 +32,6 @@ interface TextFieldBase {
     classes?: string
     allow?: string
     autocomplete?: string
-    exposeToContext?: boolean
   }
   schema: {
     max?: number
@@ -54,7 +53,6 @@ interface NumberFieldBase {
     classes?: string
     prefix?: string
     suffix?: string
-    exposeToContext?: boolean
   }
   schema: {
     min?: number
@@ -78,7 +76,6 @@ interface ListFieldBase {
     optionalText?: boolean
     classes?: string
     bold?: boolean
-    exposeToContext?: boolean
     allowPrePopulation?: boolean
   }
   list: string
@@ -109,7 +106,6 @@ interface DateFieldBase {
     optionalText?: boolean
     maxDaysInFuture?: number
     maxDaysInPast?: number
-    exposeToContext?: boolean
   }
   schema: object
 }

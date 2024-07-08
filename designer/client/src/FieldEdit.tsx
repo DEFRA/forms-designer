@@ -31,7 +31,6 @@ export function FieldEdit({
     hideTitle = false,
     optionalText = false,
     required = true,
-    exposeToContext = false,
     allowPrePopulation = false
   } = options
 
@@ -211,39 +210,6 @@ export function FieldEdit({
             id="field-options-optionalText-hint"
           >
             {i18n('common.hideOptionalTextOption.helpText')}
-          </div>
-        </div>
-      </div>
-      <div
-        className="govuk-checkboxes govuk-form-group"
-        data-test-id="field-options.exposeToContext-wrapper"
-      >
-        <div className="govuk-checkboxes__item">
-          <input
-            className="govuk-checkboxes__input"
-            id="field-options-exposeToContext"
-            aria-describedby="field-options-exposeToContext-hint"
-            name="options.exposeToContext"
-            type="checkbox"
-            checked={exposeToContext}
-            onChange={(e) =>
-              dispatch({
-                type: Options.EDIT_OPTIONS_EXPOSE_TO_CONTEXT,
-                payload: e.target.checked
-              })
-            }
-          />
-          <label
-            className="govuk-label govuk-checkboxes__label"
-            htmlFor="field-options-exposeToContext"
-          >
-            {i18n('common.exposeToContextOption.title')}
-          </label>
-          <div
-            className="govuk-hint govuk-checkboxes__hint"
-            id="field-options-exposeToContext-hint"
-          >
-            {i18n('common.exposeToContextOption.helpText')}
           </div>
         </div>
       </div>
