@@ -20,10 +20,9 @@ export function FieldEdit({ isContentField = false }: Props) {
     return null
   }
 
-  const { name, title, hint, attrs, options } = selectedComponent
+  const { name, title, options } = selectedComponent
   const defaults = getComponentDefaults(selectedComponent)
-
-  const { hideTitle = false, optionalText = false, required = true } = options
+  const isRequired = !('required' in options) || options.required !== false
 
   return (
     <div data-test-id="standard-inputs">
@@ -58,14 +57,13 @@ export function FieldEdit({ isContentField = false }: Props) {
           children: [i18n('common.helpTextField.helpText')]
         }}
         required={false}
-        value={hint}
+        value={'hint' in selectedComponent ? selectedComponent.hint : undefined}
         onChange={(e) => {
           dispatch({
             type: Fields.EDIT_HELP,
             payload: e.target.value
           })
         }}
-        {...attrs}
       />
       {[ComponentType.UkAddressField].includes(selectedComponent.type) && (
         <div className="govuk-checkboxes govuk-form-group">
@@ -76,7 +74,7 @@ export function FieldEdit({ isContentField = false }: Props) {
               aria-describedby="field-options-hideTitle-hint"
               name="options.hideTitle"
               type="checkbox"
-              checked={hideTitle}
+              checked={'hideTitle' in options && !!options.hideTitle}
               onChange={(e) =>
                 dispatch({
                   type: Options.EDIT_OPTIONS_HIDE_TITLE,
@@ -127,7 +125,7 @@ export function FieldEdit({ isContentField = false }: Props) {
           }
           name="name"
           type="text"
-          value={name ?? ''}
+          value={name}
           onChange={(e) => {
             dispatch({
               type: Fields.EDIT_NAME,
@@ -145,7 +143,7 @@ export function FieldEdit({ isContentField = false }: Props) {
               aria-describedby="field-options-required-hint"
               className="govuk-checkboxes__input"
               name="options.required"
-              checked={!required}
+              checked={!isRequired}
               onChange={(e) =>
                 dispatch({
                   type: Options.EDIT_OPTIONS_REQUIRED,
@@ -173,7 +171,7 @@ export function FieldEdit({ isContentField = false }: Props) {
       <div
         className="govuk-checkboxes govuk-form-group"
         data-test-id="field-options.optionalText-wrapper"
-        hidden={required}
+        hidden={isRequired}
       >
         <div className="govuk-checkboxes__item">
           <input
@@ -182,7 +180,7 @@ export function FieldEdit({ isContentField = false }: Props) {
             aria-describedby="field-options-optionalText-hint"
             name="options.optionalText"
             type="checkbox"
-            checked={optionalText}
+            checked={'optionalText' in options && !!options.optionalText}
             onChange={(e) =>
               dispatch({
                 type: Options.EDIT_OPTIONS_HIDE_OPTIONAL,
