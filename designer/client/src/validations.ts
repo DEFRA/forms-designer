@@ -2,7 +2,7 @@ import { type ErrorList } from '~/src/ErrorSummary.jsx'
 import { hasSpaces, isEmpty } from '~/src/helpers.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 
-export function hasValidationErrors(errors = {}) {
+export function hasValidationErrors(errors = {}): errors is object {
   return Object.keys(errors).length > 0
 }
 

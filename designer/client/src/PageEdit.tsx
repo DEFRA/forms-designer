@@ -201,7 +201,7 @@ export class PageEdit extends Component {
 
     return (
       <div data-testid="page-edit">
-        {Object.keys(errors).length > 0 && (
+        {hasValidationErrors(errors) && (
           <ErrorSummary errorList={Object.values(errors)} />
         )}
         <form onSubmit={this.onSubmit} autoComplete="off">
