@@ -277,17 +277,27 @@ export class PageCreate extends Component {
             errorMessage={errors.path}
           />
 
-          <div className="govuk-form-group">
-            <label
-              className="govuk-label govuk-label--s"
-              htmlFor="page-section"
-            >
-              {i18n('addPage.sectionOption.title')}
-            </label>
-            <div className="govuk-hint">
-              {i18n('addPage.sectionOption.helpText')}
-            </div>
-            {sections.length > 0 && (
+          {!sections.length && (
+            <>
+              <h4 className="govuk-heading-s govuk-!-margin-bottom-1">
+                {i18n('addPage.sectionOption.title')}
+              </h4>
+              <p className="govuk-hint govuk-!-margin-top-0">
+                {i18n('addPage.sectionOption.helpText')}
+              </p>
+            </>
+          )}
+          {sections.length > 0 && (
+            <div className="govuk-form-group">
+              <label
+                className="govuk-label govuk-label--s"
+                htmlFor="page-section"
+              >
+                {i18n('addPage.sectionOption.title')}
+              </label>
+              <div className="govuk-hint">
+                {i18n('addPage.sectionOption.helpText')}
+              </div>
               <select
                 className="govuk-select"
                 id="page-section"
@@ -302,8 +312,9 @@ export class PageCreate extends Component {
                   </option>
                 ))}
               </select>
-            )}
-          </div>
+            </div>
+          )}
+
           <p className="govuk-body">
             {section?.name && (
               <a
@@ -323,9 +334,11 @@ export class PageCreate extends Component {
             </a>
           </p>
 
-          <button type="submit" className="govuk-button">
-            Save
-          </button>
+          <div className="govuk-button-group">
+            <button type="submit" className="govuk-button">
+              Save
+            </button>
+          </div>
         </form>
         {isEditingSection && (
           <RenderInPortal>
