@@ -342,8 +342,6 @@
       "title": "Hide section title"
     }
   },
-  "title": "Title",
-  "titleHint": "Enter the name to show for this component",
   "warning": "Warning",
   "wontShow": "This will not show on the page.",
   "yes": "yes"

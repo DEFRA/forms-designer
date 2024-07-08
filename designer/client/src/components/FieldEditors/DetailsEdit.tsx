@@ -28,10 +28,10 @@ export function DetailsEdit({ context = ComponentContext }: Props) {
         name="title"
         label={{
           className: 'govuk-label--s',
-          children: [i18n('Title')]
+          children: [i18n('common.titleField.title')]
         }}
         hint={{
-          children: [i18n('titleHint')]
+          children: [i18n('common.titleField.helpText')]
         }}
         value={selectedComponent.title}
         onChange={(e) =>
