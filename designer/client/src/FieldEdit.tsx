@@ -47,7 +47,7 @@ export function FieldEdit({
         hint={{
           children: [i18n('common.titleField.helpText')]
         }}
-        value={title}
+        value={title ?? defaults?.title}
         onChange={(e) => {
           dispatch({
             type: Fields.EDIT_TITLE,
