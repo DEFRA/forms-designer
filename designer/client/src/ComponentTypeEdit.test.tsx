@@ -45,6 +45,17 @@ describe('ComponentTypeEdit', () => {
 
   describe.each([
     [
+      ComponentType.AutocompleteField,
+      {
+        name: true,
+        hint: true,
+        title: true,
+        hideTitle: false,
+        optional: true,
+        selectList: true
+      }
+    ],
+    [
       ComponentType.CheckboxesField,
       {
         name: true,
@@ -53,6 +64,105 @@ describe('ComponentTypeEdit', () => {
         hideTitle: false,
         optional: true,
         selectList: true
+      }
+    ],
+    [
+      ComponentType.DatePartsField,
+      {
+        name: true,
+        hint: true,
+        title: true,
+        hideTitle: false,
+        optional: true,
+        selectList: false
+      }
+    ],
+    [
+      ComponentType.Details,
+      {
+        name: false,
+        hint: false,
+        title: true,
+        hideTitle: false,
+        optional: false,
+        selectList: false
+      }
+    ],
+    [
+      ComponentType.EmailAddressField,
+      {
+        name: true,
+        hint: true,
+        title: true,
+        hideTitle: false,
+        optional: true,
+        selectList: false
+      }
+    ],
+    [
+      ComponentType.Html,
+      {
+        name: false,
+        hint: false,
+        title: false,
+        hideTitle: false,
+        optional: false,
+        selectList: false
+      }
+    ],
+    [
+      ComponentType.InsetText,
+      {
+        name: false,
+        hint: false,
+        title: false,
+        hideTitle: false,
+        optional: false,
+        selectList: false
+      }
+    ],
+    [
+      ComponentType.List,
+      {
+        name: true,
+        hint: true,
+        title: true,
+        hideTitle: false,
+        optional: false,
+        selectList: true
+      }
+    ],
+    [
+      ComponentType.MonthYearField,
+      {
+        name: true,
+        hint: true,
+        title: true,
+        hideTitle: false,
+        optional: true,
+        selectList: false
+      }
+    ],
+    [
+      ComponentType.MultilineTextField,
+      {
+        name: true,
+        hint: true,
+        title: true,
+        hideTitle: false,
+        optional: true,
+        selectList: false
+      }
+    ],
+    [
+      ComponentType.NumberField,
+      {
+        name: true,
+        hint: true,
+        title: true,
+        hideTitle: false,
+        optional: true,
+        selectList: false
       }
     ],
     [
@@ -75,6 +185,39 @@ describe('ComponentTypeEdit', () => {
         hideTitle: false,
         optional: true,
         selectList: true
+      }
+    ],
+    [
+      ComponentType.TelephoneNumberField,
+      {
+        name: true,
+        hint: true,
+        title: true,
+        hideTitle: false,
+        optional: true,
+        selectList: false
+      }
+    ],
+    [
+      ComponentType.TextField,
+      {
+        name: true,
+        hint: true,
+        title: true,
+        hideTitle: false,
+        optional: true,
+        selectList: false
+      }
+    ],
+    [
+      ComponentType.TimeField,
+      {
+        name: true,
+        hint: true,
+        title: true,
+        hideTitle: false,
+        optional: true,
+        selectList: false
       }
     ],
     [
