@@ -129,7 +129,7 @@ export const ComponentTypes: (ComponentDef & {
     title: 'Email address field',
     type: ComponentType.EmailAddressField,
     subType: ComponentSubType.Field,
-    hint: '',
+    hint: 'For example, ‘name@example.com’',
     options: {},
     schema: {}
   },
