@@ -1,3 +1,4 @@
+import { type Section } from '@defra/forms-model'
 import React, { Component, type ContextType } from 'react'
 
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
@@ -5,13 +6,20 @@ import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.j
 import { DataContext } from '~/src/context/DataContext.js'
 import { SectionEdit } from '~/src/section/SectionEdit.jsx'
 
-export class SectionsEdit extends Component {
+type Props = Record<string, never>
+
+interface State {
+  isEditingSection?: boolean
+  section?: Section
+}
+
+export class SectionsEdit extends Component<Props, State> {
   declare context: ContextType<typeof DataContext>
   static contextType = DataContext
 
-  state = {}
+  state: State = {}
 
-  onClickSection = (e, section) => {
+  onClickSection = (e, section?: Section) => {
     e.preventDefault()
     this.setState({
       section,
@@ -19,17 +27,16 @@ export class SectionsEdit extends Component {
     })
   }
 
-  // TODO:- This is borrowed from PageEdit.jsx. Needs refactor. (hooks hooks hooks)
-  closeFlyout = (sectionName) => {
-    const propSection = this.state.section ?? this.props.page?.section ?? {}
+  closeFlyout = (sectionName?: string) => {
+    const { section } = this.state
 
     this.setState({
       isEditingSection: false,
-      section: sectionName ? this.findSectionWithName(sectionName) : propSection
+      section: sectionName ? this.findSectionWithName(sectionName) : section
     })
   }
 
-  findSectionWithName(name) {
+  findSectionWithName(name?: string) {
     const { data } = this.context
     const { sections } = data
     return sections.find((section) => section.name === name)
@@ -73,9 +80,9 @@ export class SectionsEdit extends Component {
                 section?.name ? `Editing ${section.name}` : 'Add a new section'
               }
               show={isEditingSection}
-              onHide={this.closeFlyout}
+              onHide={() => this.closeFlyout()}
             >
-              <SectionEdit section={section} closeFlyout={this.closeFlyout} />
+              <SectionEdit section={section} onEdit={this.closeFlyout} />
             </Flyout>
           </RenderInPortal>
         )}

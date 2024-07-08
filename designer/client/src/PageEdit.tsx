@@ -322,7 +322,7 @@ export class PageEdit extends Component {
             >
               <SectionEdit
                 section={isNewSection ? {} : this.findSectionWithName(section)}
-                closeFlyout={this.closeFlyout}
+                onEdit={this.closeFlyout}
               />
             </Flyout>
           </RenderInPortal>

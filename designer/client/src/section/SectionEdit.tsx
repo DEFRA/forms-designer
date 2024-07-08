@@ -1,5 +1,11 @@
+import { type Section } from '@defra/forms-model'
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
-import React, { createRef, Component, type ContextType } from 'react'
+import React, {
+  Component,
+  type ContextType,
+  type FormEvent,
+  type MouseEvent
+} from 'react'
 
 import { type ErrorList, ErrorSummary } from '~/src/ErrorSummary.jsx'
 import { logger } from '~/src/common/helpers/logging/logger.js'
@@ -13,37 +19,50 @@ import {
   hasValidationErrors
 } from '~/src/validations.js'
 
-export class SectionEdit extends Component {
+interface Props {
+  section?: Section
+  onEdit?: (sectionName?: string) => void
+}
+
+interface State {
+  name: string
+  title: string
+  hideTitle: boolean
+  isNewSection: boolean
+  errors: Partial<ErrorList<'title' | 'name'>>
+}
+
+export class SectionEdit extends Component<Props, State> {
   declare context: ContextType<typeof DataContext>
   static contextType = DataContext
 
-  constructor(props, context) {
+  constructor(props: Props, context: typeof DataContext) {
     super(props, context)
 
-    this.closeFlyout = props.closeFlyout
     const { section } = props
-    this.isNewSection = !section?.name
-    this.nameRef = createRef()
+
     this.state = {
       name: section?.name ?? randomId(),
       title: section?.title ?? '',
       hideTitle: section?.hideTitle ?? false,
+      isNewSection: !section?.name,
       errors: {}
     }
   }
 
-  async onSubmit(e) {
+  onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const validationErrors = this.validate()
-
-    if (hasValidationErrors(validationErrors)) return
 
     const { data, save } = this.context
-    const { section } = this.props
-    const { name, title, hideTitle } = this.state
+    const { onEdit, section } = this.props
+    const { name, title, hideTitle, isNewSection } = this.state
+
+    const validationErrors = this.validate(name, title)
+    if (hasValidationErrors(validationErrors)) return
+
     let updated = { ...data }
 
-    if (this.isNewSection) {
+    if (isNewSection) {
       updated = addSection(data, { name, title: title.trim(), hideTitle })
     } else {
       const previousName = section?.name
@@ -71,14 +90,13 @@ export class SectionEdit extends Component {
 
     try {
       await save(updated)
-      this.closeFlyout(name)
+      onEdit?.(name)
     } catch (error) {
       logger.error(error, 'SectionEdit')
     }
   }
 
-  validate = (): ErrorList => {
-    const { name, title } = this.state
+  validate = (name?: string, title?: string): State['errors'] => {
     const titleErrors = validateTitle(
       'title',
       'section-title',
@@ -95,7 +113,7 @@ export class SectionEdit extends Component {
       i18n
     )
 
-    const errors = {
+    const errors: State['errors'] = {
       ...titleErrors,
       ...nameErrors
     }
@@ -104,7 +122,7 @@ export class SectionEdit extends Component {
     return errors
   }
 
-  onClickDelete = async (e) => {
+  onClickDelete = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
 
     if (!window.confirm('Confirm delete')) {
@@ -112,7 +130,7 @@ export class SectionEdit extends Component {
     }
 
     const { data, save } = this.context
-    const { section } = this.props
+    const { onEdit, section } = this.props
 
     if (!section) {
       return
@@ -132,21 +150,21 @@ export class SectionEdit extends Component {
 
     try {
       await save(copy)
-      this.closeFlyout('')
+      onEdit?.()
     } catch (error) {
       logger.error(error, 'SectionEdit')
     }
   }
 
   render() {
-    const { title, name, hideTitle, errors } = this.state
+    const { title, name, hideTitle, errors, isNewSection } = this.state
 
     return (
       <>
-        {Object.keys(errors).length > 0 && (
+        {hasValidationErrors(errors) && (
           <ErrorSummary errorList={Object.values(errors)} />
         )}
-        <form onSubmit={(e) => this.onSubmit(e)} autoComplete="off">
+        <form onSubmit={this.onSubmit} autoComplete="off">
           <Input
             id="section-title"
             name="title"
@@ -201,7 +219,7 @@ export class SectionEdit extends Component {
             <button className="govuk-button" type="submit">
               Save
             </button>
-            {!this.isNewSection && (
+            {!isNewSection && (
               <button
                 className="govuk-button govuk-button--warning"
                 type="button"
