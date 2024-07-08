@@ -1,4 +1,3 @@
-import { hasListField } from '@defra/forms-model'
 import React, { useContext, useLayoutEffect } from 'react'
 
 import { ComponentTypeEdit } from '~/src/ComponentTypeEdit.jsx'
@@ -16,8 +15,7 @@ export function ComponentEdit(props) {
     selectedComponent = {},
     initialName,
     errors = {},
-    hasValidated,
-    selectedListName
+    hasValidated
   } = state
   const { page, toggleShowEditor } = props
   const hasErrors = hasValidationErrors(errors)
@@ -33,18 +31,6 @@ export function ComponentEdit(props) {
 
     if (hasErrors) {
       return
-    }
-
-    if (hasListField(selectedComponent)) {
-      if (selectedListName !== 'static') {
-        componentToSubmit.values = {
-          type: 'listRef',
-          list: selectedListName
-        }
-        delete componentToSubmit.items
-      } else {
-        componentToSubmit.values.valueType = 'static'
-      }
     }
 
     const updatedData = updateComponent(
