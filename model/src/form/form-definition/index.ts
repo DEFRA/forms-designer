@@ -153,9 +153,8 @@ const specialPagesSchema = Joi.object<SpecialPages>().keys({
   confirmationPage: confirmationPageSchema.optional()
 })
 
-const listItemSchema = Joi.object<Item>().keys({
+const baseListItemSchema = Joi.object<Item>().keys({
   text: localisedString,
-  value: Joi.alternatives().try(Joi.number(), Joi.string()),
   description: localisedString.optional(),
   conditional: Joi.object<Item['conditional']>()
     .keys({
@@ -169,11 +168,29 @@ const listItemSchema = Joi.object<Item>().keys({
   condition: Joi.string().allow(null, '').optional()
 })
 
+const stringListItemSchema = baseListItemSchema.append({
+  value: Joi.string().required()
+})
+
+const numberListItemSchema = baseListItemSchema.append({
+  value: Joi.number().required()
+})
+
 const listSchema = Joi.object<List>().keys({
   name: Joi.string().required(),
   title: localisedString,
   type: Joi.string().required().valid('string', 'number'),
-  items: Joi.array<Item>().items(listItemSchema)
+  items: Joi.when('type', {
+    is: 'string',
+    then: Joi.array()
+      .items(stringListItemSchema)
+      .unique('text')
+      .unique('value'),
+    otherwise: Joi.array()
+      .items(numberListItemSchema)
+      .unique('text')
+      .unique('value')
+  })
 })
 
 const feedbackSchema = Joi.object<FormDefinition['feedback']>().keys({
