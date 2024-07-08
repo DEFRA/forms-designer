@@ -52,19 +52,21 @@ export class SectionEdit extends Component {
         (section) => section.name === previousName
       )
 
-      if (nameChanged) {
-        copySection.name = name
-        /**
-         * @code removing any references to the section
-         */
-        copy.pages.forEach((p) => {
-          if (p.section === previousName) {
-            p.section = name
-          }
-        })
+      if (copySection) {
+        copySection.title = title
+        copySection.hideTitle = hideTitle
+
+        if (nameChanged) {
+          copySection.name = name
+
+          // Update any references to the section
+          updated.pages.forEach((p) => {
+            if (p.section === previousName) {
+              p.section = name
+            }
+          })
+        }
       }
-      copySection.title = title
-      copySection.hideTitle = hideTitle
     }
 
     try {
@@ -112,8 +114,12 @@ export class SectionEdit extends Component {
     const { data, save } = this.context
     const { section } = this.props
 
+    if (!section) {
+      return
+    }
+
     const copy = { ...data }
-    const previousName = section?.name
+    const previousName = section.name
 
     copy.sections.splice(copy.sections.indexOf(section), 1)
 
