@@ -203,12 +203,13 @@ export class PageCreate extends Component {
             <label className="govuk-label govuk-label--s" htmlFor="page-type">
               {i18n('addPage.pageTypeOption.title')}
             </label>
-            <div className="govuk-hint">
+            <div className="govuk-hint" id="page-type-hint">
               {i18n('addPage.pageTypeOption.helpText')}
             </div>
             <select
               className="govuk-select"
               id="page-type"
+              aria-describedby="page-type-hint"
               name="page-type"
               value={pageType}
               onChange={this.onChangePageType}
@@ -223,12 +224,13 @@ export class PageCreate extends Component {
             <label className="govuk-label govuk-label--s" htmlFor="link-from">
               {i18n('addPage.linkFromOption.title')}
             </label>
-            <div className="govuk-hint">
+            <div className="govuk-hint" id="link-from-hint">
               {i18n('addPage.linkFromOption.helpText')}
             </div>
             <select
               className="govuk-select"
               id="link-from"
+              aria-describedby="link-from-hint"
               name="from"
               value={linkFrom}
               onChange={this.onChangeLinkFrom}
@@ -295,12 +297,13 @@ export class PageCreate extends Component {
               >
                 {i18n('addPage.sectionOption.title')}
               </label>
-              <div className="govuk-hint">
+              <div className="govuk-hint" id="page-section-hint">
                 {i18n('addPage.sectionOption.helpText')}
               </div>
               <select
                 className="govuk-select"
                 id="page-section"
+                aria-describedby="page-section-hint"
                 name="section"
                 value={section?.name}
                 onChange={this.onChangeSection}

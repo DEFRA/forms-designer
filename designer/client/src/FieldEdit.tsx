@@ -83,6 +83,7 @@ export function FieldEdit({
             <input
               className="govuk-checkboxes__input"
               id="field-options-hideTitle"
+              aria-describedby="field-options-hideTitle-hint"
               name="options.hideTitle"
               type="checkbox"
               checked={hideTitle}
@@ -99,7 +100,10 @@ export function FieldEdit({
             >
               {i18n('common.hideTitleOption.title')}
             </label>
-            <div className="govuk-hint govuk-checkboxes__hint">
+            <div
+              className="govuk-hint govuk-checkboxes__hint"
+              id="field-options-hideTitle-hint"
+            >
               {i18n('common.hideTitleOption.helpText')}
             </div>
           </div>
@@ -114,15 +118,23 @@ export function FieldEdit({
         <label className="govuk-label govuk-label--s" htmlFor="field-name">
           {i18n('common.componentNameField.title')}
         </label>
+        <div className="govuk-hint" id="field-name-hint">
+          {i18n('name.hint')}
+        </div>
         {errors.name && (
-          <ErrorMessage>{i18n('name.errors.whitespace')}</ErrorMessage>
+          <ErrorMessage id="field-name-error">
+            {i18n('name.errors.whitespace')}
+          </ErrorMessage>
         )}
-        <div className="govuk-hint">{i18n('name.hint')}</div>
         <input
-          className={`govuk-input govuk-input--width-20 ${
-            errors.name ? 'govuk-input--error' : ''
-          }`}
+          className={classNames({
+            'govuk-input govuk-input--width-20': true,
+            'govuk-input--error': errors.name
+          })}
           id="field-name"
+          aria-describedby={
+            'field-name-hint' + (errors.name ? 'field-name-error' : '')
+          }
           name="name"
           type="text"
           value={name ?? ''}
@@ -140,6 +152,7 @@ export function FieldEdit({
             <input
               type="checkbox"
               id="field-options-required"
+              aria-describedby="field-options-required-hint"
               className="govuk-checkboxes__input"
               name="options.required"
               checked={!required}
@@ -158,7 +171,10 @@ export function FieldEdit({
                 component: defaults?.title ?? ''
               })}
             </label>
-            <div className="govuk-hint govuk-checkboxes__hint">
+            <div
+              className="govuk-hint govuk-checkboxes__hint"
+              id="field-options-required-hint"
+            >
               {i18n('common.componentOptionalOption.helpText')}
             </div>
           </div>
@@ -173,6 +189,7 @@ export function FieldEdit({
           <input
             className="govuk-checkboxes__input"
             id="field-options-optionalText"
+            aria-describedby="field-options-optionalText-hint"
             name="options.optionalText"
             type="checkbox"
             checked={optionalText}
@@ -189,7 +206,10 @@ export function FieldEdit({
           >
             {i18n('common.hideOptionalTextOption.title')}
           </label>
-          <div className="govuk-hint govuk-checkboxes__hint">
+          <div
+            className="govuk-hint govuk-checkboxes__hint"
+            id="field-options-optionalText-hint"
+          >
             {i18n('common.hideOptionalTextOption.helpText')}
           </div>
         </div>
@@ -202,6 +222,7 @@ export function FieldEdit({
           <input
             className="govuk-checkboxes__input"
             id="field-options-exposeToContext"
+            aria-describedby="field-options-exposeToContext-hint"
             name="options.exposeToContext"
             type="checkbox"
             checked={exposeToContext}
@@ -218,7 +239,10 @@ export function FieldEdit({
           >
             {i18n('common.exposeToContextOption.title')}
           </label>
-          <div className="govuk-hint govuk-checkboxes__hint">
+          <div
+            className="govuk-hint govuk-checkboxes__hint"
+            id="field-options-exposeToContext-hint"
+          >
             {i18n('common.exposeToContextOption.helpText')}
           </div>
         </div>
@@ -229,6 +253,7 @@ export function FieldEdit({
             <input
               type="checkbox"
               id="field-options-allow-pre-population"
+              aria-describedby="field-options-allow-pre-population-hint"
               className={`govuk-checkboxes__input`}
               name="options.allowPrePopulation"
               checked={allowPrePopulation}
@@ -247,7 +272,10 @@ export function FieldEdit({
                 component: defaults?.title ?? ''
               })}
             </label>
-            <div className="govuk-hint govuk-checkboxes__hint">
+            <div
+              className="govuk-hint govuk-checkboxes__hint"
+              id="field-options-allow-pre-population-hint"
+            >
               {i18n('common.allowPrePopulationOption.helpText')}
             </div>
           </div>

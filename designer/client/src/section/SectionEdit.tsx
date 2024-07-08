@@ -199,6 +199,7 @@ export class SectionEdit extends Component<Props, State> {
               <input
                 className="govuk-checkboxes__input"
                 id="section-hideTitle"
+                aria-describedby="section-hideTitle-hint"
                 name="hideTitle"
                 type="checkbox"
                 checked={hideTitle}
@@ -210,7 +211,10 @@ export class SectionEdit extends Component<Props, State> {
               >
                 {i18n('sectionEdit.hideTitleField.title')}
               </label>
-              <div className="govuk-hint govuk-checkboxes__hint">
+              <div
+                className="govuk-hint govuk-checkboxes__hint"
+                id="section-hideTitle-hint"
+              >
                 {i18n('sectionEdit.hideTitleField.helpText')}
               </div>
             </div>

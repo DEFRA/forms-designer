@@ -269,15 +269,22 @@ export class InlineConditions extends Component<Props, State> {
               <label className="govuk-label govuk-label--s" htmlFor="cond-name">
                 {i18n('conditions.displayName')}
               </label>
-              <div className="govuk-hint">
+              <div className="govuk-hint" id="cond-name-hint">
                 {i18n('conditions.displayNameHint')}
               </div>
-              {nameError && <ErrorMessage>{nameError.children}</ErrorMessage>}
+              {nameError && (
+                <ErrorMessage id="cond-name-error">
+                  {nameError.children}
+                </ErrorMessage>
+              )}
               <input
                 className={classNames('govuk-input govuk-input--width-20', {
                   'govuk-input--error': nameError
                 })}
                 id="cond-name"
+                aria-describedby={
+                  'cond-name-hint' + (nameError ? 'cond-name-error' : '')
+                }
                 name="cond-name"
                 type="text"
                 value={conditions.name ?? ''}

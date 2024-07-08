@@ -209,10 +209,13 @@ export class PageEdit extends Component {
             <label className="govuk-label govuk-label--s" htmlFor="page-type">
               {i18n('page.type')}
             </label>
-            <div className="govuk-hint">{i18n('page.typeHint')}</div>
+            <div className="govuk-hint" id="page-type-hint">
+              {i18n('page.typeHint')}
+            </div>
             <select
               className="govuk-select"
               id="page-type"
+              aria-describedby="page-type-hint"
               name="page-type"
               value={controller}
               onChange={(e) => this.setState({ controller: e.target.value })}
@@ -269,10 +272,13 @@ export class PageEdit extends Component {
               >
                 {i18n('page.section')}
               </label>
-              <div className="govuk-hint">{i18n('page.sectionHint')}</div>
+              <div className="govuk-hint" id="page-section-hint">
+                {i18n('page.sectionHint')}
+              </div>
               <select
                 className="govuk-select"
                 id="page-section"
+                aria-describedby="page-section-hint"
                 name="section"
                 value={section}
                 onChange={this.onChangeSection}

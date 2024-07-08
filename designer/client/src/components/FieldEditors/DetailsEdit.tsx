@@ -52,13 +52,20 @@ export function DetailsEdit({ context = ComponentContext }: Props) {
         <label className="govuk-label govuk-label--s" htmlFor="field-content">
           Content
         </label>
-        <div className="govuk-hint">{i18n('fieldEdit.details.hint')}</div>
+        <div className="govuk-hint" id="field-content-hint">
+          {i18n('fieldEdit.details.hint')}
+        </div>
         {errors.content && (
-          <ErrorMessage>{errors.content.children}</ErrorMessage>
+          <ErrorMessage id="field-content-error">
+            {errors.content.children}
+          </ErrorMessage>
         )}
         <textarea
           className="govuk-textarea"
           id="field-content"
+          aria-describedby={
+            'field-content-hint' + (errors.name ? 'field-content-error' : '')
+          }
           name="content"
           defaultValue={
             'content' in selectedComponent

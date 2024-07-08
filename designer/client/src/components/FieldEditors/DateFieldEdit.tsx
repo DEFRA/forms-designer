@@ -37,13 +37,14 @@ export function DateFieldEdit({ context = ComponentContext }: Props) {
           >
             {i18n('dateFieldEditComponent.maxDaysInPastField.title')}
           </label>
-          <div className="govuk-hint">
+          <div className="govuk-hint" id="field-options-maxDaysInPast-hint">
             {i18n('dateFieldEditComponent.maxDaysInPastField.helpText')}
           </div>
           <input
             className="govuk-input govuk-input--width-3"
             data-cast="number"
             id="field-options-maxDaysInPast"
+            aria-describedby="field-options-maxDaysInPast-hint"
             name="options.maxDaysInPast"
             value={
               'maxDaysInPast' in options ? options.maxDaysInPast : undefined
@@ -65,13 +66,14 @@ export function DateFieldEdit({ context = ComponentContext }: Props) {
           >
             {i18n('dateFieldEditComponent.maxDaysInFutureField.title')}
           </label>
-          <div className="govuk-hint">
+          <div className="govuk-hint" id="field-options-maxDaysInFuture-hint">
             {i18n('dateFieldEditComponent.maxDaysInFutureField.helpText')}
           </div>
           <input
             className="govuk-input govuk-input--width-3"
             data-cast="number"
             id="field-options-maxDaysInFuture"
+            aria-describedby="field-options-maxDaysInFuture-hint"
             name="options.maxDaysInFuture"
             value={
               'maxDaysInFuture' in options ? options.maxDaysInFuture : undefined
