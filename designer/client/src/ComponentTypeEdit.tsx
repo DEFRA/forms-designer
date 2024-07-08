@@ -58,10 +58,7 @@ export const ComponentTypeEdit: FunctionComponent<Props> = (props) => {
     <>
       {(type === ComponentType.List ||
         subType !== ComponentSubType.Content) && (
-        <FieldEdit
-          isContentField={subType === ComponentSubType.Content}
-          isListField={subType === ComponentSubType.ListField}
-        />
+        <FieldEdit isContentField={subType === ComponentSubType.Content} />
       )}
       {TagName && <TagName>{children}</TagName>}
     </>

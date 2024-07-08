@@ -10,13 +10,9 @@ import { Fields, Options } from '~/src/reducers/component/types.js'
 
 interface Props {
   isContentField?: boolean
-  isListField?: boolean
 }
 
-export function FieldEdit({
-  isContentField = false,
-  isListField = false
-}: Props) {
+export function FieldEdit({ isContentField = false }: Props) {
   const { state, dispatch } = useContext(ComponentContext)
   const { selectedComponent, errors = {} } = state
 
@@ -27,12 +23,7 @@ export function FieldEdit({
   const { name, title, hint, attrs, options } = selectedComponent
   const defaults = getComponentDefaults(selectedComponent)
 
-  const {
-    hideTitle = false,
-    optionalText = false,
-    required = true,
-    allowPrePopulation = false
-  } = options
+  const { hideTitle = false, optionalText = false, required = true } = options
 
   return (
     <div data-test-id="standard-inputs">
@@ -213,40 +204,6 @@ export function FieldEdit({
           </div>
         </div>
       </div>
-      {isListField && (
-        <div className="govuk-checkboxes govuk-form-group">
-          <div className="govuk-checkboxes__item">
-            <input
-              type="checkbox"
-              id="field-options-allow-pre-population"
-              aria-describedby="field-options-allow-pre-population-hint"
-              className={`govuk-checkboxes__input`}
-              name="options.allowPrePopulation"
-              checked={allowPrePopulation}
-              onChange={(e) =>
-                dispatch({
-                  type: Options.EDIT_OPTIONS_ALLOW_PRE_POPULATION,
-                  payload: e.target.checked
-                })
-              }
-            />
-            <label
-              className="govuk-label govuk-checkboxes__label"
-              htmlFor="field-options-allow-pre-population"
-            >
-              {i18n('common.allowPrePopulationOption.title', {
-                component: defaults?.title ?? ''
-              })}
-            </label>
-            <div
-              className="govuk-hint govuk-checkboxes__hint"
-              id="field-options-allow-pre-population-hint"
-            >
-              {i18n('common.allowPrePopulationOption.helpText')}
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }

@@ -76,7 +76,6 @@ interface ListFieldBase {
     optionalText?: boolean
     classes?: string
     bold?: boolean
-    allowPrePopulation?: boolean
   }
   list: string
   schema: object
