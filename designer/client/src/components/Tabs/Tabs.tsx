@@ -20,10 +20,11 @@ interface Props extends HTMLAttributes<HTMLParagraphElement> {
     } & HTMLAttributes<HTMLDivElement>
   } & HTMLAttributes<HTMLAnchorElement>)[]
   title?: string
+  onInit?: () => void
 }
 
 export const Tabs: FunctionComponent<Props> = (props) => {
-  let { className, id, idPrefix, items, title, ...attributes } = props
+  let { className, id, idPrefix, items, title, onInit, ...attributes } = props
 
   idPrefix ??= ''
   title ??= 'Contents'
@@ -33,6 +34,7 @@ export const Tabs: FunctionComponent<Props> = (props) => {
   useEffect(() => {
     if (tabsRef.current) {
       new TabsJS(tabsRef.current)
+      onInit?.()
     }
   }, [tabsRef])
 

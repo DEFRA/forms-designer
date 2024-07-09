@@ -1,4 +1,5 @@
 import { hasListField } from '@defra/forms-model'
+import { highlightAll } from 'prismjs'
 import React, { useContext } from 'react'
 
 import { DeclarationEdit } from '~/src/DeclarationEdit.jsx'
@@ -203,7 +204,11 @@ export function Menu({ slug }: Props) {
       {summary.isVisible && (
         <RenderInPortal>
           <Flyout title="Summary" width="large" onHide={summary.hide}>
-            <Tabs title="Summary" items={summaryTabs}></Tabs>
+            <Tabs
+              title="Summary"
+              items={summaryTabs}
+              onInit={highlightAll}
+            ></Tabs>
           </Flyout>
         </RenderInPortal>
       )}

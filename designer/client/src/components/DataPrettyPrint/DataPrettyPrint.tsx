@@ -4,8 +4,8 @@ export const DataPrettyPrint: FunctionComponent<
   HTMLAttributes<HTMLPreElement>
 > = ({ children, ...attr }) => {
   return (
-    <pre {...attr}>
-      <code>{JSON.stringify(children, undefined, 2)}</code>
+    <pre tabIndex={-1} {...attr}>
+      <code tabIndex={0}>{JSON.stringify(children, undefined, 2)}</code>
     </pre>
   )
 }

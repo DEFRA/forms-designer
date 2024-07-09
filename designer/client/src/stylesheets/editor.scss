@@ -3,9 +3,16 @@ $govuk-assets-path: "/assets/";
 @import "govuk-frontend/dist/govuk/base";
 @import "prismjs/themes/prism.min.css";
 
+@import "variables/all";
+@import "helpers/all";
+
 @import "../components/ComponentCreate/ComponentCreate.scss";
 @import "../components/Flyout/Flyout.scss";
 @import "../components/Visualisation/visualisation.scss";
+
+$app-code-font: ui-monospace, menlo, "Cascadia Mono", "Segoe UI Mono", consolas, "Liberation Mono", monospace;
+$app-code-color: #d13118;
+$app-light-grey: #f8f8f8;
 
 %app-button-link {
   @include govuk-link-common;
@@ -42,6 +49,44 @@ button.govuk-link {
 
   .govuk-form-group & {
     display: block;
+  }
+}
+
+code
+pre,
+code[class],
+pre[class] {
+  @include govuk-typography-common($font-family: $app-code-font);
+  @include govuk-font-size($size: 16, $line-height: 1.5);
+}
+
+pre[class] {
+  padding: 0;
+  margin: 0;
+  background: none;
+  overflow: visible;
+}
+
+pre code {
+  display: block;
+  padding: govuk-spacing(4);
+  overflow-x: auto;
+  background-color: $app-light-grey;
+  border: $govuk-focus-width solid transparent;
+
+  &:focus {
+    border: $govuk-focus-width solid $govuk-input-border-colour;
+    outline: $govuk-focus-width solid $govuk-focus-colour;
+  }
+}
+
+p code {
+  padding: 1px 3px;
+  color: $app-code-color;
+  background-color: $app-light-grey;
+  @include govuk-font-size($size: 16);
+  @include govuk-media-query($from: tablet) {
+    padding: 2px 4px;
   }
 }
 

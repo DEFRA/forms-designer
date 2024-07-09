@@ -1,7 +1,6 @@
 import { highlight, languages } from 'prismjs'
 import React, { Component, type TextareaHTMLAttributes } from 'react'
 import SimpleEditor from 'react-simple-code-editor'
-import 'prismjs/components/prism-markup.js'
 
 type Props = {
   value?: string
