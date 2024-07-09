@@ -1,6 +1,5 @@
 import {
   OperatorName,
-  ComponentSubType,
   ComponentType,
   ConditionType,
   type FormDefinition
@@ -23,7 +22,6 @@ const data = {
           name: 'ukPassport',
           title: 'Do you have a UK passport?',
           type: ComponentType.YesNoField,
-          subType: ComponentSubType.Field,
           options: {
             required: true
           },

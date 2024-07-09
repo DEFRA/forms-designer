@@ -1,4 +1,4 @@
-import { ComponentSubType, ComponentType } from '@defra/forms-model'
+import { ComponentType } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
 import React from 'react'
@@ -21,7 +21,6 @@ describe('CssClasses', () => {
           name: 'TestCssClass',
           title: 'Test CSS class',
           type: ComponentType.TextField,
-          subType: ComponentSubType.Field,
           options: {},
           schema: {}
         }

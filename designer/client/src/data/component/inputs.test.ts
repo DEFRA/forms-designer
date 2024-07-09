@@ -1,8 +1,4 @@
-import {
-  ComponentSubType,
-  ComponentType,
-  type FormDefinition
-} from '@defra/forms-model'
+import { ComponentType, type FormDefinition } from '@defra/forms-model'
 
 import { allInputs } from '~/src/data/component/inputs.js'
 import { type Input } from '~/src/data/types.js'
@@ -19,7 +15,6 @@ test('should return all inputs from the page model', () => {
             name: 'name1',
             title: 'Radios',
             type: ComponentType.RadiosField,
-            subType: ComponentSubType.ListField,
             list: 'radios',
             options: {},
             schema: {}
@@ -28,7 +23,6 @@ test('should return all inputs from the page model', () => {
             name: 'name2',
             title: 'Radios',
             type: ComponentType.RadiosField,
-            subType: ComponentSubType.ListField,
             list: 'radios',
             options: {},
             schema: {}
@@ -44,7 +38,6 @@ test('should return all inputs from the page model', () => {
             name: 'name3',
             title: 'Radios',
             type: ComponentType.RadiosField,
-            subType: ComponentSubType.ListField,
             list: 'radios',
             options: {},
             schema: {}
@@ -53,7 +46,6 @@ test('should return all inputs from the page model', () => {
             name: 'name4',
             title: 'Radios',
             type: ComponentType.RadiosField,
-            subType: ComponentSubType.ListField,
             list: 'radios',
             options: {},
             schema: {}

@@ -1,4 +1,4 @@
-import { ComponentSubType, ComponentType } from '~/src/components/enums.js'
+import { ComponentType } from '~/src/components/enums.js'
 import { type FormDefinition } from '~/src/form/form-definition/types.js'
 import { updateStartPage } from '~/src/form/utils/update-start-page.js'
 
@@ -18,7 +18,6 @@ describe('updateStartPage', () => {
               name: 'ukPassport',
               title: 'Do you have a UK passport?',
               type: ComponentType.YesNoField,
-              subType: ComponentSubType.Field,
               options: {
                 required: true
               },

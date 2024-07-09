@@ -1,8 +1,4 @@
-import {
-  ComponentSubType,
-  ComponentType,
-  type FormDefinition
-} from '@defra/forms-model'
+import { ComponentType, type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
 import React from 'react'
@@ -55,7 +51,6 @@ describe('ComponentTypeEdit', () => {
           title: 'Test checkboxes',
           list: 'myList',
           type: ComponentType.CheckboxesField,
-          subType: ComponentSubType.ListField,
           options: {},
           schema: {}
         }
@@ -146,7 +141,6 @@ describe('ComponentTypeEdit', () => {
           title: 'Test radios',
           list: 'myList',
           type: ComponentType.RadiosField,
-          subType: ComponentSubType.ListField,
           options: {},
           schema: {}
         }
@@ -237,7 +231,6 @@ describe('ComponentTypeEdit', () => {
           title: 'Test select',
           list: 'myList',
           type: ComponentType.SelectField,
-          subType: ComponentSubType.ListField,
           options: {},
           schema: {}
         }
@@ -327,7 +320,6 @@ describe('ComponentTypeEdit', () => {
           name: 'TestYesNo',
           title: 'Test yes/no',
           type: ComponentType.YesNoField,
-          subType: ComponentSubType.Field,
           options: {},
           schema: {}
         }
@@ -405,7 +397,6 @@ describe('ComponentTypeEdit', () => {
           name: 'TestUkAddress',
           title: 'Test UK address',
           type: ComponentType.UkAddressField,
-          subType: ComponentSubType.Field,
           hint: '',
           options: {},
           schema: {}

@@ -1,8 +1,4 @@
-import {
-  ComponentSubType,
-  ComponentType,
-  type FormDefinition
-} from '@defra/forms-model'
+import { ComponentType, type FormDefinition } from '@defra/forms-model'
 
 import { addComponent } from '~/src/data/component/addComponent.js'
 
@@ -29,7 +25,6 @@ test('addComponent adds a component to the correct page', () => {
             name: 'firstName',
             title: 'First name',
             type: ComponentType.TextField,
-            subType: ComponentSubType.Field,
             options: {},
             schema: {}
           }
@@ -43,7 +38,6 @@ test('addComponent adds a component to the correct page', () => {
             name: 'lastName',
             title: 'Surname',
             type: ComponentType.TextField,
-            subType: ComponentSubType.Field,
             options: {},
             schema: {}
           }
@@ -60,7 +54,6 @@ test('addComponent adds a component to the correct page', () => {
       name: 'aNewComponent',
       title: 'new component',
       type: ComponentType.TextField,
-      subType: ComponentSubType.Field,
       options: {},
       schema: {}
     })
@@ -74,7 +67,6 @@ test('addComponent adds a component to the correct page', () => {
             name: 'firstName',
             title: 'First name',
             type: ComponentType.TextField,
-            subType: ComponentSubType.Field,
             options: {},
             schema: {}
           },
@@ -82,7 +74,6 @@ test('addComponent adds a component to the correct page', () => {
             name: 'aNewComponent',
             title: 'new component',
             type: ComponentType.TextField,
-            subType: ComponentSubType.Field,
             options: {},
             schema: {}
           }
@@ -96,7 +87,6 @@ test('addComponent adds a component to the correct page', () => {
             name: 'lastName',
             title: 'Surname',
             type: ComponentType.TextField,
-            subType: ComponentSubType.Field,
             options: {},
             schema: {}
           }

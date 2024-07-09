@@ -1,8 +1,4 @@
-import {
-  ComponentSubType,
-  ComponentType,
-  type FormDefinition
-} from '@defra/forms-model'
+import { ComponentType, type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { act, cleanup, render, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
@@ -21,7 +17,6 @@ const data = {
           name: 'firstName',
           title: 'First name',
           type: ComponentType.TextField,
-          subType: ComponentSubType.Field,
           options: {
             required: true
           },
@@ -31,7 +26,6 @@ const data = {
           name: 'middleName',
           title: 'Middle name',
           type: ComponentType.TextField,
-          subType: ComponentSubType.Field,
           hint: 'If you have a middle name on your passport you must include it here',
           options: {
             required: false,
@@ -43,7 +37,6 @@ const data = {
           name: 'lastName',
           title: 'Surname',
           type: ComponentType.TextField,
-          subType: ComponentSubType.Field,
           options: {
             required: true
           },

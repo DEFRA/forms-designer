@@ -1,8 +1,4 @@
-import {
-  ComponentSubType,
-  ComponentType,
-  type FormDefinition
-} from '@defra/forms-model'
+import { ComponentType, type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
 import React from 'react'
@@ -54,7 +50,6 @@ describe('SelectConditions', () => {
               name: 'ukPassport',
               title: 'Do you have a UK passport?',
               type: ComponentType.YesNoField,
-              subType: ComponentSubType.Field,
               options: {
                 required: true
               },
@@ -80,7 +75,6 @@ describe('SelectConditions', () => {
               name: 'notEligible',
               title: '',
               type: ComponentType.Html,
-              subType: ComponentSubType.Content,
               content:
                 '<p class="govuk-body">If you still think you’re eligible please contact the Foreign and Commonwealth Office.</p>',
               options: {},
@@ -96,7 +90,6 @@ describe('SelectConditions', () => {
               name: 'numberOfApplicants',
               title: 'How many applicants are there?',
               type: ComponentType.SelectField,
-              subType: ComponentSubType.ListField,
               list: 'numberOfApplicants',
               options: {
                 classes: 'govuk-input--width-10',

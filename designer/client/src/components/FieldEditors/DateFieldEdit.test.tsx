@@ -1,4 +1,4 @@
-import { ComponentSubType, ComponentType } from '@defra/forms-model'
+import { ComponentType } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
 import React from 'react'
@@ -22,7 +22,6 @@ describe('date field edit', () => {
           title: 'Date field edit class',
           hint: 'Date field hint',
           type: ComponentType.DatePartsField,
-          subType: ComponentSubType.Field,
           options: {},
           schema: {}
         }

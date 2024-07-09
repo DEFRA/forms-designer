@@ -1,8 +1,4 @@
-import {
-  ComponentSubType,
-  ComponentType,
-  type FormDefinition
-} from '@defra/forms-model'
+import { ComponentType, type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { act, cleanup, render, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
@@ -89,7 +85,6 @@ describe('ComponentCreate:', () => {
                 {
                   title: 'Details',
                   type: ComponentType.Details,
-                  subType: ComponentSubType.Content,
                   name: expect.any(String),
                   content: 'content',
                   options: {},

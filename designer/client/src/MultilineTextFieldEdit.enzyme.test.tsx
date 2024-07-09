@@ -1,4 +1,4 @@
-import { ComponentSubType, ComponentType } from '@defra/forms-model'
+import { ComponentType } from '@defra/forms-model'
 import { mount, type ReactWrapper } from 'enzyme'
 import React from 'react'
 
@@ -18,7 +18,6 @@ describe('MutlilineTextFieldEdit renders correctly when', () => {
         name: 'MultilineTextFieldEditClass',
         title: 'Multiline text field edit class',
         type: ComponentType.MultilineTextField,
-        subType: ComponentSubType.Field,
         options: {},
         schema: {}
       }

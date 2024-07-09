@@ -1,4 +1,4 @@
-import { ComponentSubType, ComponentType } from '@defra/forms-model'
+import { ComponentType } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { act, cleanup, render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
@@ -22,7 +22,6 @@ describe('CssClasses', () => {
           name: 'TelephoneNumberField',
           title: 'Telephone number field',
           type: ComponentType.TelephoneNumberField,
-          subType: ComponentSubType.Field,
           options: {},
           schema: {}
         }

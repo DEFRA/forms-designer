@@ -1,6 +1,5 @@
 import {
   ComponentType,
-  ComponentSubType,
   type ComponentDef,
   type FormDefinition
 } from '@defra/forms-model'
@@ -15,7 +14,6 @@ describe('ParaEdit', () => {
     name: 'IDDQl4',
     title: 'abc',
     type: ComponentType.Html,
-    subType: ComponentSubType.Content,
     content: '',
     options: {},
     schema: {}

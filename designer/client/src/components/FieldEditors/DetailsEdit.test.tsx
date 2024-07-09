@@ -1,4 +1,4 @@
-import { ComponentSubType, ComponentType } from '@defra/forms-model'
+import { ComponentType } from '@defra/forms-model'
 import { cleanup, render } from '@testing-library/react'
 import React from 'react'
 
@@ -14,7 +14,6 @@ describe('Details edit', () => {
       name: 'TextFieldEditClass',
       title: 'Text field edit class',
       type: ComponentType.Details,
-      subType: ComponentSubType.Content,
       content: '',
       options: {},
       schema: {}

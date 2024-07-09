@@ -1,5 +1,4 @@
 import {
-  ComponentSubType,
   ComponentType,
   type ConditionRawData,
   type FormDefinition
@@ -28,7 +27,6 @@ describe('ConditionsEdit', () => {
             name: 'field1',
             title: 'Something',
             type: ComponentType.TextField,
-            subType: ComponentSubType.Field,
             options: {},
             schema: {}
           }
@@ -43,7 +41,6 @@ describe('ConditionsEdit', () => {
             name: 'field2',
             title: 'Something else',
             type: ComponentType.TextField,
-            subType: ComponentSubType.Field,
             options: {},
             schema: {}
           },
@@ -51,7 +48,6 @@ describe('ConditionsEdit', () => {
             name: 'field3',
             title: 'beep',
             type: ComponentType.TextField,
-            subType: ComponentSubType.Field,
             options: {},
             schema: {}
           }

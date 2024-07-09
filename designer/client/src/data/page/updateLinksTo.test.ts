@@ -1,8 +1,4 @@
-import {
-  ComponentSubType,
-  ComponentType,
-  type FormDefinition
-} from '@defra/forms-model'
+import { ComponentType, type FormDefinition } from '@defra/forms-model'
 
 import { updateLinksTo } from '~/src/data/page/updateLinksTo.js'
 
@@ -18,7 +14,6 @@ const data = {
           name: 'name1',
           title: 'Name 1',
           type: ComponentType.TextField,
-          subType: ComponentSubType.Field,
           options: {},
           schema: {}
         },
@@ -26,7 +21,6 @@ const data = {
           name: 'name2',
           title: 'Name 2',
           type: ComponentType.TextField,
-          subType: ComponentSubType.Field,
           options: {},
           schema: {}
         }
@@ -42,7 +36,6 @@ const data = {
           name: 'name1',
           title: 'Name 1',
           type: ComponentType.TextField,
-          subType: ComponentSubType.Field,
           options: {},
           schema: {}
         },
@@ -50,7 +43,6 @@ const data = {
           name: 'name2',
           title: 'Name 2',
           type: ComponentType.TextField,
-          subType: ComponentSubType.Field,
           options: {},
           schema: {}
         }
@@ -66,7 +58,6 @@ const data = {
           name: 'name3',
           title: 'Name 3',
           type: ComponentType.TextField,
-          subType: ComponentSubType.Field,
           options: {},
           schema: {}
         },
@@ -74,7 +65,6 @@ const data = {
           name: 'name4',
           title: 'Name 4',
           type: ComponentType.TextField,
-          subType: ComponentSubType.Field,
           options: {},
           schema: {}
         }

@@ -1,4 +1,4 @@
-import { ComponentSubType, ComponentType } from '@defra/forms-model'
+import { ComponentType } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
 import React from 'react'
@@ -19,7 +19,6 @@ describe('AutocompleteField', () => {
         title: 'Test CSS class',
         list: 'Test list',
         type: ComponentType.AutocompleteField,
-        subType: ComponentSubType.ListField,
         options: {},
         schema: {}
       }

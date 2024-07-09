@@ -1,8 +1,4 @@
-import {
-  ComponentSubType,
-  ComponentType,
-  type FormDefinition
-} from '@defra/forms-model'
+import { ComponentType, type FormDefinition } from '@defra/forms-model'
 
 import { updateComponent } from '~/src/data/component/updateComponent.js'
 
@@ -19,7 +15,6 @@ test('updateComponent throws an error when the target component cannot be found'
             name: 'firstName',
             title: 'First name',
             type: ComponentType.TextField,
-            subType: ComponentSubType.Field,
             options: {},
             schema: {}
           }
@@ -52,7 +47,6 @@ test('addComponent adds a component to the correct page', () => {
             name: 'firstName',
             title: 'First name',
             type: ComponentType.TextField,
-            subType: ComponentSubType.Field,
             options: {},
             schema: {}
           }
@@ -66,7 +60,6 @@ test('addComponent adds a component to the correct page', () => {
             name: 'lastName',
             title: 'Surname',
             type: ComponentType.TextField,
-            subType: ComponentSubType.Field,
             options: {},
             schema: {}
           }
@@ -83,7 +76,6 @@ test('addComponent adds a component to the correct page', () => {
       name: 'fullName',
       title: 'full name',
       type: ComponentType.TextField,
-      subType: ComponentSubType.Field,
       options: {},
       schema: {}
     })
@@ -99,7 +91,6 @@ test('addComponent adds a component to the correct page', () => {
             name: 'fullName',
             title: 'full name',
             type: ComponentType.TextField,
-            subType: ComponentSubType.Field,
             options: {},
             schema: {}
           }
@@ -113,7 +104,6 @@ test('addComponent adds a component to the correct page', () => {
             name: 'lastName',
             title: 'Surname',
             type: ComponentType.TextField,
-            subType: ComponentSubType.Field,
             options: {},
             schema: {}
           }

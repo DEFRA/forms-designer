@@ -4,7 +4,9 @@ import { type ComponentDef } from '~/src/components/types.js'
 /**
  * Defaults for creating new components
  */
-export const ComponentTypes: ComponentDef[] = [
+export const ComponentTypes: (ComponentDef & {
+  subType?: ComponentSubType
+})[] = [
   {
     name: 'TextField',
     title: 'Text field',

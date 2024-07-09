@@ -1,5 +1,4 @@
 import {
-  ComponentSubType,
   ComponentType,
   ConditionType,
   OperatorName,
@@ -23,7 +22,6 @@ const data = {
           name: 'text',
           title: 'text',
           type: ComponentType.TextField,
-          subType: ComponentSubType.Field,
           schema: {},
           options: {
             required: true
@@ -45,7 +43,6 @@ const data = {
           title: 'abc',
           list: 'myList',
           type: ComponentType.SelectField,
-          subType: ComponentSubType.ListField,
           schema: {},
           options: {
             required: true

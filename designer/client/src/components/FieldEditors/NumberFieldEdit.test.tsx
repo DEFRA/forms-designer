@@ -1,4 +1,4 @@
-import { ComponentSubType, ComponentType } from '@defra/forms-model'
+import { ComponentType } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
 import React from 'react'
@@ -22,7 +22,6 @@ describe('Number field edit', () => {
           title: 'Number field edit class',
           hint: 'Number field hint',
           type: ComponentType.NumberField,
-          subType: ComponentSubType.Field,
           options: {},
           schema: {}
         }

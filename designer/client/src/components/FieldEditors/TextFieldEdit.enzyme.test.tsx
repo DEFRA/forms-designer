@@ -1,4 +1,4 @@
-import { ComponentSubType, ComponentType } from '@defra/forms-model'
+import { ComponentType } from '@defra/forms-model'
 import { mount, type ReactWrapper } from 'enzyme'
 import React from 'react'
 
@@ -18,7 +18,6 @@ describe('TextField renders correctly when', () => {
         name: 'TextFieldEditClass',
         title: 'Text field edit class',
         type: ComponentType.TextField,
-        subType: ComponentSubType.Field,
         options: {},
         schema: {}
       }

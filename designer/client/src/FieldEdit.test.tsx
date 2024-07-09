@@ -1,5 +1,4 @@
 import {
-  ComponentSubType,
   ComponentType,
   type ComponentDef,
   type FormDefinition
@@ -16,7 +15,6 @@ describe('Field Edit', () => {
     name: 'IDDQl4',
     type: ComponentType.UkAddressField,
     title: 'UK address field',
-    subType: ComponentSubType.Field,
     hint: '',
     options: {},
     schema: {}
