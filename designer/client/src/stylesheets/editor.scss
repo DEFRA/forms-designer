@@ -89,6 +89,18 @@ p code {
   }
 }
 
+.app-tabs--overview {
+  @include govuk-responsive-margin(7, "top");
+
+  @include govuk-media-query($from: tablet) {
+    @include govuk-responsive-margin(6, "top");
+  }
+
+  @include govuk-media-query($from: desktop) {
+    @include govuk-responsive-margin(1, "top");
+  }
+}
+
 .component.govuk-link {
   display: block;
   width: 100%;

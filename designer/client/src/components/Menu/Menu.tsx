@@ -40,7 +40,14 @@ export function Menu({ slug }: Props) {
       id: 'tab-definition',
       panel: {
         children: (
-          <DataPrettyPrint className="language-json">{data}</DataPrettyPrint>
+          <>
+            <h4 className="govuk-heading-m govuk-!-margin-bottom-2">
+              Definition
+            </h4>
+            <p className="govuk-body">Form definition JSON</p>
+
+            <DataPrettyPrint className="language-json">{data}</DataPrettyPrint>
+          </>
         )
       }
     },
@@ -49,9 +56,16 @@ export function Menu({ slug }: Props) {
       id: 'tab-metadata',
       panel: {
         children: (
-          <DataPrettyPrint className="language-json">
-            {meta ?? {}}
-          </DataPrettyPrint>
+          <>
+            <h4 className="govuk-heading-m govuk-!-margin-bottom-2">
+              Metadata
+            </h4>
+            <p className="govuk-body">Form metadata JSON</p>
+
+            <DataPrettyPrint className="language-json">
+              {meta ?? {}}
+            </DataPrettyPrint>
+          </>
         )
       }
     },
@@ -60,12 +74,19 @@ export function Menu({ slug }: Props) {
       id: 'tab-pages',
       panel: {
         children: (
-          <DataPrettyPrint className="language-json">
-            {data.pages.map((page) => ({
-              path: page.path,
-              title: page.title
-            }))}
-          </DataPrettyPrint>
+          <>
+            <h4 className="govuk-heading-m govuk-!-margin-bottom-2">Pages</h4>
+            <p className="govuk-body">
+              Form definition JSON <code>pages</code> showing paths and titles
+            </p>
+
+            <DataPrettyPrint className="language-json">
+              {data.pages.map((page) => ({
+                path: page.path,
+                title: page.title
+              }))}
+            </DataPrettyPrint>
+          </>
         )
       }
     },
@@ -74,15 +95,25 @@ export function Menu({ slug }: Props) {
       id: 'tab-components',
       panel: {
         children: (
-          <DataPrettyPrint className="language-json">
-            {data.pages.flatMap(({ components }) =>
-              components?.map((component) => ({
-                name: component.name,
-                type: component.type,
-                list: hasListField(component) ? component.list : undefined
-              }))
-            )}
-          </DataPrettyPrint>
+          <>
+            <h4 className="govuk-heading-m govuk-!-margin-bottom-2">
+              Components
+            </h4>
+            <p className="govuk-body">
+              Form definition JSON <code>components</code> showing name, type
+              and (optional) list
+            </p>
+
+            <DataPrettyPrint className="language-json">
+              {data.pages.flatMap(({ components }) =>
+                components?.map((component) => ({
+                  name: component.name,
+                  type: component.type,
+                  list: hasListField(component) ? component.list : undefined
+                }))
+              )}
+            </DataPrettyPrint>
+          </>
         )
       }
     }
@@ -172,11 +203,12 @@ export function Menu({ slug }: Props) {
 
       {overview.isVisible && (
         <RenderInPortal>
-          <Flyout title="Form overview" width="large" onHide={overview.hide}>
+          <Flyout width="xlarge" onHide={overview.hide}>
             <Tabs
               title="Form overview"
               items={overviewTabs}
               onInit={highlightAll}
+              className="app-tabs--overview"
             ></Tabs>
           </Flyout>
         </RenderInPortal>
