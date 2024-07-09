@@ -1,3 +1,4 @@
+import { hasListField } from '@defra/forms-model'
 import React, { useContext } from 'react'
 
 import { DeclarationEdit } from '~/src/DeclarationEdit.jsx'
@@ -31,37 +32,46 @@ export function Menu({ slug }: Props) {
   const lists = useMenuItem()
   const summaryBehaviour = useMenuItem()
   const summary = useMenuItem()
+
   const summaryTabs = [
     {
-      label: 'Data model',
-      id: 'tab-model',
-      panel: {
-        children: <DataPrettyPrint />,
-        'data-testid': 'tab-model'
-      }
-    },
-    {
-      label: 'JSON',
-      id: 'tab-json',
-      panel: {
-        children: <pre>{JSON.stringify(data, null, 2)}</pre>,
-        'data-testid': 'tab-json'
-      }
-    },
-    {
-      label: 'Summary',
-      id: 'tab-summary',
+      label: 'Definition',
+      id: 'tab-definition',
       panel: {
         children: (
-          <pre>
-            {JSON.stringify(
-              'pages' in data ? data.pages.map((page) => page.path) : [],
-              null,
-              2
+          <DataPrettyPrint className="language-json">{data}</DataPrettyPrint>
+        )
+      }
+    },
+    {
+      label: 'Pages',
+      id: 'tab-pages',
+      panel: {
+        children: (
+          <DataPrettyPrint className="language-json">
+            {data.pages.map((page) => ({
+              path: page.path,
+              title: page.title
+            }))}
+          </DataPrettyPrint>
+        )
+      }
+    },
+    {
+      label: 'Components',
+      id: 'tab-components',
+      panel: {
+        children: (
+          <DataPrettyPrint className="language-json">
+            {data.pages.flatMap(({ components }) =>
+              components?.map((component) => ({
+                name: component.name,
+                type: component.type,
+                list: hasListField(component) ? component.list : undefined
+              }))
             )}
-          </pre>
-        ),
-        'data-testid': 'tab-summary'
+          </DataPrettyPrint>
+        )
       }
     }
   ]

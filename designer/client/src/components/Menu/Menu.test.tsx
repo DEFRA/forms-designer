@@ -1,3 +1,4 @@
+import { type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { act, cleanup, render, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
@@ -7,11 +8,18 @@ import { Menu } from '~/src/components/Menu/Menu.jsx'
 import { RenderWithContext } from '~/test/helpers/renderers'
 
 describe('Menu', () => {
+  const data = {
+    pages: [],
+    lists: [],
+    sections: [],
+    conditions: []
+  } satisfies FormDefinition
+
   afterEach(cleanup)
 
   it('Renders button strings correctly', () => {
     render(
-      <RenderWithContext>
+      <RenderWithContext data={data}>
         <Menu slug="example" />
       </RenderWithContext>
     )
@@ -27,7 +35,7 @@ describe('Menu', () => {
 
   it('Can open flyouts and close them', async () => {
     render(
-      <RenderWithContext>
+      <RenderWithContext data={data}>
         <Menu slug="example" />
       </RenderWithContext>
     )
@@ -43,7 +51,7 @@ describe('Menu', () => {
 
   it('clicking on a summary tab shows different tab content', async () => {
     render(
-      <RenderWithContext>
+      <RenderWithContext data={data}>
         <Menu slug="example" />
       </RenderWithContext>
     )
@@ -77,7 +85,7 @@ describe('Menu', () => {
     const save = jest.fn()
 
     render(
-      <RenderWithContext save={save}>
+      <RenderWithContext data={data} save={save}>
         <Menu slug="example" />
       </RenderWithContext>
     )
