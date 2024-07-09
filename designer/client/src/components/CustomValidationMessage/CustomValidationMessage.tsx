@@ -6,8 +6,13 @@ import { Options } from '~/src/reducers/component/types.js'
 
 export function CustomValidationMessage() {
   const { state, dispatch } = useContext(ComponentContext)
-  const { selectedComponent = {} } = state
-  const { options = {} } = selectedComponent
+  const { selectedComponent } = state
+
+  if (!selectedComponent) {
+    return null
+  }
+
+  const { options } = selectedComponent
 
   return (
     <div className="govuk-form-group">

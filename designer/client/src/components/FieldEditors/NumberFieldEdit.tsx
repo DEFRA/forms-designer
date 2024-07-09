@@ -13,9 +13,13 @@ export function NumberFieldEdit({ context = ComponentContext }: Props) {
   // If you are editing a component, the default context will be ComponentContext because props.context is undefined,
   // but if you editing a component which is a children of a list based component, then the props.context is the ListContext.
   const { state, dispatch } = useContext(context)
-  const { selectedComponent = {} } = state
-  const { schema = {} } = selectedComponent
-  const { options = {} } = selectedComponent
+  const { selectedComponent } = state
+
+  if (!selectedComponent) {
+    return null
+  }
+
+  const { options, schema } = selectedComponent
 
   return (
     <details className="govuk-details">

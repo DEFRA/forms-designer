@@ -1,6 +1,5 @@
-import { getFormSpecificNavigation } from './library.js'
-
 import { render } from '~/src/common/nunjucks/index.js'
+import { getFormSpecificNavigation } from '~/src/models/forms/library.js'
 
 /**
  * Model to represent confirmation page dialog for a given form.

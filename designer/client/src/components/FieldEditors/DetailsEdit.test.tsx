@@ -1,27 +1,33 @@
+import { ComponentSubType, ComponentType } from '@defra/forms-model'
 import { cleanup, render } from '@testing-library/react'
-import React, { type ReactNode } from 'react'
+import React from 'react'
 
 import { DetailsEdit } from '~/src/components/FieldEditors/DetailsEdit.jsx'
-import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
+import {
+  RenderWithContext,
+  type RenderWithContextProps
+} from '~/test/helpers/renderers.jsx'
 
-describe('details-edit', () => {
-  afterEach(cleanup)
-
-  function TestComponentWithContext({ children }: { children: ReactNode }) {
-    return (
-      <ComponentContext.Provider
-        value={{ state: { selectedComponent: {} }, dispatch: jest.fn() }}
-      >
-        {children}
-      </ComponentContext.Provider>
-    )
+describe('Details edit', () => {
+  const state: RenderWithContextProps['state'] = {
+    selectedComponent: {
+      name: 'TextFieldEditClass',
+      title: 'Text field edit class',
+      type: ComponentType.Details,
+      subType: ComponentSubType.Content,
+      content: '',
+      options: {},
+      schema: {}
+    }
   }
+
+  afterEach(cleanup)
 
   it('Should render with correct screen text', () => {
     const { container } = render(
-      <TestComponentWithContext>
-        <DetailsEdit context={ComponentContext}></DetailsEdit>
-      </TestComponentWithContext>
+      <RenderWithContext state={state}>
+        <DetailsEdit />
+      </RenderWithContext>
     )
 
     expect(container).toHaveTextContent(

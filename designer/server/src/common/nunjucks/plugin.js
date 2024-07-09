@@ -3,9 +3,8 @@ import { join } from 'node:path'
 import hapiVision from '@hapi/vision'
 import nunjucks from 'nunjucks'
 
-import { environment } from './environment.js'
-
 import { context } from '~/src/common/nunjucks/context/index.js'
+import { environment } from '~/src/common/nunjucks/environment.js'
 import config from '~/src/config.js'
 
 export const plugin = {

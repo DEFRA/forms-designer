@@ -47,20 +47,23 @@ export const ComponentTypeEdit: FunctionComponent<Props> = (props) => {
     return componentType.type === selectedComponent?.type
   })
 
-  const needsFieldInputs =
-    component?.type === ComponentType.List ||
-    component?.subType !== ComponentSubType.Content
+  if (!selectedComponent) {
+    return null
+  }
 
-  const TagName = hasEditor(component)
-    ? componentTypeEditors[component.type]
+  const TagName = hasEditor(selectedComponent)
+    ? componentTypeEditors[selectedComponent.type]
     : undefined
+
+  const { type, subType } = component ?? {}
 
   return (
     <>
-      {needsFieldInputs && (
+      {(type === ComponentType.List ||
+        subType !== ComponentSubType.Content) && (
         <FieldEdit
-          isContentField={component?.subType === ComponentSubType.Content}
-          isListField={component?.subType === ComponentSubType.ListField}
+          isContentField={subType === ComponentSubType.Content}
+          isListField={subType === ComponentSubType.ListField}
         />
       )}
       {TagName && <TagName>{children}</TagName>}
