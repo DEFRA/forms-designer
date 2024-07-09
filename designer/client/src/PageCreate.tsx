@@ -335,7 +335,7 @@ export class PageCreate extends Component {
               }
               onHide={this.closeFlyout}
             >
-              <SectionEdit section={section} closeFlyout={this.closeFlyout} />
+              <SectionEdit section={section} onEdit={this.closeFlyout} />
             </Flyout>
           </RenderInPortal>
         )}
