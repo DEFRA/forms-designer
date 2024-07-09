@@ -47,8 +47,14 @@ export class Lines extends Component<Props, State> {
             const xs = edge.points.map((p) => p.x)
             const ys = edge.points.map((p) => p.y)
 
-            const textWidth = Math.max(...xs) - Math.min(...xs)
-            const textHeight = Math.max(...ys) - Math.min(...ys)
+            const xMax = Math.max(...xs)
+            const xMin = Math.min(...xs)
+            const yMax = Math.max(...ys)
+            const yMin = Math.min(...ys)
+
+            // Preserve 100px × 30px safe space for condition
+            const textWidth = Math.max(xMax - xMin, 100)
+            const textHeight = Math.max(yMax - yMin, 30)
 
             const textX = xs.reduce((a, b) => a + b, 0) / xs.length
             const textY = ys.reduce((a, b) => a + b, 0) / ys.length
