@@ -23,7 +23,7 @@ interface Props {
 }
 
 export function Menu({ slug }: Props) {
-  const { data } = useContext(DataContext)
+  const { data, meta } = useContext(DataContext)
 
   const page = useMenuItem()
   const link = useMenuItem()
@@ -40,6 +40,17 @@ export function Menu({ slug }: Props) {
       panel: {
         children: (
           <DataPrettyPrint className="language-json">{data}</DataPrettyPrint>
+        )
+      }
+    },
+    {
+      label: 'Metadata',
+      id: 'tab-metadata',
+      panel: {
+        children: (
+          <DataPrettyPrint className="language-json">
+            {meta ?? {}}
+          </DataPrettyPrint>
         )
       }
     },

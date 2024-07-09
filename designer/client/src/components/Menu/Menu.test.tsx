@@ -66,11 +66,13 @@ describe('Menu', () => {
     expect($tabs[0]).toBeVisible()
     expect($tabs[1]).toBeVisible()
     expect($tabs[2]).toBeVisible()
+    expect($tabs[3]).toBeVisible()
 
     // Only first tab panel (Data model) is visible
     expect($panels[0]).not.toHaveClass('govuk-tabs__panel--hidden')
     expect($panels[1]).toHaveClass('govuk-tabs__panel--hidden')
     expect($panels[2]).toHaveClass('govuk-tabs__panel--hidden')
+    expect($panels[3]).toHaveClass('govuk-tabs__panel--hidden')
 
     // Click JSON tab link
     await act(() => userEvent.click($tabs[1]))
@@ -79,6 +81,7 @@ describe('Menu', () => {
     expect($panels[0]).toHaveClass('govuk-tabs__panel--hidden')
     expect($panels[1]).not.toHaveClass('govuk-tabs__panel--hidden')
     expect($panels[2]).toHaveClass('govuk-tabs__panel--hidden')
+    expect($panels[3]).toHaveClass('govuk-tabs__panel--hidden')
   })
 
   it('flyouts close on Save', async () => {

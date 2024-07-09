@@ -1,4 +1,3 @@
-import { type FormDefinition } from '@defra/forms-model'
 import React, { useReducer, type ReactElement } from 'react'
 
 import { DataContext, type DataContextType } from '~/src/context/DataContext.js'
@@ -14,6 +13,7 @@ export interface RenderWithContextProps {
   children?: ReactElement
   state?: Omit<ComponentContextType['state'], 'initialName'>
   data?: DataContextType['data']
+  meta?: DataContextType['meta']
   save?: DataContextType['save']
 }
 
@@ -23,10 +23,15 @@ export function RenderWithContext(props: RenderWithContextProps) {
     initComponentState(props.state)
   )
 
-  const { children, data = {} as FormDefinition, save = jest.fn() } = props
+  const {
+    children,
+    data = {} as DataContextType['data'],
+    meta,
+    save = jest.fn()
+  } = props
 
   return (
-    <DataContext.Provider value={{ data, save }}>
+    <DataContext.Provider value={{ data, meta, save }}>
       <FlyoutContext.Provider
         value={{
           count: 1,

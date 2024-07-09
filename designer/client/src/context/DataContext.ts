@@ -1,8 +1,9 @@
-import { type FormDefinition } from '@defra/forms-model'
+import { type FormDefinition, type FormMetadata } from '@defra/forms-model'
 import { createContext } from 'react'
 
 export interface DataContextType {
   data: FormDefinition
+  meta?: FormMetadata
   save: (definition: FormDefinition) => Promise<FormDefinition>
 }
 
