@@ -112,7 +112,9 @@ export const initComponentState = (
  * Allows components to retrieve {@link ComponentState} and {@link Dispatch} from any component nested within `<ComponentContextProvider>`
  */
 export const ComponentContextProvider = (
-  props: ComponentState & { children: ReactNode }
+  props: Parameters<typeof initComponentState>[0] & {
+    children: ReactNode
+  }
 ) => {
   const { children, ...rest } = props
   const [state, dispatch] = useReducer(
