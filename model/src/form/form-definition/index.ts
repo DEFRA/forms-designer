@@ -124,8 +124,7 @@ const pageSchema = Joi.object<Page>().keys({
   section: Joi.string(),
   controller: Joi.string().optional(),
   components: Joi.array<ComponentDef>().items(componentSchema),
-  next: Joi.array<Link>().items(nextSchema),
-  backLinkFallback: Joi.string().optional()
+  next: Joi.array<Link>().items(nextSchema)
 })
 
 const baseListItemSchema = Joi.object<Item>().keys({

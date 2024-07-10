@@ -15,7 +15,6 @@ export interface Page {
   components?: ComponentDef[]
   section?: string // the section ID
   next?: Link[]
-  backLinkFallback?: string
 }
 
 export interface Section {
