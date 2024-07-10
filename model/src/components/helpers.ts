@@ -107,6 +107,7 @@ export function hasInputField(
     ComponentType.YesNoField,
     ComponentType.MonthYearField,
     ComponentType.TimeField,
+    ComponentType.DatePartsField,
     ComponentType.UkAddressField
   ]
 

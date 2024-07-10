@@ -262,6 +262,7 @@ export type InputFieldsComponentsDef =
   | YesNoFieldComponent
   | MonthYearFieldComponent
   | TimeFieldComponent
+  | DatePartsFieldFieldComponent
   | UkAddressFieldComponent
 
 // Components that render content
