@@ -75,10 +75,14 @@ export const Page = (props: {
 
   const section = data.sections.find((section) => section.name === page.section)
 
+  // Remove slashes from IDs
+  const pageId = page.path.replace(/\//g, '')
+  const headingId = `${pageId}-heading`
+
   return (
-    <div id={page.path} title={page.path} className={'page'} style={layout}>
+    <div id={pageId} title={page.path} className={'page'} style={layout}>
       <div className="page__heading">
-        <h3 className="govuk-heading-m">
+        <h3 className="govuk-heading-m" id={headingId}>
           {section && <span className="govuk-caption-m">{section.title}</span>}
           {page.title}
         </h3>
@@ -87,7 +91,11 @@ export const Page = (props: {
       <ComponentList page={page} data={data} />
 
       <div className="page__actions">
-        <button onClick={() => setIsEditingPage(true)} className="govuk-link">
+        <button
+          onClick={() => setIsEditingPage(true)}
+          className="govuk-link"
+          aria-describedby={headingId}
+        >
           {i18n('Edit page')}
         </button>
         <a
@@ -95,13 +103,14 @@ export const Page = (props: {
           className="govuk-link"
           target="_blank"
           rel="noreferrer"
-          aria-label={`${i18n('Preview')} ${page.title}`}
+          aria-describedby={headingId}
         >
           {i18n('Preview page')}
         </a>
         <button
           onClick={() => setIsCreatingComponent(true)}
           className="govuk-link"
+          aria-describedby={headingId}
         >
           {i18n('component.create')}
         </button>
