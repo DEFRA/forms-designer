@@ -228,8 +228,7 @@
     "links": "Add link",
     "lists": "Lists",
     "sections": "Sections",
-    "summary": "Summary",
-    "summaryBehaviour": "Summary behaviour"
+    "summary": "Summary"
   },
   "multilineTextFieldEditComponent": {
     "rowsField": {

@@ -7,13 +7,15 @@ import React, {
 } from 'react'
 
 import { logger } from '~/src/common/helpers/logging/logger.js'
+import { type MenuItemHook } from '~/src/components/Menu/useMenuItem.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 
 interface Props {
   slug: string
+  overview: MenuItemHook
 }
 
-export function SubMenu({ slug }: Props) {
+export function SubMenu({ slug, overview }: Props) {
   const { data, save } = useContext(DataContext)
   const fileInput = useRef<HTMLInputElement>(null)
 
@@ -82,19 +84,31 @@ export function SubMenu({ slug }: Props) {
   }
 
   return (
-    <div className="menu__row">
-      <button className="govuk-link submenu__link" onClick={onClickUpload}>
-        Import saved form
+    <div className="govuk-button-group">
+      <button
+        className="govuk-link govuk-!-font-size-16"
+        onClick={onClickUpload}
+      >
+        Upload form
       </button>
-      <button className="govuk-link submenu__link" onClick={onClickDownload}>
+      <button
+        className="govuk-link govuk-!-font-size-16"
+        onClick={onClickDownload}
+      >
         Download form
+      </button>
+      <button
+        className="govuk-link govuk-!-font-size-16"
+        onClick={overview.show}
+      >
+        Form overview
       </button>
       <input
         ref={fileInput}
         type="file"
         hidden
         onChange={onFileUpload}
-        aria-label="Import saved form"
+        aria-label="Upload form definition JSON"
       />
     </div>
   )

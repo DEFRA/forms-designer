@@ -31,10 +31,10 @@ export function Menu({ slug }: Props) {
   const sections = useMenuItem()
   const conditions = useMenuItem()
   const lists = useMenuItem()
-  const summaryBehaviour = useMenuItem()
   const summary = useMenuItem()
+  const overview = useMenuItem()
 
-  const summaryTabs = [
+  const overviewTabs = [
     {
       label: 'Definition',
       id: 'tab-definition',
@@ -91,58 +91,27 @@ export function Menu({ slug }: Props) {
   return (
     <>
       <nav className="menu">
-        <div className="menu__row">
-          <button
-            className="govuk-button"
-            data-testid="menu-page"
-            onClick={page.show}
-          >
+        <div className="govuk-button-group govuk-!-margin-bottom-0">
+          <button className="govuk-button" onClick={page.show}>
             {i18n('menu.addPage')}
           </button>
-          <button
-            className="govuk-button"
-            data-testid="menu-links"
-            onClick={link.show}
-          >
+          <button className="govuk-button" onClick={link.show}>
             {i18n('menu.links')}
           </button>
-          <button
-            className="govuk-button"
-            data-testid="menu-sections"
-            onClick={sections.show}
-          >
+          <button className="govuk-button" onClick={sections.show}>
             {i18n('menu.sections')}
           </button>
-          <button
-            className="govuk-button"
-            data-testid="menu-conditions"
-            onClick={conditions.show}
-          >
+          <button className="govuk-button" onClick={conditions.show}>
             {i18n('menu.conditions')}
           </button>
-          <button
-            className="govuk-button"
-            data-testid="menu-lists"
-            onClick={lists.show}
-          >
+          <button className="govuk-button" onClick={lists.show}>
             {i18n('menu.lists')}
           </button>
-          <button
-            className="govuk-button"
-            data-testid="menu-summary-behaviour"
-            onClick={summaryBehaviour.show}
-          >
-            {i18n('menu.summaryBehaviour')}
-          </button>
-          <button
-            className="govuk-button"
-            onClick={summary.show}
-            data-testid="menu-summary"
-          >
+          <button className="govuk-button" onClick={summary.show}>
             {i18n('menu.summary')}
           </button>
         </div>
-        <SubMenu slug={slug} />
+        <SubMenu slug={slug} overview={overview} />
       </nav>
 
       {page.isVisible && (
@@ -193,20 +162,20 @@ export function Menu({ slug }: Props) {
         </RenderInPortal>
       )}
 
-      {summaryBehaviour.isVisible && (
+      {summary.isVisible && (
         <RenderInPortal>
-          <Flyout title="Edit Summary behaviour" onHide={summaryBehaviour.hide}>
-            <DeclarationEdit onCreate={() => summaryBehaviour.hide()} />
+          <Flyout title="Edit Summary" onHide={summary.hide}>
+            <DeclarationEdit onCreate={() => summary.hide()} />
           </Flyout>
         </RenderInPortal>
       )}
 
-      {summary.isVisible && (
+      {overview.isVisible && (
         <RenderInPortal>
-          <Flyout title="Summary" width="large" onHide={summary.hide}>
+          <Flyout title="Form overview" width="large" onHide={overview.hide}>
             <Tabs
-              title="Summary"
-              items={summaryTabs}
+              title="Form overview"
+              items={overviewTabs}
               onInit={highlightAll}
             ></Tabs>
           </Flyout>

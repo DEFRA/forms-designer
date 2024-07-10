@@ -29,7 +29,6 @@ describe('Menu', () => {
     expect(screen.getByText('Sections')).toBeInTheDocument()
     expect(screen.getByText('Conditions')).toBeInTheDocument()
     expect(screen.getByText('Lists')).toBeInTheDocument()
-    expect(screen.getByText('Summary behaviour')).toBeInTheDocument()
     expect(screen.getByText('Summary')).toBeInTheDocument()
   })
 
@@ -42,21 +41,21 @@ describe('Menu', () => {
 
     expect(screen.queryByTestId('flyout-1')).not.toBeInTheDocument()
 
-    await act(() => userEvent.click(screen.getByText('Summary behaviour')))
+    await act(() => userEvent.click(screen.getByText('Summary')))
     expect(screen.queryByTestId('flyout-1')).toBeInTheDocument()
 
     await act(() => userEvent.click(screen.getByText('Close')))
     expect(screen.queryByTestId('flyout-1')).not.toBeInTheDocument()
   })
 
-  it('clicking on a summary tab shows different tab content', async () => {
+  it('clicking on a form overview tab shows different tab content', async () => {
     render(
       <RenderWithContext data={data}>
         <Menu slug="example" />
       </RenderWithContext>
     )
 
-    await act(() => userEvent.click(screen.getByText('Summary')))
+    await act(() => userEvent.click(screen.getByText('Form overview')))
     expect(screen.getByTestId('flyout-1')).toBeVisible()
 
     const $tabs = screen.queryAllByRole('tab')
@@ -93,7 +92,7 @@ describe('Menu', () => {
       </RenderWithContext>
     )
 
-    await act(() => userEvent.click(screen.getByText('Summary behaviour')))
+    await act(() => userEvent.click(screen.getByText('Summary')))
     expect(screen.queryByTestId('flyout-1')).toBeInTheDocument()
 
     await act(() => userEvent.click(screen.getByText('Save')))

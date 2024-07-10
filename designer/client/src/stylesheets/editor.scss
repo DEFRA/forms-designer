@@ -52,8 +52,7 @@ button.govuk-link {
   }
 }
 
-code
-pre,
+code pre,
 code[class],
 pre[class] {
   @include govuk-typography-common($font-family: $app-code-font);
@@ -88,25 +87,6 @@ p code {
   @include govuk-media-query($from: tablet) {
     padding: 2px 4px;
   }
-}
-
-.menu {
-  @include govuk-responsive-margin(4, "bottom");
-
-  .govuk-button {
-    @include govuk-responsive-margin(1, "right");
-    @include govuk-responsive-margin(1, "bottom");
-    @include govuk-font-size($size: 16);
-  }
-
-  &__row:not(:first-child) {
-    @include govuk-responsive-margin(4, "top");
-  }
-}
-
-.submenu__link {
-  @include govuk-font-size($size: 16);
-  @include govuk-responsive-margin(4, "right");
 }
 
 .component.govuk-link {

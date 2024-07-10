@@ -1,7 +1,7 @@
 import { type MouseEvent, type KeyboardEvent } from 'react'
 import { useState } from 'react'
 
-interface MenuItemHook {
+export interface MenuItemHook {
   isVisible: boolean
   show: (
     e?: KeyboardEvent<HTMLButtonElement> | MouseEvent<HTMLButtonElement>
