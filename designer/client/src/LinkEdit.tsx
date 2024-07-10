@@ -1,4 +1,4 @@
-import { type Next, type Page } from '@defra/forms-model'
+import { type Link, type Page } from '@defra/forms-model'
 import React, {
   Component,
   type ContextType,
@@ -22,7 +22,7 @@ interface Props {
 
 interface State {
   page: Page
-  link: Next
+  link: Link
   selectedCondition?: string
 }
 

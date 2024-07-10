@@ -4,13 +4,11 @@ import { formDefinitionSchema } from '~/src/form/form-definition/index.js'
 
 type Toggleable<T> = boolean | T
 
-export interface Next {
+export interface Link {
   path: string
   condition?: string
   redirect?: string
 }
-
-export type Link = Next
 
 export interface Page {
   title: string
@@ -18,7 +16,7 @@ export interface Page {
   controller?: string
   components?: ComponentDef[]
   section?: string // the section ID
-  next?: Next[]
+  next?: Link[]
   repeatField?: string
   backLinkFallback?: string
 }

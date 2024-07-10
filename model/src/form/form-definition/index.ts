@@ -8,8 +8,8 @@ import {
   type ConfirmationPage,
   type FormDefinition,
   type Item,
+  type Link,
   type List,
-  type Next,
   type Page,
   type PhaseBanner,
   type RepeatingFieldPage,
@@ -111,7 +111,7 @@ export const componentSchema = Joi.object<ComponentDef>()
   })
   .unknown(true)
 
-const nextSchema = Joi.object<Next>().keys({
+const nextSchema = Joi.object<Link>().keys({
   path: Joi.string().required(),
   condition: Joi.string().allow('').optional(),
   redirect: Joi.string().optional()
@@ -127,7 +127,7 @@ const pageSchema = Joi.object<Page | RepeatingFieldPage>().keys({
   section: Joi.string(),
   controller: Joi.string().optional(),
   components: Joi.array<ComponentDef>().items(componentSchema),
-  next: Joi.array<Next>().items(nextSchema),
+  next: Joi.array<Link>().items(nextSchema),
   repeatField: Joi.string().optional(),
   options: Joi.object().optional(),
   backLinkFallback: Joi.string().optional()
