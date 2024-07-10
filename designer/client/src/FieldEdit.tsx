@@ -1,4 +1,8 @@
-import { ComponentType, getComponentDefaults } from '@defra/forms-model'
+import {
+  ComponentType,
+  getComponentDefaults,
+  hasContentField
+} from '@defra/forms-model'
 import { Input, Textarea } from '@xgovformbuilder/govuk-react-jsx'
 import classNames from 'classnames'
 import React, { useContext } from 'react'
@@ -8,15 +12,11 @@ import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 import { Fields, Options } from '~/src/reducers/component/types.js'
 
-interface Props {
-  isContentField?: boolean
-}
-
-export function FieldEdit({ isContentField = false }: Props) {
+export function FieldEdit() {
   const { state, dispatch } = useContext(ComponentContext)
   const { selectedComponent, errors = {} } = state
 
-  if (!selectedComponent) {
+  if (!selectedComponent || hasContentField(selectedComponent)) {
     return null
   }
 
@@ -134,7 +134,7 @@ export function FieldEdit({ isContentField = false }: Props) {
           }}
         />
       </div>
-      {!isContentField && (
+      {selectedComponent.type !== ComponentType.List && (
         <div className="govuk-checkboxes govuk-form-group">
           <div className="govuk-checkboxes__item">
             <input

@@ -1,9 +1,4 @@
-import {
-  ComponentSubType,
-  ComponentType,
-  getComponentDefaults,
-  hasEditor
-} from '@defra/forms-model'
+import { ComponentType, hasEditor } from '@defra/forms-model'
 import React, { useContext, type FunctionComponent } from 'react'
 
 import { FieldEdit } from '~/src/FieldEdit.jsx'
@@ -47,20 +42,14 @@ export const ComponentTypeEdit: FunctionComponent<Props> = (props) => {
     return null
   }
 
-  const TagName = hasEditor(selectedComponent)
+  const FieldEditCustom = hasEditor(selectedComponent)
     ? componentTypeEditors[selectedComponent.type]
-    : undefined
-
-  const defaults = getComponentDefaults(selectedComponent)
-  const { type, subType } = defaults ?? {}
+    : () => null
 
   return (
     <>
-      {(type === ComponentType.List ||
-        subType !== ComponentSubType.Content) && (
-        <FieldEdit isContentField={subType === ComponentSubType.Content} />
-      )}
-      {TagName && <TagName>{children}</TagName>}
+      <FieldEdit />
+      <FieldEditCustom>{children}</FieldEditCustom>
     </>
   )
 }
