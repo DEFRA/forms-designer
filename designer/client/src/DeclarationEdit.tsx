@@ -69,12 +69,17 @@ export class DeclarationEdit extends Component {
           <label className="govuk-label" htmlFor="declaration">
             Declaration
           </label>
-          <div className="govuk-hint">
+          <div className="govuk-hint" id="declaration-hint">
             The declaration can include HTML and the `govuk-prose-scope` css
             class is available. Use this on a wrapping element to apply default
             govuk styles.
           </div>
-          <Editor id="declaration" name="declaration" value={declaration} />
+          <Editor
+            id="declaration"
+            aria-describedby="declaration-hint"
+            name="declaration"
+            value={declaration}
+          />
         </div>
 
         <button className="govuk-button" type="submit">

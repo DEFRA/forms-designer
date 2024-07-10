@@ -38,12 +38,19 @@ export function ParaEdit({ context = ComponentContext }: Props) {
         <label className="govuk-label govuk-label--s" htmlFor="field-content">
           Content
         </label>
-        <div className="govuk-hint">{i18n('fieldEdit.para.hint')}</div>
+        <div className="govuk-hint" id="field-content-error">
+          {i18n('fieldEdit.para.hint')}
+        </div>
         {errors.content && (
-          <ErrorMessage>{errors.content.children}</ErrorMessage>
+          <ErrorMessage id="field-content-error">
+            {errors.content.children}
+          </ErrorMessage>
         )}
         <Editor
           id="field-content"
+          aria-describedby={
+            'field-content-hint' + (errors.name ? 'field-content-error' : '')
+          }
           name="content"
           value={
             'content' in selectedComponent
@@ -63,10 +70,13 @@ export function ParaEdit({ context = ComponentContext }: Props) {
           <label className="govuk-label govuk-label--s" htmlFor="condition">
             Condition (optional)
           </label>
-          <div className="govuk-hint">{i18n('fieldEdit.conditions.hint')} </div>
+          <div className="govuk-hint" id="condition-hint">
+            {i18n('fieldEdit.conditions.hint')}{' '}
+          </div>
           <select
             className="govuk-select"
             id="condition"
+            aria-describedby="condition-hint"
             name="options.condition"
             value={'condition' in options ? options.condition : undefined}
             onChange={(e) =>

@@ -22,12 +22,16 @@ export function CustomValidationMessage() {
       >
         {i18n('common.customValidationMessage.title')}
       </label>
-      <div className="govuk-hint">
+      <div
+        className="govuk-hint"
+        id="field-options-custom-validation-message-hint"
+      >
         {i18n('common.customValidationMessage.helpText')}
       </div>
       <input
         className="govuk-input"
         id="field-options-custom-validation-message"
+        aria-describedby="field-options-custom-validation-message-hint"
         name="options.customValidationMessage"
         type="text"
         value={

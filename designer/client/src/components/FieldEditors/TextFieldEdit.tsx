@@ -41,13 +41,14 @@ export function TextFieldEdit({ children, context = ComponentContext }: Props) {
           >
             {i18n('textFieldEditComponent.minLengthField.title')}
           </label>
-          <div className="govuk-hint">
+          <div className="govuk-hint" id="field-schema-min-hint">
             {i18n('textFieldEditComponent.minLengthField.helpText')}
           </div>
           <input
             className="govuk-input govuk-input--width-3"
             data-cast="number"
             id="field-schema-min"
+            aria-describedby="field-schema-min-hint"
             name="schema.min"
             value={'min' in schema ? schema.min : undefined}
             type="number"
@@ -67,13 +68,14 @@ export function TextFieldEdit({ children, context = ComponentContext }: Props) {
           >
             {i18n('textFieldEditComponent.maxLengthField.title')}
           </label>
-          <div className="govuk-hint">
+          <div className="govuk-hint" id="field-schema-max-hint">
             {i18n('textFieldEditComponent.maxLengthField.helpText')}
           </div>
           <input
             className="govuk-input govuk-input--width-3"
             data-cast="number"
             id="field-schema-max"
+            aria-describedby="field-schema-max-hint"
             name="schema.max"
             value={'max' in schema ? schema.max : undefined}
             type="number"
@@ -93,13 +95,14 @@ export function TextFieldEdit({ children, context = ComponentContext }: Props) {
           >
             {i18n('textFieldEditComponent.maxWordField.title')}
           </label>
-          <div className="govuk-hint">
+          <div className="govuk-hint" id="field-schema-maxwords-hint">
             {i18n('textFieldEditComponent.maxWordField.helpText')}
           </div>
           <input
             className="govuk-input govuk-input--width-3"
             data-cast="number"
             id="field-schema-maxwords"
+            aria-describedby="field-schema-maxwords-hint"
             name="schema.maxwords"
             value={'maxWords' in options ? options.maxWords : undefined}
             type="number"
@@ -119,13 +122,14 @@ export function TextFieldEdit({ children, context = ComponentContext }: Props) {
           >
             {i18n('textFieldEditComponent.lengthField.title')}
           </label>
-          <div className="govuk-hint">
+          <div className="govuk-hint" id="field-schema-length-hint">
             {i18n('textFieldEditComponent.lengthField.helpText')}
           </div>
           <input
             className="govuk-input govuk-input--width-3"
             data-cast="number"
             id="field-schema-length"
+            aria-describedby="field-schema-length-hint"
             name="schema.length"
             value={'length' in schema ? schema.length : undefined}
             type="number"
@@ -147,12 +151,13 @@ export function TextFieldEdit({ children, context = ComponentContext }: Props) {
           >
             {i18n('textFieldEditComponent.regexField.title')}
           </label>
-          <div className="govuk-hint">
+          <div className="govuk-hint" id="field-schema-regex-hint">
             {i18n('textFieldEditComponent.regexField.helpText')}
           </div>
           <input
             className="govuk-input"
             id="field-schema-regex"
+            aria-describedby="field-schema-regex-hint"
             name="schema.regex"
             value={'regex' in schema ? schema.regex : undefined}
             onChange={(e) =>

@@ -22,10 +22,13 @@ export function Autocomplete() {
       >
         {i18n('common.autocomplete.title')}
       </label>
-      <div className="govuk-hint">{i18n('common.autocomplete.helpText')}</div>
+      <div className="govuk-hint" id="field-options-autocomplete-hint">
+        {i18n('common.autocomplete.helpText')}
+      </div>
       <input
         className="govuk-input"
         id="field-options-autocomplete"
+        aria-describedby="field-options-autocomplete-hint"
         name="options.autocomplete"
         type="text"
         value={'autocomplete' in options ? options.autocomplete : undefined}

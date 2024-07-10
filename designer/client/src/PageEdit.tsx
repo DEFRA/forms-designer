@@ -209,10 +209,13 @@ export class PageEdit extends Component {
             <label className="govuk-label govuk-label--s" htmlFor="page-type">
               {i18n('page.type')}
             </label>
-            <div className="govuk-hint">{i18n('page.typeHint')}</div>
+            <div className="govuk-hint" id="page-type-hint">
+              {i18n('page.typeHint')}
+            </div>
             <select
               className="govuk-select"
               id="page-type"
+              aria-describedby="page-type-hint"
               name="page-type"
               value={controller}
               onChange={(e) => this.setState({ controller: e.target.value })}
@@ -251,18 +254,31 @@ export class PageEdit extends Component {
             onChange={this.onChangePath}
             errorMessage={errors.path}
           />
-          <div className="govuk-form-group">
-            <label
-              className="govuk-label govuk-label--s"
-              htmlFor="page-section"
-            >
-              {i18n('page.section')}
-            </label>
-            <div className="govuk-hint">{i18n('page.sectionHint')}</div>
-            {sections.length > 0 && (
+          {!sections.length && (
+            <>
+              <h4 className="govuk-heading-s govuk-!-margin-bottom-1">
+                {i18n('page.section')}
+              </h4>
+              <p className="govuk-hint govuk-!-margin-top-0">
+                {i18n('page.sectionHint')}
+              </p>
+            </>
+          )}
+          {sections.length > 0 && (
+            <div className="govuk-form-group">
+              <label
+                className="govuk-label govuk-label--s"
+                htmlFor="page-section"
+              >
+                {i18n('page.section')}
+              </label>
+              <div className="govuk-hint" id="page-section-hint">
+                {i18n('page.sectionHint')}
+              </div>
               <select
                 className="govuk-select"
                 id="page-section"
+                aria-describedby="page-section-hint"
                 name="section"
                 value={section}
                 onChange={this.onChangeSection}
@@ -274,8 +290,8 @@ export class PageEdit extends Component {
                   </option>
                 ))}
               </select>
-            )}
-          </div>
+            </div>
+          )}
           <p className="govuk-body">
             {section && (
               <a

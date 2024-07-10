@@ -29,9 +29,7 @@ describe('Details edit', () => {
       </RenderWithContext>
     )
 
-    expect(container).toHaveTextContent(
-      'Enter the name to show for this component'
-    )
+    expect(container).toHaveTextContent('Enter the name to show for this field')
 
     expect(container).toHaveTextContent(
       'Enter the text you want to show when users expand the title. You can apply basic HTML, such as text formatting and hyperlinks.'

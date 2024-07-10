@@ -117,21 +117,5 @@ export function optionsReducer(
           options: { ...options, maxWords: payload }
         }
       }
-    case Options.EDIT_OPTIONS_EXPOSE_TO_CONTEXT:
-      return {
-        ...state,
-        selectedComponent: {
-          ...selectedComponent,
-          options: { ...options, exposeToContext: payload }
-        }
-      }
-    case Options.EDIT_OPTIONS_ALLOW_PRE_POPULATION:
-      return {
-        ...state,
-        selectedComponent: {
-          ...selectedComponent,
-          options: { ...options, allowPrePopulation: payload }
-        }
-      }
   }
 }

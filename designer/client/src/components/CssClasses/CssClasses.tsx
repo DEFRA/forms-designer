@@ -22,10 +22,13 @@ export function CssClasses() {
       >
         {i18n('common.classes.title')}
       </label>
-      <div className="govuk-hint">{i18n('common.classes.helpText')}</div>
+      <div className="govuk-hint" id="field-options-classes-hint">
+        {i18n('common.classes.helpText')}
+      </div>
       <input
         className="govuk-input"
         id="field-options-classes"
+        aria-describedby="field-options-classes-hint"
         name="options.classes"
         type="text"
         value={'classes' in options ? options.classes : undefined}

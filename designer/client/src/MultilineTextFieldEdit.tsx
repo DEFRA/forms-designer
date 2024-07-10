@@ -24,12 +24,13 @@ export function MultilineTextFieldEdit({ context = ComponentContext }) {
         >
           {i18n('multilineTextFieldEditComponent.rowsField.title')}
         </label>
-        <div className="govuk-hint">
+        <div className="govuk-hint" id="field-options-rows-hint">
           {i18n('multilineTextFieldEditComponent.rowsField.helpText')}
         </div>
         <input
           className="govuk-input govuk-input--width-3"
           id="field-options-rows"
+          aria-describedby="field-options-rows-hint"
           name="options.rows"
           type="text"
           data-cast="number"

@@ -79,10 +79,13 @@ export function ListItemEdit() {
         <label className="govuk-label" htmlFor="condition">
           {i18n('list.item.conditions')}
         </label>
-        <div className="govuk-hint">{i18n('list.item.conditionsHint')}</div>
+        <div className="govuk-hint" id="condition-hint">
+          {i18n('list.item.conditionsHint')}
+        </div>
         <select
           className="govuk-select"
           id="condition"
+          aria-describedby="condition-hint"
           name="options.condition"
           data-testid="list-condition-select"
           value={condition}

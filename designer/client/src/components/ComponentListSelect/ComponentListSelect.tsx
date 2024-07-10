@@ -100,10 +100,13 @@ export function ComponentListSelect() {
         >
           {i18n('list.select.title')}
         </label>
-        <div className="govuk-hint">{i18n('list.select.helpText')}</div>
+        <div className="govuk-hint" id="field-options-list-hint">
+          {i18n('list.select.helpText')}
+        </div>
         <select
           className="govuk-select govuk-input--width-10"
           id="field-options-list"
+          aria-describedby="field-options-list-hint"
           name="options.list"
           value={list}
           onChange={editList}

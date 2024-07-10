@@ -28,10 +28,10 @@ export function DetailsEdit({ context = ComponentContext }: Props) {
         name="title"
         label={{
           className: 'govuk-label--s',
-          children: [i18n('Title')]
+          children: [i18n('common.titleField.title')]
         }}
         hint={{
-          children: [i18n('titleHint')]
+          children: [i18n('common.titleField.helpText')]
         }}
         value={selectedComponent.title}
         onChange={(e) =>
@@ -52,13 +52,20 @@ export function DetailsEdit({ context = ComponentContext }: Props) {
         <label className="govuk-label govuk-label--s" htmlFor="field-content">
           Content
         </label>
-        <div className="govuk-hint">{i18n('fieldEdit.details.hint')}</div>
+        <div className="govuk-hint" id="field-content-hint">
+          {i18n('fieldEdit.details.hint')}
+        </div>
         {errors.content && (
-          <ErrorMessage>{errors.content.children}</ErrorMessage>
+          <ErrorMessage id="field-content-error">
+            {errors.content.children}
+          </ErrorMessage>
         )}
         <textarea
           className="govuk-textarea"
           id="field-content"
+          aria-describedby={
+            'field-content-hint' + (errors.name ? 'field-content-error' : '')
+          }
           name="content"
           defaultValue={
             'content' in selectedComponent

@@ -1,4 +1,8 @@
-import { ComponentType, getComponentDefaults } from '@defra/forms-model'
+import {
+  ComponentType,
+  getComponentDefaults,
+  hasContentField
+} from '@defra/forms-model'
 import { Input, Textarea } from '@xgovformbuilder/govuk-react-jsx'
 import classNames from 'classnames'
 import React, { useContext } from 'react'
@@ -8,32 +12,17 @@ import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 import { Fields, Options } from '~/src/reducers/component/types.js'
 
-interface Props {
-  isContentField?: boolean
-  isListField?: boolean
-}
-
-export function FieldEdit({
-  isContentField = false,
-  isListField = false
-}: Props) {
+export function FieldEdit() {
   const { state, dispatch } = useContext(ComponentContext)
   const { selectedComponent, errors = {} } = state
 
-  if (!selectedComponent) {
+  if (!selectedComponent || hasContentField(selectedComponent)) {
     return null
   }
 
-  const { name, title, hint, attrs, options } = selectedComponent
+  const { name, title, options } = selectedComponent
   const defaults = getComponentDefaults(selectedComponent)
-
-  const {
-    hideTitle = false,
-    optionalText = false,
-    required = true,
-    exposeToContext = false,
-    allowPrePopulation = false
-  } = options
+  const isRequired = !('required' in options) || options.required !== false
 
   return (
     <div data-test-id="standard-inputs">
@@ -47,7 +36,7 @@ export function FieldEdit({
         hint={{
           children: [i18n('common.titleField.helpText')]
         }}
-        value={title}
+        value={title ?? defaults?.title}
         onChange={(e) => {
           dispatch({
             type: Fields.EDIT_TITLE,
@@ -68,14 +57,13 @@ export function FieldEdit({
           children: [i18n('common.helpTextField.helpText')]
         }}
         required={false}
-        value={hint}
+        value={'hint' in selectedComponent ? selectedComponent.hint : undefined}
         onChange={(e) => {
           dispatch({
             type: Fields.EDIT_HELP,
             payload: e.target.value
           })
         }}
-        {...attrs}
       />
       {[ComponentType.UkAddressField].includes(selectedComponent.type) && (
         <div className="govuk-checkboxes govuk-form-group">
@@ -83,9 +71,10 @@ export function FieldEdit({
             <input
               className="govuk-checkboxes__input"
               id="field-options-hideTitle"
+              aria-describedby="field-options-hideTitle-hint"
               name="options.hideTitle"
               type="checkbox"
-              checked={hideTitle}
+              checked={'hideTitle' in options && !!options.hideTitle}
               onChange={(e) =>
                 dispatch({
                   type: Options.EDIT_OPTIONS_HIDE_TITLE,
@@ -99,7 +88,10 @@ export function FieldEdit({
             >
               {i18n('common.hideTitleOption.title')}
             </label>
-            <div className="govuk-hint govuk-checkboxes__hint">
+            <div
+              className="govuk-hint govuk-checkboxes__hint"
+              id="field-options-hideTitle-hint"
+            >
               {i18n('common.hideTitleOption.helpText')}
             </div>
           </div>
@@ -114,18 +106,26 @@ export function FieldEdit({
         <label className="govuk-label govuk-label--s" htmlFor="field-name">
           {i18n('common.componentNameField.title')}
         </label>
+        <div className="govuk-hint" id="field-name-hint">
+          {i18n('name.hint')}
+        </div>
         {errors.name && (
-          <ErrorMessage>{i18n('name.errors.whitespace')}</ErrorMessage>
+          <ErrorMessage id="field-name-error">
+            {i18n('name.errors.whitespace')}
+          </ErrorMessage>
         )}
-        <div className="govuk-hint">{i18n('name.hint')}</div>
         <input
-          className={`govuk-input govuk-input--width-20 ${
-            errors.name ? 'govuk-input--error' : ''
-          }`}
+          className={classNames({
+            'govuk-input govuk-input--width-20': true,
+            'govuk-input--error': errors.name
+          })}
           id="field-name"
+          aria-describedby={
+            'field-name-hint' + (errors.name ? 'field-name-error' : '')
+          }
           name="name"
           type="text"
-          value={name ?? ''}
+          value={name}
           onChange={(e) => {
             dispatch({
               type: Fields.EDIT_NAME,
@@ -134,15 +134,16 @@ export function FieldEdit({
           }}
         />
       </div>
-      {!isContentField && (
+      {selectedComponent.type !== ComponentType.List && (
         <div className="govuk-checkboxes govuk-form-group">
           <div className="govuk-checkboxes__item">
             <input
               type="checkbox"
               id="field-options-required"
+              aria-describedby="field-options-required-hint"
               className="govuk-checkboxes__input"
               name="options.required"
-              checked={!required}
+              checked={!isRequired}
               onChange={(e) =>
                 dispatch({
                   type: Options.EDIT_OPTIONS_REQUIRED,
@@ -158,7 +159,10 @@ export function FieldEdit({
                 component: defaults?.title ?? ''
               })}
             </label>
-            <div className="govuk-hint govuk-checkboxes__hint">
+            <div
+              className="govuk-hint govuk-checkboxes__hint"
+              id="field-options-required-hint"
+            >
               {i18n('common.componentOptionalOption.helpText')}
             </div>
           </div>
@@ -167,15 +171,16 @@ export function FieldEdit({
       <div
         className="govuk-checkboxes govuk-form-group"
         data-test-id="field-options.optionalText-wrapper"
-        hidden={required}
+        hidden={isRequired}
       >
         <div className="govuk-checkboxes__item">
           <input
             className="govuk-checkboxes__input"
             id="field-options-optionalText"
+            aria-describedby="field-options-optionalText-hint"
             name="options.optionalText"
             type="checkbox"
-            checked={optionalText}
+            checked={'optionalText' in options && !!options.optionalText}
             onChange={(e) =>
               dispatch({
                 type: Options.EDIT_OPTIONS_HIDE_OPTIONAL,
@@ -189,70 +194,14 @@ export function FieldEdit({
           >
             {i18n('common.hideOptionalTextOption.title')}
           </label>
-          <div className="govuk-hint govuk-checkboxes__hint">
+          <div
+            className="govuk-hint govuk-checkboxes__hint"
+            id="field-options-optionalText-hint"
+          >
             {i18n('common.hideOptionalTextOption.helpText')}
           </div>
         </div>
       </div>
-      <div
-        className="govuk-checkboxes govuk-form-group"
-        data-test-id="field-options.exposeToContext-wrapper"
-      >
-        <div className="govuk-checkboxes__item">
-          <input
-            className="govuk-checkboxes__input"
-            id="field-options-exposeToContext"
-            name="options.exposeToContext"
-            type="checkbox"
-            checked={exposeToContext}
-            onChange={(e) =>
-              dispatch({
-                type: Options.EDIT_OPTIONS_EXPOSE_TO_CONTEXT,
-                payload: e.target.checked
-              })
-            }
-          />
-          <label
-            className="govuk-label govuk-checkboxes__label"
-            htmlFor="field-options-exposeToContext"
-          >
-            {i18n('common.exposeToContextOption.title')}
-          </label>
-          <div className="govuk-hint govuk-checkboxes__hint">
-            {i18n('common.exposeToContextOption.helpText')}
-          </div>
-        </div>
-      </div>
-      {isListField && (
-        <div className="govuk-checkboxes govuk-form-group">
-          <div className="govuk-checkboxes__item">
-            <input
-              type="checkbox"
-              id="field-options-allow-pre-population"
-              className={`govuk-checkboxes__input`}
-              name="options.allowPrePopulation"
-              checked={allowPrePopulation}
-              onChange={(e) =>
-                dispatch({
-                  type: Options.EDIT_OPTIONS_ALLOW_PRE_POPULATION,
-                  payload: e.target.checked
-                })
-              }
-            />
-            <label
-              className="govuk-label govuk-checkboxes__label"
-              htmlFor="field-options-allow-pre-population"
-            >
-              {i18n('common.allowPrePopulationOption.title', {
-                component: defaults?.title ?? ''
-              })}
-            </label>
-            <div className="govuk-hint govuk-checkboxes__hint">
-              {i18n('common.allowPrePopulationOption.helpText')}
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }
