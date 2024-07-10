@@ -1,3 +1,4 @@
+import { ComponentTypes } from '~/src/components/component-types.js'
 import { ComponentType } from '~/src/components/enums.js'
 import {
   type InputFieldsComponentsDef,
@@ -11,6 +12,17 @@ import {
   type SelectionComponentsDef,
   type EditorComponentsDef
 } from '~/src/components/types.js'
+
+/**
+ * Return component defaults by type
+ */
+export function getComponentDefaults(component?: Partial<ComponentDef>) {
+  if (!component?.type) {
+    return
+  }
+
+  return ComponentTypes.find(({ type }) => type === component.type)
+}
 
 /**
  * Filter known components with support for conditions

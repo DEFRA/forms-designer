@@ -1,7 +1,7 @@
 import {
   ComponentSubType,
   ComponentType,
-  ComponentTypes,
+  getComponentDefaults,
   hasEditor
 } from '@defra/forms-model'
 import React, { useContext, type FunctionComponent } from 'react'
@@ -43,10 +43,6 @@ export const ComponentTypeEdit: FunctionComponent<Props> = (props) => {
   const { state } = useContext(context)
   const { selectedComponent } = state
 
-  const component = ComponentTypes.find((componentType) => {
-    return componentType.type === selectedComponent?.type
-  })
-
   if (!selectedComponent) {
     return null
   }
@@ -55,7 +51,8 @@ export const ComponentTypeEdit: FunctionComponent<Props> = (props) => {
     ? componentTypeEditors[selectedComponent.type]
     : undefined
 
-  const { type, subType } = component ?? {}
+  const defaults = getComponentDefaults(selectedComponent)
+  const { type, subType } = defaults ?? {}
 
   return (
     <>

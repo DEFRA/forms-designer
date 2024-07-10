@@ -1,6 +1,6 @@
 import {
   ComponentSubType,
-  ComponentTypes,
+  getComponentDefaults,
   type ComponentDef,
   type Page as PageType,
   type RepeatingFieldPage,
@@ -78,11 +78,10 @@ export const Page = (props: {
   const section = data.sections.find((section) => section.name === page.section)
 
   const formComponents =
-    page.components?.filter(
-      (comp) =>
-        ComponentTypes.find((componentType) => componentType.type === comp.type)
-          ?.subType === ComponentSubType.Field
-    ) ?? []
+    page.components?.filter((component) => {
+      const { subType } = getComponentDefaults(component) ?? {}
+      return subType === ComponentSubType.Field
+    }) ?? []
 
   const pageTitle =
     page.title ||

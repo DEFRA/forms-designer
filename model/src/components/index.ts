@@ -1,5 +1,6 @@
 export { ComponentTypes } from '~/src/components/component-types.js'
 export {
+  getComponentDefaults,
   hasConditionSupport,
   hasContentField,
   hasEditor,
