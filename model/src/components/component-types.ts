@@ -1,17 +1,14 @@
-import { ComponentSubType, ComponentType } from '~/src/components/enums.js'
+import { ComponentType } from '~/src/components/enums.js'
 import { type ComponentDef } from '~/src/components/types.js'
 
 /**
  * Defaults for creating new components
  */
-export const ComponentTypes: (ComponentDef & {
-  subType?: ComponentSubType
-})[] = [
+export const ComponentTypes: ComponentDef[] = [
   {
     name: 'TextField',
     title: 'Text field',
     type: ComponentType.TextField,
-    subType: ComponentSubType.Field,
     hint: '',
     options: {},
     schema: {}
@@ -20,7 +17,6 @@ export const ComponentTypes: (ComponentDef & {
     name: 'MultilineTextField',
     title: 'Multiline text field',
     type: ComponentType.MultilineTextField,
-    subType: ComponentSubType.Field,
     hint: '',
     options: {},
     schema: {}
@@ -29,7 +25,6 @@ export const ComponentTypes: (ComponentDef & {
     name: 'YesNoField',
     title: 'Yes/No field',
     type: ComponentType.YesNoField,
-    subType: ComponentSubType.Field,
     hint: '',
     options: {},
     schema: {}
@@ -38,7 +33,6 @@ export const ComponentTypes: (ComponentDef & {
     name: 'TimeField',
     title: 'Time field',
     type: ComponentType.TimeField,
-    subType: ComponentSubType.Field,
     hint: '',
     options: {},
     schema: {}
@@ -47,7 +41,6 @@ export const ComponentTypes: (ComponentDef & {
     name: 'DatePartsField',
     title: 'Date field',
     type: ComponentType.DatePartsField,
-    subType: ComponentSubType.Field,
     hint: '',
     options: {},
     schema: {}
@@ -56,7 +49,6 @@ export const ComponentTypes: (ComponentDef & {
     name: 'MonthYearField',
     title: 'Month & year field',
     type: ComponentType.MonthYearField,
-    subType: ComponentSubType.Field,
     hint: '',
     options: {},
     schema: {}
@@ -65,7 +57,6 @@ export const ComponentTypes: (ComponentDef & {
     name: 'SelectField',
     title: 'Select field',
     type: ComponentType.SelectField,
-    subType: ComponentSubType.ListField,
     options: {},
     schema: {},
     list: ''
@@ -74,7 +65,6 @@ export const ComponentTypes: (ComponentDef & {
     name: 'AutocompleteField',
     title: 'Autocomplete field',
     type: ComponentType.AutocompleteField,
-    subType: ComponentSubType.ListField,
     options: {},
     schema: {},
     list: ''
@@ -83,7 +73,6 @@ export const ComponentTypes: (ComponentDef & {
     name: 'RadiosField',
     title: 'Radios field',
     type: ComponentType.RadiosField,
-    subType: ComponentSubType.ListField,
     options: {},
     schema: {},
     list: ''
@@ -92,7 +81,6 @@ export const ComponentTypes: (ComponentDef & {
     name: 'CheckboxesField',
     title: 'Checkboxes field',
     type: ComponentType.CheckboxesField,
-    subType: ComponentSubType.ListField,
     options: {},
     schema: {},
     list: ''
@@ -101,7 +89,6 @@ export const ComponentTypes: (ComponentDef & {
     name: 'NumberField',
     title: 'Number field',
     type: ComponentType.NumberField,
-    subType: ComponentSubType.Field,
     hint: '',
     options: {},
     schema: {}
@@ -110,7 +97,6 @@ export const ComponentTypes: (ComponentDef & {
     name: 'UkAddressField',
     title: 'UK address field',
     type: ComponentType.UkAddressField,
-    subType: ComponentSubType.Field,
     hint: '',
     options: {},
     schema: {}
@@ -119,7 +105,6 @@ export const ComponentTypes: (ComponentDef & {
     name: 'TelephoneNumberField',
     title: 'Telephone number field',
     type: ComponentType.TelephoneNumberField,
-    subType: ComponentSubType.Field,
     hint: '',
     options: {},
     schema: {}
@@ -128,7 +113,6 @@ export const ComponentTypes: (ComponentDef & {
     name: 'EmailAddressField',
     title: 'Email address field',
     type: ComponentType.EmailAddressField,
-    subType: ComponentSubType.Field,
     hint: 'For example, ‘name@example.com’',
     options: {},
     schema: {}
@@ -137,7 +121,6 @@ export const ComponentTypes: (ComponentDef & {
     name: 'Html',
     title: 'Html',
     type: ComponentType.Html,
-    subType: ComponentSubType.Content,
     content: '',
     options: {},
     schema: {}
@@ -146,7 +129,6 @@ export const ComponentTypes: (ComponentDef & {
     name: 'InsetText',
     title: 'Inset text',
     type: ComponentType.InsetText,
-    subType: ComponentSubType.Content,
     content: '',
     options: {},
     schema: {}
@@ -155,7 +137,6 @@ export const ComponentTypes: (ComponentDef & {
     name: 'Details',
     title: 'Details',
     type: ComponentType.Details,
-    subType: ComponentSubType.Content,
     content: '',
     options: {},
     schema: {}
@@ -164,7 +145,6 @@ export const ComponentTypes: (ComponentDef & {
     name: 'List',
     title: 'List',
     type: ComponentType.List,
-    subType: ComponentSubType.Content,
     options: {},
     schema: {},
     list: ''
