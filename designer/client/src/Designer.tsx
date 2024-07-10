@@ -20,16 +20,18 @@ interface Props {
 interface State {
   flyoutCount: number
   data: FormDefinition
+  meta: FormMetadata
 }
 
 export class Designer extends Component<Props, State> {
   constructor(props: Props) {
     super(props)
 
-    const { definition } = this.props
+    const { definition, metadata } = this.props
 
     this.state = {
       data: definition,
+      meta: metadata,
       flyoutCount: 0
     }
   }
@@ -68,7 +70,7 @@ export class Designer extends Component<Props, State> {
 
   render() {
     const { metadata, previewUrl } = this.props
-    const { data, flyoutCount } = this.state
+    const { data, meta, flyoutCount } = this.state
 
     const flyoutContextProviderValue = {
       count: flyoutCount,
@@ -78,6 +80,7 @@ export class Designer extends Component<Props, State> {
 
     const dataContextProviderValue = {
       data,
+      meta,
       save: this.save
     }
 

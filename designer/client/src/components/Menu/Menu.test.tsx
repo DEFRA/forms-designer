@@ -1,3 +1,4 @@
+import { type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { act, cleanup, render, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
@@ -7,11 +8,18 @@ import { Menu } from '~/src/components/Menu/Menu.jsx'
 import { RenderWithContext } from '~/test/helpers/renderers'
 
 describe('Menu', () => {
+  const data = {
+    pages: [],
+    lists: [],
+    sections: [],
+    conditions: []
+  } satisfies FormDefinition
+
   afterEach(cleanup)
 
   it('Renders button strings correctly', () => {
     render(
-      <RenderWithContext>
+      <RenderWithContext data={data}>
         <Menu slug="example" />
       </RenderWithContext>
     )
@@ -21,34 +29,33 @@ describe('Menu', () => {
     expect(screen.getByText('Sections')).toBeInTheDocument()
     expect(screen.getByText('Conditions')).toBeInTheDocument()
     expect(screen.getByText('Lists')).toBeInTheDocument()
-    expect(screen.getByText('Summary behaviour')).toBeInTheDocument()
     expect(screen.getByText('Summary')).toBeInTheDocument()
   })
 
   it('Can open flyouts and close them', async () => {
     render(
-      <RenderWithContext>
+      <RenderWithContext data={data}>
         <Menu slug="example" />
       </RenderWithContext>
     )
 
     expect(screen.queryByTestId('flyout-1')).not.toBeInTheDocument()
 
-    await act(() => userEvent.click(screen.getByText('Summary behaviour')))
+    await act(() => userEvent.click(screen.getByText('Summary')))
     expect(screen.queryByTestId('flyout-1')).toBeInTheDocument()
 
     await act(() => userEvent.click(screen.getByText('Close')))
     expect(screen.queryByTestId('flyout-1')).not.toBeInTheDocument()
   })
 
-  it('clicking on a summary tab shows different tab content', async () => {
+  it('clicking on a form overview tab shows different tab content', async () => {
     render(
-      <RenderWithContext>
+      <RenderWithContext data={data}>
         <Menu slug="example" />
       </RenderWithContext>
     )
 
-    await act(() => userEvent.click(screen.getByText('Summary')))
+    await act(() => userEvent.click(screen.getByText('Form overview')))
     expect(screen.getByTestId('flyout-1')).toBeVisible()
 
     const $tabs = screen.queryAllByRole('tab')
@@ -58,11 +65,13 @@ describe('Menu', () => {
     expect($tabs[0]).toBeVisible()
     expect($tabs[1]).toBeVisible()
     expect($tabs[2]).toBeVisible()
+    expect($tabs[3]).toBeVisible()
 
     // Only first tab panel (Data model) is visible
     expect($panels[0]).not.toHaveClass('govuk-tabs__panel--hidden')
     expect($panels[1]).toHaveClass('govuk-tabs__panel--hidden')
     expect($panels[2]).toHaveClass('govuk-tabs__panel--hidden')
+    expect($panels[3]).toHaveClass('govuk-tabs__panel--hidden')
 
     // Click JSON tab link
     await act(() => userEvent.click($tabs[1]))
@@ -71,18 +80,19 @@ describe('Menu', () => {
     expect($panels[0]).toHaveClass('govuk-tabs__panel--hidden')
     expect($panels[1]).not.toHaveClass('govuk-tabs__panel--hidden')
     expect($panels[2]).toHaveClass('govuk-tabs__panel--hidden')
+    expect($panels[3]).toHaveClass('govuk-tabs__panel--hidden')
   })
 
   it('flyouts close on Save', async () => {
     const save = jest.fn()
 
     render(
-      <RenderWithContext save={save}>
+      <RenderWithContext data={data} save={save}>
         <Menu slug="example" />
       </RenderWithContext>
     )
 
-    await act(() => userEvent.click(screen.getByText('Summary behaviour')))
+    await act(() => userEvent.click(screen.getByText('Summary')))
     expect(screen.queryByTestId('flyout-1')).toBeInTheDocument()
 
     await act(() => userEvent.click(screen.getByText('Save')))

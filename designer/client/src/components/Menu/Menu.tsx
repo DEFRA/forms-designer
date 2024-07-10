@@ -1,3 +1,5 @@
+import { hasListField } from '@defra/forms-model'
+import { highlightAll } from 'prismjs'
 import React, { useContext } from 'react'
 
 import { DeclarationEdit } from '~/src/DeclarationEdit.jsx'
@@ -22,46 +24,97 @@ interface Props {
 }
 
 export function Menu({ slug }: Props) {
-  const { data } = useContext(DataContext)
+  const { data, meta } = useContext(DataContext)
 
   const page = useMenuItem()
   const link = useMenuItem()
   const sections = useMenuItem()
   const conditions = useMenuItem()
   const lists = useMenuItem()
-  const summaryBehaviour = useMenuItem()
   const summary = useMenuItem()
-  const summaryTabs = [
+  const overview = useMenuItem()
+
+  const overviewTabs = [
     {
-      label: 'Data model',
-      id: 'tab-model',
-      panel: {
-        children: <DataPrettyPrint />,
-        'data-testid': 'tab-model'
-      }
-    },
-    {
-      label: 'JSON',
-      id: 'tab-json',
-      panel: {
-        children: <pre>{JSON.stringify(data, null, 2)}</pre>,
-        'data-testid': 'tab-json'
-      }
-    },
-    {
-      label: 'Summary',
-      id: 'tab-summary',
+      label: 'Definition',
+      id: 'tab-definition',
       panel: {
         children: (
-          <pre>
-            {JSON.stringify(
-              'pages' in data ? data.pages.map((page) => page.path) : [],
-              null,
-              2
-            )}
-          </pre>
-        ),
-        'data-testid': 'tab-summary'
+          <>
+            <h4 className="govuk-heading-m govuk-!-margin-bottom-2">
+              Definition
+            </h4>
+            <p className="govuk-body">Form definition JSON</p>
+
+            <DataPrettyPrint className="language-json">{data}</DataPrettyPrint>
+          </>
+        )
+      }
+    },
+    {
+      label: 'Metadata',
+      id: 'tab-metadata',
+      panel: {
+        children: (
+          <>
+            <h4 className="govuk-heading-m govuk-!-margin-bottom-2">
+              Metadata
+            </h4>
+            <p className="govuk-body">Form metadata JSON</p>
+
+            <DataPrettyPrint className="language-json">
+              {meta ?? {}}
+            </DataPrettyPrint>
+          </>
+        )
+      }
+    },
+    {
+      label: 'Pages',
+      id: 'tab-pages',
+      panel: {
+        children: (
+          <>
+            <h4 className="govuk-heading-m govuk-!-margin-bottom-2">Pages</h4>
+            <p className="govuk-body">
+              Form definition JSON <code>pages</code> showing paths and titles
+            </p>
+
+            <DataPrettyPrint className="language-json">
+              {data.pages.map((page) => ({
+                path: page.path,
+                title: page.title
+              }))}
+            </DataPrettyPrint>
+          </>
+        )
+      }
+    },
+    {
+      label: 'Components',
+      id: 'tab-components',
+      panel: {
+        children: (
+          <>
+            <h4 className="govuk-heading-m govuk-!-margin-bottom-2">
+              Components
+            </h4>
+            <p className="govuk-body">
+              Form definition JSON <code>components</code> showing name, type
+              and (optional) list
+            </p>
+
+            <DataPrettyPrint className="language-json">
+              {data.pages.flatMap(({ components }) =>
+                components?.map((component) => ({
+                  name: component.name,
+                  type: component.type,
+                  list: hasListField(component) ? component.list : undefined
+                }))
+              )}
+            </DataPrettyPrint>
+          </>
+        )
       }
     }
   ]
@@ -69,58 +122,27 @@ export function Menu({ slug }: Props) {
   return (
     <>
       <nav className="menu">
-        <div className="menu__row">
-          <button
-            className="govuk-button"
-            data-testid="menu-page"
-            onClick={page.show}
-          >
+        <div className="govuk-button-group govuk-!-margin-bottom-0">
+          <button className="govuk-button" onClick={page.show}>
             {i18n('menu.addPage')}
           </button>
-          <button
-            className="govuk-button"
-            data-testid="menu-links"
-            onClick={link.show}
-          >
+          <button className="govuk-button" onClick={link.show}>
             {i18n('menu.links')}
           </button>
-          <button
-            className="govuk-button"
-            data-testid="menu-sections"
-            onClick={sections.show}
-          >
+          <button className="govuk-button" onClick={sections.show}>
             {i18n('menu.sections')}
           </button>
-          <button
-            className="govuk-button"
-            data-testid="menu-conditions"
-            onClick={conditions.show}
-          >
+          <button className="govuk-button" onClick={conditions.show}>
             {i18n('menu.conditions')}
           </button>
-          <button
-            className="govuk-button"
-            data-testid="menu-lists"
-            onClick={lists.show}
-          >
+          <button className="govuk-button" onClick={lists.show}>
             {i18n('menu.lists')}
           </button>
-          <button
-            className="govuk-button"
-            data-testid="menu-summary-behaviour"
-            onClick={summaryBehaviour.show}
-          >
-            {i18n('menu.summaryBehaviour')}
-          </button>
-          <button
-            className="govuk-button"
-            onClick={summary.show}
-            data-testid="menu-summary"
-          >
+          <button className="govuk-button" onClick={summary.show}>
             {i18n('menu.summary')}
           </button>
         </div>
-        <SubMenu slug={slug} />
+        <SubMenu slug={slug} overview={overview} />
       </nav>
 
       {page.isVisible && (
@@ -171,18 +193,23 @@ export function Menu({ slug }: Props) {
         </RenderInPortal>
       )}
 
-      {summaryBehaviour.isVisible && (
+      {summary.isVisible && (
         <RenderInPortal>
-          <Flyout title="Edit Summary behaviour" onHide={summaryBehaviour.hide}>
-            <DeclarationEdit onCreate={() => summaryBehaviour.hide()} />
+          <Flyout title="Edit Summary" onHide={summary.hide}>
+            <DeclarationEdit onCreate={() => summary.hide()} />
           </Flyout>
         </RenderInPortal>
       )}
 
-      {summary.isVisible && (
+      {overview.isVisible && (
         <RenderInPortal>
-          <Flyout title="Summary" width="large" onHide={summary.hide}>
-            <Tabs title="Summary" items={summaryTabs}></Tabs>
+          <Flyout width="xlarge" onHide={overview.hide}>
+            <Tabs
+              title="Form overview"
+              items={overviewTabs}
+              onInit={highlightAll}
+              className="app-tabs--overview"
+            ></Tabs>
           </Flyout>
         </RenderInPortal>
       )}
