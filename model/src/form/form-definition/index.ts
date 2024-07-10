@@ -11,7 +11,6 @@ import {
   type List,
   type Page,
   type PhaseBanner,
-  type RepeatingFieldPage,
   type Section
 } from '~/src/form/form-definition/types.js'
 
@@ -119,15 +118,13 @@ const nextSchema = Joi.object<Link>().keys({
  * `/status` is a special route for providing a user's application status.
  *  It should not be configured via the designer.
  */
-const pageSchema = Joi.object<Page | RepeatingFieldPage>().keys({
+const pageSchema = Joi.object<Page>().keys({
   path: Joi.string().required().disallow('/status'),
   title: localisedString,
   section: Joi.string(),
   controller: Joi.string().optional(),
   components: Joi.array<ComponentDef>().items(componentSchema),
   next: Joi.array<Link>().items(nextSchema),
-  repeatField: Joi.string().optional(),
-  options: Joi.object().optional(),
   backLinkFallback: Joi.string().optional()
 })
 
@@ -200,10 +197,7 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
     name: localisedString.optional(),
     feedback: feedbackSchema.optional(),
     startPage: Joi.string().optional(),
-    pages: Joi.array<Page | RepeatingFieldPage>()
-      .required()
-      .items(pageSchema)
-      .unique('path'),
+    pages: Joi.array<Page>().required().items(pageSchema).unique('path'),
     sections: Joi.array<Section>()
       .items(sectionsSchema)
       .unique('name')

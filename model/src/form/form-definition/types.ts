@@ -15,22 +15,7 @@ export interface Page {
   components?: ComponentDef[]
   section?: string // the section ID
   next?: Link[]
-  repeatField?: string
   backLinkFallback?: string
-}
-
-export interface RepeatingFieldPage extends Page {
-  controller: 'RepeatingFieldPageController'
-  options: {
-    summaryDisplayMode?: {
-      samePage?: boolean
-      separatePage?: boolean
-      hideRowTitles?: boolean
-    }
-    customText?: {
-      separatePageTitle?: string
-    }
-  }
 }
 
 export interface Section {
@@ -83,7 +68,7 @@ export interface ConditionRawData {
  * @see {@link formDefinitionSchema}
  */
 export interface FormDefinition {
-  pages: (Page | RepeatingFieldPage)[]
+  pages: Page[]
   conditions: ConditionRawData[]
   lists: List[]
   sections: Section[]

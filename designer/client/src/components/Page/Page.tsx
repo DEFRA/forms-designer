@@ -1,7 +1,6 @@
 import {
   type ComponentDef,
   type Page as PageType,
-  type RepeatingFieldPage,
   type FormDefinition
 } from '@defra/forms-model'
 import React, { useContext, useState, type CSSProperties } from 'react'
@@ -17,7 +16,7 @@ import { ComponentContextProvider } from '~/src/reducers/component/componentRedu
 
 const ComponentItem = (props: {
   index: number
-  page: PageType | RepeatingFieldPage
+  page: PageType
   selectedComponent: ComponentDef
   data: FormDefinition
 }) => {
@@ -35,10 +34,7 @@ const ComponentItem = (props: {
   )
 }
 
-const ComponentList = (props: {
-  page: PageType | RepeatingFieldPage
-  data: FormDefinition
-}) => {
+const ComponentList = (props: { page: PageType; data: FormDefinition }) => {
   const { page, data } = props
   const { components = [] } = page
 
@@ -58,7 +54,7 @@ const ComponentList = (props: {
 }
 
 export const Page = (props: {
-  page: PageType | RepeatingFieldPage
+  page: PageType
   previewUrl: string
   slug: string
   layout?: CSSProperties
