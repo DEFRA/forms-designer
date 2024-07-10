@@ -12,16 +12,16 @@ import React from 'react'
 import { LinkCreate } from '~/src/LinkCreate.jsx'
 import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
-const data: FormDefinition = {
+const data = {
   pages: [
     {
       title: 'First page',
       path: '/first-page',
       components: [
         {
-          type: ComponentType.YesNoField,
           name: 'ukPassport',
           title: 'Do you have a UK passport?',
+          type: ComponentType.YesNoField,
           options: {
             required: true
           },
@@ -44,7 +44,7 @@ const data: FormDefinition = {
   lists: [],
   sections: [],
   conditions: []
-}
+} satisfies FormDefinition
 
 afterEach(cleanup)
 

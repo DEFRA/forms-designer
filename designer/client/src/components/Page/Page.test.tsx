@@ -7,7 +7,7 @@ import React from 'react'
 import { Page } from '~/src/components/Page/Page.jsx'
 import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
-const data: FormDefinition = {
+const data = {
   pages: [
     {
       title: 'my first page',
@@ -52,7 +52,7 @@ const data: FormDefinition = {
   lists: [],
   sections: [],
   conditions: []
-}
+} satisfies FormDefinition
 
 describe('Page', () => {
   afterEach(cleanup)

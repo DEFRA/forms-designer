@@ -11,7 +11,7 @@ describe('Visualisation', () => {
   afterEach(cleanup)
 
   test('Graph is rendered with correct number of pages and updates', async () => {
-    const data: FormDefinition = {
+    const data = {
       pages: [
         {
           title: 'my first page',
@@ -22,7 +22,7 @@ describe('Visualisation', () => {
       lists: [],
       sections: [],
       conditions: []
-    }
+    } satisfies FormDefinition
 
     render(
       <RenderWithContext data={data}>
@@ -55,7 +55,7 @@ describe('Visualisation', () => {
   })
 
   test('Links between pages are navigable via keyboard', async () => {
-    const data: FormDefinition = {
+    const data = {
       pages: [
         {
           title: 'link source',
@@ -70,7 +70,7 @@ describe('Visualisation', () => {
       lists: [],
       sections: [],
       conditions: []
-    }
+    } satisfies FormDefinition
 
     render(
       <RenderWithContext data={data}>

@@ -28,7 +28,7 @@ const validateContent = (component: ContentComponentsDef) => {
 const validateList = (component: ListComponentsDef) => {
   const errors: ErrorList = {}
 
-  if (!('list' in component)) {
+  if (!('list' in component) || isEmpty(component.list)) {
     errors.list = {
       href: `#field-options-list`,
       children: [i18n('list.errors.select')]
@@ -38,7 +38,7 @@ const validateList = (component: ListComponentsDef) => {
   return errors
 }
 
-export function fieldComponentValidations(component: ComponentDef) {
+export function fieldComponentValidations(component?: ComponentDef) {
   const validations: ErrorList[] = []
 
   if (hasTitle(component)) {
@@ -58,7 +58,7 @@ export function fieldComponentValidations(component: ComponentDef) {
       'name',
       'field-name',
       '$t(common.componentNameField.title)',
-      component.name,
+      component?.name,
       i18n
     )
   )
@@ -78,7 +78,7 @@ export function fieldComponentValidations(component: ComponentDef) {
   return errors
 }
 
-export function validateComponent(selectedComponent: ComponentDef) {
+export function validateComponent(selectedComponent?: ComponentDef) {
   return {
     errors: fieldComponentValidations(selectedComponent),
     hasValidated: true

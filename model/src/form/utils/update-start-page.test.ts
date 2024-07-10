@@ -15,9 +15,9 @@ describe('updateStartPage', () => {
           next: [{ path: '/second-page' }],
           components: [
             {
-              type: ComponentType.YesNoField,
               name: 'ukPassport',
               title: 'Do you have a UK passport?',
+              type: ComponentType.YesNoField,
               options: {
                 required: true
               },

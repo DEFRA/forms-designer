@@ -2,7 +2,7 @@ import { ComponentType, type FormDefinition } from '@defra/forms-model'
 
 import { findPage } from '~/src/data/page/findPage.js'
 
-const data: FormDefinition = {
+const data = {
   pages: [
     {
       title: 'page1',
@@ -52,7 +52,8 @@ const data: FormDefinition = {
   lists: [],
   sections: [],
   conditions: []
-}
+} satisfies FormDefinition
+
 test('findPage should throw if the page does not exist', () => {
   expect(() => findPage(data, '/404')).toThrow()
 })

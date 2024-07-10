@@ -1,8 +1,4 @@
-import {
-  ComponentSubType,
-  ComponentType,
-  type ComponentDef
-} from '@defra/forms-model'
+import { ComponentType, type ComponentDef } from '@defra/forms-model'
 
 import { hasContentField } from '~/src/components/helpers.js'
 
@@ -20,7 +16,6 @@ describe('Type guards', () => {
         name: 'field',
         title: 'Radios',
         type: ComponentType.RadiosField,
-        subType: ComponentSubType.ListField,
         list: 'items',
         options: {},
         schema: {}
@@ -29,7 +24,6 @@ describe('Type guards', () => {
         name: 'field',
         title: 'Checkboxes',
         type: ComponentType.CheckboxesField,
-        subType: ComponentSubType.ListField,
         list: 'items',
         options: {},
         schema: {}

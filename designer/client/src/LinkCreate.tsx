@@ -1,13 +1,15 @@
 import classNames from 'classnames'
 import React, { Component, type ContextType } from 'react'
 
-import { ErrorSummary } from '~/src/ErrorSummary.jsx'
+import { ErrorSummary, type ErrorList } from '~/src/ErrorSummary.jsx'
 import { logger } from '~/src/common/helpers/logging/logger.js'
 import { ErrorMessage } from '~/src/components/ErrorMessage/ErrorMessage.jsx'
 import { SelectConditions } from '~/src/conditions/SelectConditions.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { addLink } from '~/src/data/page/addLink.js'
+import { isEmpty } from '~/src/helpers.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
+import { hasValidationErrors } from '~/src/validations.js'
 
 export class LinkCreate extends Component {
   declare context: ContextType<typeof DataContext>
@@ -19,8 +21,9 @@ export class LinkCreate extends Component {
     e.preventDefault()
     const { data, save } = this.context
     const { from, to, selectedCondition } = this.state
-    const hasValidationErrors = this.validate()
-    if (hasValidationErrors) return
+
+    const validationErrors = this.validate(from, to)
+    if (hasValidationErrors(validationErrors)) return
 
     const copy = { ...data }
     const { error, ...updatedData } = addLink(copy, from, to, selectedCondition)
@@ -42,32 +45,36 @@ export class LinkCreate extends Component {
     this.setState(stateUpdate)
   }
 
-  validate = () => {
-    const { from, to } = this.state
-    const errors = {}
-    if (!from) {
+  validate = (from?: string, to?: string): ErrorList => {
+    const errors: ErrorList = {}
+
+    const fromIsEmpty = isEmpty(from)
+    const toIsEmpty = isEmpty(to)
+
+    if (fromIsEmpty) {
       errors.from = { href: '#link-source', children: 'Enter from' }
     }
-    if (!to) {
+
+    if (toIsEmpty) {
       errors.to = { href: '#link-target', children: 'Enter to' }
     }
+
     this.setState({
       errors
     })
-    return !from || !to
+
+    return errors
   }
 
   render() {
     const { data } = this.context
     const { pages } = data
     const { from, errors = {} } = this.state
-    const hasValidationErrors = Object.keys(errors).length > 0
+    const hasErrors = hasValidationErrors(errors)
 
     return (
       <>
-        {hasValidationErrors && (
-          <ErrorSummary errorList={Object.values(errors)} />
-        )}
+        {hasErrors && <ErrorSummary errorList={Object.values(errors)} />}
         <div className="govuk-hint">{i18n('addLink.hint')}</div>
         <form onSubmit={(e) => this.onSubmit(e)} autoComplete="off">
           <div

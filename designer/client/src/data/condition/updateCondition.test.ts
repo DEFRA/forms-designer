@@ -11,12 +11,12 @@ const condition = {
   }
 }
 
-const data: FormDefinition = {
+const data = {
   pages: [],
   lists: [],
   sections: [],
   conditions: [{ ...condition }]
-}
+} satisfies FormDefinition
 
 test('updateCondition throws if no condition could be found', () => {
   expect(() => updateCondition(data, 'isDogPerson', {})).toThrow()

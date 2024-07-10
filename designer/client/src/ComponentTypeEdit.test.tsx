@@ -1,16 +1,13 @@
-import {
-  ComponentSubType,
-  ComponentType,
-  type ComponentDef,
-  type FormDefinition
-} from '@defra/forms-model'
+import { ComponentType, type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
 import React from 'react'
 
 import { ComponentTypeEdit } from '~/src/ComponentTypeEdit.jsx'
-import { type ComponentState } from '~/src/reducers/component/componentReducer.jsx'
-import { RenderWithContext } from '~/test/helpers/renderers.jsx'
+import {
+  RenderWithContext,
+  type RenderWithContextProps
+} from '~/test/helpers/renderers.jsx'
 
 describe('ComponentTypeEdit', () => {
   let data: FormDefinition
@@ -45,7 +42,7 @@ describe('ComponentTypeEdit', () => {
   afterEach(cleanup)
 
   describe('Checkbox', () => {
-    let state: ComponentState
+    let state: RenderWithContextProps['state']
 
     beforeEach(() => {
       state = {
@@ -54,10 +51,9 @@ describe('ComponentTypeEdit', () => {
           title: 'Test checkboxes',
           list: 'myList',
           type: ComponentType.CheckboxesField,
-          subType: ComponentSubType.ListField,
           options: {},
           schema: {}
-        } satisfies ComponentDef
+        }
       }
     })
 
@@ -136,7 +132,7 @@ describe('ComponentTypeEdit', () => {
   })
 
   describe('Radios', () => {
-    let state: ComponentState
+    let state: RenderWithContextProps['state']
 
     beforeEach(() => {
       state = {
@@ -145,10 +141,9 @@ describe('ComponentTypeEdit', () => {
           title: 'Test radios',
           list: 'myList',
           type: ComponentType.RadiosField,
-          subType: ComponentSubType.ListField,
           options: {},
           schema: {}
-        } satisfies ComponentDef
+        }
       }
     })
 
@@ -227,7 +222,7 @@ describe('ComponentTypeEdit', () => {
   })
 
   describe('Select', () => {
-    let state: ComponentState
+    let state: RenderWithContextProps['state']
 
     beforeEach(() => {
       state = {
@@ -236,10 +231,9 @@ describe('ComponentTypeEdit', () => {
           title: 'Test select',
           list: 'myList',
           type: ComponentType.SelectField,
-          subType: ComponentSubType.ListField,
           options: {},
           schema: {}
-        } satisfies ComponentDef
+        }
       }
     })
 
@@ -318,7 +312,7 @@ describe('ComponentTypeEdit', () => {
   })
 
   describe('YesNo', () => {
-    let state: ComponentState
+    let state: RenderWithContextProps['state']
 
     beforeEach(() => {
       state = {
@@ -328,7 +322,7 @@ describe('ComponentTypeEdit', () => {
           type: ComponentType.YesNoField,
           options: {},
           schema: {}
-        } satisfies ComponentDef
+        }
       }
     })
 
@@ -395,7 +389,7 @@ describe('ComponentTypeEdit', () => {
   })
 
   describe('UK address', () => {
-    let state: ComponentState
+    let state: RenderWithContextProps['state']
 
     beforeEach(() => {
       state = {
@@ -403,11 +397,10 @@ describe('ComponentTypeEdit', () => {
           name: 'TestUkAddress',
           title: 'Test UK address',
           type: ComponentType.UkAddressField,
-          subType: ComponentSubType.Field,
           hint: '',
           options: {},
           schema: {}
-        } satisfies ComponentDef
+        }
       }
     })
 

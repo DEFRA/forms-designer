@@ -23,14 +23,12 @@ import {
 } from '~/src/reducers/component/types.js'
 
 export interface ComponentState {
-  selectedComponent?: Partial<ComponentDef>
-  isNew?: boolean
-  initialName?: ComponentDef['name']
+  initialName: ComponentDef['name']
+  selectedComponent?: ComponentDef
   hasValidated?: boolean
   showDeleteWarning?: boolean
   pagePath?: string
   errors?: Partial<ErrorList<'title' | 'name' | 'content' | 'list'>>
-  listItemErrors?: Partial<ErrorList<'title' | 'value'>>
 }
 
 export type ReducerActions =
@@ -38,10 +36,6 @@ export type ReducerActions =
   | Parameters<typeof optionsReducer>[1]
   | Parameters<typeof fieldsReducer>[1]
   | Parameters<typeof schemaReducer>[1]
-
-const defaultValues: ComponentState = {
-  selectedComponent: {}
-}
 
 export interface ComponentContextType {
   state: ComponentState
@@ -52,7 +46,7 @@ export interface ComponentContextType {
  * Context providing the {@link ComponentState} and {@link Dispatch} for changing any values specified by the enum type
  */
 export const ComponentContext = createContext<ComponentContextType>({
-  state: defaultValues,
+  state: {} as ComponentState,
   dispatch: () => ({})
 })
 
@@ -82,7 +76,7 @@ export function componentReducer(
   action: ReducerActions
 ): ComponentState {
   const { type } = action
-  const { selectedComponent = {} } = state
+  const { selectedComponent } = state
 
   if (type !== Meta.VALIDATE) {
     state.hasValidated = false
@@ -90,35 +84,27 @@ export function componentReducer(
 
   const subReducer = getSubReducer(type)
 
-  if (subReducer) {
-    return {
-      ...state,
-      ...subReducer(state, action)
-    }
-  } else {
+  if (!subReducer) {
     logger.warn(`Unrecognised action: ${action.type}`)
     return { ...state, selectedComponent }
   }
-}
-
-export const initComponentState = (props?: ComponentState): ComponentState => {
-  const newName = randomId()
-
-  const {
-    selectedComponent = {
-      name: newName,
-      options: {},
-      schema: {}
-    }
-  } = props ?? {}
 
   return {
+    ...state,
+    ...subReducer(state, action)
+  }
+}
+
+export const initComponentState = (
+  props?: Omit<ComponentState, 'initialName'>
+): ComponentState => {
+  const { selectedComponent, pagePath, errors } = props ?? {}
+
+  return {
+    initialName: selectedComponent?.name ?? randomId(),
     selectedComponent,
-    initialName: selectedComponent.name ?? newName,
-    pagePath: props?.pagePath,
-    isNew: props?.isNew ?? !selectedComponent.name,
-    errors: props?.errors ?? {},
-    listItemErrors: {}
+    pagePath,
+    errors
   }
 }
 

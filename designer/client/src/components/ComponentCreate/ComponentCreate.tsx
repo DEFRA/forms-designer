@@ -15,15 +15,16 @@ import { ComponentCreateList } from '~/src/components/ComponentCreate/ComponentC
 import { DataContext } from '~/src/context/DataContext.js'
 import { addComponent } from '~/src/data/component/addComponent.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
+import randomId from '~/src/randomId.js'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
-import { Fields, Meta } from '~/src/reducers/component/types.js'
+import { Meta } from '~/src/reducers/component/types.js'
 import { hasValidationErrors } from '~/src/validations.js'
 
 function useComponentCreate(props) {
   const [renderTypeEdit, setRenderTypeEdit] = useState<boolean>(false)
   const { data, save } = useContext(DataContext)
   const { state, dispatch } = useContext(ComponentContext)
-  const { selectedComponent = {}, errors = {}, hasValidated } = state
+  const { selectedComponent, errors = {}, hasValidated } = state
   const { page, toggleAddComponent = () => {} } = props
 
   const [isSaving, setIsSaving] = useState(false)
@@ -37,7 +38,7 @@ function useComponentCreate(props) {
     // then the component edit screen renders already scrolled to the bottom
     let isMounted = true
 
-    if (selectedComponent.type) {
+    if (selectedComponent?.type) {
       window.requestAnimationFrame(() => {
         if (isMounted) setRenderTypeEdit(true)
       })
@@ -48,7 +49,7 @@ function useComponentCreate(props) {
     return () => {
       isMounted = false
     }
-  }, [selectedComponent.type])
+  }, [selectedComponent?.type])
 
   useEffect(() => {
     dispatch({ type: Meta.SET_PAGE, payload: page.path })
@@ -72,12 +73,11 @@ function useComponentCreate(props) {
       return
     }
 
-    if (hasErrors) {
+    if (hasErrors || !selectedComponent) {
       return
     }
 
     setIsSaving(true)
-    const { selectedComponent } = state
     const updatedData = addComponent(
       data,
       (page as Page).path,
@@ -88,11 +88,16 @@ function useComponentCreate(props) {
     toggleAddComponent()
   }
 
-  const handleTypeChange = (component: ComponentDef) => {
+  /**
+   * Create new component using {@link ComponentTypes}
+   * but replace default name with random ID
+   */
+  function handleCreate(component: ComponentDef) {
     dispatch({
-      type: Fields.EDIT_TYPE,
+      type: Meta.NEW_COMPONENT,
       payload: {
-        type: component.type
+        ...component,
+        name: randomId()
       }
     })
   }
@@ -104,7 +109,7 @@ function useComponentCreate(props) {
 
   return {
     handleSubmit,
-    handleTypeChange,
+    handleCreate,
     hasErrors,
     errors: Object.values(errors),
     component: selectedComponent,
@@ -117,7 +122,7 @@ function useComponentCreate(props) {
 export function ComponentCreate(props) {
   const {
     handleSubmit,
-    handleTypeChange,
+    handleCreate,
     reset,
     hasErrors,
     errors,
@@ -126,7 +131,7 @@ export function ComponentCreate(props) {
     renderTypeEdit
   } = useComponentCreate(props)
 
-  const type = component.type
+  const type = component?.type
 
   return (
     <div className="component-create" data-testid={'component-create'}>
@@ -143,7 +148,7 @@ export function ComponentCreate(props) {
         </>
       )}
       {hasErrors && <ErrorSummary errorList={errors} />}
-      {!type && <ComponentCreateList onSelectComponent={handleTypeChange} />}
+      {!type && <ComponentCreateList onSelectComponent={handleCreate} />}
       {type && renderTypeEdit && (
         <form onSubmit={handleSubmit}>
           <ComponentTypeEdit />

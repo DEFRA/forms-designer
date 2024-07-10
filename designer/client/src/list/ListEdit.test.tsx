@@ -6,7 +6,7 @@ import React from 'react'
 import { ListEdit } from '~/src/list/ListEdit.jsx'
 import { RenderListEditorWithContext } from '~/test/helpers/renderers-lists.jsx'
 
-const data: FormDefinition = {
+const data = {
   pages: [],
   lists: [
     {
@@ -27,7 +27,7 @@ const data: FormDefinition = {
   ],
   sections: [],
   conditions: []
-}
+} satisfies FormDefinition
 
 describe('ListEdit', () => {
   test('strings are rendered correctly', () => {

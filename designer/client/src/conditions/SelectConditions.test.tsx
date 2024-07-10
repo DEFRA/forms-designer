@@ -1,8 +1,4 @@
-import {
-  ComponentSubType,
-  ComponentType,
-  type FormDefinition
-} from '@defra/forms-model'
+import { ComponentType, type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
 import React from 'react'
@@ -16,12 +12,12 @@ import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 describe('SelectConditions', () => {
   afterEach(cleanup)
 
-  const data: FormDefinition = {
+  const data = {
     pages: [],
     lists: [],
     sections: [],
     conditions: []
-  }
+  } satisfies FormDefinition
 
   let props: Props
 
@@ -45,7 +41,7 @@ describe('SelectConditions', () => {
   })
 
   test('SelectConditions renders available conditions', () => {
-    const data: FormDefinition = {
+    const data = {
       pages: [
         {
           path: '/uk-passport',
@@ -76,9 +72,9 @@ describe('SelectConditions', () => {
           title: "You're not eligible for this service",
           components: [
             {
-              type: ComponentType.Html,
-              title: '',
               name: 'notEligible',
+              title: '',
+              type: ComponentType.Html,
               content:
                 '<p class="govuk-body">If you still think you’re eligible please contact the Foreign and Commonwealth Office.</p>',
               options: {},
@@ -94,7 +90,6 @@ describe('SelectConditions', () => {
               name: 'numberOfApplicants',
               title: 'How many applicants are there?',
               type: ComponentType.SelectField,
-              subType: ComponentSubType.ListField,
               list: 'numberOfApplicants',
               options: {
                 classes: 'govuk-input--width-10',
@@ -140,7 +135,7 @@ describe('SelectConditions', () => {
           value: 'applicantDetails.numberOfApplicants > 3'
         }
       ]
-    }
+    } satisfies FormDefinition
 
     props = {
       conditionsChange: jest.fn(),

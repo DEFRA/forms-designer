@@ -1,4 +1,8 @@
-import { ComponentType, type FormDefinition } from '@defra/forms-model'
+import {
+  ComponentType,
+  type ConditionRawData,
+  type FormDefinition
+} from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { act, cleanup, render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
@@ -8,7 +12,7 @@ import { ConditionsEdit } from '~/src/conditions/ConditionsEdit.jsx'
 import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
 describe('ConditionsEdit', () => {
-  const data: FormDefinition = {
+  const data = {
     pages: [
       {
         title: 'page1',
@@ -53,7 +57,7 @@ describe('ConditionsEdit', () => {
     lists: [],
     sections: [],
     conditions: []
-  }
+  } satisfies FormDefinition
 
   afterEach(cleanup)
 
@@ -95,13 +99,13 @@ describe('ConditionsEdit', () => {
       name: 'abdefg',
       displayName: 'My condition',
       value: 'badgers'
-    }
+    } satisfies ConditionRawData
 
     const condition2 = {
       name: 'abdefgh',
       displayName: 'My condition 2',
       value: 'badgers again'
-    }
+    } satisfies ConditionRawData
 
     const updated: FormDefinition = {
       ...data,

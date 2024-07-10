@@ -1,9 +1,6 @@
 import Joi from 'joi'
 
-import {
-  type ComponentSubType,
-  type ComponentType
-} from '~/src/components/enums.js'
+import { type ComponentType } from '~/src/components/enums.js'
 import { type ComponentDef } from '~/src/components/types.js'
 import {
   type ConditionRawData,
@@ -102,7 +99,6 @@ const localisedString = Joi.alternatives().try(
 
 export const componentSchema = Joi.object<ComponentDef>()
   .keys({
-    subType: Joi.string<ComponentSubType>().optional(),
     type: Joi.string<ComponentType>().required(),
     name: Joi.string(),
     title: localisedString,

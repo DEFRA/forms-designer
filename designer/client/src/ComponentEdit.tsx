@@ -11,15 +11,9 @@ import { hasValidationErrors } from '~/src/validations.js'
 export function ComponentEdit(props) {
   const { data, save } = useContext(DataContext)
   const { state, dispatch } = useContext(ComponentContext)
-  const {
-    selectedComponent = {},
-    initialName,
-    errors = {},
-    hasValidated
-  } = state
+  const { initialName, selectedComponent, errors = {}, hasValidated } = state
   const { page, toggleShowEditor } = props
   const hasErrors = hasValidationErrors(errors)
-  const componentToSubmit = { ...selectedComponent }
 
   const handleSubmit = async (e) => {
     e?.preventDefault()
@@ -29,7 +23,7 @@ export function ComponentEdit(props) {
       return
     }
 
-    if (hasErrors) {
+    if (hasErrors || !selectedComponent?.name) {
       return
     }
 
@@ -37,7 +31,7 @@ export function ComponentEdit(props) {
       data,
       page.path,
       initialName,
-      componentToSubmit
+      selectedComponent
     )
     await save(updatedData)
     toggleShowEditor()
@@ -46,7 +40,7 @@ export function ComponentEdit(props) {
   const handleDelete = async (e) => {
     e.preventDefault()
 
-    if (!window.confirm('Confirm delete')) {
+    if (!window.confirm('Confirm delete') || !selectedComponent) {
       return
     }
 

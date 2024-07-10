@@ -8,7 +8,7 @@ import { LinkCreate } from '~/src/LinkCreate.jsx'
 import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
 describe('LinkEdit', () => {
-  const data: FormDefinition = {
+  const data = {
     pages: [
       { path: '/1', title: 'Page 1', next: [{ path: '/2' }] },
       { path: '/2', title: 'Page 2' }
@@ -27,7 +27,7 @@ describe('LinkEdit', () => {
         value: 'true'
       }
     ]
-  }
+  } satisfies FormDefinition
 
   afterEach(cleanup)
 

@@ -1,4 +1,4 @@
-import { ComponentType, ComponentSubType } from '@defra/forms-model'
+import { ComponentType } from '@defra/forms-model'
 import { shallow } from 'enzyme'
 import React from 'react'
 
@@ -43,7 +43,6 @@ describe('ComponentCreateList', () => {
           name: 'Details',
           title: 'Details',
           type: ComponentType.Details,
-          subType: ComponentSubType.Content,
           content: '',
           options: {},
           schema: {}
@@ -100,7 +99,6 @@ describe('ComponentCreateList', () => {
           title: 'Autocomplete field',
           list: '',
           type: ComponentType.AutocompleteField,
-          subType: ComponentSubType.ListField,
           options: {},
           schema: {}
         }
@@ -145,7 +143,6 @@ describe('ComponentCreateList', () => {
           title: 'Checkboxes field',
           list: '',
           type: ComponentType.CheckboxesField,
-          subType: ComponentSubType.ListField,
           options: {},
           schema: {}
         }

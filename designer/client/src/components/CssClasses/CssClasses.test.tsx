@@ -1,16 +1,19 @@
-import { ComponentType, type ComponentDef } from '@defra/forms-model'
+import { ComponentType } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
 import React from 'react'
 
 import { CssClasses } from '~/src/components/CssClasses/CssClasses.jsx'
-import { RenderWithContext } from '~/test/helpers/renderers.jsx'
+import {
+  RenderWithContext,
+  type RenderWithContextProps
+} from '~/test/helpers/renderers.jsx'
 
 describe('CssClasses', () => {
   afterEach(cleanup)
 
   describe('CssClassField', () => {
-    let state
+    let state: RenderWithContextProps['state']
 
     beforeEach(() => {
       state = {
@@ -20,7 +23,7 @@ describe('CssClasses', () => {
           type: ComponentType.TextField,
           options: {},
           schema: {}
-        } satisfies ComponentDef
+        }
       }
 
       render(

@@ -3,7 +3,7 @@ import { type FormDefinition } from '@defra/forms-model'
 import { allPathsLeadingTo } from '~/src/data/page/allPathsLeadingTo.js'
 
 test('allPathsLeadingTo should work with cycle in paths', () => {
-  const data: FormDefinition = {
+  const data = {
     pages: [
       {
         title: 'page1',
@@ -23,13 +23,14 @@ test('allPathsLeadingTo should work with cycle in paths', () => {
     lists: [],
     sections: [],
     conditions: []
-  }
+  } satisfies FormDefinition
+
   const paths = allPathsLeadingTo(data, '/2')
   expect(paths).toEqual(['/2', '/1'])
 })
 
 test('allPathsLeadingTo should work with single parents', () => {
-  const data: FormDefinition = {
+  const data = {
     pages: [
       {
         title: 'page1',
@@ -49,12 +50,13 @@ test('allPathsLeadingTo should work with single parents', () => {
     lists: [],
     sections: [],
     conditions: []
-  }
+  } satisfies FormDefinition
+
   expect(allPathsLeadingTo(data, '/3')).toEqual(['/3', '/2', '/1'])
 })
 
 test('allPathsLeadingTo should work with multiple parents', () => {
-  const data: FormDefinition = {
+  const data = {
     pages: [
       {
         title: 'page1',
@@ -79,7 +81,7 @@ test('allPathsLeadingTo should work with multiple parents', () => {
     lists: [],
     sections: [],
     conditions: []
-  }
+  } satisfies FormDefinition
 
   expect(allPathsLeadingTo(data, '/4')).toEqual(['/4', '/2', '/1', '/3'])
   expect(allPathsLeadingTo(data, '/3')).toEqual(['/3', '/1'])

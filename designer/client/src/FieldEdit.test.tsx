@@ -1,5 +1,4 @@
 import {
-  ComponentSubType,
   ComponentType,
   type ComponentDef,
   type FormDefinition
@@ -12,17 +11,16 @@ import { FieldEdit } from '~/src/FieldEdit.jsx'
 import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
 describe('Field Edit', () => {
-  const selectedComponent: ComponentDef = {
+  const selectedComponent = {
     name: 'IDDQl4',
     type: ComponentType.UkAddressField,
     title: 'UK address field',
-    subType: ComponentSubType.Field,
     hint: '',
     options: {},
     schema: {}
-  }
+  } satisfies ComponentDef
 
-  const data: FormDefinition = {
+  const data = {
     pages: [
       {
         title: 'First page',
@@ -33,7 +31,7 @@ describe('Field Edit', () => {
     lists: [],
     sections: [],
     conditions: []
-  }
+  } satisfies FormDefinition
 
   afterEach(cleanup)
 

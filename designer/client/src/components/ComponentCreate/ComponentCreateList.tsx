@@ -20,7 +20,12 @@ const ComponentTypesSorted = ComponentTypes.sort(
   ({ type: typeA }, { type: typeB }) => typeA.localeCompare(typeB)
 )
 
-for (const component of ComponentTypesSorted) {
+for (const defaults of ComponentTypesSorted) {
+  const component = structuredClone(defaults)
+
+  // Remove subType from component definition
+  delete component.subType
+
   // Ensure the list component is grouped with other content fields
   if (hasContentField(component) || component.type === ComponentType.List) {
     contentFields.push(component)

@@ -2,7 +2,7 @@ import { type FormDefinition } from '@defra/forms-model'
 
 import { removeCondition } from '~/src/data/condition/removeCondition.js'
 
-const data: FormDefinition = {
+const data = {
   pages: [
     {
       title: 'start',
@@ -37,7 +37,7 @@ const data: FormDefinition = {
       value: 'true'
     }
   ]
-}
+} satisfies FormDefinition
 
 test('removeCondition should remove conditions from the conditions key and in page links', () => {
   const updated = removeCondition(data, 'someName')

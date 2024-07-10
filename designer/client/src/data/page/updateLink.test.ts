@@ -2,7 +2,7 @@ import { ComponentType, type FormDefinition } from '@defra/forms-model'
 
 import { updateLink } from '~/src/data/page/updateLink.js'
 
-const data: FormDefinition = {
+const data = {
   pages: [
     {
       title: 'page1',
@@ -64,7 +64,7 @@ const data: FormDefinition = {
       value: 'true'
     }
   ]
-}
+} satisfies FormDefinition
 
 test('updateLink throws if from, to, or there is no existing link', () => {
   expect(() => updateLink(data, '/1', '/3')).toThrow(

@@ -1,4 +1,4 @@
-import { ComponentType, ComponentTypes } from '@defra/forms-model'
+import { ComponentType, getComponentDefaults } from '@defra/forms-model'
 import { Input, Textarea } from '@xgovformbuilder/govuk-react-jsx'
 import classNames from 'classnames'
 import React, { useContext } from 'react'
@@ -24,7 +24,9 @@ export function FieldEdit({
     return null
   }
 
-  const { name, title, hint, attrs, type, options } = selectedComponent
+  const { name, title, hint, attrs, options } = selectedComponent
+  const defaults = getComponentDefaults(selectedComponent)
+
   const {
     hideTitle = false,
     optionalText = false,
@@ -32,9 +34,6 @@ export function FieldEdit({
     exposeToContext = false,
     allowPrePopulation = false
   } = options
-  const fieldTitle =
-    ComponentTypes.find((componentType) => componentType.type === type)
-      ?.title ?? ''
 
   return (
     <div data-test-id="standard-inputs">
@@ -48,7 +47,7 @@ export function FieldEdit({
         hint={{
           children: [i18n('common.titleField.helpText')]
         }}
-        value={title ?? fieldTitle}
+        value={title}
         onChange={(e) => {
           dispatch({
             type: Fields.EDIT_TITLE,
@@ -156,10 +155,7 @@ export function FieldEdit({
               htmlFor="field-options-required"
             >
               {i18n('common.componentOptionalOption.title', {
-                component:
-                  ComponentTypes.find(
-                    (componentType) => componentType.type === type
-                  )?.title ?? ''
+                component: defaults?.title ?? ''
               })}
             </label>
             <div className="govuk-hint govuk-checkboxes__hint">
@@ -248,10 +244,7 @@ export function FieldEdit({
               htmlFor="field-options-allow-pre-population"
             >
               {i18n('common.allowPrePopulationOption.title', {
-                component:
-                  ComponentTypes.find(
-                    (componentType) => componentType.type === type
-                  )?.title ?? ''
+                component: defaults?.title ?? ''
               })}
             </label>
             <div className="govuk-hint govuk-checkboxes__hint">

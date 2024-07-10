@@ -2,7 +2,7 @@ import { type FormDefinition } from '@defra/forms-model'
 
 import { findList } from '~/src/data/list/findList.js'
 
-const data: FormDefinition = {
+const data = {
   pages: [],
   lists: [
     {
@@ -20,7 +20,7 @@ const data: FormDefinition = {
   ],
   sections: [],
   conditions: []
-}
+} satisfies FormDefinition
 
 test('findList throws when no list can be found', () => {
   expect(() => findList(data, 'listC')).toThrow(/No list found with the name/)

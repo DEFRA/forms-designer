@@ -195,7 +195,7 @@ export class PageCreate extends Component {
 
     return (
       <>
-        {hasValidationErrors(errors) > 0 && (
+        {hasValidationErrors(errors) && (
           <ErrorSummary errorList={Object.values(errors)} />
         )}
         <form onSubmit={(e) => this.onSubmit(e)} autoComplete="off">

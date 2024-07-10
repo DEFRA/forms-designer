@@ -6,7 +6,7 @@ import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 import { Options, Schema } from '~/src/reducers/component/types.js'
 
 interface Props {
-  context: any // TODO
+  context?: typeof ComponentContext
 }
 
 export function NumberFieldEdit({ context = ComponentContext }: Props) {

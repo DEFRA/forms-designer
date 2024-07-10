@@ -1,14 +1,17 @@
-import { ComponentType, type ComponentDef } from '@defra/forms-model'
+import { ComponentType } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { render } from '@testing-library/react'
 import React from 'react'
 
 import { TextFieldEdit } from '~/src/components/FieldEditors/TextFieldEdit.jsx'
-import { RenderWithContext } from '~/test/helpers/renderers.jsx'
+import {
+  RenderWithContext,
+  type RenderWithContextProps
+} from '~/test/helpers/renderers.jsx'
 
 describe('Text field edit', () => {
   describe('Text field edit fields', () => {
-    let state
+    let state: RenderWithContextProps['state']
 
     beforeEach(() => {
       state = {
@@ -18,7 +21,7 @@ describe('Text field edit', () => {
           type: ComponentType.TextField,
           options: {},
           schema: {}
-        } satisfies ComponentDef
+        }
       }
 
       render(

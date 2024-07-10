@@ -2,7 +2,7 @@ import { type ConditionRawData, type FormDefinition } from '@defra/forms-model'
 
 import { addCondition } from '~/src/data/condition/addCondition.js'
 
-const data: FormDefinition = {
+const data = {
   pages: [],
   lists: [],
   sections: [],
@@ -13,7 +13,7 @@ const data: FormDefinition = {
       value: { name: 'name', conditions: [] }
     }
   ]
-}
+} satisfies FormDefinition
 
 test('addCondition adds a condition to the list', () => {
   const condition: ConditionRawData = {
@@ -34,14 +34,14 @@ test('addCondition adds a condition to the list', () => {
 })
 
 test('addCondition throws if a condition with the same name already exists', () => {
-  expect(() =>
-    addCondition(data, {
-      displayName: 'a condition',
-      name: 'isCondition',
-      value: {
-        name: 'name',
-        conditions: []
-      }
-    })
-  ).toThrow(/A condition/)
+  const condition: ConditionRawData = {
+    displayName: 'a condition',
+    name: 'isCondition',
+    value: {
+      name: 'name',
+      conditions: []
+    }
+  }
+
+  expect(() => addCondition(data, condition)).toThrow(/A condition/)
 })

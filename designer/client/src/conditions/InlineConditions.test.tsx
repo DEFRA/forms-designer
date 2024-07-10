@@ -16,7 +16,7 @@ describe('InlineConditions', () => {
       hints: []
     }
 
-    const data: FormDefinition = {
+    const data = {
       pages: [
         {
           title: 'page1',
@@ -61,7 +61,7 @@ describe('InlineConditions', () => {
       lists: [],
       sections: [],
       conditions: []
-    }
+    } satisfies FormDefinition
 
     render(
       <DataContext.Provider value={{ data, save: jest.fn() }}>

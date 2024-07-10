@@ -1,15 +1,18 @@
+import { type ComponentState } from '~/src/reducers/component/componentReducer.jsx'
 import { Schema } from '~/src/reducers/component/types.js'
 
 export function schemaReducer(
-  state,
+  state: ComponentState,
   action: {
     type: Schema
     payload?: unknown
   }
-) {
+): ComponentState {
   const { type, payload } = action
-  const { selectedComponent = {} } = state
-  const { schema = {} } = selectedComponent
+  const { selectedComponent } = state
+
+  const { schema } = selectedComponent ?? {}
+
   switch (type) {
     case Schema.EDIT_SCHEMA_MIN:
       return {
