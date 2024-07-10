@@ -2,8 +2,6 @@ import { type ComponentDef } from '~/src/components/types.js'
 import { type Condition } from '~/src/conditions/condition.js'
 import { formDefinitionSchema } from '~/src/form/form-definition/index.js'
 
-type Toggleable<T> = boolean | T
-
 export interface Link {
   path: string
   condition?: string
@@ -67,18 +65,6 @@ export interface PhaseBanner {
   feedbackUrl?: string
 }
 
-export interface ConfirmationPage {
-  customText: {
-    title: string
-    nextSteps: Toggleable<string>
-  }
-  components: ComponentDef[]
-}
-
-export interface SpecialPages {
-  confirmationPage?: ConfirmationPage
-}
-
 export type ConditionWrapperValue =
   | string
   | {
@@ -108,6 +94,5 @@ export interface FormDefinition {
   skipSummary?: boolean
   declaration?: string
   metadata?: Record<string, unknown>
-  specialPages?: SpecialPages
   outputEmail?: string
 }

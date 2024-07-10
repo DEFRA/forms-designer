@@ -5,7 +5,6 @@ import { type ComponentDef } from '~/src/components/types.js'
 import {
   type ConditionRawData,
   type ConditionWrapperValue,
-  type ConfirmationPage,
   type FormDefinition,
   type Item,
   type Link,
@@ -13,8 +12,7 @@ import {
   type Page,
   type PhaseBanner,
   type RepeatingFieldPage,
-  type Section,
-  type SpecialPages
+  type Section
 } from '~/src/form/form-definition/types.js'
 
 /**
@@ -133,22 +131,6 @@ const pageSchema = Joi.object<Page | RepeatingFieldPage>().keys({
   backLinkFallback: Joi.string().optional()
 })
 
-const toggleableString = Joi.alternatives().try(Joi.boolean(), Joi.string())
-
-const confirmationPageSchema = Joi.object<ConfirmationPage>({
-  customText: Joi.object<ConfirmationPage['customText']>({
-    title: Joi.string().default('Application complete'),
-    nextSteps: toggleableString.default(
-      'You will receive an email with details with the next steps.'
-    )
-  }).default(),
-  components: Joi.array<ComponentDef>().items(componentSchema)
-})
-
-const specialPagesSchema = Joi.object<SpecialPages>().keys({
-  confirmationPage: confirmationPageSchema.optional()
-})
-
 const baseListItemSchema = Joi.object<Item>().keys({
   text: localisedString,
   description: localisedString.optional(),
@@ -234,7 +216,6 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
     declaration: Joi.string().allow('').optional(),
     skipSummary: Joi.boolean().optional().default(false),
     phaseBanner: phaseBannerSchema.optional(),
-    specialPages: specialPagesSchema.optional(),
     outputEmail: Joi.string()
       .email({ tlds: { allow: ['uk'] } })
       .trim()
