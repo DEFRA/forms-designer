@@ -18,9 +18,3 @@ export enum ComponentType {
   Details = 'Details',
   List = 'List'
 }
-
-export enum ComponentSubType {
-  Content = 'content',
-  Field = 'field',
-  ListField = 'listField'
-}

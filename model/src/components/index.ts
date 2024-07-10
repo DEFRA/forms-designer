@@ -10,4 +10,4 @@ export {
   hasTitle
 } from '~/src/components/helpers.js'
 
-export { ComponentType, ComponentSubType } from '~/src/components/enums.js'
+export { ComponentType } from '~/src/components/enums.js'

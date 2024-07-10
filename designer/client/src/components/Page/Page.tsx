@@ -1,6 +1,4 @@
 import {
-  ComponentSubType,
-  getComponentDefaults,
   type ComponentDef,
   type Page as PageType,
   type RepeatingFieldPage,
@@ -77,18 +75,6 @@ export const Page = (props: {
 
   const section = data.sections.find((section) => section.name === page.section)
 
-  const formComponents =
-    page.components?.filter((component) => {
-      const { subType } = getComponentDefaults(component) ?? {}
-      return subType === ComponentSubType.Field
-    }) ?? []
-
-  const pageTitle =
-    page.title ||
-    (formComponents.length === 1 && page.components?.[0] === formComponents[0]
-      ? formComponents[0].title
-      : page.title)
-
   return (
     <div id={page.path} title={page.path} className={'page'} style={layout}>
       <div className="page__heading">
@@ -109,7 +95,7 @@ export const Page = (props: {
           className="govuk-link"
           target="_blank"
           rel="noreferrer"
-          aria-label={`${i18n('Preview')} ${pageTitle}`}
+          aria-label={`${i18n('Preview')} ${page.title}`}
         >
           {i18n('Preview page')}
         </a>
