@@ -231,6 +231,10 @@
     "summary": "Summary"
   },
   "multilineTextFieldEditComponent": {
+    "maxWordField": {
+      "helpText": "Specifies the maximum number of words users can enter",
+      "title": "Max words"
+    },
     "rowsField": {
       "helpText": "Specifies the number of textarea rows (default is 5 rows).",
       "title": "Rows"
@@ -303,10 +307,6 @@
     "minLengthField": {
       "helpText": "Specifies the minimum number of characters users can enter",
       "title": "Min length"
-    },
-    "maxWordField": {
-      "helpText": "Specifies the maximum number of words users can enter",
-      "title": "Max words"
     },
     "regexField": {
       "helpText": "Specifies a regular expression to validate users' inputs. Use JavaScript syntax.",
