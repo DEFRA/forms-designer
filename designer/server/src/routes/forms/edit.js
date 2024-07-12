@@ -3,7 +3,7 @@ import Joi from 'joi'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
 import * as forms from '~/src/lib/forms.js'
-import * as create from '~/src/models/forms/create.js'
+import * as edit from '~/src/models/forms/edit.js'
 import { schema } from '~/src/routes/forms/create.js'
 
 export default [
@@ -15,12 +15,13 @@ export default [
     path: '/library/{slug}/edit/lead-organisation',
     handler(request, h) {
       const { yar } = request
+      const { slug } = request.params
 
       const validation = yar.flash(sessionNames.validationFailure).at(0)
 
       return h.view(
         'forms/question-radios',
-        create.organisationViewModel(undefined, validation)
+        edit.organisationViewModel(slug, validation)
       )
     }
   }),

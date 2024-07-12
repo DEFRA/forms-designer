@@ -134,7 +134,7 @@ export async function createDraft(id, token) {
  */
 export async function updateMetadata(id, updateFields, token) {
   const patchJsonByType = /** @type {typeof patchJson<FormMetadataInput>} */ (
-    postJson
+    patchJson
   )
 
   const requestUrl = new URL(`./${id}`, formsEndpoint)
