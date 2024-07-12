@@ -100,8 +100,18 @@ export const componentSchema = Joi.object<ComponentDef>()
     name: Joi.string(),
     title: localisedString,
     hint: localisedString.optional(),
-    options: Joi.object().default({}),
-    schema: Joi.object({ min: Joi.number(), max: Joi.number() })
+    options: Joi.object({
+      rows: Joi.number().empty(''),
+      maxWords: Joi.number().empty(''),
+      customValidationMessage: Joi.string().allow('')
+    })
+      .default({})
+      .unknown(true),
+    schema: Joi.object({
+      min: Joi.number().empty(''),
+      max: Joi.number().empty(''),
+      length: Joi.number().empty('')
+    })
       .unknown(true)
       .default({}),
     list: Joi.string().optional()
