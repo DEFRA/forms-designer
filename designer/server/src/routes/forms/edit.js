@@ -15,7 +15,7 @@ function getNotificationMessage(fieldName) {
 
 export default [
   /**
-   * @satisfies {ServerRoute}
+   * @satisfies {RequestBySlug}
    */
   ({
     method: 'GET',
@@ -33,7 +33,7 @@ export default [
     }
   }),
   /**
-   * @satisfies {ServerRoute<{ Params: { slug: string }, Payload: FormMetadataInput }>}
+   * @satisfies {RequestUpdateMetadataBySlug}
    */
   ({
     method: 'POST',
@@ -75,11 +75,6 @@ export default [
  */
 
 /**
- * @template {import('@hapi/hapi').ReqRef} [ReqRef=import('@hapi/hapi').ReqRefDefaults]
- * @typedef {import('@hapi/hapi').Request<ReqRef>} Request
- */
-
-/**
- * @typedef {import('@hapi/hapi').ResponseToolkit<any>} ResponseToolkit
- * @typedef {Request<{ Payload: any }>} RequestWithPayload
+ * @typedef {ServerRoute<{ Params: { slug: string } }>} RequestBySlug
+ * @typedef {ServerRoute<{ Params: { slug: string }, Payload: FormMetadataInput }>} RequestUpdateMetadataBySlug
  */

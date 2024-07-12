@@ -1,4 +1,4 @@
-import * as create from './create.js'
+import * as create from '~/src/models/forms/create.js'
 
 /**
  * @param {string} slug
