@@ -6,6 +6,7 @@ import {
   titleSchema
 } from '@defra/forms-model'
 import Boom from '@hapi/boom'
+import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
@@ -49,7 +50,7 @@ export const displayJoiFailures = (request, h, error) => {
   }
 
   // Redirect POST to GET without resubmit on back button
-  return h.redirect(redirectTo).code(303).takeover()
+  return h.redirect(redirectTo).code(StatusCodes.SEE_OTHER).takeover()
 }
 
 export default [
@@ -117,7 +118,7 @@ export default [
       })
 
       // Redirect POST to GET without resubmit on back button
-      return h.redirect('/create/organisation').code(303)
+      return h.redirect('/create/organisation').code(StatusCodes.SEE_OTHER)
     },
     options: {
       validate: {
@@ -128,7 +129,6 @@ export default [
       }
     }
   }),
-
   /**
    * @satisfies {ServerRoute}
    */
@@ -148,7 +148,6 @@ export default [
       )
     }
   }),
-
   /**
    * @satisfies {ServerRoute<{ Payload: Pick<FormMetadataInput, 'organisation'> }>}
    */
@@ -165,7 +164,7 @@ export default [
       })
 
       // Redirect POST to GET without resubmit on back button
-      return h.redirect('/create/team').code(303)
+      return h.redirect('/create/team').code(StatusCodes.SEE_OTHER)
     },
     options: {
       validate: {
@@ -224,7 +223,7 @@ export default [
         /**
          * Redirect POST to GET without resubmit on back button
          */
-        return h.redirect(`/library/${result.slug}`).code(303)
+        return h.redirect(`/library/${result.slug}`).code(StatusCodes.SEE_OTHER)
       } catch (err) {
         if (Boom.isBoom(err) && err.data?.error === 'FormAlreadyExistsError') {
           return redirectToTitleWithErrors(request, h)
@@ -265,7 +264,7 @@ export default [
           }
 
           // Redirect POST to GET without resubmit on back button
-          return h.redirect(redirectTo).code(303).takeover()
+          return h.redirect(redirectTo).code(StatusCodes.SEE_OTHER).takeover()
         }
       }
     }
@@ -285,7 +284,7 @@ function redirectToTitleWithErrors(request, h) {
   })
 
   // Redirect POST to GET without resubmit on back button
-  return h.redirect('/create/title').code(303).takeover()
+  return h.redirect('/create/title').code(StatusCodes.SEE_OTHER).takeover()
 }
 
 /**
