@@ -2,10 +2,11 @@ import * as create from '~/src/models/forms/create.js'
 
 /**
  * @param {string} slug
+ * @param {Partial<FormMetadataInput>} [metadata]
  * @param {ValidationFailure} [validation]
  */
-export function organisationViewModel(slug, validation) {
-  const createView = create.organisationViewModel(undefined, validation)
+export function organisationViewModel(slug, metadata, validation) {
+  const createView = create.organisationViewModel(metadata, validation)
 
   createView.backLink.href = `/library/${slug}`
 

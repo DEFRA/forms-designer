@@ -1,3 +1,4 @@
+import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
@@ -20,15 +21,17 @@ export default [
   ({
     method: 'GET',
     path: '/library/{slug}/edit/lead-organisation',
-    handler(request, h) {
-      const { yar } = request
-      const { slug } = request.params
+    async handler(request, h) {
+      const { yar, params, auth } = request
+      const { token } = auth.credentials
+      const { slug } = params
 
+      const metadata = await forms.get(slug, token)
       const validation = yar.flash(sessionNames.validationFailure).at(0)
 
       return h.view(
         'forms/question-radios',
-        edit.organisationViewModel(slug, validation)
+        edit.organisationViewModel(slug, metadata, validation)
       )
     }
   }),
@@ -52,7 +55,7 @@ export default [
         getNotificationMessage('Lead organisation')
       )
 
-      return h.redirect(`/library/${slug}`).code(303)
+      return h.redirect(`/library/${slug}`).code(StatusCodes.SEE_OTHER)
     },
     options: {
       validate: {
