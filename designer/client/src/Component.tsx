@@ -2,8 +2,7 @@ import {
   ComponentType,
   type ComponentDef,
   type FormDefinition,
-  type Page,
-  type RepeatingFieldPage
+  type Page
 } from '@defra/forms-model'
 import React, { useState, type FunctionComponent } from 'react'
 
@@ -221,7 +220,7 @@ export const componentTypes = {
 
 export interface Props {
   data: FormDefinition
-  page: Page | RepeatingFieldPage
+  page: Page
   selectedComponent: ComponentDef
 }
 

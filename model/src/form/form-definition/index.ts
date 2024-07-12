@@ -5,16 +5,13 @@ import { type ComponentDef } from '~/src/components/types.js'
 import {
   type ConditionRawData,
   type ConditionWrapperValue,
-  type ConfirmationPage,
   type FormDefinition,
   type Item,
+  type Link,
   type List,
-  type Next,
   type Page,
   type PhaseBanner,
-  type RepeatingFieldPage,
-  type Section,
-  type SpecialPages
+  type Section
 } from '~/src/form/form-definition/types.js'
 
 /**
@@ -111,7 +108,7 @@ export const componentSchema = Joi.object<ComponentDef>()
   })
   .unknown(true)
 
-const nextSchema = Joi.object<Next>().keys({
+const nextSchema = Joi.object<Link>().keys({
   path: Joi.string().required(),
   condition: Joi.string().allow('').optional(),
   redirect: Joi.string().optional()
@@ -121,32 +118,13 @@ const nextSchema = Joi.object<Next>().keys({
  * `/status` is a special route for providing a user's application status.
  *  It should not be configured via the designer.
  */
-const pageSchema = Joi.object<Page | RepeatingFieldPage>().keys({
+const pageSchema = Joi.object<Page>().keys({
   path: Joi.string().required().disallow('/status'),
   title: localisedString,
   section: Joi.string(),
   controller: Joi.string().optional(),
   components: Joi.array<ComponentDef>().items(componentSchema),
-  next: Joi.array<Next>().items(nextSchema),
-  repeatField: Joi.string().optional(),
-  options: Joi.object().optional(),
-  backLinkFallback: Joi.string().optional()
-})
-
-const toggleableString = Joi.alternatives().try(Joi.boolean(), Joi.string())
-
-const confirmationPageSchema = Joi.object<ConfirmationPage>({
-  customText: Joi.object<ConfirmationPage['customText']>({
-    title: Joi.string().default('Application complete'),
-    nextSteps: toggleableString.default(
-      'You will receive an email with details with the next steps.'
-    )
-  }).default(),
-  components: Joi.array<ComponentDef>().items(componentSchema)
-})
-
-const specialPagesSchema = Joi.object<SpecialPages>().keys({
-  confirmationPage: confirmationPageSchema.optional()
+  next: Joi.array<Link>().items(nextSchema)
 })
 
 const baseListItemSchema = Joi.object<Item>().keys({
@@ -218,10 +196,7 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
     name: localisedString.optional(),
     feedback: feedbackSchema.optional(),
     startPage: Joi.string().optional(),
-    pages: Joi.array<Page | RepeatingFieldPage>()
-      .required()
-      .items(pageSchema)
-      .unique('path'),
+    pages: Joi.array<Page>().required().items(pageSchema).unique('path'),
     sections: Joi.array<Section>()
       .items(sectionsSchema)
       .unique('name')
@@ -234,7 +209,6 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
     declaration: Joi.string().allow('').optional(),
     skipSummary: Joi.boolean().optional().default(false),
     phaseBanner: phaseBannerSchema.optional(),
-    specialPages: specialPagesSchema.optional(),
     outputEmail: Joi.string()
       .email({ tlds: { allow: ['uk'] } })
       .trim()

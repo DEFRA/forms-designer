@@ -2,15 +2,11 @@ import { type ComponentDef } from '~/src/components/types.js'
 import { type Condition } from '~/src/conditions/condition.js'
 import { formDefinitionSchema } from '~/src/form/form-definition/index.js'
 
-type Toggleable<T> = boolean | T
-
-export interface Next {
+export interface Link {
   path: string
   condition?: string
   redirect?: string
 }
-
-export type Link = Next
 
 export interface Page {
   title: string
@@ -18,23 +14,7 @@ export interface Page {
   controller?: string
   components?: ComponentDef[]
   section?: string // the section ID
-  next?: Next[]
-  repeatField?: string
-  backLinkFallback?: string
-}
-
-export interface RepeatingFieldPage extends Page {
-  controller: 'RepeatingFieldPageController'
-  options: {
-    summaryDisplayMode?: {
-      samePage?: boolean
-      separatePage?: boolean
-      hideRowTitles?: boolean
-    }
-    customText?: {
-      separatePageTitle?: string
-    }
-  }
+  next?: Link[]
 }
 
 export interface Section {
@@ -69,18 +49,6 @@ export interface PhaseBanner {
   feedbackUrl?: string
 }
 
-export interface ConfirmationPage {
-  customText: {
-    title: string
-    nextSteps: Toggleable<string>
-  }
-  components: ComponentDef[]
-}
-
-export interface SpecialPages {
-  confirmationPage?: ConfirmationPage
-}
-
 export type ConditionWrapperValue =
   | string
   | {
@@ -99,7 +67,7 @@ export interface ConditionRawData {
  * @see {@link formDefinitionSchema}
  */
 export interface FormDefinition {
-  pages: (Page | RepeatingFieldPage)[]
+  pages: Page[]
   conditions: ConditionRawData[]
   lists: List[]
   sections: Section[]
@@ -110,6 +78,5 @@ export interface FormDefinition {
   skipSummary?: boolean
   declaration?: string
   metadata?: Record<string, unknown>
-  specialPages?: SpecialPages
   outputEmail?: string
 }
