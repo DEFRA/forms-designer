@@ -15,7 +15,7 @@ import * as forms from '~/src/lib/forms.js'
 import * as create from '~/src/models/forms/create.js'
 
 const logger = createLogger()
-const schema = Joi.object().keys({
+export const schema = Joi.object().keys({
   title: titleSchema.messages({
     'string.empty': 'Enter a form name',
     'string.max': 'Form name must be 250 characters or less'

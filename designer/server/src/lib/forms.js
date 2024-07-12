@@ -1,5 +1,5 @@
 import config from '~/src/config.js'
-import { getJson, postJson } from '~/src/lib/fetch.js'
+import { getJson, patchJson, postJson } from '~/src/lib/fetch.js'
 
 const formsEndpoint = new URL('/forms/', config.managerUrl)
 
@@ -123,6 +123,28 @@ export async function createDraft(id, token) {
   })
 
   return response
+}
+
+/**
+ * Updates a metadata object.
+ * @param {string} id
+ * @param {Record<string, string>} updateFields
+ * @param {string} token - auth token
+ * @returns
+ */
+export async function updateMetadata(id, updateFields, token) {
+  const patchJsonByType = /** @type {typeof patchJson<FormMetadataInput>} */ (
+    postJson
+  )
+
+  const requestUrl = new URL(`./${id}`, formsEndpoint)
+
+  const { body } = await patchJsonByType(requestUrl, {
+    payload: updateFields,
+    ...getAuthOptions(token)
+  })
+
+  return body
 }
 
 /**

@@ -55,6 +55,16 @@ export function post(url, options) {
  * @param {URL} url
  * @param {RequestOptions} options
  */
+export function patch(url, options) {
+  const requestByType = /** @type {typeof request<BodyType>} */ (request)
+  return requestByType('patch', url, options)
+}
+
+/**
+ * @template {object} [BodyType=Buffer]
+ * @param {URL} url
+ * @param {RequestOptions} options
+ */
 export function put(url, options) {
   const requestByType = /** @type {typeof request<BodyType>} */ (request)
   return requestByType('put', url, options)
@@ -88,6 +98,16 @@ export function getJson(url, options = {}) {
 export function postJson(url, options = {}) {
   const postByType = /** @type {typeof post<BodyType>} */ (post)
   return postByType(url, { json: true, ...options })
+}
+
+/**
+ * @template {object} [BodyType=Buffer]
+ * @param {URL} url
+ * @param {RequestOptions} options
+ */
+export function patchJson(url, options = {}) {
+  const patchByType = /** @type {typeof patch<BodyType>} */ (post)
+  return patchByType(url, { json: true, ...options })
 }
 
 /**
