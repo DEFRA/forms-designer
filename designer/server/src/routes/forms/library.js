@@ -43,8 +43,7 @@ export default [
         const form = await forms.get(params.slug, token)
         const model = library.overviewViewModel(
           form,
-          yar.flash(sessionNames.displayCreateLiveSuccess).at(0),
-          yar.flash(sessionNames.displayCreateDraftSuccess).at(0)
+          yar.flash(sessionNames.successNotification).at(0)
         )
 
         return h.view('forms/overview', model)

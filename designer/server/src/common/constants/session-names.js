@@ -3,7 +3,6 @@ export const sessionNames = {
   redirectTo: /** @type {const} */ ('redirectTo'),
   userAuthFailed: /** @type {const} */ ('userAuthFailed'),
   validationFailure: /** @type {const} */ ('validationFailure'),
-  displayCreateLiveSuccess: /** @type {const} */ ('displayCreateLiveSuccess'),
-  displayCreateDraftSuccess: /** @type {const} */ ('displayCreateDraftSuccess'),
+  successNotification: /** @type {const} */ ('successNotification'),
   errorList: /** @type {const} */ ('errorList')
 }

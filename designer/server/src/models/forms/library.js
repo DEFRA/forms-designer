@@ -20,23 +20,13 @@ export async function listViewModel(token) {
 
 /**
  * @param {FormMetadata} metadata
- * @param {boolean} [displayCreateLiveSuccess] - indicating if the form was successfully promoted to live
- * @param {boolean} [displayCreateDraftSuccess] - indicating if a draft form was successfully created
+ * @param {string} [notification] - success notification to display
  */
-export function overviewViewModel(
-  metadata,
-  displayCreateLiveSuccess = false,
-  displayCreateDraftSuccess = false
-) {
+export function overviewViewModel(metadata, notification) {
   const pageTitle = metadata.title
   const formPath = `/library/${metadata.slug}`
 
   const navigation = getFormSpecificNavigation(formPath, 'Overview')
-
-  const notification = getFormOverviewNotification(
-    displayCreateLiveSuccess,
-    displayCreateDraftSuccess
-  )
 
   return {
     backLink: {
@@ -86,23 +76,6 @@ export function overviewViewModel(
     },
     previewUrl: config.previewUrl,
     notification
-  }
-}
-
-/**
- * @param {boolean} displayCreateLiveSuccess - whether to display form live success message
- * @param {boolean} displayCreateDraftSuccess - whether to display draft created success message
- */
-function getFormOverviewNotification(
-  displayCreateLiveSuccess,
-  displayCreateDraftSuccess
-) {
-  if (displayCreateLiveSuccess) {
-    return 'This form is now live'
-  }
-
-  if (displayCreateDraftSuccess) {
-    return 'New draft created'
   }
 }
 
