@@ -128,11 +128,11 @@ export async function createDraft(id, token) {
 /**
  * Updates a metadata object.
  * @param {string} id
- * @param {Record<string, string>} updateFields
+ * @param {Partial<FormMetadataInput>} metadata
  * @param {string} token - auth token
  * @returns
  */
-export async function updateMetadata(id, updateFields, token) {
+export async function updateMetadata(id, metadata, token) {
   const patchJsonByType = /** @type {typeof patchJson<FormMetadataInput>} */ (
     patchJson
   )
@@ -140,7 +140,7 @@ export async function updateMetadata(id, updateFields, token) {
   const requestUrl = new URL(`./${id}`, formsEndpoint)
 
   const { body } = await patchJsonByType(requestUrl, {
-    payload: updateFields,
+    payload: metadata,
     ...getAuthOptions(token)
   })
 

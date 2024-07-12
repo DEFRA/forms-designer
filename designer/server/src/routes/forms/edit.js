@@ -37,7 +37,7 @@ export default [
       const { slug } = request.params
 
       const { id } = await forms.get(slug, token)
-      // TODO await forms.updateMetadata(id, { organisation }, token)
+      await forms.updateMetadata(id, { organisation }, token)
 
       return h.redirect(`/library/${slug}`).code(303)
     },
