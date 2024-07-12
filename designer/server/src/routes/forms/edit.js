@@ -5,6 +5,14 @@ import * as forms from '~/src/lib/forms.js'
 import * as edit from '~/src/models/forms/edit.js'
 import { schema, displayJoiFailures } from '~/src/routes/forms/create.js'
 
+/**
+ * Get the notification message for when a field is changed
+ * @param {string} fieldName
+ */
+function getNotificationMessage(fieldName) {
+  return `${fieldName} has been changed`
+}
+
 export default [
   /**
    * @satisfies {ServerRoute}
@@ -31,12 +39,18 @@ export default [
     method: 'POST',
     path: '/library/{slug}/edit/lead-organisation',
     async handler(request, h) {
-      const { token } = request.auth.credentials
-      const { organisation } = request.payload
-      const { slug } = request.params
+      const { yar, auth, payload, params } = request
+      const { token } = auth.credentials
+      const { slug } = params
+      const { organisation } = payload
 
       const { id } = await forms.get(slug, token)
       await forms.updateMetadata(id, { organisation }, token)
+
+      yar.flash(
+        sessionNames.successNotification,
+        getNotificationMessage('Lead organisation')
+      )
 
       return h.redirect(`/library/${slug}`).code(303)
     },
