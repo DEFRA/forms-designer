@@ -1,10 +1,9 @@
 import Joi from 'joi'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
-import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
 import * as forms from '~/src/lib/forms.js'
 import * as edit from '~/src/models/forms/edit.js'
-import { schema } from '~/src/routes/forms/create.js'
+import { schema, displayJoiFailures } from '~/src/routes/forms/create.js'
 
 export default [
   /**
@@ -46,21 +45,7 @@ export default [
         payload: Joi.object().keys({
           organisation: schema.extract('organisation')
         }),
-
-        failAction(request, h, error) {
-          const { payload, yar, url } = request
-          const { pathname: redirectTo } = url
-
-          if (error instanceof Joi.ValidationError) {
-            yar.flash('validationFailure', {
-              formErrors: buildErrorDetails(error),
-              formValues: payload
-            })
-          }
-
-          // Redirect POST to GET without resubmit on back button
-          return h.redirect(redirectTo).code(303).takeover()
-        }
+        failAction: displayJoiFailures
       }
     }
   })

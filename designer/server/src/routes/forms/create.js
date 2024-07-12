@@ -34,6 +34,24 @@ export const schema = Joi.object().keys({
   })
 })
 
+/**
+ * @type {FailAction}
+ */
+export const displayJoiFailures = (request, h, error) => {
+  const { payload, yar, url } = request
+  const { pathname: redirectTo } = url
+
+  if (error instanceof Joi.ValidationError) {
+    yar.flash('validationFailure', {
+      formErrors: buildErrorDetails(error),
+      formValues: payload
+    })
+  }
+
+  // Redirect POST to GET without resubmit on back button
+  return h.redirect(redirectTo).code(303).takeover()
+}
+
 export default [
   /**
    * @satisfies {ServerRoute}
@@ -106,21 +124,7 @@ export default [
         payload: Joi.object().keys({
           title: schema.extract('title')
         }),
-
-        failAction(request, h, error) {
-          const { payload, yar, url } = request
-          const { pathname: redirectTo } = url
-
-          if (error instanceof Joi.ValidationError) {
-            yar.flash('validationFailure', {
-              formErrors: buildErrorDetails(error),
-              formValues: payload
-            })
-          }
-
-          // Redirect POST to GET without resubmit on back button
-          return h.redirect(redirectTo).code(303).takeover()
-        }
+        failAction: displayJoiFailures
       }
     }
   }),
@@ -168,21 +172,7 @@ export default [
         payload: Joi.object().keys({
           organisation: schema.extract('organisation')
         }),
-
-        failAction(request, h, error) {
-          const { payload, yar, url } = request
-          const { pathname: redirectTo } = url
-
-          if (error instanceof Joi.ValidationError) {
-            yar.flash('validationFailure', {
-              formErrors: buildErrorDetails(error),
-              formValues: payload
-            })
-          }
-
-          // Redirect POST to GET without resubmit on back button
-          return h.redirect(redirectTo).code(303).takeover()
-        }
+        failAction: displayJoiFailures
       }
     }
   }),
@@ -315,4 +305,8 @@ function redirectToTitleWithErrors(request, h) {
 /**
  * @typedef {import('@hapi/hapi').ResponseToolkit<any>} ResponseToolkit
  * @typedef {Request<{ Payload: any }>} RequestWithPayload
+ */
+
+/**
+ * @typedef {import('@hapi/hapi').RouteOptionsValidate['failAction']} FailAction
  */
