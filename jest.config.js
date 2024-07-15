@@ -35,6 +35,7 @@ export const projectDefaults = {
  */
 export default {
   ...defaults,
+  displayName: '@defra/forms-designer (project)',
   projects: [
     '<rootDir>/designer/client',
     '<rootDir>/designer/server',

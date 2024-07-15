@@ -103,7 +103,7 @@ jobs:
   lint:
     name: ${{ matrix.task.description }} (${{ matrix.runner }})
     runs-on: ${{ matrix.runner }}
-    needs: [install]
+    needs: [install, build]
 
     env:
       # Authorise GitHub API requests for EditorConfig checker binary
@@ -143,6 +143,16 @@ jobs:
             designer/node_modules
             model/node_modules
             node_modules
+
+      - name: Restore build
+        uses: actions/cache/restore@v4
+        with:
+          enableCrossOsArchive: true
+          key: npm-build-${{ runner.os }}-${{ github.sha }}
+          path: |
+            designer/client/dist
+            designer/server/dist
+            model/dist
 
       - name: Run lint task
         run: ${{ matrix.task.run }}
