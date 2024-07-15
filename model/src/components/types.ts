@@ -159,6 +159,8 @@ export interface MultilineTextFieldComponent extends TextFieldBase {
   schema: {
     max?: number
     min?: number
+    length?: number
+    regex?: string
   }
 }
 

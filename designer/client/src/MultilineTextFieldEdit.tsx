@@ -20,6 +20,33 @@ export function MultilineTextFieldEdit({ context = ComponentContext }) {
       <div className="govuk-form-group">
         <label
           className="govuk-label govuk-label--s"
+          htmlFor="field-schema-maxwords"
+        >
+          {i18n('multilineTextFieldEditComponent.maxWordField.title')}
+        </label>
+        <div className="govuk-hint" id="field-schema-maxwords-hint">
+          {i18n('multilineTextFieldEditComponent.maxWordField.helpText')}
+        </div>
+        <input
+          className="govuk-input govuk-input--width-3"
+          data-cast="number"
+          id="field-schema-maxwords"
+          aria-describedby="field-schema-maxwords-hint"
+          name="schema.maxwords"
+          value={'maxWords' in options ? options.maxWords : undefined}
+          type="number"
+          onChange={(e) =>
+            dispatch({
+              type: Options.EDIT_OPTIONS_MAX_WORDS,
+              payload: e.target.value
+            })
+          }
+        />
+      </div>
+
+      <div className="govuk-form-group">
+        <label
+          className="govuk-label govuk-label--s"
           htmlFor="field-options-rows"
         >
           {i18n('multilineTextFieldEditComponent.rowsField.title')}
