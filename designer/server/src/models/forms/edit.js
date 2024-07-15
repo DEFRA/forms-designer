@@ -6,11 +6,12 @@ import * as create from '~/src/models/forms/create.js'
  * @param {ValidationFailure} [validation]
  */
 export function organisationViewModel(slug, metadata, validation) {
-  const createView = create.organisationViewModel(metadata, validation)
-
-  createView.backLink.href = `/library/${slug}`
-
-  return createView
+  return {
+    ...create.organisationViewModel(metadata, validation),
+    backLink: {
+      href: `/library/${slug}`
+    }
+  }
 }
 
 /**
