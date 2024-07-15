@@ -106,7 +106,7 @@ export function postJson(url, options = {}) {
  * @param {RequestOptions} options
  */
 export function patchJson(url, options = {}) {
-  const patchByType = /** @type {typeof patch<BodyType>} */ (post)
+  const patchByType = /** @type {typeof patch<BodyType>} */ (patch)
   return patchByType(url, { json: true, ...options })
 }
 
