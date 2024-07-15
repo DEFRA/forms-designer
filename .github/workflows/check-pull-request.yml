@@ -103,7 +103,7 @@ jobs:
   lint:
     name: ${{ matrix.task.description }} (${{ matrix.runner }})
     runs-on: ${{ matrix.runner }}
-    needs: [install]
+    needs: [install, build]
 
     env:
       # Authorise GitHub API requests for EditorConfig checker binary
