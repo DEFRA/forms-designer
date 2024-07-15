@@ -39,7 +39,7 @@ export default [
     }
   }),
   /**
-   * @satisfies {RequestUpdateMetadataBySlug}
+   * @satisfies {RequestUpdateOrganisationBySlug}
    */
   ({
     method: 'POST',
@@ -51,6 +51,7 @@ export default [
       const { organisation } = payload
 
       const { id } = await forms.get(slug, token)
+
       await forms.updateMetadata(id, { organisation }, token)
 
       yar.flash(
@@ -82,5 +83,5 @@ export default [
 
 /**
  * @typedef {ServerRoute<{ Params: { slug: string } }>} RequestBySlug
- * @typedef {ServerRoute<{ Params: { slug: string }, Payload: FormMetadataInput }>} RequestUpdateMetadataBySlug
+ * @typedef {ServerRoute<{ Params: { slug: string }, Payload: Pick<FormMetadataInput, 'organisation'> }>} RequestUpdateOrganisationBySlug
  */
