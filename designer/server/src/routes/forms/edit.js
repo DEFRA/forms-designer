@@ -6,6 +6,9 @@ import * as forms from '~/src/lib/forms.js'
 import * as edit from '~/src/models/forms/edit.js'
 import { schema, displayJoiFailures } from '~/src/routes/forms/create.js'
 
+export const ROUTE_PATH_EDIT_LEAD_ORGANISATION =
+  '/library/{slug}/edit/lead-organisation'
+
 /**
  * Get the notification message for when a field is changed
  * @param {string} fieldName
@@ -20,7 +23,7 @@ export default [
    */
   ({
     method: 'GET',
-    path: '/library/{slug}/edit/lead-organisation',
+    path: ROUTE_PATH_EDIT_LEAD_ORGANISATION,
     async handler(request, h) {
       const { yar, params, auth } = request
       const { token } = auth.credentials
@@ -40,7 +43,7 @@ export default [
    */
   ({
     method: 'POST',
-    path: '/library/{slug}/edit/lead-organisation',
+    path: ROUTE_PATH_EDIT_LEAD_ORGANISATION,
     async handler(request, h) {
       const { yar, auth, payload, params } = request
       const { token } = auth.credentials

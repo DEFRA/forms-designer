@@ -16,6 +16,12 @@ import * as forms from '~/src/lib/forms.js'
 import * as create from '~/src/models/forms/create.js'
 
 const logger = createLogger()
+
+export const ROTUE_PATH_CREATE = '/create'
+export const ROUTE_PATH_CREATE_TITLE = '/create/title'
+export const ROUTE_PATH_CREATE_ORGANISATION = '/create/organisation'
+export const ROUTE_PATH_CREATE_TEAM = '/create/team'
+
 export const schema = Joi.object().keys({
   title: titleSchema.messages({
     'string.empty': 'Enter a form name',
@@ -59,7 +65,7 @@ export default [
    */
   ({
     method: 'GET',
-    path: '/create',
+    path: ROTUE_PATH_CREATE,
     handler(request, h) {
       const { yar } = request
 
@@ -68,16 +74,15 @@ export default [
       yar.clear(sessionNames.validationFailure)
 
       // Redirect to first step
-      return h.redirect('/create/title').temporary()
+      return h.redirect(ROUTE_PATH_CREATE_TITLE).temporary()
     }
   }),
-
   /**
    * @satisfies {ServerRoute}
    */
   ({
     method: 'GET',
-    path: '/create/title',
+    path: ROUTE_PATH_CREATE_TITLE,
     handler(request, h) {
       const { yar } = request
 
@@ -91,13 +96,12 @@ export default [
       )
     }
   }),
-
   /**
    * @satisfies {ServerRoute<{ Payload: Pick<FormMetadataInput, 'title'> }>}
    */
   ({
     method: 'POST',
-    path: '/create/title',
+    path: ROUTE_PATH_CREATE_TITLE,
     async handler(request, h) {
       const { auth, payload, yar } = request
       const { title } = payload
@@ -118,7 +122,9 @@ export default [
       })
 
       // Redirect POST to GET without resubmit on back button
-      return h.redirect('/create/organisation').code(StatusCodes.SEE_OTHER)
+      return h
+        .redirect(ROUTE_PATH_CREATE_ORGANISATION)
+        .code(StatusCodes.SEE_OTHER)
     },
     options: {
       validate: {
@@ -134,7 +140,7 @@ export default [
    */
   ({
     method: 'GET',
-    path: '/create/organisation',
+    path: ROUTE_PATH_CREATE_ORGANISATION,
     handler(request, h) {
       const { yar } = request
 
@@ -153,7 +159,7 @@ export default [
    */
   ({
     method: 'POST',
-    path: '/create/organisation',
+    path: ROUTE_PATH_CREATE_ORGANISATION,
     handler(request, h) {
       const { payload, yar } = request
 
@@ -164,7 +170,7 @@ export default [
       })
 
       // Redirect POST to GET without resubmit on back button
-      return h.redirect('/create/team').code(StatusCodes.SEE_OTHER)
+      return h.redirect(ROUTE_PATH_CREATE_TEAM).code(StatusCodes.SEE_OTHER)
     },
     options: {
       validate: {
@@ -175,13 +181,12 @@ export default [
       }
     }
   }),
-
   /**
    * @satisfies {ServerRoute}
    */
   ({
     method: 'GET',
-    path: '/create/team',
+    path: ROUTE_PATH_CREATE_TEAM,
     handler(request, h) {
       const { yar } = request
 
@@ -195,13 +200,12 @@ export default [
       )
     }
   }),
-
   /**
    * @satisfies {ServerRoute<{ Payload: FormMetadataInput }>}
    */
   ({
     method: 'POST',
-    path: '/create/team',
+    path: ROUTE_PATH_CREATE_TEAM,
     async handler(request, h) {
       const { auth, payload, yar } = request
       const { token } = auth.credentials
@@ -249,9 +253,9 @@ export default [
 
             // Optionally redirect to errors on previous steps
             if ('title' in formErrors) {
-              redirectTo = '/create/title'
+              redirectTo = ROUTE_PATH_CREATE_TITLE
             } else if ('organisation' in formErrors) {
-              redirectTo = '/create/organisation'
+              redirectTo = ROUTE_PATH_CREATE_ORGANISATION
             }
 
             yar.flash('validationFailure', {
@@ -284,7 +288,10 @@ function redirectToTitleWithErrors(request, h) {
   })
 
   // Redirect POST to GET without resubmit on back button
-  return h.redirect('/create/title').code(StatusCodes.SEE_OTHER).takeover()
+  return h
+    .redirect(ROUTE_PATH_CREATE_TITLE)
+    .code(StatusCodes.SEE_OTHER)
+    .takeover()
 }
 
 /**
