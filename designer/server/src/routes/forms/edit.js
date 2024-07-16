@@ -34,7 +34,7 @@ export default [
 
       return h.view(
         'forms/question-radios',
-        edit.organisationViewModel(slug, metadata, validation)
+        edit.organisationViewModel(metadata, validation)
       )
     }
   }),

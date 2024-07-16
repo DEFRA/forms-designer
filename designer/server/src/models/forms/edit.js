@@ -1,20 +1,20 @@
 import * as create from '~/src/models/forms/create.js'
 
 /**
- * @param {string} slug
- * @param {Partial<FormMetadataInput>} [metadata]
+ * @param {FormMetadata} metadata
  * @param {ValidationFailure} [validation]
  */
-export function organisationViewModel(slug, metadata, validation) {
+export function organisationViewModel(metadata, validation) {
   return {
     ...create.organisationViewModel(metadata, validation),
     backLink: {
-      href: `/library/${slug}`
+      href: `/library/${metadata.slug}`
     }
   }
 }
 
 /**
+ * @typedef {import('@defra/forms-model').FormMetadata} FormMetadata
  * @typedef {import('@defra/forms-model').FormMetadataInput} FormMetadataInput
  * @typedef {import("~/src/common/helpers/build-error-details.js").ValidationFailure<FormMetadataInput>} ValidationFailure
  * @typedef {import('~/src/common/helpers/build-error-details.js').ErrorDetails} ErrorDetails
