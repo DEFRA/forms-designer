@@ -8,6 +8,7 @@ export function organisationViewModel(metadata, validation) {
   return {
     ...create.organisationViewModel(metadata, validation),
     backLink: {
+      text: 'Back to form overview',
       href: `/library/${metadata.slug}`
     }
   }
