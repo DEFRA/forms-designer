@@ -109,14 +109,7 @@ export interface FormMetadata {
 export type FormByIdInput = Pick<FormMetadata, 'id'>
 export type FormBySlugInput = Pick<FormMetadata, 'slug'>
 export type FormMetadataDocument = Omit<FormMetadata, 'id'>
-export type FormMetadataInput = Omit<
+export type FormMetadataInput = Pick<
   FormMetadata,
-  | 'id'
-  | 'slug'
-  | 'draft'
-  | 'live'
-  | 'createdBy'
-  | 'createdAt'
-  | 'updatedBy'
-  | 'updatedAt'
+  'title' | 'organisation' | 'teamName' | 'teamEmail'
 >
