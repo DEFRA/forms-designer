@@ -41,24 +41,6 @@ export const schema = Joi.object().keys({
   })
 })
 
-/**
- * @type {FailAction}
- */
-export const displayJoiFailures = (request, h, error) => {
-  const { payload, yar, url } = request
-  const { pathname: redirectTo } = url
-
-  if (error instanceof Joi.ValidationError) {
-    yar.flash('validationFailure', {
-      formErrors: buildErrorDetails(error),
-      formValues: payload
-    })
-  }
-
-  // Redirect POST to GET without resubmit on back button
-  return h.redirect(redirectTo).code(StatusCodes.SEE_OTHER).takeover()
-}
-
 export default [
   /**
    * @satisfies {ServerRoute}
@@ -292,6 +274,27 @@ function redirectToTitleWithErrors(request, h) {
     .redirect(ROUTE_PATH_CREATE_TITLE)
     .code(StatusCodes.SEE_OTHER)
     .takeover()
+}
+
+/**
+ * @satisfies {FailAction}
+ * @param {RequestWithPayload} request
+ * @param {ResponseToolkit} h
+ * @param {Error} error
+ */
+export function displayJoiFailures(request, h, error) {
+  const { payload, yar, url } = request
+  const { pathname: redirectTo } = url
+
+  if (error instanceof Joi.ValidationError) {
+    yar.flash('validationFailure', {
+      formErrors: buildErrorDetails(error),
+      formValues: payload
+    })
+  }
+
+  // Redirect POST to GET without resubmit on back button
+  return h.redirect(redirectTo).code(StatusCodes.SEE_OTHER).takeover()
 }
 
 /**
