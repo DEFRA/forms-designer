@@ -84,6 +84,26 @@ export interface FormMetadata {
    * The live state of the form
    */
   live?: FormMetadataState
+
+  /**
+   * The author who created the form
+   */
+  createdBy: FormMetadataState['createdBy']
+
+  /**
+   * The date the form was created
+   */
+  createdAt: FormMetadataState['createdAt']
+
+  /**
+   * The author who last updated the form
+   */
+  updatedBy: FormMetadataState['updatedBy']
+
+  /**
+   * The date the form was last updated
+   */
+  updatedAt: FormMetadataState['updatedAt']
 }
 
 export type FormByIdInput = Pick<FormMetadata, 'id'>
@@ -91,5 +111,12 @@ export type FormBySlugInput = Pick<FormMetadata, 'slug'>
 export type FormMetadataDocument = Omit<FormMetadata, 'id'>
 export type FormMetadataInput = Omit<
   FormMetadata,
-  'id' | 'slug' | 'draft' | 'live'
+  | 'id'
+  | 'slug'
+  | 'draft'
+  | 'live'
+  | 'createdBy'
+  | 'createdAt'
+  | 'updatedBy'
+  | 'updatedAt'
 >
