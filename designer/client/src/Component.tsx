@@ -230,15 +230,21 @@ export const Component: FunctionComponent<Props> = (props) => {
   const [showEditor, setShowEditor] = useState<boolean>(false)
   const toggleShowEditor = () => setShowEditor(!showEditor)
 
-  const TagName = componentTypes[selectedComponent.type]
+  const { title, type } = selectedComponent
+  const ComponentIcon = componentTypes[type]
+
   const editFlyoutTitle = i18n('component.edit', {
-    name: `$t(fieldTypeToName.${selectedComponent.type})`
+    name: `$t(fieldTypeToName.${type})`
   })
 
   return (
     <>
-      <button className="component govuk-link" onClick={toggleShowEditor}>
-        <TagName />
+      <button
+        className="component govuk-link"
+        onClick={toggleShowEditor}
+        aria-label={`${editFlyoutTitle}: ${title}`}
+      >
+        <ComponentIcon />
       </button>
       {showEditor && (
         <RenderInPortal>
