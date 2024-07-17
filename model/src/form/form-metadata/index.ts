@@ -82,5 +82,9 @@ export const formMetadataSchema = formMetadataInputSchema.append<FormMetadata>({
   id: idSchema,
   slug: slugSchema,
   draft: formMetadataStateSchema,
-  live: formMetadataStateSchema
+  live: formMetadataStateSchema,
+  createdAt: authoredAtSchema,
+  createdBy: formMetadataAuthorSchema,
+  updatedAt: authoredAtSchema,
+  updatedBy: formMetadataAuthorSchema
 })
