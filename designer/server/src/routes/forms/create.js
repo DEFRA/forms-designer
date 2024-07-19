@@ -59,6 +59,7 @@ export default [
       return h.redirect(ROUTE_PATH_CREATE_TITLE).temporary()
     }
   }),
+
   /**
    * @satisfies {ServerRoute}
    */
@@ -78,6 +79,7 @@ export default [
       )
     }
   }),
+
   /**
    * @satisfies {ServerRoute<{ Payload: Pick<FormMetadataInput, 'title'> }>}
    */
@@ -117,6 +119,7 @@ export default [
       }
     }
   }),
+
   /**
    * @satisfies {ServerRoute}
    */
@@ -136,6 +139,7 @@ export default [
       )
     }
   }),
+
   /**
    * @satisfies {ServerRoute<{ Payload: Pick<FormMetadataInput, 'organisation'> }>}
    */
@@ -163,6 +167,7 @@ export default [
       }
     }
   }),
+
   /**
    * @satisfies {ServerRoute}
    */
@@ -182,6 +187,7 @@ export default [
       )
     }
   }),
+
   /**
    * @satisfies {ServerRoute<{ Payload: FormMetadataInput }>}
    */
