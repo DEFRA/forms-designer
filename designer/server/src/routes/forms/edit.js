@@ -4,7 +4,7 @@ import Joi from 'joi'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import * as forms from '~/src/lib/forms.js'
 import * as edit from '~/src/models/forms/edit.js'
-import { schema, displayJoiFailures } from '~/src/routes/forms/create.js'
+import { redirectWithErrors, schema } from '~/src/routes/forms/create.js'
 
 export const ROUTE_PATH_EDIT_LEAD_ORGANISATION =
   '/library/{slug}/edit/lead-organisation'
@@ -66,7 +66,7 @@ export default [
         payload: Joi.object().keys({
           organisation: schema.extract('organisation')
         }),
-        failAction: displayJoiFailures
+        failAction: redirectWithErrors
       }
     }
   })

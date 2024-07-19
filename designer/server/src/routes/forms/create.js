@@ -113,7 +113,7 @@ export default [
         payload: Joi.object().keys({
           title: schema.extract('title')
         }),
-        failAction: displayJoiFailures
+        failAction: redirectToStepWithErrors
       }
     }
   }),
@@ -159,7 +159,7 @@ export default [
         payload: Joi.object().keys({
           organisation: schema.extract('organisation')
         }),
-        failAction: displayJoiFailures
+        failAction: redirectToStepWithErrors
       }
     }
   }),
@@ -225,33 +225,7 @@ export default [
     options: {
       validate: {
         payload: schema,
-
-        failAction(request, h, error) {
-          const { payload, yar, url } = request
-          let { pathname: redirectTo } = url
-
-          if (error instanceof Joi.ValidationError) {
-            const formErrors = buildErrorDetails(error)
-
-            // Optionally redirect to errors on previous steps
-            if ('title' in formErrors) {
-              redirectTo = ROUTE_PATH_CREATE_TITLE
-            } else if ('organisation' in formErrors) {
-              redirectTo = ROUTE_PATH_CREATE_ORGANISATION
-            }
-
-            yar.flash('validationFailure', {
-              formErrors: {
-                teamName: formErrors.teamName,
-                teamEmail: formErrors.teamEmail
-              },
-              formValues: payload
-            })
-          }
-
-          // Redirect POST to GET without resubmit on back button
-          return h.redirect(redirectTo).code(StatusCodes.SEE_OTHER).takeover()
-        }
+        failAction: redirectToStepWithErrors
       }
     }
   })
@@ -277,20 +251,45 @@ function redirectToTitleWithErrors(request, h) {
 }
 
 /**
- * @satisfies {FailAction}
- * @param {RequestWithPayload} request
+ * @param {Request} request
  * @param {ResponseToolkit} h
- * @param {Error} error
+ * @param {Error} [error]
  */
-export function displayJoiFailures(request, h, error) {
-  const { payload, yar, url } = request
-  const { pathname: redirectTo } = url
+export function redirectToStepWithErrors(request, h, error) {
+  return redirectWithErrors(request, h, error, true)
+}
 
-  if (error instanceof Joi.ValidationError) {
+/**
+ * @param {Request} request
+ * @param {ResponseToolkit} h
+ * @param {Error} [error]
+ * @param {boolean} [redirectToPreviousStep] Optionally redirect to errors on previous steps, else it uses the current URL
+ */
+export function redirectWithErrors(
+  request,
+  h,
+  error,
+  redirectToPreviousStep = false
+) {
+  const { payload, yar, url } = request
+  let { pathname: redirectTo } = url
+
+  if (error && error instanceof Joi.ValidationError) {
+    const formErrors = buildErrorDetails(error)
+
     yar.flash('validationFailure', {
-      formErrors: buildErrorDetails(error),
+      formErrors,
       formValues: payload
     })
+
+    // Optionally redirect to errors on previous steps
+    if (redirectToPreviousStep) {
+      if ('title' in formErrors) {
+        redirectTo = '/create/title'
+      } else if ('organisation' in formErrors) {
+        redirectTo = '/create/organisation'
+      }
+    }
   }
 
   // Redirect POST to GET without resubmit on back button
