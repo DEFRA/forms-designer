@@ -285,7 +285,7 @@ export const Component: FunctionComponent<Props> = (props) => {
             title={i18n('component.move_up')}
             aria-label={i18n('component.move_up')}
           >
-            ⯅
+            ▲
           </button>
           <button
             className="component-move govuk-button govuk-button--secondary"
@@ -293,7 +293,7 @@ export const Component: FunctionComponent<Props> = (props) => {
             title={i18n('component.move_down')}
             aria-label={i18n('component.move_down')}
           >
-            ⯆
+            ▼
           </button>
         </div>
       )}
