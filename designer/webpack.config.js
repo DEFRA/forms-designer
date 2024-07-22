@@ -80,6 +80,7 @@ export default /** @type {import('webpack').Configuration} */ ({
               : 'stylesheets/[name].css'
         },
         use: [
+          'postcss-loader',
           {
             loader: 'sass-loader',
             options: {
