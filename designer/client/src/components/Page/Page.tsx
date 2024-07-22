@@ -26,6 +26,7 @@ const ComponentItem = (props: {
     <div className="component-item">
       <Component
         key={index}
+        index={index}
         page={page}
         data={data}
         selectedComponent={selectedComponent}
