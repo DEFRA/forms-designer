@@ -245,7 +245,6 @@ p code {
   position: relative;
 
   &:hover,
-  &:focus,
   &:focus-within {
     background-color: govuk-colour("yellow");
 
