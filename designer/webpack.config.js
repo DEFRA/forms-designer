@@ -90,7 +90,6 @@ export default /** @type {import('webpack').Configuration} */ ({
                 ],
                 quietDeps: true
               },
-              api: 'modern-compiler',
               warnRuleAsWarning: true
             }
           }
