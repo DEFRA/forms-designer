@@ -89,6 +89,7 @@ export default /** @type {import('webpack').Configuration} */ ({
                   join(import.meta.dirname, 'node_modules'),
                   join(import.meta.dirname, '../node_modules')
                 ],
+                outputStyle: 'expanded',
                 quietDeps: true
               },
               warnRuleAsWarning: true
