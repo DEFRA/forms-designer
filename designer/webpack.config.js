@@ -47,7 +47,7 @@ export default /** @type {import('webpack').Configuration} */ ({
   module: {
     rules: [
       {
-        test: /\.(js|mjs)$/,
+        test: /\.(js|mjs|scss)$/,
         loader: 'source-map-loader',
         enforce: 'pre'
       },
