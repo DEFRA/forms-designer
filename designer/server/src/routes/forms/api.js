@@ -1,4 +1,5 @@
 import { formDefinitionSchema } from '@defra/forms-model'
+import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
@@ -66,10 +67,12 @@ export default [
           // Update the form definition
           await forms.updateDraftFormDefinition(id, value, token)
 
-          return h.response({ ok: true }).code(204)
+          return h.response({ ok: true }).code(StatusCodes.NO_CONTENT)
         } catch (err) {
           request.logger.error(err, 'Designer Server PUT /api/{id}/data error')
-          return h.response({ ok: false, err }).code(500)
+          return h
+            .response({ ok: false, err })
+            .code(StatusCodes.INTERNAL_SERVER_ERROR)
         }
       }
     }
@@ -90,10 +93,12 @@ export default [
             ? request.logger[level](error, ...messages)
             : request.logger[level](...messages)
 
-          return h.response({ ok: true }).code(204)
+          return h.response({ ok: true }).code(StatusCodes.NO_CONTENT)
         } catch (error) {
           request.logger.error(error)
-          return h.response({ ok: false }).code(500)
+          return h
+            .response({ ok: false })
+            .code(StatusCodes.INTERNAL_SERVER_ERROR)
         }
       }
     }

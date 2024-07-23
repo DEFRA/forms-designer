@@ -113,3 +113,9 @@ export type FormMetadataInput = Pick<
   FormMetadata,
   'title' | 'organisation' | 'teamName' | 'teamEmail'
 >
+
+export interface FormResponse {
+  id: FormMetadata['id']
+  slug: FormMetadata['slug']
+  status: string
+}

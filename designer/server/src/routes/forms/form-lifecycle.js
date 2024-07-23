@@ -1,6 +1,7 @@
 import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 
+import * as notifications from '~/src/common/constants/notifications.js'
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildSimpleErrorList } from '~/src/common/helpers/build-error-details.js'
@@ -54,7 +55,11 @@ export default [
       try {
         await forms.makeDraftFormLive(form.id, token)
 
-        yar.flash(sessionNames.displayCreateLiveSuccess, true)
+        yar.flash(
+          sessionNames.successNotification,
+          notifications.FORM_LIVE_CREATED
+        )
+
         return h.redirect(`/library/${form.slug}`)
       } catch (err) {
         if (
@@ -93,7 +98,11 @@ export default [
       const form = await forms.get(slug, token)
       await forms.createDraft(form.id, token)
 
-      yar.flash(sessionNames.displayCreateDraftSuccess, true)
+      yar.flash(
+        sessionNames.successNotification,
+        notifications.FORM_DRAFT_CREATED
+      )
+
       return h.redirect(`/library/${slug}`)
     },
     options: {

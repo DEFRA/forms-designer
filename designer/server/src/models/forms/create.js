@@ -1,6 +1,10 @@
 import { organisations } from '@defra/forms-model'
 
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
+import {
+  ROUTE_PATH_CREATE_ORGANISATION,
+  ROUTE_PATH_CREATE_TITLE
+} from '~/src/routes/forms/create.js'
 
 /**
  * @param {Partial<FormMetadataInput>} [metadata]
@@ -43,7 +47,7 @@ export function organisationViewModel(metadata, validation) {
 
   return {
     backLink: {
-      href: '/create/title'
+      href: ROUTE_PATH_CREATE_TITLE
     },
     pageTitle,
     errorList: buildErrorList(formErrors, ['organisation']),
@@ -75,7 +79,7 @@ export function teamViewModel(metadata, validation) {
 
   return {
     backLink: {
-      href: '/create/organisation'
+      href: ROUTE_PATH_CREATE_ORGANISATION
     },
     pageTitle,
     pageHeading: {

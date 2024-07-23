@@ -6,6 +6,7 @@ import {
   titleSchema
 } from '@defra/forms-model'
 import Boom from '@hapi/boom'
+import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
@@ -15,7 +16,13 @@ import * as forms from '~/src/lib/forms.js'
 import * as create from '~/src/models/forms/create.js'
 
 const logger = createLogger()
-const schema = Joi.object().keys({
+
+export const ROUTE_PATH_CREATE = '/create'
+export const ROUTE_PATH_CREATE_TITLE = '/create/title'
+export const ROUTE_PATH_CREATE_ORGANISATION = '/create/organisation'
+export const ROUTE_PATH_CREATE_TEAM = '/create/team'
+
+export const schema = Joi.object().keys({
   title: titleSchema.messages({
     'string.empty': 'Enter a form name',
     'string.max': 'Form name must be 250 characters or less'
@@ -40,7 +47,7 @@ export default [
    */
   ({
     method: 'GET',
-    path: '/create',
+    path: ROUTE_PATH_CREATE,
     handler(request, h) {
       const { yar } = request
 
@@ -49,7 +56,7 @@ export default [
       yar.clear(sessionNames.validationFailure)
 
       // Redirect to first step
-      return h.redirect('/create/title').temporary()
+      return h.redirect(ROUTE_PATH_CREATE_TITLE).temporary()
     }
   }),
 
@@ -58,7 +65,7 @@ export default [
    */
   ({
     method: 'GET',
-    path: '/create/title',
+    path: ROUTE_PATH_CREATE_TITLE,
     handler(request, h) {
       const { yar } = request
 
@@ -78,7 +85,7 @@ export default [
    */
   ({
     method: 'POST',
-    path: '/create/title',
+    path: ROUTE_PATH_CREATE_TITLE,
     async handler(request, h) {
       const { auth, payload, yar } = request
       const { title } = payload
@@ -99,28 +106,16 @@ export default [
       })
 
       // Redirect POST to GET without resubmit on back button
-      return h.redirect('/create/organisation').code(303)
+      return h
+        .redirect(ROUTE_PATH_CREATE_ORGANISATION)
+        .code(StatusCodes.SEE_OTHER)
     },
     options: {
       validate: {
         payload: Joi.object().keys({
           title: schema.extract('title')
         }),
-
-        failAction(request, h, error) {
-          const { payload, yar, url } = request
-          const { pathname: redirectTo } = url
-
-          if (error instanceof Joi.ValidationError) {
-            yar.flash('validationFailure', {
-              formErrors: buildErrorDetails(error),
-              formValues: payload
-            })
-          }
-
-          // Redirect POST to GET without resubmit on back button
-          return h.redirect(redirectTo).code(303).takeover()
-        }
+        failAction: redirectToStepWithErrors
       }
     }
   }),
@@ -130,7 +125,7 @@ export default [
    */
   ({
     method: 'GET',
-    path: '/create/organisation',
+    path: ROUTE_PATH_CREATE_ORGANISATION,
     handler(request, h) {
       const { yar } = request
 
@@ -150,7 +145,7 @@ export default [
    */
   ({
     method: 'POST',
-    path: '/create/organisation',
+    path: ROUTE_PATH_CREATE_ORGANISATION,
     handler(request, h) {
       const { payload, yar } = request
 
@@ -161,28 +156,14 @@ export default [
       })
 
       // Redirect POST to GET without resubmit on back button
-      return h.redirect('/create/team').code(303)
+      return h.redirect(ROUTE_PATH_CREATE_TEAM).code(StatusCodes.SEE_OTHER)
     },
     options: {
       validate: {
         payload: Joi.object().keys({
           organisation: schema.extract('organisation')
         }),
-
-        failAction(request, h, error) {
-          const { payload, yar, url } = request
-          const { pathname: redirectTo } = url
-
-          if (error instanceof Joi.ValidationError) {
-            yar.flash('validationFailure', {
-              formErrors: buildErrorDetails(error),
-              formValues: payload
-            })
-          }
-
-          // Redirect POST to GET without resubmit on back button
-          return h.redirect(redirectTo).code(303).takeover()
-        }
+        failAction: redirectToStepWithErrors
       }
     }
   }),
@@ -192,7 +173,7 @@ export default [
    */
   ({
     method: 'GET',
-    path: '/create/team',
+    path: ROUTE_PATH_CREATE_TEAM,
     handler(request, h) {
       const { yar } = request
 
@@ -212,7 +193,7 @@ export default [
    */
   ({
     method: 'POST',
-    path: '/create/team',
+    path: ROUTE_PATH_CREATE_TEAM,
     async handler(request, h) {
       const { auth, payload, yar } = request
       const { token } = auth.credentials
@@ -234,7 +215,7 @@ export default [
         /**
          * Redirect POST to GET without resubmit on back button
          */
-        return h.redirect(`/library/${result.slug}`).code(303)
+        return h.redirect(`/library/${result.slug}`).code(StatusCodes.SEE_OTHER)
       } catch (err) {
         if (Boom.isBoom(err) && err.data?.error === 'FormAlreadyExistsError') {
           return redirectToTitleWithErrors(request, h)
@@ -250,33 +231,7 @@ export default [
     options: {
       validate: {
         payload: schema,
-
-        failAction(request, h, error) {
-          const { payload, yar, url } = request
-          let { pathname: redirectTo } = url
-
-          if (error instanceof Joi.ValidationError) {
-            const formErrors = buildErrorDetails(error)
-
-            // Optionally redirect to errors on previous steps
-            if ('title' in formErrors) {
-              redirectTo = '/create/title'
-            } else if ('organisation' in formErrors) {
-              redirectTo = '/create/organisation'
-            }
-
-            yar.flash('validationFailure', {
-              formErrors: {
-                teamName: formErrors.teamName,
-                teamEmail: formErrors.teamEmail
-              },
-              formValues: payload
-            })
-          }
-
-          // Redirect POST to GET without resubmit on back button
-          return h.redirect(redirectTo).code(303).takeover()
-        }
+        failAction: redirectToStepWithErrors
       }
     }
   })
@@ -295,7 +250,56 @@ function redirectToTitleWithErrors(request, h) {
   })
 
   // Redirect POST to GET without resubmit on back button
-  return h.redirect('/create/title').code(303).takeover()
+  return h
+    .redirect(ROUTE_PATH_CREATE_TITLE)
+    .code(StatusCodes.SEE_OTHER)
+    .takeover()
+}
+
+/**
+ * @param {Request} request
+ * @param {ResponseToolkit} h
+ * @param {Error} [error]
+ */
+export function redirectToStepWithErrors(request, h, error) {
+  return redirectWithErrors(request, h, error, true)
+}
+
+/**
+ * @param {Request} request
+ * @param {ResponseToolkit} h
+ * @param {Error} [error]
+ * @param {boolean} [redirectToPreviousStep] Optionally redirect to errors on previous steps, else it uses the current URL
+ */
+export function redirectWithErrors(
+  request,
+  h,
+  error,
+  redirectToPreviousStep = false
+) {
+  const { payload, yar, url } = request
+  let { pathname: redirectTo } = url
+
+  if (error && error instanceof Joi.ValidationError) {
+    const formErrors = buildErrorDetails(error)
+
+    yar.flash('validationFailure', {
+      formErrors,
+      formValues: payload
+    })
+
+    // Optionally redirect to errors on previous steps
+    if (redirectToPreviousStep) {
+      if ('title' in formErrors) {
+        redirectTo = '/create/title'
+      } else if ('organisation' in formErrors) {
+        redirectTo = '/create/organisation'
+      }
+    }
+  }
+
+  // Redirect POST to GET without resubmit on back button
+  return h.redirect(redirectTo).code(StatusCodes.SEE_OTHER).takeover()
 }
 
 /**

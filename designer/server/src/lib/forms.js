@@ -1,5 +1,5 @@
 import config from '~/src/config.js'
-import { getJson, postJson } from '~/src/lib/fetch.js'
+import { getJson, patchJson, postJson } from '~/src/lib/fetch.js'
 
 const formsEndpoint = new URL('/forms/', config.managerUrl)
 
@@ -126,6 +126,28 @@ export async function createDraft(id, token) {
 }
 
 /**
+ * Updates a metadata object.
+ * @param {string} id
+ * @param {Partial<FormMetadataInput>} metadata
+ * @param {string} token - auth token
+ * @returns
+ */
+export async function updateMetadata(id, metadata, token) {
+  const patchJsonByType = /** @type {typeof patchJson<FormResponse>} */ (
+    patchJson
+  )
+
+  const requestUrl = new URL(`./${id}`, formsEndpoint)
+
+  const { body } = await patchJsonByType(requestUrl, {
+    payload: metadata,
+    ...getAuthOptions(token)
+  })
+
+  return body
+}
+
+/**
  * @param {string} token
  * @returns {RequestOptions}
  */
@@ -137,6 +159,7 @@ function getAuthOptions(token) {
  * @typedef {import('@defra/forms-model').FormDefinition} FormDefinition
  * @typedef {import('@defra/forms-model').FormMetadata} FormMetadata
  * @typedef {import('@defra/forms-model').FormMetadataInput} FormMetadataInput
+ * @typedef {import('@defra/forms-model').FormResponse} FormResponse
  * @typedef {import('@hapi/hapi').AuthCredentials} AuthCredentials
  * @typedef {import('~/src/lib/fetch.js').RequestOptions} RequestOptions
  */
