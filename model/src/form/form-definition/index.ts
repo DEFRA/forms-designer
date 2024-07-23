@@ -22,12 +22,6 @@ import {
   type Section
 } from '~/src/form/form-definition/types.js'
 
-/**
- * If an optional key is added, CURRENT_VERSION does not need to be incremented.
- * Only breaking changes will require an increment, as well as a migration script.
- */
-export const CURRENT_VERSION = 2
-
 const sectionsSchema = Joi.object<Section>().keys({
   name: Joi.string().required(),
   title: Joi.string().required(),

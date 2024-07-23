@@ -1,7 +1,7 @@
 import { type FormDefinition, type Link } from '@defra/forms-model'
 
 import { findPage } from '~/src/data/page/findPage.js'
-import { type ConditionName, type Path } from '~/src/data/types.js'
+import { type Path } from '~/src/data/types.js'
 
 /**
  * @param data - Data from DataContext
@@ -14,7 +14,7 @@ export function addLink(
   data: FormDefinition,
   from: Path,
   to: Path,
-  condition?: ConditionName
+  condition?: string
 ): FormDefinition {
   if (from === to) {
     throw Error('cannot link a page to itself')
