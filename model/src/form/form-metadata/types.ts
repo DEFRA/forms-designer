@@ -94,7 +94,7 @@ export type FormMetadataInput = Omit<
   'id' | 'slug' | 'draft' | 'live'
 >
 
-export interface FormUpdateResponse {
+export interface FormResponse {
   id: FormMetadata['id']
   slug: FormMetadata['slug']
   status: string
