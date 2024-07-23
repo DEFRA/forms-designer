@@ -43,6 +43,7 @@ export function isConditionalType(
     ComponentType.EmailAddressField,
     ComponentType.MultilineTextField,
     ComponentType.NumberField,
+    ComponentType.SelectField,
     ComponentType.TextField,
     ComponentType.TimeField,
     ComponentType.YesNoField

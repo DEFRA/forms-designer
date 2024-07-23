@@ -89,6 +89,7 @@ export const customOperators = {
   [ComponentType.TextField]: withDefaults(textFieldOperators),
   [ComponentType.MultilineTextField]: withDefaults(textFieldOperators),
   [ComponentType.EmailAddressField]: withDefaults(textFieldOperators),
+  [ComponentType.SelectField]: defaultOperators,
   [ComponentType.YesNoField]: defaultOperators
 }
 
