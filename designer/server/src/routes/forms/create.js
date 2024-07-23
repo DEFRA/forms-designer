@@ -320,7 +320,3 @@ export function redirectWithErrors(
  * @typedef {import('@hapi/hapi').ResponseToolkit<any>} ResponseToolkit
  * @typedef {Request<{ Payload: any }>} RequestWithPayload
  */
-
-/**
- * @typedef {import('@hapi/hapi').RouteOptionsValidate['failAction']} FailAction
- */
