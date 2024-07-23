@@ -133,7 +133,7 @@ export async function createDraft(id, token) {
  * @returns
  */
 export async function updateMetadata(id, metadata, token) {
-  const patchJsonByType = /** @type {typeof patchJson<FormUpdateResponse>} */ (
+  const patchJsonByType = /** @type {typeof patchJson<FormResponse>} */ (
     patchJson
   )
 
@@ -159,7 +159,7 @@ function getAuthOptions(token) {
  * @typedef {import('@defra/forms-model').FormDefinition} FormDefinition
  * @typedef {import('@defra/forms-model').FormMetadata} FormMetadata
  * @typedef {import('@defra/forms-model').FormMetadataInput} FormMetadataInput
- * @typedef {import('@defra/forms-model').FormUpdateResponse} FormUpdateResponse
+ * @typedef {import('@defra/forms-model').FormResponse} FormResponse
  * @typedef {import('@hapi/hapi').AuthCredentials} AuthCredentials
  * @typedef {import('~/src/lib/fetch.js').RequestOptions} RequestOptions
  */
