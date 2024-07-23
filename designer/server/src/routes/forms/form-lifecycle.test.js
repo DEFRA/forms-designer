@@ -45,7 +45,11 @@ describe('Test form draft and live creation route handlers', () => {
         createdBy: author,
         updatedAt: now,
         updatedBy: author
-      }
+      },
+      createdAt: now,
+      createdBy: author,
+      updatedAt: now,
+      updatedBy: author
     }
   })
 

@@ -42,7 +42,11 @@ describe('Forms library routes', () => {
       createdBy: author,
       updatedAt: now,
       updatedBy: author
-    }
+    },
+    createdAt: now,
+    createdBy: author,
+    updatedAt: now,
+    updatedBy: author
   }
 
   /**
@@ -108,7 +112,9 @@ describe('Forms library routes', () => {
         // Dates in JSON are stringified
         createdAt: now.toISOString(),
         updatedAt: now.toISOString()
-      }
+      },
+      createdAt: now.toISOString(),
+      updatedAt: now.toISOString()
     })
 
     expect(
