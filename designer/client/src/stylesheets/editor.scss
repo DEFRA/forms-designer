@@ -1,7 +1,7 @@
 $govuk-assets-path: "/assets/";
 
 @import "govuk-frontend/dist/govuk/base";
-@import "prismjs/themes/prism.min.css";
+@import "prismjs/themes/prism.min";
 
 @import "variables/all";
 @import "helpers/all";
@@ -243,6 +243,27 @@ p code {
 
 .component-item {
   position: relative;
+
+  &:hover,
+  &:focus-within {
+    background-color: govuk-colour("yellow");
+
+    .component-move {
+      visibility: visible;
+    }
+  }
+
+  .govuk-button-group {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+}
+
+.component-move {
+  visibility: hidden;
+  margin-bottom: 0;
+  @include govuk-responsive-padding(2);
 }
 
 /* Syntax highlighting */

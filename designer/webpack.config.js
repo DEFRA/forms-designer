@@ -1,7 +1,6 @@
 import { dirname, join, resolve } from 'node:path'
 
 import CopyPlugin from 'copy-webpack-plugin'
-import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 import resolvePkg from 'resolve'
 import TerserPlugin from 'terser-webpack-plugin'
 import webpack from 'webpack'
@@ -48,7 +47,7 @@ export default /** @type {import('webpack').Configuration} */ ({
   module: {
     rules: [
       {
-        test: /\.(js|mjs)$/,
+        test: /\.(js|mjs|scss)$/,
         loader: 'source-map-loader',
         enforce: 'pre'
       },
@@ -72,16 +71,16 @@ export default /** @type {import('webpack').Configuration} */ ({
       },
       {
         test: /\.scss$/,
+        type: 'asset/resource',
+        generator: {
+          binary: false,
+          filename:
+            NODE_ENV === 'production'
+              ? 'stylesheets/[name].[contenthash:7].min.css'
+              : 'stylesheets/[name].css'
+        },
         use: [
-          MiniCssExtractPlugin.loader,
-          {
-            loader: 'css-loader',
-            options: {
-              // Allow sass-loader to process CSS @import first
-              // before we use css-loader to extract `url()` etc
-              importLoaders: 2
-            }
-          },
+          'postcss-loader',
           {
             loader: 'sass-loader',
             options: {
@@ -90,9 +89,9 @@ export default /** @type {import('webpack').Configuration} */ ({
                   join(import.meta.dirname, 'node_modules'),
                   join(import.meta.dirname, '../node_modules')
                 ],
+                outputStyle: 'expanded',
                 quietDeps: true
               },
-              api: 'modern-compiler',
               warnRuleAsWarning: true
             }
           }
@@ -177,18 +176,6 @@ export default /** @type {import('webpack').Configuration} */ ({
   },
   plugins: [
     new WebpackAssetsManifest(),
-
-    new MiniCssExtractPlugin({
-      filename:
-        NODE_ENV === 'production'
-          ? 'stylesheets/[name].[contenthash:7].min.css'
-          : 'stylesheets/[name].css',
-
-      chunkFilename:
-        NODE_ENV === 'production'
-          ? 'stylesheets/[name].[contenthash:7].min.css'
-          : 'stylesheets/[name].css'
-    }),
 
     new EnvironmentPlugin({
       REACT_LOG_LEVEL:

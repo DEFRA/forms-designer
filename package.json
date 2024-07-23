@@ -1,6 +1,6 @@
 {
   "name": "forms-designer",
-  "version": "3.0.240",
+  "version": "3.0.247",
   "private": true,
   "description": "Defra forms designer repository",
   "repository": {
@@ -32,10 +32,10 @@
     "test:watch": "jest --color --watch"
   },
   "devDependencies": {
-    "@babel/cli": "^7.24.7",
-    "@babel/core": "^7.24.7",
+    "@babel/cli": "^7.24.8",
+    "@babel/core": "^7.24.9",
     "@babel/plugin-syntax-import-attributes": "^7.24.7",
-    "@babel/preset-env": "^7.24.7",
+    "@babel/preset-env": "^7.24.8",
     "@babel/preset-react": "^7.24.7",
     "@babel/preset-typescript": "^7.24.7",
     "@typescript-eslint/eslint-plugin": "^7.15.0",
@@ -87,7 +87,8 @@
     "@types/uuid": "^10.0.0",
     "@types/webpack-assets-manifest": "^5.1.4",
     "@types/webpack-bundle-analyzer": "^4.7.0",
-    "oidc-client-ts": "^3.0.1"
+    "oidc-client-ts": "^3.0.1",
+    "postcss-load-config": "^6.0.1"
   },
   "engines": {
     "node": "^20.9.0",

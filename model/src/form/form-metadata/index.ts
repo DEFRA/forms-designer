@@ -39,17 +39,19 @@ export const authoredAtSchema = Joi.date().iso().required()
 export const authorIdSchema = Joi.string().trim().required()
 export const authorDisplayNameSchema = Joi.string().trim().required()
 
+export const formMetadataInputKeys = {
+  title: titleSchema,
+  organisation: organisationSchema,
+  teamName: teamNameSchema,
+  teamEmail: teamEmailSchema
+}
+
 /**
  * Joi schema for `FormMetadataInput` interface
  * @see {@link FormMetadataInput}
  */
 export const formMetadataInputSchema = Joi.object<FormMetadataInput>()
-  .keys({
-    title: titleSchema,
-    organisation: organisationSchema,
-    teamName: teamNameSchema,
-    teamEmail: teamEmailSchema
-  })
+  .keys(formMetadataInputKeys)
   .required()
 
 /**
@@ -82,5 +84,9 @@ export const formMetadataSchema = formMetadataInputSchema.append<FormMetadata>({
   id: idSchema,
   slug: slugSchema,
   draft: formMetadataStateSchema,
-  live: formMetadataStateSchema
+  live: formMetadataStateSchema,
+  createdAt: authoredAtSchema,
+  createdBy: formMetadataAuthorSchema,
+  updatedAt: authoredAtSchema,
+  updatedBy: formMetadataAuthorSchema
 })

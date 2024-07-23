@@ -4,12 +4,15 @@ import {
   type FormDefinition,
   type Page
 } from '@defra/forms-model'
-import React, { useState, type FunctionComponent } from 'react'
+import React, { useContext, useState, type FunctionComponent } from 'react'
 
 import { ComponentEdit } from '~/src/ComponentEdit.jsx'
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import { SearchIcon } from '~/src/components/Icons/SearchIcon.jsx'
 import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
+import { DataContext } from '~/src/context/DataContext.js'
+import { findPage } from '~/src/data/page/findPage.js'
+import { arrayMove } from '~/src/helpers.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContextProvider } from '~/src/reducers/component/componentReducer.jsx'
 
@@ -222,24 +225,78 @@ export interface Props {
   data: FormDefinition
   page: Page
   selectedComponent: ComponentDef
+  index: number
 }
 
 export const Component: FunctionComponent<Props> = (props) => {
-  const { page, selectedComponent } = props
+  const { page, selectedComponent, index } = props
 
+  const { data, save } = useContext(DataContext)
   const [showEditor, setShowEditor] = useState<boolean>(false)
   const toggleShowEditor = () => setShowEditor(!showEditor)
 
-  const TagName = componentTypes[selectedComponent.type]
+  const { title, type } = selectedComponent
+  const ComponentIcon = componentTypes[type]
+
   const editFlyoutTitle = i18n('component.edit', {
-    name: `$t(fieldTypeToName.${selectedComponent.type})`
+    name: `$t(fieldTypeToName.${type})`
   })
+
+  const move = async (oldIndex: number, newIndex: number) => {
+    const copy = { ...data }
+    const [copyPage, index] = findPage(data, page.path)
+
+    if (!copyPage.components?.length) {
+      return false
+    }
+
+    const length = copyPage.components.length
+
+    if (newIndex === -1) {
+      newIndex = length - 1
+    } else if (newIndex === length) {
+      newIndex = 0
+    }
+
+    copyPage.components = arrayMove(copyPage.components, oldIndex, newIndex)
+
+    copy.pages[index] = copyPage
+
+    await save(copy)
+  }
+
+  const showMoveActions =
+    Array.isArray(page.components) && page.components.length > 1
 
   return (
     <>
-      <button className="component govuk-link" onClick={toggleShowEditor}>
-        <TagName />
+      <button
+        className="component govuk-link"
+        onClick={toggleShowEditor}
+        aria-label={`${editFlyoutTitle}: ${title}`}
+      >
+        <ComponentIcon />
       </button>
+      {showMoveActions && (
+        <div className="govuk-button-group">
+          <button
+            className="component-move govuk-button govuk-button--secondary govuk-!-margin-right-0"
+            onClick={() => move(index, index - 1)}
+            title={i18n('component.move_up')}
+            aria-label={i18n('component.move_up')}
+          >
+            ▲
+          </button>
+          <button
+            className="component-move govuk-button govuk-button--secondary"
+            onClick={() => move(index, index + 1)}
+            title={i18n('component.move_down')}
+            aria-label={i18n('component.move_down')}
+          >
+            ▼
+          </button>
+        </div>
+      )}
       {showEditor && (
         <RenderInPortal>
           <Flyout title={editFlyoutTitle} onHide={toggleShowEditor}>
