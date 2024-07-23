@@ -47,7 +47,7 @@ export default /** @type {import('webpack').Configuration} */ ({
   module: {
     rules: [
       {
-        test: /\.(js|mjs)$/,
+        test: /\.(js|mjs|scss)$/,
         loader: 'source-map-loader',
         enforce: 'pre'
       },
@@ -80,6 +80,7 @@ export default /** @type {import('webpack').Configuration} */ ({
               : 'stylesheets/[name].css'
         },
         use: [
+          'postcss-loader',
           {
             loader: 'sass-loader',
             options: {
@@ -88,9 +89,9 @@ export default /** @type {import('webpack').Configuration} */ ({
                   join(import.meta.dirname, 'node_modules'),
                   join(import.meta.dirname, '../node_modules')
                 ],
+                outputStyle: 'expanded',
                 quietDeps: true
               },
-              api: 'modern-compiler',
               warnRuleAsWarning: true
             }
           }
