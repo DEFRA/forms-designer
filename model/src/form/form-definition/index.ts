@@ -89,17 +89,12 @@ const conditionsSchema = Joi.object<ConditionRawData>().keys({
   value: conditionsModelSchema.required()
 })
 
-const localisedString = Joi.alternatives().try(
-  Joi.object({ a: Joi.any() }).unknown(),
-  Joi.string().allow('')
-)
-
 export const componentSchema = Joi.object<ComponentDef>()
   .keys({
     type: Joi.string<ComponentType>().required(),
     name: Joi.string(),
-    title: localisedString,
-    hint: localisedString.optional(),
+    title: Joi.string().allow(''),
+    hint: Joi.string().allow('').optional(),
     options: Joi.object({
       rows: Joi.number().empty(''),
       maxWords: Joi.number().empty(''),
@@ -130,7 +125,7 @@ const nextSchema = Joi.object<Link>().keys({
  */
 const pageSchema = Joi.object<Page>().keys({
   path: Joi.string().required().disallow('/status'),
-  title: localisedString,
+  title: Joi.string().allow(''),
   section: Joi.string(),
   controller: Joi.string().optional(),
   components: Joi.array<ComponentDef>().items(componentSchema),
@@ -138,8 +133,8 @@ const pageSchema = Joi.object<Page>().keys({
 })
 
 const baseListItemSchema = Joi.object<Item>().keys({
-  text: localisedString,
-  description: localisedString.optional(),
+  text: Joi.string().allow(''),
+  description: Joi.string().allow('').optional(),
   conditional: Joi.object<Item['conditional']>()
     .keys({
       components: Joi.array<ComponentDef>()
@@ -162,7 +157,7 @@ const numberListItemSchema = baseListItemSchema.append({
 
 const listSchema = Joi.object<List>().keys({
   name: Joi.string().required(),
-  title: localisedString,
+  title: Joi.string().allow(''),
   type: Joi.string().required().valid('string', 'number'),
   items: Joi.when('type', {
     is: 'string',
@@ -203,7 +198,7 @@ const phaseBannerSchema = Joi.object<PhaseBanner>().keys({
 export const formDefinitionSchema = Joi.object<FormDefinition>()
   .required()
   .keys({
-    name: localisedString.optional(),
+    name: Joi.string().allow('').optional(),
     feedback: feedbackSchema.optional(),
     startPage: Joi.string().optional(),
     pages: Joi.array<Page>().required().items(pageSchema).unique('path'),
