@@ -1,8 +1,8 @@
-import { type ConditionRawData, type FormDefinition } from '@defra/forms-model'
+import { type ConditionWrapper, type FormDefinition } from '@defra/forms-model'
 
 export function addCondition(
   data: FormDefinition,
-  condition: ConditionRawData
+  condition: ConditionWrapper
 ): FormDefinition {
   if (data.conditions.find((c) => condition.name === c.name)) {
     throw Error(`A condition with the name ${condition.name} already exists`)

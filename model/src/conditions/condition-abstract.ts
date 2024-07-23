@@ -1,9 +1,9 @@
 import { Coordinator } from '~/src/conditions/enums.js'
 
 export class ConditionAbstract {
-  coordinator: Coordinator | undefined
+  coordinator?: Coordinator
 
-  constructor(coordinator: Coordinator | undefined) {
+  constructor(coordinator?: Coordinator) {
     if (coordinator && !Object.values(Coordinator).includes(coordinator)) {
       throw Error(`coordinator ${coordinator} is not a valid coordinator`)
     }
@@ -11,15 +11,15 @@ export class ConditionAbstract {
     this.coordinator = coordinator
   }
 
-  coordinatorString() {
+  coordinatorString(): string {
     return this.coordinator ? `${this.coordinator} ` : ''
   }
 
-  getCoordinator() {
+  getCoordinator(): Coordinator | undefined {
     return this.coordinator
   }
 
-  setCoordinator(coordinator: Coordinator | undefined) {
+  setCoordinator(coordinator?: Coordinator) {
     this.coordinator = coordinator
   }
 

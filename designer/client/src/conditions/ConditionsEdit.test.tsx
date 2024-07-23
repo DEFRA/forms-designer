@@ -1,6 +1,6 @@
 import {
   ComponentType,
-  type ConditionRawData,
+  type ConditionWrapper,
   type FormDefinition
 } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
@@ -99,13 +99,13 @@ describe('ConditionsEdit', () => {
       name: 'abdefg',
       displayName: 'My condition',
       value: 'badgers'
-    } satisfies ConditionRawData
+    } satisfies ConditionWrapper
 
     const condition2 = {
       name: 'abdefgh',
       displayName: 'My condition 2',
       value: 'badgers again'
-    } satisfies ConditionRawData
+    } satisfies ConditionWrapper
 
     const updated: FormDefinition = {
       ...data,

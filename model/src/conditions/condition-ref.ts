@@ -2,13 +2,13 @@ import { ConditionAbstract } from '~/src/conditions/condition-abstract.js'
 import { type Coordinator } from '~/src/conditions/enums.js'
 
 export class ConditionRef extends ConditionAbstract {
-  conditionName
-  conditionDisplayName
+  conditionName: string
+  conditionDisplayName: string
 
   constructor(
     conditionName: string,
     conditionDisplayName: string,
-    coordinator: Coordinator | undefined
+    coordinator?: Coordinator
   ) {
     super(coordinator)
 

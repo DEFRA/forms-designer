@@ -13,7 +13,7 @@ import {
   OperatorName,
   RelativeTimeValue
 } from '~/src/conditions/index.js'
-import { type ConditionsArray } from '~/src/conditions/types.js'
+import { type ConditionsModelData } from '~/src/conditions/types.js'
 
 describe('condition model', () => {
   let underTest: ConditionsModel
@@ -1578,8 +1578,8 @@ describe('condition model', () => {
             conditionName: 'anotherCondition',
             conditionDisplayName: 'Another condition'
           }
-        ] satisfies ConditionsArray
-      }
+        ]
+      } satisfies ConditionsModelData
 
       expect(JSON.stringify(underTest)).toEqual(JSON.stringify(expected))
     })

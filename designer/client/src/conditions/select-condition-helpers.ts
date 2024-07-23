@@ -1,36 +1,43 @@
-import { type ConditionData } from '~/src/conditions/SelectConditions.jsx'
+import {
+  type ConditionData,
+  type ConditionGroupData,
+  type ConditionRefData,
+  type ConditionWrapper
+} from '@defra/forms-model'
 
-export const isObjectCondition = (condition: ConditionData) => {
+export const isObjectCondition = (condition: ConditionWrapper) => {
   return typeof condition.value !== 'string'
 }
 
-export const isStringCondition = (condition: ConditionData) => {
+export const isStringCondition = (condition: ConditionWrapper) => {
   return typeof condition.value === 'string'
 }
 
-export const hasConditionName = (condition: any) => {
-  return !!condition?.conditionName
+export const hasConditionName = (
+  condition: ConditionGroupData | ConditionData | ConditionRefData
+) => {
+  return 'conditionName' in condition && !!condition.conditionName
 }
 
-export const hasNestedCondition = (condition: ConditionData) => {
+export const hasNestedCondition = (condition: ConditionWrapper) => {
   if (typeof condition.value === 'string') {
     return false
   }
-  return condition.value.conditions.find(hasConditionName) ?? false
+  return condition.value.conditions.some(hasConditionName)
 }
 
 export const isDuplicateCondition = (
-  conditions: any[],
+  conditions: ConditionWrapper[],
   conditionName: string
 ) => {
-  return !!conditions.find((condition) => condition.name === conditionName)
+  return conditions.some((condition) => condition.name === conditionName)
 }
 
 export const getFieldNameSubstring = (sectionFieldName: string) => {
   return sectionFieldName.substring(sectionFieldName.indexOf('.'))
 }
 
-export function conditionsByType(conditions: ConditionData[]) {
+export function conditionsByType(conditions: ConditionWrapper[]) {
   return conditions.reduce<ConditionByTypeMap>(
     (conditionsByType, currentValue) => {
       if (isStringCondition(currentValue)) {
@@ -51,7 +58,7 @@ export function conditionsByType(conditions: ConditionData[]) {
 }
 
 interface ConditionByTypeMap {
-  string: ConditionData[]
-  nested: ConditionData[]
-  object: ConditionData[]
+  string: ConditionWrapper[]
+  nested: ConditionWrapper[]
+  object: ConditionWrapper[]
 }

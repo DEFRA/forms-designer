@@ -1,14 +1,14 @@
-import { type ConditionRawData, type FormDefinition } from '@defra/forms-model'
+import { type ConditionWrapper, type FormDefinition } from '@defra/forms-model'
 
 /**
  * @param data
  * @param conditionName
- * @param updatedPartial - The condition name cannot be changed, hence Omit<ConditionRawData, "name">
+ * @param updatedPartial - The condition name cannot be changed, hence Omit<ConditionWrapper, "name">
  */
 export function updateCondition(
   data: FormDefinition,
-  conditionName: ConditionRawData['name'],
-  updatedPartial: Partial<Omit<ConditionRawData, 'name'>>
+  conditionName: ConditionWrapper['name'],
+  updatedPartial: Partial<Omit<ConditionWrapper, 'name'>>
 ): FormDefinition {
   const conditions = [...data.conditions]
   const conditionIndex = conditions.findIndex(

@@ -1,6 +1,10 @@
-import { ConditionType, Coordinator, OperatorName } from '@defra/forms-model'
+import {
+  ConditionType,
+  Coordinator,
+  OperatorName,
+  type ConditionWrapper
+} from '@defra/forms-model'
 
-import { type ConditionData } from '~/src/conditions/SelectConditions.jsx'
 import { conditionsByType } from '~/src/conditions/select-condition-helpers.js'
 
 const stringCondition = {
@@ -52,7 +56,7 @@ const nestedCondition = {
 }
 
 test('conditionsByType', () => {
-  const conditions: ConditionData[] = [
+  const conditions: ConditionWrapper[] = [
     stringCondition,
     objectCondition,
     nestedCondition

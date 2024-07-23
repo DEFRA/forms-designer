@@ -9,9 +9,9 @@ import {
 import { type Coordinator, type OperatorName } from '~/src/conditions/enums.js'
 
 export class Condition extends ConditionAbstract {
-  field
-  operator
-  value
+  field: ConditionField
+  operator: OperatorName
+  value: ConditionValue | RelativeTimeValue
 
   constructor(
     field?: ConditionField,

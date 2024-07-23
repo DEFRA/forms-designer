@@ -1,6 +1,6 @@
 import {
   ConditionsModel,
-  type ConditionRef,
+  type ConditionWrapper,
   type FormDefinition
 } from '@defra/forms-model'
 import { Select } from '@xgovformbuilder/govuk-react-jsx'
@@ -31,17 +31,6 @@ interface State {
   inline: boolean
   selectedCondition: string
   fields: any
-}
-
-interface ConditionObject {
-  name: string
-  conditions: ConditionRef[]
-}
-
-export interface ConditionData {
-  name: string
-  displayName: string
-  value: string | ConditionObject
 }
 
 export class SelectConditions extends Component<Props, State> {
@@ -116,7 +105,7 @@ export class SelectConditions extends Component<Props, State> {
   }
 
   handleConditions(
-    objectConditions: ConditionData[],
+    objectConditions: ConditionWrapper[],
     fieldName: string,
     conditionsForPath: any[]
   ) {
@@ -167,7 +156,7 @@ export class SelectConditions extends Component<Props, State> {
 
   // loops through nested conditions, checking the referenced condition against the current field
   handleNestedConditions(
-    nestedConditions: ConditionData[],
+    nestedConditions: ConditionWrapper[],
     fieldName: string,
     conditionsForPath: any[]
   ) {

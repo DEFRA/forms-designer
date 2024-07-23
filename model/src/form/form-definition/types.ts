@@ -1,5 +1,5 @@
 import { type ComponentDef } from '~/src/components/types.js'
-import { type Condition } from '~/src/conditions/condition.js'
+import { type ConditionsModelData } from '~/src/conditions/types.js'
 import { formDefinitionSchema } from '~/src/form/form-definition/index.js'
 
 export interface Link {
@@ -27,8 +27,8 @@ export interface Item {
   text: string
   value: string | number | boolean
   description?: string
-  conditional?: { components: ComponentDef[] } | null
-  condition?: string | null
+  conditional?: { components: ComponentDef[] }
+  condition?: string
 }
 
 export interface List {
@@ -49,17 +49,10 @@ export interface PhaseBanner {
   feedbackUrl?: string
 }
 
-export type ConditionWrapperValue =
-  | string
-  | {
-      name: string
-      conditions: Condition[]
-    }
-
-export interface ConditionRawData {
+export interface ConditionWrapper {
   name: string
   displayName: string
-  value: ConditionWrapperValue
+  value: string | ConditionsModelData
 }
 
 /**
@@ -68,7 +61,7 @@ export interface ConditionRawData {
  */
 export interface FormDefinition {
   pages: Page[]
-  conditions: ConditionRawData[]
+  conditions: ConditionWrapper[]
   lists: List[]
   sections: Section[]
   startPage?: Page['path']
