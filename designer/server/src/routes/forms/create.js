@@ -17,7 +17,7 @@ import * as create from '~/src/models/forms/create.js'
 
 const logger = createLogger()
 
-export const ROTUE_PATH_CREATE = '/create'
+export const ROUTE_PATH_CREATE = '/create'
 export const ROUTE_PATH_CREATE_TITLE = '/create/title'
 export const ROUTE_PATH_CREATE_ORGANISATION = '/create/organisation'
 export const ROUTE_PATH_CREATE_TEAM = '/create/team'
@@ -47,7 +47,7 @@ export default [
    */
   ({
     method: 'GET',
-    path: ROTUE_PATH_CREATE,
+    path: ROUTE_PATH_CREATE,
     handler(request, h) {
       const { yar } = request
 
