@@ -142,7 +142,7 @@ export class ConditionsModel {
     this.#userGroupedConditions[1].setCoordinator(
       this.#userGroupedConditions[0].getCoordinator()
     )
-    this.#userGroupedConditions[0].setCoordinator(undefined)
+    this.#userGroupedConditions[0].setCoordinator()
   }
 
   get asPerUserGroupings() {
