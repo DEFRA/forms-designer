@@ -3,6 +3,7 @@ import {
   type ConditionWrapper,
   type FormDefinition
 } from '@defra/forms-model'
+// @ts-expect-error -- No types available
 import { Select } from '@xgovformbuilder/govuk-react-jsx'
 import React, {
   Component,

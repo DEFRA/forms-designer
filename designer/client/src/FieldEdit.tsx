@@ -3,6 +3,7 @@ import {
   getComponentDefaults,
   hasContentField
 } from '@defra/forms-model'
+// @ts-expect-error -- No types available
 import { Input, Textarea } from '@xgovformbuilder/govuk-react-jsx'
 import classNames from 'classnames'
 import React, { type ChangeEvent, useContext } from 'react'

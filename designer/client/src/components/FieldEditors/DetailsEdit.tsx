@@ -1,3 +1,4 @@
+// @ts-expect-error -- No types available
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import classNames from 'classnames'
 import React, { useContext, type ChangeEvent } from 'react'
