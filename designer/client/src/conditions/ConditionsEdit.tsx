@@ -1,3 +1,4 @@
+import { ConditionsModel } from '@defra/forms-model'
 import React, { useContext, useState } from 'react'
 
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
@@ -40,7 +41,9 @@ function useConditionsEditor() {
   }
 }
 
-interface Props {}
+interface Props {
+  path?: string
+}
 
 export function ConditionsEdit({ path }: Props) {
   const {
@@ -54,6 +57,7 @@ export function ConditionsEdit({ path }: Props) {
   const { data } = useContext(DataContext)
   const { conditions } = data
   const inputs = allInputs(data)
+
   return (
     <>
       <div className="govuk-hint">{i18n('conditions.hint')}</div>
@@ -76,24 +80,26 @@ export function ConditionsEdit({ path }: Props) {
           )}
 
           <ul
-            className="govuk-list govuk-list--bullet"
+            className="govuk-list govuk-list--bullet govuk-list--spaced"
             data-testid="conditions-list"
           >
-            {conditions.map((condition) => (
-              <li key={condition.name} data-testid="conditions-list-item">
-                <a
-                  className="govuk-link"
-                  href="#"
-                  onClick={(e) => onClickCondition(e, condition)}
-                >
-                  {condition.displayName}
-                </a>{' '}
-                <small>{condition.name}</small>
-                {'   ('}
-                <small>{condition.expression}</small>
-                {')'}
-              </li>
-            ))}
+            {conditions.map((condition) => {
+              const model = ConditionsModel.from(condition.value)
+
+              return (
+                <li key={condition.name}>
+                  <a
+                    className="govuk-link"
+                    href="#"
+                    onClick={(e) => onClickCondition(e, condition)}
+                  >
+                    {condition.displayName}
+                  </a>
+                  <br />
+                  {model.toPresentationString()}
+                </li>
+              )
+            })}
           </ul>
           <hr className="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
           {inputs.length > 0 && (
