@@ -1,6 +1,4 @@
 import {
-  type ConditionRawData,
-  type FormDefinition,
   type InputFieldsComponentsDef,
   type ListComponentsDef,
   type Page
@@ -19,8 +17,4 @@ export interface Input {
 }
 
 export type Path = Page['path']
-export type ConditionName = ConditionRawData['name']
 export type Found<T> = [T, number]
-
-export type FormDefinitionResult = FormDefinition
-export type FoundResult<T> = Found<T>

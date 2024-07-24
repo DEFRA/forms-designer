@@ -1,4 +1,9 @@
-import { ComponentType, type FormDefinition } from '@defra/forms-model'
+import {
+  ComponentType,
+  ConditionType,
+  OperatorName,
+  type FormDefinition
+} from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
 import React from 'react'
@@ -111,28 +116,113 @@ describe('SelectConditions', () => {
       conditions: [
         {
           name: 'hasUKPassport',
-          displayName: 'hasUKPassport',
-          value: 'checkBeforeYouStart.ukPassport==true'
+          displayName: 'Do you have a UK passport?',
+          value: {
+            name: 'Do you have a UK passport?',
+            conditions: [
+              {
+                field: {
+                  name: 'ukPassport',
+                  display: 'Do you have a UK passport?',
+                  type: ComponentType.YesNoField
+                },
+                operator: OperatorName.Is,
+                value: {
+                  type: ConditionType.Value,
+                  value: 'true',
+                  display: 'Yes, I have a UK passport'
+                }
+              }
+            ]
+          }
         },
         {
           name: 'doesntHaveUKPassport',
           displayName: 'doesntHaveUKPassport',
-          value: 'checkBeforeYouStart.ukPassport==false'
+          value: {
+            name: 'Do you have a UK passport?',
+            conditions: [
+              {
+                field: {
+                  name: 'ukPassport',
+                  display: 'Do you have a UK passport?',
+                  type: ComponentType.YesNoField
+                },
+                operator: OperatorName.Is,
+                value: {
+                  type: ConditionType.Value,
+                  value: 'false',
+                  display: 'No, I do not have a UK passport'
+                }
+              }
+            ]
+          }
         },
         {
-          name: 'moreThanOneApplicant',
-          displayName: 'moreThanOneApplicant',
-          value: 'applicantDetails.numberOfApplicants > 1'
+          name: 'oneApplicant',
+          displayName: 'oneApplicant',
+          value: {
+            name: 'How many applicants are there?',
+            conditions: [
+              {
+                field: {
+                  name: 'numberOfApplicants',
+                  display: 'How many applicants are there?',
+                  type: ComponentType.SelectField
+                },
+                operator: OperatorName.Is,
+                value: {
+                  type: ConditionType.Value,
+                  value: '1',
+                  display: '1'
+                }
+              }
+            ]
+          }
         },
         {
-          name: 'moreThanTwoApplicants',
-          displayName: 'moreThanTwoApplicants',
-          value: 'applicantDetails.numberOfApplicants > 2'
+          name: 'twoApplicants',
+          displayName: 'twoApplicants',
+          value: {
+            name: 'How many applicants are there?',
+            conditions: [
+              {
+                field: {
+                  name: 'numberOfApplicants',
+                  display: 'How many applicants are there?',
+                  type: ComponentType.SelectField
+                },
+                operator: OperatorName.Is,
+                value: {
+                  type: ConditionType.Value,
+                  value: '2',
+                  display: '2'
+                }
+              }
+            ]
+          }
         },
         {
-          name: 'moreThanThreeApplicants',
-          displayName: 'moreThanThreeApplicants',
-          value: 'applicantDetails.numberOfApplicants > 3'
+          name: 'threeApplicants',
+          displayName: 'threeApplicants',
+          value: {
+            name: 'How many applicants are there?',
+            conditions: [
+              {
+                field: {
+                  name: 'numberOfApplicants',
+                  display: 'How many applicants are there?',
+                  type: ComponentType.SelectField
+                },
+                operator: OperatorName.Is,
+                value: {
+                  type: ConditionType.Value,
+                  value: '3',
+                  display: '3'
+                }
+              }
+            ]
+          }
         }
       ]
     } satisfies FormDefinition

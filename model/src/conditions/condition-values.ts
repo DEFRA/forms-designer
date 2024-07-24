@@ -1,15 +1,14 @@
 import { ConditionValueAbstract } from '~/src/conditions/condition-value-abstract.js'
 import { ConditionType, DateDirections } from '~/src/conditions/enums.js'
 import {
+  type ConditionValueData,
   type DateTimeUnitValues,
   type DateUnits,
+  type RelativeTimeValueData,
   type TimeUnits
 } from '~/src/conditions/types.js'
 
-export class ConditionValue
-  extends ConditionValueAbstract
-  implements ConditionValueFrom
-{
+export class ConditionValue extends ConditionValueAbstract {
   type: ConditionType.Value
   value: string
   display: string
@@ -38,18 +37,13 @@ export class ConditionValue
     return this.value
   }
 
-  static from(obj: ConditionValue | ConditionValueFrom) {
+  static from(obj: ConditionValue | ConditionValueData) {
     return new ConditionValue(obj.value, obj.display)
   }
 
   clone() {
     return ConditionValue.from(this)
   }
-}
-
-export interface ConditionValueFrom {
-  value: string
-  display?: string
 }
 
 export const dateUnits: DateUnits = {
@@ -69,15 +63,12 @@ export const dateTimeUnits: DateUnits & TimeUnits = {
   ...timeUnits
 } as const
 
-export class RelativeTimeValue
-  extends ConditionValueAbstract
-  implements RelativeTimeValueFrom
-{
+export class RelativeTimeValue extends ConditionValueAbstract {
   type: ConditionType.RelativeTime
-  timePeriod: string
-  timeUnit: DateTimeUnitValues
-  direction: DateDirections
-  timeOnly: boolean
+  timePeriod
+  timeUnit
+  direction
+  timeOnly
 
   constructor(
     timePeriod: string,
@@ -128,7 +119,7 @@ export class RelativeTimeValue
       : `dateForComparison(${timePeriod}, '${this.timeUnit}')`
   }
 
-  static from(obj: RelativeTimeValue | RelativeTimeValueFrom) {
+  static from(obj: RelativeTimeValue | RelativeTimeValueData) {
     return new RelativeTimeValue(
       obj.timePeriod,
       obj.timeUnit,
@@ -142,19 +133,12 @@ export class RelativeTimeValue
   }
 }
 
-export interface RelativeTimeValueFrom {
-  timePeriod: string
-  timeUnit: DateTimeUnitValues
-  direction: DateDirections
-  timeOnly: boolean
-}
-
 export function conditionValueFrom(
   obj:
     | ConditionValue
+    | ConditionValueData
     | RelativeTimeValue
-    | ({ type: ConditionType.Value } & ConditionValueFrom)
-    | ({ type: ConditionType.RelativeTime } & RelativeTimeValueFrom)
+    | RelativeTimeValueData
 ) {
   switch (obj.type) {
     case ConditionType.Value:

@@ -1,4 +1,9 @@
-import { ComponentType, type FormDefinition } from '@defra/forms-model'
+import {
+  ComponentType,
+  ConditionType,
+  OperatorName,
+  type FormDefinition
+} from '@defra/forms-model'
 
 import { updateLink } from '~/src/data/page/updateLink.js'
 
@@ -7,7 +12,7 @@ const data = {
     {
       title: 'page1',
       path: '/1',
-      next: [{ path: '/2', condition: 'badgers' }],
+      next: [{ path: '/2', condition: 'isBadger' }],
       components: [
         {
           name: 'name1',
@@ -55,13 +60,47 @@ const data = {
   conditions: [
     {
       displayName: 'Badgers',
-      name: 'badgers',
-      value: 'true'
+      name: 'isBadger',
+      value: {
+        name: 'Badgers',
+        conditions: [
+          {
+            field: {
+              name: 'name1',
+              display: 'Name 1',
+              type: ComponentType.TextField
+            },
+            operator: OperatorName.Is,
+            value: {
+              type: ConditionType.Value,
+              value: 'badger',
+              display: 'badger'
+            }
+          }
+        ]
+      }
     },
     {
       displayName: 'Kangaroos',
       name: 'isKangaroo',
-      value: 'true'
+      value: {
+        name: 'Kangaroos',
+        conditions: [
+          {
+            field: {
+              name: 'name1',
+              display: 'Name 1',
+              type: ComponentType.TextField
+            },
+            operator: OperatorName.Is,
+            value: {
+              type: ConditionType.Value,
+              value: 'kangaroo',
+              display: 'kangaroo'
+            }
+          }
+        ]
+      }
     }
   ]
 } satisfies FormDefinition

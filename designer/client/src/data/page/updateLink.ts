@@ -1,4 +1,4 @@
-import { type ConditionRawData, type FormDefinition } from '@defra/forms-model'
+import { type FormDefinition } from '@defra/forms-model'
 
 import { findPage } from '~/src/data/page/findPage.js'
 import { type Path } from '~/src/data/types.js'
@@ -7,7 +7,7 @@ export function updateLink(
   data: FormDefinition,
   from: Path,
   to: Path,
-  condition?: ConditionRawData['name']
+  condition?: string
 ): FormDefinition {
   const [fromPage, fromPageIndex] = findPage(data, from)
 

@@ -1,49 +1,42 @@
-import { type ConditionData } from '~/src/conditions/SelectConditions.jsx'
+import {
+  type ConditionData,
+  type ConditionGroupData,
+  type ConditionRefData,
+  type ConditionWrapper
+} from '@defra/forms-model'
 
-export const isObjectCondition = (condition: ConditionData) => {
-  return typeof condition.value !== 'string'
+export const hasConditionName = (
+  condition?: ConditionGroupData | ConditionData | ConditionRefData
+): condition is ConditionRefData => {
+  return !!condition && 'conditionName' in condition
 }
 
-export const isStringCondition = (condition: ConditionData) => {
-  return typeof condition.value === 'string'
-}
-
-export const hasConditionName = (condition: any) => {
-  return !!condition?.conditionName
-}
-
-export const hasNestedCondition = (condition: ConditionData) => {
-  if (typeof condition.value === 'string') {
-    return false
-  }
-  return condition.value.conditions.find(hasConditionName) ?? false
+export const hasNestedCondition = (condition?: ConditionWrapper) => {
+  return !!condition?.value.conditions.some(hasConditionName)
 }
 
 export const isDuplicateCondition = (
-  conditions: any[],
+  conditions: ConditionWrapper[],
   conditionName: string
 ) => {
-  return !!conditions.find((condition) => condition.name === conditionName)
+  return conditions.some((condition) => condition.name === conditionName)
 }
 
 export const getFieldNameSubstring = (sectionFieldName: string) => {
   return sectionFieldName.substring(sectionFieldName.indexOf('.'))
 }
 
-export function conditionsByType(conditions: ConditionData[]) {
+export function conditionsByType(conditions: ConditionWrapper[]) {
   return conditions.reduce<ConditionByTypeMap>(
     (conditionsByType, currentValue) => {
-      if (isStringCondition(currentValue)) {
-        conditionsByType.string.push(currentValue)
-      } else if (hasNestedCondition(currentValue)) {
+      if (hasNestedCondition(currentValue)) {
         conditionsByType.nested.push(currentValue)
-      } else if (isObjectCondition(currentValue)) {
+      } else {
         conditionsByType.object.push(currentValue)
       }
       return conditionsByType
     },
     {
-      string: [],
       nested: [],
       object: []
     }
@@ -51,7 +44,6 @@ export function conditionsByType(conditions: ConditionData[]) {
 }
 
 interface ConditionByTypeMap {
-  string: ConditionData[]
-  nested: ConditionData[]
-  object: ConditionData[]
+  nested: ConditionWrapper[]
+  object: ConditionWrapper[]
 }

@@ -1,10 +1,12 @@
 import { type ComponentType } from '~/src/components/enums.js'
 import { isConditionalType } from '~/src/components/helpers.js'
+import { type ConditionalComponentType } from '~/src/components/types.js'
+import { type ConditionFieldData } from '~/src/conditions/types.js'
 
 export class ConditionField {
-  name
-  type
-  display
+  name: string
+  type: ConditionalComponentType
+  display: string
 
   constructor(name?: string, type?: ComponentType, display?: string) {
     if (!name || typeof name !== 'string') {
@@ -24,7 +26,7 @@ export class ConditionField {
     this.display = display
   }
 
-  static from(obj: { name: string; type: ComponentType; display: string }) {
+  static from(obj: ConditionField | ConditionFieldData) {
     return new ConditionField(obj.name, obj.type, obj.display)
   }
 }

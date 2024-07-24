@@ -1,4 +1,4 @@
-import { type ConditionRawData, type FormDefinition } from '@defra/forms-model'
+import { type ConditionWrapper, type FormDefinition } from '@defra/forms-model'
 
 import { addCondition } from '~/src/data/condition/addCondition.js'
 
@@ -16,7 +16,7 @@ const data = {
 } satisfies FormDefinition
 
 test('addCondition adds a condition to the list', () => {
-  const condition: ConditionRawData = {
+  const condition: ConditionWrapper = {
     displayName: 'added condition',
     name: 'new',
     value: {
@@ -34,7 +34,7 @@ test('addCondition adds a condition to the list', () => {
 })
 
 test('addCondition throws if a condition with the same name already exists', () => {
-  const condition: ConditionRawData = {
+  const condition: ConditionWrapper = {
     displayName: 'a condition',
     name: 'isCondition',
     value: {

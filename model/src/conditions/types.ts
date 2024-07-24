@@ -1,14 +1,58 @@
-import { type ComponentDef } from '~/src/components/types.js'
-import { type ConditionGroup } from '~/src/conditions/condition-group.js'
-import { type ConditionRef } from '~/src/conditions/condition-ref.js'
+import {
+  type ComponentDef,
+  type ConditionalComponentType
+} from '~/src/components/types.js'
 import {
   type ConditionValue,
   type RelativeTimeValue
 } from '~/src/conditions/condition-values.js'
-import { type Condition } from '~/src/conditions/condition.js'
-import { type OperatorName } from '~/src/conditions/enums.js'
+import {
+  type ConditionType,
+  type Coordinator,
+  type DateDirections,
+  type OperatorName
+} from '~/src/conditions/enums.js'
 
-export type ConditionsArray = (Condition | ConditionGroup | ConditionRef)[]
+export interface ConditionValueData {
+  type: ConditionType.Value
+  value: string
+  display: string
+}
+
+export interface RelativeTimeValueData {
+  type: ConditionType.RelativeTime
+  timePeriod: string
+  timeUnit: DateTimeUnitValues
+  direction: DateDirections
+  timeOnly: boolean
+}
+
+export interface ConditionFieldData {
+  name: string
+  type: ConditionalComponentType
+  display: string
+}
+
+export interface ConditionData {
+  field: ConditionFieldData
+  operator: OperatorName
+  value: ConditionValueData | RelativeTimeValueData
+  coordinator?: Coordinator
+}
+
+export interface ConditionRefData {
+  conditionName: string
+  conditionDisplayName: string
+  coordinator?: Coordinator
+}
+
+export interface ConditionGroupData {
+  conditions: (ConditionData | ConditionRefData | ConditionGroupData)[]
+}
+
+export interface ConditionsModelData extends ConditionGroupData {
+  name: string
+}
 
 export type DateTimeUnitValues =
   | 'years'

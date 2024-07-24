@@ -1,6 +1,6 @@
 import {
   ConditionsModel,
-  type ConditionRef,
+  type ConditionWrapper,
   type FormDefinition
 } from '@defra/forms-model'
 import { Select } from '@xgovformbuilder/govuk-react-jsx'
@@ -31,17 +31,6 @@ interface State {
   inline: boolean
   selectedCondition: string
   fields: any
-}
-
-interface ConditionObject {
-  name: string
-  conditions: ConditionRef[]
-}
-
-export interface ConditionData {
-  name: string
-  displayName: string
-  value: string | ConditionObject
 }
 
 export class SelectConditions extends Component<Props, State> {
@@ -95,11 +84,6 @@ export class SelectConditions extends Component<Props, State> {
     const conditionsByTypeMap = conditionsByType(conditions)
 
     fields.forEach((field) => {
-      this.handleStringConditions(
-        conditionsByTypeMap.string,
-        field.name,
-        conditionsForPath
-      )
       this.handleConditions(
         conditionsByTypeMap.object,
         field.name,
@@ -116,12 +100,12 @@ export class SelectConditions extends Component<Props, State> {
   }
 
   handleConditions(
-    objectConditions: ConditionData[],
+    objectConditions: ConditionWrapper[],
     fieldName: string,
     conditionsForPath: any[]
   ) {
     objectConditions.forEach((condition) => {
-      condition.value.conditions?.forEach((innerCondition) => {
+      condition.value.conditions.forEach((innerCondition) => {
         this.checkAndAddCondition(
           condition,
           fieldName,
@@ -132,42 +116,9 @@ export class SelectConditions extends Component<Props, State> {
     })
   }
 
-  handleStringConditions(
-    stringConditions: any[],
-    fieldName: string,
-    conditionsForPath: any[]
-  ) {
-    const operators = ['==', '!=', '>', '<']
-    const conditionsWithAcceptedOperators = stringConditions.filter(
-      (condition) =>
-        operators.some((operator) => condition.value.includes(operator))
-    )
-    const conditionsWithFieldName = conditionsWithAcceptedOperators.map(
-      (condition) => ({
-        ...condition,
-        conditionFieldName: condition.value
-          .substring(
-            condition.value.indexOf('.') + 1,
-            condition.value.lastIndexOf(
-              operators.filter((operator) => condition.value.includes(operator))
-            )
-          )
-          .trim()
-      })
-    )
-    conditionsWithFieldName.forEach((condition) =>
-      this.checkAndAddCondition(
-        condition,
-        fieldName,
-        condition.conditionFieldName,
-        conditionsForPath
-      )
-    )
-  }
-
   // loops through nested conditions, checking the referenced condition against the current field
   handleNestedConditions(
-    nestedConditions: ConditionData[],
+    nestedConditions: ConditionWrapper[],
     fieldName: string,
     conditionsForPath: any[]
   ) {

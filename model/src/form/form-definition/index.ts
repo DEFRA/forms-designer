@@ -3,8 +3,16 @@ import Joi from 'joi'
 import { type ComponentType } from '~/src/components/enums.js'
 import { type ComponentDef } from '~/src/components/types.js'
 import {
-  type ConditionRawData,
-  type ConditionWrapperValue,
+  type ConditionData,
+  type ConditionFieldData,
+  type ConditionGroupData,
+  type ConditionRefData,
+  type ConditionsModelData,
+  type ConditionValueData,
+  type RelativeTimeValueData
+} from '~/src/conditions/types.js'
+import {
+  type ConditionWrapper,
   type FormDefinition,
   type Item,
   type Link,
@@ -14,31 +22,25 @@ import {
   type Section
 } from '~/src/form/form-definition/types.js'
 
-/**
- * If an optional key is added, CURRENT_VERSION does not need to be incremented.
- * Only breaking changes will require an increment, as well as a migration script.
- */
-export const CURRENT_VERSION = 2
-
 const sectionsSchema = Joi.object<Section>().keys({
   name: Joi.string().required(),
   title: Joi.string().required(),
   hideTitle: Joi.boolean().optional().default(false)
 })
 
-const conditionFieldSchema = Joi.object().keys({
+const conditionFieldSchema = Joi.object<ConditionFieldData>().keys({
   name: Joi.string().required(),
   type: Joi.string().required(),
   display: Joi.string().required()
 })
 
-const conditionValueSchema = Joi.object().keys({
+const conditionValueSchema = Joi.object<ConditionValueData>().keys({
   type: Joi.string().required(),
   value: Joi.string().required(),
   display: Joi.string().required()
 })
 
-const relativeTimeValueSchema = Joi.object().keys({
+const relativeTimeValueSchema = Joi.object<RelativeTimeValueData>().keys({
   type: Joi.string().required(),
   timePeriod: Joi.string().required(),
   timeUnit: Joi.string().required(),
@@ -46,44 +48,43 @@ const relativeTimeValueSchema = Joi.object().keys({
   timeOnly: Joi.boolean().required()
 })
 
-const conditionRefSchema = Joi.object().keys({
+const conditionRefSchema = Joi.object<ConditionRefData>().keys({
   conditionName: Joi.string().required(),
   conditionDisplayName: Joi.string().required(),
   coordinator: Joi.string().optional()
 })
 
-const conditionSchema = Joi.object().keys({
+const conditionSchema = Joi.object<ConditionData>().keys({
   field: conditionFieldSchema,
   operator: Joi.string().required(),
   value: Joi.alternatives().try(conditionValueSchema, relativeTimeValueSchema),
   coordinator: Joi.string().optional()
 })
 
-const conditionGroupSchema = Joi.object().keys({
-  conditions: Joi.array().items(
-    Joi.alternatives().try(
-      conditionSchema,
-      conditionRefSchema,
-      Joi.any() /** Should be a joi.link('#conditionGroupSchema') */
-    )
-  )
-})
-
-const conditionsModelSchema = Joi.alternatives<ConditionWrapperValue>().try(
-  Joi.string(),
-  Joi.object().keys({
-    name: Joi.string().required(),
+const conditionGroupSchema = Joi.object<ConditionGroupData>()
+  .keys({
     conditions: Joi.array().items(
       Joi.alternatives().try(
         conditionSchema,
         conditionRefSchema,
-        conditionGroupSchema
+        Joi.link('#conditionGroupSchema')
       )
     )
   })
-)
+  .id('conditionGroupSchema')
 
-const conditionsSchema = Joi.object<ConditionRawData>().keys({
+const conditionsModelSchema = Joi.object<ConditionsModelData>().keys({
+  name: Joi.string().required(),
+  conditions: Joi.array().items(
+    Joi.alternatives().try(
+      conditionSchema,
+      conditionRefSchema,
+      conditionGroupSchema
+    )
+  )
+})
+
+const conditionWrapperSchema = Joi.object<ConditionWrapper>().keys({
   name: Joi.string().required(),
   displayName: Joi.string(),
   value: conditionsModelSchema.required()
@@ -142,9 +143,8 @@ const baseListItemSchema = Joi.object<Item>().keys({
         .items(componentSchema.unknown(true))
         .unique('name')
     })
-    .allow(null)
     .optional(),
-  condition: Joi.string().allow(null, '').optional()
+  condition: Joi.string().allow('').optional()
 })
 
 const stringListItemSchema = baseListItemSchema.append({
@@ -206,8 +206,8 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
       .items(sectionsSchema)
       .unique('name')
       .required(),
-    conditions: Joi.array<ConditionRawData>()
-      .items(conditionsSchema)
+    conditions: Joi.array<ConditionWrapper>()
+      .items(conditionWrapperSchema)
       .unique('name'),
     lists: Joi.array<List>().items(listSchema).unique('name'),
     metadata: Joi.object({ a: Joi.any() }).unknown().optional(),

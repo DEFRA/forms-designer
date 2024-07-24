@@ -6,18 +6,16 @@ import { conditionValueFrom } from '~/src/conditions/condition-values.js'
 import { Condition } from '~/src/conditions/condition.js'
 import { Coordinator } from '~/src/conditions/enums.js'
 import { toPresentationString, toExpression } from '~/src/conditions/helpers.js'
-import { type ConditionsArray } from '~/src/conditions/types.js'
-
-type ConditionRawObject =
-  | ConditionsModel
-  | {
-      name: string
-      conditions: Condition[]
-    }
+import {
+  type ConditionData,
+  type ConditionGroupData,
+  type ConditionRefData,
+  type ConditionsModelData
+} from '~/src/conditions/types.js'
 
 export class ConditionsModel {
-  #groupedConditions: ConditionsArray = []
-  #userGroupedConditions: ConditionsArray = []
+  #groupedConditions: (Condition | ConditionRef | ConditionGroup)[] = []
+  #userGroupedConditions: (Condition | ConditionRef | ConditionGroup)[] = []
   #conditionName: string | undefined = undefined
 
   clone() {
@@ -47,7 +45,7 @@ export class ConditionsModel {
     return this.#conditionName
   }
 
-  add(condition: Condition) {
+  add(condition: Condition | ConditionRef) {
     const coordinatorExpected = this.#userGroupedConditions.length !== 0
 
     if (condition.getCoordinator() && !coordinatorExpected) {
@@ -144,7 +142,7 @@ export class ConditionsModel {
     this.#userGroupedConditions[1].setCoordinator(
       this.#userGroupedConditions[0].getCoordinator()
     )
-    this.#userGroupedConditions[0].setCoordinator(undefined)
+    this.#userGroupedConditions[0].setCoordinator()
   }
 
   get asPerUserGroupings() {
@@ -172,7 +170,7 @@ export class ConditionsModel {
   }
 
   _applyGroups(
-    userGroupedConditions: (Condition | ConditionGroup | ConditionRef)[]
+    userGroupedConditions: (Condition | ConditionRef | ConditionGroup)[]
   ) {
     const correctedUserGroups = userGroupedConditions.map((condition) =>
       condition instanceof ConditionGroup && condition.conditions.length > 2
@@ -191,8 +189,11 @@ export class ConditionsModel {
     )
   }
 
-  _group(conditions: ConditionsArray, groupDefs: ConditionGroupDef[]) {
-    return conditions.reduce<ConditionsArray>(
+  _group(
+    conditions: (Condition | ConditionRef | ConditionGroup)[],
+    groupDefs: ConditionGroupDef[]
+  ) {
+    return conditions.reduce<(Condition | ConditionRef | ConditionGroup)[]>(
       (groups, condition, index, conditions) => {
         const groupDef = groupDefs.find((groupDef) => groupDef.contains(index))
 
@@ -211,7 +212,10 @@ export class ConditionsModel {
     )
   }
 
-  _ungroup(conditions: ConditionsArray, splitIndex: number) {
+  _ungroup(
+    conditions: (Condition | ConditionRef | ConditionGroup)[],
+    splitIndex: number
+  ) {
     if (conditions[splitIndex].isGroup()) {
       const copy = [...conditions]
       copy.splice(
@@ -224,7 +228,7 @@ export class ConditionsModel {
     return conditions
   }
 
-  _autoGroupDefs(conditions: ConditionsArray) {
+  _autoGroupDefs(conditions: (Condition | ConditionRef | ConditionGroup)[]) {
     const orPositions: number[] = []
 
     conditions.forEach((condition, index) => {
@@ -258,17 +262,17 @@ export class ConditionsModel {
     return []
   }
 
-  toJSON() {
+  toJSON(): ConditionsModelData {
     const name = this.#conditionName
     const conditions = this.#userGroupedConditions
     return {
-      name,
+      name: name ?? '',
       conditions: conditions.map((it) => it.clone())
     }
   }
 
   // TODO:- why is this not a constructor?
-  static from(obj: ConditionRawObject | ConditionsModel) {
+  static from(obj: ConditionsModel | ConditionsModelData) {
     if (obj instanceof ConditionsModel) {
       return obj
     }
@@ -284,11 +288,9 @@ export class ConditionsModel {
   }
 }
 
-type ConditionFrom = (
-  it: Condition | ConditionRef | ConditionGroup
-) => Condition | ConditionRef | ConditionGroup
-
-const conditionFrom: ConditionFrom = function (it) {
+function conditionFrom(
+  it: ConditionData | ConditionRefData | ConditionGroupData
+): Condition | ConditionRef | ConditionGroup {
   if ('conditions' in it) {
     return new ConditionGroup(
       it.conditions.map((condition) => conditionFrom(condition))
