@@ -72,7 +72,9 @@ export class SelectConditions extends Component<Props, State> {
 
   fieldsForPath(path: string) {
     const { data } = this.context
-    const inputs = path ? inputsAccessibleAt(data, path) : allInputs(data) ?? []
+    const inputs = path
+      ? inputsAccessibleAt(data, path)
+      : (allInputs(data) ?? [])
     return inputs
       .map((input) => ({
         label: input.title,
