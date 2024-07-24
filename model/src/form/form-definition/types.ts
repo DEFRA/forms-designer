@@ -52,7 +52,7 @@ export interface PhaseBanner {
 export interface ConditionWrapper {
   name: string
   displayName: string
-  value: string | ConditionsModelData
+  value: ConditionsModelData
 }
 
 /**

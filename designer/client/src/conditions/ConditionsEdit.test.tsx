@@ -1,5 +1,7 @@
 import {
   ComponentType,
+  ConditionType,
+  OperatorName,
   type ConditionWrapper,
   type FormDefinition
 } from '@defra/forms-model'
@@ -96,15 +98,49 @@ describe('ConditionsEdit', () => {
 
   describe('with existing conditions', () => {
     const condition = {
-      name: 'abdefg',
-      displayName: 'My condition',
-      value: 'badgers'
+      displayName: 'Badgers',
+      name: 'isBadger',
+      value: {
+        name: 'Badgers',
+        conditions: [
+          {
+            field: {
+              name: 'name1',
+              display: 'Name 1',
+              type: ComponentType.TextField
+            },
+            operator: OperatorName.Is,
+            value: {
+              type: ConditionType.Value,
+              value: 'badger',
+              display: 'badger'
+            }
+          }
+        ]
+      }
     } satisfies ConditionWrapper
 
     const condition2 = {
-      name: 'abdefgh',
-      displayName: 'My condition 2',
-      value: 'badgers again'
+      displayName: 'Kangaroos',
+      name: 'isKangaroo',
+      value: {
+        name: 'Kangaroos',
+        conditions: [
+          {
+            field: {
+              name: 'name1',
+              display: 'Name 1',
+              type: ComponentType.TextField
+            },
+            operator: OperatorName.Is,
+            value: {
+              type: ConditionType.Value,
+              value: 'kangaroo',
+              display: 'kangaroo'
+            }
+          }
+        ]
+      }
     } satisfies ConditionWrapper
 
     const updated: FormDefinition = {

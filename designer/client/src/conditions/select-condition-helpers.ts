@@ -5,25 +5,14 @@ import {
   type ConditionWrapper
 } from '@defra/forms-model'
 
-export const isObjectCondition = (condition: ConditionWrapper) => {
-  return typeof condition.value !== 'string'
-}
-
-export const isStringCondition = (condition: ConditionWrapper) => {
-  return typeof condition.value === 'string'
-}
-
 export const hasConditionName = (
-  condition: ConditionGroupData | ConditionData | ConditionRefData
-) => {
-  return 'conditionName' in condition && !!condition.conditionName
+  condition?: ConditionGroupData | ConditionData | ConditionRefData
+): condition is ConditionRefData => {
+  return !!condition && 'conditionName' in condition
 }
 
-export const hasNestedCondition = (condition: ConditionWrapper) => {
-  if (typeof condition.value === 'string') {
-    return false
-  }
-  return condition.value.conditions.some(hasConditionName)
+export const hasNestedCondition = (condition?: ConditionWrapper) => {
+  return !!condition?.value.conditions.some(hasConditionName)
 }
 
 export const isDuplicateCondition = (
@@ -40,17 +29,14 @@ export const getFieldNameSubstring = (sectionFieldName: string) => {
 export function conditionsByType(conditions: ConditionWrapper[]) {
   return conditions.reduce<ConditionByTypeMap>(
     (conditionsByType, currentValue) => {
-      if (isStringCondition(currentValue)) {
-        conditionsByType.string.push(currentValue)
-      } else if (hasNestedCondition(currentValue)) {
+      if (hasNestedCondition(currentValue)) {
         conditionsByType.nested.push(currentValue)
-      } else if (isObjectCondition(currentValue)) {
+      } else {
         conditionsByType.object.push(currentValue)
       }
       return conditionsByType
     },
     {
-      string: [],
       nested: [],
       object: []
     }
@@ -58,7 +44,6 @@ export function conditionsByType(conditions: ConditionWrapper[]) {
 }
 
 interface ConditionByTypeMap {
-  string: ConditionWrapper[]
   nested: ConditionWrapper[]
   object: ConditionWrapper[]
 }

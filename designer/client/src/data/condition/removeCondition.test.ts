@@ -1,4 +1,9 @@
-import { type FormDefinition } from '@defra/forms-model'
+import {
+  ComponentType,
+  ConditionType,
+  OperatorName,
+  type FormDefinition
+} from '@defra/forms-model'
 
 import { removeCondition } from '~/src/data/condition/removeCondition.js'
 
@@ -18,7 +23,7 @@ const data = {
         },
         {
           path: '/disaster',
-          condition: 'someName'
+          condition: 'isBadger'
         }
       ]
     }
@@ -27,20 +32,54 @@ const data = {
   sections: [],
   conditions: [
     {
-      displayName: 'Some name',
-      name: 'someName',
-      value: 'true'
+      displayName: 'Badgers',
+      name: 'isBadger',
+      value: {
+        name: 'Badgers',
+        conditions: [
+          {
+            field: {
+              name: 'name1',
+              display: 'Name 1',
+              type: ComponentType.TextField
+            },
+            operator: OperatorName.Is,
+            value: {
+              type: ConditionType.Value,
+              value: 'badger',
+              display: 'badger'
+            }
+          }
+        ]
+      }
     },
     {
-      displayName: 'Another name',
-      name: 'anotherName',
-      value: 'true'
+      displayName: 'Kangaroos',
+      name: 'isKangaroo',
+      value: {
+        name: 'Kangaroos',
+        conditions: [
+          {
+            field: {
+              name: 'name1',
+              display: 'Name 1',
+              type: ComponentType.TextField
+            },
+            operator: OperatorName.Is,
+            value: {
+              type: ConditionType.Value,
+              value: 'kangaroo',
+              display: 'kangaroo'
+            }
+          }
+        ]
+      }
     }
   ]
 } satisfies FormDefinition
 
 test('removeCondition should remove conditions from the conditions key and in page links', () => {
-  const updated = removeCondition(data, 'someName')
+  const updated = removeCondition(data, 'isBadger')
   expect(updated).toEqual<FormDefinition>({
     pages: [
       {
@@ -65,7 +104,7 @@ test('removeCondition should remove conditions from the conditions key and in pa
     sections: [],
     conditions: [
       expect.objectContaining({
-        name: 'anotherName'
+        name: 'isKangaroo'
       })
     ]
   })

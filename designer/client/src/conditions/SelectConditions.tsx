@@ -84,11 +84,6 @@ export class SelectConditions extends Component<Props, State> {
     const conditionsByTypeMap = conditionsByType(conditions)
 
     fields.forEach((field) => {
-      this.handleStringConditions(
-        conditionsByTypeMap.string,
-        field.name,
-        conditionsForPath
-      )
       this.handleConditions(
         conditionsByTypeMap.object,
         field.name,
@@ -110,7 +105,7 @@ export class SelectConditions extends Component<Props, State> {
     conditionsForPath: any[]
   ) {
     objectConditions.forEach((condition) => {
-      condition.value.conditions?.forEach((innerCondition) => {
+      condition.value.conditions.forEach((innerCondition) => {
         this.checkAndAddCondition(
           condition,
           fieldName,
@@ -119,39 +114,6 @@ export class SelectConditions extends Component<Props, State> {
         )
       })
     })
-  }
-
-  handleStringConditions(
-    stringConditions: any[],
-    fieldName: string,
-    conditionsForPath: any[]
-  ) {
-    const operators = ['==', '!=', '>', '<']
-    const conditionsWithAcceptedOperators = stringConditions.filter(
-      (condition) =>
-        operators.some((operator) => condition.value.includes(operator))
-    )
-    const conditionsWithFieldName = conditionsWithAcceptedOperators.map(
-      (condition) => ({
-        ...condition,
-        conditionFieldName: condition.value
-          .substring(
-            condition.value.indexOf('.') + 1,
-            condition.value.lastIndexOf(
-              operators.filter((operator) => condition.value.includes(operator))
-            )
-          )
-          .trim()
-      })
-    )
-    conditionsWithFieldName.forEach((condition) =>
-      this.checkAndAddCondition(
-        condition,
-        fieldName,
-        condition.conditionFieldName,
-        conditionsForPath
-      )
-    )
   }
 
   // loops through nested conditions, checking the referenced condition against the current field
