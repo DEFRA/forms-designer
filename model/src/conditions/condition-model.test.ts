@@ -13,6 +13,7 @@ import {
   OperatorName,
   RelativeTimeValue
 } from '~/src/conditions/index.js'
+import { type ConditionsArray } from '~/src/conditions/types.js'
 
 describe('condition model', () => {
   let underTest: ConditionsModel

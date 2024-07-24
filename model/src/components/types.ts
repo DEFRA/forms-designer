@@ -7,6 +7,7 @@ export type ConditionalComponentType =
   | ComponentType.EmailAddressField
   | ComponentType.MultilineTextField
   | ComponentType.NumberField
+  | ComponentType.SelectField
   | ComponentType.TextField
   | ComponentType.TimeField
   | ComponentType.YesNoField
@@ -231,7 +232,10 @@ export interface RadiosFieldComponent extends ListFieldBase {
 
 export interface SelectFieldComponent extends ListFieldBase {
   type: ComponentType.SelectField
-  options: ListFieldBase['options'] & { autocomplete?: string }
+  options: ListFieldBase['options'] & {
+    autocomplete?: string
+    condition?: string
+  }
 }
 
 export type ComponentDef =
