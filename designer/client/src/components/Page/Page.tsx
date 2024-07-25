@@ -114,7 +114,7 @@ export const Page = (props: {
       </div>
       {isEditingPage && (
         <RenderInPortal>
-          <Flyout title="Edit Page" onHide={setIsEditingPage}>
+          <Flyout title="Edit Page" onHide={() => setIsEditingPage(false)}>
             <PageEdit page={page} onEdit={onEditEnd} />
           </Flyout>
         </RenderInPortal>
@@ -122,7 +122,7 @@ export const Page = (props: {
 
       {isCreatingComponent && (
         <RenderInPortal>
-          <Flyout onHide={setIsCreatingComponent}>
+          <Flyout onHide={() => setIsCreatingComponent(false)}>
             <ComponentContextProvider>
               <ComponentCreate
                 renderInForm={true}

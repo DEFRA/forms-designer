@@ -7,7 +7,7 @@ import {
   clone,
   Coordinator
 } from '@defra/forms-model'
-import React, { Component } from 'react'
+import React, { Component, type ChangeEvent } from 'react'
 
 import { InlineConditionsDefinitionValue } from '~/src/conditions/InlineConditionsDefinitionValue.jsx'
 import { i18n } from '~/src/i18n/i18n.jsx'
@@ -39,7 +39,7 @@ export class InlineConditionsDefinition extends Component {
     }
   }
 
-  onChangeCoordinator = (e) => {
+  onChangeCoordinator = (e: ChangeEvent<HTMLSelectElement>) => {
     const input = e.target
     let newCondition = {}
 
@@ -75,7 +75,7 @@ export class InlineConditionsDefinition extends Component {
     }
   }
 
-  onChangeField = (e) => {
+  onChangeField = (e: ChangeEvent<HTMLSelectElement>) => {
     const input = e.target
     const fieldName = input.value
 
@@ -127,7 +127,7 @@ export class InlineConditionsDefinition extends Component {
     })
   }
 
-  onChangeOperator = (e) => {
+  onChangeOperator = (e: ChangeEvent<HTMLSelectElement>) => {
     const input = e.target
     const { condition } = this.state
 

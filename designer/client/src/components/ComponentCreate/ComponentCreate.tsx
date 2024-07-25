@@ -4,7 +4,8 @@ import React, {
   useContext,
   useState,
   useLayoutEffect,
-  type FormEvent
+  type FormEvent,
+  type MouseEvent
 } from 'react'
 
 import { ComponentTypeEdit } from '~/src/ComponentTypeEdit.jsx'
@@ -57,15 +58,13 @@ function useComponentCreate(props) {
 
   useLayoutEffect(() => {
     if (hasValidated && !hasErrors) {
-      handleSubmit()
-        .then()
-        .catch((error: unknown) => {
-          logger.error(error, 'ComponentCreate')
-        })
+      handleSubmit().catch((error: unknown) => {
+        logger.error(error, 'ComponentCreate')
+      })
     }
   }, [hasValidated, hasErrors])
 
-  const handleSubmit = async (e?: FormEvent<HTMLFormElement>) => {
+  async function handleSubmit(e?: FormEvent<HTMLFormElement>) {
     e?.preventDefault()
 
     if (!hasValidated) {
@@ -102,7 +101,7 @@ function useComponentCreate(props) {
     })
   }
 
-  const reset = (e) => {
+  function reset(e: MouseEvent<HTMLAnchorElement>) {
     e.preventDefault()
     dispatch({ type: Meta.SET_COMPONENT })
   }

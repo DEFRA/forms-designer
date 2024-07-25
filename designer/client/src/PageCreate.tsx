@@ -1,5 +1,11 @@
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
-import React, { Component, type ContextType } from 'react'
+import React, {
+  Component,
+  type ChangeEvent,
+  type ContextType,
+  type FormEvent,
+  type MouseEvent
+} from 'react'
 
 import { type ErrorList, ErrorSummary } from '~/src/ErrorSummary.jsx'
 import { logger } from '~/src/common/helpers/logging/logger.js'
@@ -34,7 +40,7 @@ export class PageCreate extends Component {
     }
   }
 
-  onSubmit = async (e) => {
+  onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     const { data, save } = this.context
@@ -119,27 +125,27 @@ export class PageCreate extends Component {
     return sections.find((section) => section.name === name)
   }
 
-  onChangeSection = (e) => {
+  onChangeSection = (e: ChangeEvent<HTMLSelectElement>) => {
     this.setState({
       section: this.findSectionWithName(e.target.value)
     })
   }
 
-  onChangeLinkFrom = (e) => {
+  onChangeLinkFrom = (e: ChangeEvent<HTMLSelectElement>) => {
     const input = e.target
     this.setState({
       linkFrom: input.value
     })
   }
 
-  onChangePageType = (e) => {
+  onChangePageType = (e: ChangeEvent<HTMLSelectElement>) => {
     const input = e.target
     this.setState({
       pageType: input.value
     })
   }
 
-  onChangeTitle = (e) => {
+  onChangeTitle = (e: ChangeEvent<HTMLInputElement>) => {
     const { data } = this.context
     const input = e.target
     const title = input.value
@@ -149,7 +155,7 @@ export class PageCreate extends Component {
     })
   }
 
-  onChangePath = (e) => {
+  onChangePath = (e: ChangeEvent<HTMLInputElement>) => {
     const input = e.target
     const path = input.value.startsWith('/') ? input.value : `/${input.value}`
     const sanitisedPath = path.replace(/\s/g, '-')
@@ -164,7 +170,7 @@ export class PageCreate extends Component {
     })
   }
 
-  editSection = (e, section) => {
+  editSection = (e: MouseEvent<HTMLAnchorElement>, section) => {
     e.preventDefault()
     this.setState({
       section,
@@ -198,7 +204,7 @@ export class PageCreate extends Component {
         {hasValidationErrors(errors) && (
           <ErrorSummary errorList={Object.values(errors)} />
         )}
-        <form onSubmit={(e) => this.onSubmit(e)} autoComplete="off">
+        <form onSubmit={this.onSubmit} autoComplete="off">
           <div className="govuk-form-group">
             <label className="govuk-label govuk-label--s" htmlFor="page-type">
               {i18n('addPage.pageTypeOption.title')}

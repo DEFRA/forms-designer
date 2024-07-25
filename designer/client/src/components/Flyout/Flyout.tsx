@@ -15,10 +15,7 @@ import { i18n } from '~/src/i18n/i18n.jsx'
 interface Props {
   style?: string
   width?: string
-  onHide?: (
-    e?: KeyboardEvent<HTMLButtonElement> | MouseEvent<HTMLButtonElement>
-  ) => void
-  closeOnEnter?: (e: KeyboardEvent<HTMLButtonElement>) => void
+  onHide?: () => void
   show?: boolean
   offset?: number
   title?: string
@@ -56,7 +53,9 @@ export function useFlyoutEffect(props: Props) {
     }
   }, [offset])
 
-  const onHide: Props['onHide'] = (e) => {
+  const onHide = (
+    e?: KeyboardEvent<HTMLButtonElement> | MouseEvent<HTMLButtonElement>
+  ) => {
     e?.preventDefault()
 
     if (props.onHide) {
@@ -68,7 +67,7 @@ export function useFlyoutEffect(props: Props) {
     }
   }
 
-  const closeOnEnter: Props['closeOnEnter'] = (e) => {
+  function closeOnEnter(e: KeyboardEvent<HTMLButtonElement>) {
     if (e.key === 'Enter') {
       onHide(e)
     }

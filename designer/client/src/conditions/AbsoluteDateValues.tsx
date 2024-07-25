@@ -87,21 +87,21 @@ export const AbsoluteDateValues = ({ value = {}, updateValue }: Props) => {
     }
   }, [year, month, day])
 
-  const dayChanged = (e: ChangeEvent<HTMLInputElement>) => {
+  function dayChanged(e: ChangeEvent<HTMLInputElement>) {
     const day = e.target.value
     if (Number(day) <= 31) {
       setDay(day)
     }
   }
 
-  const monthChanged = (e: ChangeEvent<HTMLInputElement>) => {
+  function monthChanged(e: ChangeEvent<HTMLInputElement>) {
     const month = e.target.value
     if (Number(month) <= 12) {
       setMonth(month)
     }
   }
 
-  const yearChanged = (e: ChangeEvent<HTMLInputElement>) => {
+  function yearChanged(e: ChangeEvent<HTMLInputElement>) {
     const year = e.target.value
     setYear(year)
   }

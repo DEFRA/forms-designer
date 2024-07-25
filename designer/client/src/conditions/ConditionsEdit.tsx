@@ -1,5 +1,5 @@
 import { ConditionsModel } from '@defra/forms-model'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, type MouseEvent } from 'react'
 
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
@@ -12,21 +12,22 @@ function useConditionsEditor() {
   const [editingCondition, setEditingCondition] = useState(null)
   const [showAddCondition, setShowAddCondition] = useState(false)
 
-  function onClickCondition(e, condition) {
+  function onClickCondition(e: MouseEvent<HTMLAnchorElement>, condition) {
     e.preventDefault()
     setEditingCondition(condition)
   }
-  function onClickAddCondition(e) {
+
+  function onClickAddCondition(e: MouseEvent<HTMLButtonElement>) {
     e.preventDefault()
     setShowAddCondition(true)
   }
-  function editFinished(e) {
-    e?.preventDefault()
+
+  function editFinished() {
     setEditingCondition(null)
     setShowAddCondition(false)
   }
-  function cancelInlineCondition(e) {
-    e?.preventDefault?.()
+
+  function cancelInlineCondition() {
     setEditingCondition(null)
     setShowAddCondition(false)
   }

@@ -1,4 +1,9 @@
-import React, { useContext, useLayoutEffect } from 'react'
+import React, {
+  useContext,
+  useLayoutEffect,
+  type FormEvent,
+  type MouseEvent
+} from 'react'
 
 import { ComponentTypeEdit } from '~/src/ComponentTypeEdit.jsx'
 import { ErrorSummary } from '~/src/ErrorSummary.jsx'
@@ -15,7 +20,7 @@ export function ComponentEdit(props) {
   const { page, toggleShowEditor } = props
   const hasErrors = hasValidationErrors(errors)
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e?: FormEvent<HTMLFormElement>) => {
     e?.preventDefault()
 
     if (!hasValidated) {
@@ -37,7 +42,7 @@ export function ComponentEdit(props) {
     toggleShowEditor()
   }
 
-  const handleDelete = async (e) => {
+  const handleDelete = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
 
     if (!window.confirm('Confirm delete') || !selectedComponent) {

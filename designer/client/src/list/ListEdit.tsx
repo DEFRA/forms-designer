@@ -1,6 +1,11 @@
 import { clone } from '@defra/forms-model'
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
-import React, { useContext, type FormEvent, type MouseEvent } from 'react'
+import React, {
+  useContext,
+  type ChangeEvent,
+  type FormEvent,
+  type MouseEvent
+} from 'react'
 
 import { ErrorSummary, type ErrorList } from '~/src/ErrorSummary.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
@@ -152,7 +157,7 @@ export function ListEdit() {
               children: [i18n('list.title')]
             }}
             value={selectedList.title}
-            onChange={(e) =>
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
               dispatch({
                 type: ListActions.EDIT_TITLE,
                 payload: e.target.value

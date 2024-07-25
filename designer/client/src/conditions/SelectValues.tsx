@@ -1,12 +1,12 @@
 import { ConditionValue } from '@defra/forms-model'
-import React from 'react'
+import React, { type ChangeEvent } from 'react'
 
 import { i18n } from '~/src/i18n/i18n.jsx'
 
 export const SelectValues = (props) => {
   const { fieldDef, updateValue, value } = props
 
-  const onChangeSelect = (e) => {
+  const onChangeSelect = (e: ChangeEvent<HTMLSelectElement>) => {
     const input = e.target
     const newValue = input.value
 
