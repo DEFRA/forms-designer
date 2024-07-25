@@ -33,6 +33,7 @@ export const Tabs: FunctionComponent<Props> = (props) => {
 
   useEffect(() => {
     if (tabsRef.current) {
+      // eslint-disable-next-line no-new
       new TabsJS(tabsRef.current)
       onInit?.()
     }
