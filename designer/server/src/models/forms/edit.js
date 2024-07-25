@@ -15,20 +15,6 @@ export function organisationViewModel(metadata, validation) {
 }
 
 /**
- * @param {FormMetadata} metadata
- * @param {ValidationFailure} [validation]
- */
-export function teamNameViewModel(metadata, validation) {
-  return {
-    ...create.teamViewModel(metadata, validation),
-    backLink: {
-      text: 'Back to form overview',
-      href: `/library/${metadata.slug}`
-    }
-  }
-}
-
-/**
  * @param {Pick<FormMetadata, 'teamName' | 'teamEmail' | 'slug'>} metadata
  * @param {ValidationFailure} [validation]
  */
