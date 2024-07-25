@@ -98,6 +98,8 @@ export const componentSchema = Joi.object<ComponentDef>()
     options: Joi.object({
       rows: Joi.number().empty(''),
       maxWords: Joi.number().empty(''),
+      minDaysInFuture: Joi.number().empty(''),
+      maxDaysInFuture: Joi.number().empty(''),
       customValidationMessage: Joi.string().allow('')
     })
       .default({})
