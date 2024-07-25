@@ -15,6 +15,20 @@ export function organisationViewModel(metadata, validation) {
 }
 
 /**
+ * @param {FormMetadata} metadata
+ * @param {ValidationFailure} [validation]
+ */
+export function teamNameViewModel(metadata, validation) {
+  return {
+    ...create.teamViewModel(metadata, validation),
+    backLink: {
+      text: 'Back to form overview',
+      href: `/library/${metadata.slug}`
+    }
+  }
+}
+
+/**
  * @typedef {import('@defra/forms-model').FormMetadata} FormMetadata
  * @typedef {import('@defra/forms-model').FormMetadataInput} FormMetadataInput
  * @typedef {import("~/src/common/helpers/build-error-details.js").ValidationFailure<FormMetadataInput>} ValidationFailure

@@ -8,6 +8,7 @@ import { redirectWithErrors, schema } from '~/src/routes/forms/create.js'
 
 export const ROUTE_PATH_EDIT_LEAD_ORGANISATION =
   '/library/{slug}/edit/lead-organisation'
+export const ROUTE_PATH_EDIT_TEAM = '/library/{slug}/edit/team'
 
 /**
  * Get the notification message for when a field is changed
@@ -69,6 +70,63 @@ export default [
         failAction: redirectWithErrors
       }
     }
+  }),
+  /**
+   * @satisfies {RequestBySlug}
+   */
+  ({
+    method: 'GET',
+    path: ROUTE_PATH_EDIT_TEAM,
+    async handler(request, h) {
+      const { yar, params, auth } = request
+      const { token } = auth.credentials
+      const { slug } = params
+
+      const metadata = await forms.get(slug, token)
+      const validation = yar.flash(sessionNames.validationFailure).at(0)
+
+      return h.view(
+        'forms/question-inputs',
+        edit.teamNameViewModel(metadata, validation)
+      )
+    }
+  }),
+  /**
+   * @satisfies {RequestUpdateTeamBySlug}
+   */
+  ({
+    method: 'POST',
+    path: ROUTE_PATH_EDIT_TEAM,
+    async handler(request, h) {
+      console.log('test--->', test)
+
+      const { yar, auth, payload, params } = request
+      const { token } = auth.credentials
+      const { slug } = params
+      console.log('payload--->', payload)
+
+      const { teamName, teamEmail } = payload
+
+      const { id } = await forms.get(slug, token)
+
+      await forms.updateMetadata(id, { teamName, teamEmail }, token)
+
+      yar.flash(
+        sessionNames.successNotification,
+        getNotificationMessage('Team')
+      )
+
+      return h.redirect(`/library/${slug}`).code(StatusCodes.SEE_OTHER)
+    },
+    options: {
+      validate: {
+        payload: Joi.object().keys({
+          teamName: schema.extract('teamName'),
+          teamEmail: schema.extract('teamEmail')
+        }),
+        failAction: redirectWithErrors
+      }
+    }
   })
 ]
 
@@ -84,4 +142,5 @@ export default [
 /**
  * @typedef {ServerRoute<{ Params: { slug: string } }>} RequestBySlug
  * @typedef {ServerRoute<{ Params: { slug: string }, Payload: Pick<FormMetadataInput, 'organisation'> }>} RequestUpdateOrganisationBySlug
+ * @typedef {ServerRoute<{ Params: { slug: string }, Payload: Pick<FormMetadataInput, 'teamName' | 'teamEmail'> }>} RequestUpdateTeamBySlug
  */
