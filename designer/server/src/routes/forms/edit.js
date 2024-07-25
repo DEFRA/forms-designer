@@ -98,12 +98,9 @@ export default [
     method: 'POST',
     path: ROUTE_PATH_EDIT_TEAM,
     async handler(request, h) {
-      console.log('test--->', test)
-
       const { yar, auth, payload, params } = request
       const { token } = auth.credentials
       const { slug } = params
-      console.log('payload--->', payload)
 
       const { teamName, teamEmail } = payload
 
