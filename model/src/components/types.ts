@@ -104,8 +104,8 @@ interface DateFieldBase {
   options: {
     required?: boolean
     optionalText?: boolean
-    maxDaysInFuture?: number
     maxDaysInPast?: number
+    maxDaysInFuture?: number
   }
   schema: object
 }
