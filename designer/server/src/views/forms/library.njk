@@ -33,11 +33,9 @@
         </a>
       {% endset %}
 
-      {% set state = form.draft if form.draft else form.live %}
-
       {% set formUpdated %}
-        <span class="app-display-until-desktop">Updated </span>{{ state.updatedAt | formatDate }}<br>
-        by {{ state.updatedBy.displayName }}
+        <span class="app-display-until-desktop">Updated </span>{{ form.updatedAt | formatDate }}<br>
+        by {{ form.updatedBy.displayName }}
       {% endset %}
 
       {% set formNameUpdated %}
