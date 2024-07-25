@@ -29,6 +29,27 @@ export function teamNameViewModel(metadata, validation) {
 }
 
 /**
+ * @param {Pick<FormMetadata, 'teamName' | 'teamEmail' | 'slug'>} metadata
+ * @param {ValidationFailure} [validation]
+ */
+export function teamDetailsViewModel(metadata, validation) {
+  const teamModel = create.teamViewModel(metadata, validation)
+
+  const nameAndEmailfields = teamModel.fields.filter(
+    (field) => field.id && ['teamName', 'teamEmail'].includes(field.id)
+  )
+
+  const teamDetailsModel = { ...teamModel, fields: nameAndEmailfields }
+  return {
+    ...teamDetailsModel,
+    backLink: {
+      text: 'Back to form overview',
+      href: `/library/${metadata.slug}`
+    }
+  }
+}
+
+/**
  * @typedef {import('@defra/forms-model').FormMetadata} FormMetadata
  * @typedef {import('@defra/forms-model').FormMetadataInput} FormMetadataInput
  * @typedef {import("~/src/common/helpers/build-error-details.js").ValidationFailure<FormMetadataInput>} ValidationFailure

@@ -10,14 +10,6 @@ export const ROUTE_PATH_EDIT_LEAD_ORGANISATION =
   '/library/{slug}/edit/lead-organisation'
 export const ROUTE_PATH_EDIT_TEAM = '/library/{slug}/edit/team'
 
-/**
- * Get the notification message for when a field is changed
- * @param {string} fieldName
- */
-function getNotificationMessage(fieldName) {
-  return `${fieldName} has been changed`
-}
-
 export default [
   /**
    * @satisfies {RequestBySlug}
@@ -57,7 +49,7 @@ export default [
 
       yar.flash(
         sessionNames.successNotification,
-        getNotificationMessage('Lead organisation')
+        'Lead organisation has been changed'
       )
 
       return h.redirect(`/library/${slug}`).code(StatusCodes.SEE_OTHER)
@@ -82,12 +74,14 @@ export default [
       const { token } = auth.credentials
       const { slug } = params
 
-      const metadata = await forms.get(slug, token)
+      const { teamName, teamEmail } = await forms.get(slug, token)
       const validation = yar.flash(sessionNames.validationFailure).at(0)
+
+      const metadata = { teamName, teamEmail, slug }
 
       return h.view(
         'forms/question-inputs',
-        edit.teamNameViewModel(metadata, validation)
+        edit.teamDetailsViewModel(metadata, validation)
       )
     }
   }),
@@ -110,7 +104,7 @@ export default [
 
       yar.flash(
         sessionNames.successNotification,
-        getNotificationMessage('Team')
+        'Team details have been changed'
       )
 
       return h.redirect(`/library/${slug}`).code(StatusCodes.SEE_OTHER)
