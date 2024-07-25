@@ -3,8 +3,14 @@ import {
   type ConditionWrapper,
   type FormDefinition
 } from '@defra/forms-model'
+// @ts-expect-error -- No types available
 import { Select } from '@xgovformbuilder/govuk-react-jsx'
-import React, { Component, type ChangeEvent, type ContextType } from 'react'
+import React, {
+  Component,
+  type ChangeEvent,
+  type ContextType,
+  type MouseEvent
+} from 'react'
 
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
@@ -164,7 +170,7 @@ export class SelectConditions extends Component<Props, State> {
     return fieldName
   }
 
-  onClickDefineCondition = (e) => {
+  onClickDefineCondition = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault()
     this.setState({
       inline: true

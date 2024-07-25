@@ -1,5 +1,10 @@
 import classNames from 'classnames'
-import React, { Component, type ContextType } from 'react'
+import React, {
+  Component,
+  type ChangeEvent,
+  type ContextType,
+  type FormEvent
+} from 'react'
 
 import { ErrorSummary, type ErrorList } from '~/src/ErrorSummary.jsx'
 import { logger } from '~/src/common/helpers/logging/logger.js'
@@ -17,7 +22,7 @@ export class LinkCreate extends Component {
 
   state = { errors: {} }
 
-  onSubmit = async (e) => {
+  onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const { data, save } = this.context
     const { from, to, selectedCondition } = this.state
@@ -38,7 +43,7 @@ export class LinkCreate extends Component {
     })
   }
 
-  storeValue = (e, key) => {
+  storeValue = (e: ChangeEvent<HTMLSelectElement>, key) => {
     const input = e.target
     const stateUpdate = {}
     stateUpdate[key] = input.value

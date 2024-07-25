@@ -14,28 +14,28 @@ export function useListItem(state, dispatch): ListItemHook {
   const { selectedItem = {} } = state
   const { value = '', condition } = selectedItem
 
-  function handleTitleChange(e) {
+  const handleTitleChange: ListItemHook['handleTitleChange'] = (e) => {
     dispatch({
       type: ListActions.EDIT_LIST_ITEM_TEXT,
       payload: e.target.value
     })
   }
 
-  function handleConditionChange(e) {
+  const handleConditionChange: ListItemHook['handleConditionChange'] = (e) => {
     dispatch({
       type: ListActions.EDIT_LIST_ITEM_CONDITION,
       payload: e.target.value
     })
   }
 
-  function handleValueChange(e) {
+  const handleValueChange: ListItemHook['handleValueChange'] = (e) => {
     dispatch({
       type: ListActions.EDIT_LIST_ITEM_VALUE,
       payload: e.target.value
     })
   }
 
-  function handleHintChange(e) {
+  const handleHintChange: ListItemHook['handleHintChange'] = (e) => {
     dispatch({
       type: ListActions.EDIT_LIST_ITEM_DESCRIPTION,
       payload: e.target.value

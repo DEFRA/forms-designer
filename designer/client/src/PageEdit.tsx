@@ -1,6 +1,14 @@
 import { clone } from '@defra/forms-model'
+// @ts-expect-error -- No types available
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
-import React, { Component, createRef, type ContextType } from 'react'
+import React, {
+  Component,
+  createRef,
+  type ChangeEvent,
+  type ContextType,
+  type FormEvent,
+  type MouseEvent
+} from 'react'
 
 import { type ErrorList, ErrorSummary } from '~/src/ErrorSummary.jsx'
 import { logger } from '~/src/common/helpers/logging/logger.js'
@@ -36,7 +44,7 @@ export class PageEdit extends Component {
     this.formEditSection = createRef()
   }
 
-  onSubmit = async (e) => {
+  onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const { save, data } = this.context
     const { title, path, section, controller } = this.state
@@ -97,7 +105,7 @@ export class PageEdit extends Component {
     return errors
   }
 
-  onClickDelete = async (e) => {
+  onClickDelete = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
 
     if (!window.confirm('Confirm delete')) {
@@ -132,15 +140,16 @@ export class PageEdit extends Component {
     }
   }
 
-  onChangeTitle = (e) => {
-    const title = e.target.value
+  onChangeTitle = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value: title } = e.target
+
     this.setState({
       title,
       path: this.generatePath(title)
     })
   }
 
-  onChangePath = (e) => {
+  onChangePath = (e: ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value
     const path = input.startsWith('/') ? input : `/${input}`
     this.setState({
@@ -158,8 +167,9 @@ export class PageEdit extends Component {
     return path
   }
 
-  editSection = (e, newSection = false) => {
+  editSection = (e: MouseEvent<HTMLAnchorElement>, newSection = false) => {
     e.preventDefault()
+
     this.setState({
       isEditingSection: true,
       isNewSection: newSection
@@ -174,7 +184,7 @@ export class PageEdit extends Component {
     })
   }
 
-  onChangeSection = (e) => {
+  onChangeSection = (e: ChangeEvent<HTMLSelectElement>) => {
     this.setState({
       section: e.target.value
     })

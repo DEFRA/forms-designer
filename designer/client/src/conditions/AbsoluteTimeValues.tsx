@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, type ChangeEvent } from 'react'
 
 import { isInt } from '~/src/conditions/inline-condition-helpers.js'
 
@@ -40,8 +40,11 @@ export const AbsoluteTimeValues = ({ value = {}, updateValue }: Props) => {
     }
   }, [hour, minute])
 
-  const hoursChanged = (e) => setHour(e.target.value)
-  const minutesChanged = (e) => setMinute(e.target.value)
+  const hoursChanged = (e: ChangeEvent<HTMLInputElement>) =>
+    setHour(e.target.value)
+
+  const minutesChanged = (e: ChangeEvent<HTMLInputElement>) =>
+    setMinute(e.target.value)
 
   return (
     <div className="govuk-date-input">

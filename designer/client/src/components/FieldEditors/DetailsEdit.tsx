@@ -1,6 +1,7 @@
+// @ts-expect-error -- No types available
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import classNames from 'classnames'
-import React, { useContext } from 'react'
+import React, { useContext, type ChangeEvent } from 'react'
 
 import { ErrorMessage } from '~/src/components/ErrorMessage/ErrorMessage.jsx'
 import { i18n } from '~/src/i18n/i18n.jsx'
@@ -34,7 +35,7 @@ export function DetailsEdit({ context = ComponentContext }: Props) {
           children: [i18n('common.titleField.helpText')]
         }}
         value={selectedComponent.title}
-        onChange={(e) =>
+        onChange={(e: ChangeEvent<HTMLInputElement>) =>
           dispatch({
             type: Fields.EDIT_TITLE,
             payload: e.target.value

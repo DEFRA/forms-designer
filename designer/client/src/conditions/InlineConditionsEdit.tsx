@@ -4,7 +4,12 @@ import {
   clone
 } from '@defra/forms-model'
 import classNames from 'classnames'
-import React, { Component, Fragment } from 'react'
+import React, {
+  Component,
+  Fragment,
+  type ChangeEvent,
+  type MouseEvent
+} from 'react'
 
 import { ErrorMessage } from '~/src/components/ErrorMessage/ErrorMessage.jsx'
 import { InlineConditionsDefinition } from '~/src/conditions/InlineConditionsDefinition.jsx'
@@ -19,7 +24,7 @@ export class InlineConditionsEdit extends Component {
     }
   }
 
-  onChangeCheckbox = (e) => {
+  onChangeCheckbox = (e: ChangeEvent<HTMLInputElement>) => {
     let copy = clone(this.state.selectedConditions ?? [])
     const index = Number(e.target.value)
     if (e.target.checked) {
@@ -32,8 +37,8 @@ export class InlineConditionsEdit extends Component {
     })
   }
 
-  onClickGroup = (e) => {
-    e?.preventDefault()
+  onClickGroup = (e: MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault()
     if (this.state.selectedConditions.length < 2) {
       this.setState({
         editingError: 'Please select at least 2 items for grouping'
@@ -104,8 +109,9 @@ export class InlineConditionsEdit extends Component {
     }
   }
 
-  onClickCancelEditView = (e) => {
-    e?.preventDefault()
+  onClickCancelEditView = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+
     this.setState({
       selectedConditions: [],
       editingIndex: undefined

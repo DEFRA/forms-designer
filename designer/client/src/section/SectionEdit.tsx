@@ -1,7 +1,9 @@
 import { type Section } from '@defra/forms-model'
+// @ts-expect-error -- No types available
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import React, {
   Component,
+  type ChangeEvent,
   type ContextType,
   type FormEvent,
   type MouseEvent
@@ -176,7 +178,9 @@ export class SectionEdit extends Component<Props, State> {
               children: [i18n('sectionEdit.titleField.title')]
             }}
             value={title}
-            onChange={(e) => this.setState({ title: e.target.value })}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              this.setState({ title: e.target.value })
+            }
             errorMessage={errors.name}
           />
           <Input
@@ -191,7 +195,9 @@ export class SectionEdit extends Component<Props, State> {
               children: [i18n('sectionEdit.nameField.helpText')]
             }}
             value={name}
-            onChange={(e) => this.setState({ name: e.target.value })}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              this.setState({ name: e.target.value })
+            }
             errorMessage={errors.name}
           />
           <div className="govuk-checkboxes govuk-form-group">

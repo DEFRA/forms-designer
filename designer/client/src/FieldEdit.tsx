@@ -3,9 +3,10 @@ import {
   getComponentDefaults,
   hasContentField
 } from '@defra/forms-model'
+// @ts-expect-error -- No types available
 import { Input, Textarea } from '@xgovformbuilder/govuk-react-jsx'
 import classNames from 'classnames'
-import React, { useContext } from 'react'
+import React, { type ChangeEvent, useContext } from 'react'
 
 import { ErrorMessage } from '~/src/components/ErrorMessage/ErrorMessage.jsx'
 import { i18n } from '~/src/i18n/i18n.jsx'
@@ -37,7 +38,7 @@ export function FieldEdit() {
           children: [i18n('common.titleField.helpText')]
         }}
         value={title ?? defaults?.title}
-        onChange={(e) => {
+        onChange={(e: ChangeEvent<HTMLInputElement>) => {
           dispatch({
             type: Fields.EDIT_TITLE,
             payload: e.target.value
@@ -58,7 +59,7 @@ export function FieldEdit() {
         }}
         required={false}
         value={'hint' in selectedComponent ? selectedComponent.hint : undefined}
-        onChange={(e) => {
+        onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
           dispatch({
             type: Fields.EDIT_HELP,
             payload: e.target.value

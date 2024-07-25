@@ -67,19 +67,19 @@ export function ComponentListSelect() {
     }
   }, [listsEditorState.isEditingList, selectedList?.name, isAddingNew])
 
-  const editList = (e: ChangeEvent<HTMLSelectElement>) => {
+  function editList(e: ChangeEvent<HTMLSelectElement>) {
     dispatch({
       type: Meta.SET_SELECTED_LIST,
       payload: e.target.value
     })
   }
 
-  const handleEditListClick = (e: MouseEvent) => {
+  function handleEditListClick(e: MouseEvent) {
     e.preventDefault()
     listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST, true])
   }
 
-  const handleAddListClick = (e: MouseEvent) => {
+  function handleAddListClick(e: MouseEvent) {
     e.preventDefault()
     setIsAddingNew(true)
     listDispatch({ type: ListActions.ADD_NEW_LIST })

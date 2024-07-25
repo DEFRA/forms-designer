@@ -1,5 +1,5 @@
 import { clone } from '@defra/forms-model'
-import React, { Component, type ContextType } from 'react'
+import React, { Component, type ContextType, type FormEvent } from 'react'
 
 import { Editor } from '~/src/Editor.jsx'
 import { logger } from '~/src/common/helpers/logging/logger.js'
@@ -15,7 +15,7 @@ export class DeclarationEdit extends Component {
     this.onSubmit = this.onSubmit.bind(this)
   }
 
-  onSubmit = async (e) => {
+  onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const form = e.target
     const formData = new window.FormData(form)
@@ -38,7 +38,7 @@ export class DeclarationEdit extends Component {
     const { declaration, skipSummary } = data
 
     return (
-      <form onSubmit={(e) => this.onSubmit(e)} autoComplete="off">
+      <form onSubmit={this.onSubmit} autoComplete="off">
         <div className="govuk-checkboxes govuk-form-group">
           <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">
             <p className="govuk-fieldset__heading">Skip summary page?</p>
