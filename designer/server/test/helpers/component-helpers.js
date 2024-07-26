@@ -24,11 +24,18 @@ export function renderView(...args) {
  * @param {ServerInjectOptions} options
  */
 export async function renderResponse(server, options) {
-  const { result } = /** @type {ServerInjectResponse} */ (
-    await server.inject(options)
-  )
-
+  const { result } = await serverResponse(server, options)
   return renderDOM(result)
+}
+
+/**
+ * HTTP response
+ * @param {Server} server
+ * @param {ServerInjectOptions} options
+ * @returns {Promise<ServerInjectResponse>}
+ */
+export async function serverResponse(server, options) {
+  return await server.inject(options)
 }
 
 /**
