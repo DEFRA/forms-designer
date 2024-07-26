@@ -31,7 +31,6 @@ interface State {
   editView?: boolean
   conditions: ConditionsModel
   fields: any
-  conditionString: any
   validationErrors: ErrorListItem[]
 }
 
@@ -65,8 +64,7 @@ export class InlineConditions extends Component<Props, State> {
     this.state = {
       validationErrors: [],
       conditions,
-      fields: this.fieldsForPath(path),
-      conditionString: condition?.value
+      fields: this.fieldsForPath(path)
     }
   }
 
@@ -231,8 +229,7 @@ export class InlineConditions extends Component<Props, State> {
   }
 
   render() {
-    const { conditions, editView, conditionString, validationErrors } =
-      this.state
+    const { conditions, editView, validationErrors } = this.state
     const hasConditions = conditions.hasConditions
 
     const nameError = validationErrors
@@ -245,20 +242,6 @@ export class InlineConditions extends Component<Props, State> {
       <div id="inline-conditions" data-testid={'inline-conditions'}>
         <div id="inline-condition-header">
           <div className="govuk-hint">{i18n('conditions.addOrEditHint')}</div>
-          {typeof conditionString === 'string' && (
-            <div
-              id="condition-string-edit-warning"
-              className="govuk-warning-text"
-            >
-              <span className="govuk-warning-text__icon" aria-hidden="true">
-                !
-              </span>
-              <strong className="govuk-warning-text__text">
-                <span className="govuk-visually-hidden">{i18n('warning')}</span>
-                {i18n('conditions.youCannotEditWarning', { conditionString })}
-              </strong>
-            </div>
-          )}
           <>
             {hasErrors && <ErrorSummary errorList={validationErrors} />}
             <div
