@@ -102,10 +102,7 @@ export const AbsoluteDateValues = ({ value = {}, updateValue }: Props) => {
     <div className="govuk-date-input">
       <div className="govuk-date-input__item">
         <div className="govuk-form-group">
-          <label
-            htmlFor="cond-value-day"
-            className="govuk-label govuk-label--s"
-          >
+          <label htmlFor="cond-value-day" className="govuk-label">
             Day
           </label>
           <input
@@ -125,10 +122,7 @@ export const AbsoluteDateValues = ({ value = {}, updateValue }: Props) => {
       </div>
       <div className="govuk-date-input__item">
         <div className="govuk-form-group">
-          <label
-            htmlFor="cond-value-month"
-            className="govuk-label govuk-label--s"
-          >
+          <label htmlFor="cond-value-month" className="govuk-label">
             Month
           </label>
           <input
@@ -148,10 +142,7 @@ export const AbsoluteDateValues = ({ value = {}, updateValue }: Props) => {
       </div>
       <div className="govuk-date-input__item">
         <div className="govuk-form-group">
-          <label
-            htmlFor="cond-value-year"
-            className="govuk-label govuk-label--s"
-          >
+          <label htmlFor="cond-value-year" className="govuk-label">
             Year
           </label>
           <input
