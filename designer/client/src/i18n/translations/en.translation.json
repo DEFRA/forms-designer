@@ -110,6 +110,9 @@
     "conditionField": "Component title",
     "conditionOperator": "Operator",
     "conditionCoordinator": "Coordinator",
+    "conditionDatePeriod": "Period",
+    "conditionDateUnits": "Units",
+    "conditionDateDirection": "Direction",
     "conditionValue": "Value",
     "youCannotEditWarning": "You cannot edit this condition '{{conditionString}}'. Please recreate it in the editor below to continue"
   },

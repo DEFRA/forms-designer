@@ -1,12 +1,16 @@
 import { DateDirections, RelativeTimeValue } from '@defra/forms-model'
+import upperFirst from 'lodash/upperFirst.js'
 import React, { Component } from 'react'
+
+import { i18n } from '~/src/i18n/i18n.jsx'
 
 export class RelativeTimeValues extends Component {
   constructor(props) {
     super(props)
+
     this.state = {
       timePeriod: props.value?.timePeriod,
-      timeUnits: props.value?.timeUnit,
+      timeUnit: props.value?.timeUnit,
       direction: props.value?.direction
     }
   }
@@ -18,70 +22,126 @@ export class RelativeTimeValues extends Component {
   }
 
   passValueToParentComponentIfComplete() {
-    const { timePeriod, timeUnits, direction } = this.state
-    if (timePeriod && timeUnits && direction) {
-      this.props.updateValue(
+    const { timeOnly, updateValue } = this.props
+    const { timePeriod, timeUnit, direction } = this.state
+
+    if (timePeriod && timeUnit && direction) {
+      updateValue(
         new RelativeTimeValue(
           timePeriod,
-          timeUnits,
+          timeUnit,
           direction,
-          this.props.timeOnly || false
+          timeOnly ?? false
         )
       )
     }
   }
 
   render() {
-    const { timePeriod, timeUnits, direction } = this.state
+    const { units } = this.props
+    const { timePeriod, timeUnit, direction } = this.state
 
     return (
       <>
-        <input
-          className="govuk-input govuk-input--width-20"
-          id="cond-value-period"
-          name="cond-value-period"
-          type="text"
-          defaultValue={timePeriod}
-          required
-          onChange={(e) => this.updateState({ timePeriod: e.target.value })}
-          data-testid="cond-value-period"
-        />
+        <div className="govuk-form-group govuk-!-margin-bottom-3">
+          <label className="govuk-label" htmlFor="cond-value-period">
+            {i18n('conditions.conditionDatePeriod')}
+          </label>
+          <input
+            className="govuk-input govuk-input--width-5"
+            id="cond-value-period"
+            name="cond-value-period"
+            type="text"
+            defaultValue={timePeriod}
+            required
+            onChange={(e) =>
+              this.updateState({
+                timePeriod: e.currentTarget.value
+              })
+            }
+            data-testid="cond-value-period"
+          />
+        </div>
 
-        <select
-          className="govuk-select"
-          id="cond-value-units"
-          name="cond-value-units"
-          value={timeUnits ?? ''}
-          onChange={(e) => this.updateState({ timeUnits: e.target.value })}
-          data-testid="cond-value-units"
-        >
-          <option value="" />
-          {Object.values(this.props.units).map((unit) => {
-            return (
-              <option key={unit.value} value={unit.value}>
-                {unit.display}
-              </option>
-            )
-          })}
-        </select>
+        <div className="govuk-form-group">
+          <fieldset className="govuk-fieldset">
+            <legend className="govuk-fieldset__legend">
+              {i18n('conditions.conditionDateUnits')}
+            </legend>
+            <div className="govuk-radios" data-module="govuk-radios">
+              {Object.values(units).map((unit) => {
+                const name = 'cond-value-units'
+                const id = `${name}-${unit.value}`
 
-        <select
-          className="govuk-select"
-          id="cond-value-direction"
-          name="cond-value-direction"
-          value={direction ?? ''}
-          onChange={(e) => this.updateState({ direction: e.target.value })}
-          data-testid="cond-value-direction"
-        >
-          <option value="" />
-          {Object.values(DateDirections).map((direction) => {
-            return (
-              <option key={direction} value={direction}>
-                {direction}
-              </option>
-            )
-          })}
-        </select>
+                return (
+                  <div className="govuk-radios__item" key={unit.value}>
+                    <input
+                      className="govuk-radios__input"
+                      id={id}
+                      name={name}
+                      type="radio"
+                      defaultValue={unit.value}
+                      defaultChecked={timeUnit === unit.value}
+                      onClick={(e) => {
+                        const { value: unit } = e.currentTarget
+
+                        this.updateState({
+                          timeUnit: unit
+                        })
+                      }}
+                    />
+                    <label
+                      className="govuk-label govuk-radios__label"
+                      htmlFor={id}
+                    >
+                      {upperFirst(unit.value)}
+                    </label>
+                  </div>
+                )
+              })}
+            </div>
+          </fieldset>
+        </div>
+
+        <div className="govuk-form-group">
+          <fieldset className="govuk-fieldset">
+            <legend className="govuk-fieldset__legend">
+              {i18n('conditions.conditionDateDirection')}
+            </legend>
+            <div className="govuk-radios" data-module="govuk-radios">
+              {Object.values(DateDirections).map((directionValue) => {
+                const name = 'cond-value-direction'
+                const id = `${name}-${directionValue}`
+
+                return (
+                  <div className="govuk-radios__item" key={directionValue}>
+                    <input
+                      className="govuk-radios__input"
+                      id={id}
+                      name={name}
+                      type="radio"
+                      defaultValue={directionValue}
+                      defaultChecked={direction === directionValue}
+                      onClick={(e) => {
+                        const { value: direction } = e.currentTarget
+
+                        this.updateState({
+                          direction: direction as DateDirections
+                        })
+                      }}
+                    />
+                    <label
+                      className="govuk-label govuk-radios__label"
+                      htmlFor={id}
+                    >
+                      {upperFirst(directionValue)}
+                    </label>
+                  </div>
+                )
+              })}
+            </div>
+          </fieldset>
+        </div>
       </>
     )
   }
