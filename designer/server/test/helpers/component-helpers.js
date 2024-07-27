@@ -35,7 +35,7 @@ export async function renderResponse(server, options) {
  * @returns {Promise<ServerInjectResponse>}
  */
 export async function serverResponse(server, options) {
-  return await server.inject(options)
+  return server.inject(options)
 }
 
 /**
