@@ -41,12 +41,10 @@ describe('Forms library routes', () => {
     organisation: 'Defra',
     teamName: 'Defra Forms',
     teamEmail: 'defraforms@defra.gov.uk',
-    draft: {
-      createdAt: now,
-      createdBy: author,
-      updatedAt: now,
-      updatedBy: author
-    }
+    createdAt: now,
+    createdBy: author,
+    updatedAt: now,
+    updatedBy: author
   }
 
   /**
