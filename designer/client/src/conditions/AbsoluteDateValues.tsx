@@ -12,45 +12,37 @@ export interface YearMonthDay {
   day: number
 }
 
-export interface YearMonthDayOptional {
-  year?: number
-  month?: number
-  day?: number
-}
-
-interface Props {
-  value?: YearMonthDayOptional
+export interface Props {
+  value?: Partial<YearMonthDay>
   updateValue: ({ year, month, day }: YearMonthDay) => void
 }
 
-function isValidateDate(props: {
-  year?: number | string
-  month?: number | string
-  day?: number | string
-}) {
-  const { year = 2020, month = 12, day = 1 } = props
-  const parsedDate = Date.parse(`${year}-${month}-${day}`)
+function isValidateDate(props: Partial<YearMonthDay>): props is YearMonthDay {
+  const year = `${props.year}`
+  const month = `${props.month}`.padStart(2, '0')
+  const day = `${props.day}`.padStart(2, '0')
 
-  if (isNaN(parsedDate)) {
-    return false
-  }
-
-  return true
+  return !isNaN(Date.parse(`${year}-${month}-${day}`))
 }
 
 function isValidDay(day?: number): day is number {
-  return isValidateDate({ day })
+  const date = { day, month: 12, year: 2020 }
+  return isValidateDate(date)
 }
+
 function isValidMonth(month?: number): month is number {
-  return isValidateDate({ month })
+  const date = { day: 1, month, year: 2020 }
+  return isValidateDate(date)
 }
-function isValidYear(year = 0): year is number {
-  return year >= 1000 && isValidateDate({ year })
+
+function isValidYear(year?: number): year is number {
+  const date = { day: 1, month: 12, year }
+  return isValidateDate(date) && date.year >= 1000
 }
 
 export const AbsoluteDateValues = ({ value = {}, updateValue }: Props) => {
   const [year, setYear] = useState(() =>
-    value.year && isInt(value.year) ? value.year.toString() : undefined
+    isInt(value.year) ? `${value.year}` : undefined
   )
 
   const [month, setMonth] = useState(() =>
@@ -110,10 +102,7 @@ export const AbsoluteDateValues = ({ value = {}, updateValue }: Props) => {
     <div className="govuk-date-input">
       <div className="govuk-date-input__item">
         <div className="govuk-form-group">
-          <label
-            htmlFor="cond-value-day"
-            className="govuk-label govuk-label--s"
-          >
+          <label htmlFor="cond-value-day" className="govuk-label">
             Day
           </label>
           <input
@@ -133,10 +122,7 @@ export const AbsoluteDateValues = ({ value = {}, updateValue }: Props) => {
       </div>
       <div className="govuk-date-input__item">
         <div className="govuk-form-group">
-          <label
-            htmlFor="cond-value-month"
-            className="govuk-label govuk-label--s"
-          >
+          <label htmlFor="cond-value-month" className="govuk-label">
             Month
           </label>
           <input
@@ -156,10 +142,7 @@ export const AbsoluteDateValues = ({ value = {}, updateValue }: Props) => {
       </div>
       <div className="govuk-date-input__item">
         <div className="govuk-form-group">
-          <label
-            htmlFor="cond-value-year"
-            className="govuk-label govuk-label--s"
-          >
+          <label htmlFor="cond-value-year" className="govuk-label">
             Year
           </label>
           <input
