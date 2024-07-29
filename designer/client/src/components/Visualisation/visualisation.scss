@@ -15,7 +15,10 @@ $govuk-breakpoints: (
 
   @include govuk-responsive-padding(6, "top");
   @include govuk-responsive-padding(9, "bottom");
-  overflow-x: auto;
+
+  & {
+    overflow-x: auto;
+  }
 
   @include govuk-media-query($from: wide) {
     margin-left: (calc($govuk-page-width / 2) + govuk-spacing(5)) * -1;
