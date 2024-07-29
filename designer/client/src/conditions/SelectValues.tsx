@@ -7,17 +7,16 @@ export const SelectValues = (props) => {
   const { fieldDef, updateValue, value } = props
 
   const onChangeSelect = (e: ChangeEvent<HTMLSelectElement>) => {
-    const input = e.target
-    const newValue = input.value
+    const { value: newValue } = e.target
 
-    let value
-    if (newValue && newValue?.trim() !== '') {
-      const option = fieldDef.values?.find(
-        (value) => String(value.value) === newValue
-      )
-      value = new ConditionValue(String(option.value), option.label)
+    // Find the selected option
+    const option = fieldDef.values?.find((item) => `${item.value}` === newValue)
+    if (!option || !newValue) {
+      updateValue(undefined)
+      return
     }
-    updateValue(value)
+
+    updateValue(new ConditionValue(`${option.value}`, option.text))
   }
 
   return (
