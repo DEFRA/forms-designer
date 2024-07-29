@@ -12,7 +12,7 @@ import React from 'react'
 
 import { InlineConditionsDefinitionValue } from '~/src/conditions/InlineConditionsDefinitionValue.jsx'
 
-describe.skip('InlineConditionsDefinitionValue', () => {
+describe('InlineConditionsDefinitionValue', () => {
   afterEach(cleanup)
 
   it('should display a text input for fields without custom mappings or options', async () => {
