@@ -13,17 +13,21 @@ import { userEvent } from '@testing-library/user-event'
 import upperFirst from 'lodash/upperFirst.js'
 import React from 'react'
 
-import { InlineConditionsDefinitionValue } from '~/src/conditions/InlineConditionsDefinitionValue.jsx'
+import {
+  InlineConditionsDefinitionValue,
+  type FieldDef
+} from '~/src/conditions/InlineConditionsDefinitionValue.jsx'
 
 describe('InlineConditionsDefinitionValue', () => {
   afterEach(cleanup)
 
   it('should display a text input for fields without custom mappings or options', async () => {
-    const fieldDef = {
+    const fieldDef: FieldDef = {
       label: 'Something',
       name: 'field1',
       type: ComponentType.TextField
     }
+
     render(
       <InlineConditionsDefinitionValue
         updateValue={jest.fn()}
@@ -39,12 +43,14 @@ describe('InlineConditionsDefinitionValue', () => {
   })
 
   it('inputting a text value should call update value', async () => {
-    const fieldDef = {
+    const fieldDef: FieldDef = {
       label: 'Something',
       name: 'field1',
       type: ComponentType.TextField
     }
+
     const updateValueCallback = jest.fn()
+
     render(
       <InlineConditionsDefinitionValue
         updateValue={updateValueCallback}
@@ -67,12 +73,14 @@ describe('InlineConditionsDefinitionValue', () => {
   })
 
   it('inputting a blank text value should call update value with undefined', async () => {
-    const fieldDef = {
+    const fieldDef: FieldDef = {
       label: 'Something',
       name: 'field1',
       type: ComponentType.TextField
     }
+
     const updateValueCallback = jest.fn()
+
     render(
       <InlineConditionsDefinitionValue
         updateValue={updateValueCallback}
@@ -93,12 +101,14 @@ describe('InlineConditionsDefinitionValue', () => {
       { value: 'value1', text: 'Value 1' },
       { value: 'value2', text: 'Value 2' }
     ]
-    const fieldDef = {
+
+    const fieldDef: FieldDef = {
       label: 'Something',
       name: 'field1',
       values,
       type: ComponentType.SelectField
     }
+
     render(
       <InlineConditionsDefinitionValue
         updateValue={jest.fn()}
@@ -125,13 +135,16 @@ describe('InlineConditionsDefinitionValue', () => {
       { value: 'value1', text: 'Value 1' },
       { value: 'value2', text: 'Value 2' }
     ]
-    const fieldDef = {
+
+    const fieldDef: FieldDef = {
       label: 'Something',
       name: 'field1',
       values,
       type: ComponentType.SelectField
     }
+
     const updateValueCallback = jest.fn()
+
     render(
       <InlineConditionsDefinitionValue
         updateValue={updateValueCallback}
@@ -156,13 +169,16 @@ describe('InlineConditionsDefinitionValue', () => {
       { value: true, text: 'Value 1' },
       { value: false, text: 'Value 2' }
     ]
-    const fieldDef = {
+
+    const fieldDef: FieldDef = {
       label: 'Something',
       name: 'field1',
       values,
       type: ComponentType.SelectField
     }
+
     const updateValueCallback = jest.fn()
+
     render(
       <InlineConditionsDefinitionValue
         updateValue={updateValueCallback}
@@ -187,13 +203,16 @@ describe('InlineConditionsDefinitionValue', () => {
       { value: 42, text: 'Value 1' },
       { value: 43, text: 'Value 2' }
     ]
-    const fieldDef = {
+
+    const fieldDef: FieldDef = {
       label: 'Something',
       name: 'field1',
       values,
       type: ComponentType.SelectField
     }
+
     const updateValueCallback = jest.fn()
+
     render(
       <InlineConditionsDefinitionValue
         updateValue={updateValueCallback}
@@ -218,13 +237,16 @@ describe('InlineConditionsDefinitionValue', () => {
       { value: 42, text: 'Value 1' },
       { value: 43, text: 'Value 2' }
     ]
-    const fieldDef = {
+
+    const fieldDef: FieldDef = {
       label: 'Something',
       name: 'field1',
       values,
       type: ComponentType.SelectField
     }
+
     const updateValueCallback = jest.fn()
+
     render(
       <InlineConditionsDefinitionValue
         updateValue={updateValueCallback}
