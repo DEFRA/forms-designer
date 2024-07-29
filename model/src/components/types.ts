@@ -9,7 +9,6 @@ export type ConditionalComponentType =
   | ComponentType.NumberField
   | ComponentType.SelectField
   | ComponentType.TextField
-  | ComponentType.TimeField
   | ComponentType.YesNoField
 
 /**
@@ -94,10 +93,7 @@ interface ContentFieldBase {
 }
 
 interface DateFieldBase {
-  type:
-    | ComponentType.DatePartsField
-    | ComponentType.MonthYearField
-    | ComponentType.TimeField
+  type: ComponentType.DatePartsField | ComponentType.MonthYearField
   name: string
   title: string
   hint?: string
@@ -187,13 +183,6 @@ export interface MonthYearFieldComponent extends DateFieldBase {
   }
 }
 
-export interface TimeFieldComponent extends DateFieldBase {
-  type: ComponentType.TimeField
-  options: DateFieldBase['options'] & {
-    condition?: string
-  }
-}
-
 // Content Fields
 export interface DetailsComponent extends ContentFieldBase {
   type: ComponentType.Details
@@ -254,7 +243,6 @@ export type ComponentDef =
   | SelectFieldComponent
   | TelephoneNumberFieldComponent
   | TextFieldComponent
-  | TimeFieldComponent
   | UkAddressFieldComponent
   | YesNoFieldComponent
 
@@ -267,7 +255,6 @@ export type InputFieldsComponentsDef =
   | TelephoneNumberFieldComponent
   | YesNoFieldComponent
   | MonthYearFieldComponent
-  | TimeFieldComponent
   | DatePartsFieldFieldComponent
   | UkAddressFieldComponent
 
@@ -317,5 +304,4 @@ export type ConditionalComponentsDef =
   | MultilineTextFieldComponent
   | NumberFieldComponent
   | TextFieldComponent
-  | TimeFieldComponent
   | YesNoFieldComponent

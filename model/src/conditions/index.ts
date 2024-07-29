@@ -2,16 +2,13 @@ export {
   getExpression,
   getOperatorConfig,
   getOperatorNames,
-  absoluteDateOrTimeOperatorNames,
-  relativeDateOrTimeOperatorNames
+  absoluteDateOperatorNames,
+  relativeDateOperatorNames
 } from '~/src/conditions/condition-operators.js'
 
 export {
-  timeUnits,
-  dateUnits,
-  dateTimeUnits,
   ConditionValue,
-  RelativeTimeValue,
+  RelativeDateValue,
   conditionValueFrom
 } from '~/src/conditions/condition-values.js'
 
@@ -27,6 +24,7 @@ export {
   ConditionType,
   Coordinator,
   DateDirections,
+  DateUnits,
   Operator,
   OperatorName
 } from '~/src/conditions/enums.js'

@@ -9,12 +9,11 @@ import {
 } from '@defra/forms-model'
 import React, { Component, type ChangeEvent } from 'react'
 
-import { InlineConditionsDefinitionValue } from '~/src/conditions/InlineConditionsDefinitionValue.jsx'
+import {
+  InlineConditionsDefinitionValue,
+  type FieldDef
+} from '~/src/conditions/InlineConditionsDefinitionValue.jsx'
 import { i18n } from '~/src/i18n/i18n.jsx'
-
-function isCondition(fieldDef) {
-  return fieldDef?.type === 'Condition'
-}
 
 export class InlineConditionsDefinition extends Component {
   constructor(props) {
@@ -53,26 +52,25 @@ export class InlineConditionsDefinition extends Component {
   }
 
   onClickFinalise = () => {
+    const { fields, saveCallback } = this.props
     const { condition } = this.state
+
     this.setState({
       condition: {}
     })
 
-    const fieldDef = this.props.fields[condition.field.name]
-    if (isCondition(fieldDef)) {
-      this.props.saveCallback(
-        new ConditionRef(fieldDef.name, fieldDef.label, condition.coordinator)
-      )
-    } else {
-      this.props.saveCallback(
-        new Condition(
-          ConditionField.from(condition.field),
-          condition.operator,
-          conditionValueFrom(condition.value),
-          condition.coordinator
-        )
-      )
-    }
+    const fieldDef = fields[condition.field.name]
+
+    saveCallback(
+      isFieldConditionRef(fieldDef)
+        ? new ConditionRef(fieldDef.name, fieldDef.label, condition.coordinator)
+        : new Condition(
+            ConditionField.from(condition.field),
+            condition.operator,
+            conditionValueFrom(condition.value),
+            condition.coordinator
+          )
+    )
   }
 
   onChangeField = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -88,7 +86,7 @@ export class InlineConditionsDefinition extends Component {
 
     this._updateCondition(condition, (c) => {
       if (fieldName) {
-        if (isCondition(fieldDef)) {
+        if (isFieldConditionRef(fieldDef)) {
           delete c.value
           delete c.operator
         } else {
@@ -201,7 +199,7 @@ export class InlineConditionsDefinition extends Component {
               </select>
             </div>
 
-            {fieldDef && !isCondition(fieldDef) && (
+            {fieldDef && !isFieldConditionRef(fieldDef) && (
               <div className="govuk-form-group govuk-!-margin-bottom-3">
                 <label className="govuk-label" htmlFor="cond-operator">
                   {i18n('conditions.conditionOperator')}
@@ -239,7 +237,7 @@ export class InlineConditionsDefinition extends Component {
               </div>
             )}
 
-            {(condition.value || isCondition(fieldDef)) && (
+            {(condition.value || isFieldConditionRef(fieldDef)) && (
               <div className="govuk-button-group">
                 <button
                   id="save-condition"
@@ -256,4 +254,16 @@ export class InlineConditionsDefinition extends Component {
       </div>
     )
   }
+}
+
+export function isFieldConditionRef(
+  fieldDef?: FieldDef
+): fieldDef is Extract<FieldDef, { type: 'Condition' }> {
+  return fieldDef?.type === 'Condition'
+}
+
+export function isFieldConditionList(
+  fieldDef?: FieldDef
+): fieldDef is Extract<FieldDef, { values: Item[] }> {
+  return !!fieldDef && 'values' in fieldDef
 }

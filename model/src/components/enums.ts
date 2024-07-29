@@ -2,7 +2,6 @@ export enum ComponentType {
   TextField = 'TextField',
   MultilineTextField = 'MultilineTextField',
   YesNoField = 'YesNoField',
-  TimeField = 'TimeField',
   DatePartsField = 'DatePartsField',
   MonthYearField = 'MonthYearField',
   SelectField = 'SelectField',

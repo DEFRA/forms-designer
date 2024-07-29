@@ -4,19 +4,19 @@ import { getExpression } from '~/src/conditions/condition-operators.js'
 import { ConditionValueAbstract } from '~/src/conditions/condition-value-abstract.js'
 import {
   type ConditionValue,
-  type RelativeTimeValue
+  type RelativeDateValue
 } from '~/src/conditions/condition-values.js'
 import { type Coordinator, type OperatorName } from '~/src/conditions/enums.js'
 
 export class Condition extends ConditionAbstract {
   field: ConditionField
   operator: OperatorName
-  value: ConditionValue | RelativeTimeValue
+  value: ConditionValue | RelativeDateValue
 
   constructor(
     field?: ConditionField,
     operator?: OperatorName,
-    value?: ConditionValue | RelativeTimeValue,
+    value?: ConditionValue | RelativeDateValue,
     coordinator?: Coordinator
   ) {
     if (!(field instanceof ConditionField)) {

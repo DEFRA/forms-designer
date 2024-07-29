@@ -75,16 +75,6 @@ export const NumberField: FunctionComponent = () => {
   )
 }
 
-export const TimeField: FunctionComponent = () => {
-  return (
-    <ComponentField>
-      <div className="box">
-        <span className="govuk-body govuk-!-font-size-14">hh:mm</span>
-      </div>
-    </ComponentField>
-  )
-}
-
 export const MonthYearField: FunctionComponent = () => {
   return (
     <ComponentField>
@@ -205,7 +195,6 @@ export const componentTypes = {
   [ComponentType.TelephoneNumberField]: TelephoneNumberField,
   [ComponentType.NumberField]: NumberField,
   [ComponentType.EmailAddressField]: EmailAddressField,
-  [ComponentType.TimeField]: TimeField,
   [ComponentType.DatePartsField]: DatePartsField,
   [ComponentType.MonthYearField]: MonthYearField,
   [ComponentType.MultilineTextField]: MultilineTextField,

@@ -1,45 +1,53 @@
-import { DateDirections, RelativeTimeValue } from '@defra/forms-model'
+import {
+  DateDirections,
+  DateUnits,
+  RelativeDateValue,
+  type RelativeDateValueData
+} from '@defra/forms-model'
 import upperFirst from 'lodash/upperFirst.js'
 import React, { Component } from 'react'
 
 import { i18n } from '~/src/i18n/i18n.jsx'
 
-export class RelativeTimeValues extends Component {
-  constructor(props) {
+interface Props {
+  value?: RelativeDateValueData
+  updateValue: (value: RelativeDateValue) => void
+}
+
+interface State {
+  period?: string
+  unit?: DateUnits
+  direction?: DateDirections
+}
+
+export class RelativeDateValues extends Component<Props, State> {
+  constructor(props: Props) {
     super(props)
 
     this.state = {
-      timePeriod: props.value?.timePeriod,
-      timeUnit: props.value?.timeUnit,
+      period: props.value?.period,
+      unit: props.value?.unit,
       direction: props.value?.direction
     }
   }
 
-  updateState(state) {
+  updateState(state: State) {
     this.setState(state, () => {
       this.passValueToParentComponentIfComplete()
     })
   }
 
   passValueToParentComponentIfComplete() {
-    const { timeOnly, updateValue } = this.props
-    const { timePeriod, timeUnit, direction } = this.state
+    const { updateValue } = this.props
+    const { period, unit, direction } = this.state
 
-    if (timePeriod && timeUnit && direction) {
-      updateValue(
-        new RelativeTimeValue(
-          timePeriod,
-          timeUnit,
-          direction,
-          timeOnly ?? false
-        )
-      )
+    if (period && unit && direction) {
+      updateValue(new RelativeDateValue(period, unit, direction))
     }
   }
 
   render() {
-    const { units } = this.props
-    const { timePeriod, timeUnit, direction } = this.state
+    const { period, unit, direction } = this.state
 
     return (
       <>
@@ -52,11 +60,11 @@ export class RelativeTimeValues extends Component {
             id="cond-value-period"
             name="cond-value-period"
             type="text"
-            defaultValue={timePeriod}
+            defaultValue={period}
             required
             onChange={(e) =>
               this.updateState({
-                timePeriod: e.currentTarget.value
+                period: e.currentTarget.value
               })
             }
             data-testid="cond-value-period"
@@ -69,24 +77,24 @@ export class RelativeTimeValues extends Component {
               {i18n('conditions.conditionDateUnits')}
             </legend>
             <div className="govuk-radios" data-module="govuk-radios">
-              {Object.values(units).map((unit) => {
+              {Object.values(DateUnits).map((unitValue) => {
                 const name = 'cond-value-units'
-                const id = `${name}-${unit.value}`
+                const id = `${name}-${unitValue}`
 
                 return (
-                  <div className="govuk-radios__item" key={unit.value}>
+                  <div className="govuk-radios__item" key={unitValue}>
                     <input
                       className="govuk-radios__input"
                       id={id}
                       name={name}
                       type="radio"
-                      defaultValue={unit.value}
-                      defaultChecked={timeUnit === unit.value}
+                      defaultValue={unitValue}
+                      defaultChecked={unit === unitValue}
                       onClick={(e) => {
                         const { value: unit } = e.currentTarget
 
                         this.updateState({
-                          timeUnit: unit
+                          unit: unit as DateUnits
                         })
                       }}
                     />
@@ -94,7 +102,7 @@ export class RelativeTimeValues extends Component {
                       className="govuk-label govuk-radios__label"
                       htmlFor={id}
                     >
-                      {upperFirst(unit.value)}
+                      {upperFirst(unitValue)}
                     </label>
                   </div>
                 )

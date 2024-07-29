@@ -2,10 +2,8 @@ import {
   ComponentType,
   ConditionType,
   ConditionValue,
-  dateUnits,
   OperatorName,
-  relativeDateOrTimeOperatorNames,
-  timeUnits
+  relativeDateOperatorNames
 } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { act, cleanup, render, waitFor } from '@testing-library/react'
@@ -235,13 +233,19 @@ describe.skip('InlineConditionsDefinitionValue', () => {
     expect(updateValueCallback).toHaveBeenLastCalledWith(undefined)
   })
 
-  const dateAndTimeMappings = [
-    { type: ComponentType.DatePartsField, units: dateUnits },
-    { type: ComponentType.TimeField, units: timeUnits, timeOnly: true }
+  const dateMappings = [
+    {
+      type: ComponentType.DatePartsField,
+      units: [
+        { display: 'Years', value: 'years' },
+        { display: 'Months', value: 'months' },
+        { display: 'Day', value: 'days' }
+      ]
+    }
   ]
 
-  dateAndTimeMappings.forEach((mapping) => {
-    relativeDateOrTimeOperatorNames.forEach((operator) => {
+  dateMappings.forEach((mapping) => {
+    relativeDateOperatorNames.forEach((operator) => {
       it(`should display custom component for ${mapping.type} component type and '${operator}' operator`, async () => {
         const fieldDef = {
           label: 'Something',
