@@ -1,4 +1,8 @@
-import { type ComponentDef, type Page } from '@defra/forms-model'
+import {
+  type ComponentDef,
+  type ComponentTypes,
+  type Page
+} from '@defra/forms-model'
 import React, {
   useEffect,
   useContext,
