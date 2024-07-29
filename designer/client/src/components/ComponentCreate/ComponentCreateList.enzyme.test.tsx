@@ -70,7 +70,6 @@ describe('ComponentCreateList', () => {
       'Number',
       'Telephone number',
       'Text input',
-      'Time',
       'UK address'
     ])
   })

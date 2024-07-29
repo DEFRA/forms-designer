@@ -211,17 +211,6 @@ describe('ComponentTypeEdit', () => {
       }
     ],
     [
-      ComponentType.TimeField,
-      {
-        name: true,
-        hint: true,
-        title: true,
-        hideTitle: false,
-        optional: true,
-        selectList: false
-      }
-    ],
-    [
       ComponentType.UkAddressField,
       {
         name: true,

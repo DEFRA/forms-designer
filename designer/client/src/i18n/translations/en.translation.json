@@ -129,7 +129,6 @@
   },
   "delete": "Delete",
   "edit": "edit {{noun}}",
-  "enterDateTimeAsGmt": "Dates and times should be GMT timezone",
   "error": "Error",
   "errors": {
     "field": "Enter {{field, capitalise}}",
@@ -178,8 +177,6 @@
     "TelephoneNumberField_info": "A text box that users can enter numbers and some symbols into, such as '+'",
     "TextField": "Text input",
     "TextField_info": "A text box that users can enter letters, numbers and symbols into",
-    "TimeField": "Time",
-    "TimeField_info": "A clock for users to specify a time",
     "UkAddressField": "UK address",
     "UkAddressField_info": "Allows users to enter their street address, town or city and postcode",
     "YesNoField": "YesNo",

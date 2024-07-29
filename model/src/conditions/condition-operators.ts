@@ -3,11 +3,8 @@ import { isConditionalType } from '../components/helpers.js'
 import { ComponentType } from '~/src/components/enums.js'
 import { type ComponentDef } from '~/src/components/types.js'
 import {
-  timeUnits,
-  dateUnits,
-  dateTimeUnits,
   ConditionValue,
-  RelativeTimeValue
+  RelativeDateValue
 } from '~/src/conditions/condition-values.js'
 import {
   DateDirections,
@@ -16,9 +13,7 @@ import {
 } from '~/src/conditions/enums.js'
 import {
   type Conditionals,
-  type DateUnits,
-  type OperatorDefinition,
-  type TimeUnits
+  type OperatorDefinition
 } from '~/src/conditions/types.js'
 
 const defaultOperators = {
@@ -36,35 +31,25 @@ const textFieldOperators = {
   [OperatorName.HasLength]: lengthIs(Operator.Is)
 }
 
-const absoluteDateTimeOperators = {
-  [OperatorName.Is]: absoluteDateTime(Operator.Is),
-  [OperatorName.IsNot]: absoluteDateTime(Operator.IsNot),
-  [OperatorName.IsBefore]: absoluteDateTime(Operator.IsLessThan),
-  [OperatorName.IsAfter]: absoluteDateTime(Operator.IsMoreThan)
+const absoluteDateOperators = {
+  [OperatorName.Is]: absoluteDate(Operator.Is),
+  [OperatorName.IsNot]: absoluteDate(Operator.IsNot),
+  [OperatorName.IsBefore]: absoluteDate(Operator.IsLessThan),
+  [OperatorName.IsAfter]: absoluteDate(Operator.IsMoreThan)
 }
 
-const relativeTimeOperators = (units: DateUnits | TimeUnits) => ({
-  [OperatorName.IsAtLeast]: relativeTime(
-    Operator.IsAtMost,
-    Operator.IsAtLeast,
-    units
-  ),
-  [OperatorName.IsAtMost]: relativeTime(
-    Operator.IsAtLeast,
-    Operator.IsAtMost,
-    units
-  ),
-  [OperatorName.IsLessThan]: relativeTime(
+const relativeDateOperators = {
+  [OperatorName.IsAtLeast]: relativeDate(Operator.IsAtMost, Operator.IsAtLeast),
+  [OperatorName.IsAtMost]: relativeDate(Operator.IsAtLeast, Operator.IsAtMost),
+  [OperatorName.IsLessThan]: relativeDate(
     Operator.IsMoreThan,
-    Operator.IsLessThan,
-    units
+    Operator.IsLessThan
   ),
-  [OperatorName.IsMoreThan]: relativeTime(
+  [OperatorName.IsMoreThan]: relativeDate(
     Operator.IsLessThan,
-    Operator.IsMoreThan,
-    units
+    Operator.IsMoreThan
   )
-})
+}
 
 export const customOperators = {
   [ComponentType.RadiosField]: defaultOperators,
@@ -78,13 +63,9 @@ export const customOperators = {
     [OperatorName.IsLessThan]: inline(Operator.IsLessThan),
     [OperatorName.IsMoreThan]: inline(Operator.IsMoreThan)
   }),
-  [ComponentType.TimeField]: {
-    ...absoluteDateTimeOperators,
-    ...relativeTimeOperators(timeUnits)
-  },
   [ComponentType.DatePartsField]: {
-    ...absoluteDateTimeOperators,
-    ...relativeTimeOperators(dateUnits)
+    ...absoluteDateOperators,
+    ...relativeDateOperators
   },
   [ComponentType.TextField]: withDefaults(textFieldOperators),
   [ComponentType.MultilineTextField]: withDefaults(textFieldOperators),
@@ -106,7 +87,7 @@ export function getExpression(
   fieldType: ComponentType,
   fieldName: string,
   operator: OperatorName,
-  value: ConditionValue | RelativeTimeValue
+  value: ConditionValue | RelativeDateValue
 ) {
   const conditionals = getConditionals(fieldType)
   if (!conditionals) {
@@ -172,7 +153,7 @@ function not(operatorDefinition: OperatorDefinition): OperatorDefinition {
 
 function formatValue(
   field: Pick<ComponentDef, 'type'>,
-  value: ConditionValue | RelativeTimeValue
+  value: ConditionValue | RelativeDateValue
 ) {
   if (
     'value' in value &&
@@ -185,15 +166,15 @@ function formatValue(
   return `'${value.toExpression()}'`
 }
 
-export const absoluteDateOrTimeOperatorNames = Object.keys(
-  absoluteDateTimeOperators
+export const absoluteDateOperatorNames = Object.keys(
+  absoluteDateOperators
 ) as OperatorName[]
 
-export const relativeDateOrTimeOperatorNames = Object.keys(
-  relativeTimeOperators(dateTimeUnits)
+export const relativeDateOperatorNames = Object.keys(
+  relativeDateOperators
 ) as OperatorName[]
 
-function absoluteDateTime(operator: Operator): OperatorDefinition {
+function absoluteDate(operator: Operator): OperatorDefinition {
   return {
     expression(field, value) {
       if (!(value instanceof ConditionValue)) {
@@ -207,17 +188,15 @@ function absoluteDateTime(operator: Operator): OperatorDefinition {
   }
 }
 
-function relativeTime(
+function relativeDate(
   pastOperator: Operator,
-  futureOperator: Operator,
-  units: DateUnits | TimeUnits
+  futureOperator: Operator
 ): OperatorDefinition {
   return {
-    units,
     expression(field, value) {
-      if (!(value instanceof RelativeTimeValue)) {
+      if (!(value instanceof RelativeDateValue)) {
         throw new Error(
-          "Expression param 'value' must be RelativeTimeValue instance"
+          "Expression param 'value' must be RelativeDateValue instance"
         )
       }
 

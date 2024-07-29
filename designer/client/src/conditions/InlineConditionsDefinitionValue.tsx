@@ -1,121 +1,102 @@
 import {
-  timeUnits,
-  absoluteDateOrTimeOperatorNames,
-  getOperatorConfig,
-  relativeDateOrTimeOperatorNames,
+  absoluteDateOperatorNames,
+  relativeDateOperatorNames,
   ComponentType,
   ConditionValue,
-  type OperatorName
+  type ConditionValueData,
+  type Item,
+  type OperatorName,
+  type RelativeDateValue,
+  type RelativeDateValueData,
+  ConditionType
 } from '@defra/forms-model'
 import React from 'react'
 
-import { AbsoluteDateValues } from '~/src/conditions/AbsoluteDateValues.jsx'
-import { AbsoluteTimeValues } from '~/src/conditions/AbsoluteTimeValues.jsx'
-import { RelativeTimeValues } from '~/src/conditions/RelativeTimeValues.jsx'
+import {
+  AbsoluteDateValues,
+  type YearMonthDay
+} from '~/src/conditions/AbsoluteDateValues.jsx'
+import { isFieldConditionList } from '~/src/conditions/InlineConditionsDefinition.jsx'
+import { RelativeDateValues } from '~/src/conditions/RelativeDateValues.jsx'
 import { SelectValues } from '~/src/conditions/SelectValues.jsx'
 import { TextValues } from '~/src/conditions/TextValues.jsx'
 import { tryParseInt } from '~/src/conditions/inline-condition-helpers.js'
 
-function DateTimeComponent(fieldType: ComponentType, operator: OperatorName) {
-  const operatorConfig = getOperatorConfig(fieldType, operator)
+function AbsoluteDateComponent(props: {
+  value?: ConditionValueData | RelativeDateValueData
+  updateValue: (value?: ConditionValue) => void
+}) {
+  let { value, updateValue } = props
 
-  let CustomRendering:
-    | typeof AbsoluteDateValues
-    | typeof AbsoluteTimeValues
-    | undefined
-
-  switch (fieldType) {
-    case ComponentType.DatePartsField:
-      CustomRendering = AbsoluteDateValues
-      break
-
-    case ComponentType.TimeField:
-      CustomRendering = AbsoluteTimeValues
-      break
+  // Discard value when switching condition type
+  if (value?.type !== ConditionType.Value) {
+    value = undefined
   }
 
-  if (!CustomRendering) {
-    return null
-  }
+  const pad = (num: number) => num.toString().padStart(2, '0')
 
-  if (absoluteDateOrTimeOperatorNames.includes(operator)) {
-    const pad = (num: number) => num.toString().padStart(2, '0')
-
-    return function CustomRenderingWrapper({ value, updateValue }) {
-      const transformUpdatedValue = (value) => {
-        let transformed
-        switch (fieldType) {
-          case ComponentType.DatePartsField:
-            const { year, month, day } = value
-            transformed = `${pad(year)}-${pad(month)}-${pad(day)}`
-            break
-          case ComponentType.TimeField:
-            const { hour, minute } = value
-            transformed = `${pad(hour)}:${pad(minute)}`
-        }
-
-        updateValue(new ConditionValue(transformed))
-      }
-
-      const transformInputValue = (condition?: ConditionValue) => {
-        if (condition?.value) {
-          switch (fieldType) {
-            case ComponentType.DatePartsField:
-              const [year, month, day] = condition.value.split('-')
-              return {
-                year: tryParseInt(year),
-                month: tryParseInt(month),
-                day: tryParseInt(day)
-              }
-            case ComponentType.TimeField:
-              const [hour, minute] = condition.value.split(':')
-              return { hour: tryParseInt(hour), minute: tryParseInt(minute) }
-          }
-        }
-
-        return undefined
-      }
-
-      return (
-        <CustomRendering
-          value={transformInputValue(value)}
-          updateValue={transformUpdatedValue}
-        />
-      )
+  const transformUpdatedValue = (value?: YearMonthDay) => {
+    if (!value) {
+      return
     }
-  } else if (
-    operatorConfig &&
-    relativeDateOrTimeOperatorNames.includes(operator)
-  ) {
-    const { units } = operatorConfig
 
-    return function RelativeTimeValuesWrapper({ value, updateValue }) {
-      return (
-        <RelativeTimeValues
-          value={value}
-          updateValue={updateValue}
-          units={units}
-          timeOnly={units === timeUnits}
-        />
-      )
+    const { year, month, day } = value
+    updateValue(new ConditionValue(`${pad(year)}-${pad(month)}-${pad(day)}`))
+  }
+
+  const transformInputValue = (condition?: ConditionValueData) => {
+    if (!condition?.value) {
+      return
+    }
+
+    const [year, month, day] = condition.value.split('-')
+    return {
+      year: tryParseInt(year),
+      month: tryParseInt(month),
+      day: tryParseInt(day)
     }
   }
 
-  return null
+  return (
+    <AbsoluteDateValues
+      value={transformInputValue(value)}
+      updateValue={transformUpdatedValue}
+    />
+  )
 }
 
-interface FieldDef {
-  label: string
-  name: string
-  type: ComponentType
-  values?: any[]
+function RelativeDateComponent(props: {
+  value?: ConditionValueData | RelativeDateValueData
+  updateValue: (value?: RelativeDateValue) => void
+}) {
+  let { value, updateValue } = props
+
+  // Discard value when switching condition type
+  if (value?.type !== ConditionType.RelativeDate) {
+    value = undefined
+  }
+
+  return <RelativeDateValues value={value} updateValue={updateValue} />
 }
 
-interface Props {
+export type FieldDef =
+  | {
+      label: string
+      name: string
+      type: ComponentType
+      values?: Item[]
+    }
+  | {
+      label: string
+      name: string
+      type: 'Condition'
+    }
+
+export interface Props {
   fieldDef: FieldDef
   operator: OperatorName
-  value?: any
-  updateValue: (any) => void
+  value?: ConditionValueData | RelativeDateValueData
+  updateValue: (value?: ConditionValue | RelativeDateValue) => void
 }
 
 export const InlineConditionsDefinitionValue = ({
@@ -124,23 +105,26 @@ export const InlineConditionsDefinitionValue = ({
   value,
   updateValue
 }: Props) => {
-  const CustomComponent = DateTimeComponent(fieldDef.type, operator)
-  if (CustomComponent) {
-    return <CustomComponent value={value} updateValue={updateValue} />
+  if (fieldDef.type === ComponentType.DatePartsField) {
+    const isDateAbsolute = absoluteDateOperatorNames.includes(operator)
+    const isDateRelative = relativeDateOperatorNames.includes(operator)
+
+    if (isDateAbsolute) {
+      return <AbsoluteDateComponent value={value} updateValue={updateValue} />
+    } else if (isDateRelative) {
+      return <RelativeDateComponent value={value} updateValue={updateValue} />
+    }
+
+    return null
   }
-  return (fieldDef.values?.length ?? 0) > 0 ? (
-    <SelectValues
-      fieldDef={fieldDef}
-      operator={operator}
-      value={value}
-      updateValue={updateValue}
-    />
+
+  if (value?.type === ConditionType.RelativeDate) {
+    return null
+  }
+
+  return isFieldConditionList(fieldDef) ? (
+    <SelectValues fieldDef={fieldDef} value={value} updateValue={updateValue} />
   ) : (
-    <TextValues
-      fieldDef={fieldDef}
-      operator={operator}
-      value={value}
-      updateValue={updateValue}
-    />
+    <TextValues fieldDef={fieldDef} value={value} updateValue={updateValue} />
   )
 }

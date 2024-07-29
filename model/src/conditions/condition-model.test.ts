@@ -9,9 +9,9 @@ import {
   ConditionValue,
   Coordinator,
   DateDirections,
-  dateUnits,
+  DateUnits,
   OperatorName,
-  RelativeTimeValue
+  RelativeDateValue
 } from '~/src/conditions/index.js'
 import { type ConditionsModelData } from '~/src/conditions/types.js'
 
@@ -359,7 +359,7 @@ describe('condition model', () => {
             'Birthday'
           ),
           OperatorName.IsAtLeast,
-          new RelativeTimeValue('10', 'days', DateDirections.PAST),
+          new RelativeDateValue('10', DateUnits.DAYS, DateDirections.PAST),
           Coordinator.OR
         )
       )
@@ -1440,11 +1440,7 @@ describe('condition model', () => {
             'Reported'
           ),
           OperatorName.IsMoreThan,
-          new RelativeTimeValue(
-            '10',
-            dateUnits.DAYS.value,
-            DateDirections.PAST
-          ),
+          new RelativeDateValue('10', DateUnits.DAYS, DateDirections.PAST),
           Coordinator.AND
         )
       )
@@ -1552,11 +1548,10 @@ describe('condition model', () => {
             },
             operator: OperatorName.IsMoreThan,
             value: {
-              type: ConditionType.RelativeTime,
-              timePeriod: '10',
-              timeUnit: dateUnits.DAYS.value,
-              direction: DateDirections.PAST,
-              timeOnly: false
+              type: ConditionType.RelativeDate,
+              period: '10',
+              unit: DateUnits.DAYS,
+              direction: DateDirections.PAST
             }
           },
           {

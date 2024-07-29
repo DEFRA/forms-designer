@@ -1,6 +1,6 @@
 export enum ConditionType {
   Value = 'Value',
-  RelativeTime = 'RelativeTime'
+  RelativeDate = 'RelativeDate'
 }
 
 export enum Coordinator {
@@ -37,4 +37,10 @@ export enum OperatorName {
 export enum DateDirections {
   FUTURE = 'in the future',
   PAST = 'in the past'
+}
+
+export enum DateUnits {
+  YEARS = 'years',
+  MONTHS = 'months',
+  DAYS = 'days'
 }

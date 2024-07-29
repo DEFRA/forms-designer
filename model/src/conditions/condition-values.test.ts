@@ -16,7 +16,7 @@ describe('condition values', () => {
     expect(returned).toEqual(new ConditionValue('badgers', 'Badgers'))
   })
 
-  test('can deserialize a RelativeTimeValue object from plain old JSON', () => {
+  test('can deserialize a RelativeDateValue object from plain old JSON', () => {
     const returned = conditionValueFrom({
       type: ConditionType.Value,
       value: 'badgers',

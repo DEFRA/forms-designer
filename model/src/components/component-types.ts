@@ -30,14 +30,6 @@ export const ComponentTypes: ComponentDef[] = [
     schema: {}
   },
   {
-    name: 'TimeField',
-    title: 'Time field',
-    type: ComponentType.TimeField,
-    hint: '',
-    options: {},
-    schema: {}
-  },
-  {
     name: 'DatePartsField',
     title: 'Date field',
     type: ComponentType.DatePartsField,

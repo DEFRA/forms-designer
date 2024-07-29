@@ -45,7 +45,6 @@ export function isConditionalType(
     ComponentType.NumberField,
     ComponentType.SelectField,
     ComponentType.TextField,
-    ComponentType.TimeField,
     ComponentType.YesNoField
   ]
 
@@ -107,7 +106,6 @@ export function hasInputField(
     ComponentType.TelephoneNumberField,
     ComponentType.YesNoField,
     ComponentType.MonthYearField,
-    ComponentType.TimeField,
     ComponentType.DatePartsField,
     ComponentType.UkAddressField
   ]

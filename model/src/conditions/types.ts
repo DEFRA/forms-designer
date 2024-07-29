@@ -4,12 +4,13 @@ import {
 } from '~/src/components/types.js'
 import {
   type ConditionValue,
-  type RelativeTimeValue
+  type RelativeDateValue
 } from '~/src/conditions/condition-values.js'
 import {
   type ConditionType,
   type Coordinator,
   type DateDirections,
+  type DateUnits,
   type OperatorName
 } from '~/src/conditions/enums.js'
 
@@ -19,12 +20,11 @@ export interface ConditionValueData {
   display: string
 }
 
-export interface RelativeTimeValueData {
-  type: ConditionType.RelativeTime
-  timePeriod: string
-  timeUnit: DateTimeUnitValues
+export interface RelativeDateValueData {
+  type: ConditionType.RelativeDate
+  period: string
+  unit: DateUnits
   direction: DateDirections
-  timeOnly: boolean
 }
 
 export interface ConditionFieldData {
@@ -36,7 +36,7 @@ export interface ConditionFieldData {
 export interface ConditionData {
   field: ConditionFieldData
   operator: OperatorName
-  value: ConditionValueData | RelativeTimeValueData
+  value: ConditionValueData | RelativeDateValueData
   coordinator?: Coordinator
 }
 
@@ -54,31 +54,10 @@ export interface ConditionsModelData extends ConditionGroupData {
   name: string
 }
 
-export type DateTimeUnitValues =
-  | 'years'
-  | 'months'
-  | 'days'
-  | 'hours'
-  | 'minutes'
-  | 'seconds'
-
-export interface DateUnits {
-  YEARS: { display: 'year(s)'; value: 'years' }
-  MONTHS: { display: 'month(s)'; value: 'months' }
-  DAYS: { display: 'day(s)'; value: 'days' }
-}
-
-export interface TimeUnits {
-  HOURS: { display: 'hour(s)'; value: 'hours' }
-  MINUTES: { display: 'minute(s)'; value: 'minutes' }
-  SECONDS: { display: 'second(s)'; value: 'seconds' }
-}
-
 export interface OperatorDefinition {
-  units?: DateUnits | TimeUnits
   expression: (
     component: Pick<ComponentDef, 'type' | 'name'>,
-    conditionValue: ConditionValue | RelativeTimeValue
+    conditionValue: ConditionValue | RelativeDateValue
   ) => string
 }
 

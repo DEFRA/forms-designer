@@ -9,7 +9,7 @@ import {
   type ConditionRefData,
   type ConditionsModelData,
   type ConditionValueData,
-  type RelativeTimeValueData
+  type RelativeDateValueData
 } from '~/src/conditions/types.js'
 import {
   type ConditionWrapper,
@@ -40,12 +40,11 @@ const conditionValueSchema = Joi.object<ConditionValueData>().keys({
   display: Joi.string().required()
 })
 
-const relativeTimeValueSchema = Joi.object<RelativeTimeValueData>().keys({
+const relativeDateValueSchema = Joi.object<RelativeDateValueData>().keys({
   type: Joi.string().required(),
-  timePeriod: Joi.string().required(),
-  timeUnit: Joi.string().required(),
-  direction: Joi.string().required(),
-  timeOnly: Joi.boolean().required()
+  period: Joi.string().required(),
+  unit: Joi.string().required(),
+  direction: Joi.string().required()
 })
 
 const conditionRefSchema = Joi.object<ConditionRefData>().keys({
@@ -57,7 +56,7 @@ const conditionRefSchema = Joi.object<ConditionRefData>().keys({
 const conditionSchema = Joi.object<ConditionData>().keys({
   field: conditionFieldSchema,
   operator: Joi.string().required(),
-  value: Joi.alternatives().try(conditionValueSchema, relativeTimeValueSchema),
+  value: Joi.alternatives().try(conditionValueSchema, relativeDateValueSchema),
   coordinator: Joi.string().optional()
 })
 
