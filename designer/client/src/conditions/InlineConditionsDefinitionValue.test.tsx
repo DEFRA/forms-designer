@@ -4,6 +4,7 @@ import {
   ConditionValue,
   DateUnits,
   OperatorName,
+  absoluteDateOperatorNames,
   relativeDateOperatorNames,
   type Item
 } from '@defra/forms-model'
@@ -312,6 +313,49 @@ describe('InlineConditionsDefinitionValue', () => {
 
         expect($unit).toBeInTheDocument()
       }
+    }
+  )
+
+  it.each(absoluteDateOperatorNames)(
+    `should display absolute date component fields for '%s' operator`,
+    async (operator) => {
+      const fieldDef: FieldDef = {
+        label: 'Something',
+        name: 'field1',
+        type: ComponentType.DatePartsField
+      }
+
+      const updateValueCallback = jest.fn()
+
+      render(
+        <InlineConditionsDefinitionValue
+          updateValue={updateValueCallback}
+          fieldDef={fieldDef}
+          operator={operator}
+        />
+      )
+
+      const $day = await waitFor(() =>
+        screen.findByRole('spinbutton', {
+          name: 'Day'
+        })
+      )
+
+      const $month = await waitFor(() =>
+        screen.findByRole('spinbutton', {
+          name: 'Month'
+        })
+      )
+
+      const $year = await waitFor(() =>
+        screen.findByRole('spinbutton', {
+          name: 'Year'
+        })
+      )
+
+      expect($day).toBeInTheDocument()
+      expect($month).toBeInTheDocument()
+      expect($year).toBeInTheDocument()
     }
   )
 })
