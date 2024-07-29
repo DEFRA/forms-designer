@@ -2,6 +2,7 @@ import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import * as forms from '~/src/lib/forms.js'
 import * as library from '~/src/models/forms/library.js'
+import overviewOrgDetailsChanges from '~/src/routes/njk-helpers/overview-org-details-changes.js'
 
 export default [
   /**
@@ -41,12 +42,17 @@ export default [
 
         // Retrieve form by slug
         const form = await forms.get(params.slug, token)
+
+        // TODO : correct type
+        // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
+        const changableItems = overviewOrgDetailsChanges(!!form.live, form.slug)
+
         const model = library.overviewViewModel(
           form,
           yar.flash(sessionNames.successNotification).at(0)
         )
 
-        return h.view('forms/overview', model)
+        return h.view('forms/overview', { ...model, changableItems })
       },
       auth: {
         mode: 'required',
