@@ -7,8 +7,12 @@ export const TextValues = (props) => {
   const { updateValue, value } = props
 
   const onChangeTextInput = (e: ChangeEvent<HTMLInputElement>) => {
-    const input = e.target
-    const newValue = input.value
+    const { value: newValue } = e.target
+    if (!newValue) {
+      updateValue(undefined)
+      return
+    }
+
     updateValue(new ConditionValue(newValue))
   }
 
