@@ -3,7 +3,8 @@ import {
   ConditionType,
   ConditionValue,
   OperatorName,
-  relativeDateOperatorNames
+  relativeDateOperatorNames,
+  type Item
 } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { act, cleanup, render, waitFor } from '@testing-library/react'
@@ -84,9 +85,9 @@ describe('InlineConditionsDefinitionValue', () => {
   })
 
   it('should display a select input for fields without custom mappings and with options', async () => {
-    const values = [
-      { value: 'value1', label: 'Value 1' },
-      { value: 'value2', label: 'Value 2' }
+    const values: Item[] = [
+      { value: 'value1', text: 'Value 1' },
+      { value: 'value2', text: 'Value 2' }
     ]
     const fieldDef = {
       label: 'Something',
@@ -114,9 +115,9 @@ describe('InlineConditionsDefinitionValue', () => {
   })
 
   it('selecting a value from the select list should call update value', async () => {
-    const values = [
-      { value: 'value1', label: 'Value 1' },
-      { value: 'value2', label: 'Value 2' }
+    const values: Item[] = [
+      { value: 'value1', text: 'Value 1' },
+      { value: 'value2', text: 'Value 2' }
     ]
     const fieldDef = {
       label: 'Something',
@@ -145,9 +146,9 @@ describe('InlineConditionsDefinitionValue', () => {
   })
 
   it('should correctly compare boolean string to boolean value', async () => {
-    const values = [
-      { value: true, label: 'Value 1' },
-      { value: false, label: 'Value 2' }
+    const values: Item[] = [
+      { value: true, text: 'Value 1' },
+      { value: false, text: 'Value 2' }
     ]
     const fieldDef = {
       label: 'Something',
@@ -176,9 +177,9 @@ describe('InlineConditionsDefinitionValue', () => {
   })
 
   it('should correctly compare number string to number value', async () => {
-    const values = [
-      { value: 42, label: 'Value 1' },
-      { value: 43, label: 'Value 2' }
+    const values: Item[] = [
+      { value: 42, text: 'Value 1' },
+      { value: 43, text: 'Value 2' }
     ]
     const fieldDef = {
       label: 'Something',
@@ -207,9 +208,9 @@ describe('InlineConditionsDefinitionValue', () => {
   })
 
   it('selecting a blank value from the select list should call update value with undefined', async () => {
-    const values = [
-      { value: 42, label: 'Value 1' },
-      { value: 43, label: 'Value 2' }
+    const values: Item[] = [
+      { value: 42, text: 'Value 1' },
+      { value: 43, text: 'Value 2' }
     ]
     const fieldDef = {
       label: 'Something',

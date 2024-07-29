@@ -15,7 +15,7 @@ export const SelectValues = (props) => {
       const option = fieldDef.values?.find(
         (value) => String(value.value) === newValue
       )
-      value = new ConditionValue(String(option.value), option.label)
+      value = new ConditionValue(String(option.value), option.text)
     }
     updateValue(value)
   }
