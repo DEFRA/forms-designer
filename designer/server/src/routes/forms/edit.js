@@ -8,14 +8,7 @@ import { redirectWithErrors, schema } from '~/src/routes/forms/create.js'
 
 export const ROUTE_PATH_EDIT_LEAD_ORGANISATION =
   '/library/{slug}/edit/lead-organisation'
-
-/**
- * Get the notification message for when a field is changed
- * @param {string} fieldName
- */
-function getNotificationMessage(fieldName) {
-  return `${fieldName} has been changed`
-}
+export const ROUTE_PATH_EDIT_TEAM = '/library/{slug}/edit/team'
 
 export default [
   /**
@@ -56,7 +49,7 @@ export default [
 
       yar.flash(
         sessionNames.successNotification,
-        getNotificationMessage('Lead organisation')
+        'Lead organisation has been changed'
       )
 
       return h.redirect(`/library/${slug}`).code(StatusCodes.SEE_OTHER)
@@ -65,6 +58,62 @@ export default [
       validate: {
         payload: Joi.object().keys({
           organisation: schema.extract('organisation')
+        }),
+        failAction: redirectWithErrors
+      }
+    }
+  }),
+  /**
+   * @satisfies {RequestBySlug}
+   */
+  ({
+    method: 'GET',
+    path: ROUTE_PATH_EDIT_TEAM,
+    async handler(request, h) {
+      const { yar, params, auth } = request
+      const { token } = auth.credentials
+      const { slug } = params
+
+      const { teamName, teamEmail } = await forms.get(slug, token)
+      const validation = yar.flash(sessionNames.validationFailure).at(0)
+
+      const metadata = { teamName, teamEmail, slug }
+
+      return h.view(
+        'forms/question-inputs',
+        edit.teamDetailsViewModel(metadata, validation)
+      )
+    }
+  }),
+  /**
+   * @satisfies {RequestUpdateTeamBySlug}
+   */
+  ({
+    method: 'POST',
+    path: ROUTE_PATH_EDIT_TEAM,
+    async handler(request, h) {
+      const { yar, auth, payload, params } = request
+      const { token } = auth.credentials
+      const { slug } = params
+
+      const { teamName, teamEmail } = payload
+
+      const { id } = await forms.get(slug, token)
+
+      await forms.updateMetadata(id, { teamName, teamEmail }, token)
+
+      yar.flash(
+        sessionNames.successNotification,
+        'Team details have been changed'
+      )
+
+      return h.redirect(`/library/${slug}`).code(StatusCodes.SEE_OTHER)
+    },
+    options: {
+      validate: {
+        payload: Joi.object().keys({
+          teamName: schema.extract('teamName'),
+          teamEmail: schema.extract('teamEmail')
         }),
         failAction: redirectWithErrors
       }
@@ -84,4 +133,5 @@ export default [
 /**
  * @typedef {ServerRoute<{ Params: { slug: string } }>} RequestBySlug
  * @typedef {ServerRoute<{ Params: { slug: string }, Payload: Pick<FormMetadataInput, 'organisation'> }>} RequestUpdateOrganisationBySlug
+ * @typedef {ServerRoute<{ Params: { slug: string }, Payload: Pick<FormMetadataInput, 'teamName' | 'teamEmail'> }>} RequestUpdateTeamBySlug
  */

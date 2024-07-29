@@ -62,6 +62,15 @@
         },
         value: {
           html: form.teamName
+        },
+        actions: {
+          items: [
+            {
+              href: "/library/" + form.slug + "/edit/team#teamName",
+              text: "Change",
+              visuallyHiddenText: "teamName"
+            }
+          ]
         }
       },
       {
@@ -70,6 +79,15 @@
         },
         value: {
           html: '<a href="mailto:' + form.teamEmail + '" class="govuk-link govuk-link--no-visited-state">' + form.teamEmail + '</a>'
+        },
+        actions: {
+          items: [
+            {
+              href: "/library/" + form.slug + "/edit/team#teamEmail",
+              text: "Change",
+              visuallyHiddenText: "teamEmail"
+            }
+          ]
         }
       }
     ]
