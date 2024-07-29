@@ -24,18 +24,13 @@ export function renderView(...args) {
  * @param {ServerInjectOptions} options
  */
 export async function renderResponse(server, options) {
-  const { result } = await serverResponse(server, options)
-  return renderDOM(result)
-}
+  const response = /** @type {ServerInjectResponse} */ (
+    await server.inject(options)
+  )
 
-/**
- * HTTP response
- * @param {Server} server
- * @param {ServerInjectOptions} options
- * @returns {Promise<ServerInjectResponse>}
- */
-export async function serverResponse(server, options) {
-  return server.inject(options)
+  const { document } = renderDOM(response.result)
+
+  return { response, document }
 }
 
 /**

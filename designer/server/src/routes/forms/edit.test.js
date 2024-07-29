@@ -3,10 +3,7 @@ import { StatusCodes } from 'http-status-codes'
 import { createServer } from '~/src/createServer.js'
 import * as forms from '~/src/lib/forms.js'
 import { auth } from '~/test/fixtures/auth.js'
-import {
-  renderResponse,
-  serverResponse
-} from '~/test/helpers/component-helpers.js'
+import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/forms.js')
 
@@ -72,8 +69,12 @@ describe('Forms library routes', () => {
 
     const { document } = await renderResponse(server, options)
 
-    const teamName = document.querySelector('#teamName')
-    const teamEmail = document.querySelector('#teamEmail')
+    const teamName = /** @satisfies {HTMLInputElement | null} */ (
+      document.querySelector('#teamName')
+    )
+    const teamEmail = /** @satisfies {HTMLInputElement | null} */ (
+      document.querySelector('#teamEmail')
+    )
 
     expect(teamName?.value).toBe('Defra Forms')
     expect(teamEmail?.value).toBe('defraforms@defra.gov.uk')
@@ -92,10 +93,12 @@ describe('Forms library routes', () => {
       payload: { teamName: 'new team', teamEmail: 'new.email@gov.uk' }
     }
 
-    const response = await serverResponse(server, options)
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
 
-    expect(response.statusCode).toBe(StatusCodes.SEE_OTHER)
-    expect(response.headers.location).toBe('/library/my-form-slug')
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe('/library/my-form-slug')
   })
 })
 
