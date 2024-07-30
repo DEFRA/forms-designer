@@ -18,9 +18,12 @@ $app-light-grey: #f8f8f8;
   @include govuk-link-common;
   @include govuk-link-style-default;
   @include govuk-link-print-friendly;
-  color: $govuk-link-colour;
-  background-color: transparent;
-  border: none;
+
+  & {
+    color: $govuk-link-colour;
+    background-color: transparent;
+    border: none;
+  }
 }
 
 .button {
@@ -41,7 +44,10 @@ $app-light-grey: #f8f8f8;
 button.govuk-link {
   @extend %app-button-link;
   @include govuk-font-size($size: 16);
-  padding: 0;
+
+  & {
+    padding: 0;
+  }
 
   &:hover {
     cursor: pointer;

@@ -84,6 +84,7 @@ export default /** @type {import('webpack').Configuration} */ ({
           {
             loader: 'sass-loader',
             options: {
+              api: 'legacy',
               sassOptions: {
                 includePaths: [
                   join(import.meta.dirname, 'node_modules'),
