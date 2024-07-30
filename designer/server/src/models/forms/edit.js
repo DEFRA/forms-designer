@@ -36,6 +36,22 @@ export function teamDetailsViewModel(metadata, validation) {
 }
 
 /**
+ * @param {Pick<FormMetadata, 'title' | 'slug'>} metadata
+ * @param {ValidationFailure} [validation]
+ */
+export function titleViewModel(metadata, validation) {
+  const teamModel = create.titleViewModel(metadata, validation)
+
+  return {
+    ...teamModel,
+    backLink: {
+      text: 'Back to form overview',
+      href: `/library/${metadata.slug}`
+    }
+  }
+}
+
+/**
  * @typedef {import('@defra/forms-model').FormMetadata} FormMetadata
  * @typedef {import('@defra/forms-model').FormMetadataInput} FormMetadataInput
  * @typedef {import("~/src/common/helpers/build-error-details.js").ValidationFailure<FormMetadataInput>} ValidationFailure

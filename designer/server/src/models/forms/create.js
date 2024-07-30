@@ -11,7 +11,7 @@ import {
  * @param {ValidationFailure} [validation]
  */
 export function titleViewModel(metadata, validation) {
-  const pageTitle = 'Enter a name for your form'
+  const pageTitle = 'Form title'
   const { formValues, formErrors } = validation ?? {}
 
   return {
