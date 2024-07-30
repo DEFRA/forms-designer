@@ -37,6 +37,9 @@
         },
         value: {
           html: form.title
+        },
+        actions: {
+          items: titleActionItems
         }
       },
       {
@@ -48,7 +51,11 @@
         },
         actions: {
           items: [
-            changableItems[0]
+            {
+              href: "/library/" + form.slug + "/edit/lead-organisation",
+              text: "Change",
+              visuallyHiddenText: "lead organisation"
+            }
           ]
         }
       },
@@ -61,7 +68,11 @@
         },
         actions: {
           items: [
-            changableItems[1]
+            {
+              href: "/library/" + form.slug + "/edit/team#teamName",
+              text: "Change",
+              visuallyHiddenText: "teamName"
+            }
           ]
         }
       },
@@ -74,7 +85,11 @@
         },
         actions: {
           items: [
-            changableItems[2]
+            {
+              href: "/library/" + form.slug + "/edit/team#teamEmail",
+              text: "Change",
+              visuallyHiddenText: "teamEmail"
+            }
           ]
         }
       }
