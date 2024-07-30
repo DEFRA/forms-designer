@@ -7,6 +7,7 @@ import {
   RelativeDateValue
 } from '~/src/conditions/condition-values.js'
 import {
+  ConditionType,
   DateDirections,
   Operator,
   OperatorName
@@ -156,11 +157,12 @@ function formatValue(
   value: ConditionValue | RelativeDateValue
 ) {
   if (
-    'value' in value &&
-    (field.type === ComponentType.YesNoField ||
-      field.type === ComponentType.NumberField)
+    (field.type === ComponentType.DatePartsField &&
+      value.type === ConditionType.RelativeDate) ||
+    field.type === ComponentType.NumberField ||
+    field.type === ComponentType.YesNoField
   ) {
-    return value.value
+    return value.toExpression()
   }
 
   return `'${value.toExpression()}'`
@@ -183,7 +185,7 @@ function absoluteDate(operator: Operator): OperatorDefinition {
         )
       }
 
-      return `${field.name} ${operator} '${formatValue(field, value)}'`
+      return `${field.name} ${operator} ${formatValue(field, value)}`
     }
   }
 }
@@ -201,7 +203,7 @@ function relativeDate(
       }
 
       const isPast = value.direction === DateDirections.PAST
-      return `${field.name} ${isPast ? pastOperator : futureOperator} ${value.toExpression()}`
+      return `${field.name} ${isPast ? pastOperator : futureOperator} ${formatValue(field, value)}`
     }
   }
 }
