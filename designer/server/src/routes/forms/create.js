@@ -241,7 +241,7 @@ export default [
  * @param {RequestWithPayload} request
  * @param {ResponseToolkit} h
  */
-function redirectToTitleWithErrors(request, h) {
+export function redirectToTitleWithErrors(request, h) {
   const { yar, payload } = request
 
   yar.flash('validationFailure', {

@@ -4,7 +4,11 @@ import Joi from 'joi'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import * as forms from '~/src/lib/forms.js'
 import * as edit from '~/src/models/forms/edit.js'
-import { redirectWithErrors, schema } from '~/src/routes/forms/create.js'
+import {
+  redirectToTitleWithErrors,
+  redirectWithErrors,
+  schema
+} from '~/src/routes/forms/create.js'
 
 export const ROUTE_PATH_EDIT_LEAD_ORGANISATION =
   '/library/{slug}/edit/lead-organisation'
@@ -158,6 +162,10 @@ export default [
       const { id } = await forms.get(slug, token)
 
       const response = await forms.updateMetadata(id, { title }, token)
+
+      if (response.status === 'error') {
+        return redirectToTitleWithErrors(request, h)
+      }
 
       yar.flash(sessionNames.successNotification, 'Form title has been changed')
 
