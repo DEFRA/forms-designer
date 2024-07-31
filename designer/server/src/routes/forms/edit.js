@@ -157,11 +157,11 @@ export default [
 
       const { id } = await forms.get(slug, token)
 
-      await forms.updateMetadata(id, { title }, token)
+      const response = await forms.updateMetadata(id, { title }, token)
 
       yar.flash(sessionNames.successNotification, 'Form title has been changed')
 
-      return h.redirect(`/library/${slug}`).code(StatusCodes.SEE_OTHER)
+      return h.redirect(`/library/${response.slug}`).code(StatusCodes.SEE_OTHER)
     },
     options: {
       validate: {
