@@ -99,7 +99,8 @@ describe('ComponentCreateList', () => {
           list: '',
           type: ComponentType.AutocompleteField,
           options: {},
-          schema: {}
+          schema: {},
+          hint: ''
         }
       ])
     )
@@ -143,7 +144,8 @@ describe('ComponentCreateList', () => {
           list: '',
           type: ComponentType.CheckboxesField,
           options: {},
-          schema: {}
+          schema: {},
+          hint: ''
         }
       ])
     )

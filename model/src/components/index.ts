@@ -4,7 +4,6 @@ export {
   hasConditionSupport,
   hasContentField,
   hasEditor,
-  hasInputField,
   hasListField,
   hasSelectionFields,
   hasTitle
