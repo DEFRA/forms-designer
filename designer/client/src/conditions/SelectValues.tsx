@@ -1,9 +1,20 @@
-import { ConditionValue } from '@defra/forms-model'
+import {
+  ConditionValue,
+  type ConditionValueData,
+  type Item
+} from '@defra/forms-model'
 import React, { type ChangeEvent } from 'react'
 
+import { type FieldDef } from '~/src/conditions/InlineConditionsDefinitionValue.jsx'
 import { i18n } from '~/src/i18n/i18n.jsx'
 
-export const SelectValues = (props) => {
+interface Props {
+  fieldDef: Extract<FieldDef, { values?: Item[] }>
+  value?: ConditionValueData
+  updateValue: (value: ConditionValue) => void
+}
+
+export const SelectValues = (props: Props) => {
   const { fieldDef, updateValue, value } = props
 
   const onChangeSelect = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -12,7 +23,7 @@ export const SelectValues = (props) => {
     // Find the selected option
     const option = fieldDef.values?.find((item) => `${item.value}` === newValue)
     if (!option || !newValue) {
-      updateValue(undefined)
+      updateValue(new ConditionValue(''))
       return
     }
 
@@ -28,18 +39,16 @@ export const SelectValues = (props) => {
         className="govuk-select"
         id="cond-value"
         name="cond-value"
-        value={value?.value ?? ''}
+        defaultValue={value?.value}
         onChange={onChangeSelect}
         data-testid={'cond-value'}
       >
         <option value="" />
-        {fieldDef.values.map((option) => {
-          return (
-            <option key={option.value} value={option.value}>
-              {option.text}
-            </option>
-          )
-        })}
+        {fieldDef.values?.map((option) => (
+          <option key={`${option.value}`} value={`${option.value}`}>
+            {option.text}
+          </option>
+        ))}
       </select>
     </>
   )

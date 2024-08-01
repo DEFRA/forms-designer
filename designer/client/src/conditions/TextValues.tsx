@@ -1,18 +1,18 @@
-import { ConditionValue } from '@defra/forms-model'
+import { ConditionValue, type ConditionValueData } from '@defra/forms-model'
 import React, { type ChangeEvent } from 'react'
 
 import { i18n } from '~/src/i18n/i18n.jsx'
 
-export const TextValues = (props) => {
+interface Props {
+  value?: ConditionValueData
+  updateValue: (value: ConditionValue) => void
+}
+
+export const TextValues = (props: Props) => {
   const { updateValue, value } = props
 
   const onChangeTextInput = (e: ChangeEvent<HTMLInputElement>) => {
     const { value: newValue } = e.target
-    if (!newValue) {
-      updateValue(undefined)
-      return
-    }
-
     updateValue(new ConditionValue(newValue))
   }
 
@@ -26,7 +26,7 @@ export const TextValues = (props) => {
         id="cond-value"
         name="cond-value"
         type="text"
-        defaultValue={value?.value}
+        defaultValue={value?.value ?? ''}
         required
         onChange={onChangeTextInput}
       />

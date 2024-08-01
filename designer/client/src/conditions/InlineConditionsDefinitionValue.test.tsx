@@ -73,7 +73,7 @@ describe('InlineConditionsDefinitionValue', () => {
     })
   })
 
-  it('inputting a blank text value should call update value with undefined', async () => {
+  it('inputting a blank text value should call update value with empty strings', async () => {
     const fieldDef: FieldDef = {
       label: 'Something',
       name: 'field1',
@@ -94,7 +94,11 @@ describe('InlineConditionsDefinitionValue', () => {
     const $input = await waitFor(() => screen.findByDisplayValue('my-value'))
     await act(() => userEvent.clear($input))
 
-    expect(updateValueCallback).toHaveBeenLastCalledWith(undefined)
+    expect(updateValueCallback).toHaveBeenLastCalledWith({
+      display: '',
+      type: ConditionType.Value,
+      value: ''
+    })
   })
 
   it('should display a select input for fields without custom mappings and with options', async () => {
@@ -233,7 +237,7 @@ describe('InlineConditionsDefinitionValue', () => {
     })
   })
 
-  it('selecting a blank value from the select list should call update value with undefined', async () => {
+  it('selecting a blank value from the select list should call update value with empty strings', async () => {
     const values: Item[] = [
       { value: 42, text: 'Value 1' },
       { value: 43, text: 'Value 2' }
@@ -260,7 +264,11 @@ describe('InlineConditionsDefinitionValue', () => {
     const $select = await waitFor(() => screen.findByTestId('cond-value'))
     await act(() => userEvent.selectOptions($select, ''))
 
-    expect(updateValueCallback).toHaveBeenLastCalledWith(undefined)
+    expect(updateValueCallback).toHaveBeenLastCalledWith({
+      display: '',
+      type: ConditionType.Value,
+      value: ''
+    })
   })
 
   it.each(relativeDateOperatorNames)(

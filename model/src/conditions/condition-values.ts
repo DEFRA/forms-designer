@@ -12,7 +12,7 @@ export class ConditionValue extends ConditionValueAbstract {
   display: string
 
   constructor(value: string, display?: string) {
-    if (!value || typeof value !== 'string') {
+    if (typeof value !== 'string') {
       throw new Error("ConditionValue param 'value' must be a string")
     }
 
