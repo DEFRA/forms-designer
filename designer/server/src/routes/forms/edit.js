@@ -172,10 +172,7 @@ export default [
 
         return h.redirect(`/library/${slug}`).code(StatusCodes.SEE_OTHER)
       } catch (err) {
-        if (
-          Boom.isBoom(err) &&
-          err.data.statusCode === StatusCodes.BAD_REQUEST
-        ) {
+        if (Boom.isBoom(err, StatusCodes.BAD_REQUEST)) {
           return redirectToTitleWithErrors(request, h)
         }
       }
