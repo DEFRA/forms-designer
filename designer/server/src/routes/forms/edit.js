@@ -1,3 +1,4 @@
+import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
@@ -161,15 +162,23 @@ export default [
 
       const { id } = await forms.get(slug, token)
 
-      const response = await forms.updateMetadata(id, { title }, token)
+      try {
+        const { slug } = await forms.updateMetadata(id, { title }, token)
 
-      if (response.status === 'error') {
-        return redirectToTitleWithErrors(request, h)
+        yar.flash(
+          sessionNames.successNotification,
+          'Form title has been changed'
+        )
+
+        return h.redirect(`/library/${slug}`).code(StatusCodes.SEE_OTHER)
+      } catch (err) {
+        if (
+          Boom.isBoom(err) &&
+          err.data.statusCode === StatusCodes.BAD_REQUEST
+        ) {
+          return redirectToTitleWithErrors(request, h)
+        }
       }
-
-      yar.flash(sessionNames.successNotification, 'Form title has been changed')
-
-      return h.redirect(`/library/${response.slug}`).code(StatusCodes.SEE_OTHER)
     },
     options: {
       validate: {
