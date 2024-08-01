@@ -154,11 +154,10 @@ export default [
     async handler(request, h) {
       const { yar, auth, payload, params } = request
       const { token } = auth.credentials
-      const { slug } = params
 
       const { title } = payload
 
-      const { id } = await forms.get(slug, token)
+      const { id } = await forms.get(params.slug, token)
 
       try {
         const { slug } = await forms.updateMetadata(id, { title }, token)
@@ -174,7 +173,7 @@ export default [
           return redirectToTitleWithErrors(
             request,
             h,
-            `/library/${slug}/edit/title`
+            `/library/${params.slug}/edit/title`
           )
         }
 
