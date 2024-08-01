@@ -21,7 +21,8 @@ const useListsEdit = () => {
     useContext(ListsEditorContext)
   const { isEditingList, isEditingListItem } = listEditState
   const { state } = useContext(ListContext)
-  const { selectedList, selectedItem } = state
+
+  const { initialTitle, selectedList, selectedItem } = state
 
   const closeFlyout = (action: ListsEditorStateActions) => {
     return () => listsEditorDispatch([action, false])
@@ -30,13 +31,13 @@ const useListsEdit = () => {
   const listTitle = selectedList?.isNew
     ? i18n('list.add')
     : i18n('list.edit', {
-        title: state.initialTitle ?? selectedList?.title ?? selectedList?.name
+        title: initialTitle ?? selectedList?.title ?? selectedList?.name
       })
 
   const itemTitle = selectedItem?.isNew
     ? i18n('list.item.add')
     : i18n('list.item.edit', {
-        title: selectedItem?.title
+        title: selectedItem?.text
       })
 
   return {

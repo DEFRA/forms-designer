@@ -1,4 +1,13 @@
 /**
+ * @param {FormData} formData
+ * @param {string} field
+ */
+export function getFormValue(formData, field) {
+  const value = formData.get(field)
+  return typeof value === 'string' ? value.trim() : undefined
+}
+
+/**
  * @param {string | number} [str]
  * @returns {str is '' | null | undefined}
  */

@@ -1,4 +1,9 @@
-import React, { createContext, useReducer, type Dispatch } from 'react'
+import React, {
+  createContext,
+  useReducer,
+  type Dispatch,
+  type ReactNode
+} from 'react'
 
 import { type ListsEdit } from '~/src/list/ListsEdit.jsx'
 
@@ -12,8 +17,8 @@ export enum ListsEditorStateActions {
 }
 
 export interface ListsEditorState {
-  isEditingList: boolean
-  isEditingListItem: boolean
+  isEditingList?: boolean
+  isEditingListItem?: boolean
   listTitle?: string
   listItemTitle?: string
   initialName?: string
@@ -39,10 +44,10 @@ export const ListsEditorContext = createContext<ListsEditorContextType>({
 ListsEditorContext.displayName = 'ListsEditorContext'
 
 /**
- * Responsible for which list editing screens should be open in {@link ListsEdit} component.
+ * Responsible for which list editing screens should be open in <ListsEdit> component.
  */
 export function listsEditorReducer(
-  state,
+  state: ListsEditorState,
   action: [ListsEditorStateActions, boolean | string]
 ): ListsEditorState {
   const [type, payload] = action
@@ -63,7 +68,7 @@ export function listsEditorReducer(
   }
 }
 
-export const ListsEditorContextProvider = (props) => {
+export const ListsEditorContextProvider = (props: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(
     listsEditorReducer,
     initListsEditingState()

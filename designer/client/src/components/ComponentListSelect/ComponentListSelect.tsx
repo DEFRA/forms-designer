@@ -1,3 +1,4 @@
+import { hasListField } from '@defra/forms-model'
 import classNames from 'classnames'
 import React, {
   useContext,
@@ -27,8 +28,8 @@ export function ComponentListSelect() {
     useContext(ListsEditorContext)
 
   const { state, dispatch } = useContext(ComponentContext)
-  const { selectedComponent = {}, errors = {} } = state
-  const list = 'list' in selectedComponent ? selectedComponent.list : ''
+  const { selectedComponent, errors } = state
+  const list = hasListField(selectedComponent) ? selectedComponent.list : ''
 
   const { state: listState, dispatch: listDispatch } = useContext(ListContext)
   const { selectedList } = listState
@@ -92,7 +93,7 @@ export function ComponentListSelect() {
       <div
         className={classNames({
           'govuk-form-group': true,
-          'govuk-form-group--error': errors.list
+          'govuk-form-group--error': errors?.list
         })}
       >
         <label
@@ -104,7 +105,7 @@ export function ComponentListSelect() {
         <div className="govuk-hint" id="field-options-list-hint">
           {i18n('list.select.helpText')}
         </div>
-        {errors.list && (
+        {errors?.list && (
           <ErrorMessage id="field-options-list-error">
             {errors.list.children}
           </ErrorMessage>

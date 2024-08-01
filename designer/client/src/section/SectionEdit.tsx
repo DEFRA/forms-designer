@@ -138,20 +138,20 @@ export class SectionEdit extends Component<Props, State> {
       return
     }
 
-    const copy = { ...data }
+    const definition = structuredClone(data)
     const previousName = section.name
 
-    copy.sections.splice(copy.sections.indexOf(section), 1)
+    definition.sections.splice(definition.sections.indexOf(section), 1)
 
     // Update any references to the section
-    copy.pages.forEach((p) => {
+    definition.pages.forEach((p) => {
       if (p.section === previousName) {
         delete p.section
       }
     })
 
     try {
-      await save(copy)
+      await save(definition)
       onSave()
     } catch (error) {
       logger.error(error, 'SectionEdit')

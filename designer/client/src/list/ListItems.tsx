@@ -1,4 +1,3 @@
-import { clone } from '@defra/forms-model'
 import React, { useContext } from 'react'
 
 import { DataContext } from '~/src/context/DataContext.js'
@@ -58,12 +57,11 @@ export function ListItems() {
   const { prepareForDelete } = useListItem(state, dispatch)
 
   function removeItem(index: number) {
-    const copy = clone(data)
-    save(prepareForDelete(copy, index))
+    save(prepareForDelete(data, index))
   }
 
   const { selectedList } = state
-  if (!selectedList?.items?.length) {
+  if (!selectedList?.items.length) {
     return null
   }
 

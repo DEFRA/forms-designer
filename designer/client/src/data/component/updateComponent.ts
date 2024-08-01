@@ -8,13 +8,12 @@ export function updateComponent(
   pagePath: Path,
   componentName: ComponentDef['name'],
   component: ComponentDef
-) {
+): FormDefinition {
   const [page] = findPage(data, pagePath)
   const components = [...(page.components ?? [])]
-  const componentIndex =
-    page.components?.findIndex(
-      (component: ComponentDef) => component.name === componentName
-    ) ?? -1
+  const componentIndex = components.findIndex(
+    ({ name }) => name === componentName
+  )
 
   if (componentIndex < 0) {
     throw Error(

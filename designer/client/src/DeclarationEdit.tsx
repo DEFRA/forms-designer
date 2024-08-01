@@ -1,33 +1,33 @@
-import { clone } from '@defra/forms-model'
 import React, { Component, type ContextType, type FormEvent } from 'react'
 
 import { Editor } from '~/src/Editor.jsx'
 import { logger } from '~/src/common/helpers/logging/logger.js'
 import { DataContext } from '~/src/context/DataContext.js'
+import { getFormValue } from '~/src/helpers.js'
 
-export class DeclarationEdit extends Component {
+interface Props {
+  onCreate: () => void
+}
+
+export class DeclarationEdit extends Component<Props> {
   declare context: ContextType<typeof DataContext>
   static contextType = DataContext
 
-  constructor(props, context) {
-    super(props, context)
-
-    this.onSubmit = this.onSubmit.bind(this)
-  }
-
   onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const form = e.target
-    const formData = new window.FormData(form)
-    const { save, data } = this.context
-    const copy = clone(data)
 
-    copy.declaration = formData.get('declaration')
-    copy.skipSummary = formData.get('skip-summary') === 'on'
+    const { onCreate } = this.props
+    const { save, data } = this.context
+
+    const formData = new window.FormData(e.currentTarget)
+    const definition = structuredClone(data)
+
+    definition.declaration = getFormValue(formData, 'declaration')
+    definition.skipSummary = getFormValue(formData, 'skip-summary') === 'on'
 
     try {
-      const savedData = await save(copy)
-      this.props.onCreate({ data: savedData })
+      await save(definition)
+      onCreate()
     } catch (error) {
       logger.error(error, 'DeclarationEdit')
     }

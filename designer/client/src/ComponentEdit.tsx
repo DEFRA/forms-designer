@@ -1,3 +1,4 @@
+import { type Page } from '@defra/forms-model'
 import React, {
   useContext,
   useLayoutEffect,
@@ -13,10 +14,15 @@ import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 import { Meta } from '~/src/reducers/component/types.js'
 import { hasValidationErrors } from '~/src/validations.js'
 
-export function ComponentEdit(props) {
+interface Props {
+  page: Page
+  toggleShowEditor: () => void
+}
+
+export function ComponentEdit(props: Props) {
   const { data, save } = useContext(DataContext)
   const { state, dispatch } = useContext(ComponentContext)
-  const { initialName, selectedComponent, errors = {}, hasValidated } = state
+  const { initialName, selectedComponent, errors, hasValidated } = state
   const { page, toggleShowEditor } = props
   const hasErrors = hasValidationErrors(errors)
 
@@ -32,13 +38,14 @@ export function ComponentEdit(props) {
       return
     }
 
-    const updatedData = updateComponent(
+    const definition = updateComponent(
       data,
       page.path,
       initialName,
       selectedComponent
     )
-    await save(updatedData)
+
+    await save(definition)
     toggleShowEditor()
   }
 
@@ -49,13 +56,19 @@ export function ComponentEdit(props) {
       return
     }
 
-    const copy = { ...data }
-    const indexOfPage = copy.pages.findIndex((p) => p.path === page.path)
-    const indexOfComponent = copy.pages[indexOfPage]?.components?.findIndex(
-      (component) => component.type === selectedComponent.type
-    )
-    copy.pages[indexOfPage].components.splice(indexOfComponent, 1)
-    await save(copy)
+    const definition = structuredClone(data)
+    const componentPage = definition.pages.find((p) => p.path === page.path)
+
+    const indexOfComponent =
+      componentPage?.components?.findIndex(
+        (component) => component.type === selectedComponent.type
+      ) ?? -1
+
+    if (indexOfComponent >= 0) {
+      componentPage?.components?.splice(indexOfComponent, 1)
+      await save(definition)
+    }
+
     toggleShowEditor()
   }
 

@@ -7,8 +7,11 @@ import React, { Component } from 'react'
 
 import { Menu } from '~/src/components/Menu/Menu.jsx'
 import { Visualisation } from '~/src/components/Visualisation/Visualisation.jsx'
-import { DataContext } from '~/src/context/DataContext.js'
-import { FlyoutContext } from '~/src/context/FlyoutContext.js'
+import { DataContext, type DataContextType } from '~/src/context/DataContext.js'
+import {
+  FlyoutContext,
+  type FlyoutContextType
+} from '~/src/context/FlyoutContext.js'
 import * as form from '~/src/lib/form.js'
 
 interface Props {
@@ -72,13 +75,13 @@ export class Designer extends Component<Props, State> {
     const { metadata, previewUrl } = this.props
     const { data, meta, flyoutCount } = this.state
 
-    const flyoutContextProviderValue = {
+    const flyoutContextProviderValue: FlyoutContextType = {
       count: flyoutCount,
       increment: this.incrementFlyoutCounter,
       decrement: this.decrementFlyoutCounter
     }
 
-    const dataContextProviderValue = {
+    const dataContextProviderValue: DataContextType = {
       data,
       meta,
       save: this.save

@@ -1,4 +1,4 @@
-import { clone } from '@defra/forms-model'
+import { type FormDefinition, type List } from '@defra/forms-model'
 // @ts-expect-error -- No types available
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import React, {
@@ -54,15 +54,15 @@ function useListEdit() {
 
     if (window.confirm('Confirm delete')) {
       const { initialName } = listEditorState
-      const copy = clone(data)
+      const definition = structuredClone(data)
 
-      const selectedListIndex = copy.lists.findIndex(
+      const selectedListIndex = definition.lists.findIndex(
         (list) => list.name === initialName
       )
 
-      if (selectedListIndex) {
-        copy.lists.splice(selectedListIndex, 1)
-        await save(copy)
+      if (selectedListIndex >= 0) {
+        definition.lists.splice(selectedListIndex, 1)
+        await save(definition)
       }
     }
 
@@ -95,28 +95,36 @@ function useListEdit() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+
     const { selectedList, initialName } = state
     const errors = validate()
+
     if (hasValidationErrors(errors)) {
       dispatch({
         type: ListActions.LIST_VALIDATION_ERRORS,
         payload: errors
       })
+
       return
     }
-    let copy = { ...data }
+
+    let copy: FormDefinition = { ...data }
+
     if (selectedList?.isNew) {
       delete selectedList.isNew
       copy = addList(copy, selectedList)
-    } else {
+    } else if (selectedList) {
       const selectedListIndex = copy.lists.findIndex(
         (list) => list.name === initialName
       )
+
       copy.lists[selectedListIndex] = selectedList
     }
+
     await save(copy)
 
     listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST, false])
+
     dispatch({
       type: ListActions.SUBMIT
     })
@@ -128,7 +136,10 @@ function useListEdit() {
   }
 }
 
-function validate(errors: ErrorList, selectedList: any) {
+function validate(
+  errors: ErrorList | undefined,
+  selectedList: List
+): ErrorList {
   if (selectedList.items.length > 0) {
     return {}
   }
@@ -141,7 +152,7 @@ export function ListEdit() {
 
   const { state, dispatch } = useContext(ListContext)
   const { selectedList, createItem } = useListItemActions(state, dispatch)
-  let { errors = {} } = state
+  let { errors } = state
   errors = validate(errors, selectedList)
   const validationErrors = hasValidationErrors(errors)
   return (

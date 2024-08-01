@@ -31,15 +31,16 @@ export function ListItemEdit() {
   } = useListItem(state, dispatch)
 
   const { conditions } = data
-  const { listItemErrors: errors = {} } = state
+  const { listItemErrors: errors } = state
+
   const handleSubmit = async (
     e: FormEvent<HTMLFormElement> | MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault()
-    const copy = { ...data }
+    const definition = structuredClone(data)
     const hasErrors = validate(i18n)
     if (hasErrors) return
-    await save(prepareForSubmit(copy))
+    await save(prepareForSubmit(definition))
     listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST_ITEM, false])
   }
 
@@ -57,7 +58,7 @@ export function ListItemEdit() {
           hint={{ children: i18n('list.item.titleHint') }}
           value={title}
           onChange={handleTitleChange}
-          errorMessage={errors.title}
+          errorMessage={errors?.title}
         />
         <Textarea
           label={{ children: i18n('list.item.help') }}
@@ -75,7 +76,7 @@ export function ListItemEdit() {
           data-testid="list-item-value"
           name="list-item-value"
           value={value}
-          errorMessage={errors.value}
+          errorMessage={errors?.value}
           onChange={handleValueChange}
         />
         <label className="govuk-label" htmlFor="condition">
@@ -84,7 +85,7 @@ export function ListItemEdit() {
         <div className="govuk-hint" id="condition-hint">
           {i18n('list.item.conditionsHint')}
         </div>
-        {errors.value && (
+        {errors?.value && (
           <ErrorMessage id="condition-error">
             {errors.value.children}
           </ErrorMessage>
@@ -93,7 +94,7 @@ export function ListItemEdit() {
           className="govuk-select"
           id="condition"
           aria-describedby={
-            'condition-hint' + (errors.value ? 'condition-error' : '')
+            'condition-hint' + (errors?.value ? 'condition-error' : '')
           }
           name="options.condition"
           data-testid="list-condition-select"

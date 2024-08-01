@@ -1,4 +1,4 @@
-import { type List } from '@defra/forms-model'
+import { type Item, type List } from '@defra/forms-model'
 import React, {
   createContext,
   useContext,
@@ -14,11 +14,11 @@ import randomId from '~/src/randomId.js'
 import { ListActions } from '~/src/reducers/listActions.jsx'
 
 export interface ListState {
-  selectedList?: any // TODO:- type
-  selectedItem?: any // TODO:- type
+  selectedList?: List & { isNew?: true }
+  selectedItem?: Item & { isNew?: true }
   selectedItemIndex?: number
   isEditingFromComponent?: boolean
-  selectedListItem?: any // TODO:- type
+  selectedListItem?: Item
   initialName?: string
   initialTitle?: string
   errors?: Partial<ErrorList<'title' | 'name' | 'content' | 'list'>>
@@ -36,7 +36,7 @@ export const ListContext = createContext<ListContextType>({
 })
 
 /**
- * Allows mutation of the {@link List} from any component that is nested within {@link ListContextProvider}
+ * Allows mutation of the {@link ListState} from any component that is nested within {@link ListContextProvider}
  */
 export function listReducer(
   state: ListState = {},
@@ -47,6 +47,7 @@ export function listReducer(
 ): ListState {
   const { type, payload } = action
   const { selectedList, selectedItem, selectedItemIndex } = state
+
   switch (type) {
     case ListActions.DELETE_LIST_ITEM: {
       delete state.selectedListItem
@@ -64,7 +65,8 @@ export function listReducer(
       return { ...state, errors: {} }
 
     case ListActions.DESELECT_LIST_ITEM:
-      delete state.selectedItem, state.selectedItemIndex
+      delete state.selectedItem
+      delete state.selectedItemIndex
 
       return { ...state }
 
