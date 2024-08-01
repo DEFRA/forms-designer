@@ -2,6 +2,7 @@
 import { Input, Textarea } from '@xgovformbuilder/govuk-react-jsx'
 import React, { useContext, type FormEvent, type MouseEvent } from 'react'
 
+import { ErrorMessage } from '~/src/components/ErrorMessage/ErrorMessage.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { useListItem } from '~/src/hooks/list/useListItem/useListItem.jsx'
 import { i18n } from '~/src/i18n/i18n.jsx'
@@ -83,10 +84,17 @@ export function ListItemEdit() {
         <div className="govuk-hint" id="condition-hint">
           {i18n('list.item.conditionsHint')}
         </div>
+        {errors.value && (
+          <ErrorMessage id="condition-error">
+            {errors.value.children}
+          </ErrorMessage>
+        )}
         <select
           className="govuk-select"
           id="condition"
-          aria-describedby="condition-hint"
+          aria-describedby={
+            'condition-hint' + (errors.value ? 'condition-error' : '')
+          }
           name="options.condition"
           data-testid="list-condition-select"
           value={condition}

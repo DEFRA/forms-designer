@@ -8,6 +8,7 @@ import React, {
 } from 'react'
 
 import { logger } from '~/src/common/helpers/logging/logger.js'
+import { ErrorMessage } from '~/src/components/ErrorMessage/ErrorMessage.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { findList } from '~/src/data/list/findList.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
@@ -103,10 +104,18 @@ export function ComponentListSelect() {
         <div className="govuk-hint" id="field-options-list-hint">
           {i18n('list.select.helpText')}
         </div>
+        {errors.list && (
+          <ErrorMessage id="field-options-list-error">
+            {errors.list.children}
+          </ErrorMessage>
+        )}
         <select
           className="govuk-select govuk-input--width-10"
           id="field-options-list"
-          aria-describedby="field-options-list-hint"
+          aria-describedby={
+            'field-options-list-hint' +
+            (errors?.list ? 'field-options-list-error' : '')
+          }
           name="options.list"
           value={list}
           onChange={editList}
