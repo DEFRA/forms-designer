@@ -14,7 +14,7 @@ export interface YearMonthDay {
 
 export interface Props {
   value?: Partial<YearMonthDay>
-  updateValue: ({ year, month, day }: YearMonthDay) => void
+  updateValue: (value?: YearMonthDay) => void
 }
 
 function isValidateDate(props: Partial<YearMonthDay>): props is YearMonthDay {

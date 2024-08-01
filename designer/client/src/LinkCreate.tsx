@@ -7,7 +7,6 @@ import React, {
 } from 'react'
 
 import { ErrorSummary, type ErrorList } from '~/src/ErrorSummary.jsx'
-import { logger } from '~/src/common/helpers/logging/logger.js'
 import { ErrorMessage } from '~/src/components/ErrorMessage/ErrorMessage.jsx'
 import { SelectConditions } from '~/src/conditions/SelectConditions.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
@@ -16,42 +15,55 @@ import { isEmpty } from '~/src/helpers.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { hasValidationErrors } from '~/src/validations.js'
 
-export class LinkCreate extends Component {
+interface Props {
+  onCreate?: () => void
+}
+
+interface State {
+  from?: string
+  to?: string
+  selectedCondition?: string
+  errors?: Partial<ErrorList<'from' | 'to' | 'selectedCondition'>>
+}
+
+export class LinkCreate extends Component<Props, State> {
   declare context: ContextType<typeof DataContext>
   static contextType = DataContext
 
-  state = { errors: {} }
+  state: State = {}
 
   onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+
+    const { onCreate } = this.props
     const { data, save } = this.context
     const { from, to, selectedCondition } = this.state
 
     const validationErrors = this.validate(from, to)
-    if (hasValidationErrors(validationErrors)) return
+    if (hasValidationErrors(validationErrors) || !from || !to) {
+      return
+    }
 
-    const copy = { ...data }
-    const { error, ...updatedData } = addLink(copy, from, to, selectedCondition)
-    error && logger.error(error, 'LinkCreate')
-    const savedData = await save(updatedData)
-    this.props.onCreate?.({ data: savedData })
+    const definition = addLink(data, from, to, selectedCondition)
+
+    await save(definition)
+    onCreate?.()
   }
 
-  conditionSelected = (selectedCondition) => {
+  conditionSelected = (selectedCondition: string) => {
     this.setState({
       selectedCondition
     })
   }
 
-  storeValue = (e: ChangeEvent<HTMLSelectElement>, key) => {
-    const input = e.target
-    const stateUpdate = {}
-    stateUpdate[key] = input.value
+  storeValue = (e: ChangeEvent<HTMLSelectElement>, key: keyof State) => {
+    const stateUpdate: State = {}
+    stateUpdate[key] = e.target.value
     this.setState(stateUpdate)
   }
 
-  validate = (from?: string, to?: string): ErrorList => {
-    const errors: ErrorList = {}
+  validate = (from?: string, to?: string): State['errors'] => {
+    const errors: State['errors'] = {}
 
     const fromIsEmpty = isEmpty(from)
     const toIsEmpty = isEmpty(to)
@@ -148,7 +160,7 @@ export class LinkCreate extends Component {
             </select>
           </div>
 
-          {from && from.trim() !== '' && (
+          {from && (
             <SelectConditions
               path={from}
               conditionsChange={this.conditionSelected}

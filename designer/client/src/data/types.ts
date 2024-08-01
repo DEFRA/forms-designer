@@ -1,8 +1,4 @@
-import {
-  type InputFieldsComponentsDef,
-  type ListComponentsDef,
-  type Page
-} from '@defra/forms-model'
+import { type ConditionalComponentType, type Page } from '@defra/forms-model'
 
 export interface Input {
   name: string
@@ -13,7 +9,7 @@ export interface Input {
   propertyPath: string
   list: string | undefined
   title: string
-  type: InputFieldsComponentsDef['type'] | ListComponentsDef['type']
+  type: ConditionalComponentType
 }
 
 export type Path = Page['path']

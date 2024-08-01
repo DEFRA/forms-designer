@@ -55,19 +55,15 @@ export class LinkEdit extends Component<Props, State> {
   onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
+    const { onEdit } = this.props
     const { link, page, selectedCondition } = this.state
     const { data, save } = this.context
 
-    const updatedData = updateLink(
-      data,
-      page.path,
-      link.path,
-      selectedCondition
-    )
+    const definition = updateLink(data, page.path, link.path, selectedCondition)
 
     try {
-      await save(updatedData)
-      this.props.onEdit()
+      await save(definition)
+      onEdit()
     } catch (error) {
       logger.error(error, 'LinkEdit')
     }
@@ -80,14 +76,15 @@ export class LinkEdit extends Component<Props, State> {
       return
     }
 
+    const { onEdit } = this.props
     const { link, page } = this.state
     const { data, save } = this.context
 
-    const updatedData = deleteLink(data, page.path, link.path)
+    const definition = deleteLink(data, page.path, link.path)
 
     try {
-      await save(updatedData)
-      this.props.onEdit()
+      await save(definition)
+      onEdit()
     } catch (error) {
       logger.error(error, 'LinkEdit')
     }
@@ -102,7 +99,7 @@ export class LinkEdit extends Component<Props, State> {
     return (
       <form onSubmit={this.onSubmit} autoComplete="off">
         <div className="govuk-form-group">
-          <label className="govuk-label govuk-label--s" htmlFor="link-source">
+          <label className="govuk-label" htmlFor="link-source">
             From
           </label>
           <select
@@ -121,7 +118,7 @@ export class LinkEdit extends Component<Props, State> {
           </select>
         </div>
         <div className="govuk-form-group">
-          <label className="govuk-label govuk-label--s" htmlFor="link-target">
+          <label className="govuk-label" htmlFor="link-target">
             To
           </label>
           <select

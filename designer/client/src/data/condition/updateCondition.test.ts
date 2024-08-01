@@ -1,4 +1,4 @@
-import { type FormDefinition } from '@defra/forms-model'
+import { type ConditionWrapper, type FormDefinition } from '@defra/forms-model'
 
 import { updateCondition } from '~/src/data/condition/updateCondition.js'
 
@@ -9,7 +9,7 @@ const condition = {
     name: 'newCondition',
     conditions: []
   }
-}
+} satisfies ConditionWrapper
 
 const data = {
   pages: [],

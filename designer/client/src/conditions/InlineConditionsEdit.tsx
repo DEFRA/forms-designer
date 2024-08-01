@@ -1,7 +1,14 @@
 import {
   ConditionGroupDef,
+  hasConditionField,
   toPresentationString,
-  clone
+  type Condition,
+  type ConditionData,
+  type ConditionGroup,
+  type ConditionGroupData,
+  type ConditionRef,
+  type ConditionRefData,
+  type ConditionsModel
 } from '@defra/forms-model'
 import classNames from 'classnames'
 import React, {
@@ -13,9 +20,25 @@ import React, {
 
 import { ErrorMessage } from '~/src/components/ErrorMessage/ErrorMessage.jsx'
 import { InlineConditionsDefinition } from '~/src/conditions/InlineConditionsDefinition.jsx'
+import { type FieldDef } from '~/src/conditions/InlineConditionsDefinitionValue.jsx'
 
-export class InlineConditionsEdit extends Component {
-  constructor(props) {
+interface Props {
+  conditions: ConditionsModel
+  fields: Partial<Record<string, FieldDef>>
+  saveCallback: (conditions: ConditionsModel) => void
+  exitCallback: () => void
+}
+
+interface State {
+  condition?: ConditionData | ConditionRefData | ConditionGroupData
+  conditions?: ConditionsModel
+  selectedConditions?: number[]
+  editingIndex?: number
+  editingError?: string
+}
+
+export class InlineConditionsEdit extends Component<Props, State> {
+  constructor(props: Props) {
     super(props)
 
     this.state = {
@@ -25,28 +48,34 @@ export class InlineConditionsEdit extends Component {
   }
 
   onChangeCheckbox = (e: ChangeEvent<HTMLInputElement>) => {
-    let copy = clone(this.state.selectedConditions ?? [])
+    const { selectedConditions } = this.state
+    const { checked } = e.target
+
+    let copy = selectedConditions ? structuredClone(selectedConditions) : []
     const index = Number(e.target.value)
-    if (e.target.checked) {
+
+    if (checked) {
       copy.push(index)
     } else {
       copy = copy.filter((it) => it !== index)
     }
+
     this.setState({
       selectedConditions: copy
     })
   }
 
   onClickGroup = (e: MouseEvent<HTMLAnchorElement>) => {
+    const { conditions, selectedConditions } = this.state
+
     e.preventDefault()
-    if (this.state.selectedConditions.length < 2) {
+    if (!selectedConditions || selectedConditions.length < 2) {
       this.setState({
         editingError: 'Please select at least 2 items for grouping'
       })
     } else {
-      const groups = this.groupWithConsecutiveConditions(
-        this.state.selectedConditions
-      )
+      const groups = this.groupWithConsecutiveConditions(selectedConditions)
+
       if (groups.find((group) => group.length === 1)) {
         this.setState({
           editingError: 'Please select consecutive items to group'
@@ -55,105 +84,131 @@ export class InlineConditionsEdit extends Component {
         this.setState({
           editingError: undefined,
           selectedConditions: [],
-          conditions: this.state.conditions.addGroups(
-            groups
-              .sort((a, b) => a - b)
-              .reduce((groupDefs, group) => {
-                groupDefs.push(
-                  new ConditionGroupDef(group[0], group[group.length - 1])
-                )
-                return groupDefs
-              }, [])
+          conditions: conditions?.addGroups(
+            groups.reduce<ConditionGroupDef[]>((groupDefs, group) => {
+              groupDefs.push(
+                new ConditionGroupDef(group[0], group[group.length - 1])
+              )
+              return groupDefs
+            }, [])
           )
         })
       }
     }
   }
 
-  onClickRemove = (index) => {
+  onClickRemove = (index: number) => {
+    const { exitCallback } = this.props
+    const { conditions } = this.state
+
     this.setState({
       editingError: undefined,
       selectedConditions: [],
-      conditions: this.state.conditions.remove([index]),
+      conditions: conditions?.remove([index]),
       condition: undefined
     })
 
-    if (!this.state.conditions.hasConditions) {
-      this.props.exitCallback()
+    if (!conditions?.hasConditions) {
+      exitCallback()
     }
   }
 
-  groupWithConsecutiveConditions(selectedConditions) {
-    const result = []
+  groupWithConsecutiveConditions(selectedConditions: number[]) {
+    const result: number[][] = []
+
     selectedConditions.sort((a, b) => a - b)
     selectedConditions.forEach((condition) => {
       const groupForCondition = result.find(
         (group) =>
           group.includes(condition - 1) || group.includes(condition + 1)
       )
+
       if (groupForCondition) {
         groupForCondition.push(condition)
       } else {
         result.push([condition])
       }
     })
+
     return result
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.conditions !== this.props.conditions) {
+  componentDidUpdate(prevProps: Props) {
+    const { conditions } = this.props
+
+    if (prevProps.conditions !== conditions) {
       this.setState({
-        conditions: this.props.conditions,
+        conditions,
         selectedConditions: []
       })
     }
   }
 
   onClickCancelEditView = (e: MouseEvent<HTMLButtonElement>) => {
+    const { exitCallback } = this.props
+
     e.preventDefault()
 
     this.setState({
       selectedConditions: [],
       editingIndex: undefined
     })
-    this.props.exitCallback()
+
+    exitCallback()
   }
 
-  onClickSplit(index) {
+  onClickSplit(index: number) {
+    const { conditions } = this.state
+
     this.setState({
-      conditions: this.state.conditions.splitGroup(index)
+      conditions: conditions?.splitGroup(index)
     })
   }
 
-  onClickEdit(index) {
-    const conditions = this.state.conditions.asPerUserGroupings
-    if (conditions.length > index) {
-      this.setState({
-        editingIndex: index,
-        condition: Object.assign({}, conditions[index])
-      })
-    }
-  }
+  onClickEdit(index: number) {
+    const { conditions } = this.state
 
-  setState(state, callback) {
-    if (state.conditions) {
-      this.props.saveCallback(state.conditions)
-    }
-    super.setState(state, callback)
-  }
+    const group = conditions?.asPerUserGroupings
+    const condition = group?.[index]
 
-  saveCondition = (condition) => {
+    if (!condition) {
+      return
+    }
+
     this.setState({
-      conditions: this.state.conditions.replace(
-        this.state.editingIndex,
-        condition
-      ),
+      editingIndex: index,
+      condition: condition.toJSON()
+    })
+  }
+
+  setState(state: State) {
+    const { saveCallback } = this.props
+    const { conditions } = state
+
+    if (conditions) {
+      saveCallback(conditions)
+    }
+
+    super.setState(state)
+  }
+
+  saveCondition = (condition: Condition | ConditionRef | ConditionGroup) => {
+    const { conditions, editingIndex } = this.state
+
+    if (typeof editingIndex === 'undefined') {
+      return
+    }
+
+    this.setState({
+      conditions: conditions?.replace(editingIndex, condition),
       condition: undefined,
       editingIndex: undefined
     })
   }
 
   render() {
+    const { fields } = this.props
+
     const {
       conditions,
       condition,
@@ -164,7 +219,7 @@ export class InlineConditionsEdit extends Component {
 
     return (
       <div id="edit-conditions">
-        {!editingIndex && editingIndex !== 0 && (
+        {typeof editingIndex === 'undefined' && (
           <div
             className={classNames({
               'govuk-form-group': true,
@@ -180,8 +235,8 @@ export class InlineConditionsEdit extends Component {
                 id="editing-checkboxes"
                 className="govuk-checkboxes govuk-checkboxes--small"
               >
-                {conditions.asPerUserGroupings.map((condition, index) => {
-                  const isChecked = selectedConditions.includes(index)
+                {conditions?.asPerUserGroupings.map((condition, index) => {
+                  const isChecked = selectedConditions?.includes(index)
 
                   return (
                     <Fragment key={`condition-checkbox-${index}`}>
@@ -193,7 +248,7 @@ export class InlineConditionsEdit extends Component {
                           name={`condition-${index}`}
                           value={index}
                           onChange={this.onChangeCheckbox}
-                          checked={isChecked ?? undefined}
+                          checked={isChecked}
                         />
                         <label
                           className="govuk-label govuk-checkboxes__label"
@@ -235,7 +290,7 @@ export class InlineConditionsEdit extends Component {
                               Edit
                             </a>
                           )}
-                          {!selectedConditions.length || (
+                          {!selectedConditions?.length || (
                             <a
                               href="#"
                               className="govuk-link govuk-!-margin-bottom-2"
@@ -252,7 +307,7 @@ export class InlineConditionsEdit extends Component {
                     </Fragment>
                   )
                 })}
-                {selectedConditions.length > 1 && (
+                {!!selectedConditions && selectedConditions.length > 1 && (
                   <div className="govuk-button-group">
                     <a
                       href="#"
@@ -267,10 +322,10 @@ export class InlineConditionsEdit extends Component {
             </fieldset>
           </div>
         )}
-        {editingIndex >= 0 && (
+        {typeof editingIndex === 'number' && hasConditionField(condition) && (
           <InlineConditionsDefinition
             expectsCoordinator={editingIndex > 0}
-            fields={this.props.fields}
+            fields={fields}
             condition={condition}
             saveCallback={this.saveCondition}
           />

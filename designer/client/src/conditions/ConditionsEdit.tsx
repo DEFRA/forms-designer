@@ -1,4 +1,4 @@
-import { ConditionsModel } from '@defra/forms-model'
+import { ConditionsModel, type ConditionWrapper } from '@defra/forms-model'
 import React, { useContext, useState, type MouseEvent } from 'react'
 
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
@@ -9,10 +9,15 @@ import { allInputs } from '~/src/data/component/inputs.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 
 function useConditionsEditor() {
-  const [editingCondition, setEditingCondition] = useState(null)
-  const [showAddCondition, setShowAddCondition] = useState(false)
+  const [editingCondition, setEditingCondition] =
+    useState<ConditionWrapper | null>(null)
 
-  function onClickCondition(e: MouseEvent<HTMLAnchorElement>, condition) {
+  const [showAddCondition, setShowAddCondition] = useState<boolean>(false)
+
+  function onClickCondition(
+    e: MouseEvent<HTMLAnchorElement>,
+    condition: ConditionWrapper
+  ) {
     e.preventDefault()
     setEditingCondition(condition)
   }
