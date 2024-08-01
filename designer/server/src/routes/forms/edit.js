@@ -177,6 +177,12 @@ export default [
             `/library/${slug}/edit/title`
           )
         }
+
+        return Boom.internal(
+          new Error('Failed to edit form title', {
+            cause: err
+          })
+        )
       }
     },
     options: {
