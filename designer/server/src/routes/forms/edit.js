@@ -2,14 +2,12 @@ import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
+import { redirectToTitleWithErrors } from './helpers.js'
+
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import * as forms from '~/src/lib/forms.js'
 import * as edit from '~/src/models/forms/edit.js'
-import {
-  redirectToTitleWithErrors,
-  redirectWithErrors,
-  schema
-} from '~/src/routes/forms/create.js'
+import { redirectWithErrors, schema } from '~/src/routes/forms/create.js'
 
 export const ROUTE_PATH_EDIT_LEAD_ORGANISATION =
   '/library/{slug}/edit/lead-organisation'
@@ -173,7 +171,11 @@ export default [
         return h.redirect(`/library/${slug}`).code(StatusCodes.SEE_OTHER)
       } catch (err) {
         if (Boom.isBoom(err, StatusCodes.BAD_REQUEST)) {
-          return redirectToTitleWithErrors(request, h)
+          return redirectToTitleWithErrors(
+            request,
+            h,
+            `/library/${slug}/edit/title`
+          )
         }
       }
     },
