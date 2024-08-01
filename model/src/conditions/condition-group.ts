@@ -1,7 +1,9 @@
+import { conditionFrom } from '~/src/conditions/condition-model.js'
 import { type ConditionRef } from '~/src/conditions/condition-ref.js'
 import { type Condition } from '~/src/conditions/condition.js'
 import { type Coordinator } from '~/src/conditions/enums.js'
 import { toPresentationString, toExpression } from '~/src/conditions/helpers.js'
+import { type ConditionGroupData } from '~/src/conditions/types.js'
 
 export class ConditionGroup {
   conditions: (Condition | ConditionRef | ConditionGroup)[]
@@ -56,8 +58,24 @@ export class ConditionGroup {
   }
 
   clone(): ConditionGroup {
+    return ConditionGroup.from(this)
+  }
+
+  toJSON(): ConditionGroupData {
+    const { conditions } = this.clone()
+
+    return structuredClone({
+      conditions: conditions.map((condition) => condition.toJSON())
+    })
+  }
+
+  static from(obj: ConditionGroupData | ConditionGroup): ConditionGroup {
     return new ConditionGroup(
-      this.conditions.map((condition) => condition.clone())
+      obj.conditions.map((condition) => {
+        return 'clone' in condition
+          ? condition.clone()
+          : conditionFrom(condition)
+      })
     )
   }
 }

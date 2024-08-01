@@ -1,11 +1,14 @@
-import { ConditionField } from '~/src/conditions/condition-field.js'
 import { ConditionGroupDef } from '~/src/conditions/condition-group-def.js'
 import { ConditionGroup } from '~/src/conditions/condition-group.js'
 import { ConditionRef } from '~/src/conditions/condition-ref.js'
-import { conditionValueFrom } from '~/src/conditions/condition-values.js'
 import { Condition } from '~/src/conditions/condition.js'
 import { Coordinator } from '~/src/conditions/enums.js'
-import { toPresentationString, toExpression } from '~/src/conditions/helpers.js'
+import {
+  toPresentationString,
+  toExpression,
+  hasConditionGroup,
+  hasConditionName
+} from '~/src/conditions/helpers.js'
 import {
   type ConditionData,
   type ConditionGroupData,
@@ -45,7 +48,7 @@ export class ConditionsModel {
     return this.#conditionName
   }
 
-  add(condition: Condition | ConditionRef) {
+  add(condition: Condition | ConditionRef | ConditionGroup) {
     const coordinatorExpected = this.#userGroupedConditions.length !== 0
 
     if (condition.getCoordinator() && !coordinatorExpected) {
@@ -60,7 +63,7 @@ export class ConditionsModel {
     return this
   }
 
-  replace(index: number, condition: Condition) {
+  replace(index: number, condition: Condition | ConditionRef | ConditionGroup) {
     const coordinatorExpected = index !== 0
 
     if (condition.getCoordinator() && !coordinatorExpected) {
@@ -262,12 +265,12 @@ export class ConditionsModel {
     return []
   }
 
-  toJSON(): ConditionsModelData {
+  toJSON() {
     const name = this.#conditionName
     const conditions = this.#userGroupedConditions
     return {
       name: name ?? '',
-      conditions: conditions.map((it) => it.clone())
+      conditions: conditions.map((it) => it.toJSON())
     }
   }
 
@@ -278,9 +281,7 @@ export class ConditionsModel {
     }
     const toReturn = new ConditionsModel()
     toReturn.#conditionName = obj.name
-    toReturn.#userGroupedConditions = obj.conditions.map((condition) =>
-      conditionFrom(condition)
-    )
+    toReturn.#userGroupedConditions = obj.conditions.map(conditionFrom)
     toReturn.#groupedConditions = toReturn._applyGroups(
       toReturn.#userGroupedConditions
     )
@@ -288,27 +289,16 @@ export class ConditionsModel {
   }
 }
 
-function conditionFrom(
+export function conditionFrom(
   it: ConditionData | ConditionRefData | ConditionGroupData
 ): Condition | ConditionRef | ConditionGroup {
-  if ('conditions' in it) {
-    return new ConditionGroup(
-      it.conditions.map((condition) => conditionFrom(condition))
-    )
+  if (hasConditionGroup(it)) {
+    return new ConditionGroup(it.conditions.map(conditionFrom))
   }
 
-  if ('conditionName' in it) {
-    return new ConditionRef(
-      it.conditionName,
-      it.conditionDisplayName,
-      it.coordinator
-    )
+  if (hasConditionName(it)) {
+    return ConditionRef.from(it)
   }
 
-  return new Condition(
-    ConditionField.from(it.field),
-    it.operator,
-    conditionValueFrom(it.value),
-    it.coordinator
-  )
+  return Condition.from(it)
 }

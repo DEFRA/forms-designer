@@ -1,5 +1,6 @@
 import { ConditionAbstract } from '~/src/conditions/condition-abstract.js'
 import { type Coordinator } from '~/src/conditions/enums.js'
+import { type ConditionRefData } from '~/src/conditions/types.js'
 
 export class ConditionRef extends ConditionAbstract {
   conditionName: string
@@ -40,10 +41,18 @@ export class ConditionRef extends ConditionAbstract {
   }
 
   clone() {
+    return ConditionRef.from(this)
+  }
+
+  toJSON(): ConditionRefData {
+    return structuredClone(this.clone())
+  }
+
+  static from(obj: ConditionRefData | ConditionRef) {
     return new ConditionRef(
-      this.conditionName,
-      this.conditionDisplayName,
-      this.coordinator
+      obj.conditionName,
+      obj.conditionDisplayName,
+      obj.coordinator
     )
   }
 }
