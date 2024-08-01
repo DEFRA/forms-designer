@@ -70,6 +70,7 @@ interface ListFieldBase {
     | ComponentType.SelectField
   name: string
   title: string
+  hint?: string
   options: {
     type?: string
     required?: boolean

@@ -49,6 +49,7 @@ export const ComponentTypes: ComponentDef[] = [
     name: 'SelectField',
     title: 'Select field',
     type: ComponentType.SelectField,
+    hint: '',
     options: {},
     schema: {},
     list: ''
@@ -57,6 +58,7 @@ export const ComponentTypes: ComponentDef[] = [
     name: 'AutocompleteField',
     title: 'Autocomplete field',
     type: ComponentType.AutocompleteField,
+    hint: '',
     options: {},
     schema: {},
     list: ''
@@ -65,6 +67,7 @@ export const ComponentTypes: ComponentDef[] = [
     name: 'RadiosField',
     title: 'Radios field',
     type: ComponentType.RadiosField,
+    hint: '',
     options: {},
     schema: {},
     list: ''
@@ -73,6 +76,7 @@ export const ComponentTypes: ComponentDef[] = [
     name: 'CheckboxesField',
     title: 'Checkboxes field',
     type: ComponentType.CheckboxesField,
+    hint: '',
     options: {},
     schema: {},
     list: ''

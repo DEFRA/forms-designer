@@ -1,7 +1,6 @@
 import { ComponentTypes } from '~/src/components/component-types.js'
 import { ComponentType } from '~/src/components/enums.js'
 import {
-  type InputFieldsComponentsDef,
   type ComponentDef,
   type ConditionalComponentsDef,
   type ConditionalComponentType,
@@ -87,27 +86,6 @@ export function hasEditor(
     ComponentType.Html,
     ComponentType.InsetText,
     ComponentType.DatePartsField
-  ]
-
-  return !!component?.type && allowedTypes.includes(component.type)
-}
-
-/**
- * Filter known components with input fields
- */
-export function hasInputField(
-  component?: Partial<ComponentDef>
-): component is InputFieldsComponentsDef {
-  const allowedTypes = [
-    ComponentType.TextField,
-    ComponentType.EmailAddressField,
-    ComponentType.NumberField,
-    ComponentType.MultilineTextField,
-    ComponentType.TelephoneNumberField,
-    ComponentType.YesNoField,
-    ComponentType.MonthYearField,
-    ComponentType.DatePartsField,
-    ComponentType.UkAddressField
   ]
 
   return !!component?.type && allowedTypes.includes(component.type)
