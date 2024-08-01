@@ -19,7 +19,7 @@ test('hasCondition returns true when there are conditions', () => {
     ]
   } satisfies FormDefinition
 
-  expect(hasConditions(data.conditions)).toBe(true)
+  expect(hasConditions(data)).toBe(true)
 })
 
 test("hasCondition returns false when there aren't any conditions", () => {
@@ -30,5 +30,5 @@ test("hasCondition returns false when there aren't any conditions", () => {
     conditions: []
   } satisfies FormDefinition
 
-  expect(hasConditions(data.conditions)).toBe(false)
+  expect(hasConditions(data)).toBe(false)
 })

@@ -7,7 +7,9 @@ export {
   hasInputField,
   hasListField,
   hasSelectionFields,
-  hasTitle
+  hasTitle,
+  isConditionalType,
+  isListType
 } from '~/src/components/helpers.js'
 
 export { ComponentType } from '~/src/components/enums.js'
