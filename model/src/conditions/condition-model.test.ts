@@ -10,6 +10,7 @@ import {
   Coordinator,
   DateDirections,
   DateUnits,
+  Operator,
   OperatorName,
   RelativeDateValue
 } from '~/src/conditions/index.js'
@@ -400,6 +401,94 @@ describe('condition model', () => {
     test('should return a valid expression with unquoted value', () => {
       expect(underTest.toExpression()).toBe('badger == true')
     })
+  })
+
+  describe('DatePartsField', () => {
+    it.each([
+      {
+        operatorName: OperatorName.Is,
+        operator: Operator.Is
+      },
+      {
+        operatorName: OperatorName.IsNot,
+        operator: Operator.IsNot
+      },
+      {
+        operatorName: OperatorName.IsBefore,
+        operator: Operator.IsLessThan
+      },
+      {
+        operatorName: OperatorName.IsAfter,
+        operator: Operator.IsMoreThan
+      }
+    ])(
+      `should return an absolute date expression for '$operatorName' operator`,
+      ({ operatorName, operator }) => {
+        const type = ComponentType.DatePartsField
+        const field = new ConditionField('launchDate', type, 'Launch date')
+        const value = new ConditionValue('2024-06-25')
+
+        underTest.add(new Condition(field, operatorName, value))
+        expect(underTest.toExpression()).toBe(
+          `launchDate ${operator} '2024-06-25'`
+        )
+      }
+    )
+
+    it.each([
+      {
+        direction: DateDirections.FUTURE,
+        operatorName: OperatorName.IsAtLeast,
+        operator: Operator.IsAtLeast
+      },
+      {
+        direction: DateDirections.PAST,
+        operatorName: OperatorName.IsAtLeast,
+        operator: Operator.IsAtMost // Reversed in past
+      },
+      {
+        direction: DateDirections.FUTURE,
+        operatorName: OperatorName.IsAtMost,
+        operator: Operator.IsAtMost
+      },
+      {
+        direction: DateDirections.PAST,
+        operatorName: OperatorName.IsAtMost,
+        operator: Operator.IsAtLeast // Reversed in past
+      },
+      {
+        direction: DateDirections.FUTURE,
+        operatorName: OperatorName.IsLessThan,
+        operator: Operator.IsLessThan
+      },
+      {
+        direction: DateDirections.PAST,
+        operatorName: OperatorName.IsLessThan,
+        operator: Operator.IsMoreThan // Reversed in past
+      },
+      {
+        direction: DateDirections.FUTURE,
+        operatorName: OperatorName.IsMoreThan,
+        operator: Operator.IsMoreThan
+      },
+      {
+        direction: DateDirections.PAST,
+        operatorName: OperatorName.IsMoreThan,
+        operator: Operator.IsLessThan // Reversed in past
+      }
+    ])(
+      `should return a relative date expression for '$operatorName' operator`,
+      ({ direction, operatorName, operator }) => {
+        const type = ComponentType.DatePartsField
+        const field = new ConditionField('launchDate', type, 'Launch date')
+        const value = new RelativeDateValue('10', DateUnits.DAYS, direction)
+
+        underTest.add(new Condition(field, operatorName, value))
+        expect(underTest.toExpression()).toBe(
+          `launchDate ${operator} dateForComparison(${direction === DateDirections.PAST ? '-10' : '10'}, 'days')`
+        )
+      }
+    )
   })
 
   describe('replacing conditions', () => {
