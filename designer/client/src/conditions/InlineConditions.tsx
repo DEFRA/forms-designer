@@ -171,13 +171,14 @@ export class InlineConditions extends Component<Props, State> {
       return
     }
 
-    if (condition) {
+    if (condition && conditions.name) {
       const definition = updateCondition(data, condition.name, {
+        displayName: conditions.name,
         value: conditions.toJSON()
       })
 
       await save(definition)
-      conditionsChange(condition.name)
+      conditionsChange(conditions.name)
     } else if (conditions.hasConditions && conditions.name) {
       const name = randomId()
       const definition = addCondition(data, {
