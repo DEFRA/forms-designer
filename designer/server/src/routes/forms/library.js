@@ -45,12 +45,10 @@ export default [
         const titleActionItems = []
         if (!form.live) {
           titleActionItems.push({
-            href: '/library/' + form.slug + '/edit/title',
+            href: `/library/${form.slug}/edit/title`,
             text: 'Change',
             visuallyHiddenText: 'title'
           })
-        } else {
-          titleActionItems.push([])
         }
 
         const model = library.overviewViewModel(
