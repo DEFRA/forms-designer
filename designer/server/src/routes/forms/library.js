@@ -41,12 +41,22 @@ export default [
 
         // Retrieve form by slug
         const form = await forms.get(params.slug, token)
+
+        const titleActionItems = []
+        if (!form.live) {
+          titleActionItems.push({
+            href: `/library/${form.slug}/edit/title`,
+            text: 'Change',
+            visuallyHiddenText: 'title'
+          })
+        }
+
         const model = library.overviewViewModel(
           form,
           yar.flash(sessionNames.successNotification).at(0)
         )
 
-        return h.view('forms/overview', model)
+        return h.view('forms/overview', { ...model, titleActionItems })
       },
       auth: {
         mode: 'required',

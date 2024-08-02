@@ -1,5 +1,8 @@
+import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
+
+import { redirectToTitleWithErrors } from './helpers.js'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import * as forms from '~/src/lib/forms.js'
@@ -9,6 +12,7 @@ import { redirectWithErrors, schema } from '~/src/routes/forms/create.js'
 export const ROUTE_PATH_EDIT_LEAD_ORGANISATION =
   '/library/{slug}/edit/lead-organisation'
 export const ROUTE_PATH_EDIT_TEAM = '/library/{slug}/edit/team'
+export const ROUTE_PATH_EDIT_TITLE = '/library/{slug}/edit/title'
 
 export default [
   /**
@@ -118,6 +122,76 @@ export default [
         failAction: redirectWithErrors
       }
     }
+  }),
+  /**
+   * @satisfies {RequestBySlug}
+   */
+  ({
+    method: 'GET',
+    path: ROUTE_PATH_EDIT_TITLE,
+    async handler(request, h) {
+      const { yar, params, auth } = request
+      const { token } = auth.credentials
+      const { slug } = params
+
+      const { title } = await forms.get(slug, token)
+      const validation = yar.flash(sessionNames.validationFailure).at(0)
+
+      const metadata = { title, slug }
+
+      return h.view(
+        'forms/question-input',
+        edit.titleViewModel(metadata, validation)
+      )
+    }
+  }),
+  /**
+   * @satisfies {RequestUpdateTitleBySlug}
+   */
+  ({
+    method: 'POST',
+    path: ROUTE_PATH_EDIT_TITLE,
+    async handler(request, h) {
+      const { yar, auth, payload, params } = request
+      const { token } = auth.credentials
+
+      const { title } = payload
+
+      const { id } = await forms.get(params.slug, token)
+
+      try {
+        const { slug } = await forms.updateMetadata(id, { title }, token)
+
+        yar.flash(
+          sessionNames.successNotification,
+          'Form name has been changed'
+        )
+
+        return h.redirect(`/library/${slug}`).code(StatusCodes.SEE_OTHER)
+      } catch (err) {
+        if (Boom.isBoom(err, StatusCodes.BAD_REQUEST)) {
+          return redirectToTitleWithErrors(
+            request,
+            h,
+            `/library/${params.slug}/edit/title`
+          )
+        }
+
+        return Boom.internal(
+          new Error('Failed to edit form title', {
+            cause: err
+          })
+        )
+      }
+    },
+    options: {
+      validate: {
+        payload: Joi.object().keys({
+          title: schema.extract('title')
+        }),
+        failAction: redirectWithErrors
+      }
+    }
   })
 ]
 
@@ -134,4 +208,5 @@ export default [
  * @typedef {ServerRoute<{ Params: { slug: string } }>} RequestBySlug
  * @typedef {ServerRoute<{ Params: { slug: string }, Payload: Pick<FormMetadataInput, 'organisation'> }>} RequestUpdateOrganisationBySlug
  * @typedef {ServerRoute<{ Params: { slug: string }, Payload: Pick<FormMetadataInput, 'teamName' | 'teamEmail'> }>} RequestUpdateTeamBySlug
+ * @typedef {ServerRoute<{ Params: { slug: string }, Payload: Pick<FormMetadataInput, 'title'> }>} RequestUpdateTitleBySlug
  */

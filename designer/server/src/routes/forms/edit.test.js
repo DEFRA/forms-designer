@@ -100,6 +100,48 @@ describe('Forms library routes', () => {
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe('/library/my-form-slug')
   })
+
+  test('GET - should check correct title is rendered in the view', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(formDefinition)
+
+    const options = {
+      method: 'get',
+      url: '/library/my-form-slug/edit/title',
+      auth
+    }
+
+    const { document } = await renderResponse(server, options)
+
+    const title = /** @satisfies {HTMLInputElement | null} */ (
+      document.querySelector('#title')
+    )
+
+    expect(title?.value).toBe('Test form')
+  })
+
+  test('POST - should redirect to overviewpage after updating title', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+    jest
+      .mocked(forms.updateMetadata)
+      .mockResolvedValueOnce({ slug: 'new-title' })
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/edit/title',
+      auth,
+      payload: { title: 'new title' }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe('/library/new-title')
+  })
 })
 
 /**

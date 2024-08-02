@@ -1,5 +1,7 @@
 import * as create from '~/src/models/forms/create.js'
 
+const backLinkText = 'Back to form overview'
+
 /**
  * @param {FormMetadata} metadata
  * @param {ValidationFailure} [validation]
@@ -8,7 +10,7 @@ export function organisationViewModel(metadata, validation) {
   return {
     ...create.organisationViewModel(metadata, validation),
     backLink: {
-      text: 'Back to form overview',
+      text: backLinkText,
       href: `/library/${metadata.slug}`
     }
   }
@@ -29,7 +31,23 @@ export function teamDetailsViewModel(metadata, validation) {
   return {
     ...teamDetailsModel,
     backLink: {
-      text: 'Back to form overview',
+      text: backLinkText,
+      href: `/library/${metadata.slug}`
+    }
+  }
+}
+
+/**
+ * @param {Pick<FormMetadata, 'title' | 'slug'>} metadata
+ * @param {ValidationFailure} [validation]
+ */
+export function titleViewModel(metadata, validation) {
+  const titleModel = create.titleViewModel(metadata, validation)
+
+  return {
+    ...titleModel,
+    backLink: {
+      text: backLinkText,
       href: `/library/${metadata.slug}`
     }
   }

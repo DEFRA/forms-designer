@@ -9,6 +9,8 @@ import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
+import { redirectToTitleWithErrors } from './helpers.js'
+
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
@@ -96,7 +98,7 @@ export default [
         .catch((err) => logger.error(err))
 
       if (form) {
-        return redirectToTitleWithErrors(request, h)
+        return redirectToTitleWithErrors(request, h, ROUTE_PATH_CREATE_TITLE)
       }
 
       // Update form metadata, redirect to next step
@@ -218,7 +220,7 @@ export default [
         return h.redirect(`/library/${result.slug}`).code(StatusCodes.SEE_OTHER)
       } catch (err) {
         if (Boom.isBoom(err) && err.data?.error === 'FormAlreadyExistsError') {
-          return redirectToTitleWithErrors(request, h)
+          return redirectToTitleWithErrors(request, h, ROUTE_PATH_CREATE_TITLE)
         }
 
         return Boom.internal(
@@ -236,25 +238,6 @@ export default [
     }
   })
 ]
-
-/**
- * @param {RequestWithPayload} request
- * @param {ResponseToolkit} h
- */
-function redirectToTitleWithErrors(request, h) {
-  const { yar, payload } = request
-
-  yar.flash('validationFailure', {
-    formErrors: create.titleFormErrors,
-    formValues: payload
-  })
-
-  // Redirect POST to GET without resubmit on back button
-  return h
-    .redirect(ROUTE_PATH_CREATE_TITLE)
-    .code(StatusCodes.SEE_OTHER)
-    .takeover()
-}
 
 /**
  * @param {Request} request
