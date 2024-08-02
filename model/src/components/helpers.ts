@@ -97,6 +97,12 @@ export function hasEditor(
 export function hasListField(
   component?: Partial<ComponentDef>
 ): component is ListComponentsDef {
+  return isListType(component?.type)
+}
+
+export function isListType(
+  type?: ComponentType
+): type is ListComponentsDef['type'] {
   const allowedTypes = [
     ComponentType.AutocompleteField,
     ComponentType.List,
@@ -105,7 +111,7 @@ export function hasListField(
     ComponentType.CheckboxesField
   ]
 
-  return !!component?.type && allowedTypes.includes(component.type)
+  return !!type && allowedTypes.includes(type)
 }
 
 /**

@@ -26,6 +26,14 @@ export class ConditionField {
     this.display = display
   }
 
+  clone(): ConditionField {
+    return ConditionField.from(this)
+  }
+
+  toJSON(): ConditionFieldData {
+    return structuredClone(this.clone())
+  }
+
   static from(obj: ConditionField | ConditionFieldData) {
     return new ConditionField(obj.name, obj.type, obj.display)
   }

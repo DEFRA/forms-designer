@@ -6,6 +6,7 @@ import {
   ConditionValue,
   RelativeDateValue
 } from '~/src/conditions/condition-values.js'
+import { type Condition } from '~/src/conditions/condition.js'
 import {
   ConditionType,
   DateDirections,
@@ -22,8 +23,8 @@ const defaultOperators = {
   [OperatorName.IsNot]: inline(Operator.IsNot)
 }
 
-function withDefaults<T>(param: T) {
-  return Object.assign({}, param, defaultOperators)
+function withDefaults<T>(operators: T) {
+  return { ...defaultOperators, ...operators }
 }
 
 const textFieldOperators = {
@@ -81,14 +82,14 @@ export function getOperatorNames(fieldType?: ComponentType) {
     return []
   }
 
-  return Object.keys(conditionals).sort()
+  return Object.keys(conditionals) as OperatorName[]
 }
 
 export function getExpression(
   fieldType: ComponentType,
   fieldName: string,
   operator: OperatorName,
-  value: ConditionValue | RelativeDateValue
+  value: Condition['value']
 ) {
   const conditionals = getConditionals(fieldType)
   if (!conditionals) {
@@ -154,7 +155,7 @@ function not(operatorDefinition: OperatorDefinition): OperatorDefinition {
 
 function formatValue(
   field: Pick<ComponentDef, 'type'>,
-  value: ConditionValue | RelativeDateValue
+  value: Condition['value']
 ) {
   if (
     (field.type === ComponentType.DatePartsField &&

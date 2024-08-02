@@ -24,10 +24,12 @@ export class RelativeDateValues extends Component<Props, State> {
   constructor(props: Props) {
     super(props)
 
+    const { value } = props
+
     this.state = {
-      period: props.value?.period,
-      unit: props.value?.unit,
-      direction: props.value?.direction
+      period: value?.period,
+      unit: value?.unit,
+      direction: value?.direction
     }
   }
 
@@ -41,9 +43,11 @@ export class RelativeDateValues extends Component<Props, State> {
     const { updateValue } = this.props
     const { period, unit, direction } = this.state
 
-    if (period && unit && direction) {
-      updateValue(new RelativeDateValue(period, unit, direction))
+    if (!period || !unit || !direction) {
+      return
     }
+
+    updateValue(new RelativeDateValue(period, unit, direction))
   }
 
   render() {

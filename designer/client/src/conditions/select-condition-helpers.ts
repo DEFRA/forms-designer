@@ -1,29 +1,13 @@
-import {
-  type ConditionData,
-  type ConditionGroupData,
-  type ConditionRefData,
-  type ConditionWrapper
-} from '@defra/forms-model'
+import { hasNestedCondition, type ConditionWrapper } from '@defra/forms-model'
 
-export const hasConditionName = (
-  condition?: ConditionGroupData | ConditionData | ConditionRefData
-): condition is ConditionRefData => {
-  return !!condition && 'conditionName' in condition
-}
+export const getFieldNameSubstring = (fieldName: string) => {
+  const fieldNameIndex = fieldName.indexOf('.')
 
-export const hasNestedCondition = (condition?: ConditionWrapper) => {
-  return !!condition?.value.conditions.some(hasConditionName)
-}
+  if (fieldNameIndex >= 0) {
+    return fieldName.substring(fieldNameIndex + 1)
+  }
 
-export const isDuplicateCondition = (
-  conditions: ConditionWrapper[],
-  conditionName: string
-) => {
-  return conditions.some((condition) => condition.name === conditionName)
-}
-
-export const getFieldNameSubstring = (sectionFieldName: string) => {
-  return sectionFieldName.substring(sectionFieldName.indexOf('.'))
+  return fieldName
 }
 
 export function conditionsByType(conditions: ConditionWrapper[]) {

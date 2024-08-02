@@ -2,13 +2,16 @@ import {
   absoluteDateOperatorNames,
   relativeDateOperatorNames,
   ComponentType,
+  ConditionType,
   ConditionValue,
+  type Condition,
+  type ConditionData,
   type ConditionValueData,
   type Item,
   type OperatorName,
   type RelativeDateValue,
   type RelativeDateValueData,
-  ConditionType
+  type ConditionalComponentType
 } from '@defra/forms-model'
 import React from 'react'
 
@@ -24,7 +27,7 @@ import { tryParseInt } from '~/src/conditions/inline-condition-helpers.js'
 
 function AbsoluteDateComponent(props: {
   value?: ConditionValueData | RelativeDateValueData
-  updateValue: (value?: ConditionValue) => void
+  updateValue: (value: ConditionValue) => void
 }) {
   let { value, updateValue } = props
 
@@ -67,7 +70,7 @@ function AbsoluteDateComponent(props: {
 
 function RelativeDateComponent(props: {
   value?: ConditionValueData | RelativeDateValueData
-  updateValue: (value?: RelativeDateValue) => void
+  updateValue: (value: RelativeDateValue) => void
 }) {
   let { value, updateValue } = props
 
@@ -83,7 +86,7 @@ export type FieldDef =
   | {
       label: string
       name: string
-      type: ComponentType
+      type: ConditionalComponentType
       values?: Item[]
     }
   | {
@@ -95,8 +98,8 @@ export type FieldDef =
 export interface Props {
   fieldDef: FieldDef
   operator: OperatorName
-  value?: ConditionValueData | RelativeDateValueData
-  updateValue: (value?: ConditionValue | RelativeDateValue) => void
+  value?: ConditionData['value']
+  updateValue: (value: Condition['value']) => void
 }
 
 export const InlineConditionsDefinitionValue = ({
@@ -125,6 +128,6 @@ export const InlineConditionsDefinitionValue = ({
   return isFieldConditionList(fieldDef) ? (
     <SelectValues fieldDef={fieldDef} value={value} updateValue={updateValue} />
   ) : (
-    <TextValues fieldDef={fieldDef} value={value} updateValue={updateValue} />
+    <TextValues value={value} updateValue={updateValue} />
   )
 }

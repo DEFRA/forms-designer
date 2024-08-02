@@ -109,7 +109,7 @@
     "conditionHint": "Set when a condition might be met in the form. For example, when the form asks a question and the user selects Yes instead of No (yes=true).",
     "conditionField": "Component title",
     "conditionOperator": "Operator",
-    "conditionCoordinator": "Coordinator",
+    "conditionCoordinator": "Coordinator (optional)",
     "conditionDatePeriod": "Period",
     "conditionDateUnits": "Units",
     "conditionDateDirection": "Direction",

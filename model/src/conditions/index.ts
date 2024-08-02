@@ -1,6 +1,5 @@
 export {
   getExpression,
-  getOperatorConfig,
   getOperatorNames,
   absoluteDateOperatorNames,
   relativeDateOperatorNames
@@ -18,7 +17,15 @@ export { ConditionRef } from '~/src/conditions/condition-ref.js'
 export { ConditionGroup } from '~/src/conditions/condition-group.js'
 export { ConditionsModel } from '~/src/conditions/condition-model.js'
 export { ConditionGroupDef } from '~/src/conditions/condition-group-def.js'
-export { toExpression, toPresentationString } from '~/src/conditions/helpers.js'
+export {
+  hasConditionField,
+  hasConditionGroup,
+  hasConditionName,
+  hasNestedCondition,
+  isDuplicateCondition,
+  toExpression,
+  toPresentationString
+} from '~/src/conditions/helpers.js'
 
 export {
   ConditionType,

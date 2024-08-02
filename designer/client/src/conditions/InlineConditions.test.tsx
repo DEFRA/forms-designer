@@ -13,7 +13,7 @@ describe('InlineConditions', () => {
     const props = {
       path: '/some-path',
       conditionsChange: jest.fn(),
-      hints: []
+      cancelCallback: jest.fn()
     }
 
     const data = {

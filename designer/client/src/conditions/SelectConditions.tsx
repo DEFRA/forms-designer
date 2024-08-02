@@ -1,7 +1,10 @@
 import {
   ConditionsModel,
-  type ConditionWrapper,
-  type FormDefinition
+  hasConditionField,
+  hasConditionName,
+  hasNestedCondition,
+  isDuplicateCondition,
+  type ConditionWrapper
 } from '@defra/forms-model'
 // @ts-expect-error -- No types available
 import { Select } from '@xgovformbuilder/govuk-react-jsx'
@@ -15,47 +18,50 @@ import React, {
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
 import { InlineConditions } from '~/src/conditions/InlineConditions.jsx'
+import { type FieldDef } from '~/src/conditions/InlineConditionsDefinitionValue.jsx'
 import {
-  isDuplicateCondition,
-  hasConditionName,
-  getFieldNameSubstring,
-  conditionsByType
+  conditionsByType,
+  getFieldNameSubstring
 } from '~/src/conditions/select-condition-helpers.js'
 import { DataContext } from '~/src/context/DataContext.js'
 import { allInputs, inputsAccessibleAt } from '~/src/data/component/inputs.js'
-import { hasConditions as dataHasConditions } from '~/src/data/condition/hasConditions.js'
+import { hasConditions } from '~/src/data/condition/hasConditions.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 
 export interface Props {
-  path: string
-  data: FormDefinition
+  path?: string
+  selectedCondition?: string
   conditionsChange: (selectedCondition: string) => void
   noFieldsHintText?: string
 }
 
 interface State {
-  inline: boolean
-  selectedCondition: string
-  fields: any
+  selectedCondition?: string
+  conditions?: ConditionsModel
+  fields?: Partial<Record<string, FieldDef>>
+  inline?: boolean
+  editView?: boolean
 }
 
 export class SelectConditions extends Component<Props, State> {
   declare context: ContextType<typeof DataContext>
   static contextType = DataContext
 
-  constructor(props, context) {
+  constructor(props: Props, context: typeof DataContext) {
     super(props, context)
 
     this.state = {
       fields: this.fieldsForPath(props.path),
-      inline: false,
-      selectedCondition: props.selectedCondition
+      selectedCondition: props.selectedCondition,
+      inline: false
     }
   }
 
-  componentDidUpdate = (prevProps) => {
-    if (this.props.path !== prevProps.path) {
-      const fields = this.fieldsForPath(this.props.path)
+  componentDidUpdate = (prevProps: Props) => {
+    const { path } = this.props
+
+    if (path !== prevProps.path) {
+      const fields = this.fieldsForPath(path)
 
       this.setState({
         conditions: new ConditionsModel(),
@@ -65,29 +71,31 @@ export class SelectConditions extends Component<Props, State> {
     }
   }
 
-  fieldsForPath(path: string) {
+  fieldsForPath(path?: string) {
     const { data } = this.context
-    const inputs = path
-      ? inputsAccessibleAt(data, path)
-      : (allInputs(data) ?? [])
+
+    const inputs = path ? inputsAccessibleAt(data, path) : allInputs(data)
     return inputs
-      .map((input) => ({
-        label: input.title,
-        name: this.trimSectionName(input.propertyPath),
-        type: input.type
-      }))
-      .reduce((obj, item) => {
+      .map(
+        (input) =>
+          ({
+            label: input.title,
+            name: this.trimSectionName(input.propertyPath),
+            type: input.type
+          }) satisfies FieldDef
+      )
+      .reduce<Record<string, FieldDef>>((obj, item) => {
         obj[item.name] = item
         return obj
       }, {})
   }
 
-  conditionsForPath(path: string) {
+  conditionsForPath(path?: string) {
     const { data } = this.context
-    const fields: any = Object.values(this.fieldsForPath(path))
-    const { conditions = [] } = data
-    const conditionsForPath: any[] = []
-    const conditionsByTypeMap = conditionsByType(conditions)
+
+    const fields = Object.values(this.fieldsForPath(path))
+    const conditionsForPath: ConditionWrapper[] = []
+    const conditionsByTypeMap = conditionsByType(data.conditions)
 
     fields.forEach((field) => {
       this.handleConditions(
@@ -102,16 +110,23 @@ export class SelectConditions extends Component<Props, State> {
       )
     })
 
-    return conditionsForPath
+    return conditionsForPath.sort(
+      ({ displayName: nameA }, { displayName: nameB }) =>
+        nameA.localeCompare(nameB)
+    )
   }
 
   handleConditions(
     objectConditions: ConditionWrapper[],
     fieldName: string,
-    conditionsForPath: any[]
+    conditionsForPath: ConditionWrapper[]
   ) {
     objectConditions.forEach((condition) => {
       condition.value.conditions.forEach((innerCondition) => {
+        if (!hasConditionField(innerCondition)) {
+          return
+        }
+
         this.checkAndAddCondition(
           condition,
           fieldName,
@@ -126,22 +141,33 @@ export class SelectConditions extends Component<Props, State> {
   handleNestedConditions(
     nestedConditions: ConditionWrapper[],
     fieldName: string,
-    conditionsForPath: any[]
+    conditionsForPath: ConditionWrapper[]
   ) {
     nestedConditions.forEach((condition) => {
+      if (!hasNestedCondition(condition)) {
+        return
+      }
+
       condition.value.conditions.forEach((innerCondition) => {
         // if the condition is already in the conditions array, skip the for each loop iteration
         if (isDuplicateCondition(conditionsForPath, condition.name)) return
+
         // if the inner condition isn't a nested condition, handle it in the standard way
         if (!hasConditionName(innerCondition)) {
+          if (!hasConditionField(innerCondition)) {
+            return
+          }
+
           this.checkAndAddCondition(
             condition,
             fieldName,
             getFieldNameSubstring(innerCondition.field.name),
             conditionsForPath
           )
+
           return
         }
+
         // if the inner condition is a nested condition,
         // check if that nested condition is already in the conditions array,
         // and if so, add this condition to the array
@@ -154,10 +180,10 @@ export class SelectConditions extends Component<Props, State> {
   }
 
   checkAndAddCondition(
-    conditionToAdd,
+    conditionToAdd: ConditionWrapper,
     fieldName: string,
     conditionFieldName: string,
-    conditions: any[]
+    conditions: ConditionWrapper[]
   ) {
     if (isDuplicateCondition(conditions, conditionToAdd.name)) return
     if (fieldName === conditionFieldName) conditions.push(conditionToAdd)
@@ -177,17 +203,18 @@ export class SelectConditions extends Component<Props, State> {
     })
   }
 
-  setState(state, callback?: () => void) {
-    if (state.selectedCondition !== undefined) {
-      this.props.conditionsChange(state.selectedCondition)
-    }
+  setState(state: State, callback?: () => void) {
+    const { conditionsChange } = this.props
+
+    conditionsChange(state.selectedCondition ?? '')
     super.setState(state, callback)
   }
 
-  onChangeConditionSelection = (e: ChangeEvent<HTMLInputElement>) => {
-    const input = e.target
+  onChangeConditionSelection = (e: ChangeEvent<HTMLSelectElement>) => {
+    const { value: selectedCondition } = e.target
+
     this.setState({
-      selectedCondition: input.value
+      selectedCondition
     })
   }
 
@@ -197,33 +224,30 @@ export class SelectConditions extends Component<Props, State> {
     })
   }
 
-  onSaveInlineCondition = (createdCondition) => {
+  onSaveInlineCondition = (selectedCondition?: string) => {
     this.setState({
       inline: false,
-      selectedCondition: createdCondition
+      selectedCondition
     })
   }
 
   render() {
-    const { selectedCondition, inline } = this.state
-    const { noFieldsHintText } = this.props
-    const conditions = this.conditionsForPath(this.props.path)
-    const hasConditions = dataHasConditions(conditions) || selectedCondition
-    const hasFields = Object.keys(this.state.fields ?? {}).length > 0
+    const { data } = this.context
+    const { noFieldsHintText, path } = this.props
+    const { fields, inline, selectedCondition } = this.state
+
+    const conditions = this.conditionsForPath(path)
+    const hasConditionsForPath = hasConditions(data) && !!conditions.length
+    const hasFields = Object.keys(fields ?? {}).length > 0
 
     return (
       <div className="conditions" data-testid="select-conditions">
-        <div className="govuk-form-group" id="conditions-header-group">
-          <label
-            className="govuk-label govuk-label--s"
-            htmlFor="page-conditions"
-          >
-            {i18n('conditions.optional')}
-          </label>
-        </div>
-        {hasFields || hasConditions ? (
+        <h4 className="govuk-heading-s govuk-!-margin-bottom-1">
+          {i18n('conditions.optional')}
+        </h4>
+        {hasFields || hasConditionsForPath ? (
           <>
-            {hasConditions && (
+            {hasConditionsForPath && (
               <Select
                 id="select-condition"
                 name="cond-select"
@@ -240,7 +264,6 @@ export class SelectConditions extends Component<Props, State> {
                   }))
                 ]}
                 label={{
-                  className: 'govuk-label--s',
                   children: ['Select a condition']
                 }}
                 onChange={this.onChangeConditionSelection}
@@ -266,7 +289,7 @@ export class SelectConditions extends Component<Props, State> {
                   onHide={this.onCancelInlineCondition}
                 >
                   <InlineConditions
-                    path={this.props.path}
+                    path={path}
                     conditionsChange={this.onSaveInlineCondition}
                     cancelCallback={this.onCancelInlineCondition}
                   />

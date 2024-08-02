@@ -3,10 +3,12 @@ import { ConditionField } from '~/src/conditions/condition-field.js'
 import { getExpression } from '~/src/conditions/condition-operators.js'
 import { ConditionValueAbstract } from '~/src/conditions/condition-value-abstract.js'
 import {
+  conditionValueFrom,
   type ConditionValue,
   type RelativeDateValue
 } from '~/src/conditions/condition-values.js'
 import { type Coordinator, type OperatorName } from '~/src/conditions/enums.js'
+import { type ConditionData } from '~/src/conditions/types.js'
 
 export class Condition extends ConditionAbstract {
   field: ConditionField
@@ -59,11 +61,19 @@ export class Condition extends ConditionAbstract {
   }
 
   clone() {
+    return Condition.from(this)
+  }
+
+  toJSON(): ConditionData {
+    return structuredClone(this.clone())
+  }
+
+  static from(obj: ConditionData | Condition) {
     return new Condition(
-      ConditionField.from(this.field),
-      this.operator,
-      this.value.clone(),
-      this.coordinator
+      ConditionField.from(obj.field),
+      obj.operator,
+      conditionValueFrom(obj.value),
+      obj.coordinator
     )
   }
 }

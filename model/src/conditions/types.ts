@@ -2,10 +2,7 @@ import {
   type ComponentDef,
   type ConditionalComponentType
 } from '~/src/components/types.js'
-import {
-  type ConditionValue,
-  type RelativeDateValue
-} from '~/src/conditions/condition-values.js'
+import { type Condition } from '~/src/conditions/condition.js'
 import {
   type ConditionType,
   type Coordinator,
@@ -57,7 +54,7 @@ export interface ConditionsModelData extends ConditionGroupData {
 export interface OperatorDefinition {
   expression: (
     component: Pick<ComponentDef, 'type' | 'name'>,
-    conditionValue: ConditionValue | RelativeDateValue
+    conditionValue: Condition['value']
   ) => string
 }
 

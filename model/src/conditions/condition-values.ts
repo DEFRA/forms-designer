@@ -12,7 +12,7 @@ export class ConditionValue extends ConditionValueAbstract {
   display: string
 
   constructor(value: string, display?: string) {
-    if (!value || typeof value !== 'string') {
+    if (typeof value !== 'string') {
       throw new Error("ConditionValue param 'value' must be a string")
     }
 
@@ -35,12 +35,16 @@ export class ConditionValue extends ConditionValueAbstract {
     return this.value
   }
 
-  static from(obj: ConditionValue | ConditionValueData) {
-    return new ConditionValue(obj.value, obj.display)
-  }
-
   clone() {
     return ConditionValue.from(this)
+  }
+
+  toJSON(): ConditionValueData {
+    return structuredClone(this.clone())
+  }
+
+  static from(obj: ConditionValue | ConditionValueData) {
+    return new ConditionValue(obj.value, obj.display)
   }
 }
 
@@ -82,12 +86,16 @@ export class RelativeDateValue extends ConditionValueAbstract {
     return `dateForComparison(${period}, '${this.unit}')`
   }
 
-  static from(obj: RelativeDateValue | RelativeDateValueData) {
-    return new RelativeDateValue(obj.period, obj.unit, obj.direction)
-  }
-
   clone() {
     return RelativeDateValue.from(this)
+  }
+
+  toJSON(): RelativeDateValueData {
+    return structuredClone(this.clone())
+  }
+
+  static from(obj: RelativeDateValue | RelativeDateValueData) {
+    return new RelativeDateValue(obj.period, obj.unit, obj.direction)
   }
 }
 
@@ -98,6 +106,10 @@ export function conditionValueFrom(
     | RelativeDateValue
     | RelativeDateValueData
 ) {
+  if ('clone' in obj) {
+    return obj.clone()
+  }
+
   switch (obj.type) {
     case ConditionType.Value:
       return ConditionValue.from(obj)

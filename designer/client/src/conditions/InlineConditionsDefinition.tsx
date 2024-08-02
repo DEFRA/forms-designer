@@ -1,12 +1,25 @@
 import {
+  ComponentType,
   Condition,
   ConditionField,
   ConditionRef,
+  ConditionType,
   conditionValueFrom,
+  Coordinator,
+  DateDirections,
+  DateUnits,
   getOperatorNames,
-  clone,
-  Coordinator
+  hasConditionField,
+  relativeDateOperatorNames,
+  type ConditionData,
+  type ConditionGroup,
+  type ConditionRefData,
+  type ConditionValue,
+  type Item,
+  type OperatorName,
+  type RelativeDateValue
 } from '@defra/forms-model'
+import upperFirst from 'lodash/upperFirst.js'
 import React, { Component, type ChangeEvent } from 'react'
 
 import {
@@ -15,147 +28,223 @@ import {
 } from '~/src/conditions/InlineConditionsDefinitionValue.jsx'
 import { i18n } from '~/src/i18n/i18n.jsx'
 
-export class InlineConditionsDefinition extends Component {
-  constructor(props) {
+interface Props {
+  condition?: ConditionData
+  expectsCoordinator: boolean
+  fields: Partial<Record<string, FieldDef>>
+  saveCallback: (condition: Condition | ConditionRef | ConditionGroup) => void
+}
+
+interface State {
+  condition?: ConditionData | ConditionRefData
+  selectedCoordinator?: Coordinator | ''
+  selectedOperator?: OperatorName | ''
+}
+
+export class InlineConditionsDefinition extends Component<Props, State> {
+  constructor(props: Props) {
     super(props)
+
+    const { condition } = props
+
     this.state = {
-      condition: clone(props.condition) || {}
+      condition,
+      selectedCoordinator: condition?.coordinator,
+      selectedOperator: condition?.operator
     }
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: Props) {
+    const { condition, expectsCoordinator, fields } = this.props
+
     if (
-      this.props.expectsCoordinator !== prevProps.expectsCoordinator ||
-      this.props.fields !== prevProps.fields
+      fields !== prevProps.fields ||
+      expectsCoordinator !== prevProps.expectsCoordinator
     ) {
-      const { condition } = this.state
-      const newCondition = this.props.fields[condition?.field?.name]
-        ? this.state.condition
-        : {}
       this.setState({
-        condition: newCondition
+        condition,
+        selectedCoordinator: condition?.coordinator,
+        selectedOperator: condition?.operator
       })
     }
   }
 
   onChangeCoordinator = (e: ChangeEvent<HTMLSelectElement>) => {
-    const input = e.target
-    let newCondition = {}
+    const { value: coordinator } = e.currentTarget
+    const { condition } = this.state
 
-    if (input.value && input.value.trim() !== '') {
-      newCondition = clone(this.state.condition ?? {})
-      newCondition.coordinator = input.value
-    }
+    const newCoordinator = coordinator
+      ? (coordinator as Coordinator)
+      : undefined
+
+    this._updateCondition(condition, (newCondition) => {
+      if (!newCondition) {
+        return
+      }
+
+      newCondition.coordinator = newCoordinator
+      return newCondition
+    })
+
     this.setState({
-      condition: newCondition
+      selectedCoordinator: newCoordinator ?? ''
     })
   }
 
   onClickFinalise = () => {
-    const { fields, saveCallback } = this.props
+    const { saveCallback } = this.props
     const { condition } = this.state
 
+    // Check for condition
+    if (!condition) {
+      return
+    }
+
+    // Check for condition value
+    if (
+      hasConditionField(condition) &&
+      !(condition.value.type === ConditionType.RelativeDate
+        ? !!condition.value.period
+        : !!condition.value.value)
+    ) {
+      return
+    }
+
     this.setState({
-      condition: {}
+      condition: undefined,
+      selectedCoordinator: undefined,
+      selectedOperator: undefined
     })
 
-    const fieldDef = fields[condition.field.name]
-
     saveCallback(
-      isFieldConditionRef(fieldDef)
-        ? new ConditionRef(fieldDef.name, fieldDef.label, condition.coordinator)
-        : new Condition(
-            ConditionField.from(condition.field),
-            condition.operator,
-            conditionValueFrom(condition.value),
-            condition.coordinator
-          )
+      hasConditionField(condition)
+        ? Condition.from(condition)
+        : ConditionRef.from(condition)
     )
   }
 
   onChangeField = (e: ChangeEvent<HTMLSelectElement>) => {
-    const input = e.target
-    const fieldName = input.value
+    const { value: fieldName } = e.currentTarget
 
-    const { condition } = this.state
+    const { fields } = this.props
+    const { condition, selectedCoordinator: coordinator } = this.state
 
-    const currentField = condition.field?.name
-    const currentOperator = condition.operator
+    this._updateCondition(condition, () => {
+      let field: ConditionField | undefined
+      let value: ConditionValue | RelativeDateValue | undefined
 
-    const fieldDef = this.props.fields[fieldName]
-
-    this._updateCondition(condition, (c) => {
-      if (fieldName) {
-        if (isFieldConditionRef(fieldDef)) {
-          delete c.value
-          delete c.operator
-        } else {
-          if (
-            fieldDef &&
-            currentField &&
-            this.props.fields[currentField]?.values !== fieldDef.values
-          ) {
-            delete c.value
-          }
-          if (
-            currentOperator &&
-            !getOperatorNames(fieldName).includes(currentOperator)
-          ) {
-            delete c.operator
-          }
-        }
-        c.field = {
-          name: fieldName,
-          display: fieldDef?.label,
-          type: fieldDef?.type
-        }
-      } else {
-        delete c.field
-        delete c.operator
-        delete c.value
+      const fieldDef = fields[fieldName]
+      if (!fieldDef || coordinator === '') {
+        return
       }
+
+      // Default operator
+      const operator = isFieldComponent(fieldDef)
+        ? getOperatorNames(fieldDef.type)[0]
+        : undefined
+
+      // Default field and empty condition value
+      if (isFieldComponent(fieldDef)) {
+        field = ConditionField.from({
+          name: fieldDef.name,
+          type: fieldDef.type,
+          display: fieldDef.label
+        })
+
+        value = conditionValueFrom(
+          operator &&
+            fieldDef.type === ComponentType.DatePartsField &&
+            relativeDateOperatorNames.includes(operator)
+            ? {
+                type: ConditionType.RelativeDate,
+                direction: DateDirections.FUTURE,
+                unit: DateUnits.DAYS,
+                period: ''
+              }
+            : {
+                type: ConditionType.Value,
+                display: '',
+                value: ''
+              }
+        )
+      }
+
+      return isFieldCondition(fieldDef)
+        ? new ConditionRef(fieldDef.name, fieldDef.label, coordinator).toJSON()
+        : new Condition(field, operator, value, coordinator).toJSON()
+    })
+
+    // Reset selected operator on field change
+    this.setState({
+      selectedOperator: undefined
     })
   }
 
-  _updateCondition(condition, updates) {
-    const copy = clone(condition)
-    updates(copy)
+  _updateCondition(
+    condition: State['condition'],
+    updates: (newCondition?: ConditionData) => State['condition']
+  ) {
+    const newCondition = hasConditionField(condition)
+      ? structuredClone(condition)
+      : undefined
+
     this.setState({
-      condition: copy
+      condition: updates(newCondition)
     })
+
+    return condition
   }
 
   onChangeOperator = (e: ChangeEvent<HTMLSelectElement>) => {
-    const input = e.target
+    const { value: operator } = e.currentTarget
     const { condition } = this.state
 
-    this._updateCondition(condition, (c) => {
-      c.operator = input.value
+    const newOperator = operator ? (operator as OperatorName) : undefined
+
+    this._updateCondition(condition, (newCondition) => {
+      if (!newCondition || !newOperator) {
+        return newCondition
+      }
+
+      newCondition.operator = newOperator
+      return newCondition
+    })
+
+    this.setState({
+      selectedOperator: newOperator ?? ''
     })
   }
 
-  updateValue = (newValue) => {
+  updateValue = (newValue: Condition['value']) => {
     const { condition } = this.state
-    this._updateCondition(condition, (c) => {
-      c.value = newValue
-    })
-  }
 
-  setState(state, callback) {
-    if (state.conditions || state.selectedCondition !== undefined) {
-      this.props.conditionsChange(state.conditions, state.selectedCondition)
-    }
-    super.setState(state, callback)
+    this._updateCondition(condition, (newCondition) => {
+      if (!newCondition) {
+        return
+      }
+
+      newCondition.value = newValue.toJSON()
+      return newCondition
+    })
   }
 
   render() {
     const { expectsCoordinator, fields } = this.props
-    const { condition } = this.state
-    const fieldDef = fields[condition.field?.name]
+    const { condition, selectedCoordinator, selectedOperator } = this.state
+
+    const fieldDef = hasConditionField(condition)
+      ? fields[condition.field.name]
+      : undefined
+
+    const fieldInputs = Object.values(fields)
+      .filter(isFieldComponent)
+      .sort(({ label: labelA }, { label: labelB }) =>
+        labelA.localeCompare(labelB)
+      )
 
     return (
       <div id="condition-definition-group" className="govuk-!-margin-bottom-6">
-        {expectsCoordinator && (
+        {(expectsCoordinator || !!selectedCoordinator) && (
           <div className="govuk-form-group govuk-!-margin-bottom-3">
             <label className="govuk-label" htmlFor="cond-coordinator">
               {i18n('conditions.conditionCoordinator')}
@@ -164,20 +253,19 @@ export class InlineConditionsDefinition extends Component {
               className="govuk-select"
               id="cond-coordinator"
               name="cond-coordinator"
-              value={condition?.coordinator ?? ''}
+              value={selectedCoordinator ?? condition?.coordinator ?? ''}
               onChange={this.onChangeCoordinator}
             >
               <option value="" />
-              <option key="and" value={Coordinator.AND}>
-                And
-              </option>
-              <option key="or" value={Coordinator.OR}>
-                Or
-              </option>
+              {Object.values(Coordinator).map((coordinator) => (
+                <option key={coordinator} value={coordinator}>
+                  {upperFirst(coordinator)}
+                </option>
+              ))}
             </select>
           </div>
         )}
-        {(condition.coordinator || !expectsCoordinator) && (
+        {(!expectsCoordinator || !!selectedCoordinator) && (
           <>
             <div className="govuk-form-group govuk-!-margin-bottom-3">
               <label className="govuk-label" htmlFor="cond-field">
@@ -187,57 +275,53 @@ export class InlineConditionsDefinition extends Component {
                 className="govuk-select"
                 id="cond-field"
                 name="cond-field"
-                value={condition?.field?.name ?? ''}
+                value={hasConditionField(condition) ? condition.field.name : ''}
                 onChange={this.onChangeField}
               >
                 <option value="" />
-                {Object.values(this.props.fields).map((field, index) => (
-                  <option key={`${field.name}-${index}`} value={field.name}>
-                    {field.label}
+                {fieldInputs.map((input, index) => (
+                  <option key={`${input.name}-${index}`} value={input.name}>
+                    {input.label}
                   </option>
                 ))}
               </select>
             </div>
 
-            {fieldDef && !isFieldConditionRef(fieldDef) && (
-              <div className="govuk-form-group govuk-!-margin-bottom-3">
-                <label className="govuk-label" htmlFor="cond-operator">
-                  {i18n('conditions.conditionOperator')}
-                </label>
-                <select
-                  className="govuk-select"
-                  id="cond-operator"
-                  name="cond-operator"
-                  value={condition.operator ?? ''}
-                  onChange={this.onChangeOperator}
-                >
-                  <option value="" />
-                  {getOperatorNames(fieldDef.type).map((conditional) => {
-                    return (
-                      <option
-                        key={`${condition.field}-${conditional}`}
-                        value={conditional}
-                      >
-                        {conditional}
-                      </option>
-                    )
-                  })}
-                </select>
-              </div>
+            {hasConditionField(condition) && isFieldComponent(fieldDef) && (
+              <>
+                <div className="govuk-form-group govuk-!-margin-bottom-3">
+                  <label className="govuk-label" htmlFor="cond-operator">
+                    {i18n('conditions.conditionOperator')}
+                  </label>
+                  <select
+                    className="govuk-select"
+                    id="cond-operator"
+                    name="cond-operator"
+                    value={selectedOperator ?? condition.operator}
+                    onChange={this.onChangeOperator}
+                  >
+                    <option value="" />
+                    {getOperatorNames(fieldDef.type)
+                      .sort()
+                      .map((operator) => (
+                        <option key={operator} value={operator}>
+                          {upperFirst(operator)}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+                <div className="govuk-form-group govuk-!-margin-bottom-3">
+                  <InlineConditionsDefinitionValue
+                    fieldDef={fieldDef}
+                    value={condition.value}
+                    operator={condition.operator}
+                    updateValue={this.updateValue}
+                  />
+                </div>
+              </>
             )}
 
-            {fieldDef && condition.operator && (
-              <div className="govuk-form-group govuk-!-margin-bottom-3">
-                <InlineConditionsDefinitionValue
-                  fieldDef={fieldDef}
-                  value={condition.value}
-                  operator={condition.operator}
-                  updateValue={this.updateValue}
-                />
-              </div>
-            )}
-
-            {(condition.value || isFieldConditionRef(fieldDef)) && (
+            {condition && (
               <div className="govuk-button-group">
                 <button
                   id="save-condition"
@@ -256,7 +340,13 @@ export class InlineConditionsDefinition extends Component {
   }
 }
 
-export function isFieldConditionRef(
+export function isFieldComponent(
+  fieldDef?: FieldDef
+): fieldDef is Extract<FieldDef, { type: ComponentType }> {
+  return !!fieldDef && !isFieldCondition(fieldDef)
+}
+
+export function isFieldCondition(
   fieldDef?: FieldDef
 ): fieldDef is Extract<FieldDef, { type: 'Condition' }> {
   return fieldDef?.type === 'Condition'
@@ -264,6 +354,6 @@ export function isFieldConditionRef(
 
 export function isFieldConditionList(
   fieldDef?: FieldDef
-): fieldDef is Extract<FieldDef, { values: Item[] }> {
+): fieldDef is Extract<FieldDef, { values?: Item[] }> {
   return !!fieldDef && 'values' in fieldDef
 }
