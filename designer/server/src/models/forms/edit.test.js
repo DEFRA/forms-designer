@@ -6,7 +6,7 @@ describe('edit - model', () => {
   const authorDisplayName = 'Enrique Chase'
 
   /**
-   * @satisfies {import('~/dist/types/index.js').FormMetadataAuthor}
+   * @satisfies {FormMetadataAuthor}
    */
   const author = {
     id: authorId,
@@ -40,4 +40,5 @@ describe('edit - model', () => {
 
 /**
  * @typedef {import('@defra/forms-model').FormMetadata} FormMetadata
+ * @typedef {import('@defra/forms-model').FormMetadataAuthor} FormMetadataAuthor
  */
