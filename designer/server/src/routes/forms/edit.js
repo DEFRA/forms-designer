@@ -164,7 +164,7 @@ export default [
 
         yar.flash(
           sessionNames.successNotification,
-          'Form title has been changed'
+          'Form name has been changed'
         )
 
         return h.redirect(`/library/${slug}`).code(StatusCodes.SEE_OTHER)
