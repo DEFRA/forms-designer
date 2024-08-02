@@ -42,10 +42,10 @@ export function teamDetailsViewModel(metadata, validation) {
  * @param {ValidationFailure} [validation]
  */
 export function titleViewModel(metadata, validation) {
-  const teamModel = create.titleViewModel(metadata, validation)
+  const titleModel = create.titleViewModel(metadata, validation)
 
   return {
-    ...teamModel,
+    ...titleModel,
     backLink: {
       text: backLinkText,
       href: `/library/${metadata.slug}`
