@@ -71,7 +71,7 @@ describe('Field Edit', () => {
     const $selects = screen.queryAllByRole('combobox')
 
     expect($inputs).toHaveLength(2)
-    expect($checkboxes).toHaveLength(0)
+    expect($checkboxes).toHaveLength(1)
     expect($selects).toHaveLength(0)
   })
 

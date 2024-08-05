@@ -195,6 +195,9 @@ export interface InsetTextComponent extends ContentFieldBase {
 // List Fields
 export interface ListComponent extends ListFieldBase {
   type: ComponentType.List
+  options: ListFieldBase['options'] & {
+    hideTitle?: boolean
+  }
 }
 
 export interface AutocompleteFieldComponent extends ListFieldBase {

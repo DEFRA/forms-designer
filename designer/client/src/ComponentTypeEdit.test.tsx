@@ -167,7 +167,7 @@ describe('ComponentTypeEdit', () => {
         name: false,
         hint: true,
         title: true,
-        hideTitle: false,
+        hideTitle: true,
         content: false,
         optional: false,
         selectList: true,
