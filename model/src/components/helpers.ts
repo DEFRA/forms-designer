@@ -141,6 +141,7 @@ export function hasSelectionFields(
   component?: Partial<ComponentDef>
 ): component is SelectionComponentsDef {
   const allowedTypes = [
+    ComponentType.AutocompleteField,
     ComponentType.CheckboxesField,
     ComponentType.RadiosField,
     ComponentType.SelectField,

@@ -270,6 +270,7 @@ export type ListComponentsDef =
 
 // Components that have selection fields
 export type SelectionComponentsDef =
+  | AutocompleteFieldComponent
   | CheckboxesFieldComponent
   | RadiosFieldComponent
   | SelectFieldComponent
