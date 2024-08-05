@@ -21,9 +21,13 @@ export function FieldEdit() {
     return null
   }
 
-  const { name, title, options } = selectedComponent
+  const { hint, name, title, type, options } = selectedComponent
   const defaults = getComponentDefaults(selectedComponent)
   const isRequired = !('required' in options) || options.required !== false
+
+  // Limit options by component type
+  const hasOptionRequired = type !== ComponentType.List
+  const hasOptionHideTitle = type === ComponentType.UkAddressField
 
   return (
     <div data-test-id="standard-inputs">
@@ -37,7 +41,7 @@ export function FieldEdit() {
         hint={{
           children: [i18n('common.titleField.helpText')]
         }}
-        value={title ?? defaults?.title}
+        value={title}
         onChange={(e: ChangeEvent<HTMLInputElement>) => {
           dispatch({
             type: Fields.EDIT_TITLE,
@@ -58,7 +62,7 @@ export function FieldEdit() {
           children: [i18n('common.helpTextField.helpText')]
         }}
         required={false}
-        value={'hint' in selectedComponent ? selectedComponent.hint : undefined}
+        value={hint}
         onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
           dispatch({
             type: Fields.EDIT_HELP,
@@ -66,7 +70,7 @@ export function FieldEdit() {
           })
         }}
       />
-      {[ComponentType.UkAddressField].includes(selectedComponent.type) && (
+      {hasOptionHideTitle && (
         <div className="govuk-checkboxes govuk-form-group">
           <div className="govuk-checkboxes__item">
             <input
@@ -135,7 +139,7 @@ export function FieldEdit() {
           }}
         />
       </div>
-      {selectedComponent.type !== ComponentType.List && (
+      {hasOptionRequired && (
         <div className="govuk-checkboxes govuk-form-group">
           <div className="govuk-checkboxes__item">
             <input
