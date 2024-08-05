@@ -75,7 +75,7 @@ export const customOperators = {
   [ComponentType.YesNoField]: defaultOperators
 }
 
-export function getOperatorNames(fieldType?: ComponentType) {
+export function getOperatorNames(fieldType?: ConditionalComponentType) {
   const conditionals = getConditionals(fieldType)
   if (!conditionals) {
     return []
@@ -85,7 +85,7 @@ export function getOperatorNames(fieldType?: ComponentType) {
 }
 
 export function getExpression(
-  fieldType: ComponentType,
+  fieldType: ConditionalComponentType,
   fieldName: string,
   operator: OperatorName,
   value: Condition['value']
@@ -102,14 +102,14 @@ export function getExpression(
 }
 
 export function getOperatorConfig(
-  fieldType: ComponentType,
+  fieldType: ConditionalComponentType,
   operator: OperatorName
 ) {
   return getConditionals(fieldType)?.[operator]
 }
 
 function getConditionals(
-  fieldType?: ComponentType
+  fieldType?: ConditionalComponentType
 ): Partial<Conditionals> | undefined {
   if (!fieldType || !isConditionalType(fieldType)) {
     return
