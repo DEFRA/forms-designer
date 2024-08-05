@@ -106,13 +106,6 @@ export function getExpression(
   )
 }
 
-export function getOperatorConfig(
-  fieldType: ConditionalComponentType,
-  operator: OperatorName
-) {
-  return getConditionals(fieldType)?.[operator]
-}
-
 function getConditionals(
   fieldType?: ConditionalComponentType
 ): Partial<Conditionals> | undefined {
