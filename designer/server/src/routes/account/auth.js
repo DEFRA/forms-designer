@@ -26,18 +26,6 @@ export default [
       // Add to authentication cookie for session validation
       cookieAuth.set({ sessionId: credentials.user.id })
 
-      /**
-       * Drop user sessions when scopes are missing but let users sign back in
-       * @todo Keep users signed in but restrict route access by scope
-       */
-      if (!credentials.scope.includes(scopes.SCOPE_WRITE)) {
-        await dropUserSession(request)
-
-        // Redirect users to a help message
-        yar.flash(sessionNames.userAuthFailed, true)
-        return h.redirect('/')
-      }
-
       const redirect = yar.flash(sessionNames.redirectTo).at(0) ?? '/library'
       return h.redirect(redirect)
     },

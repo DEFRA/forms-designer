@@ -4,7 +4,9 @@ import Joi from 'joi'
 
 import { redirectToTitleWithErrors } from './helpers.js'
 
+import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
+import { hapiScopeOptions } from '~/src/common/helpers/auth/user-session.js'
 import * as forms from '~/src/lib/forms.js'
 import * as edit from '~/src/models/forms/edit.js'
 import { redirectWithErrors, schema } from '~/src/routes/forms/create.js'
@@ -33,7 +35,8 @@ export default [
         'forms/question-radios',
         edit.organisationViewModel(metadata, validation)
       )
-    }
+    },
+    options: hapiScopeOptions(scopes.SCOPE_WRITE)
   }),
   /**
    * @satisfies {RequestUpdateOrganisationBySlug}
@@ -64,7 +67,8 @@ export default [
           organisation: schema.extract('organisation')
         }),
         failAction: redirectWithErrors
-      }
+      },
+      auth: hapiScopeOptions(scopes.SCOPE_WRITE).auth
     }
   }),
   /**
@@ -87,7 +91,8 @@ export default [
         'forms/question-inputs',
         edit.teamDetailsViewModel(metadata, validation)
       )
-    }
+    },
+    options: hapiScopeOptions(scopes.SCOPE_WRITE)
   }),
   /**
    * @satisfies {RequestUpdateTeamBySlug}
@@ -120,7 +125,8 @@ export default [
           teamEmail: schema.extract('teamEmail')
         }),
         failAction: redirectWithErrors
-      }
+      },
+      auth: hapiScopeOptions(scopes.SCOPE_WRITE).auth
     }
   }),
   /**
@@ -143,7 +149,8 @@ export default [
         'forms/question-input',
         edit.titleViewModel(metadata, validation)
       )
-    }
+    },
+    options: hapiScopeOptions(scopes.SCOPE_WRITE)
   }),
   /**
    * @satisfies {RequestUpdateTitleBySlug}
@@ -190,7 +197,8 @@ export default [
           title: schema.extract('title')
         }),
         failAction: redirectWithErrors
-      }
+      },
+      auth: hapiScopeOptions(scopes.SCOPE_WRITE).auth
     }
   })
 ]

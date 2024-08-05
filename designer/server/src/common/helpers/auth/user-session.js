@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon'
 
+import * as scopes from '~/src/common/constants/scopes.js'
 import {
   getUserClaims,
   getUserScopes,
@@ -62,6 +63,18 @@ export async function createUserSession(request, artifacts) {
   // Create and retrieve user session from Redis
   await server.methods.session.set(user.id, { ...credentials, user })
   return server.methods.session.get(user.id)
+}
+
+export function hapiScopeOptions(scope = scopes.SCOPE_READ) {
+  return {
+    auth: {
+      mode: 'try',
+      access: {
+        entity: 'user',
+        scope: [`+${scope}`]
+      }
+    }
+  }
 }
 
 /**

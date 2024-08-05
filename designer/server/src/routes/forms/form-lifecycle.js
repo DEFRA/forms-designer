@@ -4,6 +4,7 @@ import { StatusCodes } from 'http-status-codes'
 import * as notifications from '~/src/common/constants/notifications.js'
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
+import { hapiScopeOptions } from '~/src/common/helpers/auth/user-session.js'
 import { buildSimpleErrorList } from '~/src/common/helpers/build-error-details.js'
 import * as forms from '~/src/lib/forms.js'
 import * as formLifecycle from '~/src/models/forms/form-lifecycle.js'
@@ -30,15 +31,7 @@ export default [
         )
       )
     },
-    options: {
-      auth: {
-        mode: 'required',
-        access: {
-          entity: 'user',
-          scope: [`+${scopes.SCOPE_WRITE}`]
-        }
-      }
-    }
+    options: hapiScopeOptions(scopes.SCOPE_WRITE)
   }),
   /**
    * @satisfies {ServerRoute<{ Params: FormBySlugInput }>}
@@ -74,15 +67,7 @@ export default [
         throw err
       }
     },
-    options: {
-      auth: {
-        mode: 'required',
-        access: {
-          entity: 'user',
-          scope: [`+${scopes.SCOPE_WRITE}`]
-        }
-      }
-    }
+    options: hapiScopeOptions(scopes.SCOPE_WRITE)
   }),
   /**
    * @satisfies {ServerRoute<{ Params: FormBySlugInput }>}
@@ -105,15 +90,7 @@ export default [
 
       return h.redirect(`/library/${slug}`)
     },
-    options: {
-      auth: {
-        mode: 'required',
-        access: {
-          entity: 'user',
-          scope: [`+${scopes.SCOPE_WRITE}`]
-        }
-      }
-    }
+    options: hapiScopeOptions(scopes.SCOPE_WRITE)
   })
 ]
 
