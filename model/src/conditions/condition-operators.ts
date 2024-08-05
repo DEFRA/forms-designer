@@ -1,6 +1,9 @@
 import { ComponentType } from '~/src/components/enums.js'
 import { isConditionalType } from '~/src/components/helpers.js'
-import { type ComponentDef } from '~/src/components/types.js'
+import {
+  type ComponentDef,
+  type ConditionalComponentType
+} from '~/src/components/types.js'
 import {
   ConditionValue,
   RelativeDateValue
@@ -53,6 +56,7 @@ const relativeDateOperators = {
 }
 
 export const customOperators = {
+  [ComponentType.AutocompleteField]: defaultOperators,
   [ComponentType.RadiosField]: defaultOperators,
   [ComponentType.CheckboxesField]: {
     [OperatorName.Contains]: reverseInline(Operator.Contains),
@@ -71,6 +75,7 @@ export const customOperators = {
   [ComponentType.TextField]: withDefaults(textFieldOperators),
   [ComponentType.MultilineTextField]: withDefaults(textFieldOperators),
   [ComponentType.EmailAddressField]: withDefaults(textFieldOperators),
+  [ComponentType.TelephoneNumberField]: defaultOperators,
   [ComponentType.SelectField]: defaultOperators,
   [ComponentType.YesNoField]: defaultOperators
 }

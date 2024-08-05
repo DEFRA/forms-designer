@@ -36,11 +36,13 @@ export function isConditionalType(
   type?: ComponentType
 ): type is ConditionalComponentType {
   const allowedTypes = [
+    ComponentType.AutocompleteField,
     ComponentType.RadiosField,
     ComponentType.CheckboxesField,
     ComponentType.DatePartsField,
     ComponentType.EmailAddressField,
     ComponentType.MultilineTextField,
+    ComponentType.TelephoneNumberField,
     ComponentType.NumberField,
     ComponentType.SelectField,
     ComponentType.TextField,

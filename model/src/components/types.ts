@@ -1,15 +1,6 @@
 import { type ComponentType } from '~/src/components/enums.js'
 
-export type ConditionalComponentType =
-  | ComponentType.RadiosField
-  | ComponentType.CheckboxesField
-  | ComponentType.DatePartsField
-  | ComponentType.EmailAddressField
-  | ComponentType.MultilineTextField
-  | ComponentType.NumberField
-  | ComponentType.SelectField
-  | ComponentType.TextField
-  | ComponentType.YesNoField
+export type ConditionalComponentType = ConditionalComponentsDef['type']
 
 /**
  * Types for Components JSON structure which are expected by engine and turned into actual form input/content/lists
@@ -135,6 +126,7 @@ export interface NumberFieldComponent extends NumberFieldBase {
 export interface TelephoneNumberFieldComponent extends TextFieldBase {
   type: ComponentType.TelephoneNumberField
   options: TextFieldBase['options'] & {
+    condition?: string
     customValidationMessage?: string
   }
 }
@@ -204,6 +196,9 @@ export interface ListComponent extends ListFieldBase {
 
 export interface AutocompleteFieldComponent extends ListFieldBase {
   type: ComponentType.AutocompleteField
+  options: ListFieldBase['options'] & {
+    condition?: string
+  }
 }
 
 export interface CheckboxesFieldComponent extends ListFieldBase {
@@ -229,23 +224,10 @@ export interface SelectFieldComponent extends ListFieldBase {
 }
 
 export type ComponentDef =
-  | InsetTextComponent
-  | AutocompleteFieldComponent
-  | CheckboxesFieldComponent
-  | DatePartsFieldFieldComponent
-  | MonthYearFieldComponent
-  | DetailsComponent
-  | EmailAddressFieldComponent
-  | HtmlComponent
+  | InputFieldsComponentsDef
+  | SelectionComponentsDef
+  | ContentComponentsDef
   | ListComponent
-  | MultilineTextFieldComponent
-  | NumberFieldComponent
-  | RadiosFieldComponent
-  | SelectFieldComponent
-  | TelephoneNumberFieldComponent
-  | TextFieldComponent
-  | UkAddressFieldComponent
-  | YesNoFieldComponent
 
 // Components that render inputs
 export type InputFieldsComponentsDef =
@@ -254,7 +236,6 @@ export type InputFieldsComponentsDef =
   | NumberFieldComponent
   | MultilineTextFieldComponent
   | TelephoneNumberFieldComponent
-  | YesNoFieldComponent
   | MonthYearFieldComponent
   | DatePartsFieldFieldComponent
   | UkAddressFieldComponent
@@ -284,11 +265,8 @@ export type EditorComponentsDef =
 
 // Components that render lists
 export type ListComponentsDef =
+  | Exclude<SelectionComponentsDef, YesNoFieldComponent>
   | ListComponent
-  | AutocompleteFieldComponent
-  | CheckboxesFieldComponent
-  | RadiosFieldComponent
-  | SelectFieldComponent
 
 // Components that have selection fields
 export type SelectionComponentsDef =
@@ -298,11 +276,7 @@ export type SelectionComponentsDef =
   | YesNoFieldComponent
 
 // Components that have custom condition operators
-export type ConditionalComponentsDef =
-  | CheckboxesFieldComponent
-  | DatePartsFieldFieldComponent
-  | EmailAddressFieldComponent
-  | MultilineTextFieldComponent
-  | NumberFieldComponent
-  | TextFieldComponent
-  | YesNoFieldComponent
+export type ConditionalComponentsDef = Exclude<
+  InputFieldsComponentsDef | SelectionComponentsDef,
+  MonthYearFieldComponent | UkAddressFieldComponent
+>
