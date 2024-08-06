@@ -1,6 +1,9 @@
 import { type ComponentType } from '~/src/components/enums.js'
 
-export type ConditionalComponentType = ConditionalComponentsDef['type']
+export type ConditionalComponentType = Exclude<
+  ConditionalComponentsDef['type'],
+  ContentComponentsDef
+>
 
 /**
  * Types for Components JSON structure which are expected by engine and turned into actual form input/content/lists
@@ -276,8 +279,11 @@ export type SelectionComponentsDef =
   | SelectFieldComponent
   | YesNoFieldComponent
 
-// Components that have custom condition operators
+// Components that have condition support
 export type ConditionalComponentsDef = Exclude<
-  InputFieldsComponentsDef | SelectionComponentsDef,
-  MonthYearFieldComponent | UkAddressFieldComponent
+  ComponentDef,
+  | InsetTextComponent
+  | ListComponent
+  | MonthYearFieldComponent
+  | UkAddressFieldComponent
 >

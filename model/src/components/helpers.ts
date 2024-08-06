@@ -47,7 +47,9 @@ export function isConditionalType(
     ComponentType.NumberField,
     ComponentType.SelectField,
     ComponentType.TextField,
-    ComponentType.YesNoField
+    ComponentType.YesNoField,
+    ComponentType.Html,
+    ComponentType.Details
   ]
 
   return !!type && allowedTypes.includes(type)

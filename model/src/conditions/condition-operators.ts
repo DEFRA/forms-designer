@@ -1,5 +1,5 @@
 import { ComponentType } from '~/src/components/enums.js'
-import { isConditionalType } from '~/src/components/helpers.js'
+import { isConditionalType, isContentType } from '~/src/components/helpers.js'
 import {
   type ComponentDef,
   type ConditionalComponentType
@@ -116,7 +116,7 @@ export function getOperatorConfig(
 function getConditionals(
   fieldType?: ConditionalComponentType
 ): Partial<Conditionals> | undefined {
-  if (!fieldType || !isConditionalType(fieldType)) {
+  if (!fieldType || !isConditionalType(fieldType) || isContentType(fieldType)) {
     return
   }
 
