@@ -4,8 +4,8 @@ import Joi from 'joi'
 
 import { redirectToTitleWithErrors } from './helpers.js'
 
+import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
-import { hapiScopeWriteOptions } from '~/src/common/helpers/auth/user-session.js'
 import * as forms from '~/src/lib/forms.js'
 import * as edit from '~/src/models/forms/edit.js'
 import { redirectWithErrors, schema } from '~/src/routes/forms/create.js'
@@ -35,7 +35,15 @@ export default [
         edit.organisationViewModel(metadata, validation)
       )
     },
-    options: hapiScopeWriteOptions
+    options: {
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${scopes.SCOPE_WRITE}`]
+        }
+      }
+    }
   }),
   /**
    * @satisfies {RequestUpdateOrganisationBySlug}
@@ -67,7 +75,13 @@ export default [
         }),
         failAction: redirectWithErrors
       },
-      auth: hapiScopeWriteOptions.auth
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${scopes.SCOPE_WRITE}`]
+        }
+      }
     }
   }),
   /**
@@ -91,7 +105,15 @@ export default [
         edit.teamDetailsViewModel(metadata, validation)
       )
     },
-    options: hapiScopeWriteOptions
+    options: {
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${scopes.SCOPE_WRITE}`]
+        }
+      }
+    }
   }),
   /**
    * @satisfies {RequestUpdateTeamBySlug}
@@ -125,7 +147,13 @@ export default [
         }),
         failAction: redirectWithErrors
       },
-      auth: hapiScopeWriteOptions.auth
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${scopes.SCOPE_WRITE}`]
+        }
+      }
     }
   }),
   /**
@@ -149,7 +177,15 @@ export default [
         edit.titleViewModel(metadata, validation)
       )
     },
-    options: hapiScopeWriteOptions
+    options: {
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${scopes.SCOPE_WRITE}`]
+        }
+      }
+    }
   }),
   /**
    * @satisfies {RequestUpdateTitleBySlug}
@@ -197,7 +233,13 @@ export default [
         }),
         failAction: redirectWithErrors
       },
-      auth: hapiScopeWriteOptions.auth
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${scopes.SCOPE_WRITE}`]
+        }
+      }
     }
   })
 ]
