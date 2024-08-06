@@ -65,6 +65,9 @@ export async function createUserSession(request, artifacts) {
   return server.methods.session.get(user.id)
 }
 
+/**
+ * @satisfies {ServerRoute['options']}
+ */
 export const hapiScopeWriteOptions = {
   auth: {
     mode: 'required',
@@ -84,4 +87,5 @@ export const hapiScopeWriteOptions = {
 /**
  * @template {import('@hapi/hapi').ReqRef} [ReqRef=import('@hapi/hapi').ReqRefDefaults]
  * @typedef {import('@hapi/hapi').Request<ReqRef>} Request
+ * @typedef {import('@hapi/hapi').ServerRoute} ServerRoute
  */
