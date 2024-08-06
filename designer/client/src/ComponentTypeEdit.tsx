@@ -8,6 +8,7 @@ import React, {
 
 import { FieldEdit } from '~/src/FieldEdit.jsx'
 import { MultilineTextFieldEdit } from '~/src/MultilineTextFieldEdit.jsx'
+import { ConditionEdit } from '~/src/components/FieldEditors/ConditionEdit.jsx'
 import { DateFieldEdit } from '~/src/components/FieldEditors/DateFieldEdit.jsx'
 import { DetailsEdit } from '~/src/components/FieldEditors/DetailsEdit.jsx'
 import { ListFieldEdit } from '~/src/components/FieldEditors/ListFieldEdit.jsx'
@@ -61,6 +62,7 @@ export const ComponentTypeEdit: FunctionComponent<Props> = (props) => {
   return (
     <>
       <FieldEdit />
+      <ConditionEdit />
       <CustomEdit>{children}</CustomEdit>
     </>
   )
