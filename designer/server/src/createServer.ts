@@ -5,6 +5,8 @@ import inert from '@hapi/inert'
 import Wreck from '@hapi/wreck'
 import { ProxyAgent } from 'proxy-agent'
 
+import { SCOPE_READ } from './common/constants/scopes.js'
+
 import {
   azureOidc,
   azureOidcNoop
@@ -34,7 +36,11 @@ const serverOptions = (): ServerOptions => {
     routes: {
       auth: {
         mode: 'required',
-        strategies: ['session']
+        strategies: ['session'],
+        access: {
+          entity: 'user',
+          scope: [`+${SCOPE_READ}`]
+        }
       },
       validate: {
         options: {

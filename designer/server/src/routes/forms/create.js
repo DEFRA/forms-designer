@@ -11,9 +11,8 @@ import Joi from 'joi'
 
 import { redirectToTitleWithErrors } from './helpers.js'
 
-import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
-import { hapiScopeOptions } from '~/src/common/helpers/auth/user-session.js'
+import { hapiScopeWriteOptions } from '~/src/common/helpers/auth/user-session.js'
 import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
 import * as forms from '~/src/lib/forms.js'
@@ -62,7 +61,7 @@ export default [
       // Redirect to first step
       return h.redirect(ROUTE_PATH_CREATE_TITLE).temporary()
     },
-    options: hapiScopeOptions()
+    options: hapiScopeWriteOptions
   }),
 
   /**
@@ -83,7 +82,7 @@ export default [
         create.titleViewModel(metadata, validation)
       )
     },
-    options: hapiScopeOptions(scopes.SCOPE_WRITE)
+    options: hapiScopeWriteOptions
   }),
 
   /**
@@ -123,7 +122,7 @@ export default [
         }),
         failAction: redirectToStepWithErrors
       },
-      auth: hapiScopeOptions().auth
+      auth: hapiScopeWriteOptions.auth
     }
   }),
 
@@ -145,7 +144,7 @@ export default [
         create.organisationViewModel(metadata, validation)
       )
     },
-    options: hapiScopeOptions()
+    options: hapiScopeWriteOptions
   }),
 
   /**
@@ -173,13 +172,7 @@ export default [
         }),
         failAction: redirectToStepWithErrors
       },
-      auth: {
-        mode: 'required',
-        access: {
-          entity: 'user',
-          scope: [`+${scopes.SCOPE_READ}`]
-        }
-      }
+      auth: hapiScopeWriteOptions.auth
     }
   }),
 
@@ -201,15 +194,7 @@ export default [
         create.teamViewModel(metadata, validation)
       )
     },
-    options: {
-      auth: {
-        mode: 'required',
-        access: {
-          entity: 'user',
-          scope: [`+${scopes.SCOPE_READ}`]
-        }
-      }
-    }
+    options: hapiScopeWriteOptions
   }),
 
   /**
@@ -257,13 +242,7 @@ export default [
         payload: schema,
         failAction: redirectToStepWithErrors
       },
-      auth: {
-        mode: 'required',
-        access: {
-          entity: 'user',
-          scope: [`+${scopes.SCOPE_READ}`]
-        }
-      }
+      auth: hapiScopeWriteOptions.auth
     }
   })
 ]

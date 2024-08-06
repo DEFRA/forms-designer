@@ -1,4 +1,3 @@
-import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import * as forms from '~/src/lib/forms.js'
 import * as library from '~/src/models/forms/library.js'
@@ -16,15 +15,6 @@ export default [
       const model = await library.listViewModel(token)
 
       return h.view('forms/library', model)
-    },
-    options: {
-      auth: {
-        mode: 'required',
-        access: {
-          entity: 'user',
-          scope: [`+${scopes.SCOPE_READ}`]
-        }
-      }
     }
   }),
 
@@ -57,13 +47,6 @@ export default [
         )
 
         return h.view('forms/overview', { ...model, titleActionItems })
-      },
-      auth: {
-        mode: 'required',
-        access: {
-          entity: 'user',
-          scope: [`+${scopes.SCOPE_READ}`]
-        }
       }
     }
   }),
@@ -87,13 +70,6 @@ export default [
 
         const model = library.editorViewModel(form, definition)
         return h.view('forms/editor', model)
-      },
-      auth: {
-        mode: 'required',
-        access: {
-          entity: 'user',
-          scope: [`+${scopes.SCOPE_READ}`]
-        }
       }
     }
   })

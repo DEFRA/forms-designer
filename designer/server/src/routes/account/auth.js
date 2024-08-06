@@ -29,7 +29,10 @@ export default [
     },
     options: {
       auth: {
-        strategies: ['azure-oidc']
+        strategies: ['azure-oidc'],
+        access: {
+          scope: false
+        }
       },
 
       response: {

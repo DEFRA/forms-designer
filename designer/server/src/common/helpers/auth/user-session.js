@@ -65,14 +65,12 @@ export async function createUserSession(request, artifacts) {
   return server.methods.session.get(user.id)
 }
 
-export function hapiScopeOptions(scope = scopes.SCOPE_READ) {
-  return {
-    auth: {
-      mode: 'required',
-      access: {
-        entity: 'user',
-        scope: [`+${scope}`]
-      }
+export const hapiScopeWriteOptions = {
+  auth: {
+    mode: 'required',
+    access: {
+      entity: 'user',
+      scope: [`+${scopes.SCOPE_WRITE}`]
     }
   }
 }
