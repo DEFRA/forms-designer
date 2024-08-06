@@ -13,7 +13,6 @@ import { redirectToTitleWithErrors } from './helpers.js'
 
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
-import { scope } from '~/src/common/helpers/auth/azure-oidc.js'
 import { hapiScopeOptions } from '~/src/common/helpers/auth/user-session.js'
 import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
 import { createLogger } from '~/src/common/helpers/logging/logger.js'

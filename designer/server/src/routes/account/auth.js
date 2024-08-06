@@ -1,8 +1,6 @@
 import Boom from '@hapi/boom'
 
-import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
-import { dropUserSession } from '~/src/common/helpers/auth/drop-user-session.js'
 import { hasUser } from '~/src/common/helpers/auth/get-user-session.js'
 import { createUserSession } from '~/src/common/helpers/auth/user-session.js'
 
