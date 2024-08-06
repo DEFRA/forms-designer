@@ -1,6 +1,7 @@
 import { hasListField } from '@defra/forms-model'
 import React, { useContext } from 'react'
 
+import { CssClasses } from '~/src/components/CssClasses/CssClasses.jsx'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 import { Options } from '~/src/reducers/component/types.js'
@@ -53,6 +54,8 @@ export function ListContentEdit({ context = ComponentContext }: Props) {
             </label>
           </div>
         </div>
+
+        <CssClasses />
       </div>
     </details>
   )
