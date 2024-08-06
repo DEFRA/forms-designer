@@ -94,16 +94,22 @@ describe('Field Edit', () => {
     expect($selects).toHaveLength(0)
   })
 
-  it('should not render options for content components', () => {
+  it('should render options for content components', () => {
     selectedComponent.title = 'Details'
     selectedComponent.type = ComponentType.Details
 
-    const { container } = render(
+    render(
       <RenderWithContext data={data} state={{ selectedComponent }}>
         <FieldEdit />
       </RenderWithContext>
     )
 
-    expect(container.textContent).toBe('')
+    const $inputs = screen.queryAllByRole('textbox')
+    const $checkboxes = screen.queryAllByRole('checkbox')
+    const $selects = screen.queryAllByRole('combobox')
+
+    expect($inputs).toHaveLength(1)
+    expect($checkboxes).toHaveLength(0)
+    expect($selects).toHaveLength(0)
   })
 })

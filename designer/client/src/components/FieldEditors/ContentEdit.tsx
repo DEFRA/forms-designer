@@ -1,4 +1,4 @@
-import { hasContentField } from '@defra/forms-model'
+import { ComponentType, hasContentField } from '@defra/forms-model'
 import classNames from 'classnames'
 import React, { useContext } from 'react'
 
@@ -12,9 +12,7 @@ interface Props {
   context?: typeof ComponentContext
 }
 
-export function ParaEdit({ context = ComponentContext }: Props) {
-  // If you are editing a component, the default context will be ComponentContext because props.context is undefined,
-  // but if you editing a component which is a children of a list based component, then the props.context is the ListContext.
+export function ContentEdit({ context = ComponentContext }: Props) {
   const { state, dispatch } = useContext(context)
 
   const { selectedComponent, errors = {} } = state
@@ -34,7 +32,11 @@ export function ParaEdit({ context = ComponentContext }: Props) {
         Content
       </label>
       <div className="govuk-hint" id="field-content-error">
-        {i18n('fieldEdit.para.hint')}
+        {i18n(
+          selectedComponent.type === ComponentType.Details
+            ? 'fieldEdit.details.hint'
+            : 'fieldEdit.para.hint'
+        )}
       </div>
       {errors.content && (
         <ErrorMessage id="field-content-error">
