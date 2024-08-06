@@ -249,23 +249,6 @@ export type ContentComponentsDef =
   | InsetTextComponent
   | ListComponent
 
-// Components with editors
-export type EditorComponentsDef =
-  | TextFieldComponent
-  | EmailAddressFieldComponent
-  | TelephoneNumberFieldComponent
-  | MultilineTextFieldComponent
-  | NumberFieldComponent
-  | AutocompleteFieldComponent
-  | SelectFieldComponent
-  | RadiosFieldComponent
-  | CheckboxesFieldComponent
-  | ListComponent
-  | DetailsComponent
-  | HtmlComponent
-  | InsetTextComponent
-  | DatePartsFieldFieldComponent
-
 // Components that render lists
 export type ListComponentsDef =
   | Exclude<SelectionComponentsDef, YesNoFieldComponent>

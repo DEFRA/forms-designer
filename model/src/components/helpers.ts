@@ -5,7 +5,6 @@ import {
   type ConditionalComponentsDef,
   type ConditionalComponentType,
   type ContentComponentsDef,
-  type EditorComponentsDef,
   type HtmlComponent,
   type InsetTextComponent,
   type ListComponent,
@@ -85,32 +84,6 @@ export function isContentType(
   ]
 
   return !!type && allowedTypes.includes(type)
-}
-
-/**
- * Filter known components with text editor or list select
- */
-export function hasEditor(
-  component?: Partial<ComponentDef>
-): component is EditorComponentsDef {
-  const allowedTypes = [
-    ComponentType.TextField,
-    ComponentType.EmailAddressField,
-    ComponentType.TelephoneNumberField,
-    ComponentType.MultilineTextField,
-    ComponentType.NumberField,
-    ComponentType.AutocompleteField,
-    ComponentType.SelectField,
-    ComponentType.RadiosField,
-    ComponentType.CheckboxesField,
-    ComponentType.List,
-    ComponentType.Details,
-    ComponentType.Html,
-    ComponentType.InsetText,
-    ComponentType.DatePartsField
-  ]
-
-  return !!component?.type && allowedTypes.includes(component.type)
 }
 
 /**
