@@ -21,7 +21,7 @@ describe('Authentiation', () => {
     await server.stop()
   })
 
-  describe.each(testingScopes)('With valid or invalid scopes', (auth) => {
+  describe.each(testingScopes)('With valid or invalid scopes', (authIn) => {
     /** @type {ServerInjectResponse} */
     let response
 
@@ -29,7 +29,7 @@ describe('Authentiation', () => {
       const options = {
         method: 'get',
         url: '/auth/callback',
-        auth
+        auth: authIn
       }
 
       response = await server.inject(options)
