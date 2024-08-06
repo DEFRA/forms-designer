@@ -1,4 +1,5 @@
 import { hasListField } from '@defra/forms-model'
+import upperFirst from 'lodash/upperFirst.js'
 import React, { useContext } from 'react'
 
 import { CssClasses } from '~/src/components/CssClasses/CssClasses.jsx'
@@ -19,7 +20,6 @@ export function ListContentEdit({ context = ComponentContext }: Props) {
   }
 
   const { options } = selectedComponent
-  const checked = options.type === 'numbered'
 
   return (
     <details className="govuk-details">
@@ -30,29 +30,46 @@ export function ListContentEdit({ context = ComponentContext }: Props) {
       </summary>
 
       <div className="govuk-details__text">
-        <div className="govuk-checkboxes govuk-form-group">
-          <div className="govuk-checkboxes__item">
-            <input
-              className="govuk-checkboxes__input"
-              id="field-options-type"
-              name="options.type"
-              value="numbered"
-              type="checkbox"
-              checked={checked}
-              onChange={() =>
-                dispatch({
-                  type: Options.EDIT_OPTIONS_TYPE,
-                  payload: checked ? undefined : 'numbered'
-                })
-              }
-            />
-            <label
-              className="govuk-label govuk-checkboxes__label"
-              htmlFor="field-options-type"
-            >
-              Numbered
-            </label>
-          </div>
+        <div className="govuk-form-group">
+          <fieldset className="govuk-fieldset">
+            <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">
+              {i18n('listContentEditComponent.bulletField.title')}
+            </legend>
+            <div className="govuk-radios" data-module="govuk-radios">
+              {['bulleted', 'numbered'].map((bullet) => {
+                const name = 'cond-value-units'
+                const id = `${name}-${bullet}`
+
+                return (
+                  <div className="govuk-radios__item" key={bullet}>
+                    <input
+                      className="govuk-radios__input"
+                      id={id}
+                      name={name}
+                      type="radio"
+                      defaultValue={bullet}
+                      defaultChecked={
+                        options.type === bullet ||
+                        (!options.type && bullet === 'bulleted')
+                      }
+                      onClick={() => {
+                        dispatch({
+                          type: Options.EDIT_OPTIONS_TYPE,
+                          payload: bullet
+                        })
+                      }}
+                    />
+                    <label
+                      className="govuk-label govuk-radios__label"
+                      htmlFor={id}
+                    >
+                      {upperFirst(bullet)}
+                    </label>
+                  </div>
+                )
+              })}
+            </div>
+          </fieldset>
         </div>
 
         <CssClasses />
