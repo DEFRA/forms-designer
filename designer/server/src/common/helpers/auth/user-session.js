@@ -68,7 +68,7 @@ export async function createUserSession(request, artifacts) {
 export function hapiScopeOptions(scope = scopes.SCOPE_READ) {
   return {
     auth: {
-      mode: 'try',
+      mode: 'required',
       access: {
         entity: 'user',
         scope: [`+${scope}`]
