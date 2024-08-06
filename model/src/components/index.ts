@@ -2,6 +2,7 @@ export { ComponentTypes } from '~/src/components/component-types.js'
 export {
   getComponentDefaults,
   hasConditionSupport,
+  hasContent,
   hasContentField,
   hasEditor,
   hasListField,

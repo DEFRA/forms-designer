@@ -227,7 +227,6 @@ export type ComponentDef =
   | InputFieldsComponentsDef
   | SelectionComponentsDef
   | ContentComponentsDef
-  | ListComponent
 
 // Components that render inputs
 export type InputFieldsComponentsDef =
@@ -245,6 +244,7 @@ export type ContentComponentsDef =
   | DetailsComponent
   | HtmlComponent
   | InsetTextComponent
+  | ListComponent
 
 // Components with editors
 export type EditorComponentsDef =

@@ -5,11 +5,12 @@ import {
   type ConditionalComponentsDef,
   type ConditionalComponentType,
   type ContentComponentsDef,
+  type EditorComponentsDef,
   type HtmlComponent,
   type InsetTextComponent,
+  type ListComponent,
   type ListComponentsDef,
-  type SelectionComponentsDef,
-  type EditorComponentsDef
+  type SelectionComponentsDef
 } from '~/src/components/types.js'
 
 /**
@@ -53,18 +54,35 @@ export function isConditionalType(
 }
 
 /**
- * Filter known components with content fields
+ * Filter known components with content (textarea or list)
+ */
+export function hasContent(
+  component?: Partial<ComponentDef>
+): component is ContentComponentsDef {
+  return isContentType(component?.type)
+}
+
+/**
+ * Filter known components with content textarea
  */
 export function hasContentField(
   component?: Partial<ComponentDef>
-): component is ContentComponentsDef {
+): component is Exclude<ContentComponentsDef, ListComponent> {
+  const deniedTypes = [ComponentType.List]
+  return hasContent(component) && !deniedTypes.includes(component.type)
+}
+
+export function isContentType(
+  type?: ComponentType
+): type is ContentComponentsDef['type'] {
   const allowedTypes = [
     ComponentType.Details,
     ComponentType.Html,
-    ComponentType.InsetText
+    ComponentType.InsetText,
+    ComponentType.List
   ]
 
-  return !!component?.type && allowedTypes.includes(component.type)
+  return !!type && allowedTypes.includes(type)
 }
 
 /**
