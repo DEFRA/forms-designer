@@ -10,6 +10,7 @@ jest.mock('~/src/lib/forms.js')
 describe('Authentiation', () => {
   /** @type {import('@hapi/hapi').Server} */
   let server
+  const testingScopes = [auth, authScopesEmpty, authGroupsInvalid]
 
   beforeAll(async () => {
     server = await createServer()
@@ -20,7 +21,7 @@ describe('Authentiation', () => {
     await server.stop()
   })
 
-  describe('With valid scopes', () => {
+  describe.each(testingScopes)('With valid or invalid scopes', (auth) => {
     /** @type {ServerInjectResponse} */
     let response
 
@@ -46,60 +47,6 @@ describe('Authentiation', () => {
           expect.stringMatching(/^userSession=[a-z]/i),
           expect.not.stringContaining('userSession=;')
         ])
-      )
-    })
-  })
-
-  describe('With empty scopes', () => {
-    /** @type {ServerInjectResponse} */
-    let response
-
-    beforeAll(async () => {
-      const options = {
-        method: 'get',
-        url: '/auth/callback',
-        auth: authScopesEmpty
-      }
-
-      response = await server.inject(options)
-    })
-
-    it('should redirect to home', () => {
-      const { headers } = response
-      expect(headers.location).toBe('/')
-    })
-
-    it('should clear the user session cookie', () => {
-      const { headers } = response
-      expect(headers['set-cookie']).toMatchObject(
-        expect.arrayContaining([expect.stringContaining('userSession=;')])
-      )
-    })
-  })
-
-  describe('With invalid groups', () => {
-    /** @type {ServerInjectResponse} */
-    let response
-
-    beforeAll(async () => {
-      const options = {
-        method: 'get',
-        url: '/auth/callback',
-        auth: authGroupsInvalid
-      }
-
-      response = await server.inject(options)
-    })
-
-    it('should redirect to home', () => {
-      const { headers } = response
-      expect(headers.location).toBe('/')
-    })
-
-    it('should clear the user session cookie', () => {
-      const { headers } = response
-      expect(headers['set-cookie']).toMatchObject(
-        expect.arrayContaining([expect.stringContaining('userSession=;')])
       )
     })
   })
