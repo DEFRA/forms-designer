@@ -7,9 +7,9 @@ import {
   type ContentComponentsDef,
   type HtmlComponent,
   type InsetTextComponent,
+  type ListComponent,
   type ListComponentsDef,
-  type SelectionComponentsDef,
-  type EditorComponentsDef
+  type SelectionComponentsDef
 } from '~/src/components/types.js'
 
 /**
@@ -36,59 +36,54 @@ export function isConditionalType(
   type?: ComponentType
 ): type is ConditionalComponentType {
   const allowedTypes = [
+    ComponentType.AutocompleteField,
     ComponentType.RadiosField,
     ComponentType.CheckboxesField,
     ComponentType.DatePartsField,
     ComponentType.EmailAddressField,
     ComponentType.MultilineTextField,
+    ComponentType.TelephoneNumberField,
     ComponentType.NumberField,
     ComponentType.SelectField,
     ComponentType.TextField,
-    ComponentType.YesNoField
+    ComponentType.YesNoField,
+    ComponentType.Html,
+    ComponentType.Details
   ]
 
   return !!type && allowedTypes.includes(type)
 }
 
 /**
- * Filter known components with content fields
+ * Filter known components with content (textarea or list)
  */
-export function hasContentField(
+export function hasContent(
   component?: Partial<ComponentDef>
 ): component is ContentComponentsDef {
-  const allowedTypes = [
-    ComponentType.Details,
-    ComponentType.Html,
-    ComponentType.InsetText
-  ]
-
-  return !!component?.type && allowedTypes.includes(component.type)
+  return isContentType(component?.type)
 }
 
 /**
- * Filter known components with text editor or list select
+ * Filter known components with content textarea
  */
-export function hasEditor(
+export function hasContentField(
   component?: Partial<ComponentDef>
-): component is EditorComponentsDef {
+): component is Exclude<ContentComponentsDef, ListComponent> {
+  const deniedTypes = [ComponentType.List]
+  return hasContent(component) && !deniedTypes.includes(component.type)
+}
+
+export function isContentType(
+  type?: ComponentType
+): type is ContentComponentsDef['type'] {
   const allowedTypes = [
-    ComponentType.TextField,
-    ComponentType.EmailAddressField,
-    ComponentType.TelephoneNumberField,
-    ComponentType.MultilineTextField,
-    ComponentType.NumberField,
-    ComponentType.AutocompleteField,
-    ComponentType.SelectField,
-    ComponentType.RadiosField,
-    ComponentType.CheckboxesField,
-    ComponentType.List,
     ComponentType.Details,
     ComponentType.Html,
     ComponentType.InsetText,
-    ComponentType.DatePartsField
+    ComponentType.List
   ]
 
-  return !!component?.type && allowedTypes.includes(component.type)
+  return !!type && allowedTypes.includes(type)
 }
 
 /**
@@ -121,6 +116,7 @@ export function hasSelectionFields(
   component?: Partial<ComponentDef>
 ): component is SelectionComponentsDef {
   const allowedTypes = [
+    ComponentType.AutocompleteField,
     ComponentType.CheckboxesField,
     ComponentType.RadiosField,
     ComponentType.SelectField,

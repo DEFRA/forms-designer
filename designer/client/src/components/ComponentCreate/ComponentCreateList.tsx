@@ -1,18 +1,16 @@
 import {
-  ComponentType,
   ComponentTypes,
-  hasContentField,
+  hasContent,
   hasSelectionFields,
   type ComponentDef,
   type ContentComponentsDef,
-  type ListComponent,
   type SelectionComponentsDef
 } from '@defra/forms-model'
 import React, { type MouseEvent, useCallback } from 'react'
 
 import { i18n } from '~/src/i18n/i18n.jsx'
 
-const contentFields: (ContentComponentsDef | ListComponent)[] = []
+const contentFields: ContentComponentsDef[] = []
 const selectionFields: SelectionComponentsDef[] = []
 const inputFields: ComponentDef[] = []
 
@@ -21,8 +19,7 @@ const ComponentTypesSorted = ComponentTypes.sort(
 )
 
 for (const component of ComponentTypesSorted) {
-  // Ensure the list component is grouped with other content fields
-  if (hasContentField(component) || component.type === ComponentType.List) {
+  if (hasContent(component)) {
     contentFields.push(component)
   } else if (hasSelectionFields(component)) {
     selectionFields.push(component)

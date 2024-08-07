@@ -1,5 +1,5 @@
 import { type ComponentType } from '~/src/components/enums.js'
-import { isConditionalType } from '~/src/components/helpers.js'
+import { isConditionalType, isContentType } from '~/src/components/helpers.js'
 import { type ConditionalComponentType } from '~/src/components/types.js'
 import { type ConditionFieldData } from '~/src/conditions/types.js'
 
@@ -13,7 +13,7 @@ export class ConditionField {
       throw new Error("ConditionField param 'name' must be a string")
     }
 
-    if (!isConditionalType(type)) {
+    if (!isConditionalType(type) || isContentType(type)) {
       throw new Error("ConditionField param 'type' must support conditions")
     }
 

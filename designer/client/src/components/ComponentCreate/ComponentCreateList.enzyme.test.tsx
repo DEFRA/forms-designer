@@ -62,7 +62,6 @@ describe('ComponentCreateList', () => {
       .map((c) => c.find('a').text())
 
     expect(listItems).toEqual([
-      'Autocomplete',
       'Date',
       'Email address',
       'Month & year',
@@ -94,10 +93,9 @@ describe('ComponentCreateList', () => {
     expect(onSelectComponent.mock.calls[0]).toEqual(
       expect.arrayContaining([
         {
-          name: 'AutocompleteField',
-          title: 'Autocomplete field',
-          list: '',
-          type: ComponentType.AutocompleteField,
+          name: 'DatePartsField',
+          title: 'Date field',
+          type: ComponentType.DatePartsField,
           options: {},
           schema: {},
           hint: ''
@@ -116,7 +114,13 @@ describe('ComponentCreateList', () => {
       .find('li')
       .map((c) => c.find('a').text())
 
-    expect(listItems).toEqual(['Checkboxes', 'Radios', 'Select', 'YesNo'])
+    expect(listItems).toEqual([
+      'Autocomplete',
+      'Checkboxes',
+      'Radios',
+      'Select',
+      'YesNo'
+    ])
   })
 
   test('it selects Selection fields on click', () => {
@@ -139,10 +143,10 @@ describe('ComponentCreateList', () => {
     expect(onSelectComponent.mock.calls[0]).toEqual(
       expect.arrayContaining([
         {
-          name: 'CheckboxesField',
-          title: 'Checkboxes field',
+          name: 'AutocompleteField',
+          title: 'Autocomplete field',
           list: '',
-          type: ComponentType.CheckboxesField,
+          type: ComponentType.AutocompleteField,
           options: {},
           schema: {},
           hint: ''
