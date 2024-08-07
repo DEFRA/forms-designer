@@ -244,6 +244,9 @@ export class PageEdit extends Component {
               <option value="StartPageController">
                 {i18n('page.controllers.start')}
               </option>
+              <option value="FileUploadPageController">
+                {i18n('page.controllers.fileUpload')}
+              </option>
               <option value="SummaryPageController">
                 {i18n('page.controllers.summary')}
               </option>
