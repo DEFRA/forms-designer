@@ -1,5 +1,5 @@
 export function unauthorisedViewModel() {
-  const pageTitle = 'You are unauthorised'
+  const pageTitle = 'You do not have access to this service'
 
   return {
     pageTitle,
