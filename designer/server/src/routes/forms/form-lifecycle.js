@@ -40,6 +40,7 @@ export default [
       }
     }
   }),
+
   /**
    * @satisfies {ServerRoute<{ Params: FormBySlugInput }>}
    */
@@ -84,6 +85,7 @@ export default [
       }
     }
   }),
+
   /**
    * @satisfies {ServerRoute<{ Params: FormBySlugInput }>}
    */

@@ -35,6 +35,7 @@ export default [
       )
     }
   }),
+
   /**
    * @satisfies {RequestUpdateOrganisationBySlug}
    */
@@ -67,6 +68,7 @@ export default [
       }
     }
   }),
+
   /**
    * @satisfies {RequestBySlug}
    */
@@ -89,6 +91,7 @@ export default [
       )
     }
   }),
+
   /**
    * @satisfies {RequestUpdateTeamBySlug}
    */
@@ -123,6 +126,7 @@ export default [
       }
     }
   }),
+
   /**
    * @satisfies {RequestBySlug}
    */
@@ -145,6 +149,7 @@ export default [
       )
     }
   }),
+
   /**
    * @satisfies {RequestUpdateTitleBySlug}
    */

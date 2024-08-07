@@ -17,6 +17,7 @@ export function camelCase(str) {
     .toLowerCase()
     .replace(
       /[\s-_]+(.)/g,
+
       /**
        * @param {string} m
        * @param {string} chr
