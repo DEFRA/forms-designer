@@ -225,6 +225,7 @@ export class PageCreate extends Component {
             >
               <option value="">Question Page</option>
               <option value="./pages/start.js">Start Page</option>
+              <option value="./pages/fileUpload.js">File upload</option>
               <option value="./pages/summary.js">Summary Page</option>
             </select>
           </div>

@@ -236,6 +236,9 @@ export class PageEdit extends Component {
               <option value="./pages/start.js">
                 {i18n('page.types.start')}
               </option>
+              <option value="./pages/fileUpload.js">
+                {i18n('page.types.fileUpload')}
+              </option>
               <option value="./pages/summary.js">
                 {i18n('page.types.summary')}
               </option>
