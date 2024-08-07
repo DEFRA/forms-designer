@@ -11,10 +11,6 @@ export const requestLogger = {
 }
 
 /**
- * @template {object | void} [PluginOptions=void]
- * @typedef {import('@hapi/hapi').ServerRegisterPluginObject<PluginOptions>} ServerRegisterPluginObject
- */
-
-/**
- * @typedef {import('hapi-pino').Options} Options
+ * @import { ServerRegisterPluginObject } from '@hapi/hapi'
+ * @import { Options } from 'hapi-pino'
  */

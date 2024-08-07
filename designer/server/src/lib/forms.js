@@ -149,17 +149,13 @@ export async function updateMetadata(id, metadata, token) {
 
 /**
  * @param {string} token
- * @returns {RequestOptions}
+ * @returns {Parameters<typeof Wreck.request>[2]}
  */
 function getAuthOptions(token) {
   return { headers: { Authorization: `Bearer ${token}` } }
 }
 
 /**
- * @typedef {import('@defra/forms-model').FormDefinition} FormDefinition
- * @typedef {import('@defra/forms-model').FormMetadata} FormMetadata
- * @typedef {import('@defra/forms-model').FormMetadataInput} FormMetadataInput
- * @typedef {import('@defra/forms-model').FormResponse} FormResponse
- * @typedef {import('@hapi/hapi').AuthCredentials} AuthCredentials
- * @typedef {import('~/src/lib/fetch.js').RequestOptions} RequestOptions
+ * @import { FormDefinition, FormMetadata, FormMetadataInput, FormResponse } from '@defra/forms-model'
+ * @import Wreck from '@hapi/wreck'
  */

@@ -21,7 +21,7 @@ const govukFrontendLegacyPath = dirname(
   })
 )
 
-export default /** @type {import('webpack').Configuration} */ ({
+export default /** @type {Configuration} */ ({
   context: join(import.meta.dirname, 'client/src'),
   devtool: NODE_ENV === 'production' ? 'source-map' : 'inline-source-map',
   entry: {
@@ -227,3 +227,7 @@ export default /** @type {import('webpack').Configuration} */ ({
   },
   target: 'browserslist:javascripts'
 })
+
+/**
+ * @import { Configuration } from 'webpack'
+ */

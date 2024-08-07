@@ -24,7 +24,7 @@ export function renderView(...args) {
  * @param {ServerInjectOptions} options
  */
 export async function renderResponse(server, options) {
-  const response = /** @type {ServerInjectResponse} */ (
+  const response = /** @type {ServerInjectResponse<string>} */ (
     await server.inject(options)
   )
 
@@ -42,7 +42,5 @@ export function renderDOM(html) {
 }
 
 /**
- * @typedef {import('@hapi/hapi').Server} Server
- * @typedef {import('@hapi/hapi').ServerInjectOptions} ServerInjectOptions
- * @typedef {import('@hapi/hapi').ServerInjectResponse<string>} ServerInjectResponse
+ * @import { Server, ServerInjectOptions, ServerInjectResponse } from '@hapi/hapi'
  */

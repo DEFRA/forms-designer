@@ -1,6 +1,6 @@
 /**
  * ESLint config
- * @type {import('eslint').ESLint.ConfigData}
+ * @type {ESLint.ConfigData}
  */
 module.exports = {
   ignorePatterns: [
@@ -272,3 +272,7 @@ module.exports = {
   ],
   root: true
 }
+
+/**
+ * @import { ESLint } from 'eslint'
+ */

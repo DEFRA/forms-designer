@@ -39,6 +39,5 @@ describe('edit - model', () => {
 })
 
 /**
- * @typedef {import('@defra/forms-model').FormMetadata} FormMetadata
- * @typedef {import('@defra/forms-model').FormMetadataAuthor} FormMetadataAuthor
+ * @import { FormMetadata, FormMetadataAuthor } from '@defra/forms-model'
  */

@@ -38,6 +38,6 @@ export async function getToken(params) {
 }
 
 /**
- * @typedef {import('oidc-client-ts').OidcMetadata} OidcMetadata - OpenID Connect (OIDC) metadata
- * @typedef {import('@hapi/hapi').AuthArtifacts} AuthArtifacts
+ * @import { AuthArtifacts } from '@hapi/hapi'
+ * @import { OidcMetadata } from 'oidc-client-ts'
  */

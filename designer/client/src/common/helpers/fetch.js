@@ -3,7 +3,7 @@ import { logger } from '~/src/common/helpers/logging/logger.js'
 /**
  * @template {object} [RequestType={}]
  * @param {string} path
- * @param {RequestOptions<RequestType>} [options]
+ * @param {Omit<RequestInit, 'body'> & { body?: RequestType }} [options]
  */
 export async function request(path, options = {}) {
   const { body, ...init } = options
@@ -30,15 +30,10 @@ export async function request(path, options = {}) {
  * @template {object} [RequestType={}]
  * @template {object} [ResponseType=RequestType]
  * @param {string} path
- * @param {RequestOptions<RequestType>} [options]
+ * @param {Omit<RequestInit, 'body'> & { body?: RequestType }} [options]
  */
 export async function fetch(path, options) {
   const response = await request(path, options)
   const json = /** @type {Promise<ResponseType>} */ (response.json())
   return json
 }
-
-/**
- * @template {object} [RequestType={}]
- * @typedef {Omit<RequestInit, 'body'> & { body?: RequestType }} RequestOptions
- */

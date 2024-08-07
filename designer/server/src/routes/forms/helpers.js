@@ -3,8 +3,9 @@ import { StatusCodes } from 'http-status-codes'
 import * as create from '~/src/models/forms/create.js'
 
 /**
- * @param {RequestWithPayload} request
- * @param {ResponseToolkit} h
+ * @template {Request<{ Payload: any }> | Request<{ Params: any, Payload: any }>} RequestType
+ * @param {RequestType} request
+ * @param {ResponseToolkit<any>} h
  * @param {string} redirectPath
  */
 export function redirectToTitleWithErrors(request, h, redirectPath) {
@@ -20,11 +21,5 @@ export function redirectToTitleWithErrors(request, h, redirectPath) {
 }
 
 /**
- * @template {import('@hapi/hapi').ReqRef} [ReqRef=import('@hapi/hapi').ReqRefDefaults]
- * @typedef {import('@hapi/hapi').Request<ReqRef>} Request
- */
-
-/**
- * @typedef {import('@hapi/hapi').ResponseToolkit<any>} ResponseToolkit
- * @typedef {Request<{ Payload: any }>} RequestWithPayload
+ * @import { Request, ResponseToolkit } from '@hapi/hapi'
  */

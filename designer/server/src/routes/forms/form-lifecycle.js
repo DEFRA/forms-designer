@@ -120,20 +120,6 @@ export default [
 ]
 
 /**
- * @typedef {import('@defra/forms-model').FormBySlugInput} FormBySlugInput
- */
-
-/**
- * @template {import('@hapi/hapi').ReqRef} [ReqRef=import('@hapi/hapi').ReqRefDefaults]
- * @typedef {import('@hapi/hapi').ServerRoute<ReqRef>} ServerRoute
- */
-
-/**
- * @template {import('@hapi/hapi').ReqRef} [ReqRef=import('@hapi/hapi').ReqRefDefaults]
- * @typedef {import('@hapi/hapi').Request<ReqRef>} Request
- */
-
-/**
- * @typedef {import('@hapi/hapi').ResponseToolkit<any>} ResponseToolkit
- * @typedef {Request<{ Payload: any }>} RequestWithPayload
+ * @import { FormBySlugInput } from '@defra/forms-model'
+ * @import { ServerRoute } from '@hapi/hapi'
  */

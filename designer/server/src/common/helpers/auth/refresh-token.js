@@ -42,11 +42,5 @@ export async function refreshAccessToken(request) {
 }
 
 /**
- * @template {import('@hapi/hapi').ReqRef} [ReqRef=import('@hapi/hapi').ReqRefDefaults]
- * @typedef {import('@hapi/hapi').Request<ReqRef>} Request
- */
-
-/**
- * @typedef {import('@hapi/hapi').AuthArtifacts} AuthArtifacts
- * @typedef {import('~/src/common/helpers/auth/azure-oidc.js').OidcMetadata} OidcMetadata
+ * @import { AuthArtifacts, Request } from '@hapi/hapi'
  */

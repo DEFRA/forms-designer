@@ -1,4 +1,4 @@
-import { Redis } from 'ioredis'
+import { Cluster, Redis } from 'ioredis'
 
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
 import config from '~/src/config.js'
@@ -8,7 +8,6 @@ import config from '~/src/config.js'
  *
  * Local development - 1 Redis instance
  * Out in the wild - Elasticache / Redis Cluster with username and password
- * @returns {import('ioredis').Cluster | import('ioredis').Redis}
  */
 function buildRedisClient() {
   const logger = createLogger()
@@ -31,7 +30,7 @@ function buildRedisClient() {
   } else {
     logger.info('Connecting to Redis using cluster')
 
-    redisClient = new Redis.Cluster(
+    redisClient = new Cluster(
       [
         {
           host: config.redisHost,

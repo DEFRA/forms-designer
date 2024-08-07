@@ -123,6 +123,5 @@ export function getFormSpecificNavigation(formPath, activePage = '') {
 }
 
 /**
- * @typedef {import('@defra/forms-model').FormMetadata} FormMetadata
- * @typedef {import('@defra/forms-model').FormDefinition} FormDefinition
+ * @import { FormDefinition, FormMetadata } from '@defra/forms-model'
  */

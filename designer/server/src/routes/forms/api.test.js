@@ -5,7 +5,7 @@ import { auth } from '~/test/fixtures/auth.js'
 jest.mock('~/src/lib/forms.js')
 
 describe('Server API', () => {
-  /** @type {import('@hapi/hapi').Server} */
+  /** @type {Server} */
   let server
 
   beforeAll(async () => {
@@ -88,10 +88,6 @@ describe('Server API', () => {
 })
 
 /**
- * @typedef {import('@defra/forms-model').FormDefinition} FormDefinition
- */
-
-/**
- * @template {object} Result
- * @typedef {import('@hapi/hapi').ServerInjectResponse<Result>} ServerInjectResponse
+ * @import { FormDefinition } from '@defra/forms-model'
+ * @import { Server, ServerInjectResponse } from '@hapi/hapi'
  */

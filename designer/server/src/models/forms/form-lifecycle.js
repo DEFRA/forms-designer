@@ -45,6 +45,6 @@ export function confirmationPageViewModel(form, errorList) {
 }
 
 /**
- * @typedef {import("./library.js").FormMetadata} FormMetadata
- * @typedef {import('~/src/common/helpers/build-error-details.js').ErrorDetailsItem} ErrorDetailsItem
+ * @import { FormMetadata } from '@defra/forms-model'
+ * @import { ErrorDetailsItem } from '~/src/common/helpers/types.js'
  */

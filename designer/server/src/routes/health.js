@@ -14,5 +14,5 @@ export default /** @type {ServerRoute} */ ({
 })
 
 /**
- * @typedef {import('@hapi/hapi').ServerRoute} ServerRoute
+ * @import { ServerRoute } from '@hapi/hapi'
  */

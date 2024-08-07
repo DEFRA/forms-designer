@@ -285,20 +285,6 @@ export function redirectWithErrors(
 }
 
 /**
- * @typedef {import('@defra/forms-model').FormMetadataInput} FormMetadataInput
- */
-
-/**
- * @template {import('@hapi/hapi').ReqRef} [ReqRef=import('@hapi/hapi').ReqRefDefaults]
- * @typedef {import('@hapi/hapi').ServerRoute<ReqRef>} ServerRoute
- */
-
-/**
- * @template {import('@hapi/hapi').ReqRef} [ReqRef=import('@hapi/hapi').ReqRefDefaults]
- * @typedef {import('@hapi/hapi').Request<ReqRef>} Request
- */
-
-/**
- * @typedef {import('@hapi/hapi').ResponseToolkit<any>} ResponseToolkit
- * @typedef {Request<{ Payload: any }>} RequestWithPayload
+ * @import { FormMetadataInput } from '@defra/forms-model'
+ * @import { Request, ResponseToolkit, ServerRoute } from '@hapi/hapi'
  */
