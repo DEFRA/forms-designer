@@ -6,6 +6,7 @@ import Wreck from '@hapi/wreck'
 import { ProxyAgent } from 'proxy-agent'
 
 import { SCOPE_READ } from './common/constants/scopes.js'
+import errorPage from './plugins/errorPage.js'
 
 import {
   azureOidc,
@@ -97,6 +98,7 @@ export async function createServer() {
   await server.register(nunjucks.plugin)
   await server.register(router)
   await server.register(requestLogger)
+  await server.register(errorPage)
 
   return server
 }

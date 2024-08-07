@@ -15,9 +15,7 @@ export default /** @satisfies {ServerRoute} */ ({
     return h.view('account/signed-out', model)
   },
   options: {
-    auth: {
-      mode: 'optional'
-    }
+    auth: false
   }
 })
 
