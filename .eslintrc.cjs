@@ -139,6 +139,9 @@ module.exports = {
           }
         ],
 
+        // Skip rules handled by Prettier formatter
+        'jsdoc/lines-before-block': 'off',
+
         // JSDoc @param is optional
         'jsdoc/require-param-description': 'off',
         'jsdoc/require-param-type': 'off',
@@ -199,6 +202,9 @@ module.exports = {
             }
           }
         ],
+
+        // Skip rules handled by Prettier formatter
+        'jsdoc/lines-before-block': 'off',
 
         // JSDoc @param types are mandatory for JavaScript
         'jsdoc/require-param-description': 'off',
