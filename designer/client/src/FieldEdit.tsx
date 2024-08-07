@@ -31,10 +31,11 @@ export function FieldEdit() {
 
   // Limit options by component type
   const hasFieldTitle = hasTitle(selectedComponent)
-  const hasFieldName = hasInput || type === ComponentType.List
+  const hasFieldName = hasInput
   const hasFieldHint = hasInput || type === ComponentType.List
   const hasOptionRequired = hasInput
-  const hasOptionHideTitle = type === ComponentType.UkAddressField
+  const hasOptionHideTitle =
+    type === ComponentType.List || type === ComponentType.UkAddressField
 
   return (
     <>

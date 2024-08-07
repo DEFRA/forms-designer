@@ -11,6 +11,7 @@ import { MultilineTextFieldEdit } from '~/src/MultilineTextFieldEdit.jsx'
 import { ConditionEdit } from '~/src/components/FieldEditors/ConditionEdit.jsx'
 import { ContentEdit } from '~/src/components/FieldEditors/ContentEdit.jsx'
 import { DateFieldEdit } from '~/src/components/FieldEditors/DateFieldEdit.jsx'
+import { ListContentEdit } from '~/src/components/FieldEditors/ListContentEdit.jsx'
 import { ListFieldEdit } from '~/src/components/FieldEditors/ListFieldEdit.jsx'
 import { NumberFieldEdit } from '~/src/components/FieldEditors/NumberFieldEdit.jsx'
 import { SelectFieldEdit } from '~/src/components/FieldEditors/SelectFieldEdit.jsx'
@@ -24,6 +25,7 @@ const componentTypeEditors = {
   [ComponentType.MultilineTextField]: MultilineTextFieldEdit,
   [ComponentType.NumberField]: NumberFieldEdit,
   [ComponentType.SelectField]: SelectFieldEdit,
+  [ComponentType.List]: ListContentEdit,
   [ComponentType.DatePartsField]: DateFieldEdit
 } as Partial<
   Record<
