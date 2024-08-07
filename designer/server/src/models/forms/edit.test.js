@@ -1,4 +1,4 @@
-import { teamDetailsViewModel } from './edit.js'
+import { teamDetailsViewModel } from '~/src/models/forms/edit.js'
 
 describe('edit - model', () => {
   const now = new Date()

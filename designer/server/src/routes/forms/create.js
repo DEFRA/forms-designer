@@ -9,13 +9,12 @@ import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
-import { redirectToTitleWithErrors } from './helpers.js'
-
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
 import * as forms from '~/src/lib/forms.js'
 import * as create from '~/src/models/forms/create.js'
+import { redirectToTitleWithErrors } from '~/src/routes/forms/helpers.js'
 
 const logger = createLogger()
 

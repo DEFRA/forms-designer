@@ -2,12 +2,11 @@ import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
-import { redirectToTitleWithErrors } from './helpers.js'
-
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import * as forms from '~/src/lib/forms.js'
 import * as edit from '~/src/models/forms/edit.js'
 import { redirectWithErrors, schema } from '~/src/routes/forms/create.js'
+import { redirectToTitleWithErrors } from '~/src/routes/forms/helpers.js'
 
 export const ROUTE_PATH_EDIT_LEAD_ORGANISATION =
   '/library/{slug}/edit/lead-organisation'

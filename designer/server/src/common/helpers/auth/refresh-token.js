@@ -35,7 +35,7 @@ export async function refreshAccessToken(request) {
 
   try {
     return await oidc.getToken(params)
-  } catch (err) {
+  } catch {
     await dropUserSession(request)
     throw Boom.unauthorized()
   }

@@ -89,9 +89,14 @@ export default [
         const { level, messages, error } = request.payload
 
         try {
-          error // Include error if present
-            ? request.logger[level](error, ...messages)
-            : request.logger[level](...messages)
+          const logFn = request.logger[level]
+
+          // Include error if present
+          if (error) {
+            logFn(error, ...messages)
+          } else {
+            logFn(...messages)
+          }
 
           return h.response({ ok: true }).code(StatusCodes.NO_CONTENT)
         } catch (error) {
