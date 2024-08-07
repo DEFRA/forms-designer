@@ -8,7 +8,7 @@ import {
 
 /**
  * @param {Partial<FormMetadataInput>} [metadata]
- * @param {ValidationFailure} [validation]
+ * @param {ValidationFailure<FormMetadataInput>} [validation]
  */
 export function titleViewModel(metadata, validation) {
   const pageTitle = 'Enter a name for your form'
@@ -39,7 +39,7 @@ export function titleViewModel(metadata, validation) {
 
 /**
  * @param {Partial<FormMetadataInput>} [metadata]
- * @param {ValidationFailure} [validation]
+ * @param {ValidationFailure<FormMetadataInput>} [validation]
  */
 export function organisationViewModel(metadata, validation) {
   const pageTitle = 'Choose a lead organisation for this form'
@@ -71,7 +71,7 @@ export function organisationViewModel(metadata, validation) {
 
 /**
  * @param {Partial<FormMetadataInput>} [metadata]
- * @param {ValidationFailure} [validation]
+ * @param {ValidationFailure<FormMetadataInput>} [validation]
  */
 export function teamViewModel(metadata, validation) {
   const pageTitle = 'Team details'
@@ -142,7 +142,6 @@ export const titleFormErrors = {
 }
 
 /**
- * @typedef {import('@defra/forms-model').FormMetadataInput} FormMetadataInput
- * @typedef {import("~/src/common/helpers/build-error-details.js").ValidationFailure<FormMetadataInput>} ValidationFailure
- * @typedef {import('~/src/common/helpers/build-error-details.js').ErrorDetails} ErrorDetails
+ * @import { FormMetadataInput } from '@defra/forms-model'
+ * @import { ErrorDetails, ValidationFailure } from '~/src/common/helpers/types.js'
  */

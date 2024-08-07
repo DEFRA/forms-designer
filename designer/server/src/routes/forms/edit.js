@@ -2,12 +2,11 @@ import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
-import { redirectToTitleWithErrors } from './helpers.js'
-
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import * as forms from '~/src/lib/forms.js'
 import * as edit from '~/src/models/forms/edit.js'
 import { redirectWithErrors, schema } from '~/src/routes/forms/create.js'
+import { redirectToTitleWithErrors } from '~/src/routes/forms/helpers.js'
 
 export const ROUTE_PATH_EDIT_LEAD_ORGANISATION =
   '/library/{slug}/edit/lead-organisation'
@@ -16,7 +15,7 @@ export const ROUTE_PATH_EDIT_TITLE = '/library/{slug}/edit/title'
 
 export default [
   /**
-   * @satisfies {RequestBySlug}
+   * @satisfies {ServerRoute<{ Params: { slug: string } }>}
    */
   ({
     method: 'GET',
@@ -35,8 +34,9 @@ export default [
       )
     }
   }),
+
   /**
-   * @satisfies {RequestUpdateOrganisationBySlug}
+   * @satisfies {ServerRoute<{ Params: { slug: string }, Payload: Pick<FormMetadataInput, 'organisation'> }>}
    */
   ({
     method: 'POST',
@@ -67,8 +67,9 @@ export default [
       }
     }
   }),
+
   /**
-   * @satisfies {RequestBySlug}
+   * @satisfies {ServerRoute<{ Params: { slug: string } }>}
    */
   ({
     method: 'GET',
@@ -89,8 +90,9 @@ export default [
       )
     }
   }),
+
   /**
-   * @satisfies {RequestUpdateTeamBySlug}
+   * @satisfies {ServerRoute<{ Params: { slug: string }, Payload: Pick<FormMetadataInput, 'teamName' | 'teamEmail'> }>}
    */
   ({
     method: 'POST',
@@ -123,8 +125,9 @@ export default [
       }
     }
   }),
+
   /**
-   * @satisfies {RequestBySlug}
+   * @satisfies {ServerRoute<{ Params: { slug: string } }>}
    */
   ({
     method: 'GET',
@@ -145,8 +148,9 @@ export default [
       )
     }
   }),
+
   /**
-   * @satisfies {RequestUpdateTitleBySlug}
+   * @satisfies {ServerRoute<{ Params: { slug: string }, Payload: Pick<FormMetadataInput, 'title'> }>}
    */
   ({
     method: 'POST',
@@ -196,17 +200,6 @@ export default [
 ]
 
 /**
- * @typedef {import('@defra/forms-model').FormMetadataInput} FormMetadataInput
- */
-
-/**
- * @template {import('@hapi/hapi').ReqRef} [ReqRef=import('@hapi/hapi').ReqRefDefaults]
- * @typedef {import('@hapi/hapi').ServerRoute<ReqRef>} ServerRoute
- */
-
-/**
- * @typedef {ServerRoute<{ Params: { slug: string } }>} RequestBySlug
- * @typedef {ServerRoute<{ Params: { slug: string }, Payload: Pick<FormMetadataInput, 'organisation'> }>} RequestUpdateOrganisationBySlug
- * @typedef {ServerRoute<{ Params: { slug: string }, Payload: Pick<FormMetadataInput, 'teamName' | 'teamEmail'> }>} RequestUpdateTeamBySlug
- * @typedef {ServerRoute<{ Params: { slug: string }, Payload: Pick<FormMetadataInput, 'title'> }>} RequestUpdateTitleBySlug
+ * @import { FormMetadataInput } from '@defra/forms-model'
+ * @import { ServerRoute } from '@hapi/hapi'
  */

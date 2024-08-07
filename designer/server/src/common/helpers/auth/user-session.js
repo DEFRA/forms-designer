@@ -65,12 +65,6 @@ export async function createUserSession(request, artifacts) {
 }
 
 /**
- * @typedef {import('@hapi/hapi').AuthArtifacts} AuthArtifacts
- * @typedef {import('@hapi/hapi').UserCredentials} UserCredentials
- * @typedef {import('~/src/common/helpers/auth/get-user-session.js').AuthWithTokens} AuthWithTokens
- */
-
-/**
- * @template {import('@hapi/hapi').ReqRef} [ReqRef=import('@hapi/hapi').ReqRefDefaults]
- * @typedef {import('@hapi/hapi').Request<ReqRef>} Request
+ * @import { AuthArtifacts, Request, UserCredentials } from '@hapi/hapi'
+ * @import { AuthWithTokens } from '~/src/common/helpers/auth/types.js'
  */

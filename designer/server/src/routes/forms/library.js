@@ -100,10 +100,5 @@ export default [
 ]
 
 /**
- * @typedef {import('@defra/forms-model').FormMetadata} FormMetadata
- */
-
-/**
- * @template {import('@hapi/hapi').ReqRef} [ReqRef=import('@hapi/hapi').ReqRefDefaults]
- * @typedef {import('@hapi/hapi').ServerRoute<ReqRef>} ServerRoute
+ * @import { ServerRoute } from '@hapi/hapi'
  */

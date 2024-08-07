@@ -116,19 +116,6 @@ export function hasUser(credentials) {
 }
 
 /**
- * @typedef {import('@hapi/hapi').AuthArtifacts} AuthArtifacts
- * @typedef {import('@hapi/hapi').AuthCredentials} AuthCredentials
- * @typedef {import('@hapi/hapi').UserCredentials} UserCredentials
- * @typedef {import('~/src/common/helpers/auth/azure-oidc.js').UserProfile} UserProfile
- */
-
-/**
- * @typedef {Pick<AuthCredentials, 'token' | 'idToken'>} Tokens - Known tokens
- * @typedef {Extract<AuthCredentials, Required<Tokens>>} AuthWithTokens - Auth credentials with tokens (but maybe no user session)
- * @typedef {Required<AuthCredentials>} AuthSignedIn - Auth credentials with tokens and user session
- */
-
-/**
- * @template {import('@hapi/hapi').ReqRef} [ReqRef=import('@hapi/hapi').ReqRefDefaults]
- * @typedef {import('@hapi/hapi').Request<ReqRef>} Request
+ * @import { AuthArtifacts, AuthCredentials, Request, UserCredentials } from '@hapi/hapi'
+ * @import { AuthSignedIn, AuthWithTokens, Tokens, UserProfile } from '~/src/common/helpers/auth/types.js'
  */

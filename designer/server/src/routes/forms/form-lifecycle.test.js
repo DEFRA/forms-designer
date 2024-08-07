@@ -8,7 +8,7 @@ import { renderResponse } from '~/test/helpers/component-helpers.js'
 jest.mock('~/src/lib/forms.js')
 
 describe('Test form draft and live creation route handlers', () => {
-  /** @type {import('@hapi/hapi').Server} */
+  /** @type {Server} */
   let server
 
   /** @type {Date} */
@@ -112,7 +112,7 @@ describe('Test form draft and live creation route handlers', () => {
       auth
     }
 
-    const { headers } = /** @type {ServerInjectResponse} */ (
+    const { headers } = /** @type {ServerInjectResponse<string>} */ (
       await server.inject(options)
     )
 
@@ -129,7 +129,7 @@ describe('Test form draft and live creation route handlers', () => {
       auth
     }
 
-    const { statusCode } = /** @type {ServerInjectResponse} */ (
+    const { statusCode } = /** @type {ServerInjectResponse<string>} */ (
       await server.inject(options)
     )
 
@@ -150,7 +150,7 @@ describe('Test form draft and live creation route handlers', () => {
       auth
     }
 
-    const { headers } = /** @type {ServerInjectResponse} */ (
+    const { headers } = /** @type {ServerInjectResponse<string>} */ (
       await server.inject(options)
     )
 
@@ -167,7 +167,7 @@ describe('Test form draft and live creation route handlers', () => {
       auth
     }
 
-    const { statusCode } = /** @type {ServerInjectResponse} */ (
+    const { statusCode } = /** @type {ServerInjectResponse<string>} */ (
       await server.inject(options)
     )
 
@@ -176,9 +176,6 @@ describe('Test form draft and live creation route handlers', () => {
 })
 
 /**
- * @typedef {import('@defra/forms-model').FormMetadata} FormMetadata
- * @typedef {import('@defra/forms-model').FormMetadataAuthor} FormMetadataAuthor
- * @typedef {import('@hapi/hapi').Server} Server
- * @typedef {import('@hapi/hapi').ServerInjectOptions} ServerInjectOptions
- * @typedef {import('@hapi/hapi').ServerInjectResponse<string>} ServerInjectResponse
+ * @import { FormMetadata, FormMetadataAuthor } from '@defra/forms-model'
+ * @import { Server, ServerInjectResponse } from '@hapi/hapi'
  */

@@ -1,27 +1,31 @@
-const lib = jest.requireActual('tabbable')
+const lib = /** @type {tabbableActual} */ (jest.requireActual('tabbable'))
 
 /**
- * @type {typeof import('tabbable')["tabbable"]}
+ * @type {typeof lib["tabbable"]}
  */
 export const tabbable = (node, options) =>
   lib.tabbable(node, { ...options, displayCheck: 'none' })
 
 /**
- * @type {typeof import('tabbable')["focusable"]}
+ * @type {typeof lib["focusable"]}
  */
 export const focusable = (node, options) =>
   lib.focusable(node, { ...options, displayCheck: 'none' })
 
 /**
- * @type {typeof import('tabbable')["isFocusable"]}
+ * @type {typeof lib["isFocusable"]}
  */
 export const isFocusable = (node, options) =>
   lib.isFocusable(node, { ...options, displayCheck: 'none' })
 
 /**
- * @type {typeof import('tabbable')["isTabbable"]}
+ * @type {typeof lib["isTabbable"]}
  */
 export const isTabbable = (node, options) =>
   lib.isTabbable(node, { ...options, displayCheck: 'none' })
 
 export default tabbable
+
+/**
+ * @import tabbableActual from 'tabbable'
+ */

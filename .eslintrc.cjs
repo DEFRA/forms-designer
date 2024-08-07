@@ -1,6 +1,6 @@
 /**
  * ESLint config
- * @type {import('eslint').ESLint.ConfigData}
+ * @type {ESLint.ConfigData}
  */
 module.exports = {
   ignorePatterns: [
@@ -31,12 +31,7 @@ module.exports = {
       parser: '@typescript-eslint/parser',
       parserOptions: {
         ecmaVersion: 'latest',
-        project: [
-          './tsconfig.dev.json',
-          './designer/client/tsconfig.json',
-          './designer/server/tsconfig.json',
-          './model/tsconfig.json'
-        ],
+        projectService: true,
         tsconfigRootDir: __dirname
       },
       plugins: ['@typescript-eslint', 'import', 'jsdoc', 'n', 'promise'],
@@ -90,6 +85,7 @@ module.exports = {
         'import/extensions': 'off',
         'import/named': 'off',
         'import/namespace': 'off',
+        'import/no-named-as-default': 'off',
         'import/no-named-as-default-member': 'off',
         'import/no-unresolved': 'off',
 
@@ -138,6 +134,9 @@ module.exports = {
             }
           }
         ],
+
+        // Skip rules handled by Prettier formatter
+        'jsdoc/lines-before-block': 'off',
 
         // JSDoc @param is optional
         'jsdoc/require-param-description': 'off',
@@ -200,6 +199,9 @@ module.exports = {
           }
         ],
 
+        // Skip rules handled by Prettier formatter
+        'jsdoc/lines-before-block': 'off',
+
         // JSDoc @param types are mandatory for JavaScript
         'jsdoc/require-param-description': 'off',
         'jsdoc/require-param-type': 'error',
@@ -214,6 +216,7 @@ module.exports = {
     {
       files: ['**/*.cjs'],
       rules: {
+        '@typescript-eslint/no-require-imports': 'off',
         '@typescript-eslint/no-var-requires': 'off'
       }
     },
@@ -269,3 +272,7 @@ module.exports = {
   ],
   root: true
 }
+
+/**
+ * @import { ESLint } from 'eslint'
+ */

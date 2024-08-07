@@ -1,18 +1,16 @@
 /* eslint-disable @typescript-eslint/unified-signatures */
 
 import { type FormMetadataInput } from '@defra/forms-model'
+import { type StringLikeMap } from '@hapi/bell'
 import { type RequestAuth } from '@hapi/hapi'
 import { type Logger } from 'pino'
 
 import { type sessionNames } from '~/src/common/constants/session-names.js'
-import {
-  type Credentials,
-  type UserProfile
-} from '~/src/common/helpers/auth/azure-oidc.js'
+import { type UserProfile } from '~/src/common/helpers/auth/types.js'
 import {
   type ErrorDetailsItem,
   type ValidationFailure
-} from '~/src/common/helpers/build-error-details.js'
+} from '~/src/common/helpers/types.js'
 
 interface SessionCache {
   drop: (key: string) => Promise<void>
@@ -50,7 +48,7 @@ declare module '@hapi/hapi' {
 
   interface AuthCredentials {
     provider: 'azure-oidc'
-    query: Credentials['query']
+    query: StringLikeMap
     token: string
     idToken: string
     refreshToken: string

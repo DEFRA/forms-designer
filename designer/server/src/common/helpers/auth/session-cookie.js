@@ -10,7 +10,7 @@ import { createUserSession } from '~/src/common/helpers/auth/user-session.js'
 import config from '~/src/config.js'
 
 /**
- * @type {ServerRegisterPluginObject}
+ * @type {ServerRegisterPluginObject<void>}
  */
 const sessionCookie = {
   plugin: {
@@ -89,17 +89,6 @@ const sessionCookie = {
 export { sessionCookie }
 
 /**
- * @template {object | void} [PluginOptions=void]
- * @typedef {import('@hapi/hapi').ServerRegisterPluginObject<PluginOptions>} ServerRegisterPluginObject
- */
-
-/**
- * @template {import('@hapi/hapi').ReqRef} [ReqRef=import('@hapi/hapi').ReqRefDefaults]
- * @typedef {import('@hapi/hapi').Request<ReqRef>} Request
- */
-
-/**
- * @typedef {import('@hapi/cookie').Options} ProviderCookie
- * @typedef {import('@hapi/hapi').AuthArtifacts} AuthArtifacts
- * @typedef {import('@hapi/hapi').UserCredentials} UserCredentials
+ * @import { Options as ProviderCookie } from '@hapi/cookie'
+ * @import { AuthArtifacts, Request, ServerRegisterPluginObject, UserCredentials } from '@hapi/hapi'
  */

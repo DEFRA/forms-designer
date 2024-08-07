@@ -1,6 +1,6 @@
 /**
  * Jest config defaults
- * @type {Partial<import('@jest/types').Config.InitialOptions>}
+ * @type {Partial<Config>}
  */
 export const defaults = {
   maxWorkers: '50%',
@@ -10,7 +10,7 @@ export const defaults = {
 
 /**
  * Jest project config defaults
- * @type {Partial<import('@jest/types').Config.InitialProjectOptions>}
+ * @type {Exclude<NonNullable<Config['projects']>[0], string>}
  */
 export const projectDefaults = {
   extensionsToTreatAsEsm: ['.jsx', '.ts', '.tsx'],
@@ -31,7 +31,7 @@ export const projectDefaults = {
 
 /**
  * Jest config
- * @type {import('@jest/types').Config.InitialOptions}
+ * @type {Config}
  */
 export default {
   ...defaults,
@@ -49,3 +49,7 @@ export default {
     '<rootDir>/model'
   ]
 }
+
+/**
+ * @import { Config } from 'jest'
+ */

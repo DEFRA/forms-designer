@@ -1,6 +1,5 @@
-import { isConditionalType } from '../components/helpers.js'
-
 import { ComponentType } from '~/src/components/enums.js'
+import { isConditionalType } from '~/src/components/helpers.js'
 import { type ComponentDef } from '~/src/components/types.js'
 import {
   ConditionValue,

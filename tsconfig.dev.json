@@ -1,13 +1,10 @@
 {
   "extends": "./tsconfig.base.json",
-  "compilerOptions": {
-    "baseUrl": "./"
-  },
   "include": [
-    "**/*.config.*",
-    "**/.eslintrc.*",
-    "**/.prettierrc.*",
-    "**/.lintstagedrc.*",
+    "${configDir}/*.config.*",
+    "${configDir}/.eslintrc.*",
+    "${configDir}/.prettierrc.*",
+    "${configDir}/.lintstagedrc.*",
     "package-lock.json.test.js"
   ]
 }

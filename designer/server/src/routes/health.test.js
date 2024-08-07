@@ -9,7 +9,7 @@ describe('Health check route', () => {
     return server
   }
 
-  /** @type {import('@hapi/hapi').Server} */
+  /** @type {Server} */
   let server
 
   afterEach(async () => {
@@ -32,3 +32,7 @@ describe('Health check route', () => {
     })
   })
 })
+
+/**
+ * @import { Server } from '@hapi/hapi'
+ */
