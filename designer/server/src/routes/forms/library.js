@@ -92,7 +92,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${scopes.SCOPE_READ}`]
+          scope: [`+${scopes.SCOPE_WRITE}`]
         }
       }
     }
