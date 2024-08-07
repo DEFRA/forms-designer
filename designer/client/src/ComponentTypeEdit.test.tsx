@@ -77,6 +77,7 @@ describe('ComponentTypeEdit', () => {
         hint: true,
         title: true,
         hideTitle: false,
+        content: false,
         optional: true,
         selectList: true,
         selectCondition: true
@@ -89,6 +90,7 @@ describe('ComponentTypeEdit', () => {
         hint: true,
         title: true,
         hideTitle: false,
+        content: false,
         optional: true,
         selectList: true,
         selectCondition: true
@@ -101,6 +103,7 @@ describe('ComponentTypeEdit', () => {
         hint: true,
         title: true,
         hideTitle: false,
+        content: false,
         optional: true,
         selectList: false,
         selectCondition: true
@@ -126,6 +129,7 @@ describe('ComponentTypeEdit', () => {
         hint: true,
         title: true,
         hideTitle: false,
+        content: false,
         optional: true,
         selectList: false,
         selectCondition: true
@@ -164,6 +168,7 @@ describe('ComponentTypeEdit', () => {
         hint: true,
         title: true,
         hideTitle: false,
+        content: false,
         optional: false,
         selectList: true,
         selectCondition: false
@@ -176,6 +181,7 @@ describe('ComponentTypeEdit', () => {
         hint: true,
         title: true,
         hideTitle: false,
+        content: false,
         optional: true,
         selectList: false,
         selectCondition: false
@@ -188,6 +194,7 @@ describe('ComponentTypeEdit', () => {
         hint: true,
         title: true,
         hideTitle: false,
+        content: false,
         optional: true,
         selectList: false,
         selectCondition: true
@@ -200,6 +207,7 @@ describe('ComponentTypeEdit', () => {
         hint: true,
         title: true,
         hideTitle: false,
+        content: false,
         optional: true,
         selectList: false,
         selectCondition: true
@@ -212,6 +220,7 @@ describe('ComponentTypeEdit', () => {
         hint: true,
         title: true,
         hideTitle: false,
+        content: false,
         optional: true,
         selectList: true,
         selectCondition: true
@@ -224,6 +233,7 @@ describe('ComponentTypeEdit', () => {
         hint: true,
         title: true,
         hideTitle: false,
+        content: false,
         optional: true,
         selectList: true,
         selectCondition: true
@@ -236,6 +246,7 @@ describe('ComponentTypeEdit', () => {
         hint: true,
         title: true,
         hideTitle: false,
+        content: false,
         optional: true,
         selectList: false,
         selectCondition: true
@@ -248,6 +259,7 @@ describe('ComponentTypeEdit', () => {
         hint: true,
         title: true,
         hideTitle: false,
+        content: false,
         optional: true,
         selectList: false,
         selectCondition: true
@@ -260,6 +272,7 @@ describe('ComponentTypeEdit', () => {
         hint: true,
         title: true,
         hideTitle: true,
+        content: false,
         optional: true,
         selectList: false,
         selectCondition: false
@@ -272,6 +285,7 @@ describe('ComponentTypeEdit', () => {
         hint: true,
         title: true,
         hideTitle: false,
+        content: false,
         optional: true,
         selectList: false,
         selectCondition: true
@@ -352,6 +366,24 @@ describe('ComponentTypeEdit', () => {
         })
 
         expect($checkbox).not.toBeInTheDocument()
+      })
+    }
+
+    if (options.content) {
+      it("should render 'Content' textarea", () => {
+        const $textarea = screen.queryByRole<HTMLTextAreaElement>('textbox', {
+          name: 'Content'
+        })
+
+        expect($textarea).toBeInTheDocument()
+      })
+    } else {
+      it("should not render 'Content' textarea", () => {
+        const $textarea = screen.queryByRole('textbox', {
+          name: 'Content'
+        })
+
+        expect($textarea).not.toBeInTheDocument()
       })
     }
 

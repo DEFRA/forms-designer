@@ -14,8 +14,6 @@ interface Props {
 }
 
 export function TextFieldEdit({ children, context = ComponentContext }: Props) {
-  // If you are editing a component, the default context will be ComponentContext because props.context is undefined,
-  // but if you editing a component which is a children of a list based component, then the props.context is the ListContext.
   const { state, dispatch } = useContext(context)
   const { selectedComponent } = state
 
