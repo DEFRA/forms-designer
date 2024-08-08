@@ -4,7 +4,7 @@ import {
   type ResponseToolkit
 } from '@hapi/hapi'
 
-import { unauthorisedViewModel } from '../models/errors.js'
+import { unauthorisedViewModel } from '~/src/models/errors.js'
 
 /*
  * Add an `onPreResponse` listener to return error pages

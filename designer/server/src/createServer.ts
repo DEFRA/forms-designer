@@ -5,7 +5,6 @@ import inert from '@hapi/inert'
 import Wreck from '@hapi/wreck'
 import { ProxyAgent } from 'proxy-agent'
 
-import errorPage from './plugins/errorPage.js'
 
 import { SCOPE_READ } from '~/src/common/constants/scopes.js'
 import {
@@ -18,6 +17,7 @@ import { buildRedisClient } from '~/src/common/helpers/redis-client.js'
 import { sessionManager } from '~/src/common/helpers/session-manager.js'
 import * as nunjucks from '~/src/common/nunjucks/index.js'
 import config from '~/src/config.js'
+import errorPage from '~/src/plugins/errorPage.js'
 import router from '~/src/plugins/router.js'
 
 const proxyAgent = new ProxyAgent()
