@@ -190,6 +190,30 @@ export const Html: FunctionComponent = () => {
   )
 }
 
+export const FileUploadField: FunctionComponent = () => {
+  return (
+    <ComponentField>
+      <div className="govuk-input__wrapper">
+        <div className="govuk-input__prefix" aria-hidden="true">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M10 14.8636C9.64583 14.8636 9.34917 14.7403 9.11 14.4937C8.87 14.248 8.75 13.9433 8.75 13.5795V4.39807L6.40625 6.80578C6.15625 7.0626 5.86458 7.19101 5.53125 7.19101C5.19792 7.19101 4.89583 7.0519 4.625 6.77368C4.375 6.51685 4.25542 6.21166 4.26625 5.85811C4.27625 5.5054 4.39583 5.21134 4.625 4.97592L9.125 0.35313C9.25 0.224719 9.38542 0.133547 9.53125 0.0796145C9.67708 0.026538 9.83333 0 10 0C10.1667 0 10.3229 0.026538 10.4688 0.0796145C10.6146 0.133547 10.75 0.224719 10.875 0.35313L15.375 4.97592C15.625 5.23274 15.7446 5.53751 15.7337 5.89021C15.7237 6.24377 15.6042 6.53826 15.375 6.77368C15.125 7.0305 14.8283 7.16404 14.485 7.17432C14.1408 7.18545 13.8438 7.0626 13.5938 6.80578L11.25 4.39807V13.5795C11.25 13.9433 11.1304 14.248 10.8913 14.4937C10.6513 14.7403 10.3542 14.8636 10 14.8636ZM2.5 20C1.8125 20 1.22417 19.7487 0.735 19.2462C0.245 18.7429 0 18.138 0 17.4318V14.8636C0 14.4997 0.119584 14.1945 0.35875 13.948C0.59875 13.7023 0.895833 13.5795 1.25 13.5795C1.60417 13.5795 1.90125 13.7023 2.14125 13.948C2.38042 14.1945 2.5 14.4997 2.5 14.8636V17.4318H17.5V14.8636C17.5 14.4997 17.62 14.1945 17.86 13.948C18.0992 13.7023 18.3958 13.5795 18.75 13.5795C19.1042 13.5795 19.4008 13.7023 19.64 13.948C19.88 14.1945 20 14.4997 20 14.8636V17.4318C20 18.138 19.7554 18.7429 19.2663 19.2462C18.7763 19.7487 18.1875 20 17.5 20H2.5Z"
+              fill="black"
+            ></path>
+          </svg>
+        </div>
+        <div className="govuk-input"></div>
+      </div>
+    </ComponentField>
+  )
+}
+
 export const componentTypes = {
   [ComponentType.TextField]: TextField,
   [ComponentType.TelephoneNumberField]: TelephoneNumberField,
@@ -207,7 +231,8 @@ export const componentTypes = {
   [ComponentType.Details]: Details,
   [ComponentType.Html]: Html,
   [ComponentType.InsetText]: InsetText,
-  [ComponentType.List]: List
+  [ComponentType.List]: List,
+  [ComponentType.FileUploadField]: FileUploadField
 }
 
 export interface Props {
