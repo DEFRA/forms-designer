@@ -35,7 +35,3 @@ export function signInViewModel(options) {
     errorList
   }
 }
-
-/**
- * @typedef {import('@hapi/hapi').RequestAuth} RequestAuth
- */

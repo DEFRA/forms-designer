@@ -10,5 +10,6 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true
-  }
+  },
+  "exclude": ["${configDir}/dist", "${configDir}/node_modules", "node_modules"]
 }

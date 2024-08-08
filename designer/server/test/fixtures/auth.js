@@ -39,7 +39,7 @@ export function user(token) {
 }
 
 /**
- * @param {TokenClaims} claims
+ * @param {Record<keyof Tokens, ReturnType<typeof profile>>} claims
  */
 export function artifacts(claims) {
   return /** @satisfies {AuthArtifacts} */ ({
@@ -55,7 +55,7 @@ export function artifacts(claims) {
 
 /**
  * Credentials with tokens, user session and editor scopes
- * @param {Pick<AuthCredentials, 'user' | 'scope'> & { claims: TokenClaims }} options
+ * @param {Pick<AuthCredentials, 'user' | 'scope'> & { claims: Parameters<typeof artifacts>[0] }} options
  */
 export function credentials(options) {
   const tokens = artifacts(options.claims)
@@ -127,11 +127,6 @@ export const authScopesEmpty = {
 }
 
 /**
- * @typedef {import('@hapi/hapi').AuthArtifacts} AuthArtifacts
- * @typedef {import('@hapi/hapi').AuthCredentials} AuthCredentials
- * @typedef {import('@hapi/hapi').ServerInjectOptions} ServerInjectOptions
- * @typedef {import('@hapi/hapi').UserCredentials} UserCredentials
- * @typedef {import('~/src/common/helpers/auth/azure-oidc.js').UserProfile} UserProfile
- * @typedef {import('~/src/common/helpers/auth/get-user-session.js').Tokens} Tokens
- * @typedef {Record<keyof Tokens, ReturnType<typeof profile>>} TokenClaims
+ * @import { AuthArtifacts, AuthCredentials, ServerInjectOptions, UserCredentials } from '@hapi/hapi'
+ * @import { Tokens, UserProfile } from '~/src/common/helpers/auth/types.js'
  */

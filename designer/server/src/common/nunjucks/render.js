@@ -38,6 +38,5 @@ export function view(viewPath, options) {
 }
 
 /**
- * @typedef {import('~/src/common/nunjucks/types.js').MacroOptions} MacroOptions
- * @typedef {import('~/src/common/nunjucks/types.js').RenderOptions} RenderOptions
+ * @import { MacroOptions, RenderOptions } from '~/src/common/nunjucks/types.js'
  */

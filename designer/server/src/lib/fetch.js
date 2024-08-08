@@ -6,7 +6,7 @@ import { StatusCodes } from 'http-status-codes'
  * @template {object} [BodyType=Buffer]
  * @param {string} method
  * @param {URL} url
- * @param {RequestOptions} options
+ * @param {Parameters<typeof Wreck.request>[2]} options
  */
 export async function request(method, url, options) {
   const response = await Wreck.request(method, url.href, options)
@@ -33,7 +33,7 @@ export async function request(method, url, options) {
 /**
  * @template {object} [BodyType=Buffer]
  * @param {URL} url
- * @param {RequestOptions} options
+ * @param {Parameters<typeof Wreck.get>[1]} options
  */
 export function get(url, options) {
   const requestByType = /** @type {typeof request<BodyType>} */ (request)
@@ -43,7 +43,7 @@ export function get(url, options) {
 /**
  * @template {object} [BodyType=Buffer]
  * @param {URL} url
- * @param {RequestOptions} options
+ * @param {Parameters<typeof Wreck.post>[1]} options
  */
 export function post(url, options) {
   const requestByType = /** @type {typeof request<BodyType>} */ (request)
@@ -53,7 +53,7 @@ export function post(url, options) {
 /**
  * @template {object} [BodyType=Buffer]
  * @param {URL} url
- * @param {RequestOptions} options
+ * @param {Parameters<typeof Wreck.patch>[1]} options
  */
 export function patch(url, options) {
   const requestByType = /** @type {typeof request<BodyType>} */ (request)
@@ -63,7 +63,7 @@ export function patch(url, options) {
 /**
  * @template {object} [BodyType=Buffer]
  * @param {URL} url
- * @param {RequestOptions} options
+ * @param {Parameters<typeof Wreck.put>[1]} options
  */
 export function put(url, options) {
   const requestByType = /** @type {typeof request<BodyType>} */ (request)
@@ -73,7 +73,7 @@ export function put(url, options) {
 /**
  * @template {object} [BodyType=Buffer]
  * @param {URL} url
- * @param {RequestOptions} options
+ * @param {Parameters<typeof Wreck.delete>[1]} options
  */
 export function del(url, options) {
   const requestByType = /** @type {typeof request<BodyType>} */ (request)
@@ -83,7 +83,7 @@ export function del(url, options) {
 /**
  * @template {object} [BodyType=Buffer]
  * @param {URL} url
- * @param {RequestOptions} options
+ * @param {Parameters<typeof Wreck.get>[1]} options
  */
 export function getJson(url, options = {}) {
   const getByType = /** @type {typeof get<BodyType>} */ (get)
@@ -93,7 +93,7 @@ export function getJson(url, options = {}) {
 /**
  * @template {object} [BodyType=Buffer]
  * @param {URL} url
- * @param {RequestOptions} options
+ * @param {Parameters<typeof Wreck.post>[1]} options
  */
 export function postJson(url, options = {}) {
   const postByType = /** @type {typeof post<BodyType>} */ (post)
@@ -103,13 +103,9 @@ export function postJson(url, options = {}) {
 /**
  * @template {object} [BodyType=Buffer]
  * @param {URL} url
- * @param {RequestOptions} options
+ * @param {Parameters<typeof Wreck.patch>[1]} options
  */
 export function patchJson(url, options = {}) {
   const patchByType = /** @type {typeof patch<BodyType>} */ (patch)
   return patchByType(url, { json: true, ...options })
 }
-
-/**
- * @typedef {Parameters<typeof Wreck.defaults>[0]} RequestOptions
- */

@@ -88,7 +88,9 @@ export class PageEdit extends Component {
       i18n
     )
 
-    const errors = { ...titleErrors }
+    const errors: Partial<ErrorList<'path' | 'title'>> = {
+      ...titleErrors
+    }
 
     const pathHasErrors =
       path !== page.path ? data.pages.some((page) => page.path === path) : false

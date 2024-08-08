@@ -8,7 +8,7 @@ import {
 jest.mock('~/src/lib/forms.js')
 
 describe('Authentiation', () => {
-  /** @type {import('@hapi/hapi').Server} */
+  /** @type {Server} */
   let server
 
   beforeAll(async () => {
@@ -55,6 +55,5 @@ describe('Authentiation', () => {
 })
 
 /**
- * @template {object} [Result={}]
- * @typedef {import('@hapi/hapi').ServerInjectResponse<Result>} ServerInjectResponse
+ * @import { Server, ServerInjectResponse } from '@hapi/hapi'
  */

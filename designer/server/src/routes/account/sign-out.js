@@ -43,6 +43,5 @@ export default /** @satisfies {ServerRoute} */ ({
 })
 
 /**
- * @typedef {import('~/src/common/helpers/auth/azure-oidc.js').OidcMetadata} OidcMetadata
- * @typedef {import('@hapi/hapi').ServerRoute} ServerRoute
+ * @import { ServerRoute } from '@hapi/hapi'
  */

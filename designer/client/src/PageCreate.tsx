@@ -93,7 +93,9 @@ export class PageCreate extends Component {
       i18n
     )
 
-    const errors = { ...titleErrors }
+    const errors: Partial<ErrorList<'path' | 'title'>> = {
+      ...titleErrors
+    }
 
     const alreadyExists = data.pages.find((page) => page.path === path)
     if (alreadyExists) {

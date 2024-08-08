@@ -127,23 +127,6 @@ exports[`ComponentCreateList should match snapshot 1`] = `
                 class="govuk-link"
                 href="#0"
               >
-                Autocomplete
-              </a>
-            </p>
-            <div
-              class="govuk-hint govuk-!-margin-top-2"
-            >
-              Sets a list of values to suggest to users as they complete this field
-            </div>
-          </li>
-          <li>
-            <p
-              class="govuk-body govuk-!-margin-bottom-2"
-            >
-              <a
-                class="govuk-link"
-                href="#0"
-              >
                 Date
               </a>
             </p>
@@ -293,6 +276,23 @@ exports[`ComponentCreateList should match snapshot 1`] = `
         <ol
           class="govuk-list"
         >
+          <li>
+            <p
+              class="govuk-body govuk-!-margin-bottom-2"
+            >
+              <a
+                class="govuk-link"
+                href="#0"
+              >
+                Autocomplete
+              </a>
+            </p>
+            <div
+              class="govuk-hint govuk-!-margin-top-2"
+            >
+              Sets a list of values to suggest to users as they complete this field
+            </div>
+          </li>
           <li>
             <p
               class="govuk-body govuk-!-margin-bottom-2"

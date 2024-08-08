@@ -31,5 +31,5 @@ export async function log(level, payload) {
 }
 
 /**
- * @typedef {import('@defra/forms-model').FormDefinition} FormDefinition
+ * @import { FormDefinition } from '@defra/forms-model'
  */

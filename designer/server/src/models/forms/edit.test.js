@@ -1,4 +1,4 @@
-import { teamDetailsViewModel } from './edit.js'
+import { teamDetailsViewModel } from '~/src/models/forms/edit.js'
 
 describe('edit - model', () => {
   const now = new Date()
@@ -39,6 +39,5 @@ describe('edit - model', () => {
 })
 
 /**
- * @typedef {import('@defra/forms-model').FormMetadata} FormMetadata
- * @typedef {import('@defra/forms-model').FormMetadataAuthor} FormMetadataAuthor
+ * @import { FormMetadata, FormMetadataAuthor } from '@defra/forms-model'
  */

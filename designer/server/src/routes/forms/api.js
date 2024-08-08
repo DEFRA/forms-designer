@@ -87,7 +87,7 @@ export default [
   }),
 
   /**
-   * @satisfies {ServerRoute<{ Payload: { messages: LogMessages, level: Level, error:? LogError } }>}
+   * @satisfies {ServerRoute<{ Payload: { messages: [message: string, ...args: any[]], level: Level, error:? SerializedError } }>}
    */
   ({
     method: 'POST',
@@ -97,9 +97,14 @@ export default [
         const { level, messages, error } = request.payload
 
         try {
-          error // Include error if present
-            ? request.logger[level](error, ...messages)
-            : request.logger[level](...messages)
+          const logFn = request.logger[level]
+
+          // Include error if present
+          if (error) {
+            logFn(error, ...messages)
+          } else {
+            logFn(...messages)
+          }
 
           return h.response({ ok: true }).code(StatusCodes.NO_CONTENT)
         } catch (error) {
@@ -114,14 +119,7 @@ export default [
 ]
 
 /**
- * @template {import('@hapi/hapi').ReqRef} [ReqRef=import('@hapi/hapi').ReqRefDefaults]
- * @typedef {import('@hapi/hapi').ServerRoute<ReqRef>} ServerRoute
- */
-
-/**
- * @typedef {import('@defra/forms-model').FormByIdInput} FormByIdInput
- * @typedef {import('@defra/forms-model').FormDefinition} FormDefinition
- * @typedef {import('pino').Level} Level
- * @typedef {import('pino').SerializedError} LogError
- * @typedef {[message: string, ...args: any[]]} LogMessages
+ * @import { FormByIdInput, FormDefinition } from '@defra/forms-model'
+ * @import { ServerRoute } from '@hapi/hapi'
+ * @import { Level, SerializedError } from 'pino'
  */

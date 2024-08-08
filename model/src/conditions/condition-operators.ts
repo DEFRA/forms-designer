@@ -1,7 +1,9 @@
-import { isConditionalType } from '../components/helpers.js'
-
 import { ComponentType } from '~/src/components/enums.js'
-import { type ComponentDef } from '~/src/components/types.js'
+import { isConditionalType, isContentType } from '~/src/components/helpers.js'
+import {
+  type ComponentDef,
+  type ConditionalComponentType
+} from '~/src/components/types.js'
 import {
   ConditionValue,
   RelativeDateValue
@@ -54,6 +56,7 @@ const relativeDateOperators = {
 }
 
 export const customOperators = {
+  [ComponentType.AutocompleteField]: defaultOperators,
   [ComponentType.RadiosField]: defaultOperators,
   [ComponentType.CheckboxesField]: {
     [OperatorName.Contains]: reverseInline(Operator.Contains),
@@ -72,11 +75,12 @@ export const customOperators = {
   [ComponentType.TextField]: withDefaults(textFieldOperators),
   [ComponentType.MultilineTextField]: withDefaults(textFieldOperators),
   [ComponentType.EmailAddressField]: withDefaults(textFieldOperators),
+  [ComponentType.TelephoneNumberField]: defaultOperators,
   [ComponentType.SelectField]: defaultOperators,
   [ComponentType.YesNoField]: defaultOperators
 }
 
-export function getOperatorNames(fieldType?: ComponentType) {
+export function getOperatorNames(fieldType?: ConditionalComponentType) {
   const conditionals = getConditionals(fieldType)
   if (!conditionals) {
     return []
@@ -86,7 +90,7 @@ export function getOperatorNames(fieldType?: ComponentType) {
 }
 
 export function getExpression(
-  fieldType: ComponentType,
+  fieldType: ConditionalComponentType,
   fieldName: string,
   operator: OperatorName,
   value: Condition['value']
@@ -102,17 +106,10 @@ export function getExpression(
   )
 }
 
-export function getOperatorConfig(
-  fieldType: ComponentType,
-  operator: OperatorName
-) {
-  return getConditionals(fieldType)?.[operator]
-}
-
 function getConditionals(
-  fieldType?: ComponentType
+  fieldType?: ConditionalComponentType
 ): Partial<Conditionals> | undefined {
-  if (!fieldType || !isConditionalType(fieldType)) {
+  if (!fieldType || !isConditionalType(fieldType) || isContentType(fieldType)) {
     return
   }
 

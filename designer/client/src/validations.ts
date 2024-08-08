@@ -11,16 +11,18 @@ export function validateNotEmpty<Key extends string>(
   id: string,
   description: string,
   value?: string,
-  existingErrors: ErrorList = {}
+  i18nProp?: typeof i18n
 ) {
+  const translate = i18nProp ?? i18n
+
   const hasErrors = isEmpty(value)
-  const errors = existingErrors
+  const errors: Partial<ErrorList<Key>> = {}
 
   if (hasErrors) {
     errors[name] = {
       href: `#${id}`,
       children: [
-        i18n('errors.field', {
+        translate('errors.field', {
           field: description
         })
       ]

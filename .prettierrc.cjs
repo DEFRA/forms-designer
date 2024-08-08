@@ -1,6 +1,6 @@
 /**
  * Prettier config
- * @type {import('prettier').Config}
+ * @type {Config}
  */
 module.exports = {
   semi: false,
@@ -23,3 +23,7 @@ module.exports = {
     }
   ]
 }
+
+/**
+ * @import { Config } from 'prettier'
+ */

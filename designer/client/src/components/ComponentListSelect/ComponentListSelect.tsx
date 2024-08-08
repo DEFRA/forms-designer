@@ -120,26 +120,26 @@ export function ComponentListSelect() {
             )
           })}
         </select>
-      </div>
-      <p className="govuk-body">
-        {selectedListTitle && (
+        <p className="govuk-body govuk-!-margin-top-2">
+          {selectedListTitle && (
+            <a
+              className="govuk-link govuk-!-display-block govuk-!-margin-bottom-1"
+              onClick={handleEditListClick}
+              href="#"
+            >
+              {i18n('list.edit', { title: selectedListTitle })}
+            </a>
+          )}
           <a
             className="govuk-link govuk-!-display-block govuk-!-margin-bottom-1"
-            onClick={handleEditListClick}
+            data-testid="add-list"
+            onClick={handleAddListClick}
             href="#"
           >
-            {i18n('list.edit', { title: selectedListTitle })}
+            {i18n('list.addNew')}
           </a>
-        )}
-        <a
-          className="govuk-link govuk-!-display-block govuk-!-margin-bottom-1"
-          data-testid="add-list"
-          onClick={handleAddListClick}
-          href="#"
-        >
-          {i18n('list.addNew')}
-        </a>
-      </p>
+        </p>
+      </div>
     </>
   )
 }

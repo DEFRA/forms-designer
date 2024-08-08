@@ -21,10 +21,5 @@ export async function dropUserSession(request) {
 }
 
 /**
- * @typedef {import('@hapi/hapi').AuthArtifacts} AuthArtifacts
- */
-
-/**
- * @template {import('@hapi/hapi').ReqRef} [ReqRef=import('@hapi/hapi').ReqRefDefaults]
- * @typedef {import('@hapi/hapi').Request<ReqRef>} Request
+ * @import { AuthArtifacts, Request } from '@hapi/hapi'
  */

@@ -6,6 +6,5 @@
     },
     "types": ["@testing-library/jest-dom"]
   },
-  "exclude": ["dist", "node_modules", "*.config.*"],
   "include": ["**/*.cjs", "**/*.js", "**/*.mjs", "**/*.ts"]
 }

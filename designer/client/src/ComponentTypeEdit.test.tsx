@@ -1,6 +1,8 @@
 import {
   ComponentType,
+  ConditionType,
   getComponentDefaults,
+  OperatorName,
   type ComponentDef,
   type FormDefinition
 } from '@defra/forms-model'
@@ -38,7 +40,30 @@ describe('ComponentTypeEdit', () => {
         }
       ],
       sections: [],
-      conditions: []
+      conditions: [
+        {
+          name: 'someCondition',
+          displayName: 'My condition',
+          value: {
+            name: 'My condition',
+            conditions: [
+              {
+                field: {
+                  name: 'field1',
+                  display: 'Something',
+                  type: ComponentType.YesNoField
+                },
+                operator: OperatorName.Is,
+                value: {
+                  type: ConditionType.Value,
+                  value: 'true',
+                  display: 'Yes'
+                }
+              }
+            ]
+          }
+        }
+      ]
     }
   })
 
@@ -52,8 +77,10 @@ describe('ComponentTypeEdit', () => {
         hint: true,
         title: true,
         hideTitle: false,
+        content: false,
         optional: true,
-        selectList: true
+        selectList: true,
+        selectCondition: true
       }
     ],
     [
@@ -63,8 +90,10 @@ describe('ComponentTypeEdit', () => {
         hint: true,
         title: true,
         hideTitle: false,
+        content: false,
         optional: true,
-        selectList: true
+        selectList: true,
+        selectCondition: true
       }
     ],
     [
@@ -74,8 +103,10 @@ describe('ComponentTypeEdit', () => {
         hint: true,
         title: true,
         hideTitle: false,
+        content: false,
         optional: true,
-        selectList: false
+        selectList: false,
+        selectCondition: true
       }
     ],
     [
@@ -85,8 +116,10 @@ describe('ComponentTypeEdit', () => {
         hint: false,
         title: true,
         hideTitle: false,
+        content: true,
         optional: false,
-        selectList: false
+        selectList: false,
+        selectCondition: true
       }
     ],
     [
@@ -96,8 +129,10 @@ describe('ComponentTypeEdit', () => {
         hint: true,
         title: true,
         hideTitle: false,
+        content: false,
         optional: true,
-        selectList: false
+        selectList: false,
+        selectCondition: true
       }
     ],
     [
@@ -107,8 +142,10 @@ describe('ComponentTypeEdit', () => {
         hint: false,
         title: false,
         hideTitle: false,
+        content: true,
         optional: false,
-        selectList: false
+        selectList: false,
+        selectCondition: true
       }
     ],
     [
@@ -118,19 +155,23 @@ describe('ComponentTypeEdit', () => {
         hint: false,
         title: false,
         hideTitle: false,
+        content: true,
         optional: false,
-        selectList: false
+        selectList: false,
+        selectCondition: false
       }
     ],
     [
       ComponentType.List,
       {
-        name: true,
+        name: false,
         hint: true,
         title: true,
-        hideTitle: false,
+        hideTitle: true,
+        content: false,
         optional: false,
-        selectList: true
+        selectList: true,
+        selectCondition: false
       }
     ],
     [
@@ -140,8 +181,10 @@ describe('ComponentTypeEdit', () => {
         hint: true,
         title: true,
         hideTitle: false,
+        content: false,
         optional: true,
-        selectList: false
+        selectList: false,
+        selectCondition: false
       }
     ],
     [
@@ -151,8 +194,10 @@ describe('ComponentTypeEdit', () => {
         hint: true,
         title: true,
         hideTitle: false,
+        content: false,
         optional: true,
-        selectList: false
+        selectList: false,
+        selectCondition: true
       }
     ],
     [
@@ -162,8 +207,10 @@ describe('ComponentTypeEdit', () => {
         hint: true,
         title: true,
         hideTitle: false,
+        content: false,
         optional: true,
-        selectList: false
+        selectList: false,
+        selectCondition: true
       }
     ],
     [
@@ -173,8 +220,10 @@ describe('ComponentTypeEdit', () => {
         hint: true,
         title: true,
         hideTitle: false,
+        content: false,
         optional: true,
-        selectList: true
+        selectList: true,
+        selectCondition: true
       }
     ],
     [
@@ -184,8 +233,10 @@ describe('ComponentTypeEdit', () => {
         hint: true,
         title: true,
         hideTitle: false,
+        content: false,
         optional: true,
-        selectList: true
+        selectList: true,
+        selectCondition: true
       }
     ],
     [
@@ -195,8 +246,10 @@ describe('ComponentTypeEdit', () => {
         hint: true,
         title: true,
         hideTitle: false,
+        content: false,
         optional: true,
-        selectList: false
+        selectList: false,
+        selectCondition: true
       }
     ],
     [
@@ -206,8 +259,10 @@ describe('ComponentTypeEdit', () => {
         hint: true,
         title: true,
         hideTitle: false,
+        content: false,
         optional: true,
-        selectList: false
+        selectList: false,
+        selectCondition: true
       }
     ],
     [
@@ -217,8 +272,10 @@ describe('ComponentTypeEdit', () => {
         hint: true,
         title: true,
         hideTitle: true,
+        content: false,
         optional: true,
-        selectList: false
+        selectList: false,
+        selectCondition: false
       }
     ],
     [
@@ -228,8 +285,10 @@ describe('ComponentTypeEdit', () => {
         hint: true,
         title: true,
         hideTitle: false,
+        content: false,
         optional: true,
-        selectList: false
+        selectList: false,
+        selectCondition: true
       }
     ]
   ])('Component type edit: %s', (type, options) => {
@@ -307,6 +366,24 @@ describe('ComponentTypeEdit', () => {
         })
 
         expect($checkbox).not.toBeInTheDocument()
+      })
+    }
+
+    if (options.content) {
+      it("should render 'Content' textarea", () => {
+        const $textarea = screen.queryByRole<HTMLTextAreaElement>('textbox', {
+          name: 'Content'
+        })
+
+        expect($textarea).toBeInTheDocument()
+      })
+    } else {
+      it("should not render 'Content' textarea", () => {
+        const $textarea = screen.queryByRole('textbox', {
+          name: 'Content'
+        })
+
+        expect($textarea).not.toBeInTheDocument()
       })
     }
 
@@ -418,6 +495,31 @@ describe('ComponentTypeEdit', () => {
       it("should not render 'Select list' options", () => {
         const $select = screen.queryByRole('combobox', {
           name: 'Select list'
+        })
+
+        expect($select).not.toBeInTheDocument()
+      })
+    }
+
+    if (options.selectCondition) {
+      it("should render 'Condition (optional)' options", () => {
+        const $select = screen.queryByRole<HTMLSelectElement>('combobox', {
+          name: 'Condition (optional)',
+          description:
+            'Select a condition that determines whether to show the contents of this component. You can create and edit conditions from the Conditions screen.'
+        })
+
+        expect($select).toBeInTheDocument()
+        expect($select?.value).toBe(
+          selectedComponent && 'list' in selectedComponent
+            ? selectedComponent.list
+            : ''
+        )
+      })
+    } else {
+      it("should not render 'Condition (optional)' options", () => {
+        const $select = screen.queryByRole('combobox', {
+          name: 'Condition (optional)'
         })
 
         expect($select).not.toBeInTheDocument()

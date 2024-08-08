@@ -44,5 +44,5 @@ export async function context(request) {
 }
 
 /**
- * @typedef {import('@hapi/hapi').Request} Request
+ * @import { Request } from '@hapi/hapi'
  */

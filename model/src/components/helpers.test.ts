@@ -1,9 +1,9 @@
 import { ComponentType, type ComponentDef } from '@defra/forms-model'
 
-import { hasContentField } from '~/src/components/helpers.js'
+import { hasContent, hasContentField } from '~/src/components/helpers.js'
 
 describe('Type guards', () => {
-  describe('hasContentField', () => {
+  describe('hasContent', () => {
     it.each([
       {
         name: 'field',
@@ -27,20 +27,12 @@ describe('Type guards', () => {
         list: 'items',
         options: {},
         schema: {}
-      } satisfies ComponentDef,
-      {
-        name: 'field',
-        title: 'Items',
-        type: ComponentType.List,
-        list: 'items',
-        options: {},
-        schema: {}
       } satisfies ComponentDef
-    ])('should allow non-content types', (component) => {
+    ])('should prevent non-content types', (component) => {
       const { type } = component
 
-      expect({ hasContentField: false, type }).toEqual({
-        hasContentField: hasContentField(component),
+      expect({ hasContent: false, type }).toEqual({
+        hasContent: hasContent(component),
         type
       })
     })
@@ -69,11 +61,73 @@ describe('Type guards', () => {
         content: 'It can take up to 8 weeks to register a lasting power of…',
         options: {},
         schema: {}
+      } satisfies ComponentDef,
+      {
+        name: 'field',
+        title: 'Items',
+        type: ComponentType.List,
+        list: 'items',
+        options: {},
+        schema: {}
       } satisfies ComponentDef
-    ])('should prevent content types', (component) => {
+    ])('should allow content types', (component) => {
+      const { type } = component
+
+      expect({ hasContent: true, type }).toEqual({
+        hasContent: hasContent(component),
+        type
+      })
+    })
+  })
+
+  describe('hasContentField', () => {
+    it.each([
+      {
+        name: 'content',
+        title: 'Help with nationality',
+        type: ComponentType.Details,
+        content: 'We need to know your nationality so we can work out…',
+        options: {},
+        schema: {}
+      } satisfies ComponentDef,
+      {
+        name: 'content',
+        title: 'HTML',
+        type: ComponentType.Html,
+        content: '<p class="govuk-body">Some content</p>',
+        options: {},
+        schema: {}
+      } satisfies ComponentDef,
+      {
+        name: 'content',
+        title: '',
+        type: ComponentType.InsetText,
+        content: 'It can take up to 8 weeks to register a lasting power of…',
+        options: {},
+        schema: {}
+      } satisfies ComponentDef
+    ])('should allow content types with textarea field', (component) => {
       const { type } = component
 
       expect({ hasContentField: true, type }).toEqual({
+        hasContentField: hasContentField(component),
+        type
+      })
+    })
+
+    it.each([
+      {
+        name: 'field',
+        title: 'Items',
+        type: ComponentType.List,
+        list: 'items',
+        options: {},
+        schema: {}
+      } satisfies ComponentDef
+    ])('should prevent content types with list', (component) => {
+      const { type } = component
+
+      expect({ hasContentField: false, type }).toEqual({
         hasContentField: hasContentField(component),
         type
       })

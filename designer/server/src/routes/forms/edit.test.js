@@ -8,7 +8,7 @@ import { renderResponse } from '~/test/helpers/component-helpers.js'
 jest.mock('~/src/lib/forms.js')
 
 describe('Forms library routes', () => {
-  /** @type {import('@hapi/hapi').Server} */
+  /** @type {Server} */
   let server
 
   beforeAll(async () => {
@@ -145,7 +145,6 @@ describe('Forms library routes', () => {
 })
 
 /**
- * @typedef {import('@defra/forms-model').FormDefinition} FormDefinition
- * @typedef {import('@defra/forms-model').FormMetadata} FormMetadata
- * @typedef {import('@defra/forms-model').FormMetadataAuthor} FormMetadataAuthor
+ * @import { FormDefinition, FormMetadata, FormMetadataAuthor } from '@defra/forms-model'
+ * @import { Server } from '@hapi/hapi'
  */

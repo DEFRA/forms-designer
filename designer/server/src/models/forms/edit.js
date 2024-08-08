@@ -4,7 +4,7 @@ const backLinkText = 'Back to form overview'
 
 /**
  * @param {FormMetadata} metadata
- * @param {ValidationFailure} [validation]
+ * @param {ValidationFailure<FormMetadataInput>} [validation]
  */
 export function organisationViewModel(metadata, validation) {
   return {
@@ -18,7 +18,7 @@ export function organisationViewModel(metadata, validation) {
 
 /**
  * @param {Pick<FormMetadata, 'teamName' | 'teamEmail' | 'slug'>} metadata
- * @param {ValidationFailure} [validation]
+ * @param {ValidationFailure<FormMetadataInput>} [validation]
  */
 export function teamDetailsViewModel(metadata, validation) {
   const teamModel = create.teamViewModel(metadata, validation)
@@ -39,7 +39,7 @@ export function teamDetailsViewModel(metadata, validation) {
 
 /**
  * @param {Pick<FormMetadata, 'title' | 'slug'>} metadata
- * @param {ValidationFailure} [validation]
+ * @param {ValidationFailure<FormMetadataInput>} [validation]
  */
 export function titleViewModel(metadata, validation) {
   const titleModel = create.titleViewModel(metadata, validation)
@@ -54,8 +54,6 @@ export function titleViewModel(metadata, validation) {
 }
 
 /**
- * @typedef {import('@defra/forms-model').FormMetadata} FormMetadata
- * @typedef {import('@defra/forms-model').FormMetadataInput} FormMetadataInput
- * @typedef {import("~/src/common/helpers/build-error-details.js").ValidationFailure<FormMetadataInput>} ValidationFailure
- * @typedef {import('~/src/common/helpers/build-error-details.js').ErrorDetails} ErrorDetails
+ * @import { FormMetadata, FormMetadataInput } from '@defra/forms-model'
+ * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

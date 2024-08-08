@@ -222,6 +222,11 @@
     "title": "List title",
     "titleHint": "Enter a unique name for your list"
   },
+  "listContentEditComponent": {
+    "bulletField": {
+      "title": "List format"
+    }
+  },
   "menu": {
     "addPage": "Add page",
     "conditions": "Conditions",

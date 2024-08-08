@@ -42,19 +42,6 @@ export function buildErrorList(errorDetails, names) {
 }
 
 /**
- * @typedef {import('joi').ValidationError} ValidationError
- * @typedef {{ text: string, href?: string }} ErrorDetailsItem
- * @typedef {Record<string, ErrorDetailsItem>} ErrorDetails
- */
-
-/**
- * @template {object} Schema
- * @typedef {import('@hapi/hapi').Request<{ Payload: Schema }>["payload"]} Payload
- */
-
-/**
- * @template {object} [Schema=object]
- * @typedef {object} ValidationFailure
- * @property {ErrorDetails} formErrors - Formatted errors for error summary
- * @property {Payload<Schema>} formValues - Form POST payload from Hapi request
+ * @import { ValidationError } from 'joi'
+ * @import { ErrorDetails, ErrorDetailsItem } from '~/src/common/helpers/types.js'
  */

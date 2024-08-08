@@ -264,9 +264,9 @@ export class InlineConditions extends Component<Props, State> {
     const { condition } = this.props
     const { conditions, editView, fields, validationErrors } = this.state
 
-    const nameError = validationErrors
-      .filter((error) => error.href === '#cond-name')
-      .at(0)
+    const nameError = validationErrors.find(
+      (error) => error.href === '#cond-name'
+    )
 
     const hasErrors = !!validationErrors.length
 

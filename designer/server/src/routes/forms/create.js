@@ -9,14 +9,13 @@ import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
-import { redirectToTitleWithErrors } from './helpers.js'
-
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
 import * as forms from '~/src/lib/forms.js'
 import * as create from '~/src/models/forms/create.js'
+import { redirectToTitleWithErrors } from '~/src/routes/forms/helpers.js'
 
 const logger = createLogger()
 
@@ -344,20 +343,6 @@ export function redirectWithErrors(
 }
 
 /**
- * @typedef {import('@defra/forms-model').FormMetadataInput} FormMetadataInput
- */
-
-/**
- * @template {import('@hapi/hapi').ReqRef} [ReqRef=import('@hapi/hapi').ReqRefDefaults]
- * @typedef {import('@hapi/hapi').ServerRoute<ReqRef>} ServerRoute
- */
-
-/**
- * @template {import('@hapi/hapi').ReqRef} [ReqRef=import('@hapi/hapi').ReqRefDefaults]
- * @typedef {import('@hapi/hapi').Request<ReqRef>} Request
- */
-
-/**
- * @typedef {import('@hapi/hapi').ResponseToolkit<any>} ResponseToolkit
- * @typedef {Request<{ Payload: any }>} RequestWithPayload
+ * @import { FormMetadataInput } from '@defra/forms-model'
+ * @import { Request, ResponseToolkit, ServerRoute } from '@hapi/hapi'
  */

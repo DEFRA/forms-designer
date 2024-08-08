@@ -16,7 +16,11 @@ describe('useFlyoutContext', () => {
   let wrapper: ReactWrapper | undefined
 
   afterEach(() => {
-    wrapper?.exists() && wrapper.unmount()
+    if (!wrapper?.exists()) {
+      return
+    }
+
+    wrapper.unmount()
   })
 
   test('Increment is called on mount', () => {

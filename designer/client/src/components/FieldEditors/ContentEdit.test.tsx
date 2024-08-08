@@ -1,15 +1,16 @@
 import {
   ComponentType,
-  type ComponentDef,
-  type FormDefinition
+  type DetailsComponent,
+  type FormDefinition,
+  type HtmlComponent
 } from '@defra/forms-model'
 import { render } from '@testing-library/react'
 import React from 'react'
 
-import { ParaEdit } from '~/src/components/FieldEditors/ParaEdit.jsx'
+import { ContentEdit } from '~/src/components/FieldEditors/ContentEdit.jsx'
 import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
-describe('ParaEdit', () => {
+describe('ContentEdit', () => {
   const selectedComponent = {
     name: 'IDDQl4',
     title: 'abc',
@@ -17,7 +18,7 @@ describe('ParaEdit', () => {
     content: '',
     options: {},
     schema: {}
-  } satisfies ComponentDef
+  } as HtmlComponent | DetailsComponent
 
   const data = {
     pages: [
@@ -32,15 +33,29 @@ describe('ParaEdit', () => {
     conditions: []
   } satisfies FormDefinition
 
-  it('Should render with correct screen text', () => {
+  it('should render with correct screen text', () => {
     const { container } = render(
       <RenderWithContext data={data} state={{ selectedComponent }}>
-        <ParaEdit />
+        <ContentEdit />
       </RenderWithContext>
     )
 
     expect(container).toHaveTextContent(
       'Enter the text you want to show. You can apply basic HTML, such as text formatting and hyperlinks.'
+    )
+  })
+
+  it('should render with correct screen text (details only)', () => {
+    selectedComponent.type = ComponentType.Details
+
+    const { container } = render(
+      <RenderWithContext data={data} state={{ selectedComponent }}>
+        <ContentEdit />
+      </RenderWithContext>
+    )
+
+    expect(container).toHaveTextContent(
+      'Enter the text you want to show when users expand the title. You can apply basic HTML, such as text formatting and hyperlinks.'
     )
   })
 })

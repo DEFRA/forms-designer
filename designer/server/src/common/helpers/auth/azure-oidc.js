@@ -17,7 +17,7 @@ export const scope = [
 ]
 
 /**
- * @type {ServerRegisterPluginObject}
+ * @type {ServerRegisterPluginObject<void>}
  */
 export const azureOidc = {
   plugin: {
@@ -30,7 +30,7 @@ export const azureOidc = {
       server.auth.strategy(
         'azure-oidc',
         'bell',
-        /** @type {ProviderBell} */ ({
+        /** @type {BellOptions} */ ({
           provider: {
             name: 'azure-oidc',
             protocol: 'oauth2',
@@ -82,7 +82,7 @@ const dummyUsers = {
 }
 
 /**
- * @type {ServerRegisterPluginObject}
+ * @type {ServerRegisterPluginObject<void>}
  */
 export const azureOidcNoop = {
   plugin: {
@@ -93,7 +93,7 @@ export const azureOidcNoop = {
       server.auth.strategy(
         'azure-oidc',
         'basic',
-        /** @type {ProviderBasic} */ ({
+        /** @type {{ validate: BasicOptions.Validate }} */ ({
           validate(request, username, password) {
             const credentials = dummyUsers[username]
 
@@ -116,15 +116,7 @@ export const azureOidcNoop = {
 }
 
 /**
- * @template {object | void} [PluginOptions=void]
- * @typedef {import('@hapi/hapi').ServerRegisterPluginObject<PluginOptions>} ServerRegisterPluginObject
- */
-
-/**
- * @typedef {{ validate: import('@hapi/basic').Validate }} ProviderBasic - Basic provider options
- * @typedef {import('@hapi/bell').BellOptions} ProviderBell - Bell provider options
- * @typedef {import('@hapi/bell').Credentials2} Credentials - Provider OAuth2 credentials
- * @typedef {import('@hapi/hapi').UserCredentials} UserCredentials - User credentials
- * @typedef {import('oidc-client-ts').OidcMetadata} OidcMetadata - OpenID Connect (OIDC) metadata
- * @typedef {import('oidc-client-ts').UserProfile & { groups?: string[], unique_name?: string }} UserProfile - User profile
+ * @import BasicOptions from '@hapi/basic'
+ * @import { BellOptions } from '@hapi/bell'
+ * @import { ServerRegisterPluginObject, UserCredentials } from '@hapi/hapi'
  */
