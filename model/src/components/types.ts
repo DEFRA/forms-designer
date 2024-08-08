@@ -141,16 +141,11 @@ export interface FileUploadFieldComponent {
   hint?: string
   options: {
     required?: boolean
-    optionalText?: boolean
-    classes?: string
     accept?: string
-    autocomplete?: string
-    customValidationMessage?: string
   }
   schema: {
     max?: number
     min?: number
-    length?: number
   }
 }
 
