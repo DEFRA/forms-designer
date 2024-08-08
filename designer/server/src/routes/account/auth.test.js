@@ -10,7 +10,6 @@ jest.mock('~/src/lib/forms.js')
 describe('Authentiation', () => {
   /** @type {import('@hapi/hapi').Server} */
   let server
-  const testingScopes = [auth, authScopesEmpty, authGroupsInvalid]
 
   beforeAll(async () => {
     server = await createServer()
@@ -21,35 +20,38 @@ describe('Authentiation', () => {
     await server.stop()
   })
 
-  describe.each(testingScopes)('With valid or invalid scopes', (authIn) => {
-    /** @type {ServerInjectResponse} */
-    let response
+  describe.each([auth, authScopesEmpty, authGroupsInvalid])(
+    'With valid or invalid scopes',
+    (authIn) => {
+      /** @type {ServerInjectResponse} */
+      let response
 
-    beforeAll(async () => {
-      const options = {
-        method: 'get',
-        url: '/auth/callback',
-        auth: authIn
-      }
+      beforeAll(async () => {
+        const options = {
+          method: 'get',
+          url: '/auth/callback',
+          auth: authIn
+        }
 
-      response = await server.inject(options)
-    })
+        response = await server.inject(options)
+      })
 
-    it('should redirect to library', () => {
-      const { headers } = response
-      expect(headers.location).toBe('/library')
-    })
+      it('should redirect to library', () => {
+        const { headers } = response
+        expect(headers.location).toBe('/library')
+      })
 
-    it('should set the user session cookie', () => {
-      const { headers } = response
-      expect(headers['set-cookie']).toMatchObject(
-        expect.arrayContaining([
-          expect.stringMatching(/^userSession=[a-z]/i),
-          expect.not.stringContaining('userSession=;')
-        ])
-      )
-    })
-  })
+      it('should set the user session cookie', () => {
+        const { headers } = response
+        expect(headers['set-cookie']).toMatchObject(
+          expect.arrayContaining([
+            expect.stringMatching(/^userSession=[a-z]/i),
+            expect.not.stringContaining('userSession=;')
+          ])
+        )
+      })
+    }
+  )
 })
 
 /**
