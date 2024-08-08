@@ -34,7 +34,10 @@ export default /** @satisfies {ServerRoute} */ ({
   },
   options: {
     auth: {
-      mode: 'try'
+      mode: 'try',
+      access: {
+        scope: false
+      }
     }
   }
 })

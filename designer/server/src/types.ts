@@ -87,7 +87,6 @@ declare module '@hapi/yar' {
   type CreateKey = (typeof sessionNames)['create']
   type RedirectToKey = (typeof sessionNames)['redirectTo']
   type ValidationKey = (typeof sessionNames)['validationFailure']
-  type UserAuthFailedKey = (typeof sessionNames)['userAuthFailed']
   type SuccessNotification = (typeof sessionNames)['successNotification']
   type ErrorListKey = (typeof sessionNames)['errorList']
 
@@ -108,12 +107,6 @@ declare module '@hapi/yar' {
      * Get temporary error messages relating to the current page.
      */
     flash(type: ErrorListKey): ErrorDetailsItem[]
-
-    /**
-     * Get temporary flag that user failed authorisation
-     * (Deleted when read, e.g. after a redirect)
-     */
-    flash(type: UserAuthFailedKey): true[]
 
     /**
      *

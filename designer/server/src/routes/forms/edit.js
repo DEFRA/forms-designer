@@ -2,6 +2,7 @@ import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
+import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import * as forms from '~/src/lib/forms.js'
 import * as edit from '~/src/models/forms/edit.js'
@@ -32,6 +33,15 @@ export default [
         'forms/question-radios',
         edit.organisationViewModel(metadata, validation)
       )
+    },
+    options: {
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${scopes.SCOPE_WRITE}`]
+        }
+      }
     }
   }),
 
@@ -64,6 +74,13 @@ export default [
           organisation: schema.extract('organisation')
         }),
         failAction: redirectWithErrors
+      },
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${scopes.SCOPE_WRITE}`]
+        }
       }
     }
   }),
@@ -88,6 +105,15 @@ export default [
         'forms/question-inputs',
         edit.teamDetailsViewModel(metadata, validation)
       )
+    },
+    options: {
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${scopes.SCOPE_WRITE}`]
+        }
+      }
     }
   }),
 
@@ -122,6 +148,13 @@ export default [
           teamEmail: schema.extract('teamEmail')
         }),
         failAction: redirectWithErrors
+      },
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${scopes.SCOPE_WRITE}`]
+        }
       }
     }
   }),
@@ -146,6 +179,15 @@ export default [
         'forms/question-input',
         edit.titleViewModel(metadata, validation)
       )
+    },
+    options: {
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${scopes.SCOPE_WRITE}`]
+        }
+      }
     }
   }),
 
@@ -194,6 +236,13 @@ export default [
           title: schema.extract('title')
         }),
         failAction: redirectWithErrors
+      },
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${scopes.SCOPE_WRITE}`]
+        }
       }
     }
   })

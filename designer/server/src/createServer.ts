@@ -5,6 +5,8 @@ import inert from '@hapi/inert'
 import Wreck from '@hapi/wreck'
 import { ProxyAgent } from 'proxy-agent'
 
+
+import { SCOPE_READ } from '~/src/common/constants/scopes.js'
 import {
   azureOidc,
   azureOidcNoop
@@ -15,6 +17,7 @@ import { buildRedisClient } from '~/src/common/helpers/redis-client.js'
 import { sessionManager } from '~/src/common/helpers/session-manager.js'
 import * as nunjucks from '~/src/common/nunjucks/index.js'
 import config from '~/src/config.js'
+import errorPage from '~/src/plugins/errorPage.js'
 import router from '~/src/plugins/router.js'
 
 const proxyAgent = new ProxyAgent()
@@ -34,7 +37,11 @@ const serverOptions = (): ServerOptions => {
     routes: {
       auth: {
         mode: 'required',
-        strategies: ['session']
+        strategies: ['session'],
+        access: {
+          entity: 'user',
+          scope: [`+${SCOPE_READ}`]
+        }
       },
       validate: {
         options: {
@@ -91,6 +98,7 @@ export async function createServer() {
   await server.register(nunjucks.plugin)
   await server.register(router)
   await server.register(requestLogger)
+  await server.register(errorPage)
 
   return server
 }

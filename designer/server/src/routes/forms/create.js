@@ -9,6 +9,7 @@ import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
+import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
@@ -58,6 +59,15 @@ export default [
 
       // Redirect to first step
       return h.redirect(ROUTE_PATH_CREATE_TITLE).temporary()
+    },
+    options: {
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${scopes.SCOPE_WRITE}`]
+        }
+      }
     }
   }),
 
@@ -78,6 +88,15 @@ export default [
         'forms/question-input',
         create.titleViewModel(metadata, validation)
       )
+    },
+    options: {
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${scopes.SCOPE_WRITE}`]
+        }
+      }
     }
   }),
 
@@ -117,6 +136,13 @@ export default [
           title: schema.extract('title')
         }),
         failAction: redirectToStepWithErrors
+      },
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${scopes.SCOPE_WRITE}`]
+        }
       }
     }
   }),
@@ -138,6 +164,15 @@ export default [
         'forms/question-radios',
         create.organisationViewModel(metadata, validation)
       )
+    },
+    options: {
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${scopes.SCOPE_WRITE}`]
+        }
+      }
     }
   }),
 
@@ -165,6 +200,13 @@ export default [
           organisation: schema.extract('organisation')
         }),
         failAction: redirectToStepWithErrors
+      },
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${scopes.SCOPE_WRITE}`]
+        }
       }
     }
   }),
@@ -186,6 +228,15 @@ export default [
         'forms/question-inputs',
         create.teamViewModel(metadata, validation)
       )
+    },
+    options: {
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${scopes.SCOPE_WRITE}`]
+        }
+      }
     }
   }),
 
@@ -233,6 +284,13 @@ export default [
       validate: {
         payload: schema,
         failAction: redirectToStepWithErrors
+      },
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${scopes.SCOPE_WRITE}`]
+        }
       }
     }
   })
