@@ -5,9 +5,9 @@ import inert from '@hapi/inert'
 import Wreck from '@hapi/wreck'
 import { ProxyAgent } from 'proxy-agent'
 
-import { SCOPE_READ } from './common/constants/scopes.js'
 import errorPage from './plugins/errorPage.js'
 
+import { SCOPE_READ } from '~/src/common/constants/scopes.js'
 import {
   azureOidc,
   azureOidcNoop
