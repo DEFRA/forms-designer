@@ -283,6 +283,7 @@
     "controllers": {
       "question": "Question page",
       "start": "Start page",
+      "fileUpload": "File upload",
       "summary": "Summary page"
     },
     "noun": "page",
