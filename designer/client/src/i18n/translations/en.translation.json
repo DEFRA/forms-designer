@@ -181,7 +181,7 @@
     "YesNoField": "YesNo",
     "YesNoField_info": "Allows users to answer either 'Yes' or 'No'",
     "FileUploadField": "File upload",
-    "FileUploadField_info": "Allows a user to upload one or more files"
+    "FileUploadField_info": "Allows a user to upload files"
   },
   "leaveDesigner": "Are you sure you want to leave the Designer? If you have unsaved changes they will be lost.",
   "list": {
