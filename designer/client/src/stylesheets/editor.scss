@@ -107,6 +107,8 @@ p code {
   }
 }
 
+$box-border: solid 2px #000;
+
 .component.govuk-link {
   display: block;
   width: 100%;
@@ -160,7 +162,7 @@ p code {
   .box {
     width: 100px;
     height: 20px;
-    border: solid 2px #000;
+    border: $box-border;
 
     &.tall {
       height: 50px;
@@ -243,6 +245,20 @@ p code {
     &:after {
       right: -1px;
       content: "⟩";
+    }
+  }
+
+  .fileUploadIconContainer {
+    background-color: lightgray;
+    float: left;
+    width: 20px;
+    height: 100%;
+    border-right: $box-border;
+
+    .fileUploadIcon {
+      display: block;
+      margin: auto;
+      height: 100%;
     }
   }
 }
