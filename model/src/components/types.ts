@@ -146,6 +146,7 @@ export interface FileUploadFieldComponent {
   schema: {
     max?: number
     min?: number
+    length?: number
   }
 }
 
