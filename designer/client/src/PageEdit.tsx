@@ -17,7 +17,7 @@ import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.j
 import { DataContext } from '~/src/context/DataContext.js'
 import { findPage } from '~/src/data/page/findPage.js'
 import { updateLinksTo } from '~/src/data/page/updateLinksTo.js'
-import { toUrl } from '~/src/helpers.js'
+import { controllerNameFromPath, toUrl } from '~/src/helpers.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import randomId from '~/src/randomId.js'
 import { SectionEdit } from '~/src/section/SectionEdit.jsx'
@@ -237,7 +237,7 @@ export class PageEdit extends Component {
               id="controller"
               aria-describedby="controller-hint"
               name="controller"
-              value={controller}
+              value={controllerNameFromPath(controller)}
               onChange={this.onChangeController}
             >
               <option value="">{i18n('page.controllers.question')}</option>
