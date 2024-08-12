@@ -13,6 +13,7 @@ $govuk-assets-path: "/assets/";
 $app-code-font: ui-monospace, menlo, "Cascadia Mono", "Segoe UI Mono", consolas, "Liberation Mono", monospace;
 $app-code-color: #d13118;
 $app-light-grey: #f8f8f8;
+$app-box-border: solid 2px #000;
 
 %app-button-link {
   @include govuk-link-common;
@@ -107,8 +108,6 @@ p code {
   }
 }
 
-$box-border: solid 2px #000;
-
 .component.govuk-link {
   display: block;
   width: 100%;
@@ -162,7 +161,7 @@ $box-border: solid 2px #000;
   .box {
     width: 100px;
     height: 20px;
-    border: $box-border;
+    border: $app-box-border;
 
     &.tall {
       height: 50px;
@@ -253,7 +252,7 @@ $box-border: solid 2px #000;
     float: left;
     width: 20px;
     height: 100%;
-    border-right: $box-border;
+    border-right: $app-box-border;
 
     .fileUploadIcon {
       display: block;
