@@ -52,6 +52,7 @@ updates:
           - 'jest'
           - 'jest-*'
           - 'nodemon'
+          - 'tsx'
 
       types:
         patterns:
