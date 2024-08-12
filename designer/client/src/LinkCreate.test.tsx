@@ -37,7 +37,7 @@ const data = {
     {
       title: 'Summary',
       path: '/summary',
-      controller: './pages/summary.js',
+      controller: 'SummaryPageController',
       components: []
     }
   ],

@@ -24,7 +24,7 @@ describe('ComponentTypeEdit', () => {
           title: 'First page',
           path: '/first-page',
           components: [],
-          controller: './pages/summary.js',
+          controller: 'SummaryPageController',
           section: 'home'
         }
       ],
