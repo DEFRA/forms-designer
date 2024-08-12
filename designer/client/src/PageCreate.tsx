@@ -49,7 +49,7 @@ export class PageCreate extends Component {
     const title = this.state.title?.trim()
     const linkFrom = this.state.linkFrom?.trim()
     const section = this.state.section?.name?.trim()
-    const pageType = this.state.pageType?.trim()
+    const controller = this.state.controller?.trim()
     const selectedCondition = this.state.selectedCondition?.trim()
     const path = this.state.path
 
@@ -65,8 +65,8 @@ export class PageCreate extends Component {
     if (section) {
       value.section = section
     }
-    if (pageType) {
-      value.controller = pageType
+    if (controller) {
+      value.controller = controller
     }
 
     let copy = addPage({ ...data }, value)
@@ -141,10 +141,10 @@ export class PageCreate extends Component {
     })
   }
 
-  onChangePageType = (e: ChangeEvent<HTMLSelectElement>) => {
+  onChangeController = (e: ChangeEvent<HTMLSelectElement>) => {
     const input = e.target
     this.setState({
-      pageType: input.value
+      controller: input.value
     })
   }
 
@@ -193,7 +193,7 @@ export class PageCreate extends Component {
     const { data } = this.context
     const { sections, pages } = data
     const {
-      pageType,
+      controller,
       linkFrom,
       title,
       section,
@@ -209,23 +209,27 @@ export class PageCreate extends Component {
         )}
         <form onSubmit={this.onSubmit} autoComplete="off">
           <div className="govuk-form-group">
-            <label className="govuk-label govuk-label--s" htmlFor="page-type">
-              {i18n('addPage.pageTypeOption.title')}
+            <label className="govuk-label govuk-label--s" htmlFor="controller">
+              {i18n('addPage.controllerOption.title')}
             </label>
-            <div className="govuk-hint" id="page-type-hint">
-              {i18n('addPage.pageTypeOption.helpText')}
+            <div className="govuk-hint" id="controller-hint">
+              {i18n('addPage.controllerOption.helpText')}
             </div>
             <select
               className="govuk-select"
-              id="page-type"
-              aria-describedby="page-type-hint"
-              name="page-type"
-              value={pageType}
-              onChange={this.onChangePageType}
+              id="controller"
+              aria-describedby="controller-hint"
+              name="controller"
+              value={controller}
+              onChange={this.onChangeController}
             >
-              <option value="">Question Page</option>
-              <option value="./pages/start.js">Start Page</option>
-              <option value="./pages/summary.js">Summary Page</option>
+              <option value="">{i18n('page.controllers.question')}</option>
+              <option value="StartPageController">
+                {i18n('page.controllers.start')}
+              </option>
+              <option value="SummaryPageController">
+                {i18n('page.controllers.summary')}
+              </option>
             </select>
           </div>
 
