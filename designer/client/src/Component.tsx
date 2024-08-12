@@ -195,8 +195,12 @@ export const FileUploadField: FunctionComponent = () => {
   return (
     <ComponentField>
       <div className="box">
-        <div className="file-upload" aria-hidden="true">
-          <FileUploadIcon />
+        <div className="file-upload">
+          <FileUploadIcon
+            className="file-upload__icon"
+            width={15}
+            height={15}
+          />
         </div>
       </div>
     </ComponentField>
