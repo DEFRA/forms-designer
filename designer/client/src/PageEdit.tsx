@@ -17,7 +17,7 @@ import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.j
 import { DataContext } from '~/src/context/DataContext.js'
 import { findPage } from '~/src/data/page/findPage.js'
 import { updateLinksTo } from '~/src/data/page/updateLinksTo.js'
-import { toUrl } from '~/src/helpers.js'
+import { controllerNameFromPath, toUrl } from '~/src/helpers.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import randomId from '~/src/randomId.js'
 import { SectionEdit } from '~/src/section/SectionEdit.jsx'
@@ -142,6 +142,14 @@ export class PageEdit extends Component {
     }
   }
 
+  onChangeController = (e: ChangeEvent<HTMLSelectElement>) => {
+    const { value: controller } = e.target
+
+    this.setState({
+      controller
+    })
+  }
+
   onChangeTitle = (e: ChangeEvent<HTMLInputElement>) => {
     const { value: title } = e.target
 
@@ -218,26 +226,26 @@ export class PageEdit extends Component {
         )}
         <form onSubmit={this.onSubmit} autoComplete="off">
           <div className="govuk-form-group">
-            <label className="govuk-label govuk-label--s" htmlFor="page-type">
-              {i18n('page.type')}
+            <label className="govuk-label govuk-label--s" htmlFor="controller">
+              {i18n('page.controller')}
             </label>
-            <div className="govuk-hint" id="page-type-hint">
-              {i18n('page.typeHint')}
+            <div className="govuk-hint" id="controller-hint">
+              {i18n('page.controllerHint')}
             </div>
             <select
               className="govuk-select"
-              id="page-type"
-              aria-describedby="page-type-hint"
-              name="page-type"
-              value={controller}
-              onChange={(e) => this.setState({ controller: e.target.value })}
+              id="controller"
+              aria-describedby="controller-hint"
+              name="controller"
+              value={controllerNameFromPath(controller)}
+              onChange={this.onChangeController}
             >
-              <option value="">{i18n('page.types.question')}</option>
-              <option value="./pages/start.js">
-                {i18n('page.types.start')}
+              <option value="">{i18n('page.controllers.question')}</option>
+              <option value="StartPageController">
+                {i18n('page.controllers.start')}
               </option>
-              <option value="./pages/summary.js">
-                {i18n('page.types.summary')}
+              <option value="SummaryPageController">
+                {i18n('page.controllers.summary')}
               </option>
             </select>
           </div>

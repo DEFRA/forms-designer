@@ -80,7 +80,7 @@ const data = {
     {
       title: 'summary',
       path: '/summary',
-      controller: './pages/summary.js',
+      controller: 'SummaryPageController',
       components: []
     }
   ],
@@ -145,7 +145,7 @@ test('updateLinksTo should update all links pointing to the specified path to th
       {
         title: 'summary',
         path: '/summary',
-        controller: './pages/summary.js',
+        controller: 'SummaryPageController',
         components: [],
         next: []
       }
