@@ -48,7 +48,7 @@
     "@xgovformbuilder/govuk-react-jsx": "^7.1.2",
     "classnames": "^2.5.1",
     "cssnano": "^7.0.4",
-    "cssnano-preset-default": "^7.0.4",
+    "cssnano-preset-default": "^7.0.5",
     "date-fns": "^3.6.0",
     "depth-first": "^4.0.0",
     "focus-trap-react": "^8.11.3",
