@@ -85,7 +85,7 @@ export class Lines extends Component<Props, State> {
                     width={textWidth}
                     height={textHeight}
                     style={{
-                      overflow: 'auto',
+                      overflow: 'visible',
                       pointerEvents: 'none',
                       textAlign: 'center'
                     }}
