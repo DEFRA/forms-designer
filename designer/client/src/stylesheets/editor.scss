@@ -247,14 +247,14 @@ p code {
     }
   }
 
-  .fileUploadIconContainer {
+  .file-upload {
     background-color: lightgray;
     float: left;
     width: 20px;
     height: 100%;
     border-right: $app-box-border;
 
-    .fileUploadIcon {
+    &__icon {
       display: block;
       margin: auto;
       height: 100%;
