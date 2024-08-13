@@ -13,7 +13,7 @@ const { phase, serviceName } = config
 let webpackManifest
 
 /**
- * @param {Request | null} request
+ * @param {Partial<Request> | null} request
  */
 export async function context(request) {
   const manifestPath = join(config.clientDir, 'assets-manifest.json')
@@ -38,7 +38,7 @@ export async function context(request) {
     navigation: buildNavigation(request),
     getAssetPath: (asset = '') => `/${webpackManifest?.[asset] ?? asset}`,
     assetPath: '/assets',
-    isAuthenticated: request?.auth.isAuthenticated ?? false,
+    isAuthenticated: request?.auth?.isAuthenticated ?? false,
     authedUser: credentials?.user
   }
 }
