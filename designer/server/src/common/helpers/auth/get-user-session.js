@@ -20,9 +20,9 @@ export async function getUserSession(request, session) {
 
   // Fall back to OpenID Connect (OIDC) claim
   if (!sessionId && hasAuthenticated(auth?.credentials)) {
-    const { token } = getUserClaims(auth.credentials)
+    const claims = getUserClaims(auth.credentials)
 
-    sessionId = token.sub
+    sessionId = claims.token.sub
   }
 
   // Retrieve user session from Redis
