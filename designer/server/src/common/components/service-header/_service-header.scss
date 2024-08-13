@@ -6,9 +6,12 @@
 $govuk-header-link-underline-thickness: 3px;
 
 $defra-brand-colour: govuk-organisation-colour(department-for-environment-food-rural-affairs);
-$defra-brand-colour-high-contrast: #008531;
+$defra-brand-colour-contrast-safe: govuk-organisation-colour(
+  department-for-environment-food-rural-affairs,
+  $contrast-safe: true
+);
 
-$defra-link-colour: govuk-shade($defra-brand-colour-high-contrast, 25%);
+$defra-link-colour: govuk-shade($defra-brand-colour-contrast-safe, 25%);
 $defra-link-colour-hover: govuk-shade($defra-link-colour, 50%);
 
 @mixin toggle-button-focus($default-text-colour) {
