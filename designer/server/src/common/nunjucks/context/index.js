@@ -39,6 +39,7 @@ export async function context(request) {
     getAssetPath: (asset = '') => `/${webpackManifest?.[asset] ?? asset}`,
     assetPath: '/assets',
     isAuthenticated: request?.auth?.isAuthenticated ?? false,
+    isAuthorized: request?.auth?.isAuthorized ?? false,
     authedUser: credentials?.user
   }
 }
