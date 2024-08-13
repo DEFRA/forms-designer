@@ -42,7 +42,13 @@ const schema = joi.object<Config>({
   appDir: joi.string().default(dirname(configPath)),
   clientDir: joi
     .string()
-    .default(resolve(dirname(configPath), '../../client/dist')),
+    .default(resolve(dirname(configPath), '../../client/dist'))
+    .when('env', {
+      is: 'test',
+      then: joi
+        .string()
+        .default(resolve(dirname(configPath), '../../client/test/fixtures'))
+    }),
   managerUrl: joi.string().required(),
   previewUrl: joi.string().required(),
   serviceName: joi.string().required(),
