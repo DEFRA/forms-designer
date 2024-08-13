@@ -14,6 +14,7 @@ $govuk-new-organisation-colours: true;
 $app-code-font: ui-monospace, menlo, "Cascadia Mono", "Segoe UI Mono", consolas, "Liberation Mono", monospace;
 $app-code-color: #d13118;
 $app-light-grey: #f8f8f8;
+$app-box-border: solid 2px #000;
 
 %app-button-link {
   @include govuk-link-common;
@@ -161,7 +162,7 @@ p code {
   .box {
     width: 100px;
     height: 20px;
-    border: solid 2px #000;
+    border: $app-box-border;
 
     &.tall {
       height: 50px;
@@ -244,6 +245,20 @@ p code {
     &:after {
       right: -1px;
       content: "⟩";
+    }
+  }
+
+  .file-upload {
+    background-color: lightgray;
+    float: left;
+    width: 20px;
+    height: 100%;
+    border-right: $app-box-border;
+
+    &__icon {
+      display: block;
+      margin: auto;
+      height: 100%;
     }
   }
 }

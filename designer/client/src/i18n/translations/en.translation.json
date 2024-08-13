@@ -179,7 +179,9 @@
     "UkAddressField": "UK address",
     "UkAddressField_info": "Allows users to enter their street address, town or city and postcode",
     "YesNoField": "YesNo",
-    "YesNoField_info": "Allows users to answer either 'Yes' or 'No'"
+    "YesNoField_info": "Allows users to answer either 'Yes' or 'No'",
+    "FileUploadField": "File upload",
+    "FileUploadField_info": "Allows a user to upload files"
   },
   "leaveDesigner": "Are you sure you want to leave the Designer? If you have unsaved changes they will be lost.",
   "list": {
@@ -281,6 +283,7 @@
     "controllers": {
       "question": "Question page",
       "start": "Start page",
+      "fileUpload": "File upload",
       "summary": "Summary page"
     },
     "noun": "page",

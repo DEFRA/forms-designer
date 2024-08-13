@@ -134,6 +134,22 @@ export interface TelephoneNumberFieldComponent extends TextFieldBase {
   }
 }
 
+export interface FileUploadFieldComponent {
+  type: ComponentType.FileUploadField
+  name: string
+  title: string
+  hint?: string
+  options: {
+    required?: boolean
+    accept?: string
+  }
+  schema: {
+    max?: number
+    min?: number
+    length?: number
+  }
+}
+
 export interface YesNoFieldComponent extends TextFieldBase {
   type: ComponentType.YesNoField
   options: TextFieldBase['options'] & {
@@ -244,6 +260,7 @@ export type InputFieldsComponentsDef =
   | MonthYearFieldComponent
   | DatePartsFieldFieldComponent
   | UkAddressFieldComponent
+  | FileUploadFieldComponent
 
 // Components that render content
 export type ContentComponentsDef =

@@ -1,5 +1,6 @@
 import {
   ComponentType,
+  hasTitle,
   type ComponentDef,
   type FormDefinition,
   type Page
@@ -8,6 +9,7 @@ import React, { useContext, useState, type FunctionComponent } from 'react'
 
 import { ComponentEdit } from '~/src/ComponentEdit.jsx'
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
+import { FileUploadIcon } from '~/src/components/Icons/FileUploadIcon.jsx'
 import { SearchIcon } from '~/src/components/Icons/SearchIcon.jsx'
 import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
@@ -190,6 +192,22 @@ export const Html: FunctionComponent = () => {
   )
 }
 
+export const FileUploadField: FunctionComponent = () => {
+  return (
+    <ComponentField>
+      <div className="box">
+        <div className="file-upload">
+          <FileUploadIcon
+            className="file-upload__icon"
+            width={15}
+            height={15}
+          />
+        </div>
+      </div>
+    </ComponentField>
+  )
+}
+
 export const componentTypes = {
   [ComponentType.TextField]: TextField,
   [ComponentType.TelephoneNumberField]: TelephoneNumberField,
@@ -207,7 +225,8 @@ export const componentTypes = {
   [ComponentType.Details]: Details,
   [ComponentType.Html]: Html,
   [ComponentType.InsetText]: InsetText,
-  [ComponentType.List]: List
+  [ComponentType.List]: List,
+  [ComponentType.FileUploadField]: FileUploadField
 }
 
 export interface Props {
@@ -227,9 +246,15 @@ export const Component: FunctionComponent<Props> = (props) => {
   const { title, type } = selectedComponent
   const ComponentIcon = componentTypes[type]
 
-  const editFlyoutTitle = i18n('component.edit', {
+  // 'Edit XXX component'
+  const componentFlyoutTitle = i18n('component.edit', {
     name: `$t(fieldTypeToName.${type})`
   })
+
+  // 'Edit XXX component: Title here'
+  const componentButtonLabel = hasTitle(selectedComponent)
+    ? `${componentFlyoutTitle}: ${title}`
+    : componentFlyoutTitle
 
   const move = async (oldIndex: number, newIndex: number) => {
     const copy = { ...data }
@@ -262,7 +287,7 @@ export const Component: FunctionComponent<Props> = (props) => {
       <button
         className="component govuk-link"
         onClick={toggleShowEditor}
-        aria-label={`${editFlyoutTitle}: ${title}`}
+        aria-label={componentButtonLabel}
       >
         <ComponentIcon />
       </button>
@@ -288,7 +313,7 @@ export const Component: FunctionComponent<Props> = (props) => {
       )}
       {showEditor && (
         <RenderInPortal>
-          <Flyout title={editFlyoutTitle} onHide={toggleShowEditor}>
+          <Flyout title={componentFlyoutTitle} onHide={toggleShowEditor}>
             <ComponentContextProvider
               pagePath={page.path}
               selectedComponent={selectedComponent}
