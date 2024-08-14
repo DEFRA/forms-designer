@@ -86,7 +86,7 @@ describe('LinkEdit', () => {
   test('Submitting with a condition updates the link', async () => {
     render(
       <RenderWithContext data={data}>
-        <LinkCreate />
+        <LinkCreate onSave={jest.fn} />
       </RenderWithContext>
     )
 

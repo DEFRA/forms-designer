@@ -148,7 +148,7 @@ export function Menu({ slug }: Props) {
       {page.isVisible && (
         <RenderInPortal>
           <Flyout title="Add Page" onHide={page.hide}>
-            <PageCreate onCreate={page.hide} />
+            <PageCreate onSave={page.hide} />
           </Flyout>
         </RenderInPortal>
       )}
@@ -156,7 +156,7 @@ export function Menu({ slug }: Props) {
       {link.isVisible && (
         <RenderInPortal>
           <Flyout title={i18n('menu.links')} onHide={link.hide}>
-            <LinkCreate onCreate={() => link.hide()} />
+            <LinkCreate onSave={link.hide} />
           </Flyout>
         </RenderInPortal>
       )}

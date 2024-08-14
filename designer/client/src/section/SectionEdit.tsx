@@ -23,7 +23,7 @@ import {
 
 interface Props {
   section?: Section
-  onEdit?: (sectionName?: string) => void
+  onSave: (sectionName?: string) => void
 }
 
 interface State {
@@ -56,7 +56,7 @@ export class SectionEdit extends Component<Props, State> {
     e.preventDefault()
 
     const { data, save } = this.context
-    const { onEdit, section } = this.props
+    const { onSave, section } = this.props
     const { name, title, hideTitle, isNewSection } = this.state
 
     const validationErrors = this.validate(name, title)
@@ -92,7 +92,7 @@ export class SectionEdit extends Component<Props, State> {
 
     try {
       await save(updated)
-      onEdit?.(name)
+      onSave(name)
     } catch (error) {
       logger.error(error, 'SectionEdit')
     }
@@ -132,7 +132,7 @@ export class SectionEdit extends Component<Props, State> {
     }
 
     const { data, save } = this.context
-    const { onEdit, section } = this.props
+    const { onSave, section } = this.props
 
     if (!section) {
       return
@@ -152,7 +152,7 @@ export class SectionEdit extends Component<Props, State> {
 
     try {
       await save(copy)
-      onEdit?.()
+      onSave()
     } catch (error) {
       logger.error(error, 'SectionEdit')
     }

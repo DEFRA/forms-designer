@@ -16,7 +16,7 @@ import { i18n } from '~/src/i18n/i18n.jsx'
 import { hasValidationErrors } from '~/src/validations.js'
 
 interface Props {
-  onCreate?: () => void
+  onSave: () => void
 }
 
 interface State {
@@ -35,7 +35,7 @@ export class LinkCreate extends Component<Props, State> {
   onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    const { onCreate } = this.props
+    const { onSave } = this.props
     const { data, save } = this.context
     const { from, to, selectedCondition } = this.state
 
@@ -47,7 +47,7 @@ export class LinkCreate extends Component<Props, State> {
     const definition = addLink(data, from, to, selectedCondition)
 
     await save(definition)
-    onCreate?.()
+    onSave()
   }
 
   conditionSelected = (selectedCondition: string) => {
