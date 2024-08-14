@@ -125,10 +125,7 @@ export const Page = (props: {
           <Flyout onHide={() => setIsCreatingComponent(false)}>
             <ComponentContextProvider>
               <ComponentCreate
-                renderInForm={true}
-                toggleAddComponent={() => {
-                  setIsCreatingComponent(false)
-                }}
+                toggleAddComponent={() => setIsCreatingComponent(false)}
                 page={page}
               />
             </ComponentContextProvider>
