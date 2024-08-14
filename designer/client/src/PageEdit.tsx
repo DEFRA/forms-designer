@@ -17,6 +17,7 @@ import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.j
 import { DataContext } from '~/src/context/DataContext.js'
 import { findPage } from '~/src/data/page/findPage.js'
 import { updateLinksTo } from '~/src/data/page/updateLinksTo.js'
+import { findSection } from '~/src/data/section/findSection.js'
 import { controllerNameFromPath, toUrl } from '~/src/helpers.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import randomId from '~/src/randomId.js'
@@ -31,13 +32,15 @@ export class PageEdit extends Component {
     super(props, context)
 
     const { page } = this.props
+    const { data } = this.context
 
     this.state = {
       path: page?.path ?? this.generatePath(page.title),
       controller: page?.controller ?? '',
       title: page?.title ?? '',
-      section: page?.section ?? '',
+      section: findSection(data, page?.section),
       isEditingSection: false,
+      isNewSection: false,
       errors: {}
     }
 
@@ -63,7 +66,7 @@ export class PageEdit extends Component {
     }
 
     copyPage.title = title
-    section ? (copyPage.section = section) : delete copyPage.section
+    section ? (copyPage.section = section.name) : delete copyPage.section
     controller ? (copyPage.controller = controller) : delete copyPage.controller
 
     copy.pages[copyIndex] = copyPage
@@ -177,33 +180,34 @@ export class PageEdit extends Component {
     return path
   }
 
-  editSection = (e: MouseEvent<HTMLAnchorElement>, newSection = false) => {
+  editSection = (e: MouseEvent<HTMLAnchorElement>, isNewSection = false) => {
     e.preventDefault()
 
     this.setState({
       isEditingSection: true,
-      isNewSection: newSection
+      isNewSection
     })
   }
 
-  closeFlyout = (sectionName) => {
-    const propSection = this.state.section ?? this.props.page?.section ?? ''
+  closeFlyout = (sectionName?: string) => {
+    const { page } = this.props
+    const { data } = this.context
+    const { section } = this.state
+
     this.setState({
       isEditingSection: false,
-      section: sectionName
+      isNewSection: false,
+      section: findSection(data, sectionName ?? section?.name ?? page.section)
     })
   }
 
   onChangeSection = (e: ChangeEvent<HTMLSelectElement>) => {
-    this.setState({
-      section: e.target.value
-    })
-  }
-
-  findSectionWithName(name) {
+    const { value: sectionName } = e.target
     const { data } = this.context
-    const { sections } = data
-    return sections.find((section) => section.name === name)
+
+    this.setState({
+      section: findSection(data, sectionName)
+    })
   }
 
   render() {
@@ -303,7 +307,7 @@ export class PageEdit extends Component {
                 id="page-section"
                 aria-describedby="page-section-hint"
                 name="section"
-                value={section}
+                value={section?.name ?? ''}
                 onChange={this.onChangeSection}
               >
                 <option value="" />
@@ -315,6 +319,7 @@ export class PageEdit extends Component {
               </select>
             </div>
           )}
+
           <p className="govuk-body">
             {section && (
               <a
@@ -335,6 +340,7 @@ export class PageEdit extends Component {
               </a>
             )}
           </p>
+
           <div className="govuk-button-group">
             <button className="govuk-button" type="submit">
               {i18n('save')}
@@ -348,11 +354,12 @@ export class PageEdit extends Component {
             </button>
           </div>
         </form>
+
         {isEditingSection && (
           <RenderInPortal>
             <Flyout
               title={
-                section?.name
+                !isNewSection && !!section
                   ? i18n('section.editingTitle', { title: section.title })
                   : i18n('section.newTitle')
               }
@@ -360,7 +367,7 @@ export class PageEdit extends Component {
               show={isEditingSection}
             >
               <SectionEdit
-                section={isNewSection ? {} : this.findSectionWithName(section)}
+                section={!isNewSection ? section : undefined}
                 onEdit={this.closeFlyout}
               />
             </Flyout>
