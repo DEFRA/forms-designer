@@ -73,7 +73,7 @@ export class PageCreate extends Component {
     }
     try {
       await save(copy)
-      this.props.onCreate({ value })
+      this.props.onCreate()
     } catch (error) {
       logger.error(error, 'PageCreate')
     }
