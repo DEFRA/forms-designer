@@ -19,7 +19,6 @@ import { addPage } from '~/src/data/page/addPage.js'
 import { findSection } from '~/src/data/section/findSection.js'
 import { toUrl } from '~/src/helpers.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
-import randomId from '~/src/randomId.js'
 import { SectionEdit } from '~/src/section/SectionEdit.jsx'
 import { validateTitle, hasValidationErrors } from '~/src/validations.js'
 
@@ -111,18 +110,6 @@ export class PageCreate extends Component {
     return errors
   }
 
-  generatePath(title, data) {
-    let path = toUrl(title)
-    if (
-      title.length > 0 &&
-      data.pages.find((page) => page.path.startsWith(path))
-    ) {
-      path = `${path}-${randomId()}`
-    }
-
-    return path
-  }
-
   onChangeSection = (e: ChangeEvent<HTMLSelectElement>) => {
     const { value: sectionName } = e.target
     const { data } = this.context
@@ -147,21 +134,17 @@ export class PageCreate extends Component {
   }
 
   onChangeTitle = (e: ChangeEvent<HTMLInputElement>) => {
-    const { data } = this.context
-    const input = e.target
-    const title = input.value
-    this.setState({
-      title,
-      path: this.generatePath(title, data)
-    })
+    const { value: title } = e.target
+
+    this.onChangePath(e)
+    this.setState({ title })
   }
 
   onChangePath = (e: ChangeEvent<HTMLInputElement>) => {
-    const input = e.target
-    const path = input.value.startsWith('/') ? input.value : `/${input.value}`
-    const sanitisedPath = path.replace(/\s/g, '-')
+    const { value: path } = e.target
+
     this.setState({
-      path: sanitisedPath
+      path: toUrl(path)
     })
   }
 
