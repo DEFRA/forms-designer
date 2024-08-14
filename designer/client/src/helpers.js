@@ -1,14 +1,4 @@
 /**
- * @param {string} [title]
- */
-export function toUrl(title) {
-  return `/${(title?.replace(/[^a-zA-Z0-9- ]/g, '') ?? '')
-    .trim()
-    .replace(/ +/g, '-')
-    .toLowerCase()}`
-}
-
-/**
  * @param {string} str
  */
 export function camelCase(str) {
