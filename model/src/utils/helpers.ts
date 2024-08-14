@@ -35,10 +35,15 @@ export function filter<T extends Record<string, unknown>>(
 }
 
 /**
- * Replace spaces, en-dashes and em-dashes with hyphens
+ * Replace whitespace, en-dashes and em-dashes with spaces
  * before running through the slug package
  */
-export function slugify(input = '') {
-  const string = input.trim().replace(/[\s–—]/g, '-')
-  return slug(string, { lower: true })
+export function slugify(input = '', options?: slug.Options) {
+  const string = input.trimStart().replace(/[\s–—]/g, ' ')
+
+  return slug(string, {
+    lower: true,
+    trim: true,
+    ...options
+  })
 }

@@ -42,25 +42,24 @@ export class PageCreate extends Component {
     e.preventDefault()
 
     const { data, save } = this.context
+    const { path, controller, title, section, linkFrom, selectedCondition } =
+      this.state
 
-    const title = this.state.title?.trim()
-    const linkFrom = this.state.linkFrom?.trim()
-    const section = this.state.section?.name?.trim()
-    const controller = this.state.controller?.trim()
-    const selectedCondition = this.state.selectedCondition?.trim()
-    const path = this.state.path
+    // Remove trailing spaces and hyphens
+    const pathTrim = `/${slugify(path)}`
+    const titleTrim = title.trim()
 
-    const validationErrors = this.validate(title, path)
+    const validationErrors = this.validate(titleTrim, pathTrim)
     if (hasValidationErrors(validationErrors)) return
 
     const value = {
-      path,
-      title,
+      path: pathTrim,
+      title: titleTrim,
       components: [],
       next: []
     }
     if (section) {
-      value.section = section
+      value.section = section.name
     }
     if (controller) {
       value.controller = controller
@@ -69,7 +68,7 @@ export class PageCreate extends Component {
     let copy = addPage({ ...data }, value)
 
     if (linkFrom) {
-      copy = addLink(copy, linkFrom, path, selectedCondition)
+      copy = addLink(copy, linkFrom, pathTrim, selectedCondition)
     }
     try {
       await save(copy)
@@ -143,7 +142,7 @@ export class PageCreate extends Component {
     const { value: path } = e.target
 
     this.setState({
-      path: `/${slugify(path)}`
+      path: `/${slugify(path, { trim: false })}`
     })
   }
 
