@@ -68,20 +68,16 @@ export class PageCreate extends Component<Props, State> {
     const validationErrors = this.validate(titleTrim, pathTrim)
     if (hasValidationErrors(validationErrors)) return
 
-    const value: Page = {
+    const newPage: Page = {
       path: pathTrim,
       title: titleTrim,
+      controller,
       components: [],
+      section: section?.name,
       next: []
     }
-    if (section) {
-      value.section = section.name
-    }
-    if (controller) {
-      value.controller = controller
-    }
 
-    let copy = addPage({ ...data }, value)
+    let copy = addPage({ ...data }, newPage)
 
     if (linkFrom) {
       copy = addLink(copy, linkFrom, pathTrim, selectedCondition)

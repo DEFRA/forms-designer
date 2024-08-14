@@ -80,8 +80,8 @@ export class PageEdit extends Component<Props, State> {
     }
 
     copyPage.title = titleTrim
-    section ? (copyPage.section = section.name) : delete copyPage.section
-    controller ? (copyPage.controller = controller) : delete copyPage.controller
+    copyPage.controller = controller
+    copyPage.section = section?.name
 
     copy.pages[copyIndex] = copyPage
 
