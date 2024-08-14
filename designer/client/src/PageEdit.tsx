@@ -1,4 +1,4 @@
-import { clone } from '@defra/forms-model'
+import { clone, slugify } from '@defra/forms-model'
 // @ts-expect-error -- No types available
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import React, {
@@ -18,7 +18,7 @@ import { DataContext } from '~/src/context/DataContext.js'
 import { findPage } from '~/src/data/page/findPage.js'
 import { updateLinksTo } from '~/src/data/page/updateLinksTo.js'
 import { findSection } from '~/src/data/section/findSection.js'
-import { controllerNameFromPath, toUrl } from '~/src/helpers.js'
+import { controllerNameFromPath } from '~/src/helpers.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { SectionEdit } from '~/src/section/SectionEdit.jsx'
 import { validateTitle, hasValidationErrors } from '~/src/validations.js'
@@ -163,7 +163,7 @@ export class PageEdit extends Component {
     const { value: path } = e.target
 
     this.setState({
-      path: toUrl(path)
+      path: `/${slugify(path)}`
     })
   }
 
