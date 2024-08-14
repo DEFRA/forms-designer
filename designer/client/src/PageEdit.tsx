@@ -3,7 +3,6 @@ import { clone, slugify } from '@defra/forms-model'
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import React, {
   Component,
-  createRef,
   type ChangeEvent,
   type ContextType,
   type FormEvent,
@@ -42,8 +41,6 @@ export class PageEdit extends Component {
       isNewSection: false,
       errors: {}
     }
-
-    this.formEditSection = createRef()
   }
 
   onSubmit = async (e: FormEvent<HTMLFormElement>) => {
