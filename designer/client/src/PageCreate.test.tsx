@@ -19,7 +19,7 @@ describe('page create fields text', () => {
   test('displays field titles and help texts', () => {
     render(
       <RenderWithContext data={data}>
-        <PageCreate />
+        <PageCreate onCreate={jest.fn()} />
       </RenderWithContext>
     )
 

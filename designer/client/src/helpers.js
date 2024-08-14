@@ -26,7 +26,7 @@ export function arrayMove(arr, from, to) {
 }
 
 /**
- * @param {string} nameOrPath
+ * @param {string} [nameOrPath]
  */
 export function controllerNameFromPath(nameOrPath) {
   const controllers = [
