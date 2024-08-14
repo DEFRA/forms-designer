@@ -24,7 +24,7 @@ import { validateTitle, hasValidationErrors } from '~/src/validations.js'
 
 interface Props {
   page: Page
-  onEdit: () => void
+  onSave: () => void
 }
 
 interface State {
@@ -48,10 +48,10 @@ export class PageEdit extends Component<Props, State> {
     const { data } = this.context
 
     this.state = {
-      path: page?.path,
-      controller: page?.controller ?? '',
-      title: page?.title ?? '',
-      section: findSection(data, page?.section),
+      path: page.path,
+      controller: page.controller,
+      title: page.title,
+      section: findSection(data, page.section),
       isEditingSection: false,
       isNewSection: false,
       errors: {}
@@ -60,9 +60,10 @@ export class PageEdit extends Component<Props, State> {
 
   onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+
     const { save, data } = this.context
     const { title, path, section, controller } = this.state
-    const { page } = this.props
+    const { page, onSave } = this.props
 
     // Remove trailing spaces and hyphens
     const pathTrim = `/${slugify(path)}`
@@ -87,7 +88,7 @@ export class PageEdit extends Component<Props, State> {
 
     try {
       await save(copy)
-      this.props.onEdit()
+      onSave()
     } catch (error) {
       logger.error(error, 'PageEdit')
     }
@@ -134,9 +135,9 @@ export class PageEdit extends Component<Props, State> {
     }
 
     const { save, data } = this.context
-    const { page } = this.props
-    const copy = clone(data)
+    const { page, onSave } = this.props
 
+    const copy = clone(data)
     const copyPageIdx = copy.pages.findIndex((p) => p.path === page.path)
 
     // Remove all links to the page
@@ -155,7 +156,7 @@ export class PageEdit extends Component<Props, State> {
 
     try {
       await save(copy)
-      this.props.onEdit()
+      onSave()
     } catch (error) {
       logger.error(error, 'PageEdit')
     }
@@ -216,7 +217,6 @@ export class PageEdit extends Component<Props, State> {
 
   render() {
     const { data } = this.context
-    const { sections } = data
     const {
       title,
       path,
@@ -227,11 +227,14 @@ export class PageEdit extends Component<Props, State> {
       errors
     } = this.state
 
+    const { sections } = data
+
     return (
       <div data-testid="page-edit">
         {hasValidationErrors(errors) && (
           <ErrorSummary errorList={Object.values(errors)} />
         )}
+
         <form onSubmit={this.onSubmit} autoComplete="off">
           <div className="govuk-form-group">
             <label className="govuk-label govuk-label--s" htmlFor="controller">
@@ -260,6 +263,7 @@ export class PageEdit extends Component<Props, State> {
               </option>
             </select>
           </div>
+
           <Input
             id="page-title"
             name="title"
@@ -271,6 +275,7 @@ export class PageEdit extends Component<Props, State> {
             onChange={this.onChangeTitle}
             errorMessage={errors.title}
           />
+
           <Input
             id="page-path"
             name="path"
@@ -285,6 +290,7 @@ export class PageEdit extends Component<Props, State> {
             onChange={this.onChangePath}
             errorMessage={errors.path}
           />
+
           {!sections.length && (
             <>
               <h4 className="govuk-heading-s govuk-!-margin-bottom-1">
@@ -295,6 +301,7 @@ export class PageEdit extends Component<Props, State> {
               </p>
             </>
           )}
+
           {sections.length > 0 && (
             <div className="govuk-form-group">
               <label
@@ -370,7 +377,7 @@ export class PageEdit extends Component<Props, State> {
             >
               <SectionEdit
                 section={!isNewSection ? section : undefined}
-                onEdit={this.closeFlyout}
+                onSave={this.closeFlyout}
               />
             </Flyout>
           </RenderInPortal>

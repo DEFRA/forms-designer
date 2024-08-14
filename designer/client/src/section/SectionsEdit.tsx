@@ -79,7 +79,7 @@ export class SectionsEdit extends Component<Props, State> {
               show={isEditingSection}
               onHide={() => this.closeFlyout()}
             >
-              <SectionEdit section={section} onEdit={this.closeFlyout} />
+              <SectionEdit section={section} onSave={this.closeFlyout} />
             </Flyout>
           </RenderInPortal>
         )}

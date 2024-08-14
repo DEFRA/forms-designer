@@ -148,7 +148,7 @@ export function Menu({ slug }: Props) {
       {page.isVisible && (
         <RenderInPortal>
           <Flyout title="Add Page" onHide={page.hide}>
-            <PageCreate onCreate={page.hide} />
+            <PageCreate onSave={page.hide} />
           </Flyout>
         </RenderInPortal>
       )}

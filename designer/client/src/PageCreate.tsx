@@ -23,7 +23,7 @@ import { SectionEdit } from '~/src/section/SectionEdit.jsx'
 import { validateTitle, hasValidationErrors } from '~/src/validations.js'
 
 interface Props {
-  onCreate: () => void
+  onSave: () => void
 }
 
 interface State {
@@ -57,6 +57,7 @@ export class PageCreate extends Component<Props, State> {
   onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
+    const { onSave } = this.props
     const { data, save } = this.context
     const { path, controller, title, section, linkFrom, selectedCondition } =
       this.state
@@ -82,9 +83,10 @@ export class PageCreate extends Component<Props, State> {
     if (linkFrom) {
       copy = addLink(copy, linkFrom, pathTrim, selectedCondition)
     }
+
     try {
       await save(copy)
-      this.props.onCreate()
+      onSave()
     } catch (error) {
       logger.error(error, 'PageCreate')
     }
@@ -130,16 +132,18 @@ export class PageCreate extends Component<Props, State> {
   }
 
   onChangeLinkFrom = (e: ChangeEvent<HTMLSelectElement>) => {
-    const input = e.target
+    const { value: linkFrom } = e.target
+
     this.setState({
-      linkFrom: input.value
+      linkFrom
     })
   }
 
   onChangeController = (e: ChangeEvent<HTMLSelectElement>) => {
-    const input = e.target
+    const { value: controller } = e.target
+
     this.setState({
-      controller: input.value
+      controller
     })
   }
 
@@ -244,7 +248,7 @@ export class PageCreate extends Component<Props, State> {
               id="link-from"
               aria-describedby="link-from-hint"
               name="from"
-              value={linkFrom}
+              value={linkFrom ?? ''}
               onChange={this.onChangeLinkFrom}
             >
               <option value="" />
@@ -256,7 +260,7 @@ export class PageCreate extends Component<Props, State> {
             </select>
           </div>
 
-          {linkFrom && linkFrom.trim() !== '' && (
+          {linkFrom && (
             <SelectConditions
               path={linkFrom}
               conditionsChange={this.conditionSelected}
@@ -271,7 +275,7 @@ export class PageCreate extends Component<Props, State> {
               className: 'govuk-label--s',
               children: [i18n('addPage.pageTitleField.title')]
             }}
-            value={title || ''}
+            value={title}
             onChange={this.onChangeTitle}
             errorMessage={errors.title}
           />
@@ -301,6 +305,7 @@ export class PageCreate extends Component<Props, State> {
               </p>
             </>
           )}
+
           {sections.length > 0 && (
             <div className="govuk-form-group">
               <label
@@ -367,7 +372,7 @@ export class PageCreate extends Component<Props, State> {
             >
               <SectionEdit
                 section={!isNewSection ? section : undefined}
-                onEdit={this.closeFlyout}
+                onSave={this.closeFlyout}
               />
             </Flyout>
           </RenderInPortal>

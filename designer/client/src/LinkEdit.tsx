@@ -17,7 +17,7 @@ import { i18n } from '~/src/i18n/i18n.jsx'
 
 interface Props {
   edge: Edge
-  onEdit: () => void
+  onSave: () => void
 }
 
 interface State {
@@ -55,7 +55,7 @@ export class LinkEdit extends Component<Props, State> {
   onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    const { onEdit } = this.props
+    const { onSave } = this.props
     const { link, page, selectedCondition } = this.state
     const { data, save } = this.context
 
@@ -63,7 +63,7 @@ export class LinkEdit extends Component<Props, State> {
 
     try {
       await save(definition)
-      onEdit()
+      onSave()
     } catch (error) {
       logger.error(error, 'LinkEdit')
     }
@@ -76,7 +76,7 @@ export class LinkEdit extends Component<Props, State> {
       return
     }
 
-    const { onEdit } = this.props
+    const { onSave } = this.props
     const { link, page } = this.state
     const { data, save } = this.context
 
@@ -84,7 +84,7 @@ export class LinkEdit extends Component<Props, State> {
 
     try {
       await save(definition)
-      onEdit()
+      onSave()
     } catch (error) {
       logger.error(error, 'LinkEdit')
     }

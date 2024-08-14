@@ -66,10 +66,6 @@ export const Page = (props: {
   const [isEditingPage, setIsEditingPage] = useState(false)
   const [isCreatingComponent, setIsCreatingComponent] = useState(false)
 
-  const onEditEnd = () => {
-    setIsEditingPage(false)
-  }
-
   const section = data.sections.find((section) => section.name === page.section)
 
   // Remove slashes from IDs
@@ -115,7 +111,7 @@ export const Page = (props: {
       {isEditingPage && (
         <RenderInPortal>
           <Flyout title="Edit Page" onHide={() => setIsEditingPage(false)}>
-            <PageEdit page={page} onEdit={onEditEnd} />
+            <PageEdit page={page} onSave={() => setIsEditingPage(false)} />
           </Flyout>
         </RenderInPortal>
       )}

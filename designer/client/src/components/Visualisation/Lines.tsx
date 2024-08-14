@@ -110,7 +110,7 @@ export class Lines extends Component<Props, State> {
             >
               <LinkEdit
                 edge={this.state.edge}
-                onEdit={() => this.setState({ edge: undefined })}
+                onSave={() => this.setState({ edge: undefined })}
               />
             </Flyout>
           </RenderInPortal>
