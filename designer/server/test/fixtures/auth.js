@@ -115,7 +115,7 @@ export const authGroupsInvalid = {
 }
 
 /**
- * Request auth without without scopes for Hapi `server.inject()`
+ * Request auth without scopes for Hapi `server.inject()`
  * @satisfies {ServerInjectOptions['auth']}
  */
 export const authScopesEmpty = {

@@ -4,31 +4,30 @@ import { isPast, parseISO, subMinutes } from 'date-fns'
 import { groupsToScopes } from '~/src/common/constants/scopes.js'
 
 /**
- * @param {Request | Request<{ AuthArtifactsExtra: AuthArtifacts }>} request
+ * @param {Partial<Request> | Request<{ AuthArtifactsExtra: AuthArtifacts }>} request
  * @param {{ sessionId: string, user: UserCredentials }} [session] - Session cookie state
  */
 export async function getUserSession(request, session) {
   const { auth, server } = request
-  const { credentials } = auth
 
   // Check for existing user
-  if (hasUser(credentials)) {
-    return credentials
+  if (hasUser(auth?.credentials)) {
+    return auth.credentials
   }
 
   // Prefer Session ID from cookie state
   let sessionId = session?.sessionId
 
   // Fall back to OpenID Connect (OIDC) claim
-  if (!sessionId && hasAuthenticated(credentials)) {
-    const { token } = getUserClaims(credentials)
+  if (!sessionId && hasAuthenticated(auth?.credentials)) {
+    const claims = getUserClaims(auth.credentials)
 
-    sessionId = token.sub
+    sessionId = claims.token.sub
   }
 
   // Retrieve user session from Redis
   if (sessionId) {
-    return server.methods.session.get(sessionId)
+    return server?.methods.session.get(sessionId)
   }
 }
 
