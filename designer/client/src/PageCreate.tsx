@@ -37,6 +37,7 @@ export class PageCreate extends Component {
       controller: page?.controller ?? '',
       title: page?.title,
       isEditingSection: false,
+      isNewSection: false,
       errors: {}
     }
   }
@@ -170,11 +171,12 @@ export class PageCreate extends Component {
     })
   }
 
-  editSection = (e: MouseEvent<HTMLAnchorElement>) => {
+  editSection = (e: MouseEvent<HTMLAnchorElement>, isNewSection = false) => {
     e.preventDefault()
 
     this.setState({
-      isEditingSection: true
+      isEditingSection: true,
+      isNewSection
     })
   }
 
@@ -184,6 +186,7 @@ export class PageCreate extends Component {
 
     this.setState({
       isEditingSection: false,
+      isNewSection: false,
       section: findSection(data, sectionName ?? section?.name)
     })
   }
@@ -198,6 +201,7 @@ export class PageCreate extends Component {
       section,
       path,
       isEditingSection,
+      isNewSection,
       errors
     } = this.state
 
@@ -340,7 +344,7 @@ export class PageCreate extends Component {
                 className="govuk-link govuk-!-display-block"
                 onClick={this.editSection}
               >
-                Edit section
+                {i18n('section.edit')}
               </a>
             )}
             <a
@@ -348,13 +352,13 @@ export class PageCreate extends Component {
               className="govuk-link govuk-!-display-block"
               onClick={this.editSection}
             >
-              Create section
+              {i18n('section.create')}
             </a>
           </p>
 
           <div className="govuk-button-group">
             <button type="submit" className="govuk-button">
-              Save
+              {i18n('save')}
             </button>
           </div>
         </form>
@@ -362,11 +366,16 @@ export class PageCreate extends Component {
           <RenderInPortal>
             <Flyout
               title={
-                section?.name ? `Editing ${section.name}` : 'Add a new section'
+                !isNewSection && !!section
+                  ? i18n('section.editingTitle', { title: section.title })
+                  : i18n('section.newTitle')
               }
               onHide={this.closeFlyout}
             >
-              <SectionEdit section={section} onEdit={this.closeFlyout} />
+              <SectionEdit
+                section={!isNewSection ? section : undefined}
+                onEdit={this.closeFlyout}
+              />
             </Flyout>
           </RenderInPortal>
         )}
