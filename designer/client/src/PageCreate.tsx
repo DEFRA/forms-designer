@@ -29,12 +29,9 @@ export class PageCreate extends Component {
   constructor(props, context) {
     super(props, context)
 
-    const { page } = this.props
-
     this.state = {
       path: '/',
-      controller: page?.controller ?? '',
-      title: page?.title,
+      title: '',
       isEditingSection: false,
       isNewSection: false,
       errors: {}
