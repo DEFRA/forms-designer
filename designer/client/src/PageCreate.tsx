@@ -1,3 +1,4 @@
+import { slugify } from '@defra/forms-model'
 // @ts-expect-error -- No types available
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import React, {
@@ -17,7 +18,6 @@ import { DataContext } from '~/src/context/DataContext.js'
 import { addLink } from '~/src/data/page/addLink.js'
 import { addPage } from '~/src/data/page/addPage.js'
 import { findSection } from '~/src/data/section/findSection.js'
-import { toUrl } from '~/src/helpers.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { SectionEdit } from '~/src/section/SectionEdit.jsx'
 import { validateTitle, hasValidationErrors } from '~/src/validations.js'
@@ -144,7 +144,7 @@ export class PageCreate extends Component {
     const { value: path } = e.target
 
     this.setState({
-      path: toUrl(path)
+      path: `/${slugify(path)}`
     })
   }
 
