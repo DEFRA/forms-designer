@@ -330,15 +330,13 @@ export class PageEdit extends Component {
                 {i18n('section.edit')}
               </a>
             )}
-            {!section && (
-              <a
-                href="#"
-                className="govuk-link govuk-!-display-block"
-                onClick={(e) => this.editSection(e, true)}
-              >
-                {i18n('section.create')}
-              </a>
-            )}
+            <a
+              href="#"
+              className="govuk-link govuk-!-display-block"
+              onClick={(e) => this.editSection(e, true)}
+            >
+              {i18n('section.create')}
+            </a>
           </p>
 
           <div className="govuk-button-group">
