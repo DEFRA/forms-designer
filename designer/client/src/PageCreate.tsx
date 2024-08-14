@@ -97,8 +97,10 @@ export class PageCreate extends Component {
       ...titleErrors
     }
 
-    const alreadyExists = data.pages.find((page) => page.path === path)
-    if (alreadyExists) {
+    // Check for duplicate paths
+    const isDuplicate = data.pages.some((p) => p.path === path)
+
+    if (isDuplicate) {
       errors.path = {
         href: '#page-path',
         children: `Path '${path}' already exists`
