@@ -1,11 +1,15 @@
 import { slugify } from '~/src/utils/helpers.js'
 
 describe('Helpers', () => {
-  describe('Slugify', () => {
+  describe('slugify', () => {
     it.each([
       {
         title: 'This is a form title',
         slug: 'this-is-a-form-title'
+      },
+      {
+        title: 'this-is-already-slugified-with-trailing-hyphen-',
+        slug: 'this-is-already-slugified-with-trailing-hyphen'
       },
       {
         title: 'This is a form’s—really—punctuated: title',
@@ -33,6 +37,14 @@ describe('Helpers', () => {
       }
     ])("formats '$title' to '$slug'", ({ title, slug }) => {
       expect(slugify(title)).toBe(slug)
+    })
+
+    it('suports slug options', () => {
+      const title = 'This is a form title with trailing spaces  '
+      const slug = 'this-is-a-form-title-with-trailing-spaces-'
+
+      // Skip trim, e.g. path formatting "as you type"
+      expect(slugify(title, { trim: false })).toBe(slug)
     })
   })
 })

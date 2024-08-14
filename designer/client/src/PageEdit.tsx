@@ -49,19 +49,22 @@ export class PageEdit extends Component {
     const { title, path, section, controller } = this.state
     const { page } = this.props
 
-    const validationErrors = this.validate(title, path)
+    // Remove trailing spaces and hyphens
+    const pathTrim = `/${slugify(path)}`
+    const titleTrim = title.trim()
+
+    const validationErrors = this.validate(titleTrim, pathTrim)
     if (hasValidationErrors(validationErrors)) return
 
     let copy = { ...data }
     const [copyPage, copyIndex] = findPage(data, page.path)
-    const pathChanged = path !== page.path
 
-    if (pathChanged) {
-      copy = updateLinksTo(data, page.path, path)
-      copyPage.path = path
+    if (pathTrim !== page.path) {
+      copy = updateLinksTo(data, page.path, pathTrim)
+      copyPage.path = pathTrim
     }
 
-    copyPage.title = title
+    copyPage.title = titleTrim
     section ? (copyPage.section = section.name) : delete copyPage.section
     controller ? (copyPage.controller = controller) : delete copyPage.controller
 
@@ -162,7 +165,7 @@ export class PageEdit extends Component {
     const { value: path } = e.target
 
     this.setState({
-      path: `/${slugify(path)}`
+      path: `/${slugify(path, { trim: false })}`
     })
   }
 
