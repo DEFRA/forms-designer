@@ -16,6 +16,7 @@ import { SelectConditions } from '~/src/conditions/SelectConditions.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { addLink } from '~/src/data/page/addLink.js'
 import { addPage } from '~/src/data/page/addPage.js'
+import { findSection } from '~/src/data/section/findSection.js'
 import { toUrl } from '~/src/helpers.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import randomId from '~/src/randomId.js'
@@ -35,7 +36,6 @@ export class PageCreate extends Component {
       path: '/',
       controller: page?.controller ?? '',
       title: page?.title,
-      section: page?.section ?? {},
       isEditingSection: false,
       errors: {}
     }
@@ -122,15 +122,12 @@ export class PageCreate extends Component {
     return path
   }
 
-  findSectionWithName(name) {
-    const { data } = this.context
-    const { sections } = data
-    return sections.find((section) => section.name === name)
-  }
-
   onChangeSection = (e: ChangeEvent<HTMLSelectElement>) => {
+    const { value: sectionName } = e.target
+    const { data } = this.context
+
     this.setState({
-      section: this.findSectionWithName(e.target.value)
+      section: findSection(data, sectionName)
     })
   }
 
@@ -173,19 +170,21 @@ export class PageCreate extends Component {
     })
   }
 
-  editSection = (e: MouseEvent<HTMLAnchorElement>, section) => {
+  editSection = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault()
+
     this.setState({
-      section,
       isEditingSection: true
     })
   }
 
-  closeFlyout = (sectionName) => {
-    const propSection = this.state.section ?? {}
+  closeFlyout = (sectionName?: string) => {
+    const { section } = this.state
+    const { data } = this.context
+
     this.setState({
       isEditingSection: false,
-      section: sectionName ? this.findSectionWithName(sectionName) : propSection
+      section: findSection(data, sectionName ?? section?.name)
     })
   }
 
@@ -321,7 +320,7 @@ export class PageCreate extends Component {
                 id="page-section"
                 aria-describedby="page-section-hint"
                 name="section"
-                value={section?.name}
+                value={section?.name ?? ''}
                 onChange={this.onChangeSection}
               >
                 <option value="" />
@@ -335,7 +334,7 @@ export class PageCreate extends Component {
           )}
 
           <p className="govuk-body">
-            {section?.name && (
+            {section && (
               <a
                 href="#"
                 className="govuk-link govuk-!-display-block"
