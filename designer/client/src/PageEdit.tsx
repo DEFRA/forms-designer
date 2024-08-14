@@ -1,4 +1,4 @@
-import { clone, slugify } from '@defra/forms-model'
+import { clone, slugify, type Page, type Section } from '@defra/forms-model'
 // @ts-expect-error -- No types available
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import React, {
@@ -22,11 +22,26 @@ import { i18n } from '~/src/i18n/i18n.jsx'
 import { SectionEdit } from '~/src/section/SectionEdit.jsx'
 import { validateTitle, hasValidationErrors } from '~/src/validations.js'
 
-export class PageEdit extends Component {
+interface Props {
+  page: Page
+  onEdit: () => void
+}
+
+interface State {
+  path: string
+  controller?: string
+  title: string
+  section?: Section
+  isEditingSection: boolean
+  isNewSection: boolean
+  errors: Partial<ErrorList<'path' | 'title'>>
+}
+
+export class PageEdit extends Component<Props, State> {
   declare context: ContextType<typeof DataContext>
   static contextType = DataContext
 
-  constructor(props, context) {
+  constructor(props: Props, context: typeof DataContext) {
     super(props, context)
 
     const { page } = this.props
@@ -78,7 +93,7 @@ export class PageEdit extends Component {
     }
   }
 
-  validate = (title, path): ErrorList => {
+  validate = (title: string, path: string) => {
     const { page } = this.props
     const { data } = this.context
 

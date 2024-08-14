@@ -1,4 +1,4 @@
-import { slugify } from '@defra/forms-model'
+import { slugify, type Page, type Section } from '@defra/forms-model'
 // @ts-expect-error -- No types available
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import React, {
@@ -22,11 +22,27 @@ import { i18n } from '~/src/i18n/i18n.jsx'
 import { SectionEdit } from '~/src/section/SectionEdit.jsx'
 import { validateTitle, hasValidationErrors } from '~/src/validations.js'
 
-export class PageCreate extends Component {
+interface Props {
+  onCreate: () => void
+}
+
+interface State {
+  path: string
+  controller?: string
+  title: string
+  section?: Section
+  linkFrom?: string
+  selectedCondition?: string
+  isEditingSection: boolean
+  isNewSection: boolean
+  errors: Partial<ErrorList<'path' | 'title'>>
+}
+
+export class PageCreate extends Component<Props, State> {
   declare context: ContextType<typeof DataContext>
   static contextType = DataContext
 
-  constructor(props, context) {
+  constructor(props: Props, context: typeof DataContext) {
     super(props, context)
 
     this.state = {
@@ -52,7 +68,7 @@ export class PageCreate extends Component {
     const validationErrors = this.validate(titleTrim, pathTrim)
     if (hasValidationErrors(validationErrors)) return
 
-    const value = {
+    const value: Page = {
       path: pathTrim,
       title: titleTrim,
       components: [],
@@ -78,7 +94,7 @@ export class PageCreate extends Component {
     }
   }
 
-  validate = (title, path): ErrorList => {
+  validate = (title: string, path: string) => {
     const { data } = this.context
 
     const titleErrors = validateTitle(
@@ -148,7 +164,7 @@ export class PageCreate extends Component {
     })
   }
 
-  conditionSelected = (selectedCondition) => {
+  conditionSelected = (selectedCondition?: string) => {
     this.setState({
       selectedCondition
     })
