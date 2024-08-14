@@ -1,23 +1,4 @@
 /**
- * @param {string} str
- */
-export function camelCase(str) {
-  return str
-    .trim()
-    .toLowerCase()
-    .replace(
-      /[\s-_]+(.)/g,
-
-      /**
-       * @param {string} m
-       * @param {string} chr
-       */
-      (m, chr) => chr.toUpperCase()
-    )
-    .replace(/[^a-zA-Z0-9]/g, '')
-}
-
-/**
  * @param {string | number} [str]
  * @returns {str is '' | null | undefined}
  */
