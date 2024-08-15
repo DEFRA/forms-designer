@@ -17,8 +17,8 @@ export interface ListState extends Partial<FormList>, Partial<FormItem> {
   isEditingFromComponent?: boolean
   initialName?: string
   initialTitle?: string
-  errors?: Partial<ErrorList<'title' | 'listItems'>>
-  listItemErrors?: Partial<ErrorList<'title' | 'value'>>
+  errors: Partial<ErrorList<'title' | 'listItems'>>
+  listItemErrors: Partial<ErrorList<'title' | 'value'>>
 }
 
 export interface FormList {
@@ -35,7 +35,7 @@ export interface ListContextType {
 }
 
 export const ListContext = createContext<ListContextType>({
-  state: {},
+  state: {} as ListState,
   dispatch: () => ({})
 })
 
@@ -43,7 +43,7 @@ export const ListContext = createContext<ListContextType>({
  * Allows mutation of the {@link List} from any component that is nested within {@link ListContextProvider}
  */
 export function listReducer(
-  state: ListState = {},
+  state: ListState,
   action: {
     type: ListActions
     payload?: unknown
@@ -63,7 +63,9 @@ export function listReducer(
           items: [],
           isNew: true
         },
-        initialName: listId
+        initialName: listId,
+        errors: {},
+        listItemErrors: {}
       }
     }
 
@@ -72,7 +74,9 @@ export function listReducer(
         ...state,
         selectedList: payload,
         initialName: payload?.name || state.initialName,
-        initialTitle: payload?.title
+        initialTitle: payload?.title,
+        errors: {},
+        listItemErrors: {}
       }
 
     case ListActions.EDIT_TITLE:
@@ -155,7 +159,10 @@ export const ListContextProvider = (props: {
   const { selectedListName } = props
   const { data } = useContext(DataContext)
 
-  let init: ListState = {}
+  let init: ListState = {
+    errors: {},
+    listItemErrors: {}
+  }
 
   if (selectedListName) {
     const selectedList = data.lists.find(
@@ -163,6 +170,7 @@ export const ListContextProvider = (props: {
     )
 
     init = {
+      ...init,
       selectedList,
       initialName: selectedListName,
       initialTitle: selectedList?.title,
@@ -170,7 +178,7 @@ export const ListContextProvider = (props: {
     }
   }
 
-  const [state, dispatch] = useReducer(listReducer, { ...init })
+  const [state, dispatch] = useReducer(listReducer, init)
 
   return (
     <ListContext.Provider value={{ state, dispatch }}>

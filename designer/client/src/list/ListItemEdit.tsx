@@ -32,7 +32,7 @@ export function ListItemEdit() {
   } = useListItem(state, dispatch)
 
   const { conditions } = data
-  const { listItemErrors: errors = {}, selectedItem } = state
+  const { listItemErrors: errors, selectedItem } = state
   const hasErrors = hasValidationErrors(errors)
 
   const handleSubmit = async (
