@@ -94,10 +94,12 @@ export class PageEdit extends Component {
       ...titleErrors
     }
 
-    const pathHasErrors =
-      path !== page.path ? data.pages.some((page) => page.path === path) : false
+    // Check for duplicate path
+    function isDuplicate(input: string) {
+      return data.pages.some((p) => p.path !== page.path && p.path === input)
+    }
 
-    if (pathHasErrors) {
+    if (isDuplicate(path)) {
       errors.path = {
         href: '#page-path',
         children: `Path '${path}' already exists`
