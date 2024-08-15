@@ -49,24 +49,22 @@ export function Visualisation(props: Props) {
   }
 
   return (
-    <>
-      <div className="visualisation">
-        <div className="visualisation__pages-wrapper">
-          <div ref={ref} style={wrapperStyle}>
-            {pages.map((page, index) => (
-              <Page
-                key={index}
-                page={page}
-                previewUrl={previewUrl}
-                layout={layout?.nodes[index]}
-                slug={slug}
-              />
-            ))}
+    <div className="visualisation">
+      <div className="visualisation__pages-wrapper">
+        <div ref={ref} style={wrapperStyle}>
+          {pages.map((page, index) => (
+            <Page
+              key={index}
+              page={page}
+              previewUrl={previewUrl}
+              layout={layout?.nodes[index]}
+              slug={slug}
+            />
+          ))}
 
-            {layout && <Lines layout={layout} />}
-          </div>
+          {layout && <Lines layout={layout} />}
         </div>
       </div>
-    </>
+    </div>
   )
 }

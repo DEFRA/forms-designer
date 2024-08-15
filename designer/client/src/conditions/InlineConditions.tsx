@@ -272,71 +272,68 @@ export class InlineConditions extends Component<Props, State> {
 
     return (
       <>
-        <div>
-          <div className="govuk-hint">{i18n('conditions.addOrEditHint')}</div>
-          <>
-            {hasErrors && <ErrorSummary errorList={validationErrors} />}
-            <div
-              className={classNames('govuk-form-group', {
-                'govuk-form-group--error': nameError
-              })}
-            >
-              <label className="govuk-label govuk-label--s" htmlFor="cond-name">
-                {i18n('conditions.displayName')}
-              </label>
-              <div className="govuk-hint" id="cond-name-hint">
-                {i18n('conditions.displayNameHint')}
-              </div>
-              {nameError && (
-                <ErrorMessage id="cond-name-error">
-                  {nameError.children}
-                </ErrorMessage>
-              )}
-              <input
-                className={classNames('govuk-input govuk-input--width-20', {
-                  'govuk-input--error': nameError
-                })}
-                id="cond-name"
-                aria-describedby={
-                  'cond-name-hint' + (nameError ? 'cond-name-error' : '')
-                }
-                name="cond-name"
-                type="text"
-                defaultValue={conditions.name}
-                required
-                onChange={this.onChangeDisplayName}
-              />
-            </div>
-            <h4 className="govuk-heading-s govuk-!-margin-bottom-1">
-              {i18n('conditions.condition')}
-            </h4>
-            <p className="govuk-hint govuk-!-margin-top-0">
-              {i18n('conditions.conditionHint')}
-            </p>
-          </>
-          {conditions.hasConditions && (
-            <ul className="govuk-list govuk-list--bullet">
-              <li key="condition-string">
-                <strong>{conditions.toPresentationString()}</strong>
-                {!editView && (
-                  <>
-                    <br />
-                    <a
-                      href="#"
-                      className="govuk-link"
-                      onClick={(e) => {
-                        e.preventDefault()
-                        this.toggleEdit()
-                      }}
-                    >
-                      {i18n('conditions.edit')}
-                    </a>
-                  </>
-                )}
-              </li>
-            </ul>
+        {hasErrors && <ErrorSummary errorList={validationErrors} />}
+
+        <div className="govuk-hint">{i18n('conditions.addOrEditHint')}</div>
+        <div
+          className={classNames('govuk-form-group', {
+            'govuk-form-group--error': nameError
+          })}
+        >
+          <label className="govuk-label govuk-label--s" htmlFor="cond-name">
+            {i18n('conditions.displayName')}
+          </label>
+          <div className="govuk-hint" id="cond-name-hint">
+            {i18n('conditions.displayNameHint')}
+          </div>
+          {nameError && (
+            <ErrorMessage id="cond-name-error">
+              {nameError.children}
+            </ErrorMessage>
           )}
+          <input
+            className={classNames('govuk-input govuk-input--width-20', {
+              'govuk-input--error': nameError
+            })}
+            id="cond-name"
+            aria-describedby={
+              'cond-name-hint' + (nameError ? 'cond-name-error' : '')
+            }
+            name="cond-name"
+            type="text"
+            defaultValue={conditions.name}
+            required
+            onChange={this.onChangeDisplayName}
+          />
         </div>
+        <h4 className="govuk-heading-s govuk-!-margin-bottom-1">
+          {i18n('conditions.condition')}
+        </h4>
+        <p className="govuk-hint govuk-!-margin-top-0">
+          {i18n('conditions.conditionHint')}
+        </p>
+        {conditions.hasConditions && (
+          <ul className="govuk-list govuk-list--bullet">
+            <li key="condition-string">
+              <strong>{conditions.toPresentationString()}</strong>
+              {!editView && (
+                <>
+                  <br />
+                  <a
+                    href="#"
+                    className="govuk-link"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      this.toggleEdit()
+                    }}
+                  >
+                    {i18n('conditions.edit')}
+                  </a>
+                </>
+              )}
+            </li>
+          </ul>
+        )}
         {!editView && (
           <>
             <InlineConditionsDefinition
