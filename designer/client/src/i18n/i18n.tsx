@@ -1,11 +1,9 @@
 import i18next, { type InitOptions, type TOptions } from 'i18next'
 import Backend from 'i18next-http-backend'
+import lowerFirst from 'lodash/lowerFirst.js'
+import upperFirst from 'lodash/upperFirst.js'
 
 import enCommonTranslations from '~/src/i18n/translations/en.translation.json'
-
-const interpolationFormats: Record<string, (value: string) => string> = {
-  capitalise: (value: string) => value.charAt(0).toUpperCase() + value.slice(1)
-}
 
 const DEFAULT_SETTINGS: InitOptions = {
   lng: 'en',
@@ -13,13 +11,6 @@ const DEFAULT_SETTINGS: InitOptions = {
   debug: false,
   interpolation: {
     escapeValue: false,
-    format(value: string, format) {
-      if (format && format in interpolationFormats) {
-        return interpolationFormats[format](value)
-      }
-
-      return value
-    },
     skipOnVariables: false
   },
   resources: {
@@ -32,8 +23,12 @@ const DEFAULT_SETTINGS: InitOptions = {
   }
 }
 
-export const initI18n = (settings = DEFAULT_SETTINGS) =>
-  i18next.use(Backend).init(settings)
+export const initI18n = async (settings = DEFAULT_SETTINGS) => {
+  await i18next.use(Backend).init(settings)
+
+  i18next.services.formatter?.add('lowerFirst', lowerFirst)
+  i18next.services.formatter?.add('upperFirst', upperFirst)
+}
 
 export const i18n = (text: string, options?: TOptions) => {
   return i18next.t(text, options)

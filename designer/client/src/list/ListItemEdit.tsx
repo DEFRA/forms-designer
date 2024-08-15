@@ -36,7 +36,7 @@ export function ListItemEdit() {
   ) => {
     e.preventDefault()
     const copy = { ...data }
-    const hasErrors = validate(i18n)
+    const hasErrors = validate()
     if (hasErrors) return
     await save(prepareForSubmit(copy))
     listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST_ITEM, false])

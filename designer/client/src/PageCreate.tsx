@@ -98,9 +98,8 @@ export class PageCreate extends Component<Props, State> {
     const titleErrors = validateTitle(
       'title',
       'page-title',
-      '$t(page.title)',
-      title,
-      i18n
+      i18n('page.title'),
+      title
     )
 
     const errors: Partial<ErrorList<'path' | 'title'>> = {

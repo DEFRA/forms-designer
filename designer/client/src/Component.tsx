@@ -248,7 +248,7 @@ export const Component: FunctionComponent<Props> = (props) => {
 
   // 'Edit XXX component'
   const componentFlyoutTitle = i18n('component.edit', {
-    name: `$t(fieldTypeToName.${type})`
+    name: i18n(`fieldTypeToName.${type}`)
   })
 
   // 'Edit XXX component: Title here'

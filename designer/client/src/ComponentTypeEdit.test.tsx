@@ -9,6 +9,7 @@ import {
 import { screen, waitFor } from '@testing-library/dom'
 import { act, cleanup, render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
+import lowerFirst from 'lodash/lowerFirst.js'
 import React from 'react'
 
 import { ComponentTypeEdit } from '~/src/ComponentTypeEdit.jsx'
@@ -411,7 +412,7 @@ describe('ComponentTypeEdit', () => {
     if (options.optional) {
       it("should render 'Make {{component}} optional' checkbox", () => {
         const $checkbox = screen.queryByRole<HTMLInputElement>('checkbox', {
-          name: `Make ${selectedComponent?.title} optional`,
+          name: `Make ${lowerFirst(selectedComponent?.title)} optional`,
           description:
             'Tick this box if users do not need to complete this field to progress through the form'
         })
@@ -422,7 +423,7 @@ describe('ComponentTypeEdit', () => {
 
       it('should render "Hide \'(optional)\' text" checkbox when optional', async () => {
         const $checkbox1 = screen.getByRole<HTMLInputElement>('checkbox', {
-          name: `Make ${selectedComponent?.title} optional`
+          name: `Make ${lowerFirst(selectedComponent?.title)} optional`
         })
 
         expect($checkbox1).toBeInTheDocument()
@@ -446,7 +447,7 @@ describe('ComponentTypeEdit', () => {
 
       it('should not render "Hide \'(optional)\' text" checkbox when required', () => {
         const $checkbox1 = screen.getByRole<HTMLInputElement>('checkbox', {
-          name: `Make ${selectedComponent?.title} optional`
+          name: `Make ${lowerFirst(selectedComponent?.title)} optional`
         })
 
         expect($checkbox1).toBeInTheDocument()
@@ -461,7 +462,7 @@ describe('ComponentTypeEdit', () => {
     } else {
       it("should not render 'Make {{component}} optional' checkbox", () => {
         const $checkbox = screen.queryByRole('checkbox', {
-          name: `Make ${selectedComponent?.title} optional`
+          name: `Make ${lowerFirst(selectedComponent?.title)} optional`
         })
 
         expect($checkbox).not.toBeInTheDocument()

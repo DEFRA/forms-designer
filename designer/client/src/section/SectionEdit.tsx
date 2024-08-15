@@ -102,17 +102,15 @@ export class SectionEdit extends Component<Props, State> {
     const titleErrors = validateTitle(
       'title',
       'section-title',
-      '$t(sectionEdit.titleField.title)',
-      title,
-      i18n
+      i18n('sectionEdit.titleField.title'),
+      title
     )
 
     const nameErrors = validateName(
       'name',
       'section-name',
-      '$t(sectionEdit.nameField.title)',
-      name,
-      i18n
+      i18n('sectionEdit.nameField.title'),
+      name
     )
 
     const errors: State['errors'] = {

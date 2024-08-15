@@ -153,11 +153,11 @@ describe('ComponentCreate:', () => {
     })
 
     expect($errorSummary).toContainHTML(
-      '<a href="#field-title">Enter Title</a>'
+      '<a href="#field-title">Enter title</a>'
     )
 
     expect($errorSummary).toContainHTML(
-      '<a href="#field-content">Enter Content</a>'
+      '<a href="#field-content">Enter content</a>'
     )
   })
 })

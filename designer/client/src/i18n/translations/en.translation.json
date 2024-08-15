@@ -57,7 +57,7 @@
     },
     "componentOptionalOption": {
       "helpText": "Tick this box if users do not need to complete this field to progress through the form",
-      "title": "Make {{component}} optional"
+      "title": "Make {{component, lowerFirst}} optional"
     },
     "customValidationMessage": {
       "helpText": "Enter the validation message to show when a validation error occurs",
@@ -88,7 +88,7 @@
     "contentfields_info": "Content components allow you to add information to your page",
     "create": "Add component",
     "create_info": "Select a component to add to your page. If your page has only one component, the component title does not show on the page. To name or describe the component, use the page title instead.",
-    "edit": "Edit {{name}} component",
+    "edit": "Edit {{name, lowerFirst}} component",
     "inputfields_info": "Input fields allow you to ask users to enter information",
     "selectfields_info": "Selection fields allow you to provide lists of answers for users to choose from",
     "move_up": "Move component up",
@@ -130,8 +130,8 @@
   "edit": "edit {{noun}}",
   "error": "Error",
   "errors": {
-    "field": "Enter {{field, capitalise}}",
-    "required": "This field is required"
+    "field": "Enter {{field, lowerFirst}}",
+    "spaces": "{{field, upperFirst}} must not include spaces"
   },
   "field": "field",
   "fieldEdit": {
@@ -188,7 +188,7 @@
     "add": "Add list",
     "addNew": "Add a new list",
     "addOrEdit": "Add or edit lists",
-    "edit": "Edit {{title}}",
+    "edit": "Edit {{title, lowerFirst}}",
     "errors": {
       "empty": "The list must have list items",
       "select": "Select a list"
@@ -248,9 +248,6 @@
     }
   },
   "name": {
-    "errors": {
-      "whitespace": "Name must not contain spaces"
-    },
     "hint": "This is generated automatically and does not show on the page. Only change it if you are using an integration that requires you to, for example GOV.UK Notify. It must not contain spaces."
   },
   "no": "no",
@@ -298,7 +295,7 @@
   "section": {
     "create": "Create section",
     "edit": "Edit section",
-    "editingTitle": "Editing {{title}}",
+    "editingTitle": "Editing {{title, lowerFirst}}",
     "newTitle": "Add a new section",
     "noun": "section",
     "noun_plural": "sections"

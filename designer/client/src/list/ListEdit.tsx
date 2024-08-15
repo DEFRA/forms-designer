@@ -75,9 +75,8 @@ function useListEdit() {
     const titleErrors = validateTitle(
       'title',
       'list-title',
-      '$t(list.title)',
-      selectedList?.title,
-      i18n
+      i18n('list.title'),
+      selectedList?.title
     )
 
     const errors: ReturnType<typeof validate> = {

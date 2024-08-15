@@ -10,11 +10,8 @@ export function validateNotEmpty<Key extends string>(
   name: Key,
   id: string,
   description: string,
-  value?: string,
-  i18nProp?: typeof i18n
+  value?: string
 ) {
-  const translate = i18nProp ?? i18n
-
   const hasErrors = isEmpty(value)
   const errors: Partial<ErrorList<Key>> = {}
 
@@ -22,7 +19,7 @@ export function validateNotEmpty<Key extends string>(
     errors[name] = {
       href: `#${id}`,
       children: [
-        translate('errors.field', {
+        i18n('errors.field', {
           field: description
         })
       ]
@@ -36,24 +33,23 @@ export function validateName<Key extends string>(
   name: Key,
   id: string,
   description: string,
-  value?: string,
-  i18nProp?: typeof i18n
+  value?: string
 ) {
-  const translate = i18nProp ?? i18n
-
   const namesIsEmpty = isEmpty(value)
   const nameHasErrors = !namesIsEmpty && hasSpaces(value)
   const errors: Partial<ErrorList<Key>> = {}
 
   if (nameHasErrors) {
-    const message = translate('name.errors.whitespace')
+    const message = i18n('errors.spaces', {
+      field: description
+    })
 
     errors[name] = {
       href: `#${id}`,
       children: [message]
     }
   } else if (namesIsEmpty) {
-    const message = translate('errors.field', {
+    const message = i18n('errors.field', {
       field: description
     })
 
@@ -70,16 +66,13 @@ export function validateTitle<Key extends string>(
   name: Key,
   id: string,
   description: string,
-  value?: string,
-  i18nProp?: typeof i18n
+  value?: string
 ) {
-  const translate = i18nProp ?? i18n
-
   const titleIsEmpty = isEmpty(value)
   const errors: Partial<ErrorList<Key>> = {}
 
   if (titleIsEmpty) {
-    const message = translate('errors.field', {
+    const message = i18n('errors.field', {
       field: description
     })
 
