@@ -28,7 +28,7 @@ export interface ComponentState {
   hasValidated?: boolean
   showDeleteWarning?: boolean
   pagePath?: string
-  errors?: Partial<ErrorList<'title' | 'name' | 'content' | 'list'>>
+  errors: Partial<ErrorList<'title' | 'name' | 'content' | 'list'>>
 }
 
 export type ReducerActions =
@@ -98,7 +98,7 @@ export function componentReducer(
 export const initComponentState = (
   props?: Omit<ComponentState, 'initialName'>
 ): ComponentState => {
-  const { selectedComponent, pagePath, errors } = props ?? {}
+  const { selectedComponent, pagePath, errors = {} } = props ?? {}
 
   return {
     initialName: selectedComponent?.name ?? randomId(),

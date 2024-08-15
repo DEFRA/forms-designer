@@ -137,7 +137,7 @@ export function ListEdit() {
   const { state, dispatch } = useContext(ListContext)
   const { selectedList, createItem } = useListItemActions(state, dispatch)
 
-  const { errors = {} } = state
+  const { errors } = state
   const hasErrors = hasValidationErrors(errors)
 
   return (

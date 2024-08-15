@@ -20,7 +20,7 @@ interface Props {
 
 interface State extends Partial<Form> {
   selectedCondition?: string
-  errors?: Partial<ErrorList<'from' | 'to' | 'selectedCondition'>>
+  errors: Partial<ErrorList<'from' | 'to' | 'selectedCondition'>>
 }
 
 interface Form {
@@ -32,7 +32,9 @@ export class LinkCreate extends Component<Props, State> {
   declare context: ContextType<typeof DataContext>
   static contextType = DataContext
 
-  state: State = {}
+  state: State = {
+    errors: {}
+  }
 
   onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -85,8 +87,9 @@ export class LinkCreate extends Component<Props, State> {
 
   render() {
     const { data } = this.context
+    const { from, errors } = this.state
+
     const { pages } = data
-    const { from, errors = {} } = this.state
     const hasErrors = hasValidationErrors(errors)
 
     return (

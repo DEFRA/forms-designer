@@ -16,7 +16,7 @@ import { hasValidationErrors } from '~/src/validations.js'
 export function ComponentEdit(props) {
   const { data, save } = useContext(DataContext)
   const { state, dispatch } = useContext(ComponentContext)
-  const { initialName, selectedComponent, errors = {}, hasValidated } = state
+  const { initialName, selectedComponent, errors, hasValidated } = state
   const { page, toggleShowEditor } = props
   const hasErrors = hasValidationErrors(errors)
 

@@ -15,7 +15,7 @@ interface Props {
 export function ContentEdit({ context = ComponentContext }: Props) {
   const { state, dispatch } = useContext(context)
 
-  const { selectedComponent, errors = {} } = state
+  const { selectedComponent, errors } = state
 
   if (!hasContentField(selectedComponent)) {
     return null
