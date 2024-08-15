@@ -17,7 +17,7 @@ const data = {
     },
     {
       name: 'myOtherList',
-      title: '',
+      title: 'My other list',
       type: 'string',
       items: [{ text: 'An item', description: 'A hint', value: 12 }]
     }
@@ -34,9 +34,13 @@ describe('ListSelect', () => {
       </RenderListEditorWithContext>
     )
 
-    const $links = screen.queryAllByTestId('edit-list')
-    expect($links).toHaveLength(2)
-    expect(screen.getByTestId('add-list')).toBeInTheDocument()
+    const $link1 = screen.queryByRole('link', { name: data.lists[0].title })
+    const $link2 = screen.queryByRole('link', { name: data.lists[1].title })
+    const $button = screen.queryByRole('button', { name: 'Add a new list' })
+
+    expect($link1).toBeInTheDocument()
+    expect($link2).toBeInTheDocument()
+    expect($button).toBeInTheDocument()
   })
 
   test('strings are rendered correctly', () => {

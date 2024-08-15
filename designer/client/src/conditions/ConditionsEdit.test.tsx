@@ -155,8 +155,16 @@ describe('ConditionsEdit', () => {
         </RenderWithContext>
       )
 
-      expect(screen.getByText(condition.displayName)).toBeInTheDocument()
-      expect(screen.getByText(condition2.displayName)).toBeInTheDocument()
+      const $link = screen.queryByRole('link', {
+        name: condition.displayName
+      })
+
+      const $link2 = screen.queryByRole('link', {
+        name: condition2.displayName
+      })
+
+      expect($link).toBeInTheDocument()
+      expect($link2).toBeInTheDocument()
       expect(screen.queryByTestId('flyout-1')).not.toBeInTheDocument()
     })
 
@@ -167,7 +175,10 @@ describe('ConditionsEdit', () => {
         </RenderWithContext>
       )
 
-      const $link = screen.getByText(condition.displayName)
+      const $link = screen.getByRole('link', {
+        name: condition.displayName
+      })
+
       await act(() => userEvent.click($link))
       expect(screen.getByTestId('flyout-1')).toBeTruthy()
     })
@@ -192,18 +203,19 @@ describe('ConditionsEdit', () => {
         </RenderWithContext>
       )
 
-      const $listItem = screen.queryByTestId('conditions-list-items')
-      expect($listItem).not.toBeInTheDocument()
+      const $listItems = screen.queryAllByRole('listitem')
+      expect($listItems).toHaveLength(0)
     })
 
-    test('Renders add new condition link if inputs are available', () => {
+    test('Renders add condition button if inputs are available', () => {
       render(
         <RenderWithContext data={updated}>
           <ConditionsEdit />
         </RenderWithContext>
       )
 
-      expect(screen.queryByTestId('add-condition-link')).toBeInTheDocument()
+      const $button = screen.queryByRole('button', { name: 'Add condition' })
+      expect($button).toBeInTheDocument()
     })
 
     test('Renders no new condition message if there are no inputs available', () => {

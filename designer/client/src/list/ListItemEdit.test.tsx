@@ -122,18 +122,20 @@ describe('ListItemEdit', () => {
       </RenderListEditorWithContext>
     )
 
-    const $select = screen.getByTestId('list-condition-select')
-    const $options: HTMLOptionElement[] = screen.getAllByTestId(
-      'list-condition-option'
-    )
+    const $select = screen.getByRole<HTMLSelectElement>('combobox', {
+      name: 'Conditions (optional)',
+      description:
+        'Select a condition that determines whether to show this list item. You can create and edit conditions on the Conditions screen.'
+    })
 
-    expect($options[0].selected).toBeTruthy()
-    expect($options[1].selected).toBeFalsy()
+    expect($select.value).toBe('')
+    expect($select.options[$select.selectedIndex].textContent).toBe('')
 
     await act(() => userEvent.selectOptions($select, 'MYWwRN'))
 
-    expect($options[0].selected).toBeFalsy()
-    expect($options[1].selected).toBeTruthy()
-    expect($options[1].textContent).toBe('my condition')
+    expect($select.value).toBe('MYWwRN')
+    expect($select.options[$select.selectedIndex].textContent).toBe(
+      'my condition'
+    )
   })
 })

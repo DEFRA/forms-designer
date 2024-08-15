@@ -41,8 +41,14 @@ describe('SelectConditions', () => {
       </RenderWithContext>
     )
 
-    const hint = 'NoFieldsHintText'
-    expect(screen.getByText(hint)).toBeInTheDocument()
+    const $paragraphs = screen.queryAllByRole('paragraph')
+    const $conditions = screen.queryByRole('link', {
+      name: 'Define a new condition'
+    })
+
+    expect($paragraphs).toHaveLength(1)
+    expect($paragraphs[0]).toContainHTML('NoFieldsHintText')
+    expect($conditions).not.toBeInTheDocument()
   })
 
   test('SelectConditions renders available conditions', () => {
@@ -242,11 +248,14 @@ describe('SelectConditions', () => {
       (condition) => condition.displayName
     )
 
-    const $hint = screen.queryByText('You cannot add any conditions as')
-    const $select = screen.getByTestId('select-conditions')
+    const $paragraphs = screen.queryAllByRole('paragraph')
+    const $conditions = screen.queryByRole('link', {
+      name: 'Define a new condition'
+    })
 
-    expect($hint).not.toBeInTheDocument()
-    expect($select).toBeInTheDocument()
+    expect($paragraphs).toHaveLength(1)
+    expect($paragraphs[0]).not.toContainHTML('NoFieldsHintText')
+    expect($conditions).toBeInTheDocument()
 
     expectedConditions.forEach((condition) => {
       expect(screen.getByText(condition)).toBeInTheDocument()

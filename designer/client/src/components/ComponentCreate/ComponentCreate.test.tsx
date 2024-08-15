@@ -26,7 +26,7 @@ describe('ComponentCreate:', () => {
       </RenderWithContext>
     )
 
-    const $componentLink = await screen.findByRole('link', {
+    const $componentLink = screen.getByRole('link', {
       name: 'Details'
     })
 
@@ -34,9 +34,10 @@ describe('ComponentCreate:', () => {
     expect(screen.queryByLabelText('Content')).not.toBeInTheDocument()
 
     await act(() => userEvent.click($componentLink))
+    await waitFor(() => screen.getAllByRole('textbox'))
 
-    const $input = await waitFor(() => screen.getByLabelText('Title'))
-    const $textarea = await waitFor(() => screen.getByLabelText('Content'))
+    const $input = screen.getByRole('textbox', { name: 'Title' })
+    const $textarea = screen.getByRole('textbox', { name: 'Content' })
 
     expect($input).toBeInTheDocument()
     expect($textarea).toBeInTheDocument()
@@ -51,16 +52,16 @@ describe('ComponentCreate:', () => {
       </RenderWithContext>
     )
 
-    const $componentLink = await screen.findByRole('link', {
+    const $componentLink = screen.getByRole('link', {
       name: 'Details'
     })
 
     await act(() => userEvent.click($componentLink))
-    await waitFor(() => screen.getByTestId('component-create'))
+    await waitFor(() => screen.getAllByRole('textbox'))
 
-    const $input = await waitFor(() => screen.getByLabelText('Title'))
-    const $textarea = await waitFor(() => screen.getByLabelText('Content'))
-    const $button = await waitFor(() => screen.getByRole('button'))
+    const $input = screen.getByRole('textbox', { name: 'Title' })
+    const $textarea = screen.getByRole('textbox', { name: 'Content' })
+    const $button = screen.getByRole('button', { name: 'Save' })
 
     // Ensure fields are empty
     await act(() => userEvent.clear($input))
@@ -105,23 +106,27 @@ describe('ComponentCreate:', () => {
       </RenderWithContext>
     )
 
-    const $componentLink = await screen.findByRole('link', {
+    const $componentLink = screen.getByRole('link', {
       name: 'Details'
     })
 
     // Clicking into component will hide the list
     await act(() => userEvent.click($componentLink))
+
     expect(
-      screen.queryByTestId('component-create-list')
+      screen.queryByRole('heading', { name: 'Add component' })
     ).not.toBeInTheDocument()
 
-    const $backLink = await screen.findByRole('link', {
+    const $backLink = screen.getByRole('link', {
       name: 'Back to create component list'
     })
 
     // Clicking the back link component will show the list
     await act(() => userEvent.click($backLink))
-    expect(screen.queryByTestId('component-create-list')).toBeInTheDocument()
+
+    expect(
+      screen.queryByRole('heading', { name: 'Add component' })
+    ).toBeInTheDocument()
   })
 
   test('Should display error summary when validation fails', async () => {
@@ -131,15 +136,16 @@ describe('ComponentCreate:', () => {
       </RenderWithContext>
     )
 
-    const $componentLink = await screen.findByRole('link', {
+    const $componentLink = screen.getByRole('link', {
       name: 'Details'
     })
 
     await act(() => userEvent.click($componentLink))
+    await waitFor(() => screen.getAllByRole('textbox'))
 
-    const $input = await waitFor(() => screen.getByLabelText('Title'))
-    const $textarea = await waitFor(() => screen.getByLabelText('Content'))
-    const $button = await waitFor(() => screen.getByRole('button'))
+    const $input = screen.getByRole('textbox', { name: 'Title' })
+    const $textarea = screen.getByRole('textbox', { name: 'Content' })
+    const $button = screen.getByRole('button', { name: 'Save' })
 
     // Ensure fields are empty
     await act(() => userEvent.clear($input))
@@ -148,7 +154,7 @@ describe('ComponentCreate:', () => {
     // Submit the form
     await act(() => userEvent.click($button))
 
-    const $errorSummary = await screen.findByRole('alert', {
+    const $errorSummary = screen.getByRole('alert', {
       name: 'There is a problem'
     })
 

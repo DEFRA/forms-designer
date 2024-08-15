@@ -159,8 +159,8 @@ describe('InlineConditionsDefinitionValue', () => {
       />
     )
 
-    const select = await waitFor(() => screen.findByTestId('cond-value'))
-    await act(() => userEvent.selectOptions(select, 'value1'))
+    const $select = screen.getByRole('combobox', { name: 'Value' })
+    await act(() => userEvent.selectOptions($select, 'value1'))
 
     expect(updateValueCallback).toHaveBeenLastCalledWith({
       display: 'Value 1',
@@ -193,8 +193,8 @@ describe('InlineConditionsDefinitionValue', () => {
       />
     )
 
-    const select = await waitFor(() => screen.findByTestId('cond-value'))
-    await act(() => userEvent.selectOptions(select, 'true'))
+    const $select = screen.getByRole('combobox', { name: 'Value' })
+    await act(() => userEvent.selectOptions($select, 'true'))
 
     expect(updateValueCallback).toHaveBeenLastCalledWith({
       display: 'Value 1',
@@ -227,8 +227,8 @@ describe('InlineConditionsDefinitionValue', () => {
       />
     )
 
-    const select = await waitFor(() => screen.findByTestId('cond-value'))
-    await act(() => userEvent.selectOptions(select, '42'))
+    const $select = screen.getByRole('combobox', { name: 'Value' })
+    await act(() => userEvent.selectOptions($select, '42'))
 
     expect(updateValueCallback).toHaveBeenLastCalledWith({
       display: 'Value 1',
@@ -261,7 +261,7 @@ describe('InlineConditionsDefinitionValue', () => {
       />
     )
 
-    const $select = await waitFor(() => screen.findByTestId('cond-value'))
+    const $select = screen.getByRole('combobox', { name: 'Value' })
     await act(() => userEvent.selectOptions($select, ''))
 
     expect(updateValueCallback).toHaveBeenLastCalledWith({
