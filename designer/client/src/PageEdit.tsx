@@ -230,7 +230,7 @@ export class PageEdit extends Component<Props, State> {
     const hasErrors = hasValidationErrors(errors)
 
     return (
-      <div data-testid="page-edit">
+      <>
         {hasErrors && (
           <ErrorSummary errorList={Object.values(errors).filter(Boolean)} />
         )}
@@ -382,7 +382,7 @@ export class PageEdit extends Component<Props, State> {
             </Flyout>
           </RenderInPortal>
         )}
-      </div>
+      </>
     )
   }
 }

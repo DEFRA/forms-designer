@@ -243,7 +243,7 @@ export class InlineConditionsDefinition extends Component<Props, State> {
       )
 
     return (
-      <div id="condition-definition-group" className="govuk-!-margin-bottom-6">
+      <div className="govuk-!-margin-bottom-6">
         {(expectsCoordinator || !!selectedCoordinator) && (
           <div className="govuk-form-group govuk-!-margin-bottom-3">
             <label className="govuk-label" htmlFor="cond-coordinator">

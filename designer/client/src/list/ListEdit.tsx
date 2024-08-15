@@ -176,7 +176,6 @@ export function ListEdit() {
           <a
             href="#createItem"
             className="govuk-link"
-            data-testid="add-list-item"
             onClick={(e) => {
               e.preventDefault()
               createItem()
@@ -187,11 +186,7 @@ export function ListEdit() {
         </p>
 
         <div className="govuk-button-group">
-          <button
-            data-testid="save-list"
-            className="govuk-button"
-            type="submit"
-          >
+          <button className="govuk-button" type="submit">
             {i18n('save')}
           </button>
 

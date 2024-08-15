@@ -271,8 +271,8 @@ export class InlineConditions extends Component<Props, State> {
     const hasErrors = !!validationErrors.length
 
     return (
-      <div id="inline-conditions" data-testid={'inline-conditions'}>
-        <div id="inline-condition-header">
+      <>
+        <div>
           <div className="govuk-hint">{i18n('conditions.addOrEditHint')}</div>
           <>
             {hasErrors && <ErrorSummary errorList={validationErrors} />}
@@ -315,18 +315,14 @@ export class InlineConditions extends Component<Props, State> {
             </p>
           </>
           {conditions.hasConditions && (
-            <ul
-              className="govuk-list govuk-list--bullet"
-              id="conditions-display"
-            >
-              <li key="condition-string" id="condition-string">
+            <ul className="govuk-list govuk-list--bullet">
+              <li key="condition-string">
                 <strong>{conditions.toPresentationString()}</strong>
                 {!editView && (
                   <>
                     <br />
                     <a
                       href="#"
-                      id="edit-conditions-link"
                       className="govuk-link"
                       onClick={(e) => {
                         e.preventDefault()
@@ -352,7 +348,6 @@ export class InlineConditions extends Component<Props, State> {
               {conditions.hasConditions && (
                 <>
                   <button
-                    id="save-inline-conditions"
                     className="govuk-button"
                     type="button"
                     onClick={this.onClickSave}
@@ -361,7 +356,6 @@ export class InlineConditions extends Component<Props, State> {
                   </button>
                   {condition && (
                     <button
-                      id="delete-inline-conditions"
                       className="govuk-button govuk-button--warning"
                       type="button"
                       onClick={this.onClickDelete}
@@ -382,7 +376,7 @@ export class InlineConditions extends Component<Props, State> {
             exitCallback={this.toggleEdit}
           />
         )}
-      </div>
+      </>
     )
   }
 }

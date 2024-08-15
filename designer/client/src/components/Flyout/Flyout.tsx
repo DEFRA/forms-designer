@@ -104,9 +104,7 @@ export function Flyout(props: Props) {
           <div className="panel panel--flyout">
             <div className="panel-header govuk-!-padding-top-4 govuk-!-padding-left-4">
               {props.title && (
-                <h4 className="govuk-heading-m" data-testid="flyout-heading">
-                  {props.title}
-                </h4>
+                <h4 className="govuk-heading-m">{props.title}</h4>
               )}
             </div>
             <div className="panel-body">

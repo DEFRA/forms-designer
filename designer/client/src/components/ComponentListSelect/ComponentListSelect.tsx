@@ -132,7 +132,6 @@ export function ComponentListSelect() {
           )}
           <a
             className="govuk-link govuk-!-display-block govuk-!-margin-bottom-1"
-            data-testid="add-list"
             onClick={handleAddListClick}
             href="#"
           >

@@ -85,10 +85,7 @@ export function ConditionsEdit({ path }: Props) {
             </RenderInPortal>
           )}
 
-          <ul
-            className="govuk-list govuk-list--bullet govuk-list--spaced"
-            data-testid="conditions-list"
-          >
+          <ul className="govuk-list govuk-list--bullet govuk-list--spaced">
             {conditions.map((condition) => {
               const model = ConditionsModel.from(condition.value)
 
@@ -110,10 +107,8 @@ export function ConditionsEdit({ path }: Props) {
           <hr className="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
           {inputs.length > 0 && (
             <button
-              id="add-condition-link"
               className="govuk-button"
               type="button"
-              data-testid={'add-condition-link'}
               onClick={onClickAddCondition}
             >
               {i18n('conditions.add')}
