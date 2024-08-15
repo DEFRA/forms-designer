@@ -2,6 +2,7 @@
 import { Input, Textarea } from '@xgovformbuilder/govuk-react-jsx'
 import React, { useContext, type FormEvent, type MouseEvent } from 'react'
 
+import { ErrorSummary } from '~/src/ErrorSummary.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { useListItem } from '~/src/hooks/list/useListItem/useListItem.jsx'
 import { i18n } from '~/src/i18n/i18n.jsx'
@@ -10,6 +11,7 @@ import {
   ListsEditorStateActions
 } from '~/src/reducers/list/listsEditorReducer.jsx'
 import { ListContext } from '~/src/reducers/listReducer.jsx'
+import { hasValidationErrors } from '~/src/validations.js'
 
 export function ListItemEdit() {
   const { dispatch: listsEditorDispatch } = useContext(ListsEditorContext)
@@ -29,8 +31,6 @@ export function ListItemEdit() {
     hint
   } = useListItem(state, dispatch)
 
-  const { conditions } = data
-  const { listItemErrors: errors = {} } = state
   const handleSubmit = async (
     e: FormEvent<HTMLFormElement> | MouseEvent<HTMLButtonElement>
   ) => {
@@ -42,8 +42,16 @@ export function ListItemEdit() {
     listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST_ITEM, false])
   }
 
+  const { conditions } = data
+  const { listItemErrors: errors = {} } = state
+  const hasErrors = hasValidationErrors(errors)
+
   return (
     <>
+      {hasErrors && (
+        <ErrorSummary errorList={Object.values(errors).filter(Boolean)} />
+      )}
+
       <form onSubmit={handleSubmit}>
         <Input
           id="title"
