@@ -91,8 +91,10 @@
     "edit": "Edit {{name, lowerFirst}} component",
     "inputfields_info": "Input fields allow you to ask users to enter information",
     "selectfields_info": "Selection fields allow you to provide lists of answers for users to choose from",
-    "move_up": "Move component up",
-    "move_down": "Move component down"
+    "moveUp": "Move component up",
+    "moveUp_label": "Move {{name, lowerFirst}} component up",
+    "moveDown": "Move component down",
+    "moveDown_label": "Move {{name, lowerFirst}} component down"
   },
   "conditions": {
     "add": "Add condition",

@@ -1,6 +1,7 @@
 import {
   ComponentType,
   hasTitle,
+  slugify,
   type ComponentDef,
   type FormDefinition,
   type Page
@@ -246,15 +247,20 @@ export const Component: FunctionComponent<Props> = (props) => {
   const { title, type } = selectedComponent
   const ComponentIcon = componentTypes[type]
 
-  // 'Edit XXX component'
-  const componentFlyoutTitle = i18n('component.edit', {
-    name: i18n(`fieldTypeToName.${type}`)
-  })
+  const pageId = slugify(page.path)
+  const headingId = `${pageId}-heading`
+  const name = i18n(`fieldTypeToName.${type}`)
+  const suffix = hasTitle(selectedComponent) ? `: ${title}` : undefined
 
-  // 'Edit XXX component: Title here'
-  const componentButtonLabel = hasTitle(selectedComponent)
-    ? `${componentFlyoutTitle}: ${title}`
-    : componentFlyoutTitle
+  // '[Action] XXX component'
+  const componentFlyoutTitle = i18n('component.edit', { name })
+  const componentMoveUpTitle = i18n('component.moveUp')
+  const componentMoveDownTitle = i18n('component.moveDown')
+
+  // '[Action] XXX component: Title here'
+  const componentMoveUpLabel = `${i18n('component.moveUp_label', { name })}${suffix}`
+  const componentMoveDownLabel = `${i18n('component.moveDown_label', { name })}${suffix}`
+  const componentButtonLabel = `${componentFlyoutTitle}${suffix}`
 
   const move = async (oldIndex: number, newIndex: number) => {
     const copy = { ...data }
@@ -288,6 +294,7 @@ export const Component: FunctionComponent<Props> = (props) => {
         className="component govuk-link"
         onClick={toggleShowEditor}
         aria-label={componentButtonLabel}
+        aria-describedby={headingId}
       >
         <ComponentIcon />
       </button>
@@ -296,16 +303,18 @@ export const Component: FunctionComponent<Props> = (props) => {
           <button
             className="component-move govuk-button govuk-button--secondary govuk-!-margin-right-0"
             onClick={() => move(index, index - 1)}
-            title={i18n('component.move_up')}
-            aria-label={i18n('component.move_up')}
+            title={componentMoveUpTitle}
+            aria-label={componentMoveUpLabel}
+            aria-describedby={headingId}
           >
             ▲
           </button>
           <button
             className="component-move govuk-button govuk-button--secondary"
             onClick={() => move(index, index + 1)}
-            title={i18n('component.move_down')}
-            aria-label={i18n('component.move_down')}
+            title={componentMoveDownTitle}
+            aria-label={componentMoveDownLabel}
+            aria-describedby={headingId}
           >
             ▼
           </button>

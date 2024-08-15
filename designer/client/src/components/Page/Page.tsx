@@ -1,4 +1,5 @@
 import {
+  slugify,
   type ComponentDef,
   type Page as PageType,
   type FormDefinition
@@ -68,12 +69,11 @@ export const Page = (props: {
 
   const section = data.sections.find(({ name }) => name === page.section)
 
-  // Remove slashes from IDs
-  const pageId = page.path.replace(/\//g, '')
+  const pageId = slugify(page.path)
   const headingId = `${pageId}-heading`
 
   return (
-    <div id={pageId} title={page.path} className={'page'} style={layout}>
+    <div id={pageId} className="page" style={layout}>
       <div className="page__heading">
         <h3 className="govuk-heading-m" id={headingId}>
           {section && <span className="govuk-caption-m">{section.title}</span>}
