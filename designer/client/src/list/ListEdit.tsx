@@ -143,10 +143,13 @@ export function ListEdit() {
   const { selectedList, createItem } = useListItemActions(state, dispatch)
   let { errors = {} } = state
   errors = validate(errors, selectedList)
-  const validationErrors = hasValidationErrors(errors)
+  const hasErrors = hasValidationErrors(errors)
   return (
     <>
-      {validationErrors && <ErrorSummary errorList={Object.values(errors)} />}
+      {hasErrors && (
+        <ErrorSummary errorList={Object.values(errors).filter(Boolean)} />
+      )}
+
       <form onSubmit={handleSubmit} autoComplete="off">
         {selectedList && (
           <Input

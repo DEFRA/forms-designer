@@ -3,7 +3,7 @@ import { hasSpaces, isEmpty } from '~/src/helpers.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 
 export function hasValidationErrors(errors = {}): errors is object {
-  return Object.keys(errors).length > 0
+  return !!Object.values(errors).filter(Boolean).length
 }
 
 export function validateNotEmpty<Key extends string>(

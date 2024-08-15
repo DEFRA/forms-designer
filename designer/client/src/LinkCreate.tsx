@@ -91,7 +91,10 @@ export class LinkCreate extends Component<Props, State> {
 
     return (
       <>
-        {hasErrors && <ErrorSummary errorList={Object.values(errors)} />}
+        {hasErrors && (
+          <ErrorSummary errorList={Object.values(errors).filter(Boolean)} />
+        )}
+
         <div className="govuk-hint">{i18n('addLink.hint')}</div>
         <form onSubmit={(e) => this.onSubmit(e)} autoComplete="off">
           <div

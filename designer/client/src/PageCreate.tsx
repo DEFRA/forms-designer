@@ -192,7 +192,6 @@ export class PageCreate extends Component<Props, State> {
 
   render() {
     const { data } = this.context
-    const { sections, pages } = data
     const {
       controller,
       linkFrom,
@@ -204,11 +203,15 @@ export class PageCreate extends Component<Props, State> {
       errors
     } = this.state
 
+    const { sections, pages } = data
+    const hasErrors = hasValidationErrors(errors)
+
     return (
       <>
-        {hasValidationErrors(errors) && (
-          <ErrorSummary errorList={Object.values(errors)} />
+        {hasErrors && (
+          <ErrorSummary errorList={Object.values(errors).filter(Boolean)} />
         )}
+
         <form onSubmit={this.onSubmit} autoComplete="off">
           <div className="govuk-form-group">
             <label className="govuk-label govuk-label--s" htmlFor="controller">

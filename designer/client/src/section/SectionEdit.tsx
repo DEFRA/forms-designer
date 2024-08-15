@@ -160,12 +160,14 @@ export class SectionEdit extends Component<Props, State> {
 
   render() {
     const { title, name, hideTitle, errors, isNewSection } = this.state
+    const hasErrors = hasValidationErrors(errors)
 
     return (
       <>
-        {hasValidationErrors(errors) && (
-          <ErrorSummary errorList={Object.values(errors)} />
+        {hasErrors && (
+          <ErrorSummary errorList={Object.values(errors).filter(Boolean)} />
         )}
+
         <form onSubmit={this.onSubmit} autoComplete="off">
           <Input
             id="section-title"

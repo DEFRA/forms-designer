@@ -228,11 +228,12 @@ export class PageEdit extends Component<Props, State> {
     } = this.state
 
     const { sections } = data
+    const hasErrors = hasValidationErrors(errors)
 
     return (
       <div data-testid="page-edit">
-        {hasValidationErrors(errors) && (
-          <ErrorSummary errorList={Object.values(errors)} />
+        {hasErrors && (
+          <ErrorSummary errorList={Object.values(errors).filter(Boolean)} />
         )}
 
         <form onSubmit={this.onSubmit} autoComplete="off">
