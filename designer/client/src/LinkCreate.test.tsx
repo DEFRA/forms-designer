@@ -55,7 +55,7 @@ describe('LinkCreate', () => {
 
     render(
       <RenderWithContext data={data}>
-        <LinkCreate />
+        <LinkCreate onSave={jest.fn} />
       </RenderWithContext>
     )
 
@@ -68,7 +68,7 @@ describe('LinkCreate', () => {
 
     render(
       <RenderWithContext data={data}>
-        <LinkCreate />
+        <LinkCreate onSave={jest.fn} />
       </RenderWithContext>
     )
 
@@ -81,7 +81,7 @@ describe('LinkCreate', () => {
   test('Renders from and to inputs with the correct options', () => {
     render(
       <RenderWithContext data={data}>
-        <LinkCreate />
+        <LinkCreate onSave={jest.fn} />
       </RenderWithContext>
     )
 
@@ -97,7 +97,7 @@ describe('LinkCreate', () => {
   test('Selecting a from value causes the SelectConditions component to be displayed', async () => {
     render(
       <RenderWithContext data={data}>
-        <LinkCreate />
+        <LinkCreate onSave={jest.fn} />
       </RenderWithContext>
     )
 
@@ -167,7 +167,7 @@ describe('LinkCreate', () => {
 
     render(
       <RenderWithContext data={updated} save={save}>
-        <LinkCreate />
+        <LinkCreate onSave={jest.fn} />
       </RenderWithContext>
     )
 
@@ -250,7 +250,7 @@ describe('LinkCreate', () => {
 
     render(
       <RenderWithContext data={data} save={save}>
-        <LinkCreate />
+        <LinkCreate onSave={jest.fn} />
       </RenderWithContext>
     )
 

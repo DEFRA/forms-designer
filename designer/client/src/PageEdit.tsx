@@ -1,9 +1,8 @@
-import { clone } from '@defra/forms-model'
+import { clone, slugify, type Page, type Section } from '@defra/forms-model'
 // @ts-expect-error -- No types available
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import React, {
   Component,
-  createRef,
   type ChangeEvent,
   type ContextType,
   type FormEvent,
@@ -17,66 +16,85 @@ import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.j
 import { DataContext } from '~/src/context/DataContext.js'
 import { findPage } from '~/src/data/page/findPage.js'
 import { updateLinksTo } from '~/src/data/page/updateLinksTo.js'
-import { controllerNameFromPath, toUrl } from '~/src/helpers.js'
+import { findSection } from '~/src/data/section/findSection.js'
+import { controllerNameFromPath } from '~/src/helpers.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
-import randomId from '~/src/randomId.js'
 import { SectionEdit } from '~/src/section/SectionEdit.jsx'
 import { validateTitle, hasValidationErrors } from '~/src/validations.js'
 
-export class PageEdit extends Component {
+interface Props {
+  page: Page
+  onSave: () => void
+}
+
+interface State {
+  path: string
+  controller?: string
+  title: string
+  section?: Section
+  isEditingSection: boolean
+  isNewSection: boolean
+  errors: Partial<ErrorList<'path' | 'title'>>
+}
+
+export class PageEdit extends Component<Props, State> {
   declare context: ContextType<typeof DataContext>
   static contextType = DataContext
 
-  constructor(props, context) {
+  constructor(props: Props, context: typeof DataContext) {
     super(props, context)
 
     const { page } = this.props
+    const { data } = this.context
 
     this.state = {
-      path: page?.path ?? this.generatePath(page.title),
-      controller: page?.controller ?? '',
-      title: page?.title ?? '',
-      section: page?.section ?? '',
+      path: page.path,
+      controller: page.controller,
+      title: page.title,
+      section: findSection(data, page.section),
       isEditingSection: false,
+      isNewSection: false,
       errors: {}
     }
-
-    this.formEditSection = createRef()
   }
 
   onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+
     const { save, data } = this.context
     const { title, path, section, controller } = this.state
-    const { page } = this.props
+    const { page, onSave } = this.props
 
-    const validationErrors = this.validate(title, path)
+    // Remove trailing spaces and hyphens
+    const pathTrim = `/${slugify(path)}`
+    const titleTrim = title.trim()
+
+    const validationErrors = this.validate(titleTrim, pathTrim)
     if (hasValidationErrors(validationErrors)) return
 
     let copy = { ...data }
     const [copyPage, copyIndex] = findPage(data, page.path)
-    const pathChanged = path !== page.path
 
-    if (pathChanged) {
-      copy = updateLinksTo(data, page.path, path)
-      copyPage.path = path
+    if (pathTrim !== page.path) {
+      copy = updateLinksTo(data, page.path, pathTrim)
+      copyPage.path = pathTrim
     }
 
-    copyPage.title = title
-    section ? (copyPage.section = section) : delete copyPage.section
-    controller ? (copyPage.controller = controller) : delete copyPage.controller
+    copyPage.title = titleTrim
+    copyPage.controller = controller
+    copyPage.section = section?.name
 
     copy.pages[copyIndex] = copyPage
 
     try {
       await save(copy)
-      this.props.onEdit()
+      onSave()
     } catch (error) {
       logger.error(error, 'PageEdit')
     }
   }
 
-  validate = (title, path): ErrorList => {
+  validate = (title: string, path: string) => {
     const { page } = this.props
     const { data } = this.context
 
@@ -92,10 +110,12 @@ export class PageEdit extends Component {
       ...titleErrors
     }
 
-    const pathHasErrors =
-      path !== page.path ? data.pages.some((page) => page.path === path) : false
+    // Check for duplicate path
+    function isDuplicate(input: string) {
+      return data.pages.some((p) => p.path !== page.path && p.path === input)
+    }
 
-    if (pathHasErrors) {
+    if (isDuplicate(path)) {
       errors.path = {
         href: '#page-path',
         children: `Path '${path}' already exists`
@@ -115,9 +135,9 @@ export class PageEdit extends Component {
     }
 
     const { save, data } = this.context
-    const { page } = this.props
-    const copy = clone(data)
+    const { page, onSave } = this.props
 
+    const copy = clone(data)
     const copyPageIdx = copy.pages.findIndex((p) => p.path === page.path)
 
     // Remove all links to the page
@@ -136,7 +156,7 @@ export class PageEdit extends Component {
 
     try {
       await save(copy)
-      this.props.onEdit()
+      onSave()
     } catch (error) {
       logger.error(error, 'PageEdit')
     }
@@ -153,62 +173,50 @@ export class PageEdit extends Component {
   onChangeTitle = (e: ChangeEvent<HTMLInputElement>) => {
     const { value: title } = e.target
 
-    this.setState({
-      title,
-      path: this.generatePath(title)
-    })
+    this.onChangePath(e)
+    this.setState({ title })
   }
 
   onChangePath = (e: ChangeEvent<HTMLInputElement>) => {
-    const input = e.target.value
-    const path = input.startsWith('/') ? input : `/${input}`
+    const { value: path } = e.target
+
     this.setState({
-      path: path.replace(/\s/g, '-')
+      path: `/${slugify(path, { trim: false })}`
     })
   }
 
-  generatePath(title) {
-    let path = toUrl(title)
-    const { data } = this.context
-    const { page } = this.props
-    if (data.pages.find((page) => page.path === path) && page.title !== title) {
-      path = `${path}-${randomId()}`
-    }
-    return path
-  }
-
-  editSection = (e: MouseEvent<HTMLAnchorElement>, newSection = false) => {
+  editSection = (e: MouseEvent<HTMLAnchorElement>, isNewSection = false) => {
     e.preventDefault()
 
     this.setState({
       isEditingSection: true,
-      isNewSection: newSection
+      isNewSection
     })
   }
 
-  closeFlyout = (sectionName) => {
-    const propSection = this.state.section ?? this.props.page?.section ?? ''
+  closeFlyout = (sectionName?: string) => {
+    const { page } = this.props
+    const { data } = this.context
+    const { section } = this.state
+
     this.setState({
       isEditingSection: false,
-      section: sectionName
+      isNewSection: false,
+      section: findSection(data, sectionName ?? section?.name ?? page.section)
     })
   }
 
   onChangeSection = (e: ChangeEvent<HTMLSelectElement>) => {
-    this.setState({
-      section: e.target.value
-    })
-  }
-
-  findSectionWithName(name) {
+    const { value: sectionName } = e.target
     const { data } = this.context
-    const { sections } = data
-    return sections.find((section) => section.name === name)
+
+    this.setState({
+      section: findSection(data, sectionName)
+    })
   }
 
   render() {
     const { data } = this.context
-    const { sections } = data
     const {
       title,
       path,
@@ -219,11 +227,14 @@ export class PageEdit extends Component {
       errors
     } = this.state
 
+    const { sections } = data
+
     return (
       <div data-testid="page-edit">
         {hasValidationErrors(errors) && (
           <ErrorSummary errorList={Object.values(errors)} />
         )}
+
         <form onSubmit={this.onSubmit} autoComplete="off">
           <div className="govuk-form-group">
             <label className="govuk-label govuk-label--s" htmlFor="controller">
@@ -252,6 +263,7 @@ export class PageEdit extends Component {
               </option>
             </select>
           </div>
+
           <Input
             id="page-title"
             name="title"
@@ -263,6 +275,7 @@ export class PageEdit extends Component {
             onChange={this.onChangeTitle}
             errorMessage={errors.title}
           />
+
           <Input
             id="page-path"
             name="path"
@@ -277,6 +290,7 @@ export class PageEdit extends Component {
             onChange={this.onChangePath}
             errorMessage={errors.path}
           />
+
           {!sections.length && (
             <>
               <h4 className="govuk-heading-s govuk-!-margin-bottom-1">
@@ -287,6 +301,7 @@ export class PageEdit extends Component {
               </p>
             </>
           )}
+
           {sections.length > 0 && (
             <div className="govuk-form-group">
               <label
@@ -303,7 +318,7 @@ export class PageEdit extends Component {
                 id="page-section"
                 aria-describedby="page-section-hint"
                 name="section"
-                value={section}
+                value={section?.name ?? ''}
                 onChange={this.onChangeSection}
               >
                 <option value="" />
@@ -315,6 +330,7 @@ export class PageEdit extends Component {
               </select>
             </div>
           )}
+
           <p className="govuk-body">
             {section && (
               <a
@@ -325,16 +341,15 @@ export class PageEdit extends Component {
                 {i18n('section.edit')}
               </a>
             )}
-            {!section && (
-              <a
-                href="#"
-                className="govuk-link govuk-!-display-block"
-                onClick={(e) => this.editSection(e, true)}
-              >
-                {i18n('section.create')}
-              </a>
-            )}
+            <a
+              href="#"
+              className="govuk-link govuk-!-display-block"
+              onClick={(e) => this.editSection(e, true)}
+            >
+              {i18n('section.create')}
+            </a>
           </p>
+
           <div className="govuk-button-group">
             <button className="govuk-button" type="submit">
               {i18n('save')}
@@ -348,11 +363,12 @@ export class PageEdit extends Component {
             </button>
           </div>
         </form>
+
         {isEditingSection && (
           <RenderInPortal>
             <Flyout
               title={
-                section?.name
+                !isNewSection && !!section
                   ? i18n('section.editingTitle', { title: section.title })
                   : i18n('section.newTitle')
               }
@@ -360,8 +376,8 @@ export class PageEdit extends Component {
               show={isEditingSection}
             >
               <SectionEdit
-                section={isNewSection ? {} : this.findSectionWithName(section)}
-                onEdit={this.closeFlyout}
+                section={!isNewSection ? section : undefined}
+                onSave={this.closeFlyout}
               />
             </Flyout>
           </RenderInPortal>

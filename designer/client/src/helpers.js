@@ -1,33 +1,4 @@
 /**
- * @param {string} [title]
- */
-export function toUrl(title) {
-  return `/${(title?.replace(/[^a-zA-Z0-9- ]/g, '') ?? '')
-    .trim()
-    .replace(/ +/g, '-')
-    .toLowerCase()}`
-}
-
-/**
- * @param {string} str
- */
-export function camelCase(str) {
-  return str
-    .trim()
-    .toLowerCase()
-    .replace(
-      /[\s-_]+(.)/g,
-
-      /**
-       * @param {string} m
-       * @param {string} chr
-       */
-      (m, chr) => chr.toUpperCase()
-    )
-    .replace(/[^a-zA-Z0-9]/g, '')
-}
-
-/**
  * @param {string | number} [str]
  * @returns {str is '' | null | undefined}
  */
@@ -55,7 +26,7 @@ export function arrayMove(arr, from, to) {
 }
 
 /**
- * @param {string} nameOrPath
+ * @param {string} [nameOrPath]
  */
 export function controllerNameFromPath(nameOrPath) {
   const controllers = [

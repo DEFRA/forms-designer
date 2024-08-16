@@ -1,3 +1,4 @@
+import { slugify, type Page, type Section } from '@defra/forms-model'
 // @ts-expect-error -- No types available
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import React, {
@@ -16,27 +17,39 @@ import { SelectConditions } from '~/src/conditions/SelectConditions.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { addLink } from '~/src/data/page/addLink.js'
 import { addPage } from '~/src/data/page/addPage.js'
-import { toUrl } from '~/src/helpers.js'
+import { findSection } from '~/src/data/section/findSection.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
-import randomId from '~/src/randomId.js'
 import { SectionEdit } from '~/src/section/SectionEdit.jsx'
 import { validateTitle, hasValidationErrors } from '~/src/validations.js'
 
-export class PageCreate extends Component {
+interface Props {
+  onSave: () => void
+}
+
+interface State {
+  path: string
+  controller?: string
+  title: string
+  section?: Section
+  linkFrom?: string
+  selectedCondition?: string
+  isEditingSection: boolean
+  isNewSection: boolean
+  errors: Partial<ErrorList<'path' | 'title'>>
+}
+
+export class PageCreate extends Component<Props, State> {
   declare context: ContextType<typeof DataContext>
   static contextType = DataContext
 
-  constructor(props, context) {
+  constructor(props: Props, context: typeof DataContext) {
     super(props, context)
-
-    const { page } = this.props
 
     this.state = {
       path: '/',
-      controller: page?.controller ?? '',
-      title: page?.title,
-      section: page?.section ?? {},
+      title: '',
       isEditingSection: false,
+      isNewSection: false,
       errors: {}
     }
   }
@@ -44,45 +57,42 @@ export class PageCreate extends Component {
   onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
+    const { onSave } = this.props
     const { data, save } = this.context
+    const { path, controller, title, section, linkFrom, selectedCondition } =
+      this.state
 
-    const title = this.state.title?.trim()
-    const linkFrom = this.state.linkFrom?.trim()
-    const section = this.state.section?.name?.trim()
-    const controller = this.state.controller?.trim()
-    const selectedCondition = this.state.selectedCondition?.trim()
-    const path = this.state.path
+    // Remove trailing spaces and hyphens
+    const pathTrim = `/${slugify(path)}`
+    const titleTrim = title.trim()
 
-    const validationErrors = this.validate(title, path)
+    const validationErrors = this.validate(titleTrim, pathTrim)
     if (hasValidationErrors(validationErrors)) return
 
-    const value = {
-      path,
-      title,
+    const newPage: Page = {
+      path: pathTrim,
+      title: titleTrim,
+      controller,
       components: [],
+      section: section?.name,
       next: []
     }
-    if (section) {
-      value.section = section
-    }
-    if (controller) {
-      value.controller = controller
-    }
 
-    let copy = addPage({ ...data }, value)
+    let copy = addPage({ ...data }, newPage)
 
     if (linkFrom) {
-      copy = addLink(copy, linkFrom, path, selectedCondition)
+      copy = addLink(copy, linkFrom, pathTrim, selectedCondition)
     }
+
     try {
       await save(copy)
-      this.props.onCreate({ value })
+      onSave()
     } catch (error) {
       logger.error(error, 'PageCreate')
     }
   }
 
-  validate = (title, path): ErrorList => {
+  validate = (title: string, path: string) => {
     const { data } = this.context
 
     const titleErrors = validateTitle(
@@ -97,8 +107,12 @@ export class PageCreate extends Component {
       ...titleErrors
     }
 
-    const alreadyExists = data.pages.find((page) => page.path === path)
-    if (alreadyExists) {
+    // Check for duplicate path
+    function isDuplicate(input: string) {
+      return data.pages.some((p) => p.path === input)
+    }
+
+    if (isDuplicate(path)) {
       errors.path = {
         href: '#page-path',
         children: `Path '${path}' already exists`
@@ -110,82 +124,69 @@ export class PageCreate extends Component {
     return errors
   }
 
-  generatePath(title, data) {
-    let path = toUrl(title)
-    if (
-      title.length > 0 &&
-      data.pages.find((page) => page.path.startsWith(path))
-    ) {
-      path = `${path}-${randomId()}`
-    }
-
-    return path
-  }
-
-  findSectionWithName(name) {
-    const { data } = this.context
-    const { sections } = data
-    return sections.find((section) => section.name === name)
-  }
-
   onChangeSection = (e: ChangeEvent<HTMLSelectElement>) => {
+    const { value: sectionName } = e.target
+    const { data } = this.context
+
     this.setState({
-      section: this.findSectionWithName(e.target.value)
+      section: findSection(data, sectionName)
     })
   }
 
   onChangeLinkFrom = (e: ChangeEvent<HTMLSelectElement>) => {
-    const input = e.target
+    const { value: linkFrom } = e.target
+
     this.setState({
-      linkFrom: input.value
+      linkFrom
     })
   }
 
   onChangeController = (e: ChangeEvent<HTMLSelectElement>) => {
-    const input = e.target
+    const { value: controller } = e.target
+
     this.setState({
-      controller: input.value
+      controller
     })
   }
 
   onChangeTitle = (e: ChangeEvent<HTMLInputElement>) => {
-    const { data } = this.context
-    const input = e.target
-    const title = input.value
-    this.setState({
-      title,
-      path: this.generatePath(title, data)
-    })
+    const { value: title } = e.target
+
+    this.onChangePath(e)
+    this.setState({ title })
   }
 
   onChangePath = (e: ChangeEvent<HTMLInputElement>) => {
-    const input = e.target
-    const path = input.value.startsWith('/') ? input.value : `/${input.value}`
-    const sanitisedPath = path.replace(/\s/g, '-')
+    const { value: path } = e.target
+
     this.setState({
-      path: sanitisedPath
+      path: `/${slugify(path, { trim: false })}`
     })
   }
 
-  conditionSelected = (selectedCondition) => {
+  conditionSelected = (selectedCondition?: string) => {
     this.setState({
       selectedCondition
     })
   }
 
-  editSection = (e: MouseEvent<HTMLAnchorElement>, section) => {
+  editSection = (e: MouseEvent<HTMLAnchorElement>, isNewSection = false) => {
     e.preventDefault()
+
     this.setState({
-      section,
-      isEditingSection: true
+      isEditingSection: true,
+      isNewSection
     })
   }
 
-  closeFlyout = (sectionName) => {
-    const propSection = this.state.section ?? {}
+  closeFlyout = (sectionName?: string) => {
+    const { section } = this.state
+    const { data } = this.context
+
     this.setState({
       isEditingSection: false,
-      section: sectionName ? this.findSectionWithName(sectionName) : propSection
+      isNewSection: false,
+      section: findSection(data, sectionName ?? section?.name)
     })
   }
 
@@ -199,6 +200,7 @@ export class PageCreate extends Component {
       section,
       path,
       isEditingSection,
+      isNewSection,
       errors
     } = this.state
 
@@ -248,7 +250,7 @@ export class PageCreate extends Component {
               id="link-from"
               aria-describedby="link-from-hint"
               name="from"
-              value={linkFrom}
+              value={linkFrom ?? ''}
               onChange={this.onChangeLinkFrom}
             >
               <option value="" />
@@ -260,7 +262,7 @@ export class PageCreate extends Component {
             </select>
           </div>
 
-          {linkFrom && linkFrom.trim() !== '' && (
+          {linkFrom && (
             <SelectConditions
               path={linkFrom}
               conditionsChange={this.conditionSelected}
@@ -275,7 +277,7 @@ export class PageCreate extends Component {
               className: 'govuk-label--s',
               children: [i18n('addPage.pageTitleField.title')]
             }}
-            value={title || ''}
+            value={title}
             onChange={this.onChangeTitle}
             errorMessage={errors.title}
           />
@@ -305,6 +307,7 @@ export class PageCreate extends Component {
               </p>
             </>
           )}
+
           {sections.length > 0 && (
             <div className="govuk-form-group">
               <label
@@ -321,7 +324,7 @@ export class PageCreate extends Component {
                 id="page-section"
                 aria-describedby="page-section-hint"
                 name="section"
-                value={section?.name}
+                value={section?.name ?? ''}
                 onChange={this.onChangeSection}
               >
                 <option value="" />
@@ -335,13 +338,13 @@ export class PageCreate extends Component {
           )}
 
           <p className="govuk-body">
-            {section?.name && (
+            {section && (
               <a
                 href="#"
                 className="govuk-link govuk-!-display-block"
                 onClick={this.editSection}
               >
-                Edit section
+                {i18n('section.edit')}
               </a>
             )}
             <a
@@ -349,13 +352,13 @@ export class PageCreate extends Component {
               className="govuk-link govuk-!-display-block"
               onClick={this.editSection}
             >
-              Create section
+              {i18n('section.create')}
             </a>
           </p>
 
           <div className="govuk-button-group">
             <button type="submit" className="govuk-button">
-              Save
+              {i18n('save')}
             </button>
           </div>
         </form>
@@ -363,11 +366,16 @@ export class PageCreate extends Component {
           <RenderInPortal>
             <Flyout
               title={
-                section?.name ? `Editing ${section.name}` : 'Add a new section'
+                !isNewSection && !!section
+                  ? i18n('section.editingTitle', { title: section.title })
+                  : i18n('section.newTitle')
               }
               onHide={this.closeFlyout}
             >
-              <SectionEdit section={section} onEdit={this.closeFlyout} />
+              <SectionEdit
+                section={!isNewSection ? section : undefined}
+                onSave={this.closeFlyout}
+              />
             </Flyout>
           </RenderInPortal>
         )}

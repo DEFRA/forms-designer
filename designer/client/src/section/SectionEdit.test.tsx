@@ -11,7 +11,7 @@ describe('Section edit fields', () => {
   test('should display titles and help texts', () => {
     render(
       <RenderWithContext>
-        <SectionEdit />
+        <SectionEdit onSave={jest.fn()} />
       </RenderWithContext>
     )
 

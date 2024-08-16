@@ -4,6 +4,7 @@ import React, { Component, type ContextType, type MouseEvent } from 'react'
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
+import { findSection } from '~/src/data/section/findSection.js'
 import { SectionEdit } from '~/src/section/SectionEdit.jsx'
 
 type Props = Record<string, never>
@@ -30,17 +31,12 @@ export class SectionsEdit extends Component<Props, State> {
 
   closeFlyout = (sectionName?: string) => {
     const { section } = this.state
+    const { data } = this.context
 
     this.setState({
       isEditingSection: false,
-      section: sectionName ? this.findSectionWithName(sectionName) : section
+      section: findSection(data, sectionName ?? section?.name)
     })
-  }
-
-  findSectionWithName(name?: string) {
-    const { data } = this.context
-    const { sections } = data
-    return sections.find((section) => section.name === name)
   }
 
   render() {
@@ -83,7 +79,7 @@ export class SectionsEdit extends Component<Props, State> {
               show={isEditingSection}
               onHide={() => this.closeFlyout()}
             >
-              <SectionEdit section={section} onEdit={this.closeFlyout} />
+              <SectionEdit section={section} onSave={this.closeFlyout} />
             </Flyout>
           </RenderInPortal>
         )}
