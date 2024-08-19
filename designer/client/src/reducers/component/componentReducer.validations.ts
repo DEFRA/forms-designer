@@ -10,7 +10,7 @@ import {
 import { type ErrorList } from '~/src/ErrorSummary.jsx'
 import { isEmpty } from '~/src/helpers.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
-import { validateName, validateTitle } from '~/src/validations.js'
+import { validateName, validateRequired } from '~/src/validations.js'
 
 const validateContent = (component: ContentComponentsDef) => {
   const errors: ErrorList = {}
@@ -43,7 +43,7 @@ export function fieldComponentValidations(component?: ComponentDef) {
 
   if (hasTitle(component)) {
     validations.push(
-      validateTitle(
+      validateRequired(
         'title',
         'field-title',
         i18n('common.titleField.title'),

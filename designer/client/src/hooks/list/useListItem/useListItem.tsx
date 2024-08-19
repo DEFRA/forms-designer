@@ -5,11 +5,7 @@ import { findList } from '~/src/data/list/findList.js'
 import { type ListItemHook } from '~/src/hooks/list/useListItem/types.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ListActions } from '~/src/reducers/listActions.jsx'
-import {
-  hasValidationErrors,
-  validateNotEmpty,
-  validateTitle
-} from '~/src/validations.js'
+import { validateRequired, hasValidationErrors } from '~/src/validations.js'
 
 export function useListItem(state, dispatch): ListItemHook {
   const { selectedItem = {} } = state
@@ -47,8 +43,8 @@ export function useListItem(state, dispatch): ListItemHook {
     const title = state.selectedItem.text || ''
 
     const errors = {
-      ...validateTitle('title', 'title', i18n('list.item.title'), title),
-      ...validateNotEmpty('value', 'value', i18n('list.item.value'), value)
+      ...validateRequired('title', 'title', i18n('list.item.title'), title),
+      ...validateRequired('value', 'value', i18n('list.item.value'), value)
     }
 
     const valErrors = hasValidationErrors(errors)

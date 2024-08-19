@@ -17,7 +17,7 @@ import { i18n } from '~/src/i18n/i18n.jsx'
 import randomId from '~/src/randomId.js'
 import {
   validateName,
-  validateTitle,
+  validateRequired,
   hasValidationErrors
 } from '~/src/validations.js'
 
@@ -99,7 +99,7 @@ export class SectionEdit extends Component<Props, State> {
   }
 
   validate = (name?: string, title?: string): State['errors'] => {
-    const titleErrors = validateTitle(
+    const titleErrors = validateRequired(
       'title',
       'section-title',
       i18n('sectionEdit.titleField.title'),

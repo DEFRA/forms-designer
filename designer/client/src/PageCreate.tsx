@@ -20,7 +20,7 @@ import { addPage } from '~/src/data/page/addPage.js'
 import { findSection } from '~/src/data/section/findSection.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { SectionEdit } from '~/src/section/SectionEdit.jsx'
-import { validateTitle, hasValidationErrors } from '~/src/validations.js'
+import { validateRequired, hasValidationErrors } from '~/src/validations.js'
 
 interface Props {
   onSave: () => void
@@ -95,7 +95,7 @@ export class PageCreate extends Component<Props, State> {
   validate = (title: string, path: string) => {
     const { data } = this.context
 
-    const titleErrors = validateTitle(
+    const titleErrors = validateRequired(
       'title',
       'page-title',
       i18n('page.title'),

@@ -19,7 +19,7 @@ import {
 } from '~/src/reducers/list/listsEditorReducer.jsx'
 import { ListActions } from '~/src/reducers/listActions.jsx'
 import { ListContext } from '~/src/reducers/listReducer.jsx'
-import { hasValidationErrors, validateTitle } from '~/src/validations.js'
+import { validateRequired, hasValidationErrors } from '~/src/validations.js'
 
 const useListItemActions = (state, dispatch) => {
   const { dispatch: listsEditorDispatch } = useContext(ListsEditorContext)
@@ -72,7 +72,7 @@ function useListEdit() {
   const validate = (): Partial<ErrorList<'title' | 'listItems'>> => {
     const { selectedList } = state
 
-    const titleErrors = validateTitle(
+    const titleErrors = validateRequired(
       'title',
       'list-title',
       i18n('list.title'),
