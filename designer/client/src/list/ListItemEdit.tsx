@@ -55,7 +55,6 @@ export function ListItemEdit() {
       <form onSubmit={handleSubmit}>
         <Input
           id="title"
-          data-testid="list-item-text"
           name="list-item-text"
           label={{
             className: 'govuk-label--s',
@@ -70,7 +69,6 @@ export function ListItemEdit() {
           label={{ children: i18n('list.item.help') }}
           hint={{ children: i18n('list.item.helpHint') }}
           value={hint}
-          data-testid="list-item-hint"
           name="list-item-hint"
           id="hint"
           onChange={handleHintChange}
@@ -79,7 +77,6 @@ export function ListItemEdit() {
           label={{ children: [i18n('list.item.value')] }}
           hint={{ children: [i18n('list.item.valueHint')] }}
           id="value"
-          data-testid="list-item-value"
           name="list-item-value"
           value={value}
           errorMessage={errors.value}
@@ -96,29 +93,19 @@ export function ListItemEdit() {
           id="condition"
           aria-describedby="condition-hint"
           name="options.condition"
-          data-testid="list-condition-select"
           value={condition}
           onChange={handleConditionChange}
         >
-          <option value="" data-testid="list-condition-option" />
+          <option value="" />
           {conditions.map((condition) => (
-            <option
-              key={condition.name}
-              value={condition.name}
-              data-testid="list-condition-option"
-            >
+            <option key={condition.name} value={condition.name}>
               {condition.displayName}
             </option>
           ))}
         </select>
         <hr className="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
         <div className="govuk-button-group">
-          <button
-            data-testid="save-list-item"
-            className="govuk-button"
-            type="submit"
-            onClick={handleSubmit}
-          >
+          <button className="govuk-button" type="submit" onClick={handleSubmit}>
             {i18n('save')}
           </button>
         </div>

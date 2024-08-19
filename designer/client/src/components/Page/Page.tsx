@@ -73,7 +73,7 @@ export const Page = (props: {
   const headingId = `${pageId}-heading`
 
   return (
-    <div id={pageId} className="page" style={layout}>
+    <div className="page" style={layout}>
       <div className="page__heading">
         <h3 className="govuk-heading-m" id={headingId}>
           {section && <span className="govuk-caption-m">{section.title}</span>}

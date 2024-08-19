@@ -117,18 +117,13 @@ export class LinkCreate extends Component<Props, State> {
                 'govuk-input--error': errors.from
               })}
               id="link-source"
-              data-testid="link-source"
               aria-describedby={errors.to && 'link-source-error'}
               name="path"
               onChange={(e) => this.storeValue(e, 'from')}
             >
               <option value="" />
               {pages.map((page) => (
-                <option
-                  key={page.path}
-                  value={page.path}
-                  data-testid="link-source-option"
-                >
+                <option key={page.path} value={page.path}>
                   {page.title}
                 </option>
               ))}
@@ -155,18 +150,13 @@ export class LinkCreate extends Component<Props, State> {
                 'govuk-input--error': errors.to
               })}
               id="link-target"
-              data-testid="link-target"
               aria-describedby={errors.to && 'link-target-error'}
               name="page"
               onChange={(e) => this.storeValue(e, 'to')}
             >
               <option value="" />
               {pages.map((page) => (
-                <option
-                  key={page.path}
-                  value={page.path}
-                  data-testid="link-target-option"
-                >
+                <option key={page.path} value={page.path}>
                   {page.title}
                 </option>
               ))}

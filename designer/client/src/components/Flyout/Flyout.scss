@@ -65,6 +65,11 @@
     overflow: hidden;
   }
 
+  & .govuk-back-link {
+    margin-top: 0;
+    @include govuk-responsive-margin(6, "bottom");
+  }
+
   & h2 a {
     color: #333;
     margin-left: 15px;

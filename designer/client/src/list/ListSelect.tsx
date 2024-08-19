@@ -31,7 +31,6 @@ export function ListSelect() {
         {data.lists.map((list) => (
           <li key={list.name}>
             <a
-              data-testid="edit-list"
               href="#"
               className="govuk-link"
               onClick={(e) => editList(e, list)}
@@ -46,7 +45,6 @@ export function ListSelect() {
         <button
           className="govuk-button"
           type="button"
-          data-testid="add-list"
           onClick={(e) => {
             e.preventDefault()
             listDispatch({ type: ListActions.ADD_NEW_LIST })

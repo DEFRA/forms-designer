@@ -241,7 +241,7 @@ export class SelectConditions extends Component<Props, State> {
     const hasFields = Object.keys(fields ?? {}).length > 0
 
     return (
-      <div className="conditions" data-testid="select-conditions">
+      <>
         <h4 className="govuk-heading-s govuk-!-margin-bottom-1">
           {i18n('conditions.optional')}
         </h4>
@@ -251,7 +251,6 @@ export class SelectConditions extends Component<Props, State> {
               <Select
                 id="select-condition"
                 name="cond-select"
-                data-testid="select-condition"
                 value={selectedCondition ?? ''}
                 items={[
                   {
@@ -274,7 +273,6 @@ export class SelectConditions extends Component<Props, State> {
               <p className="govuk-body">
                 <a
                   href="#"
-                  id="inline-conditions-link"
                   className="govuk-link"
                   onClick={this.onClickDefineCondition}
                 >
@@ -300,7 +298,7 @@ export class SelectConditions extends Component<Props, State> {
         ) : (
           <p className="govuk-body">{noFieldsHintText}</p>
         )}
-      </div>
+      </>
     )
   }
 }

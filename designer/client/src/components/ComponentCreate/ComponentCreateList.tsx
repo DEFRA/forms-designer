@@ -42,13 +42,10 @@ export const ComponentCreateList = ({ onSelectComponent }: Props) => {
   )
 
   return (
-    <div
-      className="govuk-form-group component-create__list"
-      data-testid="component-create-list"
-    >
+    <div className="govuk-form-group">
       <h1 className="govuk-hint">{i18n('component.create_info')}</h1>
       <ol className="govuk-list">
-        <li className="component-create__list__item">
+        <li>
           <h2 className="govuk-heading-s">{i18n('Content')}</h2>
           <div className="govuk-hint">
             {i18n('component.contentfields_info')}
@@ -73,7 +70,7 @@ export const ComponentCreateList = ({ onSelectComponent }: Props) => {
           </ol>
           <hr className="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
         </li>
-        <li className="component-create__list__item">
+        <li>
           <h2 className="govuk-heading-s">{i18n('Input fields')}</h2>
           <div className="govuk-hint">{i18n('component.inputfields_info')}</div>
           <ol className="govuk-list">
@@ -96,7 +93,7 @@ export const ComponentCreateList = ({ onSelectComponent }: Props) => {
           </ol>
           <hr className="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
         </li>
-        <li className="component-create__list__item">
+        <li>
           <h2 className="govuk-heading-s">{i18n('Selection fields')}</h2>
           <div className="govuk-hint">
             {i18n('component.selectfields_info')}

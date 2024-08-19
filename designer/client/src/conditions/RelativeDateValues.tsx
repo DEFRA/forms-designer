@@ -71,7 +71,6 @@ export class RelativeDateValues extends Component<Props, State> {
                 period: e.currentTarget.value
               })
             }
-            data-testid="cond-value-period"
           />
         </div>
 

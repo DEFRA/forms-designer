@@ -87,59 +87,56 @@ export function ComponentListSelect() {
   }
 
   return (
-    <>
-      <div
-        className={classNames({
-          'govuk-form-group': true,
-          'govuk-form-group--error': errors.list
-        })}
+    <div
+      className={classNames({
+        'govuk-form-group': true,
+        'govuk-form-group--error': errors.list
+      })}
+    >
+      <label
+        className="govuk-label govuk-label--s"
+        htmlFor="field-options-list"
       >
-        <label
-          className="govuk-label govuk-label--s"
-          htmlFor="field-options-list"
-        >
-          {i18n('list.select.title')}
-        </label>
-        <div className="govuk-hint" id="field-options-list-hint">
-          {i18n('list.select.helpText')}
-        </div>
-        <select
-          className="govuk-select govuk-input--width-10"
-          id="field-options-list"
-          aria-describedby="field-options-list-hint"
-          name="options.list"
-          value={list}
-          onChange={editList}
-        >
-          <option value="">{i18n('list.select.option')}</option>
-          {data.lists.map((list, index) => {
-            return (
-              <option key={`${list.name}-${index}`} value={list.name}>
-                {list.title}
-              </option>
-            )
-          })}
-        </select>
-        <p className="govuk-body govuk-!-margin-top-2">
-          {selectedListTitle && (
-            <a
-              className="govuk-link govuk-!-display-block govuk-!-margin-bottom-1"
-              onClick={handleEditListClick}
-              href="#"
-            >
-              {i18n('list.edit', { title: selectedListTitle })}
-            </a>
-          )}
+        {i18n('list.select.title')}
+      </label>
+      <div className="govuk-hint" id="field-options-list-hint">
+        {i18n('list.select.helpText')}
+      </div>
+      <select
+        className="govuk-select govuk-input--width-10"
+        id="field-options-list"
+        aria-describedby="field-options-list-hint"
+        name="options.list"
+        value={list}
+        onChange={editList}
+      >
+        <option value="">{i18n('list.select.option')}</option>
+        {data.lists.map((list, index) => {
+          return (
+            <option key={`${list.name}-${index}`} value={list.name}>
+              {list.title}
+            </option>
+          )
+        })}
+      </select>
+      <p className="govuk-body govuk-!-margin-top-2">
+        {selectedListTitle && (
           <a
             className="govuk-link govuk-!-display-block govuk-!-margin-bottom-1"
-            data-testid="add-list"
-            onClick={handleAddListClick}
+            onClick={handleEditListClick}
             href="#"
           >
-            {i18n('list.addNew')}
+            {i18n('list.edit', { title: selectedListTitle })}
           </a>
-        </p>
-      </div>
-    </>
+        )}
+        <a
+          className="govuk-link govuk-!-display-block govuk-!-margin-bottom-1"
+          onClick={handleAddListClick}
+          href="#"
+        >
+          {i18n('list.addNew')}
+        </a>
+      </p>
+    </div>
   )
 }

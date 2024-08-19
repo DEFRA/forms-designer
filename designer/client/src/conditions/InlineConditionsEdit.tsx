@@ -218,7 +218,7 @@ export class InlineConditionsEdit extends Component<Props, State> {
     } = this.state
 
     return (
-      <div id="edit-conditions">
+      <>
         {typeof editingIndex === 'undefined' && (
           <div
             className={classNames({
@@ -332,7 +332,6 @@ export class InlineConditionsEdit extends Component<Props, State> {
         )}
         <div className="govuk-button-group">
           <button
-            id="cancel-edit-inline-conditions-link"
             className="govuk-button"
             type="button"
             onClick={this.onClickCancelEditView}
@@ -340,7 +339,7 @@ export class InlineConditionsEdit extends Component<Props, State> {
             Finished editing
           </button>
         </div>
-      </div>
+      </>
     )
   }
 }
