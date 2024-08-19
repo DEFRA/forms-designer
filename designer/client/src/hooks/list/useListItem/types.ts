@@ -8,7 +8,7 @@ export interface ListItemHook {
   handleHintChange: (e: ChangeEvent<HTMLTextAreaElement>) => void
   prepareForDelete: <T>(data: T, index?: number) => T
   prepareForSubmit: (data: FormDefinition) => FormDefinition
-  validate: (i18n: any) => boolean
+  validate: () => boolean
   value: any
   condition: any
   title: string

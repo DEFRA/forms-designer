@@ -46,9 +46,8 @@ export function fieldComponentValidations(component?: ComponentDef) {
       validateTitle(
         'title',
         'field-title',
-        '$t(common.titleField.title)',
-        component.title,
-        i18n
+        i18n('common.titleField.title'),
+        component.title
       )
     )
   }
@@ -57,9 +56,8 @@ export function fieldComponentValidations(component?: ComponentDef) {
     validateName(
       'name',
       'field-name',
-      '$t(common.componentNameField.title)',
-      component?.name,
-      i18n
+      i18n('common.componentNameField.title'),
+      component?.name
     )
   )
 

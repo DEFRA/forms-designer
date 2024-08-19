@@ -22,21 +22,19 @@ describe('Breadcrumbs Component', () => {
       }
     )
 
-    $breadcrumbs = document.querySelector('[data-testid="app-breadcrumbs"]')
+    $breadcrumbs = document.querySelector('.app-breadcrumbs')
   })
 
   test('Should render expected number of breadcrumbs', () => {
     expect(
-      $breadcrumbs?.querySelectorAll(
-        '[data-testid="app-breadcrumbs-list-item"]'
-      )
+      $breadcrumbs?.querySelectorAll('.app-breadcrumbs__list-item')
     ).toHaveLength(2)
   })
 
   test('First breadcrumb should be a link', () => {
     const $firstBreadcrumbLink = $breadcrumbs
-      ?.querySelector('[data-testid="app-breadcrumbs-list-item"]')
-      ?.querySelector('[data-testid="app-breadcrumbs-link"]')
+      ?.querySelector('.app-breadcrumbs__list-item')
+      ?.querySelector('.app-breadcrumbs__link')
 
     expect($firstBreadcrumbLink).toHaveAttribute('href', '/deployments')
     expect($firstBreadcrumbLink).toHaveAttribute(
@@ -47,7 +45,7 @@ describe('Breadcrumbs Component', () => {
 
   test('Last breadcrumb should not be a link', () => {
     const $lastBreadcrumb = $breadcrumbs?.querySelector(
-      '[data-testid="app-breadcrumbs-list-item"]:last-of-type'
+      '.app-breadcrumbs__list-item:last-of-type'
     )
 
     expect($lastBreadcrumb).not.toContainHTML('class="app-breadcrumbs__link"')

@@ -114,7 +114,7 @@ function useComponentCreate(props) {
     handleSubmit,
     handleCreate,
     hasErrors,
-    errors: Object.values(errors),
+    errors,
     component: selectedComponent,
     isSaving,
     reset,
@@ -150,7 +150,9 @@ export function ComponentCreate(props) {
           </h4>
         </>
       )}
-      {hasErrors && <ErrorSummary errorList={errors} />}
+      {hasErrors && (
+        <ErrorSummary errorList={Object.values(errors).filter(Boolean)} />
+      )}
       {!type && <ComponentCreateList onSelectComponent={handleCreate} />}
       {type && renderTypeEdit && (
         <form onSubmit={handleSubmit}>

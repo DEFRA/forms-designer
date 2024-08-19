@@ -101,9 +101,8 @@ export class PageEdit extends Component<Props, State> {
     const titleErrors = validateTitle(
       'title',
       'page-title',
-      '$t(page.title)',
-      title,
-      i18n
+      i18n('page.title'),
+      title
     )
 
     const errors: Partial<ErrorList<'path' | 'title'>> = {
@@ -228,11 +227,12 @@ export class PageEdit extends Component<Props, State> {
     } = this.state
 
     const { sections } = data
+    const hasErrors = hasValidationErrors(errors)
 
     return (
       <div data-testid="page-edit">
-        {hasValidationErrors(errors) && (
-          <ErrorSummary errorList={Object.values(errors)} />
+        {hasErrors && (
+          <ErrorSummary errorList={Object.values(errors).filter(Boolean)} />
         )}
 
         <form onSubmit={this.onSubmit} autoComplete="off">

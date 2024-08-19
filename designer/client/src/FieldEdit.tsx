@@ -129,7 +129,7 @@ export function FieldEdit() {
           </div>
           {errors.name && (
             <ErrorMessage id="field-name-error">
-              {i18n('name.errors.whitespace')}
+              {errors.name.children}
             </ErrorMessage>
           )}
           <input

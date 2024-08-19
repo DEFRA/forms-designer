@@ -72,7 +72,7 @@ describe('LinkCreate', () => {
       </RenderWithContext>
     )
 
-    const $source = screen.getByTestId('link-source')
+    const $source = screen.getByRole('combobox', { name: 'From' })
     await act(() => userEvent.selectOptions($source, data.pages[1].path))
 
     expect(screen.getByText(hintText)).toBeInTheDocument()
@@ -85,8 +85,8 @@ describe('LinkCreate', () => {
       </RenderWithContext>
     )
 
-    const $source = screen.getByTestId('link-source')
-    const $target = screen.getByTestId('link-target')
+    const $source = screen.getByRole('combobox', { name: 'From' })
+    const $target = screen.getByRole('combobox', { name: 'To' })
 
     expect(within($source).getByText(data.pages[0].title)).toBeInTheDocument()
     expect(within($source).getByText(data.pages[1].title)).toBeInTheDocument()
@@ -101,13 +101,18 @@ describe('LinkCreate', () => {
       </RenderWithContext>
     )
 
-    expect(screen.queryByTestId('select-conditions')).toBeNull()
+    let $conditions = screen.queryByRole('link', {
+      name: 'Define a new condition'
+    })
 
-    const $source = screen.getByTestId('link-source')
+    expect($conditions).not.toBeInTheDocument()
+
+    const $source = screen.getByRole('combobox', { name: 'From' })
     await act(() => userEvent.selectOptions($source, '/first-page'))
 
-    await waitFor(() => screen.getByTestId('select-conditions'))
-    const $conditions = screen.getByTestId('select-conditions')
+    $conditions = screen.getByRole('link', {
+      name: 'Define a new condition'
+    })
 
     expect($conditions).toBeInTheDocument()
   })
@@ -171,15 +176,16 @@ describe('LinkCreate', () => {
       </RenderWithContext>
     )
 
-    const $source = screen.getByTestId('link-source')
-    const $target = screen.getByTestId('link-target')
-    const $button = screen.getByRole('button')
+    const $source = screen.getByRole('combobox', { name: 'From' })
+    const $target = screen.getByRole('combobox', { name: 'To' })
+    const $button = screen.getByRole('button', { name: 'Save' })
 
     await act(() => userEvent.selectOptions($source, '/first-page'))
     await act(() => userEvent.selectOptions($target, '/summary'))
 
-    await waitFor(() => screen.getByTestId('select-condition'))
-    const $condition = screen.getByTestId('select-condition')
+    const $condition = screen.getByRole('combobox', {
+      name: 'Select a condition'
+    })
 
     await act(() => userEvent.selectOptions($condition, 'hasUKPassport'))
     await act(() => userEvent.click($button))

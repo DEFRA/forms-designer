@@ -91,7 +91,10 @@ export class LinkCreate extends Component<Props, State> {
 
     return (
       <>
-        {hasErrors && <ErrorSummary errorList={Object.values(errors)} />}
+        {hasErrors && (
+          <ErrorSummary errorList={Object.values(errors).filter(Boolean)} />
+        )}
+
         <div className="govuk-hint">{i18n('addLink.hint')}</div>
         <form onSubmit={(e) => this.onSubmit(e)} autoComplete="off">
           <div
@@ -103,7 +106,11 @@ export class LinkCreate extends Component<Props, State> {
             <label className="govuk-label govuk-label--s" htmlFor="link-source">
               From
             </label>
-            {errors.from && <ErrorMessage>{errors.from.children}</ErrorMessage>}
+            {errors.from && (
+              <ErrorMessage id="link-source-error">
+                {errors.from.children}
+              </ErrorMessage>
+            )}
             <select
               className={classNames({
                 'govuk-select': true,
@@ -111,6 +118,7 @@ export class LinkCreate extends Component<Props, State> {
               })}
               id="link-source"
               data-testid="link-source"
+              aria-describedby={errors.to && 'link-source-error'}
               name="path"
               onChange={(e) => this.storeValue(e, 'from')}
             >
@@ -136,7 +144,11 @@ export class LinkCreate extends Component<Props, State> {
             <label className="govuk-label govuk-label--s" htmlFor="link-target">
               To
             </label>
-            {errors.to && <ErrorMessage>{errors.to.children}</ErrorMessage>}
+            {errors.to && (
+              <ErrorMessage id="link-target-error">
+                {errors.to.children}
+              </ErrorMessage>
+            )}
             <select
               className={classNames({
                 'govuk-select': true,
@@ -144,6 +156,7 @@ export class LinkCreate extends Component<Props, State> {
               })}
               id="link-target"
               data-testid="link-target"
+              aria-describedby={errors.to && 'link-target-error'}
               name="page"
               onChange={(e) => this.storeValue(e, 'to')}
             >

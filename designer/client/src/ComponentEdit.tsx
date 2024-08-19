@@ -67,7 +67,10 @@ export function ComponentEdit(props) {
 
   return (
     <>
-      {hasErrors && <ErrorSummary errorList={Object.values(errors)} />}
+      {hasErrors && (
+        <ErrorSummary errorList={Object.values(errors).filter(Boolean)} />
+      )}
+
       <form autoComplete="off" onSubmit={handleSubmit}>
         <ComponentTypeEdit />
 

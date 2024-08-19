@@ -3,6 +3,7 @@ import { type FormDefinition } from '@defra/forms-model'
 import { addList } from '~/src/data/list/addList.js'
 import { findList } from '~/src/data/list/findList.js'
 import { type ListItemHook } from '~/src/hooks/list/useListItem/types.js'
+import { i18n } from '~/src/i18n/i18n.jsx'
 import { ListActions } from '~/src/reducers/listActions.jsx'
 import {
   hasValidationErrors,
@@ -42,25 +43,12 @@ export function useListItem(state, dispatch): ListItemHook {
     })
   }
 
-  function validate(i18nProp) {
+  function validate() {
     const title = state.selectedItem.text || ''
 
     const errors = {
-      ...validateTitle(
-        'title',
-        'title',
-        '$t(list.item.title)',
-        title,
-        i18nProp
-      ),
-
-      ...validateNotEmpty(
-        'value',
-        'value',
-        '$t(list.item.value)',
-        value,
-        i18nProp
-      )
+      ...validateTitle('title', 'title', i18n('list.item.title'), title),
+      ...validateNotEmpty('value', 'value', i18n('list.item.value'), value)
     }
 
     const valErrors = hasValidationErrors(errors)
