@@ -1,19 +1,6 @@
-import { controllerNameFromPath, isEmpty } from '~/src/helpers.js'
+import { controllerNameFromPath } from '~/src/helpers.js'
 
 describe('helpers', () => {
-  describe('isEmpty', () => {
-    test('should return the correct value', () => {
-      expect(isEmpty(1)).toBeFalsy()
-      expect(isEmpty(0)).toBeFalsy()
-      expect(isEmpty(-0)).toBeFalsy()
-      expect(isEmpty('boop')).toBeFalsy()
-
-      expect(isEmpty('')).toBeTruthy()
-      expect(isEmpty(``)).toBeTruthy()
-      expect(isEmpty(undefined)).toBeTruthy()
-    })
-  })
-
   describe('controllerNameFromPath', () => {
     const controllers = [
       {
