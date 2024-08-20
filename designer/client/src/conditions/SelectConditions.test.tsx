@@ -63,8 +63,7 @@ describe('SelectConditions', () => {
               type: ComponentType.YesNoField,
               options: {
                 required: true
-              },
-              schema: {}
+              }
             }
           ],
           next: [
@@ -88,8 +87,7 @@ describe('SelectConditions', () => {
               type: ComponentType.Html,
               content:
                 '<p class="govuk-body">If you still think you’re eligible please contact the Foreign and Commonwealth Office.</p>',
-              options: {},
-              schema: {}
+              options: {}
             }
           ],
           next: []
@@ -105,8 +103,7 @@ describe('SelectConditions', () => {
               options: {
                 classes: 'govuk-input--width-10',
                 required: true
-              },
-              schema: {}
+              }
             }
           ],
           next: [

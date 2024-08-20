@@ -88,8 +88,7 @@ describe('ComponentCreate:', () => {
                   type: ComponentType.Details,
                   name: expect.any(String),
                   content: 'content',
-                  options: {},
-                  schema: {}
+                  options: {}
                 }
               ]
             })

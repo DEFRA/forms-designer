@@ -73,7 +73,6 @@ interface ListFieldBase {
     bold?: boolean
   }
   list: string
-  schema: object
 }
 
 interface ContentFieldBase {
@@ -84,7 +83,6 @@ interface ContentFieldBase {
   options: {
     condition?: string
   }
-  schema: object
 }
 
 interface DateFieldBase {
@@ -98,7 +96,6 @@ interface DateFieldBase {
     maxDaysInPast?: number
     maxDaysInFuture?: number
   }
-  schema: object
 }
 
 // Text Fields

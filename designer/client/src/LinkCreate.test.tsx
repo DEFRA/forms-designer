@@ -24,8 +24,7 @@ const data = {
           type: ComponentType.YesNoField,
           options: {
             required: true
-          },
-          schema: {}
+          }
         }
       ]
     },
