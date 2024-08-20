@@ -77,7 +77,7 @@ describe('ComponentCreate:', () => {
     await waitFor(() => expect(save).toHaveBeenCalled())
 
     expect(save.mock.calls[0]).toEqual(
-      expect.arrayContaining([
+      expect.arrayContaining<FormDefinition>([
         {
           ...data,
           pages: [
