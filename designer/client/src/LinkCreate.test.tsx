@@ -192,7 +192,7 @@ describe('LinkCreate', () => {
     await waitFor(() => expect(save).toHaveBeenCalledTimes(1))
 
     expect(save.mock.calls[0]).toEqual(
-      expect.arrayContaining([
+      expect.arrayContaining<FormDefinition>([
         {
           ...updated,
           pages: [
@@ -225,7 +225,7 @@ describe('LinkCreate', () => {
     await waitFor(() => expect(save).toHaveBeenCalledTimes(2))
 
     expect(save.mock.calls[1]).toEqual(
-      expect.arrayContaining([
+      expect.arrayContaining<FormDefinition>([
         {
           ...updated,
           pages: [
