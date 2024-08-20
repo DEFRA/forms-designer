@@ -8,6 +8,7 @@ export {
   hasSelectionFields,
   hasTitle,
   isConditionalType,
+  isContentType,
   isListType
 } from '~/src/components/helpers.js'
 
