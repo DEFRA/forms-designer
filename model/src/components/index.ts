@@ -4,11 +4,14 @@ export {
   hasConditionSupport,
   hasContent,
   hasContentField,
+  hasFormField,
+  hasHint,
   hasListField,
   hasSelectionFields,
   hasTitle,
   isConditionalType,
   isContentType,
+  isFormType,
   isListType
 } from '~/src/components/helpers.js'
 
