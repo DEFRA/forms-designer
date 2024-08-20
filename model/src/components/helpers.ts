@@ -5,6 +5,7 @@ import {
   type ConditionalComponentsDef,
   type ConditionalComponentType,
   type ContentComponentsDef,
+  type FormComponentsDef,
   type HtmlComponent,
   type InsetTextComponent,
   type ListComponent,
@@ -87,6 +88,21 @@ export function isContentType(
 }
 
 /**
+ * Filter known components with form fields
+ */
+export function hasFormField(
+  component?: Partial<ComponentDef>
+): component is FormComponentsDef {
+  return isFormType(component?.type)
+}
+
+export function isFormType(
+  type?: ComponentType
+): type is FormComponentsDef['type'] {
+  return !!type && !isContentType(type)
+}
+
+/**
  * Filter known components with lists
  */
 export function hasListField(
@@ -134,4 +150,13 @@ export function hasTitle(
 ): component is Exclude<ComponentDef, InsetTextComponent | HtmlComponent> {
   const deniedTypes = [ComponentType.InsetText, ComponentType.Html]
   return !!component?.type && !deniedTypes.includes(component.type)
+}
+
+/**
+ * Filter known components with hint text
+ */
+export function hasHint(
+  component?: Partial<ComponentDef>
+): component is FormComponentsDef | ListComponent {
+  return isFormType(component?.type) || component?.type === ComponentType.List
 }
