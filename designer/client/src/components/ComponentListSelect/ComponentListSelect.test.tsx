@@ -21,8 +21,7 @@ describe('ComponentListSelect', () => {
             type: ComponentType.RadiosField,
             options: {
               required: true
-            },
-            schema: {}
+            }
           }
         ]
       }

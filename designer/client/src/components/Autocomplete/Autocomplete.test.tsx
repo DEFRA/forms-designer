@@ -19,8 +19,7 @@ describe('AutocompleteField', () => {
         title: 'Test CSS class',
         list: 'Test list',
         type: ComponentType.AutocompleteField,
-        options: {},
-        schema: {}
+        options: {}
       }
     }
 

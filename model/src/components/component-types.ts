@@ -26,60 +26,53 @@ export const ComponentTypes: ComponentDef[] = [
     title: 'Yes/No field',
     type: ComponentType.YesNoField,
     hint: '',
-    options: {},
-    schema: {}
+    options: {}
   },
   {
     name: 'DatePartsField',
     title: 'Date field',
     type: ComponentType.DatePartsField,
     hint: '',
-    options: {},
-    schema: {}
+    options: {}
   },
   {
     name: 'MonthYearField',
     title: 'Month & year field',
     type: ComponentType.MonthYearField,
     hint: '',
-    options: {},
-    schema: {}
+    options: {}
   },
   {
     name: 'SelectField',
     title: 'Select field',
     type: ComponentType.SelectField,
     hint: '',
-    options: {},
-    schema: {},
-    list: ''
+    list: '',
+    options: {}
   },
   {
     name: 'AutocompleteField',
     title: 'Autocomplete field',
     type: ComponentType.AutocompleteField,
     hint: '',
-    options: {},
-    schema: {},
-    list: ''
+    list: '',
+    options: {}
   },
   {
     name: 'RadiosField',
     title: 'Radios field',
     type: ComponentType.RadiosField,
     hint: '',
-    options: {},
-    schema: {},
-    list: ''
+    list: '',
+    options: {}
   },
   {
     name: 'CheckboxesField',
     title: 'Checkboxes field',
     type: ComponentType.CheckboxesField,
     hint: '',
-    options: {},
-    schema: {},
-    list: ''
+    list: '',
+    options: {}
   },
   {
     name: 'NumberField',
@@ -94,55 +87,47 @@ export const ComponentTypes: ComponentDef[] = [
     title: 'UK address field',
     type: ComponentType.UkAddressField,
     hint: '',
-    options: {},
-    schema: {}
+    options: {}
   },
   {
     name: 'TelephoneNumberField',
     title: 'Telephone number field',
     type: ComponentType.TelephoneNumberField,
     hint: '',
-    options: {},
-    schema: {}
+    options: {}
   },
   {
     name: 'EmailAddressField',
     title: 'Email address field',
     type: ComponentType.EmailAddressField,
     hint: 'For example, ‘name@example.com’',
-    options: {},
-    schema: {}
+    options: {}
   },
   {
     name: 'Html',
     title: 'Html',
     type: ComponentType.Html,
     content: '',
-    options: {},
-    schema: {}
+    options: {}
   },
   {
     name: 'InsetText',
     title: 'Inset text',
     type: ComponentType.InsetText,
-    content: '',
-    options: {},
-    schema: {}
+    content: ''
   },
   {
     name: 'Details',
     title: 'Details',
     type: ComponentType.Details,
     content: '',
-    options: {},
-    schema: {}
+    options: {}
   },
   {
     name: 'List',
     title: 'List',
     type: ComponentType.List,
-    options: {},
-    schema: {},
-    list: ''
+    list: '',
+    options: {}
   }
 ]

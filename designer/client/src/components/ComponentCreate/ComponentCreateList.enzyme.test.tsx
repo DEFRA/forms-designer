@@ -44,8 +44,7 @@ describe('ComponentCreateList', () => {
           title: 'Details',
           type: ComponentType.Details,
           content: '',
-          options: {},
-          schema: {}
+          options: {}
         }
       ])
     )
@@ -96,9 +95,8 @@ describe('ComponentCreateList', () => {
           name: 'DatePartsField',
           title: 'Date field',
           type: ComponentType.DatePartsField,
-          options: {},
-          schema: {},
-          hint: ''
+          hint: '',
+          options: {}
         }
       ])
     )
@@ -145,11 +143,10 @@ describe('ComponentCreateList', () => {
         {
           name: 'AutocompleteField',
           title: 'Autocomplete field',
-          list: '',
           type: ComponentType.AutocompleteField,
-          options: {},
-          schema: {},
-          hint: ''
+          hint: '',
+          list: '',
+          options: {}
         }
       ])
     )

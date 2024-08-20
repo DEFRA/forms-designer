@@ -23,8 +23,7 @@ describe('LinkEdit', () => {
             name: 'field1',
             title: 'Something',
             type: ComponentType.YesNoField,
-            options: {},
-            schema: {}
+            options: {}
           }
         ],
         next: [{ path: '/2' }]
