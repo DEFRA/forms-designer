@@ -119,3 +119,8 @@ export interface FormResponse {
   slug: FormMetadata['slug']
   status: string
 }
+
+export interface FileDownload {
+  fileId: string
+  token: string
+}
