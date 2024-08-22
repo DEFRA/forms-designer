@@ -1,6 +1,7 @@
-export function unauthorisedViewModel() {
-  const pageTitle = 'You do not have access to this service'
-
+/**
+ * @param {string} pageTitle
+ */
+export function errorViewModel(pageTitle) {
   return {
     pageTitle,
     pageHeading: {

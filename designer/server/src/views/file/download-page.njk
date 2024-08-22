@@ -1,0 +1,37 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% block beforeContent %}
+  {{ govukBackLink(backLink) }}
+{% endblock %}
+
+{% block content %}
+  <form method="post" novalidate>
+    {% call appPageBody({
+      heading: pageHeading
+    }) %}
+
+    <p class="govuk-body-l">
+        To confirm the file was meant for your team, enter the email address the file was sent to.
+    </p>
+
+      {{ govukInput({
+        label: {
+          text: field.label.text,
+          classes: "govuk-label--m",
+          isPageHeading: false
+        },
+        id: field.id,
+        name: field.name,
+        value: field.value
+      }) }}
+
+      {{ govukButton({
+        text: 'Download file'
+      }) }}
+    {% endcall %}
+  </form>
+{% endblock %}
