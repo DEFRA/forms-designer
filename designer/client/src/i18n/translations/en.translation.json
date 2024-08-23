@@ -12,7 +12,15 @@
   "There is a problem": "There is a problem",
   "add": "Add",
   "addLink": {
-    "hint": "You can add links between different pages and set conditions for links to control the page that loads next. For example, a question page with a component for yes and no options could have link conditions based on which option a user selects.",
+    "header": {
+      "hint": "You can add links between different pages and set conditions for links to control the page that loads next. For example, a question page with a component for yes and no options could have link conditions based on which option a user selects."
+    },
+    "linkFrom": {
+      "title": "Link from"
+    },
+    "linkTo": {
+      "title": "Link to"
+    },
     "noFieldsAvailable": "You cannot add any conditions as there are no components on the page you wish to link from. Add a component, such as an Input or a Selection field, and then add a condition."
   },
   "addPage": {
@@ -133,6 +141,7 @@
   "error": "Error",
   "errors": {
     "required": "Enter {{field, lowerFirst}}",
+    "unique": "{{field, upperFirst}} must not match",
     "spaces": "{{field, upperFirst}} must not include spaces",
     "duplicate": "{{field, upperFirst}} already exists"
   },

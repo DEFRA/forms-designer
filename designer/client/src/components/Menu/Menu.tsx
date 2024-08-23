@@ -3,7 +3,7 @@ import { highlightAll } from 'prismjs'
 import React, { useContext } from 'react'
 
 import { DeclarationEdit } from '~/src/DeclarationEdit.jsx'
-import { LinkCreate } from '~/src/LinkCreate.jsx'
+import { LinkEdit } from '~/src/LinkEdit.jsx'
 import { PageCreate } from '~/src/PageCreate.jsx'
 import { DataPrettyPrint } from '~/src/components/DataPrettyPrint/DataPrettyPrint.jsx'
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
@@ -156,7 +156,7 @@ export function Menu({ slug }: Props) {
       {link.isVisible && (
         <RenderInPortal>
           <Flyout title={i18n('menu.links')} onHide={link.hide}>
-            <LinkCreate onSave={link.hide} />
+            <LinkEdit onSave={link.hide} />
           </Flyout>
         </RenderInPortal>
       )}
