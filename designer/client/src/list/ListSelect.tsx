@@ -64,7 +64,7 @@ export function ListSelect() {
             })
           }}
         >
-          {i18n('list.newTitle')}
+          {i18n('list.add')}
         </button>
       </div>
     </>

@@ -141,7 +141,7 @@ export function ComponentListSelect() {
             onClick={handleEditList}
             href="#"
           >
-            {i18n('list.edit', { title: selectedList.title })}
+            {i18n('list.edit')}
           </a>
         )}
         <a
@@ -149,7 +149,7 @@ export function ComponentListSelect() {
           onClick={handleAddList}
           href="#"
         >
-          {i18n('list.addNew')}
+          {i18n('list.add')}
         </a>
       </p>
     </div>

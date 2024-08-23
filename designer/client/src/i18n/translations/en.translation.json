@@ -197,10 +197,10 @@
   },
   "leaveDesigner": "Are you sure you want to leave the Designer? If you have unsaved changes they will be lost.",
   "list": {
-    "add": "Add list",
-    "addNew": "Add a new list",
+    "add": "Add a new list",
     "addOrEdit": "Add or edit lists",
-    "edit": "Edit {{title, lowerFirst}}",
+    "edit": "Edit list",
+    "editTitle": "Edit list {{title, lowerFirst}}",
     "errors": {
       "empty": "The list must have list items",
       "select": "Select a list"
@@ -210,11 +210,11 @@
       "manage": "Lists you have created appear on this screen. From here you can manage the lists available for your form."
     },
     "item": {
-      "add": "Add list item",
+      "add": "Add a new list item",
       "conditions": "Conditions (optional)",
       "conditionsHint": "Select a condition that determines whether to show this list item. You can create and edit conditions on the Conditions screen.",
       "createSubcomponent": "Create sub component",
-      "edit": "Edit list item",
+      "editTitle": "Edit list item {{title, lowerFirst}}",
       "help": "Help text (optional)",
       "helpHint": "Enter the description to show for this list item",
       "subComponent": "Sub component (optional)",
@@ -227,7 +227,6 @@
     "items": {
       "title": "List items"
     },
-    "newTitle": "Add a new list",
     "select": {
       "helpText": "Select an existing list to show in this field or add a new list",
       "title": "Select list",
@@ -307,7 +306,7 @@
   "section": {
     "create": "Create section",
     "edit": "Edit section",
-    "editingTitle": "Editing {{title, lowerFirst}}",
+    "editingTitle": "Edit {{title, lowerFirst}}",
     "newTitle": "Add a new section",
     "noun": "section",
     "noun_plural": "sections"

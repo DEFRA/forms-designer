@@ -30,13 +30,13 @@ const useListsEdit = () => {
 
   const listTitle = selectedList?.isNew
     ? i18n('list.add')
-    : i18n('list.edit', {
+    : i18n('list.editTitle', {
         title: initialTitle ?? selectedList?.title
       })
 
   const itemTitle = selectedItem?.isNew
     ? i18n('list.item.add')
-    : i18n('list.item.edit', {
+    : i18n('list.item.editTitle', {
         title: initialItemText ?? selectedItem?.text
       })
 
