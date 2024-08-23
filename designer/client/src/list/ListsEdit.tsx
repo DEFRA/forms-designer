@@ -23,8 +23,8 @@ const useListsEdit = () => {
   const { state } = useContext(ListContext)
   const { selectedList, selectedItem } = state
 
-  const closeFlyout = (action: ListsEditorStateActions) => {
-    return () => listsEditorDispatch([action, false])
+  const closeFlyout = (type: ListsEditorStateActions) => {
+    return () => listsEditorDispatch({ name: type, payload: false })
   }
 
   const listTitle = selectedList?.isNew

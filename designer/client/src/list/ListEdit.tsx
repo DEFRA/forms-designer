@@ -22,6 +22,7 @@ import { ListActions } from '~/src/reducers/listActions.jsx'
 import {
   ListContext,
   type FormList,
+  type ListContextType,
   type ListState
 } from '~/src/reducers/listReducer.jsx'
 import {
@@ -30,12 +31,21 @@ import {
   hasValidationErrors
 } from '~/src/validations.js'
 
-const useListItemActions = (state, dispatch) => {
+const useListItemActions = (
+  state: ListState,
+  dispatch: ListContextType['dispatch']
+) => {
   const { dispatch: listsEditorDispatch } = useContext(ListsEditorContext)
 
   function createItem() {
-    dispatch({ type: ListActions.ADD_LIST_ITEM })
-    listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST_ITEM, true])
+    dispatch({
+      name: ListActions.ADD_LIST_ITEM
+    })
+
+    listsEditorDispatch({
+      name: ListsEditorStateActions.IS_EDITING_LIST_ITEM,
+      payload: true
+    })
   }
 
   return {
@@ -68,7 +78,10 @@ function useListEdit() {
       }
     }
 
-    listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST, false])
+    listsEditorDispatch({
+      name: ListsEditorStateActions.IS_EDITING_LIST,
+      payload: false
+    })
   }
 
   function validate(payload: Partial<FormList>): payload is FormList {
@@ -86,7 +99,7 @@ function useListEdit() {
     })
 
     dispatch({
-      type: ListActions.LIST_VALIDATION_ERRORS,
+      name: ListActions.LIST_VALIDATION_ERRORS,
       payload: errors
     })
 
@@ -119,9 +132,13 @@ function useListEdit() {
 
     await save(copy)
 
-    listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST, false])
+    listsEditorDispatch({
+      name: ListsEditorStateActions.IS_EDITING_LIST,
+      payload: false
+    })
+
     dispatch({
-      type: ListActions.SUBMIT
+      name: ListActions.SUBMIT
     })
   }
 
@@ -159,7 +176,7 @@ export function ListEdit() {
             value={selectedList.title}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               dispatch({
-                type: ListActions.EDIT_TITLE,
+                name: ListActions.EDIT_TITLE,
                 payload: e.target.value
               })
             }

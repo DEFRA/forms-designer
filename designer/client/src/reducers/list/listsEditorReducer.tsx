@@ -1,4 +1,9 @@
-import React, { createContext, useReducer, type Dispatch } from 'react'
+import React, {
+  createContext,
+  useReducer,
+  type Dispatch,
+  type ReactNode
+} from 'react'
 
 import { type ListsEdit } from '~/src/list/ListsEdit.jsx'
 
@@ -22,9 +27,14 @@ export function initListsEditingState(): ListsEditorState {
   }
 }
 
+export interface ReducerActions {
+  name: ListsEditorStateActions
+  payload: boolean
+}
+
 export interface ListsEditorContextType {
   state: ListsEditorState
-  dispatch: Dispatch<[ListsEditorStateActions, boolean | string]>
+  dispatch: Dispatch<ReducerActions>
 }
 
 export const ListsEditorContext = createContext<ListsEditorContextType>({
@@ -38,20 +48,29 @@ ListsEditorContext.displayName = 'ListsEditorContext'
  * Responsible for which list editing screens should be open in {@link ListsEdit} component.
  */
 export function listsEditorReducer(
-  state,
-  action: [ListsEditorStateActions, boolean | string]
+  state: ListsEditorState,
+  action: ReducerActions
 ): ListsEditorState {
-  const [type, payload] = action
+  const stateNew = structuredClone(state)
 
-  switch (type) {
-    case ListsEditorStateActions.IS_EDITING_LIST:
-      return { ...state, isEditingList: payload }
-    case ListsEditorStateActions.IS_EDITING_LIST_ITEM:
-      return { ...state, isEditingListItem: payload }
+  const { name, payload } = action
+
+  if (name === ListsEditorStateActions.IS_EDITING_LIST) {
+    stateNew.isEditingList = payload
   }
+
+  if (name === ListsEditorStateActions.IS_EDITING_LIST_ITEM) {
+    stateNew.isEditingListItem = payload
+  }
+
+  return stateNew
 }
 
-export const ListsEditorContextProvider = (props) => {
+interface Props {
+  children: ReactNode
+}
+
+export const ListsEditorContextProvider = (props: Props) => {
   const [state, dispatch] = useReducer(
     listsEditorReducer,
     initListsEditingState()

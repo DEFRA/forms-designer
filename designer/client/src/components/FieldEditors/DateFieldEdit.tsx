@@ -54,8 +54,9 @@ export function DateFieldEdit({ context = ComponentContext }: Props) {
             type="number"
             onChange={(e) =>
               dispatch({
-                type: Options.EDIT_OPTIONS_MAX_DAYS_IN_PAST,
-                payload: e.target.value
+                name: Options.EDIT_OPTIONS_MAX_DAYS_IN_PAST,
+                payload: e.target.valueAsNumber,
+                as: selectedComponent
               })
             }
           />
@@ -81,8 +82,9 @@ export function DateFieldEdit({ context = ComponentContext }: Props) {
             type="number"
             onChange={(e) =>
               dispatch({
-                type: Options.EDIT_OPTIONS_MAX_DAYS_IN_FUTURE,
-                payload: e.target.value
+                name: Options.EDIT_OPTIONS_MAX_DAYS_IN_FUTURE,
+                payload: e.target.valueAsNumber,
+                as: selectedComponent
               })
             }
           />

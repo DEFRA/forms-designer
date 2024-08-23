@@ -4,7 +4,8 @@ import { fieldsReducer } from '~/src/reducers/component/componentReducer.fields.
 import {
   componentReducer,
   getSubReducer,
-  type ComponentState
+  type ComponentState,
+  type ReducerActions
 } from '~/src/reducers/component/componentReducer.jsx'
 import { metaReducer } from '~/src/reducers/component/componentReducer.meta.js'
 import { optionsReducer } from '~/src/reducers/component/componentReducer.options.js'
@@ -40,9 +41,10 @@ describe('Component reducer', () => {
   test('componentReducer sets hasValidated: false', () => {
     const title = 'Updated title'
 
-    const action = {
-      type: Fields.EDIT_TITLE,
-      payload: title
+    const action: ReducerActions = {
+      name: Fields.EDIT_TITLE,
+      payload: title,
+      as: component
     }
 
     const state: ComponentState = {
@@ -59,8 +61,8 @@ describe('Component reducer', () => {
   })
 
   test('componentReducer sets hasValidated: true', () => {
-    const action = {
-      type: Meta.VALIDATE
+    const action: ReducerActions = {
+      name: Meta.VALIDATE
     }
 
     const state: ComponentState = {

@@ -16,11 +16,16 @@ export function ListSelect() {
 
   const editList = (e, list) => {
     e.preventDefault()
+
     listDispatch({
-      type: ListActions.SET_SELECTED_LIST,
+      name: ListActions.SET_SELECTED_LIST,
       payload: list
     })
-    listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST, true])
+
+    listsEditorDispatch({
+      name: ListsEditorStateActions.IS_EDITING_LIST,
+      payload: true
+    })
   }
 
   return (
@@ -47,8 +52,15 @@ export function ListSelect() {
           type="button"
           onClick={(e) => {
             e.preventDefault()
-            listDispatch({ type: ListActions.ADD_NEW_LIST })
-            listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST, true])
+
+            listDispatch({
+              name: ListActions.ADD_NEW_LIST
+            })
+
+            listsEditorDispatch({
+              name: ListsEditorStateActions.IS_EDITING_LIST,
+              payload: true
+            })
           }}
         >
           {i18n('list.newTitle')}

@@ -29,124 +29,147 @@ export interface FormItem {
   selectedItem: Item & { isNew?: true }
 }
 
+export type ListReducerActions =
+  | {
+      name:
+        | ListActions.ADD_NEW_LIST
+        | ListActions.ADD_LIST_ITEM
+        | ListActions.SUBMIT
+      payload?: undefined
+    }
+  | {
+      name: ListActions.SET_SELECTED_LIST
+      payload: List
+    }
+  | {
+      name:
+        | ListActions.EDIT_TITLE
+        | ListActions.EDIT_LIST_ITEM_TEXT
+        | ListActions.EDIT_LIST_ITEM_VALUE
+      payload: string
+    }
+  | {
+      name:
+        | ListActions.EDIT_LIST_ITEM_DESCRIPTION
+        | ListActions.EDIT_LIST_ITEM_CONDITION
+      payload?: string
+    }
+  | {
+      name: ListActions.EDIT_LIST_ITEM
+      payload: Item
+    }
+  | {
+      name: ListActions.LIST_ITEM_VALIDATION_ERRORS
+      payload: Exclude<ListState['listItemErrors'], undefined>
+    }
+  | {
+      name: ListActions.LIST_VALIDATION_ERRORS
+      payload: Exclude<ListState['errors'], undefined>
+    }
+
 export interface ListContextType {
   state: ListState
-  dispatch: Dispatch<Parameters<typeof listReducer>[1]>
+  dispatch: Dispatch<ListReducerActions>
 }
 
 export const ListContext = createContext<ListContextType>({
-  state: {} as ListState,
+  state: {
+    errors: {},
+    listItemErrors: {}
+  },
   dispatch: () => ({})
 })
 
 /**
  * Allows mutation of the {@link List} from any component that is nested within {@link ListContextProvider}
  */
-export function listReducer(
-  state: ListState,
-  action: {
-    type: ListActions
-    payload?: unknown
+export function listReducer(state: ListState, action: ListReducerActions) {
+  const stateNew = structuredClone(state)
+
+  const { selectedList, selectedItem } = stateNew
+  const { name, payload } = action
+
+  if (name === ListActions.ADD_NEW_LIST) {
+    const listId = randomId()
+
+    stateNew.initialName = listId
+    stateNew.selectedList = {
+      title: '',
+      name: listId,
+      type: 'string',
+      items: [],
+      isNew: true
+    }
+
+    stateNew.errors = {}
   }
-): ListState {
-  const { type, payload } = action
-  const { selectedList, selectedItem } = state
 
-  switch (type) {
-    case ListActions.ADD_NEW_LIST: {
-      const listId = randomId()
-      return {
-        selectedList: {
-          title: '',
-          name: listId,
-          type: 'string',
-          items: [],
-          isNew: true
-        },
-        initialName: listId,
-        errors: {},
-        listItemErrors: {}
-      }
-    }
-
-    case ListActions.SET_SELECTED_LIST:
-      return {
-        ...state,
-        selectedList: payload,
-        initialName: payload?.name || state.initialName,
-        initialTitle: payload?.title,
-        errors: {},
-        listItemErrors: {}
-      }
-
-    case ListActions.EDIT_TITLE:
-      return { ...state, selectedList: { ...selectedList, title: payload } }
-
-    case ListActions.ADD_LIST_ITEM:
-      return { ...state, selectedItem: { isNew: true }, listItemErrors: {} }
-
-    case ListActions.EDIT_LIST_ITEM: {
-      let selectedItem, selectedItemIndex
-      if (typeof payload === 'number') {
-        selectedItem = selectedList?.items[payload]
-      } else {
-        selectedItem = payload
-        selectedItemIndex = selectedList?.items.findIndex(
-          (item) => item === payload
-        )
-      }
-      return {
-        ...state,
-        selectedItem,
-        selectedItemIndex,
-        listItemErrors: {}
-      }
-    }
-
-    case ListActions.EDIT_LIST_ITEM_TEXT:
-      return {
-        ...state,
-        selectedItem: { ...selectedItem, text: payload }
-      }
-
-    case ListActions.EDIT_LIST_ITEM_DESCRIPTION: {
-      return {
-        ...state,
-        selectedItem: { ...selectedItem, description: payload }
-      }
-    }
-
-    case ListActions.EDIT_LIST_ITEM_VALUE: {
-      return { ...state, selectedItem: { ...selectedItem, value: payload } }
-    }
-
-    case ListActions.EDIT_LIST_ITEM_CONDITION: {
-      return {
-        ...state,
-        selectedItem: { ...selectedItem, condition: payload }
-      }
-    }
-
-    case ListActions.LIST_ITEM_VALIDATION_ERRORS: {
-      return {
-        ...state,
-        listItemErrors: payload
-      }
-    }
-
-    case ListActions.LIST_VALIDATION_ERRORS: {
-      return {
-        ...state,
-        errors: payload
-      }
-    }
-
-    case ListActions.SUBMIT:
-      return {
-        ...state,
-        errors: {}
-      }
+  if (name === ListActions.SET_SELECTED_LIST) {
+    stateNew.initialName = payload.name || state.initialName
+    stateNew.initialTitle = payload.title
+    stateNew.selectedList = payload
   }
+
+  if (name === ListActions.LIST_VALIDATION_ERRORS) {
+    stateNew.errors = payload
+  }
+
+  if (name === ListActions.SUBMIT) {
+    stateNew.errors = {}
+  }
+
+  if (!selectedList) {
+    return stateNew
+  }
+
+  if (name === ListActions.EDIT_TITLE) {
+    selectedList.title = payload
+  }
+
+  if (name === ListActions.ADD_LIST_ITEM) {
+    stateNew.selectedItem = {
+      text: '',
+      value: '',
+      isNew: true
+    }
+
+    stateNew.listItemErrors = {}
+  }
+
+  if (name === ListActions.EDIT_LIST_ITEM) {
+    stateNew.selectedItem = payload
+    stateNew.selectedItemIndex = selectedList.items.findIndex(
+      (item) => item === payload
+    )
+
+    stateNew.listItemErrors = {}
+  }
+
+  if (name === ListActions.LIST_ITEM_VALIDATION_ERRORS) {
+    stateNew.listItemErrors = payload
+  }
+
+  if (!selectedItem) {
+    return stateNew
+  }
+
+  if (name === ListActions.EDIT_LIST_ITEM_TEXT) {
+    selectedItem.text = payload
+  }
+
+  if (name === ListActions.EDIT_LIST_ITEM_DESCRIPTION) {
+    selectedItem.description = payload
+  }
+
+  if (name === ListActions.EDIT_LIST_ITEM_VALUE) {
+    selectedItem.value = payload
+  }
+
+  if (name === ListActions.EDIT_LIST_ITEM_CONDITION) {
+    selectedItem.condition = payload
+  }
+
+  return stateNew
 }
 
 /**

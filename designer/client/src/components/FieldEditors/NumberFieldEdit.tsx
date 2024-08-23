@@ -49,8 +49,9 @@ export function NumberFieldEdit({ context = ComponentContext }: Props) {
             type="number"
             onChange={(e) =>
               dispatch({
-                type: Schema.EDIT_SCHEMA_MIN,
-                payload: e.target.value
+                name: Schema.EDIT_SCHEMA_MIN,
+                payload: e.target.valueAsNumber,
+                as: selectedComponent
               })
             }
           />
@@ -76,8 +77,9 @@ export function NumberFieldEdit({ context = ComponentContext }: Props) {
             type="string"
             onBlur={(e) =>
               dispatch({
-                type: Options.EDIT_OPTIONS_PREFIX,
-                payload: e.target.value
+                name: Options.EDIT_OPTIONS_PREFIX,
+                payload: e.target.value,
+                as: selectedComponent
               })
             }
           />
@@ -103,8 +105,9 @@ export function NumberFieldEdit({ context = ComponentContext }: Props) {
             type="string"
             onBlur={(e) =>
               dispatch({
-                type: Options.EDIT_OPTIONS_SUFFIX,
-                payload: e.target.value
+                name: Options.EDIT_OPTIONS_SUFFIX,
+                payload: e.target.value,
+                as: selectedComponent
               })
             }
           />
@@ -130,8 +133,9 @@ export function NumberFieldEdit({ context = ComponentContext }: Props) {
             type="number"
             onBlur={(e) =>
               dispatch({
-                type: Schema.EDIT_SCHEMA_MAX,
-                payload: e.target.value
+                name: Schema.EDIT_SCHEMA_MAX,
+                payload: e.target.valueAsNumber,
+                as: selectedComponent
               })
             }
           />
@@ -157,8 +161,9 @@ export function NumberFieldEdit({ context = ComponentContext }: Props) {
             type="number"
             onBlur={(e) =>
               dispatch({
-                type: Schema.EDIT_SCHEMA_PRECISION,
-                payload: e.target.value
+                name: Schema.EDIT_SCHEMA_PRECISION,
+                payload: e.target.valueAsNumber,
+                as: selectedComponent
               })
             }
           />

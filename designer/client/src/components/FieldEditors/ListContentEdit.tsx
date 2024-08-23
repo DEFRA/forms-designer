@@ -54,8 +54,9 @@ export function ListContentEdit({ context = ComponentContext }: Props) {
                       }
                       onClick={() => {
                         dispatch({
-                          type: Options.EDIT_OPTIONS_TYPE,
-                          payload: bullet
+                          name: Options.EDIT_OPTIONS_TYPE,
+                          payload: bullet,
+                          as: selectedComponent
                         })
                       }}
                     />

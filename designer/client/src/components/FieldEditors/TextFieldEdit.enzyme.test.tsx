@@ -33,21 +33,21 @@ describe('TextField renders correctly when', () => {
   test('schema length changes', () => {
     const field = () => wrapper.find('#field-schema-length').first()
     const length = 1337
-    field().simulate('change', { target: { value: length } })
+    field().simulate('change', { target: { valueAsNumber: length } })
     expect(field().props().value).toBe(length)
   })
 
   test('schema min length changes', () => {
     const field = () => wrapper.find('#field-schema-min').first()
     const length = 42
-    field().simulate('change', { target: { value: length } })
+    field().simulate('change', { target: { valueAsNumber: length } })
     expect(field().props().value).toBe(length)
   })
 
   test('schema max length changes', () => {
     const field = () => wrapper.find('#field-schema-max').first()
     const length = 42
-    field().simulate('change', { target: { value: length } })
+    field().simulate('change', { target: { valueAsNumber: length } })
     expect(field().props().value).toBe(length)
   })
 
