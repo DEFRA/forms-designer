@@ -11,19 +11,21 @@ import { ErrorMessage } from '~/src/components/ErrorMessage/ErrorMessage.jsx'
 import { SelectConditions } from '~/src/conditions/SelectConditions.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { addLink } from '~/src/data/page/addLink.js'
-import { isEmpty } from '~/src/helpers.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
-import { hasValidationErrors } from '~/src/validations.js'
+import { validateRequired, hasValidationErrors } from '~/src/validations.js'
 
 interface Props {
   onSave: () => void
 }
 
-interface State {
-  from?: string
-  to?: string
+interface State extends Partial<Form> {
   selectedCondition?: string
   errors?: Partial<ErrorList<'from' | 'to' | 'selectedCondition'>>
+}
+
+interface Form {
+  from: string
+  to: string
 }
 
 export class LinkCreate extends Component<Props, State> {
@@ -39,12 +41,19 @@ export class LinkCreate extends Component<Props, State> {
     const { data, save } = this.context
     const { from, to, selectedCondition } = this.state
 
-    const validationErrors = this.validate(from, to)
-    if (hasValidationErrors(validationErrors) || !from || !to) {
+    const payload = { from, to }
+
+    // Check for valid form payload
+    if (!this.validate(payload)) {
       return
     }
 
-    const definition = addLink(data, from, to, selectedCondition)
+    const definition = addLink(
+      data,
+      payload.from,
+      payload.to,
+      selectedCondition
+    )
 
     await save(definition)
     onSave()
@@ -56,31 +65,22 @@ export class LinkCreate extends Component<Props, State> {
     })
   }
 
-  storeValue = (e: ChangeEvent<HTMLSelectElement>, key: keyof State) => {
-    const stateUpdate: State = {}
+  storeValue = (e: ChangeEvent<HTMLSelectElement>, key: 'from' | 'to') => {
+    const stateUpdate: Pick<State, typeof key> = {}
     stateUpdate[key] = e.target.value
     this.setState(stateUpdate)
   }
 
-  validate = (from?: string, to?: string): State['errors'] => {
+  validate = (payload: Partial<Form>): payload is Form => {
+    const { from, to } = payload
+
     const errors: State['errors'] = {}
 
-    const fromIsEmpty = isEmpty(from)
-    const toIsEmpty = isEmpty(to)
+    errors.from = validateRequired('link-source', from, { label: 'From' })
+    errors.to = validateRequired('link-target', to, { label: 'To' })
 
-    if (fromIsEmpty) {
-      errors.from = { href: '#link-source', children: 'Enter from' }
-    }
-
-    if (toIsEmpty) {
-      errors.to = { href: '#link-target', children: 'Enter to' }
-    }
-
-    this.setState({
-      errors
-    })
-
-    return errors
+    this.setState({ errors })
+    return !hasValidationErrors(errors)
   }
 
   render() {
@@ -96,7 +96,7 @@ export class LinkCreate extends Component<Props, State> {
         )}
 
         <div className="govuk-hint">{i18n('addLink.hint')}</div>
-        <form onSubmit={(e) => this.onSubmit(e)} autoComplete="off">
+        <form onSubmit={this.onSubmit} autoComplete="off">
           <div
             className={classNames({
               'govuk-form-group': true,

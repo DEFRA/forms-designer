@@ -1,4 +1,4 @@
-import { type List } from '@defra/forms-model'
+import { type Item, type List } from '@defra/forms-model'
 import React, {
   createContext,
   useContext,
@@ -12,16 +12,21 @@ import { DataContext } from '~/src/context/DataContext.js'
 import randomId from '~/src/randomId.js'
 import { ListActions } from '~/src/reducers/listActions.jsx'
 
-export interface ListState {
-  selectedList?: any // TODO:- type
-  selectedItem?: any // TODO:- type
+export interface ListState extends Partial<FormList>, Partial<FormItem> {
   selectedItemIndex?: number
   isEditingFromComponent?: boolean
-  selectedListItem?: any // TODO:- type
   initialName?: string
   initialTitle?: string
   errors?: Partial<ErrorList<'title' | 'listItems'>>
   listItemErrors?: Partial<ErrorList<'title' | 'value'>>
+}
+
+export interface FormList {
+  selectedList: List & { isNew?: true }
+}
+
+export interface FormItem {
+  selectedItem: Item & { isNew?: true }
 }
 
 export interface ListContextType {
