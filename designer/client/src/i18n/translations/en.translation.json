@@ -191,7 +191,7 @@
     "add": "Add list",
     "addNew": "Add a new list",
     "addOrEdit": "Add or edit lists",
-    "edit": "Edit {{title, lowerFirst}}",
+    "edit": "Edit list {{title, lowerFirst}}",
     "errors": {
       "empty": "The list must have list items",
       "select": "Select a list"
@@ -205,7 +205,7 @@
       "conditions": "Conditions (optional)",
       "conditionsHint": "Select a condition that determines whether to show this list item. You can create and edit conditions on the Conditions screen.",
       "createSubcomponent": "Create sub component",
-      "edit": "Edit list item",
+      "edit": "Edit list item {{title, lowerFirst}}",
       "help": "Help text (optional)",
       "helpHint": "Enter the description to show for this list item",
       "subComponent": "Sub component (optional)",
@@ -298,7 +298,7 @@
   "section": {
     "create": "Create section",
     "edit": "Edit section",
-    "editingTitle": "Editing {{title, lowerFirst}}",
+    "editingTitle": "Edit {{title, lowerFirst}}",
     "newTitle": "Add a new section",
     "noun": "section",
     "noun_plural": "sections"
