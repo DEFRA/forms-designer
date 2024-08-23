@@ -9,7 +9,7 @@ import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
 describe('ComponentCreate:', () => {
   const data = {
-    pages: [{ path: '/1', title: '', controller: '', section: '' }],
+    pages: [{ path: '/1', title: '', section: '' }],
     lists: [],
     sections: [],
     conditions: []

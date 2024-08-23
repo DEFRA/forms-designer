@@ -23,7 +23,7 @@ import {
 } from '~/src/reducers/component/types.js'
 
 export interface ComponentState {
-  initialName: ComponentDef['name']
+  initialName: string
   selectedComponent?: ComponentDef
   hasValidated?: boolean
   showDeleteWarning?: boolean
