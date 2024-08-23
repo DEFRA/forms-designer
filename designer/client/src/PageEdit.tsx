@@ -29,7 +29,7 @@ interface Props {
 
 interface State {
   path: string
-  controller?: string
+  controller?: Page['controller']
   title: string
   section?: Section
   isEditingSection: boolean
@@ -165,7 +165,7 @@ export class PageEdit extends Component<Props, State> {
     const { value: controller } = e.target
 
     this.setState({
-      controller
+      controller: controller ? (controller as Page['controller']) : undefined
     })
   }
 

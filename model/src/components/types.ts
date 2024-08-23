@@ -1,4 +1,8 @@
 import { type ComponentType } from '~/src/components/enums.js'
+import {
+  type ListTypeOption,
+  type ListTypeContent
+} from '~/src/form/form-definition/types.js'
 
 export type ConditionalComponentType = Exclude<
   ConditionalComponentsDef['type'],
@@ -8,15 +12,9 @@ export type ConditionalComponentType = Exclude<
 /**
  * Types for Components JSON structure which are expected by engine and turned into actual form input/content/lists
  */
-interface TextFieldBase {
-  type:
-    | ComponentType.EmailAddressField
-    | ComponentType.MultilineTextField
-    | ComponentType.NumberField
-    | ComponentType.TelephoneNumberField
-    | ComponentType.TextField
-    | ComponentType.UkAddressField
-    | ComponentType.YesNoField
+
+interface FormFieldBase {
+  type: FormComponentsDef['type']
   name: string
   title: string
   hint?: string
@@ -24,65 +22,29 @@ interface TextFieldBase {
     required?: boolean
     optionalText?: boolean
     classes?: string
-    allow?: string
-    autocomplete?: string
-  }
-  schema: {
-    max?: number
-    min?: number
-    length?: number
-    regex?: string
-    error?: unknown
   }
 }
 
-interface NumberFieldBase {
-  type: ComponentType
-  name: string
-  title: string
-  hint?: string
-  options: {
-    required?: boolean
-    optionalText?: boolean
-    classes?: string
-    prefix?: string
-    suffix?: string
-  }
-  schema: {
-    min?: number
-    max?: number
-    precision?: number
-  }
-}
-
-interface ListFieldBase {
+interface ListFieldBase extends FormFieldBase {
   type:
     | ComponentType.AutocompleteField
     | ComponentType.CheckboxesField
-    | ComponentType.List
     | ComponentType.RadiosField
     | ComponentType.SelectField
-  name: string
-  title: string
-  hint?: string
-  options: {
-    type?: string
-    required?: boolean
-    optionalText?: boolean
-    classes?: string
-    bold?: boolean
-  }
   list: string
+  options: FormFieldBase['options'] & {
+    type?: ListTypeContent
+  }
 }
 
 interface ContentFieldBase {
-  type: ComponentType.Details | ComponentType.Html | ComponentType.InsetText
+  type:
+    | ComponentType.Details
+    | ComponentType.Html
+    | ComponentType.InsetText
+    | ComponentType.List
   name: string
   title: string
-  content: string
-  options: {
-    condition?: string
-  }
 }
 
 interface DateFieldBase {
@@ -93,39 +55,54 @@ interface DateFieldBase {
   options: {
     required?: boolean
     optionalText?: boolean
+    classes?: string
     maxDaysInPast?: number
     maxDaysInFuture?: number
   }
 }
 
 // Text Fields
-export interface TextFieldComponent extends TextFieldBase {
+export interface TextFieldComponent extends FormFieldBase {
   type: ComponentType.TextField
-  options: TextFieldBase['options'] & {
+  options: FormFieldBase['options'] & {
+    autocomplete?: string
     condition?: string
     customValidationMessage?: string
   }
+  schema: {
+    max?: number
+    min?: number
+    length?: number
+    regex?: string
+  }
 }
 
-export interface EmailAddressFieldComponent extends TextFieldBase {
+export interface EmailAddressFieldComponent extends FormFieldBase {
   type: ComponentType.EmailAddressField
-  options: TextFieldBase['options'] & {
+  options: FormFieldBase['options'] & {
     condition?: string
     customValidationMessage?: string
   }
 }
 
-export interface NumberFieldComponent extends NumberFieldBase {
+export interface NumberFieldComponent extends FormFieldBase {
   type: ComponentType.NumberField
-  options: NumberFieldBase['options'] & {
+  options: FormFieldBase['options'] & {
+    prefix?: string
+    suffix?: string
     condition?: string
     customValidationMessage?: string
   }
+  schema: {
+    max?: number
+    min?: number
+    precision?: number
+  }
 }
 
-export interface TelephoneNumberFieldComponent extends TextFieldBase {
+export interface TelephoneNumberFieldComponent extends FormFieldBase {
   type: ComponentType.TelephoneNumberField
-  options: TextFieldBase['options'] & {
+  options: FormFieldBase['options'] & {
     condition?: string
     customValidationMessage?: string
   }
@@ -138,6 +115,8 @@ export interface FileUploadFieldComponent {
   hint?: string
   options: {
     required?: boolean
+    classes?: string
+    optionalText?: boolean
     accept?: string
   }
   schema: {
@@ -147,16 +126,16 @@ export interface FileUploadFieldComponent {
   }
 }
 
-export interface YesNoFieldComponent extends TextFieldBase {
+export interface YesNoFieldComponent extends FormFieldBase {
   type: ComponentType.YesNoField
-  options: TextFieldBase['options'] & {
+  options: FormFieldBase['options'] & {
     condition?: string
   }
 }
 
-export interface MultilineTextFieldComponent extends TextFieldBase {
+export interface MultilineTextFieldComponent extends FormFieldBase {
   type: ComponentType.MultilineTextField
-  options: TextFieldBase['options'] & {
+  options: FormFieldBase['options'] & {
     condition?: string
     customValidationMessage?: string
     rows?: number
@@ -170,9 +149,9 @@ export interface MultilineTextFieldComponent extends TextFieldBase {
   }
 }
 
-export interface UkAddressFieldComponent extends TextFieldBase {
+export interface UkAddressFieldComponent extends FormFieldBase {
   type: ComponentType.UkAddressField
-  options: TextFieldBase['options'] & {
+  options: FormFieldBase['options'] & {
     hideTitle?: boolean
   }
 }
@@ -195,21 +174,34 @@ export interface MonthYearFieldComponent extends DateFieldBase {
 // Content Fields
 export interface DetailsComponent extends ContentFieldBase {
   type: ComponentType.Details
+  content: string
+  options: {
+    condition?: string
+  }
 }
 
 export interface HtmlComponent extends ContentFieldBase {
   type: ComponentType.Html
+  content: string
+  options: {
+    condition?: string
+  }
 }
 
 export interface InsetTextComponent extends ContentFieldBase {
   type: ComponentType.InsetText
+  content: string
 }
 
-// List Fields
-export interface ListComponent extends ListFieldBase {
+export interface ListComponent extends ContentFieldBase {
   type: ComponentType.List
-  options: ListFieldBase['options'] & {
+  hint?: string
+  list: string
+  options: {
+    type?: ListTypeOption
+    classes?: string
     hideTitle?: boolean
+    bold?: boolean
   }
 }
 
@@ -223,6 +215,7 @@ export interface AutocompleteFieldComponent extends ListFieldBase {
 export interface CheckboxesFieldComponent extends ListFieldBase {
   type: ComponentType.CheckboxesField
   options: ListFieldBase['options'] & {
+    bold?: boolean
     condition?: string
   }
 }
@@ -230,6 +223,7 @@ export interface CheckboxesFieldComponent extends ListFieldBase {
 export interface RadiosFieldComponent extends ListFieldBase {
   type: ComponentType.RadiosField
   options: ListFieldBase['options'] & {
+    bold?: boolean
     condition?: string
   }
 }
@@ -242,10 +236,12 @@ export interface SelectFieldComponent extends ListFieldBase {
   }
 }
 
-export type ComponentDef =
+export type ComponentDef = FormComponentsDef | ContentComponentsDef
+
+// Components that render form fields
+export type FormComponentsDef =
   | InputFieldsComponentsDef
   | SelectionComponentsDef
-  | ContentComponentsDef
 
 // Components that render inputs
 export type InputFieldsComponentsDef =
@@ -286,4 +282,5 @@ export type ConditionalComponentsDef = Exclude<
   | ListComponent
   | MonthYearFieldComponent
   | UkAddressFieldComponent
+  | FileUploadFieldComponent
 >
