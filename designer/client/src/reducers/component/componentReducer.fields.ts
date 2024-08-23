@@ -27,8 +27,7 @@ export function fieldsReducer(
         ...state,
         selectedComponent: {
           ...selectedComponent,
-          name: payload,
-          nameHasError: /\s/g.test(payload)
+          name: payload
         }
       }
     }
