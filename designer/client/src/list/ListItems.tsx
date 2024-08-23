@@ -20,7 +20,15 @@ interface Props {
 const ListItem = ({ item, removeItem, selectListItem }: Props) => {
   return (
     <tr className="govuk-table__row">
-      <td className="govuk-table__cell govuk-!-width-full">{item.text}</td>
+      <td className="govuk-table__cell govuk-!-width-full">
+        {item.text}
+        {item.description && (
+          <>
+            <br />
+            <span className="govuk-hint">{item.description}</span>
+          </>
+        )}
+      </td>
       <td className="govuk-table__cell">
         <a
           href="#"
