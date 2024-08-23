@@ -119,18 +119,20 @@ function useListEdit() {
       return
     }
 
-    let copy = { ...data }
-    if (payload.selectedList.isNew) {
-      delete payload.selectedList.isNew
-      copy = addList(copy, payload.selectedList)
-    } else {
-      const selectedListIndex = copy.lists.findIndex(
-        (list) => list.name === initialName
-      )
-      copy.lists[selectedListIndex] = payload.selectedList
+    let definition = structuredClone(data)
+    const list = structuredClone(payload.selectedList)
+
+    const { lists } = definition
+    const listIndex = lists.findIndex(({ name }) => name === initialName)
+
+    if (list.isNew) {
+      delete list.isNew
+      definition = addList(definition, list)
+    } else if (listIndex > -1) {
+      definition.lists[listIndex] = list
     }
 
-    await save(copy)
+    await save(definition)
 
     listsEditorDispatch({
       name: ListsEditorStateActions.IS_EDITING_LIST,

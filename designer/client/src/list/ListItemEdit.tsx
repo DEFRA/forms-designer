@@ -49,8 +49,7 @@ export function ListItemEdit() {
       return
     }
 
-    const copy = { ...data }
-    await save(prepareForSubmit(copy))
+    await save(prepareForSubmit(data))
 
     listsEditorDispatch({
       name: ListsEditorStateActions.IS_EDITING_LIST_ITEM,
