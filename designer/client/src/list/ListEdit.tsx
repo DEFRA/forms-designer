@@ -24,20 +24,12 @@ import { validateRequired, hasValidationErrors } from '~/src/validations.js'
 const useListItemActions = (state, dispatch) => {
   const { dispatch: listsEditorDispatch } = useContext(ListsEditorContext)
 
-  function deleteItem(e) {
-    e.preventDefault()
-    dispatch({
-      type: ListActions.DELETE_LIST_ITEM
-    })
-  }
-
   function createItem() {
     dispatch({ type: ListActions.ADD_LIST_ITEM })
     listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST_ITEM, true])
   }
 
   return {
-    deleteItem,
     createItem,
     selectedList: state.selectedList
   }

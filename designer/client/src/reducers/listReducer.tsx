@@ -9,7 +9,6 @@ import React, {
 
 import { type ErrorList } from '~/src/ErrorSummary.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
-import { arrayMove } from '~/src/helpers.js'
 import randomId from '~/src/randomId.js'
 import { ListActions } from '~/src/reducers/listActions.jsx'
 
@@ -46,28 +45,9 @@ export function listReducer(
   }
 ): ListState {
   const { type, payload } = action
-  const { selectedList, selectedItem, selectedItemIndex } = state
+  const { selectedList, selectedItem } = state
+
   switch (type) {
-    case ListActions.DELETE_LIST_ITEM: {
-      delete state.selectedListItem
-      return {
-        ...state,
-        selectedList: selectedList && {
-          ...selectedList,
-          items: selectedList.items.filter(
-            (_item, index) => index !== (payload || selectedItemIndex)
-          )
-        }
-      }
-    }
-    case ListActions.EDIT_LIST:
-      return { ...state, errors: {} }
-
-    case ListActions.DESELECT_LIST_ITEM:
-      delete state.selectedItem, state.selectedItemIndex
-
-      return { ...state }
-
     case ListActions.ADD_NEW_LIST: {
       const listId = randomId()
       return {
@@ -92,9 +72,6 @@ export function listReducer(
 
     case ListActions.EDIT_TITLE:
       return { ...state, selectedList: { ...selectedList, title: payload } }
-
-    case ListActions.EDIT_LIST_VALUE_TYPE:
-      return { ...state, selectedList: { ...selectedList, type: payload } }
 
     case ListActions.ADD_LIST_ITEM:
       return { ...state, selectedItem: { isNew: true }, listItemErrors: {} }
@@ -139,25 +116,6 @@ export function listReducer(
         ...state,
         selectedItem: { ...selectedItem, condition: payload }
       }
-    }
-
-    case ListActions.SORT_LIST_ITEM: {
-      const changedItems = arrayMove(
-        selectedList.items,
-        payload.oldIndex,
-        payload.newIndex
-      )
-      return {
-        ...state,
-        selectedList: {
-          ...selectedList,
-          items: changedItems
-        }
-      }
-    }
-
-    case ListActions.SUBMIT_LIST_ITEM: {
-      return { selectedList }
     }
 
     case ListActions.LIST_ITEM_VALIDATION_ERRORS: {
