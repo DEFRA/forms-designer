@@ -5,9 +5,17 @@ import { findList } from '~/src/data/list/findList.js'
 import { type ListItemHook } from '~/src/hooks/list/useListItem/types.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ListActions } from '~/src/reducers/listActions.jsx'
+import {
+  type FormItem,
+  type ListContextType,
+  type ListState
+} from '~/src/reducers/listReducer.jsx'
 import { validateRequired, hasValidationErrors } from '~/src/validations.js'
 
-export function useListItem(state, dispatch): ListItemHook {
+export function useListItem(
+  state: ListState,
+  dispatch: ListContextType['dispatch']
+): ListItemHook {
   const { selectedItem = {} } = state
   const { value = '', condition } = selectedItem
 
@@ -39,23 +47,25 @@ export function useListItem(state, dispatch): ListItemHook {
     })
   }
 
-  function validate() {
-    const title = state.selectedItem.text || ''
+  function validate(payload: Partial<FormItem>): payload is FormItem {
+    const { text, value } = payload.selectedItem ?? {}
 
-    const errors = {
-      ...validateRequired('title', 'title', i18n('list.item.title'), title),
-      ...validateRequired('value', 'value', i18n('list.item.value'), value)
-    }
+    const errors: ListState['listItemErrors'] = {}
 
-    const valErrors = hasValidationErrors(errors)
+    errors.title = validateRequired('title', text, {
+      label: i18n('list.item.title')
+    })
 
-    if (valErrors) {
-      dispatch({
-        type: ListActions.LIST_ITEM_VALIDATION_ERRORS,
-        payload: errors
-      })
-    }
-    return valErrors
+    errors.value = validateRequired('value', value?.toString(), {
+      label: i18n('list.item.value')
+    })
+
+    dispatch({
+      type: ListActions.LIST_ITEM_VALIDATION_ERRORS,
+      payload: errors
+    })
+
+    return !hasValidationErrors(errors)
   }
 
   function prepareForSubmit(data: FormDefinition) {

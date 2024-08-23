@@ -1,6 +1,7 @@
 import { clone } from '@defra/forms-model'
 // @ts-expect-error -- No types available
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
+import Joi from 'joi'
 import React, {
   useContext,
   type ChangeEvent,
@@ -18,8 +19,16 @@ import {
   ListsEditorStateActions
 } from '~/src/reducers/list/listsEditorReducer.jsx'
 import { ListActions } from '~/src/reducers/listActions.jsx'
-import { ListContext } from '~/src/reducers/listReducer.jsx'
-import { validateRequired, hasValidationErrors } from '~/src/validations.js'
+import {
+  ListContext,
+  type FormList,
+  type ListState
+} from '~/src/reducers/listReducer.jsx'
+import {
+  validateCustom,
+  validateRequired,
+  hasValidationErrors
+} from '~/src/validations.js'
 
 const useListItemActions = (state, dispatch) => {
   const { dispatch: listsEditorDispatch } = useContext(ListsEditorContext)
@@ -62,23 +71,19 @@ function useListEdit() {
     listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST, false])
   }
 
-  function validate() {
-    const { selectedList } = state
+  function validate(payload: Partial<FormList>): payload is FormList {
+    const { selectedList } = payload
 
     const errors: ListState['errors'] = {}
 
-    errors.title = validateRequired(
-      'title',
-      'list-title',
-      i18n('list.title'),
-      selectedList?.title
-    ).title
+    errors.title = validateRequired('list-title', selectedList?.title, {
+      label: i18n('list.title')
+    })
 
-    if (!selectedList?.items.length) {
-      errors.listItems = {
-        children: [i18n('list.errors.empty')]
-      }
-    }
+    errors.listItems = validateCustom('list-items', selectedList?.items, {
+      message: 'list.errors.empty',
+      schema: Joi.array().min(1)
+    })
 
     dispatch({
       type: ListActions.LIST_VALIDATION_ERRORS,
@@ -92,19 +97,24 @@ function useListEdit() {
     e.preventDefault()
     const { selectedList, initialName } = state
 
-    if (!validate()) {
+    const payload = {
+      selectedList
+    }
+
+    // Check for valid form payload
+    if (!validate(payload)) {
       return
     }
 
     let copy = { ...data }
-    if (selectedList?.isNew) {
-      delete selectedList.isNew
-      copy = addList(copy, selectedList)
+    if (payload.selectedList.isNew) {
+      delete payload.selectedList.isNew
+      copy = addList(copy, payload.selectedList)
     } else {
       const selectedListIndex = copy.lists.findIndex(
         (list) => list.name === initialName
       )
-      copy.lists[selectedListIndex] = selectedList
+      copy.lists[selectedListIndex] = payload.selectedList
     }
 
     await save(copy)

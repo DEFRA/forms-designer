@@ -31,20 +31,28 @@ export function ListItemEdit() {
     hint
   } = useListItem(state, dispatch)
 
+  const { conditions } = data
+  const { listItemErrors: errors = {}, selectedItem } = state
+  const hasErrors = hasValidationErrors(errors)
+
   const handleSubmit = async (
     e: FormEvent<HTMLFormElement> | MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault()
+
+    const payload = {
+      selectedItem
+    }
+
+    // Check for valid form payload
+    if (!validate(payload)) {
+      return
+    }
+
     const copy = { ...data }
-    const hasErrors = validate()
-    if (hasErrors) return
     await save(prepareForSubmit(copy))
     listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST_ITEM, false])
   }
-
-  const { conditions } = data
-  const { listItemErrors: errors = {} } = state
-  const hasErrors = hasValidationErrors(errors)
 
   return (
     <>

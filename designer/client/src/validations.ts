@@ -1,68 +1,82 @@
-import { type ErrorList } from '~/src/ErrorSummary.jsx'
-import { hasSpaces, isEmpty } from '~/src/helpers.js'
+import Joi, { type Schema } from 'joi'
+
+import { type ErrorListItem } from '~/src/ErrorSummary.jsx'
 import { i18n } from '~/src/i18n/i18n.jsx'
 
 export function hasValidationErrors(errors = {}): errors is object {
   return !!Object.values(errors).filter(Boolean).length
 }
 
-export function validateRequired<Key extends string>(
-  name: Key,
+/**
+ * Custom field validator
+ */
+export function validateCustom(
   id: string,
-  description: string,
-  value?: string
-) {
-  const errors: Partial<ErrorList<Key>> = {}
-
-  if (isEmpty(value)) {
-    const message = i18n('errors.field', {
-      field: description
-    })
-
-    errors[name] = {
-      href: `#${id}`,
-      children: [message]
-    }
+  value: ValidatorValue | undefined,
+  options: {
+    label?: string
+    message: string
+    schema: Schema
+  }
+): ErrorListItem | undefined {
+  const result = options.schema.validate(value)
+  if (!result.error) {
+    return
   }
 
-  return errors
-}
-
-export function validateNoSpaces<Key extends string>(
-  name: Key,
-  id: string,
-  description: string,
-  value?: string
-) {
-  const errors: Partial<ErrorList<Key>> = {}
-
-  if (hasSpaces(value)) {
-    const message = i18n('errors.spaces', {
-      field: description
-    })
-
-    errors[name] = {
-      href: `#${id}`,
-      children: [message]
-    }
-  }
-
-  return errors
-}
-
-export function validateName<Key extends string>(
-  name: Key,
-  id: string,
-  description: string,
-  value?: string
-) {
-  const errorRequired = validateRequired(name, id, description, value)
-  const errorNoSpaces = validateNoSpaces(name, id, description, value)
+  const message = i18n(options.message, {
+    field: options.label
+  })
 
   return {
-    ...errorRequired,
-    ...errorNoSpaces
+    href: `#${id}`,
+    children: [message]
   }
 }
+
+/**
+ * Required field validator
+ */
+export const validateRequired: Validator<string> = (id, value, options) => {
+  const message = options.message ?? 'errors.required'
+
+  return validateCustom(id, value, {
+    label: options.label,
+    message,
+    schema: Joi.string().required()
+  })
+}
+
+/**
+ * No spaces validator
+ */
+export const validateNoSpaces: Validator<string> = (id, value, options) => {
+  const message = options.message ?? 'errors.spaces'
+
+  return validateCustom(id, value, {
+    label: options.label,
+    message,
+    schema: Joi.string().regex(/\s/, { invert: true }).required()
+  })
+}
+
+/**
+ * Auto populated name validator
+ */
+export const validateName: Validator<string> = (...args) => {
+  return validateRequired(...args) ?? validateNoSpaces(...args)
+}
+
+type Validator<
+  ValueType extends ValidatorValue,
+  OptionsType = {
+    label?: string
+    message?: string
+  }
+> = (
+  id: string,
+  value: ValueType | undefined,
+  options: OptionsType
+) => ErrorListItem | undefined
 
 export type ValidatorValue = string | number | boolean | unknown[] | undefined

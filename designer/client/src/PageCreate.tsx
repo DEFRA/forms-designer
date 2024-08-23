@@ -1,6 +1,7 @@
 import { slugify, type Page, type Section } from '@defra/forms-model'
 // @ts-expect-error -- No types available
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
+import Joi from 'joi'
 import React, {
   Component,
   type ChangeEvent,
@@ -20,22 +21,29 @@ import { addPage } from '~/src/data/page/addPage.js'
 import { findSection } from '~/src/data/section/findSection.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { SectionEdit } from '~/src/section/SectionEdit.jsx'
-import { validateRequired, hasValidationErrors } from '~/src/validations.js'
+import {
+  validateCustom,
+  validateRequired,
+  hasValidationErrors
+} from '~/src/validations.js'
 
 interface Props {
   onSave: () => void
 }
 
-interface State {
-  path: string
+interface State extends Partial<Form> {
   controller?: Page['controller']
-  title: string
   section?: Section
   linkFrom?: string
   selectedCondition?: string
   isEditingSection: boolean
   isNewSection: boolean
   errors: Partial<ErrorList<'path' | 'title'>>
+}
+
+interface Form {
+  path: string
+  title: string
 }
 
 export class PageCreate extends Component<Props, State> {
@@ -46,8 +54,6 @@ export class PageCreate extends Component<Props, State> {
     super(props, context)
 
     this.state = {
-      path: '/',
-      title: '',
       isEditingSection: false,
       isNewSection: false,
       errors: {}
@@ -63,15 +69,19 @@ export class PageCreate extends Component<Props, State> {
       this.state
 
     // Remove trailing spaces and hyphens
-    const pathTrim = `/${slugify(path)}`
-    const titleTrim = title.trim()
+    const payload = {
+      path: `/${slugify(path)}`,
+      title: title?.trim()
+    }
 
-    const validationErrors = this.validate(titleTrim, pathTrim)
-    if (hasValidationErrors(validationErrors)) return
+    // Check for valid form payload
+    if (!this.validate(payload)) {
+      return
+    }
 
     const newPage: Page = {
-      path: pathTrim,
-      title: titleTrim,
+      path: payload.path,
+      title: payload.title,
       controller,
       components: [],
       section: section?.name,
@@ -81,7 +91,7 @@ export class PageCreate extends Component<Props, State> {
     let copy = addPage({ ...data }, newPage)
 
     if (linkFrom) {
-      copy = addLink(copy, linkFrom, pathTrim, selectedCondition)
+      copy = addLink(copy, linkFrom, payload.path, selectedCondition)
     }
 
     try {
@@ -92,33 +102,28 @@ export class PageCreate extends Component<Props, State> {
     }
   }
 
-  validate = (title: string, path: string) => {
+  validate = (payload: Partial<Form>): payload is Form => {
     const { data } = this.context
+    const { title, path } = payload
 
     const errors: State['errors'] = {}
 
-    errors.title = validateRequired(
-      'title',
-      'page-title',
-      i18n('page.title'),
-      title
-    ).title
+    errors.title = validateRequired('page-title', title, {
+      label: i18n('page.title')
+    })
 
-    // Check for duplicate path
-    function isDuplicate(input: string) {
-      return data.pages.some((p) => p.path === input)
-    }
-
-    if (isDuplicate(path)) {
-      errors.path = {
-        href: '#page-path',
-        children: `Path '${path}' already exists`
+    errors.path = validateCustom(
+      'page-path',
+      [path, ...data.pages.map((p) => p.path)],
+      {
+        message: 'errors.duplicate',
+        label: `Path '${path}'`,
+        schema: Joi.array().unique()
       }
-    }
+    )
 
     this.setState({ errors })
-
-    return errors
+    return !hasValidationErrors(errors)
   }
 
   onChangeSection = (e: ChangeEvent<HTMLSelectElement>) => {

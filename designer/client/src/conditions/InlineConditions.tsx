@@ -16,7 +16,7 @@ import React, {
   type MouseEvent
 } from 'react'
 
-import { ErrorSummary, type ErrorListItem } from '~/src/ErrorSummary.jsx'
+import { ErrorSummary, type ErrorList } from '~/src/ErrorSummary.jsx'
 import { ErrorMessage } from '~/src/components/ErrorMessage/ErrorMessage.jsx'
 import { InlineConditionsDefinition } from '~/src/conditions/InlineConditionsDefinition.jsx'
 import { type FieldDef } from '~/src/conditions/InlineConditionsDefinitionValue.jsx'
@@ -29,6 +29,7 @@ import { updateCondition } from '~/src/data/condition/updateCondition.js'
 import { findList } from '~/src/data/list/findList.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import randomId from '~/src/randomId.js'
+import { validateRequired, hasValidationErrors } from '~/src/validations.js'
 
 interface Props {
   path?: string
@@ -41,7 +42,11 @@ interface State {
   editView?: boolean
   conditions: ConditionsModel
   fields: Partial<Record<string, FieldDef>>
-  validationErrors: ErrorListItem[]
+  errors: Partial<ErrorList<'name'>>
+}
+
+interface Form {
+  displayName: string
 }
 
 const yesNoValues: Readonly<Item>[] = [
@@ -71,9 +76,9 @@ export class InlineConditions extends Component<Props, State> {
     conditions.name ??= condition?.displayName
 
     this.state = {
-      validationErrors: [],
       conditions,
-      fields: this.fieldsForPath(path)
+      fields: this.fieldsForPath(path),
+      errors: {}
     }
   }
 
@@ -165,25 +170,28 @@ export class InlineConditions extends Component<Props, State> {
     const { data, save } = this.context
     const { conditions } = this.state
 
-    const nameError = this.validateName()
+    const payload = {
+      displayName: conditions.name
+    }
 
-    if (nameError) {
+    // Check for valid form payload
+    if (!this.validate(payload)) {
       return
     }
 
-    if (condition && conditions.name) {
+    if (condition) {
       const definition = updateCondition(data, condition.name, {
-        displayName: conditions.name,
+        displayName: payload.displayName,
         value: conditions.toJSON()
       })
 
       await save(definition)
-      conditionsChange(conditions.name)
-    } else if (conditions.hasConditions && conditions.name) {
+      conditionsChange(payload.displayName)
+    } else if (conditions.hasConditions) {
       const name = randomId()
       const definition = addCondition(data, {
         name,
-        displayName: conditions.name,
+        displayName: payload.displayName,
         value: conditions.toJSON()
       })
 
@@ -236,48 +244,34 @@ export class InlineConditions extends Component<Props, State> {
     })
   }
 
-  validateName = () => {
-    const { conditions, validationErrors } = this.state
+  validate = (payload: Partial<Form>): payload is Form => {
+    const { displayName } = payload
 
-    const nameError: ErrorListItem = {
-      href: '#cond-name',
-      children: i18n('conditions.enterName')
-    }
+    const errors: State['errors'] = {}
 
-    const otherErrors = validationErrors.filter(
-      (error) => error.href !== nameError.href
-    )
+    errors.name = validateRequired('cond-name', displayName, {
+      label: i18n('conditions.enterName')
+    })
 
-    if (!conditions.name) {
-      this.setState({
-        validationErrors: [...otherErrors, nameError]
-      })
-
-      return true
-    }
-
-    this.setState({ validationErrors: otherErrors })
-    return false
+    this.setState({ errors })
+    return !hasValidationErrors(errors)
   }
 
   render() {
     const { condition } = this.props
-    const { conditions, editView, fields, validationErrors } = this.state
+    const { conditions, editView, fields, errors } = this.state
 
-    const nameError = validationErrors.find(
-      (error) => error.href === '#cond-name'
-    )
-
-    const hasErrors = !!validationErrors.length
+    const hasErrors = hasValidationErrors(errors)
 
     return (
       <>
-        {hasErrors && <ErrorSummary errorList={validationErrors} />}
-
+        {hasErrors && (
+          <ErrorSummary errorList={Object.values(errors).filter(Boolean)} />
+        )}
         <div className="govuk-hint">{i18n('conditions.addOrEditHint')}</div>
         <div
           className={classNames('govuk-form-group', {
-            'govuk-form-group--error': nameError
+            'govuk-form-group--error': errors.name
           })}
         >
           <label className="govuk-label govuk-label--s" htmlFor="cond-name">
@@ -286,18 +280,18 @@ export class InlineConditions extends Component<Props, State> {
           <div className="govuk-hint" id="cond-name-hint">
             {i18n('conditions.displayNameHint')}
           </div>
-          {nameError && (
+          {errors.name && (
             <ErrorMessage id="cond-name-error">
-              {nameError.children}
+              {errors.name.children}
             </ErrorMessage>
           )}
           <input
             className={classNames('govuk-input govuk-input--width-20', {
-              'govuk-input--error': nameError
+              'govuk-input--error': errors.name
             })}
             id="cond-name"
             aria-describedby={
-              'cond-name-hint' + (nameError ? 'cond-name-error' : '')
+              'cond-name-hint' + (errors.name ? 'cond-name-error' : '')
             }
             name="cond-name"
             type="text"
