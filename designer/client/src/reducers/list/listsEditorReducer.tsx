@@ -15,9 +15,6 @@ export enum ListsEditorStateActions {
 export interface ListsEditorState {
   isEditingList: boolean
   isEditingListItem: boolean
-  listTitle?: string
-  listItemTitle?: string
-  initialName?: string
 }
 
 export function initListsEditingState(): ListsEditorState {

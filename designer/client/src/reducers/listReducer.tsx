@@ -15,7 +15,7 @@ import { ListActions } from '~/src/reducers/listActions.jsx'
 export interface ListState extends Partial<FormList>, Partial<FormItem> {
   initialName?: string
   initialTitle?: string
-  selectedListItem?: Item
+  initialItem?: string
   selectedItemIndex?: number
   errors: Partial<ErrorList<'title' | 'listItems'>>
   listItemErrors: Partial<ErrorList<'title' | 'value'>>
@@ -86,14 +86,14 @@ export const ListContext = createContext<ListContextType>({
 export function listReducer(state: ListState, action: ListReducerActions) {
   const stateNew = structuredClone(state)
 
-  const { selectedList, selectedItem } = stateNew
   const { name, payload } = action
+  let { initialName, initialTitle, initialItem, selectedList, selectedItem } =
+    stateNew
 
   if (name === ListActions.ADD_NEW_LIST) {
     const listId = randomId()
 
-    stateNew.initialName = listId
-    stateNew.selectedList = {
+    selectedList = {
       title: '',
       name: listId,
       type: 'string',
@@ -101,13 +101,24 @@ export function listReducer(state: ListState, action: ListReducerActions) {
       isNew: true
     }
 
+    initialName = selectedList.name
+    initialTitle = selectedList.title
+
+    stateNew.selectedList = selectedList
+    stateNew.initialName = initialName
+    stateNew.initialTitle = initialTitle
     stateNew.errors = {}
   }
 
   if (name === ListActions.SET_SELECTED_LIST) {
-    stateNew.initialName = payload.name || state.initialName
-    stateNew.initialTitle = payload.title
-    stateNew.selectedList = payload
+    selectedList = payload
+    initialName = payload.name
+    initialTitle = payload.title
+
+    stateNew.selectedList = selectedList
+    stateNew.initialName = initialName
+    stateNew.initialTitle = initialTitle
+    stateNew.errors = {}
   }
 
   if (name === ListActions.LIST_VALIDATION_ERRORS) {
@@ -118,7 +129,7 @@ export function listReducer(state: ListState, action: ListReducerActions) {
     stateNew.errors = {}
   }
 
-  if (!selectedList) {
+  if (!selectedList || typeof initialTitle === 'undefined') {
     return stateNew
   }
 
@@ -127,30 +138,39 @@ export function listReducer(state: ListState, action: ListReducerActions) {
   }
 
   if (name === ListActions.ADD_LIST_ITEM) {
-    stateNew.selectedItem = {
+    selectedItem = {
       text: '',
       value: '',
       isNew: true
     }
 
+    initialItem = selectedItem.text
+
+    stateNew.selectedItem = selectedItem
+    stateNew.initialItem = initialItem
     stateNew.listItemErrors = {}
   }
 
   if (name === ListActions.EDIT_LIST_ITEM) {
-    stateNew.selectedItem = payload
-    stateNew.selectedItemIndex = selectedList.items.findIndex(
-      (item) => item === payload
+    selectedItem = payload
+    initialItem = payload.text
+
+    const index = selectedList.items.findIndex(
+      (item) => item.text === initialItem
     )
 
+    stateNew.selectedItem = selectedItem
+    stateNew.selectedItemIndex = index > -1 ? index : undefined
+    stateNew.initialItem = initialItem
     stateNew.listItemErrors = {}
+  }
+
+  if (!selectedItem || typeof initialItem === 'undefined') {
+    return stateNew
   }
 
   if (name === ListActions.LIST_ITEM_VALIDATION_ERRORS) {
     stateNew.listItemErrors = payload
-  }
-
-  if (!selectedItem) {
-    return stateNew
   }
 
   if (name === ListActions.EDIT_LIST_ITEM_TEXT) {

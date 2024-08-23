@@ -22,7 +22,6 @@ import { ListActions } from '~/src/reducers/listActions.jsx'
 import {
   ListContext,
   type FormList,
-  type ListContextType,
   type ListState
 } from '~/src/reducers/listReducer.jsx'
 import {
@@ -31,13 +30,15 @@ import {
   hasValidationErrors
 } from '~/src/validations.js'
 
-const useListItemActions = (
-  state: ListState,
-  dispatch: ListContextType['dispatch']
-) => {
+function useListEdit() {
   const { dispatch: listsEditorDispatch } = useContext(ListsEditorContext)
 
-  function createItem() {
+  const { state, dispatch } = useContext(ListContext)
+  const { data, save } = useContext(DataContext)
+
+  const handleCreate = function (e: MouseEvent<HTMLAnchorElement>) {
+    e.preventDefault()
+
     dispatch({
       name: ListActions.ADD_LIST_ITEM
     })
@@ -48,24 +49,12 @@ const useListItemActions = (
     })
   }
 
-  return {
-    createItem,
-    selectedList: state.selectedList
-  }
-}
-
-function useListEdit() {
-  const { state: listEditorState, dispatch: listsEditorDispatch } =
-    useContext(ListsEditorContext)
-
-  const { state, dispatch } = useContext(ListContext)
-  const { data, save } = useContext(DataContext)
-
   const handleDelete = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
 
-    if (window.confirm('Confirm delete')) {
-      const { initialName } = listEditorState
+    const { initialName } = state
+
+    if (window.confirm('Confirm delete') && initialName) {
       const copy = clone(data)
 
       const selectedListIndex = copy.lists.findIndex(
@@ -108,6 +97,7 @@ function useListEdit() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+
     const { selectedList, initialName } = state
 
     const payload = {
@@ -145,18 +135,17 @@ function useListEdit() {
   }
 
   return {
+    handleCreate,
     handleDelete,
     handleSubmit
   }
 }
 
 export function ListEdit() {
-  const { handleSubmit, handleDelete } = useListEdit()
-
   const { state, dispatch } = useContext(ListContext)
-  const { selectedList, createItem } = useListItemActions(state, dispatch)
+  const { handleCreate, handleDelete, handleSubmit } = useListEdit()
 
-  const { errors } = state
+  const { selectedList, errors } = state
   const hasErrors = hasValidationErrors(errors)
 
   return (
@@ -193,10 +182,7 @@ export function ListEdit() {
             href="#"
             id="list-items"
             className="govuk-link"
-            onClick={(e) => {
-              e.preventDefault()
-              createItem()
-            }}
+            onClick={handleCreate}
           >
             {i18n('list.item.add')}
           </a>

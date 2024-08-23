@@ -63,15 +63,17 @@ export function ComponentListSelect() {
   }, [selectedList])
 
   useEffect(() => {
-    if (!listsEditorState.isEditingList && isAddingNew) {
-      dispatch({
-        name: Meta.SET_SELECTED_LIST,
-        payload: selectedList?.name,
-        as: selectedComponent
-      })
-
-      setIsAddingNew(false)
+    if (!listsEditorState.isEditingList || isAddingNew || !selectedList) {
+      return
     }
+
+    dispatch({
+      name: Meta.SET_SELECTED_LIST,
+      payload: selectedList.name,
+      as: selectedComponent
+    })
+
+    setIsAddingNew(false)
   }, [listsEditorState.isEditingList, selectedList?.name, isAddingNew])
 
   const editList = (e: ChangeEvent<HTMLSelectElement>) => {
