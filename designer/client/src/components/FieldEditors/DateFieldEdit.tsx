@@ -1,3 +1,4 @@
+import { ComponentType } from '@defra/forms-model'
 import React, { useContext } from 'react'
 
 import { CssClasses } from '~/src/components/CssClasses/CssClasses.jsx'
@@ -13,7 +14,12 @@ export function DateFieldEdit({ context = ComponentContext }: Props) {
   const { state, dispatch } = useContext(context)
   const { selectedComponent } = state
 
-  if (!selectedComponent) {
+  if (
+    !(
+      selectedComponent?.type === ComponentType.DatePartsField ||
+      selectedComponent?.type === ComponentType.MonthYearField
+    )
+  ) {
     return null
   }
 
@@ -44,9 +50,7 @@ export function DateFieldEdit({ context = ComponentContext }: Props) {
             id="field-options-maxDaysInPast"
             aria-describedby="field-options-maxDaysInPast-hint"
             name="options.maxDaysInPast"
-            value={
-              'maxDaysInPast' in options ? options.maxDaysInPast : undefined
-            }
+            value={options.maxDaysInPast}
             type="number"
             onChange={(e) =>
               dispatch({
@@ -73,9 +77,7 @@ export function DateFieldEdit({ context = ComponentContext }: Props) {
             id="field-options-maxDaysInFuture"
             aria-describedby="field-options-maxDaysInFuture-hint"
             name="options.maxDaysInFuture"
-            value={
-              'maxDaysInFuture' in options ? options.maxDaysInFuture : undefined
-            }
+            value={options.maxDaysInFuture}
             type="number"
             onChange={(e) =>
               dispatch({

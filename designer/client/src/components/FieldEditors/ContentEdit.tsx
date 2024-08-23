@@ -17,7 +17,7 @@ export function ContentEdit({ context = ComponentContext }: Props) {
 
   const { selectedComponent, errors = {} } = state
 
-  if (!selectedComponent || !hasContentField(selectedComponent)) {
+  if (!hasContentField(selectedComponent)) {
     return null
   }
 

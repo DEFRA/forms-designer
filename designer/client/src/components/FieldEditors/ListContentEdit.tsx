@@ -1,4 +1,4 @@
-import { hasListField, type ListTypeOption } from '@defra/forms-model'
+import { ComponentType, type ListTypeOption } from '@defra/forms-model'
 import upperFirst from 'lodash/upperFirst.js'
 import React, { useContext } from 'react'
 
@@ -15,7 +15,7 @@ export function ListContentEdit({ context = ComponentContext }: Props) {
   const { state, dispatch } = useContext(context)
   const { selectedComponent } = state
 
-  if (!selectedComponent || !hasListField(selectedComponent)) {
+  if (selectedComponent?.type !== ComponentType.List) {
     return null
   }
 
