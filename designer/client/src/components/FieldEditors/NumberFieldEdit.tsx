@@ -1,3 +1,4 @@
+import { ComponentType } from '@defra/forms-model'
 import React, { useContext } from 'react'
 
 import { CssClasses } from '~/src/components/CssClasses/CssClasses.jsx'
@@ -13,7 +14,7 @@ export function NumberFieldEdit({ context = ComponentContext }: Props) {
   const { state, dispatch } = useContext(context)
   const { selectedComponent } = state
 
-  if (!selectedComponent) {
+  if (selectedComponent?.type !== ComponentType.NumberField) {
     return null
   }
 
@@ -44,7 +45,7 @@ export function NumberFieldEdit({ context = ComponentContext }: Props) {
             id="field-schema-min"
             aria-describedby="field-schema-min-hint"
             name="schema.min"
-            value={'min' in schema ? schema.min : undefined}
+            value={schema.min}
             type="number"
             onChange={(e) =>
               dispatch({
@@ -71,7 +72,7 @@ export function NumberFieldEdit({ context = ComponentContext }: Props) {
             id="field-options-prefix"
             aria-describedby="field-options-prefix-hint"
             name="opions.prefix"
-            value={'prefix' in options ? options.prefix : undefined}
+            value={options.prefix}
             type="string"
             onBlur={(e) =>
               dispatch({
@@ -98,7 +99,7 @@ export function NumberFieldEdit({ context = ComponentContext }: Props) {
             id="field-options-suffix"
             aria-describedby="field-options-suffix-hint"
             name="options.suffix"
-            value={'suffix' in options ? options.suffix : undefined}
+            value={options.suffix}
             type="string"
             onBlur={(e) =>
               dispatch({
@@ -125,7 +126,7 @@ export function NumberFieldEdit({ context = ComponentContext }: Props) {
             id="field-schema-max"
             aria-describedby="field-schema-max-hint"
             name="schema.max"
-            value={'max' in schema ? schema.max : undefined}
+            value={schema.max}
             type="number"
             onBlur={(e) =>
               dispatch({
@@ -152,7 +153,7 @@ export function NumberFieldEdit({ context = ComponentContext }: Props) {
             id="field-schema-precision"
             aria-describedby="field-schema-precision-hint"
             name="schema.precision"
-            value={'precision' in schema ? schema.precision : undefined}
+            value={schema.precision}
             type="number"
             onBlur={(e) =>
               dispatch({

@@ -17,11 +17,7 @@ export function ConditionEdit({ context = ComponentContext }: Props) {
   const { conditions } = data
   const { selectedComponent } = state
 
-  if (
-    !conditions.length ||
-    !selectedComponent ||
-    !hasConditionSupport(selectedComponent)
-  ) {
+  if (!conditions.length || !hasConditionSupport(selectedComponent)) {
     return null
   }
 
