@@ -1,4 +1,5 @@
-import React, { useContext } from 'react'
+import { type List } from '@defra/forms-model'
+import React, { useContext, type MouseEvent } from 'react'
 
 import { DataContext } from '~/src/context/DataContext.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
@@ -14,7 +15,7 @@ export function ListSelect() {
   const { dispatch: listDispatch } = useContext(ListContext)
   const { dispatch: listsEditorDispatch } = useContext(ListsEditorContext)
 
-  const editList = (e, list) => {
+  const editList = (e: MouseEvent<HTMLAnchorElement>, list: List) => {
     e.preventDefault()
 
     listDispatch({
@@ -40,7 +41,7 @@ export function ListSelect() {
               className="govuk-link"
               onClick={(e) => editList(e, list)}
             >
-              {list.title || list.name}
+              {list.title}
             </a>
           </li>
         ))}

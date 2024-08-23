@@ -20,9 +20,7 @@ interface Props {
 const ListItem = ({ item, removeItem, selectListItem }: Props) => {
   return (
     <tr className="govuk-table__row">
-      <td className="govuk-table__cell govuk-!-width-full">
-        {item.text ?? item.label}
-      </td>
+      <td className="govuk-table__cell govuk-!-width-full">{item.text}</td>
       <td className="govuk-table__cell">
         <a
           href="#"
@@ -70,13 +68,13 @@ export function ListItems() {
 
   const { prepareForDelete } = useListItem(state, dispatch)
 
-  function removeItem(index: number) {
+  async function removeItem(index: number) {
     const copy = clone(data)
-    save(prepareForDelete(copy, index))
+    await save(prepareForDelete(copy, index))
   }
 
   const { selectedList } = state
-  if (!selectedList?.items?.length) {
+  if (!selectedList?.items.length) {
     return null
   }
 
