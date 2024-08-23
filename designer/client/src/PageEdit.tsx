@@ -98,16 +98,14 @@ export class PageEdit extends Component<Props, State> {
     const { page } = this.props
     const { data } = this.context
 
-    const titleErrors = validateRequired(
+    const errors: State['errors'] = {}
+
+    errors.title = validateRequired(
       'title',
       'page-title',
       i18n('page.title'),
       title
-    )
-
-    const errors: Partial<ErrorList<'path' | 'title'>> = {
-      ...titleErrors
-    }
+    ).title
 
     // Check for duplicate path
     function isDuplicate(input: string) {

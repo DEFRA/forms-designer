@@ -20,7 +20,7 @@ export interface ListState {
   selectedListItem?: any // TODO:- type
   initialName?: string
   initialTitle?: string
-  errors?: Partial<ErrorList<'title' | 'name' | 'content' | 'list'>>
+  errors?: Partial<ErrorList<'title' | 'listItems'>>
   listItemErrors?: Partial<ErrorList<'title' | 'value'>>
 }
 

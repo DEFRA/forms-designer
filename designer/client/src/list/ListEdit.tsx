@@ -8,7 +8,7 @@ import React, {
   type MouseEvent
 } from 'react'
 
-import { ErrorSummary, type ErrorList } from '~/src/ErrorSummary.jsx'
+import { ErrorSummary } from '~/src/ErrorSummary.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { addList } from '~/src/data/list/addList.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
@@ -38,6 +38,7 @@ const useListItemActions = (state, dispatch) => {
 function useListEdit() {
   const { state: listEditorState, dispatch: listsEditorDispatch } =
     useContext(ListsEditorContext)
+
   const { state, dispatch } = useContext(ListContext)
   const { data, save } = useContext(DataContext)
 
@@ -61,19 +62,17 @@ function useListEdit() {
     listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST, false])
   }
 
-  const validate = (): Partial<ErrorList<'title' | 'listItems'>> => {
+  function validate() {
     const { selectedList } = state
 
-    const titleErrors = validateRequired(
+    const errors: ListState['errors'] = {}
+
+    errors.title = validateRequired(
       'title',
       'list-title',
       i18n('list.title'),
       selectedList?.title
-    )
-
-    const errors: ReturnType<typeof validate> = {
-      ...titleErrors
-    }
+    ).title
 
     if (!selectedList?.items.length) {
       errors.listItems = {
@@ -81,20 +80,22 @@ function useListEdit() {
       }
     }
 
-    return errors
+    dispatch({
+      type: ListActions.LIST_VALIDATION_ERRORS,
+      payload: errors
+    })
+
+    return !hasValidationErrors(errors)
   }
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const { selectedList, initialName } = state
-    const errors = validate()
-    if (hasValidationErrors(errors)) {
-      dispatch({
-        type: ListActions.LIST_VALIDATION_ERRORS,
-        payload: errors
-      })
+
+    if (!validate()) {
       return
     }
+
     let copy = { ...data }
     if (selectedList?.isNew) {
       delete selectedList.isNew
@@ -105,6 +106,7 @@ function useListEdit() {
       )
       copy.lists[selectedListIndex] = selectedList
     }
+
     await save(copy)
 
     listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST, false])
@@ -119,22 +121,15 @@ function useListEdit() {
   }
 }
 
-function validate(errors: ErrorList, selectedList: any) {
-  if (selectedList.items.length > 0) {
-    return {}
-  }
-
-  return errors ?? {}
-}
-
 export function ListEdit() {
   const { handleSubmit, handleDelete } = useListEdit()
 
   const { state, dispatch } = useContext(ListContext)
   const { selectedList, createItem } = useListItemActions(state, dispatch)
-  let { errors = {} } = state
-  errors = validate(errors, selectedList)
+
+  const { errors = {} } = state
   const hasErrors = hasValidationErrors(errors)
+
   return (
     <>
       {hasErrors && (
@@ -166,7 +161,8 @@ export function ListEdit() {
 
         <p className="govuk-body">
           <a
-            href="#createItem"
+            href="#"
+            id="list-items"
             className="govuk-link"
             onClick={(e) => {
               e.preventDefault()
@@ -182,7 +178,7 @@ export function ListEdit() {
             {i18n('save')}
           </button>
 
-          {selectedList?.isNew || (
+          {!selectedList?.isNew && (
             <button
               className="govuk-button govuk-button--warning"
               type="button"

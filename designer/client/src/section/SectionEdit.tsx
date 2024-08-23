@@ -99,24 +99,21 @@ export class SectionEdit extends Component<Props, State> {
   }
 
   validate = (name?: string, title?: string): State['errors'] => {
-    const titleErrors = validateRequired(
+    const errors: State['errors'] = {}
+
+    errors.title = validateRequired(
       'title',
       'section-title',
       i18n('sectionEdit.titleField.title'),
       title
-    )
+    ).title
 
-    const nameErrors = validateName(
+    errors.name = validateName(
       'name',
       'section-name',
       i18n('sectionEdit.nameField.title'),
       name
-    )
-
-    const errors: State['errors'] = {
-      ...titleErrors,
-      ...nameErrors
-    }
+    ).name
 
     this.setState({ errors })
     return errors
