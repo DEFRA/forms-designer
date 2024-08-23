@@ -1,4 +1,5 @@
 import { type Item } from '@defra/forms-model'
+import Joi from 'joi'
 
 import { findListItem } from '~/src/data/list/findList.js'
 import { type ListItemHook } from '~/src/hooks/list/useListItem/types.js'
@@ -9,13 +10,23 @@ import {
   type ListContextType,
   type ListState
 } from '~/src/reducers/listReducer.jsx'
-import { validateRequired, hasValidationErrors } from '~/src/validations.js'
+import {
+  hasValidationErrors,
+  validateCustom,
+  validateRequired
+} from '~/src/validations.js'
 
 export function useListItem(
   state: ListState,
   dispatch: ListContextType['dispatch']
 ): ListItemHook {
-  const { selectedList, selectedItem, selectedItemIndex } = state
+  const {
+    initialItemText,
+    initialItemValue,
+    selectedList,
+    selectedItem,
+    selectedItemIndex
+  } = state
 
   const handleTitleChange: ListItemHook['handleTitleChange'] = (e) => {
     dispatch({
@@ -48,14 +59,36 @@ export function useListItem(
   function validate(payload: Partial<FormItem>): payload is FormItem {
     const { text, value } = payload.selectedItem ?? {}
 
+    const titles =
+      selectedList?.items
+        .filter(({ text }) => text !== initialItemText)
+        .map(({ text }) => text) ?? []
+
+    const values =
+      selectedList?.items
+        .filter(({ value }) => value !== initialItemValue)
+        .map(({ value }) => value) ?? []
+
     const errors: ListState['listItemErrors'] = {}
 
     errors.title = validateRequired('title', text, {
       label: i18n('list.item.title')
     })
 
+    errors.title ??= validateCustom('title', [...titles, text], {
+      message: 'errors.duplicate',
+      label: `Item text '${text}'`,
+      schema: Joi.array().unique()
+    })
+
     errors.value = validateRequired('value', value?.toString(), {
       label: i18n('list.item.value')
+    })
+
+    errors.value ??= validateCustom('value', [...values, value], {
+      message: 'errors.duplicate',
+      label: `Item value '${value}'`,
+      schema: Joi.array().unique()
     })
 
     dispatch({
