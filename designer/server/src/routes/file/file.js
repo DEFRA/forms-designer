@@ -42,6 +42,12 @@ export default [
 
           return h.view('file/expired', errorViewModel(pageTitle))
         }
+
+        return Boom.internal(
+          new Error('Failed to download file', {
+            cause: err
+          })
+        )
       }
     },
     options: {

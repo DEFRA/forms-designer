@@ -8,7 +8,5 @@ const submissionEndpoint = new URL('/file/', config.submissionUrl)
  */
 export async function checkFileStatus(fieldId) {
   const requestUrl = new URL(`./${fieldId}`, submissionEndpoint)
-  const { response } = await get(requestUrl, {})
-
-  return response.statusCode
+  return await get(requestUrl, {})
 }
