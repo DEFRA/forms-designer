@@ -13,10 +13,10 @@ import randomId from '~/src/randomId.js'
 import { ListActions } from '~/src/reducers/listActions.jsx'
 
 export interface ListState extends Partial<FormList>, Partial<FormItem> {
-  selectedItemIndex?: number
-  isEditingFromComponent?: boolean
   initialName?: string
   initialTitle?: string
+  selectedListItem?: Item
+  selectedItemIndex?: number
   errors: Partial<ErrorList<'title' | 'listItems'>>
   listItemErrors: Partial<ErrorList<'title' | 'value'>>
 }
@@ -196,8 +196,7 @@ export const ListContextProvider = (props: {
       ...init,
       selectedList,
       initialName: selectedListName,
-      initialTitle: selectedList?.title,
-      isEditingFromComponent: true
+      initialTitle: selectedList?.title
     }
   }
 
