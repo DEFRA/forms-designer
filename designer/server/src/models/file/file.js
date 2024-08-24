@@ -3,7 +3,7 @@
  */
 export function fileViewModel(validation) {
   const pageTitle = 'You have a file to download'
-  const email = validation.formValues.email
+  const email = validation?.formValues.email
 
   return {
     backLink: {
@@ -23,8 +23,8 @@ export function fileViewModel(validation) {
       },
       value: email
     },
-    formErrors: validation.formErrors,
-    formValues: validation.formValues,
+    formErrors: validation?.formErrors,
+    formValues: validation?.formValues,
     buttonText: 'Download file'
   }
 }
