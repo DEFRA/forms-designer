@@ -15,7 +15,7 @@ export const emailSchema = Joi.string().trim().required().messages({
 
 export default [
   /**
-   * @satisfies {ServerRoute< { Params:  FileDownload, Payload: { email: string} }>}
+   * @satisfies {ServerRoute< { Params:  { fileId: string } }>}
    */
   ({
     method: 'GET',
@@ -41,7 +41,7 @@ export default [
         }
 
         return Boom.internal(
-          new Error('Failed to download file', {
+          new Error('Failed to get download url', {
             cause: err
           })
         )
@@ -49,7 +49,7 @@ export default [
     }
   }),
   /**
-   * @satisfies {ServerRoute< { Params:  FileDownload, Payload: { email: string } }>}
+   * @satisfies {ServerRoute< { Params:  { fileId: string }, Payload: { email: string } }>}
    */
   ({
     method: 'POST',
@@ -60,8 +60,25 @@ export default [
       const { email } = payload
       const { fileId } = params
 
-      const { url } = await createFileLink(fileId, email, token)
-      return h.redirect(url)
+      try {
+        const result = await createFileLink(fileId, email, token)
+        return h.redirect(result.url)
+      } catch (err) {
+        if (
+          Boom.isBoom(err) &&
+          err.output.statusCode === StatusCodes.GONE.valueOf()
+        ) {
+          const pageTitle = 'The link has expired'
+
+          return h.view('file/expired', errorViewModel(pageTitle))
+        }
+
+        return Boom.internal(
+          new Error('Failed to download file', {
+            cause: err
+          })
+        )
+      }
     },
     options: {
       validate: {

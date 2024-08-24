@@ -19,7 +19,7 @@ export async function checkFileStatus(fieldId) {
 export async function createFileLink(fileId, retrievalKey, token) {
   const requestUrl = new URL('link', submissionEndpoint)
 
-  const postJsonByType = /** @type {typeof postJson<object>} */ (postJson)
+  const postJsonByType = /** @type {typeof postJson<FileDetails>} */ (postJson)
   const { body } = await postJsonByType(requestUrl, {
     payload: { fileId, retrievalKey },
     ...getAuthOptions(token)
@@ -34,3 +34,8 @@ export async function createFileLink(fileId, retrievalKey, token) {
 function getAuthOptions(token) {
   return { headers: { Authorization: `Bearer ${token}` } }
 }
+
+/**
+ * @import Wreck from '@hapi/wreck'
+ * @import { FileDetails } from '@defra/forms-model'
+ */
