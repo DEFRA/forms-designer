@@ -4,10 +4,6 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 
-{% block beforeContent %}
-  {{ govukBackLink(backLink) }}
-{% endblock %}
-
 {% block content %}
   <form method="post" novalidate>
     {% call appPageBody({
@@ -26,8 +22,12 @@
         },
         id: field.id,
         name: field.name,
-        value: field.value
-      }) }}
+        value: field.value,
+        errorMessage: {
+          text: formErrors[field.name].text
+        } if formErrors[field.name] 
+        })
+      }}
 
       {{ govukButton({
         text: 'Download file'

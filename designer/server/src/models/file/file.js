@@ -1,7 +1,8 @@
 /**
  * @param {string} email
+ * @param {ValidationFailure<{email : string}>} validation
  */
-export function fileViewModel(email) {
+export function fileViewModel(email, validation) {
   const pageTitle = 'You have a file to download'
 
   return {
@@ -22,6 +23,12 @@ export function fileViewModel(email) {
       },
       value: email
     },
+    formErrors: validation.formErrors,
+    formValues: validation.formValues,
     buttonText: 'Download file'
   }
 }
+
+/**
+ * @import { ValidationFailure } from '~/src/common/helpers/types.js'
+ */

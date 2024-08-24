@@ -4,18 +4,13 @@ import Joi from 'joi'
 
 import { redirectWithErrors } from '../forms/create.js'
 
-import { checkFileStatus } from '~/src/lib/file.js'
+import { sessionNames } from '~/src/common/constants/session-names.js'
+import { checkFileStatus, createFileLink } from '~/src/lib/file.js'
 import { errorViewModel } from '~/src/models/errors.js'
 import * as file from '~/src/models/file/file.js'
 
-export const schema = Joi.object().keys({
-  email: Joi.string()
-    .email({ tlds: { allow: ['uk'] } })
-    .trim()
-    .required()
-    .messages({
-      'string.empty': 'Enter an email address'
-    })
+export const emailSchema = Joi.string().trim().required().messages({
+  'string.empty': 'Enter an email address'
 })
 
 export default [
@@ -26,13 +21,18 @@ export default [
     method: 'GET',
     path: '/file-download/{fileId}',
     async handler(request, h) {
-      const { params } = request
+      const { params, yar } = request
       const { fileId } = params
 
       try {
         await checkFileStatus(fileId)
 
-        return h.view('file/download-page', file.fileViewModel(undefined))
+        const validation = yar.flash(sessionNames.validationFailure).at(0)
+
+        return h.view(
+          'file/download-page',
+          file.fileViewModel(validation?.formValues.email, validation)
+        )
       } catch (err) {
         if (
           Boom.isBoom(err) &&
@@ -49,9 +49,6 @@ export default [
           })
         )
       }
-    },
-    options: {
-      auth: false
     }
   }),
   /**
@@ -60,17 +57,19 @@ export default [
   ({
     method: 'POST',
     path: '/file-download/{fileId}',
-    handler(request, h) {
-      const { payload } = request
+    async handler(request, h) {
+      const { payload, params, auth } = request
+      const { token } = auth.credentials
       const { email } = payload
+      const { fileId } = params
 
-      return h.view('file/download-page', file.fileViewModel(email))
+      const response = await createFileLink(fileId, email, token)
+      return h.redirect(response.url)
     },
     options: {
-      auth: false,
       validate: {
         payload: Joi.object().keys({
-          email: schema.extract('email')
+          email: emailSchema
         }),
         failAction: redirectWithErrors
       }
@@ -82,3 +81,6 @@ export default [
  * @import { FileDownload } from '@defra/forms-model'
  * @import { ServerRoute } from '@hapi/hapi'
  */
+
+// 1. Downlaod file from url
+// 2. Handle 403, 404, 410 from create file link endpoint
