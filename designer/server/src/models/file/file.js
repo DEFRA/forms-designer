@@ -1,9 +1,9 @@
 /**
- * @param {string} email
  * @param {ValidationFailure<{email : string}>} validation
  */
-export function fileViewModel(email, validation) {
+export function fileViewModel(validation) {
   const pageTitle = 'You have a file to download'
+  const email = validation.formValues.email
 
   return {
     backLink: {

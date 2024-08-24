@@ -29,10 +29,7 @@ export default [
 
         const validation = yar.flash(sessionNames.validationFailure).at(0)
 
-        return h.view(
-          'file/download-page',
-          file.fileViewModel(validation?.formValues.email, validation)
-        )
+        return h.view('file/download-page', file.fileViewModel(validation))
       } catch (err) {
         if (
           Boom.isBoom(err) &&
@@ -63,8 +60,8 @@ export default [
       const { email } = payload
       const { fileId } = params
 
-      const response = await createFileLink(fileId, email, token)
-      return h.redirect(response.url)
+      const { url } = await createFileLink(fileId, email, token)
+      return h.redirect(url)
     },
     options: {
       validate: {

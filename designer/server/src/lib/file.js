@@ -17,7 +17,7 @@ export async function checkFileStatus(fieldId) {
  * @param {string} token
  */
 export async function createFileLink(fileId, retrievalKey, token) {
-  const requestUrl = new URL(`link`, submissionEndpoint)
+  const requestUrl = new URL('link', submissionEndpoint)
 
   const postJsonByType = /** @type {typeof postJson<object>} */ (postJson)
   const { body } = await postJsonByType(requestUrl, {
