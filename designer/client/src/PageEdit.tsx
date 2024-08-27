@@ -94,8 +94,9 @@ export class PageEdit extends Component<Props, State> {
     pageEdit.section = section?.name
 
     if (payload.path !== page.path) {
-      copy = updateLinksTo(copy, page.path, payload.path)
-      pageEdit.path = payload.path
+      copy = updateLinksTo(copy, pageEdit, {
+        path: payload.path
+      })
     }
 
     try {
