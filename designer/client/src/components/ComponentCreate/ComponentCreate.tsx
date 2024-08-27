@@ -80,7 +80,7 @@ function useComponentCreate(props) {
     setIsSaving(true)
     const updatedData = addComponent(
       data,
-      (page as Page).path,
+      page as Page,
       selectedComponent
     )
 
