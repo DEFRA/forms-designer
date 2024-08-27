@@ -61,7 +61,7 @@ export class PageEdit extends Component<Props, State> {
       path: page.path,
       controller: page.controller,
       title: page.title,
-      section: findSection(data, page.section),
+      section: page.section ? findSection(data, page.section) : undefined,
       isEditingSection: false,
       isNewSection: false,
       errors: {}
@@ -202,14 +202,13 @@ export class PageEdit extends Component<Props, State> {
   }
 
   closeFlyout = (sectionName?: string) => {
-    const { page } = this.props
     const { data } = this.context
     const { section } = this.state
 
     this.setState({
       isEditingSection: false,
       isNewSection: false,
-      section: findSection(data, sectionName ?? section?.name ?? page.section)
+      section: sectionName ? findSection(data, sectionName) : section
     })
   }
 
@@ -218,7 +217,7 @@ export class PageEdit extends Component<Props, State> {
     const { data } = this.context
 
     this.setState({
-      section: findSection(data, sectionName)
+      section: sectionName ? findSection(data, sectionName) : undefined
     })
   }
 

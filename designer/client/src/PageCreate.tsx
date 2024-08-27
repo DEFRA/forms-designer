@@ -139,7 +139,7 @@ export class PageCreate extends Component<Props, State> {
     const { data } = this.context
 
     this.setState({
-      section: findSection(data, sectionName)
+      section: sectionName ? findSection(data, sectionName) : undefined
     })
   }
 
@@ -190,13 +190,13 @@ export class PageCreate extends Component<Props, State> {
   }
 
   closeFlyout = (sectionName?: string) => {
-    const { section } = this.state
     const { data } = this.context
+    const { section } = this.state
 
     this.setState({
       isEditingSection: false,
       isNewSection: false,
-      section: findSection(data, sectionName ?? section?.name)
+      section: sectionName ? findSection(data, sectionName) : section
     })
   }
 
