@@ -1,4 +1,4 @@
-import { type FormDefinition } from '@defra/forms-model'
+import { type FormDefinition, type List } from '@defra/forms-model'
 
 /**
  * Find list by name
@@ -14,4 +14,19 @@ export function findList(
   }
 
   return list
+}
+
+/**
+ * Find list item by name
+ */
+export function findListItem(list: List, textSearch?: string) {
+  const item = list.items.find(({ text }) => text === textSearch)
+
+  if (!item) {
+    throw Error(
+      `List item not found with text '${textSearch}' for list '${list.name}'`
+    )
+  }
+
+  return item
 }

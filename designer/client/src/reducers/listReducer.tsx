@@ -9,7 +9,7 @@ import React, {
 
 import { type ErrorList } from '~/src/ErrorSummary.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
-import { findList } from '~/src/data/list/findList.js'
+import { findList, findListItem } from '~/src/data/list/findList.js'
 import randomId from '~/src/randomId.js'
 import { ListActions } from '~/src/reducers/listActions.jsx'
 
@@ -156,12 +156,10 @@ export function listReducer(state: ListState, action: ListReducerActions) {
       selectedItem = payload
       initialItem = payload.text
 
-      const index = selectedList.items.findIndex(
-        (item) => item.text === initialItem
-      )
+      const item = findListItem(selectedList, payload.text)
 
       stateNew.selectedItem = selectedItem
-      stateNew.selectedItemIndex = index > -1 ? index : undefined
+      stateNew.selectedItemIndex = selectedList.items.indexOf(item)
       stateNew.initialItem = initialItem
       stateNew.listItemErrors = {}
 
