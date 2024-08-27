@@ -5,7 +5,7 @@ import {
   type FormDefinition
 } from '@defra/forms-model'
 
-import { allPathsLeadingTo } from '~/src/data/page/allPathsLeadingTo.js'
+import { findPathsTo } from '~/src/data/page/findPathsTo.js'
 import { type Input, type Path } from '~/src/data/types.js'
 
 export function allInputs(data: FormDefinition): Input[] {
@@ -32,7 +32,7 @@ export function allInputs(data: FormDefinition): Input[] {
 }
 
 export function inputsAccessibleAt(data: FormDefinition, path: Path) {
-  const pages = allPathsLeadingTo(data, path)
+  const pages = findPathsTo(data, path)
   return allInputs({
     ...data,
     pages: data.pages.filter((page) => pages.includes(page.path))
