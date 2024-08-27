@@ -1,15 +1,5 @@
 {
-  "A form with this name already exists": "A form with this name already exists",
-  "Create a new form": "Create a new form",
-  "Create a new form or edit an existing form": "Create a new form or edit an existing form",
-  "Edit page": "Edit page",
-  "Enter form name": "Enter form name",
-  "Enter the name for your form, for example Applying for visitors pass": "Enter the name for your form, for example Applying for visitors pass",
-  "Preview page": "Preview page",
-  "Select an existing form to edit": "Select an existing form to edit",
-  "Start": "Start",
   "Test": "For testing purpose, do not delete it",
-  "There is a problem": "There is a problem",
   "add": "Add",
   "addLink": {
     "header": {
@@ -52,7 +42,6 @@
       "option": "Select a section"
     }
   },
-  "cancel": "Cancel",
   "close": "Close",
   "common": {
     "autocomplete": {
@@ -134,7 +123,6 @@
     "conditionValue": "Value",
     "conditionValueOption": "Select a value"
   },
-  "create": "create {{noun}}",
   "dateFieldEditComponent": {
     "maxDaysInFutureField": {
       "helpText": "Determines the latest date users can enter",
@@ -146,7 +134,6 @@
     }
   },
   "delete": "Delete",
-  "edit": "edit {{noun}}",
   "error": "Error",
   "errors": {
     "required": "Enter {{field, lowerFirst}}",
@@ -154,7 +141,6 @@
     "spaces": "{{field, upperFirst}} must not include spaces",
     "duplicate": "{{field, upperFirst}} already exists"
   },
-  "field": "field",
   "fieldEdit": {
     "conditions": {
       "hint": "Select a condition that determines whether to show the contents of this component. You can create and edit conditions from the Conditions screen.",
@@ -205,7 +191,6 @@
     "FileUploadField": "File upload",
     "FileUploadField_info": "Allows a user to upload files"
   },
-  "leaveDesigner": "Are you sure you want to leave the Designer? If you have unsaved changes they will be lost.",
   "link": {
     "edit": "Edit link"
   },
@@ -226,13 +211,10 @@
       "add": "Add a new list item",
       "conditions": "Conditions (optional)",
       "conditionsHint": "Select a condition that determines whether to show this list item. You can create and edit conditions on the Conditions screen.",
-      "createSubcomponent": "Create sub component",
       "conditionsOption": "Select a condition",
       "editTitle": "Edit list item {{title, lowerFirst}}",
       "help": "Help text (optional)",
       "helpHint": "Enter the description to show for this list item",
-      "subComponent": "Sub component (optional)",
-      "subComponentHint": "You need a sub component if the list item answer needs more information, for example an email address. This will only be shown when the user selects this list item.",
       "title": "Item text",
       "titleHint": "Enter the text you want to show",
       "value": "Value",
@@ -275,7 +257,6 @@
   "name": {
     "hint": "This is generated automatically and does not show on the page. Only change it if you are using an integration that requires you to, for example GOV.UK Notify. It must not contain spaces."
   },
-  "no": "no",
   "numberFieldEditComponent": {
     "maxField": {
       "helpText": "Specifies the highest number users can enter",
@@ -298,7 +279,6 @@
       "title": "Suffix"
     }
   },
-  "optional": "{{noun}} (optional)",
   "page": {
     "add": "Add page",
     "edit": "Edit page",
@@ -311,8 +291,6 @@
       "fileUpload": "File upload",
       "summary": "Summary page"
     },
-    "noun": "page",
-    "noun_plural": "pages",
     "path": "Path",
     "pathHint": "Appears in the browser path. The value you enter in the page title field automatically populates the path name. To override it, enter your own path name, relevant to the page, and use lowercase text and hyphens between words. For example, '/personal-details'.",
     "section": "Section (optional)",
@@ -324,9 +302,6 @@
   "section": {
     "add": "Add a new section",
     "edit": "Edit section",
-    "editingTitle": "Edit {{title, lowerFirst}}",
-    "noun": "section",
-    "noun_plural": "sections",
     "editTitle": "Edit {{title, lowerFirst}}"
   },
   "textFieldEditComponent": {
@@ -372,8 +347,5 @@
   },
   "summary": {
     "edit": "Edit summary"
-  },
-  "warning": "Warning",
-  "wontShow": "This will not show on the page.",
-  "yes": "yes"
+  }
 }
