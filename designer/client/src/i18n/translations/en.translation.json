@@ -105,7 +105,7 @@
     "moveDown_label": "Move {{name, lowerFirst}} component down"
   },
   "conditions": {
-    "add": "Add condition",
+    "add": "Add a new condition",
     "addOrEdit": "Add or edit condition",
     "addOrEditHint": "Set the rules that determine the conditional behaviour in the form flow. For example, a question page might have a component for yes and no options that need two conditions - one to control what happens if a user selects yes and one for when a user selects no.",
     "displayName": "Display name",
@@ -304,10 +304,9 @@
   },
   "save": "Save",
   "section": {
-    "create": "Create section",
+    "add": "Add a new section",
     "edit": "Edit section",
     "editingTitle": "Edit {{title, lowerFirst}}",
-    "newTitle": "Add a new section",
     "noun": "section",
     "noun_plural": "sections"
   },

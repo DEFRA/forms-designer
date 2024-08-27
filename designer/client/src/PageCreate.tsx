@@ -321,53 +321,54 @@ export class PageCreate extends Component<Props, State> {
             </>
           )}
 
-          {sections.length > 0 && (
-            <div className="govuk-form-group">
-              <label
-                className="govuk-label govuk-label--s"
-                htmlFor="page-section"
-              >
-                {i18n('addPage.sectionOption.title')}
-              </label>
-              <div className="govuk-hint" id="page-section-hint">
-                {i18n('addPage.sectionOption.helpText')}
-              </div>
-              <select
-                className="govuk-select"
-                id="page-section"
-                aria-describedby="page-section-hint"
-                name="section"
-                value={section?.name ?? ''}
-                onChange={this.onChangeSection}
-              >
-                <option value="" />
-                {sections.map((section) => (
-                  <option key={section.name} value={section.name}>
-                    {section.title}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
-
-          <p className="govuk-body">
-            {section && (
+          <div className="govuk-form-group">
+            {sections.length > 0 && (
+              <>
+                <label
+                  className="govuk-label govuk-label--s"
+                  htmlFor="page-section"
+                >
+                  {i18n('addPage.sectionOption.title')}
+                </label>
+                <div className="govuk-hint" id="page-section-hint">
+                  {i18n('addPage.sectionOption.helpText')}
+                </div>
+                <select
+                  className="govuk-select"
+                  id="page-section"
+                  aria-describedby="page-section-hint"
+                  name="section"
+                  value={section?.name ?? ''}
+                  onChange={this.onChangeSection}
+                >
+                  <option value="" />
+                  {sections.map((section) => (
+                    <option key={section.name} value={section.name}>
+                      {section.title}
+                    </option>
+                  ))}
+                </select>
+              </>
+            )}
+            <p className="govuk-body govuk-!-margin-top-2">
+              {section && (
+                <a
+                  href="#"
+                  className="govuk-link govuk-!-display-block"
+                  onClick={this.editSection}
+                >
+                  {i18n('section.edit')}
+                </a>
+              )}
               <a
                 href="#"
                 className="govuk-link govuk-!-display-block"
-                onClick={this.editSection}
+                onClick={(e) => this.editSection(e, true)}
               >
-                {i18n('section.edit')}
+                {i18n('section.add')}
               </a>
-            )}
-            <a
-              href="#"
-              className="govuk-link govuk-!-display-block"
-              onClick={this.editSection}
-            >
-              {i18n('section.create')}
-            </a>
-          </p>
+            </p>
+          </div>
 
           <div className="govuk-button-group">
             <button type="submit" className="govuk-button">
@@ -381,7 +382,7 @@ export class PageCreate extends Component<Props, State> {
               title={
                 !isNewSection && !!section
                   ? i18n('section.editingTitle', { title: section.title })
-                  : i18n('section.newTitle')
+                  : i18n('section.add')
               }
               onHide={this.closeFlyout}
             >
