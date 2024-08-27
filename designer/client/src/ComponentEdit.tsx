@@ -35,13 +35,13 @@ export function ComponentEdit(props) {
       return
     }
 
-    const updatedData = updateComponent(
+    const definition = updateComponent(
       data,
-      page.path,
+      page,
       initialName,
       selectedComponent
     )
-    await save(updatedData)
+    await save(definition)
     toggleShowEditor()
   }
 
