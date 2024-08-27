@@ -4,10 +4,10 @@ import {
   type Page
 } from '@defra/forms-model'
 import React, {
-  useEffect,
+  useCallback,
   useContext,
+  useEffect,
   useState,
-  useLayoutEffect,
   type FormEvent,
   type MouseEvent
 } from 'react'
@@ -41,6 +41,7 @@ function useComponentCreate(props: Props) {
   const { selectedComponent, errors, hasValidated = false } = state
 
   const hasErrors = hasValidationErrors(errors)
+  const onHandleSave = useCallback(handleSave, [handleSave])
 
   useEffect(() => {
     // render in the next re-paint to allow the DOM to reflow without the list
@@ -63,24 +64,25 @@ function useComponentCreate(props: Props) {
     }
   }, [selectedComponent?.type])
 
-  useLayoutEffect(() => {
-    if (hasValidated && !hasErrors) {
-      handleSubmit().catch((error: unknown) => {
-        logger.error(error, 'ComponentCreate')
-      })
-    }
-  }, [hasValidated, hasErrors])
-
-  async function handleSubmit(e?: FormEvent<HTMLFormElement>) {
-    e?.preventDefault()
-    e?.stopPropagation()
-
-    if (!hasValidated) {
-      dispatch({ name: Meta.VALIDATE })
+  useEffect(() => {
+    if (!hasValidated || hasErrors || isSaving) {
       return
     }
 
-    if (hasErrors || !selectedComponent) {
+    onHandleSave().catch((error: unknown) => {
+      logger.error(error, 'ComponentCreate')
+    })
+  }, [hasValidated, hasErrors, isSaving, onHandleSave])
+
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    e.stopPropagation()
+
+    dispatch({ name: Meta.VALIDATE })
+  }
+
+  async function handleSave() {
+    if (!selectedComponent) {
       return
     }
 
@@ -106,7 +108,7 @@ function useComponentCreate(props: Props) {
     })
   }
 
-  function reset(e: MouseEvent<HTMLAnchorElement>) {
+  function handleReset(e: MouseEvent<HTMLAnchorElement>) {
     e.preventDefault()
     dispatch({ name: Meta.SET_COMPONENT })
   }
@@ -114,11 +116,10 @@ function useComponentCreate(props: Props) {
   return {
     handleSubmit,
     handleCreate,
+    handleReset,
     hasErrors,
     errors,
-    component: selectedComponent,
-    isSaving,
-    reset,
+    selectedComponent,
     renderTypeEdit
   }
 }
@@ -127,26 +128,25 @@ export function ComponentCreate(props: Props) {
   const {
     handleSubmit,
     handleCreate,
-    reset,
+    handleReset,
     hasErrors,
     errors,
-    component,
-    isSaving,
+    selectedComponent,
     renderTypeEdit
   } = useComponentCreate(props)
 
-  const type = component?.type
+  const type = selectedComponent?.type
 
   return (
     <>
       {!type && <h4 className="govuk-heading-m">{i18n('component.create')}</h4>}
       {type && (
         <>
-          <BackLink onClick={reset} href="#">
+          <BackLink onClick={handleReset} href="#">
             {i18n('Back to create component list')}
           </BackLink>
           <h4 className="govuk-heading-m">
-            {i18n(`fieldTypeToName.${component.type}`)}{' '}
+            {i18n(`fieldTypeToName.${selectedComponent.type}`)}{' '}
             {i18n('component.component')}
           </h4>
         </>
@@ -158,7 +158,7 @@ export function ComponentCreate(props: Props) {
       {type && renderTypeEdit && (
         <form onSubmit={handleSubmit} autoComplete="off" noValidate>
           <ComponentTypeEdit />
-          <button type="submit" className="govuk-button" disabled={isSaving}>
+          <button type="submit" className="govuk-button">
             Save
           </button>
         </form>

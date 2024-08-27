@@ -1,13 +1,16 @@
 import { type Page } from '@defra/forms-model'
 import React, {
+  useCallback,
   useContext,
-  useLayoutEffect,
+  useEffect,
+  useState,
   type FormEvent,
   type MouseEvent
 } from 'react'
 
 import { ComponentTypeEdit } from '~/src/ComponentTypeEdit.jsx'
 import { ErrorSummary } from '~/src/ErrorSummary.jsx'
+import { logger } from '~/src/common/helpers/logging/logger.js'
 import { DataContext } from '~/src/context/DataContext.js'
 import { findComponent } from '~/src/data/component/findComponent.js'
 import { updateComponent } from '~/src/data/component/updateComponent.js'
@@ -26,22 +29,36 @@ export function ComponentEdit(props: Props) {
   const { data, save } = useContext(DataContext)
   const { state, dispatch } = useContext(ComponentContext)
 
+  const [isSaving, setIsSaving] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
+
   const { page, onSave } = props
   const { initialName, selectedComponent, errors, hasValidated = false } = state
 
   const hasErrors = hasValidationErrors(errors)
+  const onHandleSave = useCallback(handleSave, [handleSave])
 
-  const handleSubmit = async (e?: FormEvent<HTMLFormElement>) => {
-    e?.preventDefault()
-
-    if (!hasValidated) {
-      dispatch({ name: Meta.VALIDATE })
+  useEffect(() => {
+    if (!hasValidated || hasErrors || isSaving || isDeleting) {
       return
     }
 
-    if (hasErrors || !selectedComponent?.name) {
+    onHandleSave().catch((error: unknown) => {
+      logger.error(error, 'ComponentEdit')
+    })
+  }, [hasValidated, hasErrors, isSaving, isDeleting, onHandleSave])
+
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    dispatch({ name: Meta.VALIDATE })
+  }
+
+  async function handleSave() {
+    if (!selectedComponent) {
       return
     }
+
+    setIsSaving(true)
 
     const definition = updateComponent(
       data,
@@ -72,17 +89,13 @@ export function ComponentEdit(props: Props) {
     const component = findComponent(pageEdit, selectedComponent?.name)
     const index = components.indexOf(component)
 
+    setIsDeleting(true)
+
     components.splice(index, 1)
 
     await save(definition)
     onSave()
   }
-
-  useLayoutEffect(() => {
-    if (hasValidated && !hasErrors) {
-      handleSubmit()
-    }
-  }, [hasValidated])
 
   return (
     <>
