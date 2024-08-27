@@ -40,6 +40,7 @@ interface State extends Partial<Form> {
   selectedCondition?: string
   isEditingSection: boolean
   isNewSection: boolean
+  pages: Page[]
   errors: Partial<ErrorList<'path' | 'title'>>
 }
 
@@ -55,9 +56,17 @@ export class PageCreate extends Component<Props, State> {
   constructor(props: Props, context: typeof DataContext) {
     super(props, context)
 
+    const { data } = this.context
+
+    // Sort pages for select menus
+    const pages = structuredClone(data.pages).sort(
+      ({ title: titleA }, { title: titleB }) => titleA.localeCompare(titleB)
+    )
+
     this.state = {
       isEditingSection: false,
       isNewSection: false,
+      pages,
       errors: {}
     }
   }
@@ -210,10 +219,11 @@ export class PageCreate extends Component<Props, State> {
       path,
       isEditingSection,
       isNewSection,
+      pages,
       errors
     } = this.state
 
-    const { sections, pages } = data
+    const { sections } = data
     const hasErrors = hasValidationErrors(errors)
 
     return (
@@ -250,38 +260,6 @@ export class PageCreate extends Component<Props, State> {
               </option>
             </select>
           </div>
-
-          <div className="govuk-form-group">
-            <label className="govuk-label govuk-label--s" htmlFor="link-from">
-              {i18n('addPage.linkFromOption.title')}
-            </label>
-            <div className="govuk-hint" id="link-from-hint">
-              {i18n('addPage.linkFromOption.helpText')}
-            </div>
-            <select
-              className="govuk-select"
-              id="link-from"
-              aria-describedby="link-from-hint"
-              name="from"
-              value={linkFrom ?? ''}
-              onChange={this.onChangeLinkFrom}
-            >
-              <option value="" />
-              {pages.filter(hasNext).map((page) => (
-                <option key={page.path} value={page.path}>
-                  {page.path}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {linkFrom && (
-            <SelectConditions
-              path={linkFrom}
-              conditionsChange={this.conditionSelected}
-              noFieldsHintText={i18n('conditions.noFieldsAvailable')}
-            />
-          )}
 
           <Input
             id="page-title"
@@ -341,7 +319,9 @@ export class PageCreate extends Component<Props, State> {
                   value={section?.name ?? ''}
                   onChange={this.onChangeSection}
                 >
-                  <option value="" />
+                  <option value="">
+                    {i18n('addPage.sectionOption.option')}
+                  </option>
                   {sections.map((section) => (
                     <option key={section.name} value={section.name}>
                       {section.title}
@@ -369,6 +349,38 @@ export class PageCreate extends Component<Props, State> {
               </a>
             </p>
           </div>
+
+          <div className="govuk-form-group">
+            <label className="govuk-label govuk-label--s" htmlFor="link-from">
+              {i18n('addPage.linkFromOption.title')}
+            </label>
+            <div className="govuk-hint" id="link-from-hint">
+              {i18n('addPage.linkFromOption.helpText')}
+            </div>
+            <select
+              className="govuk-select"
+              id="link-from"
+              aria-describedby="link-from-hint"
+              name="from"
+              value={linkFrom ?? ''}
+              onChange={this.onChangeLinkFrom}
+            >
+              <option value="">{i18n('addPage.linkFromOption.option')}</option>
+              {pages.filter(hasNext).map((page) => (
+                <option key={page.path} value={page.path}>
+                  {page.title}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {linkFrom && (
+            <SelectConditions
+              path={linkFrom}
+              conditionsChange={this.conditionSelected}
+              noFieldsHintText={i18n('conditions.noFieldsAvailable')}
+            />
+          )}
 
           <div className="govuk-button-group">
             <button type="submit" className="govuk-button">

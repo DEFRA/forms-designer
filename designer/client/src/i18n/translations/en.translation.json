@@ -30,7 +30,8 @@
     },
     "linkFromOption": {
       "helpText": "Add a link to this page from a different page in the form.",
-      "title": "Link from (optional)"
+      "title": "Link from (optional)",
+      "option": "Select a page"
     },
     "pageTitleField": {
       "title": "Page title"
