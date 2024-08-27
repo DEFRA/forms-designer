@@ -1,28 +1,33 @@
-import { type FormDefinition } from '@defra/forms-model'
+import { type FormDefinition, type Page } from '@defra/forms-model'
 
+import { findLink } from '~/src/data/page/findLink.js'
 import { findPage } from '~/src/data/page/findPage.js'
-import { type Path } from '~/src/data/types.js'
+import { hasNext } from '~/src/data/page/hasNext.js'
 
+/**
+ * Delete link from page
+ */
 export function deleteLink(
   data: FormDefinition,
-  from: Path,
-  to: Path
-): FormDefinition {
-  const fromPage = findPage(data, from)
+  pageFrom: Page,
+  pageTo: Pick<Page, 'path'>
+) {
+  const definition = structuredClone(data)
 
-  findPage(data, to)
+  // Confirm pages exist
+  const pageFromCopy = findPage(definition, pageFrom.path)
+  const pageToCopy = findPage(definition, pageTo.path)
 
-  const toLinkIndex = fromPage.next?.findIndex((n) => n.path === to) ?? -1
-
-  if (!fromPage.next || toLinkIndex < 0) {
-    throw Error('Could not find page or links to delete')
+  if (!hasNext(pageFromCopy)) {
+    throw Error(`Links not found for path '${pageFrom.path}'`)
   }
 
-  fromPage.next.splice(toLinkIndex, 1)
+  // Find link
+  const link = findLink(pageFromCopy, pageToCopy)
+  const index = pageFromCopy.next.indexOf(link)
 
-  const pages = [...data.pages].map((page) =>
-    page.path === fromPage.path ? fromPage : page
-  )
+  // Delete link from page
+  pageFromCopy.next.splice(index, 1)
 
-  return { ...data, pages }
+  return definition
 }

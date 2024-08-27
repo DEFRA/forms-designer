@@ -15,7 +15,9 @@ import { logger } from '~/src/common/helpers/logging/logger.js'
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
+import { deleteLink } from '~/src/data/page/deleteLink.js'
 import { findPage } from '~/src/data/page/findPage.js'
+import { hasNext } from '~/src/data/page/hasNext.js'
 import { updateLinksTo } from '~/src/data/page/updateLinksTo.js'
 import { findSection } from '~/src/data/section/findSection.js'
 import { controllerNameFromPath } from '~/src/helpers.js'
@@ -139,23 +141,22 @@ export class PageEdit extends Component<Props, State> {
     const { save, data } = this.context
     const { page, onSave } = this.props
 
-    const copy = structuredClone(data)
+    let copy = structuredClone(data)
 
     const pageRemove = findPage(copy, page.path)
     const pageIndex = copy.pages.indexOf(pageRemove)
 
     // Remove all links to the page
-    copy.pages.forEach((p, index) => {
-      if (index !== pageIndex && Array.isArray(p.next)) {
-        for (let i = p.next.length - 1; i >= 0; i--) {
-          const next = p.next[i]
-          if (next.path === page.path) {
-            p.next.splice(i, 1)
-          }
-        }
-      }
-    })
+    for (const pageFrom of copy.pages.filter(hasNext)) {
+      const { next } = pageFrom
 
+      // Remove link
+      if (next.some(({ path }) => path === pageRemove.path)) {
+        copy = deleteLink(copy, pageFrom, pageRemove)
+      }
+    }
+
+    // Remove page
     copy.pages.splice(pageIndex, 1)
 
     try {

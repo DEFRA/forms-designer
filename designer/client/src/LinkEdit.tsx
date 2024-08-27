@@ -86,7 +86,7 @@ export class LinkEdit extends Component<Props, State> {
     const { pageFrom, pageTo } = this.state
 
     // Delete link
-    const definition = deleteLink(data, pageFrom.path, pageTo.path)
+    const definition = deleteLink(data, pageFrom, pageTo)
 
     try {
       await save(definition)
