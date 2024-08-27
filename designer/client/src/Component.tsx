@@ -244,6 +244,12 @@ export const Component: FunctionComponent<Props> = (props) => {
   const onSave = () => setShowEditor(!showEditor)
 
   const { title, type } = selectedComponent
+
+  // Check if component type is supported
+  if (!(type in componentTypes)) {
+    return null
+  }
+
   const ComponentIcon = componentTypes[type]
 
   const pageId = slugify(page.path)
