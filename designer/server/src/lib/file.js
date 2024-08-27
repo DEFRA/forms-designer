@@ -1,3 +1,6 @@
+import Boom from '@hapi/boom'
+import { StatusCodes } from 'http-status-codes'
+
 import config from '~/src/config.js'
 import { get, postJson } from '~/src/lib/fetch.js'
 
@@ -8,7 +11,24 @@ const submissionEndpoint = new URL('/file/', config.submissionUrl)
  */
 export async function checkFileStatus(fieldId) {
   const requestUrl = new URL(`./${fieldId}`, submissionEndpoint)
-  return await get(requestUrl, {})
+
+  try {
+    const result = await get(requestUrl, {})
+    return result.response.statusCode
+  } catch (err) {
+    if (
+      Boom.isBoom(err) &&
+      err.output.statusCode === StatusCodes.GONE.valueOf()
+    ) {
+      return StatusCodes.GONE.valueOf()
+    }
+
+    return Boom.internal(
+      new Error('Failed to get download url', {
+        cause: err
+      })
+    )
+  }
 }
 
 /**

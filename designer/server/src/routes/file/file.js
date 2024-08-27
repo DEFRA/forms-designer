@@ -24,27 +24,18 @@ export default [
       const { params, yar } = request
       const { fileId } = params
 
-      try {
-        await checkFileStatus(fileId)
+      const statusCode = await checkFileStatus(fileId)
 
+      if (statusCode === StatusCodes.OK) {
         const validation = yar.flash(sessionNames.validationFailure).at(0)
 
         return h.view('file/download-page', file.fileViewModel(validation))
-      } catch (err) {
-        if (
-          Boom.isBoom(err) &&
-          err.output.statusCode === StatusCodes.GONE.valueOf()
-        ) {
-          const pageTitle = 'The link has expired'
+      }
 
-          return h.view('file/expired', errorViewModel(pageTitle))
-        }
+      if (statusCode === StatusCodes.GONE) {
+        const pageTitle = 'The link has expired'
 
-        return Boom.internal(
-          new Error('Failed to get download url', {
-            cause: err
-          })
-        )
+        return h.view('file/expired', errorViewModel(pageTitle))
       }
     }
   }),
