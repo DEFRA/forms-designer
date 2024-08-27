@@ -14,10 +14,8 @@ import { userEvent } from '@testing-library/user-event'
 import upperFirst from 'lodash/upperFirst.js'
 import React from 'react'
 
-import {
-  InlineConditionsDefinitionValue,
-  type FieldDef
-} from '~/src/conditions/InlineConditionsDefinitionValue.jsx'
+import { InlineConditionsDefinitionValue } from '~/src/conditions/InlineConditionsDefinitionValue.jsx'
+import { type FieldDef } from '~/src/data/component/fields.js'
 
 describe('InlineConditionsDefinitionValue', () => {
   afterEach(cleanup)

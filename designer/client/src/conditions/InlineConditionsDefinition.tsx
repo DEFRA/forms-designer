@@ -22,10 +22,8 @@ import {
 import upperFirst from 'lodash/upperFirst.js'
 import React, { Component, type ChangeEvent } from 'react'
 
-import {
-  InlineConditionsDefinitionValue,
-  type FieldDef
-} from '~/src/conditions/InlineConditionsDefinitionValue.jsx'
+import { InlineConditionsDefinitionValue } from '~/src/conditions/InlineConditionsDefinitionValue.jsx'
+import { type FieldDef } from '~/src/data/component/fields.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 
 interface Props {

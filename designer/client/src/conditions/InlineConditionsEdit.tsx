@@ -20,7 +20,7 @@ import React, {
 
 import { ErrorMessage } from '~/src/components/ErrorMessage/ErrorMessage.jsx'
 import { InlineConditionsDefinition } from '~/src/conditions/InlineConditionsDefinition.jsx'
-import { type FieldDef } from '~/src/conditions/InlineConditionsDefinitionValue.jsx'
+import { type FieldDef } from '~/src/data/component/fields.js'
 
 interface Props {
   conditions: ConditionsModel
