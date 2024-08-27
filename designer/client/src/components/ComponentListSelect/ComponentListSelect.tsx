@@ -48,10 +48,9 @@ export function ComponentListSelect() {
       return
     }
     try {
-      const [foundList] = findList(data, list)
       listDispatch({
         name: ListActions.SET_SELECTED_LIST,
-        payload: foundList
+        payload: findList(data, list)
       })
     } catch (error) {
       logger.error(error, 'ComponentListSelect')
@@ -75,9 +74,11 @@ export function ComponentListSelect() {
   }, [listsEditorState.isEditingList, selectedList?.name, isAddingNew])
 
   const editList = (e: ChangeEvent<HTMLSelectElement>) => {
+    const { value: listName } = e.target
+
     dispatch({
       name: Meta.SET_SELECTED_LIST,
-      payload: e.target.value,
+      payload: listName || undefined,
       as: selectedComponent
     })
   }

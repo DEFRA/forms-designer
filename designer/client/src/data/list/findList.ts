@@ -1,14 +1,17 @@
-import { type FormDefinition, type List } from '@defra/forms-model'
+import { type FormDefinition } from '@defra/forms-model'
 
-import { type Found } from '~/src/data/types.js'
-
+/**
+ * Find list by name
+ */
 export function findList(
-  data: FormDefinition,
-  name: List['name']
-): Found<List> {
-  const index = data.lists.findIndex((list) => list.name === name)
-  if (index < 0) {
-    throw Error(`No list found with the name ${name}`)
+  { lists }: Pick<FormDefinition, 'lists'>,
+  nameSearch?: string
+) {
+  const list = lists.find(({ name }) => name === nameSearch)
+
+  if (!list) {
+    throw Error(`List not found with name '${nameSearch}'`)
   }
-  return [data.lists[index], index]
+
+  return list
 }

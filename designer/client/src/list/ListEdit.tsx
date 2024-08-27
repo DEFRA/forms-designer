@@ -1,4 +1,3 @@
-import { clone } from '@defra/forms-model'
 // @ts-expect-error -- No types available
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import Joi from 'joi'
@@ -12,6 +11,7 @@ import React, {
 import { ErrorSummary } from '~/src/ErrorSummary.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { addList } from '~/src/data/list/addList.js'
+import { findList } from '~/src/data/list/findList.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ListItems } from '~/src/list/ListItems.jsx'
 import {
@@ -36,7 +36,7 @@ function useListEdit() {
   const { state, dispatch } = useContext(ListContext)
   const { data, save } = useContext(DataContext)
 
-  const { selectedList, initialName } = state
+  const { selectedList } = state
 
   function handleCreate(e: MouseEvent<HTMLAnchorElement>) {
     e.preventDefault()
@@ -54,18 +54,18 @@ function useListEdit() {
   async function handleDelete(e: MouseEvent<HTMLButtonElement>) {
     e.preventDefault()
 
-    if (window.confirm('Confirm delete') && initialName) {
-      const copy = clone(data)
-
-      const selectedListIndex = copy.lists.findIndex(
-        (list) => list.name === initialName
-      )
-
-      if (selectedListIndex) {
-        copy.lists.splice(selectedListIndex, 1)
-        await save(copy)
-      }
+    if (!window.confirm('Confirm delete')) {
+      return
     }
+
+    const definition = structuredClone(data)
+
+    const listRemove = findList(definition, selectedList?.name)
+    const listIndex = definition.lists.indexOf(listRemove)
+
+    definition.lists.splice(listIndex, 1)
+
+    await save(definition)
 
     listsEditorDispatch({
       name: ListsEditorStateActions.IS_EDITING_LIST,
@@ -107,18 +107,23 @@ function useListEdit() {
       return
     }
 
-    let copy = { ...data }
-    if (payload.selectedList.isNew) {
-      delete payload.selectedList.isNew
-      copy = addList(copy, payload.selectedList)
+    let definition = structuredClone(data)
+
+    const list = structuredClone(payload.selectedList)
+
+    if (list.isNew) {
+      delete list.isNew
+      definition = addList(definition, list)
     } else {
-      const selectedListIndex = copy.lists.findIndex(
-        (list) => list.name === initialName
-      )
-      copy.lists[selectedListIndex] = payload.selectedList
+      const listEdit = findList(definition, payload.selectedList.name)
+      const listIndex = definition.lists.indexOf(listEdit)
+
+      if (listIndex > -1) {
+        definition.lists[listIndex] = list
+      }
     }
 
-    await save(copy)
+    await save(definition)
 
     listsEditorDispatch({
       name: ListsEditorStateActions.IS_EDITING_LIST,

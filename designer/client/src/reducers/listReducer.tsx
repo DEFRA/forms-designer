@@ -210,7 +210,7 @@ export const ListContextProvider = (props: {
   }
 
   if (selectedListName) {
-    const [selectedList] = findList(data, selectedListName)
+    const selectedList = findList(data, selectedListName)
 
     init = {
       ...init,
