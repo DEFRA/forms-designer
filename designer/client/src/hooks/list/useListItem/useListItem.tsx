@@ -89,7 +89,7 @@ export function useListItem(
     return copy
   }
 
-  function prepareForDelete(data: any, index: number | undefined) {
+  function prepareForDelete(data: FormDefinition, index?: number) {
     const copy = { ...data }
     const { initialName, selectedList, selectedItemIndex } = state
 

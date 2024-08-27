@@ -11,7 +11,13 @@ import {
 import { ListActions } from '~/src/reducers/listActions.jsx'
 import { ListContext } from '~/src/reducers/listReducer.jsx'
 
-const ListItem = ({ item, removeItem, selectListItem }) => {
+interface Props {
+  item: Item
+  removeItem: () => void
+  selectListItem: (payload: Item) => void
+}
+
+const ListItem = ({ item, removeItem, selectListItem }: Props) => {
   return (
     <tr className="govuk-table__row">
       <td className="govuk-table__cell govuk-!-width-full">
