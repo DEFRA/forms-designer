@@ -16,10 +16,12 @@
       "hint": "You can add links between different pages and set conditions for links to control the page that loads next. For example, a question page with a component for yes and no options could have link conditions based on which option a user selects."
     },
     "linkFrom": {
-      "title": "Link from"
+      "title": "Link from",
+      "option": "Select a page"
     },
     "linkTo": {
-      "title": "Link to"
+      "title": "Link to",
+      "option": "Select a page"
     },
     "noFieldsAvailable": "You cannot add any conditions as there are no components on the page you wish to link from. Add a component, such as an Input or a Selection field, and then add a condition."
   },
@@ -46,7 +48,8 @@
     },
     "sectionOption": {
       "helpText": "Use sections to split a form. For example, to add a section per applicant. The section title appears above the page title. However, if these titles are the same, the form will only show the page title.",
-      "title": "Section (optional)"
+      "title": "Section (optional)",
+      "option": "Select a section"
     }
   },
   "cancel": "Cancel",
@@ -120,12 +123,16 @@
     "condition": "Condition",
     "conditionHint": "Set when a condition might be met in the form. For example, when the form asks a question and the user selects Yes instead of No (yes=true).",
     "conditionField": "Component title",
+    "conditionFieldOption": "Select a title",
     "conditionOperator": "Operator",
+    "conditionOperatorOption": "Select an operator",
     "conditionCoordinator": "Coordinator (optional)",
+    "conditionCoordinatorOption": "Select a coordinator",
     "conditionDatePeriod": "Period",
     "conditionDateUnits": "Units",
     "conditionDateDirection": "Direction",
-    "conditionValue": "Value"
+    "conditionValue": "Value",
+    "conditionValueOption": "Select a value"
   },
   "create": "create {{noun}}",
   "dateFieldEditComponent": {
@@ -150,7 +157,8 @@
   "field": "field",
   "fieldEdit": {
     "conditions": {
-      "hint": "Select a condition that determines whether to show the contents of this component. You can create and edit conditions from the Conditions screen."
+      "hint": "Select a condition that determines whether to show the contents of this component. You can create and edit conditions from the Conditions screen.",
+      "option": "Select a condition"
     },
     "details": {
       "hint": "Enter the text you want to show when users expand the title. You can apply basic HTML, such as text formatting and hyperlinks."
@@ -219,6 +227,7 @@
       "conditions": "Conditions (optional)",
       "conditionsHint": "Select a condition that determines whether to show this list item. You can create and edit conditions on the Conditions screen.",
       "createSubcomponent": "Create sub component",
+      "conditionsOption": "Select a condition",
       "editTitle": "Edit list item {{title, lowerFirst}}",
       "help": "Help text (optional)",
       "helpHint": "Enter the description to show for this list item",
@@ -308,6 +317,7 @@
     "pathHint": "Appears in the browser path. The value you enter in the page title field automatically populates the path name. To override it, enter your own path name, relevant to the page, and use lowercase text and hyphens between words. For example, '/personal-details'.",
     "section": "Section (optional)",
     "sectionHint": "Use sections to split a form. For example, to add a section per applicant. The section title appears above the page title. However, if these titles are the same, the form will only show the page title.",
+    "sectionOption": "Select a section",
     "title": "Page title"
   },
   "save": "Save",

@@ -128,7 +128,9 @@ describe('ListItemEdit', () => {
     })
 
     expect($select.value).toBe('')
-    expect($select.options[$select.selectedIndex].textContent).toBe('')
+    expect($select.options[$select.selectedIndex].textContent).toBe(
+      'Select a condition'
+    )
 
     await act(() => userEvent.selectOptions($select, 'MYWwRN'))
 

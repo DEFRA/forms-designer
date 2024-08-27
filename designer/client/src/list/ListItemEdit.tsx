@@ -108,7 +108,7 @@ export function ListItemEdit() {
           value={condition}
           onChange={handleConditionChange}
         >
-          <option value="" />
+          <option value="">{i18n('list.item.conditionsOption')}</option>
           {conditions.map((condition) => (
             <option key={condition.name} value={condition.name}>
               {condition.displayName}

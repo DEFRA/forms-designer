@@ -329,7 +329,7 @@ export class PageEdit extends Component<Props, State> {
                   value={section?.name ?? ''}
                   onChange={this.onChangeSection}
                 >
-                  <option value="" />
+                  <option value="">{i18n('page.sectionOption')}</option>
                   {sections.map((section) => (
                     <option key={section.name} value={section.name}>
                       {section.title}

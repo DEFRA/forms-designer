@@ -274,7 +274,7 @@ export class LinkEdit extends Component<Props, State> {
               value={pageFrom?.path}
               onChange={this.onChangeFrom}
             >
-              <option value="" />
+              <option value="">{i18n('addLink.linkFrom.option')}</option>
               {pages.filter(hasNext).map((page) => (
                 <option key={page.path} value={page.path}>
                   {page.title}
@@ -308,7 +308,7 @@ export class LinkEdit extends Component<Props, State> {
               value={pageTo?.path}
               onChange={this.onChangeTo}
             >
-              <option value="" />
+              <option value="">{i18n('addLink.linkTo.option')}</option>
               {pages.map((page) => (
                 <option key={page.path} value={page.path}>
                   {page.title}
