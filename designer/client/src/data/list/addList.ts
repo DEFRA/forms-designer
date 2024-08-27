@@ -1,12 +1,20 @@
 import { type FormDefinition, type List } from '@defra/forms-model'
 
-export function addList(data: FormDefinition, list: List): FormDefinition {
-  const index = data.lists.findIndex((l) => l.name === list.name)
-  if (index > -1) {
-    throw Error(`A list with the name ${list.name} already exists`)
+import { findList } from '~/src/data/list/findList.js'
+
+export function addList(data: FormDefinition, list: List) {
+  try {
+    // Throw for missing list
+    findList(data, list.name)
+  } catch {
+    // Copy form definition
+    const definition = structuredClone(data)
+
+    // Add new list
+    definition.lists.push(list)
+
+    return definition
   }
-  return {
-    ...data,
-    lists: [...data.lists, list]
-  }
+
+  return data
 }
