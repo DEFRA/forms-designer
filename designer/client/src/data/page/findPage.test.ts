@@ -50,7 +50,12 @@ const data = {
     }
   ],
   lists: [],
-  sections: [],
+  sections: [
+    {
+      name: 'section1',
+      title: 'Section 1'
+    }
+  ],
   conditions: []
 } satisfies FormDefinition
 
