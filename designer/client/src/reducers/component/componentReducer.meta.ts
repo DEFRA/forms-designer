@@ -28,9 +28,6 @@ export function metaReducer(
     case Meta.SET_COMPONENT:
       return { ...state, selectedComponent: payload, errors: {} }
 
-    case Meta.SET_PAGE:
-      return { ...state, pagePath: payload }
-
     case Meta.VALIDATE:
       return {
         ...state,

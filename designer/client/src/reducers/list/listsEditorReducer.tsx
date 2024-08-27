@@ -4,11 +4,7 @@ import { type ListsEdit } from '~/src/list/ListsEdit.jsx'
 
 export enum ListsEditorStateActions {
   IS_EDITING_LIST = 'IS_EDITING_LIST',
-  IS_EDITING_LIST_ITEM = 'IS_EDITING_LIST_ITEM',
-  SET_LIST_TITLE = 'SET_LIST_TITLE',
-  SET_LIST_ITEM_TITLE = 'SET_LIST_ITEM_TITLE',
-  SET_CONTEXT = 'SET_CONTEXT',
-  RESET = 'RESET'
+  IS_EDITING_LIST_ITEM = 'IS_EDITING_LIST_ITEM'
 }
 
 export interface ListsEditorState {
@@ -48,18 +44,10 @@ export function listsEditorReducer(
   const [type, payload] = action
 
   switch (type) {
-    case ListsEditorStateActions.SET_CONTEXT:
-      return { ...state, listEditContext: payload }
-    case ListsEditorStateActions.SET_LIST_TITLE:
-      return { ...state, listTitle: payload }
-    case ListsEditorStateActions.SET_LIST_ITEM_TITLE:
-      return { ...state, listItemTitle: payload }
     case ListsEditorStateActions.IS_EDITING_LIST:
       return { ...state, isEditingList: payload }
     case ListsEditorStateActions.IS_EDITING_LIST_ITEM:
       return { ...state, isEditingListItem: payload }
-    case ListsEditorStateActions.RESET:
-      return initListsEditingState()
   }
 }
 
