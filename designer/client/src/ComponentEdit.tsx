@@ -8,6 +8,7 @@ import React, {
 import { ComponentTypeEdit } from '~/src/ComponentTypeEdit.jsx'
 import { ErrorSummary } from '~/src/ErrorSummary.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
+import { findComponent } from '~/src/data/component/findComponent.js'
 import { updateComponent } from '~/src/data/component/updateComponent.js'
 import { findPage } from '~/src/data/page/findPage.js'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
@@ -46,7 +47,7 @@ export function ComponentEdit(props) {
   const handleDelete = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
 
-    if (!window.confirm('Confirm delete') || !selectedComponent) {
+    if (!window.confirm('Confirm delete')) {
       return
     }
 
@@ -54,15 +55,10 @@ export function ComponentEdit(props) {
     const pageEdit = findPage(copy, page.path)
 
     const { components = [] } = pageEdit
-    const componentIndex = components.findIndex(
-      ({ name }) => name === selectedComponent.name
-    )
+    const component = findComponent(pageEdit, selectedComponent?.name)
+    const index = components.indexOf(component)
 
-    if (componentIndex < 0) {
-      return
-    }
-
-    components.splice(componentIndex, 1)
+    components.splice(index, 1)
 
     await save(copy)
     toggleShowEditor()
