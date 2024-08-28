@@ -89,9 +89,5 @@ export default [
 ]
 
 /**
- * @import { FileDownload } from '@defra/forms-model'
  * @import { ServerRoute } from '@hapi/hapi'
  */
-
-// 1. Downlaod file from url
-// 2. Handle 403, 404, 410 from create file link endpoint
