@@ -38,7 +38,9 @@ export default [
         }
 
         default: {
-          return h.response('Unhandled file status').code(500)
+          return h
+            .response('Unhandled file status')
+            .code(StatusCodes.INTERNAL_SERVER_ERROR)
         }
       }
     }
