@@ -17,7 +17,7 @@ import { Fields, Options } from '~/src/reducers/component/types.js'
 
 export function FieldEdit() {
   const { state, dispatch } = useContext(ComponentContext)
-  const { selectedComponent, errors = {} } = state
+  const { selectedComponent, errors } = state
 
   if (!selectedComponent) {
     return null

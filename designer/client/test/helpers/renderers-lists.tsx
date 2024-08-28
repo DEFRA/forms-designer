@@ -4,8 +4,7 @@ import { DataContext, type DataContextType } from '~/src/context/DataContext.js'
 import {
   ComponentContext,
   componentReducer,
-  initComponentState,
-  type ComponentContextType
+  initComponentState
 } from '~/src/reducers/component/componentReducer.jsx'
 import { ListsEditorContextProvider } from '~/src/reducers/list/listsEditorReducer.jsx'
 import { ListContextProvider } from '~/src/reducers/listReducer.jsx'
@@ -15,7 +14,7 @@ export interface RenderListEditorWithContextProps {
   selectedListName?: string
   data: DataContextType['data']
   save?: DataContextType['save']
-  state?: Omit<ComponentContextType['state'], 'initialName'>
+  state?: Parameters<typeof initComponentState>[0]
 }
 
 export function RenderListEditorWithContext({

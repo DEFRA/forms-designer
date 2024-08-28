@@ -28,7 +28,7 @@ export function ComponentListSelect() {
   const { state: listsEditorState, dispatch: listsEditorDispatch } =
     useContext(ListsEditorContext)
 
-  const { selectedComponent, errors = {} } = state
+  const { selectedComponent, errors } = state
 
   if (!hasListField(selectedComponent)) {
     throw new Error('Component must support lists')

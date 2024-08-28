@@ -29,7 +29,7 @@ function useComponentCreate(props) {
   const [renderTypeEdit, setRenderTypeEdit] = useState<boolean>(false)
   const { data, save } = useContext(DataContext)
   const { state, dispatch } = useContext(ComponentContext)
-  const { selectedComponent, errors = {}, hasValidated } = state
+  const { selectedComponent, errors, hasValidated } = state
   const { page, toggleAddComponent = () => {} } = props
 
   const [isSaving, setIsSaving] = useState(false)
