@@ -21,28 +21,28 @@ export function useListItem(
 
   const handleTitleChange: ListItemHook['handleTitleChange'] = (e) => {
     dispatch({
-      type: ListActions.EDIT_LIST_ITEM_TEXT,
+      name: ListActions.EDIT_LIST_ITEM_TEXT,
       payload: e.target.value
     })
   }
 
   const handleConditionChange: ListItemHook['handleConditionChange'] = (e) => {
     dispatch({
-      type: ListActions.EDIT_LIST_ITEM_CONDITION,
+      name: ListActions.EDIT_LIST_ITEM_CONDITION,
       payload: e.target.value
     })
   }
 
   const handleValueChange: ListItemHook['handleValueChange'] = (e) => {
     dispatch({
-      type: ListActions.EDIT_LIST_ITEM_VALUE,
+      name: ListActions.EDIT_LIST_ITEM_VALUE,
       payload: e.target.value
     })
   }
 
   const handleHintChange: ListItemHook['handleHintChange'] = (e) => {
     dispatch({
-      type: ListActions.EDIT_LIST_ITEM_DESCRIPTION,
+      name: ListActions.EDIT_LIST_ITEM_DESCRIPTION,
       payload: e.target.value
     })
   }
@@ -61,7 +61,7 @@ export function useListItem(
     })
 
     dispatch({
-      type: ListActions.LIST_ITEM_VALIDATION_ERRORS,
+      name: ListActions.LIST_ITEM_VALIDATION_ERRORS,
       payload: errors
     })
 

@@ -39,10 +39,3 @@ export function fieldComponentValidations(component?: ComponentDef) {
 
   return errors
 }
-
-export function validateComponent(selectedComponent?: ComponentDef) {
-  return {
-    errors: fieldComponentValidations(selectedComponent),
-    hasValidated: true
-  }
-}

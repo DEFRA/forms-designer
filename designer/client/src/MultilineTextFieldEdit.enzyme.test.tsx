@@ -33,7 +33,7 @@ describe('MutlilineTextFieldEdit renders correctly when', () => {
   test('schema rows changes', () => {
     const field = () => wrapper.find('#field-options-rows')
     const newRows = 42
-    field().simulate('change', { target: { value: newRows } })
+    field().simulate('change', { target: { valueAsNumber: newRows } })
     expect(field().props().value).toBe(newRows)
   })
 })

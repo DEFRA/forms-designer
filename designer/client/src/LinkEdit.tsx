@@ -158,7 +158,7 @@ export class LinkEdit extends Component<Props, State> {
     )
   }
 
-  conditionSelected = (selectedCondition: string) => {
+  conditionSelected = (selectedCondition?: string) => {
     this.setState({
       selectedCondition
     })

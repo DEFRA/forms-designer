@@ -68,7 +68,7 @@ function useComponentCreate(props) {
     e?.preventDefault()
 
     if (!hasValidated) {
-      dispatch({ type: Meta.VALIDATE })
+      dispatch({ name: Meta.VALIDATE })
       return
     }
 
@@ -93,7 +93,7 @@ function useComponentCreate(props) {
    */
   function handleCreate(component: ComponentDef) {
     dispatch({
-      type: Meta.NEW_COMPONENT,
+      name: Meta.NEW_COMPONENT,
       payload: {
         ...component,
         name: randomId()
@@ -103,7 +103,7 @@ function useComponentCreate(props) {
 
   function reset(e: MouseEvent<HTMLAnchorElement>) {
     e.preventDefault()
-    dispatch({ type: Meta.SET_COMPONENT })
+    dispatch({ name: Meta.SET_COMPONENT })
   }
 
   return {

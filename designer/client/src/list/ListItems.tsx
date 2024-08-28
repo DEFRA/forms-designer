@@ -1,4 +1,4 @@
-import { clone } from '@defra/forms-model'
+import { clone, type Item } from '@defra/forms-model'
 import React, { useContext } from 'react'
 
 import { DataContext } from '~/src/context/DataContext.js'
@@ -50,9 +50,16 @@ export function ListItems() {
   const { data, save } = useContext(DataContext)
   const { state, dispatch } = useContext(ListContext)
 
-  const selectListItem = (payload) => {
-    dispatch({ type: ListActions.EDIT_LIST_ITEM, payload })
-    listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST_ITEM, true])
+  const selectListItem = (payload: Item) => {
+    dispatch({
+      name: ListActions.EDIT_LIST_ITEM,
+      payload
+    })
+
+    listsEditorDispatch({
+      name: ListsEditorStateActions.IS_EDITING_LIST_ITEM,
+      payload: true
+    })
   }
 
   const { prepareForDelete } = useListItem(state, dispatch)

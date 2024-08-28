@@ -30,32 +30,31 @@ import {
   hasValidationErrors
 } from '~/src/validations.js'
 
-const useListItemActions = (state, dispatch) => {
-  const { dispatch: listsEditorDispatch } = useContext(ListsEditorContext)
-
-  function createItem() {
-    dispatch({ type: ListActions.ADD_LIST_ITEM })
-    listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST_ITEM, true])
-  }
-
-  return {
-    createItem,
-    selectedList: state.selectedList
-  }
-}
-
 function useListEdit() {
-  const { state: listEditorState, dispatch: listsEditorDispatch } =
-    useContext(ListsEditorContext)
+  const { dispatch: listsEditorDispatch } = useContext(ListsEditorContext)
 
   const { state, dispatch } = useContext(ListContext)
   const { data, save } = useContext(DataContext)
 
-  const handleDelete = async (e: MouseEvent<HTMLButtonElement>) => {
+  const { selectedList, initialName } = state
+
+  function handleCreate(e: MouseEvent<HTMLAnchorElement>) {
     e.preventDefault()
 
-    if (window.confirm('Confirm delete')) {
-      const { initialName } = listEditorState
+    dispatch({
+      name: ListActions.ADD_LIST_ITEM
+    })
+
+    listsEditorDispatch({
+      name: ListsEditorStateActions.IS_EDITING_LIST_ITEM,
+      payload: true
+    })
+  }
+
+  async function handleDelete(e: MouseEvent<HTMLButtonElement>) {
+    e.preventDefault()
+
+    if (window.confirm('Confirm delete') && initialName) {
       const copy = clone(data)
 
       const selectedListIndex = copy.lists.findIndex(
@@ -68,7 +67,10 @@ function useListEdit() {
       }
     }
 
-    listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST, false])
+    listsEditorDispatch({
+      name: ListsEditorStateActions.IS_EDITING_LIST,
+      payload: false
+    })
   }
 
   function validate(payload: Partial<FormList>): payload is FormList {
@@ -86,16 +88,15 @@ function useListEdit() {
     })
 
     dispatch({
-      type: ListActions.LIST_VALIDATION_ERRORS,
+      name: ListActions.LIST_VALIDATION_ERRORS,
       payload: errors
     })
 
     return !hasValidationErrors(errors)
   }
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    const { selectedList, initialName } = state
 
     const payload = {
       selectedList
@@ -119,25 +120,28 @@ function useListEdit() {
 
     await save(copy)
 
-    listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST, false])
+    listsEditorDispatch({
+      name: ListsEditorStateActions.IS_EDITING_LIST,
+      payload: false
+    })
+
     dispatch({
-      type: ListActions.SUBMIT
+      name: ListActions.SUBMIT
     })
   }
 
   return {
+    handleCreate,
     handleDelete,
     handleSubmit
   }
 }
 
 export function ListEdit() {
-  const { handleSubmit, handleDelete } = useListEdit()
-
   const { state, dispatch } = useContext(ListContext)
-  const { selectedList, createItem } = useListItemActions(state, dispatch)
+  const { handleCreate, handleDelete, handleSubmit } = useListEdit()
 
-  const { errors } = state
+  const { selectedList, errors } = state
   const hasErrors = hasValidationErrors(errors)
 
   return (
@@ -159,7 +163,7 @@ export function ListEdit() {
             value={selectedList.title}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               dispatch({
-                type: ListActions.EDIT_TITLE,
+                name: ListActions.EDIT_TITLE,
                 payload: e.target.value
               })
             }
@@ -174,10 +178,7 @@ export function ListEdit() {
             href="#"
             id="list-items"
             className="govuk-link"
-            onClick={(e) => {
-              e.preventDefault()
-              createItem()
-            }}
+            onClick={handleCreate}
           >
             {i18n('list.item.add')}
           </a>

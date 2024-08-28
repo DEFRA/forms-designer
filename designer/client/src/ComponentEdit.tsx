@@ -24,7 +24,7 @@ export function ComponentEdit(props) {
     e?.preventDefault()
 
     if (!hasValidated) {
-      dispatch({ type: Meta.VALIDATE })
+      dispatch({ name: Meta.VALIDATE })
       return
     }
 

@@ -39,8 +39,9 @@ export function ConditionEdit({ context = ComponentContext }: Props) {
         value={options.condition}
         onChange={(e) =>
           dispatch({
-            type: Options.EDIT_OPTIONS_CONDITION,
-            payload: e.target.value
+            name: Options.EDIT_OPTIONS_CONDITION,
+            payload: e.target.value,
+            as: selectedComponent
           })
         }
       >
