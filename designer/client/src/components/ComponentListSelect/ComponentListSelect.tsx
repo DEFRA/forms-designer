@@ -1,3 +1,4 @@
+import { hasListField } from '@defra/forms-model'
 import classNames from 'classnames'
 import React, {
   useContext,
@@ -22,14 +23,18 @@ import { ListContext } from '~/src/reducers/listReducer.jsx'
 
 export function ComponentListSelect() {
   const { data } = useContext(DataContext)
+  const { state, dispatch } = useContext(ComponentContext)
+  const { state: listState, dispatch: listDispatch } = useContext(ListContext)
   const { state: listsEditorState, dispatch: listsEditorDispatch } =
     useContext(ListsEditorContext)
 
-  const { state, dispatch } = useContext(ComponentContext)
-  const { selectedComponent = {}, errors = {} } = state
-  const list = 'list' in selectedComponent ? selectedComponent.list : ''
+  const { selectedComponent, errors = {} } = state
 
-  const { state: listState, dispatch: listDispatch } = useContext(ListContext)
+  if (!hasListField(selectedComponent)) {
+    throw new Error('Component must support lists')
+  }
+
+  const { list } = selectedComponent
   const { selectedList } = listState
 
   const [selectedListTitle, setSelectedListTitle] = useState(
@@ -67,19 +72,19 @@ export function ComponentListSelect() {
     }
   }, [listsEditorState.isEditingList, selectedList?.name, isAddingNew])
 
-  function editList(e: ChangeEvent<HTMLSelectElement>) {
+  const editList = (e: ChangeEvent<HTMLSelectElement>) => {
     dispatch({
       type: Meta.SET_SELECTED_LIST,
       payload: e.target.value
     })
   }
 
-  function handleEditListClick(e: MouseEvent) {
+  const handleEditListClick = (e: MouseEvent) => {
     e.preventDefault()
     listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST, true])
   }
 
-  function handleAddListClick(e: MouseEvent) {
+  const handleAddListClick = (e: MouseEvent) => {
     e.preventDefault()
     setIsAddingNew(true)
     listDispatch({ type: ListActions.ADD_NEW_LIST })

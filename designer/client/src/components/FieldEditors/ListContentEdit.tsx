@@ -1,4 +1,4 @@
-import { hasListField } from '@defra/forms-model'
+import { ComponentType, type ListTypeOption } from '@defra/forms-model'
 import upperFirst from 'lodash/upperFirst.js'
 import React, { useContext } from 'react'
 
@@ -15,7 +15,7 @@ export function ListContentEdit({ context = ComponentContext }: Props) {
   const { state, dispatch } = useContext(context)
   const { selectedComponent } = state
 
-  if (!selectedComponent || !hasListField(selectedComponent)) {
+  if (selectedComponent?.type !== ComponentType.List) {
     return null
   }
 
@@ -36,7 +36,7 @@ export function ListContentEdit({ context = ComponentContext }: Props) {
               {i18n('listContentEditComponent.bulletField.title')}
             </legend>
             <div className="govuk-radios" data-module="govuk-radios">
-              {['bulleted', 'numbered'].map((bullet) => {
+              {(['bulleted', 'numbered'] as ListTypeOption[]).map((bullet) => {
                 const name = 'cond-value-units'
                 const id = `${name}-${bullet}`
 

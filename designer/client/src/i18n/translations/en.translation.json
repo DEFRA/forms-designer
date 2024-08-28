@@ -132,8 +132,9 @@
   "edit": "edit {{noun}}",
   "error": "Error",
   "errors": {
-    "field": "Enter {{field, lowerFirst}}",
-    "spaces": "{{field, upperFirst}} must not include spaces"
+    "required": "Enter {{field, lowerFirst}}",
+    "spaces": "{{field, upperFirst}} must not include spaces",
+    "duplicate": "{{field, upperFirst}} already exists"
   },
   "field": "field",
   "fieldEdit": {

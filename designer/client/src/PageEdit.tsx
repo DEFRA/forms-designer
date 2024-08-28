@@ -1,6 +1,7 @@
 import { clone, slugify, type Page, type Section } from '@defra/forms-model'
 // @ts-expect-error -- No types available
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
+import Joi from 'joi'
 import React, {
   Component,
   type ChangeEvent,
@@ -20,21 +21,28 @@ import { findSection } from '~/src/data/section/findSection.js'
 import { controllerNameFromPath } from '~/src/helpers.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { SectionEdit } from '~/src/section/SectionEdit.jsx'
-import { validateTitle, hasValidationErrors } from '~/src/validations.js'
+import {
+  validateCustom,
+  validateRequired,
+  hasValidationErrors
+} from '~/src/validations.js'
 
 interface Props {
   page: Page
   onSave: () => void
 }
 
-interface State {
-  path: string
-  controller?: string
-  title: string
+interface State extends Partial<Form> {
+  controller?: Page['controller']
   section?: Section
   isEditingSection: boolean
   isNewSection: boolean
   errors: Partial<ErrorList<'path' | 'title'>>
+}
+
+interface Form {
+  path: string
+  title: string
 }
 
 export class PageEdit extends Component<Props, State> {
@@ -66,21 +74,25 @@ export class PageEdit extends Component<Props, State> {
     const { page, onSave } = this.props
 
     // Remove trailing spaces and hyphens
-    const pathTrim = `/${slugify(path)}`
-    const titleTrim = title.trim()
+    const payload = {
+      path: `/${slugify(path)}`,
+      title: title?.trim()
+    }
 
-    const validationErrors = this.validate(titleTrim, pathTrim)
-    if (hasValidationErrors(validationErrors)) return
+    // Check for valid form payload
+    if (!this.validate(payload)) {
+      return
+    }
 
     let copy = { ...data }
     const [copyPage, copyIndex] = findPage(data, page.path)
 
-    if (pathTrim !== page.path) {
-      copy = updateLinksTo(data, page.path, pathTrim)
-      copyPage.path = pathTrim
+    if (payload.path !== page.path) {
+      copy = updateLinksTo(data, page.path, payload.path)
+      copyPage.path = payload.path
     }
 
-    copyPage.title = titleTrim
+    copyPage.title = payload.title
     copyPage.controller = controller
     copyPage.section = section?.name
 
@@ -94,36 +106,29 @@ export class PageEdit extends Component<Props, State> {
     }
   }
 
-  validate = (title: string, path: string) => {
+  validate = (payload: Partial<Form>): payload is Form => {
     const { page } = this.props
     const { data } = this.context
+    const { title, path } = payload
 
-    const titleErrors = validateTitle(
-      'title',
-      'page-title',
-      i18n('page.title'),
-      title
+    const errors: State['errors'] = {}
+
+    errors.title = validateRequired('page-title', title, {
+      label: i18n('page.title')
+    })
+
+    errors.path = validateCustom(
+      'page-path',
+      [path, ...data.pages.map((p) => p.path).filter((p) => p !== page.path)],
+      {
+        message: 'errors.duplicate',
+        label: `Path '${path}'`,
+        schema: Joi.array().unique()
+      }
     )
 
-    const errors: Partial<ErrorList<'path' | 'title'>> = {
-      ...titleErrors
-    }
-
-    // Check for duplicate path
-    function isDuplicate(input: string) {
-      return data.pages.some((p) => p.path !== page.path && p.path === input)
-    }
-
-    if (isDuplicate(path)) {
-      errors.path = {
-        href: '#page-path',
-        children: `Path '${path}' already exists`
-      }
-    }
-
     this.setState({ errors })
-
-    return errors
+    return !hasValidationErrors(errors)
   }
 
   onClickDelete = async (e: MouseEvent<HTMLButtonElement>) => {
@@ -165,7 +170,7 @@ export class PageEdit extends Component<Props, State> {
     const { value: controller } = e.target
 
     this.setState({
-      controller
+      controller: controller ? (controller as Page['controller']) : undefined
     })
   }
 

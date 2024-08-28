@@ -1,6 +1,7 @@
 import { clone } from '@defra/forms-model'
 // @ts-expect-error -- No types available
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
+import Joi from 'joi'
 import React, {
   useContext,
   type ChangeEvent,
@@ -8,7 +9,7 @@ import React, {
   type MouseEvent
 } from 'react'
 
-import { ErrorSummary, type ErrorList } from '~/src/ErrorSummary.jsx'
+import { ErrorSummary } from '~/src/ErrorSummary.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { addList } from '~/src/data/list/addList.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
@@ -18,18 +19,19 @@ import {
   ListsEditorStateActions
 } from '~/src/reducers/list/listsEditorReducer.jsx'
 import { ListActions } from '~/src/reducers/listActions.jsx'
-import { ListContext } from '~/src/reducers/listReducer.jsx'
-import { hasValidationErrors, validateTitle } from '~/src/validations.js'
+import {
+  ListContext,
+  type FormList,
+  type ListState
+} from '~/src/reducers/listReducer.jsx'
+import {
+  validateCustom,
+  validateRequired,
+  hasValidationErrors
+} from '~/src/validations.js'
 
 const useListItemActions = (state, dispatch) => {
   const { dispatch: listsEditorDispatch } = useContext(ListsEditorContext)
-
-  function deleteItem(e) {
-    e.preventDefault()
-    dispatch({
-      type: ListActions.DELETE_LIST_ITEM
-    })
-  }
 
   function createItem() {
     dispatch({ type: ListActions.ADD_LIST_ITEM })
@@ -37,7 +39,6 @@ const useListItemActions = (state, dispatch) => {
   }
 
   return {
-    deleteItem,
     createItem,
     selectedList: state.selectedList
   }
@@ -46,6 +47,7 @@ const useListItemActions = (state, dispatch) => {
 function useListEdit() {
   const { state: listEditorState, dispatch: listsEditorDispatch } =
     useContext(ListsEditorContext)
+
   const { state, dispatch } = useContext(ListContext)
   const { data, save } = useContext(DataContext)
 
@@ -69,50 +71,52 @@ function useListEdit() {
     listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST, false])
   }
 
-  const validate = (): Partial<ErrorList<'title' | 'listItems'>> => {
-    const { selectedList } = state
+  function validate(payload: Partial<FormList>): payload is FormList {
+    const { selectedList } = payload
 
-    const titleErrors = validateTitle(
-      'title',
-      'list-title',
-      i18n('list.title'),
-      selectedList?.title
-    )
+    const errors: ListState['errors'] = {}
 
-    const errors: ReturnType<typeof validate> = {
-      ...titleErrors
-    }
+    errors.title = validateRequired('list-title', selectedList?.title, {
+      label: i18n('list.title')
+    })
 
-    if (!selectedList?.items.length) {
-      errors.listItems = {
-        children: [i18n('list.errors.empty')]
-      }
-    }
+    errors.listItems = validateCustom('list-items', selectedList?.items, {
+      message: 'list.errors.empty',
+      schema: Joi.array().min(1)
+    })
 
-    return errors
+    dispatch({
+      type: ListActions.LIST_VALIDATION_ERRORS,
+      payload: errors
+    })
+
+    return !hasValidationErrors(errors)
   }
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const { selectedList, initialName } = state
-    const errors = validate()
-    if (hasValidationErrors(errors)) {
-      dispatch({
-        type: ListActions.LIST_VALIDATION_ERRORS,
-        payload: errors
-      })
+
+    const payload = {
+      selectedList
+    }
+
+    // Check for valid form payload
+    if (!validate(payload)) {
       return
     }
+
     let copy = { ...data }
-    if (selectedList?.isNew) {
-      delete selectedList.isNew
-      copy = addList(copy, selectedList)
+    if (payload.selectedList.isNew) {
+      delete payload.selectedList.isNew
+      copy = addList(copy, payload.selectedList)
     } else {
       const selectedListIndex = copy.lists.findIndex(
         (list) => list.name === initialName
       )
-      copy.lists[selectedListIndex] = selectedList
+      copy.lists[selectedListIndex] = payload.selectedList
     }
+
     await save(copy)
 
     listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST, false])
@@ -127,22 +131,15 @@ function useListEdit() {
   }
 }
 
-function validate(errors: ErrorList, selectedList: any) {
-  if (selectedList.items.length > 0) {
-    return {}
-  }
-
-  return errors ?? {}
-}
-
 export function ListEdit() {
   const { handleSubmit, handleDelete } = useListEdit()
 
   const { state, dispatch } = useContext(ListContext)
   const { selectedList, createItem } = useListItemActions(state, dispatch)
-  let { errors = {} } = state
-  errors = validate(errors, selectedList)
+
+  const { errors = {} } = state
   const hasErrors = hasValidationErrors(errors)
+
   return (
     <>
       {hasErrors && (
@@ -174,7 +171,8 @@ export function ListEdit() {
 
         <p className="govuk-body">
           <a
-            href="#createItem"
+            href="#"
+            id="list-items"
             className="govuk-link"
             onClick={(e) => {
               e.preventDefault()
@@ -190,7 +188,7 @@ export function ListEdit() {
             {i18n('save')}
           </button>
 
-          {selectedList?.isNew || (
+          {!selectedList?.isNew && (
             <button
               className="govuk-button govuk-button--warning"
               type="button"

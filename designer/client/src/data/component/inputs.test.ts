@@ -16,16 +16,14 @@ test('should return all inputs from the page model', () => {
             title: 'Radios',
             type: ComponentType.RadiosField,
             list: 'radios',
-            options: {},
-            schema: {}
+            options: {}
           },
           {
             name: 'name2',
             title: 'Radios',
             type: ComponentType.RadiosField,
             list: 'radios',
-            options: {},
-            schema: {}
+            options: {}
           }
         ]
       },
@@ -39,16 +37,14 @@ test('should return all inputs from the page model', () => {
             title: 'Radios',
             type: ComponentType.RadiosField,
             list: 'radios',
-            options: {},
-            schema: {}
+            options: {}
           },
           {
             name: 'name4',
             title: 'Radios',
             type: ComponentType.RadiosField,
             list: 'radios',
-            options: {},
-            schema: {}
+            options: {}
           }
         ]
       }

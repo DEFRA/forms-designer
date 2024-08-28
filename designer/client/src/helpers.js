@@ -1,19 +1,4 @@
 /**
- * @param {string | number} [str]
- * @returns {str is '' | null | undefined}
- */
-export function isEmpty(str = '') {
-  return `${str}`.trim().length < 1
-}
-
-/**
- * @param {string} [str]
- */
-export function hasSpaces(str = '') {
-  return /\s/g.test(str)
-}
-
-/**
  * @template {unknown[]} ArrayType
  * @param {ArrayType} arr
  * @param {number} from

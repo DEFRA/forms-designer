@@ -1,4 +1,4 @@
-import { ComponentType } from '@defra/forms-model'
+import { ComponentType, type ComponentDef } from '@defra/forms-model'
 import { shallow } from 'enzyme'
 import React from 'react'
 
@@ -38,14 +38,13 @@ describe('ComponentCreateList', () => {
 
     expect(onSelectComponent.mock.calls).toHaveLength(listItems.length)
     expect(onSelectComponent.mock.calls[0]).toEqual(
-      expect.arrayContaining([
+      expect.arrayContaining<ComponentDef>([
         {
           name: 'Details',
           title: 'Details',
           type: ComponentType.Details,
           content: '',
-          options: {},
-          schema: {}
+          options: {}
         }
       ])
     )
@@ -91,14 +90,13 @@ describe('ComponentCreateList', () => {
 
     expect(onSelectComponent.mock.calls).toHaveLength(listItems.length)
     expect(onSelectComponent.mock.calls[0]).toEqual(
-      expect.arrayContaining([
+      expect.arrayContaining<ComponentDef>([
         {
           name: 'DatePartsField',
           title: 'Date field',
           type: ComponentType.DatePartsField,
-          options: {},
-          schema: {},
-          hint: ''
+          hint: '',
+          options: {}
         }
       ])
     )
@@ -141,15 +139,14 @@ describe('ComponentCreateList', () => {
 
     expect(onSelectComponent.mock.calls).toHaveLength(listItems.length)
     expect(onSelectComponent.mock.calls[0]).toEqual(
-      expect.arrayContaining([
+      expect.arrayContaining<ComponentDef>([
         {
           name: 'AutocompleteField',
           title: 'Autocomplete field',
-          list: '',
           type: ComponentType.AutocompleteField,
-          options: {},
-          schema: {},
-          hint: ''
+          hint: '',
+          list: '',
+          options: {}
         }
       ])
     )

@@ -9,7 +9,7 @@ import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
 describe('ComponentCreate:', () => {
   const data = {
-    pages: [{ path: '/1', title: '', controller: '', section: '' }],
+    pages: [{ path: '/1', title: '', section: '' }],
     lists: [],
     sections: [],
     conditions: []
@@ -77,7 +77,7 @@ describe('ComponentCreate:', () => {
     await waitFor(() => expect(save).toHaveBeenCalled())
 
     expect(save.mock.calls[0]).toEqual(
-      expect.arrayContaining([
+      expect.arrayContaining<FormDefinition>([
         {
           ...data,
           pages: [
@@ -88,8 +88,7 @@ describe('ComponentCreate:', () => {
                   type: ComponentType.Details,
                   name: expect.any(String),
                   content: 'content',
-                  options: {},
-                  schema: {}
+                  options: {}
                 }
               ]
             })

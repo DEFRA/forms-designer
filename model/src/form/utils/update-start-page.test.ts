@@ -20,8 +20,7 @@ describe('updateStartPage', () => {
               type: ComponentType.YesNoField,
               options: {
                 required: true
-              },
-              schema: {}
+              }
             }
           ]
         },

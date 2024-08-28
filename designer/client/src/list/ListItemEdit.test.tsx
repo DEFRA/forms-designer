@@ -43,7 +43,6 @@ const data = {
           title: 'abc',
           list: 'myList',
           type: ComponentType.SelectField,
-          schema: {},
           options: {
             required: true
           }

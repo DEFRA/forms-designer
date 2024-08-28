@@ -1,6 +1,7 @@
 import {
   hasConditionSupport,
   hasContent,
+  hasListField,
   type FormDefinition
 } from '@defra/forms-model'
 
@@ -23,7 +24,7 @@ export function allInputs(data: FormDefinition): Input[] {
           ? `${page.section}.${input.name}`
           : input.name,
         title: input.title,
-        list: 'list' in input ? input.list : undefined,
+        list: hasListField(input) ? input.list : undefined,
         type: input.type
       }
     })

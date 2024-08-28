@@ -56,10 +56,6 @@ function useComponentCreate(props) {
     }
   }, [selectedComponent?.type])
 
-  useEffect(() => {
-    dispatch({ type: Meta.SET_PAGE, payload: page.path })
-  }, [page.path])
-
   useLayoutEffect(() => {
     if (hasValidated && !hasErrors) {
       handleSubmit().catch((error: unknown) => {

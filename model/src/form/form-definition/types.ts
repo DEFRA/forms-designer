@@ -8,14 +8,28 @@ export interface Link {
   redirect?: string
 }
 
-export interface Page {
+export interface PageBase {
   title: string
   path: string
-  controller?: string
+  controller?:
+    | 'StartPageController'
+    | 'FileUploadPageController'
+    | 'SummaryPageController'
   components?: ComponentDef[]
-  section?: string // the section ID
+  section?: string
   next?: Link[]
 }
+
+export interface PageWithNext extends PageBase {
+  controller?: Exclude<PageBase['controller'], 'SummaryPageController'>
+  next: Link[]
+}
+
+export interface PageWithComponents extends PageBase {
+  components: ComponentDef[]
+}
+
+export type Page = PageWithComponents | PageWithNext | PageBase
 
 export interface Section {
   name: string
@@ -34,9 +48,12 @@ export interface Item {
 export interface List {
   name: string
   title: string
-  type: 'string' | 'number' | 'boolean'
+  type: ListTypeContent
   items: Item[]
 }
+
+export type ListTypeOption = 'bulleted' | 'numbered'
+export type ListTypeContent = 'string' | 'number' | 'boolean'
 
 export interface Feedback {
   feedbackForm?: boolean
@@ -64,7 +81,7 @@ export interface FormDefinition {
   conditions: ConditionWrapper[]
   lists: List[]
   sections: Section[]
-  startPage?: Page['path']
+  startPage?: string
   name?: string
   feedback?: Feedback
   phaseBanner?: PhaseBanner

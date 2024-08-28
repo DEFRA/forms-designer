@@ -323,10 +323,7 @@ export const Component: FunctionComponent<Props> = (props) => {
       {showEditor && (
         <RenderInPortal>
           <Flyout title={componentFlyoutTitle} onHide={toggleShowEditor}>
-            <ComponentContextProvider
-              pagePath={page.path}
-              selectedComponent={selectedComponent}
-            >
+            <ComponentContextProvider selectedComponent={selectedComponent}>
               <ComponentEdit page={page} toggleShowEditor={toggleShowEditor} />
             </ComponentContextProvider>
           </Flyout>

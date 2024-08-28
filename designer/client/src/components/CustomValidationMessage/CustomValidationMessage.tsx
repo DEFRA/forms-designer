@@ -1,3 +1,4 @@
+import { ComponentType } from '@defra/forms-model'
 import React, { useContext } from 'react'
 
 import { i18n } from '~/src/i18n/i18n.jsx'
@@ -8,7 +9,16 @@ export function CustomValidationMessage() {
   const { state, dispatch } = useContext(ComponentContext)
   const { selectedComponent } = state
 
-  if (!selectedComponent) {
+  if (
+    !(
+      selectedComponent?.type === ComponentType.TextField ||
+      selectedComponent?.type === ComponentType.EmailAddressField ||
+      selectedComponent?.type === ComponentType.NumberField ||
+      selectedComponent?.type === ComponentType.MultilineTextField ||
+      selectedComponent?.type === ComponentType.TelephoneNumberField ||
+      selectedComponent?.type === ComponentType.MonthYearField
+    )
+  ) {
     return null
   }
 
@@ -34,11 +44,7 @@ export function CustomValidationMessage() {
         aria-describedby="field-options-custom-validation-message-hint"
         name="options.customValidationMessage"
         type="text"
-        value={
-          'customValidationMessage' in options
-            ? options.customValidationMessage
-            : undefined
-        }
+        value={options.customValidationMessage}
         onChange={(e) =>
           dispatch({
             type: Options.EDIT_OPTIONS_CUSTOM_MESSAGE,

@@ -16,8 +16,7 @@ describe('ContentEdit', () => {
     title: 'abc',
     type: ComponentType.Html,
     content: '',
-    options: {},
-    schema: {}
+    options: {}
   } as HtmlComponent | DetailsComponent
 
   const data = {

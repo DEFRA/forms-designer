@@ -23,11 +23,10 @@ import {
 } from '~/src/reducers/component/types.js'
 
 export interface ComponentState {
-  initialName: ComponentDef['name']
+  initialName: string
   selectedComponent?: ComponentDef
   hasValidated?: boolean
   showDeleteWarning?: boolean
-  pagePath?: string
   errors?: Partial<ErrorList<'title' | 'name' | 'content' | 'list'>>
 }
 
@@ -98,12 +97,11 @@ export function componentReducer(
 export const initComponentState = (
   props?: Omit<ComponentState, 'initialName'>
 ): ComponentState => {
-  const { selectedComponent, pagePath, errors } = props ?? {}
+  const { selectedComponent, errors } = props ?? {}
 
   return {
     initialName: selectedComponent?.name ?? randomId(),
     selectedComponent,
-    pagePath,
     errors
   }
 }
