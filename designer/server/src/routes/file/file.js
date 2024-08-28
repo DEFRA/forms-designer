@@ -26,16 +26,20 @@ export default [
 
       const statusCode = await checkFileStatus(fileId)
 
-      if (statusCode === StatusCodes.OK) {
-        const validation = yar.flash(sessionNames.validationFailure).at(0)
+      switch (statusCode) {
+        case StatusCodes.OK: {
+          const validation = yar.flash(sessionNames.validationFailure)[0]
+          return h.view('file/download-page', file.fileViewModel(validation))
+        }
 
-        return h.view('file/download-page', file.fileViewModel(validation))
-      }
+        case StatusCodes.GONE: {
+          const pageTitle = 'The link has expired'
+          return h.view('file/expired', errorViewModel(pageTitle))
+        }
 
-      if (statusCode === StatusCodes.GONE) {
-        const pageTitle = 'The link has expired'
-
-        return h.view('file/expired', errorViewModel(pageTitle))
+        default: {
+          return h.response('Unhandled file status').code(500)
+        }
       }
     }
   }),
@@ -73,11 +77,9 @@ export default [
     },
     options: {
       validate: {
-        payload: Joi.object()
-          .keys({
-            email: emailSchema
-          })
-          .required(),
+        payload: Joi.object({
+          email: emailSchema
+        }).required(),
         failAction: redirectWithErrors
       }
     }
