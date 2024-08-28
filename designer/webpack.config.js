@@ -225,7 +225,10 @@ export default /** @type {Configuration} */ ({
     loggingDebug: ['sass-loader'],
     preset: 'minimal'
   },
-  target: 'browserslist:javascripts'
+  target: 'browserslist:javascripts',
+  watchOptions: {
+    aggregateTimeout: 1000
+  }
 })
 
 /**
