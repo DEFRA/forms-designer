@@ -58,8 +58,8 @@ export default [
       const { fileId } = params
 
       try {
-        const result = await createFileLink(fileId, email, token)
-        return h.redirect(result.url)
+        const { url } = await createFileLink(fileId, email, token)
+        return h.redirect(url)
       } catch (err) {
         if (
           Boom.isBoom(err) &&

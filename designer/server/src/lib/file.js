@@ -39,7 +39,9 @@ export async function checkFileStatus(fieldId) {
 export async function createFileLink(fileId, retrievalKey, token) {
   const requestUrl = new URL('link', submissionEndpoint)
 
-  const postJsonByType = /** @type {typeof postJson<FileDetails>} */ (postJson)
+  const postJsonByType = /** @type {typeof postJson<{ url: string }>} */ (
+    postJson
+  )
   const { body } = await postJsonByType(requestUrl, {
     payload: { fileId, retrievalKey },
     ...getAuthOptions(token)
