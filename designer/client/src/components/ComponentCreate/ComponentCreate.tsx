@@ -27,7 +27,7 @@ import { hasValidationErrors } from '~/src/validations.js'
 
 interface Props {
   page: Page
-  toggleAddComponent: () => void
+  onSave: () => void
 }
 
 function useComponentCreate(props: Props) {
@@ -37,7 +37,7 @@ function useComponentCreate(props: Props) {
   const [renderTypeEdit, setRenderTypeEdit] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
 
-  const { page, toggleAddComponent } = props
+  const { page, onSave } = props
   const { selectedComponent, errors, hasValidated = false } = state
 
   const hasErrors = hasValidationErrors(errors)
@@ -86,10 +86,10 @@ function useComponentCreate(props: Props) {
 
     setIsSaving(true)
 
-    const updatedData = addComponent(data, page, selectedComponent)
+    const definition = addComponent(data, page, selectedComponent)
 
-    await save(updatedData)
-    toggleAddComponent()
+    await save(definition)
+    onSave()
   }
 
   /**

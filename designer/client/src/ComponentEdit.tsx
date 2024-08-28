@@ -19,14 +19,14 @@ import { hasValidationErrors } from '~/src/validations.js'
 
 interface Props {
   page: Page
-  toggleShowEditor: () => void
+  onSave: () => void
 }
 
 export function ComponentEdit(props: Props) {
   const { data, save } = useContext(DataContext)
   const { state, dispatch } = useContext(ComponentContext)
 
-  const { page, toggleShowEditor } = props
+  const { page, onSave } = props
   const { initialName, selectedComponent, errors, hasValidated = false } = state
 
   const hasErrors = hasValidationErrors(errors)
@@ -49,8 +49,9 @@ export function ComponentEdit(props: Props) {
       initialName,
       selectedComponent
     )
+
     await save(definition)
-    toggleShowEditor()
+    onSave()
   }
 
   const handleDelete = async (e: MouseEvent<HTMLButtonElement>) => {
@@ -74,7 +75,7 @@ export function ComponentEdit(props: Props) {
     components.splice(index, 1)
 
     await save(definition)
-    toggleShowEditor()
+    onSave()
   }
 
   useLayoutEffect(() => {

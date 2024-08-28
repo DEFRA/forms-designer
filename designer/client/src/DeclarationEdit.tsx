@@ -4,20 +4,19 @@ import { Editor } from '~/src/Editor.jsx'
 import { logger } from '~/src/common/helpers/logging/logger.js'
 import { DataContext } from '~/src/context/DataContext.js'
 
-export class DeclarationEdit extends Component {
+interface Props {
+  onSave: () => void
+}
+
+export class DeclarationEdit extends Component<Props> {
   declare context: ContextType<typeof DataContext>
   static contextType = DataContext
-
-  constructor(props, context) {
-    super(props, context)
-
-    this.onSubmit = this.onSubmit.bind(this)
-  }
 
   onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     e.stopPropagation()
 
+    const { onSave } = this.props
     const { save, data } = this.context
 
     const definition = structuredClone(data)
@@ -27,8 +26,8 @@ export class DeclarationEdit extends Component {
     definition.skipSummary = formData.get('skip-summary') === 'on'
 
     try {
-      const savedData = await save(definition)
-      this.props.onCreate({ data: savedData })
+      await save(definition)
+      onSave()
     } catch (error) {
       logger.error(error, 'DeclarationEdit')
     }

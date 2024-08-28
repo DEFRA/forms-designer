@@ -29,7 +29,7 @@ describe('ComponentCreate:', () => {
   test('Selecting a component type should display the component edit form', async () => {
     render(
       <RenderWithContext data={data}>
-        <ComponentCreate page={page} />
+        <ComponentCreate page={page} onSave={jest.fn()} />
       </RenderWithContext>
     )
 
@@ -55,7 +55,7 @@ describe('ComponentCreate:', () => {
 
     render(
       <RenderWithContext data={data} save={save}>
-        <ComponentCreate page={page} />
+        <ComponentCreate page={page} onSave={jest.fn()} />
       </RenderWithContext>
     )
 
@@ -108,7 +108,7 @@ describe('ComponentCreate:', () => {
   test("Should have functioning 'Back to create component list' link", async () => {
     render(
       <RenderWithContext data={data}>
-        <ComponentCreate page={page} />
+        <ComponentCreate page={page} onSave={jest.fn()} />
       </RenderWithContext>
     )
 
@@ -138,7 +138,7 @@ describe('ComponentCreate:', () => {
   test('Should display error summary when validation fails', async () => {
     render(
       <RenderWithContext data={data}>
-        <ComponentCreate page={page} />
+        <ComponentCreate page={page} onSave={jest.fn()} />
       </RenderWithContext>
     )
 

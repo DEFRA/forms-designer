@@ -78,7 +78,7 @@ export class SectionsEdit extends Component<Props, State> {
                 section?.name ? `Editing ${section.name}` : 'Add a new section'
               }
               show={isEditingSection}
-              onHide={() => this.closeFlyout()}
+              onHide={this.closeFlyout}
             >
               <SectionEdit section={section} onSave={this.closeFlyout} />
             </Flyout>
