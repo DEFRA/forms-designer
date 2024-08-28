@@ -102,6 +102,7 @@ function useListEdit() {
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    e.stopPropagation()
 
     const payload = {
       selectedList
@@ -161,7 +162,7 @@ export function ListEdit() {
         <ErrorSummary errorList={Object.values(errors).filter(Boolean)} />
       )}
 
-      <form onSubmit={handleSubmit} autoComplete="off">
+      <form onSubmit={handleSubmit} autoComplete="off" noValidate>
         {selectedList && (
           <Input
             id="list-title"

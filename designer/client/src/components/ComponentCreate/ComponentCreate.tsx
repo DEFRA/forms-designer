@@ -66,6 +66,7 @@ function useComponentCreate(props) {
 
   async function handleSubmit(e?: FormEvent<HTMLFormElement>) {
     e?.preventDefault()
+    e?.stopPropagation()
 
     if (!hasValidated) {
       dispatch({ name: Meta.VALIDATE })
@@ -151,7 +152,7 @@ export function ComponentCreate(props) {
       )}
       {!type && <ComponentCreateList onSelectComponent={handleCreate} />}
       {type && renderTypeEdit && (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} autoComplete="off" noValidate>
           <ComponentTypeEdit />
           <button type="submit" className="govuk-button" disabled={isSaving}>
             Save

@@ -57,6 +57,7 @@ export class SectionEdit extends Component<Props, State> {
 
   onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    e.stopPropagation()
 
     const { data, save } = this.context
     const { onSave, section } = this.props
@@ -170,7 +171,7 @@ export class SectionEdit extends Component<Props, State> {
           <ErrorSummary errorList={Object.values(errors).filter(Boolean)} />
         )}
 
-        <form onSubmit={this.onSubmit} autoComplete="off">
+        <form onSubmit={this.onSubmit} autoComplete="off" noValidate>
           <Input
             id="section-title"
             name="title"

@@ -39,6 +39,7 @@ export function ListItemEdit() {
     e: FormEvent<HTMLFormElement> | MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault()
+    e.stopPropagation()
 
     const payload = {
       selectedItem
@@ -63,7 +64,7 @@ export function ListItemEdit() {
         <ErrorSummary errorList={Object.values(errors).filter(Boolean)} />
       )}
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} autoComplete="off" noValidate>
         <Input
           id="title"
           name="list-item-text"
@@ -116,7 +117,7 @@ export function ListItemEdit() {
         </select>
         <hr className="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
         <div className="govuk-button-group">
-          <button className="govuk-button" type="submit" onClick={handleSubmit}>
+          <button className="govuk-button" type="submit">
             {i18n('save')}
           </button>
         </div>

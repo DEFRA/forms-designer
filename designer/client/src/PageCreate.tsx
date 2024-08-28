@@ -64,6 +64,7 @@ export class PageCreate extends Component<Props, State> {
 
   onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    e.stopPropagation()
 
     const { onSave } = this.props
     const { data, save } = this.context
@@ -221,7 +222,7 @@ export class PageCreate extends Component<Props, State> {
           <ErrorSummary errorList={Object.values(errors).filter(Boolean)} />
         )}
 
-        <form onSubmit={this.onSubmit} autoComplete="off">
+        <form onSubmit={this.onSubmit} autoComplete="off" noValidate>
           <div className="govuk-form-group">
             <label className="govuk-label govuk-label--s" htmlFor="controller">
               {i18n('addPage.controllerOption.title')}

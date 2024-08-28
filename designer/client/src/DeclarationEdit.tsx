@@ -17,6 +17,8 @@ export class DeclarationEdit extends Component {
 
   onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    e.stopPropagation()
+
     const form = e.target
     const formData = new window.FormData(form)
     const { save, data } = this.context
@@ -38,7 +40,7 @@ export class DeclarationEdit extends Component {
     const { declaration, skipSummary } = data
 
     return (
-      <form onSubmit={this.onSubmit} autoComplete="off">
+      <form onSubmit={this.onSubmit} autoComplete="off" noValidate>
         <div className="govuk-checkboxes govuk-form-group">
           <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">
             <p className="govuk-fieldset__heading">Skip summary page?</p>
