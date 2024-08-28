@@ -1,3 +1,4 @@
+import { type Page } from '@defra/forms-model'
 import React, {
   useContext,
   useLayoutEffect,
@@ -16,11 +17,18 @@ import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 import { Meta } from '~/src/reducers/component/types.js'
 import { hasValidationErrors } from '~/src/validations.js'
 
-export function ComponentEdit(props) {
+interface Props {
+  page: Page
+  toggleShowEditor: () => void
+}
+
+export function ComponentEdit(props: Props) {
   const { data, save } = useContext(DataContext)
   const { state, dispatch } = useContext(ComponentContext)
-  const { initialName, selectedComponent, errors, hasValidated } = state
+
   const { page, toggleShowEditor } = props
+  const { initialName, selectedComponent, errors, hasValidated = false } = state
+
   const hasErrors = hasValidationErrors(errors)
 
   const handleSubmit = async (e?: FormEvent<HTMLFormElement>) => {

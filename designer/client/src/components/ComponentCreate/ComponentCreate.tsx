@@ -25,14 +25,21 @@ import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 import { Meta } from '~/src/reducers/component/types.js'
 import { hasValidationErrors } from '~/src/validations.js'
 
-function useComponentCreate(props) {
-  const [renderTypeEdit, setRenderTypeEdit] = useState<boolean>(false)
+interface Props {
+  page: Page
+  toggleAddComponent: () => void
+}
+
+function useComponentCreate(props: Props) {
   const { data, save } = useContext(DataContext)
   const { state, dispatch } = useContext(ComponentContext)
-  const { selectedComponent, errors, hasValidated } = state
-  const { page, toggleAddComponent = () => {} } = props
 
+  const [renderTypeEdit, setRenderTypeEdit] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
+
+  const { page, toggleAddComponent } = props
+  const { selectedComponent, errors, hasValidated = false } = state
+
   const hasErrors = hasValidationErrors(errors)
 
   useEffect(() => {
@@ -78,7 +85,8 @@ function useComponentCreate(props) {
     }
 
     setIsSaving(true)
-    const updatedData = addComponent(data, page as Page, selectedComponent)
+
+    const updatedData = addComponent(data, page, selectedComponent)
 
     await save(updatedData)
     toggleAddComponent()
@@ -115,7 +123,7 @@ function useComponentCreate(props) {
   }
 }
 
-export function ComponentCreate(props) {
+export function ComponentCreate(props: Props) {
   const {
     handleSubmit,
     handleCreate,
