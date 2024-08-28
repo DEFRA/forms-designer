@@ -10,6 +10,7 @@ jest.mock('~/src/lib/file.js')
 describe('File routes', () => {
   /** @type {Server} */
   let server
+  const fileDownloadUrl = '/file-download/1234'
 
   beforeAll(async () => {
     server = await createServer()
@@ -18,11 +19,11 @@ describe('File routes', () => {
 
   describe('GET', () => {
     test('should show file download page when response is 200', async () => {
-      jest.mocked(file.checkFileStatus).mockResolvedValueOnce(200)
+      jest.mocked(file.checkFileStatus).mockResolvedValueOnce(StatusCodes.OK)
 
       const options = {
         method: 'GET',
-        url: '/file-download/1234',
+        url: fileDownloadUrl,
         auth
       }
 
@@ -35,11 +36,11 @@ describe('File routes', () => {
     })
 
     test('should show link expired page when response is 410', async () => {
-      jest.mocked(file.checkFileStatus).mockResolvedValueOnce(410)
+      jest.mocked(file.checkFileStatus).mockResolvedValueOnce(StatusCodes.GONE)
 
       const options = {
         method: 'GET',
-        url: '/file-download/1234',
+        url: fileDownloadUrl,
         auth
       }
 
@@ -59,7 +60,7 @@ describe('File routes', () => {
 
       const options = {
         method: 'post',
-        url: '/file-download/1234',
+        url: fileDownloadUrl,
         auth,
         payload: { email: 'new.email@gov.uk' }
       }
