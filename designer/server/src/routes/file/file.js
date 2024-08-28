@@ -73,9 +73,11 @@ export default [
     },
     options: {
       validate: {
-        payload: Joi.object().keys({
-          email: emailSchema
-        }),
+        payload: Joi.object()
+          .keys({
+            email: emailSchema
+          })
+          .required(),
         failAction: redirectWithErrors
       }
     }
