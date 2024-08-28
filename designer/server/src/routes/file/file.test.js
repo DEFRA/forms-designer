@@ -1,3 +1,4 @@
+import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 
 import { createServer } from '~/src/createServer.js'
@@ -72,6 +73,23 @@ describe('File routes', () => {
       expect(statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
       expect(headers.location).toBe('/download-link')
     })
+  })
+
+  test('should show link expired page when response is 410', async () => {
+    jest.mocked(file.createFileLink).mockRejectedValue(Boom.resourceGone())
+
+    const options = {
+      method: 'post',
+      url: '/file-download/1234',
+      auth,
+      payload: { email: 'new.email@gov.uk' }
+    }
+
+    const { document } = await renderResponse(server, options)
+
+    const html = document.documentElement.innerHTML
+
+    expect(html).toContain('The link has expired')
   })
 })
 
