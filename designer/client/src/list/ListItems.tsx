@@ -1,7 +1,6 @@
-import { clone, type Item } from '@defra/forms-model'
+import { type Item } from '@defra/forms-model'
 import React, { useContext } from 'react'
 
-import { DataContext } from '~/src/context/DataContext.js'
 import { useListItem } from '~/src/hooks/list/useListItem/useListItem.jsx'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import {
@@ -13,11 +12,11 @@ import { ListContext } from '~/src/reducers/listReducer.jsx'
 
 interface Props {
   item: Item
-  removeItem: () => void
-  selectListItem: (payload: Item) => void
+  removeListItem: (payload: Item) => void
+  editListItem: (payload: Item) => void
 }
 
-const ListItem = ({ item, removeItem, selectListItem }: Props) => {
+const ListItem = ({ item, removeListItem, editListItem }: Props) => {
   return (
     <tr className="govuk-table__row">
       <td className="govuk-table__cell govuk-!-width-full">{item.text}</td>
@@ -27,7 +26,7 @@ const ListItem = ({ item, removeItem, selectListItem }: Props) => {
           className="govuk-link"
           onClick={(e) => {
             e.preventDefault()
-            selectListItem(item)
+            editListItem(item)
           }}
         >
           Edit
@@ -39,7 +38,7 @@ const ListItem = ({ item, removeItem, selectListItem }: Props) => {
           className="govuk-link"
           onClick={(e) => {
             e.preventDefault()
-            removeItem()
+            removeListItem(item)
           }}
         >
           Delete
@@ -50,11 +49,12 @@ const ListItem = ({ item, removeItem, selectListItem }: Props) => {
 }
 
 export function ListItems() {
-  const { dispatch: listsEditorDispatch } = useContext(ListsEditorContext)
-  const { data, save } = useContext(DataContext)
   const { state, dispatch } = useContext(ListContext)
+  const { dispatch: listsEditorDispatch } = useContext(ListsEditorContext)
 
-  const selectListItem = (payload: Item) => {
+  const { prepareForDelete } = useListItem(state, dispatch)
+
+  const editListItem = (payload: Item) => {
     dispatch({
       name: ListActions.EDIT_LIST_ITEM,
       payload
@@ -66,11 +66,8 @@ export function ListItems() {
     })
   }
 
-  const { prepareForDelete } = useListItem(state, dispatch)
-
-  async function removeItem(index: number) {
-    const copy = clone(data)
-    await save(prepareForDelete(copy, index))
+  function removeListItem(payload: Item) {
+    prepareForDelete(payload)
   }
 
   const { selectedList } = state
@@ -88,8 +85,8 @@ export function ListItems() {
           <ListItem
             key={`item-${idx}`}
             item={item}
-            selectListItem={selectListItem}
-            removeItem={() => removeItem(idx)}
+            editListItem={editListItem}
+            removeListItem={removeListItem}
           />
         ))}
       </tbody>

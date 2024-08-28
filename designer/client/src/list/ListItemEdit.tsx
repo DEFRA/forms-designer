@@ -16,7 +16,7 @@ import { hasValidationErrors } from '~/src/validations.js'
 export function ListItemEdit() {
   const { dispatch: listsEditorDispatch } = useContext(ListsEditorContext)
   const { state, dispatch } = useContext(ListContext)
-  const { data, save } = useContext(DataContext)
+  const { data } = useContext(DataContext)
 
   const {
     handleTitleChange,
@@ -35,7 +35,7 @@ export function ListItemEdit() {
   const { listItemErrors: errors, selectedItem } = state
   const hasErrors = hasValidationErrors(errors)
 
-  const handleSubmit = async (
+  const handleSubmit = (
     e: FormEvent<HTMLFormElement> | MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault()
@@ -49,8 +49,7 @@ export function ListItemEdit() {
       return
     }
 
-    const copy = { ...data }
-    await save(prepareForSubmit(copy))
+    prepareForSubmit()
 
     listsEditorDispatch({
       name: ListsEditorStateActions.IS_EDITING_LIST_ITEM,

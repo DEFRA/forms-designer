@@ -1,7 +1,6 @@
-import { type FormDefinition } from '@defra/forms-model'
+import { type Item } from '@defra/forms-model'
 
-import { addList } from '~/src/data/list/addList.js'
-import { findList } from '~/src/data/list/findList.js'
+import { findListItem } from '~/src/data/list/findList.js'
 import { type ListItemHook } from '~/src/hooks/list/useListItem/types.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ListActions } from '~/src/reducers/listActions.jsx'
@@ -16,8 +15,7 @@ export function useListItem(
   state: ListState,
   dispatch: ListContextType['dispatch']
 ): ListItemHook {
-  const { selectedItem = {} } = state
-  const { value = '', condition } = selectedItem
+  const { selectedList, selectedItem, selectedItemIndex } = state
 
   const handleTitleChange: ListItemHook['handleTitleChange'] = (e) => {
     dispatch({
@@ -68,42 +66,43 @@ export function useListItem(
     return !hasValidationErrors(errors)
   }
 
-  function prepareForSubmit(data: FormDefinition) {
-    let copy: FormDefinition = { ...data }
-    const { selectedList, selectedItemIndex } = state
-    let { items } = selectedList
-    if (!selectedItem.isNew) {
-      items = items.splice(selectedItemIndex, 1, selectedItem)
-    } else {
-      const { isNew, errors, ...selectedItem } = state.selectedItem
-      items.push(selectedItem)
+  function prepareForSubmit() {
+    if (!selectedList || !selectedItem) {
+      return
     }
 
-    if (selectedList.isNew) {
-      delete selectedList.isNew
-      copy = addList(data, selectedList)
-    } else {
-      const [list, indexOfList] = findList(copy, selectedList.name)
-      copy.lists[indexOfList] = { ...list, items }
+    const item = structuredClone(selectedItem)
+    const list = structuredClone(selectedList)
+
+    if (item.isNew) {
+      delete item.isNew
+      list.items.push(item)
+    } else if (typeof selectedItemIndex === 'number') {
+      list.items[selectedItemIndex] = item
     }
-    return copy
+
+    dispatch({
+      name: ListActions.SET_SELECTED_LIST,
+      payload: list
+    })
   }
 
-  function prepareForDelete(data: FormDefinition, index?: number) {
-    const copy = { ...data }
-    const { initialName, selectedList, selectedItemIndex } = state
+  function prepareForDelete(item: Item) {
+    if (!selectedList) {
+      return
+    }
 
-    // If user clicks delete button in list items list, then index is defined and we use it
-    // If user clicks delete button inside item edit screen, then selectedItemIndex is defined and index is undefined
-    const itemToDelete = index ?? selectedItemIndex
-    selectedList.items.splice(itemToDelete, 1)
+    const list = structuredClone(selectedList)
 
-    const selectedListIndex = copy.lists.findIndex(
-      (list) => list.name === initialName
-    )
-    copy.lists[selectedListIndex] = selectedList
+    const itemRemove = findListItem(list, item.text)
+    const itemIndex = list.items.indexOf(itemRemove)
 
-    return copy
+    list.items.splice(itemIndex, 1)
+
+    dispatch({
+      name: ListActions.SET_SELECTED_LIST,
+      payload: list
+    })
   }
 
   return {
@@ -114,9 +113,9 @@ export function useListItem(
     prepareForSubmit,
     prepareForDelete,
     validate,
-    value,
-    condition,
-    title: selectedItem.text || '',
-    hint: selectedItem.description || ''
+    value: selectedItem?.value,
+    condition: selectedItem?.condition,
+    title: selectedItem?.text ?? '',
+    hint: selectedItem?.description ?? ''
   }
 }

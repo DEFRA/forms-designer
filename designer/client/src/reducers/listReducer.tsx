@@ -32,10 +32,7 @@ export interface FormItem {
 
 export type ListReducerActions =
   | {
-      name:
-        | ListActions.ADD_NEW_LIST
-        | ListActions.ADD_LIST_ITEM
-        | ListActions.SUBMIT
+      name: ListActions.ADD_NEW_LIST | ListActions.ADD_LIST_ITEM
       payload?: undefined
     }
   | {
@@ -122,8 +119,7 @@ export function listReducer(state: ListState, action: ListReducerActions) {
       break
 
     case ListActions.LIST_VALIDATION_ERRORS:
-    case ListActions.SUBMIT:
-      stateNew.errors = payload ?? {}
+      stateNew.errors = payload
       break
   }
 
@@ -199,7 +195,7 @@ export const ListContextProvider = (props: {
   children?: ReactNode
   selectedListName?: string
 }) => {
-  const { selectedListName } = props
+  const { children, selectedListName } = props
   const { data } = useContext(DataContext)
 
   let init: ListState = {
@@ -222,7 +218,7 @@ export const ListContextProvider = (props: {
 
   return (
     <ListContext.Provider value={{ state, dispatch }}>
-      {props.children}
+      {children}
     </ListContext.Provider>
   )
 }

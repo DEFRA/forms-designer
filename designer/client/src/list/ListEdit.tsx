@@ -38,7 +38,7 @@ function useListEdit() {
 
   const { selectedList } = state
 
-  function handleCreate(e: MouseEvent<HTMLAnchorElement>) {
+  function handleAddItem(e: MouseEvent<HTMLAnchorElement>) {
     e.preventDefault()
 
     dispatch({
@@ -66,6 +66,11 @@ function useListEdit() {
     definition.lists.splice(listIndex, 1)
 
     await save(definition)
+
+    dispatch({
+      name: ListActions.SET_SELECTED_LIST,
+      payload: undefined
+    })
 
     listsEditorDispatch({
       name: ListsEditorStateActions.IS_EDITING_LIST,
@@ -125,18 +130,19 @@ function useListEdit() {
 
     await save(definition)
 
+    dispatch({
+      name: ListActions.SET_SELECTED_LIST,
+      payload: list
+    })
+
     listsEditorDispatch({
       name: ListsEditorStateActions.IS_EDITING_LIST,
       payload: false
     })
-
-    dispatch({
-      name: ListActions.SUBMIT
-    })
   }
 
   return {
-    handleCreate,
+    handleAddItem,
     handleDelete,
     handleSubmit
   }
@@ -144,7 +150,7 @@ function useListEdit() {
 
 export function ListEdit() {
   const { state, dispatch } = useContext(ListContext)
-  const { handleCreate, handleDelete, handleSubmit } = useListEdit()
+  const { handleAddItem, handleDelete, handleSubmit } = useListEdit()
 
   const { selectedList, errors } = state
   const hasErrors = hasValidationErrors(errors)
@@ -183,7 +189,7 @@ export function ListEdit() {
             href="#"
             id="list-items"
             className="govuk-link"
-            onClick={handleCreate}
+            onClick={handleAddItem}
           >
             {i18n('list.item.add')}
           </a>

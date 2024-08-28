@@ -19,16 +19,16 @@ export type MetaReducerActions =
       as?: undefined
     }
   | {
-      name: Meta.SET_SELECTED_LIST
-      payload?: string
-      as: Extract<ComponentDef, { list: string }>
+      name: Meta.EDIT
+      payload: boolean
+      as?: undefined
     }
 
 export function metaReducer(state: ComponentState, action: ReducerActions) {
   const stateNew = structuredClone(state)
 
   const { selectedComponent } = stateNew
-  const { as, name, payload } = action
+  const { name, payload } = action
 
   // Require validation on every meta change
   stateNew.hasValidated = false
@@ -47,14 +47,6 @@ export function metaReducer(state: ComponentState, action: ReducerActions) {
       stateNew.errors = fieldComponentValidations(selectedComponent)
       stateNew.hasValidated = true
       break
-
-    case Meta.SET_SELECTED_LIST: {
-      if (selectedComponent?.type === as.type) {
-        selectedComponent.list = payload ?? ''
-      }
-
-      break
-    }
   }
 
   return stateNew
