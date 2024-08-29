@@ -73,23 +73,42 @@ describe('File routes', () => {
       expect(statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
       expect(headers.location).toBe('/download-link')
     })
-  })
 
-  test('should show link expired page when response is 410', async () => {
-    jest.mocked(file.createFileLink).mockRejectedValue(Boom.resourceGone())
+    test('should show link expired page when response is 410', async () => {
+      jest.mocked(file.createFileLink).mockRejectedValue(Boom.resourceGone())
 
-    const options = {
-      method: 'post',
-      url: '/file-download/1234',
-      auth,
-      payload: { email: 'new.email@gov.uk' }
-    }
+      const options = {
+        method: 'post',
+        url: '/file-download/1234',
+        auth,
+        payload: { email: 'new.email@gov.uk' }
+      }
 
-    const { document } = await renderResponse(server, options)
+      const { document } = await renderResponse(server, options)
 
-    const html = document.documentElement.innerHTML
+      const html = document.documentElement.innerHTML
 
-    expect(html).toContain('The link has expired')
+      expect(html).toContain('The link has expired')
+    })
+
+    test('should show email not the file was sent to error', async () => {
+      jest.mocked(file.createFileLink).mockRejectedValue(Boom.forbidden())
+
+      const options = {
+        method: 'post',
+        url: '/file-download/1234',
+        auth,
+        payload: { email: 'new.email@gov.uk' }
+      }
+
+      const { document } = await renderResponse(server, options)
+
+      const html = document.documentElement.innerHTML
+
+      expect(html).toContain(
+        'This is not the email address the file was sent to'
+      )
+    })
   })
 })
 

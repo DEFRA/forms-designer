@@ -1,3 +1,5 @@
+import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
+
 /**
  * @param { ValidationFailureFile<import('~/src/types.js').FileDownload> } [validation]
  */
@@ -21,6 +23,7 @@ export function fileViewModel(validation) {
       },
       value: validation?.formValues.email
     },
+    errorList: buildErrorList(validation?.formErrors, ['email']),
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
     buttonText: 'Download file'

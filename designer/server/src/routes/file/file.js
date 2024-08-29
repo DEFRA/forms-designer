@@ -29,7 +29,7 @@ export default [
       switch (statusCode) {
         case StatusCodes.OK: {
           const validation = yar.flash(sessionNames.validationFailure)[0]
-          // @ts-expect-error
+          // @ts-expect-error This error is expected because the fileViewModel function expects a validation object as an argument.
           return h.view('file/download-page', file.fileViewModel(validation))
         }
 
@@ -69,6 +69,22 @@ export default [
           const pageTitle = 'The link has expired'
 
           return h.view('file/expired', errorViewModel(pageTitle))
+        }
+
+        if (
+          Boom.isBoom(err) &&
+          err.output.statusCode === StatusCodes.FORBIDDEN.valueOf()
+        ) {
+          const validation = {
+            formErrors: {
+              email: {
+                text: 'This is not the email address the file was sent to. To confirm the file was meant for your team, enter the email address the file was sent to.'
+              }
+            },
+            formValues: { email }
+          }
+
+          return h.view('file/download-page', file.fileViewModel(validation))
         }
 
         return Boom.internal(
