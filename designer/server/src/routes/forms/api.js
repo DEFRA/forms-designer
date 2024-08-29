@@ -94,10 +94,11 @@ export default [
     path: '/api/log',
     options: {
       handler(request, h) {
-        const { level, messages, error } = request.payload
+        const { logger, payload } = request
+        const { level, messages, error } = payload
 
         try {
-          const logFn = request.logger[level]
+          const logFn = logger[level].bind(logger)
 
           // Include error if present
           if (error) {
@@ -108,7 +109,7 @@ export default [
 
           return h.response({ ok: true }).code(StatusCodes.NO_CONTENT)
         } catch (error) {
-          request.logger.error(error)
+          logger.error(error)
           return h
             .response({ ok: false })
             .code(StatusCodes.INTERNAL_SERVER_ERROR)
