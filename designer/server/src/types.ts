@@ -9,7 +9,8 @@ import { type sessionNames } from '~/src/common/constants/session-names.js'
 import { type UserProfile } from '~/src/common/helpers/auth/types.js'
 import {
   type ErrorDetailsItem,
-  type ValidationFailure
+  type ValidationFailure,
+  type ValidationFailureFile
 } from '~/src/common/helpers/types.js'
 
 interface SessionCache {
@@ -104,6 +105,12 @@ declare module '@hapi/yar' {
     flash(type: ValidationKey): ValidationFailure<FormMetadataInput>[]
 
     /**
+     * Get temporary error messages from the session
+     * (Deleted when read, e.g. after a redirect)
+     */
+    flash(type: ValidationKey): ValidationFailureFile<FileDownload>[]
+
+    /**
      * Get temporary error messages relating to the current page.
      */
     flash(type: ErrorListKey): ErrorDetailsItem[]
@@ -127,4 +134,8 @@ declare module '@hapi/yar' {
       metadata: Partial<Schema>
     ): Partial<Schema>
   }
+}
+
+export type FileDownload = {
+  email: string
 }

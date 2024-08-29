@@ -29,6 +29,7 @@ export default [
       switch (statusCode) {
         case StatusCodes.OK: {
           const validation = yar.flash(sessionNames.validationFailure)[0]
+          // @ts-expect-error
           return h.view('file/download-page', file.fileViewModel(validation))
         }
 
@@ -90,4 +91,5 @@ export default [
 
 /**
  * @import { ServerRoute } from '@hapi/hapi'
+ * @import { ValidationFailureFile } from '~/src/common/helpers/types.js'
  */

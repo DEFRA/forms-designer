@@ -1,5 +1,5 @@
 /**
- * @param { ValidationFailure<{email : string}> | undefined } validation
+ * @param { ValidationFailureFile<import('~/src/types.js').FileDownload> } [validation]
  */
 export function fileViewModel(validation) {
   const pageTitle = 'You have a file to download'
@@ -28,5 +28,5 @@ export function fileViewModel(validation) {
 }
 
 /**
- * @import { ValidationFailure } from '~/src/common/helpers/types.js'
+ * @import { ValidationFailureFile } from '~/src/common/helpers/types.js'
  */
