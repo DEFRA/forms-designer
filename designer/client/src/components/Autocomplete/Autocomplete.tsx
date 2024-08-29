@@ -40,8 +40,9 @@ export function Autocomplete() {
         value={options.autocomplete}
         onChange={(e) =>
           dispatch({
-            type: Options.EDIT_OPTIONS_AUTOCOMPLETE,
-            payload: e.target.value
+            name: Options.EDIT_OPTIONS_AUTOCOMPLETE,
+            payload: e.target.value,
+            as: selectedComponent
           })
         }
       />

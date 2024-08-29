@@ -31,7 +31,7 @@ import { i18n } from '~/src/i18n/i18n.jsx'
 export interface Props {
   path?: string
   selectedCondition?: string
-  conditionsChange: (selectedCondition: string) => void
+  conditionsChange: (selectedCondition?: string) => void
   noFieldsHintText?: string
 }
 
@@ -206,7 +206,7 @@ export class SelectConditions extends Component<Props, State> {
   setState(state: State, callback?: () => void) {
     const { conditionsChange } = this.props
 
-    conditionsChange(state.selectedCondition ?? '')
+    conditionsChange(state.selectedCondition)
     super.setState(state, callback)
   }
 

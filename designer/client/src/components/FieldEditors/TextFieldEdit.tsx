@@ -63,8 +63,9 @@ export function TextFieldEdit({ children, context = ComponentContext }: Props) {
                 type="number"
                 onChange={(e) =>
                   dispatch({
-                    type: Schema.EDIT_SCHEMA_MIN,
-                    payload: e.target.value
+                    name: Schema.EDIT_SCHEMA_MIN,
+                    payload: e.target.valueAsNumber,
+                    as: selectedComponent
                   })
                 }
               />
@@ -90,8 +91,9 @@ export function TextFieldEdit({ children, context = ComponentContext }: Props) {
                 type="number"
                 onChange={(e) =>
                   dispatch({
-                    type: Schema.EDIT_SCHEMA_MAX,
-                    payload: e.target.value
+                    name: Schema.EDIT_SCHEMA_MAX,
+                    payload: e.target.valueAsNumber,
+                    as: selectedComponent
                   })
                 }
               />
@@ -117,8 +119,9 @@ export function TextFieldEdit({ children, context = ComponentContext }: Props) {
                 type="number"
                 onChange={(e) =>
                   dispatch({
-                    type: Schema.EDIT_SCHEMA_LENGTH,
-                    payload: e.target.value
+                    name: Schema.EDIT_SCHEMA_LENGTH,
+                    payload: e.target.valueAsNumber,
+                    as: selectedComponent
                   })
                 }
               />
@@ -147,8 +150,9 @@ export function TextFieldEdit({ children, context = ComponentContext }: Props) {
               value={selectedComponent.schema.regex}
               onChange={(e) =>
                 dispatch({
-                  type: Schema.EDIT_SCHEMA_REGEX,
-                  payload: e.target.value
+                  name: Schema.EDIT_SCHEMA_REGEX,
+                  payload: e.target.value,
+                  as: selectedComponent
                 })
               }
             />

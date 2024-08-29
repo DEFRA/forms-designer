@@ -41,8 +41,9 @@ export function CssClasses() {
         value={options.classes}
         onChange={(e) =>
           dispatch({
-            type: Options.EDIT_OPTIONS_CLASSES,
-            payload: e.target.value
+            name: Options.EDIT_OPTIONS_CLASSES,
+            payload: e.target.value,
+            as: selectedComponent
           })
         }
       />

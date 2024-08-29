@@ -47,8 +47,9 @@ export function CustomValidationMessage() {
         value={options.customValidationMessage}
         onChange={(e) =>
           dispatch({
-            type: Options.EDIT_OPTIONS_CUSTOM_MESSAGE,
-            payload: e.target.value
+            name: Options.EDIT_OPTIONS_CUSTOM_MESSAGE,
+            payload: e.target.value,
+            as: selectedComponent
           })
         }
       />

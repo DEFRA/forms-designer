@@ -50,7 +50,7 @@ export function ComponentListSelect() {
     try {
       const [foundList] = findList(data, list)
       listDispatch({
-        type: ListActions.SET_SELECTED_LIST,
+        name: ListActions.SET_SELECTED_LIST,
         payload: foundList
       })
     } catch (error) {
@@ -65,30 +65,45 @@ export function ComponentListSelect() {
   useEffect(() => {
     if (!listsEditorState.isEditingList && isAddingNew) {
       dispatch({
-        type: Meta.SET_SELECTED_LIST,
-        payload: selectedList?.name
+        name: Meta.SET_SELECTED_LIST,
+        payload: selectedList?.name,
+        as: selectedComponent
       })
+
       setIsAddingNew(false)
     }
   }, [listsEditorState.isEditingList, selectedList?.name, isAddingNew])
 
   const editList = (e: ChangeEvent<HTMLSelectElement>) => {
     dispatch({
-      type: Meta.SET_SELECTED_LIST,
-      payload: e.target.value
+      name: Meta.SET_SELECTED_LIST,
+      payload: e.target.value,
+      as: selectedComponent
     })
   }
 
   const handleEditListClick = (e: MouseEvent) => {
     e.preventDefault()
-    listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST, true])
+
+    listsEditorDispatch({
+      name: ListsEditorStateActions.IS_EDITING_LIST,
+      payload: true
+    })
   }
 
   const handleAddListClick = (e: MouseEvent) => {
     e.preventDefault()
+
     setIsAddingNew(true)
-    listDispatch({ type: ListActions.ADD_NEW_LIST })
-    listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST, true])
+
+    listDispatch({
+      name: ListActions.ADD_NEW_LIST
+    })
+
+    listsEditorDispatch({
+      name: ListsEditorStateActions.IS_EDITING_LIST,
+      payload: true
+    })
   }
 
   return (

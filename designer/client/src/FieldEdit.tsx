@@ -52,8 +52,9 @@ export function FieldEdit() {
           value={selectedComponent.title}
           onChange={(e: ChangeEvent<HTMLInputElement>) => {
             dispatch({
-              type: Fields.EDIT_TITLE,
-              payload: e.target.value
+              name: Fields.EDIT_TITLE,
+              payload: e.target.value,
+              as: selectedComponent
             })
           }}
           errorMessage={errors.title}
@@ -75,8 +76,9 @@ export function FieldEdit() {
           value={selectedComponent.hint}
           onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
             dispatch({
-              type: Fields.EDIT_HELP,
-              payload: e.target.value
+              name: Fields.EDIT_HELP,
+              payload: e.target.value,
+              as: selectedComponent
             })
           }}
         />
@@ -93,8 +95,9 @@ export function FieldEdit() {
               checked={!!selectedComponent.options.hideTitle}
               onChange={(e) =>
                 dispatch({
-                  type: Options.EDIT_OPTIONS_HIDE_TITLE,
-                  payload: e.target.checked
+                  name: Options.EDIT_OPTIONS_HIDE_TITLE,
+                  payload: e.target.checked,
+                  as: selectedComponent
                 })
               }
             />
@@ -146,7 +149,7 @@ export function FieldEdit() {
               value={selectedComponent.name}
               onChange={(e) => {
                 dispatch({
-                  type: Fields.EDIT_NAME,
+                  name: Fields.EDIT_NAME,
                   payload: e.target.value
                 })
               }}
@@ -163,8 +166,9 @@ export function FieldEdit() {
                 checked={!isRequired}
                 onChange={(e) =>
                   dispatch({
-                    type: Options.EDIT_OPTIONS_REQUIRED,
-                    payload: !e.target.checked
+                    name: Options.EDIT_OPTIONS_REQUIRED,
+                    payload: !e.target.checked,
+                    as: selectedComponent
                   })
                 }
               />
@@ -199,8 +203,9 @@ export function FieldEdit() {
                 checked={!!selectedComponent.options.optionalText}
                 onChange={(e) =>
                   dispatch({
-                    type: Options.EDIT_OPTIONS_HIDE_OPTIONAL,
-                    payload: e.target.checked
+                    name: Options.EDIT_OPTIONS_HIDE_OPTIONAL,
+                    payload: e.target.checked,
+                    as: selectedComponent
                   })
                 }
               />

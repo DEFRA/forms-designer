@@ -1,63 +1,88 @@
-import { type ComponentState } from '~/src/reducers/component/componentReducer.jsx'
+import { type ComponentDef } from '@defra/forms-model'
+
+import {
+  type ComponentState,
+  type ReducerActions
+} from '~/src/reducers/component/componentReducer.jsx'
 import { Schema } from '~/src/reducers/component/types.js'
 
-export function schemaReducer(
-  state: ComponentState,
-  action: {
-    type: Schema
-    payload?: unknown
+export type SchemaReducerActions =
+  | {
+      name: Schema.EDIT_SCHEMA_MIN | Schema.EDIT_SCHEMA_MAX
+      payload?: number
+      as: Extract<ComponentDef, { schema: { min?: number; max?: number } }>
+    }
+  | {
+      name: Schema.EDIT_SCHEMA_PRECISION
+      payload?: number
+      as: Extract<ComponentDef, { schema: { precision?: number } }>
+    }
+  | {
+      name: Schema.EDIT_SCHEMA_LENGTH
+      payload?: number
+      as: Extract<ComponentDef, { schema: { length?: number } }>
+    }
+  | {
+      name: Schema.EDIT_SCHEMA_REGEX
+      payload?: string
+      as: Extract<ComponentDef, { schema: { regex?: string } }>
+    }
+
+export function schemaReducer(state: ComponentState, action: ReducerActions) {
+  const stateNew = structuredClone(state)
+  const { selectedComponent } = stateNew
+
+  if (!selectedComponent) {
+    throw new Error('No component selected')
   }
-): ComponentState {
-  const { type, payload } = action
-  const { selectedComponent } = state
 
-  const { schema } = selectedComponent ?? {}
+  const { as, name, payload } = action
+  const { type } = selectedComponent
 
-  switch (type) {
-    case Schema.EDIT_SCHEMA_MIN:
-      return {
-        ...state,
-        selectedComponent: {
-          ...selectedComponent,
-          schema: {
-            ...schema,
-            min: payload
-          }
-        }
+  // Require validation on every schema change
+  stateNew.hasValidated = false
+
+  switch (name) {
+    case Schema.EDIT_SCHEMA_MIN: {
+      if (type === as.type) {
+        selectedComponent.schema.min = payload
       }
 
-    case Schema.EDIT_SCHEMA_MAX:
-      return {
-        ...state,
-        selectedComponent: {
-          ...selectedComponent,
-          schema: { ...schema, max: payload }
-        }
+      break
+    }
+
+    case Schema.EDIT_SCHEMA_MAX: {
+      if (type === as.type) {
+        selectedComponent.schema.max = payload
       }
 
-    case Schema.EDIT_SCHEMA_PRECISION:
-      return {
-        ...state,
-        selectedComponent: {
-          ...selectedComponent,
-          schema: { ...schema, precision: payload }
-        }
+      break
+    }
+
+    case Schema.EDIT_SCHEMA_PRECISION: {
+      if (type === as.type) {
+        selectedComponent.schema.precision = payload
       }
-    case Schema.EDIT_SCHEMA_LENGTH:
-      return {
-        ...state,
-        selectedComponent: {
-          ...selectedComponent,
-          schema: { ...schema, length: payload }
-        }
+
+      break
+    }
+
+    case Schema.EDIT_SCHEMA_LENGTH: {
+      if (type === as.type) {
+        selectedComponent.schema.length = payload
       }
-    case Schema.EDIT_SCHEMA_REGEX:
-      return {
-        ...state,
-        selectedComponent: {
-          ...selectedComponent,
-          schema: { ...schema, regex: payload }
-        }
+
+      break
+    }
+
+    case Schema.EDIT_SCHEMA_REGEX: {
+      if (type === as.type) {
+        selectedComponent.schema.regex = payload
       }
+
+      break
+    }
   }
+
+  return stateNew
 }

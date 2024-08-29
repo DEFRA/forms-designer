@@ -38,8 +38,9 @@ export function MultilineTextFieldEdit({ context = ComponentContext }) {
           type="number"
           onChange={(e) =>
             dispatch({
-              type: Options.EDIT_OPTIONS_MAX_WORDS,
-              payload: e.target.value
+              name: Options.EDIT_OPTIONS_MAX_WORDS,
+              payload: e.target.valueAsNumber,
+              as: selectedComponent
             })
           }
         />
@@ -65,8 +66,9 @@ export function MultilineTextFieldEdit({ context = ComponentContext }) {
           value={options.rows}
           onChange={(e) =>
             dispatch({
-              type: Options.EDIT_OPTIONS_ROWS,
-              payload: e.target.value
+              name: Options.EDIT_OPTIONS_ROWS,
+              payload: e.target.valueAsNumber,
+              as: selectedComponent
             })
           }
         />
