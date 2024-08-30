@@ -19,6 +19,7 @@ import { DataContext } from '~/src/context/DataContext.js'
 import { addLink } from '~/src/data/page/addLink.js'
 import { addPage } from '~/src/data/page/addPage.js'
 import { findPage } from '~/src/data/page/findPage.js'
+import { hasNext } from '~/src/data/page/hasNext.js'
 import { findSection } from '~/src/data/section/findSection.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { SectionEdit } from '~/src/section/SectionEdit.jsx'
@@ -265,7 +266,7 @@ export class PageCreate extends Component<Props, State> {
               onChange={this.onChangeLinkFrom}
             >
               <option value="" />
-              {pages.map((page) => (
+              {pages.filter(hasNext).map((page) => (
                 <option key={page.path} value={page.path}>
                   {page.path}
                 </option>

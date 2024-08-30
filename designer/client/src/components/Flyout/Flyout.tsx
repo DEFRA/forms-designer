@@ -91,7 +91,7 @@ export function Flyout(props: Props) {
   }
 
   return (
-    <FocusTrap>
+    <FocusTrap focusTrapOptions={{ preventScroll: true }}>
       <div className="flyout show" data-testid={`flyout-${offset}`}>
         <div className={`flyout__container ${width}`} style={style}>
           <button
