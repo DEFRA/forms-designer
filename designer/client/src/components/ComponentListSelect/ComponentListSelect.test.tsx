@@ -27,6 +27,7 @@ describe('ComponentListSelect', () => {
       {
         title: 'First page',
         path: '/first-page',
+        next: [],
         components: [selectedComponent]
       }
     ],

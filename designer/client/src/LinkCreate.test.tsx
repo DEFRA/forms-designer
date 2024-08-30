@@ -17,6 +17,7 @@ const data = {
     {
       title: 'First page',
       path: '/first-page',
+      next: [],
       components: [
         {
           name: 'ukPassport',
@@ -31,13 +32,13 @@ const data = {
     {
       title: 'Second page',
       path: '/second-page',
+      next: [],
       components: []
     },
     {
       title: 'Summary',
       path: '/summary',
-      controller: 'SummaryPageController',
-      components: []
+      controller: 'SummaryPageController'
     }
   ],
   lists: [],
@@ -216,8 +217,8 @@ describe('LinkCreate', () => {
       ])
     )
 
-    await act(() => userEvent.selectOptions($source, '/summary'))
-    await act(() => userEvent.selectOptions($target, '/first-page'))
+    await act(() => userEvent.selectOptions($source, '/first-page'))
+    await act(() => userEvent.selectOptions($target, '/second-page'))
 
     await act(() => userEvent.selectOptions($condition, ''))
     await act(() => userEvent.click($button))
@@ -231,7 +232,10 @@ describe('LinkCreate', () => {
           pages: [
             expect.objectContaining({
               title: 'First page',
-              path: '/first-page'
+              path: '/first-page',
+
+              // Paths are correctly generated
+              next: [{ path: '/second-page' }]
             }),
             expect.objectContaining({
               title: 'Second page',
@@ -239,10 +243,7 @@ describe('LinkCreate', () => {
             }),
             expect.objectContaining({
               title: 'Summary',
-              path: '/summary',
-
-              // Paths are correctly generated
-              next: [{ path: '/first-page' }]
+              path: '/summary'
             })
           ]
         }

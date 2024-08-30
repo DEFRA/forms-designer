@@ -80,8 +80,7 @@ const data = {
     {
       title: 'summary',
       path: '/summary',
-      controller: 'SummaryPageController',
-      components: []
+      controller: 'SummaryPageController'
     }
   ],
   lists: [],
@@ -90,7 +89,7 @@ const data = {
 } satisfies FormDefinition
 
 test('updateLinksTo should update all links pointing to the specified path to the new path', () => {
-  const returned = updateLinksTo(data, '/2', '/3')
+  const returned = updateLinksTo(data, data.pages[2], data.pages[3])
   expect(returned).toEqual<FormDefinition>({
     startPage: '/0',
     pages: [
@@ -145,9 +144,7 @@ test('updateLinksTo should update all links pointing to the specified path to th
       {
         title: 'summary',
         path: '/summary',
-        controller: 'SummaryPageController',
-        components: [],
-        next: []
+        controller: 'SummaryPageController'
       }
     ],
     lists: [],

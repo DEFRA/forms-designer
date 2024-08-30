@@ -1,24 +1,43 @@
 import { type FormDefinition, type Page } from '@defra/forms-model'
 
-import { type Path } from '~/src/data/types.js'
+import { hasNext } from '~/src/data/page/hasNext.js'
 
 export function updateLinksTo(
   data: FormDefinition,
-  oldPath: Path,
-  newPath: Path
-): FormDefinition {
-  return {
-    ...data,
-    pages: data.pages.map(
-      (page): Page => ({
-        ...page,
-        path: page.path === oldPath ? newPath : page.path,
-        next:
-          page.next?.map((link) => ({
-            ...link,
-            path: link.path === oldPath ? newPath : link.path
-          })) ?? []
-      })
-    )
+  pageFrom: Page,
+  pageTo: Pick<Page, 'path'>
+) {
+  const isOutdated = data.pages.some(({ path }) => path === pageFrom.path)
+
+  if (!isOutdated) {
+    return data
   }
+
+  // Copy form definition
+  const definition = structuredClone(data)
+  const { pages } = definition
+
+  // Check for outdated pages
+  for (const pageEdit of pages) {
+    if (pageEdit.path === pageFrom.path) {
+      pageEdit.path = pageTo.path
+    }
+
+    // Skip if page has no links
+    if (!hasNext(pageEdit)) {
+      continue
+    }
+
+    // Check for outdated links
+    for (const link of pageEdit.next) {
+      if (link.path !== pageFrom.path) {
+        continue
+      }
+
+      // Update page link
+      link.path = pageTo.path
+    }
+  }
+
+  return definition
 }

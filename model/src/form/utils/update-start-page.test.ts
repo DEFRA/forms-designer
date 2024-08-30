@@ -33,8 +33,7 @@ describe('updateStartPage', () => {
         {
           title: 'Summary',
           path: '/summary',
-          controller: 'SummaryPageController',
-          components: []
+          controller: 'SummaryPageController'
         }
       ],
       lists: [],

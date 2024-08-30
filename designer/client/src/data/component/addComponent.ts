@@ -8,7 +8,8 @@ export function addComponent(
   pagePath: Path,
   component: ComponentDef
 ): FormDefinition {
-  const [page, index] = findPage(data, pagePath)
+  const page = findPage(data, pagePath)
+  const index = data.pages.indexOf(page)
 
   const { components = [] } = page
   const updatedPage = { ...page, components: [...components, component] }

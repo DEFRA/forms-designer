@@ -1,49 +1,45 @@
-import { type FormDefinition, type Link } from '@defra/forms-model'
+import { type FormDefinition, type Link, type Page } from '@defra/forms-model'
 
+import { findLink } from '~/src/data/page/findLink.js'
 import { findPage } from '~/src/data/page/findPage.js'
-import { type Path } from '~/src/data/types.js'
+import { hasNext } from '~/src/data/page/hasNext.js'
 
 /**
- * @param data - Data from DataContext
- * @param from - path to link from
- * @param to - path to link to
- * @param condition - condition for path branching
- * @throws Error - if a page has been linked to itself
+ * Add link to page
  */
 export function addLink(
   data: FormDefinition,
-  from: Path,
-  to: Path,
-  condition?: string
-): FormDefinition {
-  if (from === to) {
-    throw Error('cannot link a page to itself')
+  pageFrom: Page,
+  pageTo: Pick<Page, 'path'>,
+  options?: Omit<Link, 'path'>
+) {
+  // Prevent linking to same page
+  if (pageFrom.path === pageTo.path) {
+    throw new Error('Link must be between different pages')
   }
-  const [fromPage, index] = findPage(data, from)
-  findPage(data, to)
-  const pages = [...data.pages]
 
-  const existingLink = fromPage.next?.find((page) => page.path === to)
+  const definition = structuredClone(data)
 
-  if (!existingLink) {
-    const link: Link = {
-      path: to
-    }
+  // Confirm pages exist
+  const pageFromCopy = findPage(definition, pageFrom.path)
+  const pageToCopy = findPage(definition, pageTo.path)
 
-    if (condition) {
-      link.condition = condition
-    }
-
-    const updatedPage = {
-      ...fromPage,
-      next: [...(fromPage.next ?? []), link]
-    }
-
-    return {
-      ...data,
-      pages: pages.map((page, i) => (i === index ? updatedPage : page))
-    }
-  } else {
-    return data
+  if (!hasNext(pageFromCopy)) {
+    throw Error(`Links not found for path '${pageFromCopy.path}'`)
   }
+
+  try {
+    // Throw for missing link
+    findLink(pageFrom, pageTo)
+  } catch {
+    // Add link to page
+    pageFromCopy.next.push({
+      path: pageToCopy.path,
+      ...options
+    })
+
+    return definition
+  }
+
+  return data
 }

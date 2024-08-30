@@ -20,7 +20,12 @@ test('updateComponent throws an error when the target component cannot be found'
           }
         ]
       },
-      { title: '2', path: '/2' }
+      {
+        title: '2',
+        path: '/2',
+        next: [],
+        components: []
+      }
     ],
     lists: [],
     sections: [],
@@ -55,6 +60,7 @@ test('addComponent adds a component to the correct page', () => {
       {
         title: 'second page',
         path: '/2',
+        next: [],
         components: [
           {
             name: 'lastName',
@@ -99,6 +105,7 @@ test('addComponent adds a component to the correct page', () => {
       {
         title: 'second page',
         path: '/2',
+        next: [],
         components: [
           {
             name: 'lastName',

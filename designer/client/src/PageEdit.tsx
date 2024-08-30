@@ -1,4 +1,4 @@
-import { clone, slugify, type Page, type Section } from '@defra/forms-model'
+import { slugify, type Page, type Section } from '@defra/forms-model'
 // @ts-expect-error -- No types available
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import Joi from 'joi'
@@ -15,7 +15,9 @@ import { logger } from '~/src/common/helpers/logging/logger.js'
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
+import { deleteLink } from '~/src/data/page/deleteLink.js'
 import { findPage } from '~/src/data/page/findPage.js'
+import { hasNext } from '~/src/data/page/hasNext.js'
 import { updateLinksTo } from '~/src/data/page/updateLinksTo.js'
 import { findSection } from '~/src/data/section/findSection.js'
 import { controllerNameFromPath } from '~/src/helpers.js'
@@ -84,19 +86,18 @@ export class PageEdit extends Component<Props, State> {
       return
     }
 
-    let copy = { ...data }
-    const [copyPage, copyIndex] = findPage(data, page.path)
+    let copy = structuredClone(data)
+    const pageEdit = findPage(copy, page.path)
+
+    pageEdit.title = payload.title
+    pageEdit.controller = controller
+    pageEdit.section = section?.name
 
     if (payload.path !== page.path) {
-      copy = updateLinksTo(data, page.path, payload.path)
-      copyPage.path = payload.path
+      copy = updateLinksTo(copy, pageEdit, {
+        path: payload.path
+      })
     }
-
-    copyPage.title = payload.title
-    copyPage.controller = controller
-    copyPage.section = section?.name
-
-    copy.pages[copyIndex] = copyPage
 
     try {
       await save(copy)
@@ -141,22 +142,23 @@ export class PageEdit extends Component<Props, State> {
     const { save, data } = this.context
     const { page, onSave } = this.props
 
-    const copy = clone(data)
-    const copyPageIdx = copy.pages.findIndex((p) => p.path === page.path)
+    let copy = structuredClone(data)
+
+    const pageRemove = findPage(copy, page.path)
+    const pageIndex = copy.pages.indexOf(pageRemove)
 
     // Remove all links to the page
-    copy.pages.forEach((p, index) => {
-      if (index !== copyPageIdx && Array.isArray(p.next)) {
-        for (let i = p.next.length - 1; i >= 0; i--) {
-          const next = p.next[i]
-          if (next.path === page.path) {
-            p.next.splice(i, 1)
-          }
-        }
-      }
-    })
+    for (const pageFrom of copy.pages.filter(hasNext)) {
+      const { next } = pageFrom
 
-    copy.pages.splice(copyPageIdx, 1)
+      // Remove link
+      if (next.some(({ path }) => path === pageRemove.path)) {
+        copy = deleteLink(copy, pageFrom, pageRemove)
+      }
+    }
+
+    // Remove page
+    copy.pages.splice(pageIndex, 1)
 
     try {
       await save(copy)

@@ -1,4 +1,4 @@
-import { type Link, type Page } from '@defra/forms-model'
+import { type Page } from '@defra/forms-model'
 import React, {
   Component,
   type ContextType,
@@ -11,6 +11,7 @@ import { type Edge } from '~/src/components/Visualisation/getLayout.js'
 import { SelectConditions } from '~/src/conditions/SelectConditions.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { deleteLink } from '~/src/data/page/deleteLink.js'
+import { findLink } from '~/src/data/page/findLink.js'
 import { findPage } from '~/src/data/page/findPage.js'
 import { updateLink } from '~/src/data/page/updateLink.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
@@ -21,8 +22,8 @@ interface Props {
 }
 
 interface State {
-  page: Page
-  link: Link
+  pageFrom: Page
+  pageTo: Page
   selectedCondition?: string
 }
 
@@ -36,18 +37,16 @@ export class LinkEdit extends Component<Props, State> {
     const { edge } = this.props
     const { data } = this.context
 
-    const [page] = findPage(data, edge.source)
-    const link = page.next?.find((n) => n.path === edge.target)
+    // Find initial pages from edge
+    const pageFrom = findPage(data, edge.source)
+    const pageTo = findPage(data, edge.target)
 
-    if (!link) {
-      throw new Error(
-        `Link not found from '${edge.source}' to '${edge.target}'`
-      )
-    }
+    // Find initial link from edge
+    const link = findLink(pageFrom, pageTo)
 
     this.state = {
-      page,
-      link,
+      pageFrom,
+      pageTo,
       selectedCondition: link.condition
     }
   }
@@ -56,10 +55,16 @@ export class LinkEdit extends Component<Props, State> {
     e.preventDefault()
 
     const { onSave } = this.props
-    const { link, page, selectedCondition } = this.state
     const { data, save } = this.context
+    const { pageFrom, pageTo, selectedCondition } = this.state
 
-    const definition = updateLink(data, page.path, link.path, selectedCondition)
+    // Update link
+    const definition = updateLink(
+      data,
+      pageFrom.path,
+      pageTo.path,
+      selectedCondition
+    )
 
     try {
       await save(definition)
@@ -77,10 +82,11 @@ export class LinkEdit extends Component<Props, State> {
     }
 
     const { onSave } = this.props
-    const { link, page } = this.state
     const { data, save } = this.context
+    const { pageFrom, pageTo } = this.state
 
-    const definition = deleteLink(data, page.path, link.path)
+    // Delete link
+    const definition = deleteLink(data, pageFrom, pageTo)
 
     try {
       await save(definition)

@@ -18,6 +18,7 @@ import { SelectConditions } from '~/src/conditions/SelectConditions.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { addLink } from '~/src/data/page/addLink.js'
 import { addPage } from '~/src/data/page/addPage.js'
+import { findPage } from '~/src/data/page/findPage.js'
 import { findSection } from '~/src/data/section/findSection.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { SectionEdit } from '~/src/section/SectionEdit.jsx'
@@ -79,7 +80,7 @@ export class PageCreate extends Component<Props, State> {
       return
     }
 
-    const newPage: Page = {
+    const pageNew: Page = {
       path: payload.path,
       title: payload.title,
       controller,
@@ -88,10 +89,15 @@ export class PageCreate extends Component<Props, State> {
       next: []
     }
 
-    let copy = addPage({ ...data }, newPage)
+    let copy = addPage(data, pageNew)
 
     if (linkFrom) {
-      copy = addLink(copy, linkFrom, payload.path, selectedCondition)
+      const pageFrom = findPage(copy, linkFrom)
+
+      // Add link from the selected page
+      copy = addLink(copy, pageFrom, pageNew, {
+        condition: selectedCondition
+      })
     }
 
     try {
@@ -139,7 +145,7 @@ export class PageCreate extends Component<Props, State> {
     const { value: linkFrom } = e.target
 
     this.setState({
-      linkFrom
+      linkFrom: linkFrom || undefined
     })
   }
 

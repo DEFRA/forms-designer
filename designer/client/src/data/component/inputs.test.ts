@@ -10,6 +10,7 @@ test('should return all inputs from the page model', () => {
         title: 'page1',
         path: '/1',
         section: 'section1',
+        next: [],
         components: [
           {
             name: 'name1',
@@ -31,6 +32,7 @@ test('should return all inputs from the page model', () => {
         title: 'page2',
         path: '/2',
         section: 'section1',
+        next: [],
         components: [
           {
             name: 'name3',
@@ -143,6 +145,8 @@ test('should handle pages with no components', () => {
       {
         title: 'No components',
         path: '/start',
+        controller: 'StartPageController',
+        next: [],
         components: []
       }
     ],

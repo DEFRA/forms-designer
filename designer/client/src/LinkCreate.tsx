@@ -11,6 +11,7 @@ import { ErrorMessage } from '~/src/components/ErrorMessage/ErrorMessage.jsx'
 import { SelectConditions } from '~/src/conditions/SelectConditions.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { addLink } from '~/src/data/page/addLink.js'
+import { findPage } from '~/src/data/page/findPage.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { validateRequired, hasValidationErrors } from '~/src/validations.js'
 
@@ -50,12 +51,13 @@ export class LinkCreate extends Component<Props, State> {
       return
     }
 
-    const definition = addLink(
-      data,
-      payload.from,
-      payload.to,
-      selectedCondition
-    )
+    const pageFrom = findPage(data, payload.from)
+    const pageTo = findPage(data, payload.to)
+
+    // Add link from the selected page
+    const definition = addLink(data, pageFrom, pageTo, {
+      condition: selectedCondition
+    })
 
     await save(definition)
     onSave()
