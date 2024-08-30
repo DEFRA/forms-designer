@@ -148,7 +148,7 @@ export function Menu({ slug }: Props) {
 
       {page.isVisible && (
         <RenderInPortal>
-          <Flyout title="Add Page" onHide={page.hide}>
+          <Flyout title={i18n('page.add')} onHide={page.hide}>
             <PageCreate onSave={page.hide} />
           </Flyout>
         </RenderInPortal>
@@ -164,7 +164,7 @@ export function Menu({ slug }: Props) {
 
       {sections.isVisible && (
         <RenderInPortal>
-          <Flyout title="Edit Sections" onHide={sections.hide}>
+          <Flyout title={i18n('sections.edit')} onHide={sections.hide}>
             <SectionsEdit />
           </Flyout>
         </RenderInPortal>
@@ -184,7 +184,7 @@ export function Menu({ slug }: Props) {
 
       {lists.isVisible && (
         <RenderInPortal>
-          <Flyout title="Edit Lists" onHide={lists.hide}>
+          <Flyout title={i18n('list.addOrEdit')} onHide={lists.hide}>
             <ListsEditorContextProvider>
               <ListContextProvider>
                 <ListsEdit showEditLists={false} />
@@ -196,7 +196,7 @@ export function Menu({ slug }: Props) {
 
       {summary.isVisible && (
         <RenderInPortal>
-          <Flyout title="Edit Summary" onHide={summary.hide}>
+          <Flyout title={i18n('summary.edit')} onHide={summary.hide}>
             <DeclarationEdit onSave={summary.hide} />
           </Flyout>
         </RenderInPortal>

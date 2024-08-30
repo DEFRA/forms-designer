@@ -381,7 +381,7 @@ export class PageCreate extends Component<Props, State> {
             <Flyout
               title={
                 !isNewSection && !!section
-                  ? i18n('section.editingTitle', { title: section.title })
+                  ? i18n('section.editTitle', { title: section.title })
                   : i18n('section.add')
               }
               onHide={this.closeFlyout}

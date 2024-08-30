@@ -272,7 +272,7 @@ export class SelectConditions extends Component<Props, State> {
             {inline && (
               <RenderInPortal>
                 <Flyout
-                  title="Define condition"
+                  title={i18n('conditions.addTitle')}
                   onHide={this.onCancelInlineCondition}
                 >
                   <InlineConditions

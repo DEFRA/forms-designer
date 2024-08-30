@@ -106,6 +106,7 @@
   },
   "conditions": {
     "add": "Add a new condition",
+    "addTitle": "Add condition",
     "addOrEdit": "Add or edit condition",
     "addOrEditHint": "Set the rules that determine the conditional behaviour in the form flow. For example, a question page might have a component for yes and no options that need two conditions - one to control what happens if a user selects yes and one for when a user selects no.",
     "displayName": "Display name",
@@ -196,6 +197,9 @@
     "FileUploadField_info": "Allows a user to upload files"
   },
   "leaveDesigner": "Are you sure you want to leave the Designer? If you have unsaved changes they will be lost.",
+  "link": {
+    "edit": "Edit link"
+  },
   "list": {
     "add": "Add a new list",
     "addOrEdit": "Add or edit lists",
@@ -286,6 +290,9 @@
   },
   "optional": "{{noun}} (optional)",
   "page": {
+    "add": "Add page",
+    "edit": "Edit page",
+    "preview": "Preview page",
     "controller": "Page type",
     "controllerHint": "Select a Start Page to start a form, a Question Page to request information, and a Summary Page at the end of a section or form. For example, use a Summary to let users check their answers to questions before they submit the form.",
     "controllers": {
@@ -308,7 +315,8 @@
     "edit": "Edit section",
     "editingTitle": "Edit {{title, lowerFirst}}",
     "noun": "section",
-    "noun_plural": "sections"
+    "noun_plural": "sections",
+    "editTitle": "Edit {{title, lowerFirst}}"
   },
   "textFieldEditComponent": {
     "lengthField": {
@@ -347,6 +355,12 @@
       "helpText": "Tick this box if you do not want the section title to show on any pages in this section",
       "title": "Hide section title"
     }
+  },
+  "sections": {
+    "edit": "Edit sections"
+  },
+  "summary": {
+    "edit": "Edit summary"
   },
   "warning": "Warning",
   "wontShow": "This will not show on the page.",
