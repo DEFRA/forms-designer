@@ -78,11 +78,7 @@ function useComponentCreate(props) {
     }
 
     setIsSaving(true)
-    const updatedData = addComponent(
-      data,
-      page as Page,
-      selectedComponent
-    )
+    const updatedData = addComponent(data, page as Page, selectedComponent)
 
     await save(updatedData)
     toggleAddComponent()
