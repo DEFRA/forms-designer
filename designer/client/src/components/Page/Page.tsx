@@ -12,6 +12,7 @@ import { ComponentCreate } from '~/src/components/ComponentCreate/ComponentCreat
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
+import { hasComponents } from '~/src/data/definition/hasComponents.js'
 import { findSection } from '~/src/data/section/findSection.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContextProvider } from '~/src/reducers/component/componentReducer.jsx'
@@ -39,6 +40,11 @@ const ComponentItem = (props: {
 
 const ComponentList = (props: { page: PageType; data: FormDefinition }) => {
   const { page, data } = props
+
+  if (!hasComponents(page) || !page.components.length) {
+    return null
+  }
+
   const { components = [] } = page
 
   return (
@@ -68,7 +74,10 @@ export const Page = (props: {
   const [isEditingPage, setIsEditingPage] = useState(false)
   const [isCreatingComponent, setIsCreatingComponent] = useState(false)
 
-  const section = page.section ? findSection(data, page.section) : undefined
+  const section =
+    hasComponents(page) && page.section
+      ? findSection(data, page.section)
+      : undefined
 
   const pageId = slugify(page.path)
   const headingId = `${pageId}-heading`

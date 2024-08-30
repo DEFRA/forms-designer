@@ -1,5 +1,6 @@
 import { type FormDefinition, type Section } from '@defra/forms-model'
 
+import { hasComponents } from '~/src/data/definition/hasComponents.js'
 import { findSection } from '~/src/data/section/findSection.js'
 
 /**
@@ -23,9 +24,9 @@ export function updateSection(
 
     // Update pages with previous section name
     if (sectionEdit.name !== sectionUpdate.name) {
-      const pagesToUpdate = pages.filter(
-        ({ section }) => section === sectionName
-      )
+      const pagesToUpdate = pages
+        .filter(hasComponents)
+        .filter((page) => page.section === sectionName)
 
       // Update page section
       for (const page of pagesToUpdate) {

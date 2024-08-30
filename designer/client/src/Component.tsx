@@ -14,6 +14,7 @@ import { FileUploadIcon } from '~/src/components/Icons/FileUploadIcon.jsx'
 import { SearchIcon } from '~/src/components/Icons/SearchIcon.jsx'
 import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
+import { hasComponents } from '~/src/data/definition/hasComponents.js'
 import { findPage } from '~/src/data/page/findPage.js'
 import { arrayMove } from '~/src/helpers.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
@@ -266,7 +267,7 @@ export const Component: FunctionComponent<Props> = (props) => {
     const copy = structuredClone(data)
     const copyPage = findPage(copy, page.path)
 
-    if (!copyPage.components?.length) {
+    if (!hasComponents(copyPage)) {
       return false
     }
 
@@ -283,8 +284,7 @@ export const Component: FunctionComponent<Props> = (props) => {
     await save(copy)
   }
 
-  const showMoveActions =
-    Array.isArray(page.components) && page.components.length > 1
+  const showMoveActions = hasComponents(page) && !!page.components.length
 
   return (
     <>

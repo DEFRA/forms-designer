@@ -1,10 +1,14 @@
 import { type Page } from '@defra/forms-model'
 
+import { hasComponents } from '~/src/data/definition/hasComponents.js'
+
 /**
  * Find component by name
  */
 export function findComponent(page: Page, componentName?: string) {
-  const component = page.components?.find(({ name }) => name === componentName)
+  const component = hasComponents(page)
+    ? page.components.find(({ name }) => name === componentName)
+    : undefined
 
   if (!component) {
     throw Error(
