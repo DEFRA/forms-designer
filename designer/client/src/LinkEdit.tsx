@@ -19,6 +19,7 @@ import { addLink } from '~/src/data/page/addLink.js'
 import { deleteLink } from '~/src/data/page/deleteLink.js'
 import { findLink, findLinkIndex } from '~/src/data/page/findLink.js'
 import { findPage } from '~/src/data/page/findPage.js'
+import { hasNext } from '~/src/data/page/hasNext.js'
 import { updateLink } from '~/src/data/page/updateLink.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import {
@@ -273,7 +274,7 @@ export class LinkEdit extends Component<Props, State> {
               onChange={this.onChangeFrom}
             >
               <option value="" />
-              {pages.map((page) => (
+              {pages.filter(hasNext).map((page) => (
                 <option key={page.path} value={page.path}>
                   {page.title}
                 </option>
