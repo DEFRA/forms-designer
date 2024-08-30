@@ -1,6 +1,8 @@
 import {
   ComponentType,
   ConditionType,
+  ControllerPath,
+  ControllerType,
   OperatorName,
   type FormDefinition
 } from '@defra/forms-model'
@@ -11,8 +13,8 @@ const data = {
   pages: [
     {
       title: 'start',
-      path: '/start',
-      controller: 'StartPageController',
+      path: ControllerPath.Start,
+      controller: ControllerType.Start,
       next: [{ path: '/badgers' }],
       components: []
     },
@@ -84,8 +86,8 @@ test('removeCondition should remove conditions from the conditions key and in pa
     pages: [
       {
         title: 'start',
-        path: '/start',
-        controller: 'StartPageController',
+        path: ControllerPath.Start,
+        controller: ControllerType.Start,
         next: [{ path: '/badgers' }],
         components: []
       },

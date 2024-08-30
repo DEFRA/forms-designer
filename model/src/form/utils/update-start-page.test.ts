@@ -1,6 +1,7 @@
 import { ComponentType } from '~/src/components/enums.js'
 import { type FormDefinition } from '~/src/form/form-definition/types.js'
 import { updateStartPage } from '~/src/form/utils/update-start-page.js'
+import { ControllerPath, ControllerType } from '~/src/pages/enums.js'
 
 describe('updateStartPage', () => {
   let data: FormDefinition
@@ -27,13 +28,13 @@ describe('updateStartPage', () => {
         {
           title: 'Second page',
           path: '/second-page',
-          next: [{ path: '/summary' }],
+          next: [{ path: ControllerPath.Summary }],
           components: []
         },
         {
           title: 'Summary',
-          path: '/summary',
-          controller: 'SummaryPageController'
+          path: ControllerPath.Summary,
+          controller: ControllerType.Summary
         }
       ],
       lists: [],

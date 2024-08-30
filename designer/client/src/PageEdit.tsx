@@ -1,4 +1,5 @@
 import {
+  ControllerType,
   controllerNameFromPath,
   hasNext,
   slugify,
@@ -263,13 +264,13 @@ export class PageEdit extends Component<Props, State> {
               onChange={this.onChangeController}
             >
               <option value="">{i18n('page.controllers.question')}</option>
-              <option value="StartPageController">
+              <option value={ControllerType.Start}>
                 {i18n('page.controllers.start')}
               </option>
-              <option value="FileUploadPageController">
+              <option value={ControllerType.FileUpload}>
                 {i18n('page.controllers.fileUpload')}
               </option>
-              <option value="SummaryPageController">
+              <option value={ControllerType.Summary}>
                 {i18n('page.controllers.summary')}
               </option>
             </select>

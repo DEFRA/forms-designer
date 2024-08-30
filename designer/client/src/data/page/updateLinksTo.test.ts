@@ -1,4 +1,9 @@
-import { ComponentType, type FormDefinition } from '@defra/forms-model'
+import {
+  ComponentType,
+  ControllerPath,
+  ControllerType,
+  type FormDefinition
+} from '@defra/forms-model'
 
 import { updateLinksTo } from '~/src/data/page/updateLinksTo.js'
 
@@ -74,13 +79,13 @@ const data = {
       title: 'page3',
       section: 'section1',
       path: '/3',
-      next: [{ path: '/summary' }],
+      next: [{ path: ControllerPath.Summary }],
       components: []
     },
     {
       title: 'summary',
-      path: '/summary',
-      controller: 'SummaryPageController'
+      path: ControllerPath.Summary,
+      controller: ControllerType.Summary
     }
   ],
   lists: [],
@@ -144,12 +149,12 @@ test('updateLinksTo should update all links pointing to the specified path to th
         section: 'section1',
         path: '/3',
         components: [],
-        next: [{ path: '/summary' }]
+        next: [{ path: ControllerPath.Summary }]
       },
       {
         title: 'summary',
-        path: '/summary',
-        controller: 'SummaryPageController'
+        path: ControllerPath.Summary,
+        controller: ControllerType.Summary
       }
     ],
     lists: [],

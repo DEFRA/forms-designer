@@ -1,6 +1,8 @@
 import {
   ComponentType,
   ConditionType,
+  ControllerPath,
+  ControllerType,
   OperatorName,
   type FormDefinition
 } from '@defra/forms-model'
@@ -16,8 +18,8 @@ const data = {
   pages: [
     {
       title: 'start',
-      path: '/start',
-      controller: 'StartPageController',
+      path: ControllerPath.Start,
+      controller: ControllerType.Start,
       components: [
         {
           name: 'text',

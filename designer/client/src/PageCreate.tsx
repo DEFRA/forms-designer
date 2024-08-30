@@ -1,4 +1,10 @@
-import { hasNext, slugify, type Page, type Section } from '@defra/forms-model'
+import {
+  ControllerType,
+  hasNext,
+  slugify,
+  type Page,
+  type Section
+} from '@defra/forms-model'
 // @ts-expect-error -- No types available
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import Joi from 'joi'
@@ -248,13 +254,13 @@ export class PageCreate extends Component<Props, State> {
               onChange={this.onChangeController}
             >
               <option value="">{i18n('page.controllers.question')}</option>
-              <option value="StartPageController">
+              <option value={ControllerType.Start}>
                 {i18n('page.controllers.start')}
               </option>
-              <option value="FileUploadPageController">
+              <option value={ControllerType.FileUpload}>
                 {i18n('page.controllers.fileUpload')}
               </option>
-              <option value="SummaryPageController">
+              <option value={ControllerType.Summary}>
                 {i18n('page.controllers.summary')}
               </option>
             </select>

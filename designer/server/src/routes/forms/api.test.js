@@ -1,3 +1,5 @@
+import { ControllerPath, ControllerType } from '@defra/forms-model'
+
 import { createServer } from '~/src/createServer.js'
 import * as forms from '~/src/lib/forms.js'
 import { auth } from '~/test/fixtures/auth.js'
@@ -57,16 +59,12 @@ describe('Server API', () => {
             title: 'First page',
             path: '/first-page',
             components: [],
-            next: [
-              {
-                path: '/summary'
-              }
-            ]
+            next: [{ path: ControllerPath.Summary }]
           },
           {
             title: 'Summary',
-            path: '/summary',
-            controller: 'SummaryPageController'
+            path: ControllerPath.Summary,
+            controller: ControllerType.Summary
           }
         ],
         lists: [],

@@ -4,6 +4,7 @@ import {
   ControllerNames,
   ControllerTypes
 } from '~/src/pages/controller-types.js'
+import { type ControllerType } from '~/src/pages/enums.js'
 
 /**
  * Check page has components
@@ -24,7 +25,9 @@ export function hasNext(page?: Page): page is Extract<Page, { next: Link[] }> {
 /**
  * Check for known page controller names
  */
-export function isControllerName(nameOrPath?: string) {
+export function isControllerName(
+  nameOrPath?: ControllerType | string
+): nameOrPath is ControllerType {
   return !!nameOrPath && ControllerNames.includes(nameOrPath)
 }
 
@@ -32,7 +35,7 @@ export function isControllerName(nameOrPath?: string) {
  * Check and optionally replace legacy path with controller name
  * @param {string} [nameOrPath] - Controller name or legacy controller path
  */
-export function controllerNameFromPath(nameOrPath?: string) {
+export function controllerNameFromPath(nameOrPath?: ControllerType | string) {
   if (!nameOrPath || isControllerName(nameOrPath)) {
     return nameOrPath
   }
