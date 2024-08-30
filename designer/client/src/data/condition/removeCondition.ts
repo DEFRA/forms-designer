@@ -29,7 +29,7 @@ export function removeCondition(
 
     // Remove condition from page links
     for (const next of page.next) {
-      if (next.condition !== name) {
+      if (next.condition !== condition.name) {
         continue
       }
 
