@@ -131,7 +131,7 @@ export const Page = (props: {
           <Flyout onHide={() => setIsCreatingComponent(false)}>
             <ComponentContextProvider>
               <ComponentCreate
-                toggleAddComponent={() => setIsCreatingComponent(false)}
+                onSave={() => setIsCreatingComponent(false)}
                 page={page}
               />
             </ComponentContextProvider>

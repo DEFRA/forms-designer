@@ -197,7 +197,7 @@ export function Menu({ slug }: Props) {
       {summary.isVisible && (
         <RenderInPortal>
           <Flyout title="Edit Summary" onHide={summary.hide}>
-            <DeclarationEdit onCreate={() => summary.hide()} />
+            <DeclarationEdit onSave={summary.hide} />
           </Flyout>
         </RenderInPortal>
       )}

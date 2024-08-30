@@ -243,7 +243,7 @@ export const Component: FunctionComponent<Props> = (props) => {
 
   const { data, save } = useContext(DataContext)
   const [showEditor, setShowEditor] = useState<boolean>(false)
-  const toggleShowEditor = () => setShowEditor(!showEditor)
+  const onSave = () => setShowEditor(!showEditor)
 
   const { title, type } = selectedComponent
   const ComponentIcon = componentTypes[type]
@@ -290,7 +290,7 @@ export const Component: FunctionComponent<Props> = (props) => {
     <>
       <button
         className="component govuk-link"
-        onClick={toggleShowEditor}
+        onClick={onSave}
         aria-label={componentButtonLabel}
         aria-describedby={headingId}
       >
@@ -320,9 +320,9 @@ export const Component: FunctionComponent<Props> = (props) => {
       )}
       {showEditor && (
         <RenderInPortal>
-          <Flyout title={componentFlyoutTitle} onHide={toggleShowEditor}>
+          <Flyout title={componentFlyoutTitle} onHide={onSave}>
             <ComponentContextProvider selectedComponent={selectedComponent}>
-              <ComponentEdit page={page} toggleShowEditor={toggleShowEditor} />
+              <ComponentEdit page={page} onSave={onSave} />
             </ComponentContextProvider>
           </Flyout>
         </RenderInPortal>
