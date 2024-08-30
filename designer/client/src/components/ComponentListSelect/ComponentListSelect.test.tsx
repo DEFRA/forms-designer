@@ -83,7 +83,7 @@ describe('ComponentListSelect', () => {
     const $select = await waitFor(() => screen.getByLabelText('Select list'))
     await act(() => userEvent.selectOptions($select, 'myList'))
 
-    expect(screen.getByText('Edit my list')).toBeInTheDocument()
+    expect(screen.getByText('Edit list')).toBeInTheDocument()
   })
 
   test('should render strings correctly', () => {

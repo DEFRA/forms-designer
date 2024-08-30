@@ -70,6 +70,7 @@ export class PageEdit extends Component<Props, State> {
 
   onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    e.stopPropagation()
 
     const { save, data } = this.context
     const { title, path, section, controller } = this.state
@@ -242,7 +243,7 @@ export class PageEdit extends Component<Props, State> {
           <ErrorSummary errorList={Object.values(errors).filter(Boolean)} />
         )}
 
-        <form onSubmit={this.onSubmit} autoComplete="off">
+        <form onSubmit={this.onSubmit} autoComplete="off" noValidate>
           <div className="govuk-form-group">
             <label className="govuk-label govuk-label--s" htmlFor="controller">
               {i18n('page.controller')}

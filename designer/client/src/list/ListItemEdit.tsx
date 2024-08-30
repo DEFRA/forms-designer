@@ -16,7 +16,7 @@ import { hasValidationErrors } from '~/src/validations.js'
 export function ListItemEdit() {
   const { dispatch: listsEditorDispatch } = useContext(ListsEditorContext)
   const { state, dispatch } = useContext(ListContext)
-  const { data, save } = useContext(DataContext)
+  const { data } = useContext(DataContext)
 
   const {
     handleTitleChange,
@@ -35,10 +35,11 @@ export function ListItemEdit() {
   const { listItemErrors: errors, selectedItem } = state
   const hasErrors = hasValidationErrors(errors)
 
-  const handleSubmit = async (
+  const handleSubmit = (
     e: FormEvent<HTMLFormElement> | MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault()
+    e.stopPropagation()
 
     const payload = {
       selectedItem
@@ -49,8 +50,7 @@ export function ListItemEdit() {
       return
     }
 
-    const copy = { ...data }
-    await save(prepareForSubmit(copy))
+    prepareForSubmit()
 
     listsEditorDispatch({
       name: ListsEditorStateActions.IS_EDITING_LIST_ITEM,
@@ -64,7 +64,7 @@ export function ListItemEdit() {
         <ErrorSummary errorList={Object.values(errors).filter(Boolean)} />
       )}
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} autoComplete="off" noValidate>
         <Input
           id="title"
           name="list-item-text"
@@ -117,7 +117,7 @@ export function ListItemEdit() {
         </select>
         <hr className="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
         <div className="govuk-button-group">
-          <button className="govuk-button" type="submit" onClick={handleSubmit}>
+          <button className="govuk-button" type="submit">
             {i18n('save')}
           </button>
         </div>

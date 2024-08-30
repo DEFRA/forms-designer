@@ -9,14 +9,15 @@ import React, {
 
 import { type ErrorList } from '~/src/ErrorSummary.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
-import { findList } from '~/src/data/list/findList.js'
+import { findList, findListItem } from '~/src/data/list/findList.js'
 import randomId from '~/src/randomId.js'
 import { ListActions } from '~/src/reducers/listActions.jsx'
 
 export interface ListState extends Partial<FormList>, Partial<FormItem> {
   initialName?: string
   initialTitle?: string
-  initialItem?: string
+  initialItemText?: string
+  initialItemValue?: Item['value']
   selectedItemIndex?: number
   errors: Partial<ErrorList<'title' | 'listItems'>>
   listItemErrors: Partial<ErrorList<'title' | 'value'>>
@@ -32,10 +33,7 @@ export interface FormItem {
 
 export type ListReducerActions =
   | {
-      name:
-        | ListActions.ADD_NEW_LIST
-        | ListActions.ADD_LIST_ITEM
-        | ListActions.SUBMIT
+      name: ListActions.ADD_NEW_LIST | ListActions.ADD_LIST_ITEM
       payload?: undefined
     }
   | {
@@ -88,7 +86,8 @@ export function listReducer(state: ListState, action: ListReducerActions) {
   const stateNew = structuredClone(state)
 
   const { name, payload } = action
-  let { initialItem, selectedList, selectedItem } = stateNew
+  let { initialItemText, initialItemValue, selectedList, selectedItem } =
+    stateNew
 
   switch (name) {
     case ListActions.ADD_NEW_LIST: {
@@ -122,8 +121,7 @@ export function listReducer(state: ListState, action: ListReducerActions) {
       break
 
     case ListActions.LIST_VALIDATION_ERRORS:
-    case ListActions.SUBMIT:
-      stateNew.errors = payload ?? {}
+      stateNew.errors = payload
       break
   }
 
@@ -143,10 +141,12 @@ export function listReducer(state: ListState, action: ListReducerActions) {
         isNew: true
       }
 
-      initialItem = selectedItem.text
+      initialItemText = selectedItem.text
+      initialItemValue = selectedItem.value
 
       stateNew.selectedItem = selectedItem
-      stateNew.initialItem = initialItem
+      stateNew.initialItemText = initialItemText
+      stateNew.initialItemValue = initialItemValue
       stateNew.listItemErrors = {}
 
       break
@@ -154,22 +154,26 @@ export function listReducer(state: ListState, action: ListReducerActions) {
 
     case ListActions.EDIT_LIST_ITEM: {
       selectedItem = payload
-      initialItem = payload.text
+      initialItemText = payload.text
+      initialItemValue = payload.value
 
-      const index = selectedList.items.findIndex(
-        (item) => item.text === initialItem
-      )
+      const item = findListItem(selectedList, payload.text)
 
       stateNew.selectedItem = selectedItem
-      stateNew.selectedItemIndex = index > -1 ? index : undefined
-      stateNew.initialItem = initialItem
+      stateNew.selectedItemIndex = selectedList.items.indexOf(item)
+      stateNew.initialItemText = initialItemText
+      stateNew.initialItemValue = initialItemValue
       stateNew.listItemErrors = {}
 
       break
     }
   }
 
-  if (!selectedItem || typeof initialItem === 'undefined') {
+  if (
+    !selectedItem ||
+    typeof initialItemText === 'undefined' ||
+    typeof initialItemValue === 'undefined'
+  ) {
     return stateNew
   }
 
@@ -201,7 +205,7 @@ export const ListContextProvider = (props: {
   children?: ReactNode
   selectedListName?: string
 }) => {
-  const { selectedListName } = props
+  const { children, selectedListName } = props
   const { data } = useContext(DataContext)
 
   let init: ListState = {
@@ -210,7 +214,7 @@ export const ListContextProvider = (props: {
   }
 
   if (selectedListName) {
-    const [selectedList] = findList(data, selectedListName)
+    const selectedList = findList(data, selectedListName)
 
     init = {
       ...init,
@@ -224,7 +228,7 @@ export const ListContextProvider = (props: {
 
   return (
     <ListContext.Provider value={{ state, dispatch }}>
-      {props.children}
+      {children}
     </ListContext.Provider>
   )
 }

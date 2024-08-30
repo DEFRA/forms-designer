@@ -27,6 +27,11 @@ export type FieldsReducerActions =
       payload: string
       as: Extract<ComponentDef, { content: string }>
     }
+  | {
+      name: Fields.EDIT_LIST
+      payload: string
+      as: Extract<ComponentDef, { list: string }>
+    }
 
 export function fieldsReducer(state: ComponentState, action: ReducerActions) {
   const stateNew = structuredClone(state)
@@ -66,6 +71,14 @@ export function fieldsReducer(state: ComponentState, action: ReducerActions) {
     case Fields.EDIT_CONTENT: {
       if (type === as.type) {
         selectedComponent.content = payload
+      }
+
+      break
+    }
+
+    case Fields.EDIT_LIST: {
+      if (type === as.type) {
+        selectedComponent.list = payload
       }
 
       break

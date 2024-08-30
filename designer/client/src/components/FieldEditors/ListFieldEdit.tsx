@@ -28,7 +28,7 @@ export function ListFieldEdit({ context = ComponentContext, children }: Props) {
 
   return (
     <ListsEditorContextProvider>
-      <ListContextProvider>
+      <ListContextProvider selectedListName={selectedComponent.list}>
         <ComponentListSelect />
         {children}
         <RenderInPortal>

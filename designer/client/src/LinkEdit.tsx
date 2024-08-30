@@ -97,6 +97,7 @@ export class LinkEdit extends Component<Props, State> {
 
   onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    e.stopPropagation()
 
     const { onSave } = this.props
     const { data, save } = this.context
@@ -247,7 +248,7 @@ export class LinkEdit extends Component<Props, State> {
         )}
 
         <div className="govuk-hint">{i18n('addLink.header.hint')}</div>
-        <form onSubmit={this.onSubmit} autoComplete="off">
+        <form onSubmit={this.onSubmit} autoComplete="off" noValidate>
           <div
             className={classNames({
               'govuk-form-group': true,
