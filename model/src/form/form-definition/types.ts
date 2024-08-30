@@ -1,7 +1,7 @@
 import { type ComponentDef } from '~/src/components/types.js'
 import { type ConditionsModelData } from '~/src/conditions/types.js'
 import { formDefinitionSchema } from '~/src/form/form-definition/index.js'
-import { type ControllerType } from '~/src/pages/enums.js'
+import { type ControllerPath, type ControllerType } from '~/src/pages/enums.js'
 
 export interface Link {
   path: string
@@ -12,27 +12,33 @@ export interface Link {
 export interface PageBase {
   title: string
   path: string
-  controller?: ControllerType
-  components?: ComponentDef[]
+}
+
+export interface PageStart extends PageBase {
+  controller: ControllerType.Start | ControllerType.Home
   section?: string
-  next?: Link[]
-}
-
-export interface PageWithNext extends PageBase {
-  controller?:
-    | ControllerType.Start
-    | ControllerType.Home
-    | ControllerType.Page
-    | ControllerType.FileUpload
   next: Link[]
-}
-
-export interface PageWithComponents extends PageBase {
-  controller?: ControllerType.Page | ControllerType.FileUpload
   components: ComponentDef[]
 }
 
-export type Page = PageWithComponents | PageWithNext | PageBase
+export interface PageQuestion extends PageBase {
+  controller?: ControllerType.Page | ControllerType.FileUpload
+  section?: string
+  next: Link[]
+  components: ComponentDef[]
+}
+
+export interface PageSummary extends PageBase {
+  path: ControllerPath.Summary
+  controller: ControllerType.Summary
+}
+
+export interface PageStatus extends PageBase {
+  path: ControllerPath.Status
+  controller: ControllerType.Status
+}
+
+export type Page = PageStart | PageQuestion | PageSummary | PageStatus
 
 export interface Section {
   name: string

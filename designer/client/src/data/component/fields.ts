@@ -8,7 +8,8 @@ import {
   type ConditionalComponentType,
   type FormDefinition,
   type Item,
-  type PageWithComponents,
+  type PageQuestion,
+  type PageStart,
   type Section
 } from '@defra/forms-model'
 
@@ -42,7 +43,10 @@ export function getFieldsTo(data: FormDefinition, pathTo?: string) {
 /**
  * Map page to conditional field definition
  */
-export function pageToFields(this: FormDefinition, page: PageWithComponents) {
+export function pageToFields(
+  this: FormDefinition,
+  page: PageStart | PageQuestion
+) {
   const section = page.section ? findSection(this, page.section) : undefined
 
   return page.components
