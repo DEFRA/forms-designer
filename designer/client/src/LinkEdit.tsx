@@ -11,6 +11,7 @@ import { type Edge } from '~/src/components/Visualisation/getLayout.js'
 import { SelectConditions } from '~/src/conditions/SelectConditions.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { deleteLink } from '~/src/data/page/deleteLink.js'
+import { findLink } from '~/src/data/page/findLink.js'
 import { findPage } from '~/src/data/page/findPage.js'
 import { updateLink } from '~/src/data/page/updateLink.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
@@ -37,13 +38,9 @@ export class LinkEdit extends Component<Props, State> {
     const { data } = this.context
 
     const [page] = findPage(data, edge.source)
-    const link = page.next?.find((n) => n.path === edge.target)
 
-    if (!link) {
-      throw new Error(
-        `Link not found from '${edge.source}' to '${edge.target}'`
-      )
-    }
+    // Find initial link from edge
+    const link = findLink(pageFrom, pageTo)
 
     this.state = {
       page,
