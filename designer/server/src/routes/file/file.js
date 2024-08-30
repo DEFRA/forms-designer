@@ -2,12 +2,11 @@ import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
-import { redirectWithErrors } from '../forms/create.js'
-
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { checkFileStatus, createFileLink } from '~/src/lib/file.js'
 import { errorViewModel } from '~/src/models/errors.js'
 import * as file from '~/src/models/file/file.js'
+import { redirectWithErrors } from '~/src/routes/forms/create.js'
 
 export const emailSchema = Joi.string().trim().required().messages({
   'string.empty': 'Enter an email address'
@@ -15,7 +14,7 @@ export const emailSchema = Joi.string().trim().required().messages({
 
 export default [
   /**
-   * @satisfies {ServerRoute< { Params:  { fileId: string } }>}
+   * @satisfies {ServerRoute<{ Params: { fileId: string } }>}
    */
   ({
     method: 'GET',
@@ -46,7 +45,7 @@ export default [
     }
   }),
   /**
-   * @satisfies {ServerRoute< { Params:  { fileId: string }, Payload: { email: string } }>}
+   * @satisfies {ServerRoute<{ Params: { fileId: string }, Payload: { email: string } }>}
    */
   ({
     method: 'POST',

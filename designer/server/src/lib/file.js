@@ -59,5 +59,4 @@ function getAuthOptions(token) {
 
 /**
  * @import Wreck from '@hapi/wreck'
- * @import { FileDetails } from '@defra/forms-model'
  */
