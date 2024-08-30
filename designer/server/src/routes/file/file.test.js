@@ -79,7 +79,7 @@ describe('File routes', () => {
 
       const options = {
         method: 'post',
-        url: '/file-download/1234',
+        url: fileDownloadUrl,
         auth,
         payload: { email: 'new.email@gov.uk' }
       }
@@ -96,7 +96,7 @@ describe('File routes', () => {
 
       const options = {
         method: 'post',
-        url: '/file-download/1234',
+        url: fileDownloadUrl,
         auth,
         payload: { email: 'new.email@gov.uk' }
       }
