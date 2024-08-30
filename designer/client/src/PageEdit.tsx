@@ -29,6 +29,7 @@ import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.j
 import { DataContext } from '~/src/context/DataContext.js'
 import { deleteLink } from '~/src/data/page/deleteLink.js'
 import { findPage } from '~/src/data/page/findPage.js'
+import { findPathsTo } from '~/src/data/page/findPathsTo.js'
 import { updateLinksTo } from '~/src/data/page/updateLinksTo.js'
 import { findSection } from '~/src/data/section/findSection.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
@@ -319,6 +320,9 @@ export class PageEdit extends Component<Props, State> {
       (page) => page.controller === ControllerType.Summary
     )
 
+    // Check if we have a link from another page
+    const hasLinkFrom = findPathsTo(data, page.path).length > 1
+
     return (
       <>
         {hasErrors && (
@@ -344,7 +348,8 @@ export class PageEdit extends Component<Props, State> {
               <option value={ControllerType.Page}>
                 {i18n('page.controllers.question')}
               </option>
-              {(!hasStartPage || page.controller === ControllerType.Start) && (
+              {((!hasStartPage && !hasLinkFrom) ||
+                page.controller === ControllerType.Start) && (
                 <option value={ControllerType.Start}>
                   {i18n('page.controllers.start')}
                 </option>
