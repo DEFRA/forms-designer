@@ -216,7 +216,10 @@ describe('ConditionsEdit', () => {
         </RenderWithContext>
       )
 
-      const $button = screen.queryByRole('button', { name: 'Add condition' })
+      const $button = screen.queryByRole('button', {
+        name: 'Add a new condition'
+      })
+
       expect($button).toBeInTheDocument()
     })
 

@@ -251,6 +251,9 @@ export class SelectConditions extends Component<Props, State> {
                 label={{
                   children: ['Select a condition']
                 }}
+                formGroup={{
+                  className: 'govuk-!-margin-bottom-2'
+                }}
                 onChange={this.onChangeConditionSelection}
                 required={false}
               />
@@ -262,14 +265,14 @@ export class SelectConditions extends Component<Props, State> {
                   className="govuk-link"
                   onClick={this.onClickDefineCondition}
                 >
-                  Define a new condition
+                  {i18n('conditions.add')}
                 </a>
               </p>
             )}
             {inline && (
               <RenderInPortal>
                 <Flyout
-                  title="Define condition"
+                  title={i18n('conditions.addTitle')}
                   onHide={this.onCancelInlineCondition}
                 >
                   <InlineConditions

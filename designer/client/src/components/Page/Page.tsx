@@ -99,7 +99,7 @@ export const Page = (props: {
           className="govuk-link"
           aria-describedby={headingId}
         >
-          {i18n('Edit page')}
+          {i18n('page.edit')}
         </button>
         <a
           href={new URL(`/preview/draft/${slug}${page.path}`, previewUrl).href}
@@ -108,7 +108,7 @@ export const Page = (props: {
           rel="noreferrer"
           aria-describedby={headingId}
         >
-          {i18n('Preview page')}
+          {i18n('page.preview')}
         </a>
         <button
           onClick={() => setIsCreatingComponent(true)}
@@ -120,7 +120,10 @@ export const Page = (props: {
       </div>
       {isEditingPage && (
         <RenderInPortal>
-          <Flyout title="Edit Page" onHide={() => setIsEditingPage(false)}>
+          <Flyout
+            title={i18n('page.edit')}
+            onHide={() => setIsEditingPage(false)}
+          >
             <PageEdit page={page} onSave={() => setIsEditingPage(false)} />
           </Flyout>
         </RenderInPortal>

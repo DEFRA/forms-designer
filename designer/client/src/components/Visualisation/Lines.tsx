@@ -8,6 +8,7 @@ import {
   type Pos
 } from '~/src/components/Visualisation/getLayout.js'
 import { DataContext } from '~/src/context/DataContext.js'
+import { i18n } from '~/src/i18n/i18n.jsx'
 
 interface Props {
   layout: Pos
@@ -105,7 +106,7 @@ export class Lines extends Component<Props, State> {
         {this.state.edge && (
           <RenderInPortal>
             <Flyout
-              title="Edit Link"
+              title={i18n('link.edit')}
               onHide={() => this.setState({ edge: undefined })}
             >
               <LinkEdit

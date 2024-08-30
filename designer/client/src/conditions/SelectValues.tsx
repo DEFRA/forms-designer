@@ -42,7 +42,7 @@ export const SelectValues = (props: Props) => {
         defaultValue={value?.value}
         onChange={onChangeSelect}
       >
-        <option value="" />
+        <option value="">{i18n('conditions.conditionValueOption')}</option>
         {fieldDef.values?.map((option) => (
           <option key={`${option.value}`} value={`${option.value}`}>
             {option.text}

@@ -40,6 +40,7 @@ interface State extends Partial<Form> {
   selectedCondition?: string
   isEditingSection: boolean
   isNewSection: boolean
+  pages: Page[]
   errors: Partial<ErrorList<'path' | 'title'>>
 }
 
@@ -55,9 +56,17 @@ export class PageCreate extends Component<Props, State> {
   constructor(props: Props, context: typeof DataContext) {
     super(props, context)
 
+    const { data } = this.context
+
+    // Sort pages for select menus
+    const pages = structuredClone(data.pages).sort(
+      ({ title: titleA }, { title: titleB }) => titleA.localeCompare(titleB)
+    )
+
     this.state = {
       isEditingSection: false,
       isNewSection: false,
+      pages,
       errors: {}
     }
   }
@@ -210,10 +219,11 @@ export class PageCreate extends Component<Props, State> {
       path,
       isEditingSection,
       isNewSection,
+      pages,
       errors
     } = this.state
 
-    const { sections, pages } = data
+    const { sections } = data
     const hasErrors = hasValidationErrors(errors)
 
     return (
@@ -250,38 +260,6 @@ export class PageCreate extends Component<Props, State> {
               </option>
             </select>
           </div>
-
-          <div className="govuk-form-group">
-            <label className="govuk-label govuk-label--s" htmlFor="link-from">
-              {i18n('addPage.linkFromOption.title')}
-            </label>
-            <div className="govuk-hint" id="link-from-hint">
-              {i18n('addPage.linkFromOption.helpText')}
-            </div>
-            <select
-              className="govuk-select"
-              id="link-from"
-              aria-describedby="link-from-hint"
-              name="from"
-              value={linkFrom ?? ''}
-              onChange={this.onChangeLinkFrom}
-            >
-              <option value="" />
-              {pages.filter(hasNext).map((page) => (
-                <option key={page.path} value={page.path}>
-                  {page.path}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {linkFrom && (
-            <SelectConditions
-              path={linkFrom}
-              conditionsChange={this.conditionSelected}
-              noFieldsHintText={i18n('conditions.noFieldsAvailable')}
-            />
-          )}
 
           <Input
             id="page-title"
@@ -321,53 +299,88 @@ export class PageCreate extends Component<Props, State> {
             </>
           )}
 
-          {sections.length > 0 && (
-            <div className="govuk-form-group">
-              <label
-                className="govuk-label govuk-label--s"
-                htmlFor="page-section"
-              >
-                {i18n('addPage.sectionOption.title')}
-              </label>
-              <div className="govuk-hint" id="page-section-hint">
-                {i18n('addPage.sectionOption.helpText')}
-              </div>
-              <select
-                className="govuk-select"
-                id="page-section"
-                aria-describedby="page-section-hint"
-                name="section"
-                value={section?.name ?? ''}
-                onChange={this.onChangeSection}
-              >
-                <option value="" />
-                {sections.map((section) => (
-                  <option key={section.name} value={section.name}>
-                    {section.title}
+          <div className="govuk-form-group">
+            {sections.length > 0 && (
+              <>
+                <label
+                  className="govuk-label govuk-label--s"
+                  htmlFor="page-section"
+                >
+                  {i18n('addPage.sectionOption.title')}
+                </label>
+                <div className="govuk-hint" id="page-section-hint">
+                  {i18n('addPage.sectionOption.helpText')}
+                </div>
+                <select
+                  className="govuk-select"
+                  id="page-section"
+                  aria-describedby="page-section-hint"
+                  name="section"
+                  value={section?.name ?? ''}
+                  onChange={this.onChangeSection}
+                >
+                  <option value="">
+                    {i18n('addPage.sectionOption.option')}
                   </option>
-                ))}
-              </select>
-            </div>
-          )}
-
-          <p className="govuk-body">
-            {section && (
+                  {sections.map((section) => (
+                    <option key={section.name} value={section.name}>
+                      {section.title}
+                    </option>
+                  ))}
+                </select>
+              </>
+            )}
+            <p className="govuk-body govuk-!-margin-top-2">
+              {section && (
+                <a
+                  href="#"
+                  className="govuk-link govuk-!-display-block"
+                  onClick={this.editSection}
+                >
+                  {i18n('section.edit')}
+                </a>
+              )}
               <a
                 href="#"
                 className="govuk-link govuk-!-display-block"
-                onClick={this.editSection}
+                onClick={(e) => this.editSection(e, true)}
               >
-                {i18n('section.edit')}
+                {i18n('section.add')}
               </a>
-            )}
-            <a
-              href="#"
-              className="govuk-link govuk-!-display-block"
-              onClick={this.editSection}
+            </p>
+          </div>
+
+          <div className="govuk-form-group">
+            <label className="govuk-label govuk-label--s" htmlFor="link-from">
+              {i18n('addPage.linkFromOption.title')}
+            </label>
+            <div className="govuk-hint" id="link-from-hint">
+              {i18n('addPage.linkFromOption.helpText')}
+            </div>
+            <select
+              className="govuk-select"
+              id="link-from"
+              aria-describedby="link-from-hint"
+              name="from"
+              value={linkFrom ?? ''}
+              onChange={this.onChangeLinkFrom}
             >
-              {i18n('section.create')}
-            </a>
-          </p>
+              <option value="">{i18n('addPage.linkFromOption.option')}</option>
+              {pages.filter(hasNext).map((page) => (
+                <option key={page.path} value={page.path}>
+                  {page.title}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {linkFrom && (
+            <SelectConditions
+              path={linkFrom}
+              conditionsChange={this.conditionSelected}
+              noFieldsHintText={i18n('conditions.noFieldsAvailable')}
+            />
+          )}
 
           <div className="govuk-button-group">
             <button type="submit" className="govuk-button">
@@ -380,8 +393,8 @@ export class PageCreate extends Component<Props, State> {
             <Flyout
               title={
                 !isNewSection && !!section
-                  ? i18n('section.editingTitle', { title: section.title })
-                  : i18n('section.newTitle')
+                  ? i18n('section.editTitle', { title: section.title })
+                  : i18n('section.add')
               }
               onHide={this.closeFlyout}
             >

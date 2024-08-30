@@ -1,25 +1,17 @@
 {
-  "A form with this name already exists": "A form with this name already exists",
-  "Create a new form": "Create a new form",
-  "Create a new form or edit an existing form": "Create a new form or edit an existing form",
-  "Edit page": "Edit page",
-  "Enter form name": "Enter form name",
-  "Enter the name for your form, for example Applying for visitors pass": "Enter the name for your form, for example Applying for visitors pass",
-  "Preview page": "Preview page",
-  "Select an existing form to edit": "Select an existing form to edit",
-  "Start": "Start",
   "Test": "For testing purpose, do not delete it",
-  "There is a problem": "There is a problem",
   "add": "Add",
   "addLink": {
     "header": {
       "hint": "You can add links between different pages and set conditions for links to control the page that loads next. For example, a question page with a component for yes and no options could have link conditions based on which option a user selects."
     },
     "linkFrom": {
-      "title": "Link from"
+      "title": "Link from",
+      "option": "Select a page"
     },
     "linkTo": {
-      "title": "Link to"
+      "title": "Link to",
+      "option": "Select a page"
     },
     "noFieldsAvailable": "You cannot add any conditions as there are no components on the page you wish to link from. Add a component, such as an Input or a Selection field, and then add a condition."
   },
@@ -30,7 +22,8 @@
     },
     "linkFromOption": {
       "helpText": "Add a link to this page from a different page in the form.",
-      "title": "Link from (optional)"
+      "title": "Link from (optional)",
+      "option": "Select a page"
     },
     "pageTitleField": {
       "title": "Page title"
@@ -45,10 +38,10 @@
     },
     "sectionOption": {
       "helpText": "Use sections to split a form. For example, to add a section per applicant. The section title appears above the page title. However, if these titles are the same, the form will only show the page title.",
-      "title": "Section (optional)"
+      "title": "Section (optional)",
+      "option": "Select a section"
     }
   },
-  "cancel": "Cancel",
   "close": "Close",
   "common": {
     "autocomplete": {
@@ -105,7 +98,8 @@
     "moveDown_label": "Move {{name, lowerFirst}} component down"
   },
   "conditions": {
-    "add": "Add condition",
+    "add": "Add a new condition",
+    "addTitle": "Add condition",
     "addOrEdit": "Add or edit condition",
     "addOrEditHint": "Set the rules that determine the conditional behaviour in the form flow. For example, a question page might have a component for yes and no options that need two conditions - one to control what happens if a user selects yes and one for when a user selects no.",
     "displayName": "Display name",
@@ -118,14 +112,17 @@
     "condition": "Condition",
     "conditionHint": "Set when a condition might be met in the form. For example, when the form asks a question and the user selects Yes instead of No (yes=true).",
     "conditionField": "Component title",
+    "conditionFieldOption": "Select a title",
     "conditionOperator": "Operator",
+    "conditionOperatorOption": "Select an operator",
     "conditionCoordinator": "Coordinator (optional)",
+    "conditionCoordinatorOption": "Select a coordinator",
     "conditionDatePeriod": "Period",
     "conditionDateUnits": "Units",
     "conditionDateDirection": "Direction",
-    "conditionValue": "Value"
+    "conditionValue": "Value",
+    "conditionValueOption": "Select a value"
   },
-  "create": "create {{noun}}",
   "dateFieldEditComponent": {
     "maxDaysInFutureField": {
       "helpText": "Determines the latest date users can enter",
@@ -137,7 +134,6 @@
     }
   },
   "delete": "Delete",
-  "edit": "edit {{noun}}",
   "error": "Error",
   "errors": {
     "required": "Enter {{field, lowerFirst}}",
@@ -145,10 +141,10 @@
     "spaces": "{{field, upperFirst}} must not include spaces",
     "duplicate": "{{field, upperFirst}} already exists"
   },
-  "field": "field",
   "fieldEdit": {
     "conditions": {
-      "hint": "Select a condition that determines whether to show the contents of this component. You can create and edit conditions from the Conditions screen."
+      "hint": "Select a condition that determines whether to show the contents of this component. You can create and edit conditions from the Conditions screen.",
+      "option": "Select a condition"
     },
     "details": {
       "hint": "Enter the text you want to show when users expand the title. You can apply basic HTML, such as text formatting and hyperlinks."
@@ -195,7 +191,9 @@
     "FileUploadField": "File upload",
     "FileUploadField_info": "Allows a user to upload files"
   },
-  "leaveDesigner": "Are you sure you want to leave the Designer? If you have unsaved changes they will be lost.",
+  "link": {
+    "edit": "Edit link"
+  },
   "list": {
     "add": "Add a new list",
     "addOrEdit": "Add or edit lists",
@@ -213,12 +211,10 @@
       "add": "Add a new list item",
       "conditions": "Conditions (optional)",
       "conditionsHint": "Select a condition that determines whether to show this list item. You can create and edit conditions on the Conditions screen.",
-      "createSubcomponent": "Create sub component",
+      "conditionsOption": "Select a condition",
       "editTitle": "Edit list item {{title, lowerFirst}}",
       "help": "Help text (optional)",
       "helpHint": "Enter the description to show for this list item",
-      "subComponent": "Sub component (optional)",
-      "subComponentHint": "You need a sub component if the list item answer needs more information, for example an email address. This will only be shown when the user selects this list item.",
       "title": "Item text",
       "titleHint": "Enter the text you want to show",
       "value": "Value",
@@ -261,7 +257,6 @@
   "name": {
     "hint": "This is generated automatically and does not show on the page. Only change it if you are using an integration that requires you to, for example GOV.UK Notify. It must not contain spaces."
   },
-  "no": "no",
   "numberFieldEditComponent": {
     "maxField": {
       "helpText": "Specifies the highest number users can enter",
@@ -284,8 +279,10 @@
       "title": "Suffix"
     }
   },
-  "optional": "{{noun}} (optional)",
   "page": {
+    "add": "Add page",
+    "edit": "Edit page",
+    "preview": "Preview page",
     "controller": "Page type",
     "controllerHint": "Select a Start Page to start a form, a Question Page to request information, and a Summary Page at the end of a section or form. For example, use a Summary to let users check their answers to questions before they submit the form.",
     "controllers": {
@@ -294,22 +291,18 @@
       "fileUpload": "File upload",
       "summary": "Summary page"
     },
-    "noun": "page",
-    "noun_plural": "pages",
     "path": "Path",
     "pathHint": "Appears in the browser path. The value you enter in the page title field automatically populates the path name. To override it, enter your own path name, relevant to the page, and use lowercase text and hyphens between words. For example, '/personal-details'.",
     "section": "Section (optional)",
     "sectionHint": "Use sections to split a form. For example, to add a section per applicant. The section title appears above the page title. However, if these titles are the same, the form will only show the page title.",
+    "sectionOption": "Select a section",
     "title": "Page title"
   },
   "save": "Save",
   "section": {
-    "create": "Create section",
+    "add": "Add a new section",
     "edit": "Edit section",
-    "editingTitle": "Edit {{title, lowerFirst}}",
-    "newTitle": "Add a new section",
-    "noun": "section",
-    "noun_plural": "sections"
+    "editTitle": "Edit {{title, lowerFirst}}"
   },
   "textFieldEditComponent": {
     "lengthField": {
@@ -349,7 +342,10 @@
       "title": "Hide section title"
     }
   },
-  "warning": "Warning",
-  "wontShow": "This will not show on the page.",
-  "yes": "yes"
+  "sections": {
+    "edit": "Edit sections"
+  },
+  "summary": {
+    "edit": "Edit summary"
+  }
 }

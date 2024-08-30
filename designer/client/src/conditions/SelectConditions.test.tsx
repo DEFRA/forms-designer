@@ -43,7 +43,7 @@ describe('SelectConditions', () => {
 
     const $paragraphs = screen.queryAllByRole('paragraph')
     const $conditions = screen.queryByRole('link', {
-      name: 'Define a new condition'
+      name: 'Add a new condition'
     })
 
     expect($paragraphs).toHaveLength(1)
@@ -267,7 +267,7 @@ describe('SelectConditions', () => {
 
     const $paragraphs = screen.queryAllByRole('paragraph')
     const $conditions = screen.queryByRole('link', {
-      name: 'Define a new condition'
+      name: 'Add a new condition'
     })
 
     expect($paragraphs).toHaveLength(1)

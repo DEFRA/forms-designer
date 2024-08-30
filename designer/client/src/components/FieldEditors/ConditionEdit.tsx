@@ -45,7 +45,7 @@ export function ConditionEdit({ context = ComponentContext }: Props) {
           })
         }
       >
-        <option value="" />
+        <option value="">{i18n('fieldEdit.conditions.option')}</option>
         {conditions.map((condition) => (
           <option key={condition.name} value={condition.name}>
             {condition.displayName}
