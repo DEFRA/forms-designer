@@ -1,5 +1,6 @@
 import {
   ComponentTypes,
+  controllerNameFromPath,
   ControllerType,
   hasContent,
   hasSelectionFields,
@@ -37,11 +38,10 @@ interface Props {
 
 export const ComponentCreateList = (props: Props) => {
   const { page, onSelectComponent } = props
-  const { controller } = page
+  const controller = controllerNameFromPath(page.controller)
 
   // Allow component pages to add input + selection fields
   const isComponentPage =
-    !controller ||
     controller === ControllerType.Page ||
     controller === ControllerType.FileUpload
 

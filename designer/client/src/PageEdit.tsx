@@ -5,6 +5,8 @@ import {
   getPageDefaults,
   hasComponents,
   hasNext,
+  hasSection,
+  isQuestionPage,
   slugify,
   type Page,
   type Section
@@ -66,22 +68,18 @@ export class PageEdit extends Component<Props, State> {
     const { page } = this.props
     const { data } = this.context
 
-    const { controller, path, title } = page
+    const { path, title } = page
+
+    const controller = controllerNameFromPath(page.controller)
 
     this.state = {
       path,
       controller,
       title,
-      section:
-        hasComponents(page) && page.section
-          ? findSection(data, page.section)
-          : undefined,
+      section: hasSection(page) ? findSection(data, page.section) : undefined,
       isEditingSection: false,
       isNewSection: false,
-      isQuestionPage:
-        !controller ||
-        controller === ControllerType.Page ||
-        controller === ControllerType.FileUpload,
+      isQuestionPage: isQuestionPage(page),
       errors: {}
     }
   }
@@ -230,15 +228,11 @@ export class PageEdit extends Component<Props, State> {
 
     const controller = value ? (value as ControllerType) : undefined
 
-    // Allow component pages to edit section + path
-    const isQuestionPage =
-      !controller ||
-      controller === ControllerType.Page ||
-      controller === ControllerType.FileUpload
-
     this.setState({
       controller,
-      isQuestionPage,
+
+      // Allow question pages to edit section + path
+      isQuestionPage: isQuestionPage({ controller }),
 
       // Reset path errors when controller changes
       errors: {
@@ -344,10 +338,12 @@ export class PageEdit extends Component<Props, State> {
               id="controller"
               aria-describedby="controller-hint"
               name="controller"
-              value={controllerNameFromPath(controller)}
+              value={controller}
               onChange={this.onChangeController}
             >
-              <option value="">{i18n('page.controllers.question')}</option>
+              <option value={ControllerType.Page}>
+                {i18n('page.controllers.question')}
+              </option>
               {(!hasStartPage || page.controller === ControllerType.Start) && (
                 <option value={ControllerType.Start}>
                   {i18n('page.controllers.start')}

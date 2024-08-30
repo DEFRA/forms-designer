@@ -1,5 +1,6 @@
 import {
   hasComponents,
+  hasSection,
   slugify,
   type ComponentDef,
   type Page as PageType
@@ -68,10 +69,7 @@ export const Page = (props: {
   const [isEditingPage, setIsEditingPage] = useState(false)
   const [isCreatingComponent, setIsCreatingComponent] = useState(false)
 
-  const section =
-    hasComponents(page) && page.section
-      ? findSection(data, page.section)
-      : undefined
+  const section = hasSection(page) ? findSection(data, page.section) : undefined
 
   const pageId = slugify(page.path)
   const headingId = `${pageId}-heading`

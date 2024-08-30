@@ -3,6 +3,7 @@ import {
   getPageDefaults,
   hasComponents,
   hasNext,
+  isQuestionPage,
   slugify,
   type Page,
   type Section
@@ -189,15 +190,11 @@ export class PageCreate extends Component<Props, State> {
 
     const controller = value ? (value as ControllerType) : undefined
 
-    // Allow component pages to edit section + path
-    const isQuestionPage =
-      !controller ||
-      controller === ControllerType.Page ||
-      controller === ControllerType.FileUpload
-
     this.setState({
       controller,
-      isQuestionPage,
+
+      // Allow question pages to edit section + path
+      isQuestionPage: isQuestionPage({ controller }),
 
       // Reset path errors when controller changes
       errors: {
@@ -303,7 +300,9 @@ export class PageCreate extends Component<Props, State> {
               value={controller}
               onChange={this.onChangeController}
             >
-              <option value="">{i18n('page.controllers.question')}</option>
+              <option value={ControllerType.Page}>
+                {i18n('page.controllers.question')}
+              </option>
               {!hasStartPage && (
                 <option value={ControllerType.Start}>
                   {i18n('page.controllers.start')}

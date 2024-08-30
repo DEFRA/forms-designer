@@ -11,7 +11,9 @@ export {
   hasComponents,
   hasSection,
   hasNext,
-  isControllerName
+  isControllerName,
+  isLinkablePage,
+  isQuestionPage
 } from '~/src/pages/helpers.js'
 
 export { ControllerPath, ControllerType } from '~/src/pages/enums.js'

@@ -4,6 +4,7 @@ import {
   hasConditionSupport,
   hasFormField,
   hasListField,
+  hasSection,
   type ConditionalComponentsDef,
   type ConditionalComponentType,
   type FormDefinition,
@@ -47,7 +48,7 @@ export function pageToFields(
   this: FormDefinition,
   page: PageStart | PageQuestion
 ) {
-  const section = page.section ? findSection(this, page.section) : undefined
+  const section = hasSection(page) ? findSection(this, page.section) : undefined
 
   return page.components
     .filter(hasConditionSupport)
