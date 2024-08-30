@@ -1,9 +1,8 @@
 import { graphlib, layout, type GraphEdge, type Node } from '@dagrejs/dagre'
-import { type FormDefinition } from '@defra/forms-model'
+import { hasNext, type FormDefinition } from '@defra/forms-model'
 
 import { logger } from '~/src/common/helpers/logging/logger.js'
 import { findPage } from '~/src/data/page/findPage.js'
-import { hasNext } from '~/src/data/page/hasNext.js'
 
 export interface Point {
   node: Node

@@ -1,8 +1,12 @@
-import { type FormDefinition, type Link, type Page } from '@defra/forms-model'
+import {
+  hasNext,
+  type FormDefinition,
+  type Link,
+  type Page
+} from '@defra/forms-model'
 
 import { findLink } from '~/src/data/page/findLink.js'
 import { findPage } from '~/src/data/page/findPage.js'
-import { hasNext } from '~/src/data/page/hasNext.js'
 
 /**
  * Add link to page

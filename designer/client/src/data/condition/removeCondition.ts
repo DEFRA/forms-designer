@@ -1,6 +1,8 @@
-import { type ConditionWrapper, type FormDefinition } from '@defra/forms-model'
-
-import { hasNext } from '~/src/data/page/hasNext.js'
+import {
+  hasNext,
+  type ConditionWrapper,
+  type FormDefinition
+} from '@defra/forms-model'
 
 /**
  * Remove link condition

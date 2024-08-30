@@ -1,5 +1,6 @@
 import {
   ComponentType,
+  hasComponents,
   hasConditionSupport,
   hasFormField,
   hasListField,
@@ -11,7 +12,6 @@ import {
   type Section
 } from '@defra/forms-model'
 
-import { hasComponents } from '~/src/data/definition/hasComponents.js'
 import { findList } from '~/src/data/list/findList.js'
 import { findPathsTo } from '~/src/data/page/findPathsTo.js'
 import { findSection } from '~/src/data/section/findSection.js'

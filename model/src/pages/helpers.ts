@@ -1,7 +1,25 @@
+import { type ComponentDef } from '~/src/components/types.js'
+import { type Link, type Page } from '~/src/form/form-definition/types.js'
 import {
   ControllerNames,
   ControllerTypes
 } from '~/src/pages/controller-types.js'
+
+/**
+ * Check page has components
+ */
+export function hasComponents(
+  page?: Page
+): page is Extract<Page, { components: ComponentDef[] }> {
+  return !!page && 'components' in page
+}
+
+/**
+ * Check page has next link
+ */
+export function hasNext(page?: Page): page is Extract<Page, { next: Link[] }> {
+  return !!page && 'next' in page
+}
 
 /**
  * Check for known page controller names

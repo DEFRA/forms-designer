@@ -1,4 +1,9 @@
-import { type FormDefinition, type Link, type Page } from '@defra/forms-model'
+import {
+  hasNext,
+  type FormDefinition,
+  type Link,
+  type Page
+} from '@defra/forms-model'
 import classNames from 'classnames'
 import Joi from 'joi'
 import React, {
@@ -19,7 +24,6 @@ import { addLink } from '~/src/data/page/addLink.js'
 import { deleteLink } from '~/src/data/page/deleteLink.js'
 import { findLink, findLinkIndex } from '~/src/data/page/findLink.js'
 import { findPage } from '~/src/data/page/findPage.js'
-import { hasNext } from '~/src/data/page/hasNext.js'
 import { updateLink } from '~/src/data/page/updateLink.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import {

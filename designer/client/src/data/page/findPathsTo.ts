@@ -1,11 +1,10 @@
 import {
+  hasNext,
   type FormDefinition,
   type Link,
   type PageWithNext
 } from '@defra/forms-model'
 import dfs, { type Edge } from 'depth-first'
-
-import { hasNext } from '~/src/data/page/hasNext.js'
 
 export function findPathsTo({ pages }: FormDefinition, pathTo: string) {
   const edges = pages.filter(hasNext).flatMap(pageToEdges)

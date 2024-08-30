@@ -1,4 +1,4 @@
-import { slugify, type Page, type Section } from '@defra/forms-model'
+import { hasNext, slugify, type Page, type Section } from '@defra/forms-model'
 // @ts-expect-error -- No types available
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import Joi from 'joi'
@@ -19,7 +19,6 @@ import { DataContext } from '~/src/context/DataContext.js'
 import { addLink } from '~/src/data/page/addLink.js'
 import { addPage } from '~/src/data/page/addPage.js'
 import { findPage } from '~/src/data/page/findPage.js'
-import { hasNext } from '~/src/data/page/hasNext.js'
 import { findSection } from '~/src/data/section/findSection.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { SectionEdit } from '~/src/section/SectionEdit.jsx'

@@ -5,5 +5,7 @@ export {
 
 export {
   controllerNameFromPath,
+  hasComponents,
+  hasNext,
   isControllerName
 } from '~/src/pages/helpers.js'

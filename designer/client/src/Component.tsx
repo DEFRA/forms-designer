@@ -1,5 +1,6 @@
 import {
   ComponentType,
+  hasComponents,
   hasTitle,
   slugify,
   type ComponentDef,
@@ -13,7 +14,6 @@ import { FileUploadIcon } from '~/src/components/Icons/FileUploadIcon.jsx'
 import { SearchIcon } from '~/src/components/Icons/SearchIcon.jsx'
 import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
-import { hasComponents } from '~/src/data/definition/hasComponents.js'
 import { findPage } from '~/src/data/page/findPage.js'
 import { arrayMove } from '~/src/helpers.js'
 import { i18n } from '~/src/i18n/i18n.jsx'

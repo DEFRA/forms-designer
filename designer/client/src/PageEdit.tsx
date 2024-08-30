@@ -1,4 +1,10 @@
-import { slugify, type Page, type Section } from '@defra/forms-model'
+import {
+  controllerNameFromPath,
+  hasNext,
+  slugify,
+  type Page,
+  type Section
+} from '@defra/forms-model'
 // @ts-expect-error -- No types available
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import Joi from 'joi'
@@ -17,10 +23,8 @@ import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.j
 import { DataContext } from '~/src/context/DataContext.js'
 import { deleteLink } from '~/src/data/page/deleteLink.js'
 import { findPage } from '~/src/data/page/findPage.js'
-import { hasNext } from '~/src/data/page/hasNext.js'
 import { updateLinksTo } from '~/src/data/page/updateLinksTo.js'
 import { findSection } from '~/src/data/section/findSection.js'
-import { controllerNameFromPath } from '~/src/helpers.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { SectionEdit } from '~/src/section/SectionEdit.jsx'
 import {

@@ -1,6 +1,4 @@
-import { type Page } from '@defra/forms-model'
-
-import { hasNext } from '~/src/data/page/hasNext.js'
+import { hasNext, type Page } from '@defra/forms-model'
 
 /**
  * Find link by path
