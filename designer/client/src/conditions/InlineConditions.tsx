@@ -1,12 +1,9 @@
 import {
-  ComponentType,
   ConditionsModel,
-  isListType,
   type Condition,
   type ConditionGroup,
   type ConditionRef,
-  type ConditionWrapper,
-  type Item
+  type ConditionWrapper
 } from '@defra/forms-model'
 import classNames from 'classnames'
 import React, {
@@ -19,14 +16,13 @@ import React, {
 import { ErrorSummary, type ErrorList } from '~/src/ErrorSummary.jsx'
 import { ErrorMessage } from '~/src/components/ErrorMessage/ErrorMessage.jsx'
 import { InlineConditionsDefinition } from '~/src/conditions/InlineConditionsDefinition.jsx'
-import { type FieldDef } from '~/src/conditions/InlineConditionsDefinitionValue.jsx'
 import { InlineConditionsEdit } from '~/src/conditions/InlineConditionsEdit.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
-import { allInputs, inputsAccessibleAt } from '~/src/data/component/inputs.js'
+import { type FieldDef } from '~/src/data/component/fields.js'
+import { getFieldsTo } from '~/src/data/component/fields.js'
 import { addCondition } from '~/src/data/condition/addCondition.js'
 import { removeCondition } from '~/src/data/condition/removeCondition.js'
 import { updateCondition } from '~/src/data/condition/updateCondition.js'
-import { findList } from '~/src/data/list/findList.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import randomId from '~/src/randomId.js'
 import { validateRequired, hasValidationErrors } from '~/src/validations.js'
@@ -48,17 +44,6 @@ interface State {
 interface Form {
   displayName: string
 }
-
-const yesNoValues: Readonly<Item>[] = [
-  {
-    text: 'Yes',
-    value: true
-  },
-  {
-    text: 'No',
-    value: false
-  }
-]
 
 export class InlineConditions extends Component<Props, State> {
   declare context: ContextType<typeof DataContext>
@@ -99,34 +84,7 @@ export class InlineConditions extends Component<Props, State> {
   fieldsForPath = (path?: string) => {
     const { data } = this.context
 
-    const inputs = path ? inputsAccessibleAt(data, path) : allInputs(data)
-
-    const fieldInputs: FieldDef[] = inputs.map((input) => {
-      const { page, propertyPath: name, title, type } = input
-
-      const section = data.sections.find(({ name }) => name === page.section)
-      const label = section ? `${section.title}: ${title}` : title
-
-      if (isListType(type) || type === ComponentType.YesNoField) {
-        const list = input.list ? findList(data, input.list)[0] : undefined
-
-        return {
-          label,
-          name,
-          type,
-          values:
-            type === ComponentType.YesNoField
-              ? yesNoValues
-              : (list?.items ?? [])
-        }
-      }
-
-      return {
-        label,
-        name,
-        type
-      }
-    })
+    const fieldInputs = getFieldsTo(data, path)
 
     const conditionsInputs: FieldDef[] = data.conditions.map((condition) => ({
       label: condition.displayName,

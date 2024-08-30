@@ -18,13 +18,13 @@ import React, {
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
 import { InlineConditions } from '~/src/conditions/InlineConditions.jsx'
-import { type FieldDef } from '~/src/conditions/InlineConditionsDefinitionValue.jsx'
 import {
   conditionsByType,
   getFieldNameSubstring
 } from '~/src/conditions/select-condition-helpers.js'
 import { DataContext } from '~/src/context/DataContext.js'
-import { allInputs, inputsAccessibleAt } from '~/src/data/component/inputs.js'
+import { type FieldDef } from '~/src/data/component/fields.js'
+import { getFieldsTo } from '~/src/data/component/fields.js'
 import { hasConditions } from '~/src/data/definition/hasConditions.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 
@@ -74,20 +74,13 @@ export class SelectConditions extends Component<Props, State> {
   fieldsForPath(path?: string) {
     const { data } = this.context
 
-    const inputs = path ? inputsAccessibleAt(data, path) : allInputs(data)
-    return inputs
-      .map(
-        (input) =>
-          ({
-            label: input.title,
-            name: this.trimSectionName(input.propertyPath),
-            type: input.type
-          }) satisfies FieldDef
-      )
-      .reduce<Record<string, FieldDef>>((obj, item) => {
+    return getFieldsTo(data, path).reduce<Record<string, FieldDef>>(
+      (obj, item) => {
         obj[item.name] = item
         return obj
-      }, {})
+      },
+      {}
+    )
   }
 
   conditionsForPath(path?: string) {
@@ -187,13 +180,6 @@ export class SelectConditions extends Component<Props, State> {
   ) {
     if (isDuplicateCondition(conditions, conditionToAdd.name)) return
     if (fieldName === conditionFieldName) conditions.push(conditionToAdd)
-  }
-
-  trimSectionName(fieldName: string) {
-    if (fieldName.includes('.')) {
-      return fieldName.substring(fieldName.indexOf('.') + 1)
-    }
-    return fieldName
   }
 
   onClickDefineCondition = (e: MouseEvent<HTMLAnchorElement>) => {
