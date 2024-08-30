@@ -28,7 +28,7 @@ const data = {
   conditions: []
 } satisfies FormDefinition
 
-test('addPage throws if a page with the same path already exists', () => {
+test('addPage does nothing if a page with the same path already exists', () => {
   expect(() =>
     addPage(data, {
       title: 'scrambled',
@@ -36,7 +36,7 @@ test('addPage throws if a page with the same path already exists', () => {
       next: [],
       components: []
     })
-  ).toThrow(/A page with the path/)
+  ).not.toThrow()
 })
 
 test('addPage adds a page if one does not exist with the same path', () => {

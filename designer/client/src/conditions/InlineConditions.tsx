@@ -211,7 +211,7 @@ export class InlineConditions extends Component<Props, State> {
     const { cancelCallback, condition } = this.props
 
     if (condition) {
-      const definition = removeCondition(data, condition.name)
+      const definition = removeCondition(data, condition)
       await save(definition)
     }
 

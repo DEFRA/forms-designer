@@ -13,6 +13,7 @@ import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.j
 import { Tabs } from '~/src/components/Tabs/Tabs.jsx'
 import { ConditionsEdit } from '~/src/conditions/ConditionsEdit.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
+import { hasComponents } from '~/src/data/definition/hasComponents.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ListsEdit } from '~/src/list/ListsEdit.jsx'
 import { ListsEditorContextProvider } from '~/src/reducers/list/listsEditorReducer.jsx'
@@ -105,8 +106,8 @@ export function Menu({ slug }: Props) {
             </p>
 
             <DataPrettyPrint className="language-json">
-              {data.pages.flatMap(({ components }) =>
-                components?.map((component) => ({
+              {data.pages.filter(hasComponents).flatMap(({ components }) =>
+                components.map((component) => ({
                   name: component.name,
                   type: component.type,
                   list: hasListField(component) ? component.list : undefined

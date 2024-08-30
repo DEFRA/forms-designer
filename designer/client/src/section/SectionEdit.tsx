@@ -13,6 +13,8 @@ import { type ErrorList, ErrorSummary } from '~/src/ErrorSummary.jsx'
 import { logger } from '~/src/common/helpers/logging/logger.js'
 import { DataContext } from '~/src/context/DataContext.js'
 import { addSection } from '~/src/data/section/addSection.js'
+import { removeSection } from '~/src/data/section/removeSection.js'
+import { updateSection } from '~/src/data/section/updateSection.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import randomId from '~/src/randomId.js'
 import {
@@ -73,37 +75,21 @@ export class SectionEdit extends Component<Props, State> {
       return
     }
 
-    let updated = { ...data }
+    let definition = isNewSection
+      ? addSection(data, { ...payload, hideTitle })
+      : structuredClone(data)
 
-    if (isNewSection) {
-      updated = addSection(data, { ...payload, hideTitle })
-    } else {
-      const previousName = section?.name
-      const nameChanged = previousName !== payload.name
-
-      const copySection = updated.sections.find(
-        ({ name }) => name === previousName
-      )
-
-      if (copySection) {
-        copySection.title = payload.title
-        copySection.hideTitle = hideTitle
-
-        if (nameChanged) {
-          copySection.name = payload.name
-
-          // Update any references to the section
-          updated.pages.forEach((p) => {
-            if (p.section === previousName) {
-              p.section = payload.name
-            }
-          })
-        }
-      }
+    // Update section
+    if (!isNewSection && section?.name) {
+      definition = updateSection(definition, section.name, {
+        title: payload.title,
+        name: payload.name,
+        hideTitle
+      })
     }
 
     try {
-      await save(updated)
+      await save(definition)
       onSave(payload.name)
     } catch (error) {
       logger.error(error, 'SectionEdit')
@@ -141,20 +127,10 @@ export class SectionEdit extends Component<Props, State> {
       return
     }
 
-    const copy = { ...data }
-    const previousName = section.name
-
-    copy.sections.splice(copy.sections.indexOf(section), 1)
-
-    // Update any references to the section
-    copy.pages.forEach((p) => {
-      if (p.section === previousName) {
-        delete p.section
-      }
-    })
+    const definition = removeSection(data, section)
 
     try {
-      await save(copy)
+      await save(definition)
       onSave()
     } catch (error) {
       logger.error(error, 'SectionEdit')

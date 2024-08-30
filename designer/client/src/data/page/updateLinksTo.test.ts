@@ -84,7 +84,12 @@ const data = {
     }
   ],
   lists: [],
-  sections: [],
+  sections: [
+    {
+      name: 'section1',
+      title: 'Section 1'
+    }
+  ],
   conditions: []
 } satisfies FormDefinition
 
@@ -148,7 +153,12 @@ test('updateLinksTo should update all links pointing to the specified path to th
       }
     ],
     lists: [],
-    sections: [],
+    sections: [
+      {
+        name: 'section1',
+        title: 'Section 1'
+      }
+    ],
     conditions: []
   })
 })

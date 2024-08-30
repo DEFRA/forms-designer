@@ -25,7 +25,7 @@ import {
 } from '~/src/conditions/select-condition-helpers.js'
 import { DataContext } from '~/src/context/DataContext.js'
 import { allInputs, inputsAccessibleAt } from '~/src/data/component/inputs.js'
-import { hasConditions } from '~/src/data/condition/hasConditions.js'
+import { hasConditions } from '~/src/data/definition/hasConditions.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 
 export interface Props {

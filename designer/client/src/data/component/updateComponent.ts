@@ -1,35 +1,34 @@
-import { type FormDefinition, type ComponentDef } from '@defra/forms-model'
+import {
+  type ComponentDef,
+  type FormDefinition,
+  type Page
+} from '@defra/forms-model'
 
-import { findPage } from '~/src/data/page/findPage.js'
-import { type Path } from '~/src/data/types.js'
+import { findComponent } from '~/src/data/component/findComponent.js'
+import { hasComponents } from '~/src/data/definition/hasComponents.js'
 
 export function updateComponent(
   data: FormDefinition,
-  pagePath: Path,
-  componentName: ComponentDef['name'],
-  component: ComponentDef
+  page: Page,
+  componentName: string,
+  componentUpdate: ComponentDef
 ) {
-  const page = findPage(data, pagePath)
-  const components = [...(page.components ?? [])]
-  const componentIndex =
-    page.components?.findIndex(
-      (component: ComponentDef) => component.name === componentName
-    ) ?? -1
+  const pageIndex = data.pages.indexOf(page)
 
-  if (componentIndex < 0) {
-    throw Error(
-      `No component exists with name ${componentName} with in page with path ${pagePath}`
-    )
+  if (!hasComponents(page)) {
+    throw Error(`Components not found for path '${page.path}'`)
   }
 
-  const updatedPage = {
-    ...page,
-    components: components.map((c, i) => (i === componentIndex ? component : c))
-  }
+  const component = findComponent(page, componentName)
+  const componentIndex = page.components.indexOf(component)
 
-  const updatedPages = data.pages.map((pg) =>
-    pg.path === pagePath ? updatedPage : pg
-  )
+  // Copy page, update component
+  const pageCopy = structuredClone(page)
+  pageCopy.components[componentIndex] = componentUpdate
 
-  return { ...data, pages: updatedPages }
+  // Copy form definition, update page
+  const definition = structuredClone(data)
+  definition.pages[pageIndex] = pageCopy
+
+  return definition
 }

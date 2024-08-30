@@ -91,19 +91,19 @@ export class PageCreate extends Component<Props, State> {
       next: []
     }
 
-    let copy = addPage(data, pageNew)
+    let definition = addPage(data, pageNew)
 
     if (linkFrom) {
-      const pageFrom = findPage(copy, linkFrom)
+      const pageFrom = findPage(definition, linkFrom)
 
       // Add link from the selected page
-      copy = addLink(copy, pageFrom, pageNew, {
+      definition = addLink(definition, pageFrom, pageNew, {
         condition: selectedCondition
       })
     }
 
     try {
-      await save(copy)
+      await save(definition)
       onSave()
     } catch (error) {
       logger.error(error, 'PageCreate')
@@ -139,7 +139,7 @@ export class PageCreate extends Component<Props, State> {
     const { data } = this.context
 
     this.setState({
-      section: findSection(data, sectionName)
+      section: sectionName ? findSection(data, sectionName) : undefined
     })
   }
 
@@ -190,13 +190,13 @@ export class PageCreate extends Component<Props, State> {
   }
 
   closeFlyout = (sectionName?: string) => {
-    const { section } = this.state
     const { data } = this.context
+    const { section } = this.state
 
     this.setState({
       isEditingSection: false,
       isNewSection: false,
-      section: findSection(data, sectionName ?? section?.name)
+      section: sectionName ? findSection(data, sectionName) : section
     })
   }
 

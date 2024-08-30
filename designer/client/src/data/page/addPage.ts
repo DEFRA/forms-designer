@@ -1,14 +1,20 @@
 import { type FormDefinition, type Page } from '@defra/forms-model'
 
-export function addPage(data: FormDefinition, page: Page): FormDefinition {
-  const index = data.pages.findIndex((pg) => pg.path === page.path)
+import { findPage } from '~/src/data/page/findPage.js'
 
-  if (index > -1) {
-    throw Error(`A page with the path ${page.path} already exists`)
+export function addPage(data: FormDefinition, page: Page) {
+  try {
+    // Throw for missing page
+    findPage(data, page.path)
+  } catch {
+    // Copy form definition
+    const definition = structuredClone(data)
+
+    // Add new page
+    definition.pages.push(page)
+
+    return definition
   }
 
-  return {
-    ...data,
-    pages: [...data.pages, page]
-  }
+  return data
 }

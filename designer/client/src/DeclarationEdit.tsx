@@ -1,4 +1,3 @@
-import { clone } from '@defra/forms-model'
 import React, { Component, type ContextType, type FormEvent } from 'react'
 
 import { Editor } from '~/src/Editor.jsx'
@@ -19,16 +18,16 @@ export class DeclarationEdit extends Component {
     e.preventDefault()
     e.stopPropagation()
 
-    const form = e.target
-    const formData = new window.FormData(form)
     const { save, data } = this.context
-    const copy = clone(data)
 
-    copy.declaration = formData.get('declaration')
-    copy.skipSummary = formData.get('skip-summary') === 'on'
+    const definition = structuredClone(data)
+    const formData = new window.FormData(e.currentTarget)
+
+    definition.declaration = formData.get('declaration')?.toString()
+    definition.skipSummary = formData.get('skip-summary') === 'on'
 
     try {
-      const savedData = await save(copy)
+      const savedData = await save(definition)
       this.props.onCreate({ data: savedData })
     } catch (error) {
       logger.error(error, 'DeclarationEdit')

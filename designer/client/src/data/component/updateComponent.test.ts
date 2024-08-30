@@ -32,11 +32,15 @@ test('updateComponent throws an error when the target component cannot be found'
     conditions: []
   } satisfies FormDefinition
 
-  // @ts-expect-error - Allow invalid component for test
-  expect(() => updateComponent(data, '/2', 'doesntExist', {})).toThrow()
+  expect(() =>
+    // @ts-expect-error - Allow invalid component for test
+    updateComponent(data, data.pages[1], 'doesntExist', {})
+  ).toThrow()
 
-  // @ts-expect-error - Allow invalid component for test
-  expect(() => updateComponent(data, '/3', 'doesntExist', {})).toThrow()
+  expect(() =>
+    // @ts-expect-error - Allow invalid component for test
+    updateComponent(data, data.pages[2], 'doesntExist', {})
+  ).toThrow()
 })
 
 test('addComponent adds a component to the correct page', () => {
@@ -78,7 +82,7 @@ test('addComponent adds a component to the correct page', () => {
   } satisfies FormDefinition
 
   expect(
-    updateComponent(data, '/1', 'firstName', {
+    updateComponent(data, data.pages[0], 'firstName', {
       name: 'fullName',
       title: 'full name',
       type: ComponentType.TextField,

@@ -14,6 +14,7 @@ import { FileUploadIcon } from '~/src/components/Icons/FileUploadIcon.jsx'
 import { SearchIcon } from '~/src/components/Icons/SearchIcon.jsx'
 import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
+import { hasComponents } from '~/src/data/definition/hasComponents.js'
 import { findPage } from '~/src/data/page/findPage.js'
 import { arrayMove } from '~/src/helpers.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
@@ -263,14 +264,14 @@ export const Component: FunctionComponent<Props> = (props) => {
   const componentButtonLabel = `${componentFlyoutTitle}${suffix}`
 
   const move = async (oldIndex: number, newIndex: number) => {
-    const copy = structuredClone(data)
-    const copyPage = findPage(copy, page.path)
+    const definition = structuredClone(data)
+    const pageEdit = findPage(definition, page.path)
 
-    if (!copyPage.components?.length) {
+    if (!hasComponents(pageEdit)) {
       return false
     }
 
-    const length = copyPage.components.length
+    const length = pageEdit.components.length
 
     if (newIndex === -1) {
       newIndex = length - 1
@@ -278,13 +279,12 @@ export const Component: FunctionComponent<Props> = (props) => {
       newIndex = 0
     }
 
-    copyPage.components = arrayMove(copyPage.components, oldIndex, newIndex)
+    pageEdit.components = arrayMove(pageEdit.components, oldIndex, newIndex)
 
-    await save(copy)
+    await save(definition)
   }
 
-  const showMoveActions =
-    Array.isArray(page.components) && page.components.length > 1
+  const showMoveActions = hasComponents(page) && !!page.components.length
 
   return (
     <>

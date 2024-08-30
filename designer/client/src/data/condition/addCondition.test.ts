@@ -33,7 +33,7 @@ test('addCondition adds a condition to the list', () => {
   })
 })
 
-test('addCondition throws if a condition with the same name already exists', () => {
+test('addCondition does nothing if a condition with the same name already exists', () => {
   const condition: ConditionWrapper = {
     displayName: 'a condition',
     name: 'isCondition',
@@ -43,5 +43,5 @@ test('addCondition throws if a condition with the same name already exists', () 
     }
   }
 
-  expect(() => addCondition(data, condition)).toThrow(/A condition/)
+  expect(() => addCondition(data, condition)).not.toThrow()
 })

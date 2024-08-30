@@ -8,7 +8,9 @@ import React, {
 import { ComponentTypeEdit } from '~/src/ComponentTypeEdit.jsx'
 import { ErrorSummary } from '~/src/ErrorSummary.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
+import { findComponent } from '~/src/data/component/findComponent.js'
 import { updateComponent } from '~/src/data/component/updateComponent.js'
+import { hasComponents } from '~/src/data/definition/hasComponents.js'
 import { findPage } from '~/src/data/page/findPage.js'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 import { Meta } from '~/src/reducers/component/types.js'
@@ -33,38 +35,37 @@ export function ComponentEdit(props) {
       return
     }
 
-    const updatedData = updateComponent(
+    const definition = updateComponent(
       data,
-      page.path,
+      page,
       initialName,
       selectedComponent
     )
-    await save(updatedData)
+    await save(definition)
     toggleShowEditor()
   }
 
   const handleDelete = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
 
-    if (!window.confirm('Confirm delete') || !selectedComponent) {
+    if (!window.confirm('Confirm delete')) {
       return
     }
 
-    const copy = structuredClone(data)
-    const pageEdit = findPage(copy, page.path)
+    const definition = structuredClone(data)
+    const pageEdit = findPage(definition, page.path)
 
-    const { components = [] } = pageEdit
-    const componentIndex = components.findIndex(
-      ({ name }) => name === selectedComponent.name
-    )
-
-    if (componentIndex < 0) {
+    if (!hasComponents(pageEdit)) {
       return
     }
 
-    components.splice(componentIndex, 1)
+    const { components } = pageEdit
+    const component = findComponent(pageEdit, selectedComponent?.name)
+    const index = components.indexOf(component)
 
-    await save(copy)
+    components.splice(index, 1)
+
+    await save(definition)
     toggleShowEditor()
   }
 
