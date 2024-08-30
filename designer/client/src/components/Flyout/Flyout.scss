@@ -43,16 +43,6 @@
     textarea {
       resize: vertical;
     }
-
-    .panel {
-      display: flex;
-      max-height: 100%;
-      flex-direction: column;
-    }
-
-    .panel-body {
-      flex: 1;
-    }
   }
 
   &.hide {
@@ -78,5 +68,26 @@
 
   & h2 a:hover {
     text-decoration: underline;
+  }
+}
+
+.panel {
+  position: relative;
+  display: flex;
+  max-height: 100%;
+  flex-direction: column;
+
+  &__header,
+  &__body {
+    padding: govuk-spacing(4);
+  }
+
+  &__header {
+    padding-right: govuk-em(75px, $context-font-size: 16);
+    padding-bottom: 0;
+  }
+
+  &__body {
+    padding-top: 0;
   }
 }

@@ -100,15 +100,11 @@ export function Flyout(props: Readonly<Props>) {
           >
             {i18n('close')}
           </button>
-          <div className="panel panel--flyout">
-            <div className="panel-header govuk-!-padding-top-4 govuk-!-padding-left-4">
+          <div className="panel">
+            <div className="panel__header">
               {title && <h4 className="govuk-heading-m">{title}</h4>}
             </div>
-            <div className="panel-body">
-              <div className="govuk-!-padding-left-4 govuk-!-padding-right-4 govuk-!-padding-bottom-4">
-                {children}
-              </div>
-            </div>
+            <div className="panel__body">{children}</div>
           </div>
         </div>
       </FocusTrap>
