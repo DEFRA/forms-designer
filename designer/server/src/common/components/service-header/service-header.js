@@ -13,9 +13,14 @@ export class ServiceHeader {
    * @param {Element | null} $module - HTML element to use for header
    */
   constructor($module) {
+    const $navigation = $module?.querySelectorAll('[data-one-login-header-nav]')
+
+    if (!($module instanceof HTMLElement) || !$navigation?.length) {
+      return
+    }
+
     this.$module = $module
-    this.$navigation =
-      $module?.querySelectorAll('[data-one-login-header-nav]') ?? []
+    this.$navigation = $navigation
 
     /**
      * The header can render with one or two navigation elements which collapse
@@ -25,7 +30,7 @@ export class ServiceHeader {
      * 2. an aria-controls attribute which can be mapped to the ID of the element
      * that should be hidden on mobile
      */
-    for (const $nav of this.$navigation) {
+    for (const $nav of Array.from(this.$navigation)) {
       const $menuButton = $nav.querySelector('.js-x-header-toggle')
       const $menuId = $menuButton?.getAttribute('aria-controls')
 

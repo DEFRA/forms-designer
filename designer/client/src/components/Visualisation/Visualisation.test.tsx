@@ -10,7 +10,7 @@ import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 describe('Visualisation', () => {
   afterEach(cleanup)
 
-  test('Graph is rendered with correct number of pages and updates', async () => {
+  test('Graph is rendered with correct number of pages and updates', () => {
     const data = {
       pages: [
         {

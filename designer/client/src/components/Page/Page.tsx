@@ -1,8 +1,7 @@
 import {
   slugify,
   type ComponentDef,
-  type Page as PageType,
-  type FormDefinition
+  type Page as PageType
 } from '@defra/forms-model'
 import React, { useContext, useState, type CSSProperties } from 'react'
 
@@ -21,9 +20,8 @@ const ComponentItem = (props: {
   index: number
   page: PageType
   selectedComponent: ComponentDef
-  data: FormDefinition
 }) => {
-  const { index, page, selectedComponent, data } = props
+  const { index, page, selectedComponent } = props
 
   return (
     <div className="component-item">
@@ -31,16 +29,13 @@ const ComponentItem = (props: {
         key={index}
         index={index}
         page={page}
-        data={data}
         selectedComponent={selectedComponent}
       />
     </div>
   )
 }
 
-const ComponentList = (props: { page: PageType; data: FormDefinition }) => {
-  const { page, data } = props
-
+const ComponentList = ({ page }: { page: PageType }) => {
   if (!hasComponents(page) || !page.components.length) {
     return null
   }
@@ -54,7 +49,6 @@ const ComponentList = (props: { page: PageType; data: FormDefinition }) => {
           key={index}
           index={index}
           page={page}
-          data={data}
           selectedComponent={component}
         />
       ))}
@@ -91,7 +85,7 @@ export const Page = (props: {
         </h3>
       </div>
 
-      <ComponentList page={page} data={data} />
+      <ComponentList page={page} />
 
       <div className="page__actions">
         <button

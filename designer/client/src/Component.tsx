@@ -3,7 +3,6 @@ import {
   hasTitle,
   slugify,
   type ComponentDef,
-  type FormDefinition,
   type Page
 } from '@defra/forms-model'
 import React, { useContext, useState, type FunctionComponent } from 'react'
@@ -232,7 +231,6 @@ export const componentTypes = {
 }
 
 export interface Props {
-  data: FormDefinition
   page: Page
   selectedComponent: ComponentDef
   index: number
@@ -246,6 +244,12 @@ export const Component: FunctionComponent<Props> = (props) => {
   const onSave = () => setShowEditor(!showEditor)
 
   const { title, type } = selectedComponent
+
+  // Check if component type is supported
+  if (!(type in componentTypes)) {
+    return null
+  }
+
   const ComponentIcon = componentTypes[type]
 
   const pageId = slugify(page.path)
