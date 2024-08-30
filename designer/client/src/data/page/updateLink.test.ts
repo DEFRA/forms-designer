@@ -33,6 +33,7 @@ const page1 = {
 const page2 = {
   title: 'page2',
   path: '/2',
+  next: [],
   components: [
     {
       name: 'name3',
@@ -53,7 +54,9 @@ const page2 = {
 
 const page3 = {
   title: 'page3',
-  path: '/3'
+  path: '/3',
+  next: [],
+  components: []
 } satisfies Page
 
 const data = {
@@ -135,11 +138,9 @@ test('updateLink should remove a condition from a link to the next page', () => 
     path: '/2'
   })
 
-  expect(definition.pages[0].next).toMatchObject([
-    {
-      path: '/2'
-    }
-  ])
+  expect(definition.pages[0]).toMatchObject({
+    next: [{ path: '/2' }]
+  })
 })
 
 test('updateLink should add a condition to a link to the next page', () => {
@@ -148,10 +149,12 @@ test('updateLink should add a condition to a link to the next page', () => {
     condition: 'isKangaroo'
   })
 
-  expect(definition.pages[0].next).toMatchObject([
-    {
-      path: '/2',
-      condition: 'isKangaroo'
-    }
-  ])
+  expect(definition.pages[0]).toMatchObject({
+    next: [
+      {
+        path: '/2',
+        condition: 'isKangaroo'
+      }
+    ]
+  })
 })

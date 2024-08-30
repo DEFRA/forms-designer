@@ -4,23 +4,30 @@ import { addLink } from '~/src/data/page/addLink.js'
 
 const page404 = {
   title: 'Page not found',
-  path: '/404'
+  path: '/404',
+  next: [],
+  components: []
 } satisfies Page
 
 const pageEggScrambed = {
   title: 'Egg scrambled',
   path: '/scrambled',
-  next: [{ path: '/poached' }]
+  next: [{ path: '/poached' }],
+  components: []
 } satisfies Page
 
 const pageEggPoached = {
   title: 'Egg poached',
-  path: '/poached'
+  path: '/poached',
+  next: [],
+  components: []
 } satisfies Page
 
 const pageEggSunny = {
   title: 'Egg sunny side up',
-  path: '/sunny'
+  path: '/sunny',
+  next: [],
+  components: []
 } satisfies Page
 
 const data = {
@@ -60,16 +67,20 @@ test('addLink successfully adds a new link', () => {
       {
         title: 'Egg scrambled',
         path: '/scrambled',
-        next: [{ path: '/poached' }]
+        next: [{ path: '/poached' }],
+        components: []
       },
       {
         title: 'Egg poached',
         path: '/poached',
-        next: [{ path: '/sunny' }]
+        next: [{ path: '/sunny' }],
+        components: []
       },
       {
         title: 'Egg sunny side up',
-        path: '/sunny'
+        path: '/sunny',
+        next: [],
+        components: []
       }
     ],
     lists: [],

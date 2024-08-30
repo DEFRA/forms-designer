@@ -13,6 +13,7 @@ const data = {
     {
       title: 'my first page',
       path: '/1',
+      next: [{ path: '/2' }],
       components: [
         {
           name: 'firstName',
@@ -47,7 +48,9 @@ const data = {
     },
     {
       title: 'my second page',
-      path: '/2'
+      path: '/2',
+      next: [],
+      components: []
     }
   ],
   lists: [],

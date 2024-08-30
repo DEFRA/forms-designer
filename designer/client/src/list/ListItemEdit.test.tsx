@@ -17,15 +17,14 @@ const data = {
     {
       title: 'start',
       path: '/start',
+      controller: 'StartPageController',
       components: [
         {
           name: 'text',
-          title: 'text',
-          type: ComponentType.TextField,
-          schema: {},
-          options: {
-            required: true
-          }
+          title: 'Start',
+          content: '<p class="govuk-body">Some content</p>',
+          type: ComponentType.Html,
+          options: {}
         }
       ],
       next: [
@@ -37,6 +36,7 @@ const data = {
     {
       title: 'First page',
       path: '/first-page',
+      next: [],
       components: [
         {
           name: 'IDDQl4',

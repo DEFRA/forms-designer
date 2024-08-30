@@ -20,6 +20,7 @@ test('addComponent adds a component to the correct page', () => {
       {
         title: 'first page',
         path: '/1',
+        next: [],
         components: [
           {
             name: 'firstName',
@@ -33,6 +34,7 @@ test('addComponent adds a component to the correct page', () => {
       {
         title: 'second page',
         path: '/2',
+        next: [],
         components: [
           {
             name: 'lastName',
@@ -62,6 +64,7 @@ test('addComponent adds a component to the correct page', () => {
       {
         title: 'first page',
         path: '/1',
+        next: [],
         components: [
           {
             name: 'firstName',
@@ -82,6 +85,7 @@ test('addComponent adds a component to the correct page', () => {
       {
         title: 'second page',
         path: '/2',
+        next: [],
         components: [
           {
             name: 'lastName',

@@ -7,10 +7,21 @@ const data = {
     {
       title: 'scrambled',
       path: '/scrambled',
-      next: [{ path: '/poached' }]
+      next: [{ path: '/poached' }],
+      components: []
     },
-    { title: 'poached', path: '/poached' },
-    { title: 'sunny', path: '/sunny' }
+    {
+      title: 'poached',
+      path: '/poached',
+      next: [],
+      components: []
+    },
+    {
+      title: 'sunny',
+      path: '/sunny',
+      next: [],
+      components: []
+    }
   ],
   lists: [],
   sections: [],
@@ -21,7 +32,9 @@ test('addPage throws if a page with the same path already exists', () => {
   expect(() =>
     addPage(data, {
       title: 'scrambled',
-      path: '/scrambled'
+      path: '/scrambled',
+      next: [],
+      components: []
     })
   ).toThrow(/A page with the path/)
 })
@@ -30,10 +43,14 @@ test('addPage adds a page if one does not exist with the same path', () => {
   expect(
     addPage(data, {
       title: 'soft boiled',
-      path: '/soft-boiled'
+      path: '/soft-boiled',
+      next: [],
+      components: []
     }).pages
   ).toContainEqual({
     title: 'soft boiled',
-    path: '/soft-boiled'
+    path: '/soft-boiled',
+    next: [],
+    components: []
   })
 })

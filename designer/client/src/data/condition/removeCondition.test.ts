@@ -11,21 +11,21 @@ const data = {
   pages: [
     {
       title: 'start',
-      next: [],
-      path: '/'
+      path: '/start',
+      controller: 'StartPageController',
+      next: [{ path: '/badgers' }],
+      components: []
     },
     {
       title: 'badgers',
       path: '/badgers',
       next: [
         {
-          path: '/summary'
-        },
-        {
           path: '/disaster',
           condition: 'isBadger'
         }
-      ]
+      ],
+      components: []
     }
   ],
   lists: [],
@@ -84,20 +84,20 @@ test('removeCondition should remove conditions from the conditions key and in pa
     pages: [
       {
         title: 'start',
-        next: [],
-        path: '/'
+        path: '/start',
+        controller: 'StartPageController',
+        next: [{ path: '/badgers' }],
+        components: []
       },
       {
         title: 'badgers',
         path: '/badgers',
         next: [
           expect.objectContaining({
-            path: '/summary'
-          }),
-          expect.objectContaining({
             path: '/disaster'
           })
-        ]
+        ],
+        components: []
       }
     ],
     lists: [],

@@ -15,9 +15,16 @@ describe('Visualisation', () => {
       pages: [
         {
           title: 'my first page',
-          path: '/1'
+          path: '/1',
+          next: [],
+          components: []
         },
-        { title: 'my second page', path: '/2' }
+        {
+          title: 'my second page',
+          path: '/2',
+          next: [],
+          components: []
+        }
       ],
       lists: [],
       sections: [],
@@ -40,7 +47,9 @@ describe('Visualisation', () => {
         ...data.pages,
         {
           title: 'my third page',
-          path: '/3'
+          path: '/3',
+          next: [],
+          components: []
         }
       ]
     }
@@ -60,11 +69,14 @@ describe('Visualisation', () => {
         {
           title: 'link source',
           path: '/link-source',
-          next: [{ path: '/link-target' }]
+          next: [{ path: '/link-target' }],
+          components: []
         },
         {
           title: 'link target',
-          path: '/link-target'
+          path: '/link-target',
+          next: [],
+          components: []
         }
       ],
       lists: [],

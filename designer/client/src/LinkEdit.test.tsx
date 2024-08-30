@@ -18,6 +18,7 @@ describe('LinkEdit', () => {
       {
         path: '/1',
         title: 'Page 1',
+        next: [{ path: '/2' }],
         components: [
           {
             name: 'field1',
@@ -25,10 +26,14 @@ describe('LinkEdit', () => {
             type: ComponentType.YesNoField,
             options: {}
           }
-        ],
-        next: [{ path: '/2' }]
+        ]
       },
-      { path: '/2', title: 'Page 2' }
+      {
+        path: '/2',
+        title: 'Page 2',
+        next: [],
+        components: []
+      }
     ],
     lists: [],
     sections: [],

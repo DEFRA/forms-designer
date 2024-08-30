@@ -8,16 +8,20 @@ test('allPathsLeadingTo should work with cycle in paths', () => {
       {
         title: 'page1',
         path: '/1',
-        next: [{ path: '/2' }]
+        next: [{ path: '/2' }],
+        components: []
       },
       {
         title: 'page2',
         path: '/2',
-        next: [{ path: '/1' }]
+        next: [{ path: '/1' }],
+        components: []
       },
       {
         title: 'page3',
-        path: '/3'
+        path: '/3',
+        next: [],
+        components: []
       }
     ],
     lists: [],
@@ -35,16 +39,20 @@ test('allPathsLeadingTo should work with single parents', () => {
       {
         title: 'page1',
         path: '/1',
-        next: [{ path: '/2' }]
+        next: [{ path: '/2' }],
+        components: []
       },
       {
         title: 'page2',
         path: '/2',
-        next: [{ path: '/3' }]
+        next: [{ path: '/3' }],
+        components: []
       },
       {
         title: 'page3',
-        path: '/3'
+        path: '/3',
+        next: [],
+        components: []
       }
     ],
     lists: [],
@@ -61,21 +69,26 @@ test('allPathsLeadingTo should work with multiple parents', () => {
       {
         title: 'page1',
         path: '/1',
-        next: [{ path: '/2' }, { path: '/3' }]
+        next: [{ path: '/2' }, { path: '/3' }],
+        components: []
       },
       {
         title: 'page2',
         path: '/2',
-        next: [{ path: '/4' }]
+        next: [{ path: '/4' }],
+        components: []
       },
       {
         title: 'page3',
         path: '/3',
-        next: [{ path: '/4' }]
+        next: [{ path: '/4' }],
+        components: []
       },
       {
         title: 'page4',
-        path: '/4'
+        path: '/4',
+        next: [],
+        components: []
       }
     ],
     lists: [],

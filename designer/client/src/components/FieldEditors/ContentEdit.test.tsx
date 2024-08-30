@@ -24,6 +24,7 @@ describe('ContentEdit', () => {
       {
         title: 'First page',
         path: '/first-page',
+        next: [],
         components: [selectedComponent]
       }
     ],
