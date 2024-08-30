@@ -68,6 +68,7 @@
     "@types/dagre": "^0.7.52",
     "@types/enzyme": "^3.10.18",
     "@types/enzyme-adapter-react-16": "^1.0.9",
+    "@types/eslint": "^8.56.12",
     "@types/govuk-frontend": "^5.4.0",
     "@types/hapi__catbox-memory": "^4.1.8",
     "@types/hapi__cookie": "^12.0.5",
