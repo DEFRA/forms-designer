@@ -3,7 +3,6 @@ import {
   hasTitle,
   slugify,
   type ComponentDef,
-  type FormDefinition,
   type Page
 } from '@defra/forms-model'
 import React, { useContext, useState, type FunctionComponent } from 'react'
@@ -232,7 +231,6 @@ export const componentTypes = {
 }
 
 export interface Props {
-  data: FormDefinition
   page: Page
   selectedComponent: ComponentDef
   index: number
