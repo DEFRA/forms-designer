@@ -19,8 +19,11 @@ export function addLink(
   if (from === to) {
     throw Error('cannot link a page to itself')
   }
-  const [fromPage, index] = findPage(data, from)
+  const fromPage = findPage(data, from)
+  const index = data.pages.indexOf(fromPage)
+
   findPage(data, to)
+
   const pages = [...data.pages]
 
   const existingLink = fromPage.next?.find((page) => page.path === to)

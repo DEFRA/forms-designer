@@ -263,8 +263,8 @@ export const Component: FunctionComponent<Props> = (props) => {
   const componentButtonLabel = `${componentFlyoutTitle}${suffix}`
 
   const move = async (oldIndex: number, newIndex: number) => {
-    const copy = { ...data }
-    const [copyPage, index] = findPage(data, page.path)
+    const copy = structuredClone(data)
+    const copyPage = findPage(copy, page.path)
 
     if (!copyPage.components?.length) {
       return false
@@ -279,8 +279,6 @@ export const Component: FunctionComponent<Props> = (props) => {
     }
 
     copyPage.components = arrayMove(copyPage.components, oldIndex, newIndex)
-
-    copy.pages[index] = copyPage
 
     await save(copy)
   }

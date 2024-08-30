@@ -1,6 +1,8 @@
 import { graphlib, layout, type GraphEdge, type Node } from '@dagrejs/dagre'
 import { type FormDefinition } from '@defra/forms-model'
 
+import { findPage } from '~/src/data/page/findPage.js'
+
 export interface Point {
   node: Node
   top: string
@@ -61,14 +63,10 @@ export const getLayout = (data: FormDefinition, el: HTMLDivElement) => {
     }
 
     page.next.forEach((next) => {
-      const hasNext = pages.some(({ path }) => path === next.path)
-      if (!hasNext) {
-        return
-      }
-
+      const pageNext = findPage(data, next.path)
       const condition = conditions.find(({ name }) => name === next.condition)
 
-      g.setEdge(page.path, next.path, {
+      g.setEdge(page.path, pageNext.path, {
         label: condition?.displayName,
         width: condition?.displayName ? 270 : undefined
       })

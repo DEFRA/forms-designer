@@ -8,7 +8,7 @@ export function deleteLink(
   from: Path,
   to: Path
 ): FormDefinition {
-  const [fromPage] = findPage(data, from)
+  const fromPage = findPage(data, from)
 
   findPage(data, to)
 

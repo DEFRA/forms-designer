@@ -1,4 +1,4 @@
-import { clone, slugify, type Page, type Section } from '@defra/forms-model'
+import { slugify, type Page, type Section } from '@defra/forms-model'
 // @ts-expect-error -- No types available
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import Joi from 'joi'
@@ -84,19 +84,17 @@ export class PageEdit extends Component<Props, State> {
       return
     }
 
-    let copy = { ...data }
-    const [copyPage, copyIndex] = findPage(data, page.path)
+    let copy = structuredClone(data)
+    const pageEdit = findPage(copy, page.path)
+
+    pageEdit.title = payload.title
+    pageEdit.controller = controller
+    pageEdit.section = section?.name
 
     if (payload.path !== page.path) {
-      copy = updateLinksTo(data, page.path, payload.path)
-      copyPage.path = payload.path
+      copy = updateLinksTo(copy, page.path, payload.path)
+      pageEdit.path = payload.path
     }
-
-    copyPage.title = payload.title
-    copyPage.controller = controller
-    copyPage.section = section?.name
-
-    copy.pages[copyIndex] = copyPage
 
     try {
       await save(copy)
@@ -141,12 +139,14 @@ export class PageEdit extends Component<Props, State> {
     const { save, data } = this.context
     const { page, onSave } = this.props
 
-    const copy = clone(data)
-    const copyPageIdx = copy.pages.findIndex((p) => p.path === page.path)
+    const copy = structuredClone(data)
+
+    const pageRemove = findPage(copy, page.path)
+    const pageIndex = copy.pages.indexOf(pageRemove)
 
     // Remove all links to the page
     copy.pages.forEach((p, index) => {
-      if (index !== copyPageIdx && Array.isArray(p.next)) {
+      if (index !== pageIndex && Array.isArray(p.next)) {
         for (let i = p.next.length - 1; i >= 0; i--) {
           const next = p.next[i]
           if (next.path === page.path) {
@@ -156,7 +156,7 @@ export class PageEdit extends Component<Props, State> {
       }
     })
 
-    copy.pages.splice(copyPageIdx, 1)
+    copy.pages.splice(pageIndex, 1)
 
     try {
       await save(copy)

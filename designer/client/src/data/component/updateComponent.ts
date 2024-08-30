@@ -9,7 +9,7 @@ export function updateComponent(
   componentName: ComponentDef['name'],
   component: ComponentDef
 ) {
-  const [page] = findPage(data, pagePath)
+  const page = findPage(data, pagePath)
   const components = [...(page.components ?? [])]
   const componentIndex =
     page.components?.findIndex(

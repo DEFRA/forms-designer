@@ -1,4 +1,4 @@
-import { type Link, type Page } from '@defra/forms-model'
+import { type Page } from '@defra/forms-model'
 import React, {
   Component,
   type ContextType,
@@ -22,8 +22,8 @@ interface Props {
 }
 
 interface State {
-  page: Page
-  link: Link
+  pageFrom: Page
+  pageTo: Page
   selectedCondition?: string
 }
 
@@ -37,14 +37,16 @@ export class LinkEdit extends Component<Props, State> {
     const { edge } = this.props
     const { data } = this.context
 
-    const [page] = findPage(data, edge.source)
+    // Find initial pages from edge
+    const pageFrom = findPage(data, edge.source)
+    const pageTo = findPage(data, edge.target)
 
     // Find initial link from edge
     const link = findLink(pageFrom, pageTo)
 
     this.state = {
-      page,
-      link,
+      pageFrom,
+      pageTo,
       selectedCondition: link.condition
     }
   }
@@ -53,10 +55,16 @@ export class LinkEdit extends Component<Props, State> {
     e.preventDefault()
 
     const { onSave } = this.props
-    const { link, page, selectedCondition } = this.state
     const { data, save } = this.context
+    const { pageFrom, pageTo, selectedCondition } = this.state
 
-    const definition = updateLink(data, page.path, link.path, selectedCondition)
+    // Update link
+    const definition = updateLink(
+      data,
+      pageFrom.path,
+      pageTo.path,
+      selectedCondition
+    )
 
     try {
       await save(definition)
@@ -74,10 +82,11 @@ export class LinkEdit extends Component<Props, State> {
     }
 
     const { onSave } = this.props
-    const { link, page } = this.state
     const { data, save } = this.context
+    const { pageFrom, pageTo } = this.state
 
-    const definition = deleteLink(data, page.path, link.path)
+    // Delete link
+    const definition = deleteLink(data, pageFrom.path, pageTo.path)
 
     try {
       await save(definition)

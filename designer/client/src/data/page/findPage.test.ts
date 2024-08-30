@@ -59,17 +59,14 @@ test('findPage should throw if the page does not exist', () => {
 })
 
 test('findPage should return the page and index if the page exists', () => {
-  expect(findPage(data, '/2')).toEqual([
-    {
-      title: 'page2',
-      section: 'section1',
-      path: '/2',
-      next: [{ path: '/3' }],
-      components: [
-        expect.objectContaining({ name: 'name3' }),
-        expect.objectContaining({ name: 'name4' })
-      ]
-    },
-    1
-  ])
+  expect(findPage(data, '/2')).toEqual({
+    title: 'page2',
+    section: 'section1',
+    path: '/2',
+    next: [{ path: '/3' }],
+    components: [
+      expect.objectContaining({ name: 'name3' }),
+      expect.objectContaining({ name: 'name4' })
+    ]
+  })
 })

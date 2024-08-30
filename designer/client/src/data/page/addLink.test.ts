@@ -18,13 +18,21 @@ const data = {
 } satisfies FormDefinition
 
 test('addLink throws if to, from or both are not found', () => {
-  expect(() => addLink(data, '404', '4004')).toThrow(/no page found/)
-  expect(() => addLink(data, '404', '/scrambled')).toThrow(/no page found/)
-  expect(() => addLink(data, '/scrambled', '404')).toThrow(/no page found/)
+  expect(() => addLink(data, '/404', '/4004')).toThrow(
+    "Page not found for path '/404'"
+  )
+
+  expect(() => addLink(data, '/404', '/scrambled')).toThrow(
+    "Page not found for path '/404'"
+  )
+
+  expect(() => addLink(data, '/scrambled', '/404')).toThrow(
+    "Page not found for path '/404'"
+  )
 })
 
 test('addLink throws if to and from are equal', () => {
-  expect(() => addLink(data, '404', '404')).toThrow(
+  expect(() => addLink(data, '/404', '/404')).toThrow(
     /cannot link a page to itself/
   )
 })

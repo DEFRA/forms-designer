@@ -9,7 +9,8 @@ export function updateLink(
   to: Path,
   condition?: string
 ): FormDefinition {
-  const [fromPage, fromPageIndex] = findPage(data, from)
+  const fromPage = findPage(data, from)
+  const fromPageIndex = data.pages.indexOf(fromPage)
 
   findPage(data, to)
 
