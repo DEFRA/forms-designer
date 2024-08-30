@@ -87,21 +87,21 @@ export class PageEdit extends Component<Props, State> {
       return
     }
 
-    let copy = structuredClone(data)
-    const pageEdit = findPage(copy, page.path)
+    let definition = structuredClone(data)
+    const pageEdit = findPage(definition, page.path)
 
     pageEdit.title = payload.title
     pageEdit.controller = controller
     pageEdit.section = section?.name
 
     if (payload.path !== page.path) {
-      copy = updateLinksTo(copy, pageEdit, {
+      definition = updateLinksTo(definition, pageEdit, {
         path: payload.path
       })
     }
 
     try {
-      await save(copy)
+      await save(definition)
       onSave()
     } catch (error) {
       logger.error(error, 'PageEdit')
@@ -143,26 +143,26 @@ export class PageEdit extends Component<Props, State> {
     const { save, data } = this.context
     const { page, onSave } = this.props
 
-    let copy = structuredClone(data)
+    let definition = structuredClone(data)
 
-    const pageRemove = findPage(copy, page.path)
-    const pageIndex = copy.pages.indexOf(pageRemove)
+    const pageRemove = findPage(definition, page.path)
+    const pageIndex = definition.pages.indexOf(pageRemove)
 
     // Remove all links to the page
-    for (const pageFrom of copy.pages.filter(hasNext)) {
+    for (const pageFrom of definition.pages.filter(hasNext)) {
       const { next } = pageFrom
 
       // Remove link
       if (next.some(({ path }) => path === pageRemove.path)) {
-        copy = deleteLink(copy, pageFrom, pageRemove)
+        definition = deleteLink(definition, pageFrom, pageRemove)
       }
     }
 
     // Remove page
-    copy.pages.splice(pageIndex, 1)
+    definition.pages.splice(pageIndex, 1)
 
     try {
-      await save(copy)
+      await save(definition)
       onSave()
     } catch (error) {
       logger.error(error, 'PageEdit')

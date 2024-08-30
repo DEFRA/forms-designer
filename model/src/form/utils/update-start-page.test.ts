@@ -52,7 +52,7 @@ describe('updateStartPage', () => {
 
     const returned = updateStartPage(updated)
 
-    expect(returned.pages).toBe(updated.pages)
+    expect(returned.pages).toEqual(updated.pages)
     expect(returned.startPage).toBe('/first-page')
   })
 
@@ -66,7 +66,7 @@ describe('updateStartPage', () => {
 
     const returned = updateStartPage(updated)
 
-    expect(returned.pages).toBe(updated.pages)
+    expect(returned.pages).toEqual(updated.pages)
     expect(returned.startPage).toBe('/first-page')
   })
 
@@ -80,7 +80,7 @@ describe('updateStartPage', () => {
 
     const returned = updateStartPage(updated)
 
-    expect(returned.pages).toBe(updated.pages)
+    expect(returned.pages).toEqual(updated.pages)
     expect(returned.startPage).toBe('/second-page')
   })
 
@@ -92,7 +92,7 @@ describe('updateStartPage', () => {
 
     const returned = updateStartPage(updated)
 
-    expect(returned.pages).toBe(updated.pages)
+    expect(returned.pages).toEqual(updated.pages)
     expect(returned.startPage).toBeUndefined()
   })
 
@@ -110,7 +110,7 @@ describe('updateStartPage', () => {
 
     const returned = updateStartPage(updated)
 
-    expect(returned.pages).toBe(updated.pages)
+    expect(returned.pages).toEqual(updated.pages)
     expect(returned.startPage).toBeUndefined()
   })
 
@@ -128,7 +128,7 @@ describe('updateStartPage', () => {
 
     const returned = updateStartPage(updated)
 
-    expect(returned.pages).toBe(updated.pages)
+    expect(returned.pages).toEqual(updated.pages)
     expect(returned.startPage).toBeUndefined()
   })
 
@@ -136,6 +136,6 @@ describe('updateStartPage', () => {
     const returned = updateStartPage(data)
 
     expect(returned).toEqual(data)
-    expect(returned).toBe(data)
+    expect(returned).toStrictEqual(data)
   })
 })

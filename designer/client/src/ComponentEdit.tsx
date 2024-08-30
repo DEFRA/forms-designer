@@ -52,8 +52,8 @@ export function ComponentEdit(props) {
       return
     }
 
-    const copy = structuredClone(data)
-    const pageEdit = findPage(copy, page.path)
+    const definition = structuredClone(data)
+    const pageEdit = findPage(definition, page.path)
 
     if (!hasComponents(pageEdit)) {
       return
@@ -65,7 +65,7 @@ export function ComponentEdit(props) {
 
     components.splice(index, 1)
 
-    await save(copy)
+    await save(definition)
     toggleShowEditor()
   }
 
