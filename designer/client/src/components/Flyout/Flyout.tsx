@@ -91,8 +91,13 @@ export function Flyout(props: Props) {
   }
 
   return (
-    <FocusTrap focusTrapOptions={{ preventScroll: true }}>
-      <div className="flyout show" data-testid={`flyout-${offset}`}>
+    <div className="flyout show" data-testid={`flyout-${offset}`}>
+      <FocusTrap
+        focusTrapOptions={{
+          preventScroll: true,
+          tabbableOptions: { displayCheck: 'none' }
+        }}
+      >
         <div className={`flyout__container ${width}`} style={style}>
           <button
             className="flyout__button-close govuk-link"
@@ -114,7 +119,7 @@ export function Flyout(props: Props) {
             </div>
           </div>
         </div>
-      </div>
-    </FocusTrap>
+      </FocusTrap>
+    </div>
   )
 }
