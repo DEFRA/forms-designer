@@ -12,6 +12,7 @@ describe('File routes', () => {
   /** @type {Server} */
   let server
   const fileDownloadUrl = '/file-download/1234'
+  const email = 'new.email@gov.uk'
 
   beforeAll(async () => {
     server = await createServer()
@@ -63,7 +64,7 @@ describe('File routes', () => {
         method: 'post',
         url: fileDownloadUrl,
         auth,
-        payload: { email: 'new.email@gov.uk' }
+        payload: { email }
       }
 
       const {
@@ -81,7 +82,7 @@ describe('File routes', () => {
         method: 'post',
         url: fileDownloadUrl,
         auth,
-        payload: { email: 'new.email@gov.uk' }
+        payload: { email }
       }
 
       const { document } = await renderResponse(server, options)
@@ -98,7 +99,7 @@ describe('File routes', () => {
         method: 'post',
         url: fileDownloadUrl,
         auth,
-        payload: { email: 'new.email@gov.uk' }
+        payload: { email }
       }
 
       const { document } = await renderResponse(server, options)
