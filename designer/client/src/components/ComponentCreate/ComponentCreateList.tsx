@@ -16,7 +16,7 @@ const contentFields: ContentComponentsDef[] = []
 const selectionFields: SelectionComponentsDef[] = []
 const inputFields: ComponentDef[] = []
 
-const ComponentTypesSorted = structuredClone(ComponentTypes).sort(
+const ComponentTypesSorted = [...structuredClone(ComponentTypes)].sort(
   ({ type: typeA }, { type: typeB }) => typeA.localeCompare(typeB)
 )
 

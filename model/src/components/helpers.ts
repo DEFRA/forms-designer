@@ -21,7 +21,9 @@ export function getComponentDefaults(component?: Partial<ComponentDef>) {
     return
   }
 
-  return ComponentTypes.find(({ type }) => type === component.type)
+  return structuredClone(
+    ComponentTypes.find(({ type }) => type === component.type)
+  )
 }
 
 /**

@@ -4,7 +4,7 @@ import { ControllerType, ControllerPath } from '~/src/pages/enums.js'
 /**
  * Defaults for creating new pages
  */
-export const PageTypes: Page[] = [
+export const PageTypes: readonly Page[] = Object.freeze([
   {
     title: 'Start page',
     path: ControllerPath.Start,
@@ -43,4 +43,4 @@ export const PageTypes: Page[] = [
     path: ControllerPath.Status,
     controller: ControllerType.Status
   }
-]
+])
