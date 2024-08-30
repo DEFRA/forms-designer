@@ -1,7 +1,9 @@
 import { graphlib, layout, type GraphEdge, type Node } from '@dagrejs/dagre'
 import { type FormDefinition } from '@defra/forms-model'
 
+import { logger } from '~/src/common/helpers/logging/logger.js'
 import { findPage } from '~/src/data/page/findPage.js'
+import { hasNext } from '~/src/data/page/hasNext.js'
 
 export interface Point {
   node: Node
@@ -58,18 +60,22 @@ export const getLayout = (data: FormDefinition, el: HTMLDivElement) => {
 
   // Add edges to the graph.
   pages.forEach((page) => {
-    if (!Array.isArray(page.next)) {
+    if (!hasNext(page)) {
       return
     }
 
     page.next.forEach((next) => {
-      const pageNext = findPage(data, next.path)
-      const condition = conditions.find(({ name }) => name === next.condition)
+      try {
+        const pageNext = findPage(data, next.path)
+        const condition = conditions.find(({ name }) => name === next.condition)
 
-      g.setEdge(page.path, pageNext.path, {
-        label: condition?.displayName,
-        width: condition?.displayName ? 270 : undefined
-      })
+        g.setEdge(page.path, pageNext.path, {
+          label: condition?.displayName,
+          width: condition?.displayName ? 270 : undefined
+        })
+      } catch (error) {
+        logger.error(error, 'Visualisation')
+      }
     })
   })
 
