@@ -1,7 +1,7 @@
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 
 /**
- * @param { ValidationFailureFile<import('~/src/types.js').FileDownload> } [validation]
+ * @param { object } [validation]
  */
 export function fileViewModel(validation) {
   const pageTitle = 'You have a file to download'
@@ -29,7 +29,3 @@ export function fileViewModel(validation) {
     buttonText: 'Download file'
   }
 }
-
-/**
- * @import { ValidationFailureFile } from '~/src/common/helpers/types.js'
- */

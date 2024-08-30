@@ -29,7 +29,6 @@ export default [
       switch (statusCode) {
         case StatusCodes.OK: {
           const validation = yar.flash(sessionNames.validationFailure)[0]
-          // @ts-expect-error This error is expected because the fileViewModel function expects a validation object as an argument.
           return h.view('file/download-page', file.fileViewModel(validation))
         }
 
@@ -107,5 +106,4 @@ export default [
 
 /**
  * @import { ServerRoute } from '@hapi/hapi'
- * @import { ValidationFailureFile } from '~/src/common/helpers/types.js'
  */

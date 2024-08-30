@@ -119,8 +119,3 @@ export interface FormResponse {
   slug: FormMetadata['slug']
   status: string
 }
-
-export interface FileDetails {
-  fileId: string
-  retrievalKey: string
-}
