@@ -145,7 +145,7 @@ export class PageCreate extends Component<Props, State> {
     const { value: linkFrom } = e.target
 
     this.setState({
-      linkFrom
+      linkFrom: linkFrom || undefined
     })
   }
 

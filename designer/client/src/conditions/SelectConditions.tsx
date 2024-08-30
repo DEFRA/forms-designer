@@ -214,7 +214,7 @@ export class SelectConditions extends Component<Props, State> {
     const { value: selectedCondition } = e.target
 
     this.setState({
-      selectedCondition
+      selectedCondition: selectedCondition || undefined
     })
   }
 
