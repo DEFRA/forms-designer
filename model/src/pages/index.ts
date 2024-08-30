@@ -3,6 +3,8 @@ export {
   ControllerTypes
 } from '~/src/pages/controller-types.js'
 
+export { PageTypes } from '~/src/pages/page-types.js'
+
 export {
   controllerNameFromPath,
   hasComponents,
