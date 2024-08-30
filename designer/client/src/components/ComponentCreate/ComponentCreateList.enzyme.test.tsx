@@ -1,15 +1,24 @@
-import { ComponentType, type ComponentDef } from '@defra/forms-model'
+import {
+  ComponentType,
+  ControllerType,
+  getPageDefaults,
+  type ComponentDef
+} from '@defra/forms-model'
 import { shallow } from 'enzyme'
 import React from 'react'
 
 import { ComponentCreateList } from '~/src/components/ComponentCreate/ComponentCreateList.jsx'
 
 describe('ComponentCreateList', () => {
+  const page = getPageDefaults({
+    controller: ControllerType.Page
+  })
+
   const onSelectComponent = jest.fn()
 
   test('it displays Content components list correctly', () => {
     const wrapper = shallow(
-      <ComponentCreateList onSelectComponent={onSelectComponent} />
+      <ComponentCreateList page={page} onSelectComponent={onSelectComponent} />
     )
 
     const contentComponentsList = wrapper.find('ol').at(1)
@@ -22,7 +31,7 @@ describe('ComponentCreateList', () => {
 
   test('it selects Content components on click', () => {
     const wrapper = shallow(
-      <ComponentCreateList onSelectComponent={onSelectComponent} />
+      <ComponentCreateList page={page} onSelectComponent={onSelectComponent} />
     )
 
     const contentComponentsList = wrapper.find('ol').at(1)
@@ -52,7 +61,7 @@ describe('ComponentCreateList', () => {
 
   test('it displays Input fields list correctly', () => {
     const wrapper = shallow(
-      <ComponentCreateList onSelectComponent={onSelectComponent} />
+      <ComponentCreateList page={page} onSelectComponent={onSelectComponent} />
     )
 
     const contentComponentsList = wrapper.find('ol').at(2)
@@ -74,7 +83,7 @@ describe('ComponentCreateList', () => {
 
   test('it selects Input components on click', () => {
     const wrapper = shallow(
-      <ComponentCreateList onSelectComponent={onSelectComponent} />
+      <ComponentCreateList page={page} onSelectComponent={onSelectComponent} />
     )
 
     const contentComponentsList = wrapper.find('ol').at(2)
@@ -104,7 +113,7 @@ describe('ComponentCreateList', () => {
 
   test('it displays Selection fields list correctly', () => {
     const wrapper = shallow(
-      <ComponentCreateList onSelectComponent={onSelectComponent} />
+      <ComponentCreateList page={page} onSelectComponent={onSelectComponent} />
     )
 
     const contentComponentsList = wrapper.find('ol').at(3)
@@ -123,7 +132,7 @@ describe('ComponentCreateList', () => {
 
   test('it selects Selection fields on click', () => {
     const wrapper = shallow(
-      <ComponentCreateList onSelectComponent={onSelectComponent} />
+      <ComponentCreateList page={page} onSelectComponent={onSelectComponent} />
     )
 
     const contentComponentsList = wrapper.find('ol').at(3)

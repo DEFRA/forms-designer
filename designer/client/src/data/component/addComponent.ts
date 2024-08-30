@@ -1,4 +1,5 @@
 import {
+  hasComponents,
   type ComponentDef,
   type FormDefinition,
   type Page
@@ -20,8 +21,11 @@ export function addComponent(
     // Copy page
     const pageCopy = structuredClone(page)
 
+    if (!hasComponents(pageCopy)) {
+      throw Error(`Components not found for path '${pageCopy.path}'`)
+    }
+
     // Add component to page
-    pageCopy.components ??= []
     pageCopy.components.push(component)
 
     // Copy form definition, update page

@@ -1,9 +1,11 @@
 import {
   ComponentTypes,
+  ControllerType,
   hasContent,
   hasSelectionFields,
   type ComponentDef,
   type ContentComponentsDef,
+  type Page,
   type SelectionComponentsDef
 } from '@defra/forms-model'
 import React, { type MouseEvent, useCallback } from 'react'
@@ -29,10 +31,20 @@ for (const component of ComponentTypesSorted) {
 }
 
 interface Props {
+  page: Page
   onSelectComponent: (type: ComponentDef) => void
 }
 
-export const ComponentCreateList = ({ onSelectComponent }: Props) => {
+export const ComponentCreateList = (props: Props) => {
+  const { page, onSelectComponent } = props
+  const { controller } = page
+
+  // Allow component pages to add input + selection fields
+  const isComponentPage =
+    !controller ||
+    controller === ControllerType.Page ||
+    controller === ControllerType.FileUpload
+
   const selectComponent = useCallback(
     (event: MouseEvent<HTMLAnchorElement>, component: ComponentDef) => {
       event.preventDefault()
@@ -68,55 +80,63 @@ export const ComponentCreateList = ({ onSelectComponent }: Props) => {
               </li>
             ))}
           </ol>
-          <hr className="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
+          {isComponentPage && (
+            <hr className="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
+          )}
         </li>
-        <li>
-          <h2 className="govuk-heading-s">{i18n('Input fields')}</h2>
-          <div className="govuk-hint">{i18n('component.inputfields_info')}</div>
-          <ol className="govuk-list">
-            {inputFields.map((component) => (
-              <li key={component.type}>
-                <p className="govuk-body govuk-!-margin-bottom-2">
-                  <a
-                    href="#0"
-                    className="govuk-link"
-                    onClick={(e) => selectComponent(e, component)}
-                  >
-                    {i18n(`fieldTypeToName.${component.type}`)}
-                  </a>
-                </p>
-                <div className="govuk-hint govuk-!-margin-top-2">
-                  {i18n(`fieldTypeToName.${component.type}_info`)}
-                </div>
-              </li>
-            ))}
-          </ol>
-          <hr className="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
-        </li>
-        <li>
-          <h2 className="govuk-heading-s">{i18n('Selection fields')}</h2>
-          <div className="govuk-hint">
-            {i18n('component.selectfields_info')}
-          </div>
-          <ol className="govuk-list">
-            {selectionFields.map((component) => (
-              <li key={component.type}>
-                <p className="govuk-body govuk-!-margin-bottom-2">
-                  <a
-                    href="#0"
-                    className="govuk-link"
-                    onClick={(e) => selectComponent(e, component)}
-                  >
-                    {i18n(`fieldTypeToName.${component.type}`)}
-                  </a>
-                </p>
-                <div className="govuk-hint govuk-!-margin-top-2">
-                  {i18n(`fieldTypeToName.${component.type}_info`)}
-                </div>
-              </li>
-            ))}
-          </ol>
-        </li>
+        {isComponentPage && (
+          <>
+            <li>
+              <h2 className="govuk-heading-s">{i18n('Input fields')}</h2>
+              <div className="govuk-hint">
+                {i18n('component.inputfields_info')}
+              </div>
+              <ol className="govuk-list">
+                {inputFields.map((component) => (
+                  <li key={component.type}>
+                    <p className="govuk-body govuk-!-margin-bottom-2">
+                      <a
+                        href="#0"
+                        className="govuk-link"
+                        onClick={(e) => selectComponent(e, component)}
+                      >
+                        {i18n(`fieldTypeToName.${component.type}`)}
+                      </a>
+                    </p>
+                    <div className="govuk-hint govuk-!-margin-top-2">
+                      {i18n(`fieldTypeToName.${component.type}_info`)}
+                    </div>
+                  </li>
+                ))}
+              </ol>
+              <hr className="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
+            </li>
+            <li>
+              <h2 className="govuk-heading-s">{i18n('Selection fields')}</h2>
+              <div className="govuk-hint">
+                {i18n('component.selectfields_info')}
+              </div>
+              <ol className="govuk-list">
+                {selectionFields.map((component) => (
+                  <li key={component.type}>
+                    <p className="govuk-body govuk-!-margin-bottom-2">
+                      <a
+                        href="#0"
+                        className="govuk-link"
+                        onClick={(e) => selectComponent(e, component)}
+                      >
+                        {i18n(`fieldTypeToName.${component.type}`)}
+                      </a>
+                    </p>
+                    <div className="govuk-hint govuk-!-margin-top-2">
+                      {i18n(`fieldTypeToName.${component.type}_info`)}
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </li>
+          </>
+        )}
       </ol>
     </div>
   )

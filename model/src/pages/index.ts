@@ -7,6 +7,7 @@ export { PageTypes } from '~/src/pages/page-types.js'
 
 export {
   controllerNameFromPath,
+  getPageDefaults,
   hasComponents,
   hasNext,
   isControllerName

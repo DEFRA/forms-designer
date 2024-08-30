@@ -280,6 +280,11 @@
     }
   },
   "page": {
+    "errors": {
+      "pathStart": "Path '/start' is reserved for start pages only",
+      "pathSummary": "Path '/summary' is reserved for summary pages only",
+      "pathStatus": "Path '/status' is reserved for status pages only"
+    },
     "add": "Add page",
     "edit": "Edit page",
     "preview": "Preview page",

@@ -154,7 +154,12 @@ export function ComponentCreate(props: Props) {
       {hasErrors && (
         <ErrorSummary errorList={Object.values(errors).filter(Boolean)} />
       )}
-      {!type && <ComponentCreateList onSelectComponent={handleCreate} />}
+      {!type && (
+        <ComponentCreateList
+          page={props.page}
+          onSelectComponent={handleCreate}
+        />
+      )}
       {type && renderTypeEdit && (
         <form onSubmit={handleSubmit} autoComplete="off" noValidate>
           <ComponentTypeEdit />

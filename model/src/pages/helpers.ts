@@ -4,7 +4,23 @@ import {
   ControllerNames,
   ControllerTypes
 } from '~/src/pages/controller-types.js'
-import { type ControllerType } from '~/src/pages/enums.js'
+import { ControllerType } from '~/src/pages/enums.js'
+import { PageTypes } from '~/src/pages/page-types.js'
+
+/**
+ * Return component defaults by type
+ */
+export function getPageDefaults(page: Pick<Page, 'controller'>) {
+  const defaults = PageTypes.find(
+    ({ controller }) => controller === (page.controller ?? ControllerType.Page)
+  )
+
+  if (!defaults) {
+    throw new Error(`Defaults not found for ${page.controller}`)
+  }
+
+  return structuredClone(defaults)
+}
 
 /**
  * Check page has components

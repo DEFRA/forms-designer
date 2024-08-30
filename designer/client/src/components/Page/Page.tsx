@@ -104,13 +104,15 @@ export const Page = (props: {
         >
           {i18n('page.preview')}
         </a>
-        <button
-          onClick={() => setIsCreatingComponent(true)}
-          className="govuk-link"
-          aria-describedby={headingId}
-        >
-          {i18n('component.create')}
-        </button>
+        {hasComponents(page) && (
+          <button
+            onClick={() => setIsCreatingComponent(true)}
+            className="govuk-link"
+            aria-describedby={headingId}
+          >
+            {i18n('component.create')}
+          </button>
+        )}
       </div>
       {isEditingPage && (
         <RenderInPortal>
