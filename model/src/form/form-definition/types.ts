@@ -16,14 +16,14 @@ export interface PageBase {
 
 export interface PageStart extends PageBase {
   controller: ControllerType.Start | ControllerType.Home
-  section?: string
+  section?: string | undefined
   next: Link[]
   components: ComponentDef[]
 }
 
 export interface PageQuestion extends PageBase {
   controller?: ControllerType.Page | ControllerType.FileUpload
-  section?: string
+  section?: string | undefined
   next: Link[]
   components: ComponentDef[]
 }
@@ -31,14 +31,24 @@ export interface PageQuestion extends PageBase {
 export interface PageSummary extends PageBase {
   path: ControllerPath.Summary
   controller: ControllerType.Summary
+  section?: undefined
 }
 
 export interface PageStatus extends PageBase {
   path: ControllerPath.Status
   controller: ControllerType.Status
+  section?: undefined
 }
 
 export type Page = PageStart | PageQuestion | PageSummary | PageStatus
+
+export type RequiredField<
+  Type extends Partial<object>,
+  KeyType extends keyof Type
+> = Omit<Type, KeyType> &
+  Required<{
+    [Key in KeyType]: Type[Key]
+  }>
 
 export interface Section {
   name: string

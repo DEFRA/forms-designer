@@ -9,6 +9,7 @@ export const PageTypes: readonly Page[] = Object.freeze([
     title: 'Start page',
     path: ControllerPath.Start,
     controller: ControllerType.Start,
+    section: undefined,
     next: [],
     components: []
   },
@@ -16,6 +17,7 @@ export const PageTypes: readonly Page[] = Object.freeze([
     title: 'Question page',
     path: '/question-page',
     controller: ControllerType.Page,
+    section: undefined,
     next: [],
     components: []
   },
@@ -23,6 +25,7 @@ export const PageTypes: readonly Page[] = Object.freeze([
     title: 'File upload page',
     path: '/file-upload-page',
     controller: ControllerType.FileUpload,
+    section: undefined,
     next: [],
     components: []
   },
@@ -30,17 +33,20 @@ export const PageTypes: readonly Page[] = Object.freeze([
     title: 'File upload page',
     path: '/file-upload-page',
     controller: ControllerType.FileUpload,
+    section: undefined,
     next: [],
     components: []
   },
   {
     title: 'Check your answers',
     path: ControllerPath.Summary,
-    controller: ControllerType.Summary
+    controller: ControllerType.Summary,
+    section: undefined
   },
   {
     title: 'Form submitted',
     path: ControllerPath.Status,
-    controller: ControllerType.Status
+    controller: ControllerType.Status,
+    section: undefined
   }
 ])

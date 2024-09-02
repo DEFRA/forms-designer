@@ -1,5 +1,11 @@
 import { type ComponentDef } from '~/src/components/types.js'
-import { type Link, type Page } from '~/src/form/form-definition/types.js'
+import {
+  type Link,
+  type Page,
+  type PageQuestion,
+  type PageStart,
+  type RequiredField
+} from '~/src/form/form-definition/types.js'
 import {
   ControllerNames,
   ControllerTypes
@@ -29,6 +35,15 @@ export function hasComponents(
   page?: Page
 ): page is Extract<Page, { components: ComponentDef[] }> {
   return !!page && 'components' in page
+}
+
+/**
+ * Check page has sections
+ */
+export function hasSection(
+  page?: Partial<Page>
+): page is RequiredField<PageStart | PageQuestion, 'section'> {
+  return !!page && 'section' in page && typeof page.section === 'string'
 }
 
 /**

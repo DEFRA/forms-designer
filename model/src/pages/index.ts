@@ -9,6 +9,7 @@ export {
   controllerNameFromPath,
   getPageDefaults,
   hasComponents,
+  hasSection,
   hasNext,
   isControllerName
 } from '~/src/pages/helpers.js'
