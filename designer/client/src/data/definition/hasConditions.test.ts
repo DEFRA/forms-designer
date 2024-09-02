@@ -1,6 +1,6 @@
 import { type FormDefinition } from '@defra/forms-model'
 
-import { hasConditions } from '~/src/data/condition/hasConditions.js'
+import { hasConditions } from '~/src/data/definition/hasConditions.js'
 
 test('hasCondition returns true when there are conditions', () => {
   const data = {

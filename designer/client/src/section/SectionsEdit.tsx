@@ -30,19 +30,20 @@ export class SectionsEdit extends Component<Props, State> {
   }
 
   closeFlyout = (sectionName?: string) => {
-    const { section } = this.state
     const { data } = this.context
+    const { section } = this.state
 
     this.setState({
       isEditingSection: false,
-      section: findSection(data, sectionName ?? section?.name)
+      section: sectionName ? findSection(data, sectionName) : section
     })
   }
 
   render() {
     const { data } = this.context
-    const { sections } = data
     const { section, isEditingSection } = this.state
+
+    const { sections } = data
 
     return (
       <>
@@ -76,8 +77,7 @@ export class SectionsEdit extends Component<Props, State> {
               title={
                 section?.name ? `Editing ${section.name}` : 'Add a new section'
               }
-              show={isEditingSection}
-              onHide={() => this.closeFlyout()}
+              onHide={this.closeFlyout}
             >
               <SectionEdit section={section} onSave={this.closeFlyout} />
             </Flyout>

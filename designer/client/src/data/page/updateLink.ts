@@ -1,35 +1,58 @@
-import { type FormDefinition } from '@defra/forms-model'
+import { type FormDefinition, type Link, type Page } from '@defra/forms-model'
 
+import { findLink, findLinkIndex } from '~/src/data/page/findLink.js'
 import { findPage } from '~/src/data/page/findPage.js'
-import { type Path } from '~/src/data/types.js'
 
+/**
+ * Update link to page
+ */
 export function updateLink(
   data: FormDefinition,
-  from: Path,
-  to: Path,
-  condition?: string
-): FormDefinition {
-  const [fromPage, fromPageIndex] = findPage(data, from)
-
-  findPage(data, to)
-
-  const existingLinkIndex =
-    fromPage.next?.findIndex((next) => next.path === to) ?? -1
-
-  if (!fromPage.next || existingLinkIndex < 0) {
-    throw Error('Could not find page or links to update')
+  pageFrom: Page,
+  pageTo: Pick<Page, 'path'>,
+  options?: Partial<Link>
+) {
+  // Prevent linking to same page
+  if (pageFrom.path === (options?.path ?? pageTo.path)) {
+    throw new Error('Link must be between different pages')
   }
 
-  const updatedNext = [...fromPage.next]
-  updatedNext[existingLinkIndex] = {
-    ...updatedNext[existingLinkIndex],
-    condition
+  // Confirm link exists
+  const link = findLink(pageFrom, pageTo)
+
+  // Skip unnecessary updates
+  if (!options || link === options) {
+    return data
   }
 
-  const updatedPage = { ...fromPage, next: updatedNext }
+  const definition = structuredClone(data)
 
-  const pages = [...data.pages]
-  pages[fromPageIndex] = updatedPage
+  // Confirm pages exist
+  const pageFromCopy = findPage(definition, pageFrom.path)
+  const pageToCopy = findPage(definition, pageTo.path)
 
-  return { ...data, pages }
+  // Confirm updated page exists (optional)
+  const pageToMoved =
+    !!options.path && options.path !== pageTo.path
+      ? findPage(data, options.path)
+      : undefined
+
+  // Throw when changes clash with existing link
+  if (pageToMoved && findLinkIndex(pageFrom, pageToMoved) > -1) {
+    throw new Error(
+      `Link already exists for path '${pageFrom.path}' to '${options.path}'`
+    )
+  }
+
+  // Find existing link
+  const linkCopy = findLink(pageFromCopy, pageToCopy)
+
+  // Reset link properties
+  delete linkCopy.condition
+  delete linkCopy.redirect
+
+  // Update link properties
+  Object.assign(linkCopy, options)
+
+  return definition
 }

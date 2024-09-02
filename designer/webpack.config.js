@@ -84,14 +84,14 @@ export default /** @type {Configuration} */ ({
           {
             loader: 'sass-loader',
             options: {
-              api: 'legacy',
               sassOptions: {
-                includePaths: [
+                loadPaths: [
                   join(import.meta.dirname, 'node_modules'),
                   join(import.meta.dirname, '../node_modules')
                 ],
-                outputStyle: 'expanded',
-                quietDeps: true
+                quietDeps: true,
+                sourceMapIncludeSources: true,
+                style: 'expanded'
               },
               warnRuleAsWarning: true
             }
@@ -225,7 +225,10 @@ export default /** @type {Configuration} */ ({
     loggingDebug: ['sass-loader'],
     preset: 'minimal'
   },
-  target: 'browserslist:javascripts'
+  target: 'browserslist:javascripts',
+  watchOptions: {
+    aggregateTimeout: 1000
+  }
 })
 
 /**

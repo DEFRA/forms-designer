@@ -11,21 +11,21 @@ const data = {
   pages: [
     {
       title: 'start',
-      next: [],
-      path: '/'
+      path: '/start',
+      controller: 'StartPageController',
+      next: [{ path: '/badgers' }],
+      components: []
     },
     {
       title: 'badgers',
       path: '/badgers',
       next: [
         {
-          path: '/summary'
-        },
-        {
           path: '/disaster',
           condition: 'isBadger'
         }
-      ]
+      ],
+      components: []
     }
   ],
   lists: [],
@@ -79,25 +79,25 @@ const data = {
 } satisfies FormDefinition
 
 test('removeCondition should remove conditions from the conditions key and in page links', () => {
-  const updated = removeCondition(data, 'isBadger')
+  const updated = removeCondition(data, data.conditions[0])
   expect(updated).toEqual<FormDefinition>({
     pages: [
       {
         title: 'start',
-        next: [],
-        path: '/'
+        path: '/start',
+        controller: 'StartPageController',
+        next: [{ path: '/badgers' }],
+        components: []
       },
       {
         title: 'badgers',
         path: '/badgers',
         next: [
           expect.objectContaining({
-            path: '/summary'
-          }),
-          expect.objectContaining({
             path: '/disaster'
           })
-        ]
+        ],
+        components: []
       }
     ],
     lists: [],
@@ -110,6 +110,13 @@ test('removeCondition should remove conditions from the conditions key and in pa
   })
 })
 
-test('removeCondition should do nothing if the condition does not exist', () => {
-  expect(removeCondition(data, '404')).toEqual<FormDefinition>(data)
+test('removeCondition should throw if the condition does not exist', () => {
+  const conditionNotFound = {
+    ...structuredClone(data.conditions[0]),
+    name: '404'
+  }
+
+  expect(() => removeCondition(data, conditionNotFound)).toThrow(
+    "Condition not found with name '404'"
+  )
 })

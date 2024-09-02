@@ -1,86 +1,82 @@
-import { type ErrorList } from '~/src/ErrorSummary.jsx'
-import { hasSpaces, isEmpty } from '~/src/helpers.js'
+import Joi, { type Schema } from 'joi'
+
+import { type ErrorListItem } from '~/src/ErrorSummary.jsx'
 import { i18n } from '~/src/i18n/i18n.jsx'
 
 export function hasValidationErrors(errors = {}): errors is object {
   return !!Object.values(errors).filter(Boolean).length
 }
 
-export function validateNotEmpty<Key extends string>(
-  name: Key,
+/**
+ * Custom field validator
+ */
+export function validateCustom(
   id: string,
-  description: string,
-  value?: string
-) {
-  const hasErrors = isEmpty(value)
-  const errors: Partial<ErrorList<Key>> = {}
-
-  if (hasErrors) {
-    errors[name] = {
-      href: `#${id}`,
-      children: [
-        i18n('errors.field', {
-          field: description
-        })
-      ]
-    }
+  value: ValidatorValue | undefined,
+  options: {
+    label?: string
+    message: string
+    schema: Schema
+  }
+): ErrorListItem | undefined {
+  const result = options.schema.validate(value)
+  if (!result.error) {
+    return
   }
 
-  return errors
-}
+  const message = i18n(options.message, {
+    field: options.label
+  })
 
-export function validateName<Key extends string>(
-  name: Key,
-  id: string,
-  description: string,
-  value?: string
-) {
-  const namesIsEmpty = isEmpty(value)
-  const nameHasErrors = !namesIsEmpty && hasSpaces(value)
-  const errors: Partial<ErrorList<Key>> = {}
-
-  if (nameHasErrors) {
-    const message = i18n('errors.spaces', {
-      field: description
-    })
-
-    errors[name] = {
-      href: `#${id}`,
-      children: [message]
-    }
-  } else if (namesIsEmpty) {
-    const message = i18n('errors.field', {
-      field: description
-    })
-
-    errors[name] = {
-      href: `#${id}`,
-      children: [message]
-    }
+  return {
+    href: `#${id}`,
+    children: [message]
   }
-
-  return errors
 }
 
-export function validateTitle<Key extends string>(
-  name: Key,
-  id: string,
-  description: string,
-  value?: string
-) {
-  const titleIsEmpty = isEmpty(value)
-  const errors: Partial<ErrorList<Key>> = {}
+/**
+ * Required field validator
+ */
+export const validateRequired: Validator<string> = (id, value, options) => {
+  const message = options.message ?? 'errors.required'
 
-  if (titleIsEmpty) {
-    const message = i18n('errors.field', {
-      field: description
-    })
+  return validateCustom(id, value, {
+    label: options.label,
+    message,
+    schema: Joi.string().required()
+  })
+}
 
-    errors[name] = {
-      href: `#${id}`,
-      children: [message]
-    }
+/**
+ * No spaces validator
+ */
+export const validateNoSpaces: Validator<string> = (id, value, options) => {
+  const message = options.message ?? 'errors.spaces'
+
+  return validateCustom(id, value, {
+    label: options.label,
+    message,
+    schema: Joi.string().regex(/\s/, { invert: true }).required()
+  })
+}
+
+/**
+ * Auto populated name validator
+ */
+export const validateName: Validator<string> = (...args) => {
+  return validateRequired(...args) ?? validateNoSpaces(...args)
+}
+
+type Validator<
+  ValueType extends ValidatorValue,
+  OptionsType = {
+    label?: string
+    message?: string
   }
+> = (
+  id: string,
+  value: ValueType | undefined,
+  options: OptionsType
+) => ErrorListItem | undefined
 
-  return errors
-}
+export type ValidatorValue = string | number | boolean | unknown[] | undefined

@@ -22,7 +22,7 @@ const data = {
   conditions: []
 } satisfies FormDefinition
 
-test('findList throws when a list with the same name already exists', () => {
+test('addList does nothing when a list with the same name already exists', () => {
   expect(() =>
     addList(data, {
       name: 'listA',
@@ -30,7 +30,7 @@ test('findList throws when a list with the same name already exists', () => {
       type: 'string',
       items: []
     })
-  ).toThrow(/A list with the name/)
+  ).not.toThrow()
 })
 
 test('addList returns a tuple of the list and the index', () => {

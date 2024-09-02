@@ -22,8 +22,7 @@ describe('CssClasses', () => {
           name: 'TelephoneNumberField',
           title: 'Telephone number field',
           type: ComponentType.TelephoneNumberField,
-          options: {},
-          schema: {}
+          options: {}
         }
       }
 

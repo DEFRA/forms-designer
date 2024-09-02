@@ -13,11 +13,13 @@ import { type ErrorList, ErrorSummary } from '~/src/ErrorSummary.jsx'
 import { logger } from '~/src/common/helpers/logging/logger.js'
 import { DataContext } from '~/src/context/DataContext.js'
 import { addSection } from '~/src/data/section/addSection.js'
+import { removeSection } from '~/src/data/section/removeSection.js'
+import { updateSection } from '~/src/data/section/updateSection.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import randomId from '~/src/randomId.js'
 import {
   validateName,
-  validateTitle,
+  validateRequired,
   hasValidationErrors
 } from '~/src/validations.js'
 
@@ -26,12 +28,15 @@ interface Props {
   onSave: (sectionName?: string) => void
 }
 
-interface State {
-  name: string
-  title: string
+interface State extends Partial<Form> {
   hideTitle: boolean
   isNewSection: boolean
   errors: Partial<ErrorList<'title' | 'name'>>
+}
+
+interface Form {
+  name: string
+  title: string
 }
 
 export class SectionEdit extends Component<Props, State> {
@@ -45,7 +50,7 @@ export class SectionEdit extends Component<Props, State> {
 
     this.state = {
       name: section?.name ?? randomId(),
-      title: section?.title ?? '',
+      title: section?.title,
       hideTitle: section?.hideTitle ?? false,
       isNewSection: !section?.name,
       errors: {}
@@ -54,72 +59,58 @@ export class SectionEdit extends Component<Props, State> {
 
   onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    e.stopPropagation()
 
     const { data, save } = this.context
     const { onSave, section } = this.props
     const { name, title, hideTitle, isNewSection } = this.state
 
-    const validationErrors = this.validate(name, title)
-    if (hasValidationErrors(validationErrors)) return
+    const payload = {
+      name,
+      title: title?.trim()
+    }
 
-    let updated = { ...data }
+    // Check for valid form payload
+    if (!this.validate(payload)) {
+      return
+    }
 
-    if (isNewSection) {
-      updated = addSection(data, { name, title: title.trim(), hideTitle })
-    } else {
-      const previousName = section?.name
-      const nameChanged = previousName !== name
-      const copySection = updated.sections.find(
-        (section) => section.name === previousName
-      )
+    let definition = isNewSection
+      ? addSection(data, { ...payload, hideTitle })
+      : structuredClone(data)
 
-      if (copySection) {
-        copySection.title = title
-        copySection.hideTitle = hideTitle
-
-        if (nameChanged) {
-          copySection.name = name
-
-          // Update any references to the section
-          updated.pages.forEach((p) => {
-            if (p.section === previousName) {
-              p.section = name
-            }
-          })
-        }
-      }
+    // Update section
+    if (!isNewSection && section?.name) {
+      definition = updateSection(definition, section.name, {
+        title: payload.title,
+        name: payload.name,
+        hideTitle
+      })
     }
 
     try {
-      await save(updated)
-      onSave(name)
+      await save(definition)
+      onSave(payload.name)
     } catch (error) {
       logger.error(error, 'SectionEdit')
     }
   }
 
-  validate = (name?: string, title?: string): State['errors'] => {
-    const titleErrors = validateTitle(
-      'title',
-      'section-title',
-      i18n('sectionEdit.titleField.title'),
-      title
-    )
+  validate = (payload: Partial<Form>): payload is Form => {
+    const { name, title } = payload
 
-    const nameErrors = validateName(
-      'name',
-      'section-name',
-      i18n('sectionEdit.nameField.title'),
-      name
-    )
+    const errors: State['errors'] = {}
 
-    const errors: State['errors'] = {
-      ...titleErrors,
-      ...nameErrors
-    }
+    errors.title = validateRequired('section-title', title, {
+      label: i18n('sectionEdit.titleField.title')
+    })
+
+    errors.name = validateName('section-name', name, {
+      label: i18n('sectionEdit.nameField.title')
+    })
 
     this.setState({ errors })
-    return errors
+    return !hasValidationErrors(errors)
   }
 
   onClickDelete = async (e: MouseEvent<HTMLButtonElement>) => {
@@ -136,20 +127,10 @@ export class SectionEdit extends Component<Props, State> {
       return
     }
 
-    const copy = { ...data }
-    const previousName = section.name
-
-    copy.sections.splice(copy.sections.indexOf(section), 1)
-
-    // Update any references to the section
-    copy.pages.forEach((p) => {
-      if (p.section === previousName) {
-        delete p.section
-      }
-    })
+    const definition = removeSection(data, section)
 
     try {
-      await save(copy)
+      await save(definition)
       onSave()
     } catch (error) {
       logger.error(error, 'SectionEdit')
@@ -166,7 +147,7 @@ export class SectionEdit extends Component<Props, State> {
           <ErrorSummary errorList={Object.values(errors).filter(Boolean)} />
         )}
 
-        <form onSubmit={this.onSubmit} autoComplete="off">
+        <form onSubmit={this.onSubmit} autoComplete="off" noValidate>
           <Input
             id="section-title"
             name="title"

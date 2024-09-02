@@ -18,20 +18,20 @@ import React, {
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
 import { InlineConditions } from '~/src/conditions/InlineConditions.jsx'
-import { type FieldDef } from '~/src/conditions/InlineConditionsDefinitionValue.jsx'
 import {
   conditionsByType,
   getFieldNameSubstring
 } from '~/src/conditions/select-condition-helpers.js'
 import { DataContext } from '~/src/context/DataContext.js'
-import { allInputs, inputsAccessibleAt } from '~/src/data/component/inputs.js'
-import { hasConditions } from '~/src/data/condition/hasConditions.js'
+import { type FieldDef } from '~/src/data/component/fields.js'
+import { getFieldsTo } from '~/src/data/component/fields.js'
+import { hasConditions } from '~/src/data/definition/hasConditions.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 
 export interface Props {
   path?: string
   selectedCondition?: string
-  conditionsChange: (selectedCondition: string) => void
+  conditionsChange: (selectedCondition?: string) => void
   noFieldsHintText?: string
 }
 
@@ -74,20 +74,13 @@ export class SelectConditions extends Component<Props, State> {
   fieldsForPath(path?: string) {
     const { data } = this.context
 
-    const inputs = path ? inputsAccessibleAt(data, path) : allInputs(data)
-    return inputs
-      .map(
-        (input) =>
-          ({
-            label: input.title,
-            name: this.trimSectionName(input.propertyPath),
-            type: input.type
-          }) satisfies FieldDef
-      )
-      .reduce<Record<string, FieldDef>>((obj, item) => {
+    return getFieldsTo(data, path).reduce<Record<string, FieldDef>>(
+      (obj, item) => {
         obj[item.name] = item
         return obj
-      }, {})
+      },
+      {}
+    )
   }
 
   conditionsForPath(path?: string) {
@@ -189,13 +182,6 @@ export class SelectConditions extends Component<Props, State> {
     if (fieldName === conditionFieldName) conditions.push(conditionToAdd)
   }
 
-  trimSectionName(fieldName: string) {
-    if (fieldName.includes('.')) {
-      return fieldName.substring(fieldName.indexOf('.') + 1)
-    }
-    return fieldName
-  }
-
   onClickDefineCondition = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault()
     this.setState({
@@ -206,7 +192,7 @@ export class SelectConditions extends Component<Props, State> {
   setState(state: State, callback?: () => void) {
     const { conditionsChange } = this.props
 
-    conditionsChange(state.selectedCondition ?? '')
+    conditionsChange(state.selectedCondition)
     super.setState(state, callback)
   }
 
@@ -214,7 +200,7 @@ export class SelectConditions extends Component<Props, State> {
     const { value: selectedCondition } = e.target
 
     this.setState({
-      selectedCondition
+      selectedCondition: selectedCondition || undefined
     })
   }
 
@@ -265,6 +251,9 @@ export class SelectConditions extends Component<Props, State> {
                 label={{
                   children: ['Select a condition']
                 }}
+                formGroup={{
+                  className: 'govuk-!-margin-bottom-2'
+                }}
                 onChange={this.onChangeConditionSelection}
                 required={false}
               />
@@ -276,14 +265,14 @@ export class SelectConditions extends Component<Props, State> {
                   className="govuk-link"
                   onClick={this.onClickDefineCondition}
                 >
-                  Define a new condition
+                  {i18n('conditions.add')}
                 </a>
               </p>
             )}
             {inline && (
               <RenderInPortal>
                 <Flyout
-                  title="Define condition"
+                  title={i18n('conditions.addTitle')}
                   onHide={this.onCancelInlineCondition}
                 >
                   <InlineConditions

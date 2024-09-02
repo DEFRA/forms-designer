@@ -1,6 +1,7 @@
-import { clone, slugify, type Page, type Section } from '@defra/forms-model'
+import { slugify, type Page, type Section } from '@defra/forms-model'
 // @ts-expect-error -- No types available
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
+import Joi from 'joi'
 import React, {
   Component,
   type ChangeEvent,
@@ -14,27 +15,36 @@ import { logger } from '~/src/common/helpers/logging/logger.js'
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
+import { deleteLink } from '~/src/data/page/deleteLink.js'
 import { findPage } from '~/src/data/page/findPage.js'
+import { hasNext } from '~/src/data/page/hasNext.js'
 import { updateLinksTo } from '~/src/data/page/updateLinksTo.js'
 import { findSection } from '~/src/data/section/findSection.js'
 import { controllerNameFromPath } from '~/src/helpers.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { SectionEdit } from '~/src/section/SectionEdit.jsx'
-import { validateTitle, hasValidationErrors } from '~/src/validations.js'
+import {
+  validateCustom,
+  validateRequired,
+  hasValidationErrors
+} from '~/src/validations.js'
 
 interface Props {
   page: Page
   onSave: () => void
 }
 
-interface State {
-  path: string
-  controller?: string
-  title: string
+interface State extends Partial<Form> {
+  controller?: Page['controller']
   section?: Section
   isEditingSection: boolean
   isNewSection: boolean
   errors: Partial<ErrorList<'path' | 'title'>>
+}
+
+interface Form {
+  path: string
+  title: string
 }
 
 export class PageEdit extends Component<Props, State> {
@@ -51,7 +61,7 @@ export class PageEdit extends Component<Props, State> {
       path: page.path,
       controller: page.controller,
       title: page.title,
-      section: findSection(data, page.section),
+      section: page.section ? findSection(data, page.section) : undefined,
       isEditingSection: false,
       isNewSection: false,
       errors: {}
@@ -60,70 +70,67 @@ export class PageEdit extends Component<Props, State> {
 
   onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    e.stopPropagation()
 
     const { save, data } = this.context
     const { title, path, section, controller } = this.state
     const { page, onSave } = this.props
 
     // Remove trailing spaces and hyphens
-    const pathTrim = `/${slugify(path)}`
-    const titleTrim = title.trim()
-
-    const validationErrors = this.validate(titleTrim, pathTrim)
-    if (hasValidationErrors(validationErrors)) return
-
-    let copy = { ...data }
-    const [copyPage, copyIndex] = findPage(data, page.path)
-
-    if (pathTrim !== page.path) {
-      copy = updateLinksTo(data, page.path, pathTrim)
-      copyPage.path = pathTrim
+    const payload = {
+      path: `/${slugify(path)}`,
+      title: title?.trim()
     }
 
-    copyPage.title = titleTrim
-    copyPage.controller = controller
-    copyPage.section = section?.name
+    // Check for valid form payload
+    if (!this.validate(payload)) {
+      return
+    }
 
-    copy.pages[copyIndex] = copyPage
+    let definition = structuredClone(data)
+    const pageEdit = findPage(definition, page.path)
+
+    pageEdit.title = payload.title
+    pageEdit.controller = controller
+    pageEdit.section = section?.name
+
+    if (payload.path !== page.path) {
+      definition = updateLinksTo(definition, pageEdit, {
+        path: payload.path
+      })
+    }
 
     try {
-      await save(copy)
+      await save(definition)
       onSave()
     } catch (error) {
       logger.error(error, 'PageEdit')
     }
   }
 
-  validate = (title: string, path: string) => {
+  validate = (payload: Partial<Form>): payload is Form => {
     const { page } = this.props
     const { data } = this.context
+    const { title, path } = payload
 
-    const titleErrors = validateTitle(
-      'title',
-      'page-title',
-      i18n('page.title'),
-      title
+    const errors: State['errors'] = {}
+
+    errors.title = validateRequired('page-title', title, {
+      label: i18n('page.title')
+    })
+
+    errors.path = validateCustom(
+      'page-path',
+      [path, ...data.pages.map((p) => p.path).filter((p) => p !== page.path)],
+      {
+        message: 'errors.duplicate',
+        label: `Path '${path}'`,
+        schema: Joi.array().unique()
+      }
     )
 
-    const errors: Partial<ErrorList<'path' | 'title'>> = {
-      ...titleErrors
-    }
-
-    // Check for duplicate path
-    function isDuplicate(input: string) {
-      return data.pages.some((p) => p.path !== page.path && p.path === input)
-    }
-
-    if (isDuplicate(path)) {
-      errors.path = {
-        href: '#page-path',
-        children: `Path '${path}' already exists`
-      }
-    }
-
     this.setState({ errors })
-
-    return errors
+    return !hasValidationErrors(errors)
   }
 
   onClickDelete = async (e: MouseEvent<HTMLButtonElement>) => {
@@ -136,25 +143,26 @@ export class PageEdit extends Component<Props, State> {
     const { save, data } = this.context
     const { page, onSave } = this.props
 
-    const copy = clone(data)
-    const copyPageIdx = copy.pages.findIndex((p) => p.path === page.path)
+    let definition = structuredClone(data)
+
+    const pageRemove = findPage(definition, page.path)
+    const pageIndex = definition.pages.indexOf(pageRemove)
 
     // Remove all links to the page
-    copy.pages.forEach((p, index) => {
-      if (index !== copyPageIdx && Array.isArray(p.next)) {
-        for (let i = p.next.length - 1; i >= 0; i--) {
-          const next = p.next[i]
-          if (next.path === page.path) {
-            p.next.splice(i, 1)
-          }
-        }
-      }
-    })
+    for (const pageFrom of definition.pages.filter(hasNext)) {
+      const { next } = pageFrom
 
-    copy.pages.splice(copyPageIdx, 1)
+      // Remove link
+      if (next.some(({ path }) => path === pageRemove.path)) {
+        definition = deleteLink(definition, pageFrom, pageRemove)
+      }
+    }
+
+    // Remove page
+    definition.pages.splice(pageIndex, 1)
 
     try {
-      await save(copy)
+      await save(definition)
       onSave()
     } catch (error) {
       logger.error(error, 'PageEdit')
@@ -165,7 +173,7 @@ export class PageEdit extends Component<Props, State> {
     const { value: controller } = e.target
 
     this.setState({
-      controller
+      controller: controller ? (controller as Page['controller']) : undefined
     })
   }
 
@@ -194,14 +202,13 @@ export class PageEdit extends Component<Props, State> {
   }
 
   closeFlyout = (sectionName?: string) => {
-    const { page } = this.props
     const { data } = this.context
     const { section } = this.state
 
     this.setState({
       isEditingSection: false,
       isNewSection: false,
-      section: findSection(data, sectionName ?? section?.name ?? page.section)
+      section: sectionName ? findSection(data, sectionName) : section
     })
   }
 
@@ -210,7 +217,7 @@ export class PageEdit extends Component<Props, State> {
     const { data } = this.context
 
     this.setState({
-      section: findSection(data, sectionName)
+      section: sectionName ? findSection(data, sectionName) : undefined
     })
   }
 
@@ -235,7 +242,7 @@ export class PageEdit extends Component<Props, State> {
           <ErrorSummary errorList={Object.values(errors).filter(Boolean)} />
         )}
 
-        <form onSubmit={this.onSubmit} autoComplete="off">
+        <form onSubmit={this.onSubmit} autoComplete="off" noValidate>
           <div className="govuk-form-group">
             <label className="govuk-label govuk-label--s" htmlFor="controller">
               {i18n('page.controller')}
@@ -302,53 +309,54 @@ export class PageEdit extends Component<Props, State> {
             </>
           )}
 
-          {sections.length > 0 && (
-            <div className="govuk-form-group">
-              <label
-                className="govuk-label govuk-label--s"
-                htmlFor="page-section"
-              >
-                {i18n('page.section')}
-              </label>
-              <div className="govuk-hint" id="page-section-hint">
-                {i18n('page.sectionHint')}
-              </div>
-              <select
-                className="govuk-select"
-                id="page-section"
-                aria-describedby="page-section-hint"
-                name="section"
-                value={section?.name ?? ''}
-                onChange={this.onChangeSection}
-              >
-                <option value="" />
-                {sections.map((section) => (
-                  <option key={section.name} value={section.name}>
-                    {section.title}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
-
-          <p className="govuk-body">
-            {section && (
+          <div className="govuk-form-group">
+            {sections.length > 0 && (
+              <>
+                <label
+                  className="govuk-label govuk-label--s"
+                  htmlFor="page-section"
+                >
+                  {i18n('page.section')}
+                </label>
+                <div className="govuk-hint" id="page-section-hint">
+                  {i18n('page.sectionHint')}
+                </div>
+                <select
+                  className="govuk-select"
+                  id="page-section"
+                  aria-describedby="page-section-hint"
+                  name="section"
+                  value={section?.name ?? ''}
+                  onChange={this.onChangeSection}
+                >
+                  <option value="">{i18n('page.sectionOption')}</option>
+                  {sections.map((section) => (
+                    <option key={section.name} value={section.name}>
+                      {section.title}
+                    </option>
+                  ))}
+                </select>
+              </>
+            )}
+            <p className="govuk-body govuk-!-margin-top-2">
+              {section && (
+                <a
+                  href="#"
+                  className="govuk-link govuk-!-display-block"
+                  onClick={this.editSection}
+                >
+                  {i18n('section.edit')}
+                </a>
+              )}
               <a
                 href="#"
                 className="govuk-link govuk-!-display-block"
-                onClick={this.editSection}
+                onClick={(e) => this.editSection(e, true)}
               >
-                {i18n('section.edit')}
+                {i18n('section.add')}
               </a>
-            )}
-            <a
-              href="#"
-              className="govuk-link govuk-!-display-block"
-              onClick={(e) => this.editSection(e, true)}
-            >
-              {i18n('section.create')}
-            </a>
-          </p>
+            </p>
+          </div>
 
           <div className="govuk-button-group">
             <button className="govuk-button" type="submit">
@@ -369,11 +377,10 @@ export class PageEdit extends Component<Props, State> {
             <Flyout
               title={
                 !isNewSection && !!section
-                  ? i18n('section.editingTitle', { title: section.title })
-                  : i18n('section.newTitle')
+                  ? i18n('section.editTitle', { title: section.title })
+                  : i18n('section.add')
               }
               onHide={this.closeFlyout}
-              show={isEditingSection}
             >
               <SectionEdit
                 section={!isNewSection ? section : undefined}

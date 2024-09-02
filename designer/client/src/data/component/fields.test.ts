@@ -1,31 +1,29 @@
 import { ComponentType, type FormDefinition } from '@defra/forms-model'
 
-import { allInputs } from '~/src/data/component/inputs.js'
-import { type Input } from '~/src/data/types.js'
+import { getFields, type FieldDef } from '~/src/data/component/fields.js'
 
-test('should return all inputs from the page model', () => {
+test('should return all fields from the page model', () => {
   const data = {
     pages: [
       {
         title: 'page1',
         path: '/1',
         section: 'section1',
+        next: [],
         components: [
           {
             name: 'name1',
             title: 'Radios',
             type: ComponentType.RadiosField,
             list: 'radios',
-            options: {},
-            schema: {}
+            options: {}
           },
           {
             name: 'name2',
             title: 'Radios',
             type: ComponentType.RadiosField,
             list: 'radios',
-            options: {},
-            schema: {}
+            options: {}
           }
         ]
       },
@@ -33,75 +31,69 @@ test('should return all inputs from the page model', () => {
         title: 'page2',
         path: '/2',
         section: 'section1',
+        next: [],
         components: [
           {
             name: 'name3',
             title: 'Radios',
             type: ComponentType.RadiosField,
             list: 'radios',
-            options: {},
-            schema: {}
+            options: {}
           },
           {
             name: 'name4',
             title: 'Radios',
             type: ComponentType.RadiosField,
             list: 'radios',
-            options: {},
-            schema: {}
+            options: {}
           }
         ]
       }
     ],
-    lists: [],
-    sections: [],
+    lists: [
+      {
+        name: 'radios',
+        title: 'Radios',
+        type: 'string',
+        items: [
+          { text: 'text a', description: 'desc a', value: 'value a' },
+          { text: 'text b', description: 'desc b', value: 'value b' }
+        ]
+      }
+    ],
+    sections: [
+      {
+        name: 'section1',
+        title: 'Section 1'
+      }
+    ],
     conditions: []
   } satisfies FormDefinition
 
-  expect(allInputs(data)).toEqual<Input[]>([
+  expect(getFields(data)).toEqual<FieldDef[]>([
     {
+      label: `${data.sections[0].title}: Radios`,
       name: 'name1',
-      page: {
-        path: '/1',
-        section: 'section1'
-      },
-      propertyPath: 'section1.name1',
-      title: 'Radios',
       type: ComponentType.RadiosField,
-      list: 'radios'
+      values: data.lists[0].items
     },
     {
+      label: `${data.sections[0].title}: Radios`,
       name: 'name2',
-      page: {
-        path: '/1',
-        section: 'section1'
-      },
-      propertyPath: 'section1.name2',
-      title: 'Radios',
       type: ComponentType.RadiosField,
-      list: 'radios'
+      values: data.lists[0].items
     },
     {
+      label: `${data.sections[0].title}: Radios`,
       name: 'name3',
-      page: {
-        path: '/2',
-        section: 'section1'
-      },
-      propertyPath: 'section1.name3',
-      title: 'Radios',
       type: ComponentType.RadiosField,
-      list: 'radios'
+      values: data.lists[0].items
     },
     {
+      label: `${data.sections[0].title}: Radios`,
       name: 'name4',
-      page: {
-        path: '/2',
-        section: 'section1'
-      },
-      propertyPath: 'section1.name4',
-      title: 'Radios',
       type: ComponentType.RadiosField,
-      list: 'radios'
+      values: data.lists[0].items
     }
   ])
 })
@@ -114,19 +106,7 @@ test('should handle no pages', () => {
     conditions: []
   } satisfies FormDefinition
 
-  expect(allInputs(data)).toEqual([])
-})
-
-test('should handle undefined pages', () => {
-  const data: FormDefinition = {
-    // @ts-expect-error - Allow invalid property for test
-    pages: undefined,
-    lists: [],
-    sections: [],
-    conditions: []
-  }
-
-  expect(allInputs(data)).toEqual([])
+  expect(getFields(data)).toEqual([])
 })
 
 test('should handle pages with undefined components', () => {
@@ -138,7 +118,7 @@ test('should handle pages with undefined components', () => {
     conditions: []
   }
 
-  expect(allInputs(data)).toEqual([])
+  expect(getFields(data)).toEqual([])
 })
 
 test('should handle pages with no components', () => {
@@ -147,6 +127,8 @@ test('should handle pages with no components', () => {
       {
         title: 'No components',
         path: '/start',
+        controller: 'StartPageController',
+        next: [],
         components: []
       }
     ],
@@ -155,5 +137,5 @@ test('should handle pages with no components', () => {
     conditions: []
   } satisfies FormDefinition
 
-  expect(allInputs(data)).toEqual([])
+  expect(getFields(data)).toEqual([])
 })

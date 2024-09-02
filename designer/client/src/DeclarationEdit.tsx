@@ -1,33 +1,33 @@
-import { clone } from '@defra/forms-model'
 import React, { Component, type ContextType, type FormEvent } from 'react'
 
 import { Editor } from '~/src/Editor.jsx'
 import { logger } from '~/src/common/helpers/logging/logger.js'
 import { DataContext } from '~/src/context/DataContext.js'
 
-export class DeclarationEdit extends Component {
+interface Props {
+  onSave: () => void
+}
+
+export class DeclarationEdit extends Component<Props> {
   declare context: ContextType<typeof DataContext>
   static contextType = DataContext
 
-  constructor(props, context) {
-    super(props, context)
-
-    this.onSubmit = this.onSubmit.bind(this)
-  }
-
   onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const form = e.target
-    const formData = new window.FormData(form)
-    const { save, data } = this.context
-    const copy = clone(data)
+    e.stopPropagation()
 
-    copy.declaration = formData.get('declaration')
-    copy.skipSummary = formData.get('skip-summary') === 'on'
+    const { onSave } = this.props
+    const { save, data } = this.context
+
+    const definition = structuredClone(data)
+    const formData = new window.FormData(e.currentTarget)
+
+    definition.declaration = formData.get('declaration')?.toString()
+    definition.skipSummary = formData.get('skip-summary') === 'on'
 
     try {
-      const savedData = await save(copy)
-      this.props.onCreate({ data: savedData })
+      await save(definition)
+      onSave()
     } catch (error) {
       logger.error(error, 'DeclarationEdit')
     }
@@ -38,7 +38,7 @@ export class DeclarationEdit extends Component {
     const { declaration, skipSummary } = data
 
     return (
-      <form onSubmit={this.onSubmit} autoComplete="off">
+      <form onSubmit={this.onSubmit} autoComplete="off" noValidate>
         <div className="govuk-checkboxes govuk-form-group">
           <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">
             <p className="govuk-fieldset__heading">Skip summary page?</p>

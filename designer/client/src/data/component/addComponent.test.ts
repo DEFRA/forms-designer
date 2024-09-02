@@ -11,7 +11,7 @@ test('addComponent throws an error when no page can be found', () => {
   } satisfies FormDefinition
 
   // @ts-expect-error - Allow invalid component for test
-  expect(() => addComponent(data, 'doesntExist', {})).toThrow()
+  expect(() => addComponent(data, data.pages[0], {})).toThrow()
 })
 
 test('addComponent adds a component to the correct page', () => {
@@ -20,6 +20,7 @@ test('addComponent adds a component to the correct page', () => {
       {
         title: 'first page',
         path: '/1',
+        next: [],
         components: [
           {
             name: 'firstName',
@@ -33,6 +34,7 @@ test('addComponent adds a component to the correct page', () => {
       {
         title: 'second page',
         path: '/2',
+        next: [],
         components: [
           {
             name: 'lastName',
@@ -50,7 +52,7 @@ test('addComponent adds a component to the correct page', () => {
   } satisfies FormDefinition
 
   expect(
-    addComponent(data, '/1', {
+    addComponent(data, data.pages[0], {
       name: 'aNewComponent',
       title: 'new component',
       type: ComponentType.TextField,
@@ -62,6 +64,7 @@ test('addComponent adds a component to the correct page', () => {
       {
         title: 'first page',
         path: '/1',
+        next: [],
         components: [
           {
             name: 'firstName',
@@ -82,6 +85,7 @@ test('addComponent adds a component to the correct page', () => {
       {
         title: 'second page',
         path: '/2',
+        next: [],
         components: [
           {
             name: 'lastName',

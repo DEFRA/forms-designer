@@ -7,11 +7,9 @@ import {
   type Condition,
   type ConditionData,
   type ConditionValueData,
-  type Item,
   type OperatorName,
   type RelativeDateValue,
-  type RelativeDateValueData,
-  type ConditionalComponentType
+  type RelativeDateValueData
 } from '@defra/forms-model'
 import React from 'react'
 
@@ -24,6 +22,7 @@ import { RelativeDateValues } from '~/src/conditions/RelativeDateValues.jsx'
 import { SelectValues } from '~/src/conditions/SelectValues.jsx'
 import { TextValues } from '~/src/conditions/TextValues.jsx'
 import { tryParseInt } from '~/src/conditions/inline-condition-helpers.js'
+import { type FieldDef } from '~/src/data/component/fields.js'
 
 function AbsoluteDateComponent(props: {
   value?: ConditionValueData | RelativeDateValueData
@@ -81,19 +80,6 @@ function RelativeDateComponent(props: {
 
   return <RelativeDateValues value={value} updateValue={updateValue} />
 }
-
-export type FieldDef =
-  | {
-      label: string
-      name: string
-      type: ConditionalComponentType
-      values?: Item[]
-    }
-  | {
-      label: string
-      name: string
-      type: 'Condition'
-    }
 
 export interface Props {
   fieldDef: FieldDef

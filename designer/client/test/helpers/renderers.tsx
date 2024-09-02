@@ -5,13 +5,12 @@ import { FlyoutContext } from '~/src/context/FlyoutContext.js'
 import {
   ComponentContext,
   componentReducer,
-  initComponentState,
-  type ComponentContextType
+  initComponentState
 } from '~/src/reducers/component/componentReducer.jsx'
 
 export interface RenderWithContextProps {
   children?: ReactElement
-  state?: Omit<ComponentContextType['state'], 'initialName'>
+  state?: Parameters<typeof initComponentState>[0]
   data?: DataContextType['data']
   meta?: DataContextType['meta']
   save?: DataContextType['save']

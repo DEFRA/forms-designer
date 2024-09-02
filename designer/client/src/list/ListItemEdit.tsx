@@ -16,7 +16,7 @@ import { hasValidationErrors } from '~/src/validations.js'
 export function ListItemEdit() {
   const { dispatch: listsEditorDispatch } = useContext(ListsEditorContext)
   const { state, dispatch } = useContext(ListContext)
-  const { data, save } = useContext(DataContext)
+  const { data } = useContext(DataContext)
 
   const {
     handleTitleChange,
@@ -31,20 +31,32 @@ export function ListItemEdit() {
     hint
   } = useListItem(state, dispatch)
 
-  const handleSubmit = async (
+  const { conditions } = data
+  const { listItemErrors: errors, selectedItem } = state
+  const hasErrors = hasValidationErrors(errors)
+
+  const handleSubmit = (
     e: FormEvent<HTMLFormElement> | MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault()
-    const copy = { ...data }
-    const hasErrors = validate()
-    if (hasErrors) return
-    await save(prepareForSubmit(copy))
-    listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST_ITEM, false])
-  }
+    e.stopPropagation()
 
-  const { conditions } = data
-  const { listItemErrors: errors = {} } = state
-  const hasErrors = hasValidationErrors(errors)
+    const payload = {
+      selectedItem
+    }
+
+    // Check for valid form payload
+    if (!validate(payload)) {
+      return
+    }
+
+    prepareForSubmit()
+
+    listsEditorDispatch({
+      name: ListsEditorStateActions.IS_EDITING_LIST_ITEM,
+      payload: false
+    })
+  }
 
   return (
     <>
@@ -52,7 +64,7 @@ export function ListItemEdit() {
         <ErrorSummary errorList={Object.values(errors).filter(Boolean)} />
       )}
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} autoComplete="off" noValidate>
         <Input
           id="title"
           name="list-item-text"
@@ -96,7 +108,7 @@ export function ListItemEdit() {
           value={condition}
           onChange={handleConditionChange}
         >
-          <option value="" />
+          <option value="">{i18n('list.item.conditionsOption')}</option>
           {conditions.map((condition) => (
             <option key={condition.name} value={condition.name}>
               {condition.displayName}
@@ -105,7 +117,7 @@ export function ListItemEdit() {
         </select>
         <hr className="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
         <div className="govuk-button-group">
-          <button className="govuk-button" type="submit" onClick={handleSubmit}>
+          <button className="govuk-button" type="submit">
             {i18n('save')}
           </button>
         </div>

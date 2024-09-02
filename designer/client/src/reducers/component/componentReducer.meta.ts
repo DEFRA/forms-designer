@@ -1,40 +1,53 @@
-import { type ComponentState } from '~/src/reducers/component/componentReducer.jsx'
-import { validateComponent } from '~/src/reducers/component/componentReducer.validations.js'
+import { type ComponentDef } from '@defra/forms-model'
+
+import {
+  type ComponentState,
+  type ReducerActions
+} from '~/src/reducers/component/componentReducer.jsx'
+import { fieldComponentValidations } from '~/src/reducers/component/componentReducer.validations.js'
 import { Meta } from '~/src/reducers/component/types.js'
 
-export function metaReducer(
-  state: ComponentState,
-  action: {
-    type: Meta
-    payload?: unknown
-  }
-): ComponentState {
-  const { type, payload } = action
-  const { selectedComponent } = state
+export type MetaReducerActions =
+  | {
+      name: Meta.NEW_COMPONENT
+      payload: ComponentDef
+      as?: undefined
+    }
+  | {
+      name: Meta.SET_COMPONENT | Meta.VALIDATE
+      payload?: undefined
+      as?: undefined
+    }
+  | {
+      name: Meta.EDIT
+      payload: boolean
+      as?: undefined
+    }
 
-  switch (type) {
-    case Meta.SET_SELECTED_LIST:
-      return {
-        ...state,
-        selectedComponent: {
-          ...selectedComponent,
-          list: payload
-        }
-      }
+export function metaReducer(state: ComponentState, action: ReducerActions) {
+  const stateNew = structuredClone(state)
 
+  const { selectedComponent } = stateNew
+  const { name, payload } = action
+
+  // Require validation on every meta change
+  stateNew.hasValidated = false
+
+  switch (name) {
     case Meta.NEW_COMPONENT:
-      return { ...state, selectedComponent: payload }
+      stateNew.selectedComponent = payload
+      break
 
     case Meta.SET_COMPONENT:
-      return { ...state, selectedComponent: payload, errors: {} }
-
-    case Meta.SET_PAGE:
-      return { ...state, pagePath: payload }
+      stateNew.selectedComponent = undefined
+      stateNew.errors = {}
+      break
 
     case Meta.VALIDATE:
-      return {
-        ...state,
-        ...validateComponent(selectedComponent)
-      }
+      stateNew.errors = fieldComponentValidations(selectedComponent)
+      stateNew.hasValidated = true
+      break
   }
+
+  return stateNew
 }

@@ -1,14 +1,23 @@
 import { type ConditionWrapper, type FormDefinition } from '@defra/forms-model'
 
+import { findCondition } from '~/src/data/condition/findCondition.js'
+
 export function addCondition(
   data: FormDefinition,
   condition: ConditionWrapper
-): FormDefinition {
-  if (data.conditions.find((c) => condition.name === c.name)) {
-    throw Error(`A condition with the name ${condition.name} already exists`)
+) {
+  try {
+    // Throw for missing condition
+    findCondition(data, condition.name)
+  } catch {
+    // Copy form definition
+    const definition = structuredClone(data)
+
+    // Add new condition
+    definition.conditions.push(condition)
+
+    return definition
   }
-  return {
-    ...data,
-    conditions: [...data.conditions, condition]
-  }
+
+  return data
 }

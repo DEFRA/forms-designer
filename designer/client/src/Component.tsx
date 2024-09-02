@@ -3,7 +3,6 @@ import {
   hasTitle,
   slugify,
   type ComponentDef,
-  type FormDefinition,
   type Page
 } from '@defra/forms-model'
 import React, { useContext, useState, type FunctionComponent } from 'react'
@@ -14,6 +13,7 @@ import { FileUploadIcon } from '~/src/components/Icons/FileUploadIcon.jsx'
 import { SearchIcon } from '~/src/components/Icons/SearchIcon.jsx'
 import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
+import { hasComponents } from '~/src/data/definition/hasComponents.js'
 import { findPage } from '~/src/data/page/findPage.js'
 import { arrayMove } from '~/src/helpers.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
@@ -231,7 +231,6 @@ export const componentTypes = {
 }
 
 export interface Props {
-  data: FormDefinition
   page: Page
   selectedComponent: ComponentDef
   index: number
@@ -242,9 +241,15 @@ export const Component: FunctionComponent<Props> = (props) => {
 
   const { data, save } = useContext(DataContext)
   const [showEditor, setShowEditor] = useState<boolean>(false)
-  const toggleShowEditor = () => setShowEditor(!showEditor)
+  const onSave = () => setShowEditor(!showEditor)
 
   const { title, type } = selectedComponent
+
+  // Check if component type is supported
+  if (!(type in componentTypes)) {
+    return null
+  }
+
   const ComponentIcon = componentTypes[type]
 
   const pageId = slugify(page.path)
@@ -263,14 +268,14 @@ export const Component: FunctionComponent<Props> = (props) => {
   const componentButtonLabel = `${componentFlyoutTitle}${suffix}`
 
   const move = async (oldIndex: number, newIndex: number) => {
-    const copy = { ...data }
-    const [copyPage, index] = findPage(data, page.path)
+    const definition = structuredClone(data)
+    const pageEdit = findPage(definition, page.path)
 
-    if (!copyPage.components?.length) {
+    if (!hasComponents(pageEdit)) {
       return false
     }
 
-    const length = copyPage.components.length
+    const length = pageEdit.components.length
 
     if (newIndex === -1) {
       newIndex = length - 1
@@ -278,21 +283,18 @@ export const Component: FunctionComponent<Props> = (props) => {
       newIndex = 0
     }
 
-    copyPage.components = arrayMove(copyPage.components, oldIndex, newIndex)
+    pageEdit.components = arrayMove(pageEdit.components, oldIndex, newIndex)
 
-    copy.pages[index] = copyPage
-
-    await save(copy)
+    await save(definition)
   }
 
-  const showMoveActions =
-    Array.isArray(page.components) && page.components.length > 1
+  const showMoveActions = hasComponents(page) && !!page.components.length
 
   return (
     <>
       <button
         className="component govuk-link"
-        onClick={toggleShowEditor}
+        onClick={onSave}
         aria-label={componentButtonLabel}
         aria-describedby={headingId}
       >
@@ -322,12 +324,9 @@ export const Component: FunctionComponent<Props> = (props) => {
       )}
       {showEditor && (
         <RenderInPortal>
-          <Flyout title={componentFlyoutTitle} onHide={toggleShowEditor}>
-            <ComponentContextProvider
-              pagePath={page.path}
-              selectedComponent={selectedComponent}
-            >
-              <ComponentEdit page={page} toggleShowEditor={toggleShowEditor} />
+          <Flyout title={componentFlyoutTitle} onHide={onSave}>
+            <ComponentContextProvider selectedComponent={selectedComponent}>
+              <ComponentEdit page={page} onSave={onSave} />
             </ComponentContextProvider>
           </Flyout>
         </RenderInPortal>

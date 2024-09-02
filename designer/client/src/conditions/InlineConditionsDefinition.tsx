@@ -22,10 +22,8 @@ import {
 import upperFirst from 'lodash/upperFirst.js'
 import React, { Component, type ChangeEvent } from 'react'
 
-import {
-  InlineConditionsDefinitionValue,
-  type FieldDef
-} from '~/src/conditions/InlineConditionsDefinitionValue.jsx'
+import { InlineConditionsDefinitionValue } from '~/src/conditions/InlineConditionsDefinitionValue.jsx'
+import { type FieldDef } from '~/src/data/component/fields.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 
 interface Props {
@@ -256,7 +254,9 @@ export class InlineConditionsDefinition extends Component<Props, State> {
               value={selectedCoordinator ?? condition?.coordinator ?? ''}
               onChange={this.onChangeCoordinator}
             >
-              <option value="" />
+              <option value="">
+                {i18n('conditions.conditionCoordinatorOption')}
+              </option>
               {Object.values(Coordinator).map((coordinator) => (
                 <option key={coordinator} value={coordinator}>
                   {upperFirst(coordinator)}
@@ -278,7 +278,9 @@ export class InlineConditionsDefinition extends Component<Props, State> {
                 value={hasConditionField(condition) ? condition.field.name : ''}
                 onChange={this.onChangeField}
               >
-                <option value="" />
+                <option value="">
+                  {i18n('conditions.conditionFieldOption')}
+                </option>
                 {fieldInputs.map((input, index) => (
                   <option key={`${input.name}-${index}`} value={input.name}>
                     {input.label}
@@ -300,7 +302,9 @@ export class InlineConditionsDefinition extends Component<Props, State> {
                     value={selectedOperator ?? condition.operator}
                     onChange={this.onChangeOperator}
                   >
-                    <option value="" />
+                    <option value="">
+                      {i18n('conditions.conditionOperatorOption')}
+                    </option>
                     {getOperatorNames(fieldDef.type)
                       .sort()
                       .map((operator) => (

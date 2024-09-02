@@ -17,26 +17,27 @@ interface Props {
 }
 
 const useListsEdit = () => {
+  const { state } = useContext(ListContext)
   const { state: listEditState, dispatch: listsEditorDispatch } =
     useContext(ListsEditorContext)
-  const { isEditingList, isEditingListItem } = listEditState
-  const { state } = useContext(ListContext)
-  const { selectedList, selectedItem } = state
 
-  const closeFlyout = (action: ListsEditorStateActions) => {
-    return () => listsEditorDispatch([action, false])
+  const { isEditingList, isEditingListItem } = listEditState
+  const { initialTitle, initialItemText, selectedList, selectedItem } = state
+
+  const closeFlyout = (type: ListsEditorStateActions) => {
+    return () => listsEditorDispatch({ name: type, payload: false })
   }
 
   const listTitle = selectedList?.isNew
     ? i18n('list.add')
-    : i18n('list.edit', {
-        title: state.initialTitle ?? selectedList?.title ?? selectedList?.name
+    : i18n('list.editTitle', {
+        title: initialTitle ?? selectedList?.title
       })
 
   const itemTitle = selectedItem?.isNew
     ? i18n('list.item.add')
-    : i18n('list.item.edit', {
-        title: selectedItem?.title
+    : i18n('list.item.editTitle', {
+        title: initialItemText ?? selectedItem?.text
       })
 
   return {
@@ -68,7 +69,6 @@ export function ListsEdit({ showEditLists = false }: Props) {
           <Flyout
             title={listTitle}
             onHide={closeFlyout(ListsEditorStateActions.IS_EDITING_LIST)}
-            width={''}
           >
             <ListEdit />
           </Flyout>
@@ -79,7 +79,6 @@ export function ListsEdit({ showEditLists = false }: Props) {
         <RenderInPortal>
           <Flyout
             title={itemTitle}
-            width={''}
             onHide={closeFlyout(ListsEditorStateActions.IS_EDITING_LIST_ITEM)}
           >
             <ListItemEdit />

@@ -1,18 +1,17 @@
+import { hasListField } from '@defra/forms-model'
 import classNames from 'classnames'
 import React, {
   useContext,
   useEffect,
-  useState,
   type ChangeEvent,
   type MouseEvent
 } from 'react'
 
-import { logger } from '~/src/common/helpers/logging/logger.js'
 import { DataContext } from '~/src/context/DataContext.js'
 import { findList } from '~/src/data/list/findList.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
-import { Meta } from '~/src/reducers/component/types.js'
+import { Fields, Meta } from '~/src/reducers/component/types.js'
 import {
   ListsEditorContext,
   ListsEditorStateActions
@@ -22,68 +21,84 @@ import { ListContext } from '~/src/reducers/listReducer.jsx'
 
 export function ComponentListSelect() {
   const { data } = useContext(DataContext)
-  const { state: listsEditorState, dispatch: listsEditorDispatch } =
-    useContext(ListsEditorContext)
-
   const { state, dispatch } = useContext(ComponentContext)
-  const { selectedComponent = {}, errors = {} } = state
-  const list = 'list' in selectedComponent ? selectedComponent.list : ''
-
   const { state: listState, dispatch: listDispatch } = useContext(ListContext)
+  const { dispatch: listsEditorDispatch } = useContext(ListsEditorContext)
+
+  const { selectedComponent, errors } = state
   const { selectedList } = listState
 
-  const [selectedListTitle, setSelectedListTitle] = useState(
-    selectedList?.title
-  )
-
-  const [isAddingNew, setIsAddingNew] = useState(false)
+  if (!hasListField(selectedComponent)) {
+    throw new Error('Component must support lists')
+  }
 
   useEffect(() => {
-    if (selectedList?.isNew ?? !list) {
+    if (
+      !selectedList?.name ||
+      selectedList.name === selectedComponent.list ||
+      selectedList.isNew
+    ) {
       return
     }
-    try {
-      const [foundList] = findList(data, list)
-      listDispatch({
-        type: ListActions.SET_SELECTED_LIST,
-        payload: foundList
-      })
-    } catch (error) {
-      logger.error(error, 'ComponentListSelect')
-    }
-  }, [data.lists, list])
 
-  useEffect(() => {
-    setSelectedListTitle(selectedList?.title ?? selectedList?.name)
-  }, [selectedList])
-
-  useEffect(() => {
-    if (!listsEditorState.isEditingList && isAddingNew) {
-      dispatch({
-        type: Meta.SET_SELECTED_LIST,
-        payload: selectedList?.name
-      })
-      setIsAddingNew(false)
-    }
-  }, [listsEditorState.isEditingList, selectedList?.name, isAddingNew])
-
-  function editList(e: ChangeEvent<HTMLSelectElement>) {
     dispatch({
-      type: Meta.SET_SELECTED_LIST,
-      payload: e.target.value
+      name: Fields.EDIT_LIST,
+      payload: selectedList.name,
+      as: selectedComponent
+    })
+  }, [
+    selectedComponent,
+    selectedComponent.list,
+    selectedList?.name,
+    selectedList?.isNew,
+    dispatch
+  ])
+
+  const handleChangeList = (e: ChangeEvent<HTMLSelectElement>) => {
+    const { value: listName } = e.target
+
+    listDispatch({
+      name: ListActions.SET_SELECTED_LIST,
+      payload: listName ? findList(data, listName) : undefined
+    })
+
+    dispatch({
+      name: Fields.EDIT_LIST,
+      payload: listName,
+      as: selectedComponent
     })
   }
 
-  function handleEditListClick(e: MouseEvent) {
+  const handleEditList = (e: MouseEvent) => {
     e.preventDefault()
-    listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST, true])
+
+    dispatch({
+      name: Meta.EDIT,
+      payload: true
+    })
+
+    listsEditorDispatch({
+      name: ListsEditorStateActions.IS_EDITING_LIST,
+      payload: true
+    })
   }
 
-  function handleAddListClick(e: MouseEvent) {
+  const handleAddList = (e: MouseEvent) => {
     e.preventDefault()
-    setIsAddingNew(true)
-    listDispatch({ type: ListActions.ADD_NEW_LIST })
-    listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST, true])
+
+    dispatch({
+      name: Meta.EDIT,
+      payload: true
+    })
+
+    listDispatch({
+      name: ListActions.ADD_NEW_LIST
+    })
+
+    listsEditorDispatch({
+      name: ListsEditorStateActions.IS_EDITING_LIST,
+      payload: true
+    })
   }
 
   return (
@@ -107,8 +122,8 @@ export function ComponentListSelect() {
         id="field-options-list"
         aria-describedby="field-options-list-hint"
         name="options.list"
-        value={list}
-        onChange={editList}
+        value={selectedList?.name}
+        onChange={handleChangeList}
       >
         <option value="">{i18n('list.select.option')}</option>
         {data.lists.map((list, index) => {
@@ -120,21 +135,21 @@ export function ComponentListSelect() {
         })}
       </select>
       <p className="govuk-body govuk-!-margin-top-2">
-        {selectedListTitle && (
+        {selectedList?.title && (
           <a
             className="govuk-link govuk-!-display-block govuk-!-margin-bottom-1"
-            onClick={handleEditListClick}
+            onClick={handleEditList}
             href="#"
           >
-            {i18n('list.edit', { title: selectedListTitle })}
+            {i18n('list.edit')}
           </a>
         )}
         <a
           className="govuk-link govuk-!-display-block govuk-!-margin-bottom-1"
-          onClick={handleAddListClick}
+          onClick={handleAddList}
           href="#"
         >
-          {i18n('list.addNew')}
+          {i18n('list.add')}
         </a>
       </p>
     </div>

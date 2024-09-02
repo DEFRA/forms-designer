@@ -1,6 +1,6 @@
-import { clone } from '@defra/forms-model'
 // @ts-expect-error -- No types available
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
+import Joi from 'joi'
 import React, {
   useContext,
   type ChangeEvent,
@@ -8,9 +8,10 @@ import React, {
   type MouseEvent
 } from 'react'
 
-import { ErrorSummary, type ErrorList } from '~/src/ErrorSummary.jsx'
+import { ErrorSummary } from '~/src/ErrorSummary.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { addList } from '~/src/data/list/addList.js'
+import { findList } from '~/src/data/list/findList.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ListItems } from '~/src/list/ListItems.jsx'
 import {
@@ -18,138 +19,150 @@ import {
   ListsEditorStateActions
 } from '~/src/reducers/list/listsEditorReducer.jsx'
 import { ListActions } from '~/src/reducers/listActions.jsx'
-import { ListContext } from '~/src/reducers/listReducer.jsx'
-import { hasValidationErrors, validateTitle } from '~/src/validations.js'
-
-const useListItemActions = (state, dispatch) => {
-  const { dispatch: listsEditorDispatch } = useContext(ListsEditorContext)
-
-  function deleteItem(e) {
-    e.preventDefault()
-    dispatch({
-      type: ListActions.DELETE_LIST_ITEM
-    })
-  }
-
-  function createItem() {
-    dispatch({ type: ListActions.ADD_LIST_ITEM })
-    listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST_ITEM, true])
-  }
-
-  return {
-    deleteItem,
-    createItem,
-    selectedList: state.selectedList
-  }
-}
+import {
+  ListContext,
+  type FormList,
+  type ListState
+} from '~/src/reducers/listReducer.jsx'
+import {
+  validateCustom,
+  validateRequired,
+  hasValidationErrors
+} from '~/src/validations.js'
 
 function useListEdit() {
-  const { state: listEditorState, dispatch: listsEditorDispatch } =
-    useContext(ListsEditorContext)
+  const { dispatch: listsEditorDispatch } = useContext(ListsEditorContext)
+
   const { state, dispatch } = useContext(ListContext)
   const { data, save } = useContext(DataContext)
 
-  const handleDelete = async (e: MouseEvent<HTMLButtonElement>) => {
+  const { selectedList } = state
+
+  function handleAddItem(e: MouseEvent<HTMLAnchorElement>) {
     e.preventDefault()
 
-    if (window.confirm('Confirm delete')) {
-      const { initialName } = listEditorState
-      const copy = clone(data)
+    dispatch({
+      name: ListActions.ADD_LIST_ITEM
+    })
 
-      const selectedListIndex = copy.lists.findIndex(
-        (list) => list.name === initialName
-      )
-
-      if (selectedListIndex) {
-        copy.lists.splice(selectedListIndex, 1)
-        await save(copy)
-      }
-    }
-
-    listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST, false])
+    listsEditorDispatch({
+      name: ListsEditorStateActions.IS_EDITING_LIST_ITEM,
+      payload: true
+    })
   }
 
-  const validate = (): Partial<ErrorList<'title' | 'listItems'>> => {
-    const { selectedList } = state
-
-    const titleErrors = validateTitle(
-      'title',
-      'list-title',
-      i18n('list.title'),
-      selectedList?.title
-    )
-
-    const errors: ReturnType<typeof validate> = {
-      ...titleErrors
-    }
-
-    if (!selectedList?.items.length) {
-      errors.listItems = {
-        children: [i18n('list.errors.empty')]
-      }
-    }
-
-    return errors
-  }
-
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  async function handleDelete(e: MouseEvent<HTMLButtonElement>) {
     e.preventDefault()
-    const { selectedList, initialName } = state
-    const errors = validate()
-    if (hasValidationErrors(errors)) {
-      dispatch({
-        type: ListActions.LIST_VALIDATION_ERRORS,
-        payload: errors
-      })
+
+    if (!window.confirm('Confirm delete')) {
       return
     }
-    let copy = { ...data }
-    if (selectedList?.isNew) {
-      delete selectedList.isNew
-      copy = addList(copy, selectedList)
-    } else {
-      const selectedListIndex = copy.lists.findIndex(
-        (list) => list.name === initialName
-      )
-      copy.lists[selectedListIndex] = selectedList
-    }
-    await save(copy)
 
-    listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST, false])
+    const definition = structuredClone(data)
+
+    const listRemove = findList(definition, selectedList?.name)
+    const listIndex = definition.lists.indexOf(listRemove)
+
+    definition.lists.splice(listIndex, 1)
+
+    await save(definition)
+
     dispatch({
-      type: ListActions.SUBMIT
+      name: ListActions.SET_SELECTED_LIST,
+      payload: undefined
+    })
+
+    listsEditorDispatch({
+      name: ListsEditorStateActions.IS_EDITING_LIST,
+      payload: false
+    })
+  }
+
+  function validate(payload: Partial<FormList>): payload is FormList {
+    const { selectedList } = payload
+
+    const errors: ListState['errors'] = {}
+
+    errors.title = validateRequired('list-title', selectedList?.title, {
+      label: i18n('list.title')
+    })
+
+    errors.listItems = validateCustom('list-items', selectedList?.items, {
+      message: 'list.errors.empty',
+      schema: Joi.array().min(1)
+    })
+
+    dispatch({
+      name: ListActions.LIST_VALIDATION_ERRORS,
+      payload: errors
+    })
+
+    return !hasValidationErrors(errors)
+  }
+
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    e.stopPropagation()
+
+    const payload = {
+      selectedList
+    }
+
+    // Check for valid form payload
+    if (!validate(payload)) {
+      return
+    }
+
+    let definition = structuredClone(data)
+
+    const list = structuredClone(payload.selectedList)
+
+    if (list.isNew) {
+      delete list.isNew
+      definition = addList(definition, list)
+    } else {
+      const listEdit = findList(definition, payload.selectedList.name)
+      const listIndex = definition.lists.indexOf(listEdit)
+
+      if (listIndex > -1) {
+        definition.lists[listIndex] = list
+      }
+    }
+
+    await save(definition)
+
+    dispatch({
+      name: ListActions.SET_SELECTED_LIST,
+      payload: list
+    })
+
+    listsEditorDispatch({
+      name: ListsEditorStateActions.IS_EDITING_LIST,
+      payload: false
     })
   }
 
   return {
+    handleAddItem,
     handleDelete,
     handleSubmit
   }
 }
 
-function validate(errors: ErrorList, selectedList: any) {
-  if (selectedList.items.length > 0) {
-    return {}
-  }
-
-  return errors ?? {}
-}
-
 export function ListEdit() {
-  const { handleSubmit, handleDelete } = useListEdit()
-
   const { state, dispatch } = useContext(ListContext)
-  const { selectedList, createItem } = useListItemActions(state, dispatch)
-  let { errors = {} } = state
-  errors = validate(errors, selectedList)
+  const { handleAddItem, handleDelete, handleSubmit } = useListEdit()
+
+  const { selectedList, errors } = state
   const hasErrors = hasValidationErrors(errors)
+
   return (
     <>
       {hasErrors && (
         <ErrorSummary errorList={Object.values(errors).filter(Boolean)} />
       )}
 
-      <form onSubmit={handleSubmit} autoComplete="off">
+      <form onSubmit={handleSubmit} autoComplete="off" noValidate>
         {selectedList && (
           <Input
             id="list-title"
@@ -162,7 +175,7 @@ export function ListEdit() {
             value={selectedList.title}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               dispatch({
-                type: ListActions.EDIT_TITLE,
+                name: ListActions.EDIT_TITLE,
                 payload: e.target.value
               })
             }
@@ -174,12 +187,10 @@ export function ListEdit() {
 
         <p className="govuk-body">
           <a
-            href="#createItem"
+            href="#"
+            id="list-items"
             className="govuk-link"
-            onClick={(e) => {
-              e.preventDefault()
-              createItem()
-            }}
+            onClick={handleAddItem}
           >
             {i18n('list.item.add')}
           </a>
@@ -190,7 +201,7 @@ export function ListEdit() {
             {i18n('save')}
           </button>
 
-          {selectedList?.isNew || (
+          {!selectedList?.isNew && (
             <button
               className="govuk-button govuk-button--warning"
               type="button"

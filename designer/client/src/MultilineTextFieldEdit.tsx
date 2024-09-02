@@ -1,3 +1,4 @@
+import { ComponentType } from '@defra/forms-model'
 import React, { useContext } from 'react'
 
 import { TextFieldEdit } from '~/src/components/FieldEditors/TextFieldEdit.jsx'
@@ -9,7 +10,7 @@ export function MultilineTextFieldEdit({ context = ComponentContext }) {
   const { state, dispatch } = useContext(context)
   const { selectedComponent } = state
 
-  if (!selectedComponent) {
+  if (selectedComponent?.type !== ComponentType.MultilineTextField) {
     return null
   }
 
@@ -33,12 +34,13 @@ export function MultilineTextFieldEdit({ context = ComponentContext }) {
           id="field-schema-maxwords"
           aria-describedby="field-schema-maxwords-hint"
           name="schema.maxwords"
-          value={'maxWords' in options ? options.maxWords : undefined}
+          value={options.maxWords}
           type="number"
           onChange={(e) =>
             dispatch({
-              type: Options.EDIT_OPTIONS_MAX_WORDS,
-              payload: e.target.value
+              name: Options.EDIT_OPTIONS_MAX_WORDS,
+              payload: e.target.valueAsNumber,
+              as: selectedComponent
             })
           }
         />
@@ -61,11 +63,12 @@ export function MultilineTextFieldEdit({ context = ComponentContext }) {
           name="options.rows"
           type="text"
           data-cast="number"
-          value={'rows' in options ? options.rows : undefined}
+          value={options.rows}
           onChange={(e) =>
             dispatch({
-              type: Options.EDIT_OPTIONS_ROWS,
-              payload: e.target.value
+              name: Options.EDIT_OPTIONS_ROWS,
+              payload: e.target.valueAsNumber,
+              as: selectedComponent
             })
           }
         />

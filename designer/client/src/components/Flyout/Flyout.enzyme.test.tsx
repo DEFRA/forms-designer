@@ -28,7 +28,7 @@ describe('useFlyoutContext', () => {
 
     wrapper = mount(
       <FlyoutContext.Provider value={flyoutContextProviderValue}>
-        <HookWrapper hook={() => useFlyoutEffect({ show: true })} />
+        <HookWrapper hook={() => useFlyoutEffect()} />
       </FlyoutContext.Provider>
     )
 
@@ -41,7 +41,7 @@ describe('useFlyoutContext', () => {
 
     wrapper = mount(
       <FlyoutContext.Provider value={flyoutContextProviderValue}>
-        <HookWrapper hook={() => useFlyoutEffect({ show: true })} />
+        <HookWrapper hook={() => useFlyoutEffect()} />
       </FlyoutContext.Provider>
     )
 
@@ -61,7 +61,7 @@ describe('useFlyoutContext', () => {
 
     wrapper = mount(
       <FlyoutContext.Provider value={flyoutContextProviderValue}>
-        <HookWrapper hook={() => useFlyoutEffect({ show: true })} />
+        <HookWrapper hook={() => useFlyoutEffect()} />
       </FlyoutContext.Provider>
     )
 

@@ -1,3 +1,4 @@
+import { ComponentType } from '@defra/forms-model'
 import React, { useContext } from 'react'
 
 import { i18n } from '~/src/i18n/i18n.jsx'
@@ -8,7 +9,12 @@ export function Autocomplete() {
   const { state, dispatch } = useContext(ComponentContext)
   const { selectedComponent } = state
 
-  if (!selectedComponent) {
+  if (
+    !(
+      selectedComponent?.type === ComponentType.TextField ||
+      selectedComponent?.type === ComponentType.SelectField
+    )
+  ) {
     return null
   }
 
@@ -31,11 +37,12 @@ export function Autocomplete() {
         aria-describedby="field-options-autocomplete-hint"
         name="options.autocomplete"
         type="text"
-        value={'autocomplete' in options ? options.autocomplete : undefined}
+        value={options.autocomplete}
         onChange={(e) =>
           dispatch({
-            type: Options.EDIT_OPTIONS_AUTOCOMPLETE,
-            payload: e.target.value
+            name: Options.EDIT_OPTIONS_AUTOCOMPLETE,
+            payload: e.target.value,
+            as: selectedComponent
           })
         }
       />

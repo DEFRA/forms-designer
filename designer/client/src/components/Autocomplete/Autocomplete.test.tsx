@@ -9,16 +9,15 @@ import {
   type RenderWithContextProps
 } from '~/test/helpers/renderers.jsx'
 
-describe('AutocompleteField', () => {
+describe('Autocomplete attribute', () => {
   let state: RenderWithContextProps['state']
 
   beforeEach(() => {
     state = {
       selectedComponent: {
-        name: 'TestCssClass',
-        title: 'Test CSS class',
-        list: 'Test list',
-        type: ComponentType.AutocompleteField,
+        name: 'TestAutocompleteAttribute',
+        title: 'Test autocomplete attribute',
+        type: ComponentType.TextField,
         options: {},
         schema: {}
       }

@@ -5,7 +5,7 @@ import {
 } from '@defra/forms-model'
 import React, { type ChangeEvent } from 'react'
 
-import { type FieldDef } from '~/src/conditions/InlineConditionsDefinitionValue.jsx'
+import { type FieldDef } from '~/src/data/component/fields.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 
 interface Props {
@@ -42,7 +42,7 @@ export const SelectValues = (props: Props) => {
         defaultValue={value?.value}
         onChange={onChangeSelect}
       >
-        <option value="" />
+        <option value="">{i18n('conditions.conditionValueOption')}</option>
         {fieldDef.values?.map((option) => (
           <option key={`${option.value}`} value={`${option.value}`}>
             {option.text}

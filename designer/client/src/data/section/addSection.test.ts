@@ -14,10 +14,10 @@ const data = {
   ]
 } satisfies FormDefinition
 
-test('addSection throws if a section with the same name already exists', () => {
+test('addSection does nothing if a section with the same name already exists', () => {
   expect(() =>
     addSection(data, { name: 'yourDetails', title: 'your details' })
-  ).toThrow(/A section with the name/)
+  ).not.toThrow()
 })
 
 test('addSection adds a section if the section does not exist', () => {

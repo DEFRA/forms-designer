@@ -9,7 +9,14 @@ import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
 describe('ComponentCreate:', () => {
   const data = {
-    pages: [{ path: '/1', title: '', controller: '', section: '' }],
+    pages: [
+      {
+        path: '/1',
+        title: '',
+        next: [],
+        components: []
+      }
+    ],
     lists: [],
     sections: [],
     conditions: []
@@ -22,7 +29,7 @@ describe('ComponentCreate:', () => {
   test('Selecting a component type should display the component edit form', async () => {
     render(
       <RenderWithContext data={data}>
-        <ComponentCreate page={page} />
+        <ComponentCreate page={page} onSave={jest.fn()} />
       </RenderWithContext>
     )
 
@@ -48,7 +55,7 @@ describe('ComponentCreate:', () => {
 
     render(
       <RenderWithContext data={data} save={save}>
-        <ComponentCreate page={page} />
+        <ComponentCreate page={page} onSave={jest.fn()} />
       </RenderWithContext>
     )
 
@@ -77,7 +84,7 @@ describe('ComponentCreate:', () => {
     await waitFor(() => expect(save).toHaveBeenCalled())
 
     expect(save.mock.calls[0]).toEqual(
-      expect.arrayContaining([
+      expect.arrayContaining<FormDefinition>([
         {
           ...data,
           pages: [
@@ -88,8 +95,7 @@ describe('ComponentCreate:', () => {
                   type: ComponentType.Details,
                   name: expect.any(String),
                   content: 'content',
-                  options: {},
-                  schema: {}
+                  options: {}
                 }
               ]
             })
@@ -102,7 +108,7 @@ describe('ComponentCreate:', () => {
   test("Should have functioning 'Back to create component list' link", async () => {
     render(
       <RenderWithContext data={data}>
-        <ComponentCreate page={page} />
+        <ComponentCreate page={page} onSave={jest.fn()} />
       </RenderWithContext>
     )
 
@@ -132,7 +138,7 @@ describe('ComponentCreate:', () => {
   test('Should display error summary when validation fails', async () => {
     render(
       <RenderWithContext data={data}>
-        <ComponentCreate page={page} />
+        <ComponentCreate page={page} onSave={jest.fn()} />
       </RenderWithContext>
     )
 

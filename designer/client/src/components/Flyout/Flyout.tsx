@@ -1,7 +1,7 @@
 import FocusTrap from 'focus-trap-react'
 import React, {
   useContext,
-  useLayoutEffect,
+  useEffect,
   useState,
   type CSSProperties,
   type KeyboardEvent,
@@ -13,37 +13,41 @@ import { FlyoutContext } from '~/src/context/FlyoutContext.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 
 interface Props {
-  style?: string
-  width?: string
-  onHide?: () => void
-  show?: boolean
-  offset?: number
   title?: string
+  width?: string
   children?: ReactNode
-  NEVER_UNMOUNTS?: boolean
+  onHide: () => void
 }
 
-export function useFlyoutEffect(props: Props) {
-  const flyoutContext = useContext(FlyoutContext)
+export function useFlyoutEffect(props?: Pick<Props, 'onHide'>) {
+  const { count, increment, decrement } = useContext(FlyoutContext)
+
   const [offset, setOffset] = useState(0)
   const [style, setStyle] = useState<CSSProperties>()
-  const show = props.show ?? true
 
   /**
-   * Run on component mount
+   * Count open flyouts
    */
-  useLayoutEffect(() => {
-    flyoutContext.increment()
-    return function cleanup() {
-      flyoutContext.decrement()
+  useEffect(() => {
+    increment()
+    return () => decrement()
+  }, [increment, decrement])
+
+  /**
+   * Update offset for newly open flyouts
+   */
+  useEffect(() => {
+    if (style) {
+      return
     }
-  }, [])
 
-  useLayoutEffect(() => {
-    setOffset(flyoutContext.count)
-  }, [])
+    setOffset(count)
+  }, [style, count])
 
-  useLayoutEffect(() => {
+  /**
+   * Update styling for offset flyouts
+   */
+  useEffect(() => {
     if (offset > 0) {
       setStyle({
         paddingLeft: `${offset * 50}px`,
@@ -53,68 +57,61 @@ export function useFlyoutEffect(props: Props) {
     }
   }, [offset])
 
-  const onHide = (
+  function closeOnClick(
     e?: KeyboardEvent<HTMLButtonElement> | MouseEvent<HTMLButtonElement>
-  ) => {
+  ) {
     e?.preventDefault()
-
-    if (props.onHide) {
-      props.onHide()
-
-      if (props.NEVER_UNMOUNTS) {
-        flyoutContext.decrement()
-      }
-    }
+    props?.onHide()
   }
 
   function closeOnEnter(e: KeyboardEvent<HTMLButtonElement>) {
     if (e.key === 'Enter') {
-      onHide(e)
+      closeOnClick(e)
     }
   }
 
-  return { style, width: props.width, closeOnEnter, onHide, offset, show }
+  return {
+    style,
+    offset,
+    closeOnEnter,
+    closeOnClick
+  }
 }
 
 export function Flyout(props: Props) {
-  const {
-    style,
-    width = '',
-    onHide,
-    closeOnEnter,
-    show,
-    offset
-  } = useFlyoutEffect(props)
-
-  if (!show) {
-    return null
-  }
+  const { title, width = '', children, onHide } = props
+  const { style, closeOnClick, closeOnEnter, offset } = useFlyoutEffect({
+    onHide
+  })
 
   return (
-    <FocusTrap>
-      <div className="flyout show" data-testid={`flyout-${offset}`}>
+    <div className="flyout show" data-testid={`flyout-${offset}`}>
+      <FocusTrap
+        focusTrapOptions={{
+          preventScroll: true,
+          tabbableOptions: { displayCheck: 'none' }
+        }}
+      >
         <div className={`flyout__container ${width}`} style={style}>
           <button
             className="flyout__button-close govuk-link"
-            onClick={onHide}
-            onKeyPress={closeOnEnter}
+            onClick={closeOnClick}
+            onKeyDown={closeOnEnter}
           >
             {i18n('close')}
           </button>
           <div className="panel panel--flyout">
             <div className="panel-header govuk-!-padding-top-4 govuk-!-padding-left-4">
-              {props.title && (
-                <h4 className="govuk-heading-m">{props.title}</h4>
-              )}
+              {title && <h4 className="govuk-heading-m">{title}</h4>}
             </div>
             <div className="panel-body">
               <div className="govuk-!-padding-left-4 govuk-!-padding-right-4 govuk-!-padding-bottom-4">
-                {props.children}
+                {children}
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </FocusTrap>
+      </FocusTrap>
+    </div>
   )
 }

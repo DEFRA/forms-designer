@@ -29,6 +29,7 @@ describe('Field Edit', () => {
         {
           title: 'First page',
           path: '/first-page',
+          next: [],
           components: [selectedComponent]
         }
       ],

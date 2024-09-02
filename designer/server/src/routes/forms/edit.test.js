@@ -124,9 +124,11 @@ describe('Forms library routes', () => {
 
   test('POST - should redirect to overviewpage after updating title', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
-    jest
-      .mocked(forms.updateMetadata)
-      .mockResolvedValueOnce({ slug: 'new-title' })
+    jest.mocked(forms.updateMetadata).mockResolvedValueOnce({
+      id: formMetadata.id,
+      slug: 'new-title',
+      status: 'updated'
+    })
 
     const options = {
       method: 'post',

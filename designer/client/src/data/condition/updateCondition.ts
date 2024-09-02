@@ -1,38 +1,34 @@
 import { type ConditionWrapper, type FormDefinition } from '@defra/forms-model'
 
+import { findCondition } from '~/src/data/condition/findCondition.js'
+import { hasConditions } from '~/src/data/definition/hasConditions.js'
+
 /**
  * @param data
  * @param conditionName
- * @param updatedPartial - The condition name cannot be changed, hence Omit<ConditionWrapper, "name">
+ * @param conditionUpdate - The condition name cannot be changed, hence Omit<ConditionWrapper, "name">
  */
 export function updateCondition(
   data: FormDefinition,
-  conditionName: ConditionWrapper['name'],
-  updatedPartial: Partial<Omit<ConditionWrapper, 'name'>>
-): FormDefinition {
-  const conditions = [...data.conditions]
-  const conditionIndex = conditions.findIndex(
-    (condition) => condition.name === conditionName
-  )
-  if (conditionIndex < 0) {
-    throw Error(`No condition found with name ${conditionName}`)
-  }
-  const condition = data.conditions[conditionIndex]
-  const {
-    displayName = condition.displayName,
-    value: conditionValue = condition.value
-  } = updatedPartial
-
-  const updatedCondition = {
-    ...condition,
-    displayName,
-    value: conditionValue
+  conditionName: string,
+  conditionUpdate: Partial<Omit<ConditionWrapper, 'name'>>
+) {
+  if (!hasConditions(data)) {
+    throw Error('Conditions not found to update')
   }
 
-  return {
-    ...data,
-    conditions: conditions.map((condition, i) =>
-      i === conditionIndex ? updatedCondition : condition
-    )
-  }
+  const condition = findCondition(data, conditionName)
+  const index = data.conditions.indexOf(condition)
+
+  // Copy condition, update properties
+  const conditionCopy = structuredClone(condition)
+  Object.assign(conditionCopy, conditionUpdate)
+
+  // Copy form definition
+  const definition = structuredClone(data)
+
+  // Replace condition
+  definition.conditions[index] = conditionCopy
+
+  return definition
 }

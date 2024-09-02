@@ -1,3 +1,4 @@
+import { ComponentType, hasContent, hasFormField } from '@defra/forms-model'
 import React, { useContext } from 'react'
 
 import { i18n } from '~/src/i18n/i18n.jsx'
@@ -8,7 +9,13 @@ export function CssClasses() {
   const { state, dispatch } = useContext(ComponentContext)
   const { selectedComponent } = state
 
-  if (!selectedComponent) {
+  if (
+    !(
+      hasFormField(selectedComponent) ||
+      (hasContent(selectedComponent) &&
+        selectedComponent.type === ComponentType.List)
+    )
+  ) {
     return null
   }
 
@@ -31,11 +38,12 @@ export function CssClasses() {
         aria-describedby="field-options-classes-hint"
         name="options.classes"
         type="text"
-        value={'classes' in options ? options.classes : undefined}
+        value={options.classes}
         onChange={(e) =>
           dispatch({
-            type: Options.EDIT_OPTIONS_CLASSES,
-            payload: e.target.value
+            name: Options.EDIT_OPTIONS_CLASSES,
+            payload: e.target.value,
+            as: selectedComponent
           })
         }
       />

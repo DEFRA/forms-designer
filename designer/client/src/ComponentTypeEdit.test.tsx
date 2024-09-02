@@ -2,6 +2,9 @@ import {
   ComponentType,
   ConditionType,
   getComponentDefaults,
+  hasConditionSupport,
+  hasHint,
+  hasListField,
   OperatorName,
   type ComponentDef,
   type FormDefinition
@@ -24,9 +27,8 @@ describe('ComponentTypeEdit', () => {
         {
           title: 'First page',
           path: '/first-page',
-          components: [],
-          controller: 'SummaryPageController',
-          section: 'home'
+          next: [],
+          components: []
         }
       ],
       lists: [
@@ -334,9 +336,7 @@ describe('ComponentTypeEdit', () => {
 
         expect($textarea).toBeInTheDocument()
         expect($textarea?.value).toBe(
-          selectedComponent && 'hint' in selectedComponent
-            ? selectedComponent.hint
-            : ''
+          hasHint(selectedComponent) ? (selectedComponent.hint ?? '') : ''
         )
       })
     } else {
@@ -487,9 +487,7 @@ describe('ComponentTypeEdit', () => {
 
         expect($select).toBeInTheDocument()
         expect($select?.value).toBe(
-          selectedComponent && 'list' in selectedComponent
-            ? selectedComponent.list
-            : ''
+          hasListField(selectedComponent) ? selectedComponent.list : ''
         )
       })
     } else {
@@ -512,8 +510,8 @@ describe('ComponentTypeEdit', () => {
 
         expect($select).toBeInTheDocument()
         expect($select?.value).toBe(
-          selectedComponent && 'list' in selectedComponent
-            ? selectedComponent.list
+          hasConditionSupport(selectedComponent)
+            ? (selectedComponent.options.condition ?? '')
             : ''
         )
       })

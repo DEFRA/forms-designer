@@ -1,4 +1,4 @@
-import { type List } from '@defra/forms-model'
+import { type Item, type List } from '@defra/forms-model'
 import React, {
   createContext,
   useContext,
@@ -9,177 +9,193 @@ import React, {
 
 import { type ErrorList } from '~/src/ErrorSummary.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
-import { arrayMove } from '~/src/helpers.js'
+import { findList, findListItem } from '~/src/data/list/findList.js'
 import randomId from '~/src/randomId.js'
 import { ListActions } from '~/src/reducers/listActions.jsx'
 
-export interface ListState {
-  selectedList?: any // TODO:- type
-  selectedItem?: any // TODO:- type
-  selectedItemIndex?: number
-  isEditingFromComponent?: boolean
-  selectedListItem?: any // TODO:- type
+export interface ListState extends Partial<FormList>, Partial<FormItem> {
   initialName?: string
   initialTitle?: string
-  errors?: Partial<ErrorList<'title' | 'name' | 'content' | 'list'>>
-  listItemErrors?: Partial<ErrorList<'title' | 'value'>>
+  initialItemText?: string
+  initialItemValue?: Item['value']
+  selectedItemIndex?: number
+  errors: Partial<ErrorList<'title' | 'listItems'>>
+  listItemErrors: Partial<ErrorList<'title' | 'value'>>
 }
+
+export interface FormList {
+  selectedList: List & { isNew?: true }
+}
+
+export interface FormItem {
+  selectedItem: Item & { isNew?: true }
+}
+
+export type ListReducerActions =
+  | {
+      name: ListActions.ADD_NEW_LIST | ListActions.ADD_LIST_ITEM
+      payload?: undefined
+    }
+  | {
+      name: ListActions.SET_SELECTED_LIST
+      payload?: List
+    }
+  | {
+      name:
+        | ListActions.EDIT_TITLE
+        | ListActions.EDIT_LIST_ITEM_TEXT
+        | ListActions.EDIT_LIST_ITEM_VALUE
+      payload: string
+    }
+  | {
+      name:
+        | ListActions.EDIT_LIST_ITEM_DESCRIPTION
+        | ListActions.EDIT_LIST_ITEM_CONDITION
+      payload?: string
+    }
+  | {
+      name: ListActions.EDIT_LIST_ITEM
+      payload: Item
+    }
+  | {
+      name: ListActions.LIST_ITEM_VALIDATION_ERRORS
+      payload: Exclude<ListState['listItemErrors'], undefined>
+    }
+  | {
+      name: ListActions.LIST_VALIDATION_ERRORS
+      payload: Exclude<ListState['errors'], undefined>
+    }
 
 export interface ListContextType {
   state: ListState
-  dispatch: Dispatch<Parameters<typeof listReducer>[1]>
+  dispatch: Dispatch<ListReducerActions>
 }
 
 export const ListContext = createContext<ListContextType>({
-  state: {},
+  state: {
+    errors: {},
+    listItemErrors: {}
+  },
   dispatch: () => ({})
 })
 
 /**
  * Allows mutation of the {@link List} from any component that is nested within {@link ListContextProvider}
  */
-export function listReducer(
-  state: ListState = {},
-  action: {
-    type: ListActions
-    payload?: unknown
-  }
-): ListState {
-  const { type, payload } = action
-  const { selectedList, selectedItem, selectedItemIndex } = state
-  switch (type) {
-    case ListActions.DELETE_LIST_ITEM: {
-      delete state.selectedListItem
-      return {
-        ...state,
-        selectedList: selectedList && {
-          ...selectedList,
-          items: selectedList.items.filter(
-            (_item, index) => index !== (payload || selectedItemIndex)
-          )
-        }
-      }
-    }
-    case ListActions.EDIT_LIST:
-      return { ...state, errors: {} }
+export function listReducer(state: ListState, action: ListReducerActions) {
+  const stateNew = structuredClone(state)
 
-    case ListActions.DESELECT_LIST_ITEM:
-      delete state.selectedItem, state.selectedItemIndex
+  const { name, payload } = action
+  let { initialItemText, initialItemValue, selectedList, selectedItem } =
+    stateNew
 
-      return { ...state }
-
+  switch (name) {
     case ListActions.ADD_NEW_LIST: {
       const listId = randomId()
-      return {
-        selectedList: {
-          title: '',
-          name: listId,
-          type: 'string',
-          items: [],
-          isNew: true
-        },
-        initialName: listId
+
+      selectedList = {
+        title: '',
+        name: listId,
+        type: 'string',
+        items: [],
+        isNew: true
       }
+
+      stateNew.selectedList = selectedList
+      stateNew.errors = {}
+      break
     }
 
-    case ListActions.SET_SELECTED_LIST:
-      return {
-        ...state,
-        selectedList: payload,
-        initialName: payload?.name || state.initialName,
-        initialTitle: payload?.title
+    case ListActions.SET_SELECTED_LIST: {
+      selectedList = payload
+
+      stateNew.selectedList = selectedList
+      stateNew.initialName = selectedList?.name
+      stateNew.initialTitle = selectedList?.title
+      stateNew.errors = {}
+      break
+    }
+
+    case ListActions.LIST_ITEM_VALIDATION_ERRORS:
+      stateNew.listItemErrors = payload
+      break
+
+    case ListActions.LIST_VALIDATION_ERRORS:
+      stateNew.errors = payload
+      break
+  }
+
+  if (!selectedList) {
+    return stateNew
+  }
+
+  switch (name) {
+    case ListActions.EDIT_TITLE:
+      selectedList.title = payload
+      break
+
+    case ListActions.ADD_LIST_ITEM: {
+      selectedItem = {
+        text: '',
+        value: '',
+        isNew: true
       }
 
-    case ListActions.EDIT_TITLE:
-      return { ...state, selectedList: { ...selectedList, title: payload } }
+      initialItemText = selectedItem.text
+      initialItemValue = selectedItem.value
 
-    case ListActions.EDIT_LIST_VALUE_TYPE:
-      return { ...state, selectedList: { ...selectedList, type: payload } }
+      stateNew.selectedItem = selectedItem
+      stateNew.initialItemText = initialItemText
+      stateNew.initialItemValue = initialItemValue
+      stateNew.listItemErrors = {}
 
-    case ListActions.ADD_LIST_ITEM:
-      return { ...state, selectedItem: { isNew: true }, listItemErrors: {} }
+      break
+    }
 
     case ListActions.EDIT_LIST_ITEM: {
-      let selectedItem, selectedItemIndex
-      if (typeof payload === 'number') {
-        selectedItem = selectedList?.items[payload]
-      } else {
-        selectedItem = payload
-        selectedItemIndex = selectedList?.items.findIndex(
-          (item) => item === payload
-        )
-      }
-      return {
-        ...state,
-        selectedItem,
-        selectedItemIndex,
-        listItemErrors: {}
-      }
+      selectedItem = payload
+      initialItemText = payload.text
+      initialItemValue = payload.value
+
+      const item = findListItem(selectedList, payload.text)
+
+      stateNew.selectedItem = selectedItem
+      stateNew.selectedItemIndex = selectedList.items.indexOf(item)
+      stateNew.initialItemText = initialItemText
+      stateNew.initialItemValue = initialItemValue
+      stateNew.listItemErrors = {}
+
+      break
     }
-
-    case ListActions.EDIT_LIST_ITEM_TEXT:
-      return {
-        ...state,
-        selectedItem: { ...selectedItem, text: payload }
-      }
-
-    case ListActions.EDIT_LIST_ITEM_DESCRIPTION: {
-      return {
-        ...state,
-        selectedItem: { ...selectedItem, description: payload }
-      }
-    }
-
-    case ListActions.EDIT_LIST_ITEM_VALUE: {
-      return { ...state, selectedItem: { ...selectedItem, value: payload } }
-    }
-
-    case ListActions.EDIT_LIST_ITEM_CONDITION: {
-      return {
-        ...state,
-        selectedItem: { ...selectedItem, condition: payload }
-      }
-    }
-
-    case ListActions.SORT_LIST_ITEM: {
-      const changedItems = arrayMove(
-        selectedList.items,
-        payload.oldIndex,
-        payload.newIndex
-      )
-      return {
-        ...state,
-        selectedList: {
-          ...selectedList,
-          items: changedItems
-        }
-      }
-    }
-
-    case ListActions.SUBMIT_LIST_ITEM: {
-      return { selectedList }
-    }
-
-    case ListActions.LIST_ITEM_VALIDATION_ERRORS: {
-      return {
-        ...state,
-        listItemErrors: payload
-      }
-    }
-
-    case ListActions.LIST_VALIDATION_ERRORS: {
-      return {
-        ...state,
-        errors: payload
-      }
-    }
-
-    case ListActions.SUBMIT:
-      return {
-        ...state,
-        errors: {}
-      }
   }
+
+  if (
+    !selectedItem ||
+    typeof initialItemText === 'undefined' ||
+    typeof initialItemValue === 'undefined'
+  ) {
+    return stateNew
+  }
+
+  switch (name) {
+    case ListActions.EDIT_LIST_ITEM_TEXT:
+      selectedItem.text = payload
+      break
+
+    case ListActions.EDIT_LIST_ITEM_DESCRIPTION:
+      selectedItem.description = payload
+      break
+
+    case ListActions.EDIT_LIST_ITEM_VALUE:
+      selectedItem.value = payload
+      break
+
+    case ListActions.EDIT_LIST_ITEM_CONDITION:
+      selectedItem.condition = payload
+      break
+  }
+
+  return stateNew
 }
 
 /**
@@ -189,29 +205,30 @@ export const ListContextProvider = (props: {
   children?: ReactNode
   selectedListName?: string
 }) => {
-  const { selectedListName } = props
+  const { children, selectedListName } = props
   const { data } = useContext(DataContext)
 
-  let init: ListState = {}
+  let init: ListState = {
+    errors: {},
+    listItemErrors: {}
+  }
 
   if (selectedListName) {
-    const selectedList = data.lists.find(
-      ({ name }) => name === selectedListName
-    )
+    const selectedList = findList(data, selectedListName)
 
     init = {
+      ...init,
       selectedList,
-      initialName: selectedListName,
-      initialTitle: selectedList?.title,
-      isEditingFromComponent: true
+      initialName: selectedList.name,
+      initialTitle: selectedList.title
     }
   }
 
-  const [state, dispatch] = useReducer(listReducer, { ...init })
+  const [state, dispatch] = useReducer(listReducer, init)
 
   return (
     <ListContext.Provider value={{ state, dispatch }}>
-      {props.children}
+      {children}
     </ListContext.Provider>
   )
 }

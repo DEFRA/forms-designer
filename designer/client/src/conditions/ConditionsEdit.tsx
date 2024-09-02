@@ -5,7 +5,7 @@ import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
 import { InlineConditions } from '~/src/conditions/InlineConditions.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
-import { allInputs } from '~/src/data/component/inputs.js'
+import { getFields } from '~/src/data/component/fields.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 
 function useConditionsEditor() {
@@ -62,7 +62,8 @@ export function ConditionsEdit({ path }: Props) {
   } = useConditionsEditor()
   const { data } = useContext(DataContext)
   const { conditions } = data
-  const inputs = allInputs(data)
+
+  const fieldInputs = getFields(data)
 
   return (
     <>
@@ -105,7 +106,7 @@ export function ConditionsEdit({ path }: Props) {
             })}
           </ul>
           <hr className="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
-          {inputs.length > 0 && (
+          {fieldInputs.length > 0 && (
             <button
               className="govuk-button"
               type="button"
@@ -114,7 +115,7 @@ export function ConditionsEdit({ path }: Props) {
               {i18n('conditions.add')}
             </button>
           )}
-          {inputs.length <= 0 && (
+          {fieldInputs.length <= 0 && (
             <div className="govuk-hint">
               {i18n('conditions.noFieldsAvailable')}
             </div>

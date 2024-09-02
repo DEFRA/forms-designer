@@ -1,4 +1,8 @@
-import { ComponentType, type FormDefinition } from '@defra/forms-model'
+import {
+  ComponentType,
+  type ComponentDef,
+  type FormDefinition
+} from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { act, cleanup, render, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
@@ -8,23 +12,23 @@ import { ComponentListSelect } from '~/src/components/ComponentListSelect/Compon
 import { RenderListEditorWithContext } from '~/test/helpers/renderers-lists.jsx'
 
 describe('ComponentListSelect', () => {
+  const selectedComponent = {
+    name: 'IDDQl4',
+    title: 'abc',
+    list: 'myList',
+    type: ComponentType.RadiosField,
+    options: {
+      required: true
+    }
+  } satisfies ComponentDef
+
   const data = {
     pages: [
       {
         title: 'First page',
         path: '/first-page',
-        components: [
-          {
-            name: 'IDDQl4',
-            title: 'abc',
-            list: 'myList',
-            type: ComponentType.RadiosField,
-            options: {
-              required: true
-            },
-            schema: {}
-          }
-        ]
+        next: [],
+        components: [selectedComponent]
       }
     ],
     lists: [
@@ -49,7 +53,7 @@ describe('ComponentListSelect', () => {
 
   test('Lists all available lists', () => {
     const { container } = render(
-      <RenderListEditorWithContext data={data}>
+      <RenderListEditorWithContext data={data} state={{ selectedComponent }}>
         <ComponentListSelect />
       </RenderListEditorWithContext>
     )
@@ -70,8 +74,6 @@ describe('ComponentListSelect', () => {
   })
 
   test('Selecting a different list changes the edit link', async () => {
-    const selectedComponent = data.pages[0].components[0]
-
     render(
       <RenderListEditorWithContext data={data} state={{ selectedComponent }}>
         <ComponentListSelect />
@@ -81,12 +83,12 @@ describe('ComponentListSelect', () => {
     const $select = await waitFor(() => screen.getByLabelText('Select list'))
     await act(() => userEvent.selectOptions($select, 'myList'))
 
-    expect(screen.getByText('Edit my list')).toBeInTheDocument()
+    expect(screen.getByText('Edit list')).toBeInTheDocument()
   })
 
   test('should render strings correctly', () => {
     render(
-      <RenderListEditorWithContext data={data}>
+      <RenderListEditorWithContext data={data} state={{ selectedComponent }}>
         <ComponentListSelect />
       </RenderListEditorWithContext>
     )
@@ -102,7 +104,6 @@ describe('ComponentListSelect', () => {
   })
 
   test('should display list error when state has errors', async () => {
-    const selectedComponent = data.pages[0].components[0]
     const errors = { list: { children: 'Select a list' } }
 
     const { container } = render(

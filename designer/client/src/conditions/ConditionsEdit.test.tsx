@@ -19,11 +19,13 @@ describe('ConditionsEdit', () => {
       {
         title: 'page1',
         path: '/1',
-        next: [{ path: '/2' }]
+        next: [{ path: '/2' }],
+        components: []
       },
       {
         title: 'page2',
         path: '/2',
+        next: [{ path: '/3' }],
         components: [
           {
             name: 'field1',
@@ -32,12 +34,12 @@ describe('ConditionsEdit', () => {
             options: {},
             schema: {}
           }
-        ],
-        next: [{ path: '/3' }]
+        ]
       },
       {
         title: 'page3',
         path: '/3',
+        next: [],
         components: [
           {
             name: 'field2',
@@ -214,7 +216,10 @@ describe('ConditionsEdit', () => {
         </RenderWithContext>
       )
 
-      const $button = screen.queryByRole('button', { name: 'Add condition' })
+      const $button = screen.queryByRole('button', {
+        name: 'Add a new condition'
+      })
+
       expect($button).toBeInTheDocument()
     })
 

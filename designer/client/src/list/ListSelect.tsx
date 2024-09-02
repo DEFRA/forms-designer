@@ -1,4 +1,5 @@
-import React, { useContext } from 'react'
+import { type List } from '@defra/forms-model'
+import React, { useContext, type MouseEvent } from 'react'
 
 import { DataContext } from '~/src/context/DataContext.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
@@ -14,13 +15,18 @@ export function ListSelect() {
   const { dispatch: listDispatch } = useContext(ListContext)
   const { dispatch: listsEditorDispatch } = useContext(ListsEditorContext)
 
-  const editList = (e, list) => {
+  const editList = (e: MouseEvent<HTMLAnchorElement>, list: List) => {
     e.preventDefault()
+
     listDispatch({
-      type: ListActions.SET_SELECTED_LIST,
+      name: ListActions.SET_SELECTED_LIST,
       payload: list
     })
-    listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST, true])
+
+    listsEditorDispatch({
+      name: ListsEditorStateActions.IS_EDITING_LIST,
+      payload: true
+    })
   }
 
   return (
@@ -35,7 +41,7 @@ export function ListSelect() {
               className="govuk-link"
               onClick={(e) => editList(e, list)}
             >
-              {list.title || list.name}
+              {list.title}
             </a>
           </li>
         ))}
@@ -47,11 +53,18 @@ export function ListSelect() {
           type="button"
           onClick={(e) => {
             e.preventDefault()
-            listDispatch({ type: ListActions.ADD_NEW_LIST })
-            listsEditorDispatch([ListsEditorStateActions.IS_EDITING_LIST, true])
+
+            listDispatch({
+              name: ListActions.ADD_NEW_LIST
+            })
+
+            listsEditorDispatch({
+              name: ListsEditorStateActions.IS_EDITING_LIST,
+              payload: true
+            })
           }}
         >
-          {i18n('list.newTitle')}
+          {i18n('list.add')}
         </button>
       </div>
     </>

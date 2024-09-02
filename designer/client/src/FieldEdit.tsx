@@ -1,7 +1,8 @@
 import {
   ComponentType,
   getComponentDefaults,
-  hasContent,
+  hasFormField,
+  hasHint,
   hasTitle
 } from '@defra/forms-model'
 // @ts-expect-error -- No types available
@@ -16,26 +17,24 @@ import { Fields, Options } from '~/src/reducers/component/types.js'
 
 export function FieldEdit() {
   const { state, dispatch } = useContext(ComponentContext)
-  const { selectedComponent, errors = {} } = state
+  const { selectedComponent, errors } = state
 
   if (!selectedComponent) {
     return null
   }
 
-  const { name, title, type, options } = selectedComponent
-  const defaults = getComponentDefaults(selectedComponent)
-  const isRequired = !('required' in options) || options.required !== false
-
   // Determine form input versus content only components
-  const hasInput = !hasContent(selectedComponent)
+  const hasInput = hasFormField(selectedComponent)
+  const hasFieldTitle = hasTitle(selectedComponent)
+  const hasFieldHint = hasHint(selectedComponent)
 
   // Limit options by component type
-  const hasFieldTitle = hasTitle(selectedComponent)
-  const hasFieldName = hasInput
-  const hasFieldHint = hasInput || type === ComponentType.List
-  const hasOptionRequired = hasInput
   const hasOptionHideTitle =
-    type === ComponentType.List || type === ComponentType.UkAddressField
+    selectedComponent.type === ComponentType.List ||
+    selectedComponent.type === ComponentType.UkAddressField
+
+  const defaults = getComponentDefaults(selectedComponent)
+  const isRequired = !hasInput || selectedComponent.options.required !== false
 
   return (
     <>
@@ -50,11 +49,12 @@ export function FieldEdit() {
           hint={{
             children: [i18n('common.titleField.helpText')]
           }}
-          value={title}
+          value={selectedComponent.title}
           onChange={(e: ChangeEvent<HTMLInputElement>) => {
             dispatch({
-              type: Fields.EDIT_TITLE,
-              payload: e.target.value
+              name: Fields.EDIT_TITLE,
+              payload: e.target.value,
+              as: selectedComponent
             })
           }}
           errorMessage={errors.title}
@@ -76,8 +76,9 @@ export function FieldEdit() {
           value={selectedComponent.hint}
           onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
             dispatch({
-              type: Fields.EDIT_HELP,
-              payload: e.target.value
+              name: Fields.EDIT_HELP,
+              payload: e.target.value,
+              as: selectedComponent
             })
           }}
         />
@@ -91,11 +92,12 @@ export function FieldEdit() {
               aria-describedby="field-options-hideTitle-hint"
               name="options.hideTitle"
               type="checkbox"
-              checked={'hideTitle' in options && !!options.hideTitle}
+              checked={!!selectedComponent.options.hideTitle}
               onChange={(e) =>
                 dispatch({
-                  type: Options.EDIT_OPTIONS_HIDE_TITLE,
-                  payload: e.target.checked
+                  name: Options.EDIT_OPTIONS_HIDE_TITLE,
+                  payload: e.target.checked,
+                  as: selectedComponent
                 })
               }
             />
@@ -114,47 +116,45 @@ export function FieldEdit() {
           </div>
         </div>
       )}
-      {hasFieldName && (
-        <div
-          className={classNames({
-            'govuk-form-group': true,
-            'govuk-form-group--error': errors.name
-          })}
-        >
-          <label className="govuk-label govuk-label--s" htmlFor="field-name">
-            {i18n('common.componentNameField.title')}
-          </label>
-          <div className="govuk-hint" id="field-name-hint">
-            {i18n('name.hint')}
-          </div>
-          {errors.name && (
-            <ErrorMessage id="field-name-error">
-              {errors.name.children}
-            </ErrorMessage>
-          )}
-          <input
-            className={classNames({
-              'govuk-input govuk-input--width-20': true,
-              'govuk-input--error': errors.name
-            })}
-            id="field-name"
-            aria-describedby={
-              'field-name-hint' + (errors.name ? 'field-name-error' : '')
-            }
-            name="name"
-            type="text"
-            value={name}
-            onChange={(e) => {
-              dispatch({
-                type: Fields.EDIT_NAME,
-                payload: e.target.value
-              })
-            }}
-          />
-        </div>
-      )}
-      {hasOptionRequired && (
+      {hasInput && (
         <>
+          <div
+            className={classNames({
+              'govuk-form-group': true,
+              'govuk-form-group--error': errors.name
+            })}
+          >
+            <label className="govuk-label govuk-label--s" htmlFor="field-name">
+              {i18n('common.componentNameField.title')}
+            </label>
+            <div className="govuk-hint" id="field-name-hint">
+              {i18n('name.hint')}
+            </div>
+            {errors.name && (
+              <ErrorMessage id="field-name-error">
+                {errors.name.children}
+              </ErrorMessage>
+            )}
+            <input
+              className={classNames({
+                'govuk-input govuk-input--width-20': true,
+                'govuk-input--error': errors.name
+              })}
+              id="field-name"
+              aria-describedby={
+                'field-name-hint' + (errors.name ? 'field-name-error' : '')
+              }
+              name="name"
+              type="text"
+              value={selectedComponent.name}
+              onChange={(e) => {
+                dispatch({
+                  name: Fields.EDIT_NAME,
+                  payload: e.target.value
+                })
+              }}
+            />
+          </div>
           <div className="govuk-checkboxes govuk-form-group">
             <div className="govuk-checkboxes__item">
               <input
@@ -166,8 +166,9 @@ export function FieldEdit() {
                 checked={!isRequired}
                 onChange={(e) =>
                   dispatch({
-                    type: Options.EDIT_OPTIONS_REQUIRED,
-                    payload: !e.target.checked
+                    name: Options.EDIT_OPTIONS_REQUIRED,
+                    payload: !e.target.checked,
+                    as: selectedComponent
                   })
                 }
               />
@@ -199,11 +200,12 @@ export function FieldEdit() {
                 aria-describedby="field-options-optionalText-hint"
                 name="options.optionalText"
                 type="checkbox"
-                checked={'optionalText' in options && !!options.optionalText}
+                checked={!!selectedComponent.options.optionalText}
                 onChange={(e) =>
                   dispatch({
-                    type: Options.EDIT_OPTIONS_HIDE_OPTIONAL,
-                    payload: e.target.checked
+                    name: Options.EDIT_OPTIONS_HIDE_OPTIONAL,
+                    payload: e.target.checked,
+                    as: selectedComponent
                   })
                 }
               />

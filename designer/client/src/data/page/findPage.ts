@@ -1,16 +1,17 @@
-import { type FormDefinition, type Page } from '@defra/forms-model'
-
-import { type Found, type Path } from '~/src/data/types.js'
+import { type FormDefinition } from '@defra/forms-model'
 
 /**
- * @returns returns a tuple of [Page, number]
+ * Find page by path
  */
-export function findPage(data: FormDefinition, path?: Path): Found<Page> {
-  const index = data.pages.findIndex((page) => page.path === path)
+export function findPage(
+  { pages }: Pick<FormDefinition, 'pages'>,
+  pathSearch?: string
+) {
+  const page = pages.find(({ path }) => path === pathSearch)
 
-  if (index < 0) {
-    throw Error(`no page found with the path ${path}`)
+  if (!page) {
+    throw Error(`Page not found for path '${pathSearch}'`)
   }
 
-  return [{ ...data.pages[index] }, index]
+  return page
 }

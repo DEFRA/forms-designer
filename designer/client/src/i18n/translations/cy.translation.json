@@ -1,6 +1,6 @@
 {
-  "Edit page": "Golygu tudalen",
-  "Persona": "Persona",
-  "Preview": "Rhagolwg",
-  "Preview page": "Tudalen rhagolwg"
+  "page": {
+    "edit": "Golygu tudalen",
+    "preview": "Tudalen rhagolwg"
+  }
 }

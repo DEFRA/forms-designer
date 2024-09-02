@@ -16,8 +16,7 @@ describe('ContentEdit', () => {
     title: 'abc',
     type: ComponentType.Html,
     content: '',
-    options: {},
-    schema: {}
+    options: {}
   } as HtmlComponent | DetailsComponent
 
   const data = {
@@ -25,6 +24,7 @@ describe('ContentEdit', () => {
       {
         title: 'First page',
         path: '/first-page',
+        next: [],
         components: [selectedComponent]
       }
     ],

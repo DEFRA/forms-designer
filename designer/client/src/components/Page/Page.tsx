@@ -1,8 +1,7 @@
 import {
   slugify,
   type ComponentDef,
-  type Page as PageType,
-  type FormDefinition
+  type Page as PageType
 } from '@defra/forms-model'
 import React, { useContext, useState, type CSSProperties } from 'react'
 
@@ -12,6 +11,8 @@ import { ComponentCreate } from '~/src/components/ComponentCreate/ComponentCreat
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
+import { hasComponents } from '~/src/data/definition/hasComponents.js'
+import { findSection } from '~/src/data/section/findSection.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContextProvider } from '~/src/reducers/component/componentReducer.jsx'
 
@@ -19,9 +20,8 @@ const ComponentItem = (props: {
   index: number
   page: PageType
   selectedComponent: ComponentDef
-  data: FormDefinition
 }) => {
-  const { index, page, selectedComponent, data } = props
+  const { index, page, selectedComponent } = props
 
   return (
     <div className="component-item">
@@ -29,15 +29,17 @@ const ComponentItem = (props: {
         key={index}
         index={index}
         page={page}
-        data={data}
         selectedComponent={selectedComponent}
       />
     </div>
   )
 }
 
-const ComponentList = (props: { page: PageType; data: FormDefinition }) => {
-  const { page, data } = props
+const ComponentList = ({ page }: { page: PageType }) => {
+  if (!hasComponents(page) || !page.components.length) {
+    return null
+  }
+
   const { components = [] } = page
 
   return (
@@ -47,7 +49,6 @@ const ComponentList = (props: { page: PageType; data: FormDefinition }) => {
           key={index}
           index={index}
           page={page}
-          data={data}
           selectedComponent={component}
         />
       ))}
@@ -67,7 +68,10 @@ export const Page = (props: {
   const [isEditingPage, setIsEditingPage] = useState(false)
   const [isCreatingComponent, setIsCreatingComponent] = useState(false)
 
-  const section = data.sections.find(({ name }) => name === page.section)
+  const section =
+    hasComponents(page) && page.section
+      ? findSection(data, page.section)
+      : undefined
 
   const pageId = slugify(page.path)
   const headingId = `${pageId}-heading`
@@ -81,7 +85,7 @@ export const Page = (props: {
         </h3>
       </div>
 
-      <ComponentList page={page} data={data} />
+      <ComponentList page={page} />
 
       <div className="page__actions">
         <button
@@ -89,7 +93,7 @@ export const Page = (props: {
           className="govuk-link"
           aria-describedby={headingId}
         >
-          {i18n('Edit page')}
+          {i18n('page.edit')}
         </button>
         <a
           href={new URL(`/preview/draft/${slug}${page.path}`, previewUrl).href}
@@ -98,7 +102,7 @@ export const Page = (props: {
           rel="noreferrer"
           aria-describedby={headingId}
         >
-          {i18n('Preview page')}
+          {i18n('page.preview')}
         </a>
         <button
           onClick={() => setIsCreatingComponent(true)}
@@ -110,7 +114,10 @@ export const Page = (props: {
       </div>
       {isEditingPage && (
         <RenderInPortal>
-          <Flyout title="Edit Page" onHide={() => setIsEditingPage(false)}>
+          <Flyout
+            title={i18n('page.edit')}
+            onHide={() => setIsEditingPage(false)}
+          >
             <PageEdit page={page} onSave={() => setIsEditingPage(false)} />
           </Flyout>
         </RenderInPortal>
@@ -121,7 +128,7 @@ export const Page = (props: {
           <Flyout onHide={() => setIsCreatingComponent(false)}>
             <ComponentContextProvider>
               <ComponentCreate
-                toggleAddComponent={() => setIsCreatingComponent(false)}
+                onSave={() => setIsCreatingComponent(false)}
                 page={page}
               />
             </ComponentContextProvider>

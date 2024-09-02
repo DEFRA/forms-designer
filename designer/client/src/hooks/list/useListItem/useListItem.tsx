@@ -1,103 +1,141 @@
-import { type FormDefinition } from '@defra/forms-model'
+import { type Item } from '@defra/forms-model'
+import Joi from 'joi'
 
-import { addList } from '~/src/data/list/addList.js'
-import { findList } from '~/src/data/list/findList.js'
+import { findListItem } from '~/src/data/list/findList.js'
 import { type ListItemHook } from '~/src/hooks/list/useListItem/types.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ListActions } from '~/src/reducers/listActions.jsx'
 import {
+  type FormItem,
+  type ListContextType,
+  type ListState
+} from '~/src/reducers/listReducer.jsx'
+import {
   hasValidationErrors,
-  validateNotEmpty,
-  validateTitle
+  validateCustom,
+  validateRequired
 } from '~/src/validations.js'
 
-export function useListItem(state, dispatch): ListItemHook {
-  const { selectedItem = {} } = state
-  const { value = '', condition } = selectedItem
+export function useListItem(
+  state: ListState,
+  dispatch: ListContextType['dispatch']
+): ListItemHook {
+  const {
+    initialItemText,
+    initialItemValue,
+    selectedList,
+    selectedItem,
+    selectedItemIndex
+  } = state
 
   const handleTitleChange: ListItemHook['handleTitleChange'] = (e) => {
     dispatch({
-      type: ListActions.EDIT_LIST_ITEM_TEXT,
+      name: ListActions.EDIT_LIST_ITEM_TEXT,
       payload: e.target.value
     })
   }
 
   const handleConditionChange: ListItemHook['handleConditionChange'] = (e) => {
     dispatch({
-      type: ListActions.EDIT_LIST_ITEM_CONDITION,
+      name: ListActions.EDIT_LIST_ITEM_CONDITION,
       payload: e.target.value
     })
   }
 
   const handleValueChange: ListItemHook['handleValueChange'] = (e) => {
     dispatch({
-      type: ListActions.EDIT_LIST_ITEM_VALUE,
+      name: ListActions.EDIT_LIST_ITEM_VALUE,
       payload: e.target.value
     })
   }
 
   const handleHintChange: ListItemHook['handleHintChange'] = (e) => {
     dispatch({
-      type: ListActions.EDIT_LIST_ITEM_DESCRIPTION,
+      name: ListActions.EDIT_LIST_ITEM_DESCRIPTION,
       payload: e.target.value
     })
   }
 
-  function validate() {
-    const title = state.selectedItem.text || ''
+  function validate(payload: Partial<FormItem>): payload is FormItem {
+    const { text, value } = payload.selectedItem ?? {}
 
-    const errors = {
-      ...validateTitle('title', 'title', i18n('list.item.title'), title),
-      ...validateNotEmpty('value', 'value', i18n('list.item.value'), value)
-    }
+    const titles =
+      selectedList?.items
+        .filter(({ text }) => text !== initialItemText)
+        .map(({ text }) => text) ?? []
 
-    const valErrors = hasValidationErrors(errors)
+    const values =
+      selectedList?.items
+        .filter(({ value }) => value !== initialItemValue)
+        .map(({ value }) => value) ?? []
 
-    if (valErrors) {
-      dispatch({
-        type: ListActions.LIST_ITEM_VALIDATION_ERRORS,
-        payload: errors
-      })
-    }
-    return valErrors
+    const errors: ListState['listItemErrors'] = {}
+
+    errors.title = validateRequired('title', text, {
+      label: i18n('list.item.title')
+    })
+
+    errors.title ??= validateCustom('title', [...titles, text], {
+      message: 'errors.duplicate',
+      label: `Item text '${text}'`,
+      schema: Joi.array().unique()
+    })
+
+    errors.value = validateRequired('value', value?.toString(), {
+      label: i18n('list.item.value')
+    })
+
+    errors.value ??= validateCustom('value', [...values, value], {
+      message: 'errors.duplicate',
+      label: `Item value '${value}'`,
+      schema: Joi.array().unique()
+    })
+
+    dispatch({
+      name: ListActions.LIST_ITEM_VALIDATION_ERRORS,
+      payload: errors
+    })
+
+    return !hasValidationErrors(errors)
   }
 
-  function prepareForSubmit(data: FormDefinition) {
-    let copy: FormDefinition = { ...data }
-    const { selectedList, selectedItemIndex } = state
-    let { items } = selectedList
-    if (!selectedItem.isNew) {
-      items = items.splice(selectedItemIndex, 1, selectedItem)
-    } else {
-      const { isNew, errors, ...selectedItem } = state.selectedItem
-      items.push(selectedItem)
+  function prepareForSubmit() {
+    if (!selectedList || !selectedItem) {
+      return
     }
 
-    if (selectedList.isNew) {
-      delete selectedList.isNew
-      copy = addList(data, selectedList)
-    } else {
-      const [list, indexOfList] = findList(copy, selectedList.name)
-      copy.lists[indexOfList] = { ...list, items }
+    const item = structuredClone(selectedItem)
+    const list = structuredClone(selectedList)
+
+    if (item.isNew) {
+      delete item.isNew
+      list.items.push(item)
+    } else if (typeof selectedItemIndex === 'number') {
+      list.items[selectedItemIndex] = item
     }
-    return copy
+
+    dispatch({
+      name: ListActions.SET_SELECTED_LIST,
+      payload: list
+    })
   }
 
-  function prepareForDelete(data: any, index: number | undefined) {
-    const copy = { ...data }
-    const { initialName, selectedList, selectedItemIndex } = state
+  function prepareForDelete(item: Item) {
+    if (!selectedList) {
+      return
+    }
 
-    // If user clicks delete button in list items list, then index is defined and we use it
-    // If user clicks delete button inside item edit screen, then selectedItemIndex is defined and index is undefined
-    const itemToDelete = index ?? selectedItemIndex
-    selectedList.items.splice(itemToDelete, 1)
+    const list = structuredClone(selectedList)
 
-    const selectedListIndex = copy.lists.findIndex(
-      (list) => list.name === initialName
-    )
-    copy.lists[selectedListIndex] = selectedList
+    const itemRemove = findListItem(list, item.text)
+    const itemIndex = list.items.indexOf(itemRemove)
 
-    return copy
+    list.items.splice(itemIndex, 1)
+
+    dispatch({
+      name: ListActions.SET_SELECTED_LIST,
+      payload: list
+    })
   }
 
   return {
@@ -108,9 +146,9 @@ export function useListItem(state, dispatch): ListItemHook {
     prepareForSubmit,
     prepareForDelete,
     validate,
-    value,
-    condition,
-    title: selectedItem.text || '',
-    hint: selectedItem.description || ''
+    value: selectedItem?.value,
+    condition: selectedItem?.condition,
+    title: selectedItem?.text ?? '',
+    hint: selectedItem?.description ?? ''
   }
 }

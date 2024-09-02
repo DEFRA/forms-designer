@@ -43,7 +43,7 @@ describe('SelectConditions', () => {
 
     const $paragraphs = screen.queryAllByRole('paragraph')
     const $conditions = screen.queryByRole('link', {
-      name: 'Define a new condition'
+      name: 'Add a new condition'
     })
 
     expect($paragraphs).toHaveLength(1)
@@ -63,8 +63,7 @@ describe('SelectConditions', () => {
               type: ComponentType.YesNoField,
               options: {
                 required: true
-              },
-              schema: {}
+              }
             }
           ],
           next: [
@@ -81,6 +80,7 @@ describe('SelectConditions', () => {
         {
           path: '/no-uk-passport',
           title: "You're not eligible for this service",
+          next: [],
           components: [
             {
               name: 'notEligible',
@@ -88,11 +88,9 @@ describe('SelectConditions', () => {
               type: ComponentType.Html,
               content:
                 '<p class="govuk-body">If you still think you’re eligible please contact the Foreign and Commonwealth Office.</p>',
-              options: {},
-              schema: {}
+              options: {}
             }
-          ],
-          next: []
+          ]
         },
         {
           path: '/how-many-people',
@@ -105,8 +103,7 @@ describe('SelectConditions', () => {
               options: {
                 classes: 'govuk-input--width-10',
                 required: true
-              },
-              schema: {}
+              }
             }
           ],
           next: [
@@ -117,7 +114,27 @@ describe('SelectConditions', () => {
           title: 'How many applicants are there?'
         }
       ],
-      lists: [],
+      lists: [
+        {
+          name: 'numberOfApplicants',
+          title: 'Number of applicants',
+          type: 'string',
+          items: [
+            {
+              text: '1',
+              value: '1'
+            },
+            {
+              text: '2',
+              value: '2'
+            },
+            {
+              text: '3',
+              value: '3'
+            }
+          ]
+        }
+      ],
       sections: [],
       conditions: [
         {
@@ -250,7 +267,7 @@ describe('SelectConditions', () => {
 
     const $paragraphs = screen.queryAllByRole('paragraph')
     const $conditions = screen.queryByRole('link', {
-      name: 'Define a new condition'
+      name: 'Add a new condition'
     })
 
     expect($paragraphs).toHaveLength(1)

@@ -22,8 +22,7 @@ describe('date field edit', () => {
           title: 'Date field edit class',
           hint: 'Date field hint',
           type: ComponentType.DatePartsField,
-          options: {},
-          schema: {}
+          options: {}
         }
       }
 

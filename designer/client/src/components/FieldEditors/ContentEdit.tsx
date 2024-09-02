@@ -15,9 +15,9 @@ interface Props {
 export function ContentEdit({ context = ComponentContext }: Props) {
   const { state, dispatch } = useContext(context)
 
-  const { selectedComponent, errors = {} } = state
+  const { selectedComponent, errors } = state
 
-  if (!selectedComponent || !hasContentField(selectedComponent)) {
+  if (!hasContentField(selectedComponent)) {
     return null
   }
 
@@ -52,8 +52,9 @@ export function ContentEdit({ context = ComponentContext }: Props) {
         value={selectedComponent.content}
         onValueChange={(content) => {
           dispatch({
-            type: Fields.EDIT_CONTENT,
-            payload: content
+            name: Fields.EDIT_CONTENT,
+            payload: content,
+            as: selectedComponent
           })
         }}
       />

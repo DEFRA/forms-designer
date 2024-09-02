@@ -44,7 +44,7 @@ describe('ListEdit', () => {
 
     const $listCaption = screen.getByText('List items')
     const $listHint = screen.getByText('Enter a unique name for your list')
-    const $listLink = screen.getByText('Add list item')
+    const $listLink = screen.getByText('Add a new list item')
 
     expect($listCaption).toBeInTheDocument()
     expect($listHint).toBeInTheDocument()

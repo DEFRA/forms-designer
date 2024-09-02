@@ -17,11 +17,7 @@ export function ConditionEdit({ context = ComponentContext }: Props) {
   const { conditions } = data
   const { selectedComponent } = state
 
-  if (
-    !conditions.length ||
-    !selectedComponent ||
-    !hasConditionSupport(selectedComponent)
-  ) {
+  if (!conditions.length || !hasConditionSupport(selectedComponent)) {
     return null
   }
 
@@ -43,12 +39,13 @@ export function ConditionEdit({ context = ComponentContext }: Props) {
         value={options.condition}
         onChange={(e) =>
           dispatch({
-            type: Options.EDIT_OPTIONS_CONDITION,
-            payload: e.target.value
+            name: Options.EDIT_OPTIONS_CONDITION,
+            payload: e.target.value,
+            as: selectedComponent
           })
         }
       >
-        <option value="" />
+        <option value="">{i18n('fieldEdit.conditions.option')}</option>
         {conditions.map((condition) => (
           <option key={condition.name} value={condition.name}>
             {condition.displayName}

@@ -3,7 +3,7 @@ import { highlightAll } from 'prismjs'
 import React, { useContext } from 'react'
 
 import { DeclarationEdit } from '~/src/DeclarationEdit.jsx'
-import { LinkCreate } from '~/src/LinkCreate.jsx'
+import { LinkEdit } from '~/src/LinkEdit.jsx'
 import { PageCreate } from '~/src/PageCreate.jsx'
 import { DataPrettyPrint } from '~/src/components/DataPrettyPrint/DataPrettyPrint.jsx'
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
@@ -13,6 +13,7 @@ import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.j
 import { Tabs } from '~/src/components/Tabs/Tabs.jsx'
 import { ConditionsEdit } from '~/src/conditions/ConditionsEdit.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
+import { hasComponents } from '~/src/data/definition/hasComponents.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ListsEdit } from '~/src/list/ListsEdit.jsx'
 import { ListsEditorContextProvider } from '~/src/reducers/list/listsEditorReducer.jsx'
@@ -105,8 +106,8 @@ export function Menu({ slug }: Props) {
             </p>
 
             <DataPrettyPrint className="language-json">
-              {data.pages.flatMap(({ components }) =>
-                components?.map((component) => ({
+              {data.pages.filter(hasComponents).flatMap(({ components }) =>
+                components.map((component) => ({
                   name: component.name,
                   type: component.type,
                   list: hasListField(component) ? component.list : undefined
@@ -147,7 +148,7 @@ export function Menu({ slug }: Props) {
 
       {page.isVisible && (
         <RenderInPortal>
-          <Flyout title="Add Page" onHide={page.hide}>
+          <Flyout title={i18n('page.add')} onHide={page.hide}>
             <PageCreate onSave={page.hide} />
           </Flyout>
         </RenderInPortal>
@@ -156,14 +157,14 @@ export function Menu({ slug }: Props) {
       {link.isVisible && (
         <RenderInPortal>
           <Flyout title={i18n('menu.links')} onHide={link.hide}>
-            <LinkCreate onSave={link.hide} />
+            <LinkEdit onSave={link.hide} />
           </Flyout>
         </RenderInPortal>
       )}
 
       {sections.isVisible && (
         <RenderInPortal>
-          <Flyout title="Edit Sections" onHide={sections.hide}>
+          <Flyout title={i18n('sections.edit')} onHide={sections.hide}>
             <SectionsEdit />
           </Flyout>
         </RenderInPortal>
@@ -183,7 +184,7 @@ export function Menu({ slug }: Props) {
 
       {lists.isVisible && (
         <RenderInPortal>
-          <Flyout title="Edit Lists" onHide={lists.hide}>
+          <Flyout title={i18n('list.addOrEdit')} onHide={lists.hide}>
             <ListsEditorContextProvider>
               <ListContextProvider>
                 <ListsEdit showEditLists={false} />
@@ -195,8 +196,8 @@ export function Menu({ slug }: Props) {
 
       {summary.isVisible && (
         <RenderInPortal>
-          <Flyout title="Edit Summary" onHide={summary.hide}>
-            <DeclarationEdit onCreate={() => summary.hide()} />
+          <Flyout title={i18n('summary.edit')} onHide={summary.hide}>
+            <DeclarationEdit onSave={summary.hide} />
           </Flyout>
         </RenderInPortal>
       )}
