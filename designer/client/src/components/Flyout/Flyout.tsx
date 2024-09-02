@@ -1,7 +1,7 @@
 import FocusTrap from 'focus-trap-react'
 import React, {
   useContext,
-  useLayoutEffect,
+  useEffect,
   useState,
   type CSSProperties,
   type KeyboardEvent,
@@ -19,26 +19,35 @@ interface Props {
   onHide: () => void
 }
 
-export function useFlyoutEffect(props: Pick<Props, 'onHide'>) {
-  const flyoutContext = useContext(FlyoutContext)
+export function useFlyoutEffect(props?: Pick<Props, 'onHide'>) {
+  const { count, increment, decrement } = useContext(FlyoutContext)
+
   const [offset, setOffset] = useState(0)
   const [style, setStyle] = useState<CSSProperties>()
 
   /**
-   * Run on component mount
+   * Count open flyouts
    */
-  useLayoutEffect(() => {
-    flyoutContext.increment()
-    return function cleanup() {
-      flyoutContext.decrement()
+  useEffect(() => {
+    increment()
+    return () => decrement()
+  }, [increment, decrement])
+
+  /**
+   * Update offset for newly open flyouts
+   */
+  useEffect(() => {
+    if (style) {
+      return
     }
-  }, [])
 
-  useLayoutEffect(() => {
-    setOffset(flyoutContext.count)
-  }, [])
+    setOffset(count)
+  }, [style, count])
 
-  useLayoutEffect(() => {
+  /**
+   * Update styling for offset flyouts
+   */
+  useEffect(() => {
     if (offset > 0) {
       setStyle({
         paddingLeft: `${offset * 50}px`,
