@@ -1,5 +1,6 @@
 import { type ComponentDef } from '@defra/forms-model'
 import React, {
+  useMemo,
   useReducer,
   createContext,
   type Dispatch,
@@ -123,13 +124,16 @@ export const ComponentContextProvider = (
   }
 ) => {
   const { children, ...rest } = props
+
   const [state, dispatch] = useReducer(
     componentReducer,
     initComponentState(rest)
   )
 
+  const context = useMemo(() => ({ state, dispatch }), [state])
+
   return (
-    <ComponentContext.Provider value={{ state, dispatch }}>
+    <ComponentContext.Provider value={context}>
       {children}
     </ComponentContext.Provider>
   )

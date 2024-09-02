@@ -1,5 +1,6 @@
 import React, {
   createContext,
+  useMemo,
   useReducer,
   type Dispatch,
   type ReactNode
@@ -75,8 +76,10 @@ export const ListsEditorContextProvider = (props: Props) => {
     initListsEditingState()
   )
 
+  const context = useMemo(() => ({ state, dispatch }), [state])
+
   return (
-    <ListsEditorContext.Provider value={{ state, dispatch }}>
+    <ListsEditorContext.Provider value={context}>
       {props.children}
     </ListsEditorContext.Provider>
   )

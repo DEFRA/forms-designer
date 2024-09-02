@@ -2,6 +2,7 @@ import { type Item, type List } from '@defra/forms-model'
 import React, {
   createContext,
   useContext,
+  useMemo,
   useReducer,
   type Dispatch,
   type ReactNode
@@ -225,10 +226,7 @@ export const ListContextProvider = (props: {
   }
 
   const [state, dispatch] = useReducer(listReducer, init)
+  const context = useMemo(() => ({ state, dispatch }), [state])
 
-  return (
-    <ListContext.Provider value={{ state, dispatch }}>
-      {children}
-    </ListContext.Provider>
-  )
+  return <ListContext.Provider value={context}>{children}</ListContext.Provider>
 }

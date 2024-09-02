@@ -24,10 +24,8 @@ describe('useFlyoutContext', () => {
   })
 
   test('Increment is called on mount', () => {
-    const flyoutContextProviderValue = { count: 0, increment, decrement }
-
     wrapper = mount(
-      <FlyoutContext.Provider value={flyoutContextProviderValue}>
+      <FlyoutContext.Provider value={{ count: 0, increment, decrement }}>
         <HookWrapper hook={() => useFlyoutEffect()} />
       </FlyoutContext.Provider>
     )
@@ -37,10 +35,8 @@ describe('useFlyoutContext', () => {
   })
 
   test('Decrement is called on unmount', () => {
-    const flyoutContextProviderValue = { count: 0, increment, decrement }
-
     wrapper = mount(
-      <FlyoutContext.Provider value={flyoutContextProviderValue}>
+      <FlyoutContext.Provider value={{ count: 0, increment, decrement }}>
         <HookWrapper hook={() => useFlyoutEffect()} />
       </FlyoutContext.Provider>
     )
@@ -51,16 +47,10 @@ describe('useFlyoutContext', () => {
   })
 
   test('flyout is offset by correct amount', () => {
-    const flyoutContextProviderValue = {
-      count: 1,
-      increment,
-      decrement
-    }
-
     expect(increment).not.toHaveBeenCalled()
 
     wrapper = mount(
-      <FlyoutContext.Provider value={flyoutContextProviderValue}>
+      <FlyoutContext.Provider value={{ count: 1, increment, decrement }}>
         <HookWrapper hook={() => useFlyoutEffect()} />
       </FlyoutContext.Provider>
     )
