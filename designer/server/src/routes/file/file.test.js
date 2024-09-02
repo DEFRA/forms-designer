@@ -55,7 +55,7 @@ describe('File routes', () => {
   })
 
   describe('POST', () => {
-    test('should return download url', async () => {
+    test('should show file is downloading page', async () => {
       jest
         .mocked(file.createFileLink)
         .mockResolvedValueOnce({ url: '/download-link' })
@@ -67,12 +67,11 @@ describe('File routes', () => {
         payload: { email }
       }
 
-      const {
-        response: { headers, statusCode }
-      } = await renderResponse(server, options)
+      const { document } = await renderResponse(server, options)
 
-      expect(statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
-      expect(headers.location).toBe('/download-link')
+      const html = document.documentElement.innerHTML
+
+      expect(html).toContain('Your file is downloading')
     })
 
     test('should show link expired page when response is 410', async () => {
