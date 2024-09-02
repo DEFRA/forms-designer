@@ -381,7 +381,6 @@ export class PageEdit extends Component<Props, State> {
                   : i18n('section.add')
               }
               onHide={this.closeFlyout}
-              show={isEditingSection}
             >
               <SectionEdit
                 section={!isNewSection ? section : undefined}

@@ -69,7 +69,6 @@ export function ListsEdit({ showEditLists = false }: Props) {
           <Flyout
             title={listTitle}
             onHide={closeFlyout(ListsEditorStateActions.IS_EDITING_LIST)}
-            width={''}
           >
             <ListEdit />
           </Flyout>
@@ -80,7 +79,6 @@ export function ListsEdit({ showEditLists = false }: Props) {
         <RenderInPortal>
           <Flyout
             title={itemTitle}
-            width={''}
             onHide={closeFlyout(ListsEditorStateActions.IS_EDITING_LIST_ITEM)}
           >
             <ListItemEdit />
