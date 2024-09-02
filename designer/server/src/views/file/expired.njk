@@ -1,14 +1,14 @@
-{% extends 'layouts/page.njk' %}
+{% extends "layouts/page.njk" %}
 
 {% block content %}
   {% call appPageBody({
     heading: pageHeading
   }) %}
-    <p class="govuk-body-l">
+    <p class="govuk-body">
       For security reasons, links expire after 30 days.
     </p>
 
-    <p class="govuk-body-l">
+    <p class="govuk-body">
       Contact the person who submitted the form and request the file again.
     </p>
   {% endcall %}

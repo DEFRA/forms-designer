@@ -1,4 +1,4 @@
-{% extends 'layouts/page.njk' %}
+{% extends "layouts/page.njk" %}
 
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
@@ -13,7 +13,7 @@
   }) %}
 
     <p class="govuk-body-l">
-      Once download is complete, your file will be saved in the 'Downloads' folder on your computer. If nothing happens, select 'Download file'.
+      Once download is complete, your file will be saved in the ‘Downloads’ folder on your computer. If nothing happens, select ‘{{ buttonText }}’.
     </p>
 
     {{ govukButton({
