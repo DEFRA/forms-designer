@@ -21,16 +21,22 @@ interface State {
 }
 
 export class RelativeDateValues extends Component<Props, State> {
-  constructor(props: Readonly<Props>) {
-    super(props)
+  state: State = {}
 
-    const { value } = props
+  componentDidMount() {
+    const { value } = this.props
 
-    this.state = {
-      period: value?.period,
-      unit: value?.unit,
-      direction: value?.direction
+    if (!value) {
+      return
     }
+
+    const { period, unit, direction } = value
+
+    this.setState({
+      period,
+      unit,
+      direction
+    })
   }
 
   updateState(state: State) {

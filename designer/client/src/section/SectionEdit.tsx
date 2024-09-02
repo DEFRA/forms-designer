@@ -43,18 +43,21 @@ export class SectionEdit extends Component<Props, State> {
   declare context: ContextType<typeof DataContext>
   static readonly contextType = DataContext
 
-  constructor(props: Readonly<Props>, context: typeof DataContext) {
-    super(props, context)
+  state: State = {
+    hideTitle: false,
+    isNewSection: false,
+    errors: {}
+  }
 
-    const { section } = props
+  componentDidMount() {
+    const { section } = this.props
 
-    this.state = {
+    this.setState({
       name: section?.name ?? randomId(),
       title: section?.title,
       hideTitle: section?.hideTitle ?? false,
-      isNewSection: !section?.name,
-      errors: {}
-    }
+      isNewSection: !section?.name
+    })
   }
 
   onSubmit = async (e: FormEvent<HTMLFormElement>) => {

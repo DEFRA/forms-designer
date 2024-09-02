@@ -62,9 +62,15 @@ export class PageCreate extends Component<Props, State> {
   declare context: ContextType<typeof DataContext>
   static readonly contextType = DataContext
 
-  constructor(props: Readonly<Props>, context: typeof DataContext) {
-    super(props, context)
+  state: State = {
+    isEditingSection: false,
+    isNewSection: false,
+    isQuestionPage: true,
+    pages: [],
+    errors: {}
+  }
 
+  componentDidMount() {
     const { data } = this.context
 
     // Sort pages for select menus
@@ -72,13 +78,7 @@ export class PageCreate extends Component<Props, State> {
       ({ title: titleA }, { title: titleB }) => titleA.localeCompare(titleB)
     )
 
-    this.state = {
-      isEditingSection: false,
-      isNewSection: false,
-      isQuestionPage: true,
-      pages,
-      errors: {}
-    }
+    this.setState({ pages })
   }
 
   onSubmit = async (e: FormEvent<HTMLFormElement>) => {

@@ -55,9 +55,13 @@ export class LinkEdit extends Component<Props, State> {
   declare context: ContextType<typeof DataContext>
   static readonly contextType = DataContext
 
-  constructor(props: Readonly<Props>, context: typeof DataContext) {
-    super(props, context)
+  state: State = {
+    isEditingLink: false,
+    pages: [],
+    errors: {}
+  }
 
+  componentDidMount() {
     const { edge } = this.props
     const { data } = this.context
 
@@ -66,11 +70,7 @@ export class LinkEdit extends Component<Props, State> {
       ({ title: titleA }, { title: titleB }) => titleA.localeCompare(titleB)
     )
 
-    this.state = {
-      isEditingLink: false,
-      pages,
-      errors: {}
-    }
+    this.setState({ pages })
 
     if (!edge) {
       return
@@ -84,9 +84,7 @@ export class LinkEdit extends Component<Props, State> {
     const link = findLink(pageFrom, pageTo)
 
     // Update state
-    this.state = {
-      ...this.state,
-
+    this.setState({
       // Initial page link (editing only)
       isEditingLink: true,
       edgeFrom: pageFrom,
@@ -96,7 +94,7 @@ export class LinkEdit extends Component<Props, State> {
       pageFrom,
       pageTo,
       selectedCondition: link.condition
-    }
+    })
   }
 
   onSubmit = async (e: FormEvent<HTMLFormElement>) => {

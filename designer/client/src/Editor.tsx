@@ -12,14 +12,16 @@ interface State {
 }
 
 export class Editor extends Component<Props, State> {
-  constructor(props: Readonly<Props>) {
-    super(props)
+  state: State = {
+    value: ''
+  }
 
+  componentDidMount() {
     const { value } = this.props
 
-    this.state = {
+    this.setState({
       value: value ?? ''
-    }
+    })
   }
 
   render() {

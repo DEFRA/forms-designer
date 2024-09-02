@@ -39,13 +39,13 @@ interface State {
 }
 
 export class InlineConditionsEdit extends Component<Props, State> {
-  constructor(props: Readonly<Props>) {
-    super(props)
+  state: State = {
+    selectedConditions: []
+  }
 
-    this.state = {
-      conditions: props.conditions,
-      selectedConditions: []
-    }
+  componentDidMount() {
+    const { conditions } = this.props
+    this.setState({ conditions })
   }
 
   onChangeCheckbox = (e: ChangeEvent<HTMLInputElement>) => {
@@ -137,12 +137,14 @@ export class InlineConditionsEdit extends Component<Props, State> {
   componentDidUpdate(prevProps: Readonly<Props>) {
     const { conditions } = this.props
 
-    if (prevProps.conditions !== conditions) {
-      this.setState({
-        conditions,
-        selectedConditions: []
-      })
+    if (conditions === prevProps.conditions) {
+      return
     }
+
+    this.setState({
+      conditions,
+      selectedConditions: []
+    })
   }
 
   onClickCancelEditView = (e: MouseEvent<HTMLButtonElement>) => {

@@ -49,36 +49,42 @@ export class InlineConditions extends Component<Props, State> {
   declare context: ContextType<typeof DataContext>
   static readonly contextType = DataContext
 
-  constructor(props: Readonly<Props>, context: typeof DataContext) {
-    super(props, context)
+  state: State = {
+    conditions: new ConditionsModel(),
+    fields: {},
+    errors: {}
+  }
 
+  componentDidMount() {
     const { path, condition } = this.props
+    const { conditions: model } = this.state
 
     const conditions = condition?.value
       ? ConditionsModel.from(condition.value)
-      : new ConditionsModel()
+      : model
 
     conditions.name ??= condition?.displayName
 
-    this.state = {
+    this.setState({
       conditions,
-      fields: this.fieldsForPath(path),
-      errors: {}
-    }
+      fields: this.fieldsForPath(path)
+    })
   }
 
-  componentDidUpdate = (prevProps: Readonly<Props>) => {
+  componentDidUpdate(prevProps: Readonly<Props>) {
     const { path } = this.props
 
-    if (path !== prevProps.path) {
-      const fields = this.fieldsForPath(path)
-
-      this.setState({
-        conditions: new ConditionsModel(),
-        fields,
-        editView: false
-      })
+    if (path === prevProps.path) {
+      return
     }
+
+    const fields = this.fieldsForPath(path)
+
+    this.setState({
+      conditions: new ConditionsModel(),
+      fields,
+      editView: false
+    })
   }
 
   fieldsForPath = (path?: string) => {

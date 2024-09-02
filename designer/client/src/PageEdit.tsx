@@ -63,26 +63,27 @@ export class PageEdit extends Component<Props, State> {
   declare context: ContextType<typeof DataContext>
   static readonly contextType = DataContext
 
-  constructor(props: Readonly<Props>, context: typeof DataContext) {
-    super(props, context)
+  state: State = {
+    isEditingSection: false,
+    isNewSection: false,
+    isQuestionPage: true,
+    errors: {}
+  }
 
+  componentDidMount() {
     const { page } = this.props
     const { data } = this.context
 
     const { path, title } = page
-
     const controller = controllerNameFromPath(page.controller)
 
-    this.state = {
+    this.setState({
       path,
       controller,
       title,
       section: hasSection(page) ? findSection(data, page.section) : undefined,
-      isEditingSection: false,
-      isNewSection: false,
-      isQuestionPage: isQuestionPage(page),
-      errors: {}
-    }
+      isQuestionPage: isQuestionPage(page)
+    })
   }
 
   onSubmit = async (e: FormEvent<HTMLFormElement>) => {

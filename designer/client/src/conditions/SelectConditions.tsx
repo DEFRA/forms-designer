@@ -1,5 +1,4 @@
 import {
-  ConditionsModel,
   hasConditionField,
   hasConditionName,
   hasNestedCondition,
@@ -46,27 +45,34 @@ export class SelectConditions extends Component<Props, State> {
   declare context: ContextType<typeof DataContext>
   static readonly contextType = DataContext
 
-  constructor(props: Readonly<Props>, context: typeof DataContext) {
-    super(props, context)
-
-    this.state = {
-      fields: this.fieldsForPath(props.path),
-      selectedCondition: props.selectedCondition,
-      inline: false
-    }
+  state: State = {
+    inline: false,
+    editView: false
   }
 
-  componentDidUpdate = (prevProps: Readonly<Props>) => {
-    const { path } = this.props
+  componentDidMount() {
+    const { path, selectedCondition } = this.props
+    const fields = this.fieldsForPath(path)
 
-    if (path !== prevProps.path) {
-      const fields = this.fieldsForPath(path)
+    this.setState({
+      fields,
+      selectedCondition
+    })
+  }
 
-      this.setState({
-        fields,
-        editView: false
-      })
+  componentDidUpdate(prevProps: Readonly<Props>) {
+    const { path, selectedCondition } = this.props
+
+    if (path === prevProps.path) {
+      return
     }
+
+    const fields = this.fieldsForPath(path)
+
+    this.setState({
+      fields,
+      selectedCondition
+    })
   }
 
   fieldsForPath(path?: string) {
