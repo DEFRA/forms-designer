@@ -1,0 +1,24 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block head %}
+  {{ super()}}
+  <meta http-equiv="refresh" content="0; url={{downloadUrl}}">
+{% endblock %}
+
+{% block content %}
+  {% call appPageBody({
+    heading: pageHeading
+  }) %}
+    <p class="govuk-body-l">
+      Your file should automatically download. If nothing happens, please click the button below.
+    </p>
+
+    {{ govukButton({
+      text: buttonText,
+      href: downloadUrl
+    }) }}
+
+  {% endcall %}
+{% endblock %}

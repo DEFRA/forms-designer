@@ -6,6 +6,7 @@ import { sessionNames } from '~/src/common/constants/session-names.js'
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
 import { checkFileStatus, createFileLink } from '~/src/lib/file.js'
 import { errorViewModel } from '~/src/models/errors.js'
+import { downloadCompleteModel } from '~/src/models/file/download-complete.js'
 import * as file from '~/src/models/file/file.js'
 import { redirectWithErrors } from '~/src/routes/forms/create.js'
 
@@ -61,7 +62,7 @@ export default [
       try {
         const { url } = await createFileLink(fileId, email, token)
         logger.info(`File download link created for file ID ${fileId}`)
-        return h.redirect(url)
+        return h.view('file/download-complete', downloadCompleteModel(url))
       } catch (err) {
         if (
           Boom.isBoom(err) &&
