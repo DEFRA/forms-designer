@@ -37,7 +37,6 @@ interface Props {
 
 interface State {
   selectedCondition?: string
-  conditions?: ConditionsModel
   fields?: Partial<Record<string, FieldDef>>
   inline?: boolean
   editView?: boolean
@@ -64,7 +63,6 @@ export class SelectConditions extends Component<Props, State> {
       const fields = this.fieldsForPath(path)
 
       this.setState({
-        conditions: new ConditionsModel(),
         fields,
         editView: false
       })
