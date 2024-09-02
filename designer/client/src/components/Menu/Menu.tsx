@@ -199,7 +199,7 @@ export function Menu() {
         <RenderInPortal>
           <Flyout width="xlarge" onHide={overview.hide}>
             <Tabs
-              title="Form overview"
+              title={i18n('menu.overview')}
               items={overviewTabs}
               onInit={highlightAll}
               className="app-tabs--overview"
