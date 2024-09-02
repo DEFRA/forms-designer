@@ -157,7 +157,7 @@ export interface UkAddressFieldComponent extends FormFieldBase {
 }
 
 // Date Fields
-export interface DatePartsFieldFieldComponent extends DateFieldBase {
+export interface DatePartsFieldComponent extends DateFieldBase {
   type: ComponentType.DatePartsField
   options: DateFieldBase['options'] & {
     condition?: string
@@ -251,7 +251,7 @@ export type InputFieldsComponentsDef =
   | MultilineTextFieldComponent
   | TelephoneNumberFieldComponent
   | MonthYearFieldComponent
-  | DatePartsFieldFieldComponent
+  | DatePartsFieldComponent
   | UkAddressFieldComponent
   | FileUploadFieldComponent
 
