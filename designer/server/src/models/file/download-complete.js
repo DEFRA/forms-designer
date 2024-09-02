@@ -2,7 +2,7 @@
  * @param { string } [downloadUrl]
  */
 export function downloadCompleteModel(downloadUrl) {
-  const pageTitle = 'Download complete'
+  const pageTitle = 'Your file is downloading'
   return {
     pageTitle,
     pageHeading: {
