@@ -3,6 +3,7 @@ import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
+import { createLogger } from '~/src/common/helpers/logging/logger.js'
 import { checkFileStatus, createFileLink } from '~/src/lib/file.js'
 import { errorViewModel } from '~/src/models/errors.js'
 import * as file from '~/src/models/file/file.js'
@@ -11,6 +12,7 @@ import { redirectWithErrors } from '~/src/routes/forms/create.js'
 export const emailSchema = Joi.string().trim().required().messages({
   'string.empty': 'Enter an email address'
 })
+const logger = createLogger()
 
 export default [
   /**
@@ -58,12 +60,15 @@ export default [
 
       try {
         const { url } = await createFileLink(fileId, email, token)
+        logger.info(`File download link created for file ID ${fileId}`)
         return h.redirect(url)
       } catch (err) {
         if (
           Boom.isBoom(err) &&
           err.output.statusCode === StatusCodes.GONE.valueOf()
         ) {
+          logger.error(`File download link expired for file ID ${fileId}`)
+
           const pageTitle = 'The link has expired'
 
           return h.view('file/expired', errorViewModel(pageTitle))
@@ -73,6 +78,9 @@ export default [
           Boom.isBoom(err) &&
           err.output.statusCode === StatusCodes.FORBIDDEN.valueOf()
         ) {
+          logger.error(
+            `Failed to download file for file ID ${fileId} with email ${email}`
+          )
           const validation = {
             formErrors: {
               email: {
