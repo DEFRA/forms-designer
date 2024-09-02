@@ -310,12 +310,14 @@ export function redirectToStepWithErrors(request, h, error) {
  * @param {ResponseToolkit} h
  * @param {Error} [error]
  * @param {boolean} [redirectToPreviousStep] Optionally redirect to errors on previous steps, else it uses the current URL
+ * @param {string} [flashKey] Optionally redirect to errors on previous steps, else it uses the current URL
  */
 export function redirectWithErrors(
   request,
   h,
   error,
-  redirectToPreviousStep = false
+  redirectToPreviousStep = false,
+  flashKey = sessionNames.validationFailure
 ) {
   const { payload, yar, url } = request
   let { pathname: redirectTo } = url
@@ -323,7 +325,7 @@ export function redirectWithErrors(
   if (error && error instanceof Joi.ValidationError) {
     const formErrors = buildErrorDetails(error)
 
-    yar.flash('validationFailure', {
+    yar.flash(flashKey, {
       formErrors,
       formValues: payload
     })

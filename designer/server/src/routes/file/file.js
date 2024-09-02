@@ -30,7 +30,9 @@ export default [
 
       switch (statusCode) {
         case StatusCodes.OK: {
-          const validation = yar.flash(sessionNames.validationFailure)[0]
+          const validation = yar.flash(
+            sessionNames.fileDownloadValidationFailure
+          )[0]
           return h.view('file/download-page', file.fileViewModel(validation))
         }
 
@@ -106,7 +108,15 @@ export default [
         payload: Joi.object({
           email: emailSchema
         }).required(),
-        failAction: redirectWithErrors
+        failAction: (request, h, err) => {
+          return redirectWithErrors(
+            request,
+            h,
+            err,
+            false,
+            sessionNames.fileDownloadValidationFailure
+          )
+        }
       }
     }
   })
