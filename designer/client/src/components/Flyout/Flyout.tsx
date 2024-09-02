@@ -48,7 +48,7 @@ export function useFlyoutEffect(props: Pick<Props, 'onHide'>) {
     }
   }, [offset])
 
-  function onHide(
+  function closeOnClick(
     e?: KeyboardEvent<HTMLButtonElement> | MouseEvent<HTMLButtonElement>
   ) {
     e?.preventDefault()
@@ -57,7 +57,7 @@ export function useFlyoutEffect(props: Pick<Props, 'onHide'>) {
 
   function closeOnEnter(e: KeyboardEvent<HTMLButtonElement>) {
     if (e.key === 'Enter') {
-      onHide(e)
+      closeOnClick(e)
     }
   }
 
@@ -65,12 +65,15 @@ export function useFlyoutEffect(props: Pick<Props, 'onHide'>) {
     style,
     offset,
     closeOnEnter,
-    onHide
+    closeOnClick
   }
 }
 
 export function Flyout(props: Props) {
-  const { style, onHide, closeOnEnter, offset } = useFlyoutEffect(props)
+  const { title, width = '', children, onHide } = props
+  const { style, closeOnClick, closeOnEnter, offset } = useFlyoutEffect({
+    onHide
+  })
 
   return (
     <div className="flyout show" data-testid={`flyout-${offset}`}>
@@ -80,23 +83,21 @@ export function Flyout(props: Props) {
           tabbableOptions: { displayCheck: 'none' }
         }}
       >
-        <div className={`flyout__container ${props.width}`} style={style}>
+        <div className={`flyout__container ${width}`} style={style}>
           <button
             className="flyout__button-close govuk-link"
-            onClick={onHide}
+            onClick={closeOnClick}
             onKeyPress={closeOnEnter}
           >
             {i18n('close')}
           </button>
           <div className="panel panel--flyout">
             <div className="panel-header govuk-!-padding-top-4 govuk-!-padding-left-4">
-              {props.title && (
-                <h4 className="govuk-heading-m">{props.title}</h4>
-              )}
+              {title && <h4 className="govuk-heading-m">{title}</h4>}
             </div>
             <div className="panel-body">
               <div className="govuk-!-padding-left-4 govuk-!-padding-right-4 govuk-!-padding-bottom-4">
-                {props.children}
+                {children}
               </div>
             </div>
           </div>
