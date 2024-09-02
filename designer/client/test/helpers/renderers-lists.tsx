@@ -1,4 +1,4 @@
-import React, { useReducer, type ReactElement } from 'react'
+import React, { useMemo, useReducer, type ReactElement } from 'react'
 
 import { DataContext, type DataContextType } from '~/src/context/DataContext.js'
 import {
@@ -8,6 +8,7 @@ import {
 } from '~/src/reducers/component/componentReducer.jsx'
 import { ListsEditorContextProvider } from '~/src/reducers/list/listsEditorReducer.jsx'
 import { ListContextProvider } from '~/src/reducers/listReducer.jsx'
+import { definition, metadata } from '~/test/helpers/renderers.jsx'
 
 export interface RenderListEditorWithContextProps
   extends Partial<DataContextType> {
@@ -24,19 +25,25 @@ export function RenderListEditorWithContext(
     initComponentState(props.state)
   )
 
-  const {
-    children,
-    selectedListName,
-    data = {} as DataContextType['data'],
-    meta = {} as DataContextType['meta'],
-    previewUrl = '',
-    save = jest.fn()
-  } = props
+  const context = useMemo(() => {
+    const {
+      data = definition,
+      meta = metadata,
+      previewUrl = 'http://localhost:3000',
+      save = jest.fn()
+    } = props
+
+    return { data, meta, previewUrl, save }
+  }, [props])
+
+  const { children, selectedListName } = props
 
   return (
-    <DataContext.Provider value={{ data, meta, previewUrl, save }}>
+    <DataContext.Provider value={context}>
       <ListsEditorContextProvider>
-        <ComponentContext.Provider value={{ state, dispatch }}>
+        <ComponentContext.Provider
+          value={useMemo(() => ({ state, dispatch }), [state])}
+        >
           <ListContextProvider selectedListName={selectedListName}>
             {children}
           </ListContextProvider>
