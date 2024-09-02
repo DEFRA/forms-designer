@@ -96,7 +96,7 @@ export function Flyout(props: Props) {
           <button
             className="flyout__button-close govuk-link"
             onClick={closeOnClick}
-            onKeyPress={closeOnEnter}
+            onKeyDown={closeOnEnter}
           >
             {i18n('close')}
           </button>
