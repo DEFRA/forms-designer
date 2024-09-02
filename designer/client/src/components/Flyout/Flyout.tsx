@@ -13,21 +13,16 @@ import { FlyoutContext } from '~/src/context/FlyoutContext.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 
 interface Props {
-  style?: string
-  width?: string
-  onHide?: () => void
-  show?: boolean
-  offset?: number
   title?: string
+  width?: string
   children?: ReactNode
-  NEVER_UNMOUNTS?: boolean
+  onHide: () => void
 }
 
-export function useFlyoutEffect(props: Props) {
+export function useFlyoutEffect(props: Pick<Props, 'onHide'>) {
   const flyoutContext = useContext(FlyoutContext)
   const [offset, setOffset] = useState(0)
   const [style, setStyle] = useState<CSSProperties>()
-  const show = props.show ?? true
 
   /**
    * Run on component mount
@@ -53,18 +48,11 @@ export function useFlyoutEffect(props: Props) {
     }
   }, [offset])
 
-  const onHide = (
+  function onHide(
     e?: KeyboardEvent<HTMLButtonElement> | MouseEvent<HTMLButtonElement>
-  ) => {
+  ) {
     e?.preventDefault()
-
-    if (props.onHide) {
-      props.onHide()
-
-      if (props.NEVER_UNMOUNTS) {
-        flyoutContext.decrement()
-      }
-    }
+    props?.onHide()
   }
 
   function closeOnEnter(e: KeyboardEvent<HTMLButtonElement>) {
@@ -73,22 +61,16 @@ export function useFlyoutEffect(props: Props) {
     }
   }
 
-  return { style, width: props.width, closeOnEnter, onHide, offset, show }
+  return {
+    style,
+    offset,
+    closeOnEnter,
+    onHide
+  }
 }
 
 export function Flyout(props: Props) {
-  const {
-    style,
-    width = '',
-    onHide,
-    closeOnEnter,
-    show,
-    offset
-  } = useFlyoutEffect(props)
-
-  if (!show) {
-    return null
-  }
+  const { style, onHide, closeOnEnter, offset } = useFlyoutEffect(props)
 
   return (
     <div className="flyout show" data-testid={`flyout-${offset}`}>
@@ -98,7 +80,7 @@ export function Flyout(props: Props) {
           tabbableOptions: { displayCheck: 'none' }
         }}
       >
-        <div className={`flyout__container ${width}`} style={style}>
+        <div className={`flyout__container ${props.width}`} style={style}>
           <button
             className="flyout__button-close govuk-link"
             onClick={onHide}
