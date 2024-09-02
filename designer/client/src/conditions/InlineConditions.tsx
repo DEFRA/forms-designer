@@ -108,20 +108,6 @@ export class InlineConditions extends Component<Props, State> {
     })
   }
 
-  onClickCancel = (e: MouseEvent<HTMLAnchorElement>) => {
-    const { cancelCallback } = this.props
-    const { conditions } = this.state
-
-    e.preventDefault()
-
-    this.setState({
-      conditions: conditions.clear(),
-      editView: false
-    })
-
-    cancelCallback()
-  }
-
   onClickSave = async (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
     const { conditionsChange, condition } = this.props
