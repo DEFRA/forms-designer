@@ -71,7 +71,7 @@ export function NumberFieldEdit() {
             name="opions.prefix"
             value={options.prefix ?? ''}
             type="string"
-            onBlur={(e) =>
+            onChange={(e) =>
               dispatch({
                 name: Options.EDIT_OPTIONS_PREFIX,
                 payload: e.target.value,
@@ -99,7 +99,7 @@ export function NumberFieldEdit() {
             name="options.suffix"
             value={options.suffix ?? ''}
             type="string"
-            onBlur={(e) =>
+            onChange={(e) =>
               dispatch({
                 name: Options.EDIT_OPTIONS_SUFFIX,
                 payload: e.target.value,
@@ -127,7 +127,7 @@ export function NumberFieldEdit() {
             name="schema.max"
             value={schema.max ?? ''}
             type="number"
-            onBlur={(e) =>
+            onChange={(e) =>
               dispatch({
                 name: Schema.EDIT_SCHEMA_MAX,
                 payload: e.target.valueAsNumber,
@@ -155,7 +155,7 @@ export function NumberFieldEdit() {
             name="schema.precision"
             value={schema.precision ?? ''}
             type="number"
-            onBlur={(e) =>
+            onChange={(e) =>
               dispatch({
                 name: Schema.EDIT_SCHEMA_PRECISION,
                 payload: e.target.valueAsNumber,
