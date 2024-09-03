@@ -1,10 +1,7 @@
 import { isValid } from 'date-fns'
 import React, { useEffect, useState, type ChangeEvent } from 'react'
 
-import {
-  isInt,
-  tryParseInt
-} from '~/src/conditions/inline-condition-helpers.js'
+import { tryParseInt } from '~/src/conditions/inline-condition-helpers.js'
 
 export interface YearMonthDay {
   year: number
@@ -42,21 +39,12 @@ function isValidYear(year?: number): year is number {
   return isValidateDate(date) && date.year >= 1000
 }
 
-export const AbsoluteDateValues = ({
-  value = {},
-  updateValue
-}: Readonly<Props>) => {
-  const [year, setYear] = useState(() =>
-    isInt(value.year) ? `${value.year}` : undefined
-  )
+export const AbsoluteDateValues = (props: Readonly<Props>) => {
+  const { value, updateValue } = props
 
-  const [month, setMonth] = useState(() =>
-    isInt(value.month) ? `${value.month}`.padStart(2, '0') : undefined
-  )
-
-  const [day, setDay] = useState(() =>
-    isInt(value.day) ? `${value.day}`.padStart(2, '0') : undefined
-  )
+  const [year, setYear] = useState(value?.year)
+  const [month, setMonth] = useState(value?.month)
+  const [day, setDay] = useState(value?.day)
 
   useEffect(() => {
     const parsedDay = tryParseInt(day)
@@ -64,9 +52,9 @@ export const AbsoluteDateValues = ({
     const parsedYear = tryParseInt(year)
 
     if (
-      parsedDay === value.day &&
-      parsedMonth === value.month &&
-      parsedYear === value.year
+      parsedDay === value?.day &&
+      parsedMonth === value?.month &&
+      parsedYear === value?.year
     ) {
       return
     }
@@ -85,22 +73,27 @@ export const AbsoluteDateValues = ({
   }, [year, month, day])
 
   function dayChanged(e: ChangeEvent<HTMLInputElement>) {
-    const day = e.target.value
-    if (Number(day) <= 31) {
+    const { valueAsNumber: day } = e.target
+
+    if (isValidDay(day)) {
       setDay(day)
     }
   }
 
   function monthChanged(e: ChangeEvent<HTMLInputElement>) {
-    const month = e.target.value
-    if (Number(month) <= 12) {
+    const { valueAsNumber: month } = e.target
+
+    if (isValidMonth(month)) {
       setMonth(month)
     }
   }
 
   function yearChanged(e: ChangeEvent<HTMLInputElement>) {
-    const year = e.target.value
-    setYear(year)
+    const { valueAsNumber: year } = e.target
+
+    if (isValidYear(year)) {
+      setYear(year)
+    }
   }
 
   return (
@@ -119,7 +112,7 @@ export const AbsoluteDateValues = ({
             minLength={2}
             min={1}
             max={31}
-            value={day}
+            defaultValue={day}
             required
             onChange={dayChanged}
           />
@@ -139,7 +132,7 @@ export const AbsoluteDateValues = ({
             minLength={2}
             min={1}
             max={12}
-            value={month}
+            defaultValue={month}
             required
             onChange={monthChanged}
           />
@@ -157,7 +150,7 @@ export const AbsoluteDateValues = ({
             type="number"
             maxLength={4}
             minLength={4}
-            value={year}
+            defaultValue={year}
             required
             onChange={yearChanged}
           />
