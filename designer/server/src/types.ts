@@ -87,6 +87,8 @@ declare module '@hapi/yar' {
   type CreateKey = (typeof sessionNames)['create']
   type RedirectToKey = (typeof sessionNames)['redirectTo']
   type ValidationKey = (typeof sessionNames)['validationFailure']
+  type FileDownloadValidationKey =
+    (typeof sessionNames)['fileDownloadValidationFailure']
   type SuccessNotification = (typeof sessionNames)['successNotification']
   type ErrorListKey = (typeof sessionNames)['errorList']
 
@@ -102,6 +104,9 @@ declare module '@hapi/yar' {
      * (Deleted when read, e.g. after a redirect)
      */
     flash(type: ValidationKey): ValidationFailure<FormMetadataInput>[]
+    flash(
+      type: FileDownloadValidationKey
+    ): ValidationFailure<{ email: string }>[]
 
     /**
      * Get temporary error messages relating to the current page.

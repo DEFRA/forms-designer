@@ -12,6 +12,7 @@ export interface Config {
   clientDir: string
   previewUrl: string
   managerUrl: string
+  submissionUrl: string
   serviceName: string
   logLevel: 'fatal' | 'error' | 'warn' | 'info' | 'debug' | 'trace' | 'silent'
   phase?: 'alpha' | 'beta' | 'live'
@@ -50,6 +51,7 @@ const schema = joi.object<Config>({
         .default(resolve(dirname(configPath), '../../client/test/fixtures'))
     }),
   managerUrl: joi.string().required(),
+  submissionUrl: joi.string().required(),
   previewUrl: joi.string().required(),
   serviceName: joi.string().required(),
   logLevel: joi
@@ -88,6 +90,7 @@ const result = schema.validate(
     port: process.env.PORT,
     env: process.env.NODE_ENV,
     managerUrl: process.env.MANAGER_URL,
+    submissionUrl: process.env.SUBMISSION_URL,
     previewUrl: process.env.PREVIEW_URL,
     serviceName: 'Submit a form to Defra',
     logLevel: process.env.LOG_LEVEL,

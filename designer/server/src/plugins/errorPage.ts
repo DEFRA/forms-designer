@@ -4,7 +4,7 @@ import {
   type ResponseToolkit
 } from '@hapi/hapi'
 
-import { unauthorisedViewModel } from '~/src/models/errors.js'
+import { errorViewModel } from '~/src/models/errors.js'
 
 /*
  * Add an `onPreResponse` listener to return error pages
@@ -20,11 +20,12 @@ export default {
           // An error was raised during
           // processing the request
           const statusCode = response.output.statusCode
+          const pageTitle = 'You do not have access to this service'
 
           // In the event of 403
           // return the `403` view
           if (statusCode === 403) {
-            return h.view('403', unauthorisedViewModel()).code(statusCode)
+            return h.view('403', errorViewModel(pageTitle)).code(statusCode)
           }
 
           request.log('error', {

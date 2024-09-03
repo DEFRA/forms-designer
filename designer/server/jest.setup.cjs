@@ -18,3 +18,4 @@ process.env.SESSION_COOKIE_TTL = Duration.fromObject({ days: 1 })
 process.env.SESSION_TTL = Duration.fromObject({ days: 28 })
   .as('milliseconds')
   .toString()
+process.env.SUBMISSION_URL = 'http://localhost:3002'

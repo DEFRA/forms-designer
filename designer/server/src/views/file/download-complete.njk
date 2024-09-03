@@ -1,0 +1,25 @@
+{% extends "layouts/page.njk" %}
+
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block head %}
+  {{ super()}}
+  <meta http-equiv="refresh" content="0; url={{downloadUrl}}">
+{% endblock %}
+
+{% block content %}
+  {% call appPageBody({
+    heading: pageHeading
+  }) %}
+
+    <p class="govuk-body">
+      Once download is complete, your file will be saved in the ‘Downloads’ folder on your computer. If nothing happens, select ‘{{ buttonText }}’.
+    </p>
+
+    {{ govukButton({
+      text: buttonText,
+      href: downloadUrl
+    }) }}
+
+  {% endcall %}
+{% endblock %}
