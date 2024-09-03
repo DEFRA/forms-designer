@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, type ReactNode } from 'react'
 
 export interface ErrorListItem {
-  href?: string
+  href: string
   children: ReactNode
 }
 

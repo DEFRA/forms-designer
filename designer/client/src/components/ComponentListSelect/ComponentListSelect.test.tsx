@@ -104,7 +104,12 @@ describe('ComponentListSelect', () => {
   })
 
   test('should display list error when state has errors', async () => {
-    const errors = { list: { children: 'Select a list' } }
+    const errors = {
+      list: {
+        href: '#field-options-list',
+        children: 'Select a list'
+      }
+    }
 
     const { container } = render(
       <RenderListEditorWithContext
