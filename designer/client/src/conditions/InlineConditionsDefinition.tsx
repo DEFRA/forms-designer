@@ -306,7 +306,7 @@ export class InlineConditionsDefinition extends Component<Props, State> {
                       {i18n('conditions.conditionOperatorOption')}
                     </option>
                     {getOperatorNames(fieldDef.type)
-                      .sort()
+                      .sort((nameA, nameB) => nameA.localeCompare(nameB))
                       .map((operator) => (
                         <option key={operator} value={operator}>
                           {upperFirst(operator)}
