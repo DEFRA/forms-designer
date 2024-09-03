@@ -1,4 +1,9 @@
-import { ComponentType, type FormDefinition } from '@defra/forms-model'
+import {
+  ComponentType,
+  ControllerPath,
+  ControllerType,
+  type FormDefinition
+} from '@defra/forms-model'
 
 import { getFields, type FieldDef } from '~/src/data/component/fields.js'
 
@@ -126,8 +131,8 @@ test('should handle pages with no components', () => {
     pages: [
       {
         title: 'No components',
-        path: '/start',
-        controller: 'StartPageController',
+        path: ControllerPath.Start,
+        controller: ControllerType.Start,
         next: [],
         components: []
       }

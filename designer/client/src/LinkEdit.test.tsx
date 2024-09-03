@@ -1,6 +1,8 @@
 import {
   ComponentType,
   ConditionType,
+  ControllerPath,
+  ControllerType,
   OperatorName,
   type FormDefinition
 } from '@defra/forms-model'
@@ -37,8 +39,8 @@ const data = {
     },
     {
       title: 'Summary',
-      path: '/summary',
-      controller: 'SummaryPageController'
+      path: ControllerPath.Summary,
+      controller: ControllerType.Summary
     }
   ],
   lists: [],

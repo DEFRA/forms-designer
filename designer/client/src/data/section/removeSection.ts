@@ -1,6 +1,8 @@
-import { type FormDefinition, type Section } from '@defra/forms-model'
-
-import { hasComponents } from '~/src/data/definition/hasComponents.js'
+import {
+  hasComponents,
+  type FormDefinition,
+  type Section
+} from '@defra/forms-model'
 
 /**
  * Remove section and update associated pages

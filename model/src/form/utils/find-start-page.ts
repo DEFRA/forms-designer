@@ -1,4 +1,5 @@
 import { type FormDefinition } from '~/src/form/form-definition/types.js'
+import { hasNext } from '~/src/pages/helpers.js'
 
 /**
  * Find correct start page for form definition
@@ -17,7 +18,7 @@ export function findStartPage(data: FormDefinition) {
 
   // Get a unique list of all pages that are linked to by other pages
   const pageReferences = new Set(
-    pages.flatMap((page) => page.next?.map((next) => next.path))
+    pages.filter(hasNext).flatMap((page) => page.next.map((next) => next.path))
   )
 
   // For each page on the form, work out if it's referenced by another page

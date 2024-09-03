@@ -1,6 +1,10 @@
 import { ComponentType } from '~/src/components/enums.js'
-import { type FormDefinition } from '~/src/form/form-definition/types.js'
+import {
+  type FormDefinition,
+  type PageQuestion
+} from '~/src/form/form-definition/types.js'
 import { updateStartPage } from '~/src/form/utils/update-start-page.js'
+import { ControllerPath, ControllerType } from '~/src/pages/enums.js'
 
 describe('updateStartPage', () => {
   let data: FormDefinition
@@ -27,13 +31,13 @@ describe('updateStartPage', () => {
         {
           title: 'Second page',
           path: '/second-page',
-          next: [{ path: '/summary' }],
+          next: [{ path: ControllerPath.Summary }],
           components: []
         },
         {
           title: 'Summary',
-          path: '/summary',
-          controller: 'SummaryPageController'
+          path: ControllerPath.Summary,
+          controller: ControllerType.Summary
         }
       ],
       lists: [],
@@ -97,7 +101,7 @@ describe('updateStartPage', () => {
   })
 
   it('should remove start page update when multiple journeys are possible', () => {
-    const pages = structuredClone(data.pages)
+    const pages = structuredClone(data.pages) as PageQuestion[]
 
     pages[0].next = [{ path: pages[2].path }]
     pages[1].next = [{ path: pages[2].path }]
@@ -115,11 +119,11 @@ describe('updateStartPage', () => {
   })
 
   it('should remove start page when no journeys are possible', () => {
-    const pages = structuredClone(data.pages)
+    const pages = structuredClone(data.pages) as PageQuestion[]
 
-    delete pages[0].next
-    delete pages[1].next
-    delete pages[2].next
+    pages[0].next = []
+    pages[1].next = []
+    pages[2].next = []
 
     const updated = {
       ...data,

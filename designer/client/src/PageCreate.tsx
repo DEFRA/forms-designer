@@ -1,4 +1,13 @@
-import { slugify, type Page, type Section } from '@defra/forms-model'
+import {
+  ControllerType,
+  getPageDefaults,
+  hasComponents,
+  hasNext,
+  isQuestionPage,
+  slugify,
+  type Page,
+  type Section
+} from '@defra/forms-model'
 // @ts-expect-error -- No types available
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import Joi from 'joi'
@@ -19,7 +28,6 @@ import { DataContext } from '~/src/context/DataContext.js'
 import { addLink } from '~/src/data/page/addLink.js'
 import { addPage } from '~/src/data/page/addPage.js'
 import { findPage } from '~/src/data/page/findPage.js'
-import { hasNext } from '~/src/data/page/hasNext.js'
 import { findSection } from '~/src/data/section/findSection.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { SectionEdit } from '~/src/section/SectionEdit.jsx'
@@ -34,12 +42,13 @@ interface Props {
 }
 
 interface State extends Partial<Form> {
-  controller?: Page['controller']
+  controller?: ControllerType
   section?: Section
   linkFrom?: string
   selectedCondition?: string
   isEditingSection: boolean
   isNewSection: boolean
+  isQuestionPage: boolean
   pages: Page[]
   errors: Partial<ErrorList<'path' | 'title'>>
 }
@@ -66,6 +75,7 @@ export class PageCreate extends Component<Props, State> {
     this.state = {
       isEditingSection: false,
       isNewSection: false,
+      isQuestionPage: true,
       pages,
       errors: {}
     }
@@ -77,13 +87,23 @@ export class PageCreate extends Component<Props, State> {
 
     const { onSave } = this.props
     const { data, save } = this.context
-    const { path, controller, title, section, linkFrom, selectedCondition } =
-      this.state
+    const {
+      path,
+      controller,
+      title,
+      section,
+      linkFrom,
+      selectedCondition,
+      isQuestionPage
+    } = this.state
+
+    // Page defaults
+    const defaults = getPageDefaults({ controller })
 
     // Remove trailing spaces and hyphens
     const payload = {
-      path: `/${slugify(path)}`,
-      title: title?.trim()
+      title: title?.trim(),
+      path: isQuestionPage ? `/${slugify(path)}` : defaults.path
     }
 
     // Check for valid form payload
@@ -91,13 +111,17 @@ export class PageCreate extends Component<Props, State> {
       return
     }
 
-    const pageNew: Page = {
-      path: payload.path,
-      title: payload.title,
-      controller,
-      components: [],
-      section: section?.name,
-      next: []
+    const pageNew = defaults
+    pageNew.title = payload.title
+
+    if (hasComponents(pageNew)) {
+      pageNew.path = payload.path
+      pageNew.section = section?.name
+
+      // Remove default controller
+      if (controller === ControllerType.Page) {
+        delete pageNew.controller
+      }
     }
 
     let definition = addPage(data, pageNew)
@@ -161,10 +185,22 @@ export class PageCreate extends Component<Props, State> {
   }
 
   onChangeController = (e: ChangeEvent<HTMLSelectElement>) => {
-    const { value: controller } = e.target
+    const { value } = e.target
+    const { errors } = this.state
+
+    const controller = value ? (value as ControllerType) : undefined
 
     this.setState({
-      controller: controller ? (controller as Page['controller']) : undefined
+      controller,
+
+      // Allow question pages to edit section + path
+      isQuestionPage: isQuestionPage({ controller }),
+
+      // Reset path errors when controller changes
+      errors: {
+        ...errors,
+        path: undefined
+      }
     })
   }
 
@@ -177,6 +213,11 @@ export class PageCreate extends Component<Props, State> {
 
   onChangePath = (e: ChangeEvent<HTMLInputElement>) => {
     const { value: path } = e.target
+    const { isQuestionPage } = this.state
+
+    if (!isQuestionPage) {
+      return
+    }
 
     this.setState({
       path: `/${slugify(path, { trim: false })}`
@@ -219,12 +260,23 @@ export class PageCreate extends Component<Props, State> {
       path,
       isEditingSection,
       isNewSection,
+      isQuestionPage,
       pages,
       errors
     } = this.state
 
     const { sections } = data
     const hasErrors = hasValidationErrors(errors)
+
+    // Check if we already have a start page
+    const hasStartPage = pages.some(
+      (page) => page.controller === ControllerType.Start
+    )
+
+    // Check if we already have a summary page
+    const hasSummaryPage = pages.some(
+      (page) => page.controller === ControllerType.Summary
+    )
 
     return (
       <>
@@ -248,16 +300,22 @@ export class PageCreate extends Component<Props, State> {
               value={controller}
               onChange={this.onChangeController}
             >
-              <option value="">{i18n('page.controllers.question')}</option>
-              <option value="StartPageController">
-                {i18n('page.controllers.start')}
+              <option value={ControllerType.Page}>
+                {i18n('page.controllers.question')}
               </option>
-              <option value="FileUploadPageController">
+              {!hasStartPage && (
+                <option value={ControllerType.Start}>
+                  {i18n('page.controllers.start')}
+                </option>
+              )}
+              <option value={ControllerType.FileUpload}>
                 {i18n('page.controllers.fileUpload')}
               </option>
-              <option value="SummaryPageController">
-                {i18n('page.controllers.summary')}
-              </option>
+              {!hasSummaryPage && (
+                <option value={ControllerType.Summary}>
+                  {i18n('page.controllers.summary')}
+                </option>
+              )}
             </select>
           </div>
 
@@ -273,113 +331,130 @@ export class PageCreate extends Component<Props, State> {
             errorMessage={errors.title}
           />
 
-          <Input
-            id="page-path"
-            name="path"
-            label={{
-              className: 'govuk-label--s',
-              children: [i18n('addPage.pathField.title')]
-            }}
-            hint={{
-              children: [i18n('addPage.pathField.helpText')]
-            }}
-            value={path}
-            onChange={this.onChangePath}
-            errorMessage={errors.path}
-          />
+          {isQuestionPage && (
+            <Input
+              id="page-path"
+              name="path"
+              label={{
+                className: 'govuk-label--s',
+                children: [i18n('addPage.pathField.title')]
+              }}
+              hint={{
+                children: [i18n('addPage.pathField.helpText')]
+              }}
+              value={path}
+              onChange={this.onChangePath}
+              errorMessage={errors.path}
+            />
+          )}
 
-          {!sections.length && (
+          {(isQuestionPage || controller === ControllerType.Start) && (
             <>
-              <h4 className="govuk-heading-s govuk-!-margin-bottom-1">
-                {i18n('addPage.sectionOption.title')}
-              </h4>
-              <p className="govuk-hint govuk-!-margin-top-0">
-                {i18n('addPage.sectionOption.helpText')}
-              </p>
+              {!sections.length && (
+                <>
+                  <h4 className="govuk-heading-s govuk-!-margin-bottom-1">
+                    {i18n('addPage.sectionOption.title')}
+                  </h4>
+                  <p className="govuk-hint govuk-!-margin-top-0">
+                    {i18n('addPage.sectionOption.helpText')}
+                  </p>
+                </>
+              )}
+
+              <div className="govuk-form-group">
+                {sections.length > 0 && (
+                  <>
+                    <label
+                      className="govuk-label govuk-label--s"
+                      htmlFor="page-section"
+                    >
+                      {i18n('addPage.sectionOption.title')}
+                    </label>
+                    <div className="govuk-hint" id="page-section-hint">
+                      {i18n('addPage.sectionOption.helpText')}
+                    </div>
+                    <select
+                      className="govuk-select"
+                      id="page-section"
+                      aria-describedby="page-section-hint"
+                      name="section"
+                      value={section?.name ?? ''}
+                      onChange={this.onChangeSection}
+                    >
+                      <option value="">
+                        {i18n('addPage.sectionOption.option')}
+                      </option>
+                      {sections.map((section) => (
+                        <option key={section.name} value={section.name}>
+                          {section.title}
+                        </option>
+                      ))}
+                    </select>
+                  </>
+                )}
+                <p className="govuk-body govuk-!-margin-top-2">
+                  {section && (
+                    <a
+                      href="#"
+                      className="govuk-link govuk-!-display-block"
+                      onClick={this.editSection}
+                    >
+                      {i18n('section.edit')}
+                    </a>
+                  )}
+                  <a
+                    href="#"
+                    className="govuk-link govuk-!-display-block"
+                    onClick={(e) => this.editSection(e, true)}
+                  >
+                    {i18n('section.add')}
+                  </a>
+                </p>
+              </div>
             </>
           )}
 
-          <div className="govuk-form-group">
-            {sections.length > 0 && (
-              <>
-                <label
-                  className="govuk-label govuk-label--s"
-                  htmlFor="page-section"
-                >
-                  {i18n('addPage.sectionOption.title')}
-                </label>
-                <div className="govuk-hint" id="page-section-hint">
-                  {i18n('addPage.sectionOption.helpText')}
-                </div>
-                <select
-                  className="govuk-select"
-                  id="page-section"
-                  aria-describedby="page-section-hint"
-                  name="section"
-                  value={section?.name ?? ''}
-                  onChange={this.onChangeSection}
-                >
-                  <option value="">
-                    {i18n('addPage.sectionOption.option')}
-                  </option>
-                  {sections.map((section) => (
-                    <option key={section.name} value={section.name}>
-                      {section.title}
+          {isQuestionPage && (
+            <>
+              {controller !== ControllerType.Start && (
+                <div className="govuk-form-group">
+                  <label
+                    className="govuk-label govuk-label--s"
+                    htmlFor="link-from"
+                  >
+                    {i18n('addPage.linkFromOption.title')}
+                  </label>
+                  <div className="govuk-hint" id="link-from-hint">
+                    {i18n('addPage.linkFromOption.helpText')}
+                  </div>
+                  <select
+                    className="govuk-select"
+                    id="link-from"
+                    aria-describedby="link-from-hint"
+                    name="from"
+                    value={linkFrom ?? ''}
+                    onChange={this.onChangeLinkFrom}
+                  >
+                    <option value="">
+                      {i18n('addPage.linkFromOption.option')}
                     </option>
-                  ))}
-                </select>
-              </>
-            )}
-            <p className="govuk-body govuk-!-margin-top-2">
-              {section && (
-                <a
-                  href="#"
-                  className="govuk-link govuk-!-display-block"
-                  onClick={this.editSection}
-                >
-                  {i18n('section.edit')}
-                </a>
+                    {pages.filter(hasNext).map((page) => (
+                      <option key={page.path} value={page.path}>
+                        {page.title}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               )}
-              <a
-                href="#"
-                className="govuk-link govuk-!-display-block"
-                onClick={(e) => this.editSection(e, true)}
-              >
-                {i18n('section.add')}
-              </a>
-            </p>
-          </div>
 
-          <div className="govuk-form-group">
-            <label className="govuk-label govuk-label--s" htmlFor="link-from">
-              {i18n('addPage.linkFromOption.title')}
-            </label>
-            <div className="govuk-hint" id="link-from-hint">
-              {i18n('addPage.linkFromOption.helpText')}
-            </div>
-            <select
-              className="govuk-select"
-              id="link-from"
-              aria-describedby="link-from-hint"
-              name="from"
-              value={linkFrom ?? ''}
-              onChange={this.onChangeLinkFrom}
-            >
-              <option value="">{i18n('addPage.linkFromOption.option')}</option>
-              {pages.filter(hasNext).map((page) => (
-                <option key={page.path} value={page.path}>
-                  {page.title}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {linkFrom && (
-            <SelectConditions
-              path={linkFrom}
-              conditionsChange={this.conditionSelected}
-              noFieldsHintText={i18n('conditions.noFieldsAvailable')}
-            />
+              {linkFrom && (
+                <SelectConditions
+                  path={linkFrom}
+                  conditionsChange={this.conditionSelected}
+                  noFieldsHintText={i18n('conditions.noFieldsAvailable')}
+                />
+              )}
+            </>
           )}
 
           <div className="govuk-button-group">
@@ -388,6 +463,7 @@ export class PageCreate extends Component<Props, State> {
             </button>
           </div>
         </form>
+
         {isEditingSection && (
           <RenderInPortal>
             <Flyout

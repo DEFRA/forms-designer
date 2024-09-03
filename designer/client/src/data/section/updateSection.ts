@@ -1,6 +1,9 @@
-import { type FormDefinition, type Section } from '@defra/forms-model'
+import {
+  hasComponents,
+  type FormDefinition,
+  type Section
+} from '@defra/forms-model'
 
-import { hasComponents } from '~/src/data/definition/hasComponents.js'
 import { findSection } from '~/src/data/section/findSection.js'
 
 /**

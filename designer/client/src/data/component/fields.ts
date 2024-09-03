@@ -1,17 +1,19 @@
 import {
   ComponentType,
+  hasComponents,
   hasConditionSupport,
   hasFormField,
   hasListField,
+  hasSection,
   type ConditionalComponentsDef,
   type ConditionalComponentType,
   type FormDefinition,
   type Item,
-  type PageWithComponents,
+  type PageQuestion,
+  type PageStart,
   type Section
 } from '@defra/forms-model'
 
-import { hasComponents } from '~/src/data/definition/hasComponents.js'
 import { findList } from '~/src/data/list/findList.js'
 import { findPathsTo } from '~/src/data/page/findPathsTo.js'
 import { findSection } from '~/src/data/section/findSection.js'
@@ -42,8 +44,11 @@ export function getFieldsTo(data: FormDefinition, pathTo?: string) {
 /**
  * Map page to conditional field definition
  */
-export function pageToFields(this: FormDefinition, page: PageWithComponents) {
-  const section = page.section ? findSection(this, page.section) : undefined
+export function pageToFields(
+  this: FormDefinition,
+  page: PageStart | PageQuestion
+) {
+  const section = hasSection(page) ? findSection(this, page.section) : undefined
 
   return page.components
     .filter(hasConditionSupport)

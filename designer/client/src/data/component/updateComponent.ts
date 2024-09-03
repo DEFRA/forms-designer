@@ -1,11 +1,11 @@
 import {
+  hasComponents,
   type ComponentDef,
   type FormDefinition,
   type Page
 } from '@defra/forms-model'
 
 import { findComponent } from '~/src/data/component/findComponent.js'
-import { hasComponents } from '~/src/data/definition/hasComponents.js'
 
 export function updateComponent(
   data: FormDefinition,

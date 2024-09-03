@@ -1,6 +1,4 @@
-import { type Page } from '@defra/forms-model'
-
-import { hasComponents } from '~/src/data/definition/hasComponents.js'
+import { hasComponents, type Page } from '@defra/forms-model'
 
 /**
  * Find component by name

@@ -1,4 +1,4 @@
-import { type Page } from '@defra/forms-model'
+import { hasComponents, type Page } from '@defra/forms-model'
 import React, {
   useCallback,
   useContext,
@@ -14,7 +14,6 @@ import { logger } from '~/src/common/helpers/logging/logger.js'
 import { DataContext } from '~/src/context/DataContext.js'
 import { findComponent } from '~/src/data/component/findComponent.js'
 import { updateComponent } from '~/src/data/component/updateComponent.js'
-import { hasComponents } from '~/src/data/definition/hasComponents.js'
 import { findPage } from '~/src/data/page/findPage.js'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 import { Meta } from '~/src/reducers/component/types.js'

@@ -1,6 +1,4 @@
-import { type FormDefinition, type Page } from '@defra/forms-model'
-
-import { hasNext } from '~/src/data/page/hasNext.js'
+import { hasNext, type FormDefinition, type Page } from '@defra/forms-model'
 
 export function updateLinksTo(
   data: FormDefinition,

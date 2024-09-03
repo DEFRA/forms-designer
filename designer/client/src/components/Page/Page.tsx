@@ -1,4 +1,6 @@
 import {
+  hasComponents,
+  hasSection,
   slugify,
   type ComponentDef,
   type Page as PageType
@@ -11,7 +13,6 @@ import { ComponentCreate } from '~/src/components/ComponentCreate/ComponentCreat
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
-import { hasComponents } from '~/src/data/definition/hasComponents.js'
 import { findSection } from '~/src/data/section/findSection.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContextProvider } from '~/src/reducers/component/componentReducer.jsx'
@@ -68,10 +69,7 @@ export const Page = (props: {
   const [isEditingPage, setIsEditingPage] = useState(false)
   const [isCreatingComponent, setIsCreatingComponent] = useState(false)
 
-  const section =
-    hasComponents(page) && page.section
-      ? findSection(data, page.section)
-      : undefined
+  const section = hasSection(page) ? findSection(data, page.section) : undefined
 
   const pageId = slugify(page.path)
   const headingId = `${pageId}-heading`
@@ -104,13 +102,15 @@ export const Page = (props: {
         >
           {i18n('page.preview')}
         </a>
-        <button
-          onClick={() => setIsCreatingComponent(true)}
-          className="govuk-link"
-          aria-describedby={headingId}
-        >
-          {i18n('component.create')}
-        </button>
+        {hasComponents(page) && (
+          <button
+            onClick={() => setIsCreatingComponent(true)}
+            className="govuk-link"
+            aria-describedby={headingId}
+          >
+            {i18n('component.create')}
+          </button>
+        )}
       </div>
       {isEditingPage && (
         <RenderInPortal>
