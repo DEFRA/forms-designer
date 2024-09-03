@@ -54,7 +54,6 @@ export function TextFieldEdit({ children }: Readonly<Props>) {
               </div>
               <input
                 className="govuk-input govuk-input--width-3"
-                data-cast="number"
                 id="field-schema-min"
                 aria-describedby="field-schema-min-hint"
                 name="schema.min"
@@ -82,7 +81,6 @@ export function TextFieldEdit({ children }: Readonly<Props>) {
               </div>
               <input
                 className="govuk-input govuk-input--width-3"
-                data-cast="number"
                 id="field-schema-max"
                 aria-describedby="field-schema-max-hint"
                 name="schema.max"
@@ -110,7 +108,6 @@ export function TextFieldEdit({ children }: Readonly<Props>) {
               </div>
               <input
                 className="govuk-input govuk-input--width-3"
-                data-cast="number"
                 id="field-schema-length"
                 aria-describedby="field-schema-length-hint"
                 name="schema.length"

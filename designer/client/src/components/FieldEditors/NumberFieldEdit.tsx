@@ -37,7 +37,6 @@ export function NumberFieldEdit() {
           </div>
           <input
             className="govuk-input govuk-input--width-3"
-            data-cast="number"
             id="field-schema-min"
             aria-describedby="field-schema-min-hint"
             name="schema.min"
@@ -65,7 +64,6 @@ export function NumberFieldEdit() {
           </div>
           <input
             className="govuk-input govuk-input--width-3"
-            data-cast="string"
             id="field-options-prefix"
             aria-describedby="field-options-prefix-hint"
             name="opions.prefix"
@@ -93,7 +91,6 @@ export function NumberFieldEdit() {
           </div>
           <input
             className="govuk-input govuk-input--width-3"
-            data-cast="string"
             id="field-options-suffix"
             aria-describedby="field-options-suffix-hint"
             name="options.suffix"
@@ -121,7 +118,6 @@ export function NumberFieldEdit() {
           </div>
           <input
             className="govuk-input govuk-input--width-3"
-            data-cast="number"
             id="field-schema-max"
             aria-describedby="field-schema-max-hint"
             name="schema.max"
@@ -149,7 +145,6 @@ export function NumberFieldEdit() {
           </div>
           <input
             className="govuk-input govuk-input--width-3"
-            data-cast="number"
             id="field-schema-precision"
             aria-describedby="field-schema-precision-hint"
             name="schema.precision"

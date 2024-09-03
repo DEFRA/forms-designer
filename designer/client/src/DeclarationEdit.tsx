@@ -51,7 +51,6 @@ export class DeclarationEdit extends Component<Props> {
             <input
               className="govuk-checkboxes__input"
               id="skip-summary"
-              data-cast="boolean"
               name="skip-summary"
               type="checkbox"
               defaultChecked={skipSummary}

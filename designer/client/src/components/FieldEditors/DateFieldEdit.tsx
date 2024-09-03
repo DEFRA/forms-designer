@@ -42,7 +42,6 @@ export function DateFieldEdit() {
           </div>
           <input
             className="govuk-input govuk-input--width-3"
-            data-cast="number"
             id="field-options-maxDaysInPast"
             aria-describedby="field-options-maxDaysInPast-hint"
             name="options.maxDaysInPast"
@@ -70,7 +69,6 @@ export function DateFieldEdit() {
           </div>
           <input
             className="govuk-input govuk-input--width-3"
-            data-cast="number"
             id="field-options-maxDaysInFuture"
             aria-describedby="field-options-maxDaysInFuture-hint"
             name="options.maxDaysInFuture"

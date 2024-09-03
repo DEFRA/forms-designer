@@ -30,7 +30,6 @@ export function MultilineTextFieldEdit() {
         </div>
         <input
           className="govuk-input govuk-input--width-3"
-          data-cast="number"
           id="field-schema-maxwords"
           aria-describedby="field-schema-maxwords-hint"
           name="schema.maxwords"
@@ -62,7 +61,6 @@ export function MultilineTextFieldEdit() {
           aria-describedby="field-options-rows-hint"
           name="options.rows"
           type="text"
-          data-cast="number"
           value={options.rows ?? ''}
           onChange={(e) =>
             dispatch({
