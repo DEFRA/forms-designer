@@ -45,7 +45,9 @@ export function schemaReducer(state: ComponentState, action: ReducerActions) {
   switch (name) {
     case Schema.EDIT_SCHEMA_MIN: {
       if (type === as.type) {
-        selectedComponent.schema.min = payload
+        selectedComponent.schema.min = Number.isFinite(payload)
+          ? payload
+          : undefined
       }
 
       break
@@ -53,7 +55,9 @@ export function schemaReducer(state: ComponentState, action: ReducerActions) {
 
     case Schema.EDIT_SCHEMA_MAX: {
       if (type === as.type) {
-        selectedComponent.schema.max = payload
+        selectedComponent.schema.max = Number.isFinite(payload)
+          ? payload
+          : undefined
       }
 
       break
@@ -61,7 +65,9 @@ export function schemaReducer(state: ComponentState, action: ReducerActions) {
 
     case Schema.EDIT_SCHEMA_PRECISION: {
       if (type === as.type) {
-        selectedComponent.schema.precision = payload
+        selectedComponent.schema.precision = Number.isFinite(payload)
+          ? payload
+          : undefined
       }
 
       break
@@ -69,7 +75,9 @@ export function schemaReducer(state: ComponentState, action: ReducerActions) {
 
     case Schema.EDIT_SCHEMA_LENGTH: {
       if (type === as.type) {
-        selectedComponent.schema.length = payload
+        selectedComponent.schema.length = Number.isFinite(payload)
+          ? payload
+          : undefined
       }
 
       break
