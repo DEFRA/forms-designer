@@ -14,6 +14,7 @@ export interface RenderListEditorWithContextProps
   extends Partial<DataContextType> {
   children: ReactElement
   selectedListName?: string
+  selectedItemText?: string
   state?: Parameters<typeof initComponentState>[0]
 }
 
@@ -36,7 +37,7 @@ export function RenderListEditorWithContext(
     return { data, meta, previewUrl, save }
   }, [props])
 
-  const { children, selectedListName } = props
+  const { children, selectedListName, selectedItemText } = props
 
   return (
     <DataContext.Provider value={context}>
@@ -44,7 +45,10 @@ export function RenderListEditorWithContext(
         <ComponentContext.Provider
           value={useMemo(() => ({ state, dispatch }), [state])}
         >
-          <ListContextProvider selectedListName={selectedListName}>
+          <ListContextProvider
+            selectedListName={selectedListName}
+            selectedItemText={selectedItemText}
+          >
             {children}
           </ListContextProvider>
         </ComponentContext.Provider>

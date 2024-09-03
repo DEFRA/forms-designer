@@ -206,9 +206,10 @@ export const ListContextProvider = (
   props: Readonly<{
     children?: ReactNode
     selectedListName?: string
+    selectedItemText?: string
   }>
 ) => {
-  const { children, selectedListName } = props
+  const { children, selectedListName, selectedItemText } = props
   const { data } = useContext(DataContext)
 
   let init: ListState = {
@@ -216,6 +217,7 @@ export const ListContextProvider = (
     listItemErrors: {}
   }
 
+  // Populate state with selected list
   if (selectedListName) {
     const selectedList = findList(data, selectedListName)
 
@@ -224,6 +226,18 @@ export const ListContextProvider = (
       selectedList,
       initialName: selectedList.name,
       initialTitle: selectedList.title
+    }
+  }
+
+  // Populate state with selected item
+  if (init.selectedList && selectedItemText) {
+    const selectedItem = findListItem(init.selectedList, selectedItemText)
+
+    init = {
+      ...init,
+      selectedItem,
+      initialItemText: selectedItem.text,
+      initialItemValue: selectedItem.value
     }
   }
 
