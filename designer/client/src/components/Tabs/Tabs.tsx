@@ -37,7 +37,7 @@ export const Tabs: FunctionComponent<Props> = (props) => {
       new TabsJS(tabsRef.current)
       onInit?.()
     }
-  }, [tabsRef])
+  }, [tabsRef, onInit])
 
   const tabContent = items.map((item, index) => {
     const { id, label, panel, ...linkAttributes } = item

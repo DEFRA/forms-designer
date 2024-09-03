@@ -70,7 +70,7 @@ export const AbsoluteDateValues = (props: Readonly<Props>) => {
     if (isValid(new Date(parsedYear, parsedMonth - 1, parsedDay))) {
       updateValue({ year: parsedYear, month: parsedMonth, day: parsedDay })
     }
-  }, [year, month, day])
+  }, [year, month, day, value, updateValue])
 
   function dayChanged(e: ChangeEvent<HTMLInputElement>) {
     const { valueAsNumber: day } = e.target
