@@ -29,9 +29,9 @@ const ComponentItem = (
   return (
     <div className="component-item">
       <Component
-        key={index}
         index={index}
         page={page}
+        key={selectedComponent.name}
         selectedComponent={selectedComponent}
       />
     </div>
@@ -51,9 +51,9 @@ const ComponentList = (props: Readonly<{ page: PageType }>) => {
     <div className="component-list">
       {components.map((component, index) => (
         <ComponentItem
-          key={index}
           index={index}
           page={page}
+          key={component.name}
           selectedComponent={component}
         />
       ))}

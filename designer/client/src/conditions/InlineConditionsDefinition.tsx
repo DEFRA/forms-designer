@@ -281,8 +281,8 @@ export class InlineConditionsDefinition extends Component<Props, State> {
                 <option value="">
                   {i18n('conditions.conditionFieldOption')}
                 </option>
-                {fieldInputs.map((input, index) => (
-                  <option key={`${input.name}-${index}`} value={input.name}>
+                {fieldInputs.map((input) => (
+                  <option key={input.name} value={input.name}>
                     {input.label}
                   </option>
                 ))}

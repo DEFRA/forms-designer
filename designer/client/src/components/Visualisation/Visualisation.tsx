@@ -47,7 +47,7 @@ export function Visualisation() {
       <div className="visualisation__pages-wrapper">
         <div ref={ref} style={wrapperStyle}>
           {pages.map((page, index) => (
-            <Page key={index} page={page} layout={layout?.nodes[index]} />
+            <Page key={page.path} page={page} layout={layout?.nodes[index]} />
           ))}
 
           {layout && <Lines layout={layout} />}

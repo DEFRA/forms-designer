@@ -1,6 +1,7 @@
 import {
   ConditionGroupDef,
   hasConditionField,
+  slugify,
   toPresentationString,
   type Condition,
   type ConditionData,
@@ -238,8 +239,11 @@ export class InlineConditionsEdit extends Component<Props, State> {
                 {conditions?.asPerUserGroupings.map((condition, index) => {
                   const isChecked = selectedConditions?.includes(index)
 
+                  const conditionLabel = toPresentationString(condition)
+                  const conditionId = slugify(conditionLabel)
+
                   return (
-                    <Fragment key={`condition-checkbox-${index}`}>
+                    <Fragment key={conditionId}>
                       <div className="govuk-checkboxes__item">
                         <input
                           type="checkbox"
@@ -254,7 +258,7 @@ export class InlineConditionsEdit extends Component<Props, State> {
                           className="govuk-label govuk-checkboxes__label"
                           htmlFor={`condition-${index}`}
                         >
-                          {toPresentationString(condition)}
+                          {conditionLabel}
                         </label>
                       </div>
                       <div

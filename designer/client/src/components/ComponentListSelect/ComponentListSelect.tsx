@@ -126,13 +126,11 @@ export function ComponentListSelect() {
         onChange={handleChangeList}
       >
         <option value="">{i18n('list.select.option')}</option>
-        {data.lists.map((list, index) => {
-          return (
-            <option key={`${list.name}-${index}`} value={list.name}>
-              {list.title}
-            </option>
-          )
-        })}
+        {data.lists.map((list) => (
+          <option key={list.name} value={list.name}>
+            {list.title}
+          </option>
+        ))}
       </select>
       <p className="govuk-body govuk-!-margin-top-2">
         {selectedList?.title && (

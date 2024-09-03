@@ -1,4 +1,4 @@
-import { type Item } from '@defra/forms-model'
+import { slugify, type Item } from '@defra/forms-model'
 import React, { useContext } from 'react'
 
 import { useListItem } from '~/src/hooks/list/useListItem/useListItem.jsx'
@@ -89,9 +89,9 @@ export function ListItems() {
         {i18n('list.items.title')}
       </caption>
       <tbody className="govuk-table__body">
-        {selectedList.items.map((item, idx) => (
+        {selectedList.items.map((item) => (
           <ListItem
-            key={`item-${idx}`}
+            key={slugify(`${selectedList.name}-${item.text}`)}
             item={item}
             editListItem={editListItem}
             removeListItem={removeListItem}

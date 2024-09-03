@@ -56,8 +56,8 @@ export function ErrorSummary({
       <div className="govuk-error-summary__body">
         {description}
         <ul className="govuk-list govuk-error-summary__list">
-          {errorList.map((error, index) => (
-            <li key={index}>
+          {errorList.map((error) => (
+            <li key={error.href}>
               {error.href ? (
                 <a
                   href={error.href}
