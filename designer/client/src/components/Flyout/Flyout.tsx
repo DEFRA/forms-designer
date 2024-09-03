@@ -19,7 +19,7 @@ interface Props {
   onHide: () => void
 }
 
-export function useFlyoutEffect(props?: Pick<Props, 'onHide'>) {
+export function useFlyoutEffect(props?: Readonly<Pick<Props, 'onHide'>>) {
   const { count, increment, decrement } = useContext(FlyoutContext)
 
   const [offset, setOffset] = useState(0)
@@ -78,7 +78,7 @@ export function useFlyoutEffect(props?: Pick<Props, 'onHide'>) {
   }
 }
 
-export function Flyout(props: Props) {
+export function Flyout(props: Readonly<Props>) {
   const { title, width = '', children, onHide } = props
   const { style, closeOnClick, closeOnEnter, offset } = useFlyoutEffect({
     onHide

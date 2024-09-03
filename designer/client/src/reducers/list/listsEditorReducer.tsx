@@ -70,7 +70,7 @@ interface Props {
   children: ReactNode
 }
 
-export const ListsEditorContextProvider = (props: Props) => {
+export const ListsEditorContextProvider = (props: Readonly<Props>) => {
   const [state, dispatch] = useReducer(
     listsEditorReducer,
     initListsEditingState()

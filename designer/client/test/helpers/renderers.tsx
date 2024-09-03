@@ -21,7 +21,7 @@ export interface RenderWithContextProps extends Partial<DataContextType> {
   state?: Parameters<typeof initComponentState>[0]
 }
 
-export function RenderWithContext(props: RenderWithContextProps) {
+export function RenderWithContext(props: Readonly<RenderWithContextProps>) {
   const [state, dispatch] = useReducer(
     componentReducer,
     initComponentState(props.state)

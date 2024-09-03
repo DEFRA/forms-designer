@@ -18,7 +18,7 @@ export interface RenderListEditorWithContextProps
 }
 
 export function RenderListEditorWithContext(
-  props: RenderListEditorWithContextProps
+  props: Readonly<RenderListEditorWithContextProps>
 ) {
   const [state, dispatch] = useReducer(
     componentReducer,

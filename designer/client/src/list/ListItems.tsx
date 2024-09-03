@@ -16,7 +16,7 @@ interface Props {
   editListItem: (payload: Item) => void
 }
 
-const ListItem = ({ item, removeListItem, editListItem }: Props) => {
+const ListItem = ({ item, removeListItem, editListItem }: Readonly<Props>) => {
   return (
     <tr className="govuk-table__row">
       <td className="govuk-table__cell govuk-!-width-full">

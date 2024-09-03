@@ -17,11 +17,13 @@ import { findSection } from '~/src/data/section/findSection.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContextProvider } from '~/src/reducers/component/componentReducer.jsx'
 
-const ComponentItem = (props: {
-  index: number
-  page: PageType
-  selectedComponent: ComponentDef
-}) => {
+const ComponentItem = (
+  props: Readonly<{
+    index: number
+    page: PageType
+    selectedComponent: ComponentDef
+  }>
+) => {
   const { index, page, selectedComponent } = props
 
   return (
@@ -36,7 +38,9 @@ const ComponentItem = (props: {
   )
 }
 
-const ComponentList = ({ page }: { page: PageType }) => {
+const ComponentList = (props: Readonly<{ page: PageType }>) => {
+  const { page } = props
+
   if (!hasComponents(page) || !page.components.length) {
     return null
   }
@@ -57,7 +61,12 @@ const ComponentList = ({ page }: { page: PageType }) => {
   )
 }
 
-export const Page = (props: { page: PageType; layout?: CSSProperties }) => {
+export const Page = (
+  props: Readonly<{
+    page: PageType
+    layout?: CSSProperties
+  }>
+) => {
   const { page, layout } = props
 
   const { data, meta, previewUrl } = useContext(DataContext)

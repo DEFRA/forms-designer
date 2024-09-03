@@ -12,12 +12,14 @@ export interface YearMonthDay {
   day: number
 }
 
-export interface Props {
+interface Props {
   value?: Partial<YearMonthDay>
   updateValue: (value?: YearMonthDay) => void
 }
 
-function isValidateDate(props: Partial<YearMonthDay>): props is YearMonthDay {
+function isValidateDate(
+  props: Readonly<Partial<YearMonthDay>>
+): props is YearMonthDay {
   const year = `${props.year}`
   const month = `${props.month}`.padStart(2, '0')
   const day = `${props.day}`.padStart(2, '0')
@@ -40,7 +42,10 @@ function isValidYear(year?: number): year is number {
   return isValidateDate(date) && date.year >= 1000
 }
 
-export const AbsoluteDateValues = ({ value = {}, updateValue }: Props) => {
+export const AbsoluteDateValues = ({
+  value = {},
+  updateValue
+}: Readonly<Props>) => {
   const [year, setYear] = useState(() =>
     isInt(value.year) ? `${value.year}` : undefined
   )

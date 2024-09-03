@@ -43,7 +43,7 @@ export class SectionEdit extends Component<Props, State> {
   declare context: ContextType<typeof DataContext>
   static contextType = DataContext
 
-  constructor(props: Props, context: typeof DataContext) {
+  constructor(props: Readonly<Props>, context: typeof DataContext) {
     super(props, context)
 
     const { section } = props

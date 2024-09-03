@@ -5,12 +5,8 @@ import { Autocomplete } from '~/src/components/Autocomplete/Autocomplete.jsx'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 
-interface Props {
-  context?: typeof ComponentContext
-}
-
-export function SelectFieldEdit({ context = ComponentContext }: Props) {
-  const { state } = useContext(context)
+export function SelectFieldEdit() {
+  const { state } = useContext(ComponentContext)
   const { selectedComponent } = state
 
   if (selectedComponent?.type !== ComponentType.SelectField) {

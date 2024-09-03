@@ -6,12 +6,8 @@ import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 import { Options, Schema } from '~/src/reducers/component/types.js'
 
-interface Props {
-  context?: typeof ComponentContext
-}
-
-export function NumberFieldEdit({ context = ComponentContext }: Props) {
-  const { state, dispatch } = useContext(context)
+export function NumberFieldEdit() {
+  const { state, dispatch } = useContext(ComponentContext)
   const { selectedComponent } = state
 
   if (selectedComponent?.type !== ComponentType.NumberField) {

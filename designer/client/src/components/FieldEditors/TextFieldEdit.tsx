@@ -9,12 +9,11 @@ import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 import { Schema } from '~/src/reducers/component/types.js'
 
 interface Props {
-  context?: typeof ComponentContext
   children?: ReactNode
 }
 
-export function TextFieldEdit({ children, context = ComponentContext }: Props) {
-  const { state, dispatch } = useContext(context)
+export function TextFieldEdit({ children }: Readonly<Props>) {
+  const { state, dispatch } = useContext(ComponentContext)
   const { selectedComponent } = state
 
   if (

@@ -28,7 +28,7 @@ import { getFieldsTo } from '~/src/data/component/fields.js'
 import { hasConditions } from '~/src/data/definition/hasConditions.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 
-export interface Props {
+interface Props {
   path?: string
   selectedCondition?: string
   conditionsChange: (selectedCondition?: string) => void
@@ -47,7 +47,7 @@ export class SelectConditions extends Component<Props, State> {
   declare context: ContextType<typeof DataContext>
   static contextType = DataContext
 
-  constructor(props: Props, context: typeof DataContext) {
+  constructor(props: Readonly<Props>, context: typeof DataContext) {
     super(props, context)
 
     this.state = {
@@ -57,7 +57,7 @@ export class SelectConditions extends Component<Props, State> {
     }
   }
 
-  componentDidUpdate = (prevProps: Props) => {
+  componentDidUpdate = (prevProps: Readonly<Props>) => {
     const { path } = this.props
 
     if (path !== prevProps.path) {

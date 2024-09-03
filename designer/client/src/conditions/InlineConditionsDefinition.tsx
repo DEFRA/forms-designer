@@ -40,7 +40,7 @@ interface State {
 }
 
 export class InlineConditionsDefinition extends Component<Props, State> {
-  constructor(props: Props) {
+  constructor(props: Readonly<Props>) {
     super(props)
 
     const { condition } = props
@@ -52,7 +52,7 @@ export class InlineConditionsDefinition extends Component<Props, State> {
     }
   }
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps: Readonly<Props>) {
     const { condition, expectsCoordinator, fields } = this.props
 
     if (

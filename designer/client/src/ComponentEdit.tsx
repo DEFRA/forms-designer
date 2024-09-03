@@ -24,7 +24,7 @@ interface Props {
   onSave: () => void
 }
 
-export function ComponentEdit(props: Props) {
+export function ComponentEdit(props: Readonly<Props>) {
   const { data, save } = useContext(DataContext)
   const { state, dispatch } = useContext(ComponentContext)
 

@@ -230,13 +230,13 @@ export const componentTypes = {
   [ComponentType.FileUploadField]: FileUploadField
 }
 
-export interface Props {
+interface Props {
   page: Page
   selectedComponent: ComponentDef
   index: number
 }
 
-export const Component: FunctionComponent<Props> = (props) => {
+export const Component: FunctionComponent<Readonly<Props>> = (props) => {
   const { page, selectedComponent, index } = props
 
   const { data, save } = useContext(DataContext)

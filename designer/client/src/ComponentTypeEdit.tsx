@@ -32,18 +32,12 @@ const componentTypeEditors = {
     ComponentType,
     JSXElementConstructor<{
       children?: ReactNode
-      context?: typeof ComponentContext
     }>
   >
 >
 
-export interface Props {
-  context?: typeof ComponentContext
-}
-
-export const ComponentTypeEdit: FunctionComponent<Props> = (props) => {
-  const { children, context = ComponentContext } = props
-  const { state } = useContext(context)
+export const ComponentTypeEdit: FunctionComponent = ({ children }) => {
+  const { state } = useContext(ComponentContext)
   const { selectedComponent } = state
 
   if (!selectedComponent) {

@@ -202,10 +202,12 @@ export function listReducer(state: ListState, action: ListReducerActions) {
 /**
  * Allows components to retrieve {@link ListState} and {@link Dispatch} from any component nested within `<ListContextProvider>`
  */
-export const ListContextProvider = (props: {
-  children?: ReactNode
-  selectedListName?: string
-}) => {
+export const ListContextProvider = (
+  props: Readonly<{
+    children?: ReactNode
+    selectedListName?: string
+  }>
+) => {
   const { children, selectedListName } = props
   const { data } = useContext(DataContext)
 

@@ -23,7 +23,7 @@ interface Props {
 /**
  * Manage form data
  */
-function useData(props: Props): DataContextType {
+function useData(props: Readonly<Props>): DataContextType {
   const [data, setData] = useState<FormDefinition>(props.data)
 
   /**
@@ -75,7 +75,7 @@ function useFlyout(): FlyoutContextType {
   )
 }
 
-export function Designer(props: Props) {
+export function Designer(props: Readonly<Props>) {
   const { data, meta, previewUrl } = props
 
   return (

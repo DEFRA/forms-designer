@@ -38,7 +38,7 @@ interface State {
 }
 
 export class InlineConditionsEdit extends Component<Props, State> {
-  constructor(props: Props) {
+  constructor(props: Readonly<Props>) {
     super(props)
 
     this.state = {
@@ -133,7 +133,7 @@ export class InlineConditionsEdit extends Component<Props, State> {
     return result
   }
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps: Readonly<Props>) {
     const { conditions } = this.props
 
     if (prevProps.conditions !== conditions) {

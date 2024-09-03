@@ -8,7 +8,7 @@ interface Props {
   updateValue: (value: ConditionValue) => void
 }
 
-export const TextValues = (props: Props) => {
+export const TextValues = (props: Readonly<Props>) => {
   const { updateValue, value } = props
 
   const onChangeTextInput = (e: ChangeEvent<HTMLInputElement>) => {

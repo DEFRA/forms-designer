@@ -15,7 +15,7 @@ interface Props {
   overview: MenuItemHook
 }
 
-export function SubMenu({ overview }: Props) {
+export function SubMenu({ overview }: Readonly<Props>) {
   const { data, meta, save } = useContext(DataContext)
   const fileInput = useRef<HTMLInputElement>(null)
 

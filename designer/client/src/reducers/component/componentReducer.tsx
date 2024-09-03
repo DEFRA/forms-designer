@@ -104,7 +104,7 @@ export function componentReducer(
 }
 
 export const initComponentState = (
-  props?: Partial<Omit<ComponentState, 'initialName'>>
+  props?: Readonly<Partial<Omit<ComponentState, 'initialName'>>>
 ): ComponentState => {
   const { selectedComponent, errors = {} } = props ?? {}
 

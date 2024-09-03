@@ -12,7 +12,7 @@ interface State {
 }
 
 export class Editor extends Component<Props, State> {
-  constructor(props: Props) {
+  constructor(props: Readonly<Props>) {
     super(props)
 
     const { value } = this.props

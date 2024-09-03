@@ -4,9 +4,11 @@ import React from 'react'
 import { useFlyoutEffect } from '~/src/components/Flyout/Flyout.jsx'
 import { FlyoutContext } from '~/src/context/FlyoutContext.js'
 
-function HookWrapper(props: {
-  hook: () => ReturnType<typeof useFlyoutEffect>
-}) {
+function HookWrapper(
+  props: Readonly<{
+    hook: () => ReturnType<typeof useFlyoutEffect>
+  }>
+) {
   return <div style={props.hook().style} />
 }
 

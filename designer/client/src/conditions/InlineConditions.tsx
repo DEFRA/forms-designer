@@ -49,7 +49,7 @@ export class InlineConditions extends Component<Props, State> {
   declare context: ContextType<typeof DataContext>
   static contextType = DataContext
 
-  constructor(props: Props, context: typeof DataContext) {
+  constructor(props: Readonly<Props>, context: typeof DataContext) {
     super(props, context)
 
     const { path, condition } = this.props
@@ -67,7 +67,7 @@ export class InlineConditions extends Component<Props, State> {
     }
   }
 
-  componentDidUpdate = (prevProps: Props) => {
+  componentDidUpdate = (prevProps: Readonly<Props>) => {
     const { path } = this.props
 
     if (path !== prevProps.path) {

@@ -9,7 +9,7 @@ export class RenderInPortal extends Component<Props> {
   $root: HTMLElement
   $wrapper: HTMLElement
 
-  constructor(props: Props) {
+  constructor(props: Readonly<Props>) {
     super(props)
 
     const $wrapper = document.createElement('div')

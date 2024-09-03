@@ -51,7 +51,7 @@ interface Props {
   path?: string
 }
 
-export function ConditionsEdit({ path }: Props) {
+export function ConditionsEdit({ path }: Readonly<Props>) {
   const {
     editingCondition,
     showAddCondition,
