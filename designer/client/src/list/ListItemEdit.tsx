@@ -27,8 +27,8 @@ export function ListItemEdit() {
     validate,
     value,
     condition,
-    title,
-    hint
+    text,
+    description
   } = useListItem(state, dispatch)
 
   const { conditions } = data
@@ -73,14 +73,14 @@ export function ListItemEdit() {
             children: [i18n('list.item.title')]
           }}
           hint={{ children: i18n('list.item.titleHint') }}
-          value={title}
+          value={text ?? ''}
           onChange={handleTitleChange}
           errorMessage={errors.title}
         />
         <Textarea
           label={{ children: i18n('list.item.help') }}
           hint={{ children: i18n('list.item.helpHint') }}
-          value={hint}
+          value={description ?? ''}
           name="list-item-hint"
           id="hint"
           onChange={handleHintChange}
@@ -90,7 +90,7 @@ export function ListItemEdit() {
           hint={{ children: [i18n('list.item.valueHint')] }}
           id="value"
           name="list-item-value"
-          value={value}
+          value={value ?? ''}
           errorMessage={errors.value}
           onChange={handleValueChange}
         />
@@ -105,7 +105,7 @@ export function ListItemEdit() {
           id="condition"
           aria-describedby="condition-hint"
           name="options.condition"
-          value={condition}
+          value={condition ?? ''}
           onChange={handleConditionChange}
         >
           <option value="">{i18n('list.item.conditionsOption')}</option>

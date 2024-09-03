@@ -343,7 +343,7 @@ export class PageEdit extends Component<Props, State> {
               id="controller"
               aria-describedby="controller-hint"
               name="controller"
-              value={controller}
+              value={controller ?? ''}
               onChange={this.onChangeController}
             >
               <option value={ControllerType.Page}>
@@ -374,7 +374,7 @@ export class PageEdit extends Component<Props, State> {
               className: 'govuk-label--s',
               children: [i18n('page.title')]
             }}
-            value={title}
+            value={title ?? ''}
             onChange={this.onChangeTitle}
             errorMessage={errors.title}
           />
@@ -390,7 +390,7 @@ export class PageEdit extends Component<Props, State> {
               hint={{
                 children: [i18n('page.pathHint')]
               }}
-              value={path}
+              value={path ?? ''}
               onChange={this.onChangePath}
               errorMessage={errors.path}
             />

@@ -32,7 +32,7 @@ export function ConditionEdit() {
         id="condition"
         aria-describedby="condition-hint"
         name="options.condition"
-        value={options.condition}
+        value={options.condition ?? ''}
         onChange={(e) =>
           dispatch({
             name: Options.EDIT_OPTIONS_CONDITION,

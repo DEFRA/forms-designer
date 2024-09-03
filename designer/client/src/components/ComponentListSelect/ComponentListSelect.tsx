@@ -122,7 +122,7 @@ export function ComponentListSelect() {
         id="field-options-list"
         aria-describedby="field-options-list-hint"
         name="options.list"
-        value={selectedList?.name}
+        value={selectedList?.name ?? ''}
         onChange={handleChangeList}
       >
         <option value="">{i18n('list.select.option')}</option>

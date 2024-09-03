@@ -273,7 +273,7 @@ export class LinkEdit extends Component<Props, State> {
               id="link-from"
               aria-describedby={errors.to && 'link-from-error'}
               name="path"
-              value={pageFrom?.path}
+              value={pageFrom?.path ?? ''}
               onChange={this.onChangeFrom}
             >
               <option value="">{i18n('addLink.linkFrom.option')}</option>
@@ -307,7 +307,7 @@ export class LinkEdit extends Component<Props, State> {
               id="link-to"
               aria-describedby={errors.to && 'link-to-error'}
               name="page"
-              value={pageTo?.path}
+              value={pageTo?.path ?? ''}
               onChange={this.onChangeTo}
             >
               <option value="">{i18n('addLink.linkTo.option')}</option>

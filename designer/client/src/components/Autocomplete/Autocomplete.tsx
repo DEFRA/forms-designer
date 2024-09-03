@@ -37,7 +37,7 @@ export function Autocomplete() {
         aria-describedby="field-options-autocomplete-hint"
         name="options.autocomplete"
         type="text"
-        value={options.autocomplete}
+        value={options.autocomplete ?? ''}
         onChange={(e) =>
           dispatch({
             name: Options.EDIT_OPTIONS_AUTOCOMPLETE,

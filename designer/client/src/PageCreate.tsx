@@ -297,7 +297,7 @@ export class PageCreate extends Component<Props, State> {
               id="controller"
               aria-describedby="controller-hint"
               name="controller"
-              value={controller}
+              value={controller ?? ''}
               onChange={this.onChangeController}
             >
               <option value={ControllerType.Page}>
@@ -326,7 +326,7 @@ export class PageCreate extends Component<Props, State> {
               className: 'govuk-label--s',
               children: [i18n('addPage.pageTitleField.title')]
             }}
-            value={title}
+            value={title ?? ''}
             onChange={this.onChangeTitle}
             errorMessage={errors.title}
           />
@@ -342,7 +342,7 @@ export class PageCreate extends Component<Props, State> {
               hint={{
                 children: [i18n('addPage.pathField.helpText')]
               }}
-              value={path}
+              value={path ?? ''}
               onChange={this.onChangePath}
               errorMessage={errors.path}
             />

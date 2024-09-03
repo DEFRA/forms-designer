@@ -161,7 +161,7 @@ export class SectionEdit extends Component<Props, State> {
               className: 'govuk-label--s',
               children: [i18n('sectionEdit.titleField.title')]
             }}
-            value={title}
+            value={title ?? ''}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               this.setState({ title: e.target.value })
             }
@@ -178,7 +178,7 @@ export class SectionEdit extends Component<Props, State> {
             hint={{
               children: [i18n('sectionEdit.nameField.helpText')]
             }}
-            value={name}
+            value={name ?? ''}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               this.setState({ name: e.target.value })
             }

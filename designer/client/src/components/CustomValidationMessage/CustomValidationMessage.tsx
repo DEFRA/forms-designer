@@ -44,7 +44,7 @@ export function CustomValidationMessage() {
         aria-describedby="field-options-custom-validation-message-hint"
         name="options.customValidationMessage"
         type="text"
-        value={options.customValidationMessage}
+        value={options.customValidationMessage ?? ''}
         onChange={(e) =>
           dispatch({
             name: Options.EDIT_OPTIONS_CUSTOM_MESSAGE,

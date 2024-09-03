@@ -46,7 +46,7 @@ export function DateFieldEdit() {
             id="field-options-maxDaysInPast"
             aria-describedby="field-options-maxDaysInPast-hint"
             name="options.maxDaysInPast"
-            value={options.maxDaysInPast}
+            value={options.maxDaysInPast ?? ''}
             type="number"
             onChange={(e) =>
               dispatch({
@@ -74,7 +74,7 @@ export function DateFieldEdit() {
             id="field-options-maxDaysInFuture"
             aria-describedby="field-options-maxDaysInFuture-hint"
             name="options.maxDaysInFuture"
-            value={options.maxDaysInFuture}
+            value={options.maxDaysInFuture ?? ''}
             type="number"
             onChange={(e) =>
               dispatch({

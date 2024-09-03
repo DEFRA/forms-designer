@@ -34,7 +34,7 @@ export function MultilineTextFieldEdit() {
           id="field-schema-maxwords"
           aria-describedby="field-schema-maxwords-hint"
           name="schema.maxwords"
-          value={options.maxWords}
+          value={options.maxWords ?? ''}
           type="number"
           onChange={(e) =>
             dispatch({
@@ -63,7 +63,7 @@ export function MultilineTextFieldEdit() {
           name="options.rows"
           type="text"
           data-cast="number"
-          value={options.rows}
+          value={options.rows ?? ''}
           onChange={(e) =>
             dispatch({
               name: Options.EDIT_OPTIONS_ROWS,

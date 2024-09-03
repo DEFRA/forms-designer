@@ -58,7 +58,7 @@ export function TextFieldEdit({ children }: Readonly<Props>) {
                 id="field-schema-min"
                 aria-describedby="field-schema-min-hint"
                 name="schema.min"
-                value={selectedComponent.schema.min}
+                value={selectedComponent.schema.min ?? ''}
                 type="number"
                 onChange={(e) =>
                   dispatch({
@@ -86,7 +86,7 @@ export function TextFieldEdit({ children }: Readonly<Props>) {
                 id="field-schema-max"
                 aria-describedby="field-schema-max-hint"
                 name="schema.max"
-                value={selectedComponent.schema.max}
+                value={selectedComponent.schema.max ?? ''}
                 type="number"
                 onChange={(e) =>
                   dispatch({
@@ -114,7 +114,7 @@ export function TextFieldEdit({ children }: Readonly<Props>) {
                 id="field-schema-length"
                 aria-describedby="field-schema-length-hint"
                 name="schema.length"
-                value={selectedComponent.schema.length}
+                value={selectedComponent.schema.length ?? ''}
                 type="number"
                 onChange={(e) =>
                   dispatch({
@@ -146,7 +146,7 @@ export function TextFieldEdit({ children }: Readonly<Props>) {
               id="field-schema-regex"
               aria-describedby="field-schema-regex-hint"
               name="schema.regex"
-              value={selectedComponent.schema.regex}
+              value={selectedComponent.schema.regex ?? ''}
               onChange={(e) =>
                 dispatch({
                   name: Schema.EDIT_SCHEMA_REGEX,

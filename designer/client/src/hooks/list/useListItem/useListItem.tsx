@@ -148,7 +148,7 @@ export function useListItem(
     validate,
     value: selectedItem?.value,
     condition: selectedItem?.condition,
-    title: selectedItem?.text ?? '',
-    hint: selectedItem?.description ?? ''
+    text: selectedItem?.text,
+    description: selectedItem?.description
   }
 }
