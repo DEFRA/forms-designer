@@ -38,13 +38,13 @@ export const PageTypes: readonly Page[] = Object.freeze([
     components: []
   },
   {
-    title: 'Check your answers',
+    title: 'Summary page',
     path: ControllerPath.Summary,
     controller: ControllerType.Summary,
     section: undefined
   },
   {
-    title: 'Form submitted',
+    title: 'Status page',
     path: ControllerPath.Status,
     controller: ControllerType.Status,
     section: undefined
