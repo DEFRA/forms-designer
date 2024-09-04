@@ -5,20 +5,20 @@ exports[`ComponentCreateList should match snapshot 1`] = `
   <div
     class="govuk-form-group"
   >
-    <h1
+    <div
       class="govuk-hint"
     >
       Select a component to add to your page. If your page has only one component, the component title does not show on the page. To name or describe the component, use the page title instead.
-    </h1>
+    </div>
     <ol
       class="govuk-list"
     >
       <li>
-        <h2
+        <h3
           class="govuk-heading-s"
         >
           Content
-        </h2>
+        </h3>
         <div
           class="govuk-hint"
         >
@@ -101,11 +101,11 @@ exports[`ComponentCreateList should match snapshot 1`] = `
         />
       </li>
       <li>
-        <h2
+        <h3
           class="govuk-heading-s"
         >
           Input fields
-        </h2>
+        </h3>
         <div
           class="govuk-hint"
         >
@@ -256,11 +256,11 @@ exports[`ComponentCreateList should match snapshot 1`] = `
         />
       </li>
       <li>
-        <h2
+        <h3
           class="govuk-heading-s"
         >
           Selection fields
-        </h2>
+        </h3>
         <div
           class="govuk-hint"
         >

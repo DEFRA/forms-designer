@@ -102,7 +102,7 @@ export function Flyout(props: Readonly<Props>) {
           </button>
           <div className="panel">
             <div className="panel__header">
-              {title && <h4 className="govuk-heading-m">{title}</h4>}
+              {title && <h2 className="govuk-heading-m">{title}</h2>}
             </div>
             <div className="panel__body">{children}</div>
           </div>

@@ -232,9 +232,9 @@ export class SelectConditions extends Component<Props, State> {
 
     return (
       <>
-        <h4 className="govuk-heading-s govuk-!-margin-bottom-1">
+        <h3 className="govuk-heading-s govuk-!-margin-bottom-1">
           {i18n('conditions.optional')}
-        </h4>
+        </h3>
         {hasFields || hasConditionsForPath ? (
           <>
             {hasConditionsForPath && (

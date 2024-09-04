@@ -139,16 +139,16 @@ export function ComponentCreate(props: Readonly<Props>) {
 
   return (
     <>
-      {!type && <h4 className="govuk-heading-m">{i18n('component.create')}</h4>}
+      {!type && <h2 className="govuk-heading-m">{i18n('component.create')}</h2>}
       {type && (
         <>
           <BackLink onClick={handleReset} href="#">
             {i18n('Back to create component list')}
           </BackLink>
-          <h4 className="govuk-heading-m">
+          <h2 className="govuk-heading-m">
             {i18n(`fieldTypeToName.${selectedComponent.type}`)}{' '}
             {i18n('component.component')}
-          </h4>
+          </h2>
         </>
       )}
       {hasErrors && (

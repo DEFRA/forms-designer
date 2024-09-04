@@ -37,9 +37,9 @@ export function Menu() {
       panel: {
         children: (
           <>
-            <h4 className="govuk-heading-m govuk-!-margin-bottom-2">
+            <h3 className="govuk-heading-s govuk-!-margin-bottom-1">
               Definition
-            </h4>
+            </h3>
             <p className="govuk-body">Form definition JSON</p>
 
             <DataPrettyPrint className="language-json">{data}</DataPrettyPrint>
@@ -53,9 +53,9 @@ export function Menu() {
       panel: {
         children: (
           <>
-            <h4 className="govuk-heading-m govuk-!-margin-bottom-2">
+            <h3 className="govuk-heading-s govuk-!-margin-bottom-1">
               Metadata
-            </h4>
+            </h3>
             <p className="govuk-body">Form metadata JSON</p>
 
             <DataPrettyPrint className="language-json">{meta}</DataPrettyPrint>
@@ -69,7 +69,7 @@ export function Menu() {
       panel: {
         children: (
           <>
-            <h4 className="govuk-heading-m govuk-!-margin-bottom-2">Pages</h4>
+            <h3 className="govuk-heading-s govuk-!-margin-bottom-1">Pages</h3>
             <p className="govuk-body">
               Form definition JSON <code>pages</code> showing paths and titles
             </p>
@@ -90,9 +90,9 @@ export function Menu() {
       panel: {
         children: (
           <>
-            <h4 className="govuk-heading-m govuk-!-margin-bottom-2">
+            <h3 className="govuk-heading-s govuk-!-margin-bottom-1">
               Components
-            </h4>
+            </h3>
             <p className="govuk-body">
               Form definition JSON <code>components</code> showing name, type
               and (optional) list
@@ -197,7 +197,11 @@ export function Menu() {
 
       {overview.isVisible && (
         <RenderInPortal>
-          <Flyout width="xlarge" onHide={overview.hide}>
+          <Flyout
+            title={i18n('menu.overview')}
+            width="xlarge"
+            onHide={overview.hide}
+          >
             <Tabs
               title={i18n('menu.overview')}
               items={overviewTabs}
