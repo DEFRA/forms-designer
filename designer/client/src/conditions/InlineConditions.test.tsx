@@ -4,7 +4,7 @@ import { cleanup, render } from '@testing-library/react'
 import React from 'react'
 
 import { InlineConditions } from '~/src/conditions/InlineConditions.jsx'
-import { DataContext } from '~/src/context/DataContext.js'
+import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
 describe('InlineConditions', () => {
   afterEach(cleanup)
@@ -66,9 +66,9 @@ describe('InlineConditions', () => {
     } satisfies FormDefinition
 
     render(
-      <DataContext.Provider value={{ data, save: jest.fn() }}>
+      <RenderWithContext data={data}>
         <InlineConditions {...props} />
-      </DataContext.Provider>
+      </RenderWithContext>
     )
 
     const $addOrEditHint = screen.getByText(

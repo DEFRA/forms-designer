@@ -8,12 +8,9 @@ import {
   initComponentState
 } from '~/src/reducers/component/componentReducer.jsx'
 
-export interface RenderWithContextProps {
+export interface RenderWithContextProps extends Partial<DataContextType> {
   children?: ReactElement
   state?: Parameters<typeof initComponentState>[0]
-  data?: DataContextType['data']
-  meta?: DataContextType['meta']
-  save?: DataContextType['save']
 }
 
 export function RenderWithContext(props: RenderWithContextProps) {
@@ -25,12 +22,17 @@ export function RenderWithContext(props: RenderWithContextProps) {
   const {
     children,
     data = {} as DataContextType['data'],
-    meta,
+    meta = {
+      id: 'example-id',
+      slug: 'example-slug',
+      title: 'Example title'
+    } as DataContextType['meta'],
+    previewUrl = 'http://localhost:3000',
     save = jest.fn()
   } = props
 
   return (
-    <DataContext.Provider value={{ data, meta, save }}>
+    <DataContext.Provider value={{ data, meta, previewUrl, save }}>
       <FlyoutContext.Provider
         value={{
           count: 1,

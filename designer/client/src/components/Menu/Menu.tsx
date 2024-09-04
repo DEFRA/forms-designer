@@ -19,11 +19,7 @@ import { ListsEditorContextProvider } from '~/src/reducers/list/listsEditorReduc
 import { ListContextProvider } from '~/src/reducers/listReducer.jsx'
 import { SectionsEdit } from '~/src/section/SectionsEdit.jsx'
 
-interface Props {
-  slug: string
-}
-
-export function Menu({ slug }: Props) {
+export function Menu() {
   const { data, meta } = useContext(DataContext)
 
   const page = useMenuItem()
@@ -62,9 +58,7 @@ export function Menu({ slug }: Props) {
             </h4>
             <p className="govuk-body">Form metadata JSON</p>
 
-            <DataPrettyPrint className="language-json">
-              {meta ?? {}}
-            </DataPrettyPrint>
+            <DataPrettyPrint className="language-json">{meta}</DataPrettyPrint>
           </>
         )
       }
@@ -142,7 +136,7 @@ export function Menu({ slug }: Props) {
             {i18n('menu.summary')}
           </button>
         </div>
-        <SubMenu slug={slug} overview={overview} />
+        <SubMenu overview={overview} />
       </nav>
 
       {page.isVisible && (

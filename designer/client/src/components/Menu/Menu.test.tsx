@@ -20,7 +20,7 @@ describe('Menu', () => {
   it('Renders button strings correctly', () => {
     render(
       <RenderWithContext data={data}>
-        <Menu slug="example" />
+        <Menu />
       </RenderWithContext>
     )
 
@@ -35,7 +35,7 @@ describe('Menu', () => {
   it('Can open flyouts and close them', async () => {
     render(
       <RenderWithContext data={data}>
-        <Menu slug="example" />
+        <Menu />
       </RenderWithContext>
     )
 
@@ -51,7 +51,7 @@ describe('Menu', () => {
   it('clicking on a form overview tab shows different tab content', async () => {
     render(
       <RenderWithContext data={data}>
-        <Menu slug="example" />
+        <Menu />
       </RenderWithContext>
     )
 
@@ -88,7 +88,7 @@ describe('Menu', () => {
 
     render(
       <RenderWithContext data={data} save={save}>
-        <Menu slug="example" />
+        <Menu />
       </RenderWithContext>
     )
 

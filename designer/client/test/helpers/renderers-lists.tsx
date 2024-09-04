@@ -9,12 +9,10 @@ import {
 import { ListsEditorContextProvider } from '~/src/reducers/list/listsEditorReducer.jsx'
 import { ListContextProvider } from '~/src/reducers/listReducer.jsx'
 
-export interface RenderListEditorWithContextProps {
+export interface RenderListEditorWithContextProps
+  extends Partial<DataContextType> {
   children: ReactElement
   selectedListName?: string
-  data: DataContextType['data']
-  meta?: DataContextType['meta']
-  save?: DataContextType['save']
   state?: Parameters<typeof initComponentState>[0]
 }
 
@@ -30,12 +28,13 @@ export function RenderListEditorWithContext(
     children,
     selectedListName,
     data = {} as DataContextType['data'],
-    meta,
+    meta = {} as DataContextType['meta'],
+    previewUrl = '',
     save = jest.fn()
   } = props
 
   return (
-    <DataContext.Provider value={{ data, meta, save }}>
+    <DataContext.Provider value={{ data, meta, previewUrl, save }}>
       <ListsEditorContextProvider>
         <ComponentContext.Provider value={{ state, dispatch }}>
           <ListContextProvider selectedListName={selectedListName}>

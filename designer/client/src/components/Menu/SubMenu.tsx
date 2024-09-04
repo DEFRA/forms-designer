@@ -11,12 +11,11 @@ import { type MenuItemHook } from '~/src/components/Menu/useMenuItem.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 
 interface Props {
-  slug: string
   overview: MenuItemHook
 }
 
-export function SubMenu({ slug, overview }: Props) {
-  const { data, save } = useContext(DataContext)
+export function SubMenu({ overview }: Props) {
+  const { data, meta, save } = useContext(DataContext)
   const fileInput = useRef<HTMLInputElement>(null)
 
   function onClickUpload() {
@@ -29,7 +28,7 @@ export function SubMenu({ slug, overview }: Props) {
     const link = document.createElement('a')
     const contents = JSON.stringify(data, undefined, 2)
 
-    link.download = `${slug}.json`
+    link.download = `${meta.slug}.json`
     link.href = `data:text/json;charset=utf-8,${encodeURIComponent(contents)}`
 
     document.body.appendChild(link)

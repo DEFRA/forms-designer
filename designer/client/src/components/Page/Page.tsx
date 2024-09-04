@@ -57,15 +57,10 @@ const ComponentList = ({ page }: { page: PageType }) => {
   )
 }
 
-export const Page = (props: {
-  page: PageType
-  previewUrl: string
-  slug: string
-  layout?: CSSProperties
-}) => {
-  const { page, previewUrl, slug, layout } = props
+export const Page = (props: { page: PageType; layout?: CSSProperties }) => {
+  const { page, layout } = props
 
-  const { data } = useContext(DataContext)
+  const { data, meta, previewUrl } = useContext(DataContext)
   const [isEditingPage, setIsEditingPage] = useState(false)
   const [isCreatingComponent, setIsCreatingComponent] = useState(false)
 
@@ -73,6 +68,11 @@ export const Page = (props: {
 
   const pageId = slugify(page.path)
   const headingId = `${pageId}-heading`
+
+  const href = new URL(
+    `/preview/draft/${meta.slug}${page.path}`,
+    previewUrl
+  ).toString()
 
   return (
     <div className="page" style={layout}>
@@ -94,7 +94,7 @@ export const Page = (props: {
           {i18n('page.edit')}
         </button>
         <a
-          href={new URL(`/preview/draft/${slug}${page.path}`, previewUrl).href}
+          href={href}
           className="govuk-link"
           target="_blank"
           rel="noreferrer"

@@ -12,8 +12,8 @@ import { FlyoutContext } from '~/src/context/FlyoutContext.js'
 import * as form from '~/src/lib/form.js'
 
 interface Props {
-  metadata: FormMetadata
-  definition: FormDefinition
+  data: FormDefinition
+  meta: FormMetadata
   previewUrl: string
 }
 
@@ -27,11 +27,11 @@ export class Designer extends Component<Props, State> {
   constructor(props: Props) {
     super(props)
 
-    const { definition, metadata } = this.props
+    const { data, meta } = this.props
 
     this.state = {
-      data: definition,
-      meta: metadata,
+      data,
+      meta,
       flyoutCount: 0
     }
   }
@@ -47,8 +47,8 @@ export class Designer extends Component<Props, State> {
   }
 
   get = async () => {
-    const { metadata } = this.props
-    const definition = await form.get(metadata.id)
+    const { meta } = this.props
+    const definition = await form.get(meta.id)
 
     this.setState({
       data: definition
@@ -58,18 +58,18 @@ export class Designer extends Component<Props, State> {
   }
 
   save = async (definition: FormDefinition) => {
-    const { metadata } = this.props
+    const { meta } = this.props
 
     // Fix incorrect start page
     const updated = updateStartPage(definition)
 
     // Save and return form definition
-    await form.save(metadata.id, updated)
+    await form.save(meta.id, updated)
     return this.get()
   }
 
   render() {
-    const { metadata, previewUrl } = this.props
+    const { previewUrl } = this.props
     const { data, meta, flyoutCount } = this.state
 
     const flyoutContextProviderValue = {
@@ -81,6 +81,7 @@ export class Designer extends Component<Props, State> {
     const dataContextProviderValue = {
       data,
       meta,
+      previewUrl,
       save: this.save
     }
 
@@ -88,9 +89,9 @@ export class Designer extends Component<Props, State> {
       <DataContext.Provider value={dataContextProviderValue}>
         <FlyoutContext.Provider value={flyoutContextProviderValue}>
           <div className="govuk-width-container">
-            <Menu slug={metadata.slug} />
+            <Menu />
           </div>
-          <Visualisation slug={metadata.slug} previewUrl={previewUrl} />
+          <Visualisation />
         </FlyoutContext.Provider>
       </DataContext.Provider>
     )
