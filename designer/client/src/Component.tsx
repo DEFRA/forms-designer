@@ -255,7 +255,7 @@ export const Component: FunctionComponent<Readonly<Props>> = (props) => {
   const pageId = slugify(page.path)
   const headingId = `${pageId}-heading`
   const name = i18n(`fieldTypeToName.${type}`)
-  const suffix = hasTitle(selectedComponent) ? `: ${title}` : undefined
+  const suffix = hasTitle(selectedComponent) ? `: ${title}` : ''
 
   // '[Action] XXX component'
   const componentFlyoutTitle = i18n('component.edit', { name })
