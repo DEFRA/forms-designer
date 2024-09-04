@@ -159,7 +159,7 @@ export class PageEdit extends Component<Props, State> {
     const errors: State['errors'] = {}
 
     errors.title = validateRequired('page-title', title, {
-      label: i18n('page.title')
+      label: i18n('addPage.pageTitleField.title')
     })
 
     // Path '/status' not allowed
@@ -333,10 +333,10 @@ export class PageEdit extends Component<Props, State> {
         <form onSubmit={this.onSubmit} autoComplete="off" noValidate>
           <div className="govuk-form-group">
             <label className="govuk-label govuk-label--s" htmlFor="controller">
-              {i18n('page.controller')}
+              {i18n('addPage.controllerOption.title')}
             </label>
             <div className="govuk-hint" id="controller-hint">
-              {i18n('page.controllerHint')}
+              {i18n('addPage.controllerOption.helpText')}
             </div>
             <select
               className="govuk-select"
@@ -372,7 +372,7 @@ export class PageEdit extends Component<Props, State> {
             name="title"
             label={{
               className: 'govuk-label--s',
-              children: [i18n('page.title')]
+              children: [i18n('addPage.pageTitleField.title')]
             }}
             value={title ?? ''}
             onChange={this.onChangeTitle}
@@ -385,10 +385,10 @@ export class PageEdit extends Component<Props, State> {
               name="path"
               label={{
                 className: 'govuk-label--s',
-                children: [i18n('page.path')]
+                children: [i18n('addPage.pathField.title')]
               }}
               hint={{
-                children: [i18n('page.pathHint')]
+                children: [i18n('addPage.pathField.helpText')]
               }}
               value={path ?? ''}
               onChange={this.onChangePath}
@@ -401,10 +401,10 @@ export class PageEdit extends Component<Props, State> {
               {!sections.length && (
                 <>
                   <h3 className="govuk-heading-s govuk-!-margin-bottom-1">
-                    {i18n('page.section')}
+                    {i18n('addPage.sectionOption.title')}
                   </h3>
                   <p className="govuk-hint govuk-!-margin-top-0">
-                    {i18n('page.sectionHint')}
+                    {i18n('addPage.sectionOption.helpText')}
                   </p>
                 </>
               )}
@@ -416,10 +416,10 @@ export class PageEdit extends Component<Props, State> {
                       className="govuk-label govuk-label--s"
                       htmlFor="page-section"
                     >
-                      {i18n('page.section')}
+                      {i18n('addPage.sectionOption.title')}
                     </label>
                     <div className="govuk-hint" id="page-section-hint">
-                      {i18n('page.sectionHint')}
+                      {i18n('addPage.sectionOption.helpText')}
                     </div>
                     <select
                       className="govuk-select"
@@ -429,7 +429,9 @@ export class PageEdit extends Component<Props, State> {
                       value={section?.name ?? ''}
                       onChange={this.onChangeSection}
                     >
-                      <option value="">{i18n('page.sectionOption')}</option>
+                      <option value="">
+                        {i18n('addPage.sectionOption.option')}
+                      </option>
                       {sections.map((section) => (
                         <option key={section.name} value={section.name}>
                           {section.title}

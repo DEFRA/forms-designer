@@ -150,7 +150,7 @@ export class PageCreate extends Component<Props, State> {
     const errors: State['errors'] = {}
 
     errors.title = validateRequired('page-title', title, {
-      label: i18n('page.title')
+      label: i18n('addPage.pageTitleField.title')
     })
 
     errors.path = validateCustom(
