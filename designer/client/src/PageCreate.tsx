@@ -269,14 +269,14 @@ export class PageCreate extends Component<Props, State> {
     const hasErrors = hasValidationErrors(errors)
 
     // Check if we already have a start page
-    const hasStartPage = pages.some(
-      (page) => page.controller === ControllerType.Start
-    )
+    const hasStartPage = pages.some((page) => {
+      return controllerNameFromPath(page.controller) === ControllerType.Start
+    })
 
     // Check if we already have a summary page
-    const hasSummaryPage = pages.some(
-      (page) => page.controller === ControllerType.Summary
-    )
+    const hasSummaryPage = pages.some((page) => {
+      return controllerNameFromPath(page.controller) === ControllerType.Summary
+    })
 
     return (
       <>

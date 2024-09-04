@@ -312,14 +312,14 @@ export class PageEdit extends Component<Props, State> {
     const hasErrors = hasValidationErrors(errors)
 
     // Check if we already have a start page
-    const hasStartPage = pages.some(
-      (page) => page.controller === ControllerType.Start
-    )
+    const hasStartPage = pages.some((page) => {
+      return controllerNameFromPath(page.controller) === ControllerType.Start
+    })
 
     // Check if we already have a summary page
-    const hasSummaryPage = pages.some(
-      (page) => page.controller === ControllerType.Summary
-    )
+    const hasSummaryPage = pages.some((page) => {
+      return controllerNameFromPath(page.controller) === ControllerType.Summary
+    })
 
     // Check if we have a link from another page
     const hasLinkFrom = findPathsTo(data, page.path).length > 1
@@ -350,7 +350,7 @@ export class PageEdit extends Component<Props, State> {
                 {i18n('page.controllers.question')}
               </option>
               {((!hasStartPage && !hasLinkFrom) ||
-                page.controller === ControllerType.Start) && (
+                controller === ControllerType.Start) && (
                 <option value={ControllerType.Start}>
                   {i18n('page.controllers.start')}
                 </option>
@@ -358,8 +358,7 @@ export class PageEdit extends Component<Props, State> {
               <option value={ControllerType.FileUpload}>
                 {i18n('page.controllers.fileUpload')}
               </option>
-              {(!hasSummaryPage ||
-                page.controller === ControllerType.Summary) && (
+              {(!hasSummaryPage || controller === ControllerType.Summary) && (
                 <option value={ControllerType.Summary}>
                   {i18n('page.controllers.summary')}
                 </option>
