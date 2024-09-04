@@ -48,13 +48,11 @@ export function useFlyoutEffect(props?: Readonly<Pick<Props, 'onHide'>>) {
    * Update styling for offset flyouts
    */
   useEffect(() => {
-    if (offset > 0) {
-      setStyle({
-        paddingLeft: `${offset * 50}px`,
-        transform: `translateX(${offset * -50}px)`,
-        position: 'relative'
-      })
-    }
+    setStyle({
+      paddingLeft: `${offset * 50}px`,
+      transform: `translateX(${offset * -50}px)`,
+      position: 'relative'
+    })
   }, [offset])
 
   function closeOnClick(
@@ -84,8 +82,11 @@ export function Flyout(props: Readonly<Props>) {
     onHide
   })
 
+  const count = offset + 1
+  const flyoutId = `flyout-${count}`
+
   return (
-    <div className="flyout show" data-testid={`flyout-${offset}`}>
+    <div className="flyout show" data-testid={flyoutId}>
       <FocusTrap
         focusTrapOptions={{
           preventScroll: true,

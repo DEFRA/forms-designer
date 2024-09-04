@@ -45,7 +45,7 @@ export function RenderWithContext(props: Readonly<RenderWithContextProps>) {
       <FlyoutContext.Provider
         value={useMemo(
           () => ({
-            count: 1,
+            count: 0,
             increment: jest.fn(),
             decrement: jest.fn()
           }),
