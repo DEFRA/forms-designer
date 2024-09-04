@@ -9,6 +9,7 @@ export {
   controllerNameFromPath,
   getPageDefaults,
   hasComponents,
+  hasFormComponents,
   hasSection,
   hasNext,
   isControllerName,

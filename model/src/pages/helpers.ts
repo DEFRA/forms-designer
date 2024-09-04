@@ -40,6 +40,15 @@ export function hasComponents(
 }
 
 /**
+ * Check page has form components
+ */
+export function hasFormComponents(
+  page?: Partial<Page>
+): page is Extract<Page, { components: ComponentDef[] }> {
+  return isLinkablePage(page) && Array.isArray(page.components)
+}
+
+/**
  * Check page has sections
  */
 export function hasSection(
