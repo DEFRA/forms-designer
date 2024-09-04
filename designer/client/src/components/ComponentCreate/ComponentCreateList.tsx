@@ -21,7 +21,10 @@ interface Props {
 
 export const ComponentCreateList = (props: Readonly<Props>) => {
   const { page, onSelectComponent } = props
-  const controller = controllerNameFromPath(page.controller)
+
+  const controller = controllerNameFromPath(
+    page.controller ?? ControllerType.Page
+  )
 
   // Allow component pages to add input + selection fields
   const isComponentPage =

@@ -86,6 +86,7 @@ export function isLinkablePage(
   const controller = controllerNameFromPath(page.controller)
 
   return (
+    !controller ||
     controller === ControllerType.Start ||
     controller === ControllerType.Page ||
     controller === ControllerType.FileUpload
@@ -99,6 +100,7 @@ export function isQuestionPage(page?: Partial<Page>): page is PageQuestion {
   const controller = controllerNameFromPath(page?.controller)
 
   return (
+    !controller ||
     controller === ControllerType.Page ||
     controller === ControllerType.FileUpload
   )
@@ -114,5 +116,5 @@ export function controllerNameFromPath(nameOrPath?: ControllerType | string) {
   }
 
   const options = ControllerTypes.find(({ path }) => path === nameOrPath)
-  return options?.name ?? ControllerType.Page
+  return options?.name
 }

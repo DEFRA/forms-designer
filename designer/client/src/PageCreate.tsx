@@ -102,7 +102,9 @@ export class PageCreate extends Component<Props, State> {
     } = this.state
 
     // Page defaults
-    const defaults = getPageDefaults({ controller })
+    const defaults = getPageDefaults({
+      controller: controller ?? ControllerType.Page
+    })
 
     // Remove trailing spaces and hyphens
     const payload = {

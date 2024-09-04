@@ -78,7 +78,9 @@ export class PageEdit extends Component<Props, State> {
     const { data } = this.context
 
     const { path, title } = page
-    const controller = controllerNameFromPath(page.controller)
+    const controller = controllerNameFromPath(
+      page.controller ?? ControllerType.Page
+    )
 
     this.setState({
       path,
@@ -98,7 +100,9 @@ export class PageEdit extends Component<Props, State> {
     const { page, onSave } = this.props
 
     // Page defaults
-    const defaults = getPageDefaults({ controller })
+    const defaults = getPageDefaults({
+      controller: controller ?? ControllerType.Page
+    })
 
     // Remove trailing spaces and hyphens
     const payload = {
