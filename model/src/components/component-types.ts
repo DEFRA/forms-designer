@@ -104,6 +104,13 @@ export const ComponentTypes: readonly ComponentDef[] = Object.freeze([
     options: {}
   },
   {
+    name: 'FileUploadField',
+    title: 'File upload field',
+    type: ComponentType.FileUploadField,
+    options: {},
+    schema: {}
+  },
+  {
     name: 'Html',
     title: 'Html',
     type: ComponentType.Html,
