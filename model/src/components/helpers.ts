@@ -17,14 +17,18 @@ import {
 /**
  * Return component defaults by type
  */
-export function getComponentDefaults(component?: Partial<ComponentDef>) {
-  if (!component?.type) {
-    return
+export function getComponentDefaults<FieldType extends ComponentDef>(
+  component?: Pick<FieldType, 'type'>
+) {
+  const defaults = ComponentTypes.find(({ type }) => type === component?.type)
+
+  if (!defaults) {
+    throw new Error(
+      `Defaults not found for component type '${component?.type}'`
+    )
   }
 
-  return structuredClone(
-    ComponentTypes.find(({ type }) => type === component.type)
-  )
+  return structuredClone(defaults) as FieldType
 }
 
 /**
