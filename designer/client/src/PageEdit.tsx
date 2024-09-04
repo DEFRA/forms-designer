@@ -13,6 +13,7 @@ import {
 } from '@defra/forms-model'
 // @ts-expect-error -- No types available
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
+import classNames from 'classnames'
 import Joi from 'joi'
 import React, {
   Component,
@@ -24,6 +25,7 @@ import React, {
 
 import { type ErrorList, ErrorSummary } from '~/src/ErrorSummary.jsx'
 import { logger } from '~/src/common/helpers/logging/logger.js'
+import { ErrorMessage } from '~/src/components/ErrorMessage/ErrorMessage.jsx'
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
@@ -46,17 +48,17 @@ interface Props {
 }
 
 interface State extends Partial<Form> {
-  controller?: ControllerType
   section?: Section
   isEditingSection: boolean
   isNewSection: boolean
   isQuestionPage: boolean
-  errors: Partial<ErrorList<'path' | 'title'>>
+  errors: Partial<ErrorList<'path' | 'title' | 'controller'>>
 }
 
 interface Form {
   path: string
   title: string
+  controller: ControllerType
 }
 
 export class PageEdit extends Component<Props, State> {
@@ -100,7 +102,8 @@ export class PageEdit extends Component<Props, State> {
     // Remove trailing spaces and hyphens
     const payload = {
       title: title?.trim(),
-      path: isQuestionPage ? `/${slugify(path)}` : defaults.path
+      path: isQuestionPage ? `/${slugify(path)}` : defaults.path,
+      controller: controller ? defaults.controller : undefined
     }
 
     // Check for valid form payload
@@ -122,7 +125,7 @@ export class PageEdit extends Component<Props, State> {
       pageUpdate.section = section?.name
 
       // Remove default controller
-      if (controller === ControllerType.Page) {
+      if (payload.controller === ControllerType.Page) {
         delete pageUpdate.controller
       }
     }
@@ -157,6 +160,11 @@ export class PageEdit extends Component<Props, State> {
     const { title, path } = payload
 
     const errors: State['errors'] = {}
+
+    errors.controller = validateRequired('page-controller', controller, {
+      label: i18n('addPage.controllerOption.title'),
+      message: 'addPage.controllerOption.option'
+    })
 
     errors.title = validateRequired('page-title', title, {
       label: i18n('addPage.pageTitleField.title')
@@ -234,7 +242,7 @@ export class PageEdit extends Component<Props, State> {
       controller,
 
       // Allow question pages to edit section + path
-      isQuestionPage: isQuestionPage({ controller }),
+      isQuestionPage: controller ? isQuestionPage({ controller }) : false,
 
       // Reset path errors when controller changes
       errors: {
@@ -331,21 +339,41 @@ export class PageEdit extends Component<Props, State> {
         )}
 
         <form onSubmit={this.onSubmit} autoComplete="off" noValidate>
-          <div className="govuk-form-group">
-            <label className="govuk-label govuk-label--s" htmlFor="controller">
+          <div
+            className={classNames('govuk-form-group', {
+              'govuk-form-group--error': errors.controller
+            })}
+          >
+            <label
+              className="govuk-label govuk-label--s"
+              htmlFor="page-controller"
+            >
               {i18n('addPage.controllerOption.title')}
             </label>
-            <div className="govuk-hint" id="controller-hint">
+            <div className="govuk-hint" id="page-controller-hint">
               {i18n('addPage.controllerOption.helpText')}
             </div>
+            {errors.controller && (
+              <ErrorMessage id="page-controller-error">
+                {errors.controller.children}
+              </ErrorMessage>
+            )}
             <select
-              className="govuk-select"
-              id="controller"
-              aria-describedby="controller-hint"
+              className={classNames('govuk-select', {
+                'govuk-select--error': errors.controller
+              })}
+              id="page-controller"
+              aria-describedby={
+                'page-controller-hint' +
+                (errors.controller ? 'page-controller-error' : '')
+              }
               name="controller"
               value={controller ?? ''}
               onChange={this.onChangeController}
             >
+              <option value="">
+                {i18n('addPage.controllerOption.option')}
+              </option>
               <option value={ControllerType.Page}>
                 {i18n('page.controllers.question')}
               </option>

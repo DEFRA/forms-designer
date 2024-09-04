@@ -30,7 +30,8 @@
     },
     "controllerOption": {
       "helpText": "Select a Start Page to start a form, a Question Page to request information, and a Summary Page at the end of a section or form. For example, use a Summary to let users check their answers to questions before they submit the form.",
-      "title": "Page type"
+      "title": "Page type",
+      "option": "Select a page type"
     },
     "pathField": {
       "helpText": "Appears in the browser path. The value you enter in the page title field automatically populates the path name. To override it, enter your own path name, relevant to the page, and use lowercase text and hyphens between words. For example, '/personal-details'.",
