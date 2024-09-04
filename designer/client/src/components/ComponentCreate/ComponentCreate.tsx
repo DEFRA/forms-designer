@@ -34,7 +34,6 @@ function useComponentCreate(props: Readonly<Props>) {
   const { data, save } = useContext(DataContext)
   const { state, dispatch } = useContext(ComponentContext)
 
-  const [renderTypeEdit, setRenderTypeEdit] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
 
   const { page, onSave } = props
@@ -42,27 +41,6 @@ function useComponentCreate(props: Readonly<Props>) {
 
   const hasErrors = hasValidationErrors(errors)
   const onHandleSave = useCallback(handleSave, [handleSave])
-
-  useEffect(() => {
-    // render in the next re-paint to allow the DOM to reflow without the list
-    // thus resetting the Flyout wrapper scrolling position
-    // This is a quick work around the bug in small screens
-    // where once user scrolls down the components list and selects one of the bottom components
-    // then the component edit screen renders already scrolled to the bottom
-    let isMounted = true
-
-    if (selectedComponent?.type) {
-      window.requestAnimationFrame(() => {
-        if (isMounted) setRenderTypeEdit(true)
-      })
-    } else {
-      setRenderTypeEdit(false)
-    }
-
-    return () => {
-      isMounted = false
-    }
-  }, [selectedComponent?.type])
 
   useEffect(() => {
     if (!hasValidated || hasErrors || isSaving) {
@@ -119,7 +97,6 @@ function useComponentCreate(props: Readonly<Props>) {
     hasErrors,
     errors,
     selectedComponent,
-    renderTypeEdit,
     onSave
   }
 }
@@ -132,7 +109,6 @@ export function ComponentCreate(props: Readonly<Props>) {
     hasErrors,
     errors,
     selectedComponent,
-    renderTypeEdit,
     onSave
   } = useComponentCreate(props)
 
@@ -150,7 +126,7 @@ export function ComponentCreate(props: Readonly<Props>) {
         </Flyout>
       </RenderInPortal>
 
-      {type && renderTypeEdit && (
+      {type && (
         <RenderInPortal>
           <Flyout
             title={`${componentName} ${i18n('component.component')}`}
