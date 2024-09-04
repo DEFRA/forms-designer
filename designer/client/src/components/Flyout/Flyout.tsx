@@ -2,6 +2,7 @@ import FocusTrap from 'focus-trap-react'
 import React, {
   useContext,
   useEffect,
+  useRef,
   useState,
   type CSSProperties,
   type KeyboardEvent,
@@ -13,17 +14,32 @@ import { FlyoutContext } from '~/src/context/FlyoutContext.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 
 interface Props {
-  title?: string
+  title: string
   width?: string
   children?: ReactNode
   onHide: () => void
 }
 
-export function useFlyoutEffect(props?: Readonly<Pick<Props, 'onHide'>>) {
+export function useFlyoutEffect(
+  props: Readonly<Pick<Props, 'onHide' | 'title'>>
+) {
   const { count, increment, decrement } = useContext(FlyoutContext)
 
   const [offset, setOffset] = useState(0)
   const [style, setStyle] = useState<CSSProperties>()
+
+  const ref = useRef<HTMLDialogElement>(null)
+
+  /**
+   * Open dialog when styled
+   */
+  useEffect(() => {
+    if (!style || !ref.current || ref.current.hasAttribute('open')) {
+      return
+    }
+
+    ref.current.showModal()
+  }, [style])
 
   /**
    * Count open flyouts
@@ -50,8 +66,7 @@ export function useFlyoutEffect(props?: Readonly<Pick<Props, 'onHide'>>) {
   useEffect(() => {
     setStyle({
       paddingLeft: `${offset * 50}px`,
-      transform: `translateX(${offset * -50}px)`,
-      position: 'relative'
+      transform: `translateX(${offset * -50}px)`
     })
   }, [offset])
 
@@ -59,7 +74,9 @@ export function useFlyoutEffect(props?: Readonly<Pick<Props, 'onHide'>>) {
     e?: KeyboardEvent<HTMLButtonElement> | MouseEvent<HTMLButtonElement>
   ) {
     e?.preventDefault()
-    props?.onHide()
+
+    ref.current?.close()
+    props.onHide()
   }
 
   function closeOnEnter(e: KeyboardEvent<HTMLButtonElement>) {
@@ -71,29 +88,29 @@ export function useFlyoutEffect(props?: Readonly<Pick<Props, 'onHide'>>) {
   return {
     style,
     offset,
+    ref,
     closeOnEnter,
     closeOnClick
   }
 }
 
 export function Flyout(props: Readonly<Props>) {
-  const { title, width = '', children, onHide } = props
-  const { style, closeOnClick, closeOnEnter, offset } = useFlyoutEffect({
-    onHide
-  })
+  const { title, width = '', children } = props
+  const { style, offset, ref, closeOnClick, closeOnEnter } =
+    useFlyoutEffect(props)
 
   const count = offset + 1
-  const flyoutId = `flyout-${count}`
+  const headingId = `flyout-${count}-heading`
 
   return (
-    <div className="flyout show" data-testid={flyoutId}>
-      <FocusTrap
-        focusTrapOptions={{
-          preventScroll: true,
-          tabbableOptions: { displayCheck: 'none' }
-        }}
-      >
-        <div className={`flyout__container ${width}`} style={style}>
+    <FocusTrap
+      focusTrapOptions={{
+        preventScroll: true,
+        tabbableOptions: { displayCheck: 'none' }
+      }}
+    >
+      <dialog className="flyout" aria-labelledby={headingId} ref={ref}>
+        <div className={`flyout__container ${width}`.trim()} style={style}>
           <button
             className="flyout__button-close govuk-link"
             onClick={closeOnClick}
@@ -103,12 +120,14 @@ export function Flyout(props: Readonly<Props>) {
           </button>
           <div className="panel">
             <div className="panel__header">
-              {title && <h2 className="govuk-heading-m">{title}</h2>}
+              <h2 id={headingId} className="govuk-heading-m">
+                {title}
+              </h2>
             </div>
             <div className="panel__body">{children}</div>
           </div>
         </div>
-      </FocusTrap>
-    </div>
+      </dialog>
+    </FocusTrap>
   )
 }

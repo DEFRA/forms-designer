@@ -167,7 +167,7 @@ describe('ConditionsEdit', () => {
 
       expect($link).toBeInTheDocument()
       expect($link2).toBeInTheDocument()
-      expect(screen.queryByTestId('flyout-1')).not.toBeInTheDocument()
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     })
 
     test('Clicking an edit link causes the edit view to be rendered and all other elements hidden', async () => {
@@ -182,7 +182,12 @@ describe('ConditionsEdit', () => {
       })
 
       await act(() => userEvent.click($link))
-      expect(screen.getByTestId('flyout-1')).toBeTruthy()
+
+      const $dialog = screen.getByRole('dialog', {
+        name: 'Add or edit condition'
+      })
+
+      expect($dialog).toBeInTheDocument()
     })
   })
 

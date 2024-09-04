@@ -75,7 +75,11 @@ describe('Page', () => {
 
     // Open edit page
     await act(() => userEvent.click($buttonEdit))
-    await waitFor(() => screen.findByTestId('flyout-1'))
+    await waitFor(() =>
+      screen.findByRole('dialog', {
+        name: 'Edit page'
+      })
+    )
 
     const $buttonSave = screen.getByRole('button', {
       name: 'Save'
@@ -90,7 +94,11 @@ describe('Page', () => {
 
     // Open edit page
     await act(() => userEvent.click($buttonEdit))
-    await waitFor(() => screen.findByTestId('flyout-1'))
+    await waitFor(() =>
+      screen.findByRole('dialog', {
+        name: 'Edit page'
+      })
+    )
 
     const $buttonClose = screen.getByRole('button', {
       name: 'Close'
@@ -98,7 +106,7 @@ describe('Page', () => {
 
     // Close edit page
     await act(() => userEvent.click($buttonClose))
-    expect(screen.queryByTestId('flyout-1')).not.toBeInTheDocument()
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 
   test('Add component can be shown/hidden successfully', async () => {
@@ -119,7 +127,7 @@ describe('Page', () => {
     })
 
     await act(() => userEvent.click($buttonClose))
-    expect(screen.queryByTestId('flyout-1')).not.toBeInTheDocument()
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 
   test('Visualisation page actions contain expected call to actions', () => {

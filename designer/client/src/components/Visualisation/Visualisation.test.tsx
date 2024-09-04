@@ -96,25 +96,33 @@ describe('Visualisation', () => {
     )
 
     // Check that link works when selected with the enter key
-    expect(screen.queryByTestId('flyout-1')).not.toBeInTheDocument()
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 
     await act(async () => {
       $lineTitle.parentElement?.focus()
       await userEvent.keyboard('[Enter]')
     })
 
-    expect(screen.queryByTestId('flyout-1')).toBeInTheDocument()
+    expect(
+      screen.queryByRole('dialog', {
+        name: 'Edit link'
+      })
+    ).toBeInTheDocument()
 
     await act(() => userEvent.click(screen.getByText('Close')))
 
     // Check that link works when selected with the space key
-    expect(screen.queryByTestId('flyout-1')).not.toBeInTheDocument()
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 
     await act(async () => {
       $lineTitle.parentElement?.focus()
       await userEvent.keyboard('[Space]')
     })
 
-    expect(screen.queryByTestId('flyout-1')).toBeInTheDocument()
+    expect(
+      screen.queryByRole('dialog', {
+        name: 'Edit link'
+      })
+    ).toBeInTheDocument()
   })
 })
