@@ -30,14 +30,6 @@ export const PageTypes: readonly Page[] = Object.freeze([
     components: []
   },
   {
-    title: 'File upload page',
-    path: '/file-upload-page',
-    controller: ControllerType.FileUpload,
-    section: undefined,
-    next: [],
-    components: []
-  },
-  {
     title: 'Summary page',
     path: ControllerPath.Summary,
     controller: ControllerType.Summary,
