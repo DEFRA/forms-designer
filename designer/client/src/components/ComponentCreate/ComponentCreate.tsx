@@ -8,15 +8,15 @@ import React, {
   useContext,
   useEffect,
   useState,
-  type FormEvent,
-  type MouseEvent
+  type FormEvent
 } from 'react'
 
 import { ComponentTypeEdit } from '~/src/ComponentTypeEdit.jsx'
 import { ErrorSummary } from '~/src/ErrorSummary.jsx'
 import { logger } from '~/src/common/helpers/logging/logger.js'
-import { BackLink } from '~/src/components/BackLink/BackLink.jsx'
 import { ComponentCreateList } from '~/src/components/ComponentCreate/ComponentCreateList.jsx'
+import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
+import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { addComponent } from '~/src/data/component/addComponent.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
@@ -108,8 +108,7 @@ function useComponentCreate(props: Readonly<Props>) {
     })
   }
 
-  function handleReset(e: MouseEvent<HTMLAnchorElement>) {
-    e.preventDefault()
+  function handleReset() {
     dispatch({ name: Meta.SET_COMPONENT })
   }
 
@@ -120,7 +119,8 @@ function useComponentCreate(props: Readonly<Props>) {
     hasErrors,
     errors,
     selectedComponent,
-    renderTypeEdit
+    renderTypeEdit,
+    onSave
   }
 }
 
@@ -132,41 +132,43 @@ export function ComponentCreate(props: Readonly<Props>) {
     hasErrors,
     errors,
     selectedComponent,
-    renderTypeEdit
+    renderTypeEdit,
+    onSave
   } = useComponentCreate(props)
 
   const type = selectedComponent?.type
+  const componentName = i18n(`fieldTypeToName.${selectedComponent?.type}`)
 
   return (
     <>
-      {!type && <h2 className="govuk-heading-m">{i18n('component.create')}</h2>}
-      {type && (
-        <>
-          <BackLink onClick={handleReset} href="#">
-            {i18n('Back to create component list')}
-          </BackLink>
-          <h2 className="govuk-heading-m">
-            {i18n(`fieldTypeToName.${selectedComponent.type}`)}{' '}
-            {i18n('component.component')}
-          </h2>
-        </>
-      )}
-      {hasErrors && (
-        <ErrorSummary errorList={Object.values(errors).filter(Boolean)} />
-      )}
-      {!type && (
-        <ComponentCreateList
-          page={props.page}
-          onSelectComponent={handleCreate}
-        />
-      )}
+      <RenderInPortal>
+        <Flyout title={i18n('component.create')} onHide={onSave}>
+          <ComponentCreateList
+            page={props.page}
+            onSelectComponent={handleCreate}
+          />
+        </Flyout>
+      </RenderInPortal>
+
       {type && renderTypeEdit && (
-        <form onSubmit={handleSubmit} autoComplete="off" noValidate>
-          <ComponentTypeEdit />
-          <button type="submit" className="govuk-button">
-            Save
-          </button>
-        </form>
+        <RenderInPortal>
+          <Flyout
+            title={`${componentName} ${i18n('component.component')}`}
+            onHide={handleReset}
+          >
+            {hasErrors && (
+              <ErrorSummary errorList={Object.values(errors).filter(Boolean)} />
+            )}
+
+            <form onSubmit={handleSubmit} autoComplete="off" noValidate>
+              <ComponentTypeEdit />
+
+              <button type="submit" className="govuk-button">
+                Save
+              </button>
+            </form>
+          </Flyout>
+        </RenderInPortal>
       )}
     </>
   )

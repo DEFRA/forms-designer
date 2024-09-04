@@ -134,14 +134,12 @@ export const Page = (
 
       {isCreatingComponent && (
         <RenderInPortal>
-          <Flyout onHide={() => setIsCreatingComponent(false)}>
-            <ComponentContextProvider>
-              <ComponentCreate
-                onSave={() => setIsCreatingComponent(false)}
-                page={page}
-              />
-            </ComponentContextProvider>
-          </Flyout>
+          <ComponentContextProvider>
+            <ComponentCreate
+              onSave={() => setIsCreatingComponent(false)}
+              page={page}
+            />
+          </ComponentContextProvider>
         </RenderInPortal>
       )}
     </div>
