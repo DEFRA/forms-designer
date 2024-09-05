@@ -1,10 +1,10 @@
 import {
-  controllerNameFromPath,
   ControllerType,
   getPageDefaults,
   hasComponents,
   hasNext,
   isQuestionPage,
+  PageTypes,
   slugify,
   type Page,
   type Section
@@ -32,6 +32,7 @@ import { addLink } from '~/src/data/page/addLink.js'
 import { addPage } from '~/src/data/page/addPage.js'
 import { findPage } from '~/src/data/page/findPage.js'
 import { findSection } from '~/src/data/section/findSection.js'
+import { isControllerAllowed } from '~/src/helpers.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { SectionEdit } from '~/src/section/SectionEdit.jsx'
 import {
@@ -276,16 +277,12 @@ export class PageCreate extends Component<Props, State> {
 
     const { sections } = data
     const hasErrors = hasValidationErrors(errors)
-
-    // Check if we already have a start page
-    const hasStartPage = pages.some((page) => {
-      return controllerNameFromPath(page.controller) === ControllerType.Start
-    })
-
-    // Check if we already have a summary page
-    const hasSummaryPage = pages.some((page) => {
-      return controllerNameFromPath(page.controller) === ControllerType.Summary
-    })
+    const pageTypes = PageTypes.filter(
+      isControllerAllowed(data, {
+        controller,
+        path
+      })
+    )
 
     return (
       <>
@@ -329,22 +326,11 @@ export class PageCreate extends Component<Props, State> {
               <option value="">
                 {i18n('addPage.controllerOption.option')}
               </option>
-              <option value={ControllerType.Page}>
-                {i18n('page.controllers.question')}
-              </option>
-              {!hasStartPage && (
-                <option value={ControllerType.Start}>
-                  {i18n('page.controllers.start')}
+              {pageTypes.map((pageType) => (
+                <option key={pageType.title} value={pageType.controller}>
+                  {pageType.title}
                 </option>
-              )}
-              <option value={ControllerType.FileUpload}>
-                {i18n('page.controllers.fileUpload')}
-              </option>
-              {!hasSummaryPage && (
-                <option value={ControllerType.Summary}>
-                  {i18n('page.controllers.summary')}
-                </option>
-              )}
+              ))}
             </select>
           </div>
 

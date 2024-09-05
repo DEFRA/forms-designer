@@ -7,7 +7,11 @@ import {
 } from '@defra/forms-model'
 import dfs, { type Edge } from 'depth-first'
 
-export function findPathsTo({ pages }: FormDefinition, pathTo: string) {
+export function findPathsTo({ pages }: FormDefinition, pathTo?: string) {
+  if (!pathTo) {
+    return []
+  }
+
   const edges = pages.filter(hasNext).flatMap(pageToEdges)
   return dfs(edges, pathTo, { reverse: true }).reverse()
 }

@@ -100,3 +100,15 @@ test('findPathsTo should work with multiple parents', () => {
   expect(findPathsTo(data, '/3')).toEqual(['/1', '/3'])
   expect(findPathsTo(data, '/1')).toEqual(['/1'])
 })
+
+test('findPathsTo should work with empty path', () => {
+  const data = {
+    pages: [],
+    lists: [],
+    sections: [],
+    conditions: []
+  } satisfies FormDefinition
+
+  expect(findPathsTo(data)).toEqual([])
+  expect(findPathsTo(data, '')).toEqual([])
+})

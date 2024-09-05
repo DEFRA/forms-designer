@@ -1,6 +1,7 @@
 import {
   ControllerPath,
   ControllerType,
+  PageTypes,
   controllerNameFromPath,
   getPageDefaults,
   hasComponents,
@@ -31,9 +32,9 @@ import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.j
 import { DataContext } from '~/src/context/DataContext.js'
 import { deleteLink } from '~/src/data/page/deleteLink.js'
 import { findPage } from '~/src/data/page/findPage.js'
-import { findPathsTo } from '~/src/data/page/findPathsTo.js'
 import { updateLinksTo } from '~/src/data/page/updateLinksTo.js'
 import { findSection } from '~/src/data/section/findSection.js'
+import { isControllerAllowed } from '~/src/helpers.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { SectionEdit } from '~/src/section/SectionEdit.jsx'
 import {
@@ -316,21 +317,9 @@ export class PageEdit extends Component<Props, State> {
       errors
     } = this.state
 
-    const { pages, sections } = data
+    const { sections } = data
     const hasErrors = hasValidationErrors(errors)
-
-    // Check if we already have a start page
-    const hasStartPage = pages.some((page) => {
-      return controllerNameFromPath(page.controller) === ControllerType.Start
-    })
-
-    // Check if we already have a summary page
-    const hasSummaryPage = pages.some((page) => {
-      return controllerNameFromPath(page.controller) === ControllerType.Summary
-    })
-
-    // Check if we have a link from another page
-    const hasLinkFrom = findPathsTo(data, page.path).length > 1
+    const pageTypes = PageTypes.filter(isControllerAllowed(data, page))
 
     return (
       <>
@@ -374,23 +363,11 @@ export class PageEdit extends Component<Props, State> {
               <option value="">
                 {i18n('addPage.controllerOption.option')}
               </option>
-              <option value={ControllerType.Page}>
-                {i18n('page.controllers.question')}
-              </option>
-              {((!hasStartPage && !hasLinkFrom) ||
-                controller === ControllerType.Start) && (
-                <option value={ControllerType.Start}>
-                  {i18n('page.controllers.start')}
+              {pageTypes.map((pageType) => (
+                <option key={pageType.title} value={pageType.controller}>
+                  {pageType.title}
                 </option>
-              )}
-              <option value={ControllerType.FileUpload}>
-                {i18n('page.controllers.fileUpload')}
-              </option>
-              {(!hasSummaryPage || controller === ControllerType.Summary) && (
-                <option value={ControllerType.Summary}>
-                  {i18n('page.controllers.summary')}
-                </option>
-              )}
+              ))}
             </select>
           </div>
 
