@@ -107,9 +107,7 @@ export function isControllerAllowed(data, page) {
     /**
      * Page types currently unavailable
      */
-    const isInactivePage =
-      pageType.controller === ControllerType.FileUpload ||
-      pageType.controller === ControllerType.Status
+    const isInactivePage = pageType.controller === ControllerType.Status
 
     /**
      * Ignore rules when already selected
