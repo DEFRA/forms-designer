@@ -47,6 +47,14 @@ export default [
             .code(StatusCodes.INTERNAL_SERVER_ERROR)
         }
       }
+    },
+    options: {
+      auth: {
+        access: {
+          entity: 'user',
+          scope: false
+        }
+      }
     }
   }),
   /**
@@ -104,6 +112,12 @@ export default [
       }
     },
     options: {
+      auth: {
+        access: {
+          entity: 'user',
+          scope: false
+        }
+      },
       validate: {
         payload: Joi.object({
           email: emailSchema
