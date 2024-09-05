@@ -87,6 +87,11 @@ export type OptionsReducerActions =
         { options: { customValidationMessage?: string } }
       >
     }
+  | {
+      name: Options.EDIT_OPTIONS_ACCEPT
+      payload?: string
+      as: Extract<ComponentDef, { options: { accept?: string } }>
+    }
 
 export function optionsReducer(state: ComponentState, action: ReducerActions) {
   const stateNew = structuredClone(state)
@@ -218,6 +223,14 @@ export function optionsReducer(state: ComponentState, action: ReducerActions) {
     case Options.EDIT_OPTIONS_CUSTOM_MESSAGE: {
       if (type === as.type) {
         selectedComponent.options.customValidationMessage = payload
+      }
+
+      break
+    }
+
+    case Options.EDIT_OPTIONS_ACCEPT: {
+      if (type === as.type) {
+        selectedComponent.options.accept = payload
       }
 
       break

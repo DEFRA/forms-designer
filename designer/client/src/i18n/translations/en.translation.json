@@ -206,6 +206,24 @@
     "FileUploadField": "File upload",
     "FileUploadField_info": "Allows a user to upload files"
   },
+  "fileUploadFieldEditComponent": {
+    "acceptField": {
+      "helpText": "Specifies allowed file formats using a comma separated list of MIME types. For example 'image/jpeg, application/pdf'",
+      "title": "Allowed MIME types"
+    },
+    "maxField": {
+      "helpText": "Specifies the maximum number of files users can upload",
+      "title": "Max file count"
+    },
+    "minField": {
+      "helpText": "Specifies the minimum number of files users can upload",
+      "title": "Min file count"
+    },
+    "lengthField": {
+      "helpText": "Specifies the exact number of files users can upload. Using this setting negates any values you set for Min or Max file count",
+      "title": "Exact file count"
+    }
+  },
   "link": {
     "edit": "Edit link"
   },

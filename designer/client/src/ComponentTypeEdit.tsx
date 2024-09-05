@@ -11,6 +11,7 @@ import { MultilineTextFieldEdit } from '~/src/MultilineTextFieldEdit.jsx'
 import { ConditionEdit } from '~/src/components/FieldEditors/ConditionEdit.jsx'
 import { ContentEdit } from '~/src/components/FieldEditors/ContentEdit.jsx'
 import { DateFieldEdit } from '~/src/components/FieldEditors/DateFieldEdit.jsx'
+import { FileUploadFieldEdit } from '~/src/components/FieldEditors/FileUploadFieldEdit.jsx'
 import { ListContentEdit } from '~/src/components/FieldEditors/ListContentEdit.jsx'
 import { ListFieldEdit } from '~/src/components/FieldEditors/ListFieldEdit.jsx'
 import { NumberFieldEdit } from '~/src/components/FieldEditors/NumberFieldEdit.jsx'
@@ -26,7 +27,8 @@ const componentTypeEditors = {
   [ComponentType.NumberField]: NumberFieldEdit,
   [ComponentType.SelectField]: SelectFieldEdit,
   [ComponentType.List]: ListContentEdit,
-  [ComponentType.DatePartsField]: DateFieldEdit
+  [ComponentType.DatePartsField]: DateFieldEdit,
+  [ComponentType.FileUploadField]: FileUploadFieldEdit
 } as Partial<
   Record<
     ComponentType,
