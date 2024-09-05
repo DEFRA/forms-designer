@@ -2,6 +2,7 @@ import { type ComponentDef } from '~/src/components/types.js'
 import {
   type Link,
   type Page,
+  type PageFileUpload,
   type PageQuestion,
   type PageStart,
   type RequiredField
@@ -56,8 +57,11 @@ export function hasFormComponents(
  * Check page has sections
  */
 export function hasSection(
-  page?: Partial<Page>
-): page is RequiredField<PageStart | PageQuestion, 'section'> {
+  page: Partial<Page>
+): page is
+  | RequiredField<PageStart, 'section'>
+  | RequiredField<PageQuestion, 'section'>
+  | RequiredField<PageFileUpload, 'section'> {
   return isLinkablePage(page) && typeof page.section === 'string'
 }
 

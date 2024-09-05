@@ -9,8 +9,8 @@ import {
   type ConditionalComponentType,
   type FormDefinition,
   type Item,
-  type PageQuestion,
-  type PageStart,
+  type Link,
+  type Page,
   type Section
 } from '@defra/forms-model'
 
@@ -46,7 +46,7 @@ export function getFieldsTo(data: FormDefinition, pathTo?: string) {
  */
 export function pageToFields(
   this: FormDefinition,
-  page: PageStart | PageQuestion
+  page: Extract<Page, { next: Link[] }>
 ) {
   const section = hasSection(page) ? findSection(this, page.section) : undefined
 
