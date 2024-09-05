@@ -277,7 +277,11 @@
       "option": "Select a list"
     },
     "title": "List title",
-    "titleHint": "Enter a unique name for your list"
+    "titleHint": "Enter a unique name for your list",
+    "type": "List type",
+    "typeHint": "Value type for your list",
+    "typeHintString": "String hint text",
+    "typeHintNumber": "Number hint text"
   },
   "listContentEditComponent": {
     "bulletField": {

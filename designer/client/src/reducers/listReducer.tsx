@@ -1,5 +1,5 @@
-import { type FormDefinition, type Item, type List } from '@defra/forms-model'
-import {
+import { type ListTypeContent, type FormDefinition, type Item, type List } from '@defra/forms-model'
+import React, {
   createContext,
   useContext,
   useMemo,
@@ -20,8 +20,8 @@ export interface ListState extends Partial<FormList>, Partial<FormItem> {
   initialItemText?: string
   initialItemValue?: Item['value']
   selectedItemIndex?: number
-  errors: Partial<ErrorList<'title' | 'listItems'>>
-  listItemErrors: Partial<ErrorList<'title' | 'value'>>
+  errors: Partial<ErrorList<'title' | 'type' | 'listItems'>>
+  listItemErrors: Partial<ErrorList<'title' | 'type' | 'value'>>
 }
 
 export interface FormList {
@@ -44,6 +44,7 @@ export type ListReducerActions =
   | {
       name:
         | ListActions.EDIT_TITLE
+        | ListActions.EDIT_TYPE
         | ListActions.EDIT_LIST_ITEM_TEXT
         | ListActions.EDIT_LIST_ITEM_VALUE
       payload: string
@@ -130,6 +131,10 @@ export function listReducer(state: ListState, action: ListReducerActions) {
   switch (name) {
     case ListActions.EDIT_TITLE:
       selectedList.title = payload
+      break
+
+    case ListActions.EDIT_TYPE:
+      selectedList.type = payload as ListTypeContent
       break
 
     case ListActions.ADD_LIST_ITEM: {
