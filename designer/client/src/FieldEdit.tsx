@@ -8,7 +8,7 @@ import {
 // @ts-expect-error -- No types available
 import { Input, Textarea } from '@xgovformbuilder/govuk-react-jsx'
 import classNames from 'classnames'
-import React, { type ChangeEvent, useContext } from 'react'
+import React, { useContext, type ChangeEvent, type ReactNode } from 'react'
 
 import { ErrorMessage } from '~/src/components/ErrorMessage/ErrorMessage.jsx'
 import { i18n } from '~/src/i18n/i18n.jsx'
@@ -32,6 +32,33 @@ export function FieldEdit() {
   const hasOptionHideTitle =
     selectedComponent.type === ComponentType.List ||
     selectedComponent.type === ComponentType.UkAddressField
+
+  // Help text (default)
+  let helpTextGuidance: ReactNode | undefined
+  let helpTextHint = i18n('common.helpTextField.helpText')
+
+  // Help text (file upload)
+  if (selectedComponent.type === ComponentType.FileUploadField) {
+    helpTextGuidance = (
+      <>
+        <h4 className="govuk-heading-s govuk-!-margin-bottom-1">
+          {i18n('fileUploadFieldEditComponent.helpTextField.title')}
+        </h4>
+        <p className="govuk-body govuk-!-margin-top-0">
+          {i18n('fileUploadFieldEditComponent.helpTextField.guidance')}
+        </p>
+        <ul className="govuk-list govuk-list--bullet">
+          {i18n('fileUploadFieldEditComponent.helpTextField.guidanceItems', {
+            returnObjects: true
+          }).map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+      </>
+    )
+
+    helpTextHint = i18n('fileUploadFieldEditComponent.helpTextField.helpText')
+  }
 
   const defaults = getComponentDefaults(selectedComponent)
   const isRequired = !hasInput || selectedComponent.options.required !== false
@@ -61,27 +88,33 @@ export function FieldEdit() {
         />
       )}
       {hasFieldHint && (
-        <Textarea
-          id="field-hint"
-          name="hint"
-          rows={2}
-          label={{
-            className: 'govuk-label--s',
-            children: [i18n('common.helpTextField.title')]
-          }}
-          hint={{
-            children: [i18n('common.helpTextField.helpText')]
-          }}
-          required={false}
-          value={selectedComponent.hint ?? ''}
-          onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
-            dispatch({
-              name: Fields.EDIT_HELP,
-              payload: e.target.value,
-              as: selectedComponent
-            })
-          }}
-        />
+        <>
+          {helpTextGuidance}
+          <Textarea
+            id="field-hint"
+            name="hint"
+            rows={2}
+            label={{
+              className: classNames({
+                'govuk-label--s': !helpTextGuidance,
+                'govuk-visually-hidden': !!helpTextGuidance
+              }),
+              children: [i18n('common.helpTextField.title')]
+            }}
+            hint={{
+              children: [helpTextHint]
+            }}
+            required={false}
+            value={selectedComponent.hint ?? ''}
+            onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
+              dispatch({
+                name: Fields.EDIT_HELP,
+                payload: e.target.value,
+                as: selectedComponent
+              })
+            }}
+          />
+        </>
       )}
       {hasOptionHideTitle && (
         <div className="govuk-checkboxes govuk-form-group">
