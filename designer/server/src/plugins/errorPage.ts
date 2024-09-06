@@ -6,11 +6,11 @@ import {
 
 import { errorViewModel } from '~/src/models/errors.js'
 
-const errorCodes = {
-  403: 'You do not have access to this service',
-  404: 'Page not found',
-  500: 'Sorry, there is a problem with the service'
-} satisfies Record<number, string>
+const errorCodes = new Map([
+  [403, 'You do not have access to this service'],
+  [404, 'Page not found'],
+  [500, 'Sorry, there is a problem with the service']
+])
 
 /*
  * Add an `onPreResponse` listener to return error pages
@@ -26,7 +26,7 @@ export default {
           // An error was raised during
           // processing the request
           const statusCode = response.output.statusCode
-          const errorMessage = errorCodes[statusCode]
+          const errorMessage = errorCodes.get(statusCode)
 
           if (errorMessage) {
             return h
