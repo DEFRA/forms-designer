@@ -10,12 +10,7 @@ export function DateFieldEdit() {
   const { state, dispatch } = useContext(ComponentContext)
   const { selectedComponent } = state
 
-  if (
-    !(
-      selectedComponent?.type === ComponentType.DatePartsField ||
-      selectedComponent?.type === ComponentType.MonthYearField
-    )
-  ) {
+  if (!(selectedComponent?.type === ComponentType.DatePartsField)) {
     return null
   }
 

@@ -159,14 +159,7 @@ export function TextFieldEdit({ children }: Readonly<Props>) {
 
         <CssClasses />
 
-        {[
-          ComponentType.EmailAddressField,
-          ComponentType.MonthYearField,
-          ComponentType.MultilineTextField,
-          ComponentType.NumberField,
-          ComponentType.TelephoneNumberField,
-          ComponentType.TextField
-        ].includes(selectedComponent.type) && <CustomValidationMessage />}
+        <CustomValidationMessage />
       </div>
     </details>
   )
