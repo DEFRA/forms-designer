@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { basename, join } from 'node:path'
 
+import { SCOPE_READ } from '~/src/common/constants/scopes.js'
 import { getUserSession } from '~/src/common/helpers/auth/get-user-session.js'
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
 import { buildNavigation } from '~/src/common/nunjucks/context/build-navigation.js'
@@ -40,6 +41,7 @@ export async function context(request) {
     assetPath: '/assets',
     isAuthenticated: request?.auth?.isAuthenticated ?? false,
     isAuthorized: request?.auth?.isAuthorized ?? false,
+    isFormsUser: credentials?.scope?.includes(SCOPE_READ), // isAuthorized may be true if no scopes are required for the route
     authedUser: credentials?.user
   }
 }
