@@ -35,6 +35,12 @@ export const teamEmailSchema = Joi.string()
   .trim()
   .required()
 
+export const privacyNoticeUrlSchema = Joi.string()
+  .uri({
+    scheme: ['http', 'https']
+  })
+  .trim()
+
 export const authoredAtSchema = Joi.date().iso().required()
 export const authorIdSchema = Joi.string().trim().required()
 export const authorDisplayNameSchema = Joi.string().trim().required()
@@ -43,7 +49,8 @@ export const formMetadataInputKeys = {
   title: titleSchema,
   organisation: organisationSchema,
   teamName: teamNameSchema,
-  teamEmail: teamEmailSchema
+  teamEmail: teamEmailSchema,
+  privacyNoticeUrl: privacyNoticeUrlSchema
 }
 
 /**

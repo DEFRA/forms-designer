@@ -95,6 +95,37 @@
       }
     ]
   }) }}
+
+  {{ appHeading({
+    text: "Data protection",
+    size: "medium",
+    level: '2',
+    classes: "govuk-!-margin-top-8"
+  }) }}
+
+  {{ govukSummaryList({
+    classes: "govuk-!-margin-bottom-8",
+    rows: [
+      {
+        key: {
+          text: "Privacy notice"
+        },
+        value: {
+          html: '<a class="govuk-link govuk-link--no-visited-state" target="_blank" href="' + form.privacyNoticeUrl + '">' + form.privacyNoticeUrl + '</a>'
+          if form.privacyNoticeUrl else '<a class="govuk-link govuk-link--no-visited-state" href="/library/' + form.slug + '/edit/privacy-notice">Enter link to privacy notice</a>'
+        },
+        actions: {
+          items: [
+            {
+              href: "/library/" + form.slug + "/edit/privacy-notice",
+              text: "Change",
+              visuallyHiddenText: "privacy notice"
+            }
+          ]
+        } if form.privacyNoticeUrl
+      }
+    ]
+  }) }}
 {% endset %}
 
 {% set formHeading %}
