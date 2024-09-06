@@ -2,7 +2,7 @@ import { ComponentType } from '@defra/forms-model'
 import { mount, type ReactWrapper } from 'enzyme'
 import React from 'react'
 
-import { MultilineTextFieldEdit } from '~/src/MultilineTextFieldEdit.jsx'
+import { MultilineTextFieldEdit } from '~/src/components/FieldEditors/MultilineTextFieldEdit.js'
 import {
   RenderWithContext,
   type RenderWithContextProps
