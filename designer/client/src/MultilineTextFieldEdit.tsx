@@ -60,7 +60,7 @@ export function MultilineTextFieldEdit() {
           id="field-options-rows"
           aria-describedby="field-options-rows-hint"
           name="options.rows"
-          type="text"
+          type="number"
           value={options.rows ?? ''}
           onChange={(e) =>
             dispatch({
