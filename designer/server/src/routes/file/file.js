@@ -90,7 +90,7 @@ export default [
           err.output.statusCode === StatusCodes.FORBIDDEN.valueOf()
         ) {
           logger.error(
-            `Failed to download file for file ID ${fileId} with email ${email}`
+            `Failed to download file for file ID ${fileId} with incorrect email`
           )
           const validation = {
             formErrors: {
