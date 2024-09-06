@@ -41,6 +41,10 @@ export default [
           return h.view('file/expired', errorViewModel(pageTitle))
         }
 
+        case StatusCodes.NOT_FOUND: {
+          return Boom.notFound()
+        }
+
         default: {
           return h
             .response('Unhandled file status')

@@ -1,0 +1,11 @@
+{% extends 'layouts/page.njk' %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+  {% call appPageBody({
+    heading: pageHeading
+  }) %}
+    <p class="govuk-body">If you typed the web address, check it is correct.</p>
+    <p class="govuk-body">If you pasted the web address, check you copied the entire address.</p>
+  {% endcall %}
+{% endblock %}
