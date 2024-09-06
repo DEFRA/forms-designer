@@ -39,13 +39,26 @@ describe('Menu', () => {
       </RenderWithContext>
     )
 
-    expect(screen.queryByTestId('flyout-1')).not.toBeInTheDocument()
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 
-    await act(() => userEvent.click(screen.getByText('Summary')))
-    expect(screen.queryByTestId('flyout-1')).toBeInTheDocument()
+    const $buttonSummary = screen.getByRole('button', {
+      name: 'Summary'
+    })
 
-    await act(() => userEvent.click(screen.getByText('Close')))
-    expect(screen.queryByTestId('flyout-1')).not.toBeInTheDocument()
+    await act(() => userEvent.click($buttonSummary))
+
+    const $dialog = screen.queryByRole('dialog', {
+      name: 'Edit summary'
+    })
+
+    expect($dialog).toBeInTheDocument()
+
+    const $buttonClose = screen.getByRole('button', {
+      name: 'Close'
+    })
+
+    await act(() => userEvent.click($buttonClose))
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 
   it('clicking on a form overview tab shows different tab content', async () => {
@@ -55,8 +68,17 @@ describe('Menu', () => {
       </RenderWithContext>
     )
 
-    await act(() => userEvent.click(screen.getByText('Form overview')))
-    expect(screen.getByTestId('flyout-1')).toBeVisible()
+    const $buttonFormOverview = screen.getByRole('button', {
+      name: 'Form overview'
+    })
+
+    await act(() => userEvent.click($buttonFormOverview))
+
+    const $dialog = screen.queryByRole('dialog', {
+      name: 'Form overview'
+    })
+
+    expect($dialog).toBeInTheDocument()
 
     const $tabs = screen.queryAllByRole('tab')
     const $panels = screen.queryAllByRole('tabpanel')
@@ -92,12 +114,25 @@ describe('Menu', () => {
       </RenderWithContext>
     )
 
-    await act(() => userEvent.click(screen.getByText('Summary')))
-    expect(screen.queryByTestId('flyout-1')).toBeInTheDocument()
+    const $buttonSummary = screen.getByRole('button', {
+      name: 'Summary'
+    })
 
-    await act(() => userEvent.click(screen.getByText('Save')))
+    await act(() => userEvent.click($buttonSummary))
+
+    const $dialog = screen.queryByRole('dialog', {
+      name: 'Edit summary'
+    })
+
+    expect($dialog).toBeInTheDocument()
+
+    const $buttonSave = screen.getByRole('button', {
+      name: 'Save'
+    })
+
+    await act(() => userEvent.click($buttonSave))
     await waitFor(() => expect(save).toHaveBeenCalledTimes(1))
 
-    expect(screen.queryByTestId('flyout-1')).not.toBeInTheDocument()
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 })

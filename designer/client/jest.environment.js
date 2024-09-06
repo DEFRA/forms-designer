@@ -2,6 +2,9 @@ import '@testing-library/jest-dom'
 
 import { initI18n } from '~/src/i18n/i18n.jsx'
 
+/**
+ * Polyfill `window.matchMedia()` for GOV.UK Frontend
+ */
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
   value: jest.fn().mockImplementation((query) => ({
@@ -13,6 +16,31 @@ Object.defineProperty(window, 'matchMedia', {
     dispatchEvent: jest.fn()
   }))
 })
+
+/**
+ * Polyfill HTMLDialogElement methods for `<Flyout>` component
+ * @see {@link https://github.com/jsdom/jsdom/issues/3294}
+ */
+Object.defineProperties(HTMLDialogElement.prototype, {
+  show: { value: jest.fn(openDialog) },
+  showModal: { value: jest.fn(openDialog) },
+  close: { value: jest.fn(closeDialog) }
+})
+
+/**
+ * @this {HTMLElement}
+ */
+function openDialog() {
+  this.setAttribute('open', '')
+}
+
+/**
+ *
+ * @this {HTMLElement}
+ */
+function closeDialog() {
+  this.removeAttribute('open')
+}
 
 beforeAll(async () => {
   const { style } = document.documentElement

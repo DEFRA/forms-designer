@@ -8,15 +8,15 @@ import React, {
   useContext,
   useEffect,
   useState,
-  type FormEvent,
-  type MouseEvent
+  type FormEvent
 } from 'react'
 
 import { ComponentTypeEdit } from '~/src/ComponentTypeEdit.jsx'
 import { ErrorSummary } from '~/src/ErrorSummary.jsx'
 import { logger } from '~/src/common/helpers/logging/logger.js'
-import { BackLink } from '~/src/components/BackLink/BackLink.jsx'
 import { ComponentCreateList } from '~/src/components/ComponentCreate/ComponentCreateList.jsx'
+import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
+import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { addComponent } from '~/src/data/component/addComponent.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
@@ -34,7 +34,6 @@ function useComponentCreate(props: Readonly<Props>) {
   const { data, save } = useContext(DataContext)
   const { state, dispatch } = useContext(ComponentContext)
 
-  const [renderTypeEdit, setRenderTypeEdit] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
 
   const { page, onSave } = props
@@ -42,27 +41,6 @@ function useComponentCreate(props: Readonly<Props>) {
 
   const hasErrors = hasValidationErrors(errors)
   const onHandleSave = useCallback(handleSave, [handleSave])
-
-  useEffect(() => {
-    // render in the next re-paint to allow the DOM to reflow without the list
-    // thus resetting the Flyout wrapper scrolling position
-    // This is a quick work around the bug in small screens
-    // where once user scrolls down the components list and selects one of the bottom components
-    // then the component edit screen renders already scrolled to the bottom
-    let isMounted = true
-
-    if (selectedComponent?.type) {
-      window.requestAnimationFrame(() => {
-        if (isMounted) setRenderTypeEdit(true)
-      })
-    } else {
-      setRenderTypeEdit(false)
-    }
-
-    return () => {
-      isMounted = false
-    }
-  }, [selectedComponent?.type])
 
   useEffect(() => {
     if (!hasValidated || hasErrors || isSaving) {
@@ -108,8 +86,7 @@ function useComponentCreate(props: Readonly<Props>) {
     })
   }
 
-  function handleReset(e: MouseEvent<HTMLAnchorElement>) {
-    e.preventDefault()
+  function handleReset() {
     dispatch({ name: Meta.SET_COMPONENT })
   }
 
@@ -120,7 +97,7 @@ function useComponentCreate(props: Readonly<Props>) {
     hasErrors,
     errors,
     selectedComponent,
-    renderTypeEdit
+    onSave
   }
 }
 
@@ -132,41 +109,42 @@ export function ComponentCreate(props: Readonly<Props>) {
     hasErrors,
     errors,
     selectedComponent,
-    renderTypeEdit
+    onSave
   } = useComponentCreate(props)
 
   const type = selectedComponent?.type
+  const componentName = i18n(`fieldTypeToName.${selectedComponent?.type}`)
 
   return (
     <>
-      {!type && <h2 className="govuk-heading-m">{i18n('component.create')}</h2>}
+      <RenderInPortal>
+        <Flyout title={i18n('component.create')} onHide={onSave}>
+          <ComponentCreateList
+            page={props.page}
+            onSelectComponent={handleCreate}
+          />
+        </Flyout>
+      </RenderInPortal>
+
       {type && (
-        <>
-          <BackLink onClick={handleReset} href="#">
-            {i18n('Back to create component list')}
-          </BackLink>
-          <h2 className="govuk-heading-m">
-            {i18n(`fieldTypeToName.${selectedComponent.type}`)}{' '}
-            {i18n('component.component')}
-          </h2>
-        </>
-      )}
-      {hasErrors && (
-        <ErrorSummary errorList={Object.values(errors).filter(Boolean)} />
-      )}
-      {!type && (
-        <ComponentCreateList
-          page={props.page}
-          onSelectComponent={handleCreate}
-        />
-      )}
-      {type && renderTypeEdit && (
-        <form onSubmit={handleSubmit} autoComplete="off" noValidate>
-          <ComponentTypeEdit />
-          <button type="submit" className="govuk-button">
-            Save
-          </button>
-        </form>
+        <RenderInPortal>
+          <Flyout
+            title={`${componentName} ${i18n('component.component')}`}
+            onHide={handleReset}
+          >
+            {hasErrors && (
+              <ErrorSummary errorList={Object.values(errors).filter(Boolean)} />
+            )}
+
+            <form onSubmit={handleSubmit} autoComplete="off" noValidate>
+              <ComponentTypeEdit />
+
+              <button type="submit" className="govuk-button">
+                Save
+              </button>
+            </form>
+          </Flyout>
+        </RenderInPortal>
       )}
     </>
   )

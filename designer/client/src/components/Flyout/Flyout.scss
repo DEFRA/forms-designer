@@ -2,14 +2,20 @@
 @import "../../stylesheets/editor-colours.scss";
 
 .flyout {
+  max-width: none;
   width: 100vw;
+  max-height: none;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
+  margin: 0;
+  padding: 0;
+  inset-block: unset;
+  inset-inline: unset;
+  background-color: transparent;
+  border: none;
   position: fixed;
   top: 0;
   left: 0;
-  transition: transform 0.3s cubic-bezier(0, 0.52, 0, 1);
-  overflow: scroll;
+  overflow: hidden;
   z-index: 1000;
 
   &__button-close {
@@ -45,19 +51,8 @@
     }
   }
 
-  &.hide {
-    transform: translate3d(-100vw, 0, 0);
-  }
-
-  &.show {
-    transform: translate3d(0vw, 0, 0);
-    min-width: 100%;
-    overflow: hidden;
-  }
-
-  & .govuk-back-link {
-    margin-top: 0;
-    @include govuk-responsive-margin(6, "bottom");
+  &::backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
   }
 
   & h2 a {

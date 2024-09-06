@@ -116,23 +116,15 @@ describe('ComponentCreate:', () => {
       name: 'Details'
     })
 
-    // Clicking into component will hide the list
+    // Clicking component link opens a flyout
     await act(() => userEvent.click($componentLink))
 
-    expect(
-      screen.queryByRole('heading', { name: 'Add component' })
-    ).not.toBeInTheDocument()
+    const $buttonClose = screen.getAllByRole('button', {
+      name: 'Close'
+    })[1]
 
-    const $backLink = screen.getByRole('link', {
-      name: 'Back to create component list'
-    })
-
-    // Clicking the back link component will show the list
-    await act(() => userEvent.click($backLink))
-
-    expect(
-      screen.queryByRole('heading', { name: 'Add component' })
-    ).toBeInTheDocument()
+    // Clicking close shows the list again
+    await act(() => userEvent.click($buttonClose))
   })
 
   test('Should display error summary when validation fails', async () => {

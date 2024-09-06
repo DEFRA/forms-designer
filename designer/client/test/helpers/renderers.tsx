@@ -1,7 +1,10 @@
 import React, { useMemo, useReducer, type ReactElement } from 'react'
 
 import { DataContext, type DataContextType } from '~/src/context/DataContext.js'
-import { FlyoutContext } from '~/src/context/FlyoutContext.js'
+import {
+  FlyoutContext,
+  type FlyoutContextType
+} from '~/src/context/FlyoutContext.js'
 import {
   ComponentContext,
   componentReducer,
@@ -19,6 +22,9 @@ export const metadata = {
 export interface RenderWithContextProps extends Partial<DataContextType> {
   children?: ReactElement
   state?: Parameters<typeof initComponentState>[0]
+  context?: Partial<{
+    flyout: Partial<FlyoutContextType>
+  }>
 }
 
 export function RenderWithContext(props: Readonly<RenderWithContextProps>) {
@@ -38,7 +44,7 @@ export function RenderWithContext(props: Readonly<RenderWithContextProps>) {
     return { data, meta, previewUrl, save }
   }, [props])
 
-  const { children } = props
+  const { children, context: override } = props
 
   return (
     <DataContext.Provider value={context}>
@@ -47,9 +53,10 @@ export function RenderWithContext(props: Readonly<RenderWithContextProps>) {
           () => ({
             count: 0,
             increment: jest.fn(),
-            decrement: jest.fn()
+            decrement: jest.fn(),
+            ...override?.flyout
           }),
-          []
+          [override?.flyout]
         )}
       >
         <ComponentContext.Provider
