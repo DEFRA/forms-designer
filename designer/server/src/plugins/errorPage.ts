@@ -6,11 +6,11 @@ import {
 
 import { errorViewModel } from '~/src/models/errors.js'
 
-const errorCodes: Record<number, string> = {
+const errorCodes = {
   403: 'You do not have access to this service',
   404: 'Page not found',
   500: 'Sorry, there is a problem with the service'
-}
+} satisfies Record<number, string>
 
 /*
  * Add an `onPreResponse` listener to return error pages
