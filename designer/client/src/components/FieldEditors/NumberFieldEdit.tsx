@@ -82,7 +82,7 @@ export function NumberFieldEdit() {
         <div className="govuk-form-group">
           <label
             className="govuk-label govuk-label--s"
-            htmlFor="field-opitions-suffix"
+            htmlFor="field-options-suffix"
           >
             {i18n('numberFieldEditComponent.suffixField.title')}
           </label>
