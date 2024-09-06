@@ -46,9 +46,7 @@ export default [
         }
 
         default: {
-          return h
-            .response('Unhandled file status')
-            .code(StatusCodes.INTERNAL_SERVER_ERROR)
+          return Boom.internal('Unhandled file status')
         }
       }
     },
