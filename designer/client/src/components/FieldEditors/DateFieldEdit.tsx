@@ -6,12 +6,8 @@ import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 import { Options } from '~/src/reducers/component/types.js'
 
-interface Props {
-  context?: typeof ComponentContext
-}
-
-export function DateFieldEdit({ context = ComponentContext }: Props) {
-  const { state, dispatch } = useContext(context)
+export function DateFieldEdit() {
+  const { state, dispatch } = useContext(ComponentContext)
   const { selectedComponent } = state
 
   if (
@@ -46,11 +42,10 @@ export function DateFieldEdit({ context = ComponentContext }: Props) {
           </div>
           <input
             className="govuk-input govuk-input--width-3"
-            data-cast="number"
             id="field-options-maxDaysInPast"
             aria-describedby="field-options-maxDaysInPast-hint"
             name="options.maxDaysInPast"
-            value={options.maxDaysInPast}
+            value={options.maxDaysInPast ?? ''}
             type="number"
             onChange={(e) =>
               dispatch({
@@ -74,11 +69,10 @@ export function DateFieldEdit({ context = ComponentContext }: Props) {
           </div>
           <input
             className="govuk-input govuk-input--width-3"
-            data-cast="number"
             id="field-options-maxDaysInFuture"
             aria-describedby="field-options-maxDaysInFuture-hint"
             name="options.maxDaysInFuture"
-            value={options.maxDaysInFuture}
+            value={options.maxDaysInFuture ?? ''}
             type="number"
             onChange={(e) =>
               dispatch({

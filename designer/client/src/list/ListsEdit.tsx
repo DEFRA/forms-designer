@@ -51,7 +51,7 @@ const useListsEdit = () => {
   }
 }
 
-export function ListsEdit({ showEditLists = false }: Props) {
+export function ListsEdit({ showEditLists = false }: Readonly<Props>) {
   const {
     isEditingList,
     isEditingListItem,

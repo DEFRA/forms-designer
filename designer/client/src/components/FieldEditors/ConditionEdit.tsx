@@ -6,13 +6,9 @@ import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 import { Options } from '~/src/reducers/component/types.js'
 
-interface Props {
-  context?: typeof ComponentContext
-}
-
-export function ConditionEdit({ context = ComponentContext }: Props) {
+export function ConditionEdit() {
   const { data } = useContext(DataContext)
-  const { state, dispatch } = useContext(context)
+  const { state, dispatch } = useContext(ComponentContext)
 
   const { conditions } = data
   const { selectedComponent } = state
@@ -36,7 +32,7 @@ export function ConditionEdit({ context = ComponentContext }: Props) {
         id="condition"
         aria-describedby="condition-hint"
         name="options.condition"
-        value={options.condition}
+        value={options.condition ?? ''}
         onChange={(e) =>
           dispatch({
             name: Options.EDIT_OPTIONS_CONDITION,

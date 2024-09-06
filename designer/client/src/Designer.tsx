@@ -3,96 +3,89 @@ import {
   type FormDefinition,
   type FormMetadata
 } from '@defra/forms-model'
-import React, { Component } from 'react'
+import React, { useCallback, useState, useMemo } from 'react'
 
 import { Menu } from '~/src/components/Menu/Menu.jsx'
 import { Visualisation } from '~/src/components/Visualisation/Visualisation.jsx'
-import { DataContext } from '~/src/context/DataContext.js'
-import { FlyoutContext } from '~/src/context/FlyoutContext.js'
+import { DataContext, type DataContextType } from '~/src/context/DataContext.js'
+import {
+  FlyoutContext,
+  type FlyoutContextType
+} from '~/src/context/FlyoutContext.js'
 import * as form from '~/src/lib/form.js'
 
 interface Props {
-  metadata: FormMetadata
-  definition: FormDefinition
+  data: FormDefinition
+  meta: FormMetadata
   previewUrl: string
 }
 
-interface State {
-  flyoutCount: number
-  data: FormDefinition
-  meta: FormMetadata
+/**
+ * Manage form data
+ */
+function useData(props: Readonly<Props>): DataContextType {
+  const [data, setData] = useState<FormDefinition>(props.data)
+
+  /**
+   * Get form definition
+   */
+  const get = useCallback(async () => {
+    const updated = await form.get(props.meta.id)
+    setData(updated)
+    return updated
+  }, [props])
+
+  /**
+   * Save form definition
+   */
+  const save = useCallback(
+    async (updated: FormDefinition) => {
+      await form.save(props.meta.id, updateStartPage(updated))
+      return get()
+    },
+    [props, get]
+  )
+
+  return useMemo(() => {
+    return { ...props, data, save }
+  }, [props, data, save])
 }
 
-export class Designer extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props)
+/**
+ * Manage flyout count
+ */
+function useFlyout(): FlyoutContextType {
+  const [count, setCount] = useState<number>(0)
 
-    const { definition, metadata } = this.props
-
-    this.state = {
-      data: definition,
-      meta: metadata,
-      flyoutCount: 0
-    }
+  function increment() {
+    setCount((countPrev) => countPrev + 1)
   }
 
-  incrementFlyoutCounter = () => {
-    let currentCount = this.state.flyoutCount
-    this.setState({ flyoutCount: ++currentCount })
+  function decrement() {
+    setCount((countPrev) => countPrev - 1)
   }
 
-  decrementFlyoutCounter = () => {
-    let currentCount = this.state.flyoutCount
-    this.setState({ flyoutCount: --currentCount })
-  }
+  return useMemo(
+    () => ({
+      count,
+      increment,
+      decrement
+    }),
+    [count]
+  )
+}
 
-  get = async () => {
-    const { metadata } = this.props
-    const definition = await form.get(metadata.id)
+export function Designer(props: Readonly<Props>) {
+  const { data, meta, previewUrl } = props
 
-    this.setState({
-      data: definition
-    })
-
-    return definition
-  }
-
-  save = async (definition: FormDefinition) => {
-    const { metadata } = this.props
-
-    // Fix incorrect start page
-    const updated = updateStartPage(definition)
-
-    // Save and return form definition
-    await form.save(metadata.id, updated)
-    return this.get()
-  }
-
-  render() {
-    const { metadata, previewUrl } = this.props
-    const { data, meta, flyoutCount } = this.state
-
-    const flyoutContextProviderValue = {
-      count: flyoutCount,
-      increment: this.incrementFlyoutCounter,
-      decrement: this.decrementFlyoutCounter
-    }
-
-    const dataContextProviderValue = {
-      data,
-      meta,
-      save: this.save
-    }
-
-    return (
-      <DataContext.Provider value={dataContextProviderValue}>
-        <FlyoutContext.Provider value={flyoutContextProviderValue}>
-          <div className="govuk-width-container">
-            <Menu slug={metadata.slug} />
-          </div>
-          <Visualisation slug={metadata.slug} previewUrl={previewUrl} />
-        </FlyoutContext.Provider>
-      </DataContext.Provider>
-    )
-  }
+  return (
+    <DataContext.Provider value={useData({ data, meta, previewUrl })}>
+      <FlyoutContext.Provider value={useFlyout()}>
+        <div className="govuk-width-container">
+          <Menu />
+        </div>
+        <Visualisation />
+      </FlyoutContext.Provider>
+    </DataContext.Provider>
+  )
 }

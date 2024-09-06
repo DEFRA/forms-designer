@@ -73,7 +73,7 @@ export function FieldEdit() {
             children: [i18n('common.helpTextField.helpText')]
           }}
           required={false}
-          value={selectedComponent.hint}
+          value={selectedComponent.hint ?? ''}
           onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
             dispatch({
               name: Fields.EDIT_HELP,

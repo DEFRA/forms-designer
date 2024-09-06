@@ -14,7 +14,7 @@ interface Props {
   updateValue: (value: ConditionValue) => void
 }
 
-export const SelectValues = (props: Props) => {
+export const SelectValues = (props: Readonly<Props>) => {
   const { fieldDef, updateValue, value } = props
 
   const onChangeSelect = (e: ChangeEvent<HTMLSelectElement>) => {

@@ -9,12 +9,11 @@ import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 import { Schema } from '~/src/reducers/component/types.js'
 
 interface Props {
-  context?: typeof ComponentContext
   children?: ReactNode
 }
 
-export function TextFieldEdit({ children, context = ComponentContext }: Props) {
-  const { state, dispatch } = useContext(context)
+export function TextFieldEdit({ children }: Readonly<Props>) {
+  const { state, dispatch } = useContext(ComponentContext)
   const { selectedComponent } = state
 
   if (
@@ -55,11 +54,10 @@ export function TextFieldEdit({ children, context = ComponentContext }: Props) {
               </div>
               <input
                 className="govuk-input govuk-input--width-3"
-                data-cast="number"
                 id="field-schema-min"
                 aria-describedby="field-schema-min-hint"
                 name="schema.min"
-                value={selectedComponent.schema.min}
+                value={selectedComponent.schema.min ?? ''}
                 type="number"
                 onChange={(e) =>
                   dispatch({
@@ -83,11 +81,10 @@ export function TextFieldEdit({ children, context = ComponentContext }: Props) {
               </div>
               <input
                 className="govuk-input govuk-input--width-3"
-                data-cast="number"
                 id="field-schema-max"
                 aria-describedby="field-schema-max-hint"
                 name="schema.max"
-                value={selectedComponent.schema.max}
+                value={selectedComponent.schema.max ?? ''}
                 type="number"
                 onChange={(e) =>
                   dispatch({
@@ -111,11 +108,10 @@ export function TextFieldEdit({ children, context = ComponentContext }: Props) {
               </div>
               <input
                 className="govuk-input govuk-input--width-3"
-                data-cast="number"
                 id="field-schema-length"
                 aria-describedby="field-schema-length-hint"
                 name="schema.length"
-                value={selectedComponent.schema.length}
+                value={selectedComponent.schema.length ?? ''}
                 type="number"
                 onChange={(e) =>
                   dispatch({
@@ -147,7 +143,7 @@ export function TextFieldEdit({ children, context = ComponentContext }: Props) {
               id="field-schema-regex"
               aria-describedby="field-schema-regex-hint"
               name="schema.regex"
-              value={selectedComponent.schema.regex}
+              value={selectedComponent.schema.regex ?? ''}
               onChange={(e) =>
                 dispatch({
                   name: Schema.EDIT_SCHEMA_REGEX,

@@ -8,12 +8,8 @@ import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 import { Fields } from '~/src/reducers/component/types.js'
 
-interface Props {
-  context?: typeof ComponentContext
-}
-
-export function ContentEdit({ context = ComponentContext }: Props) {
-  const { state, dispatch } = useContext(context)
+export function ContentEdit() {
+  const { state, dispatch } = useContext(ComponentContext)
 
   const { selectedComponent, errors } = state
 

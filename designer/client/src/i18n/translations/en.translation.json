@@ -242,7 +242,11 @@
     "links": "Add link",
     "lists": "Lists",
     "sections": "Sections",
-    "summary": "Summary"
+    "summary": "Summary",
+    "upload": "Upload form",
+    "uploadFile": "Upload form definition JSON",
+    "download": "Download form",
+    "overview": "Form overview"
   },
   "multilineTextFieldEditComponent": {
     "maxWordField": {

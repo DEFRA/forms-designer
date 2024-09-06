@@ -17,26 +17,30 @@ import { findSection } from '~/src/data/section/findSection.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContextProvider } from '~/src/reducers/component/componentReducer.jsx'
 
-const ComponentItem = (props: {
-  index: number
-  page: PageType
-  selectedComponent: ComponentDef
-}) => {
+const ComponentItem = (
+  props: Readonly<{
+    index: number
+    page: PageType
+    selectedComponent: ComponentDef
+  }>
+) => {
   const { index, page, selectedComponent } = props
 
   return (
     <div className="component-item">
       <Component
-        key={index}
         index={index}
         page={page}
+        key={selectedComponent.name}
         selectedComponent={selectedComponent}
       />
     </div>
   )
 }
 
-const ComponentList = ({ page }: { page: PageType }) => {
+const ComponentList = (props: Readonly<{ page: PageType }>) => {
+  const { page } = props
+
   if (!hasComponents(page) || !page.components.length) {
     return null
   }
@@ -47,9 +51,9 @@ const ComponentList = ({ page }: { page: PageType }) => {
     <div className="component-list">
       {components.map((component, index) => (
         <ComponentItem
-          key={index}
           index={index}
           page={page}
+          key={component.name}
           selectedComponent={component}
         />
       ))}
@@ -57,15 +61,15 @@ const ComponentList = ({ page }: { page: PageType }) => {
   )
 }
 
-export const Page = (props: {
-  page: PageType
-  previewUrl: string
-  slug: string
-  layout?: CSSProperties
-}) => {
-  const { page, previewUrl, slug, layout } = props
+export const Page = (
+  props: Readonly<{
+    page: PageType
+    layout?: CSSProperties
+  }>
+) => {
+  const { page, layout } = props
 
-  const { data } = useContext(DataContext)
+  const { data, meta, previewUrl } = useContext(DataContext)
   const [isEditingPage, setIsEditingPage] = useState(false)
   const [isCreatingComponent, setIsCreatingComponent] = useState(false)
 
@@ -73,6 +77,11 @@ export const Page = (props: {
 
   const pageId = slugify(page.path)
   const headingId = `${pageId}-heading`
+
+  const href = new URL(
+    `/preview/draft/${meta.slug}${page.path}`,
+    previewUrl
+  ).toString()
 
   return (
     <div className="page" style={layout}>
@@ -94,7 +103,7 @@ export const Page = (props: {
           {i18n('page.edit')}
         </button>
         <a
-          href={new URL(`/preview/draft/${slug}${page.path}`, previewUrl).href}
+          href={href}
           className="govuk-link"
           target="_blank"
           rel="noreferrer"

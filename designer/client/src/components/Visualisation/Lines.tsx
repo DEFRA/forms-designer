@@ -20,7 +20,7 @@ interface State {
 
 export class Lines extends Component<Props, State> {
   declare context: ContextType<typeof DataContext>
-  static contextType = DataContext
+  static readonly contextType = DataContext
 
   state: State = {}
 

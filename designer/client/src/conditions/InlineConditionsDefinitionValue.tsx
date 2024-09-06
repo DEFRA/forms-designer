@@ -24,10 +24,12 @@ import { TextValues } from '~/src/conditions/TextValues.jsx'
 import { tryParseInt } from '~/src/conditions/inline-condition-helpers.js'
 import { type FieldDef } from '~/src/data/component/fields.js'
 
-function AbsoluteDateComponent(props: {
-  value?: ConditionValueData | RelativeDateValueData
-  updateValue: (value: ConditionValue) => void
-}) {
+function AbsoluteDateComponent(
+  props: Readonly<{
+    value?: ConditionValueData | RelativeDateValueData
+    updateValue: (value: ConditionValue) => void
+  }>
+) {
   let { value, updateValue } = props
 
   // Discard value when switching condition type
@@ -67,10 +69,12 @@ function AbsoluteDateComponent(props: {
   )
 }
 
-function RelativeDateComponent(props: {
-  value?: ConditionValueData | RelativeDateValueData
-  updateValue: (value: RelativeDateValue) => void
-}) {
+function RelativeDateComponent(
+  props: Readonly<{
+    value?: ConditionValueData | RelativeDateValueData
+    updateValue: (value: RelativeDateValue) => void
+  }>
+) {
   let { value, updateValue } = props
 
   // Discard value when switching condition type
@@ -81,7 +85,7 @@ function RelativeDateComponent(props: {
   return <RelativeDateValues value={value} updateValue={updateValue} />
 }
 
-export interface Props {
+interface Props {
   fieldDef: FieldDef
   operator: OperatorName
   value?: ConditionData['value']
@@ -93,7 +97,7 @@ export const InlineConditionsDefinitionValue = ({
   operator,
   value,
   updateValue
-}: Props) => {
+}: Readonly<Props>) => {
   if (fieldDef.type === ComponentType.DatePartsField) {
     const isDateAbsolute = absoluteDateOperatorNames.includes(operator)
     const isDateRelative = relativeDateOperatorNames.includes(operator)

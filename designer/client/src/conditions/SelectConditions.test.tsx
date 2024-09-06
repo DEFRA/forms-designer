@@ -8,10 +8,7 @@ import { screen } from '@testing-library/dom'
 import { cleanup, render } from '@testing-library/react'
 import React from 'react'
 
-import {
-  SelectConditions,
-  type Props
-} from '~/src/conditions/SelectConditions.jsx'
+import { SelectConditions } from '~/src/conditions/SelectConditions.jsx'
 import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
 describe('SelectConditions', () => {
@@ -24,7 +21,7 @@ describe('SelectConditions', () => {
     conditions: []
   } satisfies FormDefinition
 
-  let props: Props
+  let props: ConstructorParameters<typeof SelectConditions>[0]
 
   beforeEach(() => {
     props = {

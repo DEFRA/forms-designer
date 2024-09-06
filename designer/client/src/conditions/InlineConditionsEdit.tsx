@@ -1,6 +1,7 @@
 import {
   ConditionGroupDef,
   hasConditionField,
+  slugify,
   toPresentationString,
   type Condition,
   type ConditionData,
@@ -38,13 +39,13 @@ interface State {
 }
 
 export class InlineConditionsEdit extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props)
+  state: State = {
+    selectedConditions: []
+  }
 
-    this.state = {
-      conditions: props.conditions,
-      selectedConditions: []
-    }
+  componentDidMount() {
+    const { conditions } = this.props
+    this.setState({ conditions })
   }
 
   onChangeCheckbox = (e: ChangeEvent<HTMLInputElement>) => {
@@ -133,15 +134,17 @@ export class InlineConditionsEdit extends Component<Props, State> {
     return result
   }
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps: Readonly<Props>) {
     const { conditions } = this.props
 
-    if (prevProps.conditions !== conditions) {
-      this.setState({
-        conditions,
-        selectedConditions: []
-      })
+    if (conditions === prevProps.conditions) {
+      return
     }
+
+    this.setState({
+      conditions,
+      selectedConditions: []
+    })
   }
 
   onClickCancelEditView = (e: MouseEvent<HTMLButtonElement>) => {
@@ -238,8 +241,11 @@ export class InlineConditionsEdit extends Component<Props, State> {
                 {conditions?.asPerUserGroupings.map((condition, index) => {
                   const isChecked = selectedConditions?.includes(index)
 
+                  const conditionLabel = toPresentationString(condition)
+                  const conditionId = slugify(conditionLabel)
+
                   return (
-                    <Fragment key={`condition-checkbox-${index}`}>
+                    <Fragment key={conditionId}>
                       <div className="govuk-checkboxes__item">
                         <input
                           type="checkbox"
@@ -254,7 +260,7 @@ export class InlineConditionsEdit extends Component<Props, State> {
                           className="govuk-label govuk-checkboxes__label"
                           htmlFor={`condition-${index}`}
                         >
-                          {toPresentationString(condition)}
+                          {conditionLabel}
                         </label>
                       </div>
                       <div

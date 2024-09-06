@@ -53,11 +53,15 @@ interface Form {
 
 export class LinkEdit extends Component<Props, State> {
   declare context: ContextType<typeof DataContext>
-  static contextType = DataContext
+  static readonly contextType = DataContext
 
-  constructor(props: Props, context: typeof DataContext) {
-    super(props, context)
+  state: State = {
+    isEditingLink: false,
+    pages: [],
+    errors: {}
+  }
 
+  componentDidMount() {
     const { edge } = this.props
     const { data } = this.context
 
@@ -66,11 +70,7 @@ export class LinkEdit extends Component<Props, State> {
       ({ title: titleA }, { title: titleB }) => titleA.localeCompare(titleB)
     )
 
-    this.state = {
-      isEditingLink: false,
-      pages,
-      errors: {}
-    }
+    this.setState({ pages })
 
     if (!edge) {
       return
@@ -84,9 +84,7 @@ export class LinkEdit extends Component<Props, State> {
     const link = findLink(pageFrom, pageTo)
 
     // Update state
-    this.state = {
-      ...this.state,
-
+    this.setState({
       // Initial page link (editing only)
       isEditingLink: true,
       edgeFrom: pageFrom,
@@ -96,7 +94,7 @@ export class LinkEdit extends Component<Props, State> {
       pageFrom,
       pageTo,
       selectedCondition: link.condition
-    }
+    })
   }
 
   onSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -275,7 +273,7 @@ export class LinkEdit extends Component<Props, State> {
               id="link-from"
               aria-describedby={errors.to && 'link-from-error'}
               name="path"
-              value={pageFrom?.path}
+              value={pageFrom?.path ?? ''}
               onChange={this.onChangeFrom}
             >
               <option value="">{i18n('addLink.linkFrom.option')}</option>
@@ -309,7 +307,7 @@ export class LinkEdit extends Component<Props, State> {
               id="link-to"
               aria-describedby={errors.to && 'link-to-error'}
               name="page"
-              value={pageTo?.path}
+              value={pageTo?.path ?? ''}
               onChange={this.onChangeTo}
             >
               <option value="">{i18n('addLink.linkTo.option')}</option>

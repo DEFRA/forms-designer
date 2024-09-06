@@ -13,6 +13,6 @@ export interface ListItemHook {
   validate: (payload: Partial<FormItem>) => boolean
   value?: Item['value']
   condition?: string
-  title: string
-  hint: string
+  text?: string
+  description?: string
 }

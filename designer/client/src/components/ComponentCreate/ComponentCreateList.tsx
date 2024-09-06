@@ -36,7 +36,7 @@ interface Props {
   onSelectComponent: (type: ComponentDef) => void
 }
 
-export const ComponentCreateList = (props: Props) => {
+export const ComponentCreateList = (props: Readonly<Props>) => {
   const { page, onSelectComponent } = props
   const controller = controllerNameFromPath(page.controller)
 

@@ -6,8 +6,8 @@ import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 import { Options } from '~/src/reducers/component/types.js'
 
-export function MultilineTextFieldEdit({ context = ComponentContext }) {
-  const { state, dispatch } = useContext(context)
+export function MultilineTextFieldEdit() {
+  const { state, dispatch } = useContext(ComponentContext)
   const { selectedComponent } = state
 
   if (selectedComponent?.type !== ComponentType.MultilineTextField) {
@@ -30,11 +30,10 @@ export function MultilineTextFieldEdit({ context = ComponentContext }) {
         </div>
         <input
           className="govuk-input govuk-input--width-3"
-          data-cast="number"
           id="field-schema-maxwords"
           aria-describedby="field-schema-maxwords-hint"
           name="schema.maxwords"
-          value={options.maxWords}
+          value={options.maxWords ?? ''}
           type="number"
           onChange={(e) =>
             dispatch({
@@ -62,8 +61,7 @@ export function MultilineTextFieldEdit({ context = ComponentContext }) {
           aria-describedby="field-options-rows-hint"
           name="options.rows"
           type="text"
-          data-cast="number"
-          value={options.rows}
+          value={options.rows ?? ''}
           onChange={(e) =>
             dispatch({
               name: Options.EDIT_OPTIONS_ROWS,

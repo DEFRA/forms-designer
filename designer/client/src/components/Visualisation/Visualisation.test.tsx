@@ -33,7 +33,7 @@ describe('Visualisation', () => {
 
     render(
       <RenderWithContext data={data}>
-        <Visualisation previewUrl={'http://localhost:3000'} slug={'aa'} />
+        <Visualisation />
       </RenderWithContext>
     )
 
@@ -56,7 +56,7 @@ describe('Visualisation', () => {
 
     render(
       <RenderWithContext data={updated}>
-        <Visualisation previewUrl={'http://localhost:3000'} slug={'aa'} />
+        <Visualisation />
       </RenderWithContext>
     )
 
@@ -86,7 +86,7 @@ describe('Visualisation', () => {
 
     render(
       <RenderWithContext data={data}>
-        <Visualisation previewUrl={'http://localhost:3000'} slug={'aa'} />
+        <Visualisation />
       </RenderWithContext>
     )
 

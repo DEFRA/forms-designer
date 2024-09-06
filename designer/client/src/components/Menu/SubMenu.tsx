@@ -9,14 +9,14 @@ import React, {
 import { logger } from '~/src/common/helpers/logging/logger.js'
 import { type MenuItemHook } from '~/src/components/Menu/useMenuItem.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
+import { i18n } from '~/src/i18n/i18n.jsx'
 
 interface Props {
-  slug: string
   overview: MenuItemHook
 }
 
-export function SubMenu({ slug, overview }: Props) {
-  const { data, save } = useContext(DataContext)
+export function SubMenu({ overview }: Readonly<Props>) {
+  const { data, meta, save } = useContext(DataContext)
   const fileInput = useRef<HTMLInputElement>(null)
 
   function onClickUpload() {
@@ -29,7 +29,7 @@ export function SubMenu({ slug, overview }: Props) {
     const link = document.createElement('a')
     const contents = JSON.stringify(data, undefined, 2)
 
-    link.download = `${slug}.json`
+    link.download = `${meta.slug}.json`
     link.href = `data:text/json;charset=utf-8,${encodeURIComponent(contents)}`
 
     document.body.appendChild(link)
@@ -89,26 +89,26 @@ export function SubMenu({ slug, overview }: Props) {
         className="govuk-link govuk-!-font-size-16"
         onClick={onClickUpload}
       >
-        Upload form
+        {i18n('menu.upload')}
       </button>
       <button
         className="govuk-link govuk-!-font-size-16"
         onClick={onClickDownload}
       >
-        Download form
+        {i18n('menu.download')}
       </button>
       <button
         className="govuk-link govuk-!-font-size-16"
         onClick={overview.show}
       >
-        Form overview
+        {i18n('menu.overview')}
       </button>
       <input
         ref={fileInput}
         type="file"
         hidden
         onChange={onFileUpload}
-        aria-label="Upload form definition JSON"
+        aria-label={i18n('menu.uploadFile')}
       />
     </div>
   )

@@ -5,33 +5,38 @@ interface Props {
   children: ReactNode
 }
 
-export class RenderInPortal extends Component<Props> {
-  $root: HTMLElement
+interface State {
   $wrapper: HTMLElement
+  $root?: HTMLElement
+}
 
-  constructor(props: Props) {
-    super(props)
+export class RenderInPortal extends Component<Props, State> {
+  state: State = {
+    $wrapper: document.createElement('div')
+  }
 
-    const $wrapper = document.createElement('div')
+  componentDidMount() {
+    const { $wrapper } = this.state
+
     const $root = document.querySelector('.app-form-portal')
 
     if (!($root instanceof HTMLElement)) {
       throw new Error('Missing portal root')
     }
 
-    this.$wrapper = $wrapper
-    this.$root = $root
-  }
-
-  componentDidMount() {
-    this.$root.appendChild(this.$wrapper)
+    this.setState({ $root })
+    $root.appendChild($wrapper)
   }
 
   componentWillUnmount() {
-    this.$root.removeChild(this.$wrapper)
+    const { $wrapper, $root } = this.state
+    $root?.removeChild($wrapper)
   }
 
   render() {
-    return createPortal(this.props.children, this.$wrapper)
+    const { children } = this.props
+    const { $wrapper } = this.state
+
+    return createPortal(children, $wrapper)
   }
 }

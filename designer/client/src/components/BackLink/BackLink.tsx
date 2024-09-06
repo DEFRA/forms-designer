@@ -6,7 +6,7 @@ interface Props {
   onClick?: (event: MouseEvent<HTMLAnchorElement>) => void
 }
 
-export const BackLink = ({ children, ...otherProps }: Props) => (
+export const BackLink = ({ children, ...otherProps }: Readonly<Props>) => (
   <a className="govuk-back-link" {...otherProps}>
     {children}
   </a>

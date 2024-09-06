@@ -41,20 +41,23 @@ interface Form {
 
 export class SectionEdit extends Component<Props, State> {
   declare context: ContextType<typeof DataContext>
-  static contextType = DataContext
+  static readonly contextType = DataContext
 
-  constructor(props: Props, context: typeof DataContext) {
-    super(props, context)
+  state: State = {
+    hideTitle: false,
+    isNewSection: false,
+    errors: {}
+  }
 
-    const { section } = props
+  componentDidMount() {
+    const { section } = this.props
 
-    this.state = {
+    this.setState({
       name: section?.name ?? randomId(),
       title: section?.title,
       hideTitle: section?.hideTitle ?? false,
-      isNewSection: !section?.name,
-      errors: {}
-    }
+      isNewSection: !section?.name
+    })
   }
 
   onSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -158,7 +161,7 @@ export class SectionEdit extends Component<Props, State> {
               className: 'govuk-label--s',
               children: [i18n('sectionEdit.titleField.title')]
             }}
-            value={title}
+            value={title ?? ''}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               this.setState({ title: e.target.value })
             }
@@ -175,7 +178,7 @@ export class SectionEdit extends Component<Props, State> {
             hint={{
               children: [i18n('sectionEdit.nameField.helpText')]
             }}
-            value={name}
+            value={name ?? ''}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               this.setState({ name: e.target.value })
             }

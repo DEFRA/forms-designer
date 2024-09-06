@@ -30,7 +30,7 @@ interface Props {
   onSave: () => void
 }
 
-function useComponentCreate(props: Props) {
+function useComponentCreate(props: Readonly<Props>) {
   const { data, save } = useContext(DataContext)
   const { state, dispatch } = useContext(ComponentContext)
 
@@ -124,7 +124,7 @@ function useComponentCreate(props: Props) {
   }
 }
 
-export function ComponentCreate(props: Props) {
+export function ComponentCreate(props: Readonly<Props>) {
   const {
     handleSubmit,
     handleCreate,

@@ -64,11 +64,7 @@ describe('Page', () => {
   test('Page edit can be shown/hidden successfully', async () => {
     render(
       <RenderWithContext data={data}>
-        <Page
-          page={data.pages[0]}
-          previewUrl={'https://localhost:3009'}
-          slug={'aa'}
-        />
+        <Page page={data.pages[0]} />
       </RenderWithContext>
     )
 
@@ -108,11 +104,7 @@ describe('Page', () => {
   test('Add component can be shown/hidden successfully', async () => {
     render(
       <RenderWithContext data={data}>
-        <Page
-          page={data.pages[0]}
-          previewUrl={'https://localhost:3009'}
-          slug={'aa'}
-        />
+        <Page page={data.pages[0]} />
       </RenderWithContext>
     )
 
@@ -133,11 +125,7 @@ describe('Page', () => {
   test('Visualisation page actions contain expected call to actions', () => {
     render(
       <RenderWithContext data={data}>
-        <Page
-          page={data.pages[0]}
-          previewUrl={'https://localhost:3009'}
-          slug={'aa'}
-        />
+        <Page page={data.pages[0]} />
       </RenderWithContext>
     )
 

@@ -38,7 +38,7 @@ export function CssClasses() {
         aria-describedby="field-options-classes-hint"
         name="options.classes"
         type="text"
-        value={options.classes}
+        value={options.classes ?? ''}
         onChange={(e) =>
           dispatch({
             name: Options.EDIT_OPTIONS_CLASSES,

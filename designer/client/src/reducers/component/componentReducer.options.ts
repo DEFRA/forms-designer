@@ -129,7 +129,9 @@ export function optionsReducer(state: ComponentState, action: ReducerActions) {
 
     case Options.EDIT_OPTIONS_ROWS: {
       if (type === as.type) {
-        selectedComponent.options.rows = payload
+        selectedComponent.options.rows = Number.isFinite(payload)
+          ? payload
+          : undefined
       }
 
       break
@@ -137,7 +139,9 @@ export function optionsReducer(state: ComponentState, action: ReducerActions) {
 
     case Options.EDIT_OPTIONS_MAX_DAYS_IN_PAST: {
       if (type === as.type) {
-        selectedComponent.options.maxDaysInPast = payload
+        selectedComponent.options.maxDaysInPast = Number.isFinite(payload)
+          ? payload
+          : undefined
       }
 
       break
@@ -145,7 +149,9 @@ export function optionsReducer(state: ComponentState, action: ReducerActions) {
 
     case Options.EDIT_OPTIONS_MAX_DAYS_IN_FUTURE: {
       if (type === as.type) {
-        selectedComponent.options.maxDaysInFuture = payload
+        selectedComponent.options.maxDaysInFuture = Number.isFinite(payload)
+          ? payload
+          : undefined
       }
 
       break
@@ -153,7 +159,9 @@ export function optionsReducer(state: ComponentState, action: ReducerActions) {
 
     case Options.EDIT_OPTIONS_MAX_WORDS: {
       if (type === as.type) {
-        selectedComponent.options.maxWords = payload
+        selectedComponent.options.maxWords = Number.isFinite(payload)
+          ? payload
+          : undefined
       }
 
       break

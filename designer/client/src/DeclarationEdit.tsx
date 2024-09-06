@@ -10,7 +10,7 @@ interface Props {
 
 export class DeclarationEdit extends Component<Props> {
   declare context: ContextType<typeof DataContext>
-  static contextType = DataContext
+  static readonly contextType = DataContext
 
   onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -51,7 +51,6 @@ export class DeclarationEdit extends Component<Props> {
             <input
               className="govuk-checkboxes__input"
               id="skip-summary"
-              data-cast="boolean"
               name="skip-summary"
               type="checkbox"
               defaultChecked={skipSummary}

@@ -1,4 +1,4 @@
-import React, { useReducer, type ReactElement } from 'react'
+import React, { useMemo, useReducer, type ReactElement } from 'react'
 
 import { DataContext, type DataContextType } from '~/src/context/DataContext.js'
 import { FlyoutContext } from '~/src/context/FlyoutContext.js'
@@ -8,37 +8,53 @@ import {
   initComponentState
 } from '~/src/reducers/component/componentReducer.jsx'
 
-export interface RenderWithContextProps {
+// Dummy data used as default values
+export const definition = {} as DataContextType['data']
+export const metadata = {
+  id: 'example-id',
+  slug: 'example-slug',
+  title: 'Example title'
+} as DataContextType['meta']
+
+export interface RenderWithContextProps extends Partial<DataContextType> {
   children?: ReactElement
   state?: Parameters<typeof initComponentState>[0]
-  data?: DataContextType['data']
-  meta?: DataContextType['meta']
-  save?: DataContextType['save']
 }
 
-export function RenderWithContext(props: RenderWithContextProps) {
+export function RenderWithContext(props: Readonly<RenderWithContextProps>) {
   const [state, dispatch] = useReducer(
     componentReducer,
     initComponentState(props.state)
   )
 
-  const {
-    children,
-    data = {} as DataContextType['data'],
-    meta,
-    save = jest.fn()
-  } = props
+  const context = useMemo(() => {
+    const {
+      data = definition,
+      meta = metadata,
+      previewUrl = 'http://localhost:3000',
+      save = jest.fn()
+    } = props
+
+    return { data, meta, previewUrl, save }
+  }, [props])
+
+  const { children } = props
 
   return (
-    <DataContext.Provider value={{ data, meta, save }}>
+    <DataContext.Provider value={context}>
       <FlyoutContext.Provider
-        value={{
-          count: 1,
-          increment: jest.fn(),
-          decrement: jest.fn()
-        }}
+        value={useMemo(
+          () => ({
+            count: 1,
+            increment: jest.fn(),
+            decrement: jest.fn()
+          }),
+          []
+        )}
       >
-        <ComponentContext.Provider value={{ state, dispatch }}>
+        <ComponentContext.Provider
+          value={useMemo(() => ({ state, dispatch }), [state])}
+        >
           {children}
         </ComponentContext.Provider>
       </FlyoutContext.Provider>

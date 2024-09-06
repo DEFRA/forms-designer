@@ -1,5 +1,4 @@
 import {
-  ConditionsModel,
   hasConditionField,
   hasConditionName,
   hasNestedCondition,
@@ -28,7 +27,7 @@ import { getFieldsTo } from '~/src/data/component/fields.js'
 import { hasConditions } from '~/src/data/definition/hasConditions.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 
-export interface Props {
+interface Props {
   path?: string
   selectedCondition?: string
   conditionsChange: (selectedCondition?: string) => void
@@ -37,7 +36,6 @@ export interface Props {
 
 interface State {
   selectedCondition?: string
-  conditions?: ConditionsModel
   fields?: Partial<Record<string, FieldDef>>
   inline?: boolean
   editView?: boolean
@@ -45,30 +43,36 @@ interface State {
 
 export class SelectConditions extends Component<Props, State> {
   declare context: ContextType<typeof DataContext>
-  static contextType = DataContext
+  static readonly contextType = DataContext
 
-  constructor(props: Props, context: typeof DataContext) {
-    super(props, context)
-
-    this.state = {
-      fields: this.fieldsForPath(props.path),
-      selectedCondition: props.selectedCondition,
-      inline: false
-    }
+  state: State = {
+    inline: false,
+    editView: false
   }
 
-  componentDidUpdate = (prevProps: Props) => {
-    const { path } = this.props
+  componentDidMount() {
+    const { path, selectedCondition } = this.props
+    const fields = this.fieldsForPath(path)
 
-    if (path !== prevProps.path) {
-      const fields = this.fieldsForPath(path)
+    this.setState({
+      fields,
+      selectedCondition
+    })
+  }
 
-      this.setState({
-        conditions: new ConditionsModel(),
-        fields,
-        editView: false
-      })
+  componentDidUpdate(prevProps: Readonly<Props>) {
+    const { path, selectedCondition } = this.props
+
+    if (path === prevProps.path) {
+      return
     }
+
+    const fields = this.fieldsForPath(path)
+
+    this.setState({
+      fields,
+      selectedCondition
+    })
   }
 
   fieldsForPath(path?: string) {

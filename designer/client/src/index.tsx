@@ -44,11 +44,7 @@ export class App extends Component {
     // Extract from HTML data-* attributes
     const { previewUrl } = $container.dataset
     return (
-      <Designer
-        metadata={metadata}
-        definition={definition}
-        previewUrl={previewUrl}
-      />
+      <Designer meta={metadata} data={definition} previewUrl={previewUrl} />
     )
   }
 }

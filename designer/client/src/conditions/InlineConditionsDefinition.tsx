@@ -40,31 +40,37 @@ interface State {
 }
 
 export class InlineConditionsDefinition extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props)
+  state: State = {}
 
-    const { condition } = props
+  componentDidMount() {
+    const { condition } = this.props
 
-    this.state = {
-      condition,
-      selectedCoordinator: condition?.coordinator,
-      selectedOperator: condition?.operator
+    if (!condition) {
+      return
     }
+
+    this.setState({
+      condition,
+      selectedCoordinator: condition.coordinator,
+      selectedOperator: condition.operator
+    })
   }
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps: Readonly<Props>) {
     const { condition, expectsCoordinator, fields } = this.props
 
     if (
-      fields !== prevProps.fields ||
-      expectsCoordinator !== prevProps.expectsCoordinator
+      fields === prevProps.fields &&
+      expectsCoordinator === prevProps.expectsCoordinator
     ) {
-      this.setState({
-        condition,
-        selectedCoordinator: condition?.coordinator,
-        selectedOperator: condition?.operator
-      })
+      return
     }
+
+    this.setState({
+      condition,
+      selectedCoordinator: condition?.coordinator,
+      selectedOperator: condition?.operator
+    })
   }
 
   onChangeCoordinator = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -281,8 +287,8 @@ export class InlineConditionsDefinition extends Component<Props, State> {
                 <option value="">
                   {i18n('conditions.conditionFieldOption')}
                 </option>
-                {fieldInputs.map((input, index) => (
-                  <option key={`${input.name}-${index}`} value={input.name}>
+                {fieldInputs.map((input) => (
+                  <option key={input.name} value={input.name}>
                     {input.label}
                   </option>
                 ))}
@@ -306,7 +312,7 @@ export class InlineConditionsDefinition extends Component<Props, State> {
                       {i18n('conditions.conditionOperatorOption')}
                     </option>
                     {getOperatorNames(fieldDef.type)
-                      .sort()
+                      .sort((nameA, nameB) => nameA.localeCompare(nameB))
                       .map((operator) => (
                         <option key={operator} value={operator}>
                           {upperFirst(operator)}

@@ -94,7 +94,11 @@ const data = {
 describe('ListItemEdit', () => {
   test('strings are rendered correctly', () => {
     render(
-      <RenderListEditorWithContext data={data}>
+      <RenderListEditorWithContext
+        data={data}
+        selectedListName="myList"
+        selectedItemText="text a"
+      >
         <ListItemEdit />
       </RenderListEditorWithContext>
     )
@@ -118,7 +122,11 @@ describe('ListItemEdit', () => {
 
   test('Condition selection works correctly', async () => {
     render(
-      <RenderListEditorWithContext data={data}>
+      <RenderListEditorWithContext
+        data={data}
+        selectedListName="myList"
+        selectedItemText="text a"
+      >
         <ListItemEdit />
       </RenderListEditorWithContext>
     )

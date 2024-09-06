@@ -9,16 +9,11 @@ import { ListsEditorContextProvider } from '~/src/reducers/list/listsEditorReduc
 import { ListContextProvider } from '~/src/reducers/listReducer.jsx'
 
 interface Props {
-  context?: typeof ComponentContext
   children?: ReactNode
 }
 
-interface Props {
-  context?: typeof ComponentContext
-}
-
-export function ListFieldEdit({ context = ComponentContext, children }: Props) {
-  const { state } = useContext(context)
+export function ListFieldEdit({ children }: Readonly<Props>) {
+  const { state } = useContext(ComponentContext)
 
   const { selectedComponent } = state
 

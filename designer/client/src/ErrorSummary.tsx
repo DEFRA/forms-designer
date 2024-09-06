@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, type ReactNode } from 'react'
 
 export interface ErrorListItem {
-  href?: string
+  href: string
   children: ReactNode
 }
 
 export type ErrorList<Key extends string = string> = Record<Key, ErrorListItem>
 
-interface ErrorSummaryProps {
+interface Props {
   className?: string
   descriptionChildren?: string
   errorList: ErrorListItem[]
@@ -19,7 +19,7 @@ export function ErrorSummary({
   descriptionChildren,
   errorList,
   titleChildren = 'There is a problem'
-}: ErrorSummaryProps) {
+}: Readonly<Props>) {
   const errorSummaryRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -56,8 +56,8 @@ export function ErrorSummary({
       <div className="govuk-error-summary__body">
         {description}
         <ul className="govuk-list govuk-error-summary__list">
-          {errorList.map((error, index) => (
-            <li key={index}>
+          {errorList.map((error) => (
+            <li key={error.href}>
               {error.href ? (
                 <a
                   href={error.href}

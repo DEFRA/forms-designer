@@ -2,6 +2,7 @@ import { type Item, type List } from '@defra/forms-model'
 import React, {
   createContext,
   useContext,
+  useMemo,
   useReducer,
   type Dispatch,
   type ReactNode
@@ -201,11 +202,14 @@ export function listReducer(state: ListState, action: ListReducerActions) {
 /**
  * Allows components to retrieve {@link ListState} and {@link Dispatch} from any component nested within `<ListContextProvider>`
  */
-export const ListContextProvider = (props: {
-  children?: ReactNode
-  selectedListName?: string
-}) => {
-  const { children, selectedListName } = props
+export const ListContextProvider = (
+  props: Readonly<{
+    children?: ReactNode
+    selectedListName?: string
+    selectedItemText?: string
+  }>
+) => {
+  const { children, selectedListName, selectedItemText } = props
   const { data } = useContext(DataContext)
 
   let init: ListState = {
@@ -213,6 +217,7 @@ export const ListContextProvider = (props: {
     listItemErrors: {}
   }
 
+  // Populate state with selected list
   if (selectedListName) {
     const selectedList = findList(data, selectedListName)
 
@@ -224,11 +229,20 @@ export const ListContextProvider = (props: {
     }
   }
 
-  const [state, dispatch] = useReducer(listReducer, init)
+  // Populate state with selected item
+  if (init.selectedList && selectedItemText) {
+    const selectedItem = findListItem(init.selectedList, selectedItemText)
 
-  return (
-    <ListContext.Provider value={{ state, dispatch }}>
-      {children}
-    </ListContext.Provider>
-  )
+    init = {
+      ...init,
+      selectedItem,
+      initialItemText: selectedItem.text,
+      initialItemValue: selectedItem.value
+    }
+  }
+
+  const [state, dispatch] = useReducer(listReducer, init)
+  const context = useMemo(() => ({ state, dispatch }), [state])
+
+  return <ListContext.Provider value={context}>{children}</ListContext.Provider>
 }

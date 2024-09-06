@@ -6,12 +6,8 @@ import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 import { Options, Schema } from '~/src/reducers/component/types.js'
 
-interface Props {
-  context?: typeof ComponentContext
-}
-
-export function NumberFieldEdit({ context = ComponentContext }: Props) {
-  const { state, dispatch } = useContext(context)
+export function NumberFieldEdit() {
+  const { state, dispatch } = useContext(ComponentContext)
   const { selectedComponent } = state
 
   if (selectedComponent?.type !== ComponentType.NumberField) {
@@ -41,11 +37,10 @@ export function NumberFieldEdit({ context = ComponentContext }: Props) {
           </div>
           <input
             className="govuk-input govuk-input--width-3"
-            data-cast="number"
             id="field-schema-min"
             aria-describedby="field-schema-min-hint"
             name="schema.min"
-            value={schema.min}
+            value={schema.min ?? ''}
             type="number"
             onChange={(e) =>
               dispatch({
@@ -69,13 +64,12 @@ export function NumberFieldEdit({ context = ComponentContext }: Props) {
           </div>
           <input
             className="govuk-input govuk-input--width-3"
-            data-cast="string"
             id="field-options-prefix"
             aria-describedby="field-options-prefix-hint"
             name="opions.prefix"
-            value={options.prefix}
+            value={options.prefix ?? ''}
             type="string"
-            onBlur={(e) =>
+            onChange={(e) =>
               dispatch({
                 name: Options.EDIT_OPTIONS_PREFIX,
                 payload: e.target.value,
@@ -97,13 +91,12 @@ export function NumberFieldEdit({ context = ComponentContext }: Props) {
           </div>
           <input
             className="govuk-input govuk-input--width-3"
-            data-cast="string"
             id="field-options-suffix"
             aria-describedby="field-options-suffix-hint"
             name="options.suffix"
-            value={options.suffix}
+            value={options.suffix ?? ''}
             type="string"
-            onBlur={(e) =>
+            onChange={(e) =>
               dispatch({
                 name: Options.EDIT_OPTIONS_SUFFIX,
                 payload: e.target.value,
@@ -125,13 +118,12 @@ export function NumberFieldEdit({ context = ComponentContext }: Props) {
           </div>
           <input
             className="govuk-input govuk-input--width-3"
-            data-cast="number"
             id="field-schema-max"
             aria-describedby="field-schema-max-hint"
             name="schema.max"
-            value={schema.max}
+            value={schema.max ?? ''}
             type="number"
-            onBlur={(e) =>
+            onChange={(e) =>
               dispatch({
                 name: Schema.EDIT_SCHEMA_MAX,
                 payload: e.target.valueAsNumber,
@@ -153,13 +145,12 @@ export function NumberFieldEdit({ context = ComponentContext }: Props) {
           </div>
           <input
             className="govuk-input govuk-input--width-3"
-            data-cast="number"
             id="field-schema-precision"
             aria-describedby="field-schema-precision-hint"
             name="schema.precision"
-            value={schema.precision}
+            value={schema.precision ?? ''}
             type="number"
-            onBlur={(e) =>
+            onChange={(e) =>
               dispatch({
                 name: Schema.EDIT_SCHEMA_PRECISION,
                 payload: e.target.valueAsNumber,

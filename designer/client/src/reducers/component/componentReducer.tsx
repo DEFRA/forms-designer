@@ -1,5 +1,6 @@
 import { type ComponentDef } from '@defra/forms-model'
 import React, {
+  useMemo,
   useReducer,
   createContext,
   type Dispatch,
@@ -103,7 +104,7 @@ export function componentReducer(
 }
 
 export const initComponentState = (
-  props?: Partial<Omit<ComponentState, 'initialName'>>
+  props?: Readonly<Partial<Omit<ComponentState, 'initialName'>>>
 ): ComponentState => {
   const { selectedComponent, errors = {} } = props ?? {}
 
@@ -123,13 +124,16 @@ export const ComponentContextProvider = (
   }
 ) => {
   const { children, ...rest } = props
+
   const [state, dispatch] = useReducer(
     componentReducer,
     initComponentState(rest)
   )
 
+  const context = useMemo(() => ({ state, dispatch }), [state])
+
   return (
-    <ComponentContext.Provider value={{ state, dispatch }}>
+    <ComponentContext.Provider value={context}>
       {children}
     </ComponentContext.Provider>
   )

@@ -47,38 +47,44 @@ interface Form {
 
 export class InlineConditions extends Component<Props, State> {
   declare context: ContextType<typeof DataContext>
-  static contextType = DataContext
+  static readonly contextType = DataContext
 
-  constructor(props: Props, context: typeof DataContext) {
-    super(props, context)
+  state: State = {
+    conditions: new ConditionsModel(),
+    fields: {},
+    errors: {}
+  }
 
+  componentDidMount() {
     const { path, condition } = this.props
+    const { conditions: model } = this.state
 
     const conditions = condition?.value
       ? ConditionsModel.from(condition.value)
-      : new ConditionsModel()
+      : model
 
     conditions.name ??= condition?.displayName
 
-    this.state = {
+    this.setState({
       conditions,
-      fields: this.fieldsForPath(path),
-      errors: {}
-    }
+      fields: this.fieldsForPath(path)
+    })
   }
 
-  componentDidUpdate = (prevProps: Props) => {
+  componentDidUpdate(prevProps: Readonly<Props>) {
     const { path } = this.props
 
-    if (path !== prevProps.path) {
-      const fields = this.fieldsForPath(path)
-
-      this.setState({
-        conditions: new ConditionsModel(),
-        fields,
-        editView: false
-      })
+    if (path === prevProps.path) {
+      return
     }
+
+    const fields = this.fieldsForPath(path)
+
+    this.setState({
+      conditions: new ConditionsModel(),
+      fields,
+      editView: false
+    })
   }
 
   fieldsForPath = (path?: string) => {
@@ -106,20 +112,6 @@ export class InlineConditions extends Component<Props, State> {
     this.setState({
       editView: !editView
     })
-  }
-
-  onClickCancel = (e: MouseEvent<HTMLAnchorElement>) => {
-    const { cancelCallback } = this.props
-    const { conditions } = this.state
-
-    e.preventDefault()
-
-    this.setState({
-      conditions: conditions.clear(),
-      editView: false
-    })
-
-    cancelCallback()
   }
 
   onClickSave = async (event: MouseEvent<HTMLButtonElement>) => {
@@ -329,4 +321,3 @@ export class InlineConditions extends Component<Props, State> {
     )
   }
 }
-InlineConditions.contextType = DataContext

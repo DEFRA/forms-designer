@@ -61,28 +61,29 @@ interface Form {
 
 export class PageEdit extends Component<Props, State> {
   declare context: ContextType<typeof DataContext>
-  static contextType = DataContext
+  static readonly contextType = DataContext
 
-  constructor(props: Props, context: typeof DataContext) {
-    super(props, context)
+  state: State = {
+    isEditingSection: false,
+    isNewSection: false,
+    isQuestionPage: true,
+    errors: {}
+  }
 
+  componentDidMount() {
     const { page } = this.props
     const { data } = this.context
 
     const { path, title } = page
-
     const controller = controllerNameFromPath(page.controller)
 
-    this.state = {
+    this.setState({
       path,
       controller,
       title,
       section: hasSection(page) ? findSection(data, page.section) : undefined,
-      isEditingSection: false,
-      isNewSection: false,
-      isQuestionPage: isQuestionPage(page),
-      errors: {}
-    }
+      isQuestionPage: isQuestionPage(page)
+    })
   }
 
   onSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -342,7 +343,7 @@ export class PageEdit extends Component<Props, State> {
               id="controller"
               aria-describedby="controller-hint"
               name="controller"
-              value={controller}
+              value={controller ?? ''}
               onChange={this.onChangeController}
             >
               <option value={ControllerType.Page}>
@@ -373,7 +374,7 @@ export class PageEdit extends Component<Props, State> {
               className: 'govuk-label--s',
               children: [i18n('page.title')]
             }}
-            value={title}
+            value={title ?? ''}
             onChange={this.onChangeTitle}
             errorMessage={errors.title}
           />
@@ -389,7 +390,7 @@ export class PageEdit extends Component<Props, State> {
               hint={{
                 children: [i18n('page.pathHint')]
               }}
-              value={path}
+              value={path ?? ''}
               onChange={this.onChangePath}
               errorMessage={errors.path}
             />

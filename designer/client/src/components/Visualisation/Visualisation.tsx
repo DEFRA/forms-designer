@@ -14,11 +14,6 @@ import {
 } from '~/src/components/Visualisation/getLayout.js'
 import { DataContext } from '~/src/context/DataContext.js'
 
-interface Props {
-  slug: string
-  previewUrl: string
-}
-
 export function useVisualisation(ref: RefObject<HTMLDivElement>) {
   const { data } = useContext(DataContext)
   const [layout, setLayout] = useState<Pos>()
@@ -35,12 +30,11 @@ export function useVisualisation(ref: RefObject<HTMLDivElement>) {
   return { layout }
 }
 
-export function Visualisation(props: Props) {
+export function Visualisation() {
   const ref = useRef<HTMLDivElement>(null)
   const { layout } = useVisualisation(ref)
   const { data } = useContext(DataContext)
 
-  const { previewUrl, slug } = props
   const { pages } = data
 
   const wrapperStyle = layout && {
@@ -53,13 +47,7 @@ export function Visualisation(props: Props) {
       <div className="visualisation__pages-wrapper">
         <div ref={ref} style={wrapperStyle}>
           {pages.map((page, index) => (
-            <Page
-              key={index}
-              page={page}
-              previewUrl={previewUrl}
-              layout={layout?.nodes[index]}
-              slug={slug}
-            />
+            <Page key={page.path} page={page} layout={layout?.nodes[index]} />
           ))}
 
           {layout && <Lines layout={layout} />}
