@@ -55,10 +55,10 @@ export const ComponentCreateList = (props: Readonly<Props>) => {
 
   return (
     <div className="govuk-form-group">
-      <h1 className="govuk-hint">{i18n('component.create_info')}</h1>
+      <div className="govuk-hint">{i18n('component.create_info')}</div>
       <ol className="govuk-list">
         <li>
-          <h2 className="govuk-heading-s">{i18n('Content')}</h2>
+          <h3 className="govuk-heading-s">{i18n('Content')}</h3>
           <div className="govuk-hint">
             {i18n('component.contentfields_info')}
           </div>
@@ -87,7 +87,7 @@ export const ComponentCreateList = (props: Readonly<Props>) => {
         {isComponentPage && (
           <>
             <li>
-              <h2 className="govuk-heading-s">{i18n('Input fields')}</h2>
+              <h3 className="govuk-heading-s">{i18n('Input fields')}</h3>
               <div className="govuk-hint">
                 {i18n('component.inputfields_info')}
               </div>
@@ -112,7 +112,7 @@ export const ComponentCreateList = (props: Readonly<Props>) => {
               <hr className="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
             </li>
             <li>
-              <h2 className="govuk-heading-s">{i18n('Selection fields')}</h2>
+              <h3 className="govuk-heading-s">{i18n('Selection fields')}</h3>
               <div className="govuk-hint">
                 {i18n('component.selectfields_info')}
               </div>

@@ -7,7 +7,7 @@ export interface FlyoutContextType {
 }
 
 export const FlyoutContext = createContext<FlyoutContextType>({
-  count: 1,
+  count: 0,
   increment: () => undefined,
   decrement: () => undefined
 })

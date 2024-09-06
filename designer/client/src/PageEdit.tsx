@@ -400,9 +400,9 @@ export class PageEdit extends Component<Props, State> {
             <>
               {!sections.length && (
                 <>
-                  <h4 className="govuk-heading-s govuk-!-margin-bottom-1">
+                  <h3 className="govuk-heading-s govuk-!-margin-bottom-1">
                     {i18n('page.section')}
-                  </h4>
+                  </h3>
                   <p className="govuk-hint govuk-!-margin-top-0">
                     {i18n('page.sectionHint')}
                   </p>

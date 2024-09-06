@@ -48,13 +48,11 @@ export function useFlyoutEffect(props?: Readonly<Pick<Props, 'onHide'>>) {
    * Update styling for offset flyouts
    */
   useEffect(() => {
-    if (offset > 0) {
-      setStyle({
-        paddingLeft: `${offset * 50}px`,
-        transform: `translateX(${offset * -50}px)`,
-        position: 'relative'
-      })
-    }
+    setStyle({
+      paddingLeft: `${offset * 50}px`,
+      transform: `translateX(${offset * -50}px)`,
+      position: 'relative'
+    })
   }, [offset])
 
   function closeOnClick(
@@ -84,8 +82,11 @@ export function Flyout(props: Readonly<Props>) {
     onHide
   })
 
+  const count = offset + 1
+  const flyoutId = `flyout-${count}`
+
   return (
-    <div className="flyout show" data-testid={`flyout-${offset}`}>
+    <div className="flyout show" data-testid={flyoutId}>
       <FocusTrap
         focusTrapOptions={{
           preventScroll: true,
@@ -100,15 +101,11 @@ export function Flyout(props: Readonly<Props>) {
           >
             {i18n('close')}
           </button>
-          <div className="panel panel--flyout">
-            <div className="panel-header govuk-!-padding-top-4 govuk-!-padding-left-4">
-              {title && <h4 className="govuk-heading-m">{title}</h4>}
+          <div className="panel">
+            <div className="panel__header">
+              {title && <h2 className="govuk-heading-m">{title}</h2>}
             </div>
-            <div className="panel-body">
-              <div className="govuk-!-padding-left-4 govuk-!-padding-right-4 govuk-!-padding-bottom-4">
-                {children}
-              </div>
-            </div>
+            <div className="panel__body">{children}</div>
           </div>
         </div>
       </FocusTrap>

@@ -352,9 +352,9 @@ export class PageCreate extends Component<Props, State> {
             <>
               {!sections.length && (
                 <>
-                  <h4 className="govuk-heading-s govuk-!-margin-bottom-1">
+                  <h3 className="govuk-heading-s govuk-!-margin-bottom-1">
                     {i18n('addPage.sectionOption.title')}
-                  </h4>
+                  </h3>
                   <p className="govuk-hint govuk-!-margin-top-0">
                     {i18n('addPage.sectionOption.helpText')}
                   </p>
