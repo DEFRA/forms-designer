@@ -26,13 +26,11 @@ export default {
           // An error was raised during
           // processing the request
           const statusCode = response.output.statusCode
+          const errorMessage = errorCodes[statusCode]
 
-          if (statusCode in errorCodes) {
+          if (errorMessage) {
             return h
-              .view(
-                statusCode.toString(),
-                errorViewModel(errorCodes[statusCode])
-              )
+              .view(statusCode.toString(), errorViewModel(errorMessage))
               .code(statusCode)
           }
 
