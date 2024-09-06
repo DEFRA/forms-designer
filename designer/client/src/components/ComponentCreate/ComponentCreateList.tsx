@@ -2,6 +2,7 @@ import {
   ComponentTypes,
   controllerNameFromPath,
   ControllerType,
+  hasComponents,
   hasContent,
   hasInputField,
   hasSelectionFields,
@@ -39,6 +40,10 @@ export const ComponentCreateList = (props: Readonly<Props>) => {
       inputFields: componentList.filter(hasInputField)
     }
   }, [componentList])
+
+  if (!hasComponents(page)) {
+    return null
+  }
 
   return (
     <div className="govuk-form-group">
