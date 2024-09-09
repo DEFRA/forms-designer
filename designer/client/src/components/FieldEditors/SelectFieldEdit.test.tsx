@@ -5,7 +5,7 @@ import {
   type ComponentDef
 } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import { cleanup, render, type RenderResult } from '@testing-library/react'
+import { render, type RenderResult } from '@testing-library/react'
 import React from 'react'
 
 import { SelectFieldEdit } from '~/src/components/FieldEditors/SelectFieldEdit.jsx'
@@ -13,8 +13,6 @@ import { RenderComponent } from '~/test/helpers/renderers.jsx'
 
 describe('Select field edit', () => {
   const supported = [ComponentType.SelectField]
-
-  afterEach(cleanup)
 
   describe('Supported components', () => {
     it.each(ComponentTypes.filter(({ type }) => supported.includes(type)))(

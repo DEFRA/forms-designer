@@ -1,6 +1,6 @@
 import { type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import { act, cleanup, render, waitFor } from '@testing-library/react'
+import { act, render, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React from 'react'
 
@@ -14,8 +14,6 @@ describe('Menu', () => {
     sections: [],
     conditions: []
   } satisfies FormDefinition
-
-  afterEach(cleanup)
 
   it('Renders button strings correctly', () => {
     render(

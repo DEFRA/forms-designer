@@ -1,12 +1,10 @@
 import { screen } from '@testing-library/dom'
-import { render, cleanup } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import React from 'react'
 
 import { ErrorMessage } from '~/src/components/ErrorMessage/ErrorMessage.jsx'
 
 describe('ErrorMessage component', () => {
-  afterEach(cleanup)
-
   it('renders children text', () => {
     render(<ErrorMessage className="123">Error 123</ErrorMessage>)
     expect(screen.getByText('Error 123')).toBeDefined()

@@ -4,7 +4,7 @@ import {
   type FormDefinition
 } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import { act, cleanup, render } from '@testing-library/react'
+import { act, render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React from 'react'
 
@@ -48,8 +48,6 @@ describe('ComponentListSelect', () => {
     sections: [],
     conditions: []
   } satisfies FormDefinition
-
-  afterEach(cleanup)
 
   test('Lists all available lists', () => {
     const { container } = render(

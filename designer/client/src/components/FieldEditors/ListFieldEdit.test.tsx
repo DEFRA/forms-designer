@@ -6,7 +6,7 @@ import {
   type FormDefinition
 } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import { act, cleanup, render, type RenderResult } from '@testing-library/react'
+import { act, render, type RenderResult } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React from 'react'
 
@@ -38,8 +38,6 @@ describe('List field edit', () => {
     sections: [],
     conditions: []
   } satisfies FormDefinition
-
-  afterEach(cleanup)
 
   describe('Supported components', () => {
     it.each(ComponentTypes.filter(({ type }) => supported.includes(type)))(

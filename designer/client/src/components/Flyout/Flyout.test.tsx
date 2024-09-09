@@ -1,5 +1,5 @@
 import { screen } from '@testing-library/dom'
-import { act, cleanup, render } from '@testing-library/react'
+import { act, render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React from 'react'
 
@@ -7,8 +7,6 @@ import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
 describe('Flyout', () => {
-  afterEach(cleanup)
-
   it('renders with accessible heading and close button', () => {
     render(
       <RenderWithContext>
@@ -48,13 +46,13 @@ describe('Flyout', () => {
     const increment = jest.fn()
     const decrement = jest.fn()
 
-    render(
+    const { unmount } = render(
       <RenderWithContext context={{ flyout: { increment, decrement } }}>
         <Flyout title="Example 1" onHide={jest.fn()} />
       </RenderWithContext>
     )
 
-    cleanup()
+    unmount()
 
     expect(increment).toHaveBeenCalledTimes(1)
     expect(decrement).toHaveBeenCalledTimes(1)

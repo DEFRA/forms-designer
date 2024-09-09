@@ -10,7 +10,7 @@ import {
   type FormDefinition
 } from '@defra/forms-model'
 import { screen, waitFor } from '@testing-library/dom'
-import { act, cleanup, render } from '@testing-library/react'
+import { act, render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import lowerFirst from 'lodash/lowerFirst.js'
 import React from 'react'
@@ -69,8 +69,6 @@ describe('ComponentTypeEdit', () => {
       ]
     }
   })
-
-  afterEach(cleanup)
 
   describe.each([
     [

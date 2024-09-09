@@ -1,6 +1,6 @@
 import { ComponentType, type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import { act, cleanup, render, waitFor } from '@testing-library/react'
+import { act, render, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import lowerFirst from 'lodash/lowerFirst.js'
 import React from 'react'
@@ -68,8 +68,6 @@ const data = {
 } satisfies FormDefinition
 
 describe('Page', () => {
-  afterEach(cleanup)
-
   test('Page edit can be shown/hidden successfully', async () => {
     render(
       <RenderWithContext data={data}>

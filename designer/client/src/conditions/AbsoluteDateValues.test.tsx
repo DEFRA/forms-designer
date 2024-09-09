@@ -1,13 +1,11 @@
 import { screen } from '@testing-library/dom'
-import { act, cleanup, render, waitFor } from '@testing-library/react'
+import { act, render, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React from 'react'
 
 import { AbsoluteDateValues } from '~/src/conditions/AbsoluteDateValues.jsx'
 
 describe('AbsoluteDateValues', () => {
-  afterEach(cleanup)
-
   it("renders out a date that's passed to it", () => {
     render(
       <AbsoluteDateValues

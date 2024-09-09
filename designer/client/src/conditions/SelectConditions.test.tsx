@@ -5,15 +5,13 @@ import {
   type FormDefinition
 } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import { cleanup, render } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import React from 'react'
 
 import { SelectConditions } from '~/src/conditions/SelectConditions.jsx'
 import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
 describe('SelectConditions', () => {
-  afterEach(cleanup)
-
   const data = {
     pages: [],
     lists: [],

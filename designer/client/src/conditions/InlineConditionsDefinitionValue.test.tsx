@@ -9,7 +9,7 @@ import {
   type Item
 } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import { act, cleanup, render } from '@testing-library/react'
+import { act, render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import upperFirst from 'lodash/upperFirst.js'
 import React from 'react'
@@ -18,8 +18,6 @@ import { InlineConditionsDefinitionValue } from '~/src/conditions/InlineConditio
 import { type FieldDef } from '~/src/data/component/fields.js'
 
 describe('InlineConditionsDefinitionValue', () => {
-  afterEach(cleanup)
-
   it('should display a text input for fields without custom mappings or options', () => {
     const fieldDef: FieldDef = {
       label: 'Something',
