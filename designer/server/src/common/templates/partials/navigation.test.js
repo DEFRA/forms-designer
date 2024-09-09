@@ -48,12 +48,13 @@ describe('Navigation partial', () => {
   describe('Service navigation', () => {
     const selectorNavigation = `.service-header`
 
-    it('should render menu when signed in (authorized)', () => {
+    it('should render menu when signed in and is a form user (authorized)', () => {
       const { document } = renderView('partials/navigation.njk', {
         context: {
           navigation: [],
           isAuthenticated: true,
-          isAuthorized: true
+          isAuthorized: true,
+          isFormsUser: true
         }
       })
 
@@ -67,7 +68,17 @@ describe('Navigation partial', () => {
         context: {
           navigation: [],
           isAuthenticated: true,
-          isAuthorized: false
+          isAuthorized: false,
+          isFormsUser: false
+        }
+      },
+      {
+        example: 'signed in (not a forms user)',
+        context: {
+          navigation: [],
+          isAuthenticated: true,
+          isAuthorized: true,
+          isFormsUser: false
         }
       },
       {
@@ -75,7 +86,8 @@ describe('Navigation partial', () => {
         context: {
           navigation: [],
           isAuthenticated: false,
-          isAuthorized: false
+          isAuthorized: false,
+          isFormsUser: false
         }
       }
     ])('should not render menu when $example', ({ context }) => {
