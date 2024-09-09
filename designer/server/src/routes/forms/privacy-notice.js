@@ -58,7 +58,7 @@ export default [
    * @satisfies {ServerRoute<{ Params: { slug: string }, Payload: { privacyNoticeUrl : string } }>}
    */
   ({
-    method: 'post',
+    method: 'POST',
     path: ROUTE_PATH_EDIT_PRIVACY_NOTICE,
     async handler(request, h) {
       const { auth, params, payload, yar } = request
