@@ -7,6 +7,7 @@ import {
   type ContentComponentsDef,
   type FormComponentsDef,
   type HtmlComponent,
+  type InputFieldsComponentsDef,
   type InsetTextComponent,
   type ListComponent,
   type ListComponentsDef,
@@ -91,6 +92,7 @@ export function isContentType(
 
 /**
  * Filter known components with form fields
+ * (includes input fields and selection fields)
  */
 export function hasFormField(
   component?: Partial<ComponentDef>
@@ -128,7 +130,18 @@ export function isListType(
 }
 
 /**
- * Filter known components with selection fields
+ * Filter known form components with input fields
+ * (excludes content and selection fields)
+ */
+export function hasInputField(
+  component?: Partial<ComponentDef>
+): component is InputFieldsComponentsDef {
+  return hasFormField(component) && !hasSelectionFields(component)
+}
+
+/**
+ * Filter known form components with selection fields
+ * (excludes content and input fields)
  */
 export function hasSelectionFields(
   component?: Partial<ComponentDef>

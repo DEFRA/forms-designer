@@ -7,6 +7,7 @@ export {
   hasFormField,
   hasHint,
   hasListField,
+  hasInputField,
   hasSelectionFields,
   hasTitle,
   isConditionalType,
