@@ -161,7 +161,12 @@ export type FormBySlugInput = Pick<FormMetadata, 'slug'>
 export type FormMetadataDocument = Omit<FormMetadata, 'id'>
 export type FormMetadataInput = Pick<
   FormMetadata,
-  'title' | 'organisation' | 'teamName' | 'teamEmail' | 'privacyNoticeUrl'
+  | 'title'
+  | 'organisation'
+  | 'teamName'
+  | 'teamEmail'
+  | 'privacyNoticeUrl'
+  | 'contact'
 >
 
 export interface FormResponse {
