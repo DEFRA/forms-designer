@@ -27,6 +27,4 @@ export const ControllerTypes = [
   }
 ]
 
-export const ControllerNames = ControllerTypes.map(({ name }) =>
-  name.toString()
-)
+export const ControllerNames = ControllerTypes.map(({ name }) => name)

@@ -78,7 +78,7 @@ export function hasNext(page?: Partial<Page>) {
 export function isControllerName(
   nameOrPath?: ControllerType | string
 ): nameOrPath is ControllerType {
-  return !!nameOrPath && ControllerNames.includes(nameOrPath)
+  return !!nameOrPath && ControllerNames.map(String).includes(nameOrPath)
 }
 
 /**
