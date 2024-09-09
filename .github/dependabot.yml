@@ -50,8 +50,6 @@ updates:
           - '@testing-library/*'
           - 'cheerio'
           - 'concurrently'
-          - 'enzyme'
-          - 'enzyme-*'
           - 'jest'
           - 'jest-*'
           - 'nodemon'
