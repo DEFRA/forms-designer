@@ -98,15 +98,18 @@
     "hint": "Select a component to add to your page. If your page has only one component, the component title does not show on the page. To name or describe the component, use the page title instead.",
     "contentFields": {
       "title": "Content",
-      "info": "Content components allow you to add information to your page."
+      "info": "Content components allow you to add information to your page.",
+      "unavailable": "No content components available"
     },
     "inputFields": {
       "title": "Input",
-      "info": "Input fields allow you to ask users to enter information."
+      "info": "Input fields allow you to ask users to enter information.",
+      "unavailable": "No input components available"
     },
     "selectionFields": {
       "title": "Selection",
-      "info": "Selection fields allow you to provide lists of answers for users to choose from."
+      "info": "Selection fields allow you to provide lists of answers for users to choose from.",
+      "unavailable": "No selection components available"
     }
   },
   "conditions": {

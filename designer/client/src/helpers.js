@@ -1,6 +1,8 @@
 import {
+  ComponentType,
   controllerNameFromPath,
   ControllerType,
+  hasContent,
   hasNext
 } from '@defra/forms-model'
 
@@ -16,6 +18,35 @@ export function arrayMove(arr, from, to) {
   const elm = arr.splice(from, 1)[0]
   arr.splice(to, 0, elm)
   return arr
+}
+
+/**
+ * Create filter for allowed components
+ * @param {Partial<Page>} page
+ */
+export function isComponentAllowed(page) {
+  const controller = controllerNameFromPath(page.controller)
+
+  /**
+   * Filter allowed components for current page
+   * @param {ComponentDef} component
+   */
+  return (component) => {
+    const isContent = hasContent(component)
+
+    // File upload components not allowed on question pages
+    const isQuestion =
+      component.type !== ComponentType.FileUploadField &&
+      (!controller || controller === ControllerType.Page)
+
+    // File upload pages can have a single file upload form component
+    const isFileUpload =
+      component.type === ComponentType.FileUploadField &&
+      controller === ControllerType.FileUpload
+
+    // Content components are always allowed
+    return isContent || isQuestion || isFileUpload
+  }
 }
 
 /**
@@ -83,5 +114,5 @@ export function isControllerAllowed(data, page) {
 }
 
 /**
- * @import { FormDefinition, Page } from '@defra/forms-model'
+ * @import { ComponentDef, FormDefinition, Page } from '@defra/forms-model'
  */
