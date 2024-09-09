@@ -41,6 +41,46 @@ export interface FormMetadataState {
 }
 
 /**
+ * Interface for contact details (phone, email and online)
+ */
+export interface FormMetadataContact {
+  /**
+   * The phone details for support
+   */
+  phone?: string
+
+  /**
+   * The email details for support
+   */
+  email?: {
+    /**
+     * The email address details for support
+     */
+    address: string
+
+    /**
+     * How long it takes to receive a support response
+     */
+    responseTime: string
+  }
+
+  /**
+   * The online details for support
+   */
+  online?: {
+    /**
+     * The url of the online contact link
+     */
+    url: string
+
+    /**
+     * The text of the online contact link
+     */
+    text: string
+  }
+}
+
+/**
  * Interface for `formMetadataSchema` Joi schema
  * @see {@link formMetadataSchema}
  */
@@ -79,6 +119,11 @@ export interface FormMetadata {
    * The url of the privacy notice
    */
   privacyNoticeUrl?: string
+
+  /**
+   * The contact details of the form
+   */
+  contact?: FormMetadataContact
 
   /**
    * The draft state of the form

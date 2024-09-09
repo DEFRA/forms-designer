@@ -41,6 +41,33 @@ export const privacyNoticeUrlSchema = Joi.string()
   })
   .trim()
 
+export const phoneSchema = Joi.string().trim()
+
+export const emailAddressSchema = Joi.string().email().trim().required()
+export const emailResponseTimeSchema = Joi.string().trim().required()
+export const emailSchema = Joi.object().keys({
+  address: emailAddressSchema,
+  responseTime: emailResponseTimeSchema
+})
+
+export const onlineLinkUrlSchema = Joi.string()
+  .uri({
+    scheme: ['http', 'https']
+  })
+  .trim()
+  .required()
+export const onlineLinkTextSchema = Joi.string().trim().required()
+export const onlineSchema = Joi.object().keys({
+  url: onlineLinkUrlSchema,
+  text: onlineLinkTextSchema
+})
+
+export const contactSchema = Joi.object().keys({
+  phone: phoneSchema,
+  email: emailSchema,
+  online: onlineSchema
+})
+
 export const authoredAtSchema = Joi.date().iso().required()
 export const authorIdSchema = Joi.string().trim().required()
 export const authorDisplayNameSchema = Joi.string().trim().required()
@@ -50,7 +77,8 @@ export const formMetadataInputKeys = {
   organisation: organisationSchema,
   teamName: teamNameSchema,
   teamEmail: teamEmailSchema,
-  privacyNoticeUrl: privacyNoticeUrlSchema
+  privacyNoticeUrl: privacyNoticeUrlSchema,
+  contact: contactSchema
 }
 
 /**
