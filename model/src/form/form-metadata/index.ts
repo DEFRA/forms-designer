@@ -4,7 +4,8 @@ import {
   type FormMetadata,
   type FormMetadataInput,
   type FormMetadataState,
-  type FormMetadataAuthor
+  type FormMetadataAuthor,
+  type FormMetadataContact
 } from '~/src/form/form-metadata/types.js'
 
 export const organisations = [
@@ -62,7 +63,7 @@ export const onlineSchema = Joi.object().keys({
   text: onlineTextSchema
 })
 
-export const contactSchema = Joi.object().keys({
+export const contactSchema = Joi.object<FormMetadataContact>().keys({
   phone: phoneSchema,
   email: emailSchema,
   online: onlineSchema
