@@ -68,7 +68,8 @@ describe('Navigation partial', () => {
         context: {
           navigation: [],
           isAuthenticated: true,
-          isAuthorized: false
+          isAuthorized: false,
+          isFormsUser: false
         }
       },
       {
@@ -85,7 +86,8 @@ describe('Navigation partial', () => {
         context: {
           navigation: [],
           isAuthenticated: false,
-          isAuthorized: false
+          isAuthorized: false,
+          isFormsUser: false
         }
       }
     ])('should not render menu when $example', ({ context }) => {

@@ -41,7 +41,7 @@ export async function context(request) {
     assetPath: '/assets',
     isAuthenticated: request?.auth?.isAuthenticated ?? false,
     isAuthorized: request?.auth?.isAuthorized ?? false,
-    isFormsUser: credentials?.scope?.includes(SCOPE_READ), // isAuthorized may be true if no scopes are required for the route
+    isFormsUser: credentials?.scope?.includes(SCOPE_READ) ?? false, // isAuthorized may be true if no scopes are required for the route
     authedUser: credentials?.user
   }
 }
