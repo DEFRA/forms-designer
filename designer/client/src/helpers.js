@@ -2,6 +2,7 @@ import {
   ComponentType,
   controllerNameFromPath,
   ControllerType,
+  hasComponents,
   hasContent,
   hasNext
 } from '@defra/forms-model'
@@ -25,7 +26,13 @@ export function arrayMove(arr, from, to) {
  * @param {Partial<Page>} page
  */
 export function isComponentAllowed(page) {
+  const components = hasComponents(page) ? page.components : []
   const controller = controllerNameFromPath(page.controller)
+
+  // Check for existing file upload components
+  const hasFileUpload = components.some(
+    (c) => c.type === ComponentType.FileUploadField
+  )
 
   /**
    * Filter allowed components for current page
@@ -42,7 +49,8 @@ export function isComponentAllowed(page) {
     // File upload pages can have a single file upload form component
     const isFileUpload =
       component.type === ComponentType.FileUploadField &&
-      controller === ControllerType.FileUpload
+      controller === ControllerType.FileUpload &&
+      !hasFileUpload
 
     // Content components are always allowed
     return isContent || isQuestion || isFileUpload
