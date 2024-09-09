@@ -5,7 +5,9 @@ import {
   type FormMetadataInput,
   type FormMetadataState,
   type FormMetadataAuthor,
-  type FormMetadataContact
+  type FormMetadataContact,
+  type FormMetadataContactOnline,
+  type FormMetadataContactEmail
 } from '~/src/form/form-metadata/types.js'
 
 export const organisations = [
@@ -46,7 +48,7 @@ export const phoneSchema = Joi.string().trim()
 
 export const emailAddressSchema = Joi.string().email().trim().required()
 export const emailResponseTimeSchema = Joi.string().trim().required()
-export const emailSchema = Joi.object().keys({
+export const emailSchema = Joi.object<FormMetadataContactEmail>().keys({
   address: emailAddressSchema,
   responseTime: emailResponseTimeSchema
 })
@@ -58,7 +60,7 @@ export const onlineUrlSchema = Joi.string()
   .trim()
   .required()
 export const onlineTextSchema = Joi.string().trim().required()
-export const onlineSchema = Joi.object().keys({
+export const onlineSchema = Joi.object<FormMetadataContactOnline>().keys({
   url: onlineUrlSchema,
   text: onlineTextSchema
 })

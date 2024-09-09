@@ -41,6 +41,36 @@ export interface FormMetadataState {
 }
 
 /**
+ * Interface for email contact details
+ */
+export interface FormMetadataContactEmail {
+  /**
+   * The email address details for support
+   */
+  address: string
+
+  /**
+   * How long it takes to receive a support response
+   */
+  responseTime: string
+}
+
+/**
+ * Interface for online contact details
+ */
+export interface FormMetadataContactOnline {
+  /**
+   * The url of the online contact link
+   */
+  url: string
+
+  /**
+   * The text of the online contact link
+   */
+  text: string
+}
+
+/**
  * Interface for contact details (phone, email and online)
  */
 export interface FormMetadataContact {
@@ -52,32 +82,12 @@ export interface FormMetadataContact {
   /**
    * The email details for support
    */
-  email?: {
-    /**
-     * The email address details for support
-     */
-    address: string
-
-    /**
-     * How long it takes to receive a support response
-     */
-    responseTime: string
-  }
+  email?: FormMetadataContactEmail
 
   /**
    * The online details for support
    */
-  online?: {
-    /**
-     * The url of the online contact link
-     */
-    url: string
-
-    /**
-     * The text of the online contact link
-     */
-    text: string
-  }
+  online?: FormMetadataContactOnline
 }
 
 /**
