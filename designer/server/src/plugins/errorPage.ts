@@ -6,6 +6,12 @@ import {
 
 import { errorViewModel } from '~/src/models/errors.js'
 
+const errorCodes = new Map([
+  [403, 'You do not have access to this service'],
+  [404, 'Page not found'],
+  [500, 'Sorry, there is a problem with the service']
+])
+
 /*
  * Add an `onPreResponse` listener to return error pages
  */
@@ -20,12 +26,12 @@ export default {
           // An error was raised during
           // processing the request
           const statusCode = response.output.statusCode
-          const pageTitle = 'You do not have access to this service'
+          const errorMessage = errorCodes.get(statusCode)
 
-          // In the event of 403
-          // return the `403` view
-          if (statusCode === 403) {
-            return h.view('403', errorViewModel(pageTitle)).code(statusCode)
+          if (errorMessage) {
+            return h
+              .view(statusCode.toString(), errorViewModel(errorMessage))
+              .code(statusCode)
           }
 
           request.log('error', {

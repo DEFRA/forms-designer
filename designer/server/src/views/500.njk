@@ -1,0 +1,11 @@
+{% extends 'layouts/page.njk' %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+  {% call appPageBody({
+    heading: pageHeading
+  }) %}
+    <p class="govuk-body">Try again later.</p>
+    <p class="govuk-body"><a href="mailto:defraforms@defra.gov.uk" class="govuk-link">Contact the Defra forms team</a> if you believe you are seeing this message in error.</p>
+  {% endcall %}
+{% endblock %}

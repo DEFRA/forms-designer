@@ -1,5 +1,4 @@
 import Boom from '@hapi/boom'
-import { StatusCodes } from 'http-status-codes'
 
 import config from '~/src/config.js'
 import { get, postJson } from '~/src/lib/fetch.js'
@@ -16,18 +15,11 @@ export async function checkFileStatus(fieldId) {
     const result = await get(requestUrl, {})
     return result.response.statusCode
   } catch (err) {
-    if (
-      Boom.isBoom(err) &&
-      err.output.statusCode === StatusCodes.GONE.valueOf()
-    ) {
-      return StatusCodes.GONE.valueOf()
+    if (Boom.isBoom(err)) {
+      return err.output.statusCode
     }
 
-    return Boom.internal(
-      new Error('Failed to get download url', {
-        cause: err
-      })
-    )
+    throw err
   }
 }
 
