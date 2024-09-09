@@ -87,16 +87,27 @@
   },
   "component": {
     "component": "component",
-    "contentfields_info": "Content components allow you to add information to your page",
     "create": "Add component",
-    "create_info": "Select a component to add to your page. If your page has only one component, the component title does not show on the page. To name or describe the component, use the page title instead.",
     "edit": "Edit {{name, lowerFirst}} component",
-    "inputfields_info": "Input fields allow you to ask users to enter information",
-    "selectfields_info": "Selection fields allow you to provide lists of answers for users to choose from",
     "moveUp": "Move component up",
     "moveUp_label": "Move {{name, lowerFirst}} component up",
     "moveDown": "Move component down",
     "moveDown_label": "Move {{name, lowerFirst}} component down"
+  },
+  "componentCreate": {
+    "hint": "Select a component to add to your page. If your page has only one component, the component title does not show on the page. To name or describe the component, use the page title instead.",
+    "contentFields": {
+      "title": "Content",
+      "info": "Content components allow you to add information to your page."
+    },
+    "inputFields": {
+      "title": "Input",
+      "info": "Input fields allow you to ask users to enter information."
+    },
+    "selectionFields": {
+      "title": "Selection",
+      "info": "Selection fields allow you to provide lists of answers for users to choose from."
+    }
   },
   "conditions": {
     "add": "Add a new condition",

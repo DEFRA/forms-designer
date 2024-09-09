@@ -47,13 +47,15 @@ export const ComponentCreateList = (props: Readonly<Props>) => {
 
   return (
     <div className="govuk-form-group">
-      <div className="govuk-hint">{i18n('component.create_info')}</div>
+      <div className="govuk-hint">{i18n('componentCreate.hint')}</div>
       <ol className="govuk-list">
         <li>
-          <h3 className="govuk-heading-s">{i18n('Content')}</h3>
-          <div className="govuk-hint">
-            {i18n('component.contentfields_info')}
-          </div>
+          <h3 className="govuk-heading-s govuk-!-margin-bottom-1">
+            {i18n('componentCreate.contentFields.title')}
+          </h3>
+          <p className="govuk-body">
+            {i18n('componentCreate.contentFields.info')}
+          </p>
           <ol className="govuk-list">
             {contentFields.map((component) => (
               <li key={component.name}>
@@ -82,10 +84,12 @@ export const ComponentCreateList = (props: Readonly<Props>) => {
         {isComponentPage && (
           <>
             <li>
-              <h3 className="govuk-heading-s">{i18n('Input fields')}</h3>
-              <div className="govuk-hint">
-                {i18n('component.inputfields_info')}
-              </div>
+              <h3 className="govuk-heading-s govuk-!-margin-bottom-1">
+                {i18n('componentCreate.inputFields.title')}
+              </h3>
+              <p className="govuk-body">
+                {i18n('componentCreate.inputFields.info')}
+              </p>
               <ol className="govuk-list">
                 {inputFields.map((component) => (
                   <li key={component.type}>
@@ -110,10 +114,12 @@ export const ComponentCreateList = (props: Readonly<Props>) => {
               <hr className="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
             </li>
             <li>
-              <h3 className="govuk-heading-s">{i18n('Selection fields')}</h3>
-              <div className="govuk-hint">
-                {i18n('component.selectfields_info')}
-              </div>
+              <h3 className="govuk-heading-s govuk-!-margin-bottom-1">
+                {i18n('componentCreate.selectionFields.title')}
+              </h3>
+              <p className="govuk-body">
+                {i18n('componentCreate.selectionFields.info')}
+              </p>
               <ol className="govuk-list">
                 {selectionFields.map((component) => (
                   <li key={component.type}>
