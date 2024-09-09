@@ -8,7 +8,7 @@ import {
   type ComponentDef,
   type Page
 } from '@defra/forms-model'
-import React, { type MouseEvent, useCallback, useMemo } from 'react'
+import React, { useMemo } from 'react'
 
 import { i18n } from '~/src/i18n/i18n.jsx'
 
@@ -25,14 +25,6 @@ export const ComponentCreateList = (props: Readonly<Props>) => {
   const isComponentPage =
     controller === ControllerType.Page ||
     controller === ControllerType.FileUpload
-
-  const selectComponent = useCallback(
-    (event: MouseEvent<HTMLAnchorElement>, component: ComponentDef) => {
-      event.preventDefault()
-      onSelectComponent(component)
-    },
-    [onSelectComponent]
-  )
 
   const componentList = useMemo(() => {
     return [...structuredClone(ComponentTypes)].sort(
@@ -64,7 +56,10 @@ export const ComponentCreateList = (props: Readonly<Props>) => {
                   <a
                     className="govuk-link"
                     href="#0"
-                    onClick={(e) => selectComponent(e, component)}
+                    onClick={(e) => {
+                      e.preventDefault()
+                      onSelectComponent(component)
+                    }}
                   >
                     {i18n(`fieldTypeToName.${component.type}`)}
                   </a>
@@ -93,7 +88,10 @@ export const ComponentCreateList = (props: Readonly<Props>) => {
                       <a
                         href="#0"
                         className="govuk-link"
-                        onClick={(e) => selectComponent(e, component)}
+                        onClick={(e) => {
+                          e.preventDefault()
+                          onSelectComponent(component)
+                        }}
                       >
                         {i18n(`fieldTypeToName.${component.type}`)}
                       </a>
@@ -118,7 +116,10 @@ export const ComponentCreateList = (props: Readonly<Props>) => {
                       <a
                         href="#0"
                         className="govuk-link"
-                        onClick={(e) => selectComponent(e, component)}
+                        onClick={(e) => {
+                          e.preventDefault()
+                          onSelectComponent(component)
+                        }}
                       >
                         {i18n(`fieldTypeToName.${component.type}`)}
                       </a>
