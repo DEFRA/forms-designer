@@ -3,33 +3,14 @@ import {
   controllerNameFromPath,
   ControllerType,
   hasContent,
+  hasInputField,
   hasSelectionFields,
   type ComponentDef,
-  type ContentComponentsDef,
-  type Page,
-  type SelectionComponentsDef
+  type Page
 } from '@defra/forms-model'
-import React, { type MouseEvent, useCallback } from 'react'
+import React, { type MouseEvent, useCallback, useMemo } from 'react'
 
 import { i18n } from '~/src/i18n/i18n.jsx'
-
-const contentFields: ContentComponentsDef[] = []
-const selectionFields: SelectionComponentsDef[] = []
-const inputFields: ComponentDef[] = []
-
-const ComponentTypesSorted = [...structuredClone(ComponentTypes)].sort(
-  ({ type: typeA }, { type: typeB }) => typeA.localeCompare(typeB)
-)
-
-for (const component of ComponentTypesSorted) {
-  if (hasContent(component)) {
-    contentFields.push(component)
-  } else if (hasSelectionFields(component)) {
-    selectionFields.push(component)
-  } else {
-    inputFields.push(component)
-  }
-}
 
 interface Props {
   page: Page
@@ -52,6 +33,20 @@ export const ComponentCreateList = (props: Readonly<Props>) => {
     },
     [onSelectComponent]
   )
+
+  const componentList = useMemo(() => {
+    return [...structuredClone(ComponentTypes)].sort(
+      ({ type: typeA }, { type: typeB }) => typeA.localeCompare(typeB)
+    )
+  }, [])
+
+  const { contentFields, selectionFields, inputFields } = useMemo(() => {
+    return {
+      contentFields: componentList.filter(hasContent),
+      selectionFields: componentList.filter(hasSelectionFields),
+      inputFields: componentList.filter(hasInputField)
+    }
+  }, [componentList])
 
   return (
     <div className="govuk-form-group">
