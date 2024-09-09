@@ -32,7 +32,7 @@ export default [
    * @satisfies {ServerRoute<{ Params: { slug: string } }>}
    */
   ({
-    method: 'get',
+    method: 'GET',
     path: '/library/{slug}',
     options: {
       async handler(request, h) {
@@ -72,7 +72,7 @@ export default [
    * @satisfies {ServerRoute<{ Params: { slug: string } }>}
    */
   ({
-    method: 'get',
+    method: 'GET',
     path: '/library/{slug}/editor',
     options: {
       async handler(request, h) {

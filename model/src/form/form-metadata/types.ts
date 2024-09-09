@@ -76,6 +76,11 @@ export interface FormMetadata {
   teamEmail: string
 
   /**
+   * The url of the privacy notice
+   */
+  privacyNoticeUrl?: string
+
+  /**
    * The draft state of the form
    */
   draft?: FormMetadataState
@@ -111,7 +116,7 @@ export type FormBySlugInput = Pick<FormMetadata, 'slug'>
 export type FormMetadataDocument = Omit<FormMetadata, 'id'>
 export type FormMetadataInput = Pick<
   FormMetadata,
-  'title' | 'organisation' | 'teamName' | 'teamEmail'
+  'title' | 'organisation' | 'teamName' | 'teamEmail' | 'privacyNoticeUrl'
 >
 
 export interface FormResponse {

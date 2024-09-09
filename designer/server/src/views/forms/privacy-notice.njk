@@ -1,0 +1,52 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% block beforeContent %}
+  {{ govukBackLink(backLink) }}
+{% endblock %}
+
+{% block content %}
+  <span class="govuk-caption-l">{{ form.title }}</span>
+  <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
+
+  <form method="post" novalidate>
+    {% call appPageBody({
+      errorList: errorList
+    }) %}
+      <p class="govuk-body-l">
+        To comply with the UK General Data Protection Regulation (UK GDPR),
+        you must provide privacy information for the people who will enter their data into your form.
+      </p>
+
+      {{ govukInput({
+        label: {
+          text: field.label.text,
+          classes: "govuk-label--s",
+          isPageHeading: false
+        },
+        id: field.id,
+        name: field.name,
+        value: field.value,
+        hint: field.hint,
+        errorMessage: {
+          text: formErrors[field.name].text
+        } if formErrors[field.name]
+      }) }}
+
+      <div class="govuk-button-group">
+        {{ govukButton({
+          text: buttonText
+        }) }}
+
+        {{ govukButton({
+          text: "Cancel",
+          href: backLink.href,
+          classes: "govuk-button--secondary"
+        }) }}
+      </div>
+    </form>
+  {% endcall %}
+{% endblock %}
