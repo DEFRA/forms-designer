@@ -34,7 +34,7 @@ import { deleteLink } from '~/src/data/page/deleteLink.js'
 import { findPage } from '~/src/data/page/findPage.js'
 import { updateLinksTo } from '~/src/data/page/updateLinksTo.js'
 import { findSection } from '~/src/data/section/findSection.js'
-import { isControllerAllowed } from '~/src/helpers.js'
+import { isComponentAllowed, isControllerAllowed } from '~/src/helpers.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { SectionEdit } from '~/src/section/SectionEdit.jsx'
 import {
@@ -135,9 +135,13 @@ export class PageEdit extends Component<Props, State> {
       }
     }
 
-    // Copy over components
+    // Copy over allowed components only
     if (hasComponents(pageEdit) && hasComponents(pageUpdate)) {
-      pageUpdate.components = pageEdit.components
+      pageUpdate.components.unshift(
+        ...pageEdit.components.filter(
+          isComponentAllowed({ controller: payload.controller })
+        )
+      )
     }
 
     // Copy over links
