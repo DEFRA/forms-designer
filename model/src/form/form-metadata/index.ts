@@ -50,16 +50,16 @@ export const emailSchema = Joi.object().keys({
   responseTime: emailResponseTimeSchema
 })
 
-export const onlineLinkUrlSchema = Joi.string()
+export const onlineUrlSchema = Joi.string()
   .uri({
     scheme: ['http', 'https']
   })
   .trim()
   .required()
-export const onlineLinkTextSchema = Joi.string().trim().required()
+export const onlineTextSchema = Joi.string().trim().required()
 export const onlineSchema = Joi.object().keys({
-  url: onlineLinkUrlSchema,
-  text: onlineLinkTextSchema
+  url: onlineUrlSchema,
+  text: onlineTextSchema
 })
 
 export const contactSchema = Joi.object().keys({
