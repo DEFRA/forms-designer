@@ -15,6 +15,7 @@ export interface PageBase {
 }
 
 export interface PageStart extends PageBase {
+  path: ControllerPath.Start | string
   controller: ControllerType.Start | ControllerType.Home
   section?: string | undefined
   next: Link[]
@@ -29,13 +30,13 @@ export interface PageQuestion extends PageBase {
 }
 
 export interface PageSummary extends PageBase {
-  path: ControllerPath.Summary
+  path: ControllerPath.Summary | string
   controller: ControllerType.Summary
   section?: undefined
 }
 
 export interface PageStatus extends PageBase {
-  path: ControllerPath.Status
+  path: ControllerPath.Status | string
   controller: ControllerType.Status
   section?: undefined
 }

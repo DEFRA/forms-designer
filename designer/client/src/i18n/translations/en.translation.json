@@ -30,7 +30,8 @@
     },
     "controllerOption": {
       "helpText": "Select a Start Page to start a form, a Question Page to request information, and a Summary Page at the end of a section or form. For example, use a Summary to let users check their answers to questions before they submit the form.",
-      "title": "Page type"
+      "title": "Page type",
+      "option": "Select a page type"
     },
     "pathField": {
       "helpText": "Appears in the browser path. The value you enter in the page title field automatically populates the path name. To override it, enter your own path name, relevant to the page, and use lowercase text and hyphens between words. For example, '/personal-details'.",
@@ -292,20 +293,12 @@
     "add": "Add page",
     "edit": "Edit page",
     "preview": "Preview page",
-    "controller": "Page type",
-    "controllerHint": "Select a Start Page to start a form, a Question Page to request information, and a Summary Page at the end of a section or form. For example, use a Summary to let users check their answers to questions before they submit the form.",
     "controllers": {
       "question": "Question page",
       "start": "Start page",
       "fileUpload": "File upload",
       "summary": "Summary page"
-    },
-    "path": "Path",
-    "pathHint": "Appears in the browser path. The value you enter in the page title field automatically populates the path name. To override it, enter your own path name, relevant to the page, and use lowercase text and hyphens between words. For example, '/personal-details'.",
-    "section": "Section (optional)",
-    "sectionHint": "Use sections to split a form. For example, to add a section per applicant. The section title appears above the page title. However, if these titles are the same, the form will only show the page title.",
-    "sectionOption": "Select a section",
-    "title": "Page title"
+    }
   },
   "save": "Save",
   "section": {

@@ -1,6 +1,7 @@
 import {
   ControllerPath,
   ControllerType,
+  PageTypes,
   controllerNameFromPath,
   getPageDefaults,
   hasComponents,
@@ -13,6 +14,7 @@ import {
 } from '@defra/forms-model'
 // @ts-expect-error -- No types available
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
+import classNames from 'classnames'
 import Joi from 'joi'
 import React, {
   Component,
@@ -24,14 +26,15 @@ import React, {
 
 import { type ErrorList, ErrorSummary } from '~/src/ErrorSummary.jsx'
 import { logger } from '~/src/common/helpers/logging/logger.js'
+import { ErrorMessage } from '~/src/components/ErrorMessage/ErrorMessage.jsx'
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { deleteLink } from '~/src/data/page/deleteLink.js'
 import { findPage } from '~/src/data/page/findPage.js'
-import { findPathsTo } from '~/src/data/page/findPathsTo.js'
 import { updateLinksTo } from '~/src/data/page/updateLinksTo.js'
 import { findSection } from '~/src/data/section/findSection.js'
+import { isControllerAllowed } from '~/src/helpers.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { SectionEdit } from '~/src/section/SectionEdit.jsx'
 import {
@@ -46,17 +49,17 @@ interface Props {
 }
 
 interface State extends Partial<Form> {
-  controller?: ControllerType
   section?: Section
   isEditingSection: boolean
   isNewSection: boolean
   isQuestionPage: boolean
-  errors: Partial<ErrorList<'path' | 'title'>>
+  errors: Partial<ErrorList<'path' | 'title' | 'controller'>>
 }
 
 interface Form {
   path: string
   title: string
+  controller: ControllerType
 }
 
 export class PageEdit extends Component<Props, State> {
@@ -100,7 +103,8 @@ export class PageEdit extends Component<Props, State> {
     // Remove trailing spaces and hyphens
     const payload = {
       title: title?.trim(),
-      path: isQuestionPage ? `/${slugify(path)}` : defaults.path
+      path: isQuestionPage ? `/${slugify(path)}` : defaults.path,
+      controller: controller ? defaults.controller : undefined
     }
 
     // Check for valid form payload
@@ -122,7 +126,7 @@ export class PageEdit extends Component<Props, State> {
       pageUpdate.section = section?.name
 
       // Remove default controller
-      if (controller === ControllerType.Page) {
+      if (payload.controller === ControllerType.Page) {
         delete pageUpdate.controller
       }
     }
@@ -158,8 +162,13 @@ export class PageEdit extends Component<Props, State> {
 
     const errors: State['errors'] = {}
 
+    errors.controller = validateRequired('page-controller', controller, {
+      label: i18n('addPage.controllerOption.title'),
+      message: 'addPage.controllerOption.option'
+    })
+
     errors.title = validateRequired('page-title', title, {
-      label: i18n('page.title')
+      label: i18n('addPage.pageTitleField.title')
     })
 
     // Path '/status' not allowed
@@ -234,7 +243,7 @@ export class PageEdit extends Component<Props, State> {
       controller,
 
       // Allow question pages to edit section + path
-      isQuestionPage: isQuestionPage({ controller }),
+      isQuestionPage: controller ? isQuestionPage({ controller }) : false,
 
       // Reset path errors when controller changes
       errors: {
@@ -308,21 +317,9 @@ export class PageEdit extends Component<Props, State> {
       errors
     } = this.state
 
-    const { pages, sections } = data
+    const { sections } = data
     const hasErrors = hasValidationErrors(errors)
-
-    // Check if we already have a start page
-    const hasStartPage = pages.some(
-      (page) => page.controller === ControllerType.Start
-    )
-
-    // Check if we already have a summary page
-    const hasSummaryPage = pages.some(
-      (page) => page.controller === ControllerType.Summary
-    )
-
-    // Check if we have a link from another page
-    const hasLinkFrom = findPathsTo(data, page.path).length > 1
+    const pageTypes = PageTypes.filter(isControllerAllowed(data, page))
 
     return (
       <>
@@ -331,39 +328,46 @@ export class PageEdit extends Component<Props, State> {
         )}
 
         <form onSubmit={this.onSubmit} autoComplete="off" noValidate>
-          <div className="govuk-form-group">
-            <label className="govuk-label govuk-label--s" htmlFor="controller">
-              {i18n('page.controller')}
+          <div
+            className={classNames('govuk-form-group', {
+              'govuk-form-group--error': errors.controller
+            })}
+          >
+            <label
+              className="govuk-label govuk-label--s"
+              htmlFor="page-controller"
+            >
+              {i18n('addPage.controllerOption.title')}
             </label>
-            <div className="govuk-hint" id="controller-hint">
-              {i18n('page.controllerHint')}
+            <div className="govuk-hint" id="page-controller-hint">
+              {i18n('addPage.controllerOption.helpText')}
             </div>
+            {errors.controller && (
+              <ErrorMessage id="page-controller-error">
+                {errors.controller.children}
+              </ErrorMessage>
+            )}
             <select
-              className="govuk-select"
-              id="controller"
-              aria-describedby="controller-hint"
+              className={classNames('govuk-select', {
+                'govuk-select--error': errors.controller
+              })}
+              id="page-controller"
+              aria-describedby={
+                'page-controller-hint' +
+                (errors.controller ? 'page-controller-error' : '')
+              }
               name="controller"
               value={controller ?? ''}
               onChange={this.onChangeController}
             >
-              <option value={ControllerType.Page}>
-                {i18n('page.controllers.question')}
+              <option value="">
+                {i18n('addPage.controllerOption.option')}
               </option>
-              {((!hasStartPage && !hasLinkFrom) ||
-                page.controller === ControllerType.Start) && (
-                <option value={ControllerType.Start}>
-                  {i18n('page.controllers.start')}
+              {pageTypes.map((pageType) => (
+                <option key={pageType.title} value={pageType.controller}>
+                  {pageType.title}
                 </option>
-              )}
-              <option value={ControllerType.FileUpload}>
-                {i18n('page.controllers.fileUpload')}
-              </option>
-              {(!hasSummaryPage ||
-                page.controller === ControllerType.Summary) && (
-                <option value={ControllerType.Summary}>
-                  {i18n('page.controllers.summary')}
-                </option>
-              )}
+              ))}
             </select>
           </div>
 
@@ -372,7 +376,7 @@ export class PageEdit extends Component<Props, State> {
             name="title"
             label={{
               className: 'govuk-label--s',
-              children: [i18n('page.title')]
+              children: [i18n('addPage.pageTitleField.title')]
             }}
             value={title ?? ''}
             onChange={this.onChangeTitle}
@@ -385,10 +389,10 @@ export class PageEdit extends Component<Props, State> {
               name="path"
               label={{
                 className: 'govuk-label--s',
-                children: [i18n('page.path')]
+                children: [i18n('addPage.pathField.title')]
               }}
               hint={{
-                children: [i18n('page.pathHint')]
+                children: [i18n('addPage.pathField.helpText')]
               }}
               value={path ?? ''}
               onChange={this.onChangePath}
@@ -401,10 +405,10 @@ export class PageEdit extends Component<Props, State> {
               {!sections.length && (
                 <>
                   <h3 className="govuk-heading-s govuk-!-margin-bottom-1">
-                    {i18n('page.section')}
+                    {i18n('addPage.sectionOption.title')}
                   </h3>
                   <p className="govuk-hint govuk-!-margin-top-0">
-                    {i18n('page.sectionHint')}
+                    {i18n('addPage.sectionOption.helpText')}
                   </p>
                 </>
               )}
@@ -416,10 +420,10 @@ export class PageEdit extends Component<Props, State> {
                       className="govuk-label govuk-label--s"
                       htmlFor="page-section"
                     >
-                      {i18n('page.section')}
+                      {i18n('addPage.sectionOption.title')}
                     </label>
                     <div className="govuk-hint" id="page-section-hint">
-                      {i18n('page.sectionHint')}
+                      {i18n('addPage.sectionOption.helpText')}
                     </div>
                     <select
                       className="govuk-select"
@@ -429,7 +433,9 @@ export class PageEdit extends Component<Props, State> {
                       value={section?.name ?? ''}
                       onChange={this.onChangeSection}
                     >
-                      <option value="">{i18n('page.sectionOption')}</option>
+                      <option value="">
+                        {i18n('addPage.sectionOption.option')}
+                      </option>
                       {sections.map((section) => (
                         <option key={section.name} value={section.name}>
                           {section.title}
