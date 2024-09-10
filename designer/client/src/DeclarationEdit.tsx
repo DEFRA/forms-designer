@@ -39,29 +39,36 @@ export class DeclarationEdit extends Component<Props> {
 
     return (
       <form onSubmit={this.onSubmit} autoComplete="off" noValidate>
-        <div className="govuk-checkboxes govuk-form-group">
-          <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">
-            <p className="govuk-fieldset__heading">Skip summary page?</p>
-            <div className="govuk-hint">
+        <div className="govuk-form-group">
+          <fieldset
+            className="govuk-fieldset"
+            aria-describedby="skip-summary-hint"
+          >
+            <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">
+              Skip summary page?
+            </legend>
+            <div className="govuk-hint" id="skip-summary-hint">
               The user will not be shown a summary page, and will continue to
               pay and/or the application complete page.
             </div>
-          </legend>
-          <div className="govuk-checkboxes__item">
-            <input
-              className="govuk-checkboxes__input"
-              id="skip-summary"
-              name="skip-summary"
-              type="checkbox"
-              defaultChecked={skipSummary}
-            />
-            <label
-              className="govuk-label govuk-checkboxes__label"
-              htmlFor="skip-summary"
-            >
-              Skip summary
-            </label>
-          </div>
+            <div className="govuk-radios" data-module="govuk-radios">
+              <div className="govuk-checkboxes__item">
+                <input
+                  className="govuk-checkboxes__input"
+                  id="skip-summary"
+                  name="skip-summary"
+                  type="checkbox"
+                  defaultChecked={skipSummary}
+                />
+                <label
+                  className="govuk-label govuk-checkboxes__label"
+                  htmlFor="skip-summary"
+                >
+                  Skip summary
+                </label>
+              </div>
+            </div>
+          </fieldset>
         </div>
 
         <div className="govuk-form-group">
