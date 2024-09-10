@@ -15,15 +15,15 @@ exports[`ComponentCreateList should match snapshot 1`] = `
     >
       <li>
         <h3
-          class="govuk-heading-s"
+          class="govuk-heading-s govuk-!-margin-bottom-1"
         >
           Content
         </h3>
-        <div
-          class="govuk-hint"
+        <p
+          class="govuk-body"
         >
-          Content components allow you to add information to your page
-        </div>
+          Content components allow you to add information to your page.
+        </p>
         <ol
           class="govuk-list"
         >
@@ -102,15 +102,15 @@ exports[`ComponentCreateList should match snapshot 1`] = `
       </li>
       <li>
         <h3
-          class="govuk-heading-s"
+          class="govuk-heading-s govuk-!-margin-bottom-1"
         >
-          Input fields
+          Input
         </h3>
-        <div
-          class="govuk-hint"
+        <p
+          class="govuk-body"
         >
-          Input fields allow you to ask users to enter information
-        </div>
+          Input fields allow you to ask users to enter information.
+        </p>
         <ol
           class="govuk-list"
         >
@@ -257,15 +257,15 @@ exports[`ComponentCreateList should match snapshot 1`] = `
       </li>
       <li>
         <h3
-          class="govuk-heading-s"
+          class="govuk-heading-s govuk-!-margin-bottom-1"
         >
-          Selection fields
+          Selection
         </h3>
-        <div
-          class="govuk-hint"
+        <p
+          class="govuk-body"
         >
-          Selection fields allow you to provide lists of answers for users to choose from
-        </div>
+          Selection fields allow you to provide lists of answers for users to choose from.
+        </p>
         <ol
           class="govuk-list"
         >

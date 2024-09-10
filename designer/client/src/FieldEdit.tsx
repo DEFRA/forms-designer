@@ -177,7 +177,7 @@ export function FieldEdit() {
                 htmlFor="field-options-required"
               >
                 {i18n('common.componentOptionalOption.title', {
-                  component: defaults?.title ?? ''
+                  component: defaults.title
                 })}
               </label>
               <div

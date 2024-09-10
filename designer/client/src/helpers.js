@@ -1,6 +1,9 @@
 import {
+  ComponentType,
   controllerNameFromPath,
   ControllerType,
+  hasComponents,
+  hasContent,
   hasNext
 } from '@defra/forms-model'
 
@@ -16,6 +19,42 @@ export function arrayMove(arr, from, to) {
   const elm = arr.splice(from, 1)[0]
   arr.splice(to, 0, elm)
   return arr
+}
+
+/**
+ * Create filter for allowed components
+ * @param {Partial<Page>} page
+ */
+export function isComponentAllowed(page) {
+  const components = hasComponents(page) ? page.components : []
+  const controller = controllerNameFromPath(page.controller)
+
+  // Check for existing file upload components
+  const hasFileUpload = components.some(
+    (c) => c.type === ComponentType.FileUploadField
+  )
+
+  /**
+   * Filter allowed components for current page
+   * @param {ComponentDef} component
+   */
+  return (component) => {
+    const isContent = hasContent(component)
+
+    // File upload components not allowed on question pages
+    const isQuestion =
+      component.type !== ComponentType.FileUploadField &&
+      (!controller || controller === ControllerType.Page)
+
+    // File upload pages can have a single file upload form component
+    const isFileUpload =
+      component.type === ComponentType.FileUploadField &&
+      controller === ControllerType.FileUpload &&
+      !hasFileUpload
+
+    // Content components are always allowed
+    return isContent || isQuestion || isFileUpload
+  }
 }
 
 /**
@@ -68,9 +107,7 @@ export function isControllerAllowed(data, page) {
     /**
      * Page types currently unavailable
      */
-    const isInactivePage =
-      pageType.controller === ControllerType.FileUpload ||
-      pageType.controller === ControllerType.Status
+    const isInactivePage = pageType.controller === ControllerType.Status
 
     /**
      * Ignore rules when already selected
@@ -83,5 +120,5 @@ export function isControllerAllowed(data, page) {
 }
 
 /**
- * @import { FormDefinition, Page } from '@defra/forms-model'
+ * @import { ComponentDef, FormDefinition, Page } from '@defra/forms-model'
  */

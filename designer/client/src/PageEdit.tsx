@@ -34,7 +34,7 @@ import { deleteLink } from '~/src/data/page/deleteLink.js'
 import { findPage } from '~/src/data/page/findPage.js'
 import { updateLinksTo } from '~/src/data/page/updateLinksTo.js'
 import { findSection } from '~/src/data/section/findSection.js'
-import { isControllerAllowed } from '~/src/helpers.js'
+import { isComponentAllowed, isControllerAllowed } from '~/src/helpers.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { SectionEdit } from '~/src/section/SectionEdit.jsx'
 import {
@@ -78,7 +78,9 @@ export class PageEdit extends Component<Props, State> {
     const { data } = this.context
 
     const { path, title } = page
-    const controller = controllerNameFromPath(page.controller)
+    const controller = controllerNameFromPath(
+      page.controller ?? ControllerType.Page
+    )
 
     this.setState({
       path,
@@ -98,7 +100,9 @@ export class PageEdit extends Component<Props, State> {
     const { page, onSave } = this.props
 
     // Page defaults
-    const defaults = getPageDefaults({ controller })
+    const defaults = getPageDefaults({
+      controller: controller ?? ControllerType.Page
+    })
 
     // Remove trailing spaces and hyphens
     const payload = {
@@ -131,9 +135,13 @@ export class PageEdit extends Component<Props, State> {
       }
     }
 
-    // Copy over components
+    // Copy over allowed components only
     if (hasComponents(pageEdit) && hasComponents(pageUpdate)) {
-      pageUpdate.components = pageEdit.components
+      pageUpdate.components.unshift(
+        ...pageEdit.components.filter(
+          isComponentAllowed({ controller: payload.controller })
+        )
+      )
     }
 
     // Copy over links

@@ -2,6 +2,7 @@ import { type ComponentDef } from '~/src/components/types.js'
 import {
   type Link,
   type Page,
+  type PageFileUpload,
   type PageQuestion,
   type PageStart,
   type RequiredField
@@ -16,18 +17,22 @@ import { PageTypes } from '~/src/pages/page-types.js'
 /**
  * Return component defaults by type
  */
-export function getPageDefaults(page: Pick<Page, 'controller'>) {
-  const controller = controllerNameFromPath(page.controller)
+export function getPageDefaults<PageType extends Page>(
+  page: Pick<PageType, 'controller'>
+) {
+  const controller = controllerNameFromPath(
+    page.controller ?? ControllerType.Page
+  )
 
   const defaults = PageTypes.find(
     (pageType) => pageType.controller === controller
   )
 
   if (!defaults) {
-    throw new Error(`Defaults not found for ${page.controller}`)
+    throw new Error(`Defaults not found for page type '${page.controller}'`)
   }
 
-  return structuredClone(defaults)
+  return structuredClone(defaults) as PageType
 }
 
 /**
@@ -40,11 +45,23 @@ export function hasComponents(
 }
 
 /**
+ * Check page has form components
+ */
+export function hasFormComponents(
+  page?: Partial<Page>
+): page is Extract<Page, { components: ComponentDef[] }> {
+  return isLinkablePage(page) && Array.isArray(page.components)
+}
+
+/**
  * Check page has sections
  */
 export function hasSection(
-  page?: Partial<Page>
-): page is RequiredField<PageStart | PageQuestion, 'section'> {
+  page: Partial<Page>
+): page is
+  | RequiredField<PageStart, 'section'>
+  | RequiredField<PageQuestion, 'section'>
+  | RequiredField<PageFileUpload, 'section'> {
   return isLinkablePage(page) && typeof page.section === 'string'
 }
 
@@ -77,6 +94,7 @@ export function isLinkablePage(
   const controller = controllerNameFromPath(page.controller)
 
   return (
+    !controller ||
     controller === ControllerType.Start ||
     controller === ControllerType.Page ||
     controller === ControllerType.FileUpload
@@ -90,6 +108,7 @@ export function isQuestionPage(page?: Partial<Page>): page is PageQuestion {
   const controller = controllerNameFromPath(page?.controller)
 
   return (
+    !controller ||
     controller === ControllerType.Page ||
     controller === ControllerType.FileUpload
   )
@@ -105,5 +124,5 @@ export function controllerNameFromPath(nameOrPath?: ControllerType | string) {
   }
 
   const options = ControllerTypes.find(({ path }) => path === nameOrPath)
-  return options?.name ?? ControllerType.Page
+  return options?.name
 }

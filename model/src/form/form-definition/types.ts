@@ -23,7 +23,14 @@ export interface PageStart extends PageBase {
 }
 
 export interface PageQuestion extends PageBase {
-  controller?: ControllerType.Page | ControllerType.FileUpload
+  controller?: ControllerType.Page
+  section?: string | undefined
+  next: Link[]
+  components: ComponentDef[]
+}
+
+export interface PageFileUpload extends PageBase {
+  controller?: ControllerType.FileUpload
   section?: string | undefined
   next: Link[]
   components: ComponentDef[]
@@ -41,7 +48,12 @@ export interface PageStatus extends PageBase {
   section?: undefined
 }
 
-export type Page = PageStart | PageQuestion | PageSummary | PageStatus
+export type Page =
+  | PageStart
+  | PageQuestion
+  | PageFileUpload
+  | PageSummary
+  | PageStatus
 
 export type RequiredField<
   Type extends Partial<object>,
