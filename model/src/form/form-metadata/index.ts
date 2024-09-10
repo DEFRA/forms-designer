@@ -4,7 +4,10 @@ import {
   type FormMetadata,
   type FormMetadataInput,
   type FormMetadataState,
-  type FormMetadataAuthor
+  type FormMetadataAuthor,
+  type FormMetadataContact,
+  type FormMetadataContactOnline,
+  type FormMetadataContactEmail
 } from '~/src/form/form-metadata/types.js'
 
 export const organisations = [
@@ -41,6 +44,33 @@ export const privacyNoticeUrlSchema = Joi.string()
   })
   .trim()
 
+export const phoneSchema = Joi.string().trim()
+
+export const emailAddressSchema = Joi.string().email().trim().required()
+export const emailResponseTimeSchema = Joi.string().trim().required()
+export const emailSchema = Joi.object<FormMetadataContactEmail>().keys({
+  address: emailAddressSchema,
+  responseTime: emailResponseTimeSchema
+})
+
+export const onlineUrlSchema = Joi.string()
+  .uri({
+    scheme: ['http', 'https']
+  })
+  .trim()
+  .required()
+export const onlineTextSchema = Joi.string().trim().required()
+export const onlineSchema = Joi.object<FormMetadataContactOnline>().keys({
+  url: onlineUrlSchema,
+  text: onlineTextSchema
+})
+
+export const contactSchema = Joi.object<FormMetadataContact>().keys({
+  phone: phoneSchema,
+  email: emailSchema,
+  online: onlineSchema
+})
+
 export const authoredAtSchema = Joi.date().iso().required()
 export const authorIdSchema = Joi.string().trim().required()
 export const authorDisplayNameSchema = Joi.string().trim().required()
@@ -50,7 +80,8 @@ export const formMetadataInputKeys = {
   organisation: organisationSchema,
   teamName: teamNameSchema,
   teamEmail: teamEmailSchema,
-  privacyNoticeUrl: privacyNoticeUrlSchema
+  privacyNoticeUrl: privacyNoticeUrlSchema,
+  contact: contactSchema
 }
 
 /**
