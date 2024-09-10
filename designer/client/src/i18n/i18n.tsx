@@ -1,4 +1,4 @@
-import i18next, { type InitOptions, type TOptions } from 'i18next'
+import I18next, { type InitOptions, type TOptions } from 'i18next'
 import Backend from 'i18next-http-backend'
 import lowerFirst from 'lodash/lowerFirst.js'
 import upperFirst from 'lodash/upperFirst.js'
@@ -24,12 +24,20 @@ const DEFAULT_SETTINGS: InitOptions = {
 }
 
 export const initI18n = async (settings = DEFAULT_SETTINGS) => {
-  await i18next.use(Backend).init(settings)
+  await I18next.use(Backend).init(settings)
 
-  i18next.services.formatter?.add('lowerFirst', lowerFirst)
-  i18next.services.formatter?.add('upperFirst', upperFirst)
+  I18next.services.formatter?.add('lowerFirst', lowerFirst)
+  I18next.services.formatter?.add('upperFirst', upperFirst)
 }
 
-export const i18n = (text: string, options?: TOptions) => {
-  return i18next.t(text, options)
+type TOptionsArray = Omit<TOptions, 'returnObject'> & {
+  returnObjects: true
 }
+
+function i18next(text: string, options: TOptionsArray): string[]
+function i18next(text: string, options?: TOptions): string
+function i18next(text: string, options?: TOptions): string | string[] {
+  return I18next.t(text, { ...options })
+}
+
+export const i18n = i18next

@@ -206,6 +206,36 @@
     "FileUploadField": "File upload",
     "FileUploadField_info": "Allows a user to upload files"
   },
+  "fileUploadFieldEditComponent": {
+    "helpTextField": {
+      "guidance": "Add any information you want to show to users. Like:",
+      "guidanceItems": [
+        "how many files they need to upload",
+        "what file types you accept (Word, PDF, JPEG, Excel)",
+        "any file types you cannot accept",
+        "if there’s a minimum or maximum file size",
+        "if you accept original or scanned copies"
+      ],
+      "helpText": "For example, ‘Upload 2 copies of your methodology statement in Word, PDF or JPEG. The maximum file size for each file is 100MB’.",
+      "title": "Help text (optional)"
+    },
+    "acceptField": {
+      "helpText": "Specifies allowed file formats using a comma separated list of MIME types. For example 'image/jpeg, application/pdf'",
+      "title": "Allowed MIME types"
+    },
+    "maxField": {
+      "helpText": "Specifies the maximum number of files users can upload",
+      "title": "Max file count"
+    },
+    "minField": {
+      "helpText": "Specifies the minimum number of files users can upload",
+      "title": "Min file count"
+    },
+    "lengthField": {
+      "helpText": "Specifies the exact number of files users can upload. Using this setting negates any values you set for Min or Max file count",
+      "title": "Exact file count"
+    }
+  },
   "link": {
     "edit": "Edit link"
   },
