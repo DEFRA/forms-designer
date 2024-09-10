@@ -11,7 +11,7 @@
 {%- macro appGridRow(columns) %}
 <div class="govuk-grid-row">
   {% for column in [columns] if columns is mapping else columns %}
-    {{- appGridColumn(column) | trim | indent(2, true) }}
+    {{- appGridColumn(column) | trim }}
   {% endfor %}
 </div>
 {% endmacro %}
@@ -19,7 +19,7 @@
 {%- macro appGridColumn(column) %}
 <div class="{{ column.classes if column.classes else "govuk-grid-column-two-thirds" }}"
   {%- for attribute, value in column.attributes %} {{ attribute }}="{{ value }}"{% endfor %}>
-  {{ column.html | safe | indent(2) if column.html else column.text }}
+  {{ column.html | safe if column.html else column.text }}
 </div>
 {% endmacro %}
 

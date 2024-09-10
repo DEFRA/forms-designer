@@ -22,9 +22,110 @@
   {% endif %}
 
   {{ appHeading({
+    text: "Contact details for support",
+    size: "medium",
+    level: "2",
+    classes: "govuk-!-margin-top-8"
+  }) }}
+
+  <p class="govuk-body">You must provide at least one way for users to get help.</p>
+  <p class="govuk-body">The contact details are shown in the footer of every page of the form.</p>
+
+  {{ govukSummaryList({
+    classes: "govuk-!-margin-bottom-8",
+    rows: [
+      {
+        key: {
+          text: "Phone"
+        },
+        value: {
+          html: '<div>' + form.contact.phone | escape | nl2br + '</div><br><a href="https://www.gov.uk/call-charges" class="govuk-link govuk-link--no-visited-state" target="_blank">Find out about call charges</a>'
+          if form.contact.phone else '<a class="govuk-link govuk-link--no-visited-state" href="/library/' + form.slug + '/edit/contact/phone">Enter phone number for support</a>'
+        },
+        actions: {
+          items: [
+            {
+              href: "/library/" + form.slug + "/edit/contact/phone",
+              text: "Change",
+              visuallyHiddenText: "contact phone"
+            }
+          ]
+        } if form.contact.phone
+      },
+      {
+        key: {
+          text: "Email address"
+        },
+        value: {
+          html: '<p class="govuk-body"><a class="govuk-link govuk-link--no-visited-state" href="mailto:' + form.contact.email.address + '">' + form.contact.email.address + '</a></p><p class="govuk-body">' + form.contact.email.responseTime | escape + '</p>'
+          if form.contact.email else '<a class="govuk-link govuk-link--no-visited-state" href="/library/' + form.slug + '/edit/contact/email">Enter email address for support</a>'
+        },
+        actions: {
+          items: [
+            {
+              href: "/library/" + form.slug + "/edit/contact/email",
+              text: "Change",
+              visuallyHiddenText: "contact email"
+            }
+          ]
+        } if form.contact.email
+      },
+      {
+        key: {
+          text: "Online contact link"
+        },
+        value: {
+          html: '<p class="govuk-body">' + form.contact.online.text | escape + '</p><p class="govuk-body"><a class="govuk-link govuk-link--no-visited-state" href="' + form.contact.online.url + '">' + form.contact.online.url + '</a></p>'
+          if form.contact.online else '<a class="govuk-link govuk-link--no-visited-state" href="/library/' + form.slug + '/edit/contact/online">Enter online contact link for support</a>'
+        },
+        actions: {
+          items: [
+            {
+              href: "/library/" + form.slug + "/edit/contact/online",
+              text: "Change",
+              visuallyHiddenText: "contact online"
+            }
+          ]
+        } if form.contact.online
+      }
+    ]
+  }) }}
+
+  {{ appHeading({
+    text: "Data protection",
+    size: "medium",
+    level: "2",
+    classes: "govuk-!-margin-top-8"
+  }) }}
+
+  {{ govukSummaryList({
+    classes: "govuk-!-margin-bottom-8",
+    rows: [
+      {
+        key: {
+          text: "Privacy notice"
+        },
+        value: {
+          html: '<a class="govuk-link govuk-link--no-visited-state" target="_blank" href="' + form.privacyNoticeUrl + '">' + form.privacyNoticeUrl + '</a>'
+          if form.privacyNoticeUrl else '<a class="govuk-link govuk-link--no-visited-state" href="/library/' + form.slug + '/edit/privacy-notice">Enter link to privacy notice</a>'
+        },
+        actions: {
+          items: [
+            {
+              href: "/library/" + form.slug + "/edit/privacy-notice",
+              text: "Change",
+              visuallyHiddenText: "privacy notice"
+            }
+          ]
+        } if form.privacyNoticeUrl
+      }
+    ]
+  }) }}
+
+  {{ appHeading({
     text: "Organisation details",
     size: "medium",
-    level: '2',
+    level: "2",
     classes: "govuk-!-margin-top-8"
   }) }}
 
@@ -92,37 +193,6 @@
             }
           ]
         }
-      }
-    ]
-  }) }}
-
-  {{ appHeading({
-    text: "Data protection",
-    size: "medium",
-    level: '2',
-    classes: "govuk-!-margin-top-8"
-  }) }}
-
-  {{ govukSummaryList({
-    classes: "govuk-!-margin-bottom-8",
-    rows: [
-      {
-        key: {
-          text: "Privacy notice"
-        },
-        value: {
-          html: '<a class="govuk-link govuk-link--no-visited-state" target="_blank" href="' + form.privacyNoticeUrl + '">' + form.privacyNoticeUrl + '</a>'
-          if form.privacyNoticeUrl else '<a class="govuk-link govuk-link--no-visited-state" href="/library/' + form.slug + '/edit/privacy-notice">Enter link to privacy notice</a>'
-        },
-        actions: {
-          items: [
-            {
-              href: "/library/" + form.slug + "/edit/privacy-notice",
-              text: "Change",
-              visuallyHiddenText: "privacy notice"
-            }
-          ]
-        } if form.privacyNoticeUrl
       }
     ]
   }) }}

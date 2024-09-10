@@ -30,7 +30,7 @@ describe('edit - model - privacy notice', () => {
     updatedBy: author
   }
 
-  it('should test team details view model', () => {
+  it('should test privacy policy view model', () => {
     const result = privacyNoticyViewModel(formMetadata)
     expect(result.pageTitle).toBe('Privacy notice for this form')
     expect(result.field.id).toBe('privacyNoticeUrl')

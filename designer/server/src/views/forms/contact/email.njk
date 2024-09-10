@@ -20,24 +20,32 @@
     {% call appPageBody({
       errorList: errorList
     }) %}
-      <p class="govuk-body-l">
-        To comply with the UK General Data Protection Regulation (UK GDPR),
-        you must provide privacy information for the people who will enter their data into your form.
-      </p>
+      {{ govukInput({
+        label: {
+          text: fields.address.label.text,
+          isPageHeading: false
+        },
+        id: fields.address.id,
+        name: fields.address.name,
+        value: fields.address.value,
+        hint: fields.address.hint,
+        errorMessage: {
+          text: formErrors[fields.address.name].text
+        } if formErrors[fields.address.name]
+      }) }}
 
       {{ govukInput({
         label: {
-          text: field.label.text,
-          classes: "govuk-label--s",
+          text: fields.responseTime.label.text,
           isPageHeading: false
         },
-        id: field.id,
-        name: field.name,
-        value: field.value,
-        hint: field.hint,
+        id: fields.responseTime.id,
+        name: fields.responseTime.name,
+        value: fields.responseTime.value,
+        hint: fields.responseTime.hint,
         errorMessage: {
-          text: formErrors[field.name].text
-        } if formErrors[field.name]
+          text: formErrors[fields.responseTime.name].text
+        } if formErrors[fields.responseTime.name]
       }) }}
 
       <div class="govuk-button-group">
