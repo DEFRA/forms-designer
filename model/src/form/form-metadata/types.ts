@@ -124,16 +124,20 @@ export interface FormMetadata {
    * The email of the team who own this form
    */
   teamEmail: string
+  /**
+   * The contact details of the form
+   */
+  contact?: FormMetadataContact
+
+  /**
+   * The guidance text displayed on the form submitted page
+   */
+  submissionGuidance?: string
 
   /**
    * The url of the privacy notice
    */
   privacyNoticeUrl?: string
-
-  /**
-   * The contact details of the form
-   */
-  contact?: FormMetadataContact
 
   /**
    * The draft state of the form
@@ -175,8 +179,9 @@ export type FormMetadataInput = Pick<
   | 'organisation'
   | 'teamName'
   | 'teamEmail'
-  | 'privacyNoticeUrl'
   | 'contact'
+  | 'submissionGuidance'
+  | 'privacyNoticeUrl'
 >
 
 export interface FormResponse {

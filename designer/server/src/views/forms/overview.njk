@@ -121,6 +121,37 @@
   }) }}
 
   {{ appHeading({
+    text: "What happens next",
+    size: "medium",
+    level: "2",
+    classes: "govuk-!-margin-top-8"
+  }) }}
+
+  {{ govukSummaryList({
+    classes: "govuk-!-margin-bottom-8",
+    rows: [
+      {
+        key: {
+          text: "Tell users what happens after they submit their form"
+        },
+        value: {
+          html: form.submissionGuidance | escape | nl2br | safe
+          if form.submissionGuidance else '<a class="govuk-link govuk-link--no-visited-state" href="/library/' + form.slug + '/edit/submission-guidance">Enter what happens next</a>'
+        },
+        actions: {
+          items: [
+            {
+              href: "/library/" + form.slug + "/edit/submission-guidance",
+              text: "Change",
+              visuallyHiddenText: "submission guidance"
+            }
+          ]
+        } if form.submissionGuidance
+      }
+    ]
+  }) }}
+
+  {{ appHeading({
     text: "Data protection",
     size: "medium",
     level: "2",

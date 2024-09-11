@@ -38,12 +38,6 @@ export const teamEmailSchema = Joi.string()
   .trim()
   .required()
 
-export const privacyNoticeUrlSchema = Joi.string()
-  .uri({
-    scheme: ['http', 'https']
-  })
-  .trim()
-
 export const phoneSchema = Joi.string().trim()
 
 export const emailAddressSchema = Joi.string().email().trim().required()
@@ -71,6 +65,14 @@ export const contactSchema = Joi.object<FormMetadataContact>().keys({
   online: onlineSchema
 })
 
+export const submissionGuidanceSchema = Joi.string().trim()
+
+export const privacyNoticeUrlSchema = Joi.string()
+  .uri({
+    scheme: ['http', 'https']
+  })
+  .trim()
+
 export const authoredAtSchema = Joi.date().iso().required()
 export const authorIdSchema = Joi.string().trim().required()
 export const authorDisplayNameSchema = Joi.string().trim().required()
@@ -80,8 +82,9 @@ export const formMetadataInputKeys = {
   organisation: organisationSchema,
   teamName: teamNameSchema,
   teamEmail: teamEmailSchema,
-  privacyNoticeUrl: privacyNoticeUrlSchema,
-  contact: contactSchema
+  contact: contactSchema,
+  submissionGuidance: submissionGuidanceSchema,
+  privacyNoticeUrl: privacyNoticeUrlSchema
 }
 
 /**

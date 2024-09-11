@@ -7,6 +7,7 @@ import edit from '~/src/routes/forms/edit.js'
 import formLifecycle from '~/src/routes/forms/form-lifecycle.js'
 import library from '~/src/routes/forms/library.js'
 import privacyNotice from '~/src/routes/forms/privacy-notice.js'
+import submissionGuidance from '~/src/routes/forms/submission-guidance.js'
 
 export default [
   api,
@@ -14,8 +15,9 @@ export default [
   edit,
   library,
   formLifecycle,
-  privacyNotice,
   contactPhone,
   contactEmail,
-  contactOnline
+  contactOnline,
+  submissionGuidance,
+  privacyNotice
 ].flat()
