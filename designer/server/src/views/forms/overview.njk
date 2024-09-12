@@ -39,7 +39,7 @@
           text: "Phone"
         },
         value: {
-          html: '<div>' + form.contact.phone | escape | nl2br + '</div><br><a href="https://www.gov.uk/call-charges" class="govuk-link govuk-link--no-visited-state" target="_blank">Find out about call charges</a>'
+          html: form.contact.phone | markdownToHtml + '<a href="https://www.gov.uk/call-charges" class="govuk-link govuk-link--no-visited-state" target="_blank">Find out about call charges</a>'
           if form.contact.phone else '<a class="govuk-link govuk-link--no-visited-state" href="/library/' + form.slug + '/edit/contact/phone">Enter phone number for support</a>'
         },
         actions: {

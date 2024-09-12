@@ -21,6 +21,7 @@
     "test:watch": "jest --color --watch"
   },
   "dependencies": {
+    "marked": "^14.1.2",
     "slug": "^9.1.0"
   },
   "devDependencies": {
