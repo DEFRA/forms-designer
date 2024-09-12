@@ -224,13 +224,18 @@ module.exports = {
       env: {
         browser: true
       },
-      extends: ['plugin:react/recommended', 'plugin:react-hooks/recommended'],
+      extends: [
+        'plugin:jsx-a11y/recommended',
+        'plugin:react/jsx-runtime',
+        'plugin:react/recommended',
+        'plugin:react-hooks/recommended'
+      ],
       files: ['**/*.{jsx,tsx}'],
       parserOptions: {
         ecmaFeatures: { jsx: true },
         sourceType: 'module'
       },
-      plugins: ['react', 'react-hooks'],
+      plugins: ['jsx-a11y', 'react', 'react-hooks'],
       rules: {
         // Temporarily turn off `isMounted` warnings appearing for `setState`
         'react/no-is-mounted': 'off'
