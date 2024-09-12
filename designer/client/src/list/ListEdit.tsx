@@ -38,7 +38,7 @@ function useListEdit() {
 
   const { selectedList } = state
 
-  function handleAddItem(e: MouseEvent<HTMLAnchorElement>) {
+  function handleAddItem(e: MouseEvent<HTMLButtonElement>) {
     e.preventDefault()
 
     dispatch({
@@ -186,14 +186,15 @@ export function ListEdit() {
         <ListItems />
 
         <p className="govuk-body">
-          <a
-            href="#"
+          <button
             id="list-items"
             className="govuk-link"
+            type="button"
+            role="link"
             onClick={handleAddItem}
           >
             {i18n('list.item.add')}
-          </a>
+          </button>
         </p>
 
         <div className="govuk-button-group">

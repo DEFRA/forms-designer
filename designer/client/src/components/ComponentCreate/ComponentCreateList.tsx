@@ -70,16 +70,17 @@ export const ComponentCreateList = (props: Readonly<Props>) => {
               {contentFields.map((component) => (
                 <li key={component.name}>
                   <p className="govuk-body govuk-!-margin-bottom-2">
-                    <a
+                    <button
                       className="govuk-link"
-                      href="#0"
+                      type="button"
+                      role="link"
                       onClick={(e) => {
                         e.preventDefault()
                         onSelectComponent(component)
                       }}
                     >
                       {i18n(`fieldTypeToName.${component.type}`)}
-                    </a>
+                    </button>
                   </p>
                   <div className="govuk-hint govuk-!-margin-top-2">
                     {i18n(`fieldTypeToName.${component.type}_info`)}
@@ -111,16 +112,17 @@ export const ComponentCreateList = (props: Readonly<Props>) => {
                   {inputFields.map((component) => (
                     <li key={component.type}>
                       <p className="govuk-body govuk-!-margin-bottom-2">
-                        <a
-                          href="#0"
+                        <button
                           className="govuk-link"
+                          type="button"
+                          role="link"
                           onClick={(e) => {
                             e.preventDefault()
                             onSelectComponent(component)
                           }}
                         >
                           {i18n(`fieldTypeToName.${component.type}`)}
-                        </a>
+                        </button>
                       </p>
                       <div className="govuk-hint govuk-!-margin-top-2">
                         {i18n(`fieldTypeToName.${component.type}_info`)}
@@ -148,16 +150,17 @@ export const ComponentCreateList = (props: Readonly<Props>) => {
                   {selectionFields.map((component) => (
                     <li key={component.type}>
                       <p className="govuk-body govuk-!-margin-bottom-2">
-                        <a
-                          href="#0"
+                        <button
                           className="govuk-link"
+                          type="button"
+                          role="link"
                           onClick={(e) => {
                             e.preventDefault()
                             onSelectComponent(component)
                           }}
                         >
                           {i18n(`fieldTypeToName.${component.type}`)}
-                        </a>
+                        </button>
                       </p>
                       <div className="govuk-hint govuk-!-margin-top-2">
                         {i18n(`fieldTypeToName.${component.type}_info`)}

@@ -34,7 +34,8 @@ describe('ComponentCreate:', () => {
     )
 
     const $componentLink = screen.getByRole('link', {
-      name: 'Details'
+      name: 'Details',
+      hidden: true
     })
 
     expect(screen.queryByLabelText('Title')).not.toBeInTheDocument()
@@ -60,7 +61,8 @@ describe('ComponentCreate:', () => {
     )
 
     const $componentLink = screen.getByRole('link', {
-      name: 'Details'
+      name: 'Details',
+      hidden: true
     })
 
     await act(() => userEvent.click($componentLink))
@@ -113,7 +115,8 @@ describe('ComponentCreate:', () => {
     )
 
     const $componentLink = screen.getByRole('link', {
-      name: 'Details'
+      name: 'Details',
+      hidden: true
     })
 
     // Clicking component link opens a flyout
@@ -135,7 +138,8 @@ describe('ComponentCreate:', () => {
     )
 
     const $componentLink = screen.getByRole('link', {
-      name: 'Details'
+      name: 'Details',
+      hidden: true
     })
 
     await act(() => userEvent.click($componentLink))

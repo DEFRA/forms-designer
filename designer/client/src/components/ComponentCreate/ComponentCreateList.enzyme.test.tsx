@@ -24,7 +24,7 @@ describe('ComponentCreateList', () => {
     const contentComponentsList = wrapper.find('ol').at(1)
     const listItems = contentComponentsList
       .find('li')
-      .map((c) => c.find('a').text())
+      .map((c) => c.find('button').text())
 
     expect(listItems).toEqual(['Details', 'Guidance', 'Inset text', 'List'])
   })
@@ -38,11 +38,11 @@ describe('ComponentCreateList', () => {
     const listItems = contentComponentsList.find('li')
 
     listItems.forEach((item) => {
-      expect(item.find('a').prop('onClick')).toBeInstanceOf(Function)
+      expect(item.find('button').prop('onClick')).toBeInstanceOf(Function)
     })
 
     listItems.forEach((item) =>
-      item.find('a').simulate('click', { preventDefault: jest.fn() })
+      item.find('button').simulate('click', { preventDefault: jest.fn() })
     )
 
     expect(onSelectComponent.mock.calls).toHaveLength(listItems.length)
@@ -67,7 +67,7 @@ describe('ComponentCreateList', () => {
     const contentComponentsList = wrapper.find('ol').at(2)
     const listItems = contentComponentsList
       .find('li')
-      .map((c) => c.find('a').text())
+      .map((c) => c.find('button').text())
 
     expect(listItems).toEqual([
       'Date',
@@ -90,11 +90,11 @@ describe('ComponentCreateList', () => {
     const listItems = contentComponentsList.find('li')
 
     listItems.forEach((item) => {
-      expect(item.find('a').prop('onClick')).toBeInstanceOf(Function)
+      expect(item.find('button').prop('onClick')).toBeInstanceOf(Function)
     })
 
     listItems.forEach((item) =>
-      item.find('a').simulate('click', { preventDefault: jest.fn() })
+      item.find('button').simulate('click', { preventDefault: jest.fn() })
     )
 
     expect(onSelectComponent.mock.calls).toHaveLength(listItems.length)
@@ -119,7 +119,7 @@ describe('ComponentCreateList', () => {
     const contentComponentsList = wrapper.find('ol').at(3)
     const listItems = contentComponentsList
       .find('li')
-      .map((c) => c.find('a').text())
+      .map((c) => c.find('button').text())
 
     expect(listItems).toEqual([
       'Autocomplete',
@@ -139,11 +139,11 @@ describe('ComponentCreateList', () => {
     const listItems = contentComponentsList.find('li')
 
     listItems.forEach((item) => {
-      expect(item.find('a').prop('onClick')).toBeInstanceOf(Function)
+      expect(item.find('button').prop('onClick')).toBeInstanceOf(Function)
     })
 
     listItems.forEach((item) =>
-      item.find('a').simulate('click', { preventDefault: jest.fn() })
+      item.find('button').simulate('click', { preventDefault: jest.fn() })
     )
 
     expect(onSelectComponent.mock.calls).toHaveLength(listItems.length)

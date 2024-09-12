@@ -263,16 +263,17 @@ export class InlineConditions extends Component<Props, State> {
               {!editView && (
                 <>
                   <br />
-                  <a
-                    href="#"
+                  <button
                     className="govuk-link"
+                    type="button"
+                    role="link"
                     onClick={(e) => {
                       e.preventDefault()
                       this.toggleEdit()
                     }}
                   >
                     {i18n('conditions.edit')}
-                  </a>
+                  </button>
                 </>
               )}
             </li>

@@ -34,9 +34,19 @@ describe('ListSelect', () => {
       </RenderListEditorWithContext>
     )
 
-    const $link1 = screen.queryByRole('link', { name: data.lists[0].title })
-    const $link2 = screen.queryByRole('link', { name: data.lists[1].title })
-    const $button = screen.queryByRole('button', { name: 'Add a new list' })
+    const $link1 = screen.queryByRole('link', {
+      name: data.lists[0].title,
+      hidden: true
+    })
+
+    const $link2 = screen.queryByRole('link', {
+      name: data.lists[1].title,
+      hidden: true
+    })
+
+    const $button = screen.queryByRole('button', {
+      name: 'Add a new list'
+    })
 
     expect($link1).toBeInTheDocument()
     expect($link2).toBeInTheDocument()

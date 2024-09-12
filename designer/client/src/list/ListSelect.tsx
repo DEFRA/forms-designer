@@ -15,7 +15,7 @@ export function ListSelect() {
   const { dispatch: listDispatch } = useContext(ListContext)
   const { dispatch: listsEditorDispatch } = useContext(ListsEditorContext)
 
-  const editList = (e: MouseEvent<HTMLAnchorElement>, list: List) => {
+  const editList = (e: MouseEvent<HTMLButtonElement>, list: List) => {
     e.preventDefault()
 
     listDispatch({
@@ -36,13 +36,14 @@ export function ListSelect() {
       <ul className="govuk-list govuk-list--bullet">
         {data.lists.map((list) => (
           <li key={list.name}>
-            <a
-              href="#"
+            <button
               className="govuk-link"
+              type="button"
+              role="link"
               onClick={(e) => editList(e, list)}
             >
               {list.title}
-            </a>
+            </button>
           </li>
         ))}
       </ul>

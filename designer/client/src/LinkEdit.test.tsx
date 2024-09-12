@@ -104,7 +104,8 @@ describe('LinkEdit', () => {
     )
 
     let $conditions = screen.queryByRole('link', {
-      name: 'Add a new condition'
+      name: 'Add a new condition',
+      hidden: true
     })
 
     expect($conditions).not.toBeInTheDocument()
@@ -113,7 +114,8 @@ describe('LinkEdit', () => {
     await act(() => userEvent.selectOptions($source, '/first-page'))
 
     $conditions = screen.getByRole('link', {
-      name: 'Add a new condition'
+      name: 'Add a new condition',
+      hidden: true
     })
 
     expect($conditions).toBeInTheDocument()

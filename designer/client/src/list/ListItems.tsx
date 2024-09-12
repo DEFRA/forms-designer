@@ -29,28 +29,30 @@ const ListItem = ({ item, removeListItem, editListItem }: Readonly<Props>) => {
         )}
       </td>
       <td className="govuk-table__cell">
-        <a
-          href="#"
+        <button
           className="govuk-link"
+          type="button"
+          role="link"
           onClick={(e) => {
             e.preventDefault()
             editListItem(item)
           }}
         >
           Edit
-        </a>
+        </button>
       </td>
       <td className="govuk-table__cell">
-        <a
-          href="#"
+        <button
           className="govuk-link"
+          type="button"
+          role="link"
           onClick={(e) => {
             e.preventDefault()
             removeListItem(item)
           }}
         >
           Delete
-        </a>
+        </button>
       </td>
     </tr>
   )

@@ -186,7 +186,7 @@ export class SelectConditions extends Component<Props, State> {
     if (fieldName === conditionFieldName) conditions.push(conditionToAdd)
   }
 
-  onClickDefineCondition = (e: MouseEvent<HTMLAnchorElement>) => {
+  onClickDefineCondition = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
     this.setState({
       inline: true
@@ -264,13 +264,14 @@ export class SelectConditions extends Component<Props, State> {
             )}
             {!inline && (
               <p className="govuk-body">
-                <a
-                  href="#"
+                <button
                   className="govuk-link"
+                  type="button"
+                  role="link"
                   onClick={this.onClickDefineCondition}
                 >
                   {i18n('conditions.add')}
-                </a>
+                </button>
               </p>
             )}
             {inline && (

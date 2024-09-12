@@ -31,12 +31,13 @@ exports[`ComponentCreateList should match snapshot 1`] = `
             <p
               class="govuk-body govuk-!-margin-bottom-2"
             >
-              <a
+              <button
                 class="govuk-link"
-                href="#0"
+                role="link"
+                type="button"
               >
                 Details
-              </a>
+              </button>
             </p>
             <div
               class="govuk-hint govuk-!-margin-top-2"
@@ -48,12 +49,13 @@ exports[`ComponentCreateList should match snapshot 1`] = `
             <p
               class="govuk-body govuk-!-margin-bottom-2"
             >
-              <a
+              <button
                 class="govuk-link"
-                href="#0"
+                role="link"
+                type="button"
               >
                 Guidance
-              </a>
+              </button>
             </p>
             <div
               class="govuk-hint govuk-!-margin-top-2"
@@ -65,12 +67,13 @@ exports[`ComponentCreateList should match snapshot 1`] = `
             <p
               class="govuk-body govuk-!-margin-bottom-2"
             >
-              <a
+              <button
                 class="govuk-link"
-                href="#0"
+                role="link"
+                type="button"
               >
                 Inset text
-              </a>
+              </button>
             </p>
             <div
               class="govuk-hint govuk-!-margin-top-2"
@@ -82,12 +85,13 @@ exports[`ComponentCreateList should match snapshot 1`] = `
             <p
               class="govuk-body govuk-!-margin-bottom-2"
             >
-              <a
+              <button
                 class="govuk-link"
-                href="#0"
+                role="link"
+                type="button"
               >
                 List
-              </a>
+              </button>
             </p>
             <div
               class="govuk-hint govuk-!-margin-top-2"
@@ -118,12 +122,13 @@ exports[`ComponentCreateList should match snapshot 1`] = `
             <p
               class="govuk-body govuk-!-margin-bottom-2"
             >
-              <a
+              <button
                 class="govuk-link"
-                href="#0"
+                role="link"
+                type="button"
               >
                 Date
-              </a>
+              </button>
             </p>
             <div
               class="govuk-hint govuk-!-margin-top-2"
@@ -135,12 +140,13 @@ exports[`ComponentCreateList should match snapshot 1`] = `
             <p
               class="govuk-body govuk-!-margin-bottom-2"
             >
-              <a
+              <button
                 class="govuk-link"
-                href="#0"
+                role="link"
+                type="button"
               >
                 Email address
-              </a>
+              </button>
             </p>
             <div
               class="govuk-hint govuk-!-margin-top-2"
@@ -152,12 +158,13 @@ exports[`ComponentCreateList should match snapshot 1`] = `
             <p
               class="govuk-body govuk-!-margin-bottom-2"
             >
-              <a
+              <button
                 class="govuk-link"
-                href="#0"
+                role="link"
+                type="button"
               >
                 Month & year
-              </a>
+              </button>
             </p>
             <div
               class="govuk-hint govuk-!-margin-top-2"
@@ -169,12 +176,13 @@ exports[`ComponentCreateList should match snapshot 1`] = `
             <p
               class="govuk-body govuk-!-margin-bottom-2"
             >
-              <a
+              <button
                 class="govuk-link"
-                href="#0"
+                role="link"
+                type="button"
               >
                 Textarea
-              </a>
+              </button>
             </p>
             <div
               class="govuk-hint govuk-!-margin-top-2"
@@ -186,12 +194,13 @@ exports[`ComponentCreateList should match snapshot 1`] = `
             <p
               class="govuk-body govuk-!-margin-bottom-2"
             >
-              <a
+              <button
                 class="govuk-link"
-                href="#0"
+                role="link"
+                type="button"
               >
                 Number
-              </a>
+              </button>
             </p>
             <div
               class="govuk-hint govuk-!-margin-top-2"
@@ -203,12 +212,13 @@ exports[`ComponentCreateList should match snapshot 1`] = `
             <p
               class="govuk-body govuk-!-margin-bottom-2"
             >
-              <a
+              <button
                 class="govuk-link"
-                href="#0"
+                role="link"
+                type="button"
               >
                 Telephone number
-              </a>
+              </button>
             </p>
             <div
               class="govuk-hint govuk-!-margin-top-2"
@@ -220,12 +230,13 @@ exports[`ComponentCreateList should match snapshot 1`] = `
             <p
               class="govuk-body govuk-!-margin-bottom-2"
             >
-              <a
+              <button
                 class="govuk-link"
-                href="#0"
+                role="link"
+                type="button"
               >
                 Text input
-              </a>
+              </button>
             </p>
             <div
               class="govuk-hint govuk-!-margin-top-2"
@@ -237,12 +248,13 @@ exports[`ComponentCreateList should match snapshot 1`] = `
             <p
               class="govuk-body govuk-!-margin-bottom-2"
             >
-              <a
+              <button
                 class="govuk-link"
-                href="#0"
+                role="link"
+                type="button"
               >
                 UK address
-              </a>
+              </button>
             </p>
             <div
               class="govuk-hint govuk-!-margin-top-2"
@@ -273,12 +285,13 @@ exports[`ComponentCreateList should match snapshot 1`] = `
             <p
               class="govuk-body govuk-!-margin-bottom-2"
             >
-              <a
+              <button
                 class="govuk-link"
-                href="#0"
+                role="link"
+                type="button"
               >
                 Autocomplete
-              </a>
+              </button>
             </p>
             <div
               class="govuk-hint govuk-!-margin-top-2"
@@ -290,12 +303,13 @@ exports[`ComponentCreateList should match snapshot 1`] = `
             <p
               class="govuk-body govuk-!-margin-bottom-2"
             >
-              <a
+              <button
                 class="govuk-link"
-                href="#0"
+                role="link"
+                type="button"
               >
                 Checkboxes
-              </a>
+              </button>
             </p>
             <div
               class="govuk-hint govuk-!-margin-top-2"
@@ -307,12 +321,13 @@ exports[`ComponentCreateList should match snapshot 1`] = `
             <p
               class="govuk-body govuk-!-margin-bottom-2"
             >
-              <a
+              <button
                 class="govuk-link"
-                href="#0"
+                role="link"
+                type="button"
               >
                 Radios
-              </a>
+              </button>
             </p>
             <div
               class="govuk-hint govuk-!-margin-top-2"
@@ -324,12 +339,13 @@ exports[`ComponentCreateList should match snapshot 1`] = `
             <p
               class="govuk-body govuk-!-margin-bottom-2"
             >
-              <a
+              <button
                 class="govuk-link"
-                href="#0"
+                role="link"
+                type="button"
               >
                 Select
-              </a>
+              </button>
             </p>
             <div
               class="govuk-hint govuk-!-margin-top-2"
@@ -341,12 +357,13 @@ exports[`ComponentCreateList should match snapshot 1`] = `
             <p
               class="govuk-body govuk-!-margin-bottom-2"
             >
-              <a
+              <button
                 class="govuk-link"
-                href="#0"
+                role="link"
+                type="button"
               >
                 YesNo
-              </a>
+              </button>
             </p>
             <div
               class="govuk-hint govuk-!-margin-top-2"

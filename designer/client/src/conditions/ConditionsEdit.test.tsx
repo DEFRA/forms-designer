@@ -158,11 +158,13 @@ describe('ConditionsEdit', () => {
       )
 
       const $link = screen.queryByRole('link', {
-        name: condition.displayName
+        name: condition.displayName,
+        hidden: true
       })
 
       const $link2 = screen.queryByRole('link', {
-        name: condition2.displayName
+        name: condition2.displayName,
+        hidden: true
       })
 
       expect($link).toBeInTheDocument()

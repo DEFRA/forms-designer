@@ -50,13 +50,14 @@ export class SectionsEdit extends Component<Props, State> {
         <ul className="govuk-list govuk-list--bullet">
           {sections.map((section) => (
             <li key={section.name}>
-              <a
+              <button
                 className="govuk-link"
-                href="#"
+                type="button"
+                role="link"
                 onClick={(e) => this.onClickSection(e, section)}
               >
                 {section.title}
-              </a>
+              </button>
             </li>
           ))}
         </ul>

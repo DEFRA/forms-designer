@@ -134,21 +134,23 @@ export function ComponentListSelect() {
       </select>
       <p className="govuk-body govuk-!-margin-top-2">
         {selectedList?.title && (
-          <a
+          <button
             className="govuk-link govuk-!-display-block govuk-!-margin-bottom-1"
+            type="button"
+            role="link"
             onClick={handleEditList}
-            href="#"
           >
             {i18n('list.edit')}
-          </a>
+          </button>
         )}
-        <a
+        <button
           className="govuk-link govuk-!-display-block govuk-!-margin-bottom-1"
+          type="button"
+          role="link"
           onClick={handleAddList}
-          href="#"
         >
           {i18n('list.add')}
-        </a>
+        </button>
       </p>
     </div>
   )

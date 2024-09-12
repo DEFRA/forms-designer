@@ -15,7 +15,7 @@ function useConditionsEditor() {
   const [showAddCondition, setShowAddCondition] = useState<boolean>(false)
 
   function onClickCondition(
-    e: MouseEvent<HTMLAnchorElement>,
+    e: MouseEvent<HTMLButtonElement>,
     condition: ConditionWrapper
   ) {
     e.preventDefault()
@@ -92,13 +92,14 @@ export function ConditionsEdit({ path }: Readonly<Props>) {
 
               return (
                 <li key={condition.name}>
-                  <a
+                  <button
                     className="govuk-link"
-                    href="#"
+                    type="button"
+                    role="link"
                     onClick={(e) => onClickCondition(e, condition)}
                   >
                     {condition.displayName}
-                  </a>
+                  </button>
                   <br />
                   {model.toPresentationString()}
                 </li>

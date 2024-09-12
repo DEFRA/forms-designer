@@ -281,7 +281,7 @@ export class PageEdit extends Component<Props, State> {
     })
   }
 
-  editSection = (e: MouseEvent<HTMLAnchorElement>, isNewSection = false) => {
+  editSection = (e: MouseEvent<HTMLButtonElement>, isNewSection = false) => {
     e.preventDefault()
 
     this.setState({
@@ -454,21 +454,23 @@ export class PageEdit extends Component<Props, State> {
                 )}
                 <p className="govuk-body govuk-!-margin-top-2">
                   {section && (
-                    <a
-                      href="#"
+                    <button
                       className="govuk-link govuk-!-display-block"
+                      type="button"
+                      role="link"
                       onClick={this.editSection}
                     >
                       {i18n('section.edit')}
-                    </a>
+                    </button>
                   )}
-                  <a
-                    href="#"
+                  <button
                     className="govuk-link govuk-!-display-block"
+                    type="button"
+                    role="link"
                     onClick={(e) => this.editSection(e, true)}
                   >
                     {i18n('section.add')}
-                  </a>
+                  </button>
                 </p>
               </div>
             </>
