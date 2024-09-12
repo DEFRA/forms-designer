@@ -232,8 +232,8 @@ module.exports = {
       },
       plugins: ['react', 'react-hooks'],
       rules: {
-        'react/prop-types': 0,
-        'react-hooks/rules-of-hooks': 'warn'
+        // Temporarily turn off `isMounted` warnings appearing for `setState`
+        'react/no-is-mounted': 'off'
       },
       settings: {
         react: {
