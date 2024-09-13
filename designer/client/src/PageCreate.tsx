@@ -67,6 +67,7 @@ export class PageCreate extends Component<Props, State> {
   static readonly contextType = DataContext
 
   state: State = {
+    controller: ControllerType.Page,
     isEditingSection: false,
     isNewSection: false,
     isQuestionPage: true,
@@ -322,7 +323,7 @@ export class PageCreate extends Component<Props, State> {
                 (errors.controller ? 'page-controller-error' : '')
               }
               name="controller"
-              value={controller ?? ControllerType.Page}
+              value={controller ?? ''}
               onChange={this.onChangeController}
             >
               <option value="">
