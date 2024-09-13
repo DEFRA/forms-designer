@@ -21,7 +21,7 @@ export const metadata = {
 } as DataContextType['meta']
 
 export interface RenderWithContextProps extends Partial<DataContextType> {
-  children?: ReactElement
+  children: ReactElement
   state?: Parameters<typeof initComponentState>[0]
   context?: Partial<{
     flyout: Partial<FlyoutContextType>
@@ -71,7 +71,7 @@ export function RenderWithContext(props: Readonly<RenderWithContextProps>) {
 }
 
 export interface RenderComponentProps {
-  children?: ReactElement
+  children: ReactElement
   defaults: ComponentDef
   override?:
     | Partial<Extract<ComponentDef, { options: object }>>
