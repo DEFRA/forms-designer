@@ -1,4 +1,4 @@
-import markdownToHtml from '~/src/utils/markdown.js'
+import { markdownToHtml } from '~/src/utils/markdown.js'
 
 describe('Helpers', () => {
   describe('markdown', () => {
