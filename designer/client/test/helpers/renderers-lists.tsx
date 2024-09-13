@@ -9,23 +9,23 @@ import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 export interface RenderListEditorWithContextProps
   extends Partial<DataContextType> {
   children: ReactElement
-  selectedListName?: string
-  selectedItemText?: string
+  initialName?: string
+  initialItemText?: string
   state?: Parameters<typeof initComponentState>[0]
 }
 
 export function RenderListEditorWithContext({
   children,
-  selectedListName,
-  selectedItemText,
+  initialName,
+  initialItemText,
   ...props
 }: Readonly<RenderListEditorWithContextProps>) {
   return (
     <RenderWithContext {...props}>
       <ListsEditorContextProvider>
         <ListContextProvider
-          selectedListName={selectedListName}
-          selectedItemText={selectedItemText}
+          initialName={initialName}
+          initialItemText={initialItemText}
         >
           {children}
         </ListContextProvider>

@@ -205,11 +205,11 @@ export function listReducer(state: ListState, action: ListReducerActions) {
 export const ListContextProvider = (
   props: Readonly<{
     children?: ReactNode
-    selectedListName?: string
-    selectedItemText?: string
+    initialName?: string
+    initialItemText?: string
   }>
 ) => {
-  const { children, selectedListName, selectedItemText } = props
+  const { children, initialName, initialItemText } = props
   const { data } = useContext(DataContext)
 
   let init: ListState = {
@@ -218,8 +218,8 @@ export const ListContextProvider = (
   }
 
   // Populate state with selected list
-  if (selectedListName) {
-    const selectedList = findList(data, selectedListName)
+  if (initialName) {
+    const selectedList = findList(data, initialName)
 
     init = {
       ...init,
@@ -230,8 +230,8 @@ export const ListContextProvider = (
   }
 
   // Populate state with selected item
-  if (init.selectedList && selectedItemText) {
-    const selectedItem = findListItem(init.selectedList, selectedItemText)
+  if (init.selectedList && initialItemText) {
+    const selectedItem = findListItem(init.selectedList, initialItemText)
 
     init = {
       ...init,
