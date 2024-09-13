@@ -40,7 +40,7 @@ describe('CssClasses', () => {
 
     test('should display display correct helptext', () => {
       const text =
-        'Apply CSS classes to this field. For example, govuk-input govuk-!-width-full'
+        'Apply CSS classes to this field. For example, ‘govuk-input govuk-!-width-full’'
       expect(screen.getByText(text)).toBeInTheDocument()
     })
   })

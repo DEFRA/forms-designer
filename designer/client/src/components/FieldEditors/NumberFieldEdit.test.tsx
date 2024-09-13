@@ -71,12 +71,12 @@ describe('Number field edit', () => {
     })
 
     test('should display prefix help text', () => {
-      const text = 'Specifies the prefix of the field.'
+      const text = 'Specifies the prefix of the field'
       expect(screen.getByText(text)).toBeInTheDocument()
     })
 
     test('should display suffix help text', () => {
-      const text = 'Specifies the suffix of the field.'
+      const text = 'Specifies the suffix of the field'
       expect(screen.getByText(text)).toBeInTheDocument()
     })
   })

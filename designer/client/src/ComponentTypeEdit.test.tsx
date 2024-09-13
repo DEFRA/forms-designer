@@ -435,7 +435,7 @@ describe('ComponentTypeEdit', () => {
 
         const $checkbox2 = await waitFor(() =>
           screen.getByRole<HTMLInputElement>('checkbox', {
-            name: "Hide '(optional)' text",
+            name: 'Hide ‘(optional)’ text',
             description:
               'Tick this box if you do not want the title to indicate that this field is optional'
           })
@@ -454,7 +454,7 @@ describe('ComponentTypeEdit', () => {
         expect($checkbox1.checked).toBe(false)
 
         const $checkbox2 = screen.queryByRole('checkbox', {
-          name: "Hide '(optional)' text"
+          name: 'Hide ‘(optional)’ text'
         })
 
         expect($checkbox2).not.toBeInTheDocument()
@@ -470,7 +470,7 @@ describe('ComponentTypeEdit', () => {
 
       it('should not render "Hide \'(optional)\' text" checkbox', () => {
         const $checkbox = screen.queryByRole('checkbox', {
-          name: "Hide '(optional)' text"
+          name: 'Hide ‘(optional)’ text'
         })
 
         expect($checkbox).not.toBeInTheDocument()

@@ -72,7 +72,7 @@ describe('InlineConditions', () => {
     )
 
     const $addOrEditHint = screen.getByText(
-      'Set the rules that determine the conditional behaviour in the form flow. For example, a question page might have a component for yes and no options that need two conditions - one to control what happens if a user selects yes and one for when a user selects no.'
+      'Set the rules that determine the conditional behaviour in the form flow. For example, a question page might have a component for yes and no options that need two conditions – one to control what happens if a user selects yes and one for when a user selects no.'
     )
 
     const $displayNameHint = screen.getByText(

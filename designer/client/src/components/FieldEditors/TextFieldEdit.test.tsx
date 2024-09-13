@@ -74,7 +74,7 @@ describe('Text field edit', () => {
 
     test('should display regex help text', () => {
       const text =
-        "Specifies a regular expression to validate users' inputs. Use JavaScript syntax."
+        'Specifies a regular expression to validate users’ inputs. Use JavaScript syntax.'
       expect(screen.getByText(text)).toBeInTheDocument()
     })
 
@@ -85,7 +85,7 @@ describe('Text field edit', () => {
 
     test('should display autocomplete help text', () => {
       const text =
-        "Add the autocomplete attribute to this field. For example, 'on' or 'given-name'."
+        'Add the autocomplete attribute to this field. For example, ‘on’ or ‘given-name’'
       expect(screen.getByText(text)).toBeInTheDocument()
     })
   })

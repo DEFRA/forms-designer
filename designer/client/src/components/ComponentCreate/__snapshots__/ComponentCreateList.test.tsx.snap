@@ -179,7 +179,7 @@ exports[`ComponentCreateList should match snapshot 1`] = `
             <div
               class="govuk-hint govuk-!-margin-top-2"
             >
-              A text box for users to enter multiple lines of text into, for example as 'Additional info'
+              A text box for users to enter multiple lines of text into, for example as ‘Additional info’
             </div>
           </li>
           <li>
@@ -213,7 +213,7 @@ exports[`ComponentCreateList should match snapshot 1`] = `
             <div
               class="govuk-hint govuk-!-margin-top-2"
             >
-              A text box that users can enter numbers and some symbols into, such as '+'
+              A text box that users can enter numbers and some symbols into, such as ‘+’
             </div>
           </li>
           <li>
@@ -351,7 +351,7 @@ exports[`ComponentCreateList should match snapshot 1`] = `
             <div
               class="govuk-hint govuk-!-margin-top-2"
             >
-              Allows users to answer either 'Yes' or 'No'
+              Allows users to answer either ’Yes’ or ‘No’
             </div>
           </li>
         </ol>
