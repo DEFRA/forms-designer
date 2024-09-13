@@ -2,17 +2,35 @@ import {
   ComponentType,
   ComponentTypes,
   getComponentDefaults,
-  type ComponentDef
+  type ComponentDef,
+  type FormDefinition
 } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { cleanup, render, type RenderResult } from '@testing-library/react'
 import React from 'react'
 
-import { DateFieldEdit } from '~/src/components/FieldEditors/DateFieldEdit.jsx'
+import { ListContentEdit } from '~/src/components/FieldEditors/ListContentEdit.jsx'
 import { RenderComponent } from '~/test/helpers/renderers.jsx'
 
-describe('Date field edit', () => {
-  const supported = [ComponentType.DatePartsField]
+describe('List content edit', () => {
+  const supported = [ComponentType.List]
+
+  const data = {
+    pages: [],
+    lists: [
+      {
+        name: 'myList',
+        title: 'My list',
+        type: 'string',
+        items: [
+          { text: 'text a', description: 'desc a', value: 'value a' },
+          { text: 'text b', description: 'desc b', value: 'value b' }
+        ]
+      }
+    ],
+    sections: [],
+    conditions: []
+  } satisfies FormDefinition
 
   afterEach(cleanup)
 
@@ -21,8 +39,8 @@ describe('Date field edit', () => {
       "should render supported component '%s'",
       (selectedComponent) => {
         const { container } = render(
-          <RenderComponent defaults={selectedComponent}>
-            <DateFieldEdit />
+          <RenderComponent data={data} defaults={selectedComponent}>
+            <ListContentEdit />
           </RenderComponent>
         )
 
@@ -35,8 +53,8 @@ describe('Date field edit', () => {
       "should not render unsupported component '%s'",
       (selectedComponent) => {
         const { container } = render(
-          <RenderComponent defaults={selectedComponent}>
-            <DateFieldEdit />
+          <RenderComponent data={data} defaults={selectedComponent}>
+            <ListContentEdit />
           </RenderComponent>
         )
 
@@ -54,8 +72,8 @@ describe('Date field edit', () => {
       selectedComponent = getComponentDefaults({ type })
 
       result = render(
-        <RenderComponent defaults={selectedComponent}>
-          <DateFieldEdit />
+        <RenderComponent data={data} defaults={selectedComponent}>
+          <ListContentEdit />
         </RenderComponent>
       )
     })
@@ -68,46 +86,46 @@ describe('Date field edit', () => {
       expect($summary).toBeInTheDocument()
     })
 
-    it("should render 'Max days in the past' input", () => {
-      const $input = screen.getByRole('spinbutton', {
-        name: 'Max days in the past',
-        description: 'Determines the earliest date users can enter'
+    it("should render 'List format' radios", () => {
+      const $legend = screen.getByText('List format', {
+        selector: 'fieldset > legend'
       })
 
-      expect($input).toBeInTheDocument()
-      expect($input).toHaveValue(null)
+      const $radio1 = screen.getByRole('radio', {
+        name: 'Bulleted',
+        checked: true
+      })
+
+      const $radio2 = screen.getByRole('radio', {
+        name: 'Numbered',
+        checked: false
+      })
+
+      expect($legend).toBeInTheDocument()
+      expect($radio1).toBeInTheDocument()
+      expect($radio2).toBeInTheDocument()
 
       result.rerender(
         <RenderComponent
           defaults={selectedComponent}
-          override={{ options: { maxDaysInPast: 10 } }}
+          override={{ options: { type: 'bulleted' } }}
         >
-          <DateFieldEdit />
+          <ListContentEdit />
         </RenderComponent>
       )
 
-      expect($input).toHaveValue(10)
-    })
-
-    it("should render 'Max days in the future' input", () => {
-      const $input = screen.getByRole('spinbutton', {
-        name: 'Max days in the future',
-        description: 'Determines the latest date users can enter'
-      })
-
-      expect($input).toBeInTheDocument()
-      expect($input).toHaveValue(null)
+      expect($radio1).toBeChecked()
 
       result.rerender(
         <RenderComponent
           defaults={selectedComponent}
-          override={{ options: { maxDaysInFuture: 10 } }}
+          override={{ options: { type: 'numbered' } }}
         >
-          <DateFieldEdit />
+          <ListContentEdit />
         </RenderComponent>
       )
 
-      expect($input).toHaveValue(10)
+      expect($radio2).toBeChecked()
     })
 
     it("should render 'Classes' input", () => {
@@ -123,9 +141,11 @@ describe('Date field edit', () => {
       result.rerender(
         <RenderComponent
           defaults={selectedComponent}
-          override={{ options: { classes: 'example' } }}
+          override={{
+            options: { classes: 'example' }
+          }}
         >
-          <DateFieldEdit />
+          <ListContentEdit />
         </RenderComponent>
       )
 

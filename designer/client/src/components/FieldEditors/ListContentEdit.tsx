@@ -43,12 +43,12 @@ export function ListContentEdit() {
                       id={id}
                       name={name}
                       type="radio"
-                      defaultValue={bullet}
-                      defaultChecked={
+                      value={bullet}
+                      checked={
                         options.type === bullet ||
                         (!options.type && bullet === 'bulleted')
                       }
-                      onClick={() => {
+                      onChange={() => {
                         dispatch({
                           name: Options.EDIT_OPTIONS_TYPE,
                           payload: bullet,

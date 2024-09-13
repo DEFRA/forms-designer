@@ -8,11 +8,11 @@ import { screen } from '@testing-library/dom'
 import { cleanup, render, type RenderResult } from '@testing-library/react'
 import React from 'react'
 
-import { DateFieldEdit } from '~/src/components/FieldEditors/DateFieldEdit.jsx'
+import { SelectFieldEdit } from '~/src/components/FieldEditors/SelectFieldEdit.jsx'
 import { RenderComponent } from '~/test/helpers/renderers.jsx'
 
-describe('Date field edit', () => {
-  const supported = [ComponentType.DatePartsField]
+describe('Select field edit', () => {
+  const supported = [ComponentType.SelectField]
 
   afterEach(cleanup)
 
@@ -22,7 +22,7 @@ describe('Date field edit', () => {
       (selectedComponent) => {
         const { container } = render(
           <RenderComponent defaults={selectedComponent}>
-            <DateFieldEdit />
+            <SelectFieldEdit />
           </RenderComponent>
         )
 
@@ -36,7 +36,7 @@ describe('Date field edit', () => {
       (selectedComponent) => {
         const { container } = render(
           <RenderComponent defaults={selectedComponent}>
-            <DateFieldEdit />
+            <SelectFieldEdit />
           </RenderComponent>
         )
 
@@ -55,7 +55,7 @@ describe('Date field edit', () => {
 
       result = render(
         <RenderComponent defaults={selectedComponent}>
-          <DateFieldEdit />
+          <SelectFieldEdit />
         </RenderComponent>
       )
     })
@@ -68,53 +68,11 @@ describe('Date field edit', () => {
       expect($summary).toBeInTheDocument()
     })
 
-    it("should render 'Max days in the past' input", () => {
-      const $input = screen.getByRole('spinbutton', {
-        name: 'Max days in the past',
-        description: 'Determines the earliest date users can enter'
-      })
-
-      expect($input).toBeInTheDocument()
-      expect($input).toHaveValue(null)
-
-      result.rerender(
-        <RenderComponent
-          defaults={selectedComponent}
-          override={{ options: { maxDaysInPast: 10 } }}
-        >
-          <DateFieldEdit />
-        </RenderComponent>
-      )
-
-      expect($input).toHaveValue(10)
-    })
-
-    it("should render 'Max days in the future' input", () => {
-      const $input = screen.getByRole('spinbutton', {
-        name: 'Max days in the future',
-        description: 'Determines the latest date users can enter'
-      })
-
-      expect($input).toBeInTheDocument()
-      expect($input).toHaveValue(null)
-
-      result.rerender(
-        <RenderComponent
-          defaults={selectedComponent}
-          override={{ options: { maxDaysInFuture: 10 } }}
-        >
-          <DateFieldEdit />
-        </RenderComponent>
-      )
-
-      expect($input).toHaveValue(10)
-    })
-
-    it("should render 'Classes' input", () => {
+    it("should render 'Autocomplete' input", () => {
       const $input = screen.getByRole('textbox', {
-        name: 'Classes',
+        name: 'Autocomplete',
         description:
-          'Apply CSS classes to this field. For example, ‘govuk-input govuk-!-width-full’'
+          'Add the autocomplete attribute to this field. For example, ‘on’ or ‘given-name’'
       })
 
       expect($input).toBeInTheDocument()
@@ -123,9 +81,9 @@ describe('Date field edit', () => {
       result.rerender(
         <RenderComponent
           defaults={selectedComponent}
-          override={{ options: { classes: 'example' } }}
+          override={{ options: { autocomplete: 'example' } }}
         >
-          <DateFieldEdit />
+          <SelectFieldEdit />
         </RenderComponent>
       )
 

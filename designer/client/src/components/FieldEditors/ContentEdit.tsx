@@ -27,7 +27,7 @@ export function ContentEdit() {
       <label className="govuk-label govuk-label--s" htmlFor="field-content">
         Content
       </label>
-      <div className="govuk-hint" id="field-content-error">
+      <div className="govuk-hint" id="field-content-hint">
         {i18n(
           selectedComponent.type === ComponentType.Details
             ? 'fieldEdit.details.hint'

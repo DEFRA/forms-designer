@@ -1,83 +1,199 @@
-import { ComponentType } from '@defra/forms-model'
+import {
+  ComponentType,
+  ComponentTypes,
+  getComponentDefaults,
+  type ComponentDef
+} from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import { cleanup, render } from '@testing-library/react'
+import { cleanup, render, type RenderResult } from '@testing-library/react'
 import React from 'react'
 
 import { NumberFieldEdit } from '~/src/components/FieldEditors/NumberFieldEdit.jsx'
-import {
-  RenderWithContext,
-  type RenderWithContextProps
-} from '~/test/helpers/renderers.jsx'
+import { RenderComponent } from '~/test/helpers/renderers.jsx'
 
 describe('Number field edit', () => {
+  const supported = [ComponentType.NumberField]
+
   afterEach(cleanup)
 
-  describe('Number field edit fields', () => {
-    let state: RenderWithContextProps['state']
+  describe('Supported components', () => {
+    it.each(ComponentTypes.filter(({ type }) => supported.includes(type)))(
+      "should render supported component '%s'",
+      (selectedComponent) => {
+        const { container } = render(
+          <RenderComponent defaults={selectedComponent}>
+            <NumberFieldEdit />
+          </RenderComponent>
+        )
+
+        const $details = container.querySelector('details')
+        expect($details).not.toBeNull()
+      }
+    )
+
+    it.each(ComponentTypes.filter(({ type }) => !supported.includes(type)))(
+      "should not render unsupported component '%s'",
+      (selectedComponent) => {
+        const { container } = render(
+          <RenderComponent defaults={selectedComponent}>
+            <NumberFieldEdit />
+          </RenderComponent>
+        )
+
+        const $details = container.querySelector('details')
+        expect($details).toBeNull()
+      }
+    )
+  })
+
+  describe.each(supported)('Settings: %s', (type) => {
+    let selectedComponent: ComponentDef
+    let result: RenderResult
 
     beforeEach(() => {
-      state = {
-        selectedComponent: {
-          name: 'NumberFieldEditClass',
-          title: 'Number field edit class',
-          hint: 'Number field hint',
-          type: ComponentType.NumberField,
-          options: {},
-          schema: {}
-        }
-      }
+      selectedComponent = getComponentDefaults({ type })
 
-      render(
-        <RenderWithContext state={state}>
+      result = render(
+        <RenderComponent defaults={selectedComponent}>
           <NumberFieldEdit />
-        </RenderWithContext>
+        </RenderComponent>
       )
     })
 
-    test('should display details link title', () => {
-      const text = 'Additional settings'
-      expect(screen.getByText(text)).toBeInTheDocument()
+    it('should render additional settings', () => {
+      const $summary = screen.getByText('Additional settings', {
+        selector: 'details > summary .govuk-details__summary-text'
+      })
+
+      expect($summary).toBeInTheDocument()
     })
 
-    test('should display min title', () => {
-      const text = 'Min'
-      expect(screen.getByText(text)).toBeInTheDocument()
+    it("should render 'Min' input", () => {
+      const $input = screen.getByRole('spinbutton', {
+        name: 'Min',
+        description: 'Specifies the lowest number users can enter'
+      })
+
+      expect($input).toBeInTheDocument()
+      expect($input).toHaveValue(null)
+
+      result.rerender(
+        <RenderComponent
+          defaults={selectedComponent}
+          override={{ schema: { min: 10 } }}
+        >
+          <NumberFieldEdit />
+        </RenderComponent>
+      )
+
+      expect($input).toHaveValue(10)
     })
 
-    test('should display min help text', () => {
-      const text = 'Specifies the lowest number users can enter'
-      expect(screen.getByText(text)).toBeInTheDocument()
+    it("should render 'Max' input", () => {
+      const $input = screen.getByRole('spinbutton', {
+        name: 'Max',
+        description: 'Specifies the highest number users can enter'
+      })
+
+      expect($input).toBeInTheDocument()
+      expect($input).toHaveValue(null)
+
+      result.rerender(
+        <RenderComponent
+          defaults={selectedComponent}
+          override={{ schema: { max: 10 } }}
+        >
+          <NumberFieldEdit />
+        </RenderComponent>
+      )
+
+      expect($input).toHaveValue(10)
     })
 
-    test('should display max title', () => {
-      const text = 'Max'
-      expect(screen.getByText(text)).toBeInTheDocument()
+    it("should render 'Precision' input", () => {
+      const $input = screen.getByRole('spinbutton', {
+        name: 'Precision',
+        description:
+          'Specifies the number of decimal places users can enter. For example, to allow users to enter numbers with up to two decimal places, set this to 2'
+      })
+
+      expect($input).toBeInTheDocument()
+      expect($input).toHaveValue(null)
+
+      result.rerender(
+        <RenderComponent
+          defaults={selectedComponent}
+          override={{ schema: { precision: 10 } }}
+        >
+          <NumberFieldEdit />
+        </RenderComponent>
+      )
+
+      expect($input).toHaveValue(10)
     })
 
-    test('should display max help text', () => {
-      const text = 'Specifies the highest number users can enter'
-      expect(screen.getByText(text)).toBeInTheDocument()
+    it("should render 'Prefix' input", () => {
+      const $input = screen.getByRole('textbox', {
+        name: 'Prefix',
+        description: 'Specifies the prefix of the field'
+      })
+
+      expect($input).toBeInTheDocument()
+      expect($input).toHaveValue('')
+
+      result.rerender(
+        <RenderComponent
+          defaults={selectedComponent}
+          override={{ options: { prefix: 'ABC' } }}
+        >
+          <NumberFieldEdit />
+        </RenderComponent>
+      )
+
+      expect($input).toHaveValue('ABC')
     })
 
-    test('should display precision title', () => {
-      const text = 'Precision'
-      expect(screen.getByText(text)).toBeInTheDocument()
+    it("should render 'Suffix' input", () => {
+      const $input = screen.getByRole('textbox', {
+        name: 'Suffix',
+        description: 'Specifies the suffix of the field'
+      })
+
+      expect($input).toBeInTheDocument()
+      expect($input).toHaveValue('')
+
+      result.rerender(
+        <RenderComponent
+          defaults={selectedComponent}
+          override={{ options: { suffix: 'XYZ' } }}
+        >
+          <NumberFieldEdit />
+        </RenderComponent>
+      )
+
+      expect($input).toHaveValue('XYZ')
     })
 
-    test('should display precision help text', () => {
-      const text =
-        'Specifies the number of decimal places users can enter. For example, to allow users to enter numbers with up to two decimal places, set this to 2'
-      expect(screen.getByText(text)).toBeInTheDocument()
-    })
+    it("should render 'Classes' input", () => {
+      const $input = screen.getByRole('textbox', {
+        name: 'Classes',
+        description:
+          'Apply CSS classes to this field. For example, ‘govuk-input govuk-!-width-full’'
+      })
 
-    test('should display prefix help text', () => {
-      const text = 'Specifies the prefix of the field'
-      expect(screen.getByText(text)).toBeInTheDocument()
-    })
+      expect($input).toBeInTheDocument()
+      expect($input).toHaveValue('')
 
-    test('should display suffix help text', () => {
-      const text = 'Specifies the suffix of the field'
-      expect(screen.getByText(text)).toBeInTheDocument()
+      result.rerender(
+        <RenderComponent
+          defaults={selectedComponent}
+          override={{ options: { classes: 'example' } }}
+        >
+          <NumberFieldEdit />
+        </RenderComponent>
+      )
+
+      expect($input).toHaveValue('example')
     })
   })
 })
