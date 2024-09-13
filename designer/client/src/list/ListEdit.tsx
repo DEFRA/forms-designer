@@ -33,15 +33,15 @@ import {
 function useListEdit() {
   const { dispatch: listsEditorDispatch } = useContext(ListsEditorContext)
 
-  const { state, dispatch } = useContext(ListContext)
   const { data, save } = useContext(DataContext)
+  const { state: listState, dispatch: listDispatch } = useContext(ListContext)
 
-  const { selectedList } = state
+  const { selectedList } = listState
 
   function handleAddItem(e: MouseEvent<HTMLAnchorElement>) {
     e.preventDefault()
 
-    dispatch({
+    listDispatch({
       name: ListActions.ADD_LIST_ITEM
     })
 
@@ -67,7 +67,7 @@ function useListEdit() {
 
     await save(definition)
 
-    dispatch({
+    listDispatch({
       name: ListActions.SET_SELECTED_LIST,
       payload: undefined
     })
@@ -92,7 +92,7 @@ function useListEdit() {
       schema: Joi.array().min(1)
     })
 
-    dispatch({
+    listDispatch({
       name: ListActions.LIST_VALIDATION_ERRORS,
       payload: errors
     })
@@ -131,7 +131,7 @@ function useListEdit() {
 
     await save(definition)
 
-    dispatch({
+    listDispatch({
       name: ListActions.SET_SELECTED_LIST,
       payload: list
     })
@@ -150,11 +150,12 @@ function useListEdit() {
 }
 
 export function ListEdit() {
-  const { state, dispatch } = useContext(ListContext)
+  const { state: listState, dispatch: listDispatch } = useContext(ListContext)
+
+  const { selectedList, errors } = listState
+  const hasErrors = hasValidationErrors(errors)
   const { handleAddItem, handleDelete, handleSubmit } = useListEdit()
 
-  const { selectedList, errors } = state
-  const hasErrors = hasValidationErrors(errors)
 
   return (
     <>
@@ -174,7 +175,7 @@ export function ListEdit() {
             }}
             value={selectedList.title}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              dispatch({
+              listDispatch({
                 name: ListActions.EDIT_TITLE,
                 payload: e.target.value
               })

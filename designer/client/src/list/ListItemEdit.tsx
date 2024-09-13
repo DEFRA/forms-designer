@@ -14,9 +14,9 @@ import { ListContext } from '~/src/reducers/listReducer.jsx'
 import { hasValidationErrors } from '~/src/validations.js'
 
 export function ListItemEdit() {
-  const { dispatch: listsEditorDispatch } = useContext(ListsEditorContext)
-  const { state, dispatch } = useContext(ListContext)
   const { data } = useContext(DataContext)
+  const { state: listState, dispatch: listDispatch } = useContext(ListContext)
+  const { dispatch: listsEditorDispatch } = useContext(ListsEditorContext)
 
   const {
     handleTitleChange,
@@ -29,10 +29,11 @@ export function ListItemEdit() {
     condition,
     text,
     description
-  } = useListItem(state, dispatch)
+  } = useListItem(listState, listDispatch)
 
   const { conditions } = data
-  const { listItemErrors: errors, selectedItem } = state
+  const { selectedList, selectedItem, listItemErrors: errors } = listState
+
   const hasErrors = hasValidationErrors(errors)
 
   const handleSubmit = (

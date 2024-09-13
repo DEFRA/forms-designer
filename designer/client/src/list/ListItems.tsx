@@ -57,13 +57,13 @@ const ListItem = ({ item, removeListItem, editListItem }: Readonly<Props>) => {
 }
 
 export function ListItems() {
-  const { state, dispatch } = useContext(ListContext)
+  const { state: listState, dispatch: listDispatch } = useContext(ListContext)
   const { dispatch: listsEditorDispatch } = useContext(ListsEditorContext)
 
-  const { prepareForDelete } = useListItem(state, dispatch)
+  const { prepareForDelete } = useListItem(listState, listDispatch)
 
   const editListItem = (payload: Item) => {
-    dispatch({
+    listDispatch({
       name: ListActions.EDIT_LIST_ITEM,
       payload
     })
@@ -78,7 +78,7 @@ export function ListItems() {
     prepareForDelete(payload)
   }
 
-  const { selectedList } = state
+  const { selectedList } = listState
   if (!selectedList?.items.length) {
     return null
   }
