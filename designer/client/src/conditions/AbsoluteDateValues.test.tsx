@@ -20,9 +20,9 @@ describe('AbsoluteDateValues', () => {
     const $month = await waitFor(() => screen.findByLabelText('Month'))
     const $day = await waitFor(() => screen.findByLabelText('Day'))
 
-    expect($year.getAttribute('value')).toBe('1999')
-    expect($month.getAttribute('value')).toBe('12')
-    expect($day.getAttribute('value')).toBe('31')
+    expect($year).toHaveValue(1999)
+    expect($month).toHaveValue(12)
+    expect($day).toHaveValue(31)
   })
 
   it('calls the updateValue prop if a valid date is entered', async () => {

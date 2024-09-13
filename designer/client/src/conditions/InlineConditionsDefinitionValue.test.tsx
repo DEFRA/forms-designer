@@ -128,7 +128,7 @@ describe('InlineConditionsDefinitionValue', () => {
     )
 
     expect($select).toBeInTheDocument()
-    expect($select.options[0].value).toBe('')
+    expect($select).toHaveValue('')
     expect($select.options[1]).toMatchObject(values[0])
     expect($select.options[2]).toMatchObject(values[1])
   })

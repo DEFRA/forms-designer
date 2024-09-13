@@ -295,7 +295,7 @@ describe('ComponentTypeEdit', () => {
       }
     ]
   ])('Component type edit: %s', (type, options) => {
-    let selectedComponent: ComponentDef | undefined
+    let selectedComponent: ComponentDef
 
     beforeEach(() => {
       selectedComponent = getComponentDefaults({ type })
@@ -315,7 +315,7 @@ describe('ComponentTypeEdit', () => {
         })
 
         expect($input).toBeInTheDocument()
-        expect($input?.value).toBe(selectedComponent?.title)
+        expect($input).toHaveValue(selectedComponent.title)
       })
     } else {
       it("should not render 'Title' input", () => {
@@ -335,7 +335,7 @@ describe('ComponentTypeEdit', () => {
         })
 
         expect($textarea).toBeInTheDocument()
-        expect($textarea?.value).toBe(
+        expect($textarea).toHaveValue(
           hasHint(selectedComponent) ? (selectedComponent.hint ?? '') : ''
         )
       })
@@ -397,7 +397,7 @@ describe('ComponentTypeEdit', () => {
         })
 
         expect($input).toBeInTheDocument()
-        expect($input?.value).toBe(selectedComponent?.name)
+        expect($input).toHaveValue(selectedComponent.name)
       })
     } else {
       it("should not render 'Component name' input", () => {
@@ -412,7 +412,7 @@ describe('ComponentTypeEdit', () => {
     if (options.optional) {
       it("should render 'Make {{component}} optional' checkbox", () => {
         const $checkbox = screen.queryByRole<HTMLInputElement>('checkbox', {
-          name: `Make ${lowerFirst(selectedComponent?.title)} optional`,
+          name: `Make ${lowerFirst(selectedComponent.title)} optional`,
           description:
             'Tick this box if users do not need to complete this field to progress through the form'
         })
@@ -423,7 +423,7 @@ describe('ComponentTypeEdit', () => {
 
       it('should render "Hide \'(optional)\' text" checkbox when optional', async () => {
         const $checkbox1 = screen.getByRole<HTMLInputElement>('checkbox', {
-          name: `Make ${lowerFirst(selectedComponent?.title)} optional`
+          name: `Make ${lowerFirst(selectedComponent.title)} optional`
         })
 
         expect($checkbox1).toBeInTheDocument()
@@ -447,7 +447,7 @@ describe('ComponentTypeEdit', () => {
 
       it('should not render "Hide \'(optional)\' text" checkbox when required', () => {
         const $checkbox1 = screen.getByRole<HTMLInputElement>('checkbox', {
-          name: `Make ${lowerFirst(selectedComponent?.title)} optional`
+          name: `Make ${lowerFirst(selectedComponent.title)} optional`
         })
 
         expect($checkbox1).toBeInTheDocument()
@@ -462,7 +462,7 @@ describe('ComponentTypeEdit', () => {
     } else {
       it("should not render 'Make {{component}} optional' checkbox", () => {
         const $checkbox = screen.queryByRole('checkbox', {
-          name: `Make ${lowerFirst(selectedComponent?.title)} optional`
+          name: `Make ${lowerFirst(selectedComponent.title)} optional`
         })
 
         expect($checkbox).not.toBeInTheDocument()
@@ -486,7 +486,7 @@ describe('ComponentTypeEdit', () => {
         })
 
         expect($select).toBeInTheDocument()
-        expect($select?.value).toBe(
+        expect($select).toHaveValue(
           hasListField(selectedComponent) ? selectedComponent.list : ''
         )
       })
@@ -509,7 +509,7 @@ describe('ComponentTypeEdit', () => {
         })
 
         expect($select).toBeInTheDocument()
-        expect($select?.value).toBe(
+        expect($select).toHaveValue(
           hasConditionSupport(selectedComponent)
             ? (selectedComponent.options.condition ?? '')
             : ''
