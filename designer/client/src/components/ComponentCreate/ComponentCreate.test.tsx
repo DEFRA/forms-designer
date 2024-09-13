@@ -37,8 +37,13 @@ describe('ComponentCreate:', () => {
       name: 'Details'
     })
 
-    expect(screen.queryByLabelText('Title')).not.toBeInTheDocument()
-    expect(screen.queryByLabelText('Content')).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('textbox', { name: 'Title' })
+    ).not.toBeInTheDocument()
+
+    expect(
+      screen.queryByRole('textbox', { name: 'Content' })
+    ).not.toBeInTheDocument()
 
     await act(() => userEvent.click($componentLink))
     await waitFor(() => screen.getAllByRole('textbox'))

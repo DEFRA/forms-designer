@@ -1,3 +1,4 @@
+import { within } from '@testing-library/dom'
 import { StatusCodes } from 'http-status-codes'
 
 import { createServer } from '~/src/createServer.js'
@@ -77,11 +78,21 @@ describe('Forms contact email', () => {
 
     const { document } = await renderResponse(server, options)
 
-    const address = document.querySelector('#address')
-    expect(address).toHaveValue(emailAddress)
+    const $address = within(document.body).getByRole('textbox', {
+      name: 'Email address',
+      description:
+        'Enter a dedicated support team email address. Do not enter a named individual. For example, ‘support@defra.gov.uk’'
+    })
 
-    const responseTime = document.querySelector('#responseTime')
-    expect(responseTime).toHaveValue(responseTimeText)
+    expect($address).toHaveValue(emailAddress)
+
+    const $responseTime = within(document.body).getByRole('textbox', {
+      name: 'Response time',
+      description:
+        'Enter how long it takes to receive a response, for example, ‘We aim to respond within 2 working days’'
+    })
+
+    expect($responseTime).toHaveValue(responseTimeText)
   })
 
   test('POST - should redirect to overviewpage after updating email details', async () => {

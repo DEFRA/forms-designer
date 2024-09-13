@@ -1,3 +1,4 @@
+import { within } from '@testing-library/dom'
 import { StatusCodes } from 'http-status-codes'
 
 import { createServer } from '~/src/createServer.js'
@@ -69,11 +70,20 @@ describe('Forms library routes', () => {
 
     const { document } = await renderResponse(server, options)
 
-    const teamName = document.querySelector('#teamName')
-    const teamEmail = document.querySelector('#teamEmail')
+    const $teamName = within(document.body).getByRole('textbox', {
+      name: 'Name of team',
+      description:
+        'Enter the name of the policy team or business area responsible for this form'
+    })
 
-    expect(teamName).toHaveValue('Defra Forms')
-    expect(teamEmail).toHaveValue('defraforms@defra.gov.uk')
+    const $teamEmail = within(document.body).getByRole('textbox', {
+      name: 'Shared team email address',
+      description:
+        'Used to contact the form subject matter expert (SME) or key stakeholder. Must be a UK email address, like name@example.gov.uk'
+    })
+
+    expect($teamName).toHaveValue('Defra Forms')
+    expect($teamEmail).toHaveValue('defraforms@defra.gov.uk')
   })
 
   test('POST - should redirect to overviewpage after updating team details', async () => {
@@ -111,8 +121,11 @@ describe('Forms library routes', () => {
 
     const { document } = await renderResponse(server, options)
 
-    const title = document.querySelector('#title')
-    expect(title).toHaveValue('Test form')
+    const $title = within(document.body).getByRole('textbox', {
+      name: 'Enter a name for your form'
+    })
+
+    expect($title).toHaveValue('Test form')
   })
 
   test('POST - should redirect to overviewpage after updating title', async () => {

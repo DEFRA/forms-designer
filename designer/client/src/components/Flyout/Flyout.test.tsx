@@ -16,9 +16,9 @@ describe('Flyout', () => {
       </RenderWithContext>
     )
 
-    const $dialog = screen.queryByRole('dialog', { name: 'Example' })
-    const $heading = screen.queryByRole('heading', { name: 'Example' })
-    const $button = screen.queryByRole('button', { name: 'Close' })
+    const $dialog = screen.getByRole('dialog', { name: 'Example' })
+    const $heading = screen.getByRole('heading', { name: 'Example' })
+    const $button = screen.getByRole('button', { name: 'Close' })
 
     expect($dialog).toBeInTheDocument()
     expect($dialog).toContainElement($heading)

@@ -8,7 +8,7 @@ import { AbsoluteDateValues } from '~/src/conditions/AbsoluteDateValues.jsx'
 describe('AbsoluteDateValues', () => {
   afterEach(cleanup)
 
-  it("renders out a date that's passed to it", async () => {
+  it("renders out a date that's passed to it", () => {
     render(
       <AbsoluteDateValues
         updateValue={jest.fn()}
@@ -16,9 +16,9 @@ describe('AbsoluteDateValues', () => {
       />
     )
 
-    const $year = await waitFor(() => screen.findByLabelText('Year'))
-    const $month = await waitFor(() => screen.findByLabelText('Month'))
-    const $day = await waitFor(() => screen.findByLabelText('Day'))
+    const $day = screen.getByRole('spinbutton', { name: 'Day' })
+    const $month = screen.getByRole('spinbutton', { name: 'Month' })
+    const $year = screen.getByRole('spinbutton', { name: 'Year' })
 
     expect($year).toHaveValue(1999)
     expect($month).toHaveValue(12)
@@ -29,9 +29,9 @@ describe('AbsoluteDateValues', () => {
     const updateValue = jest.fn()
     render(<AbsoluteDateValues updateValue={updateValue} value={{}} />)
 
-    const $year = await waitFor(() => screen.findByLabelText('Year'))
-    const $month = await waitFor(() => screen.findByLabelText('Month'))
-    const $day = await waitFor(() => screen.findByLabelText('Day'))
+    const $day = screen.getByRole('spinbutton', { name: 'Day' })
+    const $month = screen.getByRole('spinbutton', { name: 'Month' })
+    const $year = screen.getByRole('spinbutton', { name: 'Year' })
 
     await act(() => userEvent.type($year, '2020'))
     await act(() => userEvent.type($month, '4'))
@@ -55,9 +55,9 @@ describe('AbsoluteDateValues', () => {
       />
     )
 
-    const $year = await waitFor(() => screen.findByLabelText('Year'))
-    const $month = await waitFor(() => screen.findByLabelText('Month'))
-    const $day = await waitFor(() => screen.findByLabelText('Day'))
+    const $day = screen.getByRole('spinbutton', { name: 'Day' })
+    const $month = screen.getByRole('spinbutton', { name: 'Month' })
+    const $year = screen.getByRole('spinbutton', { name: 'Year' })
 
     // Clear existing values
     await Promise.all([$year, $month, $day].map(userEvent.clear))
@@ -79,9 +79,9 @@ describe('AbsoluteDateValues', () => {
     const updateValue = jest.fn()
     render(<AbsoluteDateValues updateValue={updateValue} value={{}} />)
 
-    const $year = await waitFor(() => screen.findByLabelText('Year'))
-    const $month = await waitFor(() => screen.findByLabelText('Month'))
-    const $day = await waitFor(() => screen.findByLabelText('Day'))
+    const $day = screen.getByRole('spinbutton', { name: 'Day' })
+    const $month = screen.getByRole('spinbutton', { name: 'Month' })
+    const $year = screen.getByRole('spinbutton', { name: 'Year' })
 
     await act(() => userEvent.type($year, '2020'))
     await act(() => userEvent.type($month, '4'))
@@ -94,8 +94,8 @@ describe('AbsoluteDateValues', () => {
     const updateValue = jest.fn()
     render(<AbsoluteDateValues updateValue={updateValue} value={{}} />)
 
-    const $year = await waitFor(() => screen.findByLabelText('Year'))
-    const $month = await waitFor(() => screen.findByLabelText('Month'))
+    const $year = screen.getByRole('spinbutton', { name: 'Year' })
+    const $month = screen.getByRole('spinbutton', { name: 'Month' })
 
     await act(() => userEvent.type($year, '2020'))
     await act(() => userEvent.type($month, '4'))
@@ -107,8 +107,8 @@ describe('AbsoluteDateValues', () => {
     const updateValue = jest.fn()
     render(<AbsoluteDateValues updateValue={updateValue} value={{}} />)
 
-    const $year = await waitFor(() => screen.findByLabelText('Year'))
-    const $day = await waitFor(() => screen.findByLabelText('Day'))
+    const $day = screen.getByRole('spinbutton', { name: 'Day' })
+    const $year = screen.getByRole('spinbutton', { name: 'Year' })
 
     await act(() => userEvent.type($year, '2020'))
     await act(() => userEvent.type($day, '7'))
@@ -120,8 +120,8 @@ describe('AbsoluteDateValues', () => {
     const updateValue = jest.fn()
     render(<AbsoluteDateValues updateValue={updateValue} value={{}} />)
 
-    const $month = await waitFor(() => screen.findByLabelText('Month'))
-    const $day = await waitFor(() => screen.findByLabelText('Day'))
+    const $month = screen.getByRole('spinbutton', { name: 'Month' })
+    const $day = screen.getByRole('spinbutton', { name: 'Day' })
 
     await act(() => userEvent.type($month, '4'))
     await act(() => userEvent.type($day, '23'))

@@ -146,25 +146,25 @@ describe('Page', () => {
       </RenderWithContext>
     )
 
-    const $heading = screen.queryByRole('heading', {
+    const $heading = screen.getByRole('heading', {
       name: 'my first page'
     })
 
     expect($heading).toBeInTheDocument()
 
-    const $buttonEdit = screen.queryByRole('button', {
+    const $buttonEdit = screen.getByRole('button', {
       name: 'Edit page',
-      description: $heading?.innerText
+      description: $heading.innerText
     })
 
-    const $linkPreview = screen.queryByRole('link', {
+    const $linkPreview = screen.getByRole('link', {
       name: 'Preview page',
-      description: $heading?.innerText
+      description: $heading.innerText
     })
 
-    const $buttonAdd = screen.queryByRole('button', {
+    const $buttonAdd = screen.getByRole('button', {
       name: 'Add component',
-      description: $heading?.innerText
+      description: $heading.innerText
     })
 
     expect($buttonEdit).toBeInTheDocument()
@@ -179,7 +179,7 @@ describe('Page', () => {
       </RenderWithContext>
     )
 
-    const $heading = screen.queryByRole('heading', {
+    const $heading = screen.getByRole('heading', {
       name: 'my first page'
     })
 
@@ -189,20 +189,20 @@ describe('Page', () => {
       {
         title: 'First name',
         label: 'Text input',
-        description: $heading?.innerText
+        description: $heading.innerText
       },
       {
         title: 'Middle name',
         label: 'Text input',
-        description: $heading?.innerText
+        description: $heading.innerText
       },
       {
         title: 'Surname',
         label: 'Text input',
-        description: $heading?.innerText
+        description: $heading.innerText
       }
     ]) {
-      const $component = screen.queryByRole('button', {
+      const $component = screen.getByRole('button', {
         name: `Edit ${lowerFirst(label)} component: ${title}`,
         description
       })
@@ -230,7 +230,7 @@ describe('Page', () => {
       </RenderWithContext>
     )
 
-    const $heading = screen.queryByRole('heading', {
+    const $heading = screen.getByRole('heading', {
       name: 'my second page'
     })
 
@@ -240,10 +240,10 @@ describe('Page', () => {
       {
         title: 'Mobile phone number',
         label: 'Telephone number',
-        description: $heading?.innerText
+        description: $heading.innerText
       }
     ]) {
-      const $component = screen.queryByRole('button', {
+      const $component = screen.getByRole('button', {
         name: `Edit ${lowerFirst(label)} component: ${title}`,
         description
       })

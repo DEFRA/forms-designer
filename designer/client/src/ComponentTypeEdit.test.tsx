@@ -309,7 +309,7 @@ describe('ComponentTypeEdit', () => {
 
     if (options.title) {
       it("should render 'Title' input", () => {
-        const $input = screen.queryByRole<HTMLInputElement>('textbox', {
+        const $input = screen.getByRole<HTMLInputElement>('textbox', {
           name: 'Title',
           description: 'Enter the name to show for this field'
         })
@@ -329,7 +329,7 @@ describe('ComponentTypeEdit', () => {
 
     if (options.hint) {
       it("should render 'Help text (optional)' textarea", () => {
-        const $textarea = screen.queryByRole<HTMLTextAreaElement>('textbox', {
+        const $textarea = screen.getByRole<HTMLTextAreaElement>('textbox', {
           name: 'Help text (optional)',
           description: 'Enter the description to show for this field'
         })
@@ -351,14 +351,14 @@ describe('ComponentTypeEdit', () => {
 
     if (options.hideTitle) {
       it("should render 'Hide title' checkbox", () => {
-        const $checkbox = screen.queryByRole<HTMLInputElement>('checkbox', {
+        const $checkbox = screen.getByRole<HTMLInputElement>('checkbox', {
           name: 'Hide title',
           description:
             'Tick this box if you do not want the title to show on the page'
         })
 
         expect($checkbox).toBeInTheDocument()
-        expect($checkbox?.checked).toBe(false)
+        expect($checkbox.checked).toBe(false)
       })
     } else {
       it("should not render 'Hide title' checkbox", () => {
@@ -372,7 +372,7 @@ describe('ComponentTypeEdit', () => {
 
     if (options.content) {
       it("should render 'Content' textarea", () => {
-        const $textarea = screen.queryByRole<HTMLTextAreaElement>('textbox', {
+        const $textarea = screen.getByRole<HTMLTextAreaElement>('textbox', {
           name: 'Content'
         })
 
@@ -390,7 +390,7 @@ describe('ComponentTypeEdit', () => {
 
     if (options.name) {
       it("should render 'Component name' input", () => {
-        const $input = screen.queryByRole<HTMLInputElement>('textbox', {
+        const $input = screen.getByRole<HTMLInputElement>('textbox', {
           name: 'Component name',
           description:
             'This is generated automatically and does not show on the page. Only change it if you are using an integration that requires you to, for example GOV.UK Notify. It must not contain spaces.'
@@ -411,14 +411,14 @@ describe('ComponentTypeEdit', () => {
 
     if (options.optional) {
       it("should render 'Make {{component}} optional' checkbox", () => {
-        const $checkbox = screen.queryByRole<HTMLInputElement>('checkbox', {
+        const $checkbox = screen.getByRole<HTMLInputElement>('checkbox', {
           name: `Make ${lowerFirst(selectedComponent.title)} optional`,
           description:
             'Tick this box if users do not need to complete this field to progress through the form'
         })
 
         expect($checkbox).toBeInTheDocument()
-        expect($checkbox?.checked).toBe(false)
+        expect($checkbox.checked).toBe(false)
       })
 
       it('should render "Hide \'(optional)\' text" checkbox when optional', async () => {
@@ -479,7 +479,7 @@ describe('ComponentTypeEdit', () => {
 
     if (options.selectList) {
       it("should render 'Select list' options", () => {
-        const $select = screen.queryByRole<HTMLSelectElement>('combobox', {
+        const $select = screen.getByRole<HTMLSelectElement>('combobox', {
           name: 'Select list',
           description:
             'Select an existing list to show in this field or add a new list'
@@ -502,7 +502,7 @@ describe('ComponentTypeEdit', () => {
 
     if (options.selectCondition) {
       it("should render 'Condition (optional)' options", () => {
-        const $select = screen.queryByRole<HTMLSelectElement>('combobox', {
+        const $select = screen.getByRole<HTMLSelectElement>('combobox', {
           name: 'Condition (optional)',
           description:
             'Select a condition that determines whether to show the contents of this component. You can create and edit conditions from the Conditions screen.'

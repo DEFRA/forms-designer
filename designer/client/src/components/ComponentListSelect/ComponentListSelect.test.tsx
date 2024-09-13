@@ -4,7 +4,7 @@ import {
   type FormDefinition
 } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import { act, cleanup, render, waitFor } from '@testing-library/react'
+import { act, cleanup, render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React from 'react'
 
@@ -80,7 +80,10 @@ describe('ComponentListSelect', () => {
       </RenderListEditorWithContext>
     )
 
-    const $select = await waitFor(() => screen.getByLabelText('Select list'))
+    const $select = screen.getByRole('combobox', {
+      name: 'Select list'
+    })
+
     await act(() => userEvent.selectOptions($select, 'myList'))
 
     expect(screen.getByText('Edit list')).toBeInTheDocument()
@@ -93,14 +96,18 @@ describe('ComponentListSelect', () => {
       </RenderListEditorWithContext>
     )
 
-    const title = 'Select list'
-    const help =
-      'Select an existing list to show in this field or add a new list'
-    const addNew = 'Add a new list'
+    const $select = screen.getByRole('combobox', {
+      name: 'Select list',
+      description:
+        'Select an existing list to show in this field or add a new list'
+    })
 
-    expect(screen.getByText(title)).toBeInTheDocument()
-    expect(screen.getByText(help)).toBeInTheDocument()
-    expect(screen.getByText(addNew)).toBeInTheDocument()
+    const $link = screen.getByRole('link', {
+      name: 'Add a new list'
+    })
+
+    expect($select).toBeInTheDocument()
+    expect($link).toBeInTheDocument()
   })
 
   test('should display list error when state has errors', async () => {
@@ -120,7 +127,7 @@ describe('ComponentListSelect', () => {
       </RenderListEditorWithContext>
     )
 
-    const $select = await waitFor(() => screen.getByLabelText('Select list'))
+    const $select = screen.getByRole('combobox', { name: 'Select list' })
     await act(() => userEvent.selectOptions($select, 'Select a list'))
 
     expect(

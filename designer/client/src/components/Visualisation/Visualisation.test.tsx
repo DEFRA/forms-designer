@@ -104,7 +104,7 @@ describe('Visualisation', () => {
     })
 
     expect(
-      screen.queryByRole('dialog', {
+      screen.getByRole('dialog', {
         name: 'Edit link'
       })
     ).toBeInTheDocument()
