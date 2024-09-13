@@ -288,7 +288,7 @@ export const Component: FunctionComponent<Readonly<Props>> = (props) => {
     await save(definition)
   }
 
-  const showMoveActions = hasComponents(page) && !!page.components.length
+  const showMoveActions = hasComponents(page) && page.components.length > 1
 
   return (
     <>

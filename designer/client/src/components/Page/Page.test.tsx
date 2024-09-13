@@ -50,7 +50,16 @@ const data = {
       title: 'my second page',
       path: '/2',
       next: [],
-      components: []
+      components: [
+        {
+          name: 'phone',
+          title: 'Mobile phone number',
+          type: ComponentType.TelephoneNumberField,
+          options: {
+            required: true
+          }
+        }
+      ]
     }
   ],
   lists: [],
@@ -130,7 +139,40 @@ describe('Page', () => {
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 
-  test('Visualisation page actions contain expected call to actions', () => {
+  test('Page actions are available', () => {
+    render(
+      <RenderWithContext data={data}>
+        <Page page={data.pages[0]} />
+      </RenderWithContext>
+    )
+
+    const $heading = screen.queryByRole('heading', {
+      name: 'my first page'
+    })
+
+    expect($heading).toBeInTheDocument()
+
+    const $buttonEdit = screen.queryByRole('button', {
+      name: 'Edit page',
+      description: $heading?.innerText
+    })
+
+    const $linkPreview = screen.queryByRole('link', {
+      name: 'Preview page',
+      description: $heading?.innerText
+    })
+
+    const $buttonAdd = screen.queryByRole('button', {
+      name: 'Add component',
+      description: $heading?.innerText
+    })
+
+    expect($buttonEdit).toBeInTheDocument()
+    expect($linkPreview).toBeInTheDocument()
+    expect($buttonAdd).toBeInTheDocument()
+  })
+
+  test('Component actions are available', () => {
     render(
       <RenderWithContext data={data}>
         <Page page={data.pages[0]} />
@@ -179,24 +221,46 @@ describe('Page', () => {
       expect($buttonMoveUp).toBeInTheDocument()
       expect($buttonMoveDown).toBeInTheDocument()
     }
+  })
 
-    const $buttonEdit = screen.queryByRole('button', {
-      name: 'Edit page',
-      description: $heading?.innerText
+  test('Component up/down not available for single component', () => {
+    render(
+      <RenderWithContext data={data}>
+        <Page page={data.pages[1]} />
+      </RenderWithContext>
+    )
+
+    const $heading = screen.queryByRole('heading', {
+      name: 'my second page'
     })
 
-    const $linkPreview = screen.queryByRole('link', {
-      name: 'Preview page',
-      description: $heading?.innerText
-    })
+    expect($heading).toBeInTheDocument()
 
-    const $buttonAdd = screen.queryByRole('button', {
-      name: 'Add component',
-      description: $heading?.innerText
-    })
+    for (const { title, label, description } of [
+      {
+        title: 'Mobile phone number',
+        label: 'Telephone number',
+        description: $heading?.innerText
+      }
+    ]) {
+      const $component = screen.queryByRole('button', {
+        name: `Edit ${lowerFirst(label)} component: ${title}`,
+        description
+      })
 
-    expect($buttonEdit).toBeInTheDocument()
-    expect($linkPreview).toBeInTheDocument()
-    expect($buttonAdd).toBeInTheDocument()
+      const $buttonMoveUp = screen.queryByRole('button', {
+        name: `Move ${lowerFirst(label)} component up: ${title}`,
+        description
+      })
+
+      const $buttonMoveDown = screen.queryByRole('button', {
+        name: `Move ${lowerFirst(label)} component down: ${title}`,
+        description
+      })
+
+      expect($component).toBeInTheDocument()
+      expect($buttonMoveUp).not.toBeInTheDocument()
+      expect($buttonMoveDown).not.toBeInTheDocument()
+    }
   })
 })
