@@ -1,3 +1,4 @@
+import { hasListField } from '@defra/forms-model'
 // @ts-expect-error -- No types available
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import Joi from 'joi'
@@ -14,6 +15,7 @@ import { addList } from '~/src/data/list/addList.js'
 import { findList } from '~/src/data/list/findList.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ListItems } from '~/src/list/ListItems.jsx'
+import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 import {
   ListsEditorContext,
   ListsEditorStateActions
@@ -150,12 +152,22 @@ function useListEdit() {
 }
 
 export function ListEdit() {
+  const { state } = useContext(ComponentContext)
   const { state: listState, dispatch: listDispatch } = useContext(ListContext)
 
+  const { selectedComponent } = state
   const { selectedList, errors } = listState
   const hasErrors = hasValidationErrors(errors)
+
+  if (selectedComponent && !hasListField(selectedComponent)) {
+    throw new Error('Component must support lists')
+  }
+
   const { handleAddItem, handleDelete, handleSubmit } = useListEdit()
 
+  if (!selectedList) {
+    return null
+  }
 
   return (
     <>
@@ -164,25 +176,23 @@ export function ListEdit() {
       )}
 
       <form onSubmit={handleSubmit} autoComplete="off" noValidate>
-        {selectedList && (
-          <Input
-            id="list-title"
-            name="title"
-            hint={{ children: i18n('list.titleHint') }}
-            label={{
-              className: 'govuk-label--s',
-              children: [i18n('list.title')]
-            }}
-            value={selectedList.title}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              listDispatch({
-                name: ListActions.EDIT_TITLE,
-                payload: e.target.value
-              })
-            }
-            errorMessage={errors.title}
-          />
-        )}
+        <Input
+          id="list-title"
+          name="title"
+          hint={{ children: i18n('list.titleHint') }}
+          label={{
+            className: 'govuk-label--s',
+            children: [i18n('list.title')]
+          }}
+          value={selectedList.title}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            listDispatch({
+              name: ListActions.EDIT_TITLE,
+              payload: e.target.value
+            })
+          }
+          errorMessage={errors.title}
+        />
 
         <ListItems />
 
@@ -202,7 +212,7 @@ export function ListEdit() {
             {i18n('save')}
           </button>
 
-          {!selectedList?.isNew && (
+          {!selectedList.isNew && (
             <button
               className="govuk-button govuk-button--warning"
               type="button"
