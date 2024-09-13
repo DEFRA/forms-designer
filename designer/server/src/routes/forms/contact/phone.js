@@ -6,7 +6,7 @@ import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
 import * as forms from '~/src/lib/forms.js'
-import { phoneViewModel } from '~/src/models/forms/contact.js'
+import { phoneViewModel } from '~/src/models/forms/contact/phone.js'
 
 export const ROUTE_PATH_EDIT_PHONE_CONTACT =
   '/library/{slug}/edit/contact/phone'

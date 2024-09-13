@@ -1,0 +1,36 @@
+import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
+
+/**
+ * @param {FormMetadata} metadata
+ * @param {ValidationFailure<FormMetadataInput>} [validation]
+ */
+export function phoneViewModel(metadata, validation) {
+  const pageTitle = 'Phone number and opening times'
+  const { formValues, formErrors } = validation ?? {}
+
+  return {
+    form: metadata,
+    backLink: {
+      text: 'Back',
+      href: `/library/${metadata.slug}`
+    },
+    pageTitle,
+    errorList: buildErrorList(formErrors),
+    formErrors: validation?.formErrors,
+    formValues: validation?.formValues,
+    field: {
+      id: 'phone',
+      name: 'phone',
+      label: {
+        text: 'What’s the phone number and opening times for users to get help?'
+      },
+      value: formValues?.contact?.phone ?? metadata.contact?.phone
+    },
+    buttonText: 'Save and continue'
+  }
+}
+
+/**
+ * @import { FormMetadata, FormMetadataInput } from '@defra/forms-model'
+ * @import { ValidationFailure } from '~/src/common/helpers/types.js'
+ */

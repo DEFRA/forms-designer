@@ -6,7 +6,7 @@ import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
 import * as forms from '~/src/lib/forms.js'
-import { onlineViewModel } from '~/src/models/forms/contact.js'
+import { onlineViewModel } from '~/src/models/forms/contact/online.js'
 
 export const ROUTE_PATH_EDIT_ONLINE_CONTACT =
   '/library/{slug}/edit/contact/online'
