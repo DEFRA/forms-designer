@@ -19,6 +19,8 @@ describe('Forms contact email', () => {
   const now = new Date()
   const authorId = 'f50ceeed-b7a4-47cf-a498-094efc99f8bc'
   const authorDisplayName = 'Enrique Chase'
+  const emailAddress = 'support@defra.gov.uk'
+  const responseTimeText = 'We aim to respond within 2 working days'
 
   /**
    * @satisfies {FormMetadataAuthor}
@@ -40,8 +42,8 @@ describe('Forms contact email', () => {
     teamEmail: 'defraforms@defra.gov.uk',
     contact: {
       email: {
-        address: 'support@defra.gov.uk',
-        responseTime: 'We aim to respond within 2 working days'
+        address: emailAddress,
+        responseTime: responseTimeText
       }
     },
     createdAt: now,
@@ -76,10 +78,10 @@ describe('Forms contact email', () => {
     const { document } = await renderResponse(server, options)
 
     const address = document.querySelector('#address')
-    expect(address).toHaveValue('support@defra.gov.uk')
+    expect(address).toHaveValue(emailAddress)
 
     const responseTime = document.querySelector('#responseTime')
-    expect(responseTime).toHaveValue('We aim to respond within 2 working days')
+    expect(responseTime).toHaveValue(responseTimeText)
   })
 
   test('POST - should redirect to overviewpage after updating email details', async () => {
@@ -95,8 +97,8 @@ describe('Forms contact email', () => {
       url: '/library/my-form-slug/edit/contact/email',
       auth,
       payload: {
-        address: 'support@defra.gov.uk',
-        responseTime: 'We aim to respond within 2 working days'
+        address: emailAddress,
+        responseTime: responseTimeText
       }
     }
 
