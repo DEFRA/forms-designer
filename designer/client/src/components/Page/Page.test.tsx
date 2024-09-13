@@ -130,7 +130,40 @@ describe('Page', () => {
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 
-  test('Visualisation page actions contain expected call to actions', () => {
+  test('Page actions are available', () => {
+    render(
+      <RenderWithContext data={data}>
+        <Page page={data.pages[0]} />
+      </RenderWithContext>
+    )
+
+    const $heading = screen.queryByRole('heading', {
+      name: 'my first page'
+    })
+
+    expect($heading).toBeInTheDocument()
+
+    const $buttonEdit = screen.queryByRole('button', {
+      name: 'Edit page',
+      description: $heading?.innerText
+    })
+
+    const $linkPreview = screen.queryByRole('link', {
+      name: 'Preview page',
+      description: $heading?.innerText
+    })
+
+    const $buttonAdd = screen.queryByRole('button', {
+      name: 'Add component',
+      description: $heading?.innerText
+    })
+
+    expect($buttonEdit).toBeInTheDocument()
+    expect($linkPreview).toBeInTheDocument()
+    expect($buttonAdd).toBeInTheDocument()
+  })
+
+  test('Component actions are available', () => {
     render(
       <RenderWithContext data={data}>
         <Page page={data.pages[0]} />
@@ -179,24 +212,5 @@ describe('Page', () => {
       expect($buttonMoveUp).toBeInTheDocument()
       expect($buttonMoveDown).toBeInTheDocument()
     }
-
-    const $buttonEdit = screen.queryByRole('button', {
-      name: 'Edit page',
-      description: $heading?.innerText
-    })
-
-    const $linkPreview = screen.queryByRole('link', {
-      name: 'Preview page',
-      description: $heading?.innerText
-    })
-
-    const $buttonAdd = screen.queryByRole('button', {
-      name: 'Add component',
-      description: $heading?.innerText
-    })
-
-    expect($buttonEdit).toBeInTheDocument()
-    expect($linkPreview).toBeInTheDocument()
-    expect($buttonAdd).toBeInTheDocument()
   })
 })
