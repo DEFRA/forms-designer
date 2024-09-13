@@ -31,6 +31,36 @@
   <p class="govuk-body">You must provide at least one way for users to get help.</p>
   <p class="govuk-body">The contact details are shown in the footer of every page of the form.</p>
 
+  {%- set phoneHtml %}
+    {% if form.contact.phone %}
+      {{ form.contact.phone | markdownToHtml | safe }}
+      <a href="https://www.gov.uk/call-charges" class="govuk-link govuk-link--no-visited-state" target="_blank">Find out about call charges</a>
+    {% else %}
+      <a class="govuk-link govuk-link--no-visited-state" href="/library/{{ form.slug }}/edit/contact/phone">Enter phone number for support</a>
+    {% endif %}
+  {% endset %}
+
+  {%- set emailHtml %}
+    {% if form.contact.email %}
+      <p class="govuk-body">
+        <a class="govuk-link govuk-link--no-visited-state" href="mailto:{{ form.contact.email.address }}">{{ form.contact.email.address }}</a>
+      </p>
+      <p class="govuk-body">{{ form.contact.email.responseTime | escape }}</p>
+    {% else %}
+      <a class="govuk-link govuk-link--no-visited-state" href="/library/{{ form.slug }}/edit/contact/email">Enter email address for support</a>
+    {% endif %}
+  {% endset %}
+
+  {%- set onlineHtml %}
+    {% if form.contact.online %}
+      <p class="govuk-body">{{ form.contact.online.text | escape }}</p>
+      <p class="govuk-body">
+        <a class="govuk-link govuk-link--no-visited-state" href="{{ form.contact.online.url }}" target="_blank">{{ form.contact.online.url }}</a></p>
+    {% else %}
+      <a class="govuk-link govuk-link--no-visited-state" href="/library/{{ form.slug }}/edit/contact/online">Enter online contact link for support</a>
+    {% endif %}
+  {% endset %}
+
   {{ govukSummaryList({
     classes: "govuk-!-margin-bottom-8",
     rows: [
@@ -39,8 +69,7 @@
           text: "Phone"
         },
         value: {
-          html: form.contact.phone | markdownToHtml + '<a href="https://www.gov.uk/call-charges" class="govuk-link govuk-link--no-visited-state" target="_blank">Find out about call charges</a>'
-          if form.contact.phone else '<a class="govuk-link govuk-link--no-visited-state" href="/library/' + form.slug + '/edit/contact/phone">Enter phone number for support</a>'
+          html: phoneHtml
         },
         actions: {
           items: [
@@ -57,8 +86,7 @@
           text: "Email address"
         },
         value: {
-          html: '<p class="govuk-body"><a class="govuk-link govuk-link--no-visited-state" href="mailto:' + form.contact.email.address + '">' + form.contact.email.address + '</a></p><p class="govuk-body">' + form.contact.email.responseTime | escape + '</p>'
-          if form.contact.email else '<a class="govuk-link govuk-link--no-visited-state" href="/library/' + form.slug + '/edit/contact/email">Enter email address for support</a>'
+          html: emailHtml
         },
         actions: {
           items: [
@@ -75,8 +103,7 @@
           text: "Online contact link"
         },
         value: {
-          html: '<p class="govuk-body">' + form.contact.online.text | escape + '</p><p class="govuk-body"><a class="govuk-link govuk-link--no-visited-state" href="' + form.contact.online.url + '">' + form.contact.online.url + '</a></p>'
-          if form.contact.online else '<a class="govuk-link govuk-link--no-visited-state" href="/library/' + form.slug + '/edit/contact/online">Enter online contact link for support</a>'
+          html: onlineHtml
         },
         actions: {
           items: [
