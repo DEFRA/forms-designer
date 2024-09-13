@@ -3,6 +3,7 @@ import classNames from 'classnames'
 import React, {
   useContext,
   useEffect,
+  useState,
   type ChangeEvent,
   type MouseEvent
 } from 'react'
@@ -22,51 +23,62 @@ import { ListContext } from '~/src/reducers/listReducer.jsx'
 export function ComponentListSelect() {
   const { data } = useContext(DataContext)
   const { state, dispatch } = useContext(ComponentContext)
-  const { state: listState, dispatch: listDispatch } = useContext(ListContext)
+  const { dispatch: listDispatch } = useContext(ListContext)
   const { dispatch: listsEditorDispatch } = useContext(ListsEditorContext)
 
+  const { lists } = data
   const { selectedComponent, errors } = state
-  const { selectedList } = listState
 
   if (!hasListField(selectedComponent)) {
     throw new Error('Component must support lists')
   }
 
+  const [listName, setListName] = useState(selectedComponent.list)
+
+  /**
+   * Set initial list name
+   */
   useEffect(() => {
-    if (
-      !selectedList?.name ||
-      selectedList.name === selectedComponent.list ||
-      selectedList.isNew
-    ) {
+    if (listName || !selectedComponent.list) {
       return
     }
 
-    dispatch({
-      name: Fields.EDIT_LIST,
-      payload: selectedList.name,
-      as: selectedComponent
-    })
-  }, [
-    selectedComponent,
-    selectedComponent.list,
-    selectedList?.name,
-    selectedList?.isNew,
-    dispatch
-  ])
+    setListName(selectedComponent.list)
+  }, [selectedComponent.list, listName])
 
-  const handleChangeList = (e: ChangeEvent<HTMLSelectElement>) => {
-    const { value: listName } = e.target
+  /**
+   * Update state when list changes
+   * (e.g. Selecting list from select menu)
+   */
+  useEffect(() => {
+    if (!listName || listName === selectedComponent.list) {
+      return
+    }
 
+    // Set list for editing
     listDispatch({
       name: ListActions.SET_SELECTED_LIST,
-      payload: listName ? findList(data, listName) : undefined
+      payload: findList({ lists }, listName)
     })
 
+    // Set component list
     dispatch({
       name: Fields.EDIT_LIST,
       payload: listName,
       as: selectedComponent
     })
+  }, [
+    listName,
+    lists,
+    selectedComponent,
+    selectedComponent.list,
+    dispatch,
+    listDispatch
+  ])
+
+  const handleChangeList = (e: ChangeEvent<HTMLSelectElement>) => {
+    const { value: listName } = e.target
+    setListName(listName)
   }
 
   const handleEditList = (e: MouseEvent) => {
@@ -122,7 +134,7 @@ export function ComponentListSelect() {
         id="field-options-list"
         aria-describedby="field-options-list-hint"
         name="options.list"
-        value={selectedList?.name ?? ''}
+        value={listName}
         onChange={handleChangeList}
       >
         <option value="">{i18n('list.select.option')}</option>
@@ -133,7 +145,7 @@ export function ComponentListSelect() {
         ))}
       </select>
       <p className="govuk-body govuk-!-margin-top-2">
-        {selectedList?.title && (
+        {listName && (
           <a
             className="govuk-link govuk-!-display-block govuk-!-margin-bottom-1"
             onClick={handleEditList}
