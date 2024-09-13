@@ -50,7 +50,16 @@ const data = {
       title: 'my second page',
       path: '/2',
       next: [],
-      components: []
+      components: [
+        {
+          name: 'phone',
+          title: 'Mobile phone number',
+          type: ComponentType.TelephoneNumberField,
+          options: {
+            required: true
+          }
+        }
+      ]
     }
   ],
   lists: [],
@@ -211,6 +220,47 @@ describe('Page', () => {
       expect($component).toBeInTheDocument()
       expect($buttonMoveUp).toBeInTheDocument()
       expect($buttonMoveDown).toBeInTheDocument()
+    }
+  })
+
+  test('Component up/down not available for single component', () => {
+    render(
+      <RenderWithContext data={data}>
+        <Page page={data.pages[1]} />
+      </RenderWithContext>
+    )
+
+    const $heading = screen.queryByRole('heading', {
+      name: 'my second page'
+    })
+
+    expect($heading).toBeInTheDocument()
+
+    for (const { title, label, description } of [
+      {
+        title: 'Mobile phone number',
+        label: 'Telephone number',
+        description: $heading?.innerText
+      }
+    ]) {
+      const $component = screen.queryByRole('button', {
+        name: `Edit ${lowerFirst(label)} component: ${title}`,
+        description
+      })
+
+      const $buttonMoveUp = screen.queryByRole('button', {
+        name: `Move ${lowerFirst(label)} component up: ${title}`,
+        description
+      })
+
+      const $buttonMoveDown = screen.queryByRole('button', {
+        name: `Move ${lowerFirst(label)} component down: ${title}`,
+        description
+      })
+
+      expect($component).toBeInTheDocument()
+      expect($buttonMoveUp).not.toBeInTheDocument()
+      expect($buttonMoveDown).not.toBeInTheDocument()
     }
   })
 })
