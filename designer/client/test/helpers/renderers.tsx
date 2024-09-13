@@ -31,7 +31,8 @@ export interface RenderWithContextProps extends Partial<DataContextType> {
 export function RenderWithContext(props: Readonly<RenderWithContextProps>) {
   const [state, dispatch] = useReducer(
     componentReducer,
-    initComponentState(props.state)
+    props.state,
+    initComponentState
   )
 
   const context = useMemo(() => {

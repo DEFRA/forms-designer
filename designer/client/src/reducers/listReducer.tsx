@@ -1,4 +1,4 @@
-import { type Item, type List } from '@defra/forms-model'
+import { type FormDefinition, type Item, type List } from '@defra/forms-model'
 import React, {
   createContext,
   useContext,
@@ -73,10 +73,7 @@ export interface ListContextType {
 }
 
 export const ListContext = createContext<ListContextType>({
-  state: {
-    errors: {},
-    listItemErrors: {}
-  },
+  state: {} as ListState,
   dispatch: () => ({})
 })
 
@@ -199,27 +196,21 @@ export function listReducer(state: ListState, action: ListReducerActions) {
   return stateNew
 }
 
-/**
- * Allows components to retrieve {@link ListState} and {@link Dispatch} from any component nested within `<ListContextProvider>`
- */
-export const ListContextProvider = (
-  props: Readonly<{
-    children?: ReactNode
-    initialName?: string
-    initialItemText?: string
-  }>
-) => {
-  const { children, initialName, initialItemText } = props
-  const { data } = useContext(DataContext)
+export function initListState(
+  this: FormDefinition,
+  props?: Readonly<Partial<ListState>>
+): ListState {
+  const { initialName, initialItemText } = props ?? {}
 
-  let init: ListState = {
+  let init = {
     errors: {},
-    listItemErrors: {}
+    listItemErrors: {},
+    ...props
   }
 
   // Populate state with selected list
   if (initialName) {
-    const selectedList = findList(data, initialName)
+    const selectedList = findList(this, initialName)
 
     init = {
       ...init,
@@ -241,7 +232,26 @@ export const ListContextProvider = (
     }
   }
 
-  const [state, dispatch] = useReducer(listReducer, init)
+  return init
+}
+
+/**
+ * Allows components to retrieve {@link ListState} and {@link Dispatch} from any component nested within `<ListContextProvider>`
+ */
+export const ListContextProvider = (
+  props: Parameters<typeof initListState>[0] & {
+    children: ReactNode
+  }
+) => {
+  const { data } = useContext(DataContext)
+  const { children, ...initialListState } = props
+
+  const [state, dispatch] = useReducer(
+    listReducer,
+    initialListState,
+    initListState.bind(data)
+  )
+
   const context = useMemo(() => ({ state, dispatch }), [state])
 
   return <ListContext.Provider value={context}>{children}</ListContext.Provider>

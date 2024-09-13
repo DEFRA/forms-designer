@@ -18,10 +18,13 @@ export interface ListsEditorState {
   isEditingListItem: boolean
 }
 
-export function initListsEditingState(): ListsEditorState {
+export function initListsEditorState(
+  props?: Readonly<Partial<ListsEditorState>>
+): ListsEditorState {
   return {
     isEditingList: false,
-    isEditingListItem: false
+    isEditingListItem: false,
+    ...props
   }
 }
 
@@ -36,7 +39,7 @@ export interface ListsEditorContextType {
 }
 
 export const ListsEditorContext = createContext<ListsEditorContextType>({
-  state: initListsEditingState(),
+  state: {} as ListsEditorState,
   dispatch: () => ({})
 })
 
@@ -66,14 +69,17 @@ export function listsEditorReducer(
   return stateNew
 }
 
-interface Props {
-  children: ReactNode
-}
+export const ListsEditorContextProvider = (
+  props: Parameters<typeof initListsEditorState>[0] & {
+    children: ReactNode
+  }
+) => {
+  const { children, ...initialListsEditorState } = props
 
-export const ListsEditorContextProvider = (props: Readonly<Props>) => {
   const [state, dispatch] = useReducer(
     listsEditorReducer,
-    initListsEditingState()
+    initialListsEditorState,
+    initListsEditorState
   )
 
   const context = useMemo(() => ({ state, dispatch }), [state])
