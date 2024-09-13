@@ -75,17 +75,11 @@ describe('Forms contact email', () => {
 
     const { document } = await renderResponse(server, options)
 
-    const address = /** @satisfies {HTMLInputElement | null} */ (
-      document.querySelector('#address')
-    )
+    const address = document.querySelector('#address')
+    expect(address).toHaveValue('support@defra.gov.uk')
 
-    expect(address?.value).toBe('support@defra.gov.uk')
-
-    const responseTime = /** @satisfies {HTMLInputElement | null} */ (
-      document.querySelector('#responseTime')
-    )
-
-    expect(responseTime?.value).toBe('We aim to respond within 2 working days')
+    const responseTime = document.querySelector('#responseTime')
+    expect(responseTime).toHaveValue('We aim to respond within 2 working days')
   })
 
   test('POST - should redirect to overviewpage after updating email details', async () => {

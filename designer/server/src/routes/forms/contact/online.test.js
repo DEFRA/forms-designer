@@ -75,17 +75,11 @@ describe('Forms contact online', () => {
 
     const { document } = await renderResponse(server, options)
 
-    const url = /** @satisfies {HTMLInputElement | null} */ (
-      document.querySelector('#url')
-    )
+    const url = document.querySelector('#url')
+    expect(url).toHaveValue('https://www.gov.uk/guidance/contact-defra')
 
-    expect(url?.value).toBe('https://www.gov.uk/guidance/contact-defra')
-
-    const text = /** @satisfies {HTMLInputElement | null} */ (
-      document.querySelector('#text')
-    )
-
-    expect(text?.value).toBe('Online contact form')
+    const text = document.querySelector('#text')
+    expect(text).toHaveValue('Online contact form')
   })
 
   test('POST - should redirect to overviewpage after updating online details', async () => {

@@ -70,11 +70,8 @@ describe('Forms privacy notice', () => {
 
     const { document } = await renderResponse(server, options)
 
-    const privacyNoticeUrl = /** @satisfies {HTMLInputElement | null} */ (
-      document.querySelector('#privacyNoticeUrl')
-    )
-
-    expect(privacyNoticeUrl?.value).toBe(
+    const privacyNoticeUrl = document.querySelector('#privacyNoticeUrl')
+    expect(privacyNoticeUrl).toHaveValue(
       'https://www.gov.uk/help/privacy-notice'
     )
   })

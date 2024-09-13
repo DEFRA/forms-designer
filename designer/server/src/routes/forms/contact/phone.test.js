@@ -72,11 +72,8 @@ describe('Forms contact phone', () => {
 
     const { document } = await renderResponse(server, options)
 
-    const phone = /** @satisfies {HTMLInputElement | null} */ (
-      document.querySelector('#phone')
-    )
-
-    expect(phone?.value).toBe('123')
+    const phone = document.querySelector('#phone')
+    expect(phone).toHaveValue('123')
   })
 
   test('POST - should redirect to overviewpage after updating phone details', async () => {
