@@ -10,7 +10,6 @@ marked.use({
         }
 
         const html = this.parser.renderer.list(token as Tokens.List)
-
         const classAttr = ' class="govuk-list govuk-list--bullet"'
 
         return html.slice(0, 3) + classAttr + html.slice(3)
