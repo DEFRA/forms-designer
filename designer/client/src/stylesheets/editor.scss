@@ -84,12 +84,6 @@ pre code {
   padding: govuk-spacing(4);
   overflow-x: auto;
   background-color: $app-light-grey;
-  border: $govuk-focus-width solid transparent;
-
-  &:focus {
-    border: $govuk-focus-width solid $govuk-input-border-colour;
-    outline: $govuk-focus-width solid $govuk-focus-colour;
-  }
 }
 
 p code {
@@ -350,14 +344,4 @@ p code {
 
 .govuk-main-wrapper--editor {
   padding-bottom: 0;
-}
-
-.govuk-input__input {
-  &.disabled {
-    cursor: default;
-    pointer-events: none;
-    & + .govuk-checkboxes__label {
-      opacity: 0.5;
-    }
-  }
 }
