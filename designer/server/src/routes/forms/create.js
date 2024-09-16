@@ -55,7 +55,7 @@ export default [
 
       // Clear previous form data
       yar.clear(sessionNames.create)
-      yar.clear(sessionNames.validationFailure)
+      yar.clear(sessionNames.validationFailure.createForm)
 
       // Redirect to first step
       return h.redirect(ROUTE_PATH_CREATE_TITLE).temporary()
@@ -82,7 +82,9 @@ export default [
 
       // Form metadata, validation errors
       const metadata = yar.get(sessionNames.create)
-      const validation = yar.flash(sessionNames.validationFailure).at(0)
+      const validation = yar
+        .flash(sessionNames.validationFailure.createForm)
+        .at(0)
 
       return h.view(
         'forms/question-input',
@@ -158,7 +160,9 @@ export default [
 
       // Form metadata, validation errors
       const metadata = yar.get(sessionNames.create)
-      const validation = yar.flash(sessionNames.validationFailure).at(0)
+      const validation = yar
+        .flash(sessionNames.validationFailure.createForm)
+        .at(0)
 
       return h.view(
         'forms/question-radios',
@@ -222,7 +226,9 @@ export default [
 
       // Form metadata, validation errors
       const metadata = yar.get(sessionNames.create)
-      const validation = yar.flash(sessionNames.validationFailure).at(0)
+      const validation = yar
+        .flash(sessionNames.validationFailure.createForm)
+        .at(0)
 
       return h.view(
         'forms/question-inputs',

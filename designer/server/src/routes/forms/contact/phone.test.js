@@ -7,7 +7,7 @@ import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/forms.js')
 
-describe('Forms privacy notice', () => {
+describe('Forms contact phone', () => {
   /** @type {Server} */
   let server
 
@@ -38,7 +38,9 @@ describe('Forms privacy notice', () => {
     organisation: 'Defra',
     teamName: 'Defra Forms',
     teamEmail: 'defraforms@defra.gov.uk',
-    privacyNoticeUrl: 'https://www.gov.uk/help/privacy-notice',
+    contact: {
+      phone: '123'
+    },
     createdAt: now,
     createdBy: author,
     updatedAt: now,
@@ -56,7 +58,7 @@ describe('Forms privacy notice', () => {
     lists: []
   }
 
-  test('GET - should check correct privacy notice url is rendered in the view', async () => {
+  test('GET - should check correct phone details are rendered in the view', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
     jest
       .mocked(forms.getDraftFormDefinition)
@@ -64,19 +66,17 @@ describe('Forms privacy notice', () => {
 
     const options = {
       method: 'get',
-      url: '/library/my-form-slug/edit/privacy-notice',
+      url: '/library/my-form-slug/edit/contact/phone',
       auth
     }
 
     const { document } = await renderResponse(server, options)
 
-    const privacyNoticeUrl = document.querySelector('#privacyNoticeUrl')
-    expect(privacyNoticeUrl).toHaveValue(
-      'https://www.gov.uk/help/privacy-notice'
-    )
+    const phone = document.querySelector('#phone')
+    expect(phone).toHaveValue('123')
   })
 
-  test('POST - should redirect to overviewpage after updating privacy notice url', async () => {
+  test('POST - should redirect to overviewpage after updating phone details', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
     jest.mocked(forms.updateMetadata).mockResolvedValueOnce({
       id: formMetadata.id,
@@ -86,9 +86,9 @@ describe('Forms privacy notice', () => {
 
     const options = {
       method: 'post',
-      url: '/library/my-form-slug/edit/privacy-notice',
+      url: '/library/my-form-slug/edit/contact/phone',
       auth,
-      payload: { privacyNoticeUrl: 'https://www.gov.uk/help/privacy-notice1' }
+      payload: { phone: '1234' }
     }
 
     const {

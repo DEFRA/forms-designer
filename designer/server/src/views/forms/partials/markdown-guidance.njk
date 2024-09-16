@@ -1,0 +1,32 @@
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+{% set html %}
+  <h3 class="heading-small">Lists</h3>
+  <p class="govuk-body">Use lists to make blocks of text easier to read, and to break information into manageable chunks.</p>
+  <p class="govuk-body">Copy this example to add a list:</p>
+  <pre class="formatting-example"><code class="lang-md">- use a dash followed by a space to add an item
+- start each item with a lowercase letter, do not end with a full stop
+- leave one empty line space after the last item</code></pre>
+
+  <h3 class="heading-small" id="bullets">Bullet points</h3>
+  <p class="govuk-body">Use bullet points to help words or phrases stand out in your emails and letters.</p>
+  <p class="govuk-body">Copy this example to add bullet points:</p>
+  <pre class="formatting-example"><code class="lang-md">Introduce bullet points with a lead-in line ending in a colon:
+
+* leave one empty line space after the lead-in line
+* use an asterisk or a dash followed by a space to add an item
+* start each item with a lowercase letter, do not end with a full stop
+* leave one empty line space after the last item</code></pre>
+
+  <h3 class="heading-small" id="bullets">Numbered steps</h3>
+  <p class="govuk-body">Copy this example to add numbered steps:</p>
+  <pre class="formatting-example"><code class="lang-md">1. Leave one empty line space before starting your list.
+2. Enter a number followed by a full stop and a space to add an item.
+3. Start each item with a capital letter and end it with a full stop.
+4. Leave one empty line space after the last item.</code></pre>
+{% endset %}
+
+{{ govukDetails({
+  summaryText: "Help with markdown",
+  html: html
+}) }}

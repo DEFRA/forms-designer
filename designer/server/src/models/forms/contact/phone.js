@@ -2,10 +2,10 @@ import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 
 /**
  * @param {FormMetadata} metadata
- * @param {ValidationFailure<Pick<FormMetadataInput, 'privacyNoticeUrl'>>} [validation]
+ * @param {ValidationFailure<Pick<FormMetadataContact, 'phone'>>} [validation]
  */
-export function privacyNoticyViewModel(metadata, validation) {
-  const pageTitle = 'Privacy notice for this form'
+export function phoneViewModel(metadata, validation) {
+  const pageTitle = 'Phone number and opening times'
   const { formValues, formErrors } = validation ?? {}
 
   return {
@@ -19,21 +19,18 @@ export function privacyNoticyViewModel(metadata, validation) {
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
     field: {
-      id: 'privacyNoticeUrl',
-      name: 'privacyNoticeUrl',
+      id: 'phone',
+      name: 'phone',
       label: {
-        text: 'Link to privacy notice for this form'
+        text: 'What’s the phone number and opening times for users to get help?'
       },
-      value: formValues?.privacyNoticeUrl ?? metadata.privacyNoticeUrl,
-      hint: {
-        text: 'For example, https://www.gov.uk/help/privacy-notice'
-      }
+      value: formValues?.phone ?? metadata.contact?.phone
     },
     buttonText: 'Save and continue'
   }
 }
 
 /**
- * @import { FormMetadata, FormMetadataInput } from '@defra/forms-model'
+ * @import { FormMetadata, FormMetadataContact } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

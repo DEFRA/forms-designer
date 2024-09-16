@@ -69,15 +69,11 @@ describe('Forms library routes', () => {
 
     const { document } = await renderResponse(server, options)
 
-    const teamName = /** @satisfies {HTMLInputElement | null} */ (
-      document.querySelector('#teamName')
-    )
-    const teamEmail = /** @satisfies {HTMLInputElement | null} */ (
-      document.querySelector('#teamEmail')
-    )
+    const teamName = document.querySelector('#teamName')
+    const teamEmail = document.querySelector('#teamEmail')
 
-    expect(teamName?.value).toBe('Defra Forms')
-    expect(teamEmail?.value).toBe('defraforms@defra.gov.uk')
+    expect(teamName).toHaveValue('Defra Forms')
+    expect(teamEmail).toHaveValue('defraforms@defra.gov.uk')
   })
 
   test('POST - should redirect to overviewpage after updating team details', async () => {
@@ -115,11 +111,8 @@ describe('Forms library routes', () => {
 
     const { document } = await renderResponse(server, options)
 
-    const title = /** @satisfies {HTMLInputElement | null} */ (
-      document.querySelector('#title')
-    )
-
-    expect(title?.value).toBe('Test form')
+    const title = document.querySelector('#title')
+    expect(title).toHaveValue('Test form')
   })
 
   test('POST - should redirect to overviewpage after updating title', async () => {

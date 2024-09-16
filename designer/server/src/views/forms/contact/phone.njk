@@ -2,7 +2,7 @@
 
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
-{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
 
 {% block beforeContent %}
   {{ govukBackLink(backLink) }}
@@ -20,15 +20,19 @@
     {% call appPageBody({
       errorList: errorList
     }) %}
-      <p class="govuk-body-l">
-        To comply with the UK General Data Protection Regulation (UK GDPR),
-        you must provide privacy information for the people who will enter their data into your form.
-      </p>
+      <p class="govuk-body">You can provide an optional phone number for support. You must include the opening times.</p>
+      <h2 class="govuk-heading-s">Example</h2>
+      <div class="govuk-inset-text">
+        <ul class="govuk-list">
+          <li>Telephone: 020 7946 0101</li>
+          <li>Monday to Friday, 8am to 6pm</li>
+        </ul>
+      </div>
 
-      {{ govukInput({
+      {{ govukTextarea({
         label: {
           text: field.label.text,
-          classes: "govuk-label--s",
+          classes: "govuk-label--m",
           isPageHeading: false
         },
         id: field.id,
@@ -39,6 +43,8 @@
           text: formErrors[field.name].text
         } if formErrors[field.name]
       }) }}
+
+      {% include "forms/partials/markdown-guidance.njk" %}
 
       <div class="govuk-button-group">
         {{ govukButton({

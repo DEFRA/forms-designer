@@ -1,6 +1,6 @@
-import { privacyNoticyViewModel } from '~/src/models/forms/privacy-notice.js'
+import { phoneViewModel } from '~/src/models/forms/contact/phone.js'
 
-describe('edit - model - privacy notice', () => {
+describe('edit - model - contact - phone', () => {
   const now = new Date()
   const authorId = 'f50ceeed-b7a4-47cf-a498-094efc99f8bc'
   const authorDisplayName = 'Enrique Chase'
@@ -23,19 +23,21 @@ describe('edit - model - privacy notice', () => {
     organisation: 'Defra',
     teamName: 'Defra Forms',
     teamEmail: 'defraforms@defra.gov.uk',
-    privacyNoticeUrl: 'https://www.gov.uk/help/privacy-notice',
+    contact: {
+      phone: 'A\r\nB\r\nC'
+    },
     createdAt: now,
     createdBy: author,
     updatedAt: now,
     updatedBy: author
   }
 
-  it('should test privacy policy view model', () => {
-    const result = privacyNoticyViewModel(formMetadata)
-    expect(result.pageTitle).toBe('Privacy notice for this form')
-    expect(result.field.id).toBe('privacyNoticeUrl')
-    expect(result.field.name).toBe('privacyNoticeUrl')
-    expect(result.field.value).toBe('https://www.gov.uk/help/privacy-notice')
+  it('should test phone view model', () => {
+    const result = phoneViewModel(formMetadata)
+    expect(result.pageTitle).toBe('Phone number and opening times')
+    expect(result.field.id).toBe('phone')
+    expect(result.field.name).toBe('phone')
+    expect(result.field.value).toBe('A\r\nB\r\nC')
   })
 })
 

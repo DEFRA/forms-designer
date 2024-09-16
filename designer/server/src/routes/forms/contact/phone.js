@@ -1,4 +1,4 @@
-import { privacyNoticeUrlSchema } from '@defra/forms-model'
+import { phoneSchema } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
@@ -6,18 +6,14 @@ import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
 import * as forms from '~/src/lib/forms.js'
-import { privacyNoticyViewModel } from '~/src/models/forms/privacy-notice.js'
+import { phoneViewModel } from '~/src/models/forms/contact/phone.js'
 
-export const ROUTE_PATH_EDIT_PRIVACY_NOTICE =
-  '/library/{slug}/edit/privacy-notice'
+export const ROUTE_PATH_EDIT_PHONE_CONTACT =
+  '/library/{slug}/edit/contact/phone'
 
-export const schema = Joi.object().keys({
-  privacyNoticeUrl: privacyNoticeUrlSchema.required().messages({
-    'string.empty': 'Enter a link to a privacy notice for this form',
-    'string.uri':
-      'Enter a link to a privacy notice for this form in the correct format',
-    'string.uriCustomScheme':
-      'Enter a link to a privacy notice for this form in the correct format'
+export const phoneContactSchema = Joi.object().keys({
+  phone: phoneSchema.required().messages({
+    'string.empty': 'Enter phone number and opening times for users to get help'
   })
 })
 
@@ -27,23 +23,23 @@ export default [
    */
   ({
     method: 'GET',
-    path: ROUTE_PATH_EDIT_PRIVACY_NOTICE,
+    path: ROUTE_PATH_EDIT_PHONE_CONTACT,
     async handler(request, h) {
       const { auth, params, yar } = request
       const { slug } = params
       const { token } = auth.credentials
 
       const validation = yar
-        .flash(sessionNames.validationFailure.privacyNotice)
+        .flash(sessionNames.validationFailure.contactPhone)
         .at(0)
 
       // Retrieve form by slug
       const metadata = await forms.get(slug, token)
 
-      // Create the privacy notice view model
-      const model = privacyNoticyViewModel(metadata, validation)
+      // Create the phone contact view model
+      const model = phoneViewModel(metadata, validation)
 
-      return h.view('forms/privacy-notice', model)
+      return h.view('forms/contact/phone', model)
     },
     options: {
       auth: {
@@ -57,33 +53,33 @@ export default [
   }),
 
   /**
-   * @satisfies {ServerRoute<{ Params: { slug: string }, Payload: Pick<FormMetadataInput, 'privacyNoticeUrl'> }>}
+   * @satisfies {ServerRoute<{ Params: { slug: string }, Payload: Pick<FormMetadataContact, 'phone'> }>}
    */
   ({
     method: 'POST',
-    path: ROUTE_PATH_EDIT_PRIVACY_NOTICE,
+    path: ROUTE_PATH_EDIT_PHONE_CONTACT,
     async handler(request, h) {
       const { auth, params, payload, yar } = request
       const { slug } = params
-      const { privacyNoticeUrl } = payload
+      const { phone } = payload
       const { token } = auth.credentials
 
       // Retrieve form by slug
-      const { id } = await forms.get(slug, token)
+      const { id, contact = {} } = await forms.get(slug, token)
 
-      // Update the metadata with the privacy notice url
-      await forms.updateMetadata(id, { privacyNoticeUrl }, token)
+      // Update the metadata with the phone contact details
+      await forms.updateMetadata(id, { contact: { ...contact, phone } }, token)
 
       yar.flash(
         sessionNames.successNotification,
-        'Link to a privacy notice has been updated'
+        'Phone number for support has been updated'
       )
 
       return h.redirect(`/library/${slug}`).code(StatusCodes.SEE_OTHER)
     },
     options: {
       validate: {
-        payload: schema,
+        payload: phoneContactSchema,
         /**
          * @param {Request} request
          * @param {ResponseToolkit} h
@@ -96,7 +92,7 @@ export default [
           if (error && error instanceof Joi.ValidationError) {
             const formErrors = buildErrorDetails(error)
 
-            yar.flash(sessionNames.validationFailure.privacyNotice, {
+            yar.flash(sessionNames.validationFailure.contactPhone, {
               formErrors,
               formValues: payload
             })
@@ -119,5 +115,5 @@ export default [
 
 /**
  * @import { Request, ResponseToolkit, ServerRoute } from '@hapi/hapi'
- * @import { FormMetadataInput } from '@defra/forms-model'
+ * @import { FormMetadataContact } from '@defra/forms-model'
  */

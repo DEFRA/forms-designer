@@ -1,4 +1,4 @@
-import { privacyNoticeUrlSchema } from '@defra/forms-model'
+import { emailAddressSchema, emailResponseTimeSchema } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
@@ -6,18 +6,19 @@ import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
 import * as forms from '~/src/lib/forms.js'
-import { privacyNoticyViewModel } from '~/src/models/forms/privacy-notice.js'
+import { emailViewModel } from '~/src/models/forms/contact/email.js'
 
-export const ROUTE_PATH_EDIT_PRIVACY_NOTICE =
-  '/library/{slug}/edit/privacy-notice'
+export const ROUTE_PATH_EDIT_EMAIL_CONTACT =
+  '/library/{slug}/edit/contact/email'
 
-export const schema = Joi.object().keys({
-  privacyNoticeUrl: privacyNoticeUrlSchema.required().messages({
-    'string.empty': 'Enter a link to a privacy notice for this form',
-    'string.uri':
-      'Enter a link to a privacy notice for this form in the correct format',
-    'string.uriCustomScheme':
-      'Enter a link to a privacy notice for this form in the correct format'
+export const emailContactSchema = Joi.object().keys({
+  address: emailAddressSchema.required().messages({
+    'string.empty': 'Enter an email address for dedicated support',
+    'string.email':
+      'Enter an email address for dedicated support in the correct format'
+  }),
+  responseTime: emailResponseTimeSchema.required().messages({
+    'string.empty': 'Enter a response time for receiving responses'
   })
 })
 
@@ -27,23 +28,23 @@ export default [
    */
   ({
     method: 'GET',
-    path: ROUTE_PATH_EDIT_PRIVACY_NOTICE,
+    path: ROUTE_PATH_EDIT_EMAIL_CONTACT,
     async handler(request, h) {
       const { auth, params, yar } = request
       const { slug } = params
       const { token } = auth.credentials
 
       const validation = yar
-        .flash(sessionNames.validationFailure.privacyNotice)
+        .flash(sessionNames.validationFailure.contactEmail)
         .at(0)
 
       // Retrieve form by slug
       const metadata = await forms.get(slug, token)
 
-      // Create the privacy notice view model
-      const model = privacyNoticyViewModel(metadata, validation)
+      // Create the email contact view model
+      const model = emailViewModel(metadata, validation)
 
-      return h.view('forms/privacy-notice', model)
+      return h.view('forms/contact/email', model)
     },
     options: {
       auth: {
@@ -57,33 +58,37 @@ export default [
   }),
 
   /**
-   * @satisfies {ServerRoute<{ Params: { slug: string }, Payload: Pick<FormMetadataInput, 'privacyNoticeUrl'> }>}
+   * @satisfies {ServerRoute<{ Params: { slug: string }, Payload: FormMetadataContactEmail }>}
    */
   ({
     method: 'POST',
-    path: ROUTE_PATH_EDIT_PRIVACY_NOTICE,
+    path: ROUTE_PATH_EDIT_EMAIL_CONTACT,
     async handler(request, h) {
       const { auth, params, payload, yar } = request
       const { slug } = params
-      const { privacyNoticeUrl } = payload
+      const { address, responseTime } = payload
       const { token } = auth.credentials
 
       // Retrieve form by slug
-      const { id } = await forms.get(slug, token)
+      const { id, contact = {} } = await forms.get(slug, token)
 
-      // Update the metadata with the privacy notice url
-      await forms.updateMetadata(id, { privacyNoticeUrl }, token)
+      // Update the metadata with the email contact details
+      await forms.updateMetadata(
+        id,
+        { contact: { ...contact, email: { address, responseTime } } },
+        token
+      )
 
       yar.flash(
         sessionNames.successNotification,
-        'Link to a privacy notice has been updated'
+        'Email address for support has been updated'
       )
 
       return h.redirect(`/library/${slug}`).code(StatusCodes.SEE_OTHER)
     },
     options: {
       validate: {
-        payload: schema,
+        payload: emailContactSchema,
         /**
          * @param {Request} request
          * @param {ResponseToolkit} h
@@ -96,7 +101,7 @@ export default [
           if (error && error instanceof Joi.ValidationError) {
             const formErrors = buildErrorDetails(error)
 
-            yar.flash(sessionNames.validationFailure.privacyNotice, {
+            yar.flash(sessionNames.validationFailure.contactEmail, {
               formErrors,
               formValues: payload
             })
@@ -119,5 +124,5 @@ export default [
 
 /**
  * @import { Request, ResponseToolkit, ServerRoute } from '@hapi/hapi'
- * @import { FormMetadataInput } from '@defra/forms-model'
+ * @import { FormMetadataContactEmail } from '@defra/forms-model'
  */
