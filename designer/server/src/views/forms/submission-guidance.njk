@@ -46,6 +46,8 @@
         } if formErrors[field.name]
       }) }}
 
+      {% include "forms/partials/markdown-guidance.njk" %}
+
       <div class="govuk-button-group">
         {{ govukButton({
           text: buttonText

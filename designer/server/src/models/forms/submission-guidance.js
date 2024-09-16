@@ -2,7 +2,7 @@ import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 
 /**
  * @param {FormMetadata} metadata
- * @param {ValidationFailure<FormMetadataInput>} [validation]
+ * @param {ValidationFailure<Pick<FormMetadataInput, 'submissionGuidance'>>} [validation]
  */
 export function submissionGuidanceViewModel(metadata, validation) {
   const pageTitle = 'Tell users what happens after they submit their form'

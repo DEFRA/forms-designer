@@ -127,6 +127,16 @@
     classes: "govuk-!-margin-top-8"
   }) }}
 
+  {%- set submissionGuidanceHtml %}
+    {% if form.submissionGuidance %}
+      <div class="app-prose-scope">
+        {{ form.submissionGuidance | markdownToHtml | safe }}
+      </div>
+    {% else %}
+      <a class="govuk-link govuk-link--no-visited-state" href="/library/{{ form.slug }}/edit/submission-guidance">Enter what happens next</a>
+    {% endif %}
+  {% endset %}
+
   {{ govukSummaryList({
     classes: "govuk-!-margin-bottom-8",
     rows: [
@@ -135,8 +145,7 @@
           text: "Tell users what happens after they submit their form"
         },
         value: {
-          html: form.submissionGuidance | escape | nl2br | safe
-          if form.submissionGuidance else '<a class="govuk-link govuk-link--no-visited-state" href="/library/' + form.slug + '/edit/submission-guidance">Enter what happens next</a>'
+          html: submissionGuidanceHtml
         },
         actions: {
           items: [
