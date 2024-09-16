@@ -1,4 +1,4 @@
-.govuk-prose-scope {
+.app-prose-scope {
   // @extend inheritance
 
   // Contextual heading and paragraph combinations are inherited
@@ -38,7 +38,7 @@
     @extend %govuk-list--number;
   }
 
-  ul.govuk-list.govuk-list--bullet {
+  ul {
     @extend %govuk-list--bullet;
   }
 

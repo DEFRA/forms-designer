@@ -13,7 +13,7 @@ describe('Helpers', () => {
       },
       {
         markdown: '* item 1',
-        html: '<ul class="govuk-list govuk-list--bullet">\n<li>item 1</li>\n</ul>\n'
+        html: '<ul>\n<li>item 1</li>\n</ul>\n'
       },
       {
         markdown: '1. item 1',
