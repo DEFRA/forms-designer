@@ -139,6 +139,7 @@ p code {
 }
 
 .govuk-button--component {
+  min-height: govuk-em(44px, $context-font-size: 16);
   background-color: transparent;
   box-shadow: none;
   border: none;
@@ -313,7 +314,15 @@ p code {
 }
 
 .app-component__action {
+  $app-action-small: govuk-em(39px, $context-font-size: 16);
+  $app-action-large: govuk-em(44px, $context-font-size: 19);
+
+  height: $app-action-small;
   margin-bottom: 0;
+
+  @include govuk-media-query($from: tablet) {
+    height: $app-action-large;
+  }
 }
 
 /* Syntax highlighting */
