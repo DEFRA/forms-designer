@@ -304,6 +304,7 @@ p code {
   top: 0;
   right: 0;
   z-index: -1;
+  display: flex;
 
   @at-root {
     .app-component:hover &,
@@ -319,9 +320,13 @@ p code {
 
   height: $app-action-small;
   margin-bottom: 0;
+  padding-left: 6px;
+  padding-right: 6px;
 
   @include govuk-media-query($from: tablet) {
     height: $app-action-large;
+    padding-left: 8px;
+    padding-right: 8px;
   }
 }
 
