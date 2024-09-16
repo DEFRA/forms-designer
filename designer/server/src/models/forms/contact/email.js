@@ -2,7 +2,7 @@ import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 
 /**
  * @param {FormMetadata} metadata
- * @param {ValidationFailure<FormMetadataInput>} [validation]
+ * @param {ValidationFailure<FormMetadataContactEmail>} [validation]
  */
 export function emailViewModel(metadata, validation) {
   const pageTitle = 'Email address for support'
@@ -28,9 +28,7 @@ export function emailViewModel(metadata, validation) {
         hint: {
           text: 'Enter a dedicated support team email address. Do not enter a named individual. For example, ‘support@defra.gov.uk’'
         },
-        value:
-          formValues?.contact?.email?.address ??
-          metadata.contact?.email?.address
+        value: formValues?.address ?? metadata.contact?.email?.address
       },
       responseTime: {
         id: 'responseTime',
@@ -41,9 +39,7 @@ export function emailViewModel(metadata, validation) {
         hint: {
           text: 'Enter how long it takes to receive a response, for example, ‘We aim to respond within 2 working days’'
         },
-        value:
-          formValues?.contact?.email?.responseTime ??
-          metadata.contact?.email?.responseTime
+        value: formValues?.responseTime ?? metadata.contact?.email?.responseTime
       }
     },
     buttonText: 'Save and continue'
@@ -51,6 +47,6 @@ export function emailViewModel(metadata, validation) {
 }
 
 /**
- * @import { FormMetadata, FormMetadataInput } from '@defra/forms-model'
+ * @import { FormMetadata, FormMetadataContactEmail } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

@@ -2,7 +2,7 @@ import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 
 /**
  * @param {FormMetadata} metadata
- * @param {ValidationFailure<FormMetadataInput>} [validation]
+ * @param {ValidationFailure<Pick<FormMetadataInput, 'privacyNoticeUrl'>>} [validation]
  */
 export function privacyNoticyViewModel(metadata, validation) {
   const pageTitle = 'Privacy notice for this form'

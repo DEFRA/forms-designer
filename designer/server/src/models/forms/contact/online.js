@@ -2,7 +2,7 @@ import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 
 /**
  * @param {FormMetadata} metadata
- * @param {ValidationFailure<FormMetadataInput>} [validation]
+ * @param {ValidationFailure<FormMetadataContactOnline>} [validation]
  */
 export function onlineViewModel(metadata, validation) {
   const pageTitle = 'Contact link for support'
@@ -28,7 +28,7 @@ export function onlineViewModel(metadata, validation) {
         hint: {
           text: 'For example, ‘https://www.gov.uk/guidance/contact-defra’'
         },
-        value: formValues?.contact?.online?.url ?? metadata.contact?.online?.url
+        value: formValues?.url ?? metadata.contact?.online?.url
       },
       text: {
         id: 'text',
@@ -39,8 +39,7 @@ export function onlineViewModel(metadata, validation) {
         hint: {
           text: 'For example, ‘Online contact form’'
         },
-        value:
-          formValues?.contact?.online?.text ?? metadata.contact?.online?.text
+        value: formValues?.text ?? metadata.contact?.online?.text
       }
     },
     buttonText: 'Save and continue'
@@ -48,6 +47,6 @@ export function onlineViewModel(metadata, validation) {
 }
 
 /**
- * @import { FormMetadata, FormMetadataInput } from '@defra/forms-model'
+ * @import { FormMetadata, FormMetadataContactOnline } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

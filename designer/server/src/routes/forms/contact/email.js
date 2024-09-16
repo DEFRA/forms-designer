@@ -34,7 +34,9 @@ export default [
       const { slug } = params
       const { token } = auth.credentials
 
-      const validation = yar.flash(sessionNames.validationFailure).at(0)
+      const validation = yar
+        .flash(sessionNames.validationFailure.contactEmail)
+        .at(0)
 
       // Retrieve form by slug
       const metadata = await forms.get(slug, token)
@@ -56,7 +58,7 @@ export default [
   }),
 
   /**
-   * @satisfies {ServerRoute<{ Params: { slug: string }, Payload: { address: string, responseTime: string } }>}
+   * @satisfies {ServerRoute<{ Params: { slug: string }, Payload: FormMetadataContactEmail }>}
    */
   ({
     method: 'POST',
@@ -99,11 +101,9 @@ export default [
           if (error && error instanceof Joi.ValidationError) {
             const formErrors = buildErrorDetails(error)
 
-            yar.flash(sessionNames.validationFailure, {
+            yar.flash(sessionNames.validationFailure.contactEmail, {
               formErrors,
-              formValues: {
-                contact: { email: payload }
-              }
+              formValues: payload
             })
           }
 
@@ -124,4 +124,5 @@ export default [
 
 /**
  * @import { Request, ResponseToolkit, ServerRoute } from '@hapi/hapi'
+ * @import { FormMetadataContactEmail } from '@defra/forms-model'
  */

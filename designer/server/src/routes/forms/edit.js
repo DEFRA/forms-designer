@@ -27,7 +27,9 @@ export default [
       const { slug } = params
 
       const metadata = await forms.get(slug, token)
-      const validation = yar.flash(sessionNames.validationFailure).at(0)
+      const validation = yar
+        .flash(sessionNames.validationFailure.createForm)
+        .at(0)
 
       return h.view(
         'forms/question-radios',
@@ -97,7 +99,9 @@ export default [
       const { slug } = params
 
       const { teamName, teamEmail } = await forms.get(slug, token)
-      const validation = yar.flash(sessionNames.validationFailure).at(0)
+      const validation = yar
+        .flash(sessionNames.validationFailure.createForm)
+        .at(0)
 
       const metadata = { teamName, teamEmail, slug }
 
@@ -171,7 +175,9 @@ export default [
       const { slug } = params
 
       const { title } = await forms.get(slug, token)
-      const validation = yar.flash(sessionNames.validationFailure).at(0)
+      const validation = yar
+        .flash(sessionNames.validationFailure.createForm)
+        .at(0)
 
       const metadata = { title, slug }
 

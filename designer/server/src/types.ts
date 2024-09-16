@@ -1,6 +1,11 @@
 /* eslint-disable @typescript-eslint/unified-signatures */
 
-import { type FormMetadataInput } from '@defra/forms-model'
+import {
+  type FormMetadataContact,
+  type FormMetadataContactEmail,
+  type FormMetadataContactOnline,
+  type FormMetadataInput
+} from '@defra/forms-model'
 import { type StringLikeMap } from '@hapi/bell'
 import { type RequestAuth } from '@hapi/hapi'
 import { type Logger } from 'pino'
@@ -103,7 +108,26 @@ declare module '@hapi/yar' {
      * Get temporary error messages from the session
      * (Deleted when read, e.g. after a redirect)
      */
-    flash(type: ValidationKey): ValidationFailure<FormMetadataInput>[]
+    flash(
+      type: ValidationKey['createForm']
+    ): ValidationFailure<FormMetadataInput>[]
+
+    flash(
+      type: ValidationKey['privacyNotice']
+    ): ValidationFailure<Pick<FormMetadataInput, 'privacyNoticeUrl'>>[]
+
+    flash(
+      type: ValidationKey['contactPhone']
+    ): ValidationFailure<Pick<FormMetadataContact, 'phone'>>[]
+
+    flash(
+      type: ValidationKey['contactEmail']
+    ): ValidationFailure<FormMetadataContactEmail>[]
+
+    flash(
+      type: ValidationKey['contactOnline']
+    ): ValidationFailure<FormMetadataContactOnline>[]
+
     flash(
       type: FileDownloadValidationKey
     ): ValidationFailure<{ email: string }>[]

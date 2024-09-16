@@ -2,7 +2,7 @@ import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 
 /**
  * @param {FormMetadata} metadata
- * @param {ValidationFailure<FormMetadataInput>} [validation]
+ * @param {ValidationFailure<Pick<FormMetadataContact, 'phone'>>} [validation]
  */
 export function phoneViewModel(metadata, validation) {
   const pageTitle = 'Phone number and opening times'
@@ -24,13 +24,13 @@ export function phoneViewModel(metadata, validation) {
       label: {
         text: 'What’s the phone number and opening times for users to get help?'
       },
-      value: formValues?.contact?.phone ?? metadata.contact?.phone
+      value: formValues?.phone ?? metadata.contact?.phone
     },
     buttonText: 'Save and continue'
   }
 }
 
 /**
- * @import { FormMetadata, FormMetadataInput } from '@defra/forms-model'
+ * @import { FormMetadata, FormMetadataContact } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */
