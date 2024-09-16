@@ -9,7 +9,7 @@ import {
   type Item
 } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import { act, cleanup, render, waitFor } from '@testing-library/react'
+import { act, render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import upperFirst from 'lodash/upperFirst.js'
 import React from 'react'
@@ -18,9 +18,7 @@ import { InlineConditionsDefinitionValue } from '~/src/conditions/InlineConditio
 import { type FieldDef } from '~/src/data/component/fields.js'
 
 describe('InlineConditionsDefinitionValue', () => {
-  afterEach(cleanup)
-
-  it('should display a text input for fields without custom mappings or options', async () => {
+  it('should display a text input for fields without custom mappings or options', () => {
     const fieldDef: FieldDef = {
       label: 'Something',
       name: 'field1',
@@ -36,7 +34,10 @@ describe('InlineConditionsDefinitionValue', () => {
       />
     )
 
-    const $input = await waitFor(() => screen.findByDisplayValue('my-value'))
+    const $input = screen.getByRole('textbox', {
+      name: 'Value'
+    })
+
     expect($input).toBeInTheDocument()
     expect($input).toHaveAttribute('type', 'text')
   })
@@ -59,7 +60,7 @@ describe('InlineConditionsDefinitionValue', () => {
       />
     )
 
-    const $input = await waitFor(() => screen.getByLabelText('Value'))
+    const $input = screen.getByRole('textbox', { name: 'Value' })
 
     await act(() => userEvent.clear($input))
     await act(() => userEvent.type($input, 'new-value'))
@@ -89,7 +90,10 @@ describe('InlineConditionsDefinitionValue', () => {
       />
     )
 
-    const $input = await waitFor(() => screen.findByDisplayValue('my-value'))
+    const $input = screen.getByRole('textbox', {
+      name: 'Value'
+    })
+
     await act(() => userEvent.clear($input))
 
     expect(updateValueCallback).toHaveBeenLastCalledWith({
@@ -99,7 +103,7 @@ describe('InlineConditionsDefinitionValue', () => {
     })
   })
 
-  it('should display a select input for fields without custom mappings and with options', async () => {
+  it('should display a select input for fields without custom mappings and with options', () => {
     const values: Item[] = [
       { value: 'value1', text: 'Value 1' },
       { value: 'value2', text: 'Value 2' }
@@ -121,14 +125,12 @@ describe('InlineConditionsDefinitionValue', () => {
       />
     )
 
-    const $select = await waitFor(() =>
-      screen.findByRole<HTMLSelectElement>('combobox', {
-        name: 'Value'
-      })
-    )
+    const $select = screen.getByRole<HTMLSelectElement>('combobox', {
+      name: 'Value'
+    })
 
     expect($select).toBeInTheDocument()
-    expect($select.options[0].value).toBe('')
+    expect($select).toHaveValue('')
     expect($select.options[1]).toMatchObject(values[0])
     expect($select.options[2]).toMatchObject(values[1])
   })
@@ -271,7 +273,7 @@ describe('InlineConditionsDefinitionValue', () => {
 
   it.each(relativeDateOperatorNames)(
     `should display relative date component fields for '%s' operator`,
-    async (operator) => {
+    (operator) => {
       const fieldDef: FieldDef = {
         label: 'Something',
         name: 'field1',
@@ -288,34 +290,18 @@ describe('InlineConditionsDefinitionValue', () => {
         />
       )
 
-      const $period = await waitFor(() =>
-        screen.findByRole('textbox', {
-          name: 'Period'
-        })
-      )
-
-      const $units = await waitFor(() =>
-        screen.findByRole('group', {
-          name: 'Units'
-        })
-      )
-
-      const $direction = await waitFor(() =>
-        screen.findByRole('group', {
-          name: 'Direction'
-        })
-      )
+      const $period = screen.getByRole('textbox', { name: 'Period' })
+      const $units = screen.getByRole('group', { name: 'Units' })
+      const $direction = screen.getByRole('group', { name: 'Direction' })
 
       expect($period).toBeInTheDocument()
       expect($units).toBeInTheDocument()
       expect($direction).toBeInTheDocument()
 
       for (const unit of Object.values(DateUnits)) {
-        const $unit = await waitFor(() =>
-          screen.findByRole('radio', {
-            name: upperFirst(unit)
-          })
-        )
+        const $unit = screen.getByRole('radio', {
+          name: upperFirst(unit)
+        })
 
         expect($unit).toBeInTheDocument()
       }
@@ -324,7 +310,7 @@ describe('InlineConditionsDefinitionValue', () => {
 
   it.each(absoluteDateOperatorNames)(
     `should display absolute date component fields for '%s' operator`,
-    async (operator) => {
+    (operator) => {
       const fieldDef: FieldDef = {
         label: 'Something',
         name: 'field1',
@@ -341,23 +327,9 @@ describe('InlineConditionsDefinitionValue', () => {
         />
       )
 
-      const $day = await waitFor(() =>
-        screen.findByRole('spinbutton', {
-          name: 'Day'
-        })
-      )
-
-      const $month = await waitFor(() =>
-        screen.findByRole('spinbutton', {
-          name: 'Month'
-        })
-      )
-
-      const $year = await waitFor(() =>
-        screen.findByRole('spinbutton', {
-          name: 'Year'
-        })
-      )
+      const $day = screen.getByRole('spinbutton', { name: 'Day' })
+      const $month = screen.getByRole('spinbutton', { name: 'Month' })
+      const $year = screen.getByRole('spinbutton', { name: 'Year' })
 
       expect($day).toBeInTheDocument()
       expect($month).toBeInTheDocument()

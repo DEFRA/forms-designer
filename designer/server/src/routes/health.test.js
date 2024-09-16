@@ -1,24 +1,20 @@
+import { createServer } from '~/src/createServer.js'
 import { auth } from '~/test/fixtures/auth.js'
 
 describe('Health check route', () => {
-  const startServer = async () => {
-    const { createServer } = await import('~/src/createServer.js')
-
-    const server = await createServer()
-    await server.initialize()
-    return server
-  }
-
   /** @type {Server} */
   let server
 
-  afterEach(async () => {
+  beforeAll(async () => {
+    server = await createServer()
+    await server.initialize()
+  })
+
+  afterAll(async () => {
     await server.stop()
   })
 
   test('/health route response is correct', async () => {
-    server = await startServer()
-
     const options = {
       method: 'GET',
       url: '/health',

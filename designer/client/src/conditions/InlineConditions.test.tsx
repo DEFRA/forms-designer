@@ -1,14 +1,12 @@
 import { ComponentType, type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import { cleanup, render } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import React from 'react'
 
 import { InlineConditions } from '~/src/conditions/InlineConditions.jsx'
 import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
 describe('InlineConditions', () => {
-  afterEach(cleanup)
-
   test('Strings are rendered correctly', () => {
     const props = {
       path: '/some-path',

@@ -8,7 +8,7 @@ import {
   type FormDefinition
 } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import { cleanup, render, type RenderResult } from '@testing-library/react'
+import { render, type RenderResult } from '@testing-library/react'
 import React from 'react'
 
 import { ConditionEdit } from '~/src/components/FieldEditors/ConditionEdit.jsx'
@@ -60,8 +60,6 @@ describe('Condition edit', () => {
       }
     ]
   } satisfies FormDefinition
-
-  afterEach(cleanup)
 
   describe('Supported components', () => {
     it.each(ComponentTypes.filter(({ type }) => supported.includes(type)))(

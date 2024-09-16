@@ -5,15 +5,13 @@ import {
   type FormDefinition
 } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import { cleanup, render } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import React from 'react'
 
 import { SelectConditions } from '~/src/conditions/SelectConditions.jsx'
 import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
 describe('SelectConditions', () => {
-  afterEach(cleanup)
-
   const data = {
     pages: [],
     lists: [],
@@ -38,7 +36,7 @@ describe('SelectConditions', () => {
       </RenderWithContext>
     )
 
-    const $paragraphs = screen.queryAllByRole('paragraph')
+    const $paragraphs = screen.getAllByRole('paragraph')
     const $conditions = screen.queryByRole('link', {
       name: 'Add a new condition'
     })
@@ -262,8 +260,8 @@ describe('SelectConditions', () => {
       (condition) => condition.displayName
     )
 
-    const $paragraphs = screen.queryAllByRole('paragraph')
-    const $conditions = screen.queryByRole('link', {
+    const $paragraphs = screen.getAllByRole('paragraph')
+    const $conditions = screen.getByRole('link', {
       name: 'Add a new condition'
     })
 

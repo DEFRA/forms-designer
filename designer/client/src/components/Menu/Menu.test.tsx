@@ -1,6 +1,6 @@
 import { type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import { act, cleanup, render, waitFor } from '@testing-library/react'
+import { act, render, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React from 'react'
 
@@ -14,8 +14,6 @@ describe('Menu', () => {
     sections: [],
     conditions: []
   } satisfies FormDefinition
-
-  afterEach(cleanup)
 
   it('Renders button strings correctly', () => {
     render(
@@ -47,7 +45,7 @@ describe('Menu', () => {
 
     await act(() => userEvent.click($buttonSummary))
 
-    const $dialog = screen.queryByRole('dialog', {
+    const $dialog = screen.getByRole('dialog', {
       name: 'Edit summary'
     })
 
@@ -74,14 +72,14 @@ describe('Menu', () => {
 
     await act(() => userEvent.click($buttonFormOverview))
 
-    const $dialog = screen.queryByRole('dialog', {
+    const $dialog = screen.getByRole('dialog', {
       name: 'Form overview'
     })
 
     expect($dialog).toBeInTheDocument()
 
-    const $tabs = screen.queryAllByRole('tab')
-    const $panels = screen.queryAllByRole('tabpanel')
+    const $tabs = screen.getAllByRole('tab')
+    const $panels = screen.getAllByRole('tabpanel')
 
     // All tabs links are visible
     expect($tabs[0]).toBeVisible()
@@ -120,7 +118,7 @@ describe('Menu', () => {
 
     await act(() => userEvent.click($buttonSummary))
 
-    const $dialog = screen.queryByRole('dialog', {
+    const $dialog = screen.getByRole('dialog', {
       name: 'Edit summary'
     })
 

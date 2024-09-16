@@ -137,14 +137,14 @@ describe('ListItemEdit', () => {
         'Select a condition that determines whether to show this list item. You can create and edit conditions on the Conditions screen.'
     })
 
-    expect($select.value).toBe('')
+    expect($select).toHaveValue('')
     expect($select.options[$select.selectedIndex].textContent).toBe(
       'Select a condition'
     )
 
     await act(() => userEvent.selectOptions($select, 'MYWwRN'))
 
-    expect($select.value).toBe('MYWwRN')
+    expect($select).toHaveValue('MYWwRN')
     expect($select.options[$select.selectedIndex].textContent).toBe(
       'my condition'
     )

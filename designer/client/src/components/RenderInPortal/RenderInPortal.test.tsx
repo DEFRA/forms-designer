@@ -1,4 +1,4 @@
-import { mount } from 'enzyme'
+import { render } from '@testing-library/react'
 import React from 'react'
 
 import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
@@ -13,7 +13,7 @@ describe('RenderInPortal component', () => {
   test('renders paragraph inside portal', () => {
     expect(portalRoot?.innerHTML).toBe('')
 
-    const wrapper = mount(
+    const wrapper = render(
       <RenderInPortal>
         <p id="test-paragraph">Test</p>
       </RenderInPortal>
@@ -29,13 +29,13 @@ describe('RenderInPortal component', () => {
   })
 
   test('renders multiple portals in parallel', () => {
-    const wrapper1 = mount(
+    const wrapper1 = render(
       <RenderInPortal>
         <p id="test-paragraph1">Test 1</p>
       </RenderInPortal>
     )
 
-    const wrapper2 = mount(
+    const wrapper2 = render(
       <RenderInPortal>
         <p id="test-paragraph2">Test 2</p>
       </RenderInPortal>

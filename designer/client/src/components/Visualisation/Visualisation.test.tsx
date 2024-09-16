@@ -1,6 +1,6 @@
 import { type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import { act, cleanup, render, waitFor } from '@testing-library/react'
+import { act, render, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React from 'react'
 
@@ -8,8 +8,6 @@ import { Visualisation } from '~/src/components/Visualisation/Visualisation.jsx'
 import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
 describe('Visualisation', () => {
-  afterEach(cleanup)
-
   test('Graph is rendered with correct number of pages and updates', () => {
     const data = {
       pages: [
@@ -104,7 +102,7 @@ describe('Visualisation', () => {
     })
 
     expect(
-      screen.queryByRole('dialog', {
+      screen.getByRole('dialog', {
         name: 'Edit link'
       })
     ).toBeInTheDocument()

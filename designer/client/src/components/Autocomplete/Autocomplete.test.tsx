@@ -1,6 +1,6 @@
 import { ComponentType } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import { cleanup, render } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import React from 'react'
 
 import { Autocomplete } from '~/src/components/Autocomplete/Autocomplete.jsx'
@@ -29,8 +29,6 @@ describe('Autocomplete attribute', () => {
       </RenderWithContext>
     )
   })
-
-  afterEach(cleanup)
 
   test('should display display correct title', () => {
     const text = 'Autocomplete'

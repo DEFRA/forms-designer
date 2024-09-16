@@ -5,7 +5,7 @@ import {
   type ComponentDef
 } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import { cleanup, render, type RenderResult } from '@testing-library/react'
+import { render, type RenderResult } from '@testing-library/react'
 import React from 'react'
 
 import { TextFieldEdit } from '~/src/components/FieldEditors/TextFieldEdit.jsx'
@@ -18,8 +18,6 @@ describe('Text field edit', () => {
     ComponentType.EmailAddressField,
     ComponentType.TelephoneNumberField
   ]
-
-  afterEach(cleanup)
 
   describe('Supported components', () => {
     it.each(ComponentTypes.filter(({ type }) => supported.includes(type)))(

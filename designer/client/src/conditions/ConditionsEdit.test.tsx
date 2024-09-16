@@ -6,7 +6,7 @@ import {
   type FormDefinition
 } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import { act, cleanup, render } from '@testing-library/react'
+import { act, render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React from 'react'
 
@@ -62,8 +62,6 @@ describe('ConditionsEdit', () => {
     sections: [],
     conditions: []
   } satisfies FormDefinition
-
-  afterEach(cleanup)
 
   describe('hint texts', () => {
     test('main hint text is correct', () => {
@@ -157,11 +155,11 @@ describe('ConditionsEdit', () => {
         </RenderWithContext>
       )
 
-      const $link = screen.queryByRole('link', {
+      const $link = screen.getByRole('link', {
         name: condition.displayName
       })
 
-      const $link2 = screen.queryByRole('link', {
+      const $link2 = screen.getByRole('link', {
         name: condition2.displayName
       })
 
@@ -221,7 +219,7 @@ describe('ConditionsEdit', () => {
         </RenderWithContext>
       )
 
-      const $button = screen.queryByRole('button', {
+      const $button = screen.getByRole('button', {
         name: 'Add a new condition'
       })
 

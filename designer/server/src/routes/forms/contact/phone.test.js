@@ -1,3 +1,4 @@
+import { within } from '@testing-library/dom'
 import { StatusCodes } from 'http-status-codes'
 
 import { createServer } from '~/src/createServer.js'
@@ -72,8 +73,11 @@ describe('Forms contact phone', () => {
 
     const { document } = await renderResponse(server, options)
 
-    const phone = document.querySelector('#phone')
-    expect(phone).toHaveValue('123')
+    const $phone = within(document.body).getByRole('textbox', {
+      name: 'What’s the phone number and opening times for users to get help?'
+    })
+
+    expect($phone).toHaveValue('123')
   })
 
   test('POST - should redirect to overviewpage after updating phone details', async () => {

@@ -1,3 +1,4 @@
+import { within } from '@testing-library/dom'
 import { StatusCodes } from 'http-status-codes'
 
 import { createServer } from '~/src/createServer.js'
@@ -70,8 +71,12 @@ describe('Forms privacy notice', () => {
 
     const { document } = await renderResponse(server, options)
 
-    const privacyNoticeUrl = document.querySelector('#privacyNoticeUrl')
-    expect(privacyNoticeUrl).toHaveValue(
+    const $privacyNoticeUrl = within(document.body).getByRole('textbox', {
+      name: 'Link to privacy notice for this form',
+      description: 'For example, https://www.gov.uk/help/privacy-notice'
+    })
+
+    expect($privacyNoticeUrl).toHaveValue(
       'https://www.gov.uk/help/privacy-notice'
     )
   })

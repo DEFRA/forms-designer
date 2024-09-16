@@ -1,6 +1,6 @@
 import { ComponentType, type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import { act, cleanup, render, waitFor } from '@testing-library/react'
+import { act, render, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React from 'react'
 
@@ -24,8 +24,6 @@ describe('ComponentCreate:', () => {
 
   const page = data.pages[0]
 
-  afterEach(cleanup)
-
   test('Selecting a component type should display the component edit form', async () => {
     render(
       <RenderWithContext data={data}>
@@ -37,8 +35,13 @@ describe('ComponentCreate:', () => {
       name: 'Details'
     })
 
-    expect(screen.queryByLabelText('Title')).not.toBeInTheDocument()
-    expect(screen.queryByLabelText('Content')).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('textbox', { name: 'Title' })
+    ).not.toBeInTheDocument()
+
+    expect(
+      screen.queryByRole('textbox', { name: 'Content' })
+    ).not.toBeInTheDocument()
 
     await act(() => userEvent.click($componentLink))
     await waitFor(() => screen.getAllByRole('textbox'))

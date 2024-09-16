@@ -1,3 +1,4 @@
+import { within } from '@testing-library/dom'
 import { StatusCodes } from 'http-status-codes'
 
 import { createServer } from '~/src/createServer.js'
@@ -75,11 +76,19 @@ describe('Forms contact online', () => {
 
     const { document } = await renderResponse(server, options)
 
-    const url = document.querySelector('#url')
-    expect(url).toHaveValue('https://www.gov.uk/guidance/contact-defra')
+    const $url = within(document.body).getByRole('textbox', {
+      name: 'Contact link',
+      description: 'For example, ‘https://www.gov.uk/guidance/contact-defra’'
+    })
 
-    const text = document.querySelector('#text')
-    expect(text).toHaveValue('Online contact form')
+    expect($url).toHaveValue('https://www.gov.uk/guidance/contact-defra')
+
+    const $text = within(document.body).getByRole('textbox', {
+      name: 'Text to describe the contact link',
+      description: 'For example, ‘Online contact form’'
+    })
+
+    expect($text).toHaveValue('Online contact form')
   })
 
   test('POST - should redirect to overviewpage after updating online details', async () => {

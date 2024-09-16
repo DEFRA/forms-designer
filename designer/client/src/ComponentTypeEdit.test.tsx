@@ -10,7 +10,7 @@ import {
   type FormDefinition
 } from '@defra/forms-model'
 import { screen, waitFor } from '@testing-library/dom'
-import { act, cleanup, render } from '@testing-library/react'
+import { act, render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import lowerFirst from 'lodash/lowerFirst.js'
 import React from 'react'
@@ -69,8 +69,6 @@ describe('ComponentTypeEdit', () => {
       ]
     }
   })
-
-  afterEach(cleanup)
 
   describe.each([
     [
@@ -295,7 +293,7 @@ describe('ComponentTypeEdit', () => {
       }
     ]
   ])('Component type edit: %s', (type, options) => {
-    let selectedComponent: ComponentDef | undefined
+    let selectedComponent: ComponentDef
 
     beforeEach(() => {
       selectedComponent = getComponentDefaults({ type })
@@ -309,13 +307,13 @@ describe('ComponentTypeEdit', () => {
 
     if (options.title) {
       it("should render 'Title' input", () => {
-        const $input = screen.queryByRole<HTMLInputElement>('textbox', {
+        const $input = screen.getByRole<HTMLInputElement>('textbox', {
           name: 'Title',
           description: 'Enter the name to show for this field'
         })
 
         expect($input).toBeInTheDocument()
-        expect($input?.value).toBe(selectedComponent?.title)
+        expect($input).toHaveValue(selectedComponent.title)
       })
     } else {
       it("should not render 'Title' input", () => {
@@ -329,13 +327,13 @@ describe('ComponentTypeEdit', () => {
 
     if (options.hint) {
       it("should render 'Help text (optional)' textarea", () => {
-        const $textarea = screen.queryByRole<HTMLTextAreaElement>('textbox', {
+        const $textarea = screen.getByRole<HTMLTextAreaElement>('textbox', {
           name: 'Help text (optional)',
           description: 'Enter the description to show for this field'
         })
 
         expect($textarea).toBeInTheDocument()
-        expect($textarea?.value).toBe(
+        expect($textarea).toHaveValue(
           hasHint(selectedComponent) ? (selectedComponent.hint ?? '') : ''
         )
       })
@@ -351,14 +349,14 @@ describe('ComponentTypeEdit', () => {
 
     if (options.hideTitle) {
       it("should render 'Hide title' checkbox", () => {
-        const $checkbox = screen.queryByRole<HTMLInputElement>('checkbox', {
+        const $checkbox = screen.getByRole<HTMLInputElement>('checkbox', {
           name: 'Hide title',
           description:
             'Tick this box if you do not want the title to show on the page'
         })
 
         expect($checkbox).toBeInTheDocument()
-        expect($checkbox?.checked).toBe(false)
+        expect($checkbox.checked).toBe(false)
       })
     } else {
       it("should not render 'Hide title' checkbox", () => {
@@ -372,7 +370,7 @@ describe('ComponentTypeEdit', () => {
 
     if (options.content) {
       it("should render 'Content' textarea", () => {
-        const $textarea = screen.queryByRole<HTMLTextAreaElement>('textbox', {
+        const $textarea = screen.getByRole<HTMLTextAreaElement>('textbox', {
           name: 'Content'
         })
 
@@ -390,14 +388,14 @@ describe('ComponentTypeEdit', () => {
 
     if (options.name) {
       it("should render 'Component name' input", () => {
-        const $input = screen.queryByRole<HTMLInputElement>('textbox', {
+        const $input = screen.getByRole<HTMLInputElement>('textbox', {
           name: 'Component name',
           description:
             'This is generated automatically and does not show on the page. Only change it if you are using an integration that requires you to, for example GOV.UK Notify. It must not contain spaces.'
         })
 
         expect($input).toBeInTheDocument()
-        expect($input?.value).toBe(selectedComponent?.name)
+        expect($input).toHaveValue(selectedComponent.name)
       })
     } else {
       it("should not render 'Component name' input", () => {
@@ -411,19 +409,19 @@ describe('ComponentTypeEdit', () => {
 
     if (options.optional) {
       it("should render 'Make {{component}} optional' checkbox", () => {
-        const $checkbox = screen.queryByRole<HTMLInputElement>('checkbox', {
-          name: `Make ${lowerFirst(selectedComponent?.title)} optional`,
+        const $checkbox = screen.getByRole<HTMLInputElement>('checkbox', {
+          name: `Make ${lowerFirst(selectedComponent.title)} optional`,
           description:
             'Tick this box if users do not need to complete this field to progress through the form'
         })
 
         expect($checkbox).toBeInTheDocument()
-        expect($checkbox?.checked).toBe(false)
+        expect($checkbox.checked).toBe(false)
       })
 
       it('should render "Hide \'(optional)\' text" checkbox when optional', async () => {
         const $checkbox1 = screen.getByRole<HTMLInputElement>('checkbox', {
-          name: `Make ${lowerFirst(selectedComponent?.title)} optional`
+          name: `Make ${lowerFirst(selectedComponent.title)} optional`
         })
 
         expect($checkbox1).toBeInTheDocument()
@@ -447,7 +445,7 @@ describe('ComponentTypeEdit', () => {
 
       it('should not render "Hide \'(optional)\' text" checkbox when required', () => {
         const $checkbox1 = screen.getByRole<HTMLInputElement>('checkbox', {
-          name: `Make ${lowerFirst(selectedComponent?.title)} optional`
+          name: `Make ${lowerFirst(selectedComponent.title)} optional`
         })
 
         expect($checkbox1).toBeInTheDocument()
@@ -462,7 +460,7 @@ describe('ComponentTypeEdit', () => {
     } else {
       it("should not render 'Make {{component}} optional' checkbox", () => {
         const $checkbox = screen.queryByRole('checkbox', {
-          name: `Make ${lowerFirst(selectedComponent?.title)} optional`
+          name: `Make ${lowerFirst(selectedComponent.title)} optional`
         })
 
         expect($checkbox).not.toBeInTheDocument()
@@ -479,14 +477,14 @@ describe('ComponentTypeEdit', () => {
 
     if (options.selectList) {
       it("should render 'Select list' options", () => {
-        const $select = screen.queryByRole<HTMLSelectElement>('combobox', {
+        const $select = screen.getByRole<HTMLSelectElement>('combobox', {
           name: 'Select list',
           description:
             'Select an existing list to show in this field or add a new list'
         })
 
         expect($select).toBeInTheDocument()
-        expect($select?.value).toBe(
+        expect($select).toHaveValue(
           hasListField(selectedComponent) ? selectedComponent.list : ''
         )
       })
@@ -502,14 +500,14 @@ describe('ComponentTypeEdit', () => {
 
     if (options.selectCondition) {
       it("should render 'Condition (optional)' options", () => {
-        const $select = screen.queryByRole<HTMLSelectElement>('combobox', {
+        const $select = screen.getByRole<HTMLSelectElement>('combobox', {
           name: 'Condition (optional)',
           description:
             'Select a condition that determines whether to show the contents of this component. You can create and edit conditions from the Conditions screen.'
         })
 
         expect($select).toBeInTheDocument()
-        expect($select?.value).toBe(
+        expect($select).toHaveValue(
           hasConditionSupport(selectedComponent)
             ? (selectedComponent.options.condition ?? '')
             : ''
