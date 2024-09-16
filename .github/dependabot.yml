@@ -22,6 +22,8 @@ updates:
           - 'i18next-*'
           - 'postcss'
           - 'postcss-*'
+          - 'react'
+          - 'react-*'
           - 'sass'
           - 'tsc-alias'
           - 'typescript'
