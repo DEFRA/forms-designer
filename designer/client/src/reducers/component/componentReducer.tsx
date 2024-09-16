@@ -103,15 +103,15 @@ export function componentReducer(
   }
 }
 
-export const initComponentState = (
+export function initComponentState(
   props?: Readonly<Partial<Omit<ComponentState, 'initialName'>>>
-): ComponentState => {
-  const { selectedComponent, errors = {} } = props ?? {}
+): ComponentState {
+  const { selectedComponent } = props ?? {}
 
   return {
     initialName: selectedComponent?.name ?? randomId(),
-    selectedComponent,
-    errors
+    errors: {},
+    ...props
   }
 }
 
@@ -123,11 +123,12 @@ export const ComponentContextProvider = (
     children: ReactNode
   }
 ) => {
-  const { children, ...rest } = props
+  const { children, ...initialComponentState } = props
 
   const [state, dispatch] = useReducer(
     componentReducer,
-    initComponentState(rest)
+    initialComponentState,
+    initComponentState
   )
 
   const context = useMemo(() => ({ state, dispatch }), [state])

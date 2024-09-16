@@ -15,8 +15,7 @@ export function CustomValidationMessage() {
       selectedComponent?.type === ComponentType.EmailAddressField ||
       selectedComponent?.type === ComponentType.NumberField ||
       selectedComponent?.type === ComponentType.MultilineTextField ||
-      selectedComponent?.type === ComponentType.TelephoneNumberField ||
-      selectedComponent?.type === ComponentType.MonthYearField
+      selectedComponent?.type === ComponentType.TelephoneNumberField
     )
   ) {
     return null

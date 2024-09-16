@@ -96,8 +96,8 @@ describe('ListItemEdit', () => {
     render(
       <RenderListEditorWithContext
         data={data}
-        selectedListName="myList"
-        selectedItemText="text a"
+        initialName="myList"
+        initialItemText="text a"
       >
         <ListItemEdit />
       </RenderListEditorWithContext>
@@ -124,8 +124,8 @@ describe('ListItemEdit', () => {
     render(
       <RenderListEditorWithContext
         data={data}
-        selectedListName="myList"
-        selectedItemText="text a"
+        initialName="myList"
+        initialItemText="text a"
       >
         <ListItemEdit />
       </RenderListEditorWithContext>

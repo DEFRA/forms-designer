@@ -49,6 +49,8 @@ export function ComponentEdit(props: Readonly<Props>) {
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    e.stopPropagation()
+
     dispatch({ name: Meta.VALIDATE })
   }
 

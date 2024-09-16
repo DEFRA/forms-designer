@@ -316,14 +316,14 @@ export function redirectToStepWithErrors(request, h, error) {
  * @param {ResponseToolkit} h
  * @param {Error} [error]
  * @param {boolean} [redirectToPreviousStep] Optionally redirect to errors on previous steps, else it uses the current URL
- * @param {keyof typeof sessionNames} [flashKey] Optionally redirect to errors on previous steps, else it uses the current URL
+ * @param {ValidationSessionKey} [flashKey] Optionally redirect to errors on previous steps, else it uses the current URL
  */
 export function redirectWithErrors(
   request,
   h,
   error,
   redirectToPreviousStep = false,
-  flashKey = sessionNames.validationFailure
+  flashKey = sessionNames.validationFailure.createForm
 ) {
   const { payload, yar, url } = request
   let { pathname: redirectTo } = url
@@ -353,4 +353,5 @@ export function redirectWithErrors(
 /**
  * @import { FormMetadataInput } from '@defra/forms-model'
  * @import { Request, ResponseToolkit, ServerRoute } from '@hapi/hapi'
+ * @import { ValidationSessionKey } from '@hapi/yar'
  */

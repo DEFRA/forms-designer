@@ -59,7 +59,7 @@ export default [
           if (result.error) {
             const { error } = result
 
-            yar.flash(sessionNames.validationFailure, {
+            yar.flash(sessionNames.validationFailure.updateForm, {
               formErrors: buildErrorDetails(error),
               formValues: payload
             })

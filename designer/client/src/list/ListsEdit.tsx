@@ -17,12 +17,13 @@ interface Props {
 }
 
 const useListsEdit = () => {
-  const { state } = useContext(ListContext)
+  const { state: listState } = useContext(ListContext)
   const { state: listEditState, dispatch: listsEditorDispatch } =
     useContext(ListsEditorContext)
 
   const { isEditingList, isEditingListItem } = listEditState
-  const { initialTitle, initialItemText, selectedList, selectedItem } = state
+  const { initialTitle, initialItemText, selectedList, selectedItem } =
+    listState
 
   const closeFlyout = (type: ListsEditorStateActions) => {
     return () => listsEditorDispatch({ name: type, payload: false })

@@ -23,7 +23,7 @@ export function ListFieldEdit({ children }: Readonly<Props>) {
 
   return (
     <ListsEditorContextProvider>
-      <ListContextProvider selectedListName={selectedComponent.list}>
+      <ListContextProvider initialName={selectedComponent.list}>
         <ComponentListSelect />
         {children}
         <RenderInPortal>

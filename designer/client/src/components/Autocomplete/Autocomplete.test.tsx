@@ -39,7 +39,7 @@ describe('Autocomplete attribute', () => {
 
   test('should display display correct helptext', () => {
     const text =
-      "Add the autocomplete attribute to this field. For example, 'on' or 'given-name'."
+      'Add the autocomplete attribute to this field. For example, ‘on’ or ‘given-name’'
     expect(screen.getByText(text)).toBeInTheDocument()
   })
 })

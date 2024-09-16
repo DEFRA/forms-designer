@@ -1,3 +1,4 @@
+import { hasListField } from '@defra/forms-model'
 // @ts-expect-error -- No types available
 import { Input, Textarea } from '@xgovformbuilder/govuk-react-jsx'
 import React, { useContext, type FormEvent, type MouseEvent } from 'react'
@@ -6,6 +7,7 @@ import { ErrorSummary } from '~/src/ErrorSummary.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { useListItem } from '~/src/hooks/list/useListItem/useListItem.jsx'
 import { i18n } from '~/src/i18n/i18n.jsx'
+import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 import {
   ListsEditorContext,
   ListsEditorStateActions
@@ -14,9 +16,10 @@ import { ListContext } from '~/src/reducers/listReducer.jsx'
 import { hasValidationErrors } from '~/src/validations.js'
 
 export function ListItemEdit() {
-  const { dispatch: listsEditorDispatch } = useContext(ListsEditorContext)
-  const { state, dispatch } = useContext(ListContext)
   const { data } = useContext(DataContext)
+  const { state } = useContext(ComponentContext)
+  const { state: listState, dispatch: listDispatch } = useContext(ListContext)
+  const { dispatch: listsEditorDispatch } = useContext(ListsEditorContext)
 
   const {
     handleTitleChange,
@@ -29,11 +32,17 @@ export function ListItemEdit() {
     condition,
     text,
     description
-  } = useListItem(state, dispatch)
+  } = useListItem(listState, listDispatch)
 
   const { conditions } = data
-  const { listItemErrors: errors, selectedItem } = state
+  const { selectedComponent } = state
+  const { selectedList, selectedItem, listItemErrors: errors } = listState
+
   const hasErrors = hasValidationErrors(errors)
+
+  if (selectedComponent && !hasListField(selectedComponent)) {
+    throw new Error('Component must support lists')
+  }
 
   const handleSubmit = (
     e: FormEvent<HTMLFormElement> | MouseEvent<HTMLButtonElement>
@@ -56,6 +65,10 @@ export function ListItemEdit() {
       name: ListsEditorStateActions.IS_EDITING_LIST_ITEM,
       payload: false
     })
+  }
+
+  if (!selectedList || !selectedItem) {
+    return null
   }
 
   return (

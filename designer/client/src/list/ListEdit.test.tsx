@@ -31,13 +31,10 @@ const data = {
 
 describe('ListEdit', () => {
   test('strings are rendered correctly', () => {
-    const selectedListName = data.lists[0].name
+    const initialName = data.lists[0].name
 
     render(
-      <RenderListEditorWithContext
-        data={data}
-        selectedListName={selectedListName}
-      >
+      <RenderListEditorWithContext data={data} initialName={initialName}>
         <ListEdit />
       </RenderListEditorWithContext>
     )

@@ -17,11 +17,11 @@
   },
   "addPage": {
     "header": {
-      "helpText": "Set the page type and details to apply the correct settings to a page.",
+      "helpText": "Set the page type and details to apply the correct settings to a page",
       "title": "Add page"
     },
     "linkFromOption": {
-      "helpText": "Add a link to this page from a different page in the form.",
+      "helpText": "Add a link to this page from a different page in the form",
       "title": "Link from (optional)",
       "option": "Select a page"
     },
@@ -34,7 +34,7 @@
       "option": "Select a page type"
     },
     "pathField": {
-      "helpText": "Appears in the browser path. The value you enter in the page title field automatically populates the path name. To override it, enter your own path name, relevant to the page, and use lowercase text and hyphens between words. For example, '/personal-details'.",
+      "helpText": "Appears in the browser path. The value you enter in the page title field automatically populates the path name. To override it, enter your own path name, relevant to the page, and use lowercase text and hyphens between words. For example, ‘/personal-details’",
       "title": "Path"
     },
     "sectionOption": {
@@ -46,11 +46,11 @@
   "close": "Close",
   "common": {
     "autocomplete": {
-      "helpText": "Add the autocomplete attribute to this field. For example, 'on' or 'given-name'.",
+      "helpText": "Add the autocomplete attribute to this field. For example, ‘on’ or ‘given-name’",
       "title": "Autocomplete"
     },
     "classes": {
-      "helpText": "Apply CSS classes to this field. For example, govuk-input govuk-!-width-full",
+      "helpText": "Apply CSS classes to this field. For example, ‘govuk-input govuk-!-width-full’",
       "title": "Classes"
     },
     "componentNameField": {
@@ -74,7 +74,7 @@
     },
     "hideOptionalTextOption": {
       "helpText": "Tick this box if you do not want the title to indicate that this field is optional",
-      "title": "Hide '(optional)' text"
+      "title": "Hide ‘(optional)’ text"
     },
     "hideTitleOption": {
       "helpText": "Tick this box if you do not want the title to show on the page",
@@ -116,7 +116,7 @@
     "add": "Add a new condition",
     "addTitle": "Add condition",
     "addOrEdit": "Add or edit condition",
-    "addOrEditHint": "Set the rules that determine the conditional behaviour in the form flow. For example, a question page might have a component for yes and no options that need two conditions - one to control what happens if a user selects yes and one for when a user selects no.",
+    "addOrEditHint": "Set the rules that determine the conditional behaviour in the form flow. For example, a question page might have a component for yes and no options that need two conditions – one to control what happens if a user selects yes and one for when a user selects no.",
     "displayName": "Display name",
     "displayNameHint": "Set a condition name that is easy to recognise. It appears as an option in the settings menus for the pages, components and links in a form.",
     "edit": "Edit condition",
@@ -188,7 +188,7 @@
     "MonthYearField": "Month & year",
     "MonthYearField_info": "Allows users to manually enter a month and year",
     "MultilineTextField": "Textarea",
-    "MultilineTextField_info": "A text box for users to enter multiple lines of text into, for example as 'Additional info'",
+    "MultilineTextField_info": "A text box for users to enter multiple lines of text into, for example as ‘Additional info’",
     "NumberField": "Number",
     "NumberField_info": "A text box that users can only enter numbers into",
     "RadiosField": "Radios",
@@ -196,13 +196,13 @@
     "SelectField": "Select",
     "SelectField_info": "A drop-down list for users to select one answer",
     "TelephoneNumberField": "Telephone number",
-    "TelephoneNumberField_info": "A text box that users can enter numbers and some symbols into, such as '+'",
+    "TelephoneNumberField_info": "A text box that users can enter numbers and some symbols into, such as ‘+’",
     "TextField": "Text input",
     "TextField_info": "A text box that users can enter letters, numbers and symbols into",
     "UkAddressField": "UK address",
     "UkAddressField_info": "Allows users to enter their street address, town or city and postcode",
     "YesNoField": "YesNo",
-    "YesNoField_info": "Allows users to answer either 'Yes' or 'No'",
+    "YesNoField_info": "Allows users to answer either ’Yes’ or ‘No’",
     "FileUploadField": "File upload",
     "FileUploadField_info": "Allows a user to upload files"
   },
@@ -216,7 +216,7 @@
         "if there’s a minimum or maximum file size",
         "if you accept original or scanned copies"
       ],
-      "helpText": "For example, ‘Upload 2 copies of your methodology statement in Word, PDF or JPEG. The maximum file size for each file is 100MB’.",
+      "helpText": "For example, ‘Upload 2 copies of your methodology statement in Word, PDF or JPEG. The maximum file size for each file is 100MB’",
       "title": "Help text (optional)"
     },
     "acceptField": {
@@ -299,7 +299,7 @@
       "title": "Max words"
     },
     "rowsField": {
-      "helpText": "Specifies the number of textarea rows (default is 5 rows).",
+      "helpText": "Specifies the number of textarea rows (default is 5 rows)",
       "title": "Rows"
     }
   },
@@ -320,19 +320,19 @@
       "title": "Precision"
     },
     "prefixField": {
-      "helpText": "Specifies the prefix of the field.",
+      "helpText": "Specifies the prefix of the field",
       "title": "Prefix"
     },
     "suffixField": {
-      "helpText": "Specifies the suffix of the field.",
+      "helpText": "Specifies the suffix of the field",
       "title": "Suffix"
     }
   },
   "page": {
     "errors": {
-      "pathStart": "Path '/start' is reserved for start pages only",
-      "pathSummary": "Path '/summary' is reserved for summary pages only",
-      "pathStatus": "Path '/status' is reserved for status pages only"
+      "pathStart": "Path ‘/start’ is reserved for start pages only",
+      "pathSummary": "Path ‘/summary’ is reserved for summary pages only",
+      "pathStatus": "Path ‘/status’ is reserved for status pages only"
     },
     "add": "Add page",
     "edit": "Edit page",
@@ -364,7 +364,7 @@
       "title": "Min length"
     },
     "regexField": {
-      "helpText": "Specifies a regular expression to validate users' inputs. Use JavaScript syntax.",
+      "helpText": "Specifies a regular expression to validate users’ inputs. Use JavaScript syntax.",
       "title": "Regex"
     }
   },

@@ -91,11 +91,12 @@ declare module '@hapi/hapi' {
 declare module '@hapi/yar' {
   type CreateKey = (typeof sessionNames)['create']
   type RedirectToKey = (typeof sessionNames)['redirectTo']
-  type ValidationKey = (typeof sessionNames)['validationFailure']
-  type FileDownloadValidationKey =
-    (typeof sessionNames)['fileDownloadValidationFailure']
   type SuccessNotification = (typeof sessionNames)['successNotification']
   type ErrorListKey = (typeof sessionNames)['errorList']
+
+  // Export known validation session keys
+  type ValidationSession = (typeof sessionNames)['validationFailure']
+  export type ValidationSessionKey = ValidationSession[keyof ValidationSession]
 
   interface Yar {
     /**
@@ -109,27 +110,27 @@ declare module '@hapi/yar' {
      * (Deleted when read, e.g. after a redirect)
      */
     flash(
-      type: ValidationKey['createForm']
+      type: ValidationSession['createForm']
     ): ValidationFailure<FormMetadataInput>[]
 
     flash(
-      type: ValidationKey['privacyNotice']
+      type: ValidationSession['privacyNotice']
     ): ValidationFailure<Pick<FormMetadataInput, 'privacyNoticeUrl'>>[]
 
     flash(
-      type: ValidationKey['contactPhone']
+      type: ValidationSession['contactPhone']
     ): ValidationFailure<Pick<FormMetadataContact, 'phone'>>[]
 
     flash(
-      type: ValidationKey['contactEmail']
+      type: ValidationSession['contactEmail']
     ): ValidationFailure<FormMetadataContactEmail>[]
 
     flash(
-      type: ValidationKey['contactOnline']
+      type: ValidationSession['contactOnline']
     ): ValidationFailure<FormMetadataContactOnline>[]
 
     flash(
-      type: FileDownloadValidationKey
+      type: ValidationSession['fileDownload']
     ): ValidationFailure<{ email: string }>[]
 
     /**

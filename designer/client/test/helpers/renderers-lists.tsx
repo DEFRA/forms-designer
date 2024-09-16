@@ -1,58 +1,35 @@
-import React, { useMemo, useReducer, type ReactElement } from 'react'
+import React, { type ReactElement } from 'react'
 
-import { DataContext, type DataContextType } from '~/src/context/DataContext.js'
-import {
-  ComponentContext,
-  componentReducer,
-  initComponentState
-} from '~/src/reducers/component/componentReducer.jsx'
+import { type DataContextType } from '~/src/context/DataContext.js'
+import { type initComponentState } from '~/src/reducers/component/componentReducer.jsx'
 import { ListsEditorContextProvider } from '~/src/reducers/list/listsEditorReducer.jsx'
 import { ListContextProvider } from '~/src/reducers/listReducer.jsx'
-import { definition, metadata } from '~/test/helpers/renderers.jsx'
+import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
 export interface RenderListEditorWithContextProps
   extends Partial<DataContextType> {
   children: ReactElement
-  selectedListName?: string
-  selectedItemText?: string
+  initialName?: string
+  initialItemText?: string
   state?: Parameters<typeof initComponentState>[0]
 }
 
-export function RenderListEditorWithContext(
-  props: Readonly<RenderListEditorWithContextProps>
-) {
-  const [state, dispatch] = useReducer(
-    componentReducer,
-    initComponentState(props.state)
-  )
-
-  const context = useMemo(() => {
-    const {
-      data = definition,
-      meta = metadata,
-      previewUrl = 'http://localhost:3000',
-      save = jest.fn()
-    } = props
-
-    return { data, meta, previewUrl, save }
-  }, [props])
-
-  const { children, selectedListName, selectedItemText } = props
-
+export function RenderListEditorWithContext({
+  children,
+  initialName,
+  initialItemText,
+  ...props
+}: Readonly<RenderListEditorWithContextProps>) {
   return (
-    <DataContext.Provider value={context}>
+    <RenderWithContext {...props}>
       <ListsEditorContextProvider>
-        <ComponentContext.Provider
-          value={useMemo(() => ({ state, dispatch }), [state])}
+        <ListContextProvider
+          initialName={initialName}
+          initialItemText={initialItemText}
         >
-          <ListContextProvider
-            selectedListName={selectedListName}
-            selectedItemText={selectedItemText}
-          >
-            {children}
-          </ListContextProvider>
-        </ComponentContext.Provider>
+          {children}
+        </ListContextProvider>
       </ListsEditorContextProvider>
-    </DataContext.Provider>
+    </RenderWithContext>
   )
 }

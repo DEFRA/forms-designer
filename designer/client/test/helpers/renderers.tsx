@@ -1,3 +1,4 @@
+import { type ComponentDef } from '@defra/forms-model'
 import React, { useMemo, useReducer, type ReactElement } from 'react'
 
 import { DataContext, type DataContextType } from '~/src/context/DataContext.js'
@@ -20,7 +21,7 @@ export const metadata = {
 } as DataContextType['meta']
 
 export interface RenderWithContextProps extends Partial<DataContextType> {
-  children?: ReactElement
+  children: ReactElement
   state?: Parameters<typeof initComponentState>[0]
   context?: Partial<{
     flyout: Partial<FlyoutContextType>
@@ -30,7 +31,8 @@ export interface RenderWithContextProps extends Partial<DataContextType> {
 export function RenderWithContext(props: Readonly<RenderWithContextProps>) {
   const [state, dispatch] = useReducer(
     componentReducer,
-    initComponentState(props.state)
+    props.state,
+    initComponentState
   )
 
   const context = useMemo(() => {
@@ -66,5 +68,29 @@ export function RenderWithContext(props: Readonly<RenderWithContextProps>) {
         </ComponentContext.Provider>
       </FlyoutContext.Provider>
     </DataContext.Provider>
+  )
+}
+
+export interface RenderComponentProps {
+  children: ReactElement
+  defaults: ComponentDef
+  override?:
+    | Partial<Extract<ComponentDef, { options: object }>>
+    | Partial<Extract<ComponentDef, { schema: object }>>
+    | Partial<Extract<ComponentDef, { list: string }>>
+  data?: DataContextType['data']
+}
+
+export function RenderComponent(props: Readonly<RenderComponentProps>) {
+  const { children, defaults, override, data } = props
+
+  if (override) {
+    Object.assign(defaults, override)
+  }
+
+  return (
+    <RenderWithContext data={data} state={{ selectedComponent: defaults }}>
+      {children}
+    </RenderWithContext>
   )
 }

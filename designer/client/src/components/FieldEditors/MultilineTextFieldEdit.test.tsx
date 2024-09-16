@@ -8,11 +8,11 @@ import { screen } from '@testing-library/dom'
 import { cleanup, render, type RenderResult } from '@testing-library/react'
 import React from 'react'
 
-import { DateFieldEdit } from '~/src/components/FieldEditors/DateFieldEdit.jsx'
+import { MultilineTextFieldEdit } from '~/src/components/FieldEditors/MultilineTextFieldEdit.jsx'
 import { RenderComponent } from '~/test/helpers/renderers.jsx'
 
-describe('Date field edit', () => {
-  const supported = [ComponentType.DatePartsField]
+describe('Multiline text field edit', () => {
+  const supported = [ComponentType.MultilineTextField]
 
   afterEach(cleanup)
 
@@ -22,7 +22,7 @@ describe('Date field edit', () => {
       (selectedComponent) => {
         const { container } = render(
           <RenderComponent defaults={selectedComponent}>
-            <DateFieldEdit />
+            <MultilineTextFieldEdit />
           </RenderComponent>
         )
 
@@ -36,7 +36,7 @@ describe('Date field edit', () => {
       (selectedComponent) => {
         const { container } = render(
           <RenderComponent defaults={selectedComponent}>
-            <DateFieldEdit />
+            <MultilineTextFieldEdit />
           </RenderComponent>
         )
 
@@ -55,7 +55,7 @@ describe('Date field edit', () => {
 
       result = render(
         <RenderComponent defaults={selectedComponent}>
-          <DateFieldEdit />
+          <MultilineTextFieldEdit />
         </RenderComponent>
       )
     })
@@ -68,10 +68,10 @@ describe('Date field edit', () => {
       expect($summary).toBeInTheDocument()
     })
 
-    it("should render 'Max days in the past' input", () => {
+    it("should render 'Max words' input", () => {
       const $input = screen.getByRole('spinbutton', {
-        name: 'Max days in the past',
-        description: 'Determines the earliest date users can enter'
+        name: 'Max words',
+        description: 'Specifies the maximum number of words users can enter'
       })
 
       expect($input).toBeInTheDocument()
@@ -80,19 +80,19 @@ describe('Date field edit', () => {
       result.rerender(
         <RenderComponent
           defaults={selectedComponent}
-          override={{ options: { maxDaysInPast: 10 } }}
+          override={{ options: { maxWords: 10 } }}
         >
-          <DateFieldEdit />
+          <MultilineTextFieldEdit />
         </RenderComponent>
       )
 
       expect($input).toHaveValue(10)
     })
 
-    it("should render 'Max days in the future' input", () => {
+    it("should render 'Rows' input", () => {
       const $input = screen.getByRole('spinbutton', {
-        name: 'Max days in the future',
-        description: 'Determines the latest date users can enter'
+        name: 'Rows',
+        description: 'Specifies the number of textarea rows (default is 5 rows)'
       })
 
       expect($input).toBeInTheDocument()
@@ -101,35 +101,13 @@ describe('Date field edit', () => {
       result.rerender(
         <RenderComponent
           defaults={selectedComponent}
-          override={{ options: { maxDaysInFuture: 10 } }}
+          override={{ options: { rows: 10 } }}
         >
-          <DateFieldEdit />
+          <MultilineTextFieldEdit />
         </RenderComponent>
       )
 
       expect($input).toHaveValue(10)
-    })
-
-    it("should render 'Classes' input", () => {
-      const $input = screen.getByRole('textbox', {
-        name: 'Classes',
-        description:
-          'Apply CSS classes to this field. For example, ‘govuk-input govuk-!-width-full’'
-      })
-
-      expect($input).toBeInTheDocument()
-      expect($input).toHaveValue('')
-
-      result.rerender(
-        <RenderComponent
-          defaults={selectedComponent}
-          override={{ options: { classes: 'example' } }}
-        >
-          <DateFieldEdit />
-        </RenderComponent>
-      )
-
-      expect($input).toHaveValue('example')
     })
   })
 })

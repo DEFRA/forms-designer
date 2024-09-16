@@ -33,7 +33,7 @@ describe('page create fields text', () => {
 
     const $linkFromLabel = screen.getByText('Link from (optional)')
     const $linkFromContent = screen.getByText(
-      'Add a link to this page from a different page in the form.'
+      'Add a link to this page from a different page in the form'
     )
 
     expect($linkFromLabel).toBeInTheDocument()
@@ -45,7 +45,7 @@ describe('page create fields text', () => {
 
     const $pathLabel = screen.getByText('Path')
     const $pathContent = screen.getByText(
-      "Appears in the browser path. The value you enter in the page title field automatically populates the path name. To override it, enter your own path name, relevant to the page, and use lowercase text and hyphens between words. For example, '/personal-details'."
+      'Appears in the browser path. The value you enter in the page title field automatically populates the path name. To override it, enter your own path name, relevant to the page, and use lowercase text and hyphens between words. For example, ‘/personal-details’'
     )
 
     expect($pathLabel).toBeInTheDocument()
