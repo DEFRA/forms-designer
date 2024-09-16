@@ -10,7 +10,6 @@ import React, { useContext, useState, type ComponentProps } from 'react'
 
 import { ComponentEdit } from '~/src/ComponentEdit.jsx'
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
-import { FileUploadIcon } from '~/src/components/Icons/FileUploadIcon.jsx'
 import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { findPage } from '~/src/data/page/findPage.js'
@@ -191,13 +190,7 @@ export function Html() {
 export function FileUploadField() {
   return (
     <ComponentField className="app-field-input">
-      <span className="app-field-prefix">
-        <FileUploadIcon
-          className="app-field-prefix__contents"
-          width={15}
-          height={15}
-        />
-      </span>
+      <span className="app-field-prefix app-field-prefix--file-upload" />
     </ComponentField>
   )
 }
