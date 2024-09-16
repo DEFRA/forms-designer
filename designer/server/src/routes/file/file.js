@@ -31,7 +31,7 @@ export default [
       switch (statusCode) {
         case StatusCodes.OK: {
           const validation = yar.flash(
-            sessionNames.fileDownloadValidationFailure
+            sessionNames.validationFailure.fileDownload
           )[0]
           return h.view('file/download-page', file.fileViewModel(validation))
         }
@@ -130,7 +130,7 @@ export default [
             h,
             err,
             false,
-            sessionNames.fileDownloadValidationFailure
+            sessionNames.validationFailure.fileDownload
           )
         }
       }
