@@ -323,7 +323,7 @@ export function redirectWithErrors(
   h,
   error,
   redirectToPreviousStep = false,
-  flashKey = sessionNames.validationFailure
+  flashKey = sessionNames.validationFailure.createForm
 ) {
   const { payload, yar, url } = request
   let { pathname: redirectTo } = url

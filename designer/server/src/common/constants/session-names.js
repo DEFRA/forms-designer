@@ -3,6 +3,7 @@ export const sessionNames = {
   redirectTo: /** @type {const} */ ('redirectTo'),
   validationFailure: {
     createForm: /** @type {const} */ ('createFormValidationFailure'),
+    updateForm: /** @type {const} */ ('updateFormValidationFailure'),
     privacyNotice: /** @type {const} */ ('privacyNoticeValidationFailure'),
     contactEmail: /** @type {const} */ ('contactEmailValidationFailure'),
     contactPhone: /** @type {const} */ ('contactPhoneValidationFailure'),
