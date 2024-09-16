@@ -305,7 +305,9 @@ p code {
   right: 0;
   z-index: -1;
   display: flex;
+  column-gap: 1px;
   background-color: govuk-shade(govuk-colour("light-grey"), 10%);
+  box-shadow: 0 $govuk-border-width-form-element 0 govuk-shade(govuk-colour("light-grey"), 40%);
 
   @at-root {
     .app-component:hover &,
@@ -315,7 +317,8 @@ p code {
   }
 
   &:focus-within {
-    background-color: govuk-shade(govuk-colour("light-grey"), 10%);
+    background-color: govuk-shade(govuk-colour("yellow"), 10%);
+    box-shadow: 0 $govuk-border-width-form-element 0 govuk-shade(govuk-colour("yellow"), 60%);
   }
 }
 
