@@ -1,11 +1,11 @@
 import { highlight, languages } from 'prismjs'
-import React, { Component, type TextareaHTMLAttributes } from 'react'
+import React, { Component, type ComponentProps } from 'react'
 import SimpleEditor from 'react-simple-code-editor'
 
 type Props = {
   value?: string
   onValueChange?: (content: string) => void
-} & TextareaHTMLAttributes<HTMLTextAreaElement>
+} & ComponentProps<'textarea'>
 
 interface State {
   value: string

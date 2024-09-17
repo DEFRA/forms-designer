@@ -1,14 +1,13 @@
 import classNames from 'classnames'
-import React, { type FunctionComponent, type HTMLAttributes } from 'react'
+import React, { type ComponentProps } from 'react'
 
 import { i18n } from '~/src/i18n/i18n.jsx'
 
-interface Props extends HTMLAttributes<HTMLParagraphElement> {
-  className?: string
+interface Props extends ComponentProps<'p'> {
   visuallyHiddenText?: string
 }
 
-export const ErrorMessage: FunctionComponent<Props> = (props) => {
+export function ErrorMessage(props: Readonly<Props>) {
   let { className, children, visuallyHiddenText, ...attributes } = props
 
   visuallyHiddenText ??= i18n('error')

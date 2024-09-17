@@ -1,7 +1,6 @@
 import { ComponentType, hasListField } from '@defra/forms-model'
 import React, {
   useContext,
-  type FunctionComponent,
   type JSXElementConstructor,
   type ReactNode
 } from 'react'
@@ -38,7 +37,11 @@ const componentTypeEditors = {
   >
 >
 
-export const ComponentTypeEdit: FunctionComponent = ({ children }) => {
+interface Props {
+  children?: ReactNode
+}
+
+export function ComponentTypeEdit({ children }: Readonly<Props>) {
   const { state } = useContext(ComponentContext)
   const { selectedComponent } = state
 

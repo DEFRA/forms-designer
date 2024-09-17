@@ -1,8 +1,6 @@
-import React, { type FunctionComponent, type SVGAttributes } from 'react'
+import React, { type ComponentProps } from 'react'
 
-export type Props = SVGAttributes<SVGSVGElement>
-
-export const SearchIcon: FunctionComponent<Props> = (props) => {
+export function SearchIcon(props: Readonly<ComponentProps<'svg'>>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
