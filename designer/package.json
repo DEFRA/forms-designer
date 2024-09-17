@@ -81,7 +81,7 @@
     "autoprefixer": "^10.4.20",
     "babel-loader": "^9.2.1",
     "clean-webpack-plugin": "^4.0.0",
-    "concurrently": "^8.2.2",
+    "concurrently": "^9.0.1",
     "copy-webpack-plugin": "^12.0.2",
     "core-js": "^3.38.1",
     "file-loader": "^6.2.0",
@@ -95,7 +95,7 @@
     "source-map-loader": "^5.0.0",
     "style-loader": "^4.0.0",
     "terser-webpack-plugin": "^5.3.10",
-    "tsx": "^4.19.0",
+    "tsx": "^4.19.1",
     "webpack": "^5.94.0",
     "webpack-assets-manifest": "^5.2.1",
     "webpack-cli": "^5.1.4"
