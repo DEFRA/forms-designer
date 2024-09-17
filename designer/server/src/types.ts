@@ -8,7 +8,6 @@ import {
 } from '@defra/forms-model'
 import { type StringLikeMap } from '@hapi/bell'
 import { type RequestAuth } from '@hapi/hapi'
-import { type Logger } from 'pino'
 
 import { type sessionNames } from '~/src/common/constants/session-names.js'
 import { type UserProfile } from '~/src/common/helpers/auth/types.js'
@@ -26,12 +25,7 @@ interface SessionCache {
 declare module '@hapi/hapi' {
   // Here we are decorating Hapi interface types with
   // props from plugins which doesn't export @types
-  interface Request {
-    logger: Logger
-  }
-
   interface Server {
-    logger: Logger
     method(name: 'session.drop', method: SessionCache['drop']): void
     method(name: 'session.get', method: SessionCache['get']): void
     method(name: 'session.set', method: SessionCache['set']): void
