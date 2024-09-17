@@ -1,29 +1,17 @@
 import classNames from 'classnames'
 import { Tabs as TabsJS } from 'govuk-frontend'
-import React, {
-  useEffect,
-  useRef,
-  type FunctionComponent,
-  type HTMLAttributes,
-  type ReactNode
-} from 'react'
+import React, { useEffect, useRef, type ComponentProps } from 'react'
 
-interface Props extends HTMLAttributes<HTMLParagraphElement> {
-  className?: string
-  id?: string
+interface Props extends ComponentProps<'div'> {
   idPrefix?: string
   items: ({
-    id?: string
     label: string
-    panel: {
-      children: ReactNode
-    } & HTMLAttributes<HTMLDivElement>
-  } & HTMLAttributes<HTMLAnchorElement>)[]
-  title?: string
+    panel: ComponentProps<'div'>
+  } & ComponentProps<'a'>)[]
   onInit?: () => void
 }
 
-export const Tabs: FunctionComponent<Props> = (props) => {
+export function Tabs(props: Readonly<Props>) {
   let { className, id, idPrefix, items, title, onInit, ...attributes } = props
 
   idPrefix ??= ''

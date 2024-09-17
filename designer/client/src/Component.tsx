@@ -6,7 +6,7 @@ import {
   type ComponentDef,
   type Page
 } from '@defra/forms-model'
-import React, { useContext, useState, type FunctionComponent } from 'react'
+import React, { useContext, useState, type ReactNode } from 'react'
 
 import { ComponentEdit } from '~/src/ComponentEdit.jsx'
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
@@ -19,15 +19,15 @@ import { arrayMove } from '~/src/helpers.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContextProvider } from '~/src/reducers/component/componentReducer.jsx'
 
-export const Base: FunctionComponent = (props) => {
+interface ComponentFieldProps {
+  children?: ReactNode
+}
+
+export function ComponentField(props: Readonly<ComponentFieldProps>) {
   return <>{props.children}</>
 }
 
-export const ComponentField: FunctionComponent = (props) => {
-  return <Base>{props.children}</Base>
-}
-
-export const TextField: FunctionComponent = () => {
+export function TextField() {
   return (
     <ComponentField>
       <div className="box" />
@@ -35,7 +35,7 @@ export const TextField: FunctionComponent = () => {
   )
 }
 
-export const TelephoneNumberField: FunctionComponent = () => {
+export function TelephoneNumberField() {
   return (
     <ComponentField>
       <div className="box tel" />
@@ -43,7 +43,7 @@ export const TelephoneNumberField: FunctionComponent = () => {
   )
 }
 
-export const EmailAddressField: FunctionComponent = () => {
+export function EmailAddressField() {
   return (
     <ComponentField>
       <div className="box email" />
@@ -51,7 +51,7 @@ export const EmailAddressField: FunctionComponent = () => {
   )
 }
 
-export const UkAddressField: FunctionComponent = () => {
+export function UkAddressField() {
   return (
     <ComponentField>
       <span className="box" />
@@ -62,7 +62,7 @@ export const UkAddressField: FunctionComponent = () => {
   )
 }
 
-export const MultilineTextField: FunctionComponent = () => {
+export function MultilineTextField() {
   return (
     <ComponentField>
       <span className="box tall" />
@@ -70,7 +70,7 @@ export const MultilineTextField: FunctionComponent = () => {
   )
 }
 
-export const NumberField: FunctionComponent = () => {
+export function NumberField() {
   return (
     <ComponentField>
       <div className="box number" />
@@ -78,7 +78,7 @@ export const NumberField: FunctionComponent = () => {
   )
 }
 
-export const MonthYearField: FunctionComponent = () => {
+export function MonthYearField() {
   return (
     <ComponentField>
       <span className="box small govuk-!-margin-left-1 govuk-!-margin-right-1" />
@@ -87,7 +87,7 @@ export const MonthYearField: FunctionComponent = () => {
   )
 }
 
-export const DatePartsField: FunctionComponent = () => {
+export function DatePartsField() {
   return (
     <ComponentField>
       <span className="box small" />
@@ -97,7 +97,7 @@ export const DatePartsField: FunctionComponent = () => {
   )
 }
 
-export const RadiosField: FunctionComponent = () => {
+export function RadiosField() {
   return (
     <ComponentField>
       <div className="govuk-!-margin-bottom-1">
@@ -114,7 +114,7 @@ export const RadiosField: FunctionComponent = () => {
   )
 }
 
-export const CheckboxesField: FunctionComponent = () => {
+export function CheckboxesField() {
   return (
     <ComponentField>
       <div className="govuk-!-margin-bottom-1">
@@ -131,7 +131,7 @@ export const CheckboxesField: FunctionComponent = () => {
   )
 }
 
-export const SelectField: FunctionComponent = () => {
+export function SelectField() {
   return (
     <ComponentField>
       <div className="box dropdown" />
@@ -139,7 +139,7 @@ export const SelectField: FunctionComponent = () => {
   )
 }
 
-export const YesNoField: FunctionComponent = () => {
+export function YesNoField() {
   return (
     <ComponentField>
       <div className="govuk-!-margin-bottom-1">
@@ -152,48 +152,48 @@ export const YesNoField: FunctionComponent = () => {
   )
 }
 
-export const Details: FunctionComponent = () => {
+export function Details() {
   return (
-    <Base>
+    <ComponentField>
       {'▶ '}
       <span className="line short" />
-    </Base>
+    </ComponentField>
   )
 }
 
-export const InsetText: FunctionComponent = () => {
+export function InsetText() {
   return (
-    <Base>
+    <ComponentField>
       <div className="inset govuk-!-padding-left-2">
         <div className="line" />
         <div className="line short govuk-!-margin-bottom-2 govuk-!-margin-top-2" />
         <div className="line" />
       </div>
-    </Base>
+    </ComponentField>
   )
 }
 
-export const List: FunctionComponent = () => {
+export function List() {
   return (
-    <Base>
+    <ComponentField>
       <div className="line short govuk-!-margin-bottom-2 govuk-!-margin-top-2" />
       <div className="line short govuk-!-margin-bottom-2 govuk-!-margin-top-2" />
       <div className="line short govuk-!-margin-bottom-2 govuk-!-margin-top-2" />
-    </Base>
+    </ComponentField>
   )
 }
 
-export const Html: FunctionComponent = () => {
+export function Html() {
   return (
-    <Base>
+    <ComponentField>
       <div className="html">
         <span className="line xshort govuk-!-margin-bottom-1 govuk-!-margin-top-1" />
       </div>
-    </Base>
+    </ComponentField>
   )
 }
 
-export const FileUploadField: FunctionComponent = () => {
+export function FileUploadField() {
   return (
     <ComponentField>
       <div className="box">
@@ -230,13 +230,13 @@ export const componentTypes = {
   [ComponentType.FileUploadField]: FileUploadField
 }
 
-interface Props {
+interface ComponentProps {
   page: Page
   selectedComponent: ComponentDef
   index: number
 }
 
-export const Component: FunctionComponent<Readonly<Props>> = (props) => {
+export function Component(props: Readonly<ComponentProps>) {
   const { page, selectedComponent, index } = props
 
   const { data, save } = useContext(DataContext)
