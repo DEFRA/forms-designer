@@ -23,7 +23,3 @@ export const ErrorMessage: FunctionComponent<Props> = (props) => {
     </p>
   )
 }
-
-ErrorMessage.defaultProps = {
-  visuallyHiddenText: i18n('error')
-}
