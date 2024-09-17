@@ -108,7 +108,7 @@ describe('ComponentCreate:', () => {
     )
   })
 
-  test("Should have functioning 'Back to create component list' link", async () => {
+  test('Should show component list again when closing flyout', async () => {
     render(
       <RenderWithContext data={data}>
         <ComponentCreate page={page} onSave={jest.fn()} />
@@ -119,12 +119,16 @@ describe('ComponentCreate:', () => {
       name: 'Details'
     })
 
+    expect($componentLink).toBeInTheDocument()
+
     // Clicking component link opens a flyout
     await act(() => userEvent.click($componentLink))
 
     const $buttonClose = screen.getAllByRole('button', {
       name: 'Close'
     })[1]
+
+    expect($buttonClose).toBeInTheDocument()
 
     // Clicking close shows the list again
     await act(() => userEvent.click($buttonClose))
