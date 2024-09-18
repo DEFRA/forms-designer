@@ -34,7 +34,7 @@
   {%- set phoneHtml %}
     {% if form.contact.phone %}
       <div class="app-prose-scope">
-        {{ form.contact.phone | markdownToHtml | safe }}
+        {{ form.contact.phone | markdown | safe }}
       </div>
       <a href="https://www.gov.uk/call-charges" class="govuk-link govuk-link--no-visited-state" target="_blank">Find out about call charges</a>
     {% else %}
@@ -130,7 +130,7 @@
   {%- set submissionGuidanceHtml %}
     {% if form.submissionGuidance %}
       <div class="app-prose-scope">
-        {{ form.submissionGuidance | markdownToHtml | safe }}
+        {{ form.submissionGuidance | markdown | safe }}
       </div>
     {% else %}
       <a class="govuk-link govuk-link--no-visited-state" href="/library/{{ form.slug }}/edit/submission-guidance">Enter what happens next</a>
