@@ -1,4 +1,4 @@
-import Joi from 'joi'
+import { type Root } from 'joi'
 
 import { findListItem } from '~/src/data/list/findList.js'
 import { type ListItemHook } from '~/src/hooks/list/useListItem/types.js'
@@ -55,7 +55,10 @@ export function useListItem(
     })
   }
 
-  function validate(payload: Partial<FormItem>): payload is FormItem {
+  function validate(
+    payload: Partial<FormItem>,
+    schema: Root
+  ): payload is FormItem {
     const { text, value } = payload.selectedItem ?? {}
 
     const titles =
@@ -71,23 +74,25 @@ export function useListItem(
     const errors: ListState['listItemErrors'] = {}
 
     errors.title = validateRequired('title', text, {
-      label: i18n('list.item.title')
+      label: i18n('list.item.title'),
+      schema
     })
 
     errors.title ??= validateCustom('title', [...titles, text], {
       message: 'errors.duplicate',
       label: `Item text '${text}'`,
-      schema: Joi.array().unique()
+      schema: schema.array().unique()
     })
 
     errors.value = validateRequired('value', value?.toString(), {
-      label: i18n('list.item.value')
+      label: i18n('list.item.value'),
+      schema
     })
 
     errors.value ??= validateCustom('value', [...values, value], {
       message: 'errors.duplicate',
       label: `Item value '${value}'`,
-      schema: Joi.array().unique()
+      schema: schema.array().unique()
     })
 
     dispatch({

@@ -15,7 +15,7 @@ import {
 // @ts-expect-error -- No types available
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import classNames from 'classnames'
-import Joi from 'joi'
+import { type Root } from 'joi'
 import {
   Component,
   type ChangeEvent,
@@ -111,8 +111,10 @@ export class PageEdit extends Component<Props, State> {
       controller: controller ? defaults.controller : undefined
     }
 
+    const { default: schema } = await import('joi')
+
     // Check for valid form payload
-    if (!this.validate(payload)) {
+    if (!this.validate(payload, schema)) {
       return
     }
 
@@ -163,7 +165,7 @@ export class PageEdit extends Component<Props, State> {
     }
   }
 
-  validate = (payload: Partial<Form>): payload is Form => {
+  validate = (payload: Partial<Form>, schema: Root): payload is Form => {
     const { controller } = this.state
 
     const { title, path } = payload
@@ -172,24 +174,26 @@ export class PageEdit extends Component<Props, State> {
 
     errors.controller = validateRequired('page-controller', controller, {
       label: i18n('addPage.controllerOption.title'),
-      message: 'addPage.controllerOption.option'
+      message: 'addPage.controllerOption.option',
+      schema
     })
 
     errors.title = validateRequired('page-title', title, {
-      label: i18n('addPage.pageTitleField.title')
+      label: i18n('addPage.pageTitleField.title'),
+      schema
     })
 
     // Path '/status' not allowed
     errors.path = validateCustom('page-path', path, {
       message: 'page.errors.pathStart',
-      schema: Joi.string().disallow(ControllerPath.Status)
+      schema: schema.string().disallow(ControllerPath.Status)
     })
 
     // Path '/start' not allowed
     if (controller !== ControllerType.Start) {
       errors.path ??= validateCustom('page-path', path, {
         message: 'page.errors.pathStart',
-        schema: Joi.string().disallow(ControllerPath.Start)
+        schema: schema.string().disallow(ControllerPath.Start)
       })
     }
 
@@ -197,7 +201,7 @@ export class PageEdit extends Component<Props, State> {
     if (controller !== ControllerType.Summary) {
       errors.path ??= validateCustom('page-path', path, {
         message: 'page.errors.pathSummary',
-        schema: Joi.string().disallow(ControllerPath.Summary)
+        schema: schema.string().disallow(ControllerPath.Summary)
       })
     }
 

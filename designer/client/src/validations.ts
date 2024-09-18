@@ -1,4 +1,4 @@
-import Joi, { type Schema } from 'joi'
+import { type Root, type Schema } from 'joi'
 
 import { type ErrorListItem } from '~/src/ErrorSummary.jsx'
 import { i18n } from '~/src/i18n/i18n.jsx'
@@ -38,12 +38,12 @@ export function validateCustom(
  * Required field validator
  */
 export const validateRequired: Validator<string> = (id, value, options) => {
-  const message = options.message ?? 'errors.required'
+  const { label, message, schema } = options
 
   return validateCustom(id, value, {
-    label: options.label,
-    message,
-    schema: Joi.string().required()
+    label,
+    message: message ?? 'errors.required',
+    schema: schema.string().required()
   })
 }
 
@@ -51,12 +51,12 @@ export const validateRequired: Validator<string> = (id, value, options) => {
  * No spaces validator
  */
 export const validateNoSpaces: Validator<string> = (id, value, options) => {
-  const message = options.message ?? 'errors.spaces'
+  const { label, message, schema } = options
 
   return validateCustom(id, value, {
-    label: options.label,
-    message,
-    schema: Joi.string().regex(/\s/, { invert: true }).required()
+    label,
+    message: message ?? 'errors.spaces',
+    schema: schema.string().regex(/\s/, { invert: true }).required()
   })
 }
 
@@ -72,6 +72,7 @@ type Validator<
   OptionsType = {
     label?: string
     message?: string
+    schema: Root
   }
 > = (
   id: string,

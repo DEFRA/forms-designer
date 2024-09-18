@@ -1,4 +1,5 @@
 import { type ComponentDef } from '@defra/forms-model'
+import { type Root } from 'joi'
 
 import {
   type ComponentState,
@@ -14,8 +15,13 @@ export type MetaReducerActions =
       as?: undefined
     }
   | {
-      name: Meta.SET_COMPONENT | Meta.VALIDATE
+      name: Meta.SET_COMPONENT
       payload?: undefined
+      as?: undefined
+    }
+  | {
+      name: Meta.VALIDATE
+      payload: Root
       as?: undefined
     }
   | {
@@ -44,7 +50,7 @@ export function metaReducer(state: ComponentState, action: ReducerActions) {
       break
 
     case Meta.VALIDATE:
-      stateNew.errors = fieldComponentValidations(selectedComponent)
+      stateNew.errors = fieldComponentValidations(selectedComponent, payload)
       stateNew.hasValidated = true
       break
   }

@@ -6,6 +6,7 @@ import {
   type ConditionWrapper
 } from '@defra/forms-model'
 import classNames from 'classnames'
+import { type Root } from 'joi'
 import {
   Component,
   type ChangeEvent,
@@ -124,8 +125,10 @@ export class InlineConditions extends Component<Props, State> {
       displayName: conditions.name
     }
 
+    const { default: schema } = await import('joi')
+
     // Check for valid form payload
-    if (!this.validate(payload)) {
+    if (!this.validate(payload, schema)) {
       return
     }
 
@@ -194,13 +197,14 @@ export class InlineConditions extends Component<Props, State> {
     })
   }
 
-  validate = (payload: Partial<Form>): payload is Form => {
+  validate = (payload: Partial<Form>, schema: Root): payload is Form => {
     const { displayName } = payload
 
     const errors: State['errors'] = {}
 
     errors.name = validateRequired('cond-name', displayName, {
-      label: i18n('conditions.enterName')
+      label: i18n('conditions.enterName'),
+      schema
     })
 
     this.setState({ errors })

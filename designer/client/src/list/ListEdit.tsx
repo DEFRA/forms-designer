@@ -1,7 +1,7 @@
 import { hasListField } from '@defra/forms-model'
 // @ts-expect-error -- No types available
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
-import Joi from 'joi'
+import { type Root } from 'joi'
 import {
   useContext,
   type ChangeEvent,
@@ -80,18 +80,22 @@ function useListEdit() {
     })
   }
 
-  function validate(payload: Partial<FormList>): payload is FormList {
+  function validate(
+    payload: Partial<FormList>,
+    schema: Root
+  ): payload is FormList {
     const { selectedList } = payload
 
     const errors: ListState['errors'] = {}
 
     errors.title = validateRequired('list-title', selectedList?.title, {
-      label: i18n('list.title')
+      label: i18n('list.title'),
+      schema
     })
 
     errors.listItems = validateCustom('list-items', selectedList?.items, {
       message: 'list.errors.empty',
-      schema: Joi.array().min(1)
+      schema: schema.array().min(1)
     })
 
     listDispatch({
@@ -110,8 +114,10 @@ function useListEdit() {
       selectedList
     }
 
+    const { default: schema } = await import('joi')
+
     // Check for valid form payload
-    if (!validate(payload)) {
+    if (!validate(payload, schema)) {
       return
     }
 

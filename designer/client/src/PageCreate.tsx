@@ -12,7 +12,7 @@ import {
 // @ts-expect-error -- No types available
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import classNames from 'classnames'
-import Joi from 'joi'
+import { type Root } from 'joi'
 import {
   Component,
   type ChangeEvent,
@@ -114,8 +114,10 @@ export class PageCreate extends Component<Props, State> {
       controller: controller ? defaults.controller : undefined
     }
 
+    const { default: schema } = await import('joi')
+
     // Check for valid form payload
-    if (!this.validate(payload)) {
+    if (!this.validate(payload, schema)) {
       return
     }
 
@@ -151,7 +153,7 @@ export class PageCreate extends Component<Props, State> {
     }
   }
 
-  validate = (payload: Partial<Form>): payload is Form => {
+  validate = (payload: Partial<Form>, schema: Root): payload is Form => {
     const { data } = this.context
     const { title, path, controller } = payload
 
@@ -159,11 +161,13 @@ export class PageCreate extends Component<Props, State> {
 
     errors.controller = validateRequired('page-controller', controller, {
       label: i18n('addPage.controllerOption.title'),
-      message: 'addPage.controllerOption.option'
+      message: 'addPage.controllerOption.option',
+      schema
     })
 
     errors.title = validateRequired('page-title', title, {
-      label: i18n('addPage.pageTitleField.title')
+      label: i18n('addPage.pageTitleField.title'),
+      schema
     })
 
     errors.path = validateCustom(
@@ -172,7 +176,7 @@ export class PageCreate extends Component<Props, State> {
       {
         message: 'errors.duplicate',
         label: `Path '${path}'`,
-        schema: Joi.array().unique()
+        schema: schema.array().unique()
       }
     )
 

@@ -45,7 +45,7 @@ export function ListItemEdit() {
     throw new Error('Component must support lists')
   }
 
-  const handleSubmit = (
+  const handleSubmit = async (
     e: FormEvent<HTMLFormElement> | MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault()
@@ -55,8 +55,10 @@ export function ListItemEdit() {
       selectedItem
     }
 
+    const { default: schema } = await import('joi')
+
     // Check for valid form payload
-    if (!validate(payload)) {
+    if (!validate(payload, schema)) {
       return
     }
 
