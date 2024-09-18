@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 import { Tabs as TabsJS } from 'govuk-frontend'
-import React, { useEffect, useRef, type ComponentProps } from 'react'
+import { useEffect, useRef, type ComponentProps } from 'react'
 
 interface Props extends ComponentProps<'div'> {
   idPrefix?: string

@@ -3,7 +3,6 @@ import { screen } from '@testing-library/dom'
 import { render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import lowerFirst from 'lodash/lowerFirst.js'
-import React from 'react'
 
 import { Page } from '~/src/components/Page/Page.jsx'
 import { RenderWithContext } from '~/test/helpers/renderers.jsx'

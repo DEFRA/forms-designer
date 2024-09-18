@@ -12,12 +12,7 @@ import {
   type ConditionsModel
 } from '@defra/forms-model'
 import classNames from 'classnames'
-import React, {
-  Component,
-  Fragment,
-  type ChangeEvent,
-  type MouseEvent
-} from 'react'
+import { Component, Fragment, type ChangeEvent, type MouseEvent } from 'react'
 
 import { ErrorMessage } from '~/src/components/ErrorMessage/ErrorMessage.jsx'
 import { InlineConditionsDefinition } from '~/src/conditions/InlineConditionsDefinition.jsx'

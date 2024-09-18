@@ -6,7 +6,6 @@ import {
 } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { render, type RenderResult } from '@testing-library/react'
-import React from 'react'
 
 import { MultilineTextFieldEdit } from '~/src/components/FieldEditors/MultilineTextFieldEdit.jsx'
 import { RenderComponent } from '~/test/helpers/renderers.jsx'

@@ -1,5 +1,5 @@
 import { type ComponentDef } from '@defra/forms-model'
-import React, {
+import {
   useMemo,
   useReducer,
   createContext,

@@ -1,4 +1,4 @@
-import React, { Component, type ContextType } from 'react'
+import { Component, type ContextType } from 'react'
 
 import { LinkEdit } from '~/src/LinkEdit.jsx'
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'

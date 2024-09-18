@@ -1,5 +1,5 @@
 import { type FormDefinition, type Item, type List } from '@defra/forms-model'
-import React, {
+import {
   createContext,
   useContext,
   useMemo,

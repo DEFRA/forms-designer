@@ -1,4 +1,4 @@
-import React, { type ReactElement } from 'react'
+import { type ReactElement } from 'react'
 
 import { type DataContextType } from '~/src/context/DataContext.js'
 import { type initComponentState } from '~/src/reducers/component/componentReducer.jsx'

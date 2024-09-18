@@ -6,7 +6,6 @@ import {
 import { screen } from '@testing-library/dom'
 import { render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import React from 'react'
 
 import { ComponentListSelect } from '~/src/components/ComponentListSelect/ComponentListSelect.jsx'
 import { RenderListEditorWithContext } from '~/test/helpers/renderers-lists.jsx'

@@ -5,7 +5,7 @@ import {
   type ComponentDef,
   type Page as PageType
 } from '@defra/forms-model'
-import React, { useContext, useState, type CSSProperties } from 'react'
+import { useContext, useState, type CSSProperties } from 'react'
 
 import { Component } from '~/src/Component.jsx'
 import { PageEdit } from '~/src/PageEdit.jsx'

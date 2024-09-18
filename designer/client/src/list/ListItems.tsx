@@ -1,5 +1,5 @@
 import { slugify, type Item } from '@defra/forms-model'
-import React, { useCallback, useContext, type ComponentProps } from 'react'
+import { useCallback, useContext, type ComponentProps } from 'react'
 
 import { SortUpDown } from '~/src/SortUpDown.jsx'
 import { arrayMove } from '~/src/helpers.js'

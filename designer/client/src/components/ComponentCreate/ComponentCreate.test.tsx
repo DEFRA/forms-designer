@@ -2,7 +2,6 @@ import { ComponentType, type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import React from 'react'
 
 import { ComponentCreate } from '~/src/components/ComponentCreate/ComponentCreate.jsx'
 import { RenderWithContext } from '~/test/helpers/renderers.jsx'

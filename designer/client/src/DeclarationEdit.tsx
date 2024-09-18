@@ -1,4 +1,4 @@
-import React, { Component, type ContextType, type FormEvent } from 'react'
+import { Component, type ContextType, type FormEvent } from 'react'
 
 import { Editor } from '~/src/Editor.jsx'
 import { logger } from '~/src/common/helpers/logging/logger.js'

@@ -6,7 +6,7 @@ import {
   type ConditionWrapper
 } from '@defra/forms-model'
 import classNames from 'classnames'
-import React, {
+import {
   Component,
   type ChangeEvent,
   type ContextType,

@@ -1,5 +1,5 @@
 import { ComponentType } from '@defra/forms-model'
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 
 import { TextFieldEdit } from '~/src/components/FieldEditors/TextFieldEdit.jsx'
 import { i18n } from '~/src/i18n/i18n.jsx'

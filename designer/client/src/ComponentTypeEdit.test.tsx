@@ -13,7 +13,6 @@ import { screen } from '@testing-library/dom'
 import { render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import lowerFirst from 'lodash/lowerFirst.js'
-import React from 'react'
 
 import { ComponentTypeEdit } from '~/src/ComponentTypeEdit.jsx'
 import { RenderWithContext } from '~/test/helpers/renderers.jsx'

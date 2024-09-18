@@ -6,12 +6,7 @@ import {
   type ComponentDef,
   type Page
 } from '@defra/forms-model'
-import React, {
-  useCallback,
-  useContext,
-  useState,
-  type ComponentProps
-} from 'react'
+import { useCallback, useContext, useState, type ComponentProps } from 'react'
 
 import { ComponentEdit } from '~/src/ComponentEdit.jsx'
 import { SortUpDown } from '~/src/SortUpDown.jsx'

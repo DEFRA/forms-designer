@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import React, { type ComponentProps } from 'react'
+import { type ComponentProps } from 'react'
 
 import { i18n } from '~/src/i18n/i18n.jsx'
 

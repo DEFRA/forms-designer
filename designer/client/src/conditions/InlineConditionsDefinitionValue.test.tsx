@@ -12,7 +12,6 @@ import { screen } from '@testing-library/dom'
 import { render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import upperFirst from 'lodash/upperFirst.js'
-import React from 'react'
 
 import { InlineConditionsDefinitionValue } from '~/src/conditions/InlineConditionsDefinitionValue.jsx'
 import { type FieldDef } from '~/src/data/component/fields.js'

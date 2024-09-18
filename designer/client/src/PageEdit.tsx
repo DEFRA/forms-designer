@@ -16,7 +16,7 @@ import {
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import classNames from 'classnames'
 import Joi from 'joi'
-import React, {
+import {
   Component,
   type ChangeEvent,
   type ContextType,

@@ -2,7 +2,7 @@ import { hasListField } from '@defra/forms-model'
 // @ts-expect-error -- No types available
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import Joi from 'joi'
-import React, {
+import {
   useContext,
   type ChangeEvent,
   type FormEvent,

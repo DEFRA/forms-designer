@@ -1,7 +1,6 @@
 import { type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { render } from '@testing-library/react'
-import React from 'react'
 
 import { ListEdit } from '~/src/list/ListEdit.jsx'
 import { RenderListEditorWithContext } from '~/test/helpers/renderers-lists.jsx'

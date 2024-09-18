@@ -1,7 +1,6 @@
 import { type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { render } from '@testing-library/react'
-import React from 'react'
 
 import { PageCreate } from '~/src/PageCreate.jsx'
 import { RenderWithContext } from '~/test/helpers/renderers.jsx'

@@ -7,7 +7,6 @@ import {
 } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { render, type RenderResult } from '@testing-library/react'
-import React from 'react'
 
 import { ListContentEdit } from '~/src/components/FieldEditors/ListContentEdit.jsx'
 import { RenderComponent } from '~/test/helpers/renderers.jsx'

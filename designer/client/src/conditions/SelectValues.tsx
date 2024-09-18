@@ -3,7 +3,7 @@ import {
   type ConditionValueData,
   type Item
 } from '@defra/forms-model'
-import React, { type ChangeEvent } from 'react'
+import { type ChangeEvent } from 'react'
 
 import { type FieldDef } from '~/src/data/component/fields.js'
 import { i18n } from '~/src/i18n/i18n.jsx'

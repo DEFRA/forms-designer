@@ -1,6 +1,6 @@
 import { hasListField } from '@defra/forms-model'
 import classNames from 'classnames'
-import React, {
+import {
   useContext,
   useEffect,
   useState,

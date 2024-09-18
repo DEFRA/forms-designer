@@ -1,5 +1,5 @@
 import { type FormMetadata, type FormDefinition } from '@defra/forms-model'
-import React, { Component } from 'react'
+import { Component } from 'react'
 import ReactDOM from 'react-dom'
 
 import { Designer } from '~/src/Designer.jsx'

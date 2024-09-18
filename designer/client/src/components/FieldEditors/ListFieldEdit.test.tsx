@@ -8,7 +8,6 @@ import {
 import { screen } from '@testing-library/dom'
 import { render, type RenderResult } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import React from 'react'
 
 import { ListFieldEdit } from '~/src/components/FieldEditors/ListFieldEdit.jsx'
 import { RenderComponent } from '~/test/helpers/renderers.jsx'

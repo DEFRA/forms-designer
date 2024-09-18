@@ -1,5 +1,5 @@
 import { ComponentType } from '@defra/forms-model'
-import React, { useContext, type ReactNode } from 'react'
+import { useContext, type ReactNode } from 'react'
 
 import { Autocomplete } from '~/src/components/Autocomplete/Autocomplete.jsx'
 import { CssClasses } from '~/src/components/CssClasses/CssClasses.jsx'

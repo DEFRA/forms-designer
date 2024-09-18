@@ -2,7 +2,6 @@ import { type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import React from 'react'
 
 import { Menu } from '~/src/components/Menu/Menu.jsx'
 import { RenderWithContext } from '~/test/helpers/renderers'

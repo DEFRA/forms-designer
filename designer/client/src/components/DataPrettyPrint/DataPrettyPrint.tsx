@@ -1,4 +1,4 @@
-import React, { type ComponentProps } from 'react'
+import { type ComponentProps } from 'react'
 
 interface Props extends Omit<ComponentProps<'pre'>, 'children'> {
   children: object

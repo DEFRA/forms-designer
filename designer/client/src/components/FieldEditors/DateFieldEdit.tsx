@@ -1,5 +1,5 @@
 import { ComponentType } from '@defra/forms-model'
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 
 import { CssClasses } from '~/src/components/CssClasses/CssClasses.jsx'
 import { i18n } from '~/src/i18n/i18n.jsx'
