@@ -60,7 +60,6 @@ updates:
           - 'concurrently'
           - 'jest'
           - 'jest-*'
-          - 'nodemon'
           - 'tsx'
 
       types:
