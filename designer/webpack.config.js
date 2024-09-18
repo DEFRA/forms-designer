@@ -147,8 +147,22 @@ export default /** @type {Configuration} */ ({
     // Apply cache groups in production
     splitChunks: {
       cacheGroups: {
+        defaultVendors: {
+          /**
+           * Use npm package names
+           * @param {NormalModule} module
+           */
+          name({ userRequest }) {
+            const [[modulePath, pkgName]] = userRequest.matchAll(
+              /node_modules\/([^\\/]+)/g
+            )
+
+            // Move into /javascripts/vendor
+            return join('vendor', pkgName || modulePath)
+          }
+        },
         shared: {
-          chunks: 'all',
+          chunks: 'initial',
           name: 'shared',
           test: /node_modules/,
           usedExports: true
@@ -236,5 +250,5 @@ export default /** @type {Configuration} */ ({
 })
 
 /**
- * @import { Configuration } from 'webpack'
+ * @import { Configuration, NormalModule } from 'webpack'
  */
