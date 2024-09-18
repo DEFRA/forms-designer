@@ -1,6 +1,6 @@
 import { type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import { act, render, waitFor } from '@testing-library/react'
+import { render, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React from 'react'
 
@@ -43,7 +43,7 @@ describe('Menu', () => {
       name: 'Summary'
     })
 
-    await act(() => userEvent.click($buttonSummary))
+    await userEvent.click($buttonSummary)
 
     const $dialog = screen.getByRole('dialog', {
       name: 'Edit summary'
@@ -55,7 +55,7 @@ describe('Menu', () => {
       name: 'Close'
     })
 
-    await act(() => userEvent.click($close))
+    await userEvent.click($close)
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 
@@ -70,7 +70,7 @@ describe('Menu', () => {
       name: 'Form overview'
     })
 
-    await act(() => userEvent.click($buttonFormOverview))
+    await userEvent.click($buttonFormOverview)
 
     const $dialog = screen.getByRole('dialog', {
       name: 'Form overview'
@@ -94,7 +94,7 @@ describe('Menu', () => {
     expect($panels[3]).toHaveClass('govuk-tabs__panel--hidden')
 
     // Click JSON tab link
-    await act(() => userEvent.click($tabs[1]))
+    await userEvent.click($tabs[1])
 
     // Only second tab panel (JSON) is visible
     expect($panels[0]).toHaveClass('govuk-tabs__panel--hidden')
@@ -116,7 +116,7 @@ describe('Menu', () => {
       name: 'Summary'
     })
 
-    await act(() => userEvent.click($buttonSummary))
+    await userEvent.click($buttonSummary)
 
     const $dialog = screen.getByRole('dialog', {
       name: 'Edit summary'
@@ -128,7 +128,7 @@ describe('Menu', () => {
       name: 'Save'
     })
 
-    await act(() => userEvent.click($buttonSave))
+    await userEvent.click($buttonSave)
     await waitFor(() => expect(save).toHaveBeenCalledTimes(1))
 
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()

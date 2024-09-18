@@ -6,7 +6,7 @@ import {
   type FormDefinition
 } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import { act, render } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React from 'react'
 
@@ -179,7 +179,7 @@ describe('ConditionsEdit', () => {
         name: condition.displayName
       })
 
-      await act(() => userEvent.click($link))
+      await userEvent.click($link)
 
       const $dialog = screen.getByRole('dialog', {
         name: 'Add or edit condition'

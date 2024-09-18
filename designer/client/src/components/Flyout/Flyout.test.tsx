@@ -1,5 +1,5 @@
 import { screen } from '@testing-library/dom'
-import { act, render } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React from 'react'
 
@@ -71,7 +71,7 @@ describe('Flyout', () => {
       name: 'Close'
     })
 
-    await act(() => userEvent.click($close))
+    await userEvent.click($close)
 
     expect(HTMLDialogElement.prototype.close).toHaveBeenCalled()
   })

@@ -4,7 +4,7 @@ import {
   type FormDefinition
 } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import { act, render } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React from 'react'
 
@@ -82,7 +82,7 @@ describe('ComponentListSelect', () => {
       name: 'Select list'
     })
 
-    await act(() => userEvent.selectOptions($select, 'myList'))
+    await userEvent.selectOptions($select, 'myList')
 
     expect(screen.getByText('Edit list')).toBeInTheDocument()
   })
@@ -126,7 +126,7 @@ describe('ComponentListSelect', () => {
     )
 
     const $select = screen.getByRole('combobox', { name: 'Select list' })
-    await act(() => userEvent.selectOptions($select, 'Select a list'))
+    await userEvent.selectOptions($select, 'Select a list')
 
     expect(
       container.getElementsByClassName('govuk-form-group--error')
