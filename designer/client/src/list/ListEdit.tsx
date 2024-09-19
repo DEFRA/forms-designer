@@ -207,7 +207,7 @@ export function ListEdit() {
           </a>
         </p>
 
-        <div className="govuk-button-group">
+        <div className="govuk-button-group govuk-!-margin-top-6">
           <button className="govuk-button" type="submit">
             {i18n('save')}
           </button>

@@ -123,28 +123,29 @@ export function ListItemEdit() {
           errorMessage={errors.value}
           onChange={handleValueChange}
         />
-        <label className="govuk-label" htmlFor="condition">
-          {i18n('list.item.conditions')}
-        </label>
-        <div className="govuk-hint" id="condition-hint">
-          {i18n('list.item.conditionsHint')}
+        <div className="govuk-form-group">
+          <label className="govuk-label" htmlFor="condition">
+            {i18n('list.item.conditions')}
+          </label>
+          <div className="govuk-hint" id="condition-hint">
+            {i18n('list.item.conditionsHint')}
+          </div>
+          <select
+            className="govuk-select"
+            id="condition"
+            aria-describedby="condition-hint"
+            name="options.condition"
+            value={condition ?? ''}
+            onChange={handleConditionChange}
+          >
+            <option value="">{i18n('list.item.conditionsOption')}</option>
+            {conditions.map((condition) => (
+              <option key={condition.name} value={condition.name}>
+                {condition.displayName}
+              </option>
+            ))}
+          </select>
         </div>
-        <select
-          className="govuk-select"
-          id="condition"
-          aria-describedby="condition-hint"
-          name="options.condition"
-          value={condition ?? ''}
-          onChange={handleConditionChange}
-        >
-          <option value="">{i18n('list.item.conditionsOption')}</option>
-          {conditions.map((condition) => (
-            <option key={condition.name} value={condition.name}>
-              {condition.displayName}
-            </option>
-          ))}
-        </select>
-        <hr className="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
         <div className="govuk-button-group">
           <button className="govuk-button" type="submit">
             {i18n('save')}
