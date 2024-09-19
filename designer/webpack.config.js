@@ -136,6 +136,9 @@ export default /** @type {Configuration} */ ({
           // Allow Terser to remove @preserve comments
           format: { comments: false },
 
+          // Allow Terser to shorten property names
+          mangle: { properties: true },
+
           // Include sources content from dependency source maps
           sourceMap: {
             includeSources: true
