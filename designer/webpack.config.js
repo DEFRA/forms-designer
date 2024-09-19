@@ -161,10 +161,10 @@ export default /** @type {Configuration} */ ({
             return join('vendor', pkgName || modulePath)
           }
         },
-        shared: {
+        editor: {
           chunks: 'initial',
-          name: 'shared',
-          test: /node_modules/,
+          name: 'vendor/react',
+          test: /node_modules\/(focus-trap|i18next|react)/,
           usedExports: true
         }
       }
