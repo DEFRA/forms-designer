@@ -14,8 +14,8 @@ $app-code-font: ui-monospace, menlo, "Cascadia Mono", "Segoe UI Mono", consolas,
 $app-code-color: #d13118;
 $app-light-grey: #f8f8f8;
 $app-box-border: solid 2px #000;
-$app-component-focus-color: govuk-colour("yellow");
-$app-component-focus-within-color: govuk-shade(govuk-colour("light-grey"), 10%);
+$app-result-focus-color: govuk-colour("yellow");
+$app-result-focus-within-color: govuk-shade(govuk-colour("light-grey"), 10%);
 
 %app-button-link {
   @include govuk-link-common;
@@ -93,8 +93,8 @@ p code {
   }
 }
 
-.govuk-button--editor,
-.govuk-button--component {
+.app-button--editor,
+.app-button--result {
   @include govuk-font-size($size: 16);
 
   & {
@@ -112,32 +112,31 @@ p code {
   }
 }
 
-.govuk-button--editor {
+.app-button--editor {
   background-color: govuk-colour("black");
   box-shadow: 0 1px 0 govuk-colour("white");
   color: govuk-colour("white");
 }
 
-.govuk-button--component {
+.app-button--result {
   min-height: govuk-em(44px, $context-font-size: 16);
   background-color: transparent;
   box-shadow: none;
   border: none;
   color: govuk-colour("black");
-  font-weight: bold;
 }
 
-.app-component {
+.app-result {
   position: relative;
 
   &:hover {
-    background-color: $app-component-focus-color;
-    box-shadow: 0 $govuk-border-width-form-element 0 $app-component-focus-color;
+    background-color: $app-result-focus-color;
+    box-shadow: 0 $govuk-border-width-form-element 0 $app-result-focus-color;
   }
 
   &:focus-within:not(:hover) {
-    background-color: $app-component-focus-within-color;
-    box-shadow: 0 $govuk-border-width-form-element 0 $app-component-focus-within-color;
+    background-color: $app-result-focus-within-color;
+    box-shadow: 0 $govuk-border-width-form-element 0 $app-result-focus-within-color;
   }
 
   &__button {
@@ -160,8 +159,8 @@ p code {
     box-shadow: 0 $govuk-border-width-form-element 0 govuk-shade(govuk-colour("light-grey"), 40%);
 
     @at-root {
-      .app-component:hover &,
-      .app-component:focus-within & {
+      .app-result:hover &,
+      .app-result:focus-within & {
         z-index: 1;
       }
     }
@@ -208,14 +207,14 @@ p code {
   color: govuk-colour("dark-grey");
 
   @at-root {
-    .app-component:focus-within & {
-      background-color: govuk-tint($app-component-focus-within-color, 35%);
+    .app-result:focus-within & {
+      background-color: govuk-tint($app-result-focus-within-color, 35%);
     }
 
-    .app-component:hover &,
+    .app-result:hover &,
     .govuk-button:hover &,
     .govuk-button:focus & {
-      background-color: govuk-tint($app-component-focus-color, 35%);
+      background-color: govuk-tint($app-result-focus-color, 35%);
     }
   }
 }
@@ -226,6 +225,7 @@ p code {
   align-items: center;
   column-gap: 4px;
   box-sizing: border-box;
+  font-weight: bold;
   font-size: small;
   line-height: 1;
 }
@@ -298,14 +298,14 @@ p code {
     box-shadow: inset 0 0 0 2px govuk-colour("white");
 
     @at-root {
-      .app-component:focus-within & {
-        box-shadow: inset 0 0 0 2px $app-component-focus-within-color;
+      .app-result:focus-within & {
+        box-shadow: inset 0 0 0 2px $app-result-focus-within-color;
       }
 
-      .app-component:hover &,
+      .app-result:hover &,
       .govuk-button:hover &,
       .govuk-button:focus & {
-        box-shadow: inset 0 0 0 2px $app-component-focus-color;
+        box-shadow: inset 0 0 0 2px $app-result-focus-color;
       }
     }
   }

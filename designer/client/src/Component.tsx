@@ -277,9 +277,9 @@ export function Component(props: Readonly<Props>) {
   const showMoveActions = hasComponents(page) && page.components.length > 1
 
   return (
-    <div className="app-component">
+    <div className="app-result">
       <button
-        className="app-component__button govuk-button govuk-button--component"
+        className="app-result__button govuk-button app-button--result"
         onClick={onSave}
         aria-describedby={headingId}
       >
@@ -287,9 +287,9 @@ export function Component(props: Readonly<Props>) {
         <ComponentIcon />
       </button>
       {showMoveActions && (
-        <div className="app-component__actions">
+        <div className="app-result__actions">
           <button
-            className="app-component__action govuk-button govuk-button--secondary"
+            className="app-result__action govuk-button govuk-button--secondary"
             onClick={() => move(index, index - 1)}
             title={componentMoveUpTitle}
             aria-label={componentMoveUpLabel}
@@ -298,7 +298,7 @@ export function Component(props: Readonly<Props>) {
             ▲
           </button>
           <button
-            className="app-component__action govuk-button govuk-button--secondary"
+            className="app-result__action govuk-button govuk-button--secondary"
             onClick={() => move(index, index + 1)}
             title={componentMoveDownTitle}
             aria-label={componentMoveDownLabel}
