@@ -5,6 +5,9 @@ export const sessionNames = {
     createForm: /** @type {const} */ ('createFormValidationFailure'),
     updateForm: /** @type {const} */ ('updateFormValidationFailure'),
     privacyNotice: /** @type {const} */ ('privacyNoticeValidationFailure'),
+    notificationEmail: /** @type {const} */ (
+      'notificationEmailValidationFailure'
+    ),
     contactEmail: /** @type {const} */ ('contactEmailValidationFailure'),
     contactPhone: /** @type {const} */ ('contactPhoneValidationFailure'),
     contactOnline: /** @type {const} */ ('contactOnlineValidationFailure'),

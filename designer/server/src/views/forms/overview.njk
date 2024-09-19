@@ -22,6 +22,46 @@
   {% endif %}
 
   {{ appHeading({
+    text: "Where submitted forms are sent",
+    size: "medium",
+    level: "2",
+    classes: "govuk-!-margin-top-8"
+  }) }}
+
+  {%- set notificationEmail %}
+    {% if form.notificationEmail %}
+      <div class="app-prose-scope">
+        {{ form.notificationEmail }}
+      </div>
+    {% else %}
+      <a class="govuk-link govuk-link--no-visited-state" href="/library/{{ form.slug }}/edit/notification-email">Enter email address</a>
+    {% endif %}
+  {% endset %}
+
+  {{ govukSummaryList({
+    classes: "govuk-!-margin-bottom-8",
+    rows: [
+      {
+        key: {
+          text: "Submitted forms sent to"
+        },
+        value: {
+          html: notificationEmail
+        },
+        actions: {
+          items: [
+            {
+              href: "/library/" + form.slug + "/edit/notification-email",
+              text: "Change",
+              visuallyHiddenText: "email address where submitted forms are sent to"
+            }
+          ]
+        } if form.notificationEmail
+      }
+    ]
+  }) }}
+
+  {{ appHeading({
     text: "Contact details for support",
     size: "medium",
     level: "2",
