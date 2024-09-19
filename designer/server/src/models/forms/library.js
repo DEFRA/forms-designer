@@ -1,6 +1,12 @@
 import { buildEntry } from '~/src/common/nunjucks/context/build-navigation.js'
 import config from '~/src/config.js'
 import * as forms from '~/src/lib/forms.js'
+import {
+  formOverviewBackLink,
+  formsLibraryBackLink,
+  formOverviewPath,
+  formsLibraryPath
+} from '~/src/models/links.js'
 
 /**
  * @param {string} token
@@ -24,15 +30,12 @@ export async function listViewModel(token) {
  */
 export function overviewViewModel(metadata, notification) {
   const pageTitle = metadata.title
-  const formPath = `/library/${metadata.slug}`
+  const formPath = formOverviewPath(metadata.slug)
 
   const navigation = getFormSpecificNavigation(formPath, 'Overview')
 
   return {
-    backLink: {
-      text: 'Back to forms library',
-      href: '/library'
-    },
+    backLink: formsLibraryBackLink,
     navigation,
     pageTitle,
     pageHeading: {
@@ -85,15 +88,12 @@ export function overviewViewModel(metadata, notification) {
  */
 export function editorViewModel(metadata, definition) {
   const pageTitle = metadata.title
-  const formPath = `/library/${metadata.slug}`
+  const formPath = formOverviewPath(metadata.slug)
 
   const navigation = getFormSpecificNavigation(formPath, 'Editor')
 
   return {
-    backLink: {
-      text: 'Back to form overview',
-      href: `/library/${metadata.slug}`
-    },
+    backLink: formOverviewBackLink(metadata.slug),
     navigation,
     pageTitle,
     pageHeading: {
@@ -114,7 +114,7 @@ export function editorViewModel(metadata, definition) {
  */
 export function getFormSpecificNavigation(formPath, activePage = '') {
   return [
-    ['Forms library', '/library'],
+    ['Forms library', formsLibraryPath],
     ['Overview', formPath],
     ['Editor', `${formPath}/editor`]
   ].map((item) =>

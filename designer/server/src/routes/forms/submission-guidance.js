@@ -1,4 +1,4 @@
-import { emailAddressSchema, emailResponseTimeSchema } from '@defra/forms-model'
+import { submissionGuidanceSchema } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
@@ -6,20 +6,15 @@ import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
 import * as forms from '~/src/lib/forms.js'
-import { emailViewModel } from '~/src/models/forms/contact/email.js'
+import { submissionGuidanceViewModel } from '~/src/models/forms/submission-guidance.js'
 import { formOverviewPath } from '~/src/models/links.js'
 
-export const ROUTE_PATH_EDIT_EMAIL_CONTACT =
-  '/library/{slug}/edit/contact/email'
+export const ROUTE_PATH_EDIT_SUBMISSION_GUIDANCE =
+  '/library/{slug}/edit/submission-guidance'
 
-export const emailContactSchema = Joi.object().keys({
-  address: emailAddressSchema.required().messages({
-    'string.empty': 'Enter an email address for dedicated support',
-    'string.email':
-      'Enter an email address for dedicated support in the correct format'
-  }),
-  responseTime: emailResponseTimeSchema.required().messages({
-    'string.empty': 'Enter a response time for receiving responses'
+export const schema = Joi.object().keys({
+  submissionGuidance: submissionGuidanceSchema.required().messages({
+    'string.empty': 'Enter what will happen after a user submits a form'
   })
 })
 
@@ -29,23 +24,23 @@ export default [
    */
   ({
     method: 'GET',
-    path: ROUTE_PATH_EDIT_EMAIL_CONTACT,
+    path: ROUTE_PATH_EDIT_SUBMISSION_GUIDANCE,
     async handler(request, h) {
       const { auth, params, yar } = request
       const { slug } = params
       const { token } = auth.credentials
 
       const validation = yar
-        .flash(sessionNames.validationFailure.contactEmail)
+        .flash(sessionNames.validationFailure.submissionGuidance)
         .at(0)
 
       // Retrieve form by slug
       const metadata = await forms.get(slug, token)
 
-      // Create the email contact view model
-      const model = emailViewModel(metadata, validation)
+      // Create the submission guidance view model
+      const model = submissionGuidanceViewModel(metadata, validation)
 
-      return h.view('forms/contact/email', model)
+      return h.view('forms/submission-guidance', model)
     },
     options: {
       auth: {
@@ -59,37 +54,33 @@ export default [
   }),
 
   /**
-   * @satisfies {ServerRoute<{ Params: { slug: string }, Payload: FormMetadataContactEmail }>}
+   * @satisfies {ServerRoute<{ Params: { slug: string }, Payload: Pick<FormMetadataInput, 'submissionGuidance'> }>}
    */
   ({
     method: 'POST',
-    path: ROUTE_PATH_EDIT_EMAIL_CONTACT,
+    path: ROUTE_PATH_EDIT_SUBMISSION_GUIDANCE,
     async handler(request, h) {
       const { auth, params, payload, yar } = request
       const { slug } = params
-      const { address, responseTime } = payload
+      const { submissionGuidance } = payload
       const { token } = auth.credentials
 
       // Retrieve form by slug
-      const { id, contact = {} } = await forms.get(slug, token)
+      const { id } = await forms.get(slug, token)
 
-      // Update the metadata with the email contact details
-      await forms.updateMetadata(
-        id,
-        { contact: { ...contact, email: { address, responseTime } } },
-        token
-      )
+      // Update the metadata with the submission guidance text
+      await forms.updateMetadata(id, { submissionGuidance }, token)
 
       yar.flash(
         sessionNames.successNotification,
-        'Email address for support has been updated'
+        'What happens after users submit their form has been updated'
       )
 
       return h.redirect(formOverviewPath(slug)).code(StatusCodes.SEE_OTHER)
     },
     options: {
       validate: {
-        payload: emailContactSchema,
+        payload: schema,
         /**
          * @param {Request} request
          * @param {ResponseToolkit} h
@@ -102,7 +93,7 @@ export default [
           if (error && error instanceof Joi.ValidationError) {
             const formErrors = buildErrorDetails(error)
 
-            yar.flash(sessionNames.validationFailure.contactEmail, {
+            yar.flash(sessionNames.validationFailure.submissionGuidance, {
               formErrors,
               formValues: payload
             })
@@ -125,5 +116,5 @@ export default [
 
 /**
  * @import { Request, ResponseToolkit, ServerRoute } from '@hapi/hapi'
- * @import { FormMetadataContactEmail } from '@defra/forms-model'
+ * @import { FormMetadataInput } from '@defra/forms-model'
  */

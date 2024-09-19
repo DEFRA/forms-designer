@@ -7,6 +7,7 @@ import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildSimpleErrorList } from '~/src/common/helpers/build-error-details.js'
 import * as forms from '~/src/lib/forms.js'
 import * as formLifecycle from '~/src/models/forms/form-lifecycle.js'
+import { formOverviewPath } from '~/src/models/links.js'
 
 export default [
   /**
@@ -61,7 +62,7 @@ export default [
           notifications.FORM_LIVE_CREATED
         )
 
-        return h.redirect(`/library/${form.slug}`)
+        return h.redirect(formOverviewPath(form.slug))
       } catch (err) {
         if (
           Boom.isBoom(err) &&
@@ -69,7 +70,7 @@ export default [
         ) {
           yar.flash(sessionNames.errorList, buildSimpleErrorList([err.message]))
 
-          return h.redirect(`/library/${form.slug}/make-draft-live`)
+          return h.redirect(`${formOverviewPath(form.slug)}/make-draft-live`)
         }
 
         throw err
@@ -105,7 +106,7 @@ export default [
         notifications.FORM_DRAFT_CREATED
       )
 
-      return h.redirect(`/library/${slug}`)
+      return h.redirect(formOverviewPath(slug))
     },
     options: {
       auth: {

@@ -1,4 +1,5 @@
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
+import { formsLibraryBackLink } from '~/src/models/links.js'
 
 /**
  * @param { ValidationFailure<{ email: string }> } [validation]
@@ -6,10 +7,7 @@ import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 export function fileViewModel(validation) {
   const pageTitle = 'You have a file to download'
   return {
-    backLink: {
-      text: 'Back to forms library',
-      href: '/library'
-    },
+    backLink: formsLibraryBackLink,
     pageTitle,
     pageHeading: {
       text: pageTitle,

@@ -1,4 +1,5 @@
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
+import { formOverviewBackLink } from '~/src/models/links.js'
 
 /**
  * @param {FormMetadata} metadata
@@ -10,10 +11,7 @@ export function emailViewModel(metadata, validation) {
 
   return {
     form: metadata,
-    backLink: {
-      text: 'Back',
-      href: `/library/${metadata.slug}`
-    },
+    backLink: formOverviewBackLink(metadata.slug),
     pageTitle,
     errorList: buildErrorList(formErrors),
     formErrors: validation?.formErrors,

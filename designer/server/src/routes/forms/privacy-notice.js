@@ -7,6 +7,7 @@ import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
 import * as forms from '~/src/lib/forms.js'
 import { privacyNoticyViewModel } from '~/src/models/forms/privacy-notice.js'
+import { formOverviewPath } from '~/src/models/links.js'
 
 export const ROUTE_PATH_EDIT_PRIVACY_NOTICE =
   '/library/{slug}/edit/privacy-notice'
@@ -79,7 +80,7 @@ export default [
         'Link to a privacy notice has been updated'
       )
 
-      return h.redirect(`/library/${slug}`).code(StatusCodes.SEE_OTHER)
+      return h.redirect(formOverviewPath(slug)).code(StatusCodes.SEE_OTHER)
     },
     options: {
       validate: {

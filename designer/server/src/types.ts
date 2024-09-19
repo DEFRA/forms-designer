@@ -124,6 +124,10 @@ declare module '@hapi/yar' {
     ): ValidationFailure<FormMetadataContactOnline>[]
 
     flash(
+      type: ValidationSession['submissionGuidance']
+    ): ValidationFailure<Pick<FormMetadataInput, 'submissionGuidance'>>[]
+
+    flash(
       type: ValidationSession['fileDownload']
     ): ValidationFailure<{ email: string }>[]
 

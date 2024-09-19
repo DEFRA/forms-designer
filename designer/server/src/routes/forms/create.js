@@ -15,6 +15,7 @@ import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
 import * as forms from '~/src/lib/forms.js'
 import * as create from '~/src/models/forms/create.js'
+import { formOverviewPath } from '~/src/models/links.js'
 import { redirectToTitleWithErrors } from '~/src/routes/forms/helpers.js'
 
 const logger = createLogger()
@@ -273,7 +274,9 @@ export default [
         /**
          * Redirect POST to GET without resubmit on back button
          */
-        return h.redirect(`/library/${result.slug}`).code(StatusCodes.SEE_OTHER)
+        return h
+          .redirect(formOverviewPath(result.slug))
+          .code(StatusCodes.SEE_OTHER)
       } catch (err) {
         if (Boom.isBoom(err) && err.data?.error === 'FormAlreadyExistsError') {
           return redirectToTitleWithErrors(request, h, ROUTE_PATH_CREATE_TITLE)

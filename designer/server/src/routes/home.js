@@ -1,5 +1,6 @@
 import * as scopes from '~/src/common/constants/scopes.js'
 import { signInViewModel } from '~/src/models/account/auth.js'
+import { formsLibraryPath } from '~/src/models/links.js'
 
 export default /** @satisfies {ServerRoute} */ ({
   method: 'GET',
@@ -9,7 +10,7 @@ export default /** @satisfies {ServerRoute} */ ({
     const { isAuthenticated, isAuthorized } = auth
 
     if (isAuthenticated && isAuthorized) {
-      return h.redirect('/library')
+      return h.redirect(formsLibraryPath)
     }
 
     const model = signInViewModel({

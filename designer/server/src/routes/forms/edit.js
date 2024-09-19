@@ -6,6 +6,7 @@ import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import * as forms from '~/src/lib/forms.js'
 import * as edit from '~/src/models/forms/edit.js'
+import { formOverviewPath } from '~/src/models/links.js'
 import { redirectWithErrors, schema } from '~/src/routes/forms/create.js'
 import { redirectToTitleWithErrors } from '~/src/routes/forms/helpers.js'
 
@@ -68,7 +69,7 @@ export default [
         'Lead organisation has been changed'
       )
 
-      return h.redirect(`/library/${slug}`).code(StatusCodes.SEE_OTHER)
+      return h.redirect(formOverviewPath(slug)).code(StatusCodes.SEE_OTHER)
     },
     options: {
       validate: {
@@ -143,7 +144,7 @@ export default [
         'Team details have been changed'
       )
 
-      return h.redirect(`/library/${slug}`).code(StatusCodes.SEE_OTHER)
+      return h.redirect(formOverviewPath(slug)).code(StatusCodes.SEE_OTHER)
     },
     options: {
       validate: {
@@ -219,13 +220,13 @@ export default [
           'Form name has been changed'
         )
 
-        return h.redirect(`/library/${slug}`).code(StatusCodes.SEE_OTHER)
+        return h.redirect(formOverviewPath(slug)).code(StatusCodes.SEE_OTHER)
       } catch (err) {
         if (Boom.isBoom(err, StatusCodes.BAD_REQUEST)) {
           return redirectToTitleWithErrors(
             request,
             h,
-            `/library/${params.slug}/edit/title`
+            `${formOverviewPath(params.slug)}/edit/title`
           )
         }
 
