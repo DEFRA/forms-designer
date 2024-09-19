@@ -3,6 +3,7 @@ import Boom from '@hapi/boom'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { hasUser } from '~/src/common/helpers/auth/get-user-session.js'
 import { createUserSession } from '~/src/common/helpers/auth/user-session.js'
+import { formsLibraryPath } from '~/src/models/links.js'
 
 export default [
   /**
@@ -24,7 +25,9 @@ export default [
       // Add to authentication cookie for session validation
       cookieAuth.set({ sessionId: credentials.user.id })
 
-      const redirect = yar.flash(sessionNames.redirectTo).at(0) ?? '/library'
+      const redirect =
+        yar.flash(sessionNames.redirectTo).at(0) ?? formsLibraryPath
+
       return h.redirect(redirect)
     },
     options: {

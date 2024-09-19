@@ -1,6 +1,7 @@
 import { organisations } from '@defra/forms-model'
 
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
+import { formsLibraryBackLink } from '~/src/models/links.js'
 import {
   ROUTE_PATH_CREATE_ORGANISATION,
   ROUTE_PATH_CREATE_TITLE
@@ -15,10 +16,7 @@ export function titleViewModel(metadata, validation) {
   const { formValues, formErrors } = validation ?? {}
 
   return {
-    backLink: {
-      text: 'Back to forms library',
-      href: '/library'
-    },
+    backLink: formsLibraryBackLink,
     pageTitle,
     errorList: buildErrorList(formErrors, ['title']),
     formErrors: validation?.formErrors,

@@ -1,5 +1,6 @@
 import { render } from '~/src/common/nunjucks/index.js'
 import { getFormSpecificNavigation } from '~/src/models/forms/library.js'
+import { formOverviewPath } from '~/src/models/links.js'
 
 /**
  * Model to represent confirmation page dialog for a given form.
@@ -9,7 +10,7 @@ import { getFormSpecificNavigation } from '~/src/models/forms/library.js'
 export function confirmationPageViewModel(form, errorList) {
   const pageTitle = 'Are you sure you want to make the draft live?'
 
-  const formPath = `/library/${form.slug}`
+  const formPath = formOverviewPath(form.slug)
   const navigation = getFormSpecificNavigation(formPath)
 
   return {

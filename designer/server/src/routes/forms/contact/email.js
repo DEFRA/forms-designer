@@ -7,6 +7,7 @@ import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
 import * as forms from '~/src/lib/forms.js'
 import { emailViewModel } from '~/src/models/forms/contact/email.js'
+import { formOverviewPath } from '~/src/models/links.js'
 
 export const ROUTE_PATH_EDIT_EMAIL_CONTACT =
   '/library/{slug}/edit/contact/email'
@@ -84,7 +85,7 @@ export default [
         'Email address for support has been updated'
       )
 
-      return h.redirect(`/library/${slug}`).code(StatusCodes.SEE_OTHER)
+      return h.redirect(formOverviewPath(slug)).code(StatusCodes.SEE_OTHER)
     },
     options: {
       validate: {

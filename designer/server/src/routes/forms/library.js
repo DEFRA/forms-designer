@@ -2,6 +2,7 @@ import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import * as forms from '~/src/lib/forms.js'
 import * as library from '~/src/models/forms/library.js'
+import { formOverviewPath } from '~/src/models/links.js'
 
 export default [
   /**
@@ -45,7 +46,7 @@ export default [
         const titleActionItems = []
         if (!form.live) {
           titleActionItems.push({
-            href: `/library/${form.slug}/edit/title`,
+            href: `${formOverviewPath(form.slug)}/edit/title`,
             text: 'Change',
             visuallyHiddenText: 'title'
           })

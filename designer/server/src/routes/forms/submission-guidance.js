@@ -7,6 +7,7 @@ import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
 import * as forms from '~/src/lib/forms.js'
 import { submissionGuidanceViewModel } from '~/src/models/forms/submission-guidance.js'
+import { formOverviewPath } from '~/src/models/links.js'
 
 export const ROUTE_PATH_EDIT_SUBMISSION_GUIDANCE =
   '/library/{slug}/edit/submission-guidance'
@@ -75,7 +76,7 @@ export default [
         'What happens after users submit their form has been updated'
       )
 
-      return h.redirect(`/library/${slug}`).code(StatusCodes.SEE_OTHER)
+      return h.redirect(formOverviewPath(slug)).code(StatusCodes.SEE_OTHER)
     },
     options: {
       validate: {
