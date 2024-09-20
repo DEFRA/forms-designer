@@ -11,18 +11,8 @@ $govuk-new-organisation-colours: true;
 @import "../components/Visualisation/visualisation.scss";
 
 $app-code-font: ui-monospace, menlo, "Cascadia Mono", "Segoe UI Mono", consolas, "Liberation Mono", monospace;
-$app-code-color: #d13118;
-$app-light-grey: #f8f8f8;
-
-$app-result-focus-color: govuk-colour("yellow");
-$app-result-focus-within-color: govuk-shade(govuk-colour("light-grey"), 10%);
-
 $app-action-small: govuk-em(39px, $context-font-size: 16);
 $app-action-large: govuk-em(44px, $context-font-size: 19);
-$app-action-border-color: govuk-shade(govuk-colour("light-grey"), 40%);
-$app-action-divider-color: govuk-shade(govuk-colour("light-grey"), 10%);
-$app-action-focus-color: govuk-shade(govuk-colour("yellow"), 10%);
-$app-action-focus-border-color: govuk-shade(govuk-colour("yellow"), 60%);
 
 %app-button-link {
   @include govuk-link-common;

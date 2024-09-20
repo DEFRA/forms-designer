@@ -1,1 +1,10 @@
+@import "govuk-frontend/dist/govuk/helpers/colour";
+
+$app-code-color: #d13118;
 $app-light-grey: #f8f8f8;
+$app-result-focus-color: govuk-colour("yellow");
+$app-result-focus-within-color: govuk-shade(govuk-colour("light-grey"), 10%);
+$app-action-border-color: govuk-shade(govuk-colour("light-grey"), 40%);
+$app-action-divider-color: govuk-shade(govuk-colour("light-grey"), 10%);
+$app-action-focus-color: govuk-shade(govuk-colour("yellow"), 10%);
+$app-action-focus-border-color: govuk-shade(govuk-colour("yellow"), 60%);
