@@ -6,7 +6,12 @@ import {
   type ComponentDef,
   type Page
 } from '@defra/forms-model'
-import React, { useContext, useState, type ComponentProps } from 'react'
+import React, {
+  useCallback,
+  useContext,
+  useState,
+  type ComponentProps
+} from 'react'
 
 import { ComponentEdit } from '~/src/ComponentEdit.jsx'
 import { SortUpDown } from '~/src/SortUpDown.jsx'
@@ -232,6 +237,18 @@ export function Component(props: Readonly<Props>) {
 
   const { title, type } = selectedComponent
 
+  const handleMove = useCallback(
+    async (newIndex: number) => {
+      if (!hasComponents(page)) {
+        return
+      }
+
+      const components = arrayMove(page.components, index, newIndex)
+      await save(updateComponents(data, page, components))
+    },
+    [data, page, index, save]
+  )
+
   // Check if component type is supported
   if (!(type in componentTypes)) {
     return null
@@ -253,15 +270,6 @@ export function Component(props: Readonly<Props>) {
   const componentMoveUpLabel = `${i18n('component.moveUp_label', { name })}${suffix}`
   const componentMoveDownLabel = `${i18n('component.moveDown_label', { name })}${suffix}`
   const componentButtonLabel = `${componentFlyoutTitle}${suffix}`
-
-  const handleMove = async (newIndex: number) => {
-    if (!hasComponents(page)) {
-      return
-    }
-
-    const components = arrayMove(page.components, index, newIndex)
-    await save(updateComponents(data, page, components))
-  }
 
   const showMoveActions = hasComponents(page) && page.components.length > 1
 
