@@ -149,7 +149,7 @@ export function ComponentListSelect() {
           <a
             className="govuk-link govuk-!-display-block govuk-!-margin-bottom-1"
             onClick={handleEditList}
-            href="#"
+            href="#list-edit"
           >
             {i18n('list.edit')}
           </a>
@@ -157,7 +157,7 @@ export function ComponentListSelect() {
         <a
           className="govuk-link govuk-!-display-block govuk-!-margin-bottom-1"
           onClick={handleAddList}
-          href="#"
+          href="#list-edit"
         >
           {i18n('list.add')}
         </a>

@@ -264,7 +264,7 @@ export class InlineConditions extends Component<Props, State> {
                 <>
                   <br />
                   <a
-                    href="#"
+                    href="#inline-conditions-edit"
                     className="govuk-link"
                     onClick={(e) => {
                       e.preventDefault()

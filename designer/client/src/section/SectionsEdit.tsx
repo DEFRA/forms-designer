@@ -53,7 +53,7 @@ export class SectionsEdit extends Component<Props, State> {
             <li key={section.name}>
               <a
                 className="govuk-link"
-                href="#"
+                href="#section-edit"
                 onClick={(e) => this.onClickSection(e, section)}
               >
                 {section.title}
@@ -75,6 +75,7 @@ export class SectionsEdit extends Component<Props, State> {
         {isEditingSection && (
           <RenderInPortal>
             <Flyout
+              id="section-edit"
               title={
                 section?.title
                   ? i18n('section.editTitle', { title: section.title })

@@ -107,12 +107,12 @@ describe('Page', () => {
       })
     )
 
-    const $buttonClose = screen.getByRole('button', {
+    const $close = screen.getByRole('button', {
       name: 'Close'
     })
 
     // Close edit page
-    await act(() => userEvent.click($buttonClose))
+    await act(() => userEvent.click($close))
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 
@@ -129,11 +129,11 @@ describe('Page', () => {
 
     await act(() => userEvent.click($buttonAdd))
 
-    const $buttonClose = screen.getByRole('button', {
+    const $close = screen.getByRole('button', {
       name: 'Close'
     })
 
-    await act(() => userEvent.click($buttonClose))
+    await act(() => userEvent.click($close))
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 

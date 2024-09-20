@@ -455,7 +455,7 @@ export class PageEdit extends Component<Props, State> {
                 <p className="govuk-body govuk-!-margin-top-2">
                   {section && (
                     <a
-                      href="#"
+                      href="#section-edit"
                       className="govuk-link govuk-!-display-block"
                       onClick={this.editSection}
                     >
@@ -463,7 +463,7 @@ export class PageEdit extends Component<Props, State> {
                     </a>
                   )}
                   <a
-                    href="#"
+                    href="#section-edit"
                     className="govuk-link govuk-!-display-block"
                     onClick={(e) => this.editSection(e, true)}
                   >
@@ -491,6 +491,7 @@ export class PageEdit extends Component<Props, State> {
         {isEditingSection && (
           <RenderInPortal>
             <Flyout
+              id="section-edit"
               title={
                 !isNewSection && !!section
                   ? i18n('section.editTitle', { title: section.title })

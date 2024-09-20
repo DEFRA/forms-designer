@@ -324,7 +324,11 @@ export function Component(props: Readonly<ComponentProps>) {
       )}
       {showEditor && (
         <RenderInPortal>
-          <Flyout title={componentFlyoutTitle} onHide={onSave}>
+          <Flyout
+            id="component-edit"
+            title={componentFlyoutTitle}
+            onHide={onSave}
+          >
             <ComponentContextProvider selectedComponent={selectedComponent}>
               <ComponentEdit page={page} onSave={onSave} />
             </ComponentContextProvider>

@@ -51,11 +51,11 @@ describe('Menu', () => {
 
     expect($dialog).toBeInTheDocument()
 
-    const $buttonClose = screen.getByRole('button', {
+    const $close = screen.getByRole('button', {
       name: 'Close'
     })
 
-    await act(() => userEvent.click($buttonClose))
+    await act(() => userEvent.click($close))
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 

@@ -124,6 +124,7 @@ export const Page = (
       {isEditingPage && (
         <RenderInPortal>
           <Flyout
+            id="page-edit"
             title={i18n('page.edit')}
             onHide={() => setIsEditingPage(false)}
           >

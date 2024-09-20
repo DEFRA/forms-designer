@@ -106,6 +106,7 @@ export class Lines extends Component<Props, State> {
         {this.state.edge && (
           <RenderInPortal>
             <Flyout
+              id="link-edit"
               title={i18n('link.edit')}
               onHide={() => this.setState({ edge: undefined })}
             >

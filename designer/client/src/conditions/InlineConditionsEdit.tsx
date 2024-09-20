@@ -66,7 +66,7 @@ export class InlineConditionsEdit extends Component<Props, State> {
     })
   }
 
-  onClickGroup = (e: MouseEvent<HTMLAnchorElement>) => {
+  onClickGroup = (e: MouseEvent<HTMLButtonElement>) => {
     const { conditions, selectedConditions } = this.state
 
     e.preventDefault()
@@ -273,40 +273,40 @@ export class InlineConditionsEdit extends Component<Props, State> {
                       >
                         <div className="govuk-button-group">
                           {condition.isGroup() && (
-                            <a
-                              href="#"
+                            <button
                               className="govuk-link govuk-!-margin-bottom-2"
+                              type="button"
                               onClick={(e) => {
                                 e.preventDefault()
                                 this.onClickSplit(index)
                               }}
                             >
                               Split
-                            </a>
+                            </button>
                           )}
                           {!condition.isGroup() && (
-                            <a
-                              href="#"
+                            <button
                               className="govuk-link govuk-!-margin-bottom-2"
+                              type="button"
                               onClick={(e) => {
                                 e.preventDefault()
                                 this.onClickEdit(index)
                               }}
                             >
                               Edit
-                            </a>
+                            </button>
                           )}
                           {!selectedConditions?.length || (
-                            <a
-                              href="#"
+                            <button
                               className="govuk-link govuk-!-margin-bottom-2"
+                              type="button"
                               onClick={(e) => {
                                 e.preventDefault()
                                 this.onClickRemove(index)
                               }}
                             >
                               Remove
-                            </a>
+                            </button>
                           )}
                         </div>
                       </div>
@@ -315,13 +315,13 @@ export class InlineConditionsEdit extends Component<Props, State> {
                 })}
                 {!!selectedConditions && selectedConditions.length > 1 && (
                   <div className="govuk-button-group">
-                    <a
-                      href="#"
+                    <button
                       className="govuk-link"
+                      type="button"
                       onClick={this.onClickGroup}
                     >
                       Group selected conditions
-                    </a>
+                    </button>
                   </div>
                 )}
               </div>

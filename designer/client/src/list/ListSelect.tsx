@@ -37,7 +37,7 @@ export function ListSelect() {
         {data.lists.map((list) => (
           <li key={list.name}>
             <a
-              href="#"
+              href="#list-edit"
               className="govuk-link"
               onClick={(e) => editList(e, list)}
             >

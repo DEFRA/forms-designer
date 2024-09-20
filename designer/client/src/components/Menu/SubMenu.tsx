@@ -87,18 +87,21 @@ export function SubMenu({ overview }: Readonly<Props>) {
     <div className="govuk-button-group">
       <button
         className="govuk-link govuk-!-font-size-16"
+        type="button"
         onClick={onClickUpload}
       >
         {i18n('menu.upload')}
       </button>
       <button
         className="govuk-link govuk-!-font-size-16"
+        type="button"
         onClick={onClickDownload}
       >
         {i18n('menu.download')}
       </button>
       <button
         className="govuk-link govuk-!-font-size-16"
+        type="button"
         onClick={overview.show}
       >
         {i18n('menu.overview')}

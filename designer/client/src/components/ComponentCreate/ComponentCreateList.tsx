@@ -72,7 +72,7 @@ export const ComponentCreateList = (props: Readonly<Props>) => {
                   <p className="govuk-body govuk-!-margin-bottom-2">
                     <a
                       className="govuk-link"
-                      href="#0"
+                      href="#component-create-list"
                       onClick={(e) => {
                         e.preventDefault()
                         onSelectComponent(component)
@@ -112,7 +112,7 @@ export const ComponentCreateList = (props: Readonly<Props>) => {
                     <li key={component.type}>
                       <p className="govuk-body govuk-!-margin-bottom-2">
                         <a
-                          href="#0"
+                          href="#component-type-edit"
                           className="govuk-link"
                           onClick={(e) => {
                             e.preventDefault()
@@ -149,7 +149,7 @@ export const ComponentCreateList = (props: Readonly<Props>) => {
                     <li key={component.type}>
                       <p className="govuk-body govuk-!-margin-bottom-2">
                         <a
-                          href="#0"
+                          href="#component-type-edit"
                           className="govuk-link"
                           onClick={(e) => {
                             e.preventDefault()
