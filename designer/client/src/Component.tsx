@@ -261,16 +261,7 @@ export function Component(props: Readonly<Props>) {
       return false
     }
 
-    const length = pageEdit.components.length
-
-    if (newIndex === -1) {
-      newIndex = length - 1
-    } else if (newIndex === length) {
-      newIndex = 0
-    }
-
     pageEdit.components = arrayMove(pageEdit.components, oldIndex, newIndex)
-
     await save(definition)
   }
 
