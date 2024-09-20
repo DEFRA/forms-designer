@@ -32,12 +32,14 @@ export async function context(request) {
 
   const credentials = request ? await getUserSession(request) : undefined
 
-  let tagColour = 'grey'
+  let tagColour
 
   if (isTest) {
     tagColour = 'yellow'
   } else if (isProduction) {
     tagColour = 'red'
+  } else {
+    tagColour = 'grey'
   }
 
   const envTag = {
