@@ -8,6 +8,10 @@
   {{ form.live.createdAt | formatDate }} by {{ form.live.createdBy.displayName }}
 {% endset %}
 
+{% set formUpdated %}
+  {{ form.live.updatedAt | formatDate }} by {{ form.live.updatedBy.displayName }}
+{% endset %}
+
 {% set formPreviewLink %}
   {% set linkHref = previewUrl + "/preview/live/" + form.slug | urlencode %}
   <a href="{{ linkHref }}" class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noreferrer noopener">
@@ -34,10 +38,18 @@
     },
     {
       key: {
-        text: "Went live"
+        text: "Made live"
       },
       value: {
         text: formCreated
+      }
+    },
+    {
+      key: {
+        text: "Last updated"
+      },
+      value: {
+        text: formUpdated
       }
     },
     {
