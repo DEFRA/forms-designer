@@ -13,9 +13,12 @@ $govuk-new-organisation-colours: true;
 $app-code-font: ui-monospace, menlo, "Cascadia Mono", "Segoe UI Mono", consolas, "Liberation Mono", monospace;
 $app-code-color: #d13118;
 $app-light-grey: #f8f8f8;
-$app-box-border: solid 2px #000;
 $app-result-focus-color: govuk-colour("yellow");
 $app-result-focus-within-color: govuk-shade(govuk-colour("light-grey"), 10%);
+$app-action-border-color: govuk-shade(govuk-colour("light-grey"), 40%);
+$app-action-divider-color: govuk-shade(govuk-colour("light-grey"), 10%);
+$app-action-focus-color: govuk-shade(govuk-colour("yellow"), 10%);
+$app-action-focus-border-color: govuk-shade(govuk-colour("yellow"), 60%);
 
 %app-button-link {
   @include govuk-link-common;
@@ -162,8 +165,8 @@ p code {
     display: flex;
     margin: 0;
     column-gap: 1px;
-    background-color: govuk-shade(govuk-colour("light-grey"), 10%);
-    box-shadow: 0 $govuk-border-width-form-element 0 govuk-shade(govuk-colour("light-grey"), 40%);
+    background-color: $app-action-divider-color;
+    box-shadow: 0 $govuk-border-width-form-element 0 $app-action-border-color;
 
     @at-root {
       .app-result:hover &,
@@ -173,8 +176,8 @@ p code {
     }
 
     &:focus-within {
-      background-color: govuk-shade(govuk-colour("yellow"), 10%);
-      box-shadow: 0 $govuk-border-width-form-element 0 govuk-shade(govuk-colour("yellow"), 60%);
+      background-color: $app-action-focus-color;
+      box-shadow: 0 $govuk-border-width-form-element 0 $app-action-focus-border-color;
     }
   }
 
