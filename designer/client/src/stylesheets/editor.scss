@@ -121,6 +121,15 @@ p code {
   border: none;
   color: govuk-colour("black");
 
+  .app-results--panel & {
+    min-height: auto;
+  }
+
+  .app-results--panel &:hover,
+  .app-results--panel &:focus {
+    background-color: transparent;
+  }
+
   @include govuk-media-query($from: tablet) {
     min-height: $app-action-large;
   }
@@ -131,6 +140,11 @@ p code {
   margin: 0;
   padding: 0;
   list-style: none;
+
+  &--panel {
+    margin: 0 govuk-spacing(4) * -1 govuk-spacing(4);
+    box-shadow: 0 ($govuk-border-width-form-element * -1) 0 $app-action-divider-color;
+  }
 }
 
 .app-result {
@@ -146,12 +160,28 @@ p code {
     box-shadow: 0 $govuk-border-width-form-element 0 $app-result-focus-within-color;
   }
 
+  .app-results--panel & {
+    &,
+    &:hover,
+    &:focus-within {
+      background-color: transparent;
+      border: solid $app-action-divider-color;
+      border-width: 0 0 $govuk-border-width-form-element;
+      box-shadow: none;
+    }
+  }
+
   &__container {
     margin: 0;
     line-height: inherit;
 
     span {
       pointer-events: none;
+    }
+
+    .app-results--panel & {
+      min-height: govuk-spacing(6);
+      padding: govuk-spacing(3) 120px govuk-spacing(3) govuk-spacing(4);
     }
   }
 
@@ -168,8 +198,16 @@ p code {
 
     @at-root {
       .app-result:hover &,
-      .app-result:focus-within & {
+      .app-result:focus-within &,
+      .app-results--panel & {
         z-index: 1;
+      }
+
+      .app-results--panel &,
+      .app-results--panel &:focus-within {
+        height: 100%;
+        box-shadow: none;
+        background-color: $app-action-divider-color;
       }
     }
 
@@ -184,6 +222,13 @@ p code {
     margin-bottom: 0;
     padding-left: 6px;
     padding-right: 6px;
+
+    .app-results--panel & {
+      height: 100%;
+      padding-left: govuk-spacing(3);
+      padding-right: govuk-spacing(3);
+      box-shadow: none;
+    }
 
     @include govuk-media-query($from: tablet) {
       height: $app-action-large;

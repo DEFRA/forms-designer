@@ -1,6 +1,8 @@
 import { slugify, type Item } from '@defra/forms-model'
-import React, { useContext } from 'react'
+import React, { useCallback, useContext, type ComponentProps } from 'react'
 
+import { SortUpDown } from '~/src/SortUpDown.jsx'
+import { arrayMove } from '~/src/helpers.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import {
   ListsEditorContext,
@@ -9,36 +11,34 @@ import {
 import { ListActions } from '~/src/reducers/listActions.jsx'
 import { ListContext } from '~/src/reducers/listReducer.jsx'
 
-interface Props {
+interface Props extends ComponentProps<'div'> {
   item: Item
   editListItem: (payload: Item) => void
 }
 
-const ListItem = ({ item, editListItem }: Readonly<Props>) => {
+const ListItem = ({ id, item, editListItem }: Readonly<Props>) => {
   return (
-    <tr className="govuk-table__row">
-      <td className="govuk-table__cell govuk-!-width-full">
+    <div className="app-result__container govuk-body">
+      <a
+        href="#list-item-edit"
+        className="govuk-link"
+        aria-describedby={`${id}-hint`}
+        onClick={(e) => {
+          e.preventDefault()
+          editListItem(item)
+        }}
+      >
         {item.text}
-        {item.description && (
-          <>
-            <br />
-            <span className="govuk-hint">{item.description}</span>
-          </>
-        )}
-      </td>
-      <td className="govuk-table__cell">
-        <a
-          href="#list-item-edit"
-          className="govuk-link"
-          onClick={(e) => {
-            e.preventDefault()
-            editListItem(item)
-          }}
+      </a>
+      {item.description && (
+        <p
+          className="govuk-hint govuk-!-margin-top-1 govuk-!-margin-bottom-0"
+          id={`${id}-hint`}
         >
-          Edit
-        </a>
-      </td>
-    </tr>
+          {item.description}
+        </p>
+      )}
+    </div>
   )
 }
 
@@ -59,24 +59,67 @@ export function ListItems() {
   }
 
   const { selectedList } = listState
+
+  const handleMove = useCallback(
+    (index: number, newIndex: number) => {
+      if (!selectedList) {
+        return
+      }
+
+      const listEdit = structuredClone(selectedList)
+      listEdit.items = arrayMove(listEdit.items, index, newIndex)
+
+      listDispatch({
+        name: ListActions.SET_SELECTED_LIST,
+        payload: listEdit
+      })
+    },
+    [selectedList, listDispatch]
+  )
+
   if (!selectedList?.items.length) {
     return null
   }
 
+  const headingId = `${selectedList.name}-heading`
+  const showMoveActions = selectedList.items.length > 1
+
+  const moveUpTitle = i18n('list.item.moveUp')
+  const moveDownTitle = i18n('list.item.moveDown')
+
   return (
-    <table className="govuk-table govuk-!-margin-bottom-2">
-      <caption className={'govuk-table__caption'}>
+    <>
+      <h3 id={headingId} className="govuk-heading-m govuk-!-margin-bottom-2">
         {i18n('list.items.title')}
-      </caption>
-      <tbody className="govuk-table__body">
-        {selectedList.items.map((item) => (
-          <ListItem
-            key={slugify(`${selectedList.name}-${item.text}`)}
-            item={item}
-            editListItem={editListItem}
-          />
-        ))}
-      </tbody>
-    </table>
+      </h3>
+
+      <ul className="app-results app-results--panel">
+        {selectedList.items.map((item, index) => {
+          const key = slugify(`${selectedList.name}-${item.text}`)
+          const moveUpLabel = i18n('list.item.moveUp_label', { ...item })
+          const moveDownLabel = i18n('list.item.moveDown_label', { ...item })
+
+          return (
+            <li key={key} className="app-result">
+              <ListItem id={key} item={item} editListItem={editListItem} />
+              {showMoveActions && (
+                <SortUpDown
+                  moveUp={{
+                    title: moveUpTitle,
+                    'aria-label': moveUpLabel,
+                    onClick: () => handleMove(index, index - 1)
+                  }}
+                  moveDown={{
+                    title: moveDownTitle,
+                    'aria-label': moveDownLabel,
+                    onClick: () => handleMove(index, index + 1)
+                  }}
+                />
+              )}
+            </li>
+          )
+        })}
+      </ul>
+    </>
   )
 }

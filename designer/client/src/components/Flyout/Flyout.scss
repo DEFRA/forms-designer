@@ -84,5 +84,16 @@
 
   &__body {
     padding-top: 0;
+    overflow-x: hidden;
+  }
+
+  &__results {
+    margin: 0 govuk-spacing(4) * -1 govuk-spacing(4);
+    padding: govuk-spacing(4) govuk-spacing(4) govuk-spacing(1);
+    background-color: govuk-colour("light-grey");
+
+    .govuk-button-group {
+      margin-bottom: 0;
+    }
   }
 }
