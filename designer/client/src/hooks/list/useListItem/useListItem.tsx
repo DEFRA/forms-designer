@@ -1,4 +1,3 @@
-import { type Item } from '@defra/forms-model'
 import Joi from 'joi'
 
 import { findListItem } from '~/src/data/list/findList.js'
@@ -120,14 +119,14 @@ export function useListItem(
     })
   }
 
-  function prepareForDelete(item: Item) {
-    if (!selectedList) {
+  function prepareForDelete() {
+    if (!selectedList || !selectedItem) {
       return
     }
 
     const list = structuredClone(selectedList)
 
-    const itemRemove = findListItem(list, item.text)
+    const itemRemove = findListItem(list, selectedItem.text)
     const itemIndex = list.items.indexOf(itemRemove)
 
     list.items.splice(itemIndex, 1)

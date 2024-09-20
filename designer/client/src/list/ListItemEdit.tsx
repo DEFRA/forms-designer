@@ -27,6 +27,7 @@ export function ListItemEdit() {
     handleValueChange,
     handleHintChange,
     prepareForSubmit,
+    prepareForDelete,
     validate,
     value,
     condition,
@@ -60,6 +61,21 @@ export function ListItemEdit() {
     }
 
     prepareForSubmit()
+
+    listsEditorDispatch({
+      name: ListsEditorStateActions.IS_EDITING_LIST_ITEM,
+      payload: false
+    })
+  }
+
+  const handleDelete = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+
+    if (!window.confirm('Confirm delete')) {
+      return
+    }
+
+    prepareForDelete()
 
     listsEditorDispatch({
       name: ListsEditorStateActions.IS_EDITING_LIST_ITEM,
@@ -133,6 +149,15 @@ export function ListItemEdit() {
           <button className="govuk-button" type="submit">
             {i18n('save')}
           </button>
+          {!selectedItem.isNew && (
+            <button
+              className="govuk-button govuk-button--warning"
+              type="button"
+              onClick={handleDelete}
+            >
+              {i18n('delete')}
+            </button>
+          )}
         </div>
       </form>
     </>

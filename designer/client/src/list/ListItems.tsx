@@ -1,7 +1,6 @@
 import { slugify, type Item } from '@defra/forms-model'
 import React, { useContext } from 'react'
 
-import { useListItem } from '~/src/hooks/list/useListItem/useListItem.jsx'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import {
   ListsEditorContext,
@@ -12,11 +11,10 @@ import { ListContext } from '~/src/reducers/listReducer.jsx'
 
 interface Props {
   item: Item
-  removeListItem: (payload: Item) => void
   editListItem: (payload: Item) => void
 }
 
-const ListItem = ({ item, removeListItem, editListItem }: Readonly<Props>) => {
+const ListItem = ({ item, editListItem }: Readonly<Props>) => {
   return (
     <tr className="govuk-table__row">
       <td className="govuk-table__cell govuk-!-width-full">
@@ -40,18 +38,6 @@ const ListItem = ({ item, removeListItem, editListItem }: Readonly<Props>) => {
           Edit
         </a>
       </td>
-      <td className="govuk-table__cell">
-        <button
-          className="govuk-link"
-          type="button"
-          onClick={(e) => {
-            e.preventDefault()
-            removeListItem(item)
-          }}
-        >
-          Delete
-        </button>
-      </td>
     </tr>
   )
 }
@@ -59,8 +45,6 @@ const ListItem = ({ item, removeListItem, editListItem }: Readonly<Props>) => {
 export function ListItems() {
   const { state: listState, dispatch: listDispatch } = useContext(ListContext)
   const { dispatch: listsEditorDispatch } = useContext(ListsEditorContext)
-
-  const { prepareForDelete } = useListItem(listState, listDispatch)
 
   const editListItem = (payload: Item) => {
     listDispatch({
@@ -72,10 +56,6 @@ export function ListItems() {
       name: ListsEditorStateActions.IS_EDITING_LIST_ITEM,
       payload: true
     })
-  }
-
-  function removeListItem(payload: Item) {
-    prepareForDelete(payload)
   }
 
   const { selectedList } = listState
@@ -94,7 +74,6 @@ export function ListItems() {
             key={slugify(`${selectedList.name}-${item.text}`)}
             item={item}
             editListItem={editListItem}
-            removeListItem={removeListItem}
           />
         ))}
       </tbody>

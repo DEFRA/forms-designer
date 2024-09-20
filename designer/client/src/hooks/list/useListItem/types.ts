@@ -8,7 +8,7 @@ export interface ListItemHook {
   handleConditionChange: (e: ChangeEvent<HTMLSelectElement>) => void
   handleValueChange: (e: ChangeEvent<HTMLInputElement>) => void
   handleHintChange: (e: ChangeEvent<HTMLTextAreaElement>) => void
-  prepareForDelete: (item: Item) => void
+  prepareForDelete: () => void
   prepareForSubmit: () => void
   validate: (payload: Partial<FormItem>) => boolean
   value?: Item['value']
