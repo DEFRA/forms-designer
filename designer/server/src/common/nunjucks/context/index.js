@@ -1,6 +1,8 @@
 import { readFileSync } from 'node:fs'
 import { basename, join } from 'node:path'
 
+import upperFirst from 'lodash/upperFirst.js'
+
 import { SCOPE_READ } from '~/src/common/constants/scopes.js'
 import { getUserSession } from '~/src/common/helpers/auth/get-user-session.js'
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
@@ -8,7 +10,7 @@ import { buildNavigation } from '~/src/common/nunjucks/context/build-navigation.
 import config from '~/src/config.js'
 
 const logger = createLogger()
-const { phase, serviceName } = config
+const { phase, serviceName, env, isTest, isProduction } = config
 
 /** @type {Record<string, string> | undefined} */
 let webpackManifest
@@ -30,7 +32,21 @@ export async function context(request) {
 
   const credentials = request ? await getUserSession(request) : undefined
 
+  let tagColour = 'grey'
+
+  if (isTest) {
+    tagColour = 'yellow'
+  } else if (isProduction) {
+    tagColour = 'red'
+  }
+
+  const envTag = {
+    text: upperFirst(env),
+    classes: `govuk-tag--${tagColour}`
+  }
+
   return {
+    envTag,
     breadcrumbs: [],
     config: {
       phase,
