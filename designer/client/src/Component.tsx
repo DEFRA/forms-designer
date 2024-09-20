@@ -12,7 +12,7 @@ import { ComponentEdit } from '~/src/ComponentEdit.jsx'
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
-import { findPage } from '~/src/data/page/findPage.js'
+import { updateComponents } from '~/src/data/component/updateComponents.js'
 import { arrayMove } from '~/src/helpers.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContextProvider } from '~/src/reducers/component/componentReducer.jsx'
@@ -253,16 +253,13 @@ export function Component(props: Readonly<Props>) {
   const componentMoveDownLabel = `${i18n('component.moveDown_label', { name })}${suffix}`
   const componentButtonLabel = `${componentFlyoutTitle}${suffix}`
 
-  const move = async (oldIndex: number, newIndex: number) => {
-    const definition = structuredClone(data)
-    const pageEdit = findPage(definition, page.path)
-
-    if (!hasComponents(pageEdit)) {
-      return false
+  const handleMove = async (newIndex: number) => {
+    if (!hasComponents(page)) {
+      return
     }
 
-    pageEdit.components = arrayMove(pageEdit.components, oldIndex, newIndex)
-    await save(definition)
+    const components = arrayMove(page.components, index, newIndex)
+    await save(updateComponents(data, page, components))
   }
 
   const showMoveActions = hasComponents(page) && page.components.length > 1
@@ -281,7 +278,7 @@ export function Component(props: Readonly<Props>) {
         <div className="app-result__actions">
           <button
             className="app-result__action govuk-button govuk-button--secondary"
-            onClick={() => move(index, index - 1)}
+            onClick={() => handleMove(index - 1)}
             title={componentMoveUpTitle}
             aria-label={componentMoveUpLabel}
             aria-describedby={headingId}
@@ -290,7 +287,7 @@ export function Component(props: Readonly<Props>) {
           </button>
           <button
             className="app-result__action govuk-button govuk-button--secondary"
-            onClick={() => move(index, index + 1)}
+            onClick={() => handleMove(index + 1)}
             title={componentMoveDownTitle}
             aria-label={componentMoveDownLabel}
             aria-describedby={headingId}

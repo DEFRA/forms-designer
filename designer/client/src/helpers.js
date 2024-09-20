@@ -16,21 +16,22 @@ import { findPathsTo } from '~/src/data/page/findPathsTo.js'
  * @param {number} to - Index to move to
  */
 export function arrayMove(input, from, to) {
-  const item = input.at(from)
+  const output = structuredClone(input)
+  const item = output.at(from)
 
   if (to < 0) {
-    to = input.length - 1
+    to = output.length - 1
   } else {
-    to = to < input.length ? to : 0
+    to = to < output.length ? to : 0
   }
 
   // Check for moves
   if (item && from !== to) {
-    input.splice(from, 1)
-    input.splice(to, 0, item)
+    output.splice(from, 1)
+    output.splice(to, 0, item)
   }
 
-  return input
+  return output
 }
 
 /**

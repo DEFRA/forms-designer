@@ -60,5 +60,21 @@ describe('Helpers', () => {
     ])('%s', (_, { from, to, input, output }) => {
       expect(arrayMove(input, from, to)).toEqual(output)
     })
+
+    it('does not mutate input', () => {
+      const input = [1, 2, 3, 4, 5]
+
+      // Move item down then back up
+      const output1 = arrayMove(input, 0, 1)
+      const output2 = arrayMove(output1, 1, 0)
+
+      // Output values match input
+      expect(output2).toEqual([1, 2, 3, 4, 5])
+      expect(output2).toEqual(input)
+
+      // But output is a new reference
+      expect(output1).not.toBe(input)
+      expect(output2).not.toBe(input)
+    })
   })
 })
