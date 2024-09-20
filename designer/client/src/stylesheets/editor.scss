@@ -95,8 +95,6 @@ p code {
 
 .app-button--editor,
 .app-button--result {
-  @include govuk-font-size($size: 16);
-
   & {
     display: block;
     width: 100%;
@@ -116,14 +114,22 @@ p code {
   background-color: govuk-colour("black");
   box-shadow: 0 1px 0 govuk-colour("white");
   color: govuk-colour("white");
+  @include govuk-font-size($size: 16);
 }
 
 .app-button--result {
-  min-height: govuk-em(44px, $context-font-size: 16);
+  min-height: govuk-em(44px, $context-font-size: 19);
   background-color: transparent;
   box-shadow: none;
   border: none;
   color: govuk-colour("black");
+}
+
+.app-results {
+  display: block;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .app-result {
@@ -139,8 +145,9 @@ p code {
     box-shadow: 0 $govuk-border-width-form-element 0 $app-result-focus-within-color;
   }
 
-  &__button {
+  &__container {
     margin: 0;
+    line-height: inherit;
 
     span {
       pointer-events: none;

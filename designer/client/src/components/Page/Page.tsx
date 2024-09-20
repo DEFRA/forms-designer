@@ -46,7 +46,7 @@ const ComponentList = (props: Readonly<{ page: PageType }>) => {
   const { components = [] } = page
 
   return (
-    <>
+    <ul className="app-results">
       {components.map((component, index) => (
         <ComponentItem
           index={index}
@@ -55,7 +55,7 @@ const ComponentList = (props: Readonly<{ page: PageType }>) => {
           selectedComponent={component}
         />
       ))}
-    </>
+    </ul>
   )
 }
 

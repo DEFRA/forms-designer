@@ -277,9 +277,9 @@ export function Component(props: Readonly<Props>) {
   const showMoveActions = hasComponents(page) && page.components.length > 1
 
   return (
-    <div className="app-result">
+    <li className="app-result">
       <button
-        className="app-result__button govuk-button app-button--result"
+        className="app-result__container govuk-button app-button--result"
         onClick={onSave}
         aria-describedby={headingId}
       >
@@ -321,6 +321,6 @@ export function Component(props: Readonly<Props>) {
           </Flyout>
         </RenderInPortal>
       )}
-    </div>
+    </li>
   )
 }
