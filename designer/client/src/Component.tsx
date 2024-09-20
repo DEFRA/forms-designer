@@ -9,6 +9,7 @@ import {
 import React, { useContext, useState, type ComponentProps } from 'react'
 
 import { ComponentEdit } from '~/src/ComponentEdit.jsx'
+import { SortUpDown } from '~/src/SortUpDown.jsx'
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
@@ -275,26 +276,20 @@ export function Component(props: Readonly<Props>) {
         <ComponentIcon />
       </button>
       {showMoveActions && (
-        <div className="app-result__actions">
-          <button
-            className="app-result__action govuk-button govuk-button--secondary"
-            onClick={() => handleMove(index - 1)}
-            title={componentMoveUpTitle}
-            aria-label={componentMoveUpLabel}
-            aria-describedby={headingId}
-          >
-            ▲
-          </button>
-          <button
-            className="app-result__action govuk-button govuk-button--secondary"
-            onClick={() => handleMove(index + 1)}
-            title={componentMoveDownTitle}
-            aria-label={componentMoveDownLabel}
-            aria-describedby={headingId}
-          >
-            ▼
-          </button>
-        </div>
+        <SortUpDown
+          moveUp={{
+            title: componentMoveUpTitle,
+            'aria-label': componentMoveUpLabel,
+            'aria-describedby': headingId,
+            onClick: () => handleMove(index - 1)
+          }}
+          moveDown={{
+            title: componentMoveDownTitle,
+            'aria-label': componentMoveDownLabel,
+            'aria-describedby': headingId,
+            onClick: () => handleMove(index + 1)
+          }}
+        />
       )}
       {showEditor && (
         <RenderInPortal>
