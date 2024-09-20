@@ -4,6 +4,7 @@
 {{ appServiceHeader({
   organisationName: "Defra",
   productName: "Forms Designer",
+  envTag: envTag,
   navigationItems: navigation if isAuthenticated and isAuthorized and isFormsUser,
   accountName: authedUser.displayName if isAuthenticated,
   accountLink: "/library",
