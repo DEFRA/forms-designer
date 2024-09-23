@@ -13,10 +13,21 @@ $govuk-new-organisation-colours: true;
 @import "../components/Visualisation/visualisation.scss";
 
 $app-code-font: ui-monospace, menlo, "Cascadia Mono", "Segoe UI Mono", consolas, "Liberation Mono", monospace;
+
+// Sort up/down button sizes
 $app-action-small: govuk-em(39px, $context-font-size: 16);
 $app-action-large: govuk-em(44px, $context-font-size: 19);
+
+// Offset vertical alignment for button border
+$app-action-offset: math.div($govuk-border-width-form-element, 2);
+
+// Sort up/down icon sizes
 $app-action-icon-small: math.div($app-action-small, 2);
 $app-action-icon-large: math.div($app-action-large, 2);
+
+// Offset vertical alignment for button border
+$app-action-icon-small-offset: math.div($app-action-icon-small, 20);
+$app-action-icon-large-offset: math.div($app-action-icon-large, 20);
 
 %app-button-link {
   @include govuk-link-common;
@@ -230,7 +241,6 @@ p code {
 
     &:after {
       position: absolute;
-      top: calc(50% + $govuk-border-width-form-element);
       left: 50%;
       width: $app-action-icon-small;
       height: $app-action-icon-small;
@@ -244,7 +254,6 @@ p code {
     }
 
     .app-results--panel &:after {
-      top: govuk-spacing(3);
       margin-top: 0;
     }
 
@@ -267,11 +276,36 @@ p code {
   }
 
   &__action-up:after {
+    top: calc(50% + $app-action-offset);
     content: "▲";
+
+    // Optically align up arrow (higher) when anchored
+    // to the top of results panel rows
+    .app-results--panel & {
+      top: calc(govuk-spacing(3) - $app-action-icon-small-offset);
+
+      @include govuk-media-query($from: tablet) {
+        top: calc(govuk-spacing(3) - $app-action-icon-large-offset);
+      }
+    }
   }
 
   &__action-down:after {
     content: "▼";
+
+    .app-results--panel & {
+      top: govuk-spacing(3);
+    }
+
+    // Optically align down arrow (lower) when centred
+    // within page visualisation components
+    & {
+      top: calc(50% + $app-action-offset + $app-action-icon-small-offset);
+
+      @include govuk-media-query($from: tablet) {
+        top: calc(50% + $app-action-offset + $app-action-icon-large-offset);
+      }
+    }
   }
 }
 
