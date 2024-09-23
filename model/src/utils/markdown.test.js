@@ -4,6 +4,18 @@ describe('Helpers', () => {
   describe('markdown', () => {
     it.each([
       {
+        markdown: '',
+        html: ''
+      },
+      {
+        markdown: null,
+        html: ''
+      },
+      {
+        markdown: undefined,
+        html: ''
+      },
+      {
         markdown: 'Rendered by **marked**',
         html: '<p>Rendered by <strong>marked</strong></p>\n'
       },
