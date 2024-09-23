@@ -15,6 +15,7 @@ $app-code-color: #d13118;
 $app-light-grey: #f8f8f8;
 $app-box-border: solid 2px #000;
 $app-component-focus-color: govuk-colour("yellow");
+$app-component-focus-within-color: govuk-shade(govuk-colour("light-grey"), 10%);
 
 %app-button-link {
   @include govuk-link-common;
@@ -83,12 +84,6 @@ pre code {
   padding: govuk-spacing(4);
   overflow-x: auto;
   background-color: $app-light-grey;
-  border: $govuk-focus-width solid transparent;
-
-  &:focus {
-    border: $govuk-focus-width solid $govuk-input-border-colour;
-    outline: $govuk-focus-width solid $govuk-focus-colour;
-  }
 }
 
 p code {
@@ -153,6 +148,11 @@ p code {
   &:hover {
     background-color: $app-component-focus-color;
     box-shadow: 0 $govuk-border-width-form-element 0 $app-component-focus-color;
+  }
+
+  &:focus-within:not(:hover) {
+    background-color: $app-component-focus-within-color;
+    box-shadow: 0 $govuk-border-width-form-element 0 $app-component-focus-within-color;
   }
 }
 
@@ -304,12 +304,18 @@ p code {
   top: 0;
   right: 0;
   z-index: -1;
+  display: flex;
+  background-color: govuk-shade(govuk-colour("light-grey"), 10%);
 
   @at-root {
     .app-component:hover &,
     .app-component:focus-within & {
       z-index: 1;
     }
+  }
+
+  &:focus-within {
+    background-color: govuk-shade(govuk-colour("light-grey"), 10%);
   }
 }
 
@@ -319,9 +325,13 @@ p code {
 
   height: $app-action-small;
   margin-bottom: 0;
+  padding-left: 6px;
+  padding-right: 6px;
 
   @include govuk-media-query($from: tablet) {
     height: $app-action-large;
+    padding-left: 8px;
+    padding-right: 8px;
   }
 }
 
@@ -334,14 +344,4 @@ p code {
 
 .govuk-main-wrapper--editor {
   padding-bottom: 0;
-}
-
-.govuk-input__input {
-  &.disabled {
-    cursor: default;
-    pointer-events: none;
-    & + .govuk-checkboxes__label {
-      opacity: 0.5;
-    }
-  }
 }
