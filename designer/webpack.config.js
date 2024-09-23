@@ -196,6 +196,10 @@ export default /** @type {Configuration} */ ({
           priority: 1
         },
         {
+          from: join(import.meta.dirname, 'client/src/assets'),
+          to: 'assets'
+        },
+        {
           from: 'i18n/translations',
           to: 'assets/translations'
         }

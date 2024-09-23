@@ -6,12 +6,10 @@ import {
   type ComponentDef,
   type Page
 } from '@defra/forms-model'
-import React, { useContext, useState, type ReactNode } from 'react'
+import React, { useContext, useState, type ComponentProps } from 'react'
 
 import { ComponentEdit } from '~/src/ComponentEdit.jsx'
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
-import { FileUploadIcon } from '~/src/components/Icons/FileUploadIcon.jsx'
-import { SearchIcon } from '~/src/components/Icons/SearchIcon.jsx'
 import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { findPage } from '~/src/data/page/findPage.js'
@@ -19,80 +17,66 @@ import { arrayMove } from '~/src/helpers.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContextProvider } from '~/src/reducers/component/componentReducer.jsx'
 
-interface ComponentFieldProps {
-  children?: ReactNode
-}
+export function ComponentField(props: Readonly<ComponentProps<'span'>>) {
+  const { children, ...attributes } = props
 
-export function ComponentField(props: Readonly<ComponentFieldProps>) {
-  return <>{props.children}</>
+  return (
+    <span {...attributes} aria-hidden="true">
+      {children}
+    </span>
+  )
 }
 
 export function TextField() {
-  return (
-    <ComponentField>
-      <div className="box" />
-    </ComponentField>
-  )
+  return <ComponentField className="app-field-input" />
 }
 
 export function TelephoneNumberField() {
-  return (
-    <ComponentField>
-      <div className="box tel" />
-    </ComponentField>
-  )
+  return <ComponentField className="app-field-input app-icon app-icon--phone" />
 }
 
 export function EmailAddressField() {
-  return (
-    <ComponentField>
-      <div className="box email" />
-    </ComponentField>
-  )
+  return <ComponentField className="app-field-input app-icon app-icon--email" />
 }
 
 export function UkAddressField() {
   return (
-    <ComponentField>
-      <span className="box" />
-      <span className="button search">
-        <SearchIcon width={20} height={20} />
-      </span>
+    <ComponentField className="app-field-address">
+      <span className="app-field-input" />
+      <span className="app-field-input" />
+      <span className="app-field-input-m" />
+      <span className="app-field-input-s" />
     </ComponentField>
   )
 }
 
 export function MultilineTextField() {
   return (
-    <ComponentField>
-      <span className="box tall" />
-    </ComponentField>
+    <ComponentField className="app-field-textarea app-icon app-icon--textarea" />
   )
 }
 
 export function NumberField() {
   return (
-    <ComponentField>
-      <div className="box number" />
-    </ComponentField>
+    <ComponentField className="app-field-input app-icon app-icon--number" />
   )
 }
 
 export function MonthYearField() {
   return (
-    <ComponentField>
-      <span className="box small govuk-!-margin-left-1 govuk-!-margin-right-1" />
-      <span className="box medium" />
+    <ComponentField className="app-group">
+      <span className="app-field-input-xs" />
+      <span className="app-field-input-s" />
     </ComponentField>
   )
 }
 
 export function DatePartsField() {
   return (
-    <ComponentField>
-      <span className="box small" />
-      <span className="box small govuk-!-margin-left-1 govuk-!-margin-right-1" />
-      <span className="box medium" />
+    <ComponentField className="app-group">
+      <span className="app-field-input-xs" />
+      <span className="app-field-input-xs" />
+      <span className="app-field-input-s" />
     </ComponentField>
   )
 }
@@ -100,16 +84,18 @@ export function DatePartsField() {
 export function RadiosField() {
   return (
     <ComponentField>
-      <div className="govuk-!-margin-bottom-1">
-        <span className="circle" />
-        <span className="line short" />
-      </div>
-      <div className="govuk-!-margin-bottom-1">
-        <span className="circle" />
-        <span className="line short" />
-      </div>
-      <span className="circle" />
-      <span className="line short" />
+      <span className="app-group">
+        <span className="app-field-radio app-field-radio--checked" />
+        <span className="app-field-line-s" />
+      </span>
+      <span className="app-group">
+        <span className="app-field-radio" />
+        <span className="app-field-line-s" />
+      </span>
+      <span className="app-group">
+        <span className="app-field-radio" />
+        <span className="app-field-line-s" />
+      </span>
     </ComponentField>
   )
 }
@@ -117,94 +103,94 @@ export function RadiosField() {
 export function CheckboxesField() {
   return (
     <ComponentField>
-      <div className="govuk-!-margin-bottom-1">
-        <span className="check" />
-        <span className="line short" />
-      </div>
-      <div className="govuk-!-margin-bottom-1">
-        <span className="check" />
-        <span className="line short" />
-      </div>
-      <span className="check" />
-      <span className="line short" />
+      <span className="app-group">
+        <span className="app-field-checkbox app-field-checkbox--checked" />
+        <span className="app-field-line-s" />
+      </span>
+      <span className="app-group">
+        <span className="app-field-checkbox" />
+        <span className="app-field-line-s" />
+      </span>
+      <span className="app-group">
+        <span className="app-field-checkbox" />
+        <span className="app-field-line-s" />
+      </span>
     </ComponentField>
   )
 }
 
 export function SelectField() {
   return (
-    <ComponentField>
-      <div className="box dropdown" />
-    </ComponentField>
+    <ComponentField className="app-field-input app-icon app-icon--dropdown" />
+  )
+}
+
+export function AutocompleteField() {
+  return (
+    <ComponentField className="app-field-input app-icon app-icon--autocomplete" />
   )
 }
 
 export function YesNoField() {
   return (
-    <ComponentField>
-      <div className="govuk-!-margin-bottom-1">
-        <span className="circle" />
-        <span className="line short" />
-      </div>
-      <span className="circle" />
-      <span className="line short" />
+    <ComponentField className="app-group">
+      <span className="app-field-radio app-field-radio--checked" />
+      <span className="app-field-line-xs govuk-!-margin-right-1" />
+      <span className="app-field-radio" />
+      <span className="app-field-line-xs govuk-!-margin-right-1" />
     </ComponentField>
   )
 }
 
 export function Details() {
   return (
-    <ComponentField>
-      {'▶ '}
-      <span className="line short" />
+    <ComponentField className="app-content app-field-details app-icon app-icon--details">
+      <span className="app-field-line-m" />
     </ComponentField>
   )
 }
 
 export function InsetText() {
   return (
-    <ComponentField>
-      <div className="inset govuk-!-padding-left-2">
-        <div className="line" />
-        <div className="line short govuk-!-margin-bottom-2 govuk-!-margin-top-2" />
-        <div className="line" />
-      </div>
+    <ComponentField className="app-content app-field-inset">
+      <span className="app-field-line-m" />
+      <span className="app-field-line-m" />
     </ComponentField>
   )
 }
 
 export function List() {
   return (
-    <ComponentField>
-      <div className="line short govuk-!-margin-bottom-2 govuk-!-margin-top-2" />
-      <div className="line short govuk-!-margin-bottom-2 govuk-!-margin-top-2" />
-      <div className="line short govuk-!-margin-bottom-2 govuk-!-margin-top-2" />
+    <ComponentField className="app-content">
+      <span className="app-field-heading" />
+      <span className="app-icon app-icon--bullet">
+        <span className="app-field-line-m" />
+      </span>
+      <span className="app-icon app-icon--bullet">
+        <span className="app-field-line-m" />
+      </span>
+      <span className="app-icon app-icon--bullet">
+        <span className="app-field-line-m" />
+      </span>
     </ComponentField>
   )
 }
 
 export function Html() {
   return (
-    <ComponentField>
-      <div className="html">
-        <span className="line xshort govuk-!-margin-bottom-1 govuk-!-margin-top-1" />
-      </div>
+    <ComponentField className="app-content">
+      <span className="app-field-heading govuk-!-margin-bottom-1"></span>
+      <span className="app-field-line" />
+      <span className="app-field-line" />
+      <span className="app-field-line" />
     </ComponentField>
   )
 }
 
 export function FileUploadField() {
   return (
-    <ComponentField>
-      <div className="box">
-        <div className="file-upload">
-          <FileUploadIcon
-            className="file-upload__icon"
-            width={15}
-            height={15}
-          />
-        </div>
-      </div>
+    <ComponentField className="app-field-input">
+      <span className="app-field-prefix app-field-prefix--file-upload" />
     </ComponentField>
   )
 }
@@ -219,7 +205,7 @@ export const componentTypes = {
   [ComponentType.MultilineTextField]: MultilineTextField,
   [ComponentType.RadiosField]: RadiosField,
   [ComponentType.CheckboxesField]: CheckboxesField,
-  [ComponentType.AutocompleteField]: SelectField,
+  [ComponentType.AutocompleteField]: AutocompleteField,
   [ComponentType.SelectField]: SelectField,
   [ComponentType.YesNoField]: YesNoField,
   [ComponentType.UkAddressField]: UkAddressField,
@@ -230,13 +216,13 @@ export const componentTypes = {
   [ComponentType.FileUploadField]: FileUploadField
 }
 
-interface ComponentProps {
+interface Props {
   page: Page
   selectedComponent: ComponentDef
   index: number
 }
 
-export function Component(props: Readonly<ComponentProps>) {
+export function Component(props: Readonly<Props>) {
   const { page, selectedComponent, index } = props
 
   const { data, save } = useContext(DataContext)

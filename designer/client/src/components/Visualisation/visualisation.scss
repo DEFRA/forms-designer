@@ -43,14 +43,14 @@ $govuk-breakpoints: (
 
     &__heading {
       position: relative;
-      min-height: 2.8em;
       @include govuk-responsive-padding(2);
+      padding-bottom: 0;
     }
 
     &__actions {
       display: flex;
       flex-direction: column;
-      @include govuk-responsive-padding(2, "top");
+      @include govuk-responsive-padding(3, "top");
 
       .govuk-button {
         margin-bottom: 1px;

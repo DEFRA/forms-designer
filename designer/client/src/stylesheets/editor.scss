@@ -34,21 +34,6 @@ $app-component-focus-within-color: govuk-shade(govuk-colour("light-grey"), 10%);
   }
 }
 
-.button {
-  width: 30%;
-  height: 24px;
-  cursor: pointer;
-
-  &.active:hover {
-    background-color: govuk-colour("yellow");
-  }
-
-  &.search {
-    width: 20px;
-    height: 20px;
-  }
-}
-
 button.govuk-link {
   @extend %app-button-link;
 
@@ -154,184 +139,354 @@ p code {
     background-color: $app-component-focus-within-color;
     box-shadow: 0 $govuk-border-width-form-element 0 $app-component-focus-within-color;
   }
-}
 
-.app-component__button,
-.app-component__actions {
-  margin: 0;
-}
-
-.app-component__button {
-  > div {
-    pointer-events: none;
-  }
-
-  .line {
-    width: 75%;
-    margin-bottom: 4px;
-    border-top: solid 2px #000;
-
-    &.short {
-      width: 50%;
-    }
-  }
-
-  .circle {
-    width: 24px;
-    height: 24px;
-    border: solid 2px #000;
-    border-radius: 50%;
-    vertical-align: middle;
-    margin-right: 5px;
-    display: inline-block;
-  }
-
-  .check {
-    width: 24px;
-    height: 24px;
-    border: solid 2px #000;
-    vertical-align: middle;
-    margin-right: 5px;
-    display: inline-block;
-  }
-
-  .box {
-    width: 100px;
-    height: 20px;
-    border: $app-box-border;
-
-    &.tall {
-      height: 50px;
-    }
-
-    &.small {
-      width: 16px;
-    }
-
-    &.medium {
-      width: 46px;
-    }
-
-    &.large {
-      width: 146px;
-    }
-
-    &.dropdown {
-      &:after {
-        content: "\25BC";
-        float: right;
-        margin-top: 2px;
-        font-size: small;
-      }
-    }
-
-    &.email {
-      &:before {
-        content: "@";
-        font-size: small;
-        padding-left: 2px;
-      }
-    }
-
-    &.tel {
-      &:before {
-        content: "\260E";
-        font-size: small;
-        padding-left: 2px;
-      }
-    }
-
-    &.number {
-      &:after {
-        content: "\21F3";
-        float: right;
-      }
-    }
+  &__button {
+    margin: 0;
 
     span {
-      padding-left: 3px;
+      pointer-events: none;
     }
   }
 
-  span.box,
-  span.button,
-  span.line {
-    display: inline-block;
-  }
+  &__actions {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: -1;
+    display: flex;
+    margin: 0;
+    column-gap: 1px;
+    background-color: govuk-shade(govuk-colour("light-grey"), 10%);
+    box-shadow: 0 $govuk-border-width-form-element 0 govuk-shade(govuk-colour("light-grey"), 40%);
 
-  .inset {
-    border-left: 6px solid #bfc1c3;
-  }
-
-  .html {
-    width: 78%;
-    font-weight: bold;
-    font-size: 20px;
-
-    &:before,
-    &:after {
-      position: relative;
+    @at-root {
+      .app-component:hover &,
+      .app-component:focus-within & {
+        z-index: 1;
+      }
     }
 
-    &:before {
-      left: -1px;
-      content: "⟨";
-    }
-
-    &:after {
-      right: -1px;
-      content: "⟩";
+    &:focus-within {
+      background-color: govuk-shade(govuk-colour("yellow"), 10%);
+      box-shadow: 0 $govuk-border-width-form-element 0 govuk-shade(govuk-colour("yellow"), 60%);
     }
   }
 
-  .file-upload {
-    background-color: lightgray;
-    float: left;
-    width: 20px;
-    height: 100%;
-    border-right: $app-box-border;
+  &__action {
+    $app-action-small: govuk-em(39px, $context-font-size: 16);
+    $app-action-large: govuk-em(44px, $context-font-size: 19);
 
-    &__icon {
-      display: block;
-      margin: auto;
-      height: 100%;
+    height: $app-action-small;
+    margin-bottom: 0;
+    padding-left: 6px;
+    padding-right: 6px;
+
+    @include govuk-media-query($from: tablet) {
+      height: $app-action-large;
+      padding-left: 8px;
+      padding-right: 8px;
     }
   }
 }
 
-.app-component__actions {
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: -1;
+.app-group {
   display: flex;
-  background-color: govuk-shade(govuk-colour("light-grey"), 10%);
+  align-items: center;
+  column-gap: 4px;
+}
+
+.app-content {
+  display: flex;
+  box-sizing: border-box;
+  flex-direction: column;
+  align-items: normal;
+
+  width: 76%;
+  margin: -2px -4px;
+  padding: 15px 6px;
+  background-color: govuk-colour("light-grey");
+  color: govuk-colour("dark-grey");
 
   @at-root {
-    .app-component:hover &,
     .app-component:focus-within & {
-      z-index: 1;
+      background-color: govuk-tint($app-component-focus-within-color, 35%);
     }
-  }
 
-  &:focus-within {
-    background-color: govuk-shade(govuk-colour("light-grey"), 10%);
+    .app-component:hover &,
+    .govuk-button:hover &,
+    .govuk-button:focus & {
+      background-color: govuk-tint($app-component-focus-color, 35%);
+    }
   }
 }
 
-.app-component__action {
-  $app-action-small: govuk-em(39px, $context-font-size: 16);
-  $app-action-large: govuk-em(44px, $context-font-size: 19);
+%app-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  column-gap: 4px;
+  box-sizing: border-box;
+  font-size: small;
+  line-height: 1;
+}
 
-  height: $app-action-small;
-  margin-bottom: 0;
-  padding-left: 6px;
-  padding-right: 6px;
+%app-field-text {
+  display: flex;
+  border: solid govuk-colour("black");
 
-  @include govuk-media-query($from: tablet) {
-    height: $app-action-large;
-    padding-left: 8px;
-    padding-right: 8px;
+  .app-content & {
+    border-color: govuk-colour("dark-grey");
+  }
+}
+
+%app-field-line {
+  @extend %app-field-text;
+  width: 80%;
+  border-width: 2px 0 0 0;
+
+  &,
+  &:only-child {
+    margin: 4px 0;
+  }
+
+  &:first-child {
+    margin-top: 0;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  .app-field-radio ~ &,
+  .app-field-checkbox ~ & {
+    margin: 0;
+  }
+}
+
+%app-field-input {
+  position: relative;
+  display: flex;
+  box-sizing: border-box;
+  font-size: small;
+  line-height: 1;
+  width: 125px;
+  height: 24px;
+  padding: 2px;
+  border: solid 2px govuk-colour("black");
+
+  &:only-child {
+    margin: -2px 0;
+  }
+}
+
+.app-field-radio,
+.app-field-checkbox {
+  width: 16px;
+  height: 16px;
+  margin: 2px 0;
+  box-sizing: border-box;
+  vertical-align: middle;
+  display: inline-block;
+  border: solid 2px govuk-colour("black");
+}
+
+.app-field-radio {
+  border-radius: 50%;
+
+  &--checked {
+    background-color: govuk-colour("black");
+    box-shadow: inset 0 0 0 2px govuk-colour("white");
+
+    @at-root {
+      .app-component:focus-within & {
+        box-shadow: inset 0 0 0 2px $app-component-focus-within-color;
+      }
+
+      .app-component:hover &,
+      .govuk-button:hover &,
+      .govuk-button:focus & {
+        box-shadow: inset 0 0 0 2px $app-component-focus-color;
+      }
+    }
+  }
+}
+
+.app-field-checkbox {
+  position: relative;
+
+  &--checked:before {
+    position: absolute;
+    display: block;
+    top: 2px;
+    left: 2px;
+    width: 40%;
+    height: 22%;
+    transform: rotate(-45deg);
+    border: solid govuk-colour("black");
+    border-width: 0 0 3px 3px;
+    content: "";
+  }
+}
+
+.app-field-heading {
+  @extend %app-field-text;
+  width: 36%;
+  border-width: 4px 0 0 0;
+  margin-bottom: 4px;
+}
+
+.app-field-line {
+  @extend %app-field-line;
+
+  &-m,
+  &-s,
+  &-xs {
+    @extend %app-field-line;
+  }
+
+  &-m {
+    width: 60%;
+  }
+  &-s {
+    width: 30%;
+  }
+  &-xs {
+    width: 10%;
+  }
+}
+
+.app-field-input {
+  @extend %app-field-input;
+
+  &-m,
+  &-s,
+  &-xs {
+    @extend %app-field-input;
+  }
+
+  &-m {
+    width: 90px;
+  }
+  &-s {
+    width: 45px;
+  }
+  &-xs {
+    width: 25px;
+  }
+}
+
+.app-field-textarea {
+  @extend %app-field-input;
+  height: 60px;
+}
+
+.app-field-address {
+  display: flex;
+  flex-direction: column;
+  align-items: normal;
+  padding: 6px 0;
+  row-gap: 4px;
+}
+
+.app-field-details {
+  flex-direction: row;
+  align-items: center;
+  padding-top: 7px;
+  padding-bottom: 7px;
+}
+
+.app-field-inset {
+  padding-left: 20px;
+
+  &:before {
+    position: absolute;
+    top: 10px;
+    bottom: 10px;
+    left: 8px;
+    width: 4px;
+    background: govuk-colour("mid-grey");
+    content: "";
+  }
+}
+
+.app-field-prefix,
+.app-field-suffix {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 100%;
+  background: govuk-colour("light-grey") govuk-image-url("file-upload-icon.svg") no-repeat;
+  background-position: 50% 50%;
+  background-size: 12px 12px;
+  border: solid govuk-border-width-form-element govuk-colour("black");
+  border-width: 0 2px 0 0;
+
+  &__contents {
+    display: block;
+    margin: auto;
+    height: 100%;
+  }
+}
+
+.app-field-suffix {
+  left: auto;
+  right: 0;
+  border-width: 0 0 0 2px;
+}
+
+.app-icon {
+  @extend %app-icon;
+  @include govuk-font-tabular-numbers();
+
+  &--autocomplete {
+    column-gap: 1px;
+
+    &:before {
+      content: "Abc";
+    }
+
+    &:after {
+      color: govuk-colour("mid-grey");
+      content: "|";
+    }
+  }
+
+  &--details:before {
+    content: "▶";
+  }
+
+  &--dropdown {
+    justify-content: end;
+
+    &:after {
+      content: "▼";
+    }
+  }
+
+  &--email:before {
+    content: "@";
+  }
+
+  &--phone:before {
+    content: "☎";
+  }
+
+  &--number:before {
+    content: "123";
+  }
+
+  &--textarea {
+    align-items: end;
+    justify-content: end;
+
+    &:after {
+      content: "⌟";
+    }
+  }
+
+  &--bullet:before {
+    content: "•";
   }
 }
 
