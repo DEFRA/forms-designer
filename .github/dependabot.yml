@@ -24,11 +24,17 @@ updates:
           - 'postcss-*'
           - 'react'
           - 'react-*'
+          - '*-react'
           - 'sass'
           - 'tsc-alias'
           - 'typescript'
           - 'webpack'
           - 'webpack-*'
+
+        # Exclude packages in other groups
+        exclude-patterns:
+          - 'eslint-plugin-react'
+          - 'eslint-plugin-react-hooks'
 
       lint:
         patterns:
