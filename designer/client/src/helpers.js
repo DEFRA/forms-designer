@@ -11,14 +11,27 @@ import { findPathsTo } from '~/src/data/page/findPathsTo.js'
 
 /**
  * @template {unknown[]} ArrayType
- * @param {ArrayType} arr
- * @param {number} from
- * @param {number} to
+ * @param {ArrayType} input - Input array
+ * @param {number} from - Index to move from
+ * @param {number} to - Index to move to
  */
-export function arrayMove(arr, from, to) {
-  const elm = arr.splice(from, 1)[0]
-  arr.splice(to, 0, elm)
-  return arr
+export function arrayMove(input, from, to) {
+  const output = structuredClone(input)
+  const item = output.at(from)
+
+  if (to < 0) {
+    to = output.length - 1
+  } else {
+    to = to < output.length ? to : 0
+  }
+
+  // Check for moves
+  if (item && from !== to) {
+    output.splice(from, 1)
+    output.splice(to, 0, item)
+  }
+
+  return output
 }
 
 /**

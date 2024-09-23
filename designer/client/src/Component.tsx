@@ -6,13 +6,19 @@ import {
   type ComponentDef,
   type Page
 } from '@defra/forms-model'
-import React, { useContext, useState, type ComponentProps } from 'react'
+import React, {
+  useCallback,
+  useContext,
+  useState,
+  type ComponentProps
+} from 'react'
 
 import { ComponentEdit } from '~/src/ComponentEdit.jsx'
+import { SortUpDown } from '~/src/SortUpDown.jsx'
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
-import { findPage } from '~/src/data/page/findPage.js'
+import { updateComponents } from '~/src/data/component/updateComponents.js'
 import { arrayMove } from '~/src/helpers.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContextProvider } from '~/src/reducers/component/componentReducer.jsx'
@@ -231,6 +237,18 @@ export function Component(props: Readonly<Props>) {
 
   const { title, type } = selectedComponent
 
+  const handleMove = useCallback(
+    async (newIndex: number) => {
+      if (!hasComponents(page)) {
+        return
+      }
+
+      const components = arrayMove(page.components, index, newIndex)
+      await save(updateComponents(data, page, components))
+    },
+    [data, page, index, save]
+  )
+
   // Check if component type is supported
   if (!(type in componentTypes)) {
     return null
@@ -253,33 +271,12 @@ export function Component(props: Readonly<Props>) {
   const componentMoveDownLabel = `${i18n('component.moveDown_label', { name })}${suffix}`
   const componentButtonLabel = `${componentFlyoutTitle}${suffix}`
 
-  const move = async (oldIndex: number, newIndex: number) => {
-    const definition = structuredClone(data)
-    const pageEdit = findPage(definition, page.path)
-
-    if (!hasComponents(pageEdit)) {
-      return false
-    }
-
-    const length = pageEdit.components.length
-
-    if (newIndex === -1) {
-      newIndex = length - 1
-    } else if (newIndex === length) {
-      newIndex = 0
-    }
-
-    pageEdit.components = arrayMove(pageEdit.components, oldIndex, newIndex)
-
-    await save(definition)
-  }
-
   const showMoveActions = hasComponents(page) && page.components.length > 1
 
   return (
-    <div className="app-component">
+    <li className="app-result">
       <button
-        className="app-component__button govuk-button govuk-button--component"
+        className="app-result__container govuk-button app-button--result"
         onClick={onSave}
         aria-describedby={headingId}
       >
@@ -287,26 +284,20 @@ export function Component(props: Readonly<Props>) {
         <ComponentIcon />
       </button>
       {showMoveActions && (
-        <div className="app-component__actions">
-          <button
-            className="app-component__action govuk-button govuk-button--secondary"
-            onClick={() => move(index, index - 1)}
-            title={componentMoveUpTitle}
-            aria-label={componentMoveUpLabel}
-            aria-describedby={headingId}
-          >
-            ▲
-          </button>
-          <button
-            className="app-component__action govuk-button govuk-button--secondary"
-            onClick={() => move(index, index + 1)}
-            title={componentMoveDownTitle}
-            aria-label={componentMoveDownLabel}
-            aria-describedby={headingId}
-          >
-            ▼
-          </button>
-        </div>
+        <SortUpDown
+          moveUp={{
+            title: componentMoveUpTitle,
+            'aria-label': componentMoveUpLabel,
+            'aria-describedby': headingId,
+            onClick: () => handleMove(index - 1)
+          }}
+          moveDown={{
+            title: componentMoveDownTitle,
+            'aria-label': componentMoveDownLabel,
+            'aria-describedby': headingId,
+            onClick: () => handleMove(index + 1)
+          }}
+        />
       )}
       {showEditor && (
         <RenderInPortal>
@@ -321,6 +312,6 @@ export function Component(props: Readonly<Props>) {
           </Flyout>
         </RenderInPortal>
       )}
-    </div>
+    </li>
   )
 }

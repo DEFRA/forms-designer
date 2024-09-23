@@ -46,7 +46,7 @@ const ComponentList = (props: Readonly<{ page: PageType }>) => {
   const { components = [] } = page
 
   return (
-    <>
+    <ul className="app-results">
       {components.map((component, index) => (
         <ComponentItem
           index={index}
@@ -55,7 +55,7 @@ const ComponentList = (props: Readonly<{ page: PageType }>) => {
           selectedComponent={component}
         />
       ))}
-    </>
+    </ul>
   )
 }
 
@@ -94,7 +94,7 @@ export const Page = (
 
       <div className="page__actions">
         <button
-          className="govuk-button govuk-button--editor"
+          className="govuk-button app-button--editor"
           type="button"
           aria-describedby={headingId}
           onClick={() => setIsEditingPage(true)}
@@ -103,7 +103,7 @@ export const Page = (
         </button>
         <a
           href={href}
-          className="govuk-button govuk-button--editor"
+          className="govuk-button app-button--editor"
           target="_blank"
           rel="noreferrer"
           aria-describedby={headingId}
@@ -112,7 +112,7 @@ export const Page = (
         </a>
         {hasComponents(page) && (
           <button
-            className="govuk-button govuk-button--editor"
+            className="govuk-button app-button--editor"
             aria-describedby={headingId}
             onClick={() => setIsCreatingComponent(true)}
           >
