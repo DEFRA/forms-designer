@@ -12,7 +12,6 @@ describe('Helpers', () => {
         html: ''
       },
       {
-        markdown: undefined,
         html: ''
       },
       {
