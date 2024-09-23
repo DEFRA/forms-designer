@@ -196,63 +196,61 @@ export function ListEdit() {
       )}
 
       <form onSubmit={handleSubmit} autoComplete="off" noValidate>
-        <>
-          <Input
-            id="list-title"
-            name="title"
-            hint={{ children: i18n('list.titleHint') }}
-            label={{
-              className: 'govuk-label--s',
-              children: [i18n('list.title')]
-            }}
-            value={selectedList.title}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              listDispatch({
-                name: ListActions.EDIT_TITLE,
-                payload: e.target.value
-              })
+        <Input
+          id="list-title"
+          name="title"
+          hint={{ children: i18n('list.titleHint') }}
+          label={{
+            className: 'govuk-label--s',
+            children: [i18n('list.title')]
+          }}
+          value={selectedList.title}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            listDispatch({
+              name: ListActions.EDIT_TITLE,
+              payload: e.target.value
+            })
+          }
+          errorMessage={errors.title}
+        />
+        <Radios
+          id="list-type"
+          name="type"
+          hint={{ children: i18n('list.typeHint') }}
+          fieldset={{
+            legend: {
+              className: 'govuk-fieldset__legend--s',
+              children: [i18n('list.type')]
             }
-            errorMessage={errors.title}
-          />
-          <Radios
-            id="list-type"
-            name="type"
-            hint={{ children: i18n('list.typeHint') }}
-            fieldset={{
-              legend: {
-                className: 'govuk-fieldset__legend--s',
-                children: [i18n('list.type')]
-              }
-            }}
-            value={selectedList.type}
-            defaultValue="string"
-            items={[
-              {
-                children: ['String'],
-                value: 'string',
-                hint: {
-                  children: [i18n('list.typeHintString')]
-                },
-                disabled: !selectedList.isNew
+          }}
+          value={selectedList.type}
+          defaultValue="string"
+          items={[
+            {
+              children: ['String'],
+              value: 'string',
+              hint: {
+                children: [i18n('list.typeHintString')]
               },
-              {
-                children: ['Number'],
-                value: 'number',
-                hint: {
-                  children: [i18n('list.typeHintNumber')]
-                },
-                disabled: !selectedList.isNew
-              }
-            ]}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              listDispatch({
-                name: ListActions.EDIT_TYPE,
-                payload: e.target.value
-              })
+              disabled: !selectedList.isNew
+            },
+            {
+              children: ['Number'],
+              value: 'number',
+              hint: {
+                children: [i18n('list.typeHintNumber')]
+              },
+              disabled: !selectedList.isNew
             }
-            errorMessage={errors.type}
-          />
-        </>
+          ]}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            listDispatch({
+              name: ListActions.EDIT_TYPE,
+              payload: e.target.value
+            })
+          }
+          errorMessage={errors.type}
+        />
 
         <div className="panel__results">
           <ListItems />
