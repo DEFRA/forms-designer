@@ -265,7 +265,7 @@ export class SelectConditions extends Component<Props, State> {
             {!inline && (
               <p className="govuk-body">
                 <a
-                  href="#"
+                  href="#inline-conditions-add"
                   className="govuk-link"
                   onClick={this.onClickDefineCondition}
                 >
@@ -276,6 +276,7 @@ export class SelectConditions extends Component<Props, State> {
             {inline && (
               <RenderInPortal>
                 <Flyout
+                  id="inline-conditions-add"
                   title={i18n('conditions.addTitle')}
                   onHide={this.onCancelInlineCondition}
                 >

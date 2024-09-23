@@ -118,7 +118,11 @@ export function ComponentCreate(props: Readonly<Props>) {
   return (
     <>
       <RenderInPortal>
-        <Flyout title={i18n('component.create')} onHide={onSave}>
+        <Flyout
+          id="component-create-list"
+          title={i18n('component.create')}
+          onHide={onSave}
+        >
           <ComponentCreateList
             page={props.page}
             onSelectComponent={handleCreate}
@@ -129,6 +133,7 @@ export function ComponentCreate(props: Readonly<Props>) {
       {type && (
         <RenderInPortal>
           <Flyout
+            id="component-type-edit"
             title={`${componentName} ${i18n('component.component')}`}
             onHide={handleReset}
           >

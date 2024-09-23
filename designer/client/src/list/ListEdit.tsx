@@ -198,7 +198,7 @@ export function ListEdit() {
 
         <p className="govuk-body">
           <a
-            href="#"
+            href="#list-item-edit"
             id="list-items"
             className="govuk-link"
             onClick={handleAddItem}

@@ -50,28 +50,14 @@ $govuk-breakpoints: (
     &__actions {
       display: flex;
       flex-direction: column;
+      @include govuk-responsive-padding(2, "top");
 
-      button.govuk-link {
-        border: none;
-        box-shadow: none;
-        text-align: left;
-      }
+      .govuk-button {
+        margin-bottom: 1px;
 
-      .govuk-link {
-        @include govuk-responsive-padding(2);
-        text-decoration: none;
-        background-color: govuk-colour("black");
-        color: govuk-colour("white");
-
-        &:hover,
-        &:focus {
-          background-color: govuk-colour("yellow");
-          color: govuk-colour("black");
-          cursor: pointer;
-        }
-
-        &:not(:last-child) {
-          border-bottom: 1px solid #ffffff;
+        &:last-child {
+          margin-bottom: 0;
+          box-shadow: none;
         }
       }
     }

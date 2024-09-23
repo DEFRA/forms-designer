@@ -27,14 +27,12 @@ const ComponentItem = (
   const { index, page, selectedComponent } = props
 
   return (
-    <div className="component-item">
-      <Component
-        index={index}
-        page={page}
-        key={selectedComponent.name}
-        selectedComponent={selectedComponent}
-      />
-    </div>
+    <Component
+      index={index}
+      page={page}
+      key={selectedComponent.name}
+      selectedComponent={selectedComponent}
+    />
   )
 }
 
@@ -48,7 +46,7 @@ const ComponentList = (props: Readonly<{ page: PageType }>) => {
   const { components = [] } = page
 
   return (
-    <div className="component-list">
+    <>
       {components.map((component, index) => (
         <ComponentItem
           index={index}
@@ -57,7 +55,7 @@ const ComponentList = (props: Readonly<{ page: PageType }>) => {
           selectedComponent={component}
         />
       ))}
-    </div>
+    </>
   )
 }
 
@@ -96,15 +94,16 @@ export const Page = (
 
       <div className="page__actions">
         <button
-          onClick={() => setIsEditingPage(true)}
-          className="govuk-link"
+          className="govuk-button govuk-button--editor"
+          type="button"
           aria-describedby={headingId}
+          onClick={() => setIsEditingPage(true)}
         >
           {i18n('page.edit')}
         </button>
         <a
           href={href}
-          className="govuk-link"
+          className="govuk-button govuk-button--editor"
           target="_blank"
           rel="noreferrer"
           aria-describedby={headingId}
@@ -113,9 +112,9 @@ export const Page = (
         </a>
         {hasComponents(page) && (
           <button
-            onClick={() => setIsCreatingComponent(true)}
-            className="govuk-link"
+            className="govuk-button govuk-button--editor"
             aria-describedby={headingId}
+            onClick={() => setIsCreatingComponent(true)}
           >
             {i18n('component.create')}
           </button>
@@ -124,6 +123,7 @@ export const Page = (
       {isEditingPage && (
         <RenderInPortal>
           <Flyout
+            id="page-edit"
             title={i18n('page.edit')}
             onHide={() => setIsEditingPage(false)}
           >

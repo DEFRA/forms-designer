@@ -10,17 +10,17 @@ describe('Flyout', () => {
   it('renders with accessible heading and close button', () => {
     render(
       <RenderWithContext>
-        <Flyout title="Example" onHide={jest.fn()} />
+        <Flyout id="example" title="Example" onHide={jest.fn()} />
       </RenderWithContext>
     )
 
     const $dialog = screen.getByRole('dialog', { name: 'Example' })
     const $heading = screen.getByRole('heading', { name: 'Example' })
-    const $button = screen.getByRole('button', { name: 'Close' })
+    const $close = screen.getByRole('button', { name: 'Close' })
 
     expect($dialog).toBeInTheDocument()
     expect($dialog).toContainElement($heading)
-    expect($dialog).toContainElement($button)
+    expect($dialog).toContainElement($close)
 
     const headingId = 'flyout-1-heading'
 
@@ -34,7 +34,7 @@ describe('Flyout', () => {
 
     render(
       <RenderWithContext context={{ flyout: { increment, decrement } }}>
-        <Flyout title="Example 1" onHide={jest.fn()} />
+        <Flyout id="example" title="Example 1" onHide={jest.fn()} />
       </RenderWithContext>
     )
 
@@ -48,7 +48,7 @@ describe('Flyout', () => {
 
     const { unmount } = render(
       <RenderWithContext context={{ flyout: { increment, decrement } }}>
-        <Flyout title="Example 1" onHide={jest.fn()} />
+        <Flyout id="example" title="Example 1" onHide={jest.fn()} />
       </RenderWithContext>
     )
 
@@ -61,14 +61,17 @@ describe('Flyout', () => {
   it('opens and closes as a modal dialog', async () => {
     render(
       <RenderWithContext>
-        <Flyout title="Example" onHide={jest.fn()} />
+        <Flyout id="example" title="Example" onHide={jest.fn()} />
       </RenderWithContext>
     )
 
     expect(HTMLDialogElement.prototype.showModal).toHaveBeenCalled()
 
-    const $button = screen.getByRole('button', { name: 'Close' })
-    await act(() => userEvent.click($button))
+    const $close = screen.getByRole('button', {
+      name: 'Close'
+    })
+
+    await act(() => userEvent.click($close))
 
     expect(HTMLDialogElement.prototype.close).toHaveBeenCalled()
   })
@@ -76,7 +79,7 @@ describe('Flyout', () => {
   it('renders first flyout without an offset', () => {
     render(
       <RenderWithContext>
-        <Flyout title="Example 1" onHide={jest.fn()} />
+        <Flyout id="example" title="Example 1" onHide={jest.fn()} />
       </RenderWithContext>
     )
 
@@ -95,7 +98,7 @@ describe('Flyout', () => {
   it('renders subsequent flyouts with an offset', () => {
     render(
       <RenderWithContext context={{ flyout: { count: 1 } }}>
-        <Flyout title="Example 2" onHide={jest.fn()} />
+        <Flyout id="example" title="Example 2" onHide={jest.fn()} />
       </RenderWithContext>
     )
 

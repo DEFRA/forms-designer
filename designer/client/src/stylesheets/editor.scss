@@ -14,6 +14,7 @@ $app-code-font: ui-monospace, menlo, "Cascadia Mono", "Segoe UI Mono", consolas,
 $app-code-color: #d13118;
 $app-light-grey: #f8f8f8;
 $app-box-border: solid 2px #000;
+$app-component-focus-color: govuk-colour("yellow");
 
 %app-button-link {
   @include govuk-link-common;
@@ -21,6 +22,11 @@ $app-box-border: solid 2px #000;
   @include govuk-link-print-friendly;
 
   & {
+    display: inline;
+    align-items: normal;
+    text-align: left;
+    font-size: inherit;
+    appearance: none;
     color: $govuk-link-colour;
     background-color: transparent;
     border: none;
@@ -44,7 +50,6 @@ $app-box-border: solid 2px #000;
 
 button.govuk-link {
   @extend %app-button-link;
-  @include govuk-font-size($size: 16);
 
   & {
     padding: 0;
@@ -108,14 +113,15 @@ p code {
   }
 }
 
-.component.govuk-link {
-  display: block;
-  width: 100%;
-  @include govuk-responsive-padding(2);
+.govuk-button--editor,
+.govuk-button--component {
+  @include govuk-font-size($size: 16);
 
-  color: govuk-colour("black");
-  text-decoration: none;
-  text-align: left;
+  & {
+    display: block;
+    width: 100%;
+    text-align: left;
+  }
 
   &:hover,
   &:focus {
@@ -124,7 +130,38 @@ p code {
     box-shadow: none;
     cursor: pointer;
   }
+}
 
+.govuk-button--editor {
+  background-color: govuk-colour("black");
+  box-shadow: 0 1px 0 govuk-colour("white");
+  color: govuk-colour("white");
+}
+
+.govuk-button--component {
+  min-height: govuk-em(44px, $context-font-size: 16);
+  background-color: transparent;
+  box-shadow: none;
+  border: none;
+  color: govuk-colour("black");
+  font-weight: bold;
+}
+
+.app-component {
+  position: relative;
+
+  &:hover {
+    background-color: $app-component-focus-color;
+    box-shadow: 0 $govuk-border-width-form-element 0 $app-component-focus-color;
+  }
+}
+
+.app-component__button,
+.app-component__actions {
+  margin: 0;
+}
+
+.app-component__button {
   > div {
     pointer-events: none;
   }
@@ -262,29 +299,30 @@ p code {
   }
 }
 
-.component-item {
-  position: relative;
+.app-component__actions {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: -1;
 
-  &:hover,
-  &:focus-within {
-    background-color: govuk-colour("yellow");
-
-    .component-move {
-      visibility: visible;
+  @at-root {
+    .app-component:hover &,
+    .app-component:focus-within & {
+      z-index: 1;
     }
-  }
-
-  .govuk-button-group {
-    position: absolute;
-    top: 0;
-    right: 0;
   }
 }
 
-.component-move {
-  visibility: hidden;
+.app-component__action {
+  $app-action-small: govuk-em(39px, $context-font-size: 16);
+  $app-action-large: govuk-em(44px, $context-font-size: 19);
+
+  height: $app-action-small;
   margin-bottom: 0;
-  @include govuk-responsive-padding(2);
+
+  @include govuk-media-query($from: tablet) {
+    height: $app-action-large;
+  }
 }
 
 /* Syntax highlighting */

@@ -5,6 +5,7 @@ import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { findSection } from '~/src/data/section/findSection.js'
+import { i18n } from '~/src/i18n/i18n.jsx'
 import { SectionEdit } from '~/src/section/SectionEdit.jsx'
 
 type Props = Record<string, never>
@@ -52,7 +53,7 @@ export class SectionsEdit extends Component<Props, State> {
             <li key={section.name}>
               <a
                 className="govuk-link"
-                href="#"
+                href="#section-edit"
                 onClick={(e) => this.onClickSection(e, section)}
               >
                 {section.title}
@@ -67,15 +68,18 @@ export class SectionsEdit extends Component<Props, State> {
             type="button"
             onClick={(e) => this.onClickSection(e)}
           >
-            Add section
+            {i18n('section.add')}
           </button>
         </div>
 
         {isEditingSection && (
           <RenderInPortal>
             <Flyout
+              id="section-edit"
               title={
-                section?.name ? `Editing ${section.name}` : 'Add a new section'
+                section?.title
+                  ? i18n('section.editTitle', { title: section.title })
+                  : i18n('section.add')
               }
               onHide={this.closeFlyout}
             >

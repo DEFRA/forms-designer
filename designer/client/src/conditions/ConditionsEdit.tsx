@@ -74,6 +74,7 @@ export function ConditionsEdit({ path }: Readonly<Props>) {
           {showAddCondition && (
             <RenderInPortal>
               <Flyout
+                id="inline-conditions-add"
                 title={i18n('conditions.add')}
                 onHide={cancelInlineCondition}
               >
@@ -94,7 +95,7 @@ export function ConditionsEdit({ path }: Readonly<Props>) {
                 <li key={condition.name}>
                   <a
                     className="govuk-link"
-                    href="#"
+                    href="#inline-conditions-edit"
                     onClick={(e) => onClickCondition(e, condition)}
                   >
                     {condition.displayName}
@@ -124,7 +125,11 @@ export function ConditionsEdit({ path }: Readonly<Props>) {
       )}
       {editingCondition && (
         <RenderInPortal>
-          <Flyout title={i18n('conditions.addOrEdit')} onHide={editFinished}>
+          <Flyout
+            id="inline-conditions-edit"
+            title={i18n('conditions.addOrEdit')}
+            onHide={editFinished}
+          >
             <InlineConditions
               path={path}
               condition={editingCondition}

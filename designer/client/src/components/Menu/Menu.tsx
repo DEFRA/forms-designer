@@ -141,7 +141,7 @@ export function Menu() {
 
       {page.isVisible && (
         <RenderInPortal>
-          <Flyout title={i18n('page.add')} onHide={page.hide}>
+          <Flyout id="page-create" title={i18n('page.add')} onHide={page.hide}>
             <PageCreate onSave={page.hide} />
           </Flyout>
         </RenderInPortal>
@@ -149,7 +149,7 @@ export function Menu() {
 
       {link.isVisible && (
         <RenderInPortal>
-          <Flyout title={i18n('menu.links')} onHide={link.hide}>
+          <Flyout id="link-edit" title={i18n('menu.links')} onHide={link.hide}>
             <LinkEdit onSave={link.hide} />
           </Flyout>
         </RenderInPortal>
@@ -157,7 +157,11 @@ export function Menu() {
 
       {sections.isVisible && (
         <RenderInPortal>
-          <Flyout title={i18n('sections.edit')} onHide={sections.hide}>
+          <Flyout
+            id="sections-edit"
+            title={i18n('sections.edit')}
+            onHide={sections.hide}
+          >
             <SectionsEdit />
           </Flyout>
         </RenderInPortal>
@@ -166,6 +170,7 @@ export function Menu() {
       {conditions.isVisible && (
         <RenderInPortal>
           <Flyout
+            id="conditions-edit"
             title={i18n('conditions.addOrEdit')}
             onHide={conditions.hide}
             width="large"
@@ -177,7 +182,11 @@ export function Menu() {
 
       {lists.isVisible && (
         <RenderInPortal>
-          <Flyout title={i18n('list.addOrEdit')} onHide={lists.hide}>
+          <Flyout
+            id="lists-edit"
+            title={i18n('list.addOrEdit')}
+            onHide={lists.hide}
+          >
             <ListsEditorContextProvider>
               <ListContextProvider>
                 <ListsEdit showEditLists={false} />
@@ -189,7 +198,11 @@ export function Menu() {
 
       {summary.isVisible && (
         <RenderInPortal>
-          <Flyout title={i18n('summary.edit')} onHide={summary.hide}>
+          <Flyout
+            id="declaration-edit"
+            title={i18n('summary.edit')}
+            onHide={summary.hide}
+          >
             <DeclarationEdit onSave={summary.hide} />
           </Flyout>
         </RenderInPortal>
@@ -198,6 +211,7 @@ export function Menu() {
       {overview.isVisible && (
         <RenderInPortal>
           <Flyout
+            id="form-overview"
             title={i18n('menu.overview')}
             width="xlarge"
             onHide={overview.hide}

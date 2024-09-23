@@ -14,6 +14,7 @@ import { FlyoutContext } from '~/src/context/FlyoutContext.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 
 interface Props {
+  id: string
   title: string
   width?: string
   children?: ReactNode
@@ -95,7 +96,7 @@ export function useFlyoutEffect(
 }
 
 export function Flyout(props: Readonly<Props>) {
-  const { title, width = '', children } = props
+  const { id, title, width = '', children } = props
   const { style, offset, ref, closeOnClick, closeOnEnter } =
     useFlyoutEffect(props)
 
@@ -109,10 +110,11 @@ export function Flyout(props: Readonly<Props>) {
         tabbableOptions: { displayCheck: 'none' }
       }}
     >
-      <dialog className="flyout" aria-labelledby={headingId} ref={ref}>
+      <dialog id={id} className="flyout" aria-labelledby={headingId} ref={ref}>
         <div className={`flyout__container ${width}`.trim()} style={style}>
           <button
             className="flyout__button-close govuk-link"
+            type="button"
             onClick={closeOnClick}
             onKeyDown={closeOnEnter}
           >

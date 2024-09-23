@@ -291,19 +291,19 @@ export function Component(props: Readonly<ComponentProps>) {
   const showMoveActions = hasComponents(page) && page.components.length > 1
 
   return (
-    <>
+    <div className="app-component">
       <button
-        className="component govuk-link"
+        className="app-component__button govuk-button govuk-button--component"
         onClick={onSave}
-        aria-label={componentButtonLabel}
         aria-describedby={headingId}
       >
+        <span className="govuk-visually-hidden">{componentButtonLabel}</span>
         <ComponentIcon />
       </button>
       {showMoveActions && (
-        <div className="govuk-button-group">
+        <div className="app-component__actions">
           <button
-            className="component-move govuk-button govuk-button--secondary govuk-!-margin-right-0"
+            className="app-component__action govuk-button govuk-button--secondary"
             onClick={() => move(index, index - 1)}
             title={componentMoveUpTitle}
             aria-label={componentMoveUpLabel}
@@ -312,7 +312,7 @@ export function Component(props: Readonly<ComponentProps>) {
             ▲
           </button>
           <button
-            className="component-move govuk-button govuk-button--secondary"
+            className="app-component__action govuk-button govuk-button--secondary"
             onClick={() => move(index, index + 1)}
             title={componentMoveDownTitle}
             aria-label={componentMoveDownLabel}
@@ -324,13 +324,17 @@ export function Component(props: Readonly<ComponentProps>) {
       )}
       {showEditor && (
         <RenderInPortal>
-          <Flyout title={componentFlyoutTitle} onHide={onSave}>
+          <Flyout
+            id="component-edit"
+            title={componentFlyoutTitle}
+            onHide={onSave}
+          >
             <ComponentContextProvider selectedComponent={selectedComponent}>
               <ComponentEdit page={page} onSave={onSave} />
             </ComponentContextProvider>
           </Flyout>
         </RenderInPortal>
       )}
-    </>
+    </div>
   )
 }

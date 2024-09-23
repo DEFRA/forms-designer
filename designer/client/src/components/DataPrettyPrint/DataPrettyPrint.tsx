@@ -6,8 +6,8 @@ interface Props extends Omit<ComponentProps<'pre'>, 'children'> {
 
 export function DataPrettyPrint({ children, ...attributes }: Readonly<Props>) {
   return (
-    <pre tabIndex={-1} {...attributes}>
-      <code tabIndex={0}>{JSON.stringify(children, undefined, 2)}</code>
+    <pre {...attributes}>
+      <code>{JSON.stringify(children, undefined, 2)}</code>
     </pre>
   )
 }

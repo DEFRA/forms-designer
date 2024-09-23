@@ -68,6 +68,7 @@ export function ListsEdit({ showEditLists = false }: Readonly<Props>) {
       {isEditingList && (
         <RenderInPortal>
           <Flyout
+            id="list-edit"
             title={listTitle}
             onHide={closeFlyout(ListsEditorStateActions.IS_EDITING_LIST)}
           >
@@ -79,6 +80,7 @@ export function ListsEdit({ showEditLists = false }: Readonly<Props>) {
       {isEditingListItem && (
         <RenderInPortal>
           <Flyout
+            id="list-item-edit"
             title={itemTitle}
             onHide={closeFlyout(ListsEditorStateActions.IS_EDITING_LIST_ITEM)}
           >
