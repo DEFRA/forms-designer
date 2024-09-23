@@ -263,7 +263,11 @@
       "title": "Item text",
       "titleHint": "Enter the text you want to show",
       "value": "Value",
-      "valueHint": "This determines the data format of the list item and does not show on the form. Unless you are using integrations and want to modify the payload, it should match the list item text."
+      "valueHint": "This determines the data format of the list item and does not show on the form. Unless you are using integrations and want to modify the payload, it should match the list item text.",
+      "moveUp": "Move list item up",
+      "moveUp_label": "Move list item {{text, lowerFirst}} up",
+      "moveDown": "Move list item down",
+      "moveDown_label": "Move list item {{text, lowerFirst}} down"
     },
     "items": {
       "title": "List items"

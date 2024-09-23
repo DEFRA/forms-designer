@@ -287,13 +287,13 @@ export function Component(props: Readonly<Props>) {
         <SortUpDown
           moveUp={{
             title: componentMoveUpTitle,
-            'aria-label': componentMoveUpLabel,
+            children: componentMoveUpLabel,
             'aria-describedby': headingId,
             onClick: () => handleMove(index - 1)
           }}
           moveDown={{
             title: componentMoveDownTitle,
-            'aria-label': componentMoveDownLabel,
+            children: componentMoveDownLabel,
             'aria-describedby': headingId,
             onClick: () => handleMove(index + 1)
           }}

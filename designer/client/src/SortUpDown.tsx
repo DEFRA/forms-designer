@@ -1,8 +1,8 @@
 import React, { type ComponentProps } from 'react'
 
 interface Props extends ComponentProps<'div'> {
-  moveUp: SortButtonProps
-  moveDown: SortButtonProps
+  moveUp: Omit<SortButtonProps, 'direction'>
+  moveDown: Omit<SortButtonProps, 'direction'>
 }
 
 export function SortUpDown(props: Readonly<Props>) {
@@ -10,24 +10,25 @@ export function SortUpDown(props: Readonly<Props>) {
 
   return (
     <div className="app-result__actions">
-      <SortButton {...moveUp}>▲</SortButton>
-      <SortButton {...moveDown}>▼</SortButton>
+      <SortButton {...moveUp} direction="up" />
+      <SortButton {...moveDown} direction="down" />
     </div>
   )
 }
 
 type SortButtonProps = ComponentProps<'button'> & {
+  direction: 'up' | 'down'
   onClick: () => void | Promise<void>
 }
 
-export function SortButton({ children, ...props }: SortButtonProps) {
+export function SortButton({ children, direction, ...props }: SortButtonProps) {
   return (
     <button
-      className="app-result__action govuk-button govuk-button--secondary"
+      className={`app-result__action-${direction} govuk-button govuk-button--secondary`}
       type="button"
       {...props}
     >
-      {children}
+      <span className="govuk-visually-hidden">{children}</span>
     </button>
   )
 }

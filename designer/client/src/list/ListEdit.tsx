@@ -40,7 +40,7 @@ function useListEdit() {
 
   const { selectedList } = listState
 
-  function handleAddItem(e: MouseEvent<HTMLAnchorElement>) {
+  function handleAddItem(e: MouseEvent<HTMLButtonElement>) {
     e.preventDefault()
 
     listDispatch({
@@ -194,20 +194,22 @@ export function ListEdit() {
           errorMessage={errors.title}
         />
 
-        <ListItems />
+        <div className="panel__results">
+          <ListItems />
 
-        <p className="govuk-body">
-          <a
-            href="#list-item-edit"
-            id="list-items"
-            className="govuk-link"
-            onClick={handleAddItem}
-          >
-            {i18n('list.item.add')}
-          </a>
-        </p>
+          <div className="govuk-button-group">
+            <button
+              id="list-items"
+              className="govuk-button govuk-button--secondary-quiet"
+              type="button"
+              onClick={handleAddItem}
+            >
+              {i18n('list.item.add')}
+            </button>
+          </div>
+        </div>
 
-        <div className="govuk-button-group">
+        <div className="govuk-button-group govuk-!-margin-top-5">
           <button className="govuk-button" type="submit">
             {i18n('save')}
           </button>
