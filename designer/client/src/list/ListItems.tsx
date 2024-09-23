@@ -106,12 +106,12 @@ export function ListItems() {
                 <SortUpDown
                   moveUp={{
                     title: moveUpTitle,
-                    'aria-label': moveUpLabel,
+                    children: moveUpLabel,
                     onClick: () => handleMove(index, index - 1)
                   }}
                   moveDown={{
                     title: moveDownTitle,
-                    'aria-label': moveDownLabel,
+                    children: moveDownLabel,
                     onClick: () => handleMove(index, index + 1)
                   }}
                 />

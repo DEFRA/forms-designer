@@ -1,3 +1,5 @@
+@use "sass:math";
+
 $govuk-assets-path: "/assets/";
 $govuk-new-organisation-colours: true;
 
@@ -13,6 +15,8 @@ $govuk-new-organisation-colours: true;
 $app-code-font: ui-monospace, menlo, "Cascadia Mono", "Segoe UI Mono", consolas, "Liberation Mono", monospace;
 $app-action-small: govuk-em(39px, $context-font-size: 16);
 $app-action-large: govuk-em(44px, $context-font-size: 19);
+$app-action-icon-small: math.div($app-action-small, 2);
+$app-action-icon-large: math.div($app-action-large, 2);
 
 %app-button-link {
   @include govuk-link-common;
@@ -173,6 +177,7 @@ p code {
 
   &__container {
     margin: 0;
+    box-sizing: border-box;
     line-height: inherit;
 
     span {
@@ -180,7 +185,7 @@ p code {
     }
 
     .app-results--panel & {
-      min-height: govuk-spacing(6);
+      min-height: govuk-spacing(8);
       padding: govuk-spacing(3) 120px govuk-spacing(3) govuk-spacing(4);
     }
   }
@@ -217,24 +222,56 @@ p code {
     }
   }
 
-  &__action {
+  &__action-up,
+  &__action-down {
+    width: $app-action-small;
     height: $app-action-small;
     margin-bottom: 0;
-    padding-left: 6px;
-    padding-right: 6px;
+
+    &:after {
+      position: absolute;
+      top: calc(50% + $govuk-border-width-form-element);
+      left: 50%;
+      width: $app-action-icon-small;
+      height: $app-action-icon-small;
+      margin: math.div($app-action-icon-small, -2) 0 0 math.div($app-action-icon-small, -2);
+    }
 
     .app-results--panel & {
+      display: flex;
       height: 100%;
-      padding-left: govuk-spacing(3);
-      padding-right: govuk-spacing(3);
       box-shadow: none;
     }
 
-    @include govuk-media-query($from: tablet) {
-      height: $app-action-large;
-      padding-left: 8px;
-      padding-right: 8px;
+    .app-results--panel &:after {
+      top: govuk-spacing(3);
+      margin-top: 0;
     }
+
+    @include govuk-media-query($from: tablet) {
+      width: $app-action-large;
+      height: $app-action-large;
+
+      &:after {
+        width: $app-action-icon-large;
+        height: $app-action-icon-large;
+        margin: math.div($app-action-icon-large, -2) 0 0 math.div($app-action-icon-large, -2);
+      }
+
+      .app-results--panel & {
+        display: flex;
+        height: 100%;
+        box-shadow: none;
+      }
+    }
+  }
+
+  &__action-up:after {
+    content: "▲";
+  }
+
+  &__action-down:after {
+    content: "▼";
   }
 }
 
