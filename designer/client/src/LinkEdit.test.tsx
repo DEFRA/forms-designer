@@ -7,7 +7,7 @@ import {
   type FormDefinition
 } from '@defra/forms-model'
 import { screen, within } from '@testing-library/dom'
-import { render, waitFor } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React from 'react'
 
@@ -190,7 +190,7 @@ describe('LinkEdit', () => {
     await userEvent.selectOptions($condition, 'hasUKPassport')
     await userEvent.click($button)
 
-    await waitFor(() => expect(save).toHaveBeenCalledTimes(1))
+    expect(save).toHaveBeenCalledTimes(1)
 
     expect(save.mock.calls[0]).toEqual(
       expect.arrayContaining<FormDefinition>([
@@ -223,7 +223,7 @@ describe('LinkEdit', () => {
     await userEvent.selectOptions($condition, '')
     await userEvent.click($button)
 
-    await waitFor(() => expect(save).toHaveBeenCalledTimes(2))
+    expect(save).toHaveBeenCalledTimes(2)
 
     expect(save.mock.calls[1]).toEqual(
       expect.arrayContaining<FormDefinition>([
@@ -262,7 +262,7 @@ describe('LinkEdit', () => {
 
     await userEvent.click(screen.getByRole('button'))
 
-    await waitFor(() => expect(save).not.toHaveBeenCalled())
+    expect(save).not.toHaveBeenCalled()
 
     const summary = within(screen.getByRole('alert'))
     expect(summary.getByText('Enter link from')).toBeInTheDocument()

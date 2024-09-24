@@ -1,6 +1,6 @@
 import { type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import { render, waitFor } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React from 'react'
 
@@ -129,7 +129,7 @@ describe('Menu', () => {
     })
 
     await userEvent.click($buttonSave)
-    await waitFor(() => expect(save).toHaveBeenCalledTimes(1))
+    expect(save).toHaveBeenCalledTimes(1)
 
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })

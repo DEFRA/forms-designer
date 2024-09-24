@@ -1,6 +1,6 @@
 import { ComponentType, type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import { render, waitFor } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React from 'react'
 
@@ -44,7 +44,6 @@ describe('ComponentCreate:', () => {
     ).not.toBeInTheDocument()
 
     await userEvent.click($componentLink)
-    await waitFor(() => screen.getAllByRole('textbox'))
 
     const $input = screen.getByRole('textbox', { name: 'Title' })
     const $textarea = screen.getByRole('textbox', { name: 'Content' })
@@ -67,7 +66,6 @@ describe('ComponentCreate:', () => {
     })
 
     await userEvent.click($componentLink)
-    await waitFor(() => screen.getAllByRole('textbox'))
 
     const $input = screen.getByRole('textbox', { name: 'Title' })
     const $textarea = screen.getByRole('textbox', { name: 'Content' })
@@ -84,7 +82,7 @@ describe('ComponentCreate:', () => {
     // Submit the form
     await userEvent.click($button)
 
-    await waitFor(() => expect(save).toHaveBeenCalled())
+    expect(save).toHaveBeenCalled()
 
     expect(save.mock.calls[0]).toEqual(
       expect.arrayContaining<FormDefinition>([
@@ -146,7 +144,6 @@ describe('ComponentCreate:', () => {
     })
 
     await userEvent.click($componentLink)
-    await waitFor(() => screen.getAllByRole('textbox'))
 
     const $input = screen.getByRole('textbox', { name: 'Title' })
     const $textarea = screen.getByRole('textbox', { name: 'Content' })

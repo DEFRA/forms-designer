@@ -1,6 +1,6 @@
 import { ComponentType, type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import { render, waitFor } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import lowerFirst from 'lodash/lowerFirst.js'
 import React from 'react'
@@ -82,11 +82,12 @@ describe('Page', () => {
 
     // Open edit page
     await userEvent.click($buttonEdit)
-    await waitFor(() =>
-      screen.findByRole('dialog', {
+
+    expect(
+      screen.getByRole('dialog', {
         name: 'Edit page'
       })
-    )
+    ).toBeInTheDocument()
 
     const $buttonSave = screen.getByRole('button', {
       name: 'Save'
@@ -101,11 +102,12 @@ describe('Page', () => {
 
     // Open edit page
     await userEvent.click($buttonEdit)
-    await waitFor(() =>
-      screen.findByRole('dialog', {
+
+    expect(
+      screen.getByRole('dialog', {
         name: 'Edit page'
       })
-    )
+    ).toBeInTheDocument()
 
     const $close = screen.getByRole('button', {
       name: 'Close'

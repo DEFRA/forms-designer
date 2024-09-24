@@ -1,5 +1,5 @@
 import { screen } from '@testing-library/dom'
-import { render, waitFor } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React from 'react'
 
@@ -35,13 +35,11 @@ describe('AbsoluteDateValues', () => {
     await userEvent.type($month, '4')
     await userEvent.type($day, '26')
 
-    await waitFor(() =>
-      expect(updateValue).toHaveBeenCalledWith({
-        year: 2020,
-        month: 4,
-        day: 26
-      })
-    )
+    expect(updateValue).toHaveBeenCalledWith({
+      year: 2020,
+      month: 4,
+      day: 26
+    })
   })
 
   it('calls the updateValue prop if an existing date is edited', async () => {
@@ -64,13 +62,11 @@ describe('AbsoluteDateValues', () => {
     await userEvent.type($month, '4')
     await userEvent.type($day, '26')
 
-    await waitFor(() =>
-      expect(updateValue).toHaveBeenCalledWith({
-        year: 2020,
-        month: 4,
-        day: 26
-      })
-    )
+    expect(updateValue).toHaveBeenCalledWith({
+      year: 2020,
+      month: 4,
+      day: 26
+    })
   })
 
   it("doesn't call the updateValue prop if an valid day is not entered", async () => {
