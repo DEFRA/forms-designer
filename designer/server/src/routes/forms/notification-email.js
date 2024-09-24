@@ -7,6 +7,7 @@ import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
 import * as forms from '~/src/lib/forms.js'
 import { notificationEmailViewModel } from '~/src/models/forms/notification-email.js'
+import { formOverviewPath } from '~/src/models/links.js'
 
 export const ROUTE_PATH_EDIT_NOTIFICATION_EMAIL =
   '/library/{slug}/edit/notification-email'
@@ -77,7 +78,7 @@ export default [
         'Email address for sending submitted forms has been added'
       )
 
-      return h.redirect(`/library/${slug}`).code(StatusCodes.SEE_OTHER)
+      return h.redirect(formOverviewPath(slug)).code(StatusCodes.SEE_OTHER)
     },
     options: {
       validate: {
