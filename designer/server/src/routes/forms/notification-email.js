@@ -75,7 +75,7 @@ export default [
 
       yar.flash(
         sessionNames.successNotification,
-        'Email address for sending submitted forms has been added'
+        'Email address for sending submitted forms has been updated'
       )
 
       return h.redirect(formOverviewPath(slug)).code(StatusCodes.SEE_OTHER)
