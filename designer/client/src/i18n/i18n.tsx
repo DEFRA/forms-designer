@@ -16,8 +16,8 @@ const DEFAULT_SETTINGS: InitOptions<HttpBackendOptions> = {
   }
 }
 
-export const initI18n = async (settings = DEFAULT_SETTINGS) => {
-  await I18next.use(Backend).init(settings)
+export const initI18n = async (settings?: InitOptions<HttpBackendOptions>) => {
+  await I18next.use(Backend).init({ ...DEFAULT_SETTINGS, ...settings })
 
   I18next.services.formatter?.add('lowerFirst', lowerFirst)
   I18next.services.formatter?.add('upperFirst', upperFirst)

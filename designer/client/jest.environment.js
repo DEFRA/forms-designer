@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom'
 
 import { initI18n } from '~/src/i18n/i18n.jsx'
+import translation from '~/src/i18n/translations/en.translation.json'
 
 /**
  * Polyfill `window.matchMedia()` for GOV.UK Frontend
@@ -52,7 +53,9 @@ beforeAll(async () => {
   // Flag GOV.UK Frontend as supported
   document.body.classList.add('govuk-frontend-supported')
 
-  await initI18n()
+  await initI18n({
+    resources: { en: { translation } }
+  })
 })
 
 beforeEach(() => {
