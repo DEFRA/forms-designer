@@ -9,7 +9,7 @@ import {
   type Item
 } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import { act, render } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import upperFirst from 'lodash/upperFirst.js'
 import React from 'react'
@@ -62,8 +62,8 @@ describe('InlineConditionsDefinitionValue', () => {
 
     const $input = screen.getByRole('textbox', { name: 'Value' })
 
-    await act(() => userEvent.clear($input))
-    await act(() => userEvent.type($input, 'new-value'))
+    await userEvent.clear($input)
+    await userEvent.type($input, 'new-value')
 
     expect(updateValueCallback).toHaveBeenLastCalledWith({
       display: 'new-value',
@@ -94,7 +94,7 @@ describe('InlineConditionsDefinitionValue', () => {
       name: 'Value'
     })
 
-    await act(() => userEvent.clear($input))
+    await userEvent.clear($input)
 
     expect(updateValueCallback).toHaveBeenLastCalledWith({
       display: '',
@@ -160,7 +160,7 @@ describe('InlineConditionsDefinitionValue', () => {
     )
 
     const $select = screen.getByRole('combobox', { name: 'Value' })
-    await act(() => userEvent.selectOptions($select, 'value1'))
+    await userEvent.selectOptions($select, 'value1')
 
     expect(updateValueCallback).toHaveBeenLastCalledWith({
       display: 'Value 1',
@@ -194,7 +194,7 @@ describe('InlineConditionsDefinitionValue', () => {
     )
 
     const $select = screen.getByRole('combobox', { name: 'Value' })
-    await act(() => userEvent.selectOptions($select, 'true'))
+    await userEvent.selectOptions($select, 'true')
 
     expect(updateValueCallback).toHaveBeenLastCalledWith({
       display: 'Value 1',
@@ -228,7 +228,7 @@ describe('InlineConditionsDefinitionValue', () => {
     )
 
     const $select = screen.getByRole('combobox', { name: 'Value' })
-    await act(() => userEvent.selectOptions($select, '42'))
+    await userEvent.selectOptions($select, '42')
 
     expect(updateValueCallback).toHaveBeenLastCalledWith({
       display: 'Value 1',
@@ -262,7 +262,7 @@ describe('InlineConditionsDefinitionValue', () => {
     )
 
     const $select = screen.getByRole('combobox', { name: 'Value' })
-    await act(() => userEvent.selectOptions($select, ''))
+    await userEvent.selectOptions($select, '')
 
     expect(updateValueCallback).toHaveBeenLastCalledWith({
       display: '',

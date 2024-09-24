@@ -9,8 +9,8 @@ import {
   type ComponentDef,
   type FormDefinition
 } from '@defra/forms-model'
-import { screen, waitFor } from '@testing-library/dom'
-import { act, render } from '@testing-library/react'
+import { screen } from '@testing-library/dom'
+import { render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import lowerFirst from 'lodash/lowerFirst.js'
 import React from 'react'
@@ -428,16 +428,14 @@ describe('ComponentTypeEdit', () => {
         expect($checkbox1.checked).toBe(false)
 
         // Mark field as optional
-        await act(() => userEvent.click($checkbox1))
+        await userEvent.click($checkbox1)
         expect($checkbox1.checked).toBe(true)
 
-        const $checkbox2 = await waitFor(() =>
-          screen.getByRole<HTMLInputElement>('checkbox', {
-            name: 'Hide ‘(optional)’ text',
-            description:
-              'Tick this box if you do not want the title to indicate that this field is optional'
-          })
-        )
+        const $checkbox2 = screen.getByRole<HTMLInputElement>('checkbox', {
+          name: 'Hide ‘(optional)’ text',
+          description:
+            'Tick this box if you do not want the title to indicate that this field is optional'
+        })
 
         expect($checkbox2).toBeInTheDocument()
         expect($checkbox2.checked).toBe(false)

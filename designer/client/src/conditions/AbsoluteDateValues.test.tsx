@@ -1,5 +1,5 @@
 import { screen } from '@testing-library/dom'
-import { act, render, waitFor } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React from 'react'
 
@@ -31,17 +31,15 @@ describe('AbsoluteDateValues', () => {
     const $month = screen.getByRole('spinbutton', { name: 'Month' })
     const $year = screen.getByRole('spinbutton', { name: 'Year' })
 
-    await act(() => userEvent.type($year, '2020'))
-    await act(() => userEvent.type($month, '4'))
-    await act(() => userEvent.type($day, '26'))
+    await userEvent.type($year, '2020')
+    await userEvent.type($month, '4')
+    await userEvent.type($day, '26')
 
-    await waitFor(() =>
-      expect(updateValue).toHaveBeenCalledWith({
-        year: 2020,
-        month: 4,
-        day: 26
-      })
-    )
+    expect(updateValue).toHaveBeenCalledWith({
+      year: 2020,
+      month: 4,
+      day: 26
+    })
   })
 
   it('calls the updateValue prop if an existing date is edited', async () => {
@@ -60,17 +58,15 @@ describe('AbsoluteDateValues', () => {
     // Clear existing values
     await Promise.all([$year, $month, $day].map(userEvent.clear))
 
-    await act(() => userEvent.type($year, '2020'))
-    await act(() => userEvent.type($month, '4'))
-    await act(() => userEvent.type($day, '26'))
+    await userEvent.type($year, '2020')
+    await userEvent.type($month, '4')
+    await userEvent.type($day, '26')
 
-    await waitFor(() =>
-      expect(updateValue).toHaveBeenCalledWith({
-        year: 2020,
-        month: 4,
-        day: 26
-      })
-    )
+    expect(updateValue).toHaveBeenCalledWith({
+      year: 2020,
+      month: 4,
+      day: 26
+    })
   })
 
   it("doesn't call the updateValue prop if an valid day is not entered", async () => {
@@ -81,9 +77,9 @@ describe('AbsoluteDateValues', () => {
     const $month = screen.getByRole('spinbutton', { name: 'Month' })
     const $year = screen.getByRole('spinbutton', { name: 'Year' })
 
-    await act(() => userEvent.type($year, '2020'))
-    await act(() => userEvent.type($month, '4'))
-    await act(() => userEvent.type($day, '0'))
+    await userEvent.type($year, '2020')
+    await userEvent.type($month, '4')
+    await userEvent.type($day, '0')
 
     expect(updateValue).not.toHaveBeenCalled()
   })
@@ -95,8 +91,8 @@ describe('AbsoluteDateValues', () => {
     const $year = screen.getByRole('spinbutton', { name: 'Year' })
     const $month = screen.getByRole('spinbutton', { name: 'Month' })
 
-    await act(() => userEvent.type($year, '2020'))
-    await act(() => userEvent.type($month, '4'))
+    await userEvent.type($year, '2020')
+    await userEvent.type($month, '4')
 
     expect(updateValue).not.toHaveBeenCalled()
   })
@@ -108,8 +104,8 @@ describe('AbsoluteDateValues', () => {
     const $day = screen.getByRole('spinbutton', { name: 'Day' })
     const $year = screen.getByRole('spinbutton', { name: 'Year' })
 
-    await act(() => userEvent.type($year, '2020'))
-    await act(() => userEvent.type($day, '7'))
+    await userEvent.type($year, '2020')
+    await userEvent.type($day, '7')
 
     expect(updateValue).not.toHaveBeenCalled()
   })
@@ -121,8 +117,8 @@ describe('AbsoluteDateValues', () => {
     const $month = screen.getByRole('spinbutton', { name: 'Month' })
     const $day = screen.getByRole('spinbutton', { name: 'Day' })
 
-    await act(() => userEvent.type($month, '4'))
-    await act(() => userEvent.type($day, '23'))
+    await userEvent.type($month, '4')
+    await userEvent.type($day, '23')
 
     expect(updateValue).not.toHaveBeenCalled()
   })

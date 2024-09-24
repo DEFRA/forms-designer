@@ -1,6 +1,6 @@
 import { type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import { act, render, waitFor } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React from 'react'
 
@@ -89,17 +89,15 @@ describe('Visualisation', () => {
     )
 
     // Check link exists and has the expected label
-    const $lineTitle = await waitFor(() =>
-      screen.findByText('Edit link from link-source to link-target')
+    const $lineTitle = screen.getByText(
+      'Edit link from link-source to link-target'
     )
 
     // Check that link works when selected with the enter key
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 
-    await act(async () => {
-      $lineTitle.parentElement?.focus()
-      await userEvent.keyboard('[Enter]')
-    })
+    $lineTitle.parentElement?.focus()
+    await userEvent.keyboard('[Enter]')
 
     expect(
       screen.getByRole('dialog', {
@@ -107,15 +105,13 @@ describe('Visualisation', () => {
       })
     ).toBeInTheDocument()
 
-    await act(() => userEvent.click(screen.getByText('Close')))
+    await userEvent.click(screen.getByText('Close'))
 
     // Check that link works when selected with the space key
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 
-    await act(async () => {
-      $lineTitle.parentElement?.focus()
-      await userEvent.keyboard('[Space]')
-    })
+    $lineTitle.parentElement?.focus()
+    await userEvent.keyboard('[Space]')
 
     expect(
       screen.queryByRole('dialog', {

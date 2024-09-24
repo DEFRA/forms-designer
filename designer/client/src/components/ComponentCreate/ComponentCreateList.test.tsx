@@ -5,7 +5,7 @@ import {
   getPageDefaults
 } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import { act, render } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React from 'react'
 
@@ -155,7 +155,7 @@ describe.each([
             name: i18n(`fieldTypeToName.${type}`)
           })
 
-          await act(() => userEvent.click($link))
+          await userEvent.click($link)
           expect(onSelectComponent).toHaveBeenCalledWith(
             expect.objectContaining({
               type

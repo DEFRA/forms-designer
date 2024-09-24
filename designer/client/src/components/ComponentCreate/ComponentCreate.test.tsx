@@ -1,6 +1,6 @@
 import { ComponentType, type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import { act, render, waitFor } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React from 'react'
 
@@ -43,8 +43,7 @@ describe('ComponentCreate:', () => {
       screen.queryByRole('textbox', { name: 'Content' })
     ).not.toBeInTheDocument()
 
-    await act(() => userEvent.click($componentLink))
-    await waitFor(() => screen.getAllByRole('textbox'))
+    await userEvent.click($componentLink)
 
     const $input = screen.getByRole('textbox', { name: 'Title' })
     const $textarea = screen.getByRole('textbox', { name: 'Content' })
@@ -66,25 +65,24 @@ describe('ComponentCreate:', () => {
       name: 'Details'
     })
 
-    await act(() => userEvent.click($componentLink))
-    await waitFor(() => screen.getAllByRole('textbox'))
+    await userEvent.click($componentLink)
 
     const $input = screen.getByRole('textbox', { name: 'Title' })
     const $textarea = screen.getByRole('textbox', { name: 'Content' })
     const $button = screen.getByRole('button', { name: 'Save' })
 
     // Ensure fields are empty
-    await act(() => userEvent.clear($input))
-    await act(() => userEvent.clear($textarea))
+    await userEvent.clear($input)
+    await userEvent.clear($textarea)
 
     // Populate fields
-    await act(() => userEvent.type($input, 'Details'))
-    await act(() => userEvent.type($textarea, 'content'))
+    await userEvent.type($input, 'Details')
+    await userEvent.type($textarea, 'content')
 
     // Submit the form
-    await act(() => userEvent.click($button))
+    await userEvent.click($button)
 
-    await waitFor(() => expect(save).toHaveBeenCalled())
+    expect(save).toHaveBeenCalled()
 
     expect(save.mock.calls[0]).toEqual(
       expect.arrayContaining<FormDefinition>([
@@ -122,7 +120,7 @@ describe('ComponentCreate:', () => {
     expect($componentLink).toBeInTheDocument()
 
     // Clicking component link opens a flyout
-    await act(() => userEvent.click($componentLink))
+    await userEvent.click($componentLink)
 
     const $buttonClose = screen.getAllByRole('button', {
       name: 'Close'
@@ -131,7 +129,7 @@ describe('ComponentCreate:', () => {
     expect($buttonClose).toBeInTheDocument()
 
     // Clicking close shows the list again
-    await act(() => userEvent.click($buttonClose))
+    await userEvent.click($buttonClose)
   })
 
   test('Should display error summary when validation fails', async () => {
@@ -145,19 +143,18 @@ describe('ComponentCreate:', () => {
       name: 'Details'
     })
 
-    await act(() => userEvent.click($componentLink))
-    await waitFor(() => screen.getAllByRole('textbox'))
+    await userEvent.click($componentLink)
 
     const $input = screen.getByRole('textbox', { name: 'Title' })
     const $textarea = screen.getByRole('textbox', { name: 'Content' })
     const $button = screen.getByRole('button', { name: 'Save' })
 
     // Ensure fields are empty
-    await act(() => userEvent.clear($input))
-    await act(() => userEvent.clear($textarea))
+    await userEvent.clear($input)
+    await userEvent.clear($textarea)
 
     // Submit the form
-    await act(() => userEvent.click($button))
+    await userEvent.click($button)
 
     const $errorSummary = screen.getByRole('alert', {
       name: 'There is a problem'

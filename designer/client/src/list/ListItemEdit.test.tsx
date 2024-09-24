@@ -7,7 +7,7 @@ import {
   type FormDefinition
 } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import { act, render } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React from 'react'
 
@@ -142,7 +142,7 @@ describe('ListItemEdit', () => {
       'Select a condition'
     )
 
-    await act(() => userEvent.selectOptions($select, 'MYWwRN'))
+    await userEvent.selectOptions($select, 'MYWwRN')
 
     expect($select).toHaveValue('MYWwRN')
     expect($select.options[$select.selectedIndex].textContent).toBe(

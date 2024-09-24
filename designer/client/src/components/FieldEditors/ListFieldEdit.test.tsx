@@ -6,7 +6,7 @@ import {
   type FormDefinition
 } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import { act, render, type RenderResult } from '@testing-library/react'
+import { render, type RenderResult } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React from 'react'
 
@@ -132,7 +132,7 @@ describe('List field edit', () => {
         name: 'Select list'
       })
 
-      await act(() => userEvent.selectOptions($select, 'myList'))
+      await userEvent.selectOptions($select, 'myList')
 
       expect($select).toHaveValue('myList')
       expect($select.options[$select.selectedIndex].textContent).toBe('My list')

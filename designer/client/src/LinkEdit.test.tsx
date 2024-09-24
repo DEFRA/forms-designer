@@ -7,7 +7,7 @@ import {
   type FormDefinition
 } from '@defra/forms-model'
 import { screen, within } from '@testing-library/dom'
-import { act, render, waitFor } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import React from 'react'
 
@@ -73,7 +73,7 @@ describe('LinkEdit', () => {
     )
 
     const $source = screen.getByRole('combobox', { name: 'Link from' })
-    await act(() => userEvent.selectOptions($source, data.pages[1].path))
+    await userEvent.selectOptions($source, data.pages[1].path)
 
     expect(screen.getByText(hintText)).toBeInTheDocument()
   })
@@ -108,7 +108,7 @@ describe('LinkEdit', () => {
     expect($conditions).not.toBeInTheDocument()
 
     const $source = screen.getByRole('combobox', { name: 'Link from' })
-    await act(() => userEvent.selectOptions($source, '/first-page'))
+    await userEvent.selectOptions($source, '/first-page')
 
     $conditions = screen.getByRole('link', {
       name: 'Add a new condition'
@@ -180,17 +180,17 @@ describe('LinkEdit', () => {
     const $target = screen.getByRole('combobox', { name: 'Link to' })
     const $button = screen.getByRole('button', { name: 'Save' })
 
-    await act(() => userEvent.selectOptions($source, '/first-page'))
-    await act(() => userEvent.selectOptions($target, '/summary'))
+    await userEvent.selectOptions($source, '/first-page')
+    await userEvent.selectOptions($target, '/summary')
 
     const $condition = screen.getByRole('combobox', {
       name: 'Select a condition'
     })
 
-    await act(() => userEvent.selectOptions($condition, 'hasUKPassport'))
-    await act(() => userEvent.click($button))
+    await userEvent.selectOptions($condition, 'hasUKPassport')
+    await userEvent.click($button)
 
-    await waitFor(() => expect(save).toHaveBeenCalledTimes(1))
+    expect(save).toHaveBeenCalledTimes(1)
 
     expect(save.mock.calls[0]).toEqual(
       expect.arrayContaining<FormDefinition>([
@@ -217,13 +217,13 @@ describe('LinkEdit', () => {
       ])
     )
 
-    await act(() => userEvent.selectOptions($source, '/first-page'))
-    await act(() => userEvent.selectOptions($target, '/second-page'))
+    await userEvent.selectOptions($source, '/first-page')
+    await userEvent.selectOptions($target, '/second-page')
 
-    await act(() => userEvent.selectOptions($condition, ''))
-    await act(() => userEvent.click($button))
+    await userEvent.selectOptions($condition, '')
+    await userEvent.click($button)
 
-    await waitFor(() => expect(save).toHaveBeenCalledTimes(2))
+    expect(save).toHaveBeenCalledTimes(2)
 
     expect(save.mock.calls[1]).toEqual(
       expect.arrayContaining<FormDefinition>([
@@ -260,9 +260,9 @@ describe('LinkEdit', () => {
       </RenderWithContext>
     )
 
-    await act(() => userEvent.click(screen.getByRole('button')))
+    await userEvent.click(screen.getByRole('button'))
 
-    await waitFor(() => expect(save).not.toHaveBeenCalled())
+    expect(save).not.toHaveBeenCalled()
 
     const summary = within(screen.getByRole('alert'))
     expect(summary.getByText('Enter link from')).toBeInTheDocument()

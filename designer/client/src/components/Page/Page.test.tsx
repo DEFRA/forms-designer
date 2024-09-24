@@ -1,6 +1,6 @@
 import { ComponentType, type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import { act, render, waitFor } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import lowerFirst from 'lodash/lowerFirst.js'
 import React from 'react'
@@ -81,38 +81,40 @@ describe('Page', () => {
     })
 
     // Open edit page
-    await act(() => userEvent.click($buttonEdit))
-    await waitFor(() =>
-      screen.findByRole('dialog', {
+    await userEvent.click($buttonEdit)
+
+    expect(
+      screen.getByRole('dialog', {
         name: 'Edit page'
       })
-    )
+    ).toBeInTheDocument()
 
     const $buttonSave = screen.getByRole('button', {
       name: 'Save'
     })
 
     // Save edit page
-    await act(() => userEvent.click($buttonSave))
+    await userEvent.click($buttonSave)
 
     expect(
       screen.queryByRole('button', { name: 'Save' })
     ).not.toBeInTheDocument()
 
     // Open edit page
-    await act(() => userEvent.click($buttonEdit))
-    await waitFor(() =>
-      screen.findByRole('dialog', {
+    await userEvent.click($buttonEdit)
+
+    expect(
+      screen.getByRole('dialog', {
         name: 'Edit page'
       })
-    )
+    ).toBeInTheDocument()
 
     const $close = screen.getByRole('button', {
       name: 'Close'
     })
 
     // Close edit page
-    await act(() => userEvent.click($close))
+    await userEvent.click($close)
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 
@@ -127,13 +129,13 @@ describe('Page', () => {
       name: 'Add component'
     })
 
-    await act(() => userEvent.click($buttonAdd))
+    await userEvent.click($buttonAdd)
 
     const $close = screen.getByRole('button', {
       name: 'Close'
     })
 
-    await act(() => userEvent.click($close))
+    await userEvent.click($close)
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 
