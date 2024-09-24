@@ -112,6 +112,10 @@ declare module '@hapi/yar' {
     ): ValidationFailure<Pick<FormMetadataInput, 'privacyNoticeUrl'>>[]
 
     flash(
+      type: ValidationSession['notificationEmail']
+    ): ValidationFailure<Pick<FormMetadataInput, 'notificationEmail'>>[]
+
+    flash(
       type: ValidationSession['contactPhone']
     ): ValidationFailure<Pick<FormMetadataContact, 'phone'>>[]
 
