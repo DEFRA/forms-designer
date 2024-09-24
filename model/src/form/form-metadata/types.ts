@@ -140,6 +140,11 @@ export interface FormMetadata {
   privacyNoticeUrl?: string
 
   /**
+   * Email address where form responses are sent
+   */
+  notificationEmail?: string
+
+  /**
    * The draft state of the form
    */
   draft?: FormMetadataState
@@ -182,6 +187,7 @@ export type FormMetadataInput = Pick<
   | 'contact'
   | 'submissionGuidance'
   | 'privacyNoticeUrl'
+  | 'notificationEmail'
 >
 
 export interface FormResponse {

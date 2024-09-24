@@ -84,7 +84,8 @@ export const formMetadataInputKeys = {
   teamEmail: teamEmailSchema,
   contact: contactSchema,
   submissionGuidance: submissionGuidanceSchema,
-  privacyNoticeUrl: privacyNoticeUrlSchema
+  privacyNoticeUrl: privacyNoticeUrlSchema,
+  notificationEmail: emailAddressSchema
 }
 
 /**
