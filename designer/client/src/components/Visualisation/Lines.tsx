@@ -1,17 +1,13 @@
-import { Component, type ContextType } from 'react'
+import { Component } from 'react'
 
 import { LinkEdit } from '~/src/LinkEdit.jsx'
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
-import {
-  type Edge,
-  type Pos
-} from '~/src/components/Visualisation/getLayout.js'
-import { DataContext } from '~/src/context/DataContext.js'
+import { type Edge } from '~/src/components/Visualisation/getLayout.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 
 interface Props {
-  layout: Pos
+  edges: Edge[]
 }
 
 interface State {
@@ -19,9 +15,6 @@ interface State {
 }
 
 export class Lines extends Component<Props, State> {
-  declare context: ContextType<typeof DataContext>
-  static readonly contextType = DataContext
-
   state: State = {}
 
   editLink = (edge: Edge) => {
@@ -35,12 +28,12 @@ export class Lines extends Component<Props, State> {
   }
 
   render() {
-    const { layout } = this.props
+    const { edges } = this.props
 
     return (
       <>
-        <svg height={layout.height} width={layout.width} className="line">
-          {layout.edges.map((edge) => {
+        <svg className="line">
+          {edges.map((edge) => {
             const { source, target, points, label } = edge
 
             const pointsString = points.map((p) => `${p.x},${p.y}`).join(' ')
