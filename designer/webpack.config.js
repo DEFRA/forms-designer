@@ -9,16 +9,19 @@ import WebpackAssetsManifest from 'webpack-assets-manifest'
 const { EnvironmentPlugin } = webpack
 const { NODE_ENV = 'development', REACT_LOG_LEVEL } = process.env
 
+const appDir = import.meta.dirname
+const rootDir = resolve(import.meta.dirname, '../')
+
 const govukFrontendPath = dirname(
-  resolvePkg.sync('govuk-frontend/package.json', {
-    basedir: import.meta.dirname
-  })
+  resolvePkg.sync('govuk-frontend/package.json', { basedir: appDir })
 )
 
 const govukFrontendLegacyPath = dirname(
-  resolvePkg.sync('govuk-frontend/package.json', {
-    basedir: resolve(import.meta.dirname, '../')
-  })
+  resolvePkg.sync('govuk-frontend/package.json', { basedir: rootDir })
+)
+
+const reactPath = dirname(
+  resolvePkg.sync('react/package.json', { basedir: appDir })
 )
 
 export default /** @type {Configuration} */ ({
@@ -224,11 +227,16 @@ export default /** @type {Configuration} */ ({
     alias: {
       '~': join(import.meta.dirname, 'client'),
       'govuk-frontend/dist': join(govukFrontendPath, 'dist'),
+      '/assets': join(govukFrontendPath, 'dist/govuk/assets'),
+
+      // Alias legacy GOV.UK Frontend to latest
       'govuk-frontend/govuk': [
         join(govukFrontendPath, 'dist/govuk'),
         join(govukFrontendLegacyPath, 'govuk')
       ],
-      '/assets': join(govukFrontendPath, 'dist/govuk/assets')
+
+      // Alias legacy React to latest
+      react: reactPath
     },
     extensions: ['.js', '.json', '.mjs'],
     extensionAlias: {
