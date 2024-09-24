@@ -619,5 +619,6 @@ p code {
 }
 
 .govuk-main-wrapper--editor {
+  min-height: govuk-em(600px, $context-font-size: 16);
   padding-bottom: 0;
 }
