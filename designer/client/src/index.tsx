@@ -6,8 +6,6 @@ import { Designer } from '~/src/Designer.jsx'
 import { logger } from '~/src/common/helpers/logging/logger.js'
 import { initI18n } from '~/src/i18n/i18n.jsx'
 
-import 'prismjs/components/prism-json.js'
-
 interface Props {
   container: HTMLElement
 }
