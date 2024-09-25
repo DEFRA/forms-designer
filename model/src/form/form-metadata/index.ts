@@ -40,7 +40,11 @@ export const teamEmailSchema = Joi.string()
 
 export const phoneSchema = Joi.string().trim()
 
-export const emailAddressSchema = Joi.string().email().trim().required()
+export const emailAddressSchema = Joi.string()
+  .email({ tlds: { allow: ['uk'] } })
+  .trim()
+  .pattern(/\.gov\.uk$|\.org\.uk$/)
+  .required()
 export const emailResponseTimeSchema = Joi.string().trim().required()
 export const emailSchema = Joi.object<FormMetadataContactEmail>().keys({
   address: emailAddressSchema,
