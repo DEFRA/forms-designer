@@ -1,4 +1,4 @@
-import { emailAddressSchema } from '@defra/forms-model'
+import { notificationEmailAddressSchema } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
@@ -18,7 +18,7 @@ export const INCORRECT_FORMAT_MESSAGE =
   'Enter an email address that submitted forms should be sent to in the correct format'
 
 export const schema = Joi.object().keys({
-  notificationEmail: emailAddressSchema.required().messages({
+  notificationEmail: notificationEmailAddressSchema.required().messages({
     'string.empty': EMPTY_MESSAGE,
     'string.email': INCORRECT_FORMAT_MESSAGE,
     'string.pattern.base': INCORRECT_FORMAT_MESSAGE
