@@ -12,14 +12,16 @@ import { formOverviewPath } from '~/src/models/links.js'
 export const ROUTE_PATH_EDIT_NOTIFICATION_EMAIL =
   '/library/{slug}/edit/notification-email'
 
+export const EMPTY_MESSAGE =
+  'Enter an email address that submitted forms should be sent to'
+export const INCORRECT_FORMAT_MESSAGE =
+  'Enter an email address that submitted forms should be sent to in the correct format'
+
 export const schema = Joi.object().keys({
   notificationEmail: emailAddressSchema.required().messages({
-    'string.empty':
-      'Enter an email address that submitted forms should be sent to',
-    'string.email':
-      'Enter an email address that submitted forms should be sent to in the correct format',
-    'string.pattern.base':
-      'Enter an email address that submitted forms should be sent to in the correct format, like name@example.gov.uk or name@example.org.uk'
+    'string.empty': EMPTY_MESSAGE,
+    'string.email': INCORRECT_FORMAT_MESSAGE,
+    'string.pattern.base': INCORRECT_FORMAT_MESSAGE
   })
 })
 
