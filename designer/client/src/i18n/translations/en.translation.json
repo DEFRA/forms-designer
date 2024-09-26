@@ -153,7 +153,8 @@
     "required": "Enter {{field, lowerFirst}}",
     "unique": "{{field, upperFirst}} must not match",
     "spaces": "{{field, upperFirst}} must not include spaces",
-    "duplicate": "{{field, upperFirst}} already exists"
+    "duplicate": "{{field, upperFirst}} already exists",
+    "number": "{{field, upperFirst}} must be a number"
   },
   "fieldEdit": {
     "conditions": {

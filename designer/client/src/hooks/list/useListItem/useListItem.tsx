@@ -89,6 +89,14 @@ export function useListItem(
       schema
     })
 
+    if (selectedList?.type === 'number') {
+      errors.value ??= validateCustom('value', value, {
+        message: 'errors.number',
+        label: `Item value '${value}'`,
+        schema: Joi.number().required()
+      })
+    }
+
     errors.value ??= validateCustom('value', [...values, value], {
       message: 'errors.duplicate',
       label: `Item value '${value}'`,
