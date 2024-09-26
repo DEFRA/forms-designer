@@ -1,5 +1,6 @@
 import authCookie from '@hapi/cookie'
 
+import { sessionNames } from '~/src/common/constants/session-names.js'
 import {
   getUserSession,
   hasExpired,
@@ -39,7 +40,7 @@ const sessionCookie = {
               const { url, yar } = request
 
               // Remember current location for later
-              yar.flash('redirectTo', url.pathname)
+              yar.flash(sessionNames.redirectTo, url.pathname)
             }
 
             // Redirect to callback route

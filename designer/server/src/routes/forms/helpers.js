@@ -1,5 +1,6 @@
 import { StatusCodes } from 'http-status-codes'
 
+import { sessionNames } from '~/src/common/constants/session-names.js'
 import * as create from '~/src/models/forms/create.js'
 
 /**
@@ -11,7 +12,7 @@ import * as create from '~/src/models/forms/create.js'
 export function redirectToTitleWithErrors(request, h, redirectPath) {
   const { yar, payload } = request
 
-  yar.flash('validationFailure', {
+  yar.flash(sessionNames.validationFailure.createForm, {
     formErrors: create.titleFormErrors,
     formValues: payload
   })
