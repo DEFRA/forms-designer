@@ -246,6 +246,9 @@ export function ListEdit() {
               <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">
                 {i18n('list.type')}
               </legend>
+              <div id="list-type-hint" className="govuk-hint">
+                {i18n('list.typeHint')}
+              </div>
               <div
                 id="list-type"
                 className="govuk-radios govuk-radios--small"

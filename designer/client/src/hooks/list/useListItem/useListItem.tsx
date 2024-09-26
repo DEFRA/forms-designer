@@ -1,4 +1,4 @@
-import { type Root } from 'joi'
+import Joi, { type Root } from 'joi'
 
 import { findListItem } from '~/src/data/list/findList.js'
 import { type ListItemHook } from '~/src/hooks/list/useListItem/types.js'
