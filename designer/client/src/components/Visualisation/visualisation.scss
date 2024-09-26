@@ -31,11 +31,20 @@ $govuk-breakpoints: (
 
   .page {
     position: absolute;
+    left: 30px;
     width: 240px;
     margin-bottom: 10px;
     box-sizing: border-box;
     background-color: govuk-colour("white");
     border: 2px solid govuk-colour("black");
+
+    // Hide during layout calculation
+    visibility: hidden;
+
+    // Show after layout calculation
+    &[style] {
+      visibility: visible;
+    }
 
     &:focus-within {
       box-shadow: 0 0 0 6px $govuk-focus-colour;
@@ -61,6 +70,11 @@ $govuk-breakpoints: (
         }
       }
     }
+  }
+
+  .line {
+    width: 100%;
+    height: 100%;
   }
 
   .line__condition {

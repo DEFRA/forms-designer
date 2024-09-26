@@ -44,7 +44,7 @@ export function Visualisation() {
             <Page key={page.path} page={page} layout={layout?.nodes[index]} />
           ))}
 
-          {layout && <Lines layout={layout} />}
+          {layout && <Lines edges={layout.edges} />}
         </div>
       </div>
     </div>
