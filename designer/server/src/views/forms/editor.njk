@@ -30,6 +30,7 @@
 
 {% block bodyEnd %}
   {{ super() }}
+  <script type="module" src="{{ getAssetPath("vendor/react.js") }}"></script>
   <script type="module" src="{{ getAssetPath("editor.js") }}"></script>
 
   <!-- Form metadata JSON -->
