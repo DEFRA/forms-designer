@@ -189,6 +189,19 @@ export function ListEdit() {
     return null
   }
 
+  const listTypeRadioItems = [
+    {
+      value: 'string',
+      labelText: i18n('list.typeString'),
+      hintText: i18n('list.typeHintString')
+    },
+    {
+      value: 'number',
+      labelText: i18n('list.typeNumber'),
+      hintText: i18n('list.typeHintNumber')
+    }
+  ]
+
   return (
     <>
       {hasErrors && (
@@ -213,43 +226,70 @@ export function ListEdit() {
           }
           errorMessage={errors.title}
         />
-        <Radios
-          id="list-type"
-          name="type"
-          hint={{ children: i18n('list.typeHint') }}
-          fieldset={{
-            legend: {
-              className: 'govuk-fieldset__legend--s',
-              children: [i18n('list.type')]
-            }
-          }}
-          value={selectedList.type}
-          items={[
-            {
-              children: ['String'],
-              value: 'string',
-              hint: {
-                children: [i18n('list.typeHintString')]
-              },
-              disabled: !!selectedList.items.length
-            },
-            {
-              children: ['Number'],
-              value: 'number',
-              hint: {
-                children: [i18n('list.typeHintNumber')]
-              },
-              disabled: !!selectedList.items.length
-            }
-          ]}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            listDispatch({
-              name: ListActions.EDIT_TYPE,
-              payload: e.target.value as ListTypeContent
-            })
-          }
-          errorMessage={errors.type}
-        />
+
+        {selectedList.items.length ? (
+          <div className="govuk-form-group">
+            <span className="govuk-label govuk-label--s">
+              {i18n('list.type')}
+            </span>
+            <p className="govuk-body">
+              {`${
+                listTypeRadioItems.find(
+                  (item) => item.value === selectedList.type
+                )?.labelText
+              } values only`}
+            </p>
+          </div>
+        ) : (
+          <div className="govuk-form-group">
+            <fieldset className="govuk-fieldset">
+              <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">
+                {i18n('list.type')}
+              </legend>
+              <div
+                id="list-type"
+                className="govuk-radios govuk-radios--small"
+                data-module="govuk-radios"
+              >
+                {listTypeRadioItems.map((item) => {
+                  const name = 'type'
+                  const id = `${name}-${item.value}`
+
+                  return (
+                    <div className="govuk-radios__item" key={item.value}>
+                      <input
+                        className="govuk-radios__input"
+                        id={id}
+                        name={name}
+                        type="radio"
+                        value={item.value}
+                        checked={selectedList.type === item.value}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                          listDispatch({
+                            name: ListActions.EDIT_TYPE,
+                            payload: e.target.value as ListTypeContent
+                          })
+                        }}
+                      />
+                      <label
+                        className="govuk-label govuk-radios__label"
+                        htmlFor={id}
+                      >
+                        {item.labelText}
+                      </label>
+                      <div
+                        id={`${id}-hint`}
+                        className="govuk-hint govuk-radios__hint"
+                      >
+                        {item.hintText}
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </fieldset>
+          </div>
+        )}
 
         <div className="panel__results">
           <ListItems />
