@@ -49,10 +49,13 @@ export type ListReducerActions =
   | {
       name:
         | ListActions.EDIT_TITLE
-        | ListActions.EDIT_TYPE
         | ListActions.EDIT_LIST_ITEM_TEXT
         | ListActions.EDIT_LIST_ITEM_VALUE
       payload: string
+    }
+  | {
+      name: ListActions.EDIT_TYPE
+      payload: ListTypeContent
     }
   | {
       name:
@@ -139,7 +142,7 @@ export function listReducer(state: ListState, action: ListReducerActions) {
       break
 
     case ListActions.EDIT_TYPE:
-      selectedList.type = payload as ListTypeContent
+      selectedList.type = payload
       break
 
     case ListActions.ADD_LIST_ITEM: {
