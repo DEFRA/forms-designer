@@ -1,5 +1,5 @@
 import { type Section } from '@defra/forms-model'
-import React, { Component, type ContextType, type MouseEvent } from 'react'
+import { Component, type ContextType, type MouseEvent } from 'react'
 
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'

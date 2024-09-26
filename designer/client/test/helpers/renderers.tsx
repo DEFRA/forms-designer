@@ -1,5 +1,5 @@
 import { type ComponentDef } from '@defra/forms-model'
-import React, { useMemo, useReducer, type ReactElement } from 'react'
+import { useMemo, useReducer, type ReactElement } from 'react'
 
 import { DataContext, type DataContextType } from '~/src/context/DataContext.js'
 import {

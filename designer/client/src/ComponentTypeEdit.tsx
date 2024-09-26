@@ -1,9 +1,5 @@
 import { ComponentType, hasListField } from '@defra/forms-model'
-import React, {
-  useContext,
-  type JSXElementConstructor,
-  type ReactNode
-} from 'react'
+import { useContext, type JSXElementConstructor, type ReactNode } from 'react'
 
 import { FieldEdit } from '~/src/FieldEdit.jsx'
 import { ConditionEdit } from '~/src/components/FieldEditors/ConditionEdit.jsx'

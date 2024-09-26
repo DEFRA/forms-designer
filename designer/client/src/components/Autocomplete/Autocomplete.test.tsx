@@ -1,7 +1,6 @@
 import { ComponentType } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { render } from '@testing-library/react'
-import React from 'react'
 
 import { Autocomplete } from '~/src/components/Autocomplete/Autocomplete.jsx'
 import {

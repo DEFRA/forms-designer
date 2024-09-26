@@ -1,6 +1,6 @@
 import { hasComponents, hasListField } from '@defra/forms-model'
 import { highlightAll } from 'prismjs'
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 
 import { DeclarationEdit } from '~/src/DeclarationEdit.jsx'
 import { LinkEdit } from '~/src/LinkEdit.jsx'

@@ -1,7 +1,7 @@
 import { ComponentType } from '@defra/forms-model'
 // @ts-expect-error -- No types available
 import { Textarea } from '@xgovformbuilder/govuk-react-jsx'
-import React, { useContext, type ChangeEvent } from 'react'
+import { useContext, type ChangeEvent } from 'react'
 
 import { CssClasses } from '~/src/components/CssClasses/CssClasses.jsx'
 import { i18n } from '~/src/i18n/i18n.jsx'

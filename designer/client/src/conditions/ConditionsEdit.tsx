@@ -1,5 +1,5 @@
 import { ConditionsModel, type ConditionWrapper } from '@defra/forms-model'
-import React, { useContext, useState, type MouseEvent } from 'react'
+import { useContext, useState, type MouseEvent } from 'react'
 
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'

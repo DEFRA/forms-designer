@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, type ReactNode } from 'react'
+import { useEffect, useRef, type ReactNode } from 'react'
 
 export interface ErrorListItem {
   href: string

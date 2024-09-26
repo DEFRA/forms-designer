@@ -1,5 +1,5 @@
 import { hasListField } from '@defra/forms-model'
-import React, { useContext, type ReactNode } from 'react'
+import { useContext, type ReactNode } from 'react'
 
 import { ComponentListSelect } from '~/src/components/ComponentListSelect/ComponentListSelect.jsx'
 import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'

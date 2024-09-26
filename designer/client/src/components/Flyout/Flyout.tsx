@@ -1,5 +1,5 @@
 import FocusTrap from 'focus-trap-react'
-import React, {
+import {
   useContext,
   useEffect,
   useRef,

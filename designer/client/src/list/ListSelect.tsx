@@ -1,5 +1,5 @@
 import { type List } from '@defra/forms-model'
-import React, { useContext, type MouseEvent } from 'react'
+import { useContext, type MouseEvent } from 'react'
 
 import { DataContext } from '~/src/context/DataContext.js'
 import { i18n } from '~/src/i18n/i18n.jsx'

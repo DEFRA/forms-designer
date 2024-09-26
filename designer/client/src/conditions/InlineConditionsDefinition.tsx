@@ -20,7 +20,7 @@ import {
   type RelativeDateValue
 } from '@defra/forms-model'
 import upperFirst from 'lodash/upperFirst.js'
-import React, { Component, type ChangeEvent } from 'react'
+import { Component, type ChangeEvent } from 'react'
 
 import { InlineConditionsDefinitionValue } from '~/src/conditions/InlineConditionsDefinitionValue.jsx'
 import { type FieldDef } from '~/src/data/component/fields.js'

@@ -1,5 +1,5 @@
 import { highlight, languages } from 'prismjs'
-import React, { Component, type ComponentProps } from 'react'
+import { Component, type ComponentProps } from 'react'
 import SimpleEditor from 'react-simple-code-editor'
 
 type Props = {

@@ -1,10 +1,5 @@
 import { type FormDefinition } from '@defra/forms-model'
-import React, {
-  useContext,
-  useRef,
-  type ChangeEvent,
-  type MouseEvent
-} from 'react'
+import { useContext, useRef, type ChangeEvent, type MouseEvent } from 'react'
 
 import { logger } from '~/src/common/helpers/logging/logger.js'
 import { type MenuItemHook } from '~/src/components/Menu/useMenuItem.jsx'

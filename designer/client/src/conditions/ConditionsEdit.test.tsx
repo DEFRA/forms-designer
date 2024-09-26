@@ -8,7 +8,6 @@ import {
 import { screen } from '@testing-library/dom'
 import { render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import React from 'react'
 
 import { ConditionsEdit } from '~/src/conditions/ConditionsEdit.jsx'
 import { RenderWithContext } from '~/test/helpers/renderers.jsx'

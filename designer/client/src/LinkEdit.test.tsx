@@ -9,7 +9,6 @@ import {
 import { screen, within } from '@testing-library/dom'
 import { render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import React from 'react'
 
 import { LinkEdit } from '~/src/LinkEdit.jsx'
 import { RenderWithContext } from '~/test/helpers/renderers.jsx'

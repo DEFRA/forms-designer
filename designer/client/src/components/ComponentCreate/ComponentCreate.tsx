@@ -3,7 +3,7 @@ import {
   type ComponentTypes,
   type Page
 } from '@defra/forms-model'
-import React, {
+import {
   useCallback,
   useContext,
   useEffect,

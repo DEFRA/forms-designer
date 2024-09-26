@@ -1,7 +1,7 @@
 import { hasListField } from '@defra/forms-model'
 // @ts-expect-error -- No types available
 import { Input, Textarea } from '@xgovformbuilder/govuk-react-jsx'
-import React, { useContext, type FormEvent, type MouseEvent } from 'react'
+import { useContext, type FormEvent, type MouseEvent } from 'react'
 
 import { ErrorSummary } from '~/src/ErrorSummary.jsx'
 import { DataContext } from '~/src/context/DataContext.js'

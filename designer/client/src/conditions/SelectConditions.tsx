@@ -7,7 +7,7 @@ import {
 } from '@defra/forms-model'
 // @ts-expect-error -- No types available
 import { Select } from '@xgovformbuilder/govuk-react-jsx'
-import React, {
+import {
   Component,
   type ChangeEvent,
   type ContextType,

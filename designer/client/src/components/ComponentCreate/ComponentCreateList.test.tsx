@@ -7,7 +7,6 @@ import {
 import { screen } from '@testing-library/dom'
 import { render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import React from 'react'
 
 import { ComponentCreateList } from '~/src/components/ComponentCreate/ComponentCreateList.jsx'
 import { i18n } from '~/src/i18n/i18n.jsx'

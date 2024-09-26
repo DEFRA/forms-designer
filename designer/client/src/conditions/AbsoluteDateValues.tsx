@@ -1,5 +1,5 @@
 import { isValid } from 'date-fns'
-import React, { useEffect, useState, type ChangeEvent } from 'react'
+import { useEffect, useState, type ChangeEvent } from 'react'
 
 import { tryParseInt } from '~/src/conditions/inline-condition-helpers.js'
 

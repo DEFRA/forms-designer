@@ -8,7 +8,7 @@ import {
 // @ts-expect-error -- No types available
 import { Input, Textarea } from '@xgovformbuilder/govuk-react-jsx'
 import classNames from 'classnames'
-import React, { useContext, type ChangeEvent, type ReactNode } from 'react'
+import { useContext, type ChangeEvent, type ReactNode } from 'react'
 
 import { ErrorMessage } from '~/src/components/ErrorMessage/ErrorMessage.jsx'
 import { i18n } from '~/src/i18n/i18n.jsx'

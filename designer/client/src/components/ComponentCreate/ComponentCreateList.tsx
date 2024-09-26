@@ -9,7 +9,7 @@ import {
   type ComponentDef,
   type Page
 } from '@defra/forms-model'
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 
 import { isComponentAllowed } from '~/src/helpers.js'
 import { i18n } from '~/src/i18n/i18n.jsx'

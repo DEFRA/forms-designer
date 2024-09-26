@@ -1,6 +1,6 @@
 import { ComponentType, hasContentField } from '@defra/forms-model'
 import classNames from 'classnames'
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 
 import { Editor } from '~/src/Editor.jsx'
 import { ErrorMessage } from '~/src/components/ErrorMessage/ErrorMessage.jsx'

@@ -11,7 +11,6 @@ import {
   type RelativeDateValue,
   type RelativeDateValueData
 } from '@defra/forms-model'
-import React from 'react'
 
 import {
   AbsoluteDateValues,

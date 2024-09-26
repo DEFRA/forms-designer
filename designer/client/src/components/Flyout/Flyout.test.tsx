@@ -1,7 +1,6 @@
 import { screen } from '@testing-library/dom'
 import { render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import React from 'react'
 
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import { RenderWithContext } from '~/test/helpers/renderers.jsx'

@@ -1,10 +1,4 @@
-import React, {
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-  type RefObject
-} from 'react'
+import { useContext, useEffect, useRef, useState, type RefObject } from 'react'
 
 import { Page } from '~/src/components/Page/Page.jsx'
 import { Lines } from '~/src/components/Visualisation/Lines.jsx'
