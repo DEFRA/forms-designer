@@ -1,5 +1,4 @@
 import { hasComponents, hasListField } from '@defra/forms-model'
-import { highlightAll } from 'prismjs'
 import { useContext } from 'react'
 
 import { DeclarationEdit } from '~/src/DeclarationEdit.jsx'
@@ -219,7 +218,15 @@ export function Menu() {
             <Tabs
               title={i18n('menu.overview')}
               items={overviewTabs}
-              onInit={highlightAll}
+              onInit={async () => {
+                const [{ highlightAll }] = await Promise.all([
+                  import('prismjs'),
+                  // @ts-expect-error -- No types available
+                  import('prismjs/components/prism-json.js')
+                ])
+
+                highlightAll()
+              }}
               className="app-tabs--overview"
             ></Tabs>
           </Flyout>

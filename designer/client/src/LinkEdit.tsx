@@ -5,7 +5,7 @@ import {
   type Page
 } from '@defra/forms-model'
 import classNames from 'classnames'
-import Joi from 'joi'
+import { type Root } from 'joi'
 import {
   Component,
   type ChangeEvent,
@@ -111,8 +111,10 @@ export class LinkEdit extends Component<Props, State> {
       selectedCondition: this.state.selectedCondition
     }
 
+    const { default: schema } = await import('joi')
+
     // Check for valid form payload
-    if (!this.validate(payload)) {
+    if (!this.validate(payload, schema)) {
       return
     }
 
@@ -192,24 +194,26 @@ export class LinkEdit extends Component<Props, State> {
     })
   }
 
-  validate = (payload: Partial<Form>): payload is Form => {
+  validate = (payload: Partial<Form>, schema: Root): payload is Form => {
     const { isEditingLink, edgeFrom } = this.state
     const { pageFrom, pageTo } = payload
 
     const errors: State['errors'] = {}
 
     errors.from = validateRequired('link-from', pageFrom?.path, {
-      label: i18n('addLink.linkFrom.title')
+      label: i18n('addLink.linkFrom.title'),
+      schema
     })
 
     errors.to = validateRequired('link-to', pageTo?.path, {
-      label: i18n('addLink.linkTo.title')
+      label: i18n('addLink.linkTo.title'),
+      schema
     })
 
     errors.to ??= validateCustom('link-to', [pageFrom?.path, pageTo?.path], {
       message: 'errors.unique',
       label: 'Linked pages',
-      schema: Joi.array().unique()
+      schema: schema.array().unique()
     })
 
     if (pageFrom && pageTo) {
@@ -222,7 +226,7 @@ export class LinkEdit extends Component<Props, State> {
         errors.to ??= validateCustom('link-to', index, {
           message: 'errors.duplicate',
           label: 'Link between pages',
-          schema: Joi.number().max(-1)
+          schema: schema.number().max(-1)
         })
       }
     }

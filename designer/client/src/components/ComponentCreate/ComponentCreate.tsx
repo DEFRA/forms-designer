@@ -52,11 +52,16 @@ function useComponentCreate(props: Readonly<Props>) {
     })
   }, [hasValidated, hasErrors, isSaving, onHandleSave])
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
     e.stopPropagation()
 
-    dispatch({ name: Meta.VALIDATE })
+    const { default: schema } = await import('joi')
+
+    dispatch({
+      name: Meta.VALIDATE,
+      payload: schema
+    })
   }
 
   async function handleSave() {

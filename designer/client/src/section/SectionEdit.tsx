@@ -1,6 +1,7 @@
 import { type Section } from '@defra/forms-model'
 // @ts-expect-error -- No types available
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
+import { type Root } from 'joi'
 import {
   Component,
   type ChangeEvent,
@@ -73,8 +74,10 @@ export class SectionEdit extends Component<Props, State> {
       title: title?.trim()
     }
 
+    const { default: schema } = await import('joi')
+
     // Check for valid form payload
-    if (!this.validate(payload)) {
+    if (!this.validate(payload, schema)) {
       return
     }
 
@@ -99,17 +102,19 @@ export class SectionEdit extends Component<Props, State> {
     }
   }
 
-  validate = (payload: Partial<Form>): payload is Form => {
+  validate = (payload: Partial<Form>, schema: Root): payload is Form => {
     const { name, title } = payload
 
     const errors: State['errors'] = {}
 
     errors.title = validateRequired('section-title', title, {
-      label: i18n('sectionEdit.titleField.title')
+      label: i18n('sectionEdit.titleField.title'),
+      schema
     })
 
     errors.name = validateName('section-name', name, {
-      label: i18n('sectionEdit.nameField.title')
+      label: i18n('sectionEdit.nameField.title'),
+      schema
     })
 
     this.setState({ errors })

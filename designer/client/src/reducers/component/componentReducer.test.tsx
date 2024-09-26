@@ -1,4 +1,5 @@
 import { ComponentType, type ComponentDef } from '@defra/forms-model'
+import Joi from 'joi'
 
 import { fieldsReducer } from '~/src/reducers/component/componentReducer.fields.js'
 import {
@@ -89,7 +90,8 @@ describe('Component reducer', () => {
 
   test('componentReducer sets hasValidated: true', () => {
     const action: ReducerActions = {
-      name: Meta.VALIDATE
+      name: Meta.VALIDATE,
+      payload: Joi
     }
 
     const state: ComponentState = {

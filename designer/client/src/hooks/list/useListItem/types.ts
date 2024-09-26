@@ -1,4 +1,5 @@
 import { type Item } from '@defra/forms-model'
+import { type Root } from 'joi'
 import { type ChangeEvent } from 'react'
 
 import { type FormItem } from '~/src/reducers/listReducer.jsx'
@@ -10,7 +11,7 @@ export interface ListItemHook {
   handleHintChange: (e: ChangeEvent<HTMLTextAreaElement>) => void
   prepareForDelete: () => void
   prepareForSubmit: () => void
-  validate: (payload: Partial<FormItem>) => boolean
+  validate: (payload: Partial<FormItem>, schema: Root) => boolean
   value?: Item['value']
   condition?: string
   text?: string
