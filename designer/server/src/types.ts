@@ -18,7 +18,7 @@ import {
 
 interface SessionCache {
   drop: (key: string) => Promise<void>
-  get: (key: string) => Promise<RequestAuth['credentials'] | string | undefined>
+  get: (key: string) => Promise<RequestAuth['credentials'] | undefined>
   set: (
     key: string,
     credentials: RequestAuth['credentials'] | string,

@@ -35,11 +35,11 @@ export default [
             sessionNames.validationFailure.fileDownload
           )[0]
           const email =
-            /** @type {string} */ (
+            /** @type {string | undefined} */ (
               await server.methods.session.get(
                 sessionNames.fileDownloadPassword
               )
-            ) || ''
+            ) ?? ''
           return h.view(
             'file/download-page',
             file.fileViewModel(email, validation)
