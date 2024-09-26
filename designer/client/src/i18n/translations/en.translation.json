@@ -280,9 +280,11 @@
     "title": "List title",
     "titleHint": "Enter a unique name for your list",
     "type": "List type",
-    "typeHint": "Value type for your list",
-    "typeHintString": "String hint text",
-    "typeHintNumber": "Number hint text"
+    "typeHint": "Select how list values should be stored",
+    "typeString": "Text",
+    "typeNumber": "Numeric",
+    "typeHintString": "Value will be stored as text",
+    "typeHintNumber": "Value will be stored as a number"
   },
   "listContentEditComponent": {
     "bulletField": {
