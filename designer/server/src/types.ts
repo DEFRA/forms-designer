@@ -18,8 +18,12 @@ import {
 
 interface SessionCache {
   drop: (key: string) => Promise<void>
-  get: (key: string) => Promise<RequestAuth['credentials'] | undefined>
-  set: (key: string, credentials: RequestAuth['credentials']) => Promise<void>
+  get: (key: string) => Promise<RequestAuth['credentials'] | string | undefined>
+  set: (
+    key: string,
+    credentials: RequestAuth['credentials'] | string,
+    ttl?: { cache: { expiresIn: number } }
+  ) => Promise<void>
 }
 
 declare module '@hapi/hapi' {

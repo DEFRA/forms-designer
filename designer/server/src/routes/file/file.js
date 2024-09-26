@@ -4,6 +4,7 @@ import Joi from 'joi'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
+import config from '~/src/config.js'
 import { checkFileStatus, createFileLink } from '~/src/lib/file.js'
 import { errorViewModel } from '~/src/models/errors.js'
 import { downloadCompleteModel } from '~/src/models/file/download-complete.js'
@@ -23,7 +24,7 @@ export default [
     method: 'GET',
     path: '/file-download/{fileId}',
     async handler(request, h) {
-      const { params, yar } = request
+      const { params, yar, server } = request
       const { fileId } = params
 
       const statusCode = await checkFileStatus(fileId)
@@ -33,7 +34,16 @@ export default [
           const validation = yar.flash(
             sessionNames.validationFailure.fileDownload
           )[0]
-          return h.view('file/download-page', file.fileViewModel(validation))
+          const email =
+            /** @type {string} */ (
+              await server.methods.session.get(
+                sessionNames.fileDownloadPassword
+              )
+            ) || ''
+          return h.view(
+            'file/download-page',
+            file.fileViewModel(email, validation)
+          )
         }
 
         case StatusCodes.GONE: {
@@ -66,13 +76,23 @@ export default [
     method: 'POST',
     path: '/file-download/{fileId}',
     async handler(request, h) {
-      const { payload, params, auth } = request
+      const { payload, params, auth, server } = request
       const { token } = auth.credentials
       const { email } = payload
       const { fileId } = params
 
       try {
         const { url } = await createFileLink(fileId, email, token)
+
+        await server.methods.session.set(
+          sessionNames.fileDownloadPassword,
+          email,
+          {
+            cache: {
+              expiresIn: config.fileDownloadPasswordTtl
+            }
+          }
+        )
         logger.info(`File download link created for file ID ${fileId}`)
         return h.view('file/download-complete', downloadCompleteModel(url))
       } catch (err) {
@@ -103,7 +123,10 @@ export default [
             formValues: { email }
           }
 
-          return h.view('file/download-page', file.fileViewModel(validation))
+          return h.view(
+            'file/download-page',
+            file.fileViewModel(email, validation)
+          )
         }
 
         return Boom.internal(
