@@ -1,10 +1,10 @@
 import {
-  type ListTypeContent,
   type FormDefinition,
   type Item,
-  type List
+  type List,
+  type ListTypeContent
 } from '@defra/forms-model'
-import React, {
+import {
   createContext,
   useContext,
   useMemo,
