@@ -108,30 +108,26 @@ export function FileUploadFieldEdit() {
           />
         </div>
 
-        <div className="govuk-form-group">
-          <Textarea
-            id="field-options-accept"
-            name="options.accept"
-            rows={3}
-            label={{
-              className: 'govuk-label--s',
-              children: i18n('fileUploadFieldEditComponent.acceptField.title')
-            }}
-            hint={{
-              children: i18n(
-                'fileUploadFieldEditComponent.acceptField.helpText'
-              )
-            }}
-            value={options.accept ?? ''}
-            onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
-              dispatch({
-                name: Options.EDIT_OPTIONS_ACCEPT,
-                payload: e.target.value,
-                as: selectedComponent
-              })
-            }
-          />
-        </div>
+        <Textarea
+          id="field-options-accept"
+          name="options.accept"
+          rows={3}
+          label={{
+            className: 'govuk-label--s',
+            children: i18n('fileUploadFieldEditComponent.acceptField.title')
+          }}
+          hint={{
+            children: i18n('fileUploadFieldEditComponent.acceptField.helpText')
+          }}
+          value={options.accept ?? ''}
+          onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+            dispatch({
+              name: Options.EDIT_OPTIONS_ACCEPT,
+              payload: e.target.value,
+              as: selectedComponent
+            })
+          }
+        />
 
         <CssClasses />
       </div>

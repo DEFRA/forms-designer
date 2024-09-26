@@ -370,7 +370,11 @@ describe('ComponentTypeEdit', () => {
     if (options.content) {
       it("should render 'Content' textarea", () => {
         const $textarea = screen.getByRole<HTMLTextAreaElement>('textbox', {
-          name: 'Content'
+          name: 'Content',
+          description:
+            selectedComponent.type === ComponentType.Details
+              ? 'Enter the text you want to show when users expand the title. You can apply basic HTML, such as text formatting and hyperlinks.'
+              : 'Enter the text you want to show. You can apply basic HTML, such as text formatting and hyperlinks.'
         })
 
         expect($textarea).toBeInTheDocument()

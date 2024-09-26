@@ -1,6 +1,7 @@
+// @ts-expect-error -- No types available
+import { Textarea } from '@xgovformbuilder/govuk-react-jsx'
 import { Component, type ContextType, type FormEvent } from 'react'
 
-import { Editor } from '~/src/Editor.jsx'
 import { logger } from '~/src/common/helpers/logging/logger.js'
 import { DataContext } from '~/src/context/DataContext.js'
 
@@ -71,22 +72,25 @@ export class DeclarationEdit extends Component<Props> {
           </fieldset>
         </div>
 
-        <div className="govuk-form-group">
-          <label className="govuk-label" htmlFor="declaration">
-            Declaration
-          </label>
-          <div className="govuk-hint" id="declaration-hint">
-            The declaration can include HTML and the `govuk-prose-scope` css
-            class is available. Use this on a wrapping element to apply default
-            govuk styles.
-          </div>
-          <Editor
-            id="declaration"
-            aria-describedby="declaration-hint"
-            name="declaration"
-            value={declaration}
-          />
-        </div>
+        <Textarea
+          id="field-declaration"
+          name="declaration"
+          rows={3}
+          label={{
+            className: 'govuk-label--s',
+            children: 'Declaration'
+          }}
+          hint={{
+            children: (
+              <>
+                The declaration can include HTML and the `govuk-prose-scope` css
+                class is available. Use this on a wrapping element to apply
+                default govuk styles.
+              </>
+            )
+          }}
+          defaultValue={declaration}
+        />
 
         <button className="govuk-button" type="submit">
           Save

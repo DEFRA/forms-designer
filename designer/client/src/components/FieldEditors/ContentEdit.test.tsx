@@ -5,7 +5,7 @@ import {
   type ComponentDef
 } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
-import { render, type RenderResult } from '@testing-library/react'
+import { render } from '@testing-library/react'
 
 import { ContentEdit } from '~/src/components/FieldEditors/ContentEdit.jsx'
 import { RenderComponent } from '~/test/helpers/renderers.jsx'
@@ -49,12 +49,11 @@ describe('ContentEdit', () => {
 
   describe.each(supported)('Settings: %s', (type) => {
     let selectedComponent: ComponentDef
-    let result: RenderResult
 
     beforeEach(() => {
       selectedComponent = getComponentDefaults({ type })
 
-      result = render(
+      render(
         <RenderComponent defaults={selectedComponent}>
           <ContentEdit />
         </RenderComponent>
@@ -64,21 +63,13 @@ describe('ContentEdit', () => {
     it("should render 'Content' textarea", () => {
       const $input = screen.getByRole('textbox', {
         name: 'Content',
-
-        // Custom component `<SimpleEditor>` does not support
-        // `aria-describedby` to associate hint text by ID
-        description: ''
+        description:
+          selectedComponent.type === ComponentType.Details
+            ? 'Enter the text you want to show when users expand the title. You can apply basic HTML, such as text formatting and hyperlinks.'
+            : 'Enter the text you want to show. You can apply basic HTML, such as text formatting and hyperlinks.'
       })
 
       expect($input).toBeInTheDocument()
-    })
-
-    it("should render 'Content' hint text", () => {
-      expect(result.container).toHaveTextContent(
-        selectedComponent.type === ComponentType.Details
-          ? 'Enter the text you want to show when users expand the title. You can apply basic HTML, such as text formatting and hyperlinks'
-          : 'Enter the text you want to show. You can apply basic HTML, such as text formatting and hyperlinks'
-      )
     })
   })
 })
