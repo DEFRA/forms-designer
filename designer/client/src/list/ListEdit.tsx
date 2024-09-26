@@ -1,4 +1,4 @@
-import { hasListField } from '@defra/forms-model'
+import { hasListField, type ListTypeContent } from '@defra/forms-model'
 // @ts-expect-error -- No types available
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import { type Root } from 'joi'
@@ -224,7 +224,6 @@ export function ListEdit() {
             }
           }}
           value={selectedList.type}
-          defaultValue="string"
           items={[
             {
               children: ['String'],
@@ -232,7 +231,7 @@ export function ListEdit() {
               hint: {
                 children: [i18n('list.typeHintString')]
               },
-              disabled: !selectedList.isNew
+              disabled: !!selectedList.items.length
             },
             {
               children: ['Number'],
@@ -240,13 +239,13 @@ export function ListEdit() {
               hint: {
                 children: [i18n('list.typeHintNumber')]
               },
-              disabled: !selectedList.isNew
+              disabled: !!selectedList.items.length
             }
           ]}
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             listDispatch({
               name: ListActions.EDIT_TYPE,
-              payload: e.target.value
+              payload: e.target.value as ListTypeContent
             })
           }
           errorMessage={errors.type}
