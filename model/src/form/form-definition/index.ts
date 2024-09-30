@@ -210,7 +210,7 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
     conditions: Joi.array<ConditionWrapper>()
       .items(conditionWrapperSchema)
       .unique('name'),
-    lists: Joi.array<List>().items(listSchema).unique('name'),
+    lists: Joi.array<List>().items(listSchema).unique('name').unique('title'),
     metadata: Joi.object({ a: Joi.any() }).unknown().optional(),
     declaration: Joi.string().allow('').optional(),
     skipSummary: Joi.boolean().optional().default(false),

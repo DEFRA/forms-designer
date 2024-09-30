@@ -38,7 +38,7 @@ function useListEdit() {
   const { data, save } = useContext(DataContext)
   const { state: listState, dispatch: listDispatch } = useContext(ListContext)
 
-  const { selectedList } = listState
+  const { initialTitle, selectedList } = listState
 
   function handleAddItem(e: MouseEvent<HTMLButtonElement>) {
     e.preventDefault()
@@ -88,10 +88,24 @@ function useListEdit() {
 
     const errors: ListState['errors'] = {}
 
+    const titles = data.lists
+      .filter(({ title }) => title !== initialTitle)
+      .map(({ title }) => title)
+
     errors.title = validateRequired('list-title', selectedList?.title, {
       label: i18n('list.title'),
       schema
     })
+
+    errors.title ??= validateCustom(
+      'list-title',
+      [...titles, selectedList?.title],
+      {
+        message: 'errors.duplicate',
+        label: i18n('list.title'),
+        schema: schema.array().unique()
+      }
+    )
 
     errors.listItems = validateCustom('list-items', selectedList?.items, {
       message: 'list.errors.empty',
