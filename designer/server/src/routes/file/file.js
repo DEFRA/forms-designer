@@ -87,11 +87,7 @@ export default [
         await server.methods.session.set(
           sessionNames.fileDownloadPassword,
           email,
-          {
-            cache: {
-              expiresIn: config.fileDownloadPasswordTtl
-            }
-          }
+          config.fileDownloadPasswordTtl
         )
         logger.info(`File download link created for file ID ${fileId}`)
         return h.view('file/download-complete', downloadCompleteModel(url))

@@ -21,8 +21,8 @@ interface SessionCache {
   get: (key: string) => Promise<RequestAuth['credentials'] | undefined>
   set: (
     key: string,
-    credentials: RequestAuth['credentials'] | string,
-    ttl?: { cache: { expiresIn: number } }
+    value: RequestAuth['credentials'] | string,
+    ttl?: number
   ) => Promise<void>
 }
 
@@ -32,7 +32,7 @@ declare module '@hapi/hapi' {
   interface Server {
     method(name: 'session.drop', method: SessionCache['drop']): void
     method(name: 'session.get', method: SessionCache['get']): void
-    method(name: 'session.set', method: SessionCache['set']): void
+    method(name: 'session.set', method: SessionCache['set'], ttl?: number): void
   }
 
   interface ServerMethods {
