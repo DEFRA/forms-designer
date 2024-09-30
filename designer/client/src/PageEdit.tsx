@@ -139,7 +139,9 @@ export class PageEdit extends Component<Props, State> {
       path: hasFormComponents(defaults) ? `/${slugify(path)}` : defaults.path,
       controller: controller ? defaults.controller : undefined,
       repeatName:
-        controller === ControllerType.Repeat ? repeatName?.trim() : undefined
+        defaults.controller === ControllerType.Repeat
+          ? repeatName?.trim()
+          : undefined
     }
 
     const { default: schema } = await import('joi')

@@ -12,7 +12,6 @@ import {
   type RelativeDateValueData
 } from '~/src/conditions/types.js'
 import {
-  type Repeat,
   type ConditionWrapper,
   type FormDefinition,
   type Item,
@@ -22,7 +21,8 @@ import {
   type PhaseBanner,
   type Section,
   type RepeatSchema,
-  type RepeatOptions
+  type RepeatOptions,
+  type Repeat
 } from '~/src/form/form-definition/types.js'
 
 const sectionsSchema = Joi.object<Section>().keys({
