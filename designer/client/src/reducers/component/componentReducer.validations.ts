@@ -1,5 +1,4 @@
 import {
-  hasContent,
   hasContentField,
   hasListField,
   hasTitle,
@@ -9,7 +8,7 @@ import { type Root } from 'joi'
 
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { type ComponentState } from '~/src/reducers/component/componentReducer.jsx'
-import { validateName, validateRequired } from '~/src/validations.js'
+import { validateRequired } from '~/src/validations.js'
 
 export function fieldComponentValidations(
   component: ComponentDef | undefined,
@@ -20,13 +19,6 @@ export function fieldComponentValidations(
   if (hasTitle(component)) {
     errors.title = validateRequired('field-title', component.title, {
       label: i18n('common.titleField.title'),
-      schema
-    })
-  }
-
-  if (!hasContent(component)) {
-    errors.name = validateName('field-name', component?.name, {
-      label: i18n('common.componentNameField.title'),
       schema
     })
   }

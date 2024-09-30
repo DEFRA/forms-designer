@@ -8,11 +8,6 @@ import { Fields } from '~/src/reducers/component/types.js'
 
 export type FieldsReducerActions =
   | {
-      name: Fields.EDIT_NAME
-      payload: string
-      as?: undefined
-    }
-  | {
       name: Fields.EDIT_TITLE
       payload: string
       as: Extract<ComponentDef, { title: string }>
@@ -48,10 +43,6 @@ export function fieldsReducer(state: ComponentState, action: ReducerActions) {
   stateNew.hasValidated = false
 
   switch (name) {
-    case Fields.EDIT_NAME:
-      selectedComponent.name = payload
-      break
-
     case Fields.EDIT_TITLE: {
       if (type === as.type) {
         selectedComponent.title = payload

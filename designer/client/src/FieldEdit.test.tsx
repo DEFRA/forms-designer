@@ -49,7 +49,7 @@ describe('Field Edit', () => {
     const $checkboxes = screen.queryAllByRole('checkbox')
     const $selects = screen.queryAllByRole('combobox')
 
-    expect($inputs).toHaveLength(3)
+    expect($inputs).toHaveLength(2)
     expect($checkboxes).toHaveLength(1)
     expect($selects).toHaveLength(0)
   })
@@ -87,7 +87,7 @@ describe('Field Edit', () => {
     const $checkboxes = screen.queryAllByRole('checkbox')
     const $selects = screen.queryAllByRole('combobox')
 
-    expect($inputs).toHaveLength(3)
+    expect($inputs).toHaveLength(2)
     expect($checkboxes).toHaveLength(1)
     expect($selects).toHaveLength(0)
   })

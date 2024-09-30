@@ -73,7 +73,6 @@ describe('ComponentTypeEdit', () => {
     [
       ComponentType.AutocompleteField,
       {
-        name: true,
         hint: true,
         title: true,
         hideTitle: false,
@@ -86,7 +85,6 @@ describe('ComponentTypeEdit', () => {
     [
       ComponentType.CheckboxesField,
       {
-        name: true,
         hint: true,
         title: true,
         hideTitle: false,
@@ -99,7 +97,6 @@ describe('ComponentTypeEdit', () => {
     [
       ComponentType.DatePartsField,
       {
-        name: true,
         hint: true,
         title: true,
         hideTitle: false,
@@ -112,7 +109,6 @@ describe('ComponentTypeEdit', () => {
     [
       ComponentType.Details,
       {
-        name: false,
         hint: false,
         title: true,
         hideTitle: false,
@@ -125,7 +121,6 @@ describe('ComponentTypeEdit', () => {
     [
       ComponentType.EmailAddressField,
       {
-        name: true,
         hint: true,
         title: true,
         hideTitle: false,
@@ -138,7 +133,6 @@ describe('ComponentTypeEdit', () => {
     [
       ComponentType.Html,
       {
-        name: false,
         hint: false,
         title: false,
         hideTitle: false,
@@ -151,7 +145,6 @@ describe('ComponentTypeEdit', () => {
     [
       ComponentType.InsetText,
       {
-        name: false,
         hint: false,
         title: false,
         hideTitle: false,
@@ -164,7 +157,6 @@ describe('ComponentTypeEdit', () => {
     [
       ComponentType.List,
       {
-        name: false,
         hint: true,
         title: true,
         hideTitle: true,
@@ -177,7 +169,6 @@ describe('ComponentTypeEdit', () => {
     [
       ComponentType.MonthYearField,
       {
-        name: true,
         hint: true,
         title: true,
         hideTitle: false,
@@ -190,7 +181,6 @@ describe('ComponentTypeEdit', () => {
     [
       ComponentType.MultilineTextField,
       {
-        name: true,
         hint: true,
         title: true,
         hideTitle: false,
@@ -203,7 +193,6 @@ describe('ComponentTypeEdit', () => {
     [
       ComponentType.NumberField,
       {
-        name: true,
         hint: true,
         title: true,
         hideTitle: false,
@@ -216,7 +205,6 @@ describe('ComponentTypeEdit', () => {
     [
       ComponentType.RadiosField,
       {
-        name: true,
         hint: true,
         title: true,
         hideTitle: false,
@@ -229,7 +217,6 @@ describe('ComponentTypeEdit', () => {
     [
       ComponentType.SelectField,
       {
-        name: true,
         hint: true,
         title: true,
         hideTitle: false,
@@ -242,7 +229,6 @@ describe('ComponentTypeEdit', () => {
     [
       ComponentType.TelephoneNumberField,
       {
-        name: true,
         hint: true,
         title: true,
         hideTitle: false,
@@ -255,7 +241,6 @@ describe('ComponentTypeEdit', () => {
     [
       ComponentType.TextField,
       {
-        name: true,
         hint: true,
         title: true,
         hideTitle: false,
@@ -268,7 +253,6 @@ describe('ComponentTypeEdit', () => {
     [
       ComponentType.UkAddressField,
       {
-        name: true,
         hint: true,
         title: true,
         hideTitle: true,
@@ -281,7 +265,6 @@ describe('ComponentTypeEdit', () => {
     [
       ComponentType.YesNoField,
       {
-        name: true,
         hint: true,
         title: true,
         hideTitle: false,
@@ -386,27 +369,6 @@ describe('ComponentTypeEdit', () => {
         })
 
         expect($textarea).not.toBeInTheDocument()
-      })
-    }
-
-    if (options.name) {
-      it("should render 'Component name' input", () => {
-        const $input = screen.getByRole<HTMLInputElement>('textbox', {
-          name: 'Component name',
-          description:
-            'This is generated automatically and does not show on the page. Only change it if you are using an integration that requires you to, for example GOV.UK Notify. It must not contain spaces.'
-        })
-
-        expect($input).toBeInTheDocument()
-        expect($input).toHaveValue(selectedComponent.name)
-      })
-    } else {
-      it("should not render 'Component name' input", () => {
-        const $input = screen.queryByRole('textbox', {
-          name: 'Component name'
-        })
-
-        expect($input).not.toBeInTheDocument()
       })
     }
 

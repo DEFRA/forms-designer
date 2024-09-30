@@ -24,7 +24,6 @@ export enum Schema {
  */
 export enum Fields {
   EDIT_TITLE = 'EDIT_TITLE',
-  EDIT_NAME = 'EDIT_NAME',
   EDIT_HELP = 'EDIT_HELP',
   EDIT_CONTENT = 'EDIT_CONTENT',
   EDIT_LIST = 'EDIT_LIST'

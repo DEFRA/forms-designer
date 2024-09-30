@@ -39,7 +39,7 @@ export interface ComponentState {
   selectedComponent?: ComponentDef
   hasValidated?: boolean
   showDeleteWarning?: boolean
-  errors: Partial<ErrorList<'title' | 'name' | 'content' | 'list'>>
+  errors: Partial<ErrorList<'title' | 'content' | 'list'>>
 }
 
 export type ReducerActions =
