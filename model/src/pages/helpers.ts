@@ -90,7 +90,8 @@ export function hasNext(
     !controller ||
     controller === ControllerType.Start ||
     controller === ControllerType.Page ||
-    controller === ControllerType.FileUpload
+    controller === ControllerType.FileUpload ||
+    controller === ControllerType.Repeat
   )
 }
 

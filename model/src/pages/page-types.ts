@@ -22,6 +22,18 @@ export const PageTypes: readonly Page[] = Object.freeze([
     components: []
   },
   {
+    title: 'Add another',
+    path: '/add-another-page',
+    controller: ControllerType.Repeat,
+    repeat: {
+      options: { name: '' },
+      schema: { min: 1, max: 25 }
+    },
+    section: undefined,
+    next: [],
+    components: []
+  },
+  {
     title: 'File upload page',
     path: '/file-upload-page',
     controller: ControllerType.FileUpload,

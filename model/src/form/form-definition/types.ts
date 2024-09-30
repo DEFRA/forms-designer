@@ -14,6 +14,20 @@ export interface PageBase {
   path: string
 }
 
+export interface RepeatOptions {
+  name: string
+}
+
+export interface RepeatSchema {
+  min: number
+  max: number
+}
+
+export interface Repeat {
+  options: RepeatOptions
+  schema: RepeatSchema
+}
+
 export interface PageStart extends PageBase {
   path: ControllerPath.Start | string
   controller: ControllerType.Start | ControllerType.Home
@@ -24,6 +38,14 @@ export interface PageStart extends PageBase {
 
 export interface PageQuestion extends PageBase {
   controller?: ControllerType.Page
+  section?: string | undefined
+  next: Link[]
+  components: ComponentDef[]
+}
+
+export interface PageRepeat extends PageBase {
+  controller?: ControllerType.Repeat
+  repeat: Repeat
   section?: string | undefined
   next: Link[]
   components: ComponentDef[]
@@ -52,6 +74,7 @@ export type Page =
   | PageStart
   | PageQuestion
   | PageFileUpload
+  | PageRepeat
   | PageSummary
   | PageStatus
 
