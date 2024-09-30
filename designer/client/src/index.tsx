@@ -1,6 +1,6 @@
 import { type FormMetadata, type FormDefinition } from '@defra/forms-model'
 import { Component } from 'react'
-import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
 
 import { Designer } from '~/src/Designer.jsx'
 import { logger } from '~/src/common/helpers/logging/logger.js'
@@ -51,13 +51,13 @@ export class App extends Component<Props> {
 }
 
 function initApp() {
-  const $root = document.querySelector('.app-form-editor')
+  const $container = document.querySelector('.app-form-editor')
 
-  if (!($root instanceof HTMLElement)) {
+  if (!($container instanceof HTMLElement)) {
     throw new Error('Missing form data')
   }
 
-  ReactDOM.render(<App container={$root} />, $root)
+  createRoot($container).render(<App container={$container} />)
 }
 
 initI18n()

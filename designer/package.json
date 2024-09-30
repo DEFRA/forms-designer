@@ -67,15 +67,15 @@
     "pino": "^9.4.0",
     "prismjs": "^1.29.0",
     "proxy-agent": "^6.4.0",
-    "react": "^16.14.0",
-    "react-dom": "^16.14.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "resolve": "^1.22.8",
     "serialize-javascript": "^6.0.2"
   },
   "devDependencies": {
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.5.0",
-    "@testing-library/react": "^12.1.5",
+    "@testing-library/react": "^16.0.1",
     "@testing-library/user-event": "^14.5.2",
     "autoprefixer": "^10.4.20",
     "babel-loader": "^9.2.1",
