@@ -206,6 +206,7 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
     sections: Joi.array<Section>()
       .items(sectionsSchema)
       .unique('name')
+      .unique('title')
       .required(),
     conditions: Joi.array<ConditionWrapper>()
       .items(conditionWrapperSchema)
