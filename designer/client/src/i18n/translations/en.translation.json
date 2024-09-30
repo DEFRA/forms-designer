@@ -379,10 +379,6 @@
     "editHeader": {
       "title": "Edit sections"
     },
-    "nameField": {
-      "helpText": "Automatically populated. It does not show on the page. You usually do not need to change it unless an integration requires it. It must not contain spaces.",
-      "title": "Section name"
-    },
     "titleField": {
       "helpText": "Appears above the page title. However, if these titles are the same, the form will only show the page title.",
       "title": "Section title"

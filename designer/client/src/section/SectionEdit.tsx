@@ -18,11 +18,7 @@ import { removeSection } from '~/src/data/section/removeSection.js'
 import { updateSection } from '~/src/data/section/updateSection.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import randomId from '~/src/randomId.js'
-import {
-  validateName,
-  validateRequired,
-  hasValidationErrors
-} from '~/src/validations.js'
+import { validateRequired, hasValidationErrors } from '~/src/validations.js'
 
 interface Props {
   section?: Section
@@ -32,11 +28,11 @@ interface Props {
 interface State extends Partial<Form> {
   hideTitle: boolean
   isNewSection: boolean
-  errors: Partial<ErrorList<'title' | 'name'>>
+  name: string
+  errors: Partial<ErrorList<'title'>>
 }
 
 interface Form {
-  name: string
   title: string
 }
 
@@ -47,14 +43,16 @@ export class SectionEdit extends Component<Props, State> {
   state: State = {
     hideTitle: false,
     isNewSection: false,
+    name: randomId(),
     errors: {}
   }
 
   componentDidMount() {
     const { section } = this.props
+    const { name } = this.state
 
     this.setState({
-      name: section?.name ?? randomId(),
+      name: section?.name ?? name,
       title: section?.title,
       hideTitle: section?.hideTitle ?? false,
       isNewSection: !section?.name
@@ -70,7 +68,6 @@ export class SectionEdit extends Component<Props, State> {
     const { name, title, hideTitle, isNewSection } = this.state
 
     const payload = {
-      name,
       title: title?.trim()
     }
 
@@ -82,38 +79,33 @@ export class SectionEdit extends Component<Props, State> {
     }
 
     let definition = isNewSection
-      ? addSection(data, { ...payload, hideTitle })
+      ? addSection(data, { ...payload, name, hideTitle })
       : structuredClone(data)
 
     // Update section
     if (!isNewSection && section?.name) {
       definition = updateSection(definition, section.name, {
         title: payload.title,
-        name: payload.name,
+        name,
         hideTitle
       })
     }
 
     try {
       await save(definition)
-      onSave(payload.name)
+      onSave(name)
     } catch (error) {
       logger.error(error, 'SectionEdit')
     }
   }
 
   validate = (payload: Partial<Form>, schema: Root): payload is Form => {
-    const { name, title } = payload
+    const { title } = payload
 
     const errors: State['errors'] = {}
 
     errors.title = validateRequired('section-title', title, {
       label: i18n('sectionEdit.titleField.title'),
-      schema
-    })
-
-    errors.name = validateName('section-name', name, {
-      label: i18n('sectionEdit.nameField.title'),
       schema
     })
 
@@ -146,7 +138,7 @@ export class SectionEdit extends Component<Props, State> {
   }
 
   render() {
-    const { title, name, hideTitle, errors, isNewSection } = this.state
+    const { title, hideTitle, errors, isNewSection } = this.state
     const hasErrors = hasValidationErrors(errors)
 
     return (
@@ -170,24 +162,7 @@ export class SectionEdit extends Component<Props, State> {
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               this.setState({ title: e.target.value })
             }
-            errorMessage={errors.name}
-          />
-          <Input
-            id="section-name"
-            name="name"
-            className="govuk-input--width-20"
-            label={{
-              className: 'govuk-label--s',
-              children: [i18n('sectionEdit.nameField.title')]
-            }}
-            hint={{
-              children: [i18n('sectionEdit.nameField.helpText')]
-            }}
-            value={name ?? ''}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              this.setState({ name: e.target.value })
-            }
-            errorMessage={errors.name}
+            errorMessage={errors.title}
           />
           <div className="govuk-checkboxes govuk-form-group">
             <div className="govuk-checkboxes__item">
