@@ -92,8 +92,8 @@ const conditionWrapperSchema = Joi.object<ConditionWrapper>().keys({
 export const componentSchema = Joi.object<ComponentDef>()
   .keys({
     type: Joi.string<ComponentType>().required(),
-    name: Joi.string(),
-    title: Joi.string().allow(''),
+    name: Joi.string().required(),
+    title: Joi.string().required(),
     hint: Joi.string().allow('').optional(),
     options: Joi.object({
       rows: Joi.number().empty(''),
@@ -127,7 +127,7 @@ const nextSchema = Joi.object<Link>().keys({
  */
 const pageSchema = Joi.object<Page>().keys({
   path: Joi.string().required().disallow('/status'),
-  title: Joi.string().allow(''),
+  title: Joi.string().required(),
   section: Joi.string(),
   controller: Joi.string().optional(),
   components: Joi.array<ComponentDef>().items(componentSchema).unique('name'),
@@ -158,7 +158,7 @@ const numberListItemSchema = baseListItemSchema.append({
 
 const listSchema = Joi.object<List>().keys({
   name: Joi.string().required(),
-  title: Joi.string().allow(''),
+  title: Joi.string().required(),
   type: Joi.string().required().valid('string', 'number'),
   items: Joi.when('type', {
     is: 'string',
