@@ -32,7 +32,7 @@ declare module '@hapi/hapi' {
   interface Server {
     method(name: 'session.drop', method: SessionCache['drop']): void
     method(name: 'session.get', method: SessionCache['get']): void
-    method(name: 'session.set', method: SessionCache['set'], ttl?: number): void
+    method(name: 'session.set', method: SessionCache['set']): void
   }
 
   interface ServerMethods {

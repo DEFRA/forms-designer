@@ -72,7 +72,7 @@ const schema = joi.object<Config>({
   isDevelopment: joi.boolean().default(true),
   isTest: joi.boolean().default(false),
   sessionTtl: joi.number().required(),
-  fileDownloadPasswordTtl: joi.number().default(34560),
+  fileDownloadPasswordTtl: joi.number().required(),
   sessionCookieTtl: joi.number().required(),
   sessionCookiePassword: joi.string().required(),
   azureClientId: joi.string().required(),
