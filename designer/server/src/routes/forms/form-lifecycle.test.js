@@ -39,7 +39,8 @@ describe('Test form draft and live creation route handlers', () => {
       title: 'My form',
       organisation: 'Defra',
       teamName: 'Forms',
-      teamEmail: 'defraforms@defra.gov.uk',
+      teamEmail: 'foobar@defra.gov.uk',
+      notificationEmail: 'defraforms@defra.gov.uk',
       draft: {
         createdAt: now,
         createdBy: author,
@@ -55,6 +56,27 @@ describe('Test form draft and live creation route handlers', () => {
 
   afterAll(async () => {
     await server.stop()
+  })
+
+  test('When a draft will be going live and there are no warnings, show the page content', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(metadata)
+
+    const options = {
+      method: 'GET',
+      url: '/library/my-form/make-draft-live',
+      auth
+    }
+
+    const { document } = await renderResponse(server, options)
+
+    const $bodyText = document.querySelector('.govuk-body-l')
+    const $warningText = document.querySelector('.govuk-warning-text')
+
+    expect($bodyText).toHaveTextContent(
+      'Completed forms will be sent to defraforms@defra.gov.uk.'
+    )
+
+    expect($warningText).toBeNull()
   })
 
   test('When a live form is about to be overwritten, warn the user ahead of time', async () => {
@@ -82,8 +104,11 @@ describe('Test form draft and live creation route handlers', () => {
     )
   })
 
-  test("When a live form is not about to be overwritten, don't warn the user", async () => {
-    jest.mocked(forms.get).mockResolvedValueOnce(metadata)
+  test('When a notificationEmail is missing, hide the body text', async () => {
+    const metadataNoNotificationEmail = { ...metadata }
+    delete metadataNoNotificationEmail.notificationEmail
+
+    jest.mocked(forms.get).mockResolvedValueOnce(metadataNoNotificationEmail)
 
     const options = {
       method: 'GET',
@@ -93,9 +118,9 @@ describe('Test form draft and live creation route handlers', () => {
 
     const { document } = await renderResponse(server, options)
 
-    const $warningText = document.querySelector('.govuk-warning-text')
+    const $bodyText = document.querySelector('.govuk-body-l')
 
-    expect($warningText).toBeNull()
+    expect($bodyText).toBeNull()
   })
 
   test('When a live form is created, it should redirect to the library', async () => {
