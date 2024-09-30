@@ -130,7 +130,7 @@ const pageSchema = Joi.object<Page>().keys({
   title: Joi.string().allow(''),
   section: Joi.string(),
   controller: Joi.string().optional(),
-  components: Joi.array<ComponentDef>().items(componentSchema),
+  components: Joi.array<ComponentDef>().items(componentSchema).unique('name'),
   next: Joi.array<Link>().items(nextSchema)
 })
 
