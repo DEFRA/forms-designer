@@ -9,8 +9,7 @@ import {
   hasSection,
   isQuestionPage,
   slugify,
-  type Page,
-  type Section
+  type Page
 } from '@defra/forms-model'
 // @ts-expect-error -- No types available
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
@@ -49,7 +48,7 @@ interface Props {
 }
 
 interface State extends Partial<Form> {
-  section?: Section
+  selectedSection?: string
   isEditingSection: boolean
   isNewSection: boolean
   isQuestionPage: boolean
@@ -75,7 +74,6 @@ export class PageEdit extends Component<Props, State> {
 
   componentDidMount() {
     const { page } = this.props
-    const { data } = this.context
 
     const { path, title } = page
     const controller = controllerNameFromPath(
@@ -86,7 +84,7 @@ export class PageEdit extends Component<Props, State> {
       path,
       controller,
       title,
-      section: hasSection(page) ? findSection(data, page.section) : undefined,
+      selectedSection: hasSection(page) ? page.section : undefined,
       isQuestionPage: isQuestionPage(page)
     })
   }
@@ -95,9 +93,10 @@ export class PageEdit extends Component<Props, State> {
     e.preventDefault()
     e.stopPropagation()
 
-    const { save, data } = this.context
-    const { title, path, section, controller, isQuestionPage } = this.state
     const { page, onSave } = this.props
+    const { save, data } = this.context
+    const { title, path, controller, selectedSection, isQuestionPage } =
+      this.state
 
     // Page defaults
     const defaults = getPageDefaults({
@@ -129,7 +128,7 @@ export class PageEdit extends Component<Props, State> {
     // Update question page fields
     if (hasComponents(pageUpdate)) {
       pageUpdate.path = payload.path
-      pageUpdate.section = section?.name
+      pageUpdate.section = selectedSection
 
       // Remove default controller
       if (payload.controller === ControllerType.Page) {
@@ -295,22 +294,18 @@ export class PageEdit extends Component<Props, State> {
   }
 
   closeFlyout = (sectionName?: string) => {
-    const { data } = this.context
-    const { section } = this.state
-
     this.setState({
+      selectedSection: sectionName,
       isEditingSection: false,
-      isNewSection: false,
-      section: sectionName ? findSection(data, sectionName) : section
+      isNewSection: false
     })
   }
 
   onChangeSection = (e: ChangeEvent<HTMLSelectElement>) => {
-    const { value: sectionName } = e.target
-    const { data } = this.context
+    const { value: selectedSection } = e.target
 
     this.setState({
-      section: sectionName ? findSection(data, sectionName) : undefined
+      selectedSection: selectedSection || undefined
     })
   }
 
@@ -322,7 +317,7 @@ export class PageEdit extends Component<Props, State> {
       title,
       path,
       controller,
-      section,
+      selectedSection,
       isEditingSection,
       isNewSection,
       isQuestionPage,
@@ -330,8 +325,15 @@ export class PageEdit extends Component<Props, State> {
     } = this.state
 
     const { sections } = data
+
     const hasErrors = hasValidationErrors(errors)
     const pageTypes = PageTypes.filter(isControllerAllowed(data, page))
+
+    // Find section by name
+    const section =
+      isEditingSection && !isNewSection && selectedSection
+        ? findSection(data, selectedSection)
+        : undefined
 
     return (
       <>
@@ -442,7 +444,7 @@ export class PageEdit extends Component<Props, State> {
                       id="page-section"
                       aria-describedby="page-section-hint"
                       name="section"
-                      value={section?.name ?? ''}
+                      value={selectedSection ?? ''}
                       onChange={this.onChangeSection}
                     >
                       <option value="">
@@ -457,7 +459,7 @@ export class PageEdit extends Component<Props, State> {
                   </>
                 )}
                 <p className="govuk-body govuk-!-margin-top-2">
-                  {section && (
+                  {selectedSection && (
                     <a
                       href="#section-edit"
                       className="govuk-link govuk-!-display-block"
@@ -497,16 +499,13 @@ export class PageEdit extends Component<Props, State> {
             <Flyout
               id="section-edit"
               title={
-                !isNewSection && !!section
+                section
                   ? i18n('section.editTitle', { title: section.title })
                   : i18n('section.add')
               }
               onHide={this.closeFlyout}
             >
-              <SectionEdit
-                section={!isNewSection ? section : undefined}
-                onSave={this.closeFlyout}
-              />
+              <SectionEdit section={section} onSave={this.closeFlyout} />
             </Flyout>
           </RenderInPortal>
         )}
