@@ -74,14 +74,12 @@ describe('Component reducer', () => {
     }
 
     const state: ComponentState = {
-      initialName: component1.name,
       selectedComponent: component1,
       hasValidated: true,
       errors: {}
     }
 
     expect(componentReducer(state, action)).toEqual({
-      initialName: component1.name,
       selectedComponent: { ...component1, title },
       errors: expect.any(Object),
       hasValidated: false
@@ -95,14 +93,12 @@ describe('Component reducer', () => {
     }
 
     const state: ComponentState = {
-      initialName: component1.name,
       selectedComponent: component1,
       hasValidated: false,
       errors: {}
     }
 
     expect(componentReducer(state, action)).toEqual({
-      initialName: component1.name,
       selectedComponent: component1,
       errors: expect.any(Object),
       hasValidated: true
