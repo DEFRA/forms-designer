@@ -8,8 +8,7 @@ import {
   hasNext,
   hasSection,
   slugify,
-  type Page,
-  type PageRepeat
+  type Page
 } from '@defra/forms-model'
 // @ts-expect-error -- No types available
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
@@ -163,8 +162,11 @@ export class PageEdit extends Component<Props, State> {
       // Remove default controller
       if (payload.controller === ControllerType.Page) {
         delete pageUpdate.controller
-      } else if (payload.controller === ControllerType.Repeat) {
-        ;(pageUpdate as PageRepeat).repeat.options.name = payload.repeatName
+      }
+
+      // Set repeat options
+      if (pageUpdate.controller === ControllerType.Repeat) {
+        pageUpdate.repeat.options.name = payload.repeatName
       }
     }
 
