@@ -27,10 +27,12 @@ export function confirmationPageViewModel(form, errorList) {
       ? { text: `It will replace the form that is currently live.` }
       : undefined,
 
-    bodyText: render.string(
-      'Completed forms will be sent to <a href="mailto:{{ teamEmail | urlencode }}" class="govuk-link">{{ teamEmail }}</a>.',
-      { context: form }
-    ),
+    bodyText: form.notificationEmail
+      ? render.string(
+          'Completed forms will be sent to <a href="mailto:{{ notificationEmail | urlencode }}" class="govuk-link">{{ notificationEmail }}</a>.',
+          { context: form }
+        )
+      : undefined,
 
     buttons: [
       {

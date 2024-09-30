@@ -13,9 +13,11 @@
         {{ govukWarningText(warning) }}
       {% endif %}
 
+      {% if bodyText %}
       <p class="govuk-body-l">
         {{ bodyText | safe }}
       </p>
+      {% endif %}
 
       <div class="govuk-button-group">
         {% for button in buttons %}
