@@ -80,15 +80,11 @@ export async function createServer() {
     expiresIn: config.sessionTtl
   })
 
-  server.method('session.get', async (id) => {
-    return await cache.get(id)
-  })
-  server.method('session.set', async (id, value, ttl = config.sessionTtl) => {
-    await cache.set(id, value, ttl)
-  })
-  server.method('session.drop', async (id) => {
-    await cache.drop(id)
-  })
+  server.method('session.get', (id) => cache.get(id))
+  server.method('session.set', (id, value, ttl = config.sessionTtl) =>
+    cache.set(id, value, ttl)
+  )
+  server.method('session.drop', (id) => cache.drop(id))
 
   await server.register(inert)
   await server.register(sessionManager)
