@@ -8,7 +8,8 @@ import {
   hasNext,
   hasSection,
   slugify,
-  type Page
+  type Page,
+  type PageRepeat
 } from '@defra/forms-model'
 // @ts-expect-error -- No types available
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
@@ -57,13 +58,14 @@ interface State extends Partial<Form> {
   isEditingSection: boolean
   isNewSection: boolean
   pages: Page[]
-  errors: Partial<ErrorList<'path' | 'title' | 'controller'>>
+  errors: Partial<ErrorList<'path' | 'title' | 'controller' | 'repeatName'>>
 }
 
 interface Form {
   path: string
   title: string
   controller: ControllerType
+  repeatName: string
 }
 
 export class PageEdit extends Component<Props, State> {
@@ -107,7 +109,11 @@ export class PageEdit extends Component<Props, State> {
     this.setState({
       path: page.path,
       title: page.title,
-      selectedSection: hasSection(page) ? page.section : undefined
+      selectedSection: hasSection(page) ? page.section : undefined,
+      repeatName:
+        page.controller === ControllerType.Repeat
+          ? page.repeat.options.name
+          : undefined
     })
   }
 
@@ -121,6 +127,7 @@ export class PageEdit extends Component<Props, State> {
       title,
       path,
       controller,
+      repeatName,
       defaults,
       linkFrom,
       selectedCondition,
@@ -131,7 +138,9 @@ export class PageEdit extends Component<Props, State> {
     const payload = {
       title: title?.trim(),
       path: hasFormComponents(defaults) ? `/${slugify(path)}` : defaults.path,
-      controller: controller ? defaults.controller : undefined
+      controller: controller ? defaults.controller : undefined,
+      repeatName:
+        controller === ControllerType.Repeat ? repeatName?.trim() : undefined
     }
 
     const { default: schema } = await import('joi')
@@ -154,6 +163,8 @@ export class PageEdit extends Component<Props, State> {
       // Remove default controller
       if (payload.controller === ControllerType.Page) {
         delete pageUpdate.controller
+      } else if (payload.controller === ControllerType.Repeat) {
+        ;(pageUpdate as PageRepeat).repeat.options.name = payload.repeatName
       }
     }
 
@@ -208,7 +219,7 @@ export class PageEdit extends Component<Props, State> {
     const { data } = this.context
     const { controller: selectedController } = this.state
 
-    const { controller, title, path } = payload
+    const { controller, title, path, repeatName } = payload
 
     const errors: State['errors'] = {}
 
@@ -256,6 +267,13 @@ export class PageEdit extends Component<Props, State> {
       errors.path ??= validateCustom('page-path', path, {
         message: 'page.errors.pathSummary',
         schema: schema.string().disallow(ControllerPath.Summary)
+      })
+    }
+
+    if (controller === ControllerType.Repeat) {
+      errors.repeatName = validateRequired('page-repeat-name', repeatName, {
+        label: i18n('addPage.repeatNameField.title'),
+        schema
       })
     }
 
@@ -349,6 +367,12 @@ export class PageEdit extends Component<Props, State> {
     })
   }
 
+  onChangeRepeatName = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value: repeatName } = e.target
+
+    this.setState({ repeatName })
+  }
+
   conditionSelected = (selectedCondition?: string) => {
     this.setState({
       selectedCondition
@@ -391,6 +415,7 @@ export class PageEdit extends Component<Props, State> {
       defaults,
       linkFrom,
       selectedSection,
+      repeatName,
       isEditingSection,
       isNewSection,
       pages,
@@ -606,6 +631,23 @@ export class PageEdit extends Component<Props, State> {
                 />
               )}
             </>
+          )}
+
+          {controller === ControllerType.Repeat && (
+            <Input
+              id="page-repeat-name"
+              name="repeat-name"
+              label={{
+                className: 'govuk-label--s',
+                children: [i18n('addPage.repeatNameField.title')]
+              }}
+              hint={{
+                children: [i18n('addPage.repeatNameField.helpText')]
+              }}
+              value={repeatName ?? ''}
+              onChange={this.onChangeRepeatName}
+              errorMessage={errors.repeatName}
+            />
           )}
 
           <div className="govuk-button-group">
