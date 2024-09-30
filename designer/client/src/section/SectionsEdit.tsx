@@ -1,4 +1,3 @@
-import { type Section } from '@defra/forms-model'
 import { Component, type ContextType, type MouseEvent } from 'react'
 
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
@@ -11,8 +10,8 @@ import { SectionEdit } from '~/src/section/SectionEdit.jsx'
 type Props = Record<string, never>
 
 interface State {
+  selectedSection?: string
   isEditingSection?: boolean
-  section?: Section
 }
 
 export class SectionsEdit extends Component<Props, State> {
@@ -21,30 +20,33 @@ export class SectionsEdit extends Component<Props, State> {
 
   state: State = {}
 
-  onClickSection = (e: MouseEvent, section?: Section) => {
+  onClickSection = (e: MouseEvent, selectedSection?: string) => {
     e.preventDefault()
 
     this.setState({
-      section,
+      selectedSection,
       isEditingSection: true
     })
   }
 
   closeFlyout = (sectionName?: string) => {
-    const { data } = this.context
-    const { section } = this.state
-
     this.setState({
-      isEditingSection: false,
-      section: sectionName ? findSection(data, sectionName) : section
+      selectedSection: sectionName,
+      isEditingSection: false
     })
   }
 
   render() {
     const { data } = this.context
-    const { section, isEditingSection } = this.state
+    const { selectedSection, isEditingSection } = this.state
 
     const { sections } = data
+
+    // Find section by name
+    const section =
+      isEditingSection && selectedSection
+        ? findSection(data, selectedSection)
+        : undefined
 
     return (
       <>
@@ -54,7 +56,7 @@ export class SectionsEdit extends Component<Props, State> {
               <a
                 className="govuk-link"
                 href="#section-edit"
-                onClick={(e) => this.onClickSection(e, section)}
+                onClick={(e) => this.onClickSection(e, section.name)}
               >
                 {section.title}
               </a>
@@ -77,7 +79,7 @@ export class SectionsEdit extends Component<Props, State> {
             <Flyout
               id="section-edit"
               title={
-                section?.title
+                section
                   ? i18n('section.editTitle', { title: section.title })
                   : i18n('section.add')
               }
