@@ -3,8 +3,7 @@ import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
-import { getUserClaims } from '~/src/common/helpers/auth/get-user-session.js'
-import { createUser } from '~/src/common/helpers/auth/user-session.js'
+import { hasUser } from '~/src/common/helpers/auth/get-user-session.js'
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
 import config from '~/src/config.js'
 import { checkFileStatus, createFileLink } from '~/src/lib/file.js'
@@ -27,12 +26,7 @@ export default [
     path: '/file-download/{fileId}',
     async handler(request, h) {
       const { params, yar, server, auth } = request
-      const { credentials } = auth
-
       const { fileId } = params
-
-      const claims = getUserClaims(credentials)
-      const user = createUser(credentials, claims)
 
       const statusCode = await checkFileStatus(fileId)
 
@@ -41,9 +35,13 @@ export default [
           const validation = yar.flash(
             sessionNames.validationFailure.fileDownload
           )[0]
+
+          const { credentials } = auth
+          const userId = hasUser(credentials) ? credentials.user.id : ''
+
           const email =
             (await server.methods.state.get(
-              user.id,
+              userId,
               sessionNames.fileDownloadPassword
             )) ?? ''
           return h.view(
@@ -88,14 +86,14 @@ export default [
       const { email } = payload
       const { fileId } = params
 
-      const claims = getUserClaims(credentials)
-      const user = createUser(credentials, claims)
-
       try {
         const { url } = await createFileLink(fileId, email, token)
 
+        const { credentials } = auth
+        const userId = hasUser(credentials) ? credentials.user.id : ''
+
         await server.methods.state.set(
-          user.id,
+          userId,
           sessionNames.fileDownloadPassword,
           email,
           config.fileDownloadPasswordTtl
