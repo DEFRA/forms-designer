@@ -18,7 +18,11 @@ import { removeSection } from '~/src/data/section/removeSection.js'
 import { updateSection } from '~/src/data/section/updateSection.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import randomId from '~/src/randomId.js'
-import { validateRequired, hasValidationErrors } from '~/src/validations.js'
+import {
+  hasValidationErrors,
+  validateCustom,
+  validateRequired
+} from '~/src/validations.js'
 
 interface Props {
   section?: Section
@@ -100,14 +104,29 @@ export class SectionEdit extends Component<Props, State> {
   }
 
   validate = (payload: Partial<Form>, schema: Root): payload is Form => {
-    const { title } = payload
+    const { data } = this.context
+    const { section } = this.props
 
     const errors: State['errors'] = {}
 
-    errors.title = validateRequired('section-title', title, {
+    const titles = data.sections
+      .filter(({ title }) => title !== section?.title)
+      .map(({ title }) => title)
+
+    errors.title = validateRequired('section-title', payload.title, {
       label: i18n('sectionEdit.titleField.title'),
       schema
     })
+
+    errors.title ??= validateCustom(
+      'section-title',
+      [...titles, payload.title],
+      {
+        message: 'errors.duplicate',
+        label: i18n('sectionEdit.titleField.title'),
+        schema: schema.array().unique()
+      }
+    )
 
     this.setState({ errors })
     return !hasValidationErrors(errors)

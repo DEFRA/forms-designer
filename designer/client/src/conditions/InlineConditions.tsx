@@ -26,7 +26,11 @@ import { removeCondition } from '~/src/data/condition/removeCondition.js'
 import { updateCondition } from '~/src/data/condition/updateCondition.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import randomId from '~/src/randomId.js'
-import { validateRequired, hasValidationErrors } from '~/src/validations.js'
+import {
+  hasValidationErrors,
+  validateCustom,
+  validateRequired
+} from '~/src/validations.js'
 
 interface Props {
   path?: string
@@ -198,14 +202,29 @@ export class InlineConditions extends Component<Props, State> {
   }
 
   validate = (payload: Partial<Form>, schema: Root): payload is Form => {
-    const { displayName } = payload
+    const { data } = this.context
+    const { condition } = this.props
 
     const errors: State['errors'] = {}
 
-    errors.name = validateRequired('cond-name', displayName, {
-      label: i18n('conditions.enterName'),
+    const displayNames = data.conditions
+      .filter(({ displayName }) => displayName !== condition?.displayName)
+      .map(({ displayName }) => displayName)
+
+    errors.name = validateRequired('cond-name', payload.displayName, {
+      label: i18n('conditions.displayName'),
       schema
     })
+
+    errors.name ??= validateCustom(
+      'cond-name',
+      [...displayNames, payload.displayName],
+      {
+        message: 'errors.duplicate',
+        label: i18n('conditions.displayName'),
+        schema: schema.array().unique()
+      }
+    )
 
     this.setState({ errors })
     return !hasValidationErrors(errors)
