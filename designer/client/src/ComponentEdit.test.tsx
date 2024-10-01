@@ -7,29 +7,31 @@ import {
   hasListField,
   OperatorName,
   type ComponentDef,
-  type FormDefinition
+  type FormDefinition,
+  type Page
 } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import lowerFirst from 'lodash/lowerFirst.js'
 
-import { ComponentTypeEdit } from '~/src/ComponentTypeEdit.jsx'
+import { ComponentEdit } from '~/src/ComponentEdit.jsx'
 import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
-describe('ComponentTypeEdit', () => {
+describe('ComponentEdit', () => {
+  let page: Page
   let data: FormDefinition
 
   beforeEach(() => {
+    page = {
+      title: 'First page',
+      path: '/first-page',
+      next: [],
+      components: []
+    }
+
     data = {
-      pages: [
-        {
-          title: 'First page',
-          path: '/first-page',
-          next: [],
-          components: []
-        }
-      ],
+      pages: [page],
       lists: [
         {
           name: 'myList',
@@ -274,7 +276,7 @@ describe('ComponentTypeEdit', () => {
         selectCondition: true
       }
     ]
-  ])('Component type edit: %s', (type, options) => {
+  ])('Component edit: %s', (type, options) => {
     let selectedComponent: ComponentDef
 
     beforeEach(() => {
@@ -282,7 +284,7 @@ describe('ComponentTypeEdit', () => {
 
       render(
         <RenderWithContext data={data} state={{ selectedComponent }}>
-          <ComponentTypeEdit />
+          <ComponentEdit page={page} onSave={jest.fn()} />
         </RenderWithContext>
       )
     })
