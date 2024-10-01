@@ -89,7 +89,6 @@ export default [
       try {
         const { url } = await createFileLink(fileId, email, token)
 
-        const { credentials } = auth
         const userId = hasUser(credentials) ? credentials.user.id : ''
 
         await server.methods.state.set(
