@@ -9,7 +9,6 @@ import {
 
 import { type ErrorList } from '~/src/ErrorSummary.jsx'
 import { logger } from '~/src/common/helpers/logging/logger.js'
-import randomId from '~/src/randomId.js'
 import {
   fieldsReducer,
   type FieldsReducerActions
@@ -35,11 +34,10 @@ import {
 } from '~/src/reducers/component/types.js'
 
 export interface ComponentState {
-  initialName: string
   selectedComponent?: ComponentDef
   hasValidated?: boolean
   showDeleteWarning?: boolean
-  errors: Partial<ErrorList<'title' | 'name' | 'content' | 'list'>>
+  errors: Partial<ErrorList<'title' | 'content' | 'list'>>
 }
 
 export type ReducerActions =
@@ -104,12 +102,9 @@ export function componentReducer(
 }
 
 export function initComponentState(
-  props?: Readonly<Partial<Omit<ComponentState, 'initialName'>>>
+  props?: Readonly<Partial<ComponentState>>
 ): ComponentState {
-  const { selectedComponent } = props ?? {}
-
   return {
-    initialName: selectedComponent?.name ?? randomId(),
     errors: {},
     ...props
   }

@@ -7,29 +7,31 @@ import {
   hasListField,
   OperatorName,
   type ComponentDef,
-  type FormDefinition
+  type FormDefinition,
+  type Page
 } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import lowerFirst from 'lodash/lowerFirst.js'
 
-import { ComponentTypeEdit } from '~/src/ComponentTypeEdit.jsx'
+import { ComponentEdit } from '~/src/ComponentEdit.jsx'
 import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
-describe('ComponentTypeEdit', () => {
+describe('ComponentEdit', () => {
+  let page: Page
   let data: FormDefinition
 
   beforeEach(() => {
+    page = {
+      title: 'First page',
+      path: '/first-page',
+      next: [],
+      components: []
+    }
+
     data = {
-      pages: [
-        {
-          title: 'First page',
-          path: '/first-page',
-          next: [],
-          components: []
-        }
-      ],
+      pages: [page],
       lists: [
         {
           name: 'myList',
@@ -73,7 +75,6 @@ describe('ComponentTypeEdit', () => {
     [
       ComponentType.AutocompleteField,
       {
-        name: true,
         hint: true,
         title: true,
         hideTitle: false,
@@ -86,7 +87,6 @@ describe('ComponentTypeEdit', () => {
     [
       ComponentType.CheckboxesField,
       {
-        name: true,
         hint: true,
         title: true,
         hideTitle: false,
@@ -99,7 +99,6 @@ describe('ComponentTypeEdit', () => {
     [
       ComponentType.DatePartsField,
       {
-        name: true,
         hint: true,
         title: true,
         hideTitle: false,
@@ -112,7 +111,6 @@ describe('ComponentTypeEdit', () => {
     [
       ComponentType.Details,
       {
-        name: false,
         hint: false,
         title: true,
         hideTitle: false,
@@ -125,7 +123,6 @@ describe('ComponentTypeEdit', () => {
     [
       ComponentType.EmailAddressField,
       {
-        name: true,
         hint: true,
         title: true,
         hideTitle: false,
@@ -138,7 +135,6 @@ describe('ComponentTypeEdit', () => {
     [
       ComponentType.Html,
       {
-        name: false,
         hint: false,
         title: false,
         hideTitle: false,
@@ -151,7 +147,6 @@ describe('ComponentTypeEdit', () => {
     [
       ComponentType.InsetText,
       {
-        name: false,
         hint: false,
         title: false,
         hideTitle: false,
@@ -164,7 +159,6 @@ describe('ComponentTypeEdit', () => {
     [
       ComponentType.List,
       {
-        name: false,
         hint: true,
         title: true,
         hideTitle: true,
@@ -177,7 +171,6 @@ describe('ComponentTypeEdit', () => {
     [
       ComponentType.MonthYearField,
       {
-        name: true,
         hint: true,
         title: true,
         hideTitle: false,
@@ -190,7 +183,6 @@ describe('ComponentTypeEdit', () => {
     [
       ComponentType.MultilineTextField,
       {
-        name: true,
         hint: true,
         title: true,
         hideTitle: false,
@@ -203,7 +195,6 @@ describe('ComponentTypeEdit', () => {
     [
       ComponentType.NumberField,
       {
-        name: true,
         hint: true,
         title: true,
         hideTitle: false,
@@ -216,7 +207,6 @@ describe('ComponentTypeEdit', () => {
     [
       ComponentType.RadiosField,
       {
-        name: true,
         hint: true,
         title: true,
         hideTitle: false,
@@ -229,7 +219,6 @@ describe('ComponentTypeEdit', () => {
     [
       ComponentType.SelectField,
       {
-        name: true,
         hint: true,
         title: true,
         hideTitle: false,
@@ -242,7 +231,6 @@ describe('ComponentTypeEdit', () => {
     [
       ComponentType.TelephoneNumberField,
       {
-        name: true,
         hint: true,
         title: true,
         hideTitle: false,
@@ -255,7 +243,6 @@ describe('ComponentTypeEdit', () => {
     [
       ComponentType.TextField,
       {
-        name: true,
         hint: true,
         title: true,
         hideTitle: false,
@@ -268,7 +255,6 @@ describe('ComponentTypeEdit', () => {
     [
       ComponentType.UkAddressField,
       {
-        name: true,
         hint: true,
         title: true,
         hideTitle: true,
@@ -281,7 +267,6 @@ describe('ComponentTypeEdit', () => {
     [
       ComponentType.YesNoField,
       {
-        name: true,
         hint: true,
         title: true,
         hideTitle: false,
@@ -291,7 +276,7 @@ describe('ComponentTypeEdit', () => {
         selectCondition: true
       }
     ]
-  ])('Component type edit: %s', (type, options) => {
+  ])('Component edit: %s', (type, options) => {
     let selectedComponent: ComponentDef
 
     beforeEach(() => {
@@ -299,7 +284,7 @@ describe('ComponentTypeEdit', () => {
 
       render(
         <RenderWithContext data={data} state={{ selectedComponent }}>
-          <ComponentTypeEdit />
+          <ComponentEdit page={page} onSave={jest.fn()} />
         </RenderWithContext>
       )
     })
@@ -386,27 +371,6 @@ describe('ComponentTypeEdit', () => {
         })
 
         expect($textarea).not.toBeInTheDocument()
-      })
-    }
-
-    if (options.name) {
-      it("should render 'Component name' input", () => {
-        const $input = screen.getByRole<HTMLInputElement>('textbox', {
-          name: 'Component name',
-          description:
-            'This is generated automatically and does not show on the page. Only change it if you are using an integration that requires you to, for example GOV.UK Notify. It must not contain spaces.'
-        })
-
-        expect($input).toBeInTheDocument()
-        expect($input).toHaveValue(selectedComponent.name)
-      })
-    } else {
-      it("should not render 'Component name' input", () => {
-        const $input = screen.queryByRole('textbox', {
-          name: 'Component name'
-        })
-
-        expect($input).not.toBeInTheDocument()
       })
     }
 

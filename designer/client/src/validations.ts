@@ -47,26 +47,6 @@ export const validateRequired: Validator<string> = (id, value, options) => {
   })
 }
 
-/**
- * No spaces validator
- */
-export const validateNoSpaces: Validator<string> = (id, value, options) => {
-  const { label, message, schema } = options
-
-  return validateCustom(id, value, {
-    label,
-    message: message ?? 'errors.spaces',
-    schema: schema.string().regex(/\s/, { invert: true }).required()
-  })
-}
-
-/**
- * Auto populated name validator
- */
-export const validateName: Validator<string> = (...args) => {
-  return validateRequired(...args) ?? validateNoSpaces(...args)
-}
-
 type Validator<
   ValueType extends ValidatorValue,
   OptionsType = {

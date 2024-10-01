@@ -53,10 +53,6 @@
       "helpText": "Apply CSS classes to this field. For example, ‘govuk-input govuk-!-width-full’",
       "title": "Classes"
     },
-    "componentNameField": {
-      "helpText": "This is generated automatically and does not show on the page. Only change it if you are using an integration that requires you to, for example GOV.UK Notify. It must not contain spaces.",
-      "title": "Component name"
-    },
     "componentOptionalOption": {
       "helpText": "Tick this box if users do not need to complete this field to progress through the form",
       "title": "Make {{component, lowerFirst}} optional"
@@ -378,10 +374,6 @@
     },
     "editHeader": {
       "title": "Edit sections"
-    },
-    "nameField": {
-      "helpText": "Automatically populated. It does not show on the page. You usually do not need to change it unless an integration requires it. It must not contain spaces.",
-      "title": "Section name"
     },
     "titleField": {
       "helpText": "Appears above the page title. However, if these titles are the same, the form will only show the page title.",

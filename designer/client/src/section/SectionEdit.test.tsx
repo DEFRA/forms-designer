@@ -5,27 +5,19 @@ import { SectionEdit } from '~/src/section/SectionEdit.jsx'
 import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
 describe('Section edit fields', () => {
-  test('should display titles and help texts', () => {
+  it('should display title and hint text', () => {
     render(
       <RenderWithContext>
         <SectionEdit onSave={jest.fn()} />
       </RenderWithContext>
     )
 
-    const $sectionTitleLabel = screen.getByText('Section title')
-    const $sectionTitleContent = screen.getByText(
-      'Appears above the page title. However, if these titles are the same, the form will only show the page title.'
-    )
+    const $sectionTitle = screen.getByRole('textbox', {
+      name: 'Section title',
+      description:
+        'Appears above the page title. However, if these titles are the same, the form will only show the page title.'
+    })
 
-    expect($sectionTitleLabel).toBeInTheDocument()
-    expect($sectionTitleContent).toBeInTheDocument()
-
-    const $sectionNameLabel = screen.getByText('Section name')
-    const $sectionNameContent = screen.getByText(
-      'Automatically populated. It does not show on the page. You usually do not need to change it unless an integration requires it. It must not contain spaces.'
-    )
-
-    expect($sectionNameLabel).toBeInTheDocument()
-    expect($sectionNameContent).toBeInTheDocument()
+    expect($sectionTitle).toBeInTheDocument()
   })
 })

@@ -32,7 +32,7 @@ export function ComponentEdit(props: Readonly<Props>) {
   const [isDeleting, setIsDeleting] = useState(false)
 
   const { page, onSave } = props
-  const { initialName, selectedComponent, errors, hasValidated = false } = state
+  const { selectedComponent, errors, hasValidated = false } = state
 
   const hasErrors = hasValidationErrors(errors)
   const onHandleSave = useCallback(handleSave, [handleSave])
@@ -69,7 +69,7 @@ export function ComponentEdit(props: Readonly<Props>) {
     const definition = updateComponent(
       data,
       page,
-      initialName,
+      selectedComponent.name,
       selectedComponent
     )
 

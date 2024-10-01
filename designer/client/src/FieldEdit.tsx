@@ -10,7 +10,6 @@ import { Input, Textarea } from '@xgovformbuilder/govuk-react-jsx'
 import classNames from 'classnames'
 import { useContext, type ChangeEvent, type ReactNode } from 'react'
 
-import { ErrorMessage } from '~/src/components/ErrorMessage/ErrorMessage.jsx'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 import { Fields, Options } from '~/src/reducers/component/types.js'
@@ -151,43 +150,6 @@ export function FieldEdit() {
       )}
       {hasInput && (
         <>
-          <div
-            className={classNames({
-              'govuk-form-group': true,
-              'govuk-form-group--error': errors.name
-            })}
-          >
-            <label className="govuk-label govuk-label--s" htmlFor="field-name">
-              {i18n('common.componentNameField.title')}
-            </label>
-            <div className="govuk-hint" id="field-name-hint">
-              {i18n('name.hint')}
-            </div>
-            {errors.name && (
-              <ErrorMessage id="field-name-error">
-                {errors.name.children}
-              </ErrorMessage>
-            )}
-            <input
-              className={classNames({
-                'govuk-input govuk-input--width-20': true,
-                'govuk-input--error': errors.name
-              })}
-              id="field-name"
-              aria-describedby={
-                'field-name-hint' + (errors.name ? 'field-name-error' : '')
-              }
-              name="name"
-              type="text"
-              value={selectedComponent.name}
-              onChange={(e) => {
-                dispatch({
-                  name: Fields.EDIT_NAME,
-                  payload: e.target.value
-                })
-              }}
-            />
-          </div>
           <div className="govuk-checkboxes govuk-form-group">
             <div className="govuk-checkboxes__item">
               <input
