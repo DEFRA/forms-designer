@@ -86,6 +86,13 @@ export async function createServer() {
   )
   server.method('session.drop', (id) => cache.drop(id))
 
+  server.method('state.get', (userId, key) => cache.get(userId + key))
+  server.method('state.set', (userId, key, value, ttl = config.sessionTtl) => {
+    if (!userId) return Promise.reject(new Error('userId is required'))
+    return cache.set(userId + key, value, ttl)
+  })
+  server.method('state.drop', (id) => cache.drop(id))
+
   await server.register(inert)
   await server.register(sessionManager)
 

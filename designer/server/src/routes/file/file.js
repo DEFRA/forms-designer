@@ -3,6 +3,8 @@ import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
+import { getUserClaims } from '~/src/common/helpers/auth/get-user-session.js'
+import { createUser } from '~/src/common/helpers/auth/user-session.js'
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
 import config from '~/src/config.js'
 import { checkFileStatus, createFileLink } from '~/src/lib/file.js'
@@ -24,8 +26,13 @@ export default [
     method: 'GET',
     path: '/file-download/{fileId}',
     async handler(request, h) {
-      const { params, yar, server } = request
+      const { params, yar, server, auth } = request
+      const { credentials } = auth
+
       const { fileId } = params
+
+      const claims = getUserClaims(credentials)
+      const user = createUser(credentials, claims)
 
       const statusCode = await checkFileStatus(fileId)
 
@@ -35,11 +42,10 @@ export default [
             sessionNames.validationFailure.fileDownload
           )[0]
           const email =
-            /** @type {string | undefined} */ (
-              await server.methods.session.get(
-                sessionNames.fileDownloadPassword
-              )
-            ) ?? ''
+            (await server.methods.state.get(
+              user.id,
+              sessionNames.fileDownloadPassword
+            )) ?? ''
           return h.view(
             'file/download-page',
             file.fileViewModel(email, validation)
@@ -77,14 +83,19 @@ export default [
     path: '/file-download/{fileId}',
     async handler(request, h) {
       const { payload, params, auth, server } = request
-      const { token } = auth.credentials
+      const { credentials } = auth
+      const { token } = credentials
       const { email } = payload
       const { fileId } = params
+
+      const claims = getUserClaims(credentials)
+      const user = createUser(credentials, claims)
 
       try {
         const { url } = await createFileLink(fileId, email, token)
 
-        await server.methods.session.set(
+        await server.methods.state.set(
+          user.id,
           sessionNames.fileDownloadPassword,
           email,
           config.fileDownloadPasswordTtl
