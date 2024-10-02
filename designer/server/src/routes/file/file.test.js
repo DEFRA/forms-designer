@@ -83,6 +83,7 @@ describe('File routes', () => {
         auth: { ...auth, credentials: {} }
       }
 
+      // @ts-expect-error: auth credentials are intentionally empty for this test case
       const { document } = await renderResponse(server, options)
 
       const html = document.documentElement.innerHTML
