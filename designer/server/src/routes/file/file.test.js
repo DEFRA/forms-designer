@@ -73,6 +73,24 @@ describe('File routes', () => {
 
       expect(html).toContain('The link has expired')
     })
+
+    test('should show unauthorized page when user is unauthorized', async () => {
+      jest.mocked(file.checkFileStatus).mockResolvedValueOnce(StatusCodes.OK)
+
+      const options = {
+        method: 'GET',
+        url: fileDownloadUrl,
+        auth: { ...auth, credentials: {} }
+      }
+
+      const { document } = await renderResponse(server, options)
+
+      const html = document.documentElement.innerHTML
+
+      expect(html).toContain(
+        'You do not have access to this service - Submit a form to Defra'
+      )
+    })
   })
 
   describe('POST', () => {
