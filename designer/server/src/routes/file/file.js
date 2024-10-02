@@ -41,15 +41,14 @@ export default [
             sessionNames.validationFailure.fileDownload
           )[0]
 
-          const email =
-            (await server.methods.state.get(
-              credentials.user.id,
-              sessionNames.fileDownloadPassword
-            )) ?? ''
+          const email = await server.methods.state.get(
+            credentials.user.id,
+            sessionNames.fileDownloadPassword
+          )
 
           return h.view(
             'file/download-page',
-            file.fileViewModel(email, validation)
+            file.fileViewModel(email ?? '', validation)
           )
         }
 
