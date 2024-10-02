@@ -20,7 +20,7 @@ describe('File routes', () => {
   })
 
   describe('GET', () => {
-    test('should show file download page with email when response is 200', async () => {
+    test('should show file download page with email (from cache) when file status response is 200', async () => {
       jest.mocked(file.checkFileStatus).mockResolvedValueOnce(StatusCodes.OK)
       jest.spyOn(server.methods.state, 'get').mockResolvedValue(email)
 
@@ -39,7 +39,7 @@ describe('File routes', () => {
       expect(html).toContain('new.email@gov.uk')
     })
 
-    test('should show file download page for user to enter email when response is 200', async () => {
+    test('should show file download page for user to enter email when file status response is 200', async () => {
       jest.mocked(file.checkFileStatus).mockResolvedValueOnce(StatusCodes.OK)
       jest.spyOn(server.methods.state, 'get').mockResolvedValue(undefined)
 
@@ -114,7 +114,7 @@ describe('File routes', () => {
       expect(html).toContain('Your file is downloading')
     })
 
-    test('should show link expired page when response is 410', async () => {
+    test('should show link expired page when download file link response is 410', async () => {
       jest.mocked(file.createFileLink).mockRejectedValue(Boom.resourceGone())
 
       const options = {
@@ -131,7 +131,7 @@ describe('File routes', () => {
       expect(html).toContain('The link has expired')
     })
 
-    test('should show email not the file was sent to error', async () => {
+    test('should show error when email is not for download file', async () => {
       jest.mocked(file.createFileLink).mockRejectedValue(Boom.forbidden())
 
       const options = {
