@@ -30,12 +30,11 @@ jobs:
 
       - name: Cache dependencies
         uses: actions/cache@v4
-        id: npm-install-cache
+        id: npm-install-model-cache
         with:
           enableCrossOsArchive: true
-          key: npm-install-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          key: npm-install-model-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
           path: |
-            designer/node_modules
             model/node_modules
             node_modules
 
@@ -43,7 +42,7 @@ jobs:
         uses: actions/cache@v4
         with:
           enableCrossOsArchive: true
-          key: npm-build-${{ runner.os }}-${{ github.sha }}
+          key: npm-build-model-${{ runner.os }}-${{ github.sha }}
           path: model/dist
 
       - name: Setup Node.js
@@ -53,11 +52,11 @@ jobs:
           node-version-file: .nvmrc
 
       - name: Install dependencies
-        if: steps.npm-install-cache.outputs.cache-hit != 'true'
-        run: npm ci
+        if: steps.npm-install-model-cache.outputs.cache-hit != 'true'
+        run: npm ci --workspace model --include-workspace-root
 
       - name: Run build
-        run: npm run build
+        run: npm run build --workspace model
 
   publish:
     name: Publish
@@ -75,9 +74,8 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           enableCrossOsArchive: true
-          key: npm-install-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          key: npm-install-model-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
           path: |
-            designer/node_modules
             model/node_modules
             node_modules
 
@@ -85,11 +83,8 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           enableCrossOsArchive: true
-          key: npm-build-${{ runner.os }}-${{ github.sha }}
-          path: |
-            designer/client/dist
-            designer/server/dist
-            model/dist
+          key: npm-build-model-${{ runner.os }}-${{ github.sha }}
+          path: model/dist
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
