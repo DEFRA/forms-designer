@@ -20,14 +20,7 @@ permissions:
 jobs:
   build:
     name: Build
-    runs-on: ${{ matrix.runner }}
-
-    strategy:
-      fail-fast: false
-
-      matrix:
-        runner:
-          - ubuntu-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Check out code
