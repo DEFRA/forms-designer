@@ -18,18 +18,17 @@ import { PageTypes } from '~/src/pages/page-types.js'
  * Return component defaults by type
  */
 export function getPageDefaults<PageType extends Page>(
-  page: Pick<PageType, 'controller'>
+  page?: Pick<PageType, 'controller'>
 ) {
-  const controller = controllerNameFromPath(
-    page.controller ?? ControllerType.Page
-  )
+  const nameOrPath = page?.controller ?? ControllerType.Page
+  const controller = controllerNameFromPath(nameOrPath)
 
   const defaults = PageTypes.find(
     (pageType) => pageType.controller === controller
   )
 
   if (!defaults) {
-    throw new Error(`Defaults not found for page type '${page.controller}'`)
+    throw new Error(`Defaults not found for page type '${nameOrPath}'`)
   }
 
   return structuredClone(defaults) as PageType
@@ -57,7 +56,7 @@ export function hasFormComponents(
  * Check page has sections
  */
 export function hasSection(
-  page: Partial<Page>
+  page?: Partial<Page>
 ): page is
   | RequiredField<PageStart, 'section'>
   | RequiredField<PageQuestion, 'section'>
