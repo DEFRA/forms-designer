@@ -22,6 +22,7 @@ describe('File routes', () => {
   describe('GET', () => {
     test('should show file download page when response is 200', async () => {
       jest.mocked(file.checkFileStatus).mockResolvedValueOnce(StatusCodes.OK)
+      jest.spyOn(server.methods.state, 'get').mockResolvedValue(email)
 
       const options = {
         method: 'GET',
@@ -59,6 +60,7 @@ describe('File routes', () => {
       jest
         .mocked(file.createFileLink)
         .mockResolvedValueOnce({ url: '/download-link' })
+      jest.spyOn(server.methods.state, 'get').mockResolvedValue(email)
 
       const options = {
         method: 'post',
