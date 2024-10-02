@@ -92,7 +92,7 @@ export async function createServer() {
     if (!userId) return Promise.reject(new Error('userId is not defined'))
     return cache.set(`${userId}.${key}`, value, ttl)
   })
-  server.method('state.drop', (id) => cache.drop(id))
+  server.method('state.drop', (userId, key) => cache.drop(`${userId}.${key}`))
 
   await server.register(inert)
   await server.register(sessionManager)

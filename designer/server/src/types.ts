@@ -23,7 +23,7 @@ interface UserSessionCache {
 }
 
 interface StateCache {
-  drop: (key: string) => Promise<void>
+  drop: (id: string, key: string) => Promise<void>
   get: (id: string, key: string) => Promise<string | undefined>
   set: (id: string, key: string, value: string, ttl?: number) => Promise<void>
 }

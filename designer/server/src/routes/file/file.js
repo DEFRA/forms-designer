@@ -27,6 +27,11 @@ export default [
     async handler(request, h) {
       const { params, yar, server, auth } = request
       const { fileId } = params
+      const { credentials } = auth
+
+      if (!hasUser(credentials)) {
+        return Boom.unauthorized()
+      }
 
       const statusCode = await checkFileStatus(fileId)
 
@@ -36,18 +41,16 @@ export default [
             sessionNames.validationFailure.fileDownload
           )[0]
 
-          const { credentials } = auth
-          const userId = hasUser(credentials) ? credentials.user.id : ''
-
-          const email =
-            (await server.methods.state.get(
-              userId,
-              sessionNames.fileDownloadPassword
-            )) ?? ''
-          return h.view(
-            'file/download-page',
-            file.fileViewModel(email, validation)
+          const email = await server.methods.state.get(
+            credentials.user.id,
+            sessionNames.fileDownloadPassword
           )
+
+          if (email && !validation.formValues.email) {
+            validation.formValues.email = email
+          }
+
+          return h.view('file/download-page', file.fileViewModel(validation))
         }
 
         case StatusCodes.GONE: {
@@ -86,13 +89,15 @@ export default [
       const { email } = payload
       const { fileId } = params
 
+      if (!hasUser(credentials)) {
+        return Boom.unauthorized()
+      }
+
       try {
         const { url } = await createFileLink(fileId, email, token)
 
-        const userId = hasUser(credentials) ? credentials.user.id : ''
-
         await server.methods.state.set(
-          userId,
+          credentials.user.id,
           sessionNames.fileDownloadPassword,
           email,
           config.fileDownloadPasswordTtl
