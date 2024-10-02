@@ -4,6 +4,11 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'model/.browserslistrc'
+      - 'model/babel.config.*'
+      - 'model/src/**'
+      - '!**/*.test.*'
 
 concurrency:
   group: publish-model
