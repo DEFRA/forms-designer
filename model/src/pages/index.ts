@@ -13,7 +13,6 @@ export {
   hasSection,
   hasNext,
   isControllerName,
-  isLinkablePage,
   isQuestionPage
 } from '~/src/pages/helpers.js'
 
