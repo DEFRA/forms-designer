@@ -85,7 +85,7 @@ export async function createServer() {
   server.method('session.drop', (id) => cache.drop(id))
 
   server.method('state.get', (userId, key) => cache.get(`${userId}.${key}`))
-  server.method('state.set', (userId, key, value, ttl = config.sessionTtl) =>
+  server.method('state.set', (userId, key, value, ttl) =>
     cache.set(`${userId}.${key}`, value, ttl)
   )
   server.method('state.drop', (userId, key) => cache.drop(`${userId}.${key}`))
