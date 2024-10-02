@@ -13,10 +13,6 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
-permissions:
-  contents: write
-  packages: write
-
 jobs:
   build:
     name: Build
@@ -59,7 +55,6 @@ jobs:
         with:
           cache: 'npm'
           node-version-file: .nvmrc
-          scope: '@defra'
 
       - name: Install dependencies
         if: steps.npm-install-cache.outputs.cache-hit != 'true'
@@ -211,62 +206,3 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-  publish:
-    name: Publish
-    runs-on: ubuntu-latest
-    needs: [build]
-    environment: production
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-
-    concurrency:
-      group: publish-packages
-      cancel-in-progress: false
-
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          ref: main
-
-      - name: Restore dependencies
-        uses: actions/cache/restore@v4
-        with:
-          enableCrossOsArchive: true
-          key: npm-install-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-          path: |
-            designer/node_modules
-            model/node_modules
-            node_modules
-
-      - name: Restore build
-        uses: actions/cache/restore@v4
-        with:
-          enableCrossOsArchive: true
-          key: npm-build-${{ runner.os }}-${{ github.sha }}
-          path: |
-            designer/client/dist
-            designer/server/dist
-            model/dist
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: .nvmrc
-          registry-url: https://registry.npmjs.org
-          scope: '@defra'
-
-      - name: Update package versions
-        run: npm version patch --workspaces --include-workspace-root --git-tag-version false --save
-
-      - name: Commit and push updates
-        run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git commit -am "v$(npm pkg get version | tr -d \") [skip ci]" && git push
-
-      - name: Publish to npm
-        run: npm publish --workspace model --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}

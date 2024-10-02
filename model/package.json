@@ -25,7 +25,9 @@
     "slug": "^9.1.0"
   },
   "devDependencies": {
-    "joi": "^17.13.3"
+    "@types/slug": "^5.0.9",
+    "joi": "^17.13.3",
+    "tsc-alias": "^1.8.10"
   },
   "peerDependencies": {
     "joi": "^17.0.0"

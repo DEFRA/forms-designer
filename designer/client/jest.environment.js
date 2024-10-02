@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom'
 
 import { initI18n } from '~/src/i18n/i18n.jsx'
-import translation from '~/src/i18n/translations/en.translation.json'
+import translation from '~/src/i18n/translations/en.translation.json' with { type: 'json' }
 
 /**
  * Polyfill `window.matchMedia()` for GOV.UK Frontend
