@@ -3,7 +3,7 @@ import {
   getPageDefaults,
   hasComponents,
   hasNext,
-  isQuestionPage,
+  hasFormComponents,
   PageTypes,
   slugify,
   type Page
@@ -104,7 +104,7 @@ export class PageCreate extends Component<Props, State> {
     // Remove trailing spaces and hyphens
     const payload = {
       title: title?.trim(),
-      path: isQuestionPage(defaults) ? `/${slugify(path)}` : defaults.path,
+      path: hasFormComponents(defaults) ? `/${slugify(path)}` : defaults.path,
       controller: controller ? defaults.controller : undefined
     }
 
@@ -227,7 +227,7 @@ export class PageCreate extends Component<Props, State> {
     const { value: path } = e.target
     const { defaults } = this.state
 
-    if (!isQuestionPage(defaults)) {
+    if (!hasFormComponents(defaults)) {
       return
     }
 
@@ -277,7 +277,7 @@ export class PageCreate extends Component<Props, State> {
     const { sections } = data
 
     const hasErrors = hasValidationErrors(errors)
-    const hasEditPath = !!controller && isQuestionPage(defaults)
+    const hasEditPath = !!controller && hasFormComponents(defaults)
     const hasEditSection = !!controller && hasNext(defaults)
     const hasEditLinkFrom = hasEditPath
 

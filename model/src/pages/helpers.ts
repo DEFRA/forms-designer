@@ -95,19 +95,6 @@ export function hasNext(
 }
 
 /**
- * Check page supports questions
- */
-export function isQuestionPage(page?: Partial<Page>): page is PageQuestion {
-  const controller = controllerNameFromPath(page?.controller)
-
-  return (
-    !controller ||
-    controller === ControllerType.Page ||
-    controller === ControllerType.FileUpload
-  )
-}
-
-/**
  * Check and optionally replace legacy path with controller name
  * @param {string} [nameOrPath] - Controller name or legacy controller path
  */

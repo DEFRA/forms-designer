@@ -12,8 +12,7 @@ export {
   hasFormComponents,
   hasSection,
   hasNext,
-  isControllerName,
-  isQuestionPage
+  isControllerName
 } from '~/src/pages/helpers.js'
 
 export { ControllerPath, ControllerType } from '~/src/pages/enums.js'
