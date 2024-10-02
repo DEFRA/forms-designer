@@ -2,7 +2,6 @@ import {
   ControllerPath,
   ControllerType,
   PageTypes,
-  controllerNameFromPath,
   getPageDefaults,
   hasComponents,
   hasNext,
@@ -48,10 +47,10 @@ interface Props {
 }
 
 interface State extends Partial<Form> {
+  defaults: Page
   selectedSection?: string
   isEditingSection: boolean
   isNewSection: boolean
-  isQuestionPage: boolean
   errors: Partial<ErrorList<'path' | 'title' | 'controller'>>
 }
 
@@ -66,26 +65,28 @@ export class PageEdit extends Component<Props, State> {
   static readonly contextType = DataContext
 
   state: State = {
+    defaults: getPageDefaults(),
     isEditingSection: false,
     isNewSection: false,
-    isQuestionPage: true,
     errors: {}
   }
 
   componentDidMount() {
     const { page } = this.props
 
+    const defaults = getPageDefaults({
+      controller: page.controller ?? ControllerType.Page
+    })
+
     const { path, title } = page
-    const controller = controllerNameFromPath(
-      page.controller ?? ControllerType.Page
-    )
+    const { controller } = defaults
 
     this.setState({
       path,
-      controller,
       title,
-      selectedSection: hasSection(page) ? page.section : undefined,
-      isQuestionPage: isQuestionPage(page)
+      controller,
+      defaults,
+      selectedSection: hasSection(page) ? page.section : undefined
     })
   }
 
@@ -95,18 +96,12 @@ export class PageEdit extends Component<Props, State> {
 
     const { page, onSave } = this.props
     const { save, data } = this.context
-    const { title, path, controller, selectedSection, isQuestionPage } =
-      this.state
-
-    // Page defaults
-    const defaults = getPageDefaults({
-      controller: controller ?? ControllerType.Page
-    })
+    const { title, path, controller, defaults, selectedSection } = this.state
 
     // Remove trailing spaces and hyphens
     const payload = {
       title: title?.trim(),
-      path: isQuestionPage ? `/${slugify(path)}` : defaults.path,
+      path: isQuestionPage(defaults) ? `/${slugify(path)}` : defaults.path,
       controller: controller ? defaults.controller : undefined
     }
 
@@ -250,11 +245,13 @@ export class PageEdit extends Component<Props, State> {
 
     const controller = value ? (value as ControllerType) : undefined
 
+    const defaults = getPageDefaults({
+      controller: controller ?? ControllerType.Page
+    })
+
     this.setState({
       controller,
-
-      // Allow question pages to edit section + path
-      isQuestionPage: controller ? isQuestionPage({ controller }) : false,
+      defaults,
 
       // Reset path errors when controller changes
       errors: {
@@ -273,9 +270,9 @@ export class PageEdit extends Component<Props, State> {
 
   onChangePath = (e: ChangeEvent<HTMLInputElement>) => {
     const { value: path } = e.target
-    const { isQuestionPage } = this.state
+    const { defaults } = this.state
 
-    if (!isQuestionPage) {
+    if (!isQuestionPage(defaults)) {
       return
     }
 
@@ -317,16 +314,19 @@ export class PageEdit extends Component<Props, State> {
       title,
       path,
       controller,
+      defaults,
       selectedSection,
       isEditingSection,
       isNewSection,
-      isQuestionPage,
       errors
     } = this.state
 
     const { sections } = data
 
     const hasErrors = hasValidationErrors(errors)
+    const hasEditPath = !!controller && isQuestionPage(defaults)
+    const hasEditSection = !!controller && hasNext(defaults)
+
     const pageTypes = PageTypes.filter(isControllerAllowed(data, page))
 
     // Find section by name
@@ -397,7 +397,7 @@ export class PageEdit extends Component<Props, State> {
             errorMessage={errors.title}
           />
 
-          {isQuestionPage && (
+          {hasEditPath && (
             <Input
               id="page-path"
               name="path"
@@ -414,7 +414,7 @@ export class PageEdit extends Component<Props, State> {
             />
           )}
 
-          {(isQuestionPage || controller === ControllerType.Start) && (
+          {hasEditSection && (
             <>
               {!sections.length && (
                 <>

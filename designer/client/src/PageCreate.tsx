@@ -45,12 +45,12 @@ interface Props {
 }
 
 interface State extends Partial<Form> {
+  defaults: Page
   linkFrom?: string
   selectedCondition?: string
   selectedSection?: string
   isEditingSection: boolean
   isNewSection: boolean
-  isQuestionPage: boolean
   pages: Page[]
   errors: Partial<ErrorList<'path' | 'title' | 'controller'>>
 }
@@ -66,10 +66,10 @@ export class PageCreate extends Component<Props, State> {
   static readonly contextType = DataContext
 
   state: State = {
+    defaults: getPageDefaults(),
     controller: ControllerType.Page,
     isEditingSection: false,
     isNewSection: false,
-    isQuestionPage: true,
     pages: [],
     errors: {}
   }
@@ -93,23 +93,18 @@ export class PageCreate extends Component<Props, State> {
     const { data, save } = this.context
     const {
       path,
-      controller,
       title,
+      controller,
+      defaults,
       linkFrom,
       selectedCondition,
-      selectedSection,
-      isQuestionPage
+      selectedSection
     } = this.state
-
-    // Page defaults
-    const defaults = getPageDefaults({
-      controller: controller ?? ControllerType.Page
-    })
 
     // Remove trailing spaces and hyphens
     const payload = {
       title: title?.trim(),
-      path: isQuestionPage ? `/${slugify(path)}` : defaults.path,
+      path: isQuestionPage(defaults) ? `/${slugify(path)}` : defaults.path,
       controller: controller ? defaults.controller : undefined
     }
 
@@ -205,11 +200,13 @@ export class PageCreate extends Component<Props, State> {
 
     const controller = value ? (value as ControllerType) : undefined
 
+    const defaults = getPageDefaults({
+      controller: controller ?? ControllerType.Page
+    })
+
     this.setState({
       controller,
-
-      // Allow question pages to edit section + path
-      isQuestionPage: controller ? isQuestionPage({ controller }) : false,
+      defaults,
 
       // Reset path errors when controller changes
       errors: {
@@ -228,9 +225,9 @@ export class PageCreate extends Component<Props, State> {
 
   onChangePath = (e: ChangeEvent<HTMLInputElement>) => {
     const { value: path } = e.target
-    const { isQuestionPage } = this.state
+    const { defaults } = this.state
 
-    if (!isQuestionPage) {
+    if (!isQuestionPage(defaults)) {
       return
     }
 
@@ -265,14 +262,14 @@ export class PageCreate extends Component<Props, State> {
   render() {
     const { data } = this.context
     const {
-      controller,
-      linkFrom,
       title,
       path,
+      controller,
+      defaults,
+      linkFrom,
       selectedSection,
       isEditingSection,
       isNewSection,
-      isQuestionPage,
       pages,
       errors
     } = this.state
@@ -280,6 +277,10 @@ export class PageCreate extends Component<Props, State> {
     const { sections } = data
 
     const hasErrors = hasValidationErrors(errors)
+    const hasEditPath = !!controller && isQuestionPage(defaults)
+    const hasEditSection = !!controller && hasNext(defaults)
+    const hasEditLinkFrom = hasEditPath
+
     const pageTypes = PageTypes.filter(
       isControllerAllowed(data, {
         controller,
@@ -355,7 +356,7 @@ export class PageCreate extends Component<Props, State> {
             errorMessage={errors.title}
           />
 
-          {isQuestionPage && (
+          {hasEditPath && (
             <Input
               id="page-path"
               name="path"
@@ -372,7 +373,7 @@ export class PageCreate extends Component<Props, State> {
             />
           )}
 
-          {(isQuestionPage || controller === ControllerType.Start) && (
+          {hasEditSection && (
             <>
               {!sections.length && (
                 <>
@@ -438,7 +439,7 @@ export class PageCreate extends Component<Props, State> {
             </>
           )}
 
-          {isQuestionPage && (
+          {hasEditLinkFrom && (
             <>
               {controller !== ControllerType.Start && (
                 <div className="govuk-form-group">
