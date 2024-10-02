@@ -41,7 +41,7 @@ export function getPageDefaults<PageType extends Page>(
 export function hasComponents(
   page?: Partial<Page>
 ): page is Extract<Page, { components: ComponentDef[] }> {
-  return isLinkablePage(page) && Array.isArray(page.components)
+  return hasNext(page) && Array.isArray(page.components)
 }
 
 /**
@@ -50,7 +50,7 @@ export function hasComponents(
 export function hasFormComponents(
   page?: Partial<Page>
 ): page is Extract<Page, { components: ComponentDef[] }> {
-  return isLinkablePage(page) && Array.isArray(page.components)
+  return hasNext(page) && Array.isArray(page.components)
 }
 
 /**
@@ -62,14 +62,7 @@ export function hasSection(
   | RequiredField<PageStart, 'section'>
   | RequiredField<PageQuestion, 'section'>
   | RequiredField<PageFileUpload, 'section'> {
-  return isLinkablePage(page) && typeof page.section === 'string'
-}
-
-/**
- * Check page has next link
- */
-export function hasNext(page?: Partial<Page>) {
-  return isLinkablePage(page)
+  return hasNext(page) && typeof page.section === 'string'
 }
 
 /**
@@ -82,9 +75,9 @@ export function isControllerName(
 }
 
 /**
- * Check page is linkable
+ * Check page has next link
  */
-export function isLinkablePage(
+export function hasNext(
   page?: Partial<Page>
 ): page is Extract<Page, { next: Link[] }> {
   if (!page || !('next' in page)) {
