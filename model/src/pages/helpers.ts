@@ -48,8 +48,9 @@ export function hasComponents(
  */
 export function hasFormComponents(
   page?: Partial<Page>
-): page is Extract<Page, { components: ComponentDef[] }> {
-  return hasNext(page) && Array.isArray(page.components)
+): page is PageQuestion | PageFileUpload {
+  const controller = controllerNameFromPath(page?.controller)
+  return hasComponents(page) && controller !== ControllerType.Start
 }
 
 /**
