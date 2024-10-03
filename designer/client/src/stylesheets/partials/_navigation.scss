@@ -28,17 +28,15 @@ $border-bottom-width: 4px;
 }
 
 .app-navigation__link {
-  @include govuk-link-style-no-visited-state;
-  @include govuk-font(24, "bold");
+  border: 0;
+  margin: govuk-spacing(2) 0 govuk-spacing(1);
+  padding-bottom: govuk-spacing(1);
+  display: inline-block;
+  text-decoration: none;
+  border-bottom: 4px solid transparent;
 
-  & {
-    border: 0;
-    margin: govuk-spacing(2) 0 govuk-spacing(1);
-    padding-bottom: govuk-spacing(1);
-    display: inline-block;
-    text-decoration: none;
-    border-bottom: 4px solid transparent;
-  }
+  @include govuk-font(24, "bold");
+  @include govuk-link-style-no-visited-state;
 
   @include govuk-media-query($from: tablet) {
     padding-bottom: 0;

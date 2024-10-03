@@ -9,8 +9,8 @@ $govuk-new-organisation-colours: true;
 @import "variables/all";
 @import "helpers/all";
 
-@import "../components/Flyout/Flyout.scss";
-@import "../components/Visualisation/visualisation.scss";
+@import "../components/Flyout/Flyout";
+@import "../components/Visualisation/visualisation";
 
 $app-code-font: ui-monospace, menlo, "Cascadia Mono", "Segoe UI Mono", consolas, "Liberation Mono", monospace;
 
@@ -46,12 +46,9 @@ $app-action-icon-large-offset: math.div($app-action-icon-large, 20);
   }
 }
 
-button.govuk-link {
+.govuk-link[type="button"] {
   @extend %app-button-link;
-
-  & {
-    padding: 0;
-  }
+  padding: 0;
 
   &:hover {
     cursor: pointer;
@@ -107,11 +104,9 @@ p code {
 
 .app-button--editor,
 .app-button--result {
-  & {
-    display: block;
-    width: 100%;
-    text-align: left;
-  }
+  display: block;
+  width: 100%;
+  text-align: left;
 
   &:hover,
   &:focus {
@@ -239,43 +234,47 @@ p code {
     height: $app-action-small;
     margin-bottom: 0;
 
-    &:after {
-      position: absolute;
-      left: 50%;
-      width: $app-action-icon-small;
-      height: $app-action-icon-small;
-      margin: math.div($app-action-icon-small, -2) 0 0 math.div($app-action-icon-small, -2);
-    }
-
     .app-results--panel & {
       display: flex;
       height: 100%;
       box-shadow: none;
     }
 
-    .app-results--panel &:after {
+    .app-results--panel &::after {
       margin-top: 0;
     }
 
     @include govuk-media-query($from: tablet) {
       width: $app-action-large;
       height: $app-action-large;
-
-      &:after {
-        width: $app-action-icon-large;
-        height: $app-action-icon-large;
-        margin: math.div($app-action-icon-large, -2) 0 0 math.div($app-action-icon-large, -2);
-      }
-
-      .app-results--panel & {
-        display: flex;
-        height: 100%;
-        box-shadow: none;
-      }
     }
   }
 
-  &__action-up:after {
+  @include govuk-media-query($from: tablet) {
+    .app-results--panel &__action-up,
+    .app-results--panel &__action-down {
+      display: flex;
+      height: 100%;
+      box-shadow: none;
+    }
+  }
+
+  &__action-up::after,
+  &__action-down::after {
+    position: absolute;
+    left: 50%;
+    width: $app-action-icon-small;
+    height: $app-action-icon-small;
+    margin: math.div($app-action-icon-small, -2) 0 0 math.div($app-action-icon-small, -2);
+
+    @include govuk-media-query($from: tablet) {
+      width: $app-action-icon-large;
+      height: $app-action-icon-large;
+      margin: math.div($app-action-icon-large, -2) 0 0 math.div($app-action-icon-large, -2);
+    }
+  }
+
+  &__action-up::after {
     top: calc(50% + $app-action-offset);
     content: "▲";
 
@@ -283,28 +282,28 @@ p code {
     // to the top of results panel rows
     .app-results--panel & {
       top: calc(govuk-spacing(3) - $app-action-icon-small-offset);
+    }
 
-      @include govuk-media-query($from: tablet) {
+    @include govuk-media-query($from: tablet) {
+      .app-results--panel & {
         top: calc(govuk-spacing(3) - $app-action-icon-large-offset);
       }
     }
   }
 
-  &__action-down:after {
+  &__action-down::after {
     content: "▼";
-
-    .app-results--panel & {
-      top: govuk-spacing(3);
-    }
 
     // Optically align down arrow (lower) when centred
     // within page visualisation components
-    & {
-      top: calc(50% + $app-action-offset + $app-action-icon-small-offset);
+    top: calc(50% + $app-action-offset + $app-action-icon-small-offset);
 
-      @include govuk-media-query($from: tablet) {
-        top: calc(50% + $app-action-offset + $app-action-icon-large-offset);
-      }
+    @include govuk-media-query($from: tablet) {
+      top: calc(50% + $app-action-offset + $app-action-icon-large-offset);
+    }
+
+    .app-results--panel & {
+      top: govuk-spacing(3);
     }
   }
 }
@@ -363,7 +362,7 @@ p code {
 %app-field-line {
   @extend %app-field-text;
   width: 80%;
-  border-width: 2px 0 0 0;
+  border-width: 2px 0 0;
 
   &,
   &:only-child {
@@ -435,7 +434,7 @@ p code {
 .app-field-checkbox {
   position: relative;
 
-  &--checked:before {
+  &--checked::before {
     position: absolute;
     display: block;
     top: 2px;
@@ -452,7 +451,7 @@ p code {
 .app-field-heading {
   @extend %app-field-text;
   width: 36%;
-  border-width: 4px 0 0 0;
+  border-width: 4px 0 0;
   margin-bottom: 4px;
 }
 
@@ -468,9 +467,11 @@ p code {
   &-m {
     width: 60%;
   }
+
   &-s {
     width: 30%;
   }
+
   &-xs {
     width: 10%;
   }
@@ -488,9 +489,11 @@ p code {
   &-m {
     width: 90px;
   }
+
   &-s {
     width: 45px;
   }
+
   &-xs {
     width: 25px;
   }
@@ -519,7 +522,7 @@ p code {
 .app-field-inset {
   padding-left: 20px;
 
-  &:before {
+  &::before {
     position: absolute;
     top: 10px;
     bottom: 10px;
@@ -558,42 +561,42 @@ p code {
 
 .app-icon {
   @extend %app-icon;
-  @include govuk-font-tabular-numbers();
+  @include govuk-font-tabular-numbers;
 
   &--autocomplete {
     column-gap: 1px;
 
-    &:before {
+    &::before {
       content: "Abc";
     }
 
-    &:after {
+    &::after {
       color: govuk-colour("mid-grey");
       content: "|";
     }
   }
 
-  &--details:before {
+  &--details::before {
     content: "▶";
   }
 
   &--dropdown {
     justify-content: end;
 
-    &:after {
+    &::after {
       content: "▼";
     }
   }
 
-  &--email:before {
+  &--email::before {
     content: "@";
   }
 
-  &--phone:before {
+  &--phone::before {
     content: "☎";
   }
 
-  &--number:before {
+  &--number::before {
     content: "123";
   }
 
@@ -601,12 +604,12 @@ p code {
     align-items: end;
     justify-content: end;
 
-    &:after {
+    &::after {
       content: "⌟";
     }
   }
 
-  &--bullet:before {
+  &--bullet::before {
     content: "•";
   }
 }
