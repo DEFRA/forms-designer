@@ -72,8 +72,7 @@ module.exports = {
               '.jsx': ''
             }
           }
-        ],
-        'babel-plugin-transform-import-meta'
+        ]
       ]
     }
   }

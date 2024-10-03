@@ -1,10 +1,31 @@
+const { CI } = process.env
+
 /**
  * Jest config defaults
  * @type {Partial<Config>}
  */
 export const defaults = {
+  coverageProvider: 'v8',
   maxWorkers: '50%',
-  reporters: ['default', ['github-actions', { silent: false }], 'summary'],
+  reporters: CI
+    ? [
+        [
+          'github-actions',
+          {
+            silent: false
+          }
+        ],
+        [
+          '@casualbot/jest-sonar-reporter',
+          {
+            outputName: 'report.xml',
+            suiteName: 'forms-designer',
+            relativePaths: true
+          }
+        ],
+        'summary'
+      ]
+    : ['default', 'summary'],
   silent: true
 }
 
@@ -15,8 +36,13 @@ export const defaults = {
 export const projectDefaults = {
   extensionsToTreatAsEsm: ['.jsx', '.ts', '.tsx'],
   clearMocks: true,
+  collectCoverageFrom: ['<rootDir>/src/**/*.{cjs,js,jsx,mjs,ts,tsx}'],
   coverageDirectory: '<rootDir>/coverage',
-  coveragePathIgnorePatterns: ['<rootDir>/test/', '<rootDir>/dist/'],
+  coveragePathIgnorePatterns: [
+    '/node_modules/',
+    '<rootDir>/dist/',
+    '<rootDir>/test/'
+  ],
   modulePathIgnorePatterns: ['<rootDir>/coverage/', '<rootDir>/dist/'],
   resetModules: true,
   restoreMocks: true,
@@ -24,6 +50,8 @@ export const projectDefaults = {
     '^.+\\.(cjs|js|jsx|mjs|ts|tsx)$': [
       'babel-jest',
       {
+        browserslistEnv: 'node',
+        plugins: ['transform-import-meta'],
         rootMode: 'upward'
       }
     ]
