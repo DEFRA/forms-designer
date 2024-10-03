@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
-import { hasUser } from '~/src/common/helpers/auth/get-user-session.js'
+import * as userSession from '~/src/common/helpers/auth/get-user-session.js'
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
 import config from '~/src/config.js'
 import { checkFileStatus, createFileLink } from '~/src/lib/file.js'
@@ -29,7 +29,7 @@ export default [
       const { fileId } = params
       const { credentials } = auth
 
-      if (!hasUser(credentials)) {
+      if (!userSession.hasUser(credentials)) {
         return Boom.unauthorized()
       }
 
@@ -88,7 +88,7 @@ export default [
       const { email } = payload
       const { fileId } = params
 
-      if (!hasUser(credentials)) {
+      if (!userSession.hasUser(credentials)) {
         return Boom.unauthorized()
       }
 

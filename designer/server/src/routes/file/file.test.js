@@ -1,6 +1,7 @@
 import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 
+import * as userSession from '~/src/common/helpers/auth/get-user-session.js'
 import { createServer } from '~/src/createServer.js'
 import * as file from '~/src/lib/file.js'
 import { auth } from '~/test/fixtures/auth.js'
@@ -75,22 +76,17 @@ describe('File routes', () => {
     })
 
     test('should show unauthorized page when user is unauthorized', async () => {
-      jest.mocked(file.checkFileStatus).mockResolvedValueOnce(StatusCodes.OK)
-
       const options = {
         method: 'GET',
         url: fileDownloadUrl,
-        auth: { ...auth, credentials: {} }
+        auth
       }
 
-      // @ts-expect-error: auth credentials are intentionally empty for this test case
-      const { document } = await renderResponse(server, options)
+      jest.spyOn(userSession, 'hasUser').mockReturnValue(false)
 
-      const html = document.documentElement.innerHTML
+      const result = await renderResponse(server, options)
 
-      expect(html).toContain(
-        'You do not have access to this service - Submit a form to Defra'
-      )
+      expect(result.response.statusCode).toBe(401)
     })
   })
 
@@ -151,25 +147,18 @@ describe('File routes', () => {
     })
 
     test('should show unauthorized page when user is unauthorized', async () => {
-      jest
-        .mocked(file.createFileLink)
-        .mockResolvedValueOnce({ url: '/download-link' })
-
       const options = {
         method: 'post',
         url: fileDownloadUrl,
-        auth: { ...auth, credentials: {} },
+        auth,
         payload: { email }
       }
 
-      // @ts-expect-error: auth credentials are intentionally empty for this test case
-      const { document } = await renderResponse(server, options)
+      jest.spyOn(userSession, 'hasUser').mockReturnValue(false)
 
-      const html = document.documentElement.innerHTML
+      const result = await renderResponse(server, options)
 
-      expect(html).toContain(
-        'You do not have access to this service - Submit a form to Defra'
-      )
+      expect(result.response.statusCode).toBe(401)
     })
   })
 })
