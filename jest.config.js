@@ -1,3 +1,5 @@
+const { CI } = process.env
+
 /**
  * Jest config defaults
  * @type {Partial<Config>}
@@ -5,7 +7,25 @@
 export const defaults = {
   coverageProvider: 'v8',
   maxWorkers: '50%',
-  reporters: ['default', ['github-actions', { silent: false }], 'summary'],
+  reporters: CI
+    ? [
+        [
+          'github-actions',
+          {
+            silent: false
+          }
+        ],
+        [
+          '@casualbot/jest-sonar-reporter',
+          {
+            outputName: 'report.xml',
+            suiteName: 'forms-designer',
+            relativePaths: true
+          }
+        ],
+        'summary'
+      ]
+    : ['default', 'summary'],
   silent: true
 }
 
