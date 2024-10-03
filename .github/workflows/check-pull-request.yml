@@ -82,16 +82,23 @@ jobs:
 
         task:
           - description: Prettier
+            name: lint-prettier
             run: npm run format:check
+            cache: .cache/prettier
 
           - description: EditorConfig
+            name: lint-editorconfig
             run: npm run lint:editorconfig
 
           - description: ESLint
+            name: lint-js
             run: npm run lint:js
+            cache: .cache/eslint
 
           - description: TypeScript compiler
-            run: npm run lint:types
+            name: lint-types
+            run: npm run lint:types -- --incremental --pretty
+            cache: '**/*.tsbuildinfo'
 
     steps:
       - name: Checkout
@@ -118,6 +125,15 @@ jobs:
             designer/client/dist
             designer/server/dist
             model/dist
+
+      - name: Cache task
+        if: ${{ matrix.task.cache }}
+        uses: actions/cache@v4
+        with:
+          enableCrossOsArchive: true
+          save-always: true
+          key: ${{ matrix.task.name }}-${{ runner.os }}
+          path: ${{ matrix.task.cache }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
