@@ -24,6 +24,7 @@ export const projectDefaults = {
     '^.+\\.(cjs|js|jsx|mjs|ts|tsx)$': [
       'babel-jest',
       {
+        plugins: ['transform-import-meta'],
         rootMode: 'upward'
       }
     ]
