@@ -3,6 +3,7 @@
  * @type {Partial<Config>}
  */
 export const defaults = {
+  coverageProvider: 'v8',
   maxWorkers: '50%',
   reporters: ['default', ['github-actions', { silent: false }], 'summary'],
   silent: true
