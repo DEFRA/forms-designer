@@ -149,6 +149,28 @@ describe('File routes', () => {
         'This is not the email address the file was sent to'
       )
     })
+
+    test('should show unauthorized page when user is unauthorized', async () => {
+      jest
+        .mocked(file.createFileLink)
+        .mockResolvedValueOnce({ url: '/download-link' })
+
+      const options = {
+        method: 'post',
+        url: fileDownloadUrl,
+        auth: { ...auth, credentials: {} },
+        payload: { email }
+      }
+
+      // @ts-expect-error: auth credentials are intentionally empty for this test case
+      const { document } = await renderResponse(server, options)
+
+      const html = document.documentElement.innerHTML
+
+      expect(html).toContain(
+        'You do not have access to this service - Submit a form to Defra'
+      )
+    })
   })
 })
 
