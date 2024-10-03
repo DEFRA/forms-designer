@@ -15,8 +15,13 @@ export const defaults = {
 export const projectDefaults = {
   extensionsToTreatAsEsm: ['.jsx', '.ts', '.tsx'],
   clearMocks: true,
+  collectCoverageFrom: ['<rootDir>/src/**/*.{cjs,js,jsx,mjs,ts,tsx}'],
   coverageDirectory: '<rootDir>/coverage',
-  coveragePathIgnorePatterns: ['<rootDir>/test/', '<rootDir>/dist/'],
+  coveragePathIgnorePatterns: [
+    '/node_modules/',
+    '<rootDir>/dist/',
+    '<rootDir>/test/'
+  ],
   modulePathIgnorePatterns: ['<rootDir>/coverage/', '<rootDir>/dist/'],
   resetModules: true,
   restoreMocks: true,
