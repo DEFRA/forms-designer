@@ -47,6 +47,10 @@ $govuk-breakpoints: (
       box-shadow: 0 0 0 6px $govuk-focus-colour;
     }
 
+    &--repeat {
+      box-shadow: 5px 10px #888;
+    }
+
     &__heading {
       position: relative;
       @include govuk-responsive-padding(2);
