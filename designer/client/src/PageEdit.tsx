@@ -643,7 +643,7 @@ export class PageEdit extends Component<Props, State> {
           {hasEditRepeater && (
             <Input
               id="page-repeat-title"
-              name="repeat-name"
+              name="repeat-title"
               label={{
                 className: 'govuk-label--s',
                 children: [i18n('addPage.repeatTitleField.title')]
