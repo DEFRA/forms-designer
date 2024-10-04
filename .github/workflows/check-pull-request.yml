@@ -198,7 +198,7 @@ jobs:
         with:
           enableCrossOsArchive: true
           save-always: true
-          key: ${{ matrix.task.name }}-${{ runner.os }}
+          key: ${{ matrix.task.name }}-${{ runner.os }}-${{ github.sha }}
           path: ${{ matrix.task.cache }}
 
       - name: Run task
@@ -229,7 +229,7 @@ jobs:
         with:
           enableCrossOsArchive: true
           fail-on-cache-miss: true
-          key: test-unit-${{ runner.os }}
+          key: test-unit-${{ runner.os }}-${{ github.sha }}
           path: coverage
 
       - name: SonarCloud Scan
