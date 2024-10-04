@@ -5,7 +5,6 @@ const { CI } = process.env
  * @type {Partial<Config>}
  */
 export const defaults = {
-  coverageProvider: 'v8',
   maxWorkers: '50%',
   reporters: CI
     ? [
