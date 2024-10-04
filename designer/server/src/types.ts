@@ -16,23 +16,33 @@ import {
   type ValidationFailure
 } from '~/src/common/helpers/types.js'
 
-interface SessionCache {
+interface UserSessionCache {
   drop: (key: string) => Promise<void>
   get: (key: string) => Promise<RequestAuth['credentials'] | undefined>
-  set: (key: string, credentials: RequestAuth['credentials']) => Promise<void>
+  set: (key: string, value: RequestAuth['credentials']) => Promise<void>
+}
+
+interface StateCache {
+  drop: (id: string, key: string) => Promise<void>
+  get: (id: string, key: string) => Promise<string | undefined>
+  set: (id: string, key: string, value: string, ttl?: number) => Promise<void>
 }
 
 declare module '@hapi/hapi' {
   // Here we are decorating Hapi interface types with
   // props from plugins which doesn't export @types
   interface Server {
-    method(name: 'session.drop', method: SessionCache['drop']): void
-    method(name: 'session.get', method: SessionCache['get']): void
-    method(name: 'session.set', method: SessionCache['set']): void
+    method(name: 'session.drop', method: UserSessionCache['drop']): void
+    method(name: 'session.get', method: UserSessionCache['get']): void
+    method(name: 'session.set', method: UserSessionCache['set']): void
+    method(name: 'state.drop', method: StateCache['drop']): void
+    method(name: 'state.get', method: StateCache['get']): void
+    method(name: 'state.set', method: StateCache['set']): void
   }
 
   interface ServerMethods {
-    session: SessionCache
+    session: UserSessionCache
+    state: StateCache
   }
 
   interface AuthArtifacts {

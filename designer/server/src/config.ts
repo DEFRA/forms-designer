@@ -20,6 +20,7 @@ export interface Config {
   isDevelopment: boolean
   isTest: boolean
   sessionTtl: number
+  fileDownloadPasswordTtl: number
   sessionCookieTtl: number
   sessionCookiePassword: string
   azureClientId: string
@@ -71,6 +72,7 @@ const schema = joi.object<Config>({
   isDevelopment: joi.boolean().default(true),
   isTest: joi.boolean().default(false),
   sessionTtl: joi.number().required(),
+  fileDownloadPasswordTtl: joi.number().required(),
   sessionCookieTtl: joi.number().required(),
   sessionCookiePassword: joi.string().required(),
   azureClientId: joi.string().required(),
@@ -99,6 +101,7 @@ const result = schema.validate(
     isDevelopment: !['production', 'test'].includes(`${process.env.NODE_ENV}`),
     isTest: process.env.NODE_ENV === 'test',
     sessionTtl: process.env.SESSION_TTL,
+    fileDownloadPasswordTtl: process.env.FILE_DOWNLOAD_PASSWORD_TTL,
     sessionCookiePassword: process.env.SESSION_COOKIE_PASSWORD,
     sessionCookieTtl: process.env.SESSION_COOKIE_TTL,
     azureClientId: process.env.AZURE_CLIENT_ID,

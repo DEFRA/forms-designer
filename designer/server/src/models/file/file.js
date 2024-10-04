@@ -2,9 +2,10 @@ import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { formsLibraryBackLink } from '~/src/models/links.js'
 
 /**
+ * @param { string } email
  * @param { ValidationFailure<{ email: string }> } [validation]
  */
-export function fileViewModel(validation) {
+export function fileViewModel(email, validation) {
   const pageTitle = 'You have a file to download'
   return {
     backLink: formsLibraryBackLink,
@@ -19,7 +20,7 @@ export function fileViewModel(validation) {
       label: {
         text: 'Email address'
       },
-      value: validation?.formValues.email
+      value: validation?.formValues.email ?? email
     },
     errorList: buildErrorList(validation?.formErrors, ['email']),
     formErrors: validation?.formErrors,
