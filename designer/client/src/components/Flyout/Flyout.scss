@@ -36,7 +36,7 @@
     min-width: 300px;
     box-sizing: border-box;
     position: relative;
-    background-color: #fff;
+    background-color: govuk-colour("white");
 
     &.large {
       width: 75%;
@@ -53,16 +53,6 @@
 
   &::backdrop {
     background-color: rgba(0, 0, 0, 0.5);
-  }
-
-  & h2 a {
-    color: #333;
-    margin-left: 15px;
-    text-decoration: none;
-  }
-
-  & h2 a:hover {
-    text-decoration: underline;
   }
 }
 

@@ -12,13 +12,10 @@ $govuk-breakpoints: (
 .visualisation {
   position: relative;
   flex: 1;
+  overflow-x: auto;
 
   @include govuk-responsive-padding(6, "top");
   @include govuk-responsive-padding(9, "bottom");
-
-  & {
-    overflow-x: auto;
-  }
 
   @include govuk-media-query($from: wide) {
     margin-left: (calc($govuk-page-width / 2) + govuk-spacing(5)) * -1;
@@ -60,14 +57,14 @@ $govuk-breakpoints: (
       display: flex;
       flex-direction: column;
       @include govuk-responsive-padding(3, "top");
+    }
 
-      .govuk-button {
-        margin-bottom: 1px;
+    &__actions .govuk-button {
+      margin-bottom: 1px;
 
-        &:last-child {
-          margin-bottom: 0;
-          box-shadow: none;
-        }
+      &:last-child {
+        margin-bottom: 0;
+        box-shadow: none;
       }
     }
   }

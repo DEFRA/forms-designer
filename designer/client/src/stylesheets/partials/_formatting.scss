@@ -1,16 +1,15 @@
 .formatting-example {
+  margin: govuk-spacing(3) 0 govuk-spacing(4);
+  background: govuk-colour("light-grey");
+  overflow-x: auto;
+  white-space: pre-wrap;
+
   @include govuk-responsive-padding(3, "top");
   @include govuk-responsive-padding(5, "right");
   @include govuk-responsive-padding(3, "bottom");
   @include govuk-responsive-padding(5, "left");
-  & {
-    margin: govuk-spacing(3) 0 govuk-spacing(4) 0;
-    background: govuk-colour("light-grey");
-    overflow-x: auto;
-    white-space: pre-wrap;
-  }
 }
 
-code.lang-md {
+.lang-md {
   @include govuk-font(19);
 }

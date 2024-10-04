@@ -95,6 +95,11 @@ jobs:
             run: npm run lint:js
             cache: .cache/eslint
 
+          - description: Stylelint
+            name: lint-scss
+            run: npm run lint:scss
+            cache: .cache/stylelint
+
           - description: TypeScript compiler
             name: lint-types
             run: npm run lint:types -- --incremental --pretty
