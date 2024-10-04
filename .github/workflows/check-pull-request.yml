@@ -159,9 +159,7 @@ jobs:
           - description: Unit tests
             name: test-unit
             run: npm run test
-            cache: |
-              coverage
-              report.xml
+            cache: coverage
 
     steps:
       - name: Checkout
@@ -232,9 +230,7 @@ jobs:
           enableCrossOsArchive: true
           fail-on-cache-miss: true
           key: test-unit-${{ runner.os }}
-          path: |
-            coverage
-            report.xml
+          path: coverage
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v3.0.0
