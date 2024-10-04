@@ -5,26 +5,9 @@ const { CI } = process.env
  * @type {Partial<Config>}
  */
 export const defaults = {
-  coverageProvider: 'v8',
   maxWorkers: '50%',
   reporters: CI
-    ? [
-        [
-          'github-actions',
-          {
-            silent: false
-          }
-        ],
-        [
-          '@casualbot/jest-sonar-reporter',
-          {
-            outputName: 'report.xml',
-            suiteName: 'forms-designer',
-            relativePaths: true
-          }
-        ],
-        'summary'
-      ]
+    ? [['github-actions', { silent: false }], 'summary']
     : ['default', 'summary'],
   silent: true
 }
