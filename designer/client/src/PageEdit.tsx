@@ -453,7 +453,7 @@ export class PageEdit extends Component<Props, State> {
               id="page-controller"
               aria-describedby={
                 'page-controller-hint' +
-                (errors.controller ? 'page-controller-error' : '')
+                (errors.controller ? ' page-controller-error' : '')
               }
               name="controller"
               value={controller ?? ''}

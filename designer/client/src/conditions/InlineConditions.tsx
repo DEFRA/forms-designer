@@ -264,7 +264,7 @@ export class InlineConditions extends Component<Props, State> {
             })}
             id="cond-name"
             aria-describedby={
-              'cond-name-hint' + (errors.name ? 'cond-name-error' : '')
+              'cond-name-hint' + (errors.name ? ' cond-name-error' : '')
             }
             name="cond-name"
             type="text"
