@@ -57,7 +57,9 @@ export function isComponentAllowed(page) {
     // File upload components not allowed on question pages
     const isQuestion =
       component.type !== ComponentType.FileUploadField &&
-      (!controller || controller === ControllerType.Page)
+      (!controller ||
+        controller === ControllerType.Page ||
+        controller === ControllerType.Repeat)
 
     // File upload pages can have a single file upload form component
     const isFileUpload =

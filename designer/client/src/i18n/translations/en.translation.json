@@ -42,7 +42,7 @@
       "title": "Section (optional)",
       "option": "Select a section"
     },
-    "repeatNameField": {
+    "repeatTitleField": {
       "helpText": "Appears in the caption above the page heading",
       "title": "Question set name"
     }

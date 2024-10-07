@@ -16,6 +16,7 @@ export interface PageBase {
 
 export interface RepeatOptions {
   name: string
+  title: string
 }
 
 export interface RepeatSchema {

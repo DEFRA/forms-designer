@@ -26,7 +26,7 @@ export const PageTypes: readonly Page[] = Object.freeze([
     path: '/add-another-page',
     controller: ControllerType.Repeat,
     repeat: {
-      options: { name: '' },
+      options: { name: '', title: '' },
       schema: { min: 1, max: 25 }
     },
     section: undefined,

@@ -29,7 +29,8 @@ export const ComponentCreateList = (props: Readonly<Props>) => {
   // Allow component pages to add input + selection fields
   const isComponentPage =
     controller === ControllerType.Page ||
-    controller === ControllerType.FileUpload
+    controller === ControllerType.FileUpload ||
+    controller === ControllerType.Repeat
 
   const componentList = useMemo(() => {
     return [...structuredClone(ComponentTypes)]

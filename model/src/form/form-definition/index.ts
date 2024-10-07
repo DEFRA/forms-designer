@@ -125,7 +125,8 @@ const nextSchema = Joi.object<Link>().keys({
 })
 
 const repeatOptions = Joi.object<RepeatOptions>().keys({
-  name: Joi.string().required()
+  name: Joi.string().required(),
+  title: Joi.string().required()
 })
 
 const repeatSchema = Joi.object<RepeatSchema>().keys({
