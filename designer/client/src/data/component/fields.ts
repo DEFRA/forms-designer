@@ -4,6 +4,7 @@ import {
   hasConditionSupport,
   hasFormField,
   hasListField,
+  hasRepeater,
   hasSection,
   type ConditionalComponentType,
   type ConditionalComponentsDef,
@@ -23,7 +24,10 @@ import { findSection } from '~/src/data/section/findSection.js'
  * with conditional support
  */
 export function getFields(data: FormDefinition) {
-  return data.pages.filter(hasComponents).flatMap(pageToFields.bind(data))
+  return data.pages
+    .filter(hasComponents)
+    .filter((page) => !hasRepeater(page))
+    .flatMap(pageToFields.bind(data))
 }
 
 /**
