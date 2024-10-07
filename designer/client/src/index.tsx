@@ -1,4 +1,4 @@
-import { type FormMetadata, type FormDefinition } from '@defra/forms-model'
+import { type FormDefinition, type FormMetadata } from '@defra/forms-model'
 import { Component } from 'react'
 import { createRoot } from 'react-dom/client'
 

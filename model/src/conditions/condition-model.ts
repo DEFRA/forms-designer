@@ -4,10 +4,10 @@ import { ConditionRef } from '~/src/conditions/condition-ref.js'
 import { Condition } from '~/src/conditions/condition.js'
 import { Coordinator } from '~/src/conditions/enums.js'
 import {
-  toPresentationString,
-  toExpression,
   hasConditionGroup,
-  hasConditionName
+  hasConditionName,
+  toExpression,
+  toPresentationString
 } from '~/src/conditions/helpers.js'
 import {
   type ConditionData,

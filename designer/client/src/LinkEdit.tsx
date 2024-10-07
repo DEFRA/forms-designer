@@ -27,9 +27,9 @@ import { findPage } from '~/src/data/page/findPage.js'
 import { updateLink } from '~/src/data/page/updateLink.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import {
-  validateRequired,
   hasValidationErrors,
-  validateCustom
+  validateCustom,
+  validateRequired
 } from '~/src/validations.js'
 
 interface Props {

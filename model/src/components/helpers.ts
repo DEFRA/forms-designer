@@ -2,8 +2,8 @@ import { ComponentTypes } from '~/src/components/component-types.js'
 import { ComponentType } from '~/src/components/enums.js'
 import {
   type ComponentDef,
-  type ConditionalComponentsDef,
   type ConditionalComponentType,
+  type ConditionalComponentsDef,
   type ContentComponentsDef,
   type FormComponentsDef,
   type HtmlComponent,

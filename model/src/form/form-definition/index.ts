@@ -7,8 +7,8 @@ import {
   type ConditionFieldData,
   type ConditionGroupData,
   type ConditionRefData,
-  type ConditionsModelData,
   type ConditionValueData,
+  type ConditionsModelData,
   type RelativeDateValueData
 } from '~/src/conditions/types.js'
 import {

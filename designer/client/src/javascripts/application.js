@@ -1,11 +1,11 @@
 import { ServiceHeader } from '@defra/forms-designer/server/src/common/components/service-header/service-header.js'
 import {
-  createAll,
   Button,
-  ErrorSummary,
   CharacterCount,
+  ErrorSummary,
+  NotificationBanner,
   Radios,
-  NotificationBanner
+  createAll
 } from 'govuk-frontend'
 
 createAll(Button)

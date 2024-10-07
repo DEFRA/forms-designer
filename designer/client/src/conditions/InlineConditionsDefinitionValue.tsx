@@ -1,9 +1,9 @@
 import {
-  absoluteDateOperatorNames,
-  relativeDateOperatorNames,
   ComponentType,
   ConditionType,
   ConditionValue,
+  absoluteDateOperatorNames,
+  relativeDateOperatorNames,
   type Condition,
   type ConditionData,
   type ConditionValueData,

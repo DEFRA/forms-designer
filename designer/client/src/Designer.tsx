@@ -3,7 +3,7 @@ import {
   type FormDefinition,
   type FormMetadata
 } from '@defra/forms-model'
-import { useCallback, useState, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
 import { Menu } from '~/src/components/Menu/Menu.jsx'
 import { Visualisation } from '~/src/components/Visualisation/Visualisation.jsx'

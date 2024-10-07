@@ -1,12 +1,12 @@
 import {
   ControllerPath,
   ControllerType,
+  PageTypes,
   getPageDefaults,
   hasComponents,
+  hasFormComponents,
   hasNext,
   hasSection,
-  hasFormComponents,
-  PageTypes,
   slugify,
   type Page
 } from '@defra/forms-model'
@@ -22,7 +22,7 @@ import {
   type MouseEvent
 } from 'react'
 
-import { type ErrorList, ErrorSummary } from '~/src/ErrorSummary.jsx'
+import { ErrorSummary, type ErrorList } from '~/src/ErrorSummary.jsx'
 import { logger } from '~/src/common/helpers/logging/logger.js'
 import { ErrorMessage } from '~/src/components/ErrorMessage/ErrorMessage.jsx'
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
@@ -39,9 +39,9 @@ import { isComponentAllowed, isControllerAllowed } from '~/src/helpers.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { SectionEdit } from '~/src/section/SectionEdit.jsx'
 import {
+  hasValidationErrors,
   validateCustom,
-  validateRequired,
-  hasValidationErrors
+  validateRequired
 } from '~/src/validations.js'
 
 interface Props {

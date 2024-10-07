@@ -2,7 +2,7 @@ import { conditionFrom } from '~/src/conditions/condition-model.js'
 import { type ConditionRef } from '~/src/conditions/condition-ref.js'
 import { type Condition } from '~/src/conditions/condition.js'
 import { type Coordinator } from '~/src/conditions/enums.js'
-import { toPresentationString, toExpression } from '~/src/conditions/helpers.js'
+import { toExpression, toPresentationString } from '~/src/conditions/helpers.js'
 import { type ConditionGroupData } from '~/src/conditions/types.js'
 
 export class ConditionGroup {
