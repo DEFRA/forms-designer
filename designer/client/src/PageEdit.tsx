@@ -1,12 +1,12 @@
 import {
   ControllerPath,
   ControllerType,
-  PageTypes,
   getPageDefaults,
   hasComponents,
   hasNext,
   hasSection,
   hasFormComponents,
+  PageTypes,
   slugify,
   type Page
 } from '@defra/forms-model'
@@ -27,7 +27,10 @@ import { logger } from '~/src/common/helpers/logging/logger.js'
 import { ErrorMessage } from '~/src/components/ErrorMessage/ErrorMessage.jsx'
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.jsx'
+import { SelectConditions } from '~/src/conditions/SelectConditions.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
+import { addLink } from '~/src/data/page/addLink.js'
+import { addPage } from '~/src/data/page/addPage.js'
 import { deleteLink } from '~/src/data/page/deleteLink.js'
 import { findPage } from '~/src/data/page/findPage.js'
 import { updateLinksTo } from '~/src/data/page/updateLinksTo.js'
@@ -42,15 +45,18 @@ import {
 } from '~/src/validations.js'
 
 interface Props {
-  page: Page
+  page?: Page
   onSave: () => void
 }
 
 interface State extends Partial<Form> {
   defaults: Page
+  linkFrom?: string
+  selectedCondition?: string
   selectedSection?: string
   isEditingSection: boolean
   isNewSection: boolean
+  pages: Page[]
   errors: Partial<ErrorList<'path' | 'title' | 'controller'>>
 }
 
@@ -68,24 +74,39 @@ export class PageEdit extends Component<Props, State> {
     defaults: getPageDefaults(),
     isEditingSection: false,
     isNewSection: false,
+    pages: [],
     errors: {}
   }
 
   componentDidMount() {
     const { page } = this.props
+    const { data } = this.context
 
     const defaults = getPageDefaults({
-      controller: page.controller ?? ControllerType.Page
+      controller: page?.controller ?? ControllerType.Page
     })
 
-    const { path, title } = page
-    const { controller } = defaults
+    // Sort pages for select menus
+    const pages = structuredClone(data.pages).sort(
+      ({ title: titleA }, { title: titleB }) => titleA.localeCompare(titleB)
+    )
 
+    // State for new or existing pages
     this.setState({
-      path,
-      title,
-      controller,
+      path: '/',
+      controller: defaults.controller,
       defaults,
+      pages
+    })
+
+    if (!page) {
+      return
+    }
+
+    // State for existing pages only
+    this.setState({
+      path: page.path,
+      title: page.title,
       selectedSection: hasSection(page) ? page.section : undefined
     })
   }
@@ -95,8 +116,16 @@ export class PageEdit extends Component<Props, State> {
     e.stopPropagation()
 
     const { page, onSave } = this.props
-    const { save, data } = this.context
-    const { title, path, controller, defaults, selectedSection } = this.state
+    const { data, save } = this.context
+    const {
+      title,
+      path,
+      controller,
+      defaults,
+      linkFrom,
+      selectedCondition,
+      selectedSection
+    } = this.state
 
     // Remove trailing spaces and hyphens
     const payload = {
@@ -114,9 +143,6 @@ export class PageEdit extends Component<Props, State> {
 
     let definition = structuredClone(data)
 
-    const pageEdit = findPage(definition, page.path)
-    const pageIndex = definition.pages.indexOf(pageEdit)
-
     const pageUpdate = defaults
     pageUpdate.title = payload.title
 
@@ -130,6 +156,24 @@ export class PageEdit extends Component<Props, State> {
         delete pageUpdate.controller
       }
     }
+
+    // Add new page
+    if (!page) {
+      definition = addPage(definition, pageUpdate)
+
+      if (linkFrom) {
+        const pageFrom = findPage(definition, linkFrom)
+
+        // Add link from the selected page
+        definition = addLink(definition, pageFrom, pageUpdate, {
+          condition: selectedCondition
+        })
+      }
+    }
+
+    // Edit existing (or newly added) page
+    const pageEdit = findPage(definition, page?.path ?? pageUpdate.path)
+    const pageIndex = definition.pages.indexOf(pageEdit)
 
     // Copy over allowed components only
     if (hasComponents(pageEdit) && hasComponents(pageUpdate)) {
@@ -148,7 +192,7 @@ export class PageEdit extends Component<Props, State> {
     // Update links
     definition = updateLinksTo(definition, pageEdit, pageUpdate)
 
-    // Update page
+    // Replace page with updated template
     definition.pages[pageIndex] = pageUpdate
 
     try {
@@ -160,25 +204,41 @@ export class PageEdit extends Component<Props, State> {
   }
 
   validate = (payload: Partial<Form>, schema: Root): payload is Form => {
-    const { controller } = this.state
+    const { page } = this.props
+    const { data } = this.context
+    const { controller: selectedController } = this.state
 
-    const { title, path } = payload
+    const { controller, title, path } = payload
 
     const errors: State['errors'] = {}
 
-    errors.controller = validateRequired('page-controller', controller, {
-      label: i18n('addPage.controllerOption.title'),
-      message: 'addPage.controllerOption.option',
-      schema
-    })
+    const paths = data.pages
+      .filter(({ path }) => path !== page?.path)
+      .map(({ path }) => path)
+
+    errors.controller = validateRequired(
+      'page-controller',
+      selectedController,
+      {
+        label: i18n('addPage.controllerOption.title'),
+        message: 'addPage.controllerOption.option',
+        schema
+      }
+    )
 
     errors.title = validateRequired('page-title', title, {
       label: i18n('addPage.pageTitleField.title'),
       schema
     })
 
+    errors.path = validateCustom('page-path', [path, ...paths], {
+      message: 'errors.duplicate',
+      label: `Path '${path}'`,
+      schema: schema.array().unique()
+    })
+
     // Path '/status' not allowed
-    errors.path = validateCustom('page-path', path, {
+    errors.path ??= validateCustom('page-path', path, {
       message: 'page.errors.pathStart',
       schema: schema.string().disallow(ControllerPath.Status)
     })
@@ -206,12 +266,12 @@ export class PageEdit extends Component<Props, State> {
   onClickDelete = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
 
-    if (!window.confirm('Confirm delete')) {
+    const { page, onSave } = this.props
+    const { data, save } = this.context
+
+    if (!window.confirm('Confirm delete') || !page) {
       return
     }
-
-    const { save, data } = this.context
-    const { page, onSave } = this.props
 
     let definition = structuredClone(data)
 
@@ -237,6 +297,14 @@ export class PageEdit extends Component<Props, State> {
     } catch (error) {
       logger.error(error, 'PageEdit')
     }
+  }
+
+  onChangeLinkFrom = (e: ChangeEvent<HTMLSelectElement>) => {
+    const { value: linkFrom } = e.target
+
+    this.setState({
+      linkFrom: linkFrom || undefined
+    })
   }
 
   onChangeController = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -281,6 +349,12 @@ export class PageEdit extends Component<Props, State> {
     })
   }
 
+  conditionSelected = (selectedCondition?: string) => {
+    this.setState({
+      selectedCondition
+    })
+  }
+
   editSection = (e: MouseEvent<HTMLAnchorElement>, isNewSection = false) => {
     e.preventDefault()
 
@@ -315,9 +389,11 @@ export class PageEdit extends Component<Props, State> {
       path,
       controller,
       defaults,
+      linkFrom,
       selectedSection,
       isEditingSection,
       isNewSection,
+      pages,
       errors
     } = this.state
 
@@ -326,8 +402,17 @@ export class PageEdit extends Component<Props, State> {
     const hasErrors = hasValidationErrors(errors)
     const hasEditPath = !!controller && hasFormComponents(defaults)
     const hasEditSection = !!controller && hasNext(defaults)
+    const hasEditLinkFrom = !page && hasEditPath
 
-    const pageTypes = PageTypes.filter(isControllerAllowed(data, page))
+    const pageTypes = PageTypes.filter(
+      isControllerAllowed(
+        data,
+        page ?? {
+          controller,
+          path
+        }
+      )
+    )
 
     // Find section by name
     const section =
@@ -480,17 +565,62 @@ export class PageEdit extends Component<Props, State> {
             </>
           )}
 
+          {hasEditLinkFrom && (
+            <>
+              {controller !== ControllerType.Start && (
+                <div className="govuk-form-group">
+                  <label
+                    className="govuk-label govuk-label--s"
+                    htmlFor="link-from"
+                  >
+                    {i18n('addPage.linkFromOption.title')}
+                  </label>
+                  <div className="govuk-hint" id="link-from-hint">
+                    {i18n('addPage.linkFromOption.helpText')}
+                  </div>
+                  <select
+                    className="govuk-select"
+                    id="link-from"
+                    aria-describedby="link-from-hint"
+                    name="from"
+                    value={linkFrom ?? ''}
+                    onChange={this.onChangeLinkFrom}
+                  >
+                    <option value="">
+                      {i18n('addPage.linkFromOption.option')}
+                    </option>
+                    {pages.filter(hasNext).map((page) => (
+                      <option key={page.path} value={page.path}>
+                        {page.title}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              {linkFrom && (
+                <SelectConditions
+                  path={linkFrom}
+                  conditionsChange={this.conditionSelected}
+                  noFieldsHintText={i18n('conditions.noFieldsAvailable')}
+                />
+              )}
+            </>
+          )}
+
           <div className="govuk-button-group">
             <button className="govuk-button" type="submit">
               {i18n('save')}
             </button>
-            <button
-              className="govuk-button govuk-button--warning"
-              type="button"
-              onClick={this.onClickDelete}
-            >
-              {i18n('delete')}
-            </button>
+            {page && (
+              <button
+                className="govuk-button govuk-button--warning"
+                type="button"
+                onClick={this.onClickDelete}
+              >
+                {i18n('delete')}
+              </button>
+            )}
           </div>
         </form>
 

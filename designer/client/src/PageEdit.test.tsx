@@ -2,10 +2,10 @@ import { type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { render } from '@testing-library/react'
 
-import { PageCreate } from '~/src/PageCreate.jsx'
+import { PageEdit } from '~/src/PageEdit.jsx'
 import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
-describe('page create fields text', () => {
+describe('Page edit', () => {
   const data = {
     pages: [],
     lists: [],
@@ -16,7 +16,7 @@ describe('page create fields text', () => {
   test('displays field titles and help texts', () => {
     render(
       <RenderWithContext data={data}>
-        <PageCreate onSave={jest.fn()} />
+        <PageEdit onSave={jest.fn()} />
       </RenderWithContext>
     )
 
