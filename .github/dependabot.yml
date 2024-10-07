@@ -69,6 +69,7 @@ updates:
       types:
         patterns:
           - '@types/*'
+          - 'oidc-client-ts'
 
     # Schedule run every Monday, local time
     schedule:
