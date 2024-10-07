@@ -19,10 +19,10 @@ import {
   type List,
   type Page,
   type PhaseBanner,
-  type Section,
-  type RepeatSchema,
+  type Repeat,
   type RepeatOptions,
-  type Repeat
+  type RepeatSchema,
+  type Section
 } from '~/src/form/form-definition/types.js'
 
 const sectionsSchema = Joi.object<Section>().keys({
