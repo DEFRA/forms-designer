@@ -27,9 +27,9 @@ import {
   type ListState
 } from '~/src/reducers/listReducer.jsx'
 import {
+  hasValidationErrors,
   validateCustom,
-  validateRequired,
-  hasValidationErrors
+  validateRequired
 } from '~/src/validations.js'
 
 function useListEdit() {

@@ -2,8 +2,8 @@ import {
   ComponentType,
   ComponentTypes,
   ConditionType,
-  getComponentDefaults,
   OperatorName,
+  getComponentDefaults,
   type ComponentDef,
   type FormDefinition
 } from '@defra/forms-model'

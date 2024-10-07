@@ -10,7 +10,7 @@ import {
   type MouseEvent
 } from 'react'
 
-import { type ErrorList, ErrorSummary } from '~/src/ErrorSummary.jsx'
+import { ErrorSummary, type ErrorList } from '~/src/ErrorSummary.jsx'
 import { logger } from '~/src/common/helpers/logging/logger.js'
 import { DataContext } from '~/src/context/DataContext.js'
 import { addSection } from '~/src/data/section/addSection.js'

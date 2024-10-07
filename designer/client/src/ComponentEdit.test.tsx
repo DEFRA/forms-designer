@@ -1,11 +1,11 @@
 import {
   ComponentType,
   ConditionType,
+  OperatorName,
   getComponentDefaults,
   hasConditionSupport,
   hasHint,
   hasListField,
-  OperatorName,
   type ComponentDef,
   type FormDefinition,
   type Page

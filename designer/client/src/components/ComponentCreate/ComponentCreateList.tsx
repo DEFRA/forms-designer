@@ -1,7 +1,7 @@
 import {
   ComponentTypes,
-  controllerNameFromPath,
   ControllerType,
+  controllerNameFromPath,
   hasComponents,
   hasContent,
   hasInputField,

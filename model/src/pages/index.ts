@@ -10,8 +10,8 @@ export {
   getPageDefaults,
   hasComponents,
   hasFormComponents,
-  hasSection,
   hasNext,
+  hasSection,
   isControllerName
 } from '~/src/pages/helpers.js'
 

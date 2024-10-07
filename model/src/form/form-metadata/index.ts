@@ -2,12 +2,12 @@ import Joi from 'joi'
 
 import {
   type FormMetadata,
-  type FormMetadataInput,
-  type FormMetadataState,
   type FormMetadataAuthor,
   type FormMetadataContact,
+  type FormMetadataContactEmail,
   type FormMetadataContactOnline,
-  type FormMetadataContactEmail
+  type FormMetadataInput,
+  type FormMetadataState
 } from '~/src/form/form-metadata/types.js'
 
 export const organisations = [

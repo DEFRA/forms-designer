@@ -1,7 +1,7 @@
 import {
   type ComponentDef,
-  type ListTypeOption,
-  type ListTypeContent
+  type ListTypeContent,
+  type ListTypeOption
 } from '@defra/forms-model'
 
 import {

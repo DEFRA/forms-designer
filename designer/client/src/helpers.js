@@ -1,7 +1,7 @@
 import {
   ComponentType,
-  controllerNameFromPath,
   ControllerType,
+  controllerNameFromPath,
   hasComponents,
   hasContent,
   hasNext

@@ -1,7 +1,7 @@
 export {
+  absoluteDateOperatorNames,
   getExpression,
   getOperatorNames,
-  absoluteDateOperatorNames,
   relativeDateOperatorNames
 } from '~/src/conditions/condition-operators.js'
 

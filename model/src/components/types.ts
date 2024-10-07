@@ -1,7 +1,7 @@
 import { type ComponentType } from '~/src/components/enums.js'
 import {
-  type ListTypeOption,
-  type ListTypeContent
+  type ListTypeContent,
+  type ListTypeOption
 } from '~/src/form/form-definition/types.js'
 
 export type ConditionalComponentType = Exclude<

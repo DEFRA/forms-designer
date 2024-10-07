@@ -1,8 +1,8 @@
 import { createServer } from '~/src/createServer.js'
 import {
   auth,
-  authScopesEmpty,
-  authGroupsInvalid
+  authGroupsInvalid,
+  authScopesEmpty
 } from '~/test/fixtures/auth.js'
 
 jest.mock('~/src/lib/forms.js')

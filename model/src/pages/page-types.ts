@@ -1,5 +1,5 @@
 import { type Page } from '~/src/form/form-definition/types.js'
-import { ControllerType, ControllerPath } from '~/src/pages/enums.js'
+import { ControllerPath, ControllerType } from '~/src/pages/enums.js'
 
 /**
  * Defaults for creating new pages

@@ -1,4 +1,4 @@
-import { type MouseEvent, type KeyboardEvent } from 'react'
+import { type KeyboardEvent, type MouseEvent } from 'react'
 import { useState } from 'react'
 
 export interface MenuItemHook {
