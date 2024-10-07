@@ -1,3 +1,4 @@
+import { type ParseKeys, type TOptions } from 'i18next'
 import { type Root, type Schema } from 'joi'
 
 import { type ErrorListItem } from '~/src/ErrorSummary.jsx'
@@ -15,7 +16,7 @@ export function validateCustom(
   value: ValidatorValue | undefined,
   options: {
     label?: string
-    message: string
+    message: ValidatorMessage
     schema: Schema
   }
 ): ErrorListItem | undefined {
@@ -51,7 +52,7 @@ type Validator<
   ValueType extends ValidatorValue,
   OptionsType = {
     label?: string
-    message?: string
+    message?: ValidatorMessage
     schema: Root
   }
 > = (
@@ -61,3 +62,4 @@ type Validator<
 ) => ErrorListItem | undefined
 
 export type ValidatorValue = string | number | boolean | unknown[] | undefined
+export type ValidatorMessage = ParseKeys<'translation', TOptions>

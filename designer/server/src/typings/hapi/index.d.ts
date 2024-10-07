@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/unified-signatures */
-
 import {
   type FormMetadataContact,
   type FormMetadataContactEmail,
@@ -104,10 +102,11 @@ declare module '@hapi/yar' {
 
   interface Yar {
     /**
-     * Get temporary redirect path for after sign in
+     * Get temporary string values from the session
+     * such as the redirect path for after sign in
      * (Deleted when read, e.g. after a redirect)
      */
-    flash(type: RedirectToKey): string[]
+    flash(type: RedirectToKey | SuccessNotification): string[]
 
     /**
      * Get temporary error messages from the session
@@ -149,12 +148,6 @@ declare module '@hapi/yar' {
      * Get temporary error messages relating to the current page.
      */
     flash(type: ErrorListKey): ErrorDetailsItem[]
-
-    /**
-     *
-     * @param type
-     */
-    flash(type: SuccessNotification): string[]
 
     /**
      * Get form metadata from the session
