@@ -4,6 +4,7 @@ import {
   type Page,
   type PageFileUpload,
   type PageQuestion,
+  type PageRepeat,
   type PageStart,
   type RequiredField
 } from '~/src/form/form-definition/types.js'
@@ -63,6 +64,13 @@ export function hasSection(
   | RequiredField<PageQuestion, 'section'>
   | RequiredField<PageFileUpload, 'section'> {
   return hasNext(page) && typeof page.section === 'string'
+}
+
+/**
+ * Check page has repeater
+ */
+export function hasRepeater(page?: Partial<Page>): page is PageRepeat {
+  return controllerNameFromPath(page?.controller) === ControllerType.Repeat
 }
 
 /**

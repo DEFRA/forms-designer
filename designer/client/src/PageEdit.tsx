@@ -6,6 +6,7 @@ import {
   hasComponents,
   hasFormComponents,
   hasNext,
+  hasRepeater,
   hasSection,
   slugify,
   type Page
@@ -109,10 +110,7 @@ export class PageEdit extends Component<Props, State> {
       path: page.path,
       title: page.title,
       selectedSection: hasSection(page) ? page.section : undefined,
-      repeatName:
-        page.controller === ControllerType.Repeat
-          ? page.repeat.options.name
-          : undefined
+      repeatName: hasRepeater(page) ? page.repeat.options.name : undefined
     })
   }
 
@@ -138,10 +136,7 @@ export class PageEdit extends Component<Props, State> {
       title: title?.trim(),
       path: hasFormComponents(defaults) ? `/${slugify(path)}` : defaults.path,
       controller: controller ? defaults.controller : undefined,
-      repeatName:
-        defaults.controller === ControllerType.Repeat
-          ? repeatName?.trim()
-          : undefined
+      repeatName: hasRepeater(defaults) ? repeatName?.trim() : undefined
     }
 
     const { default: schema } = await import('joi')
@@ -165,11 +160,11 @@ export class PageEdit extends Component<Props, State> {
       if (payload.controller === ControllerType.Page) {
         delete pageUpdate.controller
       }
+    }
 
-      // Set repeat options
-      if (pageUpdate.controller === ControllerType.Repeat) {
-        pageUpdate.repeat.options.name = payload.repeatName
-      }
+    // Set repeat options
+    if (hasRepeater(pageUpdate)) {
+      pageUpdate.repeat.options.name = payload.repeatName
     }
 
     // Add new page
@@ -431,6 +426,7 @@ export class PageEdit extends Component<Props, State> {
     const hasErrors = hasValidationErrors(errors)
     const hasEditPath = !!controller && hasFormComponents(defaults)
     const hasEditSection = !!controller && hasNext(defaults)
+    const hasEditRepeater = !!controller && hasRepeater(defaults)
     const hasEditLinkFrom = !page && hasEditPath
 
     const pageTypes = PageTypes.filter(
@@ -637,7 +633,7 @@ export class PageEdit extends Component<Props, State> {
             </>
           )}
 
-          {controller === ControllerType.Repeat && (
+          {hasEditRepeater && (
             <Input
               id="page-repeat-name"
               name="repeat-name"
