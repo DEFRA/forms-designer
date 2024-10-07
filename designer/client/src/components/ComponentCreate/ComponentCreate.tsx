@@ -117,8 +117,9 @@ export function ComponentCreate(props: Readonly<Props>) {
     onSave
   } = useComponentCreate(props)
 
-  const type = selectedComponent?.type
-  const componentName = i18n(`fieldTypeToName.${selectedComponent?.type}`)
+  const componentName = selectedComponent?.type
+    ? i18n(`fieldTypeToName.${selectedComponent.type}`)
+    : undefined
 
   return (
     <>
@@ -135,7 +136,7 @@ export function ComponentCreate(props: Readonly<Props>) {
         </Flyout>
       </RenderInPortal>
 
-      {type && (
+      {selectedComponent?.type && (
         <RenderInPortal>
           <Flyout
             id="component-type-edit"
