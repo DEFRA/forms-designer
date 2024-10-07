@@ -1,7 +1,10 @@
 import {
   ControllerType,
+  getPageDefaults,
   type FormDefinition,
   type Page,
+  type PageQuestion,
+  type PageRepeat,
   type Section
 } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
@@ -17,19 +20,40 @@ describe('Page edit: Existing page', () => {
   let data: FormDefinition
   let result: RenderResult
 
+  let pageQuestion: PageQuestion
+  let pageRepeat: PageRepeat
+
   beforeEach(() => {
+    pageQuestion = {
+      title: '',
+      path: '/',
+      next: [],
+      components: []
+    }
+
+    pageRepeat = {
+      title: '',
+      path: '/',
+      controller: ControllerType.Repeat,
+      repeat: {
+        options: { name: '', title: '' },
+        schema: { min: 1, max: 25 }
+      },
+      next: [],
+      components: []
+    }
+
     pages = [
       {
+        ...pageQuestion,
         title: 'Question page 1',
         path: '/question-one',
-        next: [{ path: '/question-two' }],
-        components: []
+        next: [{ path: '/question-two' }]
       },
       {
+        ...pageQuestion,
         title: 'Question page 2',
-        path: '/question-two',
-        next: [],
-        components: []
+        path: '/question-two'
       }
     ]
 
@@ -53,28 +77,40 @@ describe('Page edit: Existing page', () => {
       ControllerType.Start,
       {
         path: false,
-        section: true
+        section: true,
+        questionSet: false
       }
     ],
     [
       ControllerType.Page,
       {
         path: true,
-        section: true
+        section: true,
+        questionSet: false
+      }
+    ],
+    [
+      ControllerType.Repeat,
+      {
+        path: true,
+        section: true,
+        questionSet: true
       }
     ],
     [
       ControllerType.FileUpload,
       {
         path: true,
-        section: true
+        section: true,
+        questionSet: false
       }
     ],
     [
       ControllerType.Summary,
       {
         path: false,
-        section: false
+        section: false,
+        questionSet: false
       }
     ]
   ])('Fields: %s', (controller, options) => {
@@ -82,10 +118,8 @@ describe('Page edit: Existing page', () => {
     let section: Section
 
     beforeEach(() => {
-      page = pages[1]
+      page = getPageDefaults({ controller })
       section = sections[0]
-
-      page.controller = controller
 
       result = render(
         <RenderWithContext data={data}>
@@ -204,6 +238,65 @@ describe('Page edit: Existing page', () => {
       })
     }
 
+    if (options.questionSet) {
+      it("should render 'Question set' input (value empty)", () => {
+        const $input = screen.getByRole('textbox', {
+          name: 'Question set name',
+          description:
+            'Appears in the caption above the page title and on the button, for example, ‘Add another cow’'
+        })
+
+        expect($input).toBeInTheDocument()
+        expect($input).toHaveValue('')
+      })
+
+      it("should render 'Question set' input (value preselected)", () => {
+        result.unmount()
+
+        pageRepeat.repeat.options.title = 'Another cow'
+        page = pageRepeat
+
+        render(
+          <RenderWithContext data={data}>
+            <PageEdit page={page} onSave={jest.fn()} />
+          </RenderWithContext>
+        )
+
+        const $input = screen.getByRole('textbox', {
+          name: 'Question set name'
+        })
+
+        expect($input).toBeInTheDocument()
+        expect($input).toHaveValue('Another cow')
+      })
+
+      it("should not render 'Question set' input (changing page type)", async () => {
+        const $pageType = screen.getByRole('combobox', { name: 'Page type' })
+        await userEvent.selectOptions($pageType, ControllerType.Summary)
+
+        expect(
+          screen.queryByRole('textbox', { name: 'Question set name' })
+        ).not.toBeInTheDocument()
+      })
+    } else {
+      it("should not render 'Question set' input", () => {
+        const $input = screen.queryByRole('textbox', {
+          name: 'Question set name'
+        })
+
+        expect($input).not.toBeInTheDocument()
+      })
+
+      it("should render 'Question set' input (changing page type)", async () => {
+        const $pageType = screen.getByRole('combobox', { name: 'Page type' })
+        await userEvent.selectOptions($pageType, ControllerType.Repeat)
+
+        expect(
+          screen.getByRole('textbox', { name: 'Question set name' })
+        ).toBeInTheDocument()
+      })
+    }
+
     it("should not render 'Link from' options", () => {
       const $select = screen.queryByRole('combobox', {
         name: 'Link from (optional)'
@@ -259,6 +352,26 @@ describe('Page edit: Existing page', () => {
       await userEvent.click($buttonSave)
 
       expect(onSave).toHaveBeenCalled()
+    })
+
+    it('should allow save when valid (changing page type, add another)', async () => {
+      await userEvent.selectOptions($pageType, ControllerType.Repeat)
+
+      const $input = screen.getByRole('textbox', { name: 'Question set name' })
+      await userEvent.type($input, 'Another cow')
+      await userEvent.click($buttonSave)
+
+      expect(onSave).toHaveBeenCalled()
+    })
+
+    it('should prevent save when invalid (changing page type, add another)', async () => {
+      jest.spyOn(window, 'confirm').mockImplementation(() => false)
+
+      await userEvent.selectOptions($pageType, ControllerType.Repeat)
+      await userEvent.click($buttonDelete)
+
+      expect(window.confirm).toHaveBeenCalled()
+      expect(onSave).not.toHaveBeenCalled()
     })
 
     it('should prevent save when cancelling delete', async () => {
