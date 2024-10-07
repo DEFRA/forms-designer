@@ -48,7 +48,7 @@ $govuk-breakpoints: (
     }
 
     &--repeat {
-      box-shadow: 5px 10px #888;
+      box-shadow: 5px 10px rgba(govuk-colour("black"), 0.5);
     }
 
     &__heading {
