@@ -43,7 +43,7 @@
       "option": "Select a section"
     },
     "repeatTitleField": {
-      "helpText": "Appears in the caption above the page title and on the button, for example, ‘Add another cow’.",
+      "helpText": "Appears in the caption above the page title and on the button, for example, ‘Add another cow’",
       "title": "Question set name"
     }
   },
