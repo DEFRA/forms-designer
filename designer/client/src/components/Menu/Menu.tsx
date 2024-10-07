@@ -3,7 +3,7 @@ import { useContext } from 'react'
 
 import { DeclarationEdit } from '~/src/DeclarationEdit.jsx'
 import { LinkEdit } from '~/src/LinkEdit.jsx'
-import { PageCreate } from '~/src/PageCreate.jsx'
+import { PageEdit } from '~/src/PageEdit.jsx'
 import { DataPrettyPrint } from '~/src/components/DataPrettyPrint/DataPrettyPrint.jsx'
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import { SubMenu } from '~/src/components/Menu/SubMenu.jsx'
@@ -141,7 +141,7 @@ export function Menu() {
       {page.isVisible && (
         <RenderInPortal>
           <Flyout id="page-create" title={i18n('page.add')} onHide={page.hide}>
-            <PageCreate onSave={page.hide} />
+            <PageEdit onSave={page.hide} />
           </Flyout>
         </RenderInPortal>
       )}
