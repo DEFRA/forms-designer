@@ -6,6 +6,7 @@ import {
   hasComponents,
   hasFormComponents,
   hasNext,
+  hasRepeater,
   hasSection,
   slugify,
   type Page
@@ -37,6 +38,7 @@ import { updateLinksTo } from '~/src/data/page/updateLinksTo.js'
 import { findSection } from '~/src/data/section/findSection.js'
 import { isComponentAllowed, isControllerAllowed } from '~/src/helpers.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
+import randomId from '~/src/randomId.js'
 import { SectionEdit } from '~/src/section/SectionEdit.jsx'
 import {
   hasValidationErrors,
@@ -57,13 +59,14 @@ interface State extends Partial<Form> {
   isEditingSection: boolean
   isNewSection: boolean
   pages: Page[]
-  errors: Partial<ErrorList<'path' | 'title' | 'controller'>>
+  errors: Partial<ErrorList<'path' | 'title' | 'controller' | 'repeatTitle'>>
 }
 
 interface Form {
   path: string
   title: string
   controller: ControllerType
+  repeatTitle: string
 }
 
 export class PageEdit extends Component<Props, State> {
@@ -107,7 +110,8 @@ export class PageEdit extends Component<Props, State> {
     this.setState({
       path: page.path,
       title: page.title,
-      selectedSection: hasSection(page) ? page.section : undefined
+      selectedSection: hasSection(page) ? page.section : undefined,
+      repeatTitle: hasRepeater(page) ? page.repeat.options.title : undefined
     })
   }
 
@@ -121,6 +125,7 @@ export class PageEdit extends Component<Props, State> {
       title,
       path,
       controller,
+      repeatTitle,
       defaults,
       linkFrom,
       selectedCondition,
@@ -131,7 +136,8 @@ export class PageEdit extends Component<Props, State> {
     const payload = {
       title: title?.trim(),
       path: hasFormComponents(defaults) ? `/${slugify(path)}` : defaults.path,
-      controller: controller ? defaults.controller : undefined
+      controller: controller ? defaults.controller : undefined,
+      repeatTitle: hasRepeater(defaults) ? repeatTitle?.trim() : undefined
     }
 
     const { default: schema } = await import('joi')
@@ -155,6 +161,12 @@ export class PageEdit extends Component<Props, State> {
       if (payload.controller === ControllerType.Page) {
         delete pageUpdate.controller
       }
+    }
+
+    // Set repeat options
+    if (hasRepeater(pageUpdate)) {
+      pageUpdate.repeat.options.name = randomId()
+      pageUpdate.repeat.options.title = payload.repeatTitle
     }
 
     // Add new page
@@ -184,6 +196,11 @@ export class PageEdit extends Component<Props, State> {
       )
     }
 
+    // Copy over repeat option name
+    if (hasRepeater(pageEdit) && hasRepeater(pageUpdate)) {
+      pageUpdate.repeat.options.name = pageEdit.repeat.options.name
+    }
+
     // Copy over links
     if (hasNext(pageEdit) && hasNext(pageUpdate)) {
       pageUpdate.next = pageEdit.next
@@ -208,7 +225,7 @@ export class PageEdit extends Component<Props, State> {
     const { data } = this.context
     const { controller: selectedController } = this.state
 
-    const { controller, title, path } = payload
+    const { controller, title, path, repeatTitle } = payload
 
     const errors: State['errors'] = {}
 
@@ -256,6 +273,13 @@ export class PageEdit extends Component<Props, State> {
       errors.path ??= validateCustom('page-path', path, {
         message: 'page.errors.pathSummary',
         schema: schema.string().disallow(ControllerPath.Summary)
+      })
+    }
+
+    if (controller === ControllerType.Repeat) {
+      errors.repeatTitle = validateRequired('page-repeat-title', repeatTitle, {
+        label: i18n('addPage.repeatTitleField.title'),
+        schema
       })
     }
 
@@ -349,6 +373,12 @@ export class PageEdit extends Component<Props, State> {
     })
   }
 
+  onChangeRepeatTitle = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value: repeatTitle } = e.target
+
+    this.setState({ repeatTitle })
+  }
+
   conditionSelected = (selectedCondition?: string) => {
     this.setState({
       selectedCondition
@@ -391,6 +421,7 @@ export class PageEdit extends Component<Props, State> {
       defaults,
       linkFrom,
       selectedSection,
+      repeatTitle,
       isEditingSection,
       isNewSection,
       pages,
@@ -402,6 +433,7 @@ export class PageEdit extends Component<Props, State> {
     const hasErrors = hasValidationErrors(errors)
     const hasEditPath = !!controller && hasFormComponents(defaults)
     const hasEditSection = !!controller && hasNext(defaults)
+    const hasEditRepeater = !!controller && hasRepeater(defaults)
     const hasEditLinkFrom = !page && hasEditPath
 
     const pageTypes = PageTypes.filter(
@@ -606,6 +638,23 @@ export class PageEdit extends Component<Props, State> {
                 />
               )}
             </>
+          )}
+
+          {hasEditRepeater && (
+            <Input
+              id="page-repeat-title"
+              name="repeat-title"
+              label={{
+                className: 'govuk-label--s',
+                children: [i18n('addPage.repeatTitleField.title')]
+              }}
+              hint={{
+                children: [i18n('addPage.repeatTitleField.helpText')]
+              }}
+              value={repeatTitle ?? ''}
+              onChange={this.onChangeRepeatTitle}
+              errorMessage={errors.repeatTitle}
+            />
           )}
 
           <div className="govuk-button-group">

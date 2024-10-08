@@ -15,7 +15,8 @@ describe('Component create list: Supported page types', () => {
   const supported = [
     ControllerType.Start,
     ControllerType.Page,
-    ControllerType.FileUpload
+    ControllerType.FileUpload,
+    ControllerType.Repeat
   ]
 
   it.each(

@@ -11,6 +11,7 @@ export {
   hasComponents,
   hasFormComponents,
   hasNext,
+  hasRepeater,
   hasSection,
   isControllerName
 } from '~/src/pages/helpers.js'

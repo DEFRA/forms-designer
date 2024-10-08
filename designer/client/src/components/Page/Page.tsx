@@ -1,10 +1,12 @@
 import {
+  ControllerType,
   hasComponents,
   hasSection,
   slugify,
   type ComponentDef,
   type Page as PageType
 } from '@defra/forms-model'
+import classNames from 'classnames'
 import { useContext, useState, type CSSProperties } from 'react'
 
 import { Component } from '~/src/Component.jsx'
@@ -82,7 +84,13 @@ export const Page = (
   ).toString()
 
   return (
-    <div className="page" style={layout}>
+    <div
+      className={classNames({
+        page: true,
+        'page--repeat': page.controller === ControllerType.Repeat
+      })}
+      style={layout}
+    >
       <div className="page__heading">
         <h3 className="govuk-heading-m" id={headingId}>
           {section && <span className="govuk-caption-m">{section.title}</span>}

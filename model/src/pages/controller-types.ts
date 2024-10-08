@@ -14,6 +14,10 @@ export const ControllerTypes = [
     path: './pages/page.js'
   },
   {
+    name: ControllerType.Repeat,
+    path: './pages/repeat.js'
+  },
+  {
     name: ControllerType.FileUpload,
     path: './pages/file-upload.js'
   },

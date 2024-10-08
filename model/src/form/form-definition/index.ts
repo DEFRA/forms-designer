@@ -19,6 +19,9 @@ import {
   type List,
   type Page,
   type PhaseBanner,
+  type Repeat,
+  type RepeatOptions,
+  type RepeatSchema,
   type Section
 } from '~/src/form/form-definition/types.js'
 
@@ -121,6 +124,21 @@ const nextSchema = Joi.object<Link>().keys({
   redirect: Joi.string().optional()
 })
 
+const repeatOptions = Joi.object<RepeatOptions>().keys({
+  name: Joi.string().required(),
+  title: Joi.string().required()
+})
+
+const repeatSchema = Joi.object<RepeatSchema>().keys({
+  min: Joi.number().empty('').required(),
+  max: Joi.number().empty('').required()
+})
+
+const pageRepeatSchema = Joi.object<Repeat>().keys({
+  options: repeatOptions.required(),
+  schema: repeatSchema.required()
+})
+
 /**
  * `/status` is a special route for providing a user's application status.
  *  It should not be configured via the designer.
@@ -131,6 +149,11 @@ const pageSchema = Joi.object<Page>().keys({
   section: Joi.string(),
   controller: Joi.string().optional(),
   components: Joi.array<ComponentDef>().items(componentSchema).unique('name'),
+  repeat: Joi.when('controller', {
+    is: Joi.string().valid('RepeatPageController').required(),
+    then: pageRepeatSchema.required(),
+    otherwise: Joi.any().strip()
+  }),
   next: Joi.array<Link>().items(nextSchema)
 })
 
