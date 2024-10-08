@@ -1,5 +1,6 @@
 export enum ListActions {
   EDIT_TITLE = 'EDIT_TITLE',
+  EDIT_TYPE = 'EDIT_TYPE',
 
   SET_SELECTED_LIST = 'SET_SELECTED_LIST',
   ADD_NEW_LIST = 'ADD_NEW_LIST',
