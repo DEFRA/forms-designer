@@ -1,6 +1,6 @@
 import Joi from 'joi'
 
-import { type ComponentType } from '~/src/components/enums.js'
+import { ComponentType } from '~/src/components/enums.js'
 import { type ComponentDef } from '~/src/components/types.js'
 import {
   type ConditionData,
@@ -95,8 +95,24 @@ const conditionWrapperSchema = Joi.object<ConditionWrapper>().keys({
 export const componentSchema = Joi.object<ComponentDef>()
   .keys({
     type: Joi.string<ComponentType>().required(),
-    name: Joi.string().required(),
-    title: Joi.string().required(),
+    name: Joi.when('type', {
+      is: Joi.string().valid(
+        ComponentType.Details,
+        ComponentType.Html,
+        ComponentType.InsetText
+      ),
+      then: Joi.string().optional(),
+      otherwise: Joi.string()
+    }),
+    title: Joi.when('type', {
+      is: Joi.string().valid(
+        ComponentType.Details,
+        ComponentType.Html,
+        ComponentType.InsetText
+      ),
+      then: Joi.string().optional(),
+      otherwise: Joi.string().allow('')
+    }),
     hint: Joi.string().allow('').optional(),
     options: Joi.object({
       rows: Joi.number().empty(''),
