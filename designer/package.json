@@ -54,7 +54,7 @@
     "@types/hapi__cookie": "^12.0.5",
     "@types/hapi__crumb": "^7.3.7",
     "@types/hapi__inert": "^5.2.10",
-    "@types/lodash": "^4.17.9",
+    "@types/lodash": "^4.17.10",
     "@types/luxon": "^3.4.2",
     "@types/nunjucks": "^3.2.6",
     "@types/prismjs": "^1.26.4",
