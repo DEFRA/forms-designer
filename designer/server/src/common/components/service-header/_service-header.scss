@@ -100,7 +100,7 @@ $defra-link-colour-hover: govuk-shade($defra-link-colour, 50%);
   }
 
   &.cross-service-header__button--service-header {
-    @include toggle-button-focus($govuk-link-colour);
+    @include toggle-button-focus($defra-link-colour);
   }
 
   &.cross-service-header__button--one-login {
