@@ -1,3 +1,5 @@
+import { Component } from 'govuk-frontend'
+
 /**
  * Service header component
  *
@@ -5,21 +7,25 @@
  * To initialise the One Login header, run:
  * new window.ServiceHeader(document.querySelector("[data-module='one-login-header']"))
  */
-export class ServiceHeader {
-  $module
+export class ServiceHeader extends Component {
+  static moduleName = 'one-login-header'
+
   $navigation
 
   /**
-   * @param {Element | null} $module - HTML element to use for header
+   * @param {Element | null} $root - HTML element to use for header
    */
-  constructor($module) {
-    const $navigation = $module?.querySelectorAll('[data-one-login-header-nav]')
+  constructor($root) {
+    super($root)
 
-    if (!($module instanceof HTMLElement) || !$navigation?.length) {
+    const $navigation = this.$root.querySelectorAll(
+      `[data-${ServiceHeader.moduleName}-nav]`
+    )
+
+    if (!$navigation.length) {
       return
     }
 
-    this.$module = $module
     this.$navigation = $navigation
 
     /**

@@ -13,6 +13,4 @@ createAll(CharacterCount)
 createAll(ErrorSummary)
 createAll(Radios)
 createAll(NotificationBanner)
-
-// eslint-disable-next-line no-new
-new ServiceHeader(document.querySelector("[data-module='one-login-header']"))
+createAll(ServiceHeader)
