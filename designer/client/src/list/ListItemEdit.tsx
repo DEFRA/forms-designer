@@ -109,7 +109,10 @@ export function ListItemEdit() {
           errorMessage={errors.title}
         />
         <Textarea
-          label={{ children: i18n('list.item.help') }}
+          label={{
+            className: 'govuk-label--s',
+            children: i18n('list.item.help')
+          }}
           hint={{ children: i18n('list.item.helpHint') }}
           value={description ?? ''}
           name="list-item-hint"
@@ -117,7 +120,10 @@ export function ListItemEdit() {
           onChange={handleHintChange}
         />
         <Input
-          label={{ children: [i18n('list.item.value')] }}
+          label={{
+            className: 'govuk-label--s',
+            children: [i18n('list.item.value')]
+          }}
           hint={{ children: [i18n('list.item.valueHint')] }}
           id="value"
           name="list-item-value"
@@ -126,7 +132,7 @@ export function ListItemEdit() {
           onChange={handleValueChange}
         />
         <div className="govuk-form-group">
-          <label className="govuk-label" htmlFor="condition">
+          <label className="govuk-label govuk-label--s" htmlFor="condition">
             {i18n('list.item.conditions')}
           </label>
           <div className="govuk-hint" id="condition-hint">

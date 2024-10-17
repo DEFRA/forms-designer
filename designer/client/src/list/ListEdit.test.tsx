@@ -40,10 +40,12 @@ describe('ListEdit', () => {
 
     const $listCaption = screen.getByText('List items')
     const $listHint = screen.getByText('Enter a unique name for your list')
+    const $listType = screen.getByText('List type')
     const $listLink = screen.getByText('Add a new list item')
 
     expect($listCaption).toBeInTheDocument()
     expect($listHint).toBeInTheDocument()
+    expect($listType).toBeInTheDocument()
     expect($listLink).toBeInTheDocument()
   })
 })
