@@ -71,3 +71,16 @@ export interface SubmitPayload {
    */
   repeaters: SubmitRecordset[]
 }
+
+/**
+ * Interface for the submission-api `/submit` response payload
+ */
+export interface SubmitResponsePayload {
+  message: string
+  result: {
+    files: {
+      main: string
+      repeaters: Record<string, string>
+    }
+  }
+}
