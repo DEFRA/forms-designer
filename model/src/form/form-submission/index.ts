@@ -23,8 +23,8 @@ export const formSubmitRecordSchema = Joi.object<SubmitRecord>({
 export const formSubmitRecordsetSchema = Joi.object<SubmitRecordset>({
   name: Joi.string().required(),
   title: Joi.string().required(),
-  value: Joi.array()
-    .items(Joi.array().items(formSubmitRecordSchema).required())
+  value: Joi.array<SubmitRecord[]>()
+    .items(Joi.array<SubmitRecord>().items(formSubmitRecordSchema).required())
     .required()
 })
 
@@ -36,7 +36,9 @@ export const formSubmitPayloadSchema = Joi.object<SubmitPayload>()
   .keys({
     retrievalKey: Joi.string().required(),
     sessionId: Joi.string().required(),
-    main: Joi.array().items(formSubmitRecordSchema).required(),
-    repeaters: Joi.array().items(formSubmitRecordsetSchema).required()
+    main: Joi.array<SubmitRecord>().items(formSubmitRecordSchema).required(),
+    repeaters: Joi.array<SubmitRecordset>()
+      .items(formSubmitRecordsetSchema)
+      .required()
   })
   .required()
