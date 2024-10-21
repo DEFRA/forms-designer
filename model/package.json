@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "marked": "^14.1.2",
-    "slug": "^9.1.0"
+    "slug": "^10.0.0"
   },
   "devDependencies": {
     "@types/slug": "^5.0.9",
