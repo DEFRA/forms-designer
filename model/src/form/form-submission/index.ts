@@ -13,7 +13,7 @@ import {
 export const formSubmitRecordSchema = Joi.object<SubmitRecord>({
   name: Joi.string().required(),
   title: Joi.string().required(),
-  value: Joi.string().required()
+  value: Joi.string().required().allow('')
 })
 
 /**

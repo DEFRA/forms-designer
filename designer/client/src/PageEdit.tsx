@@ -531,6 +531,23 @@ export class PageEdit extends Component<Props, State> {
             />
           )}
 
+          {hasEditRepeater && (
+            <Input
+              id="page-repeat-title"
+              name="repeat-title"
+              label={{
+                className: 'govuk-label--s',
+                children: [i18n('addPage.repeatTitleField.title')]
+              }}
+              hint={{
+                children: [i18n('addPage.repeatTitleField.helpText')]
+              }}
+              value={repeatTitle ?? ''}
+              onChange={this.onChangeRepeatTitle}
+              errorMessage={errors.repeatTitle}
+            />
+          )}
+
           {hasEditSection && (
             <>
               {!sections.length && (
@@ -638,23 +655,6 @@ export class PageEdit extends Component<Props, State> {
                 />
               )}
             </>
-          )}
-
-          {hasEditRepeater && (
-            <Input
-              id="page-repeat-title"
-              name="repeat-title"
-              label={{
-                className: 'govuk-label--s',
-                children: [i18n('addPage.repeatTitleField.title')]
-              }}
-              hint={{
-                children: [i18n('addPage.repeatTitleField.helpText')]
-              }}
-              value={repeatTitle ?? ''}
-              onChange={this.onChangeRepeatTitle}
-              errorMessage={errors.repeatTitle}
-            />
           )}
 
           <div className="govuk-button-group">
