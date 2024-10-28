@@ -112,7 +112,7 @@
     "pino-pretty": "^11.2.2",
     "postcss-load-config": "^6.0.1",
     "postcss-loader": "^8.1.1",
-    "sass-embedded": "^1.79.4",
+    "sass-embedded": "^1.80.4",
     "sass-loader": "^16.0.2",
     "source-map-loader": "^5.0.0",
     "style-loader": "^4.0.0",
