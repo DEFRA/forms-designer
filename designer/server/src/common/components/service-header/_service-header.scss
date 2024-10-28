@@ -1,6 +1,4 @@
-@import "govuk-frontend/dist/govuk/base";
-@import "govuk-frontend/dist/govuk/objects/width-container";
-@import "govuk-frontend/dist/govuk/objects/grid";
+@use "govuk-frontend" as *;
 
 // start mixins and variables
 $govuk-header-link-underline-thickness: 3px;

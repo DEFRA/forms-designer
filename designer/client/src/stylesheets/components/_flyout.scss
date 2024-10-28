@@ -1,5 +1,4 @@
-@import "govuk-frontend/dist/govuk/base";
-@import "../../stylesheets/variables/colours";
+@use "govuk-frontend/dist/govuk/base" as *;
 
 .flyout {
   max-width: none;

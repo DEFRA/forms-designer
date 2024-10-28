@@ -1,3 +1,5 @@
+@use "govuk-frontend" as *;
+
 .app-form-card {
   background-color: govuk-colour("light-grey");
   padding: govuk-spacing(3);

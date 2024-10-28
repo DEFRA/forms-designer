@@ -1,3 +1,5 @@
+@use "govuk-frontend" as *;
+
 @include govuk-media-query($from: desktop) {
   .app-display-until-desktop {
     display: none;

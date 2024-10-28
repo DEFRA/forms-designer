@@ -1,16 +1,19 @@
 @use "sass:math";
 
-$govuk-assets-path: "/assets/";
-$govuk-new-organisation-colours: true;
+@use "govuk-frontend/dist/govuk/base" as * with (
+  $govuk-breakpoints: (
+    mobile: 320px,
+    tablet: 641px,
+    desktop: 769px,
+    wide: 1020px
+  )
+);
 
-@import "govuk-frontend/dist/govuk/base";
-@import "prismjs/themes/prism.min";
+@use "prismjs/themes/prism.min";
+@use "components/flyout";
+@use "components/visualisation";
 
-@import "variables/all";
-@import "helpers/all";
-
-@import "../components/Flyout/Flyout";
-@import "../components/Visualisation/visualisation";
+@use "variables/colours" as *;
 
 $app-code-font: ui-monospace, menlo, "Cascadia Mono", "Segoe UI Mono", consolas, "Liberation Mono", monospace;
 
