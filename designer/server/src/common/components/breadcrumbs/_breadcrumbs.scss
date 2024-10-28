@@ -1,3 +1,5 @@
+@use "govuk-frontend" as *;
+
 $font-size: 19;
 
 // Size of chevron (excluding border)
@@ -92,5 +94,13 @@ $chevron-altitude-calculated: govuk-em(5.655px, $font-size);
 
 .app-breadcrumbs__link {
   @include govuk-link-style-text;
-  @include app-link-style;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:focus {
+    text-decoration: none;
+  }
 }

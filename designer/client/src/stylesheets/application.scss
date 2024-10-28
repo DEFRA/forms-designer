@@ -1,10 +1,11 @@
-$govuk-assets-path: "/assets/";
-$govuk-new-organisation-colours: true;
+@use "govuk-frontend";
 
-@import "govuk-frontend/dist/govuk/all";
+@use "components/breadcrumbs";
+@use "components/form-card";
+@use "components/service-header";
+@use "components/button";
+@use "components/header";
 
-@import "variables/all";
-@import "helpers/all";
-@import "core/all";
-@import "components/all";
-@import "partials/all";
+@use "partials/formatting";
+@use "partials/grid";
+@use "partials/prose";

@@ -1,4 +1,4 @@
-@import "govuk-frontend/dist/govuk/helpers/colour";
+@use "govuk-frontend/dist/govuk/base" as *;
 
 $app-code-color: #d13118;
 $app-light-grey: #f8f8f8;

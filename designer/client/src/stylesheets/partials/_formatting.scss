@@ -1,3 +1,5 @@
+@use "govuk-frontend" as *;
+
 .formatting-example {
   margin: govuk-spacing(3) 0 govuk-spacing(4);
   background: govuk-colour("light-grey");
