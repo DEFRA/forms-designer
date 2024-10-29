@@ -92,7 +92,7 @@
   },
   "devDependencies": {
     "@testing-library/dom": "^10.4.0",
-    "@testing-library/jest-dom": "^6.5.0",
+    "@testing-library/jest-dom": "^6.6.2",
     "@testing-library/react": "^16.0.1",
     "@testing-library/user-event": "^14.5.2",
     "autoprefixer": "^10.4.20",
@@ -117,7 +117,7 @@
     "source-map-loader": "^5.0.0",
     "style-loader": "^4.0.0",
     "terser-webpack-plugin": "^5.3.10",
-    "tsx": "^4.19.1",
+    "tsx": "^4.19.2",
     "webpack": "^5.95.0",
     "webpack-assets-manifest": "^5.2.1",
     "webpack-cli": "^5.1.4"
