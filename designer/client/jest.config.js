@@ -26,8 +26,13 @@ export default {
     '\\.(ico|png|svg)$': '<rootDir>/test/mocks/webpack/image.cjs'
   },
 
-  // Transform React components to fix missing file extensions etc
+  // Enable Babel transforms for node_modules
+  // See: https://jestjs.io/docs/ecmascript-modules
   transformIgnorePatterns: [
-    '/node_modules/(?!@xgovformbuilder/govuk-react-jsx/.*)'
+    `node_modules/(?!${[
+      '@xgovformbuilder/govuk-react-jsx/.*',
+      'nanoid', // Supports ESM only
+      'slug' // Supports ESM only
+    ].join('|')}/)`
   ]
 }

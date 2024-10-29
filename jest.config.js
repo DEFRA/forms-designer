@@ -38,7 +38,16 @@ export const projectDefaults = {
         rootMode: 'upward'
       }
     ]
-  }
+  },
+
+  // Enable Babel transforms for node_modules
+  // See: https://jestjs.io/docs/ecmascript-modules
+  transformIgnorePatterns: [
+    `node_modules/(?!${[
+      'nanoid', // Supports ESM only
+      'slug' // Supports ESM only
+    ].join('|')}/)`
+  ]
 }
 
 /**
