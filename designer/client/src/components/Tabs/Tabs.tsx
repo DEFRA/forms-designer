@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 import { Tabs as TabsJS } from 'govuk-frontend'
-import { useEffect, useRef, type ComponentProps } from 'react'
+import { useEffect, useRef, useState, type ComponentProps } from 'react'
 
 interface Props extends ComponentProps<'div'> {
   idPrefix?: string
@@ -18,14 +18,14 @@ export function Tabs(props: Readonly<Props>) {
   title ??= 'Contents'
 
   const tabsRef = useRef<HTMLDivElement>(null)
+  const [instance, setInstance] = useState<TabsJS>()
 
   useEffect(() => {
-    if (tabsRef.current) {
-      // eslint-disable-next-line no-new
-      new TabsJS(tabsRef.current)
+    if (!instance && tabsRef.current) {
+      setInstance(new TabsJS(tabsRef.current))
       onInit?.()
     }
-  }, [tabsRef, onInit])
+  }, [instance, tabsRef, onInit])
 
   const tabContent = items.map((item, index) => {
     const { id, label, panel, ...linkAttributes } = item
