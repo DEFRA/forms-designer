@@ -8,7 +8,6 @@ const baseConfiguration: FormDefinition = {
   lists: [],
   sections: [],
   conditions: [],
-  skipSummary: false,
   phaseBanner: {}
 }
 

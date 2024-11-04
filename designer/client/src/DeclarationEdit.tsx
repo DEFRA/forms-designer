@@ -24,7 +24,6 @@ export class DeclarationEdit extends Component<Props> {
     const formData = new window.FormData(e.currentTarget)
 
     definition.declaration = formData.get('declaration')?.toString()
-    definition.skipSummary = formData.get('skip-summary') === 'on'
 
     try {
       await save(definition)
@@ -36,42 +35,10 @@ export class DeclarationEdit extends Component<Props> {
 
   render() {
     const { data } = this.context
-    const { declaration, skipSummary } = data
+    const { declaration } = data
 
     return (
       <form onSubmit={this.onSubmit} autoComplete="off" noValidate>
-        <div className="govuk-form-group">
-          <fieldset
-            className="govuk-fieldset"
-            aria-describedby="skip-summary-hint"
-          >
-            <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">
-              Skip summary page?
-            </legend>
-            <div className="govuk-hint" id="skip-summary-hint">
-              The user will not be shown a summary page, and will continue to
-              pay and/or the application complete page.
-            </div>
-            <div className="govuk-radios" data-module="govuk-radios">
-              <div className="govuk-checkboxes__item">
-                <input
-                  className="govuk-checkboxes__input"
-                  id="skip-summary"
-                  name="skip-summary"
-                  type="checkbox"
-                  defaultChecked={skipSummary}
-                />
-                <label
-                  className="govuk-label govuk-checkboxes__label"
-                  htmlFor="skip-summary"
-                >
-                  Skip summary
-                </label>
-              </div>
-            </div>
-          </fieldset>
-        </div>
-
         <Textarea
           id="field-declaration"
           name="declaration"
