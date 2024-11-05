@@ -1,29 +1,30 @@
 import { formDefinitionSchema } from '~/src/form/form-definition/index.js'
 import { type FormDefinition } from '~/src/form/form-definition/types.js'
 
-const baseConfiguration: FormDefinition = {
-  metadata: {},
-  startPage: '/first-page',
-  pages: [],
-  lists: [],
-  sections: [],
-  conditions: [],
-  phaseBanner: {}
-}
+describe('Form definition schema', () => {
+  let definition: FormDefinition
 
-test('allows feedback URL to be an empty string when feedbackForm is false', () => {
-  const goodConfiguration = {
-    ...baseConfiguration,
-    feedback: {
-      feedbackForm: false,
-      url: ''
-    },
-    name: 'Schema fix 3'
-  }
-
-  const { error } = formDefinitionSchema.validate(goodConfiguration, {
-    abortEarly: false
+  beforeEach(() => {
+    definition = {
+      pages: [],
+      lists: [],
+      sections: [],
+      conditions: []
+    }
   })
 
-  expect(error).toBeUndefined()
+  describe('Feedback', () => {
+    it("should allow empty feedback URL when 'feedbackForm' is false", () => {
+      definition.feedback = {
+        feedbackForm: false,
+        url: ''
+      }
+
+      const result = formDefinitionSchema.validate(definition, {
+        abortEarly: false
+      })
+
+      expect(result.error).toBeUndefined()
+    })
+  })
 })
