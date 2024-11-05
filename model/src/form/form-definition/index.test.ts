@@ -27,4 +27,18 @@ describe('Form definition schema', () => {
       expect(result.error).toBeUndefined()
     })
   })
+
+  describe('Summary', () => {
+    it("should remove legacy 'skipSummary' flag", () => {
+      // @ts-expect-error - Allow invalid property for test
+      definition.skipSummary = true
+
+      const result = formDefinitionSchema.validate(definition, {
+        abortEarly: false
+      })
+
+      expect(result.error).toBeUndefined()
+      expect(result.value).not.toHaveProperty('skipSummary')
+    })
+  })
 })

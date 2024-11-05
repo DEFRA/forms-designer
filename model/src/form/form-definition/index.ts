@@ -254,6 +254,7 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
     lists: Joi.array<List>().items(listSchema).unique('name').unique('title'),
     metadata: Joi.object({ a: Joi.any() }).unknown().optional(),
     declaration: Joi.string().allow('').optional(),
+    skipSummary: Joi.any().strip(),
     phaseBanner: phaseBannerSchema.optional(),
     outputEmail: Joi.string()
       .email({ tlds: { allow: ['uk'] } })
