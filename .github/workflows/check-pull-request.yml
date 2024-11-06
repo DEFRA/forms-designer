@@ -23,7 +23,7 @@ jobs:
 
       matrix:
         runner:
-          - ubuntu-latest
+          - ubuntu-24.04
 
     steps:
       - name: Check out code
@@ -78,7 +78,7 @@ jobs:
 
       matrix:
         runner:
-          - ubuntu-latest
+          - ubuntu-24.04
 
         task:
           - description: Prettier
@@ -157,7 +157,7 @@ jobs:
 
       matrix:
         runner:
-          - ubuntu-latest
+          - ubuntu-24.04
 
         task:
           - description: Unit tests
@@ -218,7 +218,7 @@ jobs:
   analysis:
     name: Analysis
     if: ${{ always() }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: [build, tasks]
 
     steps:
