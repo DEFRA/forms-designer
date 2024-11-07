@@ -140,6 +140,7 @@ export interface YesNoFieldComponent extends FormFieldBase {
 export interface MultilineTextFieldComponent extends FormFieldBase {
   type: ComponentType.MultilineTextField
   options: FormFieldBase['options'] & {
+    autocomplete?: string
     condition?: string
     customValidationMessage?: string
     rows?: number

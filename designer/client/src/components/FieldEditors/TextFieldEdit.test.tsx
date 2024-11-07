@@ -68,7 +68,7 @@ describe('Text field edit', () => {
         length: true,
         regex: true,
         classes: true,
-        autocomplete: false
+        autocomplete: true
       }
     ],
     [

@@ -13,6 +13,7 @@ export function Autocomplete() {
     !(
       selectedComponent?.type === ComponentType.TextField ||
       selectedComponent?.type === ComponentType.NumberField ||
+      selectedComponent?.type === ComponentType.MultilineTextField ||
       selectedComponent?.type === ComponentType.SelectField
     )
   ) {
