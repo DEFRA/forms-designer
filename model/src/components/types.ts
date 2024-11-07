@@ -93,6 +93,7 @@ export interface NumberFieldComponent extends FormFieldBase {
   options: FormFieldBase['options'] & {
     prefix?: string
     suffix?: string
+    autocomplete?: string
     condition?: string
     customValidationMessage?: string
   }

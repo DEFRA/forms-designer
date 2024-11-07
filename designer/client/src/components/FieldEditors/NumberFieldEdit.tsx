@@ -1,6 +1,7 @@
 import { ComponentType } from '@defra/forms-model'
 import { useContext } from 'react'
 
+import { Autocomplete } from '~/src/components/Autocomplete/Autocomplete.jsx'
 import { CssClasses } from '~/src/components/CssClasses/CssClasses.jsx'
 import { CustomValidationMessage } from '~/src/components/CustomValidationMessage/CustomValidationMessage.jsx'
 import { i18n } from '~/src/i18n/i18n.jsx'
@@ -160,6 +161,8 @@ export function NumberFieldEdit() {
             }
           />
         </div>
+
+        <Autocomplete />
 
         <CssClasses />
 

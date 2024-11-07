@@ -193,6 +193,30 @@ describe('Number field edit', () => {
       expect($input).toHaveValue('example')
     })
 
+    it("should render 'Autocomplete' input", () => {
+      const $input = screen.getByRole('textbox', {
+        name: 'Autocomplete',
+        description:
+          'Add the autocomplete attribute to this field. For example, ‘on’ or ‘given-name’'
+      })
+
+      expect($input).toBeInTheDocument()
+      expect($input).toHaveValue('')
+
+      result.rerender(
+        <RenderComponent
+          defaults={selectedComponent}
+          override={{
+            options: { autocomplete: 'tel-extension' }
+          }}
+        >
+          <NumberFieldEdit />
+        </RenderComponent>
+      )
+
+      expect($input).toHaveValue('tel-extension')
+    })
+
     it("should render 'Validation message' input", () => {
       const $input = screen.getByRole('textbox', {
         name: 'Validation message',
