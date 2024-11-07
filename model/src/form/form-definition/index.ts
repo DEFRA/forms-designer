@@ -1,4 +1,4 @@
-import Joi from 'joi'
+import Joi, { type LanguageMessages } from 'joi'
 
 import { ComponentType } from '~/src/components/enums.js'
 import { type ComponentDef } from '~/src/components/types.js'
@@ -119,7 +119,10 @@ export const componentSchema = Joi.object<ComponentDef>()
       maxWords: Joi.number().empty(''),
       maxDaysInPast: Joi.number().empty(''),
       maxDaysInFuture: Joi.number().empty(''),
-      customValidationMessage: Joi.string().allow('')
+      customValidationMessage: Joi.string().allow(''),
+      customValidationMessages: Joi.object<LanguageMessages>()
+        .unknown(true)
+        .optional()
     })
       .default({})
       .unknown(true),

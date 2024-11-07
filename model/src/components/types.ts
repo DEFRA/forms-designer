@@ -1,3 +1,5 @@
+import { type LanguageMessages } from 'joi'
+
 import { type ComponentType } from '~/src/components/enums.js'
 import {
   type ListTypeContent,
@@ -22,6 +24,7 @@ interface FormFieldBase {
     required?: boolean
     optionalText?: boolean
     classes?: string
+    customValidationMessages?: LanguageMessages
   }
 }
 
