@@ -141,8 +141,8 @@ export interface FormDefinition {
   name?: string
   feedback?: Feedback
   phaseBanner?: PhaseBanner
-  skipSummary?: boolean
   declaration?: string
+  skipSummary?: never
   metadata?: Record<string, unknown>
   outputEmail?: string
 }
