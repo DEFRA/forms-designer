@@ -1,3 +1,5 @@
+import { type LanguageMessages } from 'joi'
+
 import { type ComponentType } from '~/src/components/enums.js'
 import {
   type ListTypeContent,
@@ -22,6 +24,7 @@ interface FormFieldBase {
     required?: boolean
     optionalText?: boolean
     classes?: string
+    customValidationMessages?: LanguageMessages
   }
 }
 
@@ -90,6 +93,7 @@ export interface NumberFieldComponent extends FormFieldBase {
   options: FormFieldBase['options'] & {
     prefix?: string
     suffix?: string
+    autocomplete?: string
     condition?: string
     customValidationMessage?: string
   }
@@ -136,6 +140,7 @@ export interface YesNoFieldComponent extends FormFieldBase {
 export interface MultilineTextFieldComponent extends FormFieldBase {
   type: ComponentType.MultilineTextField
   options: FormFieldBase['options'] & {
+    autocomplete?: string
     condition?: string
     customValidationMessage?: string
     rows?: number

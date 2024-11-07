@@ -68,7 +68,7 @@ describe('Text field edit', () => {
         length: true,
         regex: true,
         classes: true,
-        autocomplete: false
+        autocomplete: true
       }
     ],
     [
@@ -305,14 +305,14 @@ describe('Text field edit', () => {
           <RenderComponent
             defaults={selectedComponent}
             override={{
-              options: { autocomplete: 'example' }
+              options: { autocomplete: 'given-name' }
             }}
           >
             <TextFieldEdit />
           </RenderComponent>
         )
 
-        expect($input).toHaveValue('example')
+        expect($input).toHaveValue('given-name')
       })
     } else {
       it("should not render 'Autocomplete' input", () => {

@@ -78,13 +78,13 @@ describe('Select field edit', () => {
       result.rerender(
         <RenderComponent
           defaults={selectedComponent}
-          override={{ options: { autocomplete: 'example' } }}
+          override={{ options: { autocomplete: 'bday' } }}
         >
           <SelectFieldEdit />
         </RenderComponent>
       )
 
-      expect($input).toHaveValue('example')
+      expect($input).toHaveValue('bday')
     })
   })
 })
