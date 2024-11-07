@@ -16,6 +16,8 @@ on:
       - 'Dockerfile'
       - '!**/*.test.*'
 
+  workflow_dispatch:
+
 concurrency:
   group: publish
 
