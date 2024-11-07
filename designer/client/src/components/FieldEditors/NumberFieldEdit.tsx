@@ -2,6 +2,7 @@ import { ComponentType } from '@defra/forms-model'
 import { useContext } from 'react'
 
 import { CssClasses } from '~/src/components/CssClasses/CssClasses.jsx'
+import { CustomValidationMessage } from '~/src/components/CustomValidationMessage/CustomValidationMessage.jsx'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 import { Options, Schema } from '~/src/reducers/component/types.js'
@@ -161,6 +162,8 @@ export function NumberFieldEdit() {
         </div>
 
         <CssClasses />
+
+        <CustomValidationMessage />
       </div>
     </details>
   )

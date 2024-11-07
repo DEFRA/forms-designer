@@ -192,5 +192,29 @@ describe('Number field edit', () => {
 
       expect($input).toHaveValue('example')
     })
+
+    it("should render 'Validation message' input", () => {
+      const $input = screen.getByRole('textbox', {
+        name: 'Validation message',
+        description:
+          'Enter the validation message to show when a validation error occurs'
+      })
+
+      expect($input).toBeInTheDocument()
+      expect($input).toHaveValue('')
+
+      result.rerender(
+        <RenderComponent
+          defaults={selectedComponent}
+          override={{
+            options: { customValidationMessage: 'example' }
+          }}
+        >
+          <NumberFieldEdit />
+        </RenderComponent>
+      )
+
+      expect($input).toHaveValue('example')
+    })
   })
 })
