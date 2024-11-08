@@ -23,7 +23,7 @@ describe('edit - model - notification email', () => {
     organisation: 'Defra',
     teamName: 'Defra Forms',
     teamEmail: 'defraforms@defra.gov.uk',
-    notificationEmail: 'NotificationEmail@defra.gov.uk',
+    notificationEmail: 'notificationemail@defra.gov.uk',
     createdAt: now,
     createdBy: author,
     updatedAt: now,
