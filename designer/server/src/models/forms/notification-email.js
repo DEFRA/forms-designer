@@ -22,7 +22,9 @@ export function notificationEmailViewModel(metadata, validation) {
       label: {
         text: 'What email address should submitted forms be sent to?'
       },
-      value: formValues?.notificationEmail ?? metadata.notificationEmail,
+      value:
+        formValues?.notificationEmail?.toLowerCase() ??
+        metadata.notificationEmail?.toLowerCase(),
       hint: {
         text: 'Used to send submitted forms for processing. Must must end with ‘.gov.uk’ or ‘.org.uk’, like name@example.gov.uk or name@example.org.uk'
       }

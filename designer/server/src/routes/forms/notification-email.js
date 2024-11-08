@@ -76,7 +76,11 @@ export default [
       const { id } = await forms.get(slug, token)
 
       // Update the metadata with the notification email
-      await forms.updateMetadata(id, { notificationEmail }, token)
+      await forms.updateMetadata(
+        id,
+        { notificationEmail: notificationEmail?.toLowerCase() },
+        token
+      )
 
       yar.flash(
         sessionNames.successNotification,
