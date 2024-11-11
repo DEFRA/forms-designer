@@ -160,6 +160,29 @@ describe('File routes', () => {
 
       expect(result.response.statusCode).toBe(401)
     })
+
+    test('should convert email to lowercase when creating file link', async () => {
+      const mixedCaseEmail = 'Test.USER@DEFRA.GOV.UK'
+
+      jest
+        .mocked(file.createFileLink)
+        .mockResolvedValueOnce({ url: '/download-link' })
+
+      const options = {
+        method: 'post',
+        url: fileDownloadUrl,
+        auth,
+        payload: { email: mixedCaseEmail }
+      }
+
+      await renderResponse(server, options)
+
+      expect(file.createFileLink).toHaveBeenCalledWith(
+        '1234',
+        'test.user@defra.gov.uk',
+        expect.any(String)
+      )
+    })
   })
 })
 

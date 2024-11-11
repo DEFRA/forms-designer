@@ -12,7 +12,7 @@ import { downloadCompleteModel } from '~/src/models/file/download-complete.js'
 import * as file from '~/src/models/file/file.js'
 import { redirectWithErrors } from '~/src/routes/forms/create.js'
 
-export const emailSchema = Joi.string().trim().required().messages({
+export const emailSchema = Joi.string().lowercase().trim().required().messages({
   'string.empty': 'Enter an email address'
 })
 const logger = createLogger()
