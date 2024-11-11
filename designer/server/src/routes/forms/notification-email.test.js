@@ -39,7 +39,7 @@ describe('Forms notification email', () => {
     organisation: 'Defra',
     teamName: 'Defra Forms',
     teamEmail: 'defraforms@defra.gov.uk',
-    notificationEmail: 'NotificationEmail@defra.gov.uk',
+    notificationEmail: 'notificationemail@defra.gov.uk',
     createdAt: now,
     createdBy: author,
     updatedAt: now,
@@ -101,7 +101,7 @@ describe('Forms notification email', () => {
     expect(headers.location).toBe('/library/my-form-slug')
   })
 
-  test('POST - should store notification email in lowercase', async () => {
+  test('POST - should update notification email and convert to lowercase', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
     jest.mocked(forms.updateMetadata).mockResolvedValueOnce({
       id: formMetadata.id,
@@ -122,8 +122,6 @@ describe('Forms notification email', () => {
 
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe('/library/my-form-slug')
-
-    // Verify that the email was converted to lowercase before saving
     expect(forms.updateMetadata).toHaveBeenCalledWith(
       formMetadata.id,
       { notificationEmail: 'updatednotificationemail@defra.gov.uk' },
