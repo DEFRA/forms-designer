@@ -1,9 +1,4 @@
-import {
-  ConditionsModel,
-  hasConditionGroup,
-  hasConditionName,
-  type ConditionWrapper
-} from '@defra/forms-model'
+import { ConditionsModel, type ConditionWrapper } from '@defra/forms-model'
 import { useContext, useState, type MouseEvent } from 'react'
 
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
@@ -11,6 +6,7 @@ import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.j
 import { InlineConditions } from '~/src/conditions/InlineConditions.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { getFields } from '~/src/data/component/fields.js'
+import { getConditions } from '~/src/data/condition/getConditions.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 
 function useConditionsEditor() {
@@ -66,23 +62,8 @@ export function ConditionsEdit({ path }: Readonly<Props>) {
     cancelInlineCondition
   } = useConditionsEditor()
   const { data } = useContext(DataContext)
-  const { conditions } = data
-
   const fieldInputs = getFields(data)
-
-  conditions.forEach(function fixConditionDisplay(condition: ConditionWrapper) {
-    // Fix up condition field display text
-    condition.value.conditions.forEach((condition) => {
-      if (!hasConditionGroup(condition) && !hasConditionName(condition)) {
-        const fieldName = condition.field.name
-        const field = fieldInputs.find((input) => input.name === fieldName)
-
-        if (field) {
-          condition.field.display = field.label
-        }
-      }
-    })
-  })
+  const conditions = getConditions(data, fieldInputs)
 
   return (
     <>
