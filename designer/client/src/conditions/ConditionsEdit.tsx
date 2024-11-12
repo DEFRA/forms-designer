@@ -1,4 +1,9 @@
-import { ConditionsModel, type ConditionWrapper } from '@defra/forms-model'
+import {
+  ConditionsModel,
+  hasConditionGroup,
+  hasConditionName,
+  type ConditionWrapper
+} from '@defra/forms-model'
 import { useContext, useState, type MouseEvent } from 'react'
 
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
@@ -64,6 +69,20 @@ export function ConditionsEdit({ path }: Readonly<Props>) {
   const { conditions } = data
 
   const fieldInputs = getFields(data)
+
+  conditions.forEach(function fixConditionDisplay(condition: ConditionWrapper) {
+    // Fix up condition field display text
+    condition.value.conditions.forEach((condition) => {
+      if (!hasConditionGroup(condition) && !hasConditionName(condition)) {
+        const fieldName = condition.field.name
+        const field = fieldInputs.find((input) => input.name === fieldName)
+
+        if (field) {
+          condition.field.display = field.label
+        }
+      }
+    })
+  })
 
   return (
     <>
