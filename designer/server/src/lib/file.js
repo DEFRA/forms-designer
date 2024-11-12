@@ -1,22 +1,36 @@
 import Boom from '@hapi/boom'
+import { StatusCodes } from 'http-status-codes'
 
 import config from '~/src/config.js'
-import { get, postJson } from '~/src/lib/fetch.js'
+import { getJson, postJson } from '~/src/lib/fetch.js'
 
 const submissionEndpoint = new URL('/file/', config.submissionUrl)
 
 /**
  * @param {string} fieldId
+ * @returns {Promise<{ statusCode: StatusCodes, emailIsCaseInsensitive: boolean }>}
  */
 export async function checkFileStatus(fieldId) {
   const requestUrl = new URL(`./${fieldId}`, submissionEndpoint)
 
   try {
-    const result = await get(requestUrl, {})
-    return result.response.statusCode
+    /** @type {{ response: import('http').IncomingMessage, body: { emailIsCaseInsensitive: boolean } }} */
+    const result = await getJson(requestUrl, {})
+
+    const statusCode = /** @type {StatusCodes} */ (
+      result.response.statusCode ?? StatusCodes.INTERNAL_SERVER_ERROR
+    )
+
+    return {
+      statusCode,
+      emailIsCaseInsensitive: result.body.emailIsCaseInsensitive
+    }
   } catch (err) {
     if (Boom.isBoom(err)) {
-      return err.output.statusCode
+      return {
+        statusCode: err.output.statusCode,
+        emailIsCaseInsensitive: false
+      }
     }
 
     throw err

@@ -12,7 +12,7 @@ import { downloadCompleteModel } from '~/src/models/file/download-complete.js'
 import * as file from '~/src/models/file/file.js'
 import { redirectWithErrors } from '~/src/routes/forms/create.js'
 
-export const emailSchema = Joi.string().lowercase().trim().required().messages({
+export const emailSchema = Joi.string().trim().required().messages({
   'string.empty': 'Enter an email address'
 })
 const logger = createLogger()
@@ -33,10 +33,17 @@ export default [
         return Boom.unauthorized()
       }
 
-      const statusCode = await checkFileStatus(fileId)
+      const { statusCode, emailIsCaseInsensitive } =
+        await checkFileStatus(fileId)
 
       switch (statusCode) {
         case StatusCodes.OK: {
+          await server.methods.state.set(
+            credentials.user.id,
+            'emailIsCaseInsensitive',
+            String(emailIsCaseInsensitive)
+          )
+
           const validation = yar.flash(
             sessionNames.validationFailure.fileDownload
           )[0]
@@ -85,11 +92,24 @@ export default [
       const { payload, params, auth, server } = request
       const { credentials } = auth
       const { token } = credentials
-      const { email } = payload
+      let { email } = payload
       const { fileId } = params
 
       if (!userSession.hasUser(credentials)) {
         return Boom.unauthorized()
+      }
+
+      const emailIsCaseInsensitiveStr = await server.methods.state.get(
+        credentials.user.id,
+        'emailIsCaseInsensitive'
+      )
+
+      const emailIsCaseInsensitive = emailIsCaseInsensitiveStr === 'true'
+
+      // If the email is case-insensitive (emailIsCaseInsensitive is true),
+      // we lowercase the email before sending it to the submission API.
+      if (emailIsCaseInsensitive) {
+        email = email.toLowerCase()
       }
 
       try {
@@ -120,7 +140,7 @@ export default [
           err.output.statusCode === StatusCodes.FORBIDDEN.valueOf()
         ) {
           logger.error(
-            `Failed to download file for file ID ${fileId} with incorrect email`
+            `Failed to download file for file ID ${fileId}. Email ${email} did not match retrieval key`
           )
           const validation = {
             formErrors: {
