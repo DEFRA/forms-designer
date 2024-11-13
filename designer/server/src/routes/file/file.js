@@ -33,17 +33,10 @@ export default [
         return Boom.unauthorized()
       }
 
-      const { statusCode, emailIsCaseInsensitive } =
-        await checkFileStatus(fileId)
+      const { statusCode } = await checkFileStatus(fileId)
 
       switch (statusCode) {
         case StatusCodes.OK: {
-          await server.methods.state.set(
-            credentials.user.id,
-            'emailIsCaseInsensitive',
-            String(emailIsCaseInsensitive)
-          )
-
           const validation = yar.flash(
             sessionNames.validationFailure.fileDownload
           )[0]
@@ -99,16 +92,11 @@ export default [
         return Boom.unauthorized()
       }
 
-      const emailIsCaseInsensitiveStr = await server.methods.state.get(
-        credentials.user.id,
-        'emailIsCaseInsensitive'
-      )
+      const { emailIsCaseSensitive } = await checkFileStatus(fileId)
 
-      const emailIsCaseInsensitive = emailIsCaseInsensitiveStr === 'true'
-
-      // If the email is case-insensitive (emailIsCaseInsensitive is true),
+      // If the email isn't case-sensitive,
       // we lowercase the email before sending it to the submission API.
-      if (emailIsCaseInsensitive) {
+      if (!emailIsCaseSensitive) {
         email = email.toLowerCase()
       }
 
