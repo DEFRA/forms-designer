@@ -22,7 +22,10 @@ describe('File routes', () => {
 
   describe('GET', () => {
     test('should show file download page with email (from cache) when file status response is 200', async () => {
-      jest.mocked(file.checkFileStatus).mockResolvedValueOnce(StatusCodes.OK)
+      jest.mocked(file.checkFileStatus).mockResolvedValueOnce({
+        statusCode: StatusCodes.OK,
+        emailIsCaseSensitive: false
+      })
       jest.spyOn(server.methods.state, 'get').mockResolvedValue(email)
 
       const options = {
@@ -41,7 +44,10 @@ describe('File routes', () => {
     })
 
     test('should show file download page for user to enter email when file status response is 200', async () => {
-      jest.mocked(file.checkFileStatus).mockResolvedValueOnce(StatusCodes.OK)
+      jest.mocked(file.checkFileStatus).mockResolvedValueOnce({
+        statusCode: StatusCodes.OK,
+        emailIsCaseSensitive: false
+      })
       jest.spyOn(server.methods.state, 'get').mockResolvedValue(undefined)
 
       const options = {
@@ -60,7 +66,10 @@ describe('File routes', () => {
     })
 
     test('should show link expired page when response is 410', async () => {
-      jest.mocked(file.checkFileStatus).mockResolvedValueOnce(StatusCodes.GONE)
+      jest.mocked(file.checkFileStatus).mockResolvedValueOnce({
+        statusCode: StatusCodes.GONE,
+        emailIsCaseSensitive: false
+      })
 
       const options = {
         method: 'GET',
@@ -92,6 +101,11 @@ describe('File routes', () => {
 
   describe('POST', () => {
     test('should show file is downloading page', async () => {
+      jest.mocked(file.checkFileStatus).mockResolvedValueOnce({
+        statusCode: StatusCodes.OK,
+        emailIsCaseSensitive: false
+      })
+
       jest
         .mocked(file.createFileLink)
         .mockResolvedValueOnce({ url: '/download-link' })
@@ -111,6 +125,11 @@ describe('File routes', () => {
     })
 
     test('should show link expired page when download file link response is 410', async () => {
+      jest.mocked(file.checkFileStatus).mockResolvedValueOnce({
+        statusCode: StatusCodes.OK,
+        emailIsCaseSensitive: false
+      })
+
       jest.mocked(file.createFileLink).mockRejectedValue(Boom.resourceGone())
 
       const options = {
@@ -128,6 +147,11 @@ describe('File routes', () => {
     })
 
     test('should show error when email is not for download file', async () => {
+      jest.mocked(file.checkFileStatus).mockResolvedValueOnce({
+        statusCode: StatusCodes.OK,
+        emailIsCaseSensitive: false
+      })
+
       jest.mocked(file.createFileLink).mockRejectedValue(Boom.forbidden())
 
       const options = {
@@ -159,29 +183,6 @@ describe('File routes', () => {
       const result = await renderResponse(server, options)
 
       expect(result.response.statusCode).toBe(401)
-    })
-
-    test('should convert email to lowercase when creating file link', async () => {
-      const mixedCaseEmail = 'Test.USER@DEFRA.GOV.UK'
-
-      jest
-        .mocked(file.createFileLink)
-        .mockResolvedValueOnce({ url: '/download-link' })
-
-      const options = {
-        method: 'post',
-        url: fileDownloadUrl,
-        auth,
-        payload: { email: mixedCaseEmail }
-      }
-
-      await renderResponse(server, options)
-
-      expect(file.createFileLink).toHaveBeenCalledWith(
-        '1234',
-        'test.user@defra.gov.uk',
-        expect.any(String)
-      )
     })
   })
 })

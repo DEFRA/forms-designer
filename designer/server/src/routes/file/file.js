@@ -92,15 +92,15 @@ export default [
         return Boom.unauthorized()
       }
 
-      const { emailIsCaseSensitive } = await checkFileStatus(fileId)
-
-      // If the email isn't case-sensitive,
-      // we lowercase the email before sending it to the submission API.
-      if (!emailIsCaseSensitive) {
-        email = email.toLowerCase()
-      }
-
       try {
+        const { emailIsCaseSensitive } = await checkFileStatus(fileId)
+
+        // If the email isn't case-sensitive,
+        // we lowercase the email before sending it to the submission API.
+        if (!emailIsCaseSensitive) {
+          email = email.toLowerCase()
+        }
+
         const { url } = await createFileLink(fileId, email, token)
 
         await server.methods.state.set(
