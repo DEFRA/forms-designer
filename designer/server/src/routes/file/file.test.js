@@ -184,6 +184,62 @@ describe('File routes', () => {
 
       expect(result.response.statusCode).toBe(401)
     })
+
+    test('should not lowercase email when emailIsCaseSensitive is true', async () => {
+      const mixedCaseEmail = 'Some.Email@GOV.UK'
+
+      jest.mocked(file.checkFileStatus).mockResolvedValueOnce({
+        statusCode: StatusCodes.OK,
+        emailIsCaseSensitive: true
+      })
+
+      jest
+        .mocked(file.createFileLink)
+        .mockResolvedValueOnce({ url: '/download-link' })
+
+      const options = {
+        method: 'post',
+        url: fileDownloadUrl,
+        auth,
+        payload: { email: mixedCaseEmail }
+      }
+
+      await renderResponse(server, options)
+
+      expect(file.createFileLink).toHaveBeenCalledWith(
+        '1234',
+        mixedCaseEmail,
+        expect.any(String)
+      )
+    })
+
+    test('should lowercase email when emailIsCaseSensitive is false', async () => {
+      const mixedCaseEmail = 'Some.Email@GOV.UK'
+
+      jest.mocked(file.checkFileStatus).mockResolvedValueOnce({
+        statusCode: StatusCodes.OK,
+        emailIsCaseSensitive: false
+      })
+
+      jest
+        .mocked(file.createFileLink)
+        .mockResolvedValueOnce({ url: '/download-link' })
+
+      const options = {
+        method: 'post',
+        url: fileDownloadUrl,
+        auth,
+        payload: { email: mixedCaseEmail }
+      }
+
+      await renderResponse(server, options)
+
+      expect(file.createFileLink).toHaveBeenCalledWith(
+        '1234',
+        mixedCaseEmail.toLowerCase(),
+        expect.any(String)
+      )
+    })
   })
 })
 
