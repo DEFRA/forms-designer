@@ -1,6 +1,9 @@
 import { type Root } from 'joi'
+import { useContext } from 'react'
 
-import { findListItem } from '~/src/data/list/findList.js'
+import { DataContext } from '~/src/context/DataContext.js'
+import { findList, findListItem } from '~/src/data/list/findList.js'
+import { findListItemReferences } from '~/src/data/list/findListItemReferences.js'
 import { type ListItemHook } from '~/src/hooks/list/useListItem/types.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ListActions } from '~/src/reducers/listActions.jsx'
@@ -19,6 +22,8 @@ export function useListItem(
   state: ListState,
   dispatch: ListContextType['dispatch']
 ): ListItemHook {
+  const { data } = useContext(DataContext)
+
   const {
     initialItemText,
     initialItemValue,
@@ -26,6 +31,21 @@ export function useListItem(
     selectedItem,
     selectedItemIndex
   } = state
+
+  let references
+  let allowDelete = false
+
+  if (!selectedList?.isNew && selectedItem) {
+    const list = findList(data, selectedList?.name)
+
+    // Find any references to the list item using the initial value
+    references = findListItemReferences(data, list, {
+      ...selectedItem,
+      value: initialItemValue ?? ''
+    }).conditions
+
+    allowDelete = !references.length
+  }
 
   const handleTitleChange: ListItemHook['handleTitleChange'] = (e) => {
     dispatch({
@@ -153,6 +173,8 @@ export function useListItem(
     value: selectedItem?.value,
     condition: selectedItem?.condition,
     text: selectedItem?.text,
-    description: selectedItem?.description
+    description: selectedItem?.description,
+    allowDelete,
+    references
   }
 }

@@ -1,4 +1,9 @@
-import { type Item } from '@defra/forms-model'
+import {
+  type ConditionData,
+  type ConditionWrapper,
+  type ConditionsModelData,
+  type Item
+} from '@defra/forms-model'
 import { type Root } from 'joi'
 import { type ChangeEvent } from 'react'
 
@@ -16,4 +21,10 @@ export interface ListItemHook {
   condition?: string
   text?: string
   description?: string
+  allowDelete: boolean
+  references?: {
+    wrapper: ConditionWrapper
+    model: ConditionsModelData
+    condition: ConditionData
+  }[]
 }

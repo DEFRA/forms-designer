@@ -13,6 +13,7 @@ import { ErrorSummary } from '~/src/ErrorSummary.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { addList } from '~/src/data/list/addList.js'
 import { findList } from '~/src/data/list/findList.js'
+import { findListReferences } from '~/src/data/list/findListReferences.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 import { ListItems } from '~/src/list/ListItems.jsx'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
@@ -39,6 +40,15 @@ function useListEdit() {
   const { state: listState, dispatch: listDispatch } = useContext(ListContext)
 
   const { initialTitle, selectedList } = listState
+
+  let references
+  let allowDelete = false
+
+  if (!selectedList?.isNew) {
+    const list = findList(data, selectedList?.name)
+    references = findListReferences(data, list).components
+    allowDelete = !references.length
+  }
 
   function handleAddItem(e: MouseEvent<HTMLButtonElement>) {
     e.preventDefault()
@@ -167,7 +177,9 @@ function useListEdit() {
   return {
     handleAddItem,
     handleDelete,
-    handleSubmit
+    handleSubmit,
+    allowDelete,
+    references
   }
 }
 
@@ -183,7 +195,8 @@ export function ListEdit() {
     throw new Error('Component must support lists')
   }
 
-  const { handleAddItem, handleDelete, handleSubmit } = useListEdit()
+  const { handleAddItem, handleDelete, handleSubmit, allowDelete, references } =
+    useListEdit()
 
   if (!selectedList) {
     return null
@@ -234,7 +247,7 @@ export function ListEdit() {
             {i18n('save')}
           </button>
 
-          {!selectedList.isNew && (
+          {allowDelete ? (
             <button
               className="govuk-button govuk-button--warning"
               type="button"
@@ -242,6 +255,16 @@ export function ListEdit() {
             >
               {i18n('delete')}
             </button>
+          ) : (
+            !!references?.length && (
+              <p className="govuk-body">
+                {i18n('list.hint.referenced', {
+                  references: references
+                    .map((ref) => `"${ref.title}"`)
+                    .join(', ')
+                })}
+              </p>
+            )
           )}
         </div>
       </form>
