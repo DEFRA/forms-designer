@@ -85,7 +85,7 @@ describe('ListEdit', () => {
     const $listHint = screen.getByText('Enter a unique name for your list')
     const $listLink = screen.getByText('Add a new list item')
     const $listDeleteMessage = screen.getByText(
-      'This list cannot be deleted as it is referenced in: "Choose animals"'
+      'This list cannot be deleted as it is referenced in components: "Choose animals"'
     )
 
     expect($listCaption).toBeInTheDocument()

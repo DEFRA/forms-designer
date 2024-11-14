@@ -250,7 +250,7 @@
     "hint": {
       "description": "Use lists to provide information in bullet points or set answers to multiple choice questions. After you create a list you can assign it to components to use on your form.",
       "manage": "Lists you have created appear on this screen. From here you can manage the lists available for your form.",
-      "referenced": "This list cannot be deleted as it is referenced in: {{references}}"
+      "referenced": "This list cannot be deleted as it is referenced in components: {{references}}"
     },
     "item": {
       "add": "Add a new list item",
@@ -268,7 +268,7 @@
       "moveUp_label": "Move list item {{text, lowerFirst}} up",
       "moveDown": "Move list item down",
       "moveDown_label": "Move list item {{text, lowerFirst}} down",
-      "referenced": "This list item cannot be deleted as it is referenced in: {{references}}"
+      "referenced": "This list item cannot be deleted as it is referenced in conditions: {{references}}"
     },
     "items": {
       "title": "List items"

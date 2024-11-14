@@ -161,7 +161,7 @@ describe('ListItemEdit', () => {
     )
 
     const $itemDeleteMessage = screen.getByText(
-      'This list item cannot be deleted as it is referenced in: "my condition"'
+      'This list item cannot be deleted as it is referenced in conditions: "my condition"'
     )
 
     expect($itemDeleteMessage).toBeInTheDocument()
