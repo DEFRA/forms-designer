@@ -12,6 +12,7 @@ import {
   FlyoutContext,
   type FlyoutContextType
 } from '~/src/context/FlyoutContext.js'
+import { updateConditions } from '~/src/data/condition/updateConditions.js'
 import * as form from '~/src/lib/form.js'
 
 interface Props {
@@ -31,7 +32,7 @@ function useData(props: Readonly<Props>): DataContextType {
    */
   const get = useCallback(async () => {
     const updated = await form.get(props.meta.id)
-    setData(updated)
+    setData(updateConditions(updated))
     return updated
   }, [props])
 
@@ -40,7 +41,8 @@ function useData(props: Readonly<Props>): DataContextType {
    */
   const save = useCallback(
     async (updated: FormDefinition) => {
-      await form.save(props.meta.id, updateStartPage(updated))
+      const definition = updateConditions(updateStartPage(updated))
+      await form.save(props.meta.id, definition)
       return get()
     },
     [props, get]

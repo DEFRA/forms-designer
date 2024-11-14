@@ -7,8 +7,7 @@ import {
   type FormDefinition
 } from '@defra/forms-model'
 
-import { getFields } from '~/src/data/component/fields.js'
-import { getConditions } from '~/src/data/condition/getConditions.js'
+import { updateConditions } from '~/src/data/condition/updateConditions.js'
 
 const condition = {
   displayName: 'condition',
@@ -75,45 +74,64 @@ const data = {
   conditions: [{ ...condition }]
 } satisfies FormDefinition
 
-const fields = getFields(data)
-
 test('getConditions successfully updates a condition display text', () => {
-  expect(getConditions(data, fields)).toEqual<ConditionWrapper[]>([
-    {
-      displayName: 'condition',
-      name: 'isEnglandOrWales',
-      value: {
-        conditions: [
-          {
-            field: {
-              display: 'Section 1: Country',
-              name: 'EsSAwF',
-              type: ComponentType.TextField
+  expect(updateConditions(data)).toEqual<FormDefinition>({
+    conditions: [
+      {
+        displayName: 'condition',
+        name: 'isEnglandOrWales',
+        value: {
+          conditions: [
+            {
+              field: {
+                display: 'Section 1: Country',
+                name: 'EsSAwF',
+                type: ComponentType.TextField
+              },
+              operator: OperatorName.Is,
+              value: {
+                display: 'England',
+                type: ConditionType.Value,
+                value: 'England'
+              }
             },
-            operator: OperatorName.Is,
-            value: {
-              display: 'England',
-              type: ConditionType.Value,
-              value: 'England'
+            {
+              coordinator: Coordinator.OR,
+              field: {
+                display: 'Section 1: Country',
+                name: 'EsSAwF',
+                type: ComponentType.TextField
+              },
+              operator: OperatorName.Is,
+              value: {
+                display: 'Wales',
+                type: ConditionType.Value,
+                value: 'Wales'
+              }
             }
-          },
+          ],
+          name: 'isEnglandOrWales'
+        }
+      }
+    ],
+    lists: [],
+    pages: [
+      {
+        components: [
           {
-            coordinator: Coordinator.OR,
-            field: {
-              display: 'Section 1: Country',
-              name: 'EsSAwF',
-              type: ComponentType.TextField
-            },
-            operator: OperatorName.Is,
-            value: {
-              display: 'Wales',
-              type: ConditionType.Value,
-              value: 'Wales'
-            }
+            name: 'EsSAwF',
+            options: {},
+            schema: {},
+            title: 'Country',
+            type: ComponentType.TextField
           }
         ],
-        name: 'isEnglandOrWales'
+        next: [],
+        path: '/1',
+        section: 'section1',
+        title: 'page1'
       }
-    }
-  ])
+    ],
+    sections: [{ name: 'section1', title: 'Section 1' }]
+  })
 })
