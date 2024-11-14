@@ -41,7 +41,7 @@ export function useListItem(
     // Find any references to the list item using the initial value
     references = findListItemReferences(data, list, {
       ...selectedItem,
-      value: initialItemValue ?? ''
+      value: String(initialItemValue)
     }).conditions
 
     allowDelete = !references.length
