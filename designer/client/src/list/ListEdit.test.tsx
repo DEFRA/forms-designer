@@ -41,12 +41,12 @@ describe('ListEdit', () => {
     const $listCaption = screen.getByText('List items')
     const $listHint = screen.getByText('Enter a unique name for your list')
     const $listLink = screen.getByText('Add a new list item')
-    const $listDelete = screen.getByText('Delete')
+    const $buttonDelete = screen.getByRole('button', { name: 'Delete' })
 
     expect($listCaption).toBeInTheDocument()
     expect($listHint).toBeInTheDocument()
     expect($listLink).toBeInTheDocument()
-    expect($listDelete).toBeInTheDocument()
+    expect($buttonDelete).toBeInTheDocument()
   })
 
   test('message is displayed if the list is referenced', () => {

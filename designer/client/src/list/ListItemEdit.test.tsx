@@ -166,4 +166,25 @@ describe('ListItemEdit', () => {
 
     expect($itemDeleteMessage).toBeInTheDocument()
   })
+
+  test('delete button is displayed if the list item can be deleted', () => {
+    const dataWithoutReferencingConditions = {
+      ...data,
+      conditions: []
+    }
+
+    render(
+      <RenderListEditorWithContext
+        data={dataWithoutReferencingConditions}
+        initialName="myList"
+        initialItemText="text a"
+      >
+        <ListItemEdit />
+      </RenderListEditorWithContext>
+    )
+
+    const $buttonDelete = screen.getByRole('button', { name: 'Delete' })
+
+    expect($buttonDelete).toBeInTheDocument()
+  })
 })
