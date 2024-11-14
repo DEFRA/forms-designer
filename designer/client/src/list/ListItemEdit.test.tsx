@@ -73,15 +73,15 @@ const data = {
         conditions: [
           {
             field: {
-              name: 'text',
-              type: ComponentType.TextField,
-              display: 'text'
+              name: 'IDDQl4',
+              type: ComponentType.SelectField,
+              display: 'text a'
             },
             operator: OperatorName.Is,
             value: {
               type: ConditionType.Value,
-              value: 'hello',
-              display: 'hello'
+              value: 'value a',
+              display: 'text a'
             }
           }
         ]
@@ -147,5 +147,23 @@ describe('ListItemEdit', () => {
     expect($select.options[$select.selectedIndex].textContent).toBe(
       'my condition'
     )
+  })
+
+  test('message is displayed if the list item is referenced', () => {
+    render(
+      <RenderListEditorWithContext
+        data={data}
+        initialName="myList"
+        initialItemText="text a"
+      >
+        <ListItemEdit />
+      </RenderListEditorWithContext>
+    )
+
+    const $itemDeleteMessage = screen.getByText(
+      'This list item cannot be deleted as it is referenced in: "my condition"'
+    )
+
+    expect($itemDeleteMessage).toBeInTheDocument()
   })
 })
