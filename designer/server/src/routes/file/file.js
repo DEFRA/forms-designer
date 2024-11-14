@@ -93,7 +93,8 @@ export default [
       }
 
       try {
-        const { emailIsCaseSensitive } = await checkFileStatus(fileId)
+        const result = await checkFileStatus(fileId)
+        const emailIsCaseSensitive = result.emailIsCaseSensitive
 
         // If the email isn't case-sensitive,
         // we lowercase the email before sending it to the submission API.
@@ -128,7 +129,7 @@ export default [
           err.output.statusCode === StatusCodes.FORBIDDEN.valueOf()
         ) {
           logger.error(
-            `Failed to download file for file ID ${fileId}. Email ${email} did not match retrieval key`
+            `Failed to download file for file ID ${fileId}. Email ${email} did not match retrieval key.`
           )
           const validation = {
             formErrors: {
