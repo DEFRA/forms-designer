@@ -32,8 +32,11 @@ function useData(props: Readonly<Props>): DataContextType {
    */
   const get = useCallback(async () => {
     const updated = await form.get(props.meta.id)
-    setData(updateConditions(updated))
-    return updated
+    const definition = updateConditions(updated)
+
+    setData(definition)
+
+    return definition
   }, [props])
 
   /**
@@ -43,6 +46,7 @@ function useData(props: Readonly<Props>): DataContextType {
     async (updated: FormDefinition) => {
       const definition = updateConditions(updateStartPage(updated))
       await form.save(props.meta.id, definition)
+
       return get()
     },
     [props, get]
