@@ -121,11 +121,7 @@ export function ListItemEdit() {
         />
         <Input
           label={{ children: [i18n('list.item.value')] }}
-          hint={{
-            children: references?.length
-              ? [i18n('list.item.valueHint')]
-              : [i18n('list.item.valueHint')]
-          }}
+          hint={{ children: [i18n('list.item.valueHint')] }}
           id="value"
           name="list-item-value"
           value={value ?? ''}
