@@ -7,8 +7,27 @@ import { checkFileStatus, createFileLink } from '~/src/lib/file.js'
 
 jest.mock('~/src/lib/fetch.js')
 
-const mockedGetJson = jest.mocked(getJson)
-const mockedPostJson = jest.mocked(postJson)
+const mockedGetJson = /** @type {jest.MockedFunction<typeof getJson>} */ (
+  getJson
+)
+const mockedPostJson = /** @type {jest.MockedFunction<typeof postJson>} */ (
+  postJson
+)
+
+/**
+ * Creates a minimal mock response
+ * @param {object} [props]
+ * @param {number} [props.statusCode]
+ */
+function createMockResponse(props = {}) {
+  /** @type {any} */
+  const response = {
+    statusCode: props.statusCode,
+    headers: {}
+  }
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  return response
+}
 
 describe('file.js', () => {
   afterEach(() => {
@@ -22,11 +41,10 @@ describe('file.js', () => {
 
     describe('when getJson succeeds', () => {
       test('returns status code and emailIsCaseSensitive', async () => {
-        const mockResponse = {
-          response: { statusCode: StatusCodes.OK },
+        mockedGetJson.mockResolvedValueOnce({
+          response: createMockResponse({ statusCode: StatusCodes.OK }),
           body: { retrievalKeyIsCaseSensitive: true }
-        }
-        mockedGetJson.mockResolvedValueOnce(mockResponse)
+        })
 
         const result = await checkFileStatus(fieldId)
 
@@ -40,11 +58,10 @@ describe('file.js', () => {
 
     describe('when response statusCode is missing', () => {
       test('defaults statusCode to INTERNAL_SERVER_ERROR', async () => {
-        const mockResponse = {
-          response: {},
+        mockedGetJson.mockResolvedValueOnce({
+          response: createMockResponse(),
           body: { retrievalKeyIsCaseSensitive: false }
-        }
-        mockedGetJson.mockResolvedValueOnce(mockResponse)
+        })
 
         const result = await checkFileStatus(fieldId)
 
@@ -92,13 +109,15 @@ describe('file.js', () => {
 
     describe('when postJson succeeds', () => {
       test('returns response body', async () => {
-        const mockResponse = { body: { url: '/download-link' } }
-        mockedPostJson.mockResolvedValueOnce(mockResponse)
+        mockedPostJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: { url: '/download-link' }
+        })
 
         const result = await createFileLink(fileId, retrievalKey, token)
 
         expect(mockedPostJson).toHaveBeenCalledWith(requestUrl, expectedOptions)
-        expect(result).toEqual(mockResponse.body)
+        expect(result).toEqual({ url: '/download-link' })
       })
     })
 
