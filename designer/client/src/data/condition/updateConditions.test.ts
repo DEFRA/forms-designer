@@ -216,3 +216,94 @@ test('updateConditions successfully updates a condition display text', () => {
     sections: [{ name: 'section1', title: 'Section 1' }]
   })
 })
+
+test('updateConditions successfully skips updates of a condition when the field is missing', () => {
+  const dataWithMissingComponent = {
+    ...data,
+    pages: []
+  }
+
+  expect(updateConditions(dataWithMissingComponent)).toEqual<FormDefinition>({
+    conditions: [
+      {
+        displayName: 'condition',
+        name: 'isEnglandOrWales',
+        value: {
+          name: 'isEnglandOrWales',
+          conditions: [
+            {
+              field: {
+                display: 'Text field A',
+                name: 'EsSAwF',
+                type: ComponentType.TextField
+              },
+              operator: OperatorName.Is,
+              value: {
+                display: 'England',
+                type: ConditionType.Value,
+                value: 'England'
+              }
+            },
+            {
+              coordinator: Coordinator.OR,
+              field: {
+                display: 'Text field A',
+                name: 'EsSAwF',
+                type: ComponentType.TextField
+              },
+              operator: OperatorName.Is,
+              value: {
+                display: 'Wales',
+                type: ConditionType.Value,
+                value: 'Wales'
+              }
+            }
+          ]
+        }
+      },
+      {
+        displayName: 'group condition',
+        name: 'isScotlandOrNorthernIreland',
+        value: {
+          name: 'isScotlandOrNorthernIreland',
+          conditions: [
+            {
+              conditions: [
+                {
+                  field: {
+                    display: 'Text field A',
+                    name: 'EsSAwF',
+                    type: ComponentType.TextField
+                  },
+                  operator: OperatorName.Is,
+                  value: {
+                    display: 'Scotland',
+                    type: ConditionType.Value,
+                    value: 'Scotland'
+                  }
+                },
+                {
+                  coordinator: Coordinator.OR,
+                  field: {
+                    display: 'Text field A',
+                    name: 'EsSAwF',
+                    type: ComponentType.TextField
+                  },
+                  operator: OperatorName.Is,
+                  value: {
+                    display: 'Northern Ireland',
+                    type: ConditionType.Value,
+                    value: 'NorthernIreland'
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ],
+    lists: [],
+    pages: [],
+    sections: [{ name: 'section1', title: 'Section 1' }]
+  })
+})
