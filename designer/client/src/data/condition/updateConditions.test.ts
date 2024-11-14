@@ -46,6 +46,47 @@ const condition = {
   }
 } satisfies ConditionWrapper
 
+const groupCondition = {
+  displayName: 'group condition',
+  name: 'isScotlandOrNorthernIreland',
+  value: {
+    name: 'isScotlandOrNorthernIreland',
+    conditions: [
+      {
+        conditions: [
+          {
+            field: {
+              name: 'EsSAwF',
+              type: ComponentType.TextField,
+              display: 'Text field A'
+            },
+            operator: OperatorName.Is,
+            value: {
+              type: ConditionType.Value,
+              value: 'Scotland',
+              display: 'Scotland'
+            }
+          },
+          {
+            coordinator: Coordinator.OR,
+            field: {
+              name: 'EsSAwF',
+              type: ComponentType.TextField,
+              display: 'Text field A'
+            },
+            operator: OperatorName.Is,
+            value: {
+              type: ConditionType.Value,
+              value: 'NorthernIreland',
+              display: 'Northern Ireland'
+            }
+          }
+        ]
+      }
+    ]
+  }
+} satisfies ConditionWrapper
+
 const data = {
   pages: [
     {
@@ -71,16 +112,17 @@ const data = {
       title: 'Section 1'
     }
   ],
-  conditions: [{ ...condition }]
+  conditions: [condition, groupCondition]
 } satisfies FormDefinition
 
-test('getConditions successfully updates a condition display text', () => {
+test('updateConditions successfully updates a condition display text', () => {
   expect(updateConditions(data)).toEqual<FormDefinition>({
     conditions: [
       {
         displayName: 'condition',
         name: 'isEnglandOrWales',
         value: {
+          name: 'isEnglandOrWales',
           conditions: [
             {
               field: {
@@ -109,8 +151,47 @@ test('getConditions successfully updates a condition display text', () => {
                 value: 'Wales'
               }
             }
-          ],
-          name: 'isEnglandOrWales'
+          ]
+        }
+      },
+      {
+        displayName: 'group condition',
+        name: 'isScotlandOrNorthernIreland',
+        value: {
+          name: 'isScotlandOrNorthernIreland',
+          conditions: [
+            {
+              conditions: [
+                {
+                  field: {
+                    display: 'Section 1: Country',
+                    name: 'EsSAwF',
+                    type: ComponentType.TextField
+                  },
+                  operator: OperatorName.Is,
+                  value: {
+                    display: 'Scotland',
+                    type: ConditionType.Value,
+                    value: 'Scotland'
+                  }
+                },
+                {
+                  coordinator: Coordinator.OR,
+                  field: {
+                    display: 'Section 1: Country',
+                    name: 'EsSAwF',
+                    type: ComponentType.TextField
+                  },
+                  operator: OperatorName.Is,
+                  value: {
+                    display: 'Northern Ireland',
+                    type: ConditionType.Value,
+                    value: 'NorthernIreland'
+                  }
+                }
+              ]
+            }
+          ]
         }
       }
     ],
