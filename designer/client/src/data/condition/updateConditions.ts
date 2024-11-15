@@ -12,15 +12,42 @@ import { getFields } from '~/src/data/component/fields.js'
  * Update conditions to keep display text in sync with the component and section titles
  */
 export function updateConditions(data: FormDefinition) {
+  const fields = getFields(data)
+
+  // Check if condition field display text is out of date
+  const checkCondition = (condition: ConditionData) => {
+    const fieldName = condition.field.name
+    const field = fields.find((input) => input.name === fieldName)
+
+    return field && condition.field.display !== field.label ? field : undefined
+  }
+
+  // Determine if any of the conditions need fixing
+  const hasConditionsChanged = data.conditions.some((wrapper) => {
+    return wrapper.value.conditions.some((condition) => {
+      if (hasConditionField(condition)) {
+        return checkCondition(condition)
+      } else if (hasConditionGroup(condition)) {
+        condition.conditions
+          .filter((condition) => hasConditionField(condition))
+          .forEach(checkCondition)
+      }
+
+      return false
+    })
+  })
+
+  if (!hasConditionsChanged) {
+    return data
+  }
+
   // Copy form definition
   const definition = structuredClone(data)
-  const fields = getFields(definition)
   const { conditions } = definition
 
   // Fix up condition field display text
-  const fixUp = (condition: ConditionData) => {
-    const fieldName = condition.field.name
-    const field = fields.find((input) => input.name === fieldName)
+  const fixUpCondition = (condition: ConditionData) => {
+    const field = checkCondition(condition)
 
     if (field) {
       condition.field.display = field.label
@@ -30,11 +57,11 @@ export function updateConditions(data: FormDefinition) {
   conditions.forEach((condition: ConditionWrapper) => {
     condition.value.conditions.forEach((condition) => {
       if (hasConditionField(condition)) {
-        fixUp(condition)
+        fixUpCondition(condition)
       } else if (hasConditionGroup(condition)) {
         condition.conditions
           .filter((condition) => hasConditionField(condition))
-          .forEach(fixUp)
+          .forEach(fixUpCondition)
       }
     })
   })
