@@ -1,5 +1,3 @@
-{% from "govuk/components/tag/macro.njk" import govukTag %}
-
 {#
 Component options:
   - organisationName (string): The name of the organisation
@@ -74,8 +72,6 @@ Component options:
             {% endif %}
           </span>
         </a>
-        {# Environment identification tag #}
-        {{ govukTag(params.envTag) }}
       </div>
       <button type="button"
         aria-controls="one-login-header__nav"

@@ -79,6 +79,7 @@ describe('Nunjucks context', () => {
       const ctx = await context(null)
 
       expect(ctx.config).toEqual({
+        cdpEnvironment: config.cdpEnvironment,
         phase: config.phase,
         serviceName: config.serviceName
       })

@@ -1,10 +1,14 @@
 {% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
 {% from "service-header/macro.njk" import appServiceHeader %}
+{% from "tag-env/macro.njk" import appTagEnv %}
+
+{%- set productName %}
+  Forms Designer {{ appTagEnv({ env: config.cdpEnvironment }) }}
+{% endset -%}
 
 {{ appServiceHeader({
   organisationName: "Defra",
-  productName: "Forms Designer",
-  envTag: envTag,
+  productName: productName | safe | trim,
   navigationItems: navigation if isAuthenticated and isAuthorized and isFormsUser,
   accountName: authedUser.displayName if isAuthenticated,
   accountLink: "/library",
