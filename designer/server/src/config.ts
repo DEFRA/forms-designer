@@ -23,6 +23,7 @@ export interface Config {
   managerUrl: string
   submissionUrl: string
   serviceName: string
+  serviceVersion?: string
   logLevel: 'fatal' | 'error' | 'warn' | 'info' | 'debug' | 'trace' | 'silent'
   phase?: 'alpha' | 'beta' | 'live'
   isProduction: boolean
@@ -77,6 +78,7 @@ const schema = joi.object<Config>({
   submissionUrl: joi.string().required(),
   previewUrl: joi.string().required(),
   serviceName: joi.string().required(),
+  serviceVersion: joi.string().optional(),
   logLevel: joi
     .string()
     .default('info')
@@ -118,6 +120,7 @@ const result = schema.validate(
     submissionUrl: process.env.SUBMISSION_URL,
     previewUrl: process.env.PREVIEW_URL,
     serviceName: 'Submit a form to Defra',
+    serviceVersion: process.env.SERVICE_VERSION,
     logLevel: process.env.LOG_LEVEL,
     phase: process.env.PHASE,
     isProduction: process.env.NODE_ENV === 'production',
