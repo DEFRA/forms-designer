@@ -6,8 +6,17 @@ import joi from 'joi'
 const configPath = fileURLToPath(import.meta.url)
 
 export interface Config {
-  env: 'development' | 'test' | 'production'
   port: number
+  cdpEnvironment:
+    | 'local'
+    | 'infra-dev'
+    | 'management'
+    | 'dev'
+    | 'test'
+    | 'perf-test'
+    | 'ext-test'
+    | 'prod'
+  env: 'development' | 'test' | 'production'
   appDir: string
   clientDir: string
   previewUrl: string
@@ -37,6 +46,19 @@ export interface Config {
 // Define config schema
 const schema = joi.object<Config>({
   port: joi.number().default(3000),
+  cdpEnvironment: joi
+    .string()
+    .valid(
+      'local',
+      'infra-dev',
+      'management',
+      'dev',
+      'test',
+      'perf-test',
+      'ext-test',
+      'prod'
+    )
+    .default('local'),
   env: joi
     .string()
     .valid('development', 'test', 'production')
@@ -90,6 +112,7 @@ const schema = joi.object<Config>({
 const result = schema.validate(
   {
     port: process.env.PORT,
+    cdpEnvironment: process.env.ENVIRONMENT,
     env: process.env.NODE_ENV,
     managerUrl: process.env.MANAGER_URL,
     submissionUrl: process.env.SUBMISSION_URL,
