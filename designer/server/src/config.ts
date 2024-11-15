@@ -6,14 +6,24 @@ import joi from 'joi'
 const configPath = fileURLToPath(import.meta.url)
 
 export interface Config {
-  env: 'development' | 'test' | 'production'
   port: number
+  cdpEnvironment:
+    | 'local'
+    | 'infra-dev'
+    | 'management'
+    | 'dev'
+    | 'test'
+    | 'perf-test'
+    | 'ext-test'
+    | 'prod'
+  env: 'development' | 'test' | 'production'
   appDir: string
   clientDir: string
   previewUrl: string
   managerUrl: string
   submissionUrl: string
   serviceName: string
+  serviceVersion?: string
   logLevel: 'fatal' | 'error' | 'warn' | 'info' | 'debug' | 'trace' | 'silent'
   phase?: 'alpha' | 'beta' | 'live'
   isProduction: boolean
@@ -37,6 +47,19 @@ export interface Config {
 // Define config schema
 const schema = joi.object<Config>({
   port: joi.number().default(3000),
+  cdpEnvironment: joi
+    .string()
+    .valid(
+      'local',
+      'infra-dev',
+      'management',
+      'dev',
+      'test',
+      'perf-test',
+      'ext-test',
+      'prod'
+    )
+    .default('local'),
   env: joi
     .string()
     .valid('development', 'test', 'production')
@@ -55,6 +78,7 @@ const schema = joi.object<Config>({
   submissionUrl: joi.string().required(),
   previewUrl: joi.string().required(),
   serviceName: joi.string().required(),
+  serviceVersion: joi.string().optional(),
   logLevel: joi
     .string()
     .default('info')
@@ -90,11 +114,13 @@ const schema = joi.object<Config>({
 const result = schema.validate(
   {
     port: process.env.PORT,
+    cdpEnvironment: process.env.ENVIRONMENT,
     env: process.env.NODE_ENV,
     managerUrl: process.env.MANAGER_URL,
     submissionUrl: process.env.SUBMISSION_URL,
     previewUrl: process.env.PREVIEW_URL,
     serviceName: 'Submit a form to Defra',
+    serviceVersion: process.env.SERVICE_VERSION,
     logLevel: process.env.LOG_LEVEL,
     phase: process.env.PHASE,
     isProduction: process.env.NODE_ENV === 'production',

@@ -8,7 +8,7 @@ import { buildNavigation } from '~/src/common/nunjucks/context/build-navigation.
 import config from '~/src/config.js'
 
 const logger = createLogger()
-const { phase, serviceName } = config
+const { cdpEnvironment, phase, serviceName, serviceVersion } = config
 
 /** @type {Record<string, string> | undefined} */
 let webpackManifest
@@ -33,8 +33,10 @@ export async function context(request) {
   return {
     breadcrumbs: [],
     config: {
+      cdpEnvironment,
       phase,
-      serviceName
+      serviceName,
+      serviceVersion
     },
     navigation: buildNavigation(request),
     getAssetPath: (asset = '') => `/${webpackManifest?.[asset] ?? asset}`,

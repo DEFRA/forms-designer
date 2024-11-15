@@ -5,6 +5,17 @@
 {% from "heading/macro.njk" import appHeading %}
 
 {% block head %}
+  <meta name="application-name" content="@defra/forms-designer" {{- govukAttributes({
+    "data-environment": {
+      value: config.cdpEnvironment,
+      optional: true
+    },
+    "data-version": {
+      value: config.serviceVersion,
+      optional: true
+    }
+  }) }}>
+
   <link href="{{ getAssetPath("stylesheets/application.scss") }}" rel="stylesheet">
 {% endblock %}
 
