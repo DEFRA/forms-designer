@@ -28,9 +28,9 @@ export function updateConditions(data: FormDefinition) {
       if (hasConditionField(condition)) {
         return checkCondition(condition)
       } else if (hasConditionGroup(condition)) {
-        condition.conditions
+        return condition.conditions
           .filter((condition) => hasConditionField(condition))
-          .forEach(checkCondition)
+          .some(checkCondition)
       }
 
       return false
