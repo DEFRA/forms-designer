@@ -32,7 +32,7 @@ export function overviewViewModel(metadata, notification) {
   const pageTitle = metadata.title
   const formPath = formOverviewPath(metadata.slug)
 
-  const navigation = getFormSpecificNavigation(formPath, 'Overview')
+  const navigation = getFormSpecificNavigation(formPath, 'Overview', metadata)
 
   return {
     backLink: formsLibraryBackLink,
@@ -90,7 +90,7 @@ export function editorViewModel(metadata, definition) {
   const pageTitle = metadata.title
   const formPath = formOverviewPath(metadata.slug)
 
-  const navigation = getFormSpecificNavigation(formPath, 'Editor')
+  const navigation = getFormSpecificNavigation(formPath, 'Editor', metadata)
 
   return {
     backLink: formOverviewBackLink(metadata.slug),
@@ -111,13 +111,19 @@ export function editorViewModel(metadata, definition) {
  * a page, that page will have isActive:true set.
  * @param {string} formPath
  * @param {string} activePage
+ * @param {FormMetadata} metadata
  */
-export function getFormSpecificNavigation(formPath, activePage = '') {
-  return [
+export function getFormSpecificNavigation(formPath, activePage = '', metadata) {
+  const navigationItems = [
     ['Forms library', formsLibraryPath],
-    ['Overview', formPath],
-    ['Editor', `${formPath}/editor`]
-  ].map((item) =>
+    ['Overview', formPath]
+  ]
+
+  if (metadata.draft) {
+    navigationItems.push(['Editor', `${formPath}/editor`])
+  }
+
+  return navigationItems.map((item) =>
     buildEntry(item[0], item[1], { isActive: item[0] === activePage })
   )
 }
