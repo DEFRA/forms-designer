@@ -1,8 +1,4 @@
-import {
-  updateStartPage,
-  type FormDefinition,
-  type FormMetadata
-} from '@defra/forms-model'
+import { type FormDefinition, type FormMetadata } from '@defra/forms-model'
 import { useCallback, useMemo, useState } from 'react'
 
 import { Menu } from '~/src/components/Menu/Menu.jsx'
@@ -13,6 +9,7 @@ import {
   type FlyoutContextType
 } from '~/src/context/FlyoutContext.js'
 import { updateConditions } from '~/src/data/condition/updateConditions.js'
+import { fixupPages } from '~/src/data/page/fixup-pages.js'
 import * as form from '~/src/lib/form.js'
 
 interface Props {
@@ -44,7 +41,7 @@ function useData(props: Readonly<Props>): DataContextType {
    */
   const save = useCallback(
     async (updated: FormDefinition) => {
-      const definition = updateConditions(updateStartPage(updated))
+      const definition = updateConditions(fixupPages(updated))
       await form.save(props.meta.id, definition)
 
       return get()
