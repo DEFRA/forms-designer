@@ -28,7 +28,8 @@ const sessionCookie = {
             path: '/',
             password: config.sessionCookiePassword,
             isSecure: config.isProduction,
-            ttl: config.sessionCookieTtl
+            ttl: config.sessionCookieTtl,
+            clearInvalid: true
           },
           keepAlive: true,
 
