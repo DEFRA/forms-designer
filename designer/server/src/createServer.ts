@@ -67,7 +67,10 @@ const serverOptions = (): ServerOptions => {
               client: buildRedisClient()
             })
       }
-    ]
+    ],
+    state: {
+      strictHeader: false
+    }
   }
 }
 
