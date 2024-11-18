@@ -2,7 +2,6 @@ import {
   hasConditionField,
   hasConditionGroup,
   type ConditionData,
-  type ConditionWrapper,
   type FormDefinition
 } from '@defra/forms-model'
 
@@ -54,7 +53,7 @@ export function updateConditions(data: FormDefinition) {
     }
   }
 
-  conditions.forEach((condition: ConditionWrapper) => {
+  conditions.forEach((condition) => {
     condition.value.conditions.forEach((condition) => {
       if (hasConditionField(condition)) {
         fixUpCondition(condition)
