@@ -10,7 +10,7 @@ import { getFields } from '~/src/data/component/fields.js'
 /**
  * Update conditions to keep display text in sync with the component and section titles
  */
-export function updateConditions(data: FormDefinition) {
+export function fixupConditions(data: FormDefinition) {
   const fields = getFields(data)
 
   // Check if condition field display text is out of date

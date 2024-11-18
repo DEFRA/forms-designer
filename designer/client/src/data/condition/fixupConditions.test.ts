@@ -7,7 +7,7 @@ import {
   type FormDefinition
 } from '@defra/forms-model'
 
-import { updateConditions } from '~/src/data/condition/updateConditions.js'
+import { fixupConditions } from '~/src/data/condition/fixupConditions.js'
 
 const condition = {
   displayName: 'condition',
@@ -116,7 +116,7 @@ const data = {
 } satisfies FormDefinition
 
 test('updateConditions successfully updates a condition display text', () => {
-  expect(updateConditions(data)).toEqual<FormDefinition>({
+  expect(fixupConditions(data)).toEqual<FormDefinition>({
     conditions: [
       {
         displayName: 'condition',
@@ -223,7 +223,7 @@ test('updateConditions successfully skips updates of a condition when the field 
     pages: []
   }
 
-  expect(updateConditions(dataWithMissingComponent)).toEqual<FormDefinition>({
+  expect(fixupConditions(dataWithMissingComponent)).toEqual<FormDefinition>({
     conditions: [
       {
         displayName: 'condition',
