@@ -6,7 +6,7 @@ import {
   type PageQuestion
 } from '@defra/forms-model'
 
-import { fixupPages } from '~/src/data/page/fixup-pages.js'
+import { fixupPages } from '~/src/data/page/fixupPages.js'
 
 describe('fixupPages', () => {
   let data: FormDefinition

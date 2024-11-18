@@ -9,7 +9,7 @@ import {
   type FlyoutContextType
 } from '~/src/context/FlyoutContext.js'
 import { fixupConditions } from '~/src/data/condition/fixupConditions.js'
-import { fixupPages } from '~/src/data/page/fixup-pages.js'
+import { fixupPages } from '~/src/data/page/fixupPages.js'
 import * as form from '~/src/lib/form.js'
 
 interface Props {
