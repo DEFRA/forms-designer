@@ -32,7 +32,7 @@ export function overviewViewModel(metadata, notification) {
   const pageTitle = metadata.title
   const formPath = formOverviewPath(metadata.slug)
 
-  const navigation = getFormSpecificNavigation(formPath, 'Overview', metadata)
+  const navigation = getFormSpecificNavigation(formPath, metadata, 'Overview')
 
   return {
     backLink: formsLibraryBackLink,
@@ -90,7 +90,7 @@ export function editorViewModel(metadata, definition) {
   const pageTitle = metadata.title
   const formPath = formOverviewPath(metadata.slug)
 
-  const navigation = getFormSpecificNavigation(formPath, 'Editor', metadata)
+  const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
 
   return {
     backLink: formOverviewBackLink(metadata.slug),
@@ -113,7 +113,7 @@ export function editorViewModel(metadata, definition) {
  * @param {string} activePage
  * @param {FormMetadata} metadata
  */
-export function getFormSpecificNavigation(formPath, activePage = '', metadata) {
+export function getFormSpecificNavigation(formPath, metadata, activePage = '') {
   const navigationItems = [
     ['Forms library', formsLibraryPath],
     ['Overview', formPath]
