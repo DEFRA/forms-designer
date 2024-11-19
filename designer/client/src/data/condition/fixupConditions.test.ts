@@ -112,11 +112,13 @@ const data = {
       title: 'Section 1'
     }
   ],
-  conditions: [condition, groupCondition]
+  conditions: []
 } satisfies FormDefinition
 
 test('updateConditions successfully updates a condition display text', () => {
-  expect(fixupConditions(data)).toEqual<FormDefinition>({
+  expect(
+    fixupConditions({ ...data, conditions: [condition] })
+  ).toEqual<FormDefinition>({
     conditions: [
       {
         displayName: 'condition',
@@ -153,7 +155,35 @@ test('updateConditions successfully updates a condition display text', () => {
             }
           ]
         }
-      },
+      }
+    ],
+    lists: [],
+    pages: [
+      {
+        components: [
+          {
+            name: 'EsSAwF',
+            options: {},
+            schema: {},
+            title: 'Country',
+            type: ComponentType.TextField
+          }
+        ],
+        next: [],
+        path: '/1',
+        section: 'section1',
+        title: 'page1'
+      }
+    ],
+    sections: [{ name: 'section1', title: 'Section 1' }]
+  })
+})
+
+test('updateConditions successfully updates a condition group display text', () => {
+  expect(
+    fixupConditions({ ...data, conditions: [groupCondition] })
+  ).toEqual<FormDefinition>({
+    conditions: [
       {
         displayName: 'group condition',
         name: 'isScotlandOrNorthernIreland',
@@ -220,7 +250,8 @@ test('updateConditions successfully updates a condition display text', () => {
 test('updateConditions successfully skips updates of a condition when the field is missing', () => {
   const dataWithMissingComponent = {
     ...data,
-    pages: []
+    pages: [],
+    conditions: [condition, groupCondition]
   }
 
   expect(fixupConditions(dataWithMissingComponent)).toEqual<FormDefinition>({
