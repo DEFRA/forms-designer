@@ -45,7 +45,7 @@ export function fixupConditions(data: FormDefinition) {
   const { conditions } = definition
 
   // Fix up condition field display text
-  const fixUpCondition = (condition: ConditionData) => {
+  const fixupCondition = (condition: ConditionData) => {
     const field = checkCondition(condition)
 
     if (field) {
@@ -56,11 +56,11 @@ export function fixupConditions(data: FormDefinition) {
   conditions.forEach((condition) => {
     condition.value.conditions.forEach((condition) => {
       if (hasConditionField(condition)) {
-        fixUpCondition(condition)
+        fixupCondition(condition)
       } else if (hasConditionGroup(condition)) {
         condition.conditions
           .filter((condition) => hasConditionField(condition))
-          .forEach(fixUpCondition)
+          .forEach(fixupCondition)
       }
     })
   })
