@@ -163,7 +163,7 @@ function formatValue(
     return value.toExpression()
   }
 
-  return `'${value.toExpression()}'`
+  return `'${value.toExpression().replace(/'/g, "\\'")}'`
 }
 
 export const absoluteDateOperatorNames = Object.keys(
