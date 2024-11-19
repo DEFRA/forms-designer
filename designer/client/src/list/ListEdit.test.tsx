@@ -1,4 +1,4 @@
-import { type FormDefinition } from '@defra/forms-model'
+import { ComponentType, type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { render } from '@testing-library/react'
 
@@ -41,9 +41,56 @@ describe('ListEdit', () => {
     const $listCaption = screen.getByText('List items')
     const $listHint = screen.getByText('Enter a unique name for your list')
     const $listLink = screen.getByText('Add a new list item')
+    const $buttonDelete = screen.getByRole('button', { name: 'Delete' })
 
     expect($listCaption).toBeInTheDocument()
     expect($listHint).toBeInTheDocument()
     expect($listLink).toBeInTheDocument()
+    expect($buttonDelete).toBeInTheDocument()
+  })
+
+  test('message is displayed if the list is referenced', () => {
+    const initialName = data.lists[0].name
+    const dataWithReferencedList = {
+      ...data,
+      pages: [
+        {
+          title: 'Page one',
+          path: '/page-one',
+          next: [],
+          components: [
+            {
+              name: 'aYwMGM',
+              title: 'Choose animals',
+              type: ComponentType.CheckboxesField,
+              hint: '',
+              list: 'myList',
+              options: {}
+            }
+          ]
+        }
+      ]
+    } satisfies FormDefinition
+
+    render(
+      <RenderListEditorWithContext
+        data={dataWithReferencedList}
+        initialName={initialName}
+      >
+        <ListEdit />
+      </RenderListEditorWithContext>
+    )
+
+    const $listCaption = screen.getByText('List items')
+    const $listHint = screen.getByText('Enter a unique name for your list')
+    const $listLink = screen.getByText('Add a new list item')
+    const $listDeleteMessage = screen.getByText(
+      'This list cannot be deleted as it is referenced in components: "Choose animals"'
+    )
+
+    expect($listCaption).toBeInTheDocument()
+    expect($listHint).toBeInTheDocument()
+    expect($listLink).toBeInTheDocument()
+    expect($listDeleteMessage).toBeInTheDocument()
   })
 })

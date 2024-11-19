@@ -32,7 +32,9 @@ export function ListItemEdit() {
     value,
     condition,
     text,
-    description
+    description,
+    allowDelete,
+    references
   } = useListItem(listState, listDispatch)
 
   const { conditions } = data
@@ -107,6 +109,7 @@ export function ListItemEdit() {
           value={text ?? ''}
           onChange={handleTitleChange}
           errorMessage={errors.title}
+          disabled={!!references?.length}
         />
         <Textarea
           label={{ children: i18n('list.item.help') }}
@@ -124,6 +127,7 @@ export function ListItemEdit() {
           value={value ?? ''}
           errorMessage={errors.value}
           onChange={handleValueChange}
+          disabled={!!references?.length}
         />
         <div className="govuk-form-group">
           <label className="govuk-label" htmlFor="condition">
@@ -152,7 +156,7 @@ export function ListItemEdit() {
           <button className="govuk-button" type="submit">
             {i18n('save')}
           </button>
-          {!selectedItem.isNew && (
+          {allowDelete ? (
             <button
               className="govuk-button govuk-button--warning"
               type="button"
@@ -160,6 +164,16 @@ export function ListItemEdit() {
             >
               {i18n('delete')}
             </button>
+          ) : (
+            !!references?.length && (
+              <p className="govuk-body">
+                {i18n('list.item.referenced', {
+                  references: references
+                    .map((ref) => `"${ref.wrapper.displayName}"`)
+                    .join(', ')
+                })}
+              </p>
+            )
           )}
         </div>
       </form>

@@ -1,12 +1,14 @@
-import { ComponentType } from '~/src/components/enums.js'
 import {
+  ComponentType,
+  ControllerPath,
+  ControllerType,
   type FormDefinition,
   type PageQuestion
-} from '~/src/form/form-definition/types.js'
-import { updateStartPage } from '~/src/form/utils/update-start-page.js'
-import { ControllerPath, ControllerType } from '~/src/pages/enums.js'
+} from '@defra/forms-model'
 
-describe('updateStartPage', () => {
+import { fixupPages } from '~/src/data/page/fixupPages.js'
+
+describe('fixupPages', () => {
   let data: FormDefinition
 
   beforeEach(() => {
@@ -54,7 +56,7 @@ describe('updateStartPage', () => {
       startPage: ''
     }
 
-    const returned = updateStartPage(updated)
+    const returned = fixupPages(updated)
 
     expect(returned.pages).toEqual(updated.pages)
     expect(returned.startPage).toBe('/first-page')
@@ -68,7 +70,7 @@ describe('updateStartPage', () => {
       startPage: '/404'
     }
 
-    const returned = updateStartPage(updated)
+    const returned = fixupPages(updated)
 
     expect(returned.pages).toEqual(updated.pages)
     expect(returned.startPage).toBe('/first-page')
@@ -82,7 +84,7 @@ describe('updateStartPage', () => {
       pages: data.pages.slice(1)
     }
 
-    const returned = updateStartPage(updated)
+    const returned = fixupPages(updated)
 
     expect(returned.pages).toEqual(updated.pages)
     expect(returned.startPage).toBe('/second-page')
@@ -94,7 +96,7 @@ describe('updateStartPage', () => {
       pages: []
     }
 
-    const returned = updateStartPage(updated)
+    const returned = fixupPages(updated)
 
     expect(returned.pages).toEqual(updated.pages)
     expect(returned.startPage).toBeUndefined()
@@ -112,7 +114,7 @@ describe('updateStartPage', () => {
       pages
     }
 
-    const returned = updateStartPage(updated)
+    const returned = fixupPages(updated)
 
     expect(returned.pages).toEqual(updated.pages)
     expect(returned.startPage).toBeUndefined()
@@ -130,14 +132,14 @@ describe('updateStartPage', () => {
       pages
     }
 
-    const returned = updateStartPage(updated)
+    const returned = fixupPages(updated)
 
     expect(returned.pages).toEqual(updated.pages)
     expect(returned.startPage).toBeUndefined()
   })
 
   it('should skip start page update without changes', () => {
-    const returned = updateStartPage(data)
+    const returned = fixupPages(data)
 
     expect(returned).toEqual(data)
     expect(returned).toStrictEqual(data)

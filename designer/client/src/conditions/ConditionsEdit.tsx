@@ -62,7 +62,6 @@ export function ConditionsEdit({ path }: Readonly<Props>) {
   } = useConditionsEditor()
   const { data } = useContext(DataContext)
   const { conditions } = data
-
   const fieldInputs = getFields(data)
 
   return (

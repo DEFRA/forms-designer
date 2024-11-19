@@ -1,11 +1,10 @@
-import { type FormDefinition } from '~/src/form/form-definition/types.js'
-import { findStartPage } from '~/src/form/utils/find-start-page.js'
+import { findStartPage, type FormDefinition } from '@defra/forms-model'
 
 /**
  * Update start page when pages are modified
  * @param data - Form definition
  */
-export function updateStartPage(data: FormDefinition) {
+export function fixupPages(data: FormDefinition) {
   const startPage = findStartPage(data)
 
   // Update start page if incorrect
