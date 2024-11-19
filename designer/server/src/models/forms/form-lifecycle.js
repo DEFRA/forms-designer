@@ -11,7 +11,7 @@ export function confirmationPageViewModel(form, errorList) {
   const pageTitle = 'Are you sure you want to make the draft live?'
 
   const formPath = formOverviewPath(form.slug)
-  const navigation = getFormSpecificNavigation(formPath)
+  const navigation = getFormSpecificNavigation(formPath, form)
 
   return {
     navigation,
