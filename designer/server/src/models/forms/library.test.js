@@ -70,7 +70,7 @@ describe('Forms Library Models', () => {
 
   describe('getFormSpecificNavigation', () => {
     describe('with draft existing', () => {
-      test('includes Editor link', () => {
+      it('includes Editor link', () => {
         const navigation = getFormSpecificNavigation(
           formPath,
           metadataWithDraft,
@@ -84,7 +84,7 @@ describe('Forms Library Models', () => {
         ])
       })
 
-      test('Editor page is active when activePage is "Editor"', () => {
+      it('shows Editor page as active when activePage is "Editor"', () => {
         const navigation = getFormSpecificNavigation(
           formPath,
           metadataWithDraft,
@@ -100,7 +100,7 @@ describe('Forms Library Models', () => {
     })
 
     describe('without draft', () => {
-      test('does not include Editor link', () => {
+      it('does not include Editor link', () => {
         const navigation = getFormSpecificNavigation(
           formPath,
           metadataWithLive,
@@ -113,7 +113,7 @@ describe('Forms Library Models', () => {
         ])
       })
 
-      test('Editor link is not included even when activePage is "Editor"', () => {
+      it('excludes Editor link even when activePage is "Editor"', () => {
         const navigation = getFormSpecificNavigation(
           formPath,
           metadataWithLive,
@@ -128,7 +128,7 @@ describe('Forms Library Models', () => {
     })
 
     describe('with invalid activePage', () => {
-      test('no navigation item is active when activePage does not match any item', () => {
+      it('shows no navigation item as active when activePage does not match any item', () => {
         const navigation = getFormSpecificNavigation(
           formPath,
           metadataWithDraft,
@@ -144,7 +144,7 @@ describe('Forms Library Models', () => {
     })
 
     describe('with default activePage', () => {
-      test('no navigation item is active when activePage is defaulted', () => {
+      it('shows no navigation item as active when activePage is defaulted', () => {
         const navigation = getFormSpecificNavigation(
           formPath,
           metadataWithDraft
@@ -161,7 +161,7 @@ describe('Forms Library Models', () => {
 
   describe('overviewViewModel', () => {
     describe('with draft existing', () => {
-      test('returns correct view model structure', () => {
+      it('returns correct view model structure', () => {
         const notificationMessage = 'Form updated successfully'
         const viewModel = overviewViewModel(
           metadataWithDraft,
@@ -204,7 +204,7 @@ describe('Forms Library Models', () => {
     })
 
     describe('without draft', () => {
-      test('returns correct view model structure', () => {
+      it('returns correct view model structure', () => {
         const notificationMessage = 'Form updated successfully'
         const viewModel = overviewViewModel(
           metadataWithLive,
@@ -241,7 +241,7 @@ describe('Forms Library Models', () => {
   })
 
   describe('editorViewModel', () => {
-    test('returns correct view model structure', () => {
+    it('returns correct view model structure', () => {
       const mockDefinition = {
         name: 'Test Form Definition',
         pages: [],
