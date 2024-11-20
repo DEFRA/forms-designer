@@ -48,17 +48,18 @@ interface ContentFieldBase {
     | ComponentType.List
   name: string
   title: string
+  options?: {
+    required?: undefined
+    optionalText?: undefined
+  }
 }
 
-interface DateFieldBase {
+interface DateFieldBase extends FormFieldBase {
   type: ComponentType.DatePartsField | ComponentType.MonthYearField
   name: string
   title: string
   hint?: string
-  options: {
-    required?: boolean
-    optionalText?: boolean
-    classes?: string
+  options: FormFieldBase['options'] & {
     maxDaysInPast?: number
     maxDaysInFuture?: number
   }
@@ -112,15 +113,12 @@ export interface TelephoneNumberFieldComponent extends FormFieldBase {
   }
 }
 
-export interface FileUploadFieldComponent {
+export interface FileUploadFieldComponent extends FormFieldBase {
   type: ComponentType.FileUploadField
   name: string
   title: string
   hint?: string
-  options: {
-    required?: boolean
-    classes?: string
-    optionalText?: boolean
+  options: FormFieldBase['options'] & {
     accept?: string
   }
   schema: {
@@ -180,7 +178,7 @@ export interface MonthYearFieldComponent extends DateFieldBase {
 export interface DetailsComponent extends ContentFieldBase {
   type: ComponentType.Details
   content: string
-  options: {
+  options: ContentFieldBase['options'] & {
     condition?: string
   }
 }
@@ -188,7 +186,7 @@ export interface DetailsComponent extends ContentFieldBase {
 export interface HtmlComponent extends ContentFieldBase {
   type: ComponentType.Html
   content: string
-  options: {
+  options: ContentFieldBase['options'] & {
     condition?: string
   }
 }
@@ -202,7 +200,7 @@ export interface ListComponent extends ContentFieldBase {
   type: ComponentType.List
   hint?: string
   list: string
-  options: {
+  options: ContentFieldBase['options'] & {
     type?: ListTypeOption
     classes?: string
     hideTitle?: boolean
