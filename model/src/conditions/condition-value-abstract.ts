@@ -5,7 +5,7 @@ export class ConditionValueAbstract {
     )
   }
 
-  toExpression(): string {
+  toValue(): string {
     throw new Error(
       'Unsupported Operation. Method toExpression has not been implemented'
     )

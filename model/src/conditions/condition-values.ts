@@ -31,7 +31,7 @@ export class ConditionValue extends ConditionValueAbstract {
     return this.display
   }
 
-  toExpression() {
+  toValue() {
     return this.value
   }
 
@@ -77,7 +77,7 @@ export class RelativeDateValue extends ConditionValueAbstract {
     return `${this.period} ${this.unit} ${this.direction}`
   }
 
-  toExpression(): string {
+  toValue(): string {
     const period =
       this.direction === DateDirections.PAST
         ? 0 - Number(this.period)
