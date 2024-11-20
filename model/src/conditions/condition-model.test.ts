@@ -1689,4 +1689,65 @@ describe('condition model', () => {
       expect(returned).toBe(underTest)
     })
   })
+
+  describe('escaping condition values', () => {
+    beforeEach(() => {
+      underTest.add(
+        new Condition(
+          new ConditionField('badger', ComponentType.TextField, 'Badger'),
+          OperatorName.Is,
+          new ConditionValue("Zebra's")
+        )
+      )
+      underTest.add(new ConditionRef('under18', 'Under 18', Coordinator.OR))
+      underTest.add(
+        new Condition(
+          new ConditionField('squiffy', ComponentType.TextField, 'Squiffy'),
+          OperatorName.Is,
+          new ConditionValue("Donkey's"),
+          Coordinator.AND
+        )
+      )
+      underTest.add(
+        new Condition(
+          new ConditionField('duration', ComponentType.NumberField, 'Duration'),
+          OperatorName.IsAtLeast,
+          new ConditionValue('10'),
+          Coordinator.OR
+        )
+      )
+      underTest.add(
+        new Condition(
+          new ConditionField(
+            'birthday',
+            ComponentType.DatePartsField,
+            'Birthday'
+          ),
+          OperatorName.Is,
+          new ConditionValue('10/10/2019'),
+          Coordinator.OR
+        )
+      )
+      underTest.add(
+        new Condition(
+          new ConditionField('squiffy', ComponentType.TextField, 'Squiffy'),
+          OperatorName.IsNot,
+          new ConditionValue("K'plah's!"),
+          Coordinator.AND
+        )
+      )
+    })
+
+    test('single quotes are escaped in toExpression', () => {
+      expect(underTest.toExpression()).toBe(
+        "badger == 'Zebra\\'s' or (under18 and squiffy == 'Donkey\\'s') or duration >= 10 or (birthday == '10/10/2019' and squiffy != 'K\\'plah\\'s!')"
+      )
+    })
+
+    test('single quotes are not escaped in toPresentationString', () => {
+      expect(underTest.toPresentationString()).toBe(
+        "'Badger' is 'Zebra's' or ('Under 18' and 'Squiffy' is 'Donkey's') or 'Duration' is at least '10' or ('Birthday' is '10/10/2019' and 'Squiffy' is not 'K'plah's!')"
+      )
+    })
+  })
 })

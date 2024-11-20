@@ -160,10 +160,10 @@ function formatValue(
     field.type === ComponentType.NumberField ||
     field.type === ComponentType.YesNoField
   ) {
-    return value.toExpression()
+    return value.toValue()
   }
 
-  return `'${value.toExpression()}'`
+  return `'${value.toValue().replace(/'/g, "\\'")}'`
 }
 
 export const absoluteDateOperatorNames = Object.keys(
