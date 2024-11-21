@@ -33,7 +33,7 @@ export default [
         return Boom.unauthorized()
       }
 
-      const statusCode = await checkFileStatus(fileId)
+      const { statusCode } = await checkFileStatus(fileId)
 
       switch (statusCode) {
         case StatusCodes.OK: {
@@ -85,7 +85,7 @@ export default [
       const { payload, params, auth, server } = request
       const { credentials } = auth
       const { token } = credentials
-      const { email } = payload
+      let { email } = payload
       const { fileId } = params
 
       if (!userSession.hasUser(credentials)) {
@@ -93,6 +93,15 @@ export default [
       }
 
       try {
+        const result = await checkFileStatus(fileId)
+        const emailIsCaseSensitive = result.emailIsCaseSensitive
+
+        // If the email isn't case-sensitive,
+        // we lowercase the email before sending it to the submission API.
+        if (!emailIsCaseSensitive) {
+          email = email.toLowerCase()
+        }
+
         const { url } = await createFileLink(fileId, email, token)
 
         await server.methods.state.set(
@@ -120,7 +129,7 @@ export default [
           err.output.statusCode === StatusCodes.FORBIDDEN.valueOf()
         ) {
           logger.error(
-            `Failed to download file for file ID ${fileId} with incorrect email`
+            `Failed to download file for file ID ${fileId}. Email ${email} did not match retrieval key.`
           )
           const validation = {
             formErrors: {

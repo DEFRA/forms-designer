@@ -39,7 +39,7 @@ describe('Forms notification email', () => {
     organisation: 'Defra',
     teamName: 'Defra Forms',
     teamEmail: 'defraforms@defra.gov.uk',
-    notificationEmail: 'notificationEmail@defra.gov.uk',
+    notificationEmail: 'notificationemail@defra.gov.uk',
     createdAt: now,
     createdBy: author,
     updatedAt: now,
@@ -75,7 +75,7 @@ describe('Forms notification email', () => {
       name: 'What email address should submitted forms be sent to?'
     })
 
-    expect($privacyNoticeUrl).toHaveValue('notificationEmail@defra.gov.uk')
+    expect($privacyNoticeUrl).toHaveValue('notificationemail@defra.gov.uk')
   })
 
   test('POST - should redirect to overview page after updating notification email', async () => {
@@ -99,6 +99,34 @@ describe('Forms notification email', () => {
 
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe('/library/my-form-slug')
+  })
+
+  test('POST - should update notification email and convert to lowercase', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+    jest.mocked(forms.updateMetadata).mockResolvedValueOnce({
+      id: formMetadata.id,
+      slug: 'my-form-slug',
+      status: 'updated'
+    })
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/edit/notification-email',
+      auth,
+      payload: { notificationEmail: 'UPDATEDNotificationEmail@defra.gov.uk' }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe('/library/my-form-slug')
+    expect(forms.updateMetadata).toHaveBeenCalledWith(
+      formMetadata.id,
+      { notificationEmail: 'updatednotificationemail@defra.gov.uk' },
+      expect.any(String)
+    )
   })
 })
 
