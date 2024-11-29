@@ -1,5 +1,3 @@
-import { JSDOM } from 'jsdom'
-
 import { render } from '~/src/common/nunjucks/index.js'
 
 /**
@@ -35,10 +33,15 @@ export async function renderResponse(server, options) {
 
 /**
  * Render DOM
- * @param {string | Buffer} [html]
+ * @param {string} [html]
  */
-export function renderDOM(html) {
-  return new JSDOM(html).window
+export function renderDOM(html = '') {
+  const { window } = globalThis.$jsdom
+
+  // Update the document body
+  window.document.body.innerHTML = html
+
+  return window
 }
 
 /**

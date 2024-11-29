@@ -8,7 +8,7 @@
     "paths": {
       "~/*": ["./*"]
     },
-    "types": ["@testing-library/jest-dom"]
+    "types": ["@testing-library/jest-dom", "global-jsdom"]
   },
   "include": [
     "**/*.cjs",
