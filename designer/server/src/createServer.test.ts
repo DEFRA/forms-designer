@@ -30,13 +30,15 @@ describe('Server tests', () => {
       auth
     }
 
-    const { document } = await renderResponse(server, options)
-    const $heading = document.querySelector('h1')
+    const { container } = await renderResponse(server, options)
 
+    const $heading = container.getByRole('heading', {
+      name: 'Accessibility statement for [website name]',
+      level: 1
+    })
+
+    expect($heading).toBeInTheDocument()
     expect($heading).toHaveClass('govuk-heading-xl')
-    expect($heading).toHaveTextContent(
-      'Accessibility statement for [website name]'
-    )
   })
 
   test('cookies page is served', async () => {
@@ -48,11 +50,15 @@ describe('Server tests', () => {
       auth
     }
 
-    const { document } = await renderResponse(server, options)
-    const $heading = document.querySelector('h1')
+    const { container } = await renderResponse(server, options)
 
+    const $heading = container.getByRole('heading', {
+      name: 'Cookies',
+      level: 1
+    })
+
+    expect($heading).toBeInTheDocument()
     expect($heading).toHaveClass('govuk-heading-xl')
-    expect($heading).toHaveTextContent('Cookies')
   })
 
   test.each([
@@ -74,7 +80,7 @@ describe('Server tests', () => {
       auth
     }
 
-    const { document } = await renderResponse(server, options)
+    await renderResponse(server, options)
 
     const $phaseBanner = document.querySelector('.govuk-phase-banner')
     const $phaseBannerTag = $phaseBanner?.querySelector('.govuk-tag')
@@ -93,7 +99,7 @@ describe('Server tests', () => {
       auth
     }
 
-    const { document } = await renderResponse(server, options)
+    await renderResponse(server, options)
 
     const $phaseBanner = document.querySelector('.govuk-phase-banner')
     expect($phaseBanner).not.toBeInTheDocument()
@@ -108,7 +114,7 @@ describe('Server tests', () => {
       auth
     }
 
-    const { document } = await renderResponse(server, options)
+    await renderResponse(server, options)
 
     const $phaseBanner = document.querySelector('.govuk-phase-banner')
     expect($phaseBanner).not.toBeInTheDocument()

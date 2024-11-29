@@ -42,7 +42,7 @@ describe('List content edit', () => {
         )
 
         const $details = container.querySelector('details')
-        expect($details).not.toBeNull()
+        expect($details).toBeInTheDocument()
       }
     )
 
@@ -56,7 +56,7 @@ describe('List content edit', () => {
         )
 
         const $details = container.querySelector('details')
-        expect($details).toBeNull()
+        expect($details).not.toBeInTheDocument()
       }
     )
   })

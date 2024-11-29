@@ -1,4 +1,3 @@
-import { within } from '@testing-library/dom'
 import { StatusCodes } from 'http-status-codes'
 
 import { createServer } from '~/src/createServer.js'
@@ -71,9 +70,9 @@ describe('Forms contact phone', () => {
       auth
     }
 
-    const { document } = await renderResponse(server, options)
+    const { container } = await renderResponse(server, options)
 
-    const $phone = within(document.body).getByRole('textbox', {
+    const $phone = container.getByRole('textbox', {
       name: 'What’s the phone number and opening times for users to get help?'
     })
 

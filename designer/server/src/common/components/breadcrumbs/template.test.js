@@ -4,23 +4,19 @@ describe('Breadcrumbs Component', () => {
   let $breadcrumbs = /** @type {Element | null} */ (null)
 
   beforeEach(() => {
-    const { document } = renderMacro(
-      'appBreadcrumbs',
-      'breadcrumbs/macro.njk',
-      {
-        params: {
-          items: [
-            {
-              text: 'Deployments',
-              href: '/deployments'
-            },
-            {
-              text: 'Magic service'
-            }
-          ]
-        }
+    renderMacro('appBreadcrumbs', 'breadcrumbs/macro.njk', {
+      params: {
+        items: [
+          {
+            text: 'Deployments',
+            href: '/deployments'
+          },
+          {
+            text: 'Magic service'
+          }
+        ]
       }
-    )
+    })
 
     $breadcrumbs = document.querySelector('.app-breadcrumbs')
   })

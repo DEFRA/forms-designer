@@ -5,25 +5,27 @@ describe('Heading Component', () => {
 
   describe('With caption', () => {
     beforeEach(() => {
-      const { document } = renderMacro('appHeading', 'heading/macro.njk', {
+      const { container } = renderMacro('appHeading', 'heading/macro.njk', {
         params: {
           text: 'Services',
           caption: 'A page showing available services'
         }
       })
 
-      $heading = document.querySelector('h1')
+      $heading = container.getByRole('heading', {
+        level: 1
+      })
     })
 
-    test('Should render app heading component', () => {
-      expect($heading).not.toBeNull()
+    it('should render app heading component', () => {
+      expect($heading).toBeInTheDocument()
     })
 
-    test('Should contain expected heading', () => {
+    it('should contain expected heading', () => {
       expect($heading).toHaveTextContent('Services')
     })
 
-    test('Should have expected heading caption', () => {
+    it('should have expected heading caption', () => {
       expect(
         $heading?.querySelector("[class^='govuk-caption']")
       ).toHaveTextContent('A page showing available services')

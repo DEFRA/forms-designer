@@ -1,4 +1,3 @@
-import { within } from '@testing-library/dom'
 import { StatusCodes } from 'http-status-codes'
 
 import { createServer } from '~/src/createServer.js'
@@ -69,9 +68,9 @@ describe('Forms notification email', () => {
       auth
     }
 
-    const { document } = await renderResponse(server, options)
+    const { container } = await renderResponse(server, options)
 
-    const $privacyNoticeUrl = within(document.body).getByRole('textbox', {
+    const $privacyNoticeUrl = container.getByRole('textbox', {
       name: 'What email address should submitted forms be sent to?'
     })
 

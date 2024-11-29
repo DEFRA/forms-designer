@@ -1,4 +1,5 @@
 import Boom from '@hapi/boom'
+import { within } from '@testing-library/dom'
 import { StatusCodes } from 'http-status-codes'
 
 import * as userSession from '~/src/common/helpers/auth/get-user-session.js'
@@ -34,13 +35,22 @@ describe('File routes', () => {
         auth
       }
 
-      const { document } = await renderResponse(server, options)
+      const { container } = await renderResponse(server, options)
 
-      const html = document.documentElement.innerHTML
+      const $heading = container.getByRole('heading', {
+        name: 'You have a file to download',
+        level: 1
+      })
 
-      expect(html).toContain('You have a file to download')
-      expect(html).toContain('Email address')
-      expect(html).toContain('new.email@gov.uk')
+      expect($heading).toBeInTheDocument()
+      expect($heading).toHaveClass('govuk-heading-l')
+
+      const $input = container.getByRole('textbox', {
+        name: 'Email address'
+      })
+
+      expect($input).toBeInTheDocument()
+      expect($input).toHaveValue('new.email@gov.uk')
     })
 
     test('should show file download page for user to enter email when file status response is 200', async () => {
@@ -56,13 +66,22 @@ describe('File routes', () => {
         auth
       }
 
-      const { document } = await renderResponse(server, options)
+      const { container } = await renderResponse(server, options)
 
-      const html = document.documentElement.innerHTML
+      const $heading = container.getByRole('heading', {
+        name: 'You have a file to download',
+        level: 1
+      })
 
-      expect(html).toContain('You have a file to download')
-      expect(html).toContain('Email address')
-      expect(html).not.toContain('new.email@gov.uk')
+      expect($heading).toBeInTheDocument()
+      expect($heading).toHaveClass('govuk-heading-l')
+
+      const $input = container.getByRole('textbox', {
+        name: 'Email address'
+      })
+
+      expect($input).toBeInTheDocument()
+      expect($input).not.toHaveValue('new.email@gov.uk')
     })
 
     test('should show link expired page when response is 410', async () => {
@@ -77,11 +96,15 @@ describe('File routes', () => {
         auth
       }
 
-      const { document } = await renderResponse(server, options)
+      const { container } = await renderResponse(server, options)
 
-      const html = document.documentElement.innerHTML
+      const $heading = container.getByRole('heading', {
+        name: 'The link has expired',
+        level: 1
+      })
 
-      expect(html).toContain('The link has expired')
+      expect($heading).toBeInTheDocument()
+      expect($heading).toHaveClass('govuk-heading-l')
     })
 
     test('should show unauthorized page when user is unauthorized', async () => {
@@ -117,11 +140,15 @@ describe('File routes', () => {
         payload: { email }
       }
 
-      const { document } = await renderResponse(server, options)
+      const { container } = await renderResponse(server, options)
 
-      const html = document.documentElement.innerHTML
+      const $heading = container.getByRole('heading', {
+        name: 'Your file is downloading',
+        level: 1
+      })
 
-      expect(html).toContain('Your file is downloading')
+      expect($heading).toBeInTheDocument()
+      expect($heading).toHaveClass('govuk-heading-l')
     })
 
     test('should show link expired page when download file link response is 410', async () => {
@@ -139,11 +166,15 @@ describe('File routes', () => {
         payload: { email }
       }
 
-      const { document } = await renderResponse(server, options)
+      const { container } = await renderResponse(server, options)
 
-      const html = document.documentElement.innerHTML
+      const $heading = container.getByRole('heading', {
+        name: 'The link has expired',
+        level: 1
+      })
 
-      expect(html).toContain('The link has expired')
+      expect($heading).toBeInTheDocument()
+      expect($heading).toHaveClass('govuk-heading-l')
     })
 
     test('should show error when email is not for download file', async () => {
@@ -161,11 +192,19 @@ describe('File routes', () => {
         payload: { email }
       }
 
-      const { document } = await renderResponse(server, options)
+      const { container } = await renderResponse(server, options)
 
-      const html = document.documentElement.innerHTML
+      const $errorSummary = container.getByRole('alert')
+      const $errorItems = within($errorSummary).getAllByRole('listitem')
 
-      expect(html).toContain(
+      const $heading = within($errorSummary).getByRole('heading', {
+        name: 'There is a problem',
+        level: 2
+      })
+
+      expect($heading).toBeInTheDocument()
+
+      expect($errorItems[0]).toHaveTextContent(
         'This is not the email address the file was sent to'
       )
     })

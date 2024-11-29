@@ -1,3 +1,5 @@
+import { within } from '@testing-library/dom'
+
 import { render } from '~/src/common/nunjucks/index.js'
 
 /**
@@ -26,9 +28,8 @@ export async function renderResponse(server, options) {
     await server.inject(options)
   )
 
-  const { document } = renderDOM(response.result)
-
-  return { response, document }
+  const result = renderDOM(response.result)
+  return { ...result, response }
 }
 
 /**
@@ -41,7 +42,10 @@ export function renderDOM(html = '') {
   // Update the document body
   window.document.body.innerHTML = html
 
-  return window
+  const document = window.document
+  const container = within(document.body)
+
+  return { container, document }
 }
 
 /**
