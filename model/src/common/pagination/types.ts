@@ -38,13 +38,3 @@ export interface QueryResult<T> {
   data: T[]
   meta: Meta
 }
-
-/**
- * Generic type for queryable operations that can be called with or without options
- * @template T The type of items being returned
- * @template TOptions The type of query options (defaults to just PaginationOptions)
- */
-export interface Queryable<T, TOptions = PaginationOptions> {
-  (): Promise<T[]>
-  (options: TOptions): Promise<QueryResult<T>>
-}
