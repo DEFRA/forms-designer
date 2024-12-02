@@ -71,7 +71,7 @@ describe('Condition edit', () => {
         )
 
         const $group = container.querySelector('.govuk-form-group')
-        expect($group).not.toBeNull()
+        expect($group).toBeInTheDocument()
       }
     )
 
@@ -85,7 +85,7 @@ describe('Condition edit', () => {
         )
 
         const $group = container.querySelector('.govuk-form-group')
-        expect($group).toBeNull()
+        expect($group).not.toBeInTheDocument()
       }
     )
   })

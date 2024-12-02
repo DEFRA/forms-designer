@@ -5,7 +5,7 @@ const mockRequest = ({ path = '' } = {}) => ({
 })
 
 describe('#buildNavigation', () => {
-  test('Should provide expected navigation details', () => {
+  it('should provide expected navigation details', () => {
     expect(buildNavigation(mockRequest())).toEqual([
       {
         isActive: false,
@@ -15,7 +15,7 @@ describe('#buildNavigation', () => {
     ])
   })
 
-  test.each([
+  it.each([
     {
       path: '/',
       entries: [
@@ -37,7 +37,7 @@ describe('#buildNavigation', () => {
       ]
     }
   ])(
-    'Should provide expected highlighted navigation details',
+    'should provide expected highlighted navigation details',
     ({ path, entries }) => {
       expect(buildNavigation(mockRequest({ path }))).toEqual(
         expect.arrayContaining(entries)

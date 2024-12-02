@@ -67,7 +67,7 @@ describe('Test form draft and live creation route handlers', () => {
       auth
     }
 
-    const { document } = await renderResponse(server, options)
+    await renderResponse(server, options)
 
     const $bodyText = document.querySelector('.govuk-body-l')
     const $warningText = document.querySelector('.govuk-warning-text')
@@ -76,7 +76,7 @@ describe('Test form draft and live creation route handlers', () => {
       'Completed forms will be sent to defraforms@defra.gov.uk.'
     )
 
-    expect($warningText).toBeNull()
+    expect($warningText).not.toBeInTheDocument()
   })
 
   test('When a live form is about to be overwritten, warn the user ahead of time', async () => {
@@ -95,7 +95,7 @@ describe('Test form draft and live creation route handlers', () => {
       auth
     }
 
-    const { document } = await renderResponse(server, options)
+    await renderResponse(server, options)
 
     const $warningText = document.querySelector('.govuk-warning-text')
 
@@ -116,11 +116,11 @@ describe('Test form draft and live creation route handlers', () => {
       auth
     }
 
-    const { document } = await renderResponse(server, options)
+    await renderResponse(server, options)
 
     const $bodyText = document.querySelector('.govuk-body-l')
 
-    expect($bodyText).toBeNull()
+    expect($bodyText).not.toBeInTheDocument()
   })
 
   test('When a live form is created, it should redirect to the library', async () => {

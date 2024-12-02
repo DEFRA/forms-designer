@@ -62,8 +62,10 @@ updates:
           - '@testing-library/*'
           - 'cheerio'
           - 'concurrently'
+          - 'global-jsdom'
           - 'jest'
           - 'jest-*'
+          - 'jsdom'
           - 'tsx'
 
       types:

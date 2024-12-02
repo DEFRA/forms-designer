@@ -9,14 +9,10 @@ describe('Grid layout component', () => {
 
   describe('With child content', () => {
     beforeEach(() => {
-      const { document } = renderMacro(
-        'appGridLayout',
-        'grid-layout/macro.njk',
-        {
-          callBlock:
-            '<p class="govuk-body">Used digger, digs great and is lots of fun to dig huge holes with. Comes with heater, comfy seat and radio.</p>'
-        }
-      )
+      renderMacro('appGridLayout', 'grid-layout/macro.njk', {
+        callBlock:
+          '<p class="govuk-body">Used digger, digs great and is lots of fun to dig huge holes with. Comes with heater, comfy seat and radio.</p>'
+      })
 
       $rows = document.querySelectorAll('.govuk-grid-row')
       $columns = document.querySelectorAll("[class^='govuk-grid-column']")
@@ -31,15 +27,11 @@ describe('Grid layout component', () => {
 
   describe('With text param', () => {
     beforeEach(() => {
-      const { document } = renderMacro(
-        'appGridLayout',
-        'grid-layout/macro.njk',
-        {
-          params: {
-            text: 'Used digger, digs great and is lots of fun to dig huge holes with. Comes with heater, comfy seat and radio.'
-          }
+      renderMacro('appGridLayout', 'grid-layout/macro.njk', {
+        params: {
+          text: 'Used digger, digs great and is lots of fun to dig huge holes with. Comes with heater, comfy seat and radio.'
         }
-      )
+      })
 
       $rows = document.querySelectorAll('.govuk-grid-row')
       $columns = document.querySelectorAll("[class^='govuk-grid-column']")
@@ -54,15 +46,11 @@ describe('Grid layout component', () => {
 
   describe('With html param', () => {
     beforeEach(() => {
-      const { document } = renderMacro(
-        'appGridLayout',
-        'grid-layout/macro.njk',
-        {
-          params: {
-            html: '<p class="govuk-body">Used digger, digs great and is lots of fun to dig huge holes with. Comes with heater, comfy seat and radio.</p>'
-          }
+      renderMacro('appGridLayout', 'grid-layout/macro.njk', {
+        params: {
+          html: '<p class="govuk-body">Used digger, digs great and is lots of fun to dig huge holes with. Comes with heater, comfy seat and radio.</p>'
         }
-      )
+      })
 
       $rows = document.querySelectorAll('.govuk-grid-row')
       $columns = document.querySelectorAll("[class^='govuk-grid-column']")
@@ -77,19 +65,15 @@ describe('Grid layout component', () => {
 
   describe('With attributes param', () => {
     beforeEach(() => {
-      const { document } = renderMacro(
-        'appGridLayout',
-        'grid-layout/macro.njk',
-        {
-          params: {
-            attributes: {
-              'data-example1': 'value1',
-              'data-example2': 'value2',
-              'data-example3': 'value3'
-            }
+      renderMacro('appGridLayout', 'grid-layout/macro.njk', {
+        params: {
+          attributes: {
+            'data-example1': 'value1',
+            'data-example2': 'value2',
+            'data-example3': 'value3'
           }
         }
-      )
+      })
 
       $rows = document.querySelectorAll('.govuk-grid-row')
       $columns = document.querySelectorAll("[class^='govuk-grid-column']")
@@ -104,20 +88,16 @@ describe('Grid layout component', () => {
 
   describe('With multiple rows', () => {
     beforeEach(() => {
-      const { document } = renderMacro(
-        'appGridLayout',
-        'grid-layout/macro.njk',
-        {
-          params: [
-            {
-              text: 'Row 1, Column 1'
-            },
-            {
-              text: 'Row 2, Column 1'
-            }
-          ]
-        }
-      )
+      renderMacro('appGridLayout', 'grid-layout/macro.njk', {
+        params: [
+          {
+            text: 'Row 1, Column 1'
+          },
+          {
+            text: 'Row 2, Column 1'
+          }
+        ]
+      })
 
       $rows = document.querySelectorAll('.govuk-grid-row')
       $columns = document.querySelectorAll("[class^='govuk-grid-column']")
@@ -142,26 +122,22 @@ describe('Grid layout component', () => {
 
   describe('With multiple rows (with attributes)', () => {
     beforeEach(() => {
-      const { document } = renderMacro(
-        'appGridLayout',
-        'grid-layout/macro.njk',
-        {
-          params: [
-            {
-              text: 'Row 1, Column 1',
-              attributes: {
-                'data-row1': 'column1'
-              }
-            },
-            {
-              text: 'Row 2, Column 1',
-              attributes: {
-                'data-row2': 'column1'
-              }
+      renderMacro('appGridLayout', 'grid-layout/macro.njk', {
+        params: [
+          {
+            text: 'Row 1, Column 1',
+            attributes: {
+              'data-row1': 'column1'
             }
-          ]
-        }
-      )
+          },
+          {
+            text: 'Row 2, Column 1',
+            attributes: {
+              'data-row2': 'column1'
+            }
+          }
+        ]
+      })
 
       $rows = document.querySelectorAll('.govuk-grid-row')
       $columns = document.querySelectorAll("[class^='govuk-grid-column']")
@@ -175,30 +151,26 @@ describe('Grid layout component', () => {
 
   describe('With multiple rows and columns', () => {
     beforeEach(() => {
-      const { document } = renderMacro(
-        'appGridLayout',
-        'grid-layout/macro.njk',
-        {
-          params: [
-            [
-              {
-                text: 'Row 1, Column 1'
-              },
-              {
-                text: 'Row 1, Column 2'
-              }
-            ],
-            [
-              {
-                text: 'Row 2, Column 1'
-              },
-              {
-                text: 'Row 2, Column 2'
-              }
-            ]
+      renderMacro('appGridLayout', 'grid-layout/macro.njk', {
+        params: [
+          [
+            {
+              text: 'Row 1, Column 1'
+            },
+            {
+              text: 'Row 1, Column 2'
+            }
+          ],
+          [
+            {
+              text: 'Row 2, Column 1'
+            },
+            {
+              text: 'Row 2, Column 2'
+            }
           ]
-        }
-      )
+        ]
+      })
 
       $rows = document.querySelectorAll('.govuk-grid-row')
       $columns = document.querySelectorAll("[class^='govuk-grid-column']")
@@ -227,42 +199,38 @@ describe('Grid layout component', () => {
 
   describe('With multiple rows and columns (with attributes)', () => {
     beforeEach(() => {
-      const { document } = renderMacro(
-        'appGridLayout',
-        'grid-layout/macro.njk',
-        {
-          params: [
-            [
-              {
-                text: 'Row 1, Column 1',
-                attributes: {
-                  'data-row1': 'column1'
-                }
-              },
-              {
-                text: 'Row 1, Column 2',
-                attributes: {
-                  'data-row1': 'column2'
-                }
+      renderMacro('appGridLayout', 'grid-layout/macro.njk', {
+        params: [
+          [
+            {
+              text: 'Row 1, Column 1',
+              attributes: {
+                'data-row1': 'column1'
               }
-            ],
-            [
-              {
-                text: 'Row 2, Column 1',
-                attributes: {
-                  'data-row2': 'column1'
-                }
-              },
-              {
-                text: 'Row 2, Column 2',
-                attributes: {
-                  'data-row2': 'column2'
-                }
+            },
+            {
+              text: 'Row 1, Column 2',
+              attributes: {
+                'data-row1': 'column2'
               }
-            ]
+            }
+          ],
+          [
+            {
+              text: 'Row 2, Column 1',
+              attributes: {
+                'data-row2': 'column1'
+              }
+            },
+            {
+              text: 'Row 2, Column 2',
+              attributes: {
+                'data-row2': 'column2'
+              }
+            }
           ]
-        }
-      )
+        ]
+      })
 
       $rows = document.querySelectorAll('.govuk-grid-row')
       $columns = document.querySelectorAll("[class^='govuk-grid-column']")

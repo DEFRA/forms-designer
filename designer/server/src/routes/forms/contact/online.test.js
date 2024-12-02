@@ -1,4 +1,3 @@
-import { within } from '@testing-library/dom'
 import { StatusCodes } from 'http-status-codes'
 
 import { createServer } from '~/src/createServer.js'
@@ -74,16 +73,16 @@ describe('Forms contact online', () => {
       auth
     }
 
-    const { document } = await renderResponse(server, options)
+    const { container } = await renderResponse(server, options)
 
-    const $url = within(document.body).getByRole('textbox', {
+    const $url = container.getByRole('textbox', {
       name: 'Contact link',
       description: 'For example, ‘https://www.gov.uk/guidance/contact-defra’'
     })
 
     expect($url).toHaveValue('https://www.gov.uk/guidance/contact-defra')
 
-    const $text = within(document.body).getByRole('textbox', {
+    const $text = container.getByRole('textbox', {
       name: 'Text to describe the contact link',
       description: 'For example, ‘Online contact form’'
     })

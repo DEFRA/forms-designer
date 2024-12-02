@@ -29,7 +29,7 @@ describe('Component create list: Supported page types', () => {
     )
 
     const $list = container.querySelector('ol')
-    expect($list).not.toBeNull()
+    expect($list).toBeInTheDocument()
   })
 
   it.each(
@@ -42,7 +42,7 @@ describe('Component create list: Supported page types', () => {
     )
 
     const $list = container.querySelector('ol')
-    expect($list).toBeNull()
+    expect($list).not.toBeInTheDocument()
   })
 })
 
@@ -170,7 +170,7 @@ describe.each([
         const $list = $heading.parentElement?.querySelector('ol')
         const $hint = $heading.parentElement?.querySelector('.govuk-hint')
 
-        expect($list).toBeNull()
+        expect($list).not.toBeInTheDocument()
         expect($hint).toHaveTextContent(
           `No ${name.toLowerCase()} components available`
         )

@@ -1,4 +1,3 @@
-import { within } from '@testing-library/dom'
 import { StatusCodes } from 'http-status-codes'
 
 import { createServer } from '~/src/createServer.js'
@@ -68,15 +67,15 @@ describe('Forms library routes', () => {
       auth
     }
 
-    const { document } = await renderResponse(server, options)
+    const { container } = await renderResponse(server, options)
 
-    const $teamName = within(document.body).getByRole('textbox', {
+    const $teamName = container.getByRole('textbox', {
       name: 'Name of team',
       description:
         'Enter the name of the policy team or business area responsible for this form'
     })
 
-    const $teamEmail = within(document.body).getByRole('textbox', {
+    const $teamEmail = container.getByRole('textbox', {
       name: 'Shared team email address',
       description:
         'Used to contact the form subject matter expert (SME) or key stakeholder. Must be a UK email address, like name@example.gov.uk'
@@ -119,9 +118,9 @@ describe('Forms library routes', () => {
       auth
     }
 
-    const { document } = await renderResponse(server, options)
+    const { container } = await renderResponse(server, options)
 
-    const $title = within(document.body).getByRole('textbox', {
+    const $title = container.getByRole('textbox', {
       name: 'Enter a name for your form'
     })
 

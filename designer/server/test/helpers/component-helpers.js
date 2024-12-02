@@ -1,4 +1,4 @@
-import { JSDOM } from 'jsdom'
+import { within } from '@testing-library/dom'
 
 import { render } from '~/src/common/nunjucks/index.js'
 
@@ -28,17 +28,24 @@ export async function renderResponse(server, options) {
     await server.inject(options)
   )
 
-  const { document } = renderDOM(response.result)
-
-  return { response, document }
+  const result = renderDOM(response.result)
+  return { ...result, response }
 }
 
 /**
  * Render DOM
- * @param {string | Buffer} [html]
+ * @param {string} [html]
  */
-export function renderDOM(html) {
-  return new JSDOM(html).window
+export function renderDOM(html = '') {
+  const { window } = globalThis.$jsdom
+
+  // Update the document body
+  window.document.body.innerHTML = html
+
+  const document = window.document
+  const container = within(document.body)
+
+  return { container, document }
 }
 
 /**

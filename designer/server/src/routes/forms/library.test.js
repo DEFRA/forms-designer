@@ -71,14 +71,19 @@ describe('Forms library routes', () => {
       auth
     }
 
-    const { document } = await renderResponse(server, options)
+    const { container } = await renderResponse(server, options)
 
-    const $heading = document.querySelector('h1')
+    const $heading = container.getByRole('heading', {
+      name: 'Forms library',
+      level: 1
+    })
+
+    const $tables = container.getAllByRole('table')
+
     expect($heading).toHaveClass('govuk-heading-xl')
-    expect($heading).toHaveTextContent('Forms library')
-
-    const $table = document.querySelector('table')
-    expect($table).toContainHTML(`<td class="govuk-table__cell">${title}</td>`)
+    expect($tables[0]).toContainHTML(
+      `<td class="govuk-table__cell">${title}</td>`
+    )
   })
 
   test('Form editor page', async () => {
@@ -93,7 +98,7 @@ describe('Forms library routes', () => {
       auth
     }
 
-    const { document } = await renderResponse(server, options)
+    await renderResponse(server, options)
 
     const $editor = document.querySelector('.app-form-editor')
     const $metadata = document.querySelector('.app-form-metadata')
@@ -137,7 +142,7 @@ describe('Forms library routes', () => {
       auth
     }
 
-    const { document } = await renderResponse(server, options)
+    await renderResponse(server, options)
 
     const $card = document.querySelector('.app-form-card')
     const $buttons = $card?.querySelectorAll('.govuk-button')
@@ -155,7 +160,7 @@ describe('Forms library routes', () => {
       auth
     }
 
-    const { document } = await renderResponse(server, options)
+    await renderResponse(server, options)
 
     const $card = document.querySelector('.app-form-card')
     const $buttons = $card?.querySelectorAll('.govuk-button')

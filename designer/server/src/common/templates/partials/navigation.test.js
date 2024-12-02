@@ -7,14 +7,14 @@ describe('Navigation partial', () => {
     const selectorHeader = '.one-login-header'
 
     it('should render by default', () => {
-      const { document } = renderView('partials/navigation.njk')
-      const $header = document.querySelector(selectorHeader)
+      renderView('partials/navigation.njk')
 
+      const $header = document.querySelector(selectorHeader)
       expect($header).toBeInTheDocument()
     })
 
     it('should render account name when authenticated', () => {
-      const { document } = renderView('partials/navigation.njk', {
+      renderView('partials/navigation.njk', {
         context: {
           authedUser: { displayName: 'John Smith' },
           isAuthenticated: true,
@@ -33,7 +33,7 @@ describe('Navigation partial', () => {
     })
 
     it('should not render account name by default', () => {
-      const { document } = renderView('partials/navigation.njk')
+      renderView('partials/navigation.njk')
 
       const $header = document.querySelector(selectorHeader)
       const $navLinks = $header?.querySelectorAll(
@@ -49,7 +49,7 @@ describe('Navigation partial', () => {
     const selectorNavigation = `.service-header`
 
     it('should render menu when signed in and is a form user (authorized)', () => {
-      const { document } = renderView('partials/navigation.njk', {
+      renderView('partials/navigation.njk', {
         context: {
           navigation: [],
           isAuthenticated: true,
@@ -91,14 +91,14 @@ describe('Navigation partial', () => {
         }
       }
     ])('should not render menu when $example', ({ context }) => {
-      const { document } = renderView('partials/navigation.njk', { context })
+      renderView('partials/navigation.njk', { context })
 
       const $navigation = document.querySelector(selectorNavigation)
       expect($navigation).not.toBeInTheDocument()
     })
 
     it('should not render menu by default', () => {
-      const { document } = renderView('partials/navigation.njk')
+      renderView('partials/navigation.njk')
       const $navigation = document.querySelector(selectorNavigation)
 
       expect($navigation).not.toBeInTheDocument()
@@ -123,7 +123,7 @@ describe('Navigation partial', () => {
     ])(
       "should render for '$context.config.phase' phase (via config)",
       ({ context }) => {
-        const { document } = renderView('partials/navigation.njk', { context })
+        renderView('partials/navigation.njk', { context })
 
         const $phaseBanner = document.querySelector(selectorPhaseBanner)
         const $phaseTag = $phaseBanner?.querySelector(selectorTag)
@@ -134,7 +134,7 @@ describe('Navigation partial', () => {
     )
 
     it("should not render for 'live' phase (via config)", () => {
-      const { document } = renderView('partials/navigation.njk', {
+      renderView('partials/navigation.njk', {
         context: {
           config: { phase: 'live' }
         }
@@ -145,7 +145,7 @@ describe('Navigation partial', () => {
     })
 
     it('should not render by default', () => {
-      const { document } = renderView('partials/navigation.njk')
+      renderView('partials/navigation.njk')
 
       const $phaseBanner = document.querySelector(selectorPhaseBanner)
       expect($phaseBanner).not.toBeInTheDocument()

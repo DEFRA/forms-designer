@@ -8,7 +8,7 @@ describe('Page body component', () => {
 
   describe('With child content', () => {
     beforeEach(() => {
-      const { document } = renderMacro('appPageBody', 'page-body/macro.njk', {
+      const { container } = renderMacro('appPageBody', 'page-body/macro.njk', {
         callBlock: outdent`
           <h1 class="govuk-heading-xl">
             You have signed out
@@ -19,16 +19,19 @@ describe('Page body component', () => {
         `
       })
 
-      $heading = document.querySelector('h1')
-      $paragraph = document.querySelector('p')
+      $heading = container.getByRole('heading', {
+        level: 1
+      })
+
+      $paragraph = container.getByRole('paragraph')
     })
 
-    test('Should render child heading', () => {
+    it('should render child heading', () => {
       expect($heading).toHaveClass('govuk-heading-xl')
       expect($heading).toHaveTextContent('You have signed out')
     })
 
-    test('Should render child paragraph', () => {
+    it('should render child paragraph', () => {
       expect($paragraph).toHaveClass('govuk-body-l')
       expect($paragraph).toHaveTextContent(
         'Sign in to access and create forms.'
@@ -38,7 +41,7 @@ describe('Page body component', () => {
 
   describe('With child content and heading', () => {
     beforeEach(() => {
-      const { document } = renderMacro('appPageBody', 'page-body/macro.njk', {
+      const { container } = renderMacro('appPageBody', 'page-body/macro.njk', {
         params: {
           heading: {
             text: 'You have signed out',
@@ -52,16 +55,19 @@ describe('Page body component', () => {
         `
       })
 
-      $heading = document.querySelector('h1')
-      $paragraph = document.querySelector('p')
+      $heading = container.getByRole('heading', {
+        level: 1
+      })
+
+      $paragraph = container.getByRole('paragraph')
     })
 
-    test('Should render configured heading', () => {
+    it('should render configured heading', () => {
       expect($heading).toHaveClass('govuk-heading-xl')
       expect($heading).toHaveTextContent('You have signed out')
     })
 
-    test('Should render child paragraph', () => {
+    it('should render child paragraph', () => {
       expect($paragraph).toHaveClass('govuk-body-l')
       expect($paragraph).toHaveTextContent(
         'Sign in to access and create forms.'

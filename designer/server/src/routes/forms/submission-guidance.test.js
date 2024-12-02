@@ -68,7 +68,7 @@ describe('Forms submission guidance', () => {
       auth
     }
 
-    const { document } = await renderResponse(server, options)
+    await renderResponse(server, options)
 
     const submissionGuidance = /** @satisfies {HTMLInputElement | null} */ (
       document.querySelector('#submissionGuidance')

@@ -24,7 +24,7 @@ describe('Select field edit', () => {
         )
 
         const $details = container.querySelector('details')
-        expect($details).not.toBeNull()
+        expect($details).toBeInTheDocument()
       }
     )
 
@@ -38,7 +38,7 @@ describe('Select field edit', () => {
         )
 
         const $details = container.querySelector('details')
-        expect($details).toBeNull()
+        expect($details).not.toBeInTheDocument()
       }
     )
   })
