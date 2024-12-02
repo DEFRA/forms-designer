@@ -42,14 +42,13 @@ export interface Meta {
 }
 
 /**
- * Generic result type for paginated queries
- * @template T The type of items in the result
+ * Standard response wrapper for query results with metadata
  */
-export interface QueryResult<T> {
+export interface QueryResult<Model> {
   /**
    * The array of data items
    */
-  data: T[]
+  data: Model[]
 
   /**
    * The metadata about the result
