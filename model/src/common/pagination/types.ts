@@ -1,5 +1,4 @@
 /**
- * Result of pagination containing page information
  * @property {number} page - The current page number.
  * @property {number} perPage - The number of items per page.
  * @property {number} totalItems - The total number of items available.
@@ -21,7 +20,6 @@ export type PaginationOptions = Partial<
 >
 
 /**
- * Metadata containing pagination information
  * @property {PaginationResult} [pagination] - The pagination details.
  */
 export interface Meta {
