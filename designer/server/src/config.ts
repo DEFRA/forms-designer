@@ -2,6 +2,7 @@ import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import joi from 'joi'
+import { type LevelWithSilent } from 'pino'
 
 const configPath = fileURLToPath(import.meta.url)
 
@@ -24,7 +25,12 @@ export interface Config {
   submissionUrl: string
   serviceName: string
   serviceVersion?: string
-  logLevel: 'fatal' | 'error' | 'warn' | 'info' | 'debug' | 'trace' | 'silent'
+  log: {
+    enabled: boolean
+    level: LevelWithSilent
+    format: 'ecs' | 'pino-pretty'
+    redact: string[]
+  }
   phase?: 'alpha' | 'beta' | 'live'
   isProduction: boolean
   isDevelopment: boolean
@@ -65,32 +71,61 @@ const schema = joi.object<Config>({
     .valid('development', 'test', 'production')
     .default('development'),
   appDir: joi.string().default(dirname(configPath)),
-  clientDir: joi
-    .string()
-    .default(resolve(dirname(configPath), '../../client/dist'))
-    .when('env', {
-      is: 'test',
-      then: joi
-        .string()
-        .default(resolve(dirname(configPath), '../../client/test/fixtures'))
-    }),
+  clientDir: joi.string().when('env', {
+    is: 'test',
+    then: joi
+      .string()
+      .default(resolve(dirname(configPath), '../../client/test/fixtures')),
+    otherwise: joi
+      .string()
+      .default(resolve(dirname(configPath), '../../client/dist'))
+  }),
   managerUrl: joi.string().required(),
   submissionUrl: joi.string().required(),
   previewUrl: joi.string().required(),
   serviceName: joi.string().required(),
   serviceVersion: joi.string().optional(),
-  logLevel: joi
-    .string()
-    .default('info')
-    .when('env', {
-      is: 'development',
-      then: joi.string().default('error')
-    })
-    .when('env', {
+  log: joi.object({
+    enabled: joi.boolean().when('...env', {
       is: 'test',
-      then: joi.string().default('silent')
-    })
-    .valid('fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent'),
+      then: joi.boolean().default(false),
+      otherwise: joi.boolean().default(true)
+    }),
+    level: joi
+      .string()
+      .when('...env', {
+        is: 'development',
+        then: joi.string().default('error'),
+        otherwise: joi.string().default('info')
+      })
+      .valid('fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent'),
+    format: joi
+      .string()
+      .when('...env', {
+        is: 'development',
+        then: joi.string().default('pino-pretty'),
+        otherwise: joi.string().default('ecs')
+      })
+      .valid('ecs', 'pino-pretty'),
+    redact: joi
+      .array()
+      .items(joi.string())
+      .when('...env', {
+        is: 'development',
+        then: joi
+          .array()
+          .items(joi.string())
+          .default(['req', 'res', 'responseTime']),
+        otherwise: joi
+          .array()
+          .items(joi.string())
+          .default([
+            'req.headers.authorization',
+            'req.headers.cookie',
+            'res.headers'
+          ])
+      })
+  }),
   phase: joi.string().valid('alpha', 'beta', 'live').optional(),
   isProduction: joi.boolean().default(false),
   isDevelopment: joi.boolean().default(true),
@@ -121,7 +156,11 @@ const result = schema.validate(
     previewUrl: process.env.PREVIEW_URL,
     serviceName: 'Submit a form to Defra',
     serviceVersion: process.env.SERVICE_VERSION,
-    logLevel: process.env.LOG_LEVEL,
+    log: {
+      enabled: process.env.LOG_ENABLED,
+      level: process.env.LOG_LEVEL,
+      format: process.env.LOG_FORMAT
+    },
     phase: process.env.PHASE,
     isProduction: process.env.NODE_ENV === 'production',
     isDevelopment: !['production', 'test'].includes(`${process.env.NODE_ENV}`),
