@@ -1,5 +1,6 @@
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
+import config from '~/src/config.js'
 import * as forms from '~/src/lib/forms.js'
 import * as library from '~/src/models/forms/library.js'
 import { formOverviewPath } from '~/src/models/links.js'
@@ -11,14 +12,47 @@ export default [
   ({
     method: 'GET',
     path: '/library',
-    async handler(request, h) {
-      const { auth } = request
-      const token = auth.credentials.token
-      const model = await library.listViewModel(token)
-
-      return h.view('forms/library', model)
-    },
     options: {
+      handler: async (request, h) => {
+        const { auth, query } = request
+        const token = auth.credentials.token
+
+        const page = Number(query.page) || 1
+        const perPage = Number(query.perPage) || 24
+
+        const paginationOptions = { page, perPage }
+        const model = await library.listViewModel(token, paginationOptions)
+
+        if (model.pagination) {
+          const { totalPages } = model.pagination
+
+          if (page < 1 || page > totalPages) {
+            // Redirect to the first page
+            const redirectUrl = new URL('/library', config.appBaseUrl)
+            redirectUrl.searchParams.set('page', '1')
+            redirectUrl.searchParams.set('perPage', String(perPage))
+            return h.redirect(redirectUrl.pathname + redirectUrl.search)
+          }
+        }
+
+        // Redirect to include pagination params if missing
+        if (!('page' in query) && !('perPage' in query) && model.pagination) {
+          const redirectUrl = new URL('/library', config.appBaseUrl)
+          redirectUrl.searchParams.set('page', String(page))
+          redirectUrl.searchParams.set('perPage', String(perPage))
+          return h.redirect(redirectUrl.pathname + redirectUrl.search)
+        }
+        // eslint-disable-next-line no-console
+        console.log('🚀 ~ handler: ~ model:', JSON.stringify(model.pagination))
+
+        // eslint-disable-next-line no-console
+        console.log(
+          '🚀 ~ handler: ~ model:',
+          JSON.stringify(model.pagination?.pages, null, 2)
+        )
+
+        return h.view('forms/library', model)
+      },
       auth: {
         mode: 'required',
         access: {

@@ -9,19 +9,118 @@ import {
 } from '~/src/models/links.js'
 
 /**
- * @param {string} token
+ * @typedef {object} PaginationPage
+ * @property {string} [number] - The page number (if it's a page).
+ * @property {string} [href] - The URL for the page.
+ * @property {boolean} [current] - Whether this page is the current page.
+ * @property {boolean} [ellipsis] - Whether this entry is an ellipsis.
  */
-export async function listViewModel(token) {
+
+/**
+ * @typedef {object} ListViewModel
+ * @property {string} pageTitle - The number of items per page.
+ * @property {{ text: string }} pageHeading - The page heading.
+ * @property {Array<FormMetadata>} formItems - The form items.
+ * @property {(PaginationResult & { pages: Array<PaginationPage> }) | null} pagination - The pagination.
+ */
+
+/**
+ * @param {string} token
+ * @param {PaginationOptions} paginationOptions
+ * @returns {Promise<ListViewModel>}
+ */
+export async function listViewModel(token, paginationOptions) {
   const pageTitle = 'Forms library'
-  const formItems = await forms.list(token)
+
+  const formResponse = await forms.list(token, paginationOptions)
+
+  const formItems = formResponse.data
+  const paginationMeta = formResponse.meta.pagination ?? null
+
+  let pagination = null
+  if (paginationMeta) {
+    const pages = buildPaginationPages(
+      paginationMeta.page,
+      paginationMeta.totalPages,
+      paginationMeta.perPage
+    )
+    pagination = {
+      ...paginationMeta,
+      pages
+    }
+  }
 
   return {
     pageTitle,
     pageHeading: {
       text: pageTitle
     },
-    formItems
+    formItems,
+    pagination
   }
+}
+
+/**
+ * Builds the pages array for the pagination component
+ * @param {number} currentPage
+ * @param {number} totalPages
+ * @param {number} perPage
+ * @returns {Array<PaginationPage>}
+ */
+function buildPaginationPages(currentPage, totalPages, perPage) {
+  const pages = []
+
+  /**
+   * Creates a pagination page item.
+   * @param {number} pageNumber - The page number.
+   * @param {boolean} [isCurrent] - Whether this page is the current page.
+   * @returns {PaginationPage} The pagination page item.
+   */
+  function createPageItem(pageNumber, isCurrent = false) {
+    return {
+      number: String(pageNumber),
+      href: `${formsLibraryPath}?page=${pageNumber}&perPage=${perPage}`,
+      current: isCurrent
+    }
+  }
+
+  // Always show the first page
+  pages.push(createPageItem(1, currentPage === 1))
+
+  let startPage = currentPage - 1
+  let endPage = currentPage + 1
+
+  // Ensure startPage is at least 2
+  if (startPage < 2) {
+    startPage = 2
+  }
+
+  // Ensure endPage is at most totalPages - 1
+  if (endPage > totalPages - 1) {
+    endPage = totalPages - 1
+  }
+
+  // Add ellipsis after first page if needed
+  if (startPage > 2) {
+    pages.push({ ellipsis: true })
+  }
+
+  // Add pages between startPage and endPage
+  for (let i = startPage; i <= endPage; i++) {
+    pages.push(createPageItem(i, i === currentPage))
+  }
+
+  // Add ellipsis before last page if needed
+  if (endPage < totalPages - 1) {
+    pages.push({ ellipsis: true })
+  }
+
+  // Always show the last page if totalPages > 1
+  if (totalPages > 1) {
+    pages.push(createPageItem(totalPages, currentPage === totalPages))
+  }
+
+  return pages
 }
 
 /**
@@ -129,5 +228,5 @@ export function getFormSpecificNavigation(formPath, metadata, activePage = '') {
 }
 
 /**
- * @import { FormDefinition, FormMetadata } from '@defra/forms-model'
+ * @import { FormDefinition, FormMetadata, PaginationResult, PaginationOptions } from '@defra/forms-model'
  */
