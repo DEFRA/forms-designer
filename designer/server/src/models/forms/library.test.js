@@ -1,7 +1,9 @@
 import { buildEntry } from '~/src/common/nunjucks/context/build-navigation.js'
+import * as forms from '~/src/lib/forms.js'
 import {
   editorViewModel,
   getFormSpecificNavigation,
+  listViewModel,
   overviewViewModel
 } from '~/src/models/forms/library.js'
 import { formOverviewPath, formsLibraryPath } from '~/src/models/links.js'
@@ -264,6 +266,350 @@ describe('Forms Library Models', () => {
           href: `/library/${formSlug}`,
           text: 'Back to form overview'
         }
+      })
+    })
+  })
+
+  describe('listViewModel', () => {
+    const token = 'some-token'
+    const paginationOptions = {
+      page: 1,
+      perPage: 10
+    }
+
+    beforeEach(() => {
+      jest.resetAllMocks()
+    })
+
+    describe('when pagination data is available', () => {
+      it('returns correct view model structure with pagination', async () => {
+        const mockFormResponse = {
+          data: [metadataWithDraft, metadataWithLive],
+          meta: {
+            pagination: {
+              page: 1,
+              perPage: 10,
+              totalPages: 2,
+              totalItems: 15
+            }
+          }
+        }
+
+        jest.spyOn(forms, 'list').mockResolvedValue(mockFormResponse)
+
+        const viewModel = await listViewModel(token, paginationOptions)
+
+        expect(viewModel).toMatchObject({
+          pageTitle: 'Forms library',
+          pageHeading: {
+            text: 'Forms library'
+          },
+          formItems: mockFormResponse.data,
+          pagination: {
+            page: 1,
+            perPage: 10,
+            totalPages: 2,
+            totalItems: 15,
+            pages: expect.any(Array)
+          }
+        })
+
+        expect(viewModel.pagination).toBeTruthy()
+        expect(viewModel.pagination?.pages).toEqual([
+          {
+            number: '1',
+            href: `${formsLibraryPath}?page=1&perPage=10`,
+            current: true
+          },
+          {
+            number: '2',
+            href: `${formsLibraryPath}?page=2&perPage=10`,
+            current: false
+          }
+        ])
+      })
+    })
+
+    describe('when pagination data is not available', () => {
+      it('returns correct view model structure without pagination', async () => {
+        const mockFormResponse = {
+          data: [metadataWithDraft],
+          meta: {}
+        }
+
+        jest.spyOn(forms, 'list').mockResolvedValue(mockFormResponse)
+
+        const viewModel = await listViewModel(token, paginationOptions)
+
+        expect(viewModel).toMatchObject({
+          pageTitle: 'Forms library',
+          pageHeading: {
+            text: 'Forms library'
+          },
+          formItems: mockFormResponse.data,
+          pagination: null
+        })
+      })
+    })
+
+    describe('when forms.list throws an error', () => {
+      it('propagates the error', async () => {
+        const errorMessage = 'Failed to fetch forms'
+        jest.spyOn(forms, 'list').mockRejectedValue(new Error(errorMessage))
+
+        await expect(listViewModel(token, paginationOptions)).rejects.toThrow(
+          errorMessage
+        )
+      })
+    })
+  })
+
+  describe('listViewModel pagination', () => {
+    const token = 'some-token'
+
+    beforeEach(() => {
+      jest.resetAllMocks()
+    })
+
+    describe('when total pages are less than or equal to 5', () => {
+      it('returns all pages without ellipsis', async () => {
+        const mockFormResponse = {
+          data: [metadataWithDraft],
+          meta: {
+            pagination: {
+              page: 3,
+              perPage: 10,
+              totalPages: 5,
+              totalItems: 50
+            }
+          }
+        }
+
+        jest.spyOn(forms, 'list').mockResolvedValue(mockFormResponse)
+        const viewModel = await listViewModel(token, { page: 3, perPage: 10 })
+
+        expect(viewModel.pagination).toBeTruthy()
+        expect(viewModel.pagination?.pages).toEqual([
+          {
+            number: '1',
+            href: `${formsLibraryPath}?page=1&perPage=10`,
+            current: false
+          },
+          {
+            number: '2',
+            href: `${formsLibraryPath}?page=2&perPage=10`,
+            current: false
+          },
+          {
+            number: '3',
+            href: `${formsLibraryPath}?page=3&perPage=10`,
+            current: true
+          },
+          {
+            number: '4',
+            href: `${formsLibraryPath}?page=4&perPage=10`,
+            current: false
+          },
+          {
+            number: '5',
+            href: `${formsLibraryPath}?page=5&perPage=10`,
+            current: false
+          }
+        ])
+      })
+    })
+
+    describe('when total pages are greater than 5', () => {
+      it('adds ellipsis appropriately', async () => {
+        const mockFormResponse = {
+          data: [metadataWithDraft],
+          meta: {
+            pagination: {
+              page: 5,
+              perPage: 10,
+              totalPages: 10,
+              totalItems: 100
+            }
+          }
+        }
+
+        jest.spyOn(forms, 'list').mockResolvedValue(mockFormResponse)
+        const viewModel = await listViewModel(token, { page: 5, perPage: 10 })
+
+        expect(viewModel.pagination).toBeTruthy()
+        expect(viewModel.pagination?.pages).toEqual([
+          {
+            number: '1',
+            href: `${formsLibraryPath}?page=1&perPage=10`,
+            current: false
+          },
+          { ellipsis: true },
+          {
+            number: '4',
+            href: `${formsLibraryPath}?page=4&perPage=10`,
+            current: false
+          },
+          {
+            number: '5',
+            href: `${formsLibraryPath}?page=5&perPage=10`,
+            current: true
+          },
+          {
+            number: '6',
+            href: `${formsLibraryPath}?page=6&perPage=10`,
+            current: false
+          },
+          { ellipsis: true },
+          {
+            number: '10',
+            href: `${formsLibraryPath}?page=10&perPage=10`,
+            current: false
+          }
+        ])
+      })
+    })
+
+    describe('when current page is the first page', () => {
+      it('does not add ellipsis at the beginning', async () => {
+        const mockFormResponse = {
+          data: [metadataWithDraft],
+          meta: {
+            pagination: {
+              page: 1,
+              perPage: 10,
+              totalPages: 10,
+              totalItems: 100
+            }
+          }
+        }
+
+        jest.spyOn(forms, 'list').mockResolvedValue(mockFormResponse)
+        const viewModel = await listViewModel(token, { page: 1, perPage: 10 })
+
+        expect(viewModel.pagination).toBeTruthy()
+        expect(viewModel.pagination?.pages).toEqual([
+          {
+            number: '1',
+            href: `${formsLibraryPath}?page=1&perPage=10`,
+            current: true
+          },
+          {
+            number: '2',
+            href: `${formsLibraryPath}?page=2&perPage=10`,
+            current: false
+          },
+          { ellipsis: true },
+          {
+            number: '10',
+            href: `${formsLibraryPath}?page=10&perPage=10`,
+            current: false
+          }
+        ])
+      })
+    })
+
+    describe('when current page is the last page', () => {
+      it('does not add ellipsis at the end', async () => {
+        const mockFormResponse = {
+          data: [metadataWithDraft],
+          meta: {
+            pagination: {
+              page: 10,
+              perPage: 10,
+              totalPages: 10,
+              totalItems: 100
+            }
+          }
+        }
+
+        jest.spyOn(forms, 'list').mockResolvedValue(mockFormResponse)
+        const viewModel = await listViewModel(token, { page: 10, perPage: 10 })
+
+        expect(viewModel.pagination).toBeTruthy()
+        expect(viewModel.pagination?.pages).toEqual([
+          {
+            number: '1',
+            href: `${formsLibraryPath}?page=1&perPage=10`,
+            current: false
+          },
+          { ellipsis: true },
+          {
+            number: '9',
+            href: `${formsLibraryPath}?page=9&perPage=10`,
+            current: false
+          },
+          {
+            number: '10',
+            href: `${formsLibraryPath}?page=10&perPage=10`,
+            current: true
+          }
+        ])
+      })
+    })
+
+    describe('when total pages is less than 1', () => {
+      it('returns only the first page', async () => {
+        const mockFormResponse = {
+          data: [metadataWithDraft],
+          meta: {
+            pagination: {
+              page: 1,
+              perPage: 10,
+              totalPages: 1,
+              totalItems: 0
+            }
+          }
+        }
+
+        jest.spyOn(forms, 'list').mockResolvedValue(mockFormResponse)
+        const viewModel = await listViewModel(token, { page: 1, perPage: 10 })
+
+        expect(viewModel.pagination).toBeTruthy()
+        expect(viewModel.pagination?.pages).toEqual([
+          {
+            number: '1',
+            href: `${formsLibraryPath}?page=1&perPage=10`,
+            current: true
+          }
+        ])
+      })
+    })
+
+    describe('when perPage is different', () => {
+      it('includes perPage in hrefs', async () => {
+        const mockFormResponse = {
+          data: [metadataWithDraft],
+          meta: {
+            pagination: {
+              page: 2,
+              perPage: 5,
+              totalPages: 3,
+              totalItems: 15
+            }
+          }
+        }
+
+        jest.spyOn(forms, 'list').mockResolvedValue(mockFormResponse)
+        const viewModel = await listViewModel(token, { page: 2, perPage: 5 })
+
+        expect(viewModel.pagination).toBeTruthy()
+        expect(viewModel.pagination?.pages).toEqual([
+          {
+            number: '1',
+            href: `${formsLibraryPath}?page=1&perPage=5`,
+            current: false
+          },
+          {
+            number: '2',
+            href: `${formsLibraryPath}?page=2&perPage=5`,
+            current: true
+          },
+          {
+            number: '3',
+            href: `${formsLibraryPath}?page=3&perPage=5`,
+            current: false
+          }
+        ])
       })
     })
   })
