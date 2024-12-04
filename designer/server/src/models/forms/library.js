@@ -61,7 +61,8 @@ export async function listViewModel(token, paginationOptions) {
 }
 
 /**
- * Builds the pages array for the pagination component
+ * Builds the pages array for the pagination component following the GOV.UK Design System pattern
+ * @see {@link https://design-system.service.gov.uk/components/pagination/}
  * @param {number} currentPage
  * @param {number} totalPages
  * @param {number} perPage
@@ -87,31 +88,31 @@ function buildPaginationPages(currentPage, totalPages, perPage) {
   // Always show the first page
   pages.push(createPageItem(1, currentPage === 1))
 
-  let startPage = currentPage - 1
-  let endPage = currentPage + 1
+  let adjacentStartPage = currentPage - 1
+  let adjacentEndPage = currentPage + 1
 
-  // Ensure startPage is at least 2
-  if (startPage < 2) {
-    startPage = 2
+  // adjacentStartPage (in range) is at least 2
+  if (adjacentStartPage < 2) {
+    adjacentStartPage = 2
   }
 
-  // Ensure endPage is at most totalPages - 1
-  if (endPage > totalPages - 1) {
-    endPage = totalPages - 1
+  // Ensure adjacentEndPage (in range) is at most totalPages - 1
+  if (adjacentEndPage > totalPages - 1) {
+    adjacentEndPage = totalPages - 1
   }
 
   // Add ellipsis after first page if needed
-  if (startPage > 2) {
+  if (adjacentStartPage > 2) {
     pages.push({ ellipsis: true })
   }
 
-  // Add pages between startPage and endPage
-  for (let i = startPage; i <= endPage; i++) {
+  // Add pages between adjacentStartPage and adjacentEndPage
+  for (let i = adjacentStartPage; i <= adjacentEndPage; i++) {
     pages.push(createPageItem(i, i === currentPage))
   }
 
   // Add ellipsis before last page if needed
-  if (endPage < totalPages - 1) {
+  if (adjacentEndPage < totalPages - 1) {
     pages.push({ ellipsis: true })
   }
 

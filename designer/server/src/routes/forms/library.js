@@ -42,14 +42,6 @@ export default [
           redirectUrl.searchParams.set('perPage', String(perPage))
           return h.redirect(redirectUrl.pathname + redirectUrl.search)
         }
-        // eslint-disable-next-line no-console
-        console.log('🚀 ~ handler: ~ model:', JSON.stringify(model.pagination))
-
-        // eslint-disable-next-line no-console
-        console.log(
-          '🚀 ~ handler: ~ model:',
-          JSON.stringify(model.pagination?.pages, null, 2)
-        )
 
         return h.view('forms/library', model)
       },
