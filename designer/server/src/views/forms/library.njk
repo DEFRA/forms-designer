@@ -4,6 +4,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/pagination/macro.njk" import govukPagination %}
 {% from "form-status/macro.njk" import appFormStatus %}
+{% from "pagination/macro.njk" import appPagination %}
 
 {% block content %}
   {% call appPageBody({
@@ -109,30 +110,9 @@
       }) }}
     {% endif %}
 
-    {% if pagination and pagination.totalPages > 1 %}
-      {% set previous = null %}
-      {% if pagination.page > 1 %}
-        {% set previous = {
-          href: "?page=" ~ (pagination.page - 1) ~ "&perPage=" ~ pagination.perPage,
-        labelText: "Previous page",
-        text: "Previous"
-      } %}
-    {% endif %}
-
-    {% set next = null %}
-    {% if pagination.page < pagination.totalPages %}
-      {% set next = {
-        href: "?page=" ~ (pagination.page + 1) ~ "&perPage=" ~ pagination.perPage,
-        labelText: "Next page",
-        text: "Next"
-      } %}
-    {% endif %}
-
-    {{ govukPagination({
-      previous: previous,
-      next: next,
-      items: pagination.pages
+    {{ appPagination({
+      baseUrl: "",
+      pagination: pagination
     }) }}
-    {% endif %}
   {% endcall %}
 {% endblock %}

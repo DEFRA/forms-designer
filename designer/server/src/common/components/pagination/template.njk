@@ -1,0 +1,27 @@
+{% from "govuk/components/pagination/macro.njk" import govukPagination %}
+
+{% if params.pagination and params.pagination.totalPages > 1 %}
+  {% set previous = null %}
+  {% if params.pagination.page > 1 %}
+    {% set previous = {
+      href: (params.baseUrl | default('')) ~ "?page=" ~ (params.pagination.page - 1) ~ "&perPage=" ~ params.pagination.perPage,
+      labelText: "Previous page",
+      text: "Previous"
+    } %}
+  {% endif %}
+
+  {% set next = null %}
+  {% if params.pagination.page < params.pagination.totalPages %}
+    {% set next = {
+      href: (params.baseUrl | default('')) ~ "?page=" ~ (params.pagination.page + 1) ~ "&perPage=" ~ params.pagination.perPage,
+      labelText: "Next page",
+      text: "Next"
+    } %}
+  {% endif %}
+
+  {{ govukPagination({
+    previous: previous,
+    next: next,
+    items: params.pagination.pages
+  }) }}
+{% endif %}
