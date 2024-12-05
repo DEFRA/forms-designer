@@ -63,7 +63,10 @@ describe('Forms library routes', () => {
   test('Forms library list page', async () => {
     const { title } = formMetadata
 
-    jest.mocked(forms.list).mockResolvedValueOnce([formMetadata])
+    jest.mocked(forms.list).mockResolvedValueOnce({
+      data: [formMetadata],
+      meta: {}
+    })
 
     const options = {
       method: 'GET',
