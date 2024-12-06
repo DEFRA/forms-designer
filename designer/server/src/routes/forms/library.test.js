@@ -15,6 +15,10 @@ describe('Forms library routes', () => {
     await server.initialize()
   })
 
+  afterAll(async () => {
+    await server.stop()
+  })
+
   const now = new Date()
   const authorId = 'f50ceeed-b7a4-47cf-a498-094efc99f8bc'
   const authorDisplayName = 'Enrique Chase'
@@ -60,117 +64,328 @@ describe('Forms library routes', () => {
     lists: []
   }
 
-  test('Forms library list page', async () => {
-    const { title } = formMetadata
+  describe('Forms library list page', () => {
+    describe('Without pagination', () => {
+      it('should render the list page without pagination data', async () => {
+        jest.mocked(forms.list).mockResolvedValueOnce({
+          data: [formMetadata],
+          meta: {}
+        })
 
-    jest.mocked(forms.list).mockResolvedValueOnce({
-      data: [formMetadata],
-      meta: {}
+        const options = {
+          method: 'GET',
+          url: '/library',
+          auth
+        }
+
+        await renderResponse(server, options)
+
+        const $heading = document.querySelector('h1.govuk-heading-xl')
+        expect($heading).toBeInTheDocument()
+        expect($heading?.textContent?.trim()).toBe('Forms library')
+
+        const $tableCells = document.querySelectorAll('td.govuk-table__cell')
+        expect($tableCells[0].textContent?.trim()).toContain(formMetadata.title)
+
+        const $pagination = document.querySelector('.govuk-pagination')
+        expect($pagination).not.toBeInTheDocument()
+      })
     })
 
-    const options = {
-      method: 'GET',
-      url: '/library',
-      auth
-    }
+    describe('With pagination', () => {
+      it('should render pagination controls when pagination data is provided', async () => {
+        jest.mocked(forms.list).mockResolvedValueOnce({
+          data: [formMetadata],
+          meta: {
+            pagination: {
+              page: 1,
+              perPage: 10,
+              totalPages: 3,
+              totalItems: 25
+            }
+          }
+        })
 
-    const { container } = await renderResponse(server, options)
+        const options = {
+          method: 'GET',
+          url: '/library?page=1&perPage=10',
+          auth
+        }
 
-    const $heading = container.getByRole('heading', {
-      name: 'Forms library',
-      level: 1
+        await renderResponse(server, options)
+
+        const $pagination = document.querySelector('.govuk-pagination')
+        expect($pagination).toBeInTheDocument()
+
+        const $pages = $pagination?.querySelectorAll('.govuk-pagination__item')
+        expect($pages).toHaveLength(3)
+
+        expect($pages?.[0].textContent?.trim()).toBe('1')
+        expect($pages?.[0].classList).toContain(
+          'govuk-pagination__item--current'
+        )
+
+        expect($pages?.[1].textContent?.trim()).toBe('2')
+        expect($pages?.[1].classList).not.toContain(
+          'govuk-pagination__item--current'
+        )
+
+        expect($pages?.[2].textContent?.trim()).toBe('3')
+        expect($pages?.[2].classList).not.toContain(
+          'govuk-pagination__item--current'
+        )
+      })
+
+      it('should highlight the current page when on a middle page', async () => {
+        jest.mocked(forms.list).mockResolvedValueOnce({
+          data: [formMetadata],
+          meta: {
+            pagination: {
+              page: 2,
+              perPage: 10,
+              totalPages: 3,
+              totalItems: 25
+            }
+          }
+        })
+
+        const options = {
+          method: 'GET',
+          url: '/library?page=2&perPage=10',
+          auth
+        }
+
+        await renderResponse(server, options)
+
+        const $pagination = document.querySelector('.govuk-pagination')
+        expect($pagination).toBeInTheDocument()
+
+        const $pages = $pagination?.querySelectorAll('.govuk-pagination__item')
+        expect($pages).toHaveLength(3)
+
+        expect($pages?.[0].textContent?.trim()).toBe('1')
+        expect($pages?.[0].classList).not.toContain(
+          'govuk-pagination__item--current'
+        )
+
+        expect($pages?.[1].textContent?.trim()).toBe('2')
+        expect($pages?.[1].classList).toContain(
+          'govuk-pagination__item--current'
+        )
+
+        expect($pages?.[2].textContent?.trim()).toBe('3')
+        expect($pages?.[2].classList).not.toContain(
+          'govuk-pagination__item--current'
+        )
+      })
+
+      it('should highlight the current page when on the last page', async () => {
+        jest.mocked(forms.list).mockResolvedValueOnce({
+          data: [formMetadata],
+          meta: {
+            pagination: {
+              page: 3,
+              perPage: 10,
+              totalPages: 3,
+              totalItems: 25
+            }
+          }
+        })
+
+        const options = {
+          method: 'GET',
+          url: '/library?page=3&perPage=10',
+          auth
+        }
+
+        await renderResponse(server, options)
+
+        const $pagination = document.querySelector('.govuk-pagination')
+        expect($pagination).toBeInTheDocument()
+
+        const $pages = $pagination?.querySelectorAll('.govuk-pagination__item')
+        expect($pages).toHaveLength(3)
+
+        expect($pages?.[0].textContent?.trim()).toBe('1')
+        expect($pages?.[0].classList).not.toContain(
+          'govuk-pagination__item--current'
+        )
+
+        expect($pages?.[1].textContent?.trim()).toBe('2')
+        expect($pages?.[1].classList).not.toContain(
+          'govuk-pagination__item--current'
+        )
+
+        expect($pages?.[2].textContent?.trim()).toBe('3')
+        expect($pages?.[2].classList).toContain(
+          'govuk-pagination__item--current'
+        )
+      })
+
+      it('should handle invalid pagination parameters gracefully', async () => {
+        jest.mocked(forms.list).mockResolvedValueOnce({
+          data: [formMetadata],
+          meta: {}
+        })
+
+        const options = {
+          method: 'GET',
+          url: '/library?page=abc&perPage=def',
+          auth
+        }
+
+        await renderResponse(server, options)
+
+        const $pagination = document.querySelector('.govuk-pagination')
+        expect($pagination).not.toBeInTheDocument()
+
+        expect(forms.list).toHaveBeenCalledWith(auth.credentials.token, {
+          page: 1,
+          perPage: 24
+        })
+      })
+
+      it('should redirect if requested page exceeds total pages', async () => {
+        jest.mocked(forms.list).mockResolvedValueOnce({
+          data: [],
+          meta: {
+            pagination: {
+              page: 5,
+              perPage: 10,
+              totalPages: 3,
+              totalItems: 25
+            }
+          }
+        })
+
+        const options = {
+          method: 'GET',
+          url: '/library?page=5&perPage=10',
+          auth
+        }
+
+        const response = await server.inject(options)
+
+        expect(response.statusCode).toBe(302)
+        expect(response.headers.location).toBe('/library?page=1&perPage=10')
+      })
     })
 
-    const $tables = container.getAllByRole('table')
+    it('should display the list page correctly', async () => {
+      const { title } = formMetadata
 
-    expect($heading).toHaveClass('govuk-heading-xl')
-    expect($tables[0]).toContainHTML(
-      `<td class="govuk-table__cell">${title}</td>`
-    )
+      jest.mocked(forms.list).mockResolvedValueOnce({
+        data: [formMetadata],
+        meta: {}
+      })
+
+      const options = {
+        method: 'GET',
+        url: '/library',
+        auth
+      }
+
+      const { container } = await renderResponse(server, options)
+
+      const $heading = container.getByRole('heading', {
+        name: 'Forms library',
+        level: 1
+      })
+
+      const $tables = container.getAllByRole('table')
+
+      expect($heading).toHaveClass('govuk-heading-xl')
+      expect($tables[0]).toContainHTML(
+        `<td class="govuk-table__cell">${title}</td>`
+      )
+    })
   })
 
-  test('Form editor page', async () => {
-    jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
-    jest
-      .mocked(forms.getDraftFormDefinition)
-      .mockResolvedValueOnce(formDefinition)
+  describe('Form editor page', () => {
+    it('should load the form editor page successfully', async () => {
+      jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+      jest
+        .mocked(forms.getDraftFormDefinition)
+        .mockResolvedValueOnce(formDefinition)
 
-    const options = {
-      method: 'get',
-      url: '/library/my-form-slug/editor',
-      auth
-    }
+      const options = {
+        method: 'GET',
+        url: '/library/my-form-slug/editor',
+        auth
+      }
 
-    await renderResponse(server, options)
+      await renderResponse(server, options)
 
-    const $editor = document.querySelector('.app-form-editor')
-    const $metadata = document.querySelector('.app-form-metadata')
-    const $definition = document.querySelector('.app-form-definition')
+      const $editor = document.querySelector('.app-form-editor')
+      const $metadata = document.querySelector('.app-form-metadata')
+      const $definition = document.querySelector('.app-form-definition')
 
-    expect($editor).toHaveAttribute('data-preview-url', config.previewUrl)
+      expect($editor).toHaveAttribute('data-preview-url', config.previewUrl)
 
-    expect(
-      $metadata?.textContent && JSON.parse($metadata.textContent)
-    ).toMatchObject({
-      ...formMetadata,
-
-      draft: {
-        ...formMetadata.draft,
-
-        // Dates in JSON are stringified
+      expect(
+        $metadata?.textContent && JSON.parse($metadata.textContent)
+      ).toMatchObject({
+        ...formMetadata,
+        draft: {
+          ...formMetadata.draft,
+          createdAt: now.toISOString(),
+          updatedAt: now.toISOString()
+        },
         createdAt: now.toISOString(),
         updatedAt: now.toISOString()
-      },
-      createdAt: now.toISOString(),
-      updatedAt: now.toISOString()
-    })
+      })
 
-    expect(
-      $definition?.textContent && JSON.parse($definition.textContent)
-    ).toMatchObject(formDefinition)
+      expect(
+        $definition?.textContent && JSON.parse($definition.textContent)
+      ).toMatchObject(formDefinition)
+    })
   })
 
-  test('Form overview has draft buttons in side bar', async () => {
-    jest.mocked(forms.get).mockResolvedValueOnce({
-      ...formMetadata,
+  describe('Form overview', () => {
+    describe('Draft buttons in side bar', () => {
+      it('should show "Create draft to edit" when no draft exists', async () => {
+        jest.mocked(forms.get).mockResolvedValueOnce({
+          ...formMetadata,
+          live: formMetadata.draft,
+          draft: undefined
+        })
 
-      // Switch draft with live for test
-      live: formMetadata.draft,
-      draft: undefined
+        const options = {
+          method: 'GET',
+          url: '/library/my-form-slug',
+          auth
+        }
+
+        await renderResponse(server, options)
+
+        const $card = document.querySelector('.app-form-card')
+        const $buttons = $card?.querySelectorAll('.govuk-button')
+
+        expect($buttons).toHaveLength(1)
+        expect($buttons?.[0]).toHaveTextContent('Create draft to edit')
+      })
     })
 
-    const options = {
-      method: 'get',
-      url: '/library/my-form-slug',
-      auth
-    }
+    describe('Live buttons in side bar', () => {
+      it('should show "Edit draft" and "Make draft live" when draft exists', async () => {
+        jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
 
-    await renderResponse(server, options)
+        const options = {
+          method: 'GET',
+          url: '/library/my-form-slug',
+          auth
+        }
 
-    const $card = document.querySelector('.app-form-card')
-    const $buttons = $card?.querySelectorAll('.govuk-button')
+        await renderResponse(server, options)
 
-    expect($buttons).toHaveLength(1)
-    expect($buttons?.[0]).toHaveTextContent('Create draft to edit')
-  })
+        const $card = document.querySelector('.app-form-card')
+        const $buttons = $card?.querySelectorAll('.govuk-button')
 
-  test('Form overview has live buttons in side bar', async () => {
-    jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
-
-    const options = {
-      method: 'get',
-      url: '/library/my-form-slug',
-      auth
-    }
-
-    await renderResponse(server, options)
-
-    const $card = document.querySelector('.app-form-card')
-    const $buttons = $card?.querySelectorAll('.govuk-button')
-
-    expect($buttons).toHaveLength(2)
-    expect($buttons?.[0]).toHaveTextContent('Edit draft')
-    expect($buttons?.[1]).toHaveTextContent('Make draft live')
+        expect($buttons).toHaveLength(2)
+        expect($buttons?.[0]).toHaveTextContent('Edit draft')
+        expect($buttons?.[1]).toHaveTextContent('Make draft live')
+      })
+    })
   })
 })
 
