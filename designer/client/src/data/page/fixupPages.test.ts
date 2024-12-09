@@ -48,6 +48,25 @@ describe('fixupPages', () => {
     }
   })
 
+  it('should fix empty start page using page with start controller', () => {
+    // Empty start page
+    data.startPage = ''
+
+    // Add page with start controller
+    data.pages.unshift({
+      title: 'Start page',
+      path: ControllerPath.Start,
+      controller: ControllerType.Start,
+      next: [{ path: '/first-page' }],
+      components: []
+    })
+
+    const returned = fixupPages(data)
+
+    expect(returned.pages).toEqual(data.pages)
+    expect(returned.startPage).toBe(ControllerPath.Start)
+  })
+
   it('should fix empty start page using pages array', () => {
     // Empty start page
     data.startPage = ''
@@ -56,6 +75,25 @@ describe('fixupPages', () => {
 
     expect(returned.pages).toEqual(data.pages)
     expect(returned.startPage).toBe('/first-page')
+  })
+
+  it('should fix incorrect start page using page with start controller', () => {
+    // Incorrect start page
+    data.startPage = '/404'
+
+    // Add page with start controller
+    data.pages.unshift({
+      title: 'Start page',
+      path: ControllerPath.Start,
+      controller: ControllerType.Start,
+      next: [{ path: '/first-page' }],
+      components: []
+    })
+
+    const returned = fixupPages(data)
+
+    expect(returned.pages).toEqual(data.pages)
+    expect(returned.startPage).toBe(ControllerPath.Start)
   })
 
   it('should fix incorrect start page using pages array', () => {
