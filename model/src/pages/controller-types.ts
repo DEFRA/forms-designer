@@ -10,8 +10,9 @@ export const ControllerTypes = [
     path: './pages/start.js'
   },
   {
-    name: ControllerType.Page,
-    path: './pages/page.js'
+    name: ControllerType.Question,
+    path: './pages/page.js',
+    aliases: ['PageController']
   },
   {
     name: ControllerType.Repeat,
