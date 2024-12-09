@@ -6,10 +6,6 @@ export const ControllerTypes = [
     path: './pages/start.js'
   },
   {
-    name: ControllerType.Home,
-    path: './pages/home.js'
-  },
-  {
     name: ControllerType.Page,
     path: './pages/page.js'
   },
