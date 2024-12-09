@@ -2,6 +2,10 @@ import { ControllerType } from '~/src/pages/enums.js'
 
 export const ControllerTypes = [
   {
+    name: ControllerType.Content,
+    path: './pages/content.js'
+  },
+  {
     name: ControllerType.Start,
     path: './pages/start.js'
   },
