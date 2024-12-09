@@ -431,7 +431,7 @@ export class PageEdit extends Component<Props, State> {
 
     const hasErrors = hasValidationErrors(errors)
     const hasEditPath = !!controller && hasFormComponents(defaults)
-    const hasEditSection = !!controller && hasNext(defaults)
+    const hasEditSection = !!controller && hasComponents(defaults)
     const hasEditRepeater = !!controller && hasRepeater(defaults)
     const hasEditLinkFrom = !page && hasEditPath
 

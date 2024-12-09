@@ -5,6 +5,7 @@ export enum ControllerPath {
 }
 
 export enum ControllerType {
+  Content = 'ContentPageController',
   Start = 'StartPageController',
   Page = 'PageController',
   Repeat = 'RepeatPageController',
