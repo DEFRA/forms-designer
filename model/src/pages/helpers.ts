@@ -19,7 +19,7 @@ import { PageTypes } from '~/src/pages/page-types.js'
 export function getPageDefaults<PageType extends Page>(
   page?: Pick<PageType, 'controller'>
 ) {
-  const nameOrPath = page?.controller ?? ControllerType.Page
+  const nameOrPath = page?.controller ?? ControllerType.Question
   const controller = controllerNameFromPath(nameOrPath)
 
   const defaults = PageTypes.find(
@@ -49,7 +49,7 @@ export function hasComponents(
     !controller ||
     controller === ControllerType.Content ||
     controller === ControllerType.Start ||
-    controller === ControllerType.Page ||
+    controller === ControllerType.Question ||
     controller === ControllerType.FileUpload ||
     controller === ControllerType.Repeat
   )
@@ -100,7 +100,7 @@ export function hasNext(
   return (
     !controller ||
     controller === ControllerType.Start ||
-    controller === ControllerType.Page ||
+    controller === ControllerType.Question ||
     controller === ControllerType.FileUpload ||
     controller === ControllerType.Repeat
   )
@@ -115,6 +115,9 @@ export function controllerNameFromPath(nameOrPath?: ControllerType | string) {
     return nameOrPath
   }
 
-  const options = ControllerTypes.find(({ path }) => path === nameOrPath)
+  const options = ControllerTypes.find(({ aliases, path }) => {
+    return nameOrPath && (path === nameOrPath || aliases?.includes(nameOrPath))
+  })
+
   return options?.name
 }

@@ -23,7 +23,7 @@ export const PageTypes: readonly Page[] = Object.freeze([
   {
     title: 'Question page',
     path: '/question-page',
-    controller: ControllerType.Page,
+    controller: ControllerType.Question,
     section: undefined,
     next: [],
     components: []

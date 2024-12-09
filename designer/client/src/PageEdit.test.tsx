@@ -90,7 +90,7 @@ describe('Page edit: Existing page', () => {
       }
     ],
     [
-      ControllerType.Page,
+      ControllerType.Question,
       {
         path: true,
         section: true,
@@ -230,7 +230,7 @@ describe('Page edit: Existing page', () => {
 
       it("should render 'Section' options (changing page type)", async () => {
         const $pageType = screen.getByRole('combobox', { name: 'Page type' })
-        await userEvent.selectOptions($pageType, ControllerType.Page)
+        await userEvent.selectOptions($pageType, ControllerType.Question)
 
         expect(
           screen.getByRole('combobox', { name: 'Section (optional)' })
@@ -470,7 +470,7 @@ describe('Page edit: New page', () => {
   describe('Fields', () => {
     it("should render 'Page type' options", async () => {
       expect($pageType).toBeInTheDocument()
-      expect($pageType).toHaveValue(ControllerType.Page)
+      expect($pageType).toHaveValue(ControllerType.Question)
 
       // Reset value and submit
       await userEvent.selectOptions($pageType, '')
@@ -605,7 +605,7 @@ describe('Page edit: New page', () => {
     })
 
     it('should allow save when valid', async () => {
-      await userEvent.selectOptions($pageType, ControllerType.Page)
+      await userEvent.selectOptions($pageType, ControllerType.Question)
       await userEvent.type($pageTitle, 'Another page')
 
       await userEvent.click($buttonSave)
@@ -614,7 +614,7 @@ describe('Page edit: New page', () => {
 
     it.each([
       ControllerType.Start,
-      ControllerType.Page,
+      ControllerType.Question,
       ControllerType.FileUpload,
       ControllerType.Summary
     ])('should allow save when valid: %s', async (controller) => {
@@ -626,7 +626,7 @@ describe('Page edit: New page', () => {
     })
 
     it('should allow save when valid (optional fields)', async () => {
-      await userEvent.selectOptions($pageType, ControllerType.Page)
+      await userEvent.selectOptions($pageType, ControllerType.Question)
       await userEvent.type($pageTitle, 'Another page')
 
       // Optional fields
