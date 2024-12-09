@@ -1,7 +1,6 @@
 import {
   ControllerType,
   hasComponents,
-  hasSection,
   slugify,
   type ComponentDef,
   type Page as PageType
@@ -45,7 +44,7 @@ const ComponentList = (props: Readonly<{ page: PageType }>) => {
     return null
   }
 
-  const { components = [] } = page
+  const { components } = page
 
   return (
     <ul className="app-results">
@@ -73,7 +72,10 @@ export const Page = (
   const [isEditingPage, setIsEditingPage] = useState(false)
   const [isCreatingComponent, setIsCreatingComponent] = useState(false)
 
-  const section = hasSection(page) ? findSection(data, page.section) : undefined
+  const section =
+    hasComponents(page) && page.section
+      ? findSection(data, page.section)
+      : undefined
 
   const pageId = slugify(page.path)
   const headingId = `${pageId}-heading`
