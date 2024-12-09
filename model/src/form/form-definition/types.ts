@@ -86,14 +86,6 @@ export type Page =
   | PageSummary
   | PageStatus
 
-export type RequiredField<
-  Type extends Partial<object>,
-  KeyType extends keyof Type
-> = Omit<Type, KeyType> &
-  Required<{
-    [Key in KeyType]: Type[Key]
-  }>
-
 export interface Section {
   name: string
   title: string
