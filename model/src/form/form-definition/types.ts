@@ -31,7 +31,7 @@ export interface Repeat {
 
 export interface PageStart extends PageBase {
   path: ControllerPath.Start | string
-  controller: ControllerType.Start | ControllerType.Home
+  controller: ControllerType.Start
   section?: string | undefined
   next: Link[]
   components: ComponentDef[]
