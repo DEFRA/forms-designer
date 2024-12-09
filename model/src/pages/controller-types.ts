@@ -2,16 +2,17 @@ import { ControllerType } from '~/src/pages/enums.js'
 
 export const ControllerTypes = [
   {
+    name: ControllerType.Content,
+    path: './pages/content.js'
+  },
+  {
     name: ControllerType.Start,
     path: './pages/start.js'
   },
   {
-    name: ControllerType.Home,
-    path: './pages/home.js'
-  },
-  {
-    name: ControllerType.Page,
-    path: './pages/page.js'
+    name: ControllerType.Question,
+    path: './pages/page.js',
+    aliases: ['PageController']
   },
   {
     name: ControllerType.Repeat,

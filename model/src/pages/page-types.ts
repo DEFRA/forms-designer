@@ -6,6 +6,13 @@ import { ControllerPath, ControllerType } from '~/src/pages/enums.js'
  */
 export const PageTypes: readonly Page[] = Object.freeze([
   {
+    title: 'Content page',
+    path: '/content-page',
+    controller: ControllerType.Content,
+    section: undefined,
+    components: []
+  },
+  {
     title: 'Start page',
     path: ControllerPath.Start,
     controller: ControllerType.Start,
@@ -16,7 +23,7 @@ export const PageTypes: readonly Page[] = Object.freeze([
   {
     title: 'Question page',
     path: '/question-page',
-    controller: ControllerType.Page,
+    controller: ControllerType.Question,
     section: undefined,
     next: [],
     components: []

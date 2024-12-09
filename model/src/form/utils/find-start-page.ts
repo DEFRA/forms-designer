@@ -1,5 +1,6 @@
 import { type FormDefinition } from '~/src/form/form-definition/types.js'
-import { hasNext } from '~/src/pages/helpers.js'
+import { ControllerType } from '~/src/pages/enums.js'
+import { controllerNameFromPath, hasNext } from '~/src/pages/helpers.js'
 
 /**
  * Find correct start page for form definition
@@ -14,21 +15,29 @@ import { hasNext } from '~/src/pages/helpers.js'
  * @param data - Form definition
  */
 export function findStartPage(data: FormDefinition) {
-  const { pages } = data
+  const pages = data.pages.filter(hasNext)
 
-  // Get a unique list of all pages that are linked to by other pages
-  const pageReferences = new Set(
-    pages.filter(hasNext).flatMap((page) => page.next.map((next) => next.path))
+  // Check for start pages
+  const startPage = pages.find(
+    ({ controller }) =>
+      controllerNameFromPath(controller) === ControllerType.Start
   )
 
+  if (startPage) {
+    return startPage.path
+  }
+
+  // Extract all link paths
+  const linkPaths = pages
+    .filter(hasNext)
+    .flatMap(({ next }) => next.map(({ path }) => path))
+
   // For each page on the form, work out if it's referenced by another page
-  // those that aren't referenced must be start pages
-  const startPages = pages
-    .map((page) => page.path)
-    .filter((page) => !pageReferences.has(page))
+  // those that aren't referenced must be form pages used as start pages
+  const pagesUnlinked = pages.filter(({ path }) => !linkPaths.includes(path))
 
   // We can only set the start page if there is a single one, else the user has made an error
-  if (startPages.length === 1) {
-    return startPages[0]
+  if (pagesUnlinked.length === 1) {
+    return pagesUnlinked[0].path
   }
 }
