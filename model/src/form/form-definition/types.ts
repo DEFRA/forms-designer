@@ -44,7 +44,7 @@ export interface PageStart extends PageBase {
 }
 
 export interface PageQuestion extends PageBase {
-  controller?: ControllerType.Page
+  controller?: ControllerType.Question
   section?: string | undefined
   next: Link[]
   components: ComponentDef[]

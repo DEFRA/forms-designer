@@ -15,7 +15,7 @@ describe('Component create list: Supported page types', () => {
   const supported = [
     ControllerType.Content,
     ControllerType.Start,
-    ControllerType.Page,
+    ControllerType.Question,
     ControllerType.FileUpload,
     ControllerType.Repeat
   ]
@@ -75,7 +75,7 @@ describe.each([
     }
   ],
   [
-    ControllerType.Page,
+    ControllerType.Question,
     {
       content: [
         ComponentType.Details,

@@ -85,7 +85,7 @@ export class PageEdit extends Component<Props, State> {
     const { data } = this.context
 
     const defaults = getPageDefaults({
-      controller: page?.controller ?? ControllerType.Page
+      controller: page?.controller ?? ControllerType.Question
     })
 
     // Sort pages for select menus
@@ -157,7 +157,7 @@ export class PageEdit extends Component<Props, State> {
       pageUpdate.section = selectedSection
 
       // Remove default controller
-      if (payload.controller === ControllerType.Page) {
+      if (payload.controller === ControllerType.Question) {
         delete pageUpdate.controller
       }
     }
@@ -337,7 +337,7 @@ export class PageEdit extends Component<Props, State> {
     const controller = value ? (value as ControllerType) : undefined
 
     const defaults = getPageDefaults({
-      controller: controller ?? ControllerType.Page
+      controller: controller ?? ControllerType.Question
     })
 
     this.setState({
