@@ -158,6 +158,21 @@ describe('fixupPages', () => {
     expect(returned.startPage).toBeUndefined()
   })
 
+  it('should not remove start page when content pages are added', () => {
+    // Add page with content controller
+    data.pages.unshift({
+      title: 'Custom privacy policy',
+      path: '/privacy-policy',
+      controller: ControllerType.Content,
+      components: []
+    })
+
+    const returned = fixupPages(data)
+
+    expect(returned.pages).toEqual(data.pages)
+    expect(returned.startPage).toBe('/first-page')
+  })
+
   it('should skip start page update without changes', () => {
     const returned = fixupPages(data)
 

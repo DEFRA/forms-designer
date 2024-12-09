@@ -74,6 +74,14 @@ describe('Page edit: Existing page', () => {
 
   describe.each([
     [
+      ControllerType.Content,
+      {
+        path: false,
+        section: true,
+        questionSet: false
+      }
+    ],
+    [
       ControllerType.Start,
       {
         path: false,

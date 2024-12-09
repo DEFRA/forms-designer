@@ -39,7 +39,20 @@ export function getPageDefaults<PageType extends Page>(
 export function hasComponents(
   page?: Partial<Page>
 ): page is Extract<Page, { components: ComponentDef[] }> {
-  return hasNext(page) && Array.isArray(page.components)
+  if (!page || !('components' in page)) {
+    return false
+  }
+
+  const controller = controllerNameFromPath(page.controller)
+
+  return (
+    !controller ||
+    controller === ControllerType.Content ||
+    controller === ControllerType.Start ||
+    controller === ControllerType.Page ||
+    controller === ControllerType.FileUpload ||
+    controller === ControllerType.Repeat
+  )
 }
 
 /**
@@ -49,7 +62,11 @@ export function hasFormComponents(
   page?: Partial<Page>
 ): page is PageQuestion | PageFileUpload {
   const controller = controllerNameFromPath(page?.controller)
-  return hasComponents(page) && controller !== ControllerType.Start
+  return (
+    hasComponents(page) &&
+    controller !== ControllerType.Content &&
+    controller !== ControllerType.Start
+  )
 }
 
 /**

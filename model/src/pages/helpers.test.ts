@@ -23,6 +23,7 @@ describe('helpers', () => {
 
   describe('hasComponents', () => {
     const supported = [
+      ControllerType.Content,
       ControllerType.Start,
       ControllerType.Page,
       ControllerType.FileUpload,
