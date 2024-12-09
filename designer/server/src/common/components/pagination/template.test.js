@@ -1,48 +1,54 @@
+import { within } from '@testing-library/dom'
+
 import { renderMacro } from '~/test/helpers/component-helpers.js'
 
 describe('Pagination Component', () => {
-  /** @type {Element | null} */
-  let $pagination = null
+  /** @type {HTMLElement} */
+  let $pagination
 
   describe('With pagination data', () => {
     describe('Standard pagination', () => {
       beforeEach(() => {
-        renderMacro('appPagination', 'pagination/macro.njk', {
-          params: {
-            baseUrl: '/library',
-            pagination: {
-              page: 2,
-              perPage: 10,
-              totalPages: 5,
-              totalItems: 50,
-              pages: [
-                {
-                  number: '1',
-                  href: '/library?page=1&perPage=10',
-                  current: false
-                },
-                {
-                  number: '2',
-                  href: '/library?page=2&perPage=10',
-                  current: true
-                },
-                {
-                  number: '3',
-                  href: '/library?page=3&perPage=10',
-                  current: false
-                },
-                { ellipsis: true },
-                {
-                  number: '5',
-                  href: '/library?page=5&perPage=10',
-                  current: false
-                }
-              ]
+        const { container } = renderMacro(
+          'appPagination',
+          'pagination/macro.njk',
+          {
+            params: {
+              baseUrl: '/library',
+              pagination: {
+                page: 2,
+                perPage: 10,
+                totalPages: 5,
+                totalItems: 50,
+                pages: [
+                  {
+                    number: '1',
+                    href: '/library?page=1&perPage=10',
+                    current: false
+                  },
+                  {
+                    number: '2',
+                    href: '/library?page=2&perPage=10',
+                    current: true
+                  },
+                  {
+                    number: '3',
+                    href: '/library?page=3&perPage=10',
+                    current: false
+                  },
+                  { ellipsis: true },
+                  {
+                    number: '5',
+                    href: '/library?page=5&perPage=10',
+                    current: false
+                  }
+                ]
+              }
             }
           }
-        })
+        )
 
-        $pagination = document.querySelector('.govuk-pagination')
+        $pagination = container.getByRole('navigation', { name: 'Pagination' })
       })
 
       it('should render the pagination component', () => {
@@ -50,12 +56,12 @@ describe('Pagination Component', () => {
       })
 
       it('should have the correct previous and next links', () => {
-        const $previousLink = $pagination?.querySelector(
-          '.govuk-pagination__prev a'
-        )
-        const $nextLink = $pagination?.querySelector(
-          '.govuk-pagination__next a'
-        )
+        const $previousLink = within($pagination).getByRole('link', {
+          name: 'Previous'
+        })
+        const $nextLink = within($pagination).getByRole('link', {
+          name: 'Next'
+        })
 
         expect($previousLink).toBeInTheDocument()
         expect($previousLink).toHaveAttribute(
@@ -70,76 +76,82 @@ describe('Pagination Component', () => {
       })
 
       it('should render the correct page numbers', () => {
-        const $pages = $pagination?.querySelectorAll('.govuk-pagination__item')
+        const $pages = within($pagination).getAllByRole('listitem')
         expect($pages).toHaveLength(5)
 
-        expect($pages?.[0].textContent?.trim()).toBe('1')
-        expect($pages?.[0].classList).not.toContain(
-          'govuk-pagination__item--current'
-        )
+        const $page1Link = within($pages[0]).getByRole('link', {
+          name: 'Page 1'
+        })
+        expect($page1Link).toHaveTextContent('1')
+        expect($pages[0]).not.toHaveClass('govuk-pagination__item--current')
 
-        expect($pages?.[1].textContent?.trim()).toBe('2')
-        expect($pages?.[1].classList).toContain(
-          'govuk-pagination__item--current'
-        )
+        const $page2Link = within($pages[1]).getByRole('link', {
+          name: 'Page 2'
+        })
+        expect($page2Link).toHaveTextContent('2')
+        expect($pages[1]).toHaveClass('govuk-pagination__item--current')
 
-        expect($pages?.[2].textContent?.trim()).toBe('3')
-        expect($pages?.[2].classList).not.toContain(
-          'govuk-pagination__item--current'
-        )
+        const $page3Link = within($pages[2]).getByRole('link', {
+          name: 'Page 3'
+        })
+        expect($page3Link).toHaveTextContent('3')
+        expect($pages[2]).not.toHaveClass('govuk-pagination__item--current')
 
-        expect($pages?.[3].textContent?.trim()).toBe('⋯') // horizontal ellipsis!
-        expect($pages?.[3].classList).not.toContain(
-          'govuk-pagination__item--current'
-        )
+        expect($pages[3]).toHaveTextContent('⋯') // Horizontal ellipsis!
+        expect($pages[3]).not.toHaveClass('govuk-pagination__item--current')
 
-        expect($pages?.[4].textContent?.trim()).toBe('5')
-        expect($pages?.[4].classList).not.toContain(
-          'govuk-pagination__item--current'
-        )
+        const $page5Link = within($pages[4]).getByRole('link', {
+          name: 'Page 5'
+        })
+        expect($page5Link).toHaveTextContent('5')
+        expect($pages[4]).not.toHaveClass('govuk-pagination__item--current')
       })
     })
 
     describe('When on the first page', () => {
       beforeEach(() => {
-        renderMacro('appPagination', 'pagination/macro.njk', {
-          params: {
-            baseUrl: '/library',
-            pagination: {
-              page: 1,
-              perPage: 10,
-              totalPages: 5,
-              totalItems: 50,
-              pages: [
-                {
-                  number: '1',
-                  href: '/library?page=1&perPage=10',
-                  current: true
-                },
-                {
-                  number: '2',
-                  href: '/library?page=2&perPage=10',
-                  current: false
-                }
-              ]
+        const { container } = renderMacro(
+          'appPagination',
+          'pagination/macro.njk',
+          {
+            params: {
+              baseUrl: '/library',
+              pagination: {
+                page: 1,
+                perPage: 10,
+                totalPages: 5,
+                totalItems: 50,
+                pages: [
+                  {
+                    number: '1',
+                    href: '/library?page=1&perPage=10',
+                    current: true
+                  },
+                  {
+                    number: '2',
+                    href: '/library?page=2&perPage=10',
+                    current: false
+                  }
+                ]
+              }
             }
           }
-        })
+        )
 
-        $pagination = document.querySelector('.govuk-pagination')
+        $pagination = container.getByRole('navigation', { name: 'Pagination' })
       })
 
       it('should not render the previous link', () => {
-        const $previousLink = $pagination?.querySelector(
-          '.govuk-pagination__prev a'
-        )
-        expect($previousLink).toBeNull()
+        const $previousLink = within($pagination).queryByRole('link', {
+          name: 'Previous'
+        })
+        expect($previousLink).not.toBeInTheDocument()
       })
 
       it('should render the next link', () => {
-        const $nextLink = $pagination?.querySelector(
-          '.govuk-pagination__next a'
-        )
+        const $nextLink = within($pagination).getByRole('link', {
+          name: 'Next'
+        })
         expect($nextLink).toBeInTheDocument()
         expect($nextLink).toHaveAttribute('href', '/library?page=2&perPage=10')
         expect($nextLink).toHaveTextContent('Next')
@@ -148,55 +160,59 @@ describe('Pagination Component', () => {
 
     describe('When on the last page', () => {
       beforeEach(() => {
-        renderMacro('appPagination', 'pagination/macro.njk', {
-          params: {
-            baseUrl: '/library',
-            pagination: {
-              page: 5,
-              perPage: 10,
-              totalPages: 5,
-              totalItems: 50,
-              pages: [
-                {
-                  number: '1',
-                  href: '/library?page=1&perPage=10',
-                  current: false
-                },
-                { ellipsis: true },
-                {
-                  number: '3',
-                  href: '/library?page=3&perPage=10',
-                  current: false
-                },
-                {
-                  number: '4',
-                  href: '/library?page=4&perPage=10',
-                  current: false
-                },
-                {
-                  number: '5',
-                  href: '/library?page=5&perPage=10',
-                  current: true
-                }
-              ]
+        const { container } = renderMacro(
+          'appPagination',
+          'pagination/macro.njk',
+          {
+            params: {
+              baseUrl: '/library',
+              pagination: {
+                page: 5,
+                perPage: 10,
+                totalPages: 5,
+                totalItems: 50,
+                pages: [
+                  {
+                    number: '1',
+                    href: '/library?page=1&perPage=10',
+                    current: false
+                  },
+                  { ellipsis: true },
+                  {
+                    number: '3',
+                    href: '/library?page=3&perPage=10',
+                    current: false
+                  },
+                  {
+                    number: '4',
+                    href: '/library?page=4&perPage=10',
+                    current: false
+                  },
+                  {
+                    number: '5',
+                    href: '/library?page=5&perPage=10',
+                    current: true
+                  }
+                ]
+              }
             }
           }
-        })
+        )
 
-        $pagination = document.querySelector('.govuk-pagination')
+        $pagination = container.getByRole('navigation', { name: 'Pagination' })
       })
 
       it('should not render the next link', () => {
-        const $nextLink = $pagination?.querySelector(
-          '.govuk-pagination__next a'
-        )
-        expect($nextLink).toBeNull()
+        const $nextLink = within($pagination).queryByRole('link', {
+          name: 'Next'
+        })
+        expect($nextLink).not.toBeInTheDocument()
       })
 
       it('should render the previous link', () => {
-        const $previousLink = $pagination?.querySelector(
-          '.govuk-pagination__prev a'
-        )
+        const $previousLink = within($pagination).getByRole('link', {
+          name: 'Previous'
+        })
         expect($previousLink).toBeInTheDocument()
         expect($previousLink).toHaveAttribute(
           'href',
@@ -206,192 +222,219 @@ describe('Pagination Component', () => {
       })
 
       it('should highlight the current page', () => {
-        const $currentPage = $pagination?.querySelector(
-          '.govuk-pagination__item--current'
-        )
-        expect($currentPage).toBeInTheDocument()
-        expect($currentPage?.textContent?.trim()).toBe('5')
+        const $currentPageLink = within($pagination).getByText('5', {
+          selector: 'a'
+        })
+        const $currentPageItem = $currentPageLink.closest('li')
+
+        expect($currentPageItem).toBeInTheDocument()
+        expect($currentPageItem).toHaveClass('govuk-pagination__item--current')
       })
     })
 
     describe('When total pages are fewer than the ellipsis threshold', () => {
       beforeEach(() => {
-        renderMacro('appPagination', 'pagination/macro.njk', {
-          params: {
-            baseUrl: '/library',
-            pagination: {
-              page: 2,
-              perPage: 10,
-              totalPages: 3,
-              totalItems: 30,
-              pages: [
-                {
-                  number: '1',
-                  href: '/library?page=1&perPage=10',
-                  current: false
-                },
-                {
-                  number: '2',
-                  href: '/library?page=2&perPage=10',
-                  current: true
-                },
-                {
-                  number: '3',
-                  href: '/library?page=3&perPage=10',
-                  current: false
-                }
-              ]
+        const { container } = renderMacro(
+          'appPagination',
+          'pagination/macro.njk',
+          {
+            params: {
+              baseUrl: '/library',
+              pagination: {
+                page: 2,
+                perPage: 10,
+                totalPages: 3,
+                totalItems: 30,
+                pages: [
+                  {
+                    number: '1',
+                    href: '/library?page=1&perPage=10',
+                    current: false
+                  },
+                  {
+                    number: '2',
+                    href: '/library?page=2&perPage=10',
+                    current: true
+                  },
+                  {
+                    number: '3',
+                    href: '/library?page=3&perPage=10',
+                    current: false
+                  }
+                ]
+              }
             }
           }
-        })
+        )
 
-        $pagination = document.querySelector('.govuk-pagination')
+        $pagination = container.getByRole('navigation', { name: 'Pagination' })
       })
 
       it('should display all page numbers without ellipsis', () => {
-        const $pages = $pagination?.querySelectorAll('.govuk-pagination__item')
+        const $pages = within($pagination).getAllByRole('listitem')
         expect($pages).toHaveLength(3)
 
-        expect($pages?.[0].textContent?.trim()).toBe('1')
-        expect($pages?.[0].classList).not.toContain(
-          'govuk-pagination__item--current'
-        )
+        const $page1Link = within($pages[0]).getByRole('link')
+        expect($page1Link).toHaveTextContent('1')
+        expect($pages[0]).not.toHaveClass('govuk-pagination__item--current')
 
-        expect($pages?.[1].textContent?.trim()).toBe('2')
-        expect($pages?.[1].classList).toContain(
-          'govuk-pagination__item--current'
-        )
+        const $page2Link = within($pages[1]).getByRole('link')
+        expect($page2Link).toHaveTextContent('2')
+        expect($pages[1]).toHaveClass('govuk-pagination__item--current')
 
-        expect($pages?.[2].textContent?.trim()).toBe('3')
-        expect($pages?.[2].classList).not.toContain(
-          'govuk-pagination__item--current'
-        )
+        const $page3Link = within($pages[2]).getByRole('link')
+        expect($page3Link).toHaveTextContent('3')
+        expect($pages[2]).not.toHaveClass('govuk-pagination__item--current')
 
-        const $ellipsis = $pagination?.querySelector(
+        const $ellipsis = $pagination.querySelector(
           '.govuk-pagination__item--ellipses'
         )
-        expect($ellipsis).toBeNull()
+        expect($ellipsis).not.toBeInTheDocument()
       })
     })
 
     describe('With different perPage values', () => {
       beforeEach(() => {
-        renderMacro('appPagination', 'pagination/macro.njk', {
-          params: {
-            baseUrl: '/library',
-            pagination: {
-              page: 2,
-              perPage: 5,
-              totalPages: 4,
-              totalItems: 20,
-              pages: [
-                {
-                  number: '1',
-                  href: '/library?page=1&perPage=5',
-                  current: false
-                },
-                {
-                  number: '2',
-                  href: '/library?page=2&perPage=5',
-                  current: true
-                },
-                {
-                  number: '3',
-                  href: '/library?page=3&perPage=5',
-                  current: false
-                },
-                {
-                  number: '4',
-                  href: '/library?page=4&perPage=5',
-                  current: false
-                }
-              ]
+        const { container } = renderMacro(
+          'appPagination',
+          'pagination/macro.njk',
+          {
+            params: {
+              baseUrl: '/library',
+              pagination: {
+                page: 2,
+                perPage: 5,
+                totalPages: 4,
+                totalItems: 20,
+                pages: [
+                  {
+                    number: '1',
+                    href: '/library?page=1&perPage=5',
+                    current: false
+                  },
+                  {
+                    number: '2',
+                    href: '/library?page=2&perPage=5',
+                    current: true
+                  },
+                  {
+                    number: '3',
+                    href: '/library?page=3&perPage=5',
+                    current: false
+                  },
+                  {
+                    number: '4',
+                    href: '/library?page=4&perPage=5',
+                    current: false
+                  }
+                ]
+              }
             }
           }
-        })
+        )
 
-        $pagination = document.querySelector('.govuk-pagination')
+        $pagination = container.getByRole('navigation', { name: 'Pagination' })
       })
 
       it('should generate correct href attributes with perPage parameter', () => {
-        const $pages = $pagination?.querySelectorAll(
-          '.govuk-pagination__item a'
-        )
-        expect($pages).toHaveLength(4)
+        const $pageLinks = within($pagination).getAllByRole('link', {
+          name: /Page \d+/
+        })
+        expect($pageLinks).toHaveLength(4)
 
-        expect($pages?.[0]).toHaveAttribute('href', '/library?page=1&perPage=5')
-        expect($pages?.[1]).toHaveAttribute('href', '/library?page=2&perPage=5')
-        expect($pages?.[2]).toHaveAttribute('href', '/library?page=3&perPage=5')
-        expect($pages?.[3]).toHaveAttribute('href', '/library?page=4&perPage=5')
+        expect($pageLinks[0]).toHaveAttribute(
+          'href',
+          '/library?page=1&perPage=5'
+        )
+        expect($pageLinks[1]).toHaveAttribute(
+          'href',
+          '/library?page=2&perPage=5'
+        )
+        expect($pageLinks[2]).toHaveAttribute(
+          'href',
+          '/library?page=3&perPage=5'
+        )
+        expect($pageLinks[3]).toHaveAttribute(
+          'href',
+          '/library?page=4&perPage=5'
+        )
       })
     })
 
     describe('When there is only one page', () => {
-      beforeEach(() => {
-        renderMacro('appPagination', 'pagination/macro.njk', {
-          params: {
-            pagination: {
-              page: 1,
-              perPage: 10,
-              totalPages: 1,
-              totalItems: 5,
-              pages: [
-                {
-                  number: '1',
-                  href: '/library?page=1&perPage=10',
-                  current: true
-                }
-              ]
+      it('should not render the pagination component', () => {
+        const { container } = renderMacro(
+          'appPagination',
+          'pagination/macro.njk',
+          {
+            params: {
+              pagination: {
+                page: 1,
+                perPage: 10,
+                totalPages: 1,
+                totalItems: 5,
+                pages: [
+                  {
+                    number: '1',
+                    href: '/library?page=1&perPage=10',
+                    current: true
+                  }
+                ]
+              }
             }
           }
+        )
+
+        const $paginationNotFound = container.queryByRole('navigation', {
+          name: 'Pagination'
         })
 
-        $pagination = document.querySelector('.govuk-pagination')
-      })
-
-      it('should not render the pagination component', () => {
-        expect($pagination).toBeNull()
+        expect($paginationNotFound).not.toBeInTheDocument()
       })
     })
 
     describe('When current page exceeds total pages', () => {
       beforeEach(() => {
-        renderMacro('appPagination', 'pagination/macro.njk', {
-          params: {
-            baseUrl: '/library',
-            pagination: {
-              page: 6,
-              perPage: 10,
-              totalPages: 5,
-              totalItems: 50,
-              pages: [
-                {
-                  number: '1',
-                  href: '/library?page=1&perPage=10',
-                  current: false
-                },
-                {
-                  number: '2',
-                  href: '/library?page=2&perPage=10',
-                  current: false
-                },
-                {
-                  number: '3',
-                  href: '/library?page=3&perPage=10',
-                  current: false
-                },
-                { ellipsis: true },
-                {
-                  number: '5',
-                  href: '/library?page=5&perPage=10',
-                  current: false
-                }
-              ]
+        const { container } = renderMacro(
+          'appPagination',
+          'pagination/macro.njk',
+          {
+            params: {
+              baseUrl: '/library',
+              pagination: {
+                page: 6,
+                perPage: 10,
+                totalPages: 5,
+                totalItems: 50,
+                pages: [
+                  {
+                    number: '1',
+                    href: '/library?page=1&perPage=10',
+                    current: false
+                  },
+                  {
+                    number: '2',
+                    href: '/library?page=2&perPage=10',
+                    current: false
+                  },
+                  {
+                    number: '3',
+                    href: '/library?page=3&perPage=10',
+                    current: false
+                  },
+                  { ellipsis: true },
+                  {
+                    number: '5',
+                    href: '/library?page=5&perPage=10',
+                    current: false
+                  }
+                ]
+              }
             }
           }
-        })
+        )
 
-        $pagination = document.querySelector('.govuk-pagination')
+        $pagination = container.getByRole('navigation', { name: 'Pagination' })
       })
 
       it('should render the pagination component', () => {
@@ -399,20 +442,17 @@ describe('Pagination Component', () => {
       })
 
       it('should not highlight any page as current', () => {
-        const $currentPage = $pagination?.querySelector(
-          '.govuk-pagination__item--current'
-        )
-        expect($currentPage).toBeNull()
+        const $pages = within($pagination).getAllByRole('listitem')
+
+        $pages.forEach(($page) => {
+          expect($page).not.toHaveClass('govuk-pagination__item--current')
+        })
       })
 
       it('should render the correct previous and next links', () => {
-        const $previousLink = $pagination?.querySelector(
-          '.govuk-pagination__prev a'
-        )
-        const $nextLink = $pagination?.querySelector(
-          '.govuk-pagination__next a'
-        )
-
+        const $previousLink = within($pagination).getByRole('link', {
+          name: 'Previous'
+        })
         expect($previousLink).toBeInTheDocument()
         expect($previousLink).toHaveAttribute(
           'href',
@@ -420,161 +460,186 @@ describe('Pagination Component', () => {
         )
         expect($previousLink).toHaveTextContent('Previous')
 
-        expect($nextLink).toBeNull()
+        const $nextLink = within($pagination).queryByRole('link', {
+          name: 'Next'
+        })
+        expect($nextLink).not.toBeInTheDocument()
       })
 
       it('should render the correct page numbers', () => {
-        const $pages = $pagination?.querySelectorAll('.govuk-pagination__item')
+        const $pages = within($pagination).getAllByRole('listitem')
         expect($pages).toHaveLength(5)
 
-        expect($pages?.[0].textContent?.trim()).toBe('1')
-        expect($pages?.[0].classList).not.toContain(
-          'govuk-pagination__item--current'
-        )
+        const $page1Link = within($pages[0]).getByRole('link', {
+          name: 'Page 1'
+        })
+        expect($page1Link).toHaveTextContent('1')
+        expect($pages[0]).not.toHaveClass('govuk-pagination__item--current')
 
-        expect($pages?.[1].textContent?.trim()).toBe('2')
-        expect($pages?.[1].classList).not.toContain(
-          'govuk-pagination__item--current'
-        )
+        const $page2Link = within($pages[1]).getByRole('link', {
+          name: 'Page 2'
+        })
+        expect($page2Link).toHaveTextContent('2')
+        expect($pages[1]).not.toHaveClass('govuk-pagination__item--current')
 
-        expect($pages?.[2].textContent?.trim()).toBe('3')
-        expect($pages?.[2].classList).not.toContain(
-          'govuk-pagination__item--current'
-        )
+        const $page3Link = within($pages[2]).getByRole('link', {
+          name: 'Page 3'
+        })
+        expect($page3Link).toHaveTextContent('3')
+        expect($pages[2]).not.toHaveClass('govuk-pagination__item--current')
 
-        expect($pages?.[3].textContent?.trim()).toBe('⋯') // Horizontal ellipsis!
-        expect($pages?.[3].classList).not.toContain(
-          'govuk-pagination__item--current'
-        )
+        expect($pages[3]).toHaveTextContent('⋯') // Horizontal ellipsis!
+        expect($pages[3]).not.toHaveClass('govuk-pagination__item--current')
 
-        expect($pages?.[4].textContent?.trim()).toBe('5')
-        expect($pages?.[4].classList).not.toContain(
-          'govuk-pagination__item--current'
-        )
+        const $page5Link = within($pages[4]).getByRole('link', {
+          name: 'Page 5'
+        })
+        expect($page5Link).toHaveTextContent('5')
+        expect($pages[4]).not.toHaveClass('govuk-pagination__item--current')
       })
     })
 
     describe('When totalPages is zero', () => {
-      beforeEach(() => {
-        renderMacro('appPagination', 'pagination/macro.njk', {
-          params: {
-            pagination: {
-              page: 1,
-              perPage: 10,
-              totalPages: 0,
-              totalItems: 0,
-              pages: []
+      it('should not render the pagination component', () => {
+        const { container } = renderMacro(
+          'appPagination',
+          'pagination/macro.njk',
+          {
+            params: {
+              pagination: {
+                page: 1,
+                perPage: 10,
+                totalPages: 0,
+                totalItems: 0,
+                pages: []
+              }
             }
           }
+        )
+
+        const $paginationNotFound = container.queryByRole('navigation', {
+          name: 'Pagination'
         })
 
-        $pagination = document.querySelector('.govuk-pagination')
-      })
-
-      it('should not render the pagination component', () => {
-        expect($pagination).toBeNull()
+        expect($paginationNotFound).not.toBeInTheDocument()
       })
     })
 
     describe('When baseUrl is missing', () => {
       beforeEach(() => {
-        renderMacro('appPagination', 'pagination/macro.njk', {
-          params: {
-            pagination: {
-              page: 2,
-              perPage: 10,
-              totalPages: 5,
-              totalItems: 50,
-              pages: [
-                {
-                  number: '1',
-                  href: '?page=1&perPage=10',
-                  current: false
-                },
-                {
-                  number: '2',
-                  href: '?page=2&perPage=10',
-                  current: true
-                },
-                {
-                  number: '3',
-                  href: '?page=3&perPage=10',
-                  current: false
-                },
-                { ellipsis: true },
-                {
-                  number: '5',
-                  href: '?page=5&perPage=10',
-                  current: false
-                }
-              ]
+        const { container } = renderMacro(
+          'appPagination',
+          'pagination/macro.njk',
+          {
+            params: {
+              pagination: {
+                page: 2,
+                perPage: 10,
+                totalPages: 5,
+                totalItems: 50,
+                pages: [
+                  {
+                    number: '1',
+                    href: '?page=1&perPage=10',
+                    current: false
+                  },
+                  {
+                    number: '2',
+                    href: '?page=2&perPage=10',
+                    current: true
+                  },
+                  {
+                    number: '3',
+                    href: '?page=3&perPage=10',
+                    current: false
+                  },
+                  { ellipsis: true },
+                  {
+                    number: '5',
+                    href: '?page=5&perPage=10',
+                    current: false
+                  }
+                ]
+              }
             }
           }
-        })
+        )
 
-        $pagination = document.querySelector('.govuk-pagination')
+        $pagination = container.getByRole('navigation', { name: 'Pagination' })
       })
 
       it('should generate hrefs without baseUrl', () => {
-        const $nextLink = $pagination?.querySelector(
-          '.govuk-pagination__next a'
-        )
+        const $nextLink = within($pagination).getByRole('link', {
+          name: 'Next'
+        })
         expect($nextLink).toHaveAttribute('href', '?page=3&perPage=10')
       })
     })
 
     describe('When pagination parameter is missing', () => {
-      beforeEach(() => {
-        renderMacro('appPagination', 'pagination/macro.njk', {
-          params: {
-            baseUrl: '/library'
+      it('should not render the pagination component', () => {
+        const { container } = renderMacro(
+          'appPagination',
+          'pagination/macro.njk',
+          {
+            params: {
+              baseUrl: '/library'
+            }
           }
+        )
+
+        const $paginationNotFound = container.queryByRole('navigation', {
+          name: 'Pagination'
         })
 
-        $pagination = document.querySelector('.govuk-pagination')
-      })
-
-      it('should not render the pagination component', () => {
-        expect($pagination).toBeNull()
+        expect($paginationNotFound).not.toBeInTheDocument()
       })
     })
 
     describe('When pages array is empty', () => {
       beforeEach(() => {
-        renderMacro('appPagination', 'pagination/macro.njk', {
-          params: {
-            baseUrl: '/library',
-            pagination: {
-              page: 1,
-              perPage: 10,
-              totalPages: 5,
-              totalItems: 50,
-              pages: []
+        const { container } = renderMacro(
+          'appPagination',
+          'pagination/macro.njk',
+          {
+            params: {
+              baseUrl: '/library',
+              pagination: {
+                page: 1,
+                perPage: 10,
+                totalPages: 5,
+                totalItems: 50,
+                pages: []
+              }
             }
           }
-        })
+        )
 
-        $pagination = document.querySelector('.govuk-pagination')
+        $pagination = container.getByRole('navigation', { name: 'Pagination' })
       })
 
       it('should not render page number items', () => {
-        const $pages = $pagination?.querySelectorAll('.govuk-pagination__item')
-        expect($pages?.length).toBe(0)
+        const $pages = within($pagination).queryAllByRole('listitem')
+        expect($pages).toHaveLength(0)
       })
     })
   })
 
   describe('Without pagination data', () => {
-    beforeEach(() => {
-      renderMacro('appPagination', 'pagination/macro.njk', {
-        params: {}
+    it('should not render the pagination component', () => {
+      const { container } = renderMacro(
+        'appPagination',
+        'pagination/macro.njk',
+        {
+          params: {}
+        }
+      )
+
+      const $paginationNotFound = container.queryByRole('navigation', {
+        name: 'Pagination'
       })
 
-      $pagination = document.querySelector('.govuk-pagination')
-    })
-
-    it('should not render the pagination component', () => {
-      expect($pagination).toBeNull()
+      expect($paginationNotFound).not.toBeInTheDocument()
     })
   })
 })
