@@ -347,7 +347,7 @@ describe('Forms Library Models', () => {
             text: 'Forms library'
           },
           formItems: mockFormResponse.data,
-          pagination: null
+          pagination: undefined
         })
       })
     })

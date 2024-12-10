@@ -21,7 +21,7 @@ import {
  * @property {string} pageTitle - The number of items per page.
  * @property {{ text: string }} pageHeading - The page heading.
  * @property {Array<FormMetadata>} formItems - The form items.
- * @property {(PaginationResult & { pages: Array<PaginationPage> }) | null} pagination - The pagination.
+ * @property {(PaginationResult & { pages: Array<PaginationPage> }) | undefined} pagination - The pagination.
  */
 
 /**
@@ -35,9 +35,9 @@ export async function listViewModel(token, paginationOptions) {
   const formResponse = await forms.list(token, paginationOptions)
 
   const formItems = formResponse.data
-  const paginationMeta = formResponse.meta.pagination ?? null
+  const paginationMeta = formResponse.meta.pagination ?? undefined
 
-  let pagination = null
+  let pagination
   if (paginationMeta) {
     const pages = buildPaginationPages(
       paginationMeta.page,
