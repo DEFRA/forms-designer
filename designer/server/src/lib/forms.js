@@ -6,18 +6,16 @@ const formsEndpoint = new URL('/forms/', config.managerUrl)
 /**
  * List forms
  * @param {string} token
- * @param {PaginationOptions} [options]
+ * @param {PaginationOptions} options
  * @returns {Promise<QueryResult<FormMetadata>>}
  */
-export async function list(token, options = {}) {
+export async function list(token, options) {
   const getJsonByType =
     /** @type {typeof getJson<QueryResult<FormMetadata>>} */ (getJson)
 
   const requestUrl = new URL(formsEndpoint)
-  if (options.page != null && options.perPage != null) {
-    requestUrl.searchParams.append('page', String(options.page))
-    requestUrl.searchParams.append('perPage', String(options.perPage))
-  }
+  requestUrl.searchParams.append('page', String(options.page))
+  requestUrl.searchParams.append('perPage', String(options.perPage))
 
   const { body } = await getJsonByType(requestUrl, getAuthOptions(token))
 

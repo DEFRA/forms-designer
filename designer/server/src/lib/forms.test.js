@@ -222,29 +222,6 @@ describe('Forms library routes', () => {
       expect($pages?.[2].classList).toContain('govuk-pagination__item--current')
     })
 
-    it('Forms library list page handles invalid pagination parameters gracefully', async () => {
-      jest.mocked(forms.list).mockResolvedValueOnce({
-        data: [formMetadata],
-        meta: {}
-      })
-
-      const options = {
-        method: 'GET',
-        url: '/library?page=abc&perPage=def',
-        auth
-      }
-
-      await renderResponse(server, options)
-
-      const $pagination = document.querySelector('.govuk-pagination')
-      expect($pagination).not.toBeInTheDocument()
-
-      expect(forms.list).toHaveBeenCalledWith(auth.credentials.token, {
-        page: 1,
-        perPage: 24
-      })
-    })
-
     it('Forms library list page redirects if page exceeds totalPages', async () => {
       jest.mocked(forms.list).mockResolvedValueOnce({
         data: [],
@@ -389,26 +366,6 @@ describe('Forms library routes', () => {
         jest.clearAllMocks()
       })
 
-      it('should fetch list of forms without pagination', async () => {
-        const mockResponse = {
-          data: [formMetadata],
-          meta: {}
-        }
-
-        jest.spyOn(fetch, 'getJson').mockResolvedValueOnce({
-          /** @type {any} */
-          response: {},
-          body: mockResponse
-        })
-
-        const result = await forms.list(token)
-
-        expect(fetch.getJson).toHaveBeenCalledWith(expect.any(URL), {
-          headers: { Authorization: `Bearer ${token}` }
-        })
-        expect(result).toEqual(mockResponse)
-      })
-
       it('should fetch list of forms with pagination', async () => {
         const options = { page: 2, perPage: 10 }
         const mockResponse = {
@@ -444,38 +401,6 @@ describe('Forms library routes', () => {
 
         expect(calledUrl.searchParams.get('page')).toBe('2')
         expect(calledUrl.searchParams.get('perPage')).toBe('10')
-
-        expect(result).toEqual(mockResponse)
-      })
-
-      it('should handle null pagination options', async () => {
-        const options = {}
-        const mockResponse = {
-          data: [formMetadata],
-          meta: {}
-        }
-
-        jest.spyOn(fetch, 'getJson').mockResolvedValueOnce({
-          /** @type {any} */
-          response: {},
-          body: mockResponse
-        })
-
-        const result = await forms.list(token, options)
-
-        expect(fetch.getJson).toHaveBeenCalledWith(expect.any(URL), {
-          headers: { Authorization: `Bearer ${token}` }
-        })
-
-        const fetchGetJsonMock = /** @type {jest.Mock} */ (fetch.getJson)
-
-        /** @type {Array<[URL, object]>} */
-        const mockCalls = fetchGetJsonMock.mock.calls
-
-        const calledUrl = /** @type {URL} */ (mockCalls[0][0])
-
-        expect(calledUrl.searchParams.get('page')).toBeNull()
-        expect(calledUrl.searchParams.get('perPage')).toBeNull()
 
         expect(result).toEqual(mockResponse)
       })
