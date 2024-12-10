@@ -1,3 +1,5 @@
+import { paginationOptionsSchema } from '@defra/forms-model'
+
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import config from '~/src/config.js'
@@ -13,19 +15,20 @@ export default [
     method: 'GET',
     path: '/library',
     options: {
+      /**
+       * @param {RequestFormsLibrary} request
+       */
       handler: async (request, h) => {
         const { auth, query } = request
         const token = auth.credentials.token
 
-        const page = Number(query.page) || 1
-        const perPage = Number(query.perPage) || 24
+        const { page, perPage } = query
 
         const paginationOptions = { page, perPage }
         const model = await library.listViewModel(token, paginationOptions)
 
         if (model.pagination) {
           const { totalPages } = model.pagination
-
           if (page < 1 || page > totalPages) {
             // Redirect to the first page
             const redirectUrl = new URL('/library', config.appBaseUrl)
@@ -33,14 +36,6 @@ export default [
             redirectUrl.searchParams.set('perPage', String(perPage))
             return h.redirect(redirectUrl.pathname + redirectUrl.search)
           }
-        }
-
-        // Redirect to include pagination params if missing
-        if (!('page' in query) && !('perPage' in query) && model.pagination) {
-          const redirectUrl = new URL('/library', config.appBaseUrl)
-          redirectUrl.searchParams.set('page', String(page))
-          redirectUrl.searchParams.set('perPage', String(perPage))
-          return h.redirect(redirectUrl.pathname + redirectUrl.search)
         }
 
         return h.view('forms/library', model)
@@ -51,6 +46,9 @@ export default [
           entity: 'user',
           scope: [`+${scopes.SCOPE_READ}`]
         }
+      },
+      validate: {
+        query: paginationOptionsSchema
       }
     }
   }),
@@ -127,5 +125,11 @@ export default [
 ]
 
 /**
+ * @typedef {Request<{ Query: PaginationOptions }>} RequestFormsLibrary
+ */
+
+/**
+ * @import { Request } from '@hapi/hapi'
  * @import { ServerRoute } from '@hapi/hapi'
+ * @import { PaginationOptions } from '@defra/forms-model'
  */

@@ -19,6 +19,10 @@ describe('Forms library routes', () => {
     await server.stop()
   })
 
+  beforeEach(() => {
+    jest.resetAllMocks()
+  })
+
   const now = new Date()
   const authorId = 'f50ceeed-b7a4-47cf-a498-094efc99f8bc'
   const authorDisplayName = 'Enrique Chase'
@@ -221,30 +225,6 @@ describe('Forms library routes', () => {
           'govuk-pagination__item--current'
         )
       })
-
-      it('should handle invalid pagination parameters gracefully', async () => {
-        jest.mocked(forms.list).mockResolvedValueOnce({
-          data: [formMetadata],
-          meta: {}
-        })
-
-        const options = {
-          method: 'GET',
-          url: '/library?page=abc&perPage=def',
-          auth
-        }
-
-        await renderResponse(server, options)
-
-        const $pagination = document.querySelector('.govuk-pagination')
-        expect($pagination).not.toBeInTheDocument()
-
-        expect(forms.list).toHaveBeenCalledWith(auth.credentials.token, {
-          page: 1,
-          perPage: 24
-        })
-      })
-
       it('should redirect if requested page exceeds total pages', async () => {
         jest.mocked(forms.list).mockResolvedValueOnce({
           data: [],
