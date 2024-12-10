@@ -45,7 +45,7 @@ export interface PageQuestion extends PageBase {
 }
 
 export interface PageRepeat extends PageBase {
-  controller?: ControllerType.Repeat
+  controller: ControllerType.Repeat
   repeat: Repeat
   section?: string | undefined
   next: Link[]
@@ -53,7 +53,7 @@ export interface PageRepeat extends PageBase {
 }
 
 export interface PageFileUpload extends PageBase {
-  controller?: ControllerType.FileUpload
+  controller: ControllerType.FileUpload
   section?: string | undefined
   next: Link[]
   components: ComponentDef[]
