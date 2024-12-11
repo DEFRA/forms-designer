@@ -4,7 +4,6 @@ import { type PaginationOptions } from '~/src/common/pagination/types.js'
 
 /**
  * Field definitions for pagination options.
- * @type {Record<keyof PaginationOptions, Joi.Schema>}
  */
 export const paginationOptionFields = {
   page: Joi.number().positive().integer().default(1).min(1).optional(),

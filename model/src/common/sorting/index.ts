@@ -4,7 +4,6 @@ import { type SortingOptions } from '~/src/common/sorting/types.js'
 
 /**
  * Field definitions for sorting options.
- * @type {Record<keyof SortingOptions, Joi.Schema>}
  */
 export const sortingOptionFields = {
   sortBy: Joi.string().valid('updatedAt', 'title').optional(),
