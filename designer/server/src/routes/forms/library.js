@@ -1,5 +1,8 @@
+import { paginationOptionsSchema } from '@defra/forms-model'
+
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
+import config from '~/src/config.js'
 import * as forms from '~/src/lib/forms.js'
 import * as library from '~/src/models/forms/library.js'
 import { formOverviewPath } from '~/src/models/links.js'
@@ -11,20 +14,41 @@ export default [
   ({
     method: 'GET',
     path: '/library',
-    async handler(request, h) {
-      const { auth } = request
-      const token = auth.credentials.token
-      const model = await library.listViewModel(token)
-
-      return h.view('forms/library', model)
-    },
     options: {
+      /**
+       * @param {RequestFormsLibrary} request
+       */
+      handler: async (request, h) => {
+        const { auth, query } = request
+        const token = auth.credentials.token
+
+        const { page, perPage } = query
+
+        const paginationOptions = { page, perPage }
+        const model = await library.listViewModel(token, paginationOptions)
+
+        if (model.pagination) {
+          const { totalPages } = model.pagination
+          if (page < 1 || page > totalPages) {
+            // Redirect to the first page
+            const redirectUrl = new URL('/library', config.appBaseUrl)
+            redirectUrl.searchParams.set('page', '1')
+            redirectUrl.searchParams.set('perPage', String(perPage))
+            return h.redirect(redirectUrl.pathname + redirectUrl.search)
+          }
+        }
+
+        return h.view('forms/library', model)
+      },
       auth: {
         mode: 'required',
         access: {
           entity: 'user',
           scope: [`+${scopes.SCOPE_READ}`]
         }
+      },
+      validate: {
+        query: paginationOptionsSchema
       }
     }
   }),
@@ -101,5 +125,11 @@ export default [
 ]
 
 /**
+ * @typedef {Request<{ Query: PaginationOptions }>} RequestFormsLibrary
+ */
+
+/**
+ * @import { Request } from '@hapi/hapi'
  * @import { ServerRoute } from '@hapi/hapi'
+ * @import { PaginationOptions } from '@defra/forms-model'
  */

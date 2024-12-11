@@ -27,7 +27,7 @@ export interface PaginationResult {
  * Options for paginating results
  * Allows partial specification of page and perPage from PaginationResult
  */
-export type PaginationOptions = Partial<
+export type PaginationOptions = Required<
   Pick<PaginationResult, 'page' | 'perPage'>
 >
 

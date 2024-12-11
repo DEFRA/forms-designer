@@ -7,6 +7,6 @@ import { type PaginationOptions } from '~/src/common/pagination/types.js'
  * @see {@link PaginationOptions}
  */
 export const paginationOptionsSchema = Joi.object<PaginationOptions>({
-  page: Joi.number().positive().integer().min(1),
-  perPage: Joi.number().positive().integer().min(1).max(200)
+  page: Joi.number().positive().integer().default(1).min(1),
+  perPage: Joi.number().positive().integer().default(24).min(1).max(200)
 }).optional()

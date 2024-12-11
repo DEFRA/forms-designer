@@ -6,11 +6,18 @@ const formsEndpoint = new URL('/forms/', config.managerUrl)
 /**
  * List forms
  * @param {string} token
+ * @param {PaginationOptions} options
+ * @returns {Promise<QueryResult<FormMetadata>>}
  */
-export async function list(token) {
-  const getJsonByType = /** @type {typeof getJson<FormMetadata[]>} */ (getJson)
+export async function list(token, options) {
+  const getJsonByType =
+    /** @type {typeof getJson<QueryResult<FormMetadata>>} */ (getJson)
 
-  const { body } = await getJsonByType(formsEndpoint, getAuthOptions(token))
+  const requestUrl = new URL(formsEndpoint)
+  requestUrl.searchParams.append('page', String(options.page))
+  requestUrl.searchParams.append('perPage', String(options.perPage))
+
+  const { body } = await getJsonByType(requestUrl, getAuthOptions(token))
 
   return body
 }
@@ -156,6 +163,6 @@ function getAuthOptions(token) {
 }
 
 /**
- * @import { FormDefinition, FormMetadata, FormMetadataInput, FormResponse } from '@defra/forms-model'
+ * @import { FormDefinition, FormMetadata, FormMetadataInput, FormResponse, PaginationOptions, QueryResult } from '@defra/forms-model'
  * @import Wreck from '@hapi/wreck'
  */
