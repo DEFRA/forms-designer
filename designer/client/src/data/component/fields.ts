@@ -5,7 +5,6 @@ import {
   hasFormField,
   hasListField,
   hasRepeater,
-  hasSection,
   type ConditionalComponentType,
   type ConditionalComponentsDef,
   type FormDefinition,
@@ -52,7 +51,10 @@ export function pageToFields(
   this: FormDefinition,
   page: Extract<Page, { next: Link[] }>
 ) {
-  const section = hasSection(page) ? findSection(this, page.section) : undefined
+  const section =
+    hasComponents(page) && page.section
+      ? findSection(this, page.section)
+      : undefined
 
   return page.components
     .filter(hasConditionSupport)

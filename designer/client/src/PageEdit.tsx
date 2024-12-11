@@ -7,7 +7,6 @@ import {
   hasFormComponents,
   hasNext,
   hasRepeater,
-  hasSection,
   slugify,
   type Page
 } from '@defra/forms-model'
@@ -110,7 +109,7 @@ export class PageEdit extends Component<Props, State> {
     this.setState({
       path: page.path,
       title: page.title,
-      selectedSection: hasSection(page) ? page.section : undefined,
+      selectedSection: hasComponents(page) ? page.section : undefined,
       repeatTitle: hasRepeater(page) ? page.repeat.options.title : undefined
     })
   }

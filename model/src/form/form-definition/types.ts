@@ -31,7 +31,7 @@ export interface Repeat {
 
 export interface PageStart extends PageBase {
   path: ControllerPath.Start | string
-  controller: ControllerType.Start | ControllerType.Home
+  controller: ControllerType.Start
   section?: string | undefined
   next: Link[]
   components: ComponentDef[]
@@ -45,7 +45,7 @@ export interface PageQuestion extends PageBase {
 }
 
 export interface PageRepeat extends PageBase {
-  controller?: ControllerType.Repeat
+  controller: ControllerType.Repeat
   repeat: Repeat
   section?: string | undefined
   next: Link[]
@@ -53,7 +53,7 @@ export interface PageRepeat extends PageBase {
 }
 
 export interface PageFileUpload extends PageBase {
-  controller?: ControllerType.FileUpload
+  controller: ControllerType.FileUpload
   section?: string | undefined
   next: Link[]
   components: ComponentDef[]
@@ -78,14 +78,6 @@ export type Page =
   | PageRepeat
   | PageSummary
   | PageStatus
-
-export type RequiredField<
-  Type extends Partial<object>,
-  KeyType extends keyof Type
-> = Omit<Type, KeyType> &
-  Required<{
-    [Key in KeyType]: Type[Key]
-  }>
 
 export interface Section {
   name: string
