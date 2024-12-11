@@ -30,28 +30,3 @@ export interface PaginationResult {
 export type PaginationOptions = Required<
   Pick<PaginationResult, 'page' | 'perPage'>
 >
-
-/**
- * Metadata containing optional pagination information
- */
-export interface Meta {
-  /**
-   * The pagination details
-   */
-  pagination?: PaginationResult
-}
-
-/**
- * Standard response wrapper for query results with metadata
- */
-export interface QueryResult<Model> {
-  /**
-   * The array of data items
-   */
-  data: Model[]
-
-  /**
-   * The metadata about the result
-   */
-  meta: Meta
-}
