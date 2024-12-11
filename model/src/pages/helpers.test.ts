@@ -23,8 +23,9 @@ describe('helpers', () => {
 
   describe('hasComponents', () => {
     const supported = [
+      ControllerType.Content,
       ControllerType.Start,
-      ControllerType.Page,
+      ControllerType.Question,
       ControllerType.FileUpload,
       ControllerType.Repeat
     ]
@@ -48,7 +49,7 @@ describe('helpers', () => {
 
   describe('hasFormComponents', () => {
     const supported = [
-      ControllerType.Page,
+      ControllerType.Question,
       ControllerType.FileUpload,
       ControllerType.Repeat
     ]
@@ -73,7 +74,7 @@ describe('helpers', () => {
   describe('hasNext', () => {
     const supported = [
       ControllerType.Start,
-      ControllerType.Page,
+      ControllerType.Question,
       ControllerType.FileUpload,
       ControllerType.Repeat
     ]
@@ -120,6 +121,15 @@ describe('helpers', () => {
       "returns controller name for '$path' legacy path",
       ({ name, path }) => {
         expect(controllerNameFromPath(path)).toEqual(name)
+      }
+    )
+
+    it.each(ControllerTypes.filter(({ aliases }) => !!aliases))(
+      'returns controller name for $aliases legacy aliases',
+      ({ name, aliases = [] }) => {
+        for (const alias of aliases) {
+          expect(controllerNameFromPath(alias)).toEqual(name)
+        }
       }
     )
   })

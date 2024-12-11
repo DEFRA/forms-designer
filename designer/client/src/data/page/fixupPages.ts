@@ -9,7 +9,7 @@ export function fixupPages(data: FormDefinition) {
 
   // Update start page if incorrect
   if (startPage && (!data.startPage || data.startPage !== startPage)) {
-    return { ...structuredClone(data), startPage }
+    return { ...structuredClone(data), startPage } satisfies FormDefinition
   }
 
   // Remove start page if no pages exist
