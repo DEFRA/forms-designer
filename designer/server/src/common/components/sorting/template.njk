@@ -1,0 +1,54 @@
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% if params.sorting %}
+<form method="get" action="/library" aria-label="Sort forms">
+  <div class="app-field-group">
+    <div class="app-field-group__item">
+      {{ govukSelect({
+        id: "sort-select",
+        name: "sort",
+        label: {
+          text: "Sort by",
+          classes: "app-field-group__label"
+        },
+        classes: "app-field-group__input",
+        items: [
+          {
+            text: "Updated (newest)",
+            value: "updated_desc",
+            selected: params.sorting.sortBy == "updatedAt" and params.sorting.order == "desc"
+          },
+          {
+            text: "Updated (oldest)", 
+            value: "updated_asc",
+            selected: params.sorting.sortBy == "updatedAt" and params.sorting.order == "asc"
+          },
+          {
+            text: "Form name (A to Z)",
+            value: "title_asc", 
+            selected: params.sorting.sortBy == "title" and params.sorting.order == "asc"
+          },
+          {
+            text: "Form name (Z to A)",
+            value: "title_desc",
+            selected: params.sorting.sortBy == "title" and params.sorting.order == "desc"
+          }
+        ]
+      }) }}
+    </div>
+    <div class="app-field-group__item">
+      {{ govukButton({
+        text: "Sort forms",
+        type: "submit",
+        classes: "govuk-button--secondary app-field-group__button"
+      }) }}
+    </div>
+  </div>
+
+  {% if params.pagination and params.pagination.page %}
+  <input type="hidden" name="page" value="{{ params.pagination.page }}">
+  <input type="hidden" name="perPage" value="{{ params.pagination.perPage }}">
+  {% endif %}
+</form>
+{% endif %}

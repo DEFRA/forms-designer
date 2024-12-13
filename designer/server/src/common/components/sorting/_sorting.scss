@@ -1,0 +1,60 @@
+@use "govuk-frontend/govuk/base" as *;
+
+.app-field-group {
+  margin-bottom: govuk-spacing(4);
+  font-size: 0;
+
+  &__item {
+    width: 100%;
+  }
+
+  &__label {
+    display: block;
+  }
+
+  &__input {
+    width: auto;
+    margin-right: govuk-spacing(0);
+  }
+
+  .govuk-form-group {
+    margin-bottom: govuk-spacing(4);
+  }
+
+  @include govuk-media-query($from: tablet) {
+    &__item {
+      display: inline-block;
+      width: auto;
+      margin-right: govuk-spacing(1);
+      vertical-align: top;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+
+    &__label {
+      display: inline-block;
+      margin-bottom: 0;
+      margin-right: govuk-spacing(2);
+      font-size: 19px;
+    }
+
+    &__input {
+      display: inline-block;
+      width: auto;
+      margin-right: govuk-spacing(2);
+      font-size: 19px;
+    }
+
+    &__button {
+      display: block;
+      margin-bottom: 0;
+      font-size: 19px;
+    }
+
+    .govuk-form-group {
+      margin-bottom: 0;
+    }
+  }
+}
