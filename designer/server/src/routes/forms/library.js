@@ -1,4 +1,5 @@
-import { paginationOptionsSchema } from '@defra/forms-model'
+import { paginationOptionFields } from '@defra/forms-model'
+import Joi from 'joi'
 
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
@@ -21,19 +22,27 @@ export default [
       handler: async (request, h) => {
         const { auth, query } = request
         const token = auth.credentials.token
+        const { page, perPage, sort } = query
 
-        const { page, perPage } = query
+        let sortBy, order
+        if (sort) {
+          const [field, direction] = sort.split('_')
+          sortBy = field === 'updated' ? 'updatedAt' : 'title'
+          order = direction
+        }
 
-        const paginationOptions = { page, perPage }
-        const model = await library.listViewModel(token, paginationOptions)
+        const listOptions = { page, perPage, sortBy, order }
+
+        const model = await library.listViewModel(token, listOptions)
 
         if (model.pagination) {
           const { totalPages } = model.pagination
-          if (page < 1 || page > totalPages) {
+          if (page > totalPages) {
             // Redirect to the first page
             const redirectUrl = new URL('/library', config.appBaseUrl)
             redirectUrl.searchParams.set('page', '1')
             redirectUrl.searchParams.set('perPage', String(perPage))
+            if (sort) redirectUrl.searchParams.set('sort', sort)
             return h.redirect(redirectUrl.pathname + redirectUrl.search)
           }
         }
@@ -48,7 +57,11 @@ export default [
         }
       },
       validate: {
-        query: paginationOptionsSchema
+        query: Joi.object(paginationOptionFields).keys({
+          sort: Joi.string()
+            .valid('updated_desc', 'updated_asc', 'title_asc', 'title_desc')
+            .optional()
+        })
       }
     }
   }),
@@ -125,7 +138,17 @@ export default [
 ]
 
 /**
- * @typedef {Request<{ Query: PaginationOptions }>} RequestFormsLibrary
+ * @typedef {{
+ *   sort?: 'updated_desc' | 'updated_asc' | 'title_asc' | 'title_desc'
+ * }} SortOptions
+ */
+
+/**
+ * @typedef {PaginationOptions & SortOptions} LibraryQueryParams
+ */
+
+/**
+ * @typedef {Request<{ Query: LibraryQueryParams }>} RequestFormsLibrary
  */
 
 /**

@@ -21,28 +21,31 @@ import {
  * @property {string} pageTitle - The number of items per page.
  * @property {{ text: string }} pageHeading - The page heading.
  * @property {Array<FormMetadata>} formItems - The form items.
- * @property {(PaginationResult & { pages: Array<PaginationPage> }) | undefined} pagination - The pagination.
+ * @property {(PaginationResult & { pages: Array<PaginationPage> }) | undefined} pagination - The pagination details, including pages for the pagination component.
+ * @property {SortingOptions | undefined} sorting - The sorting options.
  */
 
 /**
  * @param {string} token
- * @param {PaginationOptions} paginationOptions
+ * @param {QueryOptions} listOptions
  * @returns {Promise<ListViewModel>}
  */
-export async function listViewModel(token, paginationOptions) {
+export async function listViewModel(token, listOptions) {
   const pageTitle = 'Forms library'
 
-  const formResponse = await forms.list(token, paginationOptions)
+  const formResponse = await forms.list(token, listOptions)
 
   const formItems = formResponse.data
   const paginationMeta = formResponse.meta.pagination ?? undefined
+  const sortingMeta = formResponse.meta.sorting ?? undefined
 
   let pagination
   if (paginationMeta) {
     const pages = buildPaginationPages(
       paginationMeta.page,
       paginationMeta.totalPages,
-      paginationMeta.perPage
+      paginationMeta.perPage,
+      sortingMeta
     )
     pagination = {
       ...paginationMeta,
@@ -56,7 +59,8 @@ export async function listViewModel(token, paginationOptions) {
       text: pageTitle
     },
     formItems,
-    pagination
+    pagination,
+    sorting: sortingMeta
   }
 }
 
@@ -66,9 +70,10 @@ export async function listViewModel(token, paginationOptions) {
  * @param {number} currentPage
  * @param {number} totalPages
  * @param {number} perPage
+ * @param {SortingOptions} [sorting]
  * @returns {Array<PaginationPage>}
  */
-function buildPaginationPages(currentPage, totalPages, perPage) {
+function buildPaginationPages(currentPage, totalPages, perPage, sorting) {
   const pages = []
 
   /**
@@ -78,9 +83,19 @@ function buildPaginationPages(currentPage, totalPages, perPage) {
    * @returns {PaginationPage} The pagination page item.
    */
   function createPageItem(pageNumber, isCurrent = false) {
+    const queryParams = new URLSearchParams({
+      page: pageNumber.toString(),
+      perPage: perPage.toString()
+    })
+
+    if (sorting?.sortBy && sorting.order) {
+      const field = sorting.sortBy === 'updatedAt' ? 'updated' : 'title'
+      queryParams.set('sort', `${field}_${sorting.order}`)
+    }
+
     return {
       number: String(pageNumber),
-      href: `${formsLibraryPath}?page=${pageNumber}&perPage=${perPage}`,
+      href: `${formsLibraryPath}?${queryParams.toString()}`,
       current: isCurrent
     }
   }
@@ -229,5 +244,5 @@ export function getFormSpecificNavigation(formPath, metadata, activePage = '') {
 }
 
 /**
- * @import { FormDefinition, FormMetadata, PaginationResult, PaginationOptions } from '@defra/forms-model'
+ * @import { FormDefinition, FormMetadata, PaginationResult, PaginationOptions, QueryOptions, SortingOptions } from '@defra/forms-model'
  */
