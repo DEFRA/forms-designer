@@ -279,6 +279,123 @@ describe('Forms library routes', () => {
         `<td class="govuk-table__cell">${title}</td>`
       )
     })
+
+    describe('Sorting', () => {
+      it('should handle updated_desc sort parameter correctly', async () => {
+        jest.mocked(forms.list).mockResolvedValueOnce({
+          data: [formMetadata],
+          meta: {}
+        })
+
+        const options = {
+          method: 'GET',
+          url: '/library?sort=updated_desc',
+          auth
+        }
+
+        await server.inject(options)
+
+        expect(forms.list).toHaveBeenCalledWith(
+          auth.credentials.token,
+          expect.objectContaining({
+            sortBy: 'updatedAt',
+            order: 'desc'
+          })
+        )
+      })
+
+      it('should handle updated_asc sort parameter correctly', async () => {
+        jest.mocked(forms.list).mockResolvedValueOnce({
+          data: [formMetadata],
+          meta: {}
+        })
+
+        const options = {
+          method: 'GET',
+          url: '/library?sort=updated_asc',
+          auth
+        }
+
+        await server.inject(options)
+
+        expect(forms.list).toHaveBeenCalledWith(
+          auth.credentials.token,
+          expect.objectContaining({
+            sortBy: 'updatedAt',
+            order: 'asc'
+          })
+        )
+      })
+
+      it('should handle title_asc sort parameter correctly', async () => {
+        jest.mocked(forms.list).mockResolvedValueOnce({
+          data: [formMetadata],
+          meta: {}
+        })
+
+        const options = {
+          method: 'GET',
+          url: '/library?sort=title_asc',
+          auth
+        }
+
+        await server.inject(options)
+
+        expect(forms.list).toHaveBeenCalledWith(
+          auth.credentials.token,
+          expect.objectContaining({
+            sortBy: 'title',
+            order: 'asc'
+          })
+        )
+      })
+
+      it('should handle title_desc sort parameter correctly', async () => {
+        jest.mocked(forms.list).mockResolvedValueOnce({
+          data: [formMetadata],
+          meta: {}
+        })
+
+        const options = {
+          method: 'GET',
+          url: '/library?sort=title_desc',
+          auth
+        }
+
+        await server.inject(options)
+
+        expect(forms.list).toHaveBeenCalledWith(
+          auth.credentials.token,
+          expect.objectContaining({
+            sortBy: 'title',
+            order: 'desc'
+          })
+        )
+      })
+
+      it('should handle missing sort parameter', async () => {
+        jest.mocked(forms.list).mockResolvedValueOnce({
+          data: [formMetadata],
+          meta: {}
+        })
+
+        const options = {
+          method: 'GET',
+          url: '/library',
+          auth
+        }
+
+        await server.inject(options)
+
+        expect(forms.list).toHaveBeenCalledWith(
+          auth.credentials.token,
+          expect.not.objectContaining({
+            sortBy: expect.any(String),
+            order: expect.any(String)
+          })
+        )
+      })
+    })
   })
 
   describe('Form editor page', () => {
