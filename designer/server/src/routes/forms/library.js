@@ -42,7 +42,10 @@ export default [
             const redirectUrl = new URL('/library', config.appBaseUrl)
             redirectUrl.searchParams.set('page', '1')
             redirectUrl.searchParams.set('perPage', String(perPage))
-            if (sort) redirectUrl.searchParams.set('sort', sort)
+            if (sort) {
+              redirectUrl.searchParams.set('sort', sort)
+            }
+
             return h.redirect(redirectUrl.pathname + redirectUrl.search)
           }
         }

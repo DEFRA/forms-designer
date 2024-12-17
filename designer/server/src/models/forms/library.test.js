@@ -612,6 +612,168 @@ describe('Forms Library Models', () => {
         ])
       })
     })
+
+    describe('when sorting options are provided', () => {
+      it('includes sort parameters in hrefs for updatedAt sorting', async () => {
+        const mockFormResponse = {
+          data: [metadataWithDraft],
+          meta: {
+            pagination: {
+              page: 2,
+              perPage: 10,
+              totalPages: 3,
+              totalItems: 30
+            },
+            sorting: {
+              sortBy: 'updatedAt',
+              order: 'desc'
+            }
+          }
+        }
+
+        jest.spyOn(forms, 'list').mockResolvedValue(mockFormResponse)
+        const viewModel = await listViewModel(token, { page: 2, perPage: 10 })
+
+        expect(viewModel.pagination).toBeTruthy()
+        expect(viewModel.pagination?.pages).toEqual([
+          {
+            number: '1',
+            href: `${formsLibraryPath}?page=1&perPage=10&sort=updated_desc`,
+            current: false
+          },
+          {
+            number: '2',
+            href: `${formsLibraryPath}?page=2&perPage=10&sort=updated_desc`,
+            current: true
+          },
+          {
+            number: '3',
+            href: `${formsLibraryPath}?page=3&perPage=10&sort=updated_desc`,
+            current: false
+          }
+        ])
+      })
+
+      it('includes sort parameters in hrefs for title sorting', async () => {
+        const mockFormResponse = {
+          data: [metadataWithDraft],
+          meta: {
+            pagination: {
+              page: 2,
+              perPage: 10,
+              totalPages: 3,
+              totalItems: 30
+            },
+            sorting: {
+              sortBy: 'title',
+              order: 'asc'
+            }
+          }
+        }
+
+        jest.spyOn(forms, 'list').mockResolvedValue(mockFormResponse)
+        const viewModel = await listViewModel(token, { page: 2, perPage: 10 })
+
+        expect(viewModel.pagination).toBeTruthy()
+        expect(viewModel.pagination?.pages).toEqual([
+          {
+            number: '1',
+            href: `${formsLibraryPath}?page=1&perPage=10&sort=title_asc`,
+            current: false
+          },
+          {
+            number: '2',
+            href: `${formsLibraryPath}?page=2&perPage=10&sort=title_asc`,
+            current: true
+          },
+          {
+            number: '3',
+            href: `${formsLibraryPath}?page=3&perPage=10&sort=title_asc`,
+            current: false
+          }
+        ])
+      })
+
+      it('does not include sort parameters when only sortBy is provided', async () => {
+        const mockFormResponse = {
+          data: [metadataWithDraft],
+          meta: {
+            pagination: {
+              page: 2,
+              perPage: 10,
+              totalPages: 3,
+              totalItems: 30
+            },
+            sorting: {
+              sortBy: 'title'
+              // order is missing
+            }
+          }
+        }
+
+        jest.spyOn(forms, 'list').mockResolvedValue(mockFormResponse)
+        const viewModel = await listViewModel(token, { page: 2, perPage: 10 })
+
+        expect(viewModel.pagination).toBeTruthy()
+        expect(viewModel.pagination?.pages).toEqual([
+          {
+            number: '1',
+            href: `${formsLibraryPath}?page=1&perPage=10`,
+            current: false
+          },
+          {
+            number: '2',
+            href: `${formsLibraryPath}?page=2&perPage=10`,
+            current: true
+          },
+          {
+            number: '3',
+            href: `${formsLibraryPath}?page=3&perPage=10`,
+            current: false
+          }
+        ])
+      })
+
+      it('does not include sort parameters when only order is provided', async () => {
+        const mockFormResponse = {
+          data: [metadataWithDraft],
+          meta: {
+            pagination: {
+              page: 2,
+              perPage: 10,
+              totalPages: 3,
+              totalItems: 30
+            },
+            sorting: {
+              // sortBy is missing
+              order: 'desc'
+            }
+          }
+        }
+
+        jest.spyOn(forms, 'list').mockResolvedValue(mockFormResponse)
+        const viewModel = await listViewModel(token, { page: 2, perPage: 10 })
+
+        expect(viewModel.pagination).toBeTruthy()
+        expect(viewModel.pagination?.pages).toEqual([
+          {
+            number: '1',
+            href: `${formsLibraryPath}?page=1&perPage=10`,
+            current: false
+          },
+          {
+            number: '2',
+            href: `${formsLibraryPath}?page=2&perPage=10`,
+            current: true
+          },
+          {
+            number: '3',
+            href: `${formsLibraryPath}?page=3&perPage=10`,
+            current: false
+          }
+        ])
+      })
+    })
   })
 })
 
