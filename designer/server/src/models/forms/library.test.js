@@ -199,6 +199,14 @@ describe('Forms Library Models', () => {
                   formaction: `${formPath}/make-draft-live`
                 }
               }
+            ],
+            secondaryActions: [
+              {
+                text: 'Delete draft',
+                attributes: {
+                  formaction: `${formPath}/delete-draft`
+                }
+              }
             ]
           }
         })

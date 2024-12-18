@@ -9,12 +9,24 @@
   </div>
 {% endmacro %}
 
+{%- macro appFormSecondaryActions(params) %}
+  <div class="govuk-button-group">
+    {% for secondaryAction in params.items %}
+      {# TODO see if we can retain buttons with link styling to match other approach #}
+      <a class="govuk-link" href="{{ secondaryAction.attributes.formaction }}">{{ secondaryAction.text }}</a>
+    {% endfor %}
+  </div>
+{% endmacro %}
+
 <aside class="app-form-card">
   {{ appHeading(params.heading) | trim | indent(2) }}
 
   <form action="{{ params.action }}" method="{{ params.method }}" novalidate>
     {{ appFormButtons({
       items: params.buttons
+    }) | trim | indent(2) }}
+    {{ appFormSecondaryActions({
+      items: params.secondaryActions
     }) | trim | indent(2) }}
   </form>
 </aside>

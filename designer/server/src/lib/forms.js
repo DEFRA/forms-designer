@@ -1,5 +1,5 @@
 import config from '~/src/config.js'
-import { getJson, patchJson, postJson } from '~/src/lib/fetch.js'
+import { del, getJson, patchJson, postJson } from '~/src/lib/fetch.js'
 import { getHeaders } from '~/src/lib/utils.js'
 
 const formsEndpoint = new URL('/forms/', config.managerUrl)
@@ -122,6 +122,20 @@ export async function updateDraftFormDefinition(id, definition, token) {
 export async function makeDraftFormLive(id, token) {
   const requestUrl = new URL(`./${id}/create-live`, formsEndpoint)
   const { response } = await postJson(requestUrl, {
+    ...getHeaders(token)
+  })
+
+  return response
+}
+
+/**
+ * Delete form
+ * @param {string} id - form ID
+ * @param {string} token - auth token
+ */
+export async function deleteForm(id, token) {
+  const requestUrl = new URL(`./${id}`, formsEndpoint)
+  const { response } = await del(requestUrl, {
     ...getHeaders(token)
   })
 

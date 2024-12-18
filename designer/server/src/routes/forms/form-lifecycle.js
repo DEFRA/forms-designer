@@ -7,7 +7,7 @@ import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildSimpleErrorList } from '~/src/common/helpers/build-error-details.js'
 import * as forms from '~/src/lib/forms.js'
 import * as formLifecycle from '~/src/models/forms/form-lifecycle.js'
-import { formOverviewPath } from '~/src/models/links.js'
+import { formOverviewPath, formsLibraryPath } from '~/src/models/links.js'
 
 export default [
   /**
@@ -107,6 +107,81 @@ export default [
       )
 
       return h.redirect(formOverviewPath(slug))
+    },
+    options: {
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${scopes.SCOPE_WRITE}`]
+        }
+      }
+    }
+  }),
+
+  /**
+   * @satisfies {ServerRoute<{ Params: FormBySlugInput }>}
+   */
+  ({
+    method: 'GET',
+    path: '/library/{slug}/delete-draft',
+    async handler(request, h) {
+      const { token } = request.auth.credentials
+      const form = await forms.get(request.params.slug, token)
+
+      if (form.live) {
+        throw Boom.badRequest('Cannot delete a draft when a live form exists')
+      }
+
+      return h.view(
+        'forms/make-draft-live',
+        formLifecycle.deleteDraftConfirmationPageViewModel(form)
+      )
+    },
+    options: {
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${scopes.SCOPE_WRITE}`]
+        }
+      }
+    }
+  }),
+
+  /**
+   * @satisfies {ServerRoute<{ Params: FormBySlugInput }>}
+   */
+  ({
+    method: 'POST',
+    path: '/library/{slug}/delete-draft',
+    async handler(request, h) {
+      const { yar } = request
+      const { token } = request.auth.credentials
+
+      const form = await forms.get(request.params.slug, token)
+
+      try {
+        await forms.deleteForm(form.id, token)
+
+        yar.flash(
+          sessionNames.successNotification,
+          notifications.FORM_DRAFT_DELETED
+        )
+
+        return h.redirect(formsLibraryPath)
+      } catch (err) {
+        if (
+          Boom.isBoom(err) &&
+          err.output.statusCode === StatusCodes.BAD_REQUEST.valueOf()
+        ) {
+          yar.flash(sessionNames.errorList, buildSimpleErrorList([err.message]))
+
+          return h.redirect(formsLibraryPath)
+        }
+
+        throw err
+      }
     },
     options: {
       auth: {
