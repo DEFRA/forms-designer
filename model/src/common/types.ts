@@ -1,3 +1,4 @@
+import { type FilterOptions } from '~/src/common/filter/types.js'
 import {
   type PaginationOptions,
   type PaginationResult
@@ -5,12 +6,12 @@ import {
 import { type SortingOptions } from '~/src/common/sorting/types.js'
 
 /**
- * Options for querying results, including pagination and sorting
+ * Options for querying results, including pagination, sorting, and filtering
  */
-export type QueryOptions = PaginationOptions & SortingOptions
+export type QueryOptions = PaginationOptions & SortingOptions & FilterOptions
 
 /**
- * Metadata containing the optional pagination and sorting information
+ * Metadata containing the optional pagination, sorting, and filtering information
  */
 export interface Meta {
   /**
@@ -22,6 +23,11 @@ export interface Meta {
    * The sorting details
    */
   sorting?: SortingOptions
+
+  /**
+   * The filtering details
+   */
+  filter?: FilterOptions
 }
 
 /**
