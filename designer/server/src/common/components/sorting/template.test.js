@@ -49,19 +49,19 @@ describe('Sorting Component', () => {
         expect($options).toHaveLength(4)
 
         expect($options[0]).toHaveTextContent('Updated (newest)')
-        expect($options[0]).toHaveValue('updated_desc')
+        expect($options[0]).toHaveValue('updatedDesc')
         expect($options[0]).toHaveAttribute('selected')
 
         expect($options[1]).toHaveTextContent('Updated (oldest)')
-        expect($options[1]).toHaveValue('updated_asc')
+        expect($options[1]).toHaveValue('updatedAsc')
         expect($options[1]).not.toHaveAttribute('selected')
 
         expect($options[2]).toHaveTextContent('Form name (A to Z)')
-        expect($options[2]).toHaveValue('title_asc')
+        expect($options[2]).toHaveValue('titleAsc')
         expect($options[2]).not.toHaveAttribute('selected')
 
         expect($options[3]).toHaveTextContent('Form name (Z to A)')
-        expect($options[3]).toHaveValue('title_desc')
+        expect($options[3]).toHaveValue('titleDesc')
         expect($options[3]).not.toHaveAttribute('selected')
       })
 

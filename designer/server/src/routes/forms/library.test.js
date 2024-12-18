@@ -281,7 +281,7 @@ describe('Forms library routes', () => {
     })
 
     describe('Sorting', () => {
-      it('should handle updated_desc sort parameter correctly', async () => {
+      it('should handle updatedDesc sort parameter correctly', async () => {
         jest.mocked(forms.list).mockResolvedValueOnce({
           data: [formMetadata],
           meta: {}
@@ -289,7 +289,7 @@ describe('Forms library routes', () => {
 
         const options = {
           method: 'GET',
-          url: '/library?sort=updated_desc',
+          url: '/library?sort=updatedDesc',
           auth
         }
 
@@ -304,7 +304,7 @@ describe('Forms library routes', () => {
         )
       })
 
-      it('should handle updated_asc sort parameter correctly', async () => {
+      it('should handle updatedAsc sort parameter correctly', async () => {
         jest.mocked(forms.list).mockResolvedValueOnce({
           data: [formMetadata],
           meta: {}
@@ -312,7 +312,7 @@ describe('Forms library routes', () => {
 
         const options = {
           method: 'GET',
-          url: '/library?sort=updated_asc',
+          url: '/library?sort=updatedAsc',
           auth
         }
 
@@ -327,7 +327,7 @@ describe('Forms library routes', () => {
         )
       })
 
-      it('should handle title_asc sort parameter correctly', async () => {
+      it('should handle titleAsc sort parameter correctly', async () => {
         jest.mocked(forms.list).mockResolvedValueOnce({
           data: [formMetadata],
           meta: {}
@@ -335,7 +335,7 @@ describe('Forms library routes', () => {
 
         const options = {
           method: 'GET',
-          url: '/library?sort=title_asc',
+          url: '/library?sort=titleAsc',
           auth
         }
 
@@ -350,7 +350,7 @@ describe('Forms library routes', () => {
         )
       })
 
-      it('should handle title_desc sort parameter correctly', async () => {
+      it('should handle titleDesc sort parameter correctly', async () => {
         jest.mocked(forms.list).mockResolvedValueOnce({
           data: [formMetadata],
           meta: {}
@@ -358,7 +358,7 @@ describe('Forms library routes', () => {
 
         const options = {
           method: 'GET',
-          url: '/library?sort=title_desc',
+          url: '/library?sort=titleDesc',
           auth
         }
 

@@ -26,9 +26,13 @@ export default [
 
         let sortBy, order
         if (sort) {
-          const [field, direction] = sort.split('_')
-          sortBy = field === 'updated' ? 'updatedAt' : 'title'
-          order = direction
+          if (sort.startsWith('updated')) {
+            sortBy = 'updatedAt'
+            order = sort === 'updatedDesc' ? 'desc' : 'asc'
+          } else {
+            sortBy = 'title'
+            order = sort === 'titleDesc' ? 'desc' : 'asc'
+          }
         }
 
         const listOptions = { page, perPage, sortBy, order }
@@ -62,7 +66,7 @@ export default [
       validate: {
         query: Joi.object(paginationOptionFields).keys({
           sort: Joi.string()
-            .valid('updated_desc', 'updated_asc', 'title_asc', 'title_desc')
+            .valid('updatedDesc', 'updatedAsc', 'titleAsc', 'titleDesc')
             .optional()
         })
       }
@@ -142,7 +146,7 @@ export default [
 
 /**
  * @typedef {{
- *   sort?: 'updated_desc' | 'updated_asc' | 'title_asc' | 'title_desc'
+ *   sort?: 'updatedDesc' | 'updatedAsc' | 'titleAsc' | 'titleDesc'
  * }} SortOptions
  */
 
