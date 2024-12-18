@@ -1,4 +1,5 @@
 import { paginationOptionFields } from '@defra/forms-model'
+import Boom from '@hapi/boom'
 import Joi from 'joi'
 
 import * as scopes from '~/src/common/constants/scopes.js'
@@ -68,7 +69,15 @@ export default [
           sort: Joi.string()
             .valid('updatedDesc', 'updatedAsc', 'titleAsc', 'titleDesc')
             .optional()
-        })
+        }),
+        failAction: (request, h, error) => {
+          request.log('error', {
+            message: error?.message,
+            stack: error?.stack
+          })
+
+          throw Boom.badRequest()
+        }
       }
     }
   }),
@@ -145,9 +154,8 @@ export default [
 ]
 
 /**
- * @typedef {{
- *   sort?: 'updatedDesc' | 'updatedAsc' | 'titleAsc' | 'titleDesc'
- * }} SortOptions
+ * @typedef {object} SortOptions
+ * @property {'updatedDesc' | 'updatedAsc' | 'titleAsc' | 'titleDesc'} [sort] - The sort order
  */
 
 /**

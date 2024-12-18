@@ -3,6 +3,10 @@
 
 {% if params.sorting %}
 <form method="get" action="/library" aria-label="Sort forms">
+  {% if params.pagination and params.pagination.page %}
+    <input type="hidden" name="page" value="{{ params.pagination.page }}">
+    <input type="hidden" name="perPage" value="{{ params.pagination.perPage }}">
+  {% endif %}
   <div class="app-field-group">
     <div class="app-field-group__item">
       {{ govukSelect({
@@ -45,10 +49,5 @@
       }) }}
     </div>
   </div>
-
-  {% if params.pagination and params.pagination.page %}
-  <input type="hidden" name="page" value="{{ params.pagination.page }}">
-  <input type="hidden" name="perPage" value="{{ params.pagination.perPage }}">
-  {% endif %}
 </form>
 {% endif %}

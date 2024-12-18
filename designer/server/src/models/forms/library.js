@@ -89,13 +89,16 @@ function buildPaginationPages(currentPage, totalPages, perPage, sorting) {
     })
 
     if (sorting?.sortBy && sorting.order) {
-      const field = sorting.sortBy === 'updatedAt' ? 'updated' : 'title'
-      queryParams.set('sort', `${field}_${sorting.order}`)
+      const sortValue = sorting.sortBy === 'updatedAt' ? 'updated' : 'title'
+      queryParams.set(
+        'sort',
+        `${sortValue}${sorting.order.charAt(0).toUpperCase()}${sorting.order.slice(1)}`
+      )
     }
 
     return {
       number: String(pageNumber),
-      href: `${formsLibraryPath}?${queryParams.toString()}`,
+      href: `${formsLibraryPath}?${queryParams}`,
       current: isCurrent
     }
   }
