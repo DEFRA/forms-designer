@@ -6,7 +6,7 @@ describe('Sorting Component', () => {
   /** @type {HTMLElement} */
   let $sorting
 
-  describe('With sorting and pagination data', () => {
+  describe('With sorting data', () => {
     describe('Standard sorting', () => {
       beforeEach(() => {
         const { container } = renderMacro('appSorting', 'sorting/macro.njk', {
@@ -14,15 +14,11 @@ describe('Sorting Component', () => {
             sorting: {
               sortBy: 'updatedAt',
               order: 'desc'
-            },
-            pagination: {
-              page: 1,
-              perPage: 10
             }
           }
         })
 
-        $sorting = container.getByRole('form', { name: 'Sort forms' })
+        $sorting = container.getByRole('form', { name: 'Sorting options' })
       })
 
       it('should render the sorting component', () => {
@@ -32,7 +28,7 @@ describe('Sorting Component', () => {
       it('should have the correct form attributes', () => {
         expect($sorting).toHaveAttribute('method', 'get')
         expect($sorting).toHaveAttribute('action', '/library')
-        expect($sorting).toHaveAttribute('aria-label', 'Sort forms')
+        expect($sorting).toHaveAttribute('aria-label', 'Sorting options')
       })
 
       it('should render the sort select with correct options', () => {
@@ -75,14 +71,6 @@ describe('Sorting Component', () => {
         expect($button).toHaveClass('govuk-button--secondary')
         expect($button).toHaveClass('app-field-group__button')
       })
-
-      it('should not include hidden pagination inputs', () => {
-        const $pageInput = $sorting.querySelector('input[name="page"]')
-        const $perPageInput = $sorting.querySelector('input[name="perPage"]')
-
-        expect($pageInput).not.toBeInTheDocument()
-        expect($perPageInput).not.toBeInTheDocument()
-      })
     })
 
     describe('With different sort options selected', () => {
@@ -92,15 +80,11 @@ describe('Sorting Component', () => {
             sorting: {
               sortBy: 'title',
               order: 'asc'
-            },
-            pagination: {
-              page: 1,
-              perPage: 10
             }
           }
         })
 
-        $sorting = container.getByRole('form', { name: 'Sort forms' })
+        $sorting = container.getByRole('form', { name: 'Sorting options' })
       })
 
       it('should select the correct sort option', () => {
@@ -123,15 +107,11 @@ describe('Sorting Component', () => {
             sorting: {
               sortBy: 'invalidField',
               order: 'invalidOrder'
-            },
-            pagination: {
-              page: 1,
-              perPage: 10
             }
           }
         })
 
-        $sorting = container.getByRole('form', { name: 'Sort forms' })
+        $sorting = container.getByRole('form', { name: 'Sorting options' })
       })
 
       it('should not select any sort option', () => {
@@ -151,15 +131,11 @@ describe('Sorting Component', () => {
       beforeEach(() => {
         const { container } = renderMacro('appSorting', 'sorting/macro.njk', {
           params: {
-            sorting: {},
-            pagination: {
-              page: 1,
-              perPage: 10
-            }
+            sorting: {}
           }
         })
 
-        $sorting = container.getByRole('form', { name: 'Sort forms' })
+        $sorting = container.getByRole('form', { name: 'Sorting options' })
       })
 
       it('should render the sorting component', () => {
@@ -177,55 +153,6 @@ describe('Sorting Component', () => {
           expect($option).not.toHaveAttribute('selected')
         })
       })
-    })
-
-    describe('With incomplete pagination data', () => {
-      beforeEach(() => {
-        const { container } = renderMacro('appSorting', 'sorting/macro.njk', {
-          params: {
-            sorting: {
-              sortBy: 'updatedAt',
-              order: 'desc'
-            },
-            pagination: {
-              perPage: 10
-            }
-          }
-        })
-
-        $sorting = container.getByRole('form', { name: 'Sort forms' })
-      })
-
-      it('should not include hidden pagination inputs', () => {
-        const $pageInput = $sorting.querySelector('input[name="page"]')
-        const $perPageInput = $sorting.querySelector('input[name="perPage"]')
-
-        expect($pageInput).not.toBeInTheDocument()
-        expect($perPageInput).not.toBeInTheDocument()
-      })
-    })
-  })
-
-  describe('Without pagination data', () => {
-    beforeEach(() => {
-      const { container } = renderMacro('appSorting', 'sorting/macro.njk', {
-        params: {
-          sorting: {
-            sortBy: 'updatedAt',
-            order: 'desc'
-          }
-        }
-      })
-
-      $sorting = container.getByRole('form', { name: 'Sort forms' })
-    })
-
-    it('should not include hidden pagination inputs', () => {
-      const $pageInput = $sorting.querySelector('input[name="page"]')
-      const $perPageInput = $sorting.querySelector('input[name="perPage"]')
-
-      expect($pageInput).not.toBeInTheDocument()
-      expect($perPageInput).not.toBeInTheDocument()
     })
   })
 
