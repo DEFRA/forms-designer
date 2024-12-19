@@ -396,6 +396,30 @@ describe('Forms library routes', () => {
         )
       })
     })
+
+    describe('Validation', () => {
+      it('should show error page for invalid sort parameter', async () => {
+        const options = {
+          method: 'GET',
+          url: '/library?sort=invalid',
+          auth
+        }
+
+        const response = await server.inject(options)
+        expect(response.statusCode).toBe(400)
+      })
+
+      it('should show error page for invalid pagination parameters', async () => {
+        const options = {
+          method: 'GET',
+          url: '/library?page=invalid&perPage=invalid',
+          auth
+        }
+
+        const response = await server.inject(options)
+        expect(response.statusCode).toBe(400)
+      })
+    })
   })
 
   describe('Form editor page', () => {

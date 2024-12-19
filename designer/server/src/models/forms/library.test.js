@@ -638,17 +638,17 @@ describe('Forms Library Models', () => {
         expect(viewModel.pagination?.pages).toEqual([
           {
             number: '1',
-            href: `${formsLibraryPath}?page=1&perPage=10&sort=updated_desc`,
+            href: `${formsLibraryPath}?page=1&perPage=10&sort=updatedDesc`,
             current: false
           },
           {
             number: '2',
-            href: `${formsLibraryPath}?page=2&perPage=10&sort=updated_desc`,
+            href: `${formsLibraryPath}?page=2&perPage=10&sort=updatedDesc`,
             current: true
           },
           {
             number: '3',
-            href: `${formsLibraryPath}?page=3&perPage=10&sort=updated_desc`,
+            href: `${formsLibraryPath}?page=3&perPage=10&sort=updatedDesc`,
             current: false
           }
         ])
@@ -678,17 +678,17 @@ describe('Forms Library Models', () => {
         expect(viewModel.pagination?.pages).toEqual([
           {
             number: '1',
-            href: `${formsLibraryPath}?page=1&perPage=10&sort=title_asc`,
+            href: `${formsLibraryPath}?page=1&perPage=10&sort=titleAsc`,
             current: false
           },
           {
             number: '2',
-            href: `${formsLibraryPath}?page=2&perPage=10&sort=title_asc`,
+            href: `${formsLibraryPath}?page=2&perPage=10&sort=titleAsc`,
             current: true
           },
           {
             number: '3',
-            href: `${formsLibraryPath}?page=3&perPage=10&sort=title_asc`,
+            href: `${formsLibraryPath}?page=3&perPage=10&sort=titleAsc`,
             current: false
           }
         ])
