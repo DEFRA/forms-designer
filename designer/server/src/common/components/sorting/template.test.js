@@ -76,12 +76,12 @@ describe('Sorting Component', () => {
         expect($button).toHaveClass('app-field-group__button')
       })
 
-      it('should include hidden pagination inputs', () => {
+      it('should not include hidden pagination inputs', () => {
         const $pageInput = $sorting.querySelector('input[name="page"]')
         const $perPageInput = $sorting.querySelector('input[name="perPage"]')
 
-        expect($pageInput).toHaveValue('1')
-        expect($perPageInput).toHaveValue('10')
+        expect($pageInput).not.toBeInTheDocument()
+        expect($perPageInput).not.toBeInTheDocument()
       })
     })
 
