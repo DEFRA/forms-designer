@@ -4,7 +4,9 @@
  * @returns {{ sortBy?: string, order?: string }} Sort options for the forms list
  */
 export function getSortOptions(sort) {
-  if (!sort) return {}
+  if (!sort) {
+    return {}
+  }
 
   if (sort.startsWith('updated')) {
     return {
