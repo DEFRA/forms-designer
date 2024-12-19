@@ -1,5 +1,5 @@
 import config from '~/src/config.js'
-import { del, getJson, patchJson, postJson } from '~/src/lib/fetch.js'
+import { delJson, getJson, patchJson, postJson } from '~/src/lib/fetch.js'
 import { getHeaders } from '~/src/lib/utils.js'
 
 const formsEndpoint = new URL('/forms/', config.managerUrl)
@@ -135,7 +135,7 @@ export async function makeDraftFormLive(id, token) {
  */
 export async function deleteForm(id, token) {
   const requestUrl = new URL(`./${id}`, formsEndpoint)
-  const { response } = await del(requestUrl, {
+  const { response } = await delJson(requestUrl, {
     ...getHeaders(token)
   })
 

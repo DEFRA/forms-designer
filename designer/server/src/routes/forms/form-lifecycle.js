@@ -25,7 +25,7 @@ export default [
 
       return h.view(
         'forms/make-draft-live',
-        formLifecycle.confirmationPageViewModel(
+        formLifecycle.makeDraftLiveConfirmationPageViewModel(
           form,
           formPromotionValidationFailure
         )
@@ -41,7 +41,6 @@ export default [
       }
     }
   }),
-
   /**
    * @satisfies {ServerRoute<{ Params: FormBySlugInput }>}
    */
@@ -86,7 +85,6 @@ export default [
       }
     }
   }),
-
   /**
    * @satisfies {ServerRoute<{ Params: FormBySlugInput }>}
    */
@@ -118,7 +116,6 @@ export default [
       }
     }
   }),
-
   /**
    * @satisfies {ServerRoute<{ Params: FormBySlugInput }>}
    */
@@ -126,16 +123,18 @@ export default [
     method: 'GET',
     path: '/library/{slug}/delete-draft',
     async handler(request, h) {
+      const { yar } = request
       const { token } = request.auth.credentials
       const form = await forms.get(request.params.slug, token)
 
-      if (form.live) {
-        throw Boom.badRequest('Cannot delete a draft when a live form exists')
-      }
+      const deletionValidationFailure = yar.flash(sessionNames.errorList)
 
       return h.view(
         'forms/make-draft-live',
-        formLifecycle.deleteDraftConfirmationPageViewModel(form)
+        formLifecycle.deleteDraftConfirmationPageViewModel(
+          form,
+          deletionValidationFailure
+        )
       )
     },
     options: {
@@ -148,7 +147,6 @@ export default [
       }
     }
   }),
-
   /**
    * @satisfies {ServerRoute<{ Params: FormBySlugInput }>}
    */
@@ -175,9 +173,12 @@ export default [
           Boom.isBoom(err) &&
           err.output.statusCode === StatusCodes.BAD_REQUEST.valueOf()
         ) {
-          yar.flash(sessionNames.errorList, buildSimpleErrorList([err.message]))
+          const errorList = buildSimpleErrorList([err.message])
 
-          return h.redirect(formsLibraryPath)
+          return h.view(
+            'forms/make-draft-live',
+            formLifecycle.deleteDraftConfirmationPageViewModel(form, errorList)
+          )
         }
 
         throw err

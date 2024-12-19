@@ -1,7 +1,11 @@
 import Boom from '@hapi/boom'
+import yar from '@hapi/yar'
+import { within } from '@testing-library/dom'
+import { StatusCodes } from 'http-status-codes'
 
 import { createServer } from '~/src/createServer.js'
 import * as forms from '~/src/lib/forms.js'
+import { formsLibraryPath } from '~/src/models/links.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
@@ -200,7 +204,108 @@ describe('Test form draft and live creation route handlers', () => {
   })
 })
 
+describe('Deleting a form', () => {
+  /** @type {Server} */
+  let server
+
+  /** @type {Date} */
+  let now
+
+  /** @type {FormMetadataAuthor} */
+  let author
+
+  /** @type {FormMetadata} */
+  let metadata
+
+  /** @type {FormMetadataState} */
+  let state
+
+  beforeAll(async () => {
+    server = await createServer()
+    await server.initialize()
+  })
+
+  beforeEach(() => {
+    now = new Date()
+
+    author = {
+      id: '1234',
+      displayName: 'Joe Bloggs'
+    }
+
+    metadata = {
+      id: '1234',
+      slug: 'my-form',
+      title: 'My form',
+      organisation: 'Defra',
+      teamName: 'Forms',
+      teamEmail: 'foobar@defra.gov.uk',
+      notificationEmail: 'defraforms@defra.gov.uk',
+      createdAt: now,
+      createdBy: author,
+      updatedAt: now,
+      updatedBy: author
+    }
+
+    state = {
+      createdAt: now,
+      createdBy: author,
+      updatedAt: now,
+      updatedBy: author
+    }
+  })
+
+  afterAll(async () => {
+    await server.stop()
+  })
+
+  test('When a form is draft, allow the deletion', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce({
+      ...metadata,
+      draft: state
+    })
+
+    const options = {
+      method: 'POST',
+      url: '/library/my-form/delete-draft',
+      auth
+    }
+
+    const { response } = await renderResponse(server, options)
+
+    expect(response.statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
+    expect(response.headers.location).toBe(formsLibraryPath)
+  })
+
+  test('Ensure the user is shown an error message when it occurs', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce({
+      ...metadata,
+      draft: state
+    })
+    jest
+      .mocked(forms.deleteForm)
+      .mockRejectedValueOnce(Boom.badRequest('An example error message here'))
+
+    const { container } = await renderResponse(server, {
+      url: '/library/my-form/delete-draft',
+      method: 'POST',
+      auth
+    })
+
+    const $errorSummary = container.getByRole('alert')
+    const $errorItems = within($errorSummary).getAllByRole('listitem')
+
+    const $heading = within($errorSummary).getByRole('heading', {
+      name: 'There is a problem',
+      level: 2
+    })
+
+    expect($heading).toBeInTheDocument()
+    expect($errorItems[0]).toHaveTextContent('An example error message here')
+  })
+})
+
 /**
- * @import { FormMetadata, FormMetadataAuthor } from '@defra/forms-model'
+ * @import { FormMetadata, FormMetadataAuthor, FormMetadataState } from '@defra/forms-model'
  * @import { Server, ServerInjectResponse } from '@hapi/hapi'
  */

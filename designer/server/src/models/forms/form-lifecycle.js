@@ -50,8 +50,9 @@ export function makeDraftLiveConfirmationPageViewModel(form, errorList) {
 /**
  * Model to represent confirmation page dialog for a given form.
  * @param {FormMetadata} form
+ * @param {ErrorDetailsItem[]} errorList - list of errors to display to the user
  */
-export function deleteDraftConfirmationPageViewModel(form) {
+export function deleteDraftConfirmationPageViewModel(form, errorList) {
   const pageTitle = 'Are you sure you want to delete this form?'
 
   const formPath = formOverviewPath(form.slug)
@@ -64,8 +65,13 @@ export function deleteDraftConfirmationPageViewModel(form) {
       text: pageTitle,
       caption: form.title
     },
+
+    errorList,
+
     warning: { text: 'You cannot recover deleted forms.' },
+
     bodyText: undefined,
+
     buttons: [
       {
         text: 'Delete form',

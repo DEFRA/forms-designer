@@ -109,3 +109,13 @@ export function patchJson(url, options = {}) {
   const patchByType = /** @type {typeof patch<BodyType>} */ (patch)
   return patchByType(url, { json: true, ...options })
 }
+
+/**
+ * @template {object} [BodyType=Buffer]
+ * @param {URL} url
+ * @param {Parameters<typeof Wreck.patch>[1]} options
+ */
+export function delJson(url, options = {}) {
+  const delByType = /** @type {typeof patch<BodyType>} */ (del)
+  return delByType(url, { json: true, ...options })
+}
