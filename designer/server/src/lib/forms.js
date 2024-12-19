@@ -6,7 +6,7 @@ const formsEndpoint = new URL('/forms/', config.managerUrl)
 /**
  * List forms
  * @param {string} token
- * @param {PaginationOptions} options
+ * @param {QueryOptions} options
  * @returns {Promise<QueryResult<FormMetadata>>}
  */
 export async function list(token, options) {
@@ -16,6 +16,11 @@ export async function list(token, options) {
   const requestUrl = new URL(formsEndpoint)
   requestUrl.searchParams.append('page', String(options.page))
   requestUrl.searchParams.append('perPage', String(options.perPage))
+
+  if (options.sortBy && options.order) {
+    requestUrl.searchParams.append('sortBy', options.sortBy)
+    requestUrl.searchParams.append('order', options.order)
+  }
 
   const { body } = await getJsonByType(requestUrl, getAuthOptions(token))
 
@@ -163,6 +168,6 @@ function getAuthOptions(token) {
 }
 
 /**
- * @import { FormDefinition, FormMetadata, FormMetadataInput, FormResponse, PaginationOptions, QueryResult } from '@defra/forms-model'
+ * @import { FormDefinition, FormMetadata, FormMetadataInput, FormResponse, PaginationOptions, QueryOptions, QueryResult } from '@defra/forms-model'
  * @import Wreck from '@hapi/wreck'
  */
