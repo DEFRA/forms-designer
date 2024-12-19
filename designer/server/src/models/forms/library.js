@@ -90,6 +90,7 @@ function buildPaginationPages(currentPage, totalPages, perPage, sorting) {
 
     if (sorting?.sortBy && sorting.order) {
       const sortValue = sorting.sortBy === 'updatedAt' ? 'updated' : 'title'
+      // Converts sort order to proper case (e.g., "asc" -> "Asc", "desc" -> "Desc")
       queryParams.set(
         'sort',
         `${sortValue}${sorting.order.charAt(0).toUpperCase()}${sorting.order.slice(1)}`

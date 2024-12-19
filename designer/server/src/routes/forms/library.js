@@ -6,6 +6,7 @@ import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import config from '~/src/config.js'
 import * as forms from '~/src/lib/forms.js'
+import { getSortOptions } from '~/src/lib/sort.js'
 import * as library from '~/src/models/forms/library.js'
 import { formOverviewPath } from '~/src/models/links.js'
 
@@ -25,19 +26,8 @@ export default [
         const token = auth.credentials.token
         const { page, perPage, sort } = query
 
-        let sortBy, order
-        if (sort) {
-          if (sort.startsWith('updated')) {
-            sortBy = 'updatedAt'
-            order = sort === 'updatedDesc' ? 'desc' : 'asc'
-          } else {
-            sortBy = 'title'
-            order = sort === 'titleDesc' ? 'desc' : 'asc'
-          }
-        }
-
+        const { sortBy, order } = getSortOptions(sort)
         const listOptions = { page, perPage, sortBy, order }
-
         const model = await library.listViewModel(token, listOptions)
 
         if (model.pagination) {
