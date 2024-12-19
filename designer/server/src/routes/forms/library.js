@@ -70,7 +70,7 @@ export default [
             .valid('updatedDesc', 'updatedAsc', 'titleAsc', 'titleDesc')
             .optional()
         }),
-        failAction: (request, h, error) => {
+        failAction: (request, _h, error) => {
           request.log('error', {
             message: error?.message,
             stack: error?.stack
