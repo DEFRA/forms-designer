@@ -32,7 +32,7 @@ export default [
 
         if (model.pagination) {
           const { totalPages } = model.pagination
-          if (page > totalPages) {
+          if (totalPages && page > totalPages) {
             // Redirect to the first page
             const redirectUrl = new URL('/library', config.appBaseUrl)
             redirectUrl.searchParams.set('page', '1')

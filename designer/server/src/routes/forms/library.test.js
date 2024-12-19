@@ -249,6 +249,30 @@ describe('Forms library routes', () => {
         expect(response.statusCode).toBe(302)
         expect(response.headers.location).toBe('/library?page=1&perPage=10')
       })
+
+      it('should not redirect if totalPages is 0', async () => {
+        jest.mocked(forms.list).mockResolvedValueOnce({
+          data: [],
+          meta: {
+            pagination: {
+              page: 5,
+              perPage: 10,
+              totalPages: 0,
+              totalItems: 25
+            }
+          }
+        })
+
+        const options = {
+          method: 'GET',
+          url: '/library?page=5&perPage=10',
+          auth
+        }
+
+        const response = await server.inject(options)
+
+        expect(response.statusCode).toBe(200)
+      })
     })
 
     it('should display the list page correctly', async () => {
