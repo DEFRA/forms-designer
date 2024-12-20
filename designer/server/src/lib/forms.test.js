@@ -436,6 +436,45 @@ describe('Forms library routes', () => {
 
         expect(result).toEqual(mockResponse)
       })
+
+      it('should append sort parameters when provided', async () => {
+        const options = {
+          page: 1,
+          perPage: 10,
+          sortBy: 'title',
+          order: 'asc'
+        }
+        const mockResponse = {
+          data: [formMetadata],
+          meta: {}
+        }
+
+        jest.spyOn(fetch, 'getJson').mockResolvedValueOnce({
+          /** @type {any} */
+          response: {},
+          body: mockResponse
+        })
+
+        const result = await forms.list(token, options)
+
+        expect(fetch.getJson).toHaveBeenCalledWith(expect.any(URL), {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+
+        const fetchGetJsonMock = /** @type {jest.Mock} */ (fetch.getJson)
+
+        /** @type {Array<[URL, object]>} */
+        const mockCalls = fetchGetJsonMock.mock.calls
+
+        const calledUrl = /** @type {URL} */ (mockCalls[0][0])
+
+        expect(calledUrl.searchParams.get('page')).toBe('1')
+        expect(calledUrl.searchParams.get('perPage')).toBe('10')
+        expect(calledUrl.searchParams.get('sortBy')).toBe('title')
+        expect(calledUrl.searchParams.get('order')).toBe('asc')
+
+        expect(result).toEqual(mockResponse)
+      })
     })
   })
 })

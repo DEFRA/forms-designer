@@ -249,6 +249,30 @@ describe('Forms library routes', () => {
         expect(response.statusCode).toBe(302)
         expect(response.headers.location).toBe('/library?page=1&perPage=10')
       })
+
+      it('should not redirect if totalPages is 0', async () => {
+        jest.mocked(forms.list).mockResolvedValueOnce({
+          data: [],
+          meta: {
+            pagination: {
+              page: 5,
+              perPage: 10,
+              totalPages: 0,
+              totalItems: 25
+            }
+          }
+        })
+
+        const options = {
+          method: 'GET',
+          url: '/library?page=5&perPage=10',
+          auth
+        }
+
+        const response = await server.inject(options)
+
+        expect(response.statusCode).toBe(200)
+      })
     })
 
     it('should display the list page correctly', async () => {
@@ -278,6 +302,147 @@ describe('Forms library routes', () => {
       expect($tables[0]).toContainHTML(
         `<td class="govuk-table__cell">${title}</td>`
       )
+    })
+
+    describe('Sorting', () => {
+      it('should handle updatedDesc sort parameter correctly', async () => {
+        jest.mocked(forms.list).mockResolvedValueOnce({
+          data: [formMetadata],
+          meta: {}
+        })
+
+        const options = {
+          method: 'GET',
+          url: '/library?sort=updatedDesc',
+          auth
+        }
+
+        await server.inject(options)
+
+        expect(forms.list).toHaveBeenCalledWith(
+          auth.credentials.token,
+          expect.objectContaining({
+            sortBy: 'updatedAt',
+            order: 'desc'
+          })
+        )
+      })
+
+      it('should handle updatedAsc sort parameter correctly', async () => {
+        jest.mocked(forms.list).mockResolvedValueOnce({
+          data: [formMetadata],
+          meta: {}
+        })
+
+        const options = {
+          method: 'GET',
+          url: '/library?sort=updatedAsc',
+          auth
+        }
+
+        await server.inject(options)
+
+        expect(forms.list).toHaveBeenCalledWith(
+          auth.credentials.token,
+          expect.objectContaining({
+            sortBy: 'updatedAt',
+            order: 'asc'
+          })
+        )
+      })
+
+      it('should handle titleAsc sort parameter correctly', async () => {
+        jest.mocked(forms.list).mockResolvedValueOnce({
+          data: [formMetadata],
+          meta: {}
+        })
+
+        const options = {
+          method: 'GET',
+          url: '/library?sort=titleAsc',
+          auth
+        }
+
+        await server.inject(options)
+
+        expect(forms.list).toHaveBeenCalledWith(
+          auth.credentials.token,
+          expect.objectContaining({
+            sortBy: 'title',
+            order: 'asc'
+          })
+        )
+      })
+
+      it('should handle titleDesc sort parameter correctly', async () => {
+        jest.mocked(forms.list).mockResolvedValueOnce({
+          data: [formMetadata],
+          meta: {}
+        })
+
+        const options = {
+          method: 'GET',
+          url: '/library?sort=titleDesc',
+          auth
+        }
+
+        await server.inject(options)
+
+        expect(forms.list).toHaveBeenCalledWith(
+          auth.credentials.token,
+          expect.objectContaining({
+            sortBy: 'title',
+            order: 'desc'
+          })
+        )
+      })
+
+      it('should handle missing sort parameter', async () => {
+        jest.mocked(forms.list).mockResolvedValueOnce({
+          data: [formMetadata],
+          meta: {}
+        })
+
+        const options = {
+          method: 'GET',
+          url: '/library',
+          auth
+        }
+
+        await server.inject(options)
+
+        expect(forms.list).toHaveBeenCalledWith(
+          auth.credentials.token,
+          expect.not.objectContaining({
+            sortBy: expect.any(String),
+            order: expect.any(String)
+          })
+        )
+      })
+    })
+
+    describe('Validation', () => {
+      it('should show error page for invalid sort parameter', async () => {
+        const options = {
+          method: 'GET',
+          url: '/library?sort=invalid',
+          auth
+        }
+
+        const response = await server.inject(options)
+        expect(response.statusCode).toBe(400)
+      })
+
+      it('should show error page for invalid pagination parameters', async () => {
+        const options = {
+          method: 'GET',
+          url: '/library?page=invalid&perPage=invalid',
+          auth
+        }
+
+        const response = await server.inject(options)
+        expect(response.statusCode).toBe(400)
+      })
     })
   })
 

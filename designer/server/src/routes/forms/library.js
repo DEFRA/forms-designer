@@ -1,9 +1,12 @@
-import { paginationOptionsSchema } from '@defra/forms-model'
+import { paginationOptionFields } from '@defra/forms-model'
+import Boom from '@hapi/boom'
+import Joi from 'joi'
 
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import config from '~/src/config.js'
 import * as forms from '~/src/lib/forms.js'
+import { getSortOptions } from '~/src/lib/sort.js'
 import * as library from '~/src/models/forms/library.js'
 import { formOverviewPath } from '~/src/models/links.js'
 
@@ -21,19 +24,23 @@ export default [
       handler: async (request, h) => {
         const { auth, query } = request
         const token = auth.credentials.token
+        const { page, perPage, sort } = query
 
-        const { page, perPage } = query
-
-        const paginationOptions = { page, perPage }
-        const model = await library.listViewModel(token, paginationOptions)
+        const { sortBy, order } = getSortOptions(sort)
+        const listOptions = { page, perPage, sortBy, order }
+        const model = await library.listViewModel(token, listOptions)
 
         if (model.pagination) {
           const { totalPages } = model.pagination
-          if (page < 1 || page > totalPages) {
+          if (totalPages && page > totalPages) {
             // Redirect to the first page
             const redirectUrl = new URL('/library', config.appBaseUrl)
             redirectUrl.searchParams.set('page', '1')
             redirectUrl.searchParams.set('perPage', String(perPage))
+            if (sort) {
+              redirectUrl.searchParams.set('sort', sort)
+            }
+
             return h.redirect(redirectUrl.pathname + redirectUrl.search)
           }
         }
@@ -48,7 +55,19 @@ export default [
         }
       },
       validate: {
-        query: paginationOptionsSchema
+        query: Joi.object(paginationOptionFields).keys({
+          sort: Joi.string()
+            .valid('updatedDesc', 'updatedAsc', 'titleAsc', 'titleDesc')
+            .optional()
+        }),
+        failAction: (request, _h, error) => {
+          request.log('error', {
+            message: error?.message,
+            stack: error?.stack
+          })
+
+          throw Boom.badRequest()
+        }
       }
     }
   }),
@@ -125,7 +144,16 @@ export default [
 ]
 
 /**
- * @typedef {Request<{ Query: PaginationOptions }>} RequestFormsLibrary
+ * @typedef {object} SortOptions
+ * @property {'updatedDesc' | 'updatedAsc' | 'titleAsc' | 'titleDesc'} [sort] - The sort order
+ */
+
+/**
+ * @typedef {PaginationOptions & SortOptions} LibraryQueryParams
+ */
+
+/**
+ * @typedef {Request<{ Query: LibraryQueryParams }>} RequestFormsLibrary
  */
 
 /**

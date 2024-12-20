@@ -1,0 +1,48 @@
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% if params.sorting %}
+<form method="get" action="/library" aria-label="Sorting options">
+  <div class="app-field-group">
+    <div class="app-field-group__item">
+      {{ govukSelect({
+        id: "sort-select",
+        name: "sort",
+        label: {
+          text: "Sort by",
+          classes: "app-field-group__label"
+        },
+        classes: "app-field-group__input",
+        items: [
+          {
+            text: "Updated (newest)",
+            value: "updatedDesc",
+            selected: params.sorting.sortBy == "updatedAt" and params.sorting.order == "desc"
+          },
+          {
+            text: "Updated (oldest)",
+            value: "updatedAsc",
+            selected: params.sorting.sortBy == "updatedAt" and params.sorting.order == "asc"
+          },
+          {
+            text: "Form name (A to Z)",
+            value: "titleAsc",
+            selected: params.sorting.sortBy == "title" and params.sorting.order == "asc"
+          },
+          {
+            text: "Form name (Z to A)",
+            value: "titleDesc",
+            selected: params.sorting.sortBy == "title" and params.sorting.order == "desc"
+          }
+        ]
+      }) }}
+    </div>
+    <div class="app-field-group__item">
+      {{ govukButton({
+        text: "Sort forms",
+        classes: "govuk-button--secondary app-field-group__button"
+      }) }}
+    </div>
+  </div>
+</form>
+{% endif %}
