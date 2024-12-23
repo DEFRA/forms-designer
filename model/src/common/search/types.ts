@@ -1,7 +1,7 @@
 /**
- * Filter options for querying forms
+ * Search options for querying forms
  */
-export interface FilterOptions {
+export interface SearchOptions {
   /**
    * Search term to filter the results by title
    */
