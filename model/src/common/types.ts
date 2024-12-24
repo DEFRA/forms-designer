@@ -2,15 +2,16 @@ import {
   type PaginationOptions,
   type PaginationResult
 } from '~/src/common/pagination/types.js'
+import { type SearchOptions } from '~/src/common/search/types.js'
 import { type SortingOptions } from '~/src/common/sorting/types.js'
 
 /**
- * Options for querying results, including pagination and sorting
+ * Options for querying results, including pagination, sorting, and searching
  */
-export type QueryOptions = PaginationOptions & SortingOptions
+export type QueryOptions = PaginationOptions & SortingOptions & SearchOptions
 
 /**
- * Metadata containing the optional pagination and sorting information
+ * Metadata containing the optional pagination, sorting, and searching information
  */
 export interface Meta {
   /**
@@ -22,6 +23,11 @@ export interface Meta {
    * The sorting details
    */
   sorting?: SortingOptions
+
+  /**
+   * The search details
+   */
+  search?: SearchOptions
 }
 
 /**
