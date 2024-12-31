@@ -6,7 +6,7 @@ import { type SearchOptions } from '~/src/common/search/types.js'
  * Field definitions for search options.
  */
 export const searchOptionFields = {
-  title: Joi.string().trim().allow('').optional()
+  title: Joi.string().trim().allow('').max(255).optional()
 }
 
 /**
