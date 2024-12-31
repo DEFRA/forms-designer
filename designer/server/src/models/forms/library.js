@@ -229,8 +229,8 @@ export function editorViewModel(metadata, definition) {
  * Returns the navigation bar items as an array. Where activePage matches
  * a page, that page will have isActive:true set.
  * @param {string} formPath
- * @param {string} activePage
  * @param {FormMetadata} metadata
+ * @param {string} activePage
  */
 export function getFormSpecificNavigation(formPath, metadata, activePage = '') {
   const navigationItems = [
