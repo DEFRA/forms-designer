@@ -38,20 +38,17 @@
       display: inline-block;
       margin-bottom: 0;
       margin-right: govuk-spacing(2);
-      @include govuk-font-size($size: 19);
     }
 
     &__input {
       display: inline-block;
       width: auto;
       margin-right: govuk-spacing(2);
-      @include govuk-font-size($size: 19);
     }
 
     &__button {
       display: block;
       margin-bottom: 0;
-      @include govuk-font-size($size: 19);
     }
 
     .govuk-form-group {
