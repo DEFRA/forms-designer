@@ -304,6 +304,12 @@ describe('Forms Library Models', () => {
           pageHeading: {
             text: 'Forms library'
           },
+          pageActions: [
+            {
+              text: 'Create new form',
+              href: '/create'
+            }
+          ],
           formItems: mockFormResponse.data,
           pagination: {
             page: 1,
@@ -346,6 +352,12 @@ describe('Forms Library Models', () => {
           pageHeading: {
             text: 'Forms library'
           },
+          pageActions: [
+            {
+              text: 'Create new form',
+              href: '/create'
+            }
+          ],
           formItems: mockFormResponse.data,
           pagination: undefined
         })

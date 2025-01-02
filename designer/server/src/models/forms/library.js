@@ -19,8 +19,9 @@ import {
 /**
  * @typedef {object} ListViewModel
  * @property {string} pageTitle - The number of items per page.
- * @property {{ text: string }} pageHeading - The page heading.
- * @property {Array<FormMetadata>} formItems - The form items.
+ * @property {{ text: string, description?: string }} pageHeading - The page heading.
+ * @property {{ text: string, href: string }[]} [pageActions] - The page actions.
+ * @property {FormMetadata[]} formItems - The form items.
  * @property {(PaginationResult & { pages: Array<PaginationPage> }) | undefined} pagination - The pagination details, including pages for the pagination component.
  * @property {SortingOptions | undefined} sorting - The sorting options.
  */
@@ -58,6 +59,12 @@ export async function listViewModel(token, listOptions) {
     pageHeading: {
       text: pageTitle
     },
+    pageActions: [
+      {
+        text: 'Create new form',
+        href: '/create'
+      }
+    ],
     formItems,
     pagination,
     sorting: sortingMeta

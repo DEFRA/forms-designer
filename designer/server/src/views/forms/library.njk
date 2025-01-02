@@ -9,6 +9,7 @@
 {% block content %}
   {% call appPageBody({
     heading: pageHeading,
+    actions: pageActions,
     classes: "govuk-grid-column-two-thirds-from-desktop"
   }) %}
     {% if formItems | length %}
@@ -18,11 +19,6 @@
 
       <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
     {% endif %}
-
-    {{ govukButton({
-      text: "Create new form",
-      href: "/create"
-    }) }}
 
     {{ appSorting({
       sorting: sorting,
