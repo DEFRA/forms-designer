@@ -18,15 +18,22 @@
     margin-right: 0;
   }
 
-  .govuk-form-group {
-    margin-bottom: govuk-spacing(4);
-  }
-
   @include govuk-media-query($from: tablet) {
-    &__item {
+    &__item,
+    &__label,
+    &__input,
+    &__button {
       display: inline-block;
+      margin: 0;
+    }
+
+    &__item,
+    &__label {
+      margin-right: govuk-spacing(3);
+    }
+
+    &__item {
       width: auto;
-      margin-right: govuk-spacing(1);
       vertical-align: top;
 
       &:last-child {
@@ -34,25 +41,8 @@
       }
     }
 
-    &__label {
-      display: inline-block;
-      margin-bottom: 0;
-      margin-right: govuk-spacing(2);
-    }
-
     &__input {
-      display: inline-block;
       width: auto;
-      margin-right: govuk-spacing(2);
-    }
-
-    &__button {
-      display: block;
-      margin-bottom: 0;
-    }
-
-    .govuk-form-group {
-      margin-bottom: 0;
     }
   }
 }
