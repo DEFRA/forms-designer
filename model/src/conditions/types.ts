@@ -53,7 +53,7 @@ export interface ConditionsModelData extends ConditionGroupData {
 
 export interface OperatorDefinition {
   expression: (
-    component: Pick<ComponentDef, 'type' | 'name'>,
+    component: Pick<ComponentDef, 'type' | 'id'>,
     conditionValue: Condition['value']
   ) => string
 }

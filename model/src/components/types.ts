@@ -17,7 +17,7 @@ export type ConditionalComponentType = Exclude<
 
 interface FormFieldBase {
   type: FormComponentsDef['type']
-  name: string
+  id: string
   title: string
   hint?: string
   options: {
@@ -46,7 +46,7 @@ interface ContentFieldBase {
     | ComponentType.Html
     | ComponentType.InsetText
     | ComponentType.List
-  name: string
+  id: string
   title: string
   options?: {
     required?: undefined
@@ -56,7 +56,7 @@ interface ContentFieldBase {
 
 interface DateFieldBase extends FormFieldBase {
   type: ComponentType.DatePartsField | ComponentType.MonthYearField
-  name: string
+  id: string
   title: string
   hint?: string
   options: FormFieldBase['options'] & {
@@ -115,7 +115,7 @@ export interface TelephoneNumberFieldComponent extends FormFieldBase {
 
 export interface FileUploadFieldComponent extends FormFieldBase {
   type: ComponentType.FileUploadField
-  name: string
+  id: string
   title: string
   hint?: string
   options: FormFieldBase['options'] & {

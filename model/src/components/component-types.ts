@@ -1,11 +1,13 @@
 import { ComponentType } from '~/src/components/enums.js'
 import { type ComponentDef } from '~/src/components/types.js'
+import randomId from '~/src/utils/randomId.js'
 
 /**
  * Defaults for creating new components
  */
 export const ComponentTypes: readonly ComponentDef[] = Object.freeze([
   {
+    id: randomId(),
     name: 'TextField',
     title: 'Text field',
     type: ComponentType.TextField,
@@ -14,6 +16,7 @@ export const ComponentTypes: readonly ComponentDef[] = Object.freeze([
     schema: {}
   },
   {
+    id: randomId(),
     name: 'MultilineTextField',
     title: 'Multiline text field',
     type: ComponentType.MultilineTextField,
@@ -22,6 +25,7 @@ export const ComponentTypes: readonly ComponentDef[] = Object.freeze([
     schema: {}
   },
   {
+    id: randomId(),
     name: 'YesNoField',
     title: 'Yes/No field',
     type: ComponentType.YesNoField,
@@ -29,6 +33,7 @@ export const ComponentTypes: readonly ComponentDef[] = Object.freeze([
     options: {}
   },
   {
+    id: randomId(),
     name: 'DatePartsField',
     title: 'Date field',
     type: ComponentType.DatePartsField,
@@ -36,6 +41,7 @@ export const ComponentTypes: readonly ComponentDef[] = Object.freeze([
     options: {}
   },
   {
+    id: randomId(),
     name: 'MonthYearField',
     title: 'Month & year field',
     type: ComponentType.MonthYearField,
@@ -43,6 +49,7 @@ export const ComponentTypes: readonly ComponentDef[] = Object.freeze([
     options: {}
   },
   {
+    id: randomId(),
     name: 'SelectField',
     title: 'Select field',
     type: ComponentType.SelectField,
@@ -51,6 +58,7 @@ export const ComponentTypes: readonly ComponentDef[] = Object.freeze([
     options: {}
   },
   {
+    id: randomId(),
     name: 'AutocompleteField',
     title: 'Autocomplete field',
     type: ComponentType.AutocompleteField,
@@ -59,6 +67,7 @@ export const ComponentTypes: readonly ComponentDef[] = Object.freeze([
     options: {}
   },
   {
+    id: randomId(),
     name: 'RadiosField',
     title: 'Radios field',
     type: ComponentType.RadiosField,
@@ -67,6 +76,7 @@ export const ComponentTypes: readonly ComponentDef[] = Object.freeze([
     options: {}
   },
   {
+    id: randomId(),
     name: 'CheckboxesField',
     title: 'Checkboxes field',
     type: ComponentType.CheckboxesField,
@@ -75,6 +85,7 @@ export const ComponentTypes: readonly ComponentDef[] = Object.freeze([
     options: {}
   },
   {
+    id: randomId(),
     name: 'NumberField',
     title: 'Number field',
     type: ComponentType.NumberField,
@@ -83,6 +94,7 @@ export const ComponentTypes: readonly ComponentDef[] = Object.freeze([
     schema: {}
   },
   {
+    id: randomId(),
     name: 'UkAddressField',
     title: 'UK address field',
     type: ComponentType.UkAddressField,
@@ -90,6 +102,7 @@ export const ComponentTypes: readonly ComponentDef[] = Object.freeze([
     options: {}
   },
   {
+    id: randomId(),
     name: 'TelephoneNumberField',
     title: 'Telephone number field',
     type: ComponentType.TelephoneNumberField,
@@ -97,6 +110,7 @@ export const ComponentTypes: readonly ComponentDef[] = Object.freeze([
     options: {}
   },
   {
+    id: randomId(),
     name: 'EmailAddressField',
     title: 'Email address field',
     type: ComponentType.EmailAddressField,
@@ -104,6 +118,7 @@ export const ComponentTypes: readonly ComponentDef[] = Object.freeze([
     options: {}
   },
   {
+    id: randomId(),
     name: 'FileUploadField',
     title: 'File upload field',
     type: ComponentType.FileUploadField,
@@ -111,6 +126,7 @@ export const ComponentTypes: readonly ComponentDef[] = Object.freeze([
     schema: {}
   },
   {
+    id: randomId(),
     name: 'Html',
     title: 'Html',
     type: ComponentType.Html,
@@ -118,12 +134,14 @@ export const ComponentTypes: readonly ComponentDef[] = Object.freeze([
     options: {}
   },
   {
+    id: randomId(),
     name: 'InsetText',
     title: 'Inset text',
     type: ComponentType.InsetText,
     content: ''
   },
   {
+    id: randomId(),
     name: 'Details',
     title: 'Details',
     type: ComponentType.Details,
@@ -131,6 +149,7 @@ export const ComponentTypes: readonly ComponentDef[] = Object.freeze([
     options: {}
   },
   {
+    id: randomId(),
     name: 'List',
     title: 'List',
     type: ComponentType.List,

@@ -15,20 +15,29 @@ import {
   type ConditionWrapper,
   type FormDefinition,
   type Item,
-  type Link,
   type List,
   type Page,
-  type PhaseBanner,
-  type Repeat,
-  type RepeatOptions,
-  type RepeatSchema,
+  type PageBase,
+  type PageCondition,
+  type PageGroup,
   type Section
 } from '~/src/form/form-definition/types.js'
+import { hasComponents } from '~/src/pages/helpers.js'
 
-const sectionsSchema = Joi.object<Section>().keys({
-  name: Joi.string().required(),
+const idSchema = Joi.string()
+  .pattern(/^[A-Za-z]{6}$/)
+  .length(6)
+  .required()
+
+const sectionSchema = Joi.object<Section>().keys({
+  id: idSchema,
+  title: Joi.string().required()
+})
+
+const pageGroupSchema = Joi.object<PageGroup>().keys({
+  id: idSchema,
   title: Joi.string().required(),
-  hideTitle: Joi.boolean().optional().default(false)
+  condition: Joi.string().optional()
 })
 
 const conditionFieldSchema = Joi.object<ConditionFieldData>().keys({
@@ -95,30 +104,22 @@ const conditionWrapperSchema = Joi.object<ConditionWrapper>().keys({
 export const componentSchema = Joi.object<ComponentDef>()
   .keys({
     type: Joi.string<ComponentType>().required(),
-    name: Joi.when('type', {
-      is: Joi.string().valid(
-        ComponentType.Details,
-        ComponentType.Html,
-        ComponentType.InsetText
-      ),
-      then: Joi.string().optional(),
-      otherwise: Joi.string()
-    }),
+    id: idSchema,
     title: Joi.when('type', {
       is: Joi.string().valid(
         ComponentType.Details,
         ComponentType.Html,
         ComponentType.InsetText
       ),
-      then: Joi.string().optional(),
-      otherwise: Joi.string().allow('')
+      then: Joi.any().strip(),
+      otherwise: Joi.string().required()
     }),
     hint: Joi.string().allow('').optional(),
     options: Joi.object({
-      rows: Joi.number().empty(''),
-      maxWords: Joi.number().empty(''),
-      maxDaysInPast: Joi.number().empty(''),
-      maxDaysInFuture: Joi.number().empty(''),
+      rows: Joi.number(),
+      maxWords: Joi.number(),
+      maxDaysInPast: Joi.number(),
+      maxDaysInFuture: Joi.number(),
       customValidationMessage: Joi.string().allow(''),
       customValidationMessages: Joi.object<LanguageMessages>()
         .unknown(true)
@@ -127,67 +128,95 @@ export const componentSchema = Joi.object<ComponentDef>()
       .default({})
       .unknown(true),
     schema: Joi.object({
-      min: Joi.number().empty(''),
-      max: Joi.number().empty(''),
-      length: Joi.number().empty('')
+      min: Joi.number(),
+      max: Joi.number(),
+      length: Joi.number()
     })
       .unknown(true)
       .default({}),
-    list: Joi.string().optional()
+    list: Joi.string()
+      .valid(
+        Joi.ref('/lists', {
+          in: true,
+          adjust: (lists: List[]) => lists.map((list) => list.id)
+        })
+      )
+      .optional()
   })
   .unknown(true)
 
-const nextSchema = Joi.object<Link>().keys({
-  path: Joi.string().required(),
-  condition: Joi.string().allow('').optional(),
-  redirect: Joi.string().optional()
+const pageConditionSchema = Joi.object<PageCondition>().keys({
+  pageId: idSchema.valid(
+    Joi.ref('/pages', {
+      in: true,
+      adjust: (pages: Page[]) => pages.map((page) => page.id)
+    })
+  ),
+  componentId: idSchema.valid(
+    Joi.ref('/pages', {
+      in: true,
+      adjust: (pages: Page[]) =>
+        pages.flatMap((page) =>
+          hasComponents(page)
+            ? page.components.map((component) => component.id)
+            : []
+        )
+    })
+  ),
+  operator: Joi.string().valid('==').required(),
+  valueId: idSchema.valid(
+    Joi.ref('/lists', {
+      in: true,
+      adjust: (lists: List[]) =>
+        lists.flatMap((list) => list.items.map((item) => item.id))
+    })
+  )
 })
 
-const repeatOptions = Joi.object<RepeatOptions>().keys({
-  name: Joi.string().required(),
-  title: Joi.string().required()
-})
-
-const repeatSchema = Joi.object<RepeatSchema>().keys({
-  min: Joi.number().empty('').required(),
-  max: Joi.number().empty('').required()
-})
-
-const pageRepeatSchema = Joi.object<Repeat>().keys({
-  options: repeatOptions.required(),
-  schema: repeatSchema.required()
-})
-
-/**
- * `/status` is a special route for providing a user's application status.
- *  It should not be configured via the designer.
- */
 const pageSchema = Joi.object<Page>().keys({
-  path: Joi.string().required().disallow('/status'),
+  id: idSchema,
+  path: Joi.string().required(),
   title: Joi.string().required(),
-  section: Joi.string(),
+  section: Joi.string()
+    .valid(
+      Joi.ref('/sections', {
+        in: true,
+        adjust: (sections: Section[]) => sections.map((section) => section.id)
+      })
+    )
+    .optional(),
   controller: Joi.string().optional(),
-  components: Joi.array<ComponentDef>().items(componentSchema).unique('name'),
-  repeat: Joi.when('controller', {
-    is: Joi.string().valid('RepeatPageController').required(),
-    then: pageRepeatSchema.required(),
-    otherwise: Joi.any().strip()
-  }),
-  next: Joi.array<Link>().items(nextSchema)
+  components: Joi.array<ComponentDef>().items(componentSchema).unique('id'),
+  group: Joi.string()
+    .valid(
+      Joi.ref('/pageGroups', {
+        in: true,
+        adjust: (groups: PageGroup[]) => groups.map((group) => group.id)
+      })
+    )
+    .optional(),
+  condition: Joi.array<PageBase['condition'][]>().items(
+    Joi.array<PageBase['condition']>().items(pageConditionSchema)
+  )
+  // condition: Joi.string()
+  //   .valid(
+  //     Joi.in('/conditions', {
+  //       adjust: (conditions: ConditionWrapper[]) =>
+  //         conditions.map((condition) => condition.id)
+  //     })
+  //   )
+  //   .optional()
+  // condition: Joi.alternatives().try(
+  //   Joi.array<PageBase['condition']>().items(pageConditionSchema).single(),
+  //   Joi.array<PageBase['condition'][]>().items(
+  //     Joi.array<PageBase['condition']>().items(pageConditionSchema)
+  //   )
+  // )
 })
 
 const baseListItemSchema = Joi.object<Item>().keys({
-  text: Joi.string().allow(''),
-  description: Joi.string().allow('').optional(),
-  conditional: Joi.object<Item['conditional']>()
-    .keys({
-      components: Joi.array<ComponentDef>()
-        .required()
-        .items(componentSchema.unknown(true))
-        .unique('name')
-    })
-    .optional(),
-  condition: Joi.string().allow('').optional()
+  id: idSchema,
+  text: Joi.string().allow('')
 })
 
 const stringListItemSchema = baseListItemSchema.append({
@@ -198,40 +227,27 @@ const numberListItemSchema = baseListItemSchema.append({
   value: Joi.number().required()
 })
 
+const booleanListItemSchema = baseListItemSchema.append({
+  value: Joi.boolean().required()
+})
+
 const listSchema = Joi.object<List>().keys({
-  name: Joi.string().required(),
+  id: idSchema,
   title: Joi.string().required(),
-  type: Joi.string().required().valid('string', 'number'),
-  items: Joi.when('type', {
-    is: 'string',
-    then: Joi.array()
-      .items(stringListItemSchema)
-      .unique('text')
-      .unique('value'),
-    otherwise: Joi.array()
-      .items(numberListItemSchema)
-      .unique('text')
-      .unique('value')
-  })
-})
-
-const feedbackSchema = Joi.object<FormDefinition['feedback']>().keys({
-  feedbackForm: Joi.boolean().default(false),
-  url: Joi.when('feedbackForm', {
-    is: Joi.boolean().valid(false),
-    then: Joi.string().optional().allow('')
-  }),
-  emailAddress: Joi.string()
-    .email({
-      tlds: {
-        allow: false
-      }
-    })
-    .optional()
-})
-
-const phaseBannerSchema = Joi.object<PhaseBanner>().keys({
-  phase: Joi.string().valid('alpha', 'beta')
+  type: Joi.string().required().valid('string', 'number', 'boolean'),
+  items: Joi.array()
+    .unique('id')
+    .unique('text')
+    .unique('value')
+    .items(
+      Joi.when('type', {
+        switch: [
+          { is: 'string', then: stringListItemSchema },
+          { is: 'number', then: numberListItemSchema },
+          { is: 'boolean', then: booleanListItemSchema }
+        ]
+      })
+    )
 })
 
 /**
@@ -241,30 +257,31 @@ const phaseBannerSchema = Joi.object<PhaseBanner>().keys({
 export const formDefinitionSchema = Joi.object<FormDefinition>()
   .required()
   .keys({
-    name: Joi.string().allow('').optional(),
-    feedback: feedbackSchema.optional(),
-    startPage: Joi.string().optional(),
-    pages: Joi.array<Page>().required().items(pageSchema).unique('path'),
-    sections: Joi.array<Section>()
-      .items(sectionsSchema)
-      .unique('name')
+    id: idSchema,
+    name: Joi.string().required(),
+    pages: Joi.array<Page>()
+      .required()
+      .items(pageSchema)
+      .unique('id')
+      .unique('path'),
+    pageGroups: Joi.array<PageGroup>()
+      .items(pageGroupSchema)
+      .unique('id')
       .unique('title')
-      .required(),
-    conditions: Joi.array<ConditionWrapper>()
-      .items(conditionWrapperSchema)
-      .unique('name')
-      .unique('displayName'),
-    lists: Joi.array<List>().items(listSchema).unique('name').unique('title'),
-    metadata: Joi.object({ a: Joi.any() }).unknown().optional(),
-    declaration: Joi.string().allow('').optional(),
-    skipSummary: Joi.any().strip(),
-    phaseBanner: phaseBannerSchema.optional(),
-    outputEmail: Joi.string()
-      .email({ tlds: { allow: ['uk'] } })
-      .trim()
-      .optional()
+      .default([]),
+    sections: Joi.array<Section>()
+      .items(sectionSchema)
+      .unique('id')
+      .unique('title')
+      .default([]),
+    conditions: Joi.array(),
+    // conditions: Joi.array<ConditionWrapper>()
+    //   .items(conditionWrapperSchema)
+    //   .unique('name')
+    //   .unique('displayName'),
+    lists: Joi.array<List>()
+      .items(listSchema)
+      .unique('id')
+      .unique('title')
+      .default([])
   })
-
-// Maintain compatibility with legacy named export
-// E.g. `import { Schema } from '@defra/forms-model'`
-export const Schema = formDefinitionSchema

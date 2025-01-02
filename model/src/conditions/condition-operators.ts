@@ -101,7 +101,7 @@ export function getExpression(
   }
 
   return conditionals[operator]?.expression(
-    { type: fieldType, name: fieldName },
+    { type: fieldType, id: fieldName },
     value
   )
 }
@@ -121,7 +121,7 @@ function getConditionals(
 function inline(operator: Operator): OperatorDefinition {
   return {
     expression(field, value) {
-      return `${field.name} ${operator} ${formatValue(field, value)}`
+      return `${field.id} ${operator} ${formatValue(field, value)}`
     }
   }
 }
@@ -129,7 +129,7 @@ function inline(operator: Operator): OperatorDefinition {
 function lengthIs(operator: Operator): OperatorDefinition {
   return {
     expression(field, value) {
-      return `length(${field.name}) ${operator} ${formatValue(field, value)}`
+      return `length(${field.id}) ${operator} ${formatValue(field, value)}`
     }
   }
 }
@@ -137,7 +137,7 @@ function lengthIs(operator: Operator): OperatorDefinition {
 function reverseInline(operator: Operator.Contains): OperatorDefinition {
   return {
     expression(field, value) {
-      return `${formatValue(field, value)} ${operator} ${field.name}`
+      return `${formatValue(field, value)} ${operator} ${field.id}`
     }
   }
 }
@@ -183,7 +183,7 @@ function absoluteDate(operator: Operator): OperatorDefinition {
         )
       }
 
-      return `${field.name} ${operator} ${formatValue(field, value)}`
+      return `${field.id} ${operator} ${formatValue(field, value)}`
     }
   }
 }
@@ -201,7 +201,7 @@ function relativeDate(
       }
 
       const isPast = value.direction === DateDirections.PAST
-      return `${field.name} ${isPast ? pastOperator : futureOperator} ${formatValue(field, value)}`
+      return `${field.id} ${isPast ? pastOperator : futureOperator} ${formatValue(field, value)}`
     }
   }
 }

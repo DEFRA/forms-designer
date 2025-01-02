@@ -3,15 +3,18 @@ import { type ConditionsModelData } from '~/src/conditions/types.js'
 import { formDefinitionSchema } from '~/src/form/form-definition/index.js'
 import { type ControllerPath, type ControllerType } from '~/src/pages/enums.js'
 
-export interface Link {
-  path: string
-  condition?: string
-  redirect?: string
+export interface PageCondition {
+  pageId: string
+  componentId: string
+  operator: string
+  valueId: string
 }
 
 export interface PageBase {
-  title: string
+  id: string
   path: string
+  title: string
+  condition?: PageCondition[][]
 }
 
 export interface RepeatOptions {
@@ -33,14 +36,14 @@ export interface PageStart extends PageBase {
   path: ControllerPath.Start | string
   controller: ControllerType.Start
   section?: string | undefined
-  next: Link[]
+  group?: string | undefined
   components: ComponentDef[]
 }
 
 export interface PageQuestion extends PageBase {
   controller?: ControllerType.Page
   section?: string | undefined
-  next: Link[]
+  group?: string | undefined
   components: ComponentDef[]
 }
 
@@ -48,14 +51,21 @@ export interface PageRepeat extends PageBase {
   controller: ControllerType.Repeat
   repeat: Repeat
   section?: string | undefined
-  next: Link[]
+  group?: string | undefined
   components: ComponentDef[]
 }
 
 export interface PageFileUpload extends PageBase {
   controller: ControllerType.FileUpload
   section?: string | undefined
-  next: Link[]
+  group?: string | undefined
+  components: ComponentDef[]
+}
+
+export interface PageTerminal extends PageBase {
+  controller?: ControllerType.Terminal
+  section?: string | undefined
+  group?: string | undefined
   components: ComponentDef[]
 }
 
@@ -63,12 +73,14 @@ export interface PageSummary extends PageBase {
   path: ControllerPath.Summary | string
   controller: ControllerType.Summary
   section?: undefined
+  group?: undefined
 }
 
 export interface PageStatus extends PageBase {
   path: ControllerPath.Status | string
   controller: ControllerType.Status
   section?: undefined
+  group?: undefined
 }
 
 export type Page =
@@ -76,25 +88,29 @@ export type Page =
   | PageQuestion
   | PageFileUpload
   | PageRepeat
+  | PageTerminal
   | PageSummary
   | PageStatus
 
 export interface Section {
-  name: string
+  id: string
   title: string
-  hideTitle?: boolean
 }
 
-export interface Item {
-  text: string
-  value: string | number | boolean
-  description?: string
-  conditional?: { components: ComponentDef[] }
+export interface PageGroup {
+  id: string
+  title: string
   condition?: string
 }
 
+export interface Item {
+  id: string
+  text: string
+  value: string | number | boolean
+}
+
 export interface List {
-  name: string
+  id: string
   title: string
   type: ListTypeContent
   items: Item[]
@@ -103,18 +119,8 @@ export interface List {
 export type ListTypeOption = 'bulleted' | 'numbered'
 export type ListTypeContent = 'string' | 'number' | 'boolean'
 
-export interface Feedback {
-  feedbackForm?: boolean
-  url?: string
-  emailAddress?: string
-}
-
-export interface PhaseBanner {
-  phase?: 'alpha' | 'beta'
-  feedbackUrl?: string
-}
-
 export interface ConditionWrapper {
+  id: string
   name: string
   displayName: string
   value: ConditionsModelData
@@ -125,16 +131,11 @@ export interface ConditionWrapper {
  * @see {@link formDefinitionSchema}
  */
 export interface FormDefinition {
+  id: string
+  name: string
   pages: Page[]
+  pageGroups: PageGroup[]
   conditions: ConditionWrapper[]
   lists: List[]
   sections: Section[]
-  startPage?: string
-  name?: string
-  feedback?: Feedback
-  phaseBanner?: PhaseBanner
-  declaration?: string
-  skipSummary?: never
-  metadata?: Record<string, unknown>
-  outputEmail?: string
 }

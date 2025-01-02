@@ -11,6 +11,7 @@ export * from '~/src/form/utils/index.js'
 export * from '~/src/pages/index.js'
 export * from '~/src/utils/helpers.js'
 export * from '~/src/utils/markdown.js'
+export * from '~/src/utils/randomId.js'
 
 export type * from '~/src/common/types.js'
 export type * from '~/src/common/pagination/types.js'
