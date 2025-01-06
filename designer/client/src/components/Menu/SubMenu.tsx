@@ -11,8 +11,13 @@ interface Props {
 }
 
 export function SubMenu({ overview }: Readonly<Props>) {
-  const { data, meta, save } = useContext(DataContext)
+  const { data, meta, previewUrl, save } = useContext(DataContext)
   const fileInput = useRef<HTMLInputElement>(null)
+
+  const { href: formPreviewLink } = new URL(
+    `/preview/draft/${meta.slug}`,
+    previewUrl
+  )
 
   function onClickUpload() {
     fileInput.current?.click()
@@ -101,6 +106,14 @@ export function SubMenu({ overview }: Readonly<Props>) {
       >
         {i18n('menu.overview')}
       </button>
+      <a
+        href={formPreviewLink}
+        target="_blank"
+        rel="noreferrer noopener"
+        className="govuk-link govuk-link--no-visited-state govuk-!-font-size-16"
+      >
+        {i18n('menu.preview')}
+      </a>
       <input
         ref={fileInput}
         type="file"
