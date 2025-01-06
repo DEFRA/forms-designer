@@ -25,6 +25,7 @@ import {
  * @property {FormMetadata[]} formItems - The form items.
  * @property {(PaginationResult & { pages: Array<PaginationPage> }) | undefined} pagination - The pagination details, including pages for the pagination component.
  * @property {SortingOptions | undefined} sorting - The sorting options.
+ * @property {SearchOptions | undefined} search - The search options.
  */
 
 /**
@@ -40,6 +41,7 @@ export async function listViewModel(token, listOptions) {
   const formItems = formResponse.data
   const paginationMeta = formResponse.meta.pagination ?? undefined
   const sortingMeta = formResponse.meta.sorting ?? undefined
+  const searchMeta = formResponse.meta.search ?? undefined
 
   let pagination
   if (paginationMeta) {
@@ -47,7 +49,8 @@ export async function listViewModel(token, listOptions) {
       paginationMeta.page,
       paginationMeta.totalPages,
       paginationMeta.perPage,
-      sortingMeta
+      sortingMeta,
+      searchMeta
     )
     pagination = {
       ...paginationMeta,
@@ -72,7 +75,8 @@ export async function listViewModel(token, listOptions) {
     ],
     formItems,
     pagination,
-    sorting: sortingMeta
+    sorting: sortingMeta,
+    search: searchMeta
   }
 }
 
@@ -83,9 +87,16 @@ export async function listViewModel(token, listOptions) {
  * @param {number} totalPages
  * @param {number} perPage
  * @param {SortingOptions} [sorting]
+ * @param {SearchOptions} [search]
  * @returns {Array<PaginationPage>}
  */
-function buildPaginationPages(currentPage, totalPages, perPage, sorting) {
+function buildPaginationPages(
+  currentPage,
+  totalPages,
+  perPage,
+  sorting,
+  search
+) {
   const pages = []
 
   /**
@@ -107,6 +118,10 @@ function buildPaginationPages(currentPage, totalPages, perPage, sorting) {
         'sort',
         `${sortValue}${sorting.order.charAt(0).toUpperCase()}${sorting.order.slice(1)}`
       )
+    }
+
+    if (search?.title) {
+      queryParams.set('title', search.title)
     }
 
     return {
@@ -260,5 +275,5 @@ export function getFormSpecificNavigation(formPath, metadata, activePage = '') {
 }
 
 /**
- * @import { FormDefinition, FormMetadata, PaginationResult, PaginationOptions, QueryOptions, SortingOptions } from '@defra/forms-model'
+ * @import { FormDefinition, FormMetadata, PaginationResult, QueryOptions, SortingOptions, SearchOptions } from '@defra/forms-model'
  */

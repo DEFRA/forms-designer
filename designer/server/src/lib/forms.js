@@ -22,6 +22,10 @@ export async function list(token, options) {
     requestUrl.searchParams.append('order', options.order)
   }
 
+  if (options.title) {
+    requestUrl.searchParams.append('title', options.title)
+  }
+
   const { body } = await getJsonByType(requestUrl, getAuthOptions(token))
 
   return body

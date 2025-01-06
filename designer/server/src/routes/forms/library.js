@@ -1,4 +1,4 @@
-import { paginationOptionFields } from '@defra/forms-model'
+import { paginationOptionFields, searchOptionFields } from '@defra/forms-model'
 import Boom from '@hapi/boom'
 import Joi from 'joi'
 
@@ -24,10 +24,10 @@ export default [
       handler: async (request, h) => {
         const { auth, query } = request
         const token = auth.credentials.token
-        const { page, perPage, sort } = query
+        const { page, perPage, sort, title } = query
 
         const { sortBy, order } = getSortOptions(sort)
-        const listOptions = { page, perPage, sortBy, order }
+        const listOptions = { page, perPage, sortBy, order, title }
         const model = await library.listViewModel(token, listOptions)
 
         if (model.pagination) {
@@ -39,6 +39,9 @@ export default [
             redirectUrl.searchParams.set('perPage', String(perPage))
             if (sort) {
               redirectUrl.searchParams.set('sort', sort)
+            }
+            if (title) {
+              redirectUrl.searchParams.set('title', title)
             }
 
             return h.redirect(redirectUrl.pathname + redirectUrl.search)
@@ -55,7 +58,9 @@ export default [
         }
       },
       validate: {
-        query: Joi.object(paginationOptionFields).keys({
+        query: Joi.object({
+          ...paginationOptionFields,
+          ...searchOptionFields,
           sort: Joi.string()
             .valid('updatedDesc', 'updatedAsc', 'titleAsc', 'titleDesc')
             .optional()
@@ -149,7 +154,7 @@ export default [
  */
 
 /**
- * @typedef {PaginationOptions & SortOptions} LibraryQueryParams
+ * @typedef {PaginationOptions & SortOptions & SearchOptions} LibraryQueryParams
  */
 
 /**
@@ -159,5 +164,5 @@ export default [
 /**
  * @import { Request } from '@hapi/hapi'
  * @import { ServerRoute } from '@hapi/hapi'
- * @import { PaginationOptions } from '@defra/forms-model'
+ * @import { PaginationOptions, SearchOptions } from '@defra/forms-model'
  */
