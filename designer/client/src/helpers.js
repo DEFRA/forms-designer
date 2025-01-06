@@ -58,7 +58,7 @@ export function isComponentAllowed(page) {
     const isQuestion =
       component.type !== ComponentType.FileUploadField &&
       (!controller ||
-        controller === ControllerType.Page ||
+        controller === ControllerType.Question ||
         controller === ControllerType.Repeat)
 
     // File upload pages can have a single file upload form component

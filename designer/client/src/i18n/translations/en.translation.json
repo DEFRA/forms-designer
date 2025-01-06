@@ -343,6 +343,7 @@
     "edit": "Edit page",
     "preview": "Preview page",
     "controllers": {
+      "content": "Content page",
       "question": "Question page",
       "start": "Start page",
       "fileUpload": "File upload",

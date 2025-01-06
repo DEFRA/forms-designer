@@ -13,8 +13,9 @@ import { i18n } from '~/src/i18n/i18n.jsx'
 
 describe('Component create list: Supported page types', () => {
   const supported = [
+    ControllerType.Content,
     ControllerType.Start,
-    ControllerType.Page,
+    ControllerType.Question,
     ControllerType.FileUpload,
     ControllerType.Repeat
   ]
@@ -48,6 +49,19 @@ describe('Component create list: Supported page types', () => {
 
 describe.each([
   [
+    ControllerType.Content,
+    {
+      content: [
+        ComponentType.Details,
+        ComponentType.Html,
+        ComponentType.InsetText,
+        ComponentType.List
+      ],
+      selection: undefined,
+      input: undefined
+    }
+  ],
+  [
     ControllerType.Start,
     {
       content: [
@@ -61,7 +75,7 @@ describe.each([
     }
   ],
   [
-    ControllerType.Page,
+    ControllerType.Question,
     {
       content: [
         ComponentType.Details,
