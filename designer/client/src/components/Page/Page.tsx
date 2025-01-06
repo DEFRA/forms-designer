@@ -81,7 +81,7 @@ export const Page = (
   const headingId = `${pageId}-heading`
 
   const href = new URL(
-    `/preview/draft/${meta.slug}${page.path}`,
+    `/preview/draft/${meta.slug}${page.path}?force`,
     previewUrl
   ).toString()
 
