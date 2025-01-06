@@ -790,6 +790,100 @@ describe('Forms Library Models', () => {
         ])
       })
     })
+
+    describe('when search options are provided', () => {
+      it('includes search parameters in pagination hrefs', async () => {
+        const mockFormResponse = {
+          data: [metadataWithDraft],
+          meta: {
+            pagination: {
+              page: 2,
+              perPage: 10,
+              totalPages: 3,
+              totalItems: 30
+            },
+            search: {
+              title: 'some search'
+            }
+          }
+        }
+
+        jest.spyOn(forms, 'list').mockResolvedValue(mockFormResponse)
+        const viewModel = await listViewModel('token', {
+          page: 2,
+          perPage: 10,
+          title: 'some search'
+        })
+
+        expect(viewModel.pagination).toBeTruthy()
+        expect(viewModel.pagination?.pages).toEqual([
+          {
+            number: '1',
+            href: `${formsLibraryPath}?page=1&perPage=10&title=some+search`,
+            current: false
+          },
+          {
+            number: '2',
+            href: `${formsLibraryPath}?page=2&perPage=10&title=some+search`,
+            current: true
+          },
+          {
+            number: '3',
+            href: `${formsLibraryPath}?page=3&perPage=10&title=some+search`,
+            current: false
+          }
+        ])
+      })
+
+      it('includes search parameters with sorting in pagination hrefs', async () => {
+        const mockFormResponse = {
+          data: [metadataWithDraft],
+          meta: {
+            pagination: {
+              page: 2,
+              perPage: 10,
+              totalPages: 3,
+              totalItems: 30
+            },
+            sorting: {
+              sortBy: 'title',
+              order: 'asc'
+            },
+            search: {
+              title: 'some search'
+            }
+          }
+        }
+
+        jest.spyOn(forms, 'list').mockResolvedValue(mockFormResponse)
+        const viewModel = await listViewModel('token', {
+          page: 2,
+          perPage: 10,
+          sortBy: 'title',
+          order: 'asc',
+          title: 'some search'
+        })
+
+        expect(viewModel.pagination).toBeTruthy()
+        expect(viewModel.pagination?.pages).toEqual([
+          {
+            number: '1',
+            href: `${formsLibraryPath}?page=1&perPage=10&sort=titleAsc&title=some+search`,
+            current: false
+          },
+          {
+            number: '2',
+            href: `${formsLibraryPath}?page=2&perPage=10&sort=titleAsc&title=some+search`,
+            current: true
+          },
+          {
+            number: '3',
+            href: `${formsLibraryPath}?page=3&perPage=10&sort=titleAsc&title=some+search`,
+            current: false
+          }
+        ])
+      })
+    })
   })
 })
 

@@ -447,6 +447,56 @@ describe('Forms library routes', () => {
         expect(response.statusCode).toBe(400)
       })
     })
+
+    describe('Search', () => {
+      it('should handle title search parameter correctly', async () => {
+        jest.mocked(forms.list).mockResolvedValueOnce({
+          data: [formMetadata],
+          meta: {
+            search: {
+              title: 'some search'
+            }
+          }
+        })
+
+        const options = {
+          method: 'GET',
+          url: '/library?title=some+search',
+          auth
+        }
+
+        await server.inject(options)
+
+        expect(forms.list).toHaveBeenCalledWith(
+          auth.credentials.token,
+          expect.objectContaining({
+            title: 'some search'
+          })
+        )
+      })
+
+      it('should not include title parameter when not provided', async () => {
+        jest.mocked(forms.list).mockResolvedValueOnce({
+          data: [formMetadata],
+          meta: {}
+        })
+
+        const options = {
+          method: 'GET',
+          url: '/library',
+          auth
+        }
+
+        await server.inject(options)
+
+        expect(forms.list).toHaveBeenCalledWith(
+          auth.credentials.token,
+          expect.not.objectContaining({
+            title: expect.any(String)
+          })
+        )
+      })
+    })
   })
 
   describe('Form editor page', () => {
