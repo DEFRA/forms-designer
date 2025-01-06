@@ -115,7 +115,7 @@ export const Page = (
           href={href}
           className="govuk-button app-button--editor"
           target="_blank"
-          rel="noreferrer"
+          rel="noreferrer opener"
           aria-describedby={headingId}
         >
           {i18n('page.preview')}
