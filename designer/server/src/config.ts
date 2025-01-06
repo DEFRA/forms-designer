@@ -1,10 +1,7 @@
-import { dirname, resolve } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { resolve } from 'node:path'
 
 import joi from 'joi'
 import { type LevelWithSilent } from 'pino'
-
-const configPath = fileURLToPath(import.meta.url)
 
 export interface Config {
   port: number
@@ -70,15 +67,15 @@ const schema = joi.object<Config>({
     .string()
     .valid('development', 'test', 'production')
     .default('development'),
-  appDir: joi.string().default(dirname(configPath)),
+  appDir: joi.string().default(import.meta.dirname),
   clientDir: joi.string().when('env', {
     is: 'test',
     then: joi
       .string()
-      .default(resolve(dirname(configPath), '../../client/test/fixtures')),
+      .default(resolve(import.meta.dirname, '../../client/test/fixtures')),
     otherwise: joi
       .string()
-      .default(resolve(dirname(configPath), '../../client/dist'))
+      .default(resolve(import.meta.dirname, '../../client/dist'))
   }),
   managerUrl: joi.string().required(),
   submissionUrl: joi.string().required(),
