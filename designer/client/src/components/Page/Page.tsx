@@ -81,7 +81,7 @@ export const Page = (
   const headingId = `${pageId}-heading`
 
   const href = new URL(
-    `/preview/draft/${meta.slug}${page.path}`,
+    `/preview/draft/${meta.slug}${page.path}?force`,
     previewUrl
   ).toString()
 
@@ -115,7 +115,7 @@ export const Page = (
           href={href}
           className="govuk-button app-button--editor"
           target="_blank"
-          rel="noreferrer"
+          rel="noreferrer opener"
           aria-describedby={headingId}
         >
           {i18n('page.preview')}

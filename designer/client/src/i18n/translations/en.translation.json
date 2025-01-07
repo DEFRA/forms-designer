@@ -296,7 +296,8 @@
     "upload": "Upload form",
     "uploadFile": "Upload form definition JSON",
     "download": "Download form",
-    "overview": "Form overview"
+    "overview": "Form overview",
+    "preview": "Form preview (opens in a new tab)"
   },
   "multilineTextFieldEditComponent": {
     "maxWordField": {
