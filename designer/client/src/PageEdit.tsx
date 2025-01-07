@@ -255,7 +255,7 @@ export class PageEdit extends Component<Props, State> {
 
     // Path '/status' not allowed
     errors.path ??= validateCustom('page-path', path, {
-      message: 'page.errors.pathStart',
+      message: 'page.errors.pathStatus',
       schema: schema.string().disallow(ControllerPath.Status)
     })
 
