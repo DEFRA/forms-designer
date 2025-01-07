@@ -1,4 +1,12 @@
-import { marked } from 'marked'
+import { Marked } from 'marked'
+
+/**
+ * Marked instance (avoids global option/extension scope)
+ */
+export const marked = new Marked({
+  breaks: true,
+  gfm: true
+})
 
 /**
  * Convert markdown to HTML
@@ -8,5 +16,5 @@ export function markdownToHtml(markdown?: string | null) {
     return ''
   }
 
-  return marked(markdown, { gfm: true, breaks: true })
+  return marked.parse(markdown)
 }
