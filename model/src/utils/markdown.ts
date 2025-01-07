@@ -16,5 +16,5 @@ export function markdownToHtml(markdown?: string | null) {
     return ''
   }
 
-  return marked.parse(markdown)
+  return marked.parse(markdown, { async: false })
 }
