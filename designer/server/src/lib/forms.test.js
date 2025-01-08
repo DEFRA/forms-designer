@@ -86,11 +86,14 @@ describe('Forms library routes', () => {
         auth
       }
 
-      await renderResponse(server, options)
+      const { container } = await renderResponse(server, options)
 
-      const $heading = document.querySelector('h1.govuk-heading-xl')
+      const $heading = container.getByRole('heading', {
+        name: 'Forms library',
+        level: 1
+      })
+
       expect($heading).toBeInTheDocument()
-      expect($heading?.textContent?.trim()).toBe('Forms library')
 
       const $tableCells = document.querySelectorAll('td.govuk-table__cell')
       expect($tableCells[0].textContent?.trim()).toContain(formMetadata.title)
@@ -270,7 +273,7 @@ describe('Forms library routes', () => {
 
       const $tables = container.getAllByRole('table')
 
-      expect($heading).toHaveClass('govuk-heading-xl')
+      expect($heading).toHaveClass('app-masthead__heading')
       expect($tables[0]).toContainHTML(
         `<td class="govuk-table__cell">${title}</td>`
       )
