@@ -84,7 +84,7 @@ export function Designer(props: Readonly<Props>) {
   return (
     <DataContext.Provider value={useData({ data, meta, previewUrl })}>
       <FlyoutContext.Provider value={useFlyout()}>
-        <div className="govuk-width-container">
+        <div className="govuk-width-container app-width-container--wide">
           <Menu />
         </div>
         <Visualisation />

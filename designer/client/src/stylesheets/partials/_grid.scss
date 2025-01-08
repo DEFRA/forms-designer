@@ -1,5 +1,9 @@
 @use "govuk-frontend" as *;
 
+.app-width-container--wide {
+  @include govuk-width-container(1300px);
+}
+
 @include govuk-media-query($from: desktop) {
   .app-display-until-desktop {
     display: none;
