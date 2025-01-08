@@ -1,7 +1,6 @@
 {% extends "layouts/page.njk" %}
 
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/textarea/macro.njk" import govukTextarea %}
 
 {% block beforeContent %}
@@ -13,8 +12,9 @@
 {% block content %}
   <form method="post" novalidate>
     {% call appPageBody({
+      errorList: errorList,
       heading: pageHeading,
-      errorList: errorList
+      buttons: buttons
     }) %}
       <p class="govuk-body">You can provide an optional phone number for support. You must include the opening times.</p>
       <h2 class="govuk-heading-s">Example</h2>
@@ -41,18 +41,6 @@
       }) }}
 
       {% include "forms/partials/markdown-guidance.njk" %}
-
-      <div class="govuk-button-group">
-        {{ govukButton({
-          text: buttonText
-        }) }}
-
-        {{ govukButton({
-          text: "Cancel",
-          href: backLink.href,
-          classes: "govuk-button--secondary"
-        }) }}
-      </div>
-    </form>
-  {% endcall %}
+    {% endcall %}
+  </form>
 {% endblock %}

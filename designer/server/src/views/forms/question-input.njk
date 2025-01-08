@@ -1,7 +1,6 @@
 {% extends "layouts/page.njk" %}
 
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 
 {% block beforeContent %}
@@ -13,7 +12,9 @@
 {% block content %}
   <form method="post" novalidate>
     {% call appPageBody({
-      errorList: errorList
+      errorList: errorList,
+      heading: pageHeading,
+      buttons: buttons
     }) %}
       {{ govukInput({
         label: field.label,
@@ -29,10 +30,6 @@
         autocomplete: field.autocomplete,
         spellcheck: field.spellcheck
       }) }}
-
-      {{ govukButton({
-        text: buttonText
-      }) }}
-    </form>
-  {% endcall %}
+    {% endcall %}
+  </form>
 {% endblock %}

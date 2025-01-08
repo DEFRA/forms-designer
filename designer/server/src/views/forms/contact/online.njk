@@ -1,7 +1,6 @@
 {% extends "layouts/page.njk" %}
 
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 
 {% block beforeContent %}
@@ -13,8 +12,9 @@
 {% block content %}
   <form method="post" novalidate>
     {% call appPageBody({
+      errorList: errorList,
       heading: pageHeading,
-      errorList: errorList
+      buttons: buttons
     }) %}
       {% for field in fields %}
         {{ govukInput({
@@ -32,18 +32,6 @@
           spellcheck: field.spellcheck
         }) }}
       {% endfor %}
-
-      <div class="govuk-button-group">
-        {{ govukButton({
-          text: buttonText
-        }) }}
-
-        {{ govukButton({
-          text: "Cancel",
-          href: backLink.href,
-          classes: "govuk-button--secondary"
-        }) }}
-      </div>
-    </form>
-  {% endcall %}
+    {% endcall %}
+  </form>
 {% endblock %}

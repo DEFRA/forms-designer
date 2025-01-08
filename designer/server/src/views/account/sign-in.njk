@@ -3,14 +3,15 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
 {% block content %}
-  {% call appPageBody({
+  {{ appPageBody({
     errorList: errorList,
-    heading: pageHeading
-  }) %}
-    {{ govukButton({
-      text: "Sign in",
-      href: "/library",
-      isStartButton: true
-    })}}
-  {% endcall %}
+    heading: pageHeading,
+    buttons: [
+      {
+        text: "Sign in",
+        href: "/library",
+        isStartButton: true
+      }
+    ]
+  }) }}
 {% endblock %}

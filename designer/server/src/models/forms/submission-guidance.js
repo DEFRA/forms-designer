@@ -31,7 +31,11 @@ export function submissionGuidanceViewModel(metadata, validation) {
       },
       value: formValues?.submissionGuidance ?? metadata.submissionGuidance
     },
-    buttonText: 'Save and continue'
+    buttons: [
+      {
+        text: 'Save and continue'
+      }
+    ]
   }
 }
 

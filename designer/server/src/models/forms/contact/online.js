@@ -47,7 +47,11 @@ export function onlineViewModel(metadata, validation) {
         value: formValues?.text ?? metadata.contact?.online?.text
       }
     ],
-    buttonText: 'Save and continue'
+    buttons: [
+      {
+        text: 'Save and continue'
+      }
+    ]
   }
 }
 

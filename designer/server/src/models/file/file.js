@@ -30,7 +30,11 @@ export function fileViewModel(email, validation) {
     errorList: buildErrorList(validation?.formErrors, ['email']),
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
-    buttonText: 'Download file'
+    buttons: [
+      {
+        text: 'Download file'
+      }
+    ]
   }
 }
 

@@ -61,5 +61,15 @@
 
   <div class="govuk-width-container app-width-container--wide {%- if params.containerClasses %} {{ params.containerClasses }}{% endif %}">
     {{ appGridLayout(rows) }}
+
+    {% if params.buttons | length > 1 %}
+      <div class="govuk-button-group">
+        {% for button in params.buttons %}
+          {{ govukButton(button) }}
+        {% endfor %}
+      </div>
+    {% elif params.buttons | length %}
+      {{ govukButton(params.buttons[0]) }}
+    {% endif %}
   </div>
 {% endmacro %}

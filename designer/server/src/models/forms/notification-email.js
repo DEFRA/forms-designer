@@ -35,7 +35,11 @@ export function notificationEmailViewModel(metadata, validation) {
       autocomplete: 'email',
       spellcheck: false
     },
-    buttonText: 'Save and continue'
+    buttons: [
+      {
+        text: 'Save and continue'
+      }
+    ]
   }
 }
 

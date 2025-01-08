@@ -1,16 +1,15 @@
 {% extends "layouts/page.njk" %}
 
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 
 {% block content %}
   <form method="post" novalidate>
     {% call appPageBody({
+      errorList: errorList,
       heading: pageHeading,
-      errorList: errorList
+      buttons: buttons
     }) %}
-
       <p class="govuk-body">
         To confirm the file was meant for your team, enter the email address the file was sent to.
       </p>
@@ -28,10 +27,6 @@
         autocapitalize: field.autocapitalize,
         autocomplete: field.autocomplete,
         spellcheck: field.spellcheck
-      }) }}
-
-      {{ govukButton({
-        text: buttonText
       }) }}
     {% endcall %}
   </form>

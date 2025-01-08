@@ -7,11 +7,12 @@ import { formOverviewBackLink } from '~/src/models/links.js'
  */
 export function phoneViewModel(metadata, validation) {
   const pageTitle = 'Phone number and opening times'
+  const backLink = formOverviewBackLink(metadata.slug)
   const { formValues, formErrors } = validation ?? {}
 
   return {
     form: metadata,
-    backLink: formOverviewBackLink(metadata.slug),
+    backLink,
     pageTitle,
     pageHeading: {
       text: pageTitle,
@@ -33,7 +34,16 @@ export function phoneViewModel(metadata, validation) {
       value: formValues?.phone ?? metadata.contact?.phone,
       autocomplete: 'tel'
     },
-    buttonText: 'Save and continue'
+    buttons: [
+      {
+        text: 'Save and continue'
+      },
+      {
+        text: 'Cancel',
+        href: backLink.href,
+        classes: 'govuk-button--secondary'
+      }
+    ]
   }
 }
 

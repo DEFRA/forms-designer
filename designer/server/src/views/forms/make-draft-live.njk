@@ -1,13 +1,13 @@
 {% extends "layouts/page.njk" %}
 
-{% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
 
 {% block content %}
   <form method="post" novalidate>
     {% call appPageBody({
+      errorList: errorList,
       heading: pageHeading,
-      errorList: errorList
+      buttons: buttons
     }) %}
       {% if warning %}
         {{ govukWarningText(warning) }}
@@ -18,12 +18,6 @@
         {{ bodyText | safe }}
       </p>
       {% endif %}
-
-      <div class="govuk-button-group">
-        {% for button in buttons %}
-          {{ govukButton(button) }}
-        {% endfor %}
-      </div>
     {% endcall %}
   </form>
 {% endblock %}

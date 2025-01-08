@@ -50,7 +50,11 @@ export function emailViewModel(metadata, validation) {
         value: formValues?.responseTime ?? metadata.contact?.email?.responseTime
       }
     ],
-    buttonText: 'Save and continue'
+    buttons: [
+      {
+        text: 'Save and continue'
+      }
+    ]
   }
 }
 

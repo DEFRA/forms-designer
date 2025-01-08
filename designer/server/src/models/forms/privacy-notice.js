@@ -34,7 +34,11 @@ export function privacyNoticyViewModel(metadata, validation) {
         text: 'For example, https://www.gov.uk/help/privacy-notice'
       }
     },
-    buttonText: 'Save and continue'
+    buttons: [
+      {
+        text: 'Save and continue'
+      }
+    ]
   }
 }
 

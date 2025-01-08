@@ -11,7 +11,17 @@
       errorList: errorList,
       heading: {
         text: pageTitle
-      }
+      },
+      buttons: [
+        {
+          text: "Send feedback"
+        },
+        {
+          text: "Cancel",
+          href: "/",
+          classes: "govuk-button--secondary"
+        }
+      ]
     }) %}
       {{ govukCharacterCount({
         name: "feedback",
@@ -25,18 +35,6 @@
           text: "Do not include personal or financial information like your National Insurance number or credit card details."
         }
       }) }}
-
-      <div class="govuk-button-group">
-        {{ govukButton({
-          text: "Send feedback"
-        }) }}
-
-        {{ govukButton({
-          text: "Cancel",
-          href: "/",
-          classes: "govuk-button--secondary"
-        }) }}
-      </div>
     {% endcall %}
   </form>
 {% endblock %}

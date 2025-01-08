@@ -1,7 +1,6 @@
 {% extends "layouts/page.njk" %}
 
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 
 {% block beforeContent %}
@@ -14,7 +13,8 @@
   <form method="post" novalidate>
     {% call appPageBody({
       errorList: errorList,
-      heading: pageHeading
+      heading: pageHeading,
+      buttons: buttons
     }) %}
       {% for field in fields %}
         {% if field.type === "hidden" %}
@@ -36,10 +36,6 @@
           }) }}
         {% endif %}
       {% endfor %}
-
-      {{ govukButton({
-        text: buttonText
-      }) }}
     {% endcall %}
   </form>
 {% endblock %}

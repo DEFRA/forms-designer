@@ -33,7 +33,11 @@ export function titleViewModel(metadata, validation) {
       autocapitalize: true,
       spellcheck: true
     },
-    buttonText: 'Continue'
+    buttons: [
+      {
+        text: 'Continue'
+      }
+    ]
   }
 }
 
@@ -69,7 +73,11 @@ export function organisationViewModel(metadata, validation) {
       })),
       value: formValues?.organisation ?? metadata?.organisation
     },
-    buttonText: 'Continue'
+    buttons: [
+      {
+        text: 'Continue'
+      }
+    ]
   }
 }
 
@@ -132,7 +140,11 @@ export function teamViewModel(metadata, validation) {
         spellcheck: false
       }
     ],
-    buttonText: 'Save and continue'
+    buttons: [
+      {
+        text: 'Save and continue'
+      }
+    ]
   }
 }
 
