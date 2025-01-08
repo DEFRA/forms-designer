@@ -316,28 +316,30 @@
 {% endset %}
 
 {% block content %}
-  {{ appGridLayout([
-    [
-      {
-        html: formHeading
-      } if notification | length,
-      {
-        html: appGridLayout([
-          {
-            html: appHeading(pageHeading),
-            classes: "govuk-grid-column-two-thirds govuk-grid-column-full-from-desktop"
-          },
-          {
-            html: formDetails,
-            classes: "govuk-grid-column-full"
-          }
-        ]),
-        classes: "govuk-grid-column-two-thirds-from-desktop"
-      },
-      {
-        html: appFormCard(formManage),
-        classes: "govuk-grid-column-one-third-from-desktop"
-      }
-    ]
-  ]) }}
+  <div class="govuk-width-container">
+    {{ appGridLayout([
+      [
+        {
+          html: formHeading
+        } if notification | length,
+        {
+          html: appGridLayout([
+            {
+              html: appHeading(pageHeading),
+              classes: "govuk-grid-column-two-thirds govuk-grid-column-full-from-desktop"
+            },
+            {
+              html: formDetails,
+              classes: "govuk-grid-column-full"
+            }
+          ]),
+          classes: "govuk-grid-column-two-thirds-from-desktop"
+        },
+        {
+          html: appFormCard(formManage),
+          classes: "govuk-grid-column-one-third-from-desktop"
+        }
+      ]
+    ]) }}
+  </div>
 {% endblock %}
