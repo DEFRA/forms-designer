@@ -1,7 +1,10 @@
 @use "govuk-frontend" as *;
 
+// Custom wide container
+$app-container-width: 1300px;
+
 .app-width-container--wide {
-  @include govuk-width-container(1300px);
+  @include govuk-width-container($app-container-width);
 }
 
 @include govuk-media-query($from: desktop) {

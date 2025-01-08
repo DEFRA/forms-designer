@@ -1,5 +1,8 @@
 @use "govuk-frontend/dist/govuk/base" as *;
 
+// Custom wide container
+$app-container-width: 1300px;
+
 .visualisation {
   position: relative;
   flex: 1;
@@ -9,7 +12,7 @@
   @include govuk-responsive-padding(9, "bottom");
 
   @include govuk-media-query($from: wide) {
-    margin-left: (calc($govuk-page-width / 2) + govuk-spacing(5)) * -1;
+    margin-left: (calc($app-container-width / 2) + govuk-spacing(5)) * -1;
     padding-left: 50%;
   }
 
