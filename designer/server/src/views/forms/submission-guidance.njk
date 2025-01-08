@@ -5,7 +5,9 @@
 {% from "govuk/components/textarea/macro.njk" import govukTextarea %}
 
 {% block beforeContent %}
-  {{ govukBackLink(backLink) }}
+  <div class="govuk-width-container">
+    {{ govukBackLink(backLink) }}
+  </div>
 {% endblock %}
 
 {% block content %}

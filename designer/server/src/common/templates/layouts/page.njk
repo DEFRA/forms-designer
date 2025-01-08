@@ -27,15 +27,23 @@
   {{ "Error: " if errorList | length }}{{ pageTitle }} - {{ config.serviceName }}
 {%- endblock %}
 
-{% block beforeContent %}
-  {% if breadcrumbs.length > 1 %}
-    {{ appBreadcrumbs({
-      items: breadcrumbs
-    }) }}
-  {% endif %}
-{% endblock %}
+{% block main %}
+  {% block beforeContent %}
+    {% if breadcrumbs.length > 1 %}
+      {{ appBreadcrumbs({
+        items: breadcrumbs
+      }) }}
+    {% endif %}
+  {% endblock %}
 
-{% block content %}{% endblock %}
+  <main class="govuk-main-wrapper {%- if mainClasses %} {{ mainClasses }}{% endif %}" id="main-content" {%- if mainLang %} lang="{{ mainLang }}"{% endif %}>
+    <div class="govuk-width-container {%- if containerClasses %} {{ containerClasses }}{% endif %}">
+      {% block content %}{% endblock %}
+    </div>
+
+    {% block mainEnd %}{% endblock %}
+  </main>
+{% endblock %}
 
 {% block footer %}
   {{ govukFooter({
