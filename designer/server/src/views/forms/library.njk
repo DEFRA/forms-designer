@@ -6,9 +6,13 @@
 {% from "pagination/macro.njk" import appPagination %}
 {% from "sorting/macro.njk" import appSorting %}
 
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
 {% block content %}
   {% call appPageBody({
     heading: pageHeading,
+    description: pageDescription,
+    actions: pageActions,
     classes: "govuk-grid-column-two-thirds-from-desktop"
   }) %}
     {% if formItems | length %}
@@ -18,11 +22,6 @@
 
       <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
     {% endif %}
-
-    {{ govukButton({
-      text: "Create new form",
-      href: "/create"
-    }) }}
 
     {{ appSorting({
       sorting: sorting,

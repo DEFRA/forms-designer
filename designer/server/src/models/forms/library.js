@@ -20,7 +20,9 @@ import {
  * @typedef {object} ListViewModel
  * @property {string} pageTitle - The number of items per page.
  * @property {{ text: string }} pageHeading - The page heading.
- * @property {Array<FormMetadata>} formItems - The form items.
+ * @property {{ text: string }} [pageDescription] - The page description.
+ * @property {{ text: string, href: string, classes?: string }[]} [pageActions] - The page actions.
+ * @property {FormMetadata[]} formItems - The form items.
  * @property {(PaginationResult & { pages: Array<PaginationPage> }) | undefined} pagination - The pagination details, including pages for the pagination component.
  * @property {SortingOptions | undefined} sorting - The sorting options.
  */
@@ -58,6 +60,16 @@ export async function listViewModel(token, listOptions) {
     pageHeading: {
       text: pageTitle
     },
+    pageDescription: {
+      text: 'Create or search for a form.'
+    },
+    pageActions: [
+      {
+        text: 'Create a new form',
+        href: '/create',
+        classes: 'govuk-button--inverse'
+      }
+    ],
     formItems,
     pagination,
     sorting: sortingMeta

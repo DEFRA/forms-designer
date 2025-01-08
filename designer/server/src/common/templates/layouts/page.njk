@@ -1,5 +1,6 @@
 {% extends "govuk/template.njk" %}
 
+{% from "govuk/macros/attributes.njk" import govukAttributes %}
 {% from "page-body/macro.njk" import appPageBody %}
 {% from "breadcrumbs/macro.njk" import appBreadcrumbs %}
 {% from "heading/macro.njk" import appHeading %}
@@ -27,15 +28,23 @@
   {{ "Error: " if errorList | length }}{{ pageTitle }} - {{ config.serviceName }}
 {%- endblock %}
 
-{% block beforeContent %}
-  {% if breadcrumbs.length > 1 %}
-    {{ appBreadcrumbs({
-      items: breadcrumbs
-    }) }}
-  {% endif %}
-{% endblock %}
+{% block main %}
+  {% block beforeContent %}
+    {% if breadcrumbs.length > 1 %}
+      {{ appBreadcrumbs({
+        items: breadcrumbs
+      }) }}
+    {% endif %}
+  {% endblock %}
 
-{% block content %}{% endblock %}
+  <main class="govuk-main-wrapper {%- if mainClasses %} {{ mainClasses }}{% endif %}" id="main-content" {%- if mainLang %} lang="{{ mainLang }}"{% endif %}>
+    {% block mainStart %}{% endblock %}
+
+    {% block content %}{% endblock %}
+
+    {% block mainEnd %}{% endblock %}
+  </main>
+{% endblock %}
 
 {% block footer %}
   {{ govukFooter({

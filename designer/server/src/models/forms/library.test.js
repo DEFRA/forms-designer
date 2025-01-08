@@ -304,6 +304,14 @@ describe('Forms Library Models', () => {
           pageHeading: {
             text: 'Forms library'
           },
+          pageDescription: {
+            text: 'Create or search for a form.'
+          },
+          pageActions: expect.arrayContaining([
+            expect.objectContaining({
+              text: 'Create a new form'
+            })
+          ]),
           formItems: mockFormResponse.data,
           pagination: {
             page: 1,
@@ -346,6 +354,14 @@ describe('Forms Library Models', () => {
           pageHeading: {
             text: 'Forms library'
           },
+          pageDescription: {
+            text: 'Create or search for a form.'
+          },
+          pageActions: expect.arrayContaining([
+            expect.objectContaining({
+              text: 'Create a new form'
+            })
+          ]),
           formItems: mockFormResponse.data,
           pagination: undefined
         })

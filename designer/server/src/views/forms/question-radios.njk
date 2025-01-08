@@ -5,7 +5,9 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 
 {% block beforeContent %}
-  {{ govukBackLink(backLink) }}
+  <div class="govuk-width-container">
+    {{ govukBackLink(backLink) }}
+  </div>
 {% endblock %}
 
 {% block content %}

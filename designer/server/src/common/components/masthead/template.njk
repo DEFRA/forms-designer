@@ -1,0 +1,22 @@
+{% from "govuk/macros/attributes.njk" import govukAttributes %}
+
+<div class="app-masthead{%- if params.classes %} {{ params.classes }}{% endif -%}"
+  {{- govukAttributes(params.attributes) }}>
+  <div class="govuk-width-container">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds-from-desktop">
+      {% if params.heading %}
+        <h1 class="app-masthead__heading govuk-heading-xl {%- if params.heading.classes %} {{ params.heading.classes }}{% endif %}">
+          {{ params.heading.html | safe if params.heading.html else params.heading.text }}
+        </h1>
+      {% endif %}
+      {% if params.description %}
+        <p class="app-masthead__description govuk-body-l {%- if params.description.classes %} {{ params.description.classes }}{% endif %}">
+          {{ params.description.html | safe if params.description.html else params.description.text }}
+        </p>
+      {% endif %}
+        {{ caller() if caller else (params.html | safe if params.html else params.text) }}
+      </div>
+    </div>
+  </div>
+</div>

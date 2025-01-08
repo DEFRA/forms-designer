@@ -4,28 +4,32 @@
 {% from "grid-layout/macro.njk" import appGridLayout %}
 {% from "page-body/macro.njk" import appPageBody %}
 
+{% set mainClasses = "govuk-main-wrapper--editor" %}
+
 {% block head %}
   {{ super() }}
   <link href="{{ getAssetPath("stylesheets/editor.scss") }}" rel="stylesheet">
 {% endblock %}
 
-{% block main %}
+{% block beforeContent %}
   <div class="govuk-width-container">
     {{ govukBackLink(backLink) }}
   </div>
+{% endblock %}
 
-  <main class="govuk-main-wrapper govuk-main-wrapper--editor" id="main-content">
-    <div class="govuk-width-container">
-      {{ appPageBody({
-        heading: pageHeading,
-        classes: "govuk-grid-column-full"
-      }) }}
-    </div>
+{% block content %}
+  {{ appPageBody({
+    heading: pageHeading,
+    classes: "govuk-grid-column-full"
+  }) }}
+{% endblock %}
 
-    <!-- Form editor -->
-    <div class="app-form-editor" data-preview-url="{{ previewUrl }}"></div>
-    <div class="app-form-portal"></div>
-  </main>
+{% block mainEnd %}
+  {{ super() }}
+
+  <!-- Form editor -->
+  <div class="app-form-editor" data-preview-url="{{ previewUrl }}"></div>
+  <div class="app-form-portal"></div>
 {% endblock %}
 
 {% block bodyEnd %}
