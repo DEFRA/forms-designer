@@ -49,11 +49,17 @@
   {% endif %}
 
   {%- if beforeContent %}
-    {% set rows = (rows.unshift({
-      html: beforeContent | trim,
-      classes: "govuk-grid-column-two-thirds"
-    }), rows) %}
+    <div class="govuk-width-container">
+      {{ appGridLayout([
+        {
+          html: beforeContent | trim,
+          classes: "govuk-grid-column-two-thirds"
+        }
+      ]) }}
+    </div>
   {% endif %}
 
-  {{- appGridLayout(rows) -}}
+  <div class="govuk-width-container {%- if params.containerClasses %} {{ params.containerClasses }}{% endif %}">
+    {{ appGridLayout(rows) }}
+  </div>
 {% endmacro %}
