@@ -1,0 +1,26 @@
+@use "govuk-frontend/govuk/base" as *;
+
+.app-search-form {
+  margin-bottom: govuk-spacing(6);
+
+  .govuk-form-group {
+    margin-bottom: govuk-spacing(4);
+  }
+
+  .govuk-button-group {
+    margin-top: govuk-spacing(4);
+  }
+
+  @include govuk-media-query($from: tablet) {
+    margin-bottom: govuk-spacing(0);
+
+    .govuk-button-group {
+      display: flex;
+      gap: govuk-spacing(2);
+    }
+
+    .govuk-button {
+      flex: 1;
+    }
+  }
+}

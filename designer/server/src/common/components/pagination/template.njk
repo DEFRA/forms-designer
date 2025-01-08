@@ -1,10 +1,16 @@
 {% from "govuk/components/pagination/macro.njk" import govukPagination %}
 
 {% if params.pagination and params.pagination.totalPages > 1 %}
+  {% set titleQuery = "" %}
+  {% if params.search.title %}
+    {% set titleQuery = "&title=" ~ (params.search.title | urlencode) %}
+  {% endif %}
+
   {% set previous = null %}
   {% if params.pagination.page > 1 %}
+    {% set previousHref = (params.baseUrl | default('')) ~ "?page=" ~ (params.pagination.page - 1) ~ "&perPage=" ~ params.pagination.perPage ~ titleQuery %}
     {% set previous = {
-      href: (params.baseUrl | default('')) ~ "?page=" ~ (params.pagination.page - 1) ~ "&perPage=" ~ params.pagination.perPage,
+      href: previousHref,
       labelText: "Previous page",
       text: "Previous"
     } %}
@@ -12,8 +18,9 @@
 
   {% set next = null %}
   {% if params.pagination.page < params.pagination.totalPages %}
+    {% set nextHref = (params.baseUrl | default('')) ~ "?page=" ~ (params.pagination.page + 1) ~ "&perPage=" ~ params.pagination.perPage ~ titleQuery %}
     {% set next = {
-      href: (params.baseUrl | default('')) ~ "?page=" ~ (params.pagination.page + 1) ~ "&perPage=" ~ params.pagination.perPage,
+      href: nextHref,
       labelText: "Next page",
       text: "Next"
     } %}

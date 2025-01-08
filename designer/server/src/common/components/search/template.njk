@@ -1,0 +1,44 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set title = params.search.title %}
+{% set baseUrl = params.baseUrl %}
+
+<form method="get" action="/library" class="app-search-form" aria-labelledby="search-form-heading">
+  <h2 id="search-form-heading" class="govuk-heading-m">Search</h2>
+
+  {% if params.sorting %}
+    <input type="hidden" name="sort" value="{{ params.sorting.sortBy }}{{ params.sorting.order | capitalize }}">
+  {% endif %}
+
+  {{ govukInput({
+    label: {
+      text: "Form name"
+    },
+    id: "form-title",
+    name: "title",
+    value: title,
+    classes: "govuk-!-width-full"
+  }) }}
+
+  {% if params.search and params.search.title %}
+  <div class="govuk-inset-text govuk-!-margin-bottom-4" aria-labelledby="applied-filters-heading">
+    <h3 id="applied-filters-heading" class="govuk-heading-s">Applied filters:</h3>
+    <ul class="govuk-list govuk-list--bullet govuk-list--spaced">
+      <li><strong>Name:</strong> {{ params.search.title }}</li>
+    </ul>
+  </div>
+  {% endif %}
+
+  <div class="govuk-button-group govuk-!-margin-bottom-4">
+    {{ govukButton({
+      text: "Apply filters",
+      classes: "app-search-form__submit"
+    }) }}
+    {{ govukButton({
+      text: "Clear filters",
+      href: baseUrl,
+      classes: "govuk-button--secondary"
+    }) }}
+  </div>
+</form>
