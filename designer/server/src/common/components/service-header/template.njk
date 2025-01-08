@@ -46,7 +46,7 @@ Component options:
 {%- endmacro -%}
 <header class="cross-service-header" role="banner" data-module="one-login-header">
   <div class="one-login-header" data-one-login-header-nav>
-    <div class="one-login-header__container govuk-width-container">
+    <div class="one-login-header__container govuk-width-container app-width-container--wide">
       <div class="one-login-header__logo">
         <a href="{{ homepageLink }}" class="one-login-header__link one-login-header__link--homepage">
           <span class="one-login-header__logotype">
@@ -112,7 +112,7 @@ Component options:
   {% if params.serviceName or params.navigationItems %}
   <!-- Start of service navigation -->
   <div class="service-header" data-one-login-header-nav>
-    <div class="govuk-width-container">
+    <div class="govuk-width-container app-width-container--wide">
       <div class="service-header__container">
         {%- if params.serviceName %}
         <!-- The name of your service goes here -->

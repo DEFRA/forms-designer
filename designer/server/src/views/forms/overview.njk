@@ -9,7 +9,7 @@
 {% from "form-card/macro.njk" import appFormCard %}
 
 {% block beforeContent %}
-  <div class="govuk-width-container">
+  <div class="govuk-width-container app-width-container--wide">
     {{ govukBackLink(backLink) }}
   </div>
 {% endblock %}
@@ -316,7 +316,7 @@
 {% endset %}
 
 {% block content %}
-  <div class="govuk-width-container">
+  <div class="govuk-width-container app-width-container--wide">
     {{ appGridLayout([
       [
         {
