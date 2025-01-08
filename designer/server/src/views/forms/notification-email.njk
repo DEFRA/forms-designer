@@ -1,38 +1,6 @@
-{% extends "layouts/page.njk" %}
+{% extends "forms/question-input.njk" %}
 
-{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
-{% from "govuk/components/input/macro.njk" import govukInput %}
-
-{% block beforeContent %}
-  <div class="govuk-width-container app-width-container--wide">
-    {{ govukBackLink(backLink) }}
-  </div>
-{% endblock %}
-
-{% block content %}
-  <form method="post" novalidate>
-    {% call appPageBody({
-      errorList: errorList,
-      heading: pageHeading,
-      buttons: buttons
-    }) %}
-      <p class="govuk-body-l">Enter an email address for submitted forms to be sent to for processing.</p>
-      <p class="govuk-body-l">It should be a shared government email inbox and you should test it before making a form live.</p>
-
-      {{ govukInput({
-        label: field.label,
-        hint: field.hint,
-        id: field.id,
-        name: field.name,
-        type: field.type,
-        value: field.value,
-        errorMessage: {
-          text: formErrors[field.name].text
-        } if formErrors[field.name],
-        autocapitalize: field.autocapitalize,
-        autocomplete: field.autocomplete,
-        spellcheck: field.spellcheck
-      }) }}
-    {% endcall %}
-  </form>
-{% endblock %}
+{% set bodyStart %}
+  <p class="govuk-body-l">Enter an email address for submitted forms to be sent to for processing.</p>
+  <p class="govuk-body-l">It should be a shared government email inbox and you should test it before making a form live.</p>
+{% endset %}

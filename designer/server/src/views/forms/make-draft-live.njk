@@ -16,9 +16,9 @@
       {% endif %}
 
       {% if form.notificationEmail %}
-      <p class="govuk-body-l">
-        Completed forms will be sent to <a href="mailto:{{ form.notificationEmail | urlencode }}" class="govuk-link">{{ form.notificationEmail }}</a>.
-      </p>
+        <p class="govuk-body-l">
+          Completed forms will be sent to <a href="mailto:{{ form.notificationEmail | urlencode }}" class="govuk-link">{{ form.notificationEmail }}</a>.
+        </p>
       {% endif %}
     {% endcall %}
   </form>

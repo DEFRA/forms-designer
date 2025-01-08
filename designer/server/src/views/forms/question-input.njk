@@ -16,6 +16,10 @@
       heading: pageHeading,
       buttons: buttons
     }) %}
+      {% if bodyStart %}
+        {{ bodyStart | safe }}
+      {% endif %}
+
       {{ govukInput({
         label: field.label,
         hint: field.hint,
@@ -30,6 +34,10 @@
         autocomplete: field.autocomplete,
         spellcheck: field.spellcheck
       }) }}
+
+      {% if bodyEnd %}
+        {{ bodyEnd | safe }}
+      {% endif %}
     {% endcall %}
   </form>
 {% endblock %}

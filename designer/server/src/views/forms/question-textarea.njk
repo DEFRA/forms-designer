@@ -1,7 +1,7 @@
 {% extends "layouts/page.njk" %}
 
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
-{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
 
 {% block beforeContent %}
   <div class="govuk-width-container app-width-container--wide">
@@ -20,15 +20,19 @@
         {{ bodyStart | safe }}
       {% endif %}
 
-      {{ govukRadios({
-        fieldset: field.fieldset,
+      {{ govukTextarea({
+        label: field.label,
+        hint: field.hint,
+        id: field.id,
         name: field.name,
-        idPrefix: field.id,
-        items: field.items,
+        type: field.type,
         value: field.value,
         errorMessage: {
           text: formErrors[field.name].text
-        } if formErrors[field.name]
+        } if formErrors[field.name],
+        autocapitalize: field.autocapitalize,
+        autocomplete: field.autocomplete,
+        spellcheck: field.spellcheck
       }) }}
 
       {% if bodyEnd %}

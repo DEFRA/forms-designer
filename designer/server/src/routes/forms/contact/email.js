@@ -45,7 +45,7 @@ export default [
       // Create the email contact view model
       const model = emailViewModel(metadata, validation)
 
-      return h.view('forms/contact/email', model)
+      return h.view('forms/question-inputs', model)
     },
     options: {
       auth: {

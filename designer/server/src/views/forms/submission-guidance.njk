@@ -1,48 +1,21 @@
-{% extends "layouts/page.njk" %}
+{% extends "forms/question-textarea.njk" %}
 
-{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
-{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
 
-{% block beforeContent %}
-  <div class="govuk-width-container app-width-container--wide">
-    {{ govukBackLink(backLink) }}
-  </div>
-{% endblock %}
+{% set bodyStart %}
+  <p class="govuk-body-l">Add some information to tell people what will happen after they’ve submitted their form, and when - so they know what to expect.</p>
 
-{% block content %}
-  <form method="post" novalidate>
-    {% call appPageBody({
-      errorList: errorList,
-      heading: pageHeading,
-      buttons: buttons
-    }) %}
-      <p class="govuk-body-l">Add some information to tell people what will happen after they’ve submitted their form, and when - so they know what to expect.</p>
+  <h2 class="govuk-heading-s">Example</h2>
 
-      <h2 class="govuk-heading-s">Example</h2>
-      <div class="govuk-inset-text">
-        We’ll send you an email to let you know the outcome. You’ll usually get a response within 10 working days.
-      </div>
+  {{ govukInsetText({
+    text: "We’ll send you an email to let you know the outcome. You’ll usually get a response within 10 working days."
+  }) }}
 
-      <p class="govuk-body govuk-!-margin-bottom-6">
-        The email confirmation will also include the contact details you provide for the form, and the date and time of submission.
-      </p>
+  <p class="govuk-body govuk-!-margin-bottom-6">
+    The email confirmation will also include the contact details you provide for the form, and the date and time of submission.
+  </p>
+{% endset %}
 
-      {{ govukTextarea({
-        label: field.label,
-        hint: field.hint,
-        id: field.id,
-        name: field.name,
-        type: field.type,
-        value: field.value,
-        errorMessage: {
-          text: formErrors[field.name].text
-        } if formErrors[field.name],
-        autocapitalize: field.autocapitalize,
-        autocomplete: field.autocomplete,
-        spellcheck: field.spellcheck
-      }) }}
-
-      {% include "forms/partials/markdown-guidance.njk" %}
-    {% endcall %}
-  </form>
-{% endblock %}
+{% set bodyEnd %}
+  {% include "forms/partials/markdown-guidance.njk" %}
+{% endset %}

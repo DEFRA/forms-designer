@@ -1,40 +1,8 @@
-{% extends "layouts/page.njk" %}
+{% extends "forms/question-input.njk" %}
 
-{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
-{% from "govuk/components/input/macro.njk" import govukInput %}
-
-{% block beforeContent %}
-  <div class="govuk-width-container app-width-container--wide">
-    {{ govukBackLink(backLink) }}
-  </div>
-{% endblock %}
-
-{% block content %}
-  <form method="post" novalidate>
-    {% call appPageBody({
-      errorList: errorList,
-      heading: pageHeading,
-      buttons: buttons
-    }) %}
-      <p class="govuk-body-l">
-        To comply with the UK General Data Protection Regulation (UK GDPR),
-        you must provide privacy information for the people who will enter their data into your form.
-      </p>
-
-      {{ govukInput({
-        label: field.label,
-        hint: field.hint,
-        id: field.id,
-        name: field.name,
-        type: field.type,
-        value: field.value,
-        errorMessage: {
-          text: formErrors[field.name].text
-        } if formErrors[field.name],
-        autocapitalize: field.autocapitalize,
-        autocomplete: field.autocomplete,
-        spellcheck: field.spellcheck
-      }) }}
-    {% endcall %}
-  </form>
-{% endblock %}
+{% set bodyStart %}
+  <p class="govuk-body-l">
+    To comply with the UK General Data Protection Regulation (UK GDPR),
+    you must provide privacy information for the people who will enter their data into your form.
+  </p>
+{% endset %}

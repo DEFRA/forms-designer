@@ -16,6 +16,10 @@
       heading: pageHeading,
       buttons: buttons
     }) %}
+      {% if bodyStart %}
+        {{ bodyStart | safe }}
+      {% endif %}
+
       {% for field in fields %}
         {% if field.type === "hidden" %}
           <input type="hidden" name="{{ field.name }}" value="{{ field.value }}">
@@ -36,6 +40,10 @@
           }) }}
         {% endif %}
       {% endfor %}
+
+      {% if bodyEnd %}
+        {{ bodyEnd | safe }}
+      {% endif %}
     {% endcall %}
   </form>
 {% endblock %}
