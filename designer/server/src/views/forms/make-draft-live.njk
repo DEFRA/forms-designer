@@ -9,13 +9,15 @@
       heading: pageHeading,
       buttons: buttons
     }) %}
-      {% if warning %}
-        {{ govukWarningText(warning) }}
+      {% if form.live %}
+        {{ govukWarningText({
+          text: "It will replace the form that is currently live."
+        }) }}
       {% endif %}
 
-      {% if bodyText %}
+      {% if form.notificationEmail %}
       <p class="govuk-body-l">
-        {{ bodyText | safe }}
+        Completed forms will be sent to <a href="mailto:{{ form.notificationEmail | urlencode }}" class="govuk-link">{{ form.notificationEmail }}</a>.
       </p>
       {% endif %}
     {% endcall %}
