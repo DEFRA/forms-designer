@@ -13,11 +13,7 @@
 {% block content %}
   <form method="post" novalidate>
     {% call appPageBody({
-      heading: {
-        text: pageTitle,
-        caption: form.title,
-        size: "large"
-      },
+      heading: pageHeading,
       errorList: errorList
     }) %}
       <p class="govuk-body">You can provide an optional phone number for support. You must include the opening times.</p>

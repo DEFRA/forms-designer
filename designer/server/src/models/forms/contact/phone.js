@@ -13,6 +13,11 @@ export function phoneViewModel(metadata, validation) {
     form: metadata,
     backLink: formOverviewBackLink(metadata.slug),
     pageTitle,
+    pageHeading: {
+      text: pageTitle,
+      caption: metadata.title,
+      size: 'large'
+    },
     errorList: buildErrorList(formErrors),
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,

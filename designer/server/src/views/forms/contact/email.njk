@@ -13,11 +13,7 @@
 {% block content %}
   <form method="post" novalidate>
     {% call appPageBody({
-      heading: {
-        text: pageTitle,
-        caption: form.title,
-        size: "large"
-      },
+      heading: pageHeading,
       errorList: errorList
     }) %}
       {% for field in fields %}

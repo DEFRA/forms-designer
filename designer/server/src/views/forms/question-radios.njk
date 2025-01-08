@@ -16,13 +16,7 @@
       errorList: errorList
     }) %}
       {{ govukRadios({
-        fieldset: {
-          legend: {
-            text: field.legend.text,
-            isPageHeading: true,
-            classes: "govuk-fieldset__legend--l"
-          }
-        },
+        fieldset: field.fieldset,
         name: field.name,
         idPrefix: field.id,
         items: field.items,

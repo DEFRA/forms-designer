@@ -13,11 +13,7 @@
 {% block content %}
   <form method="post" novalidate>
     {% call appPageBody({
-      heading: {
-        text: pageTitle,
-        caption: form.title,
-        size: "large"
-      },
+      heading: pageHeading,
       errorList: errorList
     }) %}
       <p class="govuk-body-l">Add some information to tell people what will happen after they’ve submitted their form, and when - so they know what to expect.</p>
