@@ -126,6 +126,7 @@ export function teamViewModel(metadata, validation) {
         hint: {
           text: 'Used to contact the form subject matter expert (SME) or key stakeholder. Must be a UK email address, like name@example.gov.uk'
         },
+        type: 'email',
         value: formValues?.teamEmail ?? metadata?.teamEmail,
         autocomplete: 'email',
         spellcheck: false

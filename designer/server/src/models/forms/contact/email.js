@@ -32,7 +32,10 @@ export function emailViewModel(metadata, validation) {
         hint: {
           text: 'Enter a dedicated support team email address. Do not enter a named individual. For example, ‘support@defra.gov.uk’'
         },
-        value: formValues?.address ?? metadata.contact?.email?.address
+        type: 'email',
+        value: formValues?.address ?? metadata.contact?.email?.address,
+        autocomplete: 'email',
+        spellcheck: false
       },
       {
         id: 'responseTime',

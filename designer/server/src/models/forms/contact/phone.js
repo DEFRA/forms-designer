@@ -29,7 +29,9 @@ export function phoneViewModel(metadata, validation) {
         classes: 'govuk-label--m',
         isPageHeading: false
       },
-      value: formValues?.phone ?? metadata.contact?.phone
+      type: 'tel',
+      value: formValues?.phone ?? metadata.contact?.phone,
+      autocomplete: 'tel'
     },
     buttonText: 'Save and continue'
   }

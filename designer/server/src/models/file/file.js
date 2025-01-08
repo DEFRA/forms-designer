@@ -22,7 +22,10 @@ export function fileViewModel(email, validation) {
         classes: 'govuk-label--m',
         isPageHeading: false
       },
-      value: validation?.formValues.email ?? email
+      type: 'email',
+      value: validation?.formValues.email ?? email,
+      autocomplete: 'email',
+      spellcheck: false
     },
     errorList: buildErrorList(validation?.formErrors, ['email']),
     formErrors: validation?.formErrors,
