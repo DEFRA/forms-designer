@@ -1,6 +1,8 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "grid-layout/macro.njk" import appGridLayout %}
 {% from "heading/macro.njk" import appHeading %}
+{% from "masthead/macro.njk" import appMasthead %}
 
 {% macro appPageBody(params) %}
   {% set beforeContent = "" %}
@@ -18,8 +20,32 @@
     }) %}
   {% endif %}
 
-  {%- if params.heading %}
-    {% set beforeContent = beforeContent + appHeading(params.heading) %}
+  {%- if params.actions | length %}
+    {% set actionsContent = "" %}
+
+    {% for action in params.actions %}
+      {% set actionsContent = actionsContent + govukButton(action) %}
+    {% endfor %}
+
+    {{ appMasthead({
+      heading: params.heading,
+      description: params.description,
+      html: actionsContent
+    }) }}
+  {% else %}
+    {% if params.heading %}
+      {% set beforeContent = beforeContent + appHeading(params.heading) %}
+    {% endif %}
+
+    {% if params.description %}
+      {% set beforeContent %}
+        {{ beforeContent | safe }}
+
+        <p class="govuk-body-l govuk-!-margin-bottom-8">
+          {{ params.description }}
+        </p>
+      {% endset %}
+    {% endif %}
   {% endif %}
 
   {%- if beforeContent %}

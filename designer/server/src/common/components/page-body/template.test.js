@@ -74,4 +74,30 @@ describe('Page body component', () => {
       )
     })
   })
+
+  describe('With actions', () => {
+    let $actions = /** @type {HTMLElement[]} */ ([])
+
+    beforeEach(() => {
+      const { container } = renderMacro('appPageBody', 'page-body/macro.njk', {
+        params: {
+          actions: [
+            {
+              text: 'Create new form',
+              href: '/create'
+            }
+          ]
+        }
+      })
+
+      $actions = container.getAllByRole('button')
+    })
+
+    it('should render configured actions', () => {
+      expect($actions).toHaveLength(1)
+
+      expect($actions[0]).toHaveTextContent('Create new form')
+      expect($actions[0]).toHaveAttribute('href', '/create')
+    })
+  })
 })
