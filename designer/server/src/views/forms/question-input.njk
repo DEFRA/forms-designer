@@ -16,13 +16,11 @@
       errorList: errorList
     }) %}
       {{ govukInput({
-        label: {
-          text: field.label.text,
-          classes: "govuk-label--l",
-          isPageHeading: true
-        },
+        label: field.label,
+        hint: field.hint,
         id: field.id,
         name: field.name,
+        type: field.type,
         value: field.value,
         errorMessage: {
           text: formErrors[field.name].text

@@ -18,7 +18,9 @@ export function fileViewModel(email, validation) {
       id: 'email',
       name: 'email',
       label: {
-        text: 'Email address'
+        text: 'Email address',
+        classes: 'govuk-label--m',
+        isPageHeading: false
       },
       value: validation?.formValues.email ?? email
     },

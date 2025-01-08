@@ -20,7 +20,9 @@ export function phoneViewModel(metadata, validation) {
       id: 'phone',
       name: 'phone',
       label: {
-        text: 'What’s the phone number and opening times for users to get help?'
+        text: 'What’s the phone number and opening times for users to get help?',
+        classes: 'govuk-label--m',
+        isPageHeading: false
       },
       value: formValues?.phone ?? metadata.contact?.phone
     },

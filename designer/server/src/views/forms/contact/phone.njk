@@ -30,18 +30,18 @@
       </div>
 
       {{ govukTextarea({
-        label: {
-          text: field.label.text,
-          classes: "govuk-label--m",
-          isPageHeading: false
-        },
+        label: field.label,
+        hint: field.hint,
         id: field.id,
         name: field.name,
+        type: field.type,
         value: field.value,
-        hint: field.hint,
         errorMessage: {
           text: formErrors[field.name].text
-        } if formErrors[field.name]
+        } if formErrors[field.name],
+        autocapitalize: field.autocapitalize,
+        autocomplete: field.autocomplete,
+        spellcheck: field.spellcheck
       }) }}
 
       {% include "forms/partials/markdown-guidance.njk" %}

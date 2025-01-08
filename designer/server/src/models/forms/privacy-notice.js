@@ -20,7 +20,9 @@ export function privacyNoticyViewModel(metadata, validation) {
       id: 'privacyNoticeUrl',
       name: 'privacyNoticeUrl',
       label: {
-        text: 'Link to privacy notice for this form'
+        text: 'Link to privacy notice for this form',
+        classes: 'govuk-label--s',
+        isPageHeading: false
       },
       value: formValues?.privacyNoticeUrl ?? metadata.privacyNoticeUrl,
       hint: {

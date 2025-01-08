@@ -20,33 +20,22 @@
       },
       errorList: errorList
     }) %}
-      {{ govukInput({
-        label: {
-          text: fields.url.label.text,
-          isPageHeading: false
-        },
-        id: fields.url.id,
-        name: fields.url.name,
-        value: fields.url.value,
-        hint: fields.url.hint,
-        errorMessage: {
-          text: formErrors[fields.url.name].text
-        } if formErrors[fields.url.name]
-      }) }}
-
-      {{ govukInput({
-        label: {
-          text: fields.text.label.text,
-          isPageHeading: false
-        },
-        id: fields.text.id,
-        name: fields.text.name,
-        value: fields.text.value,
-        hint: fields.text.hint,
-        errorMessage: {
-          text: formErrors[fields.text.name].text
-        } if formErrors[fields.text.name]
-      }) }}
+      {% for field in fields %}
+        {{ govukInput({
+          label: field.label,
+          hint: field.hint,
+          id: field.id,
+          name: field.name,
+          type: field.type,
+          value: field.value,
+          errorMessage: {
+            text: formErrors[field.name].text
+          } if formErrors[field.name],
+          autocapitalize: field.autocapitalize,
+          autocomplete: field.autocomplete,
+          spellcheck: field.spellcheck
+        }) }}
+      {% endfor %}
 
       <div class="govuk-button-group">
         {{ govukButton({

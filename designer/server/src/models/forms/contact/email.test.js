@@ -38,12 +38,12 @@ describe('edit - model - contact - email', () => {
   it('should test email view model', () => {
     const result = emailViewModel(formMetadata)
     expect(result.pageTitle).toBe('Email address for support')
-    expect(result.fields.address.id).toBe('address')
-    expect(result.fields.address.name).toBe('address')
-    expect(result.fields.address.value).toBe('Enrique.Chase@defra.gov.uk')
-    expect(result.fields.responseTime.id).toBe('responseTime')
-    expect(result.fields.responseTime.name).toBe('responseTime')
-    expect(result.fields.responseTime.value).toBe('2 weeks')
+    expect(result.fields[0].id).toBe('address')
+    expect(result.fields[0].name).toBe('address')
+    expect(result.fields[0].value).toBe('Enrique.Chase@defra.gov.uk')
+    expect(result.fields[1].id).toBe('responseTime')
+    expect(result.fields[1].name).toBe('responseTime')
+    expect(result.fields[1].value).toBe('2 weeks')
   })
 })
 

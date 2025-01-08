@@ -20,7 +20,9 @@ export function submissionGuidanceViewModel(metadata, validation) {
       id: 'submissionGuidance',
       name: 'submissionGuidance',
       label: {
-        text: 'What will happen after a user submits a form?'
+        text: 'What will happen after a user submits a form?',
+        classes: 'govuk-label--m',
+        isPageHeading: false
       },
       value: formValues?.submissionGuidance ?? metadata.submissionGuidance
     },

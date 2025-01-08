@@ -16,30 +16,32 @@ export function emailViewModel(metadata, validation) {
     errorList: buildErrorList(formErrors),
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
-    fields: {
-      address: {
+    fields: [
+      {
         id: 'address',
         name: 'address',
         label: {
-          text: 'Email address'
+          text: 'Email address',
+          isPageHeading: false
         },
         hint: {
           text: 'Enter a dedicated support team email address. Do not enter a named individual. For example, ‘support@defra.gov.uk’'
         },
         value: formValues?.address ?? metadata.contact?.email?.address
       },
-      responseTime: {
+      {
         id: 'responseTime',
         name: 'responseTime',
         label: {
-          text: 'Response time'
+          text: 'Response time',
+          isPageHeading: false
         },
         hint: {
           text: 'Enter how long it takes to receive a response, for example, ‘We aim to respond within 2 working days’'
         },
         value: formValues?.responseTime ?? metadata.contact?.email?.responseTime
       }
-    },
+    ],
     buttonText: 'Save and continue'
   }
 }

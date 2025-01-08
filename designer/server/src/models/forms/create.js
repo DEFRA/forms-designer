@@ -25,7 +25,9 @@ export function titleViewModel(metadata, validation) {
       id: 'title',
       name: 'title',
       label: {
-        text: 'Enter a name for your form'
+        text: 'Enter a name for your form',
+        classes: 'govuk-label--l',
+        isPageHeading: true
       },
       value: formValues?.title ?? metadata?.title,
       autocapitalize: true,

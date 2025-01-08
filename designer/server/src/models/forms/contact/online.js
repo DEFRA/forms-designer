@@ -16,30 +16,32 @@ export function onlineViewModel(metadata, validation) {
     errorList: buildErrorList(formErrors),
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
-    fields: {
-      url: {
+    fields: [
+      {
         id: 'url',
         name: 'url',
         label: {
-          text: 'Contact link'
+          text: 'Contact link',
+          isPageHeading: false
         },
         hint: {
           text: 'For example, ‘https://www.gov.uk/guidance/contact-defra’'
         },
         value: formValues?.url ?? metadata.contact?.online?.url
       },
-      text: {
+      {
         id: 'text',
         name: 'text',
         label: {
-          text: 'Text to describe the contact link'
+          text: 'Text to describe the contact link',
+          isPageHeading: false
         },
         hint: {
           text: 'For example, ‘Online contact form’'
         },
         value: formValues?.text ?? metadata.contact?.online?.text
       }
-    },
+    ],
     buttonText: 'Save and continue'
   }
 }
