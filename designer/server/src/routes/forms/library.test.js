@@ -276,6 +276,60 @@ describe('Forms library routes', () => {
 
         expect(response.statusCode).toBe(200)
       })
+
+      it('should preserve search parameters when redirecting for exceeded page', async () => {
+        jest.mocked(forms.list).mockResolvedValueOnce({
+          data: [],
+          meta: {
+            pagination: {
+              page: 3,
+              perPage: 10,
+              totalPages: 3,
+              totalItems: 25
+            }
+          }
+        })
+
+        const options = {
+          method: 'GET',
+          url: '/library?page=5&perPage=10&title=test+form&sort=titleAsc',
+          auth
+        }
+
+        const response = await server.inject(options)
+
+        expect(response.statusCode).toBe(302)
+        expect(response.headers.location).toBe(
+          '/library?page=1&perPage=10&sort=titleAsc&title=test+form'
+        )
+      })
+
+      it('should preserve sort parameter when redirecting for exceeded page', async () => {
+        jest.mocked(forms.list).mockResolvedValueOnce({
+          data: [],
+          meta: {
+            pagination: {
+              page: 3,
+              perPage: 10,
+              totalPages: 3,
+              totalItems: 25
+            }
+          }
+        })
+
+        const options = {
+          method: 'GET',
+          url: '/library?page=5&perPage=10&sort=titleDesc',
+          auth
+        }
+
+        const response = await server.inject(options)
+
+        expect(response.statusCode).toBe(302)
+        expect(response.headers.location).toBe(
+          '/library?page=1&perPage=10&sort=titleDesc'
+        )
+      })
     })
 
     it('should display the list page correctly', async () => {
