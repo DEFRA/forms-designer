@@ -6,11 +6,6 @@
 
 {% set mainClasses = "govuk-main-wrapper--editor" %}
 
-{% block head %}
-  {{ super() }}
-  <link href="{{ getAssetPath("stylesheets/editor.scss") }}" rel="stylesheet">
-{% endblock %}
-
 {% block beforeContent %}
   <div class="govuk-width-container app-width-container--wide">
     {{ govukBackLink(backLink) }}
