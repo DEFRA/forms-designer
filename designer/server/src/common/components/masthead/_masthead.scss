@@ -1,4 +1,4 @@
-@use "govuk-frontend/govuk/base" as *;
+@use "../govuk-frontend" as *;
 
 $defra-brand-colour: govuk-organisation-colour(department-for-environment-food-rural-affairs);
 

@@ -1,7 +1,8 @@
-@use "govuk-frontend" as *;
+@use "sass:map";
+@use "../govuk-frontend" as *;
 
 // Custom wide container
-$app-container-width: 1300px;
+$app-container-width: map.get($govuk-breakpoints, "wide") - 60px;
 
 .app-width-container--wide {
   @include govuk-width-container($app-container-width);

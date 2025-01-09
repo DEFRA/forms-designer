@@ -1,4 +1,1 @@
-@forward "pkg:govuk-frontend" with (
-  $govuk-assets-path: "/assets/",
-  $govuk-new-organisation-colours: true
-);
+@forward "@defra/forms-designer/server/src/common/components/govuk-frontend";

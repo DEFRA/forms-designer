@@ -38,8 +38,7 @@ export default /** @type {Configuration} */ ({
     editor: {
       import: [
         // React rendered form editor
-        './index.tsx',
-        './stylesheets/editor.scss'
+        './index.tsx'
       ]
     }
   },

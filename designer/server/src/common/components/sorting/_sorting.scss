@@ -1,4 +1,4 @@
-@use "govuk-frontend/govuk/base" as *;
+@use "../govuk-frontend" as *;
 
 .app-field-group {
   margin-bottom: govuk-spacing(4);
