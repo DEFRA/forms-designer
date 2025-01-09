@@ -623,6 +623,133 @@ describe('Pagination Component', () => {
         expect($pages).toHaveLength(0)
       })
     })
+
+    describe('With search title parameter', () => {
+      beforeEach(() => {
+        const { container } = renderMacro(
+          'appPagination',
+          'pagination/macro.njk',
+          {
+            params: {
+              baseUrl: '/library',
+              search: {
+                title: 'Test Title'
+              },
+              pagination: {
+                page: 2,
+                perPage: 10,
+                totalPages: 5,
+                totalItems: 50,
+                pages: [
+                  {
+                    number: '1',
+                    href: '/library?page=1&perPage=10&title=Test%20Title',
+                    current: false
+                  },
+                  {
+                    number: '2',
+                    href: '/library?page=2&perPage=10&title=Test%20Title',
+                    current: true
+                  },
+                  {
+                    number: '3',
+                    href: '/library?page=3&perPage=10&title=Test%20Title',
+                    current: false
+                  }
+                ]
+              }
+            }
+          }
+        )
+
+        $pagination = container.getByRole('navigation', { name: 'Pagination' })
+      })
+
+      it('should include encoded title parameter in navigation links', () => {
+        const $previousLink = within($pagination).getByRole('link', {
+          name: 'Previous'
+        })
+        const $nextLink = within($pagination).getByRole('link', {
+          name: 'Next'
+        })
+
+        expect($previousLink).toHaveAttribute(
+          'href',
+          '/library?page=1&perPage=10&title=Test%20Title'
+        )
+        expect($nextLink).toHaveAttribute(
+          'href',
+          '/library?page=3&perPage=10&title=Test%20Title'
+        )
+      })
+
+      it('should include encoded title parameter in page number links', () => {
+        const $pageLinks = within($pagination).getAllByRole('link', {
+          name: /Page \d+/
+        })
+
+        expect($pageLinks[0]).toHaveAttribute(
+          'href',
+          '/library?page=1&perPage=10&title=Test%20Title'
+        )
+        expect($pageLinks[1]).toHaveAttribute(
+          'href',
+          '/library?page=2&perPage=10&title=Test%20Title'
+        )
+        expect($pageLinks[2]).toHaveAttribute(
+          'href',
+          '/library?page=3&perPage=10&title=Test%20Title'
+        )
+      })
+    })
+
+    describe('With special characters in search title', () => {
+      beforeEach(() => {
+        const { container } = renderMacro(
+          'appPagination',
+          'pagination/macro.njk',
+          {
+            params: {
+              baseUrl: '/library',
+              search: {
+                title: 'Test & Special?'
+              },
+              pagination: {
+                page: 1,
+                perPage: 10,
+                totalPages: 2,
+                totalItems: 15,
+                pages: [
+                  {
+                    number: '1',
+                    href: '/library?page=1&perPage=10&title=Test%20%26%20Special%3F',
+                    current: true
+                  },
+                  {
+                    number: '2',
+                    href: '/library?page=2&perPage=10&title=Test%20%26%20Special%3F',
+                    current: false
+                  }
+                ]
+              }
+            }
+          }
+        )
+
+        $pagination = container.getByRole('navigation', { name: 'Pagination' })
+      })
+
+      it('should properly encode special characters in title parameter', () => {
+        const $nextLink = within($pagination).getByRole('link', {
+          name: 'Next'
+        })
+
+        expect($nextLink).toHaveAttribute(
+          'href',
+          '/library?page=2&perPage=10&title=Test%20%26%20Special%3F'
+        )
+      })
+    })
   })
 
   describe('Without pagination data', () => {
