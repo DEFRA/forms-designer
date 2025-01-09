@@ -7,8 +7,10 @@
 <form method="get" action="/library" class="app-search-form" aria-labelledby="search-form-heading">
   <h2 id="search-form-heading" class="govuk-heading-m">Search</h2>
 
-  {% if params.sorting %}
-    <input type="hidden" name="sort" value="{{ params.sorting.sortBy }}{{ params.sorting.order | capitalize }}">
+  {% if params.sorting and params.sorting.sortBy and params.sorting.order %}
+    <input type="hidden" name="sort" value="{% if params.sorting.sortBy == "updatedAt" %}updated{% else %}title{% endif %}{{ params.sorting.order | capitalize }}">
+  {% else %}
+    <input type="hidden" name="sort" value="updatedDesc">
   {% endif %}
 
   {{ govukInput({
