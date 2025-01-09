@@ -1,0 +1,10 @@
+@forward "pkg:govuk-frontend" with (
+  $govuk-assets-path: "/assets/",
+  $govuk-breakpoints: (
+    mobile: 320px,
+    tablet: 641px,
+    desktop: 769px,
+    wide: 1020px
+  ),
+  $govuk-new-organisation-colours: true
+);
