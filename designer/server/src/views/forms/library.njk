@@ -35,12 +35,26 @@
           }}
         </h2>
         <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+      {% else %}
+        <h2 id="search-results-heading" class="govuk-heading-m">
+          0 forms
+        </h2>
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+        <h3 class="govuk-heading-m govuk-!-padding-top-4">
+          There are no matching forms
+        </h3>
+        <p class="govuk-body">Improve your search results by removing filters.</p>
+        <p class="govuk-body">
+          <a href="/library" class="govuk-link govuk-link--no-visited-state">Clear filters</a>
+        </p>
       {% endif %}
 
-      {{ appSorting({
-        sorting: sorting,
-        search: search
-      }) }}
+      {% if formItems | length %}
+        {{ appSorting({
+          sorting: sorting,
+          search: search
+        }) }}
+      {% endif %}
 
     {% set formRowsMobile = [] %}
     {% set formRowsDesktop = [] %}
