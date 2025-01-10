@@ -1,4 +1,3 @@
-import { render } from '~/src/common/nunjucks/index.js'
 import { getFormSpecificNavigation } from '~/src/models/forms/library.js'
 import { formOverviewPath } from '~/src/models/links.js'
 
@@ -14,26 +13,14 @@ export function confirmationPageViewModel(form, errorList) {
   const navigation = getFormSpecificNavigation(formPath, form)
 
   return {
+    form,
     navigation,
     pageTitle,
     pageHeading: {
       text: pageTitle,
       caption: form.title
     },
-
     errorList,
-
-    warning: form.live
-      ? { text: `It will replace the form that is currently live.` }
-      : undefined,
-
-    bodyText: form.notificationEmail
-      ? render.string(
-          'Completed forms will be sent to <a href="mailto:{{ notificationEmail | urlencode }}" class="govuk-link">{{ notificationEmail }}</a>.',
-          { context: form }
-        )
-      : undefined,
-
     buttons: [
       {
         text: 'Make draft live'

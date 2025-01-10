@@ -13,6 +13,11 @@ export function privacyNoticyViewModel(metadata, validation) {
     form: metadata,
     backLink: formOverviewBackLink(metadata.slug),
     pageTitle,
+    pageHeading: {
+      text: pageTitle,
+      caption: metadata.title,
+      size: 'large'
+    },
     errorList: buildErrorList(formErrors),
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
@@ -20,14 +25,20 @@ export function privacyNoticyViewModel(metadata, validation) {
       id: 'privacyNoticeUrl',
       name: 'privacyNoticeUrl',
       label: {
-        text: 'Link to privacy notice for this form'
+        text: 'Link to privacy notice for this form',
+        classes: 'govuk-label--s',
+        isPageHeading: false
       },
       value: formValues?.privacyNoticeUrl ?? metadata.privacyNoticeUrl,
       hint: {
         text: 'For example, https://www.gov.uk/help/privacy-notice'
       }
     },
-    buttonText: 'Save and continue'
+    buttons: [
+      {
+        text: 'Save and continue'
+      }
+    ]
   }
 }
 

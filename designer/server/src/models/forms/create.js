@@ -25,13 +25,19 @@ export function titleViewModel(metadata, validation) {
       id: 'title',
       name: 'title',
       label: {
-        text: 'Enter a name for your form'
+        text: 'Enter a name for your form',
+        classes: 'govuk-label--l',
+        isPageHeading: true
       },
       value: formValues?.title ?? metadata?.title,
       autocapitalize: true,
       spellcheck: true
     },
-    buttonText: 'Continue'
+    buttons: [
+      {
+        text: 'Continue'
+      }
+    ]
   }
 }
 
@@ -54,8 +60,12 @@ export function organisationViewModel(metadata, validation) {
     field: {
       id: 'organisation',
       name: 'organisation',
-      legend: {
-        text: 'Choose a lead organisation for this form'
+      fieldset: {
+        legend: {
+          text: 'Choose a lead organisation for this form',
+          isPageHeading: true,
+          classes: 'govuk-fieldset__legend--l'
+        }
       },
       items: organisations.map((organisation) => ({
         text: organisation,
@@ -63,7 +73,11 @@ export function organisationViewModel(metadata, validation) {
       })),
       value: formValues?.organisation ?? metadata?.organisation
     },
-    buttonText: 'Continue'
+    buttons: [
+      {
+        text: 'Continue'
+      }
+    ]
   }
 }
 
@@ -120,12 +134,17 @@ export function teamViewModel(metadata, validation) {
         hint: {
           text: 'Used to contact the form subject matter expert (SME) or key stakeholder. Must be a UK email address, like name@example.gov.uk'
         },
+        type: 'email',
         value: formValues?.teamEmail ?? metadata?.teamEmail,
         autocomplete: 'email',
         spellcheck: false
       }
     ],
-    buttonText: 'Save and continue'
+    buttons: [
+      {
+        text: 'Save and continue'
+      }
+    ]
   }
 }
 

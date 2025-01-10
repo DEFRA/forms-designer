@@ -38,14 +38,14 @@ describe('edit - model - contact - online', () => {
   it('should test online view model', () => {
     const result = onlineViewModel(formMetadata)
     expect(result.pageTitle).toBe('Contact link for support')
-    expect(result.fields.url.id).toBe('url')
-    expect(result.fields.url.name).toBe('url')
-    expect(result.fields.url.value).toBe(
+    expect(result.fields[0].id).toBe('url')
+    expect(result.fields[0].name).toBe('url')
+    expect(result.fields[0].value).toBe(
       'https://www.gov.uk/guidance/contact-defra'
     )
-    expect(result.fields.text.id).toBe('text')
-    expect(result.fields.text.name).toBe('text')
-    expect(result.fields.text.value).toBe('Online contact form')
+    expect(result.fields[1].id).toBe('text')
+    expect(result.fields[1].name).toBe('text')
+    expect(result.fields[1].value).toBe('Online contact form')
   })
 })
 

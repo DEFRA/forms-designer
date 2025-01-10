@@ -13,6 +13,11 @@ export function notificationEmailViewModel(metadata, validation) {
     form: metadata,
     backLink: formOverviewBackLink(metadata.slug),
     pageTitle,
+    pageHeading: {
+      text: pageTitle,
+      caption: metadata.title,
+      size: 'large'
+    },
     errorList: buildErrorList(formErrors),
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
@@ -22,12 +27,19 @@ export function notificationEmailViewModel(metadata, validation) {
       label: {
         text: 'What email address should submitted forms be sent to?'
       },
-      value: formValues?.notificationEmail ?? metadata.notificationEmail,
       hint: {
         text: 'Used to send submitted forms for processing. Emails must end with ‘.gov.uk’ or ‘.org.uk’, like name@example.gov.uk or name@example.org.uk'
-      }
+      },
+      type: 'email',
+      value: formValues?.notificationEmail ?? metadata.notificationEmail,
+      autocomplete: 'email',
+      spellcheck: false
     },
-    buttonText: 'Save and continue'
+    buttons: [
+      {
+        text: 'Save and continue'
+      }
+    ]
   }
 }
 

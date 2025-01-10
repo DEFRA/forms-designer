@@ -1,37 +1,7 @@
-{% extends "layouts/page.njk" %}
+{% extends "forms/question-input.njk" %}
 
-{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
-{% from "govuk/components/input/macro.njk" import govukInput %}
-
-{% block content %}
-  <form method="post" novalidate>
-    {% call appPageBody({
-      heading: pageHeading,
-      errorList: errorList
-    }) %}
-
-      <p class="govuk-body">
-        To confirm the file was meant for your team, enter the email address the file was sent to.
-      </p>
-
-      {{ govukInput({
-        label: {
-          text: field.label.text,
-          classes: "govuk-label--m",
-          isPageHeading: false
-        },
-        id: field.id,
-        name: field.name,
-        value: field.value,
-        errorMessage: {
-          text: formErrors[field.name].text
-        } if formErrors[field.name]
-      }) }}
-
-      {{ govukButton({
-        text: buttonText
-      }) }}
-    {% endcall %}
-  </form>
-{% endblock %}
+{% set bodyStart %}
+  <p class="govuk-body">
+    To confirm the file was meant for your team, enter the email address the file was sent to.
+  </p>
+{% endset %}

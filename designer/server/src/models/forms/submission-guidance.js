@@ -13,6 +13,11 @@ export function submissionGuidanceViewModel(metadata, validation) {
     form: metadata,
     backLink: formOverviewBackLink(metadata.slug),
     pageTitle,
+    pageHeading: {
+      text: pageTitle,
+      caption: metadata.title,
+      size: 'large'
+    },
     errorList: buildErrorList(formErrors),
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
@@ -20,11 +25,17 @@ export function submissionGuidanceViewModel(metadata, validation) {
       id: 'submissionGuidance',
       name: 'submissionGuidance',
       label: {
-        text: 'What will happen after a user submits a form?'
+        text: 'What will happen after a user submits a form?',
+        classes: 'govuk-label--m',
+        isPageHeading: false
       },
       value: formValues?.submissionGuidance ?? metadata.submissionGuidance
     },
-    buttonText: 'Save and continue'
+    buttons: [
+      {
+        text: 'Save and continue'
+      }
+    ]
   }
 }
 

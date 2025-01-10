@@ -1,62 +1,16 @@
-{% extends "layouts/page.njk" %}
+{% extends "forms/question-textarea.njk" %}
 
-{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
-{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
-
-{% block beforeContent %}
-  <div class="govuk-width-container app-width-container--wide">
-    {{ govukBackLink(backLink) }}
+{% set bodyStart %}
+  <p class="govuk-body">You can provide an optional phone number for support. You must include the opening times.</p>
+  <h2 class="govuk-heading-s">Example</h2>
+  <div class="govuk-inset-text">
+    <ul class="govuk-list">
+      <li>Telephone: 020 7946 0101</li>
+      <li>Monday to Friday, 8am to 6pm</li>
+    </ul>
   </div>
-{% endblock %}
+{% endset %}
 
-{% block content %}
-  <form method="post" novalidate>
-    {% call appPageBody({
-      heading: {
-        text: pageTitle,
-        caption: form.title,
-        size: "large"
-      },
-      errorList: errorList
-    }) %}
-      <p class="govuk-body">You can provide an optional phone number for support. You must include the opening times.</p>
-      <h2 class="govuk-heading-s">Example</h2>
-      <div class="govuk-inset-text">
-        <ul class="govuk-list">
-          <li>Telephone: 020 7946 0101</li>
-          <li>Monday to Friday, 8am to 6pm</li>
-        </ul>
-      </div>
-
-      {{ govukTextarea({
-        label: {
-          text: field.label.text,
-          classes: "govuk-label--m",
-          isPageHeading: false
-        },
-        id: field.id,
-        name: field.name,
-        value: field.value,
-        hint: field.hint,
-        errorMessage: {
-          text: formErrors[field.name].text
-        } if formErrors[field.name]
-      }) }}
-
-      {% include "forms/partials/markdown-guidance.njk" %}
-
-      <div class="govuk-button-group">
-        {{ govukButton({
-          text: buttonText
-        }) }}
-
-        {{ govukButton({
-          text: "Cancel",
-          href: backLink.href,
-          classes: "govuk-button--secondary"
-        }) }}
-      </div>
-    </form>
-  {% endcall %}
-{% endblock %}
+{% set bodyEnd %}
+  {% include "forms/partials/markdown-guidance.njk" %}
+{% endset %}

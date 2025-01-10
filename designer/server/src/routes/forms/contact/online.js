@@ -46,7 +46,7 @@ export default [
       // Create the online contact view model
       const model = onlineViewModel(metadata, validation)
 
-      return h.view('forms/contact/online', model)
+      return h.view('forms/question-inputs', model)
     },
     options: {
       auth: {
