@@ -1,5 +1,7 @@
 import {
   ConditionsModel,
+  markdownToHtml,
+  randomId,
   type Condition,
   type ConditionGroup,
   type ConditionRef,
@@ -25,12 +27,13 @@ import { addCondition } from '~/src/data/condition/addCondition.js'
 import { removeCondition } from '~/src/data/condition/removeCondition.js'
 import { updateCondition } from '~/src/data/condition/updateCondition.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
-import randomId from '~/src/randomId.js'
 import {
   hasValidationErrors,
   validateCustom,
   validateRequired
 } from '~/src/validations.js'
+
+const s = markdownToHtml('')
 
 interface Props {
   path?: string
@@ -145,9 +148,10 @@ export class InlineConditions extends Component<Props, State> {
       await save(definition)
       conditionsChange(payload.displayName)
     } else if (conditions.hasConditions) {
-      const name = randomId()
+      const id = randomId()
       const definition = addCondition(data, {
-        name,
+        id,
+        name: '0',
         displayName: payload.displayName,
         value: conditions.toJSON()
       })

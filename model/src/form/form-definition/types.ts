@@ -3,6 +3,12 @@ import { type ConditionsModelData } from '~/src/conditions/types.js'
 import { formDefinitionSchema } from '~/src/form/form-definition/index.js'
 import { type ControllerPath, type ControllerType } from '~/src/pages/enums.js'
 
+export interface Link {
+  path: string
+  condition?: string
+  redirect?: string
+}
+
 export interface PageCondition {
   pageId: string
   componentId: string

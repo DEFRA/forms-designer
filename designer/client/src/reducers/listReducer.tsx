@@ -1,4 +1,9 @@
-import { type FormDefinition, type Item, type List } from '@defra/forms-model'
+import {
+  randomId,
+  type FormDefinition,
+  type Item,
+  type List
+} from '@defra/forms-model'
 import {
   createContext,
   useContext,
@@ -11,7 +16,6 @@ import {
 import { type ErrorList } from '~/src/ErrorSummary.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { findList, findListItem } from '~/src/data/list/findList.js'
-import randomId from '~/src/randomId.js'
 import { ListActions } from '~/src/reducers/listActions.jsx'
 
 export interface ListState extends Partial<FormList>, Partial<FormItem> {

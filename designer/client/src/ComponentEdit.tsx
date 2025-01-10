@@ -69,7 +69,7 @@ export function ComponentEdit(props: Readonly<Props>) {
     const definition = updateComponent(
       data,
       page,
-      selectedComponent.name,
+      selectedComponent.id,
       selectedComponent
     )
 
@@ -92,7 +92,7 @@ export function ComponentEdit(props: Readonly<Props>) {
     }
 
     const { components } = pageEdit
-    const component = findComponent(pageEdit, selectedComponent?.name)
+    const component = findComponent(pageEdit, selectedComponent?.id)
     const index = components.indexOf(component)
 
     setIsDeleting(true)

@@ -14,7 +14,8 @@ describe('Form definition schema', () => {
     page = {
       title: 'Example page',
       path: '/example',
-      next: [],
+      id: '',
+      // next: [],
       components: []
     }
 
@@ -58,7 +59,7 @@ describe('Form definition schema', () => {
   describe('Components', () => {
     describe('Custom validation messages', () => {
       const component: ComponentDef = {
-        name: 'year',
+        id: 'year',
         title: 'Year',
         type: ComponentType.NumberField,
         options: {},

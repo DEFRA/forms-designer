@@ -1,4 +1,5 @@
 import {
+  randomId,
   type ComponentDef,
   type ComponentTypes,
   type Page
@@ -20,7 +21,6 @@ import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.j
 import { DataContext } from '~/src/context/DataContext.js'
 import { addComponent } from '~/src/data/component/addComponent.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
-import randomId from '~/src/randomId.js'
 import { ComponentContext } from '~/src/reducers/component/componentReducer.jsx'
 import { Meta } from '~/src/reducers/component/types.js'
 import { hasValidationErrors } from '~/src/validations.js'

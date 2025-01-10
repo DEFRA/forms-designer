@@ -1,6 +1,6 @@
 import { ComponentType } from '~/src/components/enums.js'
 import { type ComponentDef } from '~/src/components/types.js'
-import randomId from '~/src/utils/randomId.js'
+import { randomId } from '~/src/utils/randomId.js'
 
 /**
  * Defaults for creating new components

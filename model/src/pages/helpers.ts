@@ -1,5 +1,6 @@
 import { type ComponentDef } from '~/src/components/types.js'
 import {
+  type Link,
   type Page,
   type PageFileUpload,
   type PageQuestion,
@@ -65,6 +66,27 @@ export function isControllerName(
   nameOrPath?: ControllerType | string
 ): nameOrPath is ControllerType {
   return !!nameOrPath && ControllerNames.map(String).includes(nameOrPath)
+}
+
+/**
+ * Check page has next link
+ */
+export function hasNext(
+  page?: Partial<Page>
+): page is Extract<Page, { next: Link[] }> {
+  if (!page || !('next' in page)) {
+    return false
+  }
+
+  const controller = controllerNameFromPath(page.controller)
+
+  return (
+    !controller ||
+    controller === ControllerType.Start ||
+    controller === ControllerType.Page ||
+    controller === ControllerType.FileUpload ||
+    controller === ControllerType.Repeat
+  )
 }
 
 /**

@@ -25,10 +25,10 @@ export class DeclarationEdit extends Component<Props, State> {
   state: State = {}
 
   componentDidMount() {
-    const { data } = this.context
+    // const { data } = this.context
 
     this.setState({
-      declaration: data.declaration
+      // declaration: data.declaration
     })
   }
 
