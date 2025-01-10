@@ -71,6 +71,39 @@ describe('Sorting Component', () => {
         expect($button).toHaveClass('govuk-button--secondary')
         expect($button).toHaveClass('app-field-group__button')
       })
+
+      it('should not render hidden search input when no search title exists', () => {
+        const hiddenInput = within($sorting).queryByRole('textbox', {
+          hidden: true
+        })
+        expect(hiddenInput).not.toBeInTheDocument()
+      })
+    })
+
+    describe('With search title', () => {
+      beforeEach(() => {
+        const { container } = renderMacro('appSorting', 'sorting/macro.njk', {
+          params: {
+            sorting: {
+              sortBy: 'updatedAt',
+              order: 'desc'
+            },
+            search: {
+              title: 'Test Form'
+            }
+          }
+        })
+
+        $sorting = container.getByRole('form', { name: 'Sorting options' })
+      })
+
+      it('should render hidden search input with correct value', () => {
+        const hiddenInput = within($sorting).getByDisplayValue('Test Form')
+        expect(hiddenInput).toBeInTheDocument()
+        expect(hiddenInput).toHaveAttribute('type', 'hidden')
+        expect(hiddenInput).toHaveAttribute('name', 'title')
+        expect(hiddenInput).toHaveAttribute('value', 'Test Form')
+      })
     })
 
     describe('With different sort options selected', () => {
@@ -80,7 +113,8 @@ describe('Sorting Component', () => {
             sorting: {
               sortBy: 'title',
               order: 'asc'
-            }
+            },
+            search: {}
           }
         })
 

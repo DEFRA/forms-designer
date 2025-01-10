@@ -3,6 +3,10 @@
 
 {% if params.sorting %}
 <form method="get" action="/library" aria-label="Sorting options">
+  {% if params.search.title %}
+    <input type="hidden" name="title" value="{{ params.search.title | escape }}">
+  {% endif %}
+
   <div class="app-field-group">
     <div class="app-field-group__item">
       {{ govukSelect({

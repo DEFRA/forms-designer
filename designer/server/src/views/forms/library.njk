@@ -5,28 +5,56 @@
 {% from "form-status/macro.njk" import appFormStatus %}
 {% from "pagination/macro.njk" import appPagination %}
 {% from "sorting/macro.njk" import appSorting %}
+{% from "search/macro.njk" import appSearch %}
 
 {% set mainClasses = "govuk-main-wrapper--masthead" %}
 
 {% block content %}
-  {% call appPageBody({
-    heading: pageHeading,
-    description: pageDescription,
-    actions: pageActions,
-    classes: "govuk-grid-column-two-thirds-from-desktop"
-  }) %}
-    {% if formItems | length %}
-      <h2 class="govuk-heading-m">
-        {{ (pagination.totalItems if pagination else formItems | length) + (" form" if (pagination.totalItems if pagination else formItems | length) == 1 else " forms" ) }}
-      </h2>
+{% call appPageBody({
+  heading: pageHeading,
+  description: pageDescription,
+  actions: pageActions,
+  classes: "govuk-grid-column-full"
+}) %}
+  <div class="govuk-grid-row">
+    <aside class="govuk-grid-column-one-third-from-desktop">
+      {{ appSearch({
+        search: search,
+        sorting: sorting,
+        baseUrl: "/library"
+      }) }}
+    </aside>
+    <div class="govuk-grid-column-two-thirds-from-desktop">
+      {% if formItems | length %}
+        <h2 class="govuk-heading-m">
+          {{ (pagination.totalItems if pagination else formItems | length)
+            + (
+              " form" if (pagination.totalItems if pagination else formItems | length) == 1
+              else " forms"
+            )
+          }}
+        </h2>
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+      {% else %}
+        <h2 id="search-results-heading" class="govuk-heading-m">
+          0 forms
+        </h2>
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+        <h3 class="govuk-heading-m govuk-!-padding-top-4">
+          There are no matching forms
+        </h3>
+        <p class="govuk-body">Improve your search results by removing filters.</p>
+        <p class="govuk-body">
+          <a href="/library" class="govuk-link govuk-link--no-visited-state">Clear filters</a>
+        </p>
+      {% endif %}
 
-      <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-    {% endif %}
-
-    {{ appSorting({
-      sorting: sorting,
-      pagination: pagination
-    }) }}
+      {% if formItems | length %}
+        {{ appSorting({
+          sorting: sorting,
+          search: search
+        }) }}
+      {% endif %}
 
     {% set formRowsMobile = [] %}
     {% set formRowsDesktop = [] %}
@@ -114,9 +142,12 @@
       }) }}
     {% endif %}
 
-    {{ appPagination({
-      baseUrl: "",
-      pagination: pagination
-    }) }}
-  {% endcall %}
+      {{ appPagination({
+        baseUrl: "/library",
+        pagination: pagination,
+        search: search
+      }) }}
+    </div>
+  </div>
+{% endcall %}
 {% endblock %}
