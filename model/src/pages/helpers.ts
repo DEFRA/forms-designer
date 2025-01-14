@@ -84,6 +84,7 @@ export function hasNext(
     !controller ||
     controller === ControllerType.Start ||
     controller === ControllerType.Page ||
+    controller === ControllerType.Terminal ||
     controller === ControllerType.FileUpload ||
     controller === ControllerType.Repeat
   )

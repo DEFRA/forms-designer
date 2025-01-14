@@ -22,6 +22,14 @@ export const PageTypes: readonly Page[] = Object.freeze([
     components: []
   },
   {
+    title: 'Terminal page',
+    path: '/terminal-page',
+    controller: ControllerType.Terminal,
+    section: undefined,
+    next: [],
+    components: []
+  },
+  {
     title: 'Add another',
     path: '/add-another-page',
     controller: ControllerType.Repeat,

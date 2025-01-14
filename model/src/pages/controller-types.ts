@@ -10,6 +10,10 @@ export const ControllerTypes = [
     path: './pages/page.js'
   },
   {
+    name: ControllerType.Terminal,
+    path: './pages/terminal.js'
+  },
+  {
     name: ControllerType.Repeat,
     path: './pages/repeat.js'
   },
