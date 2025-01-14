@@ -1,4 +1,4 @@
-import { hasComponents, hasListField } from '@defra/forms-model'
+import { Engine, hasComponents, hasListField } from '@defra/forms-model'
 import { useContext } from 'react'
 
 import { DeclarationEdit } from '~/src/DeclarationEdit.jsx'
@@ -112,6 +112,9 @@ export function Menu() {
     }
   ]
 
+  const { engine } = data
+  const allowLinks = engine !== Engine.V2
+
   return (
     <>
       <nav className="menu">
@@ -119,9 +122,11 @@ export function Menu() {
           <button className="govuk-button" onClick={page.show}>
             {i18n('menu.addPage')}
           </button>
-          <button className="govuk-button" onClick={link.show}>
-            {i18n('menu.links')}
-          </button>
+          {allowLinks && (
+            <button className="govuk-button" onClick={link.show}>
+              {i18n('menu.links')}
+            </button>
+          )}
           <button className="govuk-button" onClick={sections.show}>
             {i18n('menu.sections')}
           </button>
