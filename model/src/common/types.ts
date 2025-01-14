@@ -11,6 +11,30 @@ import { type SortingOptions } from '~/src/common/sorting/types.js'
 export type QueryOptions = PaginationOptions & SortingOptions & SearchOptions
 
 /**
+ * Available form status values
+ */
+export type FormStatus = 'draft' | 'live'
+
+/**
+ * Available filter options for the current result set
+ */ export interface FilterOptions {
+  /**
+   * List of unique authors in the response
+   */
+  authors: string[]
+
+  /**
+   * List of organizations that have forms
+   */
+  organisations: string[]
+
+  /**
+   * Status values present in the results
+   */
+  status?: FormStatus[]
+}
+
+/**
  * Metadata containing the optional pagination, sorting, and searching information
  */
 export interface Meta {
@@ -28,6 +52,11 @@ export interface Meta {
    * The search details
    */
   search?: SearchOptions
+
+  /**
+   * Available filter options
+   */
+  filters?: FilterOptions
 }
 
 /**
