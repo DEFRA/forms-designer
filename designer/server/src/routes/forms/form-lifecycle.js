@@ -9,6 +9,8 @@ import * as forms from '~/src/lib/forms.js'
 import * as formLifecycle from '~/src/models/forms/form-lifecycle.js'
 import { formOverviewPath, formsLibraryPath } from '~/src/models/links.js'
 
+const CONFIRMATION_PAGE_VIEW = 'forms/confirmation-page'
+
 export default [
   /**
    * @satisfies {ServerRoute<{ Params: FormBySlugInput }>}
@@ -24,7 +26,7 @@ export default [
       const formPromotionValidationFailure = yar.flash(sessionNames.errorList)
 
       return h.view(
-        'forms/make-draft-live',
+        CONFIRMATION_PAGE_VIEW,
         formLifecycle.makeDraftLiveConfirmationPageViewModel(
           form,
           formPromotionValidationFailure
@@ -130,7 +132,7 @@ export default [
       const deletionValidationFailure = yar.flash(sessionNames.errorList)
 
       return h.view(
-        'forms/make-draft-live',
+        CONFIRMATION_PAGE_VIEW,
         formLifecycle.deleteDraftConfirmationPageViewModel(
           form,
           deletionValidationFailure
@@ -176,7 +178,7 @@ export default [
           const errorList = buildSimpleErrorList([err.message])
 
           return h.view(
-            'forms/make-draft-live',
+            CONFIRMATION_PAGE_VIEW,
             formLifecycle.deleteDraftConfirmationPageViewModel(form, errorList)
           )
         }

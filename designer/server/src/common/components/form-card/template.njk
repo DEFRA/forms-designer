@@ -12,7 +12,6 @@
 {%- macro appFormSecondaryActions(params) %}
   <div class="govuk-button-group">
     {% for secondaryAction in params.items %}
-      {# TODO see if we can retain buttons with link styling to match other approach #}
       <a class="govuk-link" href="{{ secondaryAction.attributes.formaction }}">{{ secondaryAction.text }}</a>
     {% endfor %}
   </div>

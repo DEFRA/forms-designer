@@ -1,5 +1,4 @@
 import Boom from '@hapi/boom'
-import yar from '@hapi/yar'
 import { within } from '@testing-library/dom'
 import { StatusCodes } from 'http-status-codes'
 
@@ -257,6 +256,39 @@ describe('Deleting a form', () => {
 
   afterAll(async () => {
     await server.stop()
+  })
+
+  test('The confirmation page is shown', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce({
+      ...metadata,
+      draft: state
+    })
+
+    const options = {
+      method: 'GET',
+      url: '/library/my-form/delete-draft',
+      auth
+    }
+
+    const { container } = await renderResponse(server, options)
+
+    const $heading = container.getByRole('heading', {
+      name: 'My form Are you sure you want to delete this form?', // "My form" is the caption. Ugly but necessary.
+      level: 1
+    })
+    expect($heading).toBeInTheDocument()
+
+    const $warning = container.getByText('You cannot recover deleted forms.')
+    expect($warning).toBeInTheDocument()
+
+    const $deleteButton = container.getByRole('button', {
+      name: 'Delete form'
+    })
+    const $cancelButton = container.getByRole('button', {
+      name: 'Cancel'
+    })
+    expect($deleteButton).toBeInTheDocument()
+    expect($cancelButton).toBeInTheDocument()
   })
 
   test('When a form is draft, allow the deletion', async () => {
