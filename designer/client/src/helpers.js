@@ -1,9 +1,12 @@
 import {
   ComponentType,
   ControllerType,
+  Engine,
   controllerNameFromPath,
   hasComponents,
   hasContent,
+  hasFormComponents,
+  hasFormField,
   hasNext
 } from '@defra/forms-model'
 
@@ -78,7 +81,7 @@ export function isComponentAllowed(page) {
  * @param {Partial<Page>} page
  */
 export function isControllerAllowed(data, page) {
-  const { pages } = data
+  const { engine, pages } = data
 
   // Check if we already have a start page
   const hasStartPage = pages.some(({ controller }) => {
@@ -120,6 +123,17 @@ export function isControllerAllowed(data, page) {
       (hasSummaryPage || hasLinkTo)
 
     /**
+     * Terminal page unavailable when:
+     *
+     * 1. Engine is not V2
+     * 2. Current page has form components
+     */
+    const isTerminalPageHidden =
+      pageType.controller === ControllerType.Terminal &&
+      (engine !== Engine.V2 ||
+        (hasFormComponents(page) && page.components.some(hasFormField)))
+
+    /**
      * Page types currently unavailable
      */
     const isInactivePage = pageType.controller === ControllerType.Status
@@ -128,8 +142,12 @@ export function isControllerAllowed(data, page) {
      * Ignore rules when already selected
      */
     return (
-      !(isStartPageHidden || isSummaryPageHidden || isInactivePage) ||
-      pageType.controller === page.controller
+      !(
+        isStartPageHidden ||
+        isSummaryPageHidden ||
+        isTerminalPageHidden ||
+        isInactivePage
+      ) || pageType.controller === page.controller
     )
   }
 }
