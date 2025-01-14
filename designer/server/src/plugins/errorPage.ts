@@ -29,20 +29,21 @@ export default {
           const statusCode = response.output.statusCode
           const errorMessage = errorCodes.get(statusCode)
 
+          request.logger.error(
+            {
+              statusCode,
+              data: response.data,
+              message: response.message,
+              stack: response.stack
+            },
+            'Unhandled error found'
+          )
+
           if (errorMessage) {
             return h
               .view(statusCode.toString(), errorViewModel(errorMessage))
               .code(statusCode)
           }
-
-          request.log('error', {
-            statusCode,
-            data: response.data,
-            message: response.message,
-            stack: response.stack
-          })
-
-          request.logger.error(response.stack)
         }
         return h.continue
       })
