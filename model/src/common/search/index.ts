@@ -9,28 +9,16 @@ import { organisations } from '~/src/form/form-metadata/index.js'
 export const searchOptionFields = {
   title: Joi.string().trim().allow('').max(255).optional().default(''),
   author: Joi.string().trim().allow('').max(100).optional().default(''),
-  organisations: Joi.alternatives()
-    .try(
-      Joi.string().valid(...organisations),
-      Joi.array().items(Joi.string().valid(...organisations))
-    )
+  organisations: Joi.array()
+    .items(Joi.string().valid(...organisations))
+    .single()
+    .optional()
+    .default([]),
+  status: Joi.array()
+    .items(Joi.string().valid('draft', 'live'))
+    .single()
     .optional()
     .default([])
-    // We're converting single string values to array (e.g., ?organisations=Defra -> ['Defra']) as expected by the API
-    .custom((value: string | string[]) =>
-      Array.isArray(value) ? value : [value]
-    ),
-  status: Joi.alternatives()
-    .try(
-      Joi.string().valid('draft', 'live'),
-      Joi.array().items(Joi.string().valid('draft', 'live'))
-    )
-    .optional()
-    .default([])
-    // We're converting single string values to array (e.g., ?status=draft -> ['draft']) as expected by the API
-    .custom((value: string | string[]) =>
-      Array.isArray(value) ? value : [value]
-    )
 }
 
 /**

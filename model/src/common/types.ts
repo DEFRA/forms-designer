@@ -17,7 +17,8 @@ export type FormStatus = 'draft' | 'live'
 
 /**
  * Available filter options for the current result set
- */ export interface FilterOptions {
+ */
+export interface FilterOptions {
   /**
    * List of unique authors in the response
    */
