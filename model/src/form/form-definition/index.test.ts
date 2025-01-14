@@ -2,6 +2,7 @@ import { ComponentType } from '~/src/components/enums.js'
 import { type ComponentDef } from '~/src/components/types.js'
 import { formDefinitionSchema } from '~/src/form/form-definition/index.js'
 import {
+  Engine,
   type FormDefinition,
   type PageQuestion
 } from '~/src/form/form-definition/types.js'
@@ -19,6 +20,7 @@ describe('Form definition schema', () => {
     }
 
     definition = {
+      engine: Engine.V1,
       pages: [page],
       lists: [],
       sections: [],

@@ -173,6 +173,7 @@ const pageSchema = Joi.object<Page>().keys({
     then: pageRepeatSchema.required(),
     otherwise: Joi.any().strip()
   }),
+  condition: Joi.string().allow('').optional(),
   next: Joi.array<Link>().items(nextSchema)
 })
 
@@ -241,6 +242,7 @@ const phaseBannerSchema = Joi.object<PhaseBanner>().keys({
 export const formDefinitionSchema = Joi.object<FormDefinition>()
   .required()
   .keys({
+    engine: Joi.string().allow('V1', 'V2').default('V1'),
     name: Joi.string().allow('').optional(),
     feedback: feedbackSchema.optional(),
     startPage: Joi.string().optional(),
