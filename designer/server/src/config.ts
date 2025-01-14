@@ -45,6 +45,9 @@ export interface Config {
   redisPassword: string
   redisKeyPrefix: string
   roleEditorGroupId: string
+  tracing: {
+    header: string
+  }
 }
 
 // Define config schema
@@ -139,7 +142,10 @@ const schema = joi.object<Config>({
   redisUsername: joi.string().required(),
   redisPassword: joi.string().required(),
   redisKeyPrefix: joi.string().required(),
-  roleEditorGroupId: joi.string().required()
+  roleEditorGroupId: joi.string().required(),
+  tracing: joi.object({
+    header: joi.string().default('x-cdp-request-id')
+  })
 })
 
 // Validate config
@@ -175,7 +181,10 @@ const result = schema.validate(
     redisUsername: process.env.REDIS_USERNAME,
     redisPassword: process.env.REDIS_PASSWORD,
     redisKeyPrefix: process.env.REDIS_KEY_PREFIX,
-    roleEditorGroupId: process.env.ROLE_EDITOR_GROUP_ID
+    roleEditorGroupId: process.env.ROLE_EDITOR_GROUP_ID,
+    tracing: {
+      header: process.env.TRACING_HEADER
+    }
   },
   { abortEarly: false }
 )

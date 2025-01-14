@@ -3,6 +3,7 @@ import { StatusCodes } from 'http-status-codes'
 
 import config from '~/src/config.js'
 import { getJson, postJson } from '~/src/lib/fetch.js'
+import { getHeaders } from '~/src/lib/utils.js'
 
 const submissionEndpoint = new URL('/file/', config.submissionUrl)
 
@@ -50,19 +51,7 @@ export async function createFileLink(fileId, retrievalKey, token) {
   )
   const { body } = await postJsonByType(requestUrl, {
     payload: { fileId, retrievalKey },
-    ...getAuthOptions(token)
+    ...getHeaders(token)
   })
   return body
 }
-
-/**
- * @param {string} token
- * @returns {Parameters<typeof Wreck.request>[2]}
- */
-function getAuthOptions(token) {
-  return { headers: { Authorization: `Bearer ${token}` } }
-}
-
-/**
- * @import Wreck from '@hapi/wreck'
- */

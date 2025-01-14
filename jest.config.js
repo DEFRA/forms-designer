@@ -45,7 +45,8 @@ export const projectDefaults = {
   transformIgnorePatterns: [
     `node_modules/(?!${[
       'nanoid', // Supports ESM only
-      'slug' // Supports ESM only
+      'slug', // Supports ESM only,
+      '@defra/hapi-tracing' // Supports ESM only|
     ].join('|')}/)`
   ]
 }
