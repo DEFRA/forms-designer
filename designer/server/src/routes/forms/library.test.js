@@ -529,7 +529,7 @@ describe('Forms library routes', () => {
         )
       })
 
-      it('should not include title parameter when not provided', async () => {
+      it('should include empty string title parameter when not provided', async () => {
         jest.mocked(forms.list).mockResolvedValueOnce({
           data: [formMetadata],
           meta: {}
@@ -545,8 +545,10 @@ describe('Forms library routes', () => {
 
         expect(forms.list).toHaveBeenCalledWith(
           auth.credentials.token,
-          expect.not.objectContaining({
-            title: expect.any(String)
+          expect.objectContaining({
+            page: 1,
+            perPage: 24,
+            title: ''
           })
         )
       })
