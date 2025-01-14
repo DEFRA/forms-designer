@@ -3,6 +3,11 @@ import { type ConditionsModelData } from '~/src/conditions/types.js'
 import { formDefinitionSchema } from '~/src/form/form-definition/index.js'
 import { type ControllerPath, type ControllerType } from '~/src/pages/enums.js'
 
+export enum Engine {
+  V1 = 'V1',
+  V2 = 'V2'
+}
+
 export interface Link {
   path: string
   condition?: string
@@ -12,6 +17,7 @@ export interface Link {
 export interface PageBase {
   title: string
   path: string
+  condition?: string
 }
 
 export interface RepeatOptions {
@@ -39,6 +45,13 @@ export interface PageStart extends PageBase {
 
 export interface PageQuestion extends PageBase {
   controller?: ControllerType.Page
+  section?: string | undefined
+  next: Link[]
+  components: ComponentDef[]
+}
+
+export interface PageTerminal extends PageBase {
+  controller?: ControllerType.Terminal
   section?: string | undefined
   next: Link[]
   components: ComponentDef[]
@@ -74,6 +87,7 @@ export interface PageStatus extends PageBase {
 export type Page =
   | PageStart
   | PageQuestion
+  | PageTerminal
   | PageFileUpload
   | PageRepeat
   | PageSummary
@@ -125,6 +139,7 @@ export interface ConditionWrapper {
  * @see {@link formDefinitionSchema}
  */
 export interface FormDefinition {
+  engine: Engine
   pages: Page[]
   conditions: ConditionWrapper[]
   lists: List[]
