@@ -1,5 +1,5 @@
 import { graphlib, layout, type GraphEdge, type Node } from '@dagrejs/dagre'
-import { hasNext, type FormDefinition } from '@defra/forms-model'
+import { Engine, hasNext, type FormDefinition } from '@defra/forms-model'
 
 import { logger } from '~/src/common/helpers/logging/logger.js'
 import { findPage } from '~/src/data/page/findPage.js'
@@ -24,7 +24,7 @@ export interface Pos {
 }
 
 export const getLayout = (data: FormDefinition, el: HTMLDivElement) => {
-  const { conditions, pages } = data
+  const { engine, conditions, pages } = data
 
   // Create a new directed graph
   const g = new graphlib.Graph()
@@ -58,24 +58,39 @@ export const getLayout = (data: FormDefinition, el: HTMLDivElement) => {
   })
 
   // Add edges to the graph.
-  pages.forEach((page) => {
-    if (!hasNext(page)) {
-      return
-    }
+  pages.forEach((page, index) => {
+    switch (engine) {
+      case Engine.V2:
+        if (index < pages.length - 1) {
+          const pageNext = pages.at(index + 1)
 
-    page.next.forEach((next) => {
-      try {
-        const pageNext = findPage(data, next.path)
-        const condition = conditions.find(({ name }) => name === next.condition)
+          if (pageNext) {
+            g.setEdge(page.path, pageNext.path)
+          }
+        }
+        break
+      default:
+        if (!hasNext(page)) {
+          return
+        }
 
-        g.setEdge(page.path, pageNext.path, {
-          label: condition?.displayName,
-          width: condition?.displayName ? 270 : undefined
+        page.next.forEach((next) => {
+          try {
+            const pageNext = findPage(data, next.path)
+            const condition = conditions.find(
+              ({ name }) => name === next.condition
+            )
+
+            g.setEdge(page.path, pageNext.path, {
+              label: condition?.displayName,
+              width: condition?.displayName ? 270 : undefined
+            })
+          } catch (error) {
+            logger.error(error, 'Visualisation')
+          }
         })
-      } catch (error) {
-        logger.error(error, 'Visualisation')
-      }
-    })
+        break
+    }
   })
 
   layout(g)
