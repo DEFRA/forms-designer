@@ -1,3 +1,4 @@
+import { getTraceId } from '@defra/hapi-tracing'
 import { ecsFormat } from '@elastic/ecs-pino-format'
 
 import config from '~/src/config.js'
@@ -8,14 +9,10 @@ const serviceVersion = config.serviceVersion
 
 const formatters = {
   ecs: /** @type {Omit<LoggerOptions, 'mixin' | 'transport'>} */ ({
-    ...ecsFormat(),
-    base: {
-      service: {
-        name: serviceName,
-        type: 'nodeJs',
-        version: serviceVersion
-      }
-    }
+    ...ecsFormat({
+      serviceVersion,
+      serviceName
+    })
   }),
   'pino-pretty': /** @type {{ transport: TransportSingleOptions }} */ ({
     transport: {
@@ -35,7 +32,15 @@ export const loggerOptions = {
     remove: true
   },
   level: logConfig.level,
-  ...formatters[logConfig.format]
+  ...formatters[logConfig.format],
+  mixin() {
+    const mixinValues = {}
+    const traceId = getTraceId()
+    if (traceId) {
+      mixinValues.trace = { id: traceId }
+    }
+    return mixinValues
+  }
 }
 
 /**

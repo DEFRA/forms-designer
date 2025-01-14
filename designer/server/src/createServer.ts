@@ -13,6 +13,7 @@ import {
 import { sessionCookie } from '~/src/common/helpers/auth/session-cookie.js'
 import { requestLogger } from '~/src/common/helpers/logging/request-logger.js'
 import { buildRedisClient } from '~/src/common/helpers/redis-client.js'
+import { requestTracing } from '~/src/common/helpers/request-tracing.js'
 import { sessionManager } from '~/src/common/helpers/session-manager.js'
 import * as nunjucks from '~/src/common/nunjucks/index.js'
 import config from '~/src/config.js'
@@ -106,6 +107,7 @@ export async function createServer() {
   await server.register(nunjucks.plugin)
   await server.register(router)
   await server.register(requestLogger)
+  await server.register(requestTracing)
   await server.register(errorPage)
 
   return server

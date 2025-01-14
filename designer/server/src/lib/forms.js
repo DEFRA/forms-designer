@@ -1,5 +1,6 @@
 import config from '~/src/config.js'
 import { getJson, patchJson, postJson } from '~/src/lib/fetch.js'
+import { getHeaders } from '~/src/lib/utils.js'
 
 const formsEndpoint = new URL('/forms/', config.managerUrl)
 
@@ -26,7 +27,7 @@ export async function list(token, options) {
     requestUrl.searchParams.append('title', options.title)
   }
 
-  const { body } = await getJsonByType(requestUrl, getAuthOptions(token))
+  const { body } = await getJsonByType(requestUrl, getHeaders(token))
 
   return body
 }
@@ -40,7 +41,7 @@ export async function get(slug, token) {
   const getJsonByType = /** @type {typeof getJson<FormMetadata>} */ (getJson)
 
   const requestUrl = new URL(`./slug/${slug}`, formsEndpoint)
-  const { body } = await getJsonByType(requestUrl, getAuthOptions(token))
+  const { body } = await getJsonByType(requestUrl, getHeaders(token))
 
   return body
 }
@@ -55,7 +56,7 @@ export async function create(metadata, token) {
 
   const { body } = await postJsonByType(formsEndpoint, {
     payload: metadata,
-    ...getAuthOptions(token)
+    ...getHeaders(token)
   })
 
   return body
@@ -73,7 +74,7 @@ export async function update(id, metadata, token) {
   const requestUrl = new URL(`./${id}`, formsEndpoint)
   const { body } = await postJsonByType(requestUrl, {
     payload: metadata,
-    ...getAuthOptions(token)
+    ...getHeaders(token)
   })
 
   return body
@@ -88,7 +89,7 @@ export async function getDraftFormDefinition(id, token) {
   const getJsonByType = /** @type {typeof getJson<FormDefinition>} */ (getJson)
 
   const requestUrl = new URL(`./${id}/definition/draft`, formsEndpoint)
-  const { body } = await getJsonByType(requestUrl, getAuthOptions(token))
+  const { body } = await getJsonByType(requestUrl, getHeaders(token))
 
   return body
 }
@@ -107,7 +108,7 @@ export async function updateDraftFormDefinition(id, definition, token) {
   const requestUrl = new URL(`./${id}/definition/draft`, formsEndpoint)
   const { body } = await postJsonByType(requestUrl, {
     payload: definition,
-    ...getAuthOptions(token)
+    ...getHeaders(token)
   })
 
   return body
@@ -121,7 +122,7 @@ export async function updateDraftFormDefinition(id, definition, token) {
 export async function makeDraftFormLive(id, token) {
   const requestUrl = new URL(`./${id}/create-live`, formsEndpoint)
   const { response } = await postJson(requestUrl, {
-    ...getAuthOptions(token)
+    ...getHeaders(token)
   })
 
   return response
@@ -135,7 +136,7 @@ export async function makeDraftFormLive(id, token) {
 export async function createDraft(id, token) {
   const requestUrl = new URL(`./${id}/create-draft`, formsEndpoint)
   const { response } = await postJson(requestUrl, {
-    ...getAuthOptions(token)
+    ...getHeaders(token)
   })
 
   return response
@@ -157,18 +158,10 @@ export async function updateMetadata(id, metadata, token) {
 
   const { body } = await patchJsonByType(requestUrl, {
     payload: metadata,
-    ...getAuthOptions(token)
+    ...getHeaders(token)
   })
 
   return body
-}
-
-/**
- * @param {string} token
- * @returns {Parameters<typeof Wreck.request>[2]}
- */
-function getAuthOptions(token) {
-  return { headers: { Authorization: `Bearer ${token}` } }
 }
 
 /**
