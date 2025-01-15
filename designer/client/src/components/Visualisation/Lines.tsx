@@ -1,3 +1,4 @@
+import classNames from 'classnames'
 import { Component } from 'react'
 
 import { LinkEdit } from '~/src/LinkEdit.jsx'
@@ -7,7 +8,7 @@ import { type Edge } from '~/src/components/Visualisation/getLayout.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 
 interface Props {
-  allowEdit: boolean
+  active: boolean
   edges: Edge[]
 }
 
@@ -29,7 +30,7 @@ export class Lines extends Component<Props, State> {
   }
 
   render() {
-    const { allowEdit, edges } = this.props
+    const { active, edges } = this.props
 
     return (
       <>
@@ -60,8 +61,10 @@ export class Lines extends Component<Props, State> {
             return (
               <g key={pointsString}>
                 <polyline
-                  className={allowEdit ? 'editable' : undefined}
-                  onClick={allowEdit ? () => this.editLink(edge) : undefined}
+                  className={classNames('line__polyline', {
+                    'line__polyline--active': active
+                  })}
+                  onClick={active ? () => this.editLink(edge) : undefined}
                   onKeyDown={(event) =>
                     this.handleEnterOrSpace(event.key, () =>
                       this.editLink(edge)
@@ -72,7 +75,7 @@ export class Lines extends Component<Props, State> {
                   data-testid={`${source}-${target}`.replace(/\//g, '')}
                   role="button"
                 >
-                  {allowEdit && (
+                  {active && (
                     <title>
                       {`Edit link from ${source} to ${target}`.replace(
                         /\//g,
@@ -81,7 +84,7 @@ export class Lines extends Component<Props, State> {
                     </title>
                   )}
                 </polyline>
-                {label && (
+                {active && label && (
                   <foreignObject
                     width={textWidth}
                     height={textHeight}

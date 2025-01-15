@@ -46,7 +46,7 @@ export function Visualisation() {
           ))}
 
           {layout && (
-            <Lines edges={layout.edges} allowEdit={engine !== Engine.V2} />
+            <Lines edges={layout.edges} active={engine !== Engine.V2} />
           )}
         </div>
       </div>
