@@ -4,6 +4,7 @@ import {
 } from '~/src/common/pagination/types.js'
 import { type SearchOptions } from '~/src/common/search/types.js'
 import { type SortingOptions } from '~/src/common/sorting/types.js'
+import { type FormMetadataAuthor } from '~/src/form/form-metadata/types.js'
 
 /**
  * Options for querying results, including pagination, sorting, and searching
@@ -22,7 +23,7 @@ export interface FilterOptions {
   /**
    * List of unique authors in the response
    */
-  authors: string[]
+  authors: FormMetadataAuthor[]
 
   /**
    * List of organizations that have forms

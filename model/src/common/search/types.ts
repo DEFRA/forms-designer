@@ -13,7 +13,7 @@ export interface SearchOptions {
    * Filter by author's name
    * If provided, shows only forms created by authors with matching name
    */
-  author?: string
+  userId?: string
 
   /**
    * Filter by organisations

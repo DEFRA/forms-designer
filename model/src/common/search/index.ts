@@ -8,7 +8,11 @@ import { organisations } from '~/src/form/form-metadata/index.js'
  */
 export const searchOptionFields = {
   title: Joi.string().trim().allow('').max(255).optional().default(''),
-  author: Joi.string().trim().allow('').max(100).optional().default(''),
+  userId: Joi.string()
+    .guid({ version: 'uuidv4' })
+    .allow('')
+    .optional()
+    .default(''),
   organisations: Joi.array()
     .items(Joi.string().valid(...organisations))
     .single()
