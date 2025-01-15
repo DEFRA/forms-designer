@@ -25,6 +25,7 @@ describe('helpers', () => {
     const supported = [
       ControllerType.Start,
       ControllerType.Page,
+      ControllerType.Terminal,
       ControllerType.FileUpload,
       ControllerType.Repeat
     ]
@@ -49,6 +50,7 @@ describe('helpers', () => {
   describe('hasFormComponents', () => {
     const supported = [
       ControllerType.Page,
+      ControllerType.Terminal,
       ControllerType.FileUpload,
       ControllerType.Repeat
     ]
@@ -74,6 +76,7 @@ describe('helpers', () => {
     const supported = [
       ControllerType.Start,
       ControllerType.Page,
+      ControllerType.Terminal,
       ControllerType.FileUpload,
       ControllerType.Repeat
     ]
