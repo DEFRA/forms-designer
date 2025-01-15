@@ -139,7 +139,7 @@ export interface ConditionWrapper {
  * @see {@link formDefinitionSchema}
  */
 export interface FormDefinition {
-  engine: Engine
+  engine?: Engine
   pages: Page[]
   conditions: ConditionWrapper[]
   lists: List[]
