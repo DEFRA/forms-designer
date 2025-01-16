@@ -200,12 +200,10 @@ describe('Forms Library Models', () => {
                 }
               }
             ],
-            secondaryActions: [
+            links: [
               {
                 text: 'Delete draft',
-                attributes: {
-                  formaction: `${formPath}/delete-draft`
-                }
+                href: `${formPath}/delete-draft`
               }
             ]
           }

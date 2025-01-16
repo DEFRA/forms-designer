@@ -225,14 +225,12 @@ export function overviewViewModel(metadata, notification) {
               }
             }
           ],
-      secondaryActions: metadata.live
+      links: metadata.live
         ? []
         : [
             {
               text: 'Delete draft',
-              attributes: {
-                formaction: `${formPath}/delete-draft`
-              }
+              href: `${formPath}/delete-draft`
             }
           ]
     },
