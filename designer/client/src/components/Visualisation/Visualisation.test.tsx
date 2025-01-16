@@ -1,4 +1,4 @@
-import { type FormDefinition } from '@defra/forms-model'
+import { Engine, type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
@@ -117,5 +117,93 @@ describe('Visualisation', () => {
         name: 'Edit link'
       })
     ).toBeInTheDocument()
+  })
+
+  test('Graph is rendered with correct number of pages and updates using V2 engine', () => {
+    const data = {
+      engine: Engine.V2,
+      pages: [
+        {
+          title: 'my first page',
+          path: '/1',
+          next: [],
+          components: []
+        },
+        {
+          title: 'my second page',
+          path: '/2',
+          next: [],
+          components: []
+        }
+      ],
+      lists: [],
+      sections: [],
+      conditions: []
+    } satisfies FormDefinition
+
+    render(
+      <RenderWithContext data={data}>
+        <Visualisation />
+      </RenderWithContext>
+    )
+
+    expect(screen.queryByText('my first page')).toBeInTheDocument()
+    expect(screen.queryByText('my second page')).toBeInTheDocument()
+    expect(screen.queryByText('my third page')).not.toBeInTheDocument()
+
+    const updated: FormDefinition = {
+      ...data,
+      pages: [
+        ...data.pages,
+        {
+          title: 'my third page',
+          path: '/3',
+          next: [],
+          components: []
+        }
+      ]
+    }
+
+    render(
+      <RenderWithContext data={updated}>
+        <Visualisation />
+      </RenderWithContext>
+    )
+
+    expect(screen.queryByText('my third page')).toBeInTheDocument()
+  })
+
+  test('Links between pages are inactive using V2 engine', () => {
+    const data = {
+      engine: Engine.V2,
+      pages: [
+        {
+          title: 'link source',
+          path: '/link-source',
+          next: [{ path: '/link-target' }],
+          components: []
+        },
+        {
+          title: 'link target',
+          path: '/link-target',
+          next: [],
+          components: []
+        }
+      ],
+      lists: [],
+      sections: [],
+      conditions: []
+    } satisfies FormDefinition
+
+    render(
+      <RenderWithContext data={data}>
+        <Visualisation />
+      </RenderWithContext>
+    )
+
+    // Check link title does not exist
+    expect(
+      screen.queryByText('Edit link from link-source to link-target')
+    ).not.toBeInTheDocument()
   })
 })
