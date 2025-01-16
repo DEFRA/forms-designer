@@ -32,7 +32,11 @@ export default [
 
         const { sortBy, order } = getSortOptions(sort)
         const listOptions = { page, perPage, sortBy, order, title }
-        const model = await library.listViewModel(token, listOptions, successNotification)
+        const model = await library.listViewModel(
+          token,
+          listOptions,
+          successNotification
+        )
 
         if (model.pagination) {
           const { totalPages } = model.pagination
