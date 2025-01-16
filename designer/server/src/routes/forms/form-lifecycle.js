@@ -7,7 +7,9 @@ import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildSimpleErrorList } from '~/src/common/helpers/build-error-details.js'
 import * as forms from '~/src/lib/forms.js'
 import * as formLifecycle from '~/src/models/forms/form-lifecycle.js'
-import { formOverviewPath } from '~/src/models/links.js'
+import { formOverviewPath, formsLibraryPath } from '~/src/models/links.js'
+
+const CONFIRMATION_PAGE_VIEW = 'forms/confirmation-page'
 
 export default [
   /**
@@ -24,8 +26,8 @@ export default [
       const formPromotionValidationFailure = yar.flash(sessionNames.errorList)
 
       return h.view(
-        'forms/make-draft-live',
-        formLifecycle.confirmationPageViewModel(
+        CONFIRMATION_PAGE_VIEW,
+        formLifecycle.makeDraftLiveConfirmationPageViewModel(
           form,
           formPromotionValidationFailure
         )
@@ -41,7 +43,6 @@ export default [
       }
     }
   }),
-
   /**
    * @satisfies {ServerRoute<{ Params: FormBySlugInput }>}
    */
@@ -86,7 +87,6 @@ export default [
       }
     }
   }),
-
   /**
    * @satisfies {ServerRoute<{ Params: FormBySlugInput }>}
    */
@@ -107,6 +107,86 @@ export default [
       )
 
       return h.redirect(formOverviewPath(slug))
+    },
+    options: {
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${scopes.SCOPE_WRITE}`]
+        }
+      }
+    }
+  }),
+  /**
+   * @satisfies {ServerRoute<{ Params: FormBySlugInput }>}
+   */
+  ({
+    method: 'GET',
+    path: '/library/{slug}/delete-draft',
+    async handler(request, h) {
+      const { yar } = request
+      const { token } = request.auth.credentials
+      const form = await forms.get(request.params.slug, token)
+
+      const deletionValidationFailure = yar.flash(sessionNames.errorList)
+
+      return h.view(
+        CONFIRMATION_PAGE_VIEW,
+        formLifecycle.deleteDraftConfirmationPageViewModel(
+          form,
+          deletionValidationFailure
+        )
+      )
+    },
+    options: {
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${scopes.SCOPE_WRITE}`]
+        }
+      }
+    }
+  }),
+  /**
+   * @satisfies {ServerRoute<{ Params: FormBySlugInput }>}
+   */
+  ({
+    method: 'POST',
+    path: '/library/{slug}/delete-draft',
+    async handler(request, h) {
+      const { yar } = request
+      const { token } = request.auth.credentials
+
+      const form = await forms.get(request.params.slug, token)
+
+      try {
+        // Currently we don't support leaving the metadata widowed with no form definitions.
+        // Deleting a draft also deletes the form itself (as long as the form hasn't gone live).
+        await forms.deleteForm(form.id, token)
+
+        yar.flash(
+          sessionNames.successNotification,
+          notifications.FORM_DELETED_DRAFT
+        )
+
+        return h.redirect(formsLibraryPath)
+      } catch (err) {
+        if (
+          Boom.isBoom(err) &&
+          err.output.statusCode === StatusCodes.BAD_REQUEST.valueOf()
+        ) {
+          const errorList = buildSimpleErrorList([err.message])
+
+          return h.view(
+            CONFIRMATION_PAGE_VIEW,
+            formLifecycle.deleteDraftConfirmationPageViewModel(form, errorList)
+          )
+        }
+
+        throw err
+      }
     },
     options: {
       auth: {

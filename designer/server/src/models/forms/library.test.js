@@ -199,6 +199,12 @@ describe('Forms Library Models', () => {
                   formaction: `${formPath}/make-draft-live`
                 }
               }
+            ],
+            links: [
+              {
+                text: 'Delete draft',
+                href: `${formPath}/delete-draft`
+              }
             ]
           }
         })

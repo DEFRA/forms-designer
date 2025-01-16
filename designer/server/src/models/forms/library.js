@@ -24,6 +24,7 @@ import {
  * @property {{ text: string, href: string, classes?: string }[]} [pageActions] - The page actions.
  * @property {FormMetadata[]} formItems - The form items.
  * @property {(PaginationResult & { pages: Array<PaginationPage> }) | undefined} pagination - The pagination details, including pages for the pagination component.
+ * @property {string} [notification] - The notification to display
  * @property {SortingOptions | undefined} sorting - The sorting options.
  * @property {SearchOptions | undefined} search - The search options.
  */
@@ -31,9 +32,10 @@ import {
 /**
  * @param {string} token
  * @param {QueryOptions} listOptions
+ * @param {string} [notification] - success notification to display
  * @returns {Promise<ListViewModel>}
  */
-export async function listViewModel(token, listOptions) {
+export async function listViewModel(token, listOptions, notification) {
   const pageTitle = 'Forms library'
 
   const formResponse = await forms.list(token, listOptions)
@@ -76,7 +78,8 @@ export async function listViewModel(token, listOptions) {
     formItems,
     pagination,
     sorting: sortingMeta,
-    search: searchMeta
+    search: searchMeta,
+    notification
   }
 }
 
@@ -221,7 +224,15 @@ export function overviewViewModel(metadata, notification) {
                 formaction: `${formPath}/make-draft-live`
               }
             }
+          ],
+      links: !metadata.live
+        ? [
+            {
+              text: 'Delete draft',
+              href: `${formPath}/delete-draft`
+            }
           ]
+        : []
     },
     previewUrl: config.previewUrl,
     notification

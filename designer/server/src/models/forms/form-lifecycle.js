@@ -7,7 +7,7 @@ import { formOverviewPath } from '~/src/models/links.js'
  * @param {FormMetadata} form
  * @param {ErrorDetailsItem[]} errorList - list of errors to display to the user
  */
-export function confirmationPageViewModel(form, errorList) {
+export function makeDraftLiveConfirmationPageViewModel(form, errorList) {
   const pageTitle = 'Are you sure you want to make the draft live?'
 
   const formPath = formOverviewPath(form.slug)
@@ -37,6 +37,43 @@ export function confirmationPageViewModel(form, errorList) {
     buttons: [
       {
         text: 'Make draft live'
+      },
+      {
+        href: formPath,
+        text: 'Cancel',
+        classes: 'govuk-button--secondary'
+      }
+    ]
+  }
+}
+
+/**
+ * Model to represent confirmation page dialog for a given form.
+ * @param {FormMetadata} form
+ * @param {ErrorDetailsItem[]} errorList - list of errors to display to the user
+ */
+export function deleteDraftConfirmationPageViewModel(form, errorList) {
+  const pageTitle = 'Are you sure you want to delete this form?'
+
+  const formPath = formOverviewPath(form.slug)
+  const navigation = getFormSpecificNavigation(formPath, form)
+
+  return {
+    navigation,
+    pageTitle,
+    pageHeading: {
+      text: pageTitle,
+      caption: form.title
+    },
+
+    errorList,
+
+    warning: { text: 'You cannot recover deleted forms.' },
+
+    buttons: [
+      {
+        text: 'Delete form',
+        classes: 'govuk-button--warning'
       },
       {
         href: formPath,

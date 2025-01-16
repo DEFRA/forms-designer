@@ -22,13 +22,21 @@ export default [
        * @param {RequestFormsLibrary} request
        */
       handler: async (request, h) => {
-        const { auth, query } = request
+        const { auth, query, yar } = request
         const token = auth.credentials.token
         const { page, perPage, sort, title } = query
 
+        const successNotification = yar
+          .flash(sessionNames.successNotification)
+          .at(0)
+
         const { sortBy, order } = getSortOptions(sort)
         const listOptions = { page, perPage, sortBy, order, title }
-        const model = await library.listViewModel(token, listOptions)
+        const model = await library.listViewModel(
+          token,
+          listOptions,
+          successNotification
+        )
 
         if (model.pagination) {
           const { totalPages } = model.pagination

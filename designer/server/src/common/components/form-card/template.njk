@@ -1,10 +1,13 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "heading/macro.njk" import appHeading %}
 
-{%- macro appFormButtons(params) %}
+{%- macro appFormActions(params) %}
   <div class="govuk-button-group">
-    {% for button in params.items %}
+    {% for button in params.buttons %}
       {{- govukButton(button) | indent(4, true) }}
+    {% endfor %}
+    {% for link in params.links %}
+      <a class="govuk-link" href="{{ link.href }}">{{ link.text }}</a>
     {% endfor %}
   </div>
 {% endmacro %}
@@ -13,8 +16,9 @@
   {{ appHeading(params.heading) | trim | indent(2) }}
 
   <form action="{{ params.action }}" method="{{ params.method }}" novalidate>
-    {{ appFormButtons({
-      items: params.buttons
+    {{ appFormActions({
+      buttons: params.buttons,
+      links: params.links
     }) | trim | indent(2) }}
   </form>
 </aside>
