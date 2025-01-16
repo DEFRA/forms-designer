@@ -70,8 +70,6 @@ export function deleteDraftConfirmationPageViewModel(form, errorList) {
 
     warning: { text: 'You cannot recover deleted forms.' },
 
-    bodyText: undefined,
-
     buttons: [
       {
         text: 'Delete form',
