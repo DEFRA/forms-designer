@@ -162,6 +162,8 @@ export default [
       const form = await forms.get(request.params.slug, token)
 
       try {
+        // Currently we don't support leaving the metadata widowed with no form definitions.
+        // Deleting a draft also deletes the form itself (as long as the form hasn't gone live).
         await forms.deleteForm(form.id, token)
 
         yar.flash(
