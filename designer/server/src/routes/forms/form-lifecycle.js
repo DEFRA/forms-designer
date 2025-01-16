@@ -166,7 +166,7 @@ export default [
 
         yar.flash(
           sessionNames.successNotification,
-          notifications.FORM_DRAFT_DELETED
+          notifications.FORM_DELETED_DRAFT
         )
 
         return h.redirect(formsLibraryPath)
