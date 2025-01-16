@@ -225,14 +225,14 @@ export function overviewViewModel(metadata, notification) {
               }
             }
           ],
-      links: metadata.live
-        ? []
-        : [
+      links: !metadata.live
+        ? [
             {
               text: 'Delete draft',
               href: `${formPath}/delete-draft`
             }
           ]
+        : []
     },
     previewUrl: config.previewUrl,
     notification
