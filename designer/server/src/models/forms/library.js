@@ -24,7 +24,7 @@ import {
  * @property {{ text: string, href: string, classes?: string }[]} [pageActions] - The page actions.
  * @property {FormMetadata[]} formItems - The form items.
  * @property {(PaginationResult & { pages: Array<PaginationPage> }) | undefined} pagination - The pagination details, including pages for the pagination component.
- * @property {string} [notification] - The notificationto display
+ * @property {string} [notification] - The notification to display
  * @property {SortingOptions | undefined} sorting - The sorting options.
  * @property {SearchOptions | undefined} search - The search options.
  */
