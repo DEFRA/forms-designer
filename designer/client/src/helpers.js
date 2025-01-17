@@ -98,55 +98,70 @@ export function isControllerAllowed(data, page) {
   const hasLinkTo = hasNext(page) && !!page.next.length
 
   /**
+   * Start page unavailable when:
+   *
+   * 1. Another start page already exists
+   * 2. Current page is linked from another page
+   * @param {Page} pageType
+   */
+  const isStartPageHidden = (pageType) => {
+    return (
+      pageType.controller === ControllerType.Start &&
+      (hasStartPage || hasLinkFrom)
+    )
+  }
+
+  /**
+   * Summary page unavailable when:
+   *
+   * 1. Another summary page already exists
+   * 2. Current page has links to another page
+   * @param {Page} pageType
+   */
+  const isSummaryPageHidden = (pageType) => {
+    return (
+      pageType.controller === ControllerType.Summary &&
+      (hasSummaryPage || hasLinkTo)
+    )
+  }
+
+  /**
+   * Terminal page unavailable when:
+   *
+   * 1. Engine is not V2
+   * 2. Current page has form components
+   * @param {Page} pageType
+   */
+  const isTerminalPageHidden = (pageType) => {
+    return (
+      pageType.controller === ControllerType.Terminal &&
+      (engine !== Engine.V2 ||
+        (hasFormComponents(page) && page.components.some(hasFormField)))
+    )
+  }
+
+  /**
+   * Page types currently unavailable
+   * @param {Page} pageType
+   */
+  const isInactivePage = (pageType) => {
+    return pageType.controller === ControllerType.Status
+  }
+
+  /**
    * Filter allowed page types for current page
    * @param {Page} pageType
    */
   return (pageType) => {
     /**
-     * Start page unavailable when:
-     *
-     * 1. Another start page already exists
-     * 2. Current page is linked from another page
-     */
-    const isStartPageHidden =
-      pageType.controller === ControllerType.Start &&
-      (hasStartPage || hasLinkFrom)
-
-    /**
-     * Summary page unavailable when:
-     *
-     * 1. Another summary page already exists
-     * 2. Current page has links to another page
-     */
-    const isSummaryPageHidden =
-      pageType.controller === ControllerType.Summary &&
-      (hasSummaryPage || hasLinkTo)
-
-    /**
-     * Terminal page unavailable when:
-     *
-     * 1. Engine is not V2
-     * 2. Current page has form components
-     */
-    const isTerminalPageHidden =
-      pageType.controller === ControllerType.Terminal &&
-      (engine !== Engine.V2 ||
-        (hasFormComponents(page) && page.components.some(hasFormField)))
-
-    /**
-     * Page types currently unavailable
-     */
-    const isInactivePage = pageType.controller === ControllerType.Status
-
-    /**
      * Ignore rules when already selected
      */
     return (
       !(
-        isStartPageHidden ||
-        isSummaryPageHidden ||
-        isTerminalPageHidden ||
-        isInactivePage
+        isStartPageHidden(pageType) ||
+        isSummaryPageHidden(pageType) ||
+        isTerminalPageHidden(pageType) ||
+        isInactivePage(pageType)
       ) || pageType.controller === page.controller
     )
   }
