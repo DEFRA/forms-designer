@@ -59,37 +59,34 @@ export const getLayout = (data: FormDefinition, el: HTMLDivElement) => {
 
   // Add edges to the graph.
   pages.forEach((page, index) => {
-    switch (engine) {
-      case Engine.V2:
-        if (index < pages.length - 1) {
-          const pageNext = pages.at(index + 1)
+    if (engine === Engine.V2) {
+      if (index < pages.length - 1) {
+        const pageNext = pages.at(index + 1)
 
-          if (pageNext) {
-            g.setEdge(page.path, pageNext.path)
-          }
+        if (pageNext) {
+          g.setEdge(page.path, pageNext.path)
         }
-        break
-      default:
-        if (!hasNext(page)) {
-          return
+      }
+    } else {
+      if (!hasNext(page)) {
+        return
+      }
+
+      page.next.forEach((next) => {
+        try {
+          const pageNext = findPage(data, next.path)
+          const condition = conditions.find(
+            ({ name }) => name === next.condition
+          )
+
+          g.setEdge(page.path, pageNext.path, {
+            label: condition?.displayName,
+            width: condition?.displayName ? 270 : undefined
+          })
+        } catch (error) {
+          logger.error(error, 'Visualisation')
         }
-
-        page.next.forEach((next) => {
-          try {
-            const pageNext = findPage(data, next.path)
-            const condition = conditions.find(
-              ({ name }) => name === next.condition
-            )
-
-            g.setEdge(page.path, pageNext.path, {
-              label: condition?.displayName,
-              width: condition?.displayName ? 270 : undefined
-            })
-          } catch (error) {
-            logger.error(error, 'Visualisation')
-          }
-        })
-        break
+      })
     }
   })
 
