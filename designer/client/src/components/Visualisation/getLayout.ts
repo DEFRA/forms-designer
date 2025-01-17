@@ -31,7 +31,7 @@ export const getLayout = (data: FormDefinition, el: HTMLDivElement) => {
 
   // Set an object for the graph label
   g.setGraph({
-    rankdir: 'LR',
+    rankdir: engine === Engine.V2 ? 'TB' : 'LR',
     align: 'UL',
     marginx: 30,
     marginy: 0,
