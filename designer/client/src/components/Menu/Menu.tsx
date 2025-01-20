@@ -1,9 +1,10 @@
-import { hasComponents, hasListField } from '@defra/forms-model'
+import { Engine, hasComponents, hasListField } from '@defra/forms-model'
 import { useContext } from 'react'
 
 import { DeclarationEdit } from '~/src/DeclarationEdit.jsx'
 import { LinkEdit } from '~/src/LinkEdit.jsx'
 import { PageEdit } from '~/src/PageEdit.jsx'
+import { PagesEdit } from '~/src/PagesEdit.jsx'
 import { DataPrettyPrint } from '~/src/components/DataPrettyPrint/DataPrettyPrint.jsx'
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
 import { SubMenu } from '~/src/components/Menu/SubMenu.jsx'
@@ -23,6 +24,7 @@ export function Menu() {
 
   const page = useMenuItem()
   const link = useMenuItem()
+  const pages = useMenuItem()
   const sections = useMenuItem()
   const conditions = useMenuItem()
   const lists = useMenuItem()
@@ -112,6 +114,8 @@ export function Menu() {
     }
   ]
 
+  const { engine } = data
+
   return (
     <>
       <nav className="menu">
@@ -119,9 +123,15 @@ export function Menu() {
           <button className="govuk-button" onClick={page.show}>
             {i18n('menu.addPage')}
           </button>
-          <button className="govuk-button" onClick={link.show}>
-            {i18n('menu.links')}
-          </button>
+          {engine !== Engine.V2 ? (
+            <button className="govuk-button" onClick={link.show}>
+              {i18n('menu.links')}
+            </button>
+          ) : (
+            <button className="govuk-button" onClick={pages.show}>
+              {i18n('menu.pages')}
+            </button>
+          )}
           <button className="govuk-button" onClick={sections.show}>
             {i18n('menu.sections')}
           </button>
@@ -150,6 +160,18 @@ export function Menu() {
         <RenderInPortal>
           <Flyout id="link-edit" title={i18n('menu.links')} onHide={link.hide}>
             <LinkEdit onSave={link.hide} />
+          </Flyout>
+        </RenderInPortal>
+      )}
+
+      {pages.isVisible && (
+        <RenderInPortal>
+          <Flyout
+            id="pages-edit"
+            title={i18n('menu.pages')}
+            onHide={pages.hide}
+          >
+            <PagesEdit onSave={pages.hide} />
           </Flyout>
         </RenderInPortal>
       )}

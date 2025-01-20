@@ -1,3 +1,4 @@
+import { Engine } from '@defra/forms-model'
 import { useContext, useEffect, useRef, useState, type RefObject } from 'react'
 
 import { Page } from '~/src/components/Page/Page.jsx'
@@ -29,7 +30,7 @@ export function Visualisation() {
   const { layout } = useVisualisation(ref)
   const { data } = useContext(DataContext)
 
-  const { pages } = data
+  const { engine, pages } = data
 
   const wrapperStyle = layout && {
     width: layout.width,
@@ -44,7 +45,9 @@ export function Visualisation() {
             <Page key={page.path} page={page} layout={layout?.nodes[index]} />
           ))}
 
-          {layout && <Lines edges={layout.edges} />}
+          {layout && (
+            <Lines edges={layout.edges} active={engine !== Engine.V2} />
+          )}
         </div>
       </div>
     </div>

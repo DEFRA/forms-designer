@@ -95,17 +95,23 @@ $app-container-width: map.get($govuk-breakpoints, "wide") - 60px;
     }
   }
 
-  polyline {
-    cursor: pointer;
-
+  .line__polyline {
     fill: none;
     stroke-width: 4;
     stroke: govuk-colour("black");
     stroke-linecap: square;
 
-    &:hover,
     &:focus {
-      outline: 6px solid $govuk-focus-colour;
+      outline: none;
+    }
+
+    &--active {
+      cursor: pointer;
+
+      &:hover,
+      &:focus {
+        outline: 6px solid $govuk-focus-colour;
+      }
     }
   }
 }

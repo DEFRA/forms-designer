@@ -1,6 +1,7 @@
 import {
   ControllerPath,
   ControllerType,
+  Engine,
   PageTypes,
   getPageDefaults,
   hasComponents,
@@ -55,6 +56,7 @@ interface State extends Partial<Form> {
   linkFrom?: string
   selectedCondition?: string
   selectedSection?: string
+  selectedPageCondition?: string
   isEditingSection: boolean
   isNewSection: boolean
   pages: Page[]
@@ -110,7 +112,8 @@ export class PageEdit extends Component<Props, State> {
       path: page.path,
       title: page.title,
       selectedSection: hasComponents(page) ? page.section : undefined,
-      repeatTitle: hasRepeater(page) ? page.repeat.options.title : undefined
+      repeatTitle: hasRepeater(page) ? page.repeat.options.title : undefined,
+      selectedPageCondition: page.condition ?? undefined
     })
   }
 
@@ -128,7 +131,8 @@ export class PageEdit extends Component<Props, State> {
       defaults,
       linkFrom,
       selectedCondition,
-      selectedSection
+      selectedSection,
+      selectedPageCondition
     } = this.state
 
     // Remove trailing spaces and hyphens
@@ -155,6 +159,7 @@ export class PageEdit extends Component<Props, State> {
     if (hasComponents(pageUpdate)) {
       pageUpdate.path = payload.path
       pageUpdate.section = selectedSection
+      pageUpdate.condition = selectedPageCondition
 
       // Remove default controller
       if (payload.controller === ControllerType.Page) {
@@ -409,6 +414,12 @@ export class PageEdit extends Component<Props, State> {
     })
   }
 
+  pageConditionSelected = (selectedPageCondition?: string) => {
+    this.setState({
+      selectedPageCondition
+    })
+  }
+
   render() {
     const { page } = this.props
     const { data } = this.context
@@ -420,6 +431,7 @@ export class PageEdit extends Component<Props, State> {
       defaults,
       linkFrom,
       selectedSection,
+      selectedPageCondition,
       repeatTitle,
       isEditingSection,
       isNewSection,
@@ -427,13 +439,14 @@ export class PageEdit extends Component<Props, State> {
       errors
     } = this.state
 
-    const { sections } = data
+    const { engine, sections } = data
 
     const hasErrors = hasValidationErrors(errors)
     const hasEditPath = !!controller && hasFormComponents(defaults)
     const hasEditSection = !!controller && hasNext(defaults)
     const hasEditRepeater = !!controller && hasRepeater(defaults)
-    const hasEditLinkFrom = !page && hasEditPath
+    const hasEditLinkFrom = engine !== Engine.V2 && !page && hasEditPath
+    const hasEditPageCondition = engine === Engine.V2 && page
 
     const pageTypes = PageTypes.filter(
       isControllerAllowed(
@@ -611,6 +624,15 @@ export class PageEdit extends Component<Props, State> {
                 </p>
               </div>
             </>
+          )}
+
+          {hasEditPageCondition && (
+            <SelectConditions
+              path={path}
+              selectedCondition={selectedPageCondition}
+              conditionsChange={this.pageConditionSelected}
+              noFieldsHintText={i18n('conditions.noFieldsAvailable')}
+            />
           )}
 
           {hasEditLinkFrom && (

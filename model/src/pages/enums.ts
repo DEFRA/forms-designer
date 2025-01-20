@@ -9,6 +9,7 @@ export enum ControllerType {
   Page = 'PageController',
   Repeat = 'RepeatPageController',
   FileUpload = 'FileUploadPageController',
+  Terminal = 'TerminalPageController',
   Summary = 'SummaryPageController',
   Status = 'StatusPageController'
 }

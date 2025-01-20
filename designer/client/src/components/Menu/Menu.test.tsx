@@ -1,4 +1,4 @@
-import { type FormDefinition } from '@defra/forms-model'
+import { Engine, type FormDefinition } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
 import { render } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
@@ -131,5 +131,20 @@ describe('Menu', () => {
     expect(save).toHaveBeenCalledTimes(1)
 
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  })
+
+  it('Renders button strings correctly in V2', () => {
+    render(
+      <RenderWithContext data={{ engine: Engine.V2, ...data }}>
+        <Menu />
+      </RenderWithContext>
+    )
+
+    expect(screen.getByText('Add page')).toBeInTheDocument()
+    expect(screen.getByText('Pages')).toBeInTheDocument()
+    expect(screen.getByText('Sections')).toBeInTheDocument()
+    expect(screen.getByText('Conditions')).toBeInTheDocument()
+    expect(screen.getByText('Lists')).toBeInTheDocument()
+    expect(screen.getByText('Summary')).toBeInTheDocument()
   })
 })
