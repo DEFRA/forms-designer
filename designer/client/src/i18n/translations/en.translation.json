@@ -290,6 +290,7 @@
     "addPage": "Add page",
     "conditions": "Conditions",
     "links": "Add link",
+    "pages": "Pages",
     "lists": "Lists",
     "sections": "Sections",
     "summary": "Summary",
@@ -349,6 +350,12 @@
       "fileUpload": "File upload",
       "summary": "Summary page"
     }
+  },
+  "pages": {
+    "moveUp": "Move page up",
+    "moveUp_label": "Move {{title, lowerFirst}} page up",
+    "moveDown": "Move page down",
+    "moveDown_label": "Move {{title, lowerFirst}} page down"
   },
   "save": "Save",
   "section": {
