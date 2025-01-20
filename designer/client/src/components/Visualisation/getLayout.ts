@@ -1,5 +1,10 @@
 import { graphlib, layout, type GraphEdge, type Node } from '@dagrejs/dagre'
-import { Engine, hasNext, type FormDefinition } from '@defra/forms-model'
+import {
+  ControllerType,
+  Engine,
+  hasNext,
+  type FormDefinition
+} from '@defra/forms-model'
 
 import { logger } from '~/src/common/helpers/logging/logger.js'
 import { findPage } from '~/src/data/page/findPage.js'
@@ -60,11 +65,24 @@ export const getLayout = (data: FormDefinition, el: HTMLDivElement) => {
   // Add edges to the graph.
   pages.forEach((page, index) => {
     if (engine === Engine.V2) {
-      if (index < pages.length - 1) {
+      if (
+        page.controller !== ControllerType.Terminal &&
+        index < pages.length - 1
+      ) {
         const pageNext = pages.at(index + 1)
 
         if (pageNext) {
           g.setEdge(page.path, pageNext.path)
+
+          // if (
+          //   pageNext.controller === ControllerType.Terminal &&
+          //   index < pages.length - 2
+          // ) {
+          //   const pageNext = pages.at(index + 2)
+          //   if (pageNext) {
+          //     g.setEdge(page.path, pageNext.path)
+          //   }
+          // }
         }
       }
     } else {

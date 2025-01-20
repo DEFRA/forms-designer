@@ -115,3 +115,28 @@ $app-container-width: map.get($govuk-breakpoints, "wide") - 60px;
     }
   }
 }
+
+.app-form-editor--v2 {
+  .visualisation {
+    .page {
+      &__badge {
+        display: block;
+        position: absolute;
+        top: -20px;
+        right: -16px;
+        width: 30px;
+        height: 30px;
+        border: 1px solid rgba(0, 0, 0, 0);
+        border-radius: 50%;
+
+        &--terminal {
+          background-color: govuk-colour("red");
+        }
+
+        &--conditional {
+          background-color: govuk-colour("orange");
+        }
+      }
+    }
+  }
+}

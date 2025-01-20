@@ -2,6 +2,7 @@
 
 import {
   ControllerType,
+  Engine,
   hasComponents,
   slugify,
   type ComponentDef,
@@ -81,6 +82,8 @@ export const Page = (
 
   const pageId = slugify(page.path)
   const headingId = `${pageId}-heading`
+  const isEngineV2 = data.engine === Engine.V2
+  const isTerminal = page.controller === ControllerType.Terminal
 
   const href = new URL(
     `/preview/draft/${meta.slug}${page.path}?force`,
@@ -97,6 +100,11 @@ export const Page = (
     >
       <div className="page__heading">
         <h3 className="govuk-heading-m" id={headingId}>
+          {isEngineV2 && (isTerminal || page.condition) && (
+            <span
+              className={`page__badge page__badge--${isTerminal ? 'terminal' : 'conditional'}`}
+            ></span>
+          )}
           {section && <span className="govuk-caption-m">{section.title}</span>}
           {page.title}
         </h3>

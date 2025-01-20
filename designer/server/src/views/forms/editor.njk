@@ -23,7 +23,7 @@
   {{ super() }}
 
   <!-- Form editor -->
-  <div class="app-form-editor" data-preview-url="{{ previewUrl }}"></div>
+  <div class="app-form-editor{{ " app-form-editor--v2" if formDefinition.engine == "V2" else "" }}" data-preview-url="{{ previewUrl }}"></div>
   <div class="app-form-portal"></div>
 {% endblock %}
 
