@@ -27,6 +27,7 @@ import {
  * @property {string} [notification] - The notification to display
  * @property {SortingOptions | undefined} sorting - The sorting options.
  * @property {SearchOptions | undefined} search - The search options.
+ * @property {{ filters: FilterOptions | undefined }} meta - The metadata containing filter options.
  */
 
 /**
@@ -44,6 +45,7 @@ export async function listViewModel(token, listOptions, notification) {
   const paginationMeta = formResponse.meta.pagination ?? undefined
   const sortingMeta = formResponse.meta.sorting ?? undefined
   const searchMeta = formResponse.meta.search ?? undefined
+  const filtersMeta = formResponse.meta.filters ?? undefined
 
   let pagination
   if (paginationMeta) {
@@ -79,7 +81,10 @@ export async function listViewModel(token, listOptions, notification) {
     pagination,
     sorting: sortingMeta,
     search: searchMeta,
-    notification
+    notification,
+    meta: {
+      filters: filtersMeta
+    }
   }
 }
 
@@ -125,6 +130,20 @@ function buildPaginationPages(
 
     if (search?.title) {
       queryParams.set('title', search.title)
+    }
+
+    if (search?.author) {
+      queryParams.set('author', search.author)
+    }
+
+    if (search?.organisations?.length) {
+      search.organisations.forEach((org) =>
+        queryParams.append('organisations', org)
+      )
+    }
+
+    if (search?.status?.length) {
+      search.status.forEach((status) => queryParams.append('status', status))
     }
 
     return {
@@ -286,5 +305,5 @@ export function getFormSpecificNavigation(formPath, metadata, activePage = '') {
 }
 
 /**
- * @import { FormDefinition, FormMetadata, PaginationResult, QueryOptions, SortingOptions, SearchOptions } from '@defra/forms-model'
+ * @import { FormDefinition, FormMetadata, PaginationResult, QueryOptions, SortingOptions, SearchOptions, FilterOptions } from '@defra/forms-model'
  */

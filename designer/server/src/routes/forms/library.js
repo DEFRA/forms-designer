@@ -24,19 +24,26 @@ export default [
       handler: async (request, h) => {
         const { auth, query, yar } = request
         const token = auth.credentials.token
-        const { page, perPage, sort, title } = query
+        const { page, perPage, sort, title, author, organisations, status } =
+          query
 
         const successNotification = yar
           .flash(sessionNames.successNotification)
           .at(0)
 
         const { sortBy, order } = getSortOptions(sort)
-        const listOptions = { page, perPage, sortBy, order, title }
-        const model = await library.listViewModel(
-          token,
-          listOptions,
+        const listOptions = {
+          page,
+          perPage,
+          sortBy,
+          order,
+          title,
+          author,
+          organisations,
+          status,
           successNotification
-        )
+        }
+        const model = await library.listViewModel(token, listOptions)
 
         if (model.pagination) {
           const { totalPages } = model.pagination
