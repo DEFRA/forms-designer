@@ -1,5 +1,6 @@
 import {
   ComponentType,
+  Engine,
   hasComponents,
   hasConditionSupport,
   hasFormField,
@@ -15,6 +16,7 @@ import {
 } from '@defra/forms-model'
 
 import { findList } from '~/src/data/list/findList.js'
+import { findPage } from '~/src/data/page/findPage.js'
 import { findPathsTo } from '~/src/data/page/findPathsTo.js'
 import { findSection } from '~/src/data/section/findSection.js'
 
@@ -36,6 +38,16 @@ export function getFields(data: FormDefinition) {
 export function getFieldsTo(data: FormDefinition, pathTo?: string) {
   if (!pathTo) {
     return getFields(data)
+  }
+
+  const { engine } = data
+
+  if (engine === Engine.V2) {
+    const page = findPage(data, pathTo)
+    const index = data.pages.indexOf(page)
+    const pages = data.pages.slice(0, index)
+
+    return getFields({ ...data, pages })
   }
 
   const paths = findPathsTo(data, pathTo)
