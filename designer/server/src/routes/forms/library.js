@@ -24,10 +24,20 @@ export default [
       handler: async (request, h) => {
         const { auth, query } = request
         const token = auth.credentials.token
-        const { page, perPage, sort, title } = query
+        const { page, perPage, sort, title, author, organisations, status } =
+          query
 
         const { sortBy, order } = getSortOptions(sort)
-        const listOptions = { page, perPage, sortBy, order, title }
+        const listOptions = {
+          page,
+          perPage,
+          sortBy,
+          order,
+          title,
+          author,
+          organisations,
+          status
+        }
         const model = await library.listViewModel(token, listOptions)
 
         if (model.pagination) {

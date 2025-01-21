@@ -27,6 +27,22 @@ export async function list(token, options) {
     requestUrl.searchParams.append('title', options.title)
   }
 
+  if (options.author) {
+    requestUrl.searchParams.append('author', options.author)
+  }
+
+  if (options.organisations?.length) {
+    options.organisations.forEach((org) =>
+      requestUrl.searchParams.append('organisations', org)
+    )
+  }
+
+  if (options.status?.length) {
+    options.status.forEach((status) =>
+      requestUrl.searchParams.append('status', status)
+    )
+  }
+
   const { body } = await getJsonByType(requestUrl, getHeaders(token))
 
   return body
