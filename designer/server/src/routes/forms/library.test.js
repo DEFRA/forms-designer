@@ -529,7 +529,117 @@ describe('Forms library routes', () => {
         )
       })
 
-      it('should include empty string title parameter when not provided', async () => {
+      it('should handle author search parameter correctly', async () => {
+        jest.mocked(forms.list).mockResolvedValueOnce({
+          data: [formMetadata],
+          meta: {
+            search: {
+              author: 'John Smith'
+            }
+          }
+        })
+
+        const options = {
+          method: 'GET',
+          url: '/library?author=John+Smith',
+          auth
+        }
+
+        await server.inject(options)
+
+        expect(forms.list).toHaveBeenCalledWith(
+          auth.credentials.token,
+          expect.objectContaining({
+            author: 'John Smith'
+          })
+        )
+      })
+
+      it('should handle organisations search parameter correctly', async () => {
+        jest.mocked(forms.list).mockResolvedValueOnce({
+          data: [formMetadata],
+          meta: {
+            search: {
+              organisations: ['Defra', 'Marine Management Organisation – MMO']
+            }
+          }
+        })
+
+        const options = {
+          method: 'GET',
+          url: '/library?organisations=Defra&organisations=Marine Management Organisation – MMO',
+          auth
+        }
+
+        await server.inject(options)
+
+        expect(forms.list).toHaveBeenCalledWith(
+          auth.credentials.token,
+          expect.objectContaining({
+            organisations: ['Defra', 'Marine Management Organisation – MMO']
+          })
+        )
+      })
+
+      it('should handle status search parameter correctly', async () => {
+        jest.mocked(forms.list).mockResolvedValueOnce({
+          data: [formMetadata],
+          meta: {
+            search: {
+              status: /** @type {FormStatus[]} */ (['draft', 'live'])
+            }
+          }
+        })
+
+        const options = {
+          method: 'GET',
+          url: '/library?status=draft&status=live',
+          auth
+        }
+
+        await server.inject(options)
+
+        expect(forms.list).toHaveBeenCalledWith(
+          auth.credentials.token,
+          expect.objectContaining({
+            status: /** @type {FormStatus[]} */ (['draft', 'live'])
+          })
+        )
+      })
+
+      it('should handle multiple search parameters together correctly', async () => {
+        jest.mocked(forms.list).mockResolvedValueOnce({
+          data: [formMetadata],
+          meta: {
+            search: {
+              title: 'test',
+              organisations: ['Defra', 'Marine Management Organisation – MMO'],
+              status: /** @type {FormStatus[]} */ (['draft', 'live']),
+              author: 'Enrique Chase'
+            }
+          }
+        })
+
+        const options = {
+          method: 'GET',
+          url: '/library?title=test&organisations=Defra&organisations=Marine Management Organisation – MMO&status=draft&status=live&author=Enrique Chase',
+          auth
+        }
+
+        await server.inject(options)
+
+        expect(forms.list).toHaveBeenCalledWith(
+          auth.credentials.token,
+          expect.objectContaining({
+            title: 'test',
+            organisations: ['Defra', 'Marine Management Organisation – MMO'],
+            status: /** @type {FormStatus[]} */ (['draft', 'live']),
+            author: 'Enrique Chase'
+          })
+        )
+      })
+
+      it('should include empty array/string defaults for all search parameters when not provided', async () => {
         jest.mocked(forms.list).mockResolvedValueOnce({
           data: [formMetadata],
           meta: {}
@@ -548,7 +658,10 @@ describe('Forms library routes', () => {
           expect.objectContaining({
             page: 1,
             perPage: 24,
-            title: ''
+            title: '',
+            author: '',
+            organisations: [],
+            status: []
           })
         )
       })
@@ -644,6 +757,6 @@ describe('Forms library routes', () => {
 })
 
 /**
- * @import { FormDefinition, FormMetadata, FormMetadataAuthor } from '@defra/forms-model'
+ * @import { FormDefinition, FormMetadata, FormMetadataAuthor, FormStatus} from '@defra/forms-model'
  * @import { Server } from '@hapi/hapi'
  */

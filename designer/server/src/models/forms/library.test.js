@@ -798,7 +798,7 @@ describe('Forms Library Models', () => {
     })
 
     describe('when search options are provided', () => {
-      it('includes search parameters in pagination hrefs', async () => {
+      it('includes title search parameters in pagination hrefs', async () => {
         const mockFormResponse = {
           data: [metadataWithDraft],
           meta: {
@@ -841,7 +841,7 @@ describe('Forms Library Models', () => {
         ])
       })
 
-      it('includes search parameters with sorting in pagination hrefs', async () => {
+      it('includes title search parameters with sorting in pagination hrefs', async () => {
         const mockFormResponse = {
           data: [metadataWithDraft],
           meta: {
@@ -889,10 +889,139 @@ describe('Forms Library Models', () => {
           }
         ])
       })
+
+      it('includes author search parameter in pagination hrefs', async () => {
+        const mockFormResponse = {
+          data: [metadataWithDraft],
+          meta: {
+            pagination: {
+              page: 2,
+              perPage: 10,
+              totalPages: 3,
+              totalItems: 30
+            },
+            search: {
+              author: 'Enrique Chase'
+            }
+          }
+        }
+
+        jest.spyOn(forms, 'list').mockResolvedValue(mockFormResponse)
+        const viewModel = await listViewModel('token', {
+          page: 2,
+          perPage: 10,
+          author: 'Enrique Chase'
+        })
+
+        expect(viewModel.pagination).toBeTruthy()
+        expect(viewModel.pagination?.pages).toEqual([
+          {
+            number: '1',
+            href: `${formsLibraryPath}?page=1&perPage=10&author=Enrique+Chase`,
+            current: false
+          },
+          {
+            number: '2',
+            href: `${formsLibraryPath}?page=2&perPage=10&author=Enrique+Chase`,
+            current: true
+          },
+          {
+            number: '3',
+            href: `${formsLibraryPath}?page=3&perPage=10&author=Enrique+Chase`,
+            current: false
+          }
+        ])
+      })
+
+      it('includes multiple organisations in pagination hrefs', async () => {
+        const mockFormResponse = {
+          data: [metadataWithDraft],
+          meta: {
+            pagination: {
+              page: 2,
+              perPage: 10,
+              totalPages: 3,
+              totalItems: 30
+            },
+            search: {
+              organisations: ['Defra', 'EA']
+            }
+          }
+        }
+
+        jest.spyOn(forms, 'list').mockResolvedValue(mockFormResponse)
+        const viewModel = await listViewModel('token', {
+          page: 2,
+          perPage: 10,
+          organisations: ['Defra', 'EA']
+        })
+
+        expect(viewModel.pagination).toBeTruthy()
+        expect(viewModel.pagination?.pages).toEqual([
+          {
+            number: '1',
+            href: `${formsLibraryPath}?page=1&perPage=10&organisations=Defra&organisations=EA`,
+            current: false
+          },
+          {
+            number: '2',
+            href: `${formsLibraryPath}?page=2&perPage=10&organisations=Defra&organisations=EA`,
+            current: true
+          },
+          {
+            number: '3',
+            href: `${formsLibraryPath}?page=3&perPage=10&organisations=Defra&organisations=EA`,
+            current: false
+          }
+        ])
+      })
+
+      it('includes multiple status values in pagination hrefs', async () => {
+        const mockFormResponse = {
+          data: [metadataWithDraft],
+          meta: {
+            pagination: {
+              page: 2,
+              perPage: 10,
+              totalPages: 3,
+              totalItems: 30
+            },
+            search: {
+              status: /** @type {FormStatus[]} */ (['draft', 'live'])
+            }
+          }
+        }
+
+        jest.spyOn(forms, 'list').mockResolvedValue(mockFormResponse)
+        const viewModel = await listViewModel('token', {
+          page: 2,
+          perPage: 10,
+          status: ['draft', 'live']
+        })
+
+        expect(viewModel.pagination).toBeTruthy()
+        expect(viewModel.pagination?.pages).toEqual([
+          {
+            number: '1',
+            href: `${formsLibraryPath}?page=1&perPage=10&status=draft&status=live`,
+            current: false
+          },
+          {
+            number: '2',
+            href: `${formsLibraryPath}?page=2&perPage=10&status=draft&status=live`,
+            current: true
+          },
+          {
+            number: '3',
+            href: `${formsLibraryPath}?page=3&perPage=10&status=draft&status=live`,
+            current: false
+          }
+        ])
+      })
     })
   })
 })
 
 /**
- * @import { FormMetadata } from '@defra/forms-model'
+ * @import { FormMetadata, FormStatus } from '@defra/forms-model'
  */

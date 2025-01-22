@@ -513,11 +513,118 @@ describe('Forms library routes', () => {
 
         expect(result).toEqual(mockResponse)
       })
+
+      it('should append author parameter when provided', async () => {
+        const options = {
+          page: 1,
+          perPage: 10,
+          author: authorDisplayName
+        }
+        const mockResponse = {
+          data: [formMetadata],
+          meta: {
+            pagination: {
+              page: 1,
+              perPage: 10,
+              totalPages: 1,
+              totalItems: 1
+            }
+          }
+        }
+
+        jest.spyOn(fetch, 'getJson').mockResolvedValueOnce({
+          /** @type {any} */
+          response: {},
+          body: mockResponse
+        })
+
+        const result = await forms.list(token, options)
+
+        const fetchGetJsonMock = /** @type {jest.Mock} */ (fetch.getJson)
+        /** @type {Array<[URL, object]>} */
+        const mockCalls = fetchGetJsonMock.mock.calls
+        const calledUrl = /** @type {URL} */ (mockCalls[0][0])
+
+        expect(calledUrl.searchParams.get('author')).toBe(authorDisplayName)
+        expect(result).toEqual(mockResponse)
+      })
+
+      it('should append organisations parameters when provided', async () => {
+        const options = {
+          page: 1,
+          perPage: 10,
+          organisations: ['Defra', 'Environment Agency']
+        }
+        const mockResponse = {
+          data: [formMetadata],
+          meta: {
+            pagination: {
+              page: 1,
+              perPage: 10,
+              totalPages: 1,
+              totalItems: 1
+            }
+          }
+        }
+
+        jest.spyOn(fetch, 'getJson').mockResolvedValueOnce({
+          /** @type {any} */
+          response: {},
+          body: mockResponse
+        })
+
+        const result = await forms.list(token, options)
+
+        const fetchGetJsonMock = /** @type {jest.Mock} */ (fetch.getJson)
+        /** @type {Array<[URL, object]>} */
+        const mockCalls = fetchGetJsonMock.mock.calls
+        const calledUrl = /** @type {URL} */ (mockCalls[0][0])
+
+        const organisations = calledUrl.searchParams.getAll('organisations')
+        expect(organisations).toEqual(['Defra', 'Environment Agency'])
+        expect(result).toEqual(mockResponse)
+      })
+
+      it('should append status parameters when provided', async () => {
+        const options = {
+          page: 1,
+          perPage: 10,
+          status: /** @type {FormStatus[]} */ (['draft', 'live'])
+        }
+        const mockResponse = {
+          data: [formMetadata],
+          meta: {
+            pagination: {
+              page: 1,
+              perPage: 10,
+              totalPages: 1,
+              totalItems: 1
+            }
+          }
+        }
+
+        jest.spyOn(fetch, 'getJson').mockResolvedValueOnce({
+          /** @type {any} */
+          response: {},
+          body: mockResponse
+        })
+
+        const result = await forms.list(token, options)
+
+        const fetchGetJsonMock = /** @type {jest.Mock} */ (fetch.getJson)
+        /** @type {Array<[URL, object]>} */
+        const mockCalls = fetchGetJsonMock.mock.calls
+        const calledUrl = /** @type {URL} */ (mockCalls[0][0])
+
+        const statuses = calledUrl.searchParams.getAll('status')
+        expect(statuses).toEqual(['draft', 'live'])
+        expect(result).toEqual(mockResponse)
+      })
     })
   })
 })
 
 /**
- * @import { FormDefinition, FormMetadata, FormMetadataAuthor } from '@defra/forms-model'
+ * @import { FormDefinition, FormMetadata, FormMetadataAuthor, FormStatus } from '@defra/forms-model'
  * @import { Server } from '@hapi/hapi'
  */
