@@ -34,7 +34,7 @@ export default {
               statusCode,
               data: response.data,
               message: response.message,
-              stack: response.stack
+              stack_trace: response.stack
             },
             'Unhandled error found'
           )
