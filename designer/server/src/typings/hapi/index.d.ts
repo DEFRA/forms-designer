@@ -60,6 +60,7 @@ declare module '@hapi/hapi' {
     idToken: string
     refreshToken: string
     expiresIn: number
+    flowId: string
   }
 
   interface UserCredentials {
@@ -95,6 +96,7 @@ declare module '@hapi/yar' {
   type RedirectToKey = (typeof sessionNames)['redirectTo']
   type SuccessNotification = (typeof sessionNames)['successNotification']
   type ErrorListKey = (typeof sessionNames)['errorList']
+  type ForceSignOutKey = (typeof sessionNames)['forceSignOut']
 
   // Export known validation session keys
   type ValidationSession = (typeof sessionNames)['validationFailure']
@@ -144,10 +146,19 @@ declare module '@hapi/yar' {
       type: ValidationSession['fileDownload']
     ): ValidationFailure<{ email: string }>[]
 
+    flash(
+      type: ValidationSession['fileDownload']
+    ): ValidationFailure<{ email: string }>[]
+
     /**
      * Get temporary error messages relating to the current page.
      */
     flash(type: ErrorListKey): ErrorDetailsItem[]
+
+    /**
+     * Get temporary boolean values from the session
+     */
+    flash(type: ForceSignOutKey): boolean[]
 
     /**
      * Get form metadata from the session

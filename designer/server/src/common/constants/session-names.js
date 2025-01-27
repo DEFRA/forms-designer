@@ -18,5 +18,6 @@ export const sessionNames = {
     )
   },
   successNotification: /** @type {const} */ ('successNotification'),
-  errorList: /** @type {const} */ ('errorList')
+  errorList: /** @type {const} */ ('errorList'),
+  forceSignOut: /** @type {const} */ ('forceSignOut')
 }
