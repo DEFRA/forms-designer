@@ -384,6 +384,117 @@ describe('Forms Library Models', () => {
         )
       })
     })
+
+    describe('when pagination with "all" author', () => {
+      it('preserves "all" author in pagination URLs', async () => {
+        const mockFormResponse = {
+          data: [metadataWithDraft],
+          meta: {
+            pagination: {
+              page: 2,
+              perPage: 10,
+              totalPages: 3,
+              totalItems: 30
+            },
+            search: {
+              author: ''
+            }
+          }
+        }
+
+        jest.spyOn(forms, 'list').mockResolvedValue(mockFormResponse)
+        const viewModel = await listViewModel('token', {
+          page: 2,
+          perPage: 10,
+          author: 'all'
+        })
+
+        expect(viewModel.pagination?.pages[0].href).toContain('author=all')
+      })
+    })
+
+    describe('when search options include author parameter', () => {
+      it('includes "all" in pagination hrefs when author is empty string', async () => {
+        const mockFormResponse = {
+          data: [metadataWithDraft],
+          meta: {
+            pagination: {
+              page: 2,
+              perPage: 10,
+              totalPages: 3,
+              totalItems: 30
+            },
+            search: {
+              author: ''
+            }
+          }
+        }
+
+        jest.spyOn(forms, 'list').mockResolvedValue(mockFormResponse)
+        const viewModel = await listViewModel('token', {
+          page: 2,
+          perPage: 10,
+          author: ''
+        })
+
+        expect(viewModel.pagination?.pages[0].href).toContain('author=all')
+        expect(viewModel.pagination?.pages[1].href).toContain('author=all')
+        expect(viewModel.pagination?.pages[2].href).toContain('author=all')
+      })
+
+      it('includes specific author name in pagination hrefs when author is provided', async () => {
+        const mockFormResponse = {
+          data: [metadataWithDraft],
+          meta: {
+            pagination: {
+              page: 2,
+              perPage: 10,
+              totalPages: 3,
+              totalItems: 30
+            },
+            search: {
+              author: 'Enrique'
+            }
+          }
+        }
+
+        jest.spyOn(forms, 'list').mockResolvedValue(mockFormResponse)
+        const viewModel = await listViewModel('token', {
+          page: 2,
+          perPage: 10,
+          author: 'Enrique'
+        })
+
+        expect(viewModel.pagination?.pages[0].href).toContain('author=Enrique')
+        expect(viewModel.pagination?.pages[1].href).toContain('author=Enrique')
+        expect(viewModel.pagination?.pages[2].href).toContain('author=Enrique')
+      })
+
+      it('omits author parameter when author is not provided in search options', async () => {
+        const mockFormResponse = {
+          data: [metadataWithDraft],
+          meta: {
+            pagination: {
+              page: 2,
+              perPage: 10,
+              totalPages: 3,
+              totalItems: 30
+            },
+            search: {}
+          }
+        }
+
+        jest.spyOn(forms, 'list').mockResolvedValue(mockFormResponse)
+        const viewModel = await listViewModel('token', {
+          page: 2,
+          perPage: 10
+        })
+
+        expect(viewModel.pagination?.pages[0].href).not.toContain('author=')
+        expect(viewModel.pagination?.pages[1].href).not.toContain('author=')
+        expect(viewModel.pagination?.pages[2].href).not.toContain('author=')
+      })
+    })
   })
 
   describe('listViewModel pagination', () => {

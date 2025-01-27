@@ -665,6 +665,28 @@ describe('Forms library routes', () => {
           })
         )
       })
+
+      it('should initialise model.search when author is "all"', async () => {
+        jest.mocked(forms.list).mockResolvedValueOnce({
+          data: [formMetadata],
+          meta: {}
+        })
+
+        const options = {
+          method: 'GET',
+          url: '/library?author=all',
+          auth
+        }
+
+        await renderResponse(server, options)
+
+        expect(forms.list).toHaveBeenCalledWith(
+          auth.credentials.token,
+          expect.objectContaining({
+            author: ''
+          })
+        )
+      })
     })
   })
 
