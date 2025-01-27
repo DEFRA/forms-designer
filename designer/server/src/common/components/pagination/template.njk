@@ -1,14 +1,27 @@
 {% from "govuk/components/pagination/macro.njk" import govukPagination %}
 
 {% if params.pagination and params.pagination.totalPages > 1 %}
-  {% set titleQuery = "" %}
+  {% set queryParams = "" %}
   {% if params.search.title %}
-    {% set titleQuery = "&title=" ~ (params.search.title | urlencode) %}
+    {% set queryParams = queryParams ~ "&title=" ~ (params.search.title | urlencode) %}
+  {% endif %}
+  {% if params.search.author %}
+    {% set queryParams = queryParams ~ "&author=" ~ (params.search.author | urlencode) %}
+  {% endif %}
+  {% if params.search.organisations and params.search.organisations | length %}
+    {% for org in params.search.organisations %}
+      {% set queryParams = queryParams ~ "&organisations=" ~ (org | urlencode) %}
+    {% endfor %}
+  {% endif %}
+  {% if params.search.status and params.search.status | length %}
+    {% for state in params.search.status %}
+      {% set queryParams = queryParams ~ "&status=" ~ (state | urlencode) %}
+    {% endfor %}
   {% endif %}
 
   {% set previous = null %}
   {% if params.pagination.page > 1 %}
-    {% set previousHref = (params.baseUrl | default('')) ~ "?page=" ~ (params.pagination.page - 1) ~ "&perPage=" ~ params.pagination.perPage ~ titleQuery %}
+    {% set previousHref = (params.baseUrl | default('')) ~ "?page=" ~ (params.pagination.page - 1) ~ "&perPage=" ~ params.pagination.perPage ~ queryParams %}
     {% set previous = {
       href: previousHref,
       labelText: "Previous page",
@@ -18,7 +31,7 @@
 
   {% set next = null %}
   {% if params.pagination.page < params.pagination.totalPages %}
-    {% set nextHref = (params.baseUrl | default('')) ~ "?page=" ~ (params.pagination.page + 1) ~ "&perPage=" ~ params.pagination.perPage ~ titleQuery %}
+    {% set nextHref = (params.baseUrl | default('')) ~ "?page=" ~ (params.pagination.page + 1) ~ "&perPage=" ~ params.pagination.perPage ~ queryParams %}
     {% set next = {
       href: nextHref,
       labelText: "Next page",
