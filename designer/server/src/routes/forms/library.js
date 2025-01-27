@@ -38,12 +38,19 @@ export default [
           sortBy,
           order,
           title,
-          author,
+          author: author === 'all' ? '' : author,
           organisations,
           status,
           successNotification
         }
         const model = await library.listViewModel(token, listOptions)
+
+        if (author === 'all') {
+          if (!model.search) {
+            model.search = {}
+          }
+          model.search.author = 'all'
+        }
 
         if (model.pagination) {
           const { totalPages } = model.pagination

@@ -132,7 +132,9 @@ function buildPaginationPages(
       queryParams.set('title', search.title)
     }
 
-    if (search?.author) {
+    if (search?.author === '') {
+      queryParams.set('author', 'all')
+    } else if (search?.author) {
       queryParams.set('author', search.author)
     }
 

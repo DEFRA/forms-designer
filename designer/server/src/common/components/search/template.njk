@@ -25,6 +25,7 @@
 
   {% set hasActiveSearch = (params.search.title and params.search.title != "") or 
                           (params.search.author and params.search.author != "") or 
+                          params.search.author == "all" or 
                           (params.search.organisations and params.search.organisations | length) or 
                           (params.search.status and params.search.status | length) %}
 
@@ -98,8 +99,8 @@
   {% endfor %}
   {% set authorsRadios = (authorsRadios.push({
     text: "All authors",
-    value: "",
-    checked: not params.search.author
+    value: "all",
+    checked: params.search.author == "all" or not params.search.author
   }), authorsRadios) %}
 
   {% set orgCheckBoxes = [] %}
