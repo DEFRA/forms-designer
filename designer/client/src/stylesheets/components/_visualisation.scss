@@ -42,8 +42,23 @@ $app-container-width: map.get($govuk-breakpoints, "wide") - 60px;
       box-shadow: 0 0 0 6px $govuk-focus-colour;
     }
 
+    .govuk-tag {
+      margin-top: auto;
+      position: absolute;
+      top: -32px;
+      left: -2px;
+    }
+
     &--repeat {
       box-shadow: 5px 10px rgba(govuk-colour("black"), 0.5);
+    }
+
+    &--terminal {
+      box-shadow: 5px 10px rgba(govuk-tint(govuk-colour("red"), 80), 0.9);
+    }
+
+    &--conditional {
+      box-shadow: 5px 10px rgba(govuk-tint(govuk-colour("blue"), 80), 0.9);
     }
 
     &__heading {
