@@ -24,10 +24,10 @@
   }) }}
 
   {% set hasActiveSearch = (params.search.title and params.search.title != "") or
-                          (params.search.author and params.search.author != "") or
-                          (params.search.author == "all" or params.search.author == "") or
-                          (params.search.organisations and params.search.organisations | length) or
-                          (params.search.status and params.search.status | length) %}
+                        (params.search.author == "all") or
+                        (params.search.author and params.search.author != "" and params.search.author != "all") or
+                        (params.search.organisations and params.search.organisations | length) or
+                        (params.search.status and params.search.status | length) %}
 
   {% if hasActiveSearch %}
     <div class="govuk-inset-text govuk-!-margin-bottom-4" aria-labelledby="applied-filters-heading">
@@ -49,9 +49,12 @@
           {% endif %}
         </li>
         {% if params.search.organisations and params.search.organisations | length %}
-          {% for org in params.search.organisations %}
-            <li><strong>Organisation:</strong> {{ org }}</li>
-          {% endfor %}
+          <li>
+            <strong>Organisation:</strong>
+            {% for org in params.search.organisations %}
+              {{ org }}{% if not loop.last %}, {% endif %}
+            {% endfor %}
+          </li>
         {% endif %}
         {% if params.search.status and params.search.status | length %}
           {% for state in params.search.status %}
