@@ -5,7 +5,7 @@
   {% if params.search.title %}
     {% set queryParams = queryParams ~ "&title=" ~ (params.search.title | urlencode) %}
   {% endif %}
-  {% if params.search.author %}
+  {% if params.search.author is defined and params.search.author != "" %}
     {% set queryParams = queryParams ~ "&author=" ~ (params.search.author | urlencode) %}
   {% endif %}
   {% if params.search.organisations and params.search.organisations | length %}

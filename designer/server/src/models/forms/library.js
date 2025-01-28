@@ -132,10 +132,8 @@ function buildPaginationPages(
       queryParams.set('title', search.title)
     }
 
-    if (search?.author === '') {
-      queryParams.set('author', 'all')
-    } else if (search?.author) {
-      queryParams.set('author', search.author)
+    if (search?.author !== undefined) {
+      queryParams.set('author', search.author === '' ? 'all' : search.author)
     }
 
     if (search?.organisations?.length) {
