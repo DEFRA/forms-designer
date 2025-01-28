@@ -69,7 +69,7 @@ export function credentials(options) {
     idToken: tokens.id_token,
     refreshToken: tokens.refresh_token,
     expiresIn: tokens.expires_in,
-    flowId: '1234'
+    flowId: ''
   })
 }
 
