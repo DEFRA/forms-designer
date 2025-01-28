@@ -703,6 +703,308 @@ describe('Pagination Component', () => {
       })
     })
 
+    describe('With search author parameter', () => {
+      beforeEach(() => {
+        const { container } = renderMacro(
+          'appPagination',
+          'pagination/macro.njk',
+          {
+            params: {
+              baseUrl: '/library',
+              search: {
+                author: 'Enrique Chase'
+              },
+              pagination: {
+                page: 2,
+                perPage: 10,
+                totalPages: 3,
+                totalItems: 25,
+                pages: [
+                  {
+                    number: '1',
+                    href: '/library?page=1&perPage=10&author=Enrique%20Chase',
+                    current: false
+                  },
+                  {
+                    number: '2',
+                    href: '/library?page=2&perPage=10&author=Enrique%20Chase',
+                    current: true
+                  },
+                  {
+                    number: '3',
+                    href: '/library?page=3&perPage=10&author=Enrique%20Chase',
+                    current: false
+                  }
+                ]
+              }
+            }
+          }
+        )
+
+        $pagination = container.getByRole('navigation', { name: 'Pagination' })
+      })
+
+      it('should include encoded author parameter in navigation links', () => {
+        const $previousLink = within($pagination).getByRole('link', {
+          name: 'Previous'
+        })
+        const $nextLink = within($pagination).getByRole('link', {
+          name: 'Next'
+        })
+
+        expect($previousLink).toHaveAttribute(
+          'href',
+          '/library?page=1&perPage=10&author=Enrique%20Chase'
+        )
+        expect($nextLink).toHaveAttribute(
+          'href',
+          '/library?page=3&perPage=10&author=Enrique%20Chase'
+        )
+      })
+
+      it('should include encoded author parameter in page number links', () => {
+        const $pageLinks = within($pagination).getAllByRole('link', {
+          name: /Page \d+/
+        })
+
+        expect($pageLinks[0]).toHaveAttribute(
+          'href',
+          '/library?page=1&perPage=10&author=Enrique%20Chase'
+        )
+        expect($pageLinks[1]).toHaveAttribute(
+          'href',
+          '/library?page=2&perPage=10&author=Enrique%20Chase'
+        )
+        expect($pageLinks[2]).toHaveAttribute(
+          'href',
+          '/library?page=3&perPage=10&author=Enrique%20Chase'
+        )
+      })
+    })
+
+    describe('With search organisations parameter', () => {
+      beforeEach(() => {
+        const { container } = renderMacro(
+          'appPagination',
+          'pagination/macro.njk',
+          {
+            params: {
+              baseUrl: '/library',
+              search: {
+                organisations: [
+                  'Defra',
+                  'Environment Agency',
+                  'Natural England'
+                ]
+              },
+              pagination: {
+                page: 2,
+                perPage: 10,
+                totalPages: 3,
+                totalItems: 25,
+                pages: [
+                  {
+                    number: '1',
+                    href: '/library?page=1&perPage=10&organisations=Defra&organisations=Environment%20Agency&organisations=Natural%20England',
+                    current: false
+                  },
+                  {
+                    number: '2',
+                    href: '/library?page=2&perPage=10&organisations=Defra&organisations=Environment%20Agency&organisations=Natural%20England',
+                    current: true
+                  },
+                  {
+                    number: '3',
+                    href: '/library?page=3&perPage=10&organisations=Defra&organisations=Environment%20Agency&organisations=Natural%20England',
+                    current: false
+                  }
+                ]
+              }
+            }
+          }
+        )
+
+        $pagination = container.getByRole('navigation', { name: 'Pagination' })
+      })
+
+      it('should include encoded organisations parameter in navigation links', () => {
+        const $previousLink = within($pagination).getByRole('link', {
+          name: 'Previous'
+        })
+        const $nextLink = within($pagination).getByRole('link', {
+          name: 'Next'
+        })
+
+        const expectedParams =
+          'organisations=Defra&organisations=Environment%20Agency&organisations=Natural%20England'
+
+        expect($previousLink).toHaveAttribute(
+          'href',
+          `/library?page=1&perPage=10&${expectedParams}`
+        )
+        expect($nextLink).toHaveAttribute(
+          'href',
+          `/library?page=3&perPage=10&${expectedParams}`
+        )
+      })
+
+      it('should include encoded organisations parameter in page number links', () => {
+        const $pageLinks = within($pagination).getAllByRole('link', {
+          name: /Page \d+/
+        })
+
+        const expectedParams =
+          'organisations=Defra&organisations=Environment%20Agency&organisations=Natural%20England'
+
+        expect($pageLinks[0]).toHaveAttribute(
+          'href',
+          `/library?page=1&perPage=10&${expectedParams}`
+        )
+        expect($pageLinks[1]).toHaveAttribute(
+          'href',
+          `/library?page=2&perPage=10&${expectedParams}`
+        )
+        expect($pageLinks[2]).toHaveAttribute(
+          'href',
+          `/library?page=3&perPage=10&${expectedParams}`
+        )
+      })
+    })
+
+    describe('With search status parameter', () => {
+      beforeEach(() => {
+        const { container } = renderMacro(
+          'appPagination',
+          'pagination/macro.njk',
+          {
+            params: {
+              baseUrl: '/library',
+              search: {
+                status: ['draft', 'live']
+              },
+              pagination: {
+                page: 2,
+                perPage: 10,
+                totalPages: 3,
+                totalItems: 25,
+                pages: [
+                  {
+                    number: '1',
+                    href: '/library?page=1&perPage=10&status=draft&status=live',
+                    current: false
+                  },
+                  {
+                    number: '2',
+                    href: '/library?page=2&perPage=10&status=draft&status=live',
+                    current: true
+                  },
+                  {
+                    number: '3',
+                    href: '/library?page=3&perPage=10&status=draft&status=live',
+                    current: false
+                  }
+                ]
+              }
+            }
+          }
+        )
+
+        $pagination = container.getByRole('navigation', { name: 'Pagination' })
+      })
+
+      it('should include encoded status parameter in navigation links', () => {
+        const $previousLink = within($pagination).getByRole('link', {
+          name: 'Previous'
+        })
+        const $nextLink = within($pagination).getByRole('link', {
+          name: 'Next'
+        })
+
+        expect($previousLink).toHaveAttribute(
+          'href',
+          '/library?page=1&perPage=10&status=draft&status=live'
+        )
+        expect($nextLink).toHaveAttribute(
+          'href',
+          '/library?page=3&perPage=10&status=draft&status=live'
+        )
+      })
+
+      it('should include encoded status parameter in page number links', () => {
+        const $pageLinks = within($pagination).getAllByRole('link', {
+          name: /Page \d+/
+        })
+
+        expect($pageLinks[0]).toHaveAttribute(
+          'href',
+          '/library?page=1&perPage=10&status=draft&status=live'
+        )
+        expect($pageLinks[1]).toHaveAttribute(
+          'href',
+          '/library?page=2&perPage=10&status=draft&status=live'
+        )
+        expect($pageLinks[2]).toHaveAttribute(
+          'href',
+          '/library?page=3&perPage=10&status=draft&status=live'
+        )
+      })
+    })
+
+    describe('With special characters in organisation names', () => {
+      beforeEach(() => {
+        const { container } = renderMacro(
+          'appPagination',
+          'pagination/macro.njk',
+          {
+            params: {
+              baseUrl: '/library',
+              search: {
+                organisations: [
+                  'Animal and Plant Health Agency – APHA',
+                  'Centre for Environment, Fisheries and Aquaculture Science – Cefas',
+                  'Marine Management Organisation – MMO'
+                ]
+              },
+              pagination: {
+                page: 1,
+                perPage: 10,
+                totalPages: 2,
+                totalItems: 15,
+                pages: [
+                  {
+                    number: '1',
+                    href: '/library?page=1&perPage=10',
+                    current: true
+                  },
+                  {
+                    number: '2',
+                    href: '/library?page=2&perPage=10',
+                    current: false
+                  }
+                ]
+              }
+            }
+          }
+        )
+
+        $pagination = container.getByRole('navigation', { name: 'Pagination' })
+      })
+
+      it('should properly encode special characters in organisation names', () => {
+        const $nextLink = within($pagination).getByRole('link', {
+          name: 'Next'
+        })
+
+        const expectedParams =
+          'organisations=Animal%20and%20Plant%20Health%20Agency%20%E2%80%93%20APHA&organisations=Centre%20for%20Environment%2C%20Fisheries%20and%20Aquaculture%20Science%20%E2%80%93%20Cefas&organisations=Marine%20Management%20Organisation%20%E2%80%93%20MMO'
+
+        expect($nextLink).toHaveAttribute(
+          'href',
+          `/library?page=2&perPage=10&${expectedParams}`
+        )
+      })
+    })
+
     describe('With special characters in search title', () => {
       beforeEach(() => {
         const { container } = renderMacro(
