@@ -102,3 +102,17 @@ The following attribution statement MUST be cited in your products and applicati
 The Open Government Licence (OGL) was developed by the Controller of Her Majesty's Stationery Office (HMSO) to enable information providers in the public sector to license the use and re-use of their information under a common open licence.
 
 It is designed to encourage use and re-use of information freely and flexibly, with only a few conditions.
+
+# Forms Model Changes
+
+If you make changes to the `@defra/forms-model` package (in the `model/` dir), or pull in model changes after rebasing with main, you'll need to:
+
+```sh
+npm run build --workspace=model
+```
+
+2. Restart your terminal/command prompt
+
+3. In VS Code, press `Cmd + Shift + P` (Mac) or `Ctrl + Shift + P` (Windows/Linux) and search for "Developer: Reload Window"
+
+This might be needed as the model package needs to be rebuilt to generate new TypeScript type definitions and compiled JavaScript files. Without these steps, you may see TS errors about missing types, especially after rebasing with main.
