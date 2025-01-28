@@ -40,9 +40,6 @@ const sessionCookie = {
            * Redirect invalid session to callback route
            */
           redirectTo(request) {
-            const forceSignOut =
-              request?.yar.flash(sessionNames.forceSignOut).at(0) ?? false
-
             if (request) {
               const { url, yar } = request
 
@@ -50,9 +47,7 @@ const sessionCookie = {
               yar.flash(sessionNames.redirectTo, url.pathname)
             }
 
-            // If we're forcing them out (e.g. duplicate session), show them an error
-            // else they might be renewing/refreshing their session, so go to the callback
-            return forceSignOut ? '/account/signed-out' : '/auth/callback'
+            return '/auth/callback'
           },
 
           /**
