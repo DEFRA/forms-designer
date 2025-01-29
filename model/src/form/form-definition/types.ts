@@ -14,10 +14,25 @@ export interface Link {
   redirect?: string
 }
 
+export interface EventOptions {
+  method: string
+  url: string
+}
+
+export interface Event {
+  type: string
+  options: EventOptions
+}
+
+export interface Events {
+  onLoad: Event
+}
+
 export interface PageBase {
   title: string
   path: string
   condition?: string
+  events?: Events
 }
 
 export interface RepeatOptions {
