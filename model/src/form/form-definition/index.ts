@@ -172,7 +172,8 @@ const eventSchema = Joi.object<Event>().keys({
 })
 
 const eventsSchema = Joi.object<Events>().keys({
-  onLoad: eventSchema
+  onLoad: eventSchema,
+  onSave: eventSchema
 })
 
 /**

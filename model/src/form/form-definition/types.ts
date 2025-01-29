@@ -26,6 +26,7 @@ export interface Event {
 
 export interface Events {
   onLoad: Event
+  onSave: Event
 }
 
 export interface PageBase {
