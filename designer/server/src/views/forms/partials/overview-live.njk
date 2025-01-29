@@ -5,11 +5,11 @@
 {% endset %}
 
 {% set formCreated %}
-  {{ form.live.createdAt | formatDate }} by {{ form.live.createdBy.displayName }}
+  {{ form.live.createdAt | formatDate }} by {{ form.live.createdBy.displayName | escape }}
 {% endset %}
 
 {% set formUpdated %}
-  {{ form.live.updatedAt | formatDate }} by {{ form.live.updatedBy.displayName }}
+  {{ form.live.updatedAt | formatDate }} by {{ form.live.updatedBy.displayName | escape }}
 {% endset %}
 
 {% set formPreviewLink %}
