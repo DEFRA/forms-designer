@@ -13,6 +13,9 @@ import {
 } from '~/src/conditions/types.js'
 import {
   type ConditionWrapper,
+  type Event,
+  type EventOptions,
+  type Events,
   type FormDefinition,
   type Item,
   type Link,
@@ -158,6 +161,21 @@ const pageRepeatSchema = Joi.object<Repeat>().keys({
   schema: repeatSchema.required()
 })
 
+const eventSchema = Joi.object<Event>().keys({
+  type: Joi.string().allow('http').required(),
+  options: Joi.object<EventOptions>().keys({
+    method: Joi.string().allow('POST').required(),
+    url: Joi.string()
+      .uri({ scheme: ['http', 'https'] })
+      .required()
+  })
+})
+
+const eventsSchema = Joi.object<Events>().keys({
+  onLoad: eventSchema,
+  onSave: eventSchema
+})
+
 /**
  * `/status` is a special route for providing a user's application status.
  *  It should not be configured via the designer.
@@ -174,7 +192,9 @@ const pageSchema = Joi.object<Page>().keys({
     otherwise: Joi.any().strip()
   }),
   condition: Joi.string().allow('').optional(),
-  next: Joi.array<Link>().items(nextSchema)
+  next: Joi.array<Link>().items(nextSchema),
+  events: eventsSchema.optional(),
+  view: Joi.string().optional()
 })
 
 const baseListItemSchema = Joi.object<Item>().keys({
