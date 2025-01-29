@@ -193,7 +193,8 @@ const pageSchema = Joi.object<Page>().keys({
   }),
   condition: Joi.string().allow('').optional(),
   next: Joi.array<Link>().items(nextSchema),
-  events: eventsSchema.optional()
+  events: eventsSchema.optional(),
+  view: Joi.string().optional()
 })
 
 const baseListItemSchema = Joi.object<Item>().keys({

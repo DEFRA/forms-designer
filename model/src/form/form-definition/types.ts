@@ -34,6 +34,7 @@ export interface PageBase {
   path: string
   condition?: string
   events?: Events
+  view?: string
 }
 
 export interface RepeatOptions {
