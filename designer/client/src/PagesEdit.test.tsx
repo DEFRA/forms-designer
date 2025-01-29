@@ -1,7 +1,9 @@
 import {
   ComponentType,
+  ConditionType,
   ControllerPath,
   ControllerType,
+  OperatorName,
   type FormDefinition
 } from '@defra/forms-model'
 import { screen } from '@testing-library/dom'
@@ -30,6 +32,19 @@ const data = {
     {
       title: 'Second page',
       path: '/second-page',
+      controller: ControllerType.Terminal,
+      next: [],
+      components: [],
+      condition: 'VHfpoC'
+    },
+    {
+      title: 'Third page',
+      path: '/third-page',
+      controller: ControllerType.Repeat,
+      repeat: {
+        options: { name: 'pizza', title: 'Pizza' },
+        schema: { min: 1, max: 4 }
+      },
       next: [],
       components: []
     },
@@ -41,7 +56,30 @@ const data = {
   ],
   lists: [],
   sections: [],
-  conditions: []
+  conditions: [
+    {
+      name: 'VHfpoC',
+      displayName: 'Do you have a UK passport?',
+      value: {
+        name: 'Do you have a UK passport?',
+        conditions: [
+          {
+            field: {
+              name: 'ukPassport',
+              type: ComponentType.YesNoField,
+              display: 'Do you have a UK passport?'
+            },
+            operator: OperatorName.Is,
+            value: {
+              type: ConditionType.Value,
+              value: 'false',
+              display: 'No'
+            }
+          }
+        ]
+      }
+    }
+  ]
 } satisfies FormDefinition
 
 describe('PagesEdit', () => {
@@ -55,6 +93,6 @@ describe('PagesEdit', () => {
     const list = screen.getByRole('list')
 
     expect(list).toBeInTheDocument()
-    expect(list.children).toHaveLength(3)
+    expect(list.children).toHaveLength(4)
   })
 })

@@ -2,6 +2,7 @@
 
 import {
   ControllerType,
+  Engine,
   hasComponents,
   slugify,
   type ComponentDef,
@@ -87,14 +88,30 @@ export const Page = (
     previewUrl
   ).toString()
 
+  const isV2 = data.engine === Engine.V2
+
   return (
     <div
       className={classNames({
         page: true,
-        'page--repeat': page.controller === ControllerType.Repeat
+        'page--repeat': page.controller === ControllerType.Repeat,
+        'page--terminal': isV2 && page.controller === ControllerType.Terminal,
+        'page--conditional':
+          isV2 && page.controller !== ControllerType.Terminal && page.condition
       })}
       style={layout}
     >
+      {isV2 && page.controller === ControllerType.Repeat && (
+        <strong className="govuk-tag govuk-tag--grey">Add another</strong>
+      )}
+      {isV2 && page.controller === ControllerType.Terminal && (
+        <strong className="govuk-tag govuk-tag--red">Exit</strong>
+      )}
+      {isV2 &&
+        page.controller !== ControllerType.Terminal &&
+        page.condition && (
+          <strong className="govuk-tag govuk-tag--blue">Conditional</strong>
+        )}
       <div className="page__heading">
         <h3 className="govuk-heading-m" id={headingId}>
           {section && <span className="govuk-caption-m">{section.title}</span>}
