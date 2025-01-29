@@ -65,19 +65,23 @@ describe('Search Component', () => {
         expect($filterItems[0]).toHaveTextContent('Name: Some Form')
       })
 
-      it('should render the button group', () => {
-        const $applyButton = within($search).getByRole('button', {
+      it('should render the button groups', () => {
+        const $applyButtons = within($search).getAllByRole('button', {
           name: 'Apply filters'
         })
-        expect($applyButton).toBeInTheDocument()
-        expect($applyButton).toHaveClass('app-search-form__submit')
+        expect($applyButtons).toHaveLength(2)
+        $applyButtons.forEach(($button) => {
+          expect($button).toHaveClass('app-search-form__submit')
+        })
 
-        const $clearButton = within($search).getByRole('button', {
+        const $clearButtons = within($search).getAllByRole('button', {
           name: 'Clear filters'
         })
-        expect($clearButton).toBeInTheDocument()
-        expect($clearButton).toHaveClass('govuk-button--secondary')
-        expect($clearButton).toHaveAttribute('href', '/library')
+        expect($clearButtons).toHaveLength(2)
+        $clearButtons.forEach(($button) => {
+          expect($button).toHaveClass('govuk-button--secondary')
+          expect($button).toHaveAttribute('href', '/library')
+        })
       })
     })
 
@@ -126,11 +130,14 @@ describe('Search Component', () => {
         expect($search).toHaveAttribute('action', '/library')
       })
 
-      it('should use the correct base URL for clear filters button', () => {
-        const $clearButton = within($search).getByRole('button', {
+      it('should use the correct base URL for clear filters buttons', () => {
+        const $clearButtons = within($search).getAllByRole('button', {
           name: 'Clear filters'
         })
-        expect($clearButton).toHaveAttribute('href', '/different-path')
+        expect($clearButtons).toHaveLength(2)
+        $clearButtons.forEach(($button) => {
+          expect($button).toHaveAttribute('href', '/different-path')
+        })
       })
     })
 
@@ -159,13 +166,223 @@ describe('Search Component', () => {
         expect($sortInput).toHaveAttribute('name', 'sort')
       })
     })
+
+    describe('With author search', () => {
+      beforeEach(() => {
+        const { container } = renderMacro('appSearch', 'search/macro.njk', {
+          params: {
+            baseUrl: '/library',
+            displayName: 'Current User',
+            search: {
+              author: 'Current User'
+            },
+            filters: {
+              authors: ['Current User', 'Other Author']
+            }
+          }
+        })
+
+        $search = container.getByRole('form', { name: 'Search' })
+      })
+
+      it('should render the author filter in applied filters', () => {
+        const $filtersList = within($search).getByRole('list')
+        const $filterItems = within($filtersList).getAllByRole('listitem')
+        expect($filterItems).toHaveLength(1)
+        expect($filterItems[0]).toHaveTextContent('Author: Me (Current User)')
+      })
+
+      it('should render the authors radio group', () => {
+        const $authorsGroup = within($search).getByRole('group', {
+          name: 'Select all authors that apply'
+        })
+        expect($authorsGroup).toBeInTheDocument()
+
+        const $options = within($authorsGroup).getAllByRole('radio')
+        expect($options).toHaveLength(3)
+        expect($options[0]).toBeChecked()
+        expect($options[1]).not.toBeChecked()
+        expect($options[2]).not.toBeChecked()
+
+        expect($authorsGroup).toHaveFormValues({
+          author: 'Current User'
+        })
+      })
+
+      describe('when "All authors" is selected', () => {
+        beforeEach(() => {
+          const { container } = renderMacro('appSearch', 'search/macro.njk', {
+            params: {
+              baseUrl: '/library',
+              search: {
+                author: 'all'
+              },
+              filters: {
+                authors: ['Current User', 'Other Author']
+              }
+            }
+          })
+
+          $search = container.getByRole('form', { name: 'Search' })
+        })
+
+        it('should render "all" in the applied filters', () => {
+          const $filtersList = within($search).getByRole('list')
+          const $filterItems = within($filtersList).getAllByRole('listitem')
+          expect($filterItems).toHaveLength(1)
+          expect($filterItems[0]).toHaveTextContent('Author: all')
+        })
+
+        it('should have "All authors" radio option checked', () => {
+          const $authorsGroup = within($search).getByRole('group', {
+            name: 'Select all authors that apply'
+          })
+          const $options = within($authorsGroup).getAllByRole('radio')
+          expect($options[2]).toBeChecked()
+
+          expect($authorsGroup).toHaveFormValues({
+            author: 'all'
+          })
+        })
+      })
+    })
+
+    describe('With organisation search', () => {
+      beforeEach(() => {
+        const { container } = renderMacro('appSearch', 'search/macro.njk', {
+          params: {
+            baseUrl: '/library',
+            search: {
+              organisations: ['Defra', 'Environment Agency']
+            },
+            filters: {
+              organisations: ['Defra', 'Environment Agency', 'Natural England']
+            }
+          }
+        })
+
+        $search = container.getByRole('form', { name: 'Search' })
+      })
+
+      it('should render the organisation filters in applied filters', () => {
+        const $filtersList = within($search).getByRole('list')
+        const $filterItems = within($filtersList).getAllByRole('listitem')
+        expect($filterItems).toHaveLength(2)
+        expect($filterItems[0]).toHaveTextContent('Author: all')
+        expect($filterItems[1]).toHaveTextContent(
+          'Organisation: Defra, Environment Agency'
+        )
+      })
+
+      it('should render the organisations checkbox group', () => {
+        const $orgCheckboxes = within($search).getByRole('group', {
+          name: 'Select all organisations that apply'
+        })
+        expect($orgCheckboxes).toBeInTheDocument()
+
+        const $options = within($orgCheckboxes).getAllByRole('checkbox')
+        expect($options).toHaveLength(3)
+        expect($options[0]).toBeChecked()
+        expect($options[1]).toBeChecked()
+        expect($options[2]).not.toBeChecked()
+      })
+    })
+
+    describe('With status search', () => {
+      beforeEach(() => {
+        const { container } = renderMacro('appSearch', 'search/macro.njk', {
+          params: {
+            baseUrl: '/library',
+            search: {
+              status: ['draft', 'live']
+            },
+            filters: {
+              statuses: ['draft', 'live']
+            }
+          }
+        })
+
+        $search = container.getByRole('form', { name: 'Search' })
+      })
+
+      it('should render the status filters in applied filters', () => {
+        const $filtersList = within($search).getByRole('list')
+        const $filterItems = within($filtersList).getAllByRole('listitem')
+        expect($filterItems).toHaveLength(3)
+        expect($filterItems[0]).toHaveTextContent('Author: all')
+        expect($filterItems[1]).toHaveTextContent('State: Draft')
+        expect($filterItems[2]).toHaveTextContent('State: Live')
+      })
+
+      it('should render the status checkbox group', () => {
+        const $statusCheckboxes = within($search).getByRole('group', {
+          name: 'Select all states that apply'
+        })
+        expect($statusCheckboxes).toBeInTheDocument()
+
+        const $options = within($statusCheckboxes).getAllByRole('checkbox')
+        expect($options).toHaveLength(2)
+        expect($options[0]).toBeChecked()
+        expect($options[1]).toBeChecked()
+      })
+    })
+
+    describe('With all filter types', () => {
+      beforeEach(() => {
+        const { container } = renderMacro('appSearch', 'search/macro.njk', {
+          params: {
+            baseUrl: '/library',
+            displayName: 'Current User',
+            search: {
+              title: 'Test Form',
+              author: 'Current User',
+              organisations: ['Defra'],
+              status: ['draft']
+            },
+            filters: {
+              authors: ['Current User', 'Other Author'],
+              organisations: ['Defra', 'Environment Agency'],
+              statuses: ['draft', 'live']
+            }
+          }
+        })
+
+        $search = container.getByRole('form', { name: 'Search' })
+      })
+
+      it('should render all applied filters in correct order', () => {
+        const $filtersList = within($search).getByRole('list')
+        const $filterItems = within($filtersList).getAllByRole('listitem')
+        expect($filterItems).toHaveLength(4)
+        expect($filterItems[0]).toHaveTextContent('Name: Test Form')
+        expect($filterItems[1]).toHaveTextContent('Author: Me (Current User)')
+        expect($filterItems[2]).toHaveTextContent('Organisation: Defra')
+        expect($filterItems[3]).toHaveTextContent('State: Draft')
+      })
+
+      it('should expand all filter sections with active filters', () => {
+        const $accordionSections = within($search).getAllByRole('heading', {
+          level: 2,
+          name: /Authors|Organisation|State/
+        })
+
+        $accordionSections.forEach(($heading) => {
+          const $section = $heading.closest('.govuk-accordion__section')
+          expect($section).toHaveClass('govuk-accordion__section--expanded')
+        })
+      })
+    })
   })
 
   describe('Without search data', () => {
     beforeEach(() => {
       const { container } = renderMacro('appSearch', 'search/macro.njk', {
         params: {
-          baseUrl: '/library'
+          baseUrl: '/library',
+          displayName: 'Current User',
+          filters: {
+            authors: ['Current User', 'Other Author']
+          }
         }
       })
 
@@ -191,6 +408,21 @@ describe('Search Component', () => {
         name: 'Form name'
       })
       expect($input).toHaveValue('')
+    })
+
+    it('should have "All authors" radio option checked by default', () => {
+      const $authorsGroup = within($search).getByRole('group', {
+        name: 'Select all authors that apply'
+      })
+      const $options = within($authorsGroup).getAllByRole('radio')
+      expect($options).toHaveLength(3)
+      expect($options[0]).not.toBeChecked()
+      expect($options[1]).not.toBeChecked()
+      expect($options[2]).toBeChecked()
+
+      expect($authorsGroup).toHaveFormValues({
+        author: 'all'
+      })
     })
   })
 

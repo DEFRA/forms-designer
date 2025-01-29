@@ -35,7 +35,9 @@
       {{ appSearch({
         search: search,
         sorting: sorting,
-        baseUrl: "/library"
+        baseUrl: "/library",
+        filters: meta.filters,
+        displayName: authedUser.displayName
       }) }}
     </aside>
     <div class="govuk-grid-column-two-thirds-from-desktop">

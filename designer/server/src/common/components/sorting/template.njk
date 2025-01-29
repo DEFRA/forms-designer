@@ -6,6 +6,19 @@
   {% if params.search.title %}
     <input type="hidden" name="title" value="{{ params.search.title | escape }}">
   {% endif %}
+  {% if params.search.author %}
+    <input type="hidden" name="author" value="{{ params.search.author | escape }}">
+  {% endif %}
+  {% if params.search.organisations and params.search.organisations | length %}
+    {% for org in params.search.organisations %}
+      <input type="hidden" name="organisations" value="{{ org | escape }}">
+    {% endfor %}
+  {% endif %}
+  {% if params.search.status and params.search.status | length %}
+    {% for state in params.search.status %}
+      <input type="hidden" name="status" value="{{ state | escape }}">
+    {% endfor %}
+  {% endif %}
 
   <div class="app-field-group">
     <div class="app-field-group__item">
