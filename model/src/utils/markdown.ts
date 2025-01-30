@@ -9,12 +9,19 @@ export const marked = new Marked({
 })
 
 /**
- * Convert markdown to HTML
+ * Convert markdown to HTML, escaping any HTML tags first
  */
 export function markdownToHtml(markdown?: string | null) {
   if (markdown === undefined || markdown === null) {
     return ''
   }
 
-  return marked.parse(markdown, { async: false })
+  const escaped = markdown
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+
+  return marked.parse(escaped, { async: false })
 }
