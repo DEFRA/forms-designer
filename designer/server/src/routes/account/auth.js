@@ -23,7 +23,10 @@ export default [
       }
 
       // Add to authentication cookie for session validation
-      cookieAuth.set({ sessionId: credentials.user.id })
+      cookieAuth.set({
+        sessionId: credentials.user.id,
+        flowId: credentials.flowId // always store the latest flowId so we can detect stale sessions later
+      })
 
       const redirect =
         yar.flash(sessionNames.redirectTo).at(0) ?? formsLibraryPath
