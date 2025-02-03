@@ -15,6 +15,15 @@ export default [
     async handler(request, h) {
       const { cookieAuth, yar } = request
 
+      const forceSignOut = yar.flash(sessionNames.forceSignOut).at(0) ?? false
+
+      if (forceSignOut) {
+        // If we're forcing them out (e.g. duplicate session), show them an error
+        // else they might be renewing/refreshing their session, so go to the callback
+        request.cookieAuth.clear()
+        return h.redirect('/account/signed-out')
+      }
+
       // Create user session
       const credentials = await createUserSession(request)
 
@@ -23,7 +32,10 @@ export default [
       }
 
       // Add to authentication cookie for session validation
-      cookieAuth.set({ sessionId: credentials.user.id })
+      cookieAuth.set({
+        sessionId: credentials.user.id,
+        flowId: credentials.flowId // always store the latest flowId so we can detect stale sessions later
+      })
 
       const redirect =
         yar.flash(sessionNames.redirectTo).at(0) ?? formsLibraryPath
