@@ -169,4 +169,8 @@ export interface FormDefinition {
   skipSummary?: never
   metadata?: Record<string, unknown>
   outputEmail?: string
+  output?: {
+    audience: 'human' | 'machine'
+    version: string
+  }
 }

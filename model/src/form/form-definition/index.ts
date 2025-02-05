@@ -255,6 +255,11 @@ const phaseBannerSchema = Joi.object<PhaseBanner>().keys({
   phase: Joi.string().valid('alpha', 'beta')
 })
 
+const outputSchema = Joi.object<FormDefinition['output']>().keys({
+  audience: Joi.string().valid('human', 'machine').required(),
+  version: Joi.string().required()
+})
+
 /**
  * Joi schema for `FormDefinition` interface
  * @see {@link FormDefinition}
@@ -284,7 +289,8 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
     outputEmail: Joi.string()
       .email({ tlds: { allow: ['uk'] } })
       .trim()
-      .optional()
+      .optional(),
+    output: outputSchema.optional()
   })
 
 // Maintain compatibility with legacy named export
