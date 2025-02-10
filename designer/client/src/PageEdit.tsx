@@ -628,7 +628,7 @@ export class PageEdit extends Component<Props, State> {
 
           {hasEditPageCondition && (
             <SelectConditions
-              path={path}
+              path={page.path}
               selectedCondition={selectedPageCondition}
               conditionsChange={this.pageConditionSelected}
               noFieldsHintText={i18n('conditions.noFieldsAvailable')}
