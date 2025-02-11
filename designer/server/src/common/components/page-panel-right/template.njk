@@ -1,0 +1,57 @@
+<!-- Right Column: Preview Panel -->
+<div class="govuk-grid-column-full govuk-grid-column-one-half-from-desktop">
+  <div class="preview-container govuk-!-margin-top-1" id="preview-{{ params.pageId }}">
+    <div id="dynamic-preview-content-{{ params.pageId }}">
+      <!-- Preview Header -->
+      <div id="before-content" style="background-color: #cce2d8;display: flex;justify-content: space-between;align-items: left;">
+        <p class="govuk-body-s" style="margin-bottom: 0; color: #005a30; padding: 2px 8px 2px;">
+          Preview of page {{ params.pageNum }}
+        </p>
+        <a href="#" id="close-before-content-{{ params.pageId }}" class="govuk-link" style="color: #005a30;" aria-label="Close Previews">
+          Close<span class="govuk-visually-hidden"> Previews section</span>
+        </a>
+      </div>
+      <div style="margin-top: 60px;">
+        <div class="govuk-tabs" data-module="govuk-tabs" data-govuk-tabs-init="">
+          <h2 class="govuk-tabs__title">Contents</h2>
+          <ul class="govuk-tabs__list" role="tablist">
+            <li class="govuk-tabs__list-item govuk-tabs__list-item--selected" role="presentation">
+              <a class="govuk-tabs__tab" href="#tab-one-{{ params.pageId }}" id="tab_tab-one-{{ params.pageId }}" role="tab" aria-controls="tab-one-{{ params.pageId }}" aria-selected="true" tabindex="0">Page preview</a>
+            </li>
+          </ul>
+
+          <!-- Tab One: Page Preview Content -->
+          <div class="govuk-tabs__panel" id="tab-one-{{ params.pageId }}" role="tabpanel" aria-labelledby="tab_tab-one-{{ params.pageId }}">
+            <p class="govuk-body-s" style="margin-bottom: 30px;">
+              <a href="#" class="govuk-link govuk-link--no-visited-state" rel="noreferrer noopener" target="_blank">
+                Preview this page in a new tab
+              </a>
+            </p>
+
+            <!-- Dynamic Heading and Guidance -->
+            <div id="heading-container-{{ params.pageId }}">
+              <h1 class="govuk-heading-xl" id="dynamic-heading-{{ params.pageId }}">
+              </h1>
+            </div>
+
+            <p class="govuk-body" id="guidance-paragraph-{{ params.pageId }}">
+            </p>
+            <!-- Render each question's preview -->
+            <div id="preview-container-inner-{{ params.pageId }}">
+              <div id="preview-items-{{ params.pageId }}">
+                <p>No questions available to preview.</p>
+              </div>
+                              
+              <a href="#overviewquestions" class="govuk-skip-link" style="margin-bottom: 30px!important;" data-module="govuk-skip-link" data-govuk-skip-link-init="">
+                Skip to page overview
+              </a>
+            </div>
+          </div>
+
+          <!-- Tab Two: Error Messages (if exactly one question exists) -->
+                      
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
