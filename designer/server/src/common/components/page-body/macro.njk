@@ -35,7 +35,9 @@
     {{ appMasthead({
       heading: params.heading,
       description: params.description,
-      html: actionsContent
+      caption: params.caption,
+      html: actionsContent,
+      backLink: params.backLink
     }) }}
   {% else %}
     {% if params.heading %}

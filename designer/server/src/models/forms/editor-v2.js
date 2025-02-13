@@ -44,7 +44,7 @@ export function pageListViewModel(metadata, definition) {
     pageHeading: {
       text: 'Add and edit pages'
     },
-    pageDescription: {
+    pageCaption: {
       text: definition.name
     },
     pageActions
