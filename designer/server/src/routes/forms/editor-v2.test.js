@@ -83,11 +83,28 @@ describe('Forms library v2 routes', () => {
     lists: []
   }
 
-  test('GET - should check correct formData is rendered in the view with one page', async () => {
+  /**
+   * @satisfies {FormDefinition}
+   */
+  const formDefinitionWithSummaryOnly = {
+    name: 'Test form',
+    pages: [
+      {
+        title: 'Summary',
+        path: '/summary',
+        controller: ControllerType.Summary
+      }
+    ],
+    conditions: [],
+    sections: [],
+    lists: []
+  }
+
+  test('GET - should check correct formData is rendered in the view with summary page only', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
     jest
       .mocked(forms.getDraftFormDefinition)
-      .mockResolvedValueOnce(formDefinition)
+      .mockResolvedValueOnce(formDefinitionWithSummaryOnly)
 
     const options = {
       method: 'get',
@@ -104,9 +121,8 @@ describe('Forms library v2 routes', () => {
     const $actions = container.getAllByRole('button')
 
     expect($mainHeading).toHaveTextContent('Add and edit pages')
-    expect($pageTitles[0]).toHaveTextContent('Page 1: Page one')
-    expect($pageTitles[1]).toHaveTextContent('End pages')
-    expect($pageTitles[2]).toHaveTextContent('Check your answers')
+    expect($pageTitles[0]).toHaveTextContent('End pages')
+    expect($pageTitles[1]).toHaveTextContent('Check your answers')
     expect($actions).toHaveLength(3)
     expect($actions[2]).toHaveTextContent('Add new page')
   })
