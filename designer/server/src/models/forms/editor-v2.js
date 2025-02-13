@@ -60,10 +60,14 @@ export function pageListViewModel(metadata, definition) {
  * Returns the navigation bar items as an array. Where activePage matches
  * a page, that page will have isActive:true set.
  * @param {string} formPath
- * @param {FormMetadata} metadata
+ * @param {FormMetadata} _metadata
  * @param {string} activePage
  */
-export function getFormSpecificNavigation(formPath, metadata, activePage = '') {
+export function getFormSpecificNavigation(
+  formPath,
+  _metadata,
+  activePage = ''
+) {
   const navigationItems = [
     ['Forms library', formsLibraryPath],
     ['Overview', formPath],
@@ -76,6 +80,5 @@ export function getFormSpecificNavigation(formPath, metadata, activePage = '') {
 }
 
 /**
- * @import { FormMetadata, FormMetadataInput, FormDefinition } from '@defra/forms-model'
- * @import { ValidationFailure } from '~/src/common/helpers/types.js'
+ * @import { FormMetadata, FormDefinition } from '@defra/forms-model'
  */
