@@ -1,6 +1,6 @@
 import * as scopes from '~/src/common/constants/scopes.js'
 import * as forms from '~/src/lib/forms.js'
-import * as edit from '~/src/models/forms/edit.js'
+import * as edit from '~/src/models/forms/editor-v2.js'
 
 export const ROUTE_PATH_EDIT_FORM2 = '/library/{slug}/editor-v2'
 
@@ -20,7 +20,7 @@ export default [
       const definition = await forms.getDraftFormDefinition(metadata.id, token)
 
       return h.view(
-        'forms/editor-v2',
+        'forms/editor-v2/pages',
         edit.pageListViewModel(metadata, definition)
       )
     },

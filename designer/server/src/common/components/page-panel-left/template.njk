@@ -18,10 +18,18 @@
   {% set questionRows = (questionRows.push(mappedQuestion), questionRows) %}
 {% endfor %}
 
+{% set cardTitle = "Page " + params.pageNum + ": " + params.pageTitle %}
+
+{% if params.isEndPage %}
+<hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+<h2 class="govuk-heading-m">End pages</h2>
+{% set cardTitle = "Check your answers" %}
+{% endif %}
+
 {{ govukSummaryList({
   card: {
     title: {
-      text: "Page " + params.pageNum + ": " + params.pageTitle
+      text: cardTitle
     },
     actions: {
       items: [

@@ -18,10 +18,6 @@
 <div class="govuk-grid-row">
   <form class="form">
       {% for page in pages %}
-        {% if loop.last %}
-        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-        <h2 class="govuk-heading-m">End pages</h2>
-        {% endif %}
         <div class="govuk-grid-row page-row">
           <div class="govuk-grid-column-full">
           {{ appPagePanelLeft({
