@@ -25,5 +25,28 @@ export function buildNavigation(request) {
 }
 
 /**
+ * Returns the navigation bar items as an array. Where activePage matches
+ * a page, that page will have isActive:true set.
+ * @param {string} formPath
+ * @param {FormMetadata} metadata
+ * @param {string} activePage
+ */
+export function getFormSpecificNavigation(formPath, metadata, activePage = '') {
+  const navigationItems = [
+    ['Forms library', formsLibraryPath],
+    ['Overview', formPath]
+  ]
+
+  if (metadata.draft) {
+    navigationItems.push(['Editor', `${formPath}/editor`])
+  }
+
+  return navigationItems.map((item) =>
+    buildEntry(item[0], item[1], { isActive: item[0] === activePage })
+  )
+}
+
+/**
  * @import { Request } from '@hapi/hapi'
+ * @import { FormMetadata } from '@defra/forms-model'
  */

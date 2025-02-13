@@ -76,7 +76,7 @@ export const privacyNoticeUrlSchema = Joi.string()
 export const notificationEmailAddressSchema = Joi.string()
   .email({ tlds: { allow: ['uk'] } })
   .trim()
-  .pattern(/\.gov\.uk$|\.org\.uk$/)
+// .pattern(/\.gov\.uk$|\.org\.uk$/)
 
 export const authoredAtSchema = Joi.date().iso().required()
 export const authorIdSchema = Joi.string().trim().required()

@@ -1,5 +1,6 @@
 import * as create from '~/src/models/forms/create.js'
-import { formOverviewBackLink } from '~/src/models/links.js'
+import { formOverviewBackLink, formOverviewPath } from '~/src/models/links.js'
+import { getFormSpecificNavigation } from '~/src/common/nunjucks/context/build-navigation.js'
 
 /**
  * @param {FormMetadata} metadata
@@ -44,6 +45,48 @@ export function titleViewModel(metadata, validation) {
 }
 
 /**
- * @import { FormMetadata, FormMetadataInput } from '@defra/forms-model'
+ * @param {FormMetadata} metadata
+ * @param {FormDefinition} definition
+ */
+export function pageListViewModel(metadata, definition) {
+  const formPath = formOverviewPath(metadata.slug)
+  const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
+
+  const pageListModel = {
+    ...definition,
+    navigation,
+    pageHeading: {
+      text: 'Add and edit pages'
+    },
+    pageDescription: {
+      text: definition.name
+    },
+    pageActions: [
+      {
+        text: 'Add new page',
+        href: '/add',
+        classes: 'govuk-button--inverse'
+      },
+      {
+        text: 'Re-order pages',
+        href: '/reorder',
+        classes: 'govuk-button--secondary'
+      },
+      {
+        text: 'Preview form',
+        href: '/preview',
+        classes: 'govuk-link govuk-link--inverse'
+      }
+    ]
+  }
+
+  return {
+    ...pageListModel,
+    backLink: formOverviewBackLink(metadata.slug)
+  }
+}
+
+/**
+ * @import { FormMetadata, FormMetadataInput, FormDefinition } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

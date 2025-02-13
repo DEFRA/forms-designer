@@ -1,0 +1,46 @@
+{% extends "layouts/page.njk" %}
+
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "grid-layout/macro.njk" import appGridLayout %}
+{% from "page-body/macro.njk" import appPageBody %}
+{% from "page-panel-left/macro.njk" import pagePanelLeft %}
+
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% block content %}
+{% call appPageBody({
+  heading: pageHeading,
+  description: pageDescription,
+  actions: pageActions,
+  classes: "govuk-grid-column-full govuk-grid-column-one-half-from-desktop"
+}) %}
+
+<div class="govuk-grid-row">
+  <form class="form">
+      {% for page in pages %}
+        {% if loop.last %}
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+        <h2 class="govuk-heading-m">End pages</h2>
+        {% endif %}
+        <div class="govuk-grid-row page-row">
+          <div class="govuk-grid-column-full">
+          {{ pagePanelLeft({
+            formName: name,
+            pageNum: loop.index,
+            pageId: page.path,
+            pageTitle: page.title,
+            rows: page.components,
+            isEndPage: loop.last,
+            showMoveButtons: false
+            }) }}
+          </div>
+        </div>
+      {% endfor %}
+  </form>
+</div>
+{% endcall %}
+{% endblock %}
+
+{% block mainEnd %}
+  {{ super() }}
+{% endblock %}

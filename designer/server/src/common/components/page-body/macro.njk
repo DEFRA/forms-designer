@@ -24,8 +24,13 @@
     {% set actionsContent = "" %}
 
     {% for action in params.actions %}
-      {% set actionsContent = actionsContent + govukButton(action) %}
+      {% if "govuk-link" in action.classes %}
+        {% set actionsContent = actionsContent + "<a class=\"" + action.classes + "\" href=\"" + action.href + "\">" + action.text + "</a>" %}
+      {% else %}
+        {% set actionsContent = actionsContent + govukButton(action) %}
+      {% endif %}
     {% endfor %}
+    {% set actionsContent = "<div class=\"govuk-button-group\">" + actionsContent + "</div>" %}
 
     {{ appMasthead({
       heading: params.heading,
