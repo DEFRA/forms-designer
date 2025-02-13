@@ -1,8 +1,9 @@
+import { ComponentType, ControllerType } from '@defra/forms-model'
+
 import { createServer } from '~/src/createServer.js'
 import * as forms from '~/src/lib/forms.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
-import { ControllerType, ComponentType } from '@defra/forms-model'
 
 jest.mock('~/src/lib/forms.js')
 
@@ -40,7 +41,13 @@ describe('Forms library v2 routes', () => {
     createdAt: now,
     createdBy: author,
     updatedAt: now,
-    updatedBy: author
+    updatedBy: author,
+    draft: {
+      createdAt: now,
+      createdBy: author,
+      updatedAt: now,
+      updatedBy: author
+    }
   }
 
   /**
@@ -76,7 +83,7 @@ describe('Forms library v2 routes', () => {
     lists: []
   }
 
-  test('GET - should check correct formData is rendered in the view', async () => {
+  test('GET - should check correct formData is rendered in the view with one page', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
     jest
       .mocked(forms.getDraftFormDefinition)
@@ -94,10 +101,85 @@ describe('Forms library v2 routes', () => {
 
     const $pageTitles = container.getAllByRole('heading', { level: 2 })
 
+    const $actions = container.getAllByRole('button')
+
     expect($mainHeading).toHaveTextContent('Add and edit pages')
     expect($pageTitles[0]).toHaveTextContent('Page 1: Page one')
     expect($pageTitles[1]).toHaveTextContent('End pages')
     expect($pageTitles[2]).toHaveTextContent('Check your answers')
+    expect($actions).toHaveLength(3)
+    expect($actions[2]).toHaveTextContent('Add new page')
+  })
+
+  test('GET - should check correct formData is rendered in the view with multiple pages', async () => {
+    const formDefinitionMultiplePages = { ...formDefinition }
+    formDefinitionMultiplePages.pages = [
+      {
+        path: '/page-one',
+        title: 'Page one',
+        section: 'section',
+        components: [
+          {
+            type: ComponentType.TextField,
+            name: 'textField',
+            title: 'This is your first field',
+            hint: 'Help text',
+            options: {},
+            schema: {}
+          }
+        ],
+        next: [{ path: '/page-two' }]
+      },
+      {
+        path: '/page-two',
+        title: 'Page two',
+        section: 'section',
+        components: [
+          {
+            type: ComponentType.TextField,
+            name: 'textField',
+            title: 'This is your second field',
+            hint: 'Help text',
+            options: {},
+            schema: {}
+          }
+        ],
+        next: [{ path: '/summary' }]
+      },
+      {
+        title: 'Summary',
+        path: '/summary',
+        controller: ControllerType.Summary
+      }
+    ]
+
+    jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(formDefinitionMultiplePages)
+
+    const options = {
+      method: 'get',
+      url: '/library/my-form-slug/editor-v2',
+      auth
+    }
+
+    const { container } = await renderResponse(server, options)
+
+    const $mainHeading = container.getByRole('heading', { level: 1 })
+
+    const $pageTitles = container.getAllByRole('heading', { level: 2 })
+
+    const $actions = container.getAllByRole('button')
+
+    expect($mainHeading).toHaveTextContent('Add and edit pages')
+    expect($pageTitles[0]).toHaveTextContent('Page 1: Page one')
+    expect($pageTitles[1]).toHaveTextContent('Page 2: Page two')
+    expect($pageTitles[2]).toHaveTextContent('End pages')
+    expect($pageTitles[3]).toHaveTextContent('Check your answers')
+    expect($actions).toHaveLength(4)
+    expect($actions[2]).toHaveTextContent('Add new page')
+    expect($actions[3]).toHaveTextContent('Re-order pages')
   })
 })
 
