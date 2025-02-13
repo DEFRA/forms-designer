@@ -66,12 +66,9 @@ export function pageListViewModel(metadata, definition) {
 export function getFormSpecificNavigation(formPath, metadata, activePage = '') {
   const navigationItems = [
     ['Forms library', formsLibraryPath],
-    ['Overview', formPath]
+    ['Overview', formPath],
+    ['Editor', `${formPath}/editor-v2`]
   ]
-
-  if (metadata.draft) {
-    navigationItems.push(['Editor', `${formPath}/editor-v2`])
-  }
 
   return navigationItems.map((item) =>
     buildEntry(item[0], item[1], { isActive: item[0] === activePage })
