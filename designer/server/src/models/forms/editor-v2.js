@@ -34,7 +34,7 @@ export function pageListViewModel(metadata, definition) {
     }
   ]
 
-  if (definition.pages.length > 2) {
+  if (definition.pages.length > 1) {
     pageActions.push(...extraPageActions)
   }
 
