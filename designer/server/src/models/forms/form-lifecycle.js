@@ -1,5 +1,5 @@
-import { getFormSpecificNavigation } from '~/src/common/nunjucks/context/build-navigation.js'
 import { render } from '~/src/common/nunjucks/index.js'
+import { getFormSpecificNavigation } from '~/src/models/forms/library.js'
 import { formOverviewPath } from '~/src/models/links.js'
 
 /**
