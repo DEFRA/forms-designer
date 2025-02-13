@@ -1,6 +1,10 @@
+import { buildEntry } from '~/src/common/nunjucks/context/build-navigation.js'
 import * as create from '~/src/models/forms/create.js'
-import { formOverviewBackLink, formOverviewPath } from '~/src/models/links.js'
-import { getFormSpecificNavigation } from '~/src/common/nunjucks/context/build-navigation.js'
+import {
+  formOverviewBackLink,
+  formOverviewPath,
+  formsLibraryPath
+} from '~/src/models/links.js'
 
 /**
  * @param {FormMetadata} metadata
@@ -84,6 +88,28 @@ export function pageListViewModel(metadata, definition) {
     ...pageListModel,
     backLink: formOverviewBackLink(metadata.slug)
   }
+}
+
+/**
+ * Returns the navigation bar items as an array. Where activePage matches
+ * a page, that page will have isActive:true set.
+ * @param {string} formPath
+ * @param {FormMetadata} metadata
+ * @param {string} activePage
+ */
+export function getFormSpecificNavigation(formPath, metadata, activePage = '') {
+  const navigationItems = [
+    ['Forms library', formsLibraryPath],
+    ['Overview', formPath]
+  ]
+
+  if (metadata.draft) {
+    navigationItems.push(['Editor', `${formPath}/editor`])
+  }
+
+  return navigationItems.map((item) =>
+    buildEntry(item[0], item[1], { isActive: item[0] === activePage })
+  )
 }
 
 /**

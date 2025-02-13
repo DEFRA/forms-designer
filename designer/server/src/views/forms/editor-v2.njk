@@ -3,7 +3,7 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "grid-layout/macro.njk" import appGridLayout %}
 {% from "page-body/macro.njk" import appPageBody %}
-{% from "page-panel-left/macro.njk" import pagePanelLeft %}
+{% from "page-panel-left/macro.njk" import appPagePanelLeft %}
 
 {% set mainClasses = "govuk-main-wrapper--masthead" %}
 
@@ -24,7 +24,7 @@
         {% endif %}
         <div class="govuk-grid-row page-row">
           <div class="govuk-grid-column-full">
-          {{ pagePanelLeft({
+          {{ appPagePanelLeft({
             formName: name,
             pageNum: loop.index,
             pageId: page.path,

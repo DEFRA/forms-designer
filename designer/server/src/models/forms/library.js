@@ -1,4 +1,4 @@
-import { getFormSpecificNavigation } from '~/src/common/nunjucks/context/build-navigation.js'
+import { buildEntry } from '~/src/common/nunjucks/context/build-navigation.js'
 import config from '~/src/config.js'
 import * as forms from '~/src/lib/forms.js'
 import {
@@ -280,6 +280,28 @@ export function editorViewModel(metadata, definition) {
     formDefinition: definition,
     previewUrl: config.previewUrl
   }
+}
+
+/**
+ * Returns the navigation bar items as an array. Where activePage matches
+ * a page, that page will have isActive:true set.
+ * @param {string} formPath
+ * @param {FormMetadata} metadata
+ * @param {string} activePage
+ */
+export function getFormSpecificNavigation(formPath, metadata, activePage = '') {
+  const navigationItems = [
+    ['Forms library', formsLibraryPath],
+    ['Overview', formPath]
+  ]
+
+  if (metadata.draft) {
+    navigationItems.push(['Editor', `${formPath}/editor`])
+  }
+
+  return navigationItems.map((item) =>
+    buildEntry(item[0], item[1], { isActive: item[0] === activePage })
+  )
 }
 
 /**

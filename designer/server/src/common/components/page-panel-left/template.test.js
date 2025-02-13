@@ -8,7 +8,7 @@ describe('Page left panel component', () => {
   describe('With no pages', () => {
     beforeEach(() => {
       const { container } = renderMacro(
-        'pagePanelLeft',
+        'appPagePanelLeft',
         'page-panel-left/macro.njk',
         {
           params: {
@@ -35,7 +35,7 @@ describe('Page left panel component', () => {
   describe('With two pages', () => {
     beforeEach(() => {
       const { container } = renderMacro(
-        'pagePanelLeft',
+        'appPagePanelLeft',
         'page-panel-left/macro.njk',
         {
           params: {
