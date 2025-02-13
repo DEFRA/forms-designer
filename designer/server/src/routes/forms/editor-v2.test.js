@@ -1,9 +1,8 @@
-import { StatusCodes } from 'http-status-codes'
-
 import { createServer } from '~/src/createServer.js'
 import * as forms from '~/src/lib/forms.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
+import { ControllerType, ComponentType } from '@defra/forms-model'
 
 jest.mock('~/src/lib/forms.js')
 
@@ -49,7 +48,29 @@ describe('Forms library v2 routes', () => {
    */
   const formDefinition = {
     name: 'Test form',
-    pages: [],
+    pages: [
+      {
+        path: '/page-one',
+        title: 'Page one',
+        section: 'section',
+        components: [
+          {
+            type: ComponentType.TextField,
+            name: 'textField',
+            title: 'This is your first field',
+            hint: 'Help text',
+            options: {},
+            schema: {}
+          }
+        ],
+        next: [{ path: '/summary' }]
+      },
+      {
+        title: 'Summary',
+        path: '/summary',
+        controller: ControllerType.Summary
+      }
+    ],
     conditions: [],
     sections: [],
     lists: []
@@ -63,91 +84,20 @@ describe('Forms library v2 routes', () => {
 
     const options = {
       method: 'get',
-      url: '/library/my-form-slug/edit/team',
+      url: '/library/my-form-slug/editor-v2',
       auth
     }
 
     const { container } = await renderResponse(server, options)
 
-    const $teamName = container.getByRole('textbox', {
-      name: 'Name of team',
-      description:
-        'Enter the name of the policy team or business area responsible for this form'
-    })
+    const $mainHeading = container.getByRole('heading', { level: 1 })
 
-    const $teamEmail = container.getByRole('textbox', {
-      name: 'Shared team email address',
-      description:
-        'Used to contact the form subject matter expert (SME) or key stakeholder. Must be a UK email address, like name@example.gov.uk'
-    })
+    const $pageTitles = container.getAllByRole('heading', { level: 2 })
 
-    expect($teamName).toHaveValue('Defra Forms')
-    expect($teamEmail).toHaveValue('defraforms@defra.gov.uk')
-  })
-
-  test('POST - should redirect to overviewpage after updating team details', async () => {
-    jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
-    jest
-      .mocked(forms.getDraftFormDefinition)
-      .mockResolvedValueOnce(formDefinition)
-
-    const options = {
-      method: 'post',
-      url: '/library/my-form-slug/edit/team',
-      auth,
-      payload: { teamName: 'new team', teamEmail: 'new.email@gov.uk' }
-    }
-
-    const {
-      response: { headers, statusCode }
-    } = await renderResponse(server, options)
-
-    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
-    expect(headers.location).toBe('/library/my-form-slug')
-  })
-
-  test('GET - should check correct title is rendered in the view', async () => {
-    jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
-    jest
-      .mocked(forms.getDraftFormDefinition)
-      .mockResolvedValueOnce(formDefinition)
-
-    const options = {
-      method: 'get',
-      url: '/library/my-form-slug/edit/title',
-      auth
-    }
-
-    const { container } = await renderResponse(server, options)
-
-    const $title = container.getByRole('textbox', {
-      name: 'Enter a name for your form'
-    })
-
-    expect($title).toHaveValue('Test form')
-  })
-
-  test('POST - should redirect to overviewpage after updating title', async () => {
-    jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
-    jest.mocked(forms.updateMetadata).mockResolvedValueOnce({
-      id: formMetadata.id,
-      slug: 'new-title',
-      status: 'updated'
-    })
-
-    const options = {
-      method: 'post',
-      url: '/library/my-form-slug/edit/title',
-      auth,
-      payload: { title: 'new title' }
-    }
-
-    const {
-      response: { headers, statusCode }
-    } = await renderResponse(server, options)
-
-    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
-    expect(headers.location).toBe('/library/new-title')
+    expect($mainHeading).toHaveTextContent('Add and edit pages')
+    expect($pageTitles[0]).toHaveTextContent('Page 1: Page one')
+    expect($pageTitles[1]).toHaveTextContent('End pages')
+    expect($pageTitles[2]).toHaveTextContent('Check your answers')
   })
 })
 
