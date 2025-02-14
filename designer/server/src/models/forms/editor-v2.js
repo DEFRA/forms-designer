@@ -1,9 +1,12 @@
+import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { buildEntry } from '~/src/common/nunjucks/context/build-navigation.js'
 import {
+  editorv2Path,
   formOverviewBackLink,
   formOverviewPath,
   formsLibraryPath
 } from '~/src/models/links.js'
+import { ROUTE_PATH_PAGES } from '~/src/routes/forms/editor-v2/pages.js'
 
 /**
  * @param {FormMetadata} metadata
@@ -16,7 +19,7 @@ export function pageListViewModel(metadata, definition) {
   const pageActions = [
     {
       text: 'Add new page',
-      href: '/add',
+      href: editorv2Path(metadata.slug, 'add-page'),
       classes: 'govuk-button--inverse'
     }
   ]
@@ -57,6 +60,54 @@ export function pageListViewModel(metadata, definition) {
 }
 
 /**
+ * @param {Partial<FormDefinition>} [_definition]
+ * @param {ValidationFailure<FormDefinition>} [validation]
+ */
+export function addPageViewModel(_definition, validation) {
+  const pageTitle = 'What kind of page do you need?'
+  const { /* formValues */ formErrors } = validation ?? {}
+
+  return {
+    backLink: {
+      href: ROUTE_PATH_PAGES
+    },
+    pageTitle,
+    pageHeading: {
+      text: pageTitle,
+      size: 'large'
+    },
+    errorList: buildErrorList(formErrors, ['pageType']),
+    formErrors: validation?.formErrors,
+    formValues: validation?.formValues,
+    field: {
+      id: 'pageType',
+      name: 'pageType',
+      legend: {
+        text: pageTitle
+      },
+      value: null, // formValues?.pageType ?? definition?.pageType,
+      items: [
+        {
+          value: 'question',
+          text: 'Question page',
+          hint: {
+            text: 'A page to hold one or more related questions'
+          }
+        },
+        {
+          value: 'guidance',
+          text: 'Guidance page',
+          hint: {
+            text: 'If you need to add guidance without asking a question'
+          }
+        }
+      ]
+    },
+    buttonText: 'Save and continue'
+  }
+}
+
+/**
  * Returns the navigation bar items as an array. Where activePage matches
  * a page, that page will have isActive:true set.
  * @param {string} formPath
@@ -81,4 +132,5 @@ export function getFormSpecificNavigation(
 
 /**
  * @import { FormMetadata, FormDefinition } from '@defra/forms-model'
+ *  @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

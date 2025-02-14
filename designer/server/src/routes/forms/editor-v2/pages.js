@@ -2,7 +2,7 @@ import * as scopes from '~/src/common/constants/scopes.js'
 import * as forms from '~/src/lib/forms.js'
 import * as edit from '~/src/models/forms/editor-v2.js'
 
-export const ROUTE_PATH_EDIT_FORM2 = '/library/{slug}/editor-v2'
+export const ROUTE_PATH_PAGES = '/library/{slug}/editor-v2/pages'
 
 export default [
   /**
@@ -10,7 +10,7 @@ export default [
    */
   ({
     method: 'GET',
-    path: ROUTE_PATH_EDIT_FORM2,
+    path: ROUTE_PATH_PAGES,
     async handler(request, h) {
       const { params, auth } = request
       const { token } = auth.credentials

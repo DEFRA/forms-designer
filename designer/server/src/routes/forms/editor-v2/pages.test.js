@@ -108,7 +108,7 @@ describe('Forms library v2 routes', () => {
 
     const options = {
       method: 'get',
-      url: '/library/my-form-slug/editor-v2',
+      url: '/library/my-form-slug/editor-v2/pages',
       auth
     }
 
@@ -176,7 +176,7 @@ describe('Forms library v2 routes', () => {
 
     const options = {
       method: 'get',
-      url: '/library/my-form-slug/editor-v2',
+      url: '/library/my-form-slug/editor-v2/pages',
       auth
     }
 
