@@ -276,7 +276,7 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
       .required()
       .items(pageSchema)
       .unique('path')
-      .unique('id'),
+      .unique('id', { ignoreUndefined: true }),
     sections: Joi.array<Section>()
       .items(sectionsSchema)
       .unique('name')
