@@ -4,9 +4,18 @@
   {{- govukAttributes(params.attributes) }}>
   <div class="govuk-width-container app-width-container--wide">
     <div class="govuk-grid-row">
+      {% if params.backLink %}
+      <div class="govuk-grid-column-full">
+      <a href="{{ params.backLink.href }}" class="govuk-back-link govuk-back-link--inverse govuk-!-margin-bottom-0">{{ params.backLink.text }}</a>
+      <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible back-link-hr">
+      </div>
+      {% endif %}
       <div class="govuk-grid-column-two-thirds-from-desktop">
       {% if params.heading %}
         <h1 class="app-masthead__heading govuk-heading-xl {%- if params.heading.classes %} {{ params.heading.classes }}{% endif %}">
+          {% if params.caption %}
+          <span class="app-masthead__caption govuk-caption-l {%- if params.caption.classes %} {{ params.caption.classes }}{% endif %}">{{ params.caption.html | safe if params.caption.html else params.caption.text }}</span>
+          {% endif %}
           {{ params.heading.html | safe if params.heading.html else params.heading.text }}
         </h1>
       {% endif %}
