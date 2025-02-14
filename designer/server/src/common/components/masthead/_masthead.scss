@@ -12,6 +12,11 @@ $defra-brand-colour: govuk-organisation-colour(department-for-environment-food-r
   .govuk-link {
     @include govuk-link-style-inverse;
   }
+
+  .back-link-hr {
+    border-bottom: 1px solid govuk-colour("white");
+    margin-bottom: 0;
+  }
 }
 
 .app-masthead__heading,
