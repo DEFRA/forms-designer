@@ -181,6 +181,7 @@ const eventsSchema = Joi.object<Events>().keys({
  *  It should not be configured via the designer.
  */
 const pageSchema = Joi.object<Page>().keys({
+  id: Joi.string().uuid().optional(),
   path: Joi.string().required().disallow('/status'),
   title: Joi.string().required(),
   section: Joi.string(),
@@ -271,7 +272,11 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
     name: Joi.string().allow('').optional(),
     feedback: feedbackSchema.optional(),
     startPage: Joi.string().optional(),
-    pages: Joi.array<Page>().required().items(pageSchema).unique('path'),
+    pages: Joi.array<Page>()
+      .required()
+      .items(pageSchema)
+      .unique('path')
+      .unique('id', { ignoreUndefined: true }),
     sections: Joi.array<Section>()
       .items(sectionsSchema)
       .unique('name')
