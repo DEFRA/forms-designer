@@ -63,7 +63,10 @@ export class SelectConditions extends Component<Props, State> {
   componentDidUpdate(prevProps: Readonly<Props>) {
     const { path, selectedCondition } = this.props
 
-    if (path === prevProps.path) {
+    if (
+      path === prevProps.path &&
+      selectedCondition === prevProps.selectedCondition
+    ) {
       return
     }
 
