@@ -7,7 +7,7 @@ import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/forms.js')
 
-describe('Forms library v2 routes', () => {
+describe('Editor v2 pages routes', () => {
   /** @type {Server} */
   let server
 

@@ -17,7 +17,12 @@ export const sessionNames = {
     submissionGuidance: /** @type {const} */ (
       'submissionGuidanceValidationFailure'
     ),
-    editorAddPage: /** @type {const} */ ('addPageValidationFailure')
+    editorAddPage: /** @type {const} */ ('addPageValidationFailure'),
+    editorQuestions: /** @type {const} */ ('questionsValidationFailure'),
+    editorAddQuestion: /** @type {const} */ ('addQuestionValidationFailure'),
+    editorQuestionDetails: /** @type {const} */ (
+      'QuestionDetailsValidationFailure'
+    )
   },
   successNotification: /** @type {const} */ ('successNotification'),
   errorList: /** @type {const} */ ('errorList')
