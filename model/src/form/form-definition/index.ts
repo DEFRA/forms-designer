@@ -180,7 +180,7 @@ const eventsSchema = Joi.object<Events>().keys({
  * `/status` is a special route for providing a user's application status.
  *  It should not be configured via the designer.
  */
-const pageSchema = Joi.object<Page>().keys({
+export const pageSchema = Joi.object<Page>().keys({
   id: Joi.string().uuid().optional(),
   path: Joi.string().required().disallow('/status'),
   title: Joi.string().required(),
