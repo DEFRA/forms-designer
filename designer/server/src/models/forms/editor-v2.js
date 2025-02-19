@@ -8,12 +8,29 @@ import {
   formOverviewPath,
   formsLibraryPath
 } from '~/src/models/links.js'
-import { ROUTE_PATH_PAGES } from '~/src/routes/forms/editor-v2/pages.js'
 
 const BACK_TO_ADD_AND_EDIT_PAGES = 'Back to add and edit pages'
 const SAVE_AND_CONTINUE = 'Save and continue'
 const GOVUK_LABEL__M = 'govuk-label--m'
 
+/**
+ * @param {string} slug
+ * @param {string} pageTitle
+ */
+function baseModelFields(slug, pageTitle) {
+  return {
+    backLink: {
+      href: editorv2Path(slug, 'pages'),
+      text: BACK_TO_ADD_AND_EDIT_PAGES
+    },
+    pageTitle,
+    pageHeading: {
+      text: pageTitle,
+      size: 'large'
+    },
+    useNewMasthead: true
+  }
+}
 /**
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
@@ -77,19 +94,11 @@ export function addPageViewModel(metadata, editor, validation) {
   const { formValues, formErrors } = validation ?? {}
 
   return {
-    backLink: {
-      href: editorv2Path(metadata.slug, ROUTE_PATH_PAGES),
-      text: BACK_TO_ADD_AND_EDIT_PAGES
-    },
+    ...baseModelFields(metadata.slug, pageTitle),
     navigation,
-    pageTitle,
-    pageHeading: {
-      text: pageTitle
-    },
     pageCaption: {
       text: metadata.title
     },
-    useNewMasthead: true,
     pageClasses:
       'govuk-grid-column-full govuk-grid-column-one-half-from-desktop',
     errorList: buildErrorList(formErrors, ['pageType']),
@@ -158,6 +167,23 @@ const questionTypeRadioItemsSimple = [
   }
 ]
 
+const writtenAnswerSubItems = [
+  {
+    text: 'Short answer (a single line)',
+    value: ComponentType.TextField
+  },
+  {
+    text: 'Long answer (more than a single line)',
+    value: ComponentType.MultilineTextField
+  },
+  { text: 'Numbers only', value: ComponentType.NumberField }
+]
+
+const dateSubItems = [
+  { text: 'Day, month and year', value: 'DatePartsField' },
+  { text: 'Month and year', value: 'MonthYearField' }
+]
+
 /**
  * @param {FormMetadata} metadata
  * @param {Partial<FormEditor>} [editor]
@@ -170,17 +196,8 @@ export function addQuestionViewModel(metadata, editor, validation) {
   const { formValues, formErrors } = validation ?? {}
 
   return {
-    backLink: {
-      href: editorv2Path(metadata.slug, 'pages'),
-      text: BACK_TO_ADD_AND_EDIT_PAGES
-    },
+    ...baseModelFields(metadata.slug, pageTitle),
     navigation,
-    pageTitle,
-    pageHeading: {
-      text: pageTitle,
-      size: 'large'
-    },
-    useNewMasthead: true,
     errorList: buildErrorList(formErrors, ['questionType']),
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
@@ -206,17 +223,7 @@ export function addQuestionViewModel(metadata, editor, validation) {
             isPageHeading: false
           }
         },
-        items: [
-          {
-            text: 'Short answer (a single line)',
-            value: ComponentType.TextField
-          },
-          {
-            text: 'Long answer (more than a single line)',
-            value: ComponentType.MultilineTextField
-          },
-          { text: 'Numbers only', value: ComponentType.NumberField }
-        ],
+        items: writtenAnswerSubItems,
         value: formValues?.writtenAnswerSub ?? editor?.question,
         ...(validation?.formErrors.writtenAnswerSub && {
           errorMessage: {
@@ -234,10 +241,7 @@ export function addQuestionViewModel(metadata, editor, validation) {
             isPageHeading: false
           }
         },
-        items: [
-          { text: 'Day, month and year', value: 'DatePartsField' },
-          { text: 'Month and year', value: 'MonthYearField' }
-        ],
+        items: dateSubItems,
         value: formValues?.dateSub ?? editor?.question,
         ...(validation?.formErrors.dateSub && {
           errorMessage: {
@@ -262,17 +266,8 @@ export function addQuestionDetailsViewModel(metadata, editor, validation) {
   const { formValues, formErrors } = validation ?? {}
 
   return {
-    backLink: {
-      href: editorv2Path(metadata.slug, 'pages'),
-      text: BACK_TO_ADD_AND_EDIT_PAGES
-    },
+    ...baseModelFields(metadata.slug, pageTitle),
     navigation,
-    pageTitle,
-    pageHeading: {
-      text: pageTitle,
-      size: 'large'
-    },
-    useNewMasthead: true,
     errorList: buildErrorList(formErrors, [
       'question',
       'shortDescription',
@@ -357,17 +352,8 @@ export function questionsViewModel(metadata, components, _editor, validation) {
   const { formErrors } = validation ?? {}
 
   return {
-    backLink: {
-      href: editorv2Path(metadata.slug, 'pages'),
-      text: BACK_TO_ADD_AND_EDIT_PAGES
-    },
+    ...baseModelFields(metadata.slug, pageTitle),
     navigation,
-    pageTitle,
-    pageHeading: {
-      text: pageTitle,
-      size: 'large'
-    },
-    useNewMasthead: true,
     errorList: buildErrorList(formErrors, ['questionType']),
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
