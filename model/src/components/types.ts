@@ -16,6 +16,7 @@ export type ConditionalComponentType = Exclude<
  */
 
 interface FormFieldBase {
+  id?: string
   type: FormComponentsDef['type']
   name: string
   title: string
