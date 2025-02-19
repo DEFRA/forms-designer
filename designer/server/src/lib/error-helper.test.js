@@ -1,6 +1,6 @@
 import Joi from 'joi'
 
-import { addErrorsToSession } from '~/src/lib/validation.js'
+import { addErrorsToSession } from '~/src/lib/error-helper.js'
 
 const mockFlash = jest.fn()
 

@@ -10,6 +10,10 @@ import {
 } from '~/src/models/links.js'
 import { ROUTE_PATH_PAGES } from '~/src/routes/forms/editor-v2/pages.js'
 
+const BACK_TO_ADD_AND_EDIT_PAGES = 'Back to add and edit pages'
+const SAVE_AND_CONTINUE = 'Save and continue'
+const GOVUK_LABEL__M = 'govuk-label--m'
+
 /**
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
@@ -75,7 +79,7 @@ export function addPageViewModel(metadata, editor, validation) {
   return {
     backLink: {
       href: editorv2Path(metadata.slug, ROUTE_PATH_PAGES),
-      text: 'Back to add and edit pages'
+      text: BACK_TO_ADD_AND_EDIT_PAGES
     },
     navigation,
     pageTitle,
@@ -112,9 +116,47 @@ export function addPageViewModel(metadata, editor, validation) {
         }
       ]
     },
-    buttonText: 'Save and continue'
+    buttonText: SAVE_AND_CONTINUE
   }
 }
+
+const questionTypeRadioItemsSimple = [
+  {
+    text: 'UK address',
+    hint: {
+      text: 'A street address, town or city and postcode'
+    },
+    value: ComponentType.UkAddressField
+  },
+  {
+    text: 'Phone number',
+    hint: {
+      text: 'A UK phone number, for example, 07700 900 982 or +44 808 157 0192'
+    },
+    value: ComponentType.TelephoneNumberField
+  },
+  {
+    text: 'Supporting evidence',
+    hint: {
+      text: 'A document, for example, DOC, PDF, CSV, Excel'
+    },
+    value: ComponentType.FileUploadField
+  },
+  {
+    text: 'Email address',
+    hint: {
+      text: 'An email address, for example, name@example.com'
+    },
+    value: ComponentType.EmailAddressField
+  },
+  {
+    divider: 'or'
+  },
+  {
+    text: 'A list of options that users can choose from',
+    value: ComponentType.SelectField
+  }
+]
 
 /**
  * @param {FormMetadata} metadata
@@ -130,7 +172,7 @@ export function addQuestionViewModel(metadata, editor, validation) {
   return {
     backLink: {
       href: editorv2Path(metadata.slug, 'pages'),
-      text: 'Back to add and edit pages'
+      text: BACK_TO_ADD_AND_EDIT_PAGES
     },
     navigation,
     pageTitle,
@@ -147,43 +189,7 @@ export function addQuestionViewModel(metadata, editor, validation) {
         idPrefix: 'questionType',
         name: 'questionType',
         value: formValues?.questionType ?? editor?.questionType,
-        items: [
-          {
-            text: 'UK address',
-            hint: {
-              text: 'A street address, town or city and postcode'
-            },
-            value: ComponentType.UkAddressField
-          },
-          {
-            text: 'Phone number',
-            hint: {
-              text: 'A UK phone number, for example, 07700 900 982 or +44 808 157 0192'
-            },
-            value: ComponentType.TelephoneNumberField
-          },
-          {
-            text: 'Supporting evidence',
-            hint: {
-              text: 'A document, for example, DOC, PDF, CSV, Excel'
-            },
-            value: ComponentType.FileUploadField
-          },
-          {
-            text: 'Email address',
-            hint: {
-              text: 'An email address, for example, name@example.com'
-            },
-            value: ComponentType.EmailAddressField
-          },
-          {
-            divider: 'or'
-          },
-          {
-            text: 'A list of options that users can choose from',
-            value: ComponentType.SelectField
-          }
-        ],
+        items: questionTypeRadioItemsSimple,
         ...(validation?.formErrors.questionType && {
           errorMessage: {
             text: validation.formErrors.questionType.text
@@ -240,7 +246,7 @@ export function addQuestionViewModel(metadata, editor, validation) {
         })
       }
     },
-    buttonText: 'Save and continue'
+    buttonText: SAVE_AND_CONTINUE
   }
 }
 
@@ -258,7 +264,7 @@ export function addQuestionDetailsViewModel(metadata, editor, validation) {
   return {
     backLink: {
       href: editorv2Path(metadata.slug, 'pages'),
-      text: 'Back to add and edit pages'
+      text: BACK_TO_ADD_AND_EDIT_PAGES
     },
     navigation,
     pageTitle,
@@ -280,7 +286,7 @@ export function addQuestionDetailsViewModel(metadata, editor, validation) {
         id: 'question',
         label: {
           text: 'Question',
-          classes: 'govuk-label--m'
+          classes: GOVUK_LABEL__M
         },
         value: formValues?.question ?? editor?.question,
         ...(validation?.formErrors.question && {
@@ -294,7 +300,7 @@ export function addQuestionDetailsViewModel(metadata, editor, validation) {
         id: 'hintText',
         label: {
           text: 'Hint text (optional)',
-          classes: 'govuk-label--m'
+          classes: GOVUK_LABEL__M
         },
         rows: 3,
         value: formValues?.hintText ?? editor?.hintText,
@@ -321,7 +327,7 @@ export function addQuestionDetailsViewModel(metadata, editor, validation) {
         idPrefix: 'shortDescription',
         label: {
           text: 'Short description',
-          classes: 'govuk-label--m'
+          classes: GOVUK_LABEL__M
         },
         hint: {
           text: "Enter a short description for this question like 'licence period'. Short descriptions are used in error messages and on the check your answers page."
@@ -334,17 +340,17 @@ export function addQuestionDetailsViewModel(metadata, editor, validation) {
         })
       }
     },
-    buttonText: 'Save and continue'
+    buttonText: SAVE_AND_CONTINUE
   }
 }
 
 /**
  * @param {FormMetadata} metadata
  * @param {ComponentDef[]} components
- * @param {Partial<FormEditor>} [editor]
+ * @param {Partial<FormEditor>} [_editor]
  * @param {ValidationFailure<FormEditor>} [validation]
  */
-export function questionsViewModel(metadata, components, editor, validation) {
+export function questionsViewModel(metadata, components, _editor, validation) {
   const pageTitle = metadata.title
   const formPath = formOverviewPath(metadata.slug)
   const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
@@ -353,7 +359,7 @@ export function questionsViewModel(metadata, components, editor, validation) {
   return {
     backLink: {
       href: editorv2Path(metadata.slug, 'pages'),
-      text: 'Back to add and edit pages'
+      text: BACK_TO_ADD_AND_EDIT_PAGES
     },
     navigation,
     pageTitle,
@@ -384,7 +390,7 @@ export function questionsViewModel(metadata, components, editor, validation) {
         }
       }
     }),
-    buttonText: 'Save and continue'
+    buttonText: SAVE_AND_CONTINUE
   }
 }
 

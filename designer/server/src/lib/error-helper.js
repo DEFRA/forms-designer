@@ -19,7 +19,6 @@ export function addErrorsToSession(request, error, flashKey) {
     })
   }
 }
-
 /**
  * @import { Request } from '@hapi/hapi'
  * @import { ValidationSessionKey } from '@hapi/yar'

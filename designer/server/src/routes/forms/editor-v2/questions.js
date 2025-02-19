@@ -9,7 +9,7 @@ import Joi from 'joi'
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import * as forms from '~/src/lib/forms.js'
-import { addErrorsToSession } from '~/src/lib/validation.js'
+import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import * as editor from '~/src/models/forms/editor-v2.js'
 import { editorv2Path } from '~/src/models/links.js'
 
@@ -17,6 +17,8 @@ export const ROUTE_FULL_PATH_QUESTIONS = `/library/{slug}/editor-v2/page/{pageId
 
 export const ROUTE_PATH_QUESTION_DETAILS =
   '/library/{slug}/editor-v2/page/{pageId}/question/{questionId}'
+
+const errorKey = sessionNames.validationFailure.editorQuestions
 
 export const schema = Joi.object().keys({
   questionType: questionTypeSchema.messages({
@@ -54,9 +56,7 @@ export default [
       const definition = await forms.getDraftFormDefinition(metadata.id, token)
       const page = definition.pages[0]
       const components = 'components' in page ? page.components : []
-      const validation = yar
-        .flash(sessionNames.validationFailure.editorQuestions)
-        .at(0)
+      const validation = yar.flash(errorKey).at(0)
 
       // TODO - supply payload
 
@@ -86,8 +86,7 @@ export default [
       const { params } = request
       const { slug, pageId, questionId } = params
 
-      // TODO - to call API to get question guid back
-      // const questionId = await API.saveQuestion()
+      // const questionId = await API.saveQuestionDetails()
 
       // Redirect to next page
       return h
@@ -99,7 +98,9 @@ export default [
     options: {
       validate: {
         payload: schema,
-        failAction: redirectToStepWithErrors
+        failAction: (request, h, error) => {
+          return redirectWithErrors(request, h, error, errorKey)
+        }
       },
       auth: {
         mode: 'required',
@@ -113,22 +114,5 @@ export default [
 ]
 
 /**
- * @param {Request} request
- * @param {ResponseToolkit} h
- * @param {Error} [error]
- */
-export function redirectToStepWithErrors(request, h, error) {
-  addErrorsToSession(
-    request,
-    error,
-    sessionNames.validationFailure.editorQuestions
-  )
-  return h
-    .redirect(request.url.toString())
-    .code(StatusCodes.SEE_OTHER)
-    .takeover()
-}
-
-/**
- * @import { Request, ResponseToolkit, ServerRoute } from '@hapi/hapi'
+ * @import { ServerRoute } from '@hapi/hapi'
  */

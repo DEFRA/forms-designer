@@ -6,7 +6,7 @@ import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { addPage } from '~/src/lib/editor.js'
 import * as forms from '~/src/lib/forms.js'
-import { addErrorsToSession } from '~/src/lib/validation.js'
+import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import * as editor from '~/src/models/forms/editor-v2.js'
 import { editorv2Path } from '~/src/models/links.js'
 
@@ -82,7 +82,9 @@ export default [
     options: {
       validate: {
         payload: schema,
-        failAction: redirectToStepWithErrors
+        failAction: (request, h, error) => {
+          return redirectWithErrors(request, h, error, errorKey)
+        }
       },
       auth: {
         mode: 'required',
@@ -96,17 +98,6 @@ export default [
 ]
 
 /**
- * @param {Request} request
- * @param {ResponseToolkit} h
- * @param {Error} [error]
- */
-export function redirectToStepWithErrors(request, h, error) {
-  addErrorsToSession(request, error, errorKey)
-  const { pathname: redirectTo } = request.url
-  return h.redirect(redirectTo).code(StatusCodes.SEE_OTHER).takeover()
-}
-
-/**
  * @import { FormEditorInput } from '@defra/forms-model'
- * @import { Request, ResponseToolkit, ServerRoute } from '@hapi/hapi'
+ * @import { ServerRoute } from '@hapi/hapi'
  */

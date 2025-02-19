@@ -3,13 +3,13 @@ import Joi from 'joi'
 
 import { createServer } from '~/src/createServer.js'
 import { addPage } from '~/src/lib/editor.js'
+import { addErrorsToSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
-import { addErrorsToSession } from '~/src/lib/validation.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/forms.js')
-jest.mock('~/src/lib/validation.js')
+jest.mock('~/src/lib/error-helper.js')
 jest.mock('~/src/lib/editor.js')
 
 describe('Editor v2 page routes', () => {
