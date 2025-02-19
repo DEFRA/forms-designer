@@ -16,6 +16,7 @@ export type ConditionalComponentType = Exclude<
  */
 
 interface FormFieldBase {
+  id?: string
   type: FormComponentsDef['type']
   name: string
   title: string
@@ -41,6 +42,7 @@ interface ListFieldBase extends FormFieldBase {
 }
 
 interface ContentFieldBase {
+  id?: string
   type:
     | ComponentType.Details
     | ComponentType.Html
