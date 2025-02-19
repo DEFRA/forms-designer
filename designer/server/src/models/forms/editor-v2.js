@@ -255,26 +255,12 @@ export function addQuestionViewModel(metadata, editor, validation) {
 }
 
 /**
- * @param {FormMetadata} metadata
- * @param {Partial<FormEditor>} [editor]
- * @param {ValidationFailure<FormEditor>} [validation]
+ * @param {ValidationFailure<FormEditor> | undefined} validation
+ * @param {Partial<FormEditor> | undefined} editor
  */
-export function addQuestionDetailsViewModel(metadata, editor, validation) {
-  const pageTitle = metadata.title
-  const formPath = formOverviewPath(metadata.slug)
-  const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
-  const { formValues, formErrors } = validation ?? {}
-
+function questionDetailsFields(validation, editor) {
+  const formValues = validation?.formValues
   return {
-    ...baseModelFields(metadata.slug, pageTitle),
-    navigation,
-    errorList: buildErrorList(formErrors, [
-      'question',
-      'shortDescription',
-      'hintText'
-    ]),
-    formErrors: validation?.formErrors,
-    formValues: validation?.formValues,
     fields: {
       question: {
         name: 'question',
@@ -334,7 +320,32 @@ export function addQuestionDetailsViewModel(metadata, editor, validation) {
           }
         })
       }
-    },
+    }
+  }
+}
+
+/**
+ * @param {FormMetadata} metadata
+ * @param {Partial<FormEditor>} [editor]
+ * @param {ValidationFailure<FormEditor>} [validation]
+ */
+export function addQuestionDetailsViewModel(metadata, editor, validation) {
+  const pageTitle = metadata.title
+  const formPath = formOverviewPath(metadata.slug)
+  const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
+  const { formErrors } = validation ?? {}
+
+  return {
+    ...baseModelFields(metadata.slug, pageTitle),
+    navigation,
+    errorList: buildErrorList(formErrors, [
+      'question',
+      'shortDescription',
+      'hintText'
+    ]),
+    formErrors: validation?.formErrors,
+    formValues: validation?.formValues,
+    ...questionDetailsFields(validation, editor),
     buttonText: SAVE_AND_CONTINUE
   }
 }

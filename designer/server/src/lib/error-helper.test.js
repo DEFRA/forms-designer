@@ -8,20 +8,22 @@ const mockFlash = jest.fn()
  *
  * @param {Request} payload
  */
-const buildMockRequest = (payload) => ({
-  yar: {
-    flash: mockFlash,
-    id: '',
-    reset: jest.fn(),
-    set: jest.fn(),
-    get: jest.fn(),
-    clear: jest.fn(),
-    touch: jest.fn(),
-    lazy: jest.fn(),
-    commit: jest.fn()
-  },
-  payload
-})
+const buildMockRequest = (payload) => {
+  return {
+    yar: {
+      flash: mockFlash,
+      id: '',
+      reset: jest.fn(),
+      set: jest.fn(),
+      get: jest.fn(),
+      clear: jest.fn(),
+      touch: jest.fn(),
+      lazy: jest.fn(),
+      commit: jest.fn()
+    },
+    payload
+  }
+}
 
 describe('Validation functions', () => {
   describe('addErrorsToSession', () => {
@@ -42,6 +44,7 @@ describe('Validation functions', () => {
         undefined
       )
       const payload = { field1: 'abc' }
+      // @ts-expect-error complex type
       addErrorsToSession(buildMockRequest(payload), error, sessionKey)
       expect(mockFlash).toHaveBeenCalledWith('this-key', {
         formErrors: {

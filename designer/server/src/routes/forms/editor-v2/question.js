@@ -109,5 +109,6 @@ export default [
 ]
 
 /**
+ * @import { FormEditorInput } from '@defra/forms-model'
  * @import { ServerRoute } from '@hapi/hapi'
  */

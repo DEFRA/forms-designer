@@ -6,7 +6,6 @@ import {
   type FormEditorInput
 } from '~/src/form/form-editor/types.js'
 
-
 export const pageTypeSchema = Joi.string()
   .required()
   .valid('question', 'guidance')
