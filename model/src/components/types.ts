@@ -42,6 +42,7 @@ interface ListFieldBase extends FormFieldBase {
 }
 
 interface ContentFieldBase {
+  id?: string
   type:
     | ComponentType.Details
     | ComponentType.Html
