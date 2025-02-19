@@ -12,6 +12,7 @@ describe('Form definition schema', () => {
 
   beforeEach(() => {
     page = {
+      id: '82468c50-ef86-47ae-bb67-0f7ddaa7d667',
       title: 'Example page',
       path: '/example',
       next: [],
