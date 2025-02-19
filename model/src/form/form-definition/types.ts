@@ -25,8 +25,8 @@ export interface Event {
 }
 
 export interface Events {
-  onLoad: Event
-  onSave: Event
+  onLoad?: Event
+  onSave?: Event
 }
 
 export interface PageBase {
