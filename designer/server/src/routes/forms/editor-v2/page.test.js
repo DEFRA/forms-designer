@@ -2,6 +2,7 @@ import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
 import { createServer } from '~/src/createServer.js'
+import { addPage } from '~/src/lib/editor.js'
 import * as forms from '~/src/lib/forms.js'
 import { addErrorsToSession } from '~/src/lib/validation.js'
 import { auth } from '~/test/fixtures/auth.js'
@@ -9,6 +10,7 @@ import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/forms.js')
 jest.mock('~/src/lib/validation.js')
+jest.mock('~/src/lib/editor.js')
 
 describe('Editor v2 page routes', () => {
   /** @type {Server} */
@@ -53,6 +55,18 @@ describe('Editor v2 page routes', () => {
     }
   }
 
+  /**
+   * @satisfies {Page}
+   */
+  const newPage = {
+    id: 'new-page-id',
+    title: 'Page one',
+    path: '/path',
+    controller: undefined,
+    next: [],
+    components: []
+  }
+
   test('GET - should check correct radio is rendered in the view', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
 
@@ -81,10 +95,11 @@ describe('Editor v2 page routes', () => {
 
   test('POST - should redirect to question if question selected', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+    jest.mocked(addPage).mockResolvedValue(newPage)
 
     const options = {
       method: 'post',
-      url: '/library/my-form-slug/editor-v2/page/1',
+      url: '/library/my-form-slug/editor-v2/page/new-page-id',
       auth,
       payload: { pageType: 'question' }
     }
@@ -95,12 +110,13 @@ describe('Editor v2 page routes', () => {
 
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe(
-      '/library/my-form-slug/editor-v2/page/1/question'
+      '/library/my-form-slug/editor-v2/page/new-page-id/question'
     )
   })
 
   test('POST - should redirect to quidance if guidance selected', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+    jest.mocked(addPage).mockResolvedValue(newPage)
 
     const options = {
       method: 'post',
@@ -115,7 +131,7 @@ describe('Editor v2 page routes', () => {
 
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe(
-      '/library/my-form-slug/editor-v2/page/1/guidance'
+      '/library/my-form-slug/editor-v2/page/new-page-id/guidance'
     )
   })
 
@@ -144,6 +160,6 @@ describe('Editor v2 page routes', () => {
 })
 
 /**
- * @import { FormMetadata, FormMetadataAuthor } from '@defra/forms-model'
+ * @import { FormMetadata, FormMetadataAuthor, Page } from '@defra/forms-model'
  * @import { Server } from '@hapi/hapi'
  */
