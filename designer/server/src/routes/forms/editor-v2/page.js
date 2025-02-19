@@ -70,7 +70,7 @@ export default [
       const metadata = await forms.get(slug, token)
       let newPageId = pageId
       if (!newPageId) {
-        const newPage = await addPage(metadata.id, token, 'Page 1', '/page-one')
+        const newPage = await addPage(metadata.id, token)
         newPageId = newPage.id
       }
 

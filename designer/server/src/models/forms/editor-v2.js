@@ -1,3 +1,5 @@
+import { ComponentType } from '@defra/forms-model'
+
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { buildEntry } from '~/src/common/nunjucks/context/build-navigation.js'
 import {
@@ -7,7 +9,6 @@ import {
   formsLibraryPath
 } from '~/src/models/links.js'
 import { ROUTE_PATH_PAGES } from '~/src/routes/forms/editor-v2/pages.js'
-import { ComponentType } from '@defra/forms-model'
 
 /**
  * @param {FormMetadata} metadata
@@ -183,9 +184,9 @@ export function addQuestionViewModel(metadata, editor, validation) {
             value: ComponentType.SelectField
           }
         ],
-        ...(validation?.formErrors?.questionType && {
+        ...(validation?.formErrors.questionType && {
           errorMessage: {
-            text: validation?.formErrors?.questionType?.text
+            text: validation.formErrors.questionType.text
           }
         })
       },
@@ -211,9 +212,9 @@ export function addQuestionViewModel(metadata, editor, validation) {
           { text: 'Numbers only', value: ComponentType.NumberField }
         ],
         value: formValues?.writtenAnswerSub ?? editor?.question,
-        ...(validation?.formErrors?.writtenAnswerSub && {
+        ...(validation?.formErrors.writtenAnswerSub && {
           errorMessage: {
-            text: validation?.formErrors?.writtenAnswerSub?.text
+            text: validation.formErrors.writtenAnswerSub.text
           }
         })
       },
@@ -232,9 +233,9 @@ export function addQuestionViewModel(metadata, editor, validation) {
           { text: 'Month and year', value: 'MonthYearField' }
         ],
         value: formValues?.dateSub ?? editor?.question,
-        ...(validation?.formErrors?.dateSub && {
+        ...(validation?.formErrors.dateSub && {
           errorMessage: {
-            text: validation?.formErrors?.dateSub?.text
+            text: validation.formErrors.dateSub.text
           }
         })
       }
@@ -282,9 +283,9 @@ export function addQuestionDetailsViewModel(metadata, editor, validation) {
           classes: 'govuk-label--m'
         },
         value: formValues?.question ?? editor?.question,
-        ...(validation?.formErrors?.question && {
+        ...(validation?.formErrors.question && {
           errorMessage: {
-            text: validation?.formErrors?.question?.text
+            text: validation.formErrors.question.text
           }
         })
       },
@@ -297,9 +298,9 @@ export function addQuestionDetailsViewModel(metadata, editor, validation) {
         },
         rows: 3,
         value: formValues?.hintText ?? editor?.hintText,
-        ...(validation?.formErrors?.hintText && {
+        ...(validation?.formErrors.hintText && {
           errorMessage: {
-            text: validation?.formErrors?.hintText?.text
+            text: validation.formErrors.hintText.text
           }
         })
       },
@@ -326,9 +327,9 @@ export function addQuestionDetailsViewModel(metadata, editor, validation) {
           text: "Enter a short description for this question like 'licence period'. Short descriptions are used in error messages and on the check your answers page."
         },
         value: formValues?.shortDescription ?? editor?.shortDescription,
-        ...(validation?.formErrors?.shortDescription && {
+        ...(validation?.formErrors.shortDescription && {
           errorMessage: {
-            text: validation?.formErrors?.shortDescription?.text
+            text: validation.formErrors.shortDescription.text
           }
         })
       }
@@ -347,7 +348,7 @@ export function questionsViewModel(metadata, components, editor, validation) {
   const pageTitle = metadata.title
   const formPath = formOverviewPath(metadata.slug)
   const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
-  const { formValues, formErrors } = validation ?? {}
+  const { formErrors } = validation ?? {}
 
   return {
     backLink: {
@@ -402,7 +403,7 @@ export function getFormSpecificNavigation(
   const navigationItems = [
     ['Forms library', formsLibraryPath],
     ['Overview', formPath],
-    ['Editor', `${formPath}/editor-v2`]
+    ['Editor', `${formPath}/editor-v2/pages`]
   ]
 
   return navigationItems.map((item) =>
