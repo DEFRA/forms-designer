@@ -4,6 +4,7 @@ import Joi from 'joi'
 
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
+import { addPage } from '~/src/lib/editor.js'
 import * as forms from '~/src/lib/forms.js'
 import { addErrorsToSession } from '~/src/lib/validation.js'
 import * as editor from '~/src/models/forms/editor-v2.js'
@@ -59,13 +60,19 @@ export default [
   ({
     method: 'POST',
     path: ROUTE_FULL_PATH_PAGE,
-    handler(request, h) {
-      const { payload, params } = request
+    async handler(request, h) {
+      const { payload, params, auth } = request
       const { slug, pageId } = params
       const { pageType } = payload
+      const { token } = auth.credentials
 
       // Save page
-      const newPageId = pageId ?? 1
+      const metadata = await forms.get(slug, token)
+      let newPageId = pageId
+      if (!newPageId) {
+        const newPage = await addPage(metadata.id, token, 'Page 1', '/page-one')
+        newPageId = newPage.id
+      }
 
       // Redirect POST to GET without resubmit on back button
       return h

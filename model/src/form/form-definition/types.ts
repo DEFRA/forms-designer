@@ -30,6 +30,7 @@ export interface Events {
 }
 
 export interface PageBase {
+  id?: string
   title: string
   path: string
   condition?: string
