@@ -1,7 +1,9 @@
 import { StatusCodes } from 'http-status-codes'
+import Joi from 'joi'
 
 import { createServer } from '~/src/createServer.js'
 import * as forms from '~/src/lib/forms.js'
+import { addErrorsToSession } from '~/src/lib/validation.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
@@ -82,7 +84,7 @@ describe('Editor v2 page routes', () => {
 
     const options = {
       method: 'post',
-      url: '/library/my-form-slug/editor-v2/page',
+      url: '/library/my-form-slug/editor-v2/page/1',
       auth,
       payload: { pageType: 'question' }
     }
@@ -114,6 +116,29 @@ describe('Editor v2 page routes', () => {
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe(
       '/library/my-form-slug/editor-v2/page/1/guidance'
+    )
+  })
+
+  test('POST - should error if no radio selected', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page',
+      auth,
+      payload: { pageType: '' }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe('/library/my-form-slug/editor-v2/page')
+    expect(addErrorsToSession).toHaveBeenCalledWith(
+      expect.anything(),
+      new Joi.ValidationError('Choose a Page Type', [], undefined),
+      'pageValidationFailure'
     )
   })
 })

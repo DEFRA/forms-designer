@@ -15,6 +15,8 @@ import { editorv2Path } from '~/src/models/links.js'
 
 export const ROUTE_FULL_PATH_QUESTION = `/library/{slug}/editor-v2/page/{pageId}/question/{questionId?}`
 
+const errorKey = sessionNames.validationFailure.editorQuestion
+
 export const schema = Joi.object().keys({
   questionType: questionTypeSchema.messages({
     '*': 'Select the type of information you need from users or ask users to choose from a list'
@@ -48,9 +50,7 @@ export default [
 
       // Form metadata, validation errors
       const metadata = await forms.get(slug, token)
-      const validation = yar
-        .flash(sessionNames.validationFailure.editorAddQuestion)
-        .at(0)
+      const validation = yar.flash(errorKey).at(0)
 
       // TODO - supply payload
       return h.view(
@@ -112,15 +112,9 @@ export default [
  * @param {Error} [error]
  */
 export function redirectToStepWithErrors(request, h, error) {
-  addErrorsToSession(
-    request,
-    error,
-    sessionNames.validationFailure.editorAddQuestion
-  )
-  return h
-    .redirect(request.url.toString())
-    .code(StatusCodes.SEE_OTHER)
-    .takeover()
+  addErrorsToSession(request, error, errorKey)
+  const { pathname: redirectTo } = request.url
+  return h.redirect(redirectTo).code(StatusCodes.SEE_OTHER).takeover()
 }
 
 /**

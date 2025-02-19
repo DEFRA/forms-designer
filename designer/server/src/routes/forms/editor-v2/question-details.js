@@ -16,6 +16,8 @@ import { editorv2Path } from '~/src/models/links.js'
 
 export const ROUTE_FULL_PATH_QUESTION_DETAILS = `/library/{slug}/editor-v2/page/{pageId}/question/{questionId}/details`
 
+const errorKey = sessionNames.validationFailure.editorQuestionDetails
+
 export const baseSchema = Joi.object().keys({
   question: questionSchema.messages({
     '*': 'Enter a question'
@@ -46,9 +48,7 @@ export default [
 
       // Form metadata, validation errors
       const metadata = await forms.get(slug, token)
-      const validation = yar
-        .flash(sessionNames.validationFailure.editorQuestionDetails)
-        .at(0)
+      const validation = yar.flash(errorKey).at(0)
 
       // TODO - supply payload
       return h.view(
@@ -75,11 +75,11 @@ export default [
     path: ROUTE_FULL_PATH_QUESTION_DETAILS,
     handler(request, h) {
       const { params } = request
-      const { slug, pageNum } = params
+      const { slug, pageId } = params
 
       // Redirect to next page
       return h
-        .redirect(editorv2Path(slug, `page/${pageNum}/questions`))
+        .redirect(editorv2Path(slug, `page/${pageId}/questions`))
         .code(StatusCodes.SEE_OTHER)
     },
     options: {
@@ -104,15 +104,9 @@ export default [
  * @param {Error} [error]
  */
 export function redirectToStepWithErrors(request, h, error) {
-  addErrorsToSession(
-    request,
-    error,
-    sessionNames.validationFailure.editorQuestionDetails
-  )
-  return h
-    .redirect(request.url.toString())
-    .code(StatusCodes.SEE_OTHER)
-    .takeover()
+  addErrorsToSession(request, error, errorKey)
+  const { pathname: redirectTo } = request.url
+  return h.redirect(redirectTo).code(StatusCodes.SEE_OTHER).takeover()
 }
 
 /**

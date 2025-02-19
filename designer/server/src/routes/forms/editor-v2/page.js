@@ -11,6 +11,8 @@ import { editorv2Path } from '~/src/models/links.js'
 
 export const ROUTE_FULL_PATH_PAGE = `/library/{slug}/editor-v2/page/{pageId?}`
 
+const errorKey = sessionNames.validationFailure.editorPage
+
 export const schema = Joi.object().keys({
   pageType: pageTypeSchema.messages({
     '*': 'Choose a Page Type'
@@ -33,9 +35,7 @@ export default [
       // Form metadata, validation errors
       const metadata = await forms.get(slug, token)
 
-      const validation = yar
-        .flash(sessionNames.validationFailure.editorAddPage)
-        .at(0)
+      const validation = yar.flash(errorKey).at(0)
 
       return h.view(
         'forms/question-radios',
@@ -54,7 +54,7 @@ export default [
   }),
 
   /**
-   * @satisfies {ServerRoute<{ Params: { slug: string, pageId: string }, Payload: Pick<FormEditorInput, 'pageType'> }>}
+   * @satisfies {ServerRoute<{ Params: { slug: string, pageId: string | undefined }, Payload: Pick<FormEditorInput, 'pageType'> }>}
    */
   ({
     method: 'POST',
@@ -64,9 +64,12 @@ export default [
       const { slug, pageId } = params
       const { pageType } = payload
 
+      // Save page
+      const newPageId = pageId ?? 1
+
       // Redirect POST to GET without resubmit on back button
       return h
-        .redirect(editorv2Path(slug, `page/${pageId}/${pageType}`))
+        .redirect(editorv2Path(slug, `page/${newPageId}/${pageType}`))
         .code(StatusCodes.SEE_OTHER)
     },
     options: {
@@ -91,15 +94,9 @@ export default [
  * @param {Error} [error]
  */
 export function redirectToStepWithErrors(request, h, error) {
-  addErrorsToSession(
-    request,
-    error,
-    sessionNames.validationFailure.editorAddPage
-  )
-  return h
-    .redirect(request.url.toString())
-    .code(StatusCodes.SEE_OTHER)
-    .takeover()
+  addErrorsToSession(request, error, errorKey)
+  const { pathname: redirectTo } = request.url
+  return h.redirect(redirectTo).code(StatusCodes.SEE_OTHER).takeover()
 }
 
 /**

@@ -1,5 +1,5 @@
 /**
- * Interface for `formMetadataSchema` Joi schema
+ * Interface for `FormEditor` Joi schema
  * @see {@link formEditorSchema}
  */
 export interface FormEditor {
