@@ -12,16 +12,14 @@ const mockedPostJson = /** @type {jest.MockedFunction<typeof postJson>} */ (
 
 /**
  * Creates a minimal mock response
- * @param {object} [props]
- * @param {number} [props.statusCode]
+ * @param {{statusCode?:number}} [props]
+ * @returns
  */
 function createMockResponse(props = {}) {
-  /** @type {any} */
-  const response = {
+  const response = /** @type {IncomingMessage} */ ({
     statusCode: props.statusCode,
     headers: {}
-  }
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  })
   return response
 }
 
@@ -90,3 +88,7 @@ describe('editor.js', () => {
     })
   })
 })
+
+/**
+ * @import { IncomingMessage } from 'http'
+ */

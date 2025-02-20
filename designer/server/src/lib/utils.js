@@ -42,5 +42,18 @@ export function isCheckboxSelected(checkboxVal) {
 }
 
 /**
+ * @param {ErrorDetailsItem | undefined} formField
+ */
+export function insertValidationErrors(formField) {
+  return {
+    ...(formField && {
+      errorMessage: {
+        text: formField.text
+      }
+    })
+  }
+}
+/**
+ * @import { ErrorDetailsItem } from '~/src/common/helpers/types.js'
  * @import Wreck from '@hapi/wreck'
  */

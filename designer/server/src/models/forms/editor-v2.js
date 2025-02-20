@@ -2,7 +2,7 @@ import { ComponentType } from '@defra/forms-model'
 
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { buildEntry } from '~/src/common/nunjucks/context/build-navigation.js'
-import { isCheckboxSelected } from '~/src/lib/utils.js'
+import { insertValidationErrors, isCheckboxSelected } from '~/src/lib/utils.js'
 import {
   editorv2Path,
   formOverviewBackLink,
@@ -209,11 +209,7 @@ export function addQuestionViewModel(metadata, editor, validation) {
         name: 'questionType',
         value: formValues?.questionType ?? editor?.questionType,
         items: questionTypeRadioItemsSimple,
-        ...(validation?.formErrors.questionType && {
-          errorMessage: {
-            text: validation.formErrors.questionType.text
-          }
-        })
+        ...insertValidationErrors(validation?.formErrors.questionType)
       },
       writtenAnswerSub: {
         id: 'writtenAnswerSub',
@@ -227,11 +223,7 @@ export function addQuestionViewModel(metadata, editor, validation) {
         },
         items: writtenAnswerSubItems,
         value: formValues?.writtenAnswerSub ?? editor?.question,
-        ...(validation?.formErrors.writtenAnswerSub && {
-          errorMessage: {
-            text: validation.formErrors.writtenAnswerSub.text
-          }
-        })
+        ...insertValidationErrors(validation?.formErrors.writtenAnswerSub)
       },
       dateSub: {
         id: 'dateSub',
@@ -245,11 +237,7 @@ export function addQuestionViewModel(metadata, editor, validation) {
         },
         items: dateSubItems,
         value: formValues?.dateSub ?? editor?.question,
-        ...(validation?.formErrors.dateSub && {
-          errorMessage: {
-            text: validation.formErrors.dateSub.text
-          }
-        })
+        ...insertValidationErrors(validation?.formErrors.dateSub)
       }
     },
     buttonText: SAVE_AND_CONTINUE
@@ -271,11 +259,7 @@ function questionDetailsFields(validation) {
           classes: GOVUK_LABEL__M
         },
         value: formValues?.question,
-        ...(validation?.formErrors.question && {
-          errorMessage: {
-            text: validation.formErrors.question.text
-          }
-        })
+        ...insertValidationErrors(validation?.formErrors.question)
       },
       hintText: {
         name: 'hintText',
@@ -286,11 +270,7 @@ function questionDetailsFields(validation) {
         },
         rows: 3,
         value: formValues?.hintText,
-        ...(validation?.formErrors.hintText && {
-          errorMessage: {
-            text: validation.formErrors.hintText.text
-          }
-        })
+        ...insertValidationErrors(validation?.formErrors.hintText)
       },
       questionOptional: {
         name: 'questionOptional',
@@ -315,11 +295,7 @@ function questionDetailsFields(validation) {
           text: "Enter a short description for this question like 'licence period'. Short descriptions are used in error messages and on the check your answers page."
         },
         value: formValues?.shortDescription,
-        ...(validation?.formErrors.shortDescription && {
-          errorMessage: {
-            text: validation.formErrors.shortDescription.text
-          }
-        })
+        ...insertValidationErrors(validation?.formErrors.shortDescription)
       }
     }
   }
@@ -428,6 +404,6 @@ export function getFormSpecificNavigation(
 }
 
 /**
- * @import { FormMetadata, FormDefinition, FormEditor, ComponentDef, Page } from '@defra/forms-model'
- *  @import { ValidationFailure } from '~/src/common/helpers/types.js'
+ * @import { FormMetadata, FormDefinition, FormEditor } from '@defra/forms-model'
+ * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

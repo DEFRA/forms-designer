@@ -6,29 +6,32 @@ const mockFlash = jest.fn()
 
 /**
  *
- * @param {Request} payload
+ * @param {Request['payload']} payload
  */
 const buildMockRequest = (payload) => {
-  return {
-    yar: {
-      flash: mockFlash,
-      id: '',
-      reset: jest.fn(),
-      set: jest.fn(),
-      get: jest.fn(),
-      clear: jest.fn(),
-      touch: jest.fn(),
-      lazy: jest.fn(),
-      commit: jest.fn()
-    },
-    payload
-  }
+  const yar = /** @type {Yar}} */ ({
+    flash: mockFlash,
+    id: '',
+    reset: jest.fn(),
+    set: jest.fn(),
+    get: jest.fn(),
+    clear: jest.fn(),
+    touch: jest.fn(),
+    lazy: jest.fn(),
+    commit: jest.fn()
+  })
+
+  const res = /** @type {Request} */ ({
+    payload,
+    yar
+  })
+  return res
 }
 
 describe('Validation functions', () => {
   describe('addErrorsToSession', () => {
     test('should return empty object', () => {
-      const sessionKey = /** type ValidationSessionKey */ 'this-key'
+      const sessionKey = /** @type ValidationSessionKey */ ('this-key')
       const error = new Joi.ValidationError(
         'dummy error',
         [
@@ -44,7 +47,6 @@ describe('Validation functions', () => {
         undefined
       )
       const payload = { field1: 'abc' }
-      // @ts-expect-error complex type
       addErrorsToSession(buildMockRequest(payload), error, sessionKey)
       expect(mockFlash).toHaveBeenCalledWith('this-key', {
         formErrors: {
@@ -61,4 +63,5 @@ describe('Validation functions', () => {
 
 /**
  * @import { Request } from '@hapi/hapi'
+ * @import { Yar, ValidationSessionKey } from '@hapi/yar'
  */
