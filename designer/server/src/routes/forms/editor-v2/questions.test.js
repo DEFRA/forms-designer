@@ -135,7 +135,7 @@ describe('Editor v2 questions routes', () => {
 
     const $mastheadHeading = container.getByText('Test form')
     const $cardTitle = container.getByText('Page 1 overview')
-    const $cardCaption = container.getByText('Page 1')
+    const $cardHeading = container.getByText('Page 1')
     const $questionNumbers = document.querySelectorAll(
       'form .govuk-summary-list__key'
     )
@@ -149,8 +149,8 @@ describe('Editor v2 questions routes', () => {
     expect($mastheadHeading).toHaveClass('govuk-heading-xl')
     expect($cardTitle).toHaveTextContent('Page 1 overview')
     expect($cardTitle).toHaveClass('editor-card-title')
-    expect($cardCaption).toHaveTextContent('Page 1')
-    expect($cardCaption).toHaveClass('govuk-caption-l')
+    expect($cardHeading).toHaveTextContent('Page 1')
+    expect($cardHeading).toHaveClass('govuk-heading-l')
 
     expect($questionNumbers[0]).toHaveTextContent('Question 1')
     expect($questionNumbers[1]).toHaveTextContent('Question 2')
@@ -178,7 +178,7 @@ describe('Editor v2 questions routes', () => {
 
     const $mastheadHeading = container.getByText('Test form')
     const $cardTitle = container.getByText('Page 1 overview')
-    const $cardCaption = container.getByText('Page 1')
+    const $cardHeading = container.getByText('Page 1')
     const $questionNumbers = document.querySelectorAll(
       'form .govuk-summary-list__key'
     )
@@ -190,8 +190,8 @@ describe('Editor v2 questions routes', () => {
     expect($mastheadHeading).toHaveClass('govuk-heading-xl')
     expect($cardTitle).toHaveTextContent('Page 1 overview')
     expect($cardTitle).toHaveClass('editor-card-title')
-    expect($cardCaption).toHaveTextContent('Page 1')
-    expect($cardCaption).toHaveClass('govuk-caption-l')
+    expect($cardHeading).toHaveTextContent('Page 1')
+    expect($cardHeading).toHaveClass('govuk-heading-l')
 
     expect($questionNumbers).toHaveLength(1)
     expect($questionTitles).toHaveLength(1)

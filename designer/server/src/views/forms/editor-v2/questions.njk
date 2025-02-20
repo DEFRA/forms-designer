@@ -22,11 +22,9 @@
 
   {% call appEditorCard({
     title: cardTitle,
-    caption: cardCaption
+    heading: cardCaption
   }) %}
   <form class="form" method="post">
-    <h2 class="govuk-heading-l" id="page-heading">Questions</h2>
-
     {% if questionRows | length %}
       {{ govukSummaryList({
         rows: questionRows,

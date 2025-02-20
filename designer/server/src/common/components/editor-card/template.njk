@@ -9,6 +9,7 @@
                   <div class="editor-card-title">{{ params.title }}</div>
                   <div class="govuk-summary-card__title-wrapper govuk-!-padding-top-0"></div>
                   <span class="govuk-caption-l">{{ params.caption }}</span>
+                  {% if params.heading %}<h2 class="govuk-heading-l" id="page-heading">{{ params.heading }}</h2>{% endif %}
                     {{ caller() if caller else (params.html | safe if params.html else params.text) }}
                 </div>
               </div>
