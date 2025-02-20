@@ -66,7 +66,7 @@ export default [
 
       // Redirect POST to GET without resubmit on back button
       return h
-        .redirect(editorv2Path(slug, `page/${pageId ?? 'first'}/${pageType}`))
+        .redirect(editorv2Path(slug, `page/${pageId ?? 'new'}/${pageType}`))
         .code(StatusCodes.SEE_OTHER)
     },
     options: {

@@ -1,4 +1,4 @@
-import { ControllerType } from '@defra/forms-model'
+import { ComponentType, ControllerType } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
@@ -57,6 +57,39 @@ describe('Editor v2 question details routes', () => {
   }
 
   /**
+   * @satisfies {FormDefinition}
+   */
+  const formDefinition = {
+    name: 'Test form',
+    pages: [
+      {
+        path: '/page-one',
+        title: 'Page one',
+        section: 'section',
+        components: [
+          {
+            type: ComponentType.TextField,
+            name: 'textField',
+            title: 'This is your first field',
+            hint: 'Help text',
+            options: {},
+            schema: {}
+          }
+        ],
+        next: [{ path: '/summary' }]
+      },
+      {
+        title: 'Summary',
+        path: '/summary',
+        controller: ControllerType.Summary
+      }
+    ],
+    conditions: [],
+    sections: [],
+    lists: []
+  }
+
+  /**
    * @satisfies {Page}
    */
   const page = {
@@ -70,6 +103,9 @@ describe('Editor v2 question details routes', () => {
 
   test('GET - should render the question fields in the view', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(formDefinition)
 
     const options = {
       method: 'get',
@@ -131,7 +167,7 @@ describe('Editor v2 question details routes', () => {
 
     const options = {
       method: 'post',
-      url: '/library/my-form-slug/editor-v2/page/first/question/first/details',
+      url: '/library/my-form-slug/editor-v2/page/new/question/new/details',
       auth,
       payload: { question: 'Question text', shortDescription: 'Short desc' }
     }
@@ -148,6 +184,6 @@ describe('Editor v2 question details routes', () => {
 })
 
 /**
- * @import { FormMetadata, FormMetadataAuthor, Page } from '@defra/forms-model'
+ * @import { FormMetadata, FormMetadataAuthor, FormDefinition, Page } from '@defra/forms-model'
  * @import { Server } from '@hapi/hapi'
  */

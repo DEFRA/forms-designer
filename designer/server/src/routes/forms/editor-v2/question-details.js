@@ -64,15 +64,21 @@ export default [
       const { yar } = request
       const { params, auth } = request
       const { token } = auth.credentials
-      const { slug } = params
+      const { slug, pageId } = params
 
       // Form metadata, validation errors
       const metadata = await forms.get(slug, token)
+      const definition = await forms.getDraftFormDefinition(metadata.id, token)
       const validation = yar.flash(errorKey).at(0)
 
       return h.view(
         'forms/editor-v2/question-details',
-        editor.addQuestionDetailsViewModel(metadata, validation)
+        editor.addQuestionDetailsViewModel(
+          metadata,
+          definition,
+          pageId,
+          validation
+        )
       )
     },
     options: {
@@ -103,7 +109,7 @@ export default [
       // Save page and first question
       const metadata = await forms.get(slug, token)
       const newPage =
-        pageId && pageId !== 'first'
+        pageId && pageId !== 'new'
           ? await addQuestion(metadata.id, token, pageId, questionDetails)
           : await addPageAndFirstQuestion(metadata.id, token, questionDetails)
 

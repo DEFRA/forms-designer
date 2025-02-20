@@ -96,7 +96,7 @@ describe('Editor v2 page routes', () => {
 
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe(
-      '/library/my-form-slug/editor-v2/page/first/question'
+      '/library/my-form-slug/editor-v2/page/new/question'
     )
   })
 
@@ -116,7 +116,7 @@ describe('Editor v2 page routes', () => {
 
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe(
-      '/library/my-form-slug/editor-v2/page/first/guidance'
+      '/library/my-form-slug/editor-v2/page/new/guidance'
     )
   })
 

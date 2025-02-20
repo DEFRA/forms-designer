@@ -106,7 +106,7 @@ export default [
         .redirect(
           editorv2Path(
             slug,
-            `page/${pageId ?? 'first'}/question/${questionId ?? 'first'}/details`
+            `page/${pageId ?? 'new'}/question/${questionId ?? 'new'}/details`
           )
         )
         .code(StatusCodes.SEE_OTHER)

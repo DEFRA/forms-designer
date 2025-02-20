@@ -303,16 +303,27 @@ function questionDetailsFields(validation) {
 
 /**
  * @param {FormMetadata} metadata
+ * @param {FormDefinition} definition
+ * @param {string} pageId
  * @param {ValidationFailure<FormEditor>} [validation]
  */
-export function addQuestionDetailsViewModel(metadata, validation) {
+export function addQuestionDetailsViewModel(
+  metadata,
+  definition,
+  pageId,
+  validation
+) {
   const pageTitle = metadata.title
   const formPath = formOverviewPath(metadata.slug)
   const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
   const { formErrors } = validation ?? {}
 
+  const pageIdx = definition.pages.findIndex((x) => x.id === pageId)
+
   return {
     ...baseModelFields(metadata.slug, pageTitle),
+    cardTitle: `Page ${pageIdx + 1} overview`,
+    cardCaption: `Page ${pageIdx + 1}`,
     navigation,
     errorList: buildErrorList(formErrors, [
       'question',
