@@ -4,6 +4,7 @@ import Joi from 'joi'
 import { createServer } from '~/src/createServer.js'
 import { addErrorsToSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
+import { deriveQuestionType } from '~/src/routes/forms/editor-v2/question.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
@@ -148,6 +149,24 @@ describe('Editor v2 question routes', () => {
     expect(headers.location).toBe(
       '/library/my-form-slug/editor-v2/page/1/question/1/details'
     )
+  })
+
+  describe('deriveQuestionType', () => {
+    test('gets written answer sub-type', () => {
+      expect(deriveQuestionType('written-answer-sub', 'wa-sub', 'd-sub')).toBe(
+        'wa-sub'
+      )
+    })
+
+    test('gets date sub-type', () => {
+      expect(deriveQuestionType('date-sub', 'wa-sub', 'd-sub')).toBe('d-sub')
+    })
+
+    test('gets non-sub type', () => {
+      expect(deriveQuestionType('standard-type', 'wa-sub', 'd-sub')).toBe(
+        'standard-type'
+      )
+    })
   })
 })
 

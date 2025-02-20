@@ -68,7 +68,6 @@ export default [
       const metadata = await forms.get(slug, token)
       const validation = yar.flash(errorKey).at(0)
 
-      // TODO - supply payload
       return h.view(
         'forms/editor-v2/question',
         editor.addQuestionViewModel(metadata, {}, validation)

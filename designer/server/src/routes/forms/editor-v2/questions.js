@@ -3,15 +3,12 @@ import {
   questionTypeSchema,
   writtenAnswerSubSchema
 } from '@defra/forms-model'
-import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import * as forms from '~/src/lib/forms.js'
-import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import * as editor from '~/src/models/forms/editor-v2.js'
-import { editorv2Path } from '~/src/models/links.js'
 
 export const ROUTE_FULL_PATH_QUESTIONS = `/library/{slug}/editor-v2/page/{pageId}/questions`
 
@@ -64,42 +61,6 @@ export default [
       )
     },
     options: {
-      auth: {
-        mode: 'required',
-        access: {
-          entity: 'user',
-          scope: [`+${scopes.SCOPE_WRITE}`]
-        }
-      }
-    }
-  }),
-
-  /**
-   * @satisfies {ServerRoute<{ Payload: Pick<FormEditorInput, 'questionType'> }>}
-   */
-  ({
-    method: 'POST',
-    path: ROUTE_FULL_PATH_QUESTIONS,
-    handler(request, h) {
-      const { params } = request
-      const { slug, pageId, questionId } = params
-
-      // const questionId = await API.saveQuestionDetails()
-
-      // Redirect to next page
-      return h
-        .redirect(
-          editorv2Path(slug, `page/${pageId}/question/${questionId}/details`)
-        )
-        .code(StatusCodes.SEE_OTHER)
-    },
-    options: {
-      validate: {
-        payload: schema,
-        failAction: (request, h, error) => {
-          return redirectWithErrors(request, h, error, errorKey)
-        }
-      },
       auth: {
         mode: 'required',
         access: {
