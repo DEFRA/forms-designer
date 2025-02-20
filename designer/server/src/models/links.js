@@ -11,6 +11,15 @@ export function formOverviewPath(slug) {
 }
 
 /**
+ * Path to the editor-v2 pages
+ * @param {string} slug - the form slug
+ * @param {string | null} page - the form page
+ */
+export function editorv2Path(slug, page = '') {
+  return `${formsLibraryPath}/${slug}/editor-v2/${page}`
+}
+
+/**
  * Back link to the form overview page
  * @param {string} slug - the form slug
  */

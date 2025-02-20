@@ -1,4 +1,5 @@
 import { getTraceId } from '@defra/hapi-tracing'
+import slug from 'slug'
 
 import config from '~/src/config.js'
 
@@ -14,6 +15,30 @@ export function getHeaders(token) {
       ...(getTraceId() ? { [config.tracing.header]: getTraceId() } : {})
     }
   }
+}
+
+/**
+ * Replace whitespace, en-dashes and em-dashes with spaces
+ * before running through the slug package
+ * @param {string} input
+ */
+export function slugify(input = '', options = {}) {
+  const string = input.trimStart().replace(/[\s–—]/g, ' ')
+
+  return slug(string, {
+    fallback: false,
+    lower: true,
+    trim: true,
+    ...options
+  })
+}
+
+/**
+ *
+ * @param {string | undefined} checkboxVal
+ */
+export function isCheckboxSelected(checkboxVal) {
+  return checkboxVal === 'true' || checkboxVal === 'Y'
 }
 
 /**
