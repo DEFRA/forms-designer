@@ -67,6 +67,7 @@ export function pageListViewModel(metadata, definition) {
 
   const pageListModel = {
     ...definition,
+    formSlug: metadata.slug,
     navigation,
     pageHeading: {
       text: 'Add and edit pages'
