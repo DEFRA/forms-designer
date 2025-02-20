@@ -49,20 +49,18 @@ export default [
       const { yar } = request
       const { params, auth } = request
       const { token } = auth.credentials
-      const { slug } = params
+      const { slug, pageId } = params
 
-      // Form metadata, validation errors
+      // Form metadata and page components
       const metadata = await forms.get(slug, token)
       const definition = await forms.getDraftFormDefinition(metadata.id, token)
-      const page = definition.pages[0]
-      const components = 'components' in page ? page.components : []
-      const validation = yar.flash(errorKey).at(0)
 
-      // TODO - supply payload
+      // Validation errors
+      const validation = yar.flash(errorKey).at(0)
 
       return h.view(
         'forms/editor-v2/questions',
-        editor.questionsViewModel(metadata, components, {}, validation)
+        editor.questionsViewModel(metadata, definition, pageId, {}, validation)
       )
     },
     options: {

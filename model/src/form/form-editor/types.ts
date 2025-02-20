@@ -1,6 +1,5 @@
 /**
  * Interface for `FormEditor` Joi schema
- * @see {@link formEditorSchema}
  */
 export interface FormEditor {
   /**
@@ -36,7 +35,7 @@ export interface FormEditor {
   /**
    * Denotes if the question is optional
    */
-  questionOptional: boolean
+  questionOptional: string
 
   /**
    * The short description of the question
@@ -44,4 +43,14 @@ export interface FormEditor {
   shortDescription: string
 }
 
-export type FormEditorInput = Pick<FormEditor, 'pageType' | 'questionType'>
+export type FormEditorInput = Pick<
+  FormEditor,
+  | 'pageType'
+  | 'questionType'
+  | 'writtenAnswerSub'
+  | 'dateSub'
+  | 'question'
+  | 'shortDescription'
+  | 'hintText'
+  | 'questionOptional'
+>

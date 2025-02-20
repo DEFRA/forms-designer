@@ -1,7 +1,9 @@
+import { ControllerType } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
 import { createServer } from '~/src/createServer.js'
+import { addPageAndFirstQuestion } from '~/src/lib/editor.js'
 import { addErrorsToSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { auth } from '~/test/fixtures/auth.js'
@@ -9,6 +11,7 @@ import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/forms.js')
 jest.mock('~/src/lib/error-helper.js')
+jest.mock('~/src/lib/editor.js')
 
 describe('Editor v2 question details routes', () => {
   /** @type {Server} */
@@ -51,6 +54,18 @@ describe('Editor v2 question details routes', () => {
       updatedAt: now,
       updatedBy: author
     }
+  }
+
+  /**
+   * @satisfies {Page}
+   */
+  const page = {
+    id: '12345',
+    title: 'page title',
+    path: '/',
+    controller: ControllerType.Page,
+    next: [],
+    components: []
   }
 
   test('GET - should render the question fields in the view', async () => {
@@ -112,10 +127,11 @@ describe('Editor v2 question details routes', () => {
 
   test('POST - should redirect to next page if valid payload', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+    jest.mocked(addPageAndFirstQuestion).mockResolvedValue(page)
 
     const options = {
       method: 'post',
-      url: '/library/my-form-slug/editor-v2/page/1/question/1/details',
+      url: '/library/my-form-slug/editor-v2/page/first/question/first/details',
       auth,
       payload: { question: 'Question text', shortDescription: 'Short desc' }
     }
@@ -126,12 +142,12 @@ describe('Editor v2 question details routes', () => {
 
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe(
-      '/library/my-form-slug/editor-v2/page/1/questions'
+      '/library/my-form-slug/editor-v2/page/12345/questions'
     )
   })
 })
 
 /**
- * @import { FormMetadata, FormMetadataAuthor } from '@defra/forms-model'
+ * @import { FormMetadata, FormMetadataAuthor, Page } from '@defra/forms-model'
  * @import { Server } from '@hapi/hapi'
  */

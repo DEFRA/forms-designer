@@ -2,6 +2,7 @@ import { ComponentType } from '@defra/forms-model'
 
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { buildEntry } from '~/src/common/nunjucks/context/build-navigation.js'
+import { isCheckboxSelected } from '~/src/lib/utils.js'
 import {
   editorv2Path,
   formOverviewBackLink,
@@ -256,9 +257,8 @@ export function addQuestionViewModel(metadata, editor, validation) {
 
 /**
  * @param {ValidationFailure<FormEditor> | undefined} validation
- * @param {Partial<FormEditor> | undefined} editor
  */
-function questionDetailsFields(validation, editor) {
+function questionDetailsFields(validation) {
   const formValues = validation?.formValues
   return {
     fields: {
@@ -269,7 +269,7 @@ function questionDetailsFields(validation, editor) {
           text: 'Question',
           classes: GOVUK_LABEL__M
         },
-        value: formValues?.question ?? editor?.question,
+        value: formValues?.question,
         ...(validation?.formErrors.question && {
           errorMessage: {
             text: validation.formErrors.question.text
@@ -284,7 +284,7 @@ function questionDetailsFields(validation, editor) {
           classes: GOVUK_LABEL__M
         },
         rows: 3,
-        value: formValues?.hintText ?? editor?.hintText,
+        value: formValues?.hintText,
         ...(validation?.formErrors.hintText && {
           errorMessage: {
             text: validation.formErrors.hintText.text
@@ -297,11 +297,11 @@ function questionDetailsFields(validation, editor) {
         classes: 'govuk-checkboxes--small',
         items: [
           {
-            value: 'optional',
-            text: 'Make this question optional'
+            value: 'true',
+            text: 'Make this question optional',
+            checked: isCheckboxSelected(formValues?.questionOptional)
           }
-        ],
-        value: formValues?.questionOptional ?? editor?.questionOptional
+        ]
       },
       shortDescription: {
         name: 'shortDescription',
@@ -313,7 +313,7 @@ function questionDetailsFields(validation, editor) {
         hint: {
           text: "Enter a short description for this question like 'licence period'. Short descriptions are used in error messages and on the check your answers page."
         },
-        value: formValues?.shortDescription ?? editor?.shortDescription,
+        value: formValues?.shortDescription,
         ...(validation?.formErrors.shortDescription && {
           errorMessage: {
             text: validation.formErrors.shortDescription.text
@@ -326,10 +326,9 @@ function questionDetailsFields(validation, editor) {
 
 /**
  * @param {FormMetadata} metadata
- * @param {Partial<FormEditor>} [editor]
  * @param {ValidationFailure<FormEditor>} [validation]
  */
-export function addQuestionDetailsViewModel(metadata, editor, validation) {
+export function addQuestionDetailsViewModel(metadata, validation) {
   const pageTitle = metadata.title
   const formPath = formOverviewPath(metadata.slug)
   const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
@@ -345,25 +344,38 @@ export function addQuestionDetailsViewModel(metadata, editor, validation) {
     ]),
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
-    ...questionDetailsFields(validation, editor),
+    ...questionDetailsFields(validation),
     buttonText: SAVE_AND_CONTINUE
   }
 }
 
 /**
  * @param {FormMetadata} metadata
- * @param {ComponentDef[]} components
+ * @param {FormDefinition} definition
+ * @param {string} pageId
  * @param {Partial<FormEditor>} [_editor]
  * @param {ValidationFailure<FormEditor>} [validation]
  */
-export function questionsViewModel(metadata, components, _editor, validation) {
+export function questionsViewModel(
+  metadata,
+  definition,
+  pageId,
+  _editor,
+  validation
+) {
   const pageTitle = metadata.title
   const formPath = formOverviewPath(metadata.slug)
   const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
   const { formErrors } = validation ?? {}
 
+  const pageIdx = definition.pages.findIndex((x) => x.id === pageId)
+  const page = definition.pages[pageIdx]
+  const components = 'components' in page ? page.components : []
+
   return {
     ...baseModelFields(metadata.slug, pageTitle),
+    cardTitle: `Page ${pageIdx + 1} overview`,
+    cardCaption: `Page ${pageIdx + 1}`,
     navigation,
     errorList: buildErrorList(formErrors, ['questionType']),
     formErrors: validation?.formErrors,
@@ -415,6 +427,6 @@ export function getFormSpecificNavigation(
 }
 
 /**
- * @import { FormMetadata, FormDefinition, FormEditor, ComponentDef } from '@defra/forms-model'
+ * @import { FormMetadata, FormDefinition, FormEditor, ComponentDef, Page } from '@defra/forms-model'
  *  @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

@@ -2,6 +2,7 @@ export const sessionNames = {
   create: /** @type {const} */ ('create'),
   redirectTo: /** @type {const} */ ('redirectTo'),
   fileDownloadPassword: /** @type {const} */ ('fileDownloadPassword'),
+  questionType: /** @type {const} */ ('questionType'),
   validationFailure: {
     createForm: /** @type {const} */ ('createFormValidationFailure'),
     updateForm: /** @type {const} */ ('updateFormValidationFailure'),

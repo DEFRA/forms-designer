@@ -34,7 +34,7 @@ export const dateSubSchema = Joi.string()
 
 export const questionSchema = Joi.string().required()
 export const hintTextSchema = Joi.string().optional().allow('')
-export const questionOptionalSchema = Joi.boolean()
+export const questionOptionalSchema = Joi.string().optional().valid('', 'true')
 export const shortDescriptionSchema = Joi.string().required()
 
 export const formEditorInputKeys = {

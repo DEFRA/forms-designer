@@ -57,6 +57,7 @@ describe('Editor v2 questions routes', () => {
     name: 'Test form',
     pages: [
       {
+        id: '1',
         path: '/page-one',
         title: 'Page one',
         section: 'section',
@@ -81,6 +82,7 @@ describe('Editor v2 questions routes', () => {
         next: [{ path: '/summary' }]
       },
       {
+        id: '2',
         title: 'Summary',
         path: '/summary',
         controller: ControllerType.Summary
@@ -98,6 +100,7 @@ describe('Editor v2 questions routes', () => {
     name: 'Test form',
     pages: [
       {
+        id: '1',
         path: '/page-one',
         title: 'Page one',
         section: 'section',
@@ -105,6 +108,7 @@ describe('Editor v2 questions routes', () => {
         next: [{ path: '/summary' }]
       },
       {
+        id: '2',
         title: 'Summary',
         path: '/summary',
         controller: ControllerType.Summary
@@ -130,8 +134,8 @@ describe('Editor v2 questions routes', () => {
     const { container, document } = await renderResponse(server, options)
 
     const $mastheadHeading = container.getByText('Test form')
-    const $cardTitle = container.getByText('Page 5')
-    const $cardCaption = container.getByText('Page 5 overview')
+    const $cardTitle = container.getByText('Page 1 overview')
+    const $cardCaption = container.getByText('Page 1')
     const $questionNumbers = document.querySelectorAll(
       'form .govuk-summary-list__key'
     )
@@ -143,9 +147,9 @@ describe('Editor v2 questions routes', () => {
 
     expect($mastheadHeading).toHaveTextContent('Test form')
     expect($mastheadHeading).toHaveClass('govuk-heading-xl')
-    expect($cardTitle).toHaveTextContent('Page 5')
+    expect($cardTitle).toHaveTextContent('Page 1 overview')
     expect($cardTitle).toHaveClass('editor-card-title')
-    expect($cardCaption).toHaveTextContent('Page 5 overview')
+    expect($cardCaption).toHaveTextContent('Page 1')
     expect($cardCaption).toHaveClass('govuk-caption-l')
 
     expect($questionNumbers[0]).toHaveTextContent('Question 1')
@@ -173,8 +177,8 @@ describe('Editor v2 questions routes', () => {
     const { container, document } = await renderResponse(server, options)
 
     const $mastheadHeading = container.getByText('Test form')
-    const $cardTitle = container.getByText('Page 5')
-    const $cardCaption = container.getByText('Page 5 overview')
+    const $cardTitle = container.getByText('Page 1 overview')
+    const $cardCaption = container.getByText('Page 1')
     const $questionNumbers = document.querySelectorAll(
       'form .govuk-summary-list__key'
     )
@@ -184,9 +188,9 @@ describe('Editor v2 questions routes', () => {
 
     expect($mastheadHeading).toHaveTextContent('Test form')
     expect($mastheadHeading).toHaveClass('govuk-heading-xl')
-    expect($cardTitle).toHaveTextContent('Page 5')
+    expect($cardTitle).toHaveTextContent('Page 1 overview')
     expect($cardTitle).toHaveClass('editor-card-title')
-    expect($cardCaption).toHaveTextContent('Page 5 overview')
+    expect($cardCaption).toHaveTextContent('Page 1')
     expect($cardCaption).toHaveClass('govuk-caption-l')
 
     expect($questionNumbers).toHaveLength(1)

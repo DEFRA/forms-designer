@@ -35,6 +35,22 @@ export const schema = Joi.object().keys({
   })
 })
 
+/**
+ *
+ * @param {string} questionType
+ * @param {string} writtenAnswerSub - sub-type if 'written-answer-sub' selected in questionType
+ * @param {string} dateSub - sub-type if 'date-sub' selected in questionType
+ */
+export function deriveQuestionType(questionType, writtenAnswerSub, dateSub) {
+  if (questionType === 'written-answer-sub') {
+    return writtenAnswerSub
+  }
+  if (questionType === 'date-sub') {
+    return dateSub
+  }
+  return questionType
+}
+
 export default [
   /**
    * @satisfies {ServerRoute<{ Params: { slug: string, pageId: string, questionId: string } }>}
@@ -70,23 +86,29 @@ export default [
   }),
 
   /**
-   * @satisfies {ServerRoute<{ Payload: Pick<FormEditorInput, 'questionType'> }>}
+   * @satisfies {ServerRoute<{ Payload: Pick<FormEditorInput, 'questionType' | 'writtenAnswerSub' | 'dateSub'> }>}
    */
   ({
     method: 'POST',
     path: ROUTE_FULL_PATH_QUESTION,
     handler(request, h) {
-      const { params } = request
+      const { params, payload, yar } = request
       const { slug, pageId, questionId } = params
-      // const { questionType } = payload
+      const { questionType, writtenAnswerSub, dateSub } = payload
 
-      // TODO - to call API to get question guid back
-      // const questionId = await API.saveQuestion()
+      // Save in session until page is saved
+      yar.set(
+        sessionNames.questionType,
+        deriveQuestionType(questionType, writtenAnswerSub, dateSub)
+      )
 
       // Redirect to next page
       return h
         .redirect(
-          editorv2Path(slug, `page/${pageId}/question/${questionId}/details`)
+          editorv2Path(
+            slug,
+            `page/${pageId ?? 'first'}/question/${questionId ?? 'first'}/details`
+          )
         )
         .code(StatusCodes.SEE_OTHER)
     },

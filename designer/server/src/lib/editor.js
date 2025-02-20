@@ -1,8 +1,6 @@
-import { v4 as uuidv4 } from 'uuid'
-
 import config from '~/src/config.js'
 import { postJson } from '~/src/lib/fetch.js'
-import { getHeaders } from '~/src/lib/utils.js'
+import { getHeaders, slugify } from '~/src/lib/utils.js'
 
 const formsEndpoint = new URL('/forms/', config.managerUrl)
 
@@ -10,8 +8,9 @@ const formsEndpoint = new URL('/forms/', config.managerUrl)
  * Add a page to a form definition
  * @param {string} formId
  * @param {string} token
+ * @param {Partial<ComponentDef>} questionDetails
  */
-export async function addPage(formId, token, pathSuffix = uuidv4()) {
+export async function addPageAndFirstQuestion(formId, token, questionDetails) {
   const postJsonByType = /** @type {typeof postJson<Page>} */ (postJson)
 
   const requestUrl = new URL(
@@ -20,8 +19,9 @@ export async function addPage(formId, token, pathSuffix = uuidv4()) {
   )
   const { body } = await postJsonByType(requestUrl, {
     payload: {
-      title: 'Untitled',
-      path: `/${pathSuffix}`
+      title: questionDetails.title,
+      path: `/${slugify(questionDetails.title)}`,
+      components: [questionDetails]
     },
     ...getHeaders(token)
   })
@@ -30,7 +30,7 @@ export async function addPage(formId, token, pathSuffix = uuidv4()) {
 }
 
 /**
- * Add a page to a form definition
+ * Add a question to an existing page
  * @param {string} formId
  * @param {string} token
  * @param {string} pageId
@@ -40,7 +40,7 @@ export async function addQuestion(formId, token, pageId, questionDetails) {
   const postJsonByType = /** @type {typeof postJson<Page>} */ (postJson)
 
   const requestUrl = new URL(
-    `./${formId}/definition/draft/pages/${pageId}/question`,
+    `./${formId}/definition/draft/pages/${pageId}`,
     formsEndpoint
   )
   const { body } = await postJsonByType(requestUrl, {

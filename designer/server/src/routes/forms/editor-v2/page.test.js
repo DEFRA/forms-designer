@@ -2,7 +2,6 @@ import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
 import { createServer } from '~/src/createServer.js'
-import { addPage } from '~/src/lib/editor.js'
 import { addErrorsToSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { auth } from '~/test/fixtures/auth.js'
@@ -55,18 +54,6 @@ describe('Editor v2 page routes', () => {
     }
   }
 
-  /**
-   * @satisfies {Page}
-   */
-  const newPage = {
-    id: 'new-page-id',
-    title: 'Page one',
-    path: '/path',
-    controller: undefined,
-    next: [],
-    components: []
-  }
-
   test('GET - should check correct radio is rendered in the view', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
 
@@ -95,11 +82,10 @@ describe('Editor v2 page routes', () => {
 
   test('POST - should redirect to question if question selected', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
-    jest.mocked(addPage).mockResolvedValue(newPage)
 
     const options = {
       method: 'post',
-      url: '/library/my-form-slug/editor-v2/page/new-page-id',
+      url: '/library/my-form-slug/editor-v2/page',
       auth,
       payload: { pageType: 'question' }
     }
@@ -110,13 +96,12 @@ describe('Editor v2 page routes', () => {
 
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe(
-      '/library/my-form-slug/editor-v2/page/new-page-id/question'
+      '/library/my-form-slug/editor-v2/page/first/question'
     )
   })
 
   test('POST - should redirect to quidance if guidance selected', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
-    jest.mocked(addPage).mockResolvedValue(newPage)
 
     const options = {
       method: 'post',
@@ -131,7 +116,27 @@ describe('Editor v2 page routes', () => {
 
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe(
-      '/library/my-form-slug/editor-v2/page/new-page-id/guidance'
+      '/library/my-form-slug/editor-v2/page/first/guidance'
+    )
+  })
+
+  test('POST - should redirect to actual page id if question selected and a page id exists', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/123456',
+      auth,
+      payload: { pageType: 'question' }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/page/123456/question'
     )
   })
 

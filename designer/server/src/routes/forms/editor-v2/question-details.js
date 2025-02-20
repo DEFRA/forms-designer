@@ -9,8 +9,10 @@ import Joi from 'joi'
 
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
+import { addPageAndFirstQuestion, addQuestion } from '~/src/lib/editor.js'
 import * as forms from '~/src/lib/forms.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
+import { isCheckboxSelected } from '~/src/lib/utils.js'
 import * as editor from '~/src/models/forms/editor-v2.js'
 import { editorv2Path } from '~/src/models/links.js'
 
@@ -29,9 +31,27 @@ export const baseSchema = Joi.object().keys({
   })
 })
 
+// To be extended with question specific fields
 const specificsSchema = Joi.object()
 
 const schema = baseSchema.concat(specificsSchema)
+
+/**
+ *
+ * @param {Partial<FormEditorInput>} payload
+ * @param {ComponentType} questionType
+ */
+function deriveQuestionDetails(payload, questionType) {
+  /** @satisfies {Partial<ComponentDef>} */
+  return {
+    type: questionType,
+    title: payload.question,
+    question: payload.question,
+    name: payload.shortDescription,
+    hint: payload.hintText,
+    optional: isCheckboxSelected(payload.questionOptional)
+  }
+}
 
 export default [
   /**
@@ -50,10 +70,9 @@ export default [
       const metadata = await forms.get(slug, token)
       const validation = yar.flash(errorKey).at(0)
 
-      // TODO - supply payload
       return h.view(
         'forms/editor-v2/question-details',
-        editor.addQuestionDetailsViewModel(metadata, {}, validation)
+        editor.addQuestionDetailsViewModel(metadata, validation)
       )
     },
     options: {
@@ -68,18 +87,29 @@ export default [
   }),
 
   /**
-   * @satisfies {ServerRoute<{ Payload: Pick<FormEditorInput, 'questionType'> }>}
+   * @satisfies {ServerRoute<{ Payload: Pick<FormEditorInput, 'question' | 'hintText' | 'shortDescription' | 'questionOptional'> }>}
    */
   ({
     method: 'POST',
     path: ROUTE_FULL_PATH_QUESTION_DETAILS,
-    handler(request, h) {
-      const { params } = request
+    async handler(request, h) {
+      const { params, auth, payload, yar } = request
       const { slug, pageId } = params
+      const { token } = auth.credentials
+
+      const questionType = yar.get(sessionNames.questionType)
+      const questionDetails = deriveQuestionDetails(payload, questionType)
+
+      // Save page and first question
+      const metadata = await forms.get(slug, token)
+      const newPage =
+        pageId && pageId !== 'first'
+          ? await addQuestion(metadata.id, token, pageId, questionDetails)
+          : await addPageAndFirstQuestion(metadata.id, token, questionDetails)
 
       // Redirect to next page
       return h
-        .redirect(editorv2Path(slug, `page/${pageId}/questions`))
+        .redirect(editorv2Path(slug, `page/${newPage.id}/questions`))
         .code(StatusCodes.SEE_OTHER)
     },
     options: {
@@ -101,6 +131,6 @@ export default [
 ]
 
 /**
- * @import { FormEditorInput } from '@defra/forms-model'
+ * @import { FormEditorInput, ComponentDef, ComponentType } from '@defra/forms-model'
  * @import { ServerRoute } from '@hapi/hapi'
  */

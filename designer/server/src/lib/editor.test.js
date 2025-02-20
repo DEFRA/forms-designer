@@ -1,7 +1,7 @@
 import { ComponentType } from '@defra/forms-model'
 
 import config from '~/src/config.js'
-import { addPage, addQuestion } from '~/src/lib/editor.js'
+import { addPageAndFirstQuestion } from '~/src/lib/editor.js'
 import { postJson } from '~/src/lib/fetch.js'
 
 jest.mock('~/src/lib/fetch.js')
@@ -27,12 +27,18 @@ function createMockResponse(props = {}) {
 
 const formsEndpoint = new URL('/forms/', config.managerUrl)
 
+const questionDetails = {
+  title: 'What is your name?',
+  name: 'what-is-your-name',
+  type: ComponentType.TextField
+}
+
 describe('editor.js', () => {
   afterEach(() => {
     jest.clearAllMocks()
   })
 
-  describe('addPage', () => {
+  describe('addPageAndFirstQuestion', () => {
     const formId = '98dbfb6c-93b7-41dc-86e7-02c7abe4ba38'
     const requestUrl = new URL(
       `./${formId}/definition/draft/pages`,
@@ -40,7 +46,17 @@ describe('editor.js', () => {
     )
     const token = 'someToken'
     const expectedOptions = {
-      payload: { title: 'Untitled', path: '/path-stub' },
+      payload: {
+        title: 'What is your name?',
+        path: '/what-is-your-name',
+        components: [
+          {
+            title: 'What is your name?',
+            name: 'what-is-your-name',
+            type: ComponentType.TextField
+          }
+        ]
+      },
       headers: { Authorization: `Bearer ${token}` }
     }
 
@@ -51,7 +67,11 @@ describe('editor.js', () => {
           body: { id: 'new-id' }
         })
 
-        const result = await addPage(formId, token, 'path-stub')
+        const result = await addPageAndFirstQuestion(
+          formId,
+          token,
+          questionDetails
+        )
 
         expect(mockedPostJson).toHaveBeenCalledWith(requestUrl, expectedOptions)
         expect(result).toEqual({ id: 'new-id' })
@@ -63,53 +83,9 @@ describe('editor.js', () => {
         const testError = new Error('Network error')
         mockedPostJson.mockRejectedValueOnce(testError)
 
-        await expect(addPage(formId, token, 'path-stub')).rejects.toThrow(
-          testError
-        )
-      })
-    })
-  })
-
-  describe('addQuestion', () => {
-    const formId = '98dbfb6c-93b7-41dc-86e7-02c7abe4ba38'
-    const pageId = '2da66e98-18f9-4822-89d0-2cabfe3cf19b'
-    const requestUrl = new URL(
-      `./${formId}/definition/draft/pages/${pageId}/question`,
-      formsEndpoint
-    )
-    const token = 'someToken'
-    const questionDetails = {
-      type: ComponentType.TextField,
-      title: 'What is your question?',
-      name: 'what-is-your-question'
-    }
-    const expectedOptions = {
-      payload: { questionDetails },
-      headers: { Authorization: `Bearer ${token}` }
-    }
-
-    describe('when postJson succeeds', () => {
-      test('returns response body', async () => {
-        mockedPostJson.mockResolvedValueOnce({
-          response: createMockResponse(),
-          body: { id: 'new-id' }
-        })
-
-        const result = await addQuestion(formId, token, pageId, questionDetails)
-
-        expect(mockedPostJson).toHaveBeenCalledWith(requestUrl, expectedOptions)
-        expect(result).toEqual({ id: 'new-id' })
-      })
-    })
-
-    describe('when postJson fails', () => {
-      test('throws the error', async () => {
-        const testError = new Error('Network error')
-        mockedPostJson.mockRejectedValueOnce(testError)
-
-        await expect(addPage(formId, token, 'path-stub')).rejects.toThrow(
-          testError
-        )
+        await expect(
+          addPageAndFirstQuestion(formId, token, questionDetails)
+        ).rejects.toThrow(testError)
       })
     })
   })
