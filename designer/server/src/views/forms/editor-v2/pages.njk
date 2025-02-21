@@ -21,10 +21,11 @@
           <div class="govuk-grid-column-full">
           {{ appPagePanelLeft({
             formName: name,
-            formSlug: formSlug,
             pageNum: loop.index,
             pageId: page.id,
             pageTitle: page.title,
+            pageEditUrl: "/library/" + formSlug + "/editor-v2/page/" + page.id + "/questions",
+            pagePreviewUrl: "/library/" + formSlug + "/editor-v2/page/" + page.id + "/preview",
             rows: page.components,
             isEndPage: loop.last,
             showMoveButtons: false
