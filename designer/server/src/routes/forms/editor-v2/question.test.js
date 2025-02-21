@@ -1,3 +1,4 @@
+import { ComponentType, ControllerType } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
@@ -54,12 +55,49 @@ describe('Editor v2 question routes', () => {
     }
   }
 
+  /**
+   * @satisfies {FormDefinition}
+   */
+  const formDefinition = {
+    name: 'Test form',
+    pages: [
+      {
+        id: 'p1',
+        path: '/page-one',
+        title: 'Page one',
+        section: 'section',
+        components: [
+          {
+            type: ComponentType.TextField,
+            name: 'textField',
+            title: 'This is your first field',
+            hint: 'Help text',
+            options: {},
+            schema: {}
+          }
+        ],
+        next: [{ path: '/summary' }]
+      },
+      {
+        title: 'Summary',
+        path: '/summary',
+        controller: ControllerType.Summary
+      }
+    ],
+    conditions: [],
+    sections: [],
+    lists: []
+  }
+
   test('GET - should render the question fields in the view', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(formDefinition)
 
     const options = {
       method: 'get',
-      url: '/library/my-form-slug/editor-v2/page/1/question/1',
+      url: '/library/my-form-slug/editor-v2/page/p1/question/1',
       auth
     }
 
@@ -67,7 +105,7 @@ describe('Editor v2 question routes', () => {
 
     const $mastheadHeading = container.getByText('Test form')
     const $cardTitle = container.getByText('Question 1')
-    const $cardCaption = container.getByText('Page 1: Question 1')
+    const $cardCaption = container.getByText('Page 1: question 1')
 
     const $radios = container.getAllByRole('radio')
 
@@ -77,7 +115,7 @@ describe('Editor v2 question routes', () => {
     expect($mastheadHeading).toHaveClass('govuk-heading-xl')
     expect($cardTitle).toHaveTextContent('Question 1')
     expect($cardTitle).toHaveClass('editor-card-title')
-    expect($cardCaption).toHaveTextContent('Page 1: Question 1')
+    expect($cardCaption).toHaveTextContent('Page 1: question 1')
     expect($cardCaption).toHaveClass('govuk-caption-l')
 
     expect($actions).toHaveLength(3)
@@ -171,6 +209,6 @@ describe('Editor v2 question routes', () => {
 })
 
 /**
- * @import { FormMetadata, FormMetadataAuthor } from '@defra/forms-model'
+ * @import { FormMetadata, FormMetadataAuthor, FormDefinition } from '@defra/forms-model'
  * @import { Server } from '@hapi/hapi'
  */

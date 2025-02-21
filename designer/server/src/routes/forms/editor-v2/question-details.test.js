@@ -63,6 +63,7 @@ describe('Editor v2 question details routes', () => {
     name: 'Test form',
     pages: [
       {
+        id: 'p1',
         path: '/page-one',
         title: 'Page one',
         section: 'section',
@@ -109,24 +110,27 @@ describe('Editor v2 question details routes', () => {
 
     const options = {
       method: 'get',
-      url: '/library/my-form-slug/editor-v2/page/1/question/1/details',
+      url: '/library/my-form-slug/editor-v2/page/p1/question/1/details',
       auth
     }
 
     const { container } = await renderResponse(server, options)
 
     const $mastheadHeading = container.getByText('Test form')
-    const $cardTitle = container.getByText('Page 5')
-    const $cardCaption = container.getByText('Edit question 1')
+    const $cardTitle = container.getByText('Question 1')
+    const $cardCaption = container.getByText('Page 1')
+    const $cardHeading = container.getByText('Edit question 1')
 
     const $actions = container.getAllByRole('button')
 
     expect($mastheadHeading).toHaveTextContent('Test form')
     expect($mastheadHeading).toHaveClass('govuk-heading-xl')
-    expect($cardTitle).toHaveTextContent('Page 5')
+    expect($cardTitle).toHaveTextContent('Question 1')
     expect($cardTitle).toHaveClass('editor-card-title')
-    expect($cardCaption).toHaveTextContent('Edit question 1')
-    expect($cardCaption).toHaveClass('govuk-fieldset__heading')
+    expect($cardCaption).toHaveTextContent('Page 1')
+    expect($cardCaption).toHaveClass('govuk-caption-l')
+    expect($cardHeading).toHaveTextContent('Edit question 1')
+    expect($cardHeading).toHaveClass('govuk-fieldset__heading')
 
     expect($actions).toHaveLength(3)
     expect($actions[2]).toHaveTextContent('Save and continue')

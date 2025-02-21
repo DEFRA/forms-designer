@@ -1,4 +1,4 @@
-import { ComponentType } from '@defra/forms-model'
+import { ComponentType, ControllerType } from '@defra/forms-model'
 
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { buildEntry } from '~/src/common/nunjucks/context/build-navigation.js'
@@ -13,6 +13,21 @@ import {
 const BACK_TO_ADD_AND_EDIT_PAGES = 'Back to add and edit pages'
 const SAVE_AND_CONTINUE = 'Save and continue'
 const GOVUK_LABEL__M = 'govuk-label--m'
+
+/**
+ * @param {FormDefinition} definition
+ * @param {string} pageId
+ */
+export function getPageNum(definition, pageId) {
+  if (pageId === 'new') {
+    return (
+      definition.pages.filter((x) => x.controller !== ControllerType.Summary)
+        .length + 1
+    )
+  }
+  const pageIdx = definition.pages.findIndex((x) => x.id === pageId)
+  return pageIdx + 1
+}
 
 /**
  * @param {string} slug
@@ -188,14 +203,17 @@ const dateSubItems = [
 
 /**
  * @param {FormMetadata} metadata
- * @param {Partial<FormEditor>} [editor]
+ * @param {FormDefinition} definition
+ * @param {string} pageId
  * @param {ValidationFailure<FormEditor>} [validation]
  */
-export function addQuestionViewModel(metadata, editor, validation) {
+export function addQuestionViewModel(metadata, definition, pageId, validation) {
   const pageTitle = metadata.title
   const formPath = formOverviewPath(metadata.slug)
   const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
   const { formValues, formErrors } = validation ?? {}
+
+  const pageNum = getPageNum(definition, pageId)
 
   return {
     ...baseModelFields(metadata.slug, pageTitle),
@@ -203,11 +221,13 @@ export function addQuestionViewModel(metadata, editor, validation) {
     errorList: buildErrorList(formErrors, ['questionType']),
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
+    cardTitle: 'Question 1',
+    cardCaption: `Page ${pageNum}: question 1`,
     fields: {
       questionType: {
         idPrefix: 'questionType',
         name: 'questionType',
-        value: formValues?.questionType ?? editor?.questionType,
+        value: formValues?.questionType,
         items: questionTypeRadioItemsSimple,
         ...insertValidationErrors(validation?.formErrors.questionType)
       },
@@ -222,7 +242,7 @@ export function addQuestionViewModel(metadata, editor, validation) {
           }
         },
         items: writtenAnswerSubItems,
-        value: formValues?.writtenAnswerSub ?? editor?.question,
+        value: formValues?.writtenAnswerSub,
         ...insertValidationErrors(validation?.formErrors.writtenAnswerSub)
       },
       dateSub: {
@@ -236,7 +256,7 @@ export function addQuestionViewModel(metadata, editor, validation) {
           }
         },
         items: dateSubItems,
-        value: formValues?.dateSub ?? editor?.question,
+        value: formValues?.dateSub,
         ...insertValidationErrors(validation?.formErrors.dateSub)
       }
     },
@@ -318,12 +338,12 @@ export function addQuestionDetailsViewModel(
   const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
   const { formErrors } = validation ?? {}
 
-  const pageIdx = definition.pages.findIndex((x) => x.id === pageId)
+  const pageNum = getPageNum(definition, pageId)
 
   return {
     ...baseModelFields(metadata.slug, pageTitle),
-    cardTitle: `Page ${pageIdx + 1} overview`,
-    cardCaption: `Page ${pageIdx + 1}`,
+    cardTitle: 'Question 1',
+    cardCaption: `Page ${pageNum}`,
     navigation,
     errorList: buildErrorList(formErrors, [
       'question',

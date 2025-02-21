@@ -12,7 +12,7 @@ const mockedPostJson = /** @type {jest.MockedFunction<typeof postJson>} */ (
 
 /**
  * Creates a minimal mock response
- * @param {{statusCode?:number}} [props]
+ * @param {{statusCode?: number}} [props]
  * @returns
  */
 function createMockResponse(props = {}) {
