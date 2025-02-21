@@ -146,7 +146,21 @@ export function addPageViewModel(metadata, editor, validation) {
   }
 }
 
-const questionTypeRadioItemsSimple = [
+const questionTypeRadioItems = [
+  {
+    text: 'Written answer',
+    hint: {
+      text: 'A short or long answer as test or number'
+    },
+    value: 'written-answer-group'
+  },
+  {
+    text: 'Date',
+    hint: {
+      text: 'A day, month and year or month and year only'
+    },
+    value: 'date-group'
+  },
   {
     text: 'UK address',
     hint: {
@@ -228,7 +242,7 @@ export function addQuestionViewModel(metadata, definition, pageId, validation) {
         idPrefix: 'questionType',
         name: 'questionType',
         value: formValues?.questionType,
-        items: questionTypeRadioItemsSimple,
+        items: questionTypeRadioItems,
         ...insertValidationErrors(validation?.formErrors.questionType)
       },
       writtenAnswerSub: {
@@ -374,7 +388,7 @@ export function questionsViewModel(
   const pageTitle = metadata.title
   const formPath = formOverviewPath(metadata.slug)
   const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
-  const { formErrors } = validation ?? {}
+  const { formValues, formErrors } = validation ?? {}
 
   const pageIdx = definition.pages.findIndex((x) => x.id === pageId)
   const page = definition.pages[pageIdx]
@@ -407,6 +421,46 @@ export function questionsViewModel(
         }
       }
     }),
+    fields: {
+      pageHeadingAndGuidance: {
+        name: 'pageHeadingAndGuidance',
+        id: 'pageHeadingAndGuidance',
+        items: [
+          {
+            value: 'true',
+            text: 'Add a page heading, guidance or both',
+            checked: isCheckboxSelected(formValues?.pageHeadingAndGuidance)
+          }
+        ]
+      },
+      pageHeading: {
+        name: 'pageHeading',
+        id: 'pageHeading',
+        label: {
+          text: 'Page heading',
+          classes: GOVUK_LABEL__M
+        },
+        hint: {
+          text: "Page headings should be a statement and not a question. For example, 'Passport information'"
+        },
+        value: formValues?.pageHeading,
+        ...insertValidationErrors(validation?.formErrors.pageHeading)
+      },
+      guidanceText: {
+        name: 'guidanceText',
+        id: 'guidanceText',
+        label: {
+          text: 'Guidance text (optional)',
+          classes: GOVUK_LABEL__M
+        },
+        hint: {
+          text: 'Use Markdown to format the content or add hyperlinks'
+        },
+        rows: 3,
+        value: formValues?.guidanceText,
+        ...insertValidationErrors(validation?.formErrors.guidanceText)
+      }
+    },
     buttonText: SAVE_AND_CONTINUE
   }
 }
