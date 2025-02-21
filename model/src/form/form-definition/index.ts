@@ -97,6 +97,7 @@ const conditionWrapperSchema = Joi.object<ConditionWrapper>().keys({
 
 export const componentSchema = Joi.object<ComponentDef>()
   .keys({
+    id: Joi.string().uuid().optional(),
     type: Joi.string<ComponentType>().required(),
     shortDescription: Joi.string().optional(),
     name: Joi.when('type', {
