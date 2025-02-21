@@ -4,7 +4,11 @@ import contactOnline from '~/src/routes/forms/contact/online.js'
 import contactPhone from '~/src/routes/forms/contact/phone.js'
 import create from '~/src/routes/forms/create.js'
 import edit from '~/src/routes/forms/edit.js'
-import editorv2 from '~/src/routes/forms/editor-v2.js'
+import editorAddPage from '~/src/routes/forms/editor-v2/page.js'
+import editorv2Pages from '~/src/routes/forms/editor-v2/pages.js'
+import editorQuestionDetails from '~/src/routes/forms/editor-v2/question-details.js'
+import editorAddQuestion from '~/src/routes/forms/editor-v2/question.js'
+import editorQuestions from '~/src/routes/forms/editor-v2/questions.js'
 import formLifecycle from '~/src/routes/forms/form-lifecycle.js'
 import library from '~/src/routes/forms/library.js'
 import notificationEmail from '~/src/routes/forms/notification-email.js'
@@ -15,7 +19,11 @@ export default [
   api,
   create,
   edit,
-  editorv2,
+  editorv2Pages,
+  editorAddPage,
+  editorAddQuestion,
+  editorQuestionDetails,
+  editorQuestions,
   library,
   formLifecycle,
   contactPhone,

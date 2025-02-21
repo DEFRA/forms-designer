@@ -20,7 +20,7 @@
     }) %}
   {% endif %}
 
-  {%- if params.actions | length %}
+  {%- if params.actions | length or params.useNewMasthead %}
     {% set actionsContent = "" %}
 
     {% for action in params.actions %}

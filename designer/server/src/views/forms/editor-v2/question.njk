@@ -1,0 +1,32 @@
+{% extends "layouts/page.njk" %}
+
+{% from "page-body/macro.njk" import appPageBody %}
+{% from "editor-card/macro.njk" import appEditorCard %}
+
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% block content %}
+{% call appPageBody({
+  heading: pageHeading,
+  description: pageDescription,
+  caption: pageCaption,
+  actions: pageActions,
+  classes: "govuk-grid-column-full govuk-grid-column-one-half-from-desktop",
+  backLink: backLink,
+  errorList: errorList,
+  useNewMasthead: true
+}) %}
+
+{% call appEditorCard({
+  title: cardTitle,
+  caption: cardCaption
+}) %}
+  {%- include "../views/forms/editor-v2/partials/question-type.njk" -%}
+{% endcall %}
+
+{% endcall %}
+{% endblock %}
+
+{% block mainEnd %}
+  {{ super() }}
+{% endblock %}
