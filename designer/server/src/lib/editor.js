@@ -1,7 +1,7 @@
 import { ComponentType } from '@defra/forms-model'
 
 import config from '~/src/config.js'
-import { patchJson, postJson } from '~/src/lib/fetch.js'
+import { patchJson, postJson, putJson } from '~/src/lib/fetch.js'
 import { getHeaders, slugify } from '~/src/lib/utils.js'
 
 const formsEndpoint = new URL('/forms/', config.managerUrl)
@@ -72,6 +72,7 @@ export async function setPageHeadingAndGuidance(
 ) {
   const patchJsonByType = /** @type {typeof patchJson<Page>} */ (patchJson)
   const postJsonByType = /** @type {typeof postJson<Page>} */ (postJson)
+  const putJsonByType = /** @type {typeof putJson<Page>} */ (putJson)
 
   const { pageHeading, guidanceText } = payload
 
@@ -87,18 +88,40 @@ export async function setPageHeadingAndGuidance(
     ...getHeaders(token)
   })
 
-  // Insert a guidance component (or update if it already exists)
-  const guidanceRequestUrl = new URL(
-    `./${formId}/definition/draft/pages/${pageId}/components`,
-    formsEndpoint
-  )
-  await postJsonByType(guidanceRequestUrl, {
-    payload: {
-      type: ComponentType.Html,
-      content: guidanceText
-    },
-    ...getHeaders(token)
-  })
+  if (guidanceText && guidanceText !== '') {
+    // Insert a guidance component (or update if it already exists)
+    const page = definition.pages.find((x) => x.id === pageId)
+    const existingGuidance =
+      page && 'components' in page
+        ? page.components.find((y) => y.type === ComponentType.Html)
+        : undefined
+
+    if (existingGuidance) {
+      const guidanceRequestUrl = new URL(
+        `./${formId}/definition/draft/pages/${pageId}/components/${existingGuidance.id}`,
+        formsEndpoint
+      )
+      await putJsonByType(guidanceRequestUrl, {
+        payload: {
+          type: ComponentType.Html,
+          content: guidanceText
+        },
+        ...getHeaders(token)
+      })
+    } else {
+      const guidanceRequestUrl = new URL(
+        `./${formId}/definition/draft/pages/${pageId}/components?prepend=true`,
+        formsEndpoint
+      )
+      await postJsonByType(guidanceRequestUrl, {
+        payload: {
+          type: ComponentType.Html,
+          content: guidanceText
+        },
+        ...getHeaders(token)
+      })
+    }
+  }
 }
 
 /**

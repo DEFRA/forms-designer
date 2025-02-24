@@ -10,7 +10,7 @@ import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import * as forms from '~/src/lib/forms.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
-import * as editor from '~/src/models/forms/editor-v2.js'
+import * as viewModel from '~/src/models/forms/editor-v2/question-type.js'
 import { editorv2Path } from '~/src/models/links.js'
 
 export const ROUTE_FULL_PATH_QUESTION = `/library/{slug}/editor-v2/page/{pageId}/question/{questionId?}`
@@ -69,11 +69,18 @@ export default [
       const definition = await forms.getDraftFormDefinition(metadata.id, token)
 
       // Validation errors
-      const validation = yar.flash(errorKey).at(0)
+      const validation = /** @type {ValidationFailure<FormEditor>} */ (
+        yar.flash(errorKey).at(0)
+      )
 
       return h.view(
         'forms/editor-v2/question',
-        editor.addQuestionViewModel(metadata, definition, pageId, validation)
+        viewModel.questionTypeViewModel(
+          metadata,
+          definition,
+          pageId,
+          validation
+        )
       )
     },
     options: {
@@ -88,7 +95,7 @@ export default [
   }),
 
   /**
-   * @satisfies {ServerRoute<{ Payload: Pick<FormEditorInput, 'questionType' | 'writtenAnswerSub' | 'dateSub'> }>}
+   * @satisfies {ServerRoute<{ Payload: Pick<FormEditorInputPage, 'questionType' | 'writtenAnswerSub' | 'dateSub'> }>}
    */
   ({
     method: 'POST',
@@ -133,6 +140,7 @@ export default [
 ]
 
 /**
- * @import { FormEditorInput } from '@defra/forms-model'
+ * @import { FormEditor, FormEditorInputPage } from '@defra/forms-model'
  * @import { ServerRoute } from '@hapi/hapi'
+ * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

@@ -74,3 +74,73 @@ export interface QueryResult<Model> {
    */
   meta: Meta
 }
+
+/**
+ * Type for the list items within a Radio or Checkbox nunjucks definition
+ */
+export interface CheckboxOrRadioItem {
+  /**
+   * The text to be displayed
+   */
+  text?: string
+
+  /**
+   * If text is set, this is not required. HTML to use within each radio item label
+   */
+  html?: string
+
+  /**
+   * Specific ID attribute for the checkbox/radio item
+   */
+  id?: string
+
+  /**
+   * Name for the checkbox/radio item
+   */
+  name?: string
+
+  /**
+   * Required. Value for the radio input
+   */
+  value: string
+
+  /**
+   * Subset of options for the label
+   */
+  label?: string
+
+  /**
+   * Can be used to add a hint to each item
+   */
+  hint?: string
+
+  /**
+   * Divider text to separate checkbox/radio items, for example the text "or"
+   */
+  divider?: string
+
+  /**
+   * Whether the checkbox/radio should be checked when the page loads
+   */
+  checked?: boolean
+
+  /**
+   * Provide additional content to reveal when the checkbox/radio is checked
+   */
+  conditional?: object
+
+  /**
+   * The behaviour - if set to "exclusive" implements a 'None of thse' type behaviour via Javascript when checkboxes are clicked
+   */
+  behaviour?: string
+
+  /**
+   * If true, checkbox/radio option will be disabled
+   */
+  disabled?: boolean
+
+  /**
+   * HTML attributes (for example data attributes) to add to the checkbox input tag
+   */
+  attributes?: object
+}

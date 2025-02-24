@@ -65,7 +65,11 @@ export type FormEditorInputPage = Pick<
 
 export type FormEditorInputQuestion = Pick<
   FormEditor,
-  'question' | 'shortDescription' | 'hintText' | 'questionOptional'
+  | 'questionType'
+  | 'question'
+  | 'shortDescription'
+  | 'hintText'
+  | 'questionOptional'
 >
 
 export type FormEditorInputPageSettings = Pick<

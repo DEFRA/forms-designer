@@ -13,7 +13,7 @@ import { addPageAndFirstQuestion, addQuestion } from '~/src/lib/editor.js'
 import * as forms from '~/src/lib/forms.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import { isCheckboxSelected } from '~/src/lib/utils.js'
-import * as editor from '~/src/models/forms/editor-v2.js'
+import * as viewModel from '~/src/models/forms/editor-v2/question-details.js'
 import { editorv2Path } from '~/src/models/links.js'
 
 export const ROUTE_FULL_PATH_QUESTION_DETAILS = `/library/{slug}/editor-v2/page/{pageId}/question/{questionId}/details`
@@ -38,7 +38,7 @@ const schema = baseSchema.concat(specificsSchema)
 
 /**
  *
- * @param {Partial<FormEditorInput>} payload
+ * @param {Partial<FormEditorInputQuestion>} payload
  * @param {ComponentType} questionType
  */
 function deriveQuestionDetails(payload, questionType) {
@@ -69,11 +69,13 @@ export default [
       // Form metadata, validation errors
       const metadata = await forms.get(slug, token)
       const definition = await forms.getDraftFormDefinition(metadata.id, token)
-      const validation = yar.flash(errorKey).at(0)
+      const validation = /** @type {ValidationFailure<FormEditor>} */ (
+        yar.flash(errorKey).at(0)
+      )
 
       return h.view(
         'forms/editor-v2/question-details',
-        editor.addQuestionDetailsViewModel(
+        viewModel.questionDetailsViewModel(
           metadata,
           definition,
           pageId,
@@ -93,7 +95,7 @@ export default [
   }),
 
   /**
-   * @satisfies {ServerRoute<{ Payload: Pick<FormEditorInput, 'question' | 'hintText' | 'shortDescription' | 'questionOptional'> }>}
+   * @satisfies {ServerRoute<{ Payload: Pick<FormEditorInputQuestion, 'question' | 'hintText' | 'shortDescription' | 'questionOptional'> }>}
    */
   ({
     method: 'POST',
@@ -103,7 +105,9 @@ export default [
       const { slug, pageId } = params
       const { token } = auth.credentials
 
-      const questionType = yar.get(sessionNames.questionType)
+      const questionType = /** @type {ComponentType} */ (
+        yar.get(sessionNames.questionType)
+      )
       const questionDetails = deriveQuestionDetails(payload, questionType)
 
       // Save page and first question
@@ -137,6 +141,7 @@ export default [
 ]
 
 /**
- * @import { FormEditorInput, ComponentDef, ComponentType } from '@defra/forms-model'
+ * @import { FormEditor, FormEditorInputQuestion, ComponentDef, ComponentType } from '@defra/forms-model'
  * @import { ServerRoute } from '@hapi/hapi'
+ * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

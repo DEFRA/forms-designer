@@ -5,7 +5,7 @@ import Joi from 'joi'
 import { createServer } from '~/src/createServer.js'
 import { addErrorsToSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
-import { deriveQuestionType } from '~/src/routes/forms/editor-v2/question.js'
+import { deriveQuestionType } from '~/src/routes/forms/editor-v2/question-type.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 

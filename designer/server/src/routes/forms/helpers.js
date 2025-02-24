@@ -4,7 +4,7 @@ import { sessionNames } from '~/src/common/constants/session-names.js'
 import * as create from '~/src/models/forms/create.js'
 
 /**
- * @template {Request<{ Payload: any }> | Request<{ Params: any, Payload: any }>} RequestType
+ * @template {Request<{ Payload: any }>  | Request<{ Params: any, Payload: any }> | Request<{ Yar: any, Params: any, Payload: any }>} RequestType
  * @param {RequestType} request
  * @param {ResponseToolkit<any>} h
  * @param {string} redirectPath

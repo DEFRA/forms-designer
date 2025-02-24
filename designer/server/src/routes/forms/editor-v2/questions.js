@@ -11,7 +11,7 @@ import { sessionNames } from '~/src/common/constants/session-names.js'
 import { setPageHeadingAndGuidance } from '~/src/lib/editor.js'
 import * as forms from '~/src/lib/forms.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
-import * as editor from '~/src/models/forms/editor-v2.js'
+import * as viewModel from '~/src/models/forms/editor-v2/questions.js'
 import { editorv2Path } from '~/src/models/links.js'
 
 export const ROUTE_FULL_PATH_QUESTIONS = `/library/{slug}/editor-v2/page/{pageId}/questions`
@@ -50,11 +50,19 @@ export default [
       const definition = await forms.getDraftFormDefinition(metadata.id, token)
 
       // Validation errors
-      const validation = yar.flash(errorKey).at(0)
+      const validation = /** @type {ValidationFailure<FormEditor>} */ (
+        yar.flash(errorKey).at(0)
+      )
 
       return h.view(
         'forms/editor-v2/questions',
-        editor.questionsViewModel(metadata, definition, pageId, {}, validation)
+        viewModel.questionsViewModel(
+          metadata,
+          definition,
+          pageId,
+          {},
+          validation
+        )
       )
     },
     options: {
@@ -68,7 +76,7 @@ export default [
     }
   }),
   /**
-   * @satisfies {ServerRoute<{ Payload: Pick<FormEditorInput, 'pageHeadingAndGuidance' | 'pageHeading' | 'guidanceText' > }>}
+   * @satisfies {ServerRoute<{ Payload: Partial<FormEditorInputPageSettings> }>}
    */
   ({
     method: 'POST',
@@ -113,6 +121,7 @@ export default [
 ]
 
 /**
- * @import { FormEditorInput } from '@defra/forms-model'
+ * @import { FormEditor, FormEditorInputPageSettings } from '@defra/forms-model'
  * @import { ServerRoute } from '@hapi/hapi'
+ * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

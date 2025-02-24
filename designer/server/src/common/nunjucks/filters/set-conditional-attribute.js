@@ -1,5 +1,5 @@
 /**
- * @param {{items: any[]}} elem
+ * @param {{items: CheckboxOrRadioItem[]}} elem
  * @param {number} itemPos
  * @param {string} conditionalHtml
  */
@@ -18,5 +18,5 @@ export function setConditionalAttribute(elem, itemPos, conditionalHtml) {
 }
 
 /**
- * @import { Item } from '@types/govuk-frontend'
+ * @import { CheckboxOrRadioItem } from '@defra/forms-model'
  */
