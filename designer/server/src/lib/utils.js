@@ -46,7 +46,7 @@ export function isCheckboxSelected(checkboxVal) {
  * @param {string | undefined | null} str
  */
 export function stringHasValue(str) {
-  return str && str !== ''
+  return str && str.length > 0
 }
 
 /**
