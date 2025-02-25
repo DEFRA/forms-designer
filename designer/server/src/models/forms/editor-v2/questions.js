@@ -71,7 +71,7 @@ function questionsFields(pageHeadingVal, guidanceTextVal, validation) {
  * @param {string | undefined} guidanceTextVal
  */
 function hasUnderlyingData(pageHeadingVal, guidanceTextVal) {
-  return stringHasValue(pageHeadingVal) ?? stringHasValue(guidanceTextVal)
+  return stringHasValue(pageHeadingVal) || stringHasValue(guidanceTextVal)
 }
 
 /**
