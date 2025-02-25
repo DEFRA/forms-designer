@@ -24,6 +24,7 @@ export async function addPageAndFirstQuestion(formId, token, questionDetails) {
     `./${formId}/definition/draft/pages`,
     formsEndpoint
   )
+
   const { body } = await postJsonByType(requestUrl, {
     payload: {
       title: questionDetails.title,
@@ -47,13 +48,11 @@ export async function addQuestion(formId, token, pageId, questionDetails) {
   const postJsonByType = /** @type {typeof postJson<Page>} */ (postJson)
 
   const requestUrl = new URL(
-    `./${formId}/definition/draft/pages/${pageId}`,
+    `./${formId}/definition/draft/pages/${pageId}/questions`,
     formsEndpoint
   )
   const { body } = await postJsonByType(requestUrl, {
-    payload: {
-      questionDetails
-    },
+    payload: questionDetails,
     ...getHeaders(token)
   })
 

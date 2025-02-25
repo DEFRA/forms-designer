@@ -1,16 +1,24 @@
-import { ComponentType } from '@defra/forms-model'
+import { ComponentType, ControllerType } from '@defra/forms-model'
 
 import config from '~/src/config.js'
 import {
   addPageAndFirstQuestion,
-  resolvePageHeading
+  addQuestion,
+  resolvePageHeading,
+  setPageHeadingAndGuidance
 } from '~/src/lib/editor.js'
-import { postJson } from '~/src/lib/fetch.js'
+import { patchJson, postJson, putJson } from '~/src/lib/fetch.js'
 
 jest.mock('~/src/lib/fetch.js')
 
 const mockedPostJson = /** @type {jest.MockedFunction<typeof postJson>} */ (
   postJson
+)
+const mockedPatchJson = /** @type {jest.MockedFunction<typeof patchJson>} */ (
+  patchJson
+)
+const mockedPutJson = /** @type {jest.MockedFunction<typeof putJson>} */ (
+  putJson
 )
 
 /**
@@ -24,6 +32,81 @@ function createMockResponse(props = {}) {
     headers: {}
   })
   return response
+}
+
+/**
+ * @satisfies {FormDefinition}
+ */
+const formDefinition = {
+  name: 'Test form',
+  pages: [
+    {
+      path: '/page-one',
+      title: 'Page one',
+      section: 'section',
+      components: [
+        {
+          type: ComponentType.TextField,
+          name: 'textField',
+          title: 'This is your first field',
+          hint: 'Help text',
+          options: {},
+          schema: {}
+        }
+      ],
+      next: [{ path: '/summary' }]
+    },
+    {
+      title: 'Summary',
+      path: '/summary',
+      controller: ControllerType.Summary
+    }
+  ],
+  conditions: [],
+  sections: [],
+  lists: []
+}
+
+/**
+ * @satisfies {FormDefinition}
+ */
+const formDefinitionWithExistingGuidance = {
+  name: 'Test form',
+  pages: [
+    {
+      path: '/page-one',
+      title: 'Page one',
+      section: 'section',
+      id: '12345',
+      components: [
+        {
+          id: '45678',
+          type: ComponentType.Html,
+          name: 'html-guidance',
+          title: 'html-title',
+          content: 'Original guidance',
+          options: {}
+        },
+        {
+          type: ComponentType.TextField,
+          name: 'textField',
+          title: 'This is your first field',
+          hint: 'Help text',
+          options: {},
+          schema: {}
+        }
+      ],
+      next: [{ path: '/summary' }]
+    },
+    {
+      title: 'Summary',
+      path: '/summary',
+      controller: ControllerType.Summary
+    }
+  ],
+  conditions: [],
+  sections: [],
+  lists: []
 }
 
 const formsEndpoint = new URL('/forms/', config.managerUrl)
@@ -46,7 +129,7 @@ describe('editor.js', () => {
       formsEndpoint
     )
     const token = 'someToken'
-    const expectedOptions = {
+    const expectedOptions1 = {
       payload: {
         title: 'What is your name?',
         path: '/what-is-your-name',
@@ -74,7 +157,10 @@ describe('editor.js', () => {
           questionDetails
         )
 
-        expect(mockedPostJson).toHaveBeenCalledWith(requestUrl, expectedOptions)
+        expect(mockedPostJson).toHaveBeenCalledWith(
+          requestUrl,
+          expectedOptions1
+        )
         expect(result).toEqual({ id: 'new-id' })
       })
     })
@@ -148,9 +234,227 @@ describe('editor.js', () => {
       expect(resolvePageHeading(true, pageCopy, '', [])).toBe('Test title')
     })
   })
+
+  describe('addQuestion', () => {
+    const formId = '98dbfb6c-93b7-41dc-86e7-02c7abe4ba38'
+    const requestUrl = new URL(
+      `./${formId}/definition/draft/pages/12345/questions`,
+      formsEndpoint
+    )
+    const token = 'someToken'
+    const expectedOptions2 = {
+      payload: {
+        title: 'What is your name?',
+        name: 'what-is-your-name',
+        type: ComponentType.TextField
+      },
+      headers: { Authorization: `Bearer ${token}` }
+    }
+
+    describe('when postJson succeeds', () => {
+      test('returns response body', async () => {
+        mockedPostJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: { id: 'new-id' }
+        })
+
+        const result = await addQuestion(
+          formId,
+          token,
+          '12345',
+          questionDetails
+        )
+
+        expect(mockedPostJson).toHaveBeenCalledWith(
+          requestUrl,
+          expectedOptions2
+        )
+        expect(result).toEqual({ id: 'new-id' })
+      })
+    })
+
+    describe('when postJson fails', () => {
+      test('throws the error', async () => {
+        const testError = new Error('Network error')
+        mockedPostJson.mockRejectedValueOnce(testError)
+
+        await expect(
+          addQuestion(formId, token, '12345', questionDetails)
+        ).rejects.toThrow(testError)
+      })
+    })
+  })
+
+  describe('setPageHeadingAndGuidance', () => {
+    const formId = '98dbfb6c-93b7-41dc-86e7-02c7abe4ba38'
+    const pageRequestUrl = new URL(
+      `./${formId}/definition/draft/pages/12345`,
+      formsEndpoint
+    )
+    const newGuidanceRequestUrl = new URL(
+      `./${formId}/definition/draft/pages/12345/components?prepend=true`,
+      formsEndpoint
+    )
+    const existingGuidanceRequestUrl = new URL(
+      `./${formId}/definition/draft/pages/12345/components/45678`,
+      formsEndpoint
+    )
+    const token = 'someToken'
+
+    describe('when patchJson succeeds', () => {
+      test('returns response body when checkbox unselected but old value in page heading', async () => {
+        mockedPatchJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: {}
+        })
+
+        const expectedOptionsPageHeading1 = {
+          payload: {
+            title: '',
+            path: '/'
+          },
+          headers: { Authorization: `Bearer ${token}` }
+        }
+
+        await setPageHeadingAndGuidance(
+          formId,
+          token,
+          '12345',
+          formDefinition,
+          { pageHeading: 'My new page title' }
+        )
+
+        expect(mockedPatchJson).toHaveBeenCalledWith(
+          pageRequestUrl,
+          expectedOptionsPageHeading1
+        )
+      })
+
+      test('returns response body when checkbox selected and value in page heading', async () => {
+        mockedPatchJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: {}
+        })
+
+        const expectedOptionsPageHeading1 = {
+          payload: {
+            title: 'My new page title',
+            path: '/my-new-page-title'
+          },
+          headers: { Authorization: `Bearer ${token}` }
+        }
+
+        await setPageHeadingAndGuidance(
+          formId,
+          token,
+          '12345',
+          formDefinition,
+          { pageHeading: 'My new page title', pageHeadingAndGuidance: 'true' }
+        )
+
+        expect(mockedPatchJson).toHaveBeenCalledWith(
+          pageRequestUrl,
+          expectedOptionsPageHeading1
+        )
+        expect(mockedPostJson).not.toHaveBeenCalled()
+      })
+
+      test('returns response body when checkbox selected and value in page heading and value in guidance', async () => {
+        mockedPatchJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: {}
+        })
+
+        const expectedOptionsPageHeading = {
+          payload: {
+            title: 'My new page title',
+            path: '/my-new-page-title'
+          },
+          headers: { Authorization: `Bearer ${token}` }
+        }
+
+        const expectedOptionsGuidance = {
+          payload: {
+            content: 'Some guidance',
+            type: 'Html',
+            id: undefined
+          },
+          headers: { Authorization: `Bearer ${token}` }
+        }
+
+        await setPageHeadingAndGuidance(
+          formId,
+          token,
+          '12345',
+          formDefinition,
+          {
+            pageHeading: 'My new page title',
+            pageHeadingAndGuidance: 'true',
+            guidanceText: 'Some guidance'
+          }
+        )
+
+        expect(mockedPatchJson).toHaveBeenCalledWith(
+          pageRequestUrl,
+          expectedOptionsPageHeading
+        )
+        expect(mockedPostJson).toHaveBeenCalledWith(
+          newGuidanceRequestUrl,
+          expectedOptionsGuidance
+        )
+        expect(mockedPutJson).not.toHaveBeenCalled()
+      })
+    })
+
+    test('handles overwriting of existing guidance', async () => {
+      mockedPatchJson.mockResolvedValueOnce({
+        response: createMockResponse(),
+        body: {}
+      })
+
+      const expectedOptionsPageHeading = {
+        payload: {
+          title: 'My new page title',
+          path: '/my-new-page-title'
+        },
+        headers: { Authorization: `Bearer ${token}` }
+      }
+
+      const expectedOptionsGuidance = {
+        payload: {
+          content: 'Some guidance',
+          type: 'Html',
+          id: '45678'
+        },
+        headers: { Authorization: `Bearer ${token}` }
+      }
+
+      await setPageHeadingAndGuidance(
+        formId,
+        token,
+        '12345',
+        formDefinitionWithExistingGuidance,
+        {
+          pageHeading: 'My new page title',
+          pageHeadingAndGuidance: 'true',
+          guidanceText: 'Some guidance'
+        }
+      )
+
+      expect(mockedPatchJson).toHaveBeenCalledWith(
+        pageRequestUrl,
+        expectedOptionsPageHeading
+      )
+      expect(mockedPutJson).toHaveBeenCalledWith(
+        existingGuidanceRequestUrl,
+        expectedOptionsGuidance
+      )
+      expect(mockedPostJson).not.toHaveBeenCalled()
+    })
+  })
 })
 
 /**
- * @import { Page } from '@defra/forms-model'
+ * @import { FormDefinition, Page } from '@defra/forms-model'
  * @import { IncomingMessage } from 'http'
  */
