@@ -15,6 +15,57 @@ import {
 import { formOverviewPath } from '~/src/models/links.js'
 
 /**
+ * @param {string | undefined} pageHeadingVal
+ * @param {string | undefined} guidanceTextVal
+ * @param {ValidationFailure<FormEditor>} [validation]
+ */
+function questionsFields(pageHeadingVal, guidanceTextVal, validation) {
+  const { formValues } = validation ?? {}
+  return {
+    pageHeadingAndGuidance: {
+      name: 'pageHeadingAndGuidance',
+      id: 'pageHeadingAndGuidance',
+      items: [
+        {
+          value: 'true',
+          text: 'Add a page heading, guidance or both',
+          checked:
+            isCheckboxSelected(formValues?.pageHeadingAndGuidance) ||
+            hasUnderlyingData(pageHeadingVal, guidanceTextVal)
+        }
+      ]
+    },
+    pageHeading: {
+      name: 'pageHeading',
+      id: 'pageHeading',
+      label: {
+        text: 'Page heading',
+        classes: GOVUK_LABEL__M
+      },
+      hint: {
+        text: "Page headings should be a statement and not a question. For example, 'Passport information'"
+      },
+      value: pageHeadingVal,
+      ...insertValidationErrors(validation?.formErrors.pageHeading)
+    },
+    guidanceText: {
+      name: 'guidanceText',
+      id: 'guidanceText',
+      label: {
+        text: 'Guidance text (optional)',
+        classes: GOVUK_LABEL__M
+      },
+      hint: {
+        text: 'Use Markdown to format the content or add hyperlinks'
+      },
+      rows: 3,
+      value: guidanceTextVal,
+      ...insertValidationErrors(validation?.formErrors.guidanceText)
+    }
+  }
+}
+
+/**
  *
  * @param {string | undefined} pageHeadingVal
  * @param {string | undefined} guidanceTextVal
@@ -52,11 +103,11 @@ export function questionsViewModel(
     (comp) => comp.type !== ComponentType.Html
   )
 
+  const pageHeadingFallback =
+    page.title !== firstQuestion?.title ? page.title : ''
   const pageHeadingVal = stringHasValue(formValues?.pageHeading)
     ? formValues?.pageHeading
-    : page.title !== firstQuestion?.title
-      ? page.title
-      : ''
+    : pageHeadingFallback
 
   const guidanceComponent = /** @type {HtmlComponent | undefined} */ (
     components.find(
@@ -64,14 +115,16 @@ export function questionsViewModel(
     )
   )
 
+  const guidanceTextFallback = stringHasValue(guidanceComponent?.content)
+    ? guidanceComponent?.content
+    : ''
   const guidanceTextVal = stringHasValue(formValues?.guidanceText)
     ? formValues?.guidanceText
-    : stringHasValue(guidanceComponent?.content)
-      ? guidanceComponent?.content
-      : ''
+    : guidanceTextFallback
 
   return {
     ...baseModelFields(metadata.slug, pageTitle),
+    fields: { ...questionsFields(pageHeadingVal, guidanceTextVal, validation) },
     cardTitle: `Page ${pageIdx + 1} overview`,
     cardCaption: `Page ${pageIdx + 1}`,
     navigation,
@@ -102,48 +155,6 @@ export function questionsViewModel(
           }
         }
       }),
-    fields: {
-      pageHeadingAndGuidance: {
-        name: 'pageHeadingAndGuidance',
-        id: 'pageHeadingAndGuidance',
-        items: [
-          {
-            value: 'true',
-            text: 'Add a page heading, guidance or both',
-            checked:
-              isCheckboxSelected(formValues?.pageHeadingAndGuidance) ||
-              hasUnderlyingData(pageHeadingVal, guidanceTextVal)
-          }
-        ]
-      },
-      pageHeading: {
-        name: 'pageHeading',
-        id: 'pageHeading',
-        label: {
-          text: 'Page heading',
-          classes: GOVUK_LABEL__M
-        },
-        hint: {
-          text: "Page headings should be a statement and not a question. For example, 'Passport information'"
-        },
-        value: pageHeadingVal,
-        ...insertValidationErrors(validation?.formErrors.pageHeading)
-      },
-      guidanceText: {
-        name: 'guidanceText',
-        id: 'guidanceText',
-        label: {
-          text: 'Guidance text (optional)',
-          classes: GOVUK_LABEL__M
-        },
-        hint: {
-          text: 'Use Markdown to format the content or add hyperlinks'
-        },
-        rows: 3,
-        value: guidanceTextVal,
-        ...insertValidationErrors(validation?.formErrors.guidanceText)
-      }
-    },
     buttonText: SAVE_AND_CONTINUE,
     notification
   }

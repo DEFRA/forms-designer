@@ -76,11 +76,10 @@ export function resolvePageHeading(isExpanded, page, pageHeading, components) {
   }
 
   const pageTitle = stringHasValue(pageHeading) ? pageHeading : page?.title
-  return stringHasValue(pageHeading)
-    ? pageHeading
-    : stringHasValue(firstQuestion?.title)
-      ? firstQuestion?.title
-      : pageTitle
+  const firstQuestionFallback = stringHasValue(firstQuestion?.title)
+    ? firstQuestion?.title
+    : pageTitle
+  return stringHasValue(pageHeading) ? pageHeading : firstQuestionFallback
 }
 
 /**
