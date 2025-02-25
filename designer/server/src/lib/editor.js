@@ -1,7 +1,7 @@
 import { ComponentType } from '@defra/forms-model'
 
 import config from '~/src/config.js'
-import { patchJson, postJson, putJson } from '~/src/lib/fetch.js'
+import { delJson, patchJson, postJson, putJson } from '~/src/lib/fetch.js'
 import {
   getHeaders,
   isCheckboxSelected,
@@ -99,6 +99,7 @@ export async function setPageHeadingAndGuidance(
   const patchJsonByType = /** @type {typeof patchJson<Page>} */ (patchJson)
   const postJsonByType = /** @type {typeof postJson<Page>} */ (postJson)
   const putJsonByType = /** @type {typeof putJson<Page>} */ (putJson)
+  const delJsonByType = /** @type {typeof delJson<ComponentDef>} */ (delJson)
 
   const { pageHeading, guidanceText } = payload
 
@@ -134,7 +135,13 @@ export async function setPageHeadingAndGuidance(
 
   if (existingGuidance && (!stringHasValue(guidanceText) || !isExpanded)) {
     // Remove guidance component since the user has blanked out the guidance text now or unchecked the checkbox
-    // TODO - call DELETE endpoint
+    const delCGuidanceRequestUrl = new URL(
+      `./${formId}/definition/draft/pages/${pageId}/components/${existingGuidance.id}`,
+      formsEndpoint
+    )
+    await delJsonByType(delCGuidanceRequestUrl, {
+      ...getHeaders(token)
+    })
     return
   }
 

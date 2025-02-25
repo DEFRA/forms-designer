@@ -7,10 +7,13 @@ import {
   resolvePageHeading,
   setPageHeadingAndGuidance
 } from '~/src/lib/editor.js'
-import { patchJson, postJson, putJson } from '~/src/lib/fetch.js'
+import { delJson, patchJson, postJson, putJson } from '~/src/lib/fetch.js'
 
 jest.mock('~/src/lib/fetch.js')
 
+const mockedDelJson = /** @type {jest.MockedFunction<typeof delJson>} */ (
+  delJson
+)
 const mockedPostJson = /** @type {jest.MockedFunction<typeof postJson>} */ (
   postJson
 )
@@ -447,6 +450,38 @@ describe('editor.js', () => {
       )
       expect(mockedPutJson).toHaveBeenCalledWith(
         existingGuidanceRequestUrl,
+        expectedOptionsGuidance
+      )
+      expect(mockedPostJson).not.toHaveBeenCalled()
+    })
+
+    test('handles removing existing guidance if user has now blanked text or unselected checkbox', async () => {
+      const removeGuidanceRequestUrl = new URL(
+        `./${formId}/definition/draft/pages/12345/components/45678`,
+        formsEndpoint
+      )
+
+      mockedPatchJson.mockResolvedValueOnce({
+        response: createMockResponse(),
+        body: {}
+      })
+
+      const expectedOptionsGuidance = {
+        headers: { Authorization: `Bearer ${token}` }
+      }
+
+      await setPageHeadingAndGuidance(
+        formId,
+        token,
+        '12345',
+        formDefinitionWithExistingGuidance,
+        {
+          pageHeadingAndGuidance: 'false'
+        }
+      )
+
+      expect(mockedDelJson).toHaveBeenCalledWith(
+        removeGuidanceRequestUrl,
         expectedOptionsGuidance
       )
       expect(mockedPostJson).not.toHaveBeenCalled()
