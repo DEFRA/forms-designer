@@ -1,7 +1,8 @@
-import { ComponentType, ControllerType } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
+import { testFormDefinitionWithSinglePage } from '~/src/__stubs__/form-definition.js'
+import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
 import {
   QUESTION_TYPE_DATE_GROUP,
   QUESTION_TYPE_WRITTEN_ANSWER_GROUP
@@ -25,79 +26,11 @@ describe('Editor v2 question routes', () => {
     await server.initialize()
   })
 
-  const now = new Date()
-  const authorId = 'f50ceeed-b7a4-47cf-a498-094efc99f8bc'
-  const authorDisplayName = 'Enrique Chase'
-
-  /**
-   * @satisfies {FormMetadataAuthor}
-   */
-  const author = {
-    id: authorId,
-    displayName: authorDisplayName
-  }
-
-  /**
-   * @satisfies {FormMetadata}
-   */
-  const formMetadata = {
-    id: '661e4ca5039739ef2902b214',
-    slug: 'my-form-slug',
-    title: 'Test form',
-    organisation: 'Defra',
-    teamName: 'Defra Forms',
-    teamEmail: 'defraforms@defra.gov.uk',
-    createdAt: now,
-    createdBy: author,
-    updatedAt: now,
-    updatedBy: author,
-    draft: {
-      createdAt: now,
-      createdBy: author,
-      updatedAt: now,
-      updatedBy: author
-    }
-  }
-
-  /**
-   * @satisfies {FormDefinition}
-   */
-  const formDefinition = {
-    name: 'Test form',
-    pages: [
-      {
-        id: 'p1',
-        path: '/page-one',
-        title: 'Page one',
-        section: 'section',
-        components: [
-          {
-            type: ComponentType.TextField,
-            name: 'textField',
-            title: 'This is your first field',
-            hint: 'Help text',
-            options: {},
-            schema: {}
-          }
-        ],
-        next: [{ path: '/summary' }]
-      },
-      {
-        title: 'Summary',
-        path: '/summary',
-        controller: ControllerType.Summary
-      }
-    ],
-    conditions: [],
-    sections: [],
-    lists: []
-  }
-
   test('GET - should render the question fields in the view', async () => {
-    jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     jest
       .mocked(forms.getDraftFormDefinition)
-      .mockResolvedValueOnce(formDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithSinglePage)
 
     const options = {
       method: 'get',
@@ -145,7 +78,7 @@ describe('Editor v2 question routes', () => {
   })
 
   test('POST - should error if missing mandatory fields', async () => {
-    jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
 
     const options = {
       method: 'post',
@@ -174,7 +107,7 @@ describe('Editor v2 question routes', () => {
   })
 
   test('POST - should redirect to next page if valid payload', async () => {
-    jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
 
     const options = {
       method: 'post',
@@ -219,6 +152,5 @@ describe('Editor v2 question routes', () => {
 })
 
 /**
- * @import { FormMetadata, FormMetadataAuthor, FormDefinition } from '@defra/forms-model'
  * @import { Server } from '@hapi/hapi'
  */
