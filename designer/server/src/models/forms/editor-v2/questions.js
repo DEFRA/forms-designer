@@ -51,19 +51,24 @@ export function questionsViewModel(
   const firstQuestion = components.find(
     (comp) => comp.type !== ComponentType.Html
   )
+
   const pageHeadingVal = stringHasValue(formValues?.pageHeading)
     ? formValues?.pageHeading
     : page.title !== firstQuestion?.title
       ? page.title
       : ''
-  const guidanceComponent = /** @type {HtmlComponent} */ (
+
+  const guidanceComponent = /** @type {HtmlComponent | undefined} */ (
     components.find(
       (comp, idx) => comp.type === ComponentType.Html && idx === 0
     )
   )
+
   const guidanceTextVal = stringHasValue(formValues?.guidanceText)
     ? formValues?.guidanceText
-    : guidanceComponent.content
+    : stringHasValue(guidanceComponent?.content)
+      ? guidanceComponent?.content
+      : ''
 
   return {
     ...baseModelFields(metadata.slug, pageTitle),
