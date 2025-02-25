@@ -22,9 +22,10 @@
 
   {% call appEditorCard({
     title: cardTitle,
-    heading: cardCaption
+    heading: cardCaption,
+    notification: notification
   }) %}
-  <form class="form" method="post">
+
     {% if questionRows | length %}
       {{ govukSummaryList({
         rows: questionRows,
@@ -59,18 +60,16 @@
 
     <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
-    <h1 class="govuk-heading-l">Settings</h1>
+    <form class="form" method="post">
 
-    {{ govukButton({
-      text: 'Save changes'
-    }) }}
+    {%- include "../views/forms/editor-v2/partials/page-settings.njk" -%}
 
     </form>
     {% endcall %}
 
-    {% endcall %}
-  {% endblock %}
+  {% endcall %}
+{% endblock %}
 
-  {% block mainEnd %}
-    {{ super() }}
-  {% endblock %}
+{% block mainEnd %}
+  {{ super() }}
+{% endblock %}

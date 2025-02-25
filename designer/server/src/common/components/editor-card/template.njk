@@ -1,3 +1,5 @@
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+
   <div class="govuk-summary-card govuk-!-margin-top-0 page-panel-left-standard">
     <div class="govuk-summary-card__content govuk-!-padding-top-0 editor-card-background">
       <dl class="govuk-summary-list">
@@ -10,6 +12,15 @@
                   <div class="govuk-summary-card__title-wrapper govuk-!-padding-top-0"></div>
                   <span class="govuk-caption-l">{{ params.caption }}</span>
                   {% if params.heading %}<h2 class="govuk-heading-l" id="page-heading">{{ params.heading }}</h2>{% endif %}
+
+                  {% if params.notification | length %}
+                    {% call govukNotificationBanner({
+                        type: "success"
+                      }) %}
+                    <p class="govuk-notification-banner__heading">{{ params.notification }}</p>
+                    {% endcall %}
+                  {% endif %}
+
                     {{ caller() if caller else (params.html | safe if params.html else params.text) }}
                 </div>
               </div>

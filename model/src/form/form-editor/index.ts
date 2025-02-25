@@ -2,8 +2,9 @@ import Joi from 'joi'
 
 import { ComponentType } from '~/src/components/enums.js'
 import {
-  type FormEditor,
-  type FormEditorInput
+  type FormEditorInputPage,
+  type FormEditorInputPageSettings,
+  type FormEditorInputQuestion
 } from '~/src/form/form-editor/types.js'
 
 export const pageTypeSchema = Joi.string()
@@ -36,25 +37,50 @@ export const questionSchema = Joi.string().required()
 export const hintTextSchema = Joi.string().optional().allow('')
 export const questionOptionalSchema = Joi.string().optional().valid('', 'true')
 export const shortDescriptionSchema = Joi.string().required()
+export const pageHeadingAndGuidanceSchema = Joi.string().optional()
+export const pageHeadingSchema = Joi.string().required()
+export const guidanceTextSchema = Joi.string().optional().allow('')
 
-export const formEditorInputKeys = {
+export const formEditorInputPageKeys = {
   pageType: pageTypeSchema,
   questionType: questionTypeSchema
 }
 
 /**
- * Joi schema for `FormEditorInput` interface
- * @see {@link FormEditorInput}
+ * Joi schema for `FormEditorInputPage` interface
+ * @see {@link FormEditorInputPage}
  */
-export const formEditorInputSchema = Joi.object<FormEditorInput>()
-  .keys(formEditorInputKeys)
+export const formEditorInputPageSchema = Joi.object<FormEditorInputPage>()
+  .keys(formEditorInputPageKeys)
   .required()
 
+export const formEditorInputQuestionKeys = {
+  question: questionSchema,
+  shortDescription: shortDescriptionSchema,
+  hintText: hintTextSchema,
+  questionOptional: questionOptionalSchema
+}
+
 /**
- * Joi schema for `FormEditor` interface
- * @see {@link FormEditor}
+ * Joi schema for `FormEditorInputQuestion` interface
+ * @see {@link FormEditorInputQuestion}
  */
-export const formEditorSchema = formEditorInputSchema.append<FormEditor>({
-  pageType: pageTypeSchema,
-  questionType: questionTypeSchema
-})
+export const formEditorInputQuestionSchema =
+  Joi.object<FormEditorInputQuestion>()
+    .keys(formEditorInputQuestionKeys)
+    .required()
+
+export const formEditorInputPageSettingsKeys = {
+  pageHeadingAndGuidance: pageHeadingAndGuidanceSchema,
+  pageHeading: pageHeadingSchema,
+  guidanceText: guidanceTextSchema
+}
+
+/**
+ * Joi schema for `FormEditorInputPageSettings` interface
+ * @see {@link FormEditorInputPageSettings}
+ */
+export const formEditorInputPageSettingsSchema =
+  Joi.object<FormEditorInputPageSettings>()
+    .keys(formEditorInputPageSettingsKeys)
+    .required()

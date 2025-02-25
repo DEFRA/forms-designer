@@ -103,6 +103,16 @@ export function postJson(url, options = {}) {
 /**
  * @template {object} [BodyType=Buffer]
  * @param {URL} url
+ * @param {Parameters<typeof Wreck.put>[1]} options
+ */
+export function putJson(url, options = {}) {
+  const putByType = /** @type {typeof put<BodyType>} */ (put)
+  return putByType(url, { json: true, ...options })
+}
+
+/**
+ * @template {object} [BodyType=Buffer]
+ * @param {URL} url
  * @param {Parameters<typeof Wreck.patch>[1]} options
  */
 export function patchJson(url, options = {}) {

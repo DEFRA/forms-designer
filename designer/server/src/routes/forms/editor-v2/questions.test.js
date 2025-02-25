@@ -1,10 +1,20 @@
-import { ComponentType, ControllerType } from '@defra/forms-model'
+import { StatusCodes } from 'http-status-codes'
+import Joi from 'joi'
 
+import {
+  testFormDefinitionWithNoQuestions,
+  testFormDefinitionWithTwoQuestions
+} from '~/src/__stubs__/form-definition.js'
+import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
 import { createServer } from '~/src/createServer.js'
+import { setPageHeadingAndGuidance } from '~/src/lib/editor.js'
+import { addErrorsToSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
+jest.mock('~/src/lib/editor.js')
+jest.mock('~/src/lib/error-helper.js')
 jest.mock('~/src/lib/forms.js')
 
 describe('Editor v2 questions routes', () => {
@@ -16,132 +26,25 @@ describe('Editor v2 questions routes', () => {
     await server.initialize()
   })
 
-  const now = new Date()
-  const authorId = 'f50ceeed-b7a4-47cf-a498-094efc99f8bc'
-  const authorDisplayName = 'Enrique Chase'
-
-  /**
-   * @satisfies {FormMetadataAuthor}
-   */
-  const author = {
-    id: authorId,
-    displayName: authorDisplayName
-  }
-
-  /**
-   * @satisfies {FormMetadata}
-   */
-  const formMetadata = {
-    id: '661e4ca5039739ef2902b214',
-    slug: 'my-form-slug',
-    title: 'Test form',
-    organisation: 'Defra',
-    teamName: 'Defra Forms',
-    teamEmail: 'defraforms@defra.gov.uk',
-    createdAt: now,
-    createdBy: author,
-    updatedAt: now,
-    updatedBy: author,
-    draft: {
-      createdAt: now,
-      createdBy: author,
-      updatedAt: now,
-      updatedBy: author
-    }
-  }
-
-  /**
-   * @satisfies {FormDefinition}
-   */
-  const formDefinitionWithTwoQuestions = {
-    name: 'Test form',
-    pages: [
-      {
-        id: '1',
-        path: '/page-one',
-        title: 'Page one',
-        section: 'section',
-        components: [
-          {
-            type: ComponentType.TextField,
-            name: 'textField',
-            title: 'This is your first question',
-            hint: 'Help text',
-            options: {},
-            schema: {}
-          },
-          {
-            type: ComponentType.TextField,
-            name: 'textField',
-            title: 'This is your second question',
-            hint: 'Help text',
-            options: {},
-            schema: {}
-          }
-        ],
-        next: [{ path: '/summary' }]
-      },
-      {
-        id: '2',
-        title: 'Summary',
-        path: '/summary',
-        controller: ControllerType.Summary
-      }
-    ],
-    conditions: [],
-    sections: [],
-    lists: []
-  }
-
-  /**
-   * @satisfies {FormDefinition}
-   */
-  const formDefinitionWithNoQuestions = {
-    name: 'Test form',
-    pages: [
-      {
-        id: '1',
-        path: '/page-one',
-        title: 'Page one',
-        section: 'section',
-        components: [],
-        next: [{ path: '/summary' }]
-      },
-      {
-        id: '2',
-        title: 'Summary',
-        path: '/summary',
-        controller: ControllerType.Summary
-      }
-    ],
-    conditions: [],
-    sections: [],
-    lists: []
-  }
-
   test('GET - should render two questions in the view', async () => {
-    jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     jest
       .mocked(forms.getDraftFormDefinition)
-      .mockResolvedValueOnce(formDefinitionWithTwoQuestions)
+      .mockResolvedValueOnce(testFormDefinitionWithTwoQuestions)
 
     const options = {
       method: 'get',
-      url: '/library/my-form-slug/editor-v2/page/1/questions',
+      url: '/library/my-form-slug/editor-v2/page/f07fbbb1-268c-429b-bba5-5fc1f7353d7c/questions',
       auth
     }
 
-    const { container, document } = await renderResponse(server, options)
+    const { container } = await renderResponse(server, options)
 
     const $mastheadHeading = container.getByText('Test form')
     const $cardTitle = container.getByText('Page 1 overview')
     const $cardHeading = container.getByText('Page 1')
-    const $questionNumbers = document.querySelectorAll(
-      'form .govuk-summary-list__key'
-    )
-    const $questionTitles = document.querySelectorAll(
-      'form .govuk-summary-list__value'
-    )
+    const $questionNumbers = container.getAllByRole('term')
+    const $questionTitles = container.getAllByRole('definition')
 
     const $actions = container.getAllByRole('button')
 
@@ -155,36 +58,33 @@ describe('Editor v2 questions routes', () => {
     expect($questionNumbers[0]).toHaveTextContent('Question 1')
     expect($questionNumbers[1]).toHaveTextContent('Question 2')
 
-    expect($questionTitles[0]).toHaveTextContent('This is your first question')
-    expect($questionTitles[1]).toHaveTextContent('This is your second question')
+    expect($questionTitles[1]).toHaveTextContent('This is your first question')
+    expect($questionTitles[3]).toHaveTextContent('This is your second question')
 
     expect($actions).toHaveLength(4)
     expect($actions[2]).toHaveTextContent('Add another question')
+    expect($actions[3]).toHaveTextContent('Save changes')
   })
 
   test('GET - should render no questions in the view', async () => {
-    jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     jest
       .mocked(forms.getDraftFormDefinition)
-      .mockResolvedValueOnce(formDefinitionWithNoQuestions)
+      .mockResolvedValueOnce(testFormDefinitionWithNoQuestions)
 
     const options = {
       method: 'get',
-      url: '/library/my-form-slug/editor-v2/page/1/questions',
+      url: '/library/my-form-slug/editor-v2/page/f07fbbb1-268c-429b-bba5-5fc1f7353d7c/questions',
       auth
     }
 
-    const { container, document } = await renderResponse(server, options)
+    const { container } = await renderResponse(server, options)
 
     const $mastheadHeading = container.getByText('Test form')
     const $cardTitle = container.getByText('Page 1 overview')
     const $cardHeading = container.getByText('Page 1')
-    const $questionNumbers = document.querySelectorAll(
-      'form .govuk-summary-list__key'
-    )
-    const $questionTitles = document.querySelectorAll(
-      'form .govuk-summary-list__value'
-    )
+    const $questionNumbers = container.getAllByRole('term')
+    const $questionTitles = container.getAllByRole('definition')
 
     expect($mastheadHeading).toHaveTextContent('Test form')
     expect($mastheadHeading).toHaveClass('govuk-heading-xl')
@@ -194,9 +94,69 @@ describe('Editor v2 questions routes', () => {
     expect($cardHeading).toHaveClass('govuk-heading-l')
 
     expect($questionNumbers).toHaveLength(1)
-    expect($questionTitles).toHaveLength(1)
+    expect($questionTitles).toHaveLength(2)
     expect($questionNumbers[0]).toHaveTextContent('')
     expect($questionTitles[0]).toHaveTextContent('No questions')
+  })
+
+  test('POST - should error if missing mandatory fields', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/1/questions',
+      auth,
+      payload: { pageHeadingAndGuidance: 'true' }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/page/1/questions'
+    )
+    expect(addErrorsToSession).toHaveBeenCalledWith(
+      expect.anything(),
+      new Joi.ValidationError('Enter a page heading', [], undefined),
+      'questionsValidationFailure'
+    )
+  })
+
+  test('POST - should save and redirect to same page if valid payload', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/1/questions',
+      auth,
+      payload: {
+        pageHeadingAndGuidance: 'true',
+        pageHeading: 'New page heading',
+        guidanceText: 'New guidance text'
+      }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/page/1/questions'
+    )
+    expect(setPageHeadingAndGuidance).toHaveBeenCalledWith(
+      testFormMetadata.id,
+      expect.anything(),
+      '1',
+      undefined,
+      {
+        guidanceText: 'New guidance text',
+        pageHeading: 'New page heading',
+        pageHeadingAndGuidance: 'true'
+      }
+    )
   })
 })
 

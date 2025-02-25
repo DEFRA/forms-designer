@@ -1,0 +1,18 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageHeadingAndGuidanceHtml %}
+{{ govukInput(fields.pageHeading) }}
+{{ govukTextarea(fields.guidanceText) }}
+{%- include "../../../../views/forms/editor-v2/partials/markdown-help.njk" -%}
+{% endset -%}
+
+<h1 class="govuk-heading-l">Settings</h1>
+
+{{ govukCheckboxes(fields.pageHeadingAndGuidance | setConditionalAttribute(0, pageHeadingAndGuidanceHtml)) }}
+
+{{ govukButton({
+  text: 'Save changes'
+}) }}

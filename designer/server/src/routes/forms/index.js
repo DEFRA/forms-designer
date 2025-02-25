@@ -4,10 +4,10 @@ import contactOnline from '~/src/routes/forms/contact/online.js'
 import contactPhone from '~/src/routes/forms/contact/phone.js'
 import create from '~/src/routes/forms/create.js'
 import edit from '~/src/routes/forms/edit.js'
-import editorAddPage from '~/src/routes/forms/editor-v2/page.js'
+import editorPage from '~/src/routes/forms/editor-v2/page.js'
 import editorv2Pages from '~/src/routes/forms/editor-v2/pages.js'
 import editorQuestionDetails from '~/src/routes/forms/editor-v2/question-details.js'
-import editorAddQuestion from '~/src/routes/forms/editor-v2/question.js'
+import editorQuestion from '~/src/routes/forms/editor-v2/question-type.js'
 import editorQuestions from '~/src/routes/forms/editor-v2/questions.js'
 import formLifecycle from '~/src/routes/forms/form-lifecycle.js'
 import library from '~/src/routes/forms/library.js'
@@ -20,8 +20,8 @@ export default [
   create,
   edit,
   editorv2Pages,
-  editorAddPage,
-  editorAddQuestion,
+  editorPage,
+  editorQuestion,
   editorQuestionDetails,
   editorQuestions,
   library,
