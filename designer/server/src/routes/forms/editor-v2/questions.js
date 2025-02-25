@@ -11,6 +11,7 @@ import { sessionNames } from '~/src/common/constants/session-names.js'
 import { setPageHeadingAndGuidance } from '~/src/lib/editor.js'
 import * as forms from '~/src/lib/forms.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
+import { CHANGES_SAVED_SUCCESSFULLY } from '~/src/models/forms/editor-v2/common.js'
 import * as viewModel from '~/src/models/forms/editor-v2/questions.js'
 import { editorv2Path } from '~/src/models/links.js'
 
@@ -20,6 +21,7 @@ export const ROUTE_PATH_QUESTION_DETAILS =
   '/library/{slug}/editor-v2/page/{pageId}/question/{questionId}'
 
 const errorKey = sessionNames.validationFailure.editorQuestions
+const notificationKey = sessionNames.successNotification
 
 export const schema = Joi.object().keys({
   pageHeadingAndGuidance: pageHeadingAndGuidanceSchema,
@@ -54,6 +56,11 @@ export default [
         yar.flash(errorKey).at(0)
       )
 
+      // Saved banner
+      const notification = /** @type {string[] | undefined} */ (
+        yar.flash(notificationKey).at(0)
+      )
+
       return h.view(
         'forms/editor-v2/questions',
         viewModel.questionsViewModel(
@@ -61,7 +68,8 @@ export default [
           definition,
           pageId,
           {},
-          validation
+          validation,
+          notification
         )
       )
     },
@@ -82,7 +90,7 @@ export default [
     method: 'POST',
     path: ROUTE_FULL_PATH_QUESTIONS,
     async handler(request, h) {
-      const { params, auth, payload } = request
+      const { params, auth, payload, yar } = request
       const { slug, pageId } = params
       const { token } = auth.credentials
 
@@ -96,6 +104,8 @@ export default [
         definition,
         payload
       )
+
+      yar.flash(notificationKey, CHANGES_SAVED_SUCCESSFULLY)
 
       // Redirect to same page
       return h

@@ -1,5 +1,11 @@
+import { ComponentType } from '@defra/forms-model'
+
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
-import { insertValidationErrors, isCheckboxSelected } from '~/src/lib/utils.js'
+import {
+  insertValidationErrors,
+  isCheckboxSelected,
+  stringHasValue
+} from '~/src/lib/utils.js'
 import {
   GOVUK_LABEL__M,
   SAVE_AND_CONTINUE,
@@ -9,18 +15,29 @@ import {
 import { formOverviewPath } from '~/src/models/links.js'
 
 /**
+ *
+ * @param {string | undefined} pageHeadingVal
+ * @param {string | undefined} guidanceTextVal
+ */
+function hasUnderlyingData(pageHeadingVal, guidanceTextVal) {
+  return stringHasValue(pageHeadingVal) || stringHasValue(guidanceTextVal)
+}
+
+/**
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  * @param {string} pageId
  * @param {Partial<FormEditor>} [_editor]
  * @param {ValidationFailure<FormEditor>} [validation]
+ * @param {string[]} [notification]
  */
 export function questionsViewModel(
   metadata,
   definition,
   pageId,
   _editor,
-  validation
+  validation,
+  notification
 ) {
   const pageTitle = metadata.title
   const formPath = formOverviewPath(metadata.slug)
@@ -31,6 +48,23 @@ export function questionsViewModel(
   const page = definition.pages[pageIdx]
   const components = 'components' in page ? page.components : []
 
+  const firstQuestion = components.find(
+    (comp) => comp.type !== ComponentType.Html
+  )
+  const pageHeadingVal = stringHasValue(formValues?.pageHeading)
+    ? formValues?.pageHeading
+    : page.title !== firstQuestion?.title
+      ? page.title
+      : ''
+  const guidanceComponent = /** @type {HtmlComponent} */ (
+    components.find(
+      (comp, idx) => comp.type === ComponentType.Html && idx === 0
+    )
+  )
+  const guidanceTextVal = stringHasValue(formValues?.guidanceText)
+    ? formValues?.guidanceText
+    : guidanceComponent.content
+
   return {
     ...baseModelFields(metadata.slug, pageTitle),
     cardTitle: `Page ${pageIdx + 1} overview`,
@@ -39,25 +73,30 @@ export function questionsViewModel(
     errorList: buildErrorList(formErrors, ['questions']),
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
-    questionRows: components.map((comp, idx) => {
-      return {
-        key: {
-          text: `Question ${idx + 1}`
-        },
-        value: {
-          text: comp.title
-        },
-        actions: {
-          items: [
-            {
-              href: '#',
-              text: 'Change',
-              visuallyHiddenText: 'name'
-            }
-          ]
+    questionRows: components
+      .filter(
+        (comp, idx) =>
+          (comp.type !== ComponentType.Html && idx === 0) || idx > 0
+      )
+      .map((comp2, idx2) => {
+        return {
+          key: {
+            text: `Question ${idx2 + 1}`
+          },
+          value: {
+            text: comp2.title
+          },
+          actions: {
+            items: [
+              {
+                href: '#',
+                text: 'Change',
+                visuallyHiddenText: 'name'
+              }
+            ]
+          }
         }
-      }
-    }),
+      }),
     fields: {
       pageHeadingAndGuidance: {
         name: 'pageHeadingAndGuidance',
@@ -66,7 +105,9 @@ export function questionsViewModel(
           {
             value: 'true',
             text: 'Add a page heading, guidance or both',
-            checked: isCheckboxSelected(formValues?.pageHeadingAndGuidance)
+            checked:
+              isCheckboxSelected(formValues?.pageHeadingAndGuidance) ||
+              hasUnderlyingData(pageHeadingVal, guidanceTextVal)
           }
         ]
       },
@@ -80,7 +121,7 @@ export function questionsViewModel(
         hint: {
           text: "Page headings should be a statement and not a question. For example, 'Passport information'"
         },
-        value: formValues?.pageHeading,
+        value: pageHeadingVal,
         ...insertValidationErrors(validation?.formErrors.pageHeading)
       },
       guidanceText: {
@@ -94,15 +135,16 @@ export function questionsViewModel(
           text: 'Use Markdown to format the content or add hyperlinks'
         },
         rows: 3,
-        value: formValues?.guidanceText,
+        value: guidanceTextVal,
         ...insertValidationErrors(validation?.formErrors.guidanceText)
       }
     },
-    buttonText: SAVE_AND_CONTINUE
+    buttonText: SAVE_AND_CONTINUE,
+    notification
   }
 }
 
 /**
- * @import { FormMetadata, FormDefinition, FormEditor } from '@defra/forms-model'
+ * @import { FormMetadata, FormDefinition, FormEditor, HtmlComponent } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

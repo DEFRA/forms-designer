@@ -1,7 +1,10 @@
 import { ComponentType } from '@defra/forms-model'
 
 import config from '~/src/config.js'
-import { addPageAndFirstQuestion } from '~/src/lib/editor.js'
+import {
+  addPageAndFirstQuestion,
+  resolvePageHeading
+} from '~/src/lib/editor.js'
 import { postJson } from '~/src/lib/fetch.js'
 
 jest.mock('~/src/lib/fetch.js')
@@ -87,8 +90,67 @@ describe('editor.js', () => {
       })
     })
   })
+
+  /**
+   * @satisfies {Page}
+   */
+  const page = {
+    id: 'f07fbbb1-268c-429b-bba5-5fc1f7353d7c',
+    path: '/page-one',
+    title: 'Page one',
+    section: 'section',
+    components: [
+      {
+        type: ComponentType.TextField,
+        name: 'textField',
+        title: 'This is your first question',
+        hint: 'Help text',
+        options: {},
+        schema: {}
+      },
+      {
+        type: ComponentType.TextField,
+        name: 'textField',
+        title: 'This is your second question',
+        hint: 'Help text',
+        options: {},
+        schema: {}
+      }
+    ],
+    next: [{ path: '/summary' }]
+  }
+
+  describe('resolvePageHeading', () => {
+    test('when checkbox unselected', () => {
+      expect(
+        resolvePageHeading(false, page, 'New page heading', page.components)
+      ).toBe('This is your first question')
+    })
+
+    test('when checkbox unselected and no components', () => {
+      expect(resolvePageHeading(false, page, 'New page heading', [])).toBe('')
+    })
+
+    test('when checkbox selected and page heading provided', () => {
+      expect(
+        resolvePageHeading(true, page, 'New page heading', page.components)
+      ).toBe('New page heading')
+    })
+
+    test('when checkbox selected and page heading not provided', () => {
+      expect(resolvePageHeading(true, page, '', page.components)).toBe(
+        'This is your first question'
+      )
+    })
+
+    test('when checkbox selected and page heading not provided and no questions', () => {
+      const pageCopy = { ...page, title: 'Test title' }
+      expect(resolvePageHeading(true, pageCopy, '', [])).toBe('Test title')
+    })
+  })
 })
 
 /**
+ * @import { Page } from '@defra/forms-model'
  * @import { IncomingMessage } from 'http'
  */

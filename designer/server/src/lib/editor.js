@@ -2,7 +2,12 @@ import { ComponentType } from '@defra/forms-model'
 
 import config from '~/src/config.js'
 import { patchJson, postJson, putJson } from '~/src/lib/fetch.js'
-import { getHeaders, slugify } from '~/src/lib/utils.js'
+import {
+  getHeaders,
+  isCheckboxSelected,
+  slugify,
+  stringHasValue
+} from '~/src/lib/utils.js'
 
 const formsEndpoint = new URL('/forms/', config.managerUrl)
 
@@ -56,6 +61,29 @@ export async function addQuestion(formId, token, pageId, questionDetails) {
 }
 
 /**
+ * Determine page heading
+ * @param {boolean} isExpanded
+ * @param {Page | undefined} page
+ * @param {string | undefined} pageHeading
+ * @param {ComponentDef[]} components
+ */
+export function resolvePageHeading(isExpanded, page, pageHeading, components) {
+  const firstQuestion = components.find(
+    (comp) => comp.type !== ComponentType.Html
+  )
+  if (!isExpanded) {
+    return firstQuestion?.title ?? ''
+  }
+
+  const pageTitle = stringHasValue(pageHeading) ? pageHeading : page?.title
+  return stringHasValue(pageHeading)
+    ? pageHeading
+    : stringHasValue(firstQuestion?.title)
+      ? firstQuestion?.title
+      : pageTitle
+}
+
+/**
  * Add a question to an existing page
  * @param {string} formId
  * @param {string} token
@@ -76,6 +104,18 @@ export async function setPageHeadingAndGuidance(
 
   const { pageHeading, guidanceText } = payload
 
+  const page = definition.pages.find((x) => x.id === pageId)
+  const components = page && 'components' in page ? page.components : []
+
+  const isExpanded = isCheckboxSelected(payload.pageHeadingAndGuidance)
+
+  const resolvedPageHeading = resolvePageHeading(
+    isExpanded,
+    page,
+    pageHeading,
+    components
+  )
+
   // Update page heading
   const pageHeadingRequestUrl = new URL(
     `./${formId}/definition/draft/pages/${pageId}`,
@@ -83,41 +123,44 @@ export async function setPageHeadingAndGuidance(
   )
   await patchJsonByType(pageHeadingRequestUrl, {
     payload: {
-      title: pageHeading
+      title: resolvedPageHeading,
+      path: `/${slugify(resolvedPageHeading)}`
     },
     ...getHeaders(token)
   })
 
-  if (guidanceText && guidanceText !== '') {
-    // Insert a guidance component (or update if it already exists)
-    const page = definition.pages.find((x) => x.id === pageId)
-    const existingGuidance =
-      page && 'components' in page
-        ? page.components.find((y) => y.type === ComponentType.Html)
-        : undefined
+  // Insert a guidance component, or update if it already exists, or remove if no longer used
+  const existingGuidance = components.find(
+    (comp, idx) => comp.type === ComponentType.Html && idx === 0
+  )
+
+  if (existingGuidance && (!stringHasValue(guidanceText) || !isExpanded)) {
+    // Remove guidance component since the user has blanked out the guidance text now or unchecked the checkbox
+    // TODO - call DELETE endpoint
+    return
+  }
+
+  if (isExpanded && stringHasValue(guidanceText)) {
+    const guidancePayload = {
+      id: existingGuidance?.id,
+      type: ComponentType.Html,
+      content: guidanceText
+    }
+
+    const guidanceRequestUrl = existingGuidance
+      ? `./${formId}/definition/draft/pages/${pageId}/components/${existingGuidance.id}`
+      : `./${formId}/definition/draft/pages/${pageId}/components?prepend=true`
+
+    const guidanceRequestFullUrl = new URL(guidanceRequestUrl, formsEndpoint)
 
     if (existingGuidance) {
-      const guidanceRequestUrl = new URL(
-        `./${formId}/definition/draft/pages/${pageId}/components/${existingGuidance.id}`,
-        formsEndpoint
-      )
-      await putJsonByType(guidanceRequestUrl, {
-        payload: {
-          type: ComponentType.Html,
-          content: guidanceText
-        },
+      await putJsonByType(guidanceRequestFullUrl, {
+        payload: guidancePayload,
         ...getHeaders(token)
       })
     } else {
-      const guidanceRequestUrl = new URL(
-        `./${formId}/definition/draft/pages/${pageId}/components?prepend=true`,
-        formsEndpoint
-      )
-      await postJsonByType(guidanceRequestUrl, {
-        payload: {
-          type: ComponentType.Html,
-          content: guidanceText
-        },
+      await postJsonByType(guidanceRequestFullUrl, {
+        payload: guidancePayload,
         ...getHeaders(token)
       })
     }

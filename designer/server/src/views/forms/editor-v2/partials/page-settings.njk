@@ -6,6 +6,7 @@
 {% set pageHeadingAndGuidanceHtml %}
 {{ govukInput(fields.pageHeading) }}
 {{ govukTextarea(fields.guidanceText) }}
+{%- include "../../../../views/forms/editor-v2/partials/markdown-help.njk" -%}
 {% endset -%}
 
 <h1 class="govuk-heading-l">Settings</h1>

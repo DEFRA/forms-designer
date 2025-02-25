@@ -2,6 +2,10 @@ import { ComponentType, ControllerType } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
+import {
+  QUESTION_TYPE_DATE_GROUP,
+  QUESTION_TYPE_WRITTEN_ANSWER_GROUP
+} from '~/src/common/constants/editor.js'
 import { createServer } from '~/src/createServer.js'
 import { addErrorsToSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
@@ -191,13 +195,19 @@ describe('Editor v2 question routes', () => {
 
   describe('deriveQuestionType', () => {
     test('gets written answer sub-type', () => {
-      expect(deriveQuestionType('written-answer-sub', 'wa-sub', 'd-sub')).toBe(
-        'wa-sub'
-      )
+      expect(
+        deriveQuestionType(
+          QUESTION_TYPE_WRITTEN_ANSWER_GROUP,
+          'wa-sub',
+          'd-sub'
+        )
+      ).toBe('wa-sub')
     })
 
     test('gets date sub-type', () => {
-      expect(deriveQuestionType('date-sub', 'wa-sub', 'd-sub')).toBe('d-sub')
+      expect(
+        deriveQuestionType(QUESTION_TYPE_DATE_GROUP, 'wa-sub', 'd-sub')
+      ).toBe('d-sub')
     })
 
     test('gets non-sub type', () => {

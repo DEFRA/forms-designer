@@ -22,8 +22,10 @@
 
   {% call appEditorCard({
     title: cardTitle,
-    heading: cardCaption
+    heading: cardCaption,
+    notification: notification
   }) %}
+
     {% if questionRows | length %}
       {{ govukSummaryList({
         rows: questionRows,

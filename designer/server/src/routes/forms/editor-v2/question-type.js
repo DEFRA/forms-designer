@@ -6,6 +6,10 @@ import {
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
+import {
+  QUESTION_TYPE_DATE_GROUP,
+  QUESTION_TYPE_WRITTEN_ANSWER_GROUP
+} from '~/src/common/constants/editor.js'
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import * as forms from '~/src/lib/forms.js'
@@ -22,13 +26,13 @@ export const schema = Joi.object().keys({
     '*': 'Select the type of information you need from users or ask users to choose from a list'
   }),
   writtenAnswerSub: Joi.when('questionType', {
-    is: 'written-answer-group',
+    is: QUESTION_TYPE_WRITTEN_ANSWER_GROUP,
     then: writtenAnswerSubSchema.messages({
       '*': 'Select the type of written answer you need from users'
     })
   }),
   dateSub: Joi.when('questionType', {
-    is: 'date-group',
+    is: QUESTION_TYPE_DATE_GROUP,
     then: dateSubSchema.messages({
       '*': 'Select the type of date you need from users'
     })
@@ -42,10 +46,10 @@ export const schema = Joi.object().keys({
  * @param {string} dateSub - sub-type if 'date-sub' selected in questionType
  */
 export function deriveQuestionType(questionType, writtenAnswerSub, dateSub) {
-  if (questionType === 'written-answer-sub') {
+  if (questionType === QUESTION_TYPE_WRITTEN_ANSWER_GROUP) {
     return writtenAnswerSub
   }
-  if (questionType === 'date-sub') {
+  if (questionType === QUESTION_TYPE_DATE_GROUP) {
     return dateSub
   }
   return questionType

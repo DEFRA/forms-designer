@@ -1,5 +1,9 @@
 import { ComponentType } from '@defra/forms-model'
 
+import {
+  QUESTION_TYPE_DATE_GROUP,
+  QUESTION_TYPE_WRITTEN_ANSWER_GROUP
+} from '~/src/common/constants/editor.js'
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { insertValidationErrors } from '~/src/lib/utils.js'
 import {
@@ -16,14 +20,14 @@ const questionTypeRadioItems = [
     hint: {
       text: 'A short or long answer as test or number'
     },
-    value: 'written-answer-group'
+    value: QUESTION_TYPE_WRITTEN_ANSWER_GROUP
   },
   {
     text: 'Date',
     hint: {
       text: 'A day, month and year or month and year only'
     },
-    value: 'date-group'
+    value: QUESTION_TYPE_DATE_GROUP
   },
   {
     text: 'UK address',

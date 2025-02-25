@@ -31,7 +31,7 @@ const buildMockRequest = (payload) => {
 describe('Validation functions', () => {
   describe('addErrorsToSession', () => {
     test('should return empty object', () => {
-      const sessionKey = /** @type ValidationSessionKey */ ('this-key')
+      const sessionKey = /** @type {ValidationSessionKey} */ ('this-key')
       const error = new Joi.ValidationError(
         'dummy error',
         [

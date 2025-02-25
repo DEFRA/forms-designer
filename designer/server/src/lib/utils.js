@@ -42,6 +42,17 @@ export function isCheckboxSelected(checkboxVal) {
 }
 
 /**
+ *
+ * @param {string | undefined | null} str
+ */
+export function stringHasValue(str) {
+  if (str && str !== '') {
+    return true
+  }
+  return false
+}
+
+/**
  * @param {ErrorDetailsItem | undefined} formField
  */
 export function insertValidationErrors(formField) {
