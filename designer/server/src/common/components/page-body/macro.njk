@@ -25,7 +25,8 @@
 
     {% for action in params.actions %}
       {% if action.classes and "govuk-link" in action.classes %}
-        {% set actionsContent = actionsContent + "<a class=\"" + action.classes + "\" href=\"" + action.href + "\">" + action.text + "</a>" %}
+        {% set attributes = action.attributes if action.attributes else ""%}
+        {% set actionsContent = actionsContent + "<a class=\"" + action.classes + "\"" + attributes + " href=\"" + action.href + "\">" + action.text + "</a>" %}
       {% else %}
         {% set actionsContent = actionsContent + govukButton(action) %}
       {% endif %}

@@ -63,7 +63,7 @@ describe('Editor v2 page routes', () => {
 
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe(
-      '/library/my-form-slug/editor-v2/page/new/question'
+      '/library/my-form-slug/editor-v2/page/new/question/new'
     )
   })
 
@@ -83,7 +83,7 @@ describe('Editor v2 page routes', () => {
 
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe(
-      '/library/my-form-slug/editor-v2/page/new/guidance'
+      '/library/my-form-slug/editor-v2/page/new/guidance/new'
     )
   })
 
@@ -103,7 +103,7 @@ describe('Editor v2 page routes', () => {
 
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe(
-      '/library/my-form-slug/editor-v2/page/123456/question'
+      '/library/my-form-slug/editor-v2/page/123456/question/new'
     )
   })
 

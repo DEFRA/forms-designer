@@ -34,7 +34,7 @@ describe('Editor v2 questions routes', () => {
 
     const options = {
       method: 'get',
-      url: '/library/my-form-slug/editor-v2/page/f07fbbb1-268c-429b-bba5-5fc1f7353d7c/questions',
+      url: '/library/my-form-slug/editor-v2/page/p1/questions',
       auth
     }
 
@@ -74,7 +74,7 @@ describe('Editor v2 questions routes', () => {
 
     const options = {
       method: 'get',
-      url: '/library/my-form-slug/editor-v2/page/f07fbbb1-268c-429b-bba5-5fc1f7353d7c/questions',
+      url: '/library/my-form-slug/editor-v2/page/p1/questions',
       auth
     }
 
