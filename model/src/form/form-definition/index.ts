@@ -195,7 +195,7 @@ export const pageSchema = Joi.object<Page>().keys({
     otherwise: Joi.any().strip()
   }),
   condition: Joi.string().allow('').optional(),
-  next: Joi.array<Link>().items(nextSchema),
+  next: Joi.array<Link>().items(nextSchema).default([]),
   events: eventsSchema.optional(),
   view: Joi.string().optional()
 })
