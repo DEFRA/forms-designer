@@ -5,7 +5,7 @@ import Joi from 'joi'
 import { testFormDefinitionWithSinglePage } from '~/src/__stubs__/form-definition.js'
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
 import { createServer } from '~/src/createServer.js'
-import { addPageAndFirstQuestion } from '~/src/lib/editor.js'
+import { addPageAndFirstQuestion, addQuestion } from '~/src/lib/editor.js'
 import { addErrorsToSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { auth } from '~/test/fixtures/auth.js'
@@ -99,7 +99,7 @@ describe('Editor v2 question details routes', () => {
     )
   })
 
-  test('POST - should redirect to next page if valid payload', async () => {
+  test('POST - should redirect to next page if valid payload with new question', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     jest.mocked(addPageAndFirstQuestion).mockResolvedValue(page)
 
@@ -117,6 +117,48 @@ describe('Editor v2 question details routes', () => {
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe(
       '/library/my-form-slug/editor-v2/page/12345/questions'
+    )
+  })
+
+  test('POST - should redirect to next page if valid payload with existing question', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest.mocked(addPageAndFirstQuestion).mockResolvedValue(page)
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/123456/question/456/details',
+      auth,
+      payload: { question: 'Question text', shortDescription: 'Short desc' }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/page/123456/questions'
+    )
+  })
+
+  test('POST - should add question if new question on existing page', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest.mocked(addQuestion).mockResolvedValue(page)
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/123456/question/new/details',
+      auth,
+      payload: { question: 'Question text', shortDescription: 'Short desc' }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/page/123456/questions'
     )
   })
 })
