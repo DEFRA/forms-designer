@@ -1,4 +1,4 @@
-import { ControllerType } from '@defra/forms-model'
+import { ControllerType, hasComponents } from '@defra/forms-model'
 
 import { buildEntry } from '~/src/common/nunjucks/context/build-navigation.js'
 import config from '~/src/config.js'
@@ -22,6 +22,40 @@ export function getPageNum(definition, pageId) {
   }
   const pageIdx = definition.pages.findIndex((x) => x.id === pageId)
   return pageIdx + 1
+}
+
+/**
+ * @param {FormDefinition} definition
+ * @param {string} pageId
+ */
+export function getQuestionsOnPage(definition, pageId) {
+  const page = definition.pages.find((x) => x.id === pageId)
+  return hasComponents(page) ? page.components : []
+}
+
+/**
+ * @param {FormDefinition} definition
+ * @param {string} pageId
+ * @param {string} questionId
+ */
+export function getQuestionNum(definition, pageId, questionId) {
+  const questions = getQuestionsOnPage(definition, pageId)
+  if (questionId === 'new') {
+    return questions.length + 1
+  }
+  const questionIdx = questions.findIndex((x) => x.id === questionId)
+  return questionIdx === -1 ? questions.length + 1 : questionIdx + 1
+}
+
+/**
+ * @param {FormDefinition} definition
+ * @param {string} pageId
+ * @param {string} questionId
+ */
+export function getQuestion(definition, pageId, questionId) {
+  return /** @type {ComponentDef | undefined } */ (
+    getQuestionsOnPage(definition, pageId).find((x) => x.id === questionId)
+  )
 }
 
 /**
@@ -74,5 +108,5 @@ export function buildPreviewUrl(slug) {
 }
 
 /**
- * @import { FormMetadata, FormDefinition } from '@defra/forms-model'
+ * @import { ComponentDef, FormMetadata, FormDefinition } from '@defra/forms-model'
  */

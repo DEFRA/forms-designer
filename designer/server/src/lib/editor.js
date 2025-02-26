@@ -1,4 +1,4 @@
-import { ComponentType } from '@defra/forms-model'
+import { ComponentType, hasComponents } from '@defra/forms-model'
 
 import config from '~/src/config.js'
 import { delJson, patchJson, postJson, putJson } from '~/src/lib/fetch.js'
@@ -60,6 +60,35 @@ export async function addQuestion(formId, token, pageId, questionDetails) {
 }
 
 /**
+ * Add a question to an existing page
+ * @param {string} formId
+ * @param {string} token
+ * @param {string} pageId
+ * @param {string} questionId
+ * @param {Partial<ComponentDef>} questionDetails
+ */
+export async function updateQuestion(
+  formId,
+  token,
+  pageId,
+  questionId,
+  questionDetails
+) {
+  const putJsonByType = /** @type {typeof putJson<Page>} */ (putJson)
+
+  const requestUrl = new URL(
+    `./${formId}/definition/draft/pages/${pageId}/components/${questionId}`,
+    formsEndpoint
+  )
+  const { body } = await putJsonByType(requestUrl, {
+    payload: questionDetails,
+    ...getHeaders(token)
+  })
+
+  return body
+}
+
+/**
  * Determine page heading
  * @param {boolean} isExpanded
  * @param {Page | undefined} page
@@ -104,7 +133,7 @@ export async function setPageHeadingAndGuidance(
   const { pageHeading, guidanceText } = payload
 
   const page = definition.pages.find((x) => x.id === pageId)
-  const components = page && 'components' in page ? page.components : []
+  const components = hasComponents(page) ? page.components : []
 
   const isExpanded = isCheckboxSelected(payload.pageHeadingAndGuidance)
 

@@ -9,10 +9,15 @@ import Joi from 'joi'
 
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
-import { addPageAndFirstQuestion, addQuestion } from '~/src/lib/editor.js'
+import {
+  addPageAndFirstQuestion,
+  addQuestion,
+  updateQuestion
+} from '~/src/lib/editor.js'
+import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
-import { isCheckboxSelected } from '~/src/lib/utils.js'
+import { isCheckboxSelected, stringHasValue } from '~/src/lib/utils.js'
 import * as viewModel from '~/src/models/forms/editor-v2/question-details.js'
 import { editorv2Path } from '~/src/models/links.js'
 
@@ -39,17 +44,18 @@ const schema = baseSchema.concat(specificsSchema)
 /**
  *
  * @param {Partial<FormEditorInputQuestion>} payload
- * @param {ComponentType} questionType
+ * @param {string} questionType
  */
-function deriveQuestionDetails(payload, questionType) {
-  /** @satisfies {Partial<ComponentDef>} */
-  return {
+function mapQuestionDetails(payload, questionType) {
+  return /** @type {Partial<ComponentDef>} */ ({
     type: questionType,
     title: payload.question,
     name: payload.shortDescription,
     hint: payload.hintText,
-    optional: isCheckboxSelected(payload.questionOptional)
-  }
+    options: {
+      required: !isCheckboxSelected(payload.questionOptional)
+    }
+  })
 }
 
 export default [
@@ -63,14 +69,16 @@ export default [
       const { yar } = request
       const { params, auth } = request
       const { token } = auth.credentials
-      const { slug, pageId } = params
+      const { slug, pageId, questionId } =
+        /** @type {{ slug: string, pageId: string, questionId: string }} */ (
+          params
+        )
 
       // Form metadata, validation errors
       const metadata = await forms.get(slug, token)
       const definition = await forms.getDraftFormDefinition(metadata.id, token)
-      const validation = /** @type {ValidationFailure<FormEditor>} */ (
-        yar.flash(errorKey).at(0)
-      )
+
+      const validation = getValidationErrorsFromSession(yar, errorKey)
 
       return h.view(
         'forms/editor-v2/question-details',
@@ -78,6 +86,7 @@ export default [
           metadata,
           definition,
           pageId,
+          questionId,
           validation
         )
       )
@@ -101,27 +110,45 @@ export default [
     path: ROUTE_FULL_PATH_QUESTION_DETAILS,
     async handler(request, h) {
       const { params, auth, payload, yar } = request
-      const { slug, pageId } = params
+      const { slug, pageId, questionId } =
+        /** @type {{ slug: string, pageId: string, questionId: string}} */ (
+          params
+        )
       const { token } = auth.credentials
 
-      const questionType = /** @type {ComponentType} */ (
-        yar.get(sessionNames.questionType)
+      const questionType = /** @type {string} */ (
+        `${yar.get(sessionNames.questionType)}`
       )
-      const questionDetails = deriveQuestionDetails(payload, questionType)
+      if (!stringHasValue(questionType)) {
+        throw new Error('Missing question type')
+      }
+
+      const questionDetails = {
+        ...mapQuestionDetails(payload, questionType),
+        id: questionId !== 'new' ? questionId : undefined
+      }
 
       // Save page and first question
       const metadata = await forms.get(slug, token)
       let finalPageId = pageId
 
-      if (pageId && pageId !== 'new') {
-        await addQuestion(metadata.id, token, `${pageId}`, questionDetails)
-      } else {
+      if (pageId === 'new') {
         const newPage = await addPageAndFirstQuestion(
           metadata.id,
           token,
           questionDetails
         )
-        finalPageId = newPage.id
+        finalPageId = newPage.id ?? 'unknown'
+      } else if (questionId === 'new') {
+        await addQuestion(metadata.id, token, pageId, questionDetails)
+      } else {
+        await updateQuestion(
+          metadata.id,
+          token,
+          pageId,
+          questionId,
+          questionDetails
+        )
       }
 
       // Redirect to next page
@@ -148,7 +175,6 @@ export default [
 ]
 
 /**
- * @import { FormEditor, FormEditorInputQuestion, ComponentDef, ComponentType } from '@defra/forms-model'
+ * @import { FormEditorInputQuestion, ComponentDef } from '@defra/forms-model'
  * @import { ServerRoute } from '@hapi/hapi'
- * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

@@ -4,6 +4,7 @@ import Joi from 'joi'
 
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
+import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import * as viewModel from '~/src/models/forms/editor-v2/page.js'
@@ -35,9 +36,7 @@ export default [
       // Form metadata, validation errors
       const metadata = await forms.get(slug, token)
 
-      const validation = /** @type {ValidationFailure<FormEditor>} */ (
-        yar.flash(errorKey).at(0)
-      )
+      const validation = getValidationErrorsFromSession(yar, errorKey)
 
       return h.view(
         'forms/question-radios',
@@ -68,7 +67,7 @@ export default [
 
       // Redirect POST to GET without resubmit on back button
       return h
-        .redirect(editorv2Path(slug, `page/${pageId ?? 'new'}/${pageType}`))
+        .redirect(editorv2Path(slug, `page/${pageId ?? 'new'}/${pageType}/new`))
         .code(StatusCodes.SEE_OTHER)
     },
     options: {
@@ -90,7 +89,6 @@ export default [
 ]
 
 /**
- * @import { FormEditor, FormEditorInputPage } from '@defra/forms-model'
+ * @import { FormEditorInputPage } from '@defra/forms-model'
  * @import { ServerRoute } from '@hapi/hapi'
- * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

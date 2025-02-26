@@ -1,4 +1,4 @@
-import { ComponentType } from '@defra/forms-model'
+import { ComponentType, hasComponents } from '@defra/forms-model'
 
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import {
@@ -97,7 +97,7 @@ export function questionsViewModel(
 
   const pageIdx = definition.pages.findIndex((x) => x.id === pageId)
   const page = definition.pages[pageIdx]
-  const components = 'components' in page ? page.components : []
+  const components = hasComponents(page) ? page.components : []
 
   const firstQuestion = components.find(
     (comp) => comp.type !== ComponentType.Html
@@ -150,7 +150,7 @@ export function questionsViewModel(
           actions: {
             items: [
               {
-                href: `${baseUrl}/question/${comp2.id}`,
+                href: `${baseUrl}/question/${comp2.id}/details`,
                 text: 'Change',
                 visuallyHiddenText: 'name'
               }

@@ -51,20 +51,20 @@ describe('Editor v2 question details routes', () => {
     const { container } = await renderResponse(server, options)
 
     const $mastheadHeading = container.getByText('Test form')
-    const $cardTitle = container.getByText('Question 1')
+    const $cardTitle = container.getByText('Question 2')
     const $cardCaption = container.getByText('Page 1')
-    const $cardHeading = container.getByText('Edit question 1')
+    const $cardHeading = container.getByText('Edit question 2')
 
     const $actions = container.getAllByRole('button')
 
     expect($mastheadHeading).toHaveTextContent('Test form')
     expect($mastheadHeading).toHaveClass('govuk-heading-xl')
-    expect($cardTitle).toHaveTextContent('Question 1')
+    expect($cardTitle).toHaveTextContent('Question 2')
     expect($cardTitle).toHaveClass('editor-card-title')
     expect($cardCaption).toHaveTextContent('Page 1')
     expect($cardCaption).toHaveClass('govuk-caption-l')
-    expect($cardHeading).toHaveTextContent('Edit question 1')
-    expect($cardHeading).toHaveClass('govuk-fieldset__heading')
+    expect($cardHeading).toHaveTextContent('Edit question 2')
+    expect($cardHeading).toHaveClass('govuk-heading-l')
 
     expect($actions).toHaveLength(3)
     expect($actions[2]).toHaveTextContent('Save and continue')
