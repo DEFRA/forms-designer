@@ -152,7 +152,8 @@ export function questionsViewModel(
               {
                 href: `${baseUrl}/question/${comp2.id}/details`,
                 text: 'Change',
-                visuallyHiddenText: 'name'
+                visuallyHiddenText: 'name',
+                classes: 'govuk-link--no-visited-state'
               }
             ]
           }
