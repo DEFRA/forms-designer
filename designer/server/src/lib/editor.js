@@ -48,7 +48,7 @@ export async function addQuestion(formId, token, pageId, questionDetails) {
   const postJsonByType = /** @type {typeof postJson<Page>} */ (postJson)
 
   const requestUrl = new URL(
-    `./${formId}/definition/draft/pages/${pageId}/questions`,
+    `./${formId}/definition/draft/pages/${pageId}/components`,
     formsEndpoint
   )
   const { body } = await postJsonByType(requestUrl, {

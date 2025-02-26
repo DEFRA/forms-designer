@@ -1,6 +1,7 @@
 import { ControllerType } from '@defra/forms-model'
 
 import { buildEntry } from '~/src/common/nunjucks/context/build-navigation.js'
+import config from '~/src/config.js'
 import { editorv2Path, formsLibraryPath } from '~/src/models/links.js'
 
 export const BACK_TO_ADD_AND_EDIT_PAGES = 'Back to add and edit pages'
@@ -63,6 +64,13 @@ export function baseModelFields(slug, pageTitle) {
     },
     useNewMasthead: true
   }
+}
+
+/**
+ * @param {string} slug
+ */
+export function buildPreviewUrl(slug) {
+  return `${config.previewUrl}/preview/draft/${slug}`
 }
 
 /**

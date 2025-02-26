@@ -12,7 +12,7 @@ import {
   baseModelFields,
   getFormSpecificNavigation
 } from '~/src/models/forms/editor-v2/common.js'
-import { formOverviewPath } from '~/src/models/links.js'
+import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
 
 /**
  * @param {string | undefined} pageHeadingVal
@@ -122,12 +122,15 @@ export function questionsViewModel(
     ? formValues?.guidanceText
     : guidanceTextFallback
 
+  const baseUrl = `${editorv2Path(metadata.slug)}page/${pageId}`
+
   return {
     ...baseModelFields(metadata.slug, pageTitle),
     fields: { ...questionsFields(pageHeadingVal, guidanceTextVal, validation) },
     cardTitle: `Page ${pageIdx + 1} overview`,
     cardCaption: `Page ${pageIdx + 1}`,
     navigation,
+    baseUrl,
     errorList: buildErrorList(formErrors, ['questions']),
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
@@ -147,7 +150,7 @@ export function questionsViewModel(
           actions: {
             items: [
               {
-                href: '#',
+                href: `${baseUrl}/question/${comp2.id}`,
                 text: 'Change',
                 visuallyHiddenText: 'name'
               }

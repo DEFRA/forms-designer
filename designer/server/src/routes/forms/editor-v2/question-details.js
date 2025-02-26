@@ -111,14 +111,22 @@ export default [
 
       // Save page and first question
       const metadata = await forms.get(slug, token)
-      const newPage =
-        pageId && pageId !== 'new'
-          ? await addQuestion(metadata.id, token, `${pageId}`, questionDetails)
-          : await addPageAndFirstQuestion(metadata.id, token, questionDetails)
+      let finalPageId = pageId
+
+      if (pageId && pageId !== 'new') {
+        await addQuestion(metadata.id, token, `${pageId}`, questionDetails)
+      } else {
+        const newPage = await addPageAndFirstQuestion(
+          metadata.id,
+          token,
+          questionDetails
+        )
+        finalPageId = newPage.id
+      }
 
       // Redirect to next page
       return h
-        .redirect(editorv2Path(slug, `page/${newPage.id}/questions`))
+        .redirect(editorv2Path(slug, `page/${finalPageId}/questions`))
         .code(StatusCodes.SEE_OTHER)
     },
     options: {
