@@ -1,6 +1,6 @@
 import * as scopes from '~/src/common/constants/scopes.js'
 import * as forms from '~/src/lib/forms.js'
-import * as edit from '~/src/models/forms/editor-v2.js'
+import * as viewModel from '~/src/models/forms/editor-v2/pages.js'
 
 export const ROUTE_PATH_PAGES = 'pages'
 export const ROUTE_FULL_PATH_PAGES = '/library/{slug}/editor-v2/pages'
@@ -22,7 +22,7 @@ export default [
 
       return h.view(
         'forms/editor-v2/pages',
-        edit.pageListViewModel(metadata, definition)
+        viewModel.pagesViewModel(metadata, definition)
       )
     },
     options: {

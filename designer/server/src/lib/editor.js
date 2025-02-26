@@ -1,6 +1,13 @@
+import { ComponentType } from '@defra/forms-model'
+
 import config from '~/src/config.js'
-import { postJson } from '~/src/lib/fetch.js'
-import { getHeaders, slugify } from '~/src/lib/utils.js'
+import { delJson, patchJson, postJson, putJson } from '~/src/lib/fetch.js'
+import {
+  getHeaders,
+  isCheckboxSelected,
+  slugify,
+  stringHasValue
+} from '~/src/lib/utils.js'
 
 const formsEndpoint = new URL('/forms/', config.managerUrl)
 
@@ -17,6 +24,7 @@ export async function addPageAndFirstQuestion(formId, token, questionDetails) {
     `./${formId}/definition/draft/pages`,
     formsEndpoint
   )
+
   const { body } = await postJsonByType(requestUrl, {
     payload: {
       title: questionDetails.title,
@@ -40,13 +48,11 @@ export async function addQuestion(formId, token, pageId, questionDetails) {
   const postJsonByType = /** @type {typeof postJson<Page>} */ (postJson)
 
   const requestUrl = new URL(
-    `./${formId}/definition/draft/pages/${pageId}`,
+    `./${formId}/definition/draft/pages/${pageId}/questions`,
     formsEndpoint
   )
   const { body } = await postJsonByType(requestUrl, {
-    payload: {
-      questionDetails
-    },
+    payload: questionDetails,
     ...getHeaders(token)
   })
 
@@ -54,5 +60,118 @@ export async function addQuestion(formId, token, pageId, questionDetails) {
 }
 
 /**
- * @import { ComponentDef, Page } from '@defra/forms-model'
+ * Determine page heading
+ * @param {boolean} isExpanded
+ * @param {Page | undefined} page
+ * @param {string | undefined} pageHeading
+ * @param {ComponentDef[]} components
+ */
+export function resolvePageHeading(isExpanded, page, pageHeading, components) {
+  const firstQuestion = components.find(
+    (comp) => comp.type !== ComponentType.Html
+  )
+  if (!isExpanded) {
+    return firstQuestion?.title ?? ''
+  }
+
+  const pageTitle = stringHasValue(pageHeading) ? pageHeading : page?.title
+  const firstQuestionFallback = stringHasValue(firstQuestion?.title)
+    ? firstQuestion?.title
+    : pageTitle
+  return stringHasValue(pageHeading) ? pageHeading : firstQuestionFallback
+}
+
+/**
+ * Add a question to an existing page
+ * @param {string} formId
+ * @param {string} token
+ * @param {string} pageId
+ * @param {FormDefinition} definition
+ * @param {Partial<FormEditorInputPageSettings>} payload
+ */
+export async function setPageHeadingAndGuidance(
+  formId,
+  token,
+  pageId,
+  definition,
+  payload
+) {
+  const patchJsonByType = /** @type {typeof patchJson<Page>} */ (patchJson)
+  const postJsonByType = /** @type {typeof postJson<Page>} */ (postJson)
+  const putJsonByType = /** @type {typeof putJson<Page>} */ (putJson)
+  const delJsonByType = /** @type {typeof delJson<ComponentDef>} */ (delJson)
+
+  const { pageHeading, guidanceText } = payload
+
+  const page = definition.pages.find((x) => x.id === pageId)
+  const components = page && 'components' in page ? page.components : []
+
+  const isExpanded = isCheckboxSelected(payload.pageHeadingAndGuidance)
+
+  const resolvedPageHeading = resolvePageHeading(
+    isExpanded,
+    page,
+    pageHeading,
+    components
+  )
+
+  // Update page heading
+  const pageHeadingRequestUrl = new URL(
+    `./${formId}/definition/draft/pages/${pageId}`,
+    formsEndpoint
+  )
+  await patchJsonByType(pageHeadingRequestUrl, {
+    payload: {
+      title: resolvedPageHeading,
+      path: `/${slugify(resolvedPageHeading)}`
+    },
+    ...getHeaders(token)
+  })
+
+  // Insert a guidance component, or update if it already exists, or remove if no longer used
+  const existingGuidance = components.find(
+    (comp, idx) => comp.type === ComponentType.Html && idx === 0
+  )
+
+  if (existingGuidance && (!stringHasValue(guidanceText) || !isExpanded)) {
+    // Remove guidance component since the user has blanked out the guidance text now or unchecked the checkbox
+    const delCGuidanceRequestUrl = new URL(
+      `./${formId}/definition/draft/pages/${pageId}/components/${existingGuidance.id}`,
+      formsEndpoint
+    )
+    await delJsonByType(delCGuidanceRequestUrl, {
+      ...getHeaders(token)
+    })
+    return
+  }
+
+  if (isExpanded && stringHasValue(guidanceText)) {
+    const guidancePayload = {
+      id: existingGuidance?.id,
+      type: ComponentType.Html,
+      content: guidanceText
+    }
+
+    const guidanceRequestUrl = existingGuidance
+      ? `./${formId}/definition/draft/pages/${pageId}/components/${existingGuidance.id}`
+      : `./${formId}/definition/draft/pages/${pageId}/components?prepend=true`
+
+    const guidanceRequestFullUrl = new URL(guidanceRequestUrl, formsEndpoint)
+
+    if (existingGuidance) {
+      await putJsonByType(guidanceRequestFullUrl, {
+        payload: guidancePayload,
+        ...getHeaders(token)
+      })
+    } else {
+      await postJsonByType(guidanceRequestFullUrl, {
+        payload: guidancePayload,
+        ...getHeaders(token)
+      })
+    }
+  }
+}
+
+/**
+ * @import { ComponentDef, Page, FormEditorInputPageSettings, FormDefinition } from '@defra/forms-model'
  */

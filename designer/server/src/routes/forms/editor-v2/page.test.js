@@ -1,6 +1,7 @@
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
+import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
 import { createServer } from '~/src/createServer.js'
 import { addErrorsToSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
@@ -20,42 +21,8 @@ describe('Editor v2 page routes', () => {
     await server.initialize()
   })
 
-  const now = new Date()
-  const authorId = 'f50ceeed-b7a4-47cf-a498-094efc99f8bc'
-  const authorDisplayName = 'Enrique Chase'
-
-  /**
-   * @satisfies {FormMetadataAuthor}
-   */
-  const author = {
-    id: authorId,
-    displayName: authorDisplayName
-  }
-
-  /**
-   * @satisfies {FormMetadata}
-   */
-  const formMetadata = {
-    id: '661e4ca5039739ef2902b214',
-    slug: 'my-form-slug',
-    title: 'Test form',
-    organisation: 'Defra',
-    teamName: 'Defra Forms',
-    teamEmail: 'defraforms@defra.gov.uk',
-    createdAt: now,
-    createdBy: author,
-    updatedAt: now,
-    updatedBy: author,
-    draft: {
-      createdAt: now,
-      createdBy: author,
-      updatedAt: now,
-      updatedBy: author
-    }
-  }
-
   test('GET - should check correct radio is rendered in the view', async () => {
-    jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
 
     const options = {
       method: 'get',
@@ -81,7 +48,7 @@ describe('Editor v2 page routes', () => {
   })
 
   test('POST - should redirect to question if question selected', async () => {
-    jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
 
     const options = {
       method: 'post',
@@ -101,7 +68,7 @@ describe('Editor v2 page routes', () => {
   })
 
   test('POST - should redirect to quidance if guidance selected', async () => {
-    jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
 
     const options = {
       method: 'post',
@@ -121,7 +88,7 @@ describe('Editor v2 page routes', () => {
   })
 
   test('POST - should redirect to actual page id if question selected and a page id exists', async () => {
-    jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
 
     const options = {
       method: 'post',
@@ -141,7 +108,7 @@ describe('Editor v2 page routes', () => {
   })
 
   test('POST - should error if no radio selected', async () => {
-    jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
 
     const options = {
       method: 'post',
@@ -165,6 +132,5 @@ describe('Editor v2 page routes', () => {
 })
 
 /**
- * @import { FormMetadata, FormMetadataAuthor, Page } from '@defra/forms-model'
  * @import { Server } from '@hapi/hapi'
  */

@@ -9,34 +9,6 @@
 {{ govukRadios(fields.dateSub) }}
 {% endset -%}
 
-{% set questionTypeItems = [
-    {
-      text: 'Written answer',
-      hint: {
-        text: 'A short or long answer as test or number'
-        },
-      value: 'written-answer-group',
-      conditional: {
-        html: writtenAnswerHtml
-      }
-    },
-    {
-      text: 'Date',
-      hint: {
-        text: 'A day, month and year or month and year only'
-      },
-      value: 'date-group',
-      conditional: {
-        html: dateHtml
-      }
-    }
-  ] %}
-{% for questionItem in fields.questionType.items %}
-  {% set questionTypeItems = (questionTypeItems.push(questionItem), questionTypeItems) %}
-{% endfor %}
-
-
-
 <form class="form" method="post">
   <div class="govuk-form-group">
     <fieldset class="govuk-fieldset" aria-describedby="informationQuestion1-hint">
@@ -45,16 +17,7 @@
       </legend>
       <div id="informationQuestion1-hint" class="govuk-hint">You can ask for more information later</div>
 
-      {{ govukRadios({
-      id: fields.questionType.id,
-      name: fields.questionType.name,
-      idPrefix: fields.questionType.idPrefix,
-      classes: fields.questionType.classes,
-      items: questionTypeItems,
-      fieldset: fields.questionType.fieldset,
-      value: fields.questionType.value,
-      errorMessage: fields.questionType.errorMessage
-      }) }}
+      {{ govukRadios(fields.questionType | setConditionalAttribute(0, writtenAnswerHtml) | setConditionalAttribute(1, dateHtml)) }}
 
     </fieldset>
   </div>

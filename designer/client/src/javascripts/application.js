@@ -3,6 +3,7 @@ import {
   Accordion,
   Button,
   CharacterCount,
+  Checkboxes,
   ErrorSummary,
   NotificationBanner,
   Radios,
@@ -12,6 +13,7 @@ import {
 createAll(Accordion)
 createAll(Button)
 createAll(CharacterCount)
+createAll(Checkboxes)
 createAll(ErrorSummary)
 createAll(Radios)
 createAll(NotificationBanner)

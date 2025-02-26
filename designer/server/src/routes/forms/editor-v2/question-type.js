@@ -6,11 +6,15 @@ import {
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
+import {
+  QUESTION_TYPE_DATE_GROUP,
+  QUESTION_TYPE_WRITTEN_ANSWER_GROUP
+} from '~/src/common/constants/editor.js'
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import * as forms from '~/src/lib/forms.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
-import * as editor from '~/src/models/forms/editor-v2.js'
+import * as viewModel from '~/src/models/forms/editor-v2/question-type.js'
 import { editorv2Path } from '~/src/models/links.js'
 
 export const ROUTE_FULL_PATH_QUESTION = `/library/{slug}/editor-v2/page/{pageId}/question/{questionId?}`
@@ -22,13 +26,13 @@ export const schema = Joi.object().keys({
     '*': 'Select the type of information you need from users or ask users to choose from a list'
   }),
   writtenAnswerSub: Joi.when('questionType', {
-    is: 'written-answer-group',
+    is: QUESTION_TYPE_WRITTEN_ANSWER_GROUP,
     then: writtenAnswerSubSchema.messages({
       '*': 'Select the type of written answer you need from users'
     })
   }),
   dateSub: Joi.when('questionType', {
-    is: 'date-group',
+    is: QUESTION_TYPE_DATE_GROUP,
     then: dateSubSchema.messages({
       '*': 'Select the type of date you need from users'
     })
@@ -42,10 +46,10 @@ export const schema = Joi.object().keys({
  * @param {string} dateSub - sub-type if 'date-sub' selected in questionType
  */
 export function deriveQuestionType(questionType, writtenAnswerSub, dateSub) {
-  if (questionType === 'written-answer-sub') {
+  if (questionType === QUESTION_TYPE_WRITTEN_ANSWER_GROUP) {
     return writtenAnswerSub
   }
-  if (questionType === 'date-sub') {
+  if (questionType === QUESTION_TYPE_DATE_GROUP) {
     return dateSub
   }
   return questionType
@@ -69,11 +73,18 @@ export default [
       const definition = await forms.getDraftFormDefinition(metadata.id, token)
 
       // Validation errors
-      const validation = yar.flash(errorKey).at(0)
+      const validation = /** @type {ValidationFailure<FormEditor>} */ (
+        yar.flash(errorKey).at(0)
+      )
 
       return h.view(
         'forms/editor-v2/question',
-        editor.addQuestionViewModel(metadata, definition, pageId, validation)
+        viewModel.questionTypeViewModel(
+          metadata,
+          definition,
+          pageId,
+          validation
+        )
       )
     },
     options: {
@@ -88,7 +99,7 @@ export default [
   }),
 
   /**
-   * @satisfies {ServerRoute<{ Payload: Pick<FormEditorInput, 'questionType' | 'writtenAnswerSub' | 'dateSub'> }>}
+   * @satisfies {ServerRoute<{ Payload: Pick<FormEditorInputPage, 'questionType' | 'writtenAnswerSub' | 'dateSub'> }>}
    */
   ({
     method: 'POST',
@@ -133,6 +144,7 @@ export default [
 ]
 
 /**
- * @import { FormEditorInput } from '@defra/forms-model'
+ * @import { FormEditor, FormEditorInputPage } from '@defra/forms-model'
  * @import { ServerRoute } from '@hapi/hapi'
+ * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

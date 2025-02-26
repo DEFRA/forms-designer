@@ -41,16 +41,38 @@ export interface FormEditor {
    * The short description of the question
    */
   shortDescription: string
+
+  /**
+   * The value of checkbox to reveal heading and guidance section
+   */
+  pageHeadingAndGuidance: string
+
+  /**
+   * The page heading
+   */
+  pageHeading: string
+
+  /**
+   * The page guidance text
+   */
+  guidanceText: string
 }
 
-export type FormEditorInput = Pick<
+export type FormEditorInputPage = Pick<
   FormEditor,
-  | 'pageType'
+  'pageType' | 'questionType' | 'writtenAnswerSub' | 'dateSub'
+>
+
+export type FormEditorInputQuestion = Pick<
+  FormEditor,
   | 'questionType'
-  | 'writtenAnswerSub'
-  | 'dateSub'
   | 'question'
   | 'shortDescription'
   | 'hintText'
   | 'questionOptional'
+>
+
+export type FormEditorInputPageSettings = Pick<
+  FormEditor,
+  'pageHeadingAndGuidance' | 'pageHeading' | 'guidanceText'
 >

@@ -1,6 +1,6 @@
 import { ComponentType, ControllerType } from '@defra/forms-model'
 
-import { getPageNum } from '~/src/models/forms/editor-v2.js'
+import { getPageNum } from '~/src/models/forms/editor-v2/common.js'
 
 /**
  * @satisfies {FormDefinition}
