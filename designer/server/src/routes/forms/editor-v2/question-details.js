@@ -113,7 +113,7 @@ export default [
       const metadata = await forms.get(slug, token)
       const newPage =
         pageId && pageId !== 'new'
-          ? await addQuestion(metadata.id, token, `${pageId}`, questionDetails)
+          ? await addQuestion(metadata.id, token, pageId, questionDetails)
           : await addPageAndFirstQuestion(metadata.id, token, questionDetails)
 
       // Redirect to next page
