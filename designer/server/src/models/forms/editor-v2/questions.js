@@ -78,7 +78,6 @@ function hasUnderlyingData(pageHeadingVal, guidanceTextVal) {
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  * @param {string} pageId
- * @param {Partial<FormEditor>} [_editor]
  * @param {ValidationFailure<FormEditor>} [validation]
  * @param {string[]} [notification]
  */
@@ -86,7 +85,6 @@ export function questionsViewModel(
   metadata,
   definition,
   pageId,
-  _editor,
   validation,
   notification
 ) {

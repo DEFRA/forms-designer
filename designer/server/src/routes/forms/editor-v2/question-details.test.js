@@ -91,7 +91,7 @@ describe('Editor v2 question details routes', () => {
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
       new Joi.ValidationError(
-        'Enter a question. Select a short description. The question type is missing',
+        'Enter a question. Enter a short description. The question type is missing',
         [],
         undefined
       ),

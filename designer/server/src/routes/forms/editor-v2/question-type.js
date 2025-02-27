@@ -53,7 +53,7 @@ export function deriveQuestionType(questionType, writtenAnswerSub, dateSub) {
   if (questionType === QUESTION_TYPE_DATE_GROUP) {
     return dateSub
   }
-  return questionType
+  return /** @type {string | undefined} */ questionType
 }
 
 export default [
@@ -117,8 +117,7 @@ export default [
       // Save in session until page is saved
       yar.flash(
         sessionNames.questionType,
-        deriveQuestionType(questionType, writtenAnswerSub, dateSub),
-        true
+        deriveQuestionType(questionType, writtenAnswerSub, dateSub)
       )
 
       // Redirect to next page

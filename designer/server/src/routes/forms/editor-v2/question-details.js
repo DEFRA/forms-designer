@@ -19,6 +19,7 @@ import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import { isCheckboxSelected } from '~/src/lib/utils.js'
+import { CHANGES_SAVED_SUCCESSFULLY } from '~/src/models/forms/editor-v2/common.js'
 import * as viewModel from '~/src/models/forms/editor-v2/question-details.js'
 import { editorv2Path } from '~/src/models/links.js'
 import { getQuestionType } from '~/src/routes/forms/editor-v2/helper.js'
@@ -34,7 +35,7 @@ export const baseSchema = Joi.object().keys({
   hintText: hintTextSchema,
   questionOptional: questionOptionalSchema,
   shortDescription: shortDescriptionSchema.messages({
-    '*': 'Select a short description'
+    '*': 'Enter a short description'
   }),
   questionType: questionTypeFullSchema.messages({
     '*': 'The question type is missing'
@@ -116,7 +117,7 @@ export default [
     method: 'POST',
     path: ROUTE_FULL_PATH_QUESTION_DETAILS,
     async handler(request, h) {
-      const { params, auth, payload } = request
+      const { params, auth, payload, yar } = request
       const { slug, pageId, questionId } =
         /** @type {{ slug: string, pageId: string, questionId: string}} */ (
           params
@@ -150,6 +151,8 @@ export default [
           questionDetails
         )
       }
+
+      yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
 
       // Redirect to next page
       return h

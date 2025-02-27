@@ -16,7 +16,7 @@ const errorKey = sessionNames.validationFailure.editorPage
 
 export const schema = Joi.object().keys({
   pageType: pageTypeSchema.messages({
-    '*': 'Choose a Page Type'
+    '*': 'Select a page type'
   })
 })
 

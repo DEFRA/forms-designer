@@ -125,7 +125,7 @@ describe('Editor v2 page routes', () => {
     expect(headers.location).toBe('/library/my-form-slug/editor-v2/page')
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
-      new Joi.ValidationError('Choose a Page Type', [], undefined),
+      new Joi.ValidationError('Select a page type', [], undefined),
       'pageValidationFailure'
     )
   })

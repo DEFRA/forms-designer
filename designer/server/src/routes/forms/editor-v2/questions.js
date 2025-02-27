@@ -22,7 +22,6 @@ export const ROUTE_PATH_QUESTION_DETAILS =
   '/library/{slug}/editor-v2/page/{pageId}/question/{questionId}'
 
 const errorKey = sessionNames.validationFailure.editorQuestions
-const notificationKey = sessionNames.successNotification
 
 export const schema = Joi.object().keys({
   pageHeadingAndGuidance: pageHeadingAndGuidanceSchema,
@@ -58,7 +57,7 @@ export default [
 
       // Saved banner
       const notification = /** @type {string[] | undefined} */ (
-        yar.flash(notificationKey).at(0)
+        yar.flash(sessionNames.successNotification).at(0)
       )
 
       return h.view(
@@ -67,7 +66,6 @@ export default [
           metadata,
           definition,
           pageId,
-          {},
           validation,
           notification
         )
@@ -107,7 +105,7 @@ export default [
         payload
       )
 
-      yar.flash(notificationKey, CHANGES_SAVED_SUCCESSFULLY)
+      yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
 
       // Redirect to same page
       return h
