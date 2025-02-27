@@ -36,12 +36,15 @@
         {
           href: params.pageEditUrl,
           text: "Edit",
-          visuallyHiddenText: " page " + params.pageNum
+          visuallyHiddenText: " page " + params.pageNum,
+          classes: 'govuk-link--no-visited-state'
         },
         {
           href: params.pagePreviewUrl,
           text: "Preview",
-          visuallyHiddenText: " page " + params.pageNum
+          visuallyHiddenText: " page " + params.pageNum,
+          attributes: 'target="_blank"',
+          classes: 'govuk-link--no-visited-state'
         }
       ]
     },

@@ -1,4 +1,7 @@
-import { getFormSpecificNavigation } from '~/src/models/forms/editor-v2/common.js'
+import {
+  buildPreviewUrl,
+  getFormSpecificNavigation
+} from '~/src/models/forms/editor-v2/common.js'
 import {
   editorv2Path,
   formOverviewBackLink,
@@ -12,6 +15,7 @@ import {
 export function pagesViewModel(metadata, definition) {
   const formPath = formOverviewPath(metadata.slug)
   const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
+  const previewBaseUrl = buildPreviewUrl(metadata.slug)
 
   const pageActions = [
     {
@@ -29,8 +33,9 @@ export function pagesViewModel(metadata, definition) {
     },
     {
       text: 'Preview form',
-      href: '/preview',
-      classes: 'govuk-link govuk-link--inverse'
+      href: previewBaseUrl,
+      classes: 'govuk-link govuk-link--inverse',
+      attributes: 'target="_blank"'
     }
   ]
 
@@ -41,6 +46,7 @@ export function pagesViewModel(metadata, definition) {
   const pageListModel = {
     ...definition,
     formSlug: metadata.slug,
+    previewBaseUrl,
     navigation,
     pageHeading: {
       text: 'Add and edit pages'

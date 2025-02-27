@@ -9,6 +9,7 @@ import Joi from 'joi'
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { setPageHeadingAndGuidance } from '~/src/lib/editor.js'
+import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import { CHANGES_SAVED_SUCCESSFULLY } from '~/src/models/forms/editor-v2/common.js'
@@ -21,7 +22,6 @@ export const ROUTE_PATH_QUESTION_DETAILS =
   '/library/{slug}/editor-v2/page/{pageId}/question/{questionId}'
 
 const errorKey = sessionNames.validationFailure.editorQuestions
-const notificationKey = sessionNames.successNotification
 
 export const schema = Joi.object().keys({
   pageHeadingAndGuidance: pageHeadingAndGuidanceSchema,
@@ -45,20 +45,19 @@ export default [
       const { yar } = request
       const { params, auth } = request
       const { token } = auth.credentials
-      const { slug, pageId } = params
+      const { slug, pageId } = /** @type {{ slug: string, pageId: string }} */ (
+        params
+      )
 
       // Form metadata and page components
       const metadata = await forms.get(slug, token)
       const definition = await forms.getDraftFormDefinition(metadata.id, token)
 
-      // Validation errors
-      const validation = /** @type {ValidationFailure<FormEditor>} */ (
-        yar.flash(errorKey).at(0)
-      )
+      const validation = getValidationErrorsFromSession(yar, errorKey)
 
       // Saved banner
       const notification = /** @type {string[] | undefined} */ (
-        yar.flash(notificationKey).at(0)
+        yar.flash(sessionNames.successNotification).at(0)
       )
 
       return h.view(
@@ -67,7 +66,6 @@ export default [
           metadata,
           definition,
           pageId,
-          {},
           validation,
           notification
         )
@@ -91,7 +89,9 @@ export default [
     path: ROUTE_FULL_PATH_QUESTIONS,
     async handler(request, h) {
       const { params, auth, payload, yar } = request
-      const { slug, pageId } = params
+      const { slug, pageId } = /** @type {{ slug: string, pageId: string }} */ (
+        params
+      )
       const { token } = auth.credentials
 
       // Form metadata and page components
@@ -105,7 +105,7 @@ export default [
         payload
       )
 
-      yar.flash(notificationKey, CHANGES_SAVED_SUCCESSFULLY)
+      yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
 
       // Redirect to same page
       return h

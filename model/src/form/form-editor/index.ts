@@ -22,6 +22,21 @@ export const questionTypeSchema = Joi.string()
     ComponentType.SelectField
   )
 
+export const questionTypeFullSchema = Joi.string()
+  .required()
+  .valid(
+    ComponentType.TextField,
+    ComponentType.MultilineTextField,
+    ComponentType.NumberField,
+    ComponentType.DatePartsField,
+    ComponentType.MonthYearField,
+    ComponentType.UkAddressField,
+    ComponentType.TelephoneNumberField,
+    ComponentType.FileUploadField,
+    ComponentType.EmailAddressField,
+    ComponentType.SelectField
+  )
+
 export const writtenAnswerSubSchema = Joi.string()
   .required()
   .valid(
