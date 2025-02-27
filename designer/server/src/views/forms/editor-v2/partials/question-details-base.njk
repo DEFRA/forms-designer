@@ -12,5 +12,7 @@
       {{ govukCheckboxes(fields.questionOptional) }}
 
       {{ govukInput(fields.shortDescription) }}
+
+      <input type="hidden" name="questionType" id="questionType" value="{{questionType}}" />
     </fieldset>
   </div>

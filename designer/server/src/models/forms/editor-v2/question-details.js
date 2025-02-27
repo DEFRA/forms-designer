@@ -107,6 +107,7 @@ export function getDetails(metadata, definition, pageId, questionId) {
  * @param {FormDefinition} definition
  * @param {string} pageId
  * @param {string} questionId
+ * @param {ComponentType | undefined} questionType
  * @param {ValidationFailure<FormEditor>} [validation]
  */
 export function questionDetailsViewModel(
@@ -114,6 +115,7 @@ export function questionDetailsViewModel(
   definition,
   pageId,
   questionId,
+  questionType,
   validation
 ) {
   const { pageTitle, navigation, question, pageNum, questionNum } = getDetails(
@@ -124,6 +126,10 @@ export function questionDetailsViewModel(
   )
 
   const { formErrors } = validation ?? {}
+
+  if (!questionType) {
+    questionType = question?.type
+  }
 
   return {
     ...baseModelFields(metadata.slug, pageTitle),
@@ -142,11 +148,12 @@ export function questionDetailsViewModel(
       /** @type {InputFieldsComponentsDef} */ (question),
       validation
     ),
+    questionType,
     buttonText: SAVE_AND_CONTINUE
   }
 }
 
 /**
- * @import { ComponentDef, FormMetadata, FormDefinition, FormEditor, InputFieldsComponentsDef } from '@defra/forms-model'
+ * @import { ComponentType, FormMetadata, FormDefinition, FormEditor, InputFieldsComponentsDef } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

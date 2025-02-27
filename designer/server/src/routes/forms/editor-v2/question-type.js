@@ -42,7 +42,7 @@ export const schema = Joi.object().keys({
 
 /**
  *
- * @param {string} questionType
+ * @param {string | undefined} questionType
  * @param {string} writtenAnswerSub - sub-type if 'written-answer-sub' selected in questionType
  * @param {string} dateSub - sub-type if 'date-sub' selected in questionType
  */
@@ -115,9 +115,10 @@ export default [
       const { questionType, writtenAnswerSub, dateSub } = payload
 
       // Save in session until page is saved
-      yar.set(
+      yar.flash(
         sessionNames.questionType,
-        deriveQuestionType(questionType, writtenAnswerSub, dateSub)
+        deriveQuestionType(questionType, writtenAnswerSub, dateSub),
+        true
       )
 
       // Redirect to next page

@@ -2,6 +2,7 @@ import {
   hintTextSchema,
   questionOptionalSchema,
   questionSchema,
+  questionTypeFullSchema,
   shortDescriptionSchema
 } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
@@ -17,9 +18,10 @@ import {
 import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
-import { isCheckboxSelected, stringHasValue } from '~/src/lib/utils.js'
+import { isCheckboxSelected } from '~/src/lib/utils.js'
 import * as viewModel from '~/src/models/forms/editor-v2/question-details.js'
 import { editorv2Path } from '~/src/models/links.js'
+import { getQuestionType } from '~/src/routes/forms/editor-v2/helper.js'
 
 export const ROUTE_FULL_PATH_QUESTION_DETAILS = `/library/{slug}/editor-v2/page/{pageId}/question/{questionId}/details`
 
@@ -33,6 +35,9 @@ export const baseSchema = Joi.object().keys({
   questionOptional: questionOptionalSchema,
   shortDescription: shortDescriptionSchema.messages({
     '*': 'Select a short description'
+  }),
+  questionType: questionTypeFullSchema.messages({
+    '*': 'The question type is missing'
   })
 })
 
@@ -44,11 +49,10 @@ const schema = baseSchema.concat(specificsSchema)
 /**
  *
  * @param {Partial<FormEditorInputQuestion>} payload
- * @param {string} questionType
  */
-function mapQuestionDetails(payload, questionType) {
+function mapQuestionDetails(payload) {
   return /** @type {Partial<ComponentDef>} */ ({
-    type: questionType,
+    type: payload.questionType,
     title: payload.question,
     name: payload.shortDescription,
     hint: payload.hintText,
@@ -80,6 +84,8 @@ export default [
 
       const validation = getValidationErrorsFromSession(yar, errorKey)
 
+      const questionType = getQuestionType(yar, validation?.formValues)
+
       return h.view(
         'forms/editor-v2/question-details',
         viewModel.questionDetailsViewModel(
@@ -87,6 +93,7 @@ export default [
           definition,
           pageId,
           questionId,
+          questionType,
           validation
         )
       )
@@ -109,22 +116,15 @@ export default [
     method: 'POST',
     path: ROUTE_FULL_PATH_QUESTION_DETAILS,
     async handler(request, h) {
-      const { params, auth, payload, yar } = request
+      const { params, auth, payload } = request
       const { slug, pageId, questionId } =
         /** @type {{ slug: string, pageId: string, questionId: string}} */ (
           params
         )
       const { token } = auth.credentials
 
-      const questionType = /** @type {string} */ (
-        `${yar.get(sessionNames.questionType)}`
-      )
-      if (!stringHasValue(questionType)) {
-        throw new Error('Missing question type')
-      }
-
       const questionDetails = {
-        ...mapQuestionDetails(payload, questionType),
+        ...mapQuestionDetails(payload),
         id: questionId !== 'new' ? questionId : undefined
       }
 
