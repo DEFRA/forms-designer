@@ -120,7 +120,7 @@ export function questionsViewModel(
     ? formValues?.guidanceText
     : guidanceTextFallback
 
-  const baseUrl = `${editorv2Path(metadata.slug)}page/${pageId}`
+  const baseUrl = editorv2Path(metadata.slug, `page/${pageId}`)
 
   return {
     ...baseModelFields(metadata.slug, pageTitle),
