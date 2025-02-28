@@ -1,6 +1,9 @@
 import Joi from 'joi'
 
-import { addErrorsToSession } from '~/src/lib/error-helper.js'
+import {
+  addErrorsToSession,
+  getValidationErrorsFromSession
+} from '~/src/lib/error-helper.js'
 
 const mockFlash = jest.fn()
 
@@ -30,7 +33,7 @@ const buildMockRequest = (payload) => {
 
 describe('Validation functions', () => {
   describe('addErrorsToSession', () => {
-    test('should return empty object', () => {
+    test('should add errors', () => {
       const sessionKey = /** @type {ValidationSessionKey} */ ('this-key')
       const error = new Joi.ValidationError(
         'dummy error',
@@ -57,6 +60,31 @@ describe('Validation functions', () => {
         },
         formValues: { field1: 'abc' }
       })
+    })
+
+    test('should handle no errors', () => {
+      const sessionKey = /** @type {ValidationSessionKey} */ ('this-key')
+      const error = undefined
+      const payload = { field1: 'abc' }
+      addErrorsToSession(buildMockRequest(payload), error, sessionKey)
+      expect(mockFlash).not.toHaveBeenCalled()
+    })
+
+    test('should handle invalid error object', () => {
+      const sessionKey = /** @type {ValidationSessionKey} */ ('this-key')
+      const error = /** @type {Joi.ValidationError} */ ({})
+      const payload = { field1: 'abc' }
+      addErrorsToSession(buildMockRequest(payload), error, sessionKey)
+      expect(mockFlash).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('getValidationErrorsFromSession', () => {
+    test('should get errors', () => {
+      const sessionKey = /** @type {ValidationSessionKey} */ ('this-key')
+      const payload = { field1: 'abc' }
+      getValidationErrorsFromSession(buildMockRequest(payload).yar, sessionKey)
+      expect(mockFlash).toHaveBeenCalledWith('this-key')
     })
   })
 })

@@ -97,15 +97,9 @@ export function questionsViewModel(
   const page = definition.pages[pageIdx]
   const components = hasComponents(page) ? page.components : []
 
-  const firstQuestion = components.find(
-    (comp) => comp.type !== ComponentType.Html
-  )
-
-  const pageHeadingFallback =
-    page.title !== firstQuestion?.title ? page.title : ''
   const pageHeadingVal = stringHasValue(formValues?.pageHeading)
     ? formValues?.pageHeading
-    : pageHeadingFallback
+    : page.title
 
   const guidanceComponent = /** @type {HtmlComponent | undefined} */ (
     components.find(

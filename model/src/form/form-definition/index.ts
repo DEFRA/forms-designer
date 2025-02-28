@@ -200,6 +200,29 @@ export const pageSchema = Joi.object<Page>().keys({
   view: Joi.string().optional()
 })
 
+/**
+ * V2 engine schema - used with new editor
+ * `/status` is a special route for providing a user's application status.
+ *  It should not be configured via the designer.
+ */
+export const pageSchemaV2 = Joi.object<Page>().keys({
+  id: Joi.string().uuid().optional(),
+  path: Joi.string().required().disallow('/status'),
+  title: Joi.string().allow('').required(),
+  section: Joi.string(),
+  controller: Joi.string().optional(),
+  components: Joi.array<ComponentDef>().items(componentSchema).unique('name'),
+  repeat: Joi.when('controller', {
+    is: Joi.string().valid('RepeatPageController').required(),
+    then: pageRepeatSchema.required(),
+    otherwise: Joi.any().strip()
+  }),
+  condition: Joi.string().allow('').optional(),
+  next: Joi.array<Link>().items(nextSchema).default([]),
+  events: eventsSchema.optional(),
+  view: Joi.string().optional()
+})
+
 const baseListItemSchema = Joi.object<Item>().keys({
   text: Joi.string().allow(''),
   description: Joi.string().allow('').optional(),
@@ -276,7 +299,11 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
     startPage: Joi.string().optional(),
     pages: Joi.array<Page>()
       .required()
-      .items(pageSchema)
+      .when('engine', {
+        is: 'V2',
+        then: Joi.array<Page>().items(pageSchemaV2),
+        otherwise: Joi.array<Page>().items(pageSchema)
+      })
       .unique('path')
       .unique('id', { ignoreUndefined: true }),
     sections: Joi.array<Section>()

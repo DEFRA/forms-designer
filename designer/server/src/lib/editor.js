@@ -27,7 +27,7 @@ export async function addPageAndFirstQuestion(formId, token, questionDetails) {
 
   const { body } = await postJsonByType(requestUrl, {
     payload: {
-      title: questionDetails.title,
+      title: '',
       path: `/${slugify(questionDetails.title)}`,
       components: [questionDetails]
     },
@@ -90,18 +90,14 @@ export async function updateQuestion(
 
 /**
  * Determine page heading
- * @param {boolean} isExpanded
  * @param {Page | undefined} page
  * @param {string | undefined} pageHeading
  * @param {ComponentDef[]} components
  */
-export function resolvePageHeading(isExpanded, page, pageHeading, components) {
+export function resolvePageHeading(page, pageHeading, components) {
   const firstQuestion = components.find(
     (comp) => comp.type !== ComponentType.Html
   )
-  if (!isExpanded) {
-    return firstQuestion?.title ?? ''
-  }
 
   const pageTitle = stringHasValue(pageHeading) ? pageHeading : page?.title
   const firstQuestionFallback = stringHasValue(firstQuestion?.title)
@@ -137,12 +133,8 @@ export async function setPageHeadingAndGuidance(
 
   const isExpanded = isCheckboxSelected(payload.pageHeadingAndGuidance)
 
-  const resolvedPageHeading = resolvePageHeading(
-    isExpanded,
-    page,
-    pageHeading,
-    components
-  )
+  const pageHeadingForCall = isExpanded ? pageHeading : ''
+  const pagePathForCall = `/${slugify(resolvePageHeading(page, pageHeading, components))}`
 
   // Update page heading
   const pageHeadingRequestUrl = new URL(
@@ -151,8 +143,8 @@ export async function setPageHeadingAndGuidance(
   )
   await patchJsonByType(pageHeadingRequestUrl, {
     payload: {
-      title: resolvedPageHeading,
-      path: `/${slugify(resolvedPageHeading)}`
+      title: pageHeadingForCall,
+      path: pagePathForCall
     },
     ...getHeaders(token)
   })

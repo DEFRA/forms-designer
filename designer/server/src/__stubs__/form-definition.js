@@ -131,6 +131,78 @@ export const testFormDefinitionWithTwoQuestions = {
 /**
  * @satisfies {FormDefinition}
  */
+export const testFormDefinitionWithTwoPagesAndQuestions = {
+  name: 'Test form',
+  pages: [
+    {
+      id: 'p1',
+      path: '/page-one',
+      title: 'Page one',
+      section: 'section',
+      components: [
+        {
+          id: 'q1',
+          type: ComponentType.TextField,
+          name: 'textField',
+          title: 'This is your first question',
+          hint: 'Help text',
+          options: {},
+          schema: {}
+        },
+        {
+          id: 'q2',
+          type: ComponentType.TextField,
+          name: 'textField',
+          title: 'This is your second question',
+          hint: 'Help text',
+          options: {},
+          schema: {}
+        }
+      ],
+      next: [{ path: '/summary' }]
+    },
+    {
+      id: 'p2',
+      path: '/page-two',
+      title: 'Page two',
+      section: 'section',
+      components: [
+        {
+          id: 'q1',
+          type: ComponentType.TextField,
+          name: 'textField',
+          title: 'This is your first question - page two',
+          hint: 'Help text',
+          options: {},
+          schema: {}
+        },
+        {
+          id: 'q2',
+          type: ComponentType.TextField,
+          name: 'textField',
+          title: 'This is your second question - page two',
+          hint: 'Help text',
+          options: {},
+          schema: {}
+        }
+      ],
+      next: [{ path: '/summary' }]
+    },
+    {
+      id: 'p3',
+      title: 'Summary',
+      path: '/summary',
+      controller: ControllerType.Summary
+    }
+  ],
+  conditions: [],
+  sections: [],
+  lists: []
+}
+
+/**
+ * @satisfies {FormDefinition}
+ */
 export const testFormDefinitionWithNoQuestions = {
   name: 'Test form',
   pages: [
@@ -149,6 +221,17 @@ export const testFormDefinitionWithNoQuestions = {
       controller: ControllerType.Summary
     }
   ],
+  conditions: [],
+  sections: [],
+  lists: []
+}
+
+/**
+ * @satisfies {FormDefinition}
+ */
+export const testFormDefinitionWithNoPages = {
+  name: 'Test form',
+  pages: [],
   conditions: [],
   sections: [],
   lists: []

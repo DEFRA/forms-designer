@@ -135,7 +135,7 @@ describe('editor.js', () => {
     const token = 'someToken'
     const expectedOptions1 = {
       payload: {
-        title: 'What is your name?',
+        title: '',
         path: '/what-is-your-name',
         components: [
           {
@@ -211,31 +211,27 @@ describe('editor.js', () => {
   }
 
   describe('resolvePageHeading', () => {
-    test('when checkbox unselected', () => {
+    test('page heading should override first question title', () => {
       expect(
-        resolvePageHeading(false, page, 'New page heading', page.components)
-      ).toBe('This is your first question')
-    })
-
-    test('when checkbox unselected and no components', () => {
-      expect(resolvePageHeading(false, page, 'New page heading', [])).toBe('')
-    })
-
-    test('when checkbox selected and page heading provided', () => {
-      expect(
-        resolvePageHeading(true, page, 'New page heading', page.components)
+        resolvePageHeading(page, 'New page heading', page.components)
       ).toBe('New page heading')
     })
 
-    test('when checkbox selected and page heading not provided', () => {
-      expect(resolvePageHeading(true, page, '', page.components)).toBe(
+    test('page heading should override even when no questions', () => {
+      expect(resolvePageHeading(page, 'New page heading', [])).toBe(
+        'New page heading'
+      )
+    })
+
+    test('should return first question title when no page heading', () => {
+      expect(resolvePageHeading(page, '', page.components)).toBe(
         'This is your first question'
       )
     })
 
-    test('when checkbox selected and page heading not provided and no questions', () => {
+    test('should return page heading from definition when form page heading not provided and no questions', () => {
       const pageCopy = { ...page, title: 'Test title' }
-      expect(resolvePageHeading(true, pageCopy, '', [])).toBe('Test title')
+      expect(resolvePageHeading(pageCopy, '', [])).toBe('Test title')
     })
   })
 
@@ -363,7 +359,7 @@ describe('editor.js', () => {
         const expectedOptionsPageHeading1 = {
           payload: {
             title: '',
-            path: '/'
+            path: '/my-new-page-title'
           },
           headers: { Authorization: `Bearer ${token}` }
         }
