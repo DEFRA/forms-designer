@@ -12,12 +12,13 @@ import {
 } from '~/src/common/constants/editor.js'
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
+import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import * as viewModel from '~/src/models/forms/editor-v2/question-type.js'
 import { editorv2Path } from '~/src/models/links.js'
 
-export const ROUTE_FULL_PATH_QUESTION = `/library/{slug}/editor-v2/page/{pageId}/question/{questionId?}`
+export const ROUTE_FULL_PATH_QUESTION = `/library/{slug}/editor-v2/page/{pageId}/question/{questionId}`
 
 const errorKey = sessionNames.validationFailure.editorQuestion
 
@@ -41,7 +42,7 @@ export const schema = Joi.object().keys({
 
 /**
  *
- * @param {string} questionType
+ * @param {string | undefined} questionType
  * @param {string} writtenAnswerSub - sub-type if 'written-answer-sub' selected in questionType
  * @param {string} dateSub - sub-type if 'date-sub' selected in questionType
  */
@@ -52,7 +53,7 @@ export function deriveQuestionType(questionType, writtenAnswerSub, dateSub) {
   if (questionType === QUESTION_TYPE_DATE_GROUP) {
     return dateSub
   }
-  return questionType
+  return /** @type {string | undefined} */ questionType
 }
 
 export default [
@@ -66,16 +67,16 @@ export default [
       const { yar } = request
       const { params, auth } = request
       const { token } = auth.credentials
-      const { slug, pageId } = params
+      const { slug, pageId, questionId } =
+        /** @type {{ slug: string, pageId: string, questionId: string }} */ (
+          params
+        )
 
       // Form metadata and page components
       const metadata = await forms.get(slug, token)
       const definition = await forms.getDraftFormDefinition(metadata.id, token)
 
-      // Validation errors
-      const validation = /** @type {ValidationFailure<FormEditor>} */ (
-        yar.flash(errorKey).at(0)
-      )
+      const validation = getValidationErrorsFromSession(yar, errorKey)
 
       return h.view(
         'forms/editor-v2/question',
@@ -83,6 +84,7 @@ export default [
           metadata,
           definition,
           pageId,
+          questionId,
           validation
         )
       )
@@ -106,11 +108,14 @@ export default [
     path: ROUTE_FULL_PATH_QUESTION,
     handler(request, h) {
       const { params, payload, yar } = request
-      const { slug, pageId, questionId } = params
+      const { slug, pageId, questionId } =
+        /** @type {{ slug: string, pageId: string, questionId: string}} */ (
+          params
+        )
       const { questionType, writtenAnswerSub, dateSub } = payload
 
       // Save in session until page is saved
-      yar.set(
+      yar.flash(
         sessionNames.questionType,
         deriveQuestionType(questionType, writtenAnswerSub, dateSub)
       )
@@ -118,10 +123,7 @@ export default [
       // Redirect to next page
       return h
         .redirect(
-          editorv2Path(
-            slug,
-            `page/${pageId ?? 'new'}/question/${questionId ?? 'new'}/details`
-          )
+          editorv2Path(slug, `page/${pageId}/question/${questionId}/details`)
         )
         .code(StatusCodes.SEE_OTHER)
     },
@@ -144,7 +146,6 @@ export default [
 ]
 
 /**
- * @import { FormEditor, FormEditorInputPage } from '@defra/forms-model'
+ * @import { FormEditorInputPage } from '@defra/forms-model'
  * @import { ServerRoute } from '@hapi/hapi'
- * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

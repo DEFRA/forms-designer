@@ -5,10 +5,6 @@
 
   <div class="govuk-form-group">
     <fieldset class="govuk-fieldset" aria-describedby="informationQuestion1-hint">
-      <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-        <h1 class="govuk-fieldset__heading">Edit question 1</h1>
-      </legend>
-
       {{ govukInput(fields.question) }}
 
       {{ govukTextarea(fields.hintText) }}
@@ -16,5 +12,7 @@
       {{ govukCheckboxes(fields.questionOptional) }}
 
       {{ govukInput(fields.shortDescription) }}
+
+      <input type="hidden" name="questionType" id="questionType" value="{{questionType}}" />
     </fieldset>
   </div>

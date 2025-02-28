@@ -1,4 +1,4 @@
-import { ComponentType } from '@defra/forms-model'
+import { ComponentType, hasComponents } from '@defra/forms-model'
 
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import {
@@ -12,7 +12,7 @@ import {
   baseModelFields,
   getFormSpecificNavigation
 } from '~/src/models/forms/editor-v2/common.js'
-import { formOverviewPath } from '~/src/models/links.js'
+import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
 
 /**
  * @param {string | undefined} pageHeadingVal
@@ -78,7 +78,6 @@ function hasUnderlyingData(pageHeadingVal, guidanceTextVal) {
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  * @param {string} pageId
- * @param {Partial<FormEditor>} [_editor]
  * @param {ValidationFailure<FormEditor>} [validation]
  * @param {string[]} [notification]
  */
@@ -86,7 +85,6 @@ export function questionsViewModel(
   metadata,
   definition,
   pageId,
-  _editor,
   validation,
   notification
 ) {
@@ -97,7 +95,7 @@ export function questionsViewModel(
 
   const pageIdx = definition.pages.findIndex((x) => x.id === pageId)
   const page = definition.pages[pageIdx]
-  const components = 'components' in page ? page.components : []
+  const components = hasComponents(page) ? page.components : []
 
   const firstQuestion = components.find(
     (comp) => comp.type !== ComponentType.Html
@@ -122,12 +120,15 @@ export function questionsViewModel(
     ? formValues?.guidanceText
     : guidanceTextFallback
 
+  const baseUrl = editorv2Path(metadata.slug, `page/${pageId}`)
+
   return {
     ...baseModelFields(metadata.slug, pageTitle),
     fields: { ...questionsFields(pageHeadingVal, guidanceTextVal, validation) },
     cardTitle: `Page ${pageIdx + 1} overview`,
     cardCaption: `Page ${pageIdx + 1}`,
     navigation,
+    baseUrl,
     errorList: buildErrorList(formErrors, ['questions']),
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
@@ -147,9 +148,10 @@ export function questionsViewModel(
           actions: {
             items: [
               {
-                href: '#',
+                href: `${baseUrl}/question/${comp2.id}/details`,
                 text: 'Change',
-                visuallyHiddenText: 'name'
+                visuallyHiddenText: 'name',
+                classes: 'govuk-link--no-visited-state'
               }
             ]
           }

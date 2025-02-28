@@ -34,7 +34,7 @@ describe('Editor v2 question routes', () => {
 
     const options = {
       method: 'get',
-      url: '/library/my-form-slug/editor-v2/page/p1/question/1',
+      url: '/library/my-form-slug/editor-v2/page/p1/question/c1',
       auth
     }
 

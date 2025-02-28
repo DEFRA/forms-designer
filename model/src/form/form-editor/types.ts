@@ -10,7 +10,7 @@ export interface FormEditor {
   /**
    * The type of the question
    */
-  questionType: string
+  questionType: string | undefined
 
   /**
    * The sub-type of written answer
