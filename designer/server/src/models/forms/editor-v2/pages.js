@@ -1,3 +1,5 @@
+import { hasComponents } from '@defra/forms-model'
+
 import {
   buildPreviewUrl,
   getFormSpecificNavigation
@@ -7,6 +9,30 @@ import {
   formOverviewBackLink,
   formOverviewPath
 } from '~/src/models/links.js'
+
+/**
+ * @param {FormDefinition} definition
+ */
+export function setPageHeadings(definition) {
+  if (!definition.pages.length) {
+    return definition
+  }
+
+  return {
+    ...definition,
+    pages: definition.pages.map((page) => {
+      if (page.title === '') {
+        return {
+          ...page,
+          title: hasComponents(page) ? page.components[0].title : ''
+        }
+      }
+      return {
+        ...page
+      }
+    })
+  }
+}
 
 /**
  * @param {FormMetadata} metadata
@@ -44,7 +70,7 @@ export function pagesViewModel(metadata, definition) {
   }
 
   const pageListModel = {
-    ...definition,
+    ...setPageHeadings(definition),
     formSlug: metadata.slug,
     previewBaseUrl,
     navigation,
