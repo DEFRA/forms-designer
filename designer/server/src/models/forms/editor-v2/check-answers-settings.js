@@ -1,0 +1,95 @@
+import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
+import { insertValidationErrors, stringHasValue } from '~/src/lib/utils.js'
+import {
+  GOVUK_LABEL__M,
+  SAVE_AND_CONTINUE,
+  baseModelFields,
+  getFormSpecificNavigation
+} from '~/src/models/forms/editor-v2/common.js'
+import { formOverviewPath } from '~/src/models/links.js'
+
+/**
+ * @param {string | undefined} needDeclarationVal
+ * @param {string | undefined} declarationTextVal
+ * @param {ValidationFailure<FormEditor>} [validation]
+ */
+function settingsFields(needDeclarationVal, declarationTextVal, validation) {
+  return {
+    needDeclaration: {
+      name: 'needDeclaration',
+      id: 'needDeclaration',
+      items: [
+        {
+          value: 'false',
+          text: 'No'
+        },
+        {
+          value: 'true',
+          text: 'Yes'
+        }
+      ],
+      value: needDeclarationVal,
+      ...insertValidationErrors(validation?.formErrors.needDeclaration)
+    },
+    declarationText: {
+      name: 'declarationText',
+      id: 'declarationText',
+      label: {
+        text: 'Declaration text',
+        classes: GOVUK_LABEL__M
+      },
+      hint: {
+        text: 'Use a declaration if you need users to declare or agree to something before they submit the form'
+      },
+      rows: 3,
+      value: declarationTextVal,
+      ...insertValidationErrors(validation?.formErrors.declarationText)
+    }
+  }
+}
+
+/**
+ * @param {FormMetadata} metadata
+ * @param {FormDefinition} definition
+ * @param {string} pageId
+ * @param {ValidationFailure<FormEditor>} [validation]
+ * @param {string[]} [notification]
+ */
+export function checkAnswersSettingsViewModel(
+  metadata,
+  definition,
+  pageId,
+  validation,
+  notification
+) {
+  const pageTitle = metadata.title
+  const formPath = formOverviewPath(metadata.slug)
+  const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
+  const { formValues, formErrors } = validation ?? {}
+
+  const pageIdx = definition.pages.findIndex((x) => x.id === pageId)
+
+  const declarationTextVal =
+    formValues?.declarationText ?? definition.declaration
+  const needDeclarationVal = `${stringHasValue(declarationTextVal)}`
+
+  return {
+    ...baseModelFields(metadata.slug, pageTitle),
+    fields: {
+      ...settingsFields(needDeclarationVal, declarationTextVal, validation)
+    },
+    cardTitle: `Page ${pageIdx + 1} overview`,
+    cardCaption: `Page ${pageIdx + 1}`,
+    navigation,
+    errorList: buildErrorList(formErrors, ['questions']),
+    formErrors: validation?.formErrors,
+    formValues: validation?.formValues,
+    buttonText: SAVE_AND_CONTINUE,
+    notification
+  }
+}
+
+/**
+ * @import { FormMetadata, FormDefinition, FormEditor, HtmlComponent } from '@defra/forms-model'
+ * @import { ValidationFailure } from '~/src/common/helpers/types.js'
+ */

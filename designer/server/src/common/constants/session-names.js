@@ -17,6 +17,9 @@ export const sessionNames = {
     submissionGuidance: /** @type {const} */ (
       'submissionGuidanceValidationFailure'
     ),
+    editorCheckAnswersSettings: /** @type {const} */ (
+      'checkAnswersSettingsValidationFailure'
+    ),
     editorPage: /** @type {const} */ ('pageValidationFailure'),
     editorQuestions: /** @type {const} */ ('questionsValidationFailure'),
     editorQuestion: /** @type {const} */ ('questionValidationFailure'),
