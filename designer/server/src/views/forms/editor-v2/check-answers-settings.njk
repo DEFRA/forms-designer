@@ -1,0 +1,53 @@
+{% extends "layouts/page.njk" %}
+
+{% from "page-body/macro.njk" import appPageBody %}
+{% from "editor-card/macro.njk" import appEditorCard %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/skip-link/macro.njk" import govukSkipLink %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% set declarationHtml %}
+{{ govukTextarea(fields.declarationText) }}
+{%- include "../../../../views/forms/editor-v2/partials/markdown-help.njk" -%}
+{% endset -%}
+
+{% block content %}
+  {% call appPageBody({
+  heading: pageHeading,
+  description: pageDescription,
+  caption: pageCaption,
+  actions: pageActions,
+  classes: "govuk-grid-column-full govuk-grid-column-one-half-from-desktop",
+  backLink: backLink,
+  errorList: errorList,
+  useNewMasthead: true
+}) %}
+
+  {% call appEditorCard({
+    title: cardTitle,
+    caption: cardCaption,
+    heading: cardHeading,
+    notification: notification
+  }) %}
+
+    <form class="form" method="post">
+
+      {{ govukRadios(fields.needDeclaration | setConditionalAttribute(1, declarationHtml)) }}
+      
+      {{ govukButton({
+        text: 'Save changes'
+      }) }}
+      
+    </form>
+    {% endcall %}
+
+  {% endcall %}
+{% endblock %}
+
+{% block mainEnd %}
+  {{ super() }}
+{% endblock %}
