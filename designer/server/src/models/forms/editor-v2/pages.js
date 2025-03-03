@@ -48,7 +48,7 @@ export function pagesViewModel(metadata, definition) {
       text: 'Add new page',
       href: editorv2Path(metadata.slug, 'page'),
       classes: 'govuk-button--inverse',
-      attributes: /** @type {string | undefined} */ (undefined)
+      attributes: /** @type {string | null} */ (null)
     }
   ]
 
@@ -56,7 +56,7 @@ export function pagesViewModel(metadata, definition) {
     text: 'Re-order pages',
     href: '/reorder',
     classes: 'govuk-button--secondary',
-    attributes: undefined
+    attributes: null
   }
 
   const numOfNonSummaryPages = definition.pages.filter(
