@@ -10,7 +10,8 @@ import {
   SAVE_AND_CONTINUE,
   baseModelFields,
   getFormSpecificNavigation,
-  getPageNum
+  getPageNum,
+  getQuestionNum
 } from '~/src/models/forms/editor-v2/common.js'
 import { formOverviewPath } from '~/src/models/links.js'
 
@@ -87,12 +88,14 @@ const dateSubItems = [
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  * @param {string} pageId
+ * @param {string} questionId
  * @param {ValidationFailure<FormEditor>} [validation]
  */
 export function questionTypeViewModel(
   metadata,
   definition,
   pageId,
+  questionId,
   validation
 ) {
   const pageTitle = metadata.title
@@ -101,6 +104,7 @@ export function questionTypeViewModel(
   const { formValues, formErrors } = validation ?? {}
 
   const pageNum = getPageNum(definition, pageId)
+  const questionNum = getQuestionNum(definition, pageId, questionId)
 
   return {
     ...baseModelFields(metadata.slug, pageTitle),
@@ -108,8 +112,8 @@ export function questionTypeViewModel(
     errorList: buildErrorList(formErrors, ['questionType']),
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
-    cardTitle: 'Question 1',
-    cardCaption: `Page ${pageNum}: question 1`,
+    cardTitle: `Question ${questionNum}`,
+    cardCaption: `Page ${pageNum}: question ${questionNum}`,
     fields: {
       questionType: {
         idPrefix: 'questionType',

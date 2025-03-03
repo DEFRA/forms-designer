@@ -25,7 +25,7 @@
             pageId: page.id,
             pageTitle: page.title,
             pageEditUrl: "/library/" + formSlug + "/editor-v2/page/" + page.id + "/questions",
-            pagePreviewUrl: "/library/" + formSlug + "/editor-v2/page/" + page.id + "/preview",
+            pagePreviewUrl: previewBaseUrl + page.path + "?force",
             rows: page.components,
             isEndPage: loop.last,
             showMoveButtons: false

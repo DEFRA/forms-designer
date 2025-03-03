@@ -57,16 +57,46 @@ export const testFormDefinitionWithSummaryOnly = {
 /**
  * @satisfies {FormDefinition}
  */
-export const testFormDefinitionWithTwoQuestions = {
+export const testFormDefinitionWithoutSummary = {
   name: 'Test form',
   pages: [
     {
-      id: 'f07fbbb1-268c-429b-bba5-5fc1f7353d7c',
+      id: 'p1',
       path: '/page-one',
       title: 'Page one',
       section: 'section',
       components: [
         {
+          type: ComponentType.TextField,
+          name: 'textField',
+          title: 'This is your first field',
+          hint: 'Help text',
+          options: {},
+          schema: {}
+        }
+      ],
+      next: [{ path: '/summary' }]
+    }
+  ],
+  conditions: [],
+  sections: [],
+  lists: []
+}
+
+/**
+ * @satisfies {FormDefinition}
+ */
+export const testFormDefinitionWithTwoQuestions = {
+  name: 'Test form',
+  pages: [
+    {
+      id: 'p1',
+      path: '/page-one',
+      title: 'Page one',
+      section: 'section',
+      components: [
+        {
+          id: 'q1',
           type: ComponentType.TextField,
           name: 'textField',
           title: 'This is your first question',
@@ -75,6 +105,7 @@ export const testFormDefinitionWithTwoQuestions = {
           schema: {}
         },
         {
+          id: 'q2',
           type: ComponentType.TextField,
           name: 'textField',
           title: 'This is your second question',
@@ -86,7 +117,79 @@ export const testFormDefinitionWithTwoQuestions = {
       next: [{ path: '/summary' }]
     },
     {
-      id: '2',
+      id: 'p2',
+      title: 'Summary',
+      path: '/summary',
+      controller: ControllerType.Summary
+    }
+  ],
+  conditions: [],
+  sections: [],
+  lists: []
+}
+
+/**
+ * @satisfies {FormDefinition}
+ */
+export const testFormDefinitionWithTwoPagesAndQuestions = {
+  name: 'Test form',
+  pages: [
+    {
+      id: 'p1',
+      path: '/page-one',
+      title: 'Page one',
+      section: 'section',
+      components: [
+        {
+          id: 'q1',
+          type: ComponentType.TextField,
+          name: 'textField',
+          title: 'This is your first question',
+          hint: 'Help text',
+          options: {},
+          schema: {}
+        },
+        {
+          id: 'q2',
+          type: ComponentType.TextField,
+          name: 'textField',
+          title: 'This is your second question',
+          hint: 'Help text',
+          options: {},
+          schema: {}
+        }
+      ],
+      next: [{ path: '/summary' }]
+    },
+    {
+      id: 'p2',
+      path: '/page-two',
+      title: 'Page two',
+      section: 'section',
+      components: [
+        {
+          id: 'q1',
+          type: ComponentType.TextField,
+          name: 'textField',
+          title: 'This is your first question - page two',
+          hint: 'Help text',
+          options: {},
+          schema: {}
+        },
+        {
+          id: 'q2',
+          type: ComponentType.TextField,
+          name: 'textField',
+          title: 'This is your second question - page two',
+          hint: 'Help text',
+          options: {},
+          schema: {}
+        }
+      ],
+      next: [{ path: '/summary' }]
+    },
+    {
+      id: 'p3',
       title: 'Summary',
       path: '/summary',
       controller: ControllerType.Summary
@@ -104,7 +207,7 @@ export const testFormDefinitionWithNoQuestions = {
   name: 'Test form',
   pages: [
     {
-      id: 'f07fbbb1-268c-429b-bba5-5fc1f7353d7c',
+      id: 'p1',
       path: '/page-one',
       title: 'Page one',
       section: 'section',
@@ -112,12 +215,23 @@ export const testFormDefinitionWithNoQuestions = {
       next: [{ path: '/summary' }]
     },
     {
-      id: '2',
+      id: 'p2',
       title: 'Summary',
       path: '/summary',
       controller: ControllerType.Summary
     }
   ],
+  conditions: [],
+  sections: [],
+  lists: []
+}
+
+/**
+ * @satisfies {FormDefinition}
+ */
+export const testFormDefinitionWithNoPages = {
+  name: 'Test form',
+  pages: [],
   conditions: [],
   sections: [],
   lists: []

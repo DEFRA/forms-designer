@@ -5,7 +5,8 @@ import {
   addPageAndFirstQuestion,
   addQuestion,
   resolvePageHeading,
-  setPageHeadingAndGuidance
+  setPageHeadingAndGuidance,
+  updateQuestion
 } from '~/src/lib/editor.js'
 import { delJson, patchJson, postJson, putJson } from '~/src/lib/fetch.js'
 
@@ -134,7 +135,7 @@ describe('editor.js', () => {
     const token = 'someToken'
     const expectedOptions1 = {
       payload: {
-        title: 'What is your name?',
+        title: '',
         path: '/what-is-your-name',
         components: [
           {
@@ -210,38 +211,34 @@ describe('editor.js', () => {
   }
 
   describe('resolvePageHeading', () => {
-    test('when checkbox unselected', () => {
+    test('page heading should override first question title', () => {
       expect(
-        resolvePageHeading(false, page, 'New page heading', page.components)
-      ).toBe('This is your first question')
-    })
-
-    test('when checkbox unselected and no components', () => {
-      expect(resolvePageHeading(false, page, 'New page heading', [])).toBe('')
-    })
-
-    test('when checkbox selected and page heading provided', () => {
-      expect(
-        resolvePageHeading(true, page, 'New page heading', page.components)
+        resolvePageHeading(page, 'New page heading', page.components)
       ).toBe('New page heading')
     })
 
-    test('when checkbox selected and page heading not provided', () => {
-      expect(resolvePageHeading(true, page, '', page.components)).toBe(
+    test('page heading should override even when no questions', () => {
+      expect(resolvePageHeading(page, 'New page heading', [])).toBe(
+        'New page heading'
+      )
+    })
+
+    test('should return first question title when no page heading', () => {
+      expect(resolvePageHeading(page, '', page.components)).toBe(
         'This is your first question'
       )
     })
 
-    test('when checkbox selected and page heading not provided and no questions', () => {
+    test('should return page heading from definition when form page heading not provided and no questions', () => {
       const pageCopy = { ...page, title: 'Test title' }
-      expect(resolvePageHeading(true, pageCopy, '', [])).toBe('Test title')
+      expect(resolvePageHeading(pageCopy, '', [])).toBe('Test title')
     })
   })
 
   describe('addQuestion', () => {
     const formId = '98dbfb6c-93b7-41dc-86e7-02c7abe4ba38'
     const requestUrl = new URL(
-      `./${formId}/definition/draft/pages/12345/questions`,
+      `./${formId}/definition/draft/pages/12345/components`,
       formsEndpoint
     )
     const token = 'someToken'
@@ -288,6 +285,54 @@ describe('editor.js', () => {
     })
   })
 
+  describe('updateQuestion', () => {
+    const formId = '98dbfb6c-93b7-41dc-86e7-02c7abe4ba38'
+    const requestUrl = new URL(
+      `./${formId}/definition/draft/pages/12345/components/456`,
+      formsEndpoint
+    )
+    const token = 'someToken'
+    const expectedOptions2 = {
+      payload: {
+        title: 'What is your name?',
+        name: 'what-is-your-name',
+        type: ComponentType.TextField
+      },
+      headers: { Authorization: `Bearer ${token}` }
+    }
+
+    describe('when putJson succeeds', () => {
+      test('returns response body', async () => {
+        mockedPutJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: { id: '456' }
+        })
+
+        const result = await updateQuestion(
+          formId,
+          token,
+          '12345',
+          '456',
+          questionDetails
+        )
+
+        expect(mockedPutJson).toHaveBeenCalledWith(requestUrl, expectedOptions2)
+        expect(result).toEqual({ id: '456' })
+      })
+    })
+
+    describe('when putJson fails', () => {
+      test('throws the error', async () => {
+        const testError = new Error('Network error')
+        mockedPutJson.mockRejectedValueOnce(testError)
+
+        await expect(
+          updateQuestion(formId, token, '12345', '456', questionDetails)
+        ).rejects.toThrow(testError)
+      })
+    })
+  })
+
   describe('setPageHeadingAndGuidance', () => {
     const formId = '98dbfb6c-93b7-41dc-86e7-02c7abe4ba38'
     const pageRequestUrl = new URL(
@@ -314,7 +359,7 @@ describe('editor.js', () => {
         const expectedOptionsPageHeading1 = {
           payload: {
             title: '',
-            path: '/'
+            path: '/my-new-page-title'
           },
           headers: { Authorization: `Bearer ${token}` }
         }
