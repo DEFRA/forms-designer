@@ -1,4 +1,4 @@
-import { hasComponents } from '@defra/forms-model'
+import { ControllerType, hasComponents } from '@defra/forms-model'
 
 import {
   buildPreviewUrl,
@@ -47,26 +47,33 @@ export function pagesViewModel(metadata, definition) {
     {
       text: 'Add new page',
       href: editorv2Path(metadata.slug, 'page'),
-      classes: 'govuk-button--inverse'
+      classes: 'govuk-button--inverse',
+      attributes: /** @type {string | undefined} */ (undefined)
     }
   ]
 
-  const extraPageActions = [
-    {
-      text: 'Re-order pages',
-      href: '/reorder',
-      classes: 'govuk-button--secondary'
-    },
-    {
+  const reorderAction = {
+    text: 'Re-order pages',
+    href: '/reorder',
+    classes: 'govuk-button--secondary',
+    attributes: undefined
+  }
+
+  const numOfNonSummaryPages = definition.pages.filter(
+    (x) => x.controller !== ControllerType.Summary
+  ).length
+
+  if (numOfNonSummaryPages > 1) {
+    pageActions.push(reorderAction)
+  }
+
+  if (numOfNonSummaryPages > 0) {
+    pageActions.push({
       text: 'Preview form',
       href: previewBaseUrl,
       classes: 'govuk-link govuk-link--inverse',
       attributes: 'target="_blank"'
-    }
-  ]
-
-  if (definition.pages.length > 1) {
-    pageActions.push(...extraPageActions)
+    })
   }
 
   const pageListModel = {
