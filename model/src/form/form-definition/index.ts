@@ -200,6 +200,13 @@ export const pageSchema = Joi.object<Page>().keys({
   view: Joi.string().optional()
 })
 
+/**
+ * V2 engine schema - used with new editor
+ */
+export const pageSchemaV2 = pageSchema.append({
+  title: Joi.string().allow('').required()
+})
+
 const baseListItemSchema = Joi.object<Item>().keys({
   text: Joi.string().allow(''),
   description: Joi.string().allow('').optional(),
@@ -276,7 +283,11 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
     startPage: Joi.string().optional(),
     pages: Joi.array<Page>()
       .required()
-      .items(pageSchema)
+      .when('engine', {
+        is: 'V2',
+        then: Joi.array<Page>().items(pageSchemaV2),
+        otherwise: Joi.array<Page>().items(pageSchema)
+      })
       .unique('path')
       .unique('id', { ignoreUndefined: true }),
     sections: Joi.array<Section>()

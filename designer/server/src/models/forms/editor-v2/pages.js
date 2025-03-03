@@ -1,3 +1,5 @@
+import { ControllerType, hasComponents } from '@defra/forms-model'
+
 import {
   buildPreviewUrl,
   getFormSpecificNavigation
@@ -7,6 +9,30 @@ import {
   formOverviewBackLink,
   formOverviewPath
 } from '~/src/models/links.js'
+
+/**
+ * @param {FormDefinition} definition
+ */
+export function setPageHeadings(definition) {
+  if (!definition.pages.length) {
+    return definition
+  }
+
+  return {
+    ...definition,
+    pages: definition.pages.map((page) => {
+      if (page.title === '') {
+        return {
+          ...page,
+          title: hasComponents(page) ? page.components[0].title : ''
+        }
+      }
+      return {
+        ...page
+      }
+    })
+  }
+}
 
 /**
  * @param {FormMetadata} metadata
@@ -21,30 +47,37 @@ export function pagesViewModel(metadata, definition) {
     {
       text: 'Add new page',
       href: editorv2Path(metadata.slug, 'page'),
-      classes: 'govuk-button--inverse'
+      classes: 'govuk-button--inverse',
+      attributes: /** @type {string | null} */ (null)
     }
   ]
 
-  const extraPageActions = [
-    {
-      text: 'Re-order pages',
-      href: '/reorder',
-      classes: 'govuk-button--secondary'
-    },
-    {
+  const reorderAction = {
+    text: 'Re-order pages',
+    href: '/reorder',
+    classes: 'govuk-button--secondary',
+    attributes: null
+  }
+
+  const numOfNonSummaryPages = definition.pages.filter(
+    (x) => x.controller !== ControllerType.Summary
+  ).length
+
+  if (numOfNonSummaryPages > 1) {
+    pageActions.push(reorderAction)
+  }
+
+  if (numOfNonSummaryPages > 0) {
+    pageActions.push({
       text: 'Preview form',
       href: previewBaseUrl,
       classes: 'govuk-link govuk-link--inverse',
       attributes: 'target="_blank"'
-    }
-  ]
-
-  if (definition.pages.length > 1) {
-    pageActions.push(...extraPageActions)
+    })
   }
 
   const pageListModel = {
-    ...definition,
+    ...setPageHeadings(definition),
     formSlug: metadata.slug,
     previewBaseUrl,
     navigation,
