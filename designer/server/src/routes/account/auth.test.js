@@ -78,7 +78,7 @@ describe('Authentiation', () => {
     // this is invalid - session should not be accepted
     const libraryResponse2S1 = await doCallLibrary(server, cookiesS1)
     expect(libraryResponse2S1.statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
-    expect(libraryResponse2S1.headers.location).toBe('/account/signed-out') // redirect to signed out
+    expect(libraryResponse2S1.headers.location).toBe('/auth/callback') // invalid sesssion, bump user back to the AAD sign in flow
 
     // attempt to access a page with session two
     // this is valid as it's the active session
