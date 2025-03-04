@@ -24,9 +24,9 @@
             pageNum: loop.index,
             pageId: page.id,
             pageTitle: page.title,
-            pageEditUrl: "/library/" + formSlug + "/editor-v2/page/" + page.id + "/questions",
+            pageEditUrl: (editBaseUrl + page.id) + ("/check-answers-settings" if loop.last else "/questions"),
             pagePreviewUrl: previewBaseUrl + page.path + "?force",
-            rows: page.components,
+            rows: page.questionRows,
             isEndPage: loop.last,
             showMoveButtons: false
             }) }}

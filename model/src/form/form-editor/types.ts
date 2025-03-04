@@ -56,11 +56,26 @@ export interface FormEditor {
    * The page guidance text
    */
   guidanceText: string
+
+  /**
+   * The value of radio to reveal declaration text field
+   */
+  needDeclaration: string
+
+  /**
+   * The check answers declaration text
+   */
+  declarationText: string
 }
 
 export type FormEditorInputPage = Pick<
   FormEditor,
   'pageType' | 'questionType' | 'writtenAnswerSub' | 'dateSub'
+>
+
+export type FormEditorInputCheckAnswersSettings = Pick<
+  FormEditor,
+  'needDeclaration' | 'declarationText'
 >
 
 export type FormEditorInputQuestion = Pick<

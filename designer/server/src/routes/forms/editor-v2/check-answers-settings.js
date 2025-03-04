@@ -1,37 +1,33 @@
 import {
-  guidanceTextSchema,
-  pageHeadingAndGuidanceSchema,
-  pageHeadingSchema
+  declarationTextSchema,
+  needDeclarationSchema
 } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
-import { setPageHeadingAndGuidance } from '~/src/lib/editor.js'
+import { setCheckAnswersDeclaration } from '~/src/lib/editor.js'
 import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
+import * as viewModel from '~/src/models/forms/editor-v2/check-answers-settings.js'
 import { CHANGES_SAVED_SUCCESSFULLY } from '~/src/models/forms/editor-v2/common.js'
-import * as viewModel from '~/src/models/forms/editor-v2/questions.js'
 import { editorv2Path } from '~/src/models/links.js'
 
-export const ROUTE_FULL_PATH_QUESTIONS = `/library/{slug}/editor-v2/page/{pageId}/questions`
+export const ROUTE_FULL_PATH_CHECK_ANSWERS_SETTINGS = `/library/{slug}/editor-v2/page/{pageId}/check-answers-settings`
 
-export const ROUTE_PATH_QUESTION_DETAILS =
-  '/library/{slug}/editor-v2/page/{pageId}/question/{questionId}'
-
-const errorKey = sessionNames.validationFailure.editorQuestions
+const errorKey = sessionNames.validationFailure.editorCheckAnswersSettings
+const notificationKey = sessionNames.successNotification
 
 export const schema = Joi.object().keys({
-  pageHeadingAndGuidance: pageHeadingAndGuidanceSchema,
-  pageHeading: Joi.when('pageHeadingAndGuidance', {
+  needDeclaration: needDeclarationSchema,
+  declarationText: Joi.when('needDeclaration', {
     is: 'true',
-    then: pageHeadingSchema.required().messages({
-      '*': 'Enter a page heading'
+    then: declarationTextSchema.required().messages({
+      '*': 'Enter the information you need users to declare or agree to'
     })
-  }),
-  guidanceText: guidanceTextSchema
+  })
 })
 
 export default [
@@ -40,29 +36,28 @@ export default [
    */
   ({
     method: 'GET',
-    path: ROUTE_FULL_PATH_QUESTIONS,
+    path: ROUTE_FULL_PATH_CHECK_ANSWERS_SETTINGS,
     async handler(request, h) {
       const { yar } = request
       const { params, auth } = request
       const { token } = auth.credentials
-      const { slug, pageId } = /** @type {{ slug: string, pageId: string }} */ (
-        params
-      )
+      const { slug, pageId } = params
 
       // Form metadata and page components
       const metadata = await forms.get(slug, token)
       const definition = await forms.getDraftFormDefinition(metadata.id, token)
 
+      // Validation errors
       const validation = getValidationErrorsFromSession(yar, errorKey)
 
       // Saved banner
       const notification = /** @type {string[] | undefined} */ (
-        yar.flash(sessionNames.successNotification).at(0)
+        yar.flash(notificationKey).at(0)
       )
 
       return h.view(
-        'forms/editor-v2/questions',
-        viewModel.questionsViewModel(
+        'forms/editor-v2/check-answers-settings',
+        viewModel.checkAnswersSettingsViewModel(
           metadata,
           definition,
           pageId,
@@ -82,11 +77,11 @@ export default [
     }
   }),
   /**
-   * @satisfies {ServerRoute<{ Payload: Partial<FormEditorInputPageSettings> }>}
+   * @satisfies {ServerRoute<{ Payload: Partial<FormEditorInputCheckAnswersSettings> }>}
    */
   ({
     method: 'POST',
-    path: ROUTE_FULL_PATH_QUESTIONS,
+    path: ROUTE_FULL_PATH_CHECK_ANSWERS_SETTINGS,
     async handler(request, h) {
       const { params, auth, payload, yar } = request
       const { slug, pageId } = /** @type {{ slug: string, pageId: string }} */ (
@@ -97,7 +92,8 @@ export default [
       // Form metadata and page components
       const metadata = await forms.get(slug, token)
       const definition = await forms.getDraftFormDefinition(metadata.id, token)
-      await setPageHeadingAndGuidance(
+
+      await setCheckAnswersDeclaration(
         metadata.id,
         token,
         pageId,
@@ -107,10 +103,8 @@ export default [
 
       yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
 
-      // Redirect to same page
-      return h
-        .redirect(editorv2Path(slug, `page/${pageId}/questions`))
-        .code(StatusCodes.SEE_OTHER)
+      // Redirect to pages list
+      return h.redirect(editorv2Path(slug, 'pages')).code(StatusCodes.SEE_OTHER)
     },
     options: {
       validate: {
@@ -131,6 +125,7 @@ export default [
 ]
 
 /**
- * @import { FormEditorInputPageSettings } from '@defra/forms-model'
+ * @import { FormEditor, FormEditorInputCheckAnswersSettings } from '@defra/forms-model'
  * @import { ServerRoute } from '@hapi/hapi'
+ * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

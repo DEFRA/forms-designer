@@ -4,7 +4,6 @@
 {% from "govuk/components/textarea/macro.njk" import govukTextarea %}
 
   <div class="govuk-form-group">
-    <fieldset class="govuk-fieldset" aria-describedby="informationQuestion1-hint">
       {{ govukInput(fields.question) }}
 
       {{ govukTextarea(fields.hintText) }}
@@ -14,5 +13,4 @@
       {{ govukInput(fields.shortDescription) }}
 
       <input type="hidden" name="questionType" id="questionType" value="{{questionType}}" />
-    </fieldset>
   </div>

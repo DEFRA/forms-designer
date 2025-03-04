@@ -1,10 +1,12 @@
 import { ComponentType, ControllerType } from '@defra/forms-model'
 
+import { testFormDefinitionWithExistingGuidance } from '~/src/__stubs__/form-definition.js'
 import config from '~/src/config.js'
 import {
   addPageAndFirstQuestion,
   addQuestion,
   resolvePageHeading,
+  setCheckAnswersDeclaration,
   setPageHeadingAndGuidance,
   updateQuestion
 } from '~/src/lib/editor.js'
@@ -45,11 +47,13 @@ const formDefinition = {
   name: 'Test form',
   pages: [
     {
+      id: 'p1',
       path: '/page-one',
       title: 'Page one',
       section: 'section',
       components: [
         {
+          id: 'c1',
           type: ComponentType.TextField,
           name: 'textField',
           title: 'This is your first field',
@@ -61,48 +65,7 @@ const formDefinition = {
       next: [{ path: '/summary' }]
     },
     {
-      title: 'Summary',
-      path: '/summary',
-      controller: ControllerType.Summary
-    }
-  ],
-  conditions: [],
-  sections: [],
-  lists: []
-}
-
-/**
- * @satisfies {FormDefinition}
- */
-const formDefinitionWithExistingGuidance = {
-  name: 'Test form',
-  pages: [
-    {
-      path: '/page-one',
-      title: 'Page one',
-      section: 'section',
-      id: '12345',
-      components: [
-        {
-          id: '45678',
-          type: ComponentType.Html,
-          name: 'html-guidance',
-          title: 'html-title',
-          content: 'Original guidance',
-          options: {}
-        },
-        {
-          type: ComponentType.TextField,
-          name: 'textField',
-          title: 'This is your first field',
-          hint: 'Help text',
-          options: {},
-          schema: {}
-        }
-      ],
-      next: [{ path: '/summary' }]
-    },
-    {
+      id: 'p2',
       title: 'Summary',
       path: '/summary',
       controller: ControllerType.Summary
@@ -481,7 +444,7 @@ describe('editor.js', () => {
         formId,
         token,
         '12345',
-        formDefinitionWithExistingGuidance,
+        testFormDefinitionWithExistingGuidance,
         {
           pageHeading: 'My new page title',
           pageHeadingAndGuidance: 'true',
@@ -519,9 +482,112 @@ describe('editor.js', () => {
         formId,
         token,
         '12345',
-        formDefinitionWithExistingGuidance,
+        testFormDefinitionWithExistingGuidance,
         {
           pageHeadingAndGuidance: 'false'
+        }
+      )
+
+      expect(mockedDelJson).toHaveBeenCalledWith(
+        removeGuidanceRequestUrl,
+        expectedOptionsGuidance
+      )
+      expect(mockedPostJson).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('setCheckAnswersDeclaration', () => {
+    const formId = '98dbfb6c-93b7-41dc-86e7-02c7abe4ba38'
+    const newGuidanceRequestUrl = new URL(
+      `./${formId}/definition/draft/pages/12345/components?prepend=true`,
+      formsEndpoint
+    )
+    const existingGuidanceRequestUrl = new URL(
+      `./${formId}/definition/draft/pages/12345/components/45678`,
+      formsEndpoint
+    )
+    const token = 'someToken'
+
+    describe('when patchJson succeeds', () => {
+      test('returns response body when checkbox selected and value in declaration', async () => {
+        const expectedOptionsDeclaration = {
+          payload: {
+            content: 'Some declaration',
+            type: 'Html',
+            id: undefined
+          },
+          headers: { Authorization: `Bearer ${token}` }
+        }
+
+        await setCheckAnswersDeclaration(
+          formId,
+          token,
+          '12345',
+          formDefinition,
+          {
+            needDeclaration: 'true',
+            declarationText: 'Some declaration'
+          }
+        )
+
+        expect(mockedPostJson).toHaveBeenCalledWith(
+          newGuidanceRequestUrl,
+          expectedOptionsDeclaration
+        )
+        expect(mockedPutJson).not.toHaveBeenCalled()
+      })
+    })
+
+    test('handles overwriting of existing guidance', async () => {
+      const expectedOptionsDeclaration = {
+        payload: {
+          content: 'Some declaration text 2',
+          type: 'Html',
+          id: '45678'
+        },
+        headers: { Authorization: `Bearer ${token}` }
+      }
+
+      await setCheckAnswersDeclaration(
+        formId,
+        token,
+        '12345',
+        testFormDefinitionWithExistingGuidance,
+        {
+          needDeclaration: 'true',
+          declarationText: 'Some declaration text 2'
+        }
+      )
+
+      expect(mockedPutJson).toHaveBeenCalledWith(
+        existingGuidanceRequestUrl,
+        expectedOptionsDeclaration
+      )
+      expect(mockedPostJson).not.toHaveBeenCalled()
+    })
+
+    test('handles removing existing guidance if user has now blanked text or unselected checkbox', async () => {
+      const removeGuidanceRequestUrl = new URL(
+        `./${formId}/definition/draft/pages/12345/components/45678`,
+        formsEndpoint
+      )
+
+      mockedPatchJson.mockResolvedValueOnce({
+        response: createMockResponse(),
+        body: {}
+      })
+
+      const expectedOptionsGuidance = {
+        headers: { Authorization: `Bearer ${token}` }
+      }
+
+      await setCheckAnswersDeclaration(
+        formId,
+        token,
+        '12345',
+        testFormDefinitionWithExistingGuidance,
+        {
+          needDeclaration: 'false'
         }
       )
 
