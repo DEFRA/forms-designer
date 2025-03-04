@@ -32,8 +32,6 @@ export function mapQuestionRows(page) {
             comp.type === ComponentType.Html ? ellipsise(comp.content) : ''
           )
         )
-        // text: comp.type === ComponentType.Html ? ellipsise(comp.content) : '',
-        // classes: 'page-panel-left-end-preserve-newlines'
       }
     }))
   }
