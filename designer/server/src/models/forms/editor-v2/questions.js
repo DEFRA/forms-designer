@@ -137,7 +137,10 @@ export function questionsViewModel(
             text: `Question ${idx2 + 1}`
           },
           value: {
-            text: comp2.title
+            text:
+              comp2.options?.required === false
+                ? `${comp2.title} (optional)`
+                : comp2.title
           },
           actions: {
             items: [

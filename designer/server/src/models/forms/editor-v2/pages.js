@@ -41,7 +41,10 @@ export function mapQuestionRows(page) {
       text: `Question ${idx + 1}`
     },
     value: {
-      text: comp.title
+      text:
+        comp.options?.required === false
+          ? `${comp.title} (optional)`
+          : comp.title
     }
   }))
 }
