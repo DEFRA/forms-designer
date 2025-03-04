@@ -1,5 +1,6 @@
 import { ComponentType, ControllerType } from '@defra/forms-model'
 
+import { testFormDefinitionWithExistingGuidance } from '~/src/__stubs__/form-definition.js'
 import config from '~/src/config.js'
 import {
   addPageAndFirstQuestion,
@@ -65,48 +66,6 @@ const formDefinition = {
     },
     {
       id: 'p2',
-      title: 'Summary',
-      path: '/summary',
-      controller: ControllerType.Summary
-    }
-  ],
-  conditions: [],
-  sections: [],
-  lists: []
-}
-
-/**
- * @satisfies {FormDefinition}
- */
-const formDefinitionWithExistingGuidance = {
-  name: 'Test form',
-  pages: [
-    {
-      path: '/page-one',
-      title: 'Page one',
-      section: 'section',
-      id: '12345',
-      components: [
-        {
-          id: '45678',
-          type: ComponentType.Html,
-          name: 'html-guidance',
-          title: 'html-title',
-          content: 'Original guidance',
-          options: {}
-        },
-        {
-          type: ComponentType.TextField,
-          name: 'textField',
-          title: 'This is your first field',
-          hint: 'Help text',
-          options: {},
-          schema: {}
-        }
-      ],
-      next: [{ path: '/summary' }]
-    },
-    {
       title: 'Summary',
       path: '/summary',
       controller: ControllerType.Summary
@@ -485,7 +444,7 @@ describe('editor.js', () => {
         formId,
         token,
         '12345',
-        formDefinitionWithExistingGuidance,
+        testFormDefinitionWithExistingGuidance,
         {
           pageHeading: 'My new page title',
           pageHeadingAndGuidance: 'true',
@@ -523,7 +482,7 @@ describe('editor.js', () => {
         formId,
         token,
         '12345',
-        formDefinitionWithExistingGuidance,
+        testFormDefinitionWithExistingGuidance,
         {
           pageHeadingAndGuidance: 'false'
         }
@@ -593,7 +552,7 @@ describe('editor.js', () => {
         formId,
         token,
         '12345',
-        formDefinitionWithExistingGuidance,
+        testFormDefinitionWithExistingGuidance,
         {
           needDeclaration: 'true',
           declarationText: 'Some declaration text 2'
@@ -626,7 +585,7 @@ describe('editor.js', () => {
         formId,
         token,
         '12345',
-        formDefinitionWithExistingGuidance,
+        testFormDefinitionWithExistingGuidance,
         {
           needDeclaration: 'false'
         }
