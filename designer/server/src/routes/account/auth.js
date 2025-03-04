@@ -18,10 +18,8 @@ export default [
       const forceSignOut = yar.flash(sessionNames.forceSignOut).at(0) ?? false
 
       if (forceSignOut) {
-        // If we're forcing them out (e.g. duplicate session), show them an error
-        // else they might be renewing/refreshing their session, so go to the callback
-        request.cookieAuth.clear()
-        return h.redirect('/account/signed-out')
+        // e.g. for duplicate sessions
+        return h.redirect('/auth/sign-out?force=true')
       }
 
       // Create user session
