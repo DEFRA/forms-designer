@@ -2,6 +2,7 @@ export const sessionNames = {
   create: /** @type {const} */ ('create'),
   redirectTo: /** @type {const} */ ('redirectTo'),
   fileDownloadPassword: /** @type {const} */ ('fileDownloadPassword'),
+  questionType: /** @type {const} */ ('questionType'),
   validationFailure: {
     createForm: /** @type {const} */ ('createFormValidationFailure'),
     updateForm: /** @type {const} */ ('updateFormValidationFailure'),
@@ -15,6 +16,12 @@ export const sessionNames = {
     fileDownload: /** @type {const} */ ('fileDownloadValidationFailure'),
     submissionGuidance: /** @type {const} */ (
       'submissionGuidanceValidationFailure'
+    ),
+    editorPage: /** @type {const} */ ('pageValidationFailure'),
+    editorQuestions: /** @type {const} */ ('questionsValidationFailure'),
+    editorQuestion: /** @type {const} */ ('questionValidationFailure'),
+    editorQuestionDetails: /** @type {const} */ (
+      'questionDetailsValidationFailure'
     )
   },
   successNotification: /** @type {const} */ ('successNotification'),

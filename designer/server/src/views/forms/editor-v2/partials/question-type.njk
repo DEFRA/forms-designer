@@ -1,0 +1,28 @@
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set writtenAnswerHtml %}
+{{ govukRadios(fields.writtenAnswerSub) }}
+{% endset -%}
+
+{% set dateHtml %}
+{{ govukRadios(fields.dateSub) }}
+{% endset -%}
+
+<form class="form" method="post">
+  <div class="govuk-form-group">
+    <fieldset class="govuk-fieldset" aria-describedby="informationQuestion1-hint">
+      <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+        <h1 class="govuk-fieldset__heading">What information do you need from users?</h1>
+      </legend>
+      <div id="informationQuestion1-hint" class="govuk-hint">You can ask for more information later</div>
+
+      {{ govukRadios(fields.questionType | setConditionalAttribute(0, writtenAnswerHtml) | setConditionalAttribute(1, dateHtml)) }}
+
+    </fieldset>
+  </div>
+
+  {{ govukButton({
+    text: 'Save and continue'
+  }) }}
+</form>

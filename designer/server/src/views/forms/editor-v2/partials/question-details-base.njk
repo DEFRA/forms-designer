@@ -1,0 +1,18 @@
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+
+  <div class="govuk-form-group">
+    <fieldset class="govuk-fieldset" aria-describedby="informationQuestion1-hint">
+      {{ govukInput(fields.question) }}
+
+      {{ govukTextarea(fields.hintText) }}
+
+      {{ govukCheckboxes(fields.questionOptional) }}
+
+      {{ govukInput(fields.shortDescription) }}
+
+      <input type="hidden" name="questionType" id="questionType" value="{{questionType}}" />
+    </fieldset>
+  </div>

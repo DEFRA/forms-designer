@@ -1,4 +1,4 @@
-import { ConditionsModel, type Page } from '@defra/forms-model'
+import { ConditionsModel, ControllerType, type Page } from '@defra/forms-model'
 import { Component, type ContextType } from 'react'
 
 import { SortUpDown } from '~/src/SortUpDown.jsx'
@@ -79,12 +79,25 @@ export class PagesEdit extends Component<Props, State> {
               <li key={key} className="app-result">
                 <div className="app-result__container govuk-body">
                   <span>{page.title}</span>
+                  {page.controller === ControllerType.Terminal && (
+                    <strong className="govuk-tag govuk-tag--red pull-right">
+                      Exit
+                    </strong>
+                  )}
+                  {page.controller === ControllerType.Repeat && (
+                    <strong className="govuk-tag govuk-tag--grey pull-right">
+                      Add another
+                    </strong>
+                  )}
                   <p className="govuk-!-margin-top-1 govuk-!-margin-bottom-0 govuk-body-s">
                     {page.path}
                   </p>
                   {condition && (
                     <p className="govuk-!-margin-top-1 govuk-!-margin-bottom-0 govuk-body-s">
-                      <span className="govuk-!-font-weight-bold">IF: </span>
+                      <strong className="govuk-tag govuk-tag--blue">
+                        <span className="govuk-!-font-weight-bold">IF:</span>
+                      </strong>
+                      &nbsp;
                       {ConditionsModel.from(
                         condition.value
                       ).toPresentationString()}

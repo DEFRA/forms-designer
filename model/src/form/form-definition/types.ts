@@ -14,10 +14,28 @@ export interface Link {
   redirect?: string
 }
 
+export interface EventOptions {
+  method: string
+  url: string
+}
+
+export interface Event {
+  type: string
+  options: EventOptions
+}
+
+export interface Events {
+  onLoad?: Event
+  onSave?: Event
+}
+
 export interface PageBase {
+  id?: string
   title: string
   path: string
   condition?: string
+  events?: Events
+  view?: string
 }
 
 export interface RepeatOptions {
@@ -152,4 +170,8 @@ export interface FormDefinition {
   skipSummary?: never
   metadata?: Record<string, unknown>
   outputEmail?: string
+  output?: {
+    audience: 'human' | 'machine'
+    version: string
+  }
 }

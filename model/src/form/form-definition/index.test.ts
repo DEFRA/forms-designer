@@ -12,6 +12,7 @@ describe('Form definition schema', () => {
 
   beforeEach(() => {
     page = {
+      id: '82468c50-ef86-47ae-bb67-0f7ddaa7d667',
       title: 'Example page',
       path: '/example',
       next: [],
@@ -58,6 +59,7 @@ describe('Form definition schema', () => {
   describe('Components', () => {
     describe('Custom validation messages', () => {
       const component: ComponentDef = {
+        id: 'fdeaa717-8e81-43fd-acce-2d83b6d63181',
         name: 'year',
         title: 'Year',
         type: ComponentType.NumberField,

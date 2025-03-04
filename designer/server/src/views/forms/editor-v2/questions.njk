@@ -1,0 +1,76 @@
+{% extends "layouts/page.njk" %}
+
+{% from "page-body/macro.njk" import appPageBody %}
+{% from "editor-card/macro.njk" import appEditorCard %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/skip-link/macro.njk" import govukSkipLink %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% block content %}
+  {% call appPageBody({
+  heading: pageHeading,
+  description: pageDescription,
+  caption: pageCaption,
+  actions: pageActions,
+  classes: "govuk-grid-column-full govuk-grid-column-one-half-from-desktop",
+  backLink: backLink,
+  errorList: errorList,
+  useNewMasthead: true
+}) %}
+
+  {% call appEditorCard({
+    title: cardTitle,
+    heading: cardCaption,
+    notification: notification
+  }) %}
+
+    {% if questionRows | length %}
+      {{ govukSummaryList({
+        rows: questionRows,
+        classes: 'govuk-summary-list__show_final_divider'
+      })
+      }}
+    {% else %}
+      {{ govukSummaryList({
+        rows: [
+        {
+          value: {
+            text: 'No questions'
+          }
+        }]
+      })
+      }}
+    {% endif %}
+    <div class="govuk-button-group govuk-!-margin-top-6">
+      {{ govukButton({
+        text: 'Add another question',
+        href: baseUrl + '/question/new'
+      }) }}
+
+      <a href="/redesigntest/templates/delete.html" class="govuk-link govuk-link--no-visited-state">
+        Delete page
+      </a>
+    </div>
+
+    {{ govukSkipLink({
+      text: "Skip to page preview",
+      href: "#"
+    }) }}
+
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+
+    <form class="form" method="post">
+
+    {%- include "../views/forms/editor-v2/partials/page-settings.njk" -%}
+
+    </form>
+    {% endcall %}
+
+  {% endcall %}
+{% endblock %}
+
+{% block mainEnd %}
+  {{ super() }}
+{% endblock %}

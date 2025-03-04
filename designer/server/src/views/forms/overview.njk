@@ -246,7 +246,7 @@
           text: "Form name"
         },
         value: {
-          html: form.title
+          html: form.title | escape
         },
         actions: {
           items: titleActionItems
@@ -257,7 +257,7 @@
           text: "Lead organisation"
         },
         value: {
-          html: form.organisation
+          html: form.organisation | escape
         },
         actions: {
           items: [
@@ -274,7 +274,7 @@
           text: "Team name"
         },
         value: {
-          html: form.teamName
+          html: form.teamName | escape
         },
         actions: {
           items: [

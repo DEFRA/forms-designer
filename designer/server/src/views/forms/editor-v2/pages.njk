@@ -1,0 +1,42 @@
+{% extends "layouts/page.njk" %}
+
+{% from "page-body/macro.njk" import appPageBody %}
+{% from "page-panel-left/macro.njk" import appPagePanelLeft %}
+
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% block content %}
+{% call appPageBody({
+  heading: pageHeading,
+  description: pageDescription,
+  caption: pageCaption,
+  actions: pageActions,
+  classes: "govuk-grid-column-full govuk-grid-column-one-half-from-desktop",
+  backLink: backLink
+}) %}
+
+  <form class="form">
+      {% for page in pages %}
+        <div class="govuk-grid-row page-row">
+          <div class="govuk-grid-column-full">
+          {{ appPagePanelLeft({
+            formName: name,
+            pageNum: loop.index,
+            pageId: page.id,
+            pageTitle: page.title,
+            pageEditUrl: "/library/" + formSlug + "/editor-v2/page/" + page.id + "/questions",
+            pagePreviewUrl: previewBaseUrl + page.path + "?force",
+            rows: page.components,
+            isEndPage: loop.last,
+            showMoveButtons: false
+            }) }}
+          </div>
+        </div>
+      {% endfor %}
+  </form>
+{% endcall %}
+{% endblock %}
+
+{% block mainEnd %}
+  {{ super() }}
+{% endblock %}

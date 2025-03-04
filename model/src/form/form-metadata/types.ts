@@ -176,6 +176,16 @@ export interface FormMetadata {
 }
 
 export type FormByIdInput = Pick<FormMetadata, 'id'>
+export type FormByIDAndPageByIdInput = Pick<FormMetadata, 'id'> & {
+  pageId: string
+}
+export type FormByIDAndPageByIdAndComponentByIdInput = Pick<
+  FormMetadata,
+  'id'
+> & {
+  pageId: string
+  componentId: string
+}
 export type FormBySlugInput = Pick<FormMetadata, 'slug'>
 export type FormMetadataDocument = Omit<FormMetadata, 'id'>
 export type FormMetadataInput = Pick<

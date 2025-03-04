@@ -5,15 +5,29 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 
 {% block beforeContent %}
+  {% if not useNewMasthead %}
   <div class="govuk-width-container app-width-container--wide">
     {{ govukBackLink(backLink) }}
   </div>
+  {% endif %}
 {% endblock %}
+
+{% set mainClasses = "" %}
+{% if useNewMasthead %}
+  {% set mainClasses = "govuk-main-wrapper--masthead" %}
+{% endif %}
 
 {% block content %}
   <form method="post" novalidate>
     {% call appPageBody({
-      errorList: errorList
+      errorList: errorList,
+      heading: pageHeading,
+      description: pageDescription,
+      caption: pageCaption,
+      actions: pageActions,
+      classes: pageClasses,
+      useNewMasthead: useNewMasthead,
+      backLink: backLink
     }) %}
       {{ govukRadios({
         fieldset: {

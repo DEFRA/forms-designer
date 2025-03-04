@@ -188,6 +188,88 @@ describe('Sorting Component', () => {
         })
       })
     })
+
+    describe('With author search parameter', () => {
+      beforeEach(() => {
+        const { container } = renderMacro('appSorting', 'sorting/macro.njk', {
+          params: {
+            sorting: {
+              sortBy: 'updatedAt',
+              order: 'desc'
+            },
+            search: {
+              author: 'Enrique Chase'
+            }
+          }
+        })
+
+        $sorting = container.getByRole('form', { name: 'Sorting options' })
+      })
+
+      it('should render hidden author input with correct value', () => {
+        const hiddenInput = within($sorting).getByDisplayValue('Enrique Chase')
+        expect(hiddenInput).toBeInTheDocument()
+        expect(hiddenInput).toHaveAttribute('type', 'hidden')
+        expect(hiddenInput).toHaveAttribute('name', 'author')
+      })
+    })
+
+    describe('With organisations search parameter', () => {
+      beforeEach(() => {
+        const { container } = renderMacro('appSorting', 'sorting/macro.njk', {
+          params: {
+            sorting: {
+              sortBy: 'updatedAt',
+              order: 'desc'
+            },
+            search: {
+              organisations: ['Defra', 'Environment Agency']
+            }
+          }
+        })
+
+        $sorting = container.getByRole('form', { name: 'Sorting options' })
+      })
+
+      it('should render hidden organisation inputs for each value', () => {
+        const orgInputs = within($sorting).getAllByDisplayValue(
+          /(Defra|Environment Agency)/
+        )
+        expect(orgInputs).toHaveLength(2)
+        orgInputs.forEach((input) => {
+          expect(input).toHaveAttribute('type', 'hidden')
+          expect(input).toHaveAttribute('name', 'organisations')
+        })
+      })
+    })
+
+    describe('With status search parameter', () => {
+      beforeEach(() => {
+        const { container } = renderMacro('appSorting', 'sorting/macro.njk', {
+          params: {
+            sorting: {
+              sortBy: 'updatedAt',
+              order: 'desc'
+            },
+            search: {
+              status: ['draft', 'live']
+            }
+          }
+        })
+
+        $sorting = container.getByRole('form', { name: 'Sorting options' })
+      })
+
+      it('should render hidden status inputs for each value', () => {
+        const statusInputs =
+          within($sorting).getAllByDisplayValue(/(draft|live)/)
+        expect(statusInputs).toHaveLength(2)
+        statusInputs.forEach((input) => {
+          expect(input).toHaveAttribute('type', 'hidden')
+          expect(input).toHaveAttribute('name', 'status')
+        })
+      })
+    })
   })
 
   describe('Without sorting data', () => {

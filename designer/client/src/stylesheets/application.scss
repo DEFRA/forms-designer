@@ -1,8 +1,10 @@
 @use "govuk-frontend";
 
 @use "components/breadcrumbs";
+@use "components/editor-card";
 @use "components/form-card";
 @use "components/masthead";
+@use "components/page-panel-left";
 @use "components/service-header";
 @use "components/sorting";
 @use "components/tag-env";
@@ -13,4 +15,5 @@
 @use "partials/grid";
 @use "partials/prose";
 
+@use "helpers";
 @use "editor";

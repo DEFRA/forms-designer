@@ -13,6 +13,9 @@ import {
 } from '~/src/conditions/types.js'
 import {
   type ConditionWrapper,
+  type Event,
+  type EventOptions,
+  type Events,
   type FormDefinition,
   type Item,
   type Link,
@@ -94,7 +97,9 @@ const conditionWrapperSchema = Joi.object<ConditionWrapper>().keys({
 
 export const componentSchema = Joi.object<ComponentDef>()
   .keys({
+    id: Joi.string().uuid().optional(),
     type: Joi.string<ComponentType>().required(),
+    shortDescription: Joi.string().optional(),
     name: Joi.when('type', {
       is: Joi.string().valid(
         ComponentType.Details,
@@ -158,11 +163,27 @@ const pageRepeatSchema = Joi.object<Repeat>().keys({
   schema: repeatSchema.required()
 })
 
+const eventSchema = Joi.object<Event>().keys({
+  type: Joi.string().allow('http').required(),
+  options: Joi.object<EventOptions>().keys({
+    method: Joi.string().allow('POST').required(),
+    url: Joi.string()
+      .uri({ scheme: ['http', 'https'] })
+      .required()
+  })
+})
+
+const eventsSchema = Joi.object<Events>().keys({
+  onLoad: eventSchema.optional(),
+  onSave: eventSchema.optional()
+})
+
 /**
  * `/status` is a special route for providing a user's application status.
  *  It should not be configured via the designer.
  */
-const pageSchema = Joi.object<Page>().keys({
+export const pageSchema = Joi.object<Page>().keys({
+  id: Joi.string().uuid().optional(),
   path: Joi.string().required().disallow('/status'),
   title: Joi.string().required(),
   section: Joi.string(),
@@ -174,7 +195,16 @@ const pageSchema = Joi.object<Page>().keys({
     otherwise: Joi.any().strip()
   }),
   condition: Joi.string().allow('').optional(),
-  next: Joi.array<Link>().items(nextSchema)
+  next: Joi.array<Link>().items(nextSchema).default([]),
+  events: eventsSchema.optional(),
+  view: Joi.string().optional()
+})
+
+/**
+ * V2 engine schema - used with new editor
+ */
+export const pageSchemaV2 = pageSchema.append({
+  title: Joi.string().allow('').required()
 })
 
 const baseListItemSchema = Joi.object<Item>().keys({
@@ -235,6 +265,11 @@ const phaseBannerSchema = Joi.object<PhaseBanner>().keys({
   phase: Joi.string().valid('alpha', 'beta')
 })
 
+const outputSchema = Joi.object<FormDefinition['output']>().keys({
+  audience: Joi.string().valid('human', 'machine').required(),
+  version: Joi.string().required()
+})
+
 /**
  * Joi schema for `FormDefinition` interface
  * @see {@link FormDefinition}
@@ -246,7 +281,15 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
     name: Joi.string().allow('').optional(),
     feedback: feedbackSchema.optional(),
     startPage: Joi.string().optional(),
-    pages: Joi.array<Page>().required().items(pageSchema).unique('path'),
+    pages: Joi.array<Page>()
+      .required()
+      .when('engine', {
+        is: 'V2',
+        then: Joi.array<Page>().items(pageSchemaV2),
+        otherwise: Joi.array<Page>().items(pageSchema)
+      })
+      .unique('path')
+      .unique('id', { ignoreUndefined: true }),
     sections: Joi.array<Section>()
       .items(sectionsSchema)
       .unique('name')
@@ -264,7 +307,8 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
     outputEmail: Joi.string()
       .email({ tlds: { allow: ['uk'] } })
       .trim()
-      .optional()
+      .optional(),
+    output: outputSchema.optional()
   })
 
 // Maintain compatibility with legacy named export
