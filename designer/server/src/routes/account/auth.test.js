@@ -64,13 +64,13 @@ describe('Authentiation', () => {
     })
 
     // log in with session one
-    const callbackResponseS1 = await doAuthCallback(server, auth)
+    const callbackResponseS1 = await doAuthCallback(server, auth, [])
     const cookiesS1 = callbackResponseS1.headers['set-cookie']
     expect(callbackResponseS1.headers.location).toBe('/library')
 
     // log in with session two
     // should be allowed, but now S2 is marked as the 'active' session
-    const callbackResponseS2 = await doAuthCallback(server, auth)
+    const callbackResponseS2 = await doAuthCallback(server, auth, [])
     const cookiesS2 = callbackResponseS2.headers['set-cookie']
     expect(callbackResponseS2.headers.location).toBe('/library')
 
@@ -79,6 +79,11 @@ describe('Authentiation', () => {
     const libraryResponse2S1 = await doCallLibrary(server, cookiesS1)
     expect(libraryResponse2S1.statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
     expect(libraryResponse2S1.headers.location).toBe('/auth/callback') // invalid sesssion, bump user back to the AAD sign in flow
+
+    const callbackResponseS1b = await doAuthCallback(server, auth, cookiesS1) // follow the callback with session 1 (stale)
+    expect(callbackResponseS1b.headers.location).toBe(
+      '/auth/sign-out?force=true'
+    ) // the callback identified the duplicate session, the sign-out route should act upon it
 
     // attempt to access a page with session two
     // this is valid as it's the active session
@@ -90,12 +95,22 @@ describe('Authentiation', () => {
 /**
  * @param {Server<any>} server
  * @param {ServerInjectOptions['auth']} auth
+ * @param {string | string[] | undefined} cookies
  */
-function doAuthCallback(server, auth) {
+function doAuthCallback(server, auth, cookies) {
+  if (!cookies || typeof cookies === 'string') {
+    throw new Error('Invalid cookies')
+  }
+
+  const headers = {
+    cookie: cookies.join('; ')
+  }
+
   return server.inject({
     method: 'get',
     url: '/auth/callback',
-    auth
+    auth,
+    headers
   })
 }
 
