@@ -1,5 +1,6 @@
+import { randomUUID } from 'node:crypto'
+
 import { DateTime } from 'luxon'
-import { v4 as uuidv4 } from 'uuid'
 
 import {
   getUserClaims,
@@ -49,7 +50,7 @@ export async function createUserSession(request, artifacts) {
   credentials.idToken = artifacts.id_token
   credentials.refreshToken = artifacts.refresh_token
   credentials.expiresIn = artifacts.expires_in
-  credentials.flowId = uuidv4() // a unique ID for the current session
+  credentials.flowId = randomUUID() // a unique ID for the current session
 
   if (!hasAuthenticated(credentials)) {
     throw new Error('Missing user authentication tokens')
