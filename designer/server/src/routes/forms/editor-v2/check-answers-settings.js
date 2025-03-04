@@ -2,21 +2,27 @@ import {
   declarationTextSchema,
   needDeclarationSchema
 } from '@defra/forms-model'
+import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
+import { setCheckAnswersDeclaration } from '~/src/lib/editor.js'
+import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
+import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import * as viewModel from '~/src/models/forms/editor-v2/check-answers-settings.js'
+import { CHANGES_SAVED_SUCCESSFULLY } from '~/src/models/forms/editor-v2/common.js'
+import { editorv2Path } from '~/src/models/links.js'
 
 export const ROUTE_FULL_PATH_CHECK_ANSWERS_SETTINGS = `/library/{slug}/editor-v2/page/{pageId}/check-answers-settings`
 
-const errorKey = sessionNames.validationFailure.editorQuestions
+const errorKey = sessionNames.validationFailure.editorCheckAnswersSettings
 const notificationKey = sessionNames.successNotification
 
 export const schema = Joi.object().keys({
   needDeclaration: needDeclarationSchema,
-  declarationTextSchema: Joi.when('needDeclaration', {
+  declarationText: Joi.when('needDeclaration', {
     is: 'true',
     then: declarationTextSchema.required().messages({
       '*': 'Enter the information you need users to declare or agree to'
@@ -41,11 +47,8 @@ export default [
       const metadata = await forms.get(slug, token)
       const definition = await forms.getDraftFormDefinition(metadata.id, token)
 
-      // TODO - merge with later code
       // Validation errors
-      const validation = /** @type {ValidationFailure<FormEditor>} */ (
-        yar.flash(errorKey).at(0)
-      )
+      const validation = getValidationErrorsFromSession(yar, errorKey)
 
       // Saved banner
       const notification = /** @type {string[] | undefined} */ (
@@ -72,11 +75,57 @@ export default [
         }
       }
     }
+  }),
+  /**
+   * @satisfies {ServerRoute<{ Payload: Partial<FormEditorInputCheckAnswersSettings> }>}
+   */
+  ({
+    method: 'POST',
+    path: ROUTE_FULL_PATH_CHECK_ANSWERS_SETTINGS,
+    async handler(request, h) {
+      const { params, auth, payload, yar } = request
+      const { slug, pageId } = /** @type {{ slug: string, pageId: string }} */ (
+        params
+      )
+      const { token } = auth.credentials
+
+      // Form metadata and page components
+      const metadata = await forms.get(slug, token)
+      const definition = await forms.getDraftFormDefinition(metadata.id, token)
+
+      await setCheckAnswersDeclaration(
+        metadata.id,
+        token,
+        pageId,
+        definition,
+        payload
+      )
+
+      yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
+
+      // Redirect to pages list
+      return h.redirect(editorv2Path(slug, 'pages')).code(StatusCodes.SEE_OTHER)
+    },
+    options: {
+      validate: {
+        payload: schema,
+        failAction: (request, h, error) => {
+          return redirectWithErrors(request, h, error, errorKey)
+        }
+      },
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${scopes.SCOPE_WRITE}`]
+        }
+      }
+    }
   })
 ]
 
 /**
- * @import { FormEditor } from '@defra/forms-model'
+ * @import { FormEditor, FormEditorInputCheckAnswersSettings } from '@defra/forms-model'
  * @import { ServerRoute } from '@hapi/hapi'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

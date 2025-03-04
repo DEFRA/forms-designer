@@ -1,3 +1,5 @@
+import { ComponentType, hasComponentsEvenIfNoNext } from '@defra/forms-model'
+
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { insertValidationErrors, stringHasValue } from '~/src/lib/utils.js'
 import {
@@ -18,6 +20,9 @@ function settingsFields(needDeclarationVal, declarationTextVal, validation) {
     needDeclaration: {
       name: 'needDeclaration',
       id: 'needDeclaration',
+      hint: {
+        text: 'Use a declaration if you need users to declare or agree to something before they submit the form'
+      },
       items: [
         {
           value: 'false',
@@ -68,18 +73,28 @@ export function checkAnswersSettingsViewModel(
   const { formValues, formErrors } = validation ?? {}
 
   const pageIdx = definition.pages.findIndex((x) => x.id === pageId)
+  const page = definition.pages[pageIdx]
+  const components = hasComponentsEvenIfNoNext(page) ? page.components : []
+
+  const guidanceComponent = /** @type {HtmlComponent | undefined} */ (
+    components.find(
+      (comp, idx) => comp.type === ComponentType.Html && idx === 0
+    )
+  )
 
   const declarationTextVal =
-    formValues?.declarationText ?? definition.declaration
-  const needDeclarationVal = `${stringHasValue(declarationTextVal)}`
+    formValues?.declarationText ?? guidanceComponent?.content
+  const needDeclarationVal =
+    formValues?.needDeclaration ?? `${stringHasValue(declarationTextVal)}`
 
   return {
     ...baseModelFields(metadata.slug, pageTitle),
     fields: {
       ...settingsFields(needDeclarationVal, declarationTextVal, validation)
     },
-    cardTitle: `Page ${pageIdx + 1} overview`,
-    cardCaption: `Page ${pageIdx + 1}`,
+    cardTitle: 'Page settings',
+    cardCaption: 'Check answers',
+    cardHeading: 'Page settings',
     navigation,
     errorList: buildErrorList(formErrors, ['questions']),
     formErrors: validation?.formErrors,

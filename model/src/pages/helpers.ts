@@ -43,6 +43,17 @@ export function hasComponents(
 }
 
 /**
+ * Check if the page has components (the page can be any page type e.g. SummaryPage)
+ */
+export function hasComponentsEvenIfNoNext(
+  page?: Partial<Page>
+): page is Extract<Page, { components: ComponentDef[] }> {
+  return (
+    page !== undefined && 'components' in page && Array.isArray(page.components)
+  )
+}
+
+/**
  * Check page has form components
  */
 export function hasFormComponents(

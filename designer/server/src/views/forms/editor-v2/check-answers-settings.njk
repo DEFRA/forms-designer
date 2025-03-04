@@ -7,12 +7,13 @@
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
 
 {% set mainClasses = "govuk-main-wrapper--masthead" %}
 
 {% set declarationHtml %}
 {{ govukTextarea(fields.declarationText) }}
-{%- include "../../../../views/forms/editor-v2/partials/markdown-help.njk" -%}
+{%- include "../views/forms/editor-v2/partials/markdown-help.njk" -%}
 {% endset -%}
 
 {% block content %}
@@ -36,12 +37,22 @@
 
     <form class="form" method="post">
 
-      {{ govukRadios(fields.needDeclaration | setConditionalAttribute(1, declarationHtml)) }}
-      
-      {{ govukButton({
-        text: 'Save changes'
-      }) }}
-      
+      {% call govukFieldset({
+        legend: {
+          text: "Do users need to make a declaration?",
+          classes: "govuk-fieldset__legend--m",
+          isPageHeading: false
+        }
+      }) %}
+
+        {{ govukRadios(fields.needDeclaration | setConditionalAttribute(1, declarationHtml)) }}
+
+        {{ govukButton({
+          text: 'Save changes'
+        }) }}
+
+      {% endcall %}
+
     </form>
     {% endcall %}
 

@@ -4,6 +4,7 @@ import contactOnline from '~/src/routes/forms/contact/online.js'
 import contactPhone from '~/src/routes/forms/contact/phone.js'
 import create from '~/src/routes/forms/create.js'
 import edit from '~/src/routes/forms/edit.js'
+import editorCheckAnswersSettings from '~/src/routes/forms/editor-v2/check-answers-settings.js'
 import editorPage from '~/src/routes/forms/editor-v2/page.js'
 import editorv2Pages from '~/src/routes/forms/editor-v2/pages.js'
 import editorQuestionDetails from '~/src/routes/forms/editor-v2/question-details.js'
@@ -24,6 +25,7 @@ export default [
   editorQuestion,
   editorQuestionDetails,
   editorQuestions,
+  editorCheckAnswersSettings,
   library,
   formLifecycle,
   contactPhone,

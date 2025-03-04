@@ -131,7 +131,6 @@ export default [
 ]
 
 /**
- * @import { FormEditor, FormEditorInputPageSettings } from '@defra/forms-model'
+ * @import { FormEditorInputPageSettings } from '@defra/forms-model'
  * @import { ServerRoute } from '@hapi/hapi'
- * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

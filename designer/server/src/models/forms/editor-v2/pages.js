@@ -1,5 +1,11 @@
-import { ControllerType, hasComponents } from '@defra/forms-model'
+import {
+  ComponentType,
+  ControllerType,
+  hasComponents,
+  hasComponentsEvenIfNoNext
+} from '@defra/forms-model'
 
+import { ellipsise, nlToBr, safeHtml } from '~/src/lib/utils.js'
 import {
   buildPreviewUrl,
   getFormSpecificNavigation
@@ -11,9 +17,41 @@ import {
 } from '~/src/models/links.js'
 
 /**
+ * @param {Page} page
+ */
+export function mapQuestionRows(page) {
+  const components = hasComponentsEvenIfNoNext(page) ? page.components : []
+  if (page.controller === ControllerType.Summary) {
+    return components.map((comp) => ({
+      key: {
+        text: 'Declaration'
+      },
+      value: {
+        html: nlToBr(
+          safeHtml(
+            comp.type === ComponentType.Html ? ellipsise(comp.content) : ''
+          )
+        )
+        // text: comp.type === ComponentType.Html ? ellipsise(comp.content) : '',
+        // classes: 'page-panel-left-end-preserve-newlines'
+      }
+    }))
+  }
+
+  return components.map((comp, idx) => ({
+    key: {
+      text: `Question ${idx + 1}`
+    },
+    value: {
+      text: comp.title
+    }
+  }))
+}
+
+/**
  * @param {FormDefinition} definition
  */
-export function setPageHeadings(definition) {
+export function mapPageData(definition) {
   if (!definition.pages.length) {
     return definition
   }
@@ -24,11 +62,13 @@ export function setPageHeadings(definition) {
       if (page.title === '') {
         return {
           ...page,
-          title: hasComponents(page) ? page.components[0].title : ''
+          title: hasComponents(page) ? page.components[0].title : '',
+          questionRows: mapQuestionRows(page)
         }
       }
       return {
-        ...page
+        ...page,
+        questionRows: mapQuestionRows(page)
       }
     })
   }
@@ -37,11 +77,13 @@ export function setPageHeadings(definition) {
 /**
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
+ * @param {string[]} [notification]
  */
-export function pagesViewModel(metadata, definition) {
+export function pagesViewModel(metadata, definition, notification) {
   const formPath = formOverviewPath(metadata.slug)
   const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
   const previewBaseUrl = buildPreviewUrl(metadata.slug)
+  const editBaseUrl = `/library/${metadata.slug}/editor-v2/page/`
 
   const pageActions = [
     {
@@ -77,8 +119,9 @@ export function pagesViewModel(metadata, definition) {
   }
 
   const pageListModel = {
-    ...setPageHeadings(definition),
+    ...mapPageData(definition),
     formSlug: metadata.slug,
+    editBaseUrl,
     previewBaseUrl,
     navigation,
     pageHeading: {
@@ -87,7 +130,8 @@ export function pagesViewModel(metadata, definition) {
     pageCaption: {
       text: definition.name
     },
-    pageActions
+    pageActions,
+    notification
   }
 
   return {
@@ -97,5 +141,5 @@ export function pagesViewModel(metadata, definition) {
 }
 
 /**
- * @import { FormMetadata, FormDefinition } from '@defra/forms-model'
+ * @import { FormMetadata, FormDefinition, Page } from '@defra/forms-model'
  */

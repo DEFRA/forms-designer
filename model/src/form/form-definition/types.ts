@@ -94,6 +94,7 @@ export interface PageSummary extends PageBase {
   path: ControllerPath.Summary | string
   controller: ControllerType.Summary
   section?: undefined
+  components?: ComponentDef[]
 }
 
 export interface PageStatus extends PageBase {
@@ -166,7 +167,7 @@ export interface FormDefinition {
   name?: string
   feedback?: Feedback
   phaseBanner?: PhaseBanner
-  declaration?: string
+  declaration?: string // Deprecated in v2
   skipSummary?: never
   metadata?: Record<string, unknown>
   outputEmail?: string

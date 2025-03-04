@@ -65,6 +65,41 @@ export function insertValidationErrors(formField) {
     })
   }
 }
+
+/**
+ * Truncate a string and append an ellipsis (if necessary)
+ * @param {string | undefined} strVal
+ * @param {number} max
+ */
+export function ellipsise(strVal, max = 50) {
+  if (!strVal) {
+    return strVal
+  }
+
+  const len = strVal.length
+  if (len <= max) {
+    return strVal
+  }
+
+  return `${strVal.substring(0, max)}...`
+}
+
+/**
+ * Replace line breaks with <br> for HTML rendering
+ * @param {string | undefined} str
+ */
+export function nlToBr(str) {
+  return str ? str.split('\n').join('<br>') : ''
+}
+
+/**
+ * Ensure html is stripped of any possible injection risks
+ * @param {string | undefined} str
+ */
+export function safeHtml(str) {
+  return str ? str.replaceAll('<', '_').replaceAll('>', '_') : ''
+}
+
 /**
  * @import { ErrorDetailsItem } from '~/src/common/helpers/types.js'
  * @import Wreck from '@hapi/wreck'

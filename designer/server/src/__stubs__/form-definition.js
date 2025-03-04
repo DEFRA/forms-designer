@@ -28,7 +28,8 @@ export const testFormDefinitionWithSinglePage = {
       id: 'c2',
       title: 'Summary',
       path: '/summary',
-      controller: ControllerType.Summary
+      controller: ControllerType.Summary,
+      components: []
     }
   ],
   conditions: [],
@@ -46,7 +47,8 @@ export const testFormDefinitionWithSummaryOnly = {
       id: 'p1',
       title: 'Summary',
       path: '/summary',
-      controller: ControllerType.Summary
+      controller: ControllerType.Summary,
+      components: []
     }
   ],
   conditions: [],
@@ -120,7 +122,8 @@ export const testFormDefinitionWithTwoQuestions = {
       id: 'p2',
       title: 'Summary',
       path: '/summary',
-      controller: ControllerType.Summary
+      controller: ControllerType.Summary,
+      components: []
     }
   ],
   conditions: [],
@@ -192,7 +195,8 @@ export const testFormDefinitionWithTwoPagesAndQuestions = {
       id: 'p3',
       title: 'Summary',
       path: '/summary',
-      controller: ControllerType.Summary
+      controller: ControllerType.Summary,
+      components: []
     }
   ],
   conditions: [],
@@ -218,7 +222,8 @@ export const testFormDefinitionWithNoQuestions = {
       id: 'p2',
       title: 'Summary',
       path: '/summary',
-      controller: ControllerType.Summary
+      controller: ControllerType.Summary,
+      components: []
     }
   ],
   conditions: [],
