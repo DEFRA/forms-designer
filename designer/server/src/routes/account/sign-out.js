@@ -28,6 +28,7 @@ export default /** @satisfies {ServerRoute<{ Params: { force: boolean }}>} */ ({
     const endSessionUrl = new URL(wellKnownConfiguration.end_session_endpoint)
     endSessionUrl.searchParams.set('client_id', config.azureClientId)
     endSessionUrl.searchParams.set('post_logout_redirect_uri', redirectUrl.href)
+    // TODO add logout_hint as a parameter to force sign out on the active account rather than showing the picker
 
     await dropUserSession(request)
 
