@@ -1,5 +1,5 @@
 import Boom from '@hapi/boom'
-import { jwtDecode } from 'jwt-decode'
+import { token } from '@hapi/jwt'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { hasUser } from '~/src/common/helpers/auth/get-user-session.js'
@@ -67,14 +67,17 @@ export default [
  * @throws {Error} If the login hint is missing or not a string
  */
 export function getLoginHint(accessToken) {
-  const accessTokenDecoded = jwtDecode(accessToken)
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- hapi returns any, nothing we can do
+  const accessTokenDecoded = /** @type {{login_hint?: string}} */ (
+    token.decode(accessToken).decoded.payload
+  )
 
   if (!('login_hint' in accessTokenDecoded)) {
-    throw new Error('Missing login_hint in access token')
+    throw new Error('Missing login_hint in token')
   }
 
   if (typeof accessTokenDecoded.login_hint !== 'string') {
-    throw new Error('login_hint in access token is not a string')
+    throw new Error('login_hint in token is not a string')
   }
 
   return accessTokenDecoded.login_hint

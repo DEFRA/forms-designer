@@ -4,10 +4,12 @@ import { hasUser } from '~/src/common/helpers/auth/get-user-session.js'
 import config from '~/src/config.js'
 import { createServer } from '~/src/createServer.js'
 import * as oidc from '~/src/lib/oidc.js'
+import { getLoginHint } from '~/src/routes/account/auth.js'
 import { auth } from '~/test/fixtures/auth.js'
 
 jest.mock('~/src/common/helpers/auth/drop-user-session.js')
 jest.mock('~/src/common/helpers/auth/get-user-session.js')
+jest.mock('~/src/routes/account/auth.js')
 jest.mock('~/src/lib/oidc.js')
 
 describe('signOutRoute', () => {
@@ -77,6 +79,7 @@ describe('signOutRoute', () => {
 
   it('should redirect to end session URL if authenticated and the logoutHint is not provided', async () => {
     jest.mocked(hasUser).mockReturnValueOnce(true)
+    jest.mocked(getLoginHint).mockReturnValueOnce('foo')
     config.isTest = false
 
     const response = await server.inject({
