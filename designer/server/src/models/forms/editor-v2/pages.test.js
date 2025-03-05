@@ -131,10 +131,14 @@ describe('editor-v2 - pages model', () => {
 
       const page1Res = hideFirstGuidance(page1)
       expect(page1Res.components).toHaveLength(2)
-      expect(page1Res.components[0].type).toBe(ComponentType.TextField)
+      expect(
+        page1Res.components ? page1Res.components[0].type : undefined
+      ).toBe(ComponentType.TextField)
       const page2Res = hideFirstGuidance(page2)
       expect(page2Res.components).toHaveLength(2)
-      expect(page2Res.components[0].type).toBe(ComponentType.TextField)
+      expect(
+        page2Res.components ? page2Res.components[0].type : undefined
+      ).toBe(ComponentType.TextField)
       const page3Res = hideFirstGuidance(page3)
       expect(page3Res.components).toEqual([])
     })
