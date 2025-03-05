@@ -1,9 +1,32 @@
+import { ComponentType } from '@defra/forms-model'
+
 import {
   testFormDefinitionWithNoPages,
   testFormDefinitionWithTwoPagesAndQuestions,
   testFormDefinitionWithTwoQuestions
 } from '~/src/__stubs__/form-definition.js'
-import { setPageHeadings } from '~/src/models/forms/editor-v2/pages.js'
+import {
+  hideFirstGuidance,
+  setPageHeadings
+} from '~/src/models/forms/editor-v2/pages.js'
+
+/**
+ * @param {ComponentDef[] | undefined} components
+ */
+function insertGuidanceAtTop(components) {
+  if (!components) {
+    return
+  }
+
+  components.unshift({
+    id: '8045384f-b03a-49d8-bc0f-b8d2eb14765d',
+    name: 'html',
+    title: 'html',
+    type: ComponentType.Html,
+    content: '# line1\r\n## line2\r\n### line3',
+    options: {}
+  })
+}
 
 describe('editor-v2 - pages model', () => {
   describe('setPageHeadings', () => {
@@ -13,7 +36,9 @@ describe('editor-v2 - pages model', () => {
     })
     test('should return unchanged if page titles already set', () => {
       const res = setPageHeadings(testFormDefinitionWithTwoQuestions)
-      expect(res).toEqual(testFormDefinitionWithTwoQuestions)
+      const expected = { ...testFormDefinitionWithTwoQuestions }
+      expected.pages[1].components = []
+      expect(res).toEqual(expected)
     })
     test('should populate page title from first question title', () => {
       const definitionWithNoPageTitles = {
@@ -34,4 +59,42 @@ describe('editor-v2 - pages model', () => {
       expect(res.pages[1].title).toBe('This is your first question - page two')
     })
   })
+
+  describe('hideFirstGuidance', () => {
+    test('should return unchanged page if no guidance components at first position', () => {
+      const [page1, page2] = testFormDefinitionWithTwoQuestions.pages
+      const page1Res = hideFirstGuidance(page1)
+      expect(page1Res.components).toEqual(
+        testFormDefinitionWithTwoQuestions.pages[0].components
+      )
+      const page2Res = hideFirstGuidance(page2)
+      expect(page2Res.components).toEqual(
+        testFormDefinitionWithTwoQuestions.pages[1].components
+      )
+    })
+
+    test('should hide guidance component if at first position', () => {
+      const testFormWithTwoGuidances = {
+        ...testFormDefinitionWithTwoPagesAndQuestions
+      }
+      const [page1, page2, page3] = testFormWithTwoGuidances.pages
+      insertGuidanceAtTop(page1.components)
+      insertGuidanceAtTop(page2.components)
+      expect(page1.components).toHaveLength(3)
+      expect(page2.components).toHaveLength(3)
+
+      const page1Res = hideFirstGuidance(page1)
+      expect(page1Res.components).toHaveLength(2)
+      expect(page1Res.components[0].type).toBe(ComponentType.TextField)
+      const page2Res = hideFirstGuidance(page2)
+      expect(page2Res.components).toHaveLength(2)
+      expect(page2Res.components[0].type).toBe(ComponentType.TextField)
+      const page3Res = hideFirstGuidance(page3)
+      expect(page3Res.components).toEqual([])
+    })
+  })
 })
+
+/**
+ * @import { ComponentDef } from '@defra/forms-model'
+ */
