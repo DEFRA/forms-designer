@@ -17,6 +17,11 @@
 
   <form class="form">
       {% for page in pages %}
+
+        <!-- Ensure html elements are escaped -->
+        {% set questionRows = [] %}
+        {%- include "../views/forms/editor-v2/partials/map-question-rows.njk" -%}
+
         <div class="govuk-grid-row page-row">
           <div class="govuk-grid-column-full">
           {{ appPagePanelLeft({
@@ -26,7 +31,7 @@
             pageTitle: page.title,
             pageEditUrl: (editBaseUrl + page.id) + ("/check-answers-settings" if loop.last else "/questions"),
             pagePreviewUrl: previewBaseUrl + page.path + "?force",
-            rows: page.questionRows,
+            rows: questionRows,
             isEndPage: loop.last,
             showMoveButtons: false
             }) }}

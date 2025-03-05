@@ -93,14 +93,6 @@ export function nlToBr(str) {
 }
 
 /**
- * Ensure html is stripped of any possible injection risks
- * @param {string | undefined} str
- */
-export function safeHtml(str) {
-  return str ? str.replaceAll('<', '_').replaceAll('>', '_') : ''
-}
-
-/**
  * @import { ErrorDetailsItem } from '~/src/common/helpers/types.js'
  * @import Wreck from '@hapi/wreck'
  */

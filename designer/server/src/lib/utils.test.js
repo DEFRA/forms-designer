@@ -1,7 +1,7 @@
 import { getTraceId } from '@defra/hapi-tracing'
 
 import config from '~/src/config.js'
-import { ellipsise, getHeaders, nlToBr, safeHtml } from '~/src/lib/utils.js'
+import { ellipsise, getHeaders, nlToBr } from '~/src/lib/utils.js'
 
 jest.mock('@defra/hapi-tracing')
 
@@ -70,22 +70,5 @@ describe('nlToBr', () => {
     expect(nlToBr('Line 1\nLine 2\nLine 3\nLine 4')).toBe(
       'Line 1<br>Line 2<br>Line 3<br>Line 4'
     )
-  })
-})
-
-describe('safeHtml', () => {
-  it('should handle undefined', () => {
-    expect(safeHtml(undefined)).toBe('')
-  })
-  it('should handle blank string', () => {
-    expect(safeHtml('')).toBe('')
-  })
-  it('should handle removing <script>', () => {
-    expect(safeHtml('Some html <script>')).toBe('Some html _script_')
-  })
-  it('should handle removing multiple element start/end tags', () => {
-    expect(
-      safeHtml('Some html <script1> </> < script > more html < > end')
-    ).toBe('Some html _script1_ _/_ _ script _ more html _ _ end')
   })
 })
