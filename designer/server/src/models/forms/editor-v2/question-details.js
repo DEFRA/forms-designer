@@ -1,3 +1,4 @@
+import { questionTypeDescriptions } from '~/src/common/constants/editor.js'
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { insertValidationErrors, isCheckboxSelected } from '~/src/lib/utils.js'
 import {
@@ -9,7 +10,7 @@ import {
   getQuestion,
   getQuestionNum
 } from '~/src/models/forms/editor-v2/common.js'
-import { formOverviewPath } from '~/src/models/links.js'
+import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
 
 /**
  * @param {InputFieldsComponentsDef | undefined} question
@@ -149,6 +150,13 @@ export function questionDetailsViewModel(
       validation
     ),
     questionType,
+    questionTypeDesc: questionTypeDescriptions.find(
+      (x) => x.type === questionType
+    )?.description,
+    changeTypeUrl: editorv2Path(
+      metadata.slug,
+      `page/${pageId}/question/${questionId}`
+    ),
     buttonText: SAVE_AND_CONTINUE
   }
 }

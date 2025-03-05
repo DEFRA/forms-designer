@@ -1,4 +1,8 @@
-import { ControllerType, hasComponents } from '@defra/forms-model'
+import {
+  ComponentType,
+  ControllerType,
+  hasComponents
+} from '@defra/forms-model'
 
 import {
   buildPreviewUrl,
@@ -23,14 +27,30 @@ export function setPageHeadings(definition) {
     pages: definition.pages.map((page) => {
       if (page.title === '') {
         return {
-          ...page,
+          ...hideFirstGuidance(page),
           title: hasComponents(page) ? page.components[0].title : ''
         }
       }
       return {
-        ...page
+        ...hideFirstGuidance(page)
       }
     })
+  }
+}
+
+/**
+ * Since the page setting of 'guidance' is shown at page level,
+ * we don't want to list the guidance component as one of the page's questions
+ * @param {Page} page
+ */
+export function hideFirstGuidance(page) {
+  return {
+    ...page,
+    components: hasComponents(page)
+      ? page.components.filter(
+          (comp, idx) => !(comp.type === ComponentType.Html && idx === 0)
+        )
+      : []
   }
 }
 
@@ -97,5 +117,5 @@ export function pagesViewModel(metadata, definition) {
 }
 
 /**
- * @import { FormMetadata, FormDefinition } from '@defra/forms-model'
+ * @import { FormMetadata, FormDefinition, Page } from '@defra/forms-model'
  */

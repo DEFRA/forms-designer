@@ -5,6 +5,7 @@
 {% from "page-body/macro.njk" import appPageBody %}
 {% from "editor-card/macro.njk" import appEditorCard %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 
 {% set mainClasses = "govuk-main-wrapper--masthead" %}
 
@@ -29,9 +30,36 @@
 
   {%- include "../views/forms/editor-v2/partials/question-details-base.njk" -%}
 
+  <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+  <h2 class="govuk-heading-m">Question settings</h2>
+
+  {{ govukSummaryList({
+    rows: [
+    {
+      key: {
+        text: 'Type of information'
+      },
+      value: {
+        text: questionTypeDesc
+      },
+      actions: {
+        items: [
+          {
+            href: changeTypeUrl,
+            text: 'Change',
+            visuallyHiddenText: 'type of question',
+            classes: 'govuk-link--no-visited-state'
+          }
+        ]
+      }
+    }]
+    }) }}
+
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+
     {{ govukButton({
     text: 'Save and continue'
-  }) }}
+    }) }}
 
   </form>
 {% endcall %}

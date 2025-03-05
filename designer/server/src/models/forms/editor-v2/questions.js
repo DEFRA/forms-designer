@@ -134,10 +134,12 @@ export function questionsViewModel(
       .map((comp2, idx2) => {
         return {
           key: {
-            text: `Question ${idx2 + 1}`
+            text: `Question ${idx2 + 1}`,
+            classes: 'govuk-!-width-one-quarter'
           },
           value: {
-            text: comp2.title
+            text: comp2.title,
+            classes: 'govuk-!-width-one-half'
           },
           actions: {
             items: [
@@ -145,7 +147,8 @@ export function questionsViewModel(
                 href: `${baseUrl}/question/${comp2.id}/details`,
                 text: 'Change',
                 visuallyHiddenText: 'name',
-                classes: 'govuk-link--no-visited-state'
+                classes:
+                  'govuk-link--no-visited-state govuk-!-width-one-quarter'
               }
             ]
           }
