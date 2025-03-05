@@ -61,12 +61,12 @@ export function mapPageData(definition) {
         return {
           ...page,
           title: hasComponents(page) ? page.components[0].title : '',
-          questionRows: mapQuestionRows(page)
+          questionRows: mapQuestionRows(hideFirstGuidance(page))
         }
       }
       return {
         ...page,
-        questionRows: mapQuestionRows(page)
+        questionRows: mapQuestionRows(hideFirstGuidance(page))
       }
     })
   }
@@ -78,6 +78,10 @@ export function mapPageData(definition) {
  * @param {Page} page
  */
 export function hideFirstGuidance(page) {
+  if (page.controller === ControllerType.Summary) {
+    return page
+  }
+
   return {
     ...page,
     components: hasComponents(page)
