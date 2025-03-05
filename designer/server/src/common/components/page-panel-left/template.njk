@@ -2,21 +2,8 @@
 
 {% set cardClass = "page-panel-left-standard" %}
 {% if params.isEndPage %}
-{% set cardClass = "page-panel-left-end" %}
+{% set cardClass = "page-panel-left-end" if params.rows | length else "page-panel-left-end-hide-declaration"%}
 {% endif %}
-
-{% set questionRows = [] %}
-{% for question in params.rows %}
-  {% set mappedQuestion = {
-    key: {
-      text: "Question " + loop.index
-    },
-    value: {
-      text: question.title
-    }
-  } %}
-  {% set questionRows = (questionRows.push(mappedQuestion), questionRows) %}
-{% endfor %}
 
 {% set cardTitle = "Page " + params.pageNum + ": " + params.pageTitle %}
 
@@ -50,6 +37,6 @@
     },
     classes: cardClass
   },
-  rows: questionRows
+  rows: params.rows
 }) }}
 

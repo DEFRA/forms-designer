@@ -1,3 +1,16 @@
 .pull-right {
   float: right;
 }
+
+.with-ellipsis {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  padding-bottom: 0;
+}
+
+.break-on-newlines {
+  white-space: pre-line;
+}

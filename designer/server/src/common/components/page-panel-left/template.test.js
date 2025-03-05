@@ -5,7 +5,7 @@ describe('Page left panel component', () => {
   let $keys = /** @type {Element[]} */ ([])
   let $values = /** @type {Element[]} */ ([])
 
-  describe('With no pages', () => {
+  describe('With some pages', () => {
     beforeEach(() => {
       const { container } = renderMacro(
         'appPagePanelLeft',
@@ -16,7 +16,7 @@ describe('Page left panel component', () => {
             pageNum: 1,
             pageId: 'abcDEF',
             pageTitle: 'My title',
-            rows: [{ title: 'Row 1' }, { title: 'Row 2' }],
+            rows: [{ value: { text: 'Row 1' } }, { value: { text: 'Row 2' } }],
             isEndPage: false,
             showMoveButtons: false
           }

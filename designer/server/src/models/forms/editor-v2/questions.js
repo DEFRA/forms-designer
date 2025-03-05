@@ -138,7 +138,10 @@ export function questionsViewModel(
             classes: 'govuk-!-width-one-quarter'
           },
           value: {
-            text: comp2.title,
+            text:
+              comp2.options?.required === false
+                ? `${comp2.title} (optional)`
+                : comp2.title,
             classes: 'govuk-!-width-one-half'
           },
           actions: {

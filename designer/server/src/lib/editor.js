@@ -1,4 +1,8 @@
-import { ComponentType, hasComponents } from '@defra/forms-model'
+import {
+  ComponentType,
+  hasComponents,
+  hasComponentsEvenIfNoNext
+} from '@defra/forms-model'
 
 import config from '~/src/config.js'
 import { delJson, patchJson, postJson, putJson } from '~/src/lib/fetch.js'
@@ -11,6 +15,11 @@ import {
 
 const formsEndpoint = new URL('/forms/', config.managerUrl)
 
+const patchJsonByType = /** @type {typeof patchJson<Page>} */ (patchJson)
+const postJsonByType = /** @type {typeof postJson<Page>} */ (postJson)
+const putJsonByType = /** @type {typeof putJson<Page>} */ (putJson)
+const delJsonByType = /** @type {typeof delJson<ComponentDef>} */ (delJson)
+
 /**
  * Add a page to a form definition
  * @param {string} formId
@@ -18,8 +27,6 @@ const formsEndpoint = new URL('/forms/', config.managerUrl)
  * @param {Partial<ComponentDef>} questionDetails
  */
 export async function addPageAndFirstQuestion(formId, token, questionDetails) {
-  const postJsonByType = /** @type {typeof postJson<Page>} */ (postJson)
-
   const requestUrl = new URL(
     `./${formId}/definition/draft/pages`,
     formsEndpoint
@@ -45,8 +52,6 @@ export async function addPageAndFirstQuestion(formId, token, questionDetails) {
  * @param {Partial<ComponentDef>} questionDetails
  */
 export async function addQuestion(formId, token, pageId, questionDetails) {
-  const postJsonByType = /** @type {typeof postJson<Page>} */ (postJson)
-
   const requestUrl = new URL(
     `./${formId}/definition/draft/pages/${pageId}/components`,
     formsEndpoint
@@ -74,8 +79,6 @@ export async function updateQuestion(
   questionId,
   questionDetails
 ) {
-  const putJsonByType = /** @type {typeof putJson<Page>} */ (putJson)
-
   const requestUrl = new URL(
     `./${formId}/definition/draft/pages/${pageId}/components/${questionId}`,
     formsEndpoint
@@ -107,48 +110,22 @@ export function resolvePageHeading(page, pageHeading, components) {
 }
 
 /**
- * Add a question to an existing page
+ * Insert, update or delete a guidance component
  * @param {string} formId
  * @param {string} token
  * @param {string} pageId
- * @param {FormDefinition} definition
- * @param {Partial<FormEditorInputPageSettings>} payload
+ * @param {ComponentDef[]} components
+ * @param {boolean} isExpanded
+ * @param {string | undefined} guidanceText
  */
-export async function setPageHeadingAndGuidance(
+export async function insertUpdateOrDeleteGuidance(
   formId,
   token,
   pageId,
-  definition,
-  payload
+  components,
+  isExpanded,
+  guidanceText
 ) {
-  const patchJsonByType = /** @type {typeof patchJson<Page>} */ (patchJson)
-  const postJsonByType = /** @type {typeof postJson<Page>} */ (postJson)
-  const putJsonByType = /** @type {typeof putJson<Page>} */ (putJson)
-  const delJsonByType = /** @type {typeof delJson<ComponentDef>} */ (delJson)
-
-  const { pageHeading, guidanceText } = payload
-
-  const page = definition.pages.find((x) => x.id === pageId)
-  const components = hasComponents(page) ? page.components : []
-
-  const isExpanded = isCheckboxSelected(payload.pageHeadingAndGuidance)
-
-  const pageHeadingForCall = isExpanded ? pageHeading : ''
-  const pagePathForCall = `/${slugify(resolvePageHeading(page, pageHeading, components))}`
-
-  // Update page heading
-  const pageHeadingRequestUrl = new URL(
-    `./${formId}/definition/draft/pages/${pageId}`,
-    formsEndpoint
-  )
-  await patchJsonByType(pageHeadingRequestUrl, {
-    payload: {
-      title: pageHeadingForCall,
-      path: pagePathForCall
-    },
-    ...getHeaders(token)
-  })
-
   // Insert a guidance component, or update if it already exists, or remove if no longer used
   const existingGuidance = components.find(
     (comp, idx) => comp.type === ComponentType.Html && idx === 0
@@ -194,5 +171,86 @@ export async function setPageHeadingAndGuidance(
 }
 
 /**
- * @import { ComponentDef, Page, FormEditorInputPageSettings, FormDefinition } from '@defra/forms-model'
+ * Set page heading and/or guidance text
+ * @param {string} formId
+ * @param {string} token
+ * @param {string} pageId
+ * @param {FormDefinition} definition
+ * @param {Partial<FormEditorInputPageSettings>} payload
+ */
+export async function setPageHeadingAndGuidance(
+  formId,
+  token,
+  pageId,
+  definition,
+  payload
+) {
+  const { pageHeading, guidanceText } = payload
+
+  const page = definition.pages.find((x) => x.id === pageId)
+  const components = hasComponents(page) ? page.components : []
+
+  const isExpanded = isCheckboxSelected(payload.pageHeadingAndGuidance)
+
+  const pageHeadingForCall = isExpanded ? pageHeading : ''
+  const pagePathForCall = `/${slugify(resolvePageHeading(page, pageHeading, components))}`
+
+  // Update page heading
+  const pageHeadingRequestUrl = new URL(
+    `./${formId}/definition/draft/pages/${pageId}`,
+    formsEndpoint
+  )
+  await patchJsonByType(pageHeadingRequestUrl, {
+    payload: {
+      title: pageHeadingForCall,
+      path: pagePathForCall
+    },
+    ...getHeaders(token)
+  })
+
+  await insertUpdateOrDeleteGuidance(
+    formId,
+    token,
+    pageId,
+    components,
+    isExpanded,
+    guidanceText
+  )
+}
+
+/**
+ * Set check-answers declaration text
+ * @param {string} formId
+ * @param {string} token
+ * @param {string} pageId
+ * @param {FormDefinition} definition
+ * @param {Partial<FormEditorInputCheckAnswersSettings>} payload
+ */
+export async function setCheckAnswersDeclaration(
+  formId,
+  token,
+  pageId,
+  definition,
+  payload
+) {
+  const { declarationText } = payload
+
+  const page = definition.pages.find((x) => x.id === pageId)
+  // Unable to use hasComponents() method since Summary page does not contain 'next' property
+  const components = hasComponentsEvenIfNoNext(page) ? page.components : []
+
+  const isExpanded = isCheckboxSelected(payload.needDeclaration)
+
+  await insertUpdateOrDeleteGuidance(
+    formId,
+    token,
+    pageId,
+    components,
+    isExpanded,
+    declarationText
+  )
+}
+
+/**
+ * @import { ComponentDef, Page, FormEditorInputCheckAnswersSettings, FormEditorInputPageSettings, FormDefinition } from '@defra/forms-model'
  */

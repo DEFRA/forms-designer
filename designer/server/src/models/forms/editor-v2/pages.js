@@ -1,7 +1,8 @@
 import {
   ComponentType,
   ControllerType,
-  hasComponents
+  hasComponents,
+  hasComponentsEvenIfNoNext
 } from '@defra/forms-model'
 
 import {
@@ -15,9 +16,42 @@ import {
 } from '~/src/models/links.js'
 
 /**
+ * @param {Page} page
+ */
+export function mapQuestionRows(page) {
+  const components = hasComponentsEvenIfNoNext(page) ? page.components : []
+  if (page.controller === ControllerType.Summary) {
+    return components.map((comp) => ({
+      key: {
+        text: 'Declaration'
+      },
+      value: {
+        html:
+          comp.type === ComponentType.Html
+            ? `<pre class="break-on-newlines"><p class="govuk-body">${comp.content}</p></pre>`
+            : '',
+        classes: 'with-ellipsis'
+      }
+    }))
+  }
+
+  return components.map((comp, idx) => ({
+    key: {
+      text: `Question ${idx + 1}`
+    },
+    value: {
+      text:
+        comp.options?.required === false
+          ? `${comp.title} (optional)`
+          : comp.title
+    }
+  }))
+}
+
+/**
  * @param {FormDefinition} definition
  */
-export function setPageHeadings(definition) {
+export function mapPageData(definition) {
   if (!definition.pages.length) {
     return definition
   }
@@ -27,12 +61,14 @@ export function setPageHeadings(definition) {
     pages: definition.pages.map((page) => {
       if (page.title === '') {
         return {
-          ...hideFirstGuidance(page),
-          title: hasComponents(page) ? page.components[0].title : ''
+          ...page,
+          title: hasComponents(page) ? page.components[0].title : '',
+          questionRows: mapQuestionRows(hideFirstGuidance(page))
         }
       }
       return {
-        ...hideFirstGuidance(page)
+        ...page,
+        questionRows: mapQuestionRows(hideFirstGuidance(page))
       }
     })
   }
@@ -44,6 +80,10 @@ export function setPageHeadings(definition) {
  * @param {Page} page
  */
 export function hideFirstGuidance(page) {
+  if (page.controller === ControllerType.Summary) {
+    return page
+  }
+
   return {
     ...page,
     components: hasComponents(page)
@@ -57,11 +97,13 @@ export function hideFirstGuidance(page) {
 /**
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
+ * @param {string[]} [notification]
  */
-export function pagesViewModel(metadata, definition) {
+export function pagesViewModel(metadata, definition, notification) {
   const formPath = formOverviewPath(metadata.slug)
   const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
   const previewBaseUrl = buildPreviewUrl(metadata.slug)
+  const editBaseUrl = `/library/${metadata.slug}/editor-v2/page/`
 
   const pageActions = [
     {
@@ -97,8 +139,9 @@ export function pagesViewModel(metadata, definition) {
   }
 
   const pageListModel = {
-    ...setPageHeadings(definition),
+    ...mapPageData(definition),
     formSlug: metadata.slug,
+    editBaseUrl,
     previewBaseUrl,
     navigation,
     pageHeading: {
@@ -107,7 +150,8 @@ export function pagesViewModel(metadata, definition) {
     pageCaption: {
       text: definition.name
     },
-    pageActions
+    pageActions,
+    notification
   }
 
   return {

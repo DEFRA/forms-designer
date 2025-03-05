@@ -46,7 +46,8 @@ export const testFormDefinitionWithSummaryOnly = {
       id: 'p1',
       title: 'Summary',
       path: '/summary',
-      controller: ControllerType.Summary
+      controller: ControllerType.Summary,
+      components: []
     }
   ],
   conditions: [],
@@ -120,7 +121,8 @@ export const testFormDefinitionWithTwoQuestions = {
       id: 'p2',
       title: 'Summary',
       path: '/summary',
-      controller: ControllerType.Summary
+      controller: ControllerType.Summary,
+      components: []
     }
   ],
   conditions: [],
@@ -192,7 +194,8 @@ export const testFormDefinitionWithTwoPagesAndQuestions = {
       id: 'p3',
       title: 'Summary',
       path: '/summary',
-      controller: ControllerType.Summary
+      controller: ControllerType.Summary,
+      components: []
     }
   ],
   conditions: [],
@@ -218,7 +221,8 @@ export const testFormDefinitionWithNoQuestions = {
       id: 'p2',
       title: 'Summary',
       path: '/summary',
-      controller: ControllerType.Summary
+      controller: ControllerType.Summary,
+      components: []
     }
   ],
   conditions: [],
@@ -232,6 +236,93 @@ export const testFormDefinitionWithNoQuestions = {
 export const testFormDefinitionWithNoPages = {
   name: 'Test form',
   pages: [],
+  conditions: [],
+  sections: [],
+  lists: []
+}
+
+/**
+ * @satisfies {FormDefinition}
+ */
+export const testFormDefinitionWithExistingGuidance = {
+  name: 'Test form',
+  pages: [
+    {
+      path: '/page-one',
+      title: 'Page one',
+      section: 'section',
+      id: '12345',
+      components: [
+        {
+          id: '45678',
+          type: ComponentType.Html,
+          name: 'html-guidance',
+          title: 'html-title',
+          content: 'Original guidance',
+          options: {}
+        },
+        {
+          type: ComponentType.TextField,
+          name: 'textField',
+          title: 'This is your first field',
+          hint: 'Help text',
+          options: {},
+          schema: {}
+        }
+      ],
+      next: [{ path: '/summary' }]
+    },
+    {
+      title: 'Summary',
+      path: '/summary',
+      controller: ControllerType.Summary
+    }
+  ],
+  conditions: [],
+  sections: [],
+  lists: []
+}
+
+/**
+ * @satisfies {FormDefinition}
+ */
+export const testFormDefinitionWithExistingSummaryDeclaration = {
+  name: 'Test form',
+  pages: [
+    {
+      path: '/page-one',
+      title: 'Page one',
+      section: 'section',
+      id: 'p1',
+      components: [
+        {
+          type: ComponentType.TextField,
+          name: 'textField',
+          title: 'This is your first field',
+          hint: 'Help text',
+          options: {},
+          schema: {}
+        }
+      ],
+      next: [{ path: '/summary' }]
+    },
+    {
+      id: 'p2',
+      title: 'Summary',
+      path: '/summary',
+      controller: ControllerType.Summary,
+      components: [
+        {
+          id: '45678',
+          type: ComponentType.Html,
+          name: 'html-declaration',
+          title: 'html-title',
+          content: 'Declaration text',
+          options: {}
+        }
+      ]
+    }
+  ],
   conditions: [],
   sections: [],
   lists: []

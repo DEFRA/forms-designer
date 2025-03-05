@@ -11,7 +11,7 @@
                   <div class="editor-card-title">{{ params.title }}</div>
                   <div class="govuk-summary-card__title-wrapper govuk-!-padding-top-0"></div>
                   <span class="govuk-caption-l">{{ params.caption }}</span>
-                  {% if params.heading %}<h2 class="govuk-heading-l" id="page-heading">{{ params.heading }}</h2>{% endif %}
+                  {% if params.heading %}<h1 class="govuk-heading-l" id="page-heading">{{ params.heading }}</h1>{% endif %}
 
                   {% if params.notification | length %}
                     {% call govukNotificationBanner({

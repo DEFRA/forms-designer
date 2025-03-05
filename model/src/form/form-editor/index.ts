@@ -2,6 +2,7 @@ import Joi from 'joi'
 
 import { ComponentType } from '~/src/components/enums.js'
 import {
+  type FormEditorInputCheckAnswersSettings,
   type FormEditorInputPage,
   type FormEditorInputPageSettings,
   type FormEditorInputQuestion
@@ -55,6 +56,8 @@ export const shortDescriptionSchema = Joi.string().required()
 export const pageHeadingAndGuidanceSchema = Joi.string().optional()
 export const pageHeadingSchema = Joi.string().required()
 export const guidanceTextSchema = Joi.string().optional().allow('')
+export const needDeclarationSchema = Joi.string().required()
+export const declarationTextSchema = Joi.string().required()
 
 export const formEditorInputPageKeys = {
   pageType: pageTypeSchema,
@@ -68,6 +71,19 @@ export const formEditorInputPageKeys = {
 export const formEditorInputPageSchema = Joi.object<FormEditorInputPage>()
   .keys(formEditorInputPageKeys)
   .required()
+
+export const formEditorInputheckAnswersSettingsKeys = {
+  declarationText: shortDescriptionSchema
+}
+
+/**
+ * Joi schema for `FormEditorInputCheckAnswersSettings` interface
+ * @see {@link FormEditorInputCheckAnswersSettings}
+ */
+export const formEditorInputCheckAnswersSettingSchema =
+  Joi.object<FormEditorInputCheckAnswersSettings>()
+    .keys(formEditorInputheckAnswersSettingsKeys)
+    .required()
 
 export const formEditorInputQuestionKeys = {
   question: questionSchema,

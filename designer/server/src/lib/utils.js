@@ -65,6 +65,7 @@ export function insertValidationErrors(formField) {
     })
   }
 }
+
 /**
  * @import { ErrorDetailsItem } from '~/src/common/helpers/types.js'
  * @import Wreck from '@hapi/wreck'

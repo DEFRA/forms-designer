@@ -69,6 +69,7 @@ function questionDetailsFields(question, validation) {
         ]
       },
       shortDescription: {
+        id: 'shortDescription',
         name: 'shortDescription',
         idPrefix: 'shortDescription',
         label: {

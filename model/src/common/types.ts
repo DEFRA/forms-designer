@@ -127,7 +127,9 @@ export interface CheckboxOrRadioItem {
   /**
    * Provide additional content to reveal when the checkbox/radio is checked
    */
-  conditional?: object
+  conditional?: {
+    html?: string
+  }
 
   /**
    * The behaviour - if set to "exclusive" implements a 'None of thse' type behaviour via Javascript when checkboxes are clicked
