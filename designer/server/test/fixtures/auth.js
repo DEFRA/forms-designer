@@ -75,17 +75,17 @@ export function credentials(options) {
 }
 
 const claims = {
-  token: profile({ groups: ['valid-test-group'], login_hint: 'foobar' }),
+  token: profile({ groups: ['valid-test-group'], login_hint: 'foo' }),
   idToken: profile()
 }
 
 const claimsGroupsInvalid = {
-  token: profile({ groups: ['invalid-test-group'], login_hint: 'foobar' }),
+  token: profile({ groups: ['invalid-test-group'], login_hint: 'foo' }),
   idToken: profile()
 }
 
 const claimsGroupsEmpty = {
-  token: profile({ groups: [], login_hint: 'foobar' }),
+  token: profile({ groups: [], login_hint: 'foo' }),
   idToken: profile()
 }
 

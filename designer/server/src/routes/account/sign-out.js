@@ -6,10 +6,11 @@ import { dropUserSession } from '~/src/common/helpers/auth/drop-user-session.js'
 import { hasUser } from '~/src/common/helpers/auth/get-user-session.js'
 import config from '~/src/config.js'
 import * as oidc from '~/src/lib/oidc.js'
+import { getLoginHint } from '~/src/routes/account/auth.js'
 
 const redirectUrl = new URL(`/account/signed-out`, config.appBaseUrl)
 
-export default /** @satisfies {ServerRoute<{ Query: { logoutHint: string }}>} */ ({
+export default /** @satisfies {ServerRoute<{ Query: { logoutHint?: string }}>} */ ({
   method: 'GET',
   path: '/auth/sign-out',
   async handler(request, h) {
@@ -26,9 +27,11 @@ export default /** @satisfies {ServerRoute<{ Query: { logoutHint: string }}>} */
 
     // Build end session URL
     const endSessionUrl = new URL(wellKnownConfiguration.end_session_endpoint)
-    endSessionUrl.searchParams.set('client_id', config.azureClientId)
     endSessionUrl.searchParams.set('post_logout_redirect_uri', redirectUrl.href)
-    endSessionUrl.searchParams.set('logout_hint', logoutHint)
+    endSessionUrl.searchParams.set(
+      'logout_hint',
+      logoutHint ?? getLoginHint(credentials.token) // take the logout hint from the request if provided (force signout), else find it from the user's session
+    )
 
     await dropUserSession(request)
 
