@@ -6,18 +6,19 @@ import { dropUserSession } from '~/src/common/helpers/auth/drop-user-session.js'
 import { hasUser } from '~/src/common/helpers/auth/get-user-session.js'
 import config from '~/src/config.js'
 import * as oidc from '~/src/lib/oidc.js'
+import { getLoginHint } from '~/src/routes/account/auth.js'
 
 const redirectUrl = new URL(`/account/signed-out`, config.appBaseUrl)
 
-export default /** @satisfies {ServerRoute<{ Params: { force: boolean }}>} */ ({
+export default /** @satisfies {ServerRoute<{ Query: { logoutHint?: string }}>} */ ({
   method: 'GET',
   path: '/auth/sign-out',
   async handler(request, h) {
     const { credentials } = request.auth
-    const { force } = request.query
+    const { logoutHint } = request.query
 
     // Skip OpenID Connect (OIDC) when not authenticated
-    if (!force && (!hasUser(credentials) || config.isTest)) {
+    if (!logoutHint && (!hasUser(credentials) || config.isTest)) {
       await dropUserSession(request)
       return h.redirect('/')
     }
@@ -26,9 +27,11 @@ export default /** @satisfies {ServerRoute<{ Params: { force: boolean }}>} */ ({
 
     // Build end session URL
     const endSessionUrl = new URL(wellKnownConfiguration.end_session_endpoint)
-    endSessionUrl.searchParams.set('client_id', config.azureClientId)
     endSessionUrl.searchParams.set('post_logout_redirect_uri', redirectUrl.href)
-    // TODO add logout_hint as a parameter to force sign out on the active account rather than showing the picker
+    endSessionUrl.searchParams.set(
+      'logout_hint',
+      logoutHint ?? getLoginHint(credentials.token) // take the logout hint from the request if provided (force signout), else find it from the user's session
+    )
 
     await dropUserSession(request)
 
@@ -38,7 +41,7 @@ export default /** @satisfies {ServerRoute<{ Params: { force: boolean }}>} */ ({
   options: {
     validate: {
       query: Joi.object({
-        force: Joi.boolean().default(false) // in the event we don't yet have a session locally but one exists in AAD, we can force sign them out
+        logoutHint: Joi.string().optional() // in the event we don't yet have a session locally but one exists in AAD, we can force sign them out
       })
     },
     auth: {

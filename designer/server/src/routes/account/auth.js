@@ -1,4 +1,5 @@
 import Boom from '@hapi/boom'
+import { token } from '@hapi/jwt'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { hasUser } from '~/src/common/helpers/auth/get-user-session.js'
@@ -15,11 +16,13 @@ export default [
     async handler(request, h) {
       const { cookieAuth, yar } = request
 
-      const forceSignOut = yar.flash(sessionNames.forceSignOut).at(0) ?? false
+      const logoutHint = yar.flash(sessionNames.logoutHint).at(0) // logoutHint on the outbound is the same value as loginHint on the inbound
 
-      if (forceSignOut) {
+      if (logoutHint) {
         // e.g. for duplicate sessions
-        return h.redirect('/auth/sign-out?force=true')
+        return h.redirect(
+          `/auth/sign-out?logoutHint=${encodeURIComponent(logoutHint)}`
+        )
       }
 
       // Create user session
@@ -32,7 +35,8 @@ export default [
       // Add to authentication cookie for session validation
       cookieAuth.set({
         sessionId: credentials.user.id,
-        flowId: credentials.flowId // always store the latest flowId so we can detect stale sessions later
+        flowId: credentials.flowId, // always store the latest flowId so we can detect stale sessions later
+        loginHint: getLoginHint(credentials.token) // so we can hint to AAD which account to sign the user out of
       })
 
       const redirect =
@@ -56,6 +60,28 @@ export default [
     }
   })
 ]
+
+/**
+ * Gets a login hint from an access token, if it exists.
+ * @param {string} accessToken
+ * @throws {Error} If the login hint is missing or not a string
+ */
+export function getLoginHint(accessToken) {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- hapi returns any, nothing we can do
+  const accessTokenDecoded = /** @type {{login_hint?: string}} */ (
+    token.decode(accessToken).decoded.payload
+  )
+
+  if (!('login_hint' in accessTokenDecoded)) {
+    throw new Error('Missing login_hint in token')
+  }
+
+  if (typeof accessTokenDecoded.login_hint !== 'string') {
+    throw new Error('login_hint in token is not a string')
+  }
+
+  return accessTokenDecoded.login_hint
+}
 
 /**
  * @import { AuthArtifacts, ServerRoute } from '@hapi/hapi'

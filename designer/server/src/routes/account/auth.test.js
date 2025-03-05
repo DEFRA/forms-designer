@@ -1,7 +1,9 @@
+import { token } from '@hapi/jwt'
 import { StatusCodes } from 'http-status-codes'
 
 import { createServer } from '~/src/createServer.js'
 import * as forms from '~/src/lib/forms.js'
+import { getLoginHint } from '~/src/routes/account/auth.js'
 import {
   auth,
   authGroupsInvalid,
@@ -82,13 +84,35 @@ describe('Authentiation', () => {
 
     const callbackResponseS1b = await doAuthCallback(server, auth, cookiesS1) // follow the callback with session 1 (stale)
     expect(callbackResponseS1b.headers.location).toBe(
-      '/auth/sign-out?force=true'
+      '/auth/sign-out?logoutHint=foo'
     ) // the callback identified the duplicate session, the sign-out route should act upon it
 
     // attempt to access a page with session two
     // this is valid as it's the active session
     const libraryResponse2S2 = await doCallLibrary(server, cookiesS2)
     expect(libraryResponse2S2.statusCode).toBe(StatusCodes.OK) // this remains the active session, so it should continue
+  })
+})
+
+describe('getLoginHint', () => {
+  it('should return the token', () => {
+    const jwt = token.generate({ login_hint: 'foo' }, 'mypass')
+
+    expect(getLoginHint(jwt)).toBe('foo')
+  })
+
+  it('should throw an error if the login_hint is missing', () => {
+    const jwt = token.generate({}, 'mypass')
+
+    expect(() => getLoginHint(jwt)).toThrow('Missing login_hint in token')
+  })
+
+  it('should throw an error if the login_hint is a non-string value', () => {
+    const jwt = token.generate({ login_hint: 123 }, 'mypass')
+
+    expect(() => getLoginHint(jwt)).toThrow(
+      'login_hint in token is not a string'
+    )
   })
 })
 

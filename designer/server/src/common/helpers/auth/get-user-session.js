@@ -4,7 +4,7 @@ import { isPast, parseISO, subMinutes } from 'date-fns'
 import { groupsToScopes } from '~/src/common/constants/scopes.js'
 
 /**
- * @param {Partial<Request> | Request<{ AuthArtifactsExtra: AuthArtifacts }> | Request<{ Params: { force: boolean } }>} request
+ * @param {Partial<Request> | Request<{ AuthArtifactsExtra: AuthArtifacts }> | Request<{ Query: { logoutHint?: string } }>} request
  * @param {{ sessionId: string, user: UserCredentials }} [session] - Session cookie state
  */
 export async function getUserSession(request, session) {
