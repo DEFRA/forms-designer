@@ -4,6 +4,7 @@ import {
   controllerNameFromPath,
   getPageDefaults,
   hasComponents,
+  hasComponentsEvenIfNoNext,
   hasFormComponents,
   hasNext,
   hasRepeater
@@ -116,6 +117,23 @@ describe('helpers', () => {
     )("returns false for unsupported page type '$controller'", (page) =>
       expect(hasRepeater(page)).toBe(false)
     )
+  })
+
+  describe('hasComponentsEvenIfNoNext', () => {
+    const pageWithComponents = {
+      components: []
+    }
+
+    const pageWithoutComponents = {}
+
+    it('returns true if page has components', () =>
+      expect(hasComponentsEvenIfNoNext(pageWithComponents)).toBe(true))
+
+    it('returns false if page has no components', () =>
+      expect(hasComponentsEvenIfNoNext(pageWithoutComponents)).toBe(false))
+
+    it('returns false if page is undefined', () =>
+      expect(hasComponentsEvenIfNoNext(undefined)).toBe(false))
   })
 
   describe('controllerNameFromPath', () => {
