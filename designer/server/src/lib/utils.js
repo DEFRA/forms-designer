@@ -67,24 +67,6 @@ export function insertValidationErrors(formField) {
 }
 
 /**
- * Truncate a string and append an ellipsis (if necessary)
- * @param {string | undefined} strVal
- * @param {number} max
- */
-export function ellipsise(strVal, max = 50) {
-  if (!strVal) {
-    return strVal
-  }
-
-  const len = strVal.length
-  if (len <= max) {
-    return strVal
-  }
-
-  return `${strVal.substring(0, max)}...`
-}
-
-/**
  * Replace line breaks with <br> for HTML rendering
  * @param {string | undefined} str
  */

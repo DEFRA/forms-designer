@@ -5,7 +5,7 @@ import {
   hasComponentsEvenIfNoNext
 } from '@defra/forms-model'
 
-import { ellipsise, nlToBr } from '~/src/lib/utils.js'
+import { nlToBr } from '~/src/lib/utils.js'
 import {
   buildPreviewUrl,
   getFormSpecificNavigation
@@ -27,9 +27,8 @@ export function mapQuestionRows(page) {
         text: 'Declaration'
       },
       value: {
-        html: nlToBr(
-          comp.type === ComponentType.Html ? ellipsise(comp.content) : ''
-        )
+        html: nlToBr(comp.type === ComponentType.Html ? comp.content : ''),
+        classes: 'with-ellipsis'
       }
     }))
   }

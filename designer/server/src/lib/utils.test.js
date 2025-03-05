@@ -1,7 +1,7 @@
 import { getTraceId } from '@defra/hapi-tracing'
 
 import config from '~/src/config.js'
-import { ellipsise, getHeaders, nlToBr } from '~/src/lib/utils.js'
+import { getHeaders, nlToBr } from '~/src/lib/utils.js'
 
 jest.mock('@defra/hapi-tracing')
 
@@ -27,27 +27,6 @@ describe('Header helper functions', () => {
         Authorization: 'Bearer token'
       }
     })
-  })
-})
-
-describe('ellipsise', () => {
-  it('should handle undeinfed', () => {
-    expect(ellipsise(undefined)).toBeUndefined()
-  })
-  it('should return string unchanged if less than max', () => {
-    expect(ellipsise('A small string to stay as is')).toBe(
-      'A small string to stay as is'
-    )
-  })
-  it('should handle override of max', () => {
-    expect(ellipsise('A small string to stay as is', 10)).toBe('A small st...')
-  })
-  it('should handle adding an ellipsis', () => {
-    expect(
-      ellipsise(
-        'A string of text that is longer than the default so it will get truncated'
-      )
-    ).toBe('A string of text that is longer than the default s...')
   })
 })
 
