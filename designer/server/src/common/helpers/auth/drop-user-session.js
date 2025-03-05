@@ -4,7 +4,7 @@ import {
 } from '~/src/common/helpers/auth/get-user-session.js'
 
 /**
- * @param {Request | Request<{ AuthArtifactsExtra: AuthArtifacts }> | Request<{ Params: { force: boolean } }> } request
+ * @param {Request | Request<{ AuthArtifactsExtra: AuthArtifacts }> | Request<{ Query: { logoutHint: string } }> } request
  */
 export async function dropUserSession(request) {
   const { cookieAuth, server } = request

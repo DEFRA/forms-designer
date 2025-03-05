@@ -82,7 +82,7 @@ describe('Authentiation', () => {
 
     const callbackResponseS1b = await doAuthCallback(server, auth, cookiesS1) // follow the callback with session 1 (stale)
     expect(callbackResponseS1b.headers.location).toBe(
-      '/auth/sign-out?force=true'
+      '/auth/sign-out?logoutHint=foobar'
     ) // the callback identified the duplicate session, the sign-out route should act upon it
 
     // attempt to access a page with session two
