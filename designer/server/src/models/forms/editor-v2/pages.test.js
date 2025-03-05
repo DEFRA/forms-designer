@@ -1,4 +1,5 @@
 import { ComponentType } from '@defra/forms-model'
+import { v4 as uuidv4 } from 'uuid'
 
 import {
   testFormDefinitionWithNoPages,
@@ -9,6 +10,24 @@ import {
   hideFirstGuidance,
   setPageHeadings
 } from '~/src/models/forms/editor-v2/pages.js'
+
+/**
+ * @param {ComponentDef[] | undefined} components
+ */
+function insertGuidanceAtTop(components) {
+  if (!components) {
+    return
+  }
+
+  components.unshift({
+    id: uuidv4(),
+    name: 'html',
+    title: 'html',
+    type: ComponentType.Html,
+    content: '# line1\r\n## line2\r\n### line3',
+    options: {}
+  })
+}
 
 describe('editor-v2 - pages model', () => {
   describe('setPageHeadings', () => {
@@ -60,6 +79,11 @@ describe('editor-v2 - pages model', () => {
         ...testFormDefinitionWithTwoPagesAndQuestions
       }
       const [page1, page2, page3] = testFormWithTwoGuidances.pages
+      insertGuidanceAtTop(page1.components)
+      insertGuidanceAtTop(page2.components)
+      expect(page1.components).toHaveLength(3)
+      expect(page2.components).toHaveLength(3)
+
       const page1Res = hideFirstGuidance(page1)
       expect(page1Res.components).toHaveLength(2)
       expect(page1Res.components[0].type).toBe(ComponentType.TextField)
@@ -71,3 +95,7 @@ describe('editor-v2 - pages model', () => {
     })
   })
 })
+
+/**
+ * @import { ComponentDef } from '@defra/forms-model'
+ */
