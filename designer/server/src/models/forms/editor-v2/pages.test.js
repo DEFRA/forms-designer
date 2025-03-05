@@ -1,5 +1,4 @@
 import { ComponentType } from '@defra/forms-model'
-import { v4 as uuidv4 } from 'uuid'
 
 import {
   testFormDefinitionWithNoPages,
@@ -20,7 +19,7 @@ function insertGuidanceAtTop(components) {
   }
 
   components.unshift({
-    id: uuidv4(),
+    id: '8045384f-b03a-49d8-bc0f-b8d2eb14765d',
     name: 'html',
     title: 'html',
     type: ComponentType.Html,
