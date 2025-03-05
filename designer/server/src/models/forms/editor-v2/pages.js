@@ -74,6 +74,22 @@ export function mapPageData(definition) {
 }
 
 /**
+ * Since the page setting of 'guidance' is shown at page level,
+ * we don't want to list the guidance component as one of the page's questions
+ * @param {Page} page
+ */
+export function hideFirstGuidance(page) {
+  return {
+    ...page,
+    components: hasComponents(page)
+      ? page.components.filter(
+          (comp, idx) => !(comp.type === ComponentType.Html && idx === 0)
+        )
+      : []
+  }
+}
+
+/**
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  * @param {string[]} [notification]
