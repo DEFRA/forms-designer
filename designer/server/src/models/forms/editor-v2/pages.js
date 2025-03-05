@@ -5,7 +5,6 @@ import {
   hasComponentsEvenIfNoNext
 } from '@defra/forms-model'
 
-import { nlToBr } from '~/src/lib/utils.js'
 import {
   buildPreviewUrl,
   getFormSpecificNavigation
@@ -27,7 +26,10 @@ export function mapQuestionRows(page) {
         text: 'Declaration'
       },
       value: {
-        html: nlToBr(comp.type === ComponentType.Html ? comp.content : ''),
+        html:
+          comp.type === ComponentType.Html
+            ? `<pre class="break-on-newlines"><p class="govuk-body">${comp.content}</p></pre>`
+            : '',
         classes: 'with-ellipsis'
       }
     }))

@@ -67,14 +67,6 @@ export function insertValidationErrors(formField) {
 }
 
 /**
- * Replace line breaks with <br> for HTML rendering
- * @param {string | undefined} str
- */
-export function nlToBr(str) {
-  return str ? str.split('\n').join('<br>') : ''
-}
-
-/**
  * @import { ErrorDetailsItem } from '~/src/common/helpers/types.js'
  * @import Wreck from '@hapi/wreck'
  */
