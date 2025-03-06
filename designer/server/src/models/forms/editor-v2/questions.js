@@ -101,9 +101,9 @@ export function questionsViewModel(
     ? formValues?.pageHeading
     : page.title
 
-  const guidanceComponent = /** @type {HtmlComponent | undefined} */ (
+  const guidanceComponent = /** @type {MarkdownComponent | undefined} */ (
     components.find(
-      (comp, idx) => comp.type === ComponentType.Html && idx === 0
+      (comp, idx) => comp.type === ComponentType.Markdown && idx === 0
     )
   )
 
@@ -129,7 +129,7 @@ export function questionsViewModel(
     questionRows: components
       .filter(
         (comp, idx) =>
-          (comp.type !== ComponentType.Html && idx === 0) || idx > 0
+          (comp.type !== ComponentType.Markdown && idx === 0) || idx > 0
       )
       .map((comp2, idx2) => {
         return {
@@ -163,6 +163,6 @@ export function questionsViewModel(
 }
 
 /**
- * @import { FormMetadata, FormDefinition, FormEditor, HtmlComponent } from '@defra/forms-model'
+ * @import { FormMetadata, FormDefinition, FormEditor, MarkdownComponent } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

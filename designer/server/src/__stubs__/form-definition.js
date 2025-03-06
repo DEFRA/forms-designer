@@ -255,7 +255,7 @@ export const testFormDefinitionWithExistingGuidance = {
       components: [
         {
           id: '45678',
-          type: ComponentType.Html,
+          type: ComponentType.Markdown,
           name: 'html-guidance',
           title: 'html-title',
           content: 'Original guidance',
@@ -314,7 +314,7 @@ export const testFormDefinitionWithExistingSummaryDeclaration = {
       components: [
         {
           id: '45678',
-          type: ComponentType.Html,
+          type: ComponentType.Markdown,
           name: 'html-declaration',
           title: 'html-title',
           content: 'Declaration text',

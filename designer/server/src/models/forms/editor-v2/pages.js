@@ -27,7 +27,7 @@ export function mapQuestionRows(page) {
       },
       value: {
         html:
-          comp.type === ComponentType.Html
+          comp.type === ComponentType.Markdown
             ? `<pre class="break-on-newlines"><p class="govuk-body">${comp.content}</p></pre>`
             : '',
         classes: 'with-ellipsis'
@@ -88,7 +88,7 @@ export function hideFirstGuidance(page) {
     ...page,
     components: hasComponents(page)
       ? page.components.filter(
-          (comp, idx) => !(comp.type === ComponentType.Html && idx === 0)
+          (comp, idx) => !(comp.type === ComponentType.Markdown && idx === 0)
         )
       : []
   }

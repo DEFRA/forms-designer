@@ -47,6 +47,7 @@ interface ContentFieldBase {
   type:
     | ComponentType.Details
     | ComponentType.Html
+    | ComponentType.Markdown
     | ComponentType.InsetText
     | ComponentType.List
   name: string
@@ -194,6 +195,14 @@ export interface HtmlComponent extends ContentFieldBase {
   }
 }
 
+export interface MarkdownComponent extends ContentFieldBase {
+  type: ComponentType.Markdown
+  content: string
+  options: ContentFieldBase['options'] & {
+    condition?: string
+  }
+}
+
 export interface InsetTextComponent extends ContentFieldBase {
   type: ComponentType.InsetText
   content: string
@@ -265,6 +274,7 @@ export type InputFieldsComponentsDef =
 export type ContentComponentsDef =
   | DetailsComponent
   | HtmlComponent
+  | MarkdownComponent
   | InsetTextComponent
   | ListComponent
 

@@ -21,9 +21,9 @@ function insertGuidanceAtTop(components) {
 
   components.unshift({
     id: '8045384f-b03a-49d8-bc0f-b8d2eb14765d',
-    name: 'html',
-    title: 'html',
-    type: ComponentType.Html,
+    name: 'markdown',
+    title: 'markdown',
+    type: ComponentType.Markdown,
     content: '# line1\r\n## line2\r\n### line3',
     options: {}
   })
