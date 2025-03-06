@@ -1,6 +1,7 @@
 import { ComponentType } from '@defra/forms-model'
 
 import {
+  testFormDefinitionWithExistingSummaryDeclaration,
   testFormDefinitionWithNoPages,
   testFormDefinitionWithTwoPagesAndQuestions,
   testFormDefinitionWithTwoQuestions
@@ -67,6 +68,10 @@ describe('editor-v2 - pages model', () => {
         testFormDefinitionWithTwoPagesAndQuestions.pages[2]
       )
 
+      const resPageSummaryExistingMarkdown = mapQuestionRows(
+        testFormDefinitionWithExistingSummaryDeclaration.pages[1]
+      )
+
       expect(resPageOneQuestions).toHaveLength(2)
       expect(resPageOneQuestions[0]).toEqual({
         key: {
@@ -103,6 +108,17 @@ describe('editor-v2 - pages model', () => {
         }
       })
       expect(resPageSummaryQuestions).toHaveLength(0)
+
+      expect(resPageSummaryExistingMarkdown).toHaveLength(1)
+      expect(resPageSummaryExistingMarkdown[0]).toEqual({
+        key: {
+          text: 'Declaration'
+        },
+        value: {
+          html: '<pre class="break-on-newlines"><p class="govuk-body">Declaration text</p></pre>',
+          classes: 'with-ellipsis'
+        }
+      })
     })
   })
 
