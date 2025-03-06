@@ -3,11 +3,13 @@ import { ComponentType } from '@defra/forms-model'
 import {
   testFormDefinitionWithExistingSummaryDeclaration,
   testFormDefinitionWithNoPages,
+  testFormDefinitionWithNoQuestions,
   testFormDefinitionWithTwoPagesAndQuestions,
   testFormDefinitionWithTwoQuestions
 } from '~/src/__stubs__/form-definition.js'
 import {
   hideFirstGuidance,
+  mapMarkdown,
   mapPageData,
   mapQuestionRows
 } from '~/src/models/forms/editor-v2/pages.js'
@@ -140,6 +142,7 @@ describe('editor-v2 - pages model', () => {
         ...testFormDefinitionWithTwoPagesAndQuestions
       }
       const [page1, page2, page3] = testFormWithTwoGuidances.pages
+      const blankPage = testFormDefinitionWithNoQuestions.pages[0]
       insertGuidanceAtTop(page1.components)
       insertGuidanceAtTop(page2.components)
       expect(page1.components).toHaveLength(3)
@@ -157,10 +160,47 @@ describe('editor-v2 - pages model', () => {
       ).toBe(ComponentType.TextField)
       const page3Res = hideFirstGuidance(page3)
       expect(page3Res.components).toEqual([])
+      const page4Res = hideFirstGuidance(blankPage)
+      expect(page4Res.components).toEqual([])
+    })
+  })
+
+  describe('mapMarkdown', () => {
+    test('should give title of Declaration', () => {
+      expect(
+        mapMarkdown(
+          /** @type {MarkdownComponent} */ ({ content: 'Some markdown' }),
+          true
+        )
+      ).toEqual({
+        key: {
+          text: 'Declaration'
+        },
+        value: {
+          html: '<pre class="break-on-newlines"><p class="govuk-body">Some markdown</p></pre>',
+          classes: 'with-ellipsis'
+        }
+      })
+    })
+    test('should give title of Markdown', () => {
+      expect(
+        mapMarkdown(
+          /** @type {MarkdownComponent} */ ({ content: 'Some markdown' }),
+          false
+        )
+      ).toEqual({
+        key: {
+          text: 'Markdown'
+        },
+        value: {
+          html: '<pre class="break-on-newlines"><p class="govuk-body">Some markdown</p></pre>',
+          classes: 'with-ellipsis'
+        }
+      })
     })
   })
 })
 
 /**
- * @import { ComponentDef } from '@defra/forms-model'
+ * @import { ComponentDef, MarkdownComponent } from '@defra/forms-model'
  */
