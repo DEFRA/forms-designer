@@ -184,7 +184,9 @@ export const testFormDefinitionWithTwoPagesAndQuestions = {
           name: 'textField',
           title: 'This is your second question - page two',
           hint: 'Help text',
-          options: {},
+          options: {
+            required: false
+          },
           schema: {}
         }
       ],

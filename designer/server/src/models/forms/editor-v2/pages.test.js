@@ -104,7 +104,7 @@ describe('editor-v2 - pages model', () => {
           text: 'Question 2'
         },
         value: {
-          text: 'This is your second question - page two'
+          text: 'This is your second question - page two (optional)'
         }
       })
       expect(resPageSummaryQuestions).toHaveLength(0)
@@ -112,7 +112,7 @@ describe('editor-v2 - pages model', () => {
       expect(resPageSummaryExistingMarkdown).toHaveLength(1)
       expect(resPageSummaryExistingMarkdown[0]).toEqual({
         key: {
-          text: 'Declaration'
+          text: 'Markdown'
         },
         value: {
           html: '<pre class="break-on-newlines"><p class="govuk-body">Declaration text</p></pre>',
