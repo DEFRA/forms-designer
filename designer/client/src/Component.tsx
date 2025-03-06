@@ -188,6 +188,17 @@ export function Html() {
   )
 }
 
+export function Markdown() {
+  return (
+    <ComponentField className="app-content">
+      <span className="app-field-heading govuk-!-margin-bottom-1"></span>
+      <span className="app-field-line" />
+      <span className="app-field-line" />
+      <span className="app-field-line" />
+    </ComponentField>
+  )
+}
+
 export function FileUploadField() {
   return (
     <ComponentField className="app-field-input">
@@ -214,6 +225,7 @@ export const componentTypes = {
   [ComponentType.Html]: Html,
   [ComponentType.InsetText]: InsetText,
   [ComponentType.List]: List,
+  [ComponentType.Markdown]: Markdown,
   [ComponentType.FileUploadField]: FileUploadField
 }
 

@@ -169,6 +169,18 @@ describe('ComponentEdit', () => {
       }
     ],
     [
+      ComponentType.Markdown,
+      {
+        hint: false,
+        title: false,
+        hideTitle: false,
+        content: true,
+        optional: false,
+        selectList: false,
+        selectCondition: true
+      }
+    ],
+    [
       ComponentType.MonthYearField,
       {
         hint: true,

@@ -104,7 +104,8 @@ export const componentSchema = Joi.object<ComponentDef>()
       is: Joi.string().valid(
         ComponentType.Details,
         ComponentType.Html,
-        ComponentType.InsetText
+        ComponentType.InsetText,
+        ComponentType.Markdown
       ),
       then: Joi.string().optional(),
       otherwise: Joi.string()
@@ -113,7 +114,8 @@ export const componentSchema = Joi.object<ComponentDef>()
       is: Joi.string().valid(
         ComponentType.Details,
         ComponentType.Html,
-        ComponentType.InsetText
+        ComponentType.InsetText,
+        ComponentType.Markdown
       ),
       then: Joi.string().optional(),
       otherwise: Joi.string().allow('')
