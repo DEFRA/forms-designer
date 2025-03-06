@@ -35,11 +35,12 @@ export function mapQuestion(component, idx) {
 
 /**
  * @param {MarkdownComponent} component
+ * @param {boolean} isSummary
  */
-export function mapMarkdown(component) {
+export function mapMarkdown(component, isSummary) {
   return {
     key: {
-      text: 'Markdown'
+      text: isSummary ? 'Declaration' : 'Markdown'
     },
     value: {
       html: `<pre class="break-on-newlines"><p class="govuk-body">${component.content}</p></pre>`,
@@ -54,9 +55,11 @@ export function mapMarkdown(component) {
 export function mapQuestionRows(page) {
   const components = hasComponentsEvenIfNoNext(page) ? page.components : []
 
+  const isSummary = page.controller === ControllerType.Summary
+
   return components.map((comp, idx) =>
     comp.type === ComponentType.Markdown
-      ? mapMarkdown(comp)
+      ? mapMarkdown(comp, isSummary)
       : mapQuestion(comp, idx)
   )
 }

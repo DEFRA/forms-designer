@@ -13,7 +13,7 @@ export enum ComponentType {
   TelephoneNumberField = 'TelephoneNumberField',
   EmailAddressField = 'EmailAddressField',
   Html = 'Html',
-  Markdown = 'HtmlMarkdown',
+  Markdown = 'Markdown',
   InsetText = 'InsetText',
   Details = 'Details',
   List = 'List',

@@ -112,7 +112,7 @@ describe('editor-v2 - pages model', () => {
       expect(resPageSummaryExistingMarkdown).toHaveLength(1)
       expect(resPageSummaryExistingMarkdown[0]).toEqual({
         key: {
-          text: 'Markdown'
+          text: 'Declaration'
         },
         value: {
           html: '<pre class="break-on-newlines"><p class="govuk-body">Declaration text</p></pre>',
