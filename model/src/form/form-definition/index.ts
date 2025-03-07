@@ -145,7 +145,7 @@ export const componentSchema = Joi.object<ComponentDef>()
   })
   .unknown(true)
 
-const componentSchemaV2 = componentSchema.keys({
+export const componentSchemaV2 = componentSchema.keys({
   id: Joi.string().uuid().default(uuidV4())
 })
 
@@ -219,7 +219,7 @@ export const pageSchemaPayloadV2 = pageSchemaV2.keys({
   components: Joi.array<ComponentDef>()
     .items(componentSchemaV2)
     .unique('name')
-    .unique('id')
+    .unique('id', { ignoreUndefined: true })
 })
 
 const baseListItemSchema = Joi.object<Item>().keys({
