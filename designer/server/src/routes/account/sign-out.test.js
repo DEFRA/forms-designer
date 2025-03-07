@@ -4,10 +4,12 @@ import { hasUser } from '~/src/common/helpers/auth/get-user-session.js'
 import config from '~/src/config.js'
 import { createServer } from '~/src/createServer.js'
 import * as oidc from '~/src/lib/oidc.js'
+import { getLoginHint } from '~/src/routes/account/auth.js'
 import { auth } from '~/test/fixtures/auth.js'
 
 jest.mock('~/src/common/helpers/auth/drop-user-session.js')
 jest.mock('~/src/common/helpers/auth/get-user-session.js')
+jest.mock('~/src/routes/account/auth.js')
 jest.mock('~/src/lib/oidc.js')
 
 describe('signOutRoute', () => {
@@ -20,7 +22,7 @@ describe('signOutRoute', () => {
     end_session_endpoint: 'https://example.com/end-session'
   }
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     jest
       .mocked(oidc.getWellKnownConfiguration)
       // @ts-expect-error we don't need a rich mock for this
@@ -29,11 +31,11 @@ describe('signOutRoute', () => {
     server = await createServer()
   })
 
-  afterAll(async () => {
+  afterEach(async () => {
     await server.stop()
   })
 
-  it('should redirect to home if not authenticated and force is false', async () => {
+  it("should redirect to home if not authenticated and the logoutHint isn't provided", async () => {
     jest.mocked(hasUser).mockReturnValueOnce(false)
     config.isTest = false
 
@@ -46,7 +48,7 @@ describe('signOutRoute', () => {
     expect(response.headers.location).toBe('/')
   })
 
-  it('should redirect to home if in test mode and force is false', async () => {
+  it("should redirect to home if in test mode and the logoutHint isn't provided", async () => {
     jest.mocked(hasUser).mockReturnValueOnce(true)
     config.isTest = true
 
@@ -59,18 +61,36 @@ describe('signOutRoute', () => {
     expect(response.headers.location).toBe('/')
   })
 
-  it('should redirect to end session URL if authenticated and force is true', async () => {
+  it('should redirect to end session URL if authenticated and the logoutHint is provided', async () => {
     jest.mocked(hasUser).mockReturnValueOnce(true)
+    config.isTest = false
 
     const response = await server.inject({
       method: 'GET',
-      url: '/auth/sign-out?force=true',
+      url: '/auth/sign-out?logoutHint=bar',
       auth
     })
 
     expect(response.statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
     expect(response.headers.location).toBe(
-      `${wellKnownConfiguration.end_session_endpoint}?client_id=dummy&post_logout_redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Faccount%2Fsigned-out`
+      `${wellKnownConfiguration.end_session_endpoint}?post_logout_redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Faccount%2Fsigned-out&logout_hint=bar` // foo is from the query params
+    )
+  })
+
+  it('should redirect to end session URL if authenticated and the logoutHint is not provided', async () => {
+    jest.mocked(hasUser).mockReturnValueOnce(true)
+    jest.mocked(getLoginHint).mockReturnValueOnce('foo')
+    config.isTest = false
+
+    const response = await server.inject({
+      method: 'GET',
+      url: '/auth/sign-out',
+      auth
+    })
+
+    expect(response.statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
+    expect(response.headers.location).toBe(
+      `${wellKnownConfiguration.end_session_endpoint}?post_logout_redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Faccount%2Fsigned-out&logout_hint=foo` // bar is from the credentials
     )
   })
 })
