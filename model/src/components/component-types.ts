@@ -124,6 +124,13 @@ export const ComponentTypes: readonly ComponentDef[] = Object.freeze([
     content: ''
   },
   {
+    name: 'Markdown',
+    title: 'Markdown',
+    type: ComponentType.Markdown,
+    content: '',
+    options: {}
+  },
+  {
     name: 'Details',
     title: 'Details',
     type: ComponentType.Details,

@@ -1,12 +1,15 @@
 import { ComponentType } from '@defra/forms-model'
 
 import {
+  testFormDefinitionWithExistingSummaryDeclaration,
   testFormDefinitionWithNoPages,
+  testFormDefinitionWithNoQuestions,
   testFormDefinitionWithTwoPagesAndQuestions,
   testFormDefinitionWithTwoQuestions
 } from '~/src/__stubs__/form-definition.js'
 import {
   hideFirstGuidance,
+  mapMarkdown,
   mapPageData,
   mapQuestionRows
 } from '~/src/models/forms/editor-v2/pages.js'
@@ -21,9 +24,9 @@ function insertGuidanceAtTop(components) {
 
   components.unshift({
     id: '8045384f-b03a-49d8-bc0f-b8d2eb14765d',
-    name: 'html',
-    title: 'html',
-    type: ComponentType.Html,
+    name: 'markdown',
+    title: 'markdown',
+    type: ComponentType.Markdown,
     content: '# line1\r\n## line2\r\n### line3',
     options: {}
   })
@@ -67,6 +70,10 @@ describe('editor-v2 - pages model', () => {
         testFormDefinitionWithTwoPagesAndQuestions.pages[2]
       )
 
+      const resPageSummaryExistingMarkdown = mapQuestionRows(
+        testFormDefinitionWithExistingSummaryDeclaration.pages[1]
+      )
+
       expect(resPageOneQuestions).toHaveLength(2)
       expect(resPageOneQuestions[0]).toEqual({
         key: {
@@ -99,10 +106,21 @@ describe('editor-v2 - pages model', () => {
           text: 'Question 2'
         },
         value: {
-          text: 'This is your second question - page two'
+          text: 'This is your second question - page two (optional)'
         }
       })
       expect(resPageSummaryQuestions).toHaveLength(0)
+
+      expect(resPageSummaryExistingMarkdown).toHaveLength(1)
+      expect(resPageSummaryExistingMarkdown[0]).toEqual({
+        key: {
+          text: 'Declaration'
+        },
+        value: {
+          html: '<pre class="break-on-newlines"><p class="govuk-body">Declaration text</p></pre>',
+          classes: 'with-ellipsis'
+        }
+      })
     })
   })
 
@@ -124,6 +142,7 @@ describe('editor-v2 - pages model', () => {
         ...testFormDefinitionWithTwoPagesAndQuestions
       }
       const [page1, page2, page3] = testFormWithTwoGuidances.pages
+      const blankPage = testFormDefinitionWithNoQuestions.pages[0]
       insertGuidanceAtTop(page1.components)
       insertGuidanceAtTop(page2.components)
       expect(page1.components).toHaveLength(3)
@@ -141,10 +160,47 @@ describe('editor-v2 - pages model', () => {
       ).toBe(ComponentType.TextField)
       const page3Res = hideFirstGuidance(page3)
       expect(page3Res.components).toEqual([])
+      const page4Res = hideFirstGuidance(blankPage)
+      expect(page4Res.components).toEqual([])
+    })
+  })
+
+  describe('mapMarkdown', () => {
+    test('should give title of Declaration', () => {
+      expect(
+        mapMarkdown(
+          /** @type {MarkdownComponent} */ ({ content: 'Some markdown' }),
+          true
+        )
+      ).toEqual({
+        key: {
+          text: 'Declaration'
+        },
+        value: {
+          html: '<pre class="break-on-newlines"><p class="govuk-body">Some markdown</p></pre>',
+          classes: 'with-ellipsis'
+        }
+      })
+    })
+    test('should give title of Markdown', () => {
+      expect(
+        mapMarkdown(
+          /** @type {MarkdownComponent} */ ({ content: 'Some markdown' }),
+          false
+        )
+      ).toEqual({
+        key: {
+          text: 'Markdown'
+        },
+        value: {
+          html: '<pre class="break-on-newlines"><p class="govuk-body">Some markdown</p></pre>',
+          classes: 'with-ellipsis'
+        }
+      })
     })
   })
 })
 
 /**
- * @import { ComponentDef } from '@defra/forms-model'
+ * @import { ComponentDef, MarkdownComponent } from '@defra/forms-model'
  */

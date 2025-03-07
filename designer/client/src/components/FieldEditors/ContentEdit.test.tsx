@@ -14,6 +14,7 @@ describe('ContentEdit', () => {
   const supported = [
     ComponentType.Details,
     ComponentType.Html,
+    ComponentType.Markdown,
     ComponentType.InsetText
   ]
 

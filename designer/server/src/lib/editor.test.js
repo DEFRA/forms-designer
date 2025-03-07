@@ -387,7 +387,7 @@ describe('editor.js', () => {
         const expectedOptionsGuidance = {
           payload: {
             content: 'Some guidance',
-            type: 'Html',
+            type: ComponentType.Markdown,
             id: undefined
           },
           headers: { Authorization: `Bearer ${token}` }
@@ -434,7 +434,7 @@ describe('editor.js', () => {
       const expectedOptionsGuidance = {
         payload: {
           content: 'Some guidance',
-          type: 'Html',
+          type: ComponentType.Markdown,
           id: '45678'
         },
         headers: { Authorization: `Bearer ${token}` }
@@ -513,7 +513,7 @@ describe('editor.js', () => {
         const expectedOptionsDeclaration = {
           payload: {
             content: 'Some declaration',
-            type: 'Html',
+            type: ComponentType.Markdown,
             id: undefined
           },
           headers: { Authorization: `Bearer ${token}` }
@@ -542,7 +542,7 @@ describe('editor.js', () => {
       const expectedOptionsDeclaration = {
         payload: {
           content: 'Some declaration text 2',
-          type: 'Html',
+          type: ComponentType.Markdown,
           id: '45678'
         },
         headers: { Authorization: `Bearer ${token}` }

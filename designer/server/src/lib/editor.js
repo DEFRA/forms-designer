@@ -99,7 +99,7 @@ export async function updateQuestion(
  */
 export function resolvePageHeading(page, pageHeading, components) {
   const firstQuestion = components.find(
-    (comp) => comp.type !== ComponentType.Html
+    (comp) => comp.type !== ComponentType.Markdown
   )
 
   const pageTitle = stringHasValue(pageHeading) ? pageHeading : page?.title
@@ -128,7 +128,7 @@ export async function insertUpdateOrDeleteGuidance(
 ) {
   // Insert a guidance component, or update if it already exists, or remove if no longer used
   const existingGuidance = components.find(
-    (comp, idx) => comp.type === ComponentType.Html && idx === 0
+    (comp, idx) => comp.type === ComponentType.Markdown && idx === 0
   )
 
   if (existingGuidance && (!stringHasValue(guidanceText) || !isExpanded)) {
@@ -146,7 +146,7 @@ export async function insertUpdateOrDeleteGuidance(
   if (isExpanded && stringHasValue(guidanceText)) {
     const guidancePayload = {
       id: existingGuidance?.id,
-      type: ComponentType.Html,
+      type: ComponentType.Markdown,
       content: guidanceText
     }
 

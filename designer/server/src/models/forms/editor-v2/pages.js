@@ -16,36 +16,52 @@ import {
 } from '~/src/models/links.js'
 
 /**
- * @param {Page} page
+ * @param {ComponentDef} component
+ * @param {number} idx
  */
-export function mapQuestionRows(page) {
-  const components = hasComponentsEvenIfNoNext(page) ? page.components : []
-  if (page.controller === ControllerType.Summary) {
-    return components.map((comp) => ({
-      key: {
-        text: 'Declaration'
-      },
-      value: {
-        html:
-          comp.type === ComponentType.Html
-            ? `<pre class="break-on-newlines"><p class="govuk-body">${comp.content}</p></pre>`
-            : '',
-        classes: 'with-ellipsis'
-      }
-    }))
-  }
-
-  return components.map((comp, idx) => ({
+export function mapQuestion(component, idx) {
+  return {
     key: {
       text: `Question ${idx + 1}`
     },
     value: {
       text:
-        comp.options?.required === false
-          ? `${comp.title} (optional)`
-          : comp.title
+        component.options?.required === false
+          ? `${component.title} (optional)`
+          : component.title
     }
-  }))
+  }
+}
+
+/**
+ * @param {MarkdownComponent} component
+ * @param {boolean} isSummary
+ */
+export function mapMarkdown(component, isSummary) {
+  return {
+    key: {
+      text: isSummary ? 'Declaration' : 'Markdown'
+    },
+    value: {
+      html: `<pre class="break-on-newlines"><p class="govuk-body">${component.content}</p></pre>`,
+      classes: 'with-ellipsis'
+    }
+  }
+}
+
+/**
+ * @param {Page} page
+ */
+export function mapQuestionRows(page) {
+  const components = hasComponentsEvenIfNoNext(page) ? page.components : []
+
+  const isSummary = page.controller === ControllerType.Summary
+
+  return components.map((comp, idx) =>
+    comp.type === ComponentType.Markdown
+      ? mapMarkdown(comp, isSummary)
+      : mapQuestion(comp, idx)
+  )
 }
 
 /**
@@ -62,7 +78,9 @@ export function mapPageData(definition) {
       if (page.title === '') {
         return {
           ...page,
-          title: hasComponents(page) ? page.components[0].title : '',
+          title: hasComponentsEvenIfNoNext(page)
+            ? page.components[0].title
+            : '',
           questionRows: mapQuestionRows(hideFirstGuidance(page))
         }
       }
@@ -88,7 +106,7 @@ export function hideFirstGuidance(page) {
     ...page,
     components: hasComponents(page)
       ? page.components.filter(
-          (comp, idx) => !(comp.type === ComponentType.Html && idx === 0)
+          (comp, idx) => !(comp.type === ComponentType.Markdown && idx === 0)
         )
       : []
   }
@@ -161,5 +179,5 @@ export function pagesViewModel(metadata, definition, notification) {
 }
 
 /**
- * @import { FormMetadata, FormDefinition, Page } from '@defra/forms-model'
+ * @import { ComponentDef, MarkdownComponent, FormMetadata, FormDefinition, Page } from '@defra/forms-model'
  */

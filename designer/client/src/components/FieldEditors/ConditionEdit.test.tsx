@@ -27,6 +27,7 @@ describe('Condition edit', () => {
     ComponentType.TextField,
     ComponentType.YesNoField,
     ComponentType.Html,
+    ComponentType.Markdown,
     ComponentType.Details
   ]
 
