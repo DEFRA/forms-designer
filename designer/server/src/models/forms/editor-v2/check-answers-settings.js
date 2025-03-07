@@ -76,10 +76,10 @@ export function checkAnswersSettingsViewModel(
   const page = definition.pages[pageIdx]
   const components = hasComponentsEvenIfNoNext(page) ? page.components : []
 
-  const guidanceComponent = /** @type {HtmlComponent | undefined} */ (
-    components.find(
-      (comp, idx) => comp.type === ComponentType.Html && idx === 0
-    )
+  const guidanceComponent = /** @type {MarkdownComponent | undefined} */ (
+    components.find((comp, idx) => {
+      return comp.type === ComponentType.Markdown && idx === 0
+    })
   )
 
   const declarationTextVal =
@@ -105,6 +105,6 @@ export function checkAnswersSettingsViewModel(
 }
 
 /**
- * @import { FormMetadata, FormDefinition, FormEditor, HtmlComponent } from '@defra/forms-model'
+ * @import { FormMetadata, FormDefinition, FormEditor, MarkdownComponent } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

@@ -55,7 +55,8 @@ describe.each([
         ComponentType.Details,
         ComponentType.Html,
         ComponentType.InsetText,
-        ComponentType.List
+        ComponentType.List,
+        ComponentType.Markdown
       ],
       selection: undefined,
       input: undefined
@@ -68,7 +69,8 @@ describe.each([
         ComponentType.Details,
         ComponentType.Html,
         ComponentType.InsetText,
-        ComponentType.List
+        ComponentType.List,
+        ComponentType.Markdown
       ],
       selection: [
         ComponentType.AutocompleteField,
@@ -96,7 +98,8 @@ describe.each([
         ComponentType.Details,
         ComponentType.Html,
         ComponentType.InsetText,
-        ComponentType.List
+        ComponentType.List,
+        ComponentType.Markdown
       ],
       selection: [],
       input: [ComponentType.FileUploadField]

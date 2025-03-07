@@ -52,6 +52,13 @@ describe('Type guards', () => {
       } satisfies ComponentDef,
       {
         name: 'content',
+        title: 'Markdown',
+        type: ComponentType.Markdown,
+        content: '<p class="govuk-body">Some content</p>',
+        options: {}
+      } satisfies ComponentDef,
+      {
+        name: 'content',
         title: '',
         type: ComponentType.InsetText,
         content: 'It can take up to 8 weeks to register a lasting power of…'
@@ -86,6 +93,13 @@ describe('Type guards', () => {
         name: 'content',
         title: 'HTML',
         type: ComponentType.Html,
+        content: '<p class="govuk-body">Some content</p>',
+        options: {}
+      } satisfies ComponentDef,
+      {
+        name: 'content',
+        title: 'Markdown',
+        type: ComponentType.Markdown,
         content: '<p class="govuk-body">Some content</p>',
         options: {}
       } satisfies ComponentDef,

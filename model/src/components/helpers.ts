@@ -11,6 +11,7 @@ import {
   type InsetTextComponent,
   type ListComponent,
   type ListComponentsDef,
+  type MarkdownComponent,
   type SelectionComponentsDef
 } from '~/src/components/types.js'
 
@@ -56,6 +57,7 @@ export function isConditionalType(
     ComponentType.TextField,
     ComponentType.YesNoField,
     ComponentType.Html,
+    ComponentType.Markdown,
     ComponentType.Details
   ]
 
@@ -87,6 +89,7 @@ export function isContentType(
   const allowedTypes = [
     ComponentType.Details,
     ComponentType.Html,
+    ComponentType.Markdown,
     ComponentType.InsetText,
     ComponentType.List
   ]
@@ -166,8 +169,15 @@ export function hasSelectionFields(
  */
 export function hasTitle(
   component?: Partial<ComponentDef>
-): component is Exclude<ComponentDef, InsetTextComponent | HtmlComponent> {
-  const deniedTypes = [ComponentType.InsetText, ComponentType.Html]
+): component is Exclude<
+  ComponentDef,
+  InsetTextComponent | HtmlComponent | MarkdownComponent
+> {
+  const deniedTypes = [
+    ComponentType.InsetText,
+    ComponentType.Html,
+    ComponentType.Markdown
+  ]
   return !!component?.type && !deniedTypes.includes(component.type)
 }
 

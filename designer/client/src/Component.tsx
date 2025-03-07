@@ -188,6 +188,10 @@ export function Html() {
   )
 }
 
+export function Markdown() {
+  return Html()
+}
+
 export function FileUploadField() {
   return (
     <ComponentField className="app-field-input">
@@ -212,6 +216,7 @@ export const componentTypes = {
   [ComponentType.UkAddressField]: UkAddressField,
   [ComponentType.Details]: Details,
   [ComponentType.Html]: Html,
+  [ComponentType.Markdown]: Markdown,
   [ComponentType.InsetText]: InsetText,
   [ComponentType.List]: List,
   [ComponentType.FileUploadField]: FileUploadField

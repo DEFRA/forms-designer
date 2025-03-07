@@ -184,7 +184,9 @@ export const testFormDefinitionWithTwoPagesAndQuestions = {
           name: 'textField',
           title: 'This is your second question - page two',
           hint: 'Help text',
-          options: {},
+          options: {
+            required: false
+          },
           schema: {}
         }
       ],
@@ -255,7 +257,7 @@ export const testFormDefinitionWithExistingGuidance = {
       components: [
         {
           id: '45678',
-          type: ComponentType.Html,
+          type: ComponentType.Markdown,
           name: 'html-guidance',
           title: 'html-title',
           content: 'Original guidance',
@@ -314,7 +316,7 @@ export const testFormDefinitionWithExistingSummaryDeclaration = {
       components: [
         {
           id: '45678',
-          type: ComponentType.Html,
+          type: ComponentType.Markdown,
           name: 'html-declaration',
           title: 'html-title',
           content: 'Declaration text',

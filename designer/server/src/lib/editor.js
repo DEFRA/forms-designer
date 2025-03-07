@@ -99,7 +99,7 @@ export async function updateQuestion(
  */
 export function resolvePageHeading(page, pageHeading, components) {
   const firstQuestion = components.find(
-    (comp) => comp.type !== ComponentType.Html
+    (comp) => comp.type !== ComponentType.Markdown
   )
 
   const pageTitle = stringHasValue(pageHeading) ? pageHeading : page?.title
@@ -127,9 +127,9 @@ export async function insertUpdateOrDeleteGuidance(
   guidanceText
 ) {
   // Insert a guidance component, or update if it already exists, or remove if no longer used
-  const existingGuidance = components.find(
-    (comp, idx) => comp.type === ComponentType.Html && idx === 0
-  )
+  const existingGuidance = components.find((comp, idx) => {
+    return comp.type === ComponentType.Markdown && idx === 0
+  })
 
   if (existingGuidance && (!stringHasValue(guidanceText) || !isExpanded)) {
     // Remove guidance component since the user has blanked out the guidance text now or unchecked the checkbox
@@ -146,7 +146,7 @@ export async function insertUpdateOrDeleteGuidance(
   if (isExpanded && stringHasValue(guidanceText)) {
     const guidancePayload = {
       id: existingGuidance?.id,
-      type: ComponentType.Html,
+      type: ComponentType.Markdown,
       content: guidanceText
     }
 
