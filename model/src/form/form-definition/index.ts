@@ -1,6 +1,5 @@
-import { randomUUID } from 'crypto'
-
 import Joi, { type LanguageMessages } from 'joi'
+import { v4 as uuidV4 } from 'uuid'
 
 import { ComponentType } from '~/src/components/enums.js'
 import { type ComponentDef } from '~/src/components/types.js'
@@ -147,7 +146,7 @@ export const componentSchema = Joi.object<ComponentDef>()
   .unknown(true)
 
 const componentSchemaV2 = componentSchema.keys({
-  id: Joi.string().uuid().default(randomUUID())
+  id: Joi.string().uuid().default(uuidV4())
 })
 
 const nextSchema = Joi.object<Link>().keys({
@@ -216,8 +215,11 @@ export const pageSchemaV2 = pageSchema.append({
 })
 
 export const pageSchemaPayloadV2 = pageSchemaV2.keys({
-  id: Joi.string().uuid().default(randomUUID()),
-  components: Joi.array<ComponentDef>().items(componentSchemaV2).unique('name')
+  id: Joi.string().uuid().default(uuidV4()),
+  components: Joi.array<ComponentDef>()
+    .items(componentSchemaV2)
+    .unique('name')
+    .unique('id')
 })
 
 const baseListItemSchema = Joi.object<Item>().keys({
