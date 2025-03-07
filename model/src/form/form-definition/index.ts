@@ -146,7 +146,9 @@ export const componentSchema = Joi.object<ComponentDef>()
   .unknown(true)
 
 export const componentSchemaV2 = componentSchema.keys({
-  id: Joi.string().uuid().default(uuidV4())
+  id: Joi.string()
+    .uuid()
+    .default(() => uuidV4())
 })
 
 const nextSchema = Joi.object<Link>().keys({
@@ -215,7 +217,9 @@ export const pageSchemaV2 = pageSchema.append({
 })
 
 export const pageSchemaPayloadV2 = pageSchemaV2.keys({
-  id: Joi.string().uuid().default(uuidV4()),
+  id: Joi.string()
+    .uuid()
+    .default(() => uuidV4()),
   components: Joi.array<ComponentDef>()
     .items(componentSchemaV2)
     .unique('name')
@@ -326,7 +330,7 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
     output: outputSchema.optional()
   })
 
-export const formDefinitionSchemaV2Payload = formDefinitionSchema.keys({
+export const formDefinitionV2PayloadSchema = formDefinitionSchema.keys({
   pages: Joi.array<Page>()
     .items(pageSchemaPayloadV2)
     .required()
