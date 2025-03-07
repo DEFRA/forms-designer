@@ -53,7 +53,7 @@ const sessionCookie = {
           /**
            * Validate session using auth credentials
            * @param {Request<{ AuthArtifactsExtra: AuthArtifacts }>} [request]
-           * @param {{ sessionId: string, flowId: string, user: UserCredentials }} [session] - Session cookie state
+           * @param {{ sessionId: string, flowId: string, loginHint: string, user: UserCredentials }} [session] - Session cookie state
            */
           async validate(request, session) {
             if (!request) {
@@ -71,7 +71,7 @@ const sessionCookie = {
                 `Found duplicate session for user ${credentials.user?.id}. Dropping old session`
               )
 
-              request.yar.flash(sessionNames.forceSignOut, true) // so we can detect the force sign out in the redirectTo function
+              request.yar.flash(sessionNames.logoutHint, session.loginHint) // so we can detect the force sign out in the redirectTo function
 
               return { isValid: false }
             }

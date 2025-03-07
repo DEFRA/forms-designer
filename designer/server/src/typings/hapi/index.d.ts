@@ -96,7 +96,7 @@ declare module '@hapi/yar' {
   type RedirectToKey = (typeof sessionNames)['redirectTo']
   type SuccessNotification = (typeof sessionNames)['successNotification']
   type ErrorListKey = (typeof sessionNames)['errorList']
-  type ForceSignOutKey = (typeof sessionNames)['forceSignOut']
+  type LogoutHintKey = (typeof sessionNames)['logoutHint']
   type QuestionType = (typeof sessionNames)['questionType']
   type ReorderPagesKey = (typeof sessionNames)['reorderPages']
 
@@ -111,7 +111,12 @@ declare module '@hapi/yar' {
      * (Deleted when read, e.g. after a redirect)
      */
     flash(
-      type: RedirectToKey | SuccessNotification | QuestionType | ReorderPagesKey
+      type:
+        | RedirectToKey
+        | SuccessNotification
+        | QuestionType
+        | LogoutHintKey
+        | ReorderPagesKey
     ): string[]
 
     /**
@@ -158,11 +163,6 @@ declare module '@hapi/yar' {
      * Get temporary error messages relating to the current page.
      */
     flash(type: ErrorListKey): ErrorDetailsItem[]
-
-    /**
-     * Get temporary boolean values from the session
-     */
-    flash(type: ForceSignOutKey): boolean[]
 
     /**
      * Get form metadata from the session

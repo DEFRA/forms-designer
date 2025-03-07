@@ -7,7 +7,7 @@ const issuedAt = DateTime.now().minus({ minutes: 30 })
 const expiresAt = DateTime.now().plus({ minutes: 30 })
 
 /**
- * @param {Pick<UserProfile, 'groups'>} [options]
+ * @param {Pick<UserProfile, 'groups'> & Pick<UserProfile, 'login_hint'>} [options]
  */
 export function profile(options) {
   return /** @satisfies {UserProfile} */ ({
@@ -21,7 +21,8 @@ export function profile(options) {
     given_name: 'John',
     family_name: 'Smith',
     sub: 'dummy_session_id',
-    groups: options?.groups
+    groups: options?.groups,
+    login_hint: options?.login_hint
   })
 }
 
@@ -74,17 +75,17 @@ export function credentials(options) {
 }
 
 const claims = {
-  token: profile({ groups: ['valid-test-group'] }),
+  token: profile({ groups: ['valid-test-group'], login_hint: 'foo' }),
   idToken: profile()
 }
 
 const claimsGroupsInvalid = {
-  token: profile({ groups: ['invalid-test-group'] }),
+  token: profile({ groups: ['invalid-test-group'], login_hint: 'foo' }),
   idToken: profile()
 }
 
 const claimsGroupsEmpty = {
-  token: profile({ groups: [] }),
+  token: profile({ groups: [], login_hint: 'foo' }),
   idToken: profile()
 }
 

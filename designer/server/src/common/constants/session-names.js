@@ -30,5 +30,5 @@ export const sessionNames = {
   },
   successNotification: /** @type {const} */ ('successNotification'),
   errorList: /** @type {const} */ ('errorList'),
-  forceSignOut: /** @type {const} */ ('forceSignOut')
+  logoutHint: /** @type {const} */ ('logoutHint')
 }
