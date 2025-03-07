@@ -1,4 +1,5 @@
 import Joi, { type LanguageMessages } from 'joi'
+import { v4 as uuidV4 } from 'uuid'
 
 import { ComponentType } from '~/src/components/enums.js'
 import { type ComponentDef } from '~/src/components/types.js'
@@ -144,6 +145,10 @@ export const componentSchema = Joi.object<ComponentDef>()
   })
   .unknown(true)
 
+const componentSchemaV2 = componentSchema.keys({
+  id: Joi.string().uuid().default(uuidV4())
+})
+
 const nextSchema = Joi.object<Link>().keys({
   path: Joi.string().required(),
   condition: Joi.string().allow('').optional(),
@@ -207,6 +212,14 @@ export const pageSchema = Joi.object<Page>().keys({
  */
 export const pageSchemaV2 = pageSchema.append({
   title: Joi.string().allow('').required()
+})
+
+export const pageSchemaPayloadV2 = pageSchemaV2.keys({
+  id: Joi.string().uuid().default(uuidV4()),
+  components: Joi.array<ComponentDef>()
+    .items(componentSchemaV2)
+    .unique('name')
+    .unique('id')
 })
 
 const baseListItemSchema = Joi.object<Item>().keys({
@@ -312,6 +325,14 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
       .optional(),
     output: outputSchema.optional()
   })
+
+export const formDefinitionSchemaV2Payload = formDefinitionSchema.keys({
+  pages: Joi.array<Page>()
+    .items(pageSchemaPayloadV2)
+    .required()
+    .unique('path')
+    .unique('id', { ignoreUndefined: true })
+})
 
 // Maintain compatibility with legacy named export
 // E.g. `import { Schema } from '@defra/forms-model'`
