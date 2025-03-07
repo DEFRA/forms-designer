@@ -3,6 +3,7 @@ export const sessionNames = {
   redirectTo: /** @type {const} */ ('redirectTo'),
   fileDownloadPassword: /** @type {const} */ ('fileDownloadPassword'),
   questionType: /** @type {const} */ ('questionType'),
+  reorderPages: /** @type {const} */ ('reorderPages'),
   validationFailure: {
     createForm: /** @type {const} */ ('createFormValidationFailure'),
     updateForm: /** @type {const} */ ('updateFormValidationFailure'),

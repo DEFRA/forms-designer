@@ -16,5 +16,6 @@ export enum ComponentType {
   InsetText = 'InsetText',
   Details = 'Details',
   List = 'List',
+  Markdown = 'Markdown',
   FileUploadField = 'FileUploadField'
 }

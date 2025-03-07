@@ -1,0 +1,17 @@
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+{% set cardTitle = "Page " + params.pageNum + ": " + params.pageTitle %}
+
+{{ govukSummaryList({
+  card: {
+    title: {
+      text: cardTitle
+    },
+    actions: {
+      items: params.actions
+    },
+    classes: "pages-reorder-panel"
+  },
+  rows: params.rows
+}) }}
+
