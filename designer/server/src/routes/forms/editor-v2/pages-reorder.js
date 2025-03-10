@@ -9,6 +9,7 @@ import {
 } from '~/src/lib/session-helper.js'
 import {
   excludeEndPages,
+  getFocus,
   repositionPage
 } from '~/src/models/forms/editor-v2/pages-helper.js'
 import * as viewModel from '~/src/models/forms/editor-v2/pages-reorder.js'
@@ -27,9 +28,12 @@ export default [
     method: 'GET',
     path: ROUTE_FULL_PATH_REORDER_PAGES,
     async handler(request, h) {
-      const { params, auth, yar } = request
+      const { params, auth, yar, query } = request
       const { token } = auth.credentials
       const { slug } = params
+      const { focus } = /** @type {{focus: string}} */ (query)
+
+      const focusObj = getFocus(focus)
 
       const metadata = await forms.get(slug, token)
       const definition = await forms.getDraftFormDefinition(metadata.id, token)
@@ -43,7 +47,12 @@ export default [
 
       return h.view(
         'forms/editor-v2/pages-reorder',
-        viewModel.pagesReorderViewModel(metadata, definition, pageOrder)
+        viewModel.pagesReorderViewModel(
+          metadata,
+          definition,
+          pageOrder,
+          focusObj
+        )
       )
     },
     options: {
@@ -75,7 +84,7 @@ export default [
 
       // Redirect POST to GET without resubmit on back button
       return h
-        .redirect(editorv2Path(slug, 'pages-reorder'))
+        .redirect(editorv2Path(slug, `pages-reorder?focus=${movement}`))
         .code(StatusCodes.SEE_OTHER)
     },
     options: {

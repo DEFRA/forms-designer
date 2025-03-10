@@ -1,19 +1,27 @@
 import { ControllerType, hasComponents } from '@defra/forms-model'
 
+import { stringHasValue } from '~/src/lib/utils.js'
+
 /**
  * @param {Page} page
  * @param {number} pageIdx
  * @param {number} numOfPages
+ * @param {{ button: string | undefined, pageId: string | undefined} | undefined} focus
  */
-export function constructPage(page, pageIdx, numOfPages) {
+export function constructPage(page, pageIdx, numOfPages, focus) {
+  const focusUpAttr =
+    focus?.pageId === page.id && focus?.button === 'up' ? ' autofocus' : ''
+  const focusDownAttr =
+    focus?.pageId === page.id && focus?.button === 'down' ? ' autofocus' : ''
+
   const buttonStub =
     '<button type="submit" name="movement" class="govuk-button govuk-button--secondary'
   const actions = [
     {
-      html: `${buttonStub} reorder-button${pageIdx === 0 ? '-hidden' : ''}" value="up|${page.id}">Up</button>`
+      html: `${buttonStub} reorder-button${pageIdx === 0 ? '-hidden' : ''}"${focusUpAttr} value="up|${page.id}">Up</button>`
     },
     {
-      html: `${buttonStub} reorder-button${pageIdx === numOfPages - 1 ? '-hidden' : ''}" value="down|${page.id}">Down</button>`
+      html: `${buttonStub} reorder-button${pageIdx === numOfPages - 1 ? '-hidden' : ''}"${focusDownAttr} value="down|${page.id}">Down</button>`
     }
   ]
 
@@ -21,12 +29,14 @@ export function constructPage(page, pageIdx, numOfPages) {
     return {
       ...page,
       title: hasComponents(page) ? page.components[0].title : '',
+      isFocus: focus?.pageId === page.id,
       actions
     }
   }
   return {
     ...page,
-    actions
+    actions,
+    isFocus: focus?.pageId === page.id
   }
 }
 
@@ -80,6 +90,21 @@ export function orderPages(orderablePages, pageOrder) {
     }
   })
   return pagesInOrder
+}
+
+/**
+ * @param {string} focusStr
+ */
+export function getFocus(focusStr) {
+  const [direction, pageId] = focusStr ? focusStr.split('|') : []
+  if (!stringHasValue(direction) || !stringHasValue(pageId)) {
+    return undefined
+  }
+
+  return {
+    pageId,
+    button: direction
+  }
 }
 
 /**

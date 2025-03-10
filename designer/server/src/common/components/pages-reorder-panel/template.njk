@@ -2,6 +2,8 @@
 
 {% set cardTitle = "Page " + params.pageNum + ": " + params.pageTitle %}
 
+{% set focusClass = " pages-reorder-panel-focus" if params.isFocus else "" %}
+
 {{ govukSummaryList({
   card: {
     title: {
@@ -10,8 +12,7 @@
     actions: {
       items: params.actions
     },
-    classes: "pages-reorder-panel"
-  },
-  rows: params.rows
+    classes: "pages-reorder-panel" + focusClass
+  }
 }) }}
 

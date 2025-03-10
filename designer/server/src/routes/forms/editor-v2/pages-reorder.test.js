@@ -79,7 +79,7 @@ describe('Editor v2 pages reorder routes', () => {
 
       expect(statusCode).toBe(StatusCodes.SEE_OTHER)
       expect(headers.location).toBe(
-        '/library/my-form-slug/editor-v2/pages-reorder'
+        '/library/my-form-slug/editor-v2/pages-reorder?focus=up|p2'
       )
       expect(setFlashInSession).toHaveBeenCalledWith(
         expect.anything(),

@@ -13,8 +13,9 @@ import {
 /**
  * @param {FormDefinition} definition
  * @param {string} pageOrder
+ * @param {{ button: string | undefined, pageId: string | undefined} | undefined} focus
  */
-export function mapPageData(definition, pageOrder) {
+export function mapPageData(definition, pageOrder, focus) {
   if (!definition.pages.length) {
     return definition
   }
@@ -26,7 +27,7 @@ export function mapPageData(definition, pageOrder) {
   return {
     ...definition,
     pages: orderedPages.map((page, idx) => {
-      return constructPage(page, idx, orderablePages.length)
+      return constructPage(page, idx, orderablePages.length, focus)
     })
   }
 }
@@ -35,8 +36,9 @@ export function mapPageData(definition, pageOrder) {
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  * @param {string} pageOrder
+ * @param {{ button: string | undefined, pageId: string | undefined} | undefined} focus
  */
-export function pagesReorderViewModel(metadata, definition, pageOrder) {
+export function pagesReorderViewModel(metadata, definition, pageOrder, focus) {
   const formPath = formOverviewPath(metadata.slug)
   const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
 
@@ -49,7 +51,7 @@ export function pagesReorderViewModel(metadata, definition, pageOrder) {
   ]
 
   const pageListModel = {
-    ...mapPageData(definition, pageOrder),
+    ...mapPageData(definition, pageOrder, focus),
     formSlug: metadata.slug,
     navigation,
     pageHeading: {
