@@ -162,12 +162,18 @@ describe('editor-v2 - page-helper', () => {
   describe('constructPage', () => {
     const page1 = /** @type {Page} */ ({
       id: 'page1',
-      controller: ControllerType.Summary
+      controller: ControllerType.Page
     })
 
-    const page2 = /** @type {Page} */ ({
+    const page2 = /** @type {PageQuestion} */ ({
       id: 'page2',
-      controller: ControllerType.Summary
+      controller: ControllerType.Page,
+      components: [
+        {
+          id: 'q1',
+          title: 'My first question'
+        }
+      ]
     })
 
     const page3 = /** @type {Page} */ ({
@@ -210,9 +216,25 @@ describe('editor-v2 - page-helper', () => {
         }
       ])
     })
+
+    test('should handle a page with no title', () => {
+      const page2Clone = { ...page2 }
+      page2Clone.title = ''
+      page2Clone.next = /** @type {Link[]} */ ([{ path: '/summary' }])
+      const res = constructPage(page2Clone, 1, 3)
+      expect(res.actions).toEqual([
+        {
+          html: '<button type="submit" name="movement" class="govuk-button govuk-button--secondary reorder-button" value="up|page2">Up</button>'
+        },
+        {
+          html: '<button type="submit" name="movement" class="govuk-button govuk-button--secondary reorder-button" value="down|page2">Down</button>'
+        }
+      ])
+      expect(res.title).toBe('My first question')
+    })
   })
 })
 
 /**
- * @import { Page } from '@defra/forms-model'
+ * @import { Link, Page, PageQuestion } from '@defra/forms-model'
  */
