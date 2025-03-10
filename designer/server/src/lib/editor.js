@@ -127,9 +127,9 @@ export async function insertUpdateOrDeleteGuidance(
   guidanceText
 ) {
   // Insert a guidance component, or update if it already exists, or remove if no longer used
-  const existingGuidance = components.find(
-    (comp, idx) => comp.type === ComponentType.Markdown && idx === 0
-  )
+  const existingGuidance = components.find((comp, idx) => {
+    return comp.type === ComponentType.Markdown && idx === 0
+  })
 
   if (existingGuidance && (!stringHasValue(guidanceText) || !isExpanded)) {
     // Remove guidance component since the user has blanked out the guidance text now or unchecked the checkbox

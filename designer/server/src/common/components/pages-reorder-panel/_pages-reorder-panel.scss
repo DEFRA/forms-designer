@@ -1,0 +1,35 @@
+@use "../govuk-frontend" as *;
+
+$defra-brand-colour: govuk-organisation-colour(department-for-environment-food-rural-affairs);
+
+.pages-reorder-panel {
+  border-left: 10px solid;
+  border-left-color: $defra-brand-colour;
+
+  &-focus {
+    border-top: 2px solid $govuk-focus-colour;
+    border-right: 2px solid $govuk-focus-colour;
+    border-bottom: 2px solid $govuk-focus-colour;
+  }
+
+  .govuk-summary-card__title-wrapper {
+    background-color: govuk-colour("white");
+  }
+
+  .govuk-summary-card__content {
+    display: none;
+  }
+
+  .govuk-summary-card__action {
+    border-right: none;
+
+    .reorder-button {
+      width: 80px;
+    }
+
+    .reorder-button-hidden {
+      width: 80px;
+      visibility: hidden;
+    }
+  }
+}

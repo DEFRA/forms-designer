@@ -1,6 +1,6 @@
 import { renderMacro } from '~/test/helpers/component-helpers.js'
 
-describe('Page left panel component', () => {
+describe('Pages left panel component', () => {
   let $headings = /** @type {Element[]} */ ([])
   let $keys = /** @type {Element[]} */ ([])
   let $values = /** @type {Element[]} */ ([])
@@ -8,8 +8,8 @@ describe('Page left panel component', () => {
   describe('With some pages', () => {
     beforeEach(() => {
       const { container } = renderMacro(
-        'appPagePanelLeft',
-        'page-panel-left/macro.njk',
+        'appPagesPanelLeft',
+        'pages-panel-left/macro.njk',
         {
           params: {
             formName: 'test-form-1',
@@ -44,8 +44,8 @@ describe('Page left panel component', () => {
   describe('With end page', () => {
     beforeEach(() => {
       const { container } = renderMacro(
-        'appPagePanelLeft',
-        'page-panel-left/macro.njk',
+        'appPagesPanelLeft',
+        'pages-panel-left/macro.njk',
         {
           params: {
             formName: 'test-form-1',

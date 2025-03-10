@@ -98,6 +98,7 @@ declare module '@hapi/yar' {
   type ErrorListKey = (typeof sessionNames)['errorList']
   type LogoutHintKey = (typeof sessionNames)['logoutHint']
   type QuestionType = (typeof sessionNames)['questionType']
+  type ReorderPagesKey = (typeof sessionNames)['reorderPages']
 
   // Export known validation session keys
   type ValidationSession = (typeof sessionNames)['validationFailure']
@@ -110,7 +111,12 @@ declare module '@hapi/yar' {
      * (Deleted when read, e.g. after a redirect)
      */
     flash(
-      type: RedirectToKey | SuccessNotification | QuestionType | LogoutHintKey
+      type:
+        | RedirectToKey
+        | SuccessNotification
+        | QuestionType
+        | LogoutHintKey
+        | ReorderPagesKey
     ): string[]
 
     /**

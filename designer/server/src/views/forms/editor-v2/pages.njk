@@ -1,7 +1,7 @@
 {% extends "layouts/page.njk" %}
 
 {% from "page-body/macro.njk" import appPageBody %}
-{% from "page-panel-left/macro.njk" import appPagePanelLeft %}
+{% from "pages-panel-left/macro.njk" import appPagesPanelLeft %}
 
 {% set mainClasses = "govuk-main-wrapper--masthead" %}
 
@@ -19,16 +19,15 @@
       {% for page in pages %}
         <div class="govuk-grid-row page-row">
           <div class="govuk-grid-column-full">
-          {{ appPagePanelLeft({
+          {{ appPagesPanelLeft({
             formName: name,
             pageNum: loop.index,
             pageId: page.id,
             pageTitle: page.title,
-            pageEditUrl: (editBaseUrl + page.id) + ("/check-answers-settings" if loop.last else "/questions"),
+            pageEditUrl: (editBaseUrl + page.id) + ("/check-answers-settings" if page.isEndPage else "/questions"),
             pagePreviewUrl: previewBaseUrl + page.path + "?force",
             rows: page.questionRows,
-            isEndPage: loop.last,
-            showMoveButtons: false
+            isEndPage: page.isEndPage
             }) }}
           </div>
         </div>

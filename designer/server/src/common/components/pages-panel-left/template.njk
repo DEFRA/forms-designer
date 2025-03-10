@@ -1,8 +1,8 @@
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 
-{% set cardClass = "page-panel-left-standard" %}
+{% set cardClass = "pages-panel-left-standard" %}
 {% if params.isEndPage %}
-{% set cardClass = "page-panel-left-end" if params.rows | length else "page-panel-left-end-hide-declaration"%}
+{% set cardClass = "pages-panel-left-end" if params.rows | length else "pages-panel-left-end-hide-declaration"%}
 {% endif %}
 
 {% set cardTitle = "Page " + params.pageNum + ": " + params.pageTitle %}

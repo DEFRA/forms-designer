@@ -102,9 +102,9 @@ export function questionsViewModel(
     : page.title
 
   const guidanceComponent = /** @type {MarkdownComponent | undefined} */ (
-    components.find(
-      (comp, idx) => comp.type === ComponentType.Markdown && idx === 0
-    )
+    components.find((comp, idx) => {
+      return comp.type === ComponentType.Markdown && idx === 0
+    })
   )
 
   const guidanceTextFallback = stringHasValue(guidanceComponent?.content)

@@ -77,9 +77,9 @@ export function checkAnswersSettingsViewModel(
   const components = hasComponentsEvenIfNoNext(page) ? page.components : []
 
   const guidanceComponent = /** @type {MarkdownComponent | undefined} */ (
-    components.find(
-      (comp, idx) => comp.type === ComponentType.Markdown && idx === 0
-    )
+    components.find((comp, idx) => {
+      return comp.type === ComponentType.Markdown && idx === 0
+    })
   )
 
   const declarationTextVal =

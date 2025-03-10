@@ -78,15 +78,15 @@ export function mapPageData(definition) {
       if (page.title === '') {
         return {
           ...page,
-          title: hasComponentsEvenIfNoNext(page)
-            ? page.components[0].title
-            : '',
-          questionRows: mapQuestionRows(hideFirstGuidance(page))
+          title: hasComponents(page) ? page.components[0].title : '',
+          questionRows: mapQuestionRows(hideFirstGuidance(page)),
+          isEndPage: page.controller === ControllerType.Summary
         }
       }
       return {
         ...page,
-        questionRows: mapQuestionRows(hideFirstGuidance(page))
+        questionRows: mapQuestionRows(hideFirstGuidance(page)),
+        isEndPage: page.controller === ControllerType.Summary
       }
     })
   }
@@ -134,7 +134,7 @@ export function pagesViewModel(metadata, definition, notification) {
 
   const reorderAction = {
     text: 'Re-order pages',
-    href: '/reorder',
+    href: editorv2Path(metadata.slug, 'pages-reorder'),
     classes: 'govuk-button--secondary',
     attributes: null
   }
