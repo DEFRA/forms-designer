@@ -49,7 +49,7 @@ export function repositionPage(pageIds, direction, pageId) {
   const pageIdx = pageOrder.findIndex((x) => x === pageId)
 
   if (pageIdx === -1) {
-    return pageOrder.join(',')
+    return pageIds
   }
 
   if (direction === 'down') {
@@ -58,6 +58,8 @@ export function repositionPage(pageIds, direction, pageId) {
   } else if (direction === 'up' && pageIdx > 0) {
     pageOrder.splice(pageIdx, 1)
     pageOrder.splice(pageIdx - 1, 0, pageId)
+  } else {
+    return pageIds
   }
 
   return pageOrder.join(',')
