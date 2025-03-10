@@ -38,7 +38,7 @@ export default [
       const pageOrder =
         getFlashFromSession(yar, reorderPagesKey) ??
         excludeEndPages(definition.pages)
-          .map((x) => x.id ?? '')
+          .map((x) => `${x.id}`)
           .join(',')
 
       return h.view(

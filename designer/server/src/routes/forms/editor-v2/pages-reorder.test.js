@@ -25,7 +25,7 @@ describe('Editor v2 pages reorder routes', () => {
   })
 
   describe('GET', () => {
-    test('GET - should check correct formData is rendered in the view with multiple pages', async () => {
+    test('should check correct formData is rendered in the view with multiple pages', async () => {
       jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
       jest
         .mocked(forms.getDraftFormDefinition)

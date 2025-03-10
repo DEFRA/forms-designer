@@ -18,11 +18,12 @@ $defra-brand-colour: govuk-organisation-colour(department-for-environment-food-r
     border-right: none;
 
     .reorder-button {
-      width: 80px !important;
+      width: 80px;
+    }
 
-      &-hidden {
-        visibility: hidden;
-      }
+    .reorder-button-hidden {
+      width: 80px;
+      visibility: hidden;
     }
   }
 }
