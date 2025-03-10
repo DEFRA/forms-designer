@@ -11,25 +11,27 @@
   description: pageDescription,
   caption: pageCaption,
   actions: pageActions,
-  classes: "govuk-grid-column-full govuk-grid-column-one-half-from-desktop",
+  classes: "govuk-grid-column-full govuk-grid-column-two-thirds-from-desktop",
   backLink: backLink
 }) %}
 
-  <form class="form">
-      {% for page in pages %}
-        <div class="govuk-grid-row page-row">
-          <div class="govuk-grid-column-full">
-          {{ appPagesReorderPanel({
-            formName: name,
-            pageNum: loop.index,
-            pageId: page.id,
-            pageTitle: page.title,
-            actions: page.actions,
-            isReorderPages: isReorderPages
-            }) }}
-          </div>
+  <form class="form" method="post">
+    {% for page in pages %}
+      <div class="govuk-grid-row page-row">
+        <div class="govuk-grid-column-full">
+        {{ appPagesReorderPanel({
+          formName: name,
+          pageNum: loop.index,
+          pageId: page.id,
+          pageTitle: page.title,
+          actions: page.actions,
+          isReorderPages: isReorderPages
+          }) }}
         </div>
-      {% endfor %}
+      </div>
+    {% endfor %}
+
+    <input type="hidden" name="pageOrder" value="{{ pageOrder }}" />
   </form>
 {% endcall %}
 {% endblock %}
