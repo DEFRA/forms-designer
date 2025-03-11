@@ -23,6 +23,7 @@ export {
   hasConditionName,
   hasNestedCondition,
   isDuplicateCondition,
+  safeFieldName,
   toExpression,
   toPresentationString
 } from '~/src/conditions/helpers.js'

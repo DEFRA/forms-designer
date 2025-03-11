@@ -15,6 +15,7 @@ import {
   Operator,
   OperatorName
 } from '~/src/conditions/enums.js'
+import { safeFieldName } from '~/src/conditions/helpers.js'
 import {
   type Conditionals,
   type OperatorDefinition
@@ -121,7 +122,7 @@ function getConditionals(
 function inline(operator: Operator): OperatorDefinition {
   return {
     expression(field, value) {
-      return `${field.name} ${operator} ${formatValue(field, value)}`
+      return `${safeFieldName(field.name)} ${operator} ${formatValue(field, value)}`
     }
   }
 }
@@ -129,7 +130,7 @@ function inline(operator: Operator): OperatorDefinition {
 function lengthIs(operator: Operator): OperatorDefinition {
   return {
     expression(field, value) {
-      return `length(${field.name}) ${operator} ${formatValue(field, value)}`
+      return `length(${safeFieldName(field.name)}) ${operator} ${formatValue(field, value)}`
     }
   }
 }
@@ -137,7 +138,7 @@ function lengthIs(operator: Operator): OperatorDefinition {
 function reverseInline(operator: Operator.Contains): OperatorDefinition {
   return {
     expression(field, value) {
-      return `${formatValue(field, value)} ${operator} ${field.name}`
+      return `${formatValue(field, value)} ${operator} ${safeFieldName(field.name)}`
     }
   }
 }
@@ -183,7 +184,7 @@ function absoluteDate(operator: Operator): OperatorDefinition {
         )
       }
 
-      return `${field.name} ${operator} ${formatValue(field, value)}`
+      return `${safeFieldName(field.name)} ${operator} ${formatValue(field, value)}`
     }
   }
 }
@@ -201,7 +202,7 @@ function relativeDate(
       }
 
       const isPast = value.direction === DateDirections.PAST
-      return `${field.name} ${isPast ? pastOperator : futureOperator} ${formatValue(field, value)}`
+      return `${safeFieldName(field.name)} ${isPast ? pastOperator : futureOperator} ${formatValue(field, value)}`
     }
   }
 }

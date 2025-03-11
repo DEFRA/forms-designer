@@ -48,3 +48,15 @@ export const isDuplicateCondition = (
 ) => {
   return conditions.some((condition) => condition.name === conditionName)
 }
+
+/**
+ * creates a safe variable name for fields with special characters
+ * @param fieldName - The original field name
+ */
+export function safeFieldName(fieldName: string): string {
+  if (!/[-+*/.()[\]]/.test(fieldName)) {
+    return fieldName
+  }
+
+  return `_field_${fieldName.replace(/[-+*/.()[\]]/g, '_')}`
+}
