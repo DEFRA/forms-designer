@@ -72,12 +72,12 @@ describe('Editor v2 pages reorder routes', () => {
         pageOrderSchema.validate({
           pageOrder: 'abc,bce'
         }).value
-      ).toEqual({ pageOrder: ['abc', 'bce'] })
+      ).toEqual({ pageOrder: ['abc', 'bce'], saveChanges: false })
       expect(
         pageOrderSchema.validate({
           pageOrder: ''
         }).value
-      ).toEqual({ pageOrder: [] })
+      ).toEqual({ pageOrder: [], saveChanges: false })
     })
   })
 
