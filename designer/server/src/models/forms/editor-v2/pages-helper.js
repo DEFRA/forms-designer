@@ -8,7 +8,7 @@ import { stringHasValue } from '~/src/lib/utils.js'
  * @param {number} numOfPages
  * @param {{ button: string | undefined, pageId: string | undefined} | undefined} focus
  */
-export function constructPage(page, pageIdx, numOfPages, focus) {
+export function constructReorderPage(page, pageIdx, numOfPages, focus) {
   const focusUpAttr =
     focus?.pageId === page.id && focus?.button === 'up' ? ' autofocus' : ''
   const focusDownAttr =
@@ -16,12 +16,15 @@ export function constructPage(page, pageIdx, numOfPages, focus) {
 
   const buttonStub =
     '<button type="submit" name="movement" class="govuk-button govuk-button--secondary'
+  const upVisibilityClass = `reorder-button${pageIdx === 0 ? '-hidden' : ''}`
+  const downVisibilityClass = `reorder-button${pageIdx === numOfPages - 1 ? '-hidden' : ''}`
+
   const actions = [
     {
-      html: `${buttonStub} reorder-button${pageIdx === 0 ? '-hidden' : ''}"${focusUpAttr} value="up|${page.id}">Up</button>`
+      html: `${buttonStub} ${upVisibilityClass}"${focusUpAttr} value="up|${page.id}">Up</button>`
     },
     {
-      html: `${buttonStub} reorder-button${pageIdx === numOfPages - 1 ? '-hidden' : ''}"${focusDownAttr} value="down|${page.id}">Down</button>`
+      html: `${buttonStub} ${downVisibilityClass}"${focusDownAttr} value="down|${page.id}">Down</button>`
     }
   ]
 

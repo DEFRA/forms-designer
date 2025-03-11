@@ -1,6 +1,6 @@
 import { getFormSpecificNavigation } from '~/src/models/forms/editor-v2/common.js'
 import {
-  constructPage,
+  constructReorderPage,
   excludeEndPages,
   orderPages
 } from '~/src/models/forms/editor-v2/pages-helper.js'
@@ -27,7 +27,7 @@ export function mapPageData(definition, pageOrder, focus) {
   return {
     ...definition,
     pages: orderedPages.map((page, idx) => {
-      return constructPage(page, idx, orderablePages.length, focus)
+      return constructReorderPage(page, idx, orderablePages.length, focus)
     })
   }
 }
