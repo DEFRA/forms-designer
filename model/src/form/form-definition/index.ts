@@ -108,8 +108,8 @@ export const componentSchema = Joi.object<ComponentDef>()
         ComponentType.InsetText,
         ComponentType.Markdown
       ),
-      then: Joi.string().optional(),
-      otherwise: Joi.string()
+      then: Joi.string().pattern(/^\w+$/).optional(),
+      otherwise: Joi.string().pattern(/^\w+$/)
     }),
     title: Joi.when('type', {
       is: Joi.string().valid(
