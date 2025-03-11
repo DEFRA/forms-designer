@@ -66,6 +66,26 @@ export interface FormEditor {
    * The check answers declaration text
    */
   declarationText: string
+
+  /**
+   * The min length a field can have
+   */
+  minLength: string
+
+  /**
+   * The max length a field can have
+   */
+  maxLength: string
+
+  /**
+   * The regex value of a field
+   */
+  regex: string
+
+  /**
+   * The classes to be applied to a field
+   */
+  classes: string
 }
 
 export type FormEditorInputPage = Pick<
@@ -85,9 +105,42 @@ export type FormEditorInputQuestion = Pick<
   | 'shortDescription'
   | 'hintText'
   | 'questionOptional'
+  | 'minLength'
+  | 'maxLength'
+  | 'regex'
+  | 'classes'
 >
 
 export type FormEditorInputPageSettings = Pick<
   FormEditor,
   'pageHeadingAndGuidance' | 'pageHeading' | 'guidanceText'
 >
+
+export interface GovukField {
+  id?: string
+  name?: string
+  idPrefix?: string
+  value?: string | boolean | undefined
+  classes?: string
+  label?: { text?: string; html?: string; classes?: string }
+  hint?: { text?: string; html?: string; classes?: string }
+  items?: { text?: string; value?: string }
+  rows?: number
+}
+
+export interface FormEditorGovukField {
+  question?: GovukField
+  hintText?: GovukField
+  questionOptional?: GovukField
+  shortDescription?: GovukField
+  minLength?: GovukField
+  maxLength?: GovukField
+  regex?: GovukField
+  classes?: GovukField
+  errorMessage?: { text: string }
+}
+
+export interface FormEditorGovukFieldList {
+  fields: FormEditorGovukField
+  optionalFieldsPartial?: string
+}
