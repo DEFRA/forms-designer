@@ -252,5 +252,24 @@ export async function setCheckAnswersDeclaration(
 }
 
 /**
+ * Re-order the pages as per list of ids
+ * @param {string} formId
+ * @param {string} token
+ * @param {string[]} payload
+ */
+export async function reorderPages(formId, token, payload) {
+  // Update page ordering
+  const pageOrderRequestUrl = new URL(
+    `./${formId}/definition/draft/pages/order`,
+    formsEndpoint
+  )
+
+  await postJsonByType(pageOrderRequestUrl, {
+    payload,
+    ...getHeaders(token)
+  })
+}
+
+/**
  * @import { ComponentDef, Page, FormEditorInputCheckAnswersSettings, FormEditorInputPageSettings, FormDefinition } from '@defra/forms-model'
  */
