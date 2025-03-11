@@ -50,21 +50,16 @@ export function hasDataOrErrorForDisplay(
 
 /**
  * @param {ComponentDef | undefined} question
- * @param {ComponentType | undefined} questionType
  * @param {ValidationFailure<FormEditor> | undefined} validation
  */
-export function combineBaseAndOptionalFields(
-  question,
-  questionType,
-  validation
-) {
+export function combineBaseAndOptionalFields(question, validation) {
   const baseFields = questionDetailsFields(
     /** @type {InputFieldsComponentsDef} */ (question),
     validation
   )
 
   const optionalFields = /** @type {FormEditorGovukFieldList} */ (
-    getOptionalFields(question, questionType, validation)
+    getOptionalFields(question, validation)
   )
 
   const combined = {
@@ -174,15 +169,14 @@ export function getDetails(metadata, definition, pageId, questionId) {
 
 /**
  * @param {ComponentDef | undefined} question
- * @param {ComponentType | undefined} questionType
  * @param {ValidationFailure<FormEditor> | undefined} validation
  * @returns {{
  *   fields: FormEditorGovukField,
  *   optionalFieldsPartial: string | null | undefined
  * }}
  */
-export function getOptionalFields(question, questionType, validation) {
-  if (questionType === ComponentType.TextField) {
+export function getOptionalFields(question, validation) {
+  if (question?.type === ComponentType.TextField) {
     return textfieldExtraOptionsFields(
       /** @type {TextFieldComponent} */ (question),
       validation
@@ -219,15 +213,15 @@ export function questionDetailsViewModel(
 
   const { formErrors } = validation ?? {}
 
-  if (!questionType) {
-    questionType = question?.type
+  // Override question type if it has changed as part of the route to this page
+  if (question) {
+    if (!questionType) {
+      questionType = question.type
+    }
+    question.type = questionType
   }
 
-  const combinedFields = combineBaseAndOptionalFields(
-    question,
-    questionType,
-    validation
-  )
+  const combinedFields = combineBaseAndOptionalFields(question, validation)
 
   const errorList = buildErrorList(formErrors, combinedFields.allFieldNames)
 
@@ -254,7 +248,7 @@ export function questionDetailsViewModel(
     isOpen: hasDataOrErrorForDisplay(
       combinedFields.optionalFieldNames,
       errorList,
-      getOptionalFields(question, questionType, validation)
+      getOptionalFields(question, validation)
     )
   }
 }

@@ -65,11 +65,7 @@ describe('editor-v2 - question details model', () => {
         schema: {},
         options: {}
       })
-      const res = getOptionalFields(
-        question,
-        ComponentType.TextField,
-        undefined
-      )
+      const res = getOptionalFields(question, undefined)
       expect(res.optionalFieldsPartial).toBe('question-details-textfield.njk')
       expect(res.fields.minLength?.id).toBe('minLength')
     })
@@ -80,11 +76,7 @@ describe('editor-v2 - question details model', () => {
         schema: {},
         options: {}
       })
-      const res = getOptionalFields(
-        question,
-        ComponentType.FileUploadField,
-        undefined
-      )
+      const res = getOptionalFields(question, undefined)
       expect(res.optionalFieldsPartial).toBeNull()
       expect(res.fields).toEqual({})
     })
