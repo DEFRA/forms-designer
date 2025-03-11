@@ -65,16 +65,26 @@ describe('editor-v2 - question details model', () => {
         schema: {},
         options: {}
       })
-      const res = getOptionalFields(question, undefined)
+      const res = getOptionalFields(
+        question,
+        ComponentType.TextField,
+        undefined
+      )
       expect(res.optionalFieldsPartial).toBe('question-details-textfield.njk')
       expect(res.fields.minLength?.id).toBe('minLength')
     })
 
     test('should return no extra options if type not yet implemented', () => {
       const question = /** @type {ComponentDef} */ ({
-        type: ComponentType.Markdown
+        type: ComponentType.FileUploadField,
+        schema: {},
+        options: {}
       })
-      const res = getOptionalFields(question, undefined)
+      const res = getOptionalFields(
+        question,
+        ComponentType.FileUploadField,
+        undefined
+      )
       expect(res.optionalFieldsPartial).toBeNull()
       expect(res.fields).toEqual({})
     })

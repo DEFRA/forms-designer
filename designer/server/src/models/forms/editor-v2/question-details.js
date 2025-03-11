@@ -50,16 +50,21 @@ export function hasDataOrErrorForDisplay(
 
 /**
  * @param {ComponentDef | undefined} question
+ * @param {ComponentType | undefined} questionType
  * @param {ValidationFailure<FormEditor> | undefined} validation
  */
-export function combineBaseAndOptionalFields(question, validation) {
+export function combineBaseAndOptionalFields(
+  question,
+  questionType,
+  validation
+) {
   const baseFields = questionDetailsFields(
     /** @type {InputFieldsComponentsDef} */ (question),
     validation
   )
 
   const optionalFields = /** @type {FormEditorGovukFieldList} */ (
-    getOptionalFields(question, validation)
+    getOptionalFields(question, questionType, validation)
   )
 
   const combined = {
@@ -169,15 +174,19 @@ export function getDetails(metadata, definition, pageId, questionId) {
 
 /**
  * @param {ComponentDef | undefined} question
+ * @param {ComponentType | undefined} questionType
  * @param {ValidationFailure<FormEditor> | undefined} validation
  * @returns {{
  *   fields: FormEditorGovukField,
  *   optionalFieldsPartial: string | null | undefined
  * }}
  */
-export function getOptionalFields(question, validation) {
-  if (question?.type === ComponentType.TextField) {
-    return textfieldExtraOptionsFields(question, validation)
+export function getOptionalFields(question, questionType, validation) {
+  if (questionType === ComponentType.TextField) {
+    return textfieldExtraOptionsFields(
+      /** @type {TextFieldComponent} */ (question),
+      validation
+    )
   }
   return {
     fields: {},
@@ -214,7 +223,11 @@ export function questionDetailsViewModel(
     questionType = question?.type
   }
 
-  const combinedFields = combineBaseAndOptionalFields(question, validation)
+  const combinedFields = combineBaseAndOptionalFields(
+    question,
+    questionType,
+    validation
+  )
 
   const errorList = buildErrorList(formErrors, combinedFields.allFieldNames)
 
@@ -241,12 +254,12 @@ export function questionDetailsViewModel(
     isOpen: hasDataOrErrorForDisplay(
       combinedFields.optionalFieldNames,
       errorList,
-      getOptionalFields(question, validation)
+      getOptionalFields(question, questionType, validation)
     )
   }
 }
 
 /**
- * @import { ComponentDef, FormMetadata, FormDefinition, FormEditor, FormEditorGovukField, FormEditorGovukFieldList, GovukField, InputFieldsComponentsDef } from '@defra/forms-model'
+ * @import { ComponentDef, FormMetadata, FormDefinition, FormEditor, FormEditorGovukField, FormEditorGovukFieldList, GovukField, InputFieldsComponentsDef, TextFieldComponent } from '@defra/forms-model'
  * @import { ErrorDetailsItem, ValidationFailure } from '~/src/common/helpers/types.js'
  */
