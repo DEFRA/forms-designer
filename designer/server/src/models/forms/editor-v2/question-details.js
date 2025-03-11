@@ -172,7 +172,7 @@ export function getDetails(metadata, definition, pageId, questionId) {
  * @param {ValidationFailure<FormEditor> | undefined} validation
  * @returns {{
  *   fields: FormEditorGovukField,
- *   optionalFieldsPartial: string | undefined
+ *   optionalFieldsPartial: string | null | undefined
  * }}
  */
 export function getOptionalFields(question, validation) {
@@ -181,7 +181,7 @@ export function getOptionalFields(question, validation) {
   }
   return {
     fields: {},
-    optionalFieldsPartial: undefined
+    optionalFieldsPartial: null
   }
 }
 

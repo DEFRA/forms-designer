@@ -75,7 +75,7 @@ describe('editor-v2 - question details model', () => {
         type: ComponentType.Markdown
       })
       const res = getOptionalFields(question, undefined)
-      expect(res.optionalFieldsPartial).toBeUndefined()
+      expect(res.optionalFieldsPartial).toBeNull()
       expect(res.fields).toEqual({})
     })
   })
