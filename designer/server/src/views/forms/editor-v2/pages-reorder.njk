@@ -6,16 +6,16 @@
 {% set mainClasses = "govuk-main-wrapper--masthead" %}
 
 {% block content %}
-{% call appPageBody({
-  heading: pageHeading,
-  description: pageDescription,
-  caption: pageCaption,
-  actions: pageActions,
-  classes: "govuk-grid-column-full govuk-grid-column-two-thirds-from-desktop",
-  backLink: backLink
-}) %}
-
   <form class="form" method="post">
+    {% call appPageBody({
+      heading: pageHeading,
+      description: pageDescription,
+      caption: pageCaption,
+      actions: pageActions,
+      classes: "govuk-grid-column-full govuk-grid-column-two-thirds-from-desktop",
+      backLink: backLink
+    }) %}
+
     {% for page in pages %}
       <div class="govuk-grid-row page-row">
         <div class="govuk-grid-column-full">

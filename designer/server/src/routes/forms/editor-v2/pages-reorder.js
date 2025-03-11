@@ -1,7 +1,10 @@
 import { StatusCodes } from 'http-status-codes'
+import Joi from 'joi'
 
+import { CHANGES_SAVED_SUCCESSFULLY } from '~/dist/models/forms/editor-v2/common.js'
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
+import { reorderPages } from '~/src/lib/editor.js'
 import * as forms from '~/src/lib/forms.js'
 import {
   getFlashFromSession,
@@ -19,6 +22,26 @@ export const ROUTE_FULL_PATH_REORDER_PAGES =
   '/library/{slug}/editor-v2/pages-reorder'
 
 const reorderPagesKey = sessionNames.reorderPages
+
+/**
+ * @param {string|undefined} value
+ * @returns {string[]}
+ */
+const customPageOrder = (value) => {
+  if (value?.length) {
+    return value.split(',')
+  }
+
+  return []
+}
+
+export const pageOrderSchema = Joi.object()
+  .keys({
+    saveChanges: Joi.boolean().default(false).optional(),
+    movement: Joi.string().optional(),
+    pageOrder: Joi.any().custom(customPageOrder)
+  })
+  .required()
 
 export default [
   /**
@@ -71,16 +94,30 @@ export default [
   ({
     method: 'POST',
     path: ROUTE_FULL_PATH_REORDER_PAGES,
-    handler(request, h) {
-      const { params, payload, yar } = request
+    async handler(request, h) {
+      const { params, auth, payload, yar } = request
       const { slug } = params
-      const { movement, pageOrder } =
-        /** @type {{ movement: string, pageOrder: string}} */ (payload)
+      const { movement, pageOrder, saveChanges } =
+        /** @type {{ movement: string, pageOrder: string[], saveChanges: boolean}} */ (
+          payload
+        )
+
+      if (saveChanges) {
+        const { token } = auth.credentials
+        const metadata = await forms.get(slug, token)
+        await reorderPages(metadata.id, token, pageOrder)
+        yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
+
+        return h
+          .redirect(editorv2Path(slug, 'pages'))
+          .code(StatusCodes.SEE_OTHER)
+          .takeover()
+      }
 
       const [direction, pageId] = movement.split('|')
 
       const newPageOrder = repositionPage(pageOrder, direction, pageId)
-      setFlashInSession(yar, reorderPagesKey, newPageOrder)
+      setFlashInSession(yar, reorderPagesKey, newPageOrder.join(','))
 
       // Redirect POST to GET without resubmit on back button
       return h
@@ -88,6 +125,9 @@ export default [
         .code(StatusCodes.SEE_OTHER)
     },
     options: {
+      validate: {
+        payload: pageOrderSchema
+      },
       auth: {
         mode: 'required',
         access: {

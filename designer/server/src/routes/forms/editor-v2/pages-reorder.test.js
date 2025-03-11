@@ -3,16 +3,19 @@ import { StatusCodes } from 'http-status-codes'
 import { testFormDefinitionWithTwoPagesAndQuestions } from '~/src/__stubs__/form-definition.js'
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
 import { createServer } from '~/src/createServer.js'
+import * as editor from '~/src/lib/editor.js'
 import * as forms from '~/src/lib/forms.js'
 import {
   getFlashFromSession,
   setFlashInSession
 } from '~/src/lib/session-helper.js'
+import { pageOrderSchema } from '~/src/routes/forms/editor-v2/pages-reorder.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/forms.js')
 jest.mock('~/src/lib/session-helper.js')
+jest.mock('~/src/lib/editor.js')
 
 describe('Editor v2 pages reorder routes', () => {
   /** @type {Server} */
@@ -58,6 +61,26 @@ describe('Editor v2 pages reorder routes', () => {
     })
   })
 
+  describe('pageOrderSchema', () => {
+    test('schema should return pageOrder correctly', () => {
+      expect(
+        pageOrderSchema.validate({
+          pageOrder: ''
+        }).error
+      ).toBeUndefined()
+      expect(
+        pageOrderSchema.validate({
+          pageOrder: 'abc,bce'
+        }).value
+      ).toEqual({ pageOrder: ['abc', 'bce'] })
+      expect(
+        pageOrderSchema.validate({
+          pageOrder: ''
+        }).value
+      ).toEqual({ pageOrder: [] })
+    })
+  })
+
   describe('POST', () => {
     test('POST - should alter order and redirect to GET', async () => {
       jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
@@ -85,6 +108,28 @@ describe('Editor v2 pages reorder routes', () => {
         expect.anything(),
         'reorderPages',
         'p2,p1,p3'
+      )
+    })
+
+    test('POST - should save changes and redirect to', async () => {
+      jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+      const options = {
+        method: 'post',
+        url: '/library/my-form-slug/editor-v2/pages-reorder',
+        auth,
+        payload: { saveChanges: 'true', pageOrder: 'abc-123,def-456,ghi-789' }
+      }
+
+      const {
+        response: { headers, statusCode }
+      } = await renderResponse(server, options)
+
+      expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+      expect(headers.location).toBe('/library/my-form-slug/editor-v2/pages')
+      expect(editor.reorderPages).toHaveBeenCalledWith(
+        '661e4ca5039739ef2902b214',
+        expect.anything(),
+        ['abc-123', 'def-456', 'ghi-789']
       )
     })
   })

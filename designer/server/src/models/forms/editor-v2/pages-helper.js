@@ -53,29 +53,23 @@ export function excludeEndPages(pages) {
 
 /**
  * Repositions a page in an array of pages
- * @param {string} pageIds
+ * @param {string[]} pageOrder
  * @param {string} direction
  * @param {string} pageId
  */
-export function repositionPage(pageIds, direction, pageId) {
-  const pageOrder = pageIds.split(',')
+export function repositionPage(pageOrder, direction, pageId) {
   const pageIdx = pageOrder.findIndex((x) => x === pageId)
 
-  if (pageIdx === -1) {
-    return pageIds
+  const isValidDirection =
+    direction === 'down' || (direction === 'up' && pageIdx > 0)
+
+  if (pageIdx === -1 || !isValidDirection) {
+    return pageOrder
   }
 
-  if (direction === 'down') {
-    pageOrder.splice(pageIdx, 1)
-    pageOrder.splice(pageIdx + 1, 0, pageId)
-  } else if (direction === 'up' && pageIdx > 0) {
-    pageOrder.splice(pageIdx, 1)
-    pageOrder.splice(pageIdx - 1, 0, pageId)
-  } else {
-    return pageIds
-  }
+  const positionIndex = direction === 'down' ? pageIdx + 1 : pageIdx - 1
 
-  return pageOrder.join(',')
+  return pageOrder.toSpliced(pageIdx, 1).toSpliced(positionIndex, 0, pageId)
 }
 
 /**

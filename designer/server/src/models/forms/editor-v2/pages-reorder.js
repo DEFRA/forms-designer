@@ -4,11 +4,7 @@ import {
   excludeEndPages,
   orderPages
 } from '~/src/models/forms/editor-v2/pages-helper.js'
-import {
-  editorv2Path,
-  formOverviewBackLink,
-  formOverviewPath
-} from '~/src/models/links.js'
+import { formOverviewBackLink, formOverviewPath } from '~/src/models/links.js'
 
 /**
  * @param {FormDefinition} definition
@@ -44,9 +40,12 @@ export function pagesReorderViewModel(metadata, definition, pageOrder, focus) {
 
   const pageActions = [
     {
+      name: 'saveChanges',
       text: 'Save changes',
-      href: editorv2Path(metadata.slug, 'pages-reorder'),
-      classes: 'govuk-button--inverse'
+      // href: editorv2Path(metadata.slug, 'pages-reorder'),
+      classes: 'govuk-button--inverse',
+      value: 'true',
+      type: 'submit'
     }
   ]
 

@@ -9,7 +9,7 @@ import {
 
 describe('editor-v2 - page-helper', () => {
   describe('repositionPage', () => {
-    const pageIdListTest1 = 'page1,page2,page3,page4,page5'
+    const pageIdListTest1 = ['page1', 'page2', 'page3', 'page4', 'page5']
 
     test('should return page list unchanged if id not found', () => {
       const res = repositionPage(pageIdListTest1, 'up', 'bad-page')
@@ -23,32 +23,32 @@ describe('editor-v2 - page-helper', () => {
 
     test('should move page down one position - page 1', () => {
       const res = repositionPage(pageIdListTest1, 'down', 'page1')
-      expect(res).toBe('page2,page1,page3,page4,page5')
+      expect(res).toEqual(['page2', 'page1', 'page3', 'page4', 'page5'])
     })
 
     test('should move page down one position - page 2', () => {
       const res = repositionPage(pageIdListTest1, 'down', 'page2')
-      expect(res).toBe('page1,page3,page2,page4,page5')
+      expect(res).toEqual(['page1', 'page3', 'page2', 'page4', 'page5'])
     })
 
     test('should move page up one position - page 3', () => {
       const res = repositionPage(pageIdListTest1, 'up', 'page3')
-      expect(res).toBe('page1,page3,page2,page4,page5')
+      expect(res).toEqual(['page1', 'page3', 'page2', 'page4', 'page5'])
     })
 
     test('should move page down one position - page 3', () => {
       const res = repositionPage(pageIdListTest1, 'down', 'page3')
-      expect(res).toBe('page1,page2,page4,page3,page5')
+      expect(res).toEqual(['page1', 'page2', 'page4', 'page3', 'page5'])
     })
 
     test('should remain unchanged if move page down one position if already in last position', () => {
       const res = repositionPage(pageIdListTest1, 'down', 'page5')
-      expect(res).toBe(pageIdListTest1)
+      expect(res).toEqual(pageIdListTest1)
     })
 
     test('should remain unchanged if move page up one position if already in first position', () => {
       const res = repositionPage(pageIdListTest1, 'up', 'page1')
-      expect(res).toBe(pageIdListTest1)
+      expect(res).toEqual(pageIdListTest1)
     })
   })
 
