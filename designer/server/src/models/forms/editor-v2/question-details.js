@@ -78,19 +78,19 @@ export function combineBaseAndOptionalFields(question, validation) {
   }
 }
 /**
- * @param {InputFieldsComponentsDef} question
+ * @param {InputFieldsComponentsDef | undefined} question
  */
 function mapToQuestionDetails(question) {
   return {
-    question: question.title,
-    hintText: question.hint,
-    questionOptional: `${question.options.required === false}`,
-    shortDescription: question.name
+    question: question?.title,
+    hintText: question?.hint,
+    questionOptional: `${question?.options.required === false}`,
+    shortDescription: question?.name
   }
 }
 
 /**
- * @param {InputFieldsComponentsDef} question
+ * @param {InputFieldsComponentsDef | undefined} question
  * @param {ValidationFailure<FormEditor> | undefined} validation
  */
 function questionDetailsFields(question, validation) {
