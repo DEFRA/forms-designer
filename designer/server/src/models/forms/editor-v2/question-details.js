@@ -20,10 +20,7 @@ import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
  * in the details section
  * @param {string[]} optionalFieldNames
  * @param {ErrorDetailsItem[] | undefined} errorList
- * @param {{ fields: {
- *    value: string | number | undefined
- *  }[]
- * }} optionalFields
+ * @param {{ fields: FormEditorGovukField }} optionalFields
  */
 export function hasDataOrErrorForDisplay(
   optionalFieldNames,
@@ -32,13 +29,16 @@ export function hasDataOrErrorForDisplay(
 ) {
   const fieldsInError = errorList ? errorList.map((x) => x.href) : []
 
-  optionalFieldNames.forEach((field) => {
-    if (fieldsInError.some((err) => err === `#${field}`)) {
-      return true
-    }
+  const errorFound = optionalFieldNames.some((field) => {
+    return fieldsInError.some((err) => err === `#${field}`)
   })
+  if (errorFound) {
+    return true
+  }
 
-  const fields = Object.entries(optionalFields.fields)
+  const fields = /** @type {[string, GovukField][]} */ (
+    Object.entries(optionalFields.fields)
+  )
   for (const [, fieldObj] of fields) {
     if (fieldObj.value !== undefined && fieldObj.value !== '') {
       return true
@@ -171,7 +171,7 @@ export function getDetails(metadata, definition, pageId, questionId) {
  * @param {ComponentDef | undefined} question
  * @param {ValidationFailure<FormEditor> | undefined} validation
  * @returns {{
- *   fields: any,
+ *   fields: FormEditorGovukField,
  *   optionalFieldsPartial: string | undefined
  * }}
  */
@@ -180,7 +180,7 @@ export function getOptionalFields(question, validation) {
     return textfieldExtraOptionsFields(question, validation)
   }
   return {
-    fields: undefined,
+    fields: {},
     optionalFieldsPartial: undefined
   }
 }
@@ -247,6 +247,6 @@ export function questionDetailsViewModel(
 }
 
 /**
- * @import { ComponentDef, FormMetadata, FormDefinition, FormEditor, FormEditorGovukField, FormEditorGovukFieldList, InputFieldsComponentsDef } from '@defra/forms-model'
+ * @import { ComponentDef, FormMetadata, FormDefinition, FormEditor, FormEditorGovukField, FormEditorGovukFieldList, GovukField, InputFieldsComponentsDef } from '@defra/forms-model'
  * @import { ErrorDetailsItem, ValidationFailure } from '~/src/common/helpers/types.js'
  */

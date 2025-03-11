@@ -16,6 +16,10 @@ function mapToQuestionOptions(question) {
 /**
  * @param {TextFieldComponent} question
  * @param {ValidationFailure<FormEditor>} [validation]
+ * @returns {{
+ *   fields: FormEditorGovukField,
+ *   optionalFieldsPartial: string | undefined
+ * }}
  */
 export function textfieldExtraOptionsFields(question, validation) {
   const formValues = validation?.formValues ?? mapToQuestionOptions(question)
@@ -84,6 +88,6 @@ export function textfieldExtraOptionsFields(question, validation) {
 }
 
 /**
- * @import { FormEditor, TextFieldComponent } from '@defra/forms-model'
+ * @import { FormEditor, FormEditorGovukField, TextFieldComponent } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

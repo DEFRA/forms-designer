@@ -120,7 +120,7 @@ export interface GovukField {
   id?: string
   name?: string
   idPrefix?: string
-  value?: string | boolean | undefined
+  value?: string | boolean | number
   classes?: string
   label?: { text?: string; html?: string; classes?: string }
   hint?: { text?: string; html?: string; classes?: string }
