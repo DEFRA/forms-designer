@@ -127,9 +127,9 @@ export async function insertUpdateOrDeleteGuidance(
   guidanceText
 ) {
   // Insert a guidance component, or update if it already exists, or remove if no longer used
-  const existingGuidance = components.find(
-    (comp, idx) => comp.type === ComponentType.Markdown && idx === 0
-  )
+  const existingGuidance = components.find((comp, idx) => {
+    return comp.type === ComponentType.Markdown && idx === 0
+  })
 
   if (existingGuidance && (!stringHasValue(guidanceText) || !isExpanded)) {
     // Remove guidance component since the user has blanked out the guidance text now or unchecked the checkbox
@@ -249,6 +249,25 @@ export async function setCheckAnswersDeclaration(
     isExpanded,
     declarationText
   )
+}
+
+/**
+ * Re-order the pages as per list of ids
+ * @param {string} formId
+ * @param {string} token
+ * @param {string[]} payload
+ */
+export async function reorderPages(formId, token, payload) {
+  // Update page ordering
+  const pageOrderRequestUrl = new URL(
+    `./${formId}/definition/draft/pages/order`,
+    formsEndpoint
+  )
+
+  await postJsonByType(pageOrderRequestUrl, {
+    payload,
+    ...getHeaders(token)
+  })
 }
 
 /**

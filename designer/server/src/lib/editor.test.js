@@ -5,6 +5,7 @@ import config from '~/src/config.js'
 import {
   addPageAndFirstQuestion,
   addQuestion,
+  reorderPages,
   resolvePageHeading,
   setCheckAnswersDeclaration,
   setPageHeadingAndGuidance,
@@ -596,6 +597,32 @@ describe('editor.js', () => {
         expectedOptionsGuidance
       )
       expect(mockedPostJson).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('reorderPages', () => {
+    const formId = '98dbfb6c-93b7-41dc-86e7-02c7abe4ba38'
+    const reorderPageUrl = new URL(
+      `./${formId}/definition/draft/pages/order`,
+      formsEndpoint
+    )
+    const token = 'someToken'
+
+    it('should reorder the pages', async () => {
+      const pageOrderPayload = [
+        'd3214138-1c1f-42c1-9572-37b2f9ba1320',
+        '097becaf-ef20-4655-a8da-b2886f06c978',
+        'da9a860e-cf05-4b4b-bf4e-7c40e319ad7d'
+      ]
+      const expectedOrderCall = {
+        payload: pageOrderPayload,
+        headers: { Authorization: `Bearer ${token}` }
+      }
+      await reorderPages(formId, token, pageOrderPayload)
+      expect(mockedPostJson).toHaveBeenCalledWith(
+        reorderPageUrl,
+        expectedOrderCall
+      )
     })
   })
 })

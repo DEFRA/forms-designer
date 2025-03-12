@@ -1,0 +1,18 @@
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+{% set cardTitle = "Page " + params.pageNum + ": " + params.pageTitle %}
+
+{% set focusClass = " pages-reorder-panel-focus" if params.isFocus else "" %}
+
+{{ govukSummaryList({
+  card: {
+    title: {
+      text: cardTitle
+    },
+    actions: {
+      items: params.actions
+    },
+    classes: "pages-reorder-panel" + focusClass
+  }
+}) }}
+

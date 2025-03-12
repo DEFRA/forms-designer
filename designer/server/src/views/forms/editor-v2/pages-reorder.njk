@@ -1,0 +1,41 @@
+{% extends "layouts/page.njk" %}
+
+{% from "page-body/macro.njk" import appPageBody %}
+{% from "pages-reorder-panel/macro.njk" import appPagesReorderPanel %}
+
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% block content %}
+  <form class="form" method="post">
+    {% call appPageBody({
+      heading: pageHeading,
+      description: pageDescription,
+      caption: pageCaption,
+      actions: pageActions,
+      classes: "govuk-grid-column-full govuk-grid-column-two-thirds-from-desktop",
+      backLink: backLink
+    }) %}
+
+    {% for page in pages %}
+      <div class="govuk-grid-row page-row">
+        <div class="govuk-grid-column-full">
+        {{ appPagesReorderPanel({
+          formName: name,
+          pageNum: loop.index,
+          pageId: page.id,
+          pageTitle: page.title,
+          actions: page.actions,
+          isFocus: page.isFocus
+          }) }}
+        </div>
+      </div>
+    {% endfor %}
+
+    <input type="hidden" name="pageOrder" value="{{ pageOrder }}" />
+  </form>
+{% endcall %}
+{% endblock %}
+
+{% block mainEnd %}
+  {{ super() }}
+{% endblock %}
