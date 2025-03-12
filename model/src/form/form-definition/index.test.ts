@@ -154,12 +154,19 @@ describe('Form definition schema', () => {
         expect(result.error).toBeUndefined()
       })
 
-      it('should accept names with letters and numbers', () => {
+      it('should reject names with letters and numbers', () => {
         testComponent.name = 'valid123name'
         page.components = [testComponent]
+
+        const result = formDefinitionSchema.validate(definition, {
+          abortEarly: false
+        })
+
+        expect(result.error).toBeDefined()
+        expect(result.error?.details[0].message).toMatch(/pattern/)
       })
 
-      it('should accept names with letters, numbers and underscores', () => {
+      it('should reject names with letters, numbers and underscores', () => {
         testComponent.name = 'valid_123_name'
         page.components = [testComponent]
 
@@ -167,7 +174,8 @@ describe('Form definition schema', () => {
           abortEarly: false
         })
 
-        expect(result.error).toBeUndefined()
+        expect(result.error).toBeDefined()
+        expect(result.error?.details[0].message).toMatch(/pattern/)
       })
 
       it('should reject names with dashes', () => {
@@ -194,7 +202,7 @@ describe('Form definition schema', () => {
         expect(result.error?.details[0].message).toMatch(/pattern/)
       })
 
-      it('should accept names that are only digits', () => {
+      it('should reject names that are only digits', () => {
         testComponent.name = '123'
         page.components = [testComponent]
 
@@ -202,10 +210,11 @@ describe('Form definition schema', () => {
           abortEarly: false
         })
 
-        expect(result.error).toBeUndefined()
+        expect(result.error).toBeDefined()
+        expect(result.error?.details[0].message).toMatch(/pattern/)
       })
 
-      it('should accept names that start with digits', () => {
+      it('should reject names that start with digits', () => {
         testComponent.name = '1foo'
         page.components = [testComponent]
 
@@ -213,7 +222,8 @@ describe('Form definition schema', () => {
           abortEarly: false
         })
 
-        expect(result.error).toBeUndefined()
+        expect(result.error).toBeDefined()
+        expect(result.error?.details[0].message).toMatch(/pattern/)
       })
     })
 
