@@ -2,6 +2,7 @@
 
 {% from "page-body/macro.njk" import appPageBody %}
 {% from "pages-panel-left/macro.njk" import appPagesPanelLeft %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 
 {% set mainClasses = "govuk-main-wrapper--masthead" %}
 
@@ -14,6 +15,14 @@
   classes: "govuk-grid-column-full govuk-grid-column-one-half-from-desktop",
   backLink: backLink
 }) %}
+
+  {% if notification | length %}
+    {% call govukNotificationBanner({
+        type: "success"
+      }) %}
+    <p class="govuk-notification-banner__heading">{{ notification }}</p>
+    {% endcall %}
+  {% endif %}
 
   <form class="form">
       {% for page in pages %}

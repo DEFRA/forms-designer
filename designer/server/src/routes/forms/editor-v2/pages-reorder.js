@@ -1,7 +1,6 @@
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
-import { CHANGES_SAVED_SUCCESSFULLY } from '~/dist/models/forms/editor-v2/common.js'
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { reorderPages } from '~/src/lib/editor.js'
@@ -10,6 +9,7 @@ import {
   getFlashFromSession,
   setFlashInSession
 } from '~/src/lib/session-helper.js'
+import { CHANGES_SAVED_SUCCESSFULLY } from '~/src/models/forms/editor-v2/common.js'
 import {
   excludeEndPages,
   getFocus,
