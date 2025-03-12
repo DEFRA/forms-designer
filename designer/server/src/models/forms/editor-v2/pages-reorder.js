@@ -42,7 +42,6 @@ export function pagesReorderViewModel(metadata, definition, pageOrder, focus) {
     {
       name: 'saveChanges',
       text: 'Save changes',
-      // href: editorv2Path(metadata.slug, 'pages-reorder'),
       classes: 'govuk-button--inverse',
       value: 'true',
       type: 'submit'
