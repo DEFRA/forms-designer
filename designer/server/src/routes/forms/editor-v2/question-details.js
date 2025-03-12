@@ -1,5 +1,6 @@
 import {
   hintTextSchema,
+  nameSchema,
   questionOptionalSchema,
   questionSchema,
   questionTypeFullSchema,
@@ -8,6 +9,8 @@ import {
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
+// eslint-disable-next-line no-restricted-imports -- Allow a file from client src area
+import randomId from '~/../client/src/randomId.js'
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import {
@@ -29,6 +32,9 @@ export const ROUTE_FULL_PATH_QUESTION_DETAILS = `/library/{slug}/editor-v2/page/
 const errorKey = sessionNames.validationFailure.editorQuestionDetails
 
 export const baseSchema = Joi.object().keys({
+  name: nameSchema.messages({
+    '*': 'There is a problem. Try again.'
+  }),
   question: questionSchema.messages({
     '*': 'Enter a question'
   }),
@@ -55,7 +61,8 @@ function mapQuestionDetails(payload) {
   return /** @type {Partial<ComponentDef>} */ ({
     type: payload.questionType,
     title: payload.question,
-    name: payload.shortDescription,
+    name: payload.name ?? randomId(),
+    shortDescription: payload.shortDescription,
     hint: payload.hintText,
     options: {
       required: !isCheckboxSelected(payload.questionOptional)

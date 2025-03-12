@@ -23,6 +23,11 @@ export interface FormEditor {
   dateSub: string
 
   /**
+   * The name of the question (unique id)
+   */
+  name: string
+
+  /**
    * The text of the question
    */
   question: string
@@ -81,6 +86,7 @@ export type FormEditorInputCheckAnswersSettings = Pick<
 export type FormEditorInputQuestion = Pick<
   FormEditor,
   | 'questionType'
+  | 'name'
   | 'question'
   | 'shortDescription'
   | 'hintText'

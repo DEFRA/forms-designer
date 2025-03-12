@@ -20,10 +20,11 @@ function mapToQuestionDetails(question) {
     return {}
   }
   return {
+    name: question.name,
     question: question.title,
     hintText: question.hint,
     questionOptional: `${question.options.required === false}`,
-    shortDescription: question.name
+    shortDescription: question.shortDescription
   }
 }
 
@@ -35,6 +36,9 @@ function questionDetailsFields(question, validation) {
   const formValues = validation?.formValues ?? mapToQuestionDetails(question)
   return {
     fields: {
+      name: {
+        value: formValues.name
+      },
       question: {
         name: 'question',
         id: 'question',
