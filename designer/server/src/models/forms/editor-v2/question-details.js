@@ -49,7 +49,7 @@ export function hasDataOrErrorForDisplay(
 }
 
 /**
- * @param {ComponentDef | undefined} question
+ * @param {ComponentDef} question
  * @param {ValidationFailure<FormEditor> | undefined} validation
  */
 export function combineBaseAndOptionalFields(question, validation) {
@@ -78,19 +78,19 @@ export function combineBaseAndOptionalFields(question, validation) {
   }
 }
 /**
- * @param {InputFieldsComponentsDef | undefined} question
+ * @param {InputFieldsComponentsDef} question
  */
 function mapToQuestionDetails(question) {
   return {
-    question: question?.title,
-    hintText: question?.hint,
-    questionOptional: `${question?.options.required === false}`,
-    shortDescription: question?.name
+    question: question.title,
+    hintText: question.hint,
+    questionOptional: `${question.options.required === false}`,
+    shortDescription: question.name
   }
 }
 
 /**
- * @param {InputFieldsComponentsDef | undefined} question
+ * @param {InputFieldsComponentsDef} question
  * @param {ValidationFailure<FormEditor> | undefined} validation
  */
 function questionDetailsFields(question, validation) {
@@ -153,15 +153,30 @@ function questionDetailsFields(question, validation) {
  * @param {FormDefinition} definition
  * @param {string} pageId
  * @param {string} questionId
+ * @param {ComponentType | undefined} questionType
  */
-export function getDetails(metadata, definition, pageId, questionId) {
+export function getDetails(
+  metadata,
+  definition,
+  pageId,
+  questionId,
+  questionType
+) {
   const formPath = formOverviewPath(metadata.slug)
   const pageNum = getPageNum(definition, pageId)
   const questionNum = getQuestionNum(definition, pageId, questionId)
+  const question = getQuestion(definition, pageId, questionId)
+
+  // Override question type if it has been passed in i.e. changed as part of the route to this page
+  const questionOverride = /** @type {ComponentDef} */ (
+    question ?? { schema: {}, options: {} }
+  )
+  questionOverride.type = questionType ?? questionOverride.type
+
   return {
     pageTitle: metadata.title,
     navigation: getFormSpecificNavigation(formPath, metadata, 'Editor'),
-    question: getQuestion(definition, pageId, questionId),
+    question: questionOverride,
     questionNum,
     pageNum
   }
@@ -208,18 +223,11 @@ export function questionDetailsViewModel(
     metadata,
     definition,
     pageId,
-    questionId
+    questionId,
+    questionType
   )
 
   const { formErrors } = validation ?? {}
-
-  // Override question type if it has changed as part of the route to this page
-  if (question) {
-    if (!questionType) {
-      questionType = question.type
-    }
-    question.type = questionType
-  }
 
   const combinedFields = combineBaseAndOptionalFields(question, validation)
 
@@ -236,9 +244,9 @@ export function questionDetailsViewModel(
     errorList,
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
-    questionType,
+    questionType: question.type,
     questionTypeDesc: questionTypeDescriptions.find(
-      (x) => x.type === questionType
+      (x) => x.type === question.type
     )?.description,
     changeTypeUrl: editorv2Path(
       metadata.slug,
