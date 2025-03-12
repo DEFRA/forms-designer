@@ -17,6 +17,8 @@ const formsEndpoint = new URL('/forms/', config.managerUrl)
 
 const patchJsonByType = /** @type {typeof patchJson<Page>} */ (patchJson)
 const postJsonByType = /** @type {typeof postJson<Page>} */ (postJson)
+const postJsonByDefinitionType =
+  /** @type {typeof postJson<FormDefinition>} */ (postJson)
 const putJsonByType = /** @type {typeof putJson<Page>} */ (putJson)
 const delJsonByType = /** @type {typeof delJson<ComponentDef>} */ (delJson)
 
@@ -281,7 +283,7 @@ export async function migrateDefinitionToV2(formId, token) {
     formsEndpoint
   )
 
-  const { body } = await postJsonByType(migrateToV2RequestUrl, {
+  const { body } = await postJsonByDefinitionType(migrateToV2RequestUrl, {
     payload: {},
     ...getHeaders(token)
   })

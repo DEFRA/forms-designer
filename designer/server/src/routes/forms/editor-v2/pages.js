@@ -1,5 +1,8 @@
+import { Engine } from '@defra/forms-model'
+
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
+import * as editor from '~/src/lib/editor.js'
 import * as forms from '~/src/lib/forms.js'
 import * as viewModel from '~/src/models/forms/editor-v2/pages.js'
 
@@ -21,7 +24,13 @@ export default [
       const { slug } = params
 
       const metadata = await forms.get(slug, token)
-      const definition = await forms.getDraftFormDefinition(metadata.id, token)
+      const formId = metadata.id
+
+      let definition = await forms.getDraftFormDefinition(formId, token)
+
+      if (definition.engine === Engine.V1) {
+        definition = await editor.migrateDefinitionToV2(formId, token)
+      }
 
       // Saved banner
       const notification = /** @type {string[] | undefined} */ (
