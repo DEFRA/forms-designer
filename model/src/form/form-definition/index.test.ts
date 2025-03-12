@@ -160,6 +160,28 @@ describe('Form definition schema', () => {
         expect(result.error).toBeDefined()
         expect(result.error?.details[0].message).toMatch(/pattern/)
       })
+
+      it('should accept names that are only digits', () => {
+        testComponent.name = '123'
+        page.components = [testComponent]
+
+        const result = formDefinitionSchema.validate(definition, {
+          abortEarly: false
+        })
+
+        expect(result.error).toBeUndefined()
+      })
+
+      it('should accept names that start with digits', () => {
+        testComponent.name = '1foo'
+        page.components = [testComponent]
+
+        const result = formDefinitionSchema.validate(definition, {
+          abortEarly: false
+        })
+
+        expect(result.error).toBeUndefined()
+      })
     })
 
     describe('For special components (Html, Markdown, etc.)', () => {
