@@ -32,9 +32,7 @@ export const ROUTE_FULL_PATH_QUESTION_DETAILS = `/library/{slug}/editor-v2/page/
 const errorKey = sessionNames.validationFailure.editorQuestionDetails
 
 export const baseSchema = Joi.object().keys({
-  name: nameSchema.messages({
-    '*': 'There is a problem. Try again.'
-  }),
+  name: nameSchema,
   question: questionSchema.messages({
     '*': 'Enter a question'
   }),
