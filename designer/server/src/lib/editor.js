@@ -17,6 +17,8 @@ const formsEndpoint = new URL('/forms/', config.managerUrl)
 
 const patchJsonByType = /** @type {typeof patchJson<Page>} */ (patchJson)
 const postJsonByType = /** @type {typeof postJson<Page>} */ (postJson)
+const postJsonByDefinitionType =
+  /** @type {typeof postJson<FormDefinition>} */ (postJson)
 const putJsonByType = /** @type {typeof putJson<Page>} */ (putJson)
 const delJsonByType = /** @type {typeof delJson<ComponentDef>} */ (delJson)
 
@@ -268,6 +270,25 @@ export async function reorderPages(formId, token, payload) {
     payload,
     ...getHeaders(token)
   })
+}
+
+/**
+ * Migrates the definition to v2
+ * @param {string} formId
+ * @param {string} token
+ */
+export async function migrateDefinitionToV2(formId, token) {
+  const migrateToV2RequestUrl = new URL(
+    `./${formId}/definition/draft/migrate/v2`,
+    formsEndpoint
+  )
+
+  const { body } = await postJsonByDefinitionType(migrateToV2RequestUrl, {
+    payload: {},
+    ...getHeaders(token)
+  })
+
+  return body
 }
 
 /**
