@@ -271,5 +271,24 @@ export async function reorderPages(formId, token, payload) {
 }
 
 /**
+ * Migrates the definition to v2
+ * @param {string} formId
+ * @param {string} token
+ */
+export async function migrateDefinitionToV2(formId, token) {
+  const migrateToV2RequestUrl = new URL(
+    `./${formId}/definition/draft/migrate/v2`,
+    formsEndpoint
+  )
+
+  const { body } = await postJsonByType(migrateToV2RequestUrl, {
+    payload: {},
+    ...getHeaders(token)
+  })
+
+  return body
+}
+
+/**
  * @import { ComponentDef, Page, FormEditorInputCheckAnswersSettings, FormEditorInputPageSettings, FormDefinition } from '@defra/forms-model'
  */
