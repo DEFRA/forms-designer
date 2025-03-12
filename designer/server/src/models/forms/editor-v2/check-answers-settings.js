@@ -76,7 +76,7 @@ export function checkAnswersSettingsViewModel(
   const page = definition.pages[pageIdx]
   const components = hasComponentsEvenIfNoNext(page) ? page.components : []
 
-  const guidanceComponent = /** @type {MarkdownComponent | undefined} */ (
+  const guidanceComponent = /** @type { MarkdownComponent | undefined } */ (
     components.find((comp, idx) => {
       return comp.type === ComponentType.Markdown && idx === 0
     })

@@ -32,7 +32,7 @@ export function mapPageData(definition, pageOrder, focus) {
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  * @param {string} pageOrder
- * @param {{ button: string | undefined, pageId: string | undefined} | undefined} focus
+ * @param {{ button: string | undefined, pageId: string | undefined } | undefined } focus
  */
 export function pagesReorderViewModel(metadata, definition, pageOrder, focus) {
   const formPath = formOverviewPath(metadata.slug)

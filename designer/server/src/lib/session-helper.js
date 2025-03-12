@@ -3,8 +3,8 @@
  * @param {string} key
  */
 export function getFlashFromSession(yar, key) {
-  const sessionVal = /** @type {string[] | undefined} */ (yar.flash(key))
-  return /** @type {string | undefined} */ (sessionVal?.at(0))
+  const sessionVal = /** @type { string[] | undefined } */ (yar.flash(key))
+  return /** @type { string | undefined } */ (sessionVal?.at(0))
 }
 
 /**

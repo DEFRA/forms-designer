@@ -6,7 +6,7 @@ import { stringHasValue } from '~/src/lib/utils.js'
  * @param {Page} page
  * @param {number} pageIdx
  * @param {number} numOfPages
- * @param {{ button: string | undefined, pageId: string | undefined} | undefined} focus
+ * @param {{ button: string | undefined, pageId: string | undefined } | undefined } focus
  */
 export function constructReorderPage(page, pageIdx, numOfPages, focus) {
   const focusUpAttr =

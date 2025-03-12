@@ -101,7 +101,7 @@ export function questionsViewModel(
     ? formValues?.pageHeading
     : page.title
 
-  const guidanceComponent = /** @type {MarkdownComponent | undefined} */ (
+  const guidanceComponent = /** @type { MarkdownComponent | undefined } */ (
     components.find((comp, idx) => {
       return comp.type === ComponentType.Markdown && idx === 0
     })
