@@ -49,7 +49,7 @@ export const dateSubSchema = Joi.string()
   .required()
   .valid(ComponentType.DatePartsField, ComponentType.MonthYearField)
 
-export const nameSchema = Joi.string().optional().allow('')
+export const nameSchema = Joi.string().required()
 export const questionSchema = Joi.string().required()
 export const hintTextSchema = Joi.string().optional().allow('')
 export const questionOptionalSchema = Joi.string().optional().valid('', 'true')
