@@ -13,8 +13,6 @@ import {
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
-// eslint-disable-next-line no-restricted-imports -- Allow a file from client src area
-import randomId from '~/../client/src/randomId.js'
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import {
@@ -72,7 +70,7 @@ function mapQuestionDetails(payload) {
   return /** @type {Partial<ComponentDef>} */ ({
     type: payload.questionType,
     title: payload.question,
-    name: payload.name ?? randomId(),
+    name: payload.name,
     shortDescription: payload.shortDescription,
     hint: payload.hintText,
     options: {

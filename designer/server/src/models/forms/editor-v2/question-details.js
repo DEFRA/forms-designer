@@ -1,5 +1,7 @@
 import { ComponentType } from '@defra/forms-model'
 
+// eslint-disable-next-line no-restricted-imports -- Allow a file from client src area
+import randomId from '~/../client/src/randomId.js'
 import { questionTypeDescriptions } from '~/src/common/constants/editor.js'
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { insertValidationErrors, isCheckboxSelected } from '~/src/lib/utils.js'
@@ -78,21 +80,21 @@ export function combineBaseAndOptionalFields(question, validation) {
   }
 }
 /**
- * @param {InputFieldsComponentsDef} question
+ * @param { InputFieldsComponentsDef | undefined } question
  */
 function mapToQuestionDetails(question) {
   return {
-    name: question.name,
-    question: question.title,
-    hintText: question.hint,
-    questionOptional: `${question.options.required === false}`,
-    shortDescription: question.shortDescription
+    name: question?.name ?? randomId(),
+    question: question?.title,
+    hintText: question?.hint,
+    questionOptional: `${question?.options.required === false}`,
+    shortDescription: question?.shortDescription
   }
 }
 
 /**
- * @param {InputFieldsComponentsDef} question
- * @param {ValidationFailure<FormEditor> | undefined} validation
+ * @param { InputFieldsComponentsDef | undefined } question
+ * @param { ValidationFailure<FormEditor> | undefined } validation
  */
 function questionDetailsFields(question, validation) {
   const formValues = validation?.formValues ?? mapToQuestionDetails(question)
