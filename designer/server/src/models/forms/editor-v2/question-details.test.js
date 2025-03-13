@@ -2,7 +2,8 @@ import { ComponentType } from '@defra/forms-model'
 
 import {
   getOptionalFields,
-  hasDataOrErrorForDisplay
+  hasDataOrErrorForDisplay,
+  mapToQuestionDetails
 } from '~/src/models/forms/editor-v2/question-details.js'
 
 const fieldNames = ['minLength', 'maxLength', 'regex', 'classes']
@@ -81,9 +82,41 @@ describe('editor-v2 - question details model', () => {
       expect(res.fields).toEqual({})
     })
   })
+
+  describe('mapToQuestionDetails', () => {
+    test('should map if question undefined', () => {
+      const res = mapToQuestionDetails(undefined)
+      expect(res).toEqual({
+        name: expect.anything(),
+        question: undefined,
+        hintText: undefined,
+        questionOptional: 'false',
+        shortDescription: undefined
+      })
+      expect(res.name).toBeDefined()
+    })
+
+    test('should map if question has values', () => {
+      const question = /** @type {InputFieldsComponentsDef} */ ({
+        name: 'name',
+        title: 'title',
+        hint: 'hintText',
+        options: { required: false },
+        shortDescription: 'shortDescription'
+      })
+      const res = mapToQuestionDetails(question)
+      expect(res).toEqual({
+        name: 'name',
+        question: 'title',
+        hintText: 'hintText',
+        questionOptional: 'true',
+        shortDescription: 'shortDescription'
+      })
+    })
+  })
 })
 
 /**
- * @import { ComponentDef, FormEditorGovukField } from '@defra/forms-model'
+ * @import { ComponentDef, FormEditorGovukField, InputFieldsComponentsDef } from '@defra/forms-model'
  * @import { ErrorDetailsItem } from '~/src/common/helpers/types.js'
  */

@@ -161,7 +161,7 @@ describe('Editor v2 question details routes', () => {
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
       new Joi.ValidationError(
-        'Enter a question. Enter a short description. The question type is missing',
+        '"name" is required. Enter a question. Enter a short description. The question type is missing',
         [],
         undefined
       ),
@@ -177,6 +177,7 @@ describe('Editor v2 question details routes', () => {
       url: '/library/my-form-slug/editor-v2/page/1/question/1/details',
       auth,
       payload: {
+        name: '12345',
         question: 'Question text',
         shortDescription: 'Short desc',
         questionType: 'TextField',
@@ -212,6 +213,7 @@ describe('Editor v2 question details routes', () => {
       url: '/library/my-form-slug/editor-v2/page/new/question/new/details',
       auth,
       payload: {
+        name: '12345',
         question: 'Question text',
         shortDescription: 'Short desc',
         questionType: 'TextField'
@@ -237,6 +239,7 @@ describe('Editor v2 question details routes', () => {
       url: '/library/my-form-slug/editor-v2/page/123456/question/456/details',
       auth,
       payload: {
+        name: '12345',
         question: 'Question text',
         shortDescription: 'Short desc',
         questionType: 'TextField'
@@ -262,6 +265,7 @@ describe('Editor v2 question details routes', () => {
       url: '/library/my-form-slug/editor-v2/page/123456/question/new/details',
       auth,
       payload: {
+        name: '12345',
         question: 'Question text',
         shortDescription: 'Short desc',
         questionType: 'TextField'

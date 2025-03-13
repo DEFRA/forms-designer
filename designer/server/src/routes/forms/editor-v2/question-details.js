@@ -3,6 +3,7 @@ import {
   hintTextSchema,
   maxLengthSchema,
   minLengthSchema,
+  nameSchema,
   questionOptionalSchema,
   questionSchema,
   questionTypeFullSchema,
@@ -33,6 +34,7 @@ export const ROUTE_FULL_PATH_QUESTION_DETAILS = `/library/{slug}/editor-v2/page/
 const errorKey = sessionNames.validationFailure.editorQuestionDetails
 
 export const baseSchema = Joi.object().keys({
+  name: nameSchema,
   question: questionSchema.messages({
     '*': 'Enter a question'
   }),
@@ -68,7 +70,8 @@ function mapQuestionDetails(payload) {
   return /** @type {Partial<ComponentDef>} */ ({
     type: payload.questionType,
     title: payload.question,
-    name: payload.shortDescription,
+    name: payload.name,
+    shortDescription: payload.shortDescription,
     hint: payload.hintText,
     options: {
       required: !isCheckboxSelected(payload.questionOptional),
