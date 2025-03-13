@@ -793,6 +793,6 @@ describe('Forms library routes', () => {
 })
 
 /**
- * @import { FormDefinition, FormMetadata, FormMetadataAuthor} from '@defra/forms-model'
+ * @import { FormDefinition, FormMetadata, FormMetadataAuthor } from '@defra/forms-model'
  * @import { Server } from '@hapi/hapi'
  */
