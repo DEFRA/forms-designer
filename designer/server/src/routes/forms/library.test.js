@@ -1,3 +1,5 @@
+import { FormStatus } from '@defra/forms-model'
+
 import config from '~/src/config.js'
 import { createServer } from '~/src/createServer.js'
 import * as forms from '~/src/lib/forms.js'
@@ -586,7 +588,10 @@ describe('Forms library routes', () => {
           data: [formMetadata],
           meta: {
             search: {
-              status: /** @type {FormStatus[]} */ (['draft', 'live'])
+              status: /** @type {FormStatus[]} */ ([
+                FormStatus.Draft,
+                FormStatus.Live
+              ])
             }
           }
         })
@@ -602,7 +607,10 @@ describe('Forms library routes', () => {
         expect(forms.list).toHaveBeenCalledWith(
           auth.credentials.token,
           expect.objectContaining({
-            status: /** @type {FormStatus[]} */ (['draft', 'live'])
+            status: /** @type {FormStatus[]} */ ([
+              FormStatus.Draft,
+              FormStatus.Live
+            ])
           })
         )
       })
@@ -614,7 +622,10 @@ describe('Forms library routes', () => {
             search: {
               title: 'test',
               organisations: ['Defra', 'Marine Management Organisation – MMO'],
-              status: /** @type {FormStatus[]} */ (['draft', 'live']),
+              status: /** @type {FormStatus[]} */ ([
+                FormStatus.Draft,
+                FormStatus.Live
+              ]),
               author: 'Enrique Chase'
             }
           }
@@ -633,7 +644,10 @@ describe('Forms library routes', () => {
           expect.objectContaining({
             title: 'test',
             organisations: ['Defra', 'Marine Management Organisation – MMO'],
-            status: /** @type {FormStatus[]} */ (['draft', 'live']),
+            status: /** @type {FormStatus[]} */ ([
+              FormStatus.Draft,
+              FormStatus.Live
+            ]),
             author: 'Enrique Chase'
           })
         )
@@ -779,6 +793,6 @@ describe('Forms library routes', () => {
 })
 
 /**
- * @import { FormDefinition, FormMetadata, FormMetadataAuthor, FormStatus} from '@defra/forms-model'
+ * @import { FormDefinition, FormMetadata, FormMetadataAuthor } from '@defra/forms-model'
  * @import { Server } from '@hapi/hapi'
  */
