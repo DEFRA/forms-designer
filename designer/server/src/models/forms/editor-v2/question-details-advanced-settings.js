@@ -5,6 +5,26 @@ import { insertValidationErrors } from '~/src/lib/utils.js'
 import { GOVUK_LABEL__M } from '~/src/models/forms/editor-v2/common.js'
 
 /**
+ * @param {GovukField} field
+ */
+export function getFieldComponentType(field) {
+  let fieldType
+  switch (field.name) {
+    case QuestionAdvancedSettings.MinLength:
+    case QuestionAdvancedSettings.MaxLength:
+      fieldType = ComponentType.TextField
+      break
+    case QuestionAdvancedSettings.Regex:
+    case QuestionAdvancedSettings.Classes:
+      fieldType = ComponentType.MultilineTextField
+      break
+    default:
+      throw new Error('Invalid advanced setting field name')
+  }
+  return fieldType
+}
+
+/**
  * @param {string} fieldName
  * @param {FormEditor} formValues
  * @param { ErrorDetails | undefined } formErrors
@@ -14,83 +34,71 @@ export function buildField(fieldName, formValues, formErrors) {
   switch (fieldName) {
     case QuestionAdvancedSettings.MinLength:
       field = {
-        minLength: {
-          type: ComponentType.TextField,
-          name: 'minLength',
-          id: 'minLength',
-          label: {
-            text: 'Minimum character length (optional)',
-            classes: GOVUK_LABEL__M
-          },
-          hint: {
-            text: 'The minimum number of characters users can enter'
-          },
-          value: formValues.minLength,
-          classes: 'govuk-input--width-3',
-          ...insertValidationErrors(formErrors?.minLength)
-        }
+        name: 'minLength',
+        id: 'minLength',
+        label: {
+          text: 'Minimum character length (optional)',
+          classes: GOVUK_LABEL__M
+        },
+        hint: {
+          text: 'The minimum number of characters users can enter'
+        },
+        value: formValues.minLength,
+        classes: 'govuk-input--width-3',
+        ...insertValidationErrors(formErrors?.minLength)
       }
       break
     case QuestionAdvancedSettings.MaxLength:
       field = {
-        maxLength: {
-          type: ComponentType.TextField,
-          name: 'maxLength',
-          id: 'maxLength',
-          label: {
-            text: 'Maximum character length (optional)',
-            classes: GOVUK_LABEL__M
-          },
-          hint: {
-            text: 'The maximum number of characters users can enter'
-          },
-          value: formValues.maxLength,
-          classes: 'govuk-input--width-3',
-          ...insertValidationErrors(formErrors?.maxLength)
-        }
+        name: 'maxLength',
+        id: 'maxLength',
+        label: {
+          text: 'Maximum character length (optional)',
+          classes: GOVUK_LABEL__M
+        },
+        hint: {
+          text: 'The maximum number of characters users can enter'
+        },
+        value: formValues.maxLength,
+        classes: 'govuk-input--width-3',
+        ...insertValidationErrors(formErrors?.maxLength)
       }
       break
     case QuestionAdvancedSettings.Regex:
       field = {
-        regex: {
-          type: ComponentType.MultilineTextField,
-          name: 'regex',
-          id: 'regex',
-          label: {
-            text: 'Regex (optional)',
-            classes: GOVUK_LABEL__M
-          },
-          hint: {
-            text: 'Specifies a regular expression to validate users’ inputs. Use JavaScript syntax'
-          },
-          rows: 3,
-          value: formValues.regex,
-          ...insertValidationErrors(formErrors?.regex)
-        }
+        name: 'regex',
+        id: 'regex',
+        label: {
+          text: 'Regex (optional)',
+          classes: GOVUK_LABEL__M
+        },
+        hint: {
+          text: 'Specifies a regular expression to validate users’ inputs. Use JavaScript syntax'
+        },
+        rows: 3,
+        value: formValues.regex,
+        ...insertValidationErrors(formErrors?.regex)
       }
       break
     case QuestionAdvancedSettings.Classes:
       field = {
-        classes: {
-          type: ComponentType.MultilineTextField,
-          name: 'classes',
-          id: 'classes',
-          label: {
-            text: 'Classes (optional)',
-            classes: GOVUK_LABEL__M
-          },
-          hint: {
-            text: 'Apply CSS classes to this field. For example, ‘govuk-input govuk-!-width-full’'
-          },
-          rows: 1,
-          value: formValues.classes,
-          ...insertValidationErrors(formErrors?.classes)
-        }
+        name: 'classes',
+        id: 'classes',
+        label: {
+          text: 'Classes (optional)',
+          classes: GOVUK_LABEL__M
+        },
+        hint: {
+          text: 'Apply CSS classes to this field. For example, ‘govuk-input govuk-!-width-full’'
+        },
+        rows: 1,
+        value: formValues.classes,
+        ...insertValidationErrors(formErrors?.classes)
       }
       break
   }
 
-  return /** @type {FormEditorGovukField} */ (field)
+  return /** @type {GovukField} */ (field)
 }
 
 /**
@@ -109,7 +117,7 @@ function mapToQuestionOptions(question) {
  * @param {string[]} options
  * @param {TextFieldComponent} question
  * @param {ValidationFailure<FormEditor>} [validation]
- * @returns {FormEditorGovukField[]}
+ * @returns {GovukField[]}
  */
 export function extraFields(options, question, validation) {
   const formValues = /** @type {FormEditor} */ (
@@ -121,6 +129,6 @@ export function extraFields(options, question, validation) {
 }
 
 /**
- * @import { FormEditor, FormEditorGovukField, TextFieldComponent } from '@defra/forms-model'
+ * @import { FormEditor, GovukField, TextFieldComponent } from '@defra/forms-model'
  * @import { ErrorDetails, ValidationFailure } from '~/src/common/helpers/types.js'
  */

@@ -12,10 +12,10 @@
   <div class="govuk-details__text">
     <div id="question-extra-content" class="question-content" style="margin-top: 10px;">
       {% for field in extraFields %}
-      <p>field = {{ field | dump }} </p>
-        {% if field.type == 'TextField' %}
+        {% set fieldType = getFieldType(field) %}
+        {% if fieldType == 'TextField' %}
           {{ govukInput(field) }}
-        {% elif field.type == 'MultilineTextField' %}
+        {% elif fieldType == 'MultilineTextField' %}
           {{ govukTextarea(field) }}
         {% endif %}
       {% endfor %}
