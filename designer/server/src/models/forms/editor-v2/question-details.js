@@ -82,7 +82,7 @@ export function combineBaseAndOptionalFields(question, validation) {
 /**
  * @param { InputFieldsComponentsDef | undefined } question
  */
-function mapToQuestionDetails(question) {
+export function mapToQuestionDetails(question) {
   return {
     name: question?.name ?? randomId(),
     question: question?.title,
