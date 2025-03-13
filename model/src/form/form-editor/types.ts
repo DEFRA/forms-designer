@@ -126,6 +126,7 @@ export interface GovukField {
   hint?: { text?: string; html?: string; classes?: string }
   items?: { text?: string; value?: string }
   rows?: number
+  type?: string
 }
 
 export interface FormEditorGovukField {
@@ -138,9 +139,4 @@ export interface FormEditorGovukField {
   regex?: GovukField
   classes?: GovukField
   errorMessage?: { text: string }
-}
-
-export interface FormEditorGovukFieldList {
-  fields: FormEditorGovukField
-  optionalFieldsPartial?: string
 }
