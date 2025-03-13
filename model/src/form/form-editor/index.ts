@@ -58,6 +58,10 @@ export const pageHeadingSchema = Joi.string().required()
 export const guidanceTextSchema = Joi.string().optional().allow('')
 export const needDeclarationSchema = Joi.string().required()
 export const declarationTextSchema = Joi.string().required()
+export const minLengthSchema = Joi.number().empty('').min(1)
+export const maxLengthSchema = Joi.number().empty('').min(1)
+export const regexSchema = Joi.string().optional().allow('')
+export const classesSchema = Joi.string().optional().allow('')
 
 export const formEditorInputPageKeys = {
   pageType: pageTypeSchema,

@@ -1,0 +1,23 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+
+<details class="govuk-details" data-module="govuk-details"{% if isOpen %} open{% endif %}>
+  <summary class="govuk-details__summary">
+    <span class="govuk-details__summary-text">
+      Set answer limits (optional)
+    </span>
+  </summary>
+  <div class="govuk-details__text">
+    <div id="question-extra-content" class="question-content" style="margin-top: 10px;">
+
+      {{ govukInput(fields.minLength) }}
+
+      {{ govukInput(fields.maxLength) }}
+
+      {{ govukTextarea(fields.regex) }}
+
+      {{ govukTextarea(fields.classes) }}
+
+    </div>
+  </div>
+</details>
