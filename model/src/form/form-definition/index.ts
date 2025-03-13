@@ -349,7 +349,7 @@ export const formDefinitionV2PayloadSchema = formDefinitionSchema.keys({
     .items(listSchemaV2)
     .unique('name')
     .unique('title')
-    .unique('id')
+    .unique('id', { ignoreUndefined: true })
 })
 
 // Maintain compatibility with legacy named export

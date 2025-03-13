@@ -315,10 +315,16 @@ describe('Form definition schema', () => {
         title: 'String List',
         type: 'string'
       }
+      const list2: List = {
+        items: [],
+        name: 'ADxeWb',
+        title: 'String List 2',
+        type: 'string'
+      }
 
       const definition: FormDefinition = {
         conditions: [],
-        lists: [list],
+        lists: [list, list2],
         pages: [page, page2],
         sections: []
       }
@@ -349,7 +355,7 @@ describe('Form definition schema', () => {
               id: expect.any(String)
             }
           ],
-          lists: [{ id: expect.any(String) }]
+          lists: [{ id: expect.any(String) }, { id: expect.any(String) }]
         })
       })
 
