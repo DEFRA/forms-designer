@@ -16,7 +16,7 @@ import {
   getQuestionNum
 } from '~/src/models/forms/editor-v2/common.js'
 import {
-  extraFields,
+  advancedSettingsFields,
   getFieldComponentType
 } from '~/src/models/forms/editor-v2/question-details-advanced-settings.js'
 import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
@@ -197,7 +197,7 @@ export function getExtraFields(question, validation) {
   )
 
   if (extraFieldNames.length) {
-    return extraFields(
+    return advancedSettingsFields(
       extraFieldNames,
       /** @type {TextFieldComponent} */ (question),
       validation

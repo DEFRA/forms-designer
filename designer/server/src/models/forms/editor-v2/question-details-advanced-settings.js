@@ -96,6 +96,7 @@ export function buildField(fieldName, formValues, formErrors) {
         ...insertValidationErrors(formErrors?.classes)
       }
       break
+    default:
   }
 
   return /** @type {GovukField} */ (field)
@@ -119,7 +120,7 @@ function mapToQuestionOptions(question) {
  * @param {ValidationFailure<FormEditor>} [validation]
  * @returns {GovukField[]}
  */
-export function extraFields(options, question, validation) {
+export function advancedSettingsFields(options, question, validation) {
   const formValues = /** @type {FormEditor} */ (
     validation?.formValues ?? mapToQuestionOptions(question)
   )
