@@ -1,3 +1,5 @@
+import { FormStatus } from '@defra/forms-model'
+
 import { buildEntry } from '~/src/common/nunjucks/context/build-navigation.js'
 import * as forms from '~/src/lib/forms.js'
 import {
@@ -1098,7 +1100,10 @@ describe('Forms Library Models', () => {
               totalItems: 30
             },
             search: {
-              status: /** @type {FormStatus[]} */ (['draft', 'live'])
+              status: /** @type {FormStatus[]} */ ([
+                FormStatus.Draft,
+                FormStatus.Live
+              ])
             }
           }
         }
@@ -1107,7 +1112,7 @@ describe('Forms Library Models', () => {
         const viewModel = await listViewModel('token', {
           page: 2,
           perPage: 10,
-          status: ['draft', 'live']
+          status: [FormStatus.Draft, FormStatus.Live]
         })
 
         expect(viewModel.pagination).toBeTruthy()
@@ -1134,5 +1139,5 @@ describe('Forms Library Models', () => {
 })
 
 /**
- * @import { FormMetadata, FormStatus } from '@defra/forms-model'
+ * @import { FormMetadata } from '@defra/forms-model'
  */

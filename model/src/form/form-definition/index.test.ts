@@ -89,7 +89,7 @@ describe('Form definition schema', () => {
     })
   })
 
-  describe('Components', () => {
+  describe('Component validation', () => {
     describe('Custom validation messages', () => {
       const component: ComponentDef = {
         id: 'fdeaa717-8e81-43fd-acce-2d83b6d63181',
@@ -126,6 +126,154 @@ describe('Form definition schema', () => {
         })
 
         expect(result.error).toBeUndefined()
+      })
+    })
+
+    describe('For regular components (TextField, etc.)', () => {
+      let testComponent: ComponentDef
+
+      beforeEach(() => {
+        testComponent = {
+          id: 'fdeaa717-8e81-43fd-acce-2d83b6d63181',
+          name: 'defaultname',
+          title: 'Test Component',
+          type: ComponentType.TextField,
+          options: {},
+          schema: {}
+        }
+      })
+
+      it('should accept names with letters only', () => {
+        testComponent.name = 'validname'
+        page.components = [testComponent]
+
+        const result = formDefinitionSchema.validate(definition, {
+          abortEarly: false
+        })
+
+        expect(result.error).toBeUndefined()
+      })
+
+      it('should reject names with letters and numbers', () => {
+        testComponent.name = 'valid123name'
+        page.components = [testComponent]
+
+        const result = formDefinitionSchema.validate(definition, {
+          abortEarly: false
+        })
+
+        expect(result.error).toBeDefined()
+        expect(result.error?.details[0].message).toMatch(/pattern/)
+      })
+
+      it('should reject names with letters, numbers and underscores', () => {
+        testComponent.name = 'valid_123_name'
+        page.components = [testComponent]
+
+        const result = formDefinitionSchema.validate(definition, {
+          abortEarly: false
+        })
+
+        expect(result.error).toBeDefined()
+        expect(result.error?.details[0].message).toMatch(/pattern/)
+      })
+
+      it('should reject names with dashes', () => {
+        testComponent.name = 'invalid-name'
+        page.components = [testComponent]
+
+        const result = formDefinitionSchema.validate(definition, {
+          abortEarly: false
+        })
+
+        expect(result.error).toBeDefined()
+        expect(result.error?.details[0].message).toMatch(/pattern/)
+      })
+
+      it('should reject names with spaces', () => {
+        testComponent.name = 'invalid name'
+        page.components = [testComponent]
+
+        const result = formDefinitionSchema.validate(definition, {
+          abortEarly: false
+        })
+
+        expect(result.error).toBeDefined()
+        expect(result.error?.details[0].message).toMatch(/pattern/)
+      })
+
+      it('should reject names that are only digits', () => {
+        testComponent.name = '123'
+        page.components = [testComponent]
+
+        const result = formDefinitionSchema.validate(definition, {
+          abortEarly: false
+        })
+
+        expect(result.error).toBeDefined()
+        expect(result.error?.details[0].message).toMatch(/pattern/)
+      })
+
+      it('should reject names that start with digits', () => {
+        testComponent.name = '1foo'
+        page.components = [testComponent]
+
+        const result = formDefinitionSchema.validate(definition, {
+          abortEarly: false
+        })
+
+        expect(result.error).toBeDefined()
+        expect(result.error?.details[0].message).toMatch(/pattern/)
+      })
+    })
+
+    describe('For special components (Html, Markdown, etc.)', () => {
+      let testComponent: ComponentDef
+
+      beforeEach(() => {
+        testComponent = {
+          id: 'fdeaa717-8e81-43fd-acce-2d83b6d63181',
+          name: 'defaultname',
+          title: 'Test Component',
+          type: ComponentType.Html,
+          options: {},
+          content: 'Some HTML content'
+        }
+      })
+
+      it('should accept valid names', () => {
+        testComponent.name = 'validname'
+        page.components = [testComponent]
+
+        const result = formDefinitionSchema.validate(definition, {
+          abortEarly: false
+        })
+
+        expect(result.error).toBeUndefined()
+      })
+
+      it('should reject names with dashes', () => {
+        testComponent.name = 'invalid-name'
+        page.components = [testComponent]
+
+        const result = formDefinitionSchema.validate(definition, {
+          abortEarly: false
+        })
+
+        expect(result.error).toBeDefined()
+        expect(result.error?.details[0].message).toMatch(/pattern/)
+      })
+
+      it('should reject names with other special characters', () => {
+        testComponent.name = 'invalid.name'
+        page.components = [testComponent]
+
+        const result = formDefinitionSchema.validate(definition, {
+          abortEarly: false
+        })
+
+        expect(result.error).toBeDefined()
+        expect(result.error?.details[0].message).toMatch(/pattern/)
       })
     })
   })

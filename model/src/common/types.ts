@@ -4,16 +4,12 @@ import {
 } from '~/src/common/pagination/types.js'
 import { type SearchOptions } from '~/src/common/search/types.js'
 import { type SortingOptions } from '~/src/common/sorting/types.js'
+import { type FormStatus } from '~/src/index.js'
 
 /**
  * Options for querying results, including pagination, sorting, and searching
  */
 export type QueryOptions = PaginationOptions & SortingOptions & SearchOptions
-
-/**
- * Available form status values
- */
-export type FormStatus = 'draft' | 'live'
 
 /**
  * Available filter options for the current result set

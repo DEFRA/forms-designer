@@ -1,9 +1,13 @@
 import {
+  classesSchema,
   hintTextSchema,
+  maxLengthSchema,
+  minLengthSchema,
   nameSchema,
   questionOptionalSchema,
   questionSchema,
   questionTypeFullSchema,
+  regexSchema,
   shortDescriptionSchema
 } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
@@ -47,7 +51,16 @@ export const baseSchema = Joi.object().keys({
 })
 
 // To be extended with question specific fields
-const specificsSchema = Joi.object()
+const specificsSchema = Joi.object().keys({
+  minLength: minLengthSchema.messages({
+    '*': 'Minimum length must be a number greater than zero'
+  }),
+  maxLength: maxLengthSchema.messages({
+    '*': 'Maximum length must be a number greater than zero'
+  }),
+  regex: regexSchema,
+  classes: classesSchema
+})
 
 const schema = baseSchema.concat(specificsSchema)
 
@@ -63,7 +76,13 @@ function mapQuestionDetails(payload) {
     shortDescription: payload.shortDescription,
     hint: payload.hintText,
     options: {
-      required: !isCheckboxSelected(payload.questionOptional)
+      required: !isCheckboxSelected(payload.questionOptional),
+      classes: payload.classes
+    },
+    schema: {
+      min: payload.minLength ?? undefined,
+      max: payload.maxLength ?? undefined,
+      regex: payload.regex ?? undefined
     }
   })
 }

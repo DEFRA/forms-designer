@@ -1,3 +1,5 @@
+import { FormStatus } from '@defra/forms-model'
+
 import config from '~/src/config.js'
 import { createServer } from '~/src/createServer.js'
 import * as fetch from '~/src/lib/fetch.js'
@@ -589,7 +591,10 @@ describe('Forms library routes', () => {
         const options = {
           page: 1,
           perPage: 10,
-          status: /** @type {FormStatus[]} */ (['draft', 'live'])
+          status: /** @type {FormStatus[]} */ ([
+            FormStatus.Draft,
+            FormStatus.Live
+          ])
         }
         const mockResponse = {
           data: [formMetadata],
@@ -625,6 +630,6 @@ describe('Forms library routes', () => {
 })
 
 /**
- * @import { FormDefinition, FormMetadata, FormMetadataAuthor, FormStatus } from '@defra/forms-model'
+ * @import { FormDefinition, FormMetadata, FormMetadataAuthor } from '@defra/forms-model'
  * @import { Server } from '@hapi/hapi'
  */

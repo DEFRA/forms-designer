@@ -1,10 +1,14 @@
-import { ComponentType, ControllerType } from '@defra/forms-model'
+import { ComponentType, ControllerType, Engine } from '@defra/forms-model'
 
-import { testFormDefinitionWithExistingGuidance } from '~/src/__stubs__/form-definition.js'
+import {
+  buildDefinition,
+  testFormDefinitionWithExistingGuidance
+} from '~/src/__stubs__/form-definition.js'
 import config from '~/src/config.js'
 import {
   addPageAndFirstQuestion,
   addQuestion,
+  migrateDefinitionToV2,
   reorderPages,
   resolvePageHeading,
   setCheckAnswersDeclaration,
@@ -86,17 +90,18 @@ const questionDetails = {
 }
 
 describe('editor.js', () => {
+  const formId = '98dbfb6c-93b7-41dc-86e7-02c7abe4ba38'
+  const token = 'someToken'
+
   afterEach(() => {
     jest.clearAllMocks()
   })
 
   describe('addPageAndFirstQuestion', () => {
-    const formId = '98dbfb6c-93b7-41dc-86e7-02c7abe4ba38'
     const requestUrl = new URL(
       `./${formId}/definition/draft/pages`,
       formsEndpoint
     )
-    const token = 'someToken'
     const expectedOptions1 = {
       payload: {
         title: '',
@@ -200,12 +205,10 @@ describe('editor.js', () => {
   })
 
   describe('addQuestion', () => {
-    const formId = '98dbfb6c-93b7-41dc-86e7-02c7abe4ba38'
     const requestUrl = new URL(
       `./${formId}/definition/draft/pages/12345/components`,
       formsEndpoint
     )
-    const token = 'someToken'
     const expectedOptions2 = {
       payload: {
         title: 'What is your name?',
@@ -250,12 +253,10 @@ describe('editor.js', () => {
   })
 
   describe('updateQuestion', () => {
-    const formId = '98dbfb6c-93b7-41dc-86e7-02c7abe4ba38'
     const requestUrl = new URL(
       `./${formId}/definition/draft/pages/12345/components/456`,
       formsEndpoint
     )
-    const token = 'someToken'
     const expectedOptions2 = {
       payload: {
         title: 'What is your name?',
@@ -298,7 +299,6 @@ describe('editor.js', () => {
   })
 
   describe('setPageHeadingAndGuidance', () => {
-    const formId = '98dbfb6c-93b7-41dc-86e7-02c7abe4ba38'
     const pageRequestUrl = new URL(
       `./${formId}/definition/draft/pages/12345`,
       formsEndpoint
@@ -311,7 +311,6 @@ describe('editor.js', () => {
       `./${formId}/definition/draft/pages/12345/components/45678`,
       formsEndpoint
     )
-    const token = 'someToken'
 
     describe('when patchJson succeeds', () => {
       test('returns response body when checkbox unselected but old value in page heading', async () => {
@@ -498,7 +497,6 @@ describe('editor.js', () => {
   })
 
   describe('setCheckAnswersDeclaration', () => {
-    const formId = '98dbfb6c-93b7-41dc-86e7-02c7abe4ba38'
     const newGuidanceRequestUrl = new URL(
       `./${formId}/definition/draft/pages/12345/components?prepend=true`,
       formsEndpoint
@@ -507,7 +505,6 @@ describe('editor.js', () => {
       `./${formId}/definition/draft/pages/12345/components/45678`,
       formsEndpoint
     )
-    const token = 'someToken'
 
     describe('when patchJson succeeds', () => {
       test('returns response body when checkbox selected and value in declaration', async () => {
@@ -601,12 +598,10 @@ describe('editor.js', () => {
   })
 
   describe('reorderPages', () => {
-    const formId = '98dbfb6c-93b7-41dc-86e7-02c7abe4ba38'
     const reorderPageUrl = new URL(
       `./${formId}/definition/draft/pages/order`,
       formsEndpoint
     )
-    const token = 'someToken'
 
     it('should reorder the pages', async () => {
       const pageOrderPayload = [
@@ -622,6 +617,33 @@ describe('editor.js', () => {
       expect(mockedPostJson).toHaveBeenCalledWith(
         reorderPageUrl,
         expectedOrderCall
+      )
+    })
+  })
+
+  describe('migrateDefinitionToV2', () => {
+    const migrationDefinitionUrl = new URL(
+      `./${formId}/definition/draft/migrate/v2`,
+      formsEndpoint
+    )
+
+    it('should migrate the definition to v2 and return updated definition', async () => {
+      const v2Definition = buildDefinition({
+        engine: Engine.V2
+      })
+      mockedPostJson.mockResolvedValueOnce({
+        response: createMockResponse(),
+        body: v2Definition
+      })
+      const expectedMigrateCall = {
+        payload: {},
+        headers: { Authorization: `Bearer ${token}` }
+      }
+      const result = await migrateDefinitionToV2(formId, token)
+      expect(result).toEqual(v2Definition)
+      expect(mockedPostJson).toHaveBeenCalledWith(
+        migrationDefinitionUrl,
+        expectedMigrateCall
       )
     })
   })
