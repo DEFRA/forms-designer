@@ -1,3 +1,5 @@
+import { ValidationError } from 'joi'
+
 import { ComponentType } from '~/src/components/enums.js'
 import {
   type ComponentDef,
@@ -9,6 +11,7 @@ import {
 } from '~/src/form/form-definition/index.js'
 import {
   type FormDefinition,
+  type List,
   type PageQuestion,
   type PageSummary
 } from '~/src/form/form-definition/types.js'
@@ -280,39 +283,47 @@ describe('Form definition schema', () => {
 
   describe('Form Definition', () => {
     describe('formDefinitionV2PayloadSchema', () => {
+      const component1 = buildNumberFieldComponent({
+        id: undefined,
+        name: 'year',
+        title: 'Year'
+      })
+      const component2 = buildNumberFieldComponent({
+        id: undefined,
+        name: 'month',
+        title: 'Month'
+      })
+
+      const page = buildQuestionPage({
+        id: undefined,
+        path: '/page-one',
+        title: 'Page One',
+        components: [component1, component2]
+      })
+
+      const page2: PageSummary = {
+        id: undefined,
+        controller: ControllerType.Summary,
+        path: ControllerPath.Summary,
+        title: 'Summary Page',
+        components: []
+      }
+
+      const list: List = {
+        items: [],
+        name: 'ADxeWa',
+        title: 'String List',
+        type: 'string'
+      }
+
+      const definition: FormDefinition = {
+        conditions: [],
+        lists: [list],
+        pages: [page, page2],
+        sections: []
+      }
+
       it('should add ids to pages and components if one is missing', () => {
-        const component1 = buildNumberFieldComponent({
-          id: undefined,
-          name: 'year',
-          title: 'Year'
-        })
-        const component2 = buildNumberFieldComponent({
-          id: undefined,
-          name: 'month',
-          title: 'Month'
-        })
-
-        const page = buildQuestionPage({
-          id: undefined,
-          path: '/page-one',
-          title: 'Page One',
-          components: [component1, component2]
-        })
-
-        const page2: PageSummary = {
-          id: undefined,
-          controller: ControllerType.Summary,
-          path: ControllerPath.Summary,
-          title: 'Summary Page',
-          components: []
-        }
-        const definition: FormDefinition = {
-          conditions: [],
-          lists: [],
-          pages: [page, page2],
-          sections: []
-        }
-
         const validated = formDefinitionV2PayloadSchema.validate(definition)
 
         expect(validated.error).toBeUndefined()
@@ -337,8 +348,32 @@ describe('Form definition schema', () => {
               ...page2,
               id: expect.any(String)
             }
+          ],
+          lists: [{ id: expect.any(String) }]
+        })
+      })
+
+      it('should not validate if there are duplicate list ids', () => {
+        const validated = formDefinitionV2PayloadSchema.validate({
+          ...definition,
+          lists: [
+            {
+              ...list,
+              id: '04fc2b13-ef4f-4e05-8433-bfa82bb2f0b8'
+            },
+            {
+              items: [],
+              name: 'ADxeWb',
+              title: 'String List',
+              type: 'string',
+              id: '04fc2b13-ef4f-4e05-8433-bfa82bb2f0b8'
+            }
           ]
         })
+
+        expect(validated.error).toEqual(
+          new ValidationError('"lists[1]" contains a duplicate value', [], {})
+        )
       })
     })
   })
