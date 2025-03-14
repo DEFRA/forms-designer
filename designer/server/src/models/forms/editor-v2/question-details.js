@@ -1,7 +1,5 @@
-import { ComponentType } from '@defra/forms-model'
+import { ComponentType, randomId } from '@defra/forms-model'
 
-// eslint-disable-next-line no-restricted-imports -- Allow a file from client src area
-import randomId from '~/../client/src/randomId.js'
 import { questionTypeDescriptions } from '~/src/common/constants/editor.js'
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { insertValidationErrors, isCheckboxSelected } from '~/src/lib/utils.js'
