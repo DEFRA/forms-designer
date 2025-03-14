@@ -8,6 +8,7 @@ import {
   hasFormComponents,
   hasNext,
   hasRepeater,
+  randomId,
   slugify,
   type Page
 } from '@defra/forms-model'
@@ -38,7 +39,6 @@ import { updateLinksTo } from '~/src/data/page/updateLinksTo.js'
 import { findSection } from '~/src/data/section/findSection.js'
 import { isComponentAllowed, isControllerAllowed } from '~/src/helpers.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
-import randomId from '~/src/randomId.js'
 import { SectionEdit } from '~/src/section/SectionEdit.jsx'
 import {
   hasValidationErrors,

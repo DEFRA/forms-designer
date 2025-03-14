@@ -1,5 +1,6 @@
 import {
   ConditionsModel,
+  randomId,
   type Condition,
   type ConditionGroup,
   type ConditionRef,
@@ -25,7 +26,6 @@ import { addCondition } from '~/src/data/condition/addCondition.js'
 import { removeCondition } from '~/src/data/condition/removeCondition.js'
 import { updateCondition } from '~/src/data/condition/updateCondition.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
-import randomId from '~/src/randomId.js'
 import {
   hasValidationErrors,
   validateCustom,

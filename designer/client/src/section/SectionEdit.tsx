@@ -1,4 +1,4 @@
-import { type Section } from '@defra/forms-model'
+import { randomId, type Section } from '@defra/forms-model'
 // @ts-expect-error -- No types available
 import { Input } from '@xgovformbuilder/govuk-react-jsx'
 import { type Root } from 'joi'
@@ -17,7 +17,6 @@ import { addSection } from '~/src/data/section/addSection.js'
 import { removeSection } from '~/src/data/section/removeSection.js'
 import { updateSection } from '~/src/data/section/updateSection.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
-import randomId from '~/src/randomId.js'
 import {
   hasValidationErrors,
   validateCustom,
