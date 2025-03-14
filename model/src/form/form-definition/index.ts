@@ -268,7 +268,7 @@ const listSchema = Joi.object<List>().keys({
   })
 })
 
-const listSchemaV2 = listSchema.keys({
+export const listSchemaV2 = listSchema.keys({
   id: Joi.string()
     .uuid()
     .default(() => uuidV4())
