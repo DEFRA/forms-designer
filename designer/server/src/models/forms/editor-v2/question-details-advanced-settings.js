@@ -19,7 +19,9 @@ export function getFieldComponentType(field) {
       fieldType = ComponentType.MultilineTextField
       break
     default:
-      throw new Error('Invalid advanced setting field name')
+      throw new Error(
+        `Invalid or not implemented advanced setting field name (${field.name})`
+      )
   }
   return fieldType
 }
