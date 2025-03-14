@@ -27,8 +27,14 @@ const delJsonByType = /** @type {typeof delJson<ComponentDef>} */ (delJson)
  * @param {string} formId
  * @param {string} token
  * @param {Partial<ComponentDef>} questionDetails
+ * @param {Partial<Page>} [pageDetails]
  */
-export async function addPageAndFirstQuestion(formId, token, questionDetails) {
+export async function addPageAndFirstQuestion(
+  formId,
+  token,
+  questionDetails,
+  pageDetails
+) {
   const requestUrl = new URL(
     `./${formId}/definition/draft/pages`,
     formsEndpoint
@@ -36,8 +42,8 @@ export async function addPageAndFirstQuestion(formId, token, questionDetails) {
 
   const { body } = await postJsonByType(requestUrl, {
     payload: {
-      title: '',
-      path: `/${slugify(questionDetails.title)}`,
+      title: pageDetails?.title ?? '',
+      path: `/${slugify(pageDetails?.title ?? questionDetails.title)}`,
       components: [questionDetails]
     },
     ...getHeaders(token)

@@ -5,6 +5,7 @@ import contactPhone from '~/src/routes/forms/contact/phone.js'
 import create from '~/src/routes/forms/create.js'
 import edit from '~/src/routes/forms/edit.js'
 import editorCheckAnswersSettings from '~/src/routes/forms/editor-v2/check-answers-settings.js'
+import editorGuidance from '~/src/routes/forms/editor-v2/guidance.js'
 import editorPage from '~/src/routes/forms/editor-v2/page.js'
 import editorPagesReorder from '~/src/routes/forms/editor-v2/pages-reorder.js'
 import editorPages from '~/src/routes/forms/editor-v2/pages.js'
@@ -21,6 +22,7 @@ export default [
   api,
   create,
   edit,
+  editorGuidance,
   editorPages,
   editorPagesReorder,
   editorPage,

@@ -122,6 +122,11 @@ export type FormEditorInputPageSettings = Pick<
   'pageHeadingAndGuidance' | 'pageHeading' | 'guidanceText'
 >
 
+export type FormEditorInputGuidancePage = Pick<
+  FormEditor,
+  'pageHeading' | 'guidanceText'
+>
+
 export interface GovukField {
   id?: string
   name?: string

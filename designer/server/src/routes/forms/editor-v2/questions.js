@@ -31,7 +31,7 @@ export const schema = Joi.object().keys({
       '*': 'Enter a page heading'
     })
   }),
-  guidanceText: guidanceTextSchema
+  guidanceText: guidanceTextSchema.optional().allow('')
 })
 
 export default [
