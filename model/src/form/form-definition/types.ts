@@ -127,6 +127,7 @@ export interface Item {
 }
 
 export interface List {
+  id?: string
   name: string
   title: string
   type: ListTypeContent

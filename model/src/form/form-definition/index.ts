@@ -251,6 +251,7 @@ const numberListItemSchema = baseListItemSchema.append({
 })
 
 const listSchema = Joi.object<List>().keys({
+  id: Joi.string().uuid().optional(),
   name: Joi.string().required(),
   title: Joi.string().required(),
   type: Joi.string().required().valid('string', 'number'),
@@ -265,6 +266,12 @@ const listSchema = Joi.object<List>().keys({
       .unique('text')
       .unique('value')
   })
+})
+
+const listSchemaV2 = listSchema.keys({
+  id: Joi.string()
+    .uuid()
+    .default(() => uuidV4())
 })
 
 const feedbackSchema = Joi.object<FormDefinition['feedback']>().keys({
@@ -337,6 +344,11 @@ export const formDefinitionV2PayloadSchema = formDefinitionSchema.keys({
     .items(pageSchemaPayloadV2)
     .required()
     .unique('path')
+    .unique('id', { ignoreUndefined: true }),
+  lists: Joi.array<List>()
+    .items(listSchemaV2)
+    .unique('name')
+    .unique('title')
     .unique('id', { ignoreUndefined: true })
 })
 
