@@ -250,7 +250,7 @@ const numberListItemSchema = baseListItemSchema.append({
   value: Joi.number().required()
 })
 
-const listSchema = Joi.object<List>().keys({
+export const listSchema = Joi.object<List>().keys({
   id: Joi.string().uuid().optional(),
   name: Joi.string().required(),
   title: Joi.string().required(),
