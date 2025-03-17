@@ -8,11 +8,11 @@ export function buildErrorDetails(error) {
     }
 
     return {
+      ...errors,
       [context.key]: {
         text: message,
         href: `#${context.key}`
-      },
-      ...errors
+      }
     }
   }, /** @type {ErrorDetails} */ ({}))
 }
