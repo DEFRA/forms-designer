@@ -1,6 +1,9 @@
-import { ComponentType, randomId } from '@defra/forms-model'
+import { randomId } from '@defra/forms-model'
 
-import { questionTypeDescriptions } from '~/src/common/constants/editor.js'
+import {
+  QuestionAdvancedSettings,
+  QuestionTypeDescriptions
+} from '~/src/common/constants/editor.js'
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { insertValidationErrors, isCheckboxSelected } from '~/src/lib/utils.js'
 import {
@@ -12,35 +15,35 @@ import {
   getQuestion,
   getQuestionNum
 } from '~/src/models/forms/editor-v2/common.js'
-import { textfieldExtraOptionsFields } from '~/src/models/forms/editor-v2/extra-options/textfield.js'
+import {
+  advancedSettingsFields,
+  getFieldComponentType
+} from '~/src/models/forms/editor-v2/question-details-advanced-settings.js'
 import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
 
 /**
  * Determines if the details section should be expanded i.e. if there is a validation error or some data populated
  * in the details section
- * @param {string[]} optionalFieldNames
+ * @param {string[]} extraFieldNames
  * @param {ErrorDetailsItem[] | undefined} errorList
- * @param {{ fields: FormEditorGovukField }} optionalFields
+ * @param {GovukField[]} extraFields
  */
 export function hasDataOrErrorForDisplay(
-  optionalFieldNames,
+  extraFieldNames,
   errorList,
-  optionalFields
+  extraFields
 ) {
   const fieldsInError = errorList ? errorList.map((x) => x.href) : []
 
-  const errorFound = optionalFieldNames.some((field) => {
+  const errorFound = extraFieldNames.some((field) => {
     return fieldsInError.some((err) => err === `#${field}`)
   })
   if (errorFound) {
     return true
   }
 
-  const fields = /** @type {[string, GovukField][]} */ (
-    Object.entries(optionalFields.fields)
-  )
-  for (const [, fieldObj] of fields) {
-    if (fieldObj.value !== undefined && fieldObj.value !== '') {
+  for (const fieldObj of extraFields) {
+    if (fieldObj.value) {
       return true
     }
   }
@@ -49,36 +52,7 @@ export function hasDataOrErrorForDisplay(
 }
 
 /**
- * @param {ComponentDef} question
- * @param {ValidationFailure<FormEditor> | undefined} validation
- */
-export function combineBaseAndOptionalFields(question, validation) {
-  const baseFields = questionDetailsFields(
-    /** @type {InputFieldsComponentsDef} */ (question),
-    validation
-  )
-
-  const optionalFields = /** @type {FormEditorGovukFieldList} */ (
-    getOptionalFields(question, validation)
-  )
-
-  const combined = {
-    fields: /** @type {FormEditorGovukField} */ ({
-      ...baseFields.fields,
-      ...optionalFields.fields
-    }),
-    optionalFieldsPartial: optionalFields.optionalFieldsPartial
-  }
-
-  return {
-    allFieldNames: Object.keys(combined.fields),
-    optionalFieldNames: Object.keys(optionalFields.fields),
-    fields: /** @type {FormEditorGovukField} */ (combined.fields),
-    optionalFieldsPartial: combined.optionalFieldsPartial
-  }
-}
-/**
- * @param { InputFieldsComponentsDef | undefined } question
+ * @param { InputFieldsComponentsDef | undefined} question
  */
 export function mapToQuestionDetails(question) {
   return {
@@ -185,26 +159,51 @@ export function getDetails(
     pageNum
   }
 }
+const componentAdvancedSettings = /** @type {Record<string, string[]> } */ ({
+  TextField: [
+    QuestionAdvancedSettings.MinLength,
+    QuestionAdvancedSettings.MaxLength,
+    QuestionAdvancedSettings.Regex,
+    QuestionAdvancedSettings.Classes
+  ],
+  MultilineTextField: [],
+  YesNoField: [],
+  DatePartsField: [],
+  MonthYearField: [],
+  SelectField: [],
+  AutocompleteField: [],
+  RadiosField: [],
+  CheckboxesField: [],
+  NumberField: [],
+  UkAddressField: [],
+  TelephoneNumberField: [],
+  EmailAddressField: [],
+  Html: [],
+  InsetText: [],
+  Details: [],
+  List: [],
+  Markdown: [],
+  FileUploadField: []
+})
 
 /**
- * @param {ComponentDef | undefined} question
+ * @param {ComponentDef} question
  * @param {ValidationFailure<FormEditor> | undefined} validation
- * @returns {{
- *   fields: FormEditorGovukField,
- *   optionalFieldsPartial: string | null | undefined
- * }}
+ * @returns {GovukField[]}
  */
-export function getOptionalFields(question, validation) {
-  if (question?.type === ComponentType.TextField) {
-    return textfieldExtraOptionsFields(
+export function getExtraFields(question, validation) {
+  const extraFieldNames = /** @type {string[]} */ (
+    componentAdvancedSettings[question.type]
+  )
+
+  if (extraFieldNames.length) {
+    return advancedSettingsFields(
+      extraFieldNames,
       /** @type {TextFieldComponent} */ (question),
       validation
     )
   }
-  return {
-    fields: {},
-    optionalFieldsPartial: null
-  }
+  return /** @type {GovukField[]} */ ([])
 }
 
 /**
@@ -233,14 +232,23 @@ export function questionDetailsViewModel(
 
   const { formErrors } = validation ?? {}
 
-  const combinedFields = combineBaseAndOptionalFields(question, validation)
+  const baseFields = questionDetailsFields(
+    /** @type {InputFieldsComponentsDef} */ (question),
+    validation
+  )
 
-  const errorList = buildErrorList(formErrors, combinedFields.allFieldNames)
+  const extraFields = /** @type {GovukField[]} */ (
+    getExtraFields(question, validation)
+  )
+
+  const extraFieldNames = extraFields.map((field) => field.name ?? 'unknown')
+  const allFieldNames = Object.keys(baseFields).concat(extraFieldNames)
+  const errorList = buildErrorList(formErrors, allFieldNames)
 
   return {
     ...baseModelFields(metadata.slug, pageTitle),
-    fields: combinedFields.fields,
-    optionalFieldsPartial: combinedFields.optionalFieldsPartial,
+    fields: baseFields.fields,
+    extraFields,
     cardTitle: `Question ${questionNum}`,
     cardCaption: `Page ${pageNum}`,
     cardHeading: `Edit question ${questionNum}`,
@@ -249,7 +257,7 @@ export function questionDetailsViewModel(
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
     questionType: question.type,
-    questionTypeDesc: questionTypeDescriptions.find(
+    questionTypeDesc: QuestionTypeDescriptions.find(
       (x) => x.type === question.type
     )?.description,
     changeTypeUrl: editorv2Path(
@@ -257,15 +265,13 @@ export function questionDetailsViewModel(
       `page/${pageId}/question/${questionId}`
     ),
     buttonText: SAVE_AND_CONTINUE,
-    isOpen: hasDataOrErrorForDisplay(
-      combinedFields.optionalFieldNames,
-      errorList,
-      getOptionalFields(question, validation)
-    )
+    isOpen: hasDataOrErrorForDisplay(extraFieldNames, errorList, extraFields),
+    getFieldType: (/** @type {GovukField} */ field) =>
+      getFieldComponentType(field)
   }
 }
 
 /**
- * @import { ComponentDef, FormMetadata, FormDefinition, FormEditor, FormEditorGovukField, FormEditorGovukFieldList, GovukField, InputFieldsComponentsDef, TextFieldComponent } from '@defra/forms-model'
+ * @import { ComponentDef, ComponentType, FormMetadata, FormDefinition, FormEditor, FormEditorGovukField, GovukField, InputFieldsComponentsDef, TextFieldComponent } from '@defra/forms-model'
  * @import { ErrorDetailsItem, ValidationFailure } from '~/src/common/helpers/types.js'
  */
