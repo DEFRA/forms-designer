@@ -8,34 +8,30 @@ import { GOVUK_LABEL__M } from '~/src/models/forms/editor-v2/common.js'
  * @param {GovukField} field
  */
 export function getFieldComponentType(field) {
-  let fieldType
   switch (field.name) {
     case QuestionAdvancedSettings.MinLength:
     case QuestionAdvancedSettings.MaxLength:
-      fieldType = ComponentType.TextField
-      break
+      return ComponentType.TextField
     case QuestionAdvancedSettings.Regex:
     case QuestionAdvancedSettings.Classes:
-      fieldType = ComponentType.MultilineTextField
-      break
+      return ComponentType.MultilineTextField
     default:
       throw new Error(
         `Invalid or not implemented advanced setting field name (${field.name})`
       )
   }
-  return fieldType
 }
 
 /**
  * @param {string} fieldName
  * @param {FormEditor} formValues
  * @param { ErrorDetails | undefined } formErrors
+ * @returns {GovukField}
  */
 export function buildField(fieldName, formValues, formErrors) {
-  let field
   switch (fieldName) {
     case QuestionAdvancedSettings.MinLength:
-      field = {
+      return {
         name: 'minLength',
         id: 'minLength',
         label: {
@@ -49,9 +45,8 @@ export function buildField(fieldName, formValues, formErrors) {
         classes: 'govuk-input--width-3',
         ...insertValidationErrors(formErrors?.minLength)
       }
-      break
     case QuestionAdvancedSettings.MaxLength:
-      field = {
+      return {
         name: 'maxLength',
         id: 'maxLength',
         label: {
@@ -65,9 +60,8 @@ export function buildField(fieldName, formValues, formErrors) {
         classes: 'govuk-input--width-3',
         ...insertValidationErrors(formErrors?.maxLength)
       }
-      break
     case QuestionAdvancedSettings.Regex:
-      field = {
+      return {
         name: 'regex',
         id: 'regex',
         label: {
@@ -81,9 +75,8 @@ export function buildField(fieldName, formValues, formErrors) {
         value: formValues.regex,
         ...insertValidationErrors(formErrors?.regex)
       }
-      break
     case QuestionAdvancedSettings.Classes:
-      field = {
+      return {
         name: 'classes',
         id: 'classes',
         label: {
@@ -97,11 +90,10 @@ export function buildField(fieldName, formValues, formErrors) {
         value: formValues.classes,
         ...insertValidationErrors(formErrors?.classes)
       }
-      break
     default:
   }
 
-  return /** @type {GovukField} */ (field)
+  throw new Error(`Invalid adveanced settings field type ${fieldName}`)
 }
 
 /**

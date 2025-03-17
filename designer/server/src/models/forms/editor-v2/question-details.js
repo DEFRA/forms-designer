@@ -1,3 +1,5 @@
+import { randomId } from '@defra/forms-model'
+
 import {
   QuestionAdvancedSettings,
   QuestionTypeDescriptions
@@ -54,7 +56,7 @@ export function hasDataOrErrorForDisplay(
  */
 export function mapToQuestionDetails(question) {
   return {
-    name: question?.name ?? 'tempRandom', // Temp exlcusion to get models in sync ... ?? randomId(),
+    name: question?.name ?? randomId(),
     question: question?.title,
     hintText: question?.hint,
     questionOptional: `${question?.options.required === false}`,
