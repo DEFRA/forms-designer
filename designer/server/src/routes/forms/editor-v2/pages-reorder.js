@@ -58,6 +58,7 @@ export default [
 
       const focusObj = getFocus(focus)
 
+      // Form metadata and page components
       const metadata = await forms.get(slug, token)
       const definition = await forms.getDraftFormDefinition(metadata.id, token)
 

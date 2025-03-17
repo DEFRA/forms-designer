@@ -16,6 +16,4 @@
       <input type="hidden" name="name" id="name" value="{{ fields.name.value }}" />
   </div>
 
-  {% if optionalFieldsPartial %}
-    {%- include "../../../../views/forms/editor-v2/partials/" + optionalFieldsPartial -%}
-  {% endif %}
+  {%- include "../../../../views/forms/editor-v2/partials/question-details-advanced-settings.njk" -%}

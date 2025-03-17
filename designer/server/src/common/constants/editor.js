@@ -3,7 +3,7 @@ import { ComponentType } from '@defra/forms-model'
 export const QUESTION_TYPE_WRITTEN_ANSWER_GROUP = 'written-answer-group'
 export const QUESTION_TYPE_DATE_GROUP = 'date-group'
 
-export const questionTypeDescriptions =
+export const QuestionTypeDescriptions =
   /** @type {{type: ComponentType, description: string }[]} */ ([
     {
       type: ComponentType.TextField,
@@ -58,3 +58,10 @@ export const questionTypeDescriptions =
       description: 'List: autocomplete'
     }
   ])
+
+export const QuestionAdvancedSettings = /** @enum {string} */ {
+  MinLength: 'minLength',
+  MaxLength: 'maxLength',
+  Regex: 'regex',
+  Classes: 'classes'
+}
