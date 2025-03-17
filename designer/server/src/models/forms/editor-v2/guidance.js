@@ -1,7 +1,7 @@
 import { ComponentType, hasComponents } from '@defra/forms-model'
 
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
-import { insertValidationErrors, stringHasValue } from '~/src/lib/utils.js'
+import { insertValidationErrors } from '~/src/lib/utils.js'
 import {
   GOVUK_LABEL__M,
   SAVE,
@@ -52,7 +52,6 @@ function guidanceFields(pageHeadingVal, guidanceTextVal, validation) {
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  * @param {string} pageId
- * @param {string} questionId
  * @param {ValidationFailure<FormEditor>} [validation]
  * @param {string[]} [notification]
  */
@@ -60,7 +59,6 @@ export function guidanceViewModel(
   metadata,
   definition,
   pageId,
-  questionId,
   validation,
   notification
 ) {
@@ -75,9 +73,7 @@ export function guidanceViewModel(
   const page = definition.pages[pageIdx]
   const components = hasComponents(page) ? page.components : []
 
-  const pageHeadingVal = stringHasValue(formValues?.pageHeading)
-    ? formValues?.pageHeading
-    : page.title
+  const pageHeadingVal = formValues?.pageHeading ?? page.title
 
   const guidanceComponent = /** @type { MarkdownComponent | undefined } */ (
     components.find((comp, idx) => {
@@ -85,12 +81,7 @@ export function guidanceViewModel(
     })
   )
 
-  const guidanceTextFallback = stringHasValue(guidanceComponent?.content)
-    ? guidanceComponent?.content
-    : ''
-  const guidanceTextVal = stringHasValue(formValues?.guidanceText)
-    ? formValues?.guidanceText
-    : guidanceTextFallback
+  const guidanceTextVal = formValues?.guidanceText ?? guidanceComponent?.content
 
   return {
     ...baseModelFields(metadata.slug, pageTitle),

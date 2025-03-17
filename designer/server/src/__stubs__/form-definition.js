@@ -407,6 +407,40 @@ export const testFormDefinitionWithMissingPageIds = {
 }
 
 /**
+ * @satisfies {FormDefinition}
+ */
+export const testFormDefinitionWithAGuidancePage = {
+  name: 'Test form',
+  pages: [
+    {
+      path: '/page-one',
+      title: 'Page one',
+      section: 'section',
+      id: 'p1',
+      components: [
+        {
+          id: 'c1',
+          type: ComponentType.Markdown,
+          name: 'html-guidance',
+          title: 'html-title',
+          content: 'Original guidance',
+          options: {}
+        }
+      ],
+      next: [{ path: '/summary' }]
+    },
+    {
+      title: 'Summary',
+      path: '/summary',
+      controller: ControllerType.Summary
+    }
+  ],
+  conditions: [],
+  sections: [],
+  lists: []
+}
+
+/**
  * @param {Partial<PageQuestion>} [partialPage]
  * @returns {PageQuestion}
  */

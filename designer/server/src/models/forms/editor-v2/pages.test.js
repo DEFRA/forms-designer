@@ -35,7 +35,7 @@ function insertGuidanceAtTop(components) {
 describe('editor-v2 - pages model', () => {
   describe('mapPageData', () => {
     test('should return unchanged definition if no pages', () => {
-      const res = mapPageData(testFormDefinitionWithNoPages)
+      const res = mapPageData('slug', testFormDefinitionWithNoPages)
       expect(res).toEqual(testFormDefinitionWithNoPages)
     })
     test('should populate page title from first question title', () => {
@@ -43,7 +43,7 @@ describe('editor-v2 - pages model', () => {
         ...testFormDefinitionWithTwoQuestions
       }
       definitionWithNoPageTitles.pages[0].title = ''
-      const res = mapPageData(definitionWithNoPageTitles)
+      const res = mapPageData('slug', definitionWithNoPageTitles)
       expect(res.pages[0].title).toBe('This is your first question')
     })
     test('should populate page titles from first question title on multiple pages', () => {
@@ -52,7 +52,7 @@ describe('editor-v2 - pages model', () => {
       }
       definitionWithNoPageTitles.pages[0].title = ''
       definitionWithNoPageTitles.pages[1].title = ''
-      const res = mapPageData(definitionWithNoPageTitles)
+      const res = mapPageData('slug', definitionWithNoPageTitles)
       expect(res.pages[0].title).toBe('This is your first question')
       expect(res.pages[1].title).toBe('This is your first question - page two')
     })
@@ -127,11 +127,11 @@ describe('editor-v2 - pages model', () => {
   describe('hideFirstGuidance', () => {
     test('should return unchanged page if no guidance components at first position', () => {
       const [page1, page2] = testFormDefinitionWithTwoQuestions.pages
-      const page1Res = hideFirstGuidance(page1)
+      const page1Res = /** @type {PageQuestion} */ (hideFirstGuidance(page1))
       expect(page1Res.components).toEqual(
         testFormDefinitionWithTwoQuestions.pages[0].components
       )
-      const page2Res = hideFirstGuidance(page2)
+      const page2Res = /** @type {PageQuestion} */ (hideFirstGuidance(page2))
       expect(page2Res.components).toEqual(
         testFormDefinitionWithTwoQuestions.pages[1].components
       )
@@ -148,19 +148,17 @@ describe('editor-v2 - pages model', () => {
       expect(page1.components).toHaveLength(3)
       expect(page2.components).toHaveLength(3)
 
-      const page1Res = hideFirstGuidance(page1)
+      const page1Res = /** @type {PageQuestion} */ (hideFirstGuidance(page1))
       expect(page1Res.components).toHaveLength(2)
-      expect(
-        page1Res.components ? page1Res.components[0].type : undefined
-      ).toBe(ComponentType.TextField)
-      const page2Res = hideFirstGuidance(page2)
+      expect(page1Res.components[0].type).toBe(ComponentType.TextField)
+      const page2Res = /** @type {PageQuestion} */ (hideFirstGuidance(page2))
       expect(page2Res.components).toHaveLength(2)
-      expect(
-        page2Res.components ? page2Res.components[0].type : undefined
-      ).toBe(ComponentType.TextField)
-      const page3Res = hideFirstGuidance(page3)
+      expect(page2Res.components[0].type).toBe(ComponentType.TextField)
+      const page3Res = /** @type {PageQuestion} */ (hideFirstGuidance(page3))
       expect(page3Res.components).toEqual([])
-      const page4Res = hideFirstGuidance(blankPage)
+      const page4Res = /** @type {PageQuestion} */ (
+        hideFirstGuidance(blankPage)
+      )
       expect(page4Res.components).toEqual([])
     })
   })
@@ -190,7 +188,7 @@ describe('editor-v2 - pages model', () => {
         )
       ).toEqual({
         key: {
-          text: 'Markdown'
+          text: 'Guidance'
         },
         value: {
           html: '<pre class="break-on-newlines"><p class="govuk-body">Some markdown</p></pre>',
@@ -202,5 +200,5 @@ describe('editor-v2 - pages model', () => {
 })
 
 /**
- * @import { ComponentDef, MarkdownComponent } from '@defra/forms-model'
+ * @import { ComponentDef, MarkdownComponent, PageQuestion } from '@defra/forms-model'
  */

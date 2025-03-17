@@ -9,7 +9,10 @@ import Joi from 'joi'
 
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
-import { addPageAndFirstQuestion, updateQuestion } from '~/src/lib/editor.js'
+import {
+  addPageAndFirstQuestion,
+  setPageHeadingAndGuidance
+} from '~/src/lib/editor.js'
 import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
@@ -46,16 +49,18 @@ function mapGuidanceDetails(payload) {
 
 /**
  * @param {string} formId
- * @param {*} token
- * @param {*} pageId
- * @param {*} questionId
- * @param {*} payload
+ * @param {string} token
+ * @param {string} pageId
+ * @param {string} questionId
+ * @param {FormDefinition} definition
+ * @param {FormEditorInputGuidancePage} payload
  */
 export async function addOrUpdateGuidance(
   formId,
   token,
   pageId,
   questionId,
+  definition,
   payload
 ) {
   const guidanceDetails = {
@@ -63,8 +68,6 @@ export async function addOrUpdateGuidance(
     id: questionId !== 'new' ? questionId : undefined
   }
 
-  let finalPageId = pageId
-  let finalQuestionId = questionId
   if (pageId === 'new') {
     const newPage = await addPageAndFirstQuestion(
       formId,
@@ -72,14 +75,23 @@ export async function addOrUpdateGuidance(
       guidanceDetails,
       { title: payload.pageHeading }
     )
-    finalPageId = newPage.id ?? 'unknown'
-    finalQuestionId =
-      (hasComponents(newPage) ? newPage.components[0].id : questionId) ??
-      'unknown'
+    const newComponentId = hasComponents(newPage)
+      ? newPage.components[0].id
+      : questionId
+    return {
+      finalPageId: newPage.id ?? 'unknown',
+      finalQuestionId: newComponentId ?? 'unknown'
+    }
   } else {
-    await updateQuestion(formId, token, pageId, questionId, guidanceDetails)
+    await setPageHeadingAndGuidance(formId, token, pageId, definition, {
+      ...payload,
+      pageHeadingAndGuidance: 'true'
+    })
   }
-  return { finalPageId, finalQuestionId }
+  return {
+    finalPageId: pageId,
+    finalQuestionId: questionId
+  }
 }
 
 export default [
@@ -93,7 +105,7 @@ export default [
       const { yar } = request
       const { params, auth } = request
       const { token } = auth.credentials
-      const { slug, pageId, questionId } =
+      const { slug, pageId } =
         /** @type {{ slug: string, pageId: string, questionId: string }} */ (
           params
         )
@@ -115,7 +127,6 @@ export default [
           metadata,
           definition,
           pageId,
-          questionId,
           validation,
           notification
         )
@@ -146,13 +157,16 @@ export default [
         )
       const { token } = auth.credentials
 
+      // Form metadata and page components
       const metadata = await forms.get(slug, token)
+      const definition = await forms.getDraftFormDefinition(metadata.id, token)
 
       const { finalPageId, finalQuestionId } = await addOrUpdateGuidance(
         metadata.id,
         token,
         pageId,
         questionId,
+        definition,
         payload
       )
 
@@ -184,6 +198,6 @@ export default [
 ]
 
 /**
- * @import { ComponentDef, FormEditorInputPage, FormEditorInputGuidancePage } from '@defra/forms-model'
+ * @import { ComponentDef, FormDefinition, FormEditorInputGuidancePage } from '@defra/forms-model'
  * @import { ServerRoute } from '@hapi/hapi'
  */
