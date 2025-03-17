@@ -1,6 +1,7 @@
 import { ComponentType } from '@defra/forms-model'
 
 import {
+  testFormDefinitionWithAGuidancePage,
   testFormDefinitionWithExistingSummaryDeclaration,
   testFormDefinitionWithNoPages,
   testFormDefinitionWithNoQuestions,
@@ -8,6 +9,7 @@ import {
   testFormDefinitionWithTwoQuestions
 } from '~/src/__stubs__/form-definition.js'
 import {
+  determineEditUrl,
   hideFirstGuidance,
   mapMarkdown,
   mapPageData,
@@ -160,6 +162,33 @@ describe('editor-v2 - pages model', () => {
         hideFirstGuidance(blankPage)
       )
       expect(page4Res.components).toEqual([])
+    })
+
+    test('should not hide guidance component if the only thing on a page', () => {
+      const testFormWithGuidancePage = {
+        ...testFormDefinitionWithAGuidancePage
+      }
+      const [page1] = testFormWithGuidancePage.pages
+      const page1Res = /** @type {PageQuestion} */ (hideFirstGuidance(page1))
+      expect(page1Res).toEqual(page1)
+    })
+  })
+
+  describe('determineEditUrl', () => {
+    test('should return end page edit url', () => {
+      const [page1] = testFormDefinitionWithTwoQuestions.pages
+      const url = determineEditUrl(page1, true, '/edit-base/')
+      expect(url).toBe('/edit-base/p1/check-answers-settings')
+    })
+    test('should return guidance url', () => {
+      const [page1] = testFormDefinitionWithAGuidancePage.pages
+      const url = determineEditUrl(page1, false, '/edit-base/')
+      expect(url).toBe('/edit-base/p1/guidance/c1')
+    })
+    test('should return questions url', () => {
+      const [page1] = testFormDefinitionWithTwoQuestions.pages
+      const url = determineEditUrl(page1, false, '/edit-base/')
+      expect(url).toBe('/edit-base/p1/questions')
     })
   })
 
