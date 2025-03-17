@@ -175,7 +175,7 @@ describe('editor-v2 - page-helper', () => {
       const page2Clone = { ...page2 }
       page2Clone.title = ''
       page2Clone.next = /** @type {Link[]} */ ([{ path: '/summary' }])
-      const res = constructReorderPage(page2Clone, 1, 3, undefined)
+      const res = constructReorderPage(page2Clone, undefined)
       expect(res.title).toBe('My first question')
     })
   })

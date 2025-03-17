@@ -4,11 +4,9 @@ import { stringHasValue } from '~/src/lib/utils.js'
 
 /**
  * @param {Page} page
- * @param {number} pageIdx
- * @param {number} numOfPages
  * @param {{ button: string | undefined, pageId: string | undefined } | undefined } focus
  */
-export function constructReorderPage(page, pageIdx, numOfPages, focus) {
+export function constructReorderPage(page, focus) {
   if (page.title === '') {
     return {
       ...page,

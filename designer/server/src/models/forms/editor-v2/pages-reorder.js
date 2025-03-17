@@ -25,8 +25,8 @@ export function mapPageData(definition, pageOrder, focus) {
 
   return {
     ...definition,
-    pages: orderedPages.map((page, idx) => {
-      return constructReorderPage(page, idx, orderablePages.length, focus)
+    pages: orderedPages.map((page) => {
+      return constructReorderPage(page, focus)
     })
   }
 }
