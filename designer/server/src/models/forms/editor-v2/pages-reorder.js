@@ -1,10 +1,13 @@
-import { getFormSpecificNavigation } from '~/src/models/forms/editor-v2/common.js'
+import {
+  baseModelFields,
+  getFormSpecificNavigation
+} from '~/src/models/forms/editor-v2/common.js'
 import {
   constructReorderPage,
   excludeEndPages,
   orderPages
 } from '~/src/models/forms/editor-v2/pages-helper.js'
-import { formOverviewBackLink, formOverviewPath } from '~/src/models/links.js'
+import { formOverviewPath } from '~/src/models/links.js'
 
 /**
  * @param {FormDefinition} definition
@@ -48,7 +51,8 @@ export function pagesReorderViewModel(metadata, definition, pageOrder, focus) {
     }
   ]
 
-  const pageListModel = {
+  return {
+    ...baseModelFields(metadata.slug, 'Re-order pages'),
     ...mapPageData(definition, pageOrder, focus),
     formSlug: metadata.slug,
     navigation,
@@ -63,11 +67,6 @@ export function pagesReorderViewModel(metadata, definition, pageOrder, focus) {
     },
     pageActions,
     pageOrder
-  }
-
-  return {
-    ...pageListModel,
-    backLink: formOverviewBackLink(metadata.slug)
   }
 }
 

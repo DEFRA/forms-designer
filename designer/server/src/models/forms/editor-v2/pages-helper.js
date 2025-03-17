@@ -9,37 +9,18 @@ import { stringHasValue } from '~/src/lib/utils.js'
  * @param {{ button: string | undefined, pageId: string | undefined } | undefined } focus
  */
 export function constructReorderPage(page, pageIdx, numOfPages, focus) {
-  const focusUpAttr =
-    focus?.pageId === page.id && focus?.button === 'up' ? ' autofocus' : ''
-  const focusDownAttr =
-    focus?.pageId === page.id && focus?.button === 'down' ? ' autofocus' : ''
-
-  const buttonStub =
-    '<button type="submit" name="movement" class="govuk-button govuk-button--secondary'
-  const upVisibilityClass = `reorder-button${pageIdx === 0 ? '-hidden' : ''}`
-  const downVisibilityClass = `reorder-button${pageIdx === numOfPages - 1 ? '-hidden' : ''}`
-
-  const actions = [
-    {
-      html: `${buttonStub} ${upVisibilityClass}"${focusUpAttr} value="up|${page.id}">Up</button>`
-    },
-    {
-      html: `${buttonStub} ${downVisibilityClass}"${focusDownAttr} value="down|${page.id}">Down</button>`
-    }
-  ]
-
   if (page.title === '') {
     return {
       ...page,
       title: hasComponents(page) ? page.components[0].title : '',
       isFocus: focus?.pageId === page.id,
-      actions
+      prevFocusDirection: focus?.button
     }
   }
   return {
     ...page,
-    actions,
-    isFocus: focus?.pageId === page.id
+    isFocus: focus?.pageId === page.id,
+    prevFocusDirection: focus?.button
   }
 }
 
