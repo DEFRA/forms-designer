@@ -268,7 +268,10 @@ const listSchema = Joi.object<List>().keys({
   })
 })
 
-const listSchemaV2 = listSchema.keys({
+/**
+ * v2 Joi schema for Lists
+ */
+export const listSchemaV2 = listSchema.keys({
   id: Joi.string()
     .uuid()
     .default(() => uuidV4())
