@@ -19,6 +19,7 @@
     {% for page in pages %}
       <div class="govuk-grid-row page-row">
         <div class="govuk-grid-column-full">
+        <ol>
         {{ appPagesReorderPanel({
           formName: name,
           pageNum: loop.index,
@@ -27,6 +28,7 @@
           actions: page.actions,
           isFocus: page.isFocus
           }) }}
+          </ol>
         </div>
       </div>
     {% endfor %}

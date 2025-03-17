@@ -1,18 +1,17 @@
-{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
-
 {% set cardTitle = "Page " + params.pageNum + ": " + params.pageTitle %}
 
 {% set focusClass = " pages-reorder-panel-focus" if params.isFocus else "" %}
 
-{{ govukSummaryList({
-  card: {
-    title: {
-      text: cardTitle
-    },
-    actions: {
-      items: params.actions
-    },
-    classes: "pages-reorder-panel" + focusClass
-  }
-}) }}
-
+<li>
+  <div class="govuk-summary-card pages-reorder-panel" + focusClass>
+    <div class="govuk-summary-card__title-wrapper">
+      <h2 class="govuk-summary-card__title">
+        {{ cardTitle }}
+      </h2>
+      <div class="govuk-button-group">
+        <button type="submit" name="movement" class="govuk-button govuk-button--secondary reorder-button" value="up|{{ params.pageId}}">Up</button>
+        <button type="submit" name="movement" class="govuk-button govuk-button--secondary reorder-button" value="down|{{ params.pageId}}">Down</button>
+      </div>
+    </div>
+  </div>
+</li>
