@@ -33,7 +33,7 @@
             pageNum: loop.index,
             pageId: page.id,
             pageTitle: page.title,
-            pageEditUrl: (editBaseUrl + page.id) + ("/check-answers-settings" if page.isEndPage else "/questions"),
+            pageEditUrl: page.editUrl,
             pagePreviewUrl: previewBaseUrl + page.path + "?force",
             rows: page.questionRows,
             isEndPage: page.isEndPage

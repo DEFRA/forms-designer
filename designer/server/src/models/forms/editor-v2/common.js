@@ -6,6 +6,7 @@ import { editorv2Path, formsLibraryPath } from '~/src/models/links.js'
 
 export const BACK_TO_ADD_AND_EDIT_PAGES = 'Back to add and edit pages'
 export const SAVE_AND_CONTINUE = 'Save and continue'
+export const SAVE = 'Save'
 export const GOVUK_LABEL__M = 'govuk-label--m'
 export const CHANGES_SAVED_SUCCESSFULLY = 'Changes saved successfully'
 

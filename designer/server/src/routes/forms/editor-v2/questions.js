@@ -31,7 +31,7 @@ export const schema = Joi.object().keys({
       '*': 'Enter a page heading'
     })
   }),
-  guidanceText: guidanceTextSchema
+  guidanceText: guidanceTextSchema.optional().allow('')
 })
 
 export default [
@@ -97,6 +97,7 @@ export default [
       // Form metadata and page components
       const metadata = await forms.get(slug, token)
       const definition = await forms.getDraftFormDefinition(metadata.id, token)
+
       await setPageHeadingAndGuidance(
         metadata.id,
         token,

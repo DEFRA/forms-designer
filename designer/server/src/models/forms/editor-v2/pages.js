@@ -16,6 +16,27 @@ import {
 } from '~/src/models/links.js'
 
 /**
+ * @param {Page} page
+ * @param {boolean} isEndPage
+ * @param {string} editBaseUrl
+ */
+export function determineEditUrl(page, isEndPage, editBaseUrl) {
+  if (isEndPage) {
+    return `${editBaseUrl}${page.id}/check-answers-settings`
+  }
+
+  const components = hasComponents(page) ? page.components : []
+  if (
+    components.length === 1 &&
+    components[0].type === ComponentType.Markdown
+  ) {
+    return `${editBaseUrl}${page.id}/guidance/${components[0].id}`
+  }
+
+  return `${editBaseUrl}${page.id}/questions`
+}
+
+/**
  * @param {ComponentDef} component
  * @param {number} idx
  */
@@ -40,7 +61,7 @@ export function mapQuestion(component, idx) {
 export function mapMarkdown(component, isSummary) {
   return {
     key: {
-      text: isSummary ? 'Declaration' : 'Markdown'
+      text: isSummary ? 'Declaration' : 'Guidance'
     },
     value: {
       html: `<pre class="break-on-newlines"><p class="govuk-body">${component.content}</p></pre>`,
@@ -65,28 +86,34 @@ export function mapQuestionRows(page) {
 }
 
 /**
+ * @param {string} slug
  * @param {FormDefinition} definition
  */
-export function mapPageData(definition) {
+export function mapPageData(slug, definition) {
   if (!definition.pages.length) {
     return definition
   }
 
+  const editBaseUrl = `/library/${slug}/editor-v2/page/`
+
   return {
     ...definition,
     pages: definition.pages.map((page) => {
+      const isEndPage = page.controller === ControllerType.Summary
       if (page.title === '') {
         return {
           ...page,
           title: hasComponents(page) ? page.components[0].title : '',
           questionRows: mapQuestionRows(hideFirstGuidance(page)),
-          isEndPage: page.controller === ControllerType.Summary
+          isEndPage,
+          editUrl: determineEditUrl(page, isEndPage, editBaseUrl)
         }
       }
       return {
         ...page,
         questionRows: mapQuestionRows(hideFirstGuidance(page)),
-        isEndPage: page.controller === ControllerType.Summary
+        isEndPage,
+        editUrl: determineEditUrl(page, isEndPage, editBaseUrl)
       }
     })
   }
@@ -102,13 +129,21 @@ export function hideFirstGuidance(page) {
     return page
   }
 
+  const components = hasComponents(page) ? page.components : []
+
+  // Don't hide a guidance component if it's the only component on the page
+  if (
+    components.length === 1 &&
+    components[0].type === ComponentType.Markdown
+  ) {
+    return page
+  }
+
   return {
     ...page,
-    components: hasComponents(page)
-      ? page.components.filter(
-          (comp, idx) => !(comp.type === ComponentType.Markdown && idx === 0)
-        )
-      : []
+    components: components.filter(
+      (comp, idx) => !(comp.type === ComponentType.Markdown && idx === 0)
+    )
   }
 }
 
@@ -121,7 +156,6 @@ export function pagesViewModel(metadata, definition, notification) {
   const formPath = formOverviewPath(metadata.slug)
   const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
   const previewBaseUrl = buildPreviewUrl(metadata.slug)
-  const editBaseUrl = `/library/${metadata.slug}/editor-v2/page/`
 
   const pageActions = [
     {
@@ -157,9 +191,8 @@ export function pagesViewModel(metadata, definition, notification) {
   }
 
   const pageListModel = {
-    ...mapPageData(definition),
+    ...mapPageData(metadata.slug, definition),
     formSlug: metadata.slug,
-    editBaseUrl,
     previewBaseUrl,
     navigation,
     pageHeading: {
