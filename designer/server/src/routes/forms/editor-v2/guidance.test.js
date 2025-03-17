@@ -14,6 +14,7 @@ import {
 } from '~/src/lib/editor.js'
 import { addErrorsToSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
+import { addOrUpdateGuidance } from '~/src/routes/forms/editor-v2/guidance.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
@@ -178,6 +179,36 @@ describe('Editor v2 guidance routes', () => {
       }
     )
     expect(addPageAndFirstQuestion).not.toHaveBeenCalled()
+  })
+
+  test('should handle route if add page/question returns bad results', async () => {
+    jest.mocked(addPageAndFirstQuestion).mockResolvedValue({
+      path: '/page-one',
+      controller: ControllerType.Page,
+      title: '',
+      next: [],
+      id: undefined,
+      components: [
+        /** @type {ComponentDef} */ ({
+          id: undefined
+        })
+      ]
+    })
+    const res = await addOrUpdateGuidance(
+      '661e4ca5039739ef2902b214',
+      'token',
+      'new',
+      'c1',
+      testFormDefinitionWithAGuidancePage,
+      {
+        pageHeading: 'Page heading 1',
+        guidanceText: 'Guidnce 1'
+      }
+    )
+    expect(res).toEqual({
+      finalPageId: 'unknown',
+      finalQuestionId: 'unknown'
+    })
   })
 })
 
