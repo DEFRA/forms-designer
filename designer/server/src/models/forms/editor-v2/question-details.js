@@ -1,5 +1,3 @@
-// eslint-disable-next-line no-restricted-imports -- Allow a file from client src area
-import randomId from '~/../client/src/randomId.js'
 import {
   QuestionAdvancedSettings,
   QuestionTypeDescriptions
@@ -56,7 +54,7 @@ export function hasDataOrErrorForDisplay(
  */
 export function mapToQuestionDetails(question) {
   return {
-    name: question?.name ?? randomId(),
+    name: question?.name ?? 'tempRandom', // Temp exlcusion to get models in sync ... ?? randomId(),
     question: question?.title,
     hintText: question?.hint,
     questionOptional: `${question?.options.required === false}`,
