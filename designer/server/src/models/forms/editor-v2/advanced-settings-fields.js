@@ -22,6 +22,7 @@ import {
 import Joi from 'joi'
 
 import { QuestionAdvancedSettings } from '~/src/common/constants/editor.js'
+import { isCheckboxSelected } from '~/src/lib/utils.js'
 import { GOVUK_LABEL__M } from '~/src/models/forms/editor-v2/common.js'
 
 export const advancedSettingsPerComponentType =
@@ -234,31 +235,31 @@ export const baseSchema = Joi.object().keys({
 
 export const allSpecificSchemas = Joi.object().keys({
   maxFuture: maxFutureSchema.messages({
-    '*': 'Max days in the future must be a number greater than zero'
+    '*': 'Max days in the future must be a positive whole number'
   }),
   maxPast: maxPastSchema.messages({
-    '*': 'Max days in the past must be a number greater than zero'
+    '*': 'Max days in the past must be a positive whole number'
   }),
   min: minSchema.messages({
-    '*': 'Lowest number must be a number'
+    '*': 'Lowest number must be a whole number'
   }),
   max: maxSchema.messages({
-    '*': 'Highest number must be a number greater than zero'
+    '*': 'Highest number must be a positive whole number'
   }),
   minLength: minLengthSchema.messages({
-    '*': 'Minimum length must be a number greater than zero'
+    '*': 'Minimum length must be a positive whole number'
   }),
   maxLength: maxLengthSchema.messages({
-    '*': 'Maximum length must be a number greater than zero'
+    '*': 'Maximum length must be a positive whole number'
   }),
   precision: precisionSchema.messages({
-    '*': 'Precision must be a number greater than zero'
+    '*': 'Precision must be a positive whole number'
   }),
   prefix: prefixSchema,
   suffix: suffixSchema,
   regex: regexSchema,
   rows: rowsSchema.messages({
-    '*': 'Rows must be a number greater than zero'
+    '*': 'Rows must be a positive whole number'
   }),
   classes: classesSchema
 })
@@ -290,5 +291,58 @@ export function getFieldComponentType(field) {
 }
 
 /**
- * @import { ComponentDef, GovukField } from '@defra/forms-model'
+ *
+ * @param {Partial<FormEditorInputQuestion>} payload
+ */
+export function mapQuestionDetails(payload) {
+  const additionalOptions = {}
+  if (payload.classes) {
+    additionalOptions.classes = payload.classes
+  }
+  if (payload.rows) {
+    additionalOptions.rows = payload.rows
+  }
+  if (payload.prefix) {
+    additionalOptions.prefix = payload.prefix
+  }
+  if (payload.suffix) {
+    additionalOptions.suffix = payload.suffix
+  }
+  if (payload.maxFuture) {
+    additionalOptions.maxDaysInFuture = payload.maxFuture
+  }
+  if (payload.maxPast) {
+    additionalOptions.maxDaysInPast = payload.maxPast
+  }
+
+  const additionalSchema = {}
+  if (payload.minLength ?? payload.min) {
+    additionalSchema.min = payload.minLength ?? payload.min
+  }
+  if (payload.maxLength ?? payload.max) {
+    additionalSchema.max = payload.maxLength ?? payload.max
+  }
+  if (payload.regex) {
+    additionalSchema.regex = payload.regex
+  }
+  if (payload.precision) {
+    additionalSchema.precision = payload.precision
+  }
+
+  return /** @type {Partial<ComponentDef>} */ ({
+    type: payload.questionType,
+    title: payload.question,
+    name: payload.name,
+    shortDescription: payload.shortDescription,
+    hint: payload.hintText,
+    options: {
+      required: !isCheckboxSelected(payload.questionOptional),
+      ...additionalOptions
+    },
+    schema: { ...additionalSchema }
+  })
+}
+
+/**
+ * @import { ComponentDef, FormEditorInputQuestion, GovukField } from '@defra/forms-model'
  */

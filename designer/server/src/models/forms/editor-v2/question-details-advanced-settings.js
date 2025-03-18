@@ -6,7 +6,7 @@ import { allAdvancedSettingsFields } from '~/src/models/forms/editor-v2/advanced
 /**
  * @param {TextFieldComponent | MultilineTextFieldComponent | NumberFieldComponent | DatePartsFieldComponent | MonthYearFieldComponent} question
  */
-function mapToQuestionOptions(question) {
+export function mapToQuestionOptions(question) {
   const isNumberField = question.type === ComponentType.NumberField
   const isDateField =
     question.type === ComponentType.DatePartsField ||

@@ -121,6 +121,16 @@ export interface FormEditor {
    * The highest number allowed in a field
    */
   max: string
+
+  /**
+   * The maximum days in the future to allow for a date
+   */
+  maxFuture: string
+
+  /**
+   * The maximum days in the past to allow for a date
+   */
+  maxPast: string
 }
 
 export type FormEditorInputPage = Pick<
@@ -151,6 +161,8 @@ export type FormEditorInputQuestion = Pick<
   | 'precision'
   | 'min'
   | 'max'
+  | 'maxFuture'
+  | 'maxPast'
 >
 
 export type FormEditorInputPageSettings = Pick<

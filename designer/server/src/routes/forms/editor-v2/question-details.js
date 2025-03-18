@@ -10,10 +10,10 @@ import {
 import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
-import { isCheckboxSelected } from '~/src/lib/utils.js'
 import {
   allSpecificSchemas,
-  baseSchema
+  baseSchema,
+  mapQuestionDetails
 } from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
 import { CHANGES_SAVED_SUCCESSFULLY } from '~/src/models/forms/editor-v2/common.js'
 import * as viewModel from '~/src/models/forms/editor-v2/question-details.js'
@@ -25,33 +25,6 @@ export const ROUTE_FULL_PATH_QUESTION_DETAILS = `/library/{slug}/editor-v2/page/
 const errorKey = sessionNames.validationFailure.editorQuestionDetails
 
 const schema = baseSchema.concat(allSpecificSchemas)
-
-/**
- *
- * @param {Partial<FormEditorInputQuestion>} payload
- */
-function mapQuestionDetails(payload) {
-  return /** @type {Partial<ComponentDef>} */ ({
-    type: payload.questionType,
-    title: payload.question,
-    name: payload.name,
-    shortDescription: payload.shortDescription,
-    hint: payload.hintText,
-    options: {
-      classes: payload.classes,
-      required: !isCheckboxSelected(payload.questionOptional),
-      rows: payload.rows ?? undefined,
-      prefix: payload.prefix ?? undefined,
-      suffix: payload.suffix ?? undefined
-    },
-    schema: {
-      min: payload.minLength ?? payload.min ?? undefined,
-      max: payload.maxLength ?? payload.max ?? undefined,
-      regex: payload.regex ?? undefined,
-      precision: payload.precision ?? undefined
-    }
-  })
-}
 
 export default [
   /**
