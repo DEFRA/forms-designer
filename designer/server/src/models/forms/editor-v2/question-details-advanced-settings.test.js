@@ -1,6 +1,6 @@
 import { ComponentType } from '@defra/forms-model'
 
-import { getFieldComponentType } from '~/src/models/forms/editor-v2/question-details-advanced-settings.js'
+import { getFieldComponentType } from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
 
 describe('editor-v2 - question details advanced settings model', () => {
   describe('getFieldComponentType', () => {

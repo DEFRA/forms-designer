@@ -1,44 +1,29 @@
 import { ComponentType } from '@defra/forms-model'
 
-import { QuestionAdvancedSettings } from '~/src/common/constants/editor.js'
 import { insertValidationErrors } from '~/src/lib/utils.js'
 import { allAdvancedSettingsFields } from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
 
 /**
- * @param {GovukField} field
- */
-export function getFieldComponentType(field) {
-  switch (field.name) {
-    case QuestionAdvancedSettings.Min:
-    case QuestionAdvancedSettings.Max:
-    case QuestionAdvancedSettings.MinLength:
-    case QuestionAdvancedSettings.MaxLength:
-    case QuestionAdvancedSettings.MaxFuture:
-    case QuestionAdvancedSettings.MaxPast:
-    case QuestionAdvancedSettings.Precision:
-    case QuestionAdvancedSettings.Prefix:
-    case QuestionAdvancedSettings.Rows:
-    case QuestionAdvancedSettings.Suffix:
-      return ComponentType.TextField
-    case QuestionAdvancedSettings.Regex:
-    case QuestionAdvancedSettings.Classes:
-      return ComponentType.MultilineTextField
-    default:
-      throw new Error(
-        `Invalid or not implemented advanced setting field name (${field.name})`
-      )
-  }
-}
-
-/**
- * @param {TextFieldComponent | MultilineTextFieldComponent} question
+ * @param {TextFieldComponent | MultilineTextFieldComponent | NumberFieldComponent | DatePartsFieldComponent | MonthYearFieldComponent} question
  */
 function mapToQuestionOptions(question) {
+  const isNumberField = question.type === ComponentType.NumberField
+  const isDateField =
+    question.type === ComponentType.DatePartsField ||
+    question.type === ComponentType.MonthYearField
+
   return {
     classes: question.options.classes,
-    minLength: question.schema.min,
-    maxLength: question.schema.max,
-    regex: question.schema.regex,
+    min: isNumberField ? question.schema.min : undefined,
+    max: isNumberField ? question.schema.max : undefined,
+    maxFuture: isDateField ? question.options.maxDaysInFuture : undefined,
+    minLength: !isNumberField && !isDateField ? question.schema.min : undefined,
+    maxLength: !isNumberField && !isDateField ? question.schema.max : undefined,
+    maxPast: isDateField ? question.options.maxDaysInPast : undefined,
+    precision: isNumberField ? question.schema.precision : undefined,
+    prefix: isNumberField ? question.options.prefix : undefined,
+    suffix: isNumberField ? question.options.suffix : undefined,
+    regex: !isNumberField && !isDateField ? question.schema.regex : undefined,
     rows:
       question.type === ComponentType.MultilineTextField
         ? question.options.rows
@@ -70,6 +55,6 @@ export function advancedSettingsFields(options, question, validation) {
 }
 
 /**
- * @import { FormEditor, GovukField, MultilineTextFieldComponent, TextFieldComponent } from '@defra/forms-model'
+ * @import { DatePartsFieldComponent, FormEditor, GovukField, MonthYearFieldComponent,  MultilineTextFieldComponent, NumberFieldComponent, TextFieldComponent } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

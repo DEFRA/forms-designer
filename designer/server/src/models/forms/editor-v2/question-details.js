@@ -1,11 +1,12 @@
 import { randomId } from '@defra/forms-model'
 
-import {
-  QuestionAdvancedSettings,
-  QuestionTypeDescriptions
-} from '~/src/common/constants/editor.js'
+import { QuestionTypeDescriptions } from '~/src/common/constants/editor.js'
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { insertValidationErrors, isCheckboxSelected } from '~/src/lib/utils.js'
+import {
+  advancedSettingsPerComponentType,
+  getFieldComponentType
+} from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
 import {
   GOVUK_LABEL__M,
   SAVE_AND_CONTINUE,
@@ -15,10 +16,7 @@ import {
   getQuestion,
   getQuestionNum
 } from '~/src/models/forms/editor-v2/common.js'
-import {
-  advancedSettingsFields,
-  getFieldComponentType
-} from '~/src/models/forms/editor-v2/question-details-advanced-settings.js'
+import { advancedSettingsFields } from '~/src/models/forms/editor-v2/question-details-advanced-settings.js'
 import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
 
 /**
@@ -159,53 +157,6 @@ export function getDetails(
     pageNum
   }
 }
-const componentAdvancedSettings = /** @type {Record<string, string[]> } */ ({
-  TextField: [
-    QuestionAdvancedSettings.MinLength,
-    QuestionAdvancedSettings.MaxLength,
-    QuestionAdvancedSettings.Regex,
-    QuestionAdvancedSettings.Classes
-  ],
-  MultilineTextField: [
-    QuestionAdvancedSettings.MinLength,
-    QuestionAdvancedSettings.MaxLength,
-    QuestionAdvancedSettings.Rows,
-    QuestionAdvancedSettings.Regex,
-    QuestionAdvancedSettings.Classes
-  ],
-  YesNoField: [],
-  DatePartsField: [
-    QuestionAdvancedSettings.MaxPast,
-    QuestionAdvancedSettings.MaxFuture,
-    QuestionAdvancedSettings.Classes
-  ],
-  MonthYearField: [
-    QuestionAdvancedSettings.MaxPast,
-    QuestionAdvancedSettings.MaxFuture,
-    QuestionAdvancedSettings.Classes
-  ],
-  SelectField: [],
-  AutocompleteField: [],
-  RadiosField: [],
-  CheckboxesField: [],
-  NumberField: [
-    QuestionAdvancedSettings.Min,
-    QuestionAdvancedSettings.Max,
-    QuestionAdvancedSettings.Precision,
-    QuestionAdvancedSettings.Prefix,
-    QuestionAdvancedSettings.Suffix
-  ],
-  UkAddressField: [],
-  TelephoneNumberField: [QuestionAdvancedSettings.Classes],
-  EmailAddressField: [QuestionAdvancedSettings.Classes],
-  Html: [],
-  InsetText: [],
-  Details: [],
-  List: [],
-  Markdown: [],
-  FileUploadField: []
-})
-
 /**
  * @param {ComponentDef} question
  * @param {ValidationFailure<FormEditor> | undefined} validation
@@ -213,7 +164,7 @@ const componentAdvancedSettings = /** @type {Record<string, string[]> } */ ({
  */
 export function getExtraFields(question, validation) {
   const extraFieldNames = /** @type {string[]} */ (
-    componentAdvancedSettings[question.type]
+    advancedSettingsPerComponentType[question.type]
   )
 
   if (extraFieldNames.length) {
