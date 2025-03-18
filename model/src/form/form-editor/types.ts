@@ -88,9 +88,49 @@ export interface FormEditor {
   regex: string
 
   /**
+   * The number of rows of a textarea
+   */
+  rows: string
+
+  /**
    * The classes to be applied to a field
    */
   classes: string
+
+  /**
+   * The prefix to be applied to a field
+   */
+  prefix: string
+
+  /**
+   * The suffix to be applied to a field
+   */
+  suffix: string
+
+  /**
+   * The decimal precision of a number field
+   */
+  precision: string
+
+  /**
+   * The lowest number allowed in a field
+   */
+  min: string
+
+  /**
+   * The highest number allowed in a field
+   */
+  max: string
+
+  /**
+   * The maximum days in the future to allow for a date
+   */
+  maxFuture: string
+
+  /**
+   * The maximum days in the past to allow for a date
+   */
+  maxPast: string
 }
 
 export type FormEditorInputPage = Pick<
@@ -114,7 +154,15 @@ export type FormEditorInputQuestion = Pick<
   | 'minLength'
   | 'maxLength'
   | 'regex'
+  | 'rows'
   | 'classes'
+  | 'prefix'
+  | 'suffix'
+  | 'precision'
+  | 'min'
+  | 'max'
+  | 'maxFuture'
+  | 'maxPast'
 >
 
 export type FormEditorInputPageSettings = Pick<
@@ -145,9 +193,5 @@ export interface FormEditorGovukField {
   hintText?: GovukField
   questionOptional?: GovukField
   shortDescription?: GovukField
-  minLength?: GovukField
-  maxLength?: GovukField
-  regex?: GovukField
-  classes?: GovukField
   errorMessage?: { text: string }
 }

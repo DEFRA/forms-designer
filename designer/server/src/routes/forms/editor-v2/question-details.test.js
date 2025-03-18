@@ -196,7 +196,7 @@ describe('Editor v2 question details routes', () => {
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
       new Joi.ValidationError(
-        'Minimum length must be a number greater than zero',
+        'Minimum length must be a positive whole number',
         [],
         undefined
       ),

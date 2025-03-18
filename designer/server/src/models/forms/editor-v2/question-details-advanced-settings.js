@@ -1,36 +1,126 @@
 import { ComponentType } from '@defra/forms-model'
 
-import { QuestionAdvancedSettings } from '~/src/common/constants/editor.js'
 import { insertValidationErrors } from '~/src/lib/utils.js'
 import { allAdvancedSettingsFields } from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
 
 /**
- * @param {GovukField} field
+ * @param {NumberFieldComponent} question
  */
-export function getFieldComponentType(field) {
-  switch (field.name) {
-    case QuestionAdvancedSettings.MinLength:
-    case QuestionAdvancedSettings.MaxLength:
-      return ComponentType.TextField
-    case QuestionAdvancedSettings.Regex:
-    case QuestionAdvancedSettings.Classes:
-      return ComponentType.MultilineTextField
-    default:
-      throw new Error(
-        `Invalid or not implemented advanced setting field name (${field.name})`
-      )
+export function addNumberFieldProperties(question) {
+  return {
+    min: question.schema.min,
+    max: question.schema.max,
+    precision: question.schema.precision,
+    prefix: question.options.prefix,
+    suffix: question.options.suffix
   }
 }
 
 /**
- * @param {TextFieldComponent} question
+ * @param { DatePartsFieldComponent | MonthYearFieldComponent } question
  */
-function mapToQuestionOptions(question) {
+export function addDateFieldProperties(question) {
+  return {
+    maxFuture: question.options.maxDaysInFuture,
+    maxPast: question.options.maxDaysInPast
+  }
+}
+
+/**
+ * @param { TextFieldComponent | MultilineTextFieldComponent | NumberFieldComponent } question
+ */
+export function addMinMaxFieldProperties(question) {
   return {
     minLength: question.schema.min,
-    maxLength: question.schema.max,
-    regex: question.schema.regex,
-    classes: question.options.classes
+    maxLength: question.schema.max
+  }
+}
+
+/**
+ * @param {MultilineTextFieldComponent} question
+ */
+export function addMultiLineFieldProperties(question) {
+  return {
+    rows: question.options.rows
+  }
+}
+
+/**
+ * @param { TextFieldComponent | MultilineTextFieldComponent } question
+ */
+export function addRegexFieldProperties(question) {
+  return {
+    regex: question.schema.regex
+  }
+}
+
+/**
+ * @param {ComponentType} questionType
+ * @param {ComponentType[]} allowableFieldTypes
+ */
+function isTypeOfField(questionType, allowableFieldTypes) {
+  return allowableFieldTypes.includes(questionType)
+}
+
+/**
+ * @param { TextFieldComponent | MultilineTextFieldComponent | NumberFieldComponent | DatePartsFieldComponent | MonthYearFieldComponent } question
+ */
+export function mapToQuestionOptions(question) {
+  const isNumberField = isTypeOfField(question.type, [
+    ComponentType.NumberField
+  ])
+  const isDateField = isTypeOfField(question.type, [
+    ComponentType.DatePartsField,
+    ComponentType.MonthYearField
+  ])
+  const hasMinMax = isTypeOfField(question.type, [
+    ComponentType.TextField,
+    ComponentType.MultilineTextField,
+    ComponentType.NumberField
+  ])
+
+  const numberExtras = isNumberField
+    ? addNumberFieldProperties(/** @type {NumberFieldComponent} */ (question))
+    : {}
+  const dateExtras = isDateField
+    ? addDateFieldProperties(
+        /** @type { DatePartsFieldComponent | MonthYearFieldComponent } */ (
+          question
+        )
+      )
+    : {}
+  const minMaxExtras = hasMinMax
+    ? addMinMaxFieldProperties(
+        /** @type { TextFieldComponent | MultilineTextFieldComponent | NumberFieldComponent } */ (
+          question
+        )
+      )
+    : {}
+  const multilineExtras = isTypeOfField(question.type, [
+    ComponentType.MultilineTextField
+  ])
+    ? addMultiLineFieldProperties(
+        /** @type {MultilineTextFieldComponent} */ (question)
+      )
+    : {}
+  const regexExtras = isTypeOfField(question.type, [
+    ComponentType.TextField,
+    ComponentType.MultilineTextField
+  ])
+    ? addRegexFieldProperties(
+        /** @type {TextFieldComponent | MultilineTextFieldComponent} */ (
+          question
+        )
+      )
+    : {}
+
+  return {
+    classes: question.options.classes,
+    ...numberExtras,
+    ...dateExtras,
+    ...minMaxExtras,
+    ...multilineExtras,
+    ...regexExtras
   }
 }
 
@@ -58,6 +148,6 @@ export function advancedSettingsFields(options, question, validation) {
 }
 
 /**
- * @import { FormEditor, GovukField, TextFieldComponent } from '@defra/forms-model'
+ * @import { ComponentDef, DatePartsFieldComponent, FormEditor, GovukField, MonthYearFieldComponent,  MultilineTextFieldComponent, NumberFieldComponent, TextFieldComponent } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */
