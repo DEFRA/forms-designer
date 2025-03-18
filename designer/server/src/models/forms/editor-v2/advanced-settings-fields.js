@@ -23,7 +23,10 @@ import Joi from 'joi'
 
 import { QuestionAdvancedSettings } from '~/src/common/constants/editor.js'
 import { isCheckboxSelected } from '~/src/lib/utils.js'
-import { GOVUK_LABEL__M } from '~/src/models/forms/editor-v2/common.js'
+import {
+  GOVUK_INPUT_WIDTH_3,
+  GOVUK_LABEL__M
+} from '~/src/models/forms/editor-v2/common.js'
 
 export const advancedSettingsPerComponentType =
   /** @type {Record<string, string[]> } */ ({
@@ -97,7 +100,7 @@ export const allAdvancedSettingsFields =
         text: 'Lowest number users can enter (optional)',
         classes: GOVUK_LABEL__M
       },
-      classes: 'govuk-input--width-3'
+      classes: GOVUK_INPUT_WIDTH_3
     },
     [QuestionAdvancedSettings.Max]: {
       name: 'max',
@@ -106,7 +109,7 @@ export const allAdvancedSettingsFields =
         text: 'Highest number users can enter (optional)',
         classes: GOVUK_LABEL__M
       },
-      classes: 'govuk-input--width-3'
+      classes: GOVUK_INPUT_WIDTH_3
     },
     [QuestionAdvancedSettings.MinLength]: {
       name: 'minLength',
@@ -118,7 +121,7 @@ export const allAdvancedSettingsFields =
       hint: {
         text: 'The minimum number of characters users can enter'
       },
-      classes: 'govuk-input--width-3'
+      classes: GOVUK_INPUT_WIDTH_3
     },
     [QuestionAdvancedSettings.MaxLength]: {
       name: 'maxLength',
@@ -130,7 +133,7 @@ export const allAdvancedSettingsFields =
       hint: {
         text: 'The maximum number of characters users can enter'
       },
-      classes: 'govuk-input--width-3'
+      classes: GOVUK_INPUT_WIDTH_3
     },
     [QuestionAdvancedSettings.MaxFuture]: {
       name: 'maxFuture',
@@ -142,7 +145,7 @@ export const allAdvancedSettingsFields =
       hint: {
         text: 'Determines the latest date users can enter'
       },
-      classes: 'govuk-input--width-3'
+      classes: GOVUK_INPUT_WIDTH_3
     },
     [QuestionAdvancedSettings.MaxPast]: {
       name: 'maxPast',
@@ -154,7 +157,7 @@ export const allAdvancedSettingsFields =
       hint: {
         text: 'Determines the earliest date users can enter'
       },
-      classes: 'govuk-input--width-3'
+      classes: GOVUK_INPUT_WIDTH_3
     },
     [QuestionAdvancedSettings.Precision]: {
       name: 'precision',
@@ -166,7 +169,7 @@ export const allAdvancedSettingsFields =
       hint: {
         text: 'Specifies the number of decimal places users can enter. For example, to allow users to enter numbers with up to two decimal places, set this to 2'
       },
-      classes: 'govuk-input--width-3'
+      classes: GOVUK_INPUT_WIDTH_3
     },
     [QuestionAdvancedSettings.Prefix]: {
       name: 'prefix',
@@ -178,7 +181,7 @@ export const allAdvancedSettingsFields =
       hint: {
         text: "For example, a symbol or abbreviation for the type of information you’re asking for, like, '£'"
       },
-      classes: 'govuk-input--width-3'
+      classes: GOVUK_INPUT_WIDTH_3
     },
     [QuestionAdvancedSettings.Regex]: {
       name: 'regex',
@@ -202,7 +205,7 @@ export const allAdvancedSettingsFields =
       hint: {
         text: 'Specifices the number of textarea rows (default is 5 rows)'
       },
-      classes: 'govuk-input--width-3'
+      classes: GOVUK_INPUT_WIDTH_3
     },
     [QuestionAdvancedSettings.Suffix]: {
       name: 'suffix',
@@ -214,7 +217,7 @@ export const allAdvancedSettingsFields =
       hint: {
         text: "For example, a symbol or abbreviation for the type of information you’re asking for, like,'per item' or 'Kg'"
       },
-      classes: 'govuk-input--width-3'
+      classes: GOVUK_INPUT_WIDTH_3
     }
   })
 
@@ -264,37 +267,46 @@ export const allSpecificSchemas = Joi.object().keys({
   classes: classesSchema
 })
 
+const textFieldQuestions = [
+  QuestionAdvancedSettings.Min,
+  QuestionAdvancedSettings.Max,
+  QuestionAdvancedSettings.MinLength,
+  QuestionAdvancedSettings.MaxLength,
+  QuestionAdvancedSettings.MaxFuture,
+  QuestionAdvancedSettings.MaxPast,
+  QuestionAdvancedSettings.Precision,
+  QuestionAdvancedSettings.Prefix,
+  QuestionAdvancedSettings.Rows,
+  QuestionAdvancedSettings.Suffix
+]
+
+const multiLineTextFieldQuestions = [
+  QuestionAdvancedSettings.Regex,
+  QuestionAdvancedSettings.Classes
+]
 /**
  * @param {GovukField} field
  */
 export function getFieldComponentType(field) {
-  switch (field.name) {
-    case QuestionAdvancedSettings.Min:
-    case QuestionAdvancedSettings.Max:
-    case QuestionAdvancedSettings.MinLength:
-    case QuestionAdvancedSettings.MaxLength:
-    case QuestionAdvancedSettings.MaxFuture:
-    case QuestionAdvancedSettings.MaxPast:
-    case QuestionAdvancedSettings.Precision:
-    case QuestionAdvancedSettings.Prefix:
-    case QuestionAdvancedSettings.Rows:
-    case QuestionAdvancedSettings.Suffix:
-      return ComponentType.TextField
-    case QuestionAdvancedSettings.Regex:
-    case QuestionAdvancedSettings.Classes:
-      return ComponentType.MultilineTextField
-    default:
-      throw new Error(
-        `Invalid or not implemented advanced setting field name (${field.name})`
-      )
+  const fieldName = field.name ?? 'unknown'
+
+  if (textFieldQuestions.includes(fieldName)) {
+    return ComponentType.TextField
   }
+
+  if (multiLineTextFieldQuestions.includes(fieldName)) {
+    return ComponentType.MultilineTextField
+  }
+
+  throw new Error(
+    `Invalid or not implemented advanced setting field name (${field.name})`
+  )
 }
 
 /**
- *
  * @param {Partial<FormEditorInputQuestion>} payload
  */
-export function mapQuestionDetails(payload) {
+function getAdditionalOptions(payload) {
   const additionalOptions = {}
   if (payload.classes) {
     additionalOptions.classes = payload.classes
@@ -314,7 +326,13 @@ export function mapQuestionDetails(payload) {
   if (payload.maxPast) {
     additionalOptions.maxDaysInPast = payload.maxPast
   }
+  return additionalOptions
+}
 
+/**
+ * @param {Partial<FormEditorInputQuestion>} payload
+ */
+function getAdditionalSchema(payload) {
   const additionalSchema = {}
   if (payload.minLength ?? payload.min) {
     additionalSchema.min = payload.minLength ?? payload.min
@@ -328,6 +346,15 @@ export function mapQuestionDetails(payload) {
   if (payload.precision) {
     additionalSchema.precision = payload.precision
   }
+  return additionalSchema
+}
+
+/**
+ * @param {Partial<FormEditorInputQuestion>} payload
+ */
+export function mapQuestionDetails(payload) {
+  const additionalOptions = getAdditionalOptions(payload)
+  const additionalSchema = getAdditionalSchema(payload)
 
   return /** @type {Partial<ComponentDef>} */ ({
     type: payload.questionType,

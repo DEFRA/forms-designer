@@ -4,26 +4,92 @@ import { insertValidationErrors } from '~/src/lib/utils.js'
 import { allAdvancedSettingsFields } from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
 
 /**
- * @param {TextFieldComponent | MultilineTextFieldComponent | NumberFieldComponent | DatePartsFieldComponent | MonthYearFieldComponent} question
+ * @param {NumberFieldComponent} question
+ */
+export function addNumberFieldProperties(question) {
+  return {
+    min: question.schema.min,
+    max: question.schema.max,
+    precision: question.schema.precision,
+    prefix: question.options.prefix,
+    suffix: question.options.suffix
+  }
+}
+
+/**
+ * @param { DatePartsFieldComponent | MonthYearFieldComponent } question
+ */
+export function addDateFieldProperties(question) {
+  return {
+    maxFuture: question.options.maxDaysInFuture,
+    maxPast: question.options.maxDaysInPast
+  }
+}
+
+/**
+ * @param { TextFieldComponent | MultilineTextFieldComponent | NumberFieldComponent } question
+ */
+export function addMinMaxFieldProperties(question) {
+  return {
+    minLength: question.schema.min,
+    maxLength: question.schema.max
+  }
+}
+
+/**
+ *
+ * @param {ComponentType} questionType
+ * @param {ComponentType[]} allowableFieldTypes
+ */
+function isTypeOfField(questionType, allowableFieldTypes) {
+  return allowableFieldTypes.includes(questionType)
+}
+
+/**
+ * @param { TextFieldComponent | MultilineTextFieldComponent | NumberFieldComponent | DatePartsFieldComponent | MonthYearFieldComponent } question
  */
 export function mapToQuestionOptions(question) {
-  const isNumberField = question.type === ComponentType.NumberField
-  const isDateField =
-    question.type === ComponentType.DatePartsField ||
-    question.type === ComponentType.MonthYearField
+  const isNumberField = isTypeOfField(question.type, [
+    ComponentType.NumberField
+  ])
+  const isDateField = isTypeOfField(question.type, [
+    ComponentType.DatePartsField,
+    ComponentType.MonthYearField
+  ])
+  const hasMinMax = isTypeOfField(question.type, [
+    ComponentType.TextField,
+    ComponentType.MultilineTextField,
+    ComponentType.NumberField
+  ])
+
+  const numberExtras = isNumberField
+    ? addNumberFieldProperties(/** @type {NumberFieldComponent} */ (question))
+    : {}
+  const dateExtras = isDateField
+    ? addDateFieldProperties(
+        /** @type { DatePartsFieldComponent | MonthYearFieldComponent } */ (
+          question
+        )
+      )
+    : {}
+  const minMaxExtras = hasMinMax
+    ? addMinMaxFieldProperties(
+        /** @type { TextFieldComponent | MultilineTextFieldComponent | NumberFieldComponent } */ (
+          question
+        )
+      )
+    : {}
 
   return {
     classes: question.options.classes,
-    min: isNumberField ? question.schema.min : undefined,
-    max: isNumberField ? question.schema.max : undefined,
-    maxFuture: isDateField ? question.options.maxDaysInFuture : undefined,
-    minLength: !isNumberField && !isDateField ? question.schema.min : undefined,
-    maxLength: !isNumberField && !isDateField ? question.schema.max : undefined,
-    maxPast: isDateField ? question.options.maxDaysInPast : undefined,
-    precision: isNumberField ? question.schema.precision : undefined,
-    prefix: isNumberField ? question.options.prefix : undefined,
-    suffix: isNumberField ? question.options.suffix : undefined,
-    regex: !isNumberField && !isDateField ? question.schema.regex : undefined,
+    ...numberExtras,
+    ...dateExtras,
+    ...minMaxExtras,
+    regex:
+      question.type === ComponentType.TextField ||
+      question.type === ComponentType.MultilineTextField
+        ? question.schema.regex
+        : undefined,
     rows:
       question.type === ComponentType.MultilineTextField
         ? question.options.rows
@@ -55,6 +121,6 @@ export function advancedSettingsFields(options, question, validation) {
 }
 
 /**
- * @import { DatePartsFieldComponent, FormEditor, GovukField, MonthYearFieldComponent,  MultilineTextFieldComponent, NumberFieldComponent, TextFieldComponent } from '@defra/forms-model'
+ * @import { ComponentDef, DatePartsFieldComponent, FormEditor, GovukField, MonthYearFieldComponent,  MultilineTextFieldComponent, NumberFieldComponent, TextFieldComponent } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */
