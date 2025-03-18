@@ -1,14 +1,22 @@
 import {
   classesSchema,
   hintTextSchema,
+  maxFutureSchema,
   maxLengthSchema,
+  maxPastSchema,
+  maxSchema,
   minLengthSchema,
+  minSchema,
   nameSchema,
+  precisionSchema,
+  prefixSchema,
   questionOptionalSchema,
   questionSchema,
   questionTypeFullSchema,
   regexSchema,
-  shortDescriptionSchema
+  rowsSchema,
+  shortDescriptionSchema,
+  suffixSchema
 } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
@@ -50,13 +58,33 @@ export const baseSchema = Joi.object().keys({
 
 // To be extended with question specific fields
 const specificsSchema = Joi.object().keys({
+  maxFuture: maxFutureSchema.messages({
+    '*': 'Max days in the future must be a number greater than zero'
+  }),
+  maxPast: maxPastSchema.messages({
+    '*': 'Max days in the past must be a number greater than zero'
+  }),
+  min: minSchema.messages({
+    '*': 'Lowest number must be a number'
+  }),
+  max: maxSchema.messages({
+    '*': 'Highest number must be a number greater than zero'
+  }),
   minLength: minLengthSchema.messages({
     '*': 'Minimum length must be a number greater than zero'
   }),
   maxLength: maxLengthSchema.messages({
     '*': 'Maximum length must be a number greater than zero'
   }),
+  precision: precisionSchema.messages({
+    '*': 'Precision must be a number greater than zero'
+  }),
+  prefix: prefixSchema,
+  suffix: suffixSchema,
   regex: regexSchema,
+  rows: rowsSchema.messages({
+    '*': 'Rows must be a number greater than zero'
+  }),
   classes: classesSchema
 })
 
@@ -74,8 +102,9 @@ function mapQuestionDetails(payload) {
     shortDescription: payload.shortDescription,
     hint: payload.hintText,
     options: {
+      classes: payload.classes,
       required: !isCheckboxSelected(payload.questionOptional),
-      classes: payload.classes
+      rows: payload.rows ?? undefined
     },
     schema: {
       min: payload.minLength ?? undefined,

@@ -9,8 +9,16 @@ import { allAdvancedSettingsFields } from '~/src/models/forms/editor-v2/advanced
  */
 export function getFieldComponentType(field) {
   switch (field.name) {
+    case QuestionAdvancedSettings.Min:
+    case QuestionAdvancedSettings.Max:
     case QuestionAdvancedSettings.MinLength:
     case QuestionAdvancedSettings.MaxLength:
+    case QuestionAdvancedSettings.MaxFuture:
+    case QuestionAdvancedSettings.MaxPast:
+    case QuestionAdvancedSettings.Precision:
+    case QuestionAdvancedSettings.Prefix:
+    case QuestionAdvancedSettings.Rows:
+    case QuestionAdvancedSettings.Suffix:
       return ComponentType.TextField
     case QuestionAdvancedSettings.Regex:
     case QuestionAdvancedSettings.Classes:
@@ -23,14 +31,18 @@ export function getFieldComponentType(field) {
 }
 
 /**
- * @param {TextFieldComponent} question
+ * @param {TextFieldComponent | MultilineTextFieldComponent} question
  */
 function mapToQuestionOptions(question) {
   return {
+    classes: question.options.classes,
     minLength: question.schema.min,
     maxLength: question.schema.max,
     regex: question.schema.regex,
-    classes: question.options.classes
+    rows:
+      question.type === ComponentType.MultilineTextField
+        ? question.options.rows
+        : undefined
   }
 }
 
@@ -58,6 +70,6 @@ export function advancedSettingsFields(options, question, validation) {
 }
 
 /**
- * @import { FormEditor, GovukField, TextFieldComponent } from '@defra/forms-model'
+ * @import { FormEditor, GovukField, MultilineTextFieldComponent, TextFieldComponent } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

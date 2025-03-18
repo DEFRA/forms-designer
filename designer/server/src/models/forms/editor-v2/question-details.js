@@ -166,18 +166,38 @@ const componentAdvancedSettings = /** @type {Record<string, string[]> } */ ({
     QuestionAdvancedSettings.Regex,
     QuestionAdvancedSettings.Classes
   ],
-  MultilineTextField: [],
+  MultilineTextField: [
+    QuestionAdvancedSettings.MinLength,
+    QuestionAdvancedSettings.MaxLength,
+    QuestionAdvancedSettings.Rows,
+    QuestionAdvancedSettings.Regex,
+    QuestionAdvancedSettings.Classes
+  ],
   YesNoField: [],
-  DatePartsField: [],
-  MonthYearField: [],
+  DatePartsField: [
+    QuestionAdvancedSettings.MaxPast,
+    QuestionAdvancedSettings.MaxFuture,
+    QuestionAdvancedSettings.Classes
+  ],
+  MonthYearField: [
+    QuestionAdvancedSettings.MaxPast,
+    QuestionAdvancedSettings.MaxFuture,
+    QuestionAdvancedSettings.Classes
+  ],
   SelectField: [],
   AutocompleteField: [],
   RadiosField: [],
   CheckboxesField: [],
-  NumberField: [],
+  NumberField: [
+    QuestionAdvancedSettings.Min,
+    QuestionAdvancedSettings.Max,
+    QuestionAdvancedSettings.Precision,
+    QuestionAdvancedSettings.Prefix,
+    QuestionAdvancedSettings.Suffix
+  ],
   UkAddressField: [],
-  TelephoneNumberField: [],
-  EmailAddressField: [],
+  TelephoneNumberField: [QuestionAdvancedSettings.Classes],
+  EmailAddressField: [QuestionAdvancedSettings.Classes],
   Html: [],
   InsetText: [],
   Details: [],

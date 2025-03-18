@@ -88,6 +88,11 @@ export interface FormEditor {
   regex: string
 
   /**
+   * The number of rows of a textarea
+   */
+  rows: string
+
+  /**
    * The classes to be applied to a field
    */
   classes: string
@@ -114,6 +119,7 @@ export type FormEditorInputQuestion = Pick<
   | 'minLength'
   | 'maxLength'
   | 'regex'
+  | 'rows'
   | 'classes'
 >
 

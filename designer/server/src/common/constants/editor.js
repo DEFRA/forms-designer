@@ -60,8 +60,16 @@ export const QuestionTypeDescriptions =
   ])
 
 export const QuestionAdvancedSettings = /** @enum {string} */ {
+  Classes: 'classes',
+  Min: 'min',
+  Max: 'max',
   MinLength: 'minLength',
   MaxLength: 'maxLength',
+  MaxFuture: 'maxFuture',
+  MaxPast: 'maxPast',
+  Precision: 'precision',
+  Prefix: 'prefix',
+  Suffix: 'suffix',
   Regex: 'regex',
-  Classes: 'classes'
+  Rows: 'rows'
 }
