@@ -7,6 +7,11 @@ $defra-brand-colour: govuk-organisation-colour(department-for-environment-food-r
   &-end,
   &-reorder {
     border-left: 10px solid;
+
+    .govuk-summary-card__actions {
+      white-space: nowrap;
+      display: block;
+    }
   }
 
   &-standard {
