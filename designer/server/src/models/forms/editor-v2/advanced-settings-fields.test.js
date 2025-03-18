@@ -7,11 +7,42 @@ import {
 
 describe('editor-v2 - advanced settings fields model', () => {
   describe('getFieldComponentType', () => {
+    test('should throw if invalid or not implemented field type', () => {
+      expect(() => getFieldComponentType({ name: ComponentType.Html })).toThrow(
+        'Invalid or not implemented advanced setting field name (Html)'
+      )
+    })
+
+    test('should return TextField for MinLength', () => {
+      expect(getFieldComponentType({ name: 'minLength' })).toBe(
+        ComponentType.TextField
+      )
+    })
+
+    test('should return TextField for MaxLength', () => {
+      expect(getFieldComponentType({ name: 'maxLength' })).toBe(
+        ComponentType.TextField
+      )
+    })
+
+    test('should return TextField for Regex', () => {
+      expect(getFieldComponentType({ name: 'regex' })).toBe(
+        ComponentType.MultilineTextField
+      )
+    })
+
+    test('should return TextField for Classes', () => {
+      expect(getFieldComponentType({ name: 'classes' })).toBe(
+        ComponentType.MultilineTextField
+      )
+    })
+
     test('should return TextField for Min', () => {
       expect(getFieldComponentType({ name: 'min' })).toBe(
         ComponentType.TextField
       )
     })
+
     test('should return TextField for Max', () => {
       expect(getFieldComponentType({ name: 'max' })).toBe(
         ComponentType.TextField

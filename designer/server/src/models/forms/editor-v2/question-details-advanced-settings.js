@@ -37,7 +37,24 @@ export function addMinMaxFieldProperties(question) {
 }
 
 /**
- *
+ * @param {MultilineTextFieldComponent} question
+ */
+export function addMultiLineFieldProperties(question) {
+  return {
+    rows: question.options.rows
+  }
+}
+
+/**
+ * @param { TextFieldComponent | MultilineTextFieldComponent } question
+ */
+export function addRegexFieldProperties(question) {
+  return {
+    regex: question.schema.regex
+  }
+}
+
+/**
  * @param {ComponentType} questionType
  * @param {ComponentType[]} allowableFieldTypes
  */
@@ -79,21 +96,31 @@ export function mapToQuestionOptions(question) {
         )
       )
     : {}
+  const multilineExtras = isTypeOfField(question.type, [
+    ComponentType.MultilineTextField
+  ])
+    ? addMultiLineFieldProperties(
+        /** @type {MultilineTextFieldComponent} */ (question)
+      )
+    : {}
+  const regexExtras = isTypeOfField(question.type, [
+    ComponentType.TextField,
+    ComponentType.MultilineTextField
+  ])
+    ? addRegexFieldProperties(
+        /** @type {TextFieldComponent | MultilineTextFieldComponent} */ (
+          question
+        )
+      )
+    : {}
 
   return {
     classes: question.options.classes,
     ...numberExtras,
     ...dateExtras,
     ...minMaxExtras,
-    regex:
-      question.type === ComponentType.TextField ||
-      question.type === ComponentType.MultilineTextField
-        ? question.schema.regex
-        : undefined,
-    rows:
-      question.type === ComponentType.MultilineTextField
-        ? question.options.rows
-        : undefined
+    ...multilineExtras,
+    ...regexExtras
   }
 }
 
