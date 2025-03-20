@@ -204,6 +204,42 @@ describe('Editor v2 question details routes', () => {
     )
   })
 
+  test('POST - should error if minLength greater than maxLength', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/1/question/1/details',
+      auth,
+      payload: {
+        name: '12345',
+        question: 'Question text',
+        shortDescription: 'Short desc',
+        questionType: 'TextField',
+        minLength: '5',
+        maxLength: '3'
+      }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/page/1/question/1/details'
+    )
+    expect(addErrorsToSession).toHaveBeenCalledWith(
+      expect.anything(),
+      new Joi.ValidationError(
+        'Minimum length must be less than or equal to maximum length',
+        [],
+        undefined
+      ),
+      'questionDetailsValidationFailure'
+    )
+  })
+
   test('POST - should redirect to next page if valid payload with new question', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     jest.mocked(addPageAndFirstQuestion).mockResolvedValue(page)

@@ -280,9 +280,17 @@ export const allSpecificSchemas = Joi.object().keys({
   maxPast: maxPastSchema.messages({
     '*': 'Max days in the past must be a positive whole number'
   }),
-  min: minSchema.messages({
-    '*': 'Lowest number must be a whole number'
-  }),
+  min: minSchema
+    .when('max', {
+      is: Joi.exist(),
+      then: Joi.number().max(Joi.ref('max')),
+      otherwise: Joi.number().empty('').integer()
+    })
+    .messages({
+      'number.base': 'Lowest number must be a whole number',
+      'number.integer': 'Lowest number must be a whole number',
+      '*': 'Lowest number must be less than or equal to highest number'
+    }),
   max: maxSchema.messages({
     '*': 'Highest number must be a positive whole number'
   }),
@@ -300,9 +308,17 @@ export const allSpecificSchemas = Joi.object().keys({
   maxFiles: maxFilesSchema.messages({
     '*': 'Maximum file count must be a positive whole number'
   }),
-  minLength: minLengthSchema.messages({
-    '*': 'Minimum length must be a positive whole number'
-  }),
+  minLength: minLengthSchema
+    .when('maxLength', {
+      is: Joi.exist(),
+      then: Joi.number().max(Joi.ref('maxLength')),
+      otherwise: Joi.number().empty('').integer()
+    })
+    .messages({
+      'number.base': 'Minimum length must be a positive whole number',
+      'number.integer': 'Minimum length must be a positive whole number',
+      '*': 'Minimum length must be less than or equal to maximum length'
+    }),
   maxLength: maxLengthSchema.messages({
     '*': 'Maximum length must be a positive whole number'
   }),

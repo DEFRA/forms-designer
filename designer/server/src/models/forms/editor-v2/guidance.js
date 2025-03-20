@@ -70,10 +70,10 @@ export function guidanceViewModel(
   const pageNum = getPageNum(definition, pageId)
 
   const pageIdx = definition.pages.findIndex((x) => x.id === pageId)
-  const page = definition.pages[pageIdx]
+  const page = /** @type { Page | undefined } */ (definition.pages[pageIdx])
   const components = hasComponents(page) ? page.components : []
 
-  const pageHeadingVal = formValues?.pageHeading ?? page.title
+  const pageHeadingVal = formValues?.pageHeading ?? page?.title
 
   const guidanceComponent = /** @type { MarkdownComponent | undefined } */ (
     components.find((comp, idx) => {
@@ -99,6 +99,6 @@ export function guidanceViewModel(
 }
 
 /**
- * @import { FormMetadata, FormDefinition, FormEditor, MarkdownComponent } from '@defra/forms-model'
+ * @import { FormMetadata, FormDefinition, FormEditor, MarkdownComponent, Page } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */
