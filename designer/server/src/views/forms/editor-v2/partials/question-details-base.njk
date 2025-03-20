@@ -10,6 +10,10 @@
 
       {{ govukCheckboxes(fields.questionOptional) }}
 
+      {% if fields.fileTypes %}
+      {%- include "../../../../views/forms/editor-v2/partials/file-types.njk" -%}
+      {% endif %}
+
       {{ govukInput(fields.shortDescription) }}
 
       <input type="hidden" name="questionType" id="questionType" value="{{ questionType }}" />

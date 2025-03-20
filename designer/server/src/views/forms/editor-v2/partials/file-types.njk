@@ -1,0 +1,19 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set documentsHtml %}
+{{ govukCheckboxes(fields.documentTypes) }}
+{% endset -%}
+
+{% set imagesHtml %}
+{{ govukCheckboxes(fields.imageTypes) }}
+{% endset -%}
+
+{% set tabularDataHtml %}
+{{ govukCheckboxes(fields.tabularDataTypes) }}
+{% endset -%}
+
+{{ govukCheckboxes(fields.fileTypes | setConditionalAttribute(0, documentsHtml) | setConditionalAttribute(1, imagesHtml) | setConditionalAttribute(2, tabularDataHtml) ) }}
+

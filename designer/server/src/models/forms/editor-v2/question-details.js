@@ -1,4 +1,5 @@
-import { randomId } from '@defra/forms-model'
+import { ComponentType, randomId } from '@defra/forms-model'
+import Joi from 'joi'
 
 import { QuestionTypeDescriptions } from '~/src/common/constants/editor.js'
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
@@ -14,10 +15,87 @@ import {
   getFormSpecificNavigation,
   getPageNum,
   getQuestion,
-  getQuestionNum
+  getQuestionNum,
+  tickBoxes
 } from '~/src/models/forms/editor-v2/common.js'
 import { advancedSettingsFields } from '~/src/models/forms/editor-v2/question-details-advanced-settings.js'
 import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
+
+const allowedParentFileTypes = [
+  { value: 'documents', text: 'Documents' },
+  { value: 'images', text: 'Images' },
+  { value: 'tabular-data', text: 'Tabular data' }
+]
+
+const allowedDocumentTypes = [
+  { value: 'pdf', text: 'PDF' },
+  { value: 'doc', text: 'DOC' },
+  { value: 'docx', text: 'DOCX' },
+  { value: 'odt', text: 'ODT' },
+  { value: 'txt', text: 'TXT' }
+]
+
+const allowedImageTypes = [
+  { value: 'jpg', text: 'JPG' },
+  { value: 'jpeg', text: 'JPEG' },
+  { value: 'png', text: 'PNG' }
+]
+
+const allowedTabularDataTypes = [
+  { value: 'xls', text: 'XLS' },
+  { value: 'xlsx', text: 'XLSX' },
+  { value: 'csv', text: 'CSV' },
+  { value: 'ods', text: 'ODS' }
+]
+
+/**
+ * @param {InputFieldsComponentsDef | undefined} question
+ */
+export function getSelectedFileTypes(question) {
+  const isFileUpload = question?.type === ComponentType.FileUploadField
+
+  if (!isFileUpload) {
+    return {
+      fileTypes: undefined,
+      documentTypes: undefined,
+      imageTypes: undefined,
+      tabularDataTypes: undefined
+    }
+  }
+
+  const selectedTypes = question.options.accept?.split(',')
+  const allowedDocumentExtensions = allowedDocumentTypes.map((x) => x.value)
+  const documentTypes =
+    selectedTypes?.filter((x) => allowedDocumentExtensions.includes(x)) ?? []
+
+  const allowedImageExtensions = allowedImageTypes.map((x) => x.value)
+  const imageTypes =
+    selectedTypes?.filter((x) => allowedImageExtensions.includes(x)) ?? []
+
+  const allowedTabularDataExtensions = allowedTabularDataTypes.map(
+    (x) => x.value
+  )
+  const tabularDataTypes =
+    selectedTypes?.filter((x) => allowedTabularDataExtensions.includes(x)) ?? []
+
+  const fileTypes = []
+  if (documentTypes.length) {
+    fileTypes.push('documents')
+  }
+  if (imageTypes.length) {
+    fileTypes.push('images')
+  }
+  if (tabularDataTypes.length) {
+    fileTypes.push('tabular-data')
+  }
+
+  return {
+    fileTypes: { fileTypes },
+    documentTypes: { documentTypes },
+    imageTypes: { imageTypes },
+    tabularDataTypes: { tabularDataTypes }
+  }
+}
 
 /**
  * Determines if the details section should be expanded i.e. if there is a validation error or some data populated
@@ -53,12 +131,19 @@ export function hasDataOrErrorForDisplay(
  * @param { InputFieldsComponentsDef | undefined} question
  */
 export function mapToQuestionDetails(question) {
+  const { fileTypes, documentTypes, imageTypes, tabularDataTypes } =
+    getSelectedFileTypes(question)
+
   return {
     name: question?.name ?? randomId(),
     question: question?.title,
     hintText: question?.hint,
     questionOptional: `${question?.options.required === false}`,
-    shortDescription: question?.shortDescription
+    shortDescription: question?.shortDescription,
+    ...fileTypes,
+    ...documentTypes,
+    ...imageTypes,
+    ...tabularDataTypes
   }
 }
 
@@ -68,7 +153,7 @@ export function mapToQuestionDetails(question) {
  */
 function questionDetailsFields(question, validation) {
   const formValues = validation?.formValues ?? mapToQuestionDetails(question)
-  return /** @type {{ fields: FormEditorGovukField }} */ ({
+  const fields = /** @type {{ fields: FormEditorGovukField }} */ ({
     fields: {
       name: {
         value: formValues.name
@@ -122,6 +207,49 @@ function questionDetailsFields(question, validation) {
       }
     }
   })
+
+  if (question?.type === ComponentType.FileUploadField) {
+    fields.fields.fileTypes = {
+      id: 'fileTypes',
+      name: 'fileTypes',
+      idPrefix: 'fileTypes',
+      fieldset: {
+        legend: {
+          text: 'Select the file types you accept',
+          isPageHeading: false,
+          classes: 'govuk-fieldset__legend--m'
+        }
+      },
+      items: tickBoxes(allowedParentFileTypes, formValues.fileTypes),
+      ...insertValidationErrors(validation?.formErrors.fileTypes)
+    }
+
+    fields.fields.documentTypes = {
+      id: 'documentTypes',
+      name: 'documentTypes',
+      idPrefix: 'documentTypes',
+      items: tickBoxes(allowedDocumentTypes, formValues.documentTypes),
+      ...insertValidationErrors(validation?.formErrors.documentTypes)
+    }
+
+    fields.fields.imageTypes = {
+      id: 'imageTypes',
+      name: 'imageTypes',
+      idPrefix: 'imageTypes',
+      items: tickBoxes(allowedImageTypes, formValues.imageTypes),
+      ...insertValidationErrors(validation?.formErrors.imageTypes)
+    }
+
+    fields.fields.tabularDataTypes = {
+      id: 'tabularDataTypes',
+      name: 'tabularDataTypes',
+      idPrefix: 'tabularDataTypes',
+      items: tickBoxes(allowedTabularDataTypes, formValues.tabularDataTypes),
+      ...insertValidationErrors(validation?.formErrors.tabularDataTypes)
+    }
+  }
+
+  return fields
 }
 
 /**
@@ -243,6 +371,66 @@ export function questionDetailsViewModel(
 }
 
 /**
- * @import { ComponentDef, ComponentType, FormMetadata, FormDefinition, FormEditor, FormEditorGovukField, GovukField, InputFieldsComponentsDef, TextFieldComponent } from '@defra/forms-model'
+ * @param {{ message: string, fieldName: string }[]} errors
+ */
+export function wrapsErrors(errors) {
+  const details = errors.map((err) => {
+    return {
+      message: err.message,
+      path: [err.fieldName],
+      type: 'custom',
+      context: {
+        key: err.fieldName
+      }
+    }
+  })
+  return new Joi.ValidationError(errors[0].message, details, undefined)
+}
+
+/**
+ * @param { Partial<FormEditorInputQuestion> } payload
+ */
+export function determineFileTypeErrors(payload) {
+  if (!payload.fileTypes?.length) {
+    return wrapsErrors([
+      {
+        message: 'Select the type of file you want to upload',
+        fieldName: 'fileTypes'
+      }
+    ])
+  }
+
+  const errors = []
+  if (
+    payload.fileTypes.includes('documents') &&
+    !payload.documentTypes?.length
+  ) {
+    errors.push({
+      message: 'Choose the document file types you accept',
+      fieldName: 'documentTypes'
+    })
+  }
+
+  if (payload.fileTypes.includes('images') && !payload.imageTypes?.length) {
+    errors.push({
+      message: 'Choose the image file types you accept',
+      fieldName: 'imageTypes'
+    })
+  }
+
+  if (
+    payload.fileTypes.includes('tabular-data') &&
+    !payload.tabularDataTypes?.length
+  ) {
+    errors.push({
+      message: 'Choose the tabular data file types you accept',
+      fieldName: 'tabularDataTypes'
+    })
+  }
+
+  return errors.length ? wrapsErrors(errors) : undefined
+}
+/**
+ * @import { ComponentDef, FormMetadata, FormDefinition, FormEditor, FormEditorGovukField, FormEditorInputQuestion, GovukField, InputFieldsComponentsDef, TextFieldComponent } from '@defra/forms-model'
  * @import { ErrorDetailsItem, ValidationFailure } from '~/src/common/helpers/types.js'
  */

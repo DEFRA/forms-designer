@@ -27,9 +27,15 @@ export function addDateFieldProperties(question) {
 }
 
 /**
- * @param { TextFieldComponent | MultilineTextFieldComponent | NumberFieldComponent } question
+ * @param { TextFieldComponent | MultilineTextFieldComponent | NumberFieldComponent | FileUploadFieldComponent } question
  */
 export function addMinMaxFieldProperties(question) {
+  if (question.type === ComponentType.FileUploadField) {
+    return {
+      minFiles: question.schema.min,
+      maxFiles: question.schema.max
+    }
+  }
   return {
     minLength: question.schema.min,
     maxLength: question.schema.max
@@ -76,7 +82,8 @@ export function mapToQuestionOptions(question) {
   const hasMinMax = isTypeOfField(question.type, [
     ComponentType.TextField,
     ComponentType.MultilineTextField,
-    ComponentType.NumberField
+    ComponentType.NumberField,
+    ComponentType.FileUploadField
   ])
 
   const numberExtras = isNumberField
@@ -148,6 +155,6 @@ export function advancedSettingsFields(options, question, validation) {
 }
 
 /**
- * @import { ComponentDef, DatePartsFieldComponent, FormEditor, GovukField, MonthYearFieldComponent,  MultilineTextFieldComponent, NumberFieldComponent, TextFieldComponent } from '@defra/forms-model'
+ * @import { DatePartsFieldComponent, FileUploadFieldComponent, FormEditor, GovukField, MonthYearFieldComponent,  MultilineTextFieldComponent, NumberFieldComponent, TextFieldComponent } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

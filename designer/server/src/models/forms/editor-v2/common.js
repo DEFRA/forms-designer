@@ -110,5 +110,26 @@ export function buildPreviewUrl(slug) {
 }
 
 /**
+ * @param {{ text?: string, value?: string, checked?: boolean }[] | undefined } items
+ * @param {string[] | undefined} selectedItems
+ */
+export function tickBoxes(items, selectedItems) {
+  if (!selectedItems?.length) {
+    return items
+  }
+
+  return /** @type {{ text?: string, value?: string, checked?: boolean }[] } */ (
+    items
+      ? items.map((item) => {
+          return {
+            ...item,
+            checked: selectedItems.includes(item.value ?? '')
+          }
+        })
+      : []
+  )
+}
+
+/**
  * @import { ComponentDef, FormMetadata, FormDefinition } from '@defra/forms-model'
  */

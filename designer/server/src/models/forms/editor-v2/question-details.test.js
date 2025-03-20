@@ -90,9 +90,11 @@ describe('editor-v2 - question details model', () => {
 
     test('should return no extra options if type not yet implemented', () => {
       const question = /** @type {ComponentDef} */ ({
-        type: ComponentType.FileUploadField,
+        type: ComponentType.YesNoField,
         schema: {},
-        options: {}
+        options: {},
+        name: '',
+        title: ''
       })
       const res = getExtraFields(question, undefined)
       expect(res[0]).toBeUndefined()
@@ -127,6 +129,29 @@ describe('editor-v2 - question details model', () => {
         hintText: 'hintText',
         questionOptional: 'true',
         shortDescription: 'shortDescription'
+      })
+    })
+
+    test('should map extra fields if question is FileUploadComponent', () => {
+      const question = /** @type {InputFieldsComponentsDef} */ ({
+        name: 'name',
+        title: 'title',
+        hint: 'hintText',
+        options: { required: false },
+        shortDescription: 'shortDescription',
+        type: ComponentType.FileUploadField
+      })
+      const res = mapToQuestionDetails(question)
+      expect(res).toEqual({
+        name: 'name',
+        question: 'title',
+        hintText: 'hintText',
+        questionOptional: 'true',
+        shortDescription: 'shortDescription',
+        fileTypes: [],
+        documentTypes: [],
+        imageTypes: [],
+        tabularDataTypes: []
       })
     })
   })
