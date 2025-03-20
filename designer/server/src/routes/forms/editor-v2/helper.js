@@ -10,7 +10,7 @@ export function getQuestionType(yar, formValues) {
   )
 
   return /** @type {ComponentType | undefined} */ (
-    formValues ?? questionTypeFromSession
+    formValues?.questionType ?? questionTypeFromSession
   )
 }
 
