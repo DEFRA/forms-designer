@@ -2,6 +2,7 @@ import { ComponentType } from '@defra/forms-model'
 
 import {
   getExtraFields,
+  getSelectedFileTypes,
   hasDataOrErrorForDisplay,
   mapToQuestionDetails
 } from '~/src/models/forms/editor-v2/question-details.js'
@@ -152,6 +153,108 @@ describe('editor-v2 - question details model', () => {
         documentTypes: [],
         imageTypes: [],
         tabularDataTypes: []
+      })
+    })
+  })
+
+  describe('getSelectedFileTypes', () => {
+    test('should ignore when not file upload Field', () => {
+      const res = getSelectedFileTypes(undefined)
+      expect(res).toEqual({
+        fileTypes: undefined,
+        documentTypes: undefined,
+        imageTypes: undefined,
+        tabularDataTypes: undefined
+      })
+    })
+
+    test('should handle no types selected', () => {
+      const res = getSelectedFileTypes({
+        name: '',
+        title: '',
+        schema: {},
+        type: ComponentType.FileUploadField,
+        options: {
+          accept: undefined
+        }
+      })
+      expect(res).toEqual({
+        fileTypes: { fileTypes: [] },
+        documentTypes: { documentTypes: [] },
+        imageTypes: { imageTypes: [] },
+        tabularDataTypes: { tabularDataTypes: [] }
+      })
+    })
+
+    test('should handle doc types selected', () => {
+      const res = getSelectedFileTypes({
+        name: '',
+        title: '',
+        schema: {},
+        type: ComponentType.FileUploadField,
+        options: {
+          accept: 'doc,docx'
+        }
+      })
+      expect(res).toEqual({
+        fileTypes: { fileTypes: ['documents'] },
+        documentTypes: { documentTypes: ['doc', 'docx'] },
+        imageTypes: { imageTypes: [] },
+        tabularDataTypes: { tabularDataTypes: [] }
+      })
+    })
+
+    test('should handle image types selected', () => {
+      const res = getSelectedFileTypes({
+        name: '',
+        title: '',
+        schema: {},
+        type: ComponentType.FileUploadField,
+        options: {
+          accept: 'jpg,jpeg'
+        }
+      })
+      expect(res).toEqual({
+        fileTypes: { fileTypes: ['images'] },
+        documentTypes: { documentTypes: [] },
+        imageTypes: { imageTypes: ['jpg', 'jpeg'] },
+        tabularDataTypes: { tabularDataTypes: [] }
+      })
+    })
+
+    test('should handle tabular data types selected', () => {
+      const res = getSelectedFileTypes({
+        name: '',
+        title: '',
+        schema: {},
+        type: ComponentType.FileUploadField,
+        options: {
+          accept: 'csv'
+        }
+      })
+      expect(res).toEqual({
+        fileTypes: { fileTypes: ['tabular-data'] },
+        documentTypes: { documentTypes: [] },
+        imageTypes: { imageTypes: [] },
+        tabularDataTypes: { tabularDataTypes: ['csv'] }
+      })
+    })
+
+    test('should handle all types selected', () => {
+      const res = getSelectedFileTypes({
+        name: '',
+        title: '',
+        schema: {},
+        type: ComponentType.FileUploadField,
+        options: {
+          accept: 'csv,jpg,doc'
+        }
+      })
+      expect(res).toEqual({
+        fileTypes: { fileTypes: ['documents', 'images', 'tabular-data'] },
+        documentTypes: { documentTypes: ['doc'] },
+        imageTypes: { imageTypes: ['jpg'] },
+        tabularDataTypes: { tabularDataTypes: ['csv'] }
       })
     })
   })
