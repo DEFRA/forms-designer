@@ -1,6 +1,7 @@
 import { ComponentType } from '@defra/forms-model'
 
 import {
+  getAdditionalSchema,
   getFieldComponentType,
   mapFileTypes,
   mapQuestionDetails
@@ -156,6 +157,17 @@ describe('editor-v2 - advanced settings fields model', () => {
       ).toBe('doc,docx,csv')
     })
 
+    test('should remove sub-types even if no sub-types, if parent type not selected', () => {
+      expect(
+        mapFileTypes({
+          fileTypes: ['documents', 'tabular-data'],
+          documentTypes: ['doc', 'docx'],
+          imageTypes: undefined,
+          tabularDataTypes: ['csv']
+        }).accept
+      ).toBe('doc,docx,csv')
+    })
+
     test('should handle undefined lists', () => {
       expect(
         mapFileTypes({
@@ -165,6 +177,35 @@ describe('editor-v2 - advanced settings fields model', () => {
           tabularDataTypes: undefined
         })
       ).toEqual({})
+    })
+  })
+
+  describe('getAdditionalSchema', () => {
+    test('should handle minLength/maxLength', () => {
+      expect(
+        getAdditionalSchema({
+          minLength: '1',
+          maxLength: '2'
+        })
+      ).toEqual({ min: '1', max: '2' })
+    })
+
+    test('should handle min/max', () => {
+      expect(
+        getAdditionalSchema({
+          min: '1',
+          max: '2'
+        })
+      ).toEqual({ min: '1', max: '2' })
+    })
+
+    test('should handle minFiles/maxFiles', () => {
+      expect(
+        getAdditionalSchema({
+          minFiles: '1',
+          maxFiles: '2'
+        })
+      ).toEqual({ min: '1', max: '2' })
     })
   })
 })

@@ -430,7 +430,7 @@ function getAdditionalOptions(payload) {
 /**
  * @param {Partial<FormEditorInputQuestion>} payload
  */
-function getAdditionalSchema(payload) {
+export function getAdditionalSchema(payload) {
   const additionalSchema = {}
   if (payload.minLength ?? payload.min ?? payload.minFiles) {
     additionalSchema.min = payload.minLength ?? payload.min ?? payload.minFiles
