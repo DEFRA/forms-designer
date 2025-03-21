@@ -2,11 +2,24 @@
 {% set focusClass = " pages-reorder-panel-focus" if params.isFocus else "" %}
 {% set upHidden = "-hidden" if params.isFirstRow else "" %}
 {% set downHidden = "-hidden" if params.isLastRow else "" %}
-{% set upAuto = "autofocus" if params.isFocus and params.prevFocusDirection == "up" else "" %}
-{% set downAuto = "autofocus" if params.isFocus and params.prevFocusDirection == "down" else "" %}
+{% set upAuto = "autofocus" if params.isFocus and (params.prevFocusDirection == "up" or params.isLastRow) else "" %}
+{% set downAuto = "autofocus" if params.isFocus and (params.prevFocusDirection == "down" or params.isFirstRow) else "" %}
 
 {% set ariaLabelUp = "Button, move page up, Page " + params.pageNum + " of " + params.totalPages + " : " + params.pageTitle + "." %}
 {% set ariaLabelDown = "Button, move page down, Page " + params.pageNum + " of " + params.totalPages + " : " + params.pageTitle + "." %}
+{% set ariaAlert = "The list of pages has been reordered, " + params.pageTitle + " is now page " + params.pageNum + " of " + params.totalPages + ". " if params.isFocus else "" %}
+
+{% if params.isFocus %}
+  {% if params.prevFocusDirection == "up" or params.isLastRow %}
+    {% set ariaLabelUp = ariaAlert + ariaLabelUp %}
+  {% endif %}
+  {% if params.prevFocusDirection == "down" or params.isFirstRow %}
+    {% set ariaLabelDown = ariaAlert + ariaLabelDown %}
+  {% endif %}
+{% endif %}
+
+{% set ariaTags = "aria-live=alert" if params.isFocus else "" %}
+{% set ariaContent = "<p class='govuk-visually-hidden'>The list of pages has been reordered, " + params.pageTitle + " is now page " + params.pageNum + " of " + params.totalPages + ".</p>" if params.isFocus else "" %}
 
 <li>
   <div class="govuk-summary-card pages-reorder-panel{{ focusClass }}">
