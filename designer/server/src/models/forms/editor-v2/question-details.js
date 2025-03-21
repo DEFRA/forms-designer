@@ -54,12 +54,7 @@ export function getSelectedFileTypes(question) {
   const isFileUpload = question?.type === ComponentType.FileUploadField
 
   if (!isFileUpload) {
-    return {
-      fileTypes: undefined,
-      documentTypes: undefined,
-      imageTypes: undefined,
-      tabularDataTypes: undefined
-    }
+    return {}
   }
 
   const selectedTypes = question.options.accept?.split(',')
