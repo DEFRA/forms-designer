@@ -2,6 +2,7 @@ import { ComponentType } from '@defra/forms-model'
 
 import {
   getFieldComponentType,
+  mapFileTypes,
   mapQuestionDetails
 } from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
 
@@ -129,6 +130,30 @@ describe('editor-v2 - advanced settings fields model', () => {
           precision: '2'
         }
       })
+    })
+  })
+
+  describe('mapFileTypes', () => {
+    test('should combine all types into one list', () => {
+      expect(
+        mapFileTypes({
+          fileTypes: ['documents', 'images', 'tabular-data'],
+          documentTypes: ['doc', 'docx'],
+          imageTypes: ['jpg', 'png'],
+          tabularDataTypes: ['csv']
+        }).accept
+      ).toBe('doc,docx,jpg,png,csv')
+    })
+
+    test('should remove sub-types if parent type not selected', () => {
+      expect(
+        mapFileTypes({
+          fileTypes: ['documents', 'tabular-data'],
+          documentTypes: ['doc', 'docx'],
+          imageTypes: ['jpg', 'png'],
+          tabularDataTypes: ['csv']
+        }).accept
+      ).toBe('doc,docx,csv')
     })
   })
 })

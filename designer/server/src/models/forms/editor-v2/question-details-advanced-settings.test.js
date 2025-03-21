@@ -2,6 +2,7 @@ import { ComponentType } from '@defra/forms-model'
 
 import {
   addDateFieldProperties,
+  addMinMaxFieldProperties,
   addMultiLineFieldProperties,
   addNumberFieldProperties,
   mapToQuestionOptions
@@ -115,6 +116,42 @@ describe('editor-v2 - question details advanced settings model', () => {
         classes: 'classes',
         prefix: 'pr',
         suffix: 'su'
+      })
+    })
+  })
+
+  describe('addMinMaxFieldProperties', () => {
+    test('should add minLength/maxLength if not file upload', () => {
+      const res = addMinMaxFieldProperties({
+        type: ComponentType.TextField,
+        name: '',
+        title: '',
+        options: {},
+        schema: {
+          min: 1,
+          max: 10
+        }
+      })
+      expect(res).toEqual({
+        minLength: 1,
+        maxLength: 10
+      })
+    })
+
+    test('should add minFiles/maxFiles if file upload', () => {
+      const res = addMinMaxFieldProperties({
+        type: ComponentType.FileUploadField,
+        name: '',
+        title: '',
+        options: {},
+        schema: {
+          min: 1,
+          max: 10
+        }
+      })
+      expect(res).toEqual({
+        minFiles: 1,
+        maxFiles: 10
       })
     })
   })

@@ -158,6 +158,9 @@ export function questionsViewModel(
         }
       }),
     buttonText: SAVE_AND_CONTINUE,
+    preventAddQuestion: components.some(
+      (comp) => comp.type === ComponentType.FileUploadField
+    ),
     notification
   }
 }

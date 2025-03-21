@@ -124,7 +124,7 @@ export const allAdvancedSettingsFields =
       name: 'minFiles',
       id: 'minFiles',
       label: {
-        text: 'Minimum file count',
+        text: 'Minimum file count (optional)',
         classes: GOVUK_LABEL__M
       },
       hint: {
@@ -136,7 +136,7 @@ export const allAdvancedSettingsFields =
       name: 'maxFiles',
       id: 'maxFiles',
       label: {
-        text: 'Maximum file count',
+        text: 'Maximum file count (optional)',
         classes: GOVUK_LABEL__M
       },
       hint: {
@@ -451,9 +451,15 @@ function getAdditionalSchema(payload) {
  * @param {Partial<FormEditorInputQuestion>} payload
  */
 export function mapFileTypes(payload) {
-  const combinedTypes = (payload.documentTypes ?? [])
-    .concat(payload.imageTypes ?? [])
-    .concat(payload.tabularDataTypes ?? [])
+  const documentParentSelected = payload.fileTypes?.includes('documents')
+  const imagesParentSelected = payload.fileTypes?.includes('images')
+  const tabularDataParentSelected = payload.fileTypes?.includes('tabular-data')
+
+  const combinedTypes = (
+    documentParentSelected ? (payload.documentTypes ?? []) : []
+  )
+    .concat(imagesParentSelected ? (payload.imageTypes ?? []) : [])
+    .concat(tabularDataParentSelected ? (payload.tabularDataTypes ?? []) : [])
   return combinedTypes.length ? { accept: combinedTypes.join(',') } : {}
 }
 
