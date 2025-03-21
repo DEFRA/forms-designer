@@ -5,6 +5,9 @@
 {% set upAuto = "autofocus" if params.isFocus and params.prevFocusDirection == "up" else "" %}
 {% set downAuto = "autofocus" if params.isFocus and params.prevFocusDirection == "down" else "" %}
 
+{% set ariaLabelUp = "Button, move page up, Page " + params.pageNum + " of " + params.totalPages + " : " + params.pageTitle + "." %}
+{% set ariaLabelDown = "Button, move page down, Page " + params.pageNum + " of " + params.totalPages + " : " + params.pageTitle + "." %}
+
 <li>
   <div class="govuk-summary-card pages-reorder-panel{{ focusClass }}">
     <div class="govuk-summary-card__title-wrapper">
@@ -12,8 +15,8 @@
         {{ cardTitle }}
       </h2>
       <div class="govuk-button-group">
-        <button type="submit" name="movement" class="govuk-button govuk-button--secondary reorder-button{{upHidden}}" {{upAuto}} value="up|{{ params.pageId}}">Up</button>
-        <button type="submit" name="movement" class="govuk-button govuk-button--secondary reorder-button{{downHidden}}" {{downAuto}} value="down|{{ params.pageId}}">Down</button>
+        <button type="submit" name="movement" id="focus-up-{{ params.pageId }}" class="govuk-button govuk-button--secondary reorder-button{{ upHidden }}" {{ upAuto }} value="up|{{ params.pageId }}" aria-label="{{ ariaLabelUp }}">Up</button>
+        <button type="submit" name="movement" id="focus-down-{{ params.pageId }}" class="govuk-button govuk-button--secondary reorder-button{{ downHidden }}" {{ downAuto }} value="down|{{ params.pageId }}" aria-label="{{ ariaLabelDown }}">Down</button>
       </div>
     </div>
   </div>
