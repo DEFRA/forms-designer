@@ -213,7 +213,7 @@ export function questionDetailsViewModel(
   )
 
   const extraFieldNames = extraFields.map((field) => field.name ?? 'unknown')
-  const allFieldNames = Object.keys(baseFields).concat(extraFieldNames)
+  const allFieldNames = Object.keys(baseFields.fields).concat(extraFieldNames)
   const errorList = buildErrorList(formErrors, allFieldNames)
 
   return {

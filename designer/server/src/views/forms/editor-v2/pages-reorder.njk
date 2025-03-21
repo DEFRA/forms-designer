@@ -23,6 +23,7 @@
         {{ appPagesReorderPanel({
           formName: name,
           pageNum: loop.index,
+          totalPages: pages.length,
           pageId: page.id,
           pageTitle: page.title,
           actions: page.actions,
