@@ -11,11 +11,12 @@ import {
   baseModelFields,
   getFormSpecificNavigation,
   getPageNum,
-  getQuestionNum
+  getQuestionNum,
+  getQuestionsOnPage
 } from '~/src/models/forms/editor-v2/common.js'
 import { formOverviewPath } from '~/src/models/links.js'
 
-const questionTypeRadioItems = [
+const questionTypeRadioItems = /** @type {FormEditorCheckbox[]} */ ([
   {
     text: 'Written answer',
     hint: {
@@ -65,7 +66,7 @@ const questionTypeRadioItems = [
     text: 'A list of options that users can choose from',
     value: ComponentType.SelectField
   }
-]
+])
 
 const writtenAnswerSubItems = [
   {
@@ -83,6 +84,22 @@ const dateSubItems = [
   { text: 'Day, month and year', value: 'DatePartsField' },
   { text: 'Month and year', value: 'MonthYearField' }
 ]
+
+/**
+ * @param {FormEditorCheckbox[]} questionTypes
+ * @param {ComponentDef[]} componentsSoFar
+ */
+export function filterQuestionTypes(questionTypes, componentsSoFar) {
+  const hasFormComponent = componentsSoFar.some(
+    (x) => x.type !== ComponentType.Markdown
+  )
+  const preventFileUpload =
+    componentsSoFar.some((x) => x.type === ComponentType.FileUploadField) ||
+    hasFormComponent
+  return preventFileUpload
+    ? questionTypes.filter((q) => q.value !== ComponentType.FileUploadField)
+    : questionTypes
+}
 
 /**
  * @param {FormMetadata} metadata
@@ -119,7 +136,10 @@ export function questionTypeViewModel(
         idPrefix: 'questionType',
         name: 'questionType',
         value: formValues?.questionType,
-        items: questionTypeRadioItems,
+        items: filterQuestionTypes(
+          questionTypeRadioItems,
+          getQuestionsOnPage(definition, pageId)
+        ),
         ...insertValidationErrors(validation?.formErrors.questionType)
       },
       writtenAnswerSub: {
@@ -156,6 +176,6 @@ export function questionTypeViewModel(
 }
 
 /**
- * @import { FormMetadata, FormDefinition, FormEditor } from '@defra/forms-model'
+ * @import { ComponentDef, FormEditorCheckbox, FormMetadata, FormDefinition, FormEditor } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

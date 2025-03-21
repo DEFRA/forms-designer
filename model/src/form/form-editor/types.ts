@@ -238,3 +238,18 @@ export interface FormEditorGovukField {
   tabularDataTypes?: GovukField
   errorMessage?: { text: string }
 }
+
+export interface FormEditorCheckbox {
+  text?: string
+  hint?: {
+    text?: string
+  }
+  value?: string
+  divider?:
+    | undefined
+    | {
+        text?: string
+        hint?: string
+        value?: string
+      }
+}
