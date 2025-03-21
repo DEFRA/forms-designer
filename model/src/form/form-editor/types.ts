@@ -245,11 +245,9 @@ export interface FormEditorCheckbox {
     text?: string
   }
   value?: string
-  divider?:
-    | undefined
-    | {
-        text?: string
-        hint?: string
-        value?: string
-      }
+  divider?: {
+    text?: string
+    hint?: string
+    value?: string
+  }
 }

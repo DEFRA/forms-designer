@@ -135,5 +135,24 @@ describe('editor-v2 - model', () => {
         { text: 'option2', value: 'value2', checked: true }
       ])
     })
+
+    test('should ignore if value is undefined', () => {
+      const res = tickBoxes(
+        [
+          { text: 'option1', value: undefined },
+          { text: 'option2', value: 'value2' }
+        ],
+        ['value1']
+      )
+      expect(res).toEqual([
+        { text: 'option1', value: undefined, checked: false },
+        { text: 'option2', value: 'value2', checked: false }
+      ])
+    })
+
+    test('should handle undefined items', () => {
+      const res = tickBoxes(undefined, ['value1'])
+      expect(res).toEqual([])
+    })
   })
 })

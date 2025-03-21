@@ -155,5 +155,16 @@ describe('editor-v2 - advanced settings fields model', () => {
         }).accept
       ).toBe('doc,docx,csv')
     })
+
+    test('should handle undefined lists', () => {
+      expect(
+        mapFileTypes({
+          fileTypes: [],
+          documentTypes: undefined,
+          imageTypes: undefined,
+          tabularDataTypes: undefined
+        })
+      ).toEqual({})
+    })
   })
 })
