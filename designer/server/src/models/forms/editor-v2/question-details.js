@@ -147,6 +147,57 @@ export function mapToQuestionDetails(question) {
 }
 
 /**
+ * @param {{ fields: FormEditorGovukField }} fields
+ * @param {ComponentType} questionType
+ * @param {{ tabularDataTypes?: string[] | undefined; imageTypes?: string[] | undefined; documentTypes?: string[] | undefined; fileTypes?: string[] | undefined; name: string; question: string | undefined; hintText: string | undefined; questionOptional: string; shortDescription: string | undefined; }} formValues
+ * @param { ErrorDetails | undefined } formErrors
+ */
+function addFileUploadFields(fields, questionType, formValues, formErrors) {
+  if (questionType === ComponentType.FileUploadField) {
+    // Causes side-effects
+    fields.fields.fileTypes = {
+      id: 'fileTypes',
+      name: 'fileTypes',
+      idPrefix: 'fileTypes',
+      fieldset: {
+        legend: {
+          text: 'Select the file types you accept',
+          isPageHeading: false,
+          classes: 'govuk-fieldset__legend--m'
+        }
+      },
+      items: tickBoxes(allowedParentFileTypes, formValues.fileTypes),
+      ...insertValidationErrors(formErrors?.fileTypes)
+    }
+
+    fields.fields.documentTypes = {
+      id: 'documentTypes',
+      name: 'documentTypes',
+      idPrefix: 'documentTypes',
+      items: tickBoxes(allowedDocumentTypes, formValues.documentTypes),
+      ...insertValidationErrors(formErrors?.documentTypes)
+    }
+
+    fields.fields.imageTypes = {
+      id: 'imageTypes',
+      name: 'imageTypes',
+      idPrefix: 'imageTypes',
+      items: tickBoxes(allowedImageTypes, formValues.imageTypes),
+      ...insertValidationErrors(formErrors?.imageTypes)
+    }
+
+    fields.fields.tabularDataTypes = {
+      id: 'tabularDataTypes',
+      name: 'tabularDataTypes',
+      idPrefix: 'tabularDataTypes',
+      items: tickBoxes(allowedTabularDataTypes, formValues.tabularDataTypes),
+      ...insertValidationErrors(formErrors?.tabularDataTypes)
+    }
+  }
+
+  return fields
+}
+/**
  * @param { InputFieldsComponentsDef | undefined } question
  * @param { ValidationFailure<FormEditor> | undefined } validation
  */
@@ -207,46 +258,13 @@ function questionDetailsFields(question, validation) {
     }
   })
 
-  if (question?.type === ComponentType.FileUploadField) {
-    fields.fields.fileTypes = {
-      id: 'fileTypes',
-      name: 'fileTypes',
-      idPrefix: 'fileTypes',
-      fieldset: {
-        legend: {
-          text: 'Select the file types you accept',
-          isPageHeading: false,
-          classes: 'govuk-fieldset__legend--m'
-        }
-      },
-      items: tickBoxes(allowedParentFileTypes, formValues.fileTypes),
-      ...insertValidationErrors(validation?.formErrors.fileTypes)
-    }
-
-    fields.fields.documentTypes = {
-      id: 'documentTypes',
-      name: 'documentTypes',
-      idPrefix: 'documentTypes',
-      items: tickBoxes(allowedDocumentTypes, formValues.documentTypes),
-      ...insertValidationErrors(validation?.formErrors.documentTypes)
-    }
-
-    fields.fields.imageTypes = {
-      id: 'imageTypes',
-      name: 'imageTypes',
-      idPrefix: 'imageTypes',
-      items: tickBoxes(allowedImageTypes, formValues.imageTypes),
-      ...insertValidationErrors(validation?.formErrors.imageTypes)
-    }
-
-    fields.fields.tabularDataTypes = {
-      id: 'tabularDataTypes',
-      name: 'tabularDataTypes',
-      idPrefix: 'tabularDataTypes',
-      items: tickBoxes(allowedTabularDataTypes, formValues.tabularDataTypes),
-      ...insertValidationErrors(validation?.formErrors.tabularDataTypes)
-    }
-  }
+  // Causes side-effects
+  addFileUploadFields(
+    fields,
+    /** @type {ComponentType} */ (question?.type),
+    formValues,
+    validation?.formErrors
+  )
 
   return fields
 }
@@ -371,5 +389,5 @@ export function questionDetailsViewModel(
 
 /**
  * @import { ComponentDef, FormMetadata, FormDefinition, FormEditor, FormEditorGovukField, GovukField, InputFieldsComponentsDef, TextFieldComponent } from '@defra/forms-model'
- * @import { ErrorDetailsItem, ValidationFailure } from '~/src/common/helpers/types.js'
+ * @import { ErrorDetails, ErrorDetailsItem, ValidationFailure } from '~/src/common/helpers/types.js'
  */
