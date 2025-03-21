@@ -51,7 +51,6 @@
     "@hapi/yar": "^11.0.2",
     "@types/dagre": "^0.7.52",
     "@types/govuk-frontend": "^5.7.0",
-    "@types/hapi__catbox-memory": "^6.0.2",
     "@types/hapi__cookie": "^12.0.5",
     "@types/hapi__crumb": "^7.3.7",
     "@types/hapi__inert": "^5.2.10",

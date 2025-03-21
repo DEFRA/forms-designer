@@ -28,7 +28,6 @@
   },
   "devDependencies": {
     "@types/slug": "^5.0.9",
-    "@types/hapi__catbox-memory": "^6.0.2",
     "joi": "^17.13.3",
     "tsc-alias": "^1.8.11"
   },
