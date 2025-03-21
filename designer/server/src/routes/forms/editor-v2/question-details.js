@@ -1,9 +1,7 @@
-import { ComponentType } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
-import { combineErrorLists } from '~/src/common/helpers/build-error-details.js'
 import {
   addPageAndFirstQuestion,
   addQuestion,
@@ -94,14 +92,6 @@ export default [
         id: questionId !== 'new' ? questionId : undefined
       }
 
-      if (questionDetails.type === ComponentType.FileUploadField) {
-        const error = viewModel.determineFileTypeErrors(payload)
-        if (error) {
-          // const req = /** @type {Request<{ Payload: Pick<FormEditorInputQuestion, 'question' | 'hintText' | 'shortDescription' | 'questionOptional' | 'questionType' | 'fileTypes' | 'documentTypes' | 'imageTypes' | 'tabularDataTypes' >}>} */ (request)
-          // TODO return redirectWithErrors(request, h, error, errorKey)
-        }
-      }
-
       // Save page and first question
       const metadata = await forms.get(slug, token)
       let finalPageId = pageId
@@ -136,20 +126,6 @@ export default [
       validate: {
         payload: schema,
         failAction: (request, h, error) => {
-          const payload = /** @type {{ questionType: ComponentType }} */ (
-            request.payload
-          )
-          if (payload.questionType === ComponentType.FileUploadField) {
-            const fileTypeErrors = viewModel.determineFileTypeErrors(
-              /** @type {Partial<FormEditorInputQuestion>} */ (request.payload)
-            )
-            if (fileTypeErrors) {
-              error = combineErrorLists(
-                /** @type {ValidationError} */ (error),
-                fileTypeErrors
-              )
-            }
-          }
           return redirectWithErrors(request, h, error, errorKey)
         }
       },
@@ -166,6 +142,5 @@ export default [
 
 /**
  * @import { FormEditorInputQuestion } from '@defra/forms-model'
- * @import { Request, ServerRoute } from '@hapi/hapi'
- * @import { ValidationError } from 'joi'
+ * @import { ServerRoute } from '@hapi/hapi'
  */

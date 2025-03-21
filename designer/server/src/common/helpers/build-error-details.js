@@ -42,16 +42,6 @@ export function buildErrorList(errorDetails, names) {
 }
 
 /**
- * @param {ValidationError} list1
- * @param {ValidationError} list2
- */
-export function combineErrorLists(list1, list2) {
-  const details = list1.details.concat(list2.details)
-  list1.details = details
-  return list1
-}
-
-/**
  * @import { ValidationError } from 'joi'
  * @import { ErrorDetails, ErrorDetailsItem } from '~/src/common/helpers/types.js'
  */

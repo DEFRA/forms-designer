@@ -1,5 +1,4 @@
 import { ComponentType, randomId } from '@defra/forms-model'
-import Joi from 'joi'
 
 import { QuestionTypeDescriptions } from '~/src/common/constants/editor.js'
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
@@ -371,66 +370,6 @@ export function questionDetailsViewModel(
 }
 
 /**
- * @param {{ message: string, fieldName: string }[]} errors
- */
-export function wrapsErrors(errors) {
-  const details = errors.map((err) => {
-    return {
-      message: err.message,
-      path: [err.fieldName],
-      type: 'custom',
-      context: {
-        key: err.fieldName
-      }
-    }
-  })
-  return new Joi.ValidationError(errors[0].message, details, undefined)
-}
-
-/**
- * @param { Partial<FormEditorInputQuestion> } payload
- */
-export function determineFileTypeErrors(payload) {
-  if (!payload.fileTypes?.length) {
-    return wrapsErrors([
-      {
-        message: 'Select the type of file you want to upload',
-        fieldName: 'fileTypes'
-      }
-    ])
-  }
-
-  const errors = []
-  if (
-    payload.fileTypes.includes('documents') &&
-    !payload.documentTypes?.length
-  ) {
-    errors.push({
-      message: 'Choose the document file types you accept',
-      fieldName: 'documentTypes'
-    })
-  }
-
-  if (payload.fileTypes.includes('images') && !payload.imageTypes?.length) {
-    errors.push({
-      message: 'Choose the image file types you accept',
-      fieldName: 'imageTypes'
-    })
-  }
-
-  if (
-    payload.fileTypes.includes('tabular-data') &&
-    !payload.tabularDataTypes?.length
-  ) {
-    errors.push({
-      message: 'Choose the tabular data file types you accept',
-      fieldName: 'tabularDataTypes'
-    })
-  }
-
-  return errors.length ? wrapsErrors(errors) : undefined
-}
-/**
- * @import { ComponentDef, FormMetadata, FormDefinition, FormEditor, FormEditorGovukField, FormEditorInputQuestion, GovukField, InputFieldsComponentsDef, TextFieldComponent } from '@defra/forms-model'
+ * @import { ComponentDef, FormMetadata, FormDefinition, FormEditor, FormEditorGovukField, GovukField, InputFieldsComponentsDef, TextFieldComponent } from '@defra/forms-model'
  * @import { ErrorDetailsItem, ValidationFailure } from '~/src/common/helpers/types.js'
  */
