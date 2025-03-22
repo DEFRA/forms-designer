@@ -44,10 +44,12 @@
       }}
     {% endif %}
     <div class="govuk-button-group govuk-!-margin-top-6">
+      {% if not preventAddQuestion %}
       {{ govukButton({
         text: 'Add another question',
         href: baseUrl + '/question/new'
       }) }}
+      {% endif %}
 
       <a href="/redesigntest/templates/delete.html" class="govuk-link govuk-link--no-visited-state">
         Delete page

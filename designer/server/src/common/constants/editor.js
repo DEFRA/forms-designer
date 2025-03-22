@@ -63,6 +63,8 @@ export const QuestionAdvancedSettings = /** @enum {string} */ {
   Classes: 'classes',
   Min: 'min',
   Max: 'max',
+  MinFiles: 'minFiles',
+  MaxFiles: 'maxFiles',
   MinLength: 'minLength',
   MaxLength: 'maxLength',
   MaxFuture: 'maxFuture',

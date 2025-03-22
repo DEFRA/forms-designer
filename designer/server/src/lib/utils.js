@@ -36,6 +36,7 @@ export function slugify(input = '', options = {}) {
 /**
  *
  * @param {string | undefined} checkboxVal
+ * @returns {boolean}
  */
 export function isCheckboxSelected(checkboxVal) {
   return checkboxVal === 'true' || checkboxVal === 'Y'

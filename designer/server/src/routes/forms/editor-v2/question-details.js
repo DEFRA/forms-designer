@@ -74,7 +74,7 @@ export default [
   }),
 
   /**
-   * @satisfies {ServerRoute<{ Payload: Pick<FormEditorInputQuestion, 'question' | 'hintText' | 'shortDescription' | 'questionOptional'> }>}
+   * @satisfies {ServerRoute<{ Payload: Pick<FormEditorInputQuestion, 'question' | 'hintText' | 'shortDescription' | 'questionOptional' | 'questionType' | 'fileTypes' | 'documentTypes' | 'imageTypes' | 'tabularDataTypes' > }>}
    */
   ({
     method: 'POST',
@@ -141,6 +141,6 @@ export default [
 ]
 
 /**
- * @import { FormEditorInputQuestion, ComponentDef, ComponentType } from '@defra/forms-model'
+ * @import { FormEditorInputQuestion } from '@defra/forms-model'
  * @import { ServerRoute } from '@hapi/hapi'
  */

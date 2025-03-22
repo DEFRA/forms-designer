@@ -7,7 +7,8 @@ import {
 import {
   getPageNum,
   getQuestionNum,
-  getQuestionsOnPage
+  getQuestionsOnPage,
+  tickBoxes
 } from '~/src/models/forms/editor-v2/common.js'
 
 describe('editor-v2 - model', () => {
@@ -98,6 +99,60 @@ describe('editor-v2 - model', () => {
         'qxxx'
       )
       expect(questionNum).toBe(3)
+    })
+  })
+
+  describe('tickBoxes', () => {
+    test('should return unchanged if no selections', () => {
+      const res = tickBoxes([{ text: 'option1', value: 'value1' }], [])
+      expect(res).toEqual([{ text: 'option1', value: 'value1' }])
+    })
+
+    test('should select first item if first selection', () => {
+      const res = tickBoxes(
+        [
+          { text: 'option1', value: 'value1' },
+          { text: 'option2', value: 'value2' }
+        ],
+        ['value1']
+      )
+      expect(res).toEqual([
+        { text: 'option1', value: 'value1', checked: true },
+        { text: 'option2', value: 'value2', checked: false }
+      ])
+    })
+
+    test('should select second item if second selection', () => {
+      const res = tickBoxes(
+        [
+          { text: 'option1', value: 'value1' },
+          { text: 'option2', value: 'value2' }
+        ],
+        ['value2']
+      )
+      expect(res).toEqual([
+        { text: 'option1', value: 'value1', checked: false },
+        { text: 'option2', value: 'value2', checked: true }
+      ])
+    })
+
+    test('should ignore if value is undefined', () => {
+      const res = tickBoxes(
+        [
+          { text: 'option1', value: undefined },
+          { text: 'option2', value: 'value2' }
+        ],
+        ['value1']
+      )
+      expect(res).toEqual([
+        { text: 'option1', value: undefined, checked: false },
+        { text: 'option2', value: 'value2', checked: false }
+      ])
+    })
+
+    test('should handle undefined items', () => {
+      const res = tickBoxes(undefined, ['value1'])
+      expect(res).toEqual([])
     })
   })
 })

@@ -131,6 +131,36 @@ export interface FormEditor {
    * The maximum days in the past to allow for a date
    */
   maxPast: string
+
+  /**
+   * The minimum number of files to upload
+   */
+  minFiles: string
+
+  /**
+   * The maximum number of files to upload
+   */
+  maxFiles: string
+
+  /**
+   * The type of files for upload
+   */
+  fileTypes: string[]
+
+  /**
+   * The types of document files for upload
+   */
+  documentTypes: string[]
+
+  /**
+   * The types of image files for upload
+   */
+  imageTypes: string[]
+
+  /**
+   * The types of tabular data files for upload
+   */
+  tabularDataTypes: string[]
 }
 
 export type FormEditorInputPage = Pick<
@@ -163,6 +193,12 @@ export type FormEditorInputQuestion = Pick<
   | 'max'
   | 'maxFuture'
   | 'maxPast'
+  | 'minFiles'
+  | 'maxFiles'
+  | 'fileTypes'
+  | 'documentTypes'
+  | 'imageTypes'
+  | 'tabularDataTypes'
 >
 
 export type FormEditorInputPageSettings = Pick<
@@ -179,11 +215,14 @@ export interface GovukField {
   id?: string
   name?: string
   idPrefix?: string
-  value?: string | boolean | number
+  fieldset?: {
+    legend?: { text?: string; isPageHeading?: boolean; classes?: string }
+  }
+  value?: string | boolean | number | string[]
   classes?: string
   label?: { text?: string; html?: string; classes?: string }
   hint?: { text?: string; html?: string; classes?: string }
-  items?: { text?: string; value?: string }
+  items?: { text?: string; value?: string; checked?: boolean }[]
   rows?: number
   type?: string
 }
@@ -193,5 +232,22 @@ export interface FormEditorGovukField {
   hintText?: GovukField
   questionOptional?: GovukField
   shortDescription?: GovukField
+  fileTypes?: GovukField
+  documentTypes?: GovukField
+  imageTypes?: GovukField
+  tabularDataTypes?: GovukField
   errorMessage?: { text: string }
+}
+
+export interface FormEditorCheckbox {
+  text?: string
+  hint?: {
+    text?: string
+  }
+  value?: string
+  divider?: {
+    text?: string
+    hint?: string
+    value?: string
+  }
 }

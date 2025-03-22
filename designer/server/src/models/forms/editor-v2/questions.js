@@ -75,6 +75,43 @@ export function hasUnderlyingData(pageHeadingVal, guidanceTextVal) {
 }
 
 /**
+ * @param {ComponentDef[]} components
+ * @param {string} baseUrl
+ */
+function mapQuestionRows(components, baseUrl) {
+  return components
+    .filter(
+      (comp, idx) =>
+        (comp.type !== ComponentType.Markdown && idx === 0) || idx > 0
+    )
+    .map((comp2, idx2) => {
+      return {
+        key: {
+          text: `Question ${idx2 + 1}`,
+          classes: 'govuk-!-width-one-quarter'
+        },
+        value: {
+          text:
+            comp2.options?.required === false
+              ? `${comp2.title} (optional)`
+              : comp2.title,
+          classes: 'govuk-!-width-one-half'
+        },
+        actions: {
+          items: [
+            {
+              href: `${baseUrl}/question/${comp2.id}/details`,
+              text: 'Change',
+              visuallyHiddenText: 'name',
+              classes: 'govuk-link--no-visited-state govuk-!-width-one-quarter'
+            }
+          ]
+        }
+      }
+    })
+}
+
+/**
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  * @param {string} pageId
@@ -126,43 +163,16 @@ export function questionsViewModel(
     errorList: buildErrorList(formErrors, ['questions']),
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
-    questionRows: components
-      .filter(
-        (comp, idx) =>
-          (comp.type !== ComponentType.Markdown && idx === 0) || idx > 0
-      )
-      .map((comp2, idx2) => {
-        return {
-          key: {
-            text: `Question ${idx2 + 1}`,
-            classes: 'govuk-!-width-one-quarter'
-          },
-          value: {
-            text:
-              comp2.options?.required === false
-                ? `${comp2.title} (optional)`
-                : comp2.title,
-            classes: 'govuk-!-width-one-half'
-          },
-          actions: {
-            items: [
-              {
-                href: `${baseUrl}/question/${comp2.id}/details`,
-                text: 'Change',
-                visuallyHiddenText: 'name',
-                classes:
-                  'govuk-link--no-visited-state govuk-!-width-one-quarter'
-              }
-            ]
-          }
-        }
-      }),
+    questionRows: mapQuestionRows(components, baseUrl),
     buttonText: SAVE_AND_CONTINUE,
+    preventAddQuestion: components.some(
+      (comp) => comp.type === ComponentType.FileUploadField
+    ),
     notification
   }
 }
 
 /**
- * @import { FormMetadata, FormDefinition, FormEditor, MarkdownComponent } from '@defra/forms-model'
+ * @import { ComponentDef, FormMetadata, FormDefinition, FormEditor, MarkdownComponent } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

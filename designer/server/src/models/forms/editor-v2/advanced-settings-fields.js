@@ -1,11 +1,16 @@
 import {
   ComponentType,
   classesSchema,
+  documentTypesSchema,
+  fileTypesSchema,
   hintTextSchema,
+  imageTypesSchema,
+  maxFilesSchema,
   maxFutureSchema,
   maxLengthSchema,
   maxPastSchema,
   maxSchema,
+  minFilesSchema,
   minLengthSchema,
   minSchema,
   nameSchema,
@@ -17,7 +22,8 @@ import {
   regexSchema,
   rowsSchema,
   shortDescriptionSchema,
-  suffixSchema
+  suffixSchema,
+  tabularDataTypesSchema
 } from '@defra/forms-model'
 import Joi from 'joi'
 
@@ -73,7 +79,10 @@ export const advancedSettingsPerComponentType =
     Details: [],
     List: [],
     Markdown: [],
-    FileUploadField: []
+    FileUploadField: [
+      QuestionAdvancedSettings.MinFiles,
+      QuestionAdvancedSettings.MaxFiles
+    ]
   })
 
 /**
@@ -108,6 +117,30 @@ export const allAdvancedSettingsFields =
       label: {
         text: 'Highest number users can enter (optional)',
         classes: GOVUK_LABEL__M
+      },
+      classes: GOVUK_INPUT_WIDTH_3
+    },
+    [QuestionAdvancedSettings.MinFiles]: {
+      name: 'minFiles',
+      id: 'minFiles',
+      label: {
+        text: 'Minimum file count (optional)',
+        classes: GOVUK_LABEL__M
+      },
+      hint: {
+        text: 'The minimum number of files users can upload'
+      },
+      classes: GOVUK_INPUT_WIDTH_3
+    },
+    [QuestionAdvancedSettings.MaxFiles]: {
+      name: 'maxFiles',
+      id: 'maxFiles',
+      label: {
+        text: 'Maximum file count (optional)',
+        classes: GOVUK_LABEL__M
+      },
+      hint: {
+        text: 'The maximum number of files users can upload'
       },
       classes: GOVUK_INPUT_WIDTH_3
     },
@@ -233,6 +266,39 @@ export const baseSchema = Joi.object().keys({
   }),
   questionType: questionTypeFullSchema.messages({
     '*': 'The question type is missing'
+  }),
+  fileTypes: fileTypesSchema.when('questionType', {
+    is: 'FileUploadField',
+    then: Joi.required().messages({
+      '*': 'Select the type of file you want to upload'
+    })
+  }),
+  documentTypes: documentTypesSchema.when('questionType', {
+    is: 'FileUploadField',
+    then: Joi.array().when('fileTypes', {
+      is: Joi.array().has('documents'),
+      then: Joi.required().messages({
+        '*': 'Choose the document file types you accept'
+      })
+    })
+  }),
+  imageTypes: imageTypesSchema.when('questionType', {
+    is: 'FileUploadField',
+    then: Joi.array().when('fileTypes', {
+      is: Joi.array().has('images'),
+      then: Joi.required().messages({
+        '*': 'Choose the image file types you accept'
+      })
+    })
+  }),
+  tabularDataTypes: tabularDataTypesSchema.when('questionType', {
+    is: 'FileUploadField',
+    then: Joi.array().when('fileTypes', {
+      is: Joi.array().has('tabular-data'),
+      then: Joi.required().messages({
+        '*': 'Choose the tabular data file types you accept'
+      })
+    })
   })
 })
 
@@ -256,6 +322,20 @@ export const allSpecificSchemas = Joi.object().keys({
     }),
   max: maxSchema.messages({
     '*': 'Highest number must be a positive whole number'
+  }),
+  minFiles: minFilesSchema
+    .when('maxFiles', {
+      is: Joi.exist(),
+      then: Joi.number().max(Joi.ref('maxFiles')),
+      otherwise: Joi.number().empty('').integer()
+    })
+    .messages({
+      'number.base': 'Minimum file count must be a whole number',
+      'number.integer': 'Minimum file count must be a whole number',
+      '*': 'Minimum file count must be less than or equal to maximum file count'
+    }),
+  maxFiles: maxFilesSchema.messages({
+    '*': 'Maximum file count must be a positive whole number'
   }),
   minLength: minLengthSchema
     .when('maxLength', {
@@ -286,6 +366,8 @@ export const allSpecificSchemas = Joi.object().keys({
 const textFieldQuestions = [
   QuestionAdvancedSettings.Min,
   QuestionAdvancedSettings.Max,
+  QuestionAdvancedSettings.MinFiles,
+  QuestionAdvancedSettings.MaxFiles,
   QuestionAdvancedSettings.MinLength,
   QuestionAdvancedSettings.MaxLength,
   QuestionAdvancedSettings.MaxFuture,
@@ -348,13 +430,13 @@ function getAdditionalOptions(payload) {
 /**
  * @param {Partial<FormEditorInputQuestion>} payload
  */
-function getAdditionalSchema(payload) {
+export function getAdditionalSchema(payload) {
   const additionalSchema = {}
-  if (payload.minLength ?? payload.min) {
-    additionalSchema.min = payload.minLength ?? payload.min
+  if (payload.minLength ?? payload.min ?? payload.minFiles) {
+    additionalSchema.min = payload.minLength ?? payload.min ?? payload.minFiles
   }
-  if (payload.maxLength ?? payload.max) {
-    additionalSchema.max = payload.maxLength ?? payload.max
+  if (payload.maxLength ?? payload.max ?? payload.maxFiles) {
+    additionalSchema.max = payload.maxLength ?? payload.max ?? payload.maxFiles
   }
   if (payload.regex) {
     additionalSchema.regex = payload.regex
@@ -368,9 +450,26 @@ function getAdditionalSchema(payload) {
 /**
  * @param {Partial<FormEditorInputQuestion>} payload
  */
+export function mapFileTypes(payload) {
+  const documentParentSelected = payload.fileTypes?.includes('documents')
+  const imagesParentSelected = payload.fileTypes?.includes('images')
+  const tabularDataParentSelected = payload.fileTypes?.includes('tabular-data')
+
+  const combinedTypes = (
+    documentParentSelected ? (payload.documentTypes ?? []) : []
+  )
+    .concat(imagesParentSelected ? (payload.imageTypes ?? []) : [])
+    .concat(tabularDataParentSelected ? (payload.tabularDataTypes ?? []) : [])
+  return combinedTypes.length ? { accept: combinedTypes.join(',') } : {}
+}
+
+/**
+ * @param {Partial<FormEditorInputQuestion>} payload
+ */
 export function mapQuestionDetails(payload) {
   const additionalOptions = getAdditionalOptions(payload)
   const additionalSchema = getAdditionalSchema(payload)
+  const fileTypes = mapFileTypes(payload)
 
   return /** @type {Partial<ComponentDef>} */ ({
     type: payload.questionType,
@@ -380,7 +479,8 @@ export function mapQuestionDetails(payload) {
     hint: payload.hintText,
     options: {
       required: !isCheckboxSelected(payload.questionOptional),
-      ...additionalOptions
+      ...additionalOptions,
+      ...fileTypes
     },
     schema: { ...additionalSchema }
   })
