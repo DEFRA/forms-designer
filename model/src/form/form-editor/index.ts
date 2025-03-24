@@ -20,7 +20,7 @@ export const questionTypeSchema = Joi.string()
     ComponentType.TelephoneNumberField,
     ComponentType.FileUploadField,
     ComponentType.EmailAddressField,
-    ComponentType.SelectField
+    'list-group'
   )
 
 export const questionTypeFullSchema = Joi.string()
@@ -48,6 +48,14 @@ export const writtenAnswerSubSchema = Joi.string()
 export const dateSubSchema = Joi.string()
   .required()
   .valid(ComponentType.DatePartsField, ComponentType.MonthYearField)
+export const listSubSchema = Joi.string()
+  .required()
+  .valid(
+    ComponentType.YesNoField,
+    ComponentType.CheckboxesField,
+    ComponentType.RadiosField,
+    ComponentType.AutocompleteField
+  )
 
 export const nameSchema = Joi.string().trim().required()
 export const questionSchema = Joi.string().trim().required()

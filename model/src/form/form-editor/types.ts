@@ -23,6 +23,11 @@ export interface FormEditor {
   dateSub: string
 
   /**
+   * The sub-type of lists
+   */
+  listSub: string
+
+  /**
    * The name of the question (unique id)
    */
   name: string
@@ -165,7 +170,7 @@ export interface FormEditor {
 
 export type FormEditorInputPage = Pick<
   FormEditor,
-  'pageType' | 'questionType' | 'writtenAnswerSub' | 'dateSub'
+  'pageType' | 'questionType' | 'writtenAnswerSub' | 'dateSub' | 'listSub'
 >
 
 export type FormEditorInputCheckAnswersSettings = Pick<

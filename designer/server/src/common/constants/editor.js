@@ -2,6 +2,7 @@ import { ComponentType } from '@defra/forms-model'
 
 export const QUESTION_TYPE_WRITTEN_ANSWER_GROUP = 'written-answer-group'
 export const QUESTION_TYPE_DATE_GROUP = 'date-group'
+export const QUESTION_TYPE_LIST_GROUP = 'list-group'
 
 export const QuestionTypeDescriptions =
   /** @type {{type: ComponentType, description: string }[]} */ ([

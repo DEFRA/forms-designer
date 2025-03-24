@@ -2,6 +2,7 @@ import { ComponentType } from '@defra/forms-model'
 
 import {
   QUESTION_TYPE_DATE_GROUP,
+  QUESTION_TYPE_LIST_GROUP,
   QUESTION_TYPE_WRITTEN_ANSWER_GROUP
 } from '~/src/common/constants/editor.js'
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
@@ -64,7 +65,7 @@ const questionTypeRadioItems = /** @type {FormEditorCheckbox[]} */ ([
   },
   {
     text: 'A list of options that users can choose from',
-    value: ComponentType.SelectField
+    value: QUESTION_TYPE_LIST_GROUP
   }
 ])
 
@@ -81,8 +82,39 @@ const writtenAnswerSubItems = [
 ]
 
 const dateSubItems = [
-  { text: 'Day, month and year', value: 'DatePartsField' },
-  { text: 'Month and year', value: 'MonthYearField' }
+  { text: 'Day, month and year', value: ComponentType.DatePartsField },
+  { text: 'Month and year', value: ComponentType.MonthYearField }
+]
+
+const listSubItems = [
+  {
+    text: 'Yes or No',
+    hint: {
+      text: 'Allow users to answer either ‘Yes’ or ‘No’'
+    },
+    value: ComponentType.YesNoField
+  },
+  {
+    text: 'Checkboxes',
+    hint: {
+      text: 'A list for users to select multiple answers'
+    },
+    value: ComponentType.CheckboxesField
+  },
+  {
+    text: 'Radios',
+    hint: {
+      text: 'A list for users to select one answer'
+    },
+    value: ComponentType.RadiosField
+  },
+  {
+    text: 'Autocomplete',
+    hint: {
+      text: 'A list of options revealed to users as they type'
+    },
+    value: ComponentType.AutocompleteField
+  }
 ]
 
 /**
@@ -169,6 +201,20 @@ export function questionTypeViewModel(
         items: dateSubItems,
         value: formValues?.dateSub,
         ...insertValidationErrors(validation?.formErrors.dateSub)
+      },
+      listSub: {
+        id: 'listSub',
+        name: 'listSub',
+        idPrefix: 'listSub',
+        fieldset: {
+          legend: {
+            text: 'Type of list',
+            isPageHeading: false
+          }
+        },
+        items: listSubItems,
+        value: formValues?.listSub,
+        ...insertValidationErrors(validation?.formErrors.listSub)
       }
     },
     buttonText: SAVE_AND_CONTINUE
