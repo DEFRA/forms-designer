@@ -26,7 +26,11 @@ export const questionTypeSchema = Joi.string()
     ComponentType.TelephoneNumberField,
     ComponentType.FileUploadField,
     ComponentType.EmailAddressField,
-    QuestionTypeSubGroup.ListSubGroup
+    QuestionTypeSubGroup.ListSubGroup,
+    ComponentType.YesNoField,
+    ComponentType.CheckboxesField,
+    ComponentType.RadiosField,
+    ComponentType.AutocompleteField
   )
 
 export const questionTypeFullSchema = Joi.string()
@@ -41,7 +45,10 @@ export const questionTypeFullSchema = Joi.string()
     ComponentType.TelephoneNumberField,
     ComponentType.FileUploadField,
     ComponentType.EmailAddressField,
-    ComponentType.SelectField
+    ComponentType.YesNoField,
+    ComponentType.CheckboxesField,
+    ComponentType.RadiosField,
+    ComponentType.AutocompleteField
   )
 
 export const writtenAnswerSubSchema = Joi.string()
@@ -83,9 +90,9 @@ export const minSchema = Joi.number().empty('').integer()
 export const maxSchema = Joi.number().empty('').integer()
 export const minLengthSchema = Joi.number().empty('').integer().min(1)
 export const maxLengthSchema = Joi.number().empty('').integer().min(1)
-export const maxFutureSchema = Joi.number().empty('').integer().min(1)
-export const maxPastSchema = Joi.number().empty('').integer().min(1)
-export const precisionSchema = Joi.number().empty('').integer().min(0)
+export const maxFutureSchema = Joi.number().empty('').integer().min(0)
+export const maxPastSchema = Joi.number().empty('').integer().min(0)
+export const precisionSchema = Joi.number().empty('').integer().min(0).max(5)
 export const prefixSchema = Joi.string().trim().optional().allow('')
 export const regexSchema = Joi.string().optional().allow('')
 export const rowsSchema = Joi.number().empty('').integer().min(1)

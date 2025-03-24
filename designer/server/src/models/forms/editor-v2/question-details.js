@@ -91,6 +91,8 @@ export function getSelectedFileTypes(question) {
   }
 }
 
+const zeroIsValidForFields = ['maxFuture', 'maxPast', 'precision']
+
 /**
  * Determines if the details section should be expanded i.e. if there is a validation error or some data populated
  * in the details section
@@ -114,6 +116,12 @@ export function hasDataOrErrorForDisplay(
 
   for (const fieldObj of extraFields) {
     if (fieldObj.value) {
+      return true
+    }
+    if (
+      zeroIsValidForFields.includes(fieldObj.name ?? 'unknown') &&
+      fieldObj.value !== undefined
+    ) {
       return true
     }
   }
