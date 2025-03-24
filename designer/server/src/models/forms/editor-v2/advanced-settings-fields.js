@@ -1,30 +1,4 @@
-import {
-  ComponentType,
-  classesSchema,
-  documentTypesSchema,
-  fileTypesSchema,
-  hintTextSchema,
-  imageTypesSchema,
-  maxFilesSchema,
-  maxFutureSchema,
-  maxLengthSchema,
-  maxPastSchema,
-  maxSchema,
-  minFilesSchema,
-  minLengthSchema,
-  minSchema,
-  nameSchema,
-  precisionSchema,
-  prefixSchema,
-  questionOptionalSchema,
-  questionSchema,
-  questionTypeFullSchema,
-  regexSchema,
-  rowsSchema,
-  shortDescriptionSchema,
-  suffixSchema,
-  tabularDataTypesSchema
-} from '@defra/forms-model'
+import { ComponentType, questionDetailsFullSchema } from '@defra/forms-model'
 import Joi from 'joi'
 
 import { QuestionAdvancedSettings } from '~/src/common/constants/editor.js'
@@ -33,6 +7,13 @@ import {
   GOVUK_INPUT_WIDTH_3,
   GOVUK_LABEL__M
 } from '~/src/models/forms/editor-v2/common.js'
+
+const MIN_FILES_ERROR_MESSAGE =
+  'Minimum file count must be a whole number between 1 and 25'
+const MAX_FILES_ERROR_MESSAGE =
+  'Maximum file count must be a whole number between 1 and 25'
+const EXACT_FILES_ERROR_MESSAGE =
+  'Exact file count must be a whole number between 1 and 25'
 
 export const advancedSettingsPerComponentType =
   /** @type {Record<string, string[]> } */ ({
@@ -81,7 +62,8 @@ export const advancedSettingsPerComponentType =
     Markdown: [],
     FileUploadField: [
       QuestionAdvancedSettings.MinFiles,
-      QuestionAdvancedSettings.MaxFiles
+      QuestionAdvancedSettings.MaxFiles,
+      QuestionAdvancedSettings.ExactFiles
     ]
   })
 
@@ -117,6 +99,18 @@ export const allAdvancedSettingsFields =
       label: {
         text: 'Highest number users can enter (optional)',
         classes: GOVUK_LABEL__M
+      },
+      classes: GOVUK_INPUT_WIDTH_3
+    },
+    [QuestionAdvancedSettings.ExactFiles]: {
+      name: 'exactFiles',
+      id: 'exactFiles',
+      label: {
+        text: 'Exact file count (optional)',
+        classes: GOVUK_LABEL__M
+      },
+      hint: {
+        text: 'The exact number of files users can upload. Using this setting negates any values you set for Min or Max file count'
       },
       classes: GOVUK_INPUT_WIDTH_3
     },
@@ -254,62 +248,14 @@ export const allAdvancedSettingsFields =
     }
   })
 
-export const baseSchema = Joi.object().keys({
-  name: nameSchema,
-  question: questionSchema.messages({
-    '*': 'Enter a question'
-  }),
-  hintText: hintTextSchema,
-  questionOptional: questionOptionalSchema,
-  shortDescription: shortDescriptionSchema.messages({
-    '*': 'Enter a short description'
-  }),
-  questionType: questionTypeFullSchema.messages({
-    '*': 'The question type is missing'
-  }),
-  fileTypes: fileTypesSchema.when('questionType', {
-    is: 'FileUploadField',
-    then: Joi.required().messages({
-      '*': 'Select the type of file you want to upload'
-    })
-  }),
-  documentTypes: documentTypesSchema.when('questionType', {
-    is: 'FileUploadField',
-    then: Joi.array().when('fileTypes', {
-      is: Joi.array().has('documents'),
-      then: Joi.required().messages({
-        '*': 'Choose the document file types you accept'
-      })
-    })
-  }),
-  imageTypes: imageTypesSchema.when('questionType', {
-    is: 'FileUploadField',
-    then: Joi.array().when('fileTypes', {
-      is: Joi.array().has('images'),
-      then: Joi.required().messages({
-        '*': 'Choose the image file types you accept'
-      })
-    })
-  }),
-  tabularDataTypes: tabularDataTypesSchema.when('questionType', {
-    is: 'FileUploadField',
-    then: Joi.array().when('fileTypes', {
-      is: Joi.array().has('tabular-data'),
-      then: Joi.required().messages({
-        '*': 'Choose the tabular data file types you accept'
-      })
-    })
-  })
-})
-
 export const allSpecificSchemas = Joi.object().keys({
-  maxFuture: maxFutureSchema.messages({
+  maxFuture: questionDetailsFullSchema.maxFutureSchema.messages({
     '*': 'Max days in the future must be a positive whole number'
   }),
-  maxPast: maxPastSchema.messages({
+  maxPast: questionDetailsFullSchema.maxPastSchema.messages({
     '*': 'Max days in the past must be a positive whole number'
   }),
-  min: minSchema
+  min: questionDetailsFullSchema.minSchema
     .when('max', {
       is: Joi.exist(),
       then: Joi.number().max(Joi.ref('max')),
@@ -320,24 +266,51 @@ export const allSpecificSchemas = Joi.object().keys({
       'number.integer': 'Lowest number must be a whole number',
       '*': 'Lowest number must be less than or equal to highest number'
     }),
-  max: maxSchema.messages({
+  max: questionDetailsFullSchema.maxSchema.messages({
     '*': 'Highest number must be a positive whole number'
   }),
-  minFiles: minFilesSchema
+  exactFiles: questionDetailsFullSchema.exactFilesSchema
+    .when('minFiles', {
+      is: Joi.exist(),
+      then: Joi.number().forbidden(),
+      otherwise: Joi.number().empty('').integer()
+    })
+    .messages({
+      'number.base': EXACT_FILES_ERROR_MESSAGE,
+      'number.integer': EXACT_FILES_ERROR_MESSAGE,
+      'number.min': EXACT_FILES_ERROR_MESSAGE,
+      'number.max': EXACT_FILES_ERROR_MESSAGE,
+      '*': 'Exact file count cannot be used with Minimum or Maximum file count'
+    })
+    .when('maxFiles', {
+      is: Joi.exist(),
+      then: Joi.number().forbidden(),
+      otherwise: Joi.number().empty('').integer()
+    })
+    .messages({
+      'number.base': EXACT_FILES_ERROR_MESSAGE,
+      'number.integer': EXACT_FILES_ERROR_MESSAGE,
+      'number.min': EXACT_FILES_ERROR_MESSAGE,
+      'number.max': EXACT_FILES_ERROR_MESSAGE,
+      '*': 'Exact file count cannot be used with Minimum or Maximum file count'
+    }),
+  minFiles: questionDetailsFullSchema.minFilesSchema
     .when('maxFiles', {
       is: Joi.exist(),
       then: Joi.number().max(Joi.ref('maxFiles')),
       otherwise: Joi.number().empty('').integer()
     })
     .messages({
-      'number.base': 'Minimum file count must be a whole number',
-      'number.integer': 'Minimum file count must be a whole number',
+      'number.base': MIN_FILES_ERROR_MESSAGE,
+      'number.integer': MIN_FILES_ERROR_MESSAGE,
+      'number.min': MIN_FILES_ERROR_MESSAGE,
+      'number.max': MIN_FILES_ERROR_MESSAGE,
       '*': 'Minimum file count must be less than or equal to maximum file count'
     }),
-  maxFiles: maxFilesSchema.messages({
-    '*': 'Maximum file count must be a positive whole number'
+  maxFiles: questionDetailsFullSchema.maxFilesSchema.messages({
+    '*': MAX_FILES_ERROR_MESSAGE
   }),
-  minLength: minLengthSchema
+  minLength: questionDetailsFullSchema.minLengthSchema
     .when('maxLength', {
       is: Joi.exist(),
       then: Joi.number().max(Joi.ref('maxLength')),
@@ -348,22 +321,23 @@ export const allSpecificSchemas = Joi.object().keys({
       'number.integer': 'Minimum length must be a positive whole number',
       '*': 'Minimum length must be less than or equal to maximum length'
     }),
-  maxLength: maxLengthSchema.messages({
+  maxLength: questionDetailsFullSchema.maxLengthSchema.messages({
     '*': 'Maximum length must be a positive whole number'
   }),
-  precision: precisionSchema.messages({
+  precision: questionDetailsFullSchema.precisionSchema.messages({
     '*': 'Precision must be a positive whole number'
   }),
-  prefix: prefixSchema,
-  suffix: suffixSchema,
-  regex: regexSchema,
-  rows: rowsSchema.messages({
+  prefix: questionDetailsFullSchema.prefixSchema,
+  suffix: questionDetailsFullSchema.suffixSchema,
+  regex: questionDetailsFullSchema.regexSchema,
+  rows: questionDetailsFullSchema.rowsSchema.messages({
     '*': 'Rows must be a positive whole number'
   }),
-  classes: classesSchema
+  classes: questionDetailsFullSchema.classesSchema
 })
 
 const textFieldQuestions = [
+  QuestionAdvancedSettings.ExactFiles,
   QuestionAdvancedSettings.Min,
   QuestionAdvancedSettings.Max,
   QuestionAdvancedSettings.MinFiles,
@@ -437,6 +411,9 @@ export function getAdditionalSchema(payload) {
   }
   if (payload.maxLength ?? payload.max ?? payload.maxFiles) {
     additionalSchema.max = payload.maxLength ?? payload.max ?? payload.maxFiles
+  }
+  if (payload.exactFiles) {
+    additionalSchema.length = payload.exactFiles
   }
   if (payload.regex) {
     additionalSchema.regex = payload.regex

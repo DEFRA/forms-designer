@@ -32,6 +32,7 @@ export function addDateFieldProperties(question) {
 export function addMinMaxFieldProperties(question) {
   if (question.type === ComponentType.FileUploadField) {
     return {
+      exactFiles: question.schema.length,
       minFiles: question.schema.min,
       maxFiles: question.schema.max
     }

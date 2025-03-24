@@ -207,5 +207,13 @@ describe('editor-v2 - advanced settings fields model', () => {
         })
       ).toEqual({ min: '1', max: '2' })
     })
+
+    test('should handle exactFiles', () => {
+      expect(
+        getAdditionalSchema({
+          exactFiles: '3'
+        })
+      ).toEqual({ length: '3' })
+    })
   })
 })
