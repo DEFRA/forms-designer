@@ -2,6 +2,7 @@ import {
   ComponentType,
   classesSchema,
   documentTypesSchema,
+  exactFilesSchema,
   fileTypesSchema,
   hintTextSchema,
   imageTypesSchema,
@@ -81,7 +82,8 @@ export const advancedSettingsPerComponentType =
     Markdown: [],
     FileUploadField: [
       QuestionAdvancedSettings.MinFiles,
-      QuestionAdvancedSettings.MaxFiles
+      QuestionAdvancedSettings.MaxFiles,
+      QuestionAdvancedSettings.ExactFiles
     ]
   })
 
@@ -117,6 +119,18 @@ export const allAdvancedSettingsFields =
       label: {
         text: 'Highest number users can enter (optional)',
         classes: GOVUK_LABEL__M
+      },
+      classes: GOVUK_INPUT_WIDTH_3
+    },
+    [QuestionAdvancedSettings.ExactFiles]: {
+      name: 'exactFiles',
+      id: 'exactFiles',
+      label: {
+        text: 'Exact file count (optional)',
+        classes: GOVUK_LABEL__M
+      },
+      hint: {
+        text: 'The exact number of files users can upload. Using this setting negates any values you set for Min or Max file count'
       },
       classes: GOVUK_INPUT_WIDTH_3
     },
@@ -323,6 +337,33 @@ export const allSpecificSchemas = Joi.object().keys({
   max: maxSchema.messages({
     '*': 'Highest number must be a positive whole number'
   }),
+  exactFiles: exactFilesSchema
+    .when('minFiles', {
+      is: Joi.exist(),
+      then: Joi.number().forbidden(),
+      otherwise: Joi.number().empty('').integer()
+    })
+    .messages({
+      'number.base': 'Exact file count must be a whole number between 1 and 25',
+      'number.integer':
+        'Exact file count must be a whole number between 1 and 25',
+      'number.min': 'Exact file count must be a whole number between 1 and 25',
+      'number.max': 'Exact file count must be a whole number between 1 and 25',
+      '*': 'Exact file count cannot be used with Minimum or Maximum file count'
+    })
+    .when('maxFiles', {
+      is: Joi.exist(),
+      then: Joi.number().forbidden(),
+      otherwise: Joi.number().empty('').integer()
+    })
+    .messages({
+      'number.base': 'Exact file count must be a whole number between 1 and 25',
+      'number.integer':
+        'Exact file count must be a whole number between 1 and 25',
+      'number.min': 'Exact file count must be a whole number between 1 and 25',
+      'number.max': 'Exact file count must be a whole number between 1 and 25',
+      '*': 'Exact file count cannot be used with Minimum or Maximum file count'
+    }),
   minFiles: minFilesSchema
     .when('maxFiles', {
       is: Joi.exist(),
@@ -332,9 +373,15 @@ export const allSpecificSchemas = Joi.object().keys({
     .messages({
       'number.base': 'Minimum file count must be a whole number',
       'number.integer': 'Minimum file count must be a whole number',
+      'number.min':
+        'Minimum file count must be a whole number between 1 and 25',
+      'number.max':
+        'Minimum file count must be a whole number between 1 and 25',
       '*': 'Minimum file count must be less than or equal to maximum file count'
     }),
   maxFiles: maxFilesSchema.messages({
+    'number.min': 'Maximum file count must be a whole number between 1 and 25',
+    'number.max': 'Maximum file count must be a whole number between 1 and 25',
     '*': 'Maximum file count must be a positive whole number'
   }),
   minLength: minLengthSchema
@@ -364,6 +411,7 @@ export const allSpecificSchemas = Joi.object().keys({
 })
 
 const textFieldQuestions = [
+  QuestionAdvancedSettings.ExactFiles,
   QuestionAdvancedSettings.Min,
   QuestionAdvancedSettings.Max,
   QuestionAdvancedSettings.MinFiles,
@@ -437,6 +485,9 @@ export function getAdditionalSchema(payload) {
   }
   if (payload.maxLength ?? payload.max ?? payload.maxFiles) {
     additionalSchema.max = payload.maxLength ?? payload.max ?? payload.maxFiles
+  }
+  if (payload.exactFiles) {
+    additionalSchema.length = payload.exactFiles
   }
   if (payload.regex) {
     additionalSchema.regex = payload.regex

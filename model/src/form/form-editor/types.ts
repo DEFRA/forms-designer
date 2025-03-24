@@ -133,6 +133,11 @@ export interface FormEditor {
   maxPast: string
 
   /**
+   * The exact number of files to upload
+   */
+  exactFiles: string
+
+  /**
    * The minimum number of files to upload
    */
   minFiles: string
@@ -193,6 +198,7 @@ export type FormEditorInputQuestion = Pick<
   | 'max'
   | 'maxFuture'
   | 'maxPast'
+  | 'exactFiles'
   | 'minFiles'
   | 'maxFiles'
   | 'fileTypes'
