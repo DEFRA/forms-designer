@@ -154,5 +154,20 @@ describe('editor-v2 - question details advanced settings model', () => {
         maxFiles: 10
       })
     })
+
+    test('should add exactFiles if file upload', () => {
+      const res = addMinMaxFieldProperties({
+        type: ComponentType.FileUploadField,
+        name: '',
+        title: '',
+        options: {},
+        schema: {
+          length: 3
+        }
+      })
+      expect(res).toEqual({
+        exactFiles: 3
+      })
+    })
   })
 })

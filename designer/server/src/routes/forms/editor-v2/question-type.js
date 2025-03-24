@@ -1,15 +1,13 @@
 import {
+  QuestionTypeSubGroup,
   dateSubSchema,
+  listSubSchema,
   questionTypeSchema,
   writtenAnswerSubSchema
 } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
-import {
-  QUESTION_TYPE_DATE_GROUP,
-  QUESTION_TYPE_WRITTEN_ANSWER_GROUP
-} from '~/src/common/constants/editor.js'
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
@@ -27,15 +25,21 @@ export const schema = Joi.object().keys({
     '*': 'Select the type of information you need from users or ask users to choose from a list'
   }),
   writtenAnswerSub: Joi.when('questionType', {
-    is: QUESTION_TYPE_WRITTEN_ANSWER_GROUP,
+    is: QuestionTypeSubGroup.WrittenAnswerSubGroup,
     then: writtenAnswerSubSchema.messages({
       '*': 'Select the type of written answer you need from users'
     })
   }),
   dateSub: Joi.when('questionType', {
-    is: QUESTION_TYPE_DATE_GROUP,
+    is: QuestionTypeSubGroup.DateSubGroup,
     then: dateSubSchema.messages({
       '*': 'Select the type of date you need from users'
+    })
+  }),
+  listSub: Joi.when('questionType', {
+    is: QuestionTypeSubGroup.ListSubGroup,
+    then: listSubSchema.messages({
+      '*': 'Select the type of list you need from users'
     })
   })
 })
@@ -45,13 +49,22 @@ export const schema = Joi.object().keys({
  * @param {string | undefined} questionType
  * @param {string} writtenAnswerSub - sub-type if 'written-answer-sub' selected in questionType
  * @param {string} dateSub - sub-type if 'date-sub' selected in questionType
+ * @param {string} listSub - sub-type if 'list-sub' selected in questionType
  */
-export function deriveQuestionType(questionType, writtenAnswerSub, dateSub) {
-  if (questionType === QUESTION_TYPE_WRITTEN_ANSWER_GROUP) {
+export function deriveQuestionType(
+  questionType,
+  writtenAnswerSub,
+  dateSub,
+  listSub
+) {
+  if (questionType === QuestionTypeSubGroup.WrittenAnswerSubGroup) {
     return writtenAnswerSub
   }
-  if (questionType === QUESTION_TYPE_DATE_GROUP) {
+  if (questionType === QuestionTypeSubGroup.DateSubGroup) {
     return dateSub
+  }
+  if (questionType === QuestionTypeSubGroup.ListSubGroup) {
+    return listSub
   }
   return /** @type {string | undefined} */ questionType
 }
@@ -101,7 +114,7 @@ export default [
   }),
 
   /**
-   * @satisfies {ServerRoute<{ Payload: Pick<FormEditorInputPage, 'questionType' | 'writtenAnswerSub' | 'dateSub'> }>}
+   * @satisfies {ServerRoute<{ Payload: Pick<FormEditorInputPage, 'questionType' | 'writtenAnswerSub' | 'dateSub' | 'listSub'> }>}
    */
   ({
     method: 'POST',
@@ -112,12 +125,12 @@ export default [
         /** @type {{ slug: string, pageId: string, questionId: string}} */ (
           params
         )
-      const { questionType, writtenAnswerSub, dateSub } = payload
+      const { questionType, writtenAnswerSub, dateSub, listSub } = payload
 
       // Save in session until page is saved
       yar.flash(
         sessionNames.questionType,
-        deriveQuestionType(questionType, writtenAnswerSub, dateSub)
+        deriveQuestionType(questionType, writtenAnswerSub, dateSub, listSub)
       )
 
       // Redirect to next page

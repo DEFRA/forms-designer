@@ -84,10 +84,10 @@ export function getSelectedFileTypes(question) {
   }
 
   return {
-    fileTypes: { fileTypes },
-    documentTypes: { documentTypes },
-    imageTypes: { imageTypes },
-    tabularDataTypes: { tabularDataTypes }
+    fileTypes,
+    documentTypes,
+    imageTypes,
+    tabularDataTypes
   }
 }
 
@@ -125,8 +125,7 @@ export function hasDataOrErrorForDisplay(
  * @param { InputFieldsComponentsDef | undefined} question
  */
 export function mapToQuestionDetails(question) {
-  const { fileTypes, documentTypes, imageTypes, tabularDataTypes } =
-    getSelectedFileTypes(question)
+  const fileTypes = getSelectedFileTypes(question)
 
   return {
     name: question?.name ?? randomId(),
@@ -134,10 +133,7 @@ export function mapToQuestionDetails(question) {
     hintText: question?.hint,
     questionOptional: `${question?.options.required === false}`,
     shortDescription: question?.shortDescription,
-    ...fileTypes,
-    ...documentTypes,
-    ...imageTypes,
-    ...tabularDataTypes
+    ...fileTypes
   }
 }
 

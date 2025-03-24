@@ -8,19 +8,25 @@ import {
   type FormEditorInputQuestion
 } from '~/src/form/form-editor/types.js'
 
+export enum QuestionTypeSubGroup {
+  WrittenAnswerSubGroup = 'writtenAnswerSub',
+  DateSubGroup = 'dateSub',
+  ListSubGroup = 'listSub'
+}
+
 export const pageTypeSchema = Joi.string()
   .required()
   .valid('question', 'guidance')
 export const questionTypeSchema = Joi.string()
   .required()
   .valid(
-    'written-answer-group',
-    'date-group',
+    QuestionTypeSubGroup.WrittenAnswerSubGroup,
+    QuestionTypeSubGroup.DateSubGroup,
     ComponentType.UkAddressField,
     ComponentType.TelephoneNumberField,
     ComponentType.FileUploadField,
     ComponentType.EmailAddressField,
-    ComponentType.SelectField
+    QuestionTypeSubGroup.ListSubGroup
   )
 
 export const questionTypeFullSchema = Joi.string()
@@ -48,6 +54,14 @@ export const writtenAnswerSubSchema = Joi.string()
 export const dateSubSchema = Joi.string()
   .required()
   .valid(ComponentType.DatePartsField, ComponentType.MonthYearField)
+export const listSubSchema = Joi.string()
+  .required()
+  .valid(
+    ComponentType.YesNoField,
+    ComponentType.CheckboxesField,
+    ComponentType.RadiosField,
+    ComponentType.AutocompleteField
+  )
 
 export const nameSchema = Joi.string().trim().required()
 export const questionSchema = Joi.string().trim().required()
@@ -62,8 +76,9 @@ export const pageHeadingSchema = Joi.string().trim().required()
 export const guidanceTextSchema = Joi.string().trim()
 export const needDeclarationSchema = Joi.string().trim().required()
 export const declarationTextSchema = Joi.string().trim().required()
-export const minFilesSchema = Joi.number().empty('').integer().min(0)
-export const maxFilesSchema = Joi.number().empty('').integer().min(1)
+export const exactFilesSchema = Joi.number().empty('').integer().min(1).max(25)
+export const minFilesSchema = Joi.number().empty('').integer().min(0).max(25)
+export const maxFilesSchema = Joi.number().empty('').integer().min(1).max(25)
 export const minSchema = Joi.number().empty('').integer()
 export const maxSchema = Joi.number().empty('').integer()
 export const minLengthSchema = Joi.number().empty('').integer().min(1)
@@ -96,6 +111,34 @@ export const tabularDataTypesSchema = Joi.array()
   .single()
   .empty(null)
   .default([])
+
+export const questionDetailsFullSchema = {
+  classesSchema,
+  documentTypesSchema,
+  exactFilesSchema,
+  fileTypesSchema,
+  hintTextSchema,
+  imageTypesSchema,
+  maxFilesSchema,
+  maxFutureSchema,
+  maxLengthSchema,
+  maxPastSchema,
+  maxSchema,
+  minFilesSchema,
+  minLengthSchema,
+  minSchema,
+  nameSchema,
+  precisionSchema,
+  prefixSchema,
+  questionOptionalSchema,
+  questionSchema,
+  questionTypeFullSchema,
+  regexSchema,
+  rowsSchema,
+  shortDescriptionSchema,
+  suffixSchema,
+  tabularDataTypesSchema
+}
 
 export const formEditorInputPageKeys = {
   pageType: pageTypeSchema,

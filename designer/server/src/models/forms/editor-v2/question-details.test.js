@@ -179,10 +179,10 @@ describe('editor-v2 - question details model', () => {
         }
       })
       expect(res).toEqual({
-        fileTypes: { fileTypes: [] },
-        documentTypes: { documentTypes: [] },
-        imageTypes: { imageTypes: [] },
-        tabularDataTypes: { tabularDataTypes: [] }
+        fileTypes: [],
+        documentTypes: [],
+        imageTypes: [],
+        tabularDataTypes: []
       })
     })
 
@@ -197,10 +197,10 @@ describe('editor-v2 - question details model', () => {
         }
       })
       expect(res).toEqual({
-        fileTypes: { fileTypes: ['documents'] },
-        documentTypes: { documentTypes: ['doc', 'docx'] },
-        imageTypes: { imageTypes: [] },
-        tabularDataTypes: { tabularDataTypes: [] }
+        fileTypes: ['documents'],
+        documentTypes: ['doc', 'docx'],
+        imageTypes: [],
+        tabularDataTypes: []
       })
     })
 
@@ -215,10 +215,10 @@ describe('editor-v2 - question details model', () => {
         }
       })
       expect(res).toEqual({
-        fileTypes: { fileTypes: ['images'] },
-        documentTypes: { documentTypes: [] },
-        imageTypes: { imageTypes: ['jpg', 'jpeg'] },
-        tabularDataTypes: { tabularDataTypes: [] }
+        fileTypes: ['images'],
+        documentTypes: [],
+        imageTypes: ['jpg', 'jpeg'],
+        tabularDataTypes: []
       })
     })
 
@@ -233,10 +233,10 @@ describe('editor-v2 - question details model', () => {
         }
       })
       expect(res).toEqual({
-        fileTypes: { fileTypes: ['tabular-data'] },
-        documentTypes: { documentTypes: [] },
-        imageTypes: { imageTypes: [] },
-        tabularDataTypes: { tabularDataTypes: ['csv'] }
+        fileTypes: ['tabular-data'],
+        documentTypes: [],
+        imageTypes: [],
+        tabularDataTypes: ['csv']
       })
     })
 
@@ -251,10 +251,10 @@ describe('editor-v2 - question details model', () => {
         }
       })
       expect(res).toEqual({
-        fileTypes: { fileTypes: ['documents', 'images', 'tabular-data'] },
-        documentTypes: { documentTypes: ['doc'] },
-        imageTypes: { imageTypes: ['jpg'] },
-        tabularDataTypes: { tabularDataTypes: ['csv'] }
+        fileTypes: ['documents', 'images', 'tabular-data'],
+        documentTypes: ['doc'],
+        imageTypes: ['jpg'],
+        tabularDataTypes: ['csv']
       })
     })
   })

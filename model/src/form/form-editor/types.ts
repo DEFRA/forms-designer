@@ -23,6 +23,11 @@ export interface FormEditor {
   dateSub: string
 
   /**
+   * The sub-type of lists
+   */
+  listSub: string
+
+  /**
    * The name of the question (unique id)
    */
   name: string
@@ -133,6 +138,11 @@ export interface FormEditor {
   maxPast: string
 
   /**
+   * The exact number of files to upload
+   */
+  exactFiles: string
+
+  /**
    * The minimum number of files to upload
    */
   minFiles: string
@@ -165,7 +175,7 @@ export interface FormEditor {
 
 export type FormEditorInputPage = Pick<
   FormEditor,
-  'pageType' | 'questionType' | 'writtenAnswerSub' | 'dateSub'
+  'pageType' | 'questionType' | 'writtenAnswerSub' | 'dateSub' | 'listSub'
 >
 
 export type FormEditorInputCheckAnswersSettings = Pick<
@@ -193,6 +203,7 @@ export type FormEditorInputQuestion = Pick<
   | 'max'
   | 'maxFuture'
   | 'maxPast'
+  | 'exactFiles'
   | 'minFiles'
   | 'maxFiles'
   | 'fileTypes'

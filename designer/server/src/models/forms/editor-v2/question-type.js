@@ -1,9 +1,5 @@
-import { ComponentType } from '@defra/forms-model'
+import { ComponentType, QuestionTypeSubGroup } from '@defra/forms-model'
 
-import {
-  QUESTION_TYPE_DATE_GROUP,
-  QUESTION_TYPE_WRITTEN_ANSWER_GROUP
-} from '~/src/common/constants/editor.js'
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { insertValidationErrors } from '~/src/lib/utils.js'
 import {
@@ -22,14 +18,14 @@ const questionTypeRadioItems = /** @type {FormEditorCheckbox[]} */ ([
     hint: {
       text: 'A short or long answer as test or number'
     },
-    value: QUESTION_TYPE_WRITTEN_ANSWER_GROUP
+    value: QuestionTypeSubGroup.WrittenAnswerSubGroup
   },
   {
     text: 'Date',
     hint: {
       text: 'A day, month and year or month and year only'
     },
-    value: QUESTION_TYPE_DATE_GROUP
+    value: QuestionTypeSubGroup.DateSubGroup
   },
   {
     text: 'UK address',
@@ -64,7 +60,7 @@ const questionTypeRadioItems = /** @type {FormEditorCheckbox[]} */ ([
   },
   {
     text: 'A list of options that users can choose from',
-    value: ComponentType.SelectField
+    value: QuestionTypeSubGroup.ListSubGroup
   }
 ])
 
@@ -81,8 +77,39 @@ const writtenAnswerSubItems = [
 ]
 
 const dateSubItems = [
-  { text: 'Day, month and year', value: 'DatePartsField' },
-  { text: 'Month and year', value: 'MonthYearField' }
+  { text: 'Day, month and year', value: ComponentType.DatePartsField },
+  { text: 'Month and year', value: ComponentType.MonthYearField }
+]
+
+const listSubItems = [
+  {
+    text: 'Yes or No',
+    hint: {
+      text: 'Allow users to answer either ‘Yes’ or ‘No’'
+    },
+    value: ComponentType.YesNoField
+  },
+  {
+    text: 'Checkboxes',
+    hint: {
+      text: 'A list for users to select multiple answers'
+    },
+    value: ComponentType.CheckboxesField
+  },
+  {
+    text: 'Radios',
+    hint: {
+      text: 'A list for users to select one answer'
+    },
+    value: ComponentType.RadiosField
+  },
+  {
+    text: 'Autocomplete',
+    hint: {
+      text: 'A list of options revealed to users as they type'
+    },
+    value: ComponentType.AutocompleteField
+  }
 ]
 
 /**
@@ -99,6 +126,57 @@ export function filterQuestionTypes(questionTypes, componentsSoFar) {
   return preventFileUpload
     ? questionTypes.filter((q) => q.value !== ComponentType.FileUploadField)
     : questionTypes
+}
+
+/**
+ * @param { FormEditor | undefined } formValues
+ * @param { ValidationFailure<FormEditor> | undefined } validation
+ */
+function questionTypeGroupFields(formValues, validation) {
+  return {
+    [QuestionTypeSubGroup.WrittenAnswerSubGroup]: {
+      id: 'writtenAnswerSub',
+      name: 'writtenAnswerSub',
+      idPrefix: 'writtenAnswerSub',
+      fieldset: {
+        legend: {
+          text: 'Type of written answer',
+          isPageHeading: false
+        }
+      },
+      items: writtenAnswerSubItems,
+      value: formValues?.writtenAnswerSub,
+      ...insertValidationErrors(validation?.formErrors.writtenAnswerSub)
+    },
+    [QuestionTypeSubGroup.DateSubGroup]: {
+      id: 'dateSub',
+      name: 'dateSub',
+      idPrefix: 'dateSub',
+      fieldset: {
+        legend: {
+          text: 'Type of date',
+          isPageHeading: false
+        }
+      },
+      items: dateSubItems,
+      value: formValues?.dateSub,
+      ...insertValidationErrors(validation?.formErrors.dateSub)
+    },
+    [QuestionTypeSubGroup.ListSubGroup]: {
+      id: 'listSub',
+      name: 'listSub',
+      idPrefix: 'listSub',
+      fieldset: {
+        legend: {
+          text: 'Type of list',
+          isPageHeading: false
+        }
+      },
+      items: listSubItems,
+      value: formValues?.listSub,
+      ...insertValidationErrors(validation?.formErrors.listSub)
+    }
+  }
 }
 
 /**
@@ -142,34 +220,7 @@ export function questionTypeViewModel(
         ),
         ...insertValidationErrors(validation?.formErrors.questionType)
       },
-      writtenAnswerSub: {
-        id: 'writtenAnswerSub',
-        name: 'writtenAnswerSub',
-        idPrefix: 'writtenAnswerSub',
-        fieldset: {
-          legend: {
-            text: 'Type of written answer',
-            isPageHeading: false
-          }
-        },
-        items: writtenAnswerSubItems,
-        value: formValues?.writtenAnswerSub,
-        ...insertValidationErrors(validation?.formErrors.writtenAnswerSub)
-      },
-      dateSub: {
-        id: 'dateSub',
-        name: 'dateSub',
-        idPrefix: 'dateSub',
-        fieldset: {
-          legend: {
-            text: 'Type of date',
-            isPageHeading: false
-          }
-        },
-        items: dateSubItems,
-        value: formValues?.dateSub,
-        ...insertValidationErrors(validation?.formErrors.dateSub)
-      }
+      ...questionTypeGroupFields(formValues, validation)
     },
     buttonText: SAVE_AND_CONTINUE
   }

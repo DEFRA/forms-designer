@@ -1,8 +1,5 @@
 import { ComponentType } from '@defra/forms-model'
 
-export const QUESTION_TYPE_WRITTEN_ANSWER_GROUP = 'written-answer-group'
-export const QUESTION_TYPE_DATE_GROUP = 'date-group'
-
 export const QuestionTypeDescriptions =
   /** @type {{type: ComponentType, description: string }[]} */ ([
     {
@@ -63,6 +60,7 @@ export const QuestionAdvancedSettings = /** @enum {string} */ {
   Classes: 'classes',
   Min: 'min',
   Max: 'max',
+  ExactFiles: 'exactFiles',
   MinFiles: 'minFiles',
   MaxFiles: 'maxFiles',
   MinLength: 'minLength',
