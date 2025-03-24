@@ -325,7 +325,7 @@ export const allSpecificSchemas = Joi.object().keys({
     '*': 'Maximum length must be a positive whole number'
   }),
   precision: questionDetailsFullSchema.precisionSchema.messages({
-    '*': 'Precision must be a whole number between zero and 5'
+    '*': 'Precision must be a whole number between 0 and 5'
   }),
   prefix: questionDetailsFullSchema.prefixSchema,
   suffix: questionDetailsFullSchema.suffixSchema,

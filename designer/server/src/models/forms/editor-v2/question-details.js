@@ -151,7 +151,12 @@ export function mapToQuestionDetails(question) {
  * @param {{ tabularDataTypes?: string[] | undefined; imageTypes?: string[] | undefined; documentTypes?: string[] | undefined; fileTypes?: string[] | undefined; name: string; question: string | undefined; hintText: string | undefined; questionOptional: string; shortDescription: string | undefined; }} formValues
  * @param { ErrorDetails | undefined } formErrors
  */
-function addFileUploadFields(fields, questionType, formValues, formErrors) {
+export function addFileUploadFields(
+  fields,
+  questionType,
+  formValues,
+  formErrors
+) {
   if (questionType === ComponentType.FileUploadField) {
     // Causes side-effects
     fields.fields.fileTypes = {
