@@ -352,7 +352,7 @@ export const allSpecificSchemas = Joi.object().keys({
     '*': 'Maximum length must be a positive whole number'
   }),
   precision: precisionSchema.messages({
-    '*': 'Precision must be a positive whole number'
+    '*': 'Precision must be a whole number'
   }),
   prefix: prefixSchema,
   suffix: suffixSchema,
