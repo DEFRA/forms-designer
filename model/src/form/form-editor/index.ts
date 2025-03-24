@@ -8,19 +8,25 @@ import {
   type FormEditorInputQuestion
 } from '~/src/form/form-editor/types.js'
 
+export enum QuestionTypeSubGroup {
+  WrittenAnswerSubGroup = 'writtenAnswerSub',
+  DateSubGroup = 'dateSub',
+  ListSubGroup = 'listSub'
+}
+
 export const pageTypeSchema = Joi.string()
   .required()
   .valid('question', 'guidance')
 export const questionTypeSchema = Joi.string()
   .required()
   .valid(
-    'written-answer-group',
-    'date-group',
+    QuestionTypeSubGroup.WrittenAnswerSubGroup,
+    QuestionTypeSubGroup.DateSubGroup,
     ComponentType.UkAddressField,
     ComponentType.TelephoneNumberField,
     ComponentType.FileUploadField,
     ComponentType.EmailAddressField,
-    ComponentType.SelectField
+    QuestionTypeSubGroup.ListSubGroup
   )
 
 export const questionTypeFullSchema = Joi.string()
@@ -48,6 +54,14 @@ export const writtenAnswerSubSchema = Joi.string()
 export const dateSubSchema = Joi.string()
   .required()
   .valid(ComponentType.DatePartsField, ComponentType.MonthYearField)
+export const listSubSchema = Joi.string()
+  .required()
+  .valid(
+    ComponentType.YesNoField,
+    ComponentType.CheckboxesField,
+    ComponentType.RadiosField,
+    ComponentType.AutocompleteField
+  )
 
 export const nameSchema = Joi.string().trim().required()
 export const questionSchema = Joi.string().trim().required()

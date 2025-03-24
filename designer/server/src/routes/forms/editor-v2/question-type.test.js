@@ -1,12 +1,9 @@
+import { QuestionTypeSubGroup } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
 import { testFormDefinitionWithSinglePage } from '~/src/__stubs__/form-definition.js'
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
-import {
-  QUESTION_TYPE_DATE_GROUP,
-  QUESTION_TYPE_WRITTEN_ANSWER_GROUP
-} from '~/src/common/constants/editor.js'
 import { createServer } from '~/src/createServer.js'
 import { addErrorsToSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
@@ -58,7 +55,7 @@ describe('Editor v2 question routes', () => {
     expect($actions).toHaveLength(3)
     expect($actions[2]).toHaveTextContent('Save and continue')
 
-    expect($radios).toHaveLength(11)
+    expect($radios).toHaveLength(16)
     expect($radios[0]).toHaveAccessibleName('Written answer')
     expect($radios[1]).toHaveAccessibleName('Short answer (a single line)')
     expect($radios[2]).toHaveAccessibleName(
@@ -74,6 +71,10 @@ describe('Editor v2 question routes', () => {
     expect($radios[10]).toHaveAccessibleName(
       'A list of options that users can choose from'
     )
+    expect($radios[12]).toHaveAccessibleName('Yes or No')
+    expect($radios[13]).toHaveAccessibleName('Checkboxes')
+    expect($radios[14]).toHaveAccessibleName('Radios')
+    expect($radios[15]).toHaveAccessibleName('Autocomplete')
   })
 
   test('POST - should error if missing mandatory fields', async () => {
@@ -129,23 +130,40 @@ describe('Editor v2 question routes', () => {
     test('gets written answer sub-type', () => {
       expect(
         deriveQuestionType(
-          QUESTION_TYPE_WRITTEN_ANSWER_GROUP,
+          QuestionTypeSubGroup.WrittenAnswerSubGroup,
           'wa-sub',
-          'd-sub'
+          'd-sub',
+          'l-sub'
         )
       ).toBe('wa-sub')
     })
 
     test('gets date sub-type', () => {
       expect(
-        deriveQuestionType(QUESTION_TYPE_DATE_GROUP, 'wa-sub', 'd-sub')
+        deriveQuestionType(
+          QuestionTypeSubGroup.DateSubGroup,
+          'wa-sub',
+          'd-sub',
+          'l-sub'
+        )
       ).toBe('d-sub')
     })
 
+    test('gets list sub-type', () => {
+      expect(
+        deriveQuestionType(
+          QuestionTypeSubGroup.ListSubGroup,
+          'wa-sub',
+          'd-sub',
+          'l-sub'
+        )
+      ).toBe('l-sub')
+    })
+
     test('gets non-sub type', () => {
-      expect(deriveQuestionType('standard-type', 'wa-sub', 'd-sub')).toBe(
-        'standard-type'
-      )
+      expect(
+        deriveQuestionType('standard-type', 'wa-sub', 'd-sub', 'l-sub')
+      ).toBe('standard-type')
     })
   })
 })
