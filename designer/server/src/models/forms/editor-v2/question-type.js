@@ -1,4 +1,4 @@
-import { ComponentType, QuestionTypeGroup } from '@defra/forms-model'
+import { ComponentType, QuestionTypeSubGroup } from '@defra/forms-model'
 
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { insertValidationErrors } from '~/src/lib/utils.js'
@@ -18,14 +18,14 @@ const questionTypeRadioItems = /** @type {FormEditorCheckbox[]} */ ([
     hint: {
       text: 'A short or long answer as test or number'
     },
-    value: QuestionTypeGroup.WrittenAnswerGroup
+    value: QuestionTypeSubGroup.WrittenAnswerSubGroup
   },
   {
     text: 'Date',
     hint: {
       text: 'A day, month and year or month and year only'
     },
-    value: QuestionTypeGroup.DateGroup
+    value: QuestionTypeSubGroup.DateSubGroup
   },
   {
     text: 'UK address',
@@ -60,7 +60,7 @@ const questionTypeRadioItems = /** @type {FormEditorCheckbox[]} */ ([
   },
   {
     text: 'A list of options that users can choose from',
-    value: QuestionTypeGroup.ListGroup
+    value: QuestionTypeSubGroup.ListSubGroup
   }
 ])
 
@@ -134,7 +134,7 @@ export function filterQuestionTypes(questionTypes, componentsSoFar) {
  */
 function questionTypeGroupFields(formValues, validation) {
   return {
-    writtenAnswerSub: {
+    [QuestionTypeSubGroup.WrittenAnswerSubGroup]: {
       id: 'writtenAnswerSub',
       name: 'writtenAnswerSub',
       idPrefix: 'writtenAnswerSub',
@@ -148,7 +148,7 @@ function questionTypeGroupFields(formValues, validation) {
       value: formValues?.writtenAnswerSub,
       ...insertValidationErrors(validation?.formErrors.writtenAnswerSub)
     },
-    dateSub: {
+    [QuestionTypeSubGroup.DateSubGroup]: {
       id: 'dateSub',
       name: 'dateSub',
       idPrefix: 'dateSub',
@@ -162,7 +162,7 @@ function questionTypeGroupFields(formValues, validation) {
       value: formValues?.dateSub,
       ...insertValidationErrors(validation?.formErrors.dateSub)
     },
-    listSub: {
+    [QuestionTypeSubGroup.ListSubGroup]: {
       id: 'listSub',
       name: 'listSub',
       idPrefix: 'listSub',

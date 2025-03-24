@@ -8,10 +8,10 @@ import {
   type FormEditorInputQuestion
 } from '~/src/form/form-editor/types.js'
 
-export enum QuestionTypeGroup {
-  WrittenAnswerGroup = 'written-answer-group',
-  DateGroup = 'date-group',
-  ListGroup = 'list-group'
+export enum QuestionTypeSubGroup {
+  WrittenAnswerSubGroup = 'writtenAnswerSub',
+  DateSubGroup = 'dateSub',
+  ListSubGroup = 'listSub'
 }
 
 export const pageTypeSchema = Joi.string()
@@ -20,13 +20,13 @@ export const pageTypeSchema = Joi.string()
 export const questionTypeSchema = Joi.string()
   .required()
   .valid(
-    QuestionTypeGroup.WrittenAnswerGroup,
-    QuestionTypeGroup.DateGroup,
+    QuestionTypeSubGroup.WrittenAnswerSubGroup,
+    QuestionTypeSubGroup.DateSubGroup,
     ComponentType.UkAddressField,
     ComponentType.TelephoneNumberField,
     ComponentType.FileUploadField,
     ComponentType.EmailAddressField,
-    QuestionTypeGroup.ListGroup
+    QuestionTypeSubGroup.ListSubGroup
   )
 
 export const questionTypeFullSchema = Joi.string()

@@ -1,5 +1,5 @@
 import {
-  QuestionTypeGroup,
+  QuestionTypeSubGroup,
   dateSubSchema,
   listSubSchema,
   questionTypeSchema,
@@ -25,19 +25,19 @@ export const schema = Joi.object().keys({
     '*': 'Select the type of information you need from users or ask users to choose from a list'
   }),
   writtenAnswerSub: Joi.when('questionType', {
-    is: QuestionTypeGroup.WrittenAnswerGroup,
+    is: QuestionTypeSubGroup.WrittenAnswerSubGroup,
     then: writtenAnswerSubSchema.messages({
       '*': 'Select the type of written answer you need from users'
     })
   }),
   dateSub: Joi.when('questionType', {
-    is: QuestionTypeGroup.DateGroup,
+    is: QuestionTypeSubGroup.DateSubGroup,
     then: dateSubSchema.messages({
       '*': 'Select the type of date you need from users'
     })
   }),
   listSub: Joi.when('questionType', {
-    is: QuestionTypeGroup.ListGroup,
+    is: QuestionTypeSubGroup.ListSubGroup,
     then: listSubSchema.messages({
       '*': 'Select the type of list you need from users'
     })
@@ -57,13 +57,13 @@ export function deriveQuestionType(
   dateSub,
   listSub
 ) {
-  if (questionType === QuestionTypeGroup.WrittenAnswerGroup) {
+  if (questionType === QuestionTypeSubGroup.WrittenAnswerSubGroup) {
     return writtenAnswerSub
   }
-  if (questionType === QuestionTypeGroup.DateGroup) {
+  if (questionType === QuestionTypeSubGroup.DateSubGroup) {
     return dateSub
   }
-  if (questionType === QuestionTypeGroup.ListGroup) {
+  if (questionType === QuestionTypeSubGroup.ListSubGroup) {
     return listSub
   }
   return /** @type {string | undefined} */ questionType

@@ -1,4 +1,4 @@
-import { QuestionTypeGroup } from '@defra/forms-model'
+import { QuestionTypeSubGroup } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
@@ -130,7 +130,7 @@ describe('Editor v2 question routes', () => {
     test('gets written answer sub-type', () => {
       expect(
         deriveQuestionType(
-          QuestionTypeGroup.WrittenAnswerGroup,
+          QuestionTypeSubGroup.WrittenAnswerSubGroup,
           'wa-sub',
           'd-sub',
           'l-sub'
@@ -141,7 +141,7 @@ describe('Editor v2 question routes', () => {
     test('gets date sub-type', () => {
       expect(
         deriveQuestionType(
-          QuestionTypeGroup.DateGroup,
+          QuestionTypeSubGroup.DateSubGroup,
           'wa-sub',
           'd-sub',
           'l-sub'
@@ -152,7 +152,7 @@ describe('Editor v2 question routes', () => {
     test('gets list sub-type', () => {
       expect(
         deriveQuestionType(
-          QuestionTypeGroup.ListGroup,
+          QuestionTypeSubGroup.ListSubGroup,
           'wa-sub',
           'd-sub',
           'l-sub'
