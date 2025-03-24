@@ -1,13 +1,9 @@
+import { QuestionTypeGroup } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
 import { testFormDefinitionWithSinglePage } from '~/src/__stubs__/form-definition.js'
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
-import {
-  QUESTION_TYPE_DATE_GROUP,
-  QUESTION_TYPE_LIST_GROUP,
-  QUESTION_TYPE_WRITTEN_ANSWER_GROUP
-} from '~/src/common/constants/editor.js'
 import { createServer } from '~/src/createServer.js'
 import { addErrorsToSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
@@ -134,7 +130,7 @@ describe('Editor v2 question routes', () => {
     test('gets written answer sub-type', () => {
       expect(
         deriveQuestionType(
-          QUESTION_TYPE_WRITTEN_ANSWER_GROUP,
+          QuestionTypeGroup.WrittenAnswerGroup,
           'wa-sub',
           'd-sub',
           'l-sub'
@@ -144,13 +140,23 @@ describe('Editor v2 question routes', () => {
 
     test('gets date sub-type', () => {
       expect(
-        deriveQuestionType(QUESTION_TYPE_DATE_GROUP, 'wa-sub', 'd-sub', 'l-sub')
+        deriveQuestionType(
+          QuestionTypeGroup.DateGroup,
+          'wa-sub',
+          'd-sub',
+          'l-sub'
+        )
       ).toBe('d-sub')
     })
 
     test('gets list sub-type', () => {
       expect(
-        deriveQuestionType(QUESTION_TYPE_LIST_GROUP, 'wa-sub', 'd-sub', 'l-sub')
+        deriveQuestionType(
+          QuestionTypeGroup.ListGroup,
+          'wa-sub',
+          'd-sub',
+          'l-sub'
+        )
       ).toBe('l-sub')
     })
 

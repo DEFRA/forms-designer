@@ -1,10 +1,5 @@
-import { ComponentType } from '@defra/forms-model'
+import { ComponentType, QuestionTypeGroup } from '@defra/forms-model'
 
-import {
-  QUESTION_TYPE_DATE_GROUP,
-  QUESTION_TYPE_LIST_GROUP,
-  QUESTION_TYPE_WRITTEN_ANSWER_GROUP
-} from '~/src/common/constants/editor.js'
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { insertValidationErrors } from '~/src/lib/utils.js'
 import {
@@ -23,14 +18,14 @@ const questionTypeRadioItems = /** @type {FormEditorCheckbox[]} */ ([
     hint: {
       text: 'A short or long answer as test or number'
     },
-    value: QUESTION_TYPE_WRITTEN_ANSWER_GROUP
+    value: QuestionTypeGroup.WrittenAnswerGroup
   },
   {
     text: 'Date',
     hint: {
       text: 'A day, month and year or month and year only'
     },
-    value: QUESTION_TYPE_DATE_GROUP
+    value: QuestionTypeGroup.DateGroup
   },
   {
     text: 'UK address',
@@ -65,7 +60,7 @@ const questionTypeRadioItems = /** @type {FormEditorCheckbox[]} */ ([
   },
   {
     text: 'A list of options that users can choose from',
-    value: QUESTION_TYPE_LIST_GROUP
+    value: QuestionTypeGroup.ListGroup
   }
 ])
 

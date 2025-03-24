@@ -1,4 +1,5 @@
 import {
+  QuestionTypeGroup,
   dateSubSchema,
   listSubSchema,
   questionTypeSchema,
@@ -7,11 +8,6 @@ import {
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
-import {
-  QUESTION_TYPE_DATE_GROUP,
-  QUESTION_TYPE_LIST_GROUP,
-  QUESTION_TYPE_WRITTEN_ANSWER_GROUP
-} from '~/src/common/constants/editor.js'
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
@@ -29,19 +25,19 @@ export const schema = Joi.object().keys({
     '*': 'Select the type of information you need from users or ask users to choose from a list'
   }),
   writtenAnswerSub: Joi.when('questionType', {
-    is: QUESTION_TYPE_WRITTEN_ANSWER_GROUP,
+    is: QuestionTypeGroup.WrittenAnswerGroup,
     then: writtenAnswerSubSchema.messages({
       '*': 'Select the type of written answer you need from users'
     })
   }),
   dateSub: Joi.when('questionType', {
-    is: QUESTION_TYPE_DATE_GROUP,
+    is: QuestionTypeGroup.DateGroup,
     then: dateSubSchema.messages({
       '*': 'Select the type of date you need from users'
     })
   }),
   listSub: Joi.when('questionType', {
-    is: QUESTION_TYPE_LIST_GROUP,
+    is: QuestionTypeGroup.ListGroup,
     then: listSubSchema.messages({
       '*': 'Select the type of list you need from users'
     })
@@ -61,13 +57,13 @@ export function deriveQuestionType(
   dateSub,
   listSub
 ) {
-  if (questionType === QUESTION_TYPE_WRITTEN_ANSWER_GROUP) {
+  if (questionType === QuestionTypeGroup.WrittenAnswerGroup) {
     return writtenAnswerSub
   }
-  if (questionType === QUESTION_TYPE_DATE_GROUP) {
+  if (questionType === QuestionTypeGroup.DateGroup) {
     return dateSub
   }
-  if (questionType === QUESTION_TYPE_LIST_GROUP) {
+  if (questionType === QuestionTypeGroup.ListGroup) {
     return listSub
   }
   return /** @type {string | undefined} */ questionType
