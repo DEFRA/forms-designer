@@ -98,6 +98,34 @@ export const tabularDataTypesSchema = Joi.array()
   .empty(null)
   .default([])
 
+export const questionDetailsFullSchema = {
+  classesSchema,
+  documentTypesSchema,
+  exactFilesSchema,
+  fileTypesSchema,
+  hintTextSchema,
+  imageTypesSchema,
+  maxFilesSchema,
+  maxFutureSchema,
+  maxLengthSchema,
+  maxPastSchema,
+  maxSchema,
+  minFilesSchema,
+  minLengthSchema,
+  minSchema,
+  nameSchema,
+  precisionSchema,
+  prefixSchema,
+  questionOptionalSchema,
+  questionSchema,
+  questionTypeFullSchema,
+  regexSchema,
+  rowsSchema,
+  shortDescriptionSchema,
+  suffixSchema,
+  tabularDataTypesSchema
+}
+
 export const formEditorInputPageKeys = {
   pageType: pageTypeSchema,
   questionType: questionTypeSchema
