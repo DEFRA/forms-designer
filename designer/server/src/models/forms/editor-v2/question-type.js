@@ -134,6 +134,57 @@ export function filterQuestionTypes(questionTypes, componentsSoFar) {
 }
 
 /**
+ * @param { FormEditor | undefined } formValues
+ * @param { ValidationFailure<FormEditor> | undefined } validation
+ */
+function questionTypeGroupFields(formValues, validation) {
+  return {
+    writtenAnswerSub: {
+      id: 'writtenAnswerSub',
+      name: 'writtenAnswerSub',
+      idPrefix: 'writtenAnswerSub',
+      fieldset: {
+        legend: {
+          text: 'Type of written answer',
+          isPageHeading: false
+        }
+      },
+      items: writtenAnswerSubItems,
+      value: formValues?.writtenAnswerSub,
+      ...insertValidationErrors(validation?.formErrors.writtenAnswerSub)
+    },
+    dateSub: {
+      id: 'dateSub',
+      name: 'dateSub',
+      idPrefix: 'dateSub',
+      fieldset: {
+        legend: {
+          text: 'Type of date',
+          isPageHeading: false
+        }
+      },
+      items: dateSubItems,
+      value: formValues?.dateSub,
+      ...insertValidationErrors(validation?.formErrors.dateSub)
+    },
+    listSub: {
+      id: 'listSub',
+      name: 'listSub',
+      idPrefix: 'listSub',
+      fieldset: {
+        legend: {
+          text: 'Type of list',
+          isPageHeading: false
+        }
+      },
+      items: listSubItems,
+      value: formValues?.listSub,
+      ...insertValidationErrors(validation?.formErrors.listSub)
+    }
+  }
+}
+
+/**
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  * @param {string} pageId
@@ -174,48 +225,7 @@ export function questionTypeViewModel(
         ),
         ...insertValidationErrors(validation?.formErrors.questionType)
       },
-      writtenAnswerSub: {
-        id: 'writtenAnswerSub',
-        name: 'writtenAnswerSub',
-        idPrefix: 'writtenAnswerSub',
-        fieldset: {
-          legend: {
-            text: 'Type of written answer',
-            isPageHeading: false
-          }
-        },
-        items: writtenAnswerSubItems,
-        value: formValues?.writtenAnswerSub,
-        ...insertValidationErrors(validation?.formErrors.writtenAnswerSub)
-      },
-      dateSub: {
-        id: 'dateSub',
-        name: 'dateSub',
-        idPrefix: 'dateSub',
-        fieldset: {
-          legend: {
-            text: 'Type of date',
-            isPageHeading: false
-          }
-        },
-        items: dateSubItems,
-        value: formValues?.dateSub,
-        ...insertValidationErrors(validation?.formErrors.dateSub)
-      },
-      listSub: {
-        id: 'listSub',
-        name: 'listSub',
-        idPrefix: 'listSub',
-        fieldset: {
-          legend: {
-            text: 'Type of list',
-            isPageHeading: false
-          }
-        },
-        items: listSubItems,
-        value: formValues?.listSub,
-        ...insertValidationErrors(validation?.formErrors.listSub)
-      }
+      ...questionTypeGroupFields(formValues, validation)
     },
     buttonText: SAVE_AND_CONTINUE
   }
