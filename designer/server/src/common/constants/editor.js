@@ -56,7 +56,7 @@ export const QuestionTypeDescriptions =
     }
   ])
 
-export const QuestionAdvancedSettings = /** @enum {string} */ {
+export const QuestionAdvancedSettings = /** @enum {AdvancedSettingsType} */ {
   Classes: 'classes',
   Min: 'min',
   Max: 'max',
