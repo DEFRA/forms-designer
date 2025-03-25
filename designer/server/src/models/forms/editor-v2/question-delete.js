@@ -1,5 +1,6 @@
 import { ComponentType, hasComponents } from '@defra/forms-model'
 
+import { stringHasValue } from '~/src/lib/utils.js'
 import {
   baseModelFields,
   getFormSpecificNavigation
@@ -50,7 +51,9 @@ export function determineCaptionText(formComponents, page, questionId) {
       return question.title
     }
   }
-  return page?.title ? page.title : formComponents[0].title
+  return stringHasValue(page?.title)
+    ? `${page?.title}`
+    : formComponents[0].title
 }
 
 /**
