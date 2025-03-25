@@ -16,7 +16,7 @@ const EXACT_FILES_ERROR_MESSAGE =
   'Exact file count must be a whole number between 1 and 25'
 
 export const advancedSettingsPerComponentType =
-  /** @type {Record<ComponentType, string[]> } */ ({
+  /** @type {Record<ComponentType, QuestionAdvancedSettings[]> } */ ({
     TextField: [
       QuestionAdvancedSettings.MinLength,
       QuestionAdvancedSettings.MaxLength,
@@ -67,7 +67,7 @@ export const advancedSettingsPerComponentType =
  * @type { Record<ComponentType, GovukField> }
  */
 export const allAdvancedSettingsFields =
-  /** @type { Record<string, GovukField> } */ ({
+  /** @type { Record<QuestionAdvancedSettings, GovukField> } */ ({
     [QuestionAdvancedSettings.Classes]: {
       name: 'classes',
       id: 'classes',
