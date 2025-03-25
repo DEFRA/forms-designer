@@ -1,4 +1,5 @@
 import { Engine } from '@defra/forms-model'
+import { StatusCodes } from 'http-status-codes'
 
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
@@ -29,7 +30,9 @@ export default [
       const definition = await forms.getDraftFormDefinition(formId, token)
 
       if (definition.engine === Engine.V1) {
-        return h.redirect(editorv2Path(slug, 'confirm-migrate'))
+        return h
+          .redirect(editorv2Path(slug, 'migrate'))
+          .code(StatusCodes.SEE_OTHER)
       }
 
       // Saved banner

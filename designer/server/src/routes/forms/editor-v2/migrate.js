@@ -3,11 +3,10 @@ import { StatusCodes } from 'http-status-codes'
 import * as scopes from '~/src/common/constants/scopes.js'
 import * as editor from '~/src/lib/editor.js'
 import * as forms from '~/src/lib/forms.js'
-import * as viewModel from '~/src/models/forms/editor-v2/confirm-migrate.js'
+import * as viewModel from '~/src/models/forms/editor-v2/migrate.js'
 import { editorv2Path } from '~/src/models/links.js'
 
-export const ROUTE_FULL_PATH_MIGRATE =
-  '/library/{slug}/editor-v2/confirm-migrate'
+export const ROUTE_FULL_PATH_MIGRATE = '/library/{slug}/editor-v2/migrate'
 const CONFIRMATION_PAGE_VIEW = 'forms/confirmation-page'
 
 export default [
