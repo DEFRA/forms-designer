@@ -1,8 +1,8 @@
 import { ComponentType } from '@defra/forms-model'
 
+import { getSelectedFileTypes } from '~/src/models/forms/editor-v2/base-settings-fields.js'
 import {
   getExtraFields,
-  getSelectedFileTypes,
   hasDataOrErrorForDisplay,
   mapToQuestionDetails
 } from '~/src/models/forms/editor-v2/question-details.js'

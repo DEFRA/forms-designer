@@ -56,6 +56,18 @@ export const QuestionTypeDescriptions =
     }
   ])
 
+/** @type {Record<string, keyof FormEditorGovukField | 'name'>} */
+export const QuestionBaseSettings = {
+  Question: 'question',
+  HintText: 'hintText',
+  QuestionOptional: 'questionOptional',
+  ShortDescription: 'shortDescription',
+  FileTypes: 'fileTypes',
+  DocumentTypes: 'documentTypes',
+  ImageTypes: 'imageTypes',
+  TabularDataTypes: 'tabularDataTypes'
+}
+
 export const QuestionAdvancedSettings = /** @enum {string} */ {
   Classes: 'classes',
   Min: 'min',
@@ -73,3 +85,6 @@ export const QuestionAdvancedSettings = /** @enum {string} */ {
   Regex: 'regex',
   Rows: 'rows'
 }
+/**
+ * @import { FormEditorGovukField } from '@defra/forms-model'
+ */
