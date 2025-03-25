@@ -21,54 +21,54 @@
   useNewMasthead: true
 }) %}
 
-{% call appEditorCard({
-  title: cardTitle,
-  caption: cardCaption,
-  heading: cardHeading
-}) %}
-  <form class="form" method="post">
+  {% call appEditorCard({
+    title: cardTitle,
+    caption: cardCaption,
+    heading: cardHeading
+  }) %}
+    <form class="form" method="post">
 
-  {%- include "../views/forms/editor-v2/partials/question-details-base.njk" -%}
-
-  <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-  <h2 class="govuk-heading-m">Question settings</h2>
-
-  {{ govukSummaryList({
-    rows: [
-    {
-      key: {
-        text: 'Type of information'
-      },
-      value: {
-        text: questionTypeDesc
-      },
-      actions: {
-        items: [
-          {
-            href: changeTypeUrl,
-            text: 'Change',
-            visuallyHiddenText: 'type of question',
-            classes: 'govuk-link--no-visited-state'
-          }
-        ]
-      }
-    }]
-    }) }}
+    {%- include "../views/forms/editor-v2/partials/question-details-base.njk" -%}
 
     <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+    <h2 class="govuk-heading-m">Question settings</h2>
 
-    <div class="govuk-button-group govuk-!-margin-top-6">
-      {{ govukButton({
-        text: 'Save and continue'
+    {{ govukSummaryList({
+      rows: [
+      {
+        key: {
+          text: 'Type of information'
+        },
+        value: {
+          text: questionTypeDesc
+        },
+        actions: {
+          items: [
+            {
+              href: changeTypeUrl,
+              text: 'Change',
+              visuallyHiddenText: 'type of question',
+              classes: 'govuk-link--no-visited-state'
+            }
+          ]
+        }
+      }]
       }) }}
 
-      <a href="{{ deleteUrl }}" class="govuk-link govuk-link--no-visited-state">
-        Delete question
-      </a>
-    </div>
+      <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
-  </form>
-{% endcall %}
+      <div class="govuk-button-group govuk-!-margin-top-6">
+        {{ govukButton({
+          text: 'Save and continue'
+        }) }}
+
+        <a href="{{ deleteUrl }}" class="govuk-link govuk-link--no-visited-state">
+          Delete question
+        </a>
+      </div>
+
+    </form>
+  {% endcall %}
 
 {% endcall %}
 {% endblock %}
