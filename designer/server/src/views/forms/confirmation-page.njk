@@ -3,14 +3,35 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
 
+{% set mainClasses = "" %}
+{% if useNewMasthead %}
+  {% set mainClasses = "govuk-main-wrapper--masthead" %}
+{% endif %}
+
 {% block content %}
   <form method="post" novalidate>
     {% call appPageBody({
       heading: pageHeading,
+      description: pageDescription,
+      caption: pageCaption,
+      useNewMasthead: useNewMasthead,
+      backLink: backLink,
       errorList: errorList
     }) %}
       {% if warning %}
         {{ govukWarningText(warning) }}
+      {% endif %}
+
+      {% if bodyHeadingText %}
+      <span class="govuk-caption-l">
+        {{ bodyCaptionText | safe }}
+      </span>
+      {% endif %}
+
+      {% if bodyHeadingText %}
+      <h2 class="govuk-heading-l">
+        {{ bodyHeadingText | safe }}
+      </h2>
       {% endif %}
 
       {% if bodyText %}

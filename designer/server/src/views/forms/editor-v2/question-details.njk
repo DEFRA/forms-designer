@@ -57,9 +57,15 @@
 
     <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
-    {{ govukButton({
-    text: 'Save and continue'
-    }) }}
+    <div class="govuk-button-group govuk-!-margin-top-6">
+      {{ govukButton({
+      text: 'Save and continue'
+      }) }}
+
+      <a href="{{ deleteUrl }}" class="govuk-link govuk-link--no-visited-state">
+        Delete question
+      </a>
+    </div>
 
   </form>
 {% endcall %}

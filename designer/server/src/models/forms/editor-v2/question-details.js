@@ -374,7 +374,11 @@ export function questionDetailsViewModel(
     buttonText: SAVE_AND_CONTINUE,
     isOpen: hasDataOrErrorForDisplay(extraFieldNames, errorList, extraFields),
     getFieldType: (/** @type {GovukField} */ field) =>
-      getFieldComponentType(field)
+      getFieldComponentType(field),
+    deleteUrl: editorv2Path(
+      metadata.slug,
+      `page/${pageId}/delete/${questionId}`
+    )
   }
 }
 
