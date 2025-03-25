@@ -268,10 +268,11 @@ export function getFileFieldValue(fileTypes) {
 }
 
 /**
+ * Function that returns a function to get field value
  * @param { ComponentType | undefined } questionType
  * @param { InputFieldsComponentsDef | undefined } questionFields
  */
-export function composeValueGetter(questionType, questionFields) {
+export function composeValueGetterFn(questionType, questionFields) {
   if (questionType === ComponentType.FileUploadField) {
     const fileTypes = getSelectedFileTypes(questionFields)
 
@@ -316,10 +317,10 @@ export function getQuestionFieldList(questionType) {
  */
 export function getFieldList(questionFields, questionType, validation) {
   const questionFieldList = getQuestionFieldList(questionType)
-  const getFieldValue = composeValueGetter(questionType, questionFields)
+  const getFieldValueFn = composeValueGetterFn(questionType, questionFields)
 
   return questionFieldList.map((fieldName) => {
-    const value = getFieldValue(fieldName, questionFields, validation)
+    const value = getFieldValueFn(fieldName, questionFields, validation)
     return {
       ...allBaseSettingsFields[fieldName],
       value,
