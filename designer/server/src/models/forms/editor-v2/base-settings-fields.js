@@ -9,6 +9,8 @@ import {
 } from '~/src/models/forms/editor-v2/common.js'
 
 const TABULAR_DATA = 'tabular-data'
+const DOCUMENTS = 'documents'
+const IMAGES = 'images'
 
 export const baseSchema = Joi.object().keys({
   name: questionDetailsFullSchema.nameSchema,
@@ -34,7 +36,7 @@ export const baseSchema = Joi.object().keys({
     {
       is: 'FileUploadField',
       then: Joi.array().when('fileTypes', {
-        is: Joi.array().has('documents'),
+        is: Joi.array().has(DOCUMENTS),
         then: Joi.required().messages({
           '*': 'Choose the document file types you accept'
         })
@@ -44,7 +46,7 @@ export const baseSchema = Joi.object().keys({
   imageTypes: questionDetailsFullSchema.imageTypesSchema.when('questionType', {
     is: 'FileUploadField',
     then: Joi.array().when('fileTypes', {
-      is: Joi.array().has('images'),
+      is: Joi.array().has(IMAGES),
       then: Joi.required().messages({
         '*': 'Choose the image file types you accept'
       })
@@ -139,8 +141,8 @@ export const allBaseSettingsFields = {
 }
 
 const allowedParentFileTypes = [
-  { value: 'documents', text: 'Documents' },
-  { value: 'images', text: 'Images' },
+  { value: DOCUMENTS, text: 'Documents' },
+  { value: IMAGES, text: 'Images' },
   { value: TABULAR_DATA, text: 'Tabular data' }
 ]
 export const allowedDocumentTypes = [
@@ -205,10 +207,10 @@ export function getSelectedFileTypesFromCSV(question) {
 
   const fileTypes = /** @type {string[]} */ ([])
   if (documentTypes.length) {
-    fileTypes.push('documents')
+    fileTypes.push(DOCUMENTS)
   }
   if (imageTypes.length) {
-    fileTypes.push('images')
+    fileTypes.push(IMAGES)
   }
   if (tabularDataTypes.length) {
     fileTypes.push(TABULAR_DATA)
