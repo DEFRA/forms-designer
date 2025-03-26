@@ -114,7 +114,7 @@ export function getDetails(
  * @returns {GovukField[]}
  */
 export function getExtraFields(question, validation) {
-  const extraFieldNames = /** @type {string[]} */ (
+  const extraFieldNames = /** @type {ComponentType[]} */ (
     advancedSettingsPerComponentType[question.type]
   )
 

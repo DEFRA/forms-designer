@@ -6,6 +6,7 @@ import create from '~/src/routes/forms/create.js'
 import edit from '~/src/routes/forms/edit.js'
 import editorCheckAnswersSettings from '~/src/routes/forms/editor-v2/check-answers-settings.js'
 import editorGuidance from '~/src/routes/forms/editor-v2/guidance.js'
+import editorMigrate from '~/src/routes/forms/editor-v2/migrate.js'
 import editorPage from '~/src/routes/forms/editor-v2/page.js'
 import editorPagesReorder from '~/src/routes/forms/editor-v2/pages-reorder.js'
 import editorPages from '~/src/routes/forms/editor-v2/pages.js'
@@ -23,6 +24,7 @@ export default [
   api,
   create,
   edit,
+  editorMigrate,
   editorGuidance,
   editorPages,
   editorPagesReorder,
