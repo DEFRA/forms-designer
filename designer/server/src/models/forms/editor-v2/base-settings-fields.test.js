@@ -1,13 +1,65 @@
 import { ComponentType } from '@defra/forms-model'
 
-import {
-  getAdditionalSchema,
-  mapFileTypes,
-  mapQuestionDetails
-} from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
+import { mapQuestionDetails } from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
+import { getFieldList } from '~/src/models/forms/editor-v2/base-settings-fields.js'
+import { GOVUK_LABEL__M } from '~/src/models/forms/editor-v2/common.js'
 import { getFieldComponentType } from '~/src/models/forms/editor-v2/page-fields.js'
 
 describe('editor-v2 - advanced settings fields model', () => {
+  describe('getFieldList', () => {
+    it('should get the default list of fields', () => {
+      const expectedArray = [
+        {
+          name: 'question',
+          id: 'question',
+          label: {
+            text: 'Question',
+            classes: GOVUK_LABEL__M
+          },
+          value: undefined
+        },
+        {
+          name: 'hintText',
+          id: 'hintText',
+          label: {
+            text: 'Hint text (optional)',
+            classes: GOVUK_LABEL__M
+          },
+          rows: 3,
+          value: undefined
+        },
+        {
+          name: 'questionOptional',
+          id: 'questionOptional',
+          classes: 'govuk-checkboxes--small',
+          items: [
+            {
+              value: 'true',
+              text: 'Make this question optional',
+              checked: false
+            }
+          ],
+          value: 'false'
+        },
+        {
+          id: 'shortDescription',
+          name: 'shortDescription',
+          idPrefix: 'shortDescription',
+          label: {
+            text: 'Short description',
+            classes: GOVUK_LABEL__M
+          },
+          hint: {
+            text: "Enter a short description for this question like 'licence period'. Short descriptions are used in error messages and on the check your answers page."
+          },
+          value: undefined
+        }
+      ]
+      expect(
+        getFieldList(undefined, ComponentType.TextField, undefined)
+      ).toEqual(expectedArray)
+    })
+  })
   describe('getFieldComponentType', () => {
     test('should throw if invalid or not implemented field type', () => {
       expect(() => getFieldComponentType({ name: ComponentType.Html })).toThrow(
@@ -131,89 +183,6 @@ describe('editor-v2 - advanced settings fields model', () => {
           precision: '2'
         }
       })
-    })
-  })
-
-  describe('mapFileTypes', () => {
-    test('should combine all types into one list', () => {
-      expect(
-        mapFileTypes({
-          fileTypes: ['documents', 'images', 'tabular-data'],
-          documentTypes: ['doc', 'docx'],
-          imageTypes: ['jpg', 'png'],
-          tabularDataTypes: ['csv']
-        }).accept
-      ).toBe('doc,docx,jpg,png,csv')
-    })
-
-    test('should remove sub-types if parent type not selected', () => {
-      expect(
-        mapFileTypes({
-          fileTypes: ['documents', 'tabular-data'],
-          documentTypes: ['doc', 'docx'],
-          imageTypes: ['jpg', 'png'],
-          tabularDataTypes: ['csv']
-        }).accept
-      ).toBe('doc,docx,csv')
-    })
-
-    test('should remove sub-types even if no sub-types, if parent type not selected', () => {
-      expect(
-        mapFileTypes({
-          fileTypes: ['documents', 'tabular-data'],
-          documentTypes: ['doc', 'docx'],
-          imageTypes: undefined,
-          tabularDataTypes: ['csv']
-        }).accept
-      ).toBe('doc,docx,csv')
-    })
-
-    test('should handle undefined lists', () => {
-      expect(
-        mapFileTypes({
-          fileTypes: [],
-          documentTypes: undefined,
-          imageTypes: undefined,
-          tabularDataTypes: undefined
-        })
-      ).toEqual({})
-    })
-  })
-
-  describe('getAdditionalSchema', () => {
-    test('should handle minLength/maxLength', () => {
-      expect(
-        getAdditionalSchema({
-          minLength: '1',
-          maxLength: '2'
-        })
-      ).toEqual({ min: '1', max: '2' })
-    })
-
-    test('should handle min/max', () => {
-      expect(
-        getAdditionalSchema({
-          min: '1',
-          max: '2'
-        })
-      ).toEqual({ min: '1', max: '2' })
-    })
-
-    test('should handle minFiles/maxFiles', () => {
-      expect(
-        getAdditionalSchema({
-          minFiles: '1',
-          maxFiles: '2'
-        })
-      ).toEqual({ min: '1', max: '2' })
-    })
-
-    test('should handle exactFiles', () => {
-      expect(
-        getAdditionalSchema({
-          exactFiles: '3'
-        })
-      ).toEqual({ length: '3' })
     })
   })
 })

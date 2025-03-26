@@ -3,21 +3,22 @@
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 {% from "govuk/components/textarea/macro.njk" import govukTextarea %}
 
-  <div class="govuk-form-group">
-      {{ govukInput(fields.question) }}
-
-      {{ govukTextarea(fields.hintText) }}
-
-      {{ govukCheckboxes(fields.questionOptional) }}
-
-      {% if fields.fileTypes %}
+<div class="govuk-form-group">
+  {% for field in basePageFields %}
+    {% set fieldType = getFieldType(field) %}
+    {% if fieldType == 'TextField' %}
+      {{ govukInput(field) }}
+    {% elif fieldType == 'MultilineTextField' %}
+      {{ govukTextarea(field) }}
+    {% elif fieldType == 'CheckboxesField' %}
+      {{ govukCheckboxes(field) }}
+    {% elif fieldType == 'FileUploadField' %}
       {%- include "../../../../views/forms/editor-v2/partials/file-types.njk" -%}
-      {% endif %}
+    {% endif %}
+  {% endfor %}
 
-      {{ govukInput(fields.shortDescription) }}
+  <input type="hidden" name="questionType" id="questionType" value="{{ questionType }}"/>
+  <input type="hidden" name="name" id="name" value="{{ name }}"/>
+</div>
 
-      <input type="hidden" name="questionType" id="questionType" value="{{ questionType }}" />
-      <input type="hidden" name="name" id="name" value="{{ fields.name.value }}" />
-  </div>
-
-  {%- include "../../../../views/forms/editor-v2/partials/question-details-advanced-settings.njk" -%}
+{%- include "../../../../views/forms/editor-v2/partials/question-details-advanced-settings.njk" -%}

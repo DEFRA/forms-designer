@@ -32,6 +32,7 @@ export default {
           request.logger.error(
             {
               statusCode,
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               data: response.data,
               message: response.message,
               stack_trace: response.stack
