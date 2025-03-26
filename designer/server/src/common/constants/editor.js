@@ -56,20 +56,40 @@ export const QuestionTypeDescriptions =
     }
   ])
 
-export const QuestionAdvancedSettings = /** @enum {string} */ {
-  Classes: 'classes',
-  Min: 'min',
-  Max: 'max',
-  ExactFiles: 'exactFiles',
-  MinFiles: 'minFiles',
-  MaxFiles: 'maxFiles',
-  MinLength: 'minLength',
-  MaxLength: 'maxLength',
-  MaxFuture: 'maxFuture',
-  MaxPast: 'maxPast',
-  Precision: 'precision',
-  Prefix: 'prefix',
-  Suffix: 'suffix',
-  Regex: 'regex',
-  Rows: 'rows'
+export const QuestionBaseSettings = {
+  Name: 'name',
+  Question: 'question',
+  HintText: 'hintText',
+  QuestionOptional: 'questionOptional',
+  ShortDescription: 'shortDescription',
+  FileTypes: 'fileTypes',
+  DocumentTypes: 'documentTypes',
+  ImageTypes: 'imageTypes',
+  TabularDataTypes: 'tabularDataTypes'
 }
+
+/**
+ * @readonly
+ * @enum {string}
+ */
+export const QuestionAdvancedSettings =
+  /** @type {Record<string, keyof FormEditorGovukField | 'name'>} */ {
+    Classes: 'classes',
+    Min: 'min',
+    Max: 'max',
+    ExactFiles: 'exactFiles',
+    MinFiles: 'minFiles',
+    MaxFiles: 'maxFiles',
+    MinLength: 'minLength',
+    MaxLength: 'maxLength',
+    MaxFuture: 'maxFuture',
+    MaxPast: 'maxPast',
+    Precision: 'precision',
+    Prefix: 'prefix',
+    Suffix: 'suffix',
+    Regex: 'regex',
+    Rows: 'rows'
+  }
+/**
+ * @import { FormEditorGovukField } from '@defra/forms-model'
+ */

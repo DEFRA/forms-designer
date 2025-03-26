@@ -6,9 +6,11 @@ import create from '~/src/routes/forms/create.js'
 import edit from '~/src/routes/forms/edit.js'
 import editorCheckAnswersSettings from '~/src/routes/forms/editor-v2/check-answers-settings.js'
 import editorGuidance from '~/src/routes/forms/editor-v2/guidance.js'
+import editorMigrate from '~/src/routes/forms/editor-v2/migrate.js'
 import editorPage from '~/src/routes/forms/editor-v2/page.js'
 import editorPagesReorder from '~/src/routes/forms/editor-v2/pages-reorder.js'
 import editorPages from '~/src/routes/forms/editor-v2/pages.js'
+import editorQuestionDelete from '~/src/routes/forms/editor-v2/question-delete.js'
 import editorQuestionDetails from '~/src/routes/forms/editor-v2/question-details.js'
 import editorQuestion from '~/src/routes/forms/editor-v2/question-type.js'
 import editorQuestions from '~/src/routes/forms/editor-v2/questions.js'
@@ -22,11 +24,13 @@ export default [
   api,
   create,
   edit,
+  editorMigrate,
   editorGuidance,
   editorPages,
   editorPagesReorder,
   editorPage,
   editorQuestion,
+  editorQuestionDelete,
   editorQuestionDetails,
   editorQuestions,
   editorCheckAnswersSettings,

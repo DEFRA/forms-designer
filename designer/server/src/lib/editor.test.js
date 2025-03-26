@@ -8,6 +8,7 @@ import config from '~/src/config.js'
 import {
   addPageAndFirstQuestion,
   addQuestion,
+  deletePage,
   migrateDefinitionToV2,
   reorderPages,
   resolvePageHeading,
@@ -645,6 +646,40 @@ describe('editor.js', () => {
         migrationDefinitionUrl,
         expectedMigrateCall
       )
+    })
+  })
+
+  describe('deletePage', () => {
+    const requestUrl = new URL(
+      `./${formId}/definition/draft/pages/12345`,
+      formsEndpoint
+    )
+    const expectedOptions = {
+      headers: { Authorization: `Bearer ${token}` }
+    }
+
+    describe('when delJson succeeds', () => {
+      test('returns response body', async () => {
+        mockedDelJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: { result: 'ok' }
+        })
+
+        await deletePage(formId, token, '12345')
+
+        expect(mockedDelJson).toHaveBeenCalledWith(requestUrl, expectedOptions)
+      })
+    })
+
+    describe('when delJson fails', () => {
+      test('throws the error', async () => {
+        const testError = new Error('Network error')
+        mockedDelJson.mockRejectedValueOnce(testError)
+
+        await expect(deletePage(formId, token, '12345')).rejects.toThrow(
+          testError
+        )
+      })
     })
   })
 })

@@ -1,4 +1,4 @@
-import { ComponentType, questionDetailsFullSchema } from '@defra/forms-model'
+import { questionDetailsFullSchema } from '@defra/forms-model'
 import Joi from 'joi'
 
 import { QuestionAdvancedSettings } from '~/src/common/constants/editor.js'
@@ -16,7 +16,7 @@ const EXACT_FILES_ERROR_MESSAGE =
   'Exact file count must be a whole number between 1 and 25'
 
 export const advancedSettingsPerComponentType =
-  /** @type {Record<string, string[]> } */ ({
+  /** @type {Record<ComponentType, QuestionAdvancedSettings[]> } */ ({
     TextField: [
       QuestionAdvancedSettings.MinLength,
       QuestionAdvancedSettings.MaxLength,
@@ -36,11 +36,7 @@ export const advancedSettingsPerComponentType =
       QuestionAdvancedSettings.MaxFuture,
       QuestionAdvancedSettings.Classes
     ],
-    MonthYearField: [
-      QuestionAdvancedSettings.MaxPast,
-      QuestionAdvancedSettings.MaxFuture,
-      QuestionAdvancedSettings.Classes
-    ],
+    MonthYearField: [],
     SelectField: [],
     AutocompleteField: [],
     RadiosField: [],
@@ -68,10 +64,10 @@ export const advancedSettingsPerComponentType =
   })
 
 /**
- * @type { Record<string, GovukField> }
+ * @type { Record<ComponentType, GovukField> }
  */
 export const allAdvancedSettingsFields =
-  /** @type { Record<string, GovukField> } */ ({
+  /** @type { Record<QuestionAdvancedSettings, GovukField> } */ ({
     [QuestionAdvancedSettings.Classes]: {
       name: 'classes',
       id: 'classes',
@@ -250,10 +246,10 @@ export const allAdvancedSettingsFields =
 
 export const allSpecificSchemas = Joi.object().keys({
   maxFuture: questionDetailsFullSchema.maxFutureSchema.messages({
-    '*': 'Max days in the future must be a positive whole number'
+    '*': 'Max days in the future must be a positive whole number or zero'
   }),
   maxPast: questionDetailsFullSchema.maxPastSchema.messages({
-    '*': 'Max days in the past must be a positive whole number'
+    '*': 'Max days in the past must be a positive whole number or zero'
   }),
   min: questionDetailsFullSchema.minSchema
     .when('max', {
@@ -325,7 +321,7 @@ export const allSpecificSchemas = Joi.object().keys({
     '*': 'Maximum length must be a positive whole number'
   }),
   precision: questionDetailsFullSchema.precisionSchema.messages({
-    '*': 'Precision must be a positive whole number'
+    '*': 'Precision must be a whole number between 0 and 5'
   }),
   prefix: questionDetailsFullSchema.prefixSchema,
   suffix: questionDetailsFullSchema.suffixSchema,
@@ -335,45 +331,6 @@ export const allSpecificSchemas = Joi.object().keys({
   }),
   classes: questionDetailsFullSchema.classesSchema
 })
-
-const textFieldQuestions = [
-  QuestionAdvancedSettings.ExactFiles,
-  QuestionAdvancedSettings.Min,
-  QuestionAdvancedSettings.Max,
-  QuestionAdvancedSettings.MinFiles,
-  QuestionAdvancedSettings.MaxFiles,
-  QuestionAdvancedSettings.MinLength,
-  QuestionAdvancedSettings.MaxLength,
-  QuestionAdvancedSettings.MaxFuture,
-  QuestionAdvancedSettings.MaxPast,
-  QuestionAdvancedSettings.Precision,
-  QuestionAdvancedSettings.Prefix,
-  QuestionAdvancedSettings.Rows,
-  QuestionAdvancedSettings.Suffix
-]
-
-const multiLineTextFieldQuestions = [
-  QuestionAdvancedSettings.Regex,
-  QuestionAdvancedSettings.Classes
-]
-/**
- * @param {GovukField} field
- */
-export function getFieldComponentType(field) {
-  const fieldName = field.name ?? 'unknown'
-
-  if (textFieldQuestions.includes(fieldName)) {
-    return ComponentType.TextField
-  }
-
-  if (multiLineTextFieldQuestions.includes(fieldName)) {
-    return ComponentType.MultilineTextField
-  }
-
-  throw new Error(
-    `Invalid or not implemented advanced setting field name (${field.name})`
-  )
-}
 
 /**
  * @param {Partial<FormEditorInputQuestion>} payload
@@ -392,10 +349,10 @@ function getAdditionalOptions(payload) {
   if (payload.suffix) {
     additionalOptions.suffix = payload.suffix
   }
-  if (payload.maxFuture) {
+  if (payload.maxFuture !== undefined) {
     additionalOptions.maxDaysInFuture = payload.maxFuture
   }
-  if (payload.maxPast) {
+  if (payload.maxPast !== undefined) {
     additionalOptions.maxDaysInPast = payload.maxPast
   }
   return additionalOptions
@@ -418,7 +375,7 @@ export function getAdditionalSchema(payload) {
   if (payload.regex) {
     additionalSchema.regex = payload.regex
   }
-  if (payload.precision) {
+  if (payload.precision !== undefined) {
     additionalSchema.precision = payload.precision
   }
   return additionalSchema
@@ -464,5 +421,5 @@ export function mapQuestionDetails(payload) {
 }
 
 /**
- * @import { ComponentDef, FormEditorInputQuestion, GovukField } from '@defra/forms-model'
+ * @import { ComponentDef, ComponentType, FormEditorInputQuestion, GovukField } from '@defra/forms-model'
  */

@@ -137,24 +137,15 @@ describe('Editor v2 pages routes', () => {
     expect($actions[3]).toHaveTextContent('Re-order pages')
   })
 
-  test('GET - should migrate to v2 if draft definition is v1', async () => {
-    const formId = '661e4ca5039739ef2902b214'
+  test('GET - should redirect to migration to v2 if draft definition is v1', async () => {
     const v1Definition = buildDefinition({
       ...testFormDefinitionWithSinglePage,
       engine: Engine.V1
     })
-    const v2Definition = buildDefinition({
-      ...testFormDefinitionWithSinglePage,
-      engine: Engine.V2
-    })
-
-    const migrateToV2 = jest.mocked(editor.migrateDefinitionToV2)
-
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     jest
       .mocked(forms.getDraftFormDefinition)
       .mockResolvedValueOnce(v1Definition)
-    migrateToV2.mockResolvedValueOnce(v2Definition)
 
     const options = {
       method: 'get',
@@ -163,10 +154,11 @@ describe('Editor v2 pages routes', () => {
     }
 
     const {
-      response: { statusCode }
+      response: { headers, statusCode }
     } = await renderResponse(server, options)
-    expect(statusCode).toBe(StatusCodes.OK)
-    expect(migrateToV2).toHaveBeenCalledWith(formId, expect.anything())
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe('/library/my-form-slug/editor-v2/migrate')
   })
 })
 

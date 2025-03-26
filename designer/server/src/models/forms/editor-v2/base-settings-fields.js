@@ -1,5 +1,16 @@
-import { questionDetailsFullSchema } from '@defra/forms-model'
+import { ComponentType, questionDetailsFullSchema } from '@defra/forms-model'
 import Joi from 'joi'
+
+import { QuestionBaseSettings } from '~/src/common/constants/editor.js'
+import { insertValidationErrors } from '~/src/lib/utils.js'
+import {
+  GOVUK_LABEL__M,
+  tickBoxes
+} from '~/src/models/forms/editor-v2/common.js'
+
+const TABULAR_DATA = 'tabular-data'
+const DOCUMENTS = 'documents'
+const IMAGES = 'images'
 
 export const baseSchema = Joi.object().keys({
   name: questionDetailsFullSchema.nameSchema,
@@ -25,7 +36,7 @@ export const baseSchema = Joi.object().keys({
     {
       is: 'FileUploadField',
       then: Joi.array().when('fileTypes', {
-        is: Joi.array().has('documents'),
+        is: Joi.array().has(DOCUMENTS),
         then: Joi.required().messages({
           '*': 'Choose the document file types you accept'
         })
@@ -35,7 +46,7 @@ export const baseSchema = Joi.object().keys({
   imageTypes: questionDetailsFullSchema.imageTypesSchema.when('questionType', {
     is: 'FileUploadField',
     then: Joi.array().when('fileTypes', {
-      is: Joi.array().has('images'),
+      is: Joi.array().has(IMAGES),
       then: Joi.required().messages({
         '*': 'Choose the image file types you accept'
       })
@@ -46,7 +57,7 @@ export const baseSchema = Joi.object().keys({
     {
       is: 'FileUploadField',
       then: Joi.array().when('fileTypes', {
-        is: Joi.array().has('tabular-data'),
+        is: Joi.array().has(TABULAR_DATA),
         then: Joi.required().messages({
           '*': 'Choose the tabular data file types you accept'
         })
@@ -54,3 +65,273 @@ export const baseSchema = Joi.object().keys({
     }
   )
 })
+
+/**
+ * @type {Record<keyof Omit<FormEditorGovukField, 'errorMessage'>, GovukField>}
+ */
+export const allBaseSettingsFields = {
+  question: {
+    name: 'question',
+    id: 'question',
+    label: {
+      text: 'Question',
+      classes: GOVUK_LABEL__M
+    }
+  },
+  hintText: {
+    name: 'hintText',
+    id: 'hintText',
+    label: {
+      text: 'Hint text (optional)',
+      classes: GOVUK_LABEL__M
+    },
+    rows: 3
+  },
+  questionOptional: {
+    name: 'questionOptional',
+    id: 'questionOptional',
+    classes: 'govuk-checkboxes--small',
+    items: [
+      {
+        value: 'true',
+        text: 'Make this question optional',
+        checked: false
+      }
+    ]
+  },
+  shortDescription: {
+    id: 'shortDescription',
+    name: 'shortDescription',
+    idPrefix: 'shortDescription',
+    label: {
+      text: 'Short description',
+      classes: GOVUK_LABEL__M
+    },
+    hint: {
+      text: "Enter a short description for this question like 'licence period'. Short descriptions are used in error messages and on the check your answers page."
+    }
+  },
+  fileTypes: {
+    id: 'fileTypes',
+    name: 'fileTypes',
+    idPrefix: 'fileTypes',
+    fieldset: {
+      legend: {
+        text: 'Select the file types you accept',
+        isPageHeading: false,
+        classes: 'govuk-fieldset__legend--m'
+      }
+    }
+  },
+  documentTypes: {
+    id: 'documentTypes',
+    name: 'documentTypes',
+    idPrefix: 'documentTypes'
+  },
+  imageTypes: {
+    id: 'imageTypes',
+    name: 'imageTypes',
+    idPrefix: 'imageTypes'
+  },
+  tabularDataTypes: {
+    id: 'tabularDataTypes',
+    name: 'tabularDataTypes',
+    idPrefix: 'tabularDataTypes'
+  }
+}
+
+const allowedParentFileTypes = [
+  { value: DOCUMENTS, text: 'Documents' },
+  { value: IMAGES, text: 'Images' },
+  { value: TABULAR_DATA, text: 'Tabular data' }
+]
+export const allowedDocumentTypes = [
+  { value: 'pdf', text: 'PDF' },
+  { value: 'doc', text: 'DOC' },
+  { value: 'docx', text: 'DOCX' },
+  { value: 'odt', text: 'ODT' },
+  { value: 'txt', text: 'TXT' }
+]
+export const allowedImageTypes = [
+  { value: 'jpg', text: 'JPG' },
+  { value: 'jpeg', text: 'JPEG' },
+  { value: 'png', text: 'PNG' }
+]
+export const allowedTabularDataTypes = [
+  { value: 'xls', text: 'XLS' },
+  { value: 'xlsx', text: 'XLSX' },
+  { value: 'csv', text: 'CSV' },
+  { value: 'ods', text: 'ODS' }
+]
+
+/**
+ * @param {ComponentDef | undefined} question
+ */
+export function getSelectedFileTypesFromCSV(question) {
+  const isFileUpload = question?.type === ComponentType.FileUploadField
+
+  if (!isFileUpload) {
+    return {}
+  }
+
+  const selectedTypesFromCSV = question.options.accept?.split(',')
+  const allowedDocumentExtensions = /** @type {string[]} */ (
+    allowedDocumentTypes.map((x) => x.value)
+  )
+  const documentTypes =
+    /** @type {string[]} */
+    (
+      selectedTypesFromCSV?.filter((x) =>
+        allowedDocumentExtensions.includes(x)
+      ) ?? []
+    )
+
+  const allowedImageExtensions = /** @type {string[]} */ (
+    allowedImageTypes.map((x) => x.value)
+  )
+  const imageTypes =
+    /** @type {string[]} */
+    (
+      selectedTypesFromCSV?.filter((x) => allowedImageExtensions.includes(x)) ??
+        []
+    )
+
+  const allowedTabularDataExtensions = /** @type {string[]} */ (
+    allowedTabularDataTypes.map((x) => x.value)
+  )
+
+  const tabularDataTypes =
+    selectedTypesFromCSV?.filter((x) =>
+      allowedTabularDataExtensions.includes(x)
+    ) ?? []
+
+  const fileTypes = /** @type {string[]} */ ([])
+  if (documentTypes.length) {
+    fileTypes.push(DOCUMENTS)
+  }
+  if (imageTypes.length) {
+    fileTypes.push(IMAGES)
+  }
+  if (tabularDataTypes.length) {
+    fileTypes.push(TABULAR_DATA)
+  }
+
+  return {
+    fileTypes,
+    documentTypes,
+    imageTypes,
+    tabularDataTypes
+  }
+}
+
+/**
+ *
+ * @param { keyof Omit<FormEditorGovukField, 'errorMessage'> } fieldName
+ * @param { InputFieldsComponentsDef | undefined } questionFields
+ * @param { ValidationFailure<FormEditor> | undefined } validation
+ * @returns {GovukField['value']}
+ */
+export function getFieldValue(fieldName, questionFields, validation) {
+  const validationResult = validation?.formValues[fieldName]
+
+  if (validationResult || validationResult === '') {
+    return validationResult
+  }
+
+  switch (fieldName) {
+    case 'questionOptional':
+      return `${questionFields?.options.required === false}`
+    case 'question':
+      return questionFields?.title
+    case 'hintText':
+      return questionFields?.hint
+    case 'shortDescription':
+      return questionFields?.shortDescription
+  }
+  return undefined
+}
+
+export const baseQuestionFields =
+  /** @type {(keyof Omit<FormEditorGovukField, 'errorMessage'>)[]} */ ([
+    QuestionBaseSettings.Question,
+    QuestionBaseSettings.HintText,
+    QuestionBaseSettings.QuestionOptional,
+    QuestionBaseSettings.ShortDescription
+  ])
+
+export const fileUploadFields =
+  /** @type {(keyof Omit<FormEditorGovukField, 'errorMessage'>)[]} */ ([
+    QuestionBaseSettings.Question,
+    QuestionBaseSettings.HintText,
+    QuestionBaseSettings.QuestionOptional,
+    QuestionBaseSettings.FileTypes,
+    QuestionBaseSettings.ShortDescription
+  ])
+
+/**
+ * @param { ComponentType | undefined } questionType
+ * @returns {(keyof Omit<FormEditorGovukField, 'errorMessage'>)[]}
+ */
+export function getQuestionFieldList(questionType) {
+  if (questionType === ComponentType.FileUploadField) {
+    return fileUploadFields
+  }
+  return baseQuestionFields
+}
+
+/**
+ * @param { InputFieldsComponentsDef | undefined } questionFields
+ * @param { ComponentType | undefined } questionType
+ * @param { ValidationFailure<FormEditor> | undefined } validation
+ * @returns {GovukField[]}
+ */
+export function getFieldList(questionFields, questionType, validation) {
+  const questionFieldList = getQuestionFieldList(questionType)
+
+  return questionFieldList.map((fieldName) => {
+    const value = getFieldValue(fieldName, questionFields, validation)
+    return {
+      ...allBaseSettingsFields[fieldName],
+      value,
+      ...insertValidationErrors(validation?.formErrors[fieldName])
+    }
+  })
+}
+
+/**
+ * @param { ComponentDef | undefined } questionFields
+ * @param { ValidationFailure<FormEditor> | undefined } validation
+ */
+export function getFileUploadFields(questionFields, validation) {
+  const formValues =
+    /** @type { Record<keyof FormEditorGovukField, string[]>} */
+    (validation?.formValues ?? getSelectedFileTypesFromCSV(questionFields))
+
+  return {
+    fileTypes: {
+      ...allBaseSettingsFields.fileTypes,
+      items: tickBoxes(allowedParentFileTypes, formValues.fileTypes),
+      ...insertValidationErrors(validation?.formErrors.fileTypes)
+    },
+    documentTypes: {
+      ...allBaseSettingsFields.documentTypes,
+      items: tickBoxes(allowedDocumentTypes, formValues.documentTypes),
+      ...insertValidationErrors(validation?.formErrors.documentTypes)
+    },
+    imageTypes: {
+      ...allBaseSettingsFields.imageTypes,
+      items: tickBoxes(allowedImageTypes, formValues.imageTypes),
+      ...insertValidationErrors(validation?.formErrors.imageTypes)
+    },
+    tabularDataTypes: {
+      ...allBaseSettingsFields.tabularDataTypes,
+      items: tickBoxes(allowedTabularDataTypes, formValues.tabularDataTypes),
+      ...insertValidationErrors(validation?.formErrors.tabularDataTypes)
+    }
+  }
+}
+
+/**
+ * @import { ComponentDef, FormMetadata, FormDefinition, FormEditor, FormEditorGovukField, GovukField, InputFieldsComponentsDef, TextFieldComponent } from '@defra/forms-model'
+ * @import { ErrorDetails, ErrorDetailsItem, ValidationFailure } from '~/src/common/helpers/types.js'
+ */
