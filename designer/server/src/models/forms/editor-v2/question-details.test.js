@@ -7,7 +7,6 @@ import {
 } from '~/src/__stubs__/form-definition.js'
 import { getSelectedFileTypesFromCSV } from '~/src/models/forms/editor-v2/base-settings-fields.js'
 import {
-  addFileUploadFields,
   getDetails,
   getExtraFields,
   hasDataOrErrorForDisplay,
@@ -302,177 +301,6 @@ describe('editor-v2 - question details model', () => {
     })
   })
 
-  describe('addFileUploadFields', () => {
-    const fields = /** @type {{ fields: FormEditorGovukField }} */ ({
-      fields: {
-        question: {
-          name: 'question',
-          id: 'question',
-          label: {
-            text: 'Question'
-          },
-          value: 'question vale'
-        },
-        hintText: {
-          name: 'hintText',
-          id: 'hintText',
-          label: {
-            text: 'Hint text (optional)'
-          },
-          rows: 3,
-          value: 'hint value'
-        },
-        questionOptional: {
-          name: 'questionOptional',
-          id: 'questionOptional',
-          classes: 'govuk-checkboxes--small',
-          items: [
-            {
-              value: 'true',
-              text: 'Make this question optional',
-              checked: false
-            }
-          ]
-        },
-        shortDescription: {
-          id: 'shortDescription',
-          name: 'shortDescription',
-          idPrefix: 'shortDescription',
-          label: {
-            text: 'Short description'
-          },
-          value: 'shortDescription value'
-        }
-      }
-    })
-
-    const formValues = {
-      name: 'name',
-      hintText: undefined,
-      tabularDataTypes: [],
-      imageTypes: [],
-      documentTypes: [],
-      question: undefined,
-      questionOptional: 'false',
-      shortDescription: undefined
-    }
-
-    test('should ignore when not file upload', () => {
-      const fieldsCloneForTest = structuredClone(fields)
-      const fieldsCloneForCompare = structuredClone(fields)
-      const res = addFileUploadFields(
-        fieldsCloneForTest,
-        ComponentType.TextField,
-        formValues,
-        {}
-      )
-      expect(res).toEqual(fieldsCloneForCompare)
-    })
-
-    test('should add file upload fields when file upload', () => {
-      const fieldsCloneForTest = structuredClone(fields)
-      const fieldsExpected = {
-        fields: {
-          question: {
-            name: 'question',
-            id: 'question',
-            label: {
-              text: 'Question'
-            },
-            value: 'question vale'
-          },
-          hintText: {
-            name: 'hintText',
-            id: 'hintText',
-            label: {
-              text: 'Hint text (optional)'
-            },
-            rows: 3,
-            value: 'hint value'
-          },
-          questionOptional: {
-            name: 'questionOptional',
-            id: 'questionOptional',
-            classes: 'govuk-checkboxes--small',
-            items: [
-              {
-                value: 'true',
-                text: 'Make this question optional',
-                checked: false
-              }
-            ]
-          },
-          shortDescription: {
-            id: 'shortDescription',
-            name: 'shortDescription',
-            idPrefix: 'shortDescription',
-            label: {
-              text: 'Short description'
-            },
-            value: 'shortDescription value'
-          },
-          fileTypes: {
-            id: 'fileTypes',
-            name: 'fileTypes',
-            idPrefix: 'fileTypes',
-            fieldset: {
-              legend: {
-                text: 'Select the file types you accept',
-                isPageHeading: false,
-                classes: 'govuk-fieldset__legend--m'
-              }
-            },
-            items: [
-              { text: 'Documents', value: 'documents' },
-              { text: 'Images', value: 'images' },
-              { text: 'Tabular data', value: 'tabular-data' }
-            ]
-          },
-          documentTypes: {
-            id: 'documentTypes',
-            name: 'documentTypes',
-            idPrefix: 'documentTypes',
-            items: [
-              { text: 'PDF', value: 'pdf' },
-              { text: 'DOC', value: 'doc' },
-              { text: 'DOCX', value: 'docx' },
-              { text: 'ODT', value: 'odt' },
-              { text: 'TXT', value: 'txt' }
-            ]
-          },
-          imageTypes: {
-            id: 'imageTypes',
-            name: 'imageTypes',
-            idPrefix: 'imageTypes',
-            items: [
-              { text: 'JPG', value: 'jpg' },
-              { text: 'JPEG', value: 'jpeg' },
-              { text: 'PNG', value: 'png' }
-            ]
-          },
-          tabularDataTypes: {
-            id: 'tabularDataTypes',
-            name: 'tabularDataTypes',
-            idPrefix: 'tabularDataTypes',
-            items: [
-              { text: 'XLS', value: 'xls' },
-              { text: 'XLSX', value: 'xlsx' },
-              { text: 'CSV', value: 'csv' },
-              { text: 'ODS', value: 'ods' }
-            ]
-          }
-        }
-      }
-      const res = addFileUploadFields(
-        fieldsCloneForTest,
-        ComponentType.FileUploadField,
-        formValues,
-        {}
-      )
-      expect(res).toEqual(fieldsExpected)
-    })
-  })
-
   describe('getDetails', () => {
     it('should handle edits', () => {
       const metadata = {
@@ -560,6 +388,6 @@ describe('editor-v2 - question details model', () => {
 })
 
 /**
- * @import { ComponentDef, FormEditorGovukField, GovukField, InputFieldsComponentsDef } from '@defra/forms-model'
+ * @import { ComponentDef, GovukField, InputFieldsComponentsDef } from '@defra/forms-model'
  * @import { ErrorDetailsItem } from '~/src/common/helpers/types.js'
  */

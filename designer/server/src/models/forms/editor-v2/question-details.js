@@ -1,8 +1,7 @@
-import { ComponentType, randomId } from '@defra/forms-model'
+import { randomId } from '@defra/forms-model'
 
 import { QuestionTypeDescriptions } from '~/src/common/constants/editor.js'
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
-import { insertValidationErrors } from '~/src/lib/utils.js'
 import { advancedSettingsPerComponentType } from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
 import {
   getFieldList,
@@ -15,83 +14,11 @@ import {
   getFormSpecificNavigation,
   getPageNum,
   getQuestion,
-  getQuestionNum,
-  tickBoxes
+  getQuestionNum
 } from '~/src/models/forms/editor-v2/common.js'
 import { getFieldComponentType } from '~/src/models/forms/editor-v2/page-fields.js'
 import { advancedSettingsFields } from '~/src/models/forms/editor-v2/question-details-advanced-settings.js'
 import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
-
-const allowedParentFileTypes = [
-  { value: 'documents', text: 'Documents' },
-  { value: 'images', text: 'Images' },
-  { value: 'tabular-data', text: 'Tabular data' }
-]
-
-const allowedDocumentTypes = [
-  { value: 'pdf', text: 'PDF' },
-  { value: 'doc', text: 'DOC' },
-  { value: 'docx', text: 'DOCX' },
-  { value: 'odt', text: 'ODT' },
-  { value: 'txt', text: 'TXT' }
-]
-
-const allowedImageTypes = [
-  { value: 'jpg', text: 'JPG' },
-  { value: 'jpeg', text: 'JPEG' },
-  { value: 'png', text: 'PNG' }
-]
-
-const allowedTabularDataTypes = [
-  { value: 'xls', text: 'XLS' },
-  { value: 'xlsx', text: 'XLSX' },
-  { value: 'csv', text: 'CSV' },
-  { value: 'ods', text: 'ODS' }
-]
-
-/**
- * @param {InputFieldsComponentsDef | undefined} question
- */
-export function getSelectedFileTypes(question) {
-  const isFileUpload = question?.type === ComponentType.FileUploadField
-
-  if (!isFileUpload) {
-    return {}
-  }
-
-  const selectedTypes = question.options.accept?.split(',')
-  const allowedDocumentExtensions = allowedDocumentTypes.map((x) => x.value)
-  const documentTypes =
-    selectedTypes?.filter((x) => allowedDocumentExtensions.includes(x)) ?? []
-
-  const allowedImageExtensions = allowedImageTypes.map((x) => x.value)
-  const imageTypes =
-    selectedTypes?.filter((x) => allowedImageExtensions.includes(x)) ?? []
-
-  const allowedTabularDataExtensions = allowedTabularDataTypes.map(
-    (x) => x.value
-  )
-  const tabularDataTypes =
-    selectedTypes?.filter((x) => allowedTabularDataExtensions.includes(x)) ?? []
-
-  const fileTypes = []
-  if (documentTypes.length) {
-    fileTypes.push('documents')
-  }
-  if (imageTypes.length) {
-    fileTypes.push('images')
-  }
-  if (tabularDataTypes.length) {
-    fileTypes.push('tabular-data')
-  }
-
-  return {
-    fileTypes,
-    documentTypes,
-    imageTypes,
-    tabularDataTypes
-  }
-}
 
 const zeroIsValidForFields = ['maxFuture', 'maxPast', 'precision']
 
@@ -145,63 +72,6 @@ export function mapToQuestionDetails(questionFields) {
     shortDescription: questionFields?.shortDescription,
     ...fileTypes
   }
-}
-
-/**
- * @param {{ fields: FormEditorGovukField }} fields
- * @param {ComponentType} questionType
- * @param {{ tabularDataTypes?: string[] | undefined; imageTypes?: string[] | undefined; documentTypes?: string[] | undefined; fileTypes?: string[] | undefined; name: string; question: string | undefined; hintText: string | undefined; questionOptional: string; shortDescription: string | undefined; }} formValues
- * @param { ErrorDetails | undefined } formErrors
- */
-export function addFileUploadFields(
-  fields,
-  questionType,
-  formValues,
-  formErrors
-) {
-  if (questionType === ComponentType.FileUploadField) {
-    // Causes side-effects
-    fields.fields.fileTypes = {
-      id: 'fileTypes',
-      name: 'fileTypes',
-      idPrefix: 'fileTypes',
-      fieldset: {
-        legend: {
-          text: 'Select the file types you accept',
-          isPageHeading: false,
-          classes: 'govuk-fieldset__legend--m'
-        }
-      },
-      items: tickBoxes(allowedParentFileTypes, formValues.fileTypes),
-      ...insertValidationErrors(formErrors?.fileTypes)
-    }
-
-    fields.fields.documentTypes = {
-      id: 'documentTypes',
-      name: 'documentTypes',
-      idPrefix: 'documentTypes',
-      items: tickBoxes(allowedDocumentTypes, formValues.documentTypes),
-      ...insertValidationErrors(formErrors?.documentTypes)
-    }
-
-    fields.fields.imageTypes = {
-      id: 'imageTypes',
-      name: 'imageTypes',
-      idPrefix: 'imageTypes',
-      items: tickBoxes(allowedImageTypes, formValues.imageTypes),
-      ...insertValidationErrors(formErrors?.imageTypes)
-    }
-
-    fields.fields.tabularDataTypes = {
-      id: 'tabularDataTypes',
-      name: 'tabularDataTypes',
-      idPrefix: 'tabularDataTypes',
-      items: tickBoxes(allowedTabularDataTypes, formValues.tabularDataTypes),
-      ...insertValidationErrors(formErrors?.tabularDataTypes)
-    }
-  }
-
-  return fields
 }
 
 /**
@@ -330,6 +200,6 @@ export function questionDetailsViewModel(
 }
 
 /**
- * @import { ComponentDef, FormMetadata, FormDefinition, FormEditor, FormEditorGovukField, GovukField, InputFieldsComponentsDef, TextFieldComponent } from '@defra/forms-model'
- * @import { ErrorDetails, ErrorDetailsItem, ValidationFailure } from '~/src/common/helpers/types.js'
+ * @import { ComponentType, ComponentDef, FormMetadata, FormDefinition, FormEditor, GovukField, InputFieldsComponentsDef, TextFieldComponent } from '@defra/forms-model'
+ * @import { ErrorDetailsItem, ValidationFailure } from '~/src/common/helpers/types.js'
  */
