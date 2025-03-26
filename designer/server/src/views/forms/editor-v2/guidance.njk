@@ -37,9 +37,15 @@
 
     {%- include "../views/forms/editor-v2/partials/markdown-help.njk" -%}
 
-    {{ govukButton({
-      text: buttonText
-    }) }}
+    <div class="govuk-button-group govuk-!-margin-top-6">
+      {{ govukButton({
+        text: buttonText
+      }) }}
+
+      <a href="{{ baseUrl }}/delete/{{ questionId }}" class="govuk-link govuk-link--no-visited-state">
+        Delete page
+      </a>
+    </div>
 
     </form>
     {% endcall %}

@@ -105,7 +105,7 @@ export default [
       const { yar } = request
       const { params, auth } = request
       const { token } = auth.credentials
-      const { slug, pageId } =
+      const { slug, pageId, questionId } =
         /** @type {{ slug: string, pageId: string, questionId: string }} */ (
           params
         )
@@ -127,6 +127,7 @@ export default [
           metadata,
           definition,
           pageId,
+          questionId,
           validation,
           notification
         )

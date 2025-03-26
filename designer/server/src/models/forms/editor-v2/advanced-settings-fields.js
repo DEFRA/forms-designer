@@ -36,11 +36,7 @@ export const advancedSettingsPerComponentType =
       QuestionAdvancedSettings.MaxFuture,
       QuestionAdvancedSettings.Classes
     ],
-    MonthYearField: [
-      QuestionAdvancedSettings.MaxPast,
-      QuestionAdvancedSettings.MaxFuture,
-      QuestionAdvancedSettings.Classes
-    ],
+    MonthYearField: [],
     SelectField: [],
     AutocompleteField: [],
     RadiosField: [],
