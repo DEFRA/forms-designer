@@ -1,4 +1,4 @@
-import { ComponentType } from '@defra/forms-model'
+import { ComponentType, Engine } from '@defra/forms-model'
 
 import {
   buildDefinition,
@@ -275,12 +275,12 @@ describe('editor-v2 - question details model', () => {
         teamName: 'Forms Team',
         teamEmail: 'name@example.gov.uk',
         draft: {
-          createdAt: '2025-03-21T11:46:19.708Z',
+          createdAt: new Date(),
           createdBy: {
             id: '84305e4e-1f52-43d0-a123-9c873b0abb35',
             displayName: 'Joe Bloggs (Acme)'
           },
-          updatedAt: '2025-03-26T10:43:46.605Z',
+          updatedAt: new Date(),
           updatedBy: {
             id: '84305e4e-1f52-43d0-a123-9c873b0abb35',
             displayName: 'Joe Bloggs (Acme)'
@@ -290,12 +290,12 @@ describe('editor-v2 - question details model', () => {
           id: '84305e4e-1f52-43d0-a123-9c873b0abb35',
           displayName: 'Joe Bloggs (Acme)'
         },
-        createdAt: '2025-03-21T11:46:19.708Z',
+        createdAt: new Date(),
         updatedBy: {
           id: '84305e4e-1f52-43d0-a123-9c873b0abb35',
           displayName: 'Joe Bloggs (Acme)'
         },
-        updatedAt: '2025-03-26T10:43:46.605Z'
+        updatedAt: new Date()
       }
       const pageId = '54c46977-005f-4917-bcb5-9f502a4fb508'
       const questionId = 'a592818a-cc2d-459f-a567-3af95e3f1d0e'
@@ -336,7 +336,7 @@ describe('editor-v2 - question details model', () => {
             id: '63ba14e5-9a08-4d16-97d9-fbb35fd5e248'
           }
         ],
-        engine: 'V2'
+        engine: Engine.V2
       })
 
       const details = getDetails(
