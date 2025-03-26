@@ -1,6 +1,6 @@
 import { ComponentType } from '@defra/forms-model'
 
-import { getSelectedFileTypes } from '~/src/models/forms/editor-v2/base-settings-fields.js'
+import { getSelectedFileTypesFromCSV } from '~/src/models/forms/editor-v2/base-settings-fields.js'
 import {
   getExtraFields,
   hasDataOrErrorForDisplay,
@@ -159,7 +159,7 @@ describe('editor-v2 - question details model', () => {
 
   describe('getSelectedFileTypes', () => {
     test('should ignore when not file upload Field', () => {
-      const res = getSelectedFileTypes(undefined)
+      const res = getSelectedFileTypesFromCSV(undefined)
       expect(res).toEqual({
         fileTypes: undefined,
         documentTypes: undefined,
@@ -169,7 +169,7 @@ describe('editor-v2 - question details model', () => {
     })
 
     test('should handle no types selected', () => {
-      const res = getSelectedFileTypes({
+      const res = getSelectedFileTypesFromCSV({
         name: '',
         title: '',
         schema: {},
@@ -187,7 +187,7 @@ describe('editor-v2 - question details model', () => {
     })
 
     test('should handle doc types selected', () => {
-      const res = getSelectedFileTypes({
+      const res = getSelectedFileTypesFromCSV({
         name: '',
         title: '',
         schema: {},
@@ -205,7 +205,7 @@ describe('editor-v2 - question details model', () => {
     })
 
     test('should handle image types selected', () => {
-      const res = getSelectedFileTypes({
+      const res = getSelectedFileTypesFromCSV({
         name: '',
         title: '',
         schema: {},
@@ -223,7 +223,7 @@ describe('editor-v2 - question details model', () => {
     })
 
     test('should handle tabular data types selected', () => {
-      const res = getSelectedFileTypes({
+      const res = getSelectedFileTypesFromCSV({
         name: '',
         title: '',
         schema: {},
@@ -241,7 +241,7 @@ describe('editor-v2 - question details model', () => {
     })
 
     test('should handle all types selected', () => {
-      const res = getSelectedFileTypes({
+      const res = getSelectedFileTypesFromCSV({
         name: '',
         title: '',
         schema: {},

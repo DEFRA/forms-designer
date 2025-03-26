@@ -163,34 +163,43 @@ export const allowedTabularDataTypes = [
 /**
  * @param {ComponentDef | undefined} question
  */
-export function getSelectedFileTypes(question) {
+export function getSelectedFileTypesFromCSV(question) {
   const isFileUpload = question?.type === ComponentType.FileUploadField
 
   if (!isFileUpload) {
     return {}
   }
 
-  const selectedTypes = question.options.accept?.split(',')
+  const selectedTypesFromCSV = question.options.accept?.split(',')
   const allowedDocumentExtensions = /** @type {string[]} */ (
     allowedDocumentTypes.map((x) => x.value)
   )
   const documentTypes =
     /** @type {string[]} */
-    (selectedTypes?.filter((x) => allowedDocumentExtensions.includes(x)) ?? [])
+    (
+      selectedTypesFromCSV?.filter((x) =>
+        allowedDocumentExtensions.includes(x)
+      ) ?? []
+    )
 
   const allowedImageExtensions = /** @type {string[]} */ (
     allowedImageTypes.map((x) => x.value)
   )
   const imageTypes =
     /** @type {string[]} */
-    (selectedTypes?.filter((x) => allowedImageExtensions.includes(x)) ?? [])
+    (
+      selectedTypesFromCSV?.filter((x) => allowedImageExtensions.includes(x)) ??
+        []
+    )
 
   const allowedTabularDataExtensions = /** @type {string[]} */ (
     allowedTabularDataTypes.map((x) => x.value)
   )
 
   const tabularDataTypes =
-    selectedTypes?.filter((x) => allowedTabularDataExtensions.includes(x)) ?? []
+    selectedTypesFromCSV?.filter((x) =>
+      allowedTabularDataExtensions.includes(x)
+    ) ?? []
 
   const fileTypes = /** @type {string[]} */ ([])
   if (documentTypes.length) {
@@ -235,50 +244,7 @@ export function getFieldValue(fieldName, questionFields, validation) {
     case 'shortDescription':
       return questionFields?.shortDescription
   }
-}
-
-/**
- * Higher order function to
- * @param { Record<string, string[]|undefined> } fileTypes
- */
-export function getFileFieldValue(fileTypes) {
-  /**
-   * @param { keyof Omit<FormEditorGovukField, 'errorMessage'> } fieldName
-   * @param { InputFieldsComponentsDef | undefined } questionFields
-   * @param { ValidationFailure<FormEditor> | undefined } validation
-   * @returns {GovukField['value']}
-   */
-  return function (fieldName, questionFields, validation) {
-    const validationResult = validation?.formValues[fieldName]
-
-    if (validationResult) {
-      return validationResult
-    }
-
-    if (
-      ['fileTypes', 'documentTypes', 'imageTypes', 'tabularDataTypes'].includes(
-        fieldName
-      )
-    ) {
-      return fileTypes[fieldName]
-    }
-
-    return getFieldValue(fieldName, questionFields, validation)
-  }
-}
-
-/**
- * Function that returns a function to get field value
- * @param { ComponentType | undefined } questionType
- * @param { InputFieldsComponentsDef | undefined } questionFields
- */
-export function composeValueGetterFn(questionType, questionFields) {
-  if (questionType === ComponentType.FileUploadField) {
-    const fileTypes = getSelectedFileTypes(questionFields)
-
-    return getFileFieldValue(fileTypes)
-  }
-  return getFieldValue
+  return undefined
 }
 
 export const baseQuestionFields =
@@ -317,10 +283,9 @@ export function getQuestionFieldList(questionType) {
  */
 export function getFieldList(questionFields, questionType, validation) {
   const questionFieldList = getQuestionFieldList(questionType)
-  const getFieldValueFn = composeValueGetterFn(questionType, questionFields)
 
   return questionFieldList.map((fieldName) => {
-    const value = getFieldValueFn(fieldName, questionFields, validation)
+    const value = getFieldValue(fieldName, questionFields, validation)
     return {
       ...allBaseSettingsFields[fieldName],
       value,
@@ -336,7 +301,7 @@ export function getFieldList(questionFields, questionType, validation) {
 export function getFileUploadFields(questionFields, validation) {
   const formValues =
     /** @type { Record<keyof FormEditorGovukField, string[]>} */
-    (validation?.formValues ?? getSelectedFileTypes(questionFields))
+    (validation?.formValues ?? getSelectedFileTypesFromCSV(questionFields))
 
   return {
     fileTypes: {
