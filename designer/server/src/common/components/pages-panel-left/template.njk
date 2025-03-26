@@ -6,14 +6,14 @@
 {% endif %}
 
 {% set cardTitle = "Page " + params.pageNum + ": " + params.pageTitle %}
-{% set visuallyHiddenText = " page " + params.pageNum %}
 
 {% if params.isEndPage %}
 <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 <h2 class="govuk-heading-m">End pages</h2>
 {% set cardTitle = "Check your answers" %}
-{% set visuallyHiddenText = "" %}
 {% endif %}
+
+{% set visuallyHiddenText = "" if params.isEndPage else " page " + params.pageNum %}
 
 {{ govukSummaryList({
   card: {
