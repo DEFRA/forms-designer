@@ -73,8 +73,9 @@ describe('Editor v2 question details routes', () => {
     expect($cardHeading).toHaveTextContent('Edit question 1')
     expect($cardHeading).toHaveClass('govuk-heading-l')
 
-    expect($actions).toHaveLength(3)
-    expect($actions[2]).toHaveTextContent('Save and continue')
+    expect($actions).toHaveLength(4)
+    expect($actions[2]).toHaveTextContent('Preview page')
+    expect($actions[3]).toHaveTextContent('Save and continue')
 
     const $fields = container.getAllByRole('textbox')
     expect($fields[0].id).toBe('question')
@@ -127,8 +128,9 @@ describe('Editor v2 question details routes', () => {
     expect($cardHeading).toHaveTextContent('Edit question 1')
     expect($cardHeading).toHaveClass('govuk-heading-l')
 
-    expect($actions).toHaveLength(3)
-    expect($actions[2]).toHaveTextContent('Save and continue')
+    expect($actions).toHaveLength(4)
+    expect($actions[2]).toHaveTextContent('Preview page')
+    expect($actions[3]).toHaveTextContent('Save and continue')
 
     const $fields = container.getAllByRole('textbox')
     expect($fields[3].id).toBe('minLength')

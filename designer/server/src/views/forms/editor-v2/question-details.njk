@@ -57,9 +57,15 @@
 
     <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
-    {{ govukButton({
-    text: 'Save and continue'
-    }) }}
+    <div class="govuk-button-group govuk-!-margin-top-6">
+      {% set button = { label: "Preview page", href: previewPageUrl, id: "preview-page" } %}
+      {%- include "../views/forms/editor-v2/partials/icon-button.njk" -%}
+
+      {{ govukButton({
+        text: 'Save and continue'
+      }) }}
+
+    </div>
 
   </form>
 {% endcall %}

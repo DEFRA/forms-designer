@@ -11,6 +11,7 @@ import {
   GOVUK_LABEL__M,
   SAVE_AND_CONTINUE,
   baseModelFields,
+  buildPreviewUrl,
   getFormSpecificNavigation,
   getPageNum,
   getQuestion,
@@ -276,6 +277,7 @@ export function getDetails(
 ) {
   const formPath = formOverviewPath(metadata.slug)
   const pageNum = getPageNum(definition, pageId)
+  const page = definition.pages.find((x) => x.id === pageId)
   const questionNum = getQuestionNum(definition, pageId, questionId)
   const question = getQuestion(definition, pageId, questionId)
 
@@ -290,7 +292,8 @@ export function getDetails(
     navigation: getFormSpecificNavigation(formPath, metadata, 'Editor'),
     question: questionOverride,
     questionNum,
-    pageNum
+    pageNum,
+    pagePath: page?.path
   }
 }
 /**
@@ -329,13 +332,8 @@ export function questionDetailsViewModel(
   questionType,
   validation
 ) {
-  const { pageTitle, navigation, question, pageNum, questionNum } = getDetails(
-    metadata,
-    definition,
-    pageId,
-    questionId,
-    questionType
-  )
+  const { pageTitle, navigation, question, pageNum, questionNum, pagePath } =
+    getDetails(metadata, definition, pageId, questionId, questionType)
 
   const { formErrors } = validation ?? {}
 
@@ -351,6 +349,7 @@ export function questionDetailsViewModel(
   const extraFieldNames = extraFields.map((field) => field.name ?? 'unknown')
   const allFieldNames = Object.keys(baseFields.fields).concat(extraFieldNames)
   const errorList = buildErrorList(formErrors, allFieldNames)
+  const previewPageUrl = `${buildPreviewUrl(metadata.slug)}${pagePath}?force`
 
   return {
     ...baseModelFields(metadata.slug, pageTitle),
@@ -372,6 +371,7 @@ export function questionDetailsViewModel(
       `page/${pageId}/question/${questionId}`
     ),
     buttonText: SAVE_AND_CONTINUE,
+    previewPageUrl,
     isOpen: hasDataOrErrorForDisplay(extraFieldNames, errorList, extraFields),
     getFieldType: (/** @type {GovukField} */ field) =>
       getFieldComponentType(field)
