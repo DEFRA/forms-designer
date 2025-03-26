@@ -1,4 +1,4 @@
-import { ComponentType, questionDetailsFullSchema } from '@defra/forms-model'
+import { questionDetailsFullSchema } from '@defra/forms-model'
 import Joi from 'joi'
 
 import { QuestionAdvancedSettings } from '~/src/common/constants/editor.js'
@@ -335,45 +335,6 @@ export const allSpecificSchemas = Joi.object().keys({
   }),
   classes: questionDetailsFullSchema.classesSchema
 })
-
-const textFieldQuestions = [
-  QuestionAdvancedSettings.ExactFiles,
-  QuestionAdvancedSettings.Min,
-  QuestionAdvancedSettings.Max,
-  QuestionAdvancedSettings.MinFiles,
-  QuestionAdvancedSettings.MaxFiles,
-  QuestionAdvancedSettings.MinLength,
-  QuestionAdvancedSettings.MaxLength,
-  QuestionAdvancedSettings.MaxFuture,
-  QuestionAdvancedSettings.MaxPast,
-  QuestionAdvancedSettings.Precision,
-  QuestionAdvancedSettings.Prefix,
-  QuestionAdvancedSettings.Rows,
-  QuestionAdvancedSettings.Suffix
-]
-
-const multiLineTextFieldQuestions = [
-  QuestionAdvancedSettings.Regex,
-  QuestionAdvancedSettings.Classes
-]
-/**
- * @param {GovukField} field
- */
-export function getFieldComponentType(field) {
-  const fieldName = field.name ?? 'unknown'
-
-  if (textFieldQuestions.includes(fieldName)) {
-    return ComponentType.TextField
-  }
-
-  if (multiLineTextFieldQuestions.includes(fieldName)) {
-    return ComponentType.MultilineTextField
-  }
-
-  throw new Error(
-    `Invalid or not implemented advanced setting field name (${field.name})`
-  )
-}
 
 /**
  * @param {Partial<FormEditorInputQuestion>} payload

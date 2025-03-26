@@ -2,13 +2,14 @@ import { ComponentType, randomId } from '@defra/forms-model'
 
 import { QuestionTypeDescriptions } from '~/src/common/constants/editor.js'
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
-import { insertValidationErrors, isCheckboxSelected } from '~/src/lib/utils.js'
+import { insertValidationErrors } from '~/src/lib/utils.js'
+import { advancedSettingsPerComponentType } from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
 import {
-  advancedSettingsPerComponentType,
-  getFieldComponentType
-} from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
+  getFieldList,
+  getFileUploadFields,
+  getSelectedFileTypesFromCSV
+} from '~/src/models/forms/editor-v2/base-settings-fields.js'
 import {
-  GOVUK_LABEL__M,
   SAVE_AND_CONTINUE,
   baseModelFields,
   getFormSpecificNavigation,
@@ -17,6 +18,7 @@ import {
   getQuestionNum,
   tickBoxes
 } from '~/src/models/forms/editor-v2/common.js'
+import { getFieldComponentType } from '~/src/models/forms/editor-v2/page-fields.js'
 import { advancedSettingsFields } from '~/src/models/forms/editor-v2/question-details-advanced-settings.js'
 import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
 
@@ -130,17 +132,17 @@ export function hasDataOrErrorForDisplay(
 }
 
 /**
- * @param { InputFieldsComponentsDef | undefined} question
+ * @param { InputFieldsComponentsDef | undefined} questionFields
  */
-export function mapToQuestionDetails(question) {
-  const fileTypes = getSelectedFileTypes(question)
+export function mapToQuestionDetails(questionFields) {
+  const fileTypes = getSelectedFileTypesFromCSV(questionFields)
 
   return {
-    name: question?.name ?? randomId(),
-    question: question?.title,
-    hintText: question?.hint,
-    questionOptional: `${question?.options.required === false}`,
-    shortDescription: question?.shortDescription,
+    name: questionFields?.name ?? randomId(),
+    question: questionFields?.title,
+    hintText: questionFields?.hint,
+    questionOptional: `${questionFields?.options.required === false}`,
+    shortDescription: questionFields?.shortDescription,
     ...fileTypes
   }
 }
@@ -201,77 +203,6 @@ export function addFileUploadFields(
 
   return fields
 }
-/**
- * @param { InputFieldsComponentsDef | undefined } question
- * @param { ValidationFailure<FormEditor> | undefined } validation
- */
-function questionDetailsFields(question, validation) {
-  const formValues = validation?.formValues ?? mapToQuestionDetails(question)
-  const fields = /** @type {{ fields: FormEditorGovukField }} */ ({
-    fields: {
-      name: {
-        value: formValues.name
-      },
-      question: {
-        name: 'question',
-        id: 'question',
-        label: {
-          text: 'Question',
-          classes: GOVUK_LABEL__M
-        },
-        value: formValues.question,
-        ...insertValidationErrors(validation?.formErrors.question)
-      },
-      hintText: {
-        name: 'hintText',
-        id: 'hintText',
-        label: {
-          text: 'Hint text (optional)',
-          classes: GOVUK_LABEL__M
-        },
-        rows: 3,
-        value: formValues.hintText,
-        ...insertValidationErrors(validation?.formErrors.hintText)
-      },
-      questionOptional: {
-        name: 'questionOptional',
-        id: 'questionOptional',
-        classes: 'govuk-checkboxes--small',
-        items: [
-          {
-            value: 'true',
-            text: 'Make this question optional',
-            checked: isCheckboxSelected(formValues.questionOptional)
-          }
-        ]
-      },
-      shortDescription: {
-        id: 'shortDescription',
-        name: 'shortDescription',
-        idPrefix: 'shortDescription',
-        label: {
-          text: 'Short description',
-          classes: GOVUK_LABEL__M
-        },
-        hint: {
-          text: "Enter a short description for this question like 'licence period'. Short descriptions are used in error messages and on the check your answers page."
-        },
-        value: formValues.shortDescription,
-        ...insertValidationErrors(validation?.formErrors.shortDescription)
-      }
-    }
-  })
-
-  // Causes side-effects
-  addFileUploadFields(
-    fields,
-    /** @type {ComponentType} */ (question?.type),
-    formValues,
-    validation?.formErrors
-  )
-
-  return fields
-}
 
 /**
  * @param {FormMetadata} metadata
@@ -296,6 +227,7 @@ export function getDetails(
   const questionOverride = /** @type {ComponentDef} */ (
     question ?? { schema: {}, options: {} }
   )
+
   questionOverride.type = questionType ?? questionOverride.type
 
   return {
@@ -331,7 +263,7 @@ export function getExtraFields(question, validation) {
  * @param {FormDefinition} definition
  * @param {string} pageId
  * @param {string} questionId
- * @param {ComponentType | undefined} questionType
+ * @param {ComponentType | undefined} questionTypeBase
  * @param {ValidationFailure<FormEditor>} [validation]
  */
 export function questionDetailsViewModel(
@@ -339,35 +271,41 @@ export function questionDetailsViewModel(
   definition,
   pageId,
   questionId,
-  questionType,
+  questionTypeBase,
   validation
 ) {
-  const { pageTitle, navigation, question, pageNum, questionNum } = getDetails(
-    metadata,
-    definition,
-    pageId,
-    questionId,
-    questionType
-  )
+  const {
+    pageTitle,
+    navigation,
+    question: questionFields,
+    pageNum,
+    questionNum
+  } = getDetails(metadata, definition, pageId, questionId, questionTypeBase)
+
+  const questionType = questionTypeBase ?? questionFields.type
 
   const { formErrors } = validation ?? {}
 
-  const baseFields = questionDetailsFields(
-    /** @type {InputFieldsComponentsDef} */ (question),
+  const basePageFields = getFieldList(
+    /** @type {InputFieldsComponentsDef} */ (questionFields),
+    questionType,
     validation
   )
 
+  const uploadFields = getFileUploadFields(questionFields, validation)
   const extraFields = /** @type {GovukField[]} */ (
-    getExtraFields(question, validation)
+    getExtraFields(questionFields, validation)
   )
 
   const extraFieldNames = extraFields.map((field) => field.name ?? 'unknown')
-  const allFieldNames = Object.keys(baseFields.fields).concat(extraFieldNames)
+  const allFieldNames = Object.keys(basePageFields).concat(extraFieldNames)
   const errorList = buildErrorList(formErrors, allFieldNames)
 
   return {
     ...baseModelFields(metadata.slug, pageTitle),
-    fields: baseFields.fields,
+    name: questionFields.name || randomId(),
+    basePageFields,
+    uploadFields,
     extraFields,
     cardTitle: `Question ${questionNum}`,
     cardCaption: `Page ${pageNum}`,
@@ -376,9 +314,9 @@ export function questionDetailsViewModel(
     errorList,
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
-    questionType: question.type,
+    questionType: questionFields.type,
     questionTypeDesc: QuestionTypeDescriptions.find(
-      (x) => x.type === question.type
+      (x) => x.type === questionFields.type
     )?.description,
     changeTypeUrl: editorv2Path(
       metadata.slug,
