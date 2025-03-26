@@ -3,6 +3,7 @@ import { ControllerType } from '@defra/forms-model'
 import {
   constructReorderPage,
   excludeEndPages,
+  getFocus,
   orderPages,
   repositionPage
 } from '~/src/models/forms/editor-v2/pages-helper.js'
@@ -177,6 +178,31 @@ describe('editor-v2 - page-helper', () => {
       page2Clone.next = /** @type {Link[]} */ ([{ path: '/summary' }])
       const res = constructReorderPage(page2Clone, undefined)
       expect(res.title).toBe('My first question')
+    })
+  })
+
+  describe('getFocus', () => {
+    test('should split into direction and pageId', () => {
+      const res = getFocus('dir|pageId')
+      expect(res).toEqual({
+        pageId: 'pageId',
+        button: 'dir'
+      })
+    })
+
+    test('should handle blank imput', () => {
+      const res = getFocus('')
+      expect(res).toBeUndefined()
+    })
+
+    test('should return undefined if first param missing', () => {
+      const res = getFocus('|pageId')
+      expect(res).toBeUndefined()
+    })
+
+    test('should return undefined if second param missing', () => {
+      const res = getFocus('dir')
+      expect(res).toBeUndefined()
     })
   })
 })
