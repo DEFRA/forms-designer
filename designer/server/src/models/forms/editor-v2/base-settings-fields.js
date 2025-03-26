@@ -234,7 +234,7 @@ export function getSelectedFileTypesFromCSV(question) {
 export function getFieldValue(fieldName, questionFields, validation) {
   const validationResult = validation?.formValues[fieldName]
 
-  if (validationResult) {
+  if (validationResult || validationResult === '') {
     return validationResult
   }
 

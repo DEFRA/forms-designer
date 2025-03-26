@@ -61,9 +61,10 @@ describe('Editor v2 questions routes', () => {
     expect($questionTitles[1]).toHaveTextContent('This is your first question')
     expect($questionTitles[3]).toHaveTextContent('This is your second question')
 
-    expect($actions).toHaveLength(4)
-    expect($actions[2]).toHaveTextContent('Add another question')
-    expect($actions[3]).toHaveTextContent('Save changes')
+    expect($actions).toHaveLength(5)
+    expect($actions[2]).toHaveTextContent('Preview page')
+    expect($actions[3]).toHaveTextContent('Add another question')
+    expect($actions[4]).toHaveTextContent('Save changes')
   })
 
   test('GET - should render no questions in the view', async () => {

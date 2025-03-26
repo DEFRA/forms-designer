@@ -2,6 +2,7 @@
 
 {% from "page-body/macro.njk" import appPageBody %}
 {% from "editor-card/macro.njk" import appEditorCard %}
+{% from "icon-button/macro.njk" import appIconButton %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/skip-link/macro.njk" import govukSkipLink %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
@@ -44,6 +45,12 @@
       }}
     {% endif %}
     <div class="govuk-button-group govuk-!-margin-top-6">
+      {{ appIconButton({
+        label: "Preview page",
+        href: previewPageUrl,
+        id: "preview-page"
+      }) }}
+
       {% if not preventAddQuestion %}
       {{ govukButton({
         text: 'Add another question',

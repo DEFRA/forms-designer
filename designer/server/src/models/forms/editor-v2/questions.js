@@ -10,6 +10,7 @@ import {
   GOVUK_LABEL__M,
   SAVE_AND_CONTINUE,
   baseModelFields,
+  buildPreviewUrl,
   getFormSpecificNavigation
 } from '~/src/models/forms/editor-v2/common.js'
 import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
@@ -168,7 +169,8 @@ export function questionsViewModel(
     preventAddQuestion: components.some(
       (comp) => comp.type === ComponentType.FileUploadField
     ),
-    notification
+    notification,
+    previewPageUrl: `${buildPreviewUrl(metadata.slug)}${page.path}?force`
   }
 }
 
