@@ -4,16 +4,15 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% set documentsHtml %}
-{{ govukCheckboxes(fields.documentTypes) }}
+    {{ govukCheckboxes(uploadFields.documentTypes) }}
 {% endset -%}
 
 {% set imagesHtml %}
-{{ govukCheckboxes(fields.imageTypes) }}
+    {{ govukCheckboxes(uploadFields.imageTypes) }}
 {% endset -%}
 
 {% set tabularDataHtml %}
-{{ govukCheckboxes(fields.tabularDataTypes) }}
+    {{ govukCheckboxes(uploadFields.tabularDataTypes) }}
 {% endset -%}
 
-{{ govukCheckboxes(fields.fileTypes | setConditionalAttribute(0, documentsHtml) | setConditionalAttribute(1, imagesHtml) | setConditionalAttribute(2, tabularDataHtml) ) }}
-
+{{ govukCheckboxes(uploadFields.fileTypes | setConditionalAttribute(0, documentsHtml) | setConditionalAttribute(1, imagesHtml) | setConditionalAttribute(2, tabularDataHtml) ) }}
