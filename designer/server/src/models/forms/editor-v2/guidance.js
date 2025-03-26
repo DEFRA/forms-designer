@@ -9,7 +9,7 @@ import {
   getFormSpecificNavigation,
   getPageNum
 } from '~/src/models/forms/editor-v2/common.js'
-import { formOverviewPath } from '~/src/models/links.js'
+import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
 
 /**
  * @param {string | undefined} pageHeadingVal
@@ -52,6 +52,7 @@ function guidanceFields(pageHeadingVal, guidanceTextVal, validation) {
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  * @param {string} pageId
+ * @param {string} questionId
  * @param {ValidationFailure<FormEditor>} [validation]
  * @param {string[]} [notification]
  */
@@ -59,6 +60,7 @@ export function guidanceViewModel(
   metadata,
   definition,
   pageId,
+  questionId,
   validation,
   notification
 ) {
@@ -93,6 +95,8 @@ export function guidanceViewModel(
     errorList: buildErrorList(formErrors, ['pageHeading', 'guidanceText']),
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
+    baseUrl: editorv2Path(metadata.slug, `page/${pageId}`),
+    questionId,
     buttonText: SAVE,
     notification
   }

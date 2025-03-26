@@ -17,6 +17,7 @@ const DEFAULT_SETTINGS: InitOptions<HttpBackendOptions> = {
 }
 
 export const initI18n = async (settings?: InitOptions<HttpBackendOptions>) => {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   await I18next.use(Backend).init({ ...DEFAULT_SETTINGS, ...settings })
 
   I18next.services.formatter?.add('lowerFirst', lowerFirst)

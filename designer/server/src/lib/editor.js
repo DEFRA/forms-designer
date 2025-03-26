@@ -298,5 +298,22 @@ export async function migrateDefinitionToV2(formId, token) {
 }
 
 /**
+ * Delete a page
+ * @param {string} formId
+ * @param {string} token
+ * @param { string | undefined } pageId
+ */
+export async function deletePage(formId, token, pageId) {
+  const deletePageRequestUrl = new URL(
+    `./${formId}/definition/draft/pages/${pageId}`,
+    formsEndpoint
+  )
+
+  await delJsonByType(deletePageRequestUrl, {
+    ...getHeaders(token)
+  })
+}
+
+/**
  * @import { ComponentDef, Page, FormEditorInputCheckAnswersSettings, FormEditorInputPageSettings, FormDefinition } from '@defra/forms-model'
  */

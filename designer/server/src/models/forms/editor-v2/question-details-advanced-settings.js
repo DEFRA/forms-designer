@@ -133,7 +133,7 @@ export function mapToQuestionOptions(question) {
 }
 
 /**
- * @param {string[]} options
+ * @param {ComponentType[]} options
  * @param {TextFieldComponent} question
  * @param {ValidationFailure<FormEditor>} [validation]
  * @returns {GovukField[]}

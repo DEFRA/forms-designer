@@ -140,6 +140,76 @@ describe('Editor v2 question details routes', () => {
     expect($details[0].hasAttribute('open')).toBeTruthy()
   })
 
+  test('GET - should render the file upload fields in the base view', async () => {
+    jest.mocked(getValidationErrorsFromSession).mockReturnValue(
+      /** @type {ValidationFailure<FormEditor>} */ ({
+        formValues: {
+          question: 'What is your name?',
+          shortDescription: 'your name',
+          minLength: '10'
+        },
+        formErrors: {}
+      })
+    )
+    jest.mocked(getQuestionType).mockReturnValue(ComponentType.FileUploadField)
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithSinglePage)
+
+    const options = {
+      method: 'get',
+      url: '/library/my-form-slug/editor-v2/page/p1/question/c1/details',
+      auth
+    }
+
+    const { container } = await renderResponse(server, options)
+
+    const $mastheadHeading = container.getByText('Test form')
+    const $cardTitle = container.getByText('Question 1')
+    const $cardCaption = container.getByText('Page 1')
+    const $cardHeading = container.getByText('Edit question 1')
+
+    const $actions = container.getAllByRole('button')
+
+    expect($mastheadHeading).toHaveTextContent('Test form')
+    expect($mastheadHeading).toHaveClass('govuk-heading-xl')
+    expect($cardTitle).toHaveTextContent('Question 1')
+    expect($cardTitle).toHaveClass('editor-card-title')
+    expect($cardCaption).toHaveTextContent('Page 1')
+    expect($cardCaption).toHaveClass('govuk-caption-l')
+    expect($cardHeading).toHaveTextContent('Edit question 1')
+    expect($cardHeading).toHaveClass('govuk-heading-l')
+
+    expect($actions).toHaveLength(3)
+    expect($actions[2]).toHaveTextContent('Save and continue')
+
+    const $fields = container.getAllByRole('textbox')
+    expect($fields[3].id).toBe('minFiles')
+    expect($fields[4].id).toBe('maxFiles')
+    expect($fields[5].id).toBe('exactFiles')
+
+    const $checkboxes = /** @type {HTMLInputElement[]} */ (
+      container.getAllByRole('checkbox')
+    )
+    expect($checkboxes[0].id).toBe('questionOptional')
+    expect($checkboxes[1].id).toBe('fileTypes')
+    expect($checkboxes[2].value).toBe('pdf')
+    expect($checkboxes[3].value).toBe('doc')
+    expect($checkboxes[4].value).toBe('docx')
+    expect($checkboxes[5].value).toBe('odt')
+    expect($checkboxes[6].value).toBe('txt')
+    expect($checkboxes[7].value).toBe('images')
+    expect($checkboxes[8].value).toBe('jpg')
+    expect($checkboxes[9].value).toBe('jpeg')
+    expect($checkboxes[10].value).toBe('png')
+    expect($checkboxes[11].value).toBe('tabular-data')
+    expect($checkboxes[12].value).toBe('xls')
+    expect($checkboxes[13].value).toBe('xlsx')
+    expect($checkboxes[14].value).toBe('csv')
+    expect($checkboxes[15].value).toBe('ods')
+  })
+
   test('POST - should error if missing mandatory fields', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
 
