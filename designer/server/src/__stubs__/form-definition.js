@@ -488,6 +488,21 @@ export function buildTextFieldComponent(partialTextField = {}) {
 }
 
 /**
+ * @param {Partial<FileUploadFieldComponent>} partialFileUploadField
+ * @returns {FileUploadFieldComponent}
+ */
+export function buildFileUploadComponent(partialFileUploadField) {
+  return {
+    name: 'FileUploadField',
+    type: ComponentType.FileUploadField,
+    title: 'File Upload Field',
+    options: {},
+    schema: {},
+    ...partialFileUploadField
+  }
+}
+
+/**
  * Builder to create a Form Definition
  * @param {Partial<FormDefinition>} definitionPartial
  * @returns {FormDefinition}
@@ -504,5 +519,5 @@ export function buildDefinition(definitionPartial = {}) {
 }
 
 /**
- * @import { FormDefinition, PageQuestion, PageSummary, TextFieldComponent } from '@defra/forms-model'
+ * @import { FormDefinition, PageQuestion, PageSummary, TextFieldComponent, FileUploadFieldComponent } from '@defra/forms-model'
  */

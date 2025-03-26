@@ -1,7 +1,13 @@
 import { ComponentType } from '@defra/forms-model'
 
+import {
+  buildDefinition,
+  buildFileUploadComponent,
+  buildQuestionPage
+} from '~/src/__stubs__/form-definition.js'
 import { getSelectedFileTypesFromCSV } from '~/src/models/forms/editor-v2/base-settings-fields.js'
 import {
+  getDetails,
   getExtraFields,
   hasDataOrErrorForDisplay,
   mapToQuestionDetails
@@ -256,6 +262,91 @@ describe('editor-v2 - question details model', () => {
         imageTypes: ['jpg'],
         tabularDataTypes: ['csv']
       })
+    })
+  })
+
+  describe('getDetails', () => {
+    it('should handle edits', () => {
+      const metadata = {
+        id: '67dd518b1f5c8b6e357e39cb',
+        slug: 'autocomplete',
+        title: 'Autocomplete',
+        organisation: 'Defra',
+        teamName: 'Forms Team',
+        teamEmail: 'name@example.gov.uk',
+        draft: {
+          createdAt: '2025-03-21T11:46:19.708Z',
+          createdBy: {
+            id: '84305e4e-1f52-43d0-a123-9c873b0abb35',
+            displayName: 'Joe Bloggs (Acme)'
+          },
+          updatedAt: '2025-03-26T10:43:46.605Z',
+          updatedBy: {
+            id: '84305e4e-1f52-43d0-a123-9c873b0abb35',
+            displayName: 'Joe Bloggs (Acme)'
+          }
+        },
+        createdBy: {
+          id: '84305e4e-1f52-43d0-a123-9c873b0abb35',
+          displayName: 'Joe Bloggs (Acme)'
+        },
+        createdAt: '2025-03-21T11:46:19.708Z',
+        updatedBy: {
+          id: '84305e4e-1f52-43d0-a123-9c873b0abb35',
+          displayName: 'Joe Bloggs (Acme)'
+        },
+        updatedAt: '2025-03-26T10:43:46.605Z'
+      }
+      const pageId = '54c46977-005f-4917-bcb5-9f502a4fb508'
+      const questionId = 'a592818a-cc2d-459f-a567-3af95e3f1d0e'
+
+      const definition = buildDefinition({
+        name: 'Autocomplete',
+        pages: [
+          buildQuestionPage({
+            id: pageId,
+            title: 'Supporting Evidence',
+            components: [
+              buildFileUploadComponent({
+                name: 'ridhiw',
+                shortDescription: 'supporting evidence',
+                hint: '',
+                options: { required: true, accept: 'pdf' },
+                schema: {},
+                id: questionId
+              })
+            ]
+          })
+        ],
+        lists: [
+          {
+            title: 'What is your favourite programming language?',
+            name: 'XddNUm',
+            type: 'string',
+            items: [
+              { text: 'JavaScript', value: 'javascript' },
+              { text: 'TypeScript', value: 'typescript' },
+              { text: 'Java', value: 'java' },
+              { text: 'Python', value: 'python' },
+              { text: 'C#', value: 'csharp' },
+              { text: 'Erlang', value: 'erlang' },
+              { text: 'Haskell', value: 'haskell' },
+              { text: 'Elixir', value: 'elixir' }
+            ],
+            id: '63ba14e5-9a08-4d16-97d9-fbb35fd5e248'
+          }
+        ],
+        engine: 'V2'
+      })
+
+      const details = getDetails(
+        metadata,
+        definition,
+        pageId,
+        questionId,
+        undefined
+      )
+      expect(details.question.type).toBe('FileUploadField')
     })
   })
 })
