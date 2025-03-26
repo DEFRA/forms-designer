@@ -9,7 +9,7 @@ import {
 } from '~/src/models/forms/editor-v2/common.js'
 
 const MIN_FILES_ERROR_MESSAGE =
-  'Minimum file count must be a whole number between 1 and 25'
+  'Minimum file count must be a whole number between 0 and 25'
 const MAX_FILES_ERROR_MESSAGE =
   'Maximum file count must be a whole number between 1 and 25'
 const EXACT_FILES_ERROR_MESSAGE =
@@ -363,7 +363,7 @@ function getAdditionalOptions(payload) {
  */
 export function getAdditionalSchema(payload) {
   const additionalSchema = {}
-  if (payload.minLength ?? payload.min ?? payload.minFiles) {
+  if (payload.minLength ?? payload.min ?? payload.minFiles !== undefined) {
     additionalSchema.min = payload.minLength ?? payload.min ?? payload.minFiles
   }
   if (payload.maxLength ?? payload.max ?? payload.maxFiles) {
