@@ -89,6 +89,7 @@ export function getDetails(
   const questionOverride = /** @type {ComponentDef} */ (
     question ?? { schema: {}, options: {} }
   )
+
   questionOverride.type = questionType ?? questionOverride.type
 
   return {
@@ -124,7 +125,7 @@ export function getExtraFields(question, validation) {
  * @param {FormDefinition} definition
  * @param {string} pageId
  * @param {string} questionId
- * @param {ComponentType | undefined} questionType
+ * @param {ComponentType | undefined} questionTypeBase
  * @param {ValidationFailure<FormEditor>} [validation]
  */
 export function questionDetailsViewModel(
@@ -132,7 +133,7 @@ export function questionDetailsViewModel(
   definition,
   pageId,
   questionId,
-  questionType,
+  questionTypeBase,
   validation
 ) {
   const {
@@ -141,7 +142,9 @@ export function questionDetailsViewModel(
     question: questionFields,
     pageNum,
     questionNum
-  } = getDetails(metadata, definition, pageId, questionId, questionType)
+  } = getDetails(metadata, definition, pageId, questionId, questionTypeBase)
+
+  const questionType = questionTypeBase ?? questionFields.type
 
   const { formErrors } = validation ?? {}
 
