@@ -41,6 +41,20 @@ const fieldArrayWithSomeValues = /** @type {GovukField[]} */ ([
   }
 ])
 
+const fieldArrayWithSomeZeroValues = /** @type {GovukField[]} */ ([
+  {
+    name: 'maxFuture',
+    value: 0
+  }
+])
+
+const fieldArrayWithMissingName = /** @type {GovukField[]} */ ([
+  {
+    name: undefined,
+    value: undefined
+  }
+])
+
 describe('editor-v2 - question details model', () => {
   describe('hasDataOrErrorForDisplay', () => {
     test('should return false if no errors and no field values', () => {
@@ -59,6 +73,28 @@ describe('editor-v2 - question details model', () => {
           fieldArrayWithSomeValues
         )
       ).toBeTruthy()
+    })
+
+    test('should return true if no errors but some field values even if zero for specific fields', () => {
+      const errorList = undefined
+      expect(
+        hasDataOrErrorForDisplay(
+          fieldNames.concat('maxFuture'),
+          errorList,
+          fieldArrayWithSomeZeroValues
+        )
+      ).toBeTruthy()
+    })
+
+    test('should return false if no errors and no name in field', () => {
+      const errorList = undefined
+      expect(
+        hasDataOrErrorForDisplay(
+          fieldNames.concat('maxFuture'),
+          errorList,
+          fieldArrayWithMissingName
+        )
+      ).toBeFalsy()
     })
 
     test('should return true if errors and no field values', () => {

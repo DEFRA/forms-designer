@@ -20,6 +20,8 @@ import { getFieldComponentType } from '~/src/models/forms/editor-v2/page-fields.
 import { advancedSettingsFields } from '~/src/models/forms/editor-v2/question-details-advanced-settings.js'
 import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
 
+const zeroIsValidForFields = ['maxFuture', 'maxPast', 'precision']
+
 /**
  * Determines if the details section should be expanded i.e. if there is a validation error or some data populated
  * in the details section
@@ -43,6 +45,12 @@ export function hasDataOrErrorForDisplay(
 
   for (const fieldObj of extraFields) {
     if (fieldObj.value) {
+      return true
+    }
+    if (
+      zeroIsValidForFields.includes(fieldObj.name ?? 'unknown') &&
+      fieldObj.value !== undefined
+    ) {
       return true
     }
   }
@@ -192,7 +200,6 @@ export function questionDetailsViewModel(
 }
 
 /**
- * @import { ComponentType, ComponentDef, FormMetadata, FormDefinition, FormEditor, FormEditorGovukField, GovukField, InputFieldsComponentsDef, TextFieldComponent } from '@defra/forms-model'
- * @import { QuestionBaseSettings } from '~/src/common/constants/editor.js'
- * @import { ErrorDetails, ErrorDetailsItem, ValidationFailure } from '~/src/common/helpers/types.js'
+ * @import { ComponentType, ComponentDef, FormMetadata, FormDefinition, FormEditor, GovukField, InputFieldsComponentsDef, TextFieldComponent } from '@defra/forms-model'
+ * @import { ErrorDetailsItem, ValidationFailure } from '~/src/common/helpers/types.js'
  */

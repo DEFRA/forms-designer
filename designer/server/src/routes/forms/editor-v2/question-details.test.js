@@ -184,6 +184,11 @@ describe('Editor v2 question details routes', () => {
     expect($actions).toHaveLength(3)
     expect($actions[2]).toHaveTextContent('Save and continue')
 
+    const $fields = container.getAllByRole('textbox')
+    expect($fields[3].id).toBe('minFiles')
+    expect($fields[4].id).toBe('maxFiles')
+    expect($fields[5].id).toBe('exactFiles')
+
     const $checkboxes = /** @type {HTMLInputElement[]} */ (
       container.getAllByRole('checkbox')
     )
@@ -203,11 +208,6 @@ describe('Editor v2 question details routes', () => {
     expect($checkboxes[13].value).toBe('xlsx')
     expect($checkboxes[14].value).toBe('csv')
     expect($checkboxes[15].value).toBe('ods')
-
-    const $fields = container.getAllByRole('textbox')
-    expect($fields[3].id).toBe('minFiles')
-    expect($fields[4].id).toBe('maxFiles')
-    expect($fields[5].id).toBe('exactFiles')
   })
 
   test('POST - should error if missing mandatory fields', async () => {

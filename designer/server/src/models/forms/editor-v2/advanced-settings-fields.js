@@ -250,10 +250,10 @@ export const allAdvancedSettingsFields =
 
 export const allSpecificSchemas = Joi.object().keys({
   maxFuture: questionDetailsFullSchema.maxFutureSchema.messages({
-    '*': 'Max days in the future must be a positive whole number'
+    '*': 'Max days in the future must be a positive whole number or zero'
   }),
   maxPast: questionDetailsFullSchema.maxPastSchema.messages({
-    '*': 'Max days in the past must be a positive whole number'
+    '*': 'Max days in the past must be a positive whole number or zero'
   }),
   min: questionDetailsFullSchema.minSchema
     .when('max', {
@@ -325,7 +325,7 @@ export const allSpecificSchemas = Joi.object().keys({
     '*': 'Maximum length must be a positive whole number'
   }),
   precision: questionDetailsFullSchema.precisionSchema.messages({
-    '*': 'Precision must be a positive whole number'
+    '*': 'Precision must be a whole number between 0 and 5'
   }),
   prefix: questionDetailsFullSchema.prefixSchema,
   suffix: questionDetailsFullSchema.suffixSchema,
@@ -353,10 +353,10 @@ function getAdditionalOptions(payload) {
   if (payload.suffix) {
     additionalOptions.suffix = payload.suffix
   }
-  if (payload.maxFuture) {
+  if (payload.maxFuture !== undefined) {
     additionalOptions.maxDaysInFuture = payload.maxFuture
   }
-  if (payload.maxPast) {
+  if (payload.maxPast !== undefined) {
     additionalOptions.maxDaysInPast = payload.maxPast
   }
   return additionalOptions
@@ -379,7 +379,7 @@ export function getAdditionalSchema(payload) {
   if (payload.regex) {
     additionalSchema.regex = payload.regex
   }
-  if (payload.precision) {
+  if (payload.precision !== undefined) {
     additionalSchema.precision = payload.precision
   }
   return additionalSchema
