@@ -4,6 +4,7 @@
 {% from "grid-layout/macro.njk" import appGridLayout %}
 {% from "page-body/macro.njk" import appPageBody %}
 {% from "editor-card/macro.njk" import appEditorCard %}
+{% from "icon-button/macro.njk" import appIconButton %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 
@@ -58,6 +59,12 @@
       <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
       <div class="govuk-button-group govuk-!-margin-top-6">
+        {{ appIconButton({
+          label: "Preview page",
+          href: previewPageUrl,
+          id: "preview-page"
+        }) }}
+
         {{ govukButton({
           text: 'Save and continue'
         }) }}
