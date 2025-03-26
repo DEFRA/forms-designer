@@ -8,6 +8,8 @@ import {
   tickBoxes
 } from '~/src/models/forms/editor-v2/common.js'
 
+const TABULAR_DATA = 'tabular-data'
+
 export const baseSchema = Joi.object().keys({
   name: questionDetailsFullSchema.nameSchema,
   question: questionDetailsFullSchema.questionSchema.messages({
@@ -53,7 +55,7 @@ export const baseSchema = Joi.object().keys({
     {
       is: 'FileUploadField',
       then: Joi.array().when('fileTypes', {
-        is: Joi.array().has('tabular-data'),
+        is: Joi.array().has(TABULAR_DATA),
         then: Joi.required().messages({
           '*': 'Choose the tabular data file types you accept'
         })
@@ -139,7 +141,7 @@ export const allBaseSettingsFields = {
 const allowedParentFileTypes = [
   { value: 'documents', text: 'Documents' },
   { value: 'images', text: 'Images' },
-  { value: 'tabular-data', text: 'Tabular data' }
+  { value: TABULAR_DATA, text: 'Tabular data' }
 ]
 export const allowedDocumentTypes = [
   { value: 'pdf', text: 'PDF' },
@@ -209,7 +211,7 @@ export function getSelectedFileTypesFromCSV(question) {
     fileTypes.push('images')
   }
   if (tabularDataTypes.length) {
-    fileTypes.push('tabular-data')
+    fileTypes.push(TABULAR_DATA)
   }
 
   return {
