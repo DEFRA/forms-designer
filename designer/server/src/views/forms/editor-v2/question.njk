@@ -13,13 +13,13 @@
   actions: pageActions,
   classes: "govuk-grid-column-full govuk-grid-column-one-half-from-desktop",
   backLink: backLink,
-  errorList: errorList,
   useNewMasthead: true
 }) %}
 
 {% call appEditorCard({
   title: cardTitle,
-  caption: cardCaption
+  caption: cardCaption,
+  errorList: errorList
 }) %}
   {%- include "../views/forms/editor-v2/partials/question-type.njk" -%}
 {% endcall %}

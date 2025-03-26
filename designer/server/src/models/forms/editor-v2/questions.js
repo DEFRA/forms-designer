@@ -160,7 +160,7 @@ export function questionsViewModel(
     cardCaption: `Page ${pageIdx + 1}`,
     navigation,
     baseUrl,
-    errorList: buildErrorList(formErrors, ['questions']),
+    errorList: buildErrorList(formErrors),
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
     questionRows: mapQuestionRows(components, baseUrl),

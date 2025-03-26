@@ -17,14 +17,14 @@
   actions: pageActions,
   classes: "govuk-grid-column-full govuk-grid-column-one-half-from-desktop",
   backLink: backLink,
-  errorList: errorList,
   useNewMasthead: true
 }) %}
 
 {% call appEditorCard({
   title: cardTitle,
   caption: cardCaption,
-  heading: cardHeading
+  heading: cardHeading,
+  errorList: errorList
 }) %}
   <form class="form" method="post">
 

@@ -96,7 +96,7 @@ export function checkAnswersSettingsViewModel(
     cardCaption: 'Check answers',
     cardHeading: 'Page settings',
     navigation,
-    errorList: buildErrorList(formErrors, ['questions']),
+    errorList: buildErrorList(formErrors),
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
     buttonText: SAVE_AND_CONTINUE,
