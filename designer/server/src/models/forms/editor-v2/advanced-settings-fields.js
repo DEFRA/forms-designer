@@ -360,16 +360,29 @@ function getAdditionalOptions(payload) {
 }
 
 /**
+ * Determine if val contains a value (including zero as a valid number)
+ * @param { string | undefined } val
+ * @returns { string | undefined }
+ */
+export function isValueOrZero(val) {
+  return val !== undefined ? 'has-value' : undefined
+}
+
+/**
  * @param {Partial<FormEditorInputQuestion>} payload
  */
 export function getAdditionalSchema(payload) {
   // Note - any properties that should allow a 'zero' need to have a !== undefined check as opposed
   // to just a value check e.g. 'minFiles' and 'precision'
   const additionalSchema = {}
-  if (payload.minLength ?? payload.min ?? payload.minFiles !== undefined) {
+  if (
+    payload.minLength ??
+    isValueOrZero(payload.min) ??
+    isValueOrZero(payload.minFiles)
+  ) {
     additionalSchema.min = payload.minLength ?? payload.min ?? payload.minFiles
   }
-  if (payload.maxLength ?? payload.max ?? payload.maxFiles) {
+  if (payload.maxLength ?? isValueOrZero(payload.max) ?? payload.maxFiles) {
     additionalSchema.max = payload.maxLength ?? payload.max ?? payload.maxFiles
   }
   if (payload.exactFiles) {
@@ -378,7 +391,7 @@ export function getAdditionalSchema(payload) {
   if (payload.regex) {
     additionalSchema.regex = payload.regex
   }
-  if (payload.precision !== undefined) {
+  if (isValueOrZero(payload.precision)) {
     additionalSchema.precision = payload.precision
   }
   return additionalSchema
