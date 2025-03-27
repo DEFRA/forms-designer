@@ -1,6 +1,6 @@
 /**
  * @param {{items: CheckboxOrRadioItem[]}} elem
- * @param {string} itemValue - the radio value of the option for which the dynamic content is to be inserted
+ * @param {string} itemValue - the radio or checkbox value of the option for which the dynamic content is to be inserted
  * @param {string} conditionalHtml
  */
 export function setConditionalAttribute(elem, itemValue, conditionalHtml) {
