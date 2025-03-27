@@ -6,7 +6,13 @@ import { type PaginationOptions } from '~/src/common/pagination/types.js'
  * Field definitions for pagination options.
  */
 export const paginationOptionFields = {
-  page: Joi.number().positive().integer().default(1).min(1).optional(),
+  page: Joi.number()
+    .positive()
+    .integer()
+    .default(1)
+    .min(1)
+    .optional()
+    .description('Current page number, starting from 1'),
   perPage: Joi.number()
     .positive()
     .integer()
@@ -14,6 +20,7 @@ export const paginationOptionFields = {
     .min(1)
     .max(200)
     .optional()
+    .description('Number of items to display per page, between 1 and 200')
 }
 
 /**
