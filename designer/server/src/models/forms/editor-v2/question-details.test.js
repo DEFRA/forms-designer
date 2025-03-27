@@ -5,7 +5,7 @@ import {
   buildFileUploadComponent,
   buildQuestionPage
 } from '~/src/__stubs__/form-definition.js'
-import { getSelectedFileTypesFromCSV } from '~/src/models/forms/editor-v2/base-settings-fields.js'
+import { getSelectedFileTypesFromCSVMimeTypes } from '~/src/models/forms/editor-v2/base-settings-fields.js'
 import {
   getDetails,
   getExtraFields,
@@ -199,9 +199,9 @@ describe('editor-v2 - question details model', () => {
     })
   })
 
-  describe('getSelectedFileTypes', () => {
+  describe('getSelectedFileTypesFromCSVMimeTypes', () => {
     test('should ignore when not file upload Field', () => {
-      const res = getSelectedFileTypesFromCSV(undefined)
+      const res = getSelectedFileTypesFromCSVMimeTypes(undefined)
       expect(res).toEqual({
         fileTypes: undefined,
         documentTypes: undefined,
@@ -211,7 +211,7 @@ describe('editor-v2 - question details model', () => {
     })
 
     test('should handle no types selected', () => {
-      const res = getSelectedFileTypesFromCSV({
+      const res = getSelectedFileTypesFromCSVMimeTypes({
         name: '',
         title: '',
         schema: {},
@@ -229,13 +229,14 @@ describe('editor-v2 - question details model', () => {
     })
 
     test('should handle doc types selected', () => {
-      const res = getSelectedFileTypesFromCSV({
+      const res = getSelectedFileTypesFromCSVMimeTypes({
         name: '',
         title: '',
         schema: {},
         type: ComponentType.FileUploadField,
         options: {
-          accept: 'doc,docx'
+          accept:
+            'application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document'
         }
       })
       expect(res).toEqual({
@@ -247,31 +248,31 @@ describe('editor-v2 - question details model', () => {
     })
 
     test('should handle image types selected', () => {
-      const res = getSelectedFileTypesFromCSV({
+      const res = getSelectedFileTypesFromCSVMimeTypes({
         name: '',
         title: '',
         schema: {},
         type: ComponentType.FileUploadField,
         options: {
-          accept: 'jpg,jpeg'
+          accept: 'image/jpeg'
         }
       })
       expect(res).toEqual({
         fileTypes: ['images'],
         documentTypes: [],
-        imageTypes: ['jpg', 'jpeg'],
+        imageTypes: ['jpg'],
         tabularDataTypes: []
       })
     })
 
     test('should handle tabular data types selected', () => {
-      const res = getSelectedFileTypesFromCSV({
+      const res = getSelectedFileTypesFromCSVMimeTypes({
         name: '',
         title: '',
         schema: {},
         type: ComponentType.FileUploadField,
         options: {
-          accept: 'csv'
+          accept: 'text/csv'
         }
       })
       expect(res).toEqual({
@@ -283,13 +284,13 @@ describe('editor-v2 - question details model', () => {
     })
 
     test('should handle all types selected', () => {
-      const res = getSelectedFileTypesFromCSV({
+      const res = getSelectedFileTypesFromCSVMimeTypes({
         name: '',
         title: '',
         schema: {},
         type: ComponentType.FileUploadField,
         options: {
-          accept: 'csv,jpg,doc'
+          accept: 'text/csv,image/jpeg,application/msword'
         }
       })
       expect(res).toEqual({

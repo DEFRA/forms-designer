@@ -13,6 +13,8 @@
 {% set cardTitle = "Check your answers" %}
 {% endif %}
 
+{% set visuallyHiddenText = "" if params.isEndPage else " page " + params.pageNum %}
+
 {{ govukSummaryList({
   card: {
     title: {
@@ -23,13 +25,13 @@
         {
           href: params.pageEditUrl,
           text: "Edit",
-          visuallyHiddenText: " page " + params.pageNum,
+          visuallyHiddenText: visuallyHiddenText,
           classes: 'govuk-link--no-visited-state'
         },
         {
           href: params.pagePreviewUrl,
           text: "Preview",
-          visuallyHiddenText: " page " + params.pageNum,
+          visuallyHiddenText: visuallyHiddenText,
           attributes: 'target="_blank"',
           classes: 'govuk-link--no-visited-state'
         }

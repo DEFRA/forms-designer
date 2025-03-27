@@ -18,16 +18,16 @@
   actions: pageActions,
   classes: "govuk-grid-column-full govuk-grid-column-one-half-from-desktop",
   backLink: backLink,
-  errorList: errorList,
   useNewMasthead: true
 }) %}
 
-  {% call appEditorCard({
-    title: cardTitle,
-    caption: cardCaption,
-    heading: cardHeading
-  }) %}
-    <form class="form" method="post">
+{% call appEditorCard({
+  title: cardTitle,
+  caption: cardCaption,
+  heading: cardHeading,
+  errorList: errorList
+}) %}
+  <form class="form" method="post">
 
     {%- include "../views/forms/editor-v2/partials/question-details-base.njk" -%}
 
