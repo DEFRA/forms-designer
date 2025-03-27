@@ -3,6 +3,7 @@ import Joi from 'joi'
 
 import { QuestionAdvancedSettings } from '~/src/common/constants/editor.js'
 import { isCheckboxSelected } from '~/src/lib/utils.js'
+import { mapPayloadToFileMimeTypes } from '~/src/models/forms/editor-v2/base-settings-fields.js'
 import {
   GOVUK_INPUT_WIDTH_3,
   GOVUK_LABEL__M
@@ -384,26 +385,10 @@ export function getAdditionalSchema(payload) {
 /**
  * @param {Partial<FormEditorInputQuestion>} payload
  */
-export function mapFileTypes(payload) {
-  const documentParentSelected = payload.fileTypes?.includes('documents')
-  const imagesParentSelected = payload.fileTypes?.includes('images')
-  const tabularDataParentSelected = payload.fileTypes?.includes('tabular-data')
-
-  const combinedTypes = (
-    documentParentSelected ? (payload.documentTypes ?? []) : []
-  )
-    .concat(imagesParentSelected ? (payload.imageTypes ?? []) : [])
-    .concat(tabularDataParentSelected ? (payload.tabularDataTypes ?? []) : [])
-  return combinedTypes.length ? { accept: combinedTypes.join(',') } : {}
-}
-
-/**
- * @param {Partial<FormEditorInputQuestion>} payload
- */
 export function mapQuestionDetails(payload) {
   const additionalOptions = getAdditionalOptions(payload)
   const additionalSchema = getAdditionalSchema(payload)
-  const fileTypes = mapFileTypes(payload)
+  const fileTypes = mapPayloadToFileMimeTypes(payload)
 
   return /** @type {Partial<ComponentDef>} */ ({
     type: payload.questionType,

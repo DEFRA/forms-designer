@@ -6,7 +6,7 @@ import { advancedSettingsPerComponentType } from '~/src/models/forms/editor-v2/a
 import {
   getFieldList,
   getFileUploadFields,
-  getSelectedFileTypesFromCSV
+  getSelectedFileTypesFromCSVMimeTypes
 } from '~/src/models/forms/editor-v2/base-settings-fields.js'
 import {
   SAVE_AND_CONTINUE,
@@ -63,7 +63,7 @@ export function hasDataOrErrorForDisplay(
  * @param { InputFieldsComponentsDef | undefined} questionFields
  */
 export function mapToQuestionDetails(questionFields) {
-  const fileTypes = getSelectedFileTypesFromCSV(questionFields)
+  const fileTypes = getSelectedFileTypesFromCSVMimeTypes(questionFields)
 
   return {
     name: questionFields?.name ?? randomId(),

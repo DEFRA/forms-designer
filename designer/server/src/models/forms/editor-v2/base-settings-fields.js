@@ -145,65 +145,125 @@ const allowedParentFileTypes = [
   { value: IMAGES, text: 'Images' },
   { value: TABULAR_DATA, text: 'Tabular data' }
 ]
+
 export const allowedDocumentTypes = [
-  { value: 'pdf', text: 'PDF' },
-  { value: 'doc', text: 'DOC' },
-  { value: 'docx', text: 'DOCX' },
-  { value: 'odt', text: 'ODT' },
-  { value: 'txt', text: 'TXT' }
+  { value: 'pdf', text: 'PDF', mimeType: 'application/pdf' },
+  { value: 'doc', text: 'DOC', mimeType: 'application/msword' },
+  {
+    value: 'docx',
+    text: 'DOCX',
+    mimeType:
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+  },
+  {
+    value: 'odt',
+    text: 'ODT',
+    mimeType: 'application/vnd.oasis.opendocument.text'
+  },
+  { value: 'txt', text: 'TXT', mimeType: 'text/plain' }
 ]
 export const allowedImageTypes = [
-  { value: 'jpg', text: 'JPG' },
-  { value: 'jpeg', text: 'JPEG' },
-  { value: 'png', text: 'PNG' }
+  { value: 'jpg', text: 'JPG', mimeType: 'image/jpeg' },
+  { value: 'png', text: 'PNG', mimeType: 'image/png' }
 ]
 export const allowedTabularDataTypes = [
-  { value: 'xls', text: 'XLS' },
-  { value: 'xlsx', text: 'XLSX' },
-  { value: 'csv', text: 'CSV' },
-  { value: 'ods', text: 'ODS' }
+  { value: 'xls', text: 'XLS', mimeType: 'application/vnd.ms-excel' },
+  {
+    value: 'xlsx',
+    text: 'XLSX',
+    mimeType:
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+  },
+  { value: 'csv', text: 'CSV', mimeType: 'text/csv' },
+  {
+    value: 'ods',
+    text: 'ODS',
+    mimeType: 'application/vnd.oasis.opendocument.spreadsheet'
+  }
 ]
+
+/**
+ * Map file extensions to mime types
+ * @param {string[]} fileExtensions
+ */
+export function mapExtensionsToMimeTypes(fileExtensions) {
+  return fileExtensions.map((ext) => {
+    const found =
+      allowedDocumentTypes.find((x) => x.value === ext) ??
+      allowedImageTypes.find((x) => x.value === ext) ??
+      allowedTabularDataTypes.find((x) => x.value === ext)
+    return found?.mimeType
+  })
+}
+
+/**
+ * @param {Partial<FormEditorInputQuestion>} payload
+ */
+export function mapPayloadToFileMimeTypes(payload) {
+  const documentParentSelected = payload.fileTypes?.includes('documents')
+  const imagesParentSelected = payload.fileTypes?.includes('images')
+  const tabularDataParentSelected = payload.fileTypes?.includes('tabular-data')
+
+  const combinedTypes = (
+    documentParentSelected ? (payload.documentTypes ?? []) : []
+  )
+    .concat(imagesParentSelected ? (payload.imageTypes ?? []) : [])
+    .concat(tabularDataParentSelected ? (payload.tabularDataTypes ?? []) : [])
+  return combinedTypes.length
+    ? { accept: mapExtensionsToMimeTypes(combinedTypes).join(',') }
+    : {}
+}
 
 /**
  * @param {ComponentDef | undefined} question
  */
-export function getSelectedFileTypesFromCSV(question) {
+export function getSelectedFileTypesFromCSVMimeTypes(question) {
   const isFileUpload = question?.type === ComponentType.FileUploadField
 
   if (!isFileUpload) {
     return {}
   }
 
-  const selectedTypesFromCSV = question.options.accept?.split(',')
-  const allowedDocumentExtensions = /** @type {string[]} */ (
-    allowedDocumentTypes.map((x) => x.value)
-  )
-  const documentTypes =
-    /** @type {string[]} */
-    (
-      selectedTypesFromCSV?.filter((x) =>
-        allowedDocumentExtensions.includes(x)
-      ) ?? []
-    )
+  const selectedMimeTypesFromCSV = question.options.accept?.split(',') ?? []
 
-  const allowedImageExtensions = /** @type {string[]} */ (
-    allowedImageTypes.map((x) => x.value)
-  )
-  const imageTypes =
-    /** @type {string[]} */
-    (
-      selectedTypesFromCSV?.filter((x) => allowedImageExtensions.includes(x)) ??
-        []
-    )
-
-  const allowedTabularDataExtensions = /** @type {string[]} */ (
-    allowedTabularDataTypes.map((x) => x.value)
+  const documentTypes = selectedMimeTypesFromCSV.reduce(
+    (typesSoFar, currMimeType) => {
+      const found = allowedDocumentTypes.filter(
+        (dt) => dt.mimeType === currMimeType
+      )
+      if (found.length) {
+        return [...typesSoFar, found[0].value]
+      }
+      return typesSoFar
+    },
+    /** @type {string[]} */ ([])
   )
 
-  const tabularDataTypes =
-    selectedTypesFromCSV?.filter((x) =>
-      allowedTabularDataExtensions.includes(x)
-    ) ?? []
+  const imageTypes = selectedMimeTypesFromCSV.reduce(
+    (typesSoFar, currMimeType) => {
+      const found = allowedImageTypes.filter(
+        (dt) => dt.mimeType === currMimeType
+      )
+      if (found.length) {
+        return [...typesSoFar, found[0].value]
+      }
+      return typesSoFar
+    },
+    /** @type {string[]} */ ([])
+  )
+
+  const tabularDataTypes = selectedMimeTypesFromCSV.reduce(
+    (typesSoFar, currMimeType) => {
+      const found = allowedTabularDataTypes.filter(
+        (dt) => dt.mimeType === currMimeType
+      )
+      if (found.length) {
+        return [...typesSoFar, found[0].value]
+      }
+      return typesSoFar
+    },
+    /** @type {string[]} */ ([])
+  )
 
   const fileTypes = /** @type {string[]} */ ([])
   if (documentTypes.length) {
@@ -305,7 +365,10 @@ export function getFieldList(questionFields, questionType, validation) {
 export function getFileUploadFields(questionFields, validation) {
   const formValues =
     /** @type { Record<keyof FormEditorGovukField, string[]>} */
-    (validation?.formValues ?? getSelectedFileTypesFromCSV(questionFields))
+    (
+      validation?.formValues ??
+        getSelectedFileTypesFromCSVMimeTypes(questionFields)
+    )
 
   return {
     fileTypes: {
@@ -332,6 +395,6 @@ export function getFileUploadFields(questionFields, validation) {
 }
 
 /**
- * @import { ComponentDef, FormMetadata, FormDefinition, FormEditor, FormEditorGovukField, GovukField, InputFieldsComponentsDef, TextFieldComponent } from '@defra/forms-model'
- * @import { ErrorDetails, ErrorDetailsItem, ValidationFailure } from '~/src/common/helpers/types.js'
+ * @import { ComponentDef, FormEditor, FormEditorGovukField, FormEditorInputQuestion, GovukField, InputFieldsComponentsDef } from '@defra/forms-model'
+ * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

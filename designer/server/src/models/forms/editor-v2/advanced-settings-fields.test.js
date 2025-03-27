@@ -2,7 +2,6 @@ import { ComponentType } from '@defra/forms-model'
 
 import {
   getAdditionalSchema,
-  mapFileTypes,
   mapQuestionDetails
 } from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
 import { getFieldComponentType } from '~/src/models/forms/editor-v2/page-fields.js'
@@ -131,52 +130,6 @@ describe('editor-v2 - advanced settings fields model', () => {
           precision: '2'
         }
       })
-    })
-  })
-
-  describe('mapFileTypes', () => {
-    test('should combine all types into one list', () => {
-      expect(
-        mapFileTypes({
-          fileTypes: ['documents', 'images', 'tabular-data'],
-          documentTypes: ['doc', 'docx'],
-          imageTypes: ['jpg', 'png'],
-          tabularDataTypes: ['csv']
-        }).accept
-      ).toBe('doc,docx,jpg,png,csv')
-    })
-
-    test('should remove sub-types if parent type not selected', () => {
-      expect(
-        mapFileTypes({
-          fileTypes: ['documents', 'tabular-data'],
-          documentTypes: ['doc', 'docx'],
-          imageTypes: ['jpg', 'png'],
-          tabularDataTypes: ['csv']
-        }).accept
-      ).toBe('doc,docx,csv')
-    })
-
-    test('should remove sub-types even if no sub-types, if parent type not selected', () => {
-      expect(
-        mapFileTypes({
-          fileTypes: ['documents', 'tabular-data'],
-          documentTypes: ['doc', 'docx'],
-          imageTypes: undefined,
-          tabularDataTypes: ['csv']
-        }).accept
-      ).toBe('doc,docx,csv')
-    })
-
-    test('should handle undefined lists', () => {
-      expect(
-        mapFileTypes({
-          fileTypes: [],
-          documentTypes: undefined,
-          imageTypes: undefined,
-          tabularDataTypes: undefined
-        })
-      ).toEqual({})
     })
   })
 

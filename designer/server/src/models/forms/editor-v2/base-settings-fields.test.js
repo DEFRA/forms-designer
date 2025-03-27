@@ -1,7 +1,9 @@
 import { ComponentType } from '@defra/forms-model'
 
-import { mapQuestionDetails } from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
-import { getFieldList } from '~/src/models/forms/editor-v2/base-settings-fields.js'
+import {
+  getFieldList,
+  mapPayloadToFileMimeTypes
+} from '~/src/models/forms/editor-v2/base-settings-fields.js'
 import { GOVUK_LABEL__M } from '~/src/models/forms/editor-v2/common.js'
 import { getFieldComponentType } from '~/src/models/forms/editor-v2/page-fields.js'
 
@@ -104,85 +106,55 @@ describe('editor-v2 - advanced settings fields model', () => {
     })
   })
 
-  describe('mapQuestionDetails', () => {
-    test('should return minimal model', () => {
-      const res = mapQuestionDetails({})
-      expect(res).toEqual({
-        type: undefined,
-        title: undefined,
-        name: undefined,
-        shortDescription: undefined,
-        hint: undefined,
-        options: {
-          required: true
-        },
-        schema: {}
-      })
+  describe('mapPayloadToFileMimeTypes', () => {
+    test('should combine all types into one list', () => {
+      expect(
+        mapPayloadToFileMimeTypes({
+          fileTypes: ['documents', 'images', 'tabular-data'],
+          documentTypes: ['doc', 'docx'],
+          imageTypes: ['jpg', 'png'],
+          tabularDataTypes: ['csv']
+        }).accept
+      ).toBe(
+        'application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/jpeg,image/png,text/csv'
+      )
     })
 
-    test('should return minimal model with fields populated', () => {
-      const res = mapQuestionDetails({
-        questionType: 'type',
-        question: 'title',
-        name: 'name',
-        shortDescription: 'shortDescription',
-        hintText: 'hint',
-        questionOptional: 'Y'
-      })
-      expect(res).toEqual({
-        type: 'type',
-        title: 'title',
-        name: 'name',
-        shortDescription: 'shortDescription',
-        hint: 'hint',
-        options: {
-          required: false
-        },
-        schema: {}
-      })
+    test('should remove sub-types if parent type not selected', () => {
+      expect(
+        mapPayloadToFileMimeTypes({
+          fileTypes: ['documents', 'tabular-data'],
+          documentTypes: ['doc', 'docx'],
+          imageTypes: ['jpg', 'png'],
+          tabularDataTypes: ['csv']
+        }).accept
+      ).toBe(
+        'application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/csv'
+      )
     })
 
-    test('should return model with options and schema properties populated', () => {
-      const res = mapQuestionDetails({
-        questionType: 'type',
-        question: 'title',
-        name: 'name',
-        shortDescription: 'shortDescription',
-        hintText: 'hint',
-        questionOptional: 'Y',
-        classes: 'classes',
-        rows: '10',
-        prefix: 'prefix',
-        suffix: 'suffix',
-        maxFuture: '50',
-        maxPast: '100',
-        minLength: '5',
-        maxLength: '15',
-        regex: 'regex',
-        precision: '2'
-      })
-      expect(res).toEqual({
-        type: 'type',
-        title: 'title',
-        name: 'name',
-        shortDescription: 'shortDescription',
-        hint: 'hint',
-        options: {
-          classes: 'classes',
-          required: false,
-          rows: '10',
-          prefix: 'prefix',
-          suffix: 'suffix',
-          maxDaysInFuture: '50',
-          maxDaysInPast: '100'
-        },
-        schema: {
-          min: '5',
-          max: '15',
-          regex: 'regex',
-          precision: '2'
-        }
-      })
+    test('should remove sub-types even if no sub-types, if parent type not selected', () => {
+      expect(
+        mapPayloadToFileMimeTypes({
+          fileTypes: ['documents', 'tabular-data'],
+          documentTypes: ['doc', 'docx'],
+          imageTypes: undefined,
+          tabularDataTypes: ['csv']
+        }).accept
+      ).toBe(
+        'application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/csv'
+      )
+    })
+
+    test('should handle undefined lists', () => {
+      expect(
+        mapPayloadToFileMimeTypes({
+          fileTypes: [],
+          documentTypes: undefined,
+          imageTypes: undefined,
+          tabularDataTypes: undefined
+        })
+      ).toEqual({})
     })
   })
 })
