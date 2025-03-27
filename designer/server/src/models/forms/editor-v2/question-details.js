@@ -21,7 +21,14 @@ import { getFieldComponentType } from '~/src/models/forms/editor-v2/page-fields.
 import { advancedSettingsFields } from '~/src/models/forms/editor-v2/question-details-advanced-settings.js'
 import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
 
-const zeroIsValidForFields = ['maxFuture', 'maxPast', 'precision', 'minFiles']
+const zeroIsValidForFields = [
+  'maxFuture',
+  'maxPast',
+  'precision',
+  'minFiles',
+  'min',
+  'max'
+]
 
 /**
  * Determines if the details section should be expanded i.e. if there is a validation error or some data populated

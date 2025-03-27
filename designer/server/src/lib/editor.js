@@ -1,5 +1,6 @@
 import {
   ComponentType,
+  ControllerType,
   hasComponents,
   hasComponentsEvenIfNoNext
 } from '@defra/forms-model'
@@ -23,6 +24,15 @@ const putJsonByType = /** @type {typeof putJson<Page>} */ (putJson)
 const delJsonByType = /** @type {typeof delJson<ComponentDef>} */ (delJson)
 
 /**
+ * @param {Partial<ComponentDef>} questionDetails
+ */
+export function getControllerType(questionDetails) {
+  return questionDetails.type === ComponentType.FileUploadField
+    ? { controller: ControllerType.FileUpload }
+    : {}
+}
+
+/**
  * Add a page to a form definition
  * @param {string} formId
  * @param {string} token
@@ -44,7 +54,8 @@ export async function addPageAndFirstQuestion(
     payload: {
       title: pageDetails?.title ?? '',
       path: `/${slugify(pageDetails?.title ?? questionDetails.title)}`,
-      components: [questionDetails]
+      components: [questionDetails],
+      ...getControllerType(questionDetails)
     },
     ...getHeaders(token)
   })

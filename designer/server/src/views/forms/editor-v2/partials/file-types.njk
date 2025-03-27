@@ -15,4 +15,4 @@
     {{ govukCheckboxes(uploadFields.tabularDataTypes) }}
 {% endset -%}
 
-{{ govukCheckboxes(uploadFields.fileTypes | setConditionalAttribute(0, documentsHtml) | setConditionalAttribute(1, imagesHtml) | setConditionalAttribute(2, tabularDataHtml) ) }}
+{{ govukCheckboxes(uploadFields.fileTypes | setConditionalAttribute("documents", documentsHtml) | setConditionalAttribute("images", imagesHtml) | setConditionalAttribute("tabular-data", tabularDataHtml) ) }}
