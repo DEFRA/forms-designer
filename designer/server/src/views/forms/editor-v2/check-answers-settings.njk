@@ -45,7 +45,7 @@
         }
       }) %}
 
-        {{ govukRadios(fields.needDeclaration | setConditionalAttribute(1, declarationHtml)) }}
+        {{ govukRadios(fields.needDeclaration | setConditionalAttribute("true", declarationHtml)) }}
 
         {{ govukButton({
           text: 'Save changes'

@@ -1,16 +1,19 @@
 /**
  * @param {{items: CheckboxOrRadioItem[]}} elem
- * @param {number} itemPos
+ * @param {string} itemValue - the radio value of the option for which the dynamic content is to be inserted
  * @param {string} conditionalHtml
  */
-export function setConditionalAttribute(elem, itemPos, conditionalHtml) {
+export function setConditionalAttribute(elem, itemValue, conditionalHtml) {
   const newElement = {
     ...elem
   }
-  newElement.items[itemPos] = {
-    ...newElement.items[itemPos],
-    conditional: {
-      html: conditionalHtml
+  const itemPos = newElement.items.findIndex((x) => x.value === itemValue)
+  if (itemPos !== -1) {
+    newElement.items[itemPos] = {
+      ...newElement.items[itemPos],
+      conditional: {
+        html: conditionalHtml
+      }
     }
   }
 
