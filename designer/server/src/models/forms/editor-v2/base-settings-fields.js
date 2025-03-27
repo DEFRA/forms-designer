@@ -226,44 +226,30 @@ export function getSelectedFileTypesFromCSVMimeTypes(question) {
 
   const selectedMimeTypesFromCSV = question.options.accept?.split(',') ?? []
 
-  const documentTypes = selectedMimeTypesFromCSV.reduce(
-    (typesSoFar, currMimeType) => {
-      const found = allowedDocumentTypes.filter(
+  const documentTypes = selectedMimeTypesFromCSV
+    .map((currMimeType) => {
+      const found = allowedDocumentTypes.find(
         (dt) => dt.mimeType === currMimeType
       )
-      if (found.length) {
-        return [...typesSoFar, found[0].value]
-      }
-      return typesSoFar
-    },
-    /** @type {string[]} */ ([])
-  )
+      return found ? found.value : null
+    })
+    .filter(Boolean)
 
-  const imageTypes = selectedMimeTypesFromCSV.reduce(
-    (typesSoFar, currMimeType) => {
-      const found = allowedImageTypes.filter(
-        (dt) => dt.mimeType === currMimeType
-      )
-      if (found.length) {
-        return [...typesSoFar, found[0].value]
-      }
-      return typesSoFar
-    },
-    /** @type {string[]} */ ([])
-  )
+  const imageTypes = selectedMimeTypesFromCSV
+    .map((currMimeType) => {
+      const found = allowedImageTypes.find((dt) => dt.mimeType === currMimeType)
+      return found ? found.value : null
+    })
+    .filter(Boolean)
 
-  const tabularDataTypes = selectedMimeTypesFromCSV.reduce(
-    (typesSoFar, currMimeType) => {
-      const found = allowedTabularDataTypes.filter(
+  const tabularDataTypes = selectedMimeTypesFromCSV
+    .map((currMimeType) => {
+      const found = allowedTabularDataTypes.find(
         (dt) => dt.mimeType === currMimeType
       )
-      if (found.length) {
-        return [...typesSoFar, found[0].value]
-      }
-      return typesSoFar
-    },
-    /** @type {string[]} */ ([])
-  )
+      return found ? found.value : null
+    })
+    .filter(Boolean)
 
   const fileTypes = /** @type {string[]} */ ([])
   if (documentTypes.length) {
