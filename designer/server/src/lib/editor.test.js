@@ -9,6 +9,7 @@ import {
   addPageAndFirstQuestion,
   addQuestion,
   deletePage,
+  getControllerType,
   migrateDefinitionToV2,
   reorderPages,
   resolvePageHeading,
@@ -680,6 +681,26 @@ describe('editor.js', () => {
           testError
         )
       })
+    })
+  })
+
+  describe('getControllerType', () => {
+    test('gets file upload controller', () => {
+      expect(
+        getControllerType({
+          type: ComponentType.FileUploadField
+        })
+      ).toEqual({
+        controller: ControllerType.FileUpload
+      })
+    })
+
+    test('gets empty for other question types', () => {
+      expect(
+        getControllerType({
+          type: ComponentType.TextField
+        })
+      ).toEqual({})
     })
   })
 })

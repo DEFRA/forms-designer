@@ -21,7 +21,7 @@
       </legend>
       <div id="informationQuestion1-hint" class="govuk-hint">You can ask for more information later</div>
 
-      {{ govukRadios(fields.questionType | setConditionalAttribute(0, writtenAnswerHtml) | setConditionalAttribute(1, dateHtml) | setConditionalAttribute(7, listHtml)) }}
+      {{ govukRadios(fields.questionType | setConditionalAttribute("writtenAnswerSub", writtenAnswerHtml) | setConditionalAttribute("dateSub", dateHtml) | setConditionalAttribute("listSub", listHtml)) }}
 
     </fieldset>
   </div>

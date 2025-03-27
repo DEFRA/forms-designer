@@ -11,7 +11,7 @@
 
 <h1 class="govuk-heading-l">Settings</h1>
 
-{{ govukCheckboxes(fields.pageHeadingAndGuidance | setConditionalAttribute(0, pageHeadingAndGuidanceHtml)) }}
+{{ govukCheckboxes(fields.pageHeadingAndGuidance | setConditionalAttribute("true", pageHeadingAndGuidanceHtml)) }}
 
 {{ govukButton({
   text: 'Save changes'
