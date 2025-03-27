@@ -2,7 +2,9 @@ import { ComponentType, ControllerType, Engine } from '@defra/forms-model'
 
 import {
   buildDefinition,
-  testFormDefinitionWithExistingGuidance
+  testFormDefinitionWithExistingGuidance,
+  testFormDefinitionWithTwoPagesAndQuestions,
+  testFormDefinitionWithTwoQuestions
 } from '~/src/__stubs__/form-definition.js'
 import config from '~/src/config.js'
 import {
@@ -278,6 +280,7 @@ describe('editor.js', () => {
         const result = await updateQuestion(
           formId,
           token,
+          testFormDefinitionWithTwoPagesAndQuestions,
           '12345',
           '456',
           questionDetails
@@ -294,7 +297,14 @@ describe('editor.js', () => {
         mockedPutJson.mockRejectedValueOnce(testError)
 
         await expect(
-          updateQuestion(formId, token, '12345', '456', questionDetails)
+          updateQuestion(
+            formId,
+            token,
+            testFormDefinitionWithTwoQuestions,
+            '12345',
+            '456',
+            questionDetails
+          )
         ).rejects.toThrow(testError)
       })
     })
