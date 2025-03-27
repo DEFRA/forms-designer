@@ -372,7 +372,7 @@ export function isValueOrZero(val) {
  * @param {Partial<FormEditorInputQuestion>} payload
  */
 export function getAdditionalSchema(payload) {
-  // Note - any properties that should allow a 'zero' need to have a !== undefined check as opposed
+  // Note - any properties that should allow a 'zero' need to have their check wrapped in isValueOrZero() as opposed
   // to just a value check e.g. 'minFiles' and 'precision'
   const additionalSchema = {}
   if (
