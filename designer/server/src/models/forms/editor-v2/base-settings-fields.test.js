@@ -156,5 +156,16 @@ describe('editor-v2 - advanced settings fields model', () => {
         })
       ).toEqual({})
     })
+
+    test('should handle undefined lists even when parent selected', () => {
+      expect(
+        mapPayloadToFileMimeTypes({
+          fileTypes: ['documents', 'images', 'tabular-data'],
+          documentTypes: undefined,
+          imageTypes: undefined,
+          tabularDataTypes: undefined
+        })
+      ).toEqual({})
+    })
   })
 })

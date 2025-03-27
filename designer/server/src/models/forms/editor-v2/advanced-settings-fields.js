@@ -363,6 +363,8 @@ function getAdditionalOptions(payload) {
  * @param {Partial<FormEditorInputQuestion>} payload
  */
 export function getAdditionalSchema(payload) {
+  // Note - any properties that should allow a 'zero' need to have a !== undefined check as opposed
+  // to just a value check e.g. 'minFiles' and 'precision'
   const additionalSchema = {}
   if (payload.minLength ?? payload.min ?? payload.minFiles !== undefined) {
     additionalSchema.min = payload.minLength ?? payload.min ?? payload.minFiles
