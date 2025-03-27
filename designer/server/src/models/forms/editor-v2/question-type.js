@@ -204,12 +204,7 @@ export function questionTypeViewModel(
   return {
     ...baseModelFields(metadata.slug, pageTitle),
     navigation,
-    errorList: buildErrorList(formErrors, [
-      'questionType',
-      'writtenAnswerSub',
-      'dateSub',
-      'listSub'
-    ]),
+    errorList: buildErrorList(formErrors),
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
     cardTitle: `Question ${questionNum}`,
