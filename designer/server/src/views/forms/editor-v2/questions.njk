@@ -17,14 +17,14 @@
   actions: pageActions,
   classes: "govuk-grid-column-full govuk-grid-column-one-half-from-desktop",
   backLink: backLink,
-  errorList: errorList,
   useNewMasthead: true
 }) %}
 
   {% call appEditorCard({
     title: cardTitle,
     heading: cardCaption,
-    notification: notification
+    notification: notification,
+    errorList: errorList
   }) %}
 
     {% if questionRows | length %}

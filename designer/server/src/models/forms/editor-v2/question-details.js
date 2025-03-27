@@ -6,7 +6,7 @@ import { advancedSettingsPerComponentType } from '~/src/models/forms/editor-v2/a
 import {
   getFieldList,
   getFileUploadFields,
-  getSelectedFileTypesFromCSV
+  getSelectedFileTypesFromCSVMimeTypes
 } from '~/src/models/forms/editor-v2/base-settings-fields.js'
 import {
   SAVE_AND_CONTINUE,
@@ -21,7 +21,7 @@ import { getFieldComponentType } from '~/src/models/forms/editor-v2/page-fields.
 import { advancedSettingsFields } from '~/src/models/forms/editor-v2/question-details-advanced-settings.js'
 import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
 
-const zeroIsValidForFields = ['maxFuture', 'maxPast', 'precision']
+const zeroIsValidForFields = ['maxFuture', 'maxPast', 'precision', 'minFiles']
 
 /**
  * Determines if the details section should be expanded i.e. if there is a validation error or some data populated
@@ -63,7 +63,7 @@ export function hasDataOrErrorForDisplay(
  * @param { InputFieldsComponentsDef | undefined} questionFields
  */
 export function mapToQuestionDetails(questionFields) {
-  const fileTypes = getSelectedFileTypesFromCSV(questionFields)
+  const fileTypes = getSelectedFileTypesFromCSVMimeTypes(questionFields)
 
   return {
     name: questionFields?.name ?? randomId(),
@@ -172,8 +172,7 @@ export function questionDetailsViewModel(
   )
 
   const extraFieldNames = extraFields.map((field) => field.name ?? 'unknown')
-  const allFieldNames = Object.keys(basePageFields).concat(extraFieldNames)
-  const errorList = buildErrorList(formErrors, allFieldNames)
+  const errorList = buildErrorList(formErrors)
   const previewPageUrl = `${buildPreviewUrl(metadata.slug)}${pagePath}?force`
 
   return {

@@ -25,7 +25,7 @@ export function pageViewModel(metadata, editor, validation) {
     },
     pageClasses:
       'govuk-grid-column-full govuk-grid-column-one-half-from-desktop',
-    errorList: buildErrorList(formErrors, ['pageType']),
+    errorList: buildErrorList(formErrors),
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
     field: {

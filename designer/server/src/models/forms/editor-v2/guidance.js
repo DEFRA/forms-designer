@@ -92,7 +92,7 @@ export function guidanceViewModel(
     cardCaption: `Page ${pageNum}`,
     cardHeading: 'Edit guidance page',
     navigation,
-    errorList: buildErrorList(formErrors, ['pageHeading', 'guidanceText']),
+    errorList: buildErrorList(formErrors),
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
     baseUrl: editorv2Path(metadata.slug, `page/${pageId}`),

@@ -3,13 +3,14 @@ import Joi from 'joi'
 
 import { QuestionAdvancedSettings } from '~/src/common/constants/editor.js'
 import { isCheckboxSelected } from '~/src/lib/utils.js'
+import { mapPayloadToFileMimeTypes } from '~/src/models/forms/editor-v2/base-settings-fields.js'
 import {
   GOVUK_INPUT_WIDTH_3,
   GOVUK_LABEL__M
 } from '~/src/models/forms/editor-v2/common.js'
 
 const MIN_FILES_ERROR_MESSAGE =
-  'Minimum file count must be a whole number between 1 and 25'
+  'Minimum file count must be a whole number between 0 and 25'
 const MAX_FILES_ERROR_MESSAGE =
   'Maximum file count must be a whole number between 1 and 25'
 const EXACT_FILES_ERROR_MESSAGE =
@@ -362,8 +363,10 @@ function getAdditionalOptions(payload) {
  * @param {Partial<FormEditorInputQuestion>} payload
  */
 export function getAdditionalSchema(payload) {
+  // Note - any properties that should allow a 'zero' need to have a !== undefined check as opposed
+  // to just a value check e.g. 'minFiles' and 'precision'
   const additionalSchema = {}
-  if (payload.minLength ?? payload.min ?? payload.minFiles) {
+  if (payload.minLength ?? payload.min ?? payload.minFiles !== undefined) {
     additionalSchema.min = payload.minLength ?? payload.min ?? payload.minFiles
   }
   if (payload.maxLength ?? payload.max ?? payload.maxFiles) {
@@ -384,26 +387,10 @@ export function getAdditionalSchema(payload) {
 /**
  * @param {Partial<FormEditorInputQuestion>} payload
  */
-export function mapFileTypes(payload) {
-  const documentParentSelected = payload.fileTypes?.includes('documents')
-  const imagesParentSelected = payload.fileTypes?.includes('images')
-  const tabularDataParentSelected = payload.fileTypes?.includes('tabular-data')
-
-  const combinedTypes = (
-    documentParentSelected ? (payload.documentTypes ?? []) : []
-  )
-    .concat(imagesParentSelected ? (payload.imageTypes ?? []) : [])
-    .concat(tabularDataParentSelected ? (payload.tabularDataTypes ?? []) : [])
-  return combinedTypes.length ? { accept: combinedTypes.join(',') } : {}
-}
-
-/**
- * @param {Partial<FormEditorInputQuestion>} payload
- */
 export function mapQuestionDetails(payload) {
   const additionalOptions = getAdditionalOptions(payload)
   const additionalSchema = getAdditionalSchema(payload)
-  const fileTypes = mapFileTypes(payload)
+  const fileTypes = mapPayloadToFileMimeTypes(payload)
 
   return /** @type {Partial<ComponentDef>} */ ({
     type: payload.questionType,
