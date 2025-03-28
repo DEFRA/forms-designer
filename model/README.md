@@ -6,7 +6,6 @@ A model and validation library for Defra forms, providing the foundation for for
 
 - **Form Definition** - Core structures for forms, pages, components, and conditions
 - **Component Library** - Pre-defined form components with validation
-- **Validation** - Comprehensive form validation using Joi schemas
 - **JSON Schema** - Ready-to-use JSON schema files for cross-platform validation
 - **Conditions Engine** - Logic for determining form flow and visibility
 - **Type Definitions** - Complete TypeScript type safety
@@ -56,38 +55,9 @@ const textField = {
 
 ### Form Validation
 
-#### Programmatic Validation
-
-You can validate form definitions programmatically using the provided utility functions:
-
-```javascript
-import { validateFormDefinition } from '@defra/forms-model';
-
-const result = validateFormDefinition(myFormData);
-if (result.valid) {
-  console.log('Form is valid!');
-} else {
-  console.error('Validation errors:', result.errors);
-}
-```
-
-For more specific validation, you can validate against any schema:
-
-```javascript
-import { validateWithSchema } from '@defra/forms-model';
-import { componentSchema } from '@defra/forms-model';
-
-const result = validateWithSchema(componentSchema, myComponent);
-if (result.valid) {
-  console.log('Component is valid!');
-} else {
-  console.error('Validation errors:', result.errors);
-}
-```
-
 #### JSON Schema Files
 
-This package includes pre-generated JSON schema files for use with external JSON Schema validators:
+This package includes pre-generated JSON schema files for use with external JSON Schema validators/ IDEs linting etc:
 
 ```javascript
 import formSchema from '@defra/forms-model/schemas/form-definition-schema.json';
@@ -95,11 +65,84 @@ import formSchema from '@defra/forms-model/schemas/form-definition-schema.json';
 
 Available schema files include:
 
+##### Form Definition Schemas
+
 - `form-definition-schema.json` - Full form definition validation
+- `form-definition-v2-payload-schema.json` - Form definition v2 payload validation
+
+##### Component Schemas
+
 - `component-schema.json` - Component validation
+- `component-schema-v2.json` - Component validation (v2)
+
+##### Page Schemas
+
 - `page-schema.json` - Page validation
+- `page-schema-v2.json` - Page validation (v2)
+- `page-schema-payload-v2.json` - Page payload validation (v2)
+
+##### List Schemas
+
 - `list-schema.json` - List validation
+- `list-schema-v2.json` - List validation (v2)
+
+##### Form Metadata Schemas
+
 - `form-metadata-schema.json` - Form metadata validation
+- `form-metadata-author-schema.json` - Form metadata author validation
+- `form-metadata-input-schema.json` - Form metadata input validation
+- `form-metadata-state-schema.json` - Form metadata state validation
+
+##### Form Metadata Field Schemas
+
+- `form-metadata-contact-schema.json` - Contact information validation
+- `form-metadata-email-schema.json` - Email validation
+- `form-metadata-online-schema.json` - Online form metadata validation
+
+##### Form Editor Schemas
+
+- `form-editor-input-page-schema.json` - Form editor input page validation
+- `form-editor-input-check-answers-setting-schema.json` - Check answers setting validation
+- `form-editor-input-question-schema.json` - Question input validation
+- `form-editor-input-page-settings-schema.json` - Page settings validation
+
+##### Form Editor Field Schemas
+
+- `page-type-schema.json` - Page type validation
+- `question-type-schema.json` - Question type validation
+- `question-type-full-schema.json` - Full question type validation
+- `written-answer-sub-schema.json` - Written answer sub-schema validation
+- `date-sub-schema.json` - Date sub-schema validation
+
+##### Form Submission Schemas
+
+- `form-submit-payload-schema.json` - Form submission payload validation
+- `form-submit-record-schema.json` - Form submission record validation
+- `form-submit-recordset-schema.json` - Form submission recordset validation
+
+##### Form Manager Schemas
+
+- `patch-page-schema.json` - Patch page validation
+
+##### Section Schemas
+
+- `question-schema.json` - Question validation
+
+##### Validation Schemas
+
+- `min-schema.json` - Minimum value validation
+- `max-schema.json` - Maximum value validation
+- `min-length-schema.json` - Minimum length validation
+- `max-length-schema.json` - Maximum length validation
+- `max-future-schema.json` - Maximum future date validation
+- `max-past-schema.json` - Maximum past date validation
+
+##### Common Schemas
+
+- `search-options-schema.json` - Search options validation
+- `query-options-schema.json` - Query options validation
+- `pagination-options-schema.json` - Pagination options validation
+- `sorting-options-schema.json` - Sorting options validation
 
 ## Development
 
