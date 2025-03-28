@@ -35,14 +35,14 @@ const testQuestionTypeItems = /** @type {FormEditorCheckbox[]} */ ([
 
 describe('editor-v2 - question type model', () => {
   describe('filterQuestionTypes', () => {
-    test('should return full list if no components', () => {
-      const res = filterQuestionTypes(testQuestionTypeItems, [])
+    test('should return full list if no components and new question', () => {
+      const res = filterQuestionTypes('new', testQuestionTypeItems, [])
       expect(res).toHaveLength(4)
       expect(res[2].text).toBe('Supporting evidence')
     })
 
-    test('should omit file upload if some components', () => {
-      const res = filterQuestionTypes(testQuestionTypeItems, [
+    test('should omit file upload if some components and new question', () => {
+      const res = filterQuestionTypes('new', testQuestionTypeItems, [
         {
           name: '',
           title: '',
@@ -55,12 +55,33 @@ describe('editor-v2 - question type model', () => {
       expect(res[2].text).toBe('Email address')
     })
 
-    test('should omit file upload if already a file upload component', () => {
-      const res = filterQuestionTypes(testQuestionTypeItems, [
+    test('should omit file upload if already a file upload component and new question', () => {
+      const res = filterQuestionTypes('new', testQuestionTypeItems, [
         {
           name: '',
           title: '',
           type: ComponentType.FileUploadField,
+          schema: {},
+          options: {}
+        }
+      ])
+      expect(res).toHaveLength(3)
+      expect(res[2].text).toBe('Email address')
+    })
+
+    test('should omit file upload if some components and existing question', () => {
+      const res = filterQuestionTypes('123', testQuestionTypeItems, [
+        {
+          name: '',
+          title: '',
+          type: ComponentType.TextField,
+          schema: {},
+          options: {}
+        },
+        {
+          name: '',
+          title: '',
+          type: ComponentType.MultilineTextField,
           schema: {},
           options: {}
         }

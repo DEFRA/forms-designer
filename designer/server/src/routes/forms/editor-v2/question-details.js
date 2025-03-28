@@ -94,6 +94,7 @@ export default [
 
       // Save page and first question
       const metadata = await forms.get(slug, token)
+      const definition = await forms.getDraftFormDefinition(metadata.id, token)
       let finalPageId = pageId
 
       if (pageId === 'new') {
@@ -109,6 +110,7 @@ export default [
         await updateQuestion(
           metadata.id,
           token,
+          definition,
           pageId,
           questionId,
           questionDetails
