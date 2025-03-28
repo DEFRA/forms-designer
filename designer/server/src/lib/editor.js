@@ -104,10 +104,8 @@ export async function updateQuestion(
   // Determine if page controller should change
   const page = getPageFromDefinition(definition, pageId)
   const origControllerType = page?.controller
-    ? { controller: page.controller }
-    : {}
-  const newControllerType = getControllerType(questionDetails)
-  if (origControllerType.controller !== newControllerType.controller) {
+  const { controller: newControllerType } = getControllerType(questionDetails)
+  if (origControllerType !== newControllerType) {
     // Update page controller
     const pageHeadingRequestUrl = new URL(
       `./${formId}/definition/draft/pages/${pageId}`,
@@ -115,7 +113,7 @@ export async function updateQuestion(
     )
     await patchJsonByType(pageHeadingRequestUrl, {
       payload: {
-        controller: newControllerType.controller ?? null
+        controller: newControllerType ?? null
       },
       ...getHeaders(token)
     })
