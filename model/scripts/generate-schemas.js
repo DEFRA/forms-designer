@@ -1,12 +1,10 @@
-/* eslint-disable no-console */
-
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import parse from 'joi-to-json'
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const schemasDir = path.resolve(__dirname, '../schemas')
-const parse = (await import('joi-to-json')).default
+export const __dirname = path.dirname(fileURLToPath(import.meta.url))
+export const schemasDir = path.resolve(__dirname, '../schemas')
 
 /**
  * @typedef {{[key: string]: any}} StringIndexedObject
@@ -32,7 +30,7 @@ const parse = (await import('joi-to-json')).default
  * Ensures a directory exists
  * @param {string} dir Directory path
  */
-function ensureDirectoryExists(dir) {
+export function ensureDirectoryExists(dir) {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true })
   }
@@ -43,7 +41,7 @@ function ensureDirectoryExists(dir) {
  * @param {string} str String to format
  * @returns {string} Formatted string
  */
-function toTitleCase(str) {
+export function toTitleCase(str) {
   return str
     .split('-')
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
@@ -55,7 +53,7 @@ function toTitleCase(str) {
  * @param {string} str String to format
  * @returns {string} Formatted string
  */
-function formatPropertyName(str) {
+export function formatPropertyName(str) {
   return (
     str
       // camelCase to space-separated
@@ -73,7 +71,7 @@ function formatPropertyName(str) {
  * @param {SchemaObject} schema - Schema object to update
  * @param {string} parentName - Parent object name for context
  */
-function setSchemaTitle(schema, parentName) {
+export function setSchemaTitle(schema, parentName) {
   if (schema.title) return
 
   if (schema.description && typeof schema.description === 'string') {
@@ -90,7 +88,7 @@ function setSchemaTitle(schema, parentName) {
  * @param {SchemaObject} subSchema - Schema to update
  * @param {number} index - Index in array
  */
-function setRepeatTitles(subSchema, index) {
+export function setRepeatTitles(subSchema, index) {
   if (index === 0) {
     subSchema.title = 'Repeat Configuration'
     subSchema.description =
@@ -108,7 +106,7 @@ function setRepeatTitles(subSchema, index) {
  * @param {SchemaObject} subSchema - Schema to update
  * @param {number} index - Index in array
  */
-function setNameTitles(subSchema, index) {
+export function setNameTitles(subSchema, index) {
   if (index === 0) {
     subSchema.title = 'Display Component Name'
     subSchema.description =
@@ -125,7 +123,7 @@ function setNameTitles(subSchema, index) {
  * @param {SchemaObject} subSchema - Schema to update
  * @param {number} index - Index in array
  */
-function setTitleTitles(subSchema, index) {
+export function setTitleTitles(subSchema, index) {
   if (index === 0) {
     subSchema.title = 'Display Component Title'
     subSchema.description = 'Title format for display-only components.'
@@ -140,7 +138,7 @@ function setTitleTitles(subSchema, index) {
  * @param {SchemaObject} subSchema - Schema to update
  * @param {number} index - Index in array
  */
-function setPagesTitles(subSchema, index) {
+export function setPagesTitles(subSchema, index) {
   if (index === 0) {
     subSchema.title = 'V2 Pages'
     subSchema.description =
@@ -159,7 +157,7 @@ function setPagesTitles(subSchema, index) {
  * @param {string} keyword - oneOf, anyOf, or allOf
  * @param {number} index - Index in the array
  */
-function handleSpecialTitles(subSchema, parentName, keyword, index) {
+export function handleSpecialTitles(subSchema, parentName, keyword, index) {
   if (subSchema.title) return
 
   if (parentName === 'repeat' && keyword === 'oneOf') {
@@ -181,11 +179,9 @@ function handleSpecialTitles(subSchema, parentName, keyword, index) {
  * Process schema properties
  * @param {SchemaObject} schema - Schema to process
  */
-function processProperties(schema) {
+export function processProperties(schema) {
   if (!schema.properties || typeof schema.properties !== 'object') return
 
-  // we know schema.properties is an object
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const entries = Object.entries(schema.properties)
 
   entries.forEach(([propName, propSchema]) => {
@@ -206,7 +202,7 @@ function processProperties(schema) {
  * @param {SchemaObject} schema - Schema to process
  * @param {string} parentName - Parent object name
  */
-function processArrayItems(schema, parentName) {
+export function processArrayItems(schema, parentName) {
   if (!schema.items) return
 
   if (Array.isArray(schema.items)) {
@@ -229,7 +225,7 @@ function processArrayItems(schema, parentName) {
  * @param {SchemaObject} schema - Schema to process
  * @param {string} parentName - Parent object name
  */
-function processCombinationKeywords(schema, parentName) {
+export function processCombinationKeywords(schema, parentName) {
   ;['oneOf', 'anyOf', 'allOf'].forEach((keyword) => {
     if (!schema[keyword] || !Array.isArray(schema[keyword])) return
 
@@ -260,7 +256,7 @@ function processCombinationKeywords(schema, parentName) {
  * Process schema references and definitions
  * @param {SchemaObject} schema - Schema to process
  */
-function processReferences(schema) {
+export function processReferences(schema) {
   if (schema.schemas) {
     Object.entries(schema.schemas).forEach(([schemaName, schemaObj]) => {
       if (!schemaObj.title) {
@@ -296,7 +292,7 @@ function processReferences(schema) {
  * @param {SchemaObject} schema - Schema to process
  * @param {string} parentName - Parent object name
  */
-function processAdditionalProperties(schema, parentName) {
+export function processAdditionalProperties(schema, parentName) {
   if (
     schema.additionalProperties &&
     typeof schema.additionalProperties === 'object'
@@ -325,7 +321,7 @@ function processAdditionalProperties(schema, parentName) {
  * @param {SchemaObject} schema - The schema object to enhance
  * @param {string} parentName - Name of the parent object for context
  */
-function addTitles(schema, parentName = '') {
+export function addTitles(schema, parentName = '') {
   if (typeof schema !== 'object') return schema
 
   setSchemaTitle(schema, parentName)
@@ -347,7 +343,7 @@ function addTitles(schema, parentName = '') {
  * @param {SchemaObject} obj - Schema to process
  * @returns {boolean} True if changes were made
  */
-function fixConditionItems(obj) {
+export function fixConditionItems(obj) {
   if (!obj.anyOfTitles?.includes('Conditions  Item Variant 3')) return false
 
   obj.anyOfTitles = [
@@ -378,7 +374,7 @@ function fixConditionItems(obj) {
  * @param {SchemaObject} obj - Schema to process
  * @returns {boolean} True if changes were made
  */
-function fixValueObjects(obj) {
+export function fixValueObjects(obj) {
   if (
     obj.anyOfTitles?.length !== 2 ||
     obj.anyOfTitles[0] !== 'Value (object)' ||
@@ -404,7 +400,7 @@ function fixValueObjects(obj) {
  * Processes the anyOfTitles array in an object
  * @param {SchemaObject} obj - Schema to process
  */
-function processAnyOfTitles(obj) {
+export function processAnyOfTitles(obj) {
   if (!Array.isArray(obj.anyOfTitles)) return
 
   if (!fixConditionItems(obj)) {
@@ -417,7 +413,7 @@ function processAnyOfTitles(obj) {
  * regardless of their nesting level
  * @param {SchemaObject} obj - The schema or subschema to fix
  */
-function fixConditionTitles(obj) {
+export function fixConditionTitles(obj) {
   if (typeof obj !== 'object') return
 
   processAnyOfTitles(obj)
@@ -440,7 +436,7 @@ function fixConditionTitles(obj) {
  * Handles reference-specific titles
  * @param {SchemaObject} result - Schema to process
  */
-function handleReferenceSpecificTitles(result) {
+export function handleReferenceSpecificTitles(result) {
   if (result.$ref?.includes('conditionGroupSchema')) {
     result.title = 'Nested Condition Group'
     result.description =
@@ -452,7 +448,7 @@ function handleReferenceSpecificTitles(result) {
  * Simplifies anyOf validations that just enumerate types
  * @param {SchemaObject} result - Schema to process
  */
-function simplifyTypeEnumerations(result) {
+export function simplifyTypeEnumerations(result) {
   if (!result.anyOf || !Array.isArray(result.anyOf)) return
 
   /** @type {Array<string>} */
@@ -493,7 +489,7 @@ function simplifyTypeEnumerations(result) {
  * @param {SchemaObject} result - Schema to process
  * @param {string} parentPath - Path to current schema
  */
-function improveConditionItemTitles(result, parentPath) {
+export function improveConditionItemTitles(result, parentPath) {
   if (!parentPath.includes('/conditions') || !result.anyOf) return
 
   result.anyOf.forEach(
@@ -516,7 +512,7 @@ function improveConditionItemTitles(result, parentPath) {
  * @param {SchemaObject} result - Schema to process
  * @param {string} parentPath - Path to current schema
  */
-function improveValueObjectTitles(result, parentPath) {
+export function improveValueObjectTitles(result, parentPath) {
   if (!parentPath.includes('/value') || !result.anyOf) return
 
   result.anyOf.forEach(
@@ -545,7 +541,7 @@ function improveValueObjectTitles(result, parentPath) {
  * @param {SchemaObject} result - Schema to process
  * @param {string} parentPath - Path to current schema
  */
-function improveOperatorDescriptions(result, parentPath) {
+export function improveOperatorDescriptions(result, parentPath) {
   if (parentPath.endsWith('/operator') && parentPath.includes('/conditions')) {
     result.description =
       'Comparison operator: equals, notEquals, contains, notContains, greaterThan, lessThan, isEmpty, isNotEmpty'
@@ -557,7 +553,7 @@ function improveOperatorDescriptions(result, parentPath) {
  * @param {SchemaObject} result - Schema to process
  * @param {string} parentPath - Path to current schema
  */
-function addExamplesToConditionGroups(result, parentPath) {
+export function addExamplesToConditionGroups(result, parentPath) {
   if (
     result.title !== 'Condition Group Schema' &&
     !parentPath.includes('conditionGroupSchema')
@@ -573,21 +569,21 @@ function addExamplesToConditionGroups(result, parentPath) {
       conditions: [
         {
           field: {
-            name: 'favoriteColor',
+            name: 'farmType',
             type: 'string',
-            display: 'Favorite color'
+            display: 'Type of farm'
           },
           operator: 'equals',
           value: {
             type: 'string',
-            value: 'blue',
-            display: 'Blue'
+            value: 'livestock',
+            display: 'Livestock farm'
           },
           coordinator: 'AND'
         },
         {
-          conditionName: 'isAdult',
-          conditionDisplayName: 'Is 18 or older',
+          conditionName: 'hasEnvironmentalPermit',
+          conditionDisplayName: 'Has an environmental permit',
           coordinator: 'OR'
         }
       ]
@@ -601,7 +597,7 @@ function addExamplesToConditionGroups(result, parentPath) {
  * @param {string} parentPath - Path to current schema
  * @returns {SchemaObject|null} Processed schema or null if no special handling needed
  */
-function handleRepeatProperty(result, parentPath) {
+export function handleRepeatProperty(result, parentPath) {
   if (
     !parentPath.endsWith('/repeat') ||
     !result.oneOf ||
@@ -625,7 +621,7 @@ function handleRepeatProperty(result, parentPath) {
  * @param {SchemaObject} result - Schema to process
  * @param {string} parentPath - Path to current schema
  */
-function handleNameTitleFields(result, parentPath) {
+export function handleNameTitleFields(result, parentPath) {
   if (
     (parentPath.endsWith('/name') || parentPath.endsWith('/title')) &&
     result.oneOf &&
@@ -641,7 +637,7 @@ function handleNameTitleFields(result, parentPath) {
  * @param {SchemaObject} result - Schema to process
  * @param {string} parentPath - Path to current schema
  */
-function improveListItemTitles(result, parentPath) {
+export function improveListItemTitles(result, parentPath) {
   if (
     !parentPath.endsWith('/items') ||
     !result.oneOf ||
@@ -669,7 +665,7 @@ function improveListItemTitles(result, parentPath) {
  * @param {SchemaObject} result - Schema to process
  * @param {string} parentPath - Path to current schema
  */
-function simplifyConditionArrays(result, parentPath) {
+export function simplifyConditionArrays(result, parentPath) {
   if (
     !parentPath.includes('/conditions/items') &&
     !parentPath.endsWith('/conditions')
@@ -686,7 +682,7 @@ function simplifyConditionArrays(result, parentPath) {
  * @param {SchemaObject} result - Schema to process
  * @param {string} parentPath - Path to current schema
  */
-function processNestedSchemas(result, parentPath) {
+export function processNestedSchemas(result, parentPath) {
   if (result.properties) {
     Object.entries(result.properties).forEach(([propName, propSchema]) => {
       result.properties[propName] = simplifyForDocs(
@@ -721,11 +717,10 @@ function processNestedSchemas(result, parentPath) {
  * @param {string} parentPath - Path to the current schema location
  * @returns {SchemaObject} Simplified schema
  */
-function simplifyForDocs(schema, parentPath = '') {
+export function simplifyForDocs(schema, parentPath = '') {
   if (typeof schema !== 'object') return schema
 
   /** @type {SchemaObject} */
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const result = JSON.parse(JSON.stringify(schema))
 
   handleReferenceSpecificTitles(result)
@@ -753,7 +748,7 @@ function simplifyForDocs(schema, parentPath = '') {
  * Cleans the schemas directory by removing all existing JSON files
  * @returns {number} Number of files cleaned
  */
-function cleanSchemaDirectory() {
+export function cleanSchemaDirectory() {
   console.log('Cleaning existing schema files...')
   const existingFiles = fs
     .readdirSync(schemasDir)
@@ -771,7 +766,7 @@ function cleanSchemaDirectory() {
  * Gets the schema map that defines which files should be generated
  * @returns {Record<string, string>} Schema map with filename-to-schema-export mapping
  */
-function getSchemaMap() {
+export function getSchemaMap() {
   return {
     // Form definition schemas
     'form-definition-schema': 'formDefinitionSchema',
@@ -850,20 +845,19 @@ function getSchemaMap() {
  * @param {Record<string, unknown>} model - The loaded model containing schemas
  * @returns {boolean} Whether processing was successful
  */
-function processSchema(fileName, schemaName, model) {
+export function processSchema(fileName, schemaName, model) {
   try {
     /** @type {unknown} */
     const joiSchema = model[schemaName]
 
     if (!joiSchema) {
-      console.warn(`⚠️  Schema "${schemaName}" not found in exports`)
       return false
     }
 
     /** @type {SchemaObject} */
     let jsonSchema = parse(
       /** @type {Schema} */ (joiSchema),
-      'open-api',
+      'json',
       {},
       {
         includeSchemaDialect: true,
@@ -903,9 +897,7 @@ function processSchema(fileName, schemaName, model) {
  */
 async function loadModelSchemas() {
   console.log('Loading model schemas...')
-  return /** @type {Record<string, unknown>} */ (
-    await import('../dist/module/index.js')
-  )
+  return await import('../dist/module/index.js')
 }
 
 /**
@@ -913,15 +905,13 @@ async function loadModelSchemas() {
  * @param {Record<string, unknown>} model - The loaded model containing schemas
  * @returns {{ successCount: number, errorCount: number }} Object containing success and error counts
  */
-function processAllSchemas(model) {
+export function processAllSchemas(model) {
   const schemaMap = getSchemaMap()
   let successCount = 0
   let errorCount = 0
 
   for (const [fileName, schemaName] of Object.entries(schemaMap)) {
-    /** @type {string} */
-    const typedSchemaName = schemaName
-    const success = processSchema(fileName, typedSchemaName, model)
+    const success = processSchema(fileName, schemaName, model)
 
     if (success) {
       successCount++
@@ -936,7 +926,7 @@ function processAllSchemas(model) {
 /**
  * Generates schema files from Joi schemas
  */
-async function generateSchemas() {
+export async function generateSchemas() {
   try {
     const model = await loadModelSchemas()
 
@@ -951,14 +941,30 @@ async function generateSchemas() {
     if (errorCount > 0) {
       console.log(`✗ Failed to generate ${errorCount} schemas`)
     }
-  } catch (/** @type {unknown} */ err) {
+
+    return { successCount, errorCount }
+  } catch (err) {
     const error = err instanceof Error ? err : new Error(String(err))
     console.error(`\n✗ Schema generation failed: ${error.message}`)
     throw error
   }
 }
 
-await generateSchemas()
+// Only run when executed directly, not when imported as a module
+if (import.meta.url === `file://${process.argv[1]}`) {
+  ;(async () => {
+    try {
+      await generateSchemas()
+    } catch (err) {
+      console.error('Schema generation failed:', err)
+      throw err
+    }
+  })().catch((err) => {
+    console.error('Unhandled error:', err)
+    // eslint-disable-next-line no-process-exit
+    process.exit(1)
+  })
+}
 
 /**
  * @import { Schema } from 'joi'
