@@ -1,7 +1,10 @@
 import { ComponentType } from '@defra/forms-model'
 
 import { insertValidationErrors } from '~/src/lib/utils.js'
-import { allAdvancedSettingsFields } from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
+import {
+  allAdvancedSettingsFields,
+  allEnhancedFields
+} from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
 
 /**
  * @param {NumberFieldComponent} question
@@ -147,6 +150,29 @@ export function advancedSettingsFields(options, question, validation) {
 
   return options.map((fieldName) => {
     const fieldSettings = allAdvancedSettingsFields[fieldName]
+    return {
+      ...fieldSettings,
+      ...insertValidationErrors(formErrors ? formErrors[fieldName] : undefined),
+      value: formValues[fieldName]
+    }
+  })
+}
+
+/**
+ * @param {ComponentType[]} options
+ * @param {TextFieldComponent} question
+ * @param {ValidationFailure<FormEditor>} [validation]
+ * @returns {GovukField[]}
+ */
+export function enhancedFields(options, question, validation) {
+  const formValues =
+    /** @type { Record<string, string | boolean | number | undefined> } */ (
+      validation?.formValues ?? mapToQuestionOptions(question)
+    )
+  const formErrors = validation?.formErrors
+
+  return options.map((fieldName) => {
+    const fieldSettings = allEnhancedFields[fieldName]
     return {
       ...fieldSettings,
       ...insertValidationErrors(formErrors ? formErrors[fieldName] : undefined),

@@ -1,3 +1,5 @@
+import { type ComponentDef } from '~/src/components/types.js'
+
 /**
  * Interface for `FormEditor` Joi schema
  */
@@ -173,9 +175,29 @@ export interface FormEditor {
   tabularDataTypes: string[]
 
   /**
-   * Placeholder to wrap a custom template
+   * The action required from within a sub-section
+   */
+  enhancedAction: string
+
+  /**
+   * Placeholder for inserted section to handle adding/editing radios or checkboxes
    */
   radiosOrCheckboxes: string
+
+  /**
+   * The display text of the radio item
+   */
+  radioLabel: string
+
+  /**
+   * The hint of the radio item
+   */
+  radioHint: string
+
+  /**
+   * The value of the radio item
+   */
+  radioValue: string
 }
 
 export type FormEditorInputPage = Pick<
@@ -215,6 +237,10 @@ export type FormEditorInputQuestion = Pick<
   | 'documentTypes'
   | 'imageTypes'
   | 'tabularDataTypes'
+  | 'enhancedAction'
+  | 'radioLabel'
+  | 'radioHint'
+  | 'radioValue'
 >
 
 export type FormEditorInputPageSettings = Pick<
@@ -226,6 +252,34 @@ export type FormEditorInputGuidancePage = Pick<
   FormEditor,
   'pageHeading' | 'guidanceText'
 >
+
+export type FormEditorInputQuestionDetails = Pick<
+  FormEditorInputQuestion,
+  | 'question'
+  | 'hintText'
+  | 'shortDescription'
+  | 'questionOptional'
+  | 'questionType'
+  | 'fileTypes'
+  | 'documentTypes'
+  | 'imageTypes'
+  | 'tabularDataTypes'
+  | 'enhancedAction'
+  | 'radioLabel'
+  | 'radioHint'
+  | 'radioValue'
+>
+
+export interface EnhancedActionState {
+  questionDetails: Partial<ComponentDef>
+  state: {
+    radioLabel?: string
+    radioHint?: string
+    radioValue?: string
+    expanded?: boolean
+    listItems?: { label?: string; hint?: string; value?: string }[]
+  }
+}
 
 export interface GovukField {
   id?: string

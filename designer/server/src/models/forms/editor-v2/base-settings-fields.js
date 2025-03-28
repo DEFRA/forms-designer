@@ -14,7 +14,7 @@ const IMAGES = 'images'
 
 export const baseSchema = Joi.object().keys({
   name: questionDetailsFullSchema.nameSchema,
-  question: questionDetailsFullSchema.questionSchema.when('radioAction', {
+  question: questionDetailsFullSchema.questionSchema.when('enhancedAction', {
     is: Joi.exist(),
     then: Joi.string().optional().allow(''),
     otherwise: Joi.string().trim().required().messages({
@@ -24,7 +24,7 @@ export const baseSchema = Joi.object().keys({
   hintText: questionDetailsFullSchema.hintTextSchema,
   questionOptional: questionDetailsFullSchema.questionOptionalSchema,
   shortDescription: questionDetailsFullSchema.shortDescriptionSchema.when(
-    'radioAction',
+    'enhancedAction',
     {
       is: Joi.exist(),
       then: Joi.string().optional().allow(''),
@@ -75,18 +75,21 @@ export const baseSchema = Joi.object().keys({
       })
     }
   ),
-  radioAction: questionDetailsFullSchema.radioAction,
-  radioLabel: questionDetailsFullSchema.radioLabelSchema.when('radioAction', {
-    is: Joi.exist(),
-    then: Joi.string().when('radioAction', {
-      is: 'add-item',
-      then: Joi.string().optional().allow(''),
-      otherwise: Joi.string().trim().required().messages({
-        '*': 'Enter item text'
-      })
-    }),
-    otherwise: Joi.string().optional().allow('')
-  }),
+  enhancedAction: questionDetailsFullSchema.enhancedActionSchema,
+  radioLabel: questionDetailsFullSchema.radioLabelSchema.when(
+    'enhancedAction',
+    {
+      is: Joi.exist(),
+      then: Joi.string().when('enhancedAction', {
+        is: 'add-item',
+        then: Joi.string().optional().allow(''),
+        otherwise: Joi.string().trim().required().messages({
+          '*': 'Enter item text'
+        })
+      }),
+      otherwise: Joi.string().optional().allow('')
+    }
+  ),
   radioHint: questionDetailsFullSchema.radioHintSchema,
   radioValue: questionDetailsFullSchema.radioValueSchema
 })

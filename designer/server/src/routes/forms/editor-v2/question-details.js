@@ -18,7 +18,11 @@ import { baseSchema } from '~/src/models/forms/editor-v2/base-settings-fields.js
 import { CHANGES_SAVED_SUCCESSFULLY } from '~/src/models/forms/editor-v2/common.js'
 import * as viewModel from '~/src/models/forms/editor-v2/question-details.js'
 import { editorv2Path } from '~/src/models/links.js'
-import { getQuestionType } from '~/src/routes/forms/editor-v2/helper.js'
+import {
+  getEnhancedActionStateFromSession,
+  getQuestionType,
+  handleEnhancedAction
+} from '~/src/routes/forms/editor-v2/helper.js'
 
 export const ROUTE_FULL_PATH_QUESTION_DETAILS = `/library/{slug}/editor-v2/page/{pageId}/question/{questionId}/details`
 
@@ -50,6 +54,8 @@ export default [
 
       const questionType = getQuestionType(yar, validation?.formValues)
 
+      const enhancedActionState = getEnhancedActionStateFromSession(yar)
+
       return h.view(
         'forms/editor-v2/question-details',
         viewModel.questionDetailsViewModel(
@@ -58,7 +64,8 @@ export default [
           pageId,
           questionId,
           questionType,
-          validation
+          validation,
+          enhancedActionState
         )
       )
     },
@@ -74,7 +81,7 @@ export default [
   }),
 
   /**
-   * @satisfies {ServerRoute<{ Payload: Pick<FormEditorInputQuestion, 'question' | 'hintText' | 'shortDescription' | 'questionOptional' | 'questionType' | 'fileTypes' | 'documentTypes' | 'imageTypes' | 'tabularDataTypes' > }>}
+   * @satisfies {ServerRoute<{ Payload: FormEditorInputQuestionDetails }>}
    */
   ({
     method: 'POST',
@@ -82,14 +89,28 @@ export default [
     async handler(request, h) {
       const { params, auth, payload, yar } = request
       const { slug, pageId, questionId } =
-        /** @type {{ slug: string, pageId: string, questionId: string}} */ (
+        /** @type {{ slug: string, pageId: string, questionId: string }} */ (
           params
         )
       const { token } = auth.credentials
+      const { enhancedAction } = payload
 
       const questionDetails = {
         ...mapQuestionDetails(payload),
         id: questionId !== 'new' ? questionId : undefined
+      }
+
+      // Intercept operations if say a radio or checkbox
+      if (enhancedAction) {
+        const anchor = handleEnhancedAction(yar, payload, questionDetails)
+        return h
+          .redirect(
+            editorv2Path(
+              slug,
+              `page/${pageId}/question/${questionId}/details${anchor}`
+            )
+          )
+          .code(StatusCodes.SEE_OTHER)
       }
 
       // Save page and first question
@@ -141,6 +162,6 @@ export default [
 ]
 
 /**
- * @import { FormEditorInputQuestion } from '@defra/forms-model'
+ * @import { FormEditorInputQuestionDetails } from '@defra/forms-model'
  * @import { ServerRoute } from '@hapi/hapi'
  */

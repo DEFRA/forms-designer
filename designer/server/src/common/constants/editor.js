@@ -91,6 +91,18 @@ export const QuestionAdvancedSettings =
     Regex: 'regex',
     Rows: 'rows'
   }
+
+/**
+ * @readonly
+ * @enum {string}
+ */
+export const QuestionEnhancedFields =
+  /** @type {Record<string, keyof FormEditorGovukField | 'name'>} */ {
+    RadioLabel: 'radioLabel',
+    RadioHint: 'radioHint',
+    RadioValue: 'radioValue'
+  }
+
 /**
  * @import { FormEditorGovukField } from '@defra/forms-model'
  */

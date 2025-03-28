@@ -2,7 +2,10 @@ import { randomId } from '@defra/forms-model'
 
 import { QuestionTypeDescriptions } from '~/src/common/constants/editor.js'
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
-import { advancedSettingsPerComponentType } from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
+import {
+  advancedSettingsPerComponentType,
+  enhancedFieldsPerComponentType
+} from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
 import {
   getFieldList,
   getFileUploadFields,
@@ -18,7 +21,10 @@ import {
   getQuestionNum
 } from '~/src/models/forms/editor-v2/common.js'
 import { getFieldComponentType } from '~/src/models/forms/editor-v2/page-fields.js'
-import { advancedSettingsFields } from '~/src/models/forms/editor-v2/question-details-advanced-settings.js'
+import {
+  advancedSettingsFields,
+  enhancedFields
+} from '~/src/models/forms/editor-v2/question-details-advanced-settings.js'
 import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
 
 const zeroIsValidForFields = [
@@ -118,6 +124,7 @@ export function getDetails(
     pagePath: page?.path
   }
 }
+
 /**
  * @param {ComponentDef} question
  * @param {ValidationFailure<FormEditor> | undefined} validation
@@ -139,12 +146,33 @@ export function getExtraFields(question, validation) {
 }
 
 /**
+ * @param {ComponentDef} question
+ * @param {ValidationFailure<FormEditor> | undefined} validation
+ * @returns {GovukField[]}
+ */
+export function getEnhancedFields(question, validation) {
+  const extraFieldNames = /** @type {ComponentType[]} */ (
+    enhancedFieldsPerComponentType[question.type]
+  )
+
+  if (extraFieldNames.length) {
+    return enhancedFields(
+      extraFieldNames,
+      /** @type {TextFieldComponent} */ (question),
+      validation
+    )
+  }
+  return /** @type {GovukField[]} */ ([])
+}
+
+/**
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  * @param {string} pageId
  * @param {string} questionId
  * @param {ComponentType | undefined} questionTypeBase
  * @param {ValidationFailure<FormEditor>} [validation]
+ * @param {EnhancedActionState} [enhancedActionState]
  */
 export function questionDetailsViewModel(
   metadata,
@@ -152,7 +180,8 @@ export function questionDetailsViewModel(
   pageId,
   questionId,
   questionTypeBase,
-  validation
+  validation,
+  enhancedActionState
 ) {
   const {
     pageTitle,
@@ -163,19 +192,25 @@ export function questionDetailsViewModel(
     pagePath
   } = getDetails(metadata, definition, pageId, questionId, questionTypeBase)
 
-  const questionType = questionTypeBase ?? questionFields.type
+  const questionFieldsOverride = /** @type {ComponentDef} */ (
+    enhancedActionState?.questionDetails ?? questionFields
+  )
+  const questionType = questionTypeBase ?? questionFieldsOverride.type
 
   const { formErrors } = validation ?? {}
 
   const basePageFields = getFieldList(
-    /** @type {InputFieldsComponentsDef} */ (questionFields),
+    /** @type {InputFieldsComponentsDef} */ (questionFieldsOverride),
     questionType,
     validation
   )
 
-  const uploadFields = getFileUploadFields(questionFields, validation)
+  const uploadFields = getFileUploadFields(questionFieldsOverride, validation)
   const extraFields = /** @type {GovukField[]} */ (
-    getExtraFields(questionFields, validation)
+    getExtraFields(questionFieldsOverride, validation)
+  )
+  const enhancedFields = /** @type {GovukField[]} */ (
+    getEnhancedFields(questionFieldsOverride, validation)
   )
 
   const extraFieldNames = extraFields.map((field) => field.name ?? 'unknown')
@@ -183,6 +218,8 @@ export function questionDetailsViewModel(
   const previewPageUrl = `${buildPreviewUrl(metadata.slug)}${pagePath}?force`
 
   return {
+    enhancedActionState,
+    enhancedFields,
     ...baseModelFields(metadata.slug, pageTitle),
     name: questionFields.name || randomId(),
     basePageFields,
@@ -195,9 +232,9 @@ export function questionDetailsViewModel(
     errorList,
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
-    questionType: questionFields.type,
+    questionType: questionFieldsOverride.type,
     questionTypeDesc: QuestionTypeDescriptions.find(
-      (x) => x.type === questionFields.type
+      (x) => x.type === questionFieldsOverride.type
     )?.description,
     changeTypeUrl: editorv2Path(
       metadata.slug,
@@ -216,6 +253,6 @@ export function questionDetailsViewModel(
 }
 
 /**
- * @import { ComponentType, ComponentDef, FormMetadata, FormDefinition, FormEditor, GovukField, InputFieldsComponentsDef, TextFieldComponent } from '@defra/forms-model'
+ * @import { ComponentType, ComponentDef, EnhancedActionState, FormMetadata, FormDefinition, FormEditor, GovukField, InputFieldsComponentsDef, TextFieldComponent } from '@defra/forms-model'
  * @import { ErrorDetailsItem, ValidationFailure } from '~/src/common/helpers/types.js'
  */
