@@ -3,6 +3,7 @@ import { ComponentType, ControllerType, Engine } from '@defra/forms-model'
 import {
   buildDefinition,
   testFormDefinitionWithExistingGuidance,
+  testFormDefinitionWithFileUploadPage,
   testFormDefinitionWithTwoPagesAndQuestions,
   testFormDefinitionWithTwoQuestions
 } from '~/src/__stubs__/form-definition.js'
@@ -271,7 +272,7 @@ describe('editor.js', () => {
     }
 
     describe('when putJson succeeds', () => {
-      test('returns response body', async () => {
+      test('returns response body when no controller defined', async () => {
         mockedPutJson.mockResolvedValueOnce({
           response: createMockResponse(),
           body: { id: '456' }
@@ -287,6 +288,109 @@ describe('editor.js', () => {
         )
 
         expect(mockedPutJson).toHaveBeenCalledWith(requestUrl, expectedOptions2)
+        expect(result).toEqual({ id: '456' })
+      })
+
+      test('returns response body when controller to change to null', async () => {
+        mockedPutJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: { id: '456' }
+        })
+
+        const expectedPatch = {
+          payload: {
+            controller: null
+          },
+          headers: { Authorization: `Bearer ${token}` }
+        }
+
+        const result = await updateQuestion(
+          formId,
+          token,
+          testFormDefinitionWithFileUploadPage,
+          'p1',
+          'q1',
+          questionDetails
+        )
+
+        expect(mockedPutJson).toHaveBeenCalledWith(requestUrl, expectedOptions2)
+        expect(mockedPatchJson).toHaveBeenCalledWith(requestUrl, expectedPatch)
+        expect(result).toEqual({ id: '456' })
+      })
+
+      test('returns response body when controller to change to File Upload controller', async () => {
+        mockedPutJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: { id: '456' }
+        })
+
+        const questionDetailsFileUpload = {
+          type: ComponentType.FileUploadField
+        }
+
+        const expectedPut = {
+          payload: {
+            type: ComponentType.FileUploadField
+          },
+          headers: { Authorization: `Bearer ${token}` }
+        }
+
+        const expectedPatch = {
+          payload: {
+            controller: ControllerType.FileUpload
+          },
+          headers: { Authorization: `Bearer ${token}` }
+        }
+
+        const result = await updateQuestion(
+          formId,
+          token,
+          testFormDefinitionWithTwoPagesAndQuestions,
+          'p1',
+          'q1',
+          questionDetailsFileUpload
+        )
+
+        expect(mockedPutJson).toHaveBeenCalledWith(requestUrl, expectedPut)
+        expect(mockedPatchJson).toHaveBeenCalledWith(requestUrl, expectedPatch)
+        expect(result).toEqual({ id: '456' })
+      })
+
+      test('returns response body when controller is not to change', async () => {
+        mockedPutJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: { id: '456' }
+        })
+
+        const questionDetailsFileUpload = {
+          type: ComponentType.FileUploadField
+        }
+
+        const expectedPut = {
+          payload: {
+            type: ComponentType.FileUploadField
+          },
+          headers: { Authorization: `Bearer ${token}` }
+        }
+
+        const expectedPatch = {
+          payload: {
+            controller: ControllerType.FileUpload
+          },
+          headers: { Authorization: `Bearer ${token}` }
+        }
+
+        const result = await updateQuestion(
+          formId,
+          token,
+          testFormDefinitionWithFileUploadPage,
+          'p1',
+          'q1',
+          questionDetailsFileUpload
+        )
+
+        expect(mockedPutJson).toHaveBeenCalledWith(requestUrl, expectedPut)
+        expect(mockedPatchJson).toHaveBeenCalledWith(requestUrl, expectedPatch)
         expect(result).toEqual({ id: '456' })
       })
     })
