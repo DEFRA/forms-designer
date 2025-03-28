@@ -107,7 +107,7 @@ export async function updateQuestion(
     ? { controller: page.controller }
     : {}
   const newControllerType = getControllerType(questionDetails)
-  if (origControllerType !== newControllerType) {
+  if (origControllerType.controller !== newControllerType.controller) {
     // Update page controller
     const pageHeadingRequestUrl = new URL(
       `./${formId}/definition/draft/pages/${pageId}`,

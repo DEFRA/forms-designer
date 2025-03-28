@@ -373,13 +373,6 @@ describe('editor.js', () => {
           headers: { Authorization: `Bearer ${token}` }
         }
 
-        const expectedPatch = {
-          payload: {
-            controller: ControllerType.FileUpload
-          },
-          headers: { Authorization: `Bearer ${token}` }
-        }
-
         const result = await updateQuestion(
           formId,
           token,
@@ -390,7 +383,7 @@ describe('editor.js', () => {
         )
 
         expect(mockedPutJson).toHaveBeenCalledWith(requestUrl, expectedPut)
-        expect(mockedPatchJson).toHaveBeenCalledWith(requestUrl, expectedPatch)
+        expect(mockedPatchJson).not.toHaveBeenCalled()
         expect(result).toEqual({ id: '456' })
       })
     })
