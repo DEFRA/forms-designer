@@ -65,7 +65,8 @@ export const QuestionBaseSettings = {
   FileTypes: 'fileTypes',
   DocumentTypes: 'documentTypes',
   ImageTypes: 'imageTypes',
-  TabularDataTypes: 'tabularDataTypes'
+  TabularDataTypes: 'tabularDataTypes',
+  RadiosOrCheckboxes: 'radiosOrCheckboxes'
 }
 
 /**

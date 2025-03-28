@@ -171,6 +171,11 @@ export interface FormEditor {
    * The types of tabular data files for upload
    */
   tabularDataTypes: string[]
+
+  /**
+   * Placeholder to wrap a custom template
+   */
+  radiosOrCheckboxes: string
 }
 
 export type FormEditorInputPage = Pick<
@@ -236,6 +241,7 @@ export interface GovukField {
   items?: { text?: string; value?: string; checked?: boolean }[]
   rows?: number
   type?: string
+  customTemplate?: string
 }
 
 export interface FormEditorGovukField {
@@ -247,6 +253,7 @@ export interface FormEditorGovukField {
   documentTypes?: GovukField
   imageTypes?: GovukField
   tabularDataTypes?: GovukField
+  radiosOrCheckboxes?: GovukField
   errorMessage?: { text: string }
 }
 

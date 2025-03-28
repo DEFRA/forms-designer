@@ -1,0 +1,63 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+<div class="govuk-form-group">
+  <h2 class="govuk-heading-m" tabindex="-1">
+    <svg class="govuk-!-margin-right-1" style="position: relative; top: -1px; vertical-align: middle;" width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="12" cy="12" r="11" fill="currentColor"></circle>
+      <path d="M6 8h12M6 12h12M6 16h12" stroke="white" stroke-width="2" stroke-linecap="round"></path>
+    </svg>
+    List items
+  </h2>
+  <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible" style="border-color:black; border-width: 3px;">
+  <ol class="gem-c-reorderable-list js-enabled" id="options-container" data-module="reorderable-list">
+  </ol>
+</div>
+
+<div id="add-option-form" class="govuk-!-margin-bottom-6 gem-c-reorderable-list__item" style="display: none;">
+  <h2 <span="" class="govuk-caption-m" id="add-option-heading">Item 1</h2>
+
+  <!-- Option Value (Label) -->
+  <div class="govuk-form-group">
+    <label class="govuk-label govuk-label--m" for="new-option-label">Item</label>
+    <input class="govuk-input" id="new-option-label" name="radioLabel" type="text" value="">
+  </div>
+
+  <!-- Hint Text -->
+  <div class="govuk-form-group">
+    <label class="govuk-label govuk-label--m" for="new-option-hint">Hint text (optional)</label>
+    <div class="govuk-hint">Use single short sentence without a full stop</div>
+    <input class="govuk-input" id="new-option-hint" name="radioHint" type="text" value="">
+  </div>
+
+  <!-- Advanced Features Section -->
+  <details class="govuk-details" data-module="govuk-details">
+    <summary class="govuk-details__summary">
+      <span class="govuk-details__summary-text">Advanced
+        features</span>
+    </summary>
+    <div class="govuk-details__text">
+      <!-- Additional Value -->
+      <div class="govuk-form-group">
+        <label class="govuk-label govuk-label--m" for="new-option-value">Unique identifier (optional)</label>
+        <div class="govuk-hint">Used in databases to identify the item</div>
+        <input class="govuk-input" id="new-option-value" name="radioValue" type="text" value="">
+      </div>
+    </div>
+  </details>
+
+  <div class="govuk-button-group">
+    <button type="button" class="govuk-button" id="save-new-option">Save item</button>
+    <a class="govuk-link" href="#" id="cancel-add-option">Cancel</a>
+  </div>
+</div>
+
+<div class="govuk-button-group">
+  <!-- Add Another Option Button -->
+  <button id="add-option-button" type="submit" class="govuk-button govuk-!-margin-bottom-4 govuk-!-margin-bottom-6" name="radioAction" value="add-item">
+    Add item
+  </button>
+
+  <button id="edit-options-button" type="submit" class="govuk-button govuk-button--inverse" style="display: none;" name="radioAction" value="re-order">
+    Re-order
+  </button>
+</div>

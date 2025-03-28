@@ -118,6 +118,10 @@ export const tabularDataTypesSchema = Joi.array()
   .single()
   .empty(null)
   .default([])
+export const radioAction = Joi.string().trim().optional().allow('')
+export const radioLabelSchema = Joi.string().trim().required()
+export const radioHintSchema = Joi.string().trim().optional().allow('')
+export const radioValueSchema = Joi.string().trim().optional().allow('')
 
 export const questionDetailsFullSchema = {
   classesSchema,
@@ -140,6 +144,10 @@ export const questionDetailsFullSchema = {
   questionOptionalSchema,
   questionSchema,
   questionTypeFullSchema,
+  radioAction,
+  radioHintSchema,
+  radioLabelSchema,
+  radioValueSchema,
   regexSchema,
   rowsSchema,
   shortDescriptionSchema,
