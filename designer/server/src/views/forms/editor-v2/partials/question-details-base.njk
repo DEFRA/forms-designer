@@ -5,18 +5,22 @@
 {% from "govuk/components/textarea/macro.njk" import govukTextarea %}
 
 <div class="govuk-form-group">
-  {% for field in basePageFields %}
-    {% set fieldType = getFieldType(field) %}
-    {% if field.customTemplate %}
-      {%- include "../../../../views/forms/editor-v2/custom-templates/file-types.njk" -%}
-    {% elif fieldType == 'TextField' %}
-      {{ govukInput(field) }}
-    {% elif fieldType == 'MultilineTextField' %}
-      {{ govukTextarea(field) }}
-    {% elif fieldType == 'CheckboxesField' %}
-      {{ govukCheckboxes(field) }}
-    {% endif %}
-  {% endfor %}
+    {% for field in basePageFields %}
+      {% if field.customTemplate %}
+        {%- include "../../../../views/forms/editor-v2/custom-templates/" + field.customTemplate + ".njk" -%}
+      {% else %}
+        {% set fieldType = getFieldType(field) %}
+        {% if fieldType == 'TextField' %}
+          {{ govukInput(field) }}
+        {% elif fieldType == 'MultilineTextField' %}
+          {{ govukTextarea(field) }}
+        {% elif fieldType == 'CheckboxesField' %}
+          {{ govukCheckboxes(field) }}
+        {% elif fieldType == 'FileUploadField' %}
+          {%- include "../../../../views/forms/editor-v2/partials/file-types.njk" -%}
+        {% endif %}
+      {% endif %}
+    {% endfor %}
   <input type="hidden" name="questionType" id="questionType" value="{{ questionType }}" />
   <input type="hidden" name="name" id="name" value="{{ name }}" />
 </div>

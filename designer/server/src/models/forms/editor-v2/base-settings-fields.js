@@ -313,21 +313,29 @@ export function getFieldValue(fieldName, questionFields, validation) {
 }
 
 export const baseQuestionFields =
-  /** @type {(keyof Omit<FormEditorGovukField, 'errorMessage'>)[]} */ ([
+  /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
     QuestionBaseSettings.Question,
     QuestionBaseSettings.HintText,
     QuestionBaseSettings.QuestionOptional,
     QuestionBaseSettings.ShortDescription
   ])
 
-export const fileUploadFields =
-  /** @type {(keyof Omit<FormEditorGovukField, 'errorMessage'>)[]} */ ([
+export const autocompleteFields =
+  /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
     QuestionBaseSettings.Question,
     QuestionBaseSettings.HintText,
     QuestionBaseSettings.QuestionOptional,
-    QuestionBaseSettings.FileTypes,
+    QuestionBaseSettings.AutoCompleteOptions,
     QuestionBaseSettings.ShortDescription
   ])
+
+export const fileUploadFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
+  QuestionBaseSettings.Question,
+  QuestionBaseSettings.HintText,
+  QuestionBaseSettings.QuestionOptional,
+  QuestionBaseSettings.FileTypes,
+  QuestionBaseSettings.ShortDescription
+])
 
 /**
  * @param { ComponentType | undefined } questionType
@@ -336,6 +344,9 @@ export const fileUploadFields =
 export function getQuestionFieldList(questionType) {
   if (questionType === ComponentType.FileUploadField) {
     return fileUploadFields
+  }
+  if (questionType === ComponentType.AutocompleteField) {
+    return autocompleteFields
   }
   return baseQuestionFields
 }
@@ -395,6 +406,6 @@ export function getFileUploadFields(questionFields, validation) {
 }
 
 /**
- * @import { ComponentDef, FormEditor, FormEditorGovukField, FormEditorInputQuestion, GovukField, InputFieldsComponentsDef, FormEditorGovukFieldBase } from '@defra/forms-model'
+ * @import { ComponentDef, FormEditor, FormEditorGovukField, FormEditorInputQuestion, GovukField, InputFieldsComponentsDef, FormEditorGovukFieldBase, FormEditorGovukFieldBaseKeys } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

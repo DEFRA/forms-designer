@@ -213,16 +213,6 @@ describe('Editor v2 question details routes', () => {
   })
 
   test('GET - should render the autocomplete options field in the base view', async () => {
-    jest.mocked(getValidationErrorsFromSession).mockReturnValue(
-      /** @type {ValidationFailure<FormEditor>} */ ({
-        formValues: {
-          question: 'What is your name?',
-          shortDescription: 'your name',
-          minLength: '10'
-        },
-        formErrors: {}
-      })
-    )
     jest
       .mocked(getQuestionType)
       .mockReturnValue(ComponentType.AutocompleteField)
@@ -239,25 +229,10 @@ describe('Editor v2 question details routes', () => {
 
     const { container } = await renderResponse(server, options)
 
-    const $mastheadHeading = container.getByText('Test form')
-    const $cardTitle = container.getByText('Question 1')
-    const $cardCaption = container.getByText('Page 1')
-    const $cardHeading = container.getByText('Edit question 1')
+    container.getByText('Test form')
 
-    const $actions = container.getAllByRole('button')
-
-    expect($mastheadHeading).toHaveTextContent('Test form')
-    expect($mastheadHeading).toHaveClass('govuk-heading-xl')
-    expect($cardTitle).toHaveTextContent('Question 1')
-    expect($cardTitle).toHaveClass('editor-card-title')
-    expect($cardCaption).toHaveTextContent('Page 1')
-    expect($cardCaption).toHaveClass('govuk-caption-l')
-    expect($cardHeading).toHaveTextContent('Edit question 1')
-    expect($cardHeading).toHaveClass('govuk-heading-l')
-
-    expect($actions).toHaveLength(4)
-    expect($actions[2]).toHaveTextContent('Preview page')
-    expect($actions[3]).toHaveTextContent('Save and continue')
+    const [, , autoCompleteField] = container.getAllByRole('textbox')
+    expect(autoCompleteField.id).toBe('autoCompleteOptions')
   })
 
   test('POST - should error if missing mandatory fields', async () => {
