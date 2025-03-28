@@ -65,7 +65,7 @@ describe('editor-v2 - advanced settings fields model', () => {
   describe('getFieldComponentType', () => {
     test('should throw if invalid or not implemented field type', () => {
       expect(() => getFieldComponentType({ name: ComponentType.Html })).toThrow(
-        'Invalid or not implemented advanced setting field name (Html)'
+        'Invalid or not implemented field name setting (Html)'
       )
     })
 
@@ -102,6 +102,12 @@ describe('editor-v2 - advanced settings fields model', () => {
     test('should return TextField for Max', () => {
       expect(getFieldComponentType({ name: 'max' })).toBe(
         ComponentType.TextField
+      )
+    })
+
+    test('should return MultilineTextField for AutoComplete', () => {
+      expect(getFieldComponentType({ name: 'autoCompleteOptions' })).toBe(
+        ComponentType.MultilineTextField
       )
     })
   })

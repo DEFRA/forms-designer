@@ -67,7 +67,7 @@ export const baseSchema = Joi.object().keys({
 })
 
 /**
- * @type {Record<keyof Omit<FormEditorGovukField, 'errorMessage'>, GovukField>}
+ * @type {FormEditorGovukFieldBase}
  */
 export const allBaseSettingsFields = {
   question: {
@@ -121,7 +121,8 @@ export const allBaseSettingsFields = {
         isPageHeading: false,
         classes: 'govuk-fieldset__legend--m'
       }
-    }
+    },
+    customTemplate: 'file-types'
   },
   documentTypes: {
     id: 'documentTypes',
@@ -137,6 +138,20 @@ export const allBaseSettingsFields = {
     id: 'tabularDataTypes',
     name: 'tabularDataTypes',
     idPrefix: 'tabularDataTypes'
+  },
+  autoCompleteOptions: {
+    id: 'autoCompleteOptions',
+    name: 'autoCompleteOptions',
+    idPrefix: 'autoCompleteOptions',
+    label: {
+      text: 'Add each option on a new line',
+      classes: 'govuk-label--s',
+      isPageHeading: false
+    },
+    hint: {
+      text: 'To optionally set an input value for each item, separate the option text and value with a colon (e.g English:en-gb)'
+    },
+    customTemplate: 'auto-complete-options'
   }
 }
 
@@ -333,7 +348,6 @@ export function getQuestionFieldList(questionType) {
  */
 export function getFieldList(questionFields, questionType, validation) {
   const questionFieldList = getQuestionFieldList(questionType)
-
   return questionFieldList.map((fieldName) => {
     const value = getFieldValue(fieldName, questionFields, validation)
     return {
@@ -381,6 +395,6 @@ export function getFileUploadFields(questionFields, validation) {
 }
 
 /**
- * @import { ComponentDef, FormEditor, FormEditorGovukField, FormEditorInputQuestion, GovukField, InputFieldsComponentsDef } from '@defra/forms-model'
+ * @import { ComponentDef, FormEditor, FormEditorGovukField, FormEditorInputQuestion, GovukField, InputFieldsComponentsDef, FormEditorGovukFieldBase } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

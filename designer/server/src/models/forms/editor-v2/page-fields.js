@@ -160,6 +160,7 @@ const textFieldQuestions = [
 
 const multiLineTextFieldQuestions = [
   QuestionBaseSettings.HintText,
+  QuestionBaseSettings.AutoCompleteOptions,
   QuestionAdvancedSettings.Regex,
   QuestionAdvancedSettings.Classes
 ]
@@ -198,7 +199,7 @@ export function getFieldComponentType(field) {
   }
 
   throw new Error(
-    `Invalid or not implemented advanced setting field name (${field.name})`
+    `Invalid or not implemented field name setting (${field.name})`
   )
 }
 /**

@@ -1,7 +1,7 @@
 import Joi from 'joi'
 
+import { pageSchema } from '~/src/form/form-definition/index.js'
 import { type PatchPageFields } from '~/src/form/form-manager/types.js'
-import { pageSchema } from '~/src/index.js'
 
 export const patchPageSchema = Joi.object<PatchPageFields>()
   .keys({

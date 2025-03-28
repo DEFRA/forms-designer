@@ -10,7 +10,7 @@ describe('editor-v2 - advanced settings fields model', () => {
   describe('getFieldComponentType', () => {
     test('should throw if invalid or not implemented field type', () => {
       expect(() => getFieldComponentType({ name: ComponentType.Html })).toThrow(
-        'Invalid or not implemented advanced setting field name (Html)'
+        'Invalid or not implemented field name setting (Html)'
       )
     })
 

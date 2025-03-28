@@ -171,6 +171,8 @@ export interface FormEditor {
    * The types of tabular data files for upload
    */
   tabularDataTypes: string[]
+
+  autoCompleteOptions: string
 }
 
 export type FormEditorInputPage = Pick<
@@ -231,11 +233,17 @@ export interface GovukField {
   }
   value?: string | boolean | number | string[]
   classes?: string
-  label?: { text?: string; html?: string; classes?: string }
+  label?: {
+    text?: string
+    html?: string
+    classes?: string
+    isPageHeading?: boolean
+  }
   hint?: { text?: string; html?: string; classes?: string }
   items?: { text?: string; value?: string; checked?: boolean }[]
   rows?: number
   type?: string
+  customTemplate?: string
 }
 
 export interface FormEditorGovukField {
@@ -247,8 +255,16 @@ export interface FormEditorGovukField {
   documentTypes?: GovukField
   imageTypes?: GovukField
   tabularDataTypes?: GovukField
+  autoCompleteOptions?: GovukField
   errorMessage?: { text: string }
 }
+
+export type FormEditorGovukFieldBase = Omit<
+  FormEditorGovukField,
+  'errorMessage'
+>
+
+export type FormEditorGovukFieldBaseKeys = keyof FormEditorGovukFieldBase
 
 export interface FormEditorCheckbox {
   text?: string

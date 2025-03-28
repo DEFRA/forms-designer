@@ -7,17 +7,16 @@
 <div class="govuk-form-group">
   {% for field in basePageFields %}
     {% set fieldType = getFieldType(field) %}
-    {% if fieldType == 'TextField' %}
+    {% if field.customTemplate %}
+      {%- include "../../../../views/forms/editor-v2/custom-templates/file-types.njk" -%}
+    {% elif fieldType == 'TextField' %}
       {{ govukInput(field) }}
     {% elif fieldType == 'MultilineTextField' %}
       {{ govukTextarea(field) }}
     {% elif fieldType == 'CheckboxesField' %}
       {{ govukCheckboxes(field) }}
-    {% elif fieldType == 'FileUploadField' %}
-      {%- include "../../../../views/forms/editor-v2/partials/file-types.njk" -%}
     {% endif %}
   {% endfor %}
-
   <input type="hidden" name="questionType" id="questionType" value="{{ questionType }}" />
   <input type="hidden" name="name" id="name" value="{{ name }}" />
 </div>
