@@ -186,6 +186,59 @@ describe('Generate Schemas Script', () => {
       expect(jsonSchema.description).toBe('Custom Description')
       expect(jsonSchema.$id).toBe('custom-id')
     })
+
+    it('should handle Error objects correctly', () => {
+      const originalConsoleError = console.error
+      console.error = jest.fn()
+
+      parse.mockImplementationOnce(() => {
+        throw new Error('Test error message')
+      })
+
+      const result = processSchema('error-schema', 'minSchema', mockModel)
+      expect(result).toBe(false)
+      expect(console.error).toHaveBeenCalledWith(
+        expect.stringContaining(
+          '✗ Failed to process error-schema: Test error message'
+        )
+      )
+
+      console.error = originalConsoleError
+    })
+
+    it('should handle non-Error thrown values correctly', () => {
+      const originalConsoleError = console.error
+      console.error = jest.fn()
+
+      parse.mockImplementationOnce(() => {
+        throw 'String error message'
+      })
+
+      const result = processSchema('error-schema', 'minSchema', mockModel)
+      expect(result).toBe(false)
+      expect(console.error).toHaveBeenCalledWith(
+        expect.stringContaining(
+          '✗ Failed to process error-schema: String error message'
+        )
+      )
+
+      console.error = originalConsoleError
+    })
+
+    it('should handle non-existent schema', () => {
+      const originalConsoleError = console.error
+      console.error = jest.fn()
+
+      const result = processSchema(
+        'non-existent',
+        'nonExistentSchema',
+        mockModel
+      )
+      expect(result).toBe(false)
+      expect(console.error).not.toHaveBeenCalled()
+
+      console.error = originalConsoleError
+    })
   })
 
   describe('Full Schema Processing', () => {

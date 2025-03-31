@@ -133,6 +133,28 @@ describe('Schema Simplifiers', () => {
 
       expect(result.anyOf[0].title).toBe('Unknown Value Type')
     })
+
+    it('should skip items without properties', () => {
+      const schema = {
+        anyOf: [
+          { type: 'string' },
+
+          {
+            properties: {
+              value: { type: 'string' },
+              type: { type: 'string' },
+              display: { type: 'string' }
+            }
+          }
+        ]
+      }
+
+      improveValueObjectTitles(schema, '/value')
+
+      expect(schema.anyOf[0].title).toBeUndefined()
+
+      expect(schema.anyOf[1].title).toBe(VALUE_TYPES.STATIC)
+    })
   })
 
   describe('improveOperatorDescriptions', () => {
@@ -313,6 +335,52 @@ describe('Schema Simplifiers', () => {
       expect(schema.items.type).toBe(originalItem.type)
       expect(schema.items.title).toBe(originalItem.title)
     })
+
+    it('should process combination keywords correctly', () => {
+      const schema = {
+        oneOf: [
+          { type: 'string', title: 'String Option' },
+          { type: 'number', title: 'Number Option' }
+        ],
+        anyOf: [
+          { type: 'boolean', title: 'Boolean Option' },
+          { type: 'object', properties: { test: { type: 'string' } } }
+        ],
+        allOf: [{ required: ['name'] }, { required: ['email'] }]
+      }
+
+      const originalOneOf = JSON.parse(JSON.stringify(schema.oneOf))
+      const originalAnyOf = JSON.parse(JSON.stringify(schema.anyOf))
+      const originalAllOf = JSON.parse(JSON.stringify(schema.allOf))
+
+      processNestedSchemas(schema, '/test')
+
+      expect(schema.oneOf).toBeDefined()
+      expect(schema.oneOf.length).toBe(originalOneOf.length)
+      expect(schema.anyOf).toBeDefined()
+      expect(schema.anyOf.length).toBe(originalAnyOf.length)
+      expect(schema.allOf).toBeDefined()
+      expect(schema.allOf.length).toBe(originalAllOf.length)
+
+      expect(schema.oneOf[0].type).toBe(originalOneOf[0].type)
+      expect(schema.oneOf[1].type).toBe(originalOneOf[1].type)
+      expect(schema.anyOf[0].type).toBe(originalAnyOf[0].type)
+      expect(schema.anyOf[1].type).toBe(originalAnyOf[1].type)
+    })
+
+    it('should skip non-array combination keywords', () => {
+      const schema = {
+        oneOf: 'not an array',
+        anyOf: 123,
+        allOf: null
+      }
+
+      const originalSchema = JSON.parse(JSON.stringify(schema))
+
+      processNestedSchemas(schema, '/test')
+
+      expect(schema).toEqual(originalSchema)
+    })
   })
 
   describe('simplifyForDocs', () => {
@@ -347,6 +415,38 @@ describe('Schema Simplifiers', () => {
       expect(simplifyForDocs(42)).toBe(42)
       expect(simplifyForDocs(true)).toBe(true)
       expect(simplifyForDocs(undefined)).toBe(undefined)
+    })
+
+    it('should return early when handleRepeatProperty returns a special result', () => {
+      const schema = {
+        oneOf: [
+          {
+            description: 'Configuration for repeatable pages',
+            properties: {
+              options: { type: 'object' },
+              schema: { type: 'object' }
+            }
+          },
+          { type: 'null' }
+        ]
+      }
+
+      const expectedSpecialResult = handleRepeatProperty(
+        schema,
+        '/properties/repeat'
+      )
+
+      const result = simplifyForDocs(schema, '/properties/repeat')
+
+      expect(result).toEqual(expectedSpecialResult)
+
+      expect(result).not.toHaveProperty('items')
+
+      expect(result.oneOf).toBeUndefined()
+
+      expect(result.description).toContain(
+        'NOTE: This configuration is only used when'
+      )
     })
   })
 })
