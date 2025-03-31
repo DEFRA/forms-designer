@@ -22,7 +22,6 @@
     "test:watch": "jest --color --watch"
   },
   "files": [
-    "dist/",
     "schemas/"
   ],
   "dependencies": {
