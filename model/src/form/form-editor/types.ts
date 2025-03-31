@@ -185,6 +185,11 @@ export interface FormEditor {
   radiosOrCheckboxes: string
 
   /**
+   * The unique id of the radio item
+   */
+  radioId: string
+
+  /**
    * The display text of the radio item
    */
   radioLabel: string
@@ -238,6 +243,7 @@ export type FormEditorInputQuestion = Pick<
   | 'imageTypes'
   | 'tabularDataTypes'
   | 'enhancedAction'
+  | 'radioId'
   | 'radioLabel'
   | 'radioHint'
   | 'radioValue'
@@ -265,6 +271,7 @@ export type FormEditorInputQuestionDetails = Pick<
   | 'imageTypes'
   | 'tabularDataTypes'
   | 'enhancedAction'
+  | 'radioId'
   | 'radioLabel'
   | 'radioHint'
   | 'radioValue'
@@ -273,12 +280,13 @@ export type FormEditorInputQuestionDetails = Pick<
 export interface EnhancedActionState {
   questionDetails: Partial<ComponentDef>
   state: {
+    radioId?: string
     radioLabel?: string
     radioHint?: string
     radioValue?: string
     expanded?: boolean
-    listItems?: { label?: string; hint?: string; value?: string }[]
   }
+  listItems: { label?: string; hint?: string; value?: string; id?: string }[]
 }
 
 export interface GovukField {

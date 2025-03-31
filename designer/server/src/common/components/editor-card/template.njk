@@ -22,7 +22,10 @@
                     }) }}
                   {% endif %}
 
+                  {% if params.caption %}
+                  <div class="govuk-summary-card__title-wrapper govuk-!-padding-top-0"></div>
                   <span class="govuk-caption-l">{{ params.caption }}</span>
+                  {% endif %}
 
                   {% if params.heading %}<h1 class="govuk-heading-l" id="page-heading">{{ params.heading }}</h1>{% endif %}
 

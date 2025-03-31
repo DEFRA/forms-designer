@@ -2,10 +2,7 @@ import { randomId } from '@defra/forms-model'
 
 import { QuestionTypeDescriptions } from '~/src/common/constants/editor.js'
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
-import {
-  advancedSettingsPerComponentType,
-  enhancedFieldsPerComponentType
-} from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
+import { advancedSettingsPerComponentType } from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
 import {
   getFieldList,
   getFileUploadFields,
@@ -20,6 +17,7 @@ import {
   getQuestion,
   getQuestionNum
 } from '~/src/models/forms/editor-v2/common.js'
+import { enhancedFieldsPerComponentType } from '~/src/models/forms/editor-v2/enhanced-fields.js'
 import { getFieldComponentType } from '~/src/models/forms/editor-v2/page-fields.js'
 import {
   advancedSettingsFields,
@@ -209,6 +207,14 @@ export function questionDetailsViewModel(
   const extraFields = /** @type {GovukField[]} */ (
     getExtraFields(questionFieldsOverride, validation)
   )
+
+  if (!validation && enhancedActionState?.state.radioId) {
+    validation = {
+      formValues: /** @type {FormEditor} */ (enhancedActionState.state),
+      formErrors: {}
+    }
+  }
+
   const enhancedFields = /** @type {GovukField[]} */ (
     getEnhancedFields(questionFieldsOverride, validation)
   )
@@ -217,6 +223,16 @@ export function questionDetailsViewModel(
   const errorList = buildErrorList(formErrors)
   const previewPageUrl = `${buildPreviewUrl(metadata.slug)}${pagePath}?force`
 
+  /*
+  if (!enhancedActionState?.listItems) {
+    enhancedActionState = {
+      state: {
+      },
+      listItems: [],
+      questionDetails: {}
+    }
+  }
+*/
   return {
     enhancedActionState,
     enhancedFields,

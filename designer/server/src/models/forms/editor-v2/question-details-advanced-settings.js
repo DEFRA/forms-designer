@@ -1,10 +1,8 @@
 import { ComponentType } from '@defra/forms-model'
 
 import { insertValidationErrors } from '~/src/lib/utils.js'
-import {
-  allAdvancedSettingsFields,
-  allEnhancedFields
-} from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
+import { allAdvancedSettingsFields } from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
+import { allEnhancedFields } from '~/src/models/forms/editor-v2/enhanced-fields.js'
 
 /**
  * @param {NumberFieldComponent} question

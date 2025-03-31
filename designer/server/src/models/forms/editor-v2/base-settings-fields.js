@@ -76,6 +76,7 @@ export const baseSchema = Joi.object().keys({
     }
   ),
   enhancedAction: questionDetailsFullSchema.enhancedActionSchema,
+  radioId: questionDetailsFullSchema.radioIdSchema,
   radioLabel: questionDetailsFullSchema.radioLabelSchema.when(
     'enhancedAction',
     {

@@ -119,6 +119,7 @@ export const tabularDataTypesSchema = Joi.array()
   .empty(null)
   .default([])
 export const enhancedActionSchema = Joi.string().trim().optional().allow('')
+export const radioIdSchema = Joi.string().trim().optional().allow('')
 export const radioLabelSchema = Joi.string().trim().required()
 export const radioHintSchema = Joi.string().trim().optional().allow('')
 export const radioValueSchema = Joi.string().trim().optional().allow('')
@@ -146,6 +147,7 @@ export const questionDetailsFullSchema = {
   questionSchema,
   questionTypeFullSchema,
   radioHintSchema,
+  radioIdSchema,
   radioLabelSchema,
   radioValueSchema,
   regexSchema,

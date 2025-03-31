@@ -1,17 +1,13 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "editor-card/macro.njk" import appEditorCard %}
 
-{% set radioLabelIdx = 0 %}
-{% set radioHintIdx = 1 %}
-{% set radioValueIdx = 2 %}
+{% set radioIdIdx = 0 %}
+{% set radioLabelIdx = 1 %}
+{% set radioHintIdx = 2 %}
+{% set radioValueIdx = 3 %}
 
-{% call appEditorCard({
-  classes: "editor-card-background-white",
-  outerClasses: "pages-panel-left-thin-border"
-}) %}
-
-<div class="govuk-form-group">
-  <h2 class="govuk-heading-m" tabindex="-1" id="list-items">
+<div class="govuk-form-group" id="list-items">
+  <h2 class="govuk-heading-m" tabindex="-1">
     <svg class="govuk-!-margin-right-1" style="position: relative; top: -1px; vertical-align: middle;" width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <circle cx="12" cy="12" r="11" fill="currentColor"></circle>
       <path d="M6 8h12M6 12h12M6 16h12" stroke="white" stroke-width="2" stroke-linecap="round"></path>
@@ -19,67 +15,79 @@
     List items
   </h2>
   <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible" style="border-color:black; border-width: 3px;">
-  <ol class="gem-c-reorderable-list js-enabled" id="options-container" data-module="reorderable-list">
-    {% for item in enhancedActionState.listItems %}
-      <li class="gem-c-reorderable-list__item" draggable="true" data-index="1">
-        {% call appEditorCard({
-          classes: "editor-card-background-white",
-          outerClasses: "pages-panel-left-thin-border"
-        }) %}
-          <dl class="govuk-summary-list">
-            <div class="govuk-summary-list__row">
-              <dt class="govuk-summary-list__key">{{ item.label }}</dt>
-              <dd class="govuk-summary-list__actions">
-                <ul class="govuk-summary-list__actions-list">
-                  <li class="govuk-summary-list__actions-list-item">
-                    <a class="govuk-link govuk-link--no-visited-state" href="editoption.html?index=1">
-                      Edit<span class="govuk-visually-hidden">option 1</span>
-                    </a>
-                  </li>
-                  <li class="govuk-summary-list__actions-list-item">
-                    <a class="govuk-link govuk-link--destructive delete-option-link" href="delete-option.html?index=1&amp;text=a" onclick="return true;">
-                      Delete<span class="govuk-visually-hidden"> list item</span>
-                    </a>
-                  </li>
-                </ul>
-              </dd>
+
+  {% if enhancedActionState.listItems | length  or enhancedActionState.state.expanded %}
+
+    {% call appEditorCard({
+      classes: "editor-card-background-white govuk-!-padding-bottom-0",
+      outerClasses: "pages-panel-left-thin-border"
+    }) %}
+
+      <ol class="gem-c-reorderable-list js-enabled" id="options-container" data-module="reorderable-list">
+        {% for item in enhancedActionState.listItems %}
+          <li class="gem-c-reorderable-list__item" draggable="true" data-index="1">
+            <div class="govuk-summary-card govuk-!-margin-top-0 pages-panel-left-thin-border">
+              <div class="govuk-summary-card__content govuk-!-padding-top-0 editor-card-background-white govuk-!-padding-bottom-0">
+                <dl class="govuk-summary-list">
+                  <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">{{ item.label }}</dt>
+                    <dd class="govuk-summary-list__actions">
+                      <ul class="govuk-summary-list__actions-list">
+                        <li class="govuk-summary-list__actions-list-item">
+                          <a class="govuk-link govuk-link--no-visited-state" href="?action=edit&id={{ item.id }}">
+                            Edit<span class="govuk-visually-hidden">option 1</span>
+                          </a>
+                        </li>
+                        <li class="govuk-summary-list__actions-list-item">
+                          <a class="govuk-link govuk-link--destructive delete-option-link" href="?action=delete&id={{ item.id }}">
+                            Delete<span class="govuk-visually-hidden"> list item</span>
+                          </a>
+                        </li>
+                      </ul>
+                    </dd>
+                  </div>
+                </dl>
+              </div>
             </div>
-          </dl>
-      {% endcall %}
-    </li>
-  {% endfor %}
-  </ol>
+
+        </li>
+      {% endfor %}
+      </ol>
+
+      {% set hasStateWithinDetailsSection = enhancedFields[radioValueIdx].value %}
+      {% if enhancedActionState.state.expanded %}
+
+        <div id="add-option-form" class="govuk-!-margin-bottom-6">
+          <h2 class="govuk-caption-m" id="add-option">Item 1</h2>
+          {{ govukInput(enhancedFields[radioLabelIdx]) }}
+
+          {{ govukInput(enhancedFields[radioHintIdx]) }}
+
+          <input type="hidden" id="radioId" name="radioId" value="{{ enhancedFields[radioIdIdx].value }}" />
+          <!-- Advanced Features Section -->
+          <details class="govuk-details" data-module="govuk-details" {% if hasStateWithinDetailsSection %}open{% endif %}>
+            <summary class="govuk-details__summary">
+              <span class="govuk-details__summary-text">Advanced
+                features</span>
+            </summary>
+            <div class="govuk-details__text">
+              <!-- Additional Value -->
+              <div class="govuk-form-group">
+                {{ govukInput(enhancedFields[radioValueIdx]) }}
+              </div>
+            </div>
+          </details>
+
+          <div class="govuk-button-group">
+            <button type="submit" class="govuk-button" id="save-new-option" name="enhancedAction" value="save-item">Save item</button>
+            <a class="govuk-link govuk-link--no-visited-state" href="?action=cancel" id="cancel-add-option">Cancel</a>
+          </div>
+        </div>
+      {% endif %}
+
+    {% endcall %}
+  {% endif %}
 </div>
-
-{% set hasStateWithinDetailsSection = enhancedFields[radioValueIdx].value %}
-{% if enhancedActionState.state.expanded %}
-
-<div id="add-option-form" class="govuk-!-margin-bottom-6">
-  <h2 class="govuk-caption-m" id="add-option">Item 1</h2>
-  {{ govukInput(enhancedFields[radioLabelIdx]) }}
-
-  {{ govukInput(enhancedFields[radioHintIdx]) }}
-
-  <!-- Advanced Features Section -->
-  <details class="govuk-details" data-module="govuk-details" {% if hasStateWithinDetailsSection %}open{% endif %}>
-    <summary class="govuk-details__summary">
-      <span class="govuk-details__summary-text">Advanced
-        features</span>
-    </summary>
-    <div class="govuk-details__text">
-      <!-- Additional Value -->
-      <div class="govuk-form-group">
-        {{ govukInput(enhancedFields[radioValueIdx]) }}
-      </div>
-    </div>
-  </details>
-
-  <div class="govuk-button-group">
-    <button type="submit" class="govuk-button" id="save-new-option" name="enhancedAction" value="save-item">Save item</button>
-    <a class="govuk-link" href="#" id="cancel-add-option">Cancel</a>
-  </div>
-</div>
-{% endif %}
 
 {% if not enhancedActionState.state.expanded %}
 <div class="govuk-button-group">
@@ -93,5 +101,3 @@
   </button>
 </div>
 {% endif %}
-
-{% endcall %}

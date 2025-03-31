@@ -1,10 +1,7 @@
 import { questionDetailsFullSchema } from '@defra/forms-model'
 import Joi from 'joi'
 
-import {
-  QuestionAdvancedSettings,
-  QuestionEnhancedFields
-} from '~/src/common/constants/editor.js'
+import { QuestionAdvancedSettings } from '~/src/common/constants/editor.js'
 import { isCheckboxSelected } from '~/src/lib/utils.js'
 import { mapPayloadToFileMimeTypes } from '~/src/models/forms/editor-v2/base-settings-fields.js'
 import {
@@ -64,15 +61,6 @@ export const advancedSettingsPerComponentType =
       QuestionAdvancedSettings.MinFiles,
       QuestionAdvancedSettings.MaxFiles,
       QuestionAdvancedSettings.ExactFiles
-    ]
-  })
-
-export const enhancedFieldsPerComponentType =
-  /** @type {Record<ComponentType, QuestionEnhancedFields[]> } */ ({
-    RadiosField: [
-      QuestionEnhancedFields.RadioLabel,
-      QuestionEnhancedFields.RadioHint,
-      QuestionEnhancedFields.RadioValue
     ]
   })
 
@@ -254,40 +242,6 @@ export const allAdvancedSettingsFields =
         text: "For example, a symbol or abbreviation for the type of information you’re asking for, like,'per item' or 'Kg'"
       },
       classes: GOVUK_INPUT_WIDTH_3
-    }
-  })
-
-/**
- * @type { Record<ComponentType, GovukField> }
- */
-export const allEnhancedFields =
-  /** @type { Record<QuestionEnhancedFields, GovukField> } */ ({
-    [QuestionEnhancedFields.RadioLabel]: {
-      name: 'radioLabel',
-      id: 'radioLabel',
-      label: {
-        text: 'Item',
-        classes: GOVUK_LABEL__M
-      }
-    },
-    [QuestionEnhancedFields.RadioHint]: {
-      name: 'radioHint',
-      id: 'radioHint',
-      label: {
-        text: 'Hint text (optional)',
-        classes: GOVUK_LABEL__M
-      }
-    },
-    [QuestionEnhancedFields.RadioValue]: {
-      name: 'radioValue',
-      id: 'radioValue',
-      label: {
-        text: 'Unique identifier (optional)',
-        classes: GOVUK_LABEL__M
-      },
-      hint: {
-        text: 'Used in databases to identify the item'
-      }
     }
   })
 

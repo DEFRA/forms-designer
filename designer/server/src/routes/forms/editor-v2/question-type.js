@@ -129,7 +129,7 @@ export default [
       const { questionType, writtenAnswerSub, dateSub, listSub } = payload
 
       // Save in session until page is saved
-      yar.flash(
+      yar.set(
         sessionNames.questionType,
         deriveQuestionType(questionType, writtenAnswerSub, dateSub, listSub)
       )
