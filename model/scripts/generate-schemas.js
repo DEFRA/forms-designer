@@ -3,8 +3,8 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import parse from 'joi-to-json'
 
-export const __dirname = path.dirname(fileURLToPath(import.meta.url))
-export const schemasDir = path.resolve(__dirname, '../schemas')
+export const currentDirname = path.dirname(fileURLToPath(import.meta.url))
+export const schemasDir = path.resolve(currentDirname, '../schemas')
 
 /**
  * @typedef {{[key: string]: any}} StringIndexedObject
@@ -25,6 +25,40 @@ export const schemasDir = path.resolve(__dirname, '../schemas')
  * @property {string} [$ref] - JSON Schema reference
  * @property {*} [x] - Any additional properties with string keys
  */
+
+/**
+ * Condition type constants
+ */
+export const CONDITION_TYPES = {
+  DEFINITION: 'Condition Definition',
+  REFERENCE: 'Condition Reference',
+  NESTED_GROUP: 'Nested Condition Group'
+}
+
+/**
+ * Value type constants
+ */
+export const VALUE_TYPES = {
+  STATIC: 'Static Value',
+  RELATIVE_DATE: 'Relative Date Value'
+}
+
+/**
+ * Common description constants
+ */
+export const DESCRIPTIONS = {
+  NESTED_CONDITION_GROUP:
+    'A nested group of conditions that allows building complex logical expressions with multiple levels.'
+}
+
+/**
+ * Path segment constants
+ */
+export const PATH_SEGMENTS = {
+  CONDITIONS: 'conditions',
+  ITEMS: 'items',
+  PROPERTIES: 'properties'
+}
 
 /**
  * Ensures a directory exists
@@ -72,9 +106,9 @@ export function formatPropertyName(str) {
  * @param {string} parentName - Parent object name for context
  */
 export function setSchemaTitle(schema, parentName) {
-  if (schema.title) return
-
-  if (schema.description && typeof schema.description === 'string') {
+  if (schema.title) {
+    return
+  } else if (schema.description && typeof schema.description === 'string') {
     schema.title = schema.description.split('.')[0].trim()
   } else if (parentName) {
     schema.title = formatPropertyName(parentName)
@@ -173,6 +207,17 @@ export function handleSpecialTitles(subSchema, parentName, keyword, index) {
   } else {
     subSchema.title = `${formatPropertyName(parentName)} Variant ${index + 1}`
   }
+
+  if (
+    keyword === 'anyOf' &&
+    parentName.includes('Alternative Validation') &&
+    subSchema.type
+  ) {
+    subSchema.title = `${subSchema.type} Type`
+    subSchema.description = `**INTERNAL VALIDATION ONLY** - This is an internal schema structure used for validation purposes. 
+                            When using the ${parentName} property, you should only configure the Repeat Configuration structure 
+                            when controller is set to "RepeatPageController".`
+  }
 }
 
 /**
@@ -180,7 +225,9 @@ export function handleSpecialTitles(subSchema, parentName, keyword, index) {
  * @param {SchemaObject} schema - Schema to process
  */
 export function processProperties(schema) {
-  if (!schema.properties || typeof schema.properties !== 'object') return
+  if (!schema.properties || typeof schema.properties !== 'object') {
+    return
+  }
 
   const entries = Object.entries(schema.properties)
 
@@ -203,7 +250,9 @@ export function processProperties(schema) {
  * @param {string} parentName - Parent object name
  */
 export function processArrayItems(schema, parentName) {
-  if (!schema.items) return
+  if (!schema.items) {
+    return
+  }
 
   if (Array.isArray(schema.items)) {
     schema.items.forEach((item, index) => {
@@ -227,24 +276,14 @@ export function processArrayItems(schema, parentName) {
  */
 export function processCombinationKeywords(schema, parentName) {
   ;['oneOf', 'anyOf', 'allOf'].forEach((keyword) => {
-    if (!schema[keyword] || !Array.isArray(schema[keyword])) return
+    if (!schema[keyword] || !Array.isArray(schema[keyword])) {
+      return
+    }
 
     schema[`${keyword}Titles`] = []
 
     schema[keyword].forEach((subSchema, index) => {
       handleSpecialTitles(subSchema, parentName, keyword, index)
-
-      if (
-        keyword === 'anyOf' &&
-        parentName.includes('Alternative Validation')
-      ) {
-        if (subSchema.type) {
-          subSchema.title = `${subSchema.type} Type`
-          subSchema.description = `**INTERNAL VALIDATION ONLY** - This is an internal schema structure used for validation purposes. 
-                                  When using the ${parentName} property, you should only configure the Repeat Configuration structure 
-                                  when controller is set to "RepeatPageController".`
-        }
-      }
 
       schema[`${keyword}Titles`][index] = subSchema.title
       addTitles(subSchema, subSchema.title || parentName)
@@ -320,9 +359,12 @@ export function processAdditionalProperties(schema, parentName) {
  * for better documentation output
  * @param {SchemaObject} schema - The schema object to enhance
  * @param {string} parentName - Name of the parent object for context
+ * @returns {SchemaObject} The enhanced schema
  */
 export function addTitles(schema, parentName = '') {
-  if (typeof schema !== 'object') return schema
+  if (typeof schema !== 'object') {
+    return schema
+  }
 
   setSchemaTitle(schema, parentName)
 
@@ -336,6 +378,8 @@ export function addTitles(schema, parentName = '') {
   processReferences(schema)
 
   processAdditionalProperties(schema, parentName)
+
+  return schema
 }
 
 /**
@@ -344,28 +388,30 @@ export function addTitles(schema, parentName = '') {
  * @returns {boolean} True if changes were made
  */
 export function fixConditionItems(obj) {
-  if (!obj.anyOfTitles?.includes('Conditions  Item Variant 3')) return false
-
-  obj.anyOfTitles = [
-    'Condition Definition',
-    'Condition Reference',
-    'Nested Condition Group'
-  ]
-
-  if (obj.anyOf?.length === 3) {
-    if (obj.anyOf[0].properties?.field) {
-      obj.anyOf[0].title = 'Condition Definition'
-    }
-    if (obj.anyOf[1].properties?.conditionName) {
-      obj.anyOf[1].title = 'Condition Reference'
-    }
-    if (obj.anyOf[2].$ref?.includes('conditionGroupSchema')) {
-      obj.anyOf[2].title = 'Nested Condition Group'
-      obj.anyOf[2].description =
-        'A nested group of conditions that allows building complex logical expressions with multiple levels.'
-    }
+  if (!obj.anyOfTitles?.includes('Conditions  Item Variant 3')) {
+    return false
   }
 
+  const EXPECTED_CONDITION_TYPES_COUNT = 3
+
+  obj.anyOfTitles = [
+    CONDITION_TYPES.DEFINITION,
+    CONDITION_TYPES.REFERENCE,
+    CONDITION_TYPES.NESTED_GROUP
+  ]
+
+  if (obj.anyOf?.length === EXPECTED_CONDITION_TYPES_COUNT) {
+    if (obj.anyOf[0].properties?.field) {
+      obj.anyOf[0].title = CONDITION_TYPES.DEFINITION
+    }
+    if (obj.anyOf[1].properties?.conditionName) {
+      obj.anyOf[1].title = CONDITION_TYPES.REFERENCE
+    }
+    if (obj.anyOf[2].$ref?.includes('conditionGroupSchema')) {
+      obj.anyOf[2].title = CONDITION_TYPES.NESTED_GROUP
+      obj.anyOf[2].description = DESCRIPTIONS.NESTED_CONDITION_GROUP
+    }
+  }
   return true
 }
 
@@ -379,17 +425,18 @@ export function fixValueObjects(obj) {
     obj.anyOfTitles?.length !== 2 ||
     obj.anyOfTitles[0] !== 'Value (object)' ||
     obj.anyOfTitles[1] !== 'Value (object)'
-  )
+  ) {
     return false
+  }
 
-  obj.anyOfTitles = ['Static Value', 'Relative Date Value']
+  obj.anyOfTitles = [VALUE_TYPES.STATIC, VALUE_TYPES.RELATIVE_DATE]
 
   if (obj.anyOf?.length === 2) {
     if (obj.anyOf[0].properties?.value) {
-      obj.anyOf[0].title = 'Static Value'
+      obj.anyOf[0].title = VALUE_TYPES.STATIC
     }
     if (obj.anyOf[1].properties?.period) {
-      obj.anyOf[1].title = 'Relative Date Value'
+      obj.anyOf[1].title = VALUE_TYPES.RELATIVE_DATE
     }
   }
 
@@ -401,7 +448,9 @@ export function fixValueObjects(obj) {
  * @param {SchemaObject} obj - Schema to process
  */
 export function processAnyOfTitles(obj) {
-  if (!Array.isArray(obj.anyOfTitles)) return
+  if (!Array.isArray(obj.anyOfTitles)) {
+    return
+  }
 
   if (!fixConditionItems(obj)) {
     fixValueObjects(obj)
@@ -414,14 +463,15 @@ export function processAnyOfTitles(obj) {
  * @param {SchemaObject} obj - The schema or subschema to fix
  */
 export function fixConditionTitles(obj) {
-  if (typeof obj !== 'object') return
+  if (typeof obj !== 'object') {
+    return
+  }
 
   processAnyOfTitles(obj)
 
   if (obj.title === 'Conditions  Item Variant 3') {
-    obj.title = 'Nested Condition Group'
-    obj.description =
-      'A nested group of conditions that allows building complex logical expressions with multiple levels.'
+    obj.title = CONDITION_TYPES.NESTED_GROUP
+    obj.description = DESCRIPTIONS.NESTED_CONDITION_GROUP
   }
 
   Object.keys(obj).forEach((key) => {
@@ -438,9 +488,8 @@ export function fixConditionTitles(obj) {
  */
 export function handleReferenceSpecificTitles(result) {
   if (result.$ref?.includes('conditionGroupSchema')) {
-    result.title = 'Nested Condition Group'
-    result.description =
-      'A nested group of conditions that allows building complex logical expressions with multiple levels.'
+    result.title = CONDITION_TYPES.NESTED_GROUP
+    result.description = DESCRIPTIONS.NESTED_CONDITION_GROUP
   }
 }
 
@@ -449,7 +498,9 @@ export function handleReferenceSpecificTitles(result) {
  * @param {SchemaObject} result - Schema to process
  */
 export function simplifyTypeEnumerations(result) {
-  if (!result.anyOf || !Array.isArray(result.anyOf)) return
+  if (!result.anyOf || !Array.isArray(result.anyOf)) {
+    return
+  }
 
   /** @type {Array<string>} */
   const types = result.anyOf
@@ -464,8 +515,10 @@ export function simplifyTypeEnumerations(result) {
     )
     .filter(/** @returns {val is string} */ (val) => Boolean(val))
 
+  const MIN_TYPES_FOR_ENUMERATION = 3
+
   const isTypeEnumeration =
-    types.length >= 3 &&
+    types.length >= MIN_TYPES_FOR_ENUMERATION &&
     types.some((t) =>
       ['string', 'number', 'boolean', 'array', 'object'].includes(t)
     )
@@ -476,10 +529,7 @@ export function simplifyTypeEnumerations(result) {
       !result.description ||
       result.description.indexOf('value type') === -1
     ) {
-      result.description =
-        String(result.description || '') +
-        (result.description ? '\n\n' : '') +
-        `Value can be of various types (${types.join(', ')}).`
+      result.description = `${String(result.description || '')}${result.description ? '\n\n' : ''}Value can be of various types (${types.join(', ')}).`
     }
   }
 }
@@ -490,17 +540,21 @@ export function simplifyTypeEnumerations(result) {
  * @param {string} parentPath - Path to current schema
  */
 export function improveConditionItemTitles(result, parentPath) {
-  if (!parentPath.includes('/conditions') || !result.anyOf) return
+  if (!parentPath.includes(`/${PATH_SEGMENTS.CONDITIONS}`) || !result.anyOf) {
+    return
+  }
 
   result.anyOf.forEach(
     /** @param {SchemaObject} item */ (item) => {
       if (item.title?.includes('Item (object)') && item.properties) {
         if (item.properties.field) {
-          item.title = 'Condition Definition'
+          item.title = CONDITION_TYPES.DEFINITION
         } else if (item.properties.conditionName) {
-          item.title = 'Condition Reference'
+          item.title = CONDITION_TYPES.REFERENCE
         } else if (item.properties.conditions) {
-          item.title = 'Condition Group'
+          item.title = CONDITION_TYPES.NESTED_GROUP
+        } else {
+          item.title = `Unknown Condition Item Type`
         }
       }
     }
@@ -513,24 +567,30 @@ export function improveConditionItemTitles(result, parentPath) {
  * @param {string} parentPath - Path to current schema
  */
 export function improveValueObjectTitles(result, parentPath) {
-  if (!parentPath.includes('/value') || !result.anyOf) return
+  if (!parentPath.includes('/value') || !result.anyOf) {
+    return
+  }
 
   result.anyOf.forEach(
     /** @param {SchemaObject} item */ (item) => {
-      if (!item.properties) return
+      if (!item.properties) {
+        return
+      }
 
       if (
         item.properties.period &&
         item.properties.unit &&
         item.properties.direction
       ) {
-        item.title = 'Relative Date Value'
+        item.title = VALUE_TYPES.RELATIVE_DATE
       } else if (
         item.properties.value &&
         item.properties.type &&
         item.properties.display
       ) {
-        item.title = 'Static Value'
+        item.title = VALUE_TYPES.STATIC
+      } else {
+        item.title = 'Unknown Value Type'
       }
     }
   )
@@ -542,7 +602,10 @@ export function improveValueObjectTitles(result, parentPath) {
  * @param {string} parentPath - Path to current schema
  */
 export function improveOperatorDescriptions(result, parentPath) {
-  if (parentPath.endsWith('/operator') && parentPath.includes('/conditions')) {
+  if (
+    parentPath.endsWith('/operator') &&
+    parentPath.includes(`/${PATH_SEGMENTS.CONDITIONS}`)
+  ) {
     result.description =
       'Comparison operator: equals, notEquals, contains, notContains, greaterThan, lessThan, isEmpty, isNotEmpty'
   }
@@ -557,8 +620,9 @@ export function addExamplesToConditionGroups(result, parentPath) {
   if (
     result.title !== 'Condition Group Schema' &&
     !parentPath.includes('conditionGroupSchema')
-  )
+  ) {
     return
+  }
 
   if (result.description) {
     result.description = `${result.description} Note: This structure can be nested multiple levels deep for complex condition logic.`
@@ -602,8 +666,9 @@ export function handleRepeatProperty(result, parentPath) {
     !parentPath.endsWith('/repeat') ||
     !result.oneOf ||
     result.oneOf.length <= 1
-  )
+  ) {
     return null
+  }
 
   const mainOption = result.oneOf[0]
 
@@ -639,11 +704,12 @@ export function handleNameTitleFields(result, parentPath) {
  */
 export function improveListItemTitles(result, parentPath) {
   if (
-    !parentPath.endsWith('/items') ||
+    !parentPath.endsWith(`/${PATH_SEGMENTS.ITEMS}`) ||
     !result.oneOf ||
     result.oneOf.length <= 1
-  )
+  ) {
     return
+  }
 
   result.oneOf.forEach(
     /** @param {SchemaObject} option */ (option) => {
@@ -651,6 +717,8 @@ export function improveListItemTitles(result, parentPath) {
         option.title = 'String List Items'
       } else if (option.description?.includes('numeric values')) {
         option.title = 'Number List Items'
+      } else {
+        option.title = 'Generic List Items'
       }
     }
   )
@@ -667,10 +735,13 @@ export function improveListItemTitles(result, parentPath) {
  */
 export function simplifyConditionArrays(result, parentPath) {
   if (
-    !parentPath.includes('/conditions/items') &&
-    !parentPath.endsWith('/conditions')
-  )
+    !parentPath.includes(
+      `${PATH_SEGMENTS.CONDITIONS}/${PATH_SEGMENTS.ITEMS}`
+    ) &&
+    !parentPath.endsWith(`/${PATH_SEGMENTS.CONDITIONS}`)
+  ) {
     return
+  }
 
   if (result.items?.anyOf) {
     result.description = `${result.description || ''}\n\nElements can be direct conditions, references to named conditions, or nested condition groups. This structure allows building complex logical expressions with AND/OR operators.`
@@ -687,7 +758,7 @@ export function processNestedSchemas(result, parentPath) {
     Object.entries(result.properties).forEach(([propName, propSchema]) => {
       result.properties[propName] = simplifyForDocs(
         propSchema,
-        `${parentPath}/properties/${propName}`
+        `${parentPath}/${PATH_SEGMENTS.PROPERTIES}/${propName}`
       )
     })
   }
@@ -695,10 +766,13 @@ export function processNestedSchemas(result, parentPath) {
   if (result.items) {
     if (Array.isArray(result.items)) {
       result.items = result.items.map((item, idx) =>
-        simplifyForDocs(item, `${parentPath}/items/${idx}`)
+        simplifyForDocs(item, `${parentPath}/${PATH_SEGMENTS.ITEMS}/${idx}`)
       )
     } else {
-      result.items = simplifyForDocs(result.items, `${parentPath}/items`)
+      result.items = simplifyForDocs(
+        result.items,
+        `${parentPath}/${PATH_SEGMENTS.ITEMS}`
+      )
     }
   }
 
@@ -718,7 +792,9 @@ export function processNestedSchemas(result, parentPath) {
  * @returns {SchemaObject} Simplified schema
  */
 export function simplifyForDocs(schema, parentPath = '') {
-  if (typeof schema !== 'object') return schema
+  if (typeof schema !== 'object') {
+    return schema
+  }
 
   /** @type {SchemaObject} */
   const result = JSON.parse(JSON.stringify(schema))
@@ -731,7 +807,9 @@ export function simplifyForDocs(schema, parentPath = '') {
   addExamplesToConditionGroups(result, parentPath)
 
   const specialResult = handleRepeatProperty(result, parentPath)
-  if (specialResult) return specialResult
+  if (specialResult) {
+    return specialResult
+  }
 
   handleNameTitleFields(result, parentPath)
   improveListItemTitles(result, parentPath)
@@ -897,7 +975,7 @@ export function processSchema(fileName, schemaName, model) {
  */
 async function loadModelSchemas() {
   console.log('Loading model schemas...')
-  return await import('../dist/module/index.js')
+  return import('../dist/module/index.js')
 }
 
 /**

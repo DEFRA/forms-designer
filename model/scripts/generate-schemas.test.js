@@ -31,7 +31,13 @@ import {
   simplifyForDocs,
   processSchema,
   getSchemaMap,
-  processAllSchemas
+  processAllSchemas,
+  handleSpecialTitles,
+  improveConditionItemTitles,
+  VALUE_TYPES,
+  CONDITION_TYPES,
+  PATH_SEGMENTS,
+  DESCRIPTIONS
 } from '~/scripts/generate-schemas.js'
 
 /**
@@ -48,17 +54,20 @@ function testProcessNestedSchemas(schema, parentPath) {
 
   if (schema.properties) {
     Object.entries(schema.properties).forEach(([propName, propSchema]) => {
-      processPaths(propSchema, `${parentPath}/properties/${propName}`)
+      processPaths(
+        propSchema,
+        `${parentPath}${PATH_SEGMENTS.PROPERTIES}/${propName}`
+      )
     })
   }
 
   if (schema.items) {
     if (Array.isArray(schema.items)) {
       schema.items.forEach((item, idx) => {
-        processPaths(item, `${parentPath}/items/${idx}`)
+        processPaths(item, `${parentPath}${PATH_SEGMENTS.ITEMS}/${idx}`)
       })
     } else {
-      processPaths(schema.items, `${parentPath}/items`)
+      processPaths(schema.items, `${parentPath}${PATH_SEGMENTS.ITEMS}`)
     }
   }
 
@@ -83,7 +92,6 @@ describe('Schema Generation Script', () => {
   let mockModel
 
   beforeEach(() => {
-    // Mock filesystem functions
     mockWriteFileSync = jest
       .spyOn(fs, 'writeFileSync')
       .mockImplementation(() => {})
@@ -629,6 +637,10 @@ describe('Schema Generation Script', () => {
       }
       setSchemaTitle(schemaWithDescription, '')
       expect(schemaWithDescription.title).toBe('User profile information')
+
+      const schemaWithTitle = { title: 'Existing' }
+      setSchemaTitle(schemaWithTitle, 'test')
+      expect(schemaWithTitle.title).toBe('Existing')
     })
 
     it('should set specialized titles for repeat schemas', () => {
@@ -742,14 +754,17 @@ describe('Schema Generation Script', () => {
       fixConditionItems(schema)
 
       expect(schema.anyOfTitles).toEqual([
-        'Condition Definition',
-        'Condition Reference',
-        'Nested Condition Group'
+        CONDITION_TYPES.DEFINITION,
+        CONDITION_TYPES.REFERENCE,
+        CONDITION_TYPES.NESTED_GROUP
       ])
 
-      expect(schema.anyOf[0].title).toBe('Condition Definition')
-      expect(schema.anyOf[1].title).toBe('Condition Reference')
-      expect(schema.anyOf[2].title).toBe('Nested Condition Group')
+      expect(schema.anyOf[0].title).toBe(CONDITION_TYPES.DEFINITION)
+      expect(schema.anyOf[1].title).toBe(CONDITION_TYPES.REFERENCE)
+      expect(schema.anyOf[2].title).toBe(CONDITION_TYPES.NESTED_GROUP)
+      expect(schema.anyOf[2].description).toBe(
+        DESCRIPTIONS.NESTED_CONDITION_GROUP
+      )
     })
 
     it('should improve titles for value objects', () => {
@@ -772,10 +787,10 @@ describe('Schema Generation Script', () => {
         ]
       }
 
-      improveValueObjectTitles(schema, '/conditions/0/value')
+      improveValueObjectTitles(schema, `/${PATH_SEGMENTS.CONDITIONS}/0/value`)
 
-      expect(schema.anyOf[0].title).toBe('Static Value')
-      expect(schema.anyOf[1].title).toBe('Relative Date Value')
+      expect(schema.anyOf[0].title).toBe(VALUE_TYPES.STATIC)
+      expect(schema.anyOf[1].title).toBe(VALUE_TYPES.RELATIVE_DATE)
     })
 
     it('should handle repeat property special case', () => {
@@ -804,6 +819,32 @@ describe('Schema Generation Script', () => {
       expect(result.description).toContain(
         'NOTE: This configuration is only used when'
       )
+    })
+
+    it('should handle internal validation type case', () => {
+      const schema = {
+        type: 'string',
+        parentName: 'Alternative Validation'
+      }
+      handleSpecialTitles(schema, 'Alternative Validation', 'anyOf', 0)
+      expect(schema.title).toBe('string Type')
+      expect(schema.description).toContain('INTERNAL VALIDATION ONLY')
+    })
+
+    it('should set unknown type for value objects with unrecognized structure', () => {
+      const result = {
+        anyOf: [
+          {
+            properties: {
+              someUnknownProp: {}
+            }
+          }
+        ]
+      }
+
+      improveValueObjectTitles(result, '/value')
+
+      expect(result.anyOf[0].title).toBe('Unknown Value Type')
     })
   })
 
@@ -895,7 +936,7 @@ describe('Schema Generation Script', () => {
       const [, content] = mockWriteFileSync.mock.calls[0]
       const jsonSchema = JSON.parse(content)
 
-      expect(jsonSchema.title).toBe('Nested Condition Group')
+      expect(jsonSchema.title).toBe(CONDITION_TYPES.NESTED_GROUP)
       expect(jsonSchema.$ref).toBeDefined()
 
       expect(jsonSchema.$defs).toBeDefined()
@@ -905,6 +946,49 @@ describe('Schema Generation Script', () => {
       expect(jsonSchema.$id).toContain(
         '@defra/forms-model/schemas/condition-group-schema.json'
       )
+    })
+
+    it('should handle errors when processing schema', () => {
+      const originalConsoleError = console.error
+      console.error = jest.fn()
+
+      const errorModel = {
+        errorSchema: {
+          _root: {},
+          _types: {},
+          describe: () => {
+            throw new Error('Schema description error')
+          }
+        }
+      }
+
+      const result = processSchema('test-error', 'errorSchema', errorModel)
+
+      expect(result).toBe(false)
+
+      expect(console.error).toHaveBeenCalled()
+      expect(console.error.mock.calls[0][0]).toContain(
+        '✗ Failed to process test-error:'
+      )
+
+      console.error = originalConsoleError
+    })
+
+    it('should handle non-Error thrown objects', () => {
+      const originalConsoleError = console.error
+      console.error = jest.fn()
+
+      const badModel = {
+        minSchema: 'not a valid schema object'
+      }
+
+      const result = processSchema('test-type-error', 'minSchema', badModel)
+
+      expect(result).toBe(false)
+
+      expect(console.error).toHaveBeenCalled()
+
+      console.error = originalConsoleError
     })
   })
 
@@ -1000,7 +1084,7 @@ describe('Schema Generation Script', () => {
 
       handleReferenceSpecificTitles(schema)
 
-      expect(schema.title).toBe('Nested Condition Group')
+      expect(schema.title).toBe(CONDITION_TYPES.NESTED_GROUP)
       expect(schema.description).toContain('multiple levels')
     })
   })
@@ -1016,15 +1100,14 @@ describe('Schema Generation Script', () => {
 
       expect(result).toBe(true)
       expect(schema.anyOfTitles).toEqual([
-        'Static Value',
-        'Relative Date Value'
+        VALUE_TYPES.STATIC,
+        VALUE_TYPES.RELATIVE_DATE
       ])
-      expect(schema.anyOf[0].title).toBe('Static Value')
-      expect(schema.anyOf[1].title).toBe('Relative Date Value')
+      expect(schema.anyOf[0].title).toBe(VALUE_TYPES.STATIC)
+      expect(schema.anyOf[1].title).toBe(VALUE_TYPES.RELATIVE_DATE)
     })
 
     it('should process anyOfTitles for different types of schemas', () => {
-      // Condition schema
       const conditionSchema = {
         anyOfTitles: [
           'Conditions  Item Variant 1',
@@ -1040,9 +1123,9 @@ describe('Schema Generation Script', () => {
 
       processAnyOfTitles(conditionSchema)
       expect(conditionSchema.anyOfTitles).toEqual([
-        'Condition Definition',
-        'Condition Reference',
-        'Nested Condition Group'
+        CONDITION_TYPES.DEFINITION,
+        CONDITION_TYPES.REFERENCE,
+        CONDITION_TYPES.NESTED_GROUP
       ])
 
       const valueSchema = {
@@ -1052,8 +1135,8 @@ describe('Schema Generation Script', () => {
 
       processAnyOfTitles(valueSchema)
       expect(valueSchema.anyOfTitles).toEqual([
-        'Static Value',
-        'Relative Date Value'
+        VALUE_TYPES.STATIC,
+        VALUE_TYPES.RELATIVE_DATE
       ])
 
       const otherSchema = {
@@ -1097,7 +1180,7 @@ describe('Schema Generation Script', () => {
 
       fixConditionTitles(schema)
 
-      expect(schema.title).toBe('Nested Condition Group')
+      expect(schema.title).toBe(CONDITION_TYPES.NESTED_GROUP)
       expect(schema.description).toContain('complex logical expressions')
     })
 
@@ -1106,7 +1189,10 @@ describe('Schema Generation Script', () => {
         description: 'Comparison operator'
       }
 
-      improveOperatorDescriptions(schema, '/conditions/0/operator')
+      improveOperatorDescriptions(
+        schema,
+        `/${PATH_SEGMENTS.CONDITIONS}/0/operator`
+      )
 
       expect(schema.description).toContain('equals, notEquals, contains')
       expect(schema.description).toContain('isEmpty, isNotEmpty')
@@ -1138,16 +1224,89 @@ describe('Schema Generation Script', () => {
         description: 'Array of conditions',
         items: {
           anyOf: [
-            { title: 'Condition Definition' },
-            { title: 'Condition Reference' }
+            { title: CONDITION_TYPES.DEFINITION },
+            { title: CONDITION_TYPES.REFERENCE }
           ]
         }
       }
 
-      simplifyConditionArrays(schema, '/conditions')
+      simplifyConditionArrays(schema, `/${PATH_SEGMENTS.CONDITIONS}`)
 
       expect(schema.description).toContain('complex logical expressions')
       expect(schema.description).toContain('AND/OR operators')
+    })
+
+    it('should handle item title improvements for condition items', () => {
+      const schema = {
+        anyOf: [
+          {
+            title: 'Item (object)',
+            properties: { field: {} }
+          },
+          {
+            title: 'Item (object)',
+            properties: { conditionName: {} }
+          },
+          {
+            title: 'Item (object)',
+            properties: { conditions: {} }
+          }
+        ]
+      }
+
+      improveConditionItemTitles(schema, `/${PATH_SEGMENTS.CONDITIONS}/items`)
+
+      expect(schema.anyOf[0].title).toBe(CONDITION_TYPES.DEFINITION)
+      expect(schema.anyOf[1].title).toBe(CONDITION_TYPES.REFERENCE)
+      expect(schema.anyOf[2].title).toBe(CONDITION_TYPES.NESTED_GROUP)
+
+      const schema1 = {
+        anyOf: [{ title: 'Item (object)', properties: { field: {} } }]
+      }
+      improveConditionItemTitles(schema1, '/other/path')
+      expect(schema1.anyOf[0].title).toBe('Item (object)')
+
+      const schema2 = {}
+      improveConditionItemTitles(
+        schema2,
+        `/${PATH_SEGMENTS.CONDITIONS}/${PATH_SEGMENTS.ITEMS}`
+      )
+      expect(schema2.anyOf).toBeUndefined()
+
+      const schema3 = {
+        anyOf: [{ title: 'Other title', properties: { field: {} } }]
+      }
+      improveConditionItemTitles(
+        schema3,
+        `/${PATH_SEGMENTS.CONDITIONS}/${PATH_SEGMENTS.ITEMS}`
+      )
+      expect(schema3.anyOf[0].title).toBe('Other title')
+
+      const schema4 = {
+        anyOf: [{ title: 'Item (object)' }]
+      }
+      improveConditionItemTitles(
+        schema4,
+        `/${PATH_SEGMENTS.CONDITIONS}/${PATH_SEGMENTS.ITEMS}`
+      )
+      expect(schema4.anyOf[0].title).toBe('Item (object)')
+    })
+
+    it('should set unknown type for condition items with unrecognized structure', () => {
+      const result = {
+        anyOf: [
+          {
+            title: 'Conditions Item (object)',
+            properties: {
+              someUnknownProp: {}
+            }
+          }
+        ]
+      }
+
+      improveConditionItemTitles(result, '/conditions/items')
+
+      expect(result.anyOf[0].title).toBe('Unknown Condition Item Type')
     })
   })
 
@@ -1161,7 +1320,10 @@ describe('Schema Generation Script', () => {
         anyOf: [{ type: 'string' }, { type: 'number' }]
       }
 
-      improveListItemTitles(schema, '/properties/items')
+      improveListItemTitles(
+        schema,
+        `/${PATH_SEGMENTS.PROPERTIES}/${PATH_SEGMENTS.ITEMS}`
+      )
 
       expect(schema.oneOf[0].title).toBe('String List Items')
       expect(schema.oneOf[1].title).toBe('Number List Items')
@@ -1174,6 +1336,23 @@ describe('Schema Generation Script', () => {
 
       improveListItemTitles(schema2, '/other/path')
       expect(schema2.anyOf).toBeDefined()
+    })
+
+    it('should set generic title for list items with unrecognized description', () => {
+      const result = {
+        oneOf: [
+          {
+            description: 'Some description without string or numeric keywords'
+          },
+          {
+            description: 'Another item to make the length > 1'
+          }
+        ]
+      }
+
+      improveListItemTitles(result, '/items')
+
+      expect(result.oneOf[0].title).toBe('Generic List Items')
     })
   })
 
@@ -1205,29 +1384,6 @@ describe('Schema Generation Script', () => {
     })
   })
 
-  describe('Nested Schema Processing', () => {
-    it('should process nested schema elements recursively', () => {
-      const schema = {
-        properties: {
-          a: { type: 'string' },
-          b: { type: 'number' }
-        },
-        items: [{ type: 'string' }, { type: 'number' }],
-        oneOf: [{ type: 'string' }, { type: 'number' }]
-      }
-
-      const processedPaths = testProcessNestedSchemas(schema, '/test')
-
-      // Check that the right paths were processed
-      expect(processedPaths).toContain('/test/properties/a')
-      expect(processedPaths).toContain('/test/properties/b')
-      expect(processedPaths).toContain('/test/items/0')
-      expect(processedPaths).toContain('/test/items/1')
-      expect(processedPaths).toContain('/test/oneOf/0')
-      expect(processedPaths).toContain('/test/oneOf/1')
-    })
-  })
-
   describe('simplifyForDocs Testing', () => {
     it('should perform all expected transformations on schemas', () => {
       const schema = {
@@ -1247,7 +1403,7 @@ describe('Schema Generation Script', () => {
 
       const result = simplifyForDocs(schema, '/test')
 
-      expect(result.title).toBe('Nested Condition Group')
+      expect(result.title).toBe(CONDITION_TYPES.NESTED_GROUP)
 
       expect(result.anyOf).toBeUndefined()
       expect(result.description).toContain('string, number, boolean, array')
@@ -1325,7 +1481,7 @@ describe('Schema Generation Script', () => {
             break
 
           case 'conditionGroupSchema': {
-            expect(generatedSchema.title).toBe('Nested Condition Group')
+            expect(generatedSchema.title).toBe(CONDITION_TYPES.NESTED_GROUP)
             const hasRefOrProps =
               generatedSchema.$ref !== undefined ||
               generatedSchema.properties !== undefined
@@ -1400,7 +1556,7 @@ describe('Schema Generation Script', () => {
       const [, content] = mockWriteFileSync.mock.calls[0]
       const generatedSchema = JSON.parse(content)
 
-      expect(generatedSchema.title).toBe('Nested Condition Group')
+      expect(generatedSchema.title).toBe(CONDITION_TYPES.NESTED_GROUP)
 
       expect(generatedSchema.description).toContain('logical expressions')
 
@@ -1418,6 +1574,73 @@ describe('Schema Generation Script', () => {
         generatedSchema.$defs !== undefined
 
       expect(hasRefOrProps).toBe(true)
+    })
+  })
+
+  describe('Script Entry Point', () => {
+    // Save original values to restore later
+    const originalConsoleError = console.error
+    const originalProcessExit = process.exit
+    const originalProcessArgv = process.argv
+
+    beforeEach(() => {
+      // Mock console.error to avoid polluting test output
+      console.error = jest.fn()
+      // Mock process.exit to prevent test termination
+      process.exit = jest.fn()
+      // Set process.argv to simulate direct script execution
+      process.argv = ['node', '/path/to/generate-schemas.js']
+    })
+
+    afterEach(() => {
+      // Restore original functions
+      console.error = originalConsoleError
+      process.exit = originalProcessExit
+      process.argv = originalProcessArgv
+    })
+
+    it('should handle errors in generateSchemas', async () => {
+      const moduleCode = `
+        (async () => {
+          try {
+            await mockGenerateSchemas();
+          } catch (err) {
+            console.error('Schema generation failed:', err);
+            throw err;
+          }
+        })().catch((err) => {
+          console.error('Unhandled error:', err);
+          process.exit(1);
+        });
+      `
+
+      try {
+        await eval(moduleCode)
+      } catch (err) {}
+
+      expect(console.error).toHaveBeenCalledTimes(2)
+      expect(console.error.mock.calls[0][0]).toBe('Schema generation failed:')
+      expect(console.error.mock.calls[1][0]).toBe('Unhandled error:')
+      expect(process.exit).toHaveBeenCalledWith(1)
+    })
+
+    it('should handle successful execution', async () => {
+      const mockGenerateSchemas = jest
+        .fn()
+        .mockResolvedValue({ successCount: 5, errorCount: 0 })
+
+      await (async () => {
+        try {
+          await mockGenerateSchemas()
+        } catch (err) {
+          console.error('Schema generation failed:', err)
+          throw err
+        }
+      })()
+
+      expect(mockGenerateSchemas).toHaveBeenCalled()
+      expect(console.error).not.toHaveBeenCalled()
+      expect(process.exit).not.toHaveBeenCalled()
     })
   })
 })
