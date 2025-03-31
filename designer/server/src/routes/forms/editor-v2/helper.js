@@ -2,6 +2,8 @@ import { randomUUID } from 'crypto'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
 
+const radiosSectionListItemsAnchor = '#list-items'
+
 /**
  * @param {Yar} yar
  * @param {FormEditor | undefined} formValues
@@ -66,7 +68,7 @@ export function handleEnhancedActionOnGet(yar, query) {
       ...state,
       listItems: newList
     })
-    return '#list-items'
+    return radiosSectionListItemsAnchor
   }
 
   if (action === 'edit') {
@@ -83,7 +85,7 @@ export function handleEnhancedActionOnGet(yar, query) {
       ...state,
       state: setItemState(undefined, false)
     })
-    return '#list-items'
+    return radiosSectionListItemsAnchor
   }
 
   return undefined
@@ -139,7 +141,7 @@ export function handleEnhancedActionOnPost(yar, payload, questionDetails) {
       ...enhancedActionState,
       state: setItemState(undefined, false)
     })
-    return '#list-items'
+    return radiosSectionListItemsAnchor
   }
   return undefined
 }

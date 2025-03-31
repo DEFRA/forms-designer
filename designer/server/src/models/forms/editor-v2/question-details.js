@@ -215,7 +215,7 @@ export function questionDetailsViewModel(
     }
   }
 
-  const enhancedFields = /** @type {GovukField[]} */ (
+  const enhancedFieldList = /** @type {GovukField[]} */ (
     getEnhancedFields(questionFieldsOverride, validation)
   )
 
@@ -223,19 +223,9 @@ export function questionDetailsViewModel(
   const errorList = buildErrorList(formErrors)
   const previewPageUrl = `${buildPreviewUrl(metadata.slug)}${pagePath}?force`
 
-  /*
-  if (!enhancedActionState?.listItems) {
-    enhancedActionState = {
-      state: {
-      },
-      listItems: [],
-      questionDetails: {}
-    }
-  }
-*/
   return {
     enhancedActionState,
-    enhancedFields,
+    enhancedFields: enhancedFieldList,
     ...baseModelFields(metadata.slug, pageTitle),
     name: questionFields.name || randomId(),
     basePageFields,
