@@ -520,7 +520,7 @@ export function buildDefinition(definitionPartial = {}) {
 
 /**
  * @param {Partial<List>} partialList
- * @returns {Partial<List>}
+ * @returns {List}
  */
 export function buildList(partialList = {}) {
   return {
