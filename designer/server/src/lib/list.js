@@ -4,8 +4,14 @@ import { getHeaders } from '~/src/lib/utils.js'
 import { mapQuestionDetails } from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
 
 const formsEndpoint = new URL('/forms/', config.managerUrl)
-const postJsonByListType = /** @type {typeof postJson<List>} */ (postJson)
-const putJsonByListType = /** @type {typeof putJson<List>} */ (putJson)
+const postJsonByListType =
+  /** @type {typeof postJson<{ id: string; list: List; status: 'created' }>} */ (
+    postJson
+  )
+const putJsonByListType =
+  /** @type {typeof putJson<{ id: string; list: List; status: 'updated' }>} */ (
+    putJson
+  )
 
 /**
  * Maps FormEditorInputQuestion payload to AutoComplete Component
@@ -40,7 +46,7 @@ export function buildAutoCompleteListFromPayload(payload) {
  * @param {string} formId
  * @param {string} token
  * @param {Partial<List>} list
- * @returns {Promise<List>}
+ * @returns {Promise<{ id: string; list: List; status: 'created' }>}
  */
 export async function createList(formId, token, list) {
   const addListUrl = new URL(
@@ -61,7 +67,7 @@ export async function createList(formId, token, list) {
  * @param {string} listId
  * @param {string} token
  * @param {Partial<List>} list
- * @returns {Promise<List>}
+ * @returns {Promise<{ id: string; list: List; status: 'updated' }>}
  */
 export async function updateList(formId, listId, token, list) {
   const addListUrl = new URL(
@@ -88,6 +94,26 @@ export async function deleteList(formId, listId, token) {
     formsEndpoint
   )
   await delJson(addListUrl, getHeaders(token))
+}
+
+/**
+ * Creates a new list if it does not exist, updates an existing list if it does
+ * @param {string} formId
+ * @param {FormDefinition} definition
+ * @param {string} token
+ * @param {Partial<List>} upsertedList
+ * @returns {Promise<{ id: string; list: List; status: 'updated' | 'created' }>}
+ */
+export async function upsertList(formId, definition, token, upsertedList) {
+  const foundList = definition.lists.find(
+    (list) => list.name === upsertedList.name
+  )
+
+  if (foundList?.id) {
+    return updateList(formId, foundList.id, token, upsertedList)
+  }
+
+  return createList(formId, token, upsertedList)
 }
 
 /**

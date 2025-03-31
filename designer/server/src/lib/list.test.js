@@ -1,7 +1,7 @@
-import { buildList } from '~/src/__stubs__/form-definition.js'
+import { buildDefinition, buildList } from '~/src/__stubs__/form-definition.js'
 import {
   baseOptions,
-  editor,
+  createMockResponse,
   formsEndpoint,
   mockedDelJson,
   mockedPostJson,
@@ -14,7 +14,8 @@ import {
   buildAutoCompleteListFromPayload,
   createList,
   deleteList,
-  updateList
+  updateList,
+  upsertList
 } from '~/src/lib/list.js'
 
 jest.mock('~/src/lib/fetch.js')
@@ -88,7 +89,7 @@ describe('list.js', () => {
         status: 'created'
       }
       mockedPostJson.mockResolvedValueOnce({
-        response: editor(),
+        response: createMockResponse(),
         body: expectedList
       })
       const list = await createList(formId, token, payload)
@@ -122,7 +123,7 @@ describe('list.js', () => {
       }
 
       mockedPutJson.mockResolvedValueOnce({
-        response: editor(),
+        response: createMockResponse(),
         body: expectedList
       })
       const list = await updateList(formId, listId, token, payload)
@@ -143,7 +144,7 @@ describe('list.js', () => {
 
     it('should delete a list', async () => {
       mockedDelJson.mockResolvedValueOnce({
-        response: editor(),
+        response: createMockResponse(),
         body: {
           id: listId,
           status: 'deleted'
@@ -152,6 +153,96 @@ describe('list.js', () => {
       await deleteList(formId, listId, token)
 
       expect(mockedDelJson).toHaveBeenCalledWith(requestUrl, baseOptions)
+    })
+  })
+
+  describe('upsertList', () => {
+    const baseList = buildList({
+      name: 'AbcdE'
+    })
+
+    it('should create list if list does not exist', async () => {
+      const requestUrl = new URL(
+        `./${formId}/definition/draft/lists`,
+        formsEndpoint
+      )
+      const expectedList = buildList({
+        ...baseList,
+        id: listId
+      })
+      const expectedResponse = {
+        id: listId,
+        list: expectedList,
+        status: 'created'
+      }
+      mockedPostJson.mockResolvedValueOnce({
+        response: createMockResponse(),
+        body: expectedResponse
+      })
+
+      const definition = buildDefinition()
+
+      const createdList = await upsertList(formId, definition, token, baseList)
+      const [calledUrl] = mockedPostJson.mock.calls[0]
+      expect(calledUrl).toEqual(requestUrl)
+      expect(createdList).toEqual(expectedResponse)
+    })
+
+    it('should create list if list id does not exist', async () => {
+      const requestUrl = new URL(
+        `./${formId}/definition/draft/lists`,
+        formsEndpoint
+      )
+      const expectedList = buildList({
+        ...baseList,
+        id: undefined
+      })
+
+      const expectedBody = {
+        id: listId,
+        list: expectedList,
+        status: 'created'
+      }
+      mockedPostJson.mockResolvedValueOnce({
+        response: createMockResponse(),
+        body: expectedBody
+      })
+
+      const definition = buildDefinition({
+        lists: [expectedList]
+      })
+
+      const createdList = await upsertList(formId, definition, token, baseList)
+      const [calledUrl] = mockedPostJson.mock.calls[0]
+      expect(calledUrl).toEqual(requestUrl)
+      expect(createdList).toEqual(expectedBody)
+    })
+
+    it('should update list if list exists', async () => {
+      const list = buildList({
+        ...baseList,
+        id: listId
+      })
+      mockedPutJson.mockResolvedValueOnce({
+        response: createMockResponse(),
+        body: {
+          id: listId,
+          list,
+          status: 'updated'
+        }
+      })
+
+      const requestUrl = new URL(
+        `./${formId}/definition/draft/lists/${listId}`,
+        formsEndpoint
+      )
+      const definition = buildDefinition({
+        pages: [],
+        lists: [list]
+      })
+      await upsertList(formId, definition, token, list)
+      const [calledUrl] = mockedPutJson.mock.calls[0]
+      expect(calledUrl).toEqual(requestUrl)
     })
   })
 })

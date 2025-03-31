@@ -15,7 +15,7 @@ export const mockedPutJson =
  * @param {{statusCode?: number}} [props]
  * @returns {IncomingMessage}
  */
-export function editor(props = {}) {
+export function createMockResponse(props = {}) {
   return /** @type {IncomingMessage} */ ({
     statusCode: props.statusCode,
     headers: {}

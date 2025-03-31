@@ -5,7 +5,7 @@ import {
   testFormDefinitionWithExistingGuidance
 } from '~/src/__stubs__/form-definition.js'
 import {
-  editor,
+  createMockResponse,
   formsEndpoint,
   mockedDelJson,
   mockedPatchJson,
@@ -99,7 +99,7 @@ describe('editor.js', () => {
     describe('when postJson succeeds', () => {
       test('returns response body', async () => {
         mockedPostJson.mockResolvedValueOnce({
-          response: editor(),
+          response: createMockResponse(),
           body: { id: 'new-id' }
         })
 
@@ -200,7 +200,7 @@ describe('editor.js', () => {
     describe('when postJson succeeds', () => {
       test('returns response body', async () => {
         mockedPostJson.mockResolvedValueOnce({
-          response: editor(),
+          response: createMockResponse(),
           body: { id: 'new-id' }
         })
 
@@ -248,7 +248,7 @@ describe('editor.js', () => {
     describe('when putJson succeeds', () => {
       test('returns response body', async () => {
         mockedPutJson.mockResolvedValueOnce({
-          response: editor(),
+          response: createMockResponse(),
           body: { id: '456' }
         })
 
@@ -294,7 +294,7 @@ describe('editor.js', () => {
     describe('when patchJson succeeds', () => {
       test('returns response body when checkbox unselected but old value in page heading', async () => {
         mockedPatchJson.mockResolvedValueOnce({
-          response: editor(),
+          response: createMockResponse(),
           body: {}
         })
 
@@ -322,7 +322,7 @@ describe('editor.js', () => {
 
       test('returns response body when checkbox selected and value in page heading', async () => {
         mockedPatchJson.mockResolvedValueOnce({
-          response: editor(),
+          response: createMockResponse(),
           body: {}
         })
 
@@ -351,7 +351,7 @@ describe('editor.js', () => {
 
       test('returns response body when checkbox selected and value in page heading and value in guidance', async () => {
         mockedPatchJson.mockResolvedValueOnce({
-          response: editor(),
+          response: createMockResponse(),
           body: {}
         })
 
@@ -398,7 +398,7 @@ describe('editor.js', () => {
 
     test('handles overwriting of existing guidance', async () => {
       mockedPatchJson.mockResolvedValueOnce({
-        response: editor(),
+        response: createMockResponse(),
         body: {}
       })
 
@@ -449,7 +449,7 @@ describe('editor.js', () => {
       )
 
       mockedPatchJson.mockResolvedValueOnce({
-        response: editor(),
+        response: createMockResponse(),
         body: {}
       })
 
@@ -550,7 +550,7 @@ describe('editor.js', () => {
       )
 
       mockedPatchJson.mockResolvedValueOnce({
-        response: editor(),
+        response: createMockResponse(),
         body: {}
       })
 
@@ -611,7 +611,7 @@ describe('editor.js', () => {
         engine: Engine.V2
       })
       mockedPostJson.mockResolvedValueOnce({
-        response: editor(),
+        response: createMockResponse(),
         body: v2Definition
       })
       const expectedMigrateCall = {
@@ -639,7 +639,7 @@ describe('editor.js', () => {
     describe('when delJson succeeds', () => {
       test('returns response body', async () => {
         mockedDelJson.mockResolvedValueOnce({
-          response: editor(),
+          response: createMockResponse(),
           body: { result: 'ok' }
         })
 
