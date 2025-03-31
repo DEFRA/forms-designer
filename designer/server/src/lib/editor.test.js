@@ -4,7 +4,15 @@ import {
   buildDefinition,
   testFormDefinitionWithExistingGuidance
 } from '~/src/__stubs__/form-definition.js'
-import config from '~/src/config.js'
+import {
+  editor,
+  formsEndpoint,
+  mockedDelJson,
+  mockedPatchJson,
+  mockedPostJson,
+  mockedPutJson,
+  token
+} from '~/src/lib/__stubs__/editor.js'
 import {
   addPageAndFirstQuestion,
   addQuestion,
@@ -16,35 +24,8 @@ import {
   setPageHeadingAndGuidance,
   updateQuestion
 } from '~/src/lib/editor.js'
-import { delJson, patchJson, postJson, putJson } from '~/src/lib/fetch.js'
 
 jest.mock('~/src/lib/fetch.js')
-
-const mockedDelJson = /** @type {jest.MockedFunction<typeof delJson>} */ (
-  delJson
-)
-const mockedPostJson = /** @type {jest.MockedFunction<typeof postJson>} */ (
-  postJson
-)
-const mockedPatchJson = /** @type {jest.MockedFunction<typeof patchJson>} */ (
-  patchJson
-)
-const mockedPutJson = /** @type {jest.MockedFunction<typeof putJson>} */ (
-  putJson
-)
-
-/**
- * Creates a minimal mock response
- * @param {{statusCode?: number}} [props]
- * @returns
- */
-function createMockResponse(props = {}) {
-  const response = /** @type {IncomingMessage} */ ({
-    statusCode: props.statusCode,
-    headers: {}
-  })
-  return response
-}
 
 /**
  * @satisfies {FormDefinition}
@@ -82,8 +63,6 @@ const formDefinition = {
   lists: []
 }
 
-const formsEndpoint = new URL('/forms/', config.managerUrl)
-
 const questionDetails = {
   title: 'What is your name?',
   name: 'what-is-your-name',
@@ -92,7 +71,6 @@ const questionDetails = {
 
 describe('editor.js', () => {
   const formId = '98dbfb6c-93b7-41dc-86e7-02c7abe4ba38'
-  const token = 'someToken'
 
   afterEach(() => {
     jest.clearAllMocks()
@@ -121,7 +99,7 @@ describe('editor.js', () => {
     describe('when postJson succeeds', () => {
       test('returns response body', async () => {
         mockedPostJson.mockResolvedValueOnce({
-          response: createMockResponse(),
+          response: editor(),
           body: { id: 'new-id' }
         })
 
@@ -222,7 +200,7 @@ describe('editor.js', () => {
     describe('when postJson succeeds', () => {
       test('returns response body', async () => {
         mockedPostJson.mockResolvedValueOnce({
-          response: createMockResponse(),
+          response: editor(),
           body: { id: 'new-id' }
         })
 
@@ -270,7 +248,7 @@ describe('editor.js', () => {
     describe('when putJson succeeds', () => {
       test('returns response body', async () => {
         mockedPutJson.mockResolvedValueOnce({
-          response: createMockResponse(),
+          response: editor(),
           body: { id: '456' }
         })
 
@@ -316,7 +294,7 @@ describe('editor.js', () => {
     describe('when patchJson succeeds', () => {
       test('returns response body when checkbox unselected but old value in page heading', async () => {
         mockedPatchJson.mockResolvedValueOnce({
-          response: createMockResponse(),
+          response: editor(),
           body: {}
         })
 
@@ -344,7 +322,7 @@ describe('editor.js', () => {
 
       test('returns response body when checkbox selected and value in page heading', async () => {
         mockedPatchJson.mockResolvedValueOnce({
-          response: createMockResponse(),
+          response: editor(),
           body: {}
         })
 
@@ -373,7 +351,7 @@ describe('editor.js', () => {
 
       test('returns response body when checkbox selected and value in page heading and value in guidance', async () => {
         mockedPatchJson.mockResolvedValueOnce({
-          response: createMockResponse(),
+          response: editor(),
           body: {}
         })
 
@@ -420,7 +398,7 @@ describe('editor.js', () => {
 
     test('handles overwriting of existing guidance', async () => {
       mockedPatchJson.mockResolvedValueOnce({
-        response: createMockResponse(),
+        response: editor(),
         body: {}
       })
 
@@ -471,7 +449,7 @@ describe('editor.js', () => {
       )
 
       mockedPatchJson.mockResolvedValueOnce({
-        response: createMockResponse(),
+        response: editor(),
         body: {}
       })
 
@@ -572,7 +550,7 @@ describe('editor.js', () => {
       )
 
       mockedPatchJson.mockResolvedValueOnce({
-        response: createMockResponse(),
+        response: editor(),
         body: {}
       })
 
@@ -633,7 +611,7 @@ describe('editor.js', () => {
         engine: Engine.V2
       })
       mockedPostJson.mockResolvedValueOnce({
-        response: createMockResponse(),
+        response: editor(),
         body: v2Definition
       })
       const expectedMigrateCall = {
@@ -661,7 +639,7 @@ describe('editor.js', () => {
     describe('when delJson succeeds', () => {
       test('returns response body', async () => {
         mockedDelJson.mockResolvedValueOnce({
-          response: createMockResponse(),
+          response: editor(),
           body: { result: 'ok' }
         })
 
