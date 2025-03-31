@@ -32,6 +32,16 @@ describe('Title Processors', () => {
       setSchemaTitle(schemaWithTitle, 'test')
       expect(schemaWithTitle.title).toBe('Existing')
     })
+
+    it('should use type as fallback or assign unknown schema', () => {
+      const schemaWithType = { type: 'array' }
+      setSchemaTitle(schemaWithType, '')
+      expect(schemaWithType.title).toBe('Array')
+
+      const schemaWithoutTypeOrDesc = {}
+      setSchemaTitle(schemaWithoutTypeOrDesc, '')
+      expect(schemaWithoutTypeOrDesc.title).toBe('Unknown Schema')
+    })
   })
 
   describe('setRepeatTitles', () => {
@@ -231,6 +241,15 @@ describe('Title Processors', () => {
       const schema = {}
       handleSpecialTitles(schema, 'testField', 'oneOf', 2)
       expect(schema.title).toBe('Test Field Variant 3')
+    })
+
+    it('should not modify schema if title already exists', () => {
+      const schema = {
+        title: 'Existing title',
+        type: 'string'
+      }
+      handleSpecialTitles(schema, 'testField', 'oneOf', 0)
+      expect(schema.title).toBe('Existing title')
     })
   })
 
