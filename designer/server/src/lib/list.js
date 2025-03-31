@@ -1,5 +1,5 @@
 import config from '~/src/config.js'
-import { postJson, putJson } from '~/src/lib/fetch.js'
+import { delJson, postJson, putJson } from '~/src/lib/fetch.js'
 import { getHeaders } from '~/src/lib/utils.js'
 import { mapQuestionDetails } from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
 
@@ -74,6 +74,20 @@ export async function updateList(formId, listId, token, list) {
   })
 
   return body
+}
+
+/**
+ * Deletes a list
+ * @param {string} formId
+ * @param {string} listId
+ * @param {string} token
+ */
+export async function deleteList(formId, listId, token) {
+  const addListUrl = new URL(
+    `./${formId}/definition/draft/lists/${listId}`,
+    formsEndpoint
+  )
+  await delJson(addListUrl, getHeaders(token))
 }
 
 /**

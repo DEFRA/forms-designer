@@ -3,6 +3,7 @@ import {
   baseOptions,
   editor,
   formsEndpoint,
+  mockedDelJson,
   mockedPostJson,
   mockedPutJson,
   token
@@ -12,6 +13,7 @@ import {
   buildAutoCompleteComponentFromPayload,
   buildAutoCompleteListFromPayload,
   createList,
+  deleteList,
   updateList
 } from '~/src/lib/list.js'
 
@@ -19,6 +21,7 @@ jest.mock('~/src/lib/fetch.js')
 
 describe('list.js', () => {
   const formId = '98dbfb6c-93b7-41dc-86e7-02c7abe4ba38'
+  const listId = '8b10412c-cb4d-46bd-99d4-249bca722b3f'
   const basePayload = buildAutoCompletePayload({
     name: 'tzrHYW',
     question: 'What is your first language?',
@@ -77,10 +80,10 @@ describe('list.js', () => {
     it('should post the new list', async () => {
       const payload = buildList()
       const expectedList = {
-        id: '8b10412c-cb4d-46bd-99d4-249bca722b3f',
+        id: listId,
         list: buildList({
           ...payload,
-          id: '8b10412c-cb4d-46bd-99d4-249bca722b3f'
+          id: listId
         }),
         status: 'created'
       }
@@ -99,7 +102,6 @@ describe('list.js', () => {
   })
 
   describe('updateList', () => {
-    const listId = '8b10412c-cb4d-46bd-99d4-249bca722b3f'
     const requestUrl = new URL(
       `./${formId}/definition/draft/lists/${listId}`,
       formsEndpoint
@@ -130,6 +132,26 @@ describe('list.js', () => {
         payload,
         ...baseOptions
       })
+    })
+  })
+
+  describe('deleteList', () => {
+    const requestUrl = new URL(
+      `./${formId}/definition/draft/lists/${listId}`,
+      formsEndpoint
+    )
+
+    it('should delete a list', async () => {
+      mockedDelJson.mockResolvedValueOnce({
+        response: editor(),
+        body: {
+          id: listId,
+          status: 'deleted'
+        }
+      })
+      await deleteList(formId, listId, token)
+
+      expect(mockedDelJson).toHaveBeenCalledWith(requestUrl, baseOptions)
     })
   })
 })
