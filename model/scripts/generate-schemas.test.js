@@ -1,6 +1,7 @@
 // @ts-nocheck
 import fs from 'fs'
 import Joi from 'joi'
+import path from 'path'
 
 import {
   toTitleCase,
@@ -14,6 +15,7 @@ import {
   processArrayItems,
   processCombinationKeywords,
   processReferences,
+  processNestedSchemas,
   processAdditionalProperties,
   fixConditionItems,
   fixValueObjects,
@@ -37,7 +39,10 @@ import {
   VALUE_TYPES,
   CONDITION_TYPES,
   PATH_SEGMENTS,
-  DESCRIPTIONS
+  DESCRIPTIONS,
+  addTitles,
+  cleanSchemaDirectory,
+  schemasDir
 } from '~/scripts/generate-schemas.js'
 
 /**
@@ -1410,6 +1415,36 @@ describe('Schema Generation Script', () => {
 
       expect(result.properties).toBeDefined()
     })
+
+    it('should process schemas with array items', () => {
+      const schema = {
+        items: [{ type: 'string' }, { type: 'number' }]
+      }
+
+      const result = simplifyForDocs(schema, '/test')
+
+      expect(result.items).toHaveLength(2)
+      expect(result.items[0]).toBeDefined()
+      expect(result.items[1]).toBeDefined()
+    })
+
+    it('should process schemas with single (non-array) items', () => {
+      const schema = {
+        items: { type: 'string' }
+      }
+
+      const result = simplifyForDocs(schema, '/test')
+
+      expect(result.items).toBeDefined()
+      expect(result.items.type).toBe('string')
+    })
+
+    it('should return primitive values without modification', () => {
+      expect(simplifyForDocs('string value')).toBe('string value')
+      expect(simplifyForDocs(42)).toBe(42)
+      expect(simplifyForDocs(true)).toBe(true)
+      expect(simplifyForDocs(undefined)).toBe(undefined)
+    })
   })
 
   describe('Full Schema to JSON Generation', () => {
@@ -1641,6 +1676,148 @@ describe('Schema Generation Script', () => {
       expect(mockGenerateSchemas).toHaveBeenCalled()
       expect(console.error).not.toHaveBeenCalled()
       expect(process.exit).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('addTitles Function', () => {
+    it('should return non-object schemas without modification', () => {
+      expect(addTitles('string value')).toBe('string value')
+      expect(addTitles(42)).toBe(42)
+      expect(addTitles(true)).toBe(true)
+      expect(addTitles(null)).toBe(null)
+      expect(addTitles(undefined)).toBe(undefined)
+    })
+
+    it('should enhance object schemas with titles', () => {
+      const schema = { type: 'string' }
+      const result = addTitles(schema, 'testProperty')
+
+      expect(result).toBe(schema)
+      expect(result.title).toBe('Test Property')
+    })
+  })
+
+  describe('fixConditionTitles Function', () => {
+    it('should handle non-object inputs by returning early', () => {
+      expect(() => fixConditionTitles('string value')).not.toThrow()
+      expect(() => fixConditionTitles(42)).not.toThrow()
+      expect(() => fixConditionTitles(null)).not.toThrow()
+      expect(() => fixConditionTitles(undefined)).not.toThrow()
+    })
+
+    it('should process object inputs correctly', () => {
+      const testObj = {
+        title: 'Conditions  Item Variant 3'
+      }
+
+      fixConditionTitles(testObj)
+
+      expect(testObj.title).toBe(CONDITION_TYPES.NESTED_GROUP)
+      expect(testObj.description).toBe(DESCRIPTIONS.NESTED_CONDITION_GROUP)
+    })
+  })
+
+  describe('processAnyOfTitles Function', () => {
+    it('should handle falsy values by returning early (!obj clause)', () => {
+      expect(() => processAnyOfTitles(null)).not.toThrow()
+      expect(() => processAnyOfTitles(undefined)).not.toThrow()
+      expect(() => processAnyOfTitles(false)).not.toThrow()
+      expect(() => processAnyOfTitles(0)).not.toThrow()
+      expect(() => processAnyOfTitles('')).not.toThrow()
+    })
+
+    it('should handle non-object values by returning early (typeof obj !== "object" clause)', () => {
+      expect(() => processAnyOfTitles('hello')).not.toThrow()
+      expect(() => processAnyOfTitles(42)).not.toThrow()
+      expect(() => processAnyOfTitles(true)).not.toThrow()
+      expect(() => processAnyOfTitles(Symbol())).not.toThrow()
+      expect(() => processAnyOfTitles(() => {})).not.toThrow()
+    })
+
+    it('should process valid objects but return if anyOfTitles is not an array', () => {
+      const testObj = { someProperty: 'value' }
+      expect(() => processAnyOfTitles(testObj)).not.toThrow()
+      const testObj2 = { anyOfTitles: 'not an array' }
+      expect(() => processAnyOfTitles(testObj2)).not.toThrow()
+    })
+  })
+
+  describe('processNestedSchemas Function', () => {
+    it('should process schema with array items correctly', () => {
+      const schema = {
+        items: [
+          { type: 'string', title: 'Item 1' },
+          { type: 'number', title: 'Item 2' },
+          { type: 'boolean', title: 'Item 3' }
+        ]
+      }
+
+      const originalItems = JSON.parse(JSON.stringify(schema.items))
+
+      processNestedSchemas(schema, '/test')
+
+      expect(schema.items.length).toBe(3)
+      expect(schema.items[0].type).toBe(originalItems[0].type)
+      expect(schema.items[1].type).toBe(originalItems[1].type)
+      expect(schema.items[2].type).toBe(originalItems[2].type)
+    })
+
+    it('should process schema with a single item correctly', () => {
+      const schema = {
+        items: { type: 'string', title: 'Single Item' }
+      }
+
+      const originalItem = JSON.parse(JSON.stringify(schema.items))
+
+      processNestedSchemas(schema, '/test')
+
+      expect(schema.items.type).toBe(originalItem.type)
+      expect(schema.items.title).toBe(originalItem.title)
+    })
+
+    it('should not modify schema without items property', () => {
+      const schema = {
+        type: 'object',
+        properties: { name: { type: 'string' } }
+      }
+
+      const originalSchema = JSON.parse(JSON.stringify(schema))
+
+      processNestedSchemas(schema, '/test')
+
+      expect(schema).toEqual(originalSchema)
+    })
+  })
+
+  describe('cleanSchemaDirectory Function', () => {
+    it('should clean JSON files from schema directory', () => {
+      const originalConsoleLog = console.log
+      console.log = jest.fn()
+
+      mockReadDirSync.mockReturnValue(['test1.json', 'test2.json', 'other.txt'])
+
+      const result = cleanSchemaDirectory()
+
+      expect(console.log).toHaveBeenCalledWith(
+        'Cleaning existing schema files...'
+      )
+      expect(console.log).toHaveBeenCalledWith(
+        'Cleaned 2 existing schema files'
+      )
+
+      expect(mockReadDirSync).toHaveBeenCalledWith(schemasDir)
+
+      expect(mockUnlinkSync).toHaveBeenCalledTimes(2)
+      expect(mockUnlinkSync).toHaveBeenCalledWith(
+        path.join(schemasDir, 'test1.json')
+      )
+      expect(mockUnlinkSync).toHaveBeenCalledWith(
+        path.join(schemasDir, 'test2.json')
+      )
+
+      expect(result).toBe(2)
+
+      console.log = originalConsoleLog
     })
   })
 })

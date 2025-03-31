@@ -114,6 +114,8 @@ export function setSchemaTitle(schema, parentName) {
     schema.title = formatPropertyName(parentName)
   } else if (schema.type) {
     schema.title = formatPropertyName(String(schema.type))
+  } else {
+    schema.title = 'Unknown Schema'
   }
 }
 
@@ -192,30 +194,68 @@ export function setPagesTitles(subSchema, index) {
  * @param {number} index - Index in the array
  */
 export function handleSpecialTitles(subSchema, parentName, keyword, index) {
-  if (subSchema.title) return
-
-  if (parentName === 'repeat' && keyword === 'oneOf') {
-    setRepeatTitles(subSchema, index)
-  } else if (parentName === 'name' && keyword === 'oneOf') {
-    setNameTitles(subSchema, index)
-  } else if (parentName === 'title' && keyword === 'oneOf') {
-    setTitleTitles(subSchema, index)
-  } else if (parentName === 'pages' && keyword === 'oneOf') {
-    setPagesTitles(subSchema, index)
-  } else if (subSchema.type) {
-    subSchema.title = `${formatPropertyName(parentName)} (${subSchema.type})`
-  } else {
-    subSchema.title = `${formatPropertyName(parentName)} Variant ${index + 1}`
+  if (subSchema.title) {
+    return
   }
 
+  if (!setSpecificTitle(subSchema, parentName, keyword, index)) {
+    if (subSchema.type) {
+      subSchema.title = `${formatPropertyName(parentName)} (${subSchema.type})`
+    } else {
+      subSchema.title = `${formatPropertyName(parentName)} Variant ${index + 1}`
+    }
+  }
+
+  setAlternativeValidationTitle(subSchema, parentName, keyword)
+}
+
+/**
+ * Sets specific titles based on parent name and keyword
+ * @param {SchemaObject} subSchema - The schema to process
+ * @param {string} parentName - Parent name
+ * @param {string} keyword - oneOf, anyOf, or allOf
+ * @param {number} index - Index in the array
+ * @returns {boolean} Whether a specific title was set
+ */
+export function setSpecificTitle(subSchema, parentName, keyword, index) {
+  if (parentName === 'repeat' && keyword === 'oneOf') {
+    setRepeatTitles(subSchema, index)
+    return true
+  }
+
+  if (parentName === 'name' && keyword === 'oneOf') {
+    setNameTitles(subSchema, index)
+    return true
+  }
+
+  if (parentName === 'title' && keyword === 'oneOf') {
+    setTitleTitles(subSchema, index)
+    return true
+  }
+
+  if (parentName === 'pages' && keyword === 'oneOf') {
+    setPagesTitles(subSchema, index)
+    return true
+  }
+
+  return false
+}
+
+/**
+ * Sets title for alternative validation schemas
+ * @param {SchemaObject} subSchema - The schema to process
+ * @param {string} parentName - Parent name
+ * @param {string} keyword - oneOf, anyOf, or allOf
+ */
+export function setAlternativeValidationTitle(subSchema, parentName, keyword) {
   if (
     keyword === 'anyOf' &&
     parentName.includes('Alternative Validation') &&
     subSchema.type
   ) {
     subSchema.title = `${subSchema.type} Type`
-    subSchema.description = `**INTERNAL VALIDATION ONLY** - This is an internal schema structure used for validation purposes. 
-                            When using the ${parentName} property, you should only configure the Repeat Configuration structure 
+    subSchema.description = `**INTERNAL VALIDATION ONLY** - This is an internal schema structure used for validation purposes.
+                            When using the ${parentName} property, you should only configure the Repeat Configuration structure
                             when controller is set to "RepeatPageController".`
   }
 }
@@ -362,7 +402,7 @@ export function processAdditionalProperties(schema, parentName) {
  * @returns {SchemaObject} The enhanced schema
  */
 export function addTitles(schema, parentName = '') {
-  if (typeof schema !== 'object') {
+  if (!schema || typeof schema !== 'object') {
     return schema
   }
 
@@ -448,6 +488,10 @@ export function fixValueObjects(obj) {
  * @param {SchemaObject} obj - Schema to process
  */
 export function processAnyOfTitles(obj) {
+  if (!obj || typeof obj !== 'object') {
+    return
+  }
+
   if (!Array.isArray(obj.anyOfTitles)) {
     return
   }
@@ -463,7 +507,7 @@ export function processAnyOfTitles(obj) {
  * @param {SchemaObject} obj - The schema or subschema to fix
  */
 export function fixConditionTitles(obj) {
-  if (typeof obj !== 'object') {
+  if (!obj || typeof obj !== 'object') {
     return
   }
 
