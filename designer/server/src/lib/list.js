@@ -8,17 +8,30 @@ const postJsonByListType = /** @type {typeof postJson<List>} */ (postJson)
 const putJsonByListType = /** @type {typeof putJson<List>} */ (putJson)
 
 /**
- *
+ * Maps FormEditorInputQuestion payload to AutoComplete Component
  * @param {Partial<FormEditorInputQuestion>} payload
- * @param {string } listId
  * @returns {Partial<ComponentDef>}
  */
-export function buildAutoCompleteComponentFromPayload(payload, listId) {
+export function buildAutoCompleteComponentFromPayload(payload) {
   const baseComponentDetails = mapQuestionDetails(payload)
 
   return {
     ...baseComponentDetails,
-    list: listId
+    list: baseComponentDetails.name
+  }
+}
+
+/**
+ * Maps FormEditorInputQuestion payload to AutoComplete Component
+ * @param {Partial<FormEditorInputQuestion>} payload
+ * @returns {Partial<List>}
+ */
+export function buildAutoCompleteListFromPayload(payload) {
+  return {
+    name: payload.name,
+    title: payload.question,
+    type: 'string',
+    items: payload.autoCompleteOptions
   }
 }
 
@@ -64,5 +77,5 @@ export async function updateList(formId, listId, token, list) {
 }
 
 /**
- * @import {  FormDefinition, List, FormEditorInputQuestion, ComponentDef} from '@defra/forms-model'
+ * @import { FormDefinition, List, Item, FormEditorInputQuestion, AutocompleteFieldComponent, ComponentDef } from '@defra/forms-model'
  */
