@@ -164,6 +164,24 @@ export function getEnhancedFields(question, validation) {
 }
 
 /**
+ * @param { ValidationFailure<FormEditor> | undefined } validation
+ * @param { EnhancedActionState | undefined } enhancedActionState
+ */
+export function overrideFormValuesForEnhancedAction(
+  validation,
+  enhancedActionState
+) {
+  if (!validation && enhancedActionState?.state.radioId) {
+    return {
+      formValues: /** @type {FormEditor} */ (enhancedActionState.state),
+      formErrors: {}
+    }
+  }
+
+  return validation
+}
+
+/**
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  * @param {string} pageId
@@ -208,12 +226,10 @@ export function questionDetailsViewModel(
     getExtraFields(questionFieldsOverride, validation)
   )
 
-  if (!validation && enhancedActionState?.state.radioId) {
-    validation = {
-      formValues: /** @type {FormEditor} */ (enhancedActionState.state),
-      formErrors: {}
-    }
-  }
+  validation = overrideFormValuesForEnhancedAction(
+    validation,
+    enhancedActionState
+  )
 
   const enhancedFieldList = /** @type {GovukField[]} */ (
     getEnhancedFields(questionFieldsOverride, validation)

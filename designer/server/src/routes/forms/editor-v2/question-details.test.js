@@ -19,6 +19,7 @@ jest.mock('~/src/lib/forms.js')
 jest.mock('~/src/lib/error-helper.js')
 jest.mock('~/src/lib/editor.js')
 jest.mock('~/src/routes/forms/editor-v2/helper.js')
+jest.mock('~/src/routes/forms/editor-v2/question-details-helper.js')
 
 describe('Editor v2 question details routes', () => {
   /** @type {Server} */

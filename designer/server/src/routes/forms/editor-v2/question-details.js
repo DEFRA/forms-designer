@@ -18,12 +18,12 @@ import { baseSchema } from '~/src/models/forms/editor-v2/base-settings-fields.js
 import { CHANGES_SAVED_SUCCESSFULLY } from '~/src/models/forms/editor-v2/common.js'
 import * as viewModel from '~/src/models/forms/editor-v2/question-details.js'
 import { editorv2Path } from '~/src/models/links.js'
+import { getQuestionType } from '~/src/routes/forms/editor-v2/helper.js'
 import {
   getEnhancedActionStateFromSession,
-  getQuestionType,
   handleEnhancedActionOnGet,
   handleEnhancedActionOnPost
-} from '~/src/routes/forms/editor-v2/helper.js'
+} from '~/src/routes/forms/editor-v2/question-details-helper.js'
 
 export const ROUTE_FULL_PATH_QUESTION_DETAILS = `/library/{slug}/editor-v2/page/{pageId}/question/{questionId}/details`
 

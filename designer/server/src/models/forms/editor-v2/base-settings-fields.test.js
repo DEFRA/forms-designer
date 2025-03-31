@@ -2,6 +2,7 @@ import { ComponentType } from '@defra/forms-model'
 
 import {
   getFieldList,
+  getQuestionFieldList,
   mapPayloadToFileMimeTypes
 } from '~/src/models/forms/editor-v2/base-settings-fields.js'
 import { GOVUK_LABEL__M } from '~/src/models/forms/editor-v2/common.js'
@@ -104,6 +105,12 @@ describe('editor-v2 - advanced settings fields model', () => {
         ComponentType.TextField
       )
     })
+
+    test('should return FileUploadField for FileTypes', () => {
+      expect(getFieldComponentType({ name: 'fileTypes' })).toBe(
+        ComponentType.FileUploadField
+      )
+    })
   })
 
   describe('mapPayloadToFileMimeTypes', () => {
@@ -166,6 +173,31 @@ describe('editor-v2 - advanced settings fields model', () => {
           tabularDataTypes: undefined
         })
       ).toEqual({})
+    })
+  })
+
+  describe('getQuestionFieldList', () => {
+    test('should return TextField for MinLength', () => {
+      const fileUploadFields = getQuestionFieldList(
+        ComponentType.FileUploadField
+      )
+      expect(fileUploadFields).toHaveLength(5)
+      expect(fileUploadFields[0]).toBe('question')
+      expect(fileUploadFields[3]).toBe('fileTypes')
+    })
+
+    test('should return Radios or Checkboxes for Radios', () => {
+      const res = getQuestionFieldList(ComponentType.RadiosField)
+      expect(res).toHaveLength(5)
+      expect(res[0]).toBe('question')
+      expect(res[4]).toBe('radiosOrCheckboxes')
+    })
+
+    test('should return Radios or Checkboxes for Checkboxes', () => {
+      const res = getQuestionFieldList(ComponentType.CheckboxesField)
+      expect(res).toHaveLength(5)
+      expect(res[0]).toBe('question')
+      expect(res[4]).toBe('radiosOrCheckboxes')
     })
   })
 })
