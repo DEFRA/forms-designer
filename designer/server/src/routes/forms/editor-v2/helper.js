@@ -8,7 +8,7 @@ import { sessionNames } from '~/src/common/constants/session-names.js'
  */
 export function getQuestionType(yar, formValues) {
   const questionTypeFromSession = /** @type {ComponentType | undefined} */ (
-    yar.get(sessionNames.questionType)
+    yar.flash(sessionNames.questionType).at(0)
   )
 
   return /** @type {ComponentType | undefined} */ (

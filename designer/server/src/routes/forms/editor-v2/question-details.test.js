@@ -233,7 +233,7 @@ describe('Editor v2 question details routes', () => {
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
       new Joi.ValidationError(
-        '"name" is required. Enter a question. Enter a short description. The question type is missing',
+        '"name" is required. The question type is missing. Enter a question. Enter a short description',
         [],
         undefined
       ),
