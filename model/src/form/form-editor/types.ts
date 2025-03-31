@@ -1,3 +1,5 @@
+import { type Item } from '~/src/index.js'
+
 /**
  * Interface for `FormEditor` Joi schema
  */
@@ -172,7 +174,7 @@ export interface FormEditor {
    */
   tabularDataTypes: string[]
 
-  autoCompleteOptions: string
+  autoCompleteOptions: Item[]
 }
 
 export type FormEditorInputPage = Pick<
@@ -212,6 +214,7 @@ export type FormEditorInputQuestion = Pick<
   | 'documentTypes'
   | 'imageTypes'
   | 'tabularDataTypes'
+  | 'autoCompleteOptions'
 >
 
 export type FormEditorInputPageSettings = Pick<
@@ -231,7 +234,7 @@ export interface GovukField {
   fieldset?: {
     legend?: { text?: string; isPageHeading?: boolean; classes?: string }
   }
-  value?: string | boolean | number | string[]
+  value?: string | boolean | number | string[] | Item[]
   classes?: string
   label?: {
     text?: string
