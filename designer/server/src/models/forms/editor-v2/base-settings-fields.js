@@ -1,4 +1,8 @@
-import { ComponentType, questionDetailsFullSchema } from '@defra/forms-model'
+import {
+  ComponentType,
+  autoCompleteOptionsSchema,
+  questionDetailsFullSchema
+} from '@defra/forms-model'
 import Joi from 'joi'
 
 import { QuestionBaseSettings } from '~/src/common/constants/editor.js'
@@ -61,6 +65,17 @@ export const baseSchema = Joi.object().keys({
         then: Joi.required().messages({
           '*': 'Choose the tabular data file types you accept'
         })
+      })
+    }
+  ),
+  autoCompleteOptions: questionDetailsFullSchema.autoCompleteOptionsSchema.when(
+    'questionType',
+    {
+      is: 'AutocompleteField',
+      then: autoCompleteOptionsSchema.messages({
+        'parse.error': 'Enter options separated by an enter',
+        'array.length': 'Enter at least one option for users to choose from',
+        'string.empty': 'Enter at least one option for users to choose from'
       })
     }
   )

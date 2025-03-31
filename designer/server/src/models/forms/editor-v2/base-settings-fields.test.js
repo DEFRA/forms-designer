@@ -1,6 +1,8 @@
 import { ComponentType } from '@defra/forms-model'
+import { ValidationError } from 'joi'
 
 import {
+  baseSchema,
   getFieldList,
   mapPayloadToFileMimeTypes
 } from '~/src/models/forms/editor-v2/base-settings-fields.js'
@@ -172,6 +174,69 @@ describe('editor-v2 - advanced settings fields model', () => {
           tabularDataTypes: undefined
         })
       ).toEqual({})
+    })
+  })
+
+  describe('baseSchema', () => {
+    it('should validate correctly when autocomplete is sent', () => {
+      const payload = {
+        question: 'What is your first language',
+        hintText: '',
+        autoCompleteOptions:
+          'English:en-gb\r\n' +
+          'French:fr-FR\r\n' +
+          'German:de-DE\r\n' +
+          'Spanish:es-ES\r\n' +
+          'Polish:pl-PL\r\n' +
+          'Ukrainian:uk-UA',
+        shortDescription: 'first language',
+        questionType: 'AutocompleteField',
+        name: 'ZlUnKg'
+      }
+
+      const validated = baseSchema.validate(payload)
+      expect(validated.error).toBeUndefined()
+      expect(validated.value).toEqual({
+        question: 'What is your first language',
+        hintText: '',
+        autoCompleteOptions: [
+          { text: 'English', value: 'en-gb' },
+          { text: 'French', value: 'fr-FR' },
+          { text: 'German', value: 'de-DE' },
+          { text: 'Spanish', value: 'es-ES' },
+          { text: 'Polish', value: 'pl-PL' },
+          { text: 'Ukrainian', value: 'uk-UA' }
+        ],
+        shortDescription: 'first language',
+        questionType: 'AutocompleteField',
+        name: 'ZlUnKg'
+      })
+    })
+
+    it('should fail validation if autocomplete is empty', () => {
+      const payload = {
+        question: 'What is your first language',
+        hintText: '',
+        autoCompleteOptions:
+          'English:en-gb\r\n' +
+          'French:fr-FR\r\n' +
+          'German:de-DE\r\n' +
+          'Spanish:es-ES\r\n' +
+          'Polish:pl-PL\r\n' +
+          'Ukrainian:uk-UA',
+        shortDescription: 'first language',
+        questionType: 'AutocompleteField',
+        name: 'ZlUnKg'
+      }
+
+      const validated = baseSchema.validate(payload)
+      expect(validated.error).toEqual(
+        new ValidationError(
+          'Autocomplete must have at least one option',
+          [],
+          []
+        )
+      )
     })
   })
 })
