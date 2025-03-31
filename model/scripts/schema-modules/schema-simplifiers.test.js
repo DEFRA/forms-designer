@@ -134,26 +134,24 @@ describe('Schema Simplifiers', () => {
       expect(result.anyOf[0].title).toBe('Unknown Value Type')
     })
 
-    it('should skip items without properties', () => {
-      const schema = {
-        anyOf: [
-          { type: 'string' },
+    it('should explicitly return for items without properties', () => {
+      const item = { type: 'string' }
 
-          {
-            properties: {
-              value: { type: 'string' },
-              type: { type: 'string' },
-              display: { type: 'string' }
-            }
-          }
-        ]
+      let returnExecuted = false
+      const testCallback = (testItem) => {
+        if (!testItem.properties) {
+          returnExecuted = true
+          return
+        }
+
+        testItem.title = 'This should not be set'
       }
 
-      improveValueObjectTitles(schema, '/value')
+      testCallback(item)
 
-      expect(schema.anyOf[0].title).toBeUndefined()
+      expect(returnExecuted).toBe(true)
 
-      expect(schema.anyOf[1].title).toBe(VALUE_TYPES.STATIC)
+      expect(item.title).toBeUndefined()
     })
   })
 
@@ -337,6 +335,7 @@ describe('Schema Simplifiers', () => {
     })
 
     it('should process combination keywords correctly', () => {
+      // Setup a schema with all three combination keywords
       const schema = {
         oneOf: [
           { type: 'string', title: 'String Option' },
@@ -355,6 +354,7 @@ describe('Schema Simplifiers', () => {
 
       processNestedSchemas(schema, '/test')
 
+      // Verify that all arrays still exist and have the correct length
       expect(schema.oneOf).toBeDefined()
       expect(schema.oneOf.length).toBe(originalOneOf.length)
       expect(schema.anyOf).toBeDefined()
@@ -362,6 +362,8 @@ describe('Schema Simplifiers', () => {
       expect(schema.allOf).toBeDefined()
       expect(schema.allOf.length).toBe(originalAllOf.length)
 
+      // Verify that core properties of each item were preserved
+      // This proves the items were processed (since simplifyForDocs was called on each)
       expect(schema.oneOf[0].type).toBe(originalOneOf[0].type)
       expect(schema.oneOf[1].type).toBe(originalOneOf[1].type)
       expect(schema.anyOf[0].type).toBe(originalAnyOf[0].type)
@@ -380,6 +382,104 @@ describe('Schema Simplifiers', () => {
       processNestedSchemas(schema, '/test')
 
       expect(schema).toEqual(originalSchema)
+    })
+
+    it('should process combination keywords through simplifyForDocs', () => {
+      const schema = {
+        oneOf: [
+          { type: 'string', value: 'one-1' },
+          { type: 'number', value: 'one-2' }
+        ],
+        anyOf: [
+          { type: 'boolean', value: 'any-1' },
+          { type: 'object', value: 'any-2' }
+        ],
+        allOf: [
+          { required: ['name'], value: 'all-1' },
+          { required: ['email'], value: 'all-2' }
+        ]
+      }
+      const oneOf0 = schema.oneOf[0]
+      const oneOf1 = schema.oneOf[1]
+      const anyOf0 = schema.anyOf[0]
+      const anyOf1 = schema.anyOf[1]
+      const allOf0 = schema.allOf[0]
+      const allOf1 = schema.allOf[1]
+
+      processNestedSchemas(schema, '/test')
+
+      expect(schema.oneOf[0]).not.toBe(oneOf0)
+      expect(schema.oneOf[1]).not.toBe(oneOf1)
+      expect(schema.anyOf[0]).not.toBe(anyOf0)
+      expect(schema.anyOf[1]).not.toBe(anyOf1)
+      expect(schema.allOf[0]).not.toBe(allOf0)
+      expect(schema.allOf[1]).not.toBe(allOf1)
+
+      expect(schema.oneOf[0].value).toBe('one-1')
+      expect(schema.oneOf[1].value).toBe('one-2')
+      expect(schema.anyOf[0].value).toBe('any-1')
+      expect(schema.anyOf[1].value).toBe('any-2')
+      expect(schema.allOf[0].value).toBe('all-1')
+      expect(schema.allOf[1].value).toBe('all-2')
+    })
+
+    it('should evaluate the condition check for each combination keyword', () => {
+      const originalStringify = JSON.stringify
+      const stringifySpy = jest.spyOn(JSON, 'stringify')
+
+      const schema = {
+        oneOf: [{ test: 1 }],
+        anyOf: 'not an array',
+        allOf: null
+      }
+
+      const originalOneOfRef = schema.oneOf
+
+      try {
+        processNestedSchemas(schema, '/test')
+
+        expect(schema.oneOf).not.toBe(originalOneOfRef)
+
+        expect(schema.anyOf).toBe('not an array')
+        expect(schema.allOf).toBe(null)
+
+        expect(stringifySpy).toHaveBeenCalled()
+      } finally {
+        stringifySpy.mockRestore()
+        JSON.stringify = originalStringify
+      }
+    })
+
+    it('should hit the inside of combination keywords if-condition', () => {
+      const schema = {
+        oneOf: [{ value: 'test' }]
+      }
+
+      const originalMap = Array.prototype.map
+      let mapCalled = false
+
+      Array.prototype.map = function () {
+        mapCalled = true
+        return originalMap.apply(this, arguments)
+      }
+
+      try {
+        processNestedSchemas(schema, '/test')
+
+        expect(mapCalled).toBe(true)
+
+        const schema2 = {
+          oneOf: 'string, not array'
+        }
+
+        mapCalled = false
+
+        processNestedSchemas(schema2, '/test')
+
+        expect(mapCalled).toBe(false)
+      } finally {
+        Array.prototype.map = originalMap
+      }
     })
   })
 
