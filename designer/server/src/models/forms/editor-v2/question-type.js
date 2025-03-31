@@ -113,16 +113,22 @@ const listSubItems = [
 ]
 
 /**
+ * @param {string} questionId
  * @param {FormEditorCheckbox[]} questionTypes
  * @param {ComponentDef[]} componentsSoFar
  */
-export function filterQuestionTypes(questionTypes, componentsSoFar) {
-  const hasFormComponent = componentsSoFar.some(
+export function filterQuestionTypes(
+  questionId,
+  questionTypes,
+  componentsSoFar
+) {
+  const formComponentCount = componentsSoFar.filter(
     (x) => x.type !== ComponentType.Markdown
-  )
+  ).length
   const preventFileUpload =
     componentsSoFar.some((x) => x.type === ComponentType.FileUploadField) ||
-    hasFormComponent
+    formComponentCount > 1 ||
+    (formComponentCount === 1 && questionId === 'new')
   return preventFileUpload
     ? questionTypes.filter((q) => q.value !== ComponentType.FileUploadField)
     : questionTypes
@@ -215,6 +221,7 @@ export function questionTypeViewModel(
         name: 'questionType',
         value: formValues?.questionType,
         items: filterQuestionTypes(
+          questionId,
           questionTypeRadioItems,
           getQuestionsOnPage(definition, pageId)
         ),

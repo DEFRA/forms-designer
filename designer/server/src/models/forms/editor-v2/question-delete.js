@@ -1,6 +1,6 @@
 import { ComponentType, hasComponents } from '@defra/forms-model'
 
-import { stringHasValue } from '~/src/lib/utils.js'
+import { getPageFromDefinition, stringHasValue } from '~/src/lib/utils.js'
 import {
   baseModelFields,
   getFormSpecificNavigation
@@ -91,7 +91,7 @@ export function deleteQuestionConfirmationPageViewModel(
   const formPath = formOverviewPath(metadata.slug)
   const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
 
-  const page = definition.pages.find((x) => x.id === pageId)
+  const page = getPageFromDefinition(definition, pageId)
   const components = hasComponents(page) ? page.components : []
 
   const { bodyText, buttonText, cancelPath, captionText, pageTitle } =

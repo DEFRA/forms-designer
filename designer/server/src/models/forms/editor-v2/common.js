@@ -2,6 +2,7 @@ import { ControllerType, hasComponents } from '@defra/forms-model'
 
 import { buildEntry } from '~/src/common/nunjucks/context/build-navigation.js'
 import config from '~/src/config.js'
+import { getPageFromDefinition } from '~/src/lib/utils.js'
 import { editorv2Path, formsLibraryPath } from '~/src/models/links.js'
 
 export const BACK_TO_ADD_AND_EDIT_PAGES = 'Back to add and edit pages'
@@ -31,7 +32,7 @@ export function getPageNum(definition, pageId) {
  * @param {string} pageId
  */
 export function getQuestionsOnPage(definition, pageId) {
-  const page = definition.pages.find((x) => x.id === pageId)
+  const page = getPageFromDefinition(definition, pageId)
   return hasComponents(page) ? page.components : []
 }
 

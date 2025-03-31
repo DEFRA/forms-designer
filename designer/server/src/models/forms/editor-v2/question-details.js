@@ -2,6 +2,7 @@ import { randomId } from '@defra/forms-model'
 
 import { QuestionTypeDescriptions } from '~/src/common/constants/editor.js'
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
+import { getPageFromDefinition } from '~/src/lib/utils.js'
 import { advancedSettingsPerComponentType } from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
 import {
   getFieldList,
@@ -102,7 +103,7 @@ export function getDetails(
 ) {
   const formPath = formOverviewPath(metadata.slug)
   const pageNum = getPageNum(definition, pageId)
-  const page = definition.pages.find((x) => x.id === pageId)
+  const page = getPageFromDefinition(definition, pageId)
   const questionNum = getQuestionNum(definition, pageId, questionId)
   const question = getQuestion(definition, pageId, questionId)
 

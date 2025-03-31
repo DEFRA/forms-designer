@@ -1,7 +1,11 @@
 import { ComponentType, hasComponentsEvenIfNoNext } from '@defra/forms-model'
 
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
-import { insertValidationErrors, stringHasValue } from '~/src/lib/utils.js'
+import {
+  getPageFromDefinition,
+  insertValidationErrors,
+  stringHasValue
+} from '~/src/lib/utils.js'
 import {
   GOVUK_LABEL__M,
   SAVE_AND_CONTINUE,
@@ -72,8 +76,7 @@ export function checkAnswersSettingsViewModel(
   const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
   const { formValues, formErrors } = validation ?? {}
 
-  const pageIdx = definition.pages.findIndex((x) => x.id === pageId)
-  const page = definition.pages[pageIdx]
+  const page = getPageFromDefinition(definition, pageId)
   const components = hasComponentsEvenIfNoNext(page) ? page.components : []
 
   const guidanceComponent = /** @type { MarkdownComponent | undefined } */ (
