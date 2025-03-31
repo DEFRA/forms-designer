@@ -119,6 +119,8 @@ export const tabularDataTypesSchema = Joi.array()
   .empty(null)
   .default([])
 
+export const autoCompleteOptionsSchema = Joi.string().trim().optional()
+
 export const questionDetailsFullSchema = {
   classesSchema,
   documentTypesSchema,
@@ -144,7 +146,8 @@ export const questionDetailsFullSchema = {
   rowsSchema,
   shortDescriptionSchema,
   suffixSchema,
-  tabularDataTypesSchema
+  tabularDataTypesSchema,
+  autoCompleteOptionsSchema
 }
 
 export const formEditorInputPageKeys = {
