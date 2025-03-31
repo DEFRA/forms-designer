@@ -188,34 +188,19 @@ describe('list.js', () => {
       expect(createdList).toEqual(expectedResponse)
     })
 
-    it('should create list if list id does not exist', async () => {
-      const requestUrl = new URL(
-        `./${formId}/definition/draft/lists`,
-        formsEndpoint
-      )
+    it('should fail if id is missing from found list', async () => {
       const expectedList = buildList({
         ...baseList,
         id: undefined
-      })
-
-      const expectedBody = {
-        id: listId,
-        list: expectedList,
-        status: 'created'
-      }
-      mockedPostJson.mockResolvedValueOnce({
-        response: createMockResponse(),
-        body: expectedBody
       })
 
       const definition = buildDefinition({
         lists: [expectedList]
       })
 
-      const createdList = await upsertList(formId, definition, token, baseList)
-      const [calledUrl] = mockedPostJson.mock.calls[0]
-      expect(calledUrl).toEqual(requestUrl)
-      expect(createdList).toEqual(expectedBody)
+      await expect(
+        upsertList(formId, definition, token, baseList)
+      ).rejects.toThrow(new Error('Id missing from list with name - AbcdE'))
     })
 
     it('should update list if list exists', async () => {

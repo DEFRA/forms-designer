@@ -64,12 +64,16 @@ export async function createList(formId, token, list) {
 /**
  * Updates a list on the draft definition
  * @param {string} formId
- * @param {string} listId
+ * @param {string | undefined} listId
  * @param {string} token
  * @param {Partial<List>} list
  * @returns {Promise<{ id: string; list: List; status: 'updated' }>}
  */
 export async function updateList(formId, listId, token, list) {
+  if (listId === undefined) {
+    throw new Error(`Id missing from list with name - ${list.name}`)
+  }
+
   const addListUrl = new URL(
     `./${formId}/definition/draft/lists/${listId}`,
     formsEndpoint
@@ -109,7 +113,7 @@ export async function upsertList(formId, definition, token, upsertedList) {
     (list) => list.name === upsertedList.name
   )
 
-  if (foundList?.id) {
+  if (foundList) {
     return updateList(formId, foundList.id, token, upsertedList)
   }
 
