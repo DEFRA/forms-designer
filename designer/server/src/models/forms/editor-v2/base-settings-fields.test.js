@@ -209,7 +209,50 @@ describe('editor-v2 - advanced settings fields model', () => {
         ],
         shortDescription: 'first language',
         questionType: 'AutocompleteField',
+        name: 'ZlUnKg',
+        documentTypes: [],
+        imageTypes: [],
+        tabularDataTypes: [],
+        fileTypes: []
+      })
+    })
+
+    it('should autofill value if not defined', () => {
+      const payload = {
+        question: 'What is your first language',
+        hintText: '',
+        autoCompleteOptions:
+          'English\r\n' +
+          'French\r\n' +
+          'German\r\n' +
+          'Spanish\r\n' +
+          'Polish\r\n' +
+          'Ukrainian',
+        shortDescription: 'first language',
+        questionType: 'AutocompleteField',
         name: 'ZlUnKg'
+      }
+
+      const validated = baseSchema.validate(payload)
+      expect(validated.error).toBeUndefined()
+      expect(validated.value).toEqual({
+        question: 'What is your first language',
+        hintText: '',
+        autoCompleteOptions: [
+          { text: 'English', value: 'English' },
+          { text: 'French', value: 'French' },
+          { text: 'German', value: 'German' },
+          { text: 'Spanish', value: 'Spanish' },
+          { text: 'Polish', value: 'Polish' },
+          { text: 'Ukrainian', value: 'Ukrainian' }
+        ],
+        shortDescription: 'first language',
+        questionType: 'AutocompleteField',
+        name: 'ZlUnKg',
+        documentTypes: [],
+        imageTypes: [],
+        tabularDataTypes: [],
+        fileTypes: []
       })
     })
 
@@ -217,13 +260,7 @@ describe('editor-v2 - advanced settings fields model', () => {
       const payload = {
         question: 'What is your first language',
         hintText: '',
-        autoCompleteOptions:
-          'English:en-gb\r\n' +
-          'French:fr-FR\r\n' +
-          'German:de-DE\r\n' +
-          'Spanish:es-ES\r\n' +
-          'Polish:pl-PL\r\n' +
-          'Ukrainian:uk-UA',
+        autoCompleteOptions: '',
         shortDescription: 'first language',
         questionType: 'AutocompleteField',
         name: 'ZlUnKg'
@@ -232,10 +269,33 @@ describe('editor-v2 - advanced settings fields model', () => {
       const validated = baseSchema.validate(payload)
       expect(validated.error).toEqual(
         new ValidationError(
-          'Autocomplete must have at least one option',
+          'Enter at least one option for users to choose from',
           [],
           []
         )
+      )
+      expect(validated.value).toEqual({
+        ...payload,
+        documentTypes: [],
+        fileTypes: [],
+        imageTypes: [],
+        tabularDataTypes: []
+      })
+    })
+
+    it('should fail validation if parsing fails', () => {
+      const payload = {
+        question: 'What is your first language',
+        hintText: '',
+        autoCompleteOptions: 'adf:::::::Adfdfadf::::\r\n',
+        shortDescription: 'first language',
+        questionType: 'AutocompleteField',
+        name: 'ZlUnKg'
+      }
+
+      const validated = baseSchema.validate(payload)
+      expect(validated.error).toEqual(
+        new ValidationError('Enter options separated by a colon', [], [])
       )
     })
   })

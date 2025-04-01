@@ -73,10 +73,11 @@ export const baseSchema = Joi.object().keys({
     {
       is: 'AutocompleteField',
       then: autoCompleteOptionsSchema.messages({
-        'parse.error': 'Enter options separated by an enter',
-        'array.length': 'Enter at least one option for users to choose from',
-        'string.empty': 'Enter at least one option for users to choose from'
-      })
+        'array.min': 'Enter at least one option for users to choose from',
+        'array.includes': 'Enter options separated by a colon',
+        'dsv.invalid': 'Enter options separated by a colon'
+      }),
+      otherwise: Joi.forbidden()
     }
   )
 })
