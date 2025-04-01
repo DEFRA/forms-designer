@@ -1,3 +1,5 @@
+import { ValidationError } from 'joi'
+
 import { customValidator } from '~/src/index.js'
 
 describe('index', () => {
@@ -30,9 +32,15 @@ describe('index', () => {
         .row(/\r?\n/)
         .col(':')
         .keys(['text', 'value'])
+        .items(
+          customValidator.object({
+            text: customValidator.string(),
+            value: customValidator.string()
+          })
+        )
         .validate(
           'English:en-gb\r\n' +
-            'French:fr-FR\r\n' +
+            ' French : fr-FR \r\n' +
             'German:de-DE\r\n' +
             'Spanish:es-ES\r\n' +
             'Polish:pl-PL\r\n' +
@@ -47,6 +55,25 @@ describe('index', () => {
         { text: 'Polish', value: 'pl-PL' },
         { text: 'Ukrainian', value: 'uk-UA' }
       ])
+    })
+
+    it('should use standard validation', () => {
+      const { value, error } = customValidator
+        .dsv<{ key: string; value: string }>()
+        .min(1)
+        .required()
+        .validate('')
+      expect(value).toEqual([])
+      expect(error).toEqual(
+        new ValidationError('"value" must contain at least 1 items', [], '')
+      )
+    })
+
+    it('should trim and filter white spaces', () => {
+      const { value } = customValidator
+        .dsv<{ key: string; value: string }>()
+        .validate(' \r\n \r\n \r\n')
+      expect(value).toEqual([])
     })
   })
 })

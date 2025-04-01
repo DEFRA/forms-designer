@@ -161,7 +161,10 @@ export const customValidator = Joi.extend((joi: Joi.Root) => {
 
           // Rows
           const rowSeparator = rowSeparatorRule?.args.rowSeparator ?? /\r?\n/
-          const rows = value.split(rowSeparator)
+          const rows = value
+            .split(rowSeparator)
+            .map((v) => v.trim())
+            .filter(Boolean)
 
           // Columns
           const colSeparator = colSeparatorRule?.args.colSeparator ?? ','
@@ -174,7 +177,7 @@ export const customValidator = Joi.extend((joi: Joi.Root) => {
                 return {
                   ...acc,
                   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                  [keys[idx]]: col || acc[keys[0]]
+                  [keys[idx]]: (col || acc[keys[0]]).trim()
                 }
               }, {})
           })
@@ -244,14 +247,19 @@ export const customValidator = Joi.extend((joi: Joi.Root) => {
   }
 }) as CustomValidator
 
-export const autoCompleteOptionsSchema = Joi.array()
+export const autoCompleteOptionsSchema = customValidator
+  .dsv<{ text: string; value: string }>()
+  .row(/\r?\n/)
+  .col(':')
+  .keys(['text', 'value'])
   .items(
-    Joi.object({
-      text: Joi.string().required(),
-      value: Joi.string().required()
+    customValidator.object({
+      text: customValidator.string(),
+      value: customValidator.string()
     })
   )
-  .default([])
+  .min(1)
+  .required()
 
 export const questionDetailsFullSchema = {
   classesSchema,
