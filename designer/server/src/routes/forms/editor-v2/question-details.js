@@ -66,6 +66,11 @@ export default [
           params
         )
 
+      if (query.clear !== undefined) {
+        clearEnhancedActionState(yar)
+        return redirectWithAnchor(h, slug, pageId, questionId, '')
+      }
+
       // Form metadata and page components
       const metadata = await forms.get(slug, token)
       const definition = await forms.getDraftFormDefinition(metadata.id, token)

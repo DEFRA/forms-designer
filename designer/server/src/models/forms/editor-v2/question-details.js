@@ -183,6 +183,21 @@ export function overrideFormValuesForEnhancedAction(
 }
 
 /**
+ * @param { EnhancedActionState | undefined } enhancedActionState
+ */
+export function getRowNumBeingEdited(enhancedActionState) {
+  const listItems = enhancedActionState?.listItems ?? []
+  const foundIdx = listItems.findIndex(
+    (x) => x.id === enhancedActionState?.state.radioId
+  )
+  if (foundIdx > -1) {
+    return foundIdx + 1
+  }
+
+  return listItems.length + 1
+}
+
+/**
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  * @param {string} pageId
@@ -239,8 +254,10 @@ export function questionDetailsViewModel(
   const extraFieldNames = extraFields.map((field) => field.name ?? 'unknown')
   const errorList = buildErrorList(formErrors)
   const previewPageUrl = `${buildPreviewUrl(metadata.slug)}${pagePath}?force`
+  const rowNumBeingEdited = getRowNumBeingEdited(enhancedActionState)
 
   return {
+    rowNumBeingEdited,
     enhancedActionState,
     enhancedFields: enhancedFieldList,
     ...baseModelFields(metadata.slug, pageTitle),

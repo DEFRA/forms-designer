@@ -1,4 +1,8 @@
 import {
+  testFormDefinitionWithNoPages,
+  testFormDefinitionWithRadioQuestionAndList
+} from '~/src/__stubs__/form-definition.js'
+import {
   getEnhancedActionStateFromSession,
   handleEnhancedActionOnGet,
   handleEnhancedActionOnPost,
@@ -33,9 +37,46 @@ describe('Editor v2 question-details route helper', () => {
   describe('getEnhancedActionStateFromSession', () => {
     test('should get value from session', () => {
       mockGet.mockReturnValue(structuredClone(listWithThreeItems))
-      expect(getEnhancedActionStateFromSession(mockYar)).toEqual(
-        listWithThreeItems
-      )
+      expect(
+        getEnhancedActionStateFromSession(
+          mockYar,
+          testFormDefinitionWithNoPages,
+          'p1',
+          'q1'
+        )
+      ).toEqual(listWithThreeItems)
+    })
+
+    test('should read value from definition and set in session if not existing state', () => {
+      mockGet.mockReturnValue(null)
+      const expectedRes = {
+        state: {},
+        listItems: [
+          { label: 'Blue', value: 'blue', id: expect.any(String) },
+          { label: 'Red', value: 'red', id: expect.any(String) },
+          { label: 'Green', value: 'green', id: expect.any(String) }
+        ]
+      }
+      expect(
+        getEnhancedActionStateFromSession(
+          mockYar,
+          testFormDefinitionWithRadioQuestionAndList,
+          'p1',
+          'q1'
+        )
+      ).toEqual(expectedRes)
+    })
+
+    test('should ignore if list not found', () => {
+      mockGet.mockReturnValue(null)
+      expect(
+        getEnhancedActionStateFromSession(
+          mockYar,
+          testFormDefinitionWithRadioQuestionAndList,
+          'p1',
+          'q5'
+        )
+      ).toBeUndefined()
     })
   })
 

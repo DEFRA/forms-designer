@@ -212,8 +212,10 @@ export async function addQuestion(
   const { body } = await postJsonByType(
     buildRequestUrl(formId, `pages/${pageId}/components`),
     {
-      payload: questionDetails,
-      ...addedList,
+      payload: {
+        ...questionDetails,
+        ...addedList
+      },
       ...getHeaders(token)
     }
   )

@@ -4,6 +4,7 @@ import {
   buildDefinition,
   testFormDefinitionWithExistingGuidance,
   testFormDefinitionWithFileUploadPage,
+  testFormDefinitionWithRadioQuestionAndList,
   testFormDefinitionWithTwoPagesAndQuestions,
   testFormDefinitionWithTwoQuestions
 } from '~/src/__stubs__/form-definition.js'
@@ -92,6 +93,13 @@ const questionDetails = {
   title: 'What is your name?',
   name: 'what-is-your-name',
   type: ComponentType.TextField
+}
+
+const radioQuestionDetails = {
+  title: 'What is your favourite colour?',
+  name: 'what-is-your-fav-colour',
+  type: ComponentType.RadiosField,
+  list: 'my-list'
 }
 
 describe('editor.js', () => {
@@ -214,6 +222,10 @@ describe('editor.js', () => {
       `./${formId}/definition/draft/pages/12345/components`,
       formsEndpoint
     )
+    const requestListUrl = new URL(
+      `./${formId}/definition/draft/lists`,
+      formsEndpoint
+    )
     const expectedOptions2 = {
       payload: {
         title: 'What is your name?',
@@ -253,6 +265,116 @@ describe('editor.js', () => {
         await expect(
           addQuestion(formId, token, '12345', questionDetails)
         ).rejects.toThrow(testError)
+      })
+    })
+
+    describe('when postJson succeeds and new list', () => {
+      test('returns response body', async () => {
+        mockedPostJson
+          .mockResolvedValueOnce({
+            response: createMockResponse(),
+            body: { status: 'created' } // Saving list
+          })
+          .mockResolvedValueOnce({
+            response: createMockResponse(),
+            body: { id: 'new-id' } // Saving question
+          })
+        const list = [
+          { id: '1', label: '1', value: '1' },
+          { id: '2', label: '2', value: '2' },
+          { id: '3', label: '3', value: '3' }
+        ]
+
+        const actionState = /** @type {EnhancedActionState} */ ({
+          state: {},
+          listItems: list
+        })
+
+        const expectedQuestionCall = {
+          payload: {
+            name: 'what-is-your-fav-colour',
+            title: 'What is your favourite colour?',
+            type: 'RadiosField',
+            list: 'what-is-your-fav-colour'
+          },
+          headers: { Authorization: `Bearer ${token}` }
+        }
+
+        const expectedListCall = {
+          payload: {
+            name: 'what-is-your-fav-colour',
+            title: 'title for What is your favourite colour?',
+            type: 'string',
+            items: [
+              { text: '1', value: '1' },
+              { text: '2', value: '2' },
+              { text: '3', value: '3' }
+            ]
+          },
+          headers: { Authorization: `Bearer ${token}` }
+        }
+
+        const result = await addQuestion(
+          formId,
+          token,
+          '12345',
+          radioQuestionDetails,
+          actionState
+        )
+
+        expect(mockedPostJson.mock.calls[0][0]).toEqual(requestUrl)
+        expect(mockedPostJson.mock.calls[0][1]).toEqual(expectedListCall)
+
+        expect(mockedPostJson.mock.calls[1][0]).toEqual(requestListUrl)
+        expect(mockedPostJson.mock.calls[1][1]).toEqual(expectedQuestionCall)
+        expect(result).toEqual({ id: 'new-id' })
+      })
+
+      test('returns error when list update fails', async () => {
+        mockedPostJson
+          .mockResolvedValueOnce({
+            response: createMockResponse(),
+            body: { status: 'failed' } // Saving list
+          })
+          .mockResolvedValueOnce({
+            response: createMockResponse(),
+            body: { id: 'new-id' } // Saving question
+          })
+        const list = [
+          { id: '1', label: '1', value: '1' },
+          { id: '2', label: '2', value: '2' },
+          { id: '3', label: '3', value: '3' }
+        ]
+
+        const actionState = /** @type {EnhancedActionState} */ ({
+          state: {},
+          listItems: list
+        })
+
+        const expectedListCall = {
+          payload: {
+            name: 'what-is-your-fav-colour',
+            title: 'title for What is your favourite colour?',
+            type: 'string',
+            items: [
+              { text: '1', value: '1' },
+              { text: '2', value: '2' },
+              { text: '3', value: '3' }
+            ]
+          },
+          headers: { Authorization: `Bearer ${token}` }
+        }
+
+        await expect(
+          addQuestion(formId, token, '12345', radioQuestionDetails, actionState)
+        ).rejects.toThrow(
+          new Error(
+            'Unable to save list for question What is your favourite colour?'
+          )
+        )
+
+        expect(mockedPostJson.mock.calls[0][0]).toEqual(requestUrl)
+        expect(mockedPostJson.mock.calls[0][1]).toEqual(expectedListCall)
       })
     })
   })
@@ -405,6 +527,34 @@ describe('editor.js', () => {
         ).rejects.toThrow(testError)
       })
     })
+
+    test('should update list if a list question', async () => {
+      mockedPutJson.mockResolvedValueOnce({
+        response: createMockResponse(),
+        body: { id: '456' }
+      })
+
+      const expectedPut = {
+        payload: {
+          type: ComponentType.RadiosField
+        },
+        headers: { Authorization: `Bearer ${token}` }
+      }
+
+      const result = await updateQuestion(
+        formId,
+        token,
+        testFormDefinitionWithRadioQuestionAndList,
+        'p1',
+        'c1',
+        {},
+        {}
+      )
+
+      expect(mockedPutJson).toHaveBeenCalledWith(requestUrl, expectedPut)
+      expect(mockedPatchJson).not.toHaveBeenCalled()
+      expect(result).toEqual({ id: '456' })
+    })
   })
 
   describe('setPageHeadingAndGuidance', () => {
@@ -483,6 +633,10 @@ describe('editor.js', () => {
         mockedPatchJson.mockResolvedValueOnce({
           response: createMockResponse(),
           body: {}
+        })
+        mockedPutJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: { id: '456' }
         })
 
         const expectedOptionsPageHeading = {
@@ -813,6 +967,6 @@ describe('editor.js', () => {
 })
 
 /**
- * @import { FormDefinition, Page } from '@defra/forms-model'
+ * @import { EnhancedActionState, FormDefinition, Page } from '@defra/forms-model'
  * @import { IncomingMessage } from 'http'
  */

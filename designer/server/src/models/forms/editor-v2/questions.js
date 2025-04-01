@@ -101,7 +101,7 @@ function mapQuestionRows(components, baseUrl) {
         actions: {
           items: [
             {
-              href: `${baseUrl}/question/${comp2.id}/details`,
+              href: `${baseUrl}/question/${comp2.id}/details?clear`,
               text: 'Change',
               visuallyHiddenText: 'name',
               classes: 'govuk-link--no-visited-state govuk-!-width-one-quarter'

@@ -10,6 +10,7 @@ import {
   getDetails,
   getEnhancedFields,
   getExtraFields,
+  getRowNumBeingEdited,
   hasDataOrErrorForDisplay,
   mapToQuestionDetails,
   overrideFormValuesForEnhancedAction
@@ -459,6 +460,40 @@ describe('editor-v2 - question details model', () => {
           }
         }
       ])
+    })
+  })
+
+  describe('getRowNumBeingEdited', () => {
+    test('should return 1 if no rows', () => {
+      expect(getRowNumBeingEdited(undefined)).toBe(1)
+    })
+
+    test('should return max if no matching id', () => {
+      expect(
+        getRowNumBeingEdited({
+          state: {},
+          questionDetails: {},
+          listItems: [
+            { id: '1', label: '1', value: '1' },
+            { id: '2', label: '2', value: '2' },
+            { id: '3', label: '3', value: '3' }
+          ]
+        })
+      ).toBe(4)
+    })
+
+    test('should return 2 if editing row 2', () => {
+      expect(
+        getRowNumBeingEdited({
+          state: { radioId: '2' },
+          questionDetails: {},
+          listItems: [
+            { id: '1', label: '1', value: '1' },
+            { id: '2', label: '2', value: '2' },
+            { id: '3', label: '3', value: '3' }
+          ]
+        })
+      ).toBe(2)
     })
   })
 })

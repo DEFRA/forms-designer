@@ -12,6 +12,7 @@ import {
 } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { getQuestionType } from '~/src/routes/forms/editor-v2/helper.js'
+import { clearEnhancedActionState } from '~/src/routes/forms/editor-v2/question-details-helper.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
@@ -42,6 +43,31 @@ describe('Editor v2 question details routes', () => {
     next: [],
     components: []
   }
+
+  test('GET - should clear session and redirect if clear param supplied', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithSinglePage)
+    jest.mocked(getQuestionType).mockReturnValue(ComponentType.TextField)
+
+    const options = {
+      method: 'get',
+      url: '/library/my-form-slug/editor-v2/page/p1/question/c1/details?clear',
+      auth
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/page/p1/question/c1/details'
+    )
+
+    expect(clearEnhancedActionState).toHaveBeenCalledTimes(1)
+  })
 
   test('GET - should render the question fields in the view', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
@@ -86,6 +112,8 @@ describe('Editor v2 question details routes', () => {
 
     const $details = document.getElementsByClassName('govuk-details')
     expect($details[0].hasAttribute('open')).toBeFalsy()
+
+    expect(clearEnhancedActionState).not.toHaveBeenCalled()
   })
 
   test('GET - should render the optional question fields in the view and keep optional section expanded', async () => {

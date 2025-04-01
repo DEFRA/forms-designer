@@ -18,16 +18,11 @@
 
   {% if enhancedActionState.listItems | length  or enhancedActionState.state.expanded %}
 
-    {% call appEditorCard({
-      classes: "editor-card-background-white govuk-!-padding-bottom-0",
-      outerClasses: "pages-panel-left-thin-border"
-    }) %}
-
       <ol class="gem-c-reorderable-list js-enabled" id="options-container" data-module="reorderable-list">
         {% for item in enhancedActionState.listItems %}
           <li class="gem-c-reorderable-list__item" draggable="true" data-index="1">
-            <div class="govuk-summary-card govuk-!-margin-top-0 pages-panel-left-thin-border">
-              <div class="govuk-summary-card__content govuk-!-padding-top-0 editor-card-background-white govuk-!-padding-bottom-0">
+            <div class="govuk-summary-card govuk-!-margin-top-0 govuk-!-margin-bottom-3 pages-panel-left-thin-border">
+              <div class="govuk-summary-card__content govuk-!-padding-top-1 editor-card-background-white govuk-!-padding-bottom-1">
                 <dl class="govuk-summary-list">
                   <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">{{ item.label }}</dt>
@@ -51,14 +46,19 @@
             </div>
 
         </li>
-      {% endfor %}
+        {% endfor %}
       </ol>
 
       {% set hasStateWithinDetailsSection = enhancedFields[radioValueIdx].value %}
       {% if enhancedActionState.state.expanded %}
 
+        {% call appEditorCard({
+          classes: "editor-card-background-white govuk-!-padding-bottom-0",
+          outerClasses: "pages-panel-left-thin-border"
+        }) %}
+
         <div id="add-option-form" class="govuk-!-margin-bottom-6">
-          <h2 class="govuk-caption-m" id="add-option">Item {{ }}</h2>
+          <h2 class="govuk-caption-m" id="add-option">Item {{ rowNumBeingEdited }}</h2>
           {{ govukInput(enhancedFields[radioLabelIdx]) }}
 
           {{ govukInput(enhancedFields[radioHintIdx]) }}
@@ -83,9 +83,9 @@
             <a class="govuk-link govuk-link--no-visited-state" href="?action=cancel" id="cancel-add-option">Cancel</a>
           </div>
         </div>
+        {% endcall %}
       {% endif %}
 
-    {% endcall %}
   {% endif %}
 </div>
 
