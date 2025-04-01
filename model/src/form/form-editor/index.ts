@@ -176,8 +176,7 @@ export const customValidator = Joi.extend((joi: Joi.Root) => {
               .reduce<Record<string, string>>((acc, col, idx) => {
                 return {
                   ...acc,
-                  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                  [keys[idx]]: (col || acc[keys[0]]).trim()
+                  [keys[idx]]: col.trim()
                 }
               }, {})
           })
@@ -185,7 +184,7 @@ export const customValidator = Joi.extend((joi: Joi.Root) => {
         } catch (_err) {
           // eslint-disable-next-line no-console
           console.error(_err)
-          return { value, errors: [helpers.error('dsv.invalid')] }
+          return { value, errors: [helpers.error('√')] }
         }
       }
     },
@@ -254,14 +253,15 @@ export const autoCompleteOptionsSchema = customValidator
   .keys(['text', 'value'])
   .items(
     customValidator.object({
-      text: customValidator.string(),
-      value: customValidator.string()
+      text: customValidator.string().required(),
+      value: customValidator.string().default((parent) => parent.text)
     })
   )
   .min(1)
   .required()
 
 export const questionDetailsFullSchema = {
+  autoCompleteOptionsSchema,
   classesSchema,
   documentTypesSchema,
   exactFilesSchema,
@@ -286,8 +286,7 @@ export const questionDetailsFullSchema = {
   rowsSchema,
   shortDescriptionSchema,
   suffixSchema,
-  tabularDataTypesSchema,
-  autoCompleteOptionsSchema
+  tabularDataTypesSchema
 }
 
 export const formEditorInputPageKeys = {
