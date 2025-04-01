@@ -203,6 +203,11 @@ export interface FormEditor {
    * The value of the radio item
    */
   radioValue: string
+
+  /**
+   * The list name to be applied to a field (if applicable)
+   */
+  list: string
 }
 
 export type FormEditorInputPage = Pick<
@@ -247,6 +252,7 @@ export type FormEditorInputQuestion = Pick<
   | 'radioLabel'
   | 'radioHint'
   | 'radioValue'
+  | 'list'
 >
 
 export type FormEditorInputPageSettings = Pick<

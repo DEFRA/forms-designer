@@ -1,6 +1,9 @@
 import { randomUUID } from 'crypto'
 
+import { hasComponents } from '@defra/forms-model'
+
 import { sessionNames } from '~/src/common/constants/session-names.js'
+import { getPageFromDefinition } from '~/src/lib/utils.js'
 
 const radiosSectionListItemsAnchor = '#list-items'
 
@@ -13,9 +16,46 @@ export function clearEnhancedActionState(yar) {
 
 /**
  * @param {Yar} yar
+ * @param {FormDefinition} definition
+ * @param {string} pageId
+ * @param {string} questionId
+ * @returns { EnhancedActionState | undefined }
  */
-export function getEnhancedActionStateFromSession(yar) {
-  return yar.get(sessionNames.enhancedActionState)
+export function getEnhancedActionStateFromSession(
+  yar,
+  definition,
+  pageId,
+  questionId
+) {
+  const state = yar.get(sessionNames.enhancedActionState)
+  if (state) {
+    return state
+  }
+
+  // Read list from definition and store in session
+  const page = getPageFromDefinition(definition, pageId)
+  const component = /** @type { ListComponentsDef | undefined } */ (
+    hasComponents(page)
+      ? page.components.find((x) => x.id === questionId)
+      : undefined
+  )
+  const listName = component?.list
+  if (listName) {
+    const items = definition.lists.find((x) => x.name === listName)?.items ?? []
+    const newState = /** @type { EnhancedActionState} */ ({
+      state: {},
+      listItems: items.map((item) => ({
+        id: randomUUID(),
+        label: item.text,
+        // hint: item.hint,
+        value: item.value
+      }))
+    })
+    yar.set(sessionNames.enhancedActionState, newState)
+    return newState
+  }
+
+  return undefined
 }
 
 /**
@@ -138,7 +178,7 @@ export function handleEnhancedActionOnPost(yar, payload, questionDetails) {
 }
 
 /**
- * @import { ComponentDef,  FormEditorInputQuestionDetails, EnhancedActionState } from '@defra/forms-model'
+ * @import { ComponentDef,  FormEditorInputQuestionDetails, EnhancedActionState, FormDefinition, ListComponentsDef } from '@defra/forms-model'
  * @import { RequestQuery } from '@hapi/hapi'
  * @import { Yar } from '@hapi/yar'
  */

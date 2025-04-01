@@ -20,6 +20,7 @@ import * as viewModel from '~/src/models/forms/editor-v2/question-details.js'
 import { editorv2Path } from '~/src/models/links.js'
 import { getQuestionType } from '~/src/routes/forms/editor-v2/helper.js'
 import {
+  clearEnhancedActionState,
   getEnhancedActionStateFromSession,
   handleEnhancedActionOnGet,
   handleEnhancedActionOnPost
@@ -73,7 +74,12 @@ export default [
 
       const questionType = getQuestionType(yar, validation?.formValues)
 
-      const enhancedActionState = getEnhancedActionStateFromSession(yar)
+      const enhancedActionState = getEnhancedActionStateFromSession(
+        yar,
+        definition,
+        pageId,
+        questionId
+      )
 
       // Intercept operations if say a radio or checkbox
       const redirectAnchor = handleEnhancedActionOnGet(yar, query)
@@ -139,15 +145,30 @@ export default [
       const definition = await forms.getDraftFormDefinition(metadata.id, token)
       let finalPageId = pageId
 
+      const enhancedActionState = getEnhancedActionStateFromSession(
+        yar,
+        definition,
+        pageId,
+        questionId
+      )
+
       if (pageId === 'new') {
         const newPage = await addPageAndFirstQuestion(
           metadata.id,
           token,
-          questionDetails
+          questionDetails,
+          undefined,
+          enhancedActionState
         )
         finalPageId = newPage.id ?? 'unknown'
       } else if (questionId === 'new') {
-        await addQuestion(metadata.id, token, pageId, questionDetails)
+        await addQuestion(
+          metadata.id,
+          token,
+          pageId,
+          questionDetails,
+          enhancedActionState
+        )
       } else {
         await updateQuestion(
           metadata.id,
@@ -155,11 +176,14 @@ export default [
           definition,
           pageId,
           questionId,
-          questionDetails
+          questionDetails,
+          enhancedActionState
         )
       }
 
       yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
+
+      clearEnhancedActionState(yar)
 
       // Redirect to next page
       return h

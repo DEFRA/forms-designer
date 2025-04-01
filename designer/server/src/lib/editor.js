@@ -2,7 +2,8 @@ import {
   ComponentType,
   ControllerType,
   hasComponents,
-  hasComponentsEvenIfNoNext
+  hasComponentsEvenIfNoNext,
+  randomId
 } from '@defra/forms-model'
 
 import config from '~/src/config.js'
@@ -19,10 +20,19 @@ const formsEndpoint = new URL('/forms/', config.managerUrl)
 
 const patchJsonByType = /** @type {typeof patchJson<Page>} */ (patchJson)
 const postJsonByType = /** @type {typeof postJson<Page>} */ (postJson)
+const postJsonByListType =
+  /** @type {typeof postJson<{ id: string, status: string }>} */ (postJson)
 const postJsonByDefinitionType =
   /** @type {typeof postJson<FormDefinition>} */ (postJson)
 const putJsonByType = /** @type {typeof putJson<Page>} */ (putJson)
+const putJsonByListType =
+  /** @type {typeof putJson<{ id: string, status: string }>} */ (putJson)
 const delJsonByType = /** @type {typeof delJson<ComponentDef>} */ (delJson)
+
+const componentsSavingLists = [
+  ComponentType.CheckboxesField,
+  ComponentType.RadiosField
+]
 
 /**
  * @param {Partial<ComponentDef>} questionDetails
@@ -34,28 +44,139 @@ export function getControllerType(questionDetails) {
 }
 
 /**
+ * @param {string} formId
+ * @param {string} path
+ */
+export function buildRequestUrl(formId, path) {
+  return new URL(`./${formId}/definition/draft/${path}`, formsEndpoint)
+}
+
+/**
+ * @param {string} formId
+ * @param {string} token
+ * @param {Partial<ComponentDef>} questionDetails
+ * @param { EnhancedActionState | undefined } actionState
+ */
+export async function saveNewList(formId, token, questionDetails, actionState) {
+  if (
+    componentsSavingLists.includes(
+      /** @type {ComponentType} */ (questionDetails.type)
+    ) &&
+    actionState?.listItems
+  ) {
+    // Save list
+    const { body } = await postJsonByListType(
+      buildRequestUrl(formId, 'lists'),
+      {
+        payload: {
+          name: questionDetails.name,
+          title: `title for ${questionDetails.title}`,
+          type: 'string',
+          items: actionState.listItems.map((item) => {
+            return {
+              text: item.label,
+              value: stringHasValue(item.value) ? item.value : item.label
+            }
+          })
+        },
+        ...getHeaders(token)
+      }
+    )
+    if (body.status !== 'created') {
+      throw new Error(
+        `Unable to save list for question ${questionDetails.title}`
+      )
+    }
+    return { list: questionDetails.name }
+  }
+  return {}
+}
+
+/**
+ * @param {string} formId
+ * @param {string} token
+ * @param {Partial<ComponentDef>} questionDetails
+ * @param { EnhancedActionState | undefined } actionState
+ * @param {FormDefinition} definition
+ * @returns {Promise<boolean>}
+ */
+export async function updateList(
+  formId,
+  token,
+  questionDetails,
+  actionState,
+  definition
+) {
+  if (
+    componentsSavingLists.includes(
+      /** @type {ComponentType} */ (questionDetails.type)
+    ) &&
+    actionState?.listItems
+  ) {
+    const listFromDef = definition.lists.find(
+      (x) => x.name === questionDetails.name
+    )
+
+    // Update list
+    const { body } = await putJsonByListType(
+      buildRequestUrl(formId, `lists/${listFromDef?.id}`),
+      {
+        payload: {
+          ...listFromDef,
+          items: actionState.listItems.map((item) => {
+            return {
+              text: item.label,
+              value: stringHasValue(item.value) ? item.value : item.label
+            }
+          })
+        },
+        ...getHeaders(token)
+      }
+    )
+    if (body.status !== 'updated') {
+      throw new Error(
+        `Unable to update list for question ${questionDetails.title}`
+      )
+    }
+    return true
+  }
+  return false
+}
+
+/**
  * Add a page to a form definition
  * @param {string} formId
  * @param {string} token
  * @param {Partial<ComponentDef>} questionDetails
  * @param {Partial<Page>} [pageDetails]
+ * @param { EnhancedActionState | undefined } [actionState]
  */
 export async function addPageAndFirstQuestion(
   formId,
   token,
   questionDetails,
-  pageDetails
+  pageDetails,
+  actionState
 ) {
-  const requestUrl = new URL(
-    `./${formId}/definition/draft/pages`,
-    formsEndpoint
+  questionDetails.name = questionDetails.name ?? randomId()
+
+  const addedList = await saveNewList(
+    formId,
+    token,
+    questionDetails,
+    actionState
   )
 
-  const { body } = await postJsonByType(requestUrl, {
+  const { body } = await postJsonByType(buildRequestUrl(formId, 'pages'), {
     payload: {
       title: pageDetails?.title ?? '',
       path: `/${slugify(pageDetails?.title ?? questionDetails.title)}`,
-      components: [questionDetails],
+      components: [
+        {
+          ...questionDetails,
+          ...addedList
+        }
+      ],
       ...getControllerType(questionDetails)
     },
     ...getHeaders(token)
@@ -70,16 +191,32 @@ export async function addPageAndFirstQuestion(
  * @param {string} token
  * @param {string} pageId
  * @param {Partial<ComponentDef>} questionDetails
+ * @param { EnhancedActionState | undefined } [actionState]
  */
-export async function addQuestion(formId, token, pageId, questionDetails) {
-  const requestUrl = new URL(
-    `./${formId}/definition/draft/pages/${pageId}/components`,
-    formsEndpoint
+export async function addQuestion(
+  formId,
+  token,
+  pageId,
+  questionDetails,
+  actionState
+) {
+  questionDetails.name = questionDetails.name ?? randomId()
+
+  const addedList = await saveNewList(
+    formId,
+    token,
+    questionDetails,
+    actionState
   )
-  const { body } = await postJsonByType(requestUrl, {
-    payload: questionDetails,
-    ...getHeaders(token)
-  })
+
+  const { body } = await postJsonByType(
+    buildRequestUrl(formId, `pages/${pageId}/components`),
+    {
+      payload: questionDetails,
+      ...addedList,
+      ...getHeaders(token)
+    }
+  )
 
   return body
 }
@@ -92,6 +229,7 @@ export async function addQuestion(formId, token, pageId, questionDetails) {
  * @param {string} pageId
  * @param {string} questionId
  * @param {Partial<ComponentDef>} questionDetails
+ * @param { EnhancedActionState | undefined } [actionState]
  */
 export async function updateQuestion(
   formId,
@@ -99,7 +237,8 @@ export async function updateQuestion(
   definition,
   pageId,
   questionId,
-  questionDetails
+  questionDetails,
+  actionState
 ) {
   // Determine if page controller should change
   const page = getPageFromDefinition(definition, pageId)
@@ -107,11 +246,7 @@ export async function updateQuestion(
   const { controller: newControllerType } = getControllerType(questionDetails)
   if (origControllerType !== newControllerType) {
     // Update page controller
-    const pageHeadingRequestUrl = new URL(
-      `./${formId}/definition/draft/pages/${pageId}`,
-      formsEndpoint
-    )
-    await patchJsonByType(pageHeadingRequestUrl, {
+    await patchJsonByType(buildRequestUrl(formId, `pages/${pageId}`), {
       payload: {
         controller: newControllerType ?? null
       },
@@ -119,14 +254,25 @@ export async function updateQuestion(
     })
   }
 
-  const requestUrl = new URL(
-    `./${formId}/definition/draft/pages/${pageId}/components/${questionId}`,
-    formsEndpoint
+  const updated = await updateList(
+    formId,
+    token,
+    questionDetails,
+    actionState,
+    definition
   )
-  const { body } = await putJsonByType(requestUrl, {
-    payload: questionDetails,
-    ...getHeaders(token)
-  })
+  if (updated) {
+    // @ts-expect-error -- 'list' not available on all components, but we have already filtered to only those that do
+    questionDetails.list = questionDetails.name
+  }
+
+  const { body } = await putJsonByType(
+    buildRequestUrl(formId, `pages/${pageId}/components/${questionId}`),
+    {
+      payload: questionDetails,
+      ...getHeaders(token)
+    }
+  )
 
   return body
 }
@@ -173,13 +319,15 @@ export async function insertUpdateOrDeleteGuidance(
 
   if (existingGuidance && (!stringHasValue(guidanceText) || !isExpanded)) {
     // Remove guidance component since the user has blanked out the guidance text now or unchecked the checkbox
-    const delCGuidanceRequestUrl = new URL(
-      `./${formId}/definition/draft/pages/${pageId}/components/${existingGuidance.id}`,
-      formsEndpoint
+    await delJsonByType(
+      buildRequestUrl(
+        formId,
+        `pages/${pageId}/components/${existingGuidance.id}`
+      ),
+      {
+        ...getHeaders(token)
+      }
     )
-    await delJsonByType(delCGuidanceRequestUrl, {
-      ...getHeaders(token)
-    })
     return
   }
 
@@ -236,11 +384,7 @@ export async function setPageHeadingAndGuidance(
   const pagePathForCall = `/${slugify(resolvePageHeading(page, pageHeading, components))}`
 
   // Update page heading
-  const pageHeadingRequestUrl = new URL(
-    `./${formId}/definition/draft/pages/${pageId}`,
-    formsEndpoint
-  )
-  await patchJsonByType(pageHeadingRequestUrl, {
+  await patchJsonByType(buildRequestUrl(formId, `pages/${pageId}`), {
     payload: {
       title: pageHeadingForCall,
       path: pagePathForCall
@@ -299,12 +443,7 @@ export async function setCheckAnswersDeclaration(
  */
 export async function reorderPages(formId, token, payload) {
   // Update page ordering
-  const pageOrderRequestUrl = new URL(
-    `./${formId}/definition/draft/pages/order`,
-    formsEndpoint
-  )
-
-  await postJsonByType(pageOrderRequestUrl, {
+  await postJsonByType(buildRequestUrl(formId, `pages/order`), {
     payload,
     ...getHeaders(token)
   })
@@ -316,15 +455,13 @@ export async function reorderPages(formId, token, payload) {
  * @param {string} token
  */
 export async function migrateDefinitionToV2(formId, token) {
-  const migrateToV2RequestUrl = new URL(
-    `./${formId}/definition/draft/migrate/v2`,
-    formsEndpoint
+  const { body } = await postJsonByDefinitionType(
+    buildRequestUrl(formId, `migrate/v2`),
+    {
+      payload: {},
+      ...getHeaders(token)
+    }
   )
-
-  const { body } = await postJsonByDefinitionType(migrateToV2RequestUrl, {
-    payload: {},
-    ...getHeaders(token)
-  })
 
   return body
 }
@@ -336,16 +473,11 @@ export async function migrateDefinitionToV2(formId, token) {
  * @param { string | undefined } pageId
  */
 export async function deletePage(formId, token, pageId) {
-  const deletePageRequestUrl = new URL(
-    `./${formId}/definition/draft/pages/${pageId}`,
-    formsEndpoint
-  )
-
-  await delJsonByType(deletePageRequestUrl, {
+  await delJsonByType(buildRequestUrl(formId, `pages/${pageId}`), {
     ...getHeaders(token)
   })
 }
 
 /**
- * @import { ComponentDef, Page, FormEditorInputCheckAnswersSettings, FormEditorInputPageSettings, FormDefinition } from '@defra/forms-model'
+ * @import { ComponentDef, EnhancedActionState, Page, FormEditorInputCheckAnswersSettings, FormEditorInputPageSettings, FormDefinition } from '@defra/forms-model'
  */
