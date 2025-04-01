@@ -239,7 +239,8 @@ const baseListItemSchema = Joi.object<Item>().keys({
         .unique('name')
     })
     .optional(),
-  condition: Joi.string().allow('').optional()
+  condition: Joi.string().allow('').optional(),
+  hint: Joi.string().allow('').optional()
 })
 
 const stringListItemSchema = baseListItemSchema.append({

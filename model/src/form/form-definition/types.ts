@@ -124,6 +124,7 @@ export interface Item {
   description?: string
   conditional?: { components: ComponentDef[] }
   condition?: string
+  hint?: string
 }
 
 export interface List {
