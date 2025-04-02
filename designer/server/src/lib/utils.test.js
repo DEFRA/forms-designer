@@ -4,11 +4,16 @@ import {
   buildAutoCompleteComponent,
   buildDefinition,
   buildList,
+  buildListItem,
   buildQuestionPage,
   buildTextFieldComponent
 } from '~/src/__stubs__/form-definition.js'
 import config from '~/src/config.js'
-import { getHeaders, getListFromComponent } from '~/src/lib/utils.js'
+import {
+  getHeaders,
+  getListFromComponent,
+  mapListToAutoCompleteStr
+} from '~/src/lib/utils.js'
 
 jest.mock('@defra/hapi-tracing')
 
@@ -69,6 +74,32 @@ describe('utils', () => {
       })
       const foundList = getListFromComponent(textFieldComponent, definition)
       expect(foundList).toBeUndefined()
+    })
+  })
+
+  describe('mapListToAutoCompleteStr', () => {
+    it('should map a list to an autocomplete string', () => {
+      const list = buildList({
+        items: [
+          buildListItem({
+            text: 'JavaScript',
+            value: 'javascript'
+          }),
+          buildListItem({
+            text: 'TypeScript',
+            value: 'typescript'
+          }),
+          buildListItem({
+            text: 'Haskell',
+            value: 'haskell'
+          })
+        ]
+      })
+      expect(mapListToAutoCompleteStr(list)).toEqual(
+        'JavaScript:javascript\r\n' +
+          'TypeScript:typescript\r\n' +
+          'Haskell:haskell'
+      )
     })
   })
 })

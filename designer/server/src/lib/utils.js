@@ -94,6 +94,14 @@ export function getListFromComponent(component, definition) {
 }
 
 /**
+ * Turns a list into a string for auto complete
+ * @param {List} list
+ */
+export function mapListToAutoCompleteStr(list) {
+  return list.items.map(({ text, value }) => `${text}:${value}`).join('\r\n')
+}
+
+/**
  * @import { ErrorDetailsItem } from '~/src/common/helpers/types.js'
  * @import { FormDefinition, Page, List, ComponentDef } from '@defra/forms-model'
  * @import Wreck from '@hapi/wreck'
