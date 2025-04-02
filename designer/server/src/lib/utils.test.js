@@ -75,6 +75,10 @@ describe('utils', () => {
       const foundList = getListFromComponent(textFieldComponent, definition)
       expect(foundList).toBeUndefined()
     })
+
+    it('should return undefined component is undefined', () => {
+      expect(getListFromComponent(undefined, buildDefinition())).toBeUndefined()
+    })
   })
 
   describe('mapListToAutoCompleteStr', () => {
@@ -101,5 +105,9 @@ describe('utils', () => {
           'Haskell:haskell'
       )
     })
+  })
+
+  it('should return an empty string for undefined', () => {
+    expect(mapListToAutoCompleteStr(undefined)).toBe('')
   })
 })

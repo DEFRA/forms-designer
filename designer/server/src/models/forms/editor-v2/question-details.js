@@ -219,7 +219,8 @@ export function questionDetailsViewModel(
   const basePageFields = getFieldList(
     /** @type {InputFieldsComponentsDef} */ (questionFieldsOverride),
     questionType,
-    validation
+    validation,
+    definition
   )
 
   const uploadFields = getFileUploadFields(questionFieldsOverride, validation)

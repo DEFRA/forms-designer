@@ -1,6 +1,7 @@
 import { ComponentType } from '@defra/forms-model'
 import { ValidationError } from 'joi'
 
+import { buildDefinition } from '~/src/__stubs__/form-definition.js'
 import {
   baseSchema,
   getFieldList,
@@ -61,7 +62,12 @@ describe('editor-v2 - advanced settings fields model', () => {
         }
       ]
       expect(
-        getFieldList(undefined, ComponentType.TextField, undefined)
+        getFieldList(
+          undefined,
+          ComponentType.TextField,
+          undefined,
+          buildDefinition()
+        )
       ).toEqual(expectedArray)
     })
   })
@@ -280,6 +286,29 @@ describe('editor-v2 - advanced settings fields model', () => {
           [],
           []
         )
+      )
+      expect(validated.value).toEqual({
+        ...payload,
+        documentTypes: [],
+        fileTypes: [],
+        imageTypes: [],
+        tabularDataTypes: []
+      })
+    })
+
+    it('should fail validation if text is empty', () => {
+      const payload = {
+        question: 'What is your first language',
+        hintText: '',
+        autoCompleteOptions: ':',
+        shortDescription: 'first language',
+        questionType: 'AutocompleteField',
+        name: 'ZlUnKg'
+      }
+
+      const validated = baseSchema.validate(payload)
+      expect(validated.error).toEqual(
+        new ValidationError('Enter options separated by a colon', [], [])
       )
       expect(validated.value).toEqual({
         ...payload,

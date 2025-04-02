@@ -2,17 +2,5 @@
 
 <div class="govuk-form-group">
     <h2 class="govuk-heading-m" tabindex="-1">Create and edit your list of autocomplete options</h2>
-    {{  govukTextarea({
-          name: "autoCompleteOptions",
-          id: "autoCompleteOptions",
-          label: {
-            text: "Add each option on a new line",
-            classes: "govuk-label--s",
-            isPageHeading: false
-          },
-          hint: {
-            text: "To optionally set an input value for each item, separate the option text and value with a colon (e.g English:en-gb)"
-          }
-        })
-    }}
+    {{  govukTextarea(field) }}
 </div>

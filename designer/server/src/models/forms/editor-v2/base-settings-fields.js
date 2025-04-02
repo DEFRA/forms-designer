@@ -6,7 +6,11 @@ import {
 import Joi from 'joi'
 
 import { QuestionBaseSettings } from '~/src/common/constants/editor.js'
-import { insertValidationErrors } from '~/src/lib/utils.js'
+import {
+  getListFromComponent,
+  insertValidationErrors,
+  mapListToAutoCompleteStr
+} from '~/src/lib/utils.js'
 import {
   GOVUK_LABEL__M,
   tickBoxes
@@ -104,7 +108,9 @@ export const baseSchema = Joi.object().keys({
       then: autoCompleteOptionsSchema.messages({
         'array.min': 'Enter at least one option for users to choose from',
         'array.includes': 'Enter options separated by a colon',
-        'dsv.invalid': 'Enter options separated by a colon'
+        'dsv.invalid': 'Enter options separated by a colon',
+        'string.min': 'Enter at least one character',
+        'string.empty': 'Enter at least one character'
       }),
       otherwise: Joi.forbidden()
     }
@@ -338,11 +344,17 @@ export function getSelectedFileTypesFromCSVMimeTypes(question) {
 /**
  *
  * @param { keyof Omit<FormEditorGovukField, 'errorMessage'> } fieldName
- * @param { InputFieldsComponentsDef | undefined } questionFields
+ * @param { FormComponentsDef | undefined } questionFields
  * @param { ValidationFailure<FormEditor> | undefined } validation
+ * @param {FormDefinition} definition
  * @returns {GovukField['value']}
  */
-export function getFieldValue(fieldName, questionFields, validation) {
+export function getFieldValue(
+  fieldName,
+  questionFields,
+  validation,
+  definition
+) {
   const validationResult = validation?.formValues[fieldName]
 
   if (validationResult || validationResult === '') {
@@ -358,6 +370,10 @@ export function getFieldValue(fieldName, questionFields, validation) {
       return questionFields?.hint
     case 'shortDescription':
       return questionFields?.shortDescription
+    case 'autoCompleteOptions':
+      return mapListToAutoCompleteStr(
+        getListFromComponent(questionFields, definition)
+      )
   }
   return undefined
 }
@@ -420,12 +436,23 @@ export function getQuestionFieldList(questionType) {
  * @param { InputFieldsComponentsDef | undefined } questionFields
  * @param { ComponentType | undefined } questionType
  * @param { ValidationFailure<FormEditor> | undefined } validation
+ * @param {FormDefinition} definition
  * @returns {GovukField[]}
  */
-export function getFieldList(questionFields, questionType, validation) {
+export function getFieldList(
+  questionFields,
+  questionType,
+  validation,
+  definition
+) {
   const questionFieldList = getQuestionFieldList(questionType)
   return questionFieldList.map((fieldName) => {
-    const value = getFieldValue(fieldName, questionFields, validation)
+    const value = getFieldValue(
+      fieldName,
+      questionFields,
+      validation,
+      definition
+    )
     return {
       ...allBaseSettingsFields[fieldName],
       value,
@@ -471,6 +498,6 @@ export function getFileUploadFields(questionFields, validation) {
 }
 
 /**
- * @import { ComponentDef, FormEditor, FormEditorGovukField, FormEditorInputQuestion, GovukField, InputFieldsComponentsDef, FormEditorGovukFieldBase, FormEditorGovukFieldBaseKeys } from '@defra/forms-model'
+ * @import { FormDefinition, ComponentDef, FormEditor, FormEditorGovukField, FormEditorInputQuestion, GovukField, InputFieldsComponentsDef, FormEditorGovukFieldBase, FormEditorGovukFieldBaseKeys, FormComponentsDef } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

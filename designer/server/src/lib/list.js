@@ -113,7 +113,10 @@ export async function upsertList(formId, definition, token, upsertedList) {
   )
 
   if (foundList) {
-    return updateList(formId, foundList.id, token, upsertedList)
+    return updateList(formId, foundList.id, token, {
+      ...foundList,
+      ...upsertedList
+    })
   }
 
   return createList(formId, token, upsertedList)

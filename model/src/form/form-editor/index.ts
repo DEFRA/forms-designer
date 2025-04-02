@@ -258,10 +258,12 @@ export const autoCompleteOptionsSchema = customValidator
   .keys(['text', 'value'])
   .items(
     customValidator.object({
-      text: customValidator.string().required(),
+      text: customValidator.string().min(1).disallow('').required(),
       value: customValidator
         .string()
         .default((parent: { text: string; value?: string }) => parent.text)
+        .min(1)
+        .disallow('')
     })
   )
   .min(1)

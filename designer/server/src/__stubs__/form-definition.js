@@ -5,6 +5,151 @@ import {
 } from '@defra/forms-model'
 
 /**
+ * @param {Partial<PageQuestion>} [partialPage]
+ * @returns {PageQuestion}
+ */
+export function buildQuestionPage(partialPage = {}) {
+  return {
+    id: 'ffefd409-f3f4-49fe-882e-6e89f44631b1',
+    title: 'Page One',
+    path: '/page-one',
+    next: [],
+    components: [],
+    ...partialPage
+  }
+}
+
+/**
+ * @param {Partial<PageSummary>} [partialSummaryPage]
+ */
+export function buildSummaryPage(partialSummaryPage = {}) {
+  /** @type {PageSummary} */
+  const page = /** @satisfies {PageSummary} */ {
+    id: '449a45f6-4541-4a46-91bd-8b8931b07b50',
+    title: 'Summary',
+    path: ControllerPath.Summary,
+    controller: ControllerType.Summary,
+    ...partialSummaryPage
+  }
+  return page
+}
+
+/**
+ * @param {Partial<TextFieldComponent>} partialTextField
+ * @returns {TextFieldComponent}
+ */
+export function buildTextFieldComponent(partialTextField = {}) {
+  return /** @satisfies {TextFieldComponent} */ {
+    id: '407dd0d7-cce9-4f43-8e1f-7d89cb698875',
+    name: 'TextField',
+    title: 'Text field',
+    type: ComponentType.TextField,
+    hint: '',
+    options: {},
+    schema: {},
+    ...partialTextField
+  }
+}
+
+/**
+ * @param {Partial<FileUploadFieldComponent>} partialFileUploadField
+ * @returns {FileUploadFieldComponent}
+ */
+export function buildFileUploadComponent(partialFileUploadField) {
+  return {
+    name: 'FileUploadField',
+    type: ComponentType.FileUploadField,
+    title: 'File Upload Field',
+    options: {},
+    schema: {},
+    ...partialFileUploadField
+  }
+}
+
+/**
+ *
+ * @param {Partial<AutocompleteFieldComponent>} partialAutoCompleteField
+ * @returns {AutocompleteFieldComponent}
+ */
+export function buildAutoCompleteComponent(partialAutoCompleteField) {
+  return {
+    name: 'AutoCompleteField',
+    title: 'What languages do you speak?',
+    type: ComponentType.AutocompleteField,
+    list: 'AutoCompleteList',
+    options: {},
+    ...partialAutoCompleteField
+  }
+}
+/**
+ * Builder to create a Form Definition
+ * @param {Partial<FormDefinition>} definitionPartial
+ * @returns {FormDefinition}
+ */
+export function buildDefinition(definitionPartial = {}) {
+  return {
+    name: 'Test form',
+    pages: [],
+    conditions: [],
+    sections: [],
+    lists: [],
+    ...definitionPartial
+  }
+}
+
+/**
+ *
+ * @param {Partial<Item>} partialListItem
+ * @returns {Item}
+ */
+export function buildListItem(partialListItem = {}) {
+  return {
+    text: 'Javascript',
+    value: 'javascript',
+    ...partialListItem
+  }
+}
+
+/**
+ * @param {Partial<List>} partialList
+ * @returns {List}
+ */
+export function buildList(partialList = {}) {
+  return {
+    title: 'Development language2',
+    name: 'YhmNDD',
+    type: 'string',
+    items: [
+      {
+        text: 'Javascript',
+        value: 'javascript'
+      },
+      {
+        text: 'TypeScript',
+        value: 'typescript'
+      },
+      {
+        text: 'Python',
+        value: 'python'
+      },
+      {
+        text: 'Haskell',
+        value: 'haskell'
+      },
+      {
+        text: 'Erlang',
+        value: 'erlang'
+      },
+      {
+        text: 'Java',
+        value: 'java'
+      }
+    ],
+    ...partialList
+  }
+}
+
+/**
  * @satisfies {FormDefinition}
  */
 export const testFormDefinitionWithSinglePage = {
@@ -506,150 +651,6 @@ export const testFormDefinitionWithFileUploadPage = {
   lists: []
 }
 
-/**
- * @param {Partial<PageQuestion>} [partialPage]
- * @returns {PageQuestion}
- */
-export function buildQuestionPage(partialPage = {}) {
-  return {
-    id: 'ffefd409-f3f4-49fe-882e-6e89f44631b1',
-    title: 'Page One',
-    path: '/page-one',
-    next: [],
-    components: [],
-    ...partialPage
-  }
-}
-
-/**
- * @param {Partial<PageSummary>} [partialSummaryPage]
- */
-export function buildSummaryPage(partialSummaryPage = {}) {
-  /** @type {PageSummary} */
-  const page = /** @satisfies {PageSummary} */ {
-    id: '449a45f6-4541-4a46-91bd-8b8931b07b50',
-    title: 'Summary',
-    path: ControllerPath.Summary,
-    controller: ControllerType.Summary,
-    ...partialSummaryPage
-  }
-  return page
-}
-
-/**
- * @param {Partial<TextFieldComponent>} partialTextField
- * @returns {TextFieldComponent}
- */
-export function buildTextFieldComponent(partialTextField = {}) {
-  return /** @satisfies {TextFieldComponent} */ {
-    id: '407dd0d7-cce9-4f43-8e1f-7d89cb698875',
-    name: 'TextField',
-    title: 'Text field',
-    type: ComponentType.TextField,
-    hint: '',
-    options: {},
-    schema: {},
-    ...partialTextField
-  }
-}
-
-/**
- * @param {Partial<FileUploadFieldComponent>} partialFileUploadField
- * @returns {FileUploadFieldComponent}
- */
-export function buildFileUploadComponent(partialFileUploadField) {
-  return {
-    name: 'FileUploadField',
-    type: ComponentType.FileUploadField,
-    title: 'File Upload Field',
-    options: {},
-    schema: {},
-    ...partialFileUploadField
-  }
-}
-
-/**
- *
- * @param {Partial<AutocompleteFieldComponent>} partialAutoCompleteField
- * @returns {AutocompleteFieldComponent}
- */
-export function buildAutoCompleteComponent(partialAutoCompleteField) {
-  return {
-    name: 'AutoCompleteField',
-    title: 'What languages do you speak?',
-    type: ComponentType.AutocompleteField,
-    list: 'AutoCompleteList',
-    options: {},
-    ...partialAutoCompleteField
-  }
-}
-/**
- * Builder to create a Form Definition
- * @param {Partial<FormDefinition>} definitionPartial
- * @returns {FormDefinition}
- */
-export function buildDefinition(definitionPartial = {}) {
-  return {
-    name: 'Test form',
-    pages: [],
-    conditions: [],
-    sections: [],
-    lists: [],
-    ...definitionPartial
-  }
-}
-
-/**
- *
- * @param {Partial<Item>} partialListItem
- * @returns {Item}
- */
-export function buildListItem(partialListItem = {}) {
-  return {
-    text: 'Javascript',
-    value: 'javascript',
-    ...partialListItem
-  }
-}
-
-/**
- * @param {Partial<List>} partialList
- * @returns {List}
- */
-export function buildList(partialList = {}) {
-  return {
-    title: 'Development language2',
-    name: 'YhmNDD',
-    type: 'string',
-    items: [
-      {
-        text: 'Javascript',
-        value: 'javascript'
-      },
-      {
-        text: 'TypeScript',
-        value: 'typescript'
-      },
-      {
-        text: 'Python',
-        value: 'python'
-      },
-      {
-        text: 'Haskell',
-        value: 'haskell'
-      },
-      {
-        text: 'Erlang',
-        value: 'erlang'
-      },
-      {
-        text: 'Java',
-        value: 'java'
-      }
-    ],
-    ...partialList
-  }
-}
 /**
  * @import { FormDefinition, PageQuestion, PageSummary, TextFieldComponent, FileUploadFieldComponent, AutocompleteFieldComponent, List, Item } from '@defra/forms-model'
  */

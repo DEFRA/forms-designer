@@ -79,11 +79,14 @@ export function getPageFromDefinition(definition, pageId) {
 
 /**
  * Finds the list in the component, if it exists
- * @param {ComponentDef} component
+ * @param { ComponentDef | undefined } component
  * @param {FormDefinition} definition
- * @returns {List|undefined}
+ * @returns { List | undefined }
  */
 export function getListFromComponent(component, definition) {
+  if (!component) {
+    return undefined
+  }
   const listName = 'list' in component ? component.list : undefined
 
   if (listName) {
@@ -95,10 +98,12 @@ export function getListFromComponent(component, definition) {
 
 /**
  * Turns a list into a string for auto complete
- * @param {List} list
+ * @param { List | undefined } list
  */
 export function mapListToAutoCompleteStr(list) {
-  return list.items.map(({ text, value }) => `${text}:${value}`).join('\r\n')
+  return (
+    list?.items.map(({ text, value }) => `${text}:${value}`).join('\r\n') ?? ''
+  )
 }
 
 /**

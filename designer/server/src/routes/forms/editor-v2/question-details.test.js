@@ -3,7 +3,11 @@ import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
 import {
+  buildAutoCompleteComponent,
+  buildDefinition,
   buildList,
+  buildListItem,
+  buildQuestionPage,
   testFormDefinitionWithSinglePage
 } from '~/src/__stubs__/form-definition.js'
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
@@ -219,13 +223,56 @@ describe('Editor v2 question details routes', () => {
   })
 
   test('GET - should render the autocomplete options field in the base view', async () => {
+    const listName = 'AutoCompleteList'
+    const listId = '3b016ee4-6484-4b0f-a02a-4e0e37de066b'
     jest
       .mocked(getQuestionType)
       .mockReturnValue(ComponentType.AutocompleteField)
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
-    jest
-      .mocked(forms.getDraftFormDefinition)
-      .mockResolvedValueOnce(testFormDefinitionWithSinglePage)
+    jest.mocked(forms.getDraftFormDefinition).mockResolvedValueOnce(
+      buildDefinition({
+        name: 'Test form',
+        pages: [
+          buildQuestionPage({
+            id: 'p1',
+            path: '/autocomplete',
+            title: 'Which country do you live in?',
+            components: [
+              buildAutoCompleteComponent({
+                id: 'c1',
+                name: 'autoComplete',
+                title: 'Which country do you live in?',
+                list: listName
+              })
+            ]
+          })
+        ],
+        lists: [
+          buildList({
+            id: listId,
+            name: listName,
+            items: [
+              buildListItem({
+                text: 'England',
+                value: 'england'
+              }),
+              buildListItem({
+                text: 'Wales',
+                value: 'wales'
+              }),
+              buildListItem({
+                text: 'Scotland',
+                value: 'scotland'
+              }),
+              buildListItem({
+                text: 'Northern Ireland',
+                value: 'northern-island'
+              })
+            ]
+          })
+        ]
+      })
+    )
 
     const options = {
       method: 'get',
@@ -239,6 +286,12 @@ describe('Editor v2 question details routes', () => {
 
     const [, , autoCompleteField] = container.getAllByRole('textbox')
     expect(autoCompleteField.id).toBe('autoCompleteOptions')
+    expect(/** @type {HTMLInputElement} */ (autoCompleteField).value).toMatch(
+      'England:england'
+    )
+    expect(/** @type {HTMLInputElement} */ (autoCompleteField).value).toMatch(
+      'Northern Ireland:northern-island'
+    )
   })
 
   test('POST - should error if missing mandatory fields', async () => {
