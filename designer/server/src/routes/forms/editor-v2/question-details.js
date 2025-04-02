@@ -67,14 +67,14 @@ async function saveList(formId, definition, token, payload) {
     return undefined
   }
 
-  const { id } = await upsertList(
+  const { name } = await upsertList(
     formId,
     definition,
     token,
     buildAutoCompleteListFromPayload(payload)
   )
 
-  return id
+  return name
 }
 
 /**
@@ -206,10 +206,11 @@ export default [
       const definition = await forms.getDraftFormDefinition(metadata.id, token)
       const formId = metadata.id
 
-      const listId = await saveList(formId, definition, token, payload)
+      // TODO: When forms runner is updated move to id
+      const listName = await saveList(formId, definition, token, payload)
 
-      const questionDetailsWithList = listId
-        ? { ...questionDetails, list: listId }
+      const questionDetailsWithList = listName
+        ? { ...questionDetails, list: listName }
         : questionDetails
 
       const finalPageId = await saveQuestion(

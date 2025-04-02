@@ -421,8 +421,10 @@ describe('Editor v2 question details routes', () => {
 
   test('POST - should create a list on autocomplete question', async () => {
     const listId = '3d7e14af-0674-40dc-aca5-a6439f45b782'
+    const name = 'atvNgE'
     const list = buildList({
       id: listId,
+      name,
       items: [
         { text: 'English', value: 'en-gb' },
         { text: 'French', value: 'fr-Fr' }
@@ -441,7 +443,7 @@ describe('Editor v2 question details routes', () => {
       url: '/library/my-form-slug/editor-v2/page/123456/question/new/details',
       auth,
       payload: {
-        name: 'atvNgE',
+        name,
         question: 'Autocomplete',
         hintText: '',
         autoCompleteOptions: 'English:en-gb\r\nFrench:fr-Fr',
@@ -459,7 +461,8 @@ describe('Editor v2 question details routes', () => {
       '/library/my-form-slug/editor-v2/page/123456/questions'
     )
     const [, , , question] = addQuestionMock.mock.calls[0]
-    expect(question).toMatchObject({ list: listId })
+    // TODO: When forms runner is updated move to id
+    expect(question).toMatchObject({ list: name })
   })
 })
 
