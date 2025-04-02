@@ -9,6 +9,7 @@ on:
       - 'model/babel.config.*'
       - 'model/src/**'
       - '!**/*.test.*'
+  workflow_dispatch:
 
 concurrency:
   group: publish-model
@@ -41,7 +42,9 @@ jobs:
         with:
           enableCrossOsArchive: true
           key: npm-build-model-${{ runner.os }}-${{ github.sha }}
-          path: model/dist
+          path: |
+            model/dist
+            model/schemas
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -85,7 +88,9 @@ jobs:
           enableCrossOsArchive: true
           fail-on-cache-miss: true
           key: npm-build-model-${{ runner.os }}-${{ github.sha }}
-          path: model/dist
+          path: |
+            model/dist
+            model/schemas
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
