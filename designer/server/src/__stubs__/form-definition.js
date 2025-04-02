@@ -569,6 +569,21 @@ export function buildFileUploadComponent(partialFileUploadField) {
 }
 
 /**
+ *
+ * @param {Partial<AutocompleteFieldComponent>} partialAutoCompleteField
+ * @returns {AutocompleteFieldComponent}
+ */
+export function buildAutoCompleteComponent(partialAutoCompleteField) {
+  return {
+    name: 'AutoCompleteField',
+    title: 'What languages do you speak?',
+    type: ComponentType.AutocompleteField,
+    list: 'AutoCompleteList',
+    options: {},
+    ...partialAutoCompleteField
+  }
+}
+/**
  * Builder to create a Form Definition
  * @param {Partial<FormDefinition>} definitionPartial
  * @returns {FormDefinition}
@@ -623,5 +638,5 @@ export function buildList(partialList = {}) {
   }
 }
 /**
- * @import { FormDefinition, PageQuestion, PageSummary, TextFieldComponent, FileUploadFieldComponent, List } from '@defra/forms-model'
+ * @import { FormDefinition, PageQuestion, PageSummary, TextFieldComponent, FileUploadFieldComponent, AutocompleteFieldComponent, List } from '@defra/forms-model'
  */

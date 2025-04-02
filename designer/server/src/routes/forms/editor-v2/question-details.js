@@ -67,14 +67,14 @@ async function saveList(formId, definition, token, payload) {
     return undefined
   }
 
-  const { name } = await upsertList(
+  const { list } = await upsertList(
     formId,
     definition,
     token,
     buildAutoCompleteListFromPayload(payload)
   )
 
-  return name
+  return list.name
 }
 
 /**
