@@ -541,6 +541,7 @@ export const testFormDefinitionWithRadioQuestionAndList = {
   sections: [],
   lists: [
     {
+      id: 'my-list-id',
       name: 'my-list',
       title: 'my list title',
       type: 'string',

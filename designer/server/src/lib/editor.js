@@ -100,7 +100,7 @@ export async function createEditorList(formId, token, questionDetails, state) {
 /**
  * @param {string} formId
  * @param {string} token
- * @param {Partial<ComponentDef>} questionDetails
+ * @param {Partial<ListComponentsDef>} questionDetails
  * @param { QuestionSessionState | undefined } state
  * @param {FormDefinition} definition
  * @returns {Promise<boolean>}
@@ -117,7 +117,7 @@ export async function updateEditorList(
   }
 
   const listFromDef = definition.lists.find(
-    (x) => x.name === questionDetails.name
+    (x) => x.name === questionDetails.list
   )
 
   const list = mapToList(
@@ -253,7 +253,7 @@ export async function updateQuestion(
   const updated = await updateEditorList(
     formId,
     token,
-    questionDetails,
+    /** @type {ListComponentsDef} */ (questionDetails),
     state,
     definition
   )
@@ -475,5 +475,5 @@ export async function deletePage(formId, token, pageId) {
 }
 
 /**
- * @import { ComponentDef, FormEditorInputCheckAnswersSettings, FormEditorInputPageSettings, FormDefinition, List, Page, QuestionSessionState } from '@defra/forms-model'
+ * @import { ComponentDef, FormEditorInputCheckAnswersSettings, FormEditorInputPageSettings, FormDefinition, List, ListComponentsDef, Page, QuestionSessionState } from '@defra/forms-model'
  */

@@ -19,11 +19,14 @@ import {
   resolvePageHeading,
   setCheckAnswersDeclaration,
   setPageHeadingAndGuidance,
+  updateEditorList,
   updateQuestion
 } from '~/src/lib/editor.js'
 import { delJson, patchJson, postJson, putJson } from '~/src/lib/fetch.js'
+import { createList, updateList } from '~/src/lib/list.js'
 
 jest.mock('~/src/lib/fetch.js')
+jest.mock('~/src/lib/list.js')
 
 const mockedDelJson = /** @type {jest.MockedFunction<typeof delJson>} */ (
   delJson
@@ -106,8 +109,22 @@ describe('editor.js', () => {
   const formId = '98dbfb6c-93b7-41dc-86e7-02c7abe4ba38'
   const token = 'someToken'
 
-  afterEach(() => {
+  beforeEach(() => {
     jest.clearAllMocks()
+    jest
+      .mocked(createList)
+      .mockResolvedValue({
+        id: 'id',
+        status: 'created',
+        list: /** @type {List} */ ({})
+      })
+    jest
+      .mocked(updateList)
+      .mockResolvedValue({
+        id: 'id',
+        status: 'updated',
+        list: /** @type {List} */ ({})
+      })
   })
 
   describe('addPageAndFirstQuestion', () => {
@@ -222,10 +239,6 @@ describe('editor.js', () => {
       `./${formId}/definition/draft/pages/12345/components`,
       formsEndpoint
     )
-    const requestListUrl = new URL(
-      `./${formId}/definition/draft/lists`,
-      formsEndpoint
-    )
     const expectedOptions2 = {
       payload: {
         title: 'What is your name?',
@@ -279,11 +292,30 @@ describe('editor.js', () => {
             response: createMockResponse(),
             body: { id: 'new-id' } // Saving question
           })
+
         const list = [
           { id: '1', label: '1', value: '1' },
           { id: '2', label: '2', value: '2' },
           { id: '3', label: '3', value: '3' }
         ]
+
+        const mappedList = [
+          { id: '1', text: '1', value: '1' },
+          { id: '2', text: '2', value: '2' },
+          { id: '3', text: '3', value: '3' }
+        ]
+
+        jest.mocked(createList).mockResolvedValue({
+          id: 'id',
+          status: 'created',
+          list: /** @type {List} */ ({
+            id: 'id',
+            name: 'my-list',
+            title: 'title',
+            type: 'string',
+            items: mappedList
+          })
+        })
 
         const actionState = /** @type {QuestionSessionState} */ ({
           editRow: {},
@@ -295,24 +327,21 @@ describe('editor.js', () => {
             name: 'what-is-your-fav-colour',
             title: 'What is your favourite colour?',
             type: 'RadiosField',
-            list: 'abcde'
+            list: 'my-list'
           },
           headers: { Authorization: `Bearer ${token}` }
         }
 
         const expectedListCall = {
-          payload: {
-            id: expect.any(String),
-            name: expect.any(String),
-            title: 'title for What is your favourite colour?',
-            type: 'string',
-            items: [
-              { text: '1', value: '1' },
-              { text: '2', value: '2' },
-              { text: '3', value: '3' }
-            ]
-          },
-          headers: { Authorization: `Bearer ${token}` }
+          id: expect.any(String),
+          name: expect.any(String),
+          title: 'title for What is your favourite colour?',
+          type: 'string',
+          items: [
+            { text: '1', value: '1' },
+            { text: '2', value: '2' },
+            { text: '3', value: '3' }
+          ]
         }
 
         const result = await addQuestion(
@@ -324,48 +353,41 @@ describe('editor.js', () => {
         )
 
         expect(mockedPostJson.mock.calls[0][0]).toEqual(requestUrl)
-        expect(mockedPostJson.mock.calls[0][1]).toEqual(expectedListCall)
+        expect(mockedPostJson.mock.calls[0][1]).toEqual(expectedQuestionCall)
 
-        expect(mockedPostJson.mock.calls[1][0]).toEqual(requestListUrl)
-        expect(mockedPostJson.mock.calls[1][1]).toEqual(expectedQuestionCall)
-        expect(result).toEqual({ id: 'new-id' })
+        expect(createList).toHaveBeenCalledWith(
+          expect.any(String),
+          expect.any(String),
+          expectedListCall
+        )
+        expect(result).toEqual({
+          list: {
+            name: 'abcde'
+          },
+          status: 'created'
+        })
       })
 
       test('returns error when list update fails', async () => {
-        mockedPostJson
-          .mockResolvedValueOnce({
-            response: createMockResponse(),
-            body: { status: 'failed' } // Saving list
-          })
-          .mockResolvedValueOnce({
-            response: createMockResponse(),
-            body: { id: 'new-id' } // Saving question
-          })
+        mockedPostJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: { id: 'new-id' } // Saving question
+        })
         const list = [
           { id: '1', label: '1', value: '1' },
           { id: '2', label: '2', value: '2' },
           { id: '3', label: '3', value: '3' }
         ]
+        jest.mocked(createList).mockResolvedValue({
+          id: 'id',
+          status: 'failed',
+          list: /** @type {List} */ ({})
+        })
 
         const actionState = /** @type {QuestionSessionState} */ ({
           state: {},
           listItems: list
         })
-
-        const expectedListCall = {
-          payload: {
-            id: expect.any(String),
-            name: expect.any(String),
-            title: 'title for What is your favourite colour?',
-            type: 'string',
-            items: [
-              { text: '1', value: '1' },
-              { text: '2', value: '2' },
-              { text: '3', value: '3' }
-            ]
-          },
-          headers: { Authorization: `Bearer ${token}` }
-        }
 
         await expect(
           addQuestion(formId, token, '12345', radioQuestionDetails, actionState)
@@ -374,9 +396,6 @@ describe('editor.js', () => {
             'Unable to save list for question What is your favourite colour?'
           )
         )
-
-        expect(mockedPostJson.mock.calls[0][0]).toEqual(requestUrl)
-        expect(mockedPostJson.mock.calls[0][1]).toEqual(expectedListCall)
       })
     })
   })
@@ -966,9 +985,43 @@ describe('editor.js', () => {
       ).toEqual({})
     })
   })
+
+  describe('updateEditorList', () => {
+    test('should ignore if not a list question', async () => {
+      const res = await updateEditorList(
+        formId,
+        token,
+        {},
+        {},
+        testFormDefinitionWithTwoPagesAndQuestions
+      )
+      expect(res).toBeFalsy()
+    })
+
+    test('should find list and call updateList', async () => {
+      jest.mocked(updateList).mockResolvedValue({
+        id: 'id',
+        status: 'updated',
+        list: /** @type {List} */ ({})
+      })
+      const listItems = [
+        { label: 'option 1', value: 'value 1' },
+        { label: 'option 2', value: 'value 2' },
+        { label: 'option 3', value: 'value 3' }
+      ]
+      const res = await updateEditorList(
+        formId,
+        token,
+        { type: ComponentType.RadiosField, list: 'my-list' },
+        { listItems },
+        testFormDefinitionWithRadioQuestionAndList
+      )
+      expect(res).toBeTruthy()
+    })
+  })
 })
 
 /**
- * @import { QuestionSessionState, FormDefinition, Page } from '@defra/forms-model'
+ * @import { QuestionSessionState, FormDefinition, List, Page } from '@defra/forms-model'
  * @import { IncomingMessage } from 'http'
  */
