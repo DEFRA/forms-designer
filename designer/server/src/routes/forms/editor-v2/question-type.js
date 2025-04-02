@@ -52,9 +52,9 @@ export const schema = Joi.object().keys({
 /**
  *
  * @param {string | undefined} questionType
- * @param {ComponentType | undefined} writtenAnswerSub - sub-type if 'written-answer-sub' selected in questionType
- * @param {ComponentType | undefined} dateSub - sub-type if 'date-sub' selected in questionType
- * @param {ComponentType | undefined} listSub - sub-type if 'list-sub' selected in questionType
+ * @param {string | undefined} writtenAnswerSub - sub-type if 'written-answer-sub' selected in questionType
+ * @param {string | undefined} dateSub - sub-type if 'date-sub' selected in questionType
+ * @param {string | undefined} listSub - sub-type if 'list-sub' selected in questionType
  */
 export function deriveQuestionType(
   questionType,

@@ -2,7 +2,10 @@ import { ComponentType, ControllerType } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
-import { testFormDefinitionWithSinglePage } from '~/src/__stubs__/form-definition.js'
+import {
+  testFormDefinitionWithFileUploadPage,
+  testFormDefinitionWithSinglePage
+} from '~/src/__stubs__/form-definition.js'
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
 import { createServer } from '~/src/createServer.js'
 import { addPageAndFirstQuestion, addQuestion } from '~/src/lib/editor.js'
@@ -11,15 +14,17 @@ import {
   getValidationErrorsFromSession
 } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
-import { getQuestionType } from '~/src/routes/forms/editor-v2/helper.js'
-import { clearEnhancedActionState } from '~/src/routes/forms/editor-v2/question-details-helper.js'
+import {
+  buildQuestionSessionState,
+  getQuestionSessionState
+} from '~/src/lib/session-helper.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/forms.js')
 jest.mock('~/src/lib/error-helper.js')
 jest.mock('~/src/lib/editor.js')
-jest.mock('~/src/routes/forms/editor-v2/helper.js')
+jest.mock('~/src/lib/session-helper.js')
 jest.mock('~/src/routes/forms/editor-v2/question-details-helper.js')
 
 describe('Editor v2 question details routes', () => {
@@ -44,41 +49,26 @@ describe('Editor v2 question details routes', () => {
     components: []
   }
 
-  test('GET - should clear session and redirect if clear param supplied', async () => {
-    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
-    jest
-      .mocked(forms.getDraftFormDefinition)
-      .mockResolvedValueOnce(testFormDefinitionWithSinglePage)
-    jest.mocked(getQuestionType).mockReturnValue(ComponentType.TextField)
+  const simpleSessionTextField = {
+    questionType: ComponentType.TextField
+  }
 
-    const options = {
-      method: 'get',
-      url: '/library/my-form-slug/editor-v2/page/p1/question/c1/details?clear',
-      auth
-    }
-
-    const {
-      response: { headers, statusCode }
-    } = await renderResponse(server, options)
-
-    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
-    expect(headers.location).toBe(
-      '/library/my-form-slug/editor-v2/page/p1/question/c1/details'
-    )
-
-    expect(clearEnhancedActionState).toHaveBeenCalledTimes(1)
-  })
+  const simpleSessionFileUpload = {
+    questionType: ComponentType.FileUploadField
+  }
 
   test('GET - should render the question fields in the view', async () => {
+    jest
+      .mocked(getQuestionSessionState)
+      .mockReturnValueOnce(simpleSessionTextField)
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     jest
       .mocked(forms.getDraftFormDefinition)
       .mockResolvedValueOnce(testFormDefinitionWithSinglePage)
-    jest.mocked(getQuestionType).mockReturnValue(ComponentType.TextField)
 
     const options = {
       method: 'get',
-      url: '/library/my-form-slug/editor-v2/page/p1/question/c1/details',
+      url: '/library/my-form-slug/editor-v2/page/p1/question/c1/details/54321',
       auth
     }
 
@@ -112,11 +102,15 @@ describe('Editor v2 question details routes', () => {
 
     const $details = document.getElementsByClassName('govuk-details')
     expect($details[0].hasAttribute('open')).toBeFalsy()
-
-    expect(clearEnhancedActionState).not.toHaveBeenCalled()
   })
 
   test('GET - should render the optional question fields in the view and keep optional section expanded', async () => {
+    jest
+      .mocked(getQuestionSessionState)
+      .mockReturnValueOnce(simpleSessionTextField)
+    jest
+      .mocked(buildQuestionSessionState)
+      .mockReturnValueOnce(simpleSessionTextField)
     jest.mocked(getValidationErrorsFromSession).mockReturnValue(
       /** @type {ValidationFailure<FormEditor>} */ ({
         formValues: {
@@ -127,7 +121,6 @@ describe('Editor v2 question details routes', () => {
         formErrors: {}
       })
     )
-    jest.mocked(getQuestionType).mockReturnValue(ComponentType.TextField)
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     jest
       .mocked(forms.getDraftFormDefinition)
@@ -135,7 +128,7 @@ describe('Editor v2 question details routes', () => {
 
     const options = {
       method: 'get',
-      url: '/library/my-form-slug/editor-v2/page/p1/question/c1/details',
+      url: '/library/my-form-slug/editor-v2/page/p1/question/c1/details/54321',
       auth
     }
 
@@ -172,31 +165,27 @@ describe('Editor v2 question details routes', () => {
   })
 
   test('GET - should render the file upload fields in the base view', async () => {
-    jest.mocked(getValidationErrorsFromSession).mockReturnValue(
-      /** @type {ValidationFailure<FormEditor>} */ ({
-        formValues: {
-          question: 'What is your name?',
-          shortDescription: 'your name',
-          minLength: '10'
-        },
-        formErrors: {}
-      })
-    )
-    jest.mocked(getQuestionType).mockReturnValue(ComponentType.FileUploadField)
+    jest
+      .mocked(getQuestionSessionState)
+      .mockReturnValue(simpleSessionFileUpload)
+    jest
+      .mocked(buildQuestionSessionState)
+      .mockReturnValue(simpleSessionFileUpload)
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     jest
       .mocked(forms.getDraftFormDefinition)
-      .mockResolvedValueOnce(testFormDefinitionWithSinglePage)
+      .mockResolvedValueOnce(testFormDefinitionWithFileUploadPage)
 
     const options = {
       method: 'get',
-      url: '/library/my-form-slug/editor-v2/page/p1/question/c1/details',
+      url: '/library/my-form-slug/editor-v2/page/p1/question/q1/details/54321',
       auth
     }
 
     const { container } = await renderResponse(server, options)
 
     const $mastheadHeading = container.getByText('Test form')
+
     const $cardTitle = container.getByText('Question 1')
     const $cardCaption = container.getByText('Page 1')
     const $cardHeading = container.getByText('Edit question 1')

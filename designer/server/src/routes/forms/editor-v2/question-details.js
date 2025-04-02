@@ -151,6 +151,7 @@ export default [
           definition,
           pageId,
           questionId,
+          stateId,
           validation,
           state
         )

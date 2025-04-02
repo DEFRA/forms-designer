@@ -632,5 +632,44 @@ export function buildDefinition(definitionPartial = {}) {
 }
 
 /**
- * @import { FormDefinition, PageQuestion, PageSummary, TextFieldComponent, FileUploadFieldComponent } from '@defra/forms-model'
+ * @param {Partial<List>} partialList
+ * @returns {List}
+ */
+export function buildList(partialList = {}) {
+  return {
+    title: 'Development language2',
+    name: 'YhmNDD',
+    type: 'string',
+    items: [
+      {
+        text: 'Javascript',
+        value: 'javascript'
+      },
+      {
+        text: 'TypeScript',
+        value: 'typescript'
+      },
+      {
+        text: 'Python',
+        value: 'python'
+      },
+      {
+        text: 'Haskell',
+        value: 'haskell'
+      },
+      {
+        text: 'Erlang',
+        value: 'erlang'
+      },
+      {
+        text: 'Java',
+        value: 'java'
+      }
+    ],
+    ...partialList
+  }
+}
+
+/**
+ * @import { FormDefinition, PageQuestion, PageSummary, TextFieldComponent, FileUploadFieldComponent, List } from '@defra/forms-model'
  */

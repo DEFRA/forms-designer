@@ -410,7 +410,9 @@ describe('editor-v2 - question details model', () => {
       expect(
         overrideFormValuesForEnhancedAction(
           undefined,
-          /** @type {QuestionSessionState} */ ({ state: { radioId: '12345' } })
+          /** @type {QuestionSessionState} */ ({
+            editRow: { radioId: '12345' }
+          })
         )
       ).toEqual({ formValues: { radioId: '12345' }, formErrors: {} })
     })
@@ -471,7 +473,7 @@ describe('editor-v2 - question details model', () => {
     test('should return max if no matching id', () => {
       expect(
         getRowNumBeingEdited({
-          state: {},
+          editRow: {},
           questionDetails: {},
           listItems: [
             { id: '1', label: '1', value: '1' },
@@ -485,7 +487,7 @@ describe('editor-v2 - question details model', () => {
     test('should return 2 if editing row 2', () => {
       expect(
         getRowNumBeingEdited({
-          state: { radioId: '2' },
+          editRow: { radioId: '2' },
           questionDetails: {},
           listItems: [
             { id: '1', label: '1', value: '1' },

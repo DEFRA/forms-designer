@@ -197,6 +197,7 @@ export function getRowNumBeingEdited(state) {
  * @param {FormDefinition} definition
  * @param {string} pageId
  * @param {string} questionId
+ * @param {string} stateId
  * @param {ValidationFailure<FormEditor>} [validation]
  * @param {QuestionSessionState} [state]
  */
@@ -205,6 +206,7 @@ export function questionDetailsViewModel(
   definition,
   pageId,
   questionId,
+  stateId,
   validation,
   state
 ) {
@@ -268,7 +270,7 @@ export function questionDetailsViewModel(
     )?.description,
     changeTypeUrl: editorv2Path(
       metadata.slug,
-      `page/${pageId}/question/${questionId}`
+      `page/${pageId}/question/${questionId}/type/${stateId}`
     ),
     buttonText: SAVE_AND_CONTINUE,
     previewPageUrl,

@@ -1,9 +1,9 @@
 import { randomUUID } from 'crypto'
 
-import { ComponentType, hasComponents, randomId } from '@defra/forms-model'
+import { ComponentType, randomId } from '@defra/forms-model'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
-import { getPageFromDefinition } from '~/src/lib/utils.js'
+import { getComponentFromDefinition } from '~/src/lib/utils.js'
 
 /**
  * @param {Yar} yar
@@ -87,38 +87,35 @@ export function buildQuestionSessionState(
 ) {
   const state = getQuestionSessionState(yar, stateId)
   if (
-    !componentsSavingLists.includes(
-      state?.questionType ?? ComponentType.TextField
-    ) ||
-    state?.editRow
+    state?.questionType &&
+    !componentsSavingLists.includes(state.questionType)
   ) {
     return state
   }
 
-  // Read list from definition and store in session
-  const page = getPageFromDefinition(definition, pageId)
-  const component = /** @type { ListComponentsDef | undefined } */ (
-    hasComponents(page)
-      ? page.components.find((x) => x.id === questionId)
-      : undefined
-  )
-  const listName = component?.list
-  if (listName) {
-    const items = definition.lists.find((x) => x.name === listName)?.items ?? []
-    const newState = /** @type { QuestionSessionState} */ ({
-      editRow: {},
-      listItems: items.map((item) => ({
-        id: randomUUID(),
-        label: item.text,
-        // hint: item.hint,
-        value: item.value
-      }))
-    })
-    yar.set(sessionNames.questionSessionState, newState)
-    return newState
+  if (state?.listItems) {
+    return state
   }
 
-  return state
+  const component = getComponentFromDefinition(definition, pageId, questionId)
+  const listName = /** @type { ListComponentsDef | undefined } */ (component)
+    ?.list
+  const items = listName
+    ? (definition.lists.find((x) => x.name === listName)?.items ?? [])
+    : []
+
+  const newState = /** @type { QuestionSessionState} */ ({
+    questionType: component?.type,
+    editRow: state?.editRow ?? {},
+    listItems: items.map((item) => ({
+      id: randomUUID(),
+      label: item.text,
+      // hint: item.hint,
+      value: item.value
+    }))
+  })
+  setQuestionSessionState(yar, stateId, newState)
+  return newState
 }
 
 /**

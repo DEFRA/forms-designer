@@ -1,3 +1,5 @@
+import { randomUUID } from 'crypto'
+
 import {
   ComponentType,
   ControllerType,
@@ -8,10 +10,12 @@ import {
 
 import config from '~/src/config.js'
 import { delJson, patchJson, postJson, putJson } from '~/src/lib/fetch.js'
+import { createList, updateList } from '~/src/lib/list.js'
 import {
   getHeaders,
   getPageFromDefinition,
   isCheckboxSelected,
+  noListToSave,
   slugify,
   stringHasValue
 } from '~/src/lib/utils.js'
@@ -20,19 +24,10 @@ const formsEndpoint = new URL('/forms/', config.managerUrl)
 
 const patchJsonByType = /** @type {typeof patchJson<Page>} */ (patchJson)
 const postJsonByType = /** @type {typeof postJson<Page>} */ (postJson)
-const postJsonByListType =
-  /** @type {typeof postJson<{ id: string, status: string }>} */ (postJson)
 const postJsonByDefinitionType =
   /** @type {typeof postJson<FormDefinition>} */ (postJson)
 const putJsonByType = /** @type {typeof putJson<Page>} */ (putJson)
-const putJsonByListType =
-  /** @type {typeof putJson<{ id: string, status: string }>} */ (putJson)
 const delJsonByType = /** @type {typeof delJson<ComponentDef>} */ (delJson)
-
-const componentsSavingLists = [
-  ComponentType.CheckboxesField,
-  ComponentType.RadiosField
-]
 
 /**
  * @param {Partial<ComponentDef>} questionDetails
@@ -41,6 +36,31 @@ export function getControllerType(questionDetails) {
   return questionDetails.type === ComponentType.FileUploadField
     ? { controller: ControllerType.FileUpload }
     : {}
+}
+
+/**
+ * @param { string | undefined } id
+ * @param { string | undefined } name
+ * @param { string | undefined } title
+ * @param { QuestionSessionState | undefined } state
+ * @returns {List}
+ */
+export function mapToList(id, name, title, state) {
+  return /** @type {List} */ ({
+    id: id ?? randomUUID(),
+    name: name ?? randomId(),
+    title,
+    type: 'string',
+    items: state?.listItems
+      ? state.listItems.map((item) => {
+          return {
+            // id: item.id,
+            text: item.label,
+            value: stringHasValue(item.value) ? item.value : item.label
+          }
+        })
+      : []
+  })
 }
 
 /**
@@ -57,39 +77,24 @@ export function buildRequestUrl(formId, path) {
  * @param {Partial<ComponentDef>} questionDetails
  * @param { QuestionSessionState | undefined } state
  */
-export async function saveNewList(formId, token, questionDetails, state) {
-  if (
-    componentsSavingLists.includes(
-      /** @type {ComponentType} */ (questionDetails.type)
-    ) &&
-    state?.listItems
-  ) {
-    // Save list
-    const { body } = await postJsonByListType(
-      buildRequestUrl(formId, 'lists'),
-      {
-        payload: {
-          name: questionDetails.name,
-          title: `title for ${questionDetails.title}`,
-          type: 'string',
-          items: state.listItems.map((item) => {
-            return {
-              text: item.label,
-              value: stringHasValue(item.value) ? item.value : item.label
-            }
-          })
-        },
-        ...getHeaders(token)
-      }
-    )
-    if (body.status !== 'created') {
-      throw new Error(
-        `Unable to save list for question ${questionDetails.title}`
-      )
-    }
-    return { list: questionDetails.name }
+export async function createEditorList(formId, token, questionDetails, state) {
+  if (noListToSave(questionDetails.type, state)) {
+    return {}
   }
-  return {}
+
+  const list = mapToList(
+    undefined,
+    undefined,
+    `title for ${questionDetails.title}`,
+    state
+  )
+
+  const body = await createList(formId, token, list)
+
+  if (body.status !== 'created') {
+    throw new Error(`Unable to save list for question ${questionDetails.title}`)
+  }
+  return { list: body.list.name }
 }
 
 /**
@@ -100,47 +105,36 @@ export async function saveNewList(formId, token, questionDetails, state) {
  * @param {FormDefinition} definition
  * @returns {Promise<boolean>}
  */
-export async function updateList(
+export async function updateEditorList(
   formId,
   token,
   questionDetails,
   state,
   definition
 ) {
-  if (
-    componentsSavingLists.includes(
-      /** @type {ComponentType} */ (questionDetails.type)
-    ) &&
-    state?.listItems
-  ) {
-    const listFromDef = definition.lists.find(
-      (x) => x.name === questionDetails.name
-    )
-
-    // Update list
-    const { body } = await putJsonByListType(
-      buildRequestUrl(formId, `lists/${listFromDef?.id}`),
-      {
-        payload: {
-          ...listFromDef,
-          items: state.listItems.map((item) => {
-            return {
-              text: item.label,
-              value: stringHasValue(item.value) ? item.value : item.label
-            }
-          })
-        },
-        ...getHeaders(token)
-      }
-    )
-    if (body.status !== 'updated') {
-      throw new Error(
-        `Unable to update list for question ${questionDetails.title}`
-      )
-    }
-    return true
+  if (noListToSave(questionDetails.type, state)) {
+    return false
   }
-  return false
+
+  const listFromDef = definition.lists.find(
+    (x) => x.name === questionDetails.name
+  )
+
+  const list = mapToList(
+    listFromDef?.id,
+    listFromDef?.name,
+    listFromDef?.title,
+    state
+  )
+
+  // Update list
+  const body = await updateList(formId, listFromDef?.id, token, list)
+  if (body.status !== 'updated') {
+    throw new Error(
+      `Unable to update list for question ${questionDetails.title}`
+    )
+  }
+  return true
 }
 
 /**
@@ -160,7 +154,12 @@ export async function addPageAndFirstQuestion(
 ) {
   questionDetails.name = questionDetails.name ?? randomId()
 
-  const addedList = await saveNewList(formId, token, questionDetails, state)
+  const addedList = await createEditorList(
+    formId,
+    token,
+    questionDetails,
+    state
+  )
 
   const { body } = await postJsonByType(buildRequestUrl(formId, 'pages'), {
     payload: {
@@ -197,7 +196,12 @@ export async function addQuestion(
 ) {
   questionDetails.name = questionDetails.name ?? randomId()
 
-  const addedList = await saveNewList(formId, token, questionDetails, state)
+  const addedList = await createEditorList(
+    formId,
+    token,
+    questionDetails,
+    state
+  )
 
   const { body } = await postJsonByType(
     buildRequestUrl(formId, `pages/${pageId}/components`),
@@ -246,7 +250,7 @@ export async function updateQuestion(
     })
   }
 
-  const updated = await updateList(
+  const updated = await updateEditorList(
     formId,
     token,
     questionDetails,
@@ -471,5 +475,5 @@ export async function deletePage(formId, token, pageId) {
 }
 
 /**
- * @import { ComponentDef, QuestionSessionState, Page, FormEditorInputCheckAnswersSettings, FormEditorInputPageSettings, FormDefinition } from '@defra/forms-model'
+ * @import { ComponentDef, FormEditorInputCheckAnswersSettings, FormEditorInputPageSettings, FormDefinition, List, Page, QuestionSessionState } from '@defra/forms-model'
  */

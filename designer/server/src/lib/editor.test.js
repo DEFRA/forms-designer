@@ -273,7 +273,7 @@ describe('editor.js', () => {
         mockedPostJson
           .mockResolvedValueOnce({
             response: createMockResponse(),
-            body: { status: 'created' } // Saving list
+            body: { status: 'created', list: { name: 'abcde' } } // Saving list
           })
           .mockResolvedValueOnce({
             response: createMockResponse(),
@@ -286,7 +286,7 @@ describe('editor.js', () => {
         ]
 
         const actionState = /** @type {QuestionSessionState} */ ({
-          state: {},
+          editRow: {},
           listItems: list
         })
 
@@ -295,14 +295,15 @@ describe('editor.js', () => {
             name: 'what-is-your-fav-colour',
             title: 'What is your favourite colour?',
             type: 'RadiosField',
-            list: 'what-is-your-fav-colour'
+            list: 'abcde'
           },
           headers: { Authorization: `Bearer ${token}` }
         }
 
         const expectedListCall = {
           payload: {
-            name: 'what-is-your-fav-colour',
+            id: expect.any(String),
+            name: expect.any(String),
             title: 'title for What is your favourite colour?',
             type: 'string',
             items: [
@@ -353,7 +354,8 @@ describe('editor.js', () => {
 
         const expectedListCall = {
           payload: {
-            name: 'what-is-your-fav-colour',
+            id: expect.any(String),
+            name: expect.any(String),
             title: 'title for What is your favourite colour?',
             type: 'string',
             items: [
@@ -547,7 +549,7 @@ describe('editor.js', () => {
         testFormDefinitionWithRadioQuestionAndList,
         'p1',
         'c1',
-        {},
+        { type: ComponentType.RadiosField },
         {}
       )
 
