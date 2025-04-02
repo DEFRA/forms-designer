@@ -1,6 +1,5 @@
 import { ComponentType } from '@defra/forms-model'
 
-import { testFormDefinitionWithRadioQuestionAndList, testFormDefinitionWithTwoPagesAndQuestions } from '~/src/__stubs__/form-definition.js'
 import {
   testFormDefinitionWithRadioQuestionAndList,
   testFormDefinitionWithTwoPagesAndQuestions
