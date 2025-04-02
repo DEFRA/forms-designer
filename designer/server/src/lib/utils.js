@@ -78,7 +78,23 @@ export function getPageFromDefinition(definition, pageId) {
 }
 
 /**
+ * Finds the list in the component, if it exists
+ * @param {ComponentDef} component
+ * @param {FormDefinition} definition
+ * @returns {List|undefined}
+ */
+export function getListFromComponent(component, definition) {
+  const listName = 'list' in component ? component.list : undefined
+
+  if (listName) {
+    return definition.lists.find((list) => list.name === listName)
+  }
+
+  return undefined
+}
+
+/**
  * @import { ErrorDetailsItem } from '~/src/common/helpers/types.js'
- * @import { FormDefinition, Page } from '@defra/forms-model'
+ * @import { FormDefinition, Page, List, ComponentDef } from '@defra/forms-model'
  * @import Wreck from '@hapi/wreck'
  */
