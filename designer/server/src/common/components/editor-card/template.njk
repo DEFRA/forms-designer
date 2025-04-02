@@ -1,16 +1,18 @@
 {% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
-  <div class="govuk-summary-card govuk-!-margin-top-0 pages-panel-left-standard">
-    <div class="govuk-summary-card__content govuk-!-padding-top-0 editor-card-background">
+{% set outerClasses = params.outerClasses if params.outerClasses else "pages-panel-left-standard" %}
+{% set cardClasses = params.classes if params.classes else "editor-card-background" %}
+
+  <div class="govuk-summary-card govuk-!-margin-top-0 {{ outerClasses }}">
+    <div class="govuk-summary-card__content govuk-!-padding-top-0 {{ cardClasses }}">
       <dl class="govuk-summary-list">
         <div class="govuk-summary-list__row">
           <dd class="govuk-summary-list__value">
             <div class="govuk-grid-row" id="page-settings-container-1">
               <div id="card-1">
                 <div class="govuk-summary-card__content">
-                  <div class="editor-card-title">{{ params.title }}</div>
-                  <div class="govuk-summary-card__title-wrapper govuk-!-padding-top-0"></div>
+                  {% if params.title %}<div class="editor-card-title">{{ params.title }}</div>{% endif %}
 
                   {% if params.errorList | length %}
                     {{ govukErrorSummary({
@@ -20,7 +22,10 @@
                     }) }}
                   {% endif %}
 
+                  {% if params.caption %}
+                  <div class="govuk-summary-card__title-wrapper govuk-!-padding-top-0"></div>
                   <span class="govuk-caption-l">{{ params.caption }}</span>
+                  {% endif %}
 
                   {% if params.heading %}<h1 class="govuk-heading-l" id="page-heading">{{ params.heading }}</h1>{% endif %}
 

@@ -5,6 +5,7 @@ $defra-brand-colour: govuk-organisation-colour(department-for-environment-food-r
 .pages-panel-left {
   &-standard,
   &-end,
+  &-thin-border,
   &-reorder {
     border-left: 10px solid;
 
@@ -14,7 +15,12 @@ $defra-brand-colour: govuk-organisation-colour(department-for-environment-food-r
     }
   }
 
-  &-standard {
+  &-thin-border {
+    border-left: 5px solid;
+  }
+
+  &-standard,
+  &-thin-border {
     border-left-color: $defra-brand-colour;
   }
 

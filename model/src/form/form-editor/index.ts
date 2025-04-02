@@ -118,10 +118,16 @@ export const tabularDataTypesSchema = Joi.array()
   .single()
   .empty(null)
   .default([])
+export const enhancedActionSchema = Joi.string().trim().optional().allow('')
+export const radioIdSchema = Joi.string().trim().optional().allow('')
+export const radioLabelSchema = Joi.string().trim().required()
+export const radioHintSchema = Joi.string().trim().optional().allow('')
+export const radioValueSchema = Joi.string().trim().optional().allow('')
 
 export const questionDetailsFullSchema = {
   classesSchema,
   documentTypesSchema,
+  enhancedActionSchema,
   exactFilesSchema,
   fileTypesSchema,
   hintTextSchema,
@@ -140,6 +146,10 @@ export const questionDetailsFullSchema = {
   questionOptionalSchema,
   questionSchema,
   questionTypeFullSchema,
+  radioHintSchema,
+  radioIdSchema,
+  radioLabelSchema,
+  radioValueSchema,
   regexSchema,
   rowsSchema,
   shortDescriptionSchema,

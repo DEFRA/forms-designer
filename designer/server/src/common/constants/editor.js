@@ -65,7 +65,8 @@ export const QuestionBaseSettings = {
   FileTypes: 'fileTypes',
   DocumentTypes: 'documentTypes',
   ImageTypes: 'imageTypes',
-  TabularDataTypes: 'tabularDataTypes'
+  TabularDataTypes: 'tabularDataTypes',
+  RadiosOrCheckboxes: 'radiosOrCheckboxes'
 }
 
 /**
@@ -90,6 +91,19 @@ export const QuestionAdvancedSettings =
     Regex: 'regex',
     Rows: 'rows'
   }
+
+/**
+ * @readonly
+ * @enum {string}
+ */
+export const QuestionEnhancedFields =
+  /** @type {Record<string, keyof FormEditorGovukField | 'name'>} */ {
+    RadioId: 'radioId',
+    RadioLabel: 'radioLabel',
+    RadioHint: 'radioHint',
+    RadioValue: 'radioValue'
+  }
+
 /**
  * @import { FormEditorGovukField } from '@defra/forms-model'
  */

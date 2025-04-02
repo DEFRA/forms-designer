@@ -4,6 +4,7 @@ export const sessionNames = {
   fileDownloadPassword: /** @type {const} */ ('fileDownloadPassword'),
   questionType: /** @type {const} */ ('questionType'),
   reorderPages: /** @type {const} */ ('reorderPages'),
+  enhancedActionState: /** @type {const} */ ('enhancedActionState'),
   validationFailure: {
     createForm: /** @type {const} */ ('createFormValidationFailure'),
     updateForm: /** @type {const} */ ('updateFormValidationFailure'),

@@ -8,6 +8,15 @@ $defra-brand-colour: govuk-organisation-colour(department-for-environment-food-r
     padding-bottom: 10px;
   }
 
+  &-background-white {
+    background-color: govuk-colour("white");
+    padding-bottom: 10px;
+  }
+
+  &-no-padding-bottom {
+    padding-bottom: 0;
+  }
+
   &-title {
     text-decoration: solid $defra-brand-colour 5px underline;
     text-underline-offset: 10px;

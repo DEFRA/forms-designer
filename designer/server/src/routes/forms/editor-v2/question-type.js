@@ -15,6 +15,7 @@ import * as forms from '~/src/lib/forms.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import * as viewModel from '~/src/models/forms/editor-v2/question-type.js'
 import { editorv2Path } from '~/src/models/links.js'
+import { clearEnhancedActionState } from '~/src/routes/forms/editor-v2/question-details-helper.js'
 
 export const ROUTE_FULL_PATH_QUESTION = `/library/{slug}/editor-v2/page/{pageId}/question/{questionId}`
 
@@ -132,6 +133,8 @@ export default [
         sessionNames.questionType,
         deriveQuestionType(questionType, writtenAnswerSub, dateSub, listSub)
       )
+
+      clearEnhancedActionState(yar)
 
       // Redirect to next page
       return h

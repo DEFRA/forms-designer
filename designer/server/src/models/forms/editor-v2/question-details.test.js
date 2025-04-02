@@ -8,9 +8,11 @@ import {
 import { getSelectedFileTypesFromCSVMimeTypes } from '~/src/models/forms/editor-v2/base-settings-fields.js'
 import {
   getDetails,
+  getEnhancedFields,
   getExtraFields,
   hasDataOrErrorForDisplay,
-  mapToQuestionDetails
+  mapToQuestionDetails,
+  overrideFormValuesForEnhancedAction
 } from '~/src/models/forms/editor-v2/question-details.js'
 
 const fieldNames = ['minLength', 'maxLength', 'regex', 'classes']
@@ -386,9 +388,82 @@ describe('editor-v2 - question details model', () => {
       expect(details.question.type).toBe('FileUploadField')
     })
   })
+
+  describe('overrideFormValuesForEnhancedAction', () => {
+    test('should ignore if validation undefined', () => {
+      expect(
+        overrideFormValuesForEnhancedAction(undefined, undefined)
+      ).toBeUndefined()
+    })
+
+    test('should ignore if radioId not set', () => {
+      expect(
+        overrideFormValuesForEnhancedAction(
+          /** @type {ValidationFailure<FormEditor>} */ ({ formValues: {} }),
+          /** @type {EnhancedActionState} */ ({})
+        )
+      ).toEqual({ formValues: {} })
+    })
+
+    test('should override if radioId is set', () => {
+      expect(
+        overrideFormValuesForEnhancedAction(
+          undefined,
+          /** @type {EnhancedActionState} */ ({ state: { radioId: '12345' } })
+        )
+      ).toEqual({ formValues: { radioId: '12345' }, formErrors: {} })
+    })
+  })
+
+  describe('getEnhancedFields', () => {
+    test('should return radio fields', () => {
+      expect(
+        getEnhancedFields(
+          /** @type {ComponentDef} */ ({
+            type: ComponentType.RadiosField,
+            options: {}
+          }),
+          undefined
+        )
+      ).toEqual([
+        {
+          id: 'radioId',
+          name: 'radioId',
+          value: undefined
+        },
+        {
+          name: 'radioLabel',
+          id: 'radioLabel',
+          label: {
+            text: 'Item',
+            classes: 'govuk-label--m'
+          }
+        },
+        {
+          name: 'radioHint',
+          id: 'radioHint',
+          label: {
+            text: 'Hint text (optional)',
+            classes: 'govuk-label--m'
+          }
+        },
+        {
+          name: 'radioValue',
+          id: 'radioValue',
+          label: {
+            text: 'Unique identifier (optional)',
+            classes: 'govuk-label--m'
+          },
+          hint: {
+            text: 'Used in databases to identify the item'
+          }
+        }
+      ])
+    })
+  })
 })
 
 /**
- * @import { ComponentDef, GovukField, InputFieldsComponentsDef } from '@defra/forms-model'
- * @import { ErrorDetailsItem } from '~/src/common/helpers/types.js'
+ * @import { ComponentDef, EnhancedActionState, FormEditor, GovukField, InputFieldsComponentsDef } from '@defra/forms-model'
+ * @import { ErrorDetailsItem, ValidationFailure } from '~/src/common/helpers/types.js'
  */

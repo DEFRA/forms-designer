@@ -25,27 +25,28 @@ const mockFormValuesWithFormValues = /** @type {FormEditor | undefined} */ ({
 })
 
 describe('Editor v2 route helper', () => {
-  test('should get value from session if not in formValues 1', () => {
-    expect(getQuestionType(mockYar, undefined)).toBe('UkAddress')
-  })
+  describe('getQuestionType', () => {
+    test('should get value from session if not in formValues 1', () => {
+      expect(getQuestionType(mockYar, undefined)).toBe('UkAddress')
+    })
 
-  test('should get value from session if not in formValues 2', () => {
-    expect(getQuestionType(mockYar, mockFormValuesNoValue1)).toBe('UkAddress')
-  })
+    test('should get value from session if not in formValues 2', () => {
+      expect(getQuestionType(mockYar, mockFormValuesNoValue1)).toBe('UkAddress')
+    })
 
-  test('should get value from session if not in formValues 3', () => {
-    expect(getQuestionType(mockYar, mockFormValuesNoValue2)).toBe('UkAddress')
-  })
+    test('should get value from session if not in formValues 3', () => {
+      expect(getQuestionType(mockYar, mockFormValuesNoValue2)).toBe('UkAddress')
+    })
 
-  test('should get value from formValues if exists', () => {
-    expect(getQuestionType(mockYar, mockFormValuesWithFormValues)).toBe(
-      'TextField'
-    )
+    test('should get value from formValues if exists', () => {
+      expect(getQuestionType(mockYar, mockFormValuesWithFormValues)).toBe(
+        'TextField'
+      )
+    })
   })
 })
 
 /**
  * @import { FormEditor } from '@defra/forms-model'
  * @import { Yar } from '@hapi/yar'
- * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */
