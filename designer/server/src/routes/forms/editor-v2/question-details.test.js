@@ -2,7 +2,10 @@ import { ComponentType, ControllerType } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
-import { testFormDefinitionWithSinglePage } from '~/src/__stubs__/form-definition.js'
+import {
+  buildList,
+  testFormDefinitionWithSinglePage
+} from '~/src/__stubs__/form-definition.js'
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
 import { createServer } from '~/src/createServer.js'
 import { addPageAndFirstQuestion, addQuestion } from '~/src/lib/editor.js'
@@ -11,6 +14,7 @@ import {
   getValidationErrorsFromSession
 } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
+import { upsertList } from '~/src/lib/list.js'
 import { getQuestionType } from '~/src/routes/forms/editor-v2/helper.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
@@ -18,6 +22,7 @@ import { renderResponse } from '~/test/helpers/component-helpers.js'
 jest.mock('~/src/lib/forms.js')
 jest.mock('~/src/lib/error-helper.js')
 jest.mock('~/src/lib/editor.js')
+jest.mock('~/src/lib/list.js')
 jest.mock('~/src/routes/forms/editor-v2/helper.js')
 jest.mock('~/src/routes/forms/editor-v2/question-details-helper.js')
 
@@ -412,6 +417,49 @@ describe('Editor v2 question details routes', () => {
     expect(headers.location).toBe(
       '/library/my-form-slug/editor-v2/page/123456/questions'
     )
+  })
+
+  test('POST - should create a list on autocomplete question', async () => {
+    const listId = '3d7e14af-0674-40dc-aca5-a6439f45b782'
+    const list = buildList({
+      id: listId,
+      items: [
+        { text: 'English', value: 'en-gb' },
+        { text: 'French', value: 'fr-Fr' }
+      ]
+    })
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest.mocked(upsertList).mockResolvedValue({
+      id: listId,
+      list,
+      status: 'created'
+    })
+    const addQuestionMock = jest.mocked(addQuestion).mockResolvedValue(page)
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/123456/question/new/details',
+      auth,
+      payload: {
+        name: 'atvNgE',
+        question: 'Autocomplete',
+        hintText: '',
+        autoCompleteOptions: 'English:en-gb\r\nFrench:fr-Fr',
+        shortDescription: 'autocomplete',
+        questionType: 'AutocompleteField'
+      }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/page/123456/questions'
+    )
+    const [, , , question] = addQuestionMock.mock.calls[0]
+    expect(question).toMatchObject({ list: listId })
   })
 })
 

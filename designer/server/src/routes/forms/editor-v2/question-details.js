@@ -1,3 +1,4 @@
+import { ComponentType } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 
 import * as scopes from '~/src/common/constants/scopes.js'
@@ -9,6 +10,7 @@ import {
 } from '~/src/lib/editor.js'
 import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
+import { buildAutoCompleteListFromPayload, upsertList } from '~/src/lib/list.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import {
   allSpecificSchemas,
@@ -47,6 +49,32 @@ function redirectWithAnchor(h, slug, pageId, questionId, anchor) {
       )
     )
     .code(StatusCodes.SEE_OTHER)
+}
+
+const listQuestions = /** @type {string[]} */ ([
+  ComponentType.AutocompleteField
+])
+
+/**
+ * @param {string} formId
+ * @param {FormDefinition} definition
+ * @param {string} token
+ * @param {FormEditorInputQuestionDetails} payload
+ * @returns {Promise<undefined|string>}
+ */
+async function saveList(formId, definition, token, payload) {
+  if (!listQuestions.includes(`${payload.questionType}`)) {
+    return undefined
+  }
+
+  const { id } = await upsertList(
+    formId,
+    definition,
+    token,
+    buildAutoCompleteListFromPayload(payload)
+  )
+
+  return id
 }
 
 /**
@@ -178,12 +206,18 @@ export default [
       const definition = await forms.getDraftFormDefinition(metadata.id, token)
       const formId = metadata.id
 
+      const listId = await saveList(formId, definition, token, payload)
+
+      const questionDetailsWithList = listId
+        ? { ...questionDetails, list: listId }
+        : questionDetails
+
       const finalPageId = await saveQuestion(
         formId,
         pageId,
         token,
         definition,
-        questionDetails,
+        questionDetailsWithList,
         questionId
       )
 
