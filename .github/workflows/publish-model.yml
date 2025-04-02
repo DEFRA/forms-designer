@@ -9,6 +9,7 @@ on:
       - 'model/babel.config.*'
       - 'model/src/**'
       - '!**/*.test.*'
+  workflow_dispatch:
 
 concurrency:
   group: publish-model
