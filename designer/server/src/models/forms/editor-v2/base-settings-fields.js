@@ -18,14 +18,25 @@ const IMAGES = 'images'
 
 export const baseSchema = Joi.object().keys({
   name: questionDetailsFullSchema.nameSchema,
-  question: questionDetailsFullSchema.questionSchema.messages({
-    '*': 'Enter a question'
+  question: questionDetailsFullSchema.questionSchema.when('enhancedAction', {
+    is: Joi.exist(),
+    then: Joi.string().optional().allow(''),
+    otherwise: Joi.string().trim().required().messages({
+      '*': 'Enter a question'
+    })
   }),
   hintText: questionDetailsFullSchema.hintTextSchema,
   questionOptional: questionDetailsFullSchema.questionOptionalSchema,
-  shortDescription: questionDetailsFullSchema.shortDescriptionSchema.messages({
-    '*': 'Enter a short description'
-  }),
+  shortDescription: questionDetailsFullSchema.shortDescriptionSchema.when(
+    'enhancedAction',
+    {
+      is: Joi.exist(),
+      then: Joi.string().optional().allow(''),
+      otherwise: Joi.string().trim().required().messages({
+        '*': 'Enter a short description'
+      })
+    }
+  ),
   questionType: questionDetailsFullSchema.questionTypeFullSchema.messages({
     '*': 'The question type is missing'
   }),
@@ -68,6 +79,24 @@ export const baseSchema = Joi.object().keys({
       })
     }
   ),
+  enhancedAction: questionDetailsFullSchema.enhancedActionSchema,
+  radioId: questionDetailsFullSchema.radioIdSchema,
+  radioLabel: questionDetailsFullSchema.radioLabelSchema.when(
+    'enhancedAction',
+    {
+      is: Joi.exist(),
+      then: Joi.string().when('enhancedAction', {
+        is: 'add-item',
+        then: Joi.string().optional().allow(''),
+        otherwise: Joi.string().trim().required().messages({
+          '*': 'Enter item text'
+        })
+      }),
+      otherwise: Joi.string().optional().allow('')
+    }
+  ),
+  radioHint: questionDetailsFullSchema.radioHintSchema,
+  radioValue: questionDetailsFullSchema.radioValueSchema,
   autoCompleteOptions: questionDetailsFullSchema.autoCompleteOptionsSchema.when(
     'questionType',
     {
@@ -154,6 +183,11 @@ export const allBaseSettingsFields = {
     id: 'tabularDataTypes',
     name: 'tabularDataTypes',
     idPrefix: 'tabularDataTypes'
+  },
+  radiosOrCheckboxes: {
+    id: 'radiosOrCheckboxes',
+    name: 'radiosOrCheckboxes',
+    customTemplate: 'radios-or-checkboxes'
   },
   autoCompleteOptions: {
     id: 'autoCompleteOptions',
@@ -353,6 +387,15 @@ export const fileUploadFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
   QuestionBaseSettings.ShortDescription
 ])
 
+export const radiosOrCheckboxesFields =
+  /** @type {(keyof Omit<FormEditorGovukField, 'errorMessage'>)[]} */ ([
+    QuestionBaseSettings.Question,
+    QuestionBaseSettings.HintText,
+    QuestionBaseSettings.QuestionOptional,
+    QuestionBaseSettings.ShortDescription,
+    QuestionBaseSettings.RadiosOrCheckboxes
+  ])
+
 /**
  * @param { ComponentType | undefined } questionType
  * @returns {(keyof Omit<FormEditorGovukField, 'errorMessage'>)[]}
@@ -363,6 +406,12 @@ export function getQuestionFieldList(questionType) {
   }
   if (questionType === ComponentType.AutocompleteField) {
     return autocompleteFields
+  }
+  if (
+    questionType === ComponentType.RadiosField ||
+    questionType === ComponentType.CheckboxesField
+  ) {
+    return radiosOrCheckboxesFields
   }
   return baseQuestionFields
 }

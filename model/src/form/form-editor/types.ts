@@ -1,3 +1,4 @@
+import { type ComponentDef } from '~/src/components/types.js'
 import { type Item } from '~/src/index.js'
 
 /**
@@ -174,6 +175,36 @@ export interface FormEditor {
    */
   tabularDataTypes: string[]
 
+  /**
+   * The action required from within a sub-section
+   */
+  enhancedAction: string
+
+  /**
+   * Placeholder for inserted section to handle adding/editing radios or checkboxes
+   */
+  radiosOrCheckboxes: string
+
+  /**
+   * The unique id of the radio item
+   */
+  radioId: string
+
+  /**
+   * The display text of the radio item
+   */
+  radioLabel: string
+
+  /**
+   * The hint of the radio item
+   */
+  radioHint: string
+
+  /**
+   * The value of the radio item
+   */
+  radioValue: string
+
   autoCompleteOptions: Item[]
 }
 
@@ -215,6 +246,11 @@ export type FormEditorInputQuestion = Pick<
   | 'imageTypes'
   | 'tabularDataTypes'
   | 'autoCompleteOptions'
+  | 'enhancedAction'
+  | 'radioId'
+  | 'radioLabel'
+  | 'radioHint'
+  | 'radioValue'
 >
 
 export type FormEditorInputPageSettings = Pick<
@@ -226,6 +262,36 @@ export type FormEditorInputGuidancePage = Pick<
   FormEditor,
   'pageHeading' | 'guidanceText'
 >
+
+export type FormEditorInputQuestionDetails = Pick<
+  FormEditorInputQuestion,
+  | 'question'
+  | 'hintText'
+  | 'shortDescription'
+  | 'questionOptional'
+  | 'questionType'
+  | 'fileTypes'
+  | 'documentTypes'
+  | 'imageTypes'
+  | 'tabularDataTypes'
+  | 'enhancedAction'
+  | 'radioId'
+  | 'radioLabel'
+  | 'radioHint'
+  | 'radioValue'
+>
+
+export interface EnhancedActionState {
+  questionDetails: Partial<ComponentDef>
+  state: {
+    radioId?: string
+    radioLabel?: string
+    radioHint?: string
+    radioValue?: string
+    expanded?: boolean
+  }
+  listItems: { label?: string; hint?: string; value?: string; id?: string }[]
+}
 
 export interface GovukField {
   id?: string
@@ -258,6 +324,7 @@ export interface FormEditorGovukField {
   documentTypes?: GovukField
   imageTypes?: GovukField
   tabularDataTypes?: GovukField
+  radiosOrCheckboxes?: GovukField
   autoCompleteOptions?: GovukField
   errorMessage?: { text: string }
 }

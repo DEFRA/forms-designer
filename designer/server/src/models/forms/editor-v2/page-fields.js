@@ -1,10 +1,6 @@
 import {
   ComponentType,
   classesSchema,
-  documentTypesSchema,
-  fileTypesSchema,
-  hintTextSchema,
-  imageTypesSchema,
   maxFilesSchema,
   maxFutureSchema,
   maxLengthSchema,
@@ -13,17 +9,11 @@ import {
   minFilesSchema,
   minLengthSchema,
   minSchema,
-  nameSchema,
   precisionSchema,
   prefixSchema,
-  questionOptionalSchema,
-  questionSchema,
-  questionTypeFullSchema,
   regexSchema,
   rowsSchema,
-  shortDescriptionSchema,
-  suffixSchema,
-  tabularDataTypesSchema
+  suffixSchema
 } from '@defra/forms-model'
 import Joi from 'joi'
 
@@ -32,53 +22,6 @@ import {
   QuestionBaseSettings
 } from '~/src/common/constants/editor.js'
 
-export const baseSchema = Joi.object().keys({
-  name: nameSchema,
-  question: questionSchema.messages({
-    '*': 'Enter a question'
-  }),
-  hintText: hintTextSchema,
-  questionOptional: questionOptionalSchema,
-  shortDescription: shortDescriptionSchema.messages({
-    '*': 'Enter a short description'
-  }),
-  questionType: questionTypeFullSchema.messages({
-    '*': 'The question type is missing'
-  }),
-  fileTypes: fileTypesSchema.when('questionType', {
-    is: 'FileUploadField',
-    then: Joi.required().messages({
-      '*': 'Select the type of file you want to upload'
-    })
-  }),
-  documentTypes: documentTypesSchema.when('questionType', {
-    is: 'FileUploadField',
-    then: Joi.array().when('fileTypes', {
-      is: Joi.array().has('documents'),
-      then: Joi.required().messages({
-        '*': 'Choose the document file types you accept'
-      })
-    })
-  }),
-  imageTypes: imageTypesSchema.when('questionType', {
-    is: 'FileUploadField',
-    then: Joi.array().when('fileTypes', {
-      is: Joi.array().has('images'),
-      then: Joi.required().messages({
-        '*': 'Choose the image file types you accept'
-      })
-    })
-  }),
-  tabularDataTypes: tabularDataTypesSchema.when('questionType', {
-    is: 'FileUploadField',
-    then: Joi.array().when('fileTypes', {
-      is: Joi.array().has('tabular-data'),
-      then: Joi.required().messages({
-        '*': 'Choose the tabular data file types you accept'
-      })
-    })
-  })
-})
 export const allSpecificSchemas = Joi.object().keys({
   maxFuture: maxFutureSchema.messages({
     '*': 'Max days in the future must be a positive whole number'

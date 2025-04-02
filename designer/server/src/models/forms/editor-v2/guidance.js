@@ -1,7 +1,10 @@
 import { ComponentType, hasComponents } from '@defra/forms-model'
 
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
-import { insertValidationErrors } from '~/src/lib/utils.js'
+import {
+  getPageFromDefinition,
+  insertValidationErrors
+} from '~/src/lib/utils.js'
 import {
   GOVUK_LABEL__M,
   SAVE,
@@ -71,8 +74,7 @@ export function guidanceViewModel(
 
   const pageNum = getPageNum(definition, pageId)
 
-  const pageIdx = definition.pages.findIndex((x) => x.id === pageId)
-  const page = /** @type { Page | undefined } */ (definition.pages[pageIdx])
+  const page = getPageFromDefinition(definition, pageId)
   const components = hasComponents(page) ? page.components : []
 
   const pageHeadingVal = formValues?.pageHeading ?? page?.title

@@ -68,6 +68,17 @@ export function insertValidationErrors(formField) {
 }
 
 /**
+ *
+ * @param {FormDefinition} definition
+ * @param {string} pageId
+ * @returns { Page | undefined }
+ */
+export function getPageFromDefinition(definition, pageId) {
+  return definition.pages.find((x) => x.id === pageId)
+}
+
+/**
  * @import { ErrorDetailsItem } from '~/src/common/helpers/types.js'
+ * @import { FormDefinition, Page } from '@defra/forms-model'
  * @import Wreck from '@hapi/wreck'
  */

@@ -2,6 +2,7 @@ import { ComponentType } from '@defra/forms-model'
 
 import {
   getAdditionalSchema,
+  isValueOrZero,
   mapQuestionDetails
 } from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
 import { getFieldComponentType } from '~/src/models/forms/editor-v2/page-fields.js'
@@ -167,6 +168,15 @@ describe('editor-v2 - advanced settings fields model', () => {
           exactFiles: '3'
         })
       ).toEqual({ length: '3' })
+    })
+  })
+
+  describe('isValueOrZero', () => {
+    test('should handle values', () => {
+      expect(isValueOrZero(undefined)).toBeFalsy()
+      expect(isValueOrZero('-1')).toBeTruthy()
+      expect(isValueOrZero('0')).toBeTruthy()
+      expect(isValueOrZero('1')).toBeTruthy()
     })
   })
 })

@@ -1,5 +1,6 @@
 import {
   ComponentType,
+  ControllerType,
   hasComponents,
   hasComponentsEvenIfNoNext
 } from '@defra/forms-model'
@@ -8,6 +9,7 @@ import config from '~/src/config.js'
 import { delJson, patchJson, postJson, putJson } from '~/src/lib/fetch.js'
 import {
   getHeaders,
+  getPageFromDefinition,
   isCheckboxSelected,
   slugify,
   stringHasValue
@@ -21,6 +23,15 @@ const postJsonByDefinitionType =
   /** @type {typeof postJson<FormDefinition>} */ (postJson)
 const putJsonByType = /** @type {typeof putJson<Page>} */ (putJson)
 const delJsonByType = /** @type {typeof delJson<ComponentDef>} */ (delJson)
+
+/**
+ * @param {Partial<ComponentDef>} questionDetails
+ */
+export function getControllerType(questionDetails) {
+  return questionDetails.type === ComponentType.FileUploadField
+    ? { controller: ControllerType.FileUpload }
+    : {}
+}
 
 /**
  * Add a page to a form definition
@@ -44,7 +55,8 @@ export async function addPageAndFirstQuestion(
     payload: {
       title: pageDetails?.title ?? '',
       path: `/${slugify(pageDetails?.title ?? questionDetails.title)}`,
-      components: [questionDetails]
+      components: [questionDetails],
+      ...getControllerType(questionDetails)
     },
     ...getHeaders(token)
   })
@@ -76,6 +88,7 @@ export async function addQuestion(formId, token, pageId, questionDetails) {
  * Add a question to an existing page
  * @param {string} formId
  * @param {string} token
+ * @param {FormDefinition} definition
  * @param {string} pageId
  * @param {string} questionId
  * @param {Partial<ComponentDef>} questionDetails
@@ -83,10 +96,29 @@ export async function addQuestion(formId, token, pageId, questionDetails) {
 export async function updateQuestion(
   formId,
   token,
+  definition,
   pageId,
   questionId,
   questionDetails
 ) {
+  // Determine if page controller should change
+  const page = getPageFromDefinition(definition, pageId)
+  const origControllerType = page?.controller
+  const { controller: newControllerType } = getControllerType(questionDetails)
+  if (origControllerType !== newControllerType) {
+    // Update page controller
+    const pageHeadingRequestUrl = new URL(
+      `./${formId}/definition/draft/pages/${pageId}`,
+      formsEndpoint
+    )
+    await patchJsonByType(pageHeadingRequestUrl, {
+      payload: {
+        controller: newControllerType ?? null
+      },
+      ...getHeaders(token)
+    })
+  }
+
   const requestUrl = new URL(
     `./${formId}/definition/draft/pages/${pageId}/components/${questionId}`,
     formsEndpoint
@@ -195,7 +227,7 @@ export async function setPageHeadingAndGuidance(
 ) {
   const { pageHeading, guidanceText } = payload
 
-  const page = definition.pages.find((x) => x.id === pageId)
+  const page = getPageFromDefinition(definition, pageId)
   const components = hasComponents(page) ? page.components : []
 
   const isExpanded = isCheckboxSelected(payload.pageHeadingAndGuidance)
@@ -243,7 +275,7 @@ export async function setCheckAnswersDeclaration(
 ) {
   const { declarationText } = payload
 
-  const page = definition.pages.find((x) => x.id === pageId)
+  const page = getPageFromDefinition(definition, pageId)
   // Unable to use hasComponents() method since Summary page does not contain 'next' property
   const components = hasComponentsEvenIfNoNext(page) ? page.components : []
 

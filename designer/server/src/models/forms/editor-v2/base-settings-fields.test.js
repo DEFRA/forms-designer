@@ -4,6 +4,7 @@ import { ValidationError } from 'joi'
 import {
   baseSchema,
   getFieldList,
+  getQuestionFieldList,
   mapPayloadToFileMimeTypes
 } from '~/src/models/forms/editor-v2/base-settings-fields.js'
 import { GOVUK_LABEL__M } from '~/src/models/forms/editor-v2/common.js'
@@ -104,6 +105,12 @@ describe('editor-v2 - advanced settings fields model', () => {
     test('should return TextField for Max', () => {
       expect(getFieldComponentType({ name: 'max' })).toBe(
         ComponentType.TextField
+      )
+    })
+
+    test('should return FileUploadField for FileTypes', () => {
+      expect(getFieldComponentType({ name: 'fileTypes' })).toBe(
+        ComponentType.FileUploadField
       )
     })
 
@@ -297,6 +304,31 @@ describe('editor-v2 - advanced settings fields model', () => {
       expect(validated.error).toEqual(
         new ValidationError('Enter options separated by a colon', [], [])
       )
+    })
+  })
+
+  describe('getQuestionFieldList', () => {
+    test('should return TextField for MinLength', () => {
+      const fileUploadFields = getQuestionFieldList(
+        ComponentType.FileUploadField
+      )
+      expect(fileUploadFields).toHaveLength(5)
+      expect(fileUploadFields[0]).toBe('question')
+      expect(fileUploadFields[3]).toBe('fileTypes')
+    })
+
+    test('should return Radios or Checkboxes for Radios', () => {
+      const res = getQuestionFieldList(ComponentType.RadiosField)
+      expect(res).toHaveLength(5)
+      expect(res[0]).toBe('question')
+      expect(res[4]).toBe('radiosOrCheckboxes')
+    })
+
+    test('should return Radios or Checkboxes for Checkboxes', () => {
+      const res = getQuestionFieldList(ComponentType.CheckboxesField)
+      expect(res).toHaveLength(5)
+      expect(res[0]).toBe('question')
+      expect(res[4]).toBe('radiosOrCheckboxes')
     })
   })
 })

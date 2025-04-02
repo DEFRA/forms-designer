@@ -441,6 +441,72 @@ export const testFormDefinitionWithAGuidancePage = {
 }
 
 /**
+ * @satisfies {FormDefinition}
+ */
+export const testFormDefinitionWithFileUploadPage = {
+  name: 'Test form',
+  pages: [
+    {
+      id: 'p1',
+      path: '/file-upload',
+      title: 'Upload a file',
+      controller: ControllerType.FileUpload,
+      section: 'section',
+      components: [
+        {
+          id: 'q1',
+          type: ComponentType.FileUploadField,
+          name: 'fileUpload',
+          title: 'Upload a file',
+          options: {},
+          schema: {}
+        }
+      ],
+      next: [{ path: '/summary' }]
+    },
+    {
+      id: 'p2',
+      path: '/page-two',
+      title: 'Page two',
+      section: 'section',
+      components: [
+        {
+          id: 'q1',
+          type: ComponentType.TextField,
+          name: 'textField',
+          title: 'This is your first question - page two',
+          hint: 'Help text',
+          options: {},
+          schema: {}
+        },
+        {
+          id: 'q2',
+          type: ComponentType.TextField,
+          name: 'textField',
+          title: 'This is your second question - page two',
+          hint: 'Help text',
+          options: {
+            required: false
+          },
+          schema: {}
+        }
+      ],
+      next: [{ path: '/summary' }]
+    },
+    {
+      id: 'p3',
+      title: 'Summary',
+      path: '/summary',
+      controller: ControllerType.Summary,
+      components: []
+    }
+  ],
+  conditions: [],
+  sections: [],
+  lists: []
+}
+
+/**
  * @param {Partial<PageQuestion>} [partialPage]
  * @returns {PageQuestion}
  */

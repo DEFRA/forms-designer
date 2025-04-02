@@ -67,8 +67,9 @@ describe('Editor v2 question routes', () => {
     expect($radios[6]).toHaveAccessibleName('Month and year')
     expect($radios[7]).toHaveAccessibleName('UK address')
     expect($radios[8]).toHaveAccessibleName('Phone number')
-    expect($radios[9]).toHaveAccessibleName('Email address')
-    expect($radios[10]).toHaveAccessibleName(
+    expect($radios[9]).toHaveAccessibleName('Supporting evidence')
+    expect($radios[10]).toHaveAccessibleName('Email address')
+    expect($radios[11]).toHaveAccessibleName(
       'A list of options that users can choose from'
     )
     expect($radios[12]).toHaveAccessibleName('Yes or No')
