@@ -1,7 +1,14 @@
 import { ComponentType } from '@defra/forms-model'
 
+import { testFormDefinitionWithRadioQuestionAndList, testFormDefinitionWithTwoPagesAndQuestions } from '~/src/__stubs__/form-definition.js'
 import {
+  testFormDefinitionWithRadioQuestionAndList,
+  testFormDefinitionWithTwoPagesAndQuestions
+} from '~/src/__stubs__/form-definition.js'
+import {
+  buildQuestionSessionState,
   clearQuestionSessionState,
+  createQuestionSessionState,
   getFlashFromSession,
   getQuestionSessionState,
   setFlashInSession,
@@ -33,6 +40,10 @@ const listWithThreeItems = {
 }
 
 describe('Session functions', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
+
   describe('getFlashFromSession', () => {
     test('should call flash', () => {
       mockFlash.mockReturnValue(['stored-val'])
@@ -56,7 +67,7 @@ describe('Session functions', () => {
     })
   })
 
-  describe('getEnhancedActionStateFromSession', () => {
+  describe('getQuestionSessionState', () => {
     test('should get value from session', () => {
       mockGet.mockReturnValue(structuredClone(listWithThreeItems))
       expect(getQuestionSessionState(mockYar, '123')).toEqual(
@@ -76,6 +87,17 @@ describe('Session functions', () => {
     })
   })
 
+  describe('createQuestionSessionState', () => {
+    test('should call set', () => {
+      const stateId = createQuestionSessionState(mockYar)
+      expect(stateId).toBeDefined()
+      expect(mockSet).toHaveBeenCalledWith(
+        `questionSessionState-${stateId}`,
+        {}
+      )
+    })
+  })
+
   describe('clearQuestionSessionState', () => {
     test('should call set', () => {
       clearQuestionSessionState(mockYar, '123')
@@ -83,6 +105,65 @@ describe('Session functions', () => {
         'questionSessionState-123',
         undefined
       )
+    })
+  })
+
+  describe('buildQuestionSessionState', () => {
+    test('should ignore if not a question that uses lists', () => {
+      mockGet.mockReturnValue({ questionType: ComponentType.TextField })
+      const res = buildQuestionSessionState(
+        mockYar,
+        '123',
+        testFormDefinitionWithTwoPagesAndQuestions,
+        'p1',
+        'q1'
+      )
+      expect(mockSet).not.toHaveBeenCalled()
+      expect(res).toEqual({ questionType: ComponentType.TextField })
+    })
+
+    test('should ignore if already a list defined', () => {
+      mockGet.mockReturnValue({
+        questionType: ComponentType.RadiosField,
+        listItems: []
+      })
+      const res = buildQuestionSessionState(
+        mockYar,
+        '123',
+        testFormDefinitionWithTwoPagesAndQuestions,
+        'p1',
+        'q1'
+      )
+      expect(mockSet).not.toHaveBeenCalled()
+      expect(res).toEqual({
+        questionType: ComponentType.RadiosField,
+        listItems: []
+      })
+    })
+
+    test('should build if required', () => {
+      mockGet.mockReturnValue({ questionType: ComponentType.RadiosField })
+      const res = buildQuestionSessionState(
+        mockYar,
+        '123',
+        testFormDefinitionWithRadioQuestionAndList,
+        'p1',
+        'q1'
+      )
+      const expectedState = {
+        editRow: {},
+        listItems: [
+          { id: expect.any(String), label: 'Blue', value: 'blue' },
+          { id: expect.any(String), label: 'Red', value: 'red' },
+          { id: expect.any(String), label: 'Green', value: 'green' }
+        ],
+        questionType: 'RadiosField'
+      }
+      expect(mockSet).toHaveBeenCalledWith(
+        'questionSessionState-123',
+        expectedState
+      )
+      expect(res).toEqual(expectedState)
     })
   })
 })

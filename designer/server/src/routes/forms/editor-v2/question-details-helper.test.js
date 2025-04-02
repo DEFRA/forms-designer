@@ -39,7 +39,7 @@ const sessionWithListWithThreeItems = {
 }
 
 describe('Editor v2 question-details route helper', () => {
-  describe('getEnhancedActionStateFromSession', () => {
+  describe('getQuestionSessionState', () => {
     test('should get value from session', () => {
       mockGet.mockReturnValue(structuredClone(listWithThreeItems))
       expect(getQuestionSessionState(mockYar, '123')).toEqual(

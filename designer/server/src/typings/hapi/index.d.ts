@@ -1,9 +1,9 @@
 import {
-  type EnhancedActionState,
   type FormMetadataContact,
   type FormMetadataContactEmail,
   type FormMetadataContactOnline,
-  type FormMetadataInput
+  type FormMetadataInput,
+  type QuestionSessionState
 } from '@defra/forms-model'
 import { type StringLikeMap } from '@hapi/bell'
 import { type RequestAuth } from '@hapi/hapi'
@@ -100,7 +100,7 @@ declare module '@hapi/yar' {
   type LogoutHintKey = (typeof sessionNames)['logoutHint']
   type QuestionType = (typeof sessionNames)['questionType']
   type ReorderPagesKey = (typeof sessionNames)['reorderPages']
-  type EnhancedActionStateKey = (typeof sessionNames)['enhancedActionState']
+  type QuestionSessionStateKey = (typeof sessionNames)['questionSessionState']
 
   // Export known validation session keys
   type ValidationSession = (typeof sessionNames)['validationFailure']
@@ -174,7 +174,7 @@ declare module '@hapi/yar' {
     /**
      * Get enhanced action state from the session
      */
-    get(type: EnhancedActionStateKey): EnhancedActionState | undefined
+    get(type: QuestionSessionStateKey): QuestionSessionState | undefined
 
     /**
      * Set form metadata on the session

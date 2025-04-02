@@ -27,7 +27,9 @@ export function setFlashInSession(yar, key, value) {
  * @param {string} stateId
  */
 export function questionSessionKey(stateId) {
-  return `${sessionNames.questionSessionState}-${stateId}`
+  return /** @type {QuestionSessionStateKey} */ (
+    `${sessionNames.questionSessionState}-${stateId}`
+  )
 }
 
 /**
@@ -120,5 +122,5 @@ export function buildQuestionSessionState(
 
 /**
  * @import { QuestionSessionState, FormDefinition, ListComponentsDef } from '@defra/forms-model'
- * @import { Yar } from '@hapi/yar'
+ * @import {QuestionSessionStateKey, Yar } from '@hapi/yar'
  */
