@@ -1,7 +1,8 @@
-import { questionDetailsFullSchema } from '@defra/forms-model'
+import { ComponentType, questionDetailsFullSchema } from '@defra/forms-model'
 import Joi from 'joi'
 
 import { QuestionAdvancedSettings } from '~/src/common/constants/editor.js'
+import { mapAutoCompleteComponentFromPayload } from '~/src/lib/list.js'
 import { isCheckboxSelected } from '~/src/lib/utils.js'
 import { mapPayloadToFileMimeTypes } from '~/src/models/forms/editor-v2/base-settings-fields.js'
 import {
@@ -399,11 +400,29 @@ export function getAdditionalSchema(payload) {
 
 /**
  * @param {Partial<FormEditorInputQuestion>} payload
+ * @returns {Partial<FileUploadFieldComponent>}
  */
-export function mapQuestionDetails(payload) {
+export function mapFileUploadQuestionDetails(payload) {
+  const baseQuestionDetails = mapBaseQuestionDetails(payload)
+  const fileTypes = mapPayloadToFileMimeTypes(payload)
+
+  return {
+    ...baseQuestionDetails,
+    type: ComponentType.FileUploadField,
+    options: {
+      ...baseQuestionDetails.options,
+      ...fileTypes
+    }
+  }
+}
+
+/**
+ * @param {Partial<FormEditorInputQuestion>} payload
+ * @returns {Partial<ComponentDef>}
+ */
+export function mapBaseQuestionDetails(payload) {
   const additionalOptions = getAdditionalOptions(payload)
   const additionalSchema = getAdditionalSchema(payload)
-  const fileTypes = mapPayloadToFileMimeTypes(payload)
 
   return /** @type {Partial<ComponentDef>} */ ({
     type: payload.questionType,
@@ -413,13 +432,26 @@ export function mapQuestionDetails(payload) {
     hint: payload.hintText,
     options: {
       required: !isCheckboxSelected(payload.questionOptional),
-      ...additionalOptions,
-      ...fileTypes
+      ...additionalOptions
     },
     schema: { ...additionalSchema }
   })
 }
 
 /**
- * @import { ComponentDef, ComponentType, FormEditorInputQuestion, GovukField } from '@defra/forms-model'
+ * @param {Partial<FormEditorInputQuestion>} payload
+ * @returns {Partial<ComponentDef>}
+ */
+export function mapQuestionDetails(payload) {
+  if (payload.questionType === ComponentType.FileUploadField) {
+    return mapFileUploadQuestionDetails(payload)
+  }
+  if (payload.questionType === ComponentType.AutocompleteField) {
+    return mapAutoCompleteComponentFromPayload(payload)
+  }
+  return mapBaseQuestionDetails(payload)
+}
+
+/**
+ * @import { ComponentDef, FormEditorInputQuestion, GovukField, FileUploadFieldComponent } from '@defra/forms-model'
  */

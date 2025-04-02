@@ -10,10 +10,10 @@ import {
 } from '~/src/lib/__stubs__/editor.js'
 import { buildAutoCompletePayload } from '~/src/lib/__stubs__/list.js'
 import {
-  buildAutoCompleteComponentFromPayload,
   buildAutoCompleteListFromPayload,
   createList,
   deleteList,
+  mapAutoCompleteComponentFromPayload,
   updateList,
   upsertList
 } from '~/src/lib/list.js'
@@ -31,7 +31,7 @@ describe('list.js', () => {
     hintText: 'Hint Text'
   })
 
-  describe('buildAutoCompleteComponentFromPayload', () => {
+  describe('mapAutoCompleteComponentFromPayload', () => {
     it('should build an autocomplete field from the payload', () => {
       const expectedAutoCompleteField = {
         name: 'tzrHYW',
@@ -44,7 +44,7 @@ describe('list.js', () => {
         schema: {}
       }
 
-      expect(buildAutoCompleteComponentFromPayload(basePayload)).toEqual(
+      expect(mapAutoCompleteComponentFromPayload(basePayload)).toEqual(
         expectedAutoCompleteField
       )
     })

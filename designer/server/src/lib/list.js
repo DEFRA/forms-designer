@@ -1,7 +1,7 @@
 import config from '~/src/config.js'
 import { delJson, postJson, putJson } from '~/src/lib/fetch.js'
 import { getHeaders } from '~/src/lib/utils.js'
-import { mapQuestionDetails } from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
+import { mapBaseQuestionDetails } from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
 
 const formsEndpoint = new URL('/forms/', config.managerUrl)
 const postJsonByListType =
@@ -18,9 +18,8 @@ const putJsonByListType =
  * @param {Partial<FormEditorInputQuestion>} payload
  * @returns {Partial<ComponentDef>}
  */
-export function buildAutoCompleteComponentFromPayload(payload) {
-  const baseComponentDetails = mapQuestionDetails(payload)
-
+export function mapAutoCompleteComponentFromPayload(payload) {
+  const baseComponentDetails = mapBaseQuestionDetails(payload)
   return {
     ...baseComponentDetails,
     list: baseComponentDetails.name
