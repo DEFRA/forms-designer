@@ -213,9 +213,6 @@ export function questionDetailsViewModel(
     enhancedActionState?.questionDetails ?? questionFields
   )
   const questionType = questionTypeBase ?? questionFieldsOverride.type
-
-  const { formErrors } = validation ?? {}
-
   const basePageFields = getFieldList(
     /** @type {InputFieldsComponentsDef} */ (questionFieldsOverride),
     questionType,
@@ -237,7 +234,7 @@ export function questionDetailsViewModel(
     getEnhancedFields(questionFieldsOverride, validation)
   )
   const extraFieldNames = extraFields.map((field) => field.name ?? 'unknown')
-  const errorList = buildErrorList(formErrors)
+  const errorList = buildErrorList(validation?.formErrors)
   const previewPageUrl = `${buildPreviewUrl(metadata.slug)}${pagePath}?force`
 
   return {
