@@ -49,6 +49,45 @@ function redirectWithAnchor(h, slug, pageId, questionId, anchor) {
     .code(StatusCodes.SEE_OTHER)
 }
 
+/**
+ * @param {string} formId
+ * @param {string} pageId
+ * @param {string} token
+ * @param {FormDefinition} definition
+ * @param {Partial<ComponentDef>} questionDetails
+ * @param {string} questionId
+ * @returns {Promise<string>}
+ */
+async function saveQuestion(
+  formId,
+  pageId,
+  token,
+  definition,
+  questionDetails,
+  questionId
+) {
+  if (pageId === 'new') {
+    const newPage = await addPageAndFirstQuestion(
+      formId,
+      token,
+      questionDetails
+    )
+    return newPage.id ?? 'unknown'
+  } else if (questionId === 'new') {
+    await addQuestion(formId, token, pageId, questionDetails)
+  } else {
+    await updateQuestion(
+      formId,
+      token,
+      definition,
+      pageId,
+      questionId,
+      questionDetails
+    )
+  }
+  return pageId
+}
+
 export default [
   /**
    * @satisfies {ServerRoute<{ Params: { slug: string, pageId: string, questionId: string } }>}
@@ -137,27 +176,16 @@ export default [
       // Save page and first question
       const metadata = await forms.get(slug, token)
       const definition = await forms.getDraftFormDefinition(metadata.id, token)
-      let finalPageId = pageId
+      const formId = metadata.id
 
-      if (pageId === 'new') {
-        const newPage = await addPageAndFirstQuestion(
-          metadata.id,
-          token,
-          questionDetails
-        )
-        finalPageId = newPage.id ?? 'unknown'
-      } else if (questionId === 'new') {
-        await addQuestion(metadata.id, token, pageId, questionDetails)
-      } else {
-        await updateQuestion(
-          metadata.id,
-          token,
-          definition,
-          pageId,
-          questionId,
-          questionDetails
-        )
-      }
+      const finalPageId = await saveQuestion(
+        formId,
+        pageId,
+        token,
+        definition,
+        questionDetails,
+        questionId
+      )
 
       yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
 
@@ -185,6 +213,6 @@ export default [
 ]
 
 /**
- * @import { FormEditorInputQuestionDetails } from '@defra/forms-model'
+ * @import { FormEditorInputQuestionDetails, ComponentDef, FormDefinition } from '@defra/forms-model'
  * @import { ResponseToolkit, ServerRoute } from '@hapi/hapi'
  */

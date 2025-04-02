@@ -39,6 +39,7 @@ export function getControllerType(questionDetails) {
  * @param {string} token
  * @param {Partial<ComponentDef>} questionDetails
  * @param {Partial<Page>} [pageDetails]
+ * @returns {Promise<Page>}
  */
 export async function addPageAndFirstQuestion(
   formId,
