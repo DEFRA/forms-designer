@@ -600,6 +600,19 @@ export function buildDefinition(definitionPartial = {}) {
 }
 
 /**
+ *
+ * @param {Partial<Item>} partialListItem
+ * @returns {Item}
+ */
+export function buildListItem(partialListItem = {}) {
+  return {
+    text: 'Javascript',
+    value: 'javascript',
+    ...partialListItem
+  }
+}
+
+/**
  * @param {Partial<List>} partialList
  * @returns {List}
  */
@@ -638,5 +651,5 @@ export function buildList(partialList = {}) {
   }
 }
 /**
- * @import { FormDefinition, PageQuestion, PageSummary, TextFieldComponent, FileUploadFieldComponent, AutocompleteFieldComponent, List } from '@defra/forms-model'
+ * @import { FormDefinition, PageQuestion, PageSummary, TextFieldComponent, FileUploadFieldComponent, AutocompleteFieldComponent, List, Item } from '@defra/forms-model'
  */
