@@ -401,7 +401,7 @@ describe('editor-v2 - question details model', () => {
       expect(
         overrideFormValuesForEnhancedAction(
           /** @type {ValidationFailure<FormEditor>} */ ({ formValues: {} }),
-          /** @type {EnhancedActionState} */ ({})
+          /** @type {QuestionSessionState} */ ({})
         )
       ).toEqual({ formValues: {} })
     })
@@ -410,7 +410,7 @@ describe('editor-v2 - question details model', () => {
       expect(
         overrideFormValuesForEnhancedAction(
           undefined,
-          /** @type {EnhancedActionState} */ ({ state: { radioId: '12345' } })
+          /** @type {QuestionSessionState} */ ({ state: { radioId: '12345' } })
         )
       ).toEqual({ formValues: { radioId: '12345' }, formErrors: {} })
     })
@@ -499,6 +499,6 @@ describe('editor-v2 - question details model', () => {
 })
 
 /**
- * @import { ComponentDef, EnhancedActionState, FormEditor, GovukField, InputFieldsComponentsDef } from '@defra/forms-model'
+ * @import { ComponentDef, QuestionSessionState, FormEditor, GovukField, InputFieldsComponentsDef } from '@defra/forms-model'
  * @import { ErrorDetailsItem, ValidationFailure } from '~/src/common/helpers/types.js'
  */

@@ -1,68 +1,17 @@
 import { randomUUID } from 'crypto'
 
-import { hasComponents } from '@defra/forms-model'
-
-import { sessionNames } from '~/src/common/constants/session-names.js'
-import { getPageFromDefinition } from '~/src/lib/utils.js'
+import {
+  getQuestionSessionState,
+  setQuestionSessionState
+} from '~/src/lib/session-helper.js'
 
 const radiosSectionListItemsAnchor = '#list-items'
-
-/**
- * @param {Yar} yar
- */
-export function clearEnhancedActionState(yar) {
-  yar.set(sessionNames.enhancedActionState, null)
-}
-
-/**
- * @param {Yar} yar
- * @param {FormDefinition} definition
- * @param {string} pageId
- * @param {string} questionId
- * @returns { EnhancedActionState | undefined }
- */
-export function getEnhancedActionStateFromSession(
-  yar,
-  definition,
-  pageId,
-  questionId
-) {
-  const state = yar.get(sessionNames.enhancedActionState)
-  if (state) {
-    return state
-  }
-
-  // Read list from definition and store in session
-  const page = getPageFromDefinition(definition, pageId)
-  const component = /** @type { ListComponentsDef | undefined } */ (
-    hasComponents(page)
-      ? page.components.find((x) => x.id === questionId)
-      : undefined
-  )
-  const listName = component?.list
-  if (listName) {
-    const items = definition.lists.find((x) => x.name === listName)?.items ?? []
-    const newState = /** @type { EnhancedActionState} */ ({
-      state: {},
-      listItems: items.map((item) => ({
-        id: randomUUID(),
-        label: item.text,
-        // hint: item.hint,
-        value: item.value
-      }))
-    })
-    yar.set(sessionNames.enhancedActionState, newState)
-    return newState
-  }
-
-  return undefined
-}
 
 /**
  * @param { { id?: string, label?: string, hint?: string, value?: string } | undefined } itemForEdit
  * @param {boolean} expanded
  */
-export function setItemState(itemForEdit, expanded) {
+export function setEditRowState(itemForEdit, expanded) {
   return {
     radioId: itemForEdit?.id ?? '',
     radioLabel: itemForEdit?.label ?? '',
@@ -74,23 +23,24 @@ export function setItemState(itemForEdit, expanded) {
 
 /**
  * @param {Yar} yar
+ * @param {string} stateId
  * @param {RequestQuery} query
  * @returns { string | undefined }
  */
-export function handleEnhancedActionOnGet(yar, query) {
+export function handleEnhancedActionOnGet(yar, stateId, query) {
   const { action, id } = query
   if (!action) {
     return undefined
   }
 
-  const state = yar.get(sessionNames.enhancedActionState) ?? {
-    state: {},
-    listItems: []
+  const state = getQuestionSessionState(yar, stateId)
+  if (!state?.questionType) {
+    throw new Error('Invalid session contents')
   }
 
   if (action === 'delete') {
-    const newList = state.listItems.filter((x) => x.id !== id)
-    yar.set(sessionNames.enhancedActionState, {
+    const newList = state.listItems?.filter((x) => x.id !== id)
+    setQuestionSessionState(yar, stateId, {
       ...state,
       listItems: newList
     })
@@ -98,18 +48,19 @@ export function handleEnhancedActionOnGet(yar, query) {
   }
 
   if (action === 'edit') {
-    const itemForEdit = state.listItems.find((x) => x.id === id)
-    yar.set(sessionNames.enhancedActionState, {
+    const itemForEdit = state.listItems?.find((x) => x.id === id)
+
+    setQuestionSessionState(yar, stateId, {
       ...state,
-      state: setItemState(itemForEdit, true)
+      editRow: setEditRowState(itemForEdit, true)
     })
     return '#add-option-form'
   }
 
   if (action === 'cancel') {
-    yar.set(sessionNames.enhancedActionState, {
+    setQuestionSessionState(yar, stateId, {
       ...state,
-      state: setItemState(undefined, false)
+      editRow: setEditRowState(undefined, false)
     })
     return radiosSectionListItemsAnchor
   }
@@ -119,40 +70,46 @@ export function handleEnhancedActionOnGet(yar, query) {
 
 /**
  * @param {Yar} yar
+ * @param {string} stateId
  * @param {FormEditorInputQuestionDetails} payload
  * @param {Partial<ComponentDef>} questionDetails
  * @returns { string | undefined }
  */
-export function handleEnhancedActionOnPost(yar, payload, questionDetails) {
+export function handleEnhancedActionOnPost(
+  yar,
+  stateId,
+  payload,
+  questionDetails
+) {
   const { enhancedAction } = payload
 
   if (!enhancedAction) {
     return undefined
   }
 
-  const preState = yar.get(sessionNames.enhancedActionState) ?? {
-    state: {},
-    listItems: []
+  const preState = getQuestionSessionState(yar, stateId)
+  if (!preState?.questionType) {
+    throw new Error('Invalid session contents')
   }
-  const enhancedActionState = /** @type {EnhancedActionState} */ ({
+
+  const state = /** @type {QuestionSessionState} */ ({
+    questionType: preState.questionType,
     questionDetails,
-    state: {
+    editRow: {
       radioId: payload.radioId,
       radioLabel: payload.radioLabel,
       radioHint: payload.radioHint,
       radioValue: payload.radioValue,
       expanded: true
     },
-    listItems: preState.listItems
+    listItems: preState.listItems ?? []
   })
   if (enhancedAction === 'add-item') {
-    yar.set(sessionNames.enhancedActionState, enhancedActionState)
+    setQuestionSessionState(yar, stateId, state)
     return '#add-option'
   }
   if (enhancedAction === 'save-item') {
-    const foundRow = enhancedActionState.listItems.find(
-      (x) => x.id === payload.radioId
-    )
+    const foundRow = state.listItems?.find((x) => x.id === payload.radioId)
     if (foundRow) {
       // Update
       foundRow.label = payload.radioLabel
@@ -160,7 +117,7 @@ export function handleEnhancedActionOnPost(yar, payload, questionDetails) {
       foundRow.value = payload.radioValue
     } else {
       // Insert
-      enhancedActionState.listItems.push({
+      state.listItems?.push({
         label: payload.radioLabel,
         hint: payload.radioHint,
         value: payload.radioValue,
@@ -168,9 +125,9 @@ export function handleEnhancedActionOnPost(yar, payload, questionDetails) {
       })
     }
 
-    yar.set(sessionNames.enhancedActionState, {
-      ...enhancedActionState,
-      state: setItemState(undefined, false)
+    setQuestionSessionState(yar, stateId, {
+      ...state,
+      editRow: setEditRowState(undefined, false)
     })
     return radiosSectionListItemsAnchor
   }
@@ -178,7 +135,7 @@ export function handleEnhancedActionOnPost(yar, payload, questionDetails) {
 }
 
 /**
- * @import { ComponentDef,  FormEditorInputQuestionDetails, EnhancedActionState, FormDefinition, ListComponentsDef } from '@defra/forms-model'
+ * @import { ComponentDef,  FormEditorInputQuestionDetails, QuestionSessionState, FormDefinition, ListComponentsDef } from '@defra/forms-model'
  * @import { RequestQuery } from '@hapi/hapi'
  * @import { Yar } from '@hapi/yar'
  */

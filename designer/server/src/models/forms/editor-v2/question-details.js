@@ -166,15 +166,12 @@ export function getEnhancedFields(question, validation) {
 
 /**
  * @param { ValidationFailure<FormEditor> | undefined } validation
- * @param { EnhancedActionState | undefined } enhancedActionState
+ * @param { QuestionSessionState | undefined } state
  */
-export function overrideFormValuesForEnhancedAction(
-  validation,
-  enhancedActionState
-) {
-  if (!validation && enhancedActionState?.state.radioId) {
+export function overrideFormValuesForEnhancedAction(validation, state) {
+  if (!validation && state?.editRow?.radioId) {
     return {
-      formValues: /** @type {FormEditor} */ (enhancedActionState.state),
+      formValues: /** @type {FormEditor} */ (state.editRow),
       formErrors: {}
     }
   }
@@ -183,13 +180,11 @@ export function overrideFormValuesForEnhancedAction(
 }
 
 /**
- * @param { EnhancedActionState | undefined } enhancedActionState
+ * @param { QuestionSessionState | undefined } state
  */
-export function getRowNumBeingEdited(enhancedActionState) {
-  const listItems = enhancedActionState?.listItems ?? []
-  const foundIdx = listItems.findIndex(
-    (x) => x.id === enhancedActionState?.state.radioId
-  )
+export function getRowNumBeingEdited(state) {
+  const listItems = state?.listItems ?? []
+  const foundIdx = listItems.findIndex((x) => x.id === state?.editRow?.radioId)
   if (foundIdx > -1) {
     return foundIdx + 1
   }
@@ -202,19 +197,18 @@ export function getRowNumBeingEdited(enhancedActionState) {
  * @param {FormDefinition} definition
  * @param {string} pageId
  * @param {string} questionId
- * @param {ComponentType | undefined} questionTypeBase
  * @param {ValidationFailure<FormEditor>} [validation]
- * @param {EnhancedActionState} [enhancedActionState]
+ * @param {QuestionSessionState} [state]
  */
 export function questionDetailsViewModel(
   metadata,
   definition,
   pageId,
   questionId,
-  questionTypeBase,
   validation,
-  enhancedActionState
+  state
 ) {
+  const questionType = state?.questionType
   const {
     pageTitle,
     navigation,
@@ -222,12 +216,11 @@ export function questionDetailsViewModel(
     pageNum,
     questionNum,
     pagePath
-  } = getDetails(metadata, definition, pageId, questionId, questionTypeBase)
+  } = getDetails(metadata, definition, pageId, questionId, questionType)
 
   const questionFieldsOverride = /** @type {ComponentDef} */ (
-    enhancedActionState?.questionDetails ?? questionFields
+    state?.questionDetails ?? questionFields
   )
-  const questionType = questionTypeBase ?? questionFieldsOverride.type
 
   const { formErrors } = validation ?? {}
 
@@ -242,10 +235,7 @@ export function questionDetailsViewModel(
     getExtraFields(questionFieldsOverride, validation)
   )
 
-  validation = overrideFormValuesForEnhancedAction(
-    validation,
-    enhancedActionState
-  )
+  validation = overrideFormValuesForEnhancedAction(validation, state)
 
   const enhancedFieldList = /** @type {GovukField[]} */ (
     getEnhancedFields(questionFieldsOverride, validation)
@@ -254,11 +244,11 @@ export function questionDetailsViewModel(
   const extraFieldNames = extraFields.map((field) => field.name ?? 'unknown')
   const errorList = buildErrorList(formErrors)
   const previewPageUrl = `${buildPreviewUrl(metadata.slug)}${pagePath}?force`
-  const rowNumBeingEdited = getRowNumBeingEdited(enhancedActionState)
+  const rowNumBeingEdited = getRowNumBeingEdited(state)
 
   return {
     rowNumBeingEdited,
-    enhancedActionState,
+    state,
     enhancedFields: enhancedFieldList,
     ...baseModelFields(metadata.slug, pageTitle),
     name: questionFields.name || randomId(),
@@ -293,6 +283,6 @@ export function questionDetailsViewModel(
 }
 
 /**
- * @import { ComponentType, ComponentDef, EnhancedActionState, FormMetadata, FormDefinition, FormEditor, GovukField, InputFieldsComponentsDef, TextFieldComponent } from '@defra/forms-model'
+ * @import { ComponentType, ComponentDef, QuestionSessionState, FormMetadata, FormDefinition, FormEditor, GovukField, InputFieldsComponentsDef, TextFieldComponent } from '@defra/forms-model'
  * @import { ErrorDetailsItem, ValidationFailure } from '~/src/common/helpers/types.js'
  */

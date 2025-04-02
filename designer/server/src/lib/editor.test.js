@@ -285,7 +285,7 @@ describe('editor.js', () => {
           { id: '3', label: '3', value: '3' }
         ]
 
-        const actionState = /** @type {EnhancedActionState} */ ({
+        const actionState = /** @type {QuestionSessionState} */ ({
           state: {},
           listItems: list
         })
@@ -346,7 +346,7 @@ describe('editor.js', () => {
           { id: '3', label: '3', value: '3' }
         ]
 
-        const actionState = /** @type {EnhancedActionState} */ ({
+        const actionState = /** @type {QuestionSessionState} */ ({
           state: {},
           listItems: list
         })
@@ -967,6 +967,6 @@ describe('editor.js', () => {
 })
 
 /**
- * @import { EnhancedActionState, FormDefinition, Page } from '@defra/forms-model'
+ * @import { QuestionSessionState, FormDefinition, Page } from '@defra/forms-model'
  * @import { IncomingMessage } from 'http'
  */

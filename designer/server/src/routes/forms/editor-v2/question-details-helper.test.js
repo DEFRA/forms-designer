@@ -1,12 +1,8 @@
+import { getQuestionSessionState } from '~/src/lib/session-helper.js'
 import {
-  testFormDefinitionWithNoPages,
-  testFormDefinitionWithRadioQuestionAndList
-} from '~/src/__stubs__/form-definition.js'
-import {
-  getEnhancedActionStateFromSession,
   handleEnhancedActionOnGet,
   handleEnhancedActionOnPost,
-  setItemState
+  setEditRowState
 } from '~/src/routes/forms/editor-v2/question-details-helper.js'
 
 const mockFlash = jest.fn().mockImplementation(() => ['UkAddress'])
@@ -33,57 +29,29 @@ const listWithThreeItems = {
   ]
 }
 
+const simpleSession = {
+  questionType: 'RadiosField'
+}
+
+const sessionWithListWithThreeItems = {
+  questionType: 'RadiosField',
+  listItems: listWithThreeItems.listItems
+}
+
 describe('Editor v2 question-details route helper', () => {
   describe('getEnhancedActionStateFromSession', () => {
     test('should get value from session', () => {
       mockGet.mockReturnValue(structuredClone(listWithThreeItems))
-      expect(
-        getEnhancedActionStateFromSession(
-          mockYar,
-          testFormDefinitionWithNoPages,
-          'p1',
-          'q1'
-        )
-      ).toEqual(listWithThreeItems)
-    })
-
-    test('should read value from definition and set in session if not existing state', () => {
-      mockGet.mockReturnValue(null)
-      const expectedRes = {
-        state: {},
-        listItems: [
-          { label: 'Blue', value: 'blue', id: expect.any(String) },
-          { label: 'Red', value: 'red', id: expect.any(String) },
-          { label: 'Green', value: 'green', id: expect.any(String) }
-        ]
-      }
-      expect(
-        getEnhancedActionStateFromSession(
-          mockYar,
-          testFormDefinitionWithRadioQuestionAndList,
-          'p1',
-          'q1'
-        )
-      ).toEqual(expectedRes)
-    })
-
-    test('should ignore if list not found', () => {
-      mockGet.mockReturnValue(null)
-      expect(
-        getEnhancedActionStateFromSession(
-          mockYar,
-          testFormDefinitionWithRadioQuestionAndList,
-          'p1',
-          'q5'
-        )
-      ).toBeUndefined()
+      expect(getQuestionSessionState(mockYar, '123')).toEqual(
+        listWithThreeItems
+      )
     })
   })
 
-  describe('setItemState', () => {
+  describe('setEditRowState', () => {
     test('should set state if values supplied', () => {
       expect(
-        setItemState(
+        setEditRowState(
           {
             id: '12345',
             label: 'label1',
@@ -102,7 +70,7 @@ describe('Editor v2 question-details route helper', () => {
     })
 
     test('should set default state', () => {
-      expect(setItemState(undefined, true)).toEqual({
+      expect(setEditRowState(undefined, true)).toEqual({
         radioId: '',
         radioLabel: '',
         radioHint: '',
@@ -114,22 +82,25 @@ describe('Editor v2 question-details route helper', () => {
 
   describe('handleEnhancedActionOnGet', () => {
     test('should ignore if no action', () => {
-      expect(handleEnhancedActionOnGet(mockYar, {})).toBeUndefined()
+      mockGet.mockReturnValue(structuredClone(simpleSession))
+      expect(handleEnhancedActionOnGet(mockYar, '123', {})).toBeUndefined()
     })
 
     test('should ignore if action not edit, delete or cancel', () => {
+      mockGet.mockReturnValue(structuredClone(simpleSession))
       expect(
-        handleEnhancedActionOnGet(mockYar, { action: 'invalid' })
+        handleEnhancedActionOnGet(mockYar, '123', { action: 'invalid' })
       ).toBeUndefined()
     })
 
     test('delete should remove item', () => {
-      mockGet.mockReturnValue(structuredClone(listWithThreeItems))
+      mockGet.mockReturnValue(structuredClone(sessionWithListWithThreeItems))
 
       expect(
-        handleEnhancedActionOnGet(mockYar, { action: 'delete', id: '2' })
+        handleEnhancedActionOnGet(mockYar, '123', { action: 'delete', id: '2' })
       ).toBe('#list-items')
-      expect(mockSet).toHaveBeenCalledWith('enhancedActionState', {
+      expect(mockSet).toHaveBeenCalledWith('questionSessionState-123', {
+        questionType: 'RadiosField',
         listItems: [
           { id: '1', label: 'label1', hint: 'hint1', value: 'value1' },
           { id: '3', label: 'label3', hint: 'hint3', value: 'value3' }
@@ -138,13 +109,14 @@ describe('Editor v2 question-details route helper', () => {
     })
 
     test('edit should populate item in fields', () => {
-      mockGet.mockReturnValue(structuredClone(listWithThreeItems))
+      mockGet.mockReturnValue(structuredClone(sessionWithListWithThreeItems))
 
       expect(
-        handleEnhancedActionOnGet(mockYar, { action: 'edit', id: '2' })
+        handleEnhancedActionOnGet(mockYar, '123', { action: 'edit', id: '2' })
       ).toBe('#add-option-form')
-      expect(mockSet).toHaveBeenCalledWith('enhancedActionState', {
-        state: {
+      expect(mockSet).toHaveBeenCalledWith('questionSessionState-123', {
+        questionType: 'RadiosField',
+        editRow: {
           radioId: '2',
           radioLabel: 'label2',
           radioHint: 'hint2',
@@ -160,13 +132,14 @@ describe('Editor v2 question-details route helper', () => {
     })
 
     test('cancel should close expanded area', () => {
-      mockGet.mockReturnValue(structuredClone(listWithThreeItems))
+      mockGet.mockReturnValue(structuredClone(sessionWithListWithThreeItems))
 
-      expect(handleEnhancedActionOnGet(mockYar, { action: 'cancel' })).toBe(
-        '#list-items'
-      )
-      expect(mockSet).toHaveBeenCalledWith('enhancedActionState', {
-        state: {
+      expect(
+        handleEnhancedActionOnGet(mockYar, '123', { action: 'cancel' })
+      ).toBe('#list-items')
+      expect(mockSet).toHaveBeenCalledWith('questionSessionState-123', {
+        questionType: 'RadiosField',
+        editRow: {
           radioId: '',
           radioLabel: '',
           radioHint: '',
@@ -185,18 +158,22 @@ describe('Editor v2 question-details route helper', () => {
   describe('handleEnhancedActionOnPost', () => {
     test('should ignore if no action', () => {
       const payload = /** @type {FormEditorInputQuestionDetails} */ ({})
-      expect(handleEnhancedActionOnPost(mockYar, payload, {})).toBeUndefined()
+      expect(
+        handleEnhancedActionOnPost(mockYar, '123', payload, {})
+      ).toBeUndefined()
     })
 
     test('should ignore if action not add-item or save-item', () => {
       const payload = /** @type {FormEditorInputQuestionDetails} */ ({
         enhancedAction: 'invalid'
       })
-      expect(handleEnhancedActionOnPost(mockYar, payload, {})).toBeUndefined()
+      expect(
+        handleEnhancedActionOnPost(mockYar, '123', payload, {})
+      ).toBeUndefined()
     })
 
     test('add-item should add item', () => {
-      mockGet.mockReturnValue(structuredClone(listWithThreeItems))
+      mockGet.mockReturnValue(structuredClone(sessionWithListWithThreeItems))
 
       const payload = /** @type {FormEditorInputQuestionDetails} */ ({
         enhancedAction: 'add-item',
@@ -206,12 +183,13 @@ describe('Editor v2 question-details route helper', () => {
         radioValue: 'value5'
       })
 
-      expect(handleEnhancedActionOnPost(mockYar, payload, {})).toBe(
+      expect(handleEnhancedActionOnPost(mockYar, '123', payload, {})).toBe(
         '#add-option'
       )
-      expect(mockSet).toHaveBeenCalledWith('enhancedActionState', {
+      expect(mockSet).toHaveBeenCalledWith('questionSessionState-123', {
+        questionType: 'RadiosField',
         listItems: listWithThreeItems.listItems,
-        state: {
+        editRow: {
           radioId: '5',
           radioLabel: 'label5',
           radioHint: 'hint5',
@@ -223,7 +201,7 @@ describe('Editor v2 question-details route helper', () => {
     })
 
     test('save-item should update existing item', () => {
-      mockGet.mockReturnValue(structuredClone(listWithThreeItems))
+      mockGet.mockReturnValue(structuredClone(sessionWithListWithThreeItems))
 
       const payload = /** @type {FormEditorInputQuestionDetails} */ ({
         enhancedAction: 'save-item',
@@ -233,7 +211,7 @@ describe('Editor v2 question-details route helper', () => {
         radioValue: 'value3x'
       })
 
-      expect(handleEnhancedActionOnPost(mockYar, payload, {})).toBe(
+      expect(handleEnhancedActionOnPost(mockYar, '123', payload, {})).toBe(
         '#list-items'
       )
       const expectedList = [
@@ -241,9 +219,10 @@ describe('Editor v2 question-details route helper', () => {
         { id: '2', label: 'label2', hint: 'hint2', value: 'value2' },
         { id: '3', label: 'label3x', hint: 'hint3x', value: 'value3x' }
       ]
-      expect(mockSet).toHaveBeenCalledWith('enhancedActionState', {
+      expect(mockSet).toHaveBeenCalledWith('questionSessionState-123', {
+        questionType: 'RadiosField',
         listItems: expectedList,
-        state: {
+        editRow: {
           radioId: '',
           radioLabel: '',
           radioHint: '',
@@ -255,7 +234,7 @@ describe('Editor v2 question-details route helper', () => {
     })
 
     test('save-item should add new item', () => {
-      mockGet.mockReturnValue(structuredClone(listWithThreeItems))
+      mockGet.mockReturnValue(structuredClone(sessionWithListWithThreeItems))
 
       const payload = /** @type {FormEditorInputQuestionDetails} */ ({
         enhancedAction: 'save-item',
@@ -265,7 +244,7 @@ describe('Editor v2 question-details route helper', () => {
         radioValue: 'value5'
       })
 
-      expect(handleEnhancedActionOnPost(mockYar, payload, {})).toBe(
+      expect(handleEnhancedActionOnPost(mockYar, '123', payload, {})).toBe(
         '#list-items'
       )
       const expectedList = [
@@ -279,9 +258,10 @@ describe('Editor v2 question-details route helper', () => {
           value: 'value5'
         }
       ]
-      expect(mockSet).toHaveBeenCalledWith('enhancedActionState', {
+      expect(mockSet).toHaveBeenCalledWith('questionSessionState-123', {
+        questionType: 'RadiosField',
         listItems: expectedList,
-        state: {
+        editRow: {
           radioId: '',
           radioLabel: '',
           radioHint: '',
@@ -295,6 +275,6 @@ describe('Editor v2 question-details route helper', () => {
 })
 
 /**
- * @import { FormEditor, FormEditorInputQuestionDetails } from '@defra/forms-model'
+ * @import { FormEditorInputQuestionDetails } from '@defra/forms-model'
  * @import { Yar } from '@hapi/yar'
  */

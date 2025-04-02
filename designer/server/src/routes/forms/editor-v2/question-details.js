@@ -11,6 +11,12 @@ import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import {
+  buildQuestionSessionState,
+  clearQuestionSessionState,
+  createQuestionSessionState,
+  getQuestionSessionState
+} from '~/src/lib/session-helper.js'
+import {
   allSpecificSchemas,
   mapQuestionDetails
 } from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
@@ -18,41 +24,83 @@ import { baseSchema } from '~/src/models/forms/editor-v2/base-settings-fields.js
 import { CHANGES_SAVED_SUCCESSFULLY } from '~/src/models/forms/editor-v2/common.js'
 import * as viewModel from '~/src/models/forms/editor-v2/question-details.js'
 import { editorv2Path } from '~/src/models/links.js'
-import { getQuestionType } from '~/src/routes/forms/editor-v2/helper.js'
 import {
-  clearEnhancedActionState,
-  getEnhancedActionStateFromSession,
   handleEnhancedActionOnGet,
   handleEnhancedActionOnPost
 } from '~/src/routes/forms/editor-v2/question-details-helper.js'
 
-export const ROUTE_FULL_PATH_QUESTION_DETAILS = `/library/{slug}/editor-v2/page/{pageId}/question/{questionId}/details`
+export const ROUTE_FULL_PATH_QUESTION_DETAILS = `/library/{slug}/editor-v2/page/{pageId}/question/{questionId}/details/{stateId?}`
 
 const errorKey = sessionNames.validationFailure.editorQuestionDetails
 
 const schema = baseSchema.concat(allSpecificSchemas)
 
 /**
- * @param {ResponseToolkit<{ Params: { slug: string, pageId: string, questionId: string } }> | ResponseToolkit< { Payload: FormEditorInputQuestionDetails }>} h
+ * @param {ResponseToolkit<{ Params: { slug: string, pageId: string, questionId: string, stateId?: string } }> | ResponseToolkit< { Payload: FormEditorInputQuestionDetails }>} h
  * @param {string} slug
  * @param {string} pageId
  * @param {string} questionId
+ * @param {string} stateId
  * @param { string | undefined } anchor
  */
-function redirectWithAnchor(h, slug, pageId, questionId, anchor) {
+function redirectWithAnchor(h, slug, pageId, questionId, stateId, anchor) {
   return h
     .redirect(
       editorv2Path(
         slug,
-        `page/${pageId}/question/${questionId}/details${anchor}`
+        `page/${pageId}/question/${questionId}/details/${stateId}${anchor}`
       )
     )
     .code(StatusCodes.SEE_OTHER)
 }
 
+/**
+ * @param {string} formId
+ * @param {string} token
+ * @param {FormDefinition} definition
+ * @param {string} pageId
+ * @param {string} questionId
+ * @param {Partial<ComponentDef>} questionDetails
+ * @param {QuestionSessionState | undefined } state
+ * @returns {Promise<string>}
+ */
+async function saveQuestion(
+  formId,
+  token,
+  definition,
+  pageId,
+  questionId,
+  questionDetails,
+  state
+) {
+  if (pageId === 'new') {
+    const newPage = await addPageAndFirstQuestion(
+      formId,
+      token,
+      questionDetails,
+      undefined,
+      state
+    )
+    return newPage.id ?? 'unknown'
+  } else if (questionId === 'new') {
+    await addQuestion(formId, token, pageId, questionDetails, state)
+  } else {
+    await updateQuestion(
+      formId,
+      token,
+      definition,
+      pageId,
+      questionId,
+      questionDetails,
+      state
+    )
+  }
+  return pageId
+}
+
 export default [
   /**
-   * @satisfies {ServerRoute<{ Params: { slug: string, pageId: string, questionId: string } }>}
+   * @satisfies {ServerRoute<{ Params: { slug: string, pageId: string, questionId: string, stateId?: string } }>}
    */
   ({
     method: 'GET',
@@ -61,14 +109,12 @@ export default [
       const { yar } = request
       const { params, auth, query } = request
       const { token } = auth.credentials
-      const { slug, pageId, questionId } =
-        /** @type {{ slug: string, pageId: string, questionId: string }} */ (
-          params
-        )
+      const { slug, pageId, questionId, stateId } = params
 
-      if (query.clear !== undefined) {
-        clearEnhancedActionState(yar)
-        return redirectWithAnchor(h, slug, pageId, questionId, '')
+      // Set up session
+      if (!stateId || !getQuestionSessionState(yar, stateId)) {
+        const newStateId = createQuestionSessionState(yar)
+        return redirectWithAnchor(h, slug, pageId, questionId, newStateId, '')
       }
 
       // Form metadata and page components
@@ -77,19 +123,25 @@ export default [
 
       const validation = getValidationErrorsFromSession(yar, errorKey)
 
-      const questionType = getQuestionType(yar, validation?.formValues)
-
-      const enhancedActionState = getEnhancedActionStateFromSession(
+      const state = buildQuestionSessionState(
         yar,
+        stateId,
         definition,
         pageId,
         questionId
       )
 
       // Intercept operations if say a radio or checkbox
-      const redirectAnchor = handleEnhancedActionOnGet(yar, query)
+      const redirectAnchor = handleEnhancedActionOnGet(yar, stateId, query)
       if (redirectAnchor) {
-        return redirectWithAnchor(h, slug, pageId, questionId, redirectAnchor)
+        return redirectWithAnchor(
+          h,
+          slug,
+          pageId,
+          questionId,
+          stateId,
+          redirectAnchor
+        )
       }
 
       return h.view(
@@ -99,9 +151,8 @@ export default [
           definition,
           pageId,
           questionId,
-          questionType,
           validation,
-          enhancedActionState
+          state
         )
       )
     },
@@ -124,8 +175,8 @@ export default [
     path: ROUTE_FULL_PATH_QUESTION_DETAILS,
     async handler(request, h) {
       const { params, auth, payload, yar } = request
-      const { slug, pageId, questionId } =
-        /** @type {{ slug: string, pageId: string, questionId: string }} */ (
+      const { slug, pageId, questionId, stateId } =
+        /** @type {{ slug: string, pageId: string, questionId: string, stateId: string }} */ (
           params
         )
       const { token } = auth.credentials
@@ -138,57 +189,40 @@ export default [
       // Intercept operations if say a radio or checkbox
       const redirectAnchor = handleEnhancedActionOnPost(
         yar,
+        stateId,
         payload,
         questionDetails
       )
       if (redirectAnchor) {
-        return redirectWithAnchor(h, slug, pageId, questionId, redirectAnchor)
+        return redirectWithAnchor(
+          h,
+          slug,
+          pageId,
+          questionId,
+          stateId,
+          redirectAnchor
+        )
       }
 
       // Save page and first question
       const metadata = await forms.get(slug, token)
       const definition = await forms.getDraftFormDefinition(metadata.id, token)
-      let finalPageId = pageId
 
-      const enhancedActionState = getEnhancedActionStateFromSession(
-        yar,
+      const state = getQuestionSessionState(yar, stateId)
+
+      const finalPageId = await saveQuestion(
+        metadata.id,
+        token,
         definition,
         pageId,
-        questionId
+        questionId,
+        questionDetails,
+        state
       )
-
-      if (pageId === 'new') {
-        const newPage = await addPageAndFirstQuestion(
-          metadata.id,
-          token,
-          questionDetails,
-          undefined,
-          enhancedActionState
-        )
-        finalPageId = newPage.id ?? 'unknown'
-      } else if (questionId === 'new') {
-        await addQuestion(
-          metadata.id,
-          token,
-          pageId,
-          questionDetails,
-          enhancedActionState
-        )
-      } else {
-        await updateQuestion(
-          metadata.id,
-          token,
-          definition,
-          pageId,
-          questionId,
-          questionDetails,
-          enhancedActionState
-        )
-      }
 
       yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
 
-      clearEnhancedActionState(yar)
+      clearQuestionSessionState(yar, stateId)
 
       // Redirect to next page
       return h
@@ -214,6 +248,6 @@ export default [
 ]
 
 /**
- * @import { FormEditorInputQuestionDetails } from '@defra/forms-model'
+ * @import { ComponentDef, FormDefinition, FormEditorInputQuestionDetails, QuestionSessionState } from '@defra/forms-model'
  * @import { ResponseToolkit, ServerRoute } from '@hapi/hapi'
  */

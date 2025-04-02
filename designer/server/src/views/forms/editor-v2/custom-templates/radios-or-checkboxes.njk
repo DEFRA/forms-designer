@@ -16,10 +16,13 @@
   </h2>
   <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible" style="border-color:black; border-width: 3px;">
 
-  {% if enhancedActionState.listItems | length  or enhancedActionState.state.expanded %}
+  {% if state.listItems | length  or state.editRow.expanded %}
 
       <ol class="gem-c-reorderable-list js-enabled" id="options-container" data-module="reorderable-list">
-        {% for item in enhancedActionState.listItems %}
+        {% for item in state.listItems %}
+          {% if loop.index == rowNumBeingEdited %}
+          {%- include "../../../../views/forms/editor-v2/custom-templates/radio-or-checkbox-edit.njk" -%}
+          {% else %}
           <li class="gem-c-reorderable-list__item" draggable="true" data-index="1">
             <div class="govuk-summary-card govuk-!-margin-top-0 govuk-!-margin-bottom-3 pages-panel-left-thin-border">
               <div class="govuk-summary-card__content govuk-!-padding-top-1 editor-card-background-white govuk-!-padding-bottom-1">
@@ -44,52 +47,23 @@
                 </dl>
               </div>
             </div>
-
-        </li>
+          </li>
+          {% endif %}
         {% endfor %}
       </ol>
 
-      {% set hasStateWithinDetailsSection = enhancedFields[radioValueIdx].value %}
-      {% if enhancedActionState.state.expanded %}
+      {% if state.editRow.expanded %}
 
-        {% call appEditorCard({
-          classes: "editor-card-background-white govuk-!-padding-bottom-0",
-          outerClasses: "pages-panel-left-thin-border"
-        }) %}
+          {% if rowNumBeingEdited == state.listItems.length + 1 %}
+          {%- include "../../../../views/forms/editor-v2/custom-templates/radio-or-checkbox-edit.njk" -%}
+          {% endif %}
 
-        <div id="add-option-form" class="govuk-!-margin-bottom-6">
-          <h2 class="govuk-caption-m" id="add-option">Item {{ rowNumBeingEdited }}</h2>
-          {{ govukInput(enhancedFields[radioLabelIdx]) }}
-
-          {{ govukInput(enhancedFields[radioHintIdx]) }}
-
-          <input type="hidden" id="radioId" name="radioId" value="{{ enhancedFields[radioIdIdx].value }}" />
-          <!-- Advanced Features Section -->
-          <details class="govuk-details" data-module="govuk-details" {% if hasStateWithinDetailsSection %}open{% endif %}>
-            <summary class="govuk-details__summary">
-              <span class="govuk-details__summary-text">Advanced
-                features</span>
-            </summary>
-            <div class="govuk-details__text">
-              <!-- Additional Value -->
-              <div class="govuk-form-group">
-                {{ govukInput(enhancedFields[radioValueIdx]) }}
-              </div>
-            </div>
-          </details>
-
-          <div class="govuk-button-group">
-            <button type="submit" class="govuk-button" id="save-new-option" name="enhancedAction" value="save-item">Save item</button>
-            <a class="govuk-link govuk-link--no-visited-state" href="?action=cancel" id="cancel-add-option">Cancel</a>
-          </div>
-        </div>
-        {% endcall %}
       {% endif %}
 
   {% endif %}
 </div>
 
-{% if not enhancedActionState.state.expanded %}
+{% if not state.editRow.expanded %}
 <div class="govuk-button-group">
   <!-- Add Another Option Button -->
   <button id="add-option-button" type="submit" class="govuk-button govuk-!-margin-bottom-4 govuk-!-margin-bottom-6" name="enhancedAction" value="add-item">

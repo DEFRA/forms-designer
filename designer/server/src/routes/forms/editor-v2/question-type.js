@@ -13,11 +13,15 @@ import { sessionNames } from '~/src/common/constants/session-names.js'
 import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
+import {
+  createQuestionSessionState,
+  getQuestionSessionState,
+  setQuestionSessionState
+} from '~/src/lib/session-helper.js'
 import * as viewModel from '~/src/models/forms/editor-v2/question-type.js'
 import { editorv2Path } from '~/src/models/links.js'
-import { clearEnhancedActionState } from '~/src/routes/forms/editor-v2/question-details-helper.js'
 
-export const ROUTE_FULL_PATH_QUESTION = `/library/{slug}/editor-v2/page/{pageId}/question/{questionId}`
+export const ROUTE_FULL_PATH_QUESTION = `/library/{slug}/editor-v2/page/{pageId}/question/{questionId}/type/{stateId?}`
 
 const errorKey = sessionNames.validationFailure.editorQuestion
 
@@ -48,9 +52,9 @@ export const schema = Joi.object().keys({
 /**
  *
  * @param {string | undefined} questionType
- * @param {string} writtenAnswerSub - sub-type if 'written-answer-sub' selected in questionType
- * @param {string} dateSub - sub-type if 'date-sub' selected in questionType
- * @param {string} listSub - sub-type if 'list-sub' selected in questionType
+ * @param {ComponentType | undefined} writtenAnswerSub - sub-type if 'written-answer-sub' selected in questionType
+ * @param {ComponentType | undefined} dateSub - sub-type if 'date-sub' selected in questionType
+ * @param {ComponentType | undefined} listSub - sub-type if 'list-sub' selected in questionType
  */
 export function deriveQuestionType(
   questionType,
@@ -72,7 +76,7 @@ export function deriveQuestionType(
 
 export default [
   /**
-   * @satisfies {ServerRoute<{ Params: { slug: string, pageId: string, questionId: string } }>}
+   * @satisfies {ServerRoute<{ Params: { slug: string, pageId: string, questionId: string, stateId?: string } }>}
    */
   ({
     method: 'GET',
@@ -81,10 +85,19 @@ export default [
       const { yar } = request
       const { params, auth } = request
       const { token } = auth.credentials
-      const { slug, pageId, questionId } =
-        /** @type {{ slug: string, pageId: string, questionId: string }} */ (
-          params
-        )
+      const { slug, pageId, questionId, stateId } = params
+
+      if (!stateId || !getQuestionSessionState(yar, stateId)) {
+        const newStateId = createQuestionSessionState(yar)
+        return h
+          .redirect(
+            editorv2Path(
+              slug,
+              `page/${pageId}/question/${questionId}/type/${newStateId}`
+            )
+          )
+          .code(StatusCodes.SEE_OTHER)
+      }
 
       // Form metadata and page components
       const metadata = await forms.get(slug, token)
@@ -122,24 +135,30 @@ export default [
     path: ROUTE_FULL_PATH_QUESTION,
     handler(request, h) {
       const { params, payload, yar } = request
-      const { slug, pageId, questionId } =
-        /** @type {{ slug: string, pageId: string, questionId: string}} */ (
+      const { slug, pageId, questionId, stateId } =
+        /** @type {{ slug: string, pageId: string, questionId?:string, stateId: string }} */ (
           params
         )
-      const { questionType, writtenAnswerSub, dateSub, listSub } = payload
+      const { questionType, writtenAnswerSub, dateSub, listSub } =
+        /** @type {{ questionType?: string, writtenAnswerSub?: ComponentType, dateSub?: ComponentType, listSub?: ComponentType }} */ (
+          payload
+        )
 
-      // Save in session until page is saved
-      yar.flash(
-        sessionNames.questionType,
-        deriveQuestionType(questionType, writtenAnswerSub, dateSub, listSub)
-      )
+      const suppliedQuestionType =
+        /** @type {ComponentType} */
+        (deriveQuestionType(questionType, writtenAnswerSub, dateSub, listSub))
 
-      clearEnhancedActionState(yar)
+      setQuestionSessionState(yar, stateId, {
+        questionType: suppliedQuestionType
+      })
 
       // Redirect to next page
       return h
         .redirect(
-          editorv2Path(slug, `page/${pageId}/question/${questionId}/details`)
+          editorv2Path(
+            slug,
+            `page/${pageId}/question/${questionId}/details/${stateId}`
+          )
         )
         .code(StatusCodes.SEE_OTHER)
     },
@@ -162,6 +181,6 @@ export default [
 ]
 
 /**
- * @import { FormEditorInputPage } from '@defra/forms-model'
+ * @import { ComponentType, FormEditorInputPage } from '@defra/forms-model'
  * @import { ServerRoute } from '@hapi/hapi'
  */

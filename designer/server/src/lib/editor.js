@@ -55,14 +55,14 @@ export function buildRequestUrl(formId, path) {
  * @param {string} formId
  * @param {string} token
  * @param {Partial<ComponentDef>} questionDetails
- * @param { EnhancedActionState | undefined } actionState
+ * @param { QuestionSessionState | undefined } state
  */
-export async function saveNewList(formId, token, questionDetails, actionState) {
+export async function saveNewList(formId, token, questionDetails, state) {
   if (
     componentsSavingLists.includes(
       /** @type {ComponentType} */ (questionDetails.type)
     ) &&
-    actionState?.listItems
+    state?.listItems
   ) {
     // Save list
     const { body } = await postJsonByListType(
@@ -72,7 +72,7 @@ export async function saveNewList(formId, token, questionDetails, actionState) {
           name: questionDetails.name,
           title: `title for ${questionDetails.title}`,
           type: 'string',
-          items: actionState.listItems.map((item) => {
+          items: state.listItems.map((item) => {
             return {
               text: item.label,
               value: stringHasValue(item.value) ? item.value : item.label
@@ -96,7 +96,7 @@ export async function saveNewList(formId, token, questionDetails, actionState) {
  * @param {string} formId
  * @param {string} token
  * @param {Partial<ComponentDef>} questionDetails
- * @param { EnhancedActionState | undefined } actionState
+ * @param { QuestionSessionState | undefined } state
  * @param {FormDefinition} definition
  * @returns {Promise<boolean>}
  */
@@ -104,14 +104,14 @@ export async function updateList(
   formId,
   token,
   questionDetails,
-  actionState,
+  state,
   definition
 ) {
   if (
     componentsSavingLists.includes(
       /** @type {ComponentType} */ (questionDetails.type)
     ) &&
-    actionState?.listItems
+    state?.listItems
   ) {
     const listFromDef = definition.lists.find(
       (x) => x.name === questionDetails.name
@@ -123,7 +123,7 @@ export async function updateList(
       {
         payload: {
           ...listFromDef,
-          items: actionState.listItems.map((item) => {
+          items: state.listItems.map((item) => {
             return {
               text: item.label,
               value: stringHasValue(item.value) ? item.value : item.label
@@ -149,23 +149,18 @@ export async function updateList(
  * @param {string} token
  * @param {Partial<ComponentDef>} questionDetails
  * @param {Partial<Page>} [pageDetails]
- * @param { EnhancedActionState | undefined } [actionState]
+ * @param { QuestionSessionState | undefined } [state]
  */
 export async function addPageAndFirstQuestion(
   formId,
   token,
   questionDetails,
   pageDetails,
-  actionState
+  state
 ) {
   questionDetails.name = questionDetails.name ?? randomId()
 
-  const addedList = await saveNewList(
-    formId,
-    token,
-    questionDetails,
-    actionState
-  )
+  const addedList = await saveNewList(formId, token, questionDetails, state)
 
   const { body } = await postJsonByType(buildRequestUrl(formId, 'pages'), {
     payload: {
@@ -191,23 +186,18 @@ export async function addPageAndFirstQuestion(
  * @param {string} token
  * @param {string} pageId
  * @param {Partial<ComponentDef>} questionDetails
- * @param { EnhancedActionState | undefined } [actionState]
+ * @param { QuestionSessionState | undefined } [state]
  */
 export async function addQuestion(
   formId,
   token,
   pageId,
   questionDetails,
-  actionState
+  state
 ) {
   questionDetails.name = questionDetails.name ?? randomId()
 
-  const addedList = await saveNewList(
-    formId,
-    token,
-    questionDetails,
-    actionState
-  )
+  const addedList = await saveNewList(formId, token, questionDetails, state)
 
   const { body } = await postJsonByType(
     buildRequestUrl(formId, `pages/${pageId}/components`),
@@ -231,7 +221,7 @@ export async function addQuestion(
  * @param {string} pageId
  * @param {string} questionId
  * @param {Partial<ComponentDef>} questionDetails
- * @param { EnhancedActionState | undefined } [actionState]
+ * @param { QuestionSessionState | undefined } [state]
  */
 export async function updateQuestion(
   formId,
@@ -240,7 +230,7 @@ export async function updateQuestion(
   pageId,
   questionId,
   questionDetails,
-  actionState
+  state
 ) {
   // Determine if page controller should change
   const page = getPageFromDefinition(definition, pageId)
@@ -260,7 +250,7 @@ export async function updateQuestion(
     formId,
     token,
     questionDetails,
-    actionState,
+    state,
     definition
   )
   if (updated) {
@@ -481,5 +471,5 @@ export async function deletePage(formId, token, pageId) {
 }
 
 /**
- * @import { ComponentDef, EnhancedActionState, Page, FormEditorInputCheckAnswersSettings, FormEditorInputPageSettings, FormDefinition } from '@defra/forms-model'
+ * @import { ComponentDef, QuestionSessionState, Page, FormEditorInputCheckAnswersSettings, FormEditorInputPageSettings, FormDefinition } from '@defra/forms-model'
  */

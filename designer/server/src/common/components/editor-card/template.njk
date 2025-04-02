@@ -22,7 +22,9 @@
                     }) }}
                   {% endif %}
 
+                  {% if not params.noTitlePadding %}
                   <div class="govuk-summary-card__title-wrapper govuk-!-padding-top-0"></div>
+                  {% endif %}
                   {% if params.caption %}
                   <span class="govuk-caption-l">{{ params.caption }}</span>
                   {% endif %}

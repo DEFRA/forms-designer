@@ -1,3 +1,4 @@
+import { type ComponentType } from '~/src/components/enums.js'
 import { type ComponentDef } from '~/src/components/types.js'
 
 /**
@@ -283,16 +284,17 @@ export type FormEditorInputQuestionDetails = Pick<
   | 'radioValue'
 >
 
-export interface EnhancedActionState {
-  questionDetails: Partial<ComponentDef>
-  state: {
+export interface QuestionSessionState {
+  questionType?: ComponentType
+  questionDetails?: Partial<ComponentDef>
+  editRow?: {
     radioId?: string
     radioLabel?: string
     radioHint?: string
     radioValue?: string
     expanded?: boolean
   }
-  listItems: { label?: string; hint?: string; value?: string; id?: string }[]
+  listItems?: { label?: string; hint?: string; value?: string; id?: string }[]
 }
 
 export interface GovukField {
