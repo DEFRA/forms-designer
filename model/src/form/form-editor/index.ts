@@ -356,7 +356,7 @@ export const customValidator = Joi.extend((joi: Joi.Root) => {
         } catch (_err) {
           // eslint-disable-next-line no-console
           console.error(_err)
-          return { value, errors: [helpers.error('√')] }
+          return { value, errors: [helpers.error('dsv.invalid')] }
         }
       }
     },
