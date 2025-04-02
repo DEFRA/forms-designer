@@ -21,9 +21,6 @@
     "test": "jest --color --coverage --verbose",
     "test:watch": "jest --color --watch"
   },
-  "files": [
-    "schemas/"
-  ],
   "dependencies": {
     "marked": "^15.0.7",
     "nanoid": "^5.0.7",

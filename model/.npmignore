@@ -2,3 +2,6 @@
 *.{jest,test}?(.d).{js,ts}?(.map)
 .*
 tsconfig.*
+
+# schemas directory inteded to be published
+!schemas/
