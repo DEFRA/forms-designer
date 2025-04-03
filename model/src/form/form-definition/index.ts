@@ -461,6 +461,9 @@ export const pageSchemaPayloadV2 = pageSchemaV2
 const baseListItemSchema = Joi.object<Item>()
   .description('Base schema for list items with common properties')
   .keys({
+    id: Joi.string()
+      .uuid()
+      .default(() => uuidV4()),
     text: Joi.string().allow('').description('Display text shown to the user'),
     description: Joi.string()
       .allow('')

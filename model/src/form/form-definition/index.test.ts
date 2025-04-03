@@ -310,7 +310,12 @@ describe('Form definition schema', () => {
       }
 
       const list: List = {
-        items: [],
+        items: [
+          {
+            text: 'a string',
+            value: 'string'
+          }
+        ],
         name: 'ADxeWa',
         title: 'String List',
         type: 'string'
@@ -355,7 +360,13 @@ describe('Form definition schema', () => {
               id: expect.any(String)
             }
           ],
-          lists: [{ id: expect.any(String) }, { id: expect.any(String) }]
+          lists: [
+            {
+              id: expect.any(String),
+              items: [expect.objectContaining({ id: expect.any(String) })]
+            },
+            { id: expect.any(String) }
+          ]
         })
       })
 
