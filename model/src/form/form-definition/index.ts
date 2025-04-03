@@ -62,11 +62,19 @@ const conditionFieldSchema = Joi.object<ConditionFieldData>()
       .description('Human-readable name of the field for display purposes')
   })
 
-const conditionValueSchema = Joi.object<ConditionValueData>().keys({
-  type: Joi.string().required(),
-  value: Joi.string().required(),
-  display: Joi.string().required()
-})
+const conditionValueSchema = Joi.object<ConditionValueData>()
+  .description('Value specification for a condition')
+  .keys({
+    type: Joi.string()
+      .required()
+      .description('Data type of the value (e.g., string, number, date)'),
+    value: Joi.string()
+      .required()
+      .description('The actual value to compare against'),
+    display: Joi.string()
+      .required()
+      .description('Human-readable version of the value for display purposes')
+  })
 
 const relativeDateValueSchema = Joi.object<RelativeDateValueData>()
   .description('Relative date specification for date-based conditions')
