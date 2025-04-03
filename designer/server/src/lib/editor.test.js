@@ -872,5 +872,5 @@ describe('editor.js', () => {
 })
 
 /**
- * @import { QuestionSessionState, FormDefinition, List, Page } from '@defra/forms-model'
+ * @import { FormDefinition, Page } from '@defra/forms-model'
  */

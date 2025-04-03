@@ -15,7 +15,8 @@ import {
   getComponentFromDefinition,
   getHeaders,
   getListFromComponent,
-  mapListToAutoCompleteStr
+  mapListToAutoCompleteStr,
+  noListToSave
 } from '~/src/lib/utils.js'
 
 jest.mock('@defra/hapi-tracing')
@@ -145,9 +146,36 @@ describe('utils', () => {
           'Haskell:haskell'
       )
     })
+
+    it('should return an empty string for undefined', () => {
+      expect(mapListToAutoCompleteStr(undefined)).toBe('')
+    })
   })
 
-  it('should return an empty string for undefined', () => {
-    expect(mapListToAutoCompleteStr(undefined)).toBe('')
+  describe('noListToSave', () => {
+    it('should return true if not a list component', () => {
+      expect(noListToSave(undefined, undefined)).toBeTruthy()
+    })
+
+    it('should return true if a list component but no list items', () => {
+      expect(
+        noListToSave(ComponentType.AutocompleteField, undefined)
+      ).toBeTruthy()
+      expect(noListToSave(ComponentType.RadiosField, undefined)).toBeTruthy()
+      expect(
+        noListToSave(ComponentType.CheckboxesField, undefined)
+      ).toBeTruthy()
+    })
+
+    it('should return false if a list component with list items', () => {
+      const someListItems = { listItems: [] }
+      expect(
+        noListToSave(ComponentType.AutocompleteField, someListItems)
+      ).toBeFalsy()
+      expect(noListToSave(ComponentType.RadiosField, someListItems)).toBeFalsy()
+      expect(
+        noListToSave(ComponentType.CheckboxesField, someListItems)
+      ).toBeFalsy()
+    })
   })
 })

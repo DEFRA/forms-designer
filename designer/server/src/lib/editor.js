@@ -1,5 +1,3 @@
-import { randomUUID } from 'crypto'
-
 import {
   ComponentType,
   ControllerType,
@@ -34,31 +32,6 @@ export function getControllerType(questionDetails) {
   return questionDetails.type === ComponentType.FileUploadField
     ? { controller: ControllerType.FileUpload }
     : {}
-}
-
-/**
- * @param { string | undefined } id
- * @param { string | undefined } name
- * @param { string | undefined } title
- * @param { QuestionSessionState | undefined } state
- * @returns {List}
- */
-export function mapToList(id, name, title, state) {
-  return /** @type {List} */ ({
-    id: id ?? randomUUID(),
-    name: name ?? randomId(),
-    title,
-    type: 'string',
-    items: state?.listItems
-      ? state.listItems.map((item) => {
-          return {
-            // id: item.id,
-            text: item.text,
-            value: stringHasValue(item.value) ? item.value : item.text
-          }
-        })
-      : []
-  })
 }
 
 /**
