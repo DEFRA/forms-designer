@@ -1,6 +1,9 @@
+import { randomId } from '@defra/forms-model'
+
 import config from '~/src/config.js'
 import { delJson, postJson, putJson } from '~/src/lib/fetch.js'
 import { getHeaders } from '~/src/lib/utils.js'
+import { mapBaseQuestionDetails } from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
 
 const formsEndpoint = new URL('/forms/', config.managerUrl)
 const postJsonByListType =
@@ -13,11 +16,38 @@ const putJsonByListType =
   )
 
 /**
+ * Maps FormEditorInputQuestion payload to List Component
+ * @param {Partial<FormEditorInputQuestion>} payload
+ * @returns {Partial<ComponentDef>}
+ */
+export function mapListComponentFromPayload(payload) {
+  const baseComponentDetails = mapBaseQuestionDetails(payload)
+  return {
+    ...baseComponentDetails,
+    list: 'list' in baseComponentDetails ? baseComponentDetails.list : ''
+  }
+}
+
+/**
+ * Maps FormEditorInputQuestion payload to AutoComplete Component
+ * @param {Partial<FormEditorInputQuestion>} questionDetails
+ * @param {Item[]} listItems
+ * @returns {Partial<List>}
+ */
+export function buildAutoCompleteListFromDetails(questionDetails, listItems) {
+  return {
+    name: questionDetails.list ?? randomId(),
+    title: `List for question ${questionDetails.question}`,
+    type: 'string',
+    items: listItems
+  }
+}
+/**
  * Creates a new list on the draft definition
  * @param {string} formId
  * @param {string} token
  * @param {Partial<List>} list
- * @returns {Promise<{ id: string; list: List; status: 'created' | 'failed' }>}
+ * @returns {Promise<{ id: string; list: List; status: 'created' }>}
  */
 export async function createList(formId, token, list) {
   const addListUrl = new URL(
@@ -38,7 +68,7 @@ export async function createList(formId, token, list) {
  * @param {string | undefined} listId
  * @param {string} token
  * @param {Partial<List>} list
- * @returns {Promise<{ id: string; list: List; status: 'updated' | 'failed' }>}
+ * @returns {Promise<{ id: string; list: List; status: 'updated' }>}
  */
 export async function updateList(formId, listId, token, list) {
   if (listId === undefined) {
@@ -77,7 +107,7 @@ export async function deleteList(formId, listId, token) {
  * @param {FormDefinition} definition
  * @param {string} token
  * @param {Partial<List>} upsertedList
- * @returns {Promise<{ id: string; list: List; status: 'updated' | 'created' | 'failed' }>}
+ * @returns {Promise<{ id: string; list: List; status: 'updated' | 'created' }>}
  */
 export async function upsertList(formId, definition, token, upsertedList) {
   const foundList = definition.lists.find(
@@ -85,12 +115,15 @@ export async function upsertList(formId, definition, token, upsertedList) {
   )
 
   if (foundList) {
-    return updateList(formId, foundList.id, token, upsertedList)
+    return updateList(formId, foundList.id, token, {
+      ...foundList,
+      ...upsertedList
+    })
   }
 
   return createList(formId, token, upsertedList)
 }
 
 /**
- * @import { FormDefinition, List } from '@defra/forms-model'
+ * @import { ComponentDef, FormDefinition, FormEditorInputQuestion, Item, List } from '@defra/forms-model'
  */

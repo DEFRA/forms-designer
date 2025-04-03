@@ -479,7 +479,11 @@ const baseListItemSchema = Joi.object<Item>()
     condition: Joi.string()
       .allow('')
       .optional()
-      .description('Condition that determines if this item is shown')
+      .description('Condition that determines if this item is shown'),
+    hint: Joi.string()
+      .allow('')
+      .optional()
+      .description('Optional hint text to be shown on list item')
   })
 
 const stringListItemSchema = baseListItemSchema

@@ -1,6 +1,7 @@
 import { ComponentType } from '@defra/forms-model'
 import { getTraceId } from '@defra/hapi-tracing'
 
+<<<<<<< HEAD
 import { testFormDefinitionWithTwoPagesAndQuestions } from '~/src/__stubs__/form-definition.js'
 import config from '~/src/config.js'
 import { getComponentFromDefinition, getHeaders } from '~/src/lib/utils.js'
@@ -9,6 +10,27 @@ jest.mock('@defra/hapi-tracing')
 
 describe('Header helper functions', () => {
   describe('getHeaders', () => {
+=======
+import {
+  buildAutoCompleteComponent,
+  buildDefinition,
+  buildList,
+  buildListItem,
+  buildQuestionPage,
+  buildTextFieldComponent
+} from '~/src/__stubs__/form-definition.js'
+import config from '~/src/config.js'
+import {
+  getHeaders,
+  getListFromComponent,
+  mapListToAutoCompleteStr
+} from '~/src/lib/utils.js'
+
+jest.mock('@defra/hapi-tracing')
+
+describe('utils', () => {
+  describe('Header helper functions', () => {
+>>>>>>> main
     it('should include the trace id in the headers if available', () => {
       jest.mocked(getTraceId).mockReturnValue('my-trace-id')
 
@@ -33,6 +55,7 @@ describe('Header helper functions', () => {
     })
   })
 
+<<<<<<< HEAD
   describe('getComponentFromDefinition', () => {
     it('should find component when exists', () => {
       const comp = getComponentFromDefinition(
@@ -67,6 +90,73 @@ describe('Header helper functions', () => {
         'q1'
       )
       expect(comp).toBeUndefined()
+=======
+  describe('getListFromComponent', () => {
+    it('should return list when found', () => {
+      const list = buildList({
+        id: '4d35e5ec-7681-422b-92eb-65c49f1458b6',
+        name: 'AbCdEFg'
+      })
+      const autoCompleteComponent = buildAutoCompleteComponent({
+        id: 'af1ed4f1-ef37-4e35-a5da-210f9e5fc336',
+        list: list.name
+      })
+      const page = buildQuestionPage({
+        components: [autoCompleteComponent]
+      })
+      const definition = buildDefinition({
+        pages: [page],
+        lists: [list]
+      })
+      const foundList = getListFromComponent(autoCompleteComponent, definition)
+      expect(foundList).toEqual(list)
+>>>>>>> main
     })
+
+    it('should return undefined when not found', () => {
+      const textFieldComponent = buildTextFieldComponent()
+      const page = buildQuestionPage({
+        components: [textFieldComponent]
+      })
+      const definition = buildDefinition({
+        pages: [page]
+      })
+      const foundList = getListFromComponent(textFieldComponent, definition)
+      expect(foundList).toBeUndefined()
+    })
+
+    it('should return undefined component is undefined', () => {
+      expect(getListFromComponent(undefined, buildDefinition())).toBeUndefined()
+    })
+  })
+
+  describe('mapListToAutoCompleteStr', () => {
+    it('should map a list to an autocomplete string', () => {
+      const list = buildList({
+        items: [
+          buildListItem({
+            text: 'JavaScript',
+            value: 'javascript'
+          }),
+          buildListItem({
+            text: 'TypeScript',
+            value: 'typescript'
+          }),
+          buildListItem({
+            text: 'Haskell',
+            value: 'haskell'
+          })
+        ]
+      })
+      expect(mapListToAutoCompleteStr(list)).toEqual(
+        'JavaScript:javascript\r\n' +
+          'TypeScript:typescript\r\n' +
+          'Haskell:haskell'
+      )
+    })
+  })
+
+  it('should return an empty string for undefined', () => {
+    expect(mapListToAutoCompleteStr(undefined)).toBe('')
   })
 })

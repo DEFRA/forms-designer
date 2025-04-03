@@ -224,12 +224,11 @@ export function questionDetailsViewModel(
     state?.questionDetails ?? questionFields
   )
 
-  const { formErrors } = validation ?? {}
-
   const basePageFields = getFieldList(
     /** @type {InputFieldsComponentsDef} */ (questionFieldsOverride),
     questionType,
-    validation
+    validation,
+    definition
   )
 
   const uploadFields = getFileUploadFields(questionFieldsOverride, validation)
@@ -242,9 +241,8 @@ export function questionDetailsViewModel(
   const enhancedFieldList = /** @type {GovukField[]} */ (
     getEnhancedFields(questionFieldsOverride, validation)
   )
-
   const extraFieldNames = extraFields.map((field) => field.name ?? 'unknown')
-  const errorList = buildErrorList(formErrors)
+  const errorList = buildErrorList(validation?.formErrors)
   const previewPageUrl = `${buildPreviewUrl(metadata.slug)}${pagePath}?force`
   const rowNumBeingEdited = getRowNumBeingEdited(state)
 

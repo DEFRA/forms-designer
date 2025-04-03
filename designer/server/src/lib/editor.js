@@ -144,6 +144,7 @@ export async function updateEditorList(
  * @param {Partial<ComponentDef>} questionDetails
  * @param {Partial<Page>} [pageDetails]
  * @param { QuestionSessionState | undefined } [state]
+ * @returns {Promise<Page>}
  */
 export async function addPageAndFirstQuestion(
   formId,

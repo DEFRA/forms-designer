@@ -79,7 +79,6 @@ export function getPageFromDefinition(definition, pageId) {
 }
 
 /**
- *
  * @param {FormDefinition} definition
  * @param {string} pageId
  * @param {string} questionId
@@ -95,6 +94,7 @@ export function getComponentFromDefinition(definition, pageId, questionId) {
 }
 
 export const componentsSavingLists = [
+  ComponentType.AutocompleteField,
   ComponentType.CheckboxesField,
   ComponentType.RadiosField
 ]
@@ -106,13 +106,49 @@ export const componentsSavingLists = [
  */
 export function noListToSave(type, state) {
   return (
-    !componentsSavingLists.includes(type ?? ComponentType.TextField) ||
-    !state?.listItems
+    !isListComponent(type) ||
+    !state?.listItems)
+}
+
+/**
+ * @param { ComponentType | undefined } type
+ * @returns {boolean}
+ */
+export function isListComponent(type) {
+  return componentsSavingLists.includes(type ?? ComponentType.TextField)
+}
+
+/**
+ * Finds the list in the component, if it exists
+ * @param { ComponentDef | undefined } component
+ * @param {FormDefinition} definition
+ * @returns { List | undefined }
+ */
+export function getListFromComponent(component, definition) {
+  if (!component) {
+    return undefined
+  }
+  const listName = 'list' in component ? component.list : undefined
+
+  if (listName) {
+    return definition.lists.find((list) => list.name === listName)
+  }
+
+  return undefined
+}
+
+/**
+ * Turns a list into a string for auto complete
+ * @param { List | undefined } list
+ */
+export function mapListToAutoCompleteStr(list) {
+  return (
+    list?.items.map(({ text, value }) => `${text}:${value}`).join('\r\n') ?? ''
   )
 }
 
 /**
  * @import { ErrorDetailsItem } from '~/src/common/helpers/types.js'
- * @import { ComponentDef, FormDefinition, Page, QuestionSessionState } from '@defra/forms-model'
+ * @import { ComponentDef, FormDefinition, List, Page, QuestionSessionState } from '@defra/forms-model'
  * @import Wreck from '@hapi/wreck'
  */

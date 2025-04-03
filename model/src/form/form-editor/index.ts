@@ -1,4 +1,4 @@
-import Joi from 'joi'
+import Joi, { type ArraySchema, type GetRuleOptions } from 'joi'
 
 import { ComponentType } from '~/src/components/enums.js'
 import {
@@ -297,7 +297,153 @@ export const classesSchema = Joi.string()
   .allow('')
   .description('Custom CSS classes to apply to the component')
 
+type GenericRuleOptions<K extends string, T> = Omit<GetRuleOptions, 'args'> & {
+  args: Record<K, T>
+}
+
+interface DSLSchema<TSchema = Record<string, unknown>[]>
+  extends ArraySchema<TSchema> {
+  rowSeparator: (rowSep: string | RegExp) => DSLSchema<TSchema>
+  row: (rowSep: string | RegExp) => DSLSchema<TSchema>
+  colSeparator: (colSep: string | RegExp) => DSLSchema<TSchema>
+  col: (colSep: string | RegExp) => DSLSchema<TSchema>
+  keys: (keys: string[]) => DSLSchema<TSchema>
+}
+
+interface CustomValidator extends Joi.Root {
+  dsv<TSchema>(): DSLSchema<TSchema>
+}
+
+export const customValidator = Joi.extend((joi: Joi.Root) => {
+  return {
+    type: 'dsv',
+    base: joi.array(),
+    messages: {
+      'dsv.invalid': 'Invalid parse string'
+    },
+    coerce: {
+      from: 'string',
+      method(value: string, helpers) {
+        try {
+          // Only called when prefs.convert is true
+          // Rules
+          const rowSeparatorRule = helpers.schema.$_getRule('rowSeparator') as
+            | undefined
+            | GenericRuleOptions<'rowSeparator', string | RegExp>
+          const colSeparatorRule = helpers.schema.$_getRule('colSeparator') as
+            | undefined
+            | GenericRuleOptions<'colSeparator', string | RegExp>
+          const keysRule = helpers.schema.$_getRule('keys') as
+            | undefined
+            | GenericRuleOptions<'keys', string[]>
+
+          // Rows
+          const rowSeparator = rowSeparatorRule?.args.rowSeparator ?? /\r?\n/
+          const rows = value
+            .split(rowSeparator)
+            .map((v) => v.trim())
+            .filter(Boolean)
+
+          // Columns
+          const colSeparator = colSeparatorRule?.args.colSeparator ?? ','
+          const keys = keysRule?.args.keys ?? ['key', 'value']
+
+          const coercedValue = rows.map((row) => {
+            return row
+              .split(colSeparator)
+              .reduce<Record<string, string>>((acc, col, idx) => {
+                return {
+                  ...acc,
+                  [keys[idx]]: col.trim()
+                }
+              }, {})
+          })
+          return { value: coercedValue }
+        } catch (_err) {
+          // eslint-disable-next-line no-console
+          console.error(_err)
+          return { value, errors: [helpers.error('dsv.invalid')] }
+        }
+      }
+    },
+    rules: {
+      rowSeparator: {
+        convert: true,
+        alias: 'row',
+        method(rowSeparator: string) {
+          return this.$_addRule({
+            name: 'rowSeparator',
+            args: { rowSeparator }
+          })
+        },
+        args: [
+          {
+            name: 'rowSeparator',
+            ref: true,
+            assert: (value) =>
+              typeof value === 'string' || value instanceof RegExp,
+            message: 'must be a string or regex'
+          }
+        ]
+      },
+      colSeparator: {
+        convert: true,
+        alias: 'col',
+        method(colSeparator: string) {
+          return this.$_addRule({
+            name: 'colSeparator',
+            args: { colSeparator }
+          })
+        },
+        args: [
+          {
+            name: 'colSeparator',
+            ref: true,
+            assert: (value) =>
+              typeof value === 'string' || value instanceof RegExp,
+            message: 'must be a string or regex'
+          }
+        ]
+      },
+      keys: {
+        convert: true,
+        method(keys: string[]) {
+          return this.$_addRule({ name: 'keys', args: { keys } })
+        },
+        args: [
+          {
+            name: 'keys',
+            ref: true,
+            assert: (value) =>
+              Array.isArray(value) && value.every((k) => typeof k === 'string'),
+            message: 'must be an array of strings'
+          }
+        ]
+      }
+    }
+  }
+}) as CustomValidator
+
+export const autoCompleteOptionsSchema = customValidator
+  .dsv<{ text: string; value: string }>()
+  .row(/\r?\n/)
+  .col(':')
+  .keys(['text', 'value'])
+  .items(
+    customValidator.object({
+      text: customValidator.string().min(1).disallow('').required(),
+      value: customValidator
+        .string()
+        .default((parent: { text: string; value?: string }) => parent.text)
+        .min(1)
+        .disallow('')
+    })
+  )
+  .min(1)
+  .required()
+
 export const questionDetailsFullSchema = {
+  autoCompleteOptionsSchema,
   classesSchema,
   documentTypesSchema,
   enhancedActionSchema,

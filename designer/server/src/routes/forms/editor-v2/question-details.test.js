@@ -3,7 +3,15 @@ import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
 import {
+<<<<<<< HEAD
   testFormDefinitionWithFileUploadPage,
+=======
+  buildAutoCompleteComponent,
+  buildDefinition,
+  buildList,
+  buildListItem,
+  buildQuestionPage,
+>>>>>>> main
   testFormDefinitionWithSinglePage
 } from '~/src/__stubs__/form-definition.js'
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
@@ -14,18 +22,28 @@ import {
   getValidationErrorsFromSession
 } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
+<<<<<<< HEAD
 import {
   buildQuestionSessionState,
   createQuestionSessionState,
   getQuestionSessionState
 } from '~/src/lib/session-helper.js'
+=======
+import { upsertList } from '~/src/lib/list.js'
+import { getQuestionType } from '~/src/routes/forms/editor-v2/helper.js'
+>>>>>>> main
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/forms.js')
 jest.mock('~/src/lib/error-helper.js')
 jest.mock('~/src/lib/editor.js')
+<<<<<<< HEAD
 jest.mock('~/src/lib/session-helper.js')
+=======
+jest.mock('~/src/lib/list.js')
+jest.mock('~/src/routes/forms/editor-v2/helper.js')
+>>>>>>> main
 jest.mock('~/src/routes/forms/editor-v2/question-details-helper.js')
 
 describe('Editor v2 question details routes', () => {
@@ -249,6 +267,78 @@ describe('Editor v2 question details routes', () => {
     expect($checkboxes[14].value).toBe('ods')
   })
 
+  test('GET - should render the autocomplete options field in the base view', async () => {
+    const listName = 'AutoCompleteList'
+    const listId = '3b016ee4-6484-4b0f-a02a-4e0e37de066b'
+    jest
+      .mocked(getQuestionType)
+      .mockReturnValue(ComponentType.AutocompleteField)
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest.mocked(forms.getDraftFormDefinition).mockResolvedValueOnce(
+      buildDefinition({
+        name: 'Test form',
+        pages: [
+          buildQuestionPage({
+            id: 'p1',
+            path: '/autocomplete',
+            title: 'Which country do you live in?',
+            components: [
+              buildAutoCompleteComponent({
+                id: 'c1',
+                name: 'autoComplete',
+                title: 'Which country do you live in?',
+                list: listName
+              })
+            ]
+          })
+        ],
+        lists: [
+          buildList({
+            id: listId,
+            name: listName,
+            items: [
+              buildListItem({
+                text: 'England',
+                value: 'england'
+              }),
+              buildListItem({
+                text: 'Wales',
+                value: 'wales'
+              }),
+              buildListItem({
+                text: 'Scotland',
+                value: 'scotland'
+              }),
+              buildListItem({
+                text: 'Northern Ireland',
+                value: 'northern-island'
+              })
+            ]
+          })
+        ]
+      })
+    )
+
+    const options = {
+      method: 'get',
+      url: '/library/my-form-slug/editor-v2/page/p1/question/c1/details',
+      auth
+    }
+
+    const { container } = await renderResponse(server, options)
+
+    container.getByText('Test form')
+
+    const [, , autoCompleteField] = container.getAllByRole('textbox')
+    expect(autoCompleteField.id).toBe('autoCompleteOptions')
+    expect(/** @type {HTMLInputElement} */ (autoCompleteField).value).toMatch(
+      'England:england'
+    )
+    expect(/** @type {HTMLInputElement} */ (autoCompleteField).value).toMatch(
+      'Northern Ireland:northern-island'
+    )
+  })
+
   test('POST - should error if missing mandatory fields', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
 
@@ -425,6 +515,52 @@ describe('Editor v2 question details routes', () => {
     expect(headers.location).toBe(
       '/library/my-form-slug/editor-v2/page/123456/questions'
     )
+  })
+
+  test('POST - should create a list on autocomplete question', async () => {
+    const listId = '3d7e14af-0674-40dc-aca5-a6439f45b782'
+    const name = 'atvNgE'
+    const list = buildList({
+      id: listId,
+      name,
+      items: [
+        { text: 'English', value: 'en-gb' },
+        { text: 'French', value: 'fr-Fr' }
+      ]
+    })
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest.mocked(upsertList).mockResolvedValue({
+      id: listId,
+      list,
+      status: 'created'
+    })
+    const addQuestionMock = jest.mocked(addQuestion).mockResolvedValue(page)
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/123456/question/new/details',
+      auth,
+      payload: {
+        name,
+        question: 'Autocomplete',
+        hintText: '',
+        autoCompleteOptions: 'English:en-gb\r\nFrench:fr-Fr',
+        shortDescription: 'autocomplete',
+        questionType: 'AutocompleteField'
+      }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/page/123456/questions'
+    )
+    const [, , , question] = addQuestionMock.mock.calls[0]
+    // TODO: When forms runner is updated move to id
+    expect(question).toMatchObject({ list: name })
   })
 })
 

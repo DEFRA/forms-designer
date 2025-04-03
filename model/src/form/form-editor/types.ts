@@ -1,5 +1,6 @@
 import { type ComponentType } from '~/src/components/enums.js'
 import { type ComponentDef } from '~/src/components/types.js'
+import { type Item } from '~/src/index.js'
 
 /**
  * Interface for `FormEditor` Joi schema
@@ -209,6 +210,11 @@ export interface FormEditor {
    * The list name to be applied to a field (if applicable)
    */
   list: string
+
+  /**
+   * An array of options for autocomplete
+   */
+  autoCompleteOptions: Item[]
 }
 
 export type FormEditorInputPage = Pick<
@@ -248,6 +254,7 @@ export type FormEditorInputQuestion = Pick<
   | 'documentTypes'
   | 'imageTypes'
   | 'tabularDataTypes'
+  | 'autoCompleteOptions'
   | 'enhancedAction'
   | 'radioId'
   | 'radioLabel'
@@ -277,6 +284,7 @@ export type FormEditorInputQuestionDetails = Pick<
   | 'documentTypes'
   | 'imageTypes'
   | 'tabularDataTypes'
+  | 'autoCompleteOptions'
   | 'enhancedAction'
   | 'radioId'
   | 'radioLabel'
@@ -304,9 +312,14 @@ export interface GovukField {
   fieldset?: {
     legend?: { text?: string; isPageHeading?: boolean; classes?: string }
   }
-  value?: string | boolean | number | string[]
+  value?: string | boolean | number | string[] | Item[]
   classes?: string
-  label?: { text?: string; html?: string; classes?: string }
+  label?: {
+    text?: string
+    html?: string
+    classes?: string
+    isPageHeading?: boolean
+  }
   hint?: { text?: string; html?: string; classes?: string }
   items?: { text?: string; value?: string; checked?: boolean }[]
   rows?: number
@@ -324,8 +337,16 @@ export interface FormEditorGovukField {
   imageTypes?: GovukField
   tabularDataTypes?: GovukField
   radiosOrCheckboxes?: GovukField
+  autoCompleteOptions?: GovukField
   errorMessage?: { text: string }
 }
+
+export type FormEditorGovukFieldBase = Omit<
+  FormEditorGovukField,
+  'errorMessage'
+>
+
+export type FormEditorGovukFieldBaseKeys = keyof FormEditorGovukFieldBase
 
 export interface FormEditorCheckbox {
   text?: string

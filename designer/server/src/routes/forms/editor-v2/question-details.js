@@ -1,3 +1,4 @@
+import { ComponentType } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 
 import * as scopes from '~/src/common/constants/scopes.js'
@@ -5,10 +6,12 @@ import { sessionNames } from '~/src/common/constants/session-names.js'
 import {
   addPageAndFirstQuestion,
   addQuestion,
+  mapToList,
   updateQuestion
 } from '~/src/lib/editor.js'
 import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
+import { buildAutoCompleteListFromDetails, upsertList } from '~/src/lib/list.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import {
   buildQuestionSessionState,
@@ -54,6 +57,35 @@ function redirectWithAnchor(h, slug, pageId, questionId, stateId, anchor) {
     .code(StatusCodes.SEE_OTHER)
 }
 
+const listQuestions = /** @type {string[]} */ ([
+  ComponentType.AutocompleteField
+])
+
+/**
+ * @param {string} formId
+ * @param {FormDefinition} definition
+ * @param {string} token
+ * @param {Partial<ComponentDef>} questionDetails
+ * @param {Item[] | undefined } listItems
+ * @returns {Promise<undefined|string>}
+ */
+async function saveList(formId, definition, token, questionDetails, listItems) {
+  if (!listQuestions.includes(questionDetails.type ?? ComponentType.TextField)) {
+    return undefined
+  }
+
+  const listMapped = buildAutoCompleteListFromDetails(questionDetails, listItems ?? [])
+
+  const { list } = await upsertList(
+    formId,
+    definition,
+    token,
+    listMapped
+  )
+
+  return list.name
+}
+
 /**
  * @param {string} formId
  * @param {string} token
@@ -61,7 +93,7 @@ function redirectWithAnchor(h, slug, pageId, questionId, stateId, anchor) {
  * @param {string} pageId
  * @param {string} questionId
  * @param {Partial<ComponentDef>} questionDetails
- * @param {QuestionSessionState | undefined } state
+ * @param { Item[] | undefined } listItems
  * @returns {Promise<string>}
  */
 async function saveQuestion(
@@ -71,15 +103,15 @@ async function saveQuestion(
   pageId,
   questionId,
   questionDetails,
-  state
+  listItems
 ) {
+  const list = await saveList(formId, definition, token, questionDetails, listItems)
   if (pageId === 'new') {
     const newPage = await addPageAndFirstQuestion(
       formId,
       token,
       questionDetails,
-      undefined,
-      state
+      undefined
     )
     return newPage.id ?? 'unknown'
   } else if (questionId === 'new') {
@@ -182,6 +214,8 @@ export default [
         )
       const { token } = auth.credentials
 
+      const state = getQuestionSessionState(yar, stateId)
+
       const questionDetails = {
         ...mapQuestionDetails(payload),
         id: questionId !== 'new' ? questionId : undefined
@@ -209,8 +243,6 @@ export default [
       const metadata = await forms.get(slug, token)
       const definition = await forms.getDraftFormDefinition(metadata.id, token)
 
-      const state = getQuestionSessionState(yar, stateId)
-
       const finalPageId = await saveQuestion(
         metadata.id,
         token,
@@ -218,7 +250,7 @@ export default [
         pageId,
         questionId,
         questionDetails,
-        state
+        payload.autoCompleteOptions ?? state?.listItems
       )
 
       yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
@@ -249,6 +281,6 @@ export default [
 ]
 
 /**
- * @import { ComponentDef, FormDefinition, FormEditorInputQuestionDetails, QuestionSessionState } from '@defra/forms-model'
+ * @import { ComponentDef, FormDefinition, FormEditorInputQuestionDetails, Item, QuestionSessionState } from '@defra/forms-model'
  * @import { ResponseToolkit, ServerRoute } from '@hapi/hapi'
  */
