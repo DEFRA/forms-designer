@@ -78,7 +78,36 @@ export function getPageFromDefinition(definition, pageId) {
 }
 
 /**
+ * Finds the list in the component, if it exists
+ * @param { ComponentDef | undefined } component
+ * @param {FormDefinition} definition
+ * @returns { List | undefined }
+ */
+export function getListFromComponent(component, definition) {
+  if (!component) {
+    return undefined
+  }
+  const listName = 'list' in component ? component.list : undefined
+
+  if (listName) {
+    return definition.lists.find((list) => list.name === listName)
+  }
+
+  return undefined
+}
+
+/**
+ * Turns a list into a string for auto complete
+ * @param { List | undefined } list
+ */
+export function mapListToAutoCompleteStr(list) {
+  return (
+    list?.items.map(({ text, value }) => `${text}:${value}`).join('\r\n') ?? ''
+  )
+}
+
+/**
  * @import { ErrorDetailsItem } from '~/src/common/helpers/types.js'
- * @import { FormDefinition, Page } from '@defra/forms-model'
+ * @import { FormDefinition, Page, List, ComponentDef } from '@defra/forms-model'
  * @import Wreck from '@hapi/wreck'
  */

@@ -1,8 +1,16 @@
-import { ComponentType, questionDetailsFullSchema } from '@defra/forms-model'
+import {
+  ComponentType,
+  autoCompleteOptionsSchema,
+  questionDetailsFullSchema
+} from '@defra/forms-model'
 import Joi from 'joi'
 
 import { QuestionBaseSettings } from '~/src/common/constants/editor.js'
-import { insertValidationErrors } from '~/src/lib/utils.js'
+import {
+  getListFromComponent,
+  insertValidationErrors,
+  mapListToAutoCompleteStr
+} from '~/src/lib/utils.js'
 import {
   GOVUK_LABEL__M,
   tickBoxes
@@ -92,11 +100,25 @@ export const baseSchema = Joi.object().keys({
     }
   ),
   radioHint: questionDetailsFullSchema.radioHintSchema,
-  radioValue: questionDetailsFullSchema.radioValueSchema
+  radioValue: questionDetailsFullSchema.radioValueSchema,
+  autoCompleteOptions: questionDetailsFullSchema.autoCompleteOptionsSchema.when(
+    'questionType',
+    {
+      is: 'AutocompleteField',
+      then: autoCompleteOptionsSchema.messages({
+        'array.min': 'Enter at least one option for users to choose from',
+        'array.includes': 'Enter options separated by a colon',
+        'dsv.invalid': 'Enter options separated by a colon',
+        'string.min': 'Enter at least one character',
+        'string.empty': 'Enter at least one character'
+      }),
+      otherwise: Joi.forbidden()
+    }
+  )
 })
 
 /**
- * @type {Record<keyof Omit<FormEditorGovukField, 'errorMessage'>, GovukField>}
+ * @type {FormEditorGovukFieldBase}
  */
 export const allBaseSettingsFields = {
   question: {
@@ -172,6 +194,20 @@ export const allBaseSettingsFields = {
     id: 'radiosOrCheckboxes',
     name: 'radiosOrCheckboxes',
     customTemplate: 'radios-or-checkboxes'
+  },
+  autoCompleteOptions: {
+    id: 'autoCompleteOptions',
+    name: 'autoCompleteOptions',
+    idPrefix: 'autoCompleteOptions',
+    label: {
+      text: 'Add each option on a new line',
+      classes: 'govuk-label--s',
+      isPageHeading: false
+    },
+    hint: {
+      text: 'To optionally set an input value for each item, separate the option text and value with a colon (e.g English:en-gb)'
+    },
+    customTemplate: 'auto-complete-options'
   }
 }
 
@@ -308,11 +344,17 @@ export function getSelectedFileTypesFromCSVMimeTypes(question) {
 /**
  *
  * @param { keyof Omit<FormEditorGovukField, 'errorMessage'> } fieldName
- * @param { InputFieldsComponentsDef | undefined } questionFields
+ * @param { FormComponentsDef | undefined } questionFields
  * @param { ValidationFailure<FormEditor> | undefined } validation
+ * @param {FormDefinition} definition
  * @returns {GovukField['value']}
  */
-export function getFieldValue(fieldName, questionFields, validation) {
+export function getFieldValue(
+  fieldName,
+  questionFields,
+  validation,
+  definition
+) {
   const validationResult = validation?.formValues[fieldName]
 
   if (validationResult || validationResult === '') {
@@ -328,26 +370,38 @@ export function getFieldValue(fieldName, questionFields, validation) {
       return questionFields?.hint
     case 'shortDescription':
       return questionFields?.shortDescription
+    case 'autoCompleteOptions':
+      return mapListToAutoCompleteStr(
+        getListFromComponent(questionFields, definition)
+      )
   }
   return undefined
 }
 
 export const baseQuestionFields =
-  /** @type {(keyof Omit<FormEditorGovukField, 'errorMessage'>)[]} */ ([
+  /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
     QuestionBaseSettings.Question,
     QuestionBaseSettings.HintText,
     QuestionBaseSettings.QuestionOptional,
     QuestionBaseSettings.ShortDescription
   ])
 
-export const fileUploadFields =
-  /** @type {(keyof Omit<FormEditorGovukField, 'errorMessage'>)[]} */ ([
+export const autocompleteFields =
+  /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
     QuestionBaseSettings.Question,
     QuestionBaseSettings.HintText,
     QuestionBaseSettings.QuestionOptional,
-    QuestionBaseSettings.FileTypes,
+    QuestionBaseSettings.AutoCompleteOptions,
     QuestionBaseSettings.ShortDescription
   ])
+
+export const fileUploadFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
+  QuestionBaseSettings.Question,
+  QuestionBaseSettings.HintText,
+  QuestionBaseSettings.QuestionOptional,
+  QuestionBaseSettings.FileTypes,
+  QuestionBaseSettings.ShortDescription
+])
 
 export const radiosOrCheckboxesFields =
   /** @type {(keyof Omit<FormEditorGovukField, 'errorMessage'>)[]} */ ([
@@ -366,6 +420,9 @@ export function getQuestionFieldList(questionType) {
   if (questionType === ComponentType.FileUploadField) {
     return fileUploadFields
   }
+  if (questionType === ComponentType.AutocompleteField) {
+    return autocompleteFields
+  }
   if (
     questionType === ComponentType.RadiosField ||
     questionType === ComponentType.CheckboxesField
@@ -379,13 +436,23 @@ export function getQuestionFieldList(questionType) {
  * @param { InputFieldsComponentsDef | undefined } questionFields
  * @param { ComponentType | undefined } questionType
  * @param { ValidationFailure<FormEditor> | undefined } validation
+ * @param {FormDefinition} definition
  * @returns {GovukField[]}
  */
-export function getFieldList(questionFields, questionType, validation) {
+export function getFieldList(
+  questionFields,
+  questionType,
+  validation,
+  definition
+) {
   const questionFieldList = getQuestionFieldList(questionType)
-
   return questionFieldList.map((fieldName) => {
-    const value = getFieldValue(fieldName, questionFields, validation)
+    const value = getFieldValue(
+      fieldName,
+      questionFields,
+      validation,
+      definition
+    )
     return {
       ...allBaseSettingsFields[fieldName],
       value,
@@ -431,6 +498,6 @@ export function getFileUploadFields(questionFields, validation) {
 }
 
 /**
- * @import { ComponentDef, FormEditor, FormEditorGovukField, FormEditorInputQuestion, GovukField, InputFieldsComponentsDef } from '@defra/forms-model'
+ * @import { FormDefinition, ComponentDef, FormEditor, FormEditorGovukField, FormEditorInputQuestion, GovukField, InputFieldsComponentsDef, FormEditorGovukFieldBase, FormEditorGovukFieldBaseKeys, FormComponentsDef } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

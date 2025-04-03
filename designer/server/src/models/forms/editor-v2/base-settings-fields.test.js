@@ -1,6 +1,9 @@
 import { ComponentType } from '@defra/forms-model'
+import { ValidationError } from 'joi'
 
+import { buildDefinition } from '~/src/__stubs__/form-definition.js'
 import {
+  baseSchema,
   getFieldList,
   getQuestionFieldList,
   mapPayloadToFileMimeTypes
@@ -59,14 +62,19 @@ describe('editor-v2 - advanced settings fields model', () => {
         }
       ]
       expect(
-        getFieldList(undefined, ComponentType.TextField, undefined)
+        getFieldList(
+          undefined,
+          ComponentType.TextField,
+          undefined,
+          buildDefinition()
+        )
       ).toEqual(expectedArray)
     })
   })
   describe('getFieldComponentType', () => {
     test('should throw if invalid or not implemented field type', () => {
       expect(() => getFieldComponentType({ name: ComponentType.Html })).toThrow(
-        'Invalid or not implemented advanced setting field name (Html)'
+        'Invalid or not implemented field name setting (Html)'
       )
     })
 
@@ -109,6 +117,12 @@ describe('editor-v2 - advanced settings fields model', () => {
     test('should return FileUploadField for FileTypes', () => {
       expect(getFieldComponentType({ name: 'fileTypes' })).toBe(
         ComponentType.FileUploadField
+      )
+    })
+
+    test('should return MultilineTextField for AutoComplete', () => {
+      expect(getFieldComponentType({ name: 'autoCompleteOptions' })).toBe(
+        ComponentType.MultilineTextField
       )
     })
   })
@@ -173,6 +187,152 @@ describe('editor-v2 - advanced settings fields model', () => {
           tabularDataTypes: undefined
         })
       ).toEqual({})
+    })
+  })
+
+  describe('baseSchema', () => {
+    it('should validate correctly when autocomplete is sent', () => {
+      const payload = {
+        question: 'What is your first language',
+        hintText: '',
+        autoCompleteOptions:
+          'English:en-gb\r\n' +
+          'French:fr-FR\r\n' +
+          'German:de-DE\r\n' +
+          'Spanish:es-ES\r\n' +
+          'Polish:pl-PL\r\n' +
+          'Ukrainian:uk-UA',
+        shortDescription: 'first language',
+        questionType: 'AutocompleteField',
+        name: 'ZlUnKg'
+      }
+
+      const validated = baseSchema.validate(payload)
+      expect(validated.error).toBeUndefined()
+      expect(validated.value).toEqual({
+        question: 'What is your first language',
+        hintText: '',
+        autoCompleteOptions: [
+          { text: 'English', value: 'en-gb' },
+          { text: 'French', value: 'fr-FR' },
+          { text: 'German', value: 'de-DE' },
+          { text: 'Spanish', value: 'es-ES' },
+          { text: 'Polish', value: 'pl-PL' },
+          { text: 'Ukrainian', value: 'uk-UA' }
+        ],
+        shortDescription: 'first language',
+        questionType: 'AutocompleteField',
+        name: 'ZlUnKg',
+        documentTypes: [],
+        imageTypes: [],
+        tabularDataTypes: [],
+        fileTypes: []
+      })
+    })
+
+    it('should autofill value if not defined', () => {
+      const payload = {
+        question: 'What is your first language',
+        hintText: '',
+        autoCompleteOptions:
+          'English\r\n' +
+          'French\r\n' +
+          'German\r\n' +
+          'Spanish\r\n' +
+          'Polish\r\n' +
+          'Ukrainian',
+        shortDescription: 'first language',
+        questionType: 'AutocompleteField',
+        name: 'ZlUnKg'
+      }
+
+      const validated = baseSchema.validate(payload)
+      expect(validated.error).toBeUndefined()
+      expect(validated.value).toEqual({
+        question: 'What is your first language',
+        hintText: '',
+        autoCompleteOptions: [
+          { text: 'English', value: 'English' },
+          { text: 'French', value: 'French' },
+          { text: 'German', value: 'German' },
+          { text: 'Spanish', value: 'Spanish' },
+          { text: 'Polish', value: 'Polish' },
+          { text: 'Ukrainian', value: 'Ukrainian' }
+        ],
+        shortDescription: 'first language',
+        questionType: 'AutocompleteField',
+        name: 'ZlUnKg',
+        documentTypes: [],
+        imageTypes: [],
+        tabularDataTypes: [],
+        fileTypes: []
+      })
+    })
+
+    it('should fail validation if autocomplete is empty', () => {
+      const payload = {
+        question: 'What is your first language',
+        hintText: '',
+        autoCompleteOptions: '',
+        shortDescription: 'first language',
+        questionType: 'AutocompleteField',
+        name: 'ZlUnKg'
+      }
+
+      const validated = baseSchema.validate(payload)
+      expect(validated.error).toEqual(
+        new ValidationError(
+          'Enter at least one option for users to choose from',
+          [],
+          []
+        )
+      )
+      expect(validated.value).toEqual({
+        ...payload,
+        documentTypes: [],
+        fileTypes: [],
+        imageTypes: [],
+        tabularDataTypes: []
+      })
+    })
+
+    it('should fail validation if text is empty', () => {
+      const payload = {
+        question: 'What is your first language',
+        hintText: '',
+        autoCompleteOptions: ':',
+        shortDescription: 'first language',
+        questionType: 'AutocompleteField',
+        name: 'ZlUnKg'
+      }
+
+      const validated = baseSchema.validate(payload)
+      expect(validated.error).toEqual(
+        new ValidationError('Enter options separated by a colon', [], [])
+      )
+      expect(validated.value).toEqual({
+        ...payload,
+        documentTypes: [],
+        fileTypes: [],
+        imageTypes: [],
+        tabularDataTypes: []
+      })
+    })
+
+    it('should fail validation if parsing fails', () => {
+      const payload = {
+        question: 'What is your first language',
+        hintText: '',
+        autoCompleteOptions: 'adf:::::::Adfdfadf::::\r\n',
+        shortDescription: 'first language',
+        questionType: 'AutocompleteField',
+        name: 'ZlUnKg'
+      }
+
+      const validated = baseSchema.validate(payload)
+      expect(validated.error).toEqual(
+        new ValidationError('Enter options separated by a colon', [], [])
+      )
     })
   })
 

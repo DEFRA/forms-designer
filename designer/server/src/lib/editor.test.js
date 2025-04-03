@@ -7,7 +7,15 @@ import {
   testFormDefinitionWithTwoPagesAndQuestions,
   testFormDefinitionWithTwoQuestions
 } from '~/src/__stubs__/form-definition.js'
-import config from '~/src/config.js'
+import {
+  createMockResponse,
+  formsEndpoint,
+  mockedDelJson,
+  mockedPatchJson,
+  mockedPostJson,
+  mockedPutJson,
+  token
+} from '~/src/lib/__stubs__/editor.js'
 import {
   addPageAndFirstQuestion,
   addQuestion,
@@ -20,35 +28,8 @@ import {
   setPageHeadingAndGuidance,
   updateQuestion
 } from '~/src/lib/editor.js'
-import { delJson, patchJson, postJson, putJson } from '~/src/lib/fetch.js'
 
 jest.mock('~/src/lib/fetch.js')
-
-const mockedDelJson = /** @type {jest.MockedFunction<typeof delJson>} */ (
-  delJson
-)
-const mockedPostJson = /** @type {jest.MockedFunction<typeof postJson>} */ (
-  postJson
-)
-const mockedPatchJson = /** @type {jest.MockedFunction<typeof patchJson>} */ (
-  patchJson
-)
-const mockedPutJson = /** @type {jest.MockedFunction<typeof putJson>} */ (
-  putJson
-)
-
-/**
- * Creates a minimal mock response
- * @param {{statusCode?: number}} [props]
- * @returns
- */
-function createMockResponse(props = {}) {
-  const response = /** @type {IncomingMessage} */ ({
-    statusCode: props.statusCode,
-    headers: {}
-  })
-  return response
-}
 
 /**
  * @satisfies {FormDefinition}
@@ -86,8 +67,6 @@ const formDefinition = {
   lists: []
 }
 
-const formsEndpoint = new URL('/forms/', config.managerUrl)
-
 const questionDetails = {
   title: 'What is your name?',
   name: 'what-is-your-name',
@@ -96,7 +75,6 @@ const questionDetails = {
 
 describe('editor.js', () => {
   const formId = '98dbfb6c-93b7-41dc-86e7-02c7abe4ba38'
-  const token = 'someToken'
 
   afterEach(() => {
     jest.clearAllMocks()

@@ -1,3 +1,4 @@
+import { ComponentType } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 
 import * as scopes from '~/src/common/constants/scopes.js'
@@ -9,6 +10,7 @@ import {
 } from '~/src/lib/editor.js'
 import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
+import { buildAutoCompleteListFromPayload, upsertList } from '~/src/lib/list.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import {
   allSpecificSchemas,
@@ -47,6 +49,71 @@ function redirectWithAnchor(h, slug, pageId, questionId, anchor) {
       )
     )
     .code(StatusCodes.SEE_OTHER)
+}
+
+const listQuestions = /** @type {string[]} */ ([
+  ComponentType.AutocompleteField
+])
+
+/**
+ * @param {string} formId
+ * @param {FormDefinition} definition
+ * @param {string} token
+ * @param {FormEditorInputQuestionDetails} payload
+ * @returns {Promise<undefined|string>}
+ */
+async function saveList(formId, definition, token, payload) {
+  if (!listQuestions.includes(`${payload.questionType}`)) {
+    return undefined
+  }
+
+  const { list } = await upsertList(
+    formId,
+    definition,
+    token,
+    buildAutoCompleteListFromPayload(payload)
+  )
+
+  return list.name
+}
+
+/**
+ * @param {string} formId
+ * @param {string} pageId
+ * @param {string} token
+ * @param {FormDefinition} definition
+ * @param {Partial<ComponentDef>} questionDetails
+ * @param {string} questionId
+ * @returns {Promise<string>}
+ */
+async function saveQuestion(
+  formId,
+  pageId,
+  token,
+  definition,
+  questionDetails,
+  questionId
+) {
+  if (pageId === 'new') {
+    const newPage = await addPageAndFirstQuestion(
+      formId,
+      token,
+      questionDetails
+    )
+    return newPage.id ?? 'unknown'
+  } else if (questionId === 'new') {
+    await addQuestion(formId, token, pageId, questionDetails)
+  } else {
+    await updateQuestion(
+      formId,
+      token,
+      definition,
+      pageId,
+      questionId,
+      questionDetails
+    )
+  }
+  return pageId
 }
 
 export default [
@@ -137,27 +204,23 @@ export default [
       // Save page and first question
       const metadata = await forms.get(slug, token)
       const definition = await forms.getDraftFormDefinition(metadata.id, token)
-      let finalPageId = pageId
+      const formId = metadata.id
 
-      if (pageId === 'new') {
-        const newPage = await addPageAndFirstQuestion(
-          metadata.id,
-          token,
-          questionDetails
-        )
-        finalPageId = newPage.id ?? 'unknown'
-      } else if (questionId === 'new') {
-        await addQuestion(metadata.id, token, pageId, questionDetails)
-      } else {
-        await updateQuestion(
-          metadata.id,
-          token,
-          definition,
-          pageId,
-          questionId,
-          questionDetails
-        )
-      }
+      // TODO: When forms runner is updated move to id
+      const listName = await saveList(formId, definition, token, payload)
+
+      const questionDetailsWithList = listName
+        ? { ...questionDetails, list: listName }
+        : questionDetails
+
+      const finalPageId = await saveQuestion(
+        formId,
+        pageId,
+        token,
+        definition,
+        questionDetailsWithList,
+        questionId
+      )
 
       yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
 
@@ -185,6 +248,6 @@ export default [
 ]
 
 /**
- * @import { FormEditorInputQuestionDetails } from '@defra/forms-model'
+ * @import { FormEditorInputQuestionDetails, ComponentDef, FormDefinition } from '@defra/forms-model'
  * @import { ResponseToolkit, ServerRoute } from '@hapi/hapi'
  */

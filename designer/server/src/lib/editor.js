@@ -39,6 +39,7 @@ export function getControllerType(questionDetails) {
  * @param {string} token
  * @param {Partial<ComponentDef>} questionDetails
  * @param {Partial<Page>} [pageDetails]
+ * @returns {Promise<Page>}
  */
 export async function addPageAndFirstQuestion(
   formId,
@@ -347,5 +348,5 @@ export async function deletePage(formId, token, pageId) {
 }
 
 /**
- * @import { ComponentDef, Page, FormEditorInputCheckAnswersSettings, FormEditorInputPageSettings, FormDefinition } from '@defra/forms-model'
+ * @import { ComponentDef, Page, FormEditorInputCheckAnswersSettings, FormEditorInputPageSettings, FormDefinition, List } from '@defra/forms-model'
  */
