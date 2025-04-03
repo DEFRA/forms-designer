@@ -10,12 +10,10 @@ import {
 
 import config from '~/src/config.js'
 import { delJson, patchJson, postJson, putJson } from '~/src/lib/fetch.js'
-import { createList, updateList } from '~/src/lib/list.js'
 import {
   getHeaders,
   getPageFromDefinition,
   isCheckboxSelected,
-  noListToSave,
   slugify,
   stringHasValue
 } from '~/src/lib/utils.js'
@@ -55,8 +53,8 @@ export function mapToList(id, name, title, state) {
       ? state.listItems.map((item) => {
           return {
             // id: item.id,
-            text: item.label,
-            value: stringHasValue(item.value) ? item.value : item.label
+            text: item.text,
+            value: stringHasValue(item.value) ? item.value : item.text
           }
         })
       : []
@@ -72,95 +70,20 @@ export function buildRequestUrl(formId, path) {
 }
 
 /**
- * @param {string} formId
- * @param {string} token
- * @param {Partial<ComponentDef>} questionDetails
- * @param { QuestionSessionState | undefined } state
- */
-export async function createEditorList(formId, token, questionDetails, state) {
-  if (noListToSave(questionDetails.type, state)) {
-    return {}
-  }
-
-  const list = mapToList(
-    undefined,
-    undefined,
-    `title for ${questionDetails.title}`,
-    state
-  )
-
-  const body = await createList(formId, token, list)
-
-  if (body.status !== 'created') {
-    throw new Error(`Unable to save list for question ${questionDetails.title}`)
-  }
-  return { list: body.list.name }
-}
-
-/**
- * @param {string} formId
- * @param {string} token
- * @param {Partial<ListComponentsDef>} questionDetails
- * @param { QuestionSessionState | undefined } state
- * @param {FormDefinition} definition
- * @returns {Promise<boolean>}
- */
-export async function updateEditorList(
-  formId,
-  token,
-  questionDetails,
-  state,
-  definition
-) {
-  if (noListToSave(questionDetails.type, state)) {
-    return false
-  }
-
-  const listFromDef = definition.lists.find(
-    (x) => x.name === questionDetails.list
-  )
-
-  const list = mapToList(
-    listFromDef?.id,
-    listFromDef?.name,
-    listFromDef?.title,
-    state
-  )
-
-  // Update list
-  const body = await updateList(formId, listFromDef?.id, token, list)
-  if (body.status !== 'updated') {
-    throw new Error(
-      `Unable to update list for question ${questionDetails.title}`
-    )
-  }
-  return true
-}
-
-/**
  * Add a page to a form definition
  * @param {string} formId
  * @param {string} token
  * @param {Partial<ComponentDef>} questionDetails
  * @param {Partial<Page>} [pageDetails]
- * @param { QuestionSessionState | undefined } [state]
  * @returns {Promise<Page>}
  */
 export async function addPageAndFirstQuestion(
   formId,
   token,
   questionDetails,
-  pageDetails,
-  state
+  pageDetails
 ) {
   questionDetails.name = questionDetails.name ?? randomId()
-
-  const addedList = await createEditorList(
-    formId,
-    token,
-    questionDetails,
-    state
-  )
 
   const { body } = await postJsonByType(buildRequestUrl(formId, 'pages'), {
     payload: {
@@ -168,8 +91,7 @@ export async function addPageAndFirstQuestion(
       path: `/${slugify(pageDetails?.title ?? questionDetails.title)}`,
       components: [
         {
-          ...questionDetails,
-          ...addedList
+          ...questionDetails
         }
       ],
       ...getControllerType(questionDetails)
@@ -186,30 +108,15 @@ export async function addPageAndFirstQuestion(
  * @param {string} token
  * @param {string} pageId
  * @param {Partial<ComponentDef>} questionDetails
- * @param { QuestionSessionState | undefined } [state]
  */
-export async function addQuestion(
-  formId,
-  token,
-  pageId,
-  questionDetails,
-  state
-) {
+export async function addQuestion(formId, token, pageId, questionDetails) {
   questionDetails.name = questionDetails.name ?? randomId()
-
-  const addedList = await createEditorList(
-    formId,
-    token,
-    questionDetails,
-    state
-  )
 
   const { body } = await postJsonByType(
     buildRequestUrl(formId, `pages/${pageId}/components`),
     {
       payload: {
-        ...questionDetails,
-        ...addedList
+        ...questionDetails
       },
       ...getHeaders(token)
     }
@@ -226,7 +133,6 @@ export async function addQuestion(
  * @param {string} pageId
  * @param {string} questionId
  * @param {Partial<ComponentDef>} questionDetails
- * @param { QuestionSessionState | undefined } [state]
  */
 export async function updateQuestion(
   formId,
@@ -234,8 +140,7 @@ export async function updateQuestion(
   definition,
   pageId,
   questionId,
-  questionDetails,
-  state
+  questionDetails
 ) {
   // Determine if page controller should change
   const page = getPageFromDefinition(definition, pageId)
@@ -250,14 +155,6 @@ export async function updateQuestion(
       ...getHeaders(token)
     })
   }
-
-  await updateEditorList(
-    formId,
-    token,
-    /** @type {ListComponentsDef} */ (questionDetails),
-    state,
-    definition
-  )
 
   const { body } = await putJsonByType(
     buildRequestUrl(formId, `pages/${pageId}/components/${questionId}`),
@@ -472,5 +369,5 @@ export async function deletePage(formId, token, pageId) {
 }
 
 /**
- * @import { ComponentDef, FormEditorInputCheckAnswersSettings, FormEditorInputPageSettings, FormDefinition, List, ListComponentsDef, Page, QuestionSessionState } from '@defra/forms-model'
+ * @import { ComponentDef, FormEditorInputCheckAnswersSettings, FormEditorInputPageSettings, FormDefinition, Item, List, ListComponentsDef, Page, QuestionSessionState } from '@defra/forms-model'
  */

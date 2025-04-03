@@ -3,15 +3,12 @@ import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
 import {
-<<<<<<< HEAD
-  testFormDefinitionWithFileUploadPage,
-=======
   buildAutoCompleteComponent,
   buildDefinition,
   buildList,
   buildListItem,
   buildQuestionPage,
->>>>>>> main
+  testFormDefinitionWithFileUploadPage,
   testFormDefinitionWithSinglePage
 } from '~/src/__stubs__/form-definition.js'
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
@@ -22,28 +19,20 @@ import {
   getValidationErrorsFromSession
 } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
-<<<<<<< HEAD
+import { upsertList } from '~/src/lib/list.js'
 import {
   buildQuestionSessionState,
   createQuestionSessionState,
   getQuestionSessionState
 } from '~/src/lib/session-helper.js'
-=======
-import { upsertList } from '~/src/lib/list.js'
-import { getQuestionType } from '~/src/routes/forms/editor-v2/helper.js'
->>>>>>> main
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/forms.js')
 jest.mock('~/src/lib/error-helper.js')
 jest.mock('~/src/lib/editor.js')
-<<<<<<< HEAD
 jest.mock('~/src/lib/session-helper.js')
-=======
 jest.mock('~/src/lib/list.js')
-jest.mock('~/src/routes/forms/editor-v2/helper.js')
->>>>>>> main
 jest.mock('~/src/routes/forms/editor-v2/question-details-helper.js')
 
 describe('Editor v2 question details routes', () => {
@@ -54,6 +43,10 @@ describe('Editor v2 question details routes', () => {
     jest.clearAllMocks()
     server = await createServer()
     await server.initialize()
+  })
+
+  beforeEach(() => {
+    jest.clearAllMocks()
   })
 
   /**
@@ -76,13 +69,17 @@ describe('Editor v2 question details routes', () => {
     questionType: ComponentType.FileUploadField
   }
 
+  const simpleSessionAutocomplete = {
+    questionType: ComponentType.AutocompleteField
+  }
+
   test('GET - should redirect if no session yet', async () => {
     jest.mocked(getQuestionSessionState).mockReturnValue(undefined)
     jest.mocked(createQuestionSessionState).mockReturnValue('newSessId')
-    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest.mocked(forms.get).mockResolvedValue(testFormMetadata)
     jest
       .mocked(forms.getDraftFormDefinition)
-      .mockResolvedValueOnce(testFormDefinitionWithSinglePage)
+      .mockResolvedValue(testFormDefinitionWithSinglePage)
 
     const options = {
       method: 'get',
@@ -271,57 +268,59 @@ describe('Editor v2 question details routes', () => {
     const listName = 'AutoCompleteList'
     const listId = '3b016ee4-6484-4b0f-a02a-4e0e37de066b'
     jest
-      .mocked(getQuestionType)
-      .mockReturnValue(ComponentType.AutocompleteField)
+      .mocked(getQuestionSessionState)
+      .mockReturnValue(simpleSessionAutocomplete)
+    jest
+      .mocked(buildQuestionSessionState)
+      .mockReturnValue(simpleSessionAutocomplete)
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
-    jest.mocked(forms.getDraftFormDefinition).mockResolvedValueOnce(
-      buildDefinition({
-        name: 'Test form',
-        pages: [
-          buildQuestionPage({
-            id: 'p1',
-            path: '/autocomplete',
-            title: 'Which country do you live in?',
-            components: [
-              buildAutoCompleteComponent({
-                id: 'c1',
-                name: 'autoComplete',
-                title: 'Which country do you live in?',
-                list: listName
-              })
-            ]
-          })
-        ],
-        lists: [
-          buildList({
-            id: listId,
-            name: listName,
-            items: [
-              buildListItem({
-                text: 'England',
-                value: 'england'
-              }),
-              buildListItem({
-                text: 'Wales',
-                value: 'wales'
-              }),
-              buildListItem({
-                text: 'Scotland',
-                value: 'scotland'
-              }),
-              buildListItem({
-                text: 'Northern Ireland',
-                value: 'northern-island'
-              })
-            ]
-          })
-        ]
-      })
-    )
+    const def = buildDefinition({
+      name: 'Test form',
+      pages: [
+        buildQuestionPage({
+          id: 'p1',
+          path: '/autocomplete',
+          title: 'Which country do you live in?',
+          components: [
+            buildAutoCompleteComponent({
+              id: 'c1',
+              name: 'autoComplete',
+              title: 'Which country do you live in?',
+              list: listName
+            })
+          ]
+        })
+      ],
+      lists: [
+        buildList({
+          id: listId,
+          name: listName,
+          items: [
+            buildListItem({
+              text: 'England',
+              value: 'england'
+            }),
+            buildListItem({
+              text: 'Wales',
+              value: 'wales'
+            }),
+            buildListItem({
+              text: 'Scotland',
+              value: 'scotland'
+            }),
+            buildListItem({
+              text: 'Northern Ireland',
+              value: 'northern-ireland'
+            })
+          ]
+        })
+      ]
+    })
+    jest.mocked(forms.getDraftFormDefinition).mockResolvedValue(def)
 
     const options = {
       method: 'get',
-      url: '/library/my-form-slug/editor-v2/page/p1/question/c1/details',
+      url: '/library/my-form-slug/editor-v2/page/p1/question/c1/details/54321',
       auth
     }
 
@@ -335,7 +334,7 @@ describe('Editor v2 question details routes', () => {
       'England:england'
     )
     expect(/** @type {HTMLInputElement} */ (autoCompleteField).value).toMatch(
-      'Northern Ireland:northern-island'
+      'Northern Ireland:northern-ireland'
     )
   })
 
@@ -440,6 +439,10 @@ describe('Editor v2 question details routes', () => {
   })
 
   test('POST - should redirect to next page if valid payload with new question', async () => {
+    jest.mocked(getQuestionSessionState).mockReturnValue(simpleSessionTextField)
+    jest
+      .mocked(buildQuestionSessionState)
+      .mockReturnValue(simpleSessionTextField)
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     jest.mocked(addPageAndFirstQuestion).mockResolvedValue(page)
 

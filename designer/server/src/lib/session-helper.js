@@ -124,7 +124,7 @@ export function buildQuestionSessionState(
     editRow: state?.editRow ?? {},
     listItems: items.map((item) => ({
       id: randomUUID(),
-      label: item.text,
+      text: item.text,
       // hint: item.hint,
       value: item.value
     }))

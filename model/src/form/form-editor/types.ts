@@ -194,7 +194,7 @@ export interface FormEditor {
   /**
    * The display text of the radio item
    */
-  radioLabel: string
+  radioText: string
 
   /**
    * The hint of the radio item
@@ -257,7 +257,7 @@ export type FormEditorInputQuestion = Pick<
   | 'autoCompleteOptions'
   | 'enhancedAction'
   | 'radioId'
-  | 'radioLabel'
+  | 'radioText'
   | 'radioHint'
   | 'radioValue'
   | 'list'
@@ -287,7 +287,7 @@ export type FormEditorInputQuestionDetails = Pick<
   | 'autoCompleteOptions'
   | 'enhancedAction'
   | 'radioId'
-  | 'radioLabel'
+  | 'radioText'
   | 'radioHint'
   | 'radioValue'
 >
@@ -297,12 +297,12 @@ export interface QuestionSessionState {
   questionDetails?: Partial<ComponentDef>
   editRow?: {
     radioId?: string
-    radioLabel?: string
+    radioText?: string
     radioHint?: string
     radioValue?: string
     expanded?: boolean
   }
-  listItems?: { label?: string; hint?: string; value?: string; id?: string }[]
+  listItems?: { text?: string; hint?: string; value?: string; id?: string }[]
 }
 
 export interface GovukField {

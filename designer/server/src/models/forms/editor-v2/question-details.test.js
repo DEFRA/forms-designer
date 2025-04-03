@@ -435,8 +435,8 @@ describe('editor-v2 - question details model', () => {
           value: undefined
         },
         {
-          name: 'radioLabel',
-          id: 'radioLabel',
+          name: 'radioText',
+          id: 'radioText',
           label: {
             text: 'Item',
             classes: 'govuk-label--m'
@@ -476,9 +476,9 @@ describe('editor-v2 - question details model', () => {
           editRow: {},
           questionDetails: {},
           listItems: [
-            { id: '1', label: '1', value: '1' },
-            { id: '2', label: '2', value: '2' },
-            { id: '3', label: '3', value: '3' }
+            { id: '1', text: '1', value: '1' },
+            { id: '2', text: '2', value: '2' },
+            { id: '3', text: '3', value: '3' }
           ]
         })
       ).toBe(4)
@@ -490,9 +490,9 @@ describe('editor-v2 - question details model', () => {
           editRow: { radioId: '2' },
           questionDetails: {},
           listItems: [
-            { id: '1', label: '1', value: '1' },
-            { id: '2', label: '2', value: '2' },
-            { id: '3', label: '3', value: '3' }
+            { id: '1', text: '1', value: '1' },
+            { id: '2', text: '2', value: '2' },
+            { id: '3', text: '3', value: '3' }
           ]
         })
       ).toBe(2)

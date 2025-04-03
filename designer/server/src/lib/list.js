@@ -3,7 +3,6 @@ import { randomId } from '@defra/forms-model'
 import config from '~/src/config.js'
 import { delJson, postJson, putJson } from '~/src/lib/fetch.js'
 import { getHeaders } from '~/src/lib/utils.js'
-import { mapBaseQuestionDetails } from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
 
 const formsEndpoint = new URL('/forms/', config.managerUrl)
 const postJsonByListType =
@@ -16,30 +15,24 @@ const putJsonByListType =
   )
 
 /**
- * Maps FormEditorInputQuestion payload to List Component
- * @param {Partial<FormEditorInputQuestion>} payload
- * @returns {Partial<ComponentDef>}
- */
-export function mapListComponentFromPayload(payload) {
-  const baseComponentDetails = mapBaseQuestionDetails(payload)
-  return {
-    ...baseComponentDetails,
-    list: 'list' in baseComponentDetails ? baseComponentDetails.list : ''
-  }
-}
-
-/**
  * Maps FormEditorInputQuestion payload to AutoComplete Component
  * @param {Partial<FormEditorInputQuestion>} questionDetails
  * @param {Item[]} listItems
  * @returns {Partial<List>}
  */
-export function buildAutoCompleteListFromDetails(questionDetails, listItems) {
+export function buildListFromDetails(questionDetails, listItems) {
   return {
     name: questionDetails.list ?? randomId(),
-    title: `List for question ${questionDetails.question}`,
+    title: `List for question ${questionDetails.name}`,
     type: 'string',
-    items: listItems
+    items: listItems.map((item) => {
+      return {
+        // id: item.id,
+        text: item.text,
+        // hint: item.hint,
+        value: item.value
+      }
+    })
   }
 }
 /**

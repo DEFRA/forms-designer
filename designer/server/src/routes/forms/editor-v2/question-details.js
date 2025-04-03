@@ -6,12 +6,11 @@ import { sessionNames } from '~/src/common/constants/session-names.js'
 import {
   addPageAndFirstQuestion,
   addQuestion,
-  mapToList,
   updateQuestion
 } from '~/src/lib/editor.js'
 import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
-import { buildAutoCompleteListFromDetails, upsertList } from '~/src/lib/list.js'
+import { buildListFromDetails, upsertList } from '~/src/lib/list.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import {
   buildQuestionSessionState,
@@ -19,6 +18,7 @@ import {
   createQuestionSessionState,
   getQuestionSessionState
 } from '~/src/lib/session-helper.js'
+import { isListComponent } from '~/src/lib/utils.js'
 import {
   allSpecificSchemas,
   mapQuestionDetails
@@ -57,10 +57,6 @@ function redirectWithAnchor(h, slug, pageId, questionId, stateId, anchor) {
     .code(StatusCodes.SEE_OTHER)
 }
 
-const listQuestions = /** @type {string[]} */ ([
-  ComponentType.AutocompleteField
-])
-
 /**
  * @param {string} formId
  * @param {FormDefinition} definition
@@ -70,20 +66,32 @@ const listQuestions = /** @type {string[]} */ ([
  * @returns {Promise<undefined|string>}
  */
 async function saveList(formId, definition, token, questionDetails, listItems) {
-  if (!listQuestions.includes(questionDetails.type ?? ComponentType.TextField)) {
+  if (!isListComponent(questionDetails.type ?? ComponentType.TextField)) {
     return undefined
   }
 
-  const listMapped = buildAutoCompleteListFromDetails(questionDetails, listItems ?? [])
+  const listMapped = buildListFromDetails(questionDetails, listItems ?? [])
 
-  const { list } = await upsertList(
+  const { list, status } = await upsertList(
     formId,
     definition,
     token,
     listMapped
   )
 
-  return list.name
+  return status === 'created' ? list.name : undefined
+}
+
+/**
+ * @param {FormEditorInputQuestionDetails} payload
+ * @param { QuestionSessionState | undefined } state
+ */
+export function getListItems(payload, state) {
+  return /** @type {Item[]} */ (
+    payload.questionType === ComponentType.AutocompleteField
+      ? payload.autoCompleteOptions
+      : state?.listItems
+  )
 }
 
 /**
@@ -105,17 +113,28 @@ async function saveQuestion(
   questionDetails,
   listItems
 ) {
-  const list = await saveList(formId, definition, token, questionDetails, listItems)
+  // Create or update the list (if this is a Component that uses a List)
+  const listName = await saveList(
+    formId,
+    definition,
+    token,
+    questionDetails,
+    listItems
+  )
+
+  const questDetailsWithList = listName
+    ? { ...questionDetails, list: listName }
+    : questionDetails
+
   if (pageId === 'new') {
     const newPage = await addPageAndFirstQuestion(
       formId,
       token,
-      questionDetails,
-      undefined
+      questDetailsWithList
     )
     return newPage.id ?? 'unknown'
   } else if (questionId === 'new') {
-    await addQuestion(formId, token, pageId, questionDetails, state)
+    await addQuestion(formId, token, pageId, questDetailsWithList)
   } else {
     await updateQuestion(
       formId,
@@ -123,8 +142,7 @@ async function saveQuestion(
       definition,
       pageId,
       questionId,
-      questionDetails,
-      state
+      questDetailsWithList
     )
   }
   return pageId
@@ -214,8 +232,6 @@ export default [
         )
       const { token } = auth.credentials
 
-      const state = getQuestionSessionState(yar, stateId)
-
       const questionDetails = {
         ...mapQuestionDetails(payload),
         id: questionId !== 'new' ? questionId : undefined
@@ -243,6 +259,8 @@ export default [
       const metadata = await forms.get(slug, token)
       const definition = await forms.getDraftFormDefinition(metadata.id, token)
 
+      const state = getQuestionSessionState(yar, stateId)
+
       const finalPageId = await saveQuestion(
         metadata.id,
         token,
@@ -250,7 +268,7 @@ export default [
         pageId,
         questionId,
         questionDetails,
-        payload.autoCompleteOptions ?? state?.listItems
+        getListItems(payload, state)
       )
 
       yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)

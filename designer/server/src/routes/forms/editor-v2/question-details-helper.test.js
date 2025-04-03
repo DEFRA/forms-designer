@@ -23,9 +23,9 @@ const mockYar = /** @type {Yar}} */ ({
 
 const listWithThreeItems = {
   listItems: [
-    { id: '1', label: 'label1', hint: 'hint1', value: 'value1' },
-    { id: '2', label: 'label2', hint: 'hint2', value: 'value2' },
-    { id: '3', label: 'label3', hint: 'hint3', value: 'value3' }
+    { id: '1', text: 'text1', hint: 'hint1', value: 'value1' },
+    { id: '2', text: 'text2', hint: 'hint2', value: 'value2' },
+    { id: '3', text: 'text3', hint: 'hint3', value: 'value3' }
   ]
 }
 
@@ -54,7 +54,7 @@ describe('Editor v2 question-details route helper', () => {
         setEditRowState(
           {
             id: '12345',
-            label: 'label1',
+            text: 'text1',
             hint: 'hint1',
             value: 'value1'
           },
@@ -62,7 +62,7 @@ describe('Editor v2 question-details route helper', () => {
         )
       ).toEqual({
         radioId: '12345',
-        radioLabel: 'label1',
+        radioText: 'text1',
         radioHint: 'hint1',
         radioValue: 'value1',
         expanded: false
@@ -72,7 +72,7 @@ describe('Editor v2 question-details route helper', () => {
     test('should set default state', () => {
       expect(setEditRowState(undefined, true)).toEqual({
         radioId: '',
-        radioLabel: '',
+        radioText: '',
         radioHint: '',
         radioValue: '',
         expanded: true
@@ -102,8 +102,8 @@ describe('Editor v2 question-details route helper', () => {
       expect(mockSet).toHaveBeenCalledWith('questionSessionState-123', {
         questionType: 'RadiosField',
         listItems: [
-          { id: '1', label: 'label1', hint: 'hint1', value: 'value1' },
-          { id: '3', label: 'label3', hint: 'hint3', value: 'value3' }
+          { id: '1', text: 'text1', hint: 'hint1', value: 'value1' },
+          { id: '3', text: 'text3', hint: 'hint3', value: 'value3' }
         ]
       })
     })
@@ -118,15 +118,15 @@ describe('Editor v2 question-details route helper', () => {
         questionType: 'RadiosField',
         editRow: {
           radioId: '2',
-          radioLabel: 'label2',
+          radioText: 'text2',
           radioHint: 'hint2',
           radioValue: 'value2',
           expanded: true
         },
         listItems: [
-          { hint: 'hint1', id: '1', label: 'label1', value: 'value1' },
-          { hint: 'hint2', id: '2', label: 'label2', value: 'value2' },
-          { hint: 'hint3', id: '3', label: 'label3', value: 'value3' }
+          { hint: 'hint1', id: '1', text: 'text1', value: 'value1' },
+          { hint: 'hint2', id: '2', text: 'text2', value: 'value2' },
+          { hint: 'hint3', id: '3', text: 'text3', value: 'value3' }
         ]
       })
     })
@@ -141,15 +141,15 @@ describe('Editor v2 question-details route helper', () => {
         questionType: 'RadiosField',
         editRow: {
           radioId: '',
-          radioLabel: '',
+          radioText: '',
           radioHint: '',
           radioValue: '',
           expanded: false
         },
         listItems: [
-          { hint: 'hint1', id: '1', label: 'label1', value: 'value1' },
-          { hint: 'hint2', id: '2', label: 'label2', value: 'value2' },
-          { hint: 'hint3', id: '3', label: 'label3', value: 'value3' }
+          { hint: 'hint1', id: '1', text: 'text1', value: 'value1' },
+          { hint: 'hint2', id: '2', text: 'text2', value: 'value2' },
+          { hint: 'hint3', id: '3', text: 'text3', value: 'value3' }
         ]
       })
     })
@@ -178,7 +178,7 @@ describe('Editor v2 question-details route helper', () => {
       const payload = /** @type {FormEditorInputQuestionDetails} */ ({
         enhancedAction: 'add-item',
         radioId: '5',
-        radioLabel: 'label5',
+        radioText: 'text5',
         radioHint: 'hint5',
         radioValue: 'value5'
       })
@@ -191,7 +191,7 @@ describe('Editor v2 question-details route helper', () => {
         listItems: listWithThreeItems.listItems,
         editRow: {
           radioId: '5',
-          radioLabel: 'label5',
+          radioText: 'text5',
           radioHint: 'hint5',
           radioValue: 'value5',
           expanded: true
@@ -206,7 +206,7 @@ describe('Editor v2 question-details route helper', () => {
       const payload = /** @type {FormEditorInputQuestionDetails} */ ({
         enhancedAction: 'save-item',
         radioId: '3',
-        radioLabel: 'label3x',
+        radioText: 'text3x',
         radioHint: 'hint3x',
         radioValue: 'value3x'
       })
@@ -215,16 +215,16 @@ describe('Editor v2 question-details route helper', () => {
         '#list-items'
       )
       const expectedList = [
-        { id: '1', label: 'label1', hint: 'hint1', value: 'value1' },
-        { id: '2', label: 'label2', hint: 'hint2', value: 'value2' },
-        { id: '3', label: 'label3x', hint: 'hint3x', value: 'value3x' }
+        { id: '1', text: 'text1', hint: 'hint1', value: 'value1' },
+        { id: '2', text: 'text2', hint: 'hint2', value: 'value2' },
+        { id: '3', text: 'text3x', hint: 'hint3x', value: 'value3x' }
       ]
       expect(mockSet).toHaveBeenCalledWith('questionSessionState-123', {
         questionType: 'RadiosField',
         listItems: expectedList,
         editRow: {
           radioId: '',
-          radioLabel: '',
+          radioText: '',
           radioHint: '',
           radioValue: '',
           expanded: false
@@ -239,7 +239,7 @@ describe('Editor v2 question-details route helper', () => {
       const payload = /** @type {FormEditorInputQuestionDetails} */ ({
         enhancedAction: 'save-item',
         radioId: '5',
-        radioLabel: 'label5',
+        radioText: 'text5',
         radioHint: 'hint5',
         radioValue: 'value5'
       })
@@ -248,12 +248,12 @@ describe('Editor v2 question-details route helper', () => {
         '#list-items'
       )
       const expectedList = [
-        { id: '1', label: 'label1', hint: 'hint1', value: 'value1' },
-        { id: '2', label: 'label2', hint: 'hint2', value: 'value2' },
-        { id: '3', label: 'label3', hint: 'hint3', value: 'value3' },
+        { id: '1', text: 'text1', hint: 'hint1', value: 'value1' },
+        { id: '2', text: 'text2', hint: 'hint2', value: 'value2' },
+        { id: '3', text: 'text3', hint: 'hint3', value: 'value3' },
         {
           id: expect.anything(),
-          label: 'label5',
+          text: 'text5',
           hint: 'hint5',
           value: 'value5'
         }
@@ -263,7 +263,7 @@ describe('Editor v2 question-details route helper', () => {
         listItems: expectedList,
         editRow: {
           radioId: '',
-          radioLabel: '',
+          radioText: '',
           radioHint: '',
           radioValue: '',
           expanded: false

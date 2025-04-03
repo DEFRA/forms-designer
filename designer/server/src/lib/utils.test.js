@@ -1,26 +1,18 @@
 import { ComponentType } from '@defra/forms-model'
 import { getTraceId } from '@defra/hapi-tracing'
 
-<<<<<<< HEAD
-import { testFormDefinitionWithTwoPagesAndQuestions } from '~/src/__stubs__/form-definition.js'
-import config from '~/src/config.js'
-import { getComponentFromDefinition, getHeaders } from '~/src/lib/utils.js'
-
-jest.mock('@defra/hapi-tracing')
-
-describe('Header helper functions', () => {
-  describe('getHeaders', () => {
-=======
 import {
   buildAutoCompleteComponent,
   buildDefinition,
   buildList,
   buildListItem,
   buildQuestionPage,
-  buildTextFieldComponent
+  buildTextFieldComponent,
+  testFormDefinitionWithTwoPagesAndQuestions
 } from '~/src/__stubs__/form-definition.js'
 import config from '~/src/config.js'
 import {
+  getComponentFromDefinition,
   getHeaders,
   getListFromComponent,
   mapListToAutoCompleteStr
@@ -30,7 +22,6 @@ jest.mock('@defra/hapi-tracing')
 
 describe('utils', () => {
   describe('Header helper functions', () => {
->>>>>>> main
     it('should include the trace id in the headers if available', () => {
       jest.mocked(getTraceId).mockReturnValue('my-trace-id')
 
@@ -55,7 +46,6 @@ describe('utils', () => {
     })
   })
 
-<<<<<<< HEAD
   describe('getComponentFromDefinition', () => {
     it('should find component when exists', () => {
       const comp = getComponentFromDefinition(
@@ -90,7 +80,9 @@ describe('utils', () => {
         'q1'
       )
       expect(comp).toBeUndefined()
-=======
+    })
+  })
+
   describe('getListFromComponent', () => {
     it('should return list when found', () => {
       const list = buildList({
@@ -110,7 +102,6 @@ describe('utils', () => {
       })
       const foundList = getListFromComponent(autoCompleteComponent, definition)
       expect(foundList).toEqual(list)
->>>>>>> main
     })
 
     it('should return undefined when not found', () => {

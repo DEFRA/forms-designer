@@ -8,13 +8,13 @@ import {
 const radiosSectionListItemsAnchor = '#list-items'
 
 /**
- * @param { { id?: string, label?: string, hint?: string, value?: string } | undefined } itemForEdit
+ * @param { { id?: string, text?: string, hint?: string, value?: string } | undefined } itemForEdit
  * @param {boolean} expanded
  */
 export function setEditRowState(itemForEdit, expanded) {
   return {
     radioId: itemForEdit?.id ?? '',
-    radioLabel: itemForEdit?.label ?? '',
+    radioText: itemForEdit?.text ?? '',
     radioHint: itemForEdit?.hint ?? '',
     radioValue: itemForEdit?.value ?? '',
     expanded
@@ -97,7 +97,7 @@ export function handleEnhancedActionOnPost(
     questionDetails,
     editRow: {
       radioId: payload.radioId,
-      radioLabel: payload.radioLabel,
+      radioText: payload.radioText,
       radioHint: payload.radioHint,
       radioValue: payload.radioValue,
       expanded: true
@@ -112,13 +112,13 @@ export function handleEnhancedActionOnPost(
     const foundRow = state.listItems?.find((x) => x.id === payload.radioId)
     if (foundRow) {
       // Update
-      foundRow.label = payload.radioLabel
+      foundRow.text = payload.radioText
       foundRow.hint = payload.radioHint
       foundRow.value = payload.radioValue
     } else {
       // Insert
       state.listItems?.push({
-        label: payload.radioLabel,
+        text: payload.radioText,
         hint: payload.radioHint,
         value: payload.radioValue,
         id: randomUUID()

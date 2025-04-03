@@ -86,20 +86,17 @@ export const baseSchema = Joi.object().keys({
   ),
   enhancedAction: questionDetailsFullSchema.enhancedActionSchema,
   radioId: questionDetailsFullSchema.radioIdSchema,
-  radioLabel: questionDetailsFullSchema.radioLabelSchema.when(
-    'enhancedAction',
-    {
-      is: Joi.exist(),
-      then: Joi.string().when('enhancedAction', {
-        is: 'add-item',
-        then: Joi.string().optional().allow(''),
-        otherwise: Joi.string().trim().required().messages({
-          '*': 'Enter item text'
-        })
-      }),
-      otherwise: Joi.string().optional().allow('')
-    }
-  ),
+  radioText: questionDetailsFullSchema.radioTextSchema.when('enhancedAction', {
+    is: Joi.exist(),
+    then: Joi.string().when('enhancedAction', {
+      is: 'add-item',
+      then: Joi.string().optional().allow(''),
+      otherwise: Joi.string().trim().required().messages({
+        '*': 'Enter item text'
+      })
+    }),
+    otherwise: Joi.string().optional().allow('')
+  }),
   radioHint: questionDetailsFullSchema.radioHintSchema,
   radioValue: questionDetailsFullSchema.radioValueSchema,
   autoCompleteOptions: questionDetailsFullSchema.autoCompleteOptionsSchema.when(

@@ -2,7 +2,7 @@
 {% from "editor-card/macro.njk" import appEditorCard %}
 
 {% set radioIdIdx = 0 %}
-{% set radioLabelIdx = 1 %}
+{% set radioTextIdx = 1 %}
 {% set radioHintIdx = 2 %}
 {% set radioValueIdx = 3 %}
 
@@ -28,7 +28,7 @@
               <div class="govuk-summary-card__content govuk-!-padding-top-1 editor-card-background-white govuk-!-padding-bottom-1">
                 <dl class="govuk-summary-list">
                   <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">{{ item.label }}</dt>
+                    <dt class="govuk-summary-list__key">{{ item.text }}</dt>
                     <dd class="govuk-summary-list__actions">
                       <ul class="govuk-summary-list__actions-list">
                         <li class="govuk-summary-list__actions-list-item">

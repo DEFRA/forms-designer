@@ -2,7 +2,6 @@ import { ComponentType, questionDetailsFullSchema } from '@defra/forms-model'
 import Joi from 'joi'
 
 import { QuestionAdvancedSettings } from '~/src/common/constants/editor.js'
-import { mapListComponentFromPayload } from '~/src/lib/list.js'
 import { isCheckboxSelected, isListComponent } from '~/src/lib/utils.js'
 import { mapPayloadToFileMimeTypes } from '~/src/models/forms/editor-v2/base-settings-fields.js'
 import {
@@ -428,6 +427,19 @@ export function mapFileUploadQuestionDetails(payload) {
 }
 
 /**
+ * Maps FormEditorInputQuestion payload to List Component
+ * @param {Partial<FormEditorInputQuestion>} payload
+ * @returns {Partial<ComponentDef>}
+ */
+export function mapListComponentFromPayload(payload) {
+  const baseComponentDetails = mapBaseQuestionDetails(payload)
+  return {
+    ...baseComponentDetails,
+    list: 'list' in baseComponentDetails ? baseComponentDetails.list : ''
+  }
+}
+
+/**
  * @param {Partial<FormEditorInputQuestion>} payload
  * @returns {Partial<ComponentDef>}
  */
@@ -459,7 +471,11 @@ export function mapQuestionDetails(payload) {
   if (payload.questionType === ComponentType.FileUploadField) {
     return mapFileUploadQuestionDetails(payload)
   }
-  if (isListComponent(/** @type { ComponentType | undefined } */ (payload.questionType))) {
+  if (
+    isListComponent(
+      /** @type { ComponentType | undefined } */ (payload.questionType)
+    )
+  ) {
     return mapListComponentFromPayload(payload)
   }
   return mapBaseQuestionDetails(payload)

@@ -32,9 +32,9 @@ const mockYar = /** @type {Yar}} */ ({
 
 const listWithThreeItems = {
   listItems: [
-    { id: '1', label: 'label1', hint: 'hint1', value: 'value1' },
-    { id: '2', label: 'label2', hint: 'hint2', value: 'value2' },
-    { id: '3', label: 'label3', hint: 'hint3', value: 'value3' }
+    { id: '1', text: 'text1', hint: 'hint1', value: 'value1' },
+    { id: '2', text: 'text2', hint: 'hint2', value: 'value2' },
+    { id: '3', text: 'text3', hint: 'hint3', value: 'value3' }
   ]
 }
 
@@ -152,9 +152,9 @@ describe('Session functions', () => {
       const expectedState = {
         editRow: {},
         listItems: [
-          { id: expect.any(String), label: 'Blue', value: 'blue' },
-          { id: expect.any(String), label: 'Red', value: 'red' },
-          { id: expect.any(String), label: 'Green', value: 'green' }
+          { id: expect.any(String), text: 'Blue', value: 'blue' },
+          { id: expect.any(String), text: 'Red', value: 'red' },
+          { id: expect.any(String), text: 'Green', value: 'green' }
         ],
         questionType: 'RadiosField'
       }

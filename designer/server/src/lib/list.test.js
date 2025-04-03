@@ -8,18 +8,10 @@ import {
   mockedPutJson,
   token
 } from '~/src/lib/__stubs__/editor.js'
-<<<<<<< HEAD
 import {
+  buildListFromDetails,
   createList,
   deleteList,
-=======
-import { buildAutoCompletePayload } from '~/src/lib/__stubs__/list.js'
-import {
-  buildAutoCompleteListFromPayload,
-  createList,
-  deleteList,
-  mapAutoCompleteComponentFromPayload,
->>>>>>> main
   updateList,
   upsertList
 } from '~/src/lib/list.js'
@@ -29,48 +21,21 @@ jest.mock('~/src/lib/fetch.js')
 describe('list.js', () => {
   const formId = '98dbfb6c-93b7-41dc-86e7-02c7abe4ba38'
   const listId = '8b10412c-cb4d-46bd-99d4-249bca722b3f'
-<<<<<<< HEAD
-=======
-  const basePayload = buildAutoCompletePayload({
-    name: 'tzrHYW',
-    question: 'What is your first language?',
-    questionType: 'AutocompleteField',
-    shortDescription: 'your first language',
-    hintText: 'Hint Text'
-  })
 
-  describe('mapAutoCompleteComponentFromPayload', () => {
-    it('should build an autocomplete field from the payload', () => {
-      const expectedAutoCompleteField = {
-        name: 'tzrHYW',
-        title: 'What is your first language?',
-        type: 'AutocompleteField',
-        shortDescription: 'your first language',
-        hint: 'Hint Text',
-        list: 'tzrHYW',
-        options: { required: true },
-        schema: {}
+  describe('buildListFromDetails', () => {
+    it('should build a list from details', () => {
+      const payload = {
+        list: 'listname',
+        name: 'questionname'
       }
+      const listItems = [
+        { text: 'English', value: 'en-gb' },
+        { text: 'German', value: 'de-De' }
+      ]
 
-      expect(mapAutoCompleteComponentFromPayload(basePayload)).toEqual(
-        expectedAutoCompleteField
-      )
-    })
-  })
-
-  describe('buildAutoCompleteListFromPayload', () => {
-    it('should build an autocomplete list from payload', () => {
-      const payload = buildAutoCompletePayload({
-        ...basePayload,
-        autoCompleteOptions: [
-          { text: 'English', value: 'en-gb' },
-          { text: 'German', value: 'de-De' }
-        ]
-      })
-
-      expect(buildAutoCompleteListFromPayload(payload)).toEqual({
-        title: 'What is your first language?',
-        name: 'tzrHYW',
+      expect(buildListFromDetails(payload, listItems)).toEqual({
+        title: 'List for question questionname',
+        name: 'listname',
         type: 'string',
         items: [
           { text: 'English', value: 'en-gb' },
@@ -79,7 +44,6 @@ describe('list.js', () => {
       })
     })
   })
->>>>>>> main
 
   describe('createList', () => {
     const requestUrl = new URL(
