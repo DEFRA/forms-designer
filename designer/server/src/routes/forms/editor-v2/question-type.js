@@ -16,12 +16,12 @@ import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import {
   createQuestionSessionState,
   getQuestionSessionState,
-  setQuestionSessionState
+  mergeQuestionSessionState
 } from '~/src/lib/session-helper.js'
 import * as viewModel from '~/src/models/forms/editor-v2/question-type.js'
 import { editorv2Path } from '~/src/models/links.js'
 
-export const ROUTE_FULL_PATH_QUESTION = `/library/{slug}/editor-v2/page/{pageId}/question/{questionId}/type/{stateId?}`
+const ROUTE_FULL_PATH_QUESTION = `/library/{slug}/editor-v2/page/{pageId}/question/{questionId}/type/{stateId?}`
 
 const errorKey = sessionNames.validationFailure.editorQuestion
 
@@ -87,6 +87,7 @@ export default [
       const { token } = auth.credentials
       const { slug, pageId, questionId, stateId } = params
 
+      // Set up session if not yet exists
       if (!stateId || !getQuestionSessionState(yar, stateId)) {
         const newStateId = createQuestionSessionState(yar)
         return h
@@ -148,7 +149,7 @@ export default [
         /** @type {ComponentType} */
         (deriveQuestionType(questionType, writtenAnswerSub, dateSub, listSub))
 
-      setQuestionSessionState(yar, stateId, {
+      mergeQuestionSessionState(yar, stateId, {
         questionType: suppliedQuestionType
       })
 

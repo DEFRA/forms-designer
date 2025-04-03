@@ -111,7 +111,7 @@ export default [
       const { token } = auth.credentials
       const { slug, pageId, questionId, stateId } = params
 
-      // Set up session
+      // Set up session if not yet exists
       if (!stateId || !getQuestionSessionState(yar, stateId)) {
         const newStateId = createQuestionSessionState(yar)
         return redirectWithAnchor(h, slug, pageId, questionId, newStateId, '')

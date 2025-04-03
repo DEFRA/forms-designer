@@ -101,6 +101,12 @@ export const questionOptionalSchema = Joi.string()
     'Indicates whether a question is optional. Empty string or "true" values are accepted.'
   )
 
+export const listForQuestionSchema = Joi.string()
+  .trim()
+  .optional()
+  .allow('')
+  .description('Unique identifier for the list used by the field')
+
 export const exactFilesSchema = Joi.number()
   .empty('')
   .integer()
@@ -299,6 +305,7 @@ export const questionDetailsFullSchema = {
   fileTypesSchema,
   hintTextSchema,
   imageTypesSchema,
+  listForQuestionSchema,
   maxFilesSchema,
   maxFutureSchema,
   maxLengthSchema,

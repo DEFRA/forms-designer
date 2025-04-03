@@ -254,6 +254,7 @@ export function questionDetailsViewModel(
     enhancedFields: enhancedFieldList,
     ...baseModelFields(metadata.slug, pageTitle),
     name: questionFields.name || randomId(),
+    list: 'list' in questionFieldsOverride ? questionFieldsOverride.list : '',
     basePageFields,
     uploadFields,
     extraFields,

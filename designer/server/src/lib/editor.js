@@ -250,17 +250,13 @@ export async function updateQuestion(
     })
   }
 
-  const updated = await updateEditorList(
+  await updateEditorList(
     formId,
     token,
     /** @type {ListComponentsDef} */ (questionDetails),
     state,
     definition
   )
-  if (updated) {
-    // @ts-expect-error -- 'list' not available on all components, but we have already filtered to only those that do
-    questionDetails.list = questionDetails.name
-  }
 
   const { body } = await putJsonByType(
     buildRequestUrl(formId, `pages/${pageId}/components/${questionId}`),

@@ -36,6 +36,7 @@ export const baseSchema = Joi.object().keys({
   questionType: questionDetailsFullSchema.questionTypeFullSchema.messages({
     '*': 'The question type is missing'
   }),
+  list: questionDetailsFullSchema.listForQuestionSchema,
   fileTypes: questionDetailsFullSchema.fileTypesSchema.when('questionType', {
     is: 'FileUploadField',
     then: Joi.required().messages({

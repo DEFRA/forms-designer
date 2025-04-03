@@ -53,6 +53,19 @@ export function setQuestionSessionState(yar, stateId, model) {
 /**
  * @param {Yar} yar
  * @param {string} stateId
+ * @param {QuestionSessionState | undefined } model
+ */
+export function mergeQuestionSessionState(yar, stateId, model) {
+  const state = yar.get(questionSessionKey(stateId)) ?? {}
+  yar.set(questionSessionKey(stateId), {
+    ...state,
+    ...model
+  })
+}
+
+/**
+ * @param {Yar} yar
+ * @param {string} stateId
  * @returns { QuestionSessionState | undefined }
  */
 export function getQuestionSessionState(yar, stateId) {
@@ -95,7 +108,7 @@ export function buildQuestionSessionState(
     return state
   }
 
-  if (state?.listItems) {
+  if (state?.questionType && state.listItems) {
     return state
   }
 
@@ -107,7 +120,7 @@ export function buildQuestionSessionState(
     : []
 
   const newState = /** @type { QuestionSessionState} */ ({
-    questionType: component?.type,
+    questionType: state?.questionType ?? component?.type,
     editRow: state?.editRow ?? {},
     listItems: items.map((item) => ({
       id: randomUUID(),

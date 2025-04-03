@@ -400,10 +400,22 @@ export function getAdditionalSchema(payload) {
 /**
  * @param {Partial<FormEditorInputQuestion>} payload
  */
+export function mapExtraRootFields(payload) {
+  const rootFields = {}
+  if (payload.list) {
+    rootFields.list = payload.list
+  }
+  return rootFields
+}
+
+/**
+ * @param {Partial<FormEditorInputQuestion>} payload
+ */
 export function mapQuestionDetails(payload) {
   const additionalOptions = getAdditionalOptions(payload)
   const additionalSchema = getAdditionalSchema(payload)
   const fileTypes = mapPayloadToFileMimeTypes(payload)
+  const extraRootFields = mapExtraRootFields(payload)
 
   return /** @type {Partial<ComponentDef>} */ ({
     type: payload.questionType,
@@ -411,6 +423,7 @@ export function mapQuestionDetails(payload) {
     name: payload.name,
     shortDescription: payload.shortDescription,
     hint: payload.hintText,
+    ...extraRootFields,
     options: {
       required: !isCheckboxSelected(payload.questionOptional),
       ...additionalOptions,
