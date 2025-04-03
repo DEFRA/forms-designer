@@ -7,7 +7,10 @@ import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
 import { createServer } from '~/src/createServer.js'
 import { addErrorsToSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
-import { getQuestionSessionState } from '~/src/lib/session-helper.js'
+import {
+  createQuestionSessionState,
+  getQuestionSessionState
+} from '~/src/lib/session-helper.js'
 import { deriveQuestionType } from '~/src/routes/forms/editor-v2/question-type.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
@@ -27,6 +30,30 @@ describe('Editor v2 question routes', () => {
   beforeAll(async () => {
     server = await createServer()
     await server.initialize()
+  })
+
+  test('GET - should redirect if no session yet', async () => {
+    jest.mocked(getQuestionSessionState).mockReturnValue(undefined)
+    jest.mocked(createQuestionSessionState).mockReturnValue('newSessId')
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithSinglePage)
+
+    const options = {
+      method: 'get',
+      url: '/library/my-form-slug/editor-v2/page/1/question/1/type',
+      auth
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/page/1/question/1/type/newSessId'
+    )
   })
 
   test('GET - should render the question fields in the view', async () => {

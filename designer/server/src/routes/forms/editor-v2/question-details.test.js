@@ -16,6 +16,7 @@ import {
 import * as forms from '~/src/lib/forms.js'
 import {
   buildQuestionSessionState,
+  createQuestionSessionState,
   getQuestionSessionState
 } from '~/src/lib/session-helper.js'
 import { auth } from '~/test/fixtures/auth.js'
@@ -56,6 +57,30 @@ describe('Editor v2 question details routes', () => {
   const simpleSessionFileUpload = {
     questionType: ComponentType.FileUploadField
   }
+
+  test('GET - should redirect if no session yet', async () => {
+    jest.mocked(getQuestionSessionState).mockReturnValue(undefined)
+    jest.mocked(createQuestionSessionState).mockReturnValue('newSessId')
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithSinglePage)
+
+    const options = {
+      method: 'get',
+      url: '/library/my-form-slug/editor-v2/page/p1/question/c1/details',
+      auth
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/page/p1/question/c1/details/newSessId'
+    )
+  })
 
   test('GET - should render the question fields in the view', async () => {
     jest
@@ -186,20 +211,14 @@ describe('Editor v2 question details routes', () => {
 
     const $mastheadHeading = container.getByText('Test form')
 
-    const $cardTitle = container.getByText('Question 1')
     const $cardCaption = container.getByText('Page 1')
-    const $cardHeading = container.getByText('Edit question 1')
 
     const $actions = container.getAllByRole('button')
 
     expect($mastheadHeading).toHaveTextContent('Test form')
     expect($mastheadHeading).toHaveClass('govuk-heading-xl')
-    expect($cardTitle).toHaveTextContent('Question 1')
-    expect($cardTitle).toHaveClass('editor-card-title')
     expect($cardCaption).toHaveTextContent('Page 1')
     expect($cardCaption).toHaveClass('govuk-caption-l')
-    expect($cardHeading).toHaveTextContent('Edit question 1')
-    expect($cardHeading).toHaveClass('govuk-heading-l')
 
     expect($actions).toHaveLength(4)
     expect($actions[2]).toHaveTextContent('Preview page')

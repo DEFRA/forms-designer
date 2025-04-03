@@ -3,6 +3,7 @@ import { ComponentType } from '@defra/forms-model'
 import {
   getAdditionalSchema,
   isValueOrZero,
+  mapExtraRootFields,
   mapQuestionDetails
 } from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
 import { getFieldComponentType } from '~/src/models/forms/editor-v2/page-fields.js'
@@ -168,6 +169,24 @@ describe('editor-v2 - advanced settings fields model', () => {
           exactFiles: '3'
         })
       ).toEqual({ length: '3' })
+    })
+  })
+
+  describe('mapExtraRootFields', () => {
+    test('should handle list', () => {
+      expect(
+        mapExtraRootFields({
+          list: 'abcde'
+        })
+      ).toEqual({ list: 'abcde' })
+    })
+
+    test('should handle no list', () => {
+      expect(
+        mapExtraRootFields({
+          name: 'abcde'
+        })
+      ).toEqual({})
     })
   })
 

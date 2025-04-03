@@ -111,20 +111,16 @@ describe('editor.js', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
-    jest
-      .mocked(createList)
-      .mockResolvedValue({
-        id: 'id',
-        status: 'created',
-        list: /** @type {List} */ ({})
-      })
-    jest
-      .mocked(updateList)
-      .mockResolvedValue({
-        id: 'id',
-        status: 'updated',
-        list: /** @type {List} */ ({})
-      })
+    jest.mocked(createList).mockResolvedValue({
+      id: 'id',
+      status: 'created',
+      list: /** @type {List} */ ({})
+    })
+    jest.mocked(updateList).mockResolvedValue({
+      id: 'id',
+      status: 'updated',
+      list: /** @type {List} */ ({})
+    })
   })
 
   describe('addPageAndFirstQuestion', () => {
