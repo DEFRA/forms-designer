@@ -451,10 +451,26 @@ export function getFieldList(
       validation,
       definition
     )
-    return {
+
+    const field = {
       ...allBaseSettingsFields[fieldName],
-      value,
       ...insertValidationErrors(validation?.formErrors[fieldName])
+    }
+
+    if (field.items) {
+      // Handle checkbox/radio selections
+      const strValue = typeof value === 'string' ? value.toString() : ''
+      return {
+        ...field,
+        items: field.items.map((cb) => ({
+          ...cb,
+          checked: cb.value === strValue
+        }))
+      }
+    }
+    return {
+      ...field,
+      value
     }
   })
 }
