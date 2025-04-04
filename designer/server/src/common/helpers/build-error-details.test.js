@@ -11,10 +11,13 @@ describe('build error details', () => {
         [
           {
             message,
+            path: [],
+            type: 'unknown',
             context: {
               pos: 0,
               value: { text: '', value: '' },
               label: 'autoCompleteOptions[0]',
+              // @ts-expect-error: Joi has incorrect typings for Context (should be string|number)
               key: 0
             }
           }
@@ -36,27 +39,36 @@ describe('build error details', () => {
         [
           {
             message,
+            path: [],
+            type: 'unknown',
             context: {
               pos: 0,
               value: { text: '', value: '' },
               label: 'unknownKey',
+              // @ts-expect-error: Joi has incorrect typings for Context (should be string|number)
               key: 0
             }
           },
           {
             message,
+            path: [],
+            type: 'unknown',
             context: {
               pos: 1,
               value: { text: '', value: '' },
               label: 'autoCompleteOptions[1]',
+              // @ts-expect-error: Joi has incorrect typings for Context (should be string|number)
               key: 1
             }
           },
           {
             message,
+            path: [],
+            type: 'unknown',
             context: {
               value: { text: '', value: '' },
               label: 'unknownKey2',
+              // @ts-expect-error: Joi has incorrect typings for Context (should be string|number)
               key: 0
             }
           }

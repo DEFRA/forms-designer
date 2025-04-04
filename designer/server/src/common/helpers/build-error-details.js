@@ -3,10 +3,11 @@
  * @param {ValidationErrorItem} errorItem
  */
 export function buildListErrorDetail(errors, { context, message }) {
-  const position = context?.pos
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const position = /** @type {string|undefined} */ (context?.pos)
   const matchString = `[${position}]`
 
-  if (position === undefined || !context.label.includes(matchString)) {
+  if (position === undefined || !context?.label?.includes(matchString)) {
     return errors
   }
 
@@ -26,9 +27,10 @@ export function buildListErrorDetail(errors, { context, message }) {
  * @param {ValidationError} error
  */
 export function buildErrorDetails(error) {
-  return error.details.reduce((errors, { context, message }) => {
-    if (context.pos !== undefined) {
-      return buildListErrorDetail(errors, { context, message })
+  return error.details.reduce((errors, validationErrorItem) => {
+    const { context, message } = validationErrorItem
+    if (context?.pos !== undefined) {
+      return buildListErrorDetail(errors, validationErrorItem)
     }
 
     if (!context?.key) {
