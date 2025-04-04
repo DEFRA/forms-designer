@@ -29,7 +29,7 @@ export function buildListFromDetails(questionDetails, listItems) {
     type: 'string',
     items: listItems.map((item) => {
       return {
-        // id: item.id,
+        id: item.id,
         text: item.text,
         hint: item.hint,
         value: stringHasValue(`${item.value}`) ? item.value : item.text
