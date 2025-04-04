@@ -2,7 +2,7 @@ import { randomId } from '@defra/forms-model'
 
 import config from '~/src/config.js'
 import { delJson, postJson, putJson } from '~/src/lib/fetch.js'
-import { getHeaders } from '~/src/lib/utils.js'
+import { getHeaders, stringHasValue } from '~/src/lib/utils.js'
 
 const formsEndpoint = new URL('/forms/', config.managerUrl)
 const postJsonByListType =
@@ -22,7 +22,9 @@ const putJsonByListType =
  */
 export function buildListFromDetails(questionDetails, listItems) {
   return {
-    name: questionDetails.list ?? randomId(),
+    name: stringHasValue(questionDetails.list)
+      ? questionDetails.list
+      : randomId(),
     title: `List for question ${questionDetails.name}`,
     type: 'string',
     items: listItems.map((item) => {
@@ -30,7 +32,7 @@ export function buildListFromDetails(questionDetails, listItems) {
         // id: item.id,
         text: item.text,
         // hint: item.hint,
-        value: item.value
+        value: stringHasValue(`${item.value}`) ? item.value : item.text
       }
     })
   }
