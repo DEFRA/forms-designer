@@ -1,7 +1,8 @@
+import { randomId } from '@defra/forms-model'
+
 import config from '~/src/config.js'
 import { delJson, postJson, putJson } from '~/src/lib/fetch.js'
-import { getHeaders } from '~/src/lib/utils.js'
-import { mapBaseQuestionDetails } from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
+import { getHeaders, stringHasValue } from '~/src/lib/utils.js'
 
 const formsEndpoint = new URL('/forms/', config.managerUrl)
 const postJsonByListType =
@@ -15,31 +16,27 @@ const putJsonByListType =
 
 /**
  * Maps FormEditorInputQuestion payload to AutoComplete Component
- * @param {Partial<FormEditorInputQuestion>} payload
- * @returns {Partial<ComponentDef>}
- */
-export function mapAutoCompleteComponentFromPayload(payload) {
-  const baseComponentDetails = mapBaseQuestionDetails(payload)
-  return {
-    ...baseComponentDetails,
-    list: baseComponentDetails.name
-  }
-}
-
-/**
- * Maps FormEditorInputQuestion payload to AutoComplete Component
- * @param {Partial<FormEditorInputQuestion>} payload
+ * @param {Partial<FormEditorInputQuestion>} questionDetails
+ * @param {Item[]} listItems
  * @returns {Partial<List>}
  */
-export function buildAutoCompleteListFromPayload(payload) {
+export function buildListFromDetails(questionDetails, listItems) {
   return {
-    name: payload.name,
-    title: payload.question,
+    name: stringHasValue(questionDetails.list)
+      ? questionDetails.list
+      : randomId(),
+    title: `List for question ${questionDetails.name}`,
     type: 'string',
-    items: payload.autoCompleteOptions
+    items: listItems.map((item) => {
+      return {
+        id: item.id,
+        text: item.text,
+        hint: item.hint,
+        value: stringHasValue(`${item.value}`) ? item.value : item.text
+      }
+    })
   }
 }
-
 /**
  * Creates a new list on the draft definition
  * @param {string} formId
@@ -123,5 +120,5 @@ export async function upsertList(formId, definition, token, upsertedList) {
 }
 
 /**
- * @import { FormDefinition, List, Item, FormEditorInputQuestion, AutocompleteFieldComponent, ComponentDef } from '@defra/forms-model'
+ * @import { ComponentDef, FormDefinition, FormEditorInputQuestion, Item, List } from '@defra/forms-model'
  */

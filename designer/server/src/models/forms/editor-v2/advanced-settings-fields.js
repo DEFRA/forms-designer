@@ -2,8 +2,7 @@ import { ComponentType, questionDetailsFullSchema } from '@defra/forms-model'
 import Joi from 'joi'
 
 import { QuestionAdvancedSettings } from '~/src/common/constants/editor.js'
-import { mapAutoCompleteComponentFromPayload } from '~/src/lib/list.js'
-import { isCheckboxSelected } from '~/src/lib/utils.js'
+import { isCheckboxSelected, isListComponent } from '~/src/lib/utils.js'
 import { mapPayloadToFileMimeTypes } from '~/src/models/forms/editor-v2/base-settings-fields.js'
 import {
   GOVUK_INPUT_WIDTH_3,
@@ -400,6 +399,17 @@ export function getAdditionalSchema(payload) {
 
 /**
  * @param {Partial<FormEditorInputQuestion>} payload
+ */
+export function mapExtraRootFields(payload) {
+  const rootFields = {}
+  if (payload.list) {
+    rootFields.list = payload.list
+  }
+  return rootFields
+}
+
+/**
+ * @param {Partial<FormEditorInputQuestion>} payload
  * @returns {Partial<FileUploadFieldComponent>}
  */
 export function mapFileUploadQuestionDetails(payload) {
@@ -417,12 +427,26 @@ export function mapFileUploadQuestionDetails(payload) {
 }
 
 /**
+ * Maps FormEditorInputQuestion payload to List Component
+ * @param {Partial<FormEditorInputQuestion>} payload
+ * @returns {Partial<ComponentDef>}
+ */
+export function mapListComponentFromPayload(payload) {
+  const baseComponentDetails = mapBaseQuestionDetails(payload)
+  return {
+    ...baseComponentDetails,
+    list: 'list' in baseComponentDetails ? baseComponentDetails.list : ''
+  }
+}
+
+/**
  * @param {Partial<FormEditorInputQuestion>} payload
  * @returns {Partial<ComponentDef>}
  */
 export function mapBaseQuestionDetails(payload) {
   const additionalOptions = getAdditionalOptions(payload)
   const additionalSchema = getAdditionalSchema(payload)
+  const extraRootFields = mapExtraRootFields(payload)
 
   return /** @type {Partial<ComponentDef>} */ ({
     type: payload.questionType,
@@ -430,6 +454,7 @@ export function mapBaseQuestionDetails(payload) {
     name: payload.name,
     shortDescription: payload.shortDescription,
     hint: payload.hintText,
+    ...extraRootFields,
     options: {
       required: !isCheckboxSelected(payload.questionOptional),
       ...additionalOptions
@@ -446,12 +471,16 @@ export function mapQuestionDetails(payload) {
   if (payload.questionType === ComponentType.FileUploadField) {
     return mapFileUploadQuestionDetails(payload)
   }
-  if (payload.questionType === ComponentType.AutocompleteField) {
-    return mapAutoCompleteComponentFromPayload(payload)
+  if (
+    isListComponent(
+      /** @type { ComponentType | undefined } */ (payload.questionType)
+    )
+  ) {
+    return mapListComponentFromPayload(payload)
   }
   return mapBaseQuestionDetails(payload)
 }
 
 /**
- * @import { ComponentDef, FormEditorInputQuestion, GovukField, FileUploadFieldComponent } from '@defra/forms-model'
+ * @import { ComponentDef, FormEditorInputQuestion, GovukField, FileUploadFieldComponent, QuestionSessionState } from '@defra/forms-model'
  */

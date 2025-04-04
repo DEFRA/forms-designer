@@ -1,3 +1,4 @@
+import { ComponentType, hasComponents } from '@defra/forms-model'
 import { getTraceId } from '@defra/hapi-tracing'
 import slug from 'slug'
 
@@ -78,6 +79,44 @@ export function getPageFromDefinition(definition, pageId) {
 }
 
 /**
+ * @param {FormDefinition} definition
+ * @param {string} pageId
+ * @param {string} questionId
+ * @returns { ComponentDef | undefined }
+ */
+export function getComponentFromDefinition(definition, pageId, questionId) {
+  const page = definition.pages.find((x) => x.id === pageId)
+  return /** @type { ComponentDef | undefined } */ (
+    hasComponents(page)
+      ? page.components.find((x) => x.id === questionId)
+      : undefined
+  )
+}
+
+export const componentsSavingLists = [
+  ComponentType.AutocompleteField,
+  ComponentType.CheckboxesField,
+  ComponentType.RadiosField
+]
+
+/**
+ * @param { ComponentType | undefined } type
+ * @param { QuestionSessionState | undefined } state
+ * @returns {boolean}
+ */
+export function noListToSave(type, state) {
+  return !isListComponent(type) || !state?.listItems
+}
+
+/**
+ * @param { ComponentType | undefined } type
+ * @returns {boolean}
+ */
+export function isListComponent(type) {
+  return componentsSavingLists.includes(type ?? ComponentType.TextField)
+}
+
+/**
  * Finds the list in the component, if it exists
  * @param { ComponentDef | undefined } component
  * @param {FormDefinition} definition
@@ -108,6 +147,6 @@ export function mapListToAutoCompleteStr(list) {
 
 /**
  * @import { ErrorDetailsItem } from '~/src/common/helpers/types.js'
- * @import { FormDefinition, Page, List, ComponentDef } from '@defra/forms-model'
+ * @import { ComponentDef, FormDefinition, List, Page, QuestionSessionState } from '@defra/forms-model'
  * @import Wreck from '@hapi/wreck'
  */

@@ -10,6 +10,7 @@ import {
   getDetails,
   getEnhancedFields,
   getExtraFields,
+  getRowNumBeingEdited,
   hasDataOrErrorForDisplay,
   mapToQuestionDetails,
   overrideFormValuesForEnhancedAction
@@ -400,7 +401,7 @@ describe('editor-v2 - question details model', () => {
       expect(
         overrideFormValuesForEnhancedAction(
           /** @type {ValidationFailure<FormEditor>} */ ({ formValues: {} }),
-          /** @type {EnhancedActionState} */ ({})
+          /** @type {QuestionSessionState} */ ({})
         )
       ).toEqual({ formValues: {} })
     })
@@ -409,7 +410,9 @@ describe('editor-v2 - question details model', () => {
       expect(
         overrideFormValuesForEnhancedAction(
           undefined,
-          /** @type {EnhancedActionState} */ ({ state: { radioId: '12345' } })
+          /** @type {QuestionSessionState} */ ({
+            editRow: { radioId: '12345' }
+          })
         )
       ).toEqual({ formValues: { radioId: '12345' }, formErrors: {} })
     })
@@ -432,8 +435,8 @@ describe('editor-v2 - question details model', () => {
           value: undefined
         },
         {
-          name: 'radioLabel',
-          id: 'radioLabel',
+          name: 'radioText',
+          id: 'radioText',
           label: {
             text: 'Item',
             classes: 'govuk-label--m'
@@ -461,9 +464,43 @@ describe('editor-v2 - question details model', () => {
       ])
     })
   })
+
+  describe('getRowNumBeingEdited', () => {
+    test('should return 1 if no rows', () => {
+      expect(getRowNumBeingEdited(undefined)).toBe(1)
+    })
+
+    test('should return max if no matching id', () => {
+      expect(
+        getRowNumBeingEdited({
+          editRow: {},
+          questionDetails: {},
+          listItems: [
+            { id: '1', text: '1', value: '1' },
+            { id: '2', text: '2', value: '2' },
+            { id: '3', text: '3', value: '3' }
+          ]
+        })
+      ).toBe(4)
+    })
+
+    test('should return 2 if editing row 2', () => {
+      expect(
+        getRowNumBeingEdited({
+          editRow: { radioId: '2' },
+          questionDetails: {},
+          listItems: [
+            { id: '1', text: '1', value: '1' },
+            { id: '2', text: '2', value: '2' },
+            { id: '3', text: '3', value: '3' }
+          ]
+        })
+      ).toBe(2)
+    })
+  })
 })
 
 /**
- * @import { ComponentDef, EnhancedActionState, FormEditor, GovukField, InputFieldsComponentsDef } from '@defra/forms-model'
+ * @import { ComponentDef, QuestionSessionState, FormEditor, GovukField, InputFieldsComponentsDef } from '@defra/forms-model'
  * @import { ErrorDetailsItem, ValidationFailure } from '~/src/common/helpers/types.js'
  */

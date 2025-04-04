@@ -44,6 +44,7 @@ export const baseSchema = Joi.object().keys({
   questionType: questionDetailsFullSchema.questionTypeFullSchema.messages({
     '*': 'The question type is missing'
   }),
+  list: questionDetailsFullSchema.listForQuestionSchema,
   fileTypes: questionDetailsFullSchema.fileTypesSchema.when('questionType', {
     is: 'FileUploadField',
     then: Joi.required().messages({
@@ -85,20 +86,17 @@ export const baseSchema = Joi.object().keys({
   ),
   enhancedAction: questionDetailsFullSchema.enhancedActionSchema,
   radioId: questionDetailsFullSchema.radioIdSchema,
-  radioLabel: questionDetailsFullSchema.radioLabelSchema.when(
-    'enhancedAction',
-    {
-      is: Joi.exist(),
-      then: Joi.string().when('enhancedAction', {
-        is: 'add-item',
-        then: Joi.string().optional().allow(''),
-        otherwise: Joi.string().trim().required().messages({
-          '*': 'Enter item text'
-        })
-      }),
-      otherwise: Joi.string().optional().allow('')
-    }
-  ),
+  radioText: questionDetailsFullSchema.radioTextSchema.when('enhancedAction', {
+    is: Joi.exist(),
+    then: Joi.string().when('enhancedAction', {
+      is: 'add-item',
+      then: Joi.string().optional().allow(''),
+      otherwise: Joi.string().trim().required().messages({
+        '*': 'Enter item text'
+      })
+    }),
+    otherwise: Joi.string().optional().allow('')
+  }),
   radioHint: questionDetailsFullSchema.radioHintSchema,
   radioValue: questionDetailsFullSchema.radioValueSchema,
   autoCompleteOptions: questionDetailsFullSchema.autoCompleteOptionsSchema.when(
@@ -453,10 +451,26 @@ export function getFieldList(
       validation,
       definition
     )
-    return {
+
+    const field = {
       ...allBaseSettingsFields[fieldName],
-      value,
       ...insertValidationErrors(validation?.formErrors[fieldName])
+    }
+
+    if (field.items) {
+      // Handle checkbox/radio selections
+      const strValue = typeof value === 'string' ? value.toString() : ''
+      return {
+        ...field,
+        items: field.items.map((cb) => ({
+          ...cb,
+          checked: cb.value === strValue
+        }))
+      }
+    }
+    return {
+      ...field,
+      value
     }
   })
 }

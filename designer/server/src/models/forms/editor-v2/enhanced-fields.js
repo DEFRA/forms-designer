@@ -12,13 +12,13 @@ export const enhancedFieldsPerComponentType =
     AutocompleteField: [],
     RadiosField: [
       QuestionEnhancedFields.RadioId,
-      QuestionEnhancedFields.RadioLabel,
+      QuestionEnhancedFields.RadioText,
       QuestionEnhancedFields.RadioHint,
       QuestionEnhancedFields.RadioValue
     ],
     CheckboxesField: [
       QuestionEnhancedFields.RadioId,
-      QuestionEnhancedFields.RadioLabel,
+      QuestionEnhancedFields.RadioText,
       QuestionEnhancedFields.RadioHint,
       QuestionEnhancedFields.RadioValue
     ],
@@ -43,9 +43,9 @@ export const allEnhancedFields =
       name: 'radioId',
       id: 'radioId'
     },
-    [QuestionEnhancedFields.RadioLabel]: {
-      name: 'radioLabel',
-      id: 'radioLabel',
+    [QuestionEnhancedFields.RadioText]: {
+      name: 'radioText',
+      id: 'radioText',
       label: {
         text: 'Item',
         classes: GOVUK_LABEL__M

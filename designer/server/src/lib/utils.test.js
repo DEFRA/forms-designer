@@ -1,3 +1,4 @@
+import { ComponentType } from '@defra/forms-model'
 import { getTraceId } from '@defra/hapi-tracing'
 
 import {
@@ -6,13 +7,16 @@ import {
   buildList,
   buildListItem,
   buildQuestionPage,
-  buildTextFieldComponent
+  buildTextFieldComponent,
+  testFormDefinitionWithTwoPagesAndQuestions
 } from '~/src/__stubs__/form-definition.js'
 import config from '~/src/config.js'
 import {
+  getComponentFromDefinition,
   getHeaders,
   getListFromComponent,
-  mapListToAutoCompleteStr
+  mapListToAutoCompleteStr,
+  noListToSave
 } from '~/src/lib/utils.js'
 
 jest.mock('@defra/hapi-tracing')
@@ -40,6 +44,43 @@ describe('utils', () => {
           Authorization: 'Bearer token'
         }
       })
+    })
+  })
+
+  describe('getComponentFromDefinition', () => {
+    it('should find component when exists', () => {
+      const comp = getComponentFromDefinition(
+        testFormDefinitionWithTwoPagesAndQuestions,
+        'p1',
+        'q1'
+      )
+      expect(comp).toEqual({
+        id: 'q1',
+        type: ComponentType.TextField,
+        name: 'textField',
+        title: 'This is your first question',
+        hint: 'Help text',
+        options: {},
+        schema: {}
+      })
+    })
+
+    it('should return undefined when component not found', () => {
+      const comp = getComponentFromDefinition(
+        testFormDefinitionWithTwoPagesAndQuestions,
+        'p1',
+        'qxx'
+      )
+      expect(comp).toBeUndefined()
+    })
+
+    it('should return undefined when page not found', () => {
+      const comp = getComponentFromDefinition(
+        testFormDefinitionWithTwoPagesAndQuestions,
+        'p1xx',
+        'q1'
+      )
+      expect(comp).toBeUndefined()
     })
   })
 
@@ -105,9 +146,36 @@ describe('utils', () => {
           'Haskell:haskell'
       )
     })
+
+    it('should return an empty string for undefined', () => {
+      expect(mapListToAutoCompleteStr(undefined)).toBe('')
+    })
   })
 
-  it('should return an empty string for undefined', () => {
-    expect(mapListToAutoCompleteStr(undefined)).toBe('')
+  describe('noListToSave', () => {
+    it('should return true if not a list component', () => {
+      expect(noListToSave(undefined, undefined)).toBeTruthy()
+    })
+
+    it('should return true if a list component but no list items', () => {
+      expect(
+        noListToSave(ComponentType.AutocompleteField, undefined)
+      ).toBeTruthy()
+      expect(noListToSave(ComponentType.RadiosField, undefined)).toBeTruthy()
+      expect(
+        noListToSave(ComponentType.CheckboxesField, undefined)
+      ).toBeTruthy()
+    })
+
+    it('should return false if a list component with list items', () => {
+      const someListItems = { listItems: [] }
+      expect(
+        noListToSave(ComponentType.AutocompleteField, someListItems)
+      ).toBeFalsy()
+      expect(noListToSave(ComponentType.RadiosField, someListItems)).toBeFalsy()
+      expect(
+        noListToSave(ComponentType.CheckboxesField, someListItems)
+      ).toBeFalsy()
+    })
   })
 })

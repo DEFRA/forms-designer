@@ -1,0 +1,34 @@
+{% call appEditorCard({
+  classes: "editor-card-background-white govuk-!-padding-bottom-0",
+  outerClasses: "pages-panel-left-thin-border"
+}) %}
+
+{% set hasStateWithinDetailsSection = enhancedFields[radioValueIdx].value %}
+
+<div id="add-option-form" class="govuk-!-margin-bottom-6">
+  <h2 class="govuk-caption-m" id="add-option">Item {{ rowNumBeingEdited }}</h2>
+  {{ govukInput(enhancedFields[radioTextIdx]) }}
+
+  {{ govukInput(enhancedFields[radioHintIdx]) }}
+
+  <input type="hidden" id="radioId" name="radioId" value="{{ enhancedFields[radioIdIdx].value }}" />
+  <!-- Advanced Features Section -->
+  <details class="govuk-details" data-module="govuk-details" {% if hasStateWithinDetailsSection %}open{% endif %}>
+    <summary class="govuk-details__summary">
+      <span class="govuk-details__summary-text">Advanced
+        features</span>
+    </summary>
+    <div class="govuk-details__text">
+      <!-- Additional Value -->
+      <div class="govuk-form-group">
+        {{ govukInput(enhancedFields[radioValueIdx]) }}
+      </div>
+    </div>
+  </details>
+
+  <div class="govuk-button-group">
+    <button type="submit" class="govuk-button" id="save-new-option" name="enhancedAction" value="save-item">Save item</button>
+    <a class="govuk-link govuk-link--no-visited-state" href="?action=cancel" id="cancel-add-option">Cancel</a>
+  </div>
+</div>
+{% endcall %}

@@ -4,6 +4,7 @@ import {
   buildDefinition,
   testFormDefinitionWithExistingGuidance,
   testFormDefinitionWithFileUploadPage,
+  testFormDefinitionWithRadioQuestionAndList,
   testFormDefinitionWithTwoPagesAndQuestions,
   testFormDefinitionWithTwoQuestions
 } from '~/src/__stubs__/form-definition.js'
@@ -30,6 +31,7 @@ import {
 } from '~/src/lib/editor.js'
 
 jest.mock('~/src/lib/fetch.js')
+jest.mock('~/src/lib/list.js')
 
 /**
  * @satisfies {FormDefinition}
@@ -73,10 +75,17 @@ const questionDetails = {
   type: ComponentType.TextField
 }
 
+const radioQuestionDetails = {
+  title: 'What is your favourite colour?',
+  name: 'what-is-your-fav-colour',
+  type: ComponentType.RadiosField,
+  list: 'my-list'
+}
+
 describe('editor.js', () => {
   const formId = '98dbfb6c-93b7-41dc-86e7-02c7abe4ba38'
 
-  afterEach(() => {
+  beforeEach(() => {
     jest.clearAllMocks()
   })
 
@@ -233,6 +242,47 @@ describe('editor.js', () => {
         ).rejects.toThrow(testError)
       })
     })
+
+    describe('when postJson succeeds and new list', () => {
+      test('returns response body', async () => {
+        mockedPostJson
+          .mockResolvedValueOnce({
+            response: createMockResponse(),
+            body: { status: 'created', list: { name: 'abcde' } } // Saving list
+          })
+          .mockResolvedValueOnce({
+            response: createMockResponse(),
+            body: { id: 'new-id' } // Saving question
+          })
+
+        const expectedQuestionCall = {
+          payload: {
+            name: 'what-is-your-fav-colour',
+            title: 'What is your favourite colour?',
+            type: 'RadiosField',
+            list: 'my-list'
+          },
+          headers: { Authorization: `Bearer ${token}` }
+        }
+
+        const result = await addQuestion(
+          formId,
+          token,
+          '12345',
+          radioQuestionDetails
+        )
+
+        expect(mockedPostJson.mock.calls[0][0]).toEqual(requestUrl)
+        expect(mockedPostJson.mock.calls[0][1]).toEqual(expectedQuestionCall)
+
+        expect(result).toEqual({
+          list: {
+            name: 'abcde'
+          },
+          status: 'created'
+        })
+      })
+    })
   })
 
   describe('updateQuestion', () => {
@@ -383,6 +433,33 @@ describe('editor.js', () => {
         ).rejects.toThrow(testError)
       })
     })
+
+    test('should update list if a list question', async () => {
+      mockedPutJson.mockResolvedValueOnce({
+        response: createMockResponse(),
+        body: { id: '456' }
+      })
+
+      const expectedPut = {
+        payload: {
+          type: ComponentType.RadiosField
+        },
+        headers: { Authorization: `Bearer ${token}` }
+      }
+
+      const result = await updateQuestion(
+        formId,
+        token,
+        testFormDefinitionWithRadioQuestionAndList,
+        'p1',
+        'c1',
+        { type: ComponentType.RadiosField }
+      )
+
+      expect(mockedPutJson).toHaveBeenCalledWith(requestUrl, expectedPut)
+      expect(mockedPatchJson).not.toHaveBeenCalled()
+      expect(result).toEqual({ id: '456' })
+    })
   })
 
   describe('setPageHeadingAndGuidance', () => {
@@ -461,6 +538,10 @@ describe('editor.js', () => {
         mockedPatchJson.mockResolvedValueOnce({
           response: createMockResponse(),
           body: {}
+        })
+        mockedPutJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: { id: '456' }
         })
 
         const expectedOptionsPageHeading = {
@@ -792,5 +873,4 @@ describe('editor.js', () => {
 
 /**
  * @import { FormDefinition, Page } from '@defra/forms-model'
- * @import { IncomingMessage } from 'http'
  */

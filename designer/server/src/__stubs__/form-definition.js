@@ -652,5 +652,53 @@ export const testFormDefinitionWithFileUploadPage = {
 }
 
 /**
+ * @satisfies {FormDefinition}
+ */
+export const testFormDefinitionWithRadioQuestionAndList = {
+  name: 'Test form',
+  pages: [
+    {
+      id: 'p1',
+      path: '/radio-question',
+      title: 'Radio question',
+      section: 'section',
+      components: [
+        {
+          id: 'q1',
+          type: ComponentType.RadiosField,
+          name: 'radio-field',
+          title: 'Select a colour',
+          options: {},
+          list: 'my-list'
+        }
+      ],
+      next: [{ path: '/summary' }]
+    },
+    {
+      id: 'p2',
+      title: 'Summary',
+      path: '/summary',
+      controller: ControllerType.Summary,
+      components: []
+    }
+  ],
+  conditions: [],
+  sections: [],
+  lists: [
+    {
+      id: 'my-list-id',
+      name: 'my-list',
+      title: 'my list title',
+      type: 'string',
+      items: [
+        { text: 'Blue', value: 'blue' },
+        { text: 'Red', value: 'red' },
+        { text: 'Green', value: 'green' }
+      ]
+    }
+  ]
+}
+
+/**
  * @import { FormDefinition, PageQuestion, PageSummary, TextFieldComponent, FileUploadFieldComponent, AutocompleteFieldComponent, List, Item } from '@defra/forms-model'
  */

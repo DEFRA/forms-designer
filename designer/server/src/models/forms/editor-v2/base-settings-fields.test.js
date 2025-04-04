@@ -44,8 +44,7 @@ describe('editor-v2 - advanced settings fields model', () => {
               text: 'Make this question optional',
               checked: false
             }
-          ],
-          value: 'false'
+          ]
         },
         {
           id: 'shortDescription',
@@ -64,6 +63,65 @@ describe('editor-v2 - advanced settings fields model', () => {
       expect(
         getFieldList(
           undefined,
+          ComponentType.TextField,
+          undefined,
+          buildDefinition()
+        )
+      ).toEqual(expectedArray)
+    })
+
+    test('should check the checkbox if optional has been set', () => {
+      const expectedArray = [
+        {
+          name: 'question',
+          id: 'question',
+          label: {
+            text: 'Question',
+            classes: GOVUK_LABEL__M
+          },
+          value: undefined
+        },
+        {
+          name: 'hintText',
+          id: 'hintText',
+          label: {
+            text: 'Hint text (optional)',
+            classes: GOVUK_LABEL__M
+          },
+          rows: 3,
+          value: undefined
+        },
+        {
+          name: 'questionOptional',
+          id: 'questionOptional',
+          classes: 'govuk-checkboxes--small',
+          items: [
+            {
+              value: 'true',
+              text: 'Make this question optional',
+              checked: true
+            }
+          ]
+        },
+        {
+          id: 'shortDescription',
+          name: 'shortDescription',
+          idPrefix: 'shortDescription',
+          label: {
+            text: 'Short description',
+            classes: GOVUK_LABEL__M
+          },
+          hint: {
+            text: "Enter a short description for this question like 'licence period'. Short descriptions are used in error messages and on the check your answers page."
+          },
+          value: undefined
+        }
+      ]
+      expect(
+        getFieldList(
+          /** @type {InputFieldsComponentsDef} */ ({
+            options: { required: false }
+          }),
           ComponentType.TextField,
           undefined,
           buildDefinition()
@@ -361,3 +419,7 @@ describe('editor-v2 - advanced settings fields model', () => {
     })
   })
 })
+
+/**
+ * @import { InputFieldsComponentsDef } from '@defra/forms-model'
+ */

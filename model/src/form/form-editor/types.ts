@@ -1,3 +1,4 @@
+import { type ComponentType } from '~/src/components/enums.js'
 import { type ComponentDef } from '~/src/components/types.js'
 import { type Item } from '~/src/index.js'
 
@@ -193,7 +194,7 @@ export interface FormEditor {
   /**
    * The display text of the radio item
    */
-  radioLabel: string
+  radioText: string
 
   /**
    * The hint of the radio item
@@ -205,6 +206,14 @@ export interface FormEditor {
    */
   radioValue: string
 
+  /**
+   * The list name to be applied to a field (if applicable)
+   */
+  list: string
+
+  /**
+   * An array of options for autocomplete
+   */
   autoCompleteOptions: Item[]
 }
 
@@ -248,9 +257,10 @@ export type FormEditorInputQuestion = Pick<
   | 'autoCompleteOptions'
   | 'enhancedAction'
   | 'radioId'
-  | 'radioLabel'
+  | 'radioText'
   | 'radioHint'
   | 'radioValue'
+  | 'list'
 >
 
 export type FormEditorInputPageSettings = Pick<
@@ -274,23 +284,25 @@ export type FormEditorInputQuestionDetails = Pick<
   | 'documentTypes'
   | 'imageTypes'
   | 'tabularDataTypes'
+  | 'autoCompleteOptions'
   | 'enhancedAction'
   | 'radioId'
-  | 'radioLabel'
+  | 'radioText'
   | 'radioHint'
   | 'radioValue'
 >
 
-export interface EnhancedActionState {
-  questionDetails: Partial<ComponentDef>
-  state: {
+export interface QuestionSessionState {
+  questionType?: ComponentType
+  questionDetails?: Partial<ComponentDef>
+  editRow?: {
     radioId?: string
-    radioLabel?: string
+    radioText?: string
     radioHint?: string
     radioValue?: string
     expanded?: boolean
   }
-  listItems: { label?: string; hint?: string; value?: string; id?: string }[]
+  listItems?: { text?: string; hint?: string; value?: string; id?: string }[]
 }
 
 export interface GovukField {

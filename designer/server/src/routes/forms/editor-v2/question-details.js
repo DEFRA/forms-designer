@@ -10,8 +10,15 @@ import {
 } from '~/src/lib/editor.js'
 import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
-import { buildAutoCompleteListFromPayload, upsertList } from '~/src/lib/list.js'
+import { buildListFromDetails, upsertList } from '~/src/lib/list.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
+import {
+  buildQuestionSessionState,
+  clearQuestionSessionState,
+  createQuestionSessionState,
+  getQuestionSessionState
+} from '~/src/lib/session-helper.js'
+import { isListComponent } from '~/src/lib/utils.js'
 import {
   allSpecificSchemas,
   mapQuestionDetails
@@ -20,89 +27,114 @@ import { baseSchema } from '~/src/models/forms/editor-v2/base-settings-fields.js
 import { CHANGES_SAVED_SUCCESSFULLY } from '~/src/models/forms/editor-v2/common.js'
 import * as viewModel from '~/src/models/forms/editor-v2/question-details.js'
 import { editorv2Path } from '~/src/models/links.js'
-import { getQuestionType } from '~/src/routes/forms/editor-v2/helper.js'
 import {
-  getEnhancedActionStateFromSession,
   handleEnhancedActionOnGet,
   handleEnhancedActionOnPost
 } from '~/src/routes/forms/editor-v2/question-details-helper.js'
 
-export const ROUTE_FULL_PATH_QUESTION_DETAILS = `/library/{slug}/editor-v2/page/{pageId}/question/{questionId}/details`
+export const ROUTE_FULL_PATH_QUESTION_DETAILS = `/library/{slug}/editor-v2/page/{pageId}/question/{questionId}/details/{stateId?}`
 
 const errorKey = sessionNames.validationFailure.editorQuestionDetails
 
 const schema = baseSchema.concat(allSpecificSchemas)
 
 /**
- * @param {ResponseToolkit<{ Params: { slug: string, pageId: string, questionId: string } }> | ResponseToolkit< { Payload: FormEditorInputQuestionDetails }>} h
+ * @param {ResponseToolkit<{ Params: { slug: string, pageId: string, questionId: string, stateId?: string } }> | ResponseToolkit< { Payload: FormEditorInputQuestionDetails }>} h
  * @param {string} slug
  * @param {string} pageId
  * @param {string} questionId
+ * @param {string} stateId
  * @param { string | undefined } anchor
  */
-function redirectWithAnchor(h, slug, pageId, questionId, anchor) {
+function redirectWithAnchor(h, slug, pageId, questionId, stateId, anchor) {
   return h
     .redirect(
       editorv2Path(
         slug,
-        `page/${pageId}/question/${questionId}/details${anchor}`
+        `page/${pageId}/question/${questionId}/details/${stateId}${anchor}`
       )
     )
     .code(StatusCodes.SEE_OTHER)
 }
 
-const listQuestions = /** @type {string[]} */ ([
-  ComponentType.AutocompleteField
-])
-
 /**
  * @param {string} formId
  * @param {FormDefinition} definition
  * @param {string} token
- * @param {FormEditorInputQuestionDetails} payload
+ * @param {Partial<ComponentDef>} questionDetails
+ * @param {Item[] | undefined } listItems
  * @returns {Promise<undefined|string>}
  */
-async function saveList(formId, definition, token, payload) {
-  if (!listQuestions.includes(`${payload.questionType}`)) {
+async function saveList(formId, definition, token, questionDetails, listItems) {
+  if (!isListComponent(questionDetails.type ?? ComponentType.TextField)) {
     return undefined
   }
 
-  const { list } = await upsertList(
+  const listMapped = buildListFromDetails(questionDetails, listItems ?? [])
+
+  const { list, status } = await upsertList(
     formId,
     definition,
     token,
-    buildAutoCompleteListFromPayload(payload)
+    listMapped
   )
 
-  return list.name
+  return status === 'created' ? list.name : undefined
+}
+
+/**
+ * @param {FormEditorInputQuestionDetails} payload
+ * @param { QuestionSessionState | undefined } state
+ */
+export function getListItems(payload, state) {
+  return /** @type {Item[]} */ (
+    payload.questionType === ComponentType.AutocompleteField
+      ? payload.autoCompleteOptions
+      : state?.listItems
+  )
 }
 
 /**
  * @param {string} formId
- * @param {string} pageId
  * @param {string} token
  * @param {FormDefinition} definition
- * @param {Partial<ComponentDef>} questionDetails
+ * @param {string} pageId
  * @param {string} questionId
+ * @param {Partial<ComponentDef>} questionDetails
+ * @param { Item[] | undefined } listItems
  * @returns {Promise<string>}
  */
 async function saveQuestion(
   formId,
-  pageId,
   token,
   definition,
+  pageId,
+  questionId,
   questionDetails,
-  questionId
+  listItems
 ) {
+  // Create or update the list (if this is a Component that uses a List)
+  const listName = await saveList(
+    formId,
+    definition,
+    token,
+    questionDetails,
+    listItems
+  )
+
+  const questDetailsWithList = listName
+    ? { ...questionDetails, list: listName }
+    : questionDetails
+
   if (pageId === 'new') {
     const newPage = await addPageAndFirstQuestion(
       formId,
       token,
-      questionDetails
+      questDetailsWithList
     )
     return newPage.id ?? 'unknown'
   } else if (questionId === 'new') {
-    await addQuestion(formId, token, pageId, questionDetails)
+    await addQuestion(formId, token, pageId, questDetailsWithList)
   } else {
     await updateQuestion(
       formId,
@@ -110,7 +142,7 @@ async function saveQuestion(
       definition,
       pageId,
       questionId,
-      questionDetails
+      questDetailsWithList
     )
   }
   return pageId
@@ -118,7 +150,7 @@ async function saveQuestion(
 
 export default [
   /**
-   * @satisfies {ServerRoute<{ Params: { slug: string, pageId: string, questionId: string } }>}
+   * @satisfies {ServerRoute<{ Params: { slug: string, pageId: string, questionId: string, stateId?: string } }>}
    */
   ({
     method: 'GET',
@@ -127,10 +159,13 @@ export default [
       const { yar } = request
       const { params, auth, query } = request
       const { token } = auth.credentials
-      const { slug, pageId, questionId } =
-        /** @type {{ slug: string, pageId: string, questionId: string }} */ (
-          params
-        )
+      const { slug, pageId, questionId, stateId } = params
+
+      // Set up session if not yet exists
+      if (!stateId || !getQuestionSessionState(yar, stateId)) {
+        const newStateId = createQuestionSessionState(yar)
+        return redirectWithAnchor(h, slug, pageId, questionId, newStateId, '')
+      }
 
       // Form metadata and page components
       const metadata = await forms.get(slug, token)
@@ -138,14 +173,25 @@ export default [
 
       const validation = getValidationErrorsFromSession(yar, errorKey)
 
-      const questionType = getQuestionType(yar, validation?.formValues)
-
-      const enhancedActionState = getEnhancedActionStateFromSession(yar)
+      const state = buildQuestionSessionState(
+        yar,
+        stateId,
+        definition,
+        pageId,
+        questionId
+      )
 
       // Intercept operations if say a radio or checkbox
-      const redirectAnchor = handleEnhancedActionOnGet(yar, query)
+      const redirectAnchor = handleEnhancedActionOnGet(yar, stateId, query)
       if (redirectAnchor) {
-        return redirectWithAnchor(h, slug, pageId, questionId, redirectAnchor)
+        return redirectWithAnchor(
+          h,
+          slug,
+          pageId,
+          questionId,
+          stateId,
+          redirectAnchor
+        )
       }
 
       return h.view(
@@ -155,9 +201,9 @@ export default [
           definition,
           pageId,
           questionId,
-          questionType,
+          stateId,
           validation,
-          enhancedActionState
+          state
         )
       )
     },
@@ -180,8 +226,8 @@ export default [
     path: ROUTE_FULL_PATH_QUESTION_DETAILS,
     async handler(request, h) {
       const { params, auth, payload, yar } = request
-      const { slug, pageId, questionId } =
-        /** @type {{ slug: string, pageId: string, questionId: string }} */ (
+      const { slug, pageId, questionId, stateId } =
+        /** @type {{ slug: string, pageId: string, questionId: string, stateId: string }} */ (
           params
         )
       const { token } = auth.credentials
@@ -194,35 +240,40 @@ export default [
       // Intercept operations if say a radio or checkbox
       const redirectAnchor = handleEnhancedActionOnPost(
         yar,
+        stateId,
         payload,
         questionDetails
       )
       if (redirectAnchor) {
-        return redirectWithAnchor(h, slug, pageId, questionId, redirectAnchor)
+        return redirectWithAnchor(
+          h,
+          slug,
+          pageId,
+          questionId,
+          stateId,
+          redirectAnchor
+        )
       }
 
       // Save page and first question
       const metadata = await forms.get(slug, token)
       const definition = await forms.getDraftFormDefinition(metadata.id, token)
-      const formId = metadata.id
 
-      // TODO: When forms runner is updated move to id
-      const listName = await saveList(formId, definition, token, payload)
-
-      const questionDetailsWithList = listName
-        ? { ...questionDetails, list: listName }
-        : questionDetails
+      const state = getQuestionSessionState(yar, stateId)
 
       const finalPageId = await saveQuestion(
-        formId,
-        pageId,
+        metadata.id,
         token,
         definition,
-        questionDetailsWithList,
-        questionId
+        pageId,
+        questionId,
+        questionDetails,
+        getListItems(payload, state)
       )
 
       yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
+
+      clearQuestionSessionState(yar, stateId)
 
       // Redirect to next page
       return h
@@ -233,7 +284,10 @@ export default [
       validate: {
         payload: schema,
         failAction: (request, h, error) => {
-          return redirectWithErrors(request, h, error, errorKey)
+          const removeAnchor = !Object.keys(request.payload).includes(
+            'enhancedAction'
+          )
+          return redirectWithErrors(request, h, error, errorKey, removeAnchor)
         }
       },
       auth: {
@@ -248,6 +302,6 @@ export default [
 ]
 
 /**
- * @import { FormEditorInputQuestionDetails, ComponentDef, FormDefinition } from '@defra/forms-model'
+ * @import { ComponentDef, FormDefinition, FormEditorInputQuestionDetails, Item, QuestionSessionState } from '@defra/forms-model'
  * @import { ResponseToolkit, ServerRoute } from '@hapi/hapi'
  */

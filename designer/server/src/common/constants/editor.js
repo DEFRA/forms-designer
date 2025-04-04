@@ -100,7 +100,7 @@ export const QuestionAdvancedSettings =
 export const QuestionEnhancedFields =
   /** @type {Record<string, keyof FormEditorGovukField | 'name'>} */ {
     RadioId: 'radioId',
-    RadioLabel: 'radioLabel',
+    RadioText: 'radioText',
     RadioHint: 'radioHint',
     RadioValue: 'radioValue'
   }

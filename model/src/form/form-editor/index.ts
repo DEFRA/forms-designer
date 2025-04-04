@@ -101,6 +101,12 @@ export const questionOptionalSchema = Joi.string()
     'Indicates whether a question is optional. Empty string or "true" values are accepted.'
   )
 
+export const listForQuestionSchema = Joi.string()
+  .trim()
+  .optional()
+  .allow('')
+  .description('Unique identifier for the list used by the field')
+
 export const exactFilesSchema = Joi.number()
   .empty('')
   .integer()
@@ -172,7 +178,7 @@ export const radioIdSchema = Joi.string()
   .allow('')
   .description('Unique identifier for radio options')
 
-export const radioLabelSchema = Joi.string()
+export const radioTextSchema = Joi.string()
   .trim()
   .required()
   .description('The visible text shown next to radio options')
@@ -445,6 +451,7 @@ export const questionDetailsFullSchema = {
   fileTypesSchema,
   hintTextSchema,
   imageTypesSchema,
+  listForQuestionSchema,
   maxFilesSchema,
   maxFutureSchema,
   maxLengthSchema,
@@ -461,7 +468,7 @@ export const questionDetailsFullSchema = {
   questionTypeFullSchema,
   radioHintSchema,
   radioIdSchema,
-  radioLabelSchema,
+  radioTextSchema,
   radioValueSchema,
   regexSchema,
   rowsSchema,

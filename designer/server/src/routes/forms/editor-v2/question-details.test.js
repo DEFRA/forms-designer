@@ -8,6 +8,7 @@ import {
   buildList,
   buildListItem,
   buildQuestionPage,
+  testFormDefinitionWithFileUploadPage,
   testFormDefinitionWithSinglePage
 } from '~/src/__stubs__/form-definition.js'
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
@@ -19,15 +20,19 @@ import {
 } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { upsertList } from '~/src/lib/list.js'
-import { getQuestionType } from '~/src/routes/forms/editor-v2/helper.js'
+import {
+  buildQuestionSessionState,
+  createQuestionSessionState,
+  getQuestionSessionState
+} from '~/src/lib/session-helper.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/forms.js')
 jest.mock('~/src/lib/error-helper.js')
 jest.mock('~/src/lib/editor.js')
+jest.mock('~/src/lib/session-helper.js')
 jest.mock('~/src/lib/list.js')
-jest.mock('~/src/routes/forms/editor-v2/helper.js')
 jest.mock('~/src/routes/forms/editor-v2/question-details-helper.js')
 
 describe('Editor v2 question details routes', () => {
@@ -38,6 +43,10 @@ describe('Editor v2 question details routes', () => {
     jest.clearAllMocks()
     server = await createServer()
     await server.initialize()
+  })
+
+  beforeEach(() => {
+    jest.clearAllMocks()
   })
 
   /**
@@ -52,16 +61,54 @@ describe('Editor v2 question details routes', () => {
     components: []
   }
 
-  test('GET - should render the question fields in the view', async () => {
-    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+  const simpleSessionTextField = {
+    questionType: ComponentType.TextField
+  }
+
+  const simpleSessionFileUpload = {
+    questionType: ComponentType.FileUploadField
+  }
+
+  const simpleSessionAutocomplete = {
+    questionType: ComponentType.AutocompleteField
+  }
+
+  test('GET - should redirect if no session yet', async () => {
+    jest.mocked(getQuestionSessionState).mockReturnValue(undefined)
+    jest.mocked(createQuestionSessionState).mockReturnValue('newSessId')
+    jest.mocked(forms.get).mockResolvedValue(testFormMetadata)
     jest
       .mocked(forms.getDraftFormDefinition)
-      .mockResolvedValueOnce(testFormDefinitionWithSinglePage)
-    jest.mocked(getQuestionType).mockReturnValue(ComponentType.TextField)
+      .mockResolvedValue(testFormDefinitionWithSinglePage)
 
     const options = {
       method: 'get',
       url: '/library/my-form-slug/editor-v2/page/p1/question/c1/details',
+      auth
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/page/p1/question/c1/details/newSessId'
+    )
+  })
+
+  test('GET - should render the question fields in the view', async () => {
+    jest
+      .mocked(getQuestionSessionState)
+      .mockReturnValueOnce(simpleSessionTextField)
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithSinglePage)
+
+    const options = {
+      method: 'get',
+      url: '/library/my-form-slug/editor-v2/page/p1/question/c1/details/54321',
       auth
     }
 
@@ -98,6 +145,12 @@ describe('Editor v2 question details routes', () => {
   })
 
   test('GET - should render the optional question fields in the view and keep optional section expanded', async () => {
+    jest
+      .mocked(getQuestionSessionState)
+      .mockReturnValueOnce(simpleSessionTextField)
+    jest
+      .mocked(buildQuestionSessionState)
+      .mockReturnValueOnce(simpleSessionTextField)
     jest.mocked(getValidationErrorsFromSession).mockReturnValue(
       /** @type {ValidationFailure<FormEditor>} */ ({
         formValues: {
@@ -108,7 +161,6 @@ describe('Editor v2 question details routes', () => {
         formErrors: {}
       })
     )
-    jest.mocked(getQuestionType).mockReturnValue(ComponentType.TextField)
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     jest
       .mocked(forms.getDraftFormDefinition)
@@ -116,7 +168,7 @@ describe('Editor v2 question details routes', () => {
 
     const options = {
       method: 'get',
-      url: '/library/my-form-slug/editor-v2/page/p1/question/c1/details',
+      url: '/library/my-form-slug/editor-v2/page/p1/question/c1/details/54321',
       auth
     }
 
@@ -153,45 +205,35 @@ describe('Editor v2 question details routes', () => {
   })
 
   test('GET - should render the file upload fields in the base view', async () => {
-    jest.mocked(getValidationErrorsFromSession).mockReturnValue(
-      /** @type {ValidationFailure<FormEditor>} */ ({
-        formValues: {
-          question: 'What is your name?',
-          shortDescription: 'your name',
-          minLength: '10'
-        },
-        formErrors: {}
-      })
-    )
-    jest.mocked(getQuestionType).mockReturnValue(ComponentType.FileUploadField)
+    jest
+      .mocked(getQuestionSessionState)
+      .mockReturnValue(simpleSessionFileUpload)
+    jest
+      .mocked(buildQuestionSessionState)
+      .mockReturnValue(simpleSessionFileUpload)
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     jest
       .mocked(forms.getDraftFormDefinition)
-      .mockResolvedValueOnce(testFormDefinitionWithSinglePage)
+      .mockResolvedValueOnce(testFormDefinitionWithFileUploadPage)
 
     const options = {
       method: 'get',
-      url: '/library/my-form-slug/editor-v2/page/p1/question/c1/details',
+      url: '/library/my-form-slug/editor-v2/page/p1/question/q1/details/54321',
       auth
     }
 
     const { container } = await renderResponse(server, options)
 
     const $mastheadHeading = container.getByText('Test form')
-    const $cardTitle = container.getByText('Question 1')
+
     const $cardCaption = container.getByText('Page 1')
-    const $cardHeading = container.getByText('Edit question 1')
 
     const $actions = container.getAllByRole('button')
 
     expect($mastheadHeading).toHaveTextContent('Test form')
     expect($mastheadHeading).toHaveClass('govuk-heading-xl')
-    expect($cardTitle).toHaveTextContent('Question 1')
-    expect($cardTitle).toHaveClass('editor-card-title')
     expect($cardCaption).toHaveTextContent('Page 1')
     expect($cardCaption).toHaveClass('govuk-caption-l')
-    expect($cardHeading).toHaveTextContent('Edit question 1')
-    expect($cardHeading).toHaveClass('govuk-heading-l')
 
     expect($actions).toHaveLength(4)
     expect($actions[2]).toHaveTextContent('Preview page')
@@ -226,57 +268,59 @@ describe('Editor v2 question details routes', () => {
     const listName = 'AutoCompleteList'
     const listId = '3b016ee4-6484-4b0f-a02a-4e0e37de066b'
     jest
-      .mocked(getQuestionType)
-      .mockReturnValue(ComponentType.AutocompleteField)
+      .mocked(getQuestionSessionState)
+      .mockReturnValue(simpleSessionAutocomplete)
+    jest
+      .mocked(buildQuestionSessionState)
+      .mockReturnValue(simpleSessionAutocomplete)
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
-    jest.mocked(forms.getDraftFormDefinition).mockResolvedValueOnce(
-      buildDefinition({
-        name: 'Test form',
-        pages: [
-          buildQuestionPage({
-            id: 'p1',
-            path: '/autocomplete',
-            title: 'Which country do you live in?',
-            components: [
-              buildAutoCompleteComponent({
-                id: 'c1',
-                name: 'autoComplete',
-                title: 'Which country do you live in?',
-                list: listName
-              })
-            ]
-          })
-        ],
-        lists: [
-          buildList({
-            id: listId,
-            name: listName,
-            items: [
-              buildListItem({
-                text: 'England',
-                value: 'england'
-              }),
-              buildListItem({
-                text: 'Wales',
-                value: 'wales'
-              }),
-              buildListItem({
-                text: 'Scotland',
-                value: 'scotland'
-              }),
-              buildListItem({
-                text: 'Northern Ireland',
-                value: 'northern-island'
-              })
-            ]
-          })
-        ]
-      })
-    )
+    const def = buildDefinition({
+      name: 'Test form',
+      pages: [
+        buildQuestionPage({
+          id: 'p1',
+          path: '/autocomplete',
+          title: 'Which country do you live in?',
+          components: [
+            buildAutoCompleteComponent({
+              id: 'c1',
+              name: 'autoComplete',
+              title: 'Which country do you live in?',
+              list: listName
+            })
+          ]
+        })
+      ],
+      lists: [
+        buildList({
+          id: listId,
+          name: listName,
+          items: [
+            buildListItem({
+              text: 'England',
+              value: 'england'
+            }),
+            buildListItem({
+              text: 'Wales',
+              value: 'wales'
+            }),
+            buildListItem({
+              text: 'Scotland',
+              value: 'scotland'
+            }),
+            buildListItem({
+              text: 'Northern Ireland',
+              value: 'northern-ireland'
+            })
+          ]
+        })
+      ]
+    })
+    jest.mocked(forms.getDraftFormDefinition).mockResolvedValue(def)
 
     const options = {
       method: 'get',
-      url: '/library/my-form-slug/editor-v2/page/p1/question/c1/details',
+      url: '/library/my-form-slug/editor-v2/page/p1/question/c1/details/54321',
       auth
     }
 
@@ -290,7 +334,7 @@ describe('Editor v2 question details routes', () => {
       'England:england'
     )
     expect(/** @type {HTMLInputElement} */ (autoCompleteField).value).toMatch(
-      'Northern Ireland:northern-island'
+      'Northern Ireland:northern-ireland'
     )
   })
 
@@ -310,12 +354,42 @@ describe('Editor v2 question details routes', () => {
 
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe(
-      '/library/my-form-slug/editor-v2/page/1/question/1/details'
+      '/library/my-form-slug/editor-v2/page/1/question/1/details#'
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
       new Joi.ValidationError(
         '"name" is required. The question type is missing. Enter a question. Enter a short description',
+        [],
+        undefined
+      ),
+      'questionDetailsValidationFailure'
+    )
+  })
+
+  test('POST - should error if missing mandatory fields in edit panel, and keep anchor', async () => {
+    // Note - anchors dont work properly in unit tests as they are handled by the browser
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/1/question/1/details#add-option',
+      auth,
+      payload: { enhancedAction: 'add-item' }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/page/1/question/1/details'
+    )
+    expect(addErrorsToSession).toHaveBeenCalledWith(
+      expect.anything(),
+      new Joi.ValidationError(
+        '"name" is required. The question type is missing',
         [],
         undefined
       ),
@@ -345,7 +419,7 @@ describe('Editor v2 question details routes', () => {
 
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe(
-      '/library/my-form-slug/editor-v2/page/1/question/1/details'
+      '/library/my-form-slug/editor-v2/page/1/question/1/details#'
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
@@ -381,7 +455,7 @@ describe('Editor v2 question details routes', () => {
 
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe(
-      '/library/my-form-slug/editor-v2/page/1/question/1/details'
+      '/library/my-form-slug/editor-v2/page/1/question/1/details#'
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
@@ -395,6 +469,10 @@ describe('Editor v2 question details routes', () => {
   })
 
   test('POST - should redirect to next page if valid payload with new question', async () => {
+    jest.mocked(getQuestionSessionState).mockReturnValue(simpleSessionTextField)
+    jest
+      .mocked(buildQuestionSessionState)
+      .mockReturnValue(simpleSessionTextField)
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     jest.mocked(addPageAndFirstQuestion).mockResolvedValue(page)
 

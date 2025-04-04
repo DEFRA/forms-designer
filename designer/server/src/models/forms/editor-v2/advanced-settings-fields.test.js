@@ -3,6 +3,8 @@ import { ComponentType } from '@defra/forms-model'
 import {
   getAdditionalSchema,
   isValueOrZero,
+  mapExtraRootFields,
+  mapListComponentFromPayload,
   mapQuestionDetails
 } from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
 import { getFieldComponentType } from '~/src/models/forms/editor-v2/page-fields.js'
@@ -168,6 +170,52 @@ describe('editor-v2 - advanced settings fields model', () => {
           exactFiles: '3'
         })
       ).toEqual({ length: '3' })
+    })
+  })
+
+  describe('mapExtraRootFields', () => {
+    test('should handle list', () => {
+      expect(
+        mapExtraRootFields({
+          list: 'abcde'
+        })
+      ).toEqual({ list: 'abcde' })
+    })
+
+    test('should handle no list', () => {
+      expect(
+        mapExtraRootFields({
+          name: 'abcde'
+        })
+      ).toEqual({})
+    })
+  })
+
+  describe('mapListComponentFromPayload', () => {
+    it('should build an autocomplete field from the payload', () => {
+      const payload = {
+        name: 'questionname',
+        questionType: 'AutocompleteField',
+        question: 'question title',
+        shortDescription: 'shortDescription',
+        hintText: 'Hint Text',
+        list: 'listname'
+      }
+
+      const expectedAutoCompleteField = {
+        name: 'questionname',
+        title: 'question title',
+        type: 'AutocompleteField',
+        shortDescription: 'shortDescription',
+        hint: 'Hint Text',
+        list: 'listname',
+        options: { required: true },
+        schema: {}
+      }
+
+      expect(mapListComponentFromPayload(payload)).toEqual(
+        expectedAutoCompleteField
+      )
     })
   })
 
