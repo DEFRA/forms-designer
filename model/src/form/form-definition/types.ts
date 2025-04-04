@@ -119,6 +119,7 @@ export interface Section {
 }
 
 export interface Item {
+  id?: string
   text: string
   value: string | number | boolean
   description?: string
