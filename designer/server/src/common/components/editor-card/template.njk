@@ -22,7 +22,7 @@
                     }) }}
                   {% endif %}
 
-                  {% if not params.noTitlePadding %}
+                  {% if params.caption or params.title or params.heading %}
                   <div class="govuk-summary-card__title-wrapper govuk-!-padding-top-0"></div>
                   {% endif %}
                   {% if params.caption %}

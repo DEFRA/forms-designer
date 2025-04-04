@@ -43,6 +43,26 @@ describe('list.js', () => {
         ]
       })
     })
+
+    it('should build a list from details including populating random name', () => {
+      const payload = {
+        name: 'q-name'
+      }
+      const listItems = [
+        { text: 'English', value: 'en-gb' },
+        { text: 'German', value: 'de-De' }
+      ]
+
+      expect(buildListFromDetails(payload, listItems)).toEqual({
+        title: 'List for question q-name',
+        name: expect.any(String),
+        type: 'string',
+        items: [
+          { text: 'English', value: 'en-gb' },
+          { text: 'German', value: 'de-De' }
+        ]
+      })
+    })
   })
 
   describe('createList', () => {
