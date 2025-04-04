@@ -65,7 +65,7 @@ describe('build error details', () => {
       )
       expect(buildErrorDetails(error)).toEqual({
         autoCompleteOptions: {
-          text: message,
+          text: 'Enter options separated by a colon on line 2',
           href: '#autoCompleteOptions'
         }
       })

@@ -11,11 +11,12 @@ export function buildListErrorDetail(errors, { context, message }) {
   }
 
   const key = context.label.replace(`[${position}]`, '')
+  const linePosition = parseInt(position) + 1
 
   return {
     ...errors,
     [key]: {
-      text: message,
+      text: message + ` on line ${linePosition}`,
       href: `#${key}`
     }
   }
@@ -26,8 +27,12 @@ export function buildListErrorDetail(errors, { context, message }) {
  */
 export function buildErrorDetails(error) {
   return error.details.reduce((errors, { context, message }) => {
-    if (!context?.key) {
+    if (context.pos !== undefined) {
       return buildListErrorDetail(errors, { context, message })
+    }
+
+    if (!context?.key) {
+      return errors
     }
 
     return {
