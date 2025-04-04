@@ -56,15 +56,14 @@ export async function addPageAndFirstQuestion(
   questionDetails,
   pageDetails
 ) {
-  questionDetails.name = questionDetails.name ?? randomId()
-
   const { body } = await postJsonByType(buildRequestUrl(formId, 'pages'), {
     payload: {
       title: pageDetails?.title ?? '',
       path: `/${slugify(pageDetails?.title ?? questionDetails.title)}`,
       components: [
         {
-          ...questionDetails
+          ...questionDetails,
+          name: questionDetails.name ?? randomId()
         }
       ],
       ...getControllerType(questionDetails)
@@ -83,13 +82,12 @@ export async function addPageAndFirstQuestion(
  * @param {Partial<ComponentDef>} questionDetails
  */
 export async function addQuestion(formId, token, pageId, questionDetails) {
-  questionDetails.name = questionDetails.name ?? randomId()
-
   const { body } = await postJsonByType(
     buildRequestUrl(formId, `pages/${pageId}/components`),
     {
       payload: {
-        ...questionDetails
+        ...questionDetails,
+        name: questionDetails.name ?? randomId()
       },
       ...getHeaders(token)
     }

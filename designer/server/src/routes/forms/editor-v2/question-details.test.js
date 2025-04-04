@@ -354,12 +354,42 @@ describe('Editor v2 question details routes', () => {
 
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe(
-      '/library/my-form-slug/editor-v2/page/1/question/1/details'
+      '/library/my-form-slug/editor-v2/page/1/question/1/details#'
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
       new Joi.ValidationError(
         '"name" is required. The question type is missing. Enter a question. Enter a short description',
+        [],
+        undefined
+      ),
+      'questionDetailsValidationFailure'
+    )
+  })
+
+  test('POST - should error if missing mandatory fields in edit panel, and keep anchor', async () => {
+    // Note - anchors dont work properly in unit tests as they are handled by the browser
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/1/question/1/details#add-option',
+      auth,
+      payload: { enhancedAction: 'add-item' }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/page/1/question/1/details'
+    )
+    expect(addErrorsToSession).toHaveBeenCalledWith(
+      expect.anything(),
+      new Joi.ValidationError(
+        '"name" is required. The question type is missing',
         [],
         undefined
       ),
@@ -389,7 +419,7 @@ describe('Editor v2 question details routes', () => {
 
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe(
-      '/library/my-form-slug/editor-v2/page/1/question/1/details'
+      '/library/my-form-slug/editor-v2/page/1/question/1/details#'
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
@@ -425,7 +455,7 @@ describe('Editor v2 question details routes', () => {
 
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe(
-      '/library/my-form-slug/editor-v2/page/1/question/1/details'
+      '/library/my-form-slug/editor-v2/page/1/question/1/details#'
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
