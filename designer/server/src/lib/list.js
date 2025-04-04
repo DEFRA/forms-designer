@@ -31,7 +31,7 @@ export function buildListFromDetails(questionDetails, listItems) {
       return {
         // id: item.id,
         text: item.text,
-        // hint: item.hint,
+        hint: item.hint,
         value: stringHasValue(`${item.value}`) ? item.value : item.text
       }
     })
