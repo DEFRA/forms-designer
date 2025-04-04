@@ -108,7 +108,8 @@ export const baseSchema = Joi.object().keys({
         'array.includes': 'Enter options separated by a colon',
         'dsv.invalid': 'Enter options separated by a colon',
         'string.min': 'Enter at least one character',
-        'string.empty': 'Enter at least one character'
+        'string.empty': 'Enter at least one character',
+        'array.unique': 'Duplicate option found'
       }),
       otherwise: Joi.forbidden()
     }
