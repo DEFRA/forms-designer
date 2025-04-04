@@ -10,6 +10,7 @@ import {
   createQuestionSessionState,
   getFlashFromSession,
   getQuestionSessionState,
+  mergeQuestionSessionState,
   setFlashInSession,
   setQuestionSessionState
 } from '~/src/lib/session-helper.js'
@@ -82,6 +83,34 @@ describe('Session functions', () => {
       })
       expect(mockSet).toHaveBeenCalledWith('questionSessionState-123', {
         questionType: ComponentType.TextField
+      })
+    })
+  })
+
+  describe('mergeQuestionSessionState', () => {
+    test('should call set', () => {
+      mockGet.mockReturnValue(structuredClone({}))
+      mergeQuestionSessionState(mockYar, '123', {
+        questionType: ComponentType.TextField
+      })
+      expect(mockSet).toHaveBeenCalledWith('questionSessionState-123', {
+        questionType: ComponentType.TextField
+      })
+    })
+
+    test('should merge', () => {
+      mockGet.mockReturnValue(
+        structuredClone({
+          questionType: ComponentType.RadiosField,
+          otherField: '123'
+        })
+      )
+      mergeQuestionSessionState(mockYar, '123', {
+        questionType: ComponentType.TextField
+      })
+      expect(mockSet).toHaveBeenCalledWith('questionSessionState-123', {
+        questionType: ComponentType.TextField,
+        otherField: '123'
       })
     })
   })

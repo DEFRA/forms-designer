@@ -93,6 +93,13 @@ describe('Editor v2 question-details route helper', () => {
       ).toBeUndefined()
     })
 
+    test('should throw if bad session', () => {
+      mockGet.mockReturnValue(undefined)
+      expect(() =>
+        handleEnhancedActionOnGet(mockYar, '123', { action: 'add-item' })
+      ).toThrow('Invalid session contents')
+    })
+
     test('delete should remove item', () => {
       mockGet.mockReturnValue(structuredClone(sessionWithListWithThreeItems))
 
@@ -170,6 +177,16 @@ describe('Editor v2 question-details route helper', () => {
       expect(
         handleEnhancedActionOnPost(mockYar, '123', payload, {})
       ).toBeUndefined()
+    })
+
+    test('should throw if bad session', () => {
+      mockGet.mockReturnValue(undefined)
+      const payload = /** @type {FormEditorInputQuestionDetails} */ ({
+        enhancedAction: 'add-item'
+      })
+      expect(() =>
+        handleEnhancedActionOnPost(mockYar, '123', payload, {})
+      ).toThrow('Invalid session contents')
     })
 
     test('add-item should add item', () => {
