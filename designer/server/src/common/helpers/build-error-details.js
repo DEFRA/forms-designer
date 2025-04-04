@@ -1,10 +1,33 @@
 /**
+ * @param {ErrorDetails} errors
+ * @param {ValidationErrorItem} errorItem
+ */
+export function buildListErrorDetail(errors, { context, message }) {
+  const position = context?.pos
+  const matchString = `[${position}]`
+
+  if (position === undefined || !context.label.includes(matchString)) {
+    return errors
+  }
+
+  const key = context.label.replace(`[${position}]`, '')
+
+  return {
+    ...errors,
+    [key]: {
+      text: message,
+      href: `#${key}`
+    }
+  }
+}
+
+/**
  * @param {ValidationError} error
  */
 export function buildErrorDetails(error) {
   return error.details.reduce((errors, { context, message }) => {
     if (!context?.key) {
-      return errors
+      return buildListErrorDetail(errors, { context, message })
     }
 
     return {
@@ -42,6 +65,6 @@ export function buildErrorList(errorDetails, names) {
 }
 
 /**
- * @import { ValidationError } from 'joi'
+ * @import { ValidationError, ValidationErrorItem } from 'joi'
  * @import { ErrorDetails, ErrorDetailsItem } from '~/src/common/helpers/types.js'
  */

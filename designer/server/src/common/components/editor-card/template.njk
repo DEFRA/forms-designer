@@ -13,7 +13,6 @@
               <div id="card-1">
                 <div class="govuk-summary-card__content">
                   {% if params.title %}<div class="editor-card-title">{{ params.title }}</div>{% endif %}
-
                   <div class="govuk-!-padding-top-3">
                     {% if params.errorList | length %}
                       {{ govukErrorSummary({
@@ -37,7 +36,7 @@
                       {% endcall %}
                     {% endif %}
 
-                      {{ caller() if caller else (params.html | safe if params.html else params.text) }}
+                    {{ caller() if caller else (params.html | safe if params.html else params.text) }}
                   </div>
                 </div>
               </div>
