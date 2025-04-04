@@ -105,9 +105,7 @@ export const componentsSavingLists = [
  * @returns {boolean}
  */
 export function noListToSave(type, state) {
-  return (
-    !isListComponent(type) ||
-    !state?.listItems)
+  return !isListComponent(type) || !state?.listItems
 }
 
 /**
