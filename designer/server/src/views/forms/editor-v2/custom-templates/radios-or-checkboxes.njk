@@ -20,7 +20,7 @@
 
       <ol class="gem-c-reorderable-list js-enabled" id="options-container" data-module="reorderable-list">
         {% for item in state.listItems %}
-          {% if loop.index == rowNumBeingEdited %}
+          {% if loop.index == listDetails.rowNumBeingEdited %}
           {%- include "../../../../views/forms/editor-v2/custom-templates/radio-or-checkbox-edit.njk" -%}
           {% else %}
           <li class="gem-c-reorderable-list__item" draggable="true" data-index="1">
@@ -54,7 +54,7 @@
 
       {% if state.editRow.expanded %}
 
-          {% if rowNumBeingEdited == state.listItems.length + 1 %}
+          {% if listDetails.rowNumBeingEdited == state.listItems.length + 1 %}
           {%- include "../../../../views/forms/editor-v2/custom-templates/radio-or-checkbox-edit.njk" -%}
           {% endif %}
 

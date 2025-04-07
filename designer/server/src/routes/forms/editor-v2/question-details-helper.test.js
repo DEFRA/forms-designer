@@ -1,5 +1,6 @@
 import { getQuestionSessionState } from '~/src/lib/session-helper.js'
 import {
+  addError,
   handleEnhancedActionOnGet,
   handleEnhancedActionOnPost,
   setEditRowState
@@ -45,6 +46,31 @@ describe('Editor v2 question-details route helper', () => {
       expect(getQuestionSessionState(mockYar, '123')).toEqual(
         listWithThreeItems
       )
+    })
+  })
+
+  describe('addError', () => {
+    test('should addError', () => {
+      addError(
+        mockYar,
+        'flashkey',
+        'fieldname',
+        'error message text',
+        /** @type {FormEditorInputQuestionDetails} */ ({
+          shortDescription: 'abc'
+        })
+      )
+      expect(mockFlash).toHaveBeenCalledWith('flashkey', {
+        formErrors: {
+          fieldname: {
+            href: '#fieldname',
+            text: 'error message text'
+          }
+        },
+        formValues: {
+          shortDescription: 'abc'
+        }
+      })
     })
   })
 
@@ -287,6 +313,41 @@ describe('Editor v2 question-details route helper', () => {
         },
         questionDetails: {}
       })
+    })
+
+    test('save-item should error if duplicate item', () => {
+      mockGet.mockReturnValue(structuredClone(sessionWithListWithThreeItems))
+
+      const payload = /** @type {FormEditorInputQuestionDetails} */ ({
+        enhancedAction: 'save-item',
+        radioId: '5',
+        radioText: 'text3',
+        radioHint: 'hint5',
+        radioValue: 'value5'
+      })
+
+      expect(handleEnhancedActionOnPost(mockYar, '123', payload, {})).toBe(
+        '#add-option'
+      )
+      expect(mockSet).not.toHaveBeenCalled()
+      expect(mockFlash).toHaveBeenCalledWith(
+        'questionDetailsValidationFailure',
+        {
+          formErrors: {
+            radioText: {
+              href: '#radioText',
+              text: 'Item text must be unique in the list'
+            }
+          },
+          formValues: {
+            enhancedAction: 'save-item',
+            radioHint: 'hint5',
+            radioId: '5',
+            radioText: 'text3',
+            radioValue: 'value5'
+          }
+        }
+      )
     })
   })
 })

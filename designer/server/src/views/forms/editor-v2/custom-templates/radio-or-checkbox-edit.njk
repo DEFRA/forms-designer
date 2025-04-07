@@ -6,7 +6,7 @@
 {% set hasStateWithinDetailsSection = enhancedFields[radioValueIdx].value %}
 
 <div id="add-option-form" class="govuk-!-margin-bottom-6">
-  <h2 class="govuk-caption-m" id="add-option">Item {{ rowNumBeingEdited }}</h2>
+  <h2 class="govuk-caption-m" id="add-option">Item {{ listDetails.rowNumBeingEdited }}</h2>
   {{ govukInput(enhancedFields[radioTextIdx]) }}
 
   {{ govukInput(enhancedFields[radioHintIdx]) }}
