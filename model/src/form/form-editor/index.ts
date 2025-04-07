@@ -444,6 +444,8 @@ export const autoCompleteOptionsSchema = customValidator
     })
   )
   .min(1)
+  .unique('text')
+  .unique('value', { ignoreUndefined: true })
   .required()
 
 export const questionDetailsFullSchema = {
