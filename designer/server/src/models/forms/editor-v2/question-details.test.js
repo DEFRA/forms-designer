@@ -10,7 +10,7 @@ import {
   getDetails,
   getEnhancedFields,
   getExtraFields,
-  getRowNumBeingEdited,
+  getListDetails,
   hasDataOrErrorForDisplay,
   mapToQuestionDetails,
   overrideFormValuesForEnhancedAction
@@ -465,37 +465,55 @@ describe('editor-v2 - question details model', () => {
     })
   })
 
-  describe('getRowNumBeingEdited', () => {
-    test('should return 1 if no rows', () => {
-      expect(getRowNumBeingEdited(undefined)).toBe(1)
+  describe('getListDetails', () => {
+    test('should return correct details if no rows', () => {
+      expect(
+        getListDetails(undefined, /** @type {ComponentDef} */ ({}))
+      ).toEqual({
+        list: '',
+        rowNumBeingEdited: 1
+      })
     })
 
     test('should return max if no matching id', () => {
       expect(
-        getRowNumBeingEdited({
-          editRow: {},
-          questionDetails: {},
-          listItems: [
-            { id: '1', text: '1', value: '1' },
-            { id: '2', text: '2', value: '2' },
-            { id: '3', text: '3', value: '3' }
-          ]
-        })
-      ).toBe(4)
+        getListDetails(
+          {
+            editRow: {},
+            questionDetails: {},
+            listItems: [
+              { id: '1', text: '1', value: '1' },
+              { id: '2', text: '2', value: '2' },
+              { id: '3', text: '3', value: '3' }
+            ]
+          },
+          /** @type {ComponentDef} */ ({ list: 'listname' })
+        )
+      ).toEqual({
+        list: 'listname',
+        rowNumBeingEdited: 4
+      })
     })
 
     test('should return 2 if editing row 2', () => {
       expect(
-        getRowNumBeingEdited({
-          editRow: { radioId: '2' },
-          questionDetails: {},
-          listItems: [
-            { id: '1', text: '1', value: '1' },
-            { id: '2', text: '2', value: '2' },
-            { id: '3', text: '3', value: '3' }
-          ]
-        })
-      ).toBe(2)
+        getListDetails(
+          {
+            editRow: { radioId: '2' },
+            questionDetails: {},
+            listItems: [
+              { id: '1', text: '1', value: '1' },
+              { id: '2', text: '2', value: '2' },
+              { id: '3', text: '3', value: '3' },
+              { id: '4', text: '4', value: '4' }
+            ]
+          },
+          /** @type {ComponentDef} */ ({ list: 'listname' })
+        )
+      ).toEqual({
+        list: 'listname',
+        rowNumBeingEdited: 2
+      })
     })
   })
 })

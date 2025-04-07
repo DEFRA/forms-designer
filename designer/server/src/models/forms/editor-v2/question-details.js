@@ -181,15 +181,17 @@ export function overrideFormValuesForEnhancedAction(validation, state) {
 
 /**
  * @param { QuestionSessionState | undefined } state
+ * @param {ComponentDef} questionFields
  */
-export function getRowNumBeingEdited(state) {
+export function getListDetails(state, questionFields) {
   const listItems = state?.listItems ?? []
   const foundIdx = listItems.findIndex((x) => x.id === state?.editRow?.radioId)
-  if (foundIdx > -1) {
-    return foundIdx + 1
+  const rowNum = foundIdx > -1 ? foundIdx + 1 : listItems.length + 1
+  const listName = 'list' in questionFields ? questionFields.list : ''
+  return {
+    rowNumBeingEdited: rowNum,
+    list: listName
   }
-
-  return listItems.length + 1
 }
 
 /**
@@ -244,15 +246,14 @@ export function questionDetailsViewModel(
   const extraFieldNames = extraFields.map((field) => field.name ?? 'unknown')
   const errorList = buildErrorList(validation?.formErrors)
   const previewPageUrl = `${buildPreviewUrl(metadata.slug)}${pagePath}?force`
-  const rowNumBeingEdited = getRowNumBeingEdited(state)
+  const listDetails = getListDetails(state, questionFieldsOverride)
 
   return {
-    rowNumBeingEdited,
+    listDetails,
     state,
     enhancedFields: enhancedFieldList,
     ...baseModelFields(metadata.slug, pageTitle),
     name: questionFields.name || randomId(),
-    list: 'list' in questionFieldsOverride ? questionFieldsOverride.list : '',
     basePageFields,
     uploadFields,
     extraFields,

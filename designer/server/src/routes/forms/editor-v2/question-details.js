@@ -1,5 +1,6 @@
-import { ComponentType } from '@defra/forms-model'
+import { ComponentType, questionDetailsFullSchema } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
+import Joi from 'joi'
 
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
@@ -37,6 +38,25 @@ export const ROUTE_FULL_PATH_QUESTION_DETAILS = `/library/{slug}/editor-v2/page/
 const errorKey = sessionNames.validationFailure.editorQuestionDetails
 
 const schema = baseSchema.concat(allSpecificSchemas)
+
+const preSchema = Joi.object()
+  .keys({
+    listItemCount: questionDetailsFullSchema.listItemCountSchema.when(
+      'questionType',
+      {
+        is: Joi.string().valid('CheckboxesField', 'RadiosField'),
+        then: Joi.when('enhancedAction', {
+          is: Joi.exist(),
+          then: Joi.number().optional(),
+          otherwise: Joi.number().min(2).messages({
+            '*': 'At least 2 items are required for a list'
+          })
+        }),
+        otherwise: Joi.number().optional()
+      }
+    )
+  })
+  .unknown(true)
 
 /**
  * @param {ResponseToolkit<{ Params: { slug: string, pageId: string, questionId: string, stateId?: string } }> | ResponseToolkit< { Payload: FormEditorInputQuestionDetails }>} h
@@ -92,6 +112,34 @@ export function getListItems(payload, state) {
       ? payload.autoCompleteOptions
       : state?.listItems
   )
+}
+
+/**
+ * @param {Request<{ Payload: FormEditorInputQuestionDetails } >} request
+ * @param {ResponseToolkit<{ Payload: FormEditorInputQuestionDetails } >} h
+ */
+export function validatePreSchema(request, h) {
+  const { params, payload, yar } = request
+  const { stateId } = /** @type {{ stateId: string }} */ (params)
+
+  const state = getQuestionSessionState(yar, stateId)
+
+  const { error } = preSchema.validate({
+    ...payload,
+    listItemCount: state?.listItems?.length ?? 0
+  })
+
+  if (error) {
+    return redirectWithErrors(
+      /** @type {Request} */ request,
+      h,
+      error,
+      errorKey,
+      '#'
+    )
+  }
+
+  return request
 }
 
 /**
@@ -239,9 +287,8 @@ export default [
 
       // Intercept operations if say a radio or checkbox
       const redirectAnchor = handleEnhancedActionOnPost(
-        yar,
+        request,
         stateId,
-        payload,
         questionDetails
       )
       if (redirectAnchor) {
@@ -281,13 +328,11 @@ export default [
         .code(StatusCodes.SEE_OTHER)
     },
     options: {
+      pre: [validatePreSchema],
       validate: {
         payload: schema,
         failAction: (request, h, error) => {
-          const removeAnchor = !Object.keys(request.payload).includes(
-            'enhancedAction'
-          )
-          return redirectWithErrors(request, h, error, errorKey, removeAnchor)
+          return redirectWithErrors(request, h, error, errorKey, '#')
         }
       },
       auth: {
@@ -303,5 +348,5 @@ export default [
 
 /**
  * @import { ComponentDef, FormDefinition, FormEditorInputQuestionDetails, Item, QuestionSessionState } from '@defra/forms-model'
- * @import { ResponseToolkit, ServerRoute } from '@hapi/hapi'
+ * @import { Request, ResponseToolkit, ServerRoute } from '@hapi/hapi'
  */
