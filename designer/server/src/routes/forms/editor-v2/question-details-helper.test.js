@@ -21,6 +21,25 @@ const mockYar = /** @type {Yar}} */ ({
   commit: jest.fn()
 })
 
+/**
+ *
+ * @param {Request['payload']} payload
+ */
+const buildMockRequest = (payload) => {
+  const req =
+    /** @type {Request<{ Payload: FormEditorInputQuestionDetails }>} */ ({
+      payload,
+      yar: mockYar
+    })
+
+  return {
+    mockRequest: req,
+    mockGet,
+    mockSet,
+    mockFlash
+  }
+}
+
 const listWithThreeItems = {
   listItems: [
     { id: '1', text: 'text1', hint: 'hint1', value: 'value1' },
@@ -165,18 +184,20 @@ describe('Editor v2 question-details route helper', () => {
   describe('handleEnhancedActionOnPost', () => {
     test('should ignore if no action', () => {
       const payload = /** @type {FormEditorInputQuestionDetails} */ ({})
-      expect(
-        handleEnhancedActionOnPost(mockYar, '123', payload, {})
-      ).toBeUndefined()
+
+      const { mockRequest } = buildMockRequest(payload)
+
+      expect(handleEnhancedActionOnPost(mockRequest, '123', {})).toBeUndefined()
     })
 
     test('should ignore if action not add-item or save-item', () => {
       const payload = /** @type {FormEditorInputQuestionDetails} */ ({
         enhancedAction: 'invalid'
       })
-      expect(
-        handleEnhancedActionOnPost(mockYar, '123', payload, {})
-      ).toBeUndefined()
+
+      const { mockRequest } = buildMockRequest(payload)
+
+      expect(handleEnhancedActionOnPost(mockRequest, '123', {})).toBeUndefined()
     })
 
     test('should throw if bad session', () => {
@@ -184,9 +205,12 @@ describe('Editor v2 question-details route helper', () => {
       const payload = /** @type {FormEditorInputQuestionDetails} */ ({
         enhancedAction: 'add-item'
       })
-      expect(() =>
-        handleEnhancedActionOnPost(mockYar, '123', payload, {})
-      ).toThrow('Invalid session contents')
+
+      const { mockRequest } = buildMockRequest(payload)
+
+      expect(() => handleEnhancedActionOnPost(mockRequest, '123', {})).toThrow(
+        'Invalid session contents'
+      )
     })
 
     test('add-item should add item', () => {
@@ -200,7 +224,9 @@ describe('Editor v2 question-details route helper', () => {
         radioValue: 'value5'
       })
 
-      expect(handleEnhancedActionOnPost(mockYar, '123', payload, {})).toBe(
+      const { mockRequest } = buildMockRequest(payload)
+
+      expect(handleEnhancedActionOnPost(mockRequest, '123', {})).toBe(
         '#add-option'
       )
       expect(mockSet).toHaveBeenCalledWith('questionSessionState-123', {
@@ -228,7 +254,9 @@ describe('Editor v2 question-details route helper', () => {
         radioValue: 'value3x'
       })
 
-      expect(handleEnhancedActionOnPost(mockYar, '123', payload, {})).toBe(
+      const { mockRequest } = buildMockRequest(payload)
+
+      expect(handleEnhancedActionOnPost(mockRequest, '123', {})).toBe(
         '#list-items'
       )
       const expectedList = [
@@ -261,7 +289,9 @@ describe('Editor v2 question-details route helper', () => {
         radioValue: 'value5'
       })
 
-      expect(handleEnhancedActionOnPost(mockYar, '123', payload, {})).toBe(
+      const { mockRequest } = buildMockRequest(payload)
+
+      expect(handleEnhancedActionOnPost(mockRequest, '123', {})).toBe(
         '#list-items'
       )
       const expectedList = [
@@ -288,10 +318,46 @@ describe('Editor v2 question-details route helper', () => {
         questionDetails: {}
       })
     })
+
+    test('save-item should error if duplicate item', () => {
+      mockGet.mockReturnValue(structuredClone(sessionWithListWithThreeItems))
+
+      const payload = /** @type {FormEditorInputQuestionDetails} */ ({
+        enhancedAction: 'save-item',
+        radioId: '5',
+        radioText: 'text3',
+        radioHint: 'hint5',
+        radioValue: 'value5'
+      })
+
+      const { mockRequest } = buildMockRequest(payload)
+
+      expect(handleEnhancedActionOnPost(mockRequest, '123', {})).toBe('#')
+      expect(mockSet).not.toHaveBeenCalled()
+      expect(mockFlash).toHaveBeenCalledWith(
+        'questionDetailsValidationFailure',
+        {
+          formErrors: {
+            radioText: {
+              href: '#radioText',
+              text: 'Item text must be unique in the list on item 4'
+            }
+          },
+          formValues: {
+            enhancedAction: 'save-item',
+            radioHint: 'hint5',
+            radioId: '5',
+            radioText: 'text3',
+            radioValue: 'value5'
+          }
+        }
+      )
+    })
   })
 })
 
 /**
  * @import { FormEditorInputQuestionDetails } from '@defra/forms-model'
+ * @import { Request } from '@hapi/hapi'
  * @import { Yar } from '@hapi/yar'
  */

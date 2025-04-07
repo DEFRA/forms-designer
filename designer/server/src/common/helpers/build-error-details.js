@@ -17,7 +17,7 @@ export function buildListErrorDetail(errors, { context, message }) {
   return {
     ...errors,
     [key]: {
-      text: message + ` on line ${linePosition}`,
+      text: `${message} on item ${linePosition}`,
       href: `#${key}`
     }
   }

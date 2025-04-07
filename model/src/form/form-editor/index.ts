@@ -107,6 +107,10 @@ export const listForQuestionSchema = Joi.string()
   .allow('')
   .description('Unique identifier for the list used by the field')
 
+export const listItemCountSchema = Joi.number()
+  .optional()
+  .description('Number of list items in the list used by the field')
+
 export const exactFilesSchema = Joi.number()
   .empty('')
   .integer()
@@ -454,6 +458,7 @@ export const questionDetailsFullSchema = {
   hintTextSchema,
   imageTypesSchema,
   listForQuestionSchema,
+  listItemCountSchema,
   maxFilesSchema,
   maxFutureSchema,
   maxLengthSchema,

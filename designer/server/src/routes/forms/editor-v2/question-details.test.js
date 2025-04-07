@@ -73,6 +73,10 @@ describe('Editor v2 question details routes', () => {
     questionType: ComponentType.AutocompleteField
   }
 
+  const simpleSessionRadiosField = {
+    questionType: ComponentType.RadiosField
+  }
+
   test('GET - should redirect if no session yet', async () => {
     jest.mocked(getQuestionSessionState).mockReturnValue(undefined)
     jest.mocked(createQuestionSessionState).mockReturnValue('newSessId')
@@ -367,36 +371,6 @@ describe('Editor v2 question details routes', () => {
     )
   })
 
-  test('POST - should error if missing mandatory fields in edit panel, and keep anchor', async () => {
-    // Note - anchors dont work properly in unit tests as they are handled by the browser
-    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
-
-    const options = {
-      method: 'post',
-      url: '/library/my-form-slug/editor-v2/page/1/question/1/details#add-option',
-      auth,
-      payload: { enhancedAction: 'add-item' }
-    }
-
-    const {
-      response: { headers, statusCode }
-    } = await renderResponse(server, options)
-
-    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
-    expect(headers.location).toBe(
-      '/library/my-form-slug/editor-v2/page/1/question/1/details'
-    )
-    expect(addErrorsToSession).toHaveBeenCalledWith(
-      expect.anything(),
-      new Joi.ValidationError(
-        '"name" is required. The question type is missing',
-        [],
-        undefined
-      ),
-      'questionDetailsValidationFailure'
-    )
-  })
-
   test('POST - should error if invalid optional fields', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
 
@@ -461,6 +435,43 @@ describe('Editor v2 question details routes', () => {
       expect.anything(),
       new Joi.ValidationError(
         'Minimum length must be less than or equal to maximum length',
+        [],
+        undefined
+      ),
+      'questionDetailsValidationFailure'
+    )
+  })
+
+  test('POST - should error if too few items on radio question', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(getQuestionSessionState)
+      .mockReturnValue(simpleSessionRadiosField)
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/1/question/1/details',
+      auth,
+      payload: {
+        name: '12345',
+        question: 'Question text',
+        shortDescription: 'Short desc',
+        questionType: 'RadiosField'
+      }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/page/1/question/1/details#'
+    )
+    expect(addErrorsToSession).toHaveBeenCalledWith(
+      expect.anything(),
+      new Joi.ValidationError(
+        'At least 2 items are required for a list',
         [],
         undefined
       ),
