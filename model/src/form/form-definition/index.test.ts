@@ -314,6 +314,11 @@ describe('Form definition schema', () => {
           {
             text: 'a string',
             value: 'string'
+          },
+          {
+            text: 'a string',
+            value: 'string',
+            hint: { text: 'a hint' }
           }
         ],
         name: 'ADxeWa',
@@ -363,7 +368,13 @@ describe('Form definition schema', () => {
           lists: [
             {
               id: expect.any(String),
-              items: [expect.objectContaining({ id: expect.any(String) })]
+              items: [
+                expect.objectContaining({ id: expect.any(String) }),
+                expect.objectContaining({
+                  id: expect.any(String),
+                  hint: { id: expect.any(String), text: 'a hint' }
+                })
+              ]
             },
             { id: expect.any(String) }
           ]

@@ -23,7 +23,7 @@ const mockYar = /** @type {Yar}} */ ({
 
 const listWithThreeItems = {
   listItems: [
-    { id: '1', text: 'text1', hint: { text: 'hint1' }, value: 'value1' },
+    { id: '1', text: 'text1', value: 'value1' },
     { id: '2', text: 'text2', hint: { text: 'hint2' }, value: 'value2' },
     { id: '3', text: 'text3', hint: { text: 'hint3' }, value: 'value3' }
   ]
@@ -111,7 +111,7 @@ describe('Editor v2 question-details route helper', () => {
       expect(mockSet).toHaveBeenCalledWith('questionSessionState-123', {
         questionType: 'RadiosField',
         listItems: [
-          { id: '1', text: 'text1', hint: { text: 'hint1' }, value: 'value1' },
+          { id: '1', text: 'text1', value: 'value1' },
           { id: '3', text: 'text3', hint: { text: 'hint3' }, value: 'value3' }
         ]
       })
@@ -133,7 +133,7 @@ describe('Editor v2 question-details route helper', () => {
           expanded: true
         },
         listItems: [
-          { hint: { text: 'hint1' }, id: '1', text: 'text1', value: 'value1' },
+          { id: '1', text: 'text1', value: 'value1' },
           { hint: { text: 'hint2' }, id: '2', text: 'text2', value: 'value2' },
           { hint: { text: 'hint3' }, id: '3', text: 'text3', value: 'value3' }
         ]
@@ -156,7 +156,7 @@ describe('Editor v2 question-details route helper', () => {
           expanded: false
         },
         listItems: [
-          { hint: { text: 'hint1' }, id: '1', text: 'text1', value: 'value1' },
+          { id: '1', text: 'text1', value: 'value1' },
           { hint: { text: 'hint2' }, id: '2', text: 'text2', value: 'value2' },
           { hint: { text: 'hint3' }, id: '3', text: 'text3', value: 'value3' }
         ]
@@ -234,7 +234,7 @@ describe('Editor v2 question-details route helper', () => {
         '#list-items'
       )
       const expectedList = [
-        { id: '1', text: 'text1', hint: { text: 'hint1' }, value: 'value1' },
+        { id: '1', text: 'text1', value: 'value1' },
         { id: '2', text: 'text2', hint: { text: 'hint2' }, value: 'value2' },
         { id: '3', text: 'text3x', hint: { text: 'hint3x' }, value: 'value3x' }
       ]
@@ -267,7 +267,7 @@ describe('Editor v2 question-details route helper', () => {
         '#list-items'
       )
       const expectedList = [
-        { id: '1', text: 'text1', hint: { text: 'hint1' }, value: 'value1' },
+        { id: '1', text: 'text1', value: 'value1' },
         { id: '2', text: 'text2', hint: { text: 'hint2' }, value: 'value2' },
         { id: '3', text: 'text3', hint: { text: 'hint3' }, value: 'value3' },
         {
