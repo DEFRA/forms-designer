@@ -3,7 +3,7 @@ import Joi from 'joi'
 import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
 
 /**
- * @param {Request | Request<{ Payload: FormEditorInputQuestionDetails; } >} request
+ * @param {Request | Request<{ Payload: FormEditorInputQuestionDetails } >} request
  * @param {Error} [error]
  * @param {ValidationSessionKey} [flashKey]
  */

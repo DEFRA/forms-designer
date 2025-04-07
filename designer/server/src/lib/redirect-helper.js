@@ -3,8 +3,8 @@ import { StatusCodes } from 'http-status-codes'
 import { addErrorsToSession } from '~/src/lib/error-helper.js'
 
 /**
- * @param {Request | Request<{ Payload: FormEditorInputQuestionDetails; } >} request
- * @param {ResponseToolkit | ResponseToolkit<{ Payload: FormEditorInputQuestionDetails; } >} h
+ * @param {Request | Request<{ Payload: FormEditorInputQuestionDetails } >} request
+ * @param {ResponseToolkit | ResponseToolkit<{ Payload: FormEditorInputQuestionDetails } >} h
  * @param {Error | undefined} error
  * @param {ValidationSessionKey} errorKey
  * @param {string} [anchor]

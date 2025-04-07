@@ -27,7 +27,7 @@ const mockYar = /** @type {Yar}} */ ({
  */
 const buildMockRequest = (payload) => {
   const req =
-    /** @type {Request<{ Payload: FormEditorInputQuestionDetails; }>} */ ({
+    /** @type {Request<{ Payload: FormEditorInputQuestionDetails }>} */ ({
       payload,
       yar: mockYar
     })

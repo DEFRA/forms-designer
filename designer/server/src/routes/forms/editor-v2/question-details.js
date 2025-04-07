@@ -115,8 +115,8 @@ export function getListItems(payload, state) {
 }
 
 /**
- * @param {Request<{ Payload: FormEditorInputQuestionDetails; } >} request
- * @param {ResponseToolkit<{ Payload: FormEditorInputQuestionDetails; } >} h
+ * @param {Request<{ Payload: FormEditorInputQuestionDetails } >} request
+ * @param {ResponseToolkit<{ Payload: FormEditorInputQuestionDetails } >} h
  */
 export function validatePreSchema(request, h) {
   const { params, payload, yar } = request

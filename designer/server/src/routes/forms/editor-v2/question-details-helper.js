@@ -80,7 +80,7 @@ export function handleEnhancedActionOnGet(yar, stateId, query) {
 }
 
 /**
- * @param {Request<{ Payload: FormEditorInputQuestionDetails; }>} request
+ * @param {Request<{ Payload: FormEditorInputQuestionDetails }>} request
  * @param {string} stateId
  * @param {Partial<ComponentDef>} questionDetails
  * @returns { string | undefined }
