@@ -64,7 +64,6 @@ describe('index', () => {
           'Polish:pl-PL\r\n' +
           'Ukrainian:uk-UA'
       )
-      expect(error).toBeUndefined()
       expect(value).toEqual([
         { text: 'English', value: 'en-gb' },
         { text: 'French', value: 'fr-FR' },
@@ -73,6 +72,7 @@ describe('index', () => {
         { text: 'Polish', value: 'pl-PL' },
         { text: 'Ukrainian', value: 'uk-UA' }
       ])
+      expect(error).toBeUndefined()
     })
 
     it('should fill in empty values', () => {

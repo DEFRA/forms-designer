@@ -1,8 +1,38 @@
 /**
+ * @param {ErrorDetails} errors
+ * @param {ValidationErrorItem} errorItem
+ */
+export function buildListErrorDetail(errors, { context, message }) {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const position = /** @type {string|undefined} */ (context?.pos)
+  const matchString = `[${position}]`
+
+  if (position === undefined || !context?.label?.includes(matchString)) {
+    return errors
+  }
+
+  const key = context.label.replace(`[${position}]`, '')
+  const linePosition = parseInt(position) + 1
+
+  return {
+    ...errors,
+    [key]: {
+      text: message + ` on line ${linePosition}`,
+      href: `#${key}`
+    }
+  }
+}
+
+/**
  * @param {ValidationError} error
  */
 export function buildErrorDetails(error) {
-  return error.details.reduce((errors, { context, message }) => {
+  return error.details.reduce((errors, validationErrorItem) => {
+    const { context, message } = validationErrorItem
+    if (context?.pos !== undefined) {
+      return buildListErrorDetail(errors, validationErrorItem)
+    }
+
     if (!context?.key) {
       return errors
     }
@@ -42,6 +72,6 @@ export function buildErrorList(errorDetails, names) {
 }
 
 /**
- * @import { ValidationError } from 'joi'
+ * @import { ValidationError, ValidationErrorItem } from 'joi'
  * @import { ErrorDetails, ErrorDetailsItem } from '~/src/common/helpers/types.js'
  */
