@@ -312,12 +312,13 @@ describe('Form definition schema', () => {
       const list: List = {
         items: [
           {
-            text: 'a string',
-            value: 'string'
+            id: 'a9dd35af-187e-4027-b8b1-e58a4aab3a82',
+            text: 'Item 1',
+            value: 'item-1'
           },
           {
-            text: 'a string',
-            value: 'string',
+            text: 'Item 2',
+            value: 'item-2',
             hint: { text: 'a hint' }
           }
         ],
