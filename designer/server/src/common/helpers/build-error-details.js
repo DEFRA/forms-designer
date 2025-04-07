@@ -1,3 +1,5 @@
+const omitLineNumberForField = ['radioText']
+
 /**
  * @param {ErrorDetails} errors
  * @param {ValidationErrorItem} errorItem
@@ -17,7 +19,9 @@ export function buildListErrorDetail(errors, { context, message }) {
   return {
     ...errors,
     [key]: {
-      text: message + ` on line ${linePosition}`,
+      text: omitLineNumberForField.includes(key)
+        ? message
+        : message + ` on line ${linePosition}`,
       href: `#${key}`
     }
   }
