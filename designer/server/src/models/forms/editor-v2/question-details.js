@@ -193,6 +193,14 @@ export function getRowNumBeingEdited(state) {
 }
 
 /**
+ * @param { QuestionSessionState | undefined } state
+ */
+export function getNumOfListItems(state) {
+  const listItems = state?.listItems ?? []
+  return listItems.length
+}
+
+/**
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  * @param {string} pageId
@@ -245,9 +253,11 @@ export function questionDetailsViewModel(
   const errorList = buildErrorList(validation?.formErrors)
   const previewPageUrl = `${buildPreviewUrl(metadata.slug)}${pagePath}?force`
   const rowNumBeingEdited = getRowNumBeingEdited(state)
+  const listItemCount = getNumOfListItems(state)
 
   return {
     rowNumBeingEdited,
+    listItemCount,
     state,
     enhancedFields: enhancedFieldList,
     ...baseModelFields(metadata.slug, pageTitle),

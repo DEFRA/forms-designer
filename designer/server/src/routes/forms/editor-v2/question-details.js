@@ -284,10 +284,7 @@ export default [
       validate: {
         payload: schema,
         failAction: (request, h, error) => {
-          const removeAnchor = !Object.keys(request.payload).includes(
-            'enhancedAction'
-          )
-          return redirectWithErrors(request, h, error, errorKey, removeAnchor)
+          return redirectWithErrors(request, h, error, errorKey, '#')
         }
       },
       auth: {

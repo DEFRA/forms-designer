@@ -1,11 +1,34 @@
 import { randomUUID } from 'crypto'
 
+import { sessionNames } from '~/src/common/constants/session-names.js'
 import {
   getQuestionSessionState,
   setQuestionSessionState
 } from '~/src/lib/session-helper.js'
 
 const radiosSectionListItemsAnchor = '#list-items'
+const errorKey = sessionNames.validationFailure.editorQuestionDetails
+
+/**
+ * @param {Yar} yar
+ * @param {string} flashKey
+ * @param {string} fieldName
+ * @param {string} message
+ * @param {FormEditorInputQuestionDetails} payload
+ */
+export function addError(yar, flashKey, fieldName, message, payload) {
+  const error = {
+    [fieldName]: {
+      text: message,
+      href: `#${fieldName}`
+    }
+  }
+
+  yar.flash(flashKey, {
+    formErrors: error,
+    formValues: payload
+  })
+}
 
 /**
  * @param { { id?: string, text?: string, hint?: string, value?: string } | undefined } itemForEdit
@@ -117,6 +140,19 @@ export function handleEnhancedActionOnPost(
       foundRow.value = payload.radioValue
     } else {
       // Insert
+      const failsUniqueness = state.listItems?.some(
+        (item) => item.text === payload.radioText
+      )
+      if (failsUniqueness) {
+        addError(
+          yar,
+          errorKey,
+          'radioText',
+          'Item text must be unique in the list',
+          payload
+        )
+        return '#add-option'
+      }
       state.listItems?.push({
         text: payload.radioText,
         hint: payload.radioHint,
