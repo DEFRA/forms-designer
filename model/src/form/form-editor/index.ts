@@ -440,7 +440,7 @@ export const autoCompleteOptionsSchema = customValidator
     })
   )
   .min(1)
-  .unique('name')
+  .unique('text')
   .unique('value', { ignoreUndefined: true })
   .required()
 
