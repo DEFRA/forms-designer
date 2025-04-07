@@ -3,8 +3,8 @@ import { StatusCodes } from 'http-status-codes'
 import { addErrorsToSession } from '~/src/lib/error-helper.js'
 
 /**
- * @param {Request} request
- * @param {ResponseToolkit} h
+ * @param {Request | Request<{ Payload: FormEditorInputQuestionDetails; } >} request
+ * @param {ResponseToolkit | ResponseToolkit<{ Payload: FormEditorInputQuestionDetails; } >} h
  * @param {Error | undefined} error
  * @param {ValidationSessionKey} errorKey
  * @param {string} [anchor]
@@ -19,6 +19,7 @@ export function redirectWithErrors(request, h, error, errorKey, anchor = '') {
 }
 
 /**
+ * @import { FormEditorInputQuestionDetails } from '@defra/forms-model'
  * @import { Request, ResponseToolkit } from '@hapi/hapi'
  * @import { ValidationSessionKey } from '@hapi/yar'
  */

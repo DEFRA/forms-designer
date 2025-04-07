@@ -3,7 +3,7 @@ import Joi from 'joi'
 import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
 
 /**
- * @param {Request} request
+ * @param {Request | Request<{ Payload: FormEditorInputQuestionDetails; } >} request
  * @param {Error} [error]
  * @param {ValidationSessionKey} [flashKey]
  */
@@ -34,7 +34,7 @@ export function getValidationErrorsFromSession(yar, errorKey) {
 }
 
 /**
- * @import { FormEditor } from '@defra/forms-model'
+ * @import { FormEditor, FormEditorInputQuestionDetails } from '@defra/forms-model'
  * @import { Request } from '@hapi/hapi'
  * @import { ValidationSessionKey, Yar } from '@hapi/yar'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'

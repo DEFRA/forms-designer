@@ -187,11 +187,9 @@ export function getListDetails(state, questionFields) {
   const listItems = state?.listItems ?? []
   const foundIdx = listItems.findIndex((x) => x.id === state?.editRow?.radioId)
   const rowNum = foundIdx > -1 ? foundIdx + 1 : listItems.length + 1
-  const numRows = listItems.length
   const listName = 'list' in questionFields ? questionFields.list : ''
   return {
     rowNumBeingEdited: rowNum,
-    listItemCount: numRows,
     list: listName
   }
 }

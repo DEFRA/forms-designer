@@ -45,20 +45,6 @@ export const baseSchema = Joi.object().keys({
     '*': 'The question type is missing'
   }),
   list: questionDetailsFullSchema.listForQuestionSchema,
-  listItemCount: questionDetailsFullSchema.listItemCountSchema.when(
-    'questionType',
-    {
-      is: Joi.string().valid('CheckboxesField', 'RadiosField'),
-      then: Joi.when('enhancedAction', {
-        is: Joi.exist(),
-        then: Joi.number().optional(),
-        otherwise: Joi.number().min(2).messages({
-          '*': 'At least 2 items are required for a list'
-        })
-      }),
-      otherwise: Joi.number().optional()
-    }
-  ),
   fileTypes: questionDetailsFullSchema.fileTypesSchema.when('questionType', {
     is: 'FileUploadField',
     then: Joi.required().messages({

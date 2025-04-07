@@ -471,8 +471,7 @@ describe('editor-v2 - question details model', () => {
         getListDetails(undefined, /** @type {ComponentDef} */ ({}))
       ).toEqual({
         list: '',
-        rowNumBeingEdited: 1,
-        listItemCount: 0
+        rowNumBeingEdited: 1
       })
     })
 
@@ -492,7 +491,6 @@ describe('editor-v2 - question details model', () => {
         )
       ).toEqual({
         list: 'listname',
-        listItemCount: 3,
         rowNumBeingEdited: 4
       })
     })
@@ -514,7 +512,6 @@ describe('editor-v2 - question details model', () => {
         )
       ).toEqual({
         list: 'listname',
-        listItemCount: 4,
         rowNumBeingEdited: 2
       })
     })

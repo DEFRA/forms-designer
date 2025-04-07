@@ -456,8 +456,7 @@ describe('Editor v2 question details routes', () => {
         name: '12345',
         question: 'Question text',
         shortDescription: 'Short desc',
-        questionType: 'RadiosField',
-        listItemCount: 1
+        questionType: 'RadiosField'
       }
     }
 
