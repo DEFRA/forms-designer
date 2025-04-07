@@ -26,7 +26,7 @@ describe('build error details', () => {
       )
       expect(buildErrorDetails(error)).toEqual({
         autoCompleteOptions: {
-          text: 'Enter options separated by a colon on line 1',
+          text: 'Enter options separated by a colon on item 1',
           href: '#autoCompleteOptions'
         }
       })
@@ -77,7 +77,7 @@ describe('build error details', () => {
       )
       expect(buildErrorDetails(error)).toEqual({
         autoCompleteOptions: {
-          text: 'Enter options separated by a colon on line 2',
+          text: 'Enter options separated by a colon on item 2',
           href: '#autoCompleteOptions'
         }
       })

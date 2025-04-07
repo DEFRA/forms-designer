@@ -115,7 +115,12 @@ export function handleEnhancedActionOnPost(request, stateId, questionDetails) {
     return '#add-option'
   }
   if (enhancedAction === 'save-item') {
-    const foundRow = state.listItems?.find((x) => x.id === payload.radioId)
+    const listItemsSnapshot =
+      state.listItems?.map((x) => {
+        return { ...x }
+      }) ?? []
+
+    const foundRow = listItemsSnapshot.find((x) => x.id === payload.radioId)
     if (foundRow) {
       // Update
       foundRow.text = payload.radioText
@@ -123,28 +128,28 @@ export function handleEnhancedActionOnPost(request, stateId, questionDetails) {
       foundRow.value = payload.radioValue
     } else {
       // Insert
-      const fullItemTexts = (state.listItems?.map((x) => x.text) ?? []).concat(
-        payload.radioText
-      )
-      // Check for uniqueness
-      const { error } = listUniquenessSchema.validate({
-        radioText: fullItemTexts
-      })
-      if (error) {
-        addErrorsToSession(request, error, errorKey)
-        return '#'
-      }
-      state.listItems?.push({
+      listItemsSnapshot.push({
         text: payload.radioText,
         hint: payload.radioHint,
         value: payload.radioValue,
         id: randomUUID()
       })
     }
+    const fullItemTexts = listItemsSnapshot.map((x) => x.text)
+
+    // Check for uniqueness
+    const { error } = listUniquenessSchema.validate({
+      radioText: fullItemTexts
+    })
+    if (error) {
+      addErrorsToSession(request, error, errorKey)
+      return '#'
+    }
 
     setQuestionSessionState(yar, stateId, {
       ...state,
-      editRow: setEditRowState(undefined, false)
+      editRow: setEditRowState(undefined, false),
+      listItems: listItemsSnapshot
     })
     return radiosSectionListItemsAnchor
   }

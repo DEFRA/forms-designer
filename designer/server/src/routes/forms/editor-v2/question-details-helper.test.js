@@ -21,10 +21,24 @@ const mockYar = /** @type {Yar}} */ ({
   commit: jest.fn()
 })
 
-const mockRequest = /** @type {Request} */ ({
-  yar: mockYar,
-  payload: {}
-})
+/**
+ *
+ * @param {Request['payload']} payload
+ */
+const buildMockRequest = (payload) => {
+  const req =
+    /** @type {Request<{ Payload: FormEditorInputQuestionDetails; }>} */ ({
+      payload,
+      yar: mockYar
+    })
+
+  return {
+    mockRequest: req,
+    mockGet,
+    mockSet,
+    mockFlash
+  }
+}
 
 const listWithThreeItems = {
   listItems: [
@@ -171,15 +185,9 @@ describe('Editor v2 question-details route helper', () => {
     test('should ignore if no action', () => {
       const payload = /** @type {FormEditorInputQuestionDetails} */ ({})
 
-      const mockRequestForTest = {
-        ...mockRequest,
-        payload
-      }
+      const { mockRequest } = buildMockRequest(payload)
 
-      expect(
-        // @ts-expect-error - Request fails type match
-        handleEnhancedActionOnPost(mockRequestForTest, '123', {})
-      ).toBeUndefined()
+      expect(handleEnhancedActionOnPost(mockRequest, '123', {})).toBeUndefined()
     })
 
     test('should ignore if action not add-item or save-item', () => {
@@ -187,15 +195,9 @@ describe('Editor v2 question-details route helper', () => {
         enhancedAction: 'invalid'
       })
 
-      const mockRequestForTest = {
-        ...mockRequest,
-        payload
-      }
+      const { mockRequest } = buildMockRequest(payload)
 
-      expect(
-        // @ts-expect-error - Request fails type match
-        handleEnhancedActionOnPost(mockRequestForTest, '123', {})
-      ).toBeUndefined()
+      expect(handleEnhancedActionOnPost(mockRequest, '123', {})).toBeUndefined()
     })
 
     test('should throw if bad session', () => {
@@ -204,15 +206,11 @@ describe('Editor v2 question-details route helper', () => {
         enhancedAction: 'add-item'
       })
 
-      const mockRequestForTest = {
-        ...mockRequest,
-        payload
-      }
+      const { mockRequest } = buildMockRequest(payload)
 
-      expect(() =>
-        // @ts-expect-error - Request fails type match
-        handleEnhancedActionOnPost(mockRequestForTest, '123', {})
-      ).toThrow('Invalid session contents')
+      expect(() => handleEnhancedActionOnPost(mockRequest, '123', {})).toThrow(
+        'Invalid session contents'
+      )
     })
 
     test('add-item should add item', () => {
@@ -226,13 +224,9 @@ describe('Editor v2 question-details route helper', () => {
         radioValue: 'value5'
       })
 
-      const mockRequestForTest = {
-        ...mockRequest,
-        payload
-      }
+      const { mockRequest } = buildMockRequest(payload)
 
-      // @ts-expect-error - Request fails type match
-      expect(handleEnhancedActionOnPost(mockRequestForTest, '123', {})).toBe(
+      expect(handleEnhancedActionOnPost(mockRequest, '123', {})).toBe(
         '#add-option'
       )
       expect(mockSet).toHaveBeenCalledWith('questionSessionState-123', {
@@ -260,13 +254,9 @@ describe('Editor v2 question-details route helper', () => {
         radioValue: 'value3x'
       })
 
-      const mockRequestForTest = {
-        ...mockRequest,
-        payload
-      }
+      const { mockRequest } = buildMockRequest(payload)
 
-      // @ts-expect-error - Request fails type match
-      expect(handleEnhancedActionOnPost(mockRequestForTest, '123', {})).toBe(
+      expect(handleEnhancedActionOnPost(mockRequest, '123', {})).toBe(
         '#list-items'
       )
       const expectedList = [
@@ -299,13 +289,9 @@ describe('Editor v2 question-details route helper', () => {
         radioValue: 'value5'
       })
 
-      const mockRequestForTest = {
-        ...mockRequest,
-        payload
-      }
+      const { mockRequest } = buildMockRequest(payload)
 
-      // @ts-expect-error - Request fails type match
-      expect(handleEnhancedActionOnPost(mockRequestForTest, '123', {})).toBe(
+      expect(handleEnhancedActionOnPost(mockRequest, '123', {})).toBe(
         '#list-items'
       )
       const expectedList = [
@@ -344,15 +330,9 @@ describe('Editor v2 question-details route helper', () => {
         radioValue: 'value5'
       })
 
-      const mockRequestForTest = {
-        ...mockRequest,
-        payload
-      }
+      const { mockRequest } = buildMockRequest(payload)
 
-      // @ts-expect-error - Request fails type match
-      expect(handleEnhancedActionOnPost(mockRequestForTest, '123', {})).toBe(
-        '#'
-      )
+      expect(handleEnhancedActionOnPost(mockRequest, '123', {})).toBe('#')
       expect(mockSet).not.toHaveBeenCalled()
       expect(mockFlash).toHaveBeenCalledWith(
         'questionDetailsValidationFailure',
@@ -360,7 +340,7 @@ describe('Editor v2 question-details route helper', () => {
           formErrors: {
             radioText: {
               href: '#radioText',
-              text: 'Item text must be unique in the list'
+              text: 'Item text must be unique in the list on item 4'
             }
           },
           formValues: {
