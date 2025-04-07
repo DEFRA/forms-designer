@@ -287,9 +287,8 @@ export default [
 
       // Intercept operations if say a radio or checkbox
       const redirectAnchor = handleEnhancedActionOnPost(
-        yar,
+        request,
         stateId,
-        payload,
         questionDetails
       )
       if (redirectAnchor) {

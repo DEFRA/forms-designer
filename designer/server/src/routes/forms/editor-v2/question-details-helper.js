@@ -1,6 +1,9 @@
 import { randomUUID } from 'crypto'
 
+import Joi from 'joi'
+
 import { sessionNames } from '~/src/common/constants/session-names.js'
+import { addErrorsToSession } from '~/src/lib/error-helper.js'
 import {
   getQuestionSessionState,
   setQuestionSessionState
@@ -9,26 +12,11 @@ import {
 const radiosSectionListItemsAnchor = '#list-items'
 const errorKey = sessionNames.validationFailure.editorQuestionDetails
 
-/**
- * @param {Yar} yar
- * @param {string} flashKey
- * @param {string} fieldName
- * @param {string} message
- * @param {FormEditorInputQuestionDetails} payload
- */
-export function addError(yar, flashKey, fieldName, message, payload) {
-  const error = {
-    [fieldName]: {
-      text: message,
-      href: `#${fieldName}`
-    }
-  }
-
-  yar.flash(flashKey, {
-    formErrors: error,
-    formValues: payload
+const listUniquenessSchema = Joi.object({
+  radioText: Joi.array().unique('text').messages({
+    'array.unique': 'Item text must be unique in the list'
   })
-}
+})
 
 /**
  * @param { { id?: string, text?: string, hint?: string, value?: string } | undefined } itemForEdit
@@ -92,18 +80,13 @@ export function handleEnhancedActionOnGet(yar, stateId, query) {
 }
 
 /**
- * @param {Yar} yar
+ * @param {Request<{ Payload: FormEditorInputQuestionDetails; }>} request
  * @param {string} stateId
- * @param {FormEditorInputQuestionDetails} payload
  * @param {Partial<ComponentDef>} questionDetails
  * @returns { string | undefined }
  */
-export function handleEnhancedActionOnPost(
-  yar,
-  stateId,
-  payload,
-  questionDetails
-) {
+export function handleEnhancedActionOnPost(request, stateId, questionDetails) {
+  const { yar, payload } = request
   const { enhancedAction } = payload
 
   if (!enhancedAction) {
@@ -140,18 +123,16 @@ export function handleEnhancedActionOnPost(
       foundRow.value = payload.radioValue
     } else {
       // Insert
-      const failsUniqueness = state.listItems?.some(
-        (item) => item.text === payload.radioText
+      const fullItemTexts = (state.listItems?.map((x) => x.text) ?? []).concat(
+        payload.radioText
       )
-      if (failsUniqueness) {
-        addError(
-          yar,
-          errorKey,
-          'radioText',
-          'Item text must be unique in the list',
-          payload
-        )
-        return '#add-option'
+      // Check for uniqueness
+      const { error } = listUniquenessSchema.validate({
+        radioText: fullItemTexts
+      })
+      if (error) {
+        addErrorsToSession(request, error, errorKey)
+        return '#'
       }
       state.listItems?.push({
         text: payload.radioText,
@@ -172,6 +153,6 @@ export function handleEnhancedActionOnPost(
 
 /**
  * @import { ComponentDef,  FormEditorInputQuestionDetails, QuestionSessionState, FormDefinition, ListComponentsDef } from '@defra/forms-model'
- * @import { RequestQuery } from '@hapi/hapi'
+ * @import { Request, RequestQuery } from '@hapi/hapi'
  * @import { Yar } from '@hapi/yar'
  */
