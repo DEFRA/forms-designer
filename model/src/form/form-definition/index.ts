@@ -483,9 +483,14 @@ const baseListItemSchema = Joi.object<Item>()
       .allow('')
       .optional()
       .description('Condition that determines if this item is shown'),
-    hint: Joi.string()
-      .allow('')
+    hint: Joi.object<Item['hint']>()
       .optional()
+      .keys({
+        id: Joi.string()
+          .uuid()
+          .default(() => uuidV4()),
+        text: Joi.string()
+      })
       .description('Optional hint text to be shown on list item')
   })
 

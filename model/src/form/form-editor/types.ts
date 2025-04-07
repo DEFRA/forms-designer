@@ -302,7 +302,12 @@ export interface QuestionSessionState {
     radioValue?: string
     expanded?: boolean
   }
-  listItems?: { text?: string; hint?: string; value?: string; id?: string }[]
+  listItems?: {
+    text?: string
+    hint?: { id?: string; text: string }
+    value?: string
+    id?: string
+  }[]
 }
 
 export interface GovukField {
