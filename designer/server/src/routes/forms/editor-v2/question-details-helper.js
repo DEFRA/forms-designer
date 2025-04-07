@@ -13,7 +13,7 @@ const radiosSectionListItemsAnchor = '#list-items'
 const errorKey = sessionNames.validationFailure.editorQuestionDetails
 
 const listUniquenessSchema = Joi.object({
-  radioText: Joi.array().unique().messages({
+  radioText: Joi.array().items(Joi.string()).unique().messages({
     'array.unique': 'Item text must be unique in the list'
   })
 })
