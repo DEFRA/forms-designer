@@ -5,14 +5,14 @@ import { sessionNames } from '~/src/common/constants/session-names.js'
 
 const boomMappings = [
   {
-    errorCode: 4091,
+    errorCode: 409,
     errorStartsWith: 'Duplicate page path',
     errorKey: sessionNames.validationFailure.editorQuestions,
     fieldName: 'pageHeading',
     userMessage: 'This page title already exists - use a unique page title'
   },
   {
-    errorCode: 4091,
+    errorCode: 409,
     errorStartsWith: 'Duplicate page path',
     errorKey: sessionNames.validationFailure.editorQuestionDetails,
     fieldName: 'question',
