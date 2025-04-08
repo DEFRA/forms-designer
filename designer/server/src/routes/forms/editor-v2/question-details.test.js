@@ -30,6 +30,7 @@ import {
   createQuestionSessionState,
   getQuestionSessionState
 } from '~/src/lib/session-helper.js'
+import { handleEnhancedActionOnGet } from '~/src/routes/forms/editor-v2/question-details-helper.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
@@ -344,6 +345,29 @@ describe('Editor v2 question details routes', () => {
     )
     expect(/** @type {HTMLInputElement} */ (autoCompleteField).value).toMatch(
       'Northern Ireland:northern-ireland'
+    )
+  })
+
+  test('GET - should redirect if enhanced action supplied', async () => {
+    jest.mocked(getQuestionSessionState).mockReturnValue(simpleSessionTextField)
+    jest
+      .mocked(buildQuestionSessionState)
+      .mockReturnValue(simpleSessionRadiosField)
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest.mocked(handleEnhancedActionOnGet).mockReturnValueOnce('#new-anchor')
+    const options = {
+      method: 'get',
+      url: '/library/my-form-slug/editor-v2/page/new/question/new/details/newSessId?action=delete&id=123',
+      auth
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/page/new/question/new/details/newSessId#new-anchor'
     )
   })
 

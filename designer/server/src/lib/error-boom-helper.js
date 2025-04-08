@@ -35,7 +35,7 @@ export function createJoiError(fieldName, message) {
 }
 
 /**
- * @param {Boom.Boom} boomError
+ * @param {Boom.Boom<{ message: string, statusCode: number }>} boomError
  * @param {ValidationSessionKey} errorKey
  * @param {string} [fieldName]
  */
@@ -44,7 +44,9 @@ export function checkBoomError(boomError, errorKey, fieldName = 'general') {
     return undefined
   }
 
-  const boomMessage = boomError.data?.message ?? 'An error occurred'
+  const boomMessage = /** @type {string} */ (
+    boomError.data?.message ?? 'An error occurred'
+  )
 
   const error = boomMappings.filter(
     (x) =>
