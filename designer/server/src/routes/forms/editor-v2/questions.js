@@ -3,19 +3,16 @@ import {
   pageHeadingAndGuidanceSchema,
   pageHeadingSchema
 } from '@defra/forms-model'
-import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { setPageHeadingAndGuidance } from '~/src/lib/editor.js'
+import { checkBoomError, pageBoomSchema } from '~/src/lib/error-boom-helper.js'
 import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
-import {
-  redirectWithBoomError,
-  redirectWithErrors
-} from '~/src/lib/redirect-helper.js'
+import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import { CHANGES_SAVED_SUCCESSFULLY } from '~/src/models/forms/editor-v2/common.js'
 import * as viewModel from '~/src/models/forms/editor-v2/questions.js'
 import { editorv2Path } from '~/src/models/links.js'
@@ -118,8 +115,12 @@ export default [
           .redirect(editorv2Path(slug, `page/${pageId}/questions`))
           .code(StatusCodes.SEE_OTHER)
       } catch (err) {
-        if (Boom.isBoom(err) && err.data?.statusCode === 409) {
-          return redirectWithBoomError(request, h, err, errorKey, 'pageHeading')
+        const error = checkBoomError(
+          /** @type {Boom.Boom} */ (err),
+          pageBoomSchema
+        )
+        if (error) {
+          return redirectWithErrors(request, h, error, errorKey, '#')
         }
         throw err
       }
@@ -144,5 +145,6 @@ export default [
 
 /**
  * @import { FormEditorInputPageSettings } from '@defra/forms-model'
- * @import { ReqRefDefaults, Request, ServerRoute } from '@hapi/hapi'
+ * @import Boom from '@hapi/boom'
+ * @import { ServerRoute } from '@hapi/hapi'
  */

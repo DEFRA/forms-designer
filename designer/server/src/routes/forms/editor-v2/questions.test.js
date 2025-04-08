@@ -22,6 +22,7 @@ jest.mock('~/src/lib/forms.js')
  * @param {string} message
  */
 function buildBoom409(message) {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return Boom.boomify(new Error(message), {
     statusCode: 409,
     data: { message, statusCode: 409 }
