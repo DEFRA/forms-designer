@@ -32,7 +32,7 @@ export const baseOptions = {
 }
 
 /**
- * @param {string} message
+ * @param { string | undefined } message
  */
 export function buildBoom409(message) {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
