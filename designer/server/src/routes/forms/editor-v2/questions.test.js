@@ -7,6 +7,7 @@ import {
 } from '~/src/__stubs__/form-definition.js'
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
 import { createServer } from '~/src/createServer.js'
+import { buildBoom409 } from '~/src/lib/__stubs__/editor.js'
 import { setPageHeadingAndGuidance } from '~/src/lib/editor.js'
 import { addErrorsToSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
@@ -123,6 +124,98 @@ describe('Editor v2 questions routes', () => {
       new Joi.ValidationError('Enter a page heading', [], undefined),
       'questionsValidationFailure'
     )
+  })
+
+  test('POST - should handle boom error if boom received from API call', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest.mocked(setPageHeadingAndGuidance).mockImplementationOnce(() => {
+      throw buildBoom409('Duplicate page path')
+    })
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/1/questions',
+      auth,
+      payload: {
+        pageHeadingAndGuidance: 'true',
+        pageHeading: 'New page heading',
+        guidanceText: 'New guidance text'
+      }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/page/1/questions#'
+    )
+    expect(addErrorsToSession).toHaveBeenCalledWith(
+      expect.anything(),
+      new Joi.ValidationError(
+        'This page title already exists - use a unique page title',
+        [],
+        undefined
+      ),
+      'questionsValidationFailure'
+    )
+  })
+
+  test('POST - should handle boom error if boom received from API call but not in error message mappings', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest.mocked(setPageHeadingAndGuidance).mockImplementationOnce(() => {
+      throw buildBoom409('Some other error boom message')
+    })
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/1/questions',
+      auth,
+      payload: {
+        pageHeadingAndGuidance: 'true',
+        pageHeading: 'New page heading',
+        guidanceText: 'New guidance text'
+      }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/page/1/questions#'
+    )
+    expect(addErrorsToSession).toHaveBeenCalledWith(
+      expect.anything(),
+      new Joi.ValidationError('Some other error boom message', [], undefined),
+      'questionsValidationFailure'
+    )
+  })
+
+  test('POST - should throw if not boom 409 from API', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest.mocked(setPageHeadingAndGuidance).mockImplementationOnce(() => {
+      throw new Error('Some other API error')
+    })
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/1/questions',
+      auth,
+      payload: {
+        pageHeadingAndGuidance: 'true',
+        pageHeading: 'New page heading',
+        guidanceText: 'New guidance text'
+      }
+    }
+
+    const {
+      response: { statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.INTERNAL_SERVER_ERROR)
   })
 
   test('POST - should save and redirect to same page if valid payload', async () => {

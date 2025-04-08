@@ -1,3 +1,5 @@
+import Boom from '@hapi/boom'
+
 import config from '~/src/config.js'
 import { delJson, patchJson, postJson, putJson } from '~/src/lib/fetch.js'
 
@@ -27,6 +29,18 @@ export const formsEndpoint = new URL('/forms/', config.managerUrl)
 export const token = 'someToken'
 export const baseOptions = {
   headers: { Authorization: `Bearer ${token}` }
+}
+
+/**
+ * @param { string | undefined } message
+ */
+export function buildBoom409(message) {
+  return /** @type {Boom.Boom<{ message: string, statusCode: number }>}} */ (
+    Boom.boomify(new Error(message), {
+      statusCode: 409,
+      data: { message, statusCode: 409 }
+    })
+  )
 }
 
 /**

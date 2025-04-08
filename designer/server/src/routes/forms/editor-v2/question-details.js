@@ -9,6 +9,7 @@ import {
   addQuestion,
   updateQuestion
 } from '~/src/lib/editor.js'
+import { checkBoomError } from '~/src/lib/error-boom-helper.js'
 import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { buildListFromDetails, upsertList } from '~/src/lib/list.js'
@@ -308,24 +309,32 @@ export default [
 
       const state = getQuestionSessionState(yar, stateId)
 
-      const finalPageId = await saveQuestion(
-        metadata.id,
-        token,
-        definition,
-        pageId,
-        questionId,
-        questionDetails,
-        getListItems(payload, state)
-      )
+      try {
+        const finalPageId = await saveQuestion(
+          metadata.id,
+          token,
+          definition,
+          pageId,
+          questionId,
+          questionDetails,
+          getListItems(payload, state)
+        )
 
-      yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
+        yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
 
-      clearQuestionSessionState(yar, stateId)
+        clearQuestionSessionState(yar, stateId)
 
-      // Redirect to next page
-      return h
-        .redirect(editorv2Path(slug, `page/${finalPageId}/questions`))
-        .code(StatusCodes.SEE_OTHER)
+        // Redirect to next page
+        return h
+          .redirect(editorv2Path(slug, `page/${finalPageId}/questions`))
+          .code(StatusCodes.SEE_OTHER)
+      } catch (err) {
+        const error = checkBoomError(/** @type {Boom.Boom} */ (err), errorKey)
+        if (error) {
+          return redirectWithErrors(request, h, error, errorKey, '#')
+        }
+        throw err
+      }
     },
     options: {
       pre: [validatePreSchema],
@@ -348,5 +357,6 @@ export default [
 
 /**
  * @import { ComponentDef, FormDefinition, FormEditorInputQuestionDetails, Item, QuestionSessionState } from '@defra/forms-model'
+ * @import Boom from '@hapi/boom'
  * @import { Request, ResponseToolkit, ServerRoute } from '@hapi/hapi'
  */

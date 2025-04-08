@@ -9,6 +9,7 @@ import Joi from 'joi'
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { setPageHeadingAndGuidance } from '~/src/lib/editor.js'
+import { checkBoomError } from '~/src/lib/error-boom-helper.js'
 import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
@@ -98,20 +99,28 @@ export default [
       const metadata = await forms.get(slug, token)
       const definition = await forms.getDraftFormDefinition(metadata.id, token)
 
-      await setPageHeadingAndGuidance(
-        metadata.id,
-        token,
-        pageId,
-        definition,
-        payload
-      )
+      try {
+        await setPageHeadingAndGuidance(
+          metadata.id,
+          token,
+          pageId,
+          definition,
+          payload
+        )
 
-      yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
+        yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
 
-      // Redirect to same page
-      return h
-        .redirect(editorv2Path(slug, `page/${pageId}/questions`))
-        .code(StatusCodes.SEE_OTHER)
+        // Redirect to same page
+        return h
+          .redirect(editorv2Path(slug, `page/${pageId}/questions`))
+          .code(StatusCodes.SEE_OTHER)
+      } catch (err) {
+        const error = checkBoomError(/** @type {Boom.Boom} */ (err), errorKey)
+        if (error) {
+          return redirectWithErrors(request, h, error, errorKey, '#')
+        }
+        throw err
+      }
     },
     options: {
       validate: {
@@ -133,5 +142,6 @@ export default [
 
 /**
  * @import { FormEditorInputPageSettings } from '@defra/forms-model'
+ * @import Boom from '@hapi/boom'
  * @import { ServerRoute } from '@hapi/hapi'
  */
