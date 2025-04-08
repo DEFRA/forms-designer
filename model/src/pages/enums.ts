@@ -13,9 +13,3 @@ export enum ControllerType {
   Summary = 'SummaryPageController',
   Status = 'StatusPageController'
 }
-
-export enum ApiErrorFunctionCode {
-  General = 'General',
-  DuplicatePagePathPage = 'DuplicatePagePathPage',
-  DuplicatePagePathQuestion = 'DuplicatePagePathQuestion'
-}
