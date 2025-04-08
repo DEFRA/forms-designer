@@ -35,11 +35,12 @@ export const baseOptions = {
  * @param { string | undefined } message
  */
 export function buildBoom409(message) {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  return Boom.boomify(new Error(message), {
-    statusCode: 409,
-    data: { message, statusCode: 409 }
-  })
+  return /** @type {Boom.Boom<{ message: string, statusCode: number }>}} */ (
+    Boom.boomify(new Error(message), {
+      statusCode: 409,
+      data: { message, statusCode: 409 }
+    })
+  )
 }
 
 /**
