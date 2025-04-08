@@ -1,79 +1,64 @@
 import Boom from '@hapi/boom'
 import Joi from 'joi'
 
-const baseBoomSchema = Joi.object({
-  boomMessage: Joi.string().optional()
-})
+import { sessionNames } from '~/src/common/constants/session-names.js'
 
-export const pageBoomSchema = Joi.object({
-  pageHeading: Joi.string()
-    .when('boomMessage', {
-      is: Joi.string().pattern(/^Duplicate page path/),
-      then: Joi.forbidden(),
-      otherwise: Joi.string().optional()
-    })
-    .messages({
-      '*': 'This page title already exists - use a unique page title'
-    })
-})
-
-export const questionsBoomSchema = Joi.object({
-  question: Joi.string()
-    .when('boomMessage', {
-      is: Joi.string().pattern(/^Duplicate page path/),
-      then: Joi.forbidden(),
-      otherwise: Joi.string().optional()
-    })
-    .messages({
-      '*': 'This question or page title already exists - use a unique question or page title'
-    })
-})
-
-const boomSchema = baseBoomSchema
-  .concat(pageBoomSchema)
-  .concat(questionsBoomSchema)
+const boomMappings = [
+  {
+    errorCode: 4091,
+    errorStartsWith: 'Duplicate page path',
+    errorKey: sessionNames.validationFailure.editorQuestions,
+    fieldName: 'pageHeading',
+    userMessage: 'This page title already exists - use a unique page title'
+  },
+  {
+    errorCode: 4091,
+    errorStartsWith: 'Duplicate page path',
+    errorKey: sessionNames.validationFailure.editorQuestionDetails,
+    fieldName: 'question',
+    userMessage:
+      'This question or page title already exists - use a unique question or page title'
+  }
+]
 
 /**
- * @param {ValidationSessionKey} errorKey
- * @param {Boom.Boom} boomError
- * @param {string} [fieldName]
+ * @param {string} fieldName
+ * @param {string} message
  */
-export function mapBoomError(errorKey, boomError, fieldName = 'general') {
-  const boomMessage = boomError.data?.message ?? 'An error occurred'
-
-  const { error } = boomSchema.validate({ boomMessage, [fieldName]: errorKey })
-
-  if (!error) {
-    // Boom schema didn't find a custom message for the error
-    return new Joi.ValidationError(
-      boomMessage,
-      [
-        {
-          message: boomMessage,
-          path: [fieldName],
-          type: 'custom',
-          context: { key: fieldName }
-        }
-      ],
-      undefined
-    )
-  }
-
+export function createJoiError(fieldName, message) {
+  const { error } = Joi.object({
+    [fieldName]: Joi.forbidden().messages({
+      '*': message
+    })
+  }).validate({ [fieldName]: 'force-error' })
   return error
 }
 
 /**
  * @param {Boom.Boom} boomError
- * @param {Joi.ObjectSchema} schema
+ * @param {ValidationSessionKey} errorKey
+ * @param {string} [fieldName]
  */
-export function checkBoomError(boomError, schema) {
-  if (!Boom.isBoom(boomError) || boomError.data?.statusCode !== 409) {
+export function checkBoomError(boomError, errorKey, fieldName = 'general') {
+  if (!Boom.isBoom(boomError)) {
     return undefined
   }
 
-  const boomSchema = baseBoomSchema.concat(schema)
-  const { error } = boomSchema.validate(boomError)
-  return error
+  const boomMessage = boomError.data?.message ?? 'An error occurred'
+
+  const error = boomMappings.filter(
+    (x) =>
+      x.errorCode === boomError.data?.statusCode &&
+      boomMessage.startsWith(x.errorStartsWith) &&
+      x.errorKey === errorKey
+  )
+
+  if (error.length) {
+    return createJoiError(error[0].fieldName, error[0].userMessage)
+  }
+
+  // Error not found in mappings
+  return createJoiError(fieldName, boomMessage)
 }
 
 /**

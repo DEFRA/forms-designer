@@ -9,10 +9,7 @@ import {
   addQuestion,
   updateQuestion
 } from '~/src/lib/editor.js'
-import {
-  checkBoomError,
-  questionsBoomSchema
-} from '~/src/lib/error-boom-helper.js'
+import { checkBoomError } from '~/src/lib/error-boom-helper.js'
 import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { buildListFromDetails, upsertList } from '~/src/lib/list.js'
@@ -332,10 +329,7 @@ export default [
           .redirect(editorv2Path(slug, `page/${finalPageId}/questions`))
           .code(StatusCodes.SEE_OTHER)
       } catch (err) {
-        const error = checkBoomError(
-          /** @type {Boom.Boom} */ (err),
-          questionsBoomSchema
-        )
+        const error = checkBoomError(/** @type {Boom.Boom} */ (err), errorKey)
         if (error) {
           return redirectWithErrors(request, h, error, errorKey, '#')
         }
