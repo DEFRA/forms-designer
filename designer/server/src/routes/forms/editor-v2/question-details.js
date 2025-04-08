@@ -1,4 +1,5 @@
 import { ComponentType, questionDetailsFullSchema } from '@defra/forms-model'
+import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
@@ -12,7 +13,10 @@ import {
 import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { buildListFromDetails, upsertList } from '~/src/lib/list.js'
-import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
+import {
+  redirectWithBoomError,
+  redirectWithErrors
+} from '~/src/lib/redirect-helper.js'
 import {
   buildQuestionSessionState,
   clearQuestionSessionState,
@@ -308,24 +312,37 @@ export default [
 
       const state = getQuestionSessionState(yar, stateId)
 
-      const finalPageId = await saveQuestion(
-        metadata.id,
-        token,
-        definition,
-        pageId,
-        questionId,
-        questionDetails,
-        getListItems(payload, state)
-      )
+      try {
+        const finalPageId = await saveQuestion(
+          metadata.id,
+          token,
+          definition,
+          pageId,
+          questionId,
+          questionDetails,
+          getListItems(payload, state)
+        )
 
-      yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
+        yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
 
-      clearQuestionSessionState(yar, stateId)
+        clearQuestionSessionState(yar, stateId)
 
-      // Redirect to next page
-      return h
-        .redirect(editorv2Path(slug, `page/${finalPageId}/questions`))
-        .code(StatusCodes.SEE_OTHER)
+        // Redirect to next page
+        return h
+          .redirect(editorv2Path(slug, `page/${finalPageId}/questions`))
+          .code(StatusCodes.SEE_OTHER)
+      } catch (err) {
+        if (Boom.isBoom(err) && err.data?.statusCode === 409) {
+          return redirectWithBoomError(
+            request,
+            h,
+            err,
+            errorKey,
+            'question',
+            '#'
+          )
+        }
+      }
     },
     options: {
       pre: [validatePreSchema],
