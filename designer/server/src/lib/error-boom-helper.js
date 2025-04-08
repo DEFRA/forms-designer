@@ -24,14 +24,21 @@ const boomMappings = [
 /**
  * @param {string} fieldName
  * @param {string} message
+ * @returns {Joi.ValidationError}
  */
 export function createJoiError(fieldName, message) {
-  const { error } = Joi.object({
-    [fieldName]: Joi.forbidden().messages({
-      '*': message
-    })
-  }).validate({ [fieldName]: 'force-error' })
-  return error
+  return new Joi.ValidationError(
+    message,
+    [
+      {
+        message,
+        path: [fieldName],
+        type: 'custom',
+        context: { key: fieldName }
+      }
+    ],
+    {}
+  )
 }
 
 /**
@@ -48,15 +55,15 @@ export function checkBoomError(boomError, errorKey, fieldName = 'general') {
     boomError.data?.message ?? 'An error occurred'
   )
 
-  const error = boomMappings.filter(
+  const error = boomMappings.find(
     (x) =>
       x.errorCode === boomError.data?.statusCode &&
       boomMessage.startsWith(x.errorStartsWith) &&
       x.errorKey === errorKey
   )
 
-  if (error.length) {
-    return createJoiError(error[0].fieldName, error[0].userMessage)
+  if (error) {
+    return createJoiError(error.fieldName, error.userMessage)
   }
 
   // Error not found in mappings
