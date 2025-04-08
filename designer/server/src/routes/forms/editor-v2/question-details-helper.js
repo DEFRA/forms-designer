@@ -19,14 +19,14 @@ const listUniquenessSchema = Joi.object({
 })
 
 /**
- * @param { { id?: string, text?: string, hint?: string, value?: string } | undefined } itemForEdit
+ * @param { { id?: string, text?: string, hint?: { text: string }, value?: string } | undefined } itemForEdit
  * @param {boolean} expanded
  */
 export function setEditRowState(itemForEdit, expanded) {
   return {
     radioId: itemForEdit?.id ?? '',
     radioText: itemForEdit?.text ?? '',
-    radioHint: itemForEdit?.hint ?? '',
+    radioHint: itemForEdit?.hint?.text ?? '',
     radioValue: itemForEdit?.value ?? '',
     expanded
   }
@@ -125,12 +125,20 @@ export function handleEnhancedActionOnPost(request, stateId, questionDetails) {
       // Update
       foundRow.text = payload.radioText
       foundRow.hint = payload.radioHint
+        ? {
+            text: payload.radioHint
+          }
+        : undefined
       foundRow.value = payload.radioValue
     } else {
       // Insert
       listItemsSnapshot.push({
         text: payload.radioText,
-        hint: payload.radioHint,
+        hint: payload.radioHint
+          ? {
+              text: payload.radioHint
+            }
+          : undefined,
         value: payload.radioValue,
         id: randomUUID()
       })
