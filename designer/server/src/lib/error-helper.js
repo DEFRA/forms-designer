@@ -1,10 +1,10 @@
 import Joi from 'joi'
 
-import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
 
 /**
- * @param {Request | Request<{ Payload: FormEditorInputQuestionDetails } >} request
+ * @template T
+ * @param {Request | Request<{ Payload: T }> } request
  * @param {Error} [error]
  * @param {ValidationSessionKey} [flashKey]
  */
@@ -35,33 +35,7 @@ export function getValidationErrorsFromSession(yar, errorKey) {
 }
 
 /**
- * @param {ValidationSessionKey} errorKey
- * @param {Boom.Boom} boomError
- * @param {string} [fieldName]
- */
-export function mapBoomError(errorKey, boomError, fieldName) {
-  const boomMessage = boomError.data?.message
-  let message = boomMessage ?? 'An error occurred'
-  if (boomMessage.startsWith('Duplicate page path')) {
-    if (errorKey === sessionNames.validationFailure.editorQuestionDetails) {
-      message =
-        'Page path (derived from first question text) already exists on another page'
-    } else if (errorKey === sessionNames.validationFailure.editorPage) {
-      message =
-        'Page path (derived from page heading) already exists on another page'
-    }
-  }
-
-  return {
-    [fieldName ?? 'general']: {
-      text: message,
-      href: `#${fieldName ?? 'general'}`
-    }
-  }
-}
-/**
- * @import { FormEditor, FormEditorInputQuestionDetails } from '@defra/forms-model'
- * @import Boom from '@hapi/boom'
+ * @import { FormEditor } from '@defra/forms-model'
  * @import { Request } from '@hapi/hapi'
  * @import { ValidationSessionKey, Yar } from '@hapi/yar'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'

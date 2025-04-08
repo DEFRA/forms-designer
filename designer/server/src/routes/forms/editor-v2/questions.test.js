@@ -1,3 +1,4 @@
+import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
@@ -16,6 +17,16 @@ import { renderResponse } from '~/test/helpers/component-helpers.js'
 jest.mock('~/src/lib/editor.js')
 jest.mock('~/src/lib/error-helper.js')
 jest.mock('~/src/lib/forms.js')
+
+/**
+ * @param {string} message
+ */
+function buildBoom409(message) {
+  return Boom.boomify(new Error(message), {
+    statusCode: 409,
+    data: { message, statusCode: 409 }
+  })
+}
 
 describe('Editor v2 questions routes', () => {
   /** @type {Server} */
@@ -121,6 +132,42 @@ describe('Editor v2 questions routes', () => {
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
       new Joi.ValidationError('Enter a page heading', [], undefined),
+      'questionsValidationFailure'
+    )
+  })
+
+  test('POST - should handle boom error if boom received from API call', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest.mocked(setPageHeadingAndGuidance).mockImplementationOnce(() => {
+      throw buildBoom409('Duplicate page path')
+    })
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/1/questions',
+      auth,
+      payload: {
+        pageHeadingAndGuidance: 'true',
+        pageHeading: 'New page heading',
+        guidanceText: 'New guidance text'
+      }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/page/1/questions'
+    )
+    expect(addErrorsToSession).toHaveBeenCalledWith(
+      expect.anything(),
+      new Joi.ValidationError(
+        'This page title already exists - use a unique page title',
+        [],
+        undefined
+      ),
       'questionsValidationFailure'
     )
   })

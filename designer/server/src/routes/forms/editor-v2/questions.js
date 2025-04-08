@@ -3,6 +3,7 @@ import {
   pageHeadingAndGuidanceSchema,
   pageHeadingSchema
 } from '@defra/forms-model'
+import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
@@ -11,7 +12,10 @@ import { sessionNames } from '~/src/common/constants/session-names.js'
 import { setPageHeadingAndGuidance } from '~/src/lib/editor.js'
 import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
-import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
+import {
+  redirectWithBoomError,
+  redirectWithErrors
+} from '~/src/lib/redirect-helper.js'
 import { CHANGES_SAVED_SUCCESSFULLY } from '~/src/models/forms/editor-v2/common.js'
 import * as viewModel from '~/src/models/forms/editor-v2/questions.js'
 import { editorv2Path } from '~/src/models/links.js'
@@ -98,20 +102,27 @@ export default [
       const metadata = await forms.get(slug, token)
       const definition = await forms.getDraftFormDefinition(metadata.id, token)
 
-      await setPageHeadingAndGuidance(
-        metadata.id,
-        token,
-        pageId,
-        definition,
-        payload
-      )
+      try {
+        await setPageHeadingAndGuidance(
+          metadata.id,
+          token,
+          pageId,
+          definition,
+          payload
+        )
 
-      yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
+        yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
 
-      // Redirect to same page
-      return h
-        .redirect(editorv2Path(slug, `page/${pageId}/questions`))
-        .code(StatusCodes.SEE_OTHER)
+        // Redirect to same page
+        return h
+          .redirect(editorv2Path(slug, `page/${pageId}/questions`))
+          .code(StatusCodes.SEE_OTHER)
+      } catch (err) {
+        if (Boom.isBoom(err) && err.data?.statusCode === 409) {
+          return redirectWithBoomError(request, h, err, errorKey, 'pageHeading')
+        }
+        throw err
+      }
     },
     options: {
       validate: {
@@ -133,5 +144,5 @@ export default [
 
 /**
  * @import { FormEditorInputPageSettings } from '@defra/forms-model'
- * @import { ServerRoute } from '@hapi/hapi'
+ * @import { ReqRefDefaults, Request, ServerRoute } from '@hapi/hapi'
  */
