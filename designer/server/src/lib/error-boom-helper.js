@@ -1,3 +1,4 @@
+import { ApiErrorFunctionCode } from '@defra/forms-model'
 import Boom from '@hapi/boom'
 import Joi from 'joi'
 
@@ -6,14 +7,14 @@ import { sessionNames } from '~/src/common/constants/session-names.js'
 const boomMappings = [
   {
     errorCode: 409,
-    errorStartsWith: 'Duplicate page path',
+    functionCode: ApiErrorFunctionCode.DuplicatePagePathPage,
     errorKey: sessionNames.validationFailure.editorQuestions,
     fieldName: 'pageHeading',
     userMessage: 'This page title already exists - use a unique page title'
   },
   {
     errorCode: 409,
-    errorStartsWith: 'Duplicate page path',
+    functionCode: ApiErrorFunctionCode.DuplicatePagePathQuestion,
     errorKey: sessionNames.validationFailure.editorQuestionDetails,
     fieldName: 'question',
     userMessage:
@@ -42,7 +43,7 @@ export function createJoiError(fieldName, message) {
 }
 
 /**
- * @param {Boom.Boom<{ message: string, statusCode: number }>} boomError
+ * @param {Boom.Boom<{ message: string, statusCode: number, functionCode?: string }>} boomError
  * @param {ValidationSessionKey} errorKey
  * @param {string} [fieldName]
  */
@@ -58,7 +59,7 @@ export function checkBoomError(boomError, errorKey, fieldName = 'general') {
   const error = boomMappings.find(
     (x) =>
       x.errorCode === boomError.data?.statusCode &&
-      boomMessage.startsWith(x.errorStartsWith) &&
+      boomError.data.functionCode === x.functionCode &&
       x.errorKey === errorKey
   )
 
