@@ -4,27 +4,30 @@ import Joi from 'joi'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
 
+const duplicatePageTitle =
+  'This page title already exists - use a unique page title'
+
 const boomMappings = [
   {
     statusCode: 409,
     errorCode: ApiErrorCode.DuplicatePagePathPage,
     errorKey: sessionNames.validationFailure.editorQuestions,
     fieldName: 'pageHeading',
-    userMessage: 'This page title already exists - use a unique page title'
+    userMessage: duplicatePageTitle
   },
   {
     statusCode: 409,
     errorCode: ApiErrorCode.DuplicatePagePathPage,
     errorKey: sessionNames.validationFailure.editorGuidance,
     fieldName: 'pageHeading',
-    userMessage: 'This page title already exists - use a unique page title'
+    userMessage: duplicatePageTitle
   },
   {
     statusCode: 409,
     errorCode: ApiErrorCode.DuplicatePagePathComponent,
     errorKey: sessionNames.validationFailure.editorGuidance,
     fieldName: 'pageHeading',
-    userMessage: 'This page title already exists - use a unique page title'
+    userMessage: duplicatePageTitle
   },
   {
     statusCode: 409,
