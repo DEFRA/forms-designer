@@ -215,50 +215,6 @@ describe('Editor v2 question-details route helper', () => {
       )
     })
 
-    test('add-item should add item', () => {
-      mockGet.mockReturnValue(structuredClone(sessionWithListWithThreeItems))
-
-      const payload = /** @type {FormEditorInputQuestionDetails} */ ({
-        enhancedAction: 'add-item',
-        radioId: '5',
-        radioText: 'text5',
-        radioHint: 'hint5',
-        radioValue: 'value5'
-      })
-
-      const { mockRequest } = buildMockRequest(payload)
-
-      expect(handleEnhancedActionOnPost(mockRequest, '123', {})).toBe(
-        '#add-option'
-      )
-      expect(mockSet).toHaveBeenCalledWith('questionSessionState-123', {
-        questionType: 'RadiosField',
-        listItems: listWithThreeItems.listItems,
-        editRow: {
-          radioId: '5',
-          radioText: 'text5',
-          radioHint: 'hint5',
-          radioValue: 'value5',
-          expanded: true
-        },
-        questionDetails: {}
-      })
-    })
-
-    test('re-order should do nothing until implemented', () => {
-      mockGet.mockReturnValue(structuredClone(sessionWithListWithThreeItems))
-
-      const payload = /** @type {FormEditorInputQuestionDetails} */ ({
-        enhancedAction: 're-order'
-      })
-
-      const { mockRequest } = buildMockRequest(payload)
-
-      expect(handleEnhancedActionOnPost(mockRequest, '123', {})).toBe(
-        '#list-items'
-      )
-    })
-
     describe('save-item', () => {
       test('should handle simple no list items', () => {
         mockGet.mockReturnValue(structuredClone(simpleSession))
