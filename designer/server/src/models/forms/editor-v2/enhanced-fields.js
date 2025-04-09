@@ -57,6 +57,9 @@ export const allEnhancedFields =
       label: {
         text: 'Hint text (optional)',
         classes: GOVUK_LABEL__M
+      },
+      hint: {
+        text: 'Use single short sentence without a full stop'
       }
     },
     [QuestionEnhancedFields.RadioValue]: {
