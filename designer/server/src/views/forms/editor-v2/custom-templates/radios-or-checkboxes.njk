@@ -70,8 +70,10 @@
     Add item
   </button>
 
-  <button id="edit-options-button" type="submit" class="govuk-button govuk-button--inverse" style="display: none;" name="enhancedAction" value="re-order">
+  {% if (state.listItems | length > 1) %}
+  <button id="edit-options-button" type="submit" class="govuk-button govuk-button--inverse" name="enhancedAction" value="re-order">
     Re-order
   </button>
+  {% endif %}
 </div>
 {% endif %}
