@@ -94,7 +94,7 @@ describe('Editor v2 guidance routes', () => {
     jest.mocked(setPageHeadingAndGuidance).mockImplementationOnce(() => {
       throw buildBoom409(
         'Duplicate page path',
-        ApiErrorCode.DuplicatePagePathComponent
+        ApiErrorCode.DuplicatePagePathPage
       )
     })
 
