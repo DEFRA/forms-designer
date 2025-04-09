@@ -89,7 +89,11 @@ const sessionCookie = {
                 )
 
                 const { body: artifacts } = await refreshAccessToken(request)
-                credentials = await createUserSession(request, artifacts)
+                credentials = await createUserSession(
+                  request,
+                  artifacts,
+                  credentials.flowId
+                )
               }
             }
 
@@ -100,10 +104,6 @@ const sessionCookie = {
           }
         })
       )
-
-      server.auth.default({
-        strategies: ['azure-oidc', 'session']
-      })
     }
   }
 }
