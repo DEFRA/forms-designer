@@ -21,6 +21,7 @@ import {
   addPageAndFirstQuestion,
   addQuestion,
   deletePage,
+  deleteQuestion,
   getControllerType,
   migrateDefinitionToV2,
   reorderPages,
@@ -846,6 +847,40 @@ describe('editor.js', () => {
         await expect(deletePage(formId, token, '12345')).rejects.toThrow(
           testError
         )
+      })
+    })
+  })
+
+  describe('deleteQuestion', () => {
+    const requestUrl = new URL(
+      `./${formId}/definition/draft/pages/12345/components/67890`,
+      formsEndpoint
+    )
+    const expectedOptions = {
+      headers: { Authorization: `Bearer ${token}` }
+    }
+
+    describe('when delJson succeeds', () => {
+      test('returns response body', async () => {
+        mockedDelJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: { result: 'ok' }
+        })
+
+        await deleteQuestion(formId, token, '12345', '67890')
+
+        expect(mockedDelJson).toHaveBeenCalledWith(requestUrl, expectedOptions)
+      })
+    })
+
+    describe('when delJson fails', () => {
+      test('throws the error', async () => {
+        const testError = new Error('Network error')
+        mockedDelJson.mockRejectedValueOnce(testError)
+
+        await expect(
+          deleteQuestion(formId, token, '12345', '67890')
+        ).rejects.toThrow(testError)
       })
     })
   })
