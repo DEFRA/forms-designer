@@ -340,5 +340,21 @@ export async function deletePage(formId, token, pageId) {
 }
 
 /**
+ * Delete a question
+ * @param {string} formId
+ * @param {string} token
+ * @param {string} pageId
+ * @param {string} questionId
+ */
+export async function deleteQuestion(formId, token, pageId, questionId) {
+  await delJsonByType(
+    buildRequestUrl(formId, `pages/${pageId}/components/${questionId}`),
+    {
+      ...getHeaders(token)
+    }
+  )
+}
+
+/**
  * @import { ComponentDef, FormEditorInputCheckAnswersSettings, FormEditorInputPageSettings, FormDefinition, Item, List, ListComponentsDef, Page, QuestionSessionState } from '@defra/forms-model'
  */

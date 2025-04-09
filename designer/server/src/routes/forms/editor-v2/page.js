@@ -68,7 +68,10 @@ export default [
       // Redirect POST to GET without resubmit on back button
       return h
         .redirect(
-          editorv2Path(slug, `page/${pageId ?? 'new'}/${pageType}/new/type`)
+          editorv2Path(
+            slug,
+            `page/${pageId ?? 'new'}/${pageType}/new${pageType === 'guidance' ? '' : '/type'}`
+          )
         )
         .code(StatusCodes.SEE_OTHER)
     },

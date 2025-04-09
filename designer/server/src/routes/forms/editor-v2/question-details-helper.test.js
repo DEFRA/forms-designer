@@ -192,7 +192,7 @@ describe('Editor v2 question-details route helper', () => {
       expect(handleEnhancedActionOnPost(mockRequest, '123', {})).toBeUndefined()
     })
 
-    test('should ignore if action not add-item or save-item', () => {
+    test('should ignore if action not add-item or save-item or re-order', () => {
       const payload = /** @type {FormEditorInputQuestionDetails} */ ({
         enhancedAction: 'invalid'
       })
@@ -213,36 +213,6 @@ describe('Editor v2 question-details route helper', () => {
       expect(() => handleEnhancedActionOnPost(mockRequest, '123', {})).toThrow(
         'Invalid session contents'
       )
-    })
-
-    test('add-item should add item', () => {
-      mockGet.mockReturnValue(structuredClone(sessionWithListWithThreeItems))
-
-      const payload = /** @type {FormEditorInputQuestionDetails} */ ({
-        enhancedAction: 'add-item',
-        radioId: '5',
-        radioText: 'text5',
-        radioHint: 'hint5',
-        radioValue: 'value5'
-      })
-
-      const { mockRequest } = buildMockRequest(payload)
-
-      expect(handleEnhancedActionOnPost(mockRequest, '123', {})).toBe(
-        '#add-option'
-      )
-      expect(mockSet).toHaveBeenCalledWith('questionSessionState-123', {
-        questionType: 'RadiosField',
-        listItems: listWithThreeItems.listItems,
-        editRow: {
-          radioId: '5',
-          radioText: 'text5',
-          radioHint: 'hint5',
-          radioValue: 'value5',
-          expanded: true
-        },
-        questionDetails: {}
-      })
     })
 
     describe('save-item', () => {

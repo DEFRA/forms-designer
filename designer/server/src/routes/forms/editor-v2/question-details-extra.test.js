@@ -14,6 +14,10 @@ jest.mock('~/src/lib/error-helper.js')
 jest.mock('~/src/lib/editor.js')
 jest.mock('~/src/lib/session-helper.js')
 
+const simpleSessionRadiosField = {
+  questionType: ComponentType.RadiosField
+}
+
 describe('Editor v2 question details routes', () => {
   /** @type {Server} */
   let server
@@ -24,7 +28,7 @@ describe('Editor v2 question details routes', () => {
     await server.initialize()
   })
 
-  test('GET - should redirect when enhanced action', async () => {
+  test('GET - should redirect when enhanced action is delete', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     jest
       .mocked(forms.getDraftFormDefinition)
@@ -49,26 +53,19 @@ describe('Editor v2 question details routes', () => {
     expect(headers.location?.endsWith('#list-items')).toBeFalsy()
   })
 
-  test('POST - should redirect to GET if enhanced action', async () => {
-    jest
-      .mocked(getQuestionSessionState)
-      .mockReturnValue({ questionType: ComponentType.RadiosField, editRow: {} })
+  test('GET - should redirect when enhanced action is add-item', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     jest
       .mocked(forms.getDraftFormDefinition)
       .mockResolvedValueOnce(testFormDefinitionWithSinglePage)
+    jest
+      .mocked(getQuestionSessionState)
+      .mockReturnValue(simpleSessionRadiosField)
 
     const options = {
-      method: 'post',
-      url: '/library/my-form-slug/editor-v2/page/123456/question/456/details/sessId',
-      auth,
-      payload: {
-        enhancedAction: 'add-item',
-        name: '456',
-        question: 'Question text',
-        shortDescription: 'Short desc',
-        questionType: 'RadiosField'
-      }
+      method: 'get',
+      url: '/library/my-form-slug/editor-v2/page/p1/question/c1/details/sessId?action=add-item',
+      auth
     }
 
     const {
@@ -77,7 +74,32 @@ describe('Editor v2 question details routes', () => {
 
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe(
-      '/library/my-form-slug/editor-v2/page/123456/question/456/details/sessId#add-option'
+      '/library/my-form-slug/editor-v2/page/p1/question/c1/details/sessId#add-option'
+    )
+  })
+
+  test('GET - should redirect when enhanced action is re-order', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithSinglePage)
+    jest
+      .mocked(getQuestionSessionState)
+      .mockReturnValue(simpleSessionRadiosField)
+
+    const options = {
+      method: 'get',
+      url: '/library/my-form-slug/editor-v2/page/p1/question/c1/details/sessId?action=re-order',
+      auth
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/page/p1/question/c1/details/sessId#list-items'
     )
   })
 })

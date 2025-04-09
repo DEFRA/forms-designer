@@ -66,12 +66,14 @@
 {% if not state.editRow.expanded %}
 <div class="govuk-button-group">
   <!-- Add Another Option Button -->
-  <button id="add-option-button" type="submit" class="govuk-button govuk-!-margin-bottom-4 govuk-!-margin-bottom-6" name="enhancedAction" value="add-item">
+  <a href="?action=add-item" id="add-option-button" class="govuk-button govuk-!-margin-bottom-4 govuk-!-margin-bottom-6">
     Add item
-  </button>
+  </a>
 
-  <button id="edit-options-button" type="submit" class="govuk-button govuk-button--inverse" style="display: none;" name="enhancedAction" value="re-order">
+  {% if (state.listItems | length > 1) %}
+  <a href="?action=re-order" id="edit-options-button" class="govuk-button govuk-button--inverse">
     Re-order
-  </button>
+  </a>
+  {% endif %}
 </div>
 {% endif %}
