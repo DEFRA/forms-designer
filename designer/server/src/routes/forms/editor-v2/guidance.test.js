@@ -1,4 +1,8 @@
-import { ControllerType, Engine } from '@defra/forms-model'
+import {
+  ApiErrorFunctionCode,
+  ControllerType,
+  Engine
+} from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
@@ -8,6 +12,7 @@ import {
 } from '~/src/__stubs__/form-definition.js'
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
 import { createServer } from '~/src/createServer.js'
+import { buildBoom409 } from '~/src/lib/__stubs__/editor.js'
 import {
   addPageAndFirstQuestion,
   setPageHeadingAndGuidance
@@ -85,6 +90,101 @@ describe('Editor v2 guidance routes', () => {
       ),
       'guidanceValidationFailure'
     )
+  })
+
+  test('POST - should error if duplicate page path', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest.mocked(forms.getDraftFormDefinition).mockResolvedValueOnce(testForm)
+    jest.mocked(setPageHeadingAndGuidance).mockImplementationOnce(() => {
+      throw buildBoom409(
+        'Duplicate page path',
+        ApiErrorFunctionCode.DuplicatePagePathQuestion
+      )
+    })
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/p1/guidance/new',
+      auth,
+      payload: {
+        pageHeading: 'page one',
+        guidanceText: 'New guidance text'
+      }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/page/p1/guidance/new'
+    )
+    expect(addErrorsToSession).toHaveBeenCalledWith(
+      expect.anything(),
+      new Joi.ValidationError(
+        'This page title already exists - use a unique page title',
+        [],
+        undefined
+      ),
+      'guidanceValidationFailure'
+    )
+  })
+
+  test('POST - should error if other boom error', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest.mocked(forms.getDraftFormDefinition).mockResolvedValueOnce(testForm)
+    jest.mocked(setPageHeadingAndGuidance).mockImplementationOnce(() => {
+      throw buildBoom409('Other boom error')
+    })
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/p1/guidance/new',
+      auth,
+      payload: {
+        pageHeading: 'page one',
+        guidanceText: 'New guidance text'
+      }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/page/p1/guidance/new'
+    )
+    expect(addErrorsToSession).toHaveBeenCalledWith(
+      expect.anything(),
+      new Joi.ValidationError('Other boom error', [], undefined),
+      'guidanceValidationFailure'
+    )
+  })
+
+  test('POST - should throw if not a boom error', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest.mocked(forms.getDraftFormDefinition).mockResolvedValueOnce(testForm)
+    jest.mocked(setPageHeadingAndGuidance).mockImplementationOnce(() => {
+      throw Error('Other error')
+    })
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/p1/guidance/new',
+      auth,
+      payload: {
+        pageHeading: 'page one',
+        guidanceText: 'New guidance text'
+      }
+    }
+
+    const {
+      response: { statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.INTERNAL_SERVER_ERROR)
   })
 
   test('POST - should save new guidance and redirect to same page if valid payload', async () => {

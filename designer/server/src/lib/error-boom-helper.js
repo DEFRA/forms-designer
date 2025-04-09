@@ -15,6 +15,13 @@ const boomMappings = [
   {
     errorCode: 409,
     functionCode: ApiErrorFunctionCode.DuplicatePagePathQuestion,
+    errorKey: sessionNames.validationFailure.editorGuidance,
+    fieldName: 'pageHeading',
+    userMessage: 'This page title already exists - use a unique page title'
+  },
+  {
+    errorCode: 409,
+    functionCode: ApiErrorFunctionCode.DuplicatePagePathQuestion,
     errorKey: sessionNames.validationFailure.editorQuestionDetails,
     fieldName: 'question',
     userMessage:
