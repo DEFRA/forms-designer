@@ -43,7 +43,7 @@ export function createJoiError(fieldName, message) {
 }
 
 /**
- * @param {Boom.Boom<{ message: string, statusCode: number, functionCode?: string }>} boomError
+ * @param {Boom.Boom<{ message: string, statusCode: number, custom?: { functionCode?: string } }>} boomError
  * @param {ValidationSessionKey} errorKey
  * @param {string} [fieldName]
  */
@@ -59,7 +59,7 @@ export function checkBoomError(boomError, errorKey, fieldName = 'general') {
   const error = boomMappings.find(
     (x) =>
       x.errorCode === boomError.data?.statusCode &&
-      boomError.data.functionCode === x.functionCode &&
+      boomError.data.custom?.functionCode === x.functionCode &&
       x.errorKey === errorKey
   )
 

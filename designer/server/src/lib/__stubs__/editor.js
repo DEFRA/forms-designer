@@ -36,10 +36,10 @@ export const baseOptions = {
  * @param { ApiErrorFunctionCode | undefined } [functionCode]
  */
 export function buildBoom409(message, functionCode) {
-  return /** @type {Boom.Boom<{ message: string, statusCode: number, functionCode?: string }>}} */ (
+  return /** @type {Boom.Boom<{ message: string, statusCode: number, custom?: { functionCode?: string } }>} */ (
     Boom.boomify(new Error(message), {
       statusCode: 409,
-      data: { message, statusCode: 409, functionCode }
+      data: { message, statusCode: 409, custom: { functionCode } }
     })
   )
 }
