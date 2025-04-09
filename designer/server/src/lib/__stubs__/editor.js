@@ -33,18 +33,18 @@ export const baseOptions = {
 
 /**
  * @param { string | undefined } message
- * @param { ApiErrorFunctionCode | undefined } [functionCode]
+ * @param { ApiErrorCode | undefined } [errorCode]
  */
-export function buildBoom409(message, functionCode) {
-  return /** @type {Boom.Boom<{ message: string, statusCode: number, custom?: { functionCode?: string } }>} */ (
+export function buildBoom409(message, errorCode) {
+  return /** @type {Boom.Boom<{ message: string, statusCode: number, custom?: { errorCode?: string } }>} */ (
     Boom.boomify(new Error(message), {
       statusCode: 409,
-      data: { message, statusCode: 409, custom: { functionCode } }
+      data: { message, statusCode: 409, custom: { errorCode } }
     })
   )
 }
 
 /**
- * @import { ApiErrorFunctionCode } from '@defra/forms-model'
+ * @import { ApiErrorCode } from '@defra/forms-model'
  * @import { IncomingMessage } from 'node:http'
  */

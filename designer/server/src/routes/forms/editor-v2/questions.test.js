@@ -1,4 +1,4 @@
-import { ApiErrorFunctionCode } from '@defra/forms-model'
+import { ApiErrorCode } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
@@ -132,7 +132,7 @@ describe('Editor v2 questions routes', () => {
     jest.mocked(setPageHeadingAndGuidance).mockImplementationOnce(() => {
       throw buildBoom409(
         'Duplicate page path',
-        ApiErrorFunctionCode.DuplicatePagePathPage
+        ApiErrorCode.DuplicatePagePathPage
       )
     })
 
