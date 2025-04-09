@@ -81,6 +81,22 @@ export function buildAutoCompleteComponent(partialAutoCompleteField) {
     ...partialAutoCompleteField
   }
 }
+
+/**
+ * @param {Partial<RadiosFieldComponent>} partialListComponent
+ * @returns {RadiosFieldComponent}
+ */
+export function buildRadioComponent(partialListComponent) {
+  return {
+    name: 'RadioField',
+    title: 'Which country do you live in?',
+    type: ComponentType.RadiosField,
+    list: 'RadioList',
+    options: {},
+    ...partialListComponent
+  }
+}
+
 /**
  * Builder to create a Form Definition
  * @param {Partial<FormDefinition>} definitionPartial
@@ -120,30 +136,30 @@ export function buildList(partialList = {}) {
     name: 'YhmNDD',
     type: 'string',
     items: [
-      {
+      buildListItem({
         text: 'Javascript',
         value: 'javascript'
-      },
-      {
+      }),
+      buildListItem({
         text: 'TypeScript',
         value: 'typescript'
-      },
-      {
+      }),
+      buildListItem({
         text: 'Python',
         value: 'python'
-      },
-      {
+      }),
+      buildListItem({
         text: 'Haskell',
         value: 'haskell'
-      },
-      {
+      }),
+      buildListItem({
         text: 'Erlang',
         value: 'erlang'
-      },
-      {
+      }),
+      buildListItem({
         text: 'Java',
         value: 'java'
-      }
+      })
     ],
     ...partialList
   }
@@ -700,5 +716,5 @@ export const testFormDefinitionWithRadioQuestionAndList = {
 }
 
 /**
- * @import { FormDefinition, PageQuestion, PageSummary, TextFieldComponent, FileUploadFieldComponent, AutocompleteFieldComponent, List, Item } from '@defra/forms-model'
+ * @import { FormDefinition, PageQuestion, PageSummary, TextFieldComponent, FileUploadFieldComponent, AutocompleteFieldComponent, List, Item, RadiosFieldComponent } from '@defra/forms-model'
  */

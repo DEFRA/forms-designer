@@ -109,6 +109,18 @@ export function noListToSave(type, state) {
 }
 
 /**
+ * @param {(component: ComponentDef) => boolean} predicate
+ * @returns {(page: Page) => boolean}
+ */
+export function isFulfilledOnPageComponent(predicate) {
+  return /** @type {(page: Page) => boolean}} */ (
+    (page) => {
+      return page.components.some(predicate)
+    }
+  )
+}
+
+/**
  * @param { ComponentType | undefined } type
  * @returns {boolean}
  */
@@ -143,6 +155,37 @@ export function mapListToAutoCompleteStr(list) {
   return (
     list?.items.map(({ text, value }) => `${text}:${value}`).join('\r\n') ?? ''
   )
+}
+
+/**
+ * Checks whether component list will be orphaned after deletion
+ * @param {FormDefinition} definition
+ * @param {string} pageId
+ * @param {string} componentId
+ */
+export function findUniquelyMappedList(definition, pageId, componentId) {
+  const component = getComponentFromDefinition(definition, pageId, componentId)
+
+  if (!isListComponent(component?.type)) {
+    return undefined
+  }
+
+  const { id } = component
+
+  const list = getListFromComponent(component, definition)
+
+  if (!list) {
+    return undefined
+  }
+
+  const predicate = /** @type {(component: ComponentDef) => boolean} */ (
+    (component) => component.id !== id && component.list === list.name
+  )
+  const listIsNotUnique = definition.pages.some(
+    isFulfilledOnPageComponent(predicate)
+  )
+
+  return listIsNotUnique ? undefined : list.id
 }
 
 /**
