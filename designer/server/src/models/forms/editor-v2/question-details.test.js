@@ -448,6 +448,9 @@ describe('editor-v2 - question details model', () => {
           label: {
             text: 'Hint text (optional)',
             classes: 'govuk-label--m'
+          },
+          hint: {
+            text: 'Use single short sentence without a full stop'
           }
         },
         {

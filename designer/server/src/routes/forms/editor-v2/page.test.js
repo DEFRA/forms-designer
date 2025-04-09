@@ -83,7 +83,7 @@ describe('Editor v2 page routes', () => {
 
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe(
-      '/library/my-form-slug/editor-v2/page/new/guidance/new/type'
+      '/library/my-form-slug/editor-v2/page/new/guidance/new'
     )
   })
 

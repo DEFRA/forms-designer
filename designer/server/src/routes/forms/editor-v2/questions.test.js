@@ -1,3 +1,4 @@
+import { ApiErrorCode } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
@@ -129,7 +130,10 @@ describe('Editor v2 questions routes', () => {
   test('POST - should handle boom error if boom received from API call', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     jest.mocked(setPageHeadingAndGuidance).mockImplementationOnce(() => {
-      throw buildBoom409('Duplicate page path')
+      throw buildBoom409(
+        'Duplicate page path',
+        ApiErrorCode.DuplicatePagePathPage
+      )
     })
 
     const options = {

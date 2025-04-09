@@ -89,7 +89,7 @@ export const baseSchema = Joi.object().keys({
   radioText: questionDetailsFullSchema.radioTextSchema.when('enhancedAction', {
     is: Joi.exist(),
     then: Joi.string().when('enhancedAction', {
-      is: 'add-item',
+      is: Joi.string().valid('add-item', 're-order'),
       then: Joi.string().optional().allow(''),
       otherwise: Joi.string().trim().required().messages({
         '*': 'Enter item text'

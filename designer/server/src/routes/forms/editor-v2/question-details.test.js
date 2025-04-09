@@ -1,4 +1,4 @@
-import { ComponentType, ControllerType } from '@defra/forms-model'
+import { ApiErrorCode, ComponentType, ControllerType } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
@@ -515,7 +515,10 @@ describe('Editor v2 question details routes', () => {
       .mockReturnValue(simpleSessionTextField)
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     jest.mocked(updateQuestion).mockImplementationOnce(() => {
-      throw buildBoom409('Duplicate page path')
+      throw buildBoom409(
+        'Duplicate page path',
+        ApiErrorCode.DuplicatePagePathComponent
+      )
     })
 
     const options = {
