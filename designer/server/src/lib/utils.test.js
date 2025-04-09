@@ -8,11 +8,13 @@ import {
   buildListItem,
   buildQuestionPage,
   buildTextFieldComponent,
+  testFormDefinitionWithNoQuestions,
   testFormDefinitionWithTwoPagesAndQuestions
 } from '~/src/__stubs__/form-definition.js'
 import config from '~/src/config.js'
 import {
   getComponentFromDefinition,
+  getComponentsOnPageFromDefinition,
   getHeaders,
   getListFromComponent,
   mapListToAutoCompleteStr,
@@ -72,6 +74,52 @@ describe('utils', () => {
         'qxx'
       )
       expect(comp).toBeUndefined()
+    })
+
+    it('should return undefined when page not found', () => {
+      const comp = getComponentFromDefinition(
+        testFormDefinitionWithTwoPagesAndQuestions,
+        'p1xx',
+        'q1'
+      )
+      expect(comp).toBeUndefined()
+    })
+  })
+
+  describe('getComponentsOnPageFromDefinition', () => {
+    it('should find all components of a page when exists', () => {
+      const comps = getComponentsOnPageFromDefinition(
+        testFormDefinitionWithTwoPagesAndQuestions,
+        'p1'
+      )
+      expect(comps).toEqual([
+        {
+          id: 'q1',
+          type: ComponentType.TextField,
+          name: 'textField',
+          title: 'This is your first question',
+          hint: 'Help text',
+          options: {},
+          schema: {}
+        },
+        {
+          id: 'q2',
+          type: ComponentType.TextField,
+          name: 'textField',
+          title: 'This is your second question',
+          hint: 'Help text',
+          options: {},
+          schema: {}
+        }
+      ])
+    })
+
+    it('should return empty array if page has no components', () => {
+      const comps = getComponentsOnPageFromDefinition(
+        testFormDefinitionWithNoQuestions,
+        'p1'
+      )
+      expect(comps).toHaveLength(0)
     })
 
     it('should return undefined when page not found', () => {
