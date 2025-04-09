@@ -192,7 +192,7 @@ describe('Editor v2 question-details route helper', () => {
       expect(handleEnhancedActionOnPost(mockRequest, '123', {})).toBeUndefined()
     })
 
-    test('should ignore if action not add-item or save-item', () => {
+    test('should ignore if action not add-item or save-item or re-order', () => {
       const payload = /** @type {FormEditorInputQuestionDetails} */ ({
         enhancedAction: 'invalid'
       })
@@ -243,6 +243,20 @@ describe('Editor v2 question-details route helper', () => {
         },
         questionDetails: {}
       })
+    })
+
+    test('re-order should do nothing until implemented', () => {
+      mockGet.mockReturnValue(structuredClone(sessionWithListWithThreeItems))
+
+      const payload = /** @type {FormEditorInputQuestionDetails} */ ({
+        enhancedAction: 're-order'
+      })
+
+      const { mockRequest } = buildMockRequest(payload)
+
+      expect(handleEnhancedActionOnPost(mockRequest, '123', {})).toBe(
+        '#list-items'
+      )
     })
 
     describe('save-item', () => {
