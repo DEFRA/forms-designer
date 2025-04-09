@@ -28,7 +28,11 @@
               <div class="govuk-summary-card__content govuk-!-padding-top-1 editor-card-background-white govuk-!-padding-bottom-1">
                 <dl class="govuk-summary-list">
                   <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">{{ item.text }}</dt>
+                    <dt class="govuk-summary-list__key">{{ item.text }}
+                    {% if item.hint.text %}
+                    <p class="govuk-hint govuk-!-margin-top-0 govuk-!-margin-bottom-0">{{ item.hint.text }}</p>
+                    {% endif %}
+                    </dt>
                     <dd class="govuk-summary-list__actions">
                       <ul class="govuk-summary-list__actions-list">
                         <li class="govuk-summary-list__actions-list-item">
