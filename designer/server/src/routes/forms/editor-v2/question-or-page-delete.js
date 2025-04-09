@@ -24,11 +24,7 @@ export async function shouldDeleteQuestionOnly(formId, token, pageId) {
   const nonGuidanceComponents = components.filter(
     (comp, idx) => !(comp.type === ComponentType.Markdown && idx === 0)
   )
-  if (nonGuidanceComponents.length > 1) {
-    return true
-  }
-
-  return false
+  return nonGuidanceComponents.length > 1
 }
 
 export default [
