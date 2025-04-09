@@ -13,6 +13,7 @@ import {
 } from '~/src/__stubs__/form-definition.js'
 import config from '~/src/config.js'
 import {
+  findPageUniquelyMappedLists,
   findUniquelyMappedList,
   getComponentFromDefinition,
   getHeaders,
@@ -27,6 +28,7 @@ const autoCompletePageId = '938d0853-7874-4b46-bd7e-3eeb93413f51'
 const questionPageId = '938d0853-7874-4b46-bd7e-3eeb93413f51'
 const componentId = 'b96fa4e3-a4dc-4e71-a4b5-86db511dec7a'
 const autoCompleteListId = '390ed821-8925-4ab8-9b35-9b6e55d5cac5'
+const radioPageId = '6282ee22-5474-4701-b517-f8fdf61c1b3e'
 const listName = 'ListName'
 
 const autoCompletePage = buildQuestionPage({
@@ -48,16 +50,16 @@ const questionPage = buildQuestionPage({
     })
   ]
 })
+
+const radioComponent = buildRadioComponent({
+  id: '3382678a-2f3b-437c-997a-a2586eacb671',
+  list: listName,
+  type: ComponentType.RadiosField
+})
 const radioPage = buildQuestionPage({
-  id: '6282ee22-5474-4701-b517-f8fdf61c1b3e',
+  id: radioPageId,
   title: 'Radio page',
-  components: [
-    buildRadioComponent({
-      id: '3382678a-2f3b-437c-997a-a2586eacb671',
-      list: listName,
-      type: ComponentType.RadiosField
-    })
-  ]
+  components: [radioComponent]
 })
 
 const list = buildList({
@@ -228,8 +230,8 @@ describe('utils', () => {
     })
   })
 
-  describe('hasUniquelyMappedList', () => {
-    it('should return true if list is orphaned', () => {
+  describe('findUniquelyMappedList', () => {
+    it('should return list id if list is orphaned', () => {
       const definition = buildDefinition({
         pages: [autoCompletePage],
         lists: [list]
@@ -240,7 +242,17 @@ describe('utils', () => {
       ).toBe(autoCompleteListId)
     })
 
-    it('should return false if page has no list', () => {
+    it('should return undefined if list is not orphaned', () => {
+      const definition = buildDefinition({
+        pages: [autoCompletePage, radioPage],
+        lists: [list]
+      })
+      expect(
+        findUniquelyMappedList(definition, autoCompletePageId, componentId)
+      ).toBeUndefined()
+    })
+
+    it('should return undefined if page has no list', () => {
       const definition = buildDefinition({
         pages: [questionPage]
       })
@@ -257,15 +269,50 @@ describe('utils', () => {
         findUniquelyMappedList(definition, autoCompletePageId, questionPageId)
       ).toBeUndefined()
     })
+  })
+  describe('findPageUniquelyMappedLists', () => {
+    const radioList2Id = '366942ab-640b-4d2e-8637-a6c1f1001d9a'
+    const radioPage2Id = '55c220b1-bfda-48ff-9297-504721be919c'
+    const radioList2Name = 'RadioList2'
+    const radioList2 = buildList({
+      id: radioList2Id,
+      name: radioList2Name
+    })
+    const radioComponent2Id = 'fb612bb3-1442-41c8-b36f-8ab210f9b24c'
+    const radioCompnent2 = buildRadioComponent({
+      id: radioComponent2Id,
+      list: radioList2Name
+    })
+    const radioPage2 = buildQuestionPage({
+      ...radioPage,
+      id: radioPage2Id,
+      components: [radioComponent, radioCompnent2]
+    })
+    it('should return an array of list ids', () => {
+      const definition = buildDefinition({
+        pages: [autoCompletePage, radioPage, radioPage2],
+        lists: [list, radioList2]
+      })
+      expect(findPageUniquelyMappedLists(definition, radioPage2Id)).toEqual([
+        radioList2Id
+      ])
+    })
 
-    it('should return undefined if list is not orphaned', () => {
+    it('should return empty list if lists are not orphaned', () => {
       const definition = buildDefinition({
         pages: [autoCompletePage, radioPage],
         lists: [list]
       })
+      expect(findPageUniquelyMappedLists(definition, radioPageId)).toEqual([])
+    })
+
+    it('should return empty list if page does not exist', () => {
       expect(
-        findUniquelyMappedList(definition, autoCompletePageId, componentId)
-      ).toBeUndefined()
+        findPageUniquelyMappedLists(
+          buildDefinition(),
+          'e36fdaad-1395-4efe-bfec-ceae7efaf8e3'
+        )
+      ).toEqual([])
     })
   })
 })
