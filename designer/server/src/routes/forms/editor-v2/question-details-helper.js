@@ -80,6 +80,62 @@ export function handleEnhancedActionOnGet(yar, stateId, query) {
 }
 
 /**
+ *
+ * @param {Request<{ Payload: FormEditorInputQuestionDetails }>} request
+ * @param {QuestionSessionState} state
+ * @param {string } stateId
+ * @returns { string | undefined }
+ */
+function handleSaveItem(request, state, stateId) {
+  const { yar, payload } = request
+  const listItemsSnapshot =
+    state.listItems?.map((x) => {
+      return { ...x }
+    }) ?? []
+
+  const foundRow = listItemsSnapshot.find((x) => x.id === payload.radioId)
+  if (foundRow) {
+    // Update
+    foundRow.text = payload.radioText
+    foundRow.hint = payload.radioHint
+      ? {
+          text: payload.radioHint
+        }
+      : undefined
+    foundRow.value = payload.radioValue
+  } else {
+    // Insert
+    listItemsSnapshot.push({
+      text: payload.radioText,
+      hint: payload.radioHint
+        ? {
+            text: payload.radioHint
+          }
+        : undefined,
+      value: payload.radioValue,
+      id: randomUUID()
+    })
+  }
+  const fullItemTexts = listItemsSnapshot.map((x) => x.text)
+
+  // Check for uniqueness
+  const { error } = listUniquenessSchema.validate({
+    radioText: fullItemTexts
+  })
+  if (error) {
+    addErrorsToSession(request, error, errorKey)
+    return '#'
+  }
+
+  setQuestionSessionState(yar, stateId, {
+    ...state,
+    editRow: setEditRowState(undefined, false),
+    listItems: listItemsSnapshot
+  })
+  return radiosSectionListItemsAnchor
+}
+
+/**
  * @param {Request<{ Payload: FormEditorInputQuestionDetails }>} request
  * @param {string} stateId
  * @param {Partial<ComponentDef>} questionDetails
@@ -118,51 +174,7 @@ export function handleEnhancedActionOnPost(request, stateId, questionDetails) {
     return radiosSectionListItemsAnchor
   }
   if (enhancedAction === 'save-item') {
-    const listItemsSnapshot =
-      state.listItems?.map((x) => {
-        return { ...x }
-      }) ?? []
-
-    const foundRow = listItemsSnapshot.find((x) => x.id === payload.radioId)
-    if (foundRow) {
-      // Update
-      foundRow.text = payload.radioText
-      foundRow.hint = payload.radioHint
-        ? {
-            text: payload.radioHint
-          }
-        : undefined
-      foundRow.value = payload.radioValue
-    } else {
-      // Insert
-      listItemsSnapshot.push({
-        text: payload.radioText,
-        hint: payload.radioHint
-          ? {
-              text: payload.radioHint
-            }
-          : undefined,
-        value: payload.radioValue,
-        id: randomUUID()
-      })
-    }
-    const fullItemTexts = listItemsSnapshot.map((x) => x.text)
-
-    // Check for uniqueness
-    const { error } = listUniquenessSchema.validate({
-      radioText: fullItemTexts
-    })
-    if (error) {
-      addErrorsToSession(request, error, errorKey)
-      return '#'
-    }
-
-    setQuestionSessionState(yar, stateId, {
-      ...state,
-      editRow: setEditRowState(undefined, false),
-      listItems: listItemsSnapshot
-    })
-    return radiosSectionListItemsAnchor
+    return handleSaveItem(request, state, stateId)
   }
   return undefined
 }
