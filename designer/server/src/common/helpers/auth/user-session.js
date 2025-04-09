@@ -37,8 +37,9 @@ export function createUser(credentials, claims) {
 /**
  * @param {Request<{ AuthArtifactsExtra: AuthArtifacts }>} request
  * @param {AuthArtifacts} [artifacts] - Sign in response using refresh token
+ * @param {string} [flowIdOverride] - Reuse an existing flowId
  */
-export async function createUserSession(request, artifacts) {
+export async function createUserSession(request, artifacts, flowIdOverride) {
   const { auth, server } = request
   const { credentials } = auth
 
@@ -50,7 +51,7 @@ export async function createUserSession(request, artifacts) {
   credentials.idToken = artifacts.id_token
   credentials.refreshToken = artifacts.refresh_token
   credentials.expiresIn = artifacts.expires_in
-  credentials.flowId = randomUUID() // a unique ID for the current session
+  credentials.flowId = flowIdOverride ?? randomUUID() // a unique ID for the current session
 
   if (!hasAuthenticated(credentials)) {
     throw new Error('Missing user authentication tokens')
