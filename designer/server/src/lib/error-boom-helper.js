@@ -1,19 +1,37 @@
+import { ApiErrorCode } from '@defra/forms-model'
 import Boom from '@hapi/boom'
 import Joi from 'joi'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
 
+const duplicatePageTitle =
+  'This page title already exists - use a unique page title'
+
 const boomMappings = [
   {
-    errorCode: 409,
-    errorStartsWith: 'Duplicate page path',
+    statusCode: 409,
+    errorCode: ApiErrorCode.DuplicatePagePathPage,
     errorKey: sessionNames.validationFailure.editorQuestions,
     fieldName: 'pageHeading',
-    userMessage: 'This page title already exists - use a unique page title'
+    userMessage: duplicatePageTitle
   },
   {
-    errorCode: 409,
-    errorStartsWith: 'Duplicate page path',
+    statusCode: 409,
+    errorCode: ApiErrorCode.DuplicatePagePathPage,
+    errorKey: sessionNames.validationFailure.editorGuidance,
+    fieldName: 'pageHeading',
+    userMessage: duplicatePageTitle
+  },
+  {
+    statusCode: 409,
+    errorCode: ApiErrorCode.DuplicatePagePathComponent,
+    errorKey: sessionNames.validationFailure.editorGuidance,
+    fieldName: 'pageHeading',
+    userMessage: duplicatePageTitle
+  },
+  {
+    statusCode: 409,
+    errorCode: ApiErrorCode.DuplicatePagePathComponent,
     errorKey: sessionNames.validationFailure.editorQuestionDetails,
     fieldName: 'question',
     userMessage:
@@ -42,7 +60,7 @@ export function createJoiError(fieldName, message) {
 }
 
 /**
- * @param {Boom.Boom<{ message: string, statusCode: number }>} boomError
+ * @param {Boom.Boom<{ message: string, statusCode: number, custom?: { errorCode?: string } }>} boomError
  * @param {ValidationSessionKey} errorKey
  * @param {string} [fieldName]
  */
@@ -57,8 +75,8 @@ export function checkBoomError(boomError, errorKey, fieldName = 'general') {
 
   const error = boomMappings.find(
     (x) =>
-      x.errorCode === boomError.data?.statusCode &&
-      boomMessage.startsWith(x.errorStartsWith) &&
+      x.statusCode === boomError.data?.statusCode &&
+      boomError.data.custom?.errorCode === x.errorCode &&
       x.errorKey === errorKey
   )
 

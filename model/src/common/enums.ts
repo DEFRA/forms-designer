@@ -3,8 +3,8 @@ export enum FormStatus {
   Live = 'live'
 }
 
-export enum ApiErrorFunctionCode {
+export enum ApiErrorCode {
   General = 'General',
   DuplicatePagePathPage = 'DuplicatePagePathPage',
-  DuplicatePagePathQuestion = 'DuplicatePagePathQuestion'
+  DuplicatePagePathComponent = 'DuplicatePagePathComponent'
 }

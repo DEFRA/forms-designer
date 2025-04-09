@@ -13,6 +13,7 @@ import {
   addPageAndFirstQuestion,
   setPageHeadingAndGuidance
 } from '~/src/lib/editor.js'
+import { checkBoomError } from '~/src/lib/error-boom-helper.js'
 import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
@@ -162,23 +163,34 @@ export default [
       const metadata = await forms.get(slug, token)
       const definition = await forms.getDraftFormDefinition(metadata.id, token)
 
-      const { finalPageId, finalQuestionId } = await addOrUpdateGuidance(
-        metadata.id,
-        token,
-        pageId,
-        questionId,
-        definition,
-        payload
-      )
-
-      yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
-
-      // Redirect to next page
-      return h
-        .redirect(
-          editorv2Path(slug, `page/${finalPageId}/guidance/${finalQuestionId}`)
+      try {
+        const { finalPageId, finalQuestionId } = await addOrUpdateGuidance(
+          metadata.id,
+          token,
+          pageId,
+          questionId,
+          definition,
+          payload
         )
-        .code(StatusCodes.SEE_OTHER)
+
+        yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
+
+        // Redirect to next page
+        return h
+          .redirect(
+            editorv2Path(
+              slug,
+              `page/${finalPageId}/guidance/${finalQuestionId}`
+            )
+          )
+          .code(StatusCodes.SEE_OTHER)
+      } catch (err) {
+        const error = checkBoomError(/** @type {Boom.Boom} */ (err), errorKey)
+        if (error) {
+          return redirectWithErrors(request, h, error, errorKey)
+        }
+        throw err
+      }
     },
     options: {
       validate: {
@@ -200,5 +212,6 @@ export default [
 
 /**
  * @import { ComponentDef, FormDefinition, FormEditorInputGuidancePage } from '@defra/forms-model'
+ * @import Boom from '@hapi/boom'
  * @import { ServerRoute } from '@hapi/hapi'
  */
