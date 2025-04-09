@@ -114,6 +114,9 @@ export function handleEnhancedActionOnPost(request, stateId, questionDetails) {
     setQuestionSessionState(yar, stateId, state)
     return '#add-option'
   }
+  if (enhancedAction === 're-order') {
+    return radiosSectionListItemsAnchor
+  }
   if (enhancedAction === 'save-item') {
     const listItemsSnapshot =
       state.listItems?.map((x) => {
