@@ -116,15 +116,36 @@ export const componentsSavingLists = [
  * @returns {boolean}
  */
 export function noListToSave(type, state) {
-  return !isListComponent(type) || !state?.listItems
+  return !isListComponentType(type) || !state?.listItems
+}
+
+/**
+ * @param {(component: ComponentDef) => boolean} predicate
+ * @returns {(page: Page) => boolean}
+ */
+export function isFulfilledOnPageComponent(predicate) {
+  return /** @type {(page: Page) => boolean}} */ (
+    (page) => {
+      return hasComponents(page) && page.components.some(predicate)
+    }
+  )
 }
 
 /**
  * @param { ComponentType | undefined } type
  * @returns {boolean}
  */
-export function isListComponent(type) {
+export function isListComponentType(type) {
   return componentsSavingLists.includes(type ?? ComponentType.TextField)
+}
+
+/**
+ * TypeGuard to check if component is a ListComponentsDef
+ * @param { ComponentDef | undefined } component
+ * @returns { component is ListComponentsDef }
+ */
+export function isListComponent(component) {
+  return isListComponentType(component?.type)
 }
 
 /**
@@ -157,7 +178,68 @@ export function mapListToAutoCompleteStr(list) {
 }
 
 /**
+ * Checks whether component list will be orphaned after deletion
+ * @param {FormDefinition} definition
+ * @param {string} pageId
+ * @param {string} componentId
+ */
+export function findUniquelyMappedList(definition, pageId, componentId) {
+  const component = getComponentFromDefinition(definition, pageId, componentId)
+
+  if (!isListComponent(component)) {
+    return undefined
+  }
+
+  const { id } = component
+
+  const list = getListFromComponent(component, definition)
+
+  if (!list) {
+    return undefined
+  }
+
+  const predicate = /** @type {(component: ComponentDef) => boolean} */ (
+    (currentComponent) =>
+      isListComponent(currentComponent) &&
+      currentComponent.id !== id &&
+      currentComponent.list === list.name
+  )
+  const listIsNotUnique = definition.pages.some(
+    isFulfilledOnPageComponent(predicate)
+  )
+
+  return listIsNotUnique ? undefined : list.id
+}
+
+/**
+ * Returns an array of list ids are unique to the page
+ * @param {FormDefinition} definition
+ * @param {string} pageId
+ * @returns {string[]}
+ */
+export function findPageUniquelyMappedLists(definition, pageId) {
+  const page = getPageFromDefinition(definition, pageId)
+
+  return hasComponents(page)
+    ? page.components.reduce((listIds, component) => {
+        if (component.id !== undefined) {
+          const listId = findUniquelyMappedList(
+            definition,
+            pageId,
+            component.id
+          )
+
+          if (listId) {
+            return [...listIds, listId]
+          }
+        }
+        return listIds
+      }, /** @type {string[]} */ ([]))
+    : []
+}
+
+/**
  * @import { ErrorDetailsItem } from '~/src/common/helpers/types.js'
- * @import { ComponentDef, FormDefinition, List, Page, QuestionSessionState } from '@defra/forms-model'
+ * @import { ComponentDef, FormDefinition, List, Page, QuestionSessionState, ListComponentsDef } from '@defra/forms-model'
  * @import Wreck from '@hapi/wreck'
  */

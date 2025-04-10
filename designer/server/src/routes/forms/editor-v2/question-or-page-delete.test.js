@@ -188,6 +188,9 @@ describe('Editor v2 question delete routes', () => {
 
   test('POST - should delete page and redirect to pages list', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithSinglePage)
 
     const options = {
       method: 'post',
@@ -203,7 +206,8 @@ describe('Editor v2 question delete routes', () => {
     expect(deletePage).toHaveBeenCalledWith(
       testFormMetadata.id,
       expect.anything(),
-      'p1'
+      'p1',
+      testFormDefinitionWithSinglePage
     )
     expect(headers.location).toBe('/library/my-form-slug/editor-v2/pages')
   })
@@ -230,7 +234,8 @@ describe('Editor v2 question delete routes', () => {
       testFormMetadata.id,
       expect.anything(),
       'p1',
-      'q1'
+      'q1',
+      definition
     )
     expect(headers.location).toBe('/library/my-form-slug/editor-v2/pages')
   })
@@ -255,7 +260,8 @@ describe('Editor v2 question delete routes', () => {
     expect(deletePage).toHaveBeenCalledWith(
       testFormMetadata.id,
       expect.anything(),
-      'p1'
+      'p1',
+      definition
     )
     expect(headers.location).toBe('/library/my-form-slug/editor-v2/pages')
   })

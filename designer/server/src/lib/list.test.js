@@ -1,4 +1,5 @@
 import { buildDefinition, buildList } from '~/src/__stubs__/form-definition.js'
+import { uniquelyMappedListsStubs } from '~/src/__stubs__/list.js'
 import {
   baseOptions,
   createMockResponse,
@@ -12,11 +13,15 @@ import {
   buildListFromDetails,
   createList,
   deleteList,
+  removeUniquelyMappedListFromQuestion,
+  removeUniquelyMappedListsFromPage,
   updateList,
   upsertList
 } from '~/src/lib/list.js'
 
 jest.mock('~/src/lib/fetch.js')
+
+const listStubs = uniquelyMappedListsStubs()
 
 describe('list.js', () => {
   const formId = '98dbfb6c-93b7-41dc-86e7-02c7abe4ba38'
@@ -221,6 +226,71 @@ describe('list.js', () => {
       await upsertList(formId, definition, token, list)
       const [calledUrl] = mockedPutJson.mock.calls[0]
       expect(calledUrl).toEqual(requestUrl)
+    })
+  })
+
+  describe('removeUniquelyMappedListFromQuestion', () => {
+    it('should remove a list from a question if it is not attached to any other questions', async () => {
+      const { definition, pageId, componentId, listId } =
+        listStubs.orphanedListOnComponent
+
+      await removeUniquelyMappedListFromQuestion(
+        formId,
+        definition,
+        token,
+        pageId,
+        componentId
+      )
+
+      expect(mockedDelJson).toHaveBeenCalledTimes(1)
+      const [requestUrl] = mockedDelJson.mock.calls[0]
+      expect(requestUrl).toEqual(
+        new URL(`./${formId}/definition/draft/lists/${listId}`, formsEndpoint)
+      )
+    })
+
+    it('should not remove a list if list is attached to multiple questions', async () => {
+      const { definition, pageId, componentId } =
+        listStubs.nonOrphanedListOnComponent
+
+      await removeUniquelyMappedListFromQuestion(
+        formId,
+        definition,
+        token,
+        pageId,
+        componentId
+      )
+
+      expect(mockedDelJson).toHaveBeenCalledTimes(0)
+    })
+  })
+
+  describe('removeUniquelyMappedListsFromPage', () => {
+    it('should remove all the uniquely mapped lists from a page', async () => {
+      const { definition, pageId, listIds } =
+        listStubs.pageWithUniquelyMappedLists
+      await removeUniquelyMappedListsFromPage(formId, definition, token, pageId)
+      expect(mockedDelJson).toHaveBeenCalledTimes(2)
+      const [requestUrl1] = mockedDelJson.mock.calls[0]
+      const [requestUrl2] = mockedDelJson.mock.calls[1]
+      expect(requestUrl1).toEqual(
+        new URL(
+          `./${formId}/definition/draft/lists/${listIds[0]}`,
+          formsEndpoint
+        )
+      )
+      expect(requestUrl2).toEqual(
+        new URL(
+          `./${formId}/definition/draft/lists/${listIds[1]}`,
+          formsEndpoint
+        )
+      )
+    })
+
+    it('should not remove lists given no lists are uniquely mapped', async () => {
+      const { definition, pageId } = listStubs.pageWithNonUniquelyMappedList
+      await removeUniquelyMappedListsFromPage(formId, definition, token, pageId)
+      expect(mockedDelJson).toHaveBeenCalledTimes(0)
     })
   })
 })

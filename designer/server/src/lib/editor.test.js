@@ -30,6 +30,10 @@ import {
   setPageHeadingAndGuidance,
   updateQuestion
 } from '~/src/lib/editor.js'
+import {
+  removeUniquelyMappedListFromQuestion,
+  removeUniquelyMappedListsFromPage
+} from '~/src/lib/list.js'
 
 jest.mock('~/src/lib/fetch.js')
 jest.mock('~/src/lib/list.js')
@@ -833,9 +837,15 @@ describe('editor.js', () => {
           body: { result: 'ok' }
         })
 
-        await deletePage(formId, token, '12345')
+        await deletePage(formId, token, '12345', formDefinition)
 
         expect(mockedDelJson).toHaveBeenCalledWith(requestUrl, expectedOptions)
+        expect(removeUniquelyMappedListsFromPage).toHaveBeenCalledWith(
+          formId,
+          formDefinition,
+          token,
+          '12345'
+        )
       })
     })
 
@@ -844,9 +854,9 @@ describe('editor.js', () => {
         const testError = new Error('Network error')
         mockedDelJson.mockRejectedValueOnce(testError)
 
-        await expect(deletePage(formId, token, '12345')).rejects.toThrow(
-          testError
-        )
+        await expect(
+          deletePage(formId, token, '12345', formDefinition)
+        ).rejects.toThrow(testError)
       })
     })
   })
@@ -867,9 +877,16 @@ describe('editor.js', () => {
           body: { result: 'ok' }
         })
 
-        await deleteQuestion(formId, token, '12345', '67890')
+        await deleteQuestion(formId, token, '12345', '67890', formDefinition)
 
         expect(mockedDelJson).toHaveBeenCalledWith(requestUrl, expectedOptions)
+        expect(removeUniquelyMappedListFromQuestion).toHaveBeenCalledWith(
+          formId,
+          formDefinition,
+          token,
+          '12345',
+          '67890'
+        )
       })
     })
 
@@ -879,7 +896,7 @@ describe('editor.js', () => {
         mockedDelJson.mockRejectedValueOnce(testError)
 
         await expect(
-          deleteQuestion(formId, token, '12345', '67890')
+          deleteQuestion(formId, token, '12345', '67890', formDefinition)
         ).rejects.toThrow(testError)
       })
     })

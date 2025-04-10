@@ -2,7 +2,12 @@ import { randomId } from '@defra/forms-model'
 
 import config from '~/src/config.js'
 import { delJson, postJson, putJson } from '~/src/lib/fetch.js'
-import { getHeaders, stringHasValue } from '~/src/lib/utils.js'
+import {
+  findPageUniquelyMappedLists,
+  findUniquelyMappedList,
+  getHeaders,
+  stringHasValue
+} from '~/src/lib/utils.js'
 
 const formsEndpoint = new URL('/forms/', config.managerUrl)
 const postJsonByListType =
@@ -117,6 +122,49 @@ export async function upsertList(formId, definition, token, upsertedList) {
   }
 
   return createList(formId, token, upsertedList)
+}
+
+/**
+ * Removes a list from a question if question list is unique
+ * @param {string} formId
+ * @param {FormDefinition} definition
+ * @param {string} token
+ * @param {string} pageId
+ * @param {string} questionId
+ */
+export async function removeUniquelyMappedListFromQuestion(
+  formId,
+  definition,
+  token,
+  pageId,
+  questionId
+) {
+  const listIdToDelete = findUniquelyMappedList(definition, pageId, questionId)
+
+  if (listIdToDelete !== undefined) {
+    await deleteList(formId, listIdToDelete, token)
+  }
+}
+
+/**
+ * Deletes all the uniquely mapped lists
+ * @param {string} formId
+ * @param {FormDefinition} definition
+ * @param {string} token
+ * @param {string} pageId
+ */
+export async function removeUniquelyMappedListsFromPage(
+  formId,
+  definition,
+  token,
+  pageId
+) {
+  const listIdsToDelete = findPageUniquelyMappedLists(definition, pageId)
+
+  let listId
+  for (listId of listIdsToDelete) {
+    await deleteList(formId, listId, token)
+  }
 }
 
 /**

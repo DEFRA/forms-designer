@@ -2,7 +2,7 @@ import { ComponentType, questionDetailsFullSchema } from '@defra/forms-model'
 import Joi from 'joi'
 
 import { QuestionAdvancedSettings } from '~/src/common/constants/editor.js'
-import { isCheckboxSelected, isListComponent } from '~/src/lib/utils.js'
+import { isCheckboxSelected, isListComponentType } from '~/src/lib/utils.js'
 import { mapPayloadToFileMimeTypes } from '~/src/models/forms/editor-v2/base-settings-fields.js'
 import {
   GOVUK_INPUT_WIDTH_3,
@@ -472,7 +472,7 @@ export function mapQuestionDetails(payload) {
     return mapFileUploadQuestionDetails(payload)
   }
   if (
-    isListComponent(
+    isListComponentType(
       /** @type { ComponentType | undefined } */ (payload.questionType)
     )
   ) {

@@ -20,7 +20,7 @@ import {
   createQuestionSessionState,
   getQuestionSessionState
 } from '~/src/lib/session-helper.js'
-import { isListComponent } from '~/src/lib/utils.js'
+import { isListComponentType } from '~/src/lib/utils.js'
 import {
   allSpecificSchemas,
   mapQuestionDetails
@@ -87,7 +87,7 @@ function redirectWithAnchor(h, slug, pageId, questionId, stateId, anchor) {
  * @returns {Promise<undefined|string>}
  */
 async function saveList(formId, definition, token, questionDetails, listItems) {
-  if (!isListComponent(questionDetails.type ?? ComponentType.TextField)) {
+  if (!isListComponentType(questionDetails.type ?? ComponentType.TextField)) {
     return undefined
   }
 

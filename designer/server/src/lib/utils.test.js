@@ -11,8 +11,11 @@ import {
   testFormDefinitionWithNoQuestions,
   testFormDefinitionWithTwoPagesAndQuestions
 } from '~/src/__stubs__/form-definition.js'
+import { uniquelyMappedListsStubs } from '~/src/__stubs__/list.js'
 import config from '~/src/config.js'
 import {
+  findPageUniquelyMappedLists,
+  findUniquelyMappedList,
   getComponentFromDefinition,
   getComponentsOnPageFromDefinition,
   getHeaders,
@@ -22,6 +25,8 @@ import {
 } from '~/src/lib/utils.js'
 
 jest.mock('@defra/hapi-tracing')
+
+const listStubs = uniquelyMappedListsStubs()
 
 describe('utils', () => {
   describe('Header helper functions', () => {
@@ -224,6 +229,62 @@ describe('utils', () => {
       expect(
         noListToSave(ComponentType.CheckboxesField, someListItems)
       ).toBeFalsy()
+    })
+  })
+
+  describe('findUniquelyMappedList', () => {
+    it('should return list id if list is orphaned', () => {
+      const { definition, pageId, componentId, listId } =
+        listStubs.orphanedListOnComponent
+
+      expect(findUniquelyMappedList(definition, pageId, componentId)).toBe(
+        listId
+      )
+    })
+
+    it('should return undefined if list is not orphaned', () => {
+      const { definition, componentId, pageId } =
+        listStubs.nonOrphanedListOnComponent
+
+      expect(
+        findUniquelyMappedList(definition, pageId, componentId)
+      ).toBeUndefined()
+    })
+
+    it('should return undefined if page has no list', () => {
+      const { definition, pageId, componentId } = listStubs.noListOnPage
+      expect(
+        findUniquelyMappedList(definition, pageId, componentId)
+      ).toBeUndefined()
+    })
+
+    it('should return undefined if component does not exist', () => {
+      const { definition, pageId } = listStubs.orphanedListOnComponent
+      expect(
+        findUniquelyMappedList(definition, pageId, listStubs.questionPageId)
+      ).toBeUndefined()
+    })
+  })
+
+  describe('findPageUniquelyMappedLists', () => {
+    it('should return an array of list ids', () => {
+      const { definition, pageId, listId } = listStubs.pageWithUniqueMappedList
+      expect(findPageUniquelyMappedLists(definition, pageId)).toEqual([listId])
+    })
+
+    it('should return empty list if lists are not orphaned', () => {
+      const { definition, pageId } = listStubs.pageWithNonUniquelyMappedList
+
+      expect(findPageUniquelyMappedLists(definition, pageId)).toEqual([])
+    })
+
+    it('should return empty list if page does not exist', () => {
+      expect(
+        findPageUniquelyMappedLists(
+          buildDefinition(),
+          'e36fdaad-1395-4efe-bfec-ceae7efaf8e3'
+        )
+      ).toEqual([])
     })
   })
 })
