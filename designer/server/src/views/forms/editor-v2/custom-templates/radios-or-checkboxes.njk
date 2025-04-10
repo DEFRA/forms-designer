@@ -28,7 +28,11 @@
               <div class="govuk-summary-card__content govuk-!-padding-top-1 editor-card-background-white govuk-!-padding-bottom-1">
                 <dl class="govuk-summary-list">
                   <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">{{ item.text }}</dt>
+                    <dt class="govuk-summary-list__key">{{ item.text }}
+                    {% if item.hint.text %}
+                    <p class="govuk-hint govuk-!-margin-top-0 govuk-!-margin-bottom-0">{{ item.hint.text }}</p>
+                    {% endif %}
+                    </dt>
                     <dd class="govuk-summary-list__actions">
                       <ul class="govuk-summary-list__actions-list">
                         <li class="govuk-summary-list__actions-list-item">
@@ -66,14 +70,14 @@
 {% if not state.editRow.expanded %}
 <div class="govuk-button-group">
   <!-- Add Another Option Button -->
-  <a href="?action=add-item" id="add-option-button" class="govuk-button govuk-!-margin-bottom-4 govuk-!-margin-bottom-6">
+  <button id="add-option-button" type="submit" class="govuk-button govuk-!-margin-bottom-4 govuk-!-margin-bottom-6" name="enhancedAction" value="add-item">
     Add item
-  </a>
+  </button>
 
   {% if (state.listItems | length > 1) %}
-  <a href="?action=re-order" id="edit-options-button" class="govuk-button govuk-button--inverse">
+  <button id="edit-options-button" type="submit" class="govuk-button govuk-button--inverse" name="enhancedAction" value="re-order">
     Re-order
-  </a>
+  </button>
   {% endif %}
 </div>
 {% endif %}

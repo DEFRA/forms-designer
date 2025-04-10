@@ -49,20 +49,6 @@ export function handleEnhancedActionOnGet(yar, stateId, query) {
     throw new Error('Invalid session contents')
   }
 
-  if (action === 'add-item') {
-    setQuestionSessionState(yar, stateId, {
-      ...state,
-      editRow: {
-        expanded: true
-      }
-    })
-    return '#add-option'
-  }
-
-  if (action === 're-order') {
-    return radiosSectionListItemsAnchor
-  }
-
   if (action === 'delete') {
     const newList = state.listItems?.filter((x) => x.id !== id)
     setQuestionSessionState(yar, stateId, {
@@ -180,6 +166,17 @@ export function handleEnhancedActionOnPost(request, stateId, questionDetails) {
     },
     listItems: preState.listItems ?? []
   })
+
+  if (enhancedAction === 'add-item') {
+    setQuestionSessionState(yar, stateId, state)
+    return '#add-option'
+  }
+
+  if (enhancedAction === 're-order') {
+    setQuestionSessionState(yar, stateId, state)
+    return radiosSectionListItemsAnchor
+  }
+
   if (enhancedAction === 'save-item') {
     return handleSaveItem(request, state, stateId)
   }

@@ -42,7 +42,7 @@ const schema = baseSchema.concat(allSpecificSchemas)
 
 const preSchema = Joi.object()
   .keys({
-    listItemCount: questionDetailsFullSchema.listItemCountSchema.when(
+    'list-items': questionDetailsFullSchema.listItemCountSchema.when(
       'questionType',
       {
         is: Joi.string().valid('CheckboxesField', 'RadiosField'),
@@ -127,7 +127,7 @@ export function validatePreSchema(request, h) {
 
   const { error } = preSchema.validate({
     ...payload,
-    listItemCount: state?.listItems?.length ?? 0
+    'list-items': state?.listItems?.length ?? 0
   })
 
   if (error) {
