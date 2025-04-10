@@ -12,6 +12,7 @@ import {
 import {
   SAVE_AND_CONTINUE,
   baseModelFields,
+  buildPreviewErrorsUrl,
   buildPreviewUrl,
   getFormSpecificNavigation,
   getPageNum,
@@ -246,6 +247,7 @@ export function questionDetailsViewModel(
   const extraFieldNames = extraFields.map((field) => field.name ?? 'unknown')
   const errorList = buildErrorList(validation?.formErrors)
   const previewPageUrl = `${buildPreviewUrl(metadata.slug)}${pagePath}?force`
+  const previewErrorsUrl = `${buildPreviewErrorsUrl(metadata.slug)}${pagePath}/${questionFieldsOverride.id}`
   const listDetails = getListDetails(state, questionFieldsOverride)
 
   return {
@@ -274,6 +276,7 @@ export function questionDetailsViewModel(
     ),
     buttonText: SAVE_AND_CONTINUE,
     previewPageUrl,
+    previewErrorsUrl,
     isOpen: hasDataOrErrorForDisplay(extraFieldNames, errorList, extraFields),
     getFieldType: (/** @type {GovukField} */ field) =>
       getFieldComponentType(field),
