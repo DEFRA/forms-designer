@@ -199,10 +199,10 @@ export function findUniquelyMappedList(definition, pageId, componentId) {
   }
 
   const predicate = /** @type {(component: ComponentDef) => boolean} */ (
-    (component) =>
-      isListComponent(component) &&
-      component.id !== id &&
-      component.list === list.name
+    (currentComponent) =>
+      isListComponent(currentComponent) &&
+      currentComponent.id !== id &&
+      currentComponent.list === list.name
   )
   const listIsNotUnique = definition.pages.some(
     isFulfilledOnPageComponent(predicate)

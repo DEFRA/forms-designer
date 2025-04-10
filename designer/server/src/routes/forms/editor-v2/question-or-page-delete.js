@@ -12,13 +12,11 @@ const ROUTE_FULL_PATH_PAGE = `/library/{slug}/editor-v2/page/{pageId}/delete/{qu
 const CONFIRMATION_PAGE_VIEW = 'forms/confirmation-page'
 
 /**
- * @param {string} formId
- * @param {string} token
  * @param {string} pageId
  * @param {FormDefinition} definition
  * @returns {boolean}
  */
-export function shouldDeleteQuestionOnly(formId, token, pageId, definition) {
+export function shouldDeleteQuestionOnly(pageId, definition) {
   // If only one (non-guidance question) on the page, 'deleting the question' becomes 'deleting the page'
 
   const components = getComponentsOnPageFromDefinition(definition, pageId)
@@ -81,10 +79,7 @@ export default [
       const definition = await forms.getDraftFormDefinition(formId, token)
 
       // If only one (non-guidance question) on the page, 'deleting the question' becomes 'deleting the page'
-      if (
-        questionId &&
-        shouldDeleteQuestionOnly(formId, token, pageId, definition)
-      ) {
+      if (questionId && shouldDeleteQuestionOnly(pageId, definition)) {
         await deleteQuestion(formId, token, pageId, questionId, definition)
       } else {
         await deletePage(formId, token, pageId, definition)
