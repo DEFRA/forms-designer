@@ -265,6 +265,7 @@ describe('utils', () => {
       ).toBeUndefined()
     })
   })
+
   describe('findPageUniquelyMappedLists', () => {
     it('should return an array of list ids', () => {
       const { definition, pageId, listId } = listStubs.pageWithUniqueMappedList

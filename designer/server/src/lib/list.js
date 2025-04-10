@@ -2,7 +2,11 @@ import { randomId } from '@defra/forms-model'
 
 import config from '~/src/config.js'
 import { delJson, postJson, putJson } from '~/src/lib/fetch.js'
-import { getHeaders, stringHasValue } from '~/src/lib/utils.js'
+import {
+  findUniquelyMappedList,
+  getHeaders,
+  stringHasValue
+} from '~/src/lib/utils.js'
 
 const formsEndpoint = new URL('/forms/', config.managerUrl)
 const postJsonByListType =
@@ -117,6 +121,28 @@ export async function upsertList(formId, definition, token, upsertedList) {
   }
 
   return createList(formId, token, upsertedList)
+}
+
+/**
+ * Removes a list from a question if question list is unique
+ * @param {string} formId
+ * @param {string} pageId
+ * @param {string} componentId
+ * @param {FormDefinition} definition
+ * @param {string} token
+ */
+export async function removeUniquelyMappedListFromQuestion(
+  formId,
+  pageId,
+  componentId,
+  definition,
+  token
+) {
+  const listIdToDelete = findUniquelyMappedList(definition, pageId, componentId)
+
+  if (listIdToDelete !== undefined) {
+    await deleteList(formId, listIdToDelete, token)
+  }
 }
 
 /**
