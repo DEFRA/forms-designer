@@ -236,10 +236,10 @@ describe('list.js', () => {
 
       await removeUniquelyMappedListFromQuestion(
         formId,
-        pageId,
-        componentId,
         definition,
-        token
+        token,
+        pageId,
+        componentId
       )
 
       expect(mockedDelJson).toHaveBeenCalledTimes(1)
@@ -255,10 +255,10 @@ describe('list.js', () => {
 
       await removeUniquelyMappedListFromQuestion(
         formId,
-        pageId,
-        componentId,
         definition,
-        token
+        token,
+        pageId,
+        componentId
       )
 
       expect(mockedDelJson).toHaveBeenCalledTimes(0)
@@ -269,7 +269,7 @@ describe('list.js', () => {
     it('should remove all the uniquely mapped lists from a page', async () => {
       const { definition, pageId, listIds } =
         listStubs.pageWithUniquelyMappedLists
-      await removeUniquelyMappedListsFromPage(formId, pageId, definition, token)
+      await removeUniquelyMappedListsFromPage(formId, definition, token, pageId)
       expect(mockedDelJson).toHaveBeenCalledTimes(2)
       const [requestUrl1] = mockedDelJson.mock.calls[0]
       const [requestUrl2] = mockedDelJson.mock.calls[1]
@@ -289,7 +289,7 @@ describe('list.js', () => {
 
     it('should not remove lists given no lists are uniquely mapped', async () => {
       const { definition, pageId } = listStubs.pageWithNonUniquelyMappedList
-      await removeUniquelyMappedListsFromPage(formId, pageId, definition, token)
+      await removeUniquelyMappedListsFromPage(formId, definition, token, pageId)
       expect(mockedDelJson).toHaveBeenCalledTimes(0)
     })
   })

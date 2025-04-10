@@ -342,7 +342,7 @@ export async function deletePage(formId, token, pageId, definition) {
   await delJsonByType(buildRequestUrl(formId, `pages/${pageId}`), {
     ...getHeaders(token)
   })
-  await removeUniquelyMappedListsFromPage(formId, pageId, definition, token)
+  await removeUniquelyMappedListsFromPage(formId, definition, token, pageId)
 }
 
 /**
@@ -368,10 +368,10 @@ export async function deleteQuestion(
   )
   await removeUniquelyMappedListFromQuestion(
     formId,
-    pageId,
-    questionId,
     definition,
-    token
+    token,
+    pageId,
+    questionId
   )
 }
 

@@ -127,19 +127,19 @@ export async function upsertList(formId, definition, token, upsertedList) {
 /**
  * Removes a list from a question if question list is unique
  * @param {string} formId
- * @param {string} pageId
- * @param {string} componentId
  * @param {FormDefinition} definition
  * @param {string} token
+ * @param {string} pageId
+ * @param {string} questionId
  */
 export async function removeUniquelyMappedListFromQuestion(
   formId,
-  pageId,
-  componentId,
   definition,
-  token
+  token,
+  pageId,
+  questionId
 ) {
-  const listIdToDelete = findUniquelyMappedList(definition, pageId, componentId)
+  const listIdToDelete = findUniquelyMappedList(definition, pageId, questionId)
 
   if (listIdToDelete !== undefined) {
     await deleteList(formId, listIdToDelete, token)
@@ -149,15 +149,15 @@ export async function removeUniquelyMappedListFromQuestion(
 /**
  * Deletes all the uniquely mapped lists
  * @param {string} formId
- * @param {string} pageId
  * @param {FormDefinition} definition
  * @param {string} token
+ * @param {string} pageId
  */
 export async function removeUniquelyMappedListsFromPage(
   formId,
-  pageId,
   definition,
-  token
+  token,
+  pageId
 ) {
   const listIdsToDelete = findPageUniquelyMappedLists(definition, pageId)
 

@@ -842,9 +842,9 @@ describe('editor.js', () => {
         expect(mockedDelJson).toHaveBeenCalledWith(requestUrl, expectedOptions)
         expect(removeUniquelyMappedListsFromPage).toHaveBeenCalledWith(
           formId,
-          '12345',
           formDefinition,
-          token
+          token,
+          '12345'
         )
       })
     })
@@ -882,10 +882,10 @@ describe('editor.js', () => {
         expect(mockedDelJson).toHaveBeenCalledWith(requestUrl, expectedOptions)
         expect(removeUniquelyMappedListFromQuestion).toHaveBeenCalledWith(
           formId,
-          '12345',
-          '67890',
           formDefinition,
-          token
+          token,
+          '12345',
+          '67890'
         )
       })
     })
