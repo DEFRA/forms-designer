@@ -1,6 +1,10 @@
 import { Engine as CatboxMemory } from '@hapi/catbox-memory'
 import { Engine as CatboxRedis } from '@hapi/catbox-redis'
-import hapi, { type ServerOptions } from '@hapi/hapi'
+import hapi, {
+  type Request,
+  type ResponseToolkit,
+  type ServerOptions
+} from '@hapi/hapi'
 import inert from '@hapi/inert'
 import Wreck from '@hapi/wreck'
 import { ProxyAgent } from 'proxy-agent'
@@ -93,6 +97,24 @@ export async function createServer() {
     cache.set(`${userId}.${key}`, value, ttl)
   )
   server.method('state.drop', (userId, key) => cache.drop(`${userId}.${key}`))
+
+  server.ext('onRequest', (request: Request, h: ResponseToolkit) => {
+    const baseUrl = config.appBaseUrl // e.g. https://forms.defra.gov.uk
+
+    const baseDomain = new URL(baseUrl).hostname // e.g. forms.defra.gov.uk
+    const requestDomain = request.info.hostname // e.g. forms-designer.prod.cdp-int.cdp.cloud
+
+    // if the user is accessing the old URL
+    if (requestDomain !== baseDomain) {
+      // create a new URL from the original as that includes the port, then override the hostname only
+      const redirectUrl = new URL(request.url)
+      redirectUrl.hostname = baseDomain
+
+      return h.redirect(redirectUrl.toString()).takeover().permanent()
+    }
+
+    return h.continue
+  })
 
   await server.register(inert)
   await server.register(sessionManager)
