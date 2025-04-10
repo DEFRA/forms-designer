@@ -79,6 +79,17 @@ export function getPageFromDefinition(definition, pageId) {
 }
 
 /**
+ *
+ * @param {FormDefinition} definition
+ * @param {string} pageId
+ * @returns { ComponentDef[] }
+ */
+export function getComponentsOnPageFromDefinition(definition, pageId) {
+  const page = getPageFromDefinition(definition, pageId)
+  return hasComponents(page) ? page.components : []
+}
+
+/**
  * @param {FormDefinition} definition
  * @param {string} pageId
  * @param {string} questionId

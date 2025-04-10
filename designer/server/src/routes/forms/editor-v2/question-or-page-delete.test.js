@@ -4,11 +4,12 @@ import {
   testFormDefinitionWithAGuidancePage,
   testFormDefinitionWithNoQuestions,
   testFormDefinitionWithSinglePage,
+  testFormDefinitionWithTwoPagesAndQuestions,
   testFormDefinitionWithTwoQuestions
 } from '~/src/__stubs__/form-definition.js'
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
 import { createServer } from '~/src/createServer.js'
-import { deletePage } from '~/src/lib/editor.js'
+import { deletePage, deleteQuestion } from '~/src/lib/editor.js'
 import * as forms from '~/src/lib/forms.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
@@ -199,6 +200,58 @@ describe('Editor v2 question delete routes', () => {
     } = await renderResponse(server, options)
 
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(deletePage).toHaveBeenCalledWith(
+      testFormMetadata.id,
+      expect.anything(),
+      'p1'
+    )
+    expect(headers.location).toBe('/library/my-form-slug/editor-v2/pages')
+  })
+
+  test('POST - should delete question and redirect to pages list', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    const definition = structuredClone(
+      testFormDefinitionWithTwoPagesAndQuestions
+    )
+    jest.mocked(forms.getDraftFormDefinition).mockResolvedValueOnce(definition)
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/p1/delete/q1',
+      auth
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(deleteQuestion).toHaveBeenCalledWith(
+      testFormMetadata.id,
+      expect.anything(),
+      'p1',
+      'q1'
+    )
+    expect(headers.location).toBe('/library/my-form-slug/editor-v2/pages')
+  })
+
+  test('POST - should delete whole page if only a single question and redirect to pages list', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    const definition = structuredClone(testFormDefinitionWithSinglePage)
+    jest.mocked(forms.getDraftFormDefinition).mockResolvedValueOnce(definition)
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/p1/delete/c1',
+      auth
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(deleteQuestion).not.toHaveBeenCalled()
     expect(deletePage).toHaveBeenCalledWith(
       testFormMetadata.id,
       expect.anything(),
