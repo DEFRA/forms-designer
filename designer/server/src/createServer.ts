@@ -110,7 +110,7 @@ export async function createServer() {
       const redirectUrl = new URL(request.url)
       redirectUrl.hostname = baseDomain
 
-      return h.redirect(redirectUrl.toString()).takeover().permanent()
+      return h.redirect(redirectUrl.toString()).permanent().takeover()
     }
 
     return h.continue
