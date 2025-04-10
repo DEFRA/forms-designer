@@ -15,11 +15,12 @@ const CONFIRMATION_PAGE_VIEW = 'forms/confirmation-page'
  * @param {string} formId
  * @param {string} token
  * @param {string} pageId
- * @returns {Promise<boolean>}
+ * @param {FormDefinition} definition
+ * @returns {boolean}
  */
-export async function shouldDeleteQuestionOnly(formId, token, pageId) {
+export function shouldDeleteQuestionOnly(formId, token, pageId, definition) {
   // If only one (non-guidance question) on the page, 'deleting the question' becomes 'deleting the page'
-  const definition = await forms.getDraftFormDefinition(formId, token)
+
   const components = getComponentsOnPageFromDefinition(definition, pageId)
   const nonGuidanceComponents = components.filter(
     (comp, idx) => !(comp.type === ComponentType.Markdown && idx === 0)
@@ -74,17 +75,19 @@ export default [
       const { params, auth } = request
       const { token } = auth.credentials
       const { slug, pageId, questionId } = params
-
       const metadata = await forms.get(slug, token)
+
+      const formId = metadata.id
+      const definition = await forms.getDraftFormDefinition(formId, token)
 
       // If only one (non-guidance question) on the page, 'deleting the question' becomes 'deleting the page'
       if (
         questionId &&
-        (await shouldDeleteQuestionOnly(metadata.id, token, pageId))
+        shouldDeleteQuestionOnly(formId, token, pageId, definition)
       ) {
-        await deleteQuestion(metadata.id, token, pageId, questionId)
+        await deleteQuestion(formId, token, pageId, questionId, definition)
       } else {
-        await deletePage(metadata.id, token, pageId)
+        await deletePage(formId, token, pageId, definition)
       }
 
       // Redirect POST to GET
@@ -103,6 +106,6 @@ export default [
 ]
 
 /**
- * @import { FormEditorInputPage } from '@defra/forms-model'
+ * @import { FormEditorInputPage, FormDefinition } from '@defra/forms-model'
  * @import { ServerRoute } from '@hapi/hapi'
  */

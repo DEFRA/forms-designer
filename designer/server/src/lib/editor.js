@@ -9,6 +9,10 @@ import {
 import config from '~/src/config.js'
 import { delJson, patchJson, postJson, putJson } from '~/src/lib/fetch.js'
 import {
+  removeUniquelyMappedListFromQuestion,
+  removeUniquelyMappedListsFromPage
+} from '~/src/lib/list.js'
+import {
   getHeaders,
   getPageFromDefinition,
   isCheckboxSelected,
@@ -331,12 +335,14 @@ export async function migrateDefinitionToV2(formId, token) {
  * Delete a page
  * @param {string} formId
  * @param {string} token
- * @param { string | undefined } pageId
+ * @param {string} pageId
+ * @param {FormDefinition} definition
  */
-export async function deletePage(formId, token, pageId) {
+export async function deletePage(formId, token, pageId, definition) {
   await delJsonByType(buildRequestUrl(formId, `pages/${pageId}`), {
     ...getHeaders(token)
   })
+  await removeUniquelyMappedListsFromPage(formId, pageId, definition, token)
 }
 
 /**
@@ -345,13 +351,27 @@ export async function deletePage(formId, token, pageId) {
  * @param {string} token
  * @param {string} pageId
  * @param {string} questionId
+ * @param {FormDefinition} definition
  */
-export async function deleteQuestion(formId, token, pageId, questionId) {
+export async function deleteQuestion(
+  formId,
+  token,
+  pageId,
+  questionId,
+  definition
+) {
   await delJsonByType(
     buildRequestUrl(formId, `pages/${pageId}/components/${questionId}`),
     {
       ...getHeaders(token)
     }
+  )
+  await removeUniquelyMappedListFromQuestion(
+    formId,
+    pageId,
+    questionId,
+    definition,
+    token
   )
 }
 
