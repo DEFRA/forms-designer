@@ -106,11 +106,9 @@ export async function createServer() {
 
     // if the user is accessing the old URL
     if (requestDomain !== baseDomain) {
-      // create a new URL from the original as that includes the port, then override the hostname only
-      const redirectUrl = new URL(request.url)
-      redirectUrl.hostname = baseDomain
+      const redirectUrl = new URL(request.url, baseDomain).toString()
 
-      return h.redirect(redirectUrl.toString()).permanent().takeover()
+      return h.redirect(redirectUrl).permanent().takeover()
     }
 
     return h.continue
