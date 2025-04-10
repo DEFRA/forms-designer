@@ -98,6 +98,21 @@ export function buildRadioComponent(partialListComponent) {
 }
 
 /**
+ * @param {Partial<CheckboxesFieldComponent>} partialListComponent
+ * @returns {CheckboxesFieldComponent}
+ */
+export function buildCheckboxComponent(partialListComponent) {
+  return {
+    name: 'FellowshipOfTheRing',
+    title: 'Which are your favourite characters from the fellowship?',
+    type: ComponentType.CheckboxesField,
+    list: 'CheckboxList',
+    options: {},
+    ...partialListComponent
+  }
+}
+
+/**
  * Builder to create a Form Definition
  * @param {Partial<FormDefinition>} definitionPartial
  * @returns {FormDefinition}
@@ -716,5 +731,5 @@ export const testFormDefinitionWithRadioQuestionAndList = {
 }
 
 /**
- * @import { FormDefinition, PageQuestion, PageSummary, TextFieldComponent, FileUploadFieldComponent, AutocompleteFieldComponent, List, Item, RadiosFieldComponent } from '@defra/forms-model'
+ * @import { FormDefinition, PageQuestion, PageSummary, TextFieldComponent, FileUploadFieldComponent, AutocompleteFieldComponent, List, Item, RadiosFieldComponent, CheckboxesFieldComponent } from '@defra/forms-model'
  */

@@ -14,6 +14,7 @@ import {
   createList,
   deleteList,
   removeUniquelyMappedListFromQuestion,
+  removeUniquelyMappedListsFromPage,
   updateList,
   upsertList
 } from '~/src/lib/list.js'
@@ -260,6 +261,35 @@ describe('list.js', () => {
         token
       )
 
+      expect(mockedDelJson).toHaveBeenCalledTimes(0)
+    })
+  })
+
+  describe('removeUniquelyMappedListsFromPage', () => {
+    it('should remove all the uniquely mapped lists from a page', async () => {
+      const { definition, pageId, listIds } =
+        listStubs.pageWithUniquelyMappedLists
+      await removeUniquelyMappedListsFromPage(formId, pageId, definition, token)
+      expect(mockedDelJson).toHaveBeenCalledTimes(2)
+      const [requestUrl1] = mockedDelJson.mock.calls[0]
+      const [requestUrl2] = mockedDelJson.mock.calls[1]
+      expect(requestUrl1).toEqual(
+        new URL(
+          `./${formId}/definition/draft/lists/${listIds[0]}`,
+          formsEndpoint
+        )
+      )
+      expect(requestUrl2).toEqual(
+        new URL(
+          `./${formId}/definition/draft/lists/${listIds[1]}`,
+          formsEndpoint
+        )
+      )
+    })
+
+    it('should not remove lists given no lists are uniquely mapped', async () => {
+      const { definition, pageId } = listStubs.pageWithNonUniquelyMappedList
+      await removeUniquelyMappedListsFromPage(formId, pageId, definition, token)
       expect(mockedDelJson).toHaveBeenCalledTimes(0)
     })
   })

@@ -3,6 +3,7 @@ import { randomId } from '@defra/forms-model'
 import config from '~/src/config.js'
 import { delJson, postJson, putJson } from '~/src/lib/fetch.js'
 import {
+  findPageUniquelyMappedLists,
   findUniquelyMappedList,
   getHeaders,
   stringHasValue
@@ -142,6 +143,27 @@ export async function removeUniquelyMappedListFromQuestion(
 
   if (listIdToDelete !== undefined) {
     await deleteList(formId, listIdToDelete, token)
+  }
+}
+
+/**
+ * Deletes all the uniquely mapped lists
+ * @param {string} formId
+ * @param {string} pageId
+ * @param {FormDefinition} definition
+ * @param {string} token
+ */
+export async function removeUniquelyMappedListsFromPage(
+  formId,
+  pageId,
+  definition,
+  token
+) {
+  const listIdsToDelete = findPageUniquelyMappedLists(definition, pageId)
+
+  let listId
+  for (listId of listIdsToDelete) {
+    await deleteList(formId, listId, token)
   }
 }
 

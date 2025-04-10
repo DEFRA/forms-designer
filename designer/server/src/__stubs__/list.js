@@ -2,6 +2,7 @@ import { ComponentType } from '@defra/forms-model'
 
 import {
   buildAutoCompleteComponent,
+  buildCheckboxComponent,
   buildDefinition,
   buildList,
   buildListItem,
@@ -20,6 +21,10 @@ const radioList2Id = '366942ab-640b-4d2e-8637-a6c1f1001d9a'
 const radioPage2Id = '55c220b1-bfda-48ff-9297-504721be919c'
 const radioList2Name = 'RadioList2'
 const radioComponent2Id = 'fb612bb3-1442-41c8-b36f-8ab210f9b24c'
+const checkboxListName = 'CheckboxList'
+const checkBoxListId = '0c427c3d-7502-445b-bd07-bdc8613e74cc'
+const checkboxComponentId = 'e40d2b9d-84d6-4ae5-bc80-0cdddd894c8c'
+const checkboxPageId = 'f229fb05-6639-4a6c-84aa-4df47d31dc78'
 
 const autoCompletePage = buildQuestionPage({
   id: autoCompletePageId,
@@ -50,6 +55,10 @@ const radioComponent2 = buildRadioComponent({
   id: radioComponent2Id,
   list: radioList2Name
 })
+const checkboxComponent = buildCheckboxComponent({
+  id: checkboxComponentId,
+  list: checkboxListName
+})
 const radioPage = buildQuestionPage({
   id: radioPageId,
   title: 'Radio page',
@@ -59,6 +68,10 @@ const radioPage2 = buildQuestionPage({
   ...radioPage,
   id: radioPage2Id,
   components: [radioComponent, radioComponent2]
+})
+const checkboxPage = buildQuestionPage({
+  id: checkboxPageId,
+  components: [checkboxComponent, radioComponent2]
 })
 
 const list = buildList({
@@ -73,6 +86,18 @@ const list = buildList({
 const radioList2 = buildList({
   id: radioList2Id,
   name: radioList2Name
+})
+const checkboxList = buildList({
+  id: checkBoxListId,
+  name: checkboxListName,
+  items: [
+    buildListItem({ value: 'frodo', text: 'Frodo Baggins' }),
+    buildListItem({ value: 'samwise', text: 'Samwise Gangi' }),
+    buildListItem({ value: 'gandalf', text: 'Gandalf' }),
+    buildListItem({ value: 'arwena', text: 'Arwena' }),
+    buildListItem({ value: 'aragorn', text: 'Aragorn' }),
+    buildListItem({ value: 'gimli', text: 'Gimli' })
+  ]
 })
 
 const orphanedListDefinition = buildDefinition({
@@ -90,6 +115,11 @@ const definitionWithNoLists = buildDefinition({
 const definitionWithUniquelyMappedList = buildDefinition({
   pages: [autoCompletePage, radioPage, radioPage2],
   lists: [list, radioList2]
+})
+
+const definitionWithUniquelyMappedLists = buildDefinition({
+  pages: [autoCompletePage, radioPage, checkboxPage],
+  lists: [list, radioList2, checkboxList]
 })
 
 const definitionWithNonUniquelyMappedList = buildDefinition({
@@ -133,6 +163,11 @@ export function uniquelyMappedListsStubs() {
       definition: definitionWithUniquelyMappedList,
       pageId: radioPage2Id,
       listId: radioList2Id
+    },
+    pageWithUniquelyMappedLists: {
+      definition: definitionWithUniquelyMappedLists,
+      pageId: checkboxPageId,
+      listIds: [checkBoxListId, radioList2Id]
     },
     pageWithNonUniquelyMappedList: {
       definition: definitionWithNonUniquelyMappedList,
