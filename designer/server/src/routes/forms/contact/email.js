@@ -16,14 +16,20 @@ export const ROUTE_PATH_EDIT_EMAIL_CONTACT =
   '/library/{slug}/edit/contact/email'
 
 export const emailContactSchema = Joi.object().keys({
-  address: emailAddressSchema.required().messages({
-    'string.empty': 'Enter an email address for dedicated support',
-    'string.email':
-      'Enter an email address for dedicated support in the correct format'
-  }),
-  responseTime: emailResponseTimeSchema.required().messages({
-    'string.empty': 'Enter a response time for receiving responses'
-  }),
+  address: emailAddressSchema
+    .required()
+    .when('_delete', { is: true, then: Joi.allow('') })
+    .messages({
+      'string.empty': 'Enter an email address for dedicated support',
+      'string.email':
+        'Enter an email address for dedicated support in the correct format'
+    }),
+  responseTime: emailResponseTimeSchema
+    .required()
+    .when('_delete', { is: true, then: Joi.allow('') })
+    .messages({
+      'string.empty': 'Enter a response time for receiving responses'
+    }),
   _delete: Joi.boolean()
 })
 

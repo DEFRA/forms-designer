@@ -16,9 +16,13 @@ export const ROUTE_PATH_EDIT_PHONE_CONTACT =
   '/library/{slug}/edit/contact/phone'
 
 export const phoneContactSchema = Joi.object().keys({
-  phone: phoneSchema.required().messages({
-    'string.empty': 'Enter phone number and opening times for users to get help'
-  }),
+  phone: phoneSchema
+    .required()
+    .when('_delete', { is: true, then: Joi.allow('') })
+    .messages({
+      'string.empty':
+        'Enter phone number and opening times for users to get help'
+    }),
   _delete: Joi.boolean()
 })
 

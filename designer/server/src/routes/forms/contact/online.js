@@ -16,15 +16,21 @@ export const ROUTE_PATH_EDIT_ONLINE_CONTACT =
   '/library/{slug}/edit/contact/online'
 
 export const onlineContactSchema = Joi.object().keys({
-  url: onlineUrlSchema.required().messages({
-    'string.empty': 'Enter a contact link for support',
-    'string.uri': 'Enter a contact link for support in the correct format',
-    'string.uriCustomScheme':
-      'Enter a contact link for support in the correct format'
-  }),
-  text: onlineTextSchema.required().messages({
-    'string.empty': 'Enter text to describe the contact link for support'
-  }),
+  url: onlineUrlSchema
+    .required()
+    .when('_delete', { is: true, then: Joi.allow('') })
+    .messages({
+      'string.empty': 'Enter a contact link for support',
+      'string.uri': 'Enter a contact link for support in the correct format',
+      'string.uriCustomScheme':
+        'Enter a contact link for support in the correct format'
+    }),
+  text: onlineTextSchema
+    .required()
+    .when('_delete', { is: true, then: Joi.allow('') })
+    .messages({
+      'string.empty': 'Enter text to describe the contact link for support'
+    }),
   _delete: Joi.boolean()
 })
 
