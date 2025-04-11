@@ -6,7 +6,10 @@ import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
 import * as forms from '~/src/lib/forms.js'
-import { phoneViewModel } from '~/src/models/forms/contact/phone.js'
+import {
+  allowDelete,
+  phoneViewModel
+} from '~/src/models/forms/contact/phone.js'
 import { formOverviewPath } from '~/src/models/links.js'
 
 export const ROUTE_PATH_EDIT_PHONE_CONTACT =
@@ -15,7 +18,8 @@ export const ROUTE_PATH_EDIT_PHONE_CONTACT =
 export const phoneContactSchema = Joi.object().keys({
   phone: phoneSchema.required().messages({
     'string.empty': 'Enter phone number and opening times for users to get help'
-  })
+  }),
+  _delete: Joi.boolean()
 })
 
 export default [
@@ -54,7 +58,7 @@ export default [
   }),
 
   /**
-   * @satisfies {ServerRoute<{ Params: { slug: string }, Payload: Pick<FormMetadataContact, 'phone'> }>}
+   * @satisfies {ServerRoute<{ Params: { slug: string }, Payload: Pick<FormMetadataContact, 'phone'> & { _delete: boolean } }>}
    */
   ({
     method: 'POST',
@@ -62,19 +66,26 @@ export default [
     async handler(request, h) {
       const { auth, params, payload, yar } = request
       const { slug } = params
-      const { phone } = payload
+      const { phone, _delete } = payload
       const { token } = auth.credentials
 
       // Retrieve form by slug
-      const { id, contact = {} } = await forms.get(slug, token)
+      const metadata = await forms.get(slug, token)
+      const { id, contact = {} } = metadata
 
-      // Update the metadata with the phone contact details
-      await forms.updateMetadata(id, { contact: { ...contact, phone } }, token)
+      if (!_delete || allowDelete(metadata)) {
+        // Update the metadata with the phone contact details
+        await forms.updateMetadata(
+          id,
+          { contact: { ...contact, phone: _delete ? undefined : phone } },
+          token
+        )
 
-      yar.flash(
-        sessionNames.successNotification,
-        'Phone number for support has been updated'
-      )
+        yar.flash(
+          sessionNames.successNotification,
+          `Phone number for support has been ${_delete ? 'removed' : 'updated'}`
+        )
+      }
 
       return h.redirect(formOverviewPath(slug)).code(StatusCodes.SEE_OTHER)
     },

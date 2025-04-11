@@ -40,8 +40,21 @@ export function onlineViewModel(metadata, validation) {
         value: formValues?.text ?? metadata.contact?.online?.text
       }
     },
-    buttonText: 'Save and continue'
+    buttonText: 'Save and continue',
+    allowDelete: allowDelete(metadata)
   }
+}
+
+/**
+ * @param {FormMetadata} metadata
+ */
+export function allowDelete(metadata) {
+  const isLive = !!metadata.live
+  const hasPhone = !!metadata.contact?.phone
+  const hasEmail = !!metadata.contact?.email
+  const hasOnline = !!metadata.contact?.online
+
+  return hasOnline && (!isLive || hasPhone || hasEmail)
 }
 
 /**

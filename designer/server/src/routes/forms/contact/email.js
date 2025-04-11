@@ -6,7 +6,10 @@ import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
 import * as forms from '~/src/lib/forms.js'
-import { emailViewModel } from '~/src/models/forms/contact/email.js'
+import {
+  allowDelete,
+  emailViewModel
+} from '~/src/models/forms/contact/email.js'
 import { formOverviewPath } from '~/src/models/links.js'
 
 export const ROUTE_PATH_EDIT_EMAIL_CONTACT =
@@ -20,7 +23,8 @@ export const emailContactSchema = Joi.object().keys({
   }),
   responseTime: emailResponseTimeSchema.required().messages({
     'string.empty': 'Enter a response time for receiving responses'
-  })
+  }),
+  _delete: Joi.boolean()
 })
 
 export default [
@@ -59,7 +63,7 @@ export default [
   }),
 
   /**
-   * @satisfies {ServerRoute<{ Params: { slug: string }, Payload: FormMetadataContactEmail }>}
+   * @satisfies {ServerRoute<{ Params: { slug: string }, Payload: FormMetadataContactEmail & { _delete: boolean } }>}
    */
   ({
     method: 'POST',
@@ -67,23 +71,31 @@ export default [
     async handler(request, h) {
       const { auth, params, payload, yar } = request
       const { slug } = params
-      const { address, responseTime } = payload
+      const { address, responseTime, _delete } = payload
       const { token } = auth.credentials
 
       // Retrieve form by slug
-      const { id, contact = {} } = await forms.get(slug, token)
+      const metadata = await forms.get(slug, token)
+      const { id, contact = {} } = metadata
 
-      // Update the metadata with the email contact details
-      await forms.updateMetadata(
-        id,
-        { contact: { ...contact, email: { address, responseTime } } },
-        token
-      )
+      if (!_delete || allowDelete(metadata)) {
+        // Update the metadata with the email contact details
+        await forms.updateMetadata(
+          id,
+          {
+            contact: {
+              ...contact,
+              email: _delete ? undefined : { address, responseTime }
+            }
+          },
+          token
+        )
 
-      yar.flash(
-        sessionNames.successNotification,
-        'Email address for support has been updated'
-      )
+        yar.flash(
+          sessionNames.successNotification,
+          `Email address for support has been ${_delete ? 'removed' : 'updated'}`
+        )
+      }
 
       return h.redirect(formOverviewPath(slug)).code(StatusCodes.SEE_OTHER)
     },

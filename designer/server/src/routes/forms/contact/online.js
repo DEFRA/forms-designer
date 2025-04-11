@@ -6,7 +6,10 @@ import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
 import * as forms from '~/src/lib/forms.js'
-import { onlineViewModel } from '~/src/models/forms/contact/online.js'
+import {
+  allowDelete,
+  onlineViewModel
+} from '~/src/models/forms/contact/online.js'
 import { formOverviewPath } from '~/src/models/links.js'
 
 export const ROUTE_PATH_EDIT_ONLINE_CONTACT =
@@ -21,7 +24,8 @@ export const onlineContactSchema = Joi.object().keys({
   }),
   text: onlineTextSchema.required().messages({
     'string.empty': 'Enter text to describe the contact link for support'
-  })
+  }),
+  _delete: Joi.boolean()
 })
 
 export default [
@@ -60,7 +64,7 @@ export default [
   }),
 
   /**
-   * @satisfies {ServerRoute<{ Params: { slug: string }, Payload: FormMetadataContactOnline }>}
+   * @satisfies {ServerRoute<{ Params: { slug: string }, Payload: FormMetadataContactOnline & { _delete: boolean } }>}
    */
   ({
     method: 'POST',
@@ -68,23 +72,28 @@ export default [
     async handler(request, h) {
       const { auth, params, payload, yar } = request
       const { slug } = params
-      const { url, text } = payload
+      const { url, text, _delete } = payload
       const { token } = auth.credentials
 
       // Retrieve form by slug
-      const { id, contact = {} } = await forms.get(slug, token)
+      const metadata = await forms.get(slug, token)
+      const { id, contact = {} } = metadata
 
-      // Update the metadata with the online contact details
-      await forms.updateMetadata(
-        id,
-        { contact: { ...contact, online: { url, text } } },
-        token
-      )
+      if (!_delete || allowDelete(metadata)) {
+        // Update the metadata with the online contact details
+        await forms.updateMetadata(
+          id,
+          {
+            contact: { ...contact, online: _delete ? undefined : { url, text } }
+          },
+          token
+        )
 
-      yar.flash(
-        sessionNames.successNotification,
-        'Contact link for support has been updated'
-      )
+        yar.flash(
+          sessionNames.successNotification,
+          `Contact link for support has been ${_delete ? 'removed' : 'updated'}`
+        )
+      }
 
       return h.redirect(formOverviewPath(slug)).code(StatusCodes.SEE_OTHER)
     },
