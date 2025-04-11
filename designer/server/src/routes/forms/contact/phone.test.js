@@ -2,6 +2,7 @@ import { StatusCodes } from 'http-status-codes'
 
 import { createServer } from '~/src/createServer.js'
 import * as forms from '~/src/lib/forms.js'
+import { allowDelete } from '~/src/models/forms/contact/phone.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
@@ -133,6 +134,86 @@ describe('Forms contact phone', () => {
 
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe('/library/my-form-slug')
+  })
+
+  test('Allow delete', () => {
+    // Allow users to delete the phone contact if:
+    // - the form is not live OR
+    // - the form is live but there's at least 1 other contact
+
+    const email = {
+      address: 'support@defra.gov.uk',
+      responseTime: 'We aim to respond within 2 working days'
+    }
+    const online = {
+      url: 'https://www.gov.uk/guidance/contact-defra',
+      text: 'Online contact form'
+    }
+
+    expect(allowDelete(formMetadata)).toBe(true)
+
+    expect(
+      allowDelete({
+        ...formMetadata,
+        contact: {
+          ...formMetadata.contact,
+          email
+        }
+      })
+    ).toBe(true)
+
+    expect(
+      allowDelete({
+        ...formMetadata,
+        contact: {
+          ...formMetadata.contact,
+          online
+        }
+      })
+    ).toBe(true)
+
+    const live = {
+      createdAt: now,
+      createdBy: author,
+      updatedAt: now,
+      updatedBy: author
+    }
+
+    expect(
+      allowDelete({
+        ...formMetadata,
+        live
+      })
+    ).toBe(false)
+
+    expect(
+      allowDelete({
+        ...formMetadata,
+        live
+      })
+    ).toBe(false)
+
+    expect(
+      allowDelete({
+        ...formMetadata,
+        live,
+        contact: {
+          ...formMetadata.contact,
+          email
+        }
+      })
+    ).toBe(true)
+
+    expect(
+      allowDelete({
+        ...formMetadata,
+        live,
+        contact: {
+          ...formMetadata.contact,
+          online
+        }
+      })
+    ).toBe(true)
   })
 })
 
