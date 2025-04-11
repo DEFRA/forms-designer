@@ -1,6 +1,8 @@
+import { hostname } from 'node:os'
+
 const { Duration } = require('luxon')
 
-process.env.APP_BASE_URL = 'http://localhost:3000'
+process.env.APP_BASE_URL = `http://${hostname()}:3000`
 process.env.AZURE_CLIENT_ID = 'dummy'
 process.env.AZURE_CLIENT_SECRET = 'dummy'
 process.env.MANAGER_URL = 'http://localhost:3001'

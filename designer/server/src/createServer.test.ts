@@ -1,4 +1,5 @@
 import { type Server } from '@hapi/hapi'
+import { StatusCodes } from 'http-status-codes'
 
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
@@ -135,5 +136,85 @@ describe('Server tests', () => {
     expect(headers['x-frame-options']).toBe('DENY')
     expect(headers['x-content-type-options']).toBe('nosniff')
     expect(headers['x-xss-protection']).toBe('1; mode=block')
+  })
+
+  describe('redirect tests', () => {
+    test('accepts requests targetting the correct hostname', async () => {
+      process.env.APP_BASE_URL = 'https://correct.forms.defra.gov.uk'
+
+      server = await startServer()
+
+      const options = {
+        method: 'get',
+        url: '/hello/world',
+        headers: {
+          Host: 'correct.forms.defra.gov.uk'
+        }
+      }
+
+      const { statusCode } = await server.inject(options)
+
+      expect(statusCode).toBe(StatusCodes.NOT_FOUND) // dummy URL, that's fine
+    })
+
+    test('accepts requests targetting the correct hostname respecting port', async () => {
+      process.env.APP_BASE_URL = 'https://correct.forms.defra.gov.uk'
+
+      server = await startServer()
+
+      const options = {
+        method: 'get',
+        url: '/hello/world',
+        headers: {
+          Host: 'correct.forms.defra.gov.uk:3000'
+        }
+      }
+
+      const { statusCode } = await server.inject(options)
+
+      expect(statusCode).toBe(StatusCodes.NOT_FOUND) // dummy URL, that's fine
+    })
+
+    test('redirects requests targetting the wrong hostname', async () => {
+      process.env.APP_BASE_URL = 'http://correct.forms.defra.gov.uk'
+
+      server = await startServer()
+
+      const options = {
+        method: 'get',
+        url: '/hello/world',
+        headers: {
+          Host: 'incorrect.forms.defra.gov.uk'
+        }
+      }
+
+      const { headers, statusCode } = await server.inject(options)
+
+      expect(statusCode).toBe(StatusCodes.MOVED_PERMANENTLY)
+      expect(headers.location).toBe(
+        'http://correct.forms.defra.gov.uk/hello/world' // local tests are http
+      )
+    })
+
+    test('redirects requests targetting the wrong hostname respecting port', async () => {
+      process.env.APP_BASE_URL = 'http://correct.forms.defra.gov.uk'
+
+      server = await startServer()
+
+      const options = {
+        method: 'get',
+        url: '/hello/world',
+        headers: {
+          Host: 'incorrect.forms.defra.gov.uk:3000'
+        }
+      }
+
+      const { headers, statusCode } = await server.inject(options)
+
+      expect(statusCode).toBe(StatusCodes.MOVED_PERMANENTLY)
+      expect(headers.location).toBe(
+        'http://correct.forms.defra.gov.uk:3000/hello/world' // local tests are http
+      )
+    })
   })
 })

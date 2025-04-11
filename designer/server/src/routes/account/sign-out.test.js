@@ -1,3 +1,5 @@
+import { hostname } from 'node:os'
+
 import { StatusCodes } from 'http-status-codes'
 
 import { hasUser } from '~/src/common/helpers/auth/get-user-session.js'
@@ -73,7 +75,7 @@ describe('signOutRoute', () => {
 
     expect(response.statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
     expect(response.headers.location).toBe(
-      `${wellKnownConfiguration.end_session_endpoint}?post_logout_redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Faccount%2Fsigned-out&logout_hint=bar` // foo is from the query params
+      `${wellKnownConfiguration.end_session_endpoint}?post_logout_redirect_uri=http%3A%2F%2F${hostname()}%3A3000%2Faccount%2Fsigned-out&logout_hint=bar` // foo is from the query params
     )
   })
 
@@ -90,7 +92,7 @@ describe('signOutRoute', () => {
 
     expect(response.statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
     expect(response.headers.location).toBe(
-      `${wellKnownConfiguration.end_session_endpoint}?post_logout_redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Faccount%2Fsigned-out&logout_hint=foo` // bar is from the credentials
+      `${wellKnownConfiguration.end_session_endpoint}?post_logout_redirect_uri=http%3A%2F%2F${hostname()}%3A3000%2Faccount%2Fsigned-out&logout_hint=foo` // bar is from the credentials
     )
   })
 })
