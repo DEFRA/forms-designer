@@ -40,8 +40,21 @@ export function emailViewModel(metadata, validation) {
         value: formValues?.responseTime ?? metadata.contact?.email?.responseTime
       }
     },
-    buttonText: 'Save and continue'
+    buttonText: 'Save and continue',
+    allowDelete: allowDelete(metadata)
   }
+}
+
+/**
+ * @param {FormMetadata} metadata
+ */
+export function allowDelete(metadata) {
+  const isLive = !!metadata.live
+  const hasPhone = !!metadata.contact?.phone
+  const hasEmail = !!metadata.contact?.email
+  const hasOnline = !!metadata.contact?.online
+
+  return hasEmail && (!isLive || hasPhone || hasOnline)
 }
 
 /**

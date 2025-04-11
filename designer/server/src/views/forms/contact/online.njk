@@ -58,6 +58,15 @@
           href: backLink.href,
           classes: "govuk-button--secondary"
         }) }}
+
+        {% if allowDelete %}
+          {{ govukButton({
+            text: "Delete",
+            classes: "govuk-button--warning",
+            name: "_delete",
+            value: "true"
+          }) }}
+        {% endif %}
       </div>
     </form>
   {% endcall %}
