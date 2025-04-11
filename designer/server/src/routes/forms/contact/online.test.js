@@ -115,6 +115,43 @@ describe('Forms contact online', () => {
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe('/library/my-form-slug')
   })
+
+  test('POST - should redirect to overview page after removing online details', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce({
+      ...formMetadata,
+      contact: {
+        ...formMetadata.contact,
+        email: {
+          address: 'support@defra.gov.uk',
+          responseTime: 'We aim to respond within 2 working days'
+        }
+      }
+    })
+
+    jest.mocked(forms.updateMetadata).mockResolvedValueOnce({
+      id: formMetadata.id,
+      slug: 'my-form-slug',
+      status: 'updated'
+    })
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/edit/contact/online',
+      auth,
+      payload: {
+        url: 'https://www.gov.uk/guidance/contact-defra',
+        text: 'Online contact form',
+        _delete: true
+      }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe('/library/my-form-slug')
+  })
 })
 
 /**
