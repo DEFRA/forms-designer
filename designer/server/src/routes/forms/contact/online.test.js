@@ -90,7 +90,7 @@ describe('Forms contact online', () => {
     expect($text).toHaveValue('Online contact form')
   })
 
-  test('POST - should redirect to overviewpage after updating online details', async () => {
+  test('POST - should redirect to overview page after updating online details', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
     jest.mocked(forms.updateMetadata).mockResolvedValueOnce({
       id: formMetadata.id,

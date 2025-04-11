@@ -79,7 +79,7 @@ describe('Forms contact phone', () => {
     expect($phone).toHaveValue('123')
   })
 
-  test('POST - should redirect to overviewpage after updating phone details', async () => {
+  test('POST - should redirect to overview page after updating phone details', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
     jest.mocked(forms.updateMetadata).mockResolvedValueOnce({
       id: formMetadata.id,

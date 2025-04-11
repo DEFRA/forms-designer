@@ -85,7 +85,7 @@ describe('Forms library routes', () => {
     expect($teamEmail).toHaveValue('defraforms@defra.gov.uk')
   })
 
-  test('POST - should redirect to overviewpage after updating team details', async () => {
+  test('POST - should redirect to overview page after updating team details', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
     jest
       .mocked(forms.getDraftFormDefinition)
@@ -127,7 +127,7 @@ describe('Forms library routes', () => {
     expect($title).toHaveValue('Test form')
   })
 
-  test('POST - should redirect to overviewpage after updating title', async () => {
+  test('POST - should redirect to overview page after updating title', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
     jest.mocked(forms.updateMetadata).mockResolvedValueOnce({
       id: formMetadata.id,

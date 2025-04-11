@@ -94,7 +94,7 @@ describe('Forms contact email', () => {
     expect($responseTime).toHaveValue(responseTimeText)
   })
 
-  test('POST - should redirect to overviewpage after updating email details', async () => {
+  test('POST - should redirect to overview page after updating email details', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
     jest.mocked(forms.updateMetadata).mockResolvedValueOnce({
       id: formMetadata.id,
