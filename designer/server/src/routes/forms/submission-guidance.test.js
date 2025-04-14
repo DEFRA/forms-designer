@@ -79,7 +79,7 @@ describe('Forms submission guidance', () => {
     )
   })
 
-  test('POST - should redirect to overviewpage after updating submission guidance', async () => {
+  test('POST - should redirect to overview page after updating submission guidance', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
     jest.mocked(forms.updateMetadata).mockResolvedValueOnce({
       id: formMetadata.id,
