@@ -111,11 +111,13 @@ export async function createServer() {
     if (requestDomain !== baseDomain) {
       Object.entries(request.headers).forEach(([key, value]) => {
         if (
-          key.toLowerCase() !== 'authorization' &&
-          !key.toLowerCase().includes('session')
+          key.toLowerCase() === 'authorization' ||
+          key.toLowerCase() === 'cookie'
         ) {
-          logger.debug(`Header: ${key} = ${value}`)
+          return
         }
+
+        logger.debug(`Header: ${key} = ${value}`)
       })
 
       logger.debug(
