@@ -1,4 +1,9 @@
-import { ApiErrorCode, ComponentType, ControllerType } from '@defra/forms-model'
+import {
+  ApiErrorCode,
+  ComponentType,
+  ControllerType,
+  hasComponents
+} from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
@@ -140,9 +145,63 @@ describe('Editor v2 question details routes', () => {
     expect($cardHeading).toHaveTextContent('Edit question 1')
     expect($cardHeading).toHaveClass('govuk-heading-l')
 
-    expect($actions).toHaveLength(4)
-    expect($actions[2]).toHaveTextContent('Preview page')
-    expect($actions[3]).toHaveTextContent('Save and continue')
+    expect($actions).toHaveLength(5)
+    expect($actions[2]).toHaveTextContent('Preview error messages')
+    expect($actions[3]).toHaveTextContent('Preview page')
+    expect($actions[4]).toHaveTextContent('Save and continue')
+
+    const $fields = container.getAllByRole('textbox')
+    expect($fields[0].id).toBe('question')
+    expect($fields[1].id).toBe('hintText')
+    expect($fields[2].id).toBe('shortDescription')
+    expect($fields[3].id).toBe('minLength')
+
+    const $details = document.getElementsByClassName('govuk-details')
+    expect($details[0].hasAttribute('open')).toBeFalsy()
+  })
+
+  test('GET - should hide preview error message button and preview page button if question not saved yet', async () => {
+    jest
+      .mocked(getQuestionSessionState)
+      .mockReturnValueOnce(simpleSessionTextField)
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+
+    // Force a component id to be 'new' as if not yet saved, for the purpose of this test
+    const definition = /** @type {FormDefinition} */ (
+      structuredClone(testFormDefinitionWithSinglePage)
+    )
+    if (hasComponents(definition.pages[0])) {
+      definition.pages[0].components[0].id = 'new'
+    }
+
+    jest.mocked(forms.getDraftFormDefinition).mockResolvedValueOnce(definition)
+
+    const options = {
+      method: 'get',
+      url: '/library/my-form-slug/editor-v2/page/p1/question/new/details/54321',
+      auth
+    }
+
+    const { container, document } = await renderResponse(server, options)
+
+    const $mastheadHeading = container.getByText('Test form')
+    const $cardTitle = container.getByText('Question 2')
+    const $cardCaption = container.getByText('Page 1')
+    const $cardHeading = container.getByText('Edit question 2')
+
+    const $actions = container.getAllByRole('button')
+
+    expect($mastheadHeading).toHaveTextContent('Test form')
+    expect($mastheadHeading).toHaveClass('govuk-heading-xl')
+    expect($cardTitle).toHaveTextContent('Question 2')
+    expect($cardTitle).toHaveClass('editor-card-title')
+    expect($cardCaption).toHaveTextContent('Page 1')
+    expect($cardCaption).toHaveClass('govuk-caption-l')
+    expect($cardHeading).toHaveTextContent('Edit question 2')
+    expect($cardHeading).toHaveClass('govuk-heading-l')
+
+    expect($actions).toHaveLength(3)
+    expect($actions[2]).toHaveTextContent('Save and continue')
 
     const $fields = container.getAllByRole('textbox')
     expect($fields[0].id).toBe('question')
@@ -200,9 +259,10 @@ describe('Editor v2 question details routes', () => {
     expect($cardHeading).toHaveTextContent('Edit question 1')
     expect($cardHeading).toHaveClass('govuk-heading-l')
 
-    expect($actions).toHaveLength(4)
-    expect($actions[2]).toHaveTextContent('Preview page')
-    expect($actions[3]).toHaveTextContent('Save and continue')
+    expect($actions).toHaveLength(5)
+    expect($actions[2]).toHaveTextContent('Preview error messages')
+    expect($actions[3]).toHaveTextContent('Preview page')
+    expect($actions[4]).toHaveTextContent('Save and continue')
 
     const $fields = container.getAllByRole('textbox')
     expect($fields[3].id).toBe('minLength')
@@ -245,9 +305,10 @@ describe('Editor v2 question details routes', () => {
     expect($cardCaption).toHaveTextContent('Page 1')
     expect($cardCaption).toHaveClass('govuk-caption-l')
 
-    expect($actions).toHaveLength(4)
-    expect($actions[2]).toHaveTextContent('Preview page')
-    expect($actions[3]).toHaveTextContent('Save and continue')
+    expect($actions).toHaveLength(5)
+    expect($actions[2]).toHaveTextContent('Preview error messages')
+    expect($actions[3]).toHaveTextContent('Preview page')
+    expect($actions[4]).toHaveTextContent('Save and continue')
 
     const $fields = container.getAllByRole('textbox')
     expect($fields[3].id).toBe('minFiles')
@@ -748,7 +809,7 @@ describe('Editor v2 question details routes', () => {
 })
 
 /**
- * @import { FormEditor, Page } from '@defra/forms-model'
+ * @import { FormDefinition, FormEditor, Page } from '@defra/forms-model'
  * @import { Server } from '@hapi/hapi'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

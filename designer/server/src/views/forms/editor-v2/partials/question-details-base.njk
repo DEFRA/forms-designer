@@ -29,9 +29,10 @@
 
 {%- include "../../../../views/forms/editor-v2/partials/question-details-advanced-settings.njk" -%}
 
-{#       {{ appIconButton({
-        label: "Preview error messages",
-        href: "#",
-        id: "preview-error-messages"
-      }) }}
-#}
+{% if questionId != 'new' %}
+  {{ appIconButton({
+    label: "Preview error messages",
+    href: previewErrorsUrl,
+    id: "preview-error-messages"
+  }) }}
+{% endif %}

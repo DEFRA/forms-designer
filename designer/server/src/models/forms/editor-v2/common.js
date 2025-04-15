@@ -111,6 +111,13 @@ export function buildPreviewUrl(slug) {
 }
 
 /**
+ * @param {string} slug
+ */
+export function buildPreviewErrorsUrl(slug) {
+  return `${config.previewUrl}/error-preview/draft/${slug}`
+}
+
+/**
  * @param {{ text?: string, value?: string, checked?: boolean }[] | undefined } items
  * @param {string[] | undefined} selectedItems
  */

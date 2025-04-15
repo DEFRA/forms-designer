@@ -59,19 +59,23 @@
       <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
       <div class="govuk-button-group govuk-!-margin-top-6">
-        {{ appIconButton({
-          label: "Preview page",
-          href: previewPageUrl,
-          id: "preview-page"
-        }) }}
+        {% if questionId != 'new' %}
+          {{ appIconButton({
+            label: "Preview page",
+            href: previewPageUrl,
+            id: "preview-page"
+          }) }}
+        {% endif %}
 
         {{ govukButton({
           text: 'Save and continue'
         }) }}
 
-        <a href="{{ deleteUrl }}" class="govuk-link govuk-link--no-visited-state">
-          Delete question
-        </a>
+        {% if questionId != 'new' %}
+          <a href="{{ deleteUrl }}" class="govuk-link govuk-link--no-visited-state">
+            Delete question
+          </a>
+        {% endif %}
       </div>
 
     </form>
