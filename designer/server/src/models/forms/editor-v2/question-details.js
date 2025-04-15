@@ -214,16 +214,17 @@ export function questionDetailsViewModel(
   state
 ) {
   const questionType = state?.questionType
-  const {
-    pageTitle,
-    navigation,
-    question: questionFields,
-    pageNum,
-    questionNum,
-    pagePath
-  } = getDetails(metadata, definition, pageId, questionId, questionType)
+
+  const details = getDetails(
+    metadata,
+    definition,
+    pageId,
+    questionId,
+    questionType
+  )
+
   const questionFieldsOverride = /** @type {ComponentDef} */ (
-    state?.questionDetails ?? questionFields
+    state?.questionDetails ?? details.question
   )
   const basePageFields = getFieldList(
     /** @type {InputFieldsComponentsDef} */ (questionFieldsOverride),
@@ -241,31 +242,26 @@ export function questionDetailsViewModel(
   )
   const extraFieldNames = extraFields.map((field) => field.name ?? 'unknown')
   const errorList = buildErrorList(validation?.formErrors)
-  const previewPageUrl = `${buildPreviewUrl(metadata.slug)}${pagePath}?force`
-  const previewErrorsUrl = `${buildPreviewErrorsUrl(metadata.slug)}${pagePath}/${questionFieldsOverride.id}`
-  const deleteUrl = editorv2Path(
-    metadata.slug,
-    `page/${pageId}/delete/${questionId}`
-  )
-  const changeTypeUrl = editorv2Path(
-    metadata.slug,
-    `page/${pageId}/question/${questionId}/type/${stateId}`
-  )
+  const previewPageUrl = `${buildPreviewUrl(metadata.slug)}${details.pagePath}?force`
+  const previewErrorsUrl = `${buildPreviewErrorsUrl(metadata.slug)}${details.pagePath}/${questionFieldsOverride.id}`
+  const urlPageBase = editorv2Path(metadata.slug, `page/${pageId}`)
+  const deleteUrl = `${urlPageBase}/delete/${questionId}`
+  const changeTypeUrl = `${urlPageBase}/question/${questionId}/type/${stateId}`
 
   return {
     listDetails: getListDetails(state, questionFieldsOverride),
     state,
     enhancedFields: enhancedFieldList,
-    ...baseModelFields(metadata.slug, pageTitle),
-    name: questionFields.name || randomId(),
+    ...baseModelFields(metadata.slug, details.pageTitle),
+    name: details.question.name || randomId(),
     questionId,
     basePageFields,
     uploadFields,
     extraFields,
-    cardTitle: `Question ${questionNum}`,
-    cardCaption: `Page ${pageNum}`,
-    cardHeading: `Edit question ${questionNum}`,
-    navigation,
+    cardTitle: `Question ${details.questionNum}`,
+    cardCaption: `Page ${details.pageNum}`,
+    cardHeading: `Edit question ${details.questionNum}`,
+    navigation: details.navigation,
     errorList,
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
