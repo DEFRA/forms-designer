@@ -248,6 +248,15 @@ export function questionDetailsViewModel(
   const errorList = buildErrorList(validation?.formErrors)
   const previewPageUrl = `${buildPreviewUrl(metadata.slug)}${pagePath}?force`
   const previewErrorsUrl = `${buildPreviewErrorsUrl(metadata.slug)}${pagePath}/${questionFieldsOverride.id}`
+  const deleteUrl = editorv2Path(
+    metadata.slug,
+    `page/${pageId}/delete/${questionId}`
+  )
+  const changeTypeUrl = editorv2Path(
+    metadata.slug,
+    `page/${pageId}/question/${questionId}/type/${stateId}`
+  )
+
   const listDetails = getListDetails(state, questionFieldsOverride)
 
   return {
@@ -271,20 +280,14 @@ export function questionDetailsViewModel(
     questionTypeDesc: QuestionTypeDescriptions.find(
       (x) => x.type === questionFieldsOverride.type
     )?.description,
-    changeTypeUrl: editorv2Path(
-      metadata.slug,
-      `page/${pageId}/question/${questionId}/type/${stateId}`
-    ),
+    changeTypeUrl,
     buttonText: SAVE_AND_CONTINUE,
     previewPageUrl,
     previewErrorsUrl,
+    deleteUrl,
     isOpen: hasDataOrErrorForDisplay(extraFieldNames, errorList, extraFields),
     getFieldType: (/** @type {GovukField} */ field) =>
-      getFieldComponentType(field),
-    deleteUrl: editorv2Path(
-      metadata.slug,
-      `page/${pageId}/delete/${questionId}`
-    )
+      getFieldComponentType(field)
   }
 }
 
