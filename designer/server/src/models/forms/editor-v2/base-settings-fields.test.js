@@ -55,7 +55,7 @@ describe('editor-v2 - advanced settings fields model', () => {
             classes: GOVUK_LABEL__M
           },
           hint: {
-            text: "Enter a short description for this question like 'licence period'. Short descriptions are used in error messages and on the check your answers page."
+            text: "Enter a short description for this question like 'Licence period'. Short descriptions are used in error messages and on the check your answers page."
           },
           value: undefined
         }
@@ -112,7 +112,7 @@ describe('editor-v2 - advanced settings fields model', () => {
             classes: GOVUK_LABEL__M
           },
           hint: {
-            text: "Enter a short description for this question like 'licence period'. Short descriptions are used in error messages and on the check your answers page."
+            text: "Enter a short description for this question like 'Licence period'. Short descriptions are used in error messages and on the check your answers page."
           },
           value: undefined
         }
