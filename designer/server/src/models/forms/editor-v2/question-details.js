@@ -222,25 +222,20 @@ export function questionDetailsViewModel(
     questionNum,
     pagePath
   } = getDetails(metadata, definition, pageId, questionId, questionType)
-
   const questionFieldsOverride = /** @type {ComponentDef} */ (
     state?.questionDetails ?? questionFields
   )
-
   const basePageFields = getFieldList(
     /** @type {InputFieldsComponentsDef} */ (questionFieldsOverride),
     questionType,
     validation,
     definition
   )
-
   const uploadFields = getFileUploadFields(questionFieldsOverride, validation)
   const extraFields = /** @type {GovukField[]} */ (
     getExtraFields(questionFieldsOverride, validation)
   )
-
   validation = overrideFormValuesForEnhancedAction(validation, state)
-
   const enhancedFieldList = /** @type {GovukField[]} */ (
     getEnhancedFields(questionFieldsOverride, validation)
   )
@@ -257,10 +252,8 @@ export function questionDetailsViewModel(
     `page/${pageId}/question/${questionId}/type/${stateId}`
   )
 
-  const listDetails = getListDetails(state, questionFieldsOverride)
-
   return {
-    listDetails,
+    listDetails: getListDetails(state, questionFieldsOverride),
     state,
     enhancedFields: enhancedFieldList,
     ...baseModelFields(metadata.slug, pageTitle),
