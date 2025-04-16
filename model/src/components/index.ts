@@ -15,5 +15,9 @@ export {
   isFormType,
   isListType
 } from '~/src/components/helpers.js'
-
+export {
+  allDocumentTypes,
+  allImageTypes,
+  allTabularDataTypes
+} from '~/src/components/file-types.js'
 export { ComponentType } from '~/src/components/enums.js'

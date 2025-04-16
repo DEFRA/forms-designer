@@ -4,8 +4,7 @@ import Joi from 'joi'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
 
-const duplicatePageTitle =
-  'This page title already exists - use a unique page title'
+const duplicatePageTitle = 'Page heading already exists in this form'
 
 const boomMappings = [
   {
@@ -34,8 +33,7 @@ const boomMappings = [
     errorCode: ApiErrorCode.DuplicatePagePathComponent,
     errorKey: sessionNames.validationFailure.editorQuestionDetails,
     fieldName: 'question',
-    userMessage:
-      'This question or page title already exists - use a unique question or page title'
+    userMessage: 'Question or page heading already exists in this form'
   }
 ]
 

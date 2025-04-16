@@ -10,11 +10,11 @@ import {
 } from '~/src/models/forms/editor-v2/common.js'
 
 const MIN_FILES_ERROR_MESSAGE =
-  'Minimum file count must be a whole number between 0 and 25'
+  'Enter the minimum number of files you accept between 0 and 25'
 const MAX_FILES_ERROR_MESSAGE =
-  'Maximum file count must be a whole number between 1 and 25'
+  'Enter the maximum number of files you accept between 1 and 25'
 const EXACT_FILES_ERROR_MESSAGE =
-  'Exact file count must be a whole number between 1 and 25'
+  'Enter the exact number of files you accept between 1 and 25'
 
 export const advancedSettingsPerComponentType =
   /** @type {Record<ComponentType, QuestionAdvancedSettings[]> } */ ({
@@ -247,10 +247,10 @@ export const allAdvancedSettingsFields =
 
 export const allSpecificSchemas = Joi.object().keys({
   maxFuture: questionDetailsFullSchema.maxFutureSchema.messages({
-    '*': 'Max days in the future must be a positive whole number or zero'
+    '*': 'Enter the maximum days in the future'
   }),
   maxPast: questionDetailsFullSchema.maxPastSchema.messages({
-    '*': 'Max days in the past must be a positive whole number or zero'
+    '*': 'Enter the maximum days in the past'
   }),
   min: questionDetailsFullSchema.minSchema
     .when('max', {
@@ -259,12 +259,12 @@ export const allSpecificSchemas = Joi.object().keys({
       otherwise: Joi.number().empty('').integer()
     })
     .messages({
-      'number.base': 'Lowest number must be a whole number',
-      'number.integer': 'Lowest number must be a whole number',
-      '*': 'Lowest number must be less than or equal to highest number'
+      'number.base': 'Enter the lowest number',
+      'number.integer': 'Enter the lowest number',
+      '*': 'Lowest number cannot be more than the highest number'
     }),
   max: questionDetailsFullSchema.maxSchema.messages({
-    '*': 'Highest number must be a positive whole number'
+    '*': 'Enter the highest number'
   }),
   exactFiles: questionDetailsFullSchema.exactFilesSchema
     .when('minFiles', {
@@ -277,7 +277,7 @@ export const allSpecificSchemas = Joi.object().keys({
       'number.integer': EXACT_FILES_ERROR_MESSAGE,
       'number.min': EXACT_FILES_ERROR_MESSAGE,
       'number.max': EXACT_FILES_ERROR_MESSAGE,
-      '*': 'Exact file count cannot be used with Minimum or Maximum file count'
+      '*': 'Enter an exact amount or choose the minimum and maximum range allowed'
     })
     .when('maxFiles', {
       is: Joi.exist(),
@@ -289,7 +289,7 @@ export const allSpecificSchemas = Joi.object().keys({
       'number.integer': EXACT_FILES_ERROR_MESSAGE,
       'number.min': EXACT_FILES_ERROR_MESSAGE,
       'number.max': EXACT_FILES_ERROR_MESSAGE,
-      '*': 'Exact file count cannot be used with Minimum or Maximum file count'
+      '*': 'Enter an exact amount or choose the minimum and maximum range allowed'
     }),
   minFiles: questionDetailsFullSchema.minFilesSchema
     .when('maxFiles', {
@@ -302,7 +302,7 @@ export const allSpecificSchemas = Joi.object().keys({
       'number.integer': MIN_FILES_ERROR_MESSAGE,
       'number.min': MIN_FILES_ERROR_MESSAGE,
       'number.max': MIN_FILES_ERROR_MESSAGE,
-      '*': 'Minimum file count must be less than or equal to maximum file count'
+      '*': 'The minimum number of files you accept cannot be greater than the maximum'
     }),
   maxFiles: questionDetailsFullSchema.maxFilesSchema.messages({
     '*': MAX_FILES_ERROR_MESSAGE
@@ -314,21 +314,21 @@ export const allSpecificSchemas = Joi.object().keys({
       otherwise: Joi.number().empty('').integer()
     })
     .messages({
-      'number.base': 'Minimum length must be a positive whole number',
-      'number.integer': 'Minimum length must be a positive whole number',
-      '*': 'Minimum length must be less than or equal to maximum length'
+      'number.base': 'Enter the minimum number of characters',
+      'number.integer': 'Enter the minimum number of characters',
+      '*': 'Minimum number of characters cannot be more than the maximum number of characters'
     }),
   maxLength: questionDetailsFullSchema.maxLengthSchema.messages({
-    '*': 'Maximum length must be a positive whole number'
+    '*': 'Enter the maximum number of characters'
   }),
   precision: questionDetailsFullSchema.precisionSchema.messages({
-    '*': 'Precision must be a whole number between 0 and 5'
+    '*': 'Enter a number between 0 and 5'
   }),
   prefix: questionDetailsFullSchema.prefixSchema,
   suffix: questionDetailsFullSchema.suffixSchema,
   regex: questionDetailsFullSchema.regexSchema,
   rows: questionDetailsFullSchema.rowsSchema.messages({
-    '*': 'Rows must be a positive whole number'
+    '*': 'Enter the number of rows you will accept'
   }),
   classes: questionDetailsFullSchema.classesSchema
 })
@@ -482,5 +482,5 @@ export function mapQuestionDetails(payload) {
 }
 
 /**
- * @import { ComponentDef, FormEditorInputQuestion, GovukField, FileUploadFieldComponent, QuestionSessionState } from '@defra/forms-model'
+ * @import { ComponentDef, FormEditorInputQuestion, GovukField, FileUploadFieldComponent } from '@defra/forms-model'
  */
