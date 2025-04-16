@@ -1,0 +1,516 @@
+<div class="govuk-grid-column-one-half-from-desktop" id="second-container" style="outline: solid 1px #008938; height: 100%; position: sticky; top: 0; padding: 20px; box-shadow: 5px 10px #008938;">
+        <!-- Before content -->
+        <div id="before-content" style=" background-color:  #cce2d8;">
+          <p class="govuk-body-s" style="margin-bottom: 0; color: #005a30; padding: 2px 8px 3px;
+    text-align: center;"> Previews
+          </p>
+        </div>
+
+        <div style="margin-top: 60px;">
+
+          <div class="govuk-tabs" data-module="govuk-tabs" data-govuk-tabs-init="">
+            <h2 class="govuk-tabs__title">
+              Contents
+            </h2>
+            <ul class="govuk-tabs__list" role="tablist">
+              <li class="govuk-tabs__list-item govuk-tabs__list-item--selected" role="presentation">
+                <a class="govuk-tabs__tab" href="#tab-one" id="tab_tab-one" role="tab" aria-controls="tab-one" aria-selected="true" tabindex="0">Page preview</a>
+              </li>
+              <li class="govuk-tabs__list-item" role="presentation">
+                <a class="govuk-tabs__tab" href="#tab-two" id="tab_tab-two" role="tab" aria-controls="tab-two" aria-selected="false" tabindex="-1">Error messages</a>
+              </li>
+            </ul>
+
+            <div class="govuk-tabs__panel" id="tab-one" role="tabpanel" aria-labelledby="tab_tab-one">
+              <!-- Page Preview Content -->
+
+
+              <p class="govuk-body-s" style="margin-bottom: 30px; border-bottom: #008938 1px;">
+                <a href="#" class="govuk-link govuk-link--no-visited-state" rel="noreferrer noopener" target="_blank">
+                  Preview this page in a new tab
+                </a>
+              </p>
+
+              <!-- Additional Content Here -->
+<div class="additional-content">
+
+  <div>
+    <!-- Tag for Preview -->
+    <!-- Form for Preview -->
+    <!-- Dynamic Heading -->
+
+    <div class="border-left-container-shorttext">
+      <div class="govuk-form-group">
+        <h1 class="govuk-label-wrapper">
+          <label class="govuk-label govuk-label--l" for="text-input-field" id="question-label-legend">
+            Question
+          </label>
+        </h1>
+        <div id="hint-text-output" class="govuk-hint">
+
+        </div>
+
+        <input class="govuk-input" id="text-input-field" name="textInputField" type="text" aria-describedby="hint-text-output">
+
+      </div>
+    </div>
+
+<button type="submit" disabled="" aria-disabled="true" class="govuk-button govuk-button govuk-!-margin-top-6 govuk-!-display-none" data-module="govuk-button" id="once-button" data-govuk-button-init="">
+  Continue
+</button>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const dynamicCaption = document.getElementById("dynamic-caption");
+        const setName = dynamicCaption.getAttribute("data-setname");
+
+        if (!setName) {
+          dynamicCaption.style.display = "none";
+        }
+
+        // Select the input fields and the details element
+        const inputField = document.getElementById("error-message-input-shorttext");
+        const regexTextarea = document.getElementById("regex-message");
+        const errorMessagePreview = document.getElementById("error-message-preview-summary");
+
+        // Function to open the details element
+        function openErrorMessagePreview() {
+          errorMessagePreview.setAttribute("open", "true");
+        }
+
+        // Function to close the details element if neither field is focused
+        function closeErrorMessagePreview() {
+          if (document.activeElement !== inputField && document.activeElement !== regexTextarea) {
+            errorMessagePreview.removeAttribute("open");
+          }
+        }
+
+        // Add event listeners for focus and blur on both input fields
+        inputField.addEventListener("focus", openErrorMessagePreview);
+        inputField.addEventListener("blur", closeErrorMessagePreview);
+
+        regexTextarea.addEventListener("focus", openErrorMessagePreview);
+        regexTextarea.addEventListener("blur", closeErrorMessagePreview);
+      });
+    </script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        // Get the textarea and the output paragraph elements
+        const textarea = document.getElementById('guidance-shorttext');
+        const previewTarget = document.querySelector(textarea.getAttribute('data-preview-target'));
+
+        // Listen for input events on the textarea
+        textarea.addEventListener('input', function () {
+          // Convert the textarea content using the marked library
+          previewTarget.innerHTML = marked.parse(textarea.value);
+        });
+
+
+      });
+    </script>
+
+
+
+
+
+    <style>
+      .border-left-container-shorttext {
+        border-left: 10px solid #ffb266;
+        padding-left: 20px;
+      }
+    </style>
+
+              <a href="#edit-page" class="govuk-skip-link" style="margin-bottom: 30px!important;" data-module="govuk-skip-link" data-govuk-skip-link-init="">
+                Skip to edit page
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="tab-two" role="tabpanel" aria-labelledby="tab_tab-two">
+
+          <p class="govuk-body-s" style="margin-bottom: 30px; border-bottom: #008938 1px;">
+            <a href="#" class="govuk-link govuk-link--no-visited-state" rel="noreferrer noopener" target="_blank">
+              Preview error messages in a new tab
+            </a>
+          </p>
+          <!-- Error Messages Content -->
+          <div class="govuk-error-summary" data-disable-auto-focus="true">
+            <h2 class="govuk-error-summary__title">There is a problem</h2>
+            <ul class="govuk-list govuk-error-summary__list">
+              <!-- Error messages -->
+              <li>
+                <a id="empty-input-error-shorttext" class="govuk-error-message">
+                  <span class="govuk-visually-hidden">Error:</span>
+                  Enter <span id="error-dynamic-text" style="text-transform: lowercase;">[Short description]</span>
+                </a>
+              </li>
+              <h3 class="govuk-heading-s">If you set answer limits:</h3>
+              <li>
+                <a id="too-long-input-error-shorttext" class="govuk-error-message">
+                  <span class="govuk-visually-hidden">Error:</span>
+                  <span id="error-dynamic-text-long">[Short description]</span> must be
+                  <span id="max-length">[max length]</span> characters or less
+                </a>
+              </li>
+              <li>
+                <a id="too-short-input-error-shorttext" class="govuk-error-message">
+                  <span class="govuk-visually-hidden">Error:</span>
+                  <span id="error-dynamic-text-short">[Short description]</span> must be
+                  <span id="min-length">[min length]</span> characters or more
+                </a>
+              </li>
+            </ul>
+            <a href="#edit-page" class="govuk-skip-link" style="margin-bottom: 30px!important;" data-module="govuk-skip-link" data-govuk-skip-link-init="">
+              Skip to edit page
+            </a>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        // DOM Elements
+        const domElements = {
+          questionLabelInputShorttext: document.getElementById('question-label-input-shorttext'),
+          questionLabelLegend: document.getElementById('question-label-legend'),
+          hintTextInputShorttext: document.getElementById('hint-text-input-shorttext'),
+          hintTextOutput: document.getElementById('hint-text-output'),
+          makeOptionalCheckbox: document.getElementById('make-optional'),
+          errorMessageInputShorttext: document.getElementById('error-message-input-shorttext'),
+          errorMessagesTab: document.getElementById('tab_tab-two'),
+          pageHeadingInputShorttext: document.getElementById('page-heading-input-shorttext'),
+          dynamicHeading: document.getElementById('dynamic-heading'),
+          guidanceShorttext: document.getElementById('guidance-shorttext'),
+          guidanceParagraph: document.getElementById('guidance-paragraph')
+        };
+
+        // Initialize event listeners
+        initializeEventListeners();
+
+        function initializeEventListeners() {
+          // Update question label
+          if (domElements.questionLabelInputShorttext && domElements.questionLabelLegend) {
+            domElements.questionLabelInputShorttext.addEventListener('input', updateQuestionLabel);
+          }
+
+          // Update hint text and handle placeholder
+          if (domElements.hintTextInputShorttext && domElements.hintTextOutput) {
+            domElements.hintTextInputShorttext.addEventListener('input', updateHintText);
+            domElements.hintTextInputShorttext.addEventListener('focus', showPlaceholderHint);
+            domElements.hintTextInputShorttext.addEventListener('blur', clearPlaceholderHint);
+          }
+
+          // Update page heading and handle placeholder
+          if (domElements.pageHeadingInputShorttext && domElements.dynamicHeading) {
+            domElements.pageHeadingInputShorttext.addEventListener('input', updatePageHeading);
+            domElements.pageHeadingInputShorttext.addEventListener('focus', showPlaceholderHeading);
+            domElements.pageHeadingInputShorttext.addEventListener('blur', clearPlaceholderHeading);
+          }
+
+          // Update guidance text and handle placeholder
+          if (domElements.guidanceShorttext && domElements.guidanceParagraph) {
+            domElements.guidanceShorttext.addEventListener('input', updateGuidanceText);
+            domElements.guidanceShorttext.addEventListener('focus', showPlaceholderGuidance);
+            domElements.guidanceShorttext.addEventListener('blur', clearPlaceholderGuidance);
+          }
+
+          // Update optional label
+          if (domElements.makeOptionalCheckbox) {
+            domElements.makeOptionalCheckbox.addEventListener('change', updateQuestionLabel);
+          }
+
+          // Highlight elements on focus/blur
+          applyHighlightOnFocus(domElements.questionLabelInputShorttext, domElements.questionLabelLegend);
+          applyHighlightOnFocus(domElements.hintTextInputShorttext, domElements.hintTextOutput);
+          applyHighlightOnFocus(domElements.pageHeadingInputShorttext, domElements.dynamicHeading);
+          applyHighlightOnFocus(domElements.guidanceShorttext, domElements.guidanceParagraph);
+
+          // Update error messages tab when input gains focus
+          if (domElements.errorMessageInputShorttext && domElements.errorMessagesTab) {
+            domElements.errorMessageInputShorttext.addEventListener('focus', () => {
+              domElements.errorMessagesTab.textContent = 'Error messages';
+            });
+          }
+        }
+
+        function updateQuestionLabel() {
+          const suffix = domElements.makeOptionalCheckbox.checked ? ' (optional)' : '';
+          domElements.questionLabelLegend.textContent =
+            domElements.questionLabelInputShorttext.value || 'Question';
+          domElements.questionLabelLegend.textContent += suffix;
+        }
+
+        function updateHintText() {
+          domElements.hintTextOutput.textContent = domElements.hintTextInputShorttext.value;
+        }
+
+        function updatePageHeading() {
+          domElements.dynamicHeading.textContent = domElements.pageHeadingInputShorttext.value;
+        }
+
+        function updateGuidanceText() {
+          domElements.guidanceParagraph.textContent = domElements.guidanceShorttext.value;
+        }
+
+        function applyHighlightOnFocus(inputElement, targetElement) {
+          if (inputElement && targetElement) {
+            inputElement.addEventListener('focus', function () {
+              targetElement.classList.add('highlight');
+            });
+            inputElement.addEventListener('blur', function () {
+              targetElement.classList.remove('highlight');
+            });
+
+            // If the input is already focused
+            if (document.activeElement === inputElement) {
+              targetElement.classList.add('highlight');
+            }
+          }
+        }
+
+        // Placeholder handling for hint text
+        function showPlaceholderHint() {
+          if (!domElements.hintTextInputShorttext.value) {
+            domElements.hintTextOutput.textContent = 'Hint text';
+          }
+        }
+
+        function clearPlaceholderHint() {
+          if (!domElements.hintTextInputShorttext.value) {
+            domElements.hintTextOutput.textContent = '';
+          }
+        }
+
+        // Placeholder handling for page heading
+        function showPlaceholderHeading() {
+          if (!domElements.pageHeadingInputShorttext.value) {
+            domElements.dynamicHeading.textContent = 'Page heading';
+          }
+        }
+
+        function clearPlaceholderHeading() {
+          if (!domElements.pageHeadingInputShorttext.value) {
+            domElements.dynamicHeading.textContent = '';
+          }
+        }
+
+        // Placeholder handling for guidance text
+        function showPlaceholderGuidance() {
+          if (!domElements.guidanceShorttext.value) {
+            domElements.guidanceParagraph.textContent = 'Guidance text';
+          }
+        }
+
+        function clearPlaceholderGuidance() {
+          if (!domElements.guidanceShorttext.value) {
+            domElements.guidanceParagraph.textContent = '';
+          }
+        }
+      });
+    </script>
+
+    <!-- SCRIPT FOR ACTIVATING THE ERROR MESSAGES TAB -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        window.scrollTo(0, 0);
+      });
+
+    </script>
+
+
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        // DOM Elements
+        const domElements = {
+          questionLabelInputShorttext: document.getElementById('question-label-input-shorttext'),
+          errorMessageInputShorttext: document.getElementById('error-message-input-shorttext'),
+          validationMessageInputRegex: document.getElementById('regex-message'), // Updated ID for regex textarea
+          errorMessagePreviewElements: document.querySelectorAll("#error-dynamic-text, #error-dynamic-text-long, #error-dynamic-text-short, #error-dynamic-text-regex"), // Updated regex error span ID
+          validationMessagePreviewRegex: document.getElementById('error-dynamic-text-regex'), // Updated regex error span ID
+          makeOptionalCheckbox: document.getElementById('make-optional'),
+          minCharactersInput: document.getElementById('min-characters'),
+          maxCharactersInput: document.getElementById('max-characters'),
+          minCharactersPreview: document.querySelectorAll("#min-characters, #min-length, #min-length-range"),
+          maxCharactersPreview: document.querySelectorAll("#max-characters, #max-length, #max-length-range")
+        };
+
+        // Initialize event listeners
+        initializeEventListeners();
+
+        function initializeEventListeners() {
+          // Update short description and apply highlighting
+          if (domElements.errorMessageInputShorttext && domElements.errorMessagePreviewElements.length) {
+            domElements.errorMessageInputShorttext.addEventListener('input', updateErrorMessages);
+            applyHighlightOnFocus(domElements.errorMessageInputShorttext, domElements.errorMessagePreviewElements);
+          }
+
+          // Add event listener for the validation message in regex textarea
+          if (domElements.validationMessageInputRegex && domElements.validationMessagePreviewRegex) {
+            domElements.validationMessageInputRegex.addEventListener('input', updateValidationMessage);
+            applyHighlightOnFocus(domElements.validationMessageInputRegex, [domElements.validationMessagePreviewRegex]);
+          }
+
+          // Apply focus/blur highlighting to other elements
+          applyHighlightOnFocus(domElements.questionLabelInputShorttext, document.getElementById('question-label-legend'));
+
+          // Update character limits dynamically
+          if (domElements.minCharactersInput && domElements.maxCharactersInput) {
+            domElements.minCharactersInput.addEventListener('input', updateCharacterLimits);
+            domElements.maxCharactersInput.addEventListener('input', updateCharacterLimits);
+          }
+        }
+
+        function updateErrorMessages() {
+          const shortDescription = domElements.errorMessageInputShorttext.value || '[Short description]';
+          domElements.errorMessagePreviewElements.forEach(element => {
+            element.textContent = shortDescription;
+          });
+        }
+
+        function updateValidationMessage() {
+          const validationMessage = domElements.validationMessageInputRegex.value || '[Short description]';
+          domElements.validationMessagePreviewRegex.textContent = validationMessage;
+        }
+
+        function updateCharacterLimits() {
+          const minCharacters = domElements.minCharactersInput.value || '[min length]';
+          const maxCharacters = domElements.maxCharactersInput.value || '[max length]';
+
+          domElements.minCharactersPreview.forEach(element => {
+            element.textContent = minCharacters;
+          });
+
+          domElements.maxCharactersPreview.forEach(element => {
+            element.textContent = maxCharacters;
+          });
+        }
+
+        function applyHighlightOnFocus(inputElement, targetElements) {
+          if (inputElement && targetElements) {
+            inputElement.addEventListener('focus', function () {
+              targetElements.forEach(target => target.classList.add('highlight'));
+            });
+            inputElement.addEventListener('blur', function () {
+              targetElements.forEach(target => target.classList.remove('highlight'));
+            });
+
+            // If the input is already focused, apply the highlight immediately
+            if (document.activeElement === inputElement) {
+              targetElements.forEach(target => target.classList.add('highlight'));
+            }
+          }
+        }
+      });
+    </script>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        // Get the textarea and the output paragraph elements
+        const textarea = document.getElementById('guidance-shorttext');
+        const previewTarget = document.querySelector(textarea.getAttribute('data-preview-target'));
+
+        // Listen for input events on the textarea
+        textarea.addEventListener('input', function () {
+          // Convert the textarea content using the marked library
+          previewTarget.innerHTML = marked.parse(textarea.value);
+        });
+      });
+    </script>
+
+
+
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        // Get the input field
+        const inputField = document.getElementById('error-message-input-shorttext');
+
+        // Check if input field exists
+        if (!inputField) {
+          console.error('Input field not found.');
+          return;
+        }
+
+        // Get the error message placeholders
+        const errorDynamicTextElements = {
+          asIs: document.getElementById('error-dynamic-text'), // Use input as-is
+          capitalize: [
+            document.getElementById('error-dynamic-text-long'),
+            document.getElementById('error-dynamic-text-short'),
+            document.getElementById('error-dynamic-text-range')
+          ].filter(Boolean) // Apply capitalizeFirstLetter
+        };
+
+        // Function to capitalize only the first letter of the input
+        function capitalizeFirstLetter(str) {
+          if (!str) return '[Short description]';
+          return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        // Function to update error messages
+        function updateErrorMessages() {
+          const userInput = inputField.value.trim() || '[Short description]';
+
+          // For the error message where we use input as-is
+          if (errorDynamicTextElements.asIs) {
+            errorDynamicTextElements.asIs.textContent = userInput;
+          }
+
+          // For the error messages where we capitalize the first letter
+          const transformedInput = capitalizeFirstLetter(userInput);
+          errorDynamicTextElements.capitalize.forEach(function (element) {
+            element.textContent = transformedInput;
+          });
+        }
+
+        // Add event listener to the input field
+        inputField.addEventListener('input', updateErrorMessages);
+
+        // Initialize error messages on page load
+        updateErrorMessages();
+      });
+    </script>
+
+
+    <style>
+      .highlight {
+        background-color: #ffe5cc;
+        border-bottom: 2px solid #ffb266;
+        color: black;
+      }
+
+      #before-content {
+        position: absolute;
+        top: 0;
+        left: 10 !important;
+        right: 0;
+        width: 100%;
+        padding: 10px !important;
+        box-sizing: border-box;
+        z-index: 1;
+        border-bottom: 1px solid #008938;
+        padding-left: 10px;
+      }
+
+      #second-container {
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      #second-container>* {
+        padding-left: 0px;
+        z-index: 2;
+      }
+    </style>
+  </div>

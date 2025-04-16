@@ -16,7 +16,7 @@
   description: pageDescription,
   caption: pageCaption,
   actions: pageActions,
-  classes: "govuk-grid-column-full govuk-grid-column-one-half-from-desktop",
+  classes: "govuk-grid-column-one-half-from-desktop",
   backLink: backLink,
   useNewMasthead: true
 }) %}
@@ -79,7 +79,10 @@
       </div>
 
     </form>
+
   {% endcall %}
+
+  {%- include "../views/forms/editor-v2/partials/preview-panel.njk" -%}
 
 {% endcall %}
 {% endblock %}
