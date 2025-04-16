@@ -109,17 +109,6 @@ export async function createServer() {
 
     // if the user is accessing the old URL
     if (requestDomain !== 'localhost' && requestDomain !== baseDomain) {
-      Object.entries(request.headers).forEach(([key, value]) => {
-        if (
-          key.toLowerCase() === 'authorization' ||
-          key.toLowerCase() === 'cookie'
-        ) {
-          return
-        }
-
-        logger.debug(`Header: ${key} = ${value}`)
-      })
-
       logger.debug(
         `Request domain ${requestDomain} did not match base domain ${baseDomain}`
       )
