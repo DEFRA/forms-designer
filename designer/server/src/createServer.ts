@@ -104,22 +104,11 @@ export async function createServer() {
   server.ext('onRequest', (request: Request, h: ResponseToolkit) => {
     const baseUrl = config.appBaseUrl // e.g. https://forms.defra.gov.uk
 
-    const baseDomain = new URL(baseUrl).hostname // e.g. forms.defra.gov.uk
-    const requestDomain = request.info.hostname // e.g. forms-designer.prod.cdp-int.cdp.cloud
+    const baseDomain = new URL(baseUrl).hostname.toLowerCase() // e.g. forms.defra.gov.uk
+    const requestDomain = request.info.hostname.toLowerCase() // e.g. forms-designer.prod.cdp-int.cdp.cloud
 
     // if the user is accessing the old URL
-    if (requestDomain !== baseDomain) {
-      Object.entries(request.headers).forEach(([key, value]) => {
-        if (
-          key.toLowerCase() === 'authorization' ||
-          key.toLowerCase() === 'cookie'
-        ) {
-          return
-        }
-
-        logger.debug(`Header: ${key} = ${value}`)
-      })
-
+    if (requestDomain !== 'localhost' && requestDomain !== baseDomain) {
       logger.debug(
         `Request domain ${requestDomain} did not match base domain ${baseDomain}`
       )
