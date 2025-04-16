@@ -148,13 +148,13 @@ describe('Server tests', () => {
         method: 'get',
         url: '/hello/world',
         headers: {
-          Host: 'correct.forms.defra.gov.uk'
+          Host: 'CORRECT.forms.defra.gov.uk' // case insensitive
         }
       }
 
       const { statusCode } = await server.inject(options)
 
-      expect(statusCode).toBe(StatusCodes.NOT_FOUND) // dummy URL, that's fine
+      expect(statusCode).toBe(StatusCodes.NOT_FOUND) // dummy URL, that's fine since it's not a redirect
     })
 
     test('accepts requests targetting the correct hostname respecting port', async () => {
@@ -172,7 +172,7 @@ describe('Server tests', () => {
 
       const { statusCode } = await server.inject(options)
 
-      expect(statusCode).toBe(StatusCodes.NOT_FOUND) // dummy URL, that's fine
+      expect(statusCode).toBe(StatusCodes.NOT_FOUND) // dummy URL, that's fine since it's not a redirect
     })
 
     test('redirects requests targetting the wrong hostname', async () => {
@@ -215,6 +215,24 @@ describe('Server tests', () => {
       expect(headers.location).toBe(
         'http://correct.forms.defra.gov.uk:3000/hello/world' // local tests are http
       )
+    })
+
+    test('ignores redirects for localhost', async () => {
+      process.env.APP_BASE_URL = 'http://correct.forms.defra.gov.uk'
+
+      server = await startServer()
+
+      const options = {
+        method: 'get',
+        url: '/hello/world',
+        headers: {
+          Host: 'localhost:3000'
+        }
+      }
+
+      const { statusCode } = await server.inject(options)
+
+      expect(statusCode).toBe(StatusCodes.NOT_FOUND) // dummy URL, that's fine since it's not a redirect
     })
   })
 })
