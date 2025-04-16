@@ -488,7 +488,7 @@ describe('Editor v2 question details routes', () => {
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
       new Joi.ValidationError(
-        'Minimum length must be a positive whole number',
+        'Enter the minimum number of characters',
         [],
         undefined
       ),
@@ -524,7 +524,7 @@ describe('Editor v2 question details routes', () => {
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
       new Joi.ValidationError(
-        'Minimum length must be less than or equal to maximum length',
+        'Minimum number of characters cannot be more than the maximum number of characters',
         [],
         undefined
       ),
@@ -605,7 +605,7 @@ describe('Editor v2 question details routes', () => {
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
       new Joi.ValidationError(
-        'This question or page title already exists - use a unique question or page title',
+        'Question or page heading already exists in this form',
         [],
         undefined
       ),
