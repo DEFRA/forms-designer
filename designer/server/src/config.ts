@@ -80,6 +80,15 @@ const schema = joi.object<Config>({
       .string()
       .default(resolve(import.meta.dirname, '../../client/dist'))
   }),
+  clientV2Views: joi.string().when('env', {
+    is: 'test',
+    then: joi
+      .string()
+      .default(resolve(import.meta.dirname, '../../client/views')),
+    otherwise: joi
+      .string()
+      .default(resolve(import.meta.dirname, '../../client/dist'))
+  }),
   managerUrl: joi.string().required(),
   submissionUrl: joi.string().required(),
   previewUrl: joi.string().required(),

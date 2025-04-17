@@ -32,13 +32,22 @@ export default /** @type {Configuration} */ ({
       import: [
         // Nunjucks rendered application
         './javascripts/application.js',
-        './stylesheets/application.scss'
+        './stylesheets/application.scss',
+        './javascripts/preview.js',
+        './stylesheets/preview.scss'
       ]
     },
     editor: {
       import: [
         // React rendered form editor
         './index.tsx'
+      ]
+    },
+    preview: {
+      import: [
+        // Nunjucks rendered application
+        './javascripts/preview.js',
+        './stylesheets/preview.scss'
       ]
     }
   },
