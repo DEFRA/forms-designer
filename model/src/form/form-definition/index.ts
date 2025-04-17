@@ -33,11 +33,13 @@ const sectionsSchema = Joi.object<Section>()
   .description('A form section grouping related pages together')
   .keys({
     name: Joi.string()
+      .trim()
       .required()
       .description(
         'Unique identifier for the section, used in code and page references'
       ),
     title: Joi.string()
+      .trim()
       .required()
       .description('Human-readable section title displayed to users'),
     hideTitle: Joi.boolean()
@@ -52,12 +54,15 @@ const conditionFieldSchema = Joi.object<ConditionFieldData>()
   .description('Field reference used in a condition')
   .keys({
     name: Joi.string()
+      .trim()
       .required()
       .description('Component name referenced by this condition'),
     type: Joi.string()
+      .trim()
       .required()
       .description('Data type of the field (e.g., string, number, date)'),
     display: Joi.string()
+      .trim()
       .required()
       .description('Human-readable name of the field for display purposes')
   })
@@ -66,12 +71,15 @@ const conditionValueSchema = Joi.object<ConditionValueData>()
   .description('Value specification for a condition')
   .keys({
     type: Joi.string()
+      .trim()
       .required()
       .description('Data type of the value (e.g., string, number, date)'),
     value: Joi.string()
+      .trim()
       .required()
       .description('The actual value to compare against'),
     display: Joi.string()
+      .trim()
       .required()
       .description('Human-readable version of the value for display purposes')
   })
@@ -80,15 +88,19 @@ const relativeDateValueSchema = Joi.object<RelativeDateValueData>()
   .description('Relative date specification for date-based conditions')
   .keys({
     type: Joi.string()
+      .trim()
       .required()
       .description('Data type identifier, should be "RelativeDate"'),
     period: Joi.string()
+      .trim()
       .required()
       .description('Numeric amount of the time period, as a string'),
     unit: Joi.string()
+      .trim()
       .required()
       .description('Time unit (e.g., days, weeks, months, years)'),
     direction: Joi.string()
+      .trim()
       .required()
       .description('Temporal direction, either "past" or "future"')
   })
@@ -97,12 +109,15 @@ const conditionRefSchema = Joi.object<ConditionRefData>()
   .description('Reference to a named condition defined elsewhere')
   .keys({
     conditionName: Joi.string()
+      .trim()
       .required()
       .description('Name of the referenced condition'),
     conditionDisplayName: Joi.string()
+      .trim()
       .required()
       .description('Human-readable name of the condition for display purposes'),
     coordinator: Joi.string()
+      .trim()
       .optional()
       .description(
         'Logical operator connecting this condition with others (AND, OR)'
@@ -116,6 +131,7 @@ const conditionSchema = Joi.object<ConditionData>()
       'The form field being evaluated in this condition'
     ),
     operator: Joi.string()
+      .trim()
       .required()
       .description('Comparison operator (equals, greaterThan, contains, etc.)'),
     value: Joi.alternatives()
@@ -124,6 +140,7 @@ const conditionSchema = Joi.object<ConditionData>()
         'Value to compare the field against, either fixed or relative date'
       ),
     coordinator: Joi.string()
+      .trim()
       .optional()
       .description(
         'Logical operator connecting this condition with others (AND, OR)'
@@ -149,6 +166,7 @@ const conditionsModelSchema = Joi.object<ConditionsModelData>()
   .description('Complete condition model with name and condition set')
   .keys({
     name: Joi.string()
+      .trim()
       .required()
       .description('Unique identifier for the condition set'),
     conditions: Joi.array()
@@ -168,11 +186,12 @@ const conditionWrapperSchema = Joi.object<ConditionWrapper>()
   .description('Container for a named condition with its definition')
   .keys({
     name: Joi.string()
+      .trim()
       .required()
       .description('Unique identifier used to reference this condition'),
-    displayName: Joi.string().description(
-      'Human-readable name for display in the UI'
-    ),
+    displayName: Joi.string()
+      .trim()
+      .description('Human-readable name for display in the UI'),
     value: conditionsModelSchema
       .required()
       .description('The complete condition definition')
@@ -182,13 +201,16 @@ export const componentSchema = Joi.object<ComponentDef>()
   .description('Form component definition specifying UI element behavior')
   .keys({
     id: Joi.string()
+      .trim()
       .uuid()
       .optional()
       .description('Unique identifier for the component'),
     type: Joi.string<ComponentType>()
+      .trim()
       .required()
       .description('Component type (TextField, RadioButtons, DateField, etc.)'),
     shortDescription: Joi.string()
+      .trim()
       .optional()
       .description('Brief description of the component purpose'),
     name: Joi.when('type', {
@@ -199,10 +221,12 @@ export const componentSchema = Joi.object<ComponentDef>()
         ComponentType.Markdown
       ),
       then: Joi.string()
+        .trim()
         .pattern(/^[a-zA-Z]+$/)
         .optional()
         .description('Optional identifier for display-only components'),
       otherwise: Joi.string()
+        .trim()
         .pattern(/^[a-zA-Z]+$/)
         .description('Unique identifier for the component, used in form data')
     }),
@@ -214,13 +238,16 @@ export const componentSchema = Joi.object<ComponentDef>()
         ComponentType.Markdown
       ),
       then: Joi.string()
+        .trim()
         .optional()
         .description('Optional title for display-only components'),
       otherwise: Joi.string()
+        .trim()
         .allow('')
         .description('Label displayed above the component')
     }),
     hint: Joi.string()
+      .trim()
       .allow('')
       .optional()
       .description(
@@ -240,6 +267,7 @@ export const componentSchema = Joi.object<ComponentDef>()
         .empty('')
         .description('Maximum days in the future allowed for date inputs'),
       customValidationMessage: Joi.string()
+        .trim()
         .allow('')
         .description('Custom error message for validation failures'),
       customValidationMessages: Joi.object<LanguageMessages>()
@@ -265,6 +293,7 @@ export const componentSchema = Joi.object<ComponentDef>()
       .default({})
       .description('Validation rules for the component'),
     list: Joi.string()
+      .trim()
       .optional()
       .description(
         'Reference to a predefined list of options for select components'
@@ -275,6 +304,7 @@ export const componentSchema = Joi.object<ComponentDef>()
 export const componentSchemaV2 = componentSchema
   .keys({
     id: Joi.string()
+      .trim()
       .uuid()
       .default(() => uuidV4())
       .description('Auto-generated unique identifier for the component')
@@ -285,15 +315,18 @@ const nextSchema = Joi.object<Link>()
   .description('Navigation link defining where to go after completing a page')
   .keys({
     path: Joi.string()
+      .trim()
       .required()
       .description('The target page path to navigate to'),
     condition: Joi.string()
+      .trim()
       .allow('')
       .optional()
       .description(
         'Optional condition that determines if this path should be taken'
       ),
     redirect: Joi.string()
+      .trim()
       .optional()
       .description(
         'Optional external URL to redirect to instead of an internal page'
@@ -304,11 +337,13 @@ const repeatOptions = Joi.object<RepeatOptions>()
   .description('Configuration options for a repeatable page section')
   .keys({
     name: Joi.string()
+      .trim()
       .required()
       .description(
         'Identifier for the repeatable section, used in data structure'
       ),
     title: Joi.string()
+      .trim()
       .required()
       .description('Title displayed for each repeatable item')
   })
@@ -341,6 +376,7 @@ const eventSchema = Joi.object<Event>()
   .description('Event handler configuration for page lifecycle events')
   .keys({
     type: Joi.string()
+      .trim()
       .allow('http')
       .required()
       .description(
@@ -350,10 +386,12 @@ const eventSchema = Joi.object<Event>()
       .description('Options specific to the event handler type')
       .keys({
         method: Joi.string()
+          .trim()
           .allow('POST')
           .required()
           .description('HTTP method to use for the request'),
         url: Joi.string()
+          .trim()
           .uri({ scheme: ['http', 'https'] })
           .required()
           .description('URL endpoint to call when the event fires')
@@ -381,20 +419,24 @@ export const pageSchema = Joi.object<Page>()
   .description('Form page definition specifying content and behavior')
   .keys({
     id: Joi.string()
+      .trim()
       .uuid()
       .optional()
       .description('Unique identifier for the page'),
     path: Joi.string()
+      .trim()
       .required()
       .disallow('/status')
       .description(
         'URL path for this page, must not be the reserved "/status" path'
       ),
     title: Joi.string()
+      .trim()
       .required()
       .description('Page title displayed at the top of the page'),
-    section: Joi.string().description('Section this page belongs to'),
+    section: Joi.string().trim().description('Section this page belongs to'),
     controller: Joi.string()
+      .trim()
       .optional()
       .description('Custom controller class name for special page behavior'),
     components: Joi.array<ComponentDef>()
@@ -402,7 +444,7 @@ export const pageSchema = Joi.object<Page>()
       .unique('name')
       .description('UI components displayed on this page'),
     repeat: Joi.when('controller', {
-      is: Joi.string().valid('RepeatPageController').required(),
+      is: Joi.string().trim().valid('RepeatPageController').required(),
       then: pageRepeatSchema
         .required()
         .description(
@@ -411,6 +453,7 @@ export const pageSchema = Joi.object<Page>()
       otherwise: Joi.any().strip()
     }),
     condition: Joi.string()
+      .trim()
       .allow('')
       .optional()
       .description('Optional condition that determines if this page is shown'),
@@ -422,6 +465,7 @@ export const pageSchema = Joi.object<Page>()
       .optional()
       .description('Event handlers for page lifecycle events'),
     view: Joi.string()
+      .trim()
       .optional()
       .description(
         'Optional custom view template to use for rendering this page'
@@ -434,6 +478,7 @@ export const pageSchema = Joi.object<Page>()
 export const pageSchemaV2 = pageSchema
   .append({
     title: Joi.string()
+      .trim()
       .allow('')
       .required()
       .description('Page title with enhanced support for empty titles in V2')
@@ -445,6 +490,7 @@ export const pageSchemaV2 = pageSchema
 export const pageSchemaPayloadV2 = pageSchemaV2
   .keys({
     id: Joi.string()
+      .trim()
       .uuid()
       .default(() => uuidV4())
       .description('Auto-generated unique identifier for the page'),
@@ -462,10 +508,15 @@ const baseListItemSchema = Joi.object<Item>()
   .description('Base schema for list items with common properties')
   .keys({
     id: Joi.string()
+      .trim()
       .uuid()
       .default(() => uuidV4()),
-    text: Joi.string().allow('').description('Display text shown to the user'),
+    text: Joi.string()
+      .trim()
+      .allow('')
+      .description('Display text shown to the user'),
     description: Joi.string()
+      .trim()
       .allow('')
       .optional()
       .description('Optional additional descriptive text for the item'),
@@ -480,6 +531,7 @@ const baseListItemSchema = Joi.object<Item>()
       })
       .optional(),
     condition: Joi.string()
+      .trim()
       .allow('')
       .optional()
       .description('Condition that determines if this item is shown'),
@@ -487,9 +539,10 @@ const baseListItemSchema = Joi.object<Item>()
       .optional()
       .keys({
         id: Joi.string()
+          .trim()
           .uuid()
           .default(() => uuidV4()),
-        text: Joi.string()
+        text: Joi.string().trim()
       })
       .description('Optional hint text to be shown on list item')
   })
@@ -497,6 +550,7 @@ const baseListItemSchema = Joi.object<Item>()
 const stringListItemSchema = baseListItemSchema
   .append({
     value: Joi.string()
+      .trim()
       .required()
       .description('String value stored when this item is selected')
   })
@@ -514,16 +568,20 @@ export const listSchema = Joi.object<List>()
   .description('Reusable list of options for select components')
   .keys({
     id: Joi.string()
+      .trim()
       .uuid()
       .optional()
       .description('Unique identifier for the list'),
     name: Joi.string()
+      .trim()
       .required()
       .description('Name used to reference this list from components'),
     title: Joi.string()
+      .trim()
       .required()
       .description('Human-readable title for the list'),
     type: Joi.string()
+      .trim()
       .required()
       .valid('string', 'number')
       .description('Data type for list values (string or number)'),
@@ -548,6 +606,7 @@ export const listSchema = Joi.object<List>()
 export const listSchemaV2 = listSchema
   .keys({
     id: Joi.string()
+      .trim()
       .uuid()
       .default(() => uuidV4())
       .description('Auto-generated unique identifier for the list')
@@ -563,6 +622,7 @@ const feedbackSchema = Joi.object<FormDefinition['feedback']>()
     url: Joi.when('feedbackForm', {
       is: Joi.boolean().valid(false),
       then: Joi.string()
+        .trim()
         .optional()
         .allow('')
         .description(
@@ -570,6 +630,7 @@ const feedbackSchema = Joi.object<FormDefinition['feedback']>()
         )
     }),
     emailAddress: Joi.string()
+      .trim()
       .email({
         tlds: {
           allow: false
@@ -583,6 +644,7 @@ const phaseBannerSchema = Joi.object<PhaseBanner>()
   .description('Phase banner configuration showing development status')
   .keys({
     phase: Joi.string()
+      .trim()
       .valid('alpha', 'beta')
       .description('Development phase of the service (alpha or beta)')
   })
@@ -591,12 +653,14 @@ const outputSchema = Joi.object<FormDefinition['output']>()
   .description('Configuration for form submission output')
   .keys({
     audience: Joi.string()
+      .trim()
       .valid('human', 'machine')
       .required()
       .description(
         'Target audience for the output (human readable or machine processable)'
       ),
     version: Joi.string()
+      .trim()
       .required()
       .description('Version identifier for the output format')
   })
@@ -610,10 +674,12 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
   .required()
   .keys({
     engine: Joi.string()
+      .trim()
       .allow('V1', 'V2')
       .default('V1')
       .description('Form engine version to use (V1 or V2)'),
     name: Joi.string()
+      .trim()
       .allow('')
       .optional()
       .description('Unique name identifying the form'),
@@ -621,6 +687,7 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
       .optional()
       .description('Feedback mechanism configuration'),
     startPage: Joi.string()
+      .trim()
       .optional()
       .description('Path of the first page to show when starting the form'),
     pages: Joi.array<Page>()
@@ -658,6 +725,7 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
       .optional()
       .description('Custom metadata for the form'),
     declaration: Joi.string()
+      .trim()
       .allow('')
       .optional()
       .description('Declaration text shown on the summary page'),
@@ -668,8 +736,8 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
       .optional()
       .description('Phase banner configuration'),
     outputEmail: Joi.string()
-      .email({ tlds: { allow: ['uk'] } })
       .trim()
+      .email({ tlds: { allow: ['uk'] } })
       .optional()
       .description('Email address where form submissions are sent'),
     output: outputSchema
