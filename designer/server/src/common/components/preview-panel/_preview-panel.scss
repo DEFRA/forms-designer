@@ -1,0 +1,12 @@
+@use "../govuk-frontend" as *;
+
+$defra-brand-colour: govuk-organisation-colour(department-for-environment-food-rural-affairs);
+
+.preview-panel {
+  outline: solid 1px #008938;
+  height: 100%;
+  position: sticky;
+  top: 0;
+  padding: 20px;
+  box-shadow: 5px 10px #008938;
+}

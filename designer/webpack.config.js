@@ -40,6 +40,9 @@ export default /** @type {Configuration} */ ({
         // React rendered form editor
         './index.tsx'
       ]
+    },
+    'editor-v2': {
+      import: ['./javascripts/editor-v2.js']
     }
   },
   experiments: {

@@ -16,14 +16,18 @@
   description: pageDescription,
   caption: pageCaption,
   actions: pageActions,
-  classes: "govuk-grid-column-one-half-from-desktop",
+  classes: "govuk-grid-column-full",
   backLink: backLink,
   useNewMasthead: true
 }) %}
 
+  <div class="govuk-grid-column-one-half-from-desktop">
     {%- include "../views/forms/editor-v2/partials/question-details-left-panel.njk" -%}
+  </div>
 
+  <div class="govuk-grid-column-one-half-from-desktop">
     {%- include "../views/forms/editor-v2/partials/question-details-preview-panel.njk" -%}
+  </div>
 
 {% endcall %}
 {% endblock %}
