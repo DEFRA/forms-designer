@@ -6,18 +6,24 @@ export class ComponentBase {
     this.document = document
     this.setupDomElements()
     this.initialisePanel()
+    this.initialiseSpecifics()
   }
 
   setupDomElements() {
-    this.domElements = {
-      questionLabelInput: this.document.getElementById('question'),
-      questionLabelOutput: this.document.getElementById(
-        'question-label-output'
-      ),
-      hintTextInput: this.document.getElementById('hintText'),
-      hintTextOutput: this.document.getElementById('text-input-field-hint'),
-      makeOptionInput: this.document.getElementById('questionOptional')
-    }
+    this.baseDomElements =
+      /** @type {{ questionLabelInput: HTMLElement | null, questionLabelOutput: HTMLElement | null, hintTextInput: HTMLElement | null, hintTextOutput: HTMLElement | null, makeOptionInput: HTMLElement | null }} */ ({
+        questionLabelInput: this.document.getElementById('question'),
+        questionLabelOutput: this.document.getElementById(
+          'question-label-output'
+        ),
+        hintTextInput: this.document.getElementById('hintText'),
+        hintTextOutput: this.document.getElementById('text-input-field-hint'),
+        makeOptionInput: this.document.getElementById('questionOptional')
+      })
+  }
+
+  initialiseSpecifics() {
+    // do nothing in base
   }
 
   initialisePanel() {
@@ -40,43 +46,46 @@ export class ComponentBase {
     const local = this
     // Update question label preview
     if (
-      this.domElements.questionLabelInput &&
-      this.domElements.questionLabelOutput
+      this.baseDomElements.questionLabelInput &&
+      this.baseDomElements.questionLabelOutput
     ) {
-      this.domElements.questionLabelInput.addEventListener(
+      this.baseDomElements.questionLabelInput.addEventListener(
         'input',
         function () {
           local.updateQuestionLabel()
         }
       )
       this.applyHighlightOnFocus(
-        this.domElements.questionLabelInput,
-        this.domElements.questionLabelOutput
+        this.baseDomElements.questionLabelInput,
+        this.baseDomElements.questionLabelOutput
       )
     }
 
     // Update hint text preview and placeholder behavior
-    if (this.domElements.hintTextInput) {
-      this.domElements.hintTextInput.addEventListener('input', function () {
+    if (this.baseDomElements.hintTextInput) {
+      this.baseDomElements.hintTextInput.addEventListener('input', function () {
         local.updateHintText()
       })
-      this.domElements.hintTextInput.addEventListener('focus', function () {
+      this.baseDomElements.hintTextInput.addEventListener('focus', function () {
         local.showPlaceholderHint()
         // addHighlight(domElements.hintTextOutputExample)
-        local.addHighlight(local.domElements.hintTextOutput)
+        local.addHighlight(local.baseDomElements.hintTextOutput)
       })
-      this.domElements.hintTextInput.addEventListener('blur', function () {
+      this.baseDomElements.hintTextInput.addEventListener('blur', function () {
         local.clearPlaceholderHint()
         // removeHighlight(domElements.hintTextOutputExample)
-        local.removeHighlight(local.domElements.hintTextOutput)
+        local.removeHighlight(local.baseDomElements.hintTextOutput)
       })
     }
 
     // Update label depending on checkbox
-    if (this.domElements.makeOptionInput) {
-      this.domElements.makeOptionInput.addEventListener('change', function () {
-        local.updateQuestionLabel()
-      })
+    if (this.baseDomElements.makeOptionInput) {
+      this.baseDomElements.makeOptionInput.addEventListener(
+        'change',
+        function () {
+          local.updateQuestionLabel()
+        }
+      )
     }
 
     this.updateQuestionLabel()
@@ -84,36 +93,37 @@ export class ComponentBase {
   }
 
   updateQuestionLabel() {
-    const labelText = this.domElements.questionLabelInput?.value ?? 'Question'
-    const optional = this.domElements.makeOptionInput.checked
+    const labelText =
+      this.baseDomElements.questionLabelInput?.value ?? 'Question'
+    const optional = this.baseDomElements.makeOptionInput.checked
       ? ' (optional)'
       : ''
-    this.domElements.questionLabelOutput.textContent = `${labelText}${optional}`
+    this.baseDomElements.questionLabelOutput.textContent = `${labelText}${optional}`
   }
 
   updateHintText() {
-    const hintText = this.domElements.hintTextInput.value ?? 'Hint text'
+    const hintText = this.baseDomElements.hintTextInput.value ?? 'Hint text'
     this.updateHintOutputs(hintText)
   }
 
   showPlaceholderHint() {
-    if (!this.domElements.hintTextInput.value) {
+    if (!this.baseDomElements.hintTextInput.value) {
       this.updateHintOutputs('Hint text')
     }
   }
 
   clearPlaceholderHint() {
-    if (!this.domElements.hintTextInput.value) {
+    if (!this.baseDomElements.hintTextInput.value) {
       this.updateHintOutputs('')
     }
   }
 
   updateHintOutputs(hintText) {
-    if (this.domElements.hintTextOutput) {
-      this.domElements.hintTextOutput.textContent = hintText
+    if (this.baseDomElements.hintTextOutput) {
+      this.baseDomElements.hintTextOutput.textContent = hintText
     }
-    if (this.domElements.hintTextOutput) {
-      this.domElements.hintTextOutput.textContent = hintText
+    if (this.baseDomElements.hintTextOutput) {
+      this.baseDomElements.hintTextOutput.textContent = hintText
     }
   }
 
