@@ -1,4 +1,4 @@
-import { ComponentType } from '@defra/forms-model'
+import { getComponentsExcludingGuidance } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 
 import * as scopes from '~/src/common/constants/scopes.js'
@@ -20,9 +20,7 @@ export function shouldDeleteQuestionOnly(pageId, definition) {
   // If only one (non-guidance question) on the page, 'deleting the question' becomes 'deleting the page'
 
   const components = getComponentsOnPageFromDefinition(definition, pageId)
-  const nonGuidanceComponents = components.filter(
-    (comp, idx) => !(comp.type === ComponentType.Markdown && idx === 0)
-  )
+  const nonGuidanceComponents = getComponentsExcludingGuidance(components)
   return nonGuidanceComponents.length > 1
 }
 

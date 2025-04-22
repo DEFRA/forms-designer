@@ -1,6 +1,7 @@
 import {
   ComponentType,
   ControllerType,
+  getComponentsExcludingGuidance,
   hasComponents,
   hasComponentsEvenIfNoNext,
   randomId
@@ -121,10 +122,9 @@ export async function updateQuestion(
   const page = getPageFromDefinition(definition, pageId)
 
   // Are we editing first question on page where there is no page title specified?
-  const questions = getComponentsOnPageFromDefinition(
-    definition,
-    pageId
-  ).filter((comp, idx) => !(comp.type === ComponentType.Markdown && idx === 0))
+  const questions = getComponentsExcludingGuidance(
+    getComponentsOnPageFromDefinition(definition, pageId)
+  )
   const isFirstQuestionAndNoPageTitle =
     questions.findIndex((comp) => comp.id === questionId) === 0 && !page?.title
 

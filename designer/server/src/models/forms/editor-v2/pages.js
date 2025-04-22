@@ -1,6 +1,7 @@
 import {
   ComponentType,
   ControllerType,
+  getComponentsExcludingGuidance,
   hasComponents,
   hasComponentsEvenIfNoNext
 } from '@defra/forms-model'
@@ -141,9 +142,7 @@ export function hideFirstGuidance(page) {
 
   return {
     ...page,
-    components: components.filter(
-      (comp, idx) => !(comp.type === ComponentType.Markdown && idx === 0)
-    )
+    components: getComponentsExcludingGuidance(components)
   }
 }
 

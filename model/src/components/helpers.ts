@@ -189,3 +189,14 @@ export function hasHint(
 ): component is FormComponentsDef | ListComponent {
   return isFormType(component?.type) || component?.type === ComponentType.List
 }
+
+/**
+ * Excludes the guidance component (if any) which sits in position zero
+ */
+export function getComponentsExcludingGuidance(
+  components: ComponentDef[]
+): ComponentDef[] {
+  return components.filter(
+    (comp, idx) => !(comp.type === ComponentType.Markdown && idx === 0)
+  )
+}
