@@ -10,7 +10,7 @@ import {
 } from '~/src/models/forms/editor-v2/common.js'
 
 const MIN_FILES_ERROR_MESSAGE =
-  'Minimum file count must be a whole number between 1 and 25'
+  'Minimum file count must be a whole number between 0 and 25'
 const MAX_FILES_ERROR_MESSAGE =
   'Maximum file count must be a whole number between 1 and 25'
 const EXACT_FILES_ERROR_MESSAGE =
@@ -294,19 +294,17 @@ export const allSpecificSchemas = Joi.object().keys({
       'number.max': EXACT_FILES_ERROR_MESSAGE,
       '*': 'Enter an exact amount or choose the minimum and maximum range allowed'
     }),
-  minFiles: questionDetailsFullSchema.minFilesSchema
-    .when('maxFiles', {
-      is: Joi.exist(),
-      then: Joi.number().max(Joi.ref('maxFiles')),
-      otherwise: Joi.number().empty('').integer()
-    })
-    .messages({
-      'number.base': MIN_FILES_ERROR_MESSAGE,
-      'number.integer': MIN_FILES_ERROR_MESSAGE,
-      'number.min': MIN_FILES_ERROR_MESSAGE,
-      'number.max': MIN_FILES_ERROR_MESSAGE,
-      '*': 'The minimum number of files you accept cannot be greater than the maximum'
+  minFiles: questionDetailsFullSchema.minFilesSchema.when('maxFiles', {
+    is: Joi.exist(),
+    then: Joi.number().max(Joi.ref('maxFiles')).messages({
+      'number.max':
+        'The minimum number of files you accept cannot be greater than the maximum',
+      '*': MIN_FILES_ERROR_MESSAGE
     }),
+    otherwise: Joi.number().empty('').integer().messages({
+      '*': MIN_FILES_ERROR_MESSAGE
+    })
+  }),
   maxFiles: questionDetailsFullSchema.maxFilesSchema.messages({
     '*': MAX_FILES_ERROR_MESSAGE
   }),
