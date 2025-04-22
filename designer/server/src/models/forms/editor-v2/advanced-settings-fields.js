@@ -15,6 +15,9 @@ const MAX_FILES_ERROR_MESSAGE =
   'Maximum file count must be a whole number between 1 and 25'
 const EXACT_FILES_ERROR_MESSAGE =
   'Exact file count must be a whole number between 1 and 25'
+const MAX_LENGTH_ERROR_MESSAGE =
+  'Maximum length must be a positive whole number'
+const MAX_PRECISION = 5
 
 export const advancedSettingsPerComponentType =
   /** @type {Record<ComponentType, QuestionAdvancedSettings[]> } */ ({
@@ -314,16 +317,18 @@ export const allSpecificSchemas = Joi.object().keys({
       otherwise: Joi.number().empty('').integer()
     })
     .messages({
-      'number.base': 'Maximum length must be a positive whole number',
-      'number.integer': 'Maximum length must be a positive whole number',
+      'number.base': MAX_LENGTH_ERROR_MESSAGE,
+      'number.integer': MAX_LENGTH_ERROR_MESSAGE,
       '*': 'Minimum length must be less than or equal to maximum length'
     }),
   maxLength: questionDetailsFullSchema.maxLengthSchema.messages({
-    '*': 'Maximum length must be a positive whole number'
+    '*': MAX_LENGTH_ERROR_MESSAGE
   }),
-  precision: questionDetailsFullSchema.precisionSchema.max(5).messages({
-    '*': 'Enter a whole number between 0 and 5'
-  }),
+  precision: questionDetailsFullSchema.precisionSchema
+    .max(MAX_PRECISION)
+    .messages({
+      '*': `Enter a whole number between 0 and ${MAX_PRECISION}`
+    }),
   prefix: questionDetailsFullSchema.prefixSchema,
   suffix: questionDetailsFullSchema.suffixSchema,
   regex: questionDetailsFullSchema.regexSchema,
