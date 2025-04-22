@@ -421,6 +421,62 @@ describe('editor.js', () => {
         expect(mockedPatchJson).not.toHaveBeenCalled()
         expect(result).toEqual({ id: '456' })
       })
+
+      test('returns response body when path should change to first question', async () => {
+        mockedPutJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: { id: '456' }
+        })
+
+        mockedPatchJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: { id: '456' }
+        })
+
+        const patchUrl = new URL(
+          `./${formId}/definition/draft/pages/12345`,
+          formsEndpoint
+        )
+
+        const questionDetails = {
+          type: ComponentType.TextField,
+          title: 'My first question'
+        }
+
+        const expectedPut = {
+          payload: {
+            type: ComponentType.TextField,
+            title: 'My first question'
+          },
+          headers: { Authorization: `Bearer ${token}` }
+        }
+
+        const expectedPatch = {
+          payload: {
+            controller: null,
+            path: '/my-first-question'
+          },
+          headers: { Authorization: `Bearer ${token}` }
+        }
+
+        const formDefinitionWithNoPageHeading = structuredClone(
+          testFormDefinitionWithExistingGuidance
+        )
+        formDefinitionWithNoPageHeading.pages[0].title = ''
+
+        const result = await updateQuestion(
+          formId,
+          token,
+          formDefinitionWithNoPageHeading,
+          '12345',
+          '99011',
+          questionDetails
+        )
+
+        expect(mockedPutJson).toHaveBeenCalledWith(requestUrl, expectedPut)
+        expect(mockedPatchJson).toHaveBeenCalledWith(patchUrl, expectedPatch)
+        expect(result).toEqual({ id: '456' })
+      })
     })
 
     describe('when putJson fails', () => {
