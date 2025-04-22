@@ -10,11 +10,14 @@ import {
 } from '~/src/models/forms/editor-v2/common.js'
 
 const MIN_FILES_ERROR_MESSAGE =
-  'Enter the minimum number of files you accept between 0 and 25'
+  'Minimum file count must be a whole number between 1 and 25'
 const MAX_FILES_ERROR_MESSAGE =
-  'Enter the maximum number of files you accept between 1 and 25'
+  'Maximum file count must be a whole number between 1 and 25'
 const EXACT_FILES_ERROR_MESSAGE =
-  'Enter the exact number of files you accept between 1 and 25'
+  'Exact file count must be a whole number between 1 and 25'
+const MAX_LENGTH_ERROR_MESSAGE =
+  'Maximum length must be a positive whole number'
+const MAX_PRECISION = 5
 
 export const advancedSettingsPerComponentType =
   /** @type {Record<ComponentType, QuestionAdvancedSettings[]> } */ ({
@@ -247,10 +250,10 @@ export const allAdvancedSettingsFields =
 
 export const allSpecificSchemas = Joi.object().keys({
   maxFuture: questionDetailsFullSchema.maxFutureSchema.messages({
-    '*': 'Enter the maximum days in the future'
+    '*': 'Maximum days in the future must be a real number or 0'
   }),
   maxPast: questionDetailsFullSchema.maxPastSchema.messages({
-    '*': 'Enter the maximum days in the past'
+    '*': 'Maximum days in the past must be a real number or 0'
   }),
   min: questionDetailsFullSchema.minSchema
     .when('max', {
@@ -259,12 +262,12 @@ export const allSpecificSchemas = Joi.object().keys({
       otherwise: Joi.number().empty('').integer()
     })
     .messages({
-      'number.base': 'Enter the lowest number',
-      'number.integer': 'Enter the lowest number',
+      'number.base': 'Lowest number must be a whole number',
+      'number.integer': 'Lowest number must be a whole number',
       '*': 'Lowest number cannot be more than the highest number'
     }),
   max: questionDetailsFullSchema.maxSchema.messages({
-    '*': 'Enter the highest number'
+    '*': 'Highest number must be a whole number'
   }),
   exactFiles: questionDetailsFullSchema.exactFilesSchema
     .when('minFiles', {
@@ -314,21 +317,23 @@ export const allSpecificSchemas = Joi.object().keys({
       otherwise: Joi.number().empty('').integer()
     })
     .messages({
-      'number.base': 'Enter the minimum number of characters',
-      'number.integer': 'Enter the minimum number of characters',
-      '*': 'Minimum number of characters cannot be more than the maximum number of characters'
+      'number.base': MAX_LENGTH_ERROR_MESSAGE,
+      'number.integer': MAX_LENGTH_ERROR_MESSAGE,
+      '*': 'Minimum length must be less than or equal to maximum length'
     }),
   maxLength: questionDetailsFullSchema.maxLengthSchema.messages({
-    '*': 'Enter the maximum number of characters'
+    '*': MAX_LENGTH_ERROR_MESSAGE
   }),
-  precision: questionDetailsFullSchema.precisionSchema.messages({
-    '*': 'Enter a number between 0 and 5'
-  }),
+  precision: questionDetailsFullSchema.precisionSchema
+    .max(MAX_PRECISION)
+    .messages({
+      '*': `Enter a whole number between 0 and ${MAX_PRECISION}`
+    }),
   prefix: questionDetailsFullSchema.prefixSchema,
   suffix: questionDetailsFullSchema.suffixSchema,
   regex: questionDetailsFullSchema.regexSchema,
   rows: questionDetailsFullSchema.rowsSchema.messages({
-    '*': 'Enter the number of rows you will accept'
+    '*': 'Enter a positive whole number'
   }),
   classes: questionDetailsFullSchema.classesSchema
 })
