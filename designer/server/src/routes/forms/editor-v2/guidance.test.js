@@ -119,7 +119,7 @@ describe('Editor v2 guidance routes', () => {
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
       new Joi.ValidationError(
-        'This page title already exists - use a unique page title',
+        'Page heading already exists in this form',
         [],
         undefined
       ),
