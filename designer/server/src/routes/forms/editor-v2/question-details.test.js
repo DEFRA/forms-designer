@@ -488,7 +488,7 @@ describe('Editor v2 question details routes', () => {
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
       new Joi.ValidationError(
-        'Enter the minimum number of characters',
+        'Maximum length must be a positive whole number',
         [],
         undefined
       ),
@@ -524,7 +524,7 @@ describe('Editor v2 question details routes', () => {
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
       new Joi.ValidationError(
-        'Minimum number of characters cannot be more than the maximum number of characters',
+        'Minimum length must be less than or equal to maximum length',
         [],
         undefined
       ),
