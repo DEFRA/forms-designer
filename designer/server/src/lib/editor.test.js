@@ -332,7 +332,8 @@ describe('editor.js', () => {
 
         const expectedPatch = {
           payload: {
-            controller: null
+            controller: null,
+            path: '/file-upload'
           },
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -370,7 +371,8 @@ describe('editor.js', () => {
 
         const expectedPatch = {
           payload: {
-            controller: ControllerType.FileUpload
+            controller: ControllerType.FileUpload,
+            path: '/page-one'
           },
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -491,18 +493,14 @@ describe('editor.js', () => {
         const expectedOptionsPageHeading1 = {
           payload: {
             title: '',
-            path: '/my-new-page-title'
+            path: '/this-is-your-first-field'
           },
           headers: { Authorization: `Bearer ${token}` }
         }
 
-        await setPageHeadingAndGuidance(
-          formId,
-          token,
-          '12345',
-          formDefinition,
-          { pageHeading: 'My new page title' }
-        )
+        await setPageHeadingAndGuidance(formId, token, 'p1', formDefinition, {
+          pageHeading: 'My new page title'
+        })
 
         expect(mockedPatchJson).toHaveBeenCalledWith(
           pageRequestUrl,
