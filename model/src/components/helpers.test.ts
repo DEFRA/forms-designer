@@ -1,10 +1,6 @@
 import { ComponentType, type ComponentDef } from '@defra/forms-model'
 
-import {
-  getComponentsExcludingGuidance,
-  hasContent,
-  hasContentField
-} from '~/src/components/helpers.js'
+import { hasContent, hasContentField } from '~/src/components/helpers.js'
 
 describe('Type guards', () => {
   describe('hasContent', () => {
@@ -137,63 +133,6 @@ describe('Type guards', () => {
         hasContentField: hasContentField(component),
         type
       })
-    })
-  })
-
-  describe('getComponentsExcludingGuidance()', () => {
-    it('should return all components if no markdown at position zero', () => {
-      const components: ComponentDef[] = [
-        {
-          name: 'textfield',
-          title: 'What is your name?',
-          type: ComponentType.TextField,
-          options: {},
-          schema: {}
-        },
-        {
-          name: 'textfield',
-          title: 'What is your age?',
-          type: ComponentType.NumberField,
-          options: {},
-          schema: {}
-        }
-      ]
-
-      const expectedComponents = structuredClone(components)
-      expect(getComponentsExcludingGuidance(components)).toEqual(
-        expectedComponents
-      )
-    })
-
-    it('should return only components that arent guidance', () => {
-      const components: ComponentDef[] = [
-        {
-          name: 'guidance',
-          title: 'Some guidance',
-          type: ComponentType.Markdown,
-          content: 'Guidance text',
-          options: {}
-        },
-        {
-          name: 'textfield',
-          title: 'What is your name?',
-          type: ComponentType.TextField,
-          options: {},
-          schema: {}
-        },
-        {
-          name: 'textfield',
-          title: 'What is your age?',
-          type: ComponentType.NumberField,
-          options: {},
-          schema: {}
-        }
-      ]
-
-      const res = getComponentsExcludingGuidance(components)
-      expect(res).toHaveLength(2)
-      expect(res[0].title).toBe('What is your name?')
-      expect(res[1].title).toBe('What is your age?')
     })
   })
 })

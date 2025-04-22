@@ -1,7 +1,6 @@
 export { ComponentTypes } from '~/src/components/component-types.js'
 export {
   getComponentDefaults,
-  getComponentsExcludingGuidance,
   hasConditionSupport,
   hasContent,
   hasContentField,

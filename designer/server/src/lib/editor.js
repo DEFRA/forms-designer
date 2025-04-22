@@ -1,9 +1,9 @@
 import {
   ComponentType,
   ControllerType,
-  getComponentsExcludingGuidance,
   hasComponents,
   hasComponentsEvenIfNoNext,
+  isFormType,
   randomId
 } from '@defra/forms-model'
 
@@ -122,9 +122,11 @@ export async function updateQuestion(
   const page = getPageFromDefinition(definition, pageId)
 
   // Are we editing first question on page where there is no page title specified?
-  const questions = getComponentsExcludingGuidance(
-    getComponentsOnPageFromDefinition(definition, pageId)
-  )
+  const questions = getComponentsOnPageFromDefinition(
+    definition,
+    pageId
+  ).filter((q) => isFormType(q.type))
+
   const isFirstQuestionAndNoPageTitle =
     questions.findIndex((comp) => comp.id === questionId) === 0 && !page?.title
 

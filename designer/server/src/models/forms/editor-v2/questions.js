@@ -1,8 +1,4 @@
-import {
-  ComponentType,
-  getComponentsExcludingGuidance,
-  hasComponents
-} from '@defra/forms-model'
+import { ComponentType, hasComponents, isFormType } from '@defra/forms-model'
 
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import {
@@ -84,31 +80,33 @@ export function hasUnderlyingData(pageHeadingVal, guidanceTextVal) {
  * @param {string} baseUrl
  */
 function mapQuestionRows(components, baseUrl) {
-  return getComponentsExcludingGuidance(components).map((comp2, idx2) => {
-    return {
-      key: {
-        text: `Question ${idx2 + 1}`,
-        classes: 'govuk-!-width-one-quarter'
-      },
-      value: {
-        text:
-          comp2.options?.required === false
-            ? `${comp2.title} (optional)`
-            : comp2.title,
-        classes: 'govuk-!-width-one-half'
-      },
-      actions: {
-        items: [
-          {
-            href: `${baseUrl}/question/${comp2.id}/details`,
-            text: 'Change',
-            visuallyHiddenText: 'name',
-            classes: 'govuk-link--no-visited-state govuk-!-width-one-quarter'
-          }
-        ]
+  return components
+    .filter((c) => isFormType(c.type))
+    .map((comp2, idx2) => {
+      return {
+        key: {
+          text: `Question ${idx2 + 1}`,
+          classes: 'govuk-!-width-one-quarter'
+        },
+        value: {
+          text:
+            comp2.options?.required === false
+              ? `${comp2.title} (optional)`
+              : comp2.title,
+          classes: 'govuk-!-width-one-half'
+        },
+        actions: {
+          items: [
+            {
+              href: `${baseUrl}/question/${comp2.id}/details`,
+              text: 'Change',
+              visuallyHiddenText: 'name',
+              classes: 'govuk-link--no-visited-state govuk-!-width-one-quarter'
+            }
+          ]
+        }
       }
-    }
-  })
+    })
 }
 
 /**
