@@ -63,6 +63,7 @@
     "postcss": "^8.4.49",
     "postcss-scss": "^4.0.9",
     "prettier": "^3.5.3",
+    "sortablejs": "1.15.6",
     "stylelint": "^16.16.0",
     "stylelint-config-gds": "^2.0.0",
     "typescript": "^5.8.2"

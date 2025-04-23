@@ -1,20 +1,10 @@
+import Sortable from 'sortablejs'
+
 import { ComponentBase } from '~/src/javascripts/editor-v2-classes/component-base.js'
 
 export class RadiosField extends ComponentBase {
   setupDomElements() {
     this.baseDomElements = {
-      questionLabelInput: this.document.getElementById('question'),
-      questionLabelOutput: this.document
-        .getElementById('question-label-output')
-        ?.querySelector('h1'),
-      hintTextInput: this.document.getElementById('hintText'),
-      hintTextOutput: this.document
-        .getElementById('question-label-output')
-        ?.querySelector('.govuk-hint'),
-      makeOptionInput: this.document.getElementById('questionOptional')
-    }
-
-    this.extraDomElements = {
       questionLabelInput: this.document.getElementById('question'),
       questionLabelOutput: this.document
         .getElementById('question-label-output')
@@ -34,24 +24,15 @@ export class RadiosField extends ComponentBase {
       const addOptionButton = document.querySelector('#add-option-button')
       const saveItemButton = document.querySelector('#save-new-option')
       const cancelButton = document.querySelector('#cancel-add-option')
-      const newOptionLabel = document.querySelector('#new-option-label')
-      const newOptionHint = document.querySelector('#new-option-hint')
-      const newOptionValue = document.querySelector('#new-option-value')
+      const newOptionLabel = document.querySelector('#radioText')
+      const newOptionHint = document.querySelector('#radioHint')
+      const newOptionValue = document.querySelector('#radioValue')
       const optionsContainer = document.querySelector('#options-container')
-      const radioList = document.querySelector('#radio-list .govuk-radios')
+      const radioList = document.querySelector(
+        '#question-preview-content .govuk-radios'
+      )
       const questionForm = document.getElementById('question-form')
       const addOptionHeading = document.querySelector('#add-option-heading')
-
-      /*
-      console.log('addOptionForm', addOptionForm)
-      console.log('addOptionButton', addOptionButton)
-      console.log('saveItemButton', saveItemButton)
-      console.log('cancelButton', cancelButton)
-      console.log('newOptionLabel', newOptionLabel)
-      console.log('newOptionHint', newOptionHint)
-      console.log('newOptionValue', newOptionValue)
-      console.log('optionsContainer', optionsContainer)
-      */
 
       // Add option button click
       addOptionButton.addEventListener('click', function (e) {
@@ -107,6 +88,7 @@ export class RadiosField extends ComponentBase {
         e.preventDefault()
         const labelValue = newOptionLabel.value.trim()
 
+        /*
         // Get conditions data
         const conditions = []
         const conditionName = document
@@ -217,7 +199,7 @@ export class RadiosField extends ComponentBase {
             }
           })
         }
-
+        */
         // Add the new option with conditions
         const currentOptions = optionsContainer.querySelectorAll(
           '.gem-c-reorderable-list__item'
@@ -244,14 +226,6 @@ export class RadiosField extends ComponentBase {
                   name="option[${newIndex + 1}][option_label]" value="${labelValue}">
                 <input type="hidden" id="option-${newIndex + 1}-hint" class="option-hint-input"
                   name="option[${newIndex + 1}][option_hint]" value="${newOptionHint.value}">
-                ${
-                  conditions.length > 0
-                    ? `
-                <input type="hidden" id="option-${newIndex + 1}-conditions" class="option-conditions-input"
-                  name="option[${newIndex + 1}][conditions]" value='${JSON.stringify(conditions)}'>
-                `
-                    : ''
-                }
               </div>
               <div class="gem-c-reorderable-list__actions">
                 <button class="gem-c-button govuk-button govuk-button--secondary js-reorderable-list-up"
@@ -284,7 +258,7 @@ export class RadiosField extends ComponentBase {
         updateEditButtonVisibility()
       })
 
-      // Function to update the edit button visibility
+      // Function to update the re-order button visibility
       function updateEditButtonVisibility() {
         const editButton = document.getElementById('edit-options-button')
         const optionItems = optionsContainer.querySelectorAll(
@@ -345,10 +319,10 @@ export class RadiosField extends ComponentBase {
             .map((item, index) => {
               const label = item
                 .querySelector('.option-label-display')
-                .textContent.trim()
-              const hint = item.querySelector(
-                'input[name$="[option_hint]"]'
-              ).value
+                .textContent?.trim()
+              const hint = item
+                .querySelector('.govuk_hint')
+                ?.textContent?.trim()
               return `
               <div class="govuk-radios__item">
                 <input class="govuk-radios__input" id="listPreview-option${index}" name="listPreview" type="radio" value="${label}">
@@ -364,7 +338,7 @@ export class RadiosField extends ComponentBase {
             const newOptionPreview = `
               <div class="govuk-radios__item">
                 <input class="govuk-radios__input" id="listPreview-option-new" name="listPreview" type="radio" value="${valueAttr}">
-                <label class="govuk-label govuk-radios__label" for="listPreview-option-new">${labelValue ?? 'Item text'}</label>
+                <label class="govuk-label govuk-radios__label" for="listPreview-option-new">${labelValue !== '' ? labelValue : 'Item text'}</label>
                 ${hintValue || document.activeElement === newOptionHint ? `<div class="govuk-hint govuk-radios__hint">${hintValue ?? 'Hint text'}</div>` : ''}
               </div>
             `
@@ -405,7 +379,7 @@ export class RadiosField extends ComponentBase {
           const label = item
             .querySelector('.option-label-display')
             .textContent.trim()
-          const hint = item.querySelector('input[name$="[option_hint]"]').value
+          const hint = item.querySelector('input[name$="[option_hint]"]')?.value
 
           const radioHTML = `
             <div class="govuk-radios__item">
@@ -564,12 +538,15 @@ export class RadiosField extends ComponentBase {
         )
 
         optionItems.forEach((item) => {
-          const labelInput = item.querySelector('.option-label-input-hidden')
-          const hintInput = item.querySelector('.option-hint-input')
+          const labelInput = item.querySelector('.option-label-display')
+          const hintInput = item.querySelector('.govuk-hint')
 
           if (labelInput) {
-            const label = labelInput.value
-            const hint = hintInput ? hintInput.value : ''
+            const label =
+              labelInput.textContent?.replace(/\n/g, '').trim() ?? ''
+            const hint = hintInput
+              ? hintInput.textContent?.replace(/\n/g, '').trim()
+              : ''
             const value = label.toLowerCase().replace(/\s+/g, '-')
 
             options.push({
@@ -819,10 +796,17 @@ export class RadiosField extends ComponentBase {
 
       // Function to convert a list item to editable form
       function makeItemEditable(listItem) {
-        const labelDisplay = listItem.querySelector('.option-label-display')
+        // console.log('editItem', listItem)
+        const labelDisplay = listItem
+          .querySelector('.option-label-display')
+          .textContent.trim()
         const labelInput = listItem.querySelector('.option-label-input-hidden')
         const hintInput = listItem.querySelector('.option-hint-input')
         const editLink = listItem.querySelector('.edit-item a')
+        // console.log('labelDisplay', labelDisplay)
+        // console.log('labelInput', labelInput)
+        // console.log('hintInput', hintInput)
+        // console.log('editLink', editLink)
 
         // Create the edit form HTML
         const editFormHTML = `
@@ -1051,8 +1035,6 @@ export class RadiosField extends ComponentBase {
       document.addEventListener('DOMContentLoaded', function () {
         const urlParams = new URLSearchParams(window.location.search)
         const deleteIndex = urlParams.get('deleteIndex')
-
-        // console.log("Parsed deleteIndex:", deleteIndex);
 
         if (deleteIndex !== null) {
           const itemToDelete = document.querySelector(

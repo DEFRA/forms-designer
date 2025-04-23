@@ -42,6 +42,9 @@ export class ComponentBase {
   }
 
   initializeEventListenersAndContent() {
+    if (!this.baseDomElements) {
+      throw new Error('Invalid initialisation - no elements')
+    }
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const local = this
     // Update question label preview
@@ -68,13 +71,11 @@ export class ComponentBase {
       })
       this.baseDomElements.hintTextInput.addEventListener('focus', function () {
         local.showPlaceholderHint()
-        // addHighlight(domElements.hintTextOutputExample)
-        local.addHighlight(local.baseDomElements.hintTextOutput)
+        local.addHighlight(local.baseDomElements?.hintTextOutput)
       })
       this.baseDomElements.hintTextInput.addEventListener('blur', function () {
         local.clearPlaceholderHint()
-        // removeHighlight(domElements.hintTextOutputExample)
-        local.removeHighlight(local.baseDomElements.hintTextOutput)
+        local.removeHighlight(local.baseDomElements?.hintTextOutput)
       })
     }
 
@@ -93,52 +94,85 @@ export class ComponentBase {
   }
 
   updateQuestionLabel() {
-    const labelText =
-      this.baseDomElements.questionLabelInput?.value ?? 'Question'
-    const optional = this.baseDomElements.makeOptionInput.checked
-      ? ' (optional)'
-      : ''
-    this.baseDomElements.questionLabelOutput.textContent = `${labelText}${optional}`
+    if (
+      this.baseDomElements?.questionLabelInput &&
+      this.baseDomElements.questionLabelOutput
+    ) {
+      const labelTextInput =
+        /** @type { HTMLInputElement | undefined | null } */ (
+          this.baseDomElements.questionLabelInput
+        )
+      const labelText = labelTextInput?.value ?? 'Question'
+      const optionalInput =
+        /** @type { HTMLInputElement | undefined | null } */ (
+          this.baseDomElements.makeOptionInput
+        )
+      const optional = optionalInput?.checked ? ' (optional)' : ''
+      this.baseDomElements.questionLabelOutput.textContent = `${labelText}${optional}`
+    }
   }
 
   updateHintText() {
-    const hintText = this.baseDomElements.hintTextInput.value ?? 'Hint text'
+    const hintTextInput = /** @type { HTMLInputElement | undefined | null } */ (
+      this.baseDomElements?.hintTextInput
+    )
+    const hintText = hintTextInput?.value ?? 'Hint text'
     this.updateHintOutputs(hintText)
   }
 
   showPlaceholderHint() {
-    if (!this.baseDomElements.hintTextInput.value) {
+    const hintTextInput = /** @type { HTMLInputElement | undefined | null } */ (
+      this.baseDomElements?.hintTextInput
+    )
+    if (!hintTextInput?.value) {
       this.updateHintOutputs('Hint text')
     }
   }
 
   clearPlaceholderHint() {
-    if (!this.baseDomElements.hintTextInput.value) {
+    const hintTextInput = /** @type { HTMLInputElement | undefined | null } */ (
+      this.baseDomElements?.hintTextInput
+    )
+    if (!hintTextInput?.value) {
       this.updateHintOutputs('')
     }
   }
 
+  /**
+   * @param {string} hintText
+   */
   updateHintOutputs(hintText) {
-    if (this.baseDomElements.hintTextOutput) {
-      this.baseDomElements.hintTextOutput.textContent = hintText
-    }
-    if (this.baseDomElements.hintTextOutput) {
+    const hintTextOutput =
+      /** @type { HTMLInputElement | undefined | null } */ (
+        this.baseDomElements?.hintTextOutput
+      )
+    if (hintTextOutput && this.baseDomElements?.hintTextOutput) {
       this.baseDomElements.hintTextOutput.textContent = hintText
     }
   }
 
+  /**
+   * @param { HTMLElement | null | undefined } targetElement
+   */
   addHighlight(targetElement) {
     if (targetElement) {
       targetElement.classList.add('highlight')
     }
   }
 
+  /**
+   * @param { HTMLElement | null | undefined } targetElement
+   */
   removeHighlight(targetElement) {
     if (targetElement) {
       targetElement.classList.remove('highlight')
     }
   }
 
+  /**
+   * @param { HTMLElement | undefined } inputElement
+   * @param { HTMLElement | undefined } targetElement
+   */
   applyHighlightOnFocus(inputElement, targetElement) {
     if (inputElement && targetElement) {
       inputElement.addEventListener('focus', () =>
