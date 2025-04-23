@@ -332,7 +332,8 @@ describe('editor.js', () => {
 
         const expectedPatch = {
           payload: {
-            controller: null
+            controller: null,
+            path: '/file-upload'
           },
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -370,7 +371,8 @@ describe('editor.js', () => {
 
         const expectedPatch = {
           payload: {
-            controller: ControllerType.FileUpload
+            controller: ControllerType.FileUpload,
+            path: '/page-one'
           },
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -417,6 +419,62 @@ describe('editor.js', () => {
 
         expect(mockedPutJson).toHaveBeenCalledWith(requestUrl, expectedPut)
         expect(mockedPatchJson).not.toHaveBeenCalled()
+        expect(result).toEqual({ id: '456' })
+      })
+
+      test('returns response body when path should change to first question', async () => {
+        mockedPutJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: { id: '456' }
+        })
+
+        mockedPatchJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: { id: '456' }
+        })
+
+        const patchUrl = new URL(
+          `./${formId}/definition/draft/pages/12345`,
+          formsEndpoint
+        )
+
+        const questionDetails = {
+          type: ComponentType.TextField,
+          title: 'My first question'
+        }
+
+        const expectedPut = {
+          payload: {
+            type: ComponentType.TextField,
+            title: 'My first question'
+          },
+          headers: { Authorization: `Bearer ${token}` }
+        }
+
+        const expectedPatch = {
+          payload: {
+            controller: null,
+            path: '/my-first-question'
+          },
+          headers: { Authorization: `Bearer ${token}` }
+        }
+
+        const formDefinitionWithNoPageHeading = structuredClone(
+          testFormDefinitionWithExistingGuidance
+        )
+        formDefinitionWithNoPageHeading.pages[0].title = ''
+
+        const result = await updateQuestion(
+          formId,
+          token,
+          formDefinitionWithNoPageHeading,
+          '12345',
+          '99011',
+          questionDetails
+        )
+
+        expect(mockedPutJson).toHaveBeenCalledWith(requestUrl, expectedPut)
+        expect(mockedPatchJson).toHaveBeenCalledWith(patchUrl, expectedPatch)
         expect(result).toEqual({ id: '456' })
       })
     })
@@ -491,18 +549,14 @@ describe('editor.js', () => {
         const expectedOptionsPageHeading1 = {
           payload: {
             title: '',
-            path: '/my-new-page-title'
+            path: '/this-is-your-first-field'
           },
           headers: { Authorization: `Bearer ${token}` }
         }
 
-        await setPageHeadingAndGuidance(
-          formId,
-          token,
-          '12345',
-          formDefinition,
-          { pageHeading: 'My new page title' }
-        )
+        await setPageHeadingAndGuidance(formId, token, 'p1', formDefinition, {
+          pageHeading: 'My new page title'
+        })
 
         expect(mockedPatchJson).toHaveBeenCalledWith(
           pageRequestUrl,

@@ -444,6 +444,7 @@ export const testFormDefinitionWithExistingGuidance = {
           options: {}
         },
         {
+          id: '99011',
           type: ComponentType.TextField,
           name: 'textField',
           title: 'This is your first field',

@@ -3,6 +3,7 @@ import {
   ControllerType,
   hasComponents,
   hasComponentsEvenIfNoNext,
+  isFormType,
   randomId
 } from '@defra/forms-model'
 
@@ -13,6 +14,7 @@ import {
   removeUniquelyMappedListsFromPage
 } from '~/src/lib/list.js'
 import {
+  getComponentsOnPageFromDefinition,
   getHeaders,
   getPageFromDefinition,
   isCheckboxSelected,
@@ -117,15 +119,33 @@ export async function updateQuestion(
   questionId,
   questionDetails
 ) {
-  // Determine if page controller should change
   const page = getPageFromDefinition(definition, pageId)
+
+  // Are we editing first question on page where there is no page title specified?
+  const questions = getComponentsOnPageFromDefinition(
+    definition,
+    pageId
+  ).filter((q) => isFormType(q.type))
+
+  const isFirstQuestionAndNoPageTitle =
+    questions.findIndex((comp) => comp.id === questionId) === 0 && !page?.title
+
+  const pagePathForCall = isFirstQuestionAndNoPageTitle
+    ? `/${slugify(questionDetails.title)}`
+    : page?.path
+
+  // Determine if page controller should change
   const origControllerType = page?.controller
   const { controller: newControllerType } = getControllerType(questionDetails)
-  if (origControllerType !== newControllerType) {
-    // Update page controller
+  if (
+    origControllerType !== newControllerType ||
+    isFirstQuestionAndNoPageTitle
+  ) {
+    // Update page controller and/or page path
     await patchJsonByType(buildRequestUrl(formId, `pages/${pageId}`), {
       payload: {
-        controller: newControllerType ?? null
+        controller: newControllerType ?? null,
+        path: pagePathForCall
       },
       ...getHeaders(token)
     })
@@ -246,7 +266,7 @@ export async function setPageHeadingAndGuidance(
   const isExpanded = isCheckboxSelected(payload.pageHeadingAndGuidance)
 
   const pageHeadingForCall = isExpanded ? pageHeading : ''
-  const pagePathForCall = `/${slugify(resolvePageHeading(page, pageHeading, components))}`
+  const pagePathForCall = `/${slugify(resolvePageHeading(page, pageHeadingForCall, components))}`
 
   // Update page heading
   await patchJsonByType(buildRequestUrl(formId, `pages/${pageId}`), {
