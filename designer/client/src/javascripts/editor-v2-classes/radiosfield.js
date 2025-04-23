@@ -93,7 +93,9 @@ export class RadiosField extends ComponentBase {
       // Add live preview event listeners
       newOptionLabel.addEventListener('input', updatePreview)
       newOptionHint.addEventListener('input', updatePreview)
-      newOptionValue.addEventListener('input', updatePreview)
+      if (newOptionValue) {
+        newOptionValue.addEventListener('input', updatePreview)
+      }
 
       // Add focus/blur event listeners for highlighting
       newOptionLabel.addEventListener('focus', () => applyHighlight('label'))
@@ -302,7 +304,9 @@ export class RadiosField extends ComponentBase {
         addOptionButton.style.display = 'inline-block'
         newOptionLabel.value = ''
         newOptionHint.value = ''
-        newOptionValue.value = ''
+        if (newOptionValue) {
+          newOptionValue.value = ''
+        }
         removeHighlight('label')
         removeHighlight('hint')
         updateAllOptionsPreview()
@@ -347,7 +351,7 @@ export class RadiosField extends ComponentBase {
             .map((item, index) => {
               const label = item
                 .querySelector('.option-label-display')
-                .textContent?.trim()
+                ?.textContent?.trim()
               const hint = item
                 .querySelector('.govuk_hint')
                 ?.textContent?.trim()
@@ -406,8 +410,8 @@ export class RadiosField extends ComponentBase {
         items.forEach((item, index) => {
           const label = item
             .querySelector('.option-label-display')
-            .textContent.trim()
-          const hint = item.querySelector('input[name$="[option_hint]"]')?.value
+            ?.textContent?.trim()
+          const hint = item.querySelector('.govuk-hint')?.textContent?.trim()
 
           const radioHTML = `
             <div class="govuk-radios__item">
@@ -420,7 +424,10 @@ export class RadiosField extends ComponentBase {
         })
       }
 
-      // Function to apply highlight to the preview
+      /**
+       * Function to apply highlight to the preview
+       * @param {string} type
+       */
       function applyHighlight(type) {
         if (!radioList) return
         const lastOption = radioList.querySelector(
@@ -444,7 +451,10 @@ export class RadiosField extends ComponentBase {
         }
       }
 
-      // Function to remove highlight from the preview
+      /**
+       * Function to remove highlight from the preview
+       * @param {string} type
+       */
       function removeHighlight(type) {
         if (!radioList) return
         const lastOption = radioList.querySelector(
@@ -560,7 +570,8 @@ export class RadiosField extends ComponentBase {
 
       // Function to update the hidden input with all current options
       function updateHiddenOptionsData() {
-        const options = []
+        const options =
+          /** @type {{ label?: string, hint?: string, value?: string }[]} */ ([])
         const optionItems = optionsContainer.querySelectorAll(
           '.gem-c-reorderable-list__item'
         )
@@ -585,8 +596,10 @@ export class RadiosField extends ComponentBase {
           }
         })
 
-        document.getElementById('radio-options-data').value =
-          JSON.stringify(options)
+        const radioOptionsData = /** @type {HTMLInputElement} */ (
+          document.getElementById('radio-options-data')
+        )
+        radioOptionsData.value = JSON.stringify(options)
       }
 
       // Form submission handler
@@ -598,8 +611,7 @@ export class RadiosField extends ComponentBase {
       // Initialize Sortable for the options container
       const sortableContainer = document.getElementById('options-container')
       if (sortableContainer) {
-        // @ts-expect-error todo text to explain
-        // eslint-disable-next-line no-new, no-undef
+        // eslint-disable-next-line no-new
         new Sortable(sortableContainer, {
           animation: 150,
           ghostClass: 'sortable-ghost',
@@ -822,19 +834,20 @@ export class RadiosField extends ComponentBase {
         }
       })
 
-      // Function to convert a list item to editable form
+      /**
+       * Function to convert a list item to editable form
+       * @param {HTMLElement} listItem
+       */
       function makeItemEditable(listItem) {
-        // console.log('editItem', listItem)
-        const labelDisplay = listItem
-          .querySelector('.option-label-display')
-          .textContent.trim()
-        const labelInput = listItem.querySelector('.option-label-input-hidden')
-        const hintInput = listItem.querySelector('.option-hint-input')
+        const labelDisplay = listItem.querySelector('.option-label-display')
+        const labelDisplayText = labelDisplay
+          ? labelDisplay.textContent?.trim()
+          : ''
+        const hintDisplay = listItem.querySelector('.govuk-hint')
+        const hintDisplayText = hintDisplay
+          ? hintDisplay.textContent?.trim()
+          : ''
         const editLink = listItem.querySelector('.edit-item a')
-        // console.log('labelDisplay', labelDisplay)
-        // console.log('labelInput', labelInput)
-        // console.log('hintInput', hintInput)
-        // console.log('editLink', editLink)
 
         // Create the edit form HTML
         const editFormHTML = `
@@ -845,7 +858,7 @@ export class RadiosField extends ComponentBase {
             <div class="govuk-form-group">
               <label class="govuk-label govuk-label--m" for="edit-option-label">Item</label>
               <input class="govuk-input" id="edit-option-label" name="edit-label" type="text" 
-                value="${labelInput.value}">
+                value="${labelDisplayText}">
             </div>
   
             <!-- Hint Text -->
@@ -853,7 +866,7 @@ export class RadiosField extends ComponentBase {
               <label class="govuk-label govuk-label--m" for="edit-option-hint">Hint text (optional)</label>
               <div class="govuk-hint">Use single short sentence without a full stop</div>
               <input class="govuk-input" id="edit-option-hint" name="edit-hint" type="text" 
-                value="${hintInput.value}">
+                value="${hintDisplayText}">
             </div>
   
             <!-- Advanced Features Section -->
@@ -908,8 +921,8 @@ export class RadiosField extends ComponentBase {
 
           // Update the values
           labelDisplay.textContent = newLabel
-          labelInput.value = newLabel
-          hintInput.value = newHint
+          // labelInput.value = newLabel
+          hintDisplay.textContent = newHint
 
           // Update or create the value input
           let valueInput = listItem.querySelector('.option-value-input')
