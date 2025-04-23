@@ -488,7 +488,7 @@ describe('Editor v2 question details routes', () => {
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
       new Joi.ValidationError(
-        'Maximum length must be a positive whole number',
+        'Minimum length must be a positive whole number',
         [],
         undefined
       ),
