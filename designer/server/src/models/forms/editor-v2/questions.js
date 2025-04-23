@@ -1,4 +1,4 @@
-import { ComponentType, hasComponents } from '@defra/forms-model'
+import { ComponentType, hasComponents, isFormType } from '@defra/forms-model'
 
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import {
@@ -81,10 +81,7 @@ export function hasUnderlyingData(pageHeadingVal, guidanceTextVal) {
  */
 function mapQuestionRows(components, baseUrl) {
   return components
-    .filter(
-      (comp, idx) =>
-        (comp.type !== ComponentType.Markdown && idx === 0) || idx > 0
-    )
+    .filter((c) => isFormType(c.type))
     .map((comp2, idx2) => {
       return {
         key: {
