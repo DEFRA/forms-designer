@@ -6,13 +6,17 @@ export class RadiosField extends ComponentBase {
   setupDomElements() {
     this.baseDomElements = {
       questionLabelInput: this.document.getElementById('question'),
-      questionLabelOutput: this.document
-        .getElementById('question-label-output')
-        ?.querySelector('h1'),
+      questionLabelOutput: /** @type { HTMLElement | null } */ (
+        this.document
+          .getElementById('question-label-output')
+          ?.querySelector('h1')
+      ),
       hintTextInput: this.document.getElementById('hintText'),
-      hintTextOutput: this.document
-        .getElementById('question-label-output')
-        ?.querySelector('.govuk-hint'),
+      hintTextOutput: /** @type { HTMLElement | null } */ (
+        this.document
+          .getElementById('question-label-output')
+          ?.querySelector('.govuk-hint')
+      ),
       makeOptionInput: this.document.getElementById('questionOptional')
     }
   }
@@ -20,19 +24,39 @@ export class RadiosField extends ComponentBase {
   initialiseSpecifics() {
     document.addEventListener('DOMContentLoaded', function () {
       // Get form elements
-      const addOptionForm = document.querySelector('#add-option-form')
-      const addOptionButton = document.querySelector('#add-option-button')
-      const saveItemButton = document.querySelector('#save-new-option')
-      const cancelButton = document.querySelector('#cancel-add-option')
-      const newOptionLabel = document.querySelector('#radioText')
-      const newOptionHint = document.querySelector('#radioHint')
-      const newOptionValue = document.querySelector('#radioValue')
-      const optionsContainer = document.querySelector('#options-container')
-      const radioList = document.querySelector(
-        '#question-preview-content .govuk-radios'
+      const addOptionForm = /** @type {HTMLElement} */ (
+        document.querySelector('#add-option-form')
       )
-      const questionForm = document.getElementById('question-form')
-      const addOptionHeading = document.querySelector('#add-option-heading')
+      const addOptionButton = /** @type {HTMLElement} */ (
+        document.querySelector('#add-option-button')
+      )
+      const saveItemButton = /** @type {HTMLElement} */ (
+        document.querySelector('#save-new-option')
+      )
+      const cancelButton = /** @type {HTMLElement} */ (
+        document.querySelector('#cancel-add-option')
+      )
+      const newOptionLabel = /** @type {HTMLInputElement} */ (
+        document.querySelector('#radioText')
+      )
+      const newOptionHint = /** @type {HTMLInputElement} */ (
+        document.querySelector('#radioHint')
+      )
+      const newOptionValue = /** @type { HTMLInputElement | null } */ (
+        document.querySelector('#radioValue')
+      )
+      const optionsContainer = /** @type {HTMLElement} */ (
+        document.querySelector('#options-container')
+      )
+      const radioList = /** @type { HTMLElement | null } */ (
+        document.querySelector('#question-preview-content .govuk-radios')
+      )
+      const questionForm = /** @type {HTMLElement} */ (
+        document.getElementById('question-form')
+      )
+      const addOptionHeading = /** @type {HTMLElement} */ (
+        document.querySelector('#add-option-heading')
+      )
 
       // Add option button click
       addOptionButton.addEventListener('click', function (e) {
@@ -293,7 +317,11 @@ export class RadiosField extends ComponentBase {
 
         const labelValue = newOptionLabel.value.trim()
         const hintValue = newOptionHint.value.trim()
-        const valueAttr = newOptionValue.value.trim() ?? labelValue
+          ? newOptionHint.value.trim()
+          : undefined
+        const valueAttr = newOptionValue?.value.trim()
+          ? newOptionValue.value.trim()
+          : labelValue
 
         // Get existing options
         const existingOptions = Array.from(
