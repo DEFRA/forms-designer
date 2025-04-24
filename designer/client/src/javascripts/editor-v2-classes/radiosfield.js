@@ -22,6 +22,9 @@ export class RadiosField extends ComponentBase {
   }
 
   initialiseSpecifics() {
+    /** @type { Sortable | undefined } */
+    let sortableInstance
+
     document.addEventListener('DOMContentLoaded', function () {
       // Get form elements
       const addOptionForm = /** @type {HTMLElement} */ (
@@ -114,118 +117,6 @@ export class RadiosField extends ComponentBase {
         e.preventDefault()
         const labelValue = newOptionLabel.value.trim()
 
-        /*
-        // Get conditions data
-        const conditions = []
-        const conditionName = document
-          .getElementById('condition-name')
-          ?.value.trim()
-        const questionSelect = document.getElementById('condition-question')
-        const operatorSelect = document.getElementById('condition-operator')
-        const valueContainer = document.getElementById(
-          'condition-value-container'
-        )
-
-        if (
-          conditionName &&
-          questionSelect &&
-          operatorSelect &&
-          valueContainer
-        ) {
-          // Add first condition
-          const firstQuestionText = questionSelect.options[
-            questionSelect.selectedIndex
-          ].text
-            .replace(/\s*\([^)]*\)/, '')
-            .trim()
-          const firstQuestionType =
-            questionSelect.options[questionSelect.selectedIndex].getAttribute(
-              'data-type'
-            )
-          let firstValue = ''
-
-          if (firstQuestionType === 'radios') {
-            const selectedRadio = valueContainer.querySelector(
-              'input[type="radio"]:checked'
-            )
-            firstValue = selectedRadio ? selectedRadio.value : ''
-          } else if (firstQuestionType === 'checkboxes') {
-            const checkedBoxes = valueContainer.querySelectorAll(
-              'input[type="checkbox"]:checked'
-            )
-            firstValue = Array.from(checkedBoxes).map((cb) => cb.value)
-          } else {
-            const selectElement = valueContainer.querySelector('select')
-            firstValue = selectElement ? selectElement.value : ''
-          }
-
-          conditions.push({
-            conditionName,
-            rules: [
-              {
-                questionText: firstQuestionText,
-                operator: operatorSelect.value,
-                value: firstValue,
-                logicalOperator: null
-              }
-            ]
-          })
-
-          // Get additional conditions
-          const additionalConditions = document.querySelectorAll(
-            '#additional-conditions .condition-item'
-          )
-          additionalConditions.forEach((condition) => {
-            const logicalOperator =
-              condition.querySelector('select[name^="logical-operator"]')
-                ?.value ?? 'AND'
-            const questionSelect = condition.querySelector(
-              '.condition-question'
-            )
-            const operatorSelect = condition.querySelector(
-              'select[id^="condition-operator"]'
-            )
-            const valueContainer = condition.querySelector(
-              '.condition-value-container'
-            )
-
-            if (questionSelect && operatorSelect && valueContainer) {
-              const questionText = questionSelect.options[
-                questionSelect.selectedIndex
-              ].text
-                .replace(/\s*\([^)]*\)/, '')
-                .trim()
-              const questionType =
-                questionSelect.options[
-                  questionSelect.selectedIndex
-                ].getAttribute('data-type')
-              let value = ''
-
-              if (questionType === 'radios') {
-                const selectedRadio = valueContainer.querySelector(
-                  'input[type="radio"]:checked'
-                )
-                value = selectedRadio ? selectedRadio.value : ''
-              } else if (questionType === 'checkboxes') {
-                const checkedBoxes = valueContainer.querySelectorAll(
-                  'input[type="checkbox"]:checked'
-                )
-                value = Array.from(checkedBoxes).map((cb) => cb.value)
-              } else {
-                const selectElement = valueContainer.querySelector('select')
-                value = selectElement ? selectElement.value : ''
-              }
-
-              conditions[0].rules.push({
-                questionText,
-                operator: operatorSelect.value,
-                value,
-                logicalOperator
-              })
-            }
-          })
-        }
-        */
         // Add the new option with conditions
         const currentOptions = optionsContainer.querySelectorAll(
           '.gem-c-reorderable-list__item'
@@ -233,7 +124,7 @@ export class RadiosField extends ComponentBase {
         const newIndex = currentOptions.length
 
         const newOptionHTML = `
-          <li class="gem-c-reorderable-list__item" draggable="true" data-index="${newIndex + 1}">
+          <li class="gem-c-reorderable-list__item" data-index="${newIndex + 1}">
             <div class="gem-c-reorderable-list__wrapper">
               <div class="gem-c-reorderable-list__content">
                 <p class="govuk-body fauxlabel option-label-display" id="option-${newIndex + 1}-label-display">
@@ -248,10 +139,6 @@ export class RadiosField extends ComponentBase {
                 `
                     : ''
                 }
-                <input type="hidden" id="option-${newIndex + 1}-label" class="option-label-input-hidden" 
-                  name="option[${newIndex + 1}][option_label]" value="${labelValue}">
-                <input type="hidden" id="option-${newIndex + 1}-hint" class="option-hint-input"
-                  name="option[${newIndex + 1}][option_hint]" value="${newOptionHint.value}">
               </div>
               <div class="gem-c-reorderable-list__actions">
                 <button class="gem-c-button govuk-button govuk-button--secondary js-reorderable-list-up"
@@ -281,11 +168,11 @@ export class RadiosField extends ComponentBase {
         hideForm()
         updateAllOptionsPreview()
         updateHiddenOptionsData()
-        updateEditButtonVisibility()
+        updateEditOptionsButtonVisibility()
       })
 
-      // Function to update the re-order button visibility
-      function updateEditButtonVisibility() {
+      // Function to update the edit button visibility
+      function updateEditOptionsButtonVisibility() {
         const editButton = document.getElementById('edit-options-button')
         const optionItems = optionsContainer.querySelectorAll(
           '.gem-c-reorderable-list__item'
@@ -297,7 +184,10 @@ export class RadiosField extends ComponentBase {
       }
 
       // Initialize edit button visibility on page load
-      document.addEventListener('DOMContentLoaded', updateEditButtonVisibility)
+      document.addEventListener(
+        'DOMContentLoaded',
+        updateEditOptionsButtonVisibility
+      )
 
       function hideForm() {
         addOptionForm.style.display = 'none'
@@ -310,7 +200,7 @@ export class RadiosField extends ComponentBase {
         removeHighlight('label')
         removeHighlight('hint')
         updateAllOptionsPreview()
-        updateEditButtonVisibility()
+        updateEditOptionsButtonVisibility()
         addOptionButton.focus()
       }
 
@@ -518,20 +408,26 @@ export class RadiosField extends ComponentBase {
       document.addEventListener(
         'focus',
         function (e) {
-          if (e.target.classList.contains('option-hint-input')) {
-            const optionIndex = e.target.closest(
-              '.gem-c-reorderable-list__item'
-            ).dataset.index
+          const targetElem = /** @type {Element} */ (e.target)
+          if (targetElem.classList.contains('option-hint-input')) {
+            const closestElem = /** @type {HTMLElement} */ (
+              targetElem.closest('.gem-c-reorderable-list__item')
+            )
+            const optionIndex = closestElem.dataset.index ?? '0'
             const previewOption = radioList
-              .querySelector(`#listPreview-option${optionIndex - 1}`)
-              .closest('.govuk-radios__item')
-            let hintElement = previewOption.querySelector('.govuk-radios__hint')
+              ?.querySelector(`#listPreview-option${parseInt(optionIndex) - 1}`)
+              ?.closest('.govuk-radios__item')
+            let hintElement = previewOption?.querySelector(
+              '.govuk-radios__hint'
+            )
 
             if (!hintElement) {
               hintElement = document.createElement('div')
               hintElement.className = 'govuk-hint govuk-radios__hint highlight'
               hintElement.textContent = 'Hint text'
-              previewOption.appendChild(hintElement)
+              if (previewOption) {
+                previewOption.appendChild(hintElement)
+              }
             } else {
               hintElement.classList.add('highlight')
             }
@@ -543,21 +439,26 @@ export class RadiosField extends ComponentBase {
       document.addEventListener(
         'blur',
         function (e) {
-          if (e.target.classList.contains('option-hint-input')) {
-            const optionIndex = e.target.closest(
-              '.gem-c-reorderable-list__item'
-            ).dataset.index
+          const targetElem = /** @type {Element} */ (e.target)
+          if (targetElem.classList.contains('option-hint-input')) {
+            const closestElem = /** @type {HTMLElement} */ (
+              targetElem.closest('.gem-c-reorderable-list__item')
+            )
+            const optionIndex = closestElem.dataset.index ?? '0'
             const previewOption = radioList
-              .querySelector(`#listPreview-option${optionIndex - 1}`)
-              .closest('.govuk-radios__item')
-            const hintElement = previewOption.querySelector(
+              ?.querySelector(`#listPreview-option${parseInt(optionIndex) - 1}`)
+              ?.closest('.govuk-radios__item')
+            const hintElement = previewOption?.querySelector(
               '.govuk-radios__hint'
             )
 
             if (hintElement) {
               hintElement.classList.remove('highlight')
+              const targetInputElem = /** @type {HTMLInputElement} */ (
+                targetElem
+              )
               if (
-                !e.target.value.trim() &&
+                !targetInputElem.value.trim() &&
                 hintElement.textContent === 'Hint text'
               ) {
                 hintElement.remove()
@@ -571,7 +472,7 @@ export class RadiosField extends ComponentBase {
       // Function to update the hidden input with all current options
       function updateHiddenOptionsData() {
         const options =
-          /** @type {{ label?: string, hint?: string, value?: string }[]} */ ([])
+          /** @type {{ text?: string, hint?: { text?: string, id?: string }, value?: string, id?: string }[]} */ ([])
         const optionItems = optionsContainer.querySelectorAll(
           '.gem-c-reorderable-list__item'
         )
@@ -579,6 +480,7 @@ export class RadiosField extends ComponentBase {
         optionItems.forEach((item) => {
           const labelInput = item.querySelector('.option-label-display')
           const hintInput = item.querySelector('.govuk-hint')
+          const id = /** @type {HTMLElement} */ (item).dataset.id
 
           if (labelInput) {
             const label =
@@ -589,9 +491,12 @@ export class RadiosField extends ComponentBase {
             const value = label.toLowerCase().replace(/\s+/g, '-')
 
             options.push({
-              label,
-              hint,
-              value
+              text: label,
+              hint: {
+                text: hint
+              },
+              value,
+              id
             })
           }
         })
@@ -611,8 +516,7 @@ export class RadiosField extends ComponentBase {
       // Initialize Sortable for the options container
       const sortableContainer = document.getElementById('options-container')
       if (sortableContainer) {
-        // eslint-disable-next-line no-new
-        new Sortable(sortableContainer, {
+        sortableInstance = Sortable.create(sortableContainer, {
           animation: 150,
           ghostClass: 'sortable-ghost',
           chosenClass: 'sortable-chosen',
@@ -626,15 +530,20 @@ export class RadiosField extends ComponentBase {
             updateHiddenOptionsData()
             updateMoveButtons()
             removePreviewHighlights()
-          }
+          },
+          disabled: true
         })
       }
 
       // Function to highlight preview item
       /**
-       * @param {number} index
+       * @param { number | undefined } index
        */
       function highlightPreviewItem(index) {
+        if (index === undefined || index === -1) {
+          return
+        }
+
         const radioList = document.querySelector('#radio-list .govuk-radios')
         if (!radioList) return
 
@@ -661,12 +570,13 @@ export class RadiosField extends ComponentBase {
 
       // Add focus/blur handlers for list items in edit mode
       document.addEventListener('focusin', function (e) {
+        const targetElem = /** @type {Element} */ (e.target)
         if (
-          e.target.classList.contains('js-reorderable-list-up') ||
-          e.target.classList.contains('js-reorderable-list-down')
+          targetElem.classList.contains('js-reorderable-list-up') ||
+          targetElem.classList.contains('js-reorderable-list-down')
         ) {
-          const listItem = e.target.closest('.gem-c-reorderable-list__item')
-          if (listItem) {
+          const listItem = targetElem.closest('.gem-c-reorderable-list__item')
+          if (listItem?.parentNode) {
             const index = Array.from(listItem.parentNode.children).indexOf(
               listItem
             )
@@ -676,9 +586,10 @@ export class RadiosField extends ComponentBase {
       })
 
       document.addEventListener('focusout', function (e) {
+        const targetElem = /** @type {Element} */ (e.target)
         if (
-          e.target.classList.contains('js-reorderable-list-up') ||
-          e.target.classList.contains('js-reorderable-list-down')
+          targetElem.classList.contains('js-reorderable-list-up') ||
+          targetElem.classList.contains('js-reorderable-list-down')
         ) {
           removePreviewHighlights()
         }
@@ -688,8 +599,13 @@ export class RadiosField extends ComponentBase {
 
       // Add hover handlers for list items in edit mode
       document.addEventListener('mouseover', function (e) {
-        const listItem = e.target.closest('.gem-c-reorderable-list__item')
-        if (listItem && editOptionsButton.textContent.trim() === 'Re-order') {
+        const targetElem = /** @type {Element} */ (e.target)
+        const listItem = targetElem.closest('.gem-c-reorderable-list__item')
+        if (
+          listItem &&
+          editOptionsButton?.textContent?.trim() === 'Re-order' &&
+          listItem.parentNode
+        ) {
           const index = Array.from(listItem.parentNode.children).indexOf(
             listItem
           )
@@ -698,78 +614,81 @@ export class RadiosField extends ComponentBase {
       })
 
       document.addEventListener('mouseout', function (e) {
-        const listItem = e.target.closest('.gem-c-reorderable-list__item')
-        if (listItem && editOptionsButton.textContent.trim() === 'Re-order') {
+        const targetElem = /** @type {Element} */ (e.target)
+        const listItem = targetElem.closest('.gem-c-reorderable-list__item')
+        if (listItem && editOptionsButton?.textContent?.trim() === 'Re-order') {
           removePreviewHighlights()
         }
       })
 
       // Add edit options button functionality
       if (editOptionsButton) {
-        editOptionsButton.addEventListener('click', function () {
-          const listItems = document.querySelectorAll(
-            '.gem-c-reorderable-list__item'
+        editOptionsButton.addEventListener('click', function (e) {
+          e.preventDefault()
+          const listItems = /** @type {NodeListOf<HTMLElement>} */ (
+            document.querySelectorAll('.gem-c-reorderable-list__item')
           )
-          const actionButtons = document.querySelectorAll(
-            '.gem-c-reorderable-list__actions'
+          const actionButtons = /** @type {NodeListOf<HTMLElement>} */ (
+            document.querySelectorAll('.gem-c-reorderable-list__actions')
           )
-          const editDeleteLinks = document.querySelectorAll('.edit-item')
+          const editDeleteLinks = /** @type {NodeListOf<HTMLElement>} */ (
+            document.querySelectorAll('.edit-item')
+          )
           const addButton = document.getElementById('add-option-button')
 
           // Toggle button text and state
-          const isEditing = editOptionsButton.textContent.trim() === 'Done'
-          editOptionsButton.textContent = isEditing ? 'Re-order' : 'Done'
+          const isReordering = editOptionsButton.textContent?.trim() !== 'Done'
+          editOptionsButton.textContent = isReordering ? 'Done' : 'Re-order'
 
           // Toggle button style - add inverse when NOT editing (showing "Re-order")
-          if (isEditing) {
-            editOptionsButton.classList.add('govuk-button--inverse')
-          } else {
+          if (isReordering) {
             editOptionsButton.classList.remove('govuk-button--inverse')
+          } else {
+            editOptionsButton.classList.add('govuk-button--inverse')
           }
 
           // Show/hide add button based on edit state
           if (addButton) {
-            addButton.style.display = isEditing ? 'inline-block' : 'none'
+            addButton.style.display = isReordering ? 'none' : 'inline-block'
           }
 
           // Toggle action buttons visibility
           actionButtons.forEach((actions) => {
-            actions.style.display = isEditing ? 'none' : 'flex'
+            actions.style.display = isReordering ? 'flex' : 'none'
           })
 
           // Toggle edit/delete links visibility
           editDeleteLinks.forEach((links) => {
-            links.style.display = isEditing ? 'block' : 'none'
+            links.style.display = isReordering ? 'none' : 'block'
           })
 
           // Update cursor style and hover effect
           listItems.forEach((item) => {
-            if (isEditing) {
-              item.style.cursor = 'default'
-              item.classList.remove('sortable-enabled')
-            } else {
+            if (isReordering) {
               item.style.cursor = 'move'
               item.classList.add('sortable-enabled')
+            } else {
+              item.style.cursor = 'default'
+              item.classList.remove('sortable-enabled')
             }
           })
 
           // Enable/disable sorting
-          if (sortableContainer) {
-            sortableContainer.sortable = !isEditing
+          if (sortableInstance) {
+            sortableInstance.option('disabled', !isReordering)
           }
 
           // Update button visibility and focus when entering edit mode
-          if (!isEditing) {
+          if (isReordering) {
             updateMoveButtons()
             const firstItem = listItems[0]
             // if (firstItem) {
-            const firstDownButton = firstItem.querySelector(
-              '.js-reorderable-list-down'
+            const firstDownButton = /** @type { HTMLElement | null } */ (
+              firstItem.querySelector('.js-reorderable-list-down')
             )
             if (firstDownButton) {
               firstDownButton.focus()
             }
-            // }
           }
         })
       }
@@ -780,8 +699,12 @@ export class RadiosField extends ComponentBase {
           '.gem-c-reorderable-list__item'
         )
         items.forEach((item, index) => {
-          const upButton = item.querySelector('.js-reorderable-list-up')
-          const downButton = item.querySelector('.js-reorderable-list-down')
+          const upButton = /** @type { HTMLElement | null } */ (
+            item.querySelector('.js-reorderable-list-up')
+          )
+          const downButton = /** @type { HTMLElement | null } */ (
+            item.querySelector('.js-reorderable-list-down')
+          )
 
           if (upButton && downButton) {
             // First item - only show Down
@@ -805,70 +728,113 @@ export class RadiosField extends ComponentBase {
 
       // Add Up/Down button functionality
       document.addEventListener('click', function (e) {
-        if (e.target.classList.contains('js-reorderable-list-up')) {
-          const item = e.target.closest('.gem-c-reorderable-list__item')
-          const prevItem = item.previousElementSibling
-          if (prevItem) {
+        const targetElem = /** @type {Element} */ (e.target)
+        if (targetElem.classList.contains('js-reorderable-list-up')) {
+          const item = targetElem.closest('.gem-c-reorderable-list__item')
+          const prevItem = item?.previousElementSibling
+          if (prevItem && item.parentNode) {
             item.parentNode.insertBefore(item, prevItem)
             updateAllOptionsPreview()
             updateHiddenOptionsData()
+            updateMoveButtons()
           }
-        } else if (e.target.classList.contains('js-reorderable-list-down')) {
-          const item = e.target.closest('.gem-c-reorderable-list__item')
-          const nextItem = item.nextElementSibling
-          if (nextItem) {
+        } else if (targetElem.classList.contains('js-reorderable-list-down')) {
+          const item = targetElem.closest('.gem-c-reorderable-list__item')
+          const nextItem = item?.nextElementSibling
+          if (nextItem && item.parentNode) {
             item.parentNode.insertBefore(nextItem, item)
             updateAllOptionsPreview()
             updateHiddenOptionsData()
-          }
-        } else if (e.target.classList.contains('js-remove-option')) {
-          e.preventDefault()
-          const item = e.target.closest('.gem-c-reorderable-list__item')
-          // eslint-disable-next-line no-undef
-          if (confirm('Are you sure you want to remove this option?')) {
-            item.remove()
-            updateAllOptionsPreview()
-            updateHiddenOptionsData()
-            updateEditButtonVisibility() // Update edit button visibility after removing an option
+            updateMoveButtons()
           }
         }
       })
 
       /**
+       * Function to delete an item
+       * @param { HTMLElement | null } listItem
+       */
+      function deleteItem(listItem) {
+        if (!listItem) {
+          return
+        }
+
+        const listItemsData = /** @type {HTMLInputElement} */ (
+          document.getElementById('radio-options-data')
+        )
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        const listItems =
+          /** @type {{ text?: string, hint?: { text?: string }, value?: string, id?: string }[]} */ (
+            JSON.parse(listItemsData.value)
+          )
+        const newListItems = listItems.filter(
+          (x) => x.id !== listItem.dataset.id
+        )
+        listItemsData.value = JSON.stringify(newListItems)
+
+        // Remove the radio
+        listItem.remove()
+
+        updateEditOptionsButtonVisibility()
+
+        // Update the preview
+        updateAllOptionsPreview()
+      }
+
+      /**
        * Function to convert a list item to editable form
-       * @param {HTMLElement} listItem
+       * @param { HTMLElement | null } listItem
        */
       function makeItemEditable(listItem) {
-        const labelDisplay = listItem.querySelector('.option-label-display')
-        const labelDisplayText = labelDisplay
-          ? labelDisplay.textContent?.trim()
-          : ''
-        const hintDisplay = listItem.querySelector('.govuk-hint')
-        const hintDisplayText = hintDisplay
-          ? hintDisplay.textContent?.trim()
-          : ''
-        const editLink = listItem.querySelector('.edit-item a')
+        if (!listItem) {
+          return
+        }
+
+        const listItemsData = /** @type {HTMLInputElement} */ (
+          document.getElementById('radio-options-data')
+        )
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        const listItems =
+          /** @type {{ text?: string, hint?: { text?: string }, value?: string, id?: string }[]} */ (
+            JSON.parse(listItemsData.value)
+          )
+        const currentListItem = listItems.find(
+          (x) => x.id === listItem.dataset.id
+        )
+
+        const labelDisplayText = currentListItem?.text ?? ''
+        const labelDisplay = /** @type { HTMLElement | null } */ (
+          listItem.querySelector('.option-label-display')
+        )
+        const hintDisplay = /** @type { HTMLElement | null } */ (
+          listItem.querySelector('.govuk-hint')
+        )
+        const hintDisplayText = currentListItem?.hint?.text ?? ''
+        const editLink = /** @type { HTMLElement | null } */ (
+          listItem.querySelector('.edit-item a')
+        )
+        const valueDisplayText = currentListItem?.value ?? ''
 
         // Create the edit form HTML
         const editFormHTML = `
           <div class="edit-option-form govuk-!-margin-bottom-6">
             <h2 class="govuk-heading-m">Edit option</h2>
-            
+
             <!-- Option Value (Label) -->
             <div class="govuk-form-group">
               <label class="govuk-label govuk-label--m" for="edit-option-label">Item</label>
-              <input class="govuk-input" id="edit-option-label" name="edit-label" type="text" 
+              <input class="govuk-input" id="edit-option-label" name="edit-label" type="text"
                 value="${labelDisplayText}">
             </div>
-  
+
             <!-- Hint Text -->
             <div class="govuk-form-group">
               <label class="govuk-label govuk-label--m" for="edit-option-hint">Hint text (optional)</label>
               <div class="govuk-hint">Use single short sentence without a full stop</div>
-              <input class="govuk-input" id="edit-option-hint" name="edit-hint" type="text" 
+              <input class="govuk-input" id="edit-option-hint" name="edit-hint" type="text"
                 value="${hintDisplayText}">
             </div>
-  
+
             <!-- Advanced Features Section -->
             <details class="govuk-details" data-module="govuk-details">
               <summary class="govuk-details__summary">
@@ -879,12 +845,12 @@ export class RadiosField extends ComponentBase {
                 <div class="govuk-form-group">
                   <label class="govuk-label govuk-label--m" for="edit-option-value">Unique identifier (optional)</label>
                   <div class="govuk-hint">Used in databases to identify the item</div>
-                  <input class="govuk-input" id="edit-option-value" name="edit-value" type="text" 
-                    value="${listItem.querySelector('.option-value-input')?.value ?? ''}">
+                  <input class="govuk-input" id="edit-option-value" name="edit-value" type="text"
+                    value="${valueDisplayText}">
                 </div>
               </div>
             </details>
-  
+
             <div class="govuk-button-group">
               <button type="button" class="govuk-button save-edit-button">Save changes</button>
               <a class="govuk-link cancel-edit-link" href="#">Cancel</a>
@@ -893,110 +859,153 @@ export class RadiosField extends ComponentBase {
       `
 
         // Hide the display elements
-        labelDisplay.style.display = 'none'
-        editLink.style.display = 'none'
-        listItem.querySelector('.delete-option-link').style.display = 'none'
+        if (labelDisplay) {
+          labelDisplay.style.display = 'none'
+        }
+        if (editLink) {
+          editLink.style.display = 'none'
+        }
+        const deleteOptionLink = /** @type { HTMLElement | null } */ (
+          listItem.querySelector('.delete-option-link')
+        )
+        if (deleteOptionLink) {
+          deleteOptionLink.style.display = 'none'
+        }
 
         // Insert the edit form
-        listItem
-          .querySelector('.gem-c-reorderable-list__content')
-          .insertAdjacentHTML('beforeend', editFormHTML)
+        const listArea = listItem.querySelector(
+          '.gem-c-reorderable-list__content'
+        )
+        if (listArea) {
+          listArea.insertAdjacentHTML('beforeend', editFormHTML)
+        }
 
         // Add event listeners for the new form
         const editForm = listItem.querySelector('.edit-option-form')
-        const saveButton = editForm.querySelector('.save-edit-button')
-        const cancelButton = editForm.querySelector('.cancel-edit-link')
-        const editLabelInput = editForm.querySelector('#edit-option-label')
-        const editHintInput = editForm.querySelector('#edit-option-hint')
+        const saveButton = /** @type { HTMLElement | null } */ (
+          editForm?.querySelector('.save-edit-button')
+        )
+        const cancelButton = editForm?.querySelector('.cancel-edit-link')
+        const editLabelInput = /** @type { HTMLInputElement | null } */ (
+          editForm?.querySelector('#edit-option-label')
+        )
+        const editHintInput = /** @type { HTMLInputElement | null } */ (
+          editForm?.querySelector('#edit-option-hint')
+        )
+        const editValueInput = /** @type { HTMLInputElement | null } */ (
+          editForm?.querySelector('#edit-option-value')
+        )
 
         // Focus the label input
-        editLabelInput.focus()
+        if (editLabelInput) {
+          editLabelInput.focus()
+        }
 
         // Save changes
+        if (!saveButton) {
+          return
+        }
         saveButton.addEventListener('click', () => {
-          const newLabel = editLabelInput.value.trim()
-          const newHint = editHintInput.value.trim()
-          const newValue =
-            editForm.querySelector('#edit-option-value')?.value.trim() ?? ''
+          const newLabel = editLabelInput?.value.trim() ?? ''
+          const newHint = editHintInput?.value.trim() ?? ''
+          const newValue = editValueInput?.value.trim() ?? ''
 
           // Update the values
-          labelDisplay.textContent = newLabel
-          // labelInput.value = newLabel
-          hintDisplay.textContent = newHint
-
-          // Update or create the value input
-          let valueInput = listItem.querySelector('.option-value-input')
-          if (!valueInput) {
-            valueInput = document.createElement('input')
-            valueInput.type = 'hidden'
-            valueInput.className = 'option-value-input'
-            valueInput.name = `option[${listItem.dataset.index}][option_value]`
-            listItem
-              .querySelector('.gem-c-reorderable-list__content')
-              .appendChild(valueInput)
+          if (labelDisplay) {
+            labelDisplay.textContent = newLabel
           }
-          valueInput.value = newValue
+          if (hintDisplay) {
+            hintDisplay.textContent = newHint
+          }
+
+          // Update hidden data list
+          if (currentListItem) {
+            currentListItem.text = newLabel
+            currentListItem.hint = { text: newHint }
+            currentListItem.value = newValue
+          }
+
+          listItemsData.value = JSON.stringify(listItems)
 
           // Restore the display
           restoreItemDisplay(listItem)
 
           // Update the preview
           updateAllOptionsPreview()
-          updateHiddenOptionsData()
         })
 
         // Cancel editing
-        cancelButton.addEventListener('click', (e) => {
-          e.preventDefault()
-          restoreItemDisplay(listItem)
-        })
+        if (cancelButton) {
+          cancelButton.addEventListener('click', (e) => {
+            e.preventDefault()
+            restoreItemDisplay(listItem)
+          })
+        }
 
         // Add preview updating on input
-        editLabelInput.addEventListener('input', () => {
-          updateEditPreview(listItem, editLabelInput.value, editHintInput.value)
-        })
-
-        editHintInput.addEventListener('input', () => {
-          updateEditPreview(listItem, editLabelInput.value, editHintInput.value)
-        })
-
-        // Add focus/blur event listeners for highlighting
-        editLabelInput.addEventListener('focus', () => {
-          const previewItem = document
-            .querySelector(`#listPreview-option${listItem.dataset.index - 1}`)
-            .closest('.govuk-radios__item')
-          if (previewItem) {
-            const labelElement = previewItem.querySelector(
-              '.govuk-radios__label'
+        if (editHintInput) {
+          editHintInput.addEventListener('input', () => {
+            updateEditPreview(
+              listItem,
+              editLabelInput?.value,
+              editHintInput.value
             )
-            if (labelElement) {
-              labelElement.classList.add('highlight')
-            }
-          }
-        })
+          })
+        }
 
-        editLabelInput.addEventListener('blur', () => {
-          const previewItem = document
-            .querySelector(`#listPreview-option${listItem.dataset.index - 1}`)
-            .closest('.govuk-radios__item')
-          if (previewItem) {
-            const labelElement = previewItem.querySelector(
-              '.govuk-radios__label'
+        if (editLabelInput) {
+          editLabelInput.addEventListener('input', () => {
+            updateEditPreview(
+              listItem,
+              editLabelInput.value,
+              editHintInput?.value
             )
-            if (labelElement) {
-              labelElement.classList.remove('highlight')
+          })
+
+          // Add focus/blur event listeners for highlighting
+          editLabelInput.addEventListener('focus', () => {
+            const indexStr = listItem.dataset.index ?? '0'
+            const index = parseInt(indexStr) - 1
+            const previewItem = document
+              .querySelector(`#listPreview-option${index - 1}`)
+              ?.closest('.govuk-radios__item')
+            if (previewItem) {
+              const labelElement = previewItem.querySelector(
+                '.govuk-radios__label'
+              )
+              if (labelElement) {
+                labelElement.classList.add('highlight')
+              }
             }
-          }
-        })
+          })
+
+          editLabelInput.addEventListener('blur', () => {
+            const indexStr = listItem.dataset.index ?? '0'
+            const index = parseInt(indexStr) - 1
+            const previewItem = document
+              .querySelector(`#listPreview-option${index - 1}`)
+              ?.closest('.govuk-radios__item')
+            if (previewItem) {
+              const labelElement = previewItem.querySelector(
+                '.govuk-radios__label'
+              )
+              if (labelElement) {
+                labelElement.classList.remove('highlight')
+              }
+            }
+          })
+        }
 
         // Update preview immediately to show current state
-        updateEditPreview(listItem, editLabelInput.value, editHintInput.value)
+        updateEditPreview(listItem, editLabelInput?.value, editHintInput?.value)
 
         // If label input is already focused, apply highlight immediately
         if (document.activeElement === editLabelInput) {
+          const indexStr = listItem.dataset.index ?? '0'
+          const index = parseInt(indexStr) - 1
           const previewItem = document
-            .querySelector(`#listPreview-option${listItem.dataset.index - 1}`)
-            .closest('.govuk-radios__item')
+            .querySelector(`#listPreview-option${index - 1}`)
+            ?.closest('.govuk-radios__item')
           if (previewItem) {
             const labelElement = previewItem.querySelector(
               '.govuk-radios__label'
@@ -1008,36 +1017,59 @@ export class RadiosField extends ComponentBase {
         }
       }
 
-      // Function to restore item to display mode
+      /**
+       * Function to restore item to display mode
+       * @param {Element} listItem
+       */
       function restoreItemDisplay(listItem) {
-        const labelDisplay = listItem.querySelector('.option-label-display')
-        const editLink = listItem.querySelector('.edit-item a')
-        const deleteLink = listItem.querySelector('.delete-option-link')
+        const labelDisplay = /** @type { HTMLElement | null } */ (
+          listItem.querySelector('.option-label-display')
+        )
+        const editLink = /** @type { HTMLElement | null } */ (
+          listItem.querySelector('.edit-item a')
+        )
+        const deleteLink = /** @type { HTMLElement | null } */ (
+          listItem.querySelector('.delete-option-link')
+        )
         const editForm = listItem.querySelector('.edit-option-form')
 
         if (editForm) {
           editForm.remove()
         }
 
-        labelDisplay.style.display = 'block'
-        editLink.style.display = 'inline-block'
+        if (labelDisplay) {
+          labelDisplay.style.display = 'block'
+        }
+        if (editLink) {
+          editLink.style.display = 'inline-block'
+        }
         if (deleteLink) {
           deleteLink.style.display = 'inline-block'
         }
       }
 
-      // Function to update preview while editing
+      /**
+       * Function to update preview while editing
+       * @param {HTMLElement} listItem
+       * @param { string | undefined } labelValue
+       * @param { string | undefined } hintValue
+       */
       function updateEditPreview(listItem, labelValue, hintValue) {
-        const index = listItem.dataset.index - 1
+        const indexStr = listItem.dataset.index ?? '0'
+        const index = parseInt(indexStr) - 1
         const previewItem = radioList
-          .querySelector(`#listPreview-option${index}`)
-          .closest('.govuk-radios__item')
+          ?.querySelector(`#listPreview-option${index}`)
+          ?.closest('.govuk-radios__item')
 
         if (previewItem) {
-          const label = previewItem.querySelector('.govuk-radios__label')
+          const label = /** @type { HTMLElement | null } */ (
+            previewItem.querySelector('.govuk-radios__label')
+          )
           let hint = previewItem.querySelector('.govuk-radios__hint')
 
-          label.textContent = labelValue ?? 'Item text'
+          if (label) {
+            label.textContent = labelValue ?? 'Item text'
+          }
 
           if (hintValue) {
             if (!hint) {
@@ -1052,370 +1084,22 @@ export class RadiosField extends ComponentBase {
         }
       }
 
-      // Add click handler for edit links
+      // Add click handler for edit and delete links
       document.addEventListener('click', function (e) {
-        if (e.target.closest('.edit-item a')) {
+        const targetElem = /** @type {Element} */ (e.target)
+        const isEdit = targetElem.classList.contains('edit-option-link')
+        const isDelete = targetElem.classList.contains('delete-option-link')
+        if (isEdit || isDelete) {
           e.preventDefault()
-          const listItem = e.target.closest('.gem-c-reorderable-list__item')
+          const listItem = /** @type { HTMLElement | null } */ (
+            targetElem.closest('.gem-c-reorderable-list__item')
+          )
           if (listItem) {
-            makeItemEditable(listItem)
-          }
-        }
-      })
-
-      // Remove all existing delete-related event handlers and add a single, clean handler
-      document.addEventListener('click', function (e) {
-        const deleteLink = e.target.closest('.delete-option-link')
-        if (deleteLink) {
-          // Let the link navigate naturally to the delete confirmation page
-          return true
-        }
-      })
-
-      // Add delete functionality
-      document.addEventListener('DOMContentLoaded', function () {
-        const urlParams = new URLSearchParams(window.location.search)
-        const deleteIndex = urlParams.get('deleteIndex')
-
-        if (deleteIndex !== null) {
-          const itemToDelete = document.querySelector(
-            `.gem-c-reorderable-list__item[data-index="${deleteIndex}"]`
-          )
-          if (itemToDelete) {
-            // console.log("Found item to delete:", itemToDelete);
-            itemToDelete.remove()
-            updateAllOptionsPreview() // Update the preview after deletion
-            updateHiddenOptionsData() // Update the hidden input data
-            updateEditButtonVisibility() // Update edit button visibility after deleting an option
-          } else {
-            // console.error("Item to delete not found for index:", deleteIndex);
-          }
-
-          // Clean up the URL
-          const newUrl = window.location.href.split('?')[0]
-          window.history.replaceState({}, document.title, newUrl)
-        }
-      })
-
-      // Conditions functionality
-      const questionSelect = document.getElementById('condition-question')
-      const valueContainer = document.getElementById(
-        'condition-value-container'
-      )
-      const addConditionLink = document.getElementById('add-condition-link')
-      const additionalConditions = document.getElementById(
-        'additional-conditions'
-      )
-      let conditionCount = 1
-
-      // Function to update value options based on selected question
-      function updateValueOptions(questionSelect, valueSelect) {
-        const selectedOption =
-          questionSelect.options[questionSelect.selectedIndex]
-        const questionType = selectedOption.getAttribute('data-type')
-        const rawOptions = selectedOption.getAttribute('data-options')
-
-        // Clear existing options
-        valueSelect.innerHTML = '<option value="">Select a value</option>'
-
-        try {
-          if (questionType === 'yes-no') {
-            valueSelect.innerHTML = `${valueSelect.innerHTML}
-              <option value="yes">Yes</option>
-              <option value="no">No</option>
-            `
-          } else if (
-            ['radios', 'checkboxes', 'select'].includes(questionType)
-          ) {
-            const options = JSON.parse(rawOptions)
-            options.forEach((option) => {
-              const value = option.value ?? option.text
-              valueSelect.innerHTML = `${valueSelect.innerHTML}
-                <option value="${value}">${option.text}</option>
-              `
-            })
-          }
-        } catch {
-          // console.error('Error parsing options:', e);
-        }
-      }
-
-      // Add event listener to first question select
-      if (questionSelect) {
-        questionSelect.addEventListener('change', () => {
-          const valueSelect = document.getElementById('condition-value')
-          updateValueOptions(questionSelect, valueSelect)
-        })
-      }
-
-      // Handle adding new conditions
-      if (addConditionLink) {
-        addConditionLink.addEventListener('click', function (e) {
-          e.preventDefault()
-
-          const newCondition = document.createElement('div')
-          newCondition.className =
-            'condition-item govuk-!-margin-top-4 govuk-!-padding-4'
-          newCondition.style.position = 'relative'
-          newCondition.style.background = '#f3f2f1'
-
-          newCondition.innerHTML = `
-            <!-- Remove link positioned absolutely in top right -->
-            <a href="#" class="govuk-link govuk-link--no-visited-state govuk-link--destructive govuk-!-font-size-16" 
-              onclick="event.preventDefault(); removeCondition(this);"
-              style="position: absolute; top: 15px; right: 15px;">
-                <svg class="govuk-!-margin-right-1" style="position: relative; top: 2px" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M10.5 1.5L1.5 10.5" stroke="currentColor" stroke-width="2"/>
-                  <path d="M1.5 1.5L10.5 10.5" stroke="currentColor" stroke-width="2"/>
-                </svg>
-                Remove this condition
-            </a>
-  
-            <div class="govuk-form-group">
-              <label class="govuk-label">Combine with</label>
-              <select class="govuk-select" name="logical-operator-${conditionCount}">
-                <option value="AND">AND</option>
-                <option value="OR">OR</option>
-              </select>
-            </div>
-            
-            <div class="govuk-form-group">
-              <label class="govuk-label" for="condition-question-${conditionCount}">Select a question</label>
-              <select class="govuk-select condition-question" 
-                  id="condition-question-${conditionCount}" 
-                  name="question-${conditionCount}">
-                ${questionSelect.innerHTML}
-              </select>
-            </div>
-  
-            <div class="govuk-form-group">
-              <label class="govuk-label" for="condition-operator-${conditionCount}">Condition type</label>
-              <select class="govuk-select" id="condition-operator-${conditionCount}" name="operator-${conditionCount}">
-                <option value="">Select a condition type</option>
-                <option value="is" selected>is</option>
-                <option value="is-not">is not</option>
-              </select>
-            </div>
-  
-            <div class="govuk-form-group">
-              <label class="govuk-label" for="condition-value-${conditionCount}">Select a value</label>
-              <div class="condition-value-container">
-                <select class="govuk-select condition-value" 
-                    id="condition-value-${conditionCount}" 
-                    name="value-${conditionCount}">
-                  <option value="">Select a value</option>
-                </select>
-              </div>
-            </div>
-          `
-
-          // Add event listener to new question select
-          const newQuestionSelect = newCondition.querySelector(
-            '.condition-question'
-          )
-          const newValueContainer = newCondition.querySelector(
-            '.condition-value-container'
-          )
-          newQuestionSelect.addEventListener('change', () => {
-            const selectedOption =
-              newQuestionSelect.options[newQuestionSelect.selectedIndex]
-            const questionType = selectedOption.getAttribute('data-type') ?? ''
-            const rawOptions = selectedOption.getAttribute('data-options')
-
-            // Clear existing options
-            newValueContainer.innerHTML = '' // Clear the entire container
-
-            try {
-              // Handle yes/no questions with dropdown
-              if (questionType === 'yes-no') {
-                const select = document.createElement('select')
-                select.classList.add('govuk-select')
-                select.id = `condition-value-${conditionCount}`
-                select.name = `value-${conditionCount}`
-
-                select.innerHTML = `
-                  <option value="">Select yes or no</option>
-                  <option value="yes">Yes</option>
-                  <option value="no">No</option>
-                `
-
-                const label = document.createElement('label')
-                label.classList.add('govuk-label')
-                label.setAttribute('for', `condition-value-${conditionCount}`)
-                label.textContent = 'Select yes or no'
-
-                newValueContainer.appendChild(label)
-                newValueContainer.appendChild(select)
-                newValueContainer.style.display = 'block'
-                return
-              }
-
-              // Handle radio questions with radio buttons
-              if (questionType === 'radios') {
-                const options = rawOptions ? JSON.parse(rawOptions) : []
-
-                if (Array.isArray(options) && options.length > 0) {
-                  const fieldset = document.createElement('fieldset')
-                  fieldset.classList.add('govuk-fieldset')
-
-                  const legend = document.createElement('legend')
-                  legend.classList.add(
-                    'govuk-fieldset__legend',
-                    'govuk-fieldset__legend--s'
-                  )
-                  legend.textContent = 'Select an option'
-                  fieldset.appendChild(legend)
-
-                  const radiosDiv = document.createElement('div')
-                  radiosDiv.classList.add('govuk-radios', 'govuk-radios--small')
-                  radiosDiv.setAttribute('data-module', 'govuk-radios')
-
-                  options.forEach((option, index) => {
-                    const itemDiv = document.createElement('div')
-                    itemDiv.classList.add('govuk-radios__item')
-
-                    const radio = document.createElement('input')
-                    radio.classList.add('govuk-radios__input')
-                    radio.type = 'radio'
-                    radio.id = `radio-${index}`
-                    radio.name = 'value'
-                    radio.value = option.value ?? option.label
-
-                    const label = document.createElement('label')
-                    label.classList.add('govuk-label', 'govuk-radios__label')
-                    label.setAttribute('for', `radio-${index}`)
-                    label.textContent = option.label
-
-                    itemDiv.appendChild(radio)
-                    itemDiv.appendChild(label)
-
-                    radiosDiv.appendChild(itemDiv)
-                  })
-
-                  fieldset.appendChild(radiosDiv)
-                  valueContainer.appendChild(fieldset)
-                  valueContainer.style.display = 'block'
-                  return
-                }
-              }
-
-              // Handle checkbox questions with actual checkboxes
-              if (questionType === 'checkboxes') {
-                const options = rawOptions ? JSON.parse(rawOptions) : []
-
-                if (Array.isArray(options) && options.length > 0) {
-                  const fieldset = document.createElement('fieldset')
-                  fieldset.classList.add('govuk-fieldset')
-
-                  const legend = document.createElement('legend')
-                  legend.classList.add(
-                    'govuk-fieldset__legend',
-                    'govuk-fieldset__legend--s'
-                  )
-                  legend.textContent = 'Select all that apply'
-                  fieldset.appendChild(legend)
-
-                  const checkboxesDiv = document.createElement('div')
-                  checkboxesDiv.classList.add(
-                    'govuk-checkboxes',
-                    'govuk-checkboxes--small'
-                  )
-                  checkboxesDiv.setAttribute('data-module', 'govuk-checkboxes')
-
-                  options.forEach((option, index) => {
-                    const itemDiv = document.createElement('div')
-                    itemDiv.classList.add('govuk-checkboxes__item')
-
-                    const checkbox = document.createElement('input')
-                    checkbox.classList.add('govuk-checkboxes__input')
-                    checkbox.type = 'checkbox'
-                    checkbox.id = `checkbox-${index}`
-                    checkbox.name = 'value'
-                    checkbox.value = option.value ?? option.label
-
-                    const label = document.createElement('label')
-                    label.classList.add(
-                      'govuk-label',
-                      'govuk-checkboxes__label'
-                    )
-                    label.setAttribute('for', `checkbox-${index}`)
-                    label.textContent = option.label
-
-                    itemDiv.appendChild(checkbox)
-                    itemDiv.appendChild(label)
-                    checkboxesDiv.appendChild(itemDiv)
-                  })
-
-                  fieldset.appendChild(checkboxesDiv)
-                  valueContainer.appendChild(fieldset)
-                  valueContainer.style.display = 'block'
-                  return
-                }
-              }
-
-              // Handle select questions with dropdown
-              if (questionType === 'select') {
-                const select = document.createElement('select')
-                select.classList.add('govuk-select')
-                select.id = `condition-value-${conditionCount}`
-                select.name = `value-${conditionCount}`
-
-                const defaultOption = document.createElement('option')
-                defaultOption.value = ''
-                defaultOption.textContent = 'Select from the list'
-                select.appendChild(defaultOption)
-
-                const options = rawOptions ? JSON.parse(rawOptions) : []
-
-                if (Array.isArray(options) && options.length > 0) {
-                  options.forEach((option) => {
-                    const newOption = document.createElement('option')
-                    newOption.value = option.value ?? option.label
-                    newOption.textContent = option.label
-                    select.appendChild(newOption)
-                  })
-
-                  const label = document.createElement('label')
-                  label.classList.add('govuk-label')
-                  label.setAttribute('for', `condition-value-${conditionCount}`)
-                  label.textContent = 'Select from the list'
-
-                  valueContainer.appendChild(label)
-                  valueContainer.appendChild(select)
-                  valueContainer.style.display = 'block'
-                }
-              }
-            } catch {
-              // console.error("Error parsing options:", e);
+            if (isEdit) {
+              makeItemEditable(listItem)
+            } else {
+              deleteItem(listItem)
             }
-          })
-
-          additionalConditions.appendChild(newCondition)
-          conditionCount++
-        })
-      }
-
-      /*
-      function removeCondition(element) {
-        // Find the closest parent condition-item div and remove it
-        const conditionItem = element.closest('.condition-item');
-        if (conditionItem) {
-          conditionItem.remove();
-        }
-      }
-      */
-
-      // Add click handlers to all remove condition links
-      document.addEventListener('click', function (event) {
-        const removeLink = event.target.closest('.govuk-link--destructive')
-        if (
-          removeLink &&
-          removeLink.textContent.trim() === 'Remove this condition'
-        ) {
-          event.preventDefault()
-          const conditionItem = removeLink.closest('.condition-item')
-          if (conditionItem) {
-            conditionItem.remove()
           }
         }
       })

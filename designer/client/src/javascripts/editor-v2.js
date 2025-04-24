@@ -14,5 +14,10 @@ function initialiseComponent(questionType) {
   }
 }
 
-// @ts-expect-error TODO some text to explain
-initialiseComponent(document.questionType)
+const questionTypeElem = /** @type { HTMLInputElement | null } */ (
+  document.getElementById('questionType')
+)
+if (questionTypeElem) {
+  const questionType = /** @type { string } */ (questionTypeElem.value)
+  initialiseComponent(questionType)
+}
