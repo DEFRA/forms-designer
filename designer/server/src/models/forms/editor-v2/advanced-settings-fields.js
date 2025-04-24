@@ -10,7 +10,7 @@ import {
 } from '~/src/models/forms/editor-v2/common.js'
 
 const MIN_FILES_ERROR_MESSAGE =
-  'Minimum file count must be a whole number between 0 and 25'
+  'Minimum file count must be a whole number between 1 and 25'
 const MAX_FILES_ERROR_MESSAGE =
   'Maximum file count must be a whole number between 1 and 25'
 const EXACT_FILES_ERROR_MESSAGE =
@@ -252,10 +252,10 @@ export const allAdvancedSettingsFields =
 
 export const allSpecificSchemas = Joi.object().keys({
   maxFuture: questionDetailsFullSchema.maxFutureSchema.messages({
-    '*': 'Maximum days in the future must be a real number or 0'
+    '*': 'Maximum days in the future must be a positive whole number'
   }),
   maxPast: questionDetailsFullSchema.maxPastSchema.messages({
-    '*': 'Maximum days in the past must be a real number or 0'
+    '*': 'Maximum days in the past must be a positive whole number'
   }),
   min: questionDetailsFullSchema.minSchema
     .when('max', {
