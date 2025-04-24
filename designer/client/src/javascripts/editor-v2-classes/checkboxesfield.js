@@ -1,3 +1,3 @@
 import { ListField } from '~/src/javascripts/editor-v2-classes/listfield.js'
 
-export class RadiosField extends ListField {}
+export class CheckboxesField extends ListField {}
