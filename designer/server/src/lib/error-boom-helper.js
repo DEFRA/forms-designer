@@ -34,6 +34,13 @@ const boomMappings = [
     errorKey: sessionNames.validationFailure.editorQuestionDetails,
     fieldName: 'question',
     userMessage: 'Question or page heading already exists in this form'
+  },
+  {
+    statusCode: 409,
+    errorCode: ApiErrorCode.DuplicatePagePathPage,
+    errorKey: sessionNames.validationFailure.editorQuestionDetails,
+    fieldName: 'question',
+    userMessage: 'Question or page heading already exists in this form'
   }
 ]
 
