@@ -36,21 +36,21 @@ describe('Editor v2 question details error messages', () => {
       /**
        * Date parts field - maxFuture
        */
-      [ ComponentType.DatePartsField, { maxFuture: 'a' }, 'Maximum days in the future must be a real number or 0' ],
-      [ ComponentType.DatePartsField, { maxFuture: '-1' }, 'Maximum days in the future must be a real number or 0' ],
-      [ ComponentType.DatePartsField, { maxFuture: 'a123' }, 'Maximum days in the future must be a real number or 0' ],
-      [ ComponentType.DatePartsField, { maxFuture: '-100' }, 'Maximum days in the future must be a real number or 0' ],
-      [ ComponentType.DatePartsField, { maxFuture: '1.1' }, 'Maximum days in the future must be a real number or 0' ],
-      [ ComponentType.DatePartsField, { maxFuture: '10.25' }, 'Maximum days in the future must be a real number or 0' ],
+      [ ComponentType.DatePartsField, { maxFuture: 'a' }, 'Maximum days in the future must be a positive whole number' ],
+      [ ComponentType.DatePartsField, { maxFuture: '-1' }, 'Maximum days in the future must be a positive whole number' ],
+      [ ComponentType.DatePartsField, { maxFuture: 'a123' }, 'Maximum days in the future must be a positive whole number' ],
+      [ ComponentType.DatePartsField, { maxFuture: '-100' }, 'Maximum days in the future must be a positive whole number' ],
+      [ ComponentType.DatePartsField, { maxFuture: '1.1' }, 'Maximum days in the future must be a positive whole number' ],
+      [ ComponentType.DatePartsField, { maxFuture: '10.25' }, 'Maximum days in the future must be a positive whole number' ],
       /**
        * Date parts field - maxPast
        */
-      [ ComponentType.DatePartsField, { maxPast: 'a' }, 'Maximum days in the past must be a real number or 0' ],
-      [ ComponentType.DatePartsField, { maxPast: '-1' }, 'Maximum days in the past must be a real number or 0' ],
-      [ ComponentType.DatePartsField, { maxPast: 'a123' }, 'Maximum days in the past must be a real number or 0' ],
-      [ ComponentType.DatePartsField, { maxPast: '-100' }, 'Maximum days in the past must be a real number or 0' ],
-      [ ComponentType.DatePartsField, { maxPast: '1.1' }, 'Maximum days in the past must be a real number or 0' ],
-      [ ComponentType.DatePartsField, { maxPast: '10.25' }, 'Maximum days in the past must be a real number or 0' ],
+      [ ComponentType.DatePartsField, { maxPast: 'a' }, 'Maximum days in the past must be a positive whole number' ],
+      [ ComponentType.DatePartsField, { maxPast: '-1' }, 'Maximum days in the past must be a positive whole number' ],
+      [ ComponentType.DatePartsField, { maxPast: 'a123' }, 'Maximum days in the past must be a positive whole number' ],
+      [ ComponentType.DatePartsField, { maxPast: '-100' }, 'Maximum days in the past must be a positive whole number' ],
+      [ ComponentType.DatePartsField, { maxPast: '1.1' }, 'Maximum days in the past must be a positive whole number' ],
+      [ ComponentType.DatePartsField, { maxPast: '10.25' }, 'Maximum days in the past must be a positive whole number' ],
 
       /**
        * Number field - min value
@@ -136,12 +136,13 @@ describe('Editor v2 question details error messages', () => {
       /**
        * File upload field - min file count
        */
-      [ ComponentType.FileUploadField, { fileTypes: 'documents', documentTypes: 'pdf', minFiles: 'a' }, 'Minimum file count must be a whole number between 0 and 25' ],
-      [ ComponentType.FileUploadField, { fileTypes: 'documents', documentTypes: 'pdf', minFiles: '-1' }, 'Minimum file count must be a whole number between 0 and 25' ],
-      [ ComponentType.FileUploadField, { fileTypes: 'documents', documentTypes: 'pdf', minFiles: '26' }, 'Minimum file count must be a whole number between 0 and 25' ],
-      [ ComponentType.FileUploadField, { fileTypes: 'documents', documentTypes: 'pdf', minFiles: 'a123' }, 'Minimum file count must be a whole number between 0 and 25' ],
-      [ ComponentType.FileUploadField, { fileTypes: 'documents', documentTypes: 'pdf', minFiles: '1.1' }, 'Minimum file count must be a whole number between 0 and 25' ],
-      [ ComponentType.FileUploadField, { fileTypes: 'documents', documentTypes: 'pdf', minFiles: '10.25' }, 'Minimum file count must be a whole number between 0 and 25' ],
+      [ ComponentType.FileUploadField, { fileTypes: 'documents', documentTypes: 'pdf', minFiles: 'a' }, 'Minimum file count must be a whole number between 1 and 25' ],
+      [ ComponentType.FileUploadField, { fileTypes: 'documents', documentTypes: 'pdf', minFiles: '-1' }, 'Minimum file count must be a whole number between 1 and 25' ],
+      [ ComponentType.FileUploadField, { fileTypes: 'documents', documentTypes: 'pdf', minFiles: '0' }, 'Minimum file count must be a whole number between 1 and 25' ],
+      [ ComponentType.FileUploadField, { fileTypes: 'documents', documentTypes: 'pdf', minFiles: '26' }, 'Minimum file count must be a whole number between 1 and 25' ],
+      [ ComponentType.FileUploadField, { fileTypes: 'documents', documentTypes: 'pdf', minFiles: 'a123' }, 'Minimum file count must be a whole number between 1 and 25' ],
+      [ ComponentType.FileUploadField, { fileTypes: 'documents', documentTypes: 'pdf', minFiles: '1.1' }, 'Minimum file count must be a whole number between 1 and 25' ],
+      [ ComponentType.FileUploadField, { fileTypes: 'documents', documentTypes: 'pdf', minFiles: '10.25' }, 'Minimum file count must be a whole number between 1 and 25' ],
       /**
        * File upload field - max file count
        */
