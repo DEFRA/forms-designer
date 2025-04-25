@@ -6,8 +6,11 @@ import { ComponentBase } from '~/src/javascripts/editor-v2-classes/component-bas
 const GOVUK_HINT_CLASS = '.govuk-hint'
 const REORDERABLE_LIST_ITEM_CLASS = '.gem-c-reorderable-list__item'
 const RADIO_OPTION_DATA = 'radio-options-data'
+const OPTION_LABEL_DISPLAY = '.option-label-display'
 const INLINE_BLOCK = 'inline-block'
 const ERROR_HTML = '<p>error</p>'
+const JS_REORDERABLE_LIST_UP = 'js-reorderable-list-up'
+const JS_REORDERABLE_LIST_DOWN = 'js-reorderable-list-down'
 
 export class ListField extends ComponentBase {
   /**
@@ -44,38 +47,38 @@ export class ListField extends ComponentBase {
   }
 
   /**
-   * @param {number} newIndex
-   * @param {string} newId
-   * @param {string} labelValue
-   * @param {string} hintValue
-   * @param {string} valueValue
+   * @param {number} _newIndex
+   * @param {string} _newId
+   * @param {string} _labelValue
+   * @param {string} _hintValue
+   * @param {string} _valueValue
    * @returns {string}
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  getNewOptionHtml(newIndex, newId, labelValue, hintValue, valueValue) {
+  getNewOptionHtml(_newIndex, _newId, _labelValue, _hintValue, _valueValue) {
     return ERROR_HTML
   }
 
   /**
-   * @param {number} index
-   * @param { string | undefined } label
-   * @param { string | undefined } hint
+   * @param {number} _index
+   * @param { string | undefined } _label
+   * @param { string | undefined } _hint
    * @returns {string}
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  getSingleOptionHtml(index, label, hint) {
+  getSingleOptionHtml(_index, _label, _hint) {
     return ERROR_HTML
   }
 
   /**
-   * @param {string} labelValue
-   * @param { string | undefined } hintValue
-   * @param {string} valueAttr
-   * @param {Element} newOptionHint
+   * @param {string} _labelValue
+   * @param { string | undefined } _hintValue
+   * @param {string} _valueAttr
+   * @param {Element} _newOptionHint
    * @returns {string}
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  getNewOptionPreview(labelValue, hintValue, valueAttr, newOptionHint) {
+  getNewOptionPreview(_labelValue, _hintValue, _valueAttr, _newOptionHint) {
     return ERROR_HTML
   }
 
@@ -87,13 +90,13 @@ export class ListField extends ComponentBase {
   }
 
   /**
-   * @param {number} index
-   * @param { string | undefined } label
-   * @param { string | undefined } hint
+   * @param {number} _index
+   * @param { string | undefined } _label
+   * @param { string | undefined } _hint
    * @returns {string}
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  getHtmlForInsert(index, label, hint) {
+  getHtmlForInsert(_index, _label, _hint) {
     return ERROR_HTML
   }
 
@@ -153,11 +156,11 @@ export class ListField extends ComponentBase {
         newOptionLabel.focus()
 
         // Show initial preview immediately
-        const radioList = document.querySelector(
+        const radioListElement = document.querySelector(
           `#radio-list .${baseClassName}`
         )
-        if (radioList) {
-          radioList.innerHTML = local.getInitialPreviewHtml()
+        if (radioListElement) {
+          radioListElement.innerHTML = local.getInitialPreviewHtml()
           applyHighlight('label')
         }
         updatePreview() // Update preview for any existing items
@@ -255,10 +258,10 @@ export class ListField extends ComponentBase {
 
       // Function to update the live preview of the option being added
       function updatePreview() {
-        const radioList = document.querySelector(
+        const radioListElement = document.querySelector(
           `#radio-list .${baseClassName}`
         )
-        if (!radioList) {
+        if (!radioListElement) {
           return
         }
 
@@ -293,7 +296,7 @@ export class ListField extends ComponentBase {
           allOptionsHTML = existingOptions
             .map((item, index) => {
               const label = item
-                .querySelector('.option-label-display')
+                .querySelector(OPTION_LABEL_DISPLAY)
                 ?.textContent?.trim()
               const hint = item
                 .querySelector('.govuk_hint')
@@ -314,32 +317,33 @@ export class ListField extends ComponentBase {
           }
         }
 
-        radioList.innerHTML = allOptionsHTML
+        radioListElement.innerHTML = allOptionsHTML
 
         // Reapply highlights if needed
         if (document.activeElement === newOptionLabel) {
           applyHighlight('label')
-        } else if (document.activeElement === newOptionHint) {
+        }
+        if (document.activeElement === newOptionHint) {
           applyHighlight('hint')
         }
       }
 
       // Function to update the preview of all existing options
       function updateAllOptionsPreview() {
-        const radioList = document.querySelector(
+        const radioListElement = document.querySelector(
           `#radio-list .${baseClassName}`
         )
-        if (!radioList) {
+        if (!radioListElement) {
           return
         }
 
         const items = optionsContainer.querySelectorAll(
           REORDERABLE_LIST_ITEM_CLASS
         )
-        radioList.innerHTML = ''
+        radioListElement.innerHTML = ''
 
         if (items.length === 0) {
-          radioList.innerHTML = `
+          radioListElement.innerHTML = `
             <div class="govuk-inset-text">
               <p class="govuk-body">No items added yet.</p>
             </div>
@@ -349,11 +353,11 @@ export class ListField extends ComponentBase {
 
         items.forEach((item, index) => {
           const label = item
-            .querySelector('.option-label-display')
+            .querySelector(OPTION_LABEL_DISPLAY)
             ?.textContent?.trim()
           const hint = item.querySelector(GOVUK_HINT_CLASS)?.textContent?.trim()
           const radioHTML = local.getHtmlForInsert(index, label, hint)
-          radioList.insertAdjacentHTML('beforeend', radioHTML)
+          radioListElement.insertAdjacentHTML('beforeend', radioHTML)
         })
       }
 
@@ -368,7 +372,9 @@ export class ListField extends ComponentBase {
         const lastOption = radioList.querySelector(
           `.${baseClassName}__item:last-child`
         )
-        if (!lastOption) return
+        if (!lastOption) {
+          return
+        }
 
         const elementToHighlight =
           type === 'label'
@@ -377,12 +383,14 @@ export class ListField extends ComponentBase {
 
         if (elementToHighlight) {
           elementToHighlight.classList.add('highlight')
-        } else if (type === 'hint') {
-          // If hint element doesn't exist, create it
-          const hintElement = document.createElement('div')
-          hintElement.className = `govuk-hint ${baseClassName}__hint highlight`
-          hintElement.textContent = 'Hint text'
-          lastOption.appendChild(hintElement)
+        } else {
+          if (type === 'hint') {
+            // If hint element doesn't exist, create it
+            const hintElement = document.createElement('div')
+            hintElement.className = `govuk-hint ${baseClassName}__hint highlight`
+            hintElement.textContent = 'Hint text'
+            lastOption.appendChild(hintElement)
+          }
         }
       }
 
@@ -397,7 +405,9 @@ export class ListField extends ComponentBase {
         const lastOption = radioList.querySelector(
           `.${baseClassName}__item:last-child`
         )
-        if (!lastOption) return
+        if (!lastOption) {
+          return
+        }
 
         const elementToUnhighlight =
           type === 'label'
@@ -562,7 +572,7 @@ export class ListField extends ComponentBase {
         )
 
         optionItems.forEach((item) => {
-          const labelInput = item.querySelector('.option-label-display')
+          const labelInput = item.querySelector(OPTION_LABEL_DISPLAY)
           const hintInput = item.querySelector(GOVUK_HINT_CLASS)
           const val = /** @type {HTMLElement} */ (item).dataset.val ?? ''
           const id = /** @type {HTMLElement} */ (item).dataset.id
@@ -631,10 +641,10 @@ export class ListField extends ComponentBase {
           return
         }
 
-        const radioList = document.querySelector(
+        const radioListElement = document.querySelector(
           `#radio-list .${baseClassName}`
         )
-        if (!radioList) {
+        if (!radioListElement) {
           return
         }
 
@@ -642,7 +652,7 @@ export class ListField extends ComponentBase {
         removePreviewHighlights()
 
         // Add highlight to the corresponding preview item
-        const previewItem = radioList.querySelector(
+        const previewItem = radioListElement.querySelector(
           `.${baseClassName}__item:nth-child(${index + 1})`
         )
         if (previewItem) {
@@ -652,14 +662,16 @@ export class ListField extends ComponentBase {
 
       // Function to remove all preview highlights
       function removePreviewHighlights() {
-        const radioList = document.querySelector(
+        const radioListElement = document.querySelector(
           `#radio-list .${baseClassName}`
         )
-        if (!radioList) {
+        if (!radioListElement) {
           return
         }
 
-        const items = radioList.querySelectorAll(`.${baseClassName}__item`)
+        const items = radioListElement.querySelectorAll(
+          `.${baseClassName}__item`
+        )
         items.forEach((item) => item.classList.remove('highlight'))
       }
 
@@ -667,8 +679,8 @@ export class ListField extends ComponentBase {
       document.addEventListener('focusin', function (e) {
         const targetElem = /** @type {Element} */ (e.target)
         if (
-          targetElem.classList.contains('js-reorderable-list-up') ||
-          targetElem.classList.contains('js-reorderable-list-down')
+          targetElem.classList.contains(JS_REORDERABLE_LIST_UP) ||
+          targetElem.classList.contains(JS_REORDERABLE_LIST_DOWN)
         ) {
           const listItem = targetElem.closest(REORDERABLE_LIST_ITEM_CLASS)
           if (listItem?.parentNode) {
@@ -683,8 +695,8 @@ export class ListField extends ComponentBase {
       document.addEventListener('focusout', function (e) {
         const targetElem = /** @type {Element} */ (e.target)
         if (
-          targetElem.classList.contains('js-reorderable-list-up') ||
-          targetElem.classList.contains('js-reorderable-list-down')
+          targetElem.classList.contains(JS_REORDERABLE_LIST_UP) ||
+          targetElem.classList.contains(JS_REORDERABLE_LIST_DOWN)
         ) {
           removePreviewHighlights()
         }
@@ -777,7 +789,6 @@ export class ListField extends ComponentBase {
           if (isReordering) {
             updateMoveButtons()
             const firstItem = listItems[0]
-            // if (firstItem) {
             const firstDownButton = /** @type { HTMLElement | null } */ (
               firstItem.querySelector('.js-reorderable-list-down')
             )
@@ -824,7 +835,7 @@ export class ListField extends ComponentBase {
       // Add Up/Down button functionality
       document.addEventListener('click', function (e) {
         const targetElem = /** @type {Element} */ (e.target)
-        if (targetElem.classList.contains('js-reorderable-list-up')) {
+        if (targetElem.classList.contains(JS_REORDERABLE_LIST_UP)) {
           const item = targetElem.closest(REORDERABLE_LIST_ITEM_CLASS)
           const prevItem = item?.previousElementSibling
           if (prevItem && item.parentNode) {
@@ -833,14 +844,16 @@ export class ListField extends ComponentBase {
             updateHiddenOptionsData()
             updateMoveButtons()
           }
-        } else if (targetElem.classList.contains('js-reorderable-list-down')) {
-          const item = targetElem.closest(REORDERABLE_LIST_ITEM_CLASS)
-          const nextItem = item?.nextElementSibling
-          if (nextItem && item.parentNode) {
-            item.parentNode.insertBefore(nextItem, item)
-            updateAllOptionsPreview()
-            updateHiddenOptionsData()
-            updateMoveButtons()
+        } else {
+          if (targetElem.classList.contains(JS_REORDERABLE_LIST_DOWN)) {
+            const item = targetElem.closest(REORDERABLE_LIST_ITEM_CLASS)
+            const nextItem = item?.nextElementSibling
+            if (nextItem && item.parentNode) {
+              item.parentNode.insertBefore(nextItem, item)
+              updateAllOptionsPreview()
+              updateHiddenOptionsData()
+              updateMoveButtons()
+            }
           }
         }
       })
@@ -900,7 +913,7 @@ export class ListField extends ComponentBase {
 
         const labelDisplayText = currentListItem?.text ?? ''
         const labelDisplay = /** @type { HTMLElement | null } */ (
-          listItem.querySelector('.option-label-display')
+          listItem.querySelector(OPTION_LABEL_DISPLAY)
         )
         const hintDisplay = /** @type { HTMLElement | null } */ (
           listItem.querySelector(GOVUK_HINT_CLASS)
@@ -981,7 +994,7 @@ export class ListField extends ComponentBase {
         const saveButton = /** @type { HTMLElement | null } */ (
           editForm?.querySelector('.save-edit-button')
         )
-        const cancelButton = editForm?.querySelector('.cancel-edit-link')
+        const cancelButtonElement = editForm?.querySelector('.cancel-edit-link')
         const editLabelInput = /** @type { HTMLInputElement | null } */ (
           editForm?.querySelector('#edit-option-label')
         )
@@ -1041,8 +1054,10 @@ export class ListField extends ComponentBase {
               }
             }
             hintElement.textContent = newHint
-          } else if (hintElement) {
-            hintElement.remove()
+          } else {
+            if (hintElement) {
+              hintElement.remove()
+            }
           }
 
           // Restore the display
@@ -1053,8 +1068,8 @@ export class ListField extends ComponentBase {
         })
 
         // Cancel editing
-        if (cancelButton) {
-          cancelButton.addEventListener('click', (e) => {
+        if (cancelButtonElement) {
+          cancelButtonElement.addEventListener('click', (e) => {
             e.preventDefault()
             restoreItemDisplay(listItem)
           })
@@ -1141,7 +1156,7 @@ export class ListField extends ComponentBase {
        */
       function restoreItemDisplay(listItem) {
         const labelDisplay = /** @type { HTMLElement | null } */ (
-          listItem.querySelector('.option-label-display')
+          listItem.querySelector(OPTION_LABEL_DISPLAY)
         )
         const editLink = /** @type { HTMLElement | null } */ (
           listItem.querySelector('.edit-item a')
@@ -1196,8 +1211,10 @@ export class ListField extends ComponentBase {
               previewItem.appendChild(hint)
             }
             hint.textContent = hintValue
-          } else if (hint) {
-            hint.remove()
+          } else {
+            if (hint) {
+              hint.remove()
+            }
           }
         }
       }
