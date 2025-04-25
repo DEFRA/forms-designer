@@ -1,10 +1,12 @@
 {% from "govuk/components/date-input/macro.njk" import govukDateInput %}
 
 {{ govukDateInput({
-  label: {
-    text: 'Title',
-    classes: "govuk-label--l",
-    isPageHeading: true,
+  fieldset: {
+    legend: {
+      text: "Title",
+      isPageHeading: true,
+      classes: "govuk-fieldset__legend--l"
+    },
     attributes: 'id="question-label-output"'
   },
   hint: {

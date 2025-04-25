@@ -35,6 +35,12 @@
             <p class="govuk-hint govuk-!-margin-top-0 govuk-!-margin-bottom-0">{{ item.hint.text }}</p>
             {% endif %}
           </div>
+          <div class="gem-c-reorderable-list__actions">
+            <button class="gem-c-button govuk-button govuk-button--secondary js-reorderable-list-up"
+              type="button" aria-label="Move option up">Up</button>
+            <button class="gem-c-button govuk-button govuk-button--secondary js-reorderable-list-down"
+              type="button" aria-label="Move option down">Down</button>
+          </div>
           <div class="edit-item">
           <ul class="govuk-summary-list__actions-list">
             <li class="govuk-summary-list__actions-list-item">
