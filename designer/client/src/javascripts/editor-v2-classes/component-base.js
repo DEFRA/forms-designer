@@ -6,7 +6,6 @@ export class ComponentBase {
     this.document = document
     this.setupDomElements()
     this.initialisePanel()
-    this.initialiseSpecifics()
   }
 
   setupDomElements() {
@@ -20,10 +19,6 @@ export class ComponentBase {
         hintTextOutput: this.document.getElementById('text-input-field-hint'),
         makeOptionInput: this.document.getElementById('questionOptional')
       })
-  }
-
-  initialiseSpecifics() {
-    // do nothing in base
   }
 
   initialisePanel() {

@@ -1,8 +1,17 @@
 import Sortable from 'sortablejs'
+import { v4 as uuidV4 } from 'uuid'
 
 import { ComponentBase } from '~/src/javascripts/editor-v2-classes/component-base.js'
 
 export class ListField extends ComponentBase {
+  /**
+   * @param {Document} document
+   */
+  constructor(document) {
+    super(document)
+    this.initialiseSpecifics()
+  }
+
   setupDomElements() {
     this.baseDomElements = {
       questionLabelInput: this.document.getElementById('question'),
@@ -21,10 +30,74 @@ export class ListField extends ComponentBase {
     }
   }
 
+  /**
+   * @returns {string}
+   */
+  getInitialPreviewHtml() {
+    return '<p>error</p>'
+  }
+
+  /**
+   * @param {number} newIndex
+   * @param {string} newId
+   * @param {string} labelValue
+   * @param {string} hintValue
+   * @param {string} valueValue
+   * @returns {string}
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  getNewOptionHtml(newIndex, newId, labelValue, hintValue, valueValue) {
+    return '<p>error</p>'
+  }
+
+  /**
+   * @param {number} index
+   * @param { string | undefined } label
+   * @param { string | undefined } hint
+   * @returns {string}
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  getSingleOptionHtml(index, label, hint) {
+    return '<p>error</p>'
+  }
+
+  /**
+   * @param {string} labelValue
+   * @param { string | undefined } hintValue
+   * @param {string} valueAttr
+   * @param {Element} newOptionHint
+   * @returns {string}
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  getNewOptionPreview(labelValue, hintValue, valueAttr, newOptionHint) {
+    return '<p>error</p>'
+  }
+
+  /**
+   * @returns {string}
+   */
+  getBaseClassName() {
+    return 'unknown'
+  }
+
+  /**
+   * @param {number} index
+   * @param { string | undefined } label
+   * @param { string | undefined } hint
+   * @returns {string}
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  getHtmlForInsert(index, label, hint) {
+    return '<p>error</p>'
+  }
+
   initialiseSpecifics() {
+    const baseClassName = this.getBaseClassName()
+
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const local = this
     /** @type { Sortable | undefined } */
     let sortableInstance
-
     document.addEventListener('DOMContentLoaded', function () {
       // Get form elements
       const addOptionForm = /** @type {HTMLElement} */ (
@@ -52,7 +125,7 @@ export class ListField extends ComponentBase {
         document.querySelector('#options-container')
       )
       const radioList = /** @type { HTMLElement | null } */ (
-        document.querySelector('#question-preview-content .govuk-radios')
+        document.querySelector(`#question-preview-content .${baseClassName}`)
       )
       const questionForm = /** @type {HTMLElement} */ (
         document.getElementById('question-form')
@@ -74,14 +147,11 @@ export class ListField extends ComponentBase {
         newOptionLabel.focus()
 
         // Show initial preview immediately
-        const radioList = document.querySelector('#radio-list .govuk-radios')
+        const radioList = document.querySelector(
+          `#radio-list .${baseClassName}`
+        )
         if (radioList) {
-          radioList.innerHTML = `
-            <div class="govuk-radios__item">
-              <input class="govuk-radios__input" id="listPreview-option-new" name="listPreview" type="radio">
-              <label class="govuk-label govuk-radios__label" for="listPreview-option-new">Item text</label>
-            </div>
-          `
+          radioList.innerHTML = local.getInitialPreviewHtml()
           applyHighlight('label')
         }
         updatePreview() // Update preview for any existing items
@@ -112,10 +182,15 @@ export class ListField extends ComponentBase {
         removeHintPlaceholder()
       })
 
-      // Save item button click
+      // Save new item button click
       saveItemButton.addEventListener('click', function (e) {
         e.preventDefault()
         const labelValue = newOptionLabel.value.trim()
+        const hintValue = newOptionHint.value.trim()
+        const valueValue = newOptionValue?.value.trim()
+        const valueEnforced = valueValue?.length
+          ? valueValue
+          : labelValue.toLowerCase().replace(/\s+/g, '-')
 
         // Add the new option with conditions
         const currentOptions = optionsContainer.querySelectorAll(
@@ -123,51 +198,19 @@ export class ListField extends ComponentBase {
         )
         const newIndex = currentOptions.length
 
-        const newOptionHTML = `
-          <li class="gem-c-reorderable-list__item" data-index="${newIndex + 1}">
-            <div class="gem-c-reorderable-list__wrapper">
-              <div class="gem-c-reorderable-list__content">
-                <p class="govuk-body fauxlabel option-label-display" id="option-${newIndex + 1}-label-display">
-                  ${labelValue}
-                </p>
-                ${
-                  newOptionHint.value.trim()
-                    ? `
-                <p class="govuk-body fauxlabel option-label-display" style="color: #505a5f;">
-                  ${newOptionHint.value}
-                </p>
-                `
-                    : ''
-                }
-              </div>
-              <div class="gem-c-reorderable-list__actions">
-                <button class="gem-c-button govuk-button govuk-button--secondary js-reorderable-list-up"
-                  type="button" aria-label="Move option up">Up</button>
-                <button class="gem-c-button govuk-button govuk-button--secondary js-reorderable-list-down"
-                  type="button" aria-label="Move option down">Down</button>
-              </div>
-              <div class="edit-item">
-                <ul class="govuk-summary-list__actions-list">
-                  <li class="govuk-summary-list__actions-list-item">
-                    <a class="govuk-link govuk-link--no-visited-state" href="editoption.html?index=${newIndex + 1}">
-                      Edit<span class="govuk-visually-hidden">option ${newIndex + 1}</span>
-                    </a>
-                  </li>
-                  <li class="govuk-summary-list__actions-list-item">
-                    <a class="govuk-link govuk-link--destructive delete-option-link" href="delete-option.html?index=${newIndex + 1}&text=${encodeURIComponent(labelValue)}" onclick="return true;">
-                      Delete<span class="govuk-visually-hidden"> list item</span>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </li>
-        `
+        const newId = uuidV4()
+        const newOptionHTML = local.getNewOptionHtml(
+          newIndex,
+          newId,
+          labelValue,
+          hintValue,
+          valueEnforced
+        )
 
         optionsContainer.insertAdjacentHTML('beforeend', newOptionHTML)
         hideForm()
         updateAllOptionsPreview()
-        updateHiddenOptionsData()
+        addItemToHiddenOptionsData(newId, labelValue, hintValue, valueEnforced)
         updateEditOptionsButtonVisibility()
       })
 
@@ -206,7 +249,9 @@ export class ListField extends ComponentBase {
 
       // Function to update the live preview of the option being added
       function updatePreview() {
-        const radioList = document.querySelector('#radio-list .govuk-radios')
+        const radioList = document.querySelector(
+          `#radio-list .${baseClassName}`
+        )
         if (!radioList) return
 
         const labelValue = newOptionLabel.value.trim()
@@ -245,25 +290,18 @@ export class ListField extends ComponentBase {
               const hint = item
                 .querySelector('.govuk_hint')
                 ?.textContent?.trim()
-              return `
-              <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="listPreview-option${index}" name="listPreview" type="radio" value="${label}">
-                <label class="govuk-label govuk-radios__label" for="listPreview-option${index}">${label}</label>
-                ${hint ? `<div class="govuk-hint govuk-radios__hint">${hint}</div>` : ''}
-              </div>
-            `
+              return local.getSingleOptionHtml(index, label, hint)
             })
             .join('')
 
           // Add the new option preview if the form is visible
           if (addOptionForm.style.display === 'block') {
-            const newOptionPreview = `
-              <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="listPreview-option-new" name="listPreview" type="radio" value="${valueAttr}">
-                <label class="govuk-label govuk-radios__label" for="listPreview-option-new">${labelValue !== '' ? labelValue : 'Item text'}</label>
-                ${hintValue || document.activeElement === newOptionHint ? `<div class="govuk-hint govuk-radios__hint">${hintValue ?? 'Hint text'}</div>` : ''}
-              </div>
-            `
+            const newOptionPreview = local.getNewOptionPreview(
+              labelValue,
+              hintValue,
+              valueAttr,
+              newOptionHint
+            )
             allOptionsHTML += newOptionPreview
           }
         }
@@ -280,7 +318,9 @@ export class ListField extends ComponentBase {
 
       // Function to update the preview of all existing options
       function updateAllOptionsPreview() {
-        const radioList = document.querySelector('#radio-list .govuk-radios')
+        const radioList = document.querySelector(
+          `#radio-list .${baseClassName}`
+        )
         if (!radioList) return
 
         const items = optionsContainer.querySelectorAll(
@@ -303,13 +343,7 @@ export class ListField extends ComponentBase {
             ?.textContent?.trim()
           const hint = item.querySelector('.govuk-hint')?.textContent?.trim()
 
-          const radioHTML = `
-            <div class="govuk-radios__item">
-              <input class="govuk-radios__input" id="listPreview-option${index}" name="listPreview" type="radio" value="${label}">
-              <label class="govuk-label govuk-radios__label" for="listPreview-option${index}">${label}</label>
-              ${hint ? `<div class="govuk-hint govuk-radios__hint">${hint}</div>` : ''}
-            </div>
-          `
+          const radioHTML = local.getHtmlForInsert(index, label, hint)
           radioList.insertAdjacentHTML('beforeend', radioHTML)
         })
       }
@@ -321,21 +355,21 @@ export class ListField extends ComponentBase {
       function applyHighlight(type) {
         if (!radioList) return
         const lastOption = radioList.querySelector(
-          '.govuk-radios__item:last-child'
+          `.${baseClassName}__item:last-child`
         )
         if (!lastOption) return
 
         const elementToHighlight =
           type === 'label'
-            ? lastOption.querySelector('.govuk-radios__label')
-            : lastOption.querySelector('.govuk-radios__hint')
+            ? lastOption.querySelector(`.${baseClassName}__label`)
+            : lastOption.querySelector(`.${baseClassName}__hint`)
 
         if (elementToHighlight) {
           elementToHighlight.classList.add('highlight')
         } else if (type === 'hint') {
           // If hint element doesn't exist, create it
           const hintElement = document.createElement('div')
-          hintElement.className = 'govuk-hint govuk-radios__hint highlight'
+          hintElement.className = `govuk-hint ${baseClassName}__hint highlight`
           hintElement.textContent = 'Hint text'
           lastOption.appendChild(hintElement)
         }
@@ -348,14 +382,14 @@ export class ListField extends ComponentBase {
       function removeHighlight(type) {
         if (!radioList) return
         const lastOption = radioList.querySelector(
-          '.govuk-radios__item:last-child'
+          `.${baseClassName}__item:last-child`
         )
         if (!lastOption) return
 
         const elementToUnhighlight =
           type === 'label'
-            ? lastOption.querySelector('.govuk-radios__label')
-            : lastOption.querySelector('.govuk-radios__hint')
+            ? lastOption.querySelector(`.${baseClassName}__label`)
+            : lastOption.querySelector(`.${baseClassName}__hint`)
 
         if (elementToUnhighlight) {
           elementToUnhighlight.classList.remove('highlight')
@@ -374,14 +408,14 @@ export class ListField extends ComponentBase {
       function showHintPlaceholder() {
         if (!radioList || newOptionHint.value.trim()) return
         const lastOption = radioList.querySelector(
-          '.govuk-radios__item:last-child'
+          `.${baseClassName}__item:last-child`
         )
         if (!lastOption) return
 
-        let hintElement = lastOption.querySelector('.govuk-radios__hint')
+        let hintElement = lastOption.querySelector(`.${baseClassName}__hint`)
         if (!hintElement) {
           hintElement = document.createElement('div')
-          hintElement.className = 'govuk-hint govuk-radios__hint highlight'
+          hintElement.className = `govuk-hint ${baseClassName}__hint highlight`
           lastOption.appendChild(hintElement)
         }
         hintElement.textContent = 'Hint text'
@@ -391,11 +425,11 @@ export class ListField extends ComponentBase {
       function removeHintPlaceholder() {
         if (!radioList || newOptionHint.value.trim()) return
         const lastOption = radioList.querySelector(
-          '.govuk-radios__item:last-child'
+          `.${baseClassName}__item:last-child`
         )
         if (!lastOption) return
 
-        const hintElement = lastOption.querySelector('.govuk-radios__hint')
+        const hintElement = lastOption.querySelector(`.${baseClassName}__hint`)
         if (hintElement && !newOptionHint.value.trim()) {
           hintElement.remove()
         }
@@ -416,14 +450,14 @@ export class ListField extends ComponentBase {
             const optionIndex = closestElem.dataset.index ?? '0'
             const previewOption = radioList
               ?.querySelector(`#listPreview-option${parseInt(optionIndex) - 1}`)
-              ?.closest('.govuk-radios__item')
+              ?.closest(`.${baseClassName}__item`)
             let hintElement = previewOption?.querySelector(
-              '.govuk-radios__hint'
+              `.${baseClassName}__hint`
             )
 
             if (!hintElement) {
               hintElement = document.createElement('div')
-              hintElement.className = 'govuk-hint govuk-radios__hint highlight'
+              hintElement.className = `govuk-hint ${baseClassName}__hint highlight`
               hintElement.textContent = 'Hint text'
               if (previewOption) {
                 previewOption.appendChild(hintElement)
@@ -447,9 +481,9 @@ export class ListField extends ComponentBase {
             const optionIndex = closestElem.dataset.index ?? '0'
             const previewOption = radioList
               ?.querySelector(`#listPreview-option${parseInt(optionIndex) - 1}`)
-              ?.closest('.govuk-radios__item')
+              ?.closest(`.${baseClassName}__item`)
             const hintElement = previewOption?.querySelector(
-              '.govuk-radios__hint'
+              `.${baseClassName}__hint`
             )
 
             if (hintElement) {
@@ -469,6 +503,35 @@ export class ListField extends ComponentBase {
         true
       )
 
+      /**
+       * Function to add a single row in the hidden input with all current options
+       * @param {string} id
+       * @param {string} text - label
+       * @param {string} hint
+       * @param {string} value
+       */
+      function addItemToHiddenOptionsData(id, text, hint, value) {
+        const listItemsData = /** @type {HTMLInputElement} */ (
+          document.getElementById('radio-options-data')
+        )
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        const listItems =
+          /** @type {{ text?: string, hint?: { text?: string }, value?: string, id?: string }[]} */ (
+            JSON.parse(listItemsData.value)
+          )
+
+        listItems.push({
+          id,
+          text,
+          hint: {
+            text: hint
+          },
+          value
+        })
+
+        listItemsData.value = JSON.stringify(listItems)
+      }
+
       // Function to update the hidden input with all current options
       function updateHiddenOptionsData() {
         const options =
@@ -480,6 +543,7 @@ export class ListField extends ComponentBase {
         optionItems.forEach((item) => {
           const labelInput = item.querySelector('.option-label-display')
           const hintInput = item.querySelector('.govuk-hint')
+          const val = /** @type {HTMLElement} */ (item).dataset.val ?? ''
           const id = /** @type {HTMLElement} */ (item).dataset.id
 
           if (labelInput) {
@@ -488,7 +552,9 @@ export class ListField extends ComponentBase {
             const hint = hintInput
               ? hintInput.textContent?.replace(/\n/g, '').trim()
               : ''
-            const value = label.toLowerCase().replace(/\s+/g, '-')
+            const value = val.length
+              ? val
+              : label.toLowerCase().replace(/\s+/g, '-')
 
             options.push({
               text: label,
@@ -544,7 +610,9 @@ export class ListField extends ComponentBase {
           return
         }
 
-        const radioList = document.querySelector('#radio-list .govuk-radios')
+        const radioList = document.querySelector(
+          `#radio-list .${baseClassName}`
+        )
         if (!radioList) return
 
         // Remove any existing highlights
@@ -552,7 +620,7 @@ export class ListField extends ComponentBase {
 
         // Add highlight to the corresponding preview item
         const previewItem = radioList.querySelector(
-          `.govuk-radios__item:nth-child(${index + 1})`
+          `.${baseClassName}__item:nth-child(${index + 1})`
         )
         if (previewItem) {
           previewItem.classList.add('highlight')
@@ -561,10 +629,12 @@ export class ListField extends ComponentBase {
 
       // Function to remove all preview highlights
       function removePreviewHighlights() {
-        const radioList = document.querySelector('#radio-list .govuk-radios')
+        const radioList = document.querySelector(
+          `#radio-list .${baseClassName}`
+        )
         if (!radioList) return
 
-        const items = radioList.querySelectorAll('.govuk-radios__item')
+        const items = radioList.querySelectorAll(`.${baseClassName}__item`)
         items.forEach((item) => item.classList.remove('highlight'))
       }
 
@@ -798,6 +868,7 @@ export class ListField extends ComponentBase {
           /** @type {{ text?: string, hint?: { text?: string }, value?: string, id?: string }[]} */ (
             JSON.parse(listItemsData.value)
           )
+
         const currentListItem = listItems.find(
           (x) => x.id === listItem.dataset.id
         )
@@ -905,10 +976,14 @@ export class ListField extends ComponentBase {
         if (!saveButton) {
           return
         }
+        // Save changes of existing item being edited
         saveButton.addEventListener('click', () => {
           const newLabel = editLabelInput?.value.trim() ?? ''
           const newHint = editHintInput?.value.trim() ?? ''
           const newValue = editValueInput?.value.trim() ?? ''
+          const valueEnforced = newValue.length
+            ? newValue
+            : newLabel.toLowerCase().replace(/\s+/g, '-')
 
           // Update the values
           if (labelDisplay) {
@@ -922,7 +997,7 @@ export class ListField extends ComponentBase {
           if (currentListItem) {
             currentListItem.text = newLabel
             currentListItem.hint = { text: newHint }
-            currentListItem.value = newValue
+            currentListItem.value = valueEnforced
           }
 
           listItemsData.value = JSON.stringify(listItems)
@@ -968,10 +1043,10 @@ export class ListField extends ComponentBase {
             const index = parseInt(indexStr) - 1
             const previewItem = document
               .querySelector(`#listPreview-option${index - 1}`)
-              ?.closest('.govuk-radios__item')
+              ?.closest(`.${baseClassName}__item`)
             if (previewItem) {
               const labelElement = previewItem.querySelector(
-                '.govuk-radios__label'
+                `.${baseClassName}__label`
               )
               if (labelElement) {
                 labelElement.classList.add('highlight')
@@ -984,10 +1059,10 @@ export class ListField extends ComponentBase {
             const index = parseInt(indexStr) - 1
             const previewItem = document
               .querySelector(`#listPreview-option${index - 1}`)
-              ?.closest('.govuk-radios__item')
+              ?.closest(`.${baseClassName}__item`)
             if (previewItem) {
               const labelElement = previewItem.querySelector(
-                '.govuk-radios__label'
+                `.${baseClassName}__label`
               )
               if (labelElement) {
                 labelElement.classList.remove('highlight')
@@ -1005,10 +1080,10 @@ export class ListField extends ComponentBase {
           const index = parseInt(indexStr) - 1
           const previewItem = document
             .querySelector(`#listPreview-option${index - 1}`)
-            ?.closest('.govuk-radios__item')
+            ?.closest(`.${baseClassName}__item`)
           if (previewItem) {
             const labelElement = previewItem.querySelector(
-              '.govuk-radios__label'
+              `.${baseClassName}__label`
             )
             if (labelElement) {
               labelElement.classList.add('highlight')
@@ -1059,13 +1134,13 @@ export class ListField extends ComponentBase {
         const index = parseInt(indexStr) - 1
         const previewItem = radioList
           ?.querySelector(`#listPreview-option${index}`)
-          ?.closest('.govuk-radios__item')
+          ?.closest(`.${baseClassName}__item`)
 
         if (previewItem) {
           const label = /** @type { HTMLElement | null } */ (
-            previewItem.querySelector('.govuk-radios__label')
+            previewItem.querySelector(`.${baseClassName}__label`)
           )
-          let hint = previewItem.querySelector('.govuk-radios__hint')
+          let hint = previewItem.querySelector(`.${baseClassName}__hint`)
 
           if (label) {
             label.textContent = labelValue ?? 'Item text'
@@ -1074,7 +1149,7 @@ export class ListField extends ComponentBase {
           if (hintValue) {
             if (!hint) {
               hint = document.createElement('div')
-              hint.className = 'govuk-hint govuk-radios__hint'
+              hint.className = `govuk-hint ${baseClassName}__hint`
               previewItem.appendChild(hint)
             }
             hint.textContent = hintValue
