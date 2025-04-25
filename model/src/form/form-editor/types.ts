@@ -212,6 +212,11 @@ export interface FormEditor {
   list: string
 
   /**
+   * List items in JSON format, such as for radios ro checkboxes
+   */
+  listItemsData: string
+
+  /**
    * An array of options for autocomplete
    */
   autoCompleteOptions: Item[]
@@ -261,6 +266,7 @@ export type FormEditorInputQuestion = Pick<
   | 'radioHint'
   | 'radioValue'
   | 'list'
+  | 'listItemsData'
 >
 
 export type FormEditorInputPageSettings = Pick<
@@ -290,6 +296,7 @@ export type FormEditorInputQuestionDetails = Pick<
   | 'radioText'
   | 'radioHint'
   | 'radioValue'
+  | 'listItemsData'
 >
 
 export interface QuestionSessionState {

@@ -3,6 +3,12 @@ import { v4 as uuidV4 } from 'uuid'
 
 import { ComponentBase } from '~/src/javascripts/editor-v2-classes/component-base.js'
 
+const GOVUK_HINT_CLASS = '.govuk-hint'
+const REORDERABLE_LIST_ITEM_CLASS = '.gem-c-reorderable-list__item'
+const RADIO_OPTION_DATA = 'radio-options-data'
+const INLINE_BLOCK = 'inline-block'
+const ERROR_HTML = '<p>error</p>'
+
 export class ListField extends ComponentBase {
   /**
    * @param {Document} document
@@ -24,7 +30,7 @@ export class ListField extends ComponentBase {
       hintTextOutput: /** @type { HTMLElement | null } */ (
         this.document
           .getElementById('question-label-output')
-          ?.querySelector('.govuk-hint')
+          ?.querySelector(GOVUK_HINT_CLASS)
       ),
       makeOptionInput: this.document.getElementById('questionOptional')
     }
@@ -34,7 +40,7 @@ export class ListField extends ComponentBase {
    * @returns {string}
    */
   getInitialPreviewHtml() {
-    return '<p>error</p>'
+    return ERROR_HTML
   }
 
   /**
@@ -47,7 +53,7 @@ export class ListField extends ComponentBase {
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getNewOptionHtml(newIndex, newId, labelValue, hintValue, valueValue) {
-    return '<p>error</p>'
+    return ERROR_HTML
   }
 
   /**
@@ -58,7 +64,7 @@ export class ListField extends ComponentBase {
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getSingleOptionHtml(index, label, hint) {
-    return '<p>error</p>'
+    return ERROR_HTML
   }
 
   /**
@@ -70,7 +76,7 @@ export class ListField extends ComponentBase {
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getNewOptionPreview(labelValue, hintValue, valueAttr, newOptionHint) {
-    return '<p>error</p>'
+    return ERROR_HTML
   }
 
   /**
@@ -88,7 +94,7 @@ export class ListField extends ComponentBase {
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getHtmlForInsert(index, label, hint) {
-    return '<p>error</p>'
+    return ERROR_HTML
   }
 
   initialiseSpecifics() {
@@ -138,7 +144,7 @@ export class ListField extends ComponentBase {
       addOptionButton.addEventListener('click', function (e) {
         e.preventDefault()
         const currentOptions = optionsContainer.querySelectorAll(
-          '.gem-c-reorderable-list__item'
+          REORDERABLE_LIST_ITEM_CLASS
         )
         const nextItemNumber = currentOptions.length + 1
         addOptionHeading.textContent = `Item ${nextItemNumber}`
@@ -194,7 +200,7 @@ export class ListField extends ComponentBase {
 
         // Add the new option with conditions
         const currentOptions = optionsContainer.querySelectorAll(
-          '.gem-c-reorderable-list__item'
+          REORDERABLE_LIST_ITEM_CLASS
         )
         const newIndex = currentOptions.length
 
@@ -218,11 +224,11 @@ export class ListField extends ComponentBase {
       function updateEditOptionsButtonVisibility() {
         const editButton = document.getElementById('edit-options-button')
         const optionItems = optionsContainer.querySelectorAll(
-          '.gem-c-reorderable-list__item'
+          REORDERABLE_LIST_ITEM_CLASS
         )
         if (editButton) {
           editButton.style.display =
-            optionItems.length > 1 ? 'inline-block' : 'none'
+            optionItems.length > 1 ? INLINE_BLOCK : 'none'
         }
       }
 
@@ -234,7 +240,7 @@ export class ListField extends ComponentBase {
 
       function hideForm() {
         addOptionForm.style.display = 'none'
-        addOptionButton.style.display = 'inline-block'
+        addOptionButton.style.display = INLINE_BLOCK
         newOptionLabel.value = ''
         newOptionHint.value = ''
         if (newOptionValue) {
@@ -252,7 +258,9 @@ export class ListField extends ComponentBase {
         const radioList = document.querySelector(
           `#radio-list .${baseClassName}`
         )
-        if (!radioList) return
+        if (!radioList) {
+          return
+        }
 
         const labelValue = newOptionLabel.value.trim()
         const hintValue = newOptionHint.value.trim()
@@ -264,7 +272,7 @@ export class ListField extends ComponentBase {
 
         // Get existing options
         const existingOptions = Array.from(
-          optionsContainer.querySelectorAll('.gem-c-reorderable-list__item')
+          optionsContainer.querySelectorAll(REORDERABLE_LIST_ITEM_CLASS)
         )
 
         // Start with existing options HTML
@@ -321,10 +329,12 @@ export class ListField extends ComponentBase {
         const radioList = document.querySelector(
           `#radio-list .${baseClassName}`
         )
-        if (!radioList) return
+        if (!radioList) {
+          return
+        }
 
         const items = optionsContainer.querySelectorAll(
-          '.gem-c-reorderable-list__item'
+          REORDERABLE_LIST_ITEM_CLASS
         )
         radioList.innerHTML = ''
 
@@ -341,8 +351,7 @@ export class ListField extends ComponentBase {
           const label = item
             .querySelector('.option-label-display')
             ?.textContent?.trim()
-          const hint = item.querySelector('.govuk-hint')?.textContent?.trim()
-
+          const hint = item.querySelector(GOVUK_HINT_CLASS)?.textContent?.trim()
           const radioHTML = local.getHtmlForInsert(index, label, hint)
           radioList.insertAdjacentHTML('beforeend', radioHTML)
         })
@@ -353,7 +362,9 @@ export class ListField extends ComponentBase {
        * @param {string} type
        */
       function applyHighlight(type) {
-        if (!radioList) return
+        if (!radioList) {
+          return
+        }
         const lastOption = radioList.querySelector(
           `.${baseClassName}__item:last-child`
         )
@@ -380,7 +391,9 @@ export class ListField extends ComponentBase {
        * @param {string} type
        */
       function removeHighlight(type) {
-        if (!radioList) return
+        if (!radioList) {
+          return
+        }
         const lastOption = radioList.querySelector(
           `.${baseClassName}__item:last-child`
         )
@@ -406,11 +419,15 @@ export class ListField extends ComponentBase {
 
       // Function to show hint placeholder
       function showHintPlaceholder() {
-        if (!radioList || newOptionHint.value.trim()) return
+        if (!radioList || newOptionHint.value.trim()) {
+          return
+        }
         const lastOption = radioList.querySelector(
           `.${baseClassName}__item:last-child`
         )
-        if (!lastOption) return
+        if (!lastOption) {
+          return
+        }
 
         let hintElement = lastOption.querySelector(`.${baseClassName}__hint`)
         if (!hintElement) {
@@ -423,11 +440,15 @@ export class ListField extends ComponentBase {
 
       // Function to remove hint placeholder
       function removeHintPlaceholder() {
-        if (!radioList || newOptionHint.value.trim()) return
+        if (!radioList || newOptionHint.value.trim()) {
+          return
+        }
         const lastOption = radioList.querySelector(
           `.${baseClassName}__item:last-child`
         )
-        if (!lastOption) return
+        if (!lastOption) {
+          return
+        }
 
         const hintElement = lastOption.querySelector(`.${baseClassName}__hint`)
         if (hintElement && !newOptionHint.value.trim()) {
@@ -445,7 +466,7 @@ export class ListField extends ComponentBase {
           const targetElem = /** @type {Element} */ (e.target)
           if (targetElem.classList.contains('option-hint-input')) {
             const closestElem = /** @type {HTMLElement} */ (
-              targetElem.closest('.gem-c-reorderable-list__item')
+              targetElem.closest(REORDERABLE_LIST_ITEM_CLASS)
             )
             const optionIndex = closestElem.dataset.index ?? '0'
             const previewOption = radioList
@@ -476,7 +497,7 @@ export class ListField extends ComponentBase {
           const targetElem = /** @type {Element} */ (e.target)
           if (targetElem.classList.contains('option-hint-input')) {
             const closestElem = /** @type {HTMLElement} */ (
-              targetElem.closest('.gem-c-reorderable-list__item')
+              targetElem.closest(REORDERABLE_LIST_ITEM_CLASS)
             )
             const optionIndex = closestElem.dataset.index ?? '0'
             const previewOption = radioList
@@ -512,7 +533,7 @@ export class ListField extends ComponentBase {
        */
       function addItemToHiddenOptionsData(id, text, hint, value) {
         const listItemsData = /** @type {HTMLInputElement} */ (
-          document.getElementById('radio-options-data')
+          document.getElementById(RADIO_OPTION_DATA)
         )
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const listItems =
@@ -520,12 +541,12 @@ export class ListField extends ComponentBase {
             JSON.parse(listItemsData.value)
           )
 
+        const hintObj = hint.length ? { hint: { text: hint } } : undefined
+
         listItems.push({
           id,
           text,
-          hint: {
-            text: hint
-          },
+          ...hintObj,
           value
         })
 
@@ -537,12 +558,12 @@ export class ListField extends ComponentBase {
         const options =
           /** @type {{ text?: string, hint?: { text?: string, id?: string }, value?: string, id?: string }[]} */ ([])
         const optionItems = optionsContainer.querySelectorAll(
-          '.gem-c-reorderable-list__item'
+          REORDERABLE_LIST_ITEM_CLASS
         )
 
         optionItems.forEach((item) => {
           const labelInput = item.querySelector('.option-label-display')
-          const hintInput = item.querySelector('.govuk-hint')
+          const hintInput = item.querySelector(GOVUK_HINT_CLASS)
           const val = /** @type {HTMLElement} */ (item).dataset.val ?? ''
           const id = /** @type {HTMLElement} */ (item).dataset.id
 
@@ -556,11 +577,11 @@ export class ListField extends ComponentBase {
               ? val
               : label.toLowerCase().replace(/\s+/g, '-')
 
+            const hintObj = hint?.length ? { hint: { text: hint } } : undefined
+
             options.push({
               text: label,
-              hint: {
-                text: hint
-              },
+              ...hintObj,
               value,
               id
             })
@@ -568,7 +589,7 @@ export class ListField extends ComponentBase {
         })
 
         const radioOptionsData = /** @type {HTMLInputElement} */ (
-          document.getElementById('radio-options-data')
+          document.getElementById(RADIO_OPTION_DATA)
         )
         radioOptionsData.value = JSON.stringify(options)
       }
@@ -613,7 +634,9 @@ export class ListField extends ComponentBase {
         const radioList = document.querySelector(
           `#radio-list .${baseClassName}`
         )
-        if (!radioList) return
+        if (!radioList) {
+          return
+        }
 
         // Remove any existing highlights
         removePreviewHighlights()
@@ -632,7 +655,9 @@ export class ListField extends ComponentBase {
         const radioList = document.querySelector(
           `#radio-list .${baseClassName}`
         )
-        if (!radioList) return
+        if (!radioList) {
+          return
+        }
 
         const items = radioList.querySelectorAll(`.${baseClassName}__item`)
         items.forEach((item) => item.classList.remove('highlight'))
@@ -645,7 +670,7 @@ export class ListField extends ComponentBase {
           targetElem.classList.contains('js-reorderable-list-up') ||
           targetElem.classList.contains('js-reorderable-list-down')
         ) {
-          const listItem = targetElem.closest('.gem-c-reorderable-list__item')
+          const listItem = targetElem.closest(REORDERABLE_LIST_ITEM_CLASS)
           if (listItem?.parentNode) {
             const index = Array.from(listItem.parentNode.children).indexOf(
               listItem
@@ -670,7 +695,7 @@ export class ListField extends ComponentBase {
       // Add hover handlers for list items in edit mode
       document.addEventListener('mouseover', function (e) {
         const targetElem = /** @type {Element} */ (e.target)
-        const listItem = targetElem.closest('.gem-c-reorderable-list__item')
+        const listItem = targetElem.closest(REORDERABLE_LIST_ITEM_CLASS)
         if (
           listItem &&
           editOptionsButton?.textContent?.trim() === 'Re-order' &&
@@ -685,7 +710,7 @@ export class ListField extends ComponentBase {
 
       document.addEventListener('mouseout', function (e) {
         const targetElem = /** @type {Element} */ (e.target)
-        const listItem = targetElem.closest('.gem-c-reorderable-list__item')
+        const listItem = targetElem.closest(REORDERABLE_LIST_ITEM_CLASS)
         if (listItem && editOptionsButton?.textContent?.trim() === 'Re-order') {
           removePreviewHighlights()
         }
@@ -696,7 +721,7 @@ export class ListField extends ComponentBase {
         editOptionsButton.addEventListener('click', function (e) {
           e.preventDefault()
           const listItems = /** @type {NodeListOf<HTMLElement>} */ (
-            document.querySelectorAll('.gem-c-reorderable-list__item')
+            document.querySelectorAll(REORDERABLE_LIST_ITEM_CLASS)
           )
           const actionButtons = /** @type {NodeListOf<HTMLElement>} */ (
             document.querySelectorAll('.gem-c-reorderable-list__actions')
@@ -719,7 +744,7 @@ export class ListField extends ComponentBase {
 
           // Show/hide add button based on edit state
           if (addButton) {
-            addButton.style.display = isReordering ? 'none' : 'inline-block'
+            addButton.style.display = isReordering ? 'none' : INLINE_BLOCK
           }
 
           // Toggle action buttons visibility
@@ -766,7 +791,7 @@ export class ListField extends ComponentBase {
       // Function to update the visibility of Up/Down buttons
       function updateMoveButtons() {
         const items = optionsContainer.querySelectorAll(
-          '.gem-c-reorderable-list__item'
+          REORDERABLE_LIST_ITEM_CLASS
         )
         items.forEach((item, index) => {
           const upButton = /** @type { HTMLElement | null } */ (
@@ -780,17 +805,17 @@ export class ListField extends ComponentBase {
             // First item - only show Down
             if (index === 0) {
               upButton.style.display = 'none'
-              downButton.style.display = 'inline-block'
+              downButton.style.display = INLINE_BLOCK
             }
             // Last item - only show Up
             else if (index === items.length - 1) {
-              upButton.style.display = 'inline-block'
+              upButton.style.display = INLINE_BLOCK
               downButton.style.display = 'none'
             }
             // Middle items - show both
             else {
-              upButton.style.display = 'inline-block'
-              downButton.style.display = 'inline-block'
+              upButton.style.display = INLINE_BLOCK
+              downButton.style.display = INLINE_BLOCK
             }
           }
         })
@@ -800,7 +825,7 @@ export class ListField extends ComponentBase {
       document.addEventListener('click', function (e) {
         const targetElem = /** @type {Element} */ (e.target)
         if (targetElem.classList.contains('js-reorderable-list-up')) {
-          const item = targetElem.closest('.gem-c-reorderable-list__item')
+          const item = targetElem.closest(REORDERABLE_LIST_ITEM_CLASS)
           const prevItem = item?.previousElementSibling
           if (prevItem && item.parentNode) {
             item.parentNode.insertBefore(item, prevItem)
@@ -809,7 +834,7 @@ export class ListField extends ComponentBase {
             updateMoveButtons()
           }
         } else if (targetElem.classList.contains('js-reorderable-list-down')) {
-          const item = targetElem.closest('.gem-c-reorderable-list__item')
+          const item = targetElem.closest(REORDERABLE_LIST_ITEM_CLASS)
           const nextItem = item?.nextElementSibling
           if (nextItem && item.parentNode) {
             item.parentNode.insertBefore(nextItem, item)
@@ -830,7 +855,7 @@ export class ListField extends ComponentBase {
         }
 
         const listItemsData = /** @type {HTMLInputElement} */ (
-          document.getElementById('radio-options-data')
+          document.getElementById(RADIO_OPTION_DATA)
         )
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const listItems =
@@ -861,7 +886,7 @@ export class ListField extends ComponentBase {
         }
 
         const listItemsData = /** @type {HTMLInputElement} */ (
-          document.getElementById('radio-options-data')
+          document.getElementById(RADIO_OPTION_DATA)
         )
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const listItems =
@@ -878,7 +903,7 @@ export class ListField extends ComponentBase {
           listItem.querySelector('.option-label-display')
         )
         const hintDisplay = /** @type { HTMLElement | null } */ (
-          listItem.querySelector('.govuk-hint')
+          listItem.querySelector(GOVUK_HINT_CLASS)
         )
         const hintDisplayText = currentListItem?.hint?.text ?? ''
         const editLink = /** @type { HTMLElement | null } */ (
@@ -1002,6 +1027,24 @@ export class ListField extends ComponentBase {
 
           listItemsData.value = JSON.stringify(listItems)
 
+          // Add/remove hint
+          const listOption = listItem.querySelector(
+            '.gem-c-reorderable-list__content'
+          )
+          let hintElement = listOption?.querySelector(GOVUK_HINT_CLASS)
+          if (newHint.length) {
+            if (!hintElement) {
+              hintElement = document.createElement('p')
+              hintElement.className = `govuk-hint govuk-!-margin-top-0 govuk-!-margin-bottom-0`
+              if (listOption) {
+                listOption.appendChild(hintElement)
+              }
+            }
+            hintElement.textContent = newHint
+          } else if (hintElement) {
+            hintElement.remove()
+          }
+
           // Restore the display
           restoreItemDisplay(listItem)
 
@@ -1116,10 +1159,10 @@ export class ListField extends ComponentBase {
           labelDisplay.style.display = 'block'
         }
         if (editLink) {
-          editLink.style.display = 'inline-block'
+          editLink.style.display = INLINE_BLOCK
         }
         if (deleteLink) {
-          deleteLink.style.display = 'inline-block'
+          deleteLink.style.display = INLINE_BLOCK
         }
       }
 
@@ -1167,7 +1210,7 @@ export class ListField extends ComponentBase {
         if (isEdit || isDelete) {
           e.preventDefault()
           const listItem = /** @type { HTMLElement | null } */ (
-            targetElem.closest('.gem-c-reorderable-list__item')
+            targetElem.closest(REORDERABLE_LIST_ITEM_CLASS)
           )
           if (listItem) {
             if (isEdit) {

@@ -16,7 +16,7 @@
   </h2>
   <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible" style="border-color:black; border-width: 3px;">
 
-  <input type="hidden" name="radioOptions" id="radio-options-data" value="{{ state.listItems | dump }}">
+  <input type="hidden" name="listItemsData" id="radio-options-data" value="{{ state.listItems | dump }}">
 
   <ol class="gem-c-reorderable-list js-enabled" id="options-container" data-module="reorderable-list">
   {% if state.listItems | length  or state.editRow.expanded %}

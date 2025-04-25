@@ -111,6 +111,10 @@ export const listItemCountSchema = Joi.number()
   .optional()
   .description('Number of list items in the list used by the field')
 
+export const listItemsDataSchema = Joi.string()
+  .allow('')
+  .description('List items in JSON format, such as for radios or checkboxes.')
+
 export const exactFilesSchema = Joi.number()
   .empty('')
   .integer()
@@ -170,6 +174,7 @@ export const tabularDataTypesSchema = Joi.array()
   .single()
   .empty(null)
   .default([])
+
 export const enhancedActionSchema = Joi.string()
   .trim()
   .optional()
@@ -459,6 +464,7 @@ export const questionDetailsFullSchema = {
   imageTypesSchema,
   listForQuestionSchema,
   listItemCountSchema,
+  listItemsDataSchema,
   maxFilesSchema,
   maxFutureSchema,
   maxLengthSchema,
