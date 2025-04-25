@@ -9,18 +9,17 @@ import { TextField } from '~/src/javascripts/editor-v2-classes/textfield.js'
  * @param {ComponentType} questionType
  */
 function initialiseComponent(questionType) {
+  let instance
   if (questionType === ComponentType.RadiosField) {
-    // eslint-disable-next-line no-new
-    new RadiosField(document)
+    instance = new RadiosField(document)
   } else if (questionType === ComponentType.CheckboxesField) {
-    // eslint-disable-next-line no-new
-    new CheckboxesField(document)
+    instance = new CheckboxesField(document)
   } else {
     // TODO (questionType === ComponentType.TextField) {
     // TextField and others
-    // eslint-disable-next-line no-new
-    new TextField(document)
+    instance = new TextField(document)
   }
+  return instance
 }
 
 const questionTypeElem = /** @type { HTMLInputElement | null } */ (

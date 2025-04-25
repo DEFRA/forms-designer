@@ -971,13 +971,11 @@ export class ListField extends ComponentBase {
         if (labelDisplay) {
           labelDisplay.style.display = 'none'
         }
-        if (editLink) {
-          editLink.style.display = 'none'
-        }
         const deleteOptionLink = /** @type { HTMLElement | null } */ (
           listItem.querySelector('.delete-option-link')
         )
-        if (deleteOptionLink) {
+        if (deleteOptionLink && editLink) {
+          editLink.style.display = 'none'
           deleteOptionLink.style.display = 'none'
         }
 
