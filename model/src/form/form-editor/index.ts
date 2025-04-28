@@ -306,6 +306,12 @@ export const classesSchema = Joi.string()
   .allow('')
   .description('Custom CSS classes to apply to the component')
 
+export const jsEnabledSchema = Joi.string()
+  .trim()
+  .optional()
+  .allow('false', 'true')
+  .description('Flag to show if Javascript is enabled or not')
+
 type GenericRuleOptions<K extends string, T> = Omit<GetRuleOptions, 'args'> & {
   args: Record<K, T>
 }
@@ -462,6 +468,7 @@ export const questionDetailsFullSchema = {
   fileTypesSchema,
   hintTextSchema,
   imageTypesSchema,
+  jsEnabledSchema,
   listForQuestionSchema,
   listItemCountSchema,
   listItemsDataSchema,

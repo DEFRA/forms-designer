@@ -39,7 +39,7 @@ export class CheckboxesField extends ListField {
             ${
               hintValue
                 ? `
-            <p class="govuk-body fauxlabel option-label-display" style="color: #505a5f;">
+            <p class="govuk-hint fauxlabel option-label-display" style="color: #505a5f;">
               ${hintValue}
             </p>
             `

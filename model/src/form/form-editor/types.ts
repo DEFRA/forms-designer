@@ -220,6 +220,11 @@ export interface FormEditor {
    * An array of options for autocomplete
    */
   autoCompleteOptions: Item[]
+
+  /**
+   * Set to 'true' is Javascript is enabled
+   */
+  jsEnabled: string
 }
 
 export type FormEditorInputPage = Pick<

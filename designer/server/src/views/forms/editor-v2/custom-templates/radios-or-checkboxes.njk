@@ -28,7 +28,7 @@
       <li class="gem-c-reorderable-list__item" data-index="{{ loop.index }}" data-id="{{ item.id }}" data-val="{{ item.value }}">
         <div class="gem-c-reorderable-list__wrapper">
           <div class="gem-c-reorderable-list__content">
-            <p class="govuk-body fauxlabel option-label-display" id="option-2-label-display">
+            <p class="govuk-body fauxlabel option-label-display" id="option-{{ loop.index }}-label-display">
               {{ item.text }}
             </p>
             {% if item.hint.text %}

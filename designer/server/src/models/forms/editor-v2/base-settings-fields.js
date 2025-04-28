@@ -117,7 +117,8 @@ export const baseSchema = Joi.object().keys({
       }),
       otherwise: Joi.forbidden()
     }
-  )
+  ),
+  jsEnabled: questionDetailsFullSchema.jsEnabledSchema
 })
 
 /**

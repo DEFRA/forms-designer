@@ -25,6 +25,11 @@ export class ComponentBase {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const local = this
     local.document.addEventListener('DOMContentLoaded', function () {
+      const jsEnabled = document.getElementById('jsEnabled')
+      if (jsEnabled) {
+        ;/** @type {HTMLInputElement} */ (jsEnabled).value = 'true'
+      }
+
       // Show preview panel
       const panel = document.getElementById('preview-container')
       if (!panel) {
