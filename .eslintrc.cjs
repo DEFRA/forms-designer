@@ -177,7 +177,12 @@ module.exports = {
         'no-use-before-define': 'off',
         '@typescript-eslint/no-unused-vars': [
           'error',
-          { ignoreRestSiblings: true }
+          {
+            ignoreRestSiblings: true,
+            argsIgnorePattern: '^_',
+            varsIgnorePattern: '^_',
+            caughtErrorsIgnorePattern: '^_'
+          }
         ],
         '@typescript-eslint/no-use-before-define': ['error', 'nofunc']
       },

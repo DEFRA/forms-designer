@@ -1,6 +1,5 @@
 import { Radios, createAll } from 'govuk-frontend'
 
-import '~/src/assets/nunjucks/govuk-components.js'
 import '~/src/javascripts/preview/nunjucks.js'
 import '~/src/views/components/input.njk'
 import '~/src/views/components/radios.njk'

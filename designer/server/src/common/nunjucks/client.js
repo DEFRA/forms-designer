@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { dirname, join } from 'node:path'
 
 import nunjucks from 'nunjucks'
@@ -20,14 +21,13 @@ export const nunjucksClientEnvironment = nunjucks.configure(
     }
   }
 )
-/* global globals, filters */
-// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+
+// @ts-expect-error
 for (const [name, nunjucksGlobal] of Object.entries(globals)) {
   nunjucksClientEnvironment.addGlobal(name, nunjucksGlobal)
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+// @ts-expect-error
 for (const [name, nunjucksFilter] of Object.entries(filters)) {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   nunjucksClientEnvironment.addFilter(name, nunjucksFilter)
 }

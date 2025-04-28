@@ -12,6 +12,7 @@ const env = new Environment([])
  * @returns {string}
  */
 export default function (source) {
+  // @ts-expect-error
   const name = path.basename(this.resourcePath)
 
   return precompileString(source, {

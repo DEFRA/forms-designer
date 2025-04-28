@@ -10,7 +10,7 @@ interface BaseSettings {
 export class QuestionElements {
   question: HTMLInputElement | null
   hintText: HTMLInputElement | null
-  optional: HTMLElement | null
+  optional: HTMLInputElement | null
   shortDesc: HTMLInputElement | null
 
   constructor() {
@@ -36,13 +36,18 @@ export class QuestionElements {
   get values(): BaseSettings {
     return {
       hintText: this.hintText?.value ?? '',
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       optional: this.optional?.checked ?? false,
       question: this.question?.value ?? '',
       shortDesc: this.shortDesc?.value ?? ''
     }
   }
 }
+
+type ListenerRow = [
+  HTMLInputElement | null,
+  (target: HTMLInputElement) => void,
+  keyof HTMLElementEventMap
+]
 
 export class EventListeners {
   public readonly baseElements: QuestionElements
@@ -67,25 +72,24 @@ export class EventListeners {
     }
   }
 
-  private get highlightListeners(): [HTMLElement, () => void, string][] {
-    const allItems: [HTMLElement | null, string][] = [
+  private get highlightListeners(): ListenerRow[] {
+    const allItems: [HTMLInputElement | null, string][] = [
       [this.baseElements.question, 'question'],
       [this.baseElements.hintText, 'hintText']
     ]
-    const items = allItems.filter(Boolean) as [HTMLElement, string][]
 
-    return items.flatMap(([element, highlight]) => {
-      const elements: [HTMLElement, () => void, string][] = [
+    return allItems.flatMap(([element, highlight]) => {
+      const elements: ListenerRow[] = [
         [
           element,
-          () => {
+          (_target: HTMLInputElement) => {
             this._question.highlight = highlight
           },
           'focus'
         ],
         [
           element,
-          () => {
+          (_target: HTMLInputElement) => {
             this._question.highlight = undefined
           },
           'blur'
@@ -96,34 +100,36 @@ export class EventListeners {
     })
   }
 
-  private get listeners() {
-    return [
-      [
-        this.baseElements.question,
-        (target: HTMLInputElement) => {
-          this._question.question = target.value
-        }
-      ],
-      [
-        this.baseElements.hintText,
-        (target: HTMLInputElement) => {
-          this._question.hintText = target.value
-        }
-      ],
-      [
-        this.baseElements.optional,
-        (target: HTMLInputElement) => {
-          this._question.optional = target.checked
-        },
-        'change'
-      ],
-      ...this.highlightListeners
+  private get listeners(): ListenerRow[] {
+    const row1: ListenerRow = [
+      this.baseElements.question,
+      (target: HTMLInputElement) => {
+        this._question.question = target.value
+      },
+      'input'
     ]
+
+    const row2: ListenerRow = [
+      this.baseElements.hintText,
+      (target: HTMLInputElement) => {
+        this._question.hintText = target.value
+      },
+      'input'
+    ]
+
+    const row3: ListenerRow = [
+      this.baseElements.optional,
+      (target: HTMLInputElement) => {
+        this._question.optional = target.checked
+      },
+      'change'
+    ]
+    return [row1, row2, row3, ...this.highlightListeners]
   }
 
   setupListeners() {
-    for (const listener of this.listeners) {
-      this.inputEventListener(...listener)
+    for (const [el, cb, type] of this.listeners) {
+      this.inputEventListener(el, cb, type)
     }
   }
 }
@@ -182,8 +188,21 @@ export class Question {
   }
 
   protected _render() {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-assignment
-    const render = njk.render as (name, ctx) => string
+    const render = (
+      njk as {
+        render: (
+          name: string,
+          ctx: {
+            model: Question['renderInput']
+          }
+        ) => string
+      }
+    ).render as (
+      name: string,
+      ctx: {
+        model: Question['renderInput']
+      }
+    ) => string
 
     const html = render('input.njk', {
       model: this.renderInput

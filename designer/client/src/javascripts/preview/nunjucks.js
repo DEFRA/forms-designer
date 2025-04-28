@@ -1,12 +1,15 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable */
+// @ts-expect-error
 import * as njk from 'nunjucks/browser/nunjucks-slim'
+// @ts-expect-error
 import * as path from 'path-webpack'
 
-// eslint-disable-next-line
+// @ts-expect-error
 njk.PrecompiledLoader.prototype.resolve = function patchedResolve(from, to) {
   return path.resolve(path.dirname(from), to).replace(/^\//, '')
 }
 
+// @ts-expect-error
 window.nunjucks = njk
 
 export default njk

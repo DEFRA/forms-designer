@@ -8,7 +8,7 @@ const inputPath = join(
 
 const outputPath = join(
   import.meta.dirname,
-  'client/src/javascripts/preview/govuk-components.js'
+  'client/src/assets/nunjucks/govuk-components.js'
 )
 
 precompileFn(inputPath, outputPath)
