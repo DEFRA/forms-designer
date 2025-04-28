@@ -7,36 +7,50 @@ interface BaseSettings {
   shortDesc: string
 }
 
-const defaultBaseSettings: BaseSettings = {
-  hintText: '',
-  optional: false,
-  question: '',
-  shortDesc: ''
-}
-
-interface HTMLElements {
+export class QuestionElements {
   question: HTMLInputElement | null
   hintText: HTMLInputElement | null
   optional: HTMLElement | null
   shortDesc: HTMLInputElement | null
+
+  constructor() {
+    const questionEl = document.getElementById(
+      'question'
+    ) as HTMLInputElement | null
+    const hintTextEl = document.getElementById(
+      'hintText'
+    ) as HTMLInputElement | null
+    const optionalEl = document.getElementById(
+      'questionOptional'
+    ) as HTMLInputElement | null
+    const shortDescEl = document.getElementById(
+      'shortDescription'
+    ) as HTMLInputElement | null
+
+    this.question = questionEl
+    this.hintText = hintTextEl
+    this.optional = optionalEl
+    this.shortDesc = shortDescEl
+  }
+
+  get values(): BaseSettings {
+    return {
+      hintText: this.hintText?.value ?? '',
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      optional: this.optional?.checked ?? false,
+      question: this.question?.value ?? '',
+      shortDesc: this.shortDesc?.value ?? ''
+    }
+  }
 }
 
-export class Question {
-  public question: string
-  public hintText: string
-  public optional: boolean
-  public readonly baseElements: HTMLElements
-  public highlight: string | undefined
+export class EventListeners {
+  public readonly baseElements: QuestionElements
+  private readonly _question: Question
 
-  constructor(
-    htmlElements: HTMLElements,
-    baseSettings: BaseSettings = defaultBaseSettings
-  ) {
-    this.question = baseSettings.question
-    this.hintText = baseSettings.hintText
-    this.optional = baseSettings.optional
-    this.baseElements = htmlElements
-    this.setupListeners()
+  constructor(question: Question, baseElements: QuestionElements) {
+    this._question = question
+    this.baseElements = baseElements
   }
 
   protected inputEventListener(
@@ -48,7 +62,7 @@ export class Question {
       element.addEventListener(type, (e) => {
         const target = e.target as HTMLInputElement
         cb(target)
-        this.render()
+        this._question.render()
       })
     }
   }
@@ -65,14 +79,14 @@ export class Question {
         [
           element,
           () => {
-            this.highlight = highlight
+            this._question.highlight = highlight
           },
           'focus'
         ],
         [
           element,
           () => {
-            this.highlight = undefined
+            this._question.highlight = undefined
           },
           'blur'
         ]
@@ -87,19 +101,19 @@ export class Question {
       [
         this.baseElements.question,
         (target: HTMLInputElement) => {
-          this.question = target.value
+          this._question.question = target.value
         }
       ],
       [
         this.baseElements.hintText,
         (target: HTMLInputElement) => {
-          this.hintText = target.value
+          this._question.hintText = target.value
         }
       ],
       [
         this.baseElements.optional,
         (target: HTMLInputElement) => {
-          this.optional = target.checked
+          this._question.optional = target.checked
         },
         'change'
       ],
@@ -107,10 +121,30 @@ export class Question {
     ]
   }
 
-  protected setupListeners() {
+  setupListeners() {
     for (const listener of this.listeners) {
       this.inputEventListener(...listener)
     }
+  }
+}
+
+export class Question {
+  public question: string
+  public hintText: string
+  public optional: boolean
+  public highlight: string | undefined
+  private readonly _listeners: EventListeners
+
+  constructor(htmlElements: QuestionElements) {
+    const { question, hintText, optional } = htmlElements.values
+
+    this.question = question
+    this.hintText = hintText
+    this.optional = optional
+
+    const listeners = new EventListeners(this, htmlElements)
+    listeners.setupListeners()
+    this._listeners = listeners
   }
 
   protected getHighlight(element: string): string {
@@ -166,32 +200,8 @@ export class Question {
   }
 
   static setupPreview() {
-    const questionEl = document.getElementById(
-      'question'
-    ) as HTMLInputElement | null
-    const hintTextEl = document.getElementById(
-      'hintText'
-    ) as HTMLInputElement | null
-    const optionalEl = document.getElementById(
-      'questionOptional'
-    ) as HTMLInputElement | null
-    const shortDescEl = document.getElementById(
-      'shortDescription'
-    ) as HTMLInputElement | null
-
-    const elements: HTMLElements = {
-      question: questionEl,
-      hintText: hintTextEl,
-      optional: optionalEl,
-      shortDesc: shortDescEl
-    }
-
-    const question = new Question(elements, {
-      hintText: hintTextEl?.value ?? '',
-      optional: optionalEl?.checked ?? false,
-      question: questionEl?.value ?? '',
-      shortDesc: shortDescEl?.value ?? ''
-    })
+    const elements = new QuestionElements()
+    const question = new Question(elements)
     question.render()
   }
 }
