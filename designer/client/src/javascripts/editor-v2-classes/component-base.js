@@ -27,7 +27,8 @@ export class ComponentBase {
     local.document.addEventListener('DOMContentLoaded', function () {
       const jsEnabled = document.getElementById('jsEnabled')
       if (jsEnabled) {
-        ;/** @type {HTMLInputElement} */ (jsEnabled).value = 'true'
+        const jsInputElem = /** @type {HTMLInputElement} */ (jsEnabled)
+        jsInputElem.value = 'true'
       }
 
       // Show preview panel
