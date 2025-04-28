@@ -12,8 +12,14 @@ import {
   RADIO_OPTION_DATA,
   REORDERABLE_LIST_ITEM_CLASS,
   addItemToHiddenOptionsData,
+  addOrRemoveHint,
+  applyHighlight,
   getClosestLabel,
-  getListItemsFromHidden
+  getHtmlElement,
+  getHtmlInputElement,
+  getListItemsFromHidden,
+  removeHighlight,
+  restoreItemDisplay
 } from '~/src/javascripts/editor-v2-classes/listfield-helper'
 
 export class ListField extends ComponentBase {
@@ -107,40 +113,25 @@ export class ListField extends ComponentBase {
   initialiseSpecifics() {
     const baseClassName = this.getBaseClassName()
 
-    /**
-     * @param {string} selector
-     * @returns {HTMLInputElement}
-     */
-    function getHtmlInputElement(selector) {
-      return /** @type {HTMLInputElement} */ (document.querySelector(selector))
-    }
-
-    /**
-     * @param {string} selector
-     * @returns {HTMLElement}
-     */
-    function getHtmlElement(selector) {
-      return /** @type {HTMLElement} */ (document.querySelector(selector))
-    }
-
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const local = this
     /** @type { Sortable | undefined } */
     let sortableInstance
     document.addEventListener('DOMContentLoaded', function () {
       // Get form elements
-      const addOptionForm = getHtmlElement('#add-option-form')
-      const addOptionButton = getHtmlElement('#add-option-button')
-      const saveItemButton = getHtmlElement('#save-new-option')
-      const cancelButton = getHtmlElement('#cancel-add-option')
-      const newOptionLabel = getHtmlInputElement('#radioText')
-      const newOptionHint = getHtmlInputElement('#radioHint')
-      const newOptionValue = getHtmlInputElement('#radioValue')
-      const optionsContainer = getHtmlElement('#options-container')
+      const addOptionForm = getHtmlElement(document, '#add-option-form')
+      const addOptionButton = getHtmlElement(document, '#add-option-button')
+      const saveItemButton = getHtmlElement(document, '#save-new-option')
+      const cancelButton = getHtmlElement(document, '#cancel-add-option')
+      const newOptionLabel = getHtmlInputElement(document, '#radioText')
+      const newOptionHint = getHtmlInputElement(document, '#radioHint')
+      const newOptionValue = getHtmlInputElement(document, '#radioValue')
+      const optionsContainer = getHtmlElement(document, '#options-container')
       const radioList = getHtmlElement(
+        document,
         `#question-preview-content .${baseClassName}`
       )
-      const addOptionHeading = getHtmlElement('#add-option-heading')
+      const addOptionHeading = getHtmlElement(document, '#add-option-heading')
 
       // Add option button click
       addOptionButton.addEventListener('click', function (e) {
@@ -160,7 +151,7 @@ export class ListField extends ComponentBase {
         )
         if (radioListElement) {
           radioListElement.innerHTML = local.getInitialPreviewHtml()
-          applyHighlight('label')
+          applyHighlight('label', radioList, baseClassName)
         }
         updatePreview() // Update preview for any existing items
       })
@@ -177,14 +168,18 @@ export class ListField extends ComponentBase {
       newOptionValue.addEventListener('input', updatePreview)
 
       // Add focus/blur event listeners for highlighting
-      newOptionLabel.addEventListener('focus', () => applyHighlight('label'))
-      newOptionLabel.addEventListener('blur', () => removeHighlight('label'))
+      newOptionLabel.addEventListener('focus', () =>
+        applyHighlight('label', radioList, baseClassName)
+      )
+      newOptionLabel.addEventListener('blur', () =>
+        removeHighlight('label', radioList, baseClassName, newOptionHint)
+      )
       newOptionHint.addEventListener('focus', () => {
-        applyHighlight('hint')
+        applyHighlight('hint', radioList, baseClassName)
         showHintPlaceholder()
       })
       newOptionHint.addEventListener('blur', () => {
-        removeHighlight('hint')
+        removeHighlight('hint', radioList, baseClassName, newOptionHint)
         removeHintPlaceholder()
       })
 
@@ -250,8 +245,8 @@ export class ListField extends ComponentBase {
         newOptionLabel.value = ''
         newOptionHint.value = ''
         newOptionValue.value = ''
-        removeHighlight('label')
-        removeHighlight('hint')
+        removeHighlight('label', radioList, baseClassName, newOptionHint)
+        removeHighlight('hint', radioList, baseClassName, newOptionHint)
         updateAllOptionsPreview()
         updateEditOptionsButtonVisibility()
         addOptionButton.focus()
@@ -322,10 +317,10 @@ export class ListField extends ComponentBase {
 
         // Reapply highlights if needed
         if (document.activeElement === newOptionLabel) {
-          applyHighlight('label')
+          applyHighlight('label', radioList, baseClassName)
         }
         if (document.activeElement === newOptionHint) {
-          applyHighlight('hint')
+          applyHighlight('hint', radioList, baseClassName)
         }
       }
 
@@ -360,66 +355,6 @@ export class ListField extends ComponentBase {
           const radioHTML = local.getHtmlForInsert(index, label, hint)
           radioListElement.insertAdjacentHTML('beforeend', radioHTML)
         })
-      }
-
-      /**
-       * Function to apply highlight to the preview
-       * @param {string} type
-       */
-      function applyHighlight(type) {
-        const lastOption = radioList.querySelector(
-          `.${baseClassName}__item:last-child`
-        )
-        if (!lastOption) {
-          return
-        }
-
-        const elementToHighlight =
-          type === 'label'
-            ? lastOption.querySelector(`.${baseClassName}__label`)
-            : lastOption.querySelector(`.${baseClassName}__hint`)
-
-        if (elementToHighlight) {
-          elementToHighlight.classList.add('highlight')
-        } else {
-          if (type === 'hint') {
-            // If hint element doesn't exist, create it
-            const hintElement = document.createElement('div')
-            hintElement.className = `govuk-hint ${baseClassName}__hint highlight`
-            hintElement.textContent = 'Hint text'
-            lastOption.appendChild(hintElement)
-          }
-        }
-      }
-
-      /**
-       * Function to remove highlight from the preview
-       * @param {string} type
-       */
-      function removeHighlight(type) {
-        const lastOption = radioList.querySelector(
-          `.${baseClassName}__item:last-child`
-        )
-        if (!lastOption) {
-          return
-        }
-
-        const elementToUnhighlight =
-          type === 'label'
-            ? lastOption.querySelector(`.${baseClassName}__label`)
-            : lastOption.querySelector(`.${baseClassName}__hint`)
-
-        if (elementToUnhighlight) {
-          elementToUnhighlight.classList.remove('highlight')
-          // Remove empty hint element if it was just a placeholder
-          if (
-            type === 'hint' &&
-            !newOptionHint.value.trim() &&
-            elementToUnhighlight.textContent === 'Hint text'
-          ) {
-            elementToUnhighlight.remove()
-          }
-        }
       }
 
       // Function to show hint placeholder
@@ -803,16 +738,17 @@ export class ListField extends ComponentBase {
             updateHiddenOptionsData()
             updateMoveButtons()
           }
-        } else {
-          if (targetElem.classList.contains(JS_REORDERABLE_LIST_DOWN)) {
-            const item = targetElem.closest(REORDERABLE_LIST_ITEM_CLASS)
-            const nextItem = item?.nextElementSibling
-            if (nextItem && item.parentNode) {
-              item.parentNode.insertBefore(nextItem, item)
-              updateAllOptionsPreview()
-              updateHiddenOptionsData()
-              updateMoveButtons()
-            }
+          return
+        }
+
+        if (targetElem.classList.contains(JS_REORDERABLE_LIST_DOWN)) {
+          const item = targetElem.closest(REORDERABLE_LIST_ITEM_CLASS)
+          const nextItem = item?.nextElementSibling
+          if (nextItem && item.parentNode) {
+            item.parentNode.insertBefore(nextItem, item)
+            updateAllOptionsPreview()
+            updateHiddenOptionsData()
+            updateMoveButtons()
           }
         }
       })
@@ -878,21 +814,9 @@ export class ListField extends ComponentBase {
           const listOption = formDetails.listItem.querySelector(
             '.gem-c-reorderable-list__content'
           )
-          let hintElement = listOption?.querySelector(GOVUK_HINT_CLASS)
-          if (newHint.length) {
-            if (!hintElement) {
-              hintElement = document.createElement('p')
-              hintElement.className = `govuk-hint govuk-!-margin-top-0 govuk-!-margin-bottom-0`
-              if (listOption) {
-                listOption.appendChild(hintElement)
-              }
-            }
-            hintElement.textContent = newHint
-          } else {
-            if (hintElement) {
-              hintElement.remove()
-            }
-          }
+          const origHintElement = listOption?.querySelector(GOVUK_HINT_CLASS)
+
+          addOrRemoveHint(newHint, origHintElement, listOption)
 
           // Restore the display
           restoreItemDisplay(formDetails.listItem)
@@ -1043,40 +967,36 @@ export class ListField extends ComponentBase {
         }
 
         // Add preview updating on input
-        if (editHintInput) {
-          editHintInput.addEventListener('input', () => {
-            updateEditPreview(
-              listItem,
-              editLabelInput?.value,
-              editHintInput.value
-            )
-          })
-        }
+        editHintInput?.addEventListener('input', () => {
+          updateEditPreview(
+            listItem,
+            editLabelInput?.value,
+            editHintInput.value
+          )
+        })
 
-        if (editLabelInput) {
-          editLabelInput.addEventListener('input', () => {
-            updateEditPreview(
-              listItem,
-              editLabelInput.value,
-              editHintInput?.value
-            )
-          })
+        editLabelInput?.addEventListener('input', () => {
+          updateEditPreview(
+            listItem,
+            editLabelInput.value,
+            editHintInput?.value
+          )
+        })
 
-          // Add focus/blur event listeners for highlighting
-          editLabelInput.addEventListener('focus', () => {
-            const labelElement = getClosestLabel(listItem, baseClassName)
-            if (labelElement) {
-              labelElement.classList.add('highlight')
-            }
-          })
+        // Add focus/blur event listeners for highlighting
+        editLabelInput?.addEventListener('focus', () => {
+          const labelElement = getClosestLabel(listItem, baseClassName)
+          if (labelElement) {
+            labelElement.classList.add('highlight')
+          }
+        })
 
-          editLabelInput.addEventListener('blur', () => {
-            const labelElement = getClosestLabel(listItem, baseClassName)
-            if (labelElement) {
-              labelElement.classList.remove('highlight')
-            }
-          })
-        }
+        editLabelInput?.addEventListener('blur', () => {
+          const labelElement = getClosestLabel(listItem, baseClassName)
+          if (labelElement) {
+            labelElement.classList.remove('highlight')
+          }
+        })
 
         // Update preview immediately to show current state
         updateEditPreview(listItem, editLabelInput?.value, editHintInput?.value)
@@ -1087,37 +1007,6 @@ export class ListField extends ComponentBase {
           if (labelElement) {
             labelElement.classList.add('highlight')
           }
-        }
-      }
-
-      /**
-       * Function to restore item to display mode
-       * @param {Element} listItem
-       */
-      function restoreItemDisplay(listItem) {
-        const labelDisplay = /** @type { HTMLElement | null } */ (
-          listItem.querySelector(OPTION_LABEL_DISPLAY)
-        )
-        const editLink = /** @type { HTMLElement | null } */ (
-          listItem.querySelector('.edit-item a')
-        )
-        const deleteLink = /** @type { HTMLElement | null } */ (
-          listItem.querySelector('.delete-option-link')
-        )
-        const editForm = listItem.querySelector('.edit-option-form')
-
-        if (editForm) {
-          editForm.remove()
-        }
-
-        if (labelDisplay) {
-          labelDisplay.style.display = 'block'
-        }
-        if (editLink) {
-          editLink.style.display = INLINE_BLOCK
-        }
-        if (deleteLink) {
-          deleteLink.style.display = INLINE_BLOCK
         }
       }
 
@@ -1138,22 +1027,24 @@ export class ListField extends ComponentBase {
           const label = /** @type { HTMLElement | null } */ (
             previewItem.querySelector(`.${baseClassName}__label`)
           )
-          let hint = previewItem.querySelector(`.${baseClassName}__hint`)
+          const origHint = previewItem.querySelector(`.${baseClassName}__hint`)
+
+          if (!hintValue && origHint) {
+            origHint.remove()
+          }
 
           if (label) {
             label.textContent = labelValue ?? 'Item text'
           }
 
           if (hintValue) {
-            if (!hint) {
-              hint = document.createElement('div')
-              hint.className = `govuk-hint ${baseClassName}__hint`
-              previewItem.appendChild(hint)
-            }
-            hint.textContent = hintValue
-          } else {
-            if (hint) {
-              hint.remove()
+            if (!origHint) {
+              const newHint = document.createElement('div')
+              newHint.className = `govuk-hint ${baseClassName}__hint`
+              newHint.textContent = hintValue
+              previewItem.appendChild(newHint)
+            } else {
+              origHint.textContent = hintValue
             }
           }
         }

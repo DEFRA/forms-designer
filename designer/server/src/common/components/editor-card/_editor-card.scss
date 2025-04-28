@@ -88,11 +88,6 @@ $defra-brand-colour: govuk-organisation-colour(department-for-environment-food-r
   text-transform: capitalize;
 }
 
-.fauxlabel:focus,
-.fauxlabel:active {
-  background-color: transparent !important;
-}
-
 .gem-c-reorderable-list .gem-c-reorderable-list__item:hover,
 .gem-c-reorderable-list__item:hover .fauxlabel {
   background-color: #ffffff;
@@ -139,16 +134,6 @@ $defra-brand-colour: govuk-organisation-colour(department-for-environment-food-r
   background-color: #e5f5ff;
   outline: 4px solid #ffdd00;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-#second-container {
-  padding: 0;
-  box-sizing: border-box;
-}
-
-#second-container > * {
-  padding-left: 0;
-  z-index: 2;
 }
 
 .border-left-container {
