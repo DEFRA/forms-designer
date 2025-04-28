@@ -289,3 +289,41 @@ export function updateHiddenOptionsData() {
   )
   radioOptionsData.value = JSON.stringify(options)
 }
+
+/**
+ * @param { HTMLElement | null } elem
+ */
+export function hideIfExists(elem) {
+  if (elem) {
+    elem.style.display = 'none'
+  }
+}
+
+/**
+ * @param { HTMLElement | null } elem
+ */
+export function focusIfExists(elem) {
+  if (elem) {
+    elem.focus()
+  }
+}
+
+/**
+ * @param { HTMLElement | Element | null } elem
+ * @param {string} className
+ */
+export function addClassIfExists(elem, className) {
+  if (elem) {
+    elem.classList.add(className)
+  }
+}
+
+/**
+ * @param { HTMLElement | Element | null } elem
+ * @param {string} className
+ */
+export function removeClassIfExists(elem, className) {
+  if (elem) {
+    elem.classList.remove(className)
+  }
+}

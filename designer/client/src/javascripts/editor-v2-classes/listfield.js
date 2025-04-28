@@ -10,13 +10,17 @@ import {
   JS_REORDERABLE_LIST_UP,
   OPTION_LABEL_DISPLAY,
   REORDERABLE_LIST_ITEM_CLASS,
+  addClassIfExists,
   addItemToHiddenOptionsData,
   addOrRemoveHint,
   applyHighlight,
+  focusIfExists,
   getClosestLabel,
   getHtmlElement,
   getHtmlInputElement,
   getListItemsFromHidden,
+  hideIfExists,
+  removeClassIfExists,
   removeHighlight,
   removeHintPlaceholder,
   restoreItemDisplay,
@@ -472,9 +476,7 @@ export class ListField extends ComponentBase {
         const previewItem = radioListElement.querySelector(
           `.${baseClassName}__item:nth-child(${index + 1})`
         )
-        if (previewItem) {
-          previewItem.classList.add('highlight')
-        }
+        addClassIfExists(previewItem, 'highlight')
       }
 
       // Function to remove all preview highlights
@@ -751,13 +753,9 @@ export class ListField extends ComponentBase {
 
       /**
        * Function to convert a list item to editable form
-       * @param { HTMLElement | null } listItem
+       * @param {HTMLElement} listItem
        */
       function makeItemEditable(listItem) {
-        if (!listItem) {
-          return
-        }
-
         const { listItemsData, listItems } = getListItemsFromHidden(document)
 
         const currentListItem = listItems.find(
@@ -825,13 +823,9 @@ export class ListField extends ComponentBase {
       `
 
         // Hide the display elements
-        if (labelDisplay) {
-          labelDisplay.style.display = 'none'
-        }
-        if (deleteOptionLink && editLink) {
-          editLink.style.display = 'none'
-          deleteOptionLink.style.display = 'none'
-        }
+        hideIfExists(labelDisplay)
+        hideIfExists(deleteOptionLink)
+        hideIfExists(editLink)
 
         // Insert the edit form
         const listArea = listItem.querySelector(
@@ -858,9 +852,7 @@ export class ListField extends ComponentBase {
         )
 
         // Focus the label input
-        if (editLabelInput) {
-          editLabelInput.focus()
-        }
+        focusIfExists(editLabelInput)
 
         // Save changes
         if (!saveButton) {
@@ -909,16 +901,12 @@ export class ListField extends ComponentBase {
         // Add focus/blur event listeners for highlighting
         editLabelInput?.addEventListener('focus', () => {
           const labelElement = getClosestLabel(listItem, baseClassName)
-          if (labelElement) {
-            labelElement.classList.add('highlight')
-          }
+          addClassIfExists(labelElement, 'highlight')
         })
 
         editLabelInput?.addEventListener('blur', () => {
           const labelElement = getClosestLabel(listItem, baseClassName)
-          if (labelElement) {
-            labelElement.classList.remove('highlight')
-          }
+          removeClassIfExists(labelElement, 'highlight')
         })
 
         // Update preview immediately to show current state
@@ -927,9 +915,7 @@ export class ListField extends ComponentBase {
         // If label input is already focused, apply highlight immediately
         if (document.activeElement === editLabelInput) {
           const labelElement = getClosestLabel(listItem, baseClassName)
-          if (labelElement) {
-            labelElement.classList.add('highlight')
-          }
+          addClassIfExists(labelElement, 'highlight')
         }
       }
 
