@@ -127,10 +127,10 @@ export const exactFilesSchema = Joi.number()
 export const minFilesSchema = Joi.number()
   .empty('')
   .integer()
-  .min(0)
+  .min(1)
   .max(25)
   .description(
-    'Minimum number of files required for upload. Must be between 0 and 25.'
+    'Minimum number of files required for upload. Must be between 1 and 25.'
   )
 
 export const maxFilesSchema = Joi.number()
