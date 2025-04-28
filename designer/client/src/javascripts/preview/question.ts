@@ -12,6 +12,7 @@ export class QuestionElements {
   hintText: HTMLInputElement | null
   optional: HTMLInputElement | null
   shortDesc: HTMLInputElement | null
+  preview: HTMLElement | null
 
   constructor() {
     const questionEl = document.getElementById(
@@ -26,11 +27,13 @@ export class QuestionElements {
     const shortDescEl = document.getElementById(
       'shortDescription'
     ) as HTMLInputElement | null
+    const previewEl = document.getElementById('question-preview-content')
 
     this.question = questionEl
     this.hintText = hintTextEl
     this.optional = optionalEl
     this.shortDesc = shortDescEl
+    this.preview = previewEl
   }
 
   get values(): BaseSettings {
@@ -39,6 +42,12 @@ export class QuestionElements {
       optional: this.optional?.checked ?? false,
       question: this.question?.value ?? '',
       shortDesc: this.shortDesc?.value ?? ''
+    }
+  }
+
+  setPreviewHTML(value: string) {
+    if (this.preview) {
+      this.preview.innerHTML = value
     }
   }
 }
@@ -53,11 +62,21 @@ export class EventListeners {
   public readonly baseElements: QuestionElements
   private readonly _question: Question
 
+  /**
+   * @param {Question} question
+   * @param {QuestionElements} baseElements
+   */
   constructor(question: Question, baseElements: QuestionElements) {
     this._question = question
     this.baseElements = baseElements
   }
 
+  /**
+   * @param {HTMLElement | null} element
+   * @param {(inputElement: HTMLInputElement) => void} cb
+   * @param {keyof HTMLElementEventMap} type
+   * @protected
+   */
   protected inputEventListener(
     element: HTMLElement | null,
     cb: (inputElement: HTMLInputElement) => void,
@@ -67,11 +86,14 @@ export class EventListeners {
       element.addEventListener(type, (e) => {
         const target = e.target as HTMLInputElement
         cb(target)
-        this._question.render()
       })
     }
   }
 
+  /**
+   * @private
+   * @returns {ListenerRow[]}
+   */
   private get highlightListeners(): ListenerRow[] {
     const allItems: [HTMLInputElement | null, string][] = [
       [this.baseElements.question, 'question'],
@@ -100,6 +122,10 @@ export class EventListeners {
     })
   }
 
+  /**
+   * @private
+   * @returns {ListenerRow[]}
+   */
   private get listeners(): ListenerRow[] {
     const row1: ListenerRow = [
       this.baseElements.question,
@@ -135,18 +161,20 @@ export class EventListeners {
 }
 
 export class Question {
-  public question: string
-  public hintText: string
-  public optional: boolean
-  public highlight: string | undefined
+  protected _question: string
+  protected _hintText: string
+  protected _optional: boolean
+  protected _highlight: string | undefined
   private readonly _listeners: EventListeners
+  protected _htmlElements: QuestionElements
 
   constructor(htmlElements: QuestionElements) {
     const { question, hintText, optional } = htmlElements.values
 
-    this.question = question
-    this.hintText = hintText
-    this.optional = optional
+    this._htmlElements = htmlElements
+    this._question = question
+    this._hintText = hintText
+    this._optional = optional
 
     const listeners = new EventListeners(this, htmlElements)
     listeners.setupListeners()
@@ -154,23 +182,23 @@ export class Question {
   }
 
   protected getHighlight(element: string): string {
-    return this.highlight === element ? ' highlight' : ''
+    return this._highlight === element ? ' highlight' : ''
   }
 
   private get label() {
-    const optionalText = this.optional ? ' (optional)' : ''
+    const optionalText = this._optional ? ' (optional)' : ''
 
     return {
-      text: this.question + optionalText,
+      text: this._question + optionalText,
       classes: 'govuk-label--l' + this.getHighlight('question')
     }
   }
 
   private get hint() {
     const text =
-      this.highlight === 'hintText' && !this.hintText.length
+      this._highlight === 'hintText' && !this._hintText.length
         ? 'Hint text'
-        : this.hintText
+        : this._hintText
 
     return {
       text,
@@ -207,15 +235,49 @@ export class Question {
     const html = render('input.njk', {
       model: this.renderInput
     })
-    const previewBlock = document.getElementById('question-preview-content')
 
-    if (previewBlock) {
-      previewBlock.innerHTML = html
-    }
+    this._htmlElements.setPreviewHTML(html)
   }
 
-  render() {
+  protected render() {
+    // debounce?
     this._render()
+  }
+
+  get question(): string {
+    return this._question
+  }
+
+  set question(value: string) {
+    this._question = value
+    this.render()
+  }
+
+  get hintText(): string {
+    return this._hintText
+  }
+
+  set hintText(value: string) {
+    this._hintText = value
+    this.render()
+  }
+
+  get optional(): boolean {
+    return this._optional
+  }
+
+  set optional(value: boolean) {
+    this._optional = value
+    this.render()
+  }
+
+  get highlight(): string | undefined {
+    return this._highlight
+  }
+
+  set highlight(value: string | undefined) {
+    this._highlight = value
+    this.render()
   }
 
   static setupPreview() {
