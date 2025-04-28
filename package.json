@@ -1,6 +1,6 @@
 {
   "name": "forms-designer",
-  "version": "3.0.443",
+  "version": "3.0.444",
   "private": true,
   "description": "Defra forms designer repository",
   "repository": {
@@ -67,8 +67,7 @@
     "prettier": "^3.5.3",
     "stylelint": "^16.16.0",
     "stylelint-config-gds": "^2.0.0",
-    "typescript": "^5.8.2",
-    "webpack-glob": "^2.0.2"
+    "typescript": "^5.8.2"
   },
   "engines": {
     "node": "^22.11.0",

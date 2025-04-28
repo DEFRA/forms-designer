@@ -15,6 +15,8 @@ const MAX_FILES_ERROR_MESSAGE =
   'Maximum file count must be a whole number between 1 and 25'
 const EXACT_FILES_ERROR_MESSAGE =
   'Exact file count must be a whole number between 1 and 25'
+const MIN_LENGTH_ERROR_MESSAGE =
+  'Minimum length must be a positive whole number'
 const MAX_LENGTH_ERROR_MESSAGE =
   'Maximum length must be a positive whole number'
 const MAX_PRECISION = 5
@@ -250,10 +252,10 @@ export const allAdvancedSettingsFields =
 
 export const allSpecificSchemas = Joi.object().keys({
   maxFuture: questionDetailsFullSchema.maxFutureSchema.messages({
-    '*': 'Maximum days in the future must be a real number or 0'
+    '*': 'Maximum days in the future must be a positive whole number'
   }),
   maxPast: questionDetailsFullSchema.maxPastSchema.messages({
-    '*': 'Maximum days in the past must be a real number or 0'
+    '*': 'Maximum days in the past must be a positive whole number'
   }),
   min: questionDetailsFullSchema.minSchema
     .when('max', {
@@ -310,17 +312,17 @@ export const allSpecificSchemas = Joi.object().keys({
   maxFiles: questionDetailsFullSchema.maxFilesSchema.messages({
     '*': MAX_FILES_ERROR_MESSAGE
   }),
-  minLength: questionDetailsFullSchema.minLengthSchema
-    .when('maxLength', {
-      is: Joi.exist(),
-      then: Joi.number().max(Joi.ref('maxLength')),
-      otherwise: Joi.number().empty('').integer()
-    })
-    .messages({
-      'number.base': MAX_LENGTH_ERROR_MESSAGE,
-      'number.integer': MAX_LENGTH_ERROR_MESSAGE,
-      '*': 'Minimum length must be less than or equal to maximum length'
+  minLength: questionDetailsFullSchema.minLengthSchema.when('maxLength', {
+    is: Joi.exist(),
+    then: Joi.number().max(Joi.ref('maxLength')).messages({
+      'number.max':
+        'Minimum length must be less than or equal to maximum length',
+      '*': MIN_LENGTH_ERROR_MESSAGE
     }),
+    otherwise: Joi.number().empty('').integer().messages({
+      '*': MIN_LENGTH_ERROR_MESSAGE
+    })
+  }),
   maxLength: questionDetailsFullSchema.maxLengthSchema.messages({
     '*': MAX_LENGTH_ERROR_MESSAGE
   }),
