@@ -2,20 +2,19 @@ import Sortable from 'sortablejs'
 import { v4 as uuidV4 } from 'uuid'
 
 import { ComponentBase } from '~/src/javascripts/editor-v2-classes/component-base.js'
-import { getClosestLabel } from '~/src/javascripts/editor-v2-classes/listfield-helper'
-
-const GOVUK_HINT_CLASS = '.govuk-hint'
-const REORDERABLE_LIST_ITEM_CLASS = '.gem-c-reorderable-list__item'
-const RADIO_OPTION_DATA = 'radio-options-data'
-const OPTION_LABEL_DISPLAY = '.option-label-display'
-const INLINE_BLOCK = 'inline-block'
-const ERROR_HTML = '<p>error</p>'
-const JS_REORDERABLE_LIST_UP = 'js-reorderable-list-up'
-const JS_REORDERABLE_LIST_DOWN = 'js-reorderable-list-down'
-
-/**
- * @typedef {{ text?: string, hint?: { text?: string }, value?: string, id?: string }} ListItem
- */
+import {
+  ERROR_HTML,
+  GOVUK_HINT_CLASS,
+  INLINE_BLOCK,
+  JS_REORDERABLE_LIST_DOWN,
+  JS_REORDERABLE_LIST_UP,
+  OPTION_LABEL_DISPLAY,
+  RADIO_OPTION_DATA,
+  REORDERABLE_LIST_ITEM_CLASS,
+  addItemToHiddenOptionsData,
+  getClosestLabel,
+  getListItemsFromHidden
+} from '~/src/javascripts/editor-v2-classes/listfield-helper'
 
 export class ListField extends ComponentBase {
   /**
@@ -217,7 +216,13 @@ export class ListField extends ComponentBase {
         optionsContainer.insertAdjacentHTML('beforeend', newOptionHTML)
         hideForm()
         updateAllOptionsPreview()
-        addItemToHiddenOptionsData(newId, labelValue, hintValue, valueEnforced)
+        addItemToHiddenOptionsData(
+          document,
+          newId,
+          labelValue,
+          hintValue,
+          valueEnforced
+        )
         updateEditOptionsButtonVisibility()
       })
 
@@ -524,28 +529,6 @@ export class ListField extends ComponentBase {
         true
       )
 
-      /**
-       * Function to add a single row in the hidden input with all current options
-       * @param {string} id
-       * @param {string} text - label
-       * @param {string} hint
-       * @param {string} value
-       */
-      function addItemToHiddenOptionsData(id, text, hint, value) {
-        const { listItemsData, listItems } = getListItemsFromHidden()
-
-        const hintObj = hint.length ? { hint: { text: hint } } : undefined
-
-        listItems.push({
-          id,
-          text,
-          ...hintObj,
-          value
-        })
-
-        listItemsData.value = JSON.stringify(listItems)
-      }
-
       // Function to update the hidden input with all current options
       function updateHiddenOptionsData() {
         const options = /** @type {ListItem[]} */ ([])
@@ -843,7 +826,7 @@ export class ListField extends ComponentBase {
           return
         }
 
-        const { listItemsData, listItems } = getListItemsFromHidden()
+        const { listItemsData, listItems } = getListItemsFromHidden(document)
 
         const newListItems = listItems.filter(
           (x) => x.id !== listItem.dataset.id
@@ -857,20 +840,6 @@ export class ListField extends ComponentBase {
 
         // Update the preview
         updateAllOptionsPreview()
-      }
-
-      function getListItemsFromHidden() {
-        const listItemsData = /** @type {HTMLInputElement} */ (
-          document.getElementById(RADIO_OPTION_DATA)
-        )
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const listItems = /** @type {ListItem[]} */ (
-          JSON.parse(listItemsData.value)
-        )
-        return {
-          listItemsData,
-          listItems
-        }
       }
 
       /**
@@ -942,7 +911,7 @@ export class ListField extends ComponentBase {
           return
         }
 
-        const { listItemsData, listItems } = getListItemsFromHidden()
+        const { listItemsData, listItems } = getListItemsFromHidden(document)
 
         const currentListItem = listItems.find(
           (x) => x.id === listItem.dataset.id
