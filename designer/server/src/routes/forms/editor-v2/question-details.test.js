@@ -305,7 +305,7 @@ describe('Editor v2 question details routes', () => {
     expect($cardCaption).toHaveTextContent('Page 1')
     expect($cardCaption).toHaveClass('govuk-caption-l')
 
-    expect($actions).toHaveLength(5)
+    expect($actions).toHaveLength(6)
     expect($actions[2]).toHaveTextContent('Preview error messages')
     expect($actions[3]).toHaveTextContent('Preview page')
     expect($actions[4]).toHaveTextContent('Save and continue')
