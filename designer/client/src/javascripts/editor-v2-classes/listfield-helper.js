@@ -202,3 +202,90 @@ export function removeHighlight(type, radioList, baseClassName, newOptionHint) {
     }
   }
 }
+
+/**
+ * Function to show hint placeholder
+ * @param {HTMLInputElement} newOptionHint
+ * @param {Element} radioList
+ * @param {string} baseClassName
+ */
+export function showHintPlaceholder(newOptionHint, radioList, baseClassName) {
+  if (newOptionHint.value.trim()) {
+    return
+  }
+  const lastOption = radioList.querySelector(
+    `.${baseClassName}__item:last-child`
+  )
+  if (!lastOption) {
+    return
+  }
+
+  let hintElement = lastOption.querySelector(`.${baseClassName}__hint`)
+  if (!hintElement) {
+    hintElement = document.createElement('div')
+    hintElement.className = `govuk-hint ${baseClassName}__hint highlight`
+    lastOption.appendChild(hintElement)
+  }
+  hintElement.textContent = 'Hint text'
+}
+
+/**
+ * Function to remove hint placeholder
+ * @param {HTMLInputElement} newOptionHint
+ * @param {Element} radioList
+ * @param {string} baseClassName
+ */
+export function removeHintPlaceholder(newOptionHint, radioList, baseClassName) {
+  if (newOptionHint.value.trim()) {
+    return
+  }
+  const lastOption = radioList.querySelector(
+    `.${baseClassName}__item:last-child`
+  )
+  if (!lastOption) {
+    return
+  }
+
+  const hintElement = lastOption.querySelector(`.${baseClassName}__hint`)
+  if (hintElement && !newOptionHint.value.trim()) {
+    hintElement.remove()
+  }
+}
+
+// Function to update the hidden input with all current options
+export function updateHiddenOptionsData() {
+  const optionsContainer = getHtmlElement(document, '#options-container')
+  const options = /** @type {ListItem[]} */ ([])
+  const optionItems = optionsContainer.querySelectorAll(
+    REORDERABLE_LIST_ITEM_CLASS
+  )
+
+  optionItems.forEach((item) => {
+    const labelInput = item.querySelector(OPTION_LABEL_DISPLAY)
+    const hintInput = item.querySelector(GOVUK_HINT_CLASS)
+    const val = /** @type {HTMLElement} */ (item).dataset.val ?? ''
+    const id = /** @type {HTMLElement} */ (item).dataset.id
+
+    if (labelInput) {
+      const label = labelInput.textContent?.replace(/\n/g, '').trim() ?? ''
+      const hint = hintInput
+        ? hintInput.textContent?.replace(/\n/g, '').trim()
+        : ''
+      const value = val.length ? val : label.toLowerCase().replace(/\s+/g, '-')
+
+      const hintObj = hint?.length ? { hint: { text: hint } } : undefined
+
+      options.push({
+        text: label,
+        ...hintObj,
+        value,
+        id
+      })
+    }
+  })
+
+  const radioOptionsData = /** @type {HTMLInputElement} */ (
+    document.getElementById(RADIO_OPTION_DATA)
+  )
+  radioOptionsData.value = JSON.stringify(options)
+}

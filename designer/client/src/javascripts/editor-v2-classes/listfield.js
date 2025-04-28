@@ -9,7 +9,6 @@ import {
   JS_REORDERABLE_LIST_DOWN,
   JS_REORDERABLE_LIST_UP,
   OPTION_LABEL_DISPLAY,
-  RADIO_OPTION_DATA,
   REORDERABLE_LIST_ITEM_CLASS,
   addItemToHiddenOptionsData,
   addOrRemoveHint,
@@ -19,7 +18,10 @@ import {
   getHtmlInputElement,
   getListItemsFromHidden,
   removeHighlight,
-  restoreItemDisplay
+  removeHintPlaceholder,
+  restoreItemDisplay,
+  showHintPlaceholder,
+  updateHiddenOptionsData
 } from '~/src/javascripts/editor-v2-classes/listfield-helper'
 
 export class ListField extends ComponentBase {
@@ -176,11 +178,11 @@ export class ListField extends ComponentBase {
       )
       newOptionHint.addEventListener('focus', () => {
         applyHighlight('hint', radioList, baseClassName)
-        showHintPlaceholder()
+        showHintPlaceholder(newOptionHint, radioList, baseClassName)
       })
       newOptionHint.addEventListener('blur', () => {
         removeHighlight('hint', radioList, baseClassName, newOptionHint)
-        removeHintPlaceholder()
+        removeHintPlaceholder(newOptionHint, radioList, baseClassName)
       })
 
       // Save new item button click
@@ -357,45 +359,6 @@ export class ListField extends ComponentBase {
         })
       }
 
-      // Function to show hint placeholder
-      function showHintPlaceholder() {
-        if (newOptionHint.value.trim()) {
-          return
-        }
-        const lastOption = radioList.querySelector(
-          `.${baseClassName}__item:last-child`
-        )
-        if (!lastOption) {
-          return
-        }
-
-        let hintElement = lastOption.querySelector(`.${baseClassName}__hint`)
-        if (!hintElement) {
-          hintElement = document.createElement('div')
-          hintElement.className = `govuk-hint ${baseClassName}__hint highlight`
-          lastOption.appendChild(hintElement)
-        }
-        hintElement.textContent = 'Hint text'
-      }
-
-      // Function to remove hint placeholder
-      function removeHintPlaceholder() {
-        if (newOptionHint.value.trim()) {
-          return
-        }
-        const lastOption = radioList.querySelector(
-          `.${baseClassName}__item:last-child`
-        )
-        if (!lastOption) {
-          return
-        }
-
-        const hintElement = lastOption.querySelector(`.${baseClassName}__hint`)
-        if (hintElement && !newOptionHint.value.trim()) {
-          hintElement.remove()
-        }
-      }
-
       // Initialize the preview
       updateAllOptionsPreview()
 
@@ -463,46 +426,6 @@ export class ListField extends ComponentBase {
         },
         true
       )
-
-      // Function to update the hidden input with all current options
-      function updateHiddenOptionsData() {
-        const options = /** @type {ListItem[]} */ ([])
-        const optionItems = optionsContainer.querySelectorAll(
-          REORDERABLE_LIST_ITEM_CLASS
-        )
-
-        optionItems.forEach((item) => {
-          const labelInput = item.querySelector(OPTION_LABEL_DISPLAY)
-          const hintInput = item.querySelector(GOVUK_HINT_CLASS)
-          const val = /** @type {HTMLElement} */ (item).dataset.val ?? ''
-          const id = /** @type {HTMLElement} */ (item).dataset.id
-
-          if (labelInput) {
-            const label =
-              labelInput.textContent?.replace(/\n/g, '').trim() ?? ''
-            const hint = hintInput
-              ? hintInput.textContent?.replace(/\n/g, '').trim()
-              : ''
-            const value = val.length
-              ? val
-              : label.toLowerCase().replace(/\s+/g, '-')
-
-            const hintObj = hint?.length ? { hint: { text: hint } } : undefined
-
-            options.push({
-              text: label,
-              ...hintObj,
-              value,
-              id
-            })
-          }
-        })
-
-        const radioOptionsData = /** @type {HTMLInputElement} */ (
-          document.getElementById(RADIO_OPTION_DATA)
-        )
-        radioOptionsData.value = JSON.stringify(options)
-      }
 
       // Initialize Sortable for the options container
       const sortableContainer = document.getElementById('options-container')
