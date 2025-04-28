@@ -44,8 +44,7 @@ export default /** @type {Configuration} */ ({
     preview: {
       import: [
         // Nunjucks rendered application
-        './javascripts/preview.js',
-        './stylesheets/preview.scss'
+        './javascripts/preview.js'
       ]
     }
   },
