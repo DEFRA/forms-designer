@@ -1,4 +1,4 @@
-import { ComponentType, hasComponents, isFormType } from '@defra/forms-model'
+import { ComponentType, hasComponents } from '@defra/forms-model'
 
 import { getPageFromDefinition, stringHasValue } from '~/src/lib/utils.js'
 import {
@@ -20,7 +20,9 @@ const TypeOfDelete = {
  * @returns {{ bodyText: string, buttonText: string, pageTitle: string, captionText: string, cancelPath: string }}
  */
 export function determineDetails(components, page, questionId) {
-  const formComponents = components.filter((c) => isFormType(c.type))
+  const formComponents = components.filter(
+    (comp, idx) => !(comp.type === ComponentType.Markdown && idx === 0)
+  )
 
   const pageOrQuestion =
     questionId && formComponents.length > 1

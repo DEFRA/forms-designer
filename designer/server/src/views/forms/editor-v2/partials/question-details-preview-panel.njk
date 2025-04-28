@@ -1,0 +1,13 @@
+{% from "preview-panel/macro.njk" import appPreviewPanel %}
+
+{% call appPreviewPanel({
+    questionType: questionType
+  }) %}
+{% endcall %}
+
+<script>
+document.questionType = '{{ questionType }}'
+</script>
+
+<script src="{{ getAssetPath("assets/nunjucks/govuk-components.js") }}"></script>
+<script src="{{ getAssetPath("preview.js") }}"></script>

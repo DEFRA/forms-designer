@@ -28,6 +28,8 @@
     "lint:scss": "stylelint --cache --cache-location .cache/stylelint --cache-strategy content --color --ignore-path .gitignore --max-warnings 0 \"**/*.scss\"",
     "lint:types": "tsc --build tsconfig.json",
     "prepare": "husky || true",
+    "precompile": "node designer/precompile-govuk-components.js",
+    "postinstall": "npm run precompile",
     "start": "npm run start --workspace designer",
     "test": "jest --color --coverage --verbose",
     "test:watch": "jest --color --watch"
@@ -65,7 +67,8 @@
     "prettier": "^3.5.3",
     "stylelint": "^16.16.0",
     "stylelint-config-gds": "^2.0.0",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "webpack-glob": "^2.0.2"
   },
   "engines": {
     "node": "^22.11.0",

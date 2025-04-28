@@ -16,7 +16,9 @@ export interface Config {
     | 'prod'
   env: 'development' | 'test' | 'production'
   appDir: string
+  clientV2Views: string
   clientDir: string
+  clientSrc: string
   previewUrl: string
   managerUrl: string
   submissionUrl: string
@@ -71,20 +73,14 @@ const schema = joi.object<Config>({
     .valid('development', 'test', 'production')
     .default('development'),
   appDir: joi.string().default(import.meta.dirname),
+  clientSrc: joi
+    .string()
+    .default(resolve(import.meta.dirname, '../../client/src')),
   clientDir: joi.string().when('env', {
     is: 'test',
     then: joi
       .string()
       .default(resolve(import.meta.dirname, '../../client/test/fixtures')),
-    otherwise: joi
-      .string()
-      .default(resolve(import.meta.dirname, '../../client/dist'))
-  }),
-  clientV2Views: joi.string().when('env', {
-    is: 'test',
-    then: joi
-      .string()
-      .default(resolve(import.meta.dirname, '../../client/views')),
     otherwise: joi
       .string()
       .default(resolve(import.meta.dirname, '../../client/dist'))

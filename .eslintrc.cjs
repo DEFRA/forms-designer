@@ -7,6 +7,10 @@ module.exports = {
     '**/coverage/**',
     '**/dist/**',
     '**/public/**',
+    'designer/client/src/assets/nunjucks/govuk-components.js',
+    'designer/precompile-govuk-components.js',
+    'designer/precompile.js',
+    'designer/bin/precompile.js',
 
     // Enable dotfile linting
     '!.*',

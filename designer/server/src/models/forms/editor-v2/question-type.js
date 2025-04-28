@@ -1,8 +1,4 @@
-import {
-  ComponentType,
-  QuestionTypeSubGroup,
-  isFormType
-} from '@defra/forms-model'
+import { ComponentType, QuestionTypeSubGroup } from '@defra/forms-model'
 
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { insertValidationErrors } from '~/src/lib/utils.js'
@@ -126,10 +122,11 @@ export function filterQuestionTypes(
   questionTypes,
   componentsSoFar
 ) {
-  const formComponents = componentsSoFar.filter((c) => isFormType(c.type))
-  const formComponentCount = formComponents.length
+  const formComponentCount = componentsSoFar.filter(
+    (x) => x.type !== ComponentType.Markdown
+  ).length
   const preventFileUpload =
-    formComponents.some((x) => x.type === ComponentType.FileUploadField) ||
+    componentsSoFar.some((x) => x.type === ComponentType.FileUploadField) ||
     formComponentCount > 1 ||
     (formComponentCount === 1 && questionId === 'new')
   return preventFileUpload
