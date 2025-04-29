@@ -216,8 +216,8 @@ export default [
       // Form metadata and page components
       const { page, metadata, definition } = await getFormPage(
         slug,
-        token,
-        pageId
+        pageId,
+        token
       )
 
       // Ensure there's a page title when adding multiple questions
@@ -320,8 +320,8 @@ export default [
       // Save page and first question
       const { page, metadata, definition } = await getFormPage(
         slug,
-        token,
-        pageId
+        pageId,
+        token
       )
 
       // Ensure there's a page title when adding multiple questions

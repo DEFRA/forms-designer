@@ -202,7 +202,7 @@ describe('Editor v2 question routes', () => {
     )
   })
 
-  test('POST - should redirect to page overview with errors if there is not title', async () => {
+  test('POST - should redirect to page overview with errors if there is no title', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
 
     jest
