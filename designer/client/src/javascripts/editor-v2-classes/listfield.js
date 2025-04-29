@@ -129,7 +129,7 @@ export class ListField extends ComponentBase {
       const addOptionForm = getHtmlElement(document, '#add-option-form')
       const addOptionButton = getHtmlElement(document, '#add-option-button')
       const saveItemButton = getHtmlElement(document, '#save-new-option')
-      const cancelButton = getHtmlElement(document, '#cancel-add-option')
+      const cancelItemButton = getHtmlElement(document, '#cancel-add-option')
       const newOptionLabel = getHtmlInputElement(document, '#radioText')
       const newOptionHint = getHtmlInputElement(document, '#radioHint')
       const newOptionValue = getHtmlInputElement(document, '#radioValue')
@@ -164,7 +164,7 @@ export class ListField extends ComponentBase {
       })
 
       // Cancel button click
-      cancelButton.addEventListener('click', function (e) {
+      cancelItemButton.addEventListener('click', function (e) {
         e.preventDefault()
         hideForm()
       })

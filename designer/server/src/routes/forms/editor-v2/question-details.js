@@ -18,7 +18,8 @@ import {
   buildQuestionSessionState,
   clearQuestionSessionState,
   createQuestionSessionState,
-  getQuestionSessionState
+  getQuestionSessionState,
+  setQuestionSessionState
 } from '~/src/lib/session-helper.js'
 import { isListComponentType } from '~/src/lib/utils.js'
 import {
@@ -145,6 +146,41 @@ export function validatePreSchema(request, h) {
   }
 
   return request
+}
+
+/**
+ * @param { Request } request
+ */
+export function overrideStateIfJsEnabled(request) {
+  const { payload, params } = request
+  if (typeof payload === 'object') {
+    const jsEnabled = 'jsEnabled' in payload && payload.jsEnabled === 'true'
+    const questionType =
+      'questionType' in payload
+        ? /** @type {string} */ (payload.questionType)
+        : undefined
+    const listItemsData =
+      'listItemsData' in payload
+        ? /** @type {string} */ (payload.listItemsData)
+        : undefined
+    const stateId =
+      'stateId' in params ? /** @type {string} */ (params.stateId) : 'unknown'
+
+    if (jsEnabled) {
+      const overridenState = /** @type {QuestionSessionState} */ ({
+        questionType,
+        editRow: {
+          expanded: false
+        },
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        listItems:
+          /** @type { { text?: string, hint?: { id?: string; text: string }, value?: string, id?: string }[]} */
+          (JSON.parse(listItemsData ?? '[]'))
+      })
+      setQuestionSessionState(request.yar, stateId, overridenState)
+    }
+  }
+  return undefined
 }
 
 /**
@@ -345,6 +381,7 @@ export default [
       validate: {
         payload: schema,
         failAction: (request, h, error) => {
+          overrideStateIfJsEnabled(request)
           return redirectWithErrors(request, h, error, errorKey, '#')
         }
       },
@@ -362,5 +399,5 @@ export default [
 /**
  * @import { ComponentDef, FormDefinition, FormEditorInputQuestionDetails, Item, QuestionSessionState } from '@defra/forms-model'
  * @import Boom from '@hapi/boom'
- * @import { Request, ResponseToolkit, ServerRoute } from '@hapi/hapi'
+ * @import { ReqRefDefaults, Request, ResponseToolkit, ServerRoute } from '@hapi/hapi'
  */

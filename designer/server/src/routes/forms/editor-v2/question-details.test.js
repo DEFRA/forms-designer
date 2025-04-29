@@ -33,7 +33,8 @@ import { upsertList } from '~/src/lib/list.js'
 import {
   buildQuestionSessionState,
   createQuestionSessionState,
-  getQuestionSessionState
+  getQuestionSessionState,
+  setQuestionSessionState
 } from '~/src/lib/session-helper.js'
 import { handleEnhancedActionOnGet } from '~/src/routes/forms/editor-v2/question-details-helper.js'
 import { auth } from '~/test/fixtures/auth.js'
@@ -677,6 +678,64 @@ describe('Editor v2 question details routes', () => {
     } = await renderResponse(server, options)
 
     expect(statusCode).toBe(StatusCodes.INTERNAL_SERVER_ERROR)
+  })
+
+  test('POST - should retain radios state if error with JS enabled', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+
+    jest.mocked(getQuestionSessionState).mockReturnValueOnce({
+      ...simpleSessionRadiosField,
+      listItems: [
+        {
+          text: 'option 1',
+          hint: { text: 'option 1 hint' },
+          value: 'option 1 val'
+        },
+        {
+          text: 'option 2',
+          hint: { text: 'option 2 hint' },
+          value: 'option 2 val'
+        }
+      ]
+    })
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/1/question/1/details/77889',
+      auth,
+      payload: {
+        name: '12345',
+        question: 'Question text',
+        shortDescription: '',
+        questionType: 'RadiosField',
+        jsEnabled: 'true'
+      }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/page/1/question/1/details/77889#'
+    )
+    expect(addErrorsToSession).toHaveBeenCalledWith(
+      expect.anything(),
+      new Joi.ValidationError('Enter a short description', [], undefined),
+      'questionDetailsValidationFailure'
+    )
+    expect(setQuestionSessionState).toHaveBeenCalledWith(
+      expect.anything(),
+      '77889',
+      {
+        editRow: {
+          expanded: false
+        },
+        listItems: [],
+        questionType: 'RadiosField'
+      }
+    )
   })
 
   test('POST - should redirect to next page if valid payload with new question', async () => {

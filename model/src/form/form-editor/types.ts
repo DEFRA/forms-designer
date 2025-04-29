@@ -272,6 +272,7 @@ export type FormEditorInputQuestion = Pick<
   | 'radioValue'
   | 'list'
   | 'listItemsData'
+  | 'jsEnabled'
 >
 
 export type FormEditorInputPageSettings = Pick<
@@ -302,6 +303,7 @@ export type FormEditorInputQuestionDetails = Pick<
   | 'radioHint'
   | 'radioValue'
   | 'listItemsData'
+  | 'jsEnabled'
 >
 
 export interface QuestionSessionState {
