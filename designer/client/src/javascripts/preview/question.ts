@@ -161,6 +161,7 @@ export class EventListeners {
 }
 
 export class Question {
+  protected _questionTemplate = 'textfield.njk'
   protected _question: string
   protected _hintText: string
   protected _optional: boolean
@@ -281,8 +282,6 @@ export class Question {
   }
 
   static setupPreview() {
-    const elements = new QuestionElements()
-    const question = new Question(elements)
-    question.render()
+    new Question(new QuestionElements()).render()
   }
 }
