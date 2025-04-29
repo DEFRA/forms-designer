@@ -1,7 +1,9 @@
 {% from "preview-panel/macro.njk" import appPreviewPanel %}
 
 {% call appPreviewPanel({
-    questionType: questionType
+    questionType: questionType,
+    previewPageUrl: previewPageUrl,
+    previewErrorsUrl: previewErrorsUrl
   }) %}
 {% endcall %}
 

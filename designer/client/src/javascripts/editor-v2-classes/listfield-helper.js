@@ -327,3 +327,58 @@ export function removeClassIfExists(elem, className) {
     elem.classList.remove(className)
   }
 }
+
+/**
+ * @param {string} labelDisplayText
+ * @param {string} hintDisplayText
+ * @param {string} valueDisplayText
+ * @returns {string}
+ */
+export function createEditHtml(
+  labelDisplayText,
+  hintDisplayText,
+  valueDisplayText
+) {
+  // Create the edit form HTML
+  return `
+  <div class="edit-option-form govuk-!-margin-bottom-6">
+    <h2 class="govuk-heading-m">Edit option</h2>
+
+    <!-- Option Value (Label) -->
+    <div class="govuk-form-group">
+      <label class="govuk-label govuk-label--m" for="edit-option-label">Item</label>
+      <input class="govuk-input" id="edit-option-label" name="edit-label" type="text"
+        value="${labelDisplayText}">
+    </div>
+
+    <!-- Hint Text -->
+    <div class="govuk-form-group">
+      <label class="govuk-label govuk-label--m" for="edit-option-hint">Hint text (optional)</label>
+      <div class="govuk-hint">Use single short sentence without a full stop</div>
+      <input class="govuk-input" id="edit-option-hint" name="edit-hint" type="text"
+        value="${hintDisplayText}">
+    </div>
+
+    <!-- Advanced Features Section -->
+    <details class="govuk-details" data-module="govuk-details">
+      <summary class="govuk-details__summary">
+        <span class="govuk-details__summary-text">Advanced features</span>
+      </summary>
+      <div class="govuk-details__text">
+        <!-- Additional Value -->
+        <div class="govuk-form-group">
+          <label class="govuk-label govuk-label--m" for="edit-option-value">Unique identifier (optional)</label>
+          <div class="govuk-hint">Used in databases to identify the item</div>
+          <input class="govuk-input" id="edit-option-value" name="edit-value" type="text"
+            value="${valueDisplayText}">
+        </div>
+      </div>
+    </details>
+
+    <div class="govuk-button-group">
+      <button type="button" class="govuk-button save-edit-button">Save changes</button>
+      <a class="govuk-link cancel-edit-link" href="#">Cancel</a>
+    </div>
+</div>
+`
+}

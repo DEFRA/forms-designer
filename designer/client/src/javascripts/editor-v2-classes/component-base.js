@@ -1,3 +1,5 @@
+import { hideIfExists } from '~/src/javascripts/editor-v2-classes/listfield-helper'
+
 export class ComponentBase {
   /**
    * @param {Document} document
@@ -37,6 +39,14 @@ export class ComponentBase {
         return
       }
       panel.classList.remove('govuk-!-display-none')
+
+      // Hide preview buttons
+      const previewPageButton = document.getElementById('preview-page')
+      hideIfExists(previewPageButton)
+      const previewErrorsButton = document.getElementById(
+        'preview-error-messages'
+      )
+      hideIfExists(previewErrorsButton)
 
       local.initializeEventListenersAndContent()
     })

@@ -7,6 +7,7 @@ import {
   ErrorSummary,
   NotificationBanner,
   Radios,
+  Tabs,
   createAll
 } from 'govuk-frontend'
 
@@ -16,5 +17,6 @@ createAll(CharacterCount)
 createAll(Checkboxes)
 createAll(ErrorSummary)
 createAll(Radios)
+createAll(Tabs)
 createAll(NotificationBanner)
 createAll(ServiceHeader)

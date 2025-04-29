@@ -9,4 +9,38 @@ $defra-brand-colour: govuk-organisation-colour(department-for-environment-food-r
   top: 0;
   padding: 20px;
   box-shadow: 5px 10px #008938;
+
+  #before-content {
+    background-color: #cce2d8;
+
+    position: absolute;
+    top: 0;
+    left: 10 !important;
+    right: 0;
+    width: 100%;
+    padding: 10px !important;
+    box-sizing: border-box;
+    z-index: 1;
+    border-bottom: 1px solid #008938;
+    padding-left: 10px;
+
+    p {
+      margin-bottom: 0;
+      color: #005a30;
+      padding: 2px 8px 3px;
+      text-align: center;
+    }
+  }
+
+  .govuk-tabs__panel {
+    p {
+      margin-bottom: 30px;
+      border-bottom: #008938 1px;
+    }
+  }
+
+  .border-left-container-shorttext {
+    border-left: 10px solid #ffb266;
+    padding-left: 20px;
+  }
 }
