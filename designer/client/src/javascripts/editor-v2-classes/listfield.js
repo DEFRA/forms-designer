@@ -705,32 +705,26 @@ export class ListField extends ComponentBase {
       }
 
       /**
-       * @param {{ saveButton: HTMLElement, editLabelInput: HTMLInputElement | null, editHintInput: HTMLInputElement | null, editValueInput: HTMLInputElement | null, labelDisplay: HTMLElement | null, hintDisplay: HTMLElement | null, currentListItem: ListItem | undefined, listItemsData: HTMLInputElement, listItems: ListItem[], listItem: HTMLElement }} formDetails
+       * @param {FormDetails} formDetails
        */
       function setupSaveChangesButtonExistingItem(formDetails) {
         // Save changes of existing item being edited
         formDetails.saveButton.addEventListener('click', () => {
-          const newLabel = formDetails.editLabelInput?.value.trim() ?? ''
-          const newHint = formDetails.editHintInput?.value.trim() ?? ''
-          const newValue = formDetails.editValueInput?.value.trim() ?? ''
+          const newLabel = formDetails.editLabelInput.value.trim()
+          const newHint = formDetails.editHintInput.value.trim()
+          const newValue = formDetails.editValueInput.value.trim()
           const valueEnforced = newValue.length
             ? newValue
             : newLabel.toLowerCase().replace(/\s+/g, '-')
 
           // Update the values
-          if (formDetails.labelDisplay) {
-            formDetails.labelDisplay.textContent = newLabel
-          }
-          if (formDetails.hintDisplay) {
-            formDetails.hintDisplay.textContent = newHint
-          }
+          formDetails.labelDisplay.textContent = newLabel
+          formDetails.hintDisplay.textContent = newHint
 
           // Update hidden data list
-          if (formDetails.currentListItem) {
-            formDetails.currentListItem.text = newLabel
-            formDetails.currentListItem.hint = { text: newHint }
-            formDetails.currentListItem.value = valueEnforced
-          }
+          formDetails.currentListItem.text = newLabel
+          formDetails.currentListItem.hint = { text: newHint }
+          formDetails.currentListItem.value = valueEnforced
 
           formDetails.listItemsData.value = JSON.stringify(
             formDetails.listItems
@@ -753,6 +747,51 @@ export class ListField extends ComponentBase {
       }
 
       /**
+       * @param {FormDetails} formDetails
+       */
+      function addEditableEventListeners(formDetails) {
+        // Cancel editing
+        formDetails.cancelButton.addEventListener('click', (e) => {
+          e.preventDefault()
+          restoreItemDisplay(formDetails.listItem)
+        })
+
+        // Add preview updating on input
+        formDetails.editHintInput.addEventListener('input', () => {
+          updateEditPreview(
+            formDetails.listItem,
+            formDetails.editLabelInput.value,
+            formDetails.editHintInput.value
+          )
+        })
+
+        formDetails.editLabelInput.addEventListener('input', () => {
+          updateEditPreview(
+            formDetails.listItem,
+            formDetails.editLabelInput.value,
+            formDetails.editHintInput.value
+          )
+        })
+
+        // Add focus/blur event listeners for highlighting
+        formDetails.editLabelInput.addEventListener('focus', () => {
+          const labelElement = getClosestLabel(
+            formDetails.listItem,
+            formDetails.baseClassName
+          )
+          addClassIfExists(labelElement, 'highlight')
+        })
+
+        formDetails.editLabelInput.addEventListener('blur', () => {
+          const labelElement = getClosestLabel(
+            formDetails.listItem,
+            baseClassName
+          )
+          removeClassIfExists(labelElement, 'highlight')
+        })
+      }
+
+      /**
        * Function to convert a list item to editable form
        * @param {HTMLElement} listItem
        */
@@ -765,7 +804,6 @@ export class ListField extends ComponentBase {
 
         const labelDisplayText = currentListItem?.text ?? ''
         const hintDisplayText = currentListItem?.hint?.text ?? ''
-
         const labelDisplay = getHtmlElement(listItem, OPTION_LABEL_DISPLAY)
         const hintDisplay = getHtmlElement(listItem, GOVUK_HINT_CLASS)
         const editLink = getHtmlElement(listItem, '.edit-item a')
@@ -794,29 +832,23 @@ export class ListField extends ComponentBase {
 
         // Add event listeners for the new form
         const editForm = listItem.querySelector('.edit-option-form')
-        const saveButton = /** @type { HTMLElement | null } */ (
-          editForm?.querySelector('.save-edit-button')
+        const saveButton = getHtmlElement(editForm, '.save-edit-button')
+        const cancelButton = editForm?.querySelector('.cancel-edit-link')
+        const editLabelInput = getHtmlInputElement(
+          editForm,
+          '#edit-option-label'
         )
-        const cancelButtonElement = editForm?.querySelector('.cancel-edit-link')
-        const editLabelInput = /** @type { HTMLInputElement | null } */ (
-          editForm?.querySelector('#edit-option-label')
-        )
-        const editHintInput = /** @type { HTMLInputElement | null } */ (
-          editForm?.querySelector('#edit-option-hint')
-        )
-        const editValueInput = /** @type { HTMLInputElement | null } */ (
-          editForm?.querySelector('#edit-option-value')
+        const editHintInput = getHtmlInputElement(editForm, '#edit-option-hint')
+        const editValueInput = getHtmlInputElement(
+          editForm,
+          '#edit-option-value'
         )
 
         // Focus the label input
         focusIfExists(editLabelInput)
 
         // Save changes
-        if (!saveButton) {
-          return
-        }
-
-        const formDetails = {
+        const formDetails = /** @type {FormDetails} */ ({
           saveButton,
           editLabelInput,
           editHintInput,
@@ -826,48 +858,15 @@ export class ListField extends ComponentBase {
           currentListItem,
           listItemsData,
           listItems,
-          listItem
-        }
+          listItem,
+          cancelButton,
+          baseClassName
+        })
         setupSaveChangesButtonExistingItem(formDetails)
-
-        // Cancel editing
-        if (cancelButtonElement) {
-          cancelButtonElement.addEventListener('click', (e) => {
-            e.preventDefault()
-            restoreItemDisplay(listItem)
-          })
-        }
-
-        // Add preview updating on input
-        editHintInput?.addEventListener('input', () => {
-          updateEditPreview(
-            listItem,
-            editLabelInput?.value,
-            editHintInput.value
-          )
-        })
-
-        editLabelInput?.addEventListener('input', () => {
-          updateEditPreview(
-            listItem,
-            editLabelInput.value,
-            editHintInput?.value
-          )
-        })
-
-        // Add focus/blur event listeners for highlighting
-        editLabelInput?.addEventListener('focus', () => {
-          const labelElement = getClosestLabel(listItem, baseClassName)
-          addClassIfExists(labelElement, 'highlight')
-        })
-
-        editLabelInput?.addEventListener('blur', () => {
-          const labelElement = getClosestLabel(listItem, baseClassName)
-          removeClassIfExists(labelElement, 'highlight')
-        })
+        addEditableEventListeners(formDetails)
 
         // Update preview immediately to show current state
-        updateEditPreview(listItem, editLabelInput?.value, editHintInput?.value)
+        updateEditPreview(listItem, editLabelInput.value, editHintInput.value)
 
         // If label input is already focused, apply highlight immediately
         if (document.activeElement === editLabelInput) {

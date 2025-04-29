@@ -8,21 +8,21 @@ export const JS_REORDERABLE_LIST_UP = 'js-reorderable-list-up'
 export const JS_REORDERABLE_LIST_DOWN = 'js-reorderable-list-down'
 
 /**
- * @param {Document | Element } rootElement
+ * @param {Document | Element | null } rootElement
  * @param {string} selector
  * @returns {HTMLInputElement}
  */
 export function getHtmlInputElement(rootElement, selector) {
-  return /** @type {HTMLInputElement} */ (rootElement.querySelector(selector))
+  return /** @type {HTMLInputElement} */ (rootElement?.querySelector(selector))
 }
 
 /**
- * @param {Document | Element } rootElement
+ * @param {Document | Element | null } rootElement
  * @param {string} selector
  * @returns {HTMLElement}
  */
 export function getHtmlElement(rootElement, selector) {
-  return /** @type {HTMLElement} */ (rootElement.querySelector(selector))
+  return /** @type {HTMLElement} */ (rootElement?.querySelector(selector))
 }
 
 /**
