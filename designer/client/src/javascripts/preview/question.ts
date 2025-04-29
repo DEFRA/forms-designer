@@ -232,7 +232,7 @@ export class Question {
       }
     ) => string
 
-    const html = render('input.njk', {
+    const html = render('textfield.njk', {
       model: this.renderInput
     })
 
