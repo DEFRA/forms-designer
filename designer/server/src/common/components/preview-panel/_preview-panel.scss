@@ -10,15 +10,14 @@ $defra-brand-colour: govuk-organisation-colour(department-for-environment-food-r
   padding: 20px;
   box-shadow: 5px 10px #008938;
 
-  #before-content {
+  .preview-before-content {
     background-color: #cce2d8;
 
     position: absolute;
     top: 0;
-    left: 10 !important;
     right: 0;
     width: 100%;
-    padding: 10px !important;
+    padding: 10px;
     box-sizing: border-box;
     z-index: 1;
     border-bottom: 1px solid #008938;
