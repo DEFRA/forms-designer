@@ -5,8 +5,8 @@
   }) %}
 {% endcall %}
 
-<!-- this could probably be better handled with a preview function rather than a global -->
-<script>document.questionType = '{{ questionType }}'.toLowerCase()</script>
-
 <script src="{{ getAssetPath("assets/nunjucks/govuk-components.js") }}"></script>
-<script src="{{ getAssetPath("preview.js") }}"></script>
+<script type="module">
+  import { setupPreview } from "{{ getAssetPath("preview.js") }}"
+  setupPreview('{{ questionType}}'.toLowerCase())
+</script>

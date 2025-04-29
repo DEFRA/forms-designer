@@ -5,9 +5,13 @@ import '~/src/views/components/radios.njk'
 import { Question } from '~/src/javascripts/preview/question.js'
 import { Textfield } from '~/src/javascripts/preview/textfield.js'
 
-// @ts-expect-error - Property 'questionType' does not exist on type 'Document' - will be sorted for PROD
-if (document.questionType === 'textfield') {
-  Textfield.setupPreview()
-} else {
-  Question.setupPreview()
+/**
+ * @param {string} questionType
+ */
+export function setupPreview(questionType) {
+  if (questionType === 'textfield') {
+    Textfield.setupPreview()
+  } else {
+    Question.setupPreview()
+  }
 }
