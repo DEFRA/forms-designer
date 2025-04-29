@@ -326,6 +326,9 @@ export interface QuestionSessionState {
     expanded?: boolean
   }
   listItems?: ListItem[]
+  isReordering?: boolean
+  lastMovedId?: string
+  lastMoveDirection?: string
 }
 
 export interface GovukField {
