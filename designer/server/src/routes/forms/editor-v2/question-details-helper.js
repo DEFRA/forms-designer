@@ -169,7 +169,7 @@ export function handleEnhancedActionOnPost(request, stateId, questionDetails) {
 
   if (enhancedAction === 'add-item') {
     setQuestionSessionState(yar, stateId, state)
-    return '#add-option'
+    return '#add-option-form'
   }
 
   if (enhancedAction === 're-order') {
