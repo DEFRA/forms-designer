@@ -341,7 +341,7 @@ describe('Editor v2 question-details route helper', () => {
       const { mockRequest } = buildMockRequest(payload)
 
       expect(handleEnhancedActionOnPost(mockRequest, '123', {})).toBe(
-        '#add-option'
+        '#add-option-form'
       )
       expect(mockSet).toHaveBeenCalledWith('questionSessionState-123', {
         questionType: 'RadiosField',
