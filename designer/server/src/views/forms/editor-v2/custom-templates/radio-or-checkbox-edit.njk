@@ -1,6 +1,6 @@
 {% set hasStateWithinDetailsSection = enhancedFields[radioValueIdx].value %}
 
-{% set showOrHide = "display:none"%}
+{% set showOrHide = "display:block" if state.editRow.expanded else "display:none"%}
 <div id="add-option-form" class="govuk-!-margin-bottom-6 gem-c-reorderable-list__item" style="{{ showOrHide }}">
   <h2 class="govuk-caption-m" id="add-option-heading">Item {{ listDetails.rowNumBeingEdited }}</h2>
   {{ govukInput(enhancedFields[radioTextIdx]) }}
