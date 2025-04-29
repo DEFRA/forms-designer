@@ -2,6 +2,7 @@ import Sortable from 'sortablejs'
 import { v4 as uuidV4 } from 'uuid'
 
 import { ComponentBase } from '~/src/javascripts/editor-v2-classes/component-base.js'
+import { addOptionButtonFn } from '~/src/javascripts/editor-v2-classes/listfield-functions.js'
 import {
   ERROR_HTML,
   GOVUK_HINT_CLASS,
@@ -138,28 +139,11 @@ export class ListField extends ComponentBase {
         document,
         `#question-preview-content .${baseClassName}`
       )
-      const addOptionHeading = getHtmlElement(document, '#add-option-heading')
 
       // Add option button click
       addOptionButton.addEventListener('click', function (e) {
         e.preventDefault()
-        const currentOptions = optionsContainer.querySelectorAll(
-          REORDERABLE_LIST_ITEM_CLASS
-        )
-        const nextItemNumber = currentOptions.length + 1
-        addOptionHeading.textContent = `Item ${nextItemNumber}`
-        addOptionForm.style.display = 'block'
-        addOptionButton.style.display = 'none'
-        newOptionLabel.focus()
-
-        // Show initial preview immediately
-        const radioListElement = document.querySelector(
-          `#radio-list .${baseClassName}`
-        )
-        if (radioListElement) {
-          radioListElement.innerHTML = local.getInitialPreviewHtml()
-          applyHighlight('label', radioList, baseClassName)
-        }
+        addOptionButtonFn(local, baseClassName)
         updatePreview() // Update preview for any existing items
       })
 

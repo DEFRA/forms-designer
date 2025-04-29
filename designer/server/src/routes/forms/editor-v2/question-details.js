@@ -130,12 +130,18 @@ export function validatePreSchema(request, h) {
 
   const state = getQuestionSessionState(yar, stateId)
 
+  const jsEnabled = payload.jsEnabled === 'true'
+  const listItems = jsEnabled
+    ? /** @type {ListItem[]} */ (JSON.parse(payload.listItemsData))
+    : state?.listItems
+
   const { error } = preSchema.validate({
     ...payload,
-    'list-items': state?.listItems?.length ?? 0
+    'list-items': listItems?.length ?? 0
   })
 
   if (error) {
+    overrideStateIfJsEnabled(request)
     return redirectWithErrors(
       /** @type {Request} */ request,
       h,
@@ -149,7 +155,7 @@ export function validatePreSchema(request, h) {
 }
 
 /**
- * @param { Request } request
+ * @param { Request | Request<{ Payload: FormEditorInputQuestionDetails } > } request
  */
 export function overrideStateIfJsEnabled(request) {
   const { payload, params } = request
@@ -397,7 +403,7 @@ export default [
 ]
 
 /**
- * @import { ComponentDef, FormDefinition, FormEditorInputQuestionDetails, Item, QuestionSessionState } from '@defra/forms-model'
+ * @import { ComponentDef, FormDefinition, FormEditorInputQuestionDetails, Item, ListItem, QuestionSessionState } from '@defra/forms-model'
  * @import Boom from '@hapi/boom'
- * @import { ReqRefDefaults, Request, ResponseToolkit, ServerRoute } from '@hapi/hapi'
+ * @import { Request, ResponseToolkit, ServerRoute } from '@hapi/hapi'
  */
