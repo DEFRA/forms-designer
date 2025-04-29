@@ -10,7 +10,10 @@ import Joi from 'joi'
 
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
-import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
+import {
+  dispatchToPageTitle,
+  getValidationErrorsFromSession
+} from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import {
@@ -18,10 +21,18 @@ import {
   getQuestionSessionState,
   mergeQuestionSessionState
 } from '~/src/lib/session-helper.js'
+import {
+  getFormComponentsCount,
+  getPageFromDefinition,
+  hasPageTitle
+} from '~/src/lib/utils.js'
 import * as viewModel from '~/src/models/forms/editor-v2/question-type.js'
 import { editorv2Path } from '~/src/models/links.js'
 
-const ROUTE_FULL_PATH_QUESTION = `/library/{slug}/editor-v2/page/{pageId}/question/{questionId}/type/{stateId?}`
+const ROUTE_FULL_PATH_QUESTION =
+  '/library/{slug}/editor-v2/page/{pageId}/question/{questionId}/type/{stateId?}'
+const ROUTE_FULL_PATH_QUESTION_WITH_STATE =
+  '/library/{slug}/editor-v2/page/{pageId}/question/{questionId}/type/{stateId}'
 
 const errorKey = sessionNames.validationFailure.editorQuestion
 
@@ -76,7 +87,7 @@ export function deriveQuestionType(
 
 export default [
   /**
-   * @satisfies {ServerRoute<{ Params: { slug: string, pageId: string, questionId: string, stateId?: string } }>}
+   * @satisfies {ServerRoute<{ Params: { slug: string, pageId: string, questionId: string, stateId?: string }, Payload: undefined }>}
    */
   ({
     method: 'GET',
@@ -87,6 +98,20 @@ export default [
       const { token } = auth.credentials
       const { slug, pageId, questionId, stateId } = params
 
+      // Form metadata and page components
+      const metadata = await forms.get(slug, token)
+      const definition = await forms.getDraftFormDefinition(metadata.id, token)
+      const page = getPageFromDefinition(definition, pageId)
+
+      // Ensure there's a page title when adding multiple questions
+      if (page && getFormComponentsCount(page) && !hasPageTitle(page)) {
+        return dispatchToPageTitle(
+          request,
+          h,
+          editorv2Path(slug, `page/${pageId}/questions`)
+        )
+      }
+
       // Set up session if not yet exists
       // prettier-ignore
       if (!stateId || !getQuestionSessionState(yar, stateId)) {
@@ -94,10 +119,6 @@ export default [
         return h.redirect(editorv2Path(slug,`page/${pageId}/question/${questionId}/type/${newStateId}`))
           .code(StatusCodes.SEE_OTHER)
       }
-
-      // Form metadata and page components
-      const metadata = await forms.get(slug, token)
-      const definition = await forms.getDraftFormDefinition(metadata.id, token)
 
       const validation = getValidationErrorsFromSession(yar, errorKey)
 
@@ -122,23 +143,32 @@ export default [
       }
     }
   }),
-
   /**
-   * @satisfies {ServerRoute<{ Payload: Pick<FormEditorInputPage, 'questionType' | 'writtenAnswerSub' | 'dateSub' | 'listSub'> }>}
+   * @satisfies {ServerRoute<{ Params: { slug: string, pageId: string, questionId: string, stateId: string }, Payload: Pick<FormEditorInputPage, 'questionType' | 'writtenAnswerSub' | 'dateSub' | 'listSub'> }>}
    */
   ({
     method: 'POST',
-    path: ROUTE_FULL_PATH_QUESTION,
-    handler(request, h) {
-      const { params, payload, yar } = request
-      const { slug, pageId, questionId, stateId } =
-        /** @type {{ slug: string, pageId: string, questionId?:string, stateId: string }} */ (
-          params
+    path: ROUTE_FULL_PATH_QUESTION_WITH_STATE,
+    async handler(request, h) {
+      const { params, payload, yar, auth } = request
+      const { token } = auth.credentials
+      const { slug, pageId, questionId, stateId } = params
+
+      // Form metadata and page components
+      const metadata = await forms.get(slug, token)
+      const definition = await forms.getDraftFormDefinition(metadata.id, token)
+      const page = getPageFromDefinition(definition, pageId)
+
+      // Ensure there's a page title when adding multiple questions
+      if (page && getFormComponentsCount(page) && !hasPageTitle(page)) {
+        return dispatchToPageTitle(
+          request,
+          h,
+          editorv2Path(slug, `page/${pageId}/questions`)
         )
-      const { questionType, writtenAnswerSub, dateSub, listSub } =
-        /** @type {{ questionType?: string, writtenAnswerSub?: ComponentType, dateSub?: ComponentType, listSub?: ComponentType }} */ (
-          payload
-        )
+      }
+
+      const { questionType, writtenAnswerSub, dateSub, listSub } = payload
 
       const suppliedQuestionType =
         /** @type {ComponentType} */

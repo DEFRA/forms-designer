@@ -732,5 +732,42 @@ export const testFormDefinitionWithRadioQuestionAndList = {
 }
 
 /**
+ * @satisfies {FormDefinition}
+ */
+export const testFormDefinitionWithOneQuestionNoPageTitle = {
+  name: 'Test form',
+  pages: [
+    {
+      id: 'p1',
+      path: '/page-one',
+      title: '',
+      section: 'section',
+      components: [
+        {
+          id: 'q1',
+          type: ComponentType.TextField,
+          name: 'textField',
+          title: 'This is your first question',
+          hint: 'Help text',
+          options: {},
+          schema: {}
+        }
+      ],
+      next: [{ path: '/summary' }]
+    },
+    {
+      id: 'p2',
+      title: 'Summary',
+      path: '/summary',
+      controller: ControllerType.Summary,
+      components: []
+    }
+  ],
+  conditions: [],
+  sections: [],
+  lists: []
+}
+
+/**
  * @import { FormDefinition, PageQuestion, PageSummary, TextFieldComponent, FileUploadFieldComponent, AutocompleteFieldComponent, List, Item, RadiosFieldComponent, CheckboxesFieldComponent } from '@defra/forms-model'
  */

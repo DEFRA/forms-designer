@@ -2,7 +2,11 @@ import { ComponentType, QuestionTypeSubGroup } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
-import { testFormDefinitionWithSinglePage } from '~/src/__stubs__/form-definition.js'
+import {
+  testFormDefinitionWithNoQuestions,
+  testFormDefinitionWithOneQuestionNoPageTitle,
+  testFormDefinitionWithSinglePage
+} from '~/src/__stubs__/form-definition.js'
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
 import { createServer } from '~/src/createServer.js'
 import { addErrorsToSession } from '~/src/lib/error-helper.js'
@@ -16,7 +20,15 @@ import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/forms.js')
-jest.mock('~/src/lib/error-helper.js')
+jest.mock('~/src/lib/error-helper.js', () => {
+  const original = jest.requireActual('~/src/lib/error-helper.js')
+
+  return {
+    ...original,
+    addErrorsToSession: jest.fn()
+  }
+})
+
 jest.mock('~/src/lib/session-helper.js')
 
 const simpleSessionWithTextField = {
@@ -145,10 +157,13 @@ describe('Editor v2 question routes', () => {
 
   test('POST - should redirect to next page if valid payload', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithNoQuestions)
 
     const options = {
       method: 'post',
-      url: '/library/my-form-slug/editor-v2/page/1/question/1/type/54321',
+      url: '/library/my-form-slug/editor-v2/page/p1/question/1/type/54321',
       auth,
       payload: { questionType: 'UkAddressField' }
     }
@@ -159,7 +174,54 @@ describe('Editor v2 question routes', () => {
 
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe(
-      '/library/my-form-slug/editor-v2/page/1/question/1/details/54321'
+      '/library/my-form-slug/editor-v2/page/p1/question/1/details/54321'
+    )
+  })
+
+  test('GET - should redirect to page overview with errors if there is not title', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithOneQuestionNoPageTitle)
+
+    const options = {
+      method: 'get',
+      url: '/library/my-form-slug/editor-v2/page/p1/question/q1/type/54321',
+      auth
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/page/p1/questions'
+    )
+  })
+
+  test('POST - should redirect to page overview with errors if there is not title', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithOneQuestionNoPageTitle)
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/p1/question/q1/type/54321',
+      auth,
+      payload: { questionType: 'UkAddressField' }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/page/p1/questions'
     )
   })
 
