@@ -160,6 +160,29 @@ export class EventListeners {
   }
 }
 
+export interface DefaultComponent {
+  id?: string
+  text: string
+  classes: string
+}
+
+export interface FieldSet {
+  legend: DefaultComponent
+}
+
+export interface QuestionBaseModel {
+  id: string
+  name: string
+  label?: DefaultComponent
+  hint?: DefaultComponent
+  fieldset?: FieldSet
+}
+
+export interface TextFieldModel extends QuestionBaseModel {
+  label: DefaultComponent
+  hint: DefaultComponent
+}
+
 export class Question {
   protected _questionTemplate = 'textfield.njk'
   protected _question: string
@@ -186,7 +209,7 @@ export class Question {
     return this._highlight === element ? ' highlight' : ''
   }
 
-  private get label() {
+  protected get label(): DefaultComponent {
     const optionalText = this._optional ? ' (optional)' : ''
 
     return {
@@ -195,7 +218,18 @@ export class Question {
     }
   }
 
-  private get hint() {
+  protected get fieldSet(): FieldSet {
+    const optionalText = this._optional ? ' (optional)' : ''
+
+    return {
+      legend: {
+        text: this._question + optionalText,
+        classes: 'govuk-fieldset__legend--l' + this.getHighlight('question')
+      }
+    }
+  }
+
+  protected get hint(): DefaultComponent {
     const text =
       this._highlight === 'hintText' && !this._hintText.length
         ? 'Hint text'
@@ -207,7 +241,7 @@ export class Question {
     }
   }
 
-  get renderInput() {
+  get renderInput(): QuestionBaseModel {
     return {
       id: 'inputField',
       name: 'inputField',
@@ -222,18 +256,18 @@ export class Question {
         render: (
           name: string,
           ctx: {
-            model: Question['renderInput']
+            model: QuestionBaseModel
           }
         ) => string
       }
     ).render as (
       name: string,
       ctx: {
-        model: Question['renderInput']
+        model: QuestionBaseModel
       }
     ) => string
 
-    const html = render('textfield.njk', {
+    const html = render(this._questionTemplate, {
       model: this.renderInput
     })
 
