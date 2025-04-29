@@ -18,7 +18,8 @@ import {
   buildQuestionSessionState,
   clearQuestionSessionState,
   createQuestionSessionState,
-  getQuestionSessionState
+  getQuestionSessionState,
+  setQuestionSessionState
 } from '~/src/lib/session-helper.js'
 import { isListComponentType } from '~/src/lib/utils.js'
 import {
@@ -108,6 +109,10 @@ async function saveList(formId, definition, token, questionDetails, listItems) {
  * @param { QuestionSessionState | undefined } state
  */
 export function getListItems(payload, state) {
+  if (payload.listItemsData) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return /** @type {Item[]} */ (JSON.parse(payload.listItemsData))
+  }
   return /** @type {Item[]} */ (
     payload.questionType === ComponentType.AutocompleteField
       ? payload.autoCompleteOptions
@@ -125,12 +130,18 @@ export function validatePreSchema(request, h) {
 
   const state = getQuestionSessionState(yar, stateId)
 
+  const jsEnabled = payload.jsEnabled === 'true'
+  const listItems = jsEnabled
+    ? /** @type {ListItem[]} */ (JSON.parse(payload.listItemsData))
+    : state?.listItems
+
   const { error } = preSchema.validate({
     ...payload,
-    'list-items': state?.listItems?.length ?? 0
+    'list-items': listItems?.length ?? 0
   })
 
   if (error) {
+    overrideStateIfJsEnabled(request)
     return redirectWithErrors(
       /** @type {Request} */ request,
       h,
@@ -141,6 +152,41 @@ export function validatePreSchema(request, h) {
   }
 
   return request
+}
+
+/**
+ * @param { Request | Request<{ Payload: FormEditorInputQuestionDetails } > } request
+ */
+export function overrideStateIfJsEnabled(request) {
+  const { payload, params } = request
+  if (typeof payload === 'object') {
+    const jsEnabled = 'jsEnabled' in payload && payload.jsEnabled === 'true'
+    const questionType =
+      'questionType' in payload
+        ? /** @type {string} */ (payload.questionType)
+        : undefined
+    const listItemsData =
+      'listItemsData' in payload
+        ? /** @type {string} */ (payload.listItemsData)
+        : undefined
+    const stateId =
+      'stateId' in params ? /** @type {string} */ (params.stateId) : 'unknown'
+
+    if (jsEnabled) {
+      const overridenState = /** @type {QuestionSessionState} */ ({
+        questionType,
+        editRow: {
+          expanded: false
+        },
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        listItems:
+          /** @type { { text?: string, hint?: { id?: string; text: string }, value?: string, id?: string }[]} */
+          (JSON.parse(listItemsData ?? '[]'))
+      })
+      setQuestionSessionState(request.yar, stateId, overridenState)
+    }
+  }
+  return undefined
 }
 
 /**
@@ -341,6 +387,7 @@ export default [
       validate: {
         payload: schema,
         failAction: (request, h, error) => {
+          overrideStateIfJsEnabled(request)
           return redirectWithErrors(request, h, error, errorKey, '#')
         }
       },
@@ -356,7 +403,7 @@ export default [
 ]
 
 /**
- * @import { ComponentDef, FormDefinition, FormEditorInputQuestionDetails, Item, QuestionSessionState } from '@defra/forms-model'
+ * @import { ComponentDef, FormDefinition, FormEditorInputQuestionDetails, Item, ListItem, QuestionSessionState } from '@defra/forms-model'
  * @import Boom from '@hapi/boom'
  * @import { Request, ResponseToolkit, ServerRoute } from '@hapi/hapi'
  */

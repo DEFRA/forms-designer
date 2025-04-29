@@ -212,9 +212,19 @@ export interface FormEditor {
   list: string
 
   /**
+   * List items in JSON format, such as for radios ro checkboxes
+   */
+  listItemsData: string
+
+  /**
    * An array of options for autocomplete
    */
   autoCompleteOptions: Item[]
+
+  /**
+   * Set to 'true' is Javascript is enabled
+   */
+  jsEnabled: string
 }
 
 export type FormEditorInputPage = Pick<
@@ -261,6 +271,8 @@ export type FormEditorInputQuestion = Pick<
   | 'radioHint'
   | 'radioValue'
   | 'list'
+  | 'listItemsData'
+  | 'jsEnabled'
 >
 
 export type FormEditorInputPageSettings = Pick<
@@ -290,7 +302,18 @@ export type FormEditorInputQuestionDetails = Pick<
   | 'radioText'
   | 'radioHint'
   | 'radioValue'
+  | 'listItemsData'
+  | 'jsEnabled'
 >
+
+export interface ListItem {
+  text?: string
+  hint?: {
+    text?: string
+  }
+  value?: string
+  id?: string
+}
 
 export interface QuestionSessionState {
   questionType?: ComponentType
@@ -302,12 +325,7 @@ export interface QuestionSessionState {
     radioValue?: string
     expanded?: boolean
   }
-  listItems?: {
-    text?: string
-    hint?: { id?: string; text: string }
-    value?: string
-    id?: string
-  }[]
+  listItems?: ListItem[]
 }
 
 export interface GovukField {

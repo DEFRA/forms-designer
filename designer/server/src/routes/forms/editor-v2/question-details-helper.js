@@ -19,7 +19,7 @@ const listUniquenessSchema = Joi.object({
 })
 
 /**
- * @param { { id?: string, text?: string, hint?: { text: string }, value?: string } | undefined } itemForEdit
+ * @param { ListItem | undefined } itemForEdit
  * @param {boolean} expanded
  */
 export function setEditRowState(itemForEdit, expanded) {
@@ -169,7 +169,7 @@ export function handleEnhancedActionOnPost(request, stateId, questionDetails) {
 
   if (enhancedAction === 'add-item') {
     setQuestionSessionState(yar, stateId, state)
-    return '#add-option'
+    return '#add-option-form'
   }
 
   if (enhancedAction === 're-order') {
@@ -184,7 +184,7 @@ export function handleEnhancedActionOnPost(request, stateId, questionDetails) {
 }
 
 /**
- * @import { ComponentDef,  FormEditorInputQuestionDetails, QuestionSessionState, FormDefinition, ListComponentsDef } from '@defra/forms-model'
+ * @import { ComponentDef,  FormEditorInputQuestionDetails, QuestionSessionState, ListItem } from '@defra/forms-model'
  * @import { Request, RequestQuery } from '@hapi/hapi'
  * @import { Yar } from '@hapi/yar'
  */

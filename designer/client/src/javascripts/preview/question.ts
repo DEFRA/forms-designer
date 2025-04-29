@@ -209,6 +209,10 @@ export class Question {
     return this._highlight === element ? ' highlight' : ''
   }
 
+  /**
+   * @protected
+   * @returns {DefaultComponent}
+   */
   protected get label(): DefaultComponent {
     const optionalText = this._optional ? ' (optional)' : ''
 
