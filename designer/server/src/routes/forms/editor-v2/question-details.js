@@ -14,7 +14,6 @@ import {
   dispatchToPageTitle,
   getValidationErrorsFromSession
 } from '~/src/lib/error-helper.js'
-import * as forms from '~/src/lib/forms.js'
 import { buildListFromDetails, upsertList } from '~/src/lib/list.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import {
@@ -23,12 +22,7 @@ import {
   createQuestionSessionState,
   getQuestionSessionState
 } from '~/src/lib/session-helper.js'
-import {
-  getFormComponentsCount,
-  getPageFromDefinition,
-  hasPageTitle,
-  isListComponentType
-} from '~/src/lib/utils.js'
+import { isListComponentType, requiresPageTitle } from '~/src/lib/utils.js'
 import {
   allSpecificSchemas,
   mapQuestionDetails
@@ -37,6 +31,7 @@ import { baseSchema } from '~/src/models/forms/editor-v2/base-settings-fields.js
 import { CHANGES_SAVED_SUCCESSFULLY } from '~/src/models/forms/editor-v2/common.js'
 import * as viewModel from '~/src/models/forms/editor-v2/question-details.js'
 import { editorv2Path } from '~/src/models/links.js'
+import { getFormPage } from '~/src/routes/forms/editor-v2/helpers.js'
 import {
   handleEnhancedActionOnGet,
   handleEnhancedActionOnPost
@@ -219,12 +214,14 @@ export default [
       const { slug, pageId, questionId, stateId } = params
 
       // Form metadata and page components
-      const metadata = await forms.get(slug, token)
-      const definition = await forms.getDraftFormDefinition(metadata.id, token)
-      const page = getPageFromDefinition(definition, pageId)
+      const { page, metadata, definition } = await getFormPage(
+        slug,
+        token,
+        pageId
+      )
 
       // Ensure there's a page title when adding multiple questions
-      if (page && getFormComponentsCount(page) && !hasPageTitle(page)) {
+      if (requiresPageTitle(page)) {
         return dispatchToPageTitle(
           request,
           h,
@@ -284,7 +281,6 @@ export default [
       }
     }
   }),
-
   /**
    * @satisfies {ServerRoute<{ Payload: FormEditorInputQuestionDetails }>}
    */
@@ -322,12 +318,14 @@ export default [
       }
 
       // Save page and first question
-      const metadata = await forms.get(slug, token)
-      const definition = await forms.getDraftFormDefinition(metadata.id, token)
-      const page = getPageFromDefinition(definition, pageId)
+      const { page, metadata, definition } = await getFormPage(
+        slug,
+        token,
+        pageId
+      )
 
       // Ensure there's a page title when adding multiple questions
-      if (page && getFormComponentsCount(page) && !hasPageTitle(page)) {
+      if (requiresPageTitle(page)) {
         return dispatchToPageTitle(
           request,
           h,

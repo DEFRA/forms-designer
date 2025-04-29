@@ -259,6 +259,15 @@ export function getFormComponentsCount(page) {
 }
 
 /**
+ * Helper function to return if a page requires a title
+ * @param {Page | undefined} page - the page
+ * @returns {boolean}
+ */
+export function requiresPageTitle(page) {
+  return !!page && getFormComponentsCount(page) > 0 && !hasPageTitle(page)
+}
+
+/**
  * @import { ErrorDetailsItem } from '~/src/common/helpers/types.js'
  * @import { ComponentDef, FormDefinition, List, Page, QuestionSessionState, ListComponentsDef } from '@defra/forms-model'
  * @import Wreck from '@hapi/wreck'

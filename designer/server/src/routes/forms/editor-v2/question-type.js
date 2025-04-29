@@ -14,20 +14,16 @@ import {
   dispatchToPageTitle,
   getValidationErrorsFromSession
 } from '~/src/lib/error-helper.js'
-import * as forms from '~/src/lib/forms.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import {
   createQuestionSessionState,
   getQuestionSessionState,
   mergeQuestionSessionState
 } from '~/src/lib/session-helper.js'
-import {
-  getFormComponentsCount,
-  getPageFromDefinition,
-  hasPageTitle
-} from '~/src/lib/utils.js'
+import { requiresPageTitle } from '~/src/lib/utils.js'
 import * as viewModel from '~/src/models/forms/editor-v2/question-type.js'
 import { editorv2Path } from '~/src/models/links.js'
+import { getFormPage } from '~/src/routes/forms/editor-v2/helpers.js'
 
 const ROUTE_FULL_PATH_QUESTION =
   '/library/{slug}/editor-v2/page/{pageId}/question/{questionId}/type/{stateId?}'
@@ -99,12 +95,14 @@ export default [
       const { slug, pageId, questionId, stateId } = params
 
       // Form metadata and page components
-      const metadata = await forms.get(slug, token)
-      const definition = await forms.getDraftFormDefinition(metadata.id, token)
-      const page = getPageFromDefinition(definition, pageId)
+      const { page, metadata, definition } = await getFormPage(
+        slug,
+        token,
+        pageId
+      )
 
       // Ensure there's a page title when adding multiple questions
-      if (page && getFormComponentsCount(page) && !hasPageTitle(page)) {
+      if (requiresPageTitle(page)) {
         return dispatchToPageTitle(
           request,
           h,
@@ -155,12 +153,10 @@ export default [
       const { slug, pageId, questionId, stateId } = params
 
       // Form metadata and page components
-      const metadata = await forms.get(slug, token)
-      const definition = await forms.getDraftFormDefinition(metadata.id, token)
-      const page = getPageFromDefinition(definition, pageId)
+      const { page } = await getFormPage(slug, token, pageId)
 
       // Ensure there's a page title when adding multiple questions
-      if (page && getFormComponentsCount(page) && !hasPageTitle(page)) {
+      if (requiresPageTitle(page)) {
         return dispatchToPageTitle(
           request,
           h,
