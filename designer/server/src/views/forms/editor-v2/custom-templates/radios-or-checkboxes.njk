@@ -33,26 +33,26 @@
               <p class="govuk-hint govuk-!-margin-top-0 govuk-!-margin-bottom-0">{{ item.hint.text }}</p>
               {% endif %}
             </div>
-            
+
             {% set itemsCount = state.listItems | length %}
             {% set isFirst = loop.first %}
             {% set isLast = loop.last %}
             {% set isFocused = state.lastMovedId == item.id %}
-            
+
             {% if isFocused %}
               {% set ariaAnnouncement = "The list has been reordered, " + item.text + " is now option " + loop.index + " of " + itemsCount + " options." %}
             {% endif %}
-            
+
             <div style="display: flex; justify-content: flex-end; margin-left: auto;">
               {% if not isFirst %}
-              <a href="?action=move&id={{ item.id }}&direction=up" class="govuk-button govuk-button--secondary" 
+              <a href="?action=move&id={{ item.id }}&direction=up" class="govuk-button govuk-button--secondary"
                 {% if isFocused and state.lastMoveDirection == "up" %}
-                  autofocus 
+                  autofocus
                   aria-live="assertive"
                   style="margin-bottom: 0; margin-right: 5px; background-color: #f3f2f1;"
                 {% else %}
                   style="margin-bottom: 0; margin-right: 5px;"
-                {% endif %} 
+                {% endif %}
                 aria-label="Button, Move {{ item.text }}: Up, {{ item.text }} is currently option {{ loop.index }} of {{ itemsCount }} options.">
                 Up
                 {% if isFocused and state.lastMoveDirection == "up" %}
@@ -60,16 +60,16 @@
                 {% endif %}
               </a>
               {% endif %}
-              
+
               {% if not isLast %}
-              <a href="?action=move&id={{ item.id }}&direction=down" class="govuk-button govuk-button--secondary" 
+              <a href="?action=move&id={{ item.id }}&direction=down" class="govuk-button govuk-button--secondary"
                 {% if isFocused and state.lastMoveDirection == "down" %}
-                  autofocus 
+                  autofocus
                   aria-live="assertive"
                   style="margin-bottom: 0; background-color: #ffdd00;"
                 {% else %}
                   style="margin-bottom: 0;"
-                {% endif %} 
+                {% endif %}
                 aria-label="Button, Move {{ item.text }}: Down, {{ item.text }} is currently option {{ loop.index }} of {{ itemsCount }} options.">
                 Down
                 {% if isFocused and state.lastMoveDirection == "down" %}
@@ -83,7 +83,7 @@
       {% endfor %}
     {% endif %}
     </ol>
-    
+
     <div class="govuk-button-group govuk-!-margin-top-6">
       <a href="?action=done-reordering" class="govuk-button">Done</a>
     </div>
@@ -104,7 +104,7 @@
                   <p class="govuk-hint govuk-!-margin-top-0 govuk-!-margin-bottom-0">{{ item.hint.text }}</p>
                 {% endif %}
               </div>
-              
+
               {% if not state.isReordering %}
                 <div class="gem-c-reorderable-list__actions">
                   <button class="gem-c-button govuk-button govuk-button--secondary js-reorderable-list-up"
@@ -127,22 +127,22 @@
                   </ul>
                 </div>
               {% endif %}
-              
+
               {% if state.isReordering %}
                 <div class="gem-c-reorderable-list__actions">
                   {% set itemsCount = state.listItems | length %}
                   {% set isFirst = loop.first %}
                   {% set isLast = loop.last %}
                   {% set isFocused = state.lastMovedId == item.id %}
-                  
+
                   {% if isFocused %}
                     {% set ariaAnnouncement = "The list has been reordered, " + item.text + " is now option " + loop.index + " of " + itemsCount + " options." %}
                   {% endif %}
-                  
+
                   {% if not isFirst %}
-                    <a href="?action=move&id={{ item.id }}&direction=up" class="govuk-button govuk-button--secondary" 
+                    <a href="?action=move&id={{ item.id }}&direction=up" class="govuk-button govuk-button--secondary"
                       {% if isFocused and state.lastMoveDirection == "up" %}
-                        autofocus 
+                        autofocus
                         aria-live="assertive"
                         style="margin-bottom: 0; margin-right: 5px; background-color: #f3f2f1;"
                       {% else %}
@@ -155,11 +155,11 @@
                       {% endif %}
                     </a>
                   {% endif %}
-                  
+
                   {% if not isLast %}
-                    <a href="?action=move&id={{ item.id }}&direction=down" class="govuk-button govuk-button--secondary" 
+                    <a href="?action=move&id={{ item.id }}&direction=down" class="govuk-button govuk-button--secondary"
                       {% if isFocused and state.lastMoveDirection == "down" %}
-                        autofocus 
+                        autofocus
                         aria-live="assertive"
                         style="margin-bottom: 0; background-color: #ffdd00;"
                       {% else %}
