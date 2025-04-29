@@ -181,6 +181,118 @@ describe('Editor v2 question-details route helper', () => {
         ]
       })
     })
+
+    test('reorder should set isReordering flag', () => {
+      mockGet.mockReturnValue(structuredClone(sessionWithListWithThreeItems))
+
+      expect(
+        handleEnhancedActionOnGet(mockYar, '123', { action: 'reorder' })
+      ).toBe('#list-items')
+      expect(mockSet).toHaveBeenCalledWith('questionSessionState-123', {
+        questionType: 'RadiosField',
+        isReordering: true,
+        editRow: { expanded: false },
+        listItems: [
+          { id: '1', text: 'text1', value: 'value1' },
+          { hint: { text: 'hint2' }, id: '2', text: 'text2', value: 'value2' },
+          { hint: { text: 'hint3' }, id: '3', text: 'text3', value: 'value3' }
+        ]
+      })
+    })
+
+    test('done-reordering should clear isReordering flag', () => {
+      mockGet.mockReturnValue(
+        structuredClone({
+          ...sessionWithListWithThreeItems,
+          isReordering: true
+        })
+      )
+
+      expect(
+        handleEnhancedActionOnGet(mockYar, '123', { action: 'done-reordering' })
+      ).toBe('#list-items')
+      expect(mockSet).toHaveBeenCalledWith('questionSessionState-123', {
+        questionType: 'RadiosField',
+        isReordering: false,
+        listItems: [
+          { id: '1', text: 'text1', value: 'value1' },
+          { hint: { text: 'hint2' }, id: '2', text: 'text2', value: 'value2' },
+          { hint: { text: 'hint3' }, id: '3', text: 'text3', value: 'value3' }
+        ]
+      })
+    })
+
+    test('move up should reposition item properly', () => {
+      mockGet.mockReturnValue(structuredClone(sessionWithListWithThreeItems))
+
+      expect(
+        handleEnhancedActionOnGet(mockYar, '123', {
+          action: 'move',
+          id: '3',
+          direction: 'up'
+        })
+      ).toBe('#list-items')
+
+      // up to position 2
+      expect(mockSet).toHaveBeenCalledWith('questionSessionState-123', {
+        questionType: 'RadiosField',
+        listItems: [
+          { id: '1', text: 'text1', value: 'value1' },
+          { hint: { text: 'hint3' }, id: '3', text: 'text3', value: 'value3' },
+          { hint: { text: 'hint2' }, id: '2', text: 'text2', value: 'value2' }
+        ],
+        lastMovedId: '3',
+        lastMoveDirection: 'up'
+      })
+    })
+
+    test('move down should reposition item properly', () => {
+      mockGet.mockReturnValue(structuredClone(sessionWithListWithThreeItems))
+
+      expect(
+        handleEnhancedActionOnGet(mockYar, '123', {
+          action: 'move',
+          id: '1',
+          direction: 'down'
+        })
+      ).toBe('#list-items')
+
+      // down to position 2
+      expect(mockSet).toHaveBeenCalledWith('questionSessionState-123', {
+        questionType: 'RadiosField',
+        listItems: [
+          { hint: { text: 'hint2' }, id: '2', text: 'text2', value: 'value2' },
+          { id: '1', text: 'text1', value: 'value1' },
+          { hint: { text: 'hint3' }, id: '3', text: 'text3', value: 'value3' }
+        ],
+        lastMovedId: '1',
+        lastMoveDirection: 'down'
+      })
+    })
+
+    test('move should handle invalid moves gracefully', () => {
+      mockGet.mockReturnValue(structuredClone(sessionWithListWithThreeItems))
+
+      // try to move first item up (should not change list!)
+      expect(
+        handleEnhancedActionOnGet(mockYar, '123', {
+          action: 'move',
+          id: '1',
+          direction: 'up'
+        })
+      ).toBe('#list-items')
+
+      expect(mockSet).toHaveBeenCalledWith('questionSessionState-123', {
+        questionType: 'RadiosField',
+        listItems: [
+          { id: '1', text: 'text1', value: 'value1' },
+          { hint: { text: 'hint2' }, id: '2', text: 'text2', value: 'value2' },
+          { hint: { text: 'hint3' }, id: '3', text: 'text3', value: 'value3' }
+        ],
+        lastMovedId: '1',
+        lastMoveDirection: 'up'
+      })
+    })
   })
 
   describe('handleEnhancedActionOnPost', () => {
@@ -411,6 +523,31 @@ describe('Editor v2 question-details route helper', () => {
           }
         )
       })
+    })
+
+    test('done-reordering post should clear isReordering flag', () => {
+      mockGet.mockReturnValue(
+        structuredClone({
+          ...sessionWithListWithThreeItems,
+          isReordering: true
+        })
+      )
+
+      const payload = /** @type {FormEditorInputQuestionDetails} */ ({
+        enhancedAction: 'done-reordering'
+      })
+
+      const { mockRequest } = buildMockRequest(payload)
+
+      expect(handleEnhancedActionOnPost(mockRequest, '123', {})).toBe(
+        '#list-items'
+      )
+      expect(mockSet).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.objectContaining({
+          isReordering: false
+        })
+      )
     })
   })
 })
