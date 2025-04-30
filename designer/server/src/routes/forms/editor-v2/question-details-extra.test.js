@@ -78,7 +78,7 @@ describe('Editor v2 question details routes', () => {
 
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe(
-      '/library/my-form-slug/editor-v2/page/123456/question/456/details/sessId#add-option'
+      '/library/my-form-slug/editor-v2/page/123456/question/456/details/sessId#add-option-form'
     )
   })
 })

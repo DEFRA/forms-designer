@@ -28,3 +28,121 @@ $defra-brand-colour: govuk-organisation-colour(department-for-environment-food-r
 .govuk-summary-card__content .govuk-summary-list__show_final_divider .govuk-summary-list__row:last-of-type {
   border-bottom: 1px solid $govuk-border-colour;
 }
+
+// Styles for the reorderable list
+.gem-c-reorderable-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.gem-c-reorderable-list__item {
+  margin-bottom: 15px;
+  border-left: 5px solid #008938;
+  outline: 1px solid #b1b4b6;
+  padding: 15px;
+  background-color: #ffffff;
+}
+
+.gem-c-reorderable-list__wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.gem-c-reorderable-list__content {
+  flex-grow: 1;
+}
+
+.gem-c-reorderable-list__actions {
+  display: none;
+
+  // Hide by default
+  flex-direction: column;
+  margin-left: 15px;
+}
+
+.gem-c-reorderable-list__actions .govuk-button {
+  margin-bottom: 10px;
+}
+
+.govuk-body.fauxlabel.option-label-display {
+  white-space: normal;
+
+  // Allow text to wrap
+  word-wrap: break-word;
+
+  // Break long words if necessary
+  overflow-wrap: break-word;
+
+  // Ensure wrapping for long words
+}
+
+// Styling for fauxlabel
+.fauxlabel {
+  border: 0;
+
+  margin: 0;
+}
+
+.govuk-radios__item label {
+  text-transform: capitalize;
+}
+
+.gem-c-reorderable-list .gem-c-reorderable-list__item:hover,
+.gem-c-reorderable-list__item:hover .fauxlabel {
+  background-color: #ffffff;
+  cursor: initial;
+}
+
+.gem-c-reorderable-list__item:hover .fauxlabel:focus {
+  cursor: initial;
+}
+
+// Highlighting styles
+.highlight {
+  background-color: #ffe5cc;
+  border-bottom: 2px solid #ffb266;
+}
+
+.highlight-dragging {
+  border: 2px dotted #ffb266;
+
+  // Example highlight style
+  background-color: #f0f0f0;
+}
+
+.highlight-moving {
+  border: 2px dashed #ffff00;
+}
+
+.sortable-ghost {
+  opacity: 0.4;
+}
+
+.sortable-chosen {
+  background-color: #e5f5ff;
+}
+
+// Style for hover state of the list item
+.gem-c-reorderable-list__item:hover {
+  background-color: #f0f0f0;
+  cursor: move;
+}
+
+// Style for the chosen item (when selected)
+.gem-c-reorderable-list__item.sortable-chosen {
+  background-color: #e5f5ff;
+  outline: 4px solid #ffdd00;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.border-left-container {
+  border-left: 10px solid #ffb266;
+  padding-left: 20px;
+}
+
+.reorder-panel-focus {
+  border-top: 2px solid $govuk-focus-colour;
+  border-right: 2px solid $govuk-focus-colour;
+  border-bottom: 2px solid $govuk-focus-colour;
+}

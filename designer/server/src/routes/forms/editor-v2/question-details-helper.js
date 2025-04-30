@@ -2,6 +2,11 @@ import { randomUUID } from 'crypto'
 
 import Joi from 'joi'
 
+import {
+  Direction,
+  EnhancedAction,
+  ListAction
+} from '~/src/common/constants/editor.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { addErrorsToSession } from '~/src/lib/error-helper.js'
 import {
@@ -19,7 +24,7 @@ const listUniquenessSchema = Joi.object({
 })
 
 /**
- * @param { { id?: string, text?: string, hint?: { text: string }, value?: string } | undefined } itemForEdit
+ * @param { ListItem | undefined } itemForEdit
  * @param {boolean} expanded
  */
 export function setEditRowState(itemForEdit, expanded) {
@@ -33,13 +38,45 @@ export function setEditRowState(itemForEdit, expanded) {
 }
 
 /**
+ * Repositions a list item in the array
+ * @param {{ id?: string }[]} listItems
+ * @param {string} direction
+ * @param {string} itemId
+ * @returns {{ id?: string }[]}
+ */
+export function repositionListItem(listItems, direction, itemId) {
+  if (!listItems.length) {
+    return listItems
+  }
+
+  const itemIdx = listItems.findIndex((x) => x.id === itemId)
+
+  const isValidDirection =
+    (direction === Direction.Down && itemIdx < listItems.length - 1) ||
+    (direction === Direction.Up && itemIdx > 0)
+
+  if (itemIdx === -1 || !isValidDirection) {
+    return listItems
+  }
+
+  const positionIndex = direction === Direction.Down ? itemIdx + 1 : itemIdx - 1
+
+  const newListItems = [...listItems]
+  const itemToMove = newListItems[itemIdx]
+  newListItems.splice(itemIdx, 1)
+  newListItems.splice(positionIndex, 0, itemToMove)
+
+  return newListItems
+}
+
+/**
  * @param {Yar} yar
  * @param {string} stateId
  * @param {RequestQuery} query
  * @returns { string | undefined }
  */
 export function handleEnhancedActionOnGet(yar, stateId, query) {
-  const { action, id } = query
+  const { action, id, direction } = query
   if (!action) {
     return undefined
   }
@@ -49,7 +86,7 @@ export function handleEnhancedActionOnGet(yar, stateId, query) {
     throw new Error('Invalid session contents')
   }
 
-  if (action === 'delete') {
+  if (action === ListAction.Delete) {
     const newList = state.listItems?.filter((x) => x.id !== id)
     setQuestionSessionState(yar, stateId, {
       ...state,
@@ -58,7 +95,7 @@ export function handleEnhancedActionOnGet(yar, stateId, query) {
     return radiosSectionListItemsAnchor
   }
 
-  if (action === 'edit') {
+  if (action === ListAction.Edit) {
     const itemForEdit = state.listItems?.find((x) => x.id === id)
 
     setQuestionSessionState(yar, stateId, {
@@ -68,10 +105,51 @@ export function handleEnhancedActionOnGet(yar, stateId, query) {
     return '#add-option-form'
   }
 
-  if (action === 'cancel') {
+  if (action === ListAction.Cancel) {
     setQuestionSessionState(yar, stateId, {
       ...state,
       editRow: setEditRowState(undefined, false)
+    })
+    return radiosSectionListItemsAnchor
+  }
+
+  if (action === ListAction.Reorder) {
+    setQuestionSessionState(yar, stateId, {
+      ...state,
+      isReordering: true,
+      editRow: { expanded: false },
+      lastMovedId: undefined,
+      lastMoveDirection: undefined
+    })
+    return radiosSectionListItemsAnchor
+  }
+
+  if (action === ListAction.Move) {
+    if (
+      id &&
+      direction &&
+      (direction === Direction.Up || direction === Direction.Down)
+    ) {
+      const newList = repositionListItem(
+        state.listItems ?? [],
+        String(direction),
+        String(id)
+      )
+      setQuestionSessionState(yar, stateId, {
+        ...state,
+        listItems: newList,
+        lastMovedId: String(id),
+        lastMoveDirection: String(direction)
+      })
+    }
+    return '#'
+  }
+
+  if (action === ListAction.DoneReordering) {
+    setQuestionSessionState(yar, stateId, {
+      ...state,
+      isReordering: false,
+      editRow: { expanded: false }
     })
     return radiosSectionListItemsAnchor
   }
@@ -164,27 +242,38 @@ export function handleEnhancedActionOnPost(request, stateId, questionDetails) {
       radioValue: payload.radioValue,
       expanded: true
     },
+    isReordering: preState.isReordering,
+    lastMovedId: preState.lastMovedId,
+    lastMoveDirection: preState.lastMoveDirection,
     listItems: preState.listItems ?? []
   })
 
-  if (enhancedAction === 'add-item') {
+  if (enhancedAction === EnhancedAction.AddItem) {
     setQuestionSessionState(yar, stateId, state)
-    return '#add-option'
+    return '#add-option-form'
   }
 
-  if (enhancedAction === 're-order') {
+  if (enhancedAction === EnhancedAction.Reorder) {
+    state.isReordering = true
     setQuestionSessionState(yar, stateId, state)
     return radiosSectionListItemsAnchor
   }
 
-  if (enhancedAction === 'save-item') {
+  if (enhancedAction === ListAction.DoneReordering) {
+    state.isReordering = false
+    setQuestionSessionState(yar, stateId, state)
+    return radiosSectionListItemsAnchor
+  }
+
+  if (enhancedAction === EnhancedAction.SaveItem) {
     return handleSaveItem(request, state, stateId)
   }
+
   return undefined
 }
 
 /**
- * @import { ComponentDef,  FormEditorInputQuestionDetails, QuestionSessionState, FormDefinition, ListComponentsDef } from '@defra/forms-model'
+ * @import { ComponentDef,  FormEditorInputQuestionDetails, QuestionSessionState, ListItem } from '@defra/forms-model'
  * @import { Request, RequestQuery } from '@hapi/hapi'
  * @import { Yar } from '@hapi/yar'
  */
