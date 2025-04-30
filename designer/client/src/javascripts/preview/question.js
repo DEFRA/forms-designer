@@ -99,7 +99,7 @@ export class EventListeners {
 
   /**
    * @param {HTMLElement | null} element
-   * @param {(inputElement: HTMLInputElement) => void} cb
+   * @param {(inputElement: HTMLInputElement, event: Event) => void} cb
    * @param {keyof HTMLElementEventMap} type
    * @protected
    */
@@ -107,7 +107,7 @@ export class EventListeners {
     if (element) {
       element.addEventListener(type, (e) => {
         const target = /** @type {HTMLInputElement} */ (e.target)
-        cb(target)
+        cb(target, e)
       })
     }
   }
@@ -146,7 +146,7 @@ export class EventListeners {
   }
 
   /**
-   * @private
+   * @public
    * @returns {ListenerRow[]}
    */
   get listeners() {
@@ -307,7 +307,8 @@ export class Question {
     const optionalText = this._optional ? ' (optional)' : ''
 
     return {
-      text: this._question + optionalText,
+      text:
+        (this._question === '' ? 'Question' : this._question) + optionalText,
       classes: 'govuk-label--l' + this.getHighlight('question')
     }
   }
