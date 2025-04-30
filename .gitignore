@@ -15,3 +15,13 @@ coverage
 
 */.pnp.*
 *.tsbuildinfo
+
+# Playwright
+designer/test-results/
+designer/playwright-report/
+designer/blob-report/
+designer/playwright/.cache/
+designer/server/test/integration/playwright/.auth/user.json
+
+playwright-report/index.html
+test-results/.last-run.json
