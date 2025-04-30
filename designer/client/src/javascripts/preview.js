@@ -5,6 +5,7 @@ import '~/src/views/components/date-input.njk'
 
 import { DateInput } from '~/src/javascripts/preview/date-input.js'
 import { Question } from '~/src/javascripts/preview/question.js'
+import { Radio } from '~/src/javascripts/preview/radio.js'
 import { Textfield } from '~/src/javascripts/preview/textfield.js'
 
 /**
@@ -15,6 +16,8 @@ export function setupPreview(questionType) {
     Textfield.setupPreview()
   } else if (questionType === 'datepartsfield') {
     DateInput.setupPreview()
+  } else if (questionType === 'radiosfield') {
+    Radio.setupPreview()
   } else {
     Question.setupPreview()
   }

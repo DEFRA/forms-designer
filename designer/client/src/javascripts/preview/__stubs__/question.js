@@ -13,8 +13,7 @@ export const questionDetailsLeftPanelHTML = `
           <label class="govuk-label govuk-label--m" for="question">
             Question
           </label>
-          <input class="govuk-input" id="question" name="question" type="text"
-                 value="Which quest would you like to pick?">
+          <input class="govuk-input" id="question" name="question" type="text" value="Which quest would you like to pick?">
         </div>
 
         <div class="govuk-form-group">
@@ -25,11 +24,9 @@ export const questionDetailsLeftPanelHTML = `
         </div>
 
         <div class="govuk-form-group">
-          <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes"
-               data-govuk-checkboxes-init="">
+          <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes" data-govuk-checkboxes-init="">
             <div class="govuk-checkboxes__item">
-              <input class="govuk-checkboxes__input" id="questionOptional" name="questionOptional" type="checkbox"
-                     value="true">
+              <input class="govuk-checkboxes__input" id="questionOptional" name="questionOptional" type="checkbox" value="true">
               <label class="govuk-label govuk-checkboxes__label" for="questionOptional">
                 Make this question optional
               </label>
@@ -45,15 +42,13 @@ export const questionDetailsLeftPanelHTML = `
             Enter a short description for this question like 'Licence period'. Short descriptions are used in error
             messages and on the check your answers page.
           </div>
-          <input class="govuk-input" id="shortDescription" name="shortDescription" type="text" value="your quest"
-                 aria-describedby="shortDescription-hint">
+          <input class="govuk-input" id="shortDescription" name="shortDescription" type="text" value="your quest" aria-describedby="shortDescription-hint">
         </div>
 
 
         <div class="govuk-form-group" id="list-items">
           <h2 class="govuk-heading-m" tabindex="-1">
-            <svg class="govuk-!-margin-right-1" style="position: relative; top: -1px; vertical-align: middle;"
-                 width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg class="govuk-!-margin-right-1" style="position: relative; top: -1px; vertical-align: middle;" width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="12" cy="12" r="11" fill="currentColor"></circle>
               <path d="M6 8h12M6 12h12M6 16h12" stroke="white" stroke-width="2" stroke-linecap="round"></path>
             </svg>
@@ -62,65 +57,38 @@ export const questionDetailsLeftPanelHTML = `
           <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"
               style="border-color:black; border-width: 3px;">
 
-          <input type="hidden" name="listItemsData" id="radio-options-data"
-                 value="[{&quot;id&quot;:&quot;879e1a76-e110-44a5-840d-3866f50b5fd6&quot;,&quot;text&quot;:&quot;Treasure Hunting&quot;,&quot;value&quot;:&quot;Treasure Hunting&quot;},{&quot;id&quot;:&quot;801385a4-81e6-4171-96c3-6c6727d97f22&quot;,&quot;text&quot;:&quot;Rescuing the princess&quot;,&quot;value&quot;:&quot;Rescuing the princess&quot;},{&quot;id&quot;:&quot;e6e3f621-b875-4ca3-a054-cca9149149dd&quot;,&quot;text&quot;:&quot;Saving a city&quot;,&quot;value&quot;:&quot;Saving a city&quot;},{&quot;id&quot;:&quot;d71b3909-582f-4e90-b6f5-490b89a6eb8f&quot;,&quot;text&quot;:&quot;Defeating the baron&quot;,&quot;value&quot;:&quot;Defeating the baron&quot;}]">
+          <input type="hidden" name="listItemsData" id="radio-options-data" value="[{&quot;id&quot;:&quot;879e1a76-e110-44a5-840d-3866f50b5fd6&quot;,&quot;text&quot;:&quot;Treasure Hunting&quot;,&quot;value&quot;:&quot;Treasure Hunting&quot;},{&quot;id&quot;:&quot;801385a4-81e6-4171-96c3-6c6727d97f22&quot;,&quot;text&quot;:&quot;Rescuing the princess&quot;,&quot;value&quot;:&quot;Rescuing the princess&quot;},{&quot;id&quot;:&quot;e6e3f621-b875-4ca3-a054-cca9149149dd&quot;,&quot;text&quot;:&quot;Saving a city&quot;,&quot;value&quot;:&quot;Saving a city&quot;},{&quot;id&quot;:&quot;d71b3909-582f-4e90-b6f5-490b89a6eb8f&quot;,&quot;text&quot;:&quot;Defeating the baron&quot;,&quot;value&quot;:&quot;Defeating the baron&quot;}]">
 
           <ol class="gem-c-reorderable-list js-enabled" id="options-container" data-module="reorderable-list">
-            <div id="add-option-form" class="govuk-!-margin-bottom-6 gem-c-reorderable-list__item"
-                 style="display:block">
-              <h2 class="govuk-caption-m" id="add-option-heading">Item 1</h2>
-              <div class="govuk-form-group">
-                <label class="govuk-label govuk-label--m" for="radioText">
-                  Item
-                </label>
-                <input class="govuk-input" id="radioText" name="radioText" type="text" value="Treasure Hunting">
-              </div>
-
-              <div class="govuk-form-group">
-                <label class="govuk-label govuk-label--m" for="radioHint">
-                  Hint text (optional)
-                </label>
-                <div id="radioHint-hint" class="govuk-hint">
-                  Use single short sentence without a full stop
+            <li class="gem-c-reorderable-list__item" data-index="1" data-id="414d82a3-4cab-416a-bd54-6b86fbd51120" data-val="Treasure Hunting" data-text="Treasure Hunting">
+              <div class="gem-c-reorderable-list__wrapper">
+                <div class="gem-c-reorderable-list__content">
+                  <p class="govuk-body fauxlabel option-label-display" id="option-1-label-display">
+                    Treasure Hunting
+                  </p>
                 </div>
-                <input class="govuk-input" id="radioHint" name="radioHint" type="text" value=""
-                       aria-describedby="radioHint-hint">
-              </div>
-
-              <input type="hidden" id="radioId" name="radioId" value="879e1a76-e110-44a5-840d-3866f50b5fd6">
-              <!-- Advanced Features Section -->
-              <details class="govuk-details" data-module="govuk-details" open="">
-                <summary class="govuk-details__summary">
-      <span class="govuk-details__summary-text">Advanced
-        features</span>
-                </summary>
-                <div class="govuk-details__text">
-                  <!-- Additional Value -->
-                  <div class="govuk-form-group">
-                    <div class="govuk-form-group">
-                      <label class="govuk-label govuk-label--m" for="radioValue">
-                        Unique identifier (optional)
-                      </label>
-                      <div id="radioValue-hint" class="govuk-hint">
-                        Used in databases to identify the item
-                      </div>
-                      <input class="govuk-input" id="radioValue" name="radioValue" type="text" value="Treasure Hunting"
-                             aria-describedby="radioValue-hint">
-                    </div>
-                  </div>
+                <div class="gem-c-reorderable-list__actions">
+                  <button class="gem-c-button govuk-button govuk-button--secondary js-reorderable-list-up" type="button" aria-label="Move option up">Up</button>
+                  <button class="gem-c-button govuk-button govuk-button--secondary js-reorderable-list-down" type="button" aria-label="Move option down">Down</button>
                 </div>
-              </details>
-
-              <div class="govuk-button-group">
-                <button type="submit" class="govuk-button" id="save-new-option" name="enhancedAction" value="save-item">
-                  Save item
-                </button>
-                <a class="govuk-link govuk-link--no-visited-state" href="?action=cancel"
-                   id="cancel-add-option">Cancel</a>
+                <div class="edit-item">
+                  <ul class="govuk-summary-list__actions-list">
+                    <li class="govuk-summary-list__actions-list-item">
+                      <a class="govuk-link govuk-link--no-visited-state edit-option-link" href="?action=edit&amp;id=414d82a3-4cab-416a-bd54-6b86fbd51120">
+                        Edit<span class="govuk-visually-hidden">option 1</span>
+                      </a>
+                    </li>
+                    <li class="govuk-summary-list__actions-list-item">
+                      <a class="govuk-link govuk-link--destructive delete-option-link" href="?action=delete&amp;id=414d82a3-4cab-416a-bd54-6b86fbd51120">
+                        Delete<span class="govuk-visually-hidden"> list item</span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
               </div>
-            </div>
+            </li>
             <li class="gem-c-reorderable-list__item" data-index="2" data-id="801385a4-81e6-4171-96c3-6c6727d97f22"
-                data-val="Rescuing the princess">
+                data-val="Rescuing the princess" data-text="Rescuing the princess">
               <div class="gem-c-reorderable-list__wrapper">
                 <div class="gem-c-reorderable-list__content">
                   <p class="govuk-body fauxlabel option-label-display" id="option-2-label-display">
@@ -138,14 +106,12 @@ export const questionDetailsLeftPanelHTML = `
                 <div class="edit-item">
                   <ul class="govuk-summary-list__actions-list">
                     <li class="govuk-summary-list__actions-list-item">
-                      <a class="govuk-link govuk-link--no-visited-state edit-option-link"
-                         href="?action=edit&amp;id=801385a4-81e6-4171-96c3-6c6727d97f22">
+                      <a class="govuk-link govuk-link--no-visited-state edit-option-link" href="?action=edit&amp;id=801385a4-81e6-4171-96c3-6c6727d97f22">
                         Edit<span class="govuk-visually-hidden">option 2</span>
                       </a>
                     </li>
                     <li class="govuk-summary-list__actions-list-item">
-                      <a class="govuk-link govuk-link--destructive delete-option-link"
-                         href="?action=delete&amp;id=801385a4-81e6-4171-96c3-6c6727d97f22">
+                      <a class="govuk-link govuk-link--destructive delete-option-link" href="?action=delete&amp;id=801385a4-81e6-4171-96c3-6c6727d97f22">
                         Delete<span class="govuk-visually-hidden"> list item</span>
                       </a>
                     </li>
@@ -154,7 +120,7 @@ export const questionDetailsLeftPanelHTML = `
               </div>
             </li>
             <li class="gem-c-reorderable-list__item" data-index="3" data-id="e6e3f621-b875-4ca3-a054-cca9149149dd"
-                data-val="Saving a city">
+                data-val="Saving a city" data-text="Saving a city">
               <div class="gem-c-reorderable-list__wrapper">
                 <div class="gem-c-reorderable-list__content">
                   <p class="govuk-body fauxlabel option-label-display" id="option-3-label-display">
@@ -172,14 +138,12 @@ export const questionDetailsLeftPanelHTML = `
                 <div class="edit-item">
                   <ul class="govuk-summary-list__actions-list">
                     <li class="govuk-summary-list__actions-list-item">
-                      <a class="govuk-link govuk-link--no-visited-state edit-option-link"
-                         href="?action=edit&amp;id=e6e3f621-b875-4ca3-a054-cca9149149dd">
+                      <a class="govuk-link govuk-link--no-visited-state edit-option-link" href="?action=edit&amp;id=e6e3f621-b875-4ca3-a054-cca9149149dd">
                         Edit<span class="govuk-visually-hidden">option 3</span>
                       </a>
                     </li>
                     <li class="govuk-summary-list__actions-list-item">
-                      <a class="govuk-link govuk-link--destructive delete-option-link"
-                         href="?action=delete&amp;id=e6e3f621-b875-4ca3-a054-cca9149149dd">
+                      <a class="govuk-link govuk-link--destructive delete-option-link" href="?action=delete&amp;id=e6e3f621-b875-4ca3-a054-cca9149149dd">
                         Delete<span class="govuk-visually-hidden"> list item</span>
                       </a>
                     </li>
@@ -188,7 +152,7 @@ export const questionDetailsLeftPanelHTML = `
               </div>
             </li>
             <li class="gem-c-reorderable-list__item" data-index="4" data-id="d71b3909-582f-4e90-b6f5-490b89a6eb8f"
-                data-val="Defeating the baron">
+                data-val="Defeating the baron" data-text="Defeating the baron">
               <div class="gem-c-reorderable-list__wrapper">
                 <div class="gem-c-reorderable-list__content">
                   <p class="govuk-body fauxlabel option-label-display" id="option-4-label-display">
@@ -206,14 +170,12 @@ export const questionDetailsLeftPanelHTML = `
                 <div class="edit-item">
                   <ul class="govuk-summary-list__actions-list">
                     <li class="govuk-summary-list__actions-list-item">
-                      <a class="govuk-link govuk-link--no-visited-state edit-option-link"
-                         href="?action=edit&amp;id=d71b3909-582f-4e90-b6f5-490b89a6eb8f">
+                      <a class="govuk-link govuk-link--no-visited-state edit-option-link" href="?action=edit&amp;id=d71b3909-582f-4e90-b6f5-490b89a6eb8f">
                         Edit<span class="govuk-visually-hidden">option 4</span>
                       </a>
                     </li>
                     <li class="govuk-summary-list__actions-list-item">
-                      <a class="govuk-link govuk-link--destructive delete-option-link"
-                         href="?action=delete&amp;id=d71b3909-582f-4e90-b6f5-490b89a6eb8f">
+                      <a class="govuk-link govuk-link--destructive delete-option-link" href="?action=delete&amp;id=d71b3909-582f-4e90-b6f5-490b89a6eb8f">
                         Delete<span class="govuk-visually-hidden"> list item</span>
                       </a>
                     </li>
@@ -259,8 +221,7 @@ export const questionDetailsLeftPanelHTML = `
             List: radios
           </dd>
           <dd class="govuk-summary-list__actions">
-            <a class="govuk-link govuk-link--no-visited-state"
-               href="/library/form-to-go-live/editor-v2/page/b07e7a93-a5eb-49b4-9005-e7e5cc179ee8/question/f8da282b-3d6f-4175-9168-8977de18862a/type/TbfMkP">Change<span
+            <a class="govuk-link govuk-link--no-visited-state" href="/library/form-to-go-live/editor-v2/page/b07e7a93-a5eb-49b4-9005-e7e5cc179ee8/question/f8da282b-3d6f-4175-9168-8977de18862a/type/TbfMkP">Change<span
               class="govuk-visually-hidden"> type of question</span></a>
           </dd>
         </div>
@@ -269,10 +230,7 @@ export const questionDetailsLeftPanelHTML = `
       <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
       <div class="govuk-button-group govuk-!-margin-top-6">
-        <a class="govuk-button govuk-button--inverse"
-           data-module="govuk-button" href="/preview/draft/form-to-go-live/pick-your-quest?force"
-           id="preview-page"
-           role="button" target="_blank">
+        <a class="govuk-button govuk-button--inverse" data-module="govuk-button" href="/preview/draft/form-to-go-live/pick-your-quest?force" id="preview-page" role="button" target="_blank">
           <span class="icon-wrapper">
             <!-- Your SVG icon -->
             <svg width="24" height="17" viewBox="0 0 24 17" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -1,111 +1,173 @@
-/**
- * @typedef {{
- *  id: string;
- *  text: string;
- *  value: string;
- * }} Radio
- */
-
-import {
-  questionDetailsLeftPanelHTML,
-  questionDetailsStubPanels
-} from '~/src/javascripts/preview/__stubs__/question.js'
-import { QuestionElements } from '~/src/javascripts/preview/question.js'
+import { questionDetailsStubPanels } from '~/src/javascripts/preview/__stubs__/question.js'
 import {
   Radio,
   RadioQuestionElements
 } from '~/src/javascripts/preview/radio.js'
+class EmptyRadioQuestionElements extends RadioQuestionElements {
+  get values() {
+    const baseValues = super.values
+    return {
+      ...baseValues,
+      items: []
+    }
+  }
+}
+
+jest.mock('~/src/javascripts/preview/nunjucks.js', () => {
+  return {
+    /**
+     * @param {string} _template
+     * @param {{ model: QuestionBaseModel }} _context
+     * @returns {string}
+     */
+    render(_template, _context) {
+      return '****UPDATED****'
+    }
+  }
+})
 
 describe('radio', () => {
-  const radio1Id = 'c73a2bfa-e4e5-4087-82b5-5cf46ad1997f'
-  const radio1 = /** @type {Radio} */ ({
+  const radio1Id = '414d82a3-4cab-416a-bd54-6b86fbd51120'
+  const radio1 = /** @type {RadioElement} */ ({
     id: radio1Id,
-    text: 'List Item 1',
-    value: 'list-item-1'
+    text: 'Treasure Hunting',
+    value: 'Treasure Hunting'
   })
-  const radio2Id = 'fac0dce2-ed95-41af-afde-2ed7d0d6e4ad'
-  const radio2 = /** @type {Radio} */ ({
+  const radio2Id = '801385a4-81e6-4171-96c3-6c6727d97f22'
+  const radio2 = /** @type {RadioElement} */ ({
     id: radio2Id,
-    text: 'List Item 2',
-    value: 'list-item-2'
+    text: 'Rescuing the princess',
+    value: 'Rescuing the princess'
   })
-  const radio3Id = '45d67f82-9e77-49c0-a6f5-cdd32ef7b4a0'
-  const radio3 = /** @type {Radio} */ ({
+  const radio3Id = 'e6e3f621-b875-4ca3-a054-cca9149149dd'
+  const radio3 = /** @type {RadioElement} */ ({
     id: radio3Id,
-    text: 'List Item 3',
-    value: 'list-item-'
+    text: 'Saving a city',
+    value: 'Saving a city'
   })
-  const list = [radio1, radio2, radio3]
-  const exampleMap = new Map([
-    ['c73a2bfa-e4e5-4087-82b5-5cf46ad1997f', radio1],
-    ['fac0dce2-ed95-41af-afde-2ed7d0d6e4ad', radio2],
-    ['45d67f82-9e77-49c0-a6f5-cdd32ef7b4a0', radio3]
-  ])
+  const radio4Id = 'd71b3909-582f-4e90-b6f5-490b89a6eb8f'
+  const radio4 = {
+    id: radio4Id,
+    text: 'Defeating the baron',
+    value: 'Defeating the baron'
+  }
+
+  /**
+   * @type {RadioQuestionElements}
+   */
+  let questionElements
+  /**
+   * @type {EmptyRadioQuestionElements}
+   */
+  let emptyQuestionElements
 
   beforeEach(() => {
     document.body.innerHTML = questionDetailsStubPanels
+    questionElements = new RadioQuestionElements()
+    emptyQuestionElements = new EmptyRadioQuestionElements()
   })
 
-  const questionElements = new RadioQuestionElements()
+  const expectedList = [
+    {
+      id: radio1Id,
+      text: 'Treasure Hunting',
+      value: 'Treasure Hunting'
+    },
+    {
+      id: radio2Id,
+      text: 'Rescuing the princess',
+      value: 'Rescuing the princess'
+    },
+    {
+      id: radio3Id,
+      text: 'Saving a city',
+      value: 'Saving a city'
+    },
+    {
+      id: radio4Id,
+      text: 'Defeating the baron',
+      value: 'Defeating the baron'
+    }
+  ]
 
-  describe('integration', () => {})
+  describe('integration', () => {
+    it('test', () => {
+      expect(true).toBe(true)
+    })
+  })
 
   describe('RadioQuestionElements', () => {
     it('should get all correct defaults', () => {
-      const radioQuestionElements = new RadioQuestionElements()
-      expect(radioQuestionElements.values).toEqual({
+      expect(questionElements.values).toEqual({
         question: 'Which quest would you like to pick?',
         hintText: 'Choose one adventure that best suits you.',
         optional: false,
         shortDesc: 'your quest',
-        items: [
-          {
-            id: '414d82a3-4cab-416a-bd54-6b86fbd51120',
-            text: 'Treasure Hunting',
-            value: 'Treasure Hunting'
-          },
-          {
-            id: 'e3c7dc34-a401-40e2-8836-8ec43bdee88a',
-            text: 'Rescuing the princess',
-            value: 'Rescuing the princess'
-          },
-          {
-            id: '6550cf75-2523-45c3-b119-8ca7bc27a159',
-            text: 'Saving a city',
-            value: 'Saving a city'
-          },
-          {
-            id: '6edb06e0-0d2d-4879-bac1-b58e70b8c067',
-            text: 'Defeating the baron',
-            value: 'Defeating the baron'
-          }
-        ]
+        items: expectedList
       })
     })
   })
 
-  describe('RadioEventListeners', () => {})
+  describe('RadioEventListeners', () => {
+    it('test', () => {
+      expect(true).toBeTruthy()
+    })
+  })
 
   describe('Radio class', () => {
     describe('addElement', () => {
       it('should add an element', () => {
-        const radioClass = new Radio(questionElements)
-        radioClass.push(structuredClone(radio1))
-        expect(radioClass.list).toEqual([radio1])
+        const radio = new Radio(emptyQuestionElements)
+        radio.push(structuredClone(radio1))
+        expect(radio.list).toEqual([radio1])
       })
 
       it('should delete an element', () => {
-        const radioClass = new Radio(questionElements)
-        radioClass.push(structuredClone(radio1))
-        expect(radioClass.list).toEqual([radio1])
-        radioClass.delete(radio1Id)
-        expect(radioClass.list).toEqual([])
+        const radio = new Radio(emptyQuestionElements)
+        radio.push(structuredClone(radio1))
+        expect(radio.list).toEqual([radio1])
+        radio.delete(radio1Id)
+        expect(radio.list).toEqual([])
       })
 
-      it('should edit an element', () => {
-        const radioClass = new Radio(questionElements)
-        radioClass.push(structuredClone(radio1))
-        radioClass.update(radio1Id)
+      it('should edit list text', () => {
+        const radio = new Radio(emptyQuestionElements)
+        radio.push(structuredClone(radio2))
+        radio.updateText(radio2Id, 'Rescuing the princess 👸')
+        expect(radio.list).toEqual([
+          { ...radio2, text: 'Rescuing the princess 👸' }
+        ])
+      })
+
+      it('should edit list value', () => {
+        const radio = new Radio(emptyQuestionElements)
+        radio.push(structuredClone(radio2))
+        radio.updateValue(radio2Id, 'princess-rescuing')
+        expect(radio.list).toEqual([{ ...radio2, value: 'princess-rescuing' }])
+      })
+
+      it('should return the correct model', () => {
+        const radio = new Radio(emptyQuestionElements)
+        radio.push(radio1)
+        radio.push(radio2)
+        radio.push(radio3)
+        radio.push(radio4)
+        expect(radio.renderInput).toEqual({
+          id: 'radioInput',
+          name: 'radioInputField',
+          fieldset: {
+            legend: {
+              text: 'Which quest would you like to pick?',
+              classes: 'govuk-fieldset__legend--l'
+            }
+          },
+          hint: {
+            classes: '',
+            text: 'Choose one adventure that best suits you.'
+          },
+          items: expectedList
+        })
+        expect(emptyQuestionElements.preview.innerHTML).toBe('****UPDATED****')
       })
     })
   })
@@ -114,3 +176,8 @@ describe('radio', () => {
     expect(true).toBe(true)
   })
 })
+
+/**
+ * @import { RadioElement } from '~/src/javascripts/preview/radio.js'
+ * @import { QuestionBaseModel } from '~/src/javascripts/preview/question.js'
+ */
