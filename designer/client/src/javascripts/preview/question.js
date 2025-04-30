@@ -208,11 +208,21 @@ export class EventListeners {
 
 /**
  * @typedef {{
+ *    id: string
+ *    value: string
+ *    text: string
+ *    hint?: DefaultComponent
+ * }} RadioItem
+ */
+
+/**
+ * @typedef {{
  *   id: string
  *   name: string
  *   label?: DefaultComponent
  *   hint?: DefaultComponent
  *   fieldset?: FieldSet
+ *   items?: RadioItem
  * }} QuestionBaseModel
  */
 
