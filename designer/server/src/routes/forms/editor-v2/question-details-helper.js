@@ -70,13 +70,27 @@ export function repositionListItem(listItems, direction, itemId) {
 }
 
 /**
+ * @param { string | undefined } id
+ * @param { string | undefined } direction
+ * @returns {boolean}
+ */
+export function paramsValidForMove(id, direction) {
+  return (
+    !!id &&
+    !!direction &&
+    (direction === Direction.Up || direction === Direction.Down)
+  )
+}
+
+/**
  * @param {Yar} yar
  * @param {string} stateId
  * @param {RequestQuery} query
  * @returns { string | undefined }
  */
 export function handleEnhancedActionOnGet(yar, stateId, query) {
-  const { action, id, direction } = query
+  const { action, id, direction } =
+    /** @type {{ action?: string, id?: string, direction?: string }} */ (query)
   if (!action) {
     return undefined
   }
@@ -125,11 +139,7 @@ export function handleEnhancedActionOnGet(yar, stateId, query) {
   }
 
   if (action === ListAction.Move) {
-    if (
-      id &&
-      direction &&
-      (direction === Direction.Up || direction === Direction.Down)
-    ) {
+    if (paramsValidForMove(id, direction)) {
       const newList = repositionListItem(
         state.listItems ?? [],
         String(direction),
