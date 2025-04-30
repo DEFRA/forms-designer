@@ -224,12 +224,6 @@ export class ListField extends ComponentBase {
         }
       }
 
-      // Initialize edit button visibility on page load
-      document.addEventListener(
-        'DOMContentLoaded',
-        updateEditOptionsButtonVisibility
-      )
-
       function hideForm() {
         addOptionForm.style.display = 'none'
         addOptionButton.style.display = INLINE_BLOCK
@@ -347,9 +341,6 @@ export class ListField extends ComponentBase {
           radioListElement.insertAdjacentHTML('beforeend', radioHTML)
         })
       }
-
-      // Initialize the preview
-      updateAllOptionsPreview()
 
       // Add event delegation for edit form hint text inputs
       document.addEventListener(
@@ -816,44 +807,38 @@ export class ListField extends ComponentBase {
 
         // Add event listeners for the new form
         const editForm = listItem.querySelector('.edit-option-form')
-        const saveButton = getHtmlElement(editForm, '.save-edit-button')
-        const cancelButton = editForm?.querySelector('.cancel-edit-link')
-        const editLabelInput = getHtmlInputElement(
-          editForm,
-          '#edit-option-label'
-        )
-        const editHintInput = getHtmlInputElement(editForm, '#edit-option-hint')
-        const editValueInput = getHtmlInputElement(
-          editForm,
-          '#edit-option-value'
-        )
-
-        // Focus the label input
-        focusIfExists(editLabelInput)
 
         // Save changes
         const formDetails = /** @type {FormDetails} */ ({
-          saveButton,
-          editLabelInput,
-          editHintInput,
-          editValueInput,
+          saveButton: getHtmlElement(editForm, '.save-edit-button'),
+          editLabelInput: getHtmlInputElement(editForm, '#edit-option-label'),
+          editHintInput: getHtmlInputElement(editForm, '#edit-option-hint'),
+          editValueInput: getHtmlInputElement(editForm, '#edit-option-value'),
           labelDisplay,
           hintDisplay,
           currentListItem,
           listItemsData,
           listItems,
           listItem,
-          cancelButton,
+          cancelButton: editForm?.querySelector('.cancel-edit-link'),
           baseClassName
         })
+
+        // Focus the label input
+        focusIfExists(formDetails.editLabelInput)
+
         setupSaveChangesButtonExistingItem(formDetails)
         addEditableEventListeners(formDetails)
 
         // Update preview immediately to show current state
-        updateEditPreview(listItem, editLabelInput.value, editHintInput.value)
+        updateEditPreview(
+          listItem,
+          formDetails.editLabelInput.value,
+          formDetails.editHintInput.value
+        )
 
         // If label input is already focused, apply highlight immediately
-        if (document.activeElement === editLabelInput) {
+        if (document.activeElement === formDetails.editLabelInput) {
           const labelElement = getClosestLabel(listItem, baseClassName)
           addClassIfExists(labelElement, 'highlight')
         }
@@ -883,7 +868,7 @@ export class ListField extends ComponentBase {
           }
 
           if (label) {
-            label.textContent = labelValue ?? 'Item text'
+            label.textContent = labelValue?.length ? labelValue : 'Item text'
           }
 
           if (hintValue) {
@@ -918,6 +903,12 @@ export class ListField extends ComponentBase {
           }
         }
       })
+
+      // Initialize edit button visibility on page load
+      updateEditOptionsButtonVisibility()
+
+      // Initialize the preview
+      updateAllOptionsPreview()
     })
   }
 }

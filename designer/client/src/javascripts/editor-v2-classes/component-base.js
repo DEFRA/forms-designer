@@ -113,7 +113,9 @@ export class ComponentBase {
         /** @type { HTMLInputElement | undefined | null } */ (
           this.baseDomElements.questionLabelInput
         )
-      const labelText = labelTextInput?.value ?? 'Question'
+      const labelText = labelTextInput?.value.length
+        ? labelTextInput.value
+        : 'Question'
       const optionalInput =
         /** @type { HTMLInputElement | undefined | null } */ (
           this.baseDomElements.makeOptionInput
