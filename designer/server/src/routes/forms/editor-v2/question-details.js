@@ -10,8 +10,10 @@ import {
   updateQuestion
 } from '~/src/lib/editor.js'
 import { checkBoomError } from '~/src/lib/error-boom-helper.js'
-import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
-import * as forms from '~/src/lib/forms.js'
+import {
+  dispatchToPageTitle,
+  getValidationErrorsFromSession
+} from '~/src/lib/error-helper.js'
 import { buildListFromDetails, upsertList } from '~/src/lib/list.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import {
@@ -20,7 +22,7 @@ import {
   createQuestionSessionState,
   getQuestionSessionState
 } from '~/src/lib/session-helper.js'
-import { isListComponentType } from '~/src/lib/utils.js'
+import { isListComponentType, requiresPageTitle } from '~/src/lib/utils.js'
 import {
   allSpecificSchemas,
   mapQuestionDetails
@@ -29,6 +31,7 @@ import { baseSchema } from '~/src/models/forms/editor-v2/base-settings-fields.js
 import { CHANGES_SAVED_SUCCESSFULLY } from '~/src/models/forms/editor-v2/common.js'
 import * as viewModel from '~/src/models/forms/editor-v2/question-details.js'
 import { editorv2Path } from '~/src/models/links.js'
+import { getFormPage } from '~/src/routes/forms/editor-v2/helpers.js'
 import {
   handleEnhancedActionOnGet,
   handleEnhancedActionOnPost
@@ -210,15 +213,27 @@ export default [
       const { token } = auth.credentials
       const { slug, pageId, questionId, stateId } = params
 
+      // Form metadata and page components
+      const { page, metadata, definition } = await getFormPage(
+        slug,
+        pageId,
+        token
+      )
+
+      // Ensure there's a page title when adding multiple questions
+      if (requiresPageTitle(page)) {
+        return dispatchToPageTitle(
+          request,
+          h,
+          editorv2Path(slug, `page/${pageId}/questions`)
+        )
+      }
+
       // Set up session if not yet exists
       if (!stateId || !getQuestionSessionState(yar, stateId)) {
         const newStateId = createQuestionSessionState(yar)
         return redirectWithAnchor(h, slug, pageId, questionId, newStateId, '')
       }
-
-      // Form metadata and page components
-      const metadata = await forms.get(slug, token)
-      const definition = await forms.getDraftFormDefinition(metadata.id, token)
 
       const validation = getValidationErrorsFromSession(yar, errorKey)
 
@@ -266,7 +281,6 @@ export default [
       }
     }
   }),
-
   /**
    * @satisfies {ServerRoute<{ Payload: FormEditorInputQuestionDetails }>}
    */
@@ -304,8 +318,20 @@ export default [
       }
 
       // Save page and first question
-      const metadata = await forms.get(slug, token)
-      const definition = await forms.getDraftFormDefinition(metadata.id, token)
+      const { page, metadata, definition } = await getFormPage(
+        slug,
+        pageId,
+        token
+      )
+
+      // Ensure there's a page title when adding multiple questions
+      if (requiresPageTitle(page)) {
+        return dispatchToPageTitle(
+          request,
+          h,
+          editorv2Path(slug, `page/${pageId}/questions`)
+        )
+      }
 
       const state = getQuestionSessionState(yar, stateId)
 

@@ -1,4 +1,4 @@
-import { ComponentType, hasComponents } from '@defra/forms-model'
+import { ComponentType, hasComponents, isFormType } from '@defra/forms-model'
 import { getTraceId } from '@defra/hapi-tracing'
 import slug from 'slug'
 
@@ -236,6 +236,35 @@ export function findPageUniquelyMappedLists(definition, pageId) {
         return listIds
       }, /** @type {string[]} */ ([]))
     : []
+}
+
+/**
+ * Helper function to determine if a page has a title
+ * @param {Page} page - the page id
+ * @returns {boolean}
+ */
+export function hasPageTitle(page) {
+  return !!page.title
+}
+
+/**
+ * Helper function to return the count of form components on a page
+ * @param {Page} page - the page
+ * @returns {number}
+ */
+export function getFormComponentsCount(page) {
+  return hasComponents(page)
+    ? page.components.filter((component) => isFormType(component.type)).length
+    : 0
+}
+
+/**
+ * Helper function to return if a page requires a title
+ * @param {Page | undefined} page - the page
+ * @returns {boolean}
+ */
+export function requiresPageTitle(page) {
+  return !!page && getFormComponentsCount(page) > 0 && !hasPageTitle(page)
 }
 
 /**

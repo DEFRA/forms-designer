@@ -3,6 +3,7 @@ import {
   pageHeadingAndGuidanceSchema,
   pageHeadingSchema
 } from '@defra/forms-model'
+import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
@@ -10,9 +11,17 @@ import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { setPageHeadingAndGuidance } from '~/src/lib/editor.js'
 import { checkBoomError } from '~/src/lib/error-boom-helper.js'
-import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
+import {
+  getValidationErrorsFromSession,
+  pageTitleError
+} from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
+import {
+  getFormComponentsCount,
+  getPageFromDefinition,
+  isCheckboxSelected
+} from '~/src/lib/utils.js'
 import { CHANGES_SAVED_SUCCESSFULLY } from '~/src/models/forms/editor-v2/common.js'
 import * as viewModel from '~/src/models/forms/editor-v2/questions.js'
 import { editorv2Path } from '~/src/models/links.js'
@@ -98,8 +107,28 @@ export default [
       // Form metadata and page components
       const metadata = await forms.get(slug, token)
       const definition = await forms.getDraftFormDefinition(metadata.id, token)
+      const page = getPageFromDefinition(definition, pageId)
+
+      if (!page) {
+        throw Boom.notFound(`Page with id '${pageId}' not found`)
+      }
+
+      const isExpanded = isCheckboxSelected(payload.pageHeadingAndGuidance)
 
       try {
+        // Ensure there's a page title when multiple questions exist
+        if (
+          (!isExpanded || !payload.pageHeading) &&
+          getFormComponentsCount(page) > 1
+        ) {
+          return redirectWithErrors(
+            request,
+            h,
+            pageTitleError(),
+            sessionNames.validationFailure.editorQuestions
+          )
+        }
+
         await setPageHeadingAndGuidance(
           metadata.id,
           token,
@@ -142,6 +171,5 @@ export default [
 
 /**
  * @import { FormEditorInputPageSettings } from '@defra/forms-model'
- * @import Boom from '@hapi/boom'
  * @import { ServerRoute } from '@hapi/hapi'
  */

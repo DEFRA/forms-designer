@@ -4,6 +4,7 @@ import Joi from 'joi'
 
 import {
   testFormDefinitionWithNoQuestions,
+  testFormDefinitionWithOneQuestionNoPageTitle,
   testFormDefinitionWithTwoQuestions
 } from '~/src/__stubs__/form-definition.js'
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
@@ -26,6 +27,10 @@ describe('Editor v2 questions routes', () => {
   beforeAll(async () => {
     server = await createServer()
     await server.initialize()
+  })
+
+  beforeEach(() => {
+    jest.resetAllMocks()
   })
 
   test('GET - should render two questions in the view', async () => {
@@ -129,6 +134,9 @@ describe('Editor v2 questions routes', () => {
 
   test('POST - should handle boom error if boom received from API call', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithNoQuestions)
     jest.mocked(setPageHeadingAndGuidance).mockImplementationOnce(() => {
       throw buildBoom409(
         'Duplicate page path',
@@ -138,7 +146,7 @@ describe('Editor v2 questions routes', () => {
 
     const options = {
       method: 'post',
-      url: '/library/my-form-slug/editor-v2/page/1/questions',
+      url: '/library/my-form-slug/editor-v2/page/p1/questions',
       auth,
       payload: {
         pageHeadingAndGuidance: 'true',
@@ -153,7 +161,7 @@ describe('Editor v2 questions routes', () => {
 
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe(
-      '/library/my-form-slug/editor-v2/page/1/questions#'
+      '/library/my-form-slug/editor-v2/page/p1/questions#'
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
@@ -168,13 +176,16 @@ describe('Editor v2 questions routes', () => {
 
   test('POST - should handle boom error if boom received from API call but not in error message mappings', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithNoQuestions)
     jest.mocked(setPageHeadingAndGuidance).mockImplementationOnce(() => {
       throw buildBoom409('Some other error boom message')
     })
 
     const options = {
       method: 'post',
-      url: '/library/my-form-slug/editor-v2/page/1/questions',
+      url: '/library/my-form-slug/editor-v2/page/p1/questions',
       auth,
       payload: {
         pageHeadingAndGuidance: 'true',
@@ -189,7 +200,7 @@ describe('Editor v2 questions routes', () => {
 
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe(
-      '/library/my-form-slug/editor-v2/page/1/questions#'
+      '/library/my-form-slug/editor-v2/page/p1/questions#'
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
@@ -224,10 +235,13 @@ describe('Editor v2 questions routes', () => {
 
   test('POST - should save and redirect to same page if valid payload', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithNoQuestions)
 
     const options = {
       method: 'post',
-      url: '/library/my-form-slug/editor-v2/page/1/questions',
+      url: '/library/my-form-slug/editor-v2/page/p1/questions',
       auth,
       payload: {
         pageHeadingAndGuidance: 'true',
@@ -242,13 +256,13 @@ describe('Editor v2 questions routes', () => {
 
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe(
-      '/library/my-form-slug/editor-v2/page/1/questions'
+      '/library/my-form-slug/editor-v2/page/p1/questions'
     )
     expect(setPageHeadingAndGuidance).toHaveBeenCalledWith(
       testFormMetadata.id,
       expect.anything(),
-      '1',
-      undefined,
+      'p1',
+      expect.anything(),
       {
         guidanceText: 'New guidance text',
         pageHeading: 'New page heading',
@@ -256,9 +270,59 @@ describe('Editor v2 questions routes', () => {
       }
     )
   })
+
+  test('POST - should 404 if page is not found', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithOneQuestionNoPageTitle)
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/p3/questions',
+      auth,
+      payload: {
+        pageHeadingAndGuidance: 'true',
+        pageHeading: 'New page heading',
+        guidanceText: 'New guidance text'
+      }
+    }
+
+    const {
+      response: { statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.NOT_FOUND)
+  })
+
+  test('POST - should redirect to same page if trying to clear the page heading when there is more than 1 question', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithTwoQuestions)
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/p1/questions',
+      auth,
+      payload: {
+        pageHeadingAndGuidance: 'false',
+        pageHeading: '',
+        guidanceText: 'New guidance text'
+      }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/page/p1/questions'
+    )
+  })
 })
 
 /**
- * @import { FormDefinition, FormMetadata, FormMetadataAuthor } from '@defra/forms-model'
  * @import { Server } from '@hapi/hapi'
  */
