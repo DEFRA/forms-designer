@@ -128,13 +128,14 @@ export function handleEnhancedActionOnGet(yar, stateId, query) {
   }
 
   if (action === ListAction.Reorder) {
-    setQuestionSessionState(yar, stateId, {
-      ...state,
-      isReordering: true,
+    const newState = {
+      questionType: state.questionType,
+      questionDetails: state.questionDetails,
       editRow: { expanded: false },
-      lastMovedId: undefined,
-      lastMoveDirection: undefined
-    })
+      listItems: state.listItems,
+      isReordering: true
+    }
+    setQuestionSessionState(yar, stateId, newState)
     return radiosSectionListItemsAnchor
   }
 
