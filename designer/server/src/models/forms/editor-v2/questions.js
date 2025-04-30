@@ -132,9 +132,7 @@ export function questionsViewModel(
   const page = definition.pages[pageIdx]
   const components = hasComponents(page) ? page.components : []
 
-  const pageHeadingVal = stringHasValue(formValues?.pageHeading)
-    ? formValues?.pageHeading
-    : page.title
+  const pageHeadingVal = formValues?.pageHeading ?? page.title
 
   const guidanceComponent = /** @type { MarkdownComponent | undefined } */ (
     components.find((comp, idx) => {
@@ -142,12 +140,8 @@ export function questionsViewModel(
     })
   )
 
-  const guidanceTextFallback = stringHasValue(guidanceComponent?.content)
-    ? guidanceComponent?.content
-    : ''
-  const guidanceTextVal = stringHasValue(formValues?.guidanceText)
-    ? formValues?.guidanceText
-    : guidanceTextFallback
+  const guidanceTextFallback = guidanceComponent?.content ?? ''
+  const guidanceTextVal = formValues?.guidanceText ?? guidanceTextFallback
 
   const baseUrl = editorv2Path(metadata.slug, `page/${pageId}`)
 
