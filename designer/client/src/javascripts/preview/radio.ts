@@ -1,7 +1,6 @@
 import {
   EventListeners,
   Question,
-  QuestionBaseModel,
   QuestionElements,
   type ListItem,
   type ListenerRow
@@ -79,20 +78,35 @@ export class RadioEventListeners extends EventListeners {
   }
 
   get listeners() {
-    const radioListeners = this.listElements.map(
-      (listElem) =>
-        [
-          listElem,
-          (target, e) => {
-            // eslint-disable-next-line no-console
-            console.log('click', target)
-            e.preventDefault()
-          },
-          'click'
-        ] as ListenerRow
+    // console.log('elements', this.listElements)
+    const radioListeners = this.listElements.map((listElem) =>
+      this.mapElementListener(listElem)
     )
 
     return radioListeners
+  }
+
+  mapElementListener(elem: Element) {
+    return [
+      elem,
+      (target, e) => {
+        // eslint-disable-next-line no-console
+        console.log('click', target)
+        e.preventDefault()
+      },
+      'click'
+    ] as ListenerRow
+  }
+
+  removeItem(target: HTMLElement) {
+    const closestParent = target.closest('li')
+    const closestElem = (
+      closestParent?.parentNode as HTMLElement | null
+    )?.closest('li')
+    if (closestElem) {
+      closestElem.remove()
+    }
+    // TODO - ajax call to update state
   }
 }
 
