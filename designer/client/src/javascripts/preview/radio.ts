@@ -12,46 +12,78 @@ export interface RadioElement {
 }
 
 export class RadioQuestionElements extends QuestionElements {
+  deleteLinks: Element[]
   editLinks: Element[]
 
   constructor() {
     super()
+
+    const deleteElements =
+      /** @type {HTMLInputElement[]} */ document.querySelectorAll(
+        '#options-container .delete-option-link'
+      )
+
     const editElements =
       /** @type {HTMLInputElement[]} */ document.querySelectorAll(
         '#options-container .edit-option-link'
       )
 
+    this.deleteLinks = Array.from(deleteElements)
     this.editLinks = Array.from(editElements)
   }
 }
 
 export class RadioEventListeners extends EventListeners {
-  listElements: Element[]
+  deleteLinks: Element[]
+  editLinks: Element[]
 
   constructor(
     question: Question,
     baseElements: QuestionElements,
-    listElements: Element[]
+    deleteLinks: Element[],
+    editLinks: Element[]
   ) {
     super(question, baseElements)
-    this.listElements = listElements
+    this.deleteLinks = deleteLinks
+    this.editLinks = editLinks
   }
 
   get listeners() {
-    const radioListeners = this.listElements.map(
+    const deleteListeners = this.deleteLinks.map(
       (listElem) =>
         [
           listElem,
-          (target, e) => {
+          (target, e: Event) => {
+            e.preventDefault()
+            this.removeItem(target)
+          },
+          'click'
+        ] as ListenerRow
+    )
+
+    const editListeners = this.editLinks.map(
+      (listElem) =>
+        [
+          listElem,
+          (target, e: Event) => {
             // eslint-disable-next-line no-console
-            console.log('click', target)
+            console.log('click edit', target)
             e.preventDefault()
           },
           'click'
         ] as ListenerRow
     )
 
-    return radioListeners
+    return [...deleteListeners, ...editListeners]
+  }
+
+  removeItem(target: HTMLElement) {
+    const closestElem = target.closest('li')?.parentNode?.closest('li')
+    // console.log('remove closest', closestElem)
+    if (closestElem) {
+      closestElem.remove()
+    }
+    // TODO - ajax call to update state
   }
 }
 
@@ -73,6 +105,7 @@ export class Radio extends Question {
     const listeners = new RadioEventListeners(
       this,
       radioElements,
+      radioElements.deleteLinks,
       radioElements.editLinks
     )
     listeners.setupListeners()
