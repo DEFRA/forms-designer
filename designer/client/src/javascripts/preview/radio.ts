@@ -1,8 +1,10 @@
 import {
   EventListeners,
   Question,
+  QuestionBaseModel,
   QuestionElements,
-  type ListItem
+  type ListItem,
+  type ListenerRow
 } from '~/src/javascripts/preview/question.js'
 
 export interface ListElement {
@@ -48,6 +50,7 @@ export class RadioQuestionElements extends QuestionElements {
   }
 
   get values() {
+    // @ts-expect-error - inheritance not detected properly, as 'values' is protected so should be fine
     const baseValues = super.values
 
     return {
@@ -146,6 +149,9 @@ export class Radio extends Question {
     this._list = listsElementToMap(radioElements.values.items)
   }
 
+  /**
+   * @type {QuestionBaseModel}
+   */
   get renderInput() {
     return {
       id: 'radioInput',

@@ -80,7 +80,7 @@ export class QuestionElements {
 /**
  * @typedef {[
  *   HTMLInputElement | null,
- *   (target: HTMLInputElement) => void,
+ *   (target: HTMLInputElement, e: Event) => void,
  *   keyof HTMLElementEventMap
  * ]} ListenerRow
  */
@@ -225,7 +225,7 @@ export class EventListeners {
  *   label?: DefaultComponent
  *   hint?: DefaultComponent
  *   fieldset?: FieldSet
- *   items?: ListItem
+ *   items?: ListItem[]
  * }} QuestionBaseModel
  */
 
