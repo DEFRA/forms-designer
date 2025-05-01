@@ -93,7 +93,7 @@ export class EventListeners {
   constructor(question, baseElements) {
     /**
      * @property {Question} _question -
-     * @private
+     * @protected
      */
     this._question = question
     this.baseElements = baseElements

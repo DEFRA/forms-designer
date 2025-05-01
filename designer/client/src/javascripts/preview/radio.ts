@@ -25,18 +25,18 @@ export interface RadioElementReadOnly extends ListItem {
 }
 
 export class RadioQuestionElements extends QuestionElements {
-  editLinks: Element[]
-  listElements: Element[]
+  editLinks: HTMLInputElement[]
+  listElements: HTMLElement[]
   updateElement: HTMLInputElement | undefined
   radioText: HTMLInputElement
   radioHint: HTMLInputElement
 
   constructor() {
     super()
-    // const editElements =
-    //   /** @type {HTMLInputElement[]} */ document.querySelectorAll(
-    //     '#options-container .edit-option-link'
-    //   )
+    const editElements =
+      /** @type {HTMLInputElement[]} */ document.querySelectorAll(
+        '#options-container .edit-option-link'
+      )
     const radioText = /** @type {HTMLInputElement} */ document.getElementById(
       'radioText'
     ) as HTMLInputElement
@@ -52,7 +52,7 @@ export class RadioQuestionElements extends QuestionElements {
 
     const listElements = document.getElementById('options-container')?.children
 
-    this.editLinks = Array.from([])
+    this.editLinks = Array.from(editElements)
     this.listElements = Array.from(listElements ?? [])
     this.radioText = radioText
     this.radioHint = radioHint
@@ -92,14 +92,14 @@ export class RadioQuestionElements extends QuestionElements {
 }
 
 export class RadioEventListeners extends EventListeners {
-  listElements: Element[]
+  listElements: HTMLElement[]
   _radioElements: RadioQuestionElements
   _radioQuestion: Radio
 
   constructor(
     question: Radio,
     radioElements: RadioQuestionElements,
-    listElements: Element[]
+    listElements: HTMLElement[]
   ) {
     super(question, radioElements)
     this.listElements = listElements
@@ -108,8 +108,8 @@ export class RadioEventListeners extends EventListeners {
   }
 
   get listeners() {
-    const radioListeners: ListenerRow[] = []
-    /*
+    const editLinkListeners: ListenerRow[] = []
+    /* TODO - implement edit link listeners
     this.listElements.map(
       (listElem) =>
         [
@@ -122,17 +122,14 @@ export class RadioEventListeners extends EventListeners {
           'click'
         ] as ListenerRow
     )
-        */
+    */
     // TODO: highlight listener - highlight radio label
     // TODO: highlight listener - highlight radio hint
-    const editListeners = [
+    const editPanelListeners = [
       [
         this._radioElements.radioText,
         (target) => {
-          // console.log('~~~~~~ Chris Debug ~~~~~~ radioText', 'Target', target)
-          // console.log('~~~~~~ Chris Debug ~~~~~~ radioText', 'Target.value', target.value)
           const { id } = RadioQuestionElements.getUpdateData(target)
-          // console.log('~~~~~~ Chris Debug ~~~~~~ RadioText', 'id', id)
           this._radioQuestion.updateText(id, target.value)
         },
         'input'
@@ -140,17 +137,30 @@ export class RadioEventListeners extends EventListeners {
       [
         this._radioElements.radioHint,
         (target) => {
-          // console.log('~~~~~~ Chris Debug ~~~~~~ radioHint', 'Target', target)
-          // console.log('~~~~~~ Chris Debug ~~~~~~ radioHint', 'Target.value', target.value)
           const { id } = RadioQuestionElements.getUpdateData(target)
-          // console.log('~~~~~~ Chris Debug ~~~~~~ radioHint', 'Id', id)
           this._radioQuestion.updateHint(id, target.value)
         },
         'input'
       ] as ListenerRow
     ]
 
-    return radioListeners.concat(editListeners)
+    const highlightListeners = this._radioElements.listElements.map(
+      (listElem) =>
+        [
+          listElem,
+          (_target, _e) => {
+            // console.log('highlight', target)
+
+            this._question.highlight = listElem.dataset.id
+          },
+          'mouseover'
+        ] as ListenerRow
+    )
+
+    // console.log('highlightListeners', highlightListeners)
+    return editLinkListeners
+      .concat(editPanelListeners)
+      .concat(highlightListeners)
   }
 }
 
@@ -193,11 +203,7 @@ export class Radio extends Question {
    */
   constructor(radioElements: RadioQuestionElements) {
     super(radioElements)
-    const listeners = new RadioEventListeners(
-      this,
-      radioElements,
-      radioElements.editLinks
-    )
+    const listeners = new RadioEventListeners(this, radioElements, [])
     listeners.setupListeners()
 
     /**
@@ -234,25 +240,20 @@ export class Radio extends Question {
   }
 
   updateText(id: string, text: string) {
-    // console.log('~~~~~~ Chris Debug ~~~~~~ ', 'Id', id)
     const listItem = this._list.get(id)
-    // console.log('~~~~~~ Chris Debug ~~~~~~ updateText', listItem)
     if (listItem) {
       listItem.text = text
-      // console.log('~~~~~~ Chris Debug ~~~~~~ updateText', 'This', this)
       this.render()
     }
   }
 
   updateHint(id: string, text: string) {
     const listItem = this._list.get(id)
-    // console.log('~~~~~~ Chris Debug ~~~~~~ updateHint', listItem)
     if (listItem) {
       listItem.hint = {
         ...listItem.hint,
         text
       }
-      // console.log('~~~~~~ Chris Debug ~~~~~~ updateHint', 'This', this)
       this.render()
     }
   }
