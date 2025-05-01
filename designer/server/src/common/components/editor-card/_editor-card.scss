@@ -30,13 +30,13 @@ $defra-brand-colour: govuk-organisation-colour(department-for-environment-food-r
 }
 
 // Styles for the reorderable list
-.gem-c-reorderable-list {
+.app-reorderable-list {
   list-style-type: none;
   margin: 0;
   padding: 0;
 }
 
-.gem-c-reorderable-list__item {
+.app-reorderable-list__item {
   margin-bottom: 15px;
   border-left: 5px solid #008938;
   outline: 1px solid #b1b4b6;
@@ -44,16 +44,16 @@ $defra-brand-colour: govuk-organisation-colour(department-for-environment-food-r
   background-color: #ffffff;
 }
 
-.gem-c-reorderable-list__wrapper {
+.app-reorderable-list__wrapper {
   display: flex;
   align-items: center;
 }
 
-.gem-c-reorderable-list__content {
+.app-reorderable-list__content {
   flex-grow: 1;
 }
 
-.gem-c-reorderable-list__actions {
+.app-reorderable-list__actions {
   display: none;
 
   // Hide by default
@@ -61,7 +61,7 @@ $defra-brand-colour: govuk-organisation-colour(department-for-environment-food-r
   margin-left: 15px;
 }
 
-.gem-c-reorderable-list__actions .govuk-button {
+.app-reorderable-list__actions .govuk-button {
   margin-bottom: 10px;
 }
 
@@ -88,13 +88,13 @@ $defra-brand-colour: govuk-organisation-colour(department-for-environment-food-r
   text-transform: capitalize;
 }
 
-.gem-c-reorderable-list .gem-c-reorderable-list__item:hover,
-.gem-c-reorderable-list__item:hover .fauxlabel {
+.app-reorderable-list .app-reorderable-list__item:hover,
+.app-reorderable-list__item:hover .fauxlabel {
   background-color: #ffffff;
   cursor: initial;
 }
 
-.gem-c-reorderable-list__item:hover .fauxlabel:focus {
+.app-reorderable-list__item:hover .fauxlabel:focus {
   cursor: initial;
 }
 
@@ -124,13 +124,13 @@ $defra-brand-colour: govuk-organisation-colour(department-for-environment-food-r
 }
 
 // Style for hover state of the list item
-.gem-c-reorderable-list__item:hover {
+.app-reorderable-list__item:hover {
   background-color: #f0f0f0;
   cursor: move;
 }
 
 // Style for the chosen item (when selected)
-.gem-c-reorderable-list__item.sortable-chosen {
+.app-reorderable-list__item.sortable-chosen {
   background-color: #e5f5ff;
   outline: 4px solid #ffdd00;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);

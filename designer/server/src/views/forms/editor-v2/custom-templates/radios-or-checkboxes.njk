@@ -19,7 +19,7 @@
 
 
   {% if state.isReordering %}
-    <ol class="gem-c-reorderable-list" id="options-container">
+    <ol class="app-reorderable-list" id="options-container">
     {% if state.listItems | length %}
       {% set itemsCount = state.listItems | length %}
       {% for item in state.listItems %}
@@ -29,9 +29,9 @@
         {% set isFocus = state.lastMovedId == item.id %}
         {% set focusClass = " pages-reorder-panel-focus" if isFocus else "" %}
 
-        <li class="gem-c-reorderable-list__item reorder-panel{{ focusClass }}" data-index="{{ loop.index }}" data-id="{{ item.id }}">
-          <div class="gem-c-reorderable-list__wrapper">
-            <div class="gem-c-reorderable-list__content">
+        <li class="app-reorderable-list__item reorder-panel{{ focusClass }}" data-index="{{ loop.index }}" data-id="{{ item.id }}">
+          <div class="app-reorderable-list__wrapper">
+            <div class="app-reorderable-list__content">
               <p class="govuk-body fauxlabel option-label-display" id="option-{{ loop.index }}-label-display">
                 {{ item.text }}
               </p>
@@ -75,15 +75,15 @@
       <a href="?action=done-reordering" class="govuk-button">Done</a>
     </div>
   {% else %}
-    <ol class="gem-c-reorderable-list js-enabled" id="options-container" data-module="reorderable-list">
+    <ol class="app-reorderable-list js-enabled" id="options-container" data-module="reorderable-list">
     {% if state.listItems | length or state.editRow.expanded %}
       {% for item in state.listItems %}
         {% if loop.index == listDetails.rowNumBeingEdited %}
           {%- include "../../../../views/forms/editor-v2/custom-templates/radio-or-checkbox-edit.njk" -%}
         {% else %}
-          <li class="gem-c-reorderable-list__item" data-index="{{ loop.index }}" data-id="{{ item.id }}" data-val="{{ item.value }}">
-            <div class="gem-c-reorderable-list__wrapper">
-              <div class="gem-c-reorderable-list__content">
+          <li class="app-reorderable-list__item" data-index="{{ loop.index }}" data-id="{{ item.id }}" data-val="{{ item.value }}">
+            <div class="app-reorderable-list__wrapper">
+              <div class="app-reorderable-list__content">
                 <p class="govuk-body fauxlabel option-label-display" id="option-{{ loop.index }}-label-display">
                   {{ item.text }}
                 </p>
