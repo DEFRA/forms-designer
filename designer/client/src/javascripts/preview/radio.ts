@@ -30,6 +30,7 @@ export class RadioQuestionElements extends QuestionElements {
   updateElement: HTMLInputElement | undefined
   radioText: HTMLInputElement
   radioHint: HTMLInputElement
+  afterInputsHTML: string
 
   constructor() {
     super()
@@ -57,6 +58,7 @@ export class RadioQuestionElements extends QuestionElements {
     this.radioText = radioText
     this.radioHint = radioHint
     this.updateElement = updateElement
+    this.afterInputsHTML = '' // Question._renderHelper('')
   }
 
   static getParentUpdateElement(el: HTMLInputElement) {
@@ -252,6 +254,19 @@ export class Radio extends Question {
      */
     this._listeners = listeners
     this._list = listsElementToMap(radioElements.values.items)
+  }
+
+  get afterInput() {
+    if (!this.list.length) {
+      return {
+        afterInputs: {
+          html:
+            '<div class="govuk-inset-text"><p class="govuk-body">No items added yet.</p><div class="govuk-inset-text">' +
+            '<p class="govuk-body">No items added yet.</p>' +
+            '</div></div>'
+        }
+      }
+    }
   }
 
   get renderInput() {

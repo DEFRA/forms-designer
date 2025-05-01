@@ -303,7 +303,7 @@ export class Question {
 
   get titleText() {
     const optionalText = this._optional ? ' (optional)' : ''
-    return (this._question === '' ? 'Question' : this._question) + optionalText
+    return (!this._question ? 'Question' : this._question) + optionalText
   }
 
   /**
@@ -358,12 +358,17 @@ export class Question {
     }
   }
 
-  _render() {
+  /**
+   * @returns {NJKRender}
+   */
+  static get _renderHelper() {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const NJK = /** @type {NJK} */ (njk)
-    const render = NJK.render
+    return NJK.render
+  }
 
-    const html = render(this._questionTemplate, {
+  _render() {
+    const html = Question._renderHelper(this._questionTemplate, {
       model: this.renderInput
     })
 

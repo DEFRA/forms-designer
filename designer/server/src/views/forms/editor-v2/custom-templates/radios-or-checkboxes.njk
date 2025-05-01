@@ -81,7 +81,7 @@
         {% if loop.index == listDetails.rowNumBeingEdited %}
           {%- include "../../../../views/forms/editor-v2/custom-templates/radio-or-checkbox-edit.njk" -%}
         {% else %}
-          <li class="app-reorderable-list__item" data-index="{{ loop.index }}" data-id="{{ item.id }}" data-val="{{ item.value }}">
+        <li class="app-reorderable-list__item" data-index="{{ loop.index }}" data-id="{{ item.id }}" data-val="{{ item.value }}" data-text="{{ item.text }}" data-hint="{{ item.hint.text }}">
             <div class="app-reorderable-list__wrapper">
               <div class="app-reorderable-list__content">
                 <p class="govuk-body fauxlabel option-label-display" id="option-{{ loop.index }}-label-display">
