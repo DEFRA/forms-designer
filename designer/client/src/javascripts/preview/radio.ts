@@ -1,7 +1,8 @@
 import {
   EventListeners,
   Question,
-  QuestionElements
+  QuestionElements,
+  type ListItem
 } from '~/src/javascripts/preview/question.js'
 
 export interface ListElement {
@@ -22,11 +23,18 @@ export interface RadioElementReadOnly {
 }
 
 export class RadioQuestionElements extends QuestionElements {
+  deleteLinks: Element[]
   editLinks: Element[]
   listElements: Element[]
 
   constructor() {
     super()
+
+    const deleteElements =
+      /** @type {HTMLInputElement[]} */ document.querySelectorAll(
+        '#options-container .delete-option-link'
+      )
+
     const editElements =
       /** @type {HTMLInputElement[]} */ document.querySelectorAll(
         '#options-container .edit-option-link'
@@ -34,6 +42,7 @@ export class RadioQuestionElements extends QuestionElements {
 
     const listElements = document.getElementById('options-container')?.children
 
+    this.deleteLinks = Array.from(deleteElements)
     this.editLinks = Array.from(editElements)
     this.listElements = Array.from(listElements ?? [])
   }
@@ -123,11 +132,10 @@ export class Radio extends Question {
    */
   constructor(radioElements: RadioQuestionElements) {
     super(radioElements)
-    const listeners = new RadioEventListeners(
-      this,
-      radioElements,
-      radioElements.editLinks
-    )
+    const listeners = new RadioEventListeners(this, radioElements, [
+      ...radioElements.deleteLinks,
+      ...radioElements.editLinks
+    ])
     listeners.setupListeners()
 
     /**
