@@ -178,6 +178,6 @@ describe('radio', () => {
 })
 
 /**
- * @import { RadioElement } from '~/src/javascripts/preview/radio.js'
+ * @import { ListElement } from '~/src/javascripts/preview/radio.js'
  * @import { QuestionBaseModel } from '~/src/javascripts/preview/question.js'
  */

@@ -6,6 +6,7 @@ import njk from '~/src/javascripts/preview/nunjucks.js'
  * @property {string} hintText -
  * @property {boolean} optional -
  * @property {string} shortDesc -
+ * @property {ListElement[]} [items] -
  */
 
 export class QuestionElements {

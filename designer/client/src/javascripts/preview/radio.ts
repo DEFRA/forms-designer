@@ -4,7 +4,7 @@ import {
   QuestionElements
 } from '~/src/javascripts/preview/question.js'
 
-export interface RadioElement {
+export interface ListElement {
   readonly id: string
   text: string
   value: string
@@ -48,7 +48,7 @@ export class RadioQuestionElements extends QuestionElements {
           id: element.getAttribute('data-id'),
           text: element.getAttribute('data-text'),
           value: element.getAttribute('data-val')
-        }
+        } as ListElement
       })
     }
   }
@@ -89,15 +89,39 @@ export class RadioEventListeners extends EventListeners {
 // updating index
 //
 
+/**
+ * @param {ListElement} listElement
+ * @returns {[string, ListElement]}
+ */
+export function listItemMapper(
+  listElement: ListElement
+): [string, ListElement] {
+  return [listElement.id, listElement]
+}
+
+/**
+ *
+ * @param {ListElement[]} listElements
+ * @returns {Map<string, ListElement>}
+ */
+export function listsElementToMap(listElements: ListElement[]) {
+  const entries = listElements.map(listItemMapper)
+  return new Map<string, ListElement>(entries)
+}
+
 export class Radio extends Question {
   _questionTemplate = 'radios.njk'
 
-  private readonly _list = new Map<string, RadioElement>([])
+  /**
+   * @type {Map<string, ListElement>}
+   * @private
+   */
+  private readonly _list: Map<string, ListElement>
 
   /**
-   * @param {QuestionElements} htmlElements
+   * @param {RadioQuestionElements} radioElements
    */
-  constructor(radioElements) {
+  constructor(radioElements: RadioQuestionElements) {
     super(radioElements)
     const listeners = new RadioEventListeners(
       this,
@@ -111,6 +135,7 @@ export class Radio extends Question {
      * @private
      */
     this._listeners = listeners
+    this._list = listsElementToMap(radioElements.values.items)
   }
 
   get renderInput() {
@@ -123,7 +148,7 @@ export class Radio extends Question {
     }
   }
 
-  push(radioElement: RadioElement) {
+  push(radioElement: ListElement) {
     this._list.set(radioElement.id, radioElement)
     this.render()
   }
@@ -134,7 +159,7 @@ export class Radio extends Question {
   }
 
   get list(): readonly ListItem[] {
-    const iterator: MapIterator<RadioElement> = this._list.values()
+    const iterator: MapIterator<ListElement> = this._list.values()
     return Array.from(iterator)
   }
 
