@@ -457,7 +457,8 @@ describe('Editor v2 question details routes', () => {
         [],
         undefined
       ),
-      'questionDetailsValidationFailure'
+      'questionDetailsValidationFailure',
+      undefined
     )
   })
 
@@ -492,7 +493,8 @@ describe('Editor v2 question details routes', () => {
         [],
         undefined
       ),
-      'questionDetailsValidationFailure'
+      'questionDetailsValidationFailure',
+      undefined
     )
   })
 
@@ -528,7 +530,8 @@ describe('Editor v2 question details routes', () => {
         [],
         undefined
       ),
-      'questionDetailsValidationFailure'
+      'questionDetailsValidationFailure',
+      undefined
     )
   })
 
@@ -565,7 +568,8 @@ describe('Editor v2 question details routes', () => {
         [],
         undefined
       ),
-      'questionDetailsValidationFailure'
+      'questionDetailsValidationFailure',
+      undefined
     )
   })
 
@@ -609,7 +613,8 @@ describe('Editor v2 question details routes', () => {
         [],
         undefined
       ),
-      'questionDetailsValidationFailure'
+      'questionDetailsValidationFailure',
+      undefined
     )
   })
 
@@ -646,7 +651,8 @@ describe('Editor v2 question details routes', () => {
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
       new Joi.ValidationError('Some other boom error', [], undefined),
-      'questionDetailsValidationFailure'
+      'questionDetailsValidationFailure',
+      undefined
     )
   })
 

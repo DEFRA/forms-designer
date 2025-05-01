@@ -84,7 +84,8 @@ describe('Editor v2 guidance routes', () => {
         [],
         undefined
       ),
-      'guidanceValidationFailure'
+      'guidanceValidationFailure',
+      undefined
     )
   })
 
@@ -123,7 +124,8 @@ describe('Editor v2 guidance routes', () => {
         [],
         undefined
       ),
-      'guidanceValidationFailure'
+      'guidanceValidationFailure',
+      undefined
     )
   })
 
@@ -155,7 +157,8 @@ describe('Editor v2 guidance routes', () => {
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
       new Joi.ValidationError('Other boom error', [], undefined),
-      'guidanceValidationFailure'
+      'guidanceValidationFailure',
+      undefined
     )
   })
 

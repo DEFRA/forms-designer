@@ -152,7 +152,8 @@ describe('Editor v2 question routes', () => {
         [],
         undefined
       ),
-      'questionValidationFailure'
+      'questionValidationFailure',
+      undefined
     )
   })
 

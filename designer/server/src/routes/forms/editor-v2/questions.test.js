@@ -128,7 +128,8 @@ describe('Editor v2 questions routes', () => {
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
       new Joi.ValidationError('Enter a page heading', [], undefined),
-      'questionsValidationFailure'
+      'questionsValidationFailure',
+      undefined
     )
   })
 
@@ -170,7 +171,8 @@ describe('Editor v2 questions routes', () => {
         [],
         undefined
       ),
-      'questionsValidationFailure'
+      'questionsValidationFailure',
+      undefined
     )
   })
 
@@ -205,7 +207,8 @@ describe('Editor v2 questions routes', () => {
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
       new Joi.ValidationError('Some other error boom message', [], undefined),
-      'questionsValidationFailure'
+      'questionsValidationFailure',
+      undefined
     )
   })
 

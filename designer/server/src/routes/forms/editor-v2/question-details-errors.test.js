@@ -200,7 +200,8 @@ describe('Editor v2 question details error messages', () => {
         expect(addErrorsToSession).toHaveBeenCalledWith(
           expect.anything(),
           new Joi.ValidationError(expectedErrorMessage, [], undefined),
-          'questionDetailsValidationFailure'
+          'questionDetailsValidationFailure',
+          undefined
         )
       }
     )
@@ -239,7 +240,8 @@ describe('Editor v2 question details error messages', () => {
           [],
           undefined
         ),
-        'questionDetailsValidationFailure'
+        'questionDetailsValidationFailure',
+        undefined
       )
     })
   })

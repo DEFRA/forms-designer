@@ -121,7 +121,8 @@ describe('Editor v2 check-answers-settings routes', () => {
         [],
         undefined
       ),
-      'checkAnswersSettingsValidationFailure'
+      'checkAnswersSettingsValidationFailure',
+      undefined
     )
   })
 

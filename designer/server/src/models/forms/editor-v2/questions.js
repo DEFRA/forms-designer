@@ -155,6 +155,7 @@ export function questionsViewModel(
     errorList: buildErrorList(formErrors),
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
+    formErrorsDescription: validation?.formErrorsDescription,
     questionRows: mapQuestionRows(components, baseUrl),
     buttonText: SAVE_AND_CONTINUE,
     preventAddQuestion: components.some(

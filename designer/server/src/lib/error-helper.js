@@ -5,16 +5,25 @@ import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
 import { createJoiError } from '~/src/lib/error-boom-helper.js'
 
+export const PAGE_HEADING_ERROR_DESCRIPTION =
+  'Pages with more than one question must include a page heading'
+
 /**
  * @template T
  * @param { Request | Request<{ Payload: T }> } request
  * @param {Error} [error]
  * @param {ValidationSessionKey} [flashKey]
+ * @param {string} [errorsDescription]
  */
-export function addErrorsToSession(request, error, flashKey) {
+export function addErrorsToSession(
+  request,
+  error,
+  flashKey,
+  errorsDescription
+) {
   const { payload } = request
 
-  flashErrorsToSession(request, payload, error, flashKey)
+  flashErrorsToSession(request, payload, error, flashKey, errorsDescription)
 }
 
 /**
@@ -23,8 +32,15 @@ export function addErrorsToSession(request, error, flashKey) {
  * @param {unknown} formValues
  * @param {Error} [error]
  * @param {ValidationSessionKey} [flashKey]
+ * @param {string} [errorsDescription]
  */
-export function flashErrorsToSession(request, formValues, error, flashKey) {
+export function flashErrorsToSession(
+  request,
+  formValues,
+  error,
+  flashKey,
+  errorsDescription
+) {
   const { yar } = request
 
   if (error && error instanceof Joi.ValidationError) {
@@ -32,7 +48,8 @@ export function flashErrorsToSession(request, formValues, error, flashKey) {
 
     yar.flash(flashKey, {
       formErrors,
-      formValues
+      formValues,
+      formErrorsDescription: errorsDescription
     })
   }
 }
@@ -55,10 +72,7 @@ export function getValidationErrorsFromSession(yar, errorKey) {
  * @returns {Joi.ValidationError}
  */
 export function pageTitleError() {
-  return createJoiError(
-    'pageHeading',
-    'Pages with more than one question must include a page heading'
-  )
+  return createJoiError('pageHeading', 'Enter a page heading')
 }
 
 /**
@@ -76,7 +90,8 @@ export function dispatchToPageTitle(request, h, path) {
       pageHeadingAndGuidance: 'true'
     },
     pageTitleError(),
-    errorKey
+    errorKey,
+    PAGE_HEADING_ERROR_DESCRIPTION
   )
 
   return h.redirect(path).code(StatusCodes.SEE_OTHER)

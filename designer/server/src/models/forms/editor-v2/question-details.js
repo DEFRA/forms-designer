@@ -265,6 +265,7 @@ export function questionDetailsViewModel(
     errorList,
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
+    formErrorsDescription: validation?.formErrorsDescription,
     questionType: questionFieldsOverride.type,
     questionTypeDesc: QuestionTypeDescriptions.find(
       (x) => x.type === questionFieldsOverride.type

@@ -12,6 +12,7 @@ import { sessionNames } from '~/src/common/constants/session-names.js'
 import { setPageHeadingAndGuidance } from '~/src/lib/editor.js'
 import { checkBoomError } from '~/src/lib/error-boom-helper.js'
 import {
+  PAGE_HEADING_ERROR_DESCRIPTION,
   getValidationErrorsFromSession,
   pageTitleError
 } from '~/src/lib/error-helper.js'
@@ -125,7 +126,9 @@ export default [
             request,
             h,
             pageTitleError(),
-            sessionNames.validationFailure.editorQuestions
+            sessionNames.validationFailure.editorQuestions,
+            undefined,
+            PAGE_HEADING_ERROR_DESCRIPTION
           )
         }
 

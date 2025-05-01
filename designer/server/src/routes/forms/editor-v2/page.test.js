@@ -126,7 +126,8 @@ describe('Editor v2 page routes', () => {
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
       new Joi.ValidationError('Select a page type', [], undefined),
-      'pageValidationFailure'
+      'pageValidationFailure',
+      undefined
     )
   })
 })
