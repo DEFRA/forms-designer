@@ -1,16 +1,18 @@
+import { type ListItem } from '@defra/forms-model'
+
 import {
   EventListeners,
   Question,
   QuestionElements
 } from '~/src/javascripts/preview/question.js'
 
-export interface ListElement {
+export interface ListElement extends ListItem {
   readonly id: string
   text: string
   value: string
 }
 
-export interface RadioElementReadOnly {
+export interface RadioElementReadOnly extends ListItem {
   readonly id: string
   readonly value: string
   readonly text: string
@@ -24,6 +26,9 @@ export interface RadioElementReadOnly {
 export class RadioQuestionElements extends QuestionElements {
   editLinks: Element[]
   listElements: Element[]
+  updateElement: HTMLInputElement | undefined
+  radioText: HTMLInputElement
+  radioHint: HTMLInputElement
 
   constructor() {
     super()
@@ -31,11 +36,46 @@ export class RadioQuestionElements extends QuestionElements {
       /** @type {HTMLInputElement[]} */ document.querySelectorAll(
         '#options-container .edit-option-link'
       )
+    const radioText = /** @type {HTMLInputElement} */ document.getElementById(
+      'radioText'
+    ) as HTMLInputElement
+    const radioHint = /** @type {HTMLInputElement} */ document.getElementById(
+      'radioHint'
+    ) as HTMLInputElement
+    const updateElement =
+      /** @type {HTMLInputElement|undefined} */ document.getElementById(
+        'add-option-form'
+      ) as HTMLInputElement
+
+    // we could document.createElement update element if need be
 
     const listElements = document.getElementById('options-container')?.children
 
     this.editLinks = Array.from(editElements)
     this.listElements = Array.from(listElements ?? [])
+    this.radioText = radioText
+    this.radioHint = radioHint
+    this.updateElement = updateElement
+  }
+
+  static getParentUpdateElement(el: HTMLInputElement) {
+    return el.closest('#add-option-form')
+  }
+
+  static getUpdateData(el: HTMLInputElement) {
+    const updateElement = RadioQuestionElements.getParentUpdateElement(el)
+    if (updateElement) {
+      return RadioQuestionElements.getListElementValues(updateElement)
+    }
+    return undefined
+  }
+
+  static getListElementValues(el: Element) {
+    return {
+      id: el.getAttribute('data-id'),
+      text: el.getAttribute('data-text'),
+      value: el.getAttribute('data-val')
+    } as ListElement
   }
 
   get values() {
@@ -43,27 +83,25 @@ export class RadioQuestionElements extends QuestionElements {
 
     return {
       ...baseValues,
-      items: this.listElements.map((element) => {
-        return {
-          id: element.getAttribute('data-id'),
-          text: element.getAttribute('data-text'),
-          value: element.getAttribute('data-val')
-        } as ListElement
-      })
+      items: this.listElements.map(RadioQuestionElements.getListElementValues)
     }
   }
 }
 
 export class RadioEventListeners extends EventListeners {
   listElements: Element[]
+  _radioElements: RadioQuestionElements
+  _radioQuestion: Radio
 
   constructor(
-    question: Question,
-    baseElements: QuestionElements,
+    question: Radio,
+    radioElements: RadioQuestionElements,
     listElements: Element[]
   ) {
-    super(question, baseElements)
+    super(question, radioElements)
     this.listElements = listElements
+    this._radioElements = radioElements
+    this._radioQuestion = question
   }
 
   get listeners() {
@@ -71,16 +109,50 @@ export class RadioEventListeners extends EventListeners {
       (listElem) =>
         [
           listElem,
-          (target, e) => {
+          (target, _e) => {
             // eslint-disable-next-line no-console
             console.log('click', target)
-            e.preventDefault()
+            // e.preventDefault()
           },
           'click'
         ] as ListenerRow
     )
+    // TODO: highlight listener - highlight radio label
+    // TODO: highlight listener - highlight radio hint
+    const editListeners = [
+      [
+        this._radioElements.radioText,
+        (target) => {
+          console.log('~~~~~~ Chris Debug ~~~~~~ radioText', 'Target', target)
+          console.log(
+            '~~~~~~ Chris Debug ~~~~~~ radioText',
+            'Target.value',
+            target.value
+          )
+          const { id } = RadioQuestionElements.getUpdateData(target)
+          console.log('~~~~~~ Chris Debug ~~~~~~ RadioText', 'id', id)
+          this._radioQuestion.updateText(id, target.value)
+        },
+        'input'
+      ],
+      [
+        this._radioElements.radioHint,
+        (target) => {
+          console.log('~~~~~~ Chris Debug ~~~~~~ radioHint', 'Target', target)
+          console.log(
+            '~~~~~~ Chris Debug ~~~~~~ radioHint',
+            'Target.value',
+            target.value
+          )
+          const { id } = RadioQuestionElements.getUpdateData(target)
+          console.log('~~~~~~ Chris Debug ~~~~~~ radioHint', 'Id', id)
+          this._radioQuestion.updateHint(id, target.value)
+        },
+        'input'
+      ]
+    ]
 
-    return radioListeners
+    return radioListeners.concat(editListeners)
   }
 }
 
@@ -164,9 +236,25 @@ export class Radio extends Question {
   }
 
   updateText(id: string, text: string) {
+    console.log('~~~~~~ Chris Debug ~~~~~~ ', 'Id', id)
     const listItem = this._list.get(id)
+    console.log('~~~~~~ Chris Debug ~~~~~~ updateText', listItem)
     if (listItem) {
       listItem.text = text
+      console.log('~~~~~~ Chris Debug ~~~~~~ updateText', 'This', this)
+      this.render()
+    }
+  }
+
+  updateHint(id: string, text: string) {
+    const listItem = this._list.get(id)
+    console.log('~~~~~~ Chris Debug ~~~~~~ updateHint', listItem)
+    if (listItem) {
+      listItem.hint = {
+        ...listItem.hint,
+        text
+      }
+      console.log('~~~~~~ Chris Debug ~~~~~~ updateHint', 'This', this)
       this.render()
     }
   }
