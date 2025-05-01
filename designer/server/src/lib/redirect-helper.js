@@ -16,13 +16,13 @@ export function redirectWithErrors(
   h,
   error,
   errorKey,
-  anchor = '',
+  anchor,
   errorsDescription
 ) {
   addErrorsToSession(request, error, errorKey, errorsDescription)
   const { pathname: redirectTo } = request.url
   return h
-    .redirect(`${redirectTo}${anchor}`)
+    .redirect(`${redirectTo}${anchor ?? ''}`)
     .code(StatusCodes.SEE_OTHER)
     .takeover()
 }
