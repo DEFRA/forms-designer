@@ -140,12 +140,42 @@ export class RadioEventListeners extends EventListeners {
         'input'
       ] as ListenerRow,
       [
+        this._radioElements.radioText,
+        (target) => {
+          const { id } = RadioQuestionElements.getUpdateData(target)
+          this._question.highlight = `${id}-label`
+        },
+        'focus'
+      ] as ListenerRow,
+      [
+        this._radioElements.radioText,
+        (_target) => {
+          this._question.highlight = undefined
+        },
+        'blur'
+      ] as ListenerRow,
+      [
         this._radioElements.radioHint,
         (target) => {
           const { id } = RadioQuestionElements.getUpdateData(target)
           this._radioQuestion.updateHint(id, target.value)
         },
         'input'
+      ] as ListenerRow,
+      [
+        this._radioElements.radioHint,
+        (target) => {
+          const { id } = RadioQuestionElements.getUpdateData(target)
+          this._question.highlight = `${id}-hint`
+        },
+        'focus'
+      ] as ListenerRow,
+      [
+        this._radioElements.radioHint,
+        (_target) => {
+          this._question.highlight = undefined
+        },
+        'blur'
       ] as ListenerRow
     ]
 
@@ -154,8 +184,6 @@ export class RadioEventListeners extends EventListeners {
         [
           listElem,
           (_target, _e) => {
-            // console.log('highlight', target)
-
             this._question.highlight = `${listElem.dataset.id}-label`
           },
           'mouseover'
@@ -163,8 +191,6 @@ export class RadioEventListeners extends EventListeners {
         [
           listElem,
           (_target, _e) => {
-            // console.log('highlight', target)
-
             this._question.highlight = undefined
           },
           'mouseout'
@@ -172,7 +198,6 @@ export class RadioEventListeners extends EventListeners {
       ]
     )
 
-    // console.log('highlightListeners', highlightListeners)
     return editLinkListeners
       .concat(editPanelListeners)
       .concat(highlightListeners)
