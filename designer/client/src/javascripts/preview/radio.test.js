@@ -31,25 +31,41 @@ describe('radio', () => {
   const radio1 = /** @type {RadioElement} */ ({
     id: radio1Id,
     text: 'Treasure Hunting',
-    value: 'Treasure Hunting'
+    value: 'Treasure Hunting',
+    label: {
+      classes: '',
+      text: 'Treasure Hunting'
+    }
   })
   const radio2Id = '801385a4-81e6-4171-96c3-6c6727d97f22'
   const radio2 = /** @type {RadioElement} */ ({
     id: radio2Id,
     text: 'Rescuing the princess',
-    value: 'Rescuing the princess'
+    value: 'Rescuing the princess',
+    label: {
+      classes: '',
+      text: 'Rescuing the princess'
+    }
   })
   const radio3Id = 'e6e3f621-b875-4ca3-a054-cca9149149dd'
   const radio3 = /** @type {RadioElement} */ ({
     id: radio3Id,
     text: 'Saving a city',
-    value: 'Saving a city'
+    value: 'Saving a city',
+    label: {
+      classes: '',
+      text: 'Saving a city'
+    }
   })
   const radio4Id = 'd71b3909-582f-4e90-b6f5-490b89a6eb8f'
   const radio4 = {
     id: radio4Id,
     text: 'Defeating the baron',
-    value: 'Defeating the baron'
+    value: 'Defeating the baron',
+    label: {
+      classes: '',
+      text: 'Defeating the baron'
+    }
   }
 
   /**
@@ -71,22 +87,38 @@ describe('radio', () => {
     {
       id: radio1Id,
       text: 'Treasure Hunting',
-      value: 'Treasure Hunting'
+      value: 'Treasure Hunting',
+      label: {
+        classes: '',
+        text: 'Treasure Hunting'
+      }
     },
     {
       id: radio2Id,
       text: 'Rescuing the princess',
-      value: 'Rescuing the princess'
+      value: 'Rescuing the princess',
+      label: {
+        classes: '',
+        text: 'Rescuing the princess'
+      }
     },
     {
       id: radio3Id,
       text: 'Saving a city',
-      value: 'Saving a city'
+      value: 'Saving a city',
+      label: {
+        classes: '',
+        text: 'Saving a city'
+      }
     },
     {
       id: radio4Id,
       text: 'Defeating the baron',
-      value: 'Defeating the baron'
+      value: 'Defeating the baron',
+      label: {
+        classes: '',
+        text: 'Defeating the baron'
+      }
     }
   ]
 
@@ -135,7 +167,11 @@ describe('radio', () => {
         radio.push(structuredClone(radio2))
         radio.updateText(radio2Id, 'Rescuing the princess 👸')
         expect(radio.list).toEqual([
-          { ...radio2, text: 'Rescuing the princess 👸' }
+          {
+            ...radio2,
+            text: 'Rescuing the princess 👸',
+            label: { ...radio2.label, text: 'Rescuing the princess 👸' }
+          }
         ])
       })
 

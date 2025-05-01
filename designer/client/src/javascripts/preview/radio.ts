@@ -71,12 +71,17 @@ export class RadioQuestionElements extends QuestionElements {
     return undefined
   }
 
-  static getListElementValues(el: Element) {
+  static getListElementValues(el: HTMLElement) {
+    const hint = el.dataset.hint ? { hint: { text: el.dataset.hint } } : {}
     return {
-      id: el.getAttribute('data-id') ?? 'new',
-      text: el.getAttribute('data-text'),
-      hint: { text: el.getAttribute('data-hint') },
-      value: el.getAttribute('data-val')
+      id: el.dataset.id ?? 'new',
+      text: el.dataset.text,
+      ...hint,
+      label: {
+        classes: '',
+        text: el.dataset.text
+      },
+      value: el.dataset.val
     } as ListElement
   }
 
@@ -144,17 +149,27 @@ export class RadioEventListeners extends EventListeners {
       ] as ListenerRow
     ]
 
-    const highlightListeners = this._radioElements.listElements.map(
-      (listElem) =>
+    const highlightListeners = this._radioElements.listElements.flatMap(
+      (listElem) => [
         [
           listElem,
           (_target, _e) => {
             // console.log('highlight', target)
 
-            this._question.highlight = listElem.dataset.id
+            this._question.highlight = `${listElem.dataset.id}-label`
           },
           'mouseover'
+        ] as ListenerRow,
+        [
+          listElem,
+          (_target, _e) => {
+            // console.log('highlight', target)
+
+            this._question.highlight = undefined
+          },
+          'mouseout'
         ] as ListenerRow
+      ]
     )
 
     // console.log('highlightListeners', highlightListeners)
@@ -236,7 +251,31 @@ export class Radio extends Question {
 
   get list(): readonly ListItem[] {
     const iterator: MapIterator<ListElement> = this._list.values()
-    return Array.from(iterator)
+    return Array.from(iterator).map((listItem) => {
+      const hintText =
+        this._highlight === `${listItem.id}-hint` &&
+        !listItem.hint?.text?.length
+          ? 'Hint text'
+          : listItem.hint?.text
+
+      const hint = hintText
+        ? {
+            hint: {
+              text: hintText,
+              classes: this.getHighlight(`${listItem.id}-hint`)
+            }
+          }
+        : {}
+
+      return {
+        ...listItem,
+        ...hint,
+        label: {
+          text: listItem.text,
+          classes: this.getHighlight(listItem.id + '-label')
+        }
+      }
+    })
   }
 
   updateText(id: string, text: string) {
