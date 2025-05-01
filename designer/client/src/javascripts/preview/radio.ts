@@ -3,7 +3,8 @@ import { type ListItem } from '@defra/forms-model'
 import {
   EventListeners,
   Question,
-  QuestionElements
+  QuestionElements,
+  type ListenerRow
 } from '~/src/javascripts/preview/question.js'
 
 export interface ListElement extends ListItem {
@@ -32,10 +33,10 @@ export class RadioQuestionElements extends QuestionElements {
 
   constructor() {
     super()
-    const editElements =
-      /** @type {HTMLInputElement[]} */ document.querySelectorAll(
-        '#options-container .edit-option-link'
-      )
+    // const editElements =
+    //   /** @type {HTMLInputElement[]} */ document.querySelectorAll(
+    //     '#options-container .edit-option-link'
+    //   )
     const radioText = /** @type {HTMLInputElement} */ document.getElementById(
       'radioText'
     ) as HTMLInputElement
@@ -51,7 +52,7 @@ export class RadioQuestionElements extends QuestionElements {
 
     const listElements = document.getElementById('options-container')?.children
 
-    this.editLinks = Array.from(editElements)
+    this.editLinks = Array.from([])
     this.listElements = Array.from(listElements ?? [])
     this.radioText = radioText
     this.radioHint = radioHint
@@ -72,8 +73,9 @@ export class RadioQuestionElements extends QuestionElements {
 
   static getListElementValues(el: Element) {
     return {
-      id: el.getAttribute('data-id'),
+      id: el.getAttribute('data-id') ?? 'new',
       text: el.getAttribute('data-text'),
+      hint: { text: el.getAttribute('data-hint') },
       value: el.getAttribute('data-val')
     } as ListElement
   }
@@ -83,6 +85,7 @@ export class RadioQuestionElements extends QuestionElements {
 
     return {
       ...baseValues,
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       items: this.listElements.map(RadioQuestionElements.getListElementValues)
     }
   }
@@ -105,7 +108,9 @@ export class RadioEventListeners extends EventListeners {
   }
 
   get listeners() {
-    const radioListeners = this.listElements.map(
+    const radioListeners: ListenerRow[] = []
+    /*
+    this.listElements.map(
       (listElem) =>
         [
           listElem,
@@ -117,39 +122,32 @@ export class RadioEventListeners extends EventListeners {
           'click'
         ] as ListenerRow
     )
+        */
     // TODO: highlight listener - highlight radio label
     // TODO: highlight listener - highlight radio hint
     const editListeners = [
       [
         this._radioElements.radioText,
         (target) => {
-          console.log('~~~~~~ Chris Debug ~~~~~~ radioText', 'Target', target)
-          console.log(
-            '~~~~~~ Chris Debug ~~~~~~ radioText',
-            'Target.value',
-            target.value
-          )
+          // console.log('~~~~~~ Chris Debug ~~~~~~ radioText', 'Target', target)
+          // console.log('~~~~~~ Chris Debug ~~~~~~ radioText', 'Target.value', target.value)
           const { id } = RadioQuestionElements.getUpdateData(target)
-          console.log('~~~~~~ Chris Debug ~~~~~~ RadioText', 'id', id)
+          // console.log('~~~~~~ Chris Debug ~~~~~~ RadioText', 'id', id)
           this._radioQuestion.updateText(id, target.value)
         },
         'input'
-      ],
+      ] as ListenerRow,
       [
         this._radioElements.radioHint,
         (target) => {
-          console.log('~~~~~~ Chris Debug ~~~~~~ radioHint', 'Target', target)
-          console.log(
-            '~~~~~~ Chris Debug ~~~~~~ radioHint',
-            'Target.value',
-            target.value
-          )
+          // console.log('~~~~~~ Chris Debug ~~~~~~ radioHint', 'Target', target)
+          // console.log('~~~~~~ Chris Debug ~~~~~~ radioHint', 'Target.value', target.value)
           const { id } = RadioQuestionElements.getUpdateData(target)
-          console.log('~~~~~~ Chris Debug ~~~~~~ radioHint', 'Id', id)
+          // console.log('~~~~~~ Chris Debug ~~~~~~ radioHint', 'Id', id)
           this._radioQuestion.updateHint(id, target.value)
         },
         'input'
-      ]
+      ] as ListenerRow
     ]
 
     return radioListeners.concat(editListeners)
@@ -236,25 +234,25 @@ export class Radio extends Question {
   }
 
   updateText(id: string, text: string) {
-    console.log('~~~~~~ Chris Debug ~~~~~~ ', 'Id', id)
+    // console.log('~~~~~~ Chris Debug ~~~~~~ ', 'Id', id)
     const listItem = this._list.get(id)
-    console.log('~~~~~~ Chris Debug ~~~~~~ updateText', listItem)
+    // console.log('~~~~~~ Chris Debug ~~~~~~ updateText', listItem)
     if (listItem) {
       listItem.text = text
-      console.log('~~~~~~ Chris Debug ~~~~~~ updateText', 'This', this)
+      // console.log('~~~~~~ Chris Debug ~~~~~~ updateText', 'This', this)
       this.render()
     }
   }
 
   updateHint(id: string, text: string) {
     const listItem = this._list.get(id)
-    console.log('~~~~~~ Chris Debug ~~~~~~ updateHint', listItem)
+    // console.log('~~~~~~ Chris Debug ~~~~~~ updateHint', listItem)
     if (listItem) {
       listItem.hint = {
         ...listItem.hint,
         text
       }
-      console.log('~~~~~~ Chris Debug ~~~~~~ updateHint', 'This', this)
+      // console.log('~~~~~~ Chris Debug ~~~~~~ updateHint', 'This', this)
       this.render()
     }
   }
