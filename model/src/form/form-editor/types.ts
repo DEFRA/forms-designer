@@ -292,6 +292,15 @@ export type FormEditorInputQuestionDetails = Pick<
   | 'radioValue'
 >
 
+export interface ListItem {
+  text?: string
+  hint?: {
+    text?: string
+  }
+  value?: string
+  id?: string
+}
+
 export interface QuestionSessionState {
   questionType?: ComponentType
   questionDetails?: Partial<ComponentDef>
@@ -302,12 +311,10 @@ export interface QuestionSessionState {
     radioValue?: string
     expanded?: boolean
   }
-  listItems?: {
-    text?: string
-    hint?: { id?: string; text: string }
-    value?: string
-    id?: string
-  }[]
+  listItems?: ListItem[]
+  isReordering?: boolean
+  lastMovedId?: string
+  lastMoveDirection?: string
 }
 
 export interface GovukField {
