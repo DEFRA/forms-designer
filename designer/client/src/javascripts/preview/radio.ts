@@ -5,8 +5,8 @@ import {
   type ListenerRow
 } from '~/src/javascripts/preview/question.js'
 
-export interface RadioElement {
-  id: string
+export interface ListElement {
+  readonly id: string
   text: string
   value: string
 }
@@ -14,6 +14,7 @@ export interface RadioElement {
 export class RadioQuestionElements extends QuestionElements {
   deleteLinks: Element[]
   editLinks: Element[]
+  listElements: Element[]
 
   constructor() {
     super()
@@ -28,22 +29,43 @@ export class RadioQuestionElements extends QuestionElements {
         '#options-container .edit-option-link'
       )
 
+    const listElements = document.getElementById('options-container')?.children
+
     this.deleteLinks = Array.from(deleteElements)
     this.editLinks = Array.from(editElements)
+    this.listElements = Array.from(listElements ?? [])
+  }
+
+  get values() {
+    const baseValues = super.values
+
+    return {
+      ...baseValues,
+      items: this.listElements.map((element) => {
+        return {
+          id: element.getAttribute('data-id'),
+          text: element.getAttribute('data-text'),
+          value: element.getAttribute('data-val')
+        } as ListElement
+      })
+    }
   }
 }
 
 export class RadioEventListeners extends EventListeners {
   deleteLinks: Element[]
   editLinks: Element[]
+  listElements: Element[]
 
   constructor(
     question: Question,
     baseElements: QuestionElements,
+    listElements: Element[],
     deleteLinks: Element[],
     editLinks: Element[]
   ) {
     super(question, baseElements)
+    this.listElements = listElements
     this.deleteLinks = deleteLinks
     this.editLinks = editLinks
   }
@@ -92,18 +114,43 @@ export class RadioEventListeners extends EventListeners {
 // updating index
 //
 
+/**
+ * @param {ListElement} listElement
+ * @returns {[string, ListElement]}
+ */
+export function listItemMapper(
+  listElement: ListElement
+): [string, ListElement] {
+  return [listElement.id, listElement]
+}
+
+/**
+ *
+ * @param {ListElement[]} listElements
+ * @returns {Map<string, ListElement>}
+ */
+export function listsElementToMap(listElements: ListElement[]) {
+  const entries = listElements.map(listItemMapper)
+  return new Map<string, ListElement>(entries)
+}
+
 export class Radio extends Question {
   _questionTemplate = 'radios.njk'
 
-  private readonly _list = new Map<string, RadioElement>([])
+  /**
+   * @type {Map<string, ListElement>}
+   * @private
+   */
+  private readonly _list: Map<string, ListElement>
 
   /**
-   * @param {QuestionElements} htmlElements
+   * @param {RadioQuestionElements} radioElements
    */
-  constructor(radioElements) {
+  constructor(radioElements: RadioQuestionElements) {
     super(radioElements)
     const listeners = new RadioEventListeners(
       this,
+      radioElements,
       radioElements,
       radioElements.deleteLinks,
       radioElements.editLinks
@@ -115,6 +162,7 @@ export class Radio extends Question {
      * @private
      */
     this._listeners = listeners
+    this._list = listsElementToMap(radioElements.values.items)
   }
 
   get renderInput() {
@@ -122,21 +170,40 @@ export class Radio extends Question {
       id: 'radioInput',
       name: 'radioInputField',
       fieldset: this.fieldSet,
-      hint: this.hint
+      hint: this.hint,
+      items: this.list
     }
   }
 
-  push(radioElement: RadioElement) {
+  push(radioElement: ListElement) {
     this._list.set(radioElement.id, radioElement)
+    this.render()
   }
 
   delete(key: string) {
     this._list.delete(key)
+    this.render()
   }
 
-  get list(): RadioElement[] {
-    const iterator: MapIterator<RadioElement> = this._list.values()
+  get list(): readonly ListItem[] {
+    const iterator: MapIterator<ListElement> = this._list.values()
     return Array.from(iterator)
+  }
+
+  updateText(id: string, text: string) {
+    const listItem = this._list.get(id)
+    if (listItem) {
+      listItem.text = text
+      this.render()
+    }
+  }
+
+  updateValue(id: string, value: string) {
+    const listItem = this._list.get(id)
+    if (listItem) {
+      listItem.value = value
+      this.render()
+    }
   }
 
   static setupPreview() {

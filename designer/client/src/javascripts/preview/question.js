@@ -6,6 +6,7 @@ import njk from '~/src/javascripts/preview/nunjucks.js'
  * @property {string} hintText -
  * @property {boolean} optional -
  * @property {string} shortDesc -
+ * @property {ListElement[]} [items] -
  */
 
 export class QuestionElements {
@@ -50,6 +51,7 @@ export class QuestionElements {
 
   /**
    * @returns {BaseSettings}
+   * @public
    */
   get values() {
     const hintText = /** @type {string} */ (this.hintText?.value ?? '')
@@ -146,7 +148,7 @@ export class EventListeners {
   }
 
   /**
-   * @public
+   * @protected
    * @returns {ListenerRow[]}
    */
   get listeners() {
@@ -208,11 +210,11 @@ export class EventListeners {
 
 /**
  * @typedef {{
- *    id: string
- *    value: string
- *    text: string
- *    hint?: DefaultComponent
- * }} RadioItem
+ *    readonly id: string
+ *    readonly value: string
+ *    readonly text: string
+ *    readonly hint?: DefaultComponent
+ * }} ListItem
  */
 
 /**
@@ -222,7 +224,7 @@ export class EventListeners {
  *   label?: DefaultComponent
  *   hint?: DefaultComponent
  *   fieldset?: FieldSet
- *   items?: RadioItem
+ *   items?: ListItem
  * }} QuestionBaseModel
  */
 
@@ -299,16 +301,18 @@ export class Question {
     return this._highlight === element ? ' highlight' : ''
   }
 
+  get titleText() {
+    const optionalText = this._optional ? ' (optional)' : ''
+    return (this._question === '' ? 'Question' : this._question) + optionalText
+  }
+
   /**
    * @protected
    * @type {DefaultComponent}
    */
   get label() {
-    const optionalText = this._optional ? ' (optional)' : ''
-
     return {
-      text:
-        (this._question === '' ? 'Question' : this._question) + optionalText,
+      text: this.titleText,
       classes: 'govuk-label--l' + this.getHighlight('question')
     }
   }
@@ -318,11 +322,9 @@ export class Question {
    * @type {FieldSet}
    */
   get fieldSet() {
-    const optionalText = this._optional ? ' (optional)' : ''
-
     return {
       legend: {
-        text: this._question + optionalText,
+        text: this.titleText,
         classes: 'govuk-fieldset__legend--l' + this.getHighlight('question')
       }
     }
