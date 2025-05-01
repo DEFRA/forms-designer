@@ -1,8 +1,7 @@
 import {
   EventListeners,
   Question,
-  QuestionElements,
-  type ListenerRow
+  QuestionElements
 } from '~/src/javascripts/preview/question.js'
 
 export interface ListElement {
@@ -11,19 +10,23 @@ export interface ListElement {
   value: string
 }
 
+export interface RadioElementReadOnly {
+  readonly id: string
+  readonly value: string
+  readonly text: string
+  readonly hint?: {
+    text: string
+    id?: string
+    classes?: string
+  }
+}
+
 export class RadioQuestionElements extends QuestionElements {
-  deleteLinks: Element[]
   editLinks: Element[]
   listElements: Element[]
 
   constructor() {
     super()
-
-    const deleteElements =
-      /** @type {HTMLInputElement[]} */ document.querySelectorAll(
-        '#options-container .delete-option-link'
-      )
-
     const editElements =
       /** @type {HTMLInputElement[]} */ document.querySelectorAll(
         '#options-container .edit-option-link'
@@ -31,7 +34,6 @@ export class RadioQuestionElements extends QuestionElements {
 
     const listElements = document.getElementById('options-container')?.children
 
-    this.deleteLinks = Array.from(deleteElements)
     this.editLinks = Array.from(editElements)
     this.listElements = Array.from(listElements ?? [])
   }
@@ -53,59 +55,32 @@ export class RadioQuestionElements extends QuestionElements {
 }
 
 export class RadioEventListeners extends EventListeners {
-  deleteLinks: Element[]
-  editLinks: Element[]
   listElements: Element[]
 
   constructor(
     question: Question,
     baseElements: QuestionElements,
-    listElements: Element[],
-    deleteLinks: Element[],
-    editLinks: Element[]
+    listElements: Element[]
   ) {
     super(question, baseElements)
     this.listElements = listElements
-    this.deleteLinks = deleteLinks
-    this.editLinks = editLinks
   }
 
   get listeners() {
-    const deleteListeners = this.deleteLinks.map(
+    const radioListeners = this.listElements.map(
       (listElem) =>
         [
           listElem,
-          (target, e: Event) => {
-            e.preventDefault()
-            this.removeItem(target)
-          },
-          'click'
-        ] as ListenerRow
-    )
-
-    const editListeners = this.editLinks.map(
-      (listElem) =>
-        [
-          listElem,
-          (target, e: Event) => {
+          (target, e) => {
             // eslint-disable-next-line no-console
-            console.log('click edit', target)
+            console.log('click', target)
             e.preventDefault()
           },
           'click'
         ] as ListenerRow
     )
 
-    return [...deleteListeners, ...editListeners]
-  }
-
-  removeItem(target: HTMLElement) {
-    const closestElem = target.closest('li')?.parentNode?.closest('li')
-    // console.log('remove closest', closestElem)
-    if (closestElem) {
-      closestElem.remove()
-    }
-    // TODO - ajax call to update state
+    return radioListeners
   }
 }
 
@@ -151,8 +126,6 @@ export class Radio extends Question {
     const listeners = new RadioEventListeners(
       this,
       radioElements,
-      radioElements,
-      radioElements.deleteLinks,
       radioElements.editLinks
     )
     listeners.setupListeners()

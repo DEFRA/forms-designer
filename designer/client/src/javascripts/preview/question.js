@@ -209,11 +209,12 @@ export class EventListeners {
  */
 
 /**
+ * @readonly
  * @typedef {{
- *    readonly id: string
- *    readonly value: string
- *    readonly text: string
- *    readonly hint?: DefaultComponent
+ *    id: string
+ *    value: string
+ *    text: string
+ *    hint?: DefaultComponent
  * }} ListItem
  */
 
@@ -436,3 +437,7 @@ export class Question {
     new Question(new QuestionElements()).render()
   }
 }
+
+/**
+ * @import { ListElement } from '~/src/javascripts/preview/radio'
+ */
