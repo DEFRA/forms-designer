@@ -106,5 +106,40 @@ export const QuestionEnhancedFields =
   }
 
 /**
+ * @readonly
+ * @enum {string}
+ */
+export const Direction = {
+  Up: 'up',
+  Down: 'down'
+}
+
+/**
+ * @readonly
+ * @enum {string}
+ */
+export const ListAction = {
+  Move: 'move',
+  Reorder: 'reorder',
+  DoneReordering: 'done-reordering',
+  Delete: 'delete',
+  Edit: 'edit',
+  Cancel: 'cancel'
+}
+
+/**
+ * @readonly
+ * @enum {string}
+ */
+export const EnhancedAction = {
+  AddItem: 'add-item',
+  Reorder: 're-order',
+  DoneReordering: 'done-reordering',
+  SaveItem: 'save-item',
+  Up: 'up',
+  Down: 'down'
+}
+
+/**
  * @import { FormEditorGovukField } from '@defra/forms-model'
  */

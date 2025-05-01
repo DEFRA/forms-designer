@@ -52,10 +52,10 @@
       }) }}
 
       {% if not preventAddQuestion %}
-      {{ govukButton({
-        text: 'Add another question',
-        href: baseUrl + '/question/new/type'
-      }) }}
+        {{ govukButton({
+          text: 'Add another question',
+          href: baseUrl + '/question/new/type'
+        }) }}
       {% endif %}
 
       <a href="{{ baseUrl }}/delete" class="govuk-link govuk-link--no-visited-state">

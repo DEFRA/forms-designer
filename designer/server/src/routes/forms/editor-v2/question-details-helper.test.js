@@ -181,6 +181,121 @@ describe('Editor v2 question-details route helper', () => {
         ]
       })
     })
+
+    test('reorder should set isReordering flag', () => {
+      mockGet.mockReturnValue(structuredClone(sessionWithListWithThreeItems))
+
+      expect(
+        handleEnhancedActionOnGet(mockYar, '123', { action: 'reorder' })
+      ).toBe('#list-items')
+      expect(mockSet).toHaveBeenCalledWith('questionSessionState-123', {
+        questionType: 'RadiosField',
+        isReordering: true,
+        editRow: { expanded: false },
+        listItems: [
+          { id: '1', text: 'text1', value: 'value1' },
+          { hint: { text: 'hint2' }, id: '2', text: 'text2', value: 'value2' },
+          { hint: { text: 'hint3' }, id: '3', text: 'text3', value: 'value3' }
+        ]
+      })
+    })
+
+    test('done-reordering should clear isReordering flag', () => {
+      mockGet.mockReturnValue(
+        structuredClone({
+          ...sessionWithListWithThreeItems,
+          isReordering: true
+        })
+      )
+
+      expect(
+        handleEnhancedActionOnGet(mockYar, '123', { action: 'done-reordering' })
+      ).toBe('#list-items')
+      expect(mockSet).toHaveBeenCalledWith('questionSessionState-123', {
+        questionType: 'RadiosField',
+        isReordering: false,
+        listItems: [
+          { id: '1', text: 'text1', value: 'value1' },
+          { hint: { text: 'hint2' }, id: '2', text: 'text2', value: 'value2' },
+          { hint: { text: 'hint3' }, id: '3', text: 'text3', value: 'value3' }
+        ],
+        editRow: {
+          expanded: false
+        }
+      })
+    })
+
+    test('move up should reposition item properly', () => {
+      mockGet.mockReturnValue(structuredClone(sessionWithListWithThreeItems))
+
+      expect(
+        handleEnhancedActionOnGet(mockYar, '123', {
+          action: 'move',
+          id: '3',
+          direction: 'up'
+        })
+      ).toBe('#')
+
+      // up to position 2
+      expect(mockSet).toHaveBeenCalledWith('questionSessionState-123', {
+        questionType: 'RadiosField',
+        listItems: [
+          { id: '1', text: 'text1', value: 'value1' },
+          { hint: { text: 'hint3' }, id: '3', text: 'text3', value: 'value3' },
+          { hint: { text: 'hint2' }, id: '2', text: 'text2', value: 'value2' }
+        ],
+        lastMovedId: '3',
+        lastMoveDirection: 'up'
+      })
+    })
+
+    test('move down should reposition item properly', () => {
+      mockGet.mockReturnValue(structuredClone(sessionWithListWithThreeItems))
+
+      expect(
+        handleEnhancedActionOnGet(mockYar, '123', {
+          action: 'move',
+          id: '1',
+          direction: 'down'
+        })
+      ).toBe('#')
+
+      // down to position 2
+      expect(mockSet).toHaveBeenCalledWith('questionSessionState-123', {
+        questionType: 'RadiosField',
+        listItems: [
+          { hint: { text: 'hint2' }, id: '2', text: 'text2', value: 'value2' },
+          { id: '1', text: 'text1', value: 'value1' },
+          { hint: { text: 'hint3' }, id: '3', text: 'text3', value: 'value3' }
+        ],
+        lastMovedId: '1',
+        lastMoveDirection: 'down'
+      })
+    })
+
+    test('move should handle invalid moves gracefully', () => {
+      mockGet.mockReturnValue(structuredClone(sessionWithListWithThreeItems))
+
+      // try to move first item up (should not change list!)
+      expect(
+        handleEnhancedActionOnGet(mockYar, '123', {
+          action: 'move',
+          id: '1',
+          direction: 'up'
+        })
+      ).toBe('#')
+
+      expect(mockSet).toHaveBeenCalledWith('questionSessionState-123', {
+        questionType: 'RadiosField',
+        listItems: [
+          { id: '1', text: 'text1', value: 'value1' },
+          { hint: { text: 'hint2' }, id: '2', text: 'text2', value: 'value2' },
+          { hint: { text: 'hint3' }, id: '3', text: 'text3', value: 'value3' }
+        ],
+        lastMovedId: '1',
+        lastMoveDirection: 'up'
+      })
+    })
   })
 
   describe('handleEnhancedActionOnPost', () => {
@@ -258,160 +373,185 @@ describe('Editor v2 question-details route helper', () => {
         '#list-items'
       )
     })
+  })
 
-    describe('save-item', () => {
-      test('should handle simple no list items', () => {
-        mockGet.mockReturnValue(structuredClone(simpleSession))
+  describe('save-item', () => {
+    test('should handle simple no list items', () => {
+      mockGet.mockReturnValue(structuredClone(simpleSession))
 
-        const payload = /** @type {FormEditorInputQuestionDetails} */ ({
-          enhancedAction: 'save-item',
-          radioId: '1',
-          radioText: 'text',
+      const payload = /** @type {FormEditorInputQuestionDetails} */ ({
+        enhancedAction: 'save-item',
+        radioId: '1',
+        radioText: 'text',
+        radioHint: '',
+        radioValue: 'value'
+      })
+      const { mockRequest } = buildMockRequest(payload)
+
+      expect(handleEnhancedActionOnPost(mockRequest, '123', {})).toBe(
+        '#list-items'
+      )
+      const expectedList = [
+        {
+          id: expect.any(String),
+          text: 'text',
+          hint: undefined,
+          value: 'value'
+        }
+      ]
+      expect(mockSet).toHaveBeenCalledWith('questionSessionState-123', {
+        questionType: 'RadiosField',
+        listItems: expectedList,
+        editRow: {
+          radioId: '',
+          radioText: '',
           radioHint: '',
-          radioValue: 'value'
-        })
-        const { mockRequest } = buildMockRequest(payload)
-
-        expect(handleEnhancedActionOnPost(mockRequest, '123', {})).toBe(
-          '#list-items'
-        )
-        const expectedList = [
-          {
-            id: expect.any(String),
-            text: 'text',
-            hint: undefined,
-            value: 'value'
-          }
-        ]
-        expect(mockSet).toHaveBeenCalledWith('questionSessionState-123', {
-          questionType: 'RadiosField',
-          listItems: expectedList,
-          editRow: {
-            radioId: '',
-            radioText: '',
-            radioHint: '',
-            radioValue: '',
-            expanded: false
-          },
-          questionDetails: {}
-        })
-      })
-      test('save-item should update existing item', () => {
-        mockGet.mockReturnValue(structuredClone(sessionWithListWithThreeItems))
-
-        const payload = /** @type {FormEditorInputQuestionDetails} */ ({
-          enhancedAction: 'save-item',
-          radioId: '3',
-          radioText: 'text3x',
-          radioHint: 'hint3x',
-          radioValue: 'value3x'
-        })
-
-        const { mockRequest } = buildMockRequest(payload)
-
-        expect(handleEnhancedActionOnPost(mockRequest, '123', {})).toBe(
-          '#list-items'
-        )
-        const expectedList = [
-          { id: '1', text: 'text1', value: 'value1' },
-          { id: '2', text: 'text2', hint: { text: 'hint2' }, value: 'value2' },
-          {
-            id: '3',
-            text: 'text3x',
-            hint: { text: 'hint3x' },
-            value: 'value3x'
-          }
-        ]
-        expect(mockSet).toHaveBeenCalledWith('questionSessionState-123', {
-          questionType: 'RadiosField',
-          listItems: expectedList,
-          editRow: {
-            radioId: '',
-            radioText: '',
-            radioHint: '',
-            radioValue: '',
-            expanded: false
-          },
-          questionDetails: {}
-        })
-      })
-
-      test('save-item should add new item', () => {
-        mockGet.mockReturnValue(structuredClone(sessionWithListWithThreeItems))
-
-        const payload = /** @type {FormEditorInputQuestionDetails} */ ({
-          enhancedAction: 'save-item',
-          radioId: '5',
-          radioText: 'text5',
-          radioHint: '',
-          radioValue: 'value5'
-        })
-
-        const { mockRequest } = buildMockRequest(payload)
-
-        expect(handleEnhancedActionOnPost(mockRequest, '123', {})).toBe(
-          '#list-items'
-        )
-        const expectedList = [
-          { id: '1', text: 'text1', value: 'value1' },
-          { id: '2', text: 'text2', hint: { text: 'hint2' }, value: 'value2' },
-          { id: '3', text: 'text3', hint: { text: 'hint3' }, value: 'value3' },
-          {
-            id: expect.anything(),
-            text: 'text5',
-            hint: undefined,
-            value: 'value5'
-          }
-        ]
-        expect(mockSet).toHaveBeenCalledWith('questionSessionState-123', {
-          questionType: 'RadiosField',
-          listItems: expectedList,
-          editRow: {
-            radioId: '',
-            radioText: '',
-            radioHint: '',
-            radioValue: '',
-            expanded: false
-          },
-          questionDetails: {}
-        })
-      })
-
-      test('save-item should error if duplicate item', () => {
-        mockGet.mockReturnValue(structuredClone(sessionWithListWithThreeItems))
-
-        const payload = /** @type {FormEditorInputQuestionDetails} */ ({
-          enhancedAction: 'save-item',
-          radioId: '5',
-          radioText: 'text3',
-          radioHint: 'hint5',
-          radioValue: 'value5'
-        })
-
-        const { mockRequest } = buildMockRequest(payload)
-
-        expect(handleEnhancedActionOnPost(mockRequest, '123', {})).toBe('#')
-        expect(mockSet).not.toHaveBeenCalled()
-        expect(mockFlash).toHaveBeenCalledWith(
-          'questionDetailsValidationFailure',
-          {
-            formErrors: {
-              radioText: {
-                href: '#radioText',
-                text: 'Item text must be unique in the list on item 4'
-              }
-            },
-            formValues: {
-              enhancedAction: 'save-item',
-              radioHint: 'hint5',
-              radioId: '5',
-              radioText: 'text3',
-              radioValue: 'value5'
-            }
-          }
-        )
+          radioValue: '',
+          expanded: false
+        },
+        questionDetails: {}
       })
     })
+    test('save-item should update existing item', () => {
+      mockGet.mockReturnValue(structuredClone(sessionWithListWithThreeItems))
+
+      const payload = /** @type {FormEditorInputQuestionDetails} */ ({
+        enhancedAction: 'save-item',
+        radioId: '3',
+        radioText: 'text3x',
+        radioHint: 'hint3x',
+        radioValue: 'value3x'
+      })
+
+      const { mockRequest } = buildMockRequest(payload)
+
+      expect(handleEnhancedActionOnPost(mockRequest, '123', {})).toBe(
+        '#list-items'
+      )
+      const expectedList = [
+        { id: '1', text: 'text1', value: 'value1' },
+        { id: '2', text: 'text2', hint: { text: 'hint2' }, value: 'value2' },
+        {
+          id: '3',
+          text: 'text3x',
+          hint: { text: 'hint3x' },
+          value: 'value3x'
+        }
+      ]
+      expect(mockSet).toHaveBeenCalledWith('questionSessionState-123', {
+        questionType: 'RadiosField',
+        listItems: expectedList,
+        editRow: {
+          radioId: '',
+          radioText: '',
+          radioHint: '',
+          radioValue: '',
+          expanded: false
+        },
+        questionDetails: {}
+      })
+    })
+
+    test('save-item should add new item', () => {
+      mockGet.mockReturnValue(structuredClone(sessionWithListWithThreeItems))
+
+      const payload = /** @type {FormEditorInputQuestionDetails} */ ({
+        enhancedAction: 'save-item',
+        radioId: '5',
+        radioText: 'text5',
+        radioHint: '',
+        radioValue: 'value5'
+      })
+
+      const { mockRequest } = buildMockRequest(payload)
+
+      expect(handleEnhancedActionOnPost(mockRequest, '123', {})).toBe(
+        '#list-items'
+      )
+      const expectedList = [
+        { id: '1', text: 'text1', value: 'value1' },
+        { id: '2', text: 'text2', hint: { text: 'hint2' }, value: 'value2' },
+        { id: '3', text: 'text3', hint: { text: 'hint3' }, value: 'value3' },
+        {
+          id: expect.anything(),
+          text: 'text5',
+          hint: undefined,
+          value: 'value5'
+        }
+      ]
+      expect(mockSet).toHaveBeenCalledWith('questionSessionState-123', {
+        questionType: 'RadiosField',
+        listItems: expectedList,
+        editRow: {
+          radioId: '',
+          radioText: '',
+          radioHint: '',
+          radioValue: '',
+          expanded: false
+        },
+        questionDetails: {}
+      })
+    })
+
+    test('save-item should error if duplicate item', () => {
+      mockGet.mockReturnValue(structuredClone(sessionWithListWithThreeItems))
+
+      const payload = /** @type {FormEditorInputQuestionDetails} */ ({
+        enhancedAction: 'save-item',
+        radioId: '5',
+        radioText: 'text3',
+        radioHint: 'hint5',
+        radioValue: 'value5'
+      })
+
+      const { mockRequest } = buildMockRequest(payload)
+
+      expect(handleEnhancedActionOnPost(mockRequest, '123', {})).toBe('#')
+      expect(mockSet).not.toHaveBeenCalled()
+      expect(mockFlash).toHaveBeenCalledWith(
+        'questionDetailsValidationFailure',
+        {
+          formErrors: {
+            radioText: {
+              href: '#radioText',
+              text: 'Item text must be unique in the list on item 4'
+            }
+          },
+          formValues: {
+            enhancedAction: 'save-item',
+            radioHint: 'hint5',
+            radioId: '5',
+            radioText: 'text3',
+            radioValue: 'value5'
+          }
+        }
+      )
+    })
+  })
+
+  test('done-reordering post should clear isReordering flag', () => {
+    mockGet.mockReturnValue(
+      structuredClone({
+        ...sessionWithListWithThreeItems,
+        isReordering: true
+      })
+    )
+
+    const payload = /** @type {FormEditorInputQuestionDetails} */ ({
+      enhancedAction: 'done-reordering'
+    })
+
+    const { mockRequest } = buildMockRequest(payload)
+
+    expect(handleEnhancedActionOnPost(mockRequest, '123', {})).toBe(
+      '#list-items'
+    )
+    expect(mockSet).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({
+        isReordering: false
+      })
+    )
   })
 })
 

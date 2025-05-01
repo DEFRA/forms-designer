@@ -1,5 +1,6 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "editor-card/macro.njk" import appEditorCard %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% set radioIdIdx = 0 %}
 {% set radioTextIdx = 1 %}
@@ -16,70 +17,121 @@
   </h2>
   <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible" style="border-color:black; border-width: 3px;">
 
-  <input type="hidden" name="listItemsData" id="radio-options-data" value="{{ state.listItems | dump }}">
 
-  <ol class="gem-c-reorderable-list js-enabled" id="options-container" data-module="reorderable-list">
-  {% if state.listItems | length  or state.editRow.expanded %}
+  {% if state.isReordering %}
+    <ol class="app-reorderable-list" id="options-container">
+    {% if state.listItems | length %}
+      {% set itemsCount = state.listItems | length %}
+      {% for item in state.listItems %}
 
-    {% for item in state.listItems %}
-      {% if loop.index == listDetails.rowNumBeingEdited %}
-      {%- include "../../../../views/forms/editor-v2/custom-templates/radio-or-checkbox-edit.njk" -%}
-      {% else %}
-      <li class="gem-c-reorderable-list__item" data-index="{{ loop.index }}" data-id="{{ item.id }}" data-val="{{ item.value }}" data-text="{{ item.text }}" data-hint="{{ item.hint.text }}">
-        <div class="gem-c-reorderable-list__wrapper">
-          <div class="gem-c-reorderable-list__content">
-            <p class="govuk-body fauxlabel option-label-display" id="option-{{ loop.index }}-label-display">
-              {{ item.text }}
-            </p>
-            {% if item.hint.text %}
-            <p class="govuk-hint govuk-!-margin-top-0 govuk-!-margin-bottom-0">{{ item.hint.text }}</p>
+        {% set isFirst = loop.first %}
+        {% set isLast = loop.last %}
+        {% set isFocus = state.lastMovedId == item.id %}
+        {% set focusClass = " pages-reorder-panel-focus" if isFocus else "" %}
+
+        <li class="app-reorderable-list__item reorder-panel{{ focusClass }}" data-index="{{ loop.index }}" data-id="{{ item.id }}" data-val="{{ item.value }}" data-text="{{ item.text }}" data-hint="{{ item.hint.text }}">
+          <div class="app-reorderable-list__wrapper">
+            <div class="app-reorderable-list__content">
+              <p class="govuk-body fauxlabel option-label-display" id="option-{{ loop.index }}-label-display">
+                {{ item.text }}
+              </p>
+              {% if item.hint.text %}
+              <p class="govuk-hint govuk-!-margin-top-0 govuk-!-margin-bottom-0">{{ item.hint.text }}</p>
+              {% endif %}
+            </div>
+
+            {% set upAuto = "autofocus" if isFocus and (state.lastMoveDirection == "up" or isLast) else "" %}
+            {% set downAuto = "autofocus" if isFocus and (state.lastMoveDirection == "down" or isFirst) else "" %}
+
+            {% set ariaLabelUp = "Button, Move " + item.text + ": up, " + item.text + " is currently option " + loop.index + " of " + itemsCount + " options." %}
+            {% set ariaLabelDown = "Button, Move " + item.text + ": down, " + item.text + " is currently option " + loop.index + " of " + itemsCount + " options." %}
+            {% set ariaAlert = "The list has been reordered, " + item.text + " is now option " + loop.index + " of " + itemsCount + " options." if isFocus else "" %}
+
+            {% if isFocus %}
+              {% if state.lastMoveDirection == "up" or isLast %}
+                {% set ariaLabelUp = ariaAlert + ariaLabelUp %}
+              {% endif %}
+              {% if state.lastMoveDirection == "down" or isFirst %}
+                {% set ariaLabelDown = ariaAlert + ariaLabelDown %}
+              {% endif %}
             {% endif %}
-          </div>
-          <div class="gem-c-reorderable-list__actions">
-            <button class="gem-c-button govuk-button govuk-button--secondary js-reorderable-list-up"
-              type="button" aria-label="Move option up">Up</button>
-            <button class="gem-c-button govuk-button govuk-button--secondary js-reorderable-list-down"
-              type="button" aria-label="Move option down">Down</button>
-          </div>
-          <div class="edit-item">
-          <ul class="govuk-summary-list__actions-list">
-            <li class="govuk-summary-list__actions-list-item">
-              <a class="govuk-link govuk-link--no-visited-state edit-option-link" href="?action=edit&id={{ item.id }}">
-                Edit<span class="govuk-visually-hidden">option {{ loop.index }}</span>
-              </a>
-            </li>
-            <li class="govuk-summary-list__actions-list-item">
-              <a class="govuk-link govuk-link--destructive delete-option-link" href="?action=delete&id={{ item.id }}">
-                Delete<span class="govuk-visually-hidden"> list item</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </li>
-      {% endif %}
-    {% endfor %}
-  {% endif %}
-  {% if state.editRow.expanded %}
 
-    {% if listDetails.rowNumBeingEdited == state.listItems.length + 1 %}
-    {%- include "../../../../views/forms/editor-v2/custom-templates/radio-or-checkbox-edit.njk" -%}
+            <div class="govuk-button-group">
+              {% if not isFirst %}
+                <a href="?action=move&id={{ item.id }}&direction=up" class="govuk-button govuk-button--secondary" {{ upAuto }} aria-label="{{ ariaLabelUp }}">Up</a>
+              {% endif %}
+
+              {% if not isLast %}
+                <a href="?action=move&id={{ item.id }}&direction=down"  class="govuk-button govuk-button--secondary" {{ downAuto }} aria-label="{{ ariaLabelDown }}">Down</a>
+              {% endif %}
+            </div>
+          </div>
+        </li>
+      {% endfor %}
+    {% endif %}
+    </ol>
+
+    <div class="govuk-button-group govuk-!-margin-top-6">
+      <a href="?action=done-reordering" class="govuk-button">Done</a>
+    </div>
+  {% else %}
+    <ol class="app-reorderable-list js-enabled" id="options-container" data-module="reorderable-list">
+    {% if state.listItems | length or state.editRow.expanded %}
+      {% for item in state.listItems %}
+        {% if loop.index == listDetails.rowNumBeingEdited %}
+          {%- include "../../../../views/forms/editor-v2/custom-templates/radio-or-checkbox-edit.njk" -%}
+        {% else %}
+          <li class="app-reorderable-list__item" data-index="{{ loop.index }}" data-id="{{ item.id }}" data-val="{{ item.value }}">
+            <div class="app-reorderable-list__wrapper">
+              <div class="app-reorderable-list__content">
+                <p class="govuk-body fauxlabel option-label-display" id="option-{{ loop.index }}-label-display">
+                  {{ item.text }}
+                </p>
+                {% if item.hint.text %}
+                  <p class="govuk-hint govuk-!-margin-top-0 govuk-!-margin-bottom-0">{{ item.hint.text }}</p>
+                {% endif %}
+              </div>
+
+              <div class="edit-item">
+                <ul class="govuk-summary-list__actions-list">
+                  <li class="govuk-summary-list__actions-list-item">
+                    <a class="govuk-link govuk-link--no-visited-state edit-option-link" href="?action=edit&id={{ item.id }}">
+                      Edit<span class="govuk-visually-hidden">option {{ loop.index }}</span>
+                    </a>
+                  </li>
+                  <li class="govuk-summary-list__actions-list-item">
+                    <a class="govuk-link govuk-link--destructive delete-option-link" href="?action=delete&id={{ item.id }}">
+                      Delete<span class="govuk-visually-hidden"> list item</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+
+            </div>
+          </li>
+        {% endif %}
+      {% endfor %}
     {% endif %}
 
+    {% if state.editRow.expanded %}
+      {% if listDetails.rowNumBeingEdited == state.listItems.length + 1 %}
+      {%- include "../../../../views/forms/editor-v2/custom-templates/radio-or-checkbox-edit.njk" -%}
+      {% endif %}
+    {% endif %}
   {% endif %}
   </ol>
 </div>
 
-{% if not state.editRow.expanded %}
-{%- include "../../../../views/forms/editor-v2/custom-templates/radio-or-checkbox-edit.njk" -%}
+{% if not state.editRow.expanded and not state.isReordering %}
 <div class="govuk-button-group">
-  <!-- Add Another Option Button -->
   <button id="add-option-button" type="submit" class="govuk-button govuk-!-margin-bottom-4 govuk-!-margin-bottom-6" name="enhancedAction" value="add-item">
     Add item
   </button>
 
-  {% set displayReorderButton = "block" if state.listItems.length > 1 else "none" %}
-  <button id="edit-options-button" type="submit" class="govuk-button govuk-button--inverse" style="display: {{ displayReorderButton }}" name="enhancedAction" value="re-order">
+  {% if state.listItems.length > 1 %}
+  <a href="?action=reorder" id="edit-options-button" class="govuk-button govuk-button--inverse">
     Re-order
-  </button>
+  </a>
+  {% endif %}
 </div>
 {% endif %}
