@@ -27,6 +27,11 @@ jest.mock('~/src/javascripts/preview/nunjucks.js', () => {
   }
 })
 
+jest.mock(
+  '~/src/views/components/inset.njk',
+  () => '<div class="govuk-inset-text"></div>'
+)
+
 describe('radio', () => {
   const radio1Id = '414d82a3-4cab-416a-bd54-6b86fbd51120'
   const radio1 = /** @type {ListElement} */ ({
