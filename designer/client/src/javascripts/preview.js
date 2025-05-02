@@ -8,6 +8,21 @@ import { Question } from '~/src/javascripts/preview/question.js'
 import { Radio } from '~/src/javascripts/preview/radio.js'
 import { Textfield } from '~/src/javascripts/preview/textfield.js'
 
+export function showHideForJs() {
+  const previewPanel = document.getElementById('preview-panel')
+  if (previewPanel) {
+    previewPanel.style = 'display: block'
+  }
+  const previewErrorsButton = document.getElementById('preview-error-messages')
+  if (previewErrorsButton) {
+    previewErrorsButton.style = 'display: none'
+  }
+  const previewPageButton = document.getElementById('preview-page')
+  if (previewPageButton) {
+    previewPageButton.style = 'display: none'
+  }
+}
+
 /**
  * @param {string} questionType
  */
@@ -21,8 +36,5 @@ export function setupPreview(questionType) {
   } else {
     Question.setupPreview()
   }
-  const previewPanel = document.getElementById('preview-panel')
-  if (previewPanel) {
-    previewPanel.style = 'display: block'
-  }
+  showHideForJs()
 }
