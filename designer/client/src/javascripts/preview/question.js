@@ -219,12 +219,13 @@ export class EventListeners {
 
 /**
  * @typedef {{
- *   id: string
- *   name: string
+ *   id?: string
+ *   name?: string
  *   label?: DefaultComponent
  *   hint?: DefaultComponent
  *   fieldset?: FieldSet
  *   items?: ListItem
+ *   text?: string
  * }} QuestionBaseModel
  */
 

@@ -1,4 +1,5 @@
 import { type ListItem } from '@defra/forms-model'
+import '~/src/views/components/inset.njk'
 
 import {
   EventListeners,
@@ -58,7 +59,11 @@ export class RadioQuestionElements extends QuestionElements {
     this.radioText = radioText
     this.radioHint = radioHint
     this.updateElement = updateElement
-    this.afterInputsHTML = '' // Question._renderHelper('')
+    this.afterInputsHTML = Question._renderHelper('inset.njk', {
+      model: {
+        text: 'No items added yet.'
+      }
+    })
   }
 
   static getParentUpdateElement(el: HTMLInputElement) {
@@ -186,7 +191,7 @@ export class RadioEventListeners extends EventListeners {
         [
           listElem,
           (_target, _e) => {
-            this._question.highlight = `${listElem.dataset.id}-label`
+            this._question.highlight = `${listElem.dataset.id}-hint`
           },
           'mouseover'
         ] as ListenerRow,
@@ -233,6 +238,7 @@ export function listsElementToMap(listElements: ListElement[]) {
 
 export class Radio extends Question {
   _questionTemplate = 'radios.njk'
+  _radioElements: RadioQuestionElements
 
   /**
    * @type {Map<string, ListElement>}
@@ -254,6 +260,7 @@ export class Radio extends Question {
      */
     this._listeners = listeners
     this._list = listsElementToMap(radioElements.values.items)
+    this._radioElements = radioElements
   }
 
   get afterInput() {
@@ -270,12 +277,23 @@ export class Radio extends Question {
   }
 
   get renderInput() {
+    const afterInputs = this.list.length
+      ? {}
+      : {
+          formGroup: {
+            afterInputs: {
+              html: this._radioElements.afterInputsHTML
+            }
+          }
+        }
+
     return {
       id: 'radioInput',
       name: 'radioInputField',
       fieldset: this.fieldSet,
       hint: this.hint,
-      items: this.list
+      items: this.list,
+      ...afterInputs
     }
   }
 
