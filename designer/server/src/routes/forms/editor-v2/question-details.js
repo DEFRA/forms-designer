@@ -325,7 +325,7 @@ export default [
       )
 
       // Ensure there's a page title when adding multiple questions
-      if (questionId !== 'new' && requiresPageTitle(page)) {
+      if (questionId === 'new' && requiresPageTitle(page)) {
         return dispatchToPageTitle(
           request,
           h,
