@@ -21,4 +21,8 @@ export function setupPreview(questionType) {
   } else {
     Question.setupPreview()
   }
+  const previewPanel = document.getElementById('preview-panel')
+  if (previewPanel) {
+    previewPanel.style = 'display: block'
+  }
 }
