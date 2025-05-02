@@ -6,6 +6,7 @@ import create from '~/src/routes/forms/create.js'
 import edit from '~/src/routes/forms/edit.js'
 import editorCheckAnswersSettings from '~/src/routes/forms/editor-v2/check-answers-settings.js'
 import editorGuidance from '~/src/routes/forms/editor-v2/guidance.js'
+import editorListItemDelete from '~/src/routes/forms/editor-v2/list-item-delete.js'
 import editorMigrate from '~/src/routes/forms/editor-v2/migrate.js'
 import editorPage from '~/src/routes/forms/editor-v2/page.js'
 import editorPagesReorder from '~/src/routes/forms/editor-v2/pages-reorder.js'
@@ -33,6 +34,7 @@ export default [
   editorQuestionDelete,
   editorQuestionDetails,
   editorQuestions,
+  editorListItemDelete,
   editorCheckAnswersSettings,
   library,
   formLifecycle,
