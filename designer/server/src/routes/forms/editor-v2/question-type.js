@@ -102,7 +102,7 @@ export default [
       )
 
       // Ensure there's a page title when adding multiple questions
-      if (requiresPageTitle(page)) {
+      if (questionId === 'new' && requiresPageTitle(page)) {
         return dispatchToPageTitle(
           request,
           h,
@@ -156,7 +156,7 @@ export default [
       const { page } = await getFormPage(slug, pageId, token)
 
       // Ensure there's a page title when adding multiple questions
-      if (requiresPageTitle(page)) {
+      if (questionId === 'new' && requiresPageTitle(page)) {
         return dispatchToPageTitle(
           request,
           h,

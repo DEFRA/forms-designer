@@ -179,7 +179,7 @@ describe('Editor v2 question routes', () => {
     )
   })
 
-  test('GET - should redirect to page overview with errors if there is not title', async () => {
+  test('GET - new questions should redirect to page overview with errors if there is no title', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
 
     jest
@@ -188,7 +188,7 @@ describe('Editor v2 question routes', () => {
 
     const options = {
       method: 'get',
-      url: '/library/my-form-slug/editor-v2/page/p1/question/q1/type/54321',
+      url: '/library/my-form-slug/editor-v2/page/p1/question/new/type/54321',
       auth
     }
 
@@ -202,7 +202,51 @@ describe('Editor v2 question routes', () => {
     )
   })
 
-  test('POST - should redirect to page overview with errors if there is no title', async () => {
+  test('GET - existing questions should not redirect to page overview with errors if there is no title', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithOneQuestionNoPageTitle)
+
+    const options = {
+      method: 'get',
+      url: '/library/my-form-slug/editor-v2/page/p1/question/q1/type/54321',
+      auth
+    }
+
+    const {
+      response: { statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.OK)
+  })
+
+  test('POST - new questions should redirect to page overview with errors if there is no title', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithOneQuestionNoPageTitle)
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/p1/question/new/type/54321',
+      auth,
+      payload: { questionType: 'UkAddressField' }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/page/p1/questions'
+    )
+  })
+
+  test('POST - existing questions should not redirect to page overview with errors if there is no title', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
 
     jest
@@ -222,7 +266,7 @@ describe('Editor v2 question routes', () => {
 
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe(
-      '/library/my-form-slug/editor-v2/page/p1/questions'
+      '/library/my-form-slug/editor-v2/page/p1/question/q1/details/54321'
     )
   })
 
