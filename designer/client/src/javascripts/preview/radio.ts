@@ -1,4 +1,5 @@
 import { type ListItem } from '@defra/forms-model'
+import '~/src/views/components/inset.njk'
 
 import {
   EventListeners,
