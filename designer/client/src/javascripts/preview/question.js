@@ -50,10 +50,10 @@ export class QuestionElements {
   }
 
   /**
+   * @protected
    * @returns {BaseSettings}
-   * @public
    */
-  get values() {
+  constructValues() {
     const hintText = /** @type {string} */ (this.hintText?.value ?? '')
     const optional = this.optional?.checked ?? false
     const question = this.question?.value ?? ''
@@ -65,6 +65,14 @@ export class QuestionElements {
       question,
       shortDesc
     })
+  }
+
+  /**
+   * @returns {BaseSettings}
+   * @public
+   */
+  get values() {
+    return this.constructValues()
   }
 
   /**
@@ -220,22 +228,14 @@ export class EventListeners {
 
 /**
  * @typedef {{
- *    id: readonlyString
- *    value: readonlyString
- *    text: readonlyString
- *    hint?: readonlyDefaultComponent
- * }} ListItem
- */
-
-/**
- * @typedef {{
  *   id?: string
  *   name?: string
  *   label?: DefaultComponent
  *   hint?: DefaultComponent
  *   fieldset?: FieldSet
- *   items?: ListItem
+ *   items?: ReadonlyArray<ListItemReadonly>
  *   text?: string
+ *   formGroup?: { afterInputs: { html: string }}
  * }} QuestionBaseModel
  */
 
@@ -454,5 +454,5 @@ export class Question {
 }
 
 /**
- * @import { ListElement } from '~/src/javascripts/preview/radio.js'
+ * @import { ListElement, ListItemReadonly } from '@defra/forms-model'
  */

@@ -307,12 +307,35 @@ export type FormEditorInputQuestionDetails = Pick<
 >
 
 export interface ListItem {
+  id?: string
   text?: string
   hint?: {
-    text?: string
+    text: string
   }
   value?: string
-  id?: string
+}
+
+export interface ListLabel {
+  text: string
+  classes: string
+}
+
+export interface ListElement extends ListItem {
+  readonly id: string
+  text: string
+  value: string
+  label: ListLabel
+}
+
+export interface ReadonlyHint {
+  readonly text: string
+}
+
+export interface ListItemReadonly extends ListElement {
+  readonly text: string
+  readonly hint?: ReadonlyHint
+  readonly value: string
+  readonly label: ListLabel
 }
 
 export interface QuestionSessionState {

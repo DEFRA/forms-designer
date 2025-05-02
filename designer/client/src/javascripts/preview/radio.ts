@@ -1,4 +1,4 @@
-import { type ListItem } from '@defra/forms-model'
+import { type ListElement, type ListItemReadonly } from '@defra/forms-model'
 import '~/src/views/components/inset.njk'
 
 import {
@@ -7,27 +7,6 @@ import {
   QuestionElements,
   type ListenerRow
 } from '~/src/javascripts/preview/question.js'
-
-export interface ListElement extends ListItem {
-  readonly id: string
-  text: string
-  value: string
-  label: {
-    text: string
-    classes: string
-  }
-}
-
-export interface RadioElementReadOnly extends ListItem {
-  readonly id: string
-  readonly value: string
-  readonly text: string
-  readonly hint?: {
-    text: string
-    id?: string
-    classes?: string
-  }
-}
 
 export class RadioQuestionElements extends QuestionElements {
   editLinks: HTMLInputElement[]
@@ -92,8 +71,8 @@ export class RadioQuestionElements extends QuestionElements {
     } as ListElement
   }
 
-  get values() {
-    const baseValues = super.values
+  constructValues() {
+    const baseValues = super.constructValues()
 
     return {
       ...baseValues,
@@ -223,9 +202,9 @@ export class RadioEventListeners extends EventListeners {
       ]
     )
 
-    return editLinkListeners
-      .concat(editPanelListeners)
+    return editPanelListeners
       .concat(highlightListeners)
+      .concat(editLinkListeners)
   }
 }
 
@@ -246,11 +225,11 @@ export function listItemMapper(
 
 /**
  *
- * @param {ListElement[]} listElements
+ * @param { ListElement[]| undefined } listElements
  * @returns {Map<string, ListElement>}
  */
-export function listsElementToMap(listElements: ListElement[]) {
-  const entries = listElements.map(listItemMapper)
+export function listsElementToMap(listElements: ListElement[] | undefined) {
+  const entries = listElements ? listElements.map(listItemMapper) : []
   return new Map<string, ListElement>(entries)
 }
 
@@ -292,10 +271,12 @@ export class Radio extends Question {
         }
       }
     }
+    return {}
   }
 
   get renderInput() {
-    const afterInputs = this.list.length
+    const afterInputs: { formGroup?: { afterInputs: { html: string } } } = this
+      .list.length
       ? {}
       : {
           formGroup: {
@@ -325,25 +306,25 @@ export class Radio extends Question {
     this.render()
   }
 
-  get list(): readonly ListItem[] {
+  get list(): readonly ListItemReadonly[] {
     const iterator: MapIterator<ListElement> = this._list.values()
     return Array.from(iterator).map((listItem) => {
       const hintText =
         this._highlight === `${listItem.id}-hint` &&
         !listItem.hint?.text?.length
           ? 'Hint text'
-          : listItem.hint?.text
+          : (listItem.hint?.text ?? '')
 
-      const hint = hintText
-        ? {
-            hint: {
-              text: hintText,
-              classes: this.getHighlight(`${listItem.id}-hint`)
+      const hint = {
+        hint: hintText
+          ? {
+              text: hintText
             }
-          }
-        : {}
+          : undefined
+      }
 
       const text = listItem.text.length ? listItem.text : 'Item text'
+
       return {
         ...listItem,
         text,
