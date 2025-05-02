@@ -5,6 +5,7 @@ import {
 } from '~/src/javascripts/preview/radio.js'
 class EmptyRadioQuestionElements extends RadioQuestionElements {
   get values() {
+    // @ts-expect-error - inheritance not working properly in linting
     const baseValues = super.values
     return {
       ...baseValues,
@@ -28,7 +29,7 @@ jest.mock('~/src/javascripts/preview/nunjucks.js', () => {
 
 describe('radio', () => {
   const radio1Id = '414d82a3-4cab-416a-bd54-6b86fbd51120'
-  const radio1 = /** @type {RadioElement} */ ({
+  const radio1 = /** @type {ListElement} */ ({
     id: radio1Id,
     text: 'Treasure Hunting',
     value: 'Treasure Hunting',
@@ -38,7 +39,7 @@ describe('radio', () => {
     }
   })
   const radio2Id = '801385a4-81e6-4171-96c3-6c6727d97f22'
-  const radio2 = /** @type {RadioElement} */ ({
+  const radio2 = /** @type {ListElement} */ ({
     id: radio2Id,
     text: 'Rescuing the princess',
     value: 'Rescuing the princess',
@@ -48,7 +49,7 @@ describe('radio', () => {
     }
   })
   const radio3Id = 'e6e3f621-b875-4ca3-a054-cca9149149dd'
-  const radio3 = /** @type {RadioElement} */ ({
+  const radio3 = /** @type {ListElement} */ ({
     id: radio3Id,
     text: 'Saving a city',
     value: 'Saving a city',
@@ -203,7 +204,7 @@ describe('radio', () => {
           },
           items: expectedList
         })
-        expect(emptyQuestionElements.preview.innerHTML).toBe('****UPDATED****')
+        expect(emptyQuestionElements.preview?.innerHTML).toBe('****UPDATED****')
       })
     })
   })

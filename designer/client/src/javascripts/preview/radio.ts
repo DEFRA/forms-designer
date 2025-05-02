@@ -1,5 +1,4 @@
 import { type ListItem } from '@defra/forms-model'
-import '~/src/views/components/inset.njk'
 
 import {
   EventListeners,
@@ -12,6 +11,10 @@ export interface ListElement extends ListItem {
   readonly id: string
   text: string
   value: string
+  label: {
+    text: string
+    classes: string
+  }
 }
 
 export interface RadioElementReadOnly extends ListItem {
@@ -35,27 +38,21 @@ export class RadioQuestionElements extends QuestionElements {
 
   constructor() {
     super()
-    const editElements =
-      /** @type {HTMLInputElement[]} */ document.querySelectorAll(
-        '#options-container .edit-option-link'
-      )
-    const radioText = /** @type {HTMLInputElement} */ document.getElementById(
-      'radioText'
+    const editElements = document.querySelectorAll(
+      '#options-container .edit-option-link'
+    )
+    const radioText = document.getElementById('radioText') as HTMLInputElement
+    const radioHint = document.getElementById('radioHint') as HTMLInputElement
+    const updateElement = document.getElementById(
+      'add-option-form'
     ) as HTMLInputElement
-    const radioHint = /** @type {HTMLInputElement} */ document.getElementById(
-      'radioHint'
-    ) as HTMLInputElement
-    const updateElement =
-      /** @type {HTMLInputElement|undefined} */ document.getElementById(
-        'add-option-form'
-      ) as HTMLInputElement
 
     // we could document.createElement update element if need be
 
     const listElements = document.getElementById('options-container')?.children
 
-    this.editLinks = Array.from(editElements)
-    this.listElements = Array.from(listElements ?? [])
+    this.editLinks = Array.from(editElements) as HTMLInputElement[]
+    this.listElements = Array.from(listElements ?? []) as HTMLElement[]
     this.radioText = radioText
     this.radioHint = radioHint
     this.updateElement = updateElement
@@ -73,7 +70,9 @@ export class RadioQuestionElements extends QuestionElements {
   static getUpdateData(el: HTMLInputElement) {
     const updateElement = RadioQuestionElements.getParentUpdateElement(el)
     if (updateElement) {
-      return RadioQuestionElements.getListElementValues(updateElement)
+      return RadioQuestionElements.getListElementValues(
+        updateElement as HTMLElement
+      )
     }
     return undefined
   }
@@ -121,7 +120,7 @@ export class RadioEventListeners extends EventListeners {
 
   get listeners() {
     const editLinkListeners: ListenerRow[] = []
-    /* TODO - implement edit link listeners
+    /* TODO - implement edit link and delete link listeners
     this.listElements.map(
       (listElem) =>
         [
@@ -135,8 +134,6 @@ export class RadioEventListeners extends EventListeners {
         ] as ListenerRow
     )
     */
-    // TODO: highlight listener - highlight radio label
-    // TODO: highlight listener - highlight radio hint
     const editPanelListeners = [
       [
         this._radioElements.radioText,
@@ -191,7 +188,10 @@ export class RadioEventListeners extends EventListeners {
         [
           listElem,
           (_target, _e) => {
-            this._question.highlight = `${listElem.dataset.id}-hint`
+            this._question.highlight = `${listElem.dataset.id}-label`
+            if (listElem.dataset.hint?.length) {
+              this._question.highlight = `${listElem.dataset.id}-hint`
+            }
           },
           'mouseover'
         ] as ListenerRow,
@@ -325,8 +325,10 @@ export class Radio extends Question {
           }
         : {}
 
+      const text = listItem.text.length ? listItem.text : 'Item text'
       return {
         ...listItem,
+        text,
         ...hint,
         label: {
           text: listItem.text,
