@@ -68,14 +68,14 @@ export class RadioQuestionElements extends QuestionElements {
     return el.closest('#add-option-form')
   }
 
-  static getUpdateData(el: HTMLInputElement) {
+  static getUpdateData(el: HTMLInputElement): { id?: string } {
     const updateElement = RadioQuestionElements.getParentUpdateElement(el)
     if (updateElement) {
       return RadioQuestionElements.getListElementValues(
         updateElement as HTMLElement
       )
     }
-    return undefined
+    return {}
   }
 
   static getListElementValues(el: HTMLElement) {
@@ -356,7 +356,11 @@ export class Radio extends Question {
     })
   }
 
-  updateText(id: string, text: string) {
+  updateText(id: string | undefined, text: string) {
+    if (!id) {
+      return
+    }
+
     const listItem = this._list.get(id)
     if (listItem) {
       listItem.text = text
@@ -364,7 +368,11 @@ export class Radio extends Question {
     }
   }
 
-  updateHint(id: string, text: string) {
+  updateHint(id: string | undefined, text: string) {
+    if (!id) {
+      return
+    }
+
     const listItem = this._list.get(id)
     if (listItem) {
       listItem.hint = {
@@ -375,7 +383,11 @@ export class Radio extends Question {
     }
   }
 
-  updateValue(id: string, value: string) {
+  updateValue(id: string | undefined, value: string) {
+    if (!id) {
+      return
+    }
+
     const listItem = this._list.get(id)
     if (listItem) {
       listItem.value = value

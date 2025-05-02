@@ -80,7 +80,7 @@ export class QuestionElements {
 /**
  * @typedef {[
  *   HTMLInputElement | null,
- *   (target: HTMLInputElement) => void,
+ *   (target: HTMLInputElement, e: Event) => void,
  *   keyof HTMLElementEventMap
  * ]} ListenerRow
  */
@@ -209,11 +209,21 @@ export class EventListeners {
  */
 
 /**
+ * @readonly
+ * @typedef {string} readonlyString
+ */
+
+/**
+ * @readonly
+ * @typedef {DefaultComponent} readonlyDefaultComponent
+ */
+
+/**
  * @typedef {{
- *    readonly id: string
- *    readonly value: string
- *    readonly text: string
- *    readonly hint?: DefaultComponent
+ *    id: readonlyString
+ *    value: readonlyString
+ *    text: readonlyString
+ *    hint?: readonlyDefaultComponent
  * }} ListItem
  */
 
@@ -288,7 +298,7 @@ export class Question {
 
     /**
      * @type {EventListeners}
-     * @private
+     * @protected
      */
     this._listeners = listeners
   }
@@ -442,3 +452,7 @@ export class Question {
     new Question(new QuestionElements()).render()
   }
 }
+
+/**
+ * @import { ListElement } from '~/src/javascripts/preview/radio.js'
+ */
