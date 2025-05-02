@@ -119,6 +119,19 @@ export class RadioEventListeners extends EventListeners {
     this._radioQuestion = question
   }
 
+  editFieldHasFocus() {
+    if (!document.hasFocus()) {
+      return false
+    }
+
+    const activeElementId = document.activeElement?.id
+    if (!activeElementId) {
+      return false
+    }
+
+    return ['radioText', 'radioHint'].includes(activeElementId)
+  }
+
   get listeners() {
     const editLinkListeners: ListenerRow[] = []
     /* TODO - implement edit link and delete link listeners
@@ -189,9 +202,11 @@ export class RadioEventListeners extends EventListeners {
         [
           listElem,
           (_target, _e) => {
-            this._question.highlight = `${listElem.dataset.id}-label`
-            if (listElem.dataset.hint?.length) {
-              this._question.highlight = `${listElem.dataset.id}-hint`
+            if (!this.editFieldHasFocus()) {
+              this._question.highlight = `${listElem.dataset.id}-label`
+              if (listElem.dataset.hint?.length) {
+                this._question.highlight = `${listElem.dataset.id}-hint`
+              }
             }
           },
           'mouseover'
@@ -199,7 +214,9 @@ export class RadioEventListeners extends EventListeners {
         [
           listElem,
           (_target, _e) => {
-            this._question.highlight = undefined
+            if (!this.editFieldHasFocus()) {
+              this._question.highlight = undefined
+            }
           },
           'mouseout'
         ] as ListenerRow
