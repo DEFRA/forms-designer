@@ -68,14 +68,21 @@ const preSchema = Joi.object()
  * @param {string} pageId
  * @param {string} questionId
  * @param {string} stateId
- * @param { string | undefined } anchor
+ * @param { string | undefined } anchorOrUrl - anchor (starting with '#') or a relative url
  */
-function redirectWithAnchor(h, slug, pageId, questionId, stateId, anchor) {
+function redirectWithAnchorOrUrl(
+  h,
+  slug,
+  pageId,
+  questionId,
+  stateId,
+  anchorOrUrl
+) {
   return h
     .redirect(
       editorv2Path(
         slug,
-        `page/${pageId}/question/${questionId}/details/${stateId}${anchor}`
+        `page/${pageId}/question/${questionId}/details/${stateId}${anchorOrUrl}`
       )
     )
     .code(StatusCodes.SEE_OTHER)
@@ -208,8 +215,7 @@ export default [
     method: 'GET',
     path: ROUTE_FULL_PATH_QUESTION_DETAILS,
     async handler(request, h) {
-      const { yar } = request
-      const { params, auth, query } = request
+      const { yar, params, auth, query } = request
       const { token } = auth.credentials
       const { slug, pageId, questionId, stateId } = params
 
@@ -232,7 +238,14 @@ export default [
       // Set up session if not yet exists
       if (!stateId || !getQuestionSessionState(yar, stateId)) {
         const newStateId = createQuestionSessionState(yar)
-        return redirectWithAnchor(h, slug, pageId, questionId, newStateId, '')
+        return redirectWithAnchorOrUrl(
+          h,
+          slug,
+          pageId,
+          questionId,
+          newStateId,
+          ''
+        )
       }
 
       const validation = getValidationErrorsFromSession(yar, errorKey)
@@ -246,15 +259,15 @@ export default [
       )
 
       // Intercept operations if say a radio or checkbox
-      const redirectAnchor = handleEnhancedActionOnGet(yar, stateId, query)
-      if (redirectAnchor) {
-        return redirectWithAnchor(
+      const redirectAnchorOrUrl = handleEnhancedActionOnGet(yar, stateId, query)
+      if (redirectAnchorOrUrl) {
+        return redirectWithAnchorOrUrl(
           h,
           slug,
           pageId,
           questionId,
           stateId,
-          redirectAnchor
+          redirectAnchorOrUrl
         )
       }
 
@@ -301,19 +314,19 @@ export default [
       }
 
       // Intercept operations if say a radio or checkbox
-      const redirectAnchor = handleEnhancedActionOnPost(
+      const redirectAnchorOrUrl = handleEnhancedActionOnPost(
         request,
         stateId,
         questionDetails
       )
-      if (redirectAnchor) {
-        return redirectWithAnchor(
+      if (redirectAnchorOrUrl) {
+        return redirectWithAnchorOrUrl(
           h,
           slug,
           pageId,
           questionId,
           stateId,
-          redirectAnchor
+          redirectAnchorOrUrl
         )
       }
 

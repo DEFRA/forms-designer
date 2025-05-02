@@ -119,5 +119,52 @@ export function deleteQuestionConfirmationPageViewModel(
 }
 
 /**
- * @import { ComponentDef, FormDefinition, FormMetadata, Page } from '@defra/forms-model'
+ * Model to represent confirmation page dialog for a given form.
+ * @param { QuestionSessionState | undefined } state
+ * @param {FormMetadata} metadata
+ * @param {string} pageId
+ * @param {string} questionId
+ * @param {string} stateId
+ * @param {string} itemId
+ */
+export function deleteListItemConfirmationPageViewModel(
+  state,
+  metadata,
+  pageId,
+  questionId,
+  stateId,
+  itemId
+) {
+  const formPath = formOverviewPath(metadata.slug)
+  const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
+
+  const listItem = state?.listItems?.find((x) => x.id === itemId)
+
+  const pageTitle = 'Are you sure you want to delete this item?'
+
+  return {
+    ...baseModelFields(metadata.slug, pageTitle),
+    navigation,
+    pageHeading: {
+      text: metadata.title
+    },
+    bodyCaptionText: `List item: ${listItem?.text}`,
+    bodyHeadingText: pageTitle,
+    bodyText: 'You cannot recover deleted items',
+    buttons: [
+      {
+        text: 'Delete item',
+        classes: 'govuk-button--warning'
+      },
+      {
+        href: `${formPath}/editor-v2/page/${pageId}/question/${questionId}/details/${stateId}#list-items`,
+        text: 'Cancel',
+        classes: 'govuk-button--secondary'
+      }
+    ]
+  }
+}
+
+/**
+ * @import { ComponentDef, FormDefinition, FormMetadata, Page, QuestionSessionState } from '@defra/forms-model'
  */

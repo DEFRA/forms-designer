@@ -126,14 +126,8 @@ describe('Editor v2 question-details route helper', () => {
 
       expect(
         handleEnhancedActionOnGet(mockYar, '123', { action: 'delete', id: '2' })
-      ).toBe('#list-items')
-      expect(mockSet).toHaveBeenCalledWith('questionSessionState-123', {
-        questionType: 'RadiosField',
-        listItems: [
-          { id: '1', text: 'text1', value: 'value1' },
-          { id: '3', text: 'text3', hint: { text: 'hint3' }, value: 'value3' }
-        ]
-      })
+      ).toBe('/delete-list-item/2')
+      expect(mockSet).not.toHaveBeenCalled()
     })
 
     test('edit should populate item in fields', () => {
