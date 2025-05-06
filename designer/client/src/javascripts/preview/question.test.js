@@ -106,7 +106,7 @@ describe('question', () => {
       expect(res.question).toBe('Which quest would you like to pick?')
       expect(res.hintText).toBe('Choose one adventure that best suits you.')
       expect(res.optional).toBeFalsy()
-      expect(res.highlight).toBeUndefined()
+      expect(res.highlight).toBeNull()
     })
 
     it('should handle changed values', () => {
@@ -117,7 +117,7 @@ describe('question', () => {
       expect(res.question).toBe('Which quest would you like to pick?')
       expect(res.hintText).toBe('Choose one adventure that best suits you.')
       expect(res.optional).toBeFalsy()
-      expect(res.highlight).toBeUndefined()
+      expect(res.highlight).toBeNull()
       res.question = 'New question'
       expect(res.question).toBe('New question')
       res.hintText = 'New hint text'

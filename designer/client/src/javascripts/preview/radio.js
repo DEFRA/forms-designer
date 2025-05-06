@@ -84,7 +84,7 @@ export class RadioQuestionElements extends QuestionElements {
   static getListElementValues(el) {
     const hint = el.dataset.hint ? { hint: { text: el.dataset.hint } } : {}
     return /** @type {ListElement} */ ({
-      id: el.dataset.id ?? 'new',
+      id: el.dataset.id !== '' ? el.dataset.id : 'new',
       text: el.dataset.text,
       ...hint,
       label: {
@@ -172,7 +172,7 @@ export class RadioEventListeners extends EventListeners {
        * @param {HTMLInputElement} _target
        */
       (_target) => {
-        this._question.highlight = undefined
+        this._question.highlight = null
       },
       'blur'
     ])
@@ -204,7 +204,7 @@ export class RadioEventListeners extends EventListeners {
        * @param {HTMLInputElement} _target
        */
       (_target) => {
-        this._question.highlight = undefined
+        this._question.highlight = null
       },
       'blur'
     ])
@@ -249,7 +249,7 @@ export class RadioEventListeners extends EventListeners {
          */
         (_target, _e) => {
           if (!this.editFieldHasFocus()) {
-            this._question.highlight = undefined
+            this._question.highlight = null
           }
         },
         'mouseout'
@@ -408,7 +408,8 @@ export class Radio extends Question {
       const hint = {
         hint: hintText
           ? {
-              text: hintText
+              text: hintText,
+              classes: this.getHighlight(listItem.id + '-hint')
             }
           : undefined
       }

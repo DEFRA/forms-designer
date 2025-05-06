@@ -146,7 +146,7 @@ export class EventListeners {
       const blurRow = /** @type {ListenerRow} */ ([
         element,
         (_target) => {
-          this._question.highlight = undefined
+          this._question.highlight = null
         },
         'blur'
       ])
@@ -261,10 +261,10 @@ export class Question {
    */
   _questionTemplate = 'textfield.njk'
   /**
-   * @type {string|undefined}
+   * @type { string|null }
    * @protected
    */
-  _highlight = undefined
+  _highlight = null
 
   /**
    * @param {QuestionElements} htmlElements
@@ -434,14 +434,14 @@ export class Question {
   }
 
   /**
-   * @type {string | undefined}
+   * @type {string | null}
    */
   get highlight() {
     return this._highlight
   }
 
   /**
-   * @param {string | undefined} value
+   * @param {string | null} value
    */
   set highlight(value) {
     this._highlight = value

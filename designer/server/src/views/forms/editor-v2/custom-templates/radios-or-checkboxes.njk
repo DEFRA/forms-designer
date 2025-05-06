@@ -116,12 +116,12 @@
     {% if state.editRow.expanded %}
       {% if listDetails.rowNumBeingEdited == state.listItems.length + 1 %}
         <li class="app-reorderable-list__item" data-index="{{ loop.index }}" data-id="{{ item.id }}" data-val="{{ item.value }}" data-text="{{ item.text }}" data-hint="{{ item.hint.text }}">
-            <div class="app-reorderable-list__wrapper">
-              <div class="app-reorderable-list__content">
-                {%- include "../../../../views/forms/editor-v2/custom-templates/radio-or-checkbox-edit.njk" -%}
-              </div>
+          <div class="app-reorderable-list__wrapper">
+            <div class="app-reorderable-list__content">
+              {%- include "../../../../views/forms/editor-v2/custom-templates/radio-or-checkbox-edit.njk" -%}
             </div>
-          </li>
+          </div>
+        </li>
       {% endif %}
     {% endif %}
   {% endif %}
