@@ -175,6 +175,9 @@ describe('radio', () => {
         shortDesc: 'your quest',
         items: expectedList
       })
+      const radioText = document.getElementById('radioText')
+      expect(RadioQuestionElements.getUpdateData(radioText)).toBeDefined()
+      expect(RadioQuestionElements.getUpdateData(radioText)).not.toBeNull()
     })
   })
 
