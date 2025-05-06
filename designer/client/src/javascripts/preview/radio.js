@@ -9,7 +9,7 @@ import {
 export class RadioQuestionElements extends QuestionElements {
   /** @type {HTMLInputElement[]} */
   editLinks
-  /** @type {HTMLInputElement[]} */
+  /** @type {HTMLElement[]} */
   listElements
   /** @type { HTMLInputElement | undefined } */
   updateElement
