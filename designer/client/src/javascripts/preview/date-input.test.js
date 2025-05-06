@@ -2,7 +2,7 @@ import {
   questionDetailsLeftPanelHTML,
   questionDetailsPreviewHTML
 } from '~/src/javascripts/preview/__stubs__/question'
-import { Textfield } from '~/src/javascripts/preview/textfield.js'
+import { DateInput } from '~/src/javascripts/preview/date-input.js'
 
 jest.mock('~/src/javascripts/preview/nunjucks.js', () => {
   return {
@@ -47,11 +47,11 @@ jest.mock(
     '</div>'
 )
 
-describe('textfield', () => {
+describe('date-input', () => {
   it('should create class', () => {
     document.body.innerHTML =
       questionDetailsLeftPanelHTML + questionDetailsPreviewHTML
-    const res = Textfield.setupPreview()
+    const res = DateInput.setupPreview()
     expect(res).toBeDefined()
   })
 })
