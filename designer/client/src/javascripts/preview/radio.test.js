@@ -206,6 +206,7 @@ describe('radio', () => {
   })
 
   describe('RadioEventListeners', () => {
+    const mockEvent = /** @type {Event} */ ({})
     describe('editPanelListeners', () => {
       it('should update the Radio class when listeners are called', () => {
         const preview = /** @type {Radio} */ (Radio.setupPreview())
@@ -243,8 +244,8 @@ describe('radio', () => {
         const [, radioHintHighlightHandler] = hintFocusListener
         const [, radioHintBlurHandler] = hintBlurListener
 
-        textInputListenerElement(radioTextTarget)
-        radioTextHighlightHandler(radioTextTarget)
+        textInputListenerElement(radioTextTarget, mockEvent)
+        radioTextHighlightHandler(radioTextTarget, mockEvent)
         expect(preview.list[0]).toEqual({
           hint: undefined,
           id: '414d82a3-4cab-416a-bd54-6b86fbd51120',
@@ -255,10 +256,10 @@ describe('radio', () => {
           text: 'Extreme Treasure Hunting',
           value: 'Treasure Hunting'
         })
-        radioTextBlurHandler(radioTextTarget)
+        radioTextBlurHandler(radioTextTarget, mockEvent)
         const radioHint = questionElements.radioHint
         radioHint.value = 'Looking for gold'
-        radioHintInputHandler(radioHint)
+        radioHintInputHandler(radioHint, mockEvent)
         expect(preview.list[0]).toEqual({
           hint: { text: 'Looking for gold' },
           id: '414d82a3-4cab-416a-bd54-6b86fbd51120',
@@ -269,8 +270,8 @@ describe('radio', () => {
           text: 'Extreme Treasure Hunting',
           value: 'Treasure Hunting'
         })
-        radioHintHighlightHandler(radioHint)
-        radioHintBlurHandler(radioHint)
+        radioHintHighlightHandler(radioHint, mockEvent)
+        radioHintBlurHandler(radioHint, mockEvent)
         expect(preview.list[0]).toEqual({
           hint: { text: 'Looking for gold' },
           id: '414d82a3-4cab-416a-bd54-6b86fbd51120',
@@ -305,12 +306,14 @@ describe('radio', () => {
 
         const [mouseOverItem, mouseOutItem] =
           radioEventListeners.radioHighlightListeners
-        const listElement = questionElements.listElements[0]
+        const listElement = /** @type {HTMLInputElement} */ (
+          questionElements.listElements[0]
+        )
 
         const [, mouseOverHandler] = mouseOverItem
         const [, mouseOutHandler] = mouseOutItem
 
-        mouseOverHandler(listElement)
+        mouseOverHandler(listElement, mockEvent)
 
         expect(preview.list[0]).toEqual({
           hint: undefined,
@@ -322,7 +325,7 @@ describe('radio', () => {
           text: 'Treasure Hunting',
           value: 'Treasure Hunting'
         })
-        mouseOutHandler(listElement)
+        mouseOutHandler(listElement, mockEvent)
         expect(preview.list[0]).toEqual({
           hint: undefined,
           id: '414d82a3-4cab-416a-bd54-6b86fbd51120',
