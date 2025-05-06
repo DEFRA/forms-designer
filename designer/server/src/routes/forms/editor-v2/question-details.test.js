@@ -14,6 +14,7 @@ import {
   buildListItem,
   buildQuestionPage,
   testFormDefinitionWithFileUploadPage,
+  testFormDefinitionWithRadioQuestionAndList,
   testFormDefinitionWithSinglePage
 } from '~/src/__stubs__/form-definition.js'
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
@@ -37,6 +38,7 @@ import {
   setQuestionSessionState
 } from '~/src/lib/session-helper.js'
 import { handleEnhancedActionOnGet } from '~/src/routes/forms/editor-v2/question-details-helper.js'
+import { saveList } from '~/src/routes/forms/editor-v2/question-details.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
@@ -865,6 +867,84 @@ describe('Editor v2 question details routes', () => {
     const [, , , question] = addQuestionMock.mock.calls[0]
     // TODO: When forms runner is updated move to id
     expect(question).toMatchObject({ list: name })
+  })
+
+  describe('saveList', () => {
+    const listId = '3d7e14af-0674-40dc-aca5-a6439f45b782'
+    const listName = 'atvNgE'
+    const list = buildList({
+      id: listId,
+      name: listName,
+      items: [
+        { text: 'English', value: 'en-gb' },
+        { text: 'French', value: 'fr-Fr' }
+      ]
+    })
+    jest.mocked(upsertList).mockResolvedValue({
+      id: listId,
+      list,
+      status: 'created'
+    })
+
+    test('should return undefined if question type undefined', async () => {
+      const res = await saveList(
+        '12345',
+        testFormDefinitionWithSinglePage,
+        'token',
+        { type: undefined },
+        []
+      )
+      expect(res).toBeUndefined()
+    })
+
+    test('should return undefined if question type not needing a list', async () => {
+      const res = await saveList(
+        '12345',
+        testFormDefinitionWithSinglePage,
+        'token',
+        { type: ComponentType.TextField },
+        []
+      )
+      expect(res).toBeUndefined()
+    })
+
+    test('should return list name if list saved', async () => {
+      const res = await saveList(
+        '12345',
+        testFormDefinitionWithRadioQuestionAndList,
+        'token',
+        { type: ComponentType.RadiosField },
+        []
+      )
+      expect(res).toBe(listName)
+    })
+
+    test('should return list name if list saved, even if no entries', async () => {
+      const res = await saveList(
+        '12345',
+        testFormDefinitionWithRadioQuestionAndList,
+        'token',
+        { type: ComponentType.RadiosField },
+        undefined
+      )
+      expect(res).toBe(listName)
+    })
+
+    test('should return undefined if failed to save', async () => {
+      jest.mocked(upsertList).mockResolvedValue({
+        id: listId,
+        list,
+        status: 'updated'
+      })
+      const res = await saveList(
+        '12345',
+        testFormDefinitionWithRadioQuestionAndList,
+        'token',
+        { type: ComponentType.RadiosField },
+        []
+      )
+      expect(res).toBeUndefined()
+    })
   })
 })
 

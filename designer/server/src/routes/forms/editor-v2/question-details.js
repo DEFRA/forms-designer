@@ -97,7 +97,13 @@ function redirectWithAnchorOrUrl(
  * @param {Item[] | undefined } listItems
  * @returns {Promise<undefined|string>}
  */
-async function saveList(formId, definition, token, questionDetails, listItems) {
+export async function saveList(
+  formId,
+  definition,
+  token,
+  questionDetails,
+  listItems
+) {
   if (!isListComponentType(questionDetails.type ?? ComponentType.TextField)) {
     return undefined
   }
