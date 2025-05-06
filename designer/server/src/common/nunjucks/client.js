@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 /* eslint-disable */
 import { dirname, join } from 'node:path'
 

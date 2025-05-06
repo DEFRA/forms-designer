@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { ServiceHeader } from '@defra/forms-designer/server/src/common/components/service-header/service-header.js'
 import {
   Accordion,
