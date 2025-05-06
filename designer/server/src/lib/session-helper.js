@@ -123,7 +123,7 @@ export function buildQuestionSessionState(
     questionType: state?.questionType ?? component?.type,
     editRow: state?.editRow ?? {},
     listItems: items.map((item) => ({
-      id: randomUUID(),
+      id: item.id ?? randomUUID(),
       text: item.text,
       hint: item.hint,
       value: item.value

@@ -189,13 +189,15 @@ export function pagesViewModel(metadata, definition, notification) {
     })
   }
 
+  const pageTitle = 'Add and edit pages'
   const pageListModel = {
     ...mapPageData(metadata.slug, definition),
+    pageTitle,
     formSlug: metadata.slug,
     previewBaseUrl,
     navigation,
     pageHeading: {
-      text: 'Add and edit pages'
+      text: pageTitle
     },
     pageCaption: {
       text: definition.name

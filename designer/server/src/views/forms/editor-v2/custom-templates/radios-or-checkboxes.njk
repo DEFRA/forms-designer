@@ -92,21 +92,21 @@
                   {% endif %}
                 </div>
 
-                <div class="edit-item">
-                  <ul class="govuk-summary-list__actions-list">
-                    <li class="govuk-summary-list__actions-list-item">
-                      <a class="govuk-link govuk-link--no-visited-state edit-option-link" href="?action=edit&id={{ item.id }}">
-                        Edit<span class="govuk-visually-hidden">option {{ loop.index }}</span>
-                      </a>
-                    </li>
-                    <li class="govuk-summary-list__actions-list-item">
-                      <a class="govuk-link govuk-link--destructive delete-option-link" href="?action=delete&id={{ item.id }}">
-                        Delete<span class="govuk-visually-hidden"> list item</span>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              {% endif %}
+              <div class="edit-item">
+                <ul class="govuk-summary-list__actions-list">
+                  <li class="govuk-summary-list__actions-list-item">
+                    <a class="govuk-link govuk-link--no-visited-state edit-option-link" href="?action=edit&id={{ item.id }}">
+                      Edit<span class="govuk-visually-hidden">option {{ loop.index }}</span>
+                    </a>
+                  </li>
+                  <li class="govuk-summary-list__actions-list-item">
+                    <a class="govuk-link govuk-link--no-visited-state govuk-link--destructive delete-option-link" href="?action=delete&id={{ item.id }}">
+                      Delete<span class="govuk-visually-hidden"> list item</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+
             </div>
           </li>
       {% endfor %}

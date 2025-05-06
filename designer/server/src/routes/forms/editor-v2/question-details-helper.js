@@ -86,7 +86,7 @@ export function paramsValidForMove(id, direction) {
  * @param {Yar} yar
  * @param {string} stateId
  * @param {RequestQuery} query
- * @returns { string | undefined }
+ * @returns { string | undefined } - anchor (beginning with '#') or a url
  */
 export function handleEnhancedActionOnGet(yar, stateId, query) {
   const { action, id, direction } =
@@ -101,12 +101,7 @@ export function handleEnhancedActionOnGet(yar, stateId, query) {
   }
 
   if (action === ListAction.Delete) {
-    const newList = state.listItems?.filter((x) => x.id !== id)
-    setQuestionSessionState(yar, stateId, {
-      ...state,
-      listItems: newList
-    })
-    return radiosSectionListItemsAnchor
+    return `/delete-list-item/${id}`
   }
 
   if (action === ListAction.Edit) {
