@@ -1,3 +1,4 @@
+import Sortable from 'sortablejs'
 import '~/src/views/components/inset.njk'
 
 import {
@@ -119,6 +120,8 @@ export class RadioEventListeners extends EventListeners {
   _radioElements
   /** @type {Radio} */
   _radioQuestion
+  /** @type { Sortable | undefined } */
+  _sortableInstance
 
   /**
    *
@@ -144,6 +147,84 @@ export class RadioEventListeners extends EventListeners {
     }
 
     return ['radioText', 'radioHint'].includes(activeElementId)
+  }
+
+  /**
+   * @param {(e: SortableEvent) => void} onStartCb
+   * @param {(e: SortableEvent) => void} onEndCb
+   */
+  setupSortable(onStartCb, onEndCb) {
+    // Initialize Sortable for the options container
+    const sortableContainer = document.getElementById('options-container')
+    if (sortableContainer) {
+      this._sortableInstance = Sortable.create(
+        sortableContainer,
+        /** @type {SortableOptions} */ ({
+          animation: 150,
+          ghostClass: 'sortable-ghost',
+          chosenClass: 'sortable-chosen',
+          dragClass: 'highlight-dragging',
+          onStart: onStartCb,
+          onEnd: onEndCb,
+          disabled: true
+        })
+      )
+    }
+  }
+
+  /**
+   * @param {string} buttonId
+   */
+  showButton(buttonId) {
+    const button = document.getElementById(buttonId)
+    if (button) {
+      button.style = 'display: block'
+    }
+  }
+
+  /**
+   * @param {string} buttonId
+   */
+  hideButton(buttonId) {
+    const button = document.getElementById(buttonId)
+    if (button) {
+      button.style = 'display: none'
+    }
+  }
+
+  /**
+   * @param {HTMLElement | null} button
+   * @param {Event} e
+   */
+  handleReorder(button, e) {
+    const isReordering = button?.textContent?.trim() !== 'Done'
+    if (!button) {
+      return
+    }
+    e.preventDefault()
+    button.textContent = isReordering ? 'Done' : 'Re-order'
+    if (isReordering) {
+      button.classList.remove('govuk-button--inverse')
+      this.hideButton('add-option-button')
+    } else {
+      button.classList.add('govuk-button--inverse')
+      this.showButton('add-option-button')
+    }
+
+    this.listElements.forEach((item) => {
+      if (isReordering) {
+        item.style.cursor = 'move'
+        item.classList.add('sortable-enabled')
+      } else {
+        item.style.cursor = 'default'
+        item.classList.remove('sortable-enabled')
+      }
+    })
+
+    // Enable/disable sorting
+    if (this._sortableInstance) {
+      this._sortableInstance.option('disabled', !isReordering)
+    }
   }
 
   /**
@@ -265,6 +346,41 @@ export class RadioEventListeners extends EventListeners {
     })
   }
 
+  get reorderItemsListeners() {
+    this.setupSortable(
+      () => {
+        // console.log('onStart')
+        //
+      },
+      () => {
+        // const el = document.getElementById('options-container')
+        // const listItems = el?.querySelectorAll('li.app-reorderable-list__item')
+        // const listElements = /** @type {HTMLInputElement[]} */ (
+        //   Array.from(listItems ?? [])
+        // )
+        // console.log('items2', listElements.map(item => {
+        //  return {
+        //    id: item.dataset.id,
+        //    text: item.dataset.text
+        //  }
+        // }))
+        // eslint-disable-next-line @typescript-eslint/unbound-method
+        // console.log('items3', listElements.map(RadioQuestionElements.getListElementValues))
+      }
+    )
+
+    const editOptionsButton = document.getElementById('edit-options-button')
+    return /** @type {ListenerRow[]} */ ([
+      [
+        editOptionsButton,
+        (_target, e) => {
+          this.handleReorder(editOptionsButton, e)
+        },
+        'click'
+      ]
+    ])
+  }
+
   get listeners() {
     const editLinkListeners = /** @type {ListenerRow[]} */ ([])
     /* TODO - implement edit link and delete link listeners
@@ -283,10 +399,12 @@ export class RadioEventListeners extends EventListeners {
     */
     const editPanelListeners = this.editPanelListeners
     const highlightListeners = this.radioHighlightListeners
+    const reorderListeners = this.reorderItemsListeners
 
     return editPanelListeners
       .concat(highlightListeners)
       .concat(editLinkListeners)
+      .concat(reorderListeners)
   }
 }
 
@@ -321,7 +439,6 @@ export class Radio extends Question {
   /**
    * @type {Map<string, ListElement>}
    * @private
-   * @readonly
    */
   _list
 
@@ -434,6 +551,11 @@ export class Radio extends Question {
     })
   }
 
+  resyncPreviewAfterReorder() {
+    const elems = this._radioElements
+    this._list = listsElementToMap(elems.values.items)
+  }
+
   /**
    *
    * @param {string | undefined} id
@@ -499,4 +621,5 @@ export class Radio extends Question {
 /**
  * @import {ListenerRow} from '~/src/javascripts/preview/question.js'
  * @import { ListElement, ListItemReadonly } from '@defra/forms-model'
+ * @import { SortableEvent, SortableOptions } from 'sortablejs'
  */
