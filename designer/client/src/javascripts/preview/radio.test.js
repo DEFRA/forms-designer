@@ -1,9 +1,9 @@
 import { questionDetailsStubPanels } from '~/src/javascripts/preview/__stubs__/question.js'
+import { listsElementToMap } from '~/src/javascripts/preview/list.js'
 import {
   Radio,
   RadioEventListeners,
-  RadioQuestionElements,
-  listsElementToMap
+  RadioQuestionElements
 } from '~/src/javascripts/preview/radio.js'
 import { setupPreview } from '~/src/javascripts/preview.js'
 class EmptyRadioQuestionElements extends RadioQuestionElements {
@@ -235,7 +235,7 @@ describe('radio', () => {
           hintFocusListener,
           hintBlurListener
         ] = radioEventListeners.editPanelListeners
-        const radioTextTarget = questionElements.radioText
+        const radioTextTarget = questionElements.listText
         radioTextTarget.value = 'Extreme Treasure Hunting'
         const [, textInputListenerElement] = textInputListener
         const [, radioTextHighlightHandler] = textFocusListener
@@ -257,7 +257,7 @@ describe('radio', () => {
           value: 'Treasure Hunting'
         })
         radioTextBlurHandler(radioTextTarget, mockEvent)
-        const radioHint = questionElements.radioHint
+        const radioHint = questionElements.listHint
         radioHint.value = 'Looking for gold'
         radioHintInputHandler(radioHint, mockEvent)
         expect(preview.list[0]).toEqual({
@@ -311,7 +311,7 @@ describe('radio', () => {
         })
 
         const [mouseOverItem, mouseOutItem] =
-          radioEventListeners.radioHighlightListeners
+          radioEventListeners.listHighlightListeners
         const listElement = /** @type {HTMLInputElement} */ (
           questionElements.listElements[0]
         )
