@@ -38,7 +38,10 @@ import {
   setQuestionSessionState
 } from '~/src/lib/session-helper.js'
 import { handleEnhancedActionOnGet } from '~/src/routes/forms/editor-v2/question-details-helper.js'
-import { saveList } from '~/src/routes/forms/editor-v2/question-details.js'
+import {
+  getListItems,
+  saveList
+} from '~/src/routes/forms/editor-v2/question-details.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
@@ -946,10 +949,26 @@ describe('Editor v2 question details routes', () => {
       expect(res).toBeUndefined()
     })
   })
+
+  describe('getListItems', () => {
+    test('should parse list items if supplied', () => {
+      const payload =
+        /** @type {FormEditorInputQuestionDetails} */
+        ({
+          listItemsData:
+            '[{ "text": "Option 1", "value": "val1" }, { "text": "Option 2", "value": "val2" }]'
+        })
+      const res = getListItems(payload, undefined)
+      expect(res).toEqual([
+        { text: 'Option 1', value: 'val1' },
+        { text: 'Option 2', value: 'val2' }
+      ])
+    })
+  })
 })
 
 /**
- * @import { FormDefinition, FormEditor, Page } from '@defra/forms-model'
+ * @import { FormDefinition, FormEditor, FormEditorInputQuestionDetails, Page } from '@defra/forms-model'
  * @import { Server } from '@hapi/hapi'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */
