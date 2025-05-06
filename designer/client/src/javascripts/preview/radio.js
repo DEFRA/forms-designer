@@ -140,22 +140,10 @@ export class RadioEventListeners extends EventListeners {
     return ['radioText', 'radioHint'].includes(activeElementId)
   }
 
-  get listeners() {
-    const editLinkListeners = /** @type {ListenerRow[]} */ ([])
-    /* TODO - implement edit link and delete link listeners
-    this.listElements.map(
-      (listElem) =>
-        [
-          listElem,
-          (target, _e) => {
-            // eslint-disable-next-line no-console
-            console.log('click', target)
-            // e.preventDefault()
-          },
-          'click'
-        ]
-    )
-    */
+  /**
+   * @returns {ListenerRow[]}
+   */
+  get editPanelListeners() {
     const editPanelListener1 = /** @type {ListenerRow} */ ([
       this._radioElements.radioText,
       /**
@@ -221,51 +209,74 @@ export class RadioEventListeners extends EventListeners {
       'blur'
     ])
 
-    const editPanelListeners = /** @type {ListenerRow[]} */ ([
+    return [
       editPanelListener1,
       editPanelListener2,
       editPanelListener3,
       editPanelListener4,
       editPanelListener5,
       editPanelListener6
-    ])
+    ]
+  }
 
-    const highlightListeners = /** @type {ListenerRow[]} */ (
-      this._radioElements.listElements.flatMap((listElem) => {
-        const mouseOverRow = /** @type {ListenerRow} */ ([
-          /** @type {HTMLInputElement} */ (listElem),
-          /**
-           * @param {HTMLInputElement} _target
-           * @param {Event} _e
-           */
-          (_target, _e) => {
-            if (!this.editFieldHasFocus()) {
-              this._question.highlight = `${listElem.dataset.id}-label`
-              if (listElem.dataset.hint?.length) {
-                this._question.highlight = `${listElem.dataset.id}-hint`
-              }
+  /**
+   * @returns {ListenerRow[]}
+   */
+  get radioHighlightListeners() {
+    return this._radioElements.listElements.flatMap((listElem) => {
+      const mouseOverRow = /** @type {ListenerRow} */ ([
+        /** @type {HTMLInputElement} */ (listElem),
+        /**
+         * @param {HTMLInputElement} _target
+         * @param {Event} _e
+         */
+        (_target, _e) => {
+          if (!this.editFieldHasFocus()) {
+            this._question.highlight = `${listElem.dataset.id}-label`
+            if (listElem.dataset.hint?.length) {
+              this._question.highlight = `${listElem.dataset.id}-hint`
             }
-          },
-          'mouseover'
-        ])
+          }
+        },
+        'mouseover'
+      ])
 
-        const mouseOutRow = /** @type {ListenerRow} */ ([
-          /** @type {HTMLInputElement} */ (listElem),
-          /**
-           * @param {HTMLInputElement} _target
-           * @param {Event} _e
-           */
-          (_target, _e) => {
-            if (!this.editFieldHasFocus()) {
-              this._question.highlight = undefined
-            }
-          },
-          'mouseout'
-        ])
+      const mouseOutRow = /** @type {ListenerRow} */ ([
+        /** @type {HTMLInputElement} */ (listElem),
+        /**
+         * @param {HTMLInputElement} _target
+         * @param {Event} _e
+         */
+        (_target, _e) => {
+          if (!this.editFieldHasFocus()) {
+            this._question.highlight = undefined
+          }
+        },
+        'mouseout'
+      ])
 
-        return [mouseOverRow, mouseOutRow]
-      })
+      return [mouseOverRow, mouseOutRow]
+    })
+  }
+
+  get listeners() {
+    const editLinkListeners = /** @type {ListenerRow[]} */ ([])
+    /* TODO - implement edit link and delete link listeners
+    this.listElements.map(
+      (listElem) =>
+        [
+          listElem,
+          (target, _e) => {
+            // eslint-disable-next-line no-console
+            console.log('click', target)
+            // e.preventDefault()
+          },
+          'click'
+        ]
     )
+    */
+    const editPanelListeners = this.editPanelListeners
+    const highlightListeners = this.radioHighlightListeners
 
     return editPanelListeners
       .concat(highlightListeners)
