@@ -1,7 +1,9 @@
 import { questionDetailsStubPanels } from '~/src/javascripts/preview/__stubs__/question.js'
 import {
   Radio,
-  RadioQuestionElements
+  RadioEventListeners,
+  RadioQuestionElements,
+  listsElementToMap
 } from '~/src/javascripts/preview/radio.js'
 import { setupPreview } from '~/src/javascripts/preview.js'
 class EmptyRadioQuestionElements extends RadioQuestionElements {
@@ -175,15 +177,43 @@ describe('radio', () => {
         shortDesc: 'your quest',
         items: expectedList
       })
-      const radioText = document.getElementById('radioText')
+      const radioText = /** @type {HTMLInputElement} */ (
+        document.getElementById('radioText')
+      )
       expect(RadioQuestionElements.getUpdateData(radioText)).toBeDefined()
       expect(RadioQuestionElements.getUpdateData(radioText)).not.toBeNull()
+      const listItem = questionElements.listElements[2]
+      expect(listItem).toBeDefined()
+      listItem.dataset.hint = 'hint 1'
+      expect(RadioQuestionElements.getListElementValues(listItem).hint).toEqual(
+        {
+          text: 'hint 1'
+        }
+      )
+      const newElement = document.createElement('li')
+      newElement.dataset.text = 'A custom adventure'
+      newElement.dataset.val = 'A custom adventure'
+      expect(RadioQuestionElements.getListElementValues(newElement)).toEqual({
+        id: 'new',
+        text: 'A custom adventure',
+        label: {
+          classes: '',
+          text: 'A custom adventure'
+        },
+        value: 'A custom adventure'
+      })
     })
   })
 
   describe('RadioEventListeners', () => {
     it('test', () => {
-      expect(true).toBeTruthy()
+      const preview = /** @type {Radio} */ (Radio.setupPreview())
+      const listeners = new RadioEventListeners(
+        preview,
+        questionElements,
+        questionElements.listElements
+      )
+      expect(listeners.editFieldHasFocus()).toBe(false)
     })
   })
 
@@ -277,7 +307,7 @@ describe('radio', () => {
     })
 
     it('should handle edge cases', () => {
-      const preview = Radio.setupPreview()
+      const preview = /** @type {Radio} */ (Radio.setupPreview())
       expect(preview.list).toEqual(expectedList)
       preview.updateValue(undefined, 'new-value')
       preview.updateValue('b40e1a4f-9777-463a-a657-83f9da39e69e', 'New Text')
@@ -288,6 +318,7 @@ describe('radio', () => {
       expect(preview.list).toEqual(expectedList)
       preview.updateText(baronListItemId, '')
       expect(preview.list[3].text).toBe('Item text')
+      expect(listsElementToMap(undefined)).toEqual(new Map([]))
     })
   })
 })
