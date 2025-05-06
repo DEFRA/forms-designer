@@ -314,7 +314,7 @@ export const questionDetailsStubPanels = `
 `
 
 export const questionDetailsPreviewTabsHTML = `<div class="govuk-grid-column-one-half-from-desktop preview-panel" id="preview-panel" style="display: block;">
-     <div id="preview-container-inner">
+    <div id="preview-container-inner">
       <!-- Before content -->
       <div id="before-content" class="preview-before-content">
         <p class="govuk-body-s">Previews</p>
