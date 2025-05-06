@@ -106,7 +106,7 @@ describe('radio', () => {
   /**
    * @type {RadioQuestionElements}
    */
-  let questionElements
+  let questionElements = new RadioQuestionElements()
   /**
    * @type {EmptyRadioQuestionElements}
    */
@@ -206,14 +206,134 @@ describe('radio', () => {
   })
 
   describe('RadioEventListeners', () => {
-    it('test', () => {
-      const preview = /** @type {Radio} */ (Radio.setupPreview())
-      const listeners = new RadioEventListeners(
-        preview,
-        questionElements,
-        questionElements.listElements
-      )
-      expect(listeners.editFieldHasFocus()).toBe(false)
+    describe('editPanelListeners', () => {
+      it('should update the Radio class when listeners are called', () => {
+        const preview = /** @type {Radio} */ (Radio.setupPreview())
+        const radioEventListeners = new RadioEventListeners(
+          preview,
+          questionElements,
+          questionElements.listElements
+        )
+        expect(radioEventListeners.editFieldHasFocus()).toBe(false)
+        expect(preview.list[0]).toEqual({
+          hint: undefined,
+          id: '414d82a3-4cab-416a-bd54-6b86fbd51120',
+          label: {
+            classes: '',
+            text: 'Treasure Hunting'
+          },
+          text: 'Treasure Hunting',
+          value: 'Treasure Hunting'
+        })
+
+        const [
+          textInputListener,
+          textFocusListener,
+          textBlurListener,
+          hintInputListener,
+          hintFocusListener,
+          hintBlurListener
+        ] = radioEventListeners.editPanelListeners
+        const radioTextTarget = questionElements.radioText
+        radioTextTarget.value = 'Extreme Treasure Hunting'
+        const [, textInputListenerElement] = textInputListener
+        const [, radioTextHighlightHandler] = textFocusListener
+        const [, radioTextBlurHandler] = textBlurListener
+        const [, radioHintInputHandler] = hintInputListener
+        const [, radioHintHighlightHandler] = hintFocusListener
+        const [, radioHintBlurHandler] = hintBlurListener
+
+        textInputListenerElement(radioTextTarget)
+        radioTextHighlightHandler(radioTextTarget)
+        expect(preview.list[0]).toEqual({
+          hint: undefined,
+          id: '414d82a3-4cab-416a-bd54-6b86fbd51120',
+          label: {
+            classes: ' highlight',
+            text: 'Extreme Treasure Hunting'
+          },
+          text: 'Extreme Treasure Hunting',
+          value: 'Treasure Hunting'
+        })
+        radioTextBlurHandler(radioTextTarget)
+        const radioHint = questionElements.radioHint
+        radioHint.value = 'Looking for gold'
+        radioHintInputHandler(radioHint)
+        expect(preview.list[0]).toEqual({
+          hint: { text: 'Looking for gold' },
+          id: '414d82a3-4cab-416a-bd54-6b86fbd51120',
+          label: {
+            classes: '',
+            text: 'Extreme Treasure Hunting'
+          },
+          text: 'Extreme Treasure Hunting',
+          value: 'Treasure Hunting'
+        })
+        radioHintHighlightHandler(radioHint)
+        radioHintBlurHandler(radioHint)
+        expect(preview.list[0]).toEqual({
+          hint: { text: 'Looking for gold' },
+          id: '414d82a3-4cab-416a-bd54-6b86fbd51120',
+          label: {
+            classes: '',
+            text: 'Extreme Treasure Hunting'
+          },
+          text: 'Extreme Treasure Hunting',
+          value: 'Treasure Hunting'
+        })
+      })
+    })
+
+    describe('radioHighlightListeners', () => {
+      it('should update the Radio class when listeners are called', () => {
+        const preview = /** @type {Radio} */ (Radio.setupPreview())
+        const radioEventListeners = new RadioEventListeners(
+          preview,
+          questionElements,
+          questionElements.listElements
+        )
+        expect(preview.list[0]).toEqual({
+          hint: undefined,
+          id: '414d82a3-4cab-416a-bd54-6b86fbd51120',
+          label: {
+            classes: '',
+            text: 'Treasure Hunting'
+          },
+          text: 'Treasure Hunting',
+          value: 'Treasure Hunting'
+        })
+
+        const [mouseOverItem, mouseOutItem] =
+          radioEventListeners.radioHighlightListeners
+        const listElement = questionElements.listElements[0]
+
+        const [, mouseOverHandler] = mouseOverItem
+        const [, mouseOutHandler] = mouseOutItem
+
+        mouseOverHandler(listElement)
+
+        expect(preview.list[0]).toEqual({
+          hint: undefined,
+          id: '414d82a3-4cab-416a-bd54-6b86fbd51120',
+          label: {
+            classes: ' highlight',
+            text: 'Treasure Hunting'
+          },
+          text: 'Treasure Hunting',
+          value: 'Treasure Hunting'
+        })
+        mouseOutHandler(listElement)
+        expect(preview.list[0]).toEqual({
+          hint: undefined,
+          id: '414d82a3-4cab-416a-bd54-6b86fbd51120',
+          label: {
+            classes: '',
+            text: 'Treasure Hunting'
+          },
+          text: 'Treasure Hunting',
+          value: 'Treasure Hunting'
+        })
+      })
     })
   })
 
