@@ -402,7 +402,7 @@ export class Radio extends Question {
     return Array.from(iterator).map((listItem) => {
       const hintText =
         this._highlight === `${listItem.id}-hint` &&
-        !listItem.hint?.text?.length
+        !listItem.hint?.text.length
           ? 'Hint text'
           : (listItem.hint?.text ?? '')
 
@@ -485,6 +485,8 @@ export class Radio extends Question {
     const elements = new RadioQuestionElements()
     const radioField = new Radio(elements)
     radioField.render()
+
+    return radioField
   }
 }
 

@@ -448,8 +448,14 @@ export class Question {
     this.render()
   }
 
+  /**
+   * @returns {Question}
+   */
   static setupPreview() {
-    new Question(new QuestionElements()).render()
+    const question = new Question(new QuestionElements())
+    question.render()
+
+    return question
   }
 }
 

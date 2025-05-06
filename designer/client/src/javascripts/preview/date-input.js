@@ -23,5 +23,7 @@ export class DateInput extends Question {
     const elements = new QuestionElements()
     const dateInputField = new DateInput(elements)
     dateInputField.render()
+
+    return elements
   }
 }

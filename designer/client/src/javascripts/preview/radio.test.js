@@ -3,6 +3,7 @@ import {
   Radio,
   RadioQuestionElements
 } from '~/src/javascripts/preview/radio.js'
+import { setupPreview } from '~/src/javascripts/preview.js'
 class EmptyRadioQuestionElements extends RadioQuestionElements {
   get values() {
     // @ts-expect-error - inheritance not working properly in linting
@@ -30,6 +31,31 @@ jest.mock('~/src/javascripts/preview/nunjucks.js', () => {
 jest.mock(
   '~/src/views/components/inset.njk',
   () => '<div class="govuk-inset-text"></div>'
+)
+jest.mock(
+  '~/src/views/components/textfield.njk',
+  () =>
+    '<input class="govuk-input" id="question" name="question" type="text" value="What is your answer?">'
+)
+jest.mock(
+  '~/src/views/components/radios.njk',
+  () => '<div class="govuk-inset-text"></div>'
+)
+
+jest.mock(
+  '~/src/views/components/date-input.njk',
+  () =>
+    '<div class="govuk-date-input" id="dateInput">' +
+    '  <div class="govuk-date-input__item">' +
+    '    <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dateInput-day" name="day" type="text" inputmode="numeric">' +
+    '  </div>' +
+    '  <div class="govuk-date-input__item">' +
+    '    <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dateInput-month" name="month" type="text" inputmode="numeric">' +
+    '  </div>' +
+    '  <div class="govuk-date-input__item">' +
+    '    <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="dateInput-year" name="year" type="text" inputmode="numeric">' +
+    '  </div>' +
+    '</div>'
 )
 
 describe('radio', () => {
@@ -129,6 +155,9 @@ describe('radio', () => {
   ]
 
   describe('integration', () => {
+    it('should setup', () => {
+      setupPreview('radiosfield')
+    })
     it('test', () => {
       expect(true).toBe(true)
     })
@@ -166,6 +195,9 @@ describe('radio', () => {
         expect(radio.list).toEqual([radio1])
         radio.delete(radio1Id)
         expect(radio.list).toEqual([])
+        expect(radio.afterInput.afterInputs.html).toContain(
+          'No items added yet'
+        )
       })
 
       it('should edit list text', () => {
@@ -215,7 +247,17 @@ describe('radio', () => {
   })
 
   it('should work', () => {
-    expect(true).toBe(true)
+    const preview = Radio.setupPreview()
+    expect(preview.afterInput).toEqual({})
+  })
+
+  it('should handle edge cases', () => {
+    const preview = Radio.setupPreview()
+    expect(preview.list).toEqual(expectedList)
+    preview.updateValue(undefined, 'new-value')
+    preview.updateHint(undefined, 'New Hint')
+    preview.updateText(undefined, 'New Text')
+    expect(preview.list).toEqual(expectedList)
   })
 })
 
