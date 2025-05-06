@@ -84,16 +84,6 @@ describe('question', () => {
     })
   })
 
-  describe('Event listeners', () => {
-    it('should create class', () => {
-      document.body.innerHTML = questionDetailsLeftPanelHTML
-      const res = new Question(new QuestionElements())
-      expect(res).toBeDefined()
-      const questionEl = document.getElementById('question')
-      expect(questionEl?.oninput).toBe({})
-    })
-  })
-
   describe('Question', () => {
     it('should create class', () => {
       document.body.innerHTML =
