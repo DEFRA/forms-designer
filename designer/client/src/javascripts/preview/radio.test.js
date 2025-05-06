@@ -261,7 +261,10 @@ describe('radio', () => {
         radioHint.value = 'Looking for gold'
         radioHintInputHandler(radioHint, mockEvent)
         expect(preview.list[0]).toEqual({
-          hint: { text: 'Looking for gold' },
+          hint: {
+            text: 'Looking for gold',
+            classes: ''
+          },
           id: '414d82a3-4cab-416a-bd54-6b86fbd51120',
           label: {
             classes: '',
@@ -273,7 +276,10 @@ describe('radio', () => {
         radioHintHighlightHandler(radioHint, mockEvent)
         radioHintBlurHandler(radioHint, mockEvent)
         expect(preview.list[0]).toEqual({
-          hint: { text: 'Looking for gold' },
+          hint: {
+            text: 'Looking for gold',
+            classes: ''
+          },
           id: '414d82a3-4cab-416a-bd54-6b86fbd51120',
           label: {
             classes: '',
@@ -391,6 +397,7 @@ describe('radio', () => {
         {
           ...radio2,
           hint: {
+            classes: '',
             text: 'When you want to rescue a princess'
           }
         }

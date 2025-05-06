@@ -83,8 +83,14 @@ export class RadioQuestionElements extends QuestionElements {
    */
   static getListElementValues(el) {
     const hint = el.dataset.hint ? { hint: { text: el.dataset.hint } } : {}
+    let id = 'new'
+
+    if (el.dataset.id) {
+      id = el.dataset.id
+    }
+
     return /** @type {ListElement} */ ({
-      id: el.dataset.id !== '' ? el.dataset.id : 'new',
+      id,
       text: el.dataset.text,
       ...hint,
       label: {
