@@ -267,3 +267,52 @@ export const questionDetailsStubPanels = `
   </div>
 </div>
 `
+
+export const questionDetailsPreviewTabsHTML = `<div class="govuk-grid-column-one-half-from-desktop preview-panel" id="preview-panel" style="display: block;">
+     <div id="preview-container-inner">
+      <!-- Before content -->
+      <div id="before-content" class="preview-before-content">
+        <p class="govuk-body-s">Previews</p>
+      </div>
+
+      <div class="govuk-!-margin-top-9">
+        <div class="govuk-tabs" data-module="govuk-tabs" data-govuk-tabs-init="">
+          <h2 class="govuk-tabs__title">Contents</h2>
+          <ul class="govuk-tabs__list" role="tablist">
+            <li class="govuk-tabs__list-item govuk-tabs__list-item--selected" role="presentation">
+              <a class="govuk-tabs__tab" href="#tab-preview" id="tab_tab-preview" role="tab" aria-controls="tab-preview" aria-selected="true" tabindex="0">Page preview</a>
+            </li>
+            <li class="govuk-tabs__list-item" role="presentation">
+              <a class="govuk-tabs__tab" href="#tab-errors" id="tab_tab-errors" role="tab" aria-controls="tab-errors" aria-selected="false" tabindex="-1">Error messages</a>
+            </li>
+          </ul>
+
+        <div class="govuk-tabs__panel" id="tab-preview" role="tabpanel" aria-labelledby="tab_tab-preview">
+          <!-- Page Preview Content -->
+          <div class="border-left-container-shorttext" id="question-preview-content">
+            <div class="govuk-form-group">
+              <fieldset class="govuk-fieldset" aria-describedby="radioInputField-hint">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">Question title</legend>
+              </fieldset>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="tab-errors" role="tabpanel" aria-labelledby="tab_tab-errors">
+        <!-- Error Messages Content -->
+        <div class="govuk-error-summary" data-disable-auto-focus="true">
+          <h2 class="govuk-error-summary__title">There is a problem</h2>
+          <ul class="govuk-list govuk-error-summary__list">
+            <!-- Error messages -->
+            <li>
+              <a id="empty-input-error-shorttext" class="govuk-error-message">
+                <span class="govuk-visually-hidden">Error:</span>
+                Enter <span id="error-dynamic-text" style="text-transform: lowercase;">[Short description]</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+`
