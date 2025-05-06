@@ -25,16 +25,23 @@ export function showHideForJs() {
 
 /**
  * @param {string} questionType
+ * @returns {Question|Radio|DateInput|Textfield}
  */
 export function setupPreview(questionType) {
+  /**
+   * @type {Question|Radio|DateInput|Textfield}
+   */
+  let preview
   if (questionType === 'textfield') {
-    Textfield.setupPreview()
+    preview = Textfield.setupPreview()
   } else if (questionType === 'datepartsfield') {
-    DateInput.setupPreview()
+    preview = DateInput.setupPreview()
   } else if (questionType === 'radiosfield') {
-    Radio.setupPreview()
+    preview = Radio.setupPreview()
   } else {
-    Question.setupPreview()
+    preview = Question.setupPreview()
   }
   showHideForJs()
+
+  return preview
 }

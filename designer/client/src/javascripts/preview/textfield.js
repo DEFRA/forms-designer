@@ -8,5 +8,6 @@ export class Textfield extends Question {
     const elements = new QuestionElements()
     const textfield = new Textfield(elements)
     textfield.render()
+    return textfield
   }
 }

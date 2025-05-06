@@ -99,6 +99,7 @@ describe('radio', () => {
       text: 'Defeating the baron'
     }
   }
+  const baronListItemId = 'd71b3909-582f-4e90-b6f5-490b89a6eb8f'
 
   /**
    * @type {RadioQuestionElements}
@@ -156,7 +157,9 @@ describe('radio', () => {
 
   describe('integration', () => {
     it('should setup', () => {
-      setupPreview('radiosfield')
+      document.body.innerHTML = ''
+      const preview = /** @type {Radio} */ (setupPreview('radiosfield'))
+      expect(preview.renderInput.fieldset.legend.text).toBe('Question')
     })
     it('test', () => {
       expect(true).toBe(true)
@@ -182,82 +185,107 @@ describe('radio', () => {
   })
 
   describe('Radio class', () => {
-    describe('addElement', () => {
-      it('should add an element', () => {
-        const radio = new Radio(emptyQuestionElements)
-        radio.push(structuredClone(radio1))
-        expect(radio.list).toEqual([radio1])
-      })
+    it('should update', () => {
+      const preview = Radio.setupPreview()
+      expect(preview.afterInput).toEqual({})
+    })
 
-      it('should delete an element', () => {
-        const radio = new Radio(emptyQuestionElements)
-        radio.push(structuredClone(radio1))
-        expect(radio.list).toEqual([radio1])
-        radio.delete(radio1Id)
-        expect(radio.list).toEqual([])
-        expect(radio.afterInput.afterInputs.html).toContain(
-          'No items added yet'
-        )
-      })
+    it('should delete an element', () => {
+      const radio = new Radio(emptyQuestionElements)
+      radio.push(structuredClone(radio1))
+      expect(radio.list).toEqual([radio1])
+      radio.delete(radio1Id)
+      expect(radio.list).toEqual([])
+      expect(radio.afterInput.afterInputs?.html).toContain('No items added yet')
+    })
 
-      it('should edit list text', () => {
-        const radio = new Radio(emptyQuestionElements)
-        radio.push(structuredClone(radio2))
-        radio.updateText(radio2Id, 'Rescuing the princess 👸')
-        expect(radio.list).toEqual([
-          {
-            ...radio2,
-            text: 'Rescuing the princess 👸',
-            label: { ...radio2.label, text: 'Rescuing the princess 👸' }
-          }
-        ])
-      })
+    it('should edit list text', () => {
+      const expectedList = [
+        {
+          ...radio2,
+          text: 'Rescuing the princess 👸',
+          label: { ...radio2.label, text: 'Rescuing the princess 👸' }
+        }
+      ]
+      const radio = new Radio(emptyQuestionElements)
+      radio.push(structuredClone(radio2))
+      radio.updateText(radio2Id, 'Rescuing the princess 👸')
+      expect(radio.list).toEqual(expectedList)
+    })
 
-      it('should edit list value', () => {
-        const radio = new Radio(emptyQuestionElements)
-        radio.push(structuredClone(radio2))
-        radio.updateValue(radio2Id, 'princess-rescuing')
-        expect(radio.list).toEqual([{ ...radio2, value: 'princess-rescuing' }])
-      })
+    it('should add an element', () => {
+      const radio = new Radio(emptyQuestionElements)
+      radio.push(structuredClone(radio1))
+      expect(radio.list).toEqual([radio1])
+    })
 
-      it('should return the correct model', () => {
-        const radio = new Radio(emptyQuestionElements)
-        radio.push(radio1)
-        radio.push(radio2)
-        radio.push(radio3)
-        radio.push(radio4)
-        expect(radio.renderInput).toEqual({
-          id: 'radioInput',
-          name: 'radioInputField',
-          fieldset: {
-            legend: {
-              text: 'Which quest would you like to pick?',
-              classes: 'govuk-fieldset__legend--l'
-            }
-          },
+    it('should edit list value', () => {
+      const radio = new Radio(emptyQuestionElements)
+      radio.push(structuredClone(radio2))
+      radio.updateValue(radio2Id, 'princess-rescuing')
+      expect(radio.list).toEqual([{ ...radio2, value: 'princess-rescuing' }])
+    })
+
+    it('should edit hint', () => {
+      const expectedHint = 'When you want to rescue a princess'
+      const radio = new Radio(emptyQuestionElements)
+      radio.push(structuredClone(radio2))
+      radio.updateHint(radio2Id, expectedHint)
+      expect(radio.list).toEqual([
+        {
+          ...radio2,
           hint: {
-            classes: '',
-            text: 'Choose one adventure that best suits you.'
-          },
-          items: expectedList
-        })
-        expect(emptyQuestionElements.preview?.innerHTML).toBe('****UPDATED****')
+            text: 'When you want to rescue a princess'
+          }
+        }
+      ])
+    })
+
+    it('should return the correct model', () => {
+      const radio = new Radio(emptyQuestionElements)
+      radio.push(radio1)
+      radio.push(radio2)
+      radio.push(radio3)
+      radio.push(radio4)
+      expect(radio.renderInput).toEqual({
+        id: 'radioInput',
+        name: 'radioInputField',
+        fieldset: {
+          legend: {
+            text: 'Which quest would you like to pick?',
+            classes: 'govuk-fieldset__legend--l'
+          }
+        },
+        hint: {
+          classes: '',
+          text: 'Choose one adventure that best suits you.'
+        },
+        items: expectedList
+      })
+      expect(emptyQuestionElements.preview?.innerHTML).toBe('****UPDATED****')
+    })
+
+    it('should highlight', () => {
+      const preview = Radio.setupPreview()
+      preview.highlight = `${baronListItemId}-hint`
+      expect(preview.list[3]).toMatchObject({
+        hint: { text: 'Hint text' }
       })
     })
-  })
 
-  it('should work', () => {
-    const preview = Radio.setupPreview()
-    expect(preview.afterInput).toEqual({})
-  })
-
-  it('should handle edge cases', () => {
-    const preview = Radio.setupPreview()
-    expect(preview.list).toEqual(expectedList)
-    preview.updateValue(undefined, 'new-value')
-    preview.updateHint(undefined, 'New Hint')
-    preview.updateText(undefined, 'New Text')
-    expect(preview.list).toEqual(expectedList)
+    it('should handle edge cases', () => {
+      const preview = Radio.setupPreview()
+      expect(preview.list).toEqual(expectedList)
+      preview.updateValue(undefined, 'new-value')
+      preview.updateValue('b40e1a4f-9777-463a-a657-83f9da39e69e', 'New Text')
+      preview.updateHint(undefined, 'New Hint')
+      preview.updateHint('b40e1a4f-9777-463a-a657-83f9da39e69e', 'New Hint')
+      preview.updateText(undefined, 'New Text')
+      preview.updateText('b40e1a4f-9777-463a-a657-83f9da39e69e', 'New Text')
+      expect(preview.list).toEqual(expectedList)
+      preview.updateText(baronListItemId, '')
+      expect(preview.list[3].text).toBe('Item text')
+    })
   })
 })
 
