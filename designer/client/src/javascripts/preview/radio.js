@@ -455,7 +455,8 @@ export class Radio extends Question {
      * @private
      */
     this._listeners = listeners
-    this._list = listsElementToMap(radioElements.values.items)
+    const items = /** @type {ListElement[]} */ (radioElements.values.items)
+    this._list = this.createListFromElements(items)
     this._radioElements = radioElements
   }
 
@@ -512,6 +513,15 @@ export class Radio extends Question {
   delete(key) {
     this._list.delete(key)
     this.render()
+  }
+
+  /**
+   * @param {ListElement[]} listElements
+   * @returns {Map<string, ListElement>}
+   */
+  createListFromElements(listElements) {
+    this._list = listsElementToMap(listElements)
+    return this._list
   }
 
   /**
