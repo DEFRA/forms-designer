@@ -181,7 +181,7 @@ describe('list-sortable', () => {
     })
 
     describe('should handle re-order', () => {
-      it('should set for reorder mode', () => {
+      it('should set for reorder mode and then back', () => {
         document.body.innerHTML =
           '<button id="edit-options-button">Re-order</button>' +
           '<button id="add-option-button">Add item</button>' +
@@ -197,7 +197,7 @@ describe('list-sortable', () => {
             cursorCount++
           }
         })
-        expect(cursorCount).toBe(49)
+        expect(cursorCount).toBe(41)
       })
 
       it('should set for non-reorder mode', () => {
@@ -216,7 +216,7 @@ describe('list-sortable', () => {
             cursorCount++
           }
         })
-        expect(cursorCount).toBe(49)
+        expect(cursorCount).toBe(41)
       })
     })
   })

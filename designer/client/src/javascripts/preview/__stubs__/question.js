@@ -336,7 +336,7 @@ export const questionDetailsPreviewTabsHTML = `<div class="govuk-grid-column-one
           <!-- Page Preview Content -->
           <div class="border-left-container-shorttext" id="question-preview-content">
             <div class="govuk-form-group">
-              <fieldset class="govuk-fieldset" aria-describedby="listInputField-hint">
+              <fieldset class="govuk-fieldset" aria-describedby="radioInputField-hint">
                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">Question title</legend>
               </fieldset>
             </div>

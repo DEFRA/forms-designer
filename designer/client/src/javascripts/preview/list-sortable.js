@@ -83,11 +83,11 @@ export class ListSortableQuestionElements extends ListQuestionElements {
 
   /**
    * @param {HTMLElement[]} elements
+   * @param {boolean} inReorderMode
    */
-  setStyleOnChildren(elements) {
-    const isReordering = this.isReordering()
+  setStyleOnChildren(elements, inReorderMode) {
     elements.forEach((item) => {
-      const cursorStyle = isReordering ? 'move' : 'default'
+      const cursorStyle = inReorderMode ? 'move' : 'default'
       item.style.cursor = cursorStyle
       const children = /** @type {HTMLElement[]} */ (
         Array.from(item.getElementsByTagName('*'))
@@ -97,14 +97,14 @@ export class ListSortableQuestionElements extends ListQuestionElements {
         if (child.tagName === 'A') {
           if (child.classList.contains('govuk-button')) {
             // Show/hide up/down buttons
-            child.style = isReordering ? 'display: block' : 'display:none'
+            child.style = inReorderMode ? 'display: block' : 'display:none'
           } else {
             // Show/hide edit/delete links
-            child.style = isReordering ? 'display: none' : 'display:block'
+            child.style = inReorderMode ? 'display: none' : 'display:block'
           }
         }
       })
-      if (isReordering) {
+      if (inReorderMode) {
         item.classList.add('sortable-enabled')
       } else {
         item.classList.remove('sortable-enabled')
@@ -119,7 +119,7 @@ export class ListSortableQuestionElements extends ListQuestionElements {
     this.addItemButton.style = 'display: none'
     this.editOptionsButton.textContent = 'Done'
     this.editOptionsButton.classList.remove('govuk-button--inverse')
-    this.setStyleOnChildren(elements)
+    this.setStyleOnChildren(elements, true)
   }
 
   /**
@@ -129,7 +129,7 @@ export class ListSortableQuestionElements extends ListQuestionElements {
     this.addItemButton.style = 'display: block'
     this.editOptionsButton.textContent = 'Re-order'
     this.editOptionsButton.classList.add('govuk-button--inverse')
-    this.setStyleOnChildren(elements)
+    this.setStyleOnChildren(elements, false)
   }
 }
 
