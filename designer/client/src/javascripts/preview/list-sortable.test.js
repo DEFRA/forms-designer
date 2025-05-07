@@ -308,11 +308,6 @@ describe('list-sortable', () => {
     })
 
     describe('ListSortable class', () => {
-      it('should setup preview', () => {
-        const preview = ListSortable.setupPreview()
-        expect(preview.afterInput).toEqual({})
-      })
-
       it('should resync preview after reorder', () => {
         document.body.innerHTML =
           '<button id="edit-options-button">Done</button>' +

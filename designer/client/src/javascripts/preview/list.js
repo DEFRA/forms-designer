@@ -360,20 +360,6 @@ export class List extends Question {
     this._listElements = listQuestionElements
   }
 
-  get afterInput() {
-    if (!this.list.length) {
-      return {
-        afterInputs: {
-          html:
-            '<div class="govuk-inset-text"><p class="govuk-body">No items added yet.</p><div class="govuk-inset-text">' +
-            '<p class="govuk-body">No items added yet.</p>' +
-            '</div></div>'
-        }
-      }
-    }
-    return {}
-  }
-
   get renderInput() {
     const afterInputs =
       /** @type {{ formGroup?: { afterInputs: { html: string } } }} */ (

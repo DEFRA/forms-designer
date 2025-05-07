@@ -344,18 +344,12 @@ describe('list', () => {
   })
 
   describe('List class', () => {
-    it('should update', () => {
-      const preview = List.setupPreview()
-      expect(preview.afterInput).toEqual({})
-    })
-
     it('should delete an element', () => {
       const list = new List(emptyQuestionElements)
       list.push(structuredClone(list1))
       expect(list.list).toEqual([list1])
       list.delete(list1Id)
       expect(list.list).toEqual([])
-      expect(list.afterInput.afterInputs?.html).toContain('No items added yet')
     })
 
     it('should edit list text', () => {
