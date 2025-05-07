@@ -133,6 +133,26 @@ describe('Editor v2 pages reorder routes', () => {
       )
     })
   })
+
+  test('POST - should handle form validation failure and redirect', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/pages-reorder',
+      auth,
+      payload: { pageOrder: 'invalid-format' }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/pages-reorder'
+    )
+  })
 })
 
 /**
