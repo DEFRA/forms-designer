@@ -58,7 +58,7 @@ export class PageReorder {
   panelFocusClass = 'pages-reorder-panel-focus'
   /** @type {Sortable | null} */
   sortableInstance = null
-  /** @type {number | undefined} */
+  /** @type {ReturnType<typeof setTimeout> | undefined} */
   announceTimeout = undefined
   /** @type {number} */
   announceDisplayTimeMs = 150
@@ -341,7 +341,7 @@ export class PageReorder {
       window.getComputedStyle(button).display !== 'none'
 
     /** @type {Element | null} */
-    let elementToFocus = movedItem
+    let elementToFocus = null // Initialize to null
 
     if (wasUpButtonClick && isButtonFocusable(upButtonOnMovedItem)) {
       // Case 1: Up button clicked, Up button still visible
@@ -355,6 +355,8 @@ export class PageReorder {
     } else if (!wasUpButtonClick && isButtonFocusable(upButtonOnMovedItem)) {
       // Case 4: Down button clicked, Down button hidden, Up button visible
       elementToFocus = upButtonOnMovedItem
+    } else {
+      elementToFocus = movedItem
     }
 
     focusIfExists(elementToFocus)
@@ -574,7 +576,7 @@ export class PageReorder {
     const message = `List reordered, ${pageTitle} is now page ${newPosition} of ${totalItems}.`
 
     clearTimeout(this.announceTimeout)
-    this.announceTimeout = window.setTimeout(() => {
+    this.announceTimeout = setTimeout(() => {
       if (this.announcementRegion) {
         this.announcementRegion.textContent = message
         setTimeout(() => {
