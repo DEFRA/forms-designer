@@ -212,9 +212,19 @@ export interface FormEditor {
   list: string
 
   /**
+   * List items in JSON format, such as for radios ro checkboxes
+   */
+  listItemsData: string
+
+  /**
    * An array of options for autocomplete
    */
   autoCompleteOptions: Item[]
+
+  /**
+   * Set to 'true' is Javascript is enabled
+   */
+  jsEnabled: string
 }
 
 export type FormEditorInputPage = Pick<
@@ -261,6 +271,8 @@ export type FormEditorInputQuestion = Pick<
   | 'radioHint'
   | 'radioValue'
   | 'list'
+  | 'listItemsData'
+  | 'jsEnabled'
 >
 
 export type FormEditorInputPageSettings = Pick<
@@ -290,15 +302,40 @@ export type FormEditorInputQuestionDetails = Pick<
   | 'radioText'
   | 'radioHint'
   | 'radioValue'
+  | 'listItemsData'
+  | 'jsEnabled'
 >
 
 export interface ListItem {
+  id?: string
   text?: string
   hint?: {
-    text?: string
+    text: string
   }
   value?: string
-  id?: string
+}
+
+export interface ListLabel {
+  text: string
+  classes: string
+}
+
+export interface ListElement extends ListItem {
+  readonly id: string
+  text: string
+  value: string
+  label: ListLabel
+}
+
+export interface ReadonlyHint {
+  readonly text: string
+}
+
+export interface ListItemReadonly extends ListElement {
+  readonly text: string
+  readonly hint?: ReadonlyHint
+  readonly value: string
+  readonly label: ListLabel
 }
 
 export interface QuestionSessionState {

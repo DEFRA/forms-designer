@@ -1,0 +1,14 @@
+{% from "preview-panel/macro.njk" import appPreviewPanel %}
+
+{% call appPreviewPanel({
+    questionType: questionType,
+    previewPageUrl: previewPageUrl,
+    previewErrorsUrl: previewErrorsUrl
+  }) %}
+{% endcall %}
+
+<script src="{{ getAssetPath("assets/nunjucks/govuk-components.js") }}"></script>
+<script type="module">
+  import { setupPreview } from "{{ getAssetPath("preview.js") }}"
+  setupPreview('{{ questionType }}'.toLowerCase())
+</script>

@@ -40,6 +40,12 @@ export default /** @type {Configuration} */ ({
         // React rendered form editor
         './index.tsx'
       ]
+    },
+    preview: {
+      import: [
+        // Nunjucks rendered application
+        './javascripts/preview.js'
+      ]
     }
   },
   experiments: {
@@ -120,8 +126,21 @@ export default /** @type {Configuration} */ ({
         generator: {
           filename: 'assets/fonts/[name][ext]'
         }
+      },
+      {
+        test: /\.(njk)$/,
+        loader: 'nunjucks-loader',
+        sideEffects: true
       }
     ]
+  },
+  resolveLoader: {
+    alias: {
+      'nunjucks-loader': resolve(
+        import.meta.dirname,
+        'client/nunjucks-loader.js'
+      )
+    }
   },
   optimization: {
     minimize: NODE_ENV === 'production',
@@ -237,7 +256,7 @@ export default /** @type {Configuration} */ ({
       // Alias legacy React to latest
       react: reactPath
     },
-    extensions: ['.js', '.json', '.mjs'],
+    extensions: ['.js', '.json', '.mjs', '.njk'],
     extensionAlias: {
       '.cjs': ['.cts', '.cjs'],
       '.js': ['.ts', '.js'],

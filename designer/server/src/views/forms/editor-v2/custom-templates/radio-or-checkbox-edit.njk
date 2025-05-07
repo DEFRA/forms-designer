@@ -1,12 +1,8 @@
-{% call appEditorCard({
-  classes: "editor-card-background-white govuk-!-padding-bottom-0",
-  outerClasses: "pages-panel-left-thin-border"
-}) %}
-
 {% set hasStateWithinDetailsSection = enhancedFields[radioValueIdx].value %}
 
-<div id="add-option-form" class="govuk-!-margin-bottom-6">
-  <h2 class="govuk-caption-m" id="add-option">Item {{ listDetails.rowNumBeingEdited }}</h2>
+{% set showOrHide = "display:block" if state.editRow.expanded else "display:none"%}
+<div id="add-option-form" class="govuk-!-margin-bottom-6" style="{{ showOrHide }}" data-index="{{ loop.index }}" data-id="{{ item.id }}" data-val="{{ item.value }}" data-hint="{{ item.hint.text }}"  data-text="{{ item.text }}">
+  <h2 class="govuk-caption-m" id="add-option-heading">Item {{ listDetails.rowNumBeingEdited }}</h2>
   {{ govukInput(enhancedFields[radioTextIdx]) }}
 
   {{ govukInput(enhancedFields[radioHintIdx]) }}
@@ -31,4 +27,3 @@
     <a class="govuk-link govuk-link--no-visited-state" href="?action=cancel" id="cancel-add-option">Cancel</a>
   </div>
 </div>
-{% endcall %}

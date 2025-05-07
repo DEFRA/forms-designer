@@ -7,6 +7,10 @@ module.exports = {
     '**/coverage/**',
     '**/dist/**',
     '**/public/**',
+    'designer/client/src/assets/nunjucks/govuk-components.js',
+    'designer/precompile-govuk-components.js',
+    'designer/precompile.js',
+    'designer/bin/precompile.js',
 
     // Enable dotfile linting
     '!.*',
@@ -173,7 +177,12 @@ module.exports = {
         'no-use-before-define': 'off',
         '@typescript-eslint/no-unused-vars': [
           'error',
-          { ignoreRestSiblings: true }
+          {
+            ignoreRestSiblings: true,
+            argsIgnorePattern: '^_',
+            varsIgnorePattern: '^_',
+            caughtErrorsIgnorePattern: '^_'
+          }
         ],
         '@typescript-eslint/no-use-before-define': ['error', 'nofunc']
       },

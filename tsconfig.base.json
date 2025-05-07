@@ -11,5 +11,10 @@
     "sourceMap": true,
     "strict": true
   },
-  "exclude": ["${configDir}/dist", "${configDir}/node_modules", "node_modules"]
+  "exclude": [
+    "${configDir}/dist",
+    "${configDir}/node_modules",
+    "node_modules",
+    "designer/client/src/assets/nunjucks/govuk-components.js"
+  ]
 }

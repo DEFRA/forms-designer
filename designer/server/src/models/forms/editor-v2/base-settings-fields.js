@@ -102,6 +102,7 @@ export const baseSchema = Joi.object().keys({
   }),
   radioHint: questionDetailsFullSchema.radioHintSchema,
   radioValue: questionDetailsFullSchema.radioValueSchema,
+  listItemsData: questionDetailsFullSchema.listItemsDataSchema,
   autoCompleteOptions: questionDetailsFullSchema.autoCompleteOptionsSchema.when(
     'questionType',
     {
@@ -116,7 +117,8 @@ export const baseSchema = Joi.object().keys({
       }),
       otherwise: Joi.forbidden()
     }
-  )
+  ),
+  jsEnabled: questionDetailsFullSchema.jsEnabledSchema
 })
 
 /**

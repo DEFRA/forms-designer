@@ -29,7 +29,7 @@
         {% set isFocus = state.lastMovedId == item.id %}
         {% set focusClass = " pages-reorder-panel-focus" if isFocus else "" %}
 
-        <li class="app-reorderable-list__item reorder-panel{{ focusClass }}" data-index="{{ loop.index }}" data-id="{{ item.id }}">
+        <li class="app-reorderable-list__item reorder-panel{{ focusClass }}" data-index="{{ loop.index }}" data-id="{{ item.id }}" data-val="{{ item.value }}" data-text="{{ item.text }}" data-hint="{{ item.hint.text }}">
           <div class="app-reorderable-list__wrapper">
             <div class="app-reorderable-list__content">
               <p class="govuk-body fauxlabel option-label-display" id="option-{{ loop.index }}-label-display">
@@ -78,48 +78,54 @@
     <ol class="app-reorderable-list js-enabled" id="options-container" data-module="reorderable-list">
     {% if state.listItems | length or state.editRow.expanded %}
       {% for item in state.listItems %}
-        {% if loop.index == listDetails.rowNumBeingEdited %}
-          {%- include "../../../../views/forms/editor-v2/custom-templates/radio-or-checkbox-edit.njk" -%}
-        {% else %}
-          <li class="app-reorderable-list__item" data-index="{{ loop.index }}" data-id="{{ item.id }}" data-val="{{ item.value }}">
-            <div class="app-reorderable-list__wrapper">
-              <div class="app-reorderable-list__content">
+        <li class="app-reorderable-list__item" data-index="{{ loop.index }}" data-id="{{ item.id }}" data-val="{{ item.value }}" data-text="{{ item.text }}" data-hint="{{ item.hint.text }}">
+          <div class="app-reorderable-list__wrapper">
+            <div class="app-reorderable-list__content">
+              {% if loop.index == listDetails.rowNumBeingEdited %}
+                {%- include "../../../../views/forms/editor-v2/custom-templates/radio-or-checkbox-edit.njk" -%}
+              {% else %}
                 <p class="govuk-body fauxlabel option-label-display" id="option-{{ loop.index }}-label-display">
                   {{ item.text }}
                 </p>
-                {% if item.hint.text %}
-                  <p class="govuk-hint govuk-!-margin-top-0 govuk-!-margin-bottom-0">{{ item.hint.text }}</p>
-                {% endif %}
-              </div>
-
-              <div class="edit-item">
-                <ul class="govuk-summary-list__actions-list">
-                  <li class="govuk-summary-list__actions-list-item">
-                    <a class="govuk-link govuk-link--no-visited-state edit-option-link" href="?action=edit&id={{ item.id }}">
-                      Edit<span class="govuk-visually-hidden">option {{ loop.index }}</span>
-                    </a>
-                  </li>
-                  <li class="govuk-summary-list__actions-list-item">
-                    <a class="govuk-link govuk-link--no-visited-state govuk-link--destructive delete-option-link" href="?action=delete&id={{ item.id }}">
-                      Delete<span class="govuk-visually-hidden"> list item</span>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-
+              {% endif %}
+              {% if item.hint.text %}
+              <p class="govuk-hint govuk-!-margin-top-0 govuk-!-margin-bottom-0">{{ item.hint.text }}</p>
+              {% endif %}
             </div>
-          </li>
-        {% endif %}
+
+            <div class="edit-item">
+              <ul class="govuk-summary-list__actions-list">
+                <li class="govuk-summary-list__actions-list-item">
+                  <a class="govuk-link govuk-link--no-visited-state edit-option-link" href="?action=edit&id={{ item.id }}">
+                    Edit<span class="govuk-visually-hidden">option {{ loop.index }}</span>
+                  </a>
+                </li>
+                <li class="govuk-summary-list__actions-list-item">
+                  <a class="govuk-link govuk-link--no-visited-state govuk-link--destructive delete-option-link" href="?action=delete&id={{ item.id }}">
+                    Delete<span class="govuk-visually-hidden"> list item</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+          </div>
+        </li>
       {% endfor %}
     {% endif %}
-    </ol>
 
     {% if state.editRow.expanded %}
       {% if listDetails.rowNumBeingEdited == state.listItems.length + 1 %}
-      {%- include "../../../../views/forms/editor-v2/custom-templates/radio-or-checkbox-edit.njk" -%}
+        <li class="app-reorderable-list__item" data-index="{{ loop.index }}" data-id="{{ item.id }}" data-val="{{ item.value }}" data-text="{{ item.text }}" data-hint="{{ item.hint.text }}">
+          <div class="app-reorderable-list__wrapper">
+            <div class="app-reorderable-list__content">
+              {%- include "../../../../views/forms/editor-v2/custom-templates/radio-or-checkbox-edit.njk" -%}
+            </div>
+          </div>
+        </li>
       {% endif %}
     {% endif %}
   {% endif %}
+  </ol>
 </div>
 
 {% if not state.editRow.expanded and not state.isReordering %}

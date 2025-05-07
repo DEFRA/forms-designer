@@ -1,0 +1,25 @@
+<div class="govuk-error-summary-container"></div>
+
+  <form method="post" novalidate="">
+    <div class="govuk-form-group">
+      <h1 class="govuk-label-wrapper">
+        <label class="govuk-label govuk-label--l" id="question-label-output" for="nipRGh">
+          Title
+        </label>
+      </h1>
+      <div class="govuk-hint" id="text-input-field-hint">Hint text</div>
+      <input class="govuk-file-upload" id="nipRGh" name="file" type="file" accept="application/pdf,application/msword,application/vnd.oasis.opendocument.text,text/plain">
+    </div>
+
+    <button type="submit" data-prevent-double-click="true" class="govuk-button govuk-button--secondary upload-file-button" data-module="govuk-button" data-govuk-button-init="">
+    Upload file
+    </button>
+  </form>
+
+  <form>
+    <div id="uploadedFilesContainer">
+      <h2 class="govuk-heading-m">Uploaded files</h2>
+        <p class="govuk-body">0 files uploaded</p>
+    </div>
+
+  </form>

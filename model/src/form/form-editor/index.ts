@@ -111,6 +111,10 @@ export const listItemCountSchema = Joi.number()
   .optional()
   .description('Number of list items in the list used by the field')
 
+export const listItemsDataSchema = Joi.string()
+  .allow('')
+  .description('List items in JSON format, such as for radios or checkboxes.')
+
 export const exactFilesSchema = Joi.number()
   .empty('')
   .integer()
@@ -170,6 +174,7 @@ export const tabularDataTypesSchema = Joi.array()
   .single()
   .empty(null)
   .default([])
+
 export const enhancedActionSchema = Joi.string()
   .trim()
   .optional()
@@ -300,6 +305,12 @@ export const classesSchema = Joi.string()
   .optional()
   .allow('')
   .description('Custom CSS classes to apply to the component')
+
+export const jsEnabledSchema = Joi.string()
+  .trim()
+  .optional()
+  .allow('false', 'true')
+  .description('Flag to show if Javascript is enabled or not')
 
 type GenericRuleOptions<K extends string, T> = Omit<GetRuleOptions, 'args'> & {
   args: Record<K, T>
@@ -457,8 +468,10 @@ export const questionDetailsFullSchema = {
   fileTypesSchema,
   hintTextSchema,
   imageTypesSchema,
+  jsEnabledSchema,
   listForQuestionSchema,
   listItemCountSchema,
+  listItemsDataSchema,
   maxFilesSchema,
   maxFutureSchema,
   maxLengthSchema,

@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { ServiceHeader } from '@defra/forms-designer/server/src/common/components/service-header/service-header.js'
 import {
   Accordion,
@@ -7,6 +8,7 @@ import {
   ErrorSummary,
   NotificationBanner,
   Radios,
+  Tabs,
   createAll
 } from 'govuk-frontend'
 
@@ -16,5 +18,6 @@ createAll(CharacterCount)
 createAll(Checkboxes)
 createAll(ErrorSummary)
 createAll(Radios)
+createAll(Tabs)
 createAll(NotificationBanner)
 createAll(ServiceHeader)

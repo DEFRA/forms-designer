@@ -1,0 +1,76 @@
+<div id="preview-container-inner">
+  <!-- Before content -->
+  <div id="before-content" class="preview-before-content">
+    <p class="govuk-body-s">Previews</p>
+  </div>
+
+  <div class="govuk-!-margin-top-9">
+    <div class="govuk-tabs" data-module="govuk-tabs">
+      <h2 class="govuk-tabs__title">Contents</h2>
+      <ul class="govuk-tabs__list" role="tablist">
+        <li class="govuk-tabs__list-item govuk-tabs__list-item--selected" role="presentation">
+          <a class="govuk-tabs__tab" href="#tab-preview" id="tab_tab-preview" role="tab" aria-controls="tab-preview">Page preview</a>
+        </li>
+        <li class="govuk-tabs__list-item" role="presentation">
+          <a class="govuk-tabs__tab" href="#tab-errors" id="tab_tab-errors" role="tab" aria-controls="tab-errors">Error messages</a>
+        </li>
+      </ul>
+
+      <div class="govuk-tabs__panel" id="tab-preview" role="tabpanel" aria-labelledby="tab_tab-preview">
+        <!-- Page Preview Content -->
+        <p class="govuk-body-s">
+          <a href="{{ params.previewPageUrl }}" class="govuk-link govuk-link--no-visited-state" rel="noreferrer noopener" target="_blank">
+            Preview this page in a new tab
+          </a>
+        </p>
+
+        <!-- Question Content Here -->
+
+        <div class="border-left-container-shorttext" id="question-preview-content">
+        {%- include "./templates/" + params.questionType | lower + ".njk" -%}
+        </div>
+      </div>
+
+      <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="tab-errors" role="tabpanel" aria-labelledby="tab_tab-errors">
+
+        <p class="govuk-body-s">
+          <a href="{{ params.previewErrorsUrl }}" class="govuk-link govuk-link--no-visited-state" rel="noreferrer noopener" target="_blank">
+            Preview error messages in a new tab
+          </a>
+        </p>
+        <!-- Error Messages Content -->
+        <div class="govuk-error-summary" data-disable-auto-focus="true">
+          <h2 class="govuk-error-summary__title">There is a problem</h2>
+          <ul class="govuk-list govuk-error-summary__list">
+            <!-- Error messages -->
+            <li>
+              <a id="empty-input-error-shorttext" class="govuk-error-message">
+                <span class="govuk-visually-hidden">Error:</span>
+                Enter <span id="error-dynamic-text" style="text-transform: lowercase;">[Short description]</span>
+              </a>
+            </li>
+            <h3 class="govuk-heading-s">If you set answer limits:</h3>
+            <li>
+              <a id="too-long-input-error-shorttext" class="govuk-error-message">
+                <span class="govuk-visually-hidden">Error:</span>
+                <span id="error-dynamic-text-long">[Short description]</span> must be
+                <span id="max-length">[max length]</span> characters or less
+              </a>
+            </li>
+            <li>
+              <a id="too-short-input-error-shorttext" class="govuk-error-message">
+                <span class="govuk-visually-hidden">Error:</span>
+                <span id="error-dynamic-text-short">[Short description]</span> must be
+                <span id="min-length">[min length]</span> characters or more
+              </a>
+            </li>
+          </ul>
+          <a href="#edit-page" class="govuk-skip-link" style="margin-bottom: 30px!important;" data-module="govuk-skip-link" data-govuk-skip-link-init="">
+            Skip to edit page
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

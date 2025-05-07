@@ -14,6 +14,7 @@ import {
   buildListItem,
   buildQuestionPage,
   testFormDefinitionWithFileUploadPage,
+  testFormDefinitionWithRadioQuestionAndList,
   testFormDefinitionWithSinglePage
 } from '~/src/__stubs__/form-definition.js'
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
@@ -33,9 +34,14 @@ import { upsertList } from '~/src/lib/list.js'
 import {
   buildQuestionSessionState,
   createQuestionSessionState,
-  getQuestionSessionState
+  getQuestionSessionState,
+  setQuestionSessionState
 } from '~/src/lib/session-helper.js'
 import { handleEnhancedActionOnGet } from '~/src/routes/forms/editor-v2/question-details-helper.js'
+import {
+  getListItems,
+  saveList
+} from '~/src/routes/forms/editor-v2/question-details.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
@@ -306,6 +312,7 @@ describe('Editor v2 question details routes', () => {
     expect($cardCaption).toHaveClass('govuk-caption-l')
 
     expect($actions).toHaveLength(5)
+
     expect($actions[2]).toHaveTextContent('Preview error messages')
     expect($actions[3]).toHaveTextContent('Preview page')
     expect($actions[4]).toHaveTextContent('Save and continue')
@@ -679,6 +686,64 @@ describe('Editor v2 question details routes', () => {
     expect(statusCode).toBe(StatusCodes.INTERNAL_SERVER_ERROR)
   })
 
+  test('POST - should retain radios state if error with JS enabled', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+
+    jest.mocked(getQuestionSessionState).mockReturnValueOnce({
+      ...simpleSessionRadiosField,
+      listItems: [
+        {
+          text: 'option 1',
+          hint: { text: 'option 1 hint' },
+          value: 'option 1 val'
+        },
+        {
+          text: 'option 2',
+          hint: { text: 'option 2 hint' },
+          value: 'option 2 val'
+        }
+      ]
+    })
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/1/question/1/details/77889',
+      auth,
+      payload: {
+        name: '12345',
+        question: 'Question text',
+        shortDescription: '',
+        questionType: 'RadiosField',
+        jsEnabled: 'true'
+      }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/page/1/question/1/details/77889#'
+    )
+    expect(addErrorsToSession).toHaveBeenCalledWith(
+      expect.anything(),
+      new Joi.ValidationError('Enter a short description', [], undefined),
+      'questionDetailsValidationFailure'
+    )
+    expect(setQuestionSessionState).toHaveBeenCalledWith(
+      expect.anything(),
+      '77889',
+      {
+        editRow: {
+          expanded: false
+        },
+        listItems: [],
+        questionType: 'RadiosField'
+      }
+    )
+  })
+
   test('POST - should redirect to next page if valid payload with new question', async () => {
     jest.mocked(getQuestionSessionState).mockReturnValue(simpleSessionTextField)
     jest
@@ -806,10 +871,104 @@ describe('Editor v2 question details routes', () => {
     // TODO: When forms runner is updated move to id
     expect(question).toMatchObject({ list: name })
   })
+
+  describe('saveList', () => {
+    const listId = '3d7e14af-0674-40dc-aca5-a6439f45b782'
+    const listName = 'atvNgE'
+    const list = buildList({
+      id: listId,
+      name: listName,
+      items: [
+        { text: 'English', value: 'en-gb' },
+        { text: 'French', value: 'fr-Fr' }
+      ]
+    })
+    jest.mocked(upsertList).mockResolvedValue({
+      id: listId,
+      list,
+      status: 'created'
+    })
+
+    test('should return undefined if question type undefined', async () => {
+      const res = await saveList(
+        '12345',
+        testFormDefinitionWithSinglePage,
+        'token',
+        { type: undefined },
+        []
+      )
+      expect(res).toBeUndefined()
+    })
+
+    test('should return undefined if question type not needing a list', async () => {
+      const res = await saveList(
+        '12345',
+        testFormDefinitionWithSinglePage,
+        'token',
+        { type: ComponentType.TextField },
+        []
+      )
+      expect(res).toBeUndefined()
+    })
+
+    test('should return list name if list saved', async () => {
+      const res = await saveList(
+        '12345',
+        testFormDefinitionWithRadioQuestionAndList,
+        'token',
+        { type: ComponentType.RadiosField },
+        []
+      )
+      expect(res).toBe(listName)
+    })
+
+    test('should return list name if list saved, even if no entries', async () => {
+      const res = await saveList(
+        '12345',
+        testFormDefinitionWithRadioQuestionAndList,
+        'token',
+        { type: ComponentType.RadiosField },
+        undefined
+      )
+      expect(res).toBe(listName)
+    })
+
+    test('should return undefined if failed to save', async () => {
+      jest.mocked(upsertList).mockResolvedValue({
+        id: listId,
+        list,
+        status: 'updated'
+      })
+      const res = await saveList(
+        '12345',
+        testFormDefinitionWithRadioQuestionAndList,
+        'token',
+        { type: ComponentType.RadiosField },
+        []
+      )
+      expect(res).toBeUndefined()
+    })
+  })
+
+  describe('getListItems', () => {
+    test('should parse list items if supplied', () => {
+      const payload =
+        /** @type {FormEditorInputQuestionDetails} */
+        ({
+          listItemsData:
+            '[{ "text": "Option 1", "value": "val1" }, { "text": "Option 2", "value": "val2" }]'
+        })
+      const res = getListItems(payload, undefined)
+      expect(res).toEqual([
+        { text: 'Option 1', value: 'val1' },
+        { text: 'Option 2', value: 'val2' }
+      ])
+    })
+  })
 })
 
 /**
- * @import { FormDefinition, FormEditor, Page } from '@defra/forms-model'
+ * @import { FormDefinition, FormEditor, FormEditorInputQuestionDetails, Page } from '@defra/forms-model'
  * @import { Server } from '@hapi/hapi'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */
