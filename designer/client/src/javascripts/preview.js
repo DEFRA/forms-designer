@@ -1,7 +1,9 @@
 import '~/src/views/components/textfield.njk'
 import '~/src/views/components/radios.njk'
 import '~/src/views/components/date-input.njk'
+import '~/src/views/components/ukaddressfield.njk'
 
+import { Address } from '~/src/javascripts/preview/address.js'
 import { DateInput } from '~/src/javascripts/preview/date-input.js'
 import { Question } from '~/src/javascripts/preview/question.js'
 import { Radio } from '~/src/javascripts/preview/radio.js'
@@ -23,7 +25,7 @@ export function showHideForJs() {
 }
 
 /**
- * @param {string} questionType
+ * @param {'textfield'|'datepartsfield'|'radiosfield'|'ukaddressfield'|'unknown'} questionType
  * @returns {Question|Radio|DateInput|Textfield}
  */
 export function setupPreview(questionType) {
@@ -37,6 +39,8 @@ export function setupPreview(questionType) {
     preview = DateInput.setupPreview()
   } else if (questionType === 'radiosfield') {
     preview = Radio.setupPreview()
+  } else if (questionType === 'ukaddressfield') {
+    preview = Address.setupPreview()
   } else {
     preview = Question.setupPreview()
   }

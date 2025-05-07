@@ -9,18 +9,7 @@ import { Question } from '~/src/javascripts/preview/question'
 import { Radio } from '~/src/javascripts/preview/radio'
 import { Textfield } from '~/src/javascripts/preview/textfield'
 
-jest.mock('~/src/javascripts/preview/nunjucks.js', () => {
-  return {
-    /**
-     * @param {string} _template
-     * @param {{ model: QuestionBaseModel }} _context
-     * @returns {string}
-     */
-    render(_template, _context) {
-      return '****UPDATED****'
-    }
-  }
-})
+jest.mock('~/src/javascripts/preview/nunjucks.js')
 
 jest.mock(
   '~/src/views/components/inset.njk',
@@ -31,26 +20,11 @@ jest.mock(
   () =>
     '<input class="govuk-input" id="question" name="question" type="text" value="What is your answer?">'
 )
-jest.mock(
-  '~/src/views/components/radios.njk',
-  () => '<div class="govuk-inset-text"></div>'
-)
-
-jest.mock(
-  '~/src/views/components/date-input.njk',
-  () =>
-    '<div class="govuk-date-input" id="dateInput">' +
-    '  <div class="govuk-date-input__item">' +
-    '    <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dateInput-day" name="day" type="text" inputmode="numeric">' +
-    '  </div>' +
-    '  <div class="govuk-date-input__item">' +
-    '    <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dateInput-month" name="month" type="text" inputmode="numeric">' +
-    '  </div>' +
-    '  <div class="govuk-date-input__item">' +
-    '    <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="dateInput-year" name="year" type="text" inputmode="numeric">' +
-    '  </div>' +
-    '</div>'
-)
+jest.mock('~/src/views/components/ukaddressfield.njk', () => '')
+jest.mock('~/src/views/components/inset.njk', () => '')
+jest.mock('~/src/views/components/textfield.njk', () => '')
+jest.mock('~/src/views/components/radios.njk', () => '')
+jest.mock('~/src/views/components/date-input.njk', () => '')
 
 describe('preview', () => {
   describe('setupPreview', () => {
@@ -69,8 +43,8 @@ describe('preview', () => {
       expect(res).toBeInstanceOf(Radio)
     })
 
-    it('should setup preview for other', () => {
-      const res = setupPreview('other')
+    it('should setup preview for unknown', () => {
+      const res = setupPreview('unknown')
       expect(res).toBeInstanceOf(Question)
     })
   })
