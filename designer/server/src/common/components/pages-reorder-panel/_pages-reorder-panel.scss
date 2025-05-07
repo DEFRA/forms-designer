@@ -41,76 +41,74 @@ li {
   }
 }
 
-#pages-container {
+.pages-container {
   margin-top: govuk-spacing(4);
 
   .js-reorderable-list-up,
   .js-reorderable-list-down {
     display: none;
   }
+}
 
-  &.js-enabled {
-    .reorder-button-no-js {
-      display: none;
-    }
-
-    .js-reorderable-list-up,
-    .js-reorderable-list-down {
-      display: none;
-    }
-
-    .app-reorderable-list__item:not(.check-answers-item) {
-      cursor: move;
-    }
-
-    .reorder-button-js {
-      display: inline-block;
-      width: 80px;
-    }
-
-    .check-answers-item {
-      .govuk-summary-card {
-        cursor: default;
-      }
-      .reorder-button-js {
-        display: none !important;
-      }
-    }
-
-    .app-reorderable-list__actions {
-      display: flex !important;
-      flex-direction: row-reverse;
-      justify-content: flex-end;
-      gap: govuk-spacing(1);
-      align-items: center;
-      margin-left: govuk-spacing(3);
-    }
+.pages-container.js-enabled {
+  .reorder-button-no-js {
+    display: none;
   }
 
-  .app-reorderable-list__item.sortable-ghost {
-    opacity: 0.4;
-    background-color: govuk-colour("light-grey");
-    outline: 2px dashed $govuk-link-colour;
-    .govuk-summary-card__title-wrapper {
-      visibility: hidden;
-    }
+  .js-reorderable-list-up,
+  .js-reorderable-list-down {
+    display: none;
   }
 
-  .app-reorderable-list__item.highlight-dragging {
-    .govuk-summary-card__title-wrapper {
-      outline: 2px solid $govuk-focus-colour;
-    }
+  .app-reorderable-list__item:not(.check-answers-item) {
+    cursor: move;
   }
 
-  .check-answers-item {
-    border-left-color: $govuk-border-colour;
-    background-color: govuk-colour("light-grey");
-    cursor: default;
-
-    .app-reorderable-list__actions {
-      display: none !important;
-    }
+  .reorder-button-js {
+    display: inline-block;
+    width: 80px;
   }
+
+  .app-reorderable-list__actions {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: govuk-spacing(1);
+    align-items: center;
+    margin-left: govuk-spacing(3);
+  }
+}
+
+.pages-container.js-enabled .check-answers-item .govuk-summary-card {
+  cursor: default;
+}
+
+.pages-container.js-enabled .check-answers-item .reorder-button-js {
+  display: none;
+}
+
+.pages-container .app-reorderable-list__item.sortable-ghost {
+  opacity: 0.4;
+  background-color: govuk-colour("light-grey");
+  outline: 2px dashed $govuk-link-colour;
+}
+
+.pages-container .app-reorderable-list__item.sortable-ghost .govuk-summary-card__title-wrapper {
+  visibility: hidden;
+}
+
+.pages-container .app-reorderable-list__item.highlight-dragging .govuk-summary-card__title-wrapper {
+  outline: 2px solid $govuk-focus-colour;
+}
+
+.pages-container .check-answers-item {
+  border-left-color: $govuk-border-colour;
+  background-color: govuk-colour("light-grey");
+  cursor: default;
+}
+
+.pages-container .check-answers-item .app-reorderable-list__actions {
+  display: none;
 }
 
 .app-reorderable-list__item {

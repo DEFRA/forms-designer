@@ -93,6 +93,7 @@ export class PageReorder {
     }
 
     this.container.classList.add('js-enabled')
+    this.container.classList.add('pages-container')
 
     this.initSortable()
     this.initButtonListeners()
@@ -258,7 +259,9 @@ export class PageReorder {
    * @param {Element | null} insertBeforeItem
    */
   moveItemInDom(itemToMove, insertBeforeItem) {
-    if (!this.container) return
+    if (!this.container) {
+      return
+    }
 
     if (insertBeforeItem) {
       this.container.insertBefore(itemToMove, insertBeforeItem)
@@ -280,7 +283,9 @@ export class PageReorder {
    * @param {HTMLLIElement} movedItem
    */
   updatePanelFocus(movedItem) {
-    if (!this.container) return
+    if (!this.container) {
+      return
+    }
 
     const currentlyFocusedItemsNodeList = querySelectorAllHelper(
       this.container,
@@ -301,7 +306,9 @@ export class PageReorder {
    * @param {HTMLLIElement} movedItem
    */
   announceSuccessfulMove(movedItem) {
-    if (!this.container) return
+    if (!this.container) {
+      return
+    }
 
     const allItemsNodeList = querySelectorAllHelper(
       this.container,
@@ -329,38 +336,28 @@ export class PageReorder {
       `.js-reorderable-list-down`
     )
 
-    let focusedSuccessfully = false
-    if (wasUpButtonClick) {
-      if (
-        upButtonOnMovedItem &&
-        window.getComputedStyle(upButtonOnMovedItem).display !== 'none'
-      ) {
-        focusIfExists(upButtonOnMovedItem)
-        focusedSuccessfully = true
-      } else if (
-        downButtonOnMovedItem &&
-        window.getComputedStyle(downButtonOnMovedItem).display !== 'none'
-      ) {
-        focusIfExists(downButtonOnMovedItem)
-        focusedSuccessfully = true
-      }
-    } else if (
-      downButtonOnMovedItem &&
-      window.getComputedStyle(downButtonOnMovedItem).display !== 'none'
-    ) {
-      focusIfExists(downButtonOnMovedItem)
-      focusedSuccessfully = true
-    } else if (
-      upButtonOnMovedItem &&
-      window.getComputedStyle(upButtonOnMovedItem).display !== 'none'
-    ) {
-      focusIfExists(upButtonOnMovedItem)
-      focusedSuccessfully = true
+    const isButtonFocusable = (/** @type {Element | null} */ button) =>
+      button instanceof HTMLElement &&
+      window.getComputedStyle(button).display !== 'none'
+
+    /** @type {Element | null} */
+    let elementToFocus = movedItem
+
+    if (wasUpButtonClick && isButtonFocusable(upButtonOnMovedItem)) {
+      // Case 1: Up button clicked, Up button still visible
+      elementToFocus = upButtonOnMovedItem
+    } else if (wasUpButtonClick && isButtonFocusable(downButtonOnMovedItem)) {
+      // Case 2: Up button clicked, Up button hidden, Down button visible
+      elementToFocus = downButtonOnMovedItem
+    } else if (!wasUpButtonClick && isButtonFocusable(downButtonOnMovedItem)) {
+      // Case 3: Down button clicked, Down button still visible
+      elementToFocus = downButtonOnMovedItem
+    } else if (!wasUpButtonClick && isButtonFocusable(upButtonOnMovedItem)) {
+      // Case 4: Down button clicked, Down button hidden, Up button visible
+      elementToFocus = upButtonOnMovedItem
     }
 
-    if (!focusedSuccessfully) {
-      focusIfExists(movedItem)
-    }
+    focusIfExists(elementToFocus)
   }
 
   updateVisuals() {
