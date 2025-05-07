@@ -46,6 +46,9 @@ export default /** @type {Configuration} */ ({
         // Nunjucks rendered application
         './javascripts/preview.js'
       ]
+    },
+    'pages-reorder': {
+      import: ['./javascripts/pages-reorder.js']
     }
   },
   experiments: {

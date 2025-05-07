@@ -40,3 +40,97 @@ li {
     visibility: hidden;
   }
 }
+
+#pages-container {
+  margin-top: govuk-spacing(4);
+
+  .js-reorderable-list-up,
+  .js-reorderable-list-down {
+    display: none;
+  }
+
+  &.js-enabled {
+    .reorder-button-no-js {
+      display: none;
+    }
+
+    .js-reorderable-list-up,
+    .js-reorderable-list-down {
+      display: none;
+    }
+
+    .app-reorderable-list__item:not(.check-answers-item) {
+      cursor: move;
+    }
+
+    .reorder-button-js {
+      display: inline-block;
+      width: 80px;
+    }
+
+    .check-answers-item {
+      .govuk-summary-card {
+        cursor: default;
+      }
+      .reorder-button-js {
+        display: none !important;
+      }
+    }
+
+    .app-reorderable-list__actions {
+      display: flex !important;
+      flex-direction: row-reverse;
+      justify-content: flex-end;
+      gap: govuk-spacing(1);
+      align-items: center;
+      margin-left: govuk-spacing(3);
+    }
+  }
+
+  .app-reorderable-list__item.sortable-ghost {
+    opacity: 0.4;
+    background-color: govuk-colour("light-grey");
+    outline: 2px dashed $govuk-link-colour;
+    .govuk-summary-card__title-wrapper {
+      visibility: hidden;
+    }
+  }
+
+  .app-reorderable-list__item.highlight-dragging {
+    .govuk-summary-card__title-wrapper {
+      outline: 2px solid $govuk-focus-colour;
+    }
+  }
+
+  .check-answers-item {
+    border-left-color: $govuk-border-colour;
+    background-color: govuk-colour("light-grey");
+    cursor: default;
+
+    .app-reorderable-list__actions {
+      display: none !important;
+    }
+  }
+}
+
+.app-reorderable-list__item {
+  margin-bottom: govuk-spacing(3);
+  padding: 0;
+
+  .govuk-summary-card__title-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 20px;
+    border-bottom: 1px solid transparent;
+  }
+
+  .govuk-summary-card__title {
+    flex-grow: 1;
+    margin: 0;
+  }
+
+  .govuk-button-group {
+    margin-left: govuk-spacing(2);
+  }
+}

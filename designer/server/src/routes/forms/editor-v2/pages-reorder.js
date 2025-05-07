@@ -106,8 +106,12 @@ export default [
       if (saveChanges) {
         const { token } = auth.credentials
         const metadata = await forms.get(slug, token)
-        await reorderPages(metadata.id, token, pageOrder)
+
+        if (pageOrder.length > 0) {
+          await reorderPages(metadata.id, token, pageOrder)
+        }
         yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
+        yar.clear(reorderPagesKey)
 
         return h
           .redirect(editorv2Path(slug, 'pages'))
@@ -115,14 +119,22 @@ export default [
           .takeover()
       }
 
-      const [direction, pageId] = movement.split('|')
+      if (movement) {
+        const [direction, pageId] = movement.split('|')
 
-      const newPageOrder = repositionPage(pageOrder, direction, pageId)
-      setFlashInSession(yar, reorderPagesKey, newPageOrder.join(','))
+        const newPageOrder = repositionPage(pageOrder, direction, pageId).join(
+          ','
+        )
 
-      // Redirect POST to GET without resubmit on back button
+        setFlashInSession(yar, reorderPagesKey, newPageOrder)
+
+        return h
+          .redirect(editorv2Path(slug, `pages-reorder?focus=${movement}`))
+          .code(StatusCodes.SEE_OTHER)
+      }
+
       return h
-        .redirect(editorv2Path(slug, `pages-reorder?focus=${movement}`))
+        .redirect(editorv2Path(slug, `pages-reorder`))
         .code(StatusCodes.SEE_OTHER)
     },
     options: {
