@@ -75,31 +75,39 @@ export class ListSortableQuestionElements extends ListQuestionElements {
     }
   }
 
+  getAllMoveButtons() {
+    return /** @type {HTMLElement[]} */ (
+      Array.from(this.sortableContainer.querySelectorAll('a .govuk-button'))
+    )
+  }
+
   /**
    * @param {HTMLElement[]} elements
-   * @param {string} styleToSetForCursor
-   * @param { string | undefined } styleToAddOnItem
-   * @param { string | undefined } styleToRemoveOnItem
    */
-  setStyleOnChildren(
-    elements,
-    styleToSetForCursor,
-    styleToAddOnItem,
-    styleToRemoveOnItem
-  ) {
+  setStyleOnChildren(elements) {
+    const isReordering = this.isReordering()
     elements.forEach((item) => {
-      item.style.cursor = styleToSetForCursor
+      const cursorStyle = isReordering ? 'move' : 'default'
+      item.style.cursor = cursorStyle
       const children = /** @type {HTMLElement[]} */ (
         Array.from(item.getElementsByTagName('*'))
       )
       children.forEach((child) => {
-        child.style.cursor = styleToSetForCursor
+        child.style.cursor = cursorStyle
+        if (child.tagName === 'A') {
+          if (child.classList.contains('govuk-button')) {
+            // Show/hide up/down buttons
+            child.style = isReordering ? 'display: block' : 'display:none'
+          } else {
+            // Show/hide edit/delete links
+            child.style = isReordering ? 'display: none' : 'display:block'
+          }
+        }
       })
-      if (styleToAddOnItem) {
-        item.classList.add(styleToAddOnItem)
-      }
-      if (styleToRemoveOnItem) {
-        item.classList.remove(styleToRemoveOnItem)
+      if (isReordering) {
+        item.classList.add('sortable-enabled')
+      } else {
+        item.classList.remove('sortable-enabled')
       }
     })
   }
@@ -111,7 +119,7 @@ export class ListSortableQuestionElements extends ListQuestionElements {
     this.addItemButton.style = 'display: none'
     this.editOptionsButton.textContent = 'Done'
     this.editOptionsButton.classList.remove('govuk-button--inverse')
-    this.setStyleOnChildren(elements, 'move', 'sortable-enabled', undefined)
+    this.setStyleOnChildren(elements)
   }
 
   /**
@@ -121,7 +129,7 @@ export class ListSortableQuestionElements extends ListQuestionElements {
     this.addItemButton.style = 'display: block'
     this.editOptionsButton.textContent = 'Re-order'
     this.editOptionsButton.classList.add('govuk-button--inverse')
-    this.setStyleOnChildren(elements, 'default', undefined, 'sortable-enabled')
+    this.setStyleOnChildren(elements)
   }
 }
 
@@ -161,10 +169,40 @@ export class ListSortableEventListeners extends ListEventListeners {
         this._listSortableElements.editOptionsButton,
         (_target, e) => {
           this._listSortableElements.handleReorder(e)
+          this.configureMoveButtonListeners()
         },
         'click'
       ]
     ])
+  }
+
+  configureMoveButtonListeners() {
+    const allMoveButtons = this._listSortableElements.getAllMoveButtons()
+    if (this._listSortableElements.isReordering()) {
+      // Add all move button listeners
+      allMoveButtons.forEach((button) => {
+        if (button.textContent === 'Up') {
+          this.inputEventListener(
+            button,
+            (_e) => {
+              // console.log('up', e)
+            },
+            'click'
+          )
+        }
+        if (button.textContent === 'Down') {
+          this.inputEventListener(
+            button,
+            (_e) => {
+              // console.log('down', e)
+            },
+            'click'
+          )
+        }
+      })
+    } else {
+      // Remove all move button listeners
+    }
   }
 }
 
