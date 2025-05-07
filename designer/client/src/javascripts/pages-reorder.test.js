@@ -215,6 +215,41 @@ describe('PageReorder Class', () => {
     expect(instance.announcementRegion).toBeNull()
   })
 
+  test('constructor should return early if pageOrderInput is missing', () => {
+    document.body.innerHTML = `
+      <ol id="pages-container" data-module="pages-reorder"></ol>
+      <div id="reorder-announcement"></div>`
+    const validContainer = document.getElementById('pages-container')
+    const instance = new PageReorder(/** @type {Element} */ (validContainer))
+
+    const initButtonListenersSpy = jest.spyOn(
+      PageReorder.prototype,
+      'initButtonListeners'
+    )
+    // eslint-disable-next-line no-new
+    new PageReorder(/** @type {Element} */ (validContainer))
+    expect(instance.pageOrderInput).toBeNull()
+
+    initButtonListenersSpy.mockRestore()
+  })
+
+  test('constructor should return early if announcementRegion is missing', () => {
+    document.body.innerHTML = `
+      <ol id="pages-container" data-module="pages-reorder"></ol>
+      <input id="pageOrder" />`
+    const validContainer = document.getElementById('pages-container')
+    const instance = new PageReorder(/** @type {Element} */ (validContainer))
+    expect(instance.announcementRegion).toBeNull()
+    const initButtonListenersSpy = jest.spyOn(
+      PageReorder.prototype,
+      'initButtonListeners'
+    )
+    // eslint-disable-next-line no-new
+    new PageReorder(/** @type {Element} */ (validContainer))
+    expect(initButtonListenersSpy).not.toHaveBeenCalled()
+    initButtonListenersSpy.mockRestore()
+  })
+
   test('initSortable should call Sortable.create with correct options', () => {
     const createSpy = jest.spyOn(Sortable, 'create')
     pageReorderInstance?.initSortable()
@@ -227,6 +262,35 @@ describe('PageReorder Class', () => {
         onEnd: expect.any(Function)
       })
     )
+  })
+
+  test('initSortable should return early if container is null', () => {
+    if (!pageReorderInstance) throw new Error()
+
+    // eslint-disable-next-line jest/unbound-method
+    const createSpy = Sortable.create
+    // @ts-expect-error TS doesn't recognise createSpy as a Jest mock here, but it is at runtime
+    createSpy.mockClear()
+
+    const originalContainer = pageReorderInstance.container
+    pageReorderInstance.container = null
+    pageReorderInstance.initSortable()
+    expect(createSpy).not.toHaveBeenCalled()
+
+    pageReorderInstance.container = originalContainer
+  })
+
+  test('initButtonListeners should return early if container is null', () => {
+    if (!pageReorderInstance) throw new Error()
+    const addEventSpy = jest.spyOn(
+      /** @type {HTMLOListElement} */ (pageReorderInstance.container),
+      'addEventListener'
+    )
+    const originalInstanceContainer = pageReorderInstance.container
+    pageReorderInstance.container = null
+    pageReorderInstance.initButtonListeners()
+    expect(addEventSpy).not.toHaveBeenCalled()
+    pageReorderInstance.container = originalInstanceContainer
   })
 
   describe('handleSortableEnd', () => {
@@ -277,6 +341,124 @@ describe('PageReorder Class', () => {
       )
       expect(mockEvt.item.setAttribute).toHaveBeenCalledWith('tabindex', '-1')
       expect(focusSpy).toHaveBeenCalled()
+    })
+
+    test('should handle onEnd when newIndex is undefined (e.g. drag cancelled)', () => {
+      const itemToInteractWith = container?.children[1]
+      if (!(itemToInteractWith instanceof HTMLElement)) {
+        throw new Error()
+      }
+
+      const mockEvt = {
+        item: itemToInteractWith,
+        newIndex: undefined,
+        oldIndex: 1
+      }
+      const mockInstance = /** @type {any} */ (Sortable)._getMockInstance()
+
+      if (!pageReorderInstance) {
+        throw new Error()
+      }
+
+      const updateVisualsSpy = jest.spyOn(pageReorderInstance, 'updateVisuals')
+      const updateMoveButtonsSpy = jest.spyOn(
+        pageReorderInstance,
+        'updateMoveButtons'
+      )
+      const updateHiddenDataSpy = jest.spyOn(
+        pageReorderInstance,
+        'updateHiddenPageOrderData'
+      )
+      const announceReorderSpy = jest.spyOn(
+        pageReorderInstance,
+        'announceReorder'
+      )
+      const setAttributeSpy = jest.spyOn(itemToInteractWith, 'setAttribute')
+      const itemFocusSpy = jest.spyOn(itemToInteractWith, 'focus')
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      mockInstance._onEndHandler(mockEvt)
+
+      expect(updateVisualsSpy).toHaveBeenCalled()
+      expect(updateMoveButtonsSpy).toHaveBeenCalled()
+      expect(updateHiddenDataSpy).toHaveBeenCalled()
+      expect(announceReorderSpy).not.toHaveBeenCalled()
+      expect(setAttributeSpy).toHaveBeenCalledWith('tabindex', '-1')
+      expect(itemFocusSpy).toHaveBeenCalled()
+
+      expect(
+        itemToInteractWith.classList.contains('pages-reorder-panel-focus')
+      ).toBe(true)
+    })
+
+    test('should not throw if container is null during querySelectorAllHelper call', () => {
+      if (!pageReorderInstance) throw new Error('Test setup')
+      const mockEvt = { item: document.createElement('li'), newIndex: 0 }
+      const originalContainer = pageReorderInstance.container
+      pageReorderInstance.container = null
+      const panelFocusClass = pageReorderInstance.panelFocusClass
+      const item = mockEvt.item
+      const addClassSpy = jest.spyOn(item.classList, 'add')
+
+      expect(() =>
+        pageReorderInstance?.handleSortableEnd(
+          /** @type {Sortable.SortableEvent} */ (/** @type {any} */ (mockEvt))
+        )
+      ).not.toThrow()
+
+      expect(addClassSpy).toHaveBeenCalledWith(panelFocusClass)
+      pageReorderInstance.container = originalContainer
+    })
+
+    test('should not throw if container is null during querySelectorAll call in else block', () => {
+      if (!pageReorderInstance) throw new Error('Test setup')
+      const mockEvt = {
+        item: document.createElement('li'),
+        newIndex: undefined
+      }
+      const originalContainer = pageReorderInstance.container
+      pageReorderInstance.container = null
+      const panelFocusClass = pageReorderInstance.panelFocusClass
+      const item = mockEvt.item
+      const addClassSpy = jest.spyOn(item.classList, 'add')
+
+      expect(() =>
+        pageReorderInstance?.handleSortableEnd(
+          /** @type {Sortable.SortableEvent} */ (/** @type {any} */ (mockEvt))
+        )
+      ).not.toThrow()
+
+      expect(addClassSpy).toHaveBeenCalledWith(panelFocusClass)
+      pageReorderInstance.container = originalContainer
+    })
+
+    test('should do nothing if movedItem is not an HTMLElement', () => {
+      if (!pageReorderInstance) throw new Error('Test setup')
+      const mockNode = document.createTextNode('text')
+      const mockEvt = {
+        item: mockNode,
+        newIndex: 0,
+        oldIndex: 1
+      }
+      const mockSorteableInstance = /** @type {any} */ (
+        Sortable
+      )._getMockInstance()
+      const updateVisualsSpy = jest.spyOn(pageReorderInstance, 'updateVisuals')
+
+      const announceReorderSpy = jest
+        .spyOn(pageReorderInstance, 'announceReorder')
+        .mockImplementation(() => undefined)
+      const focusIfExistsSpy = jest.spyOn(PageReorderModule, 'focusIfExists')
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      mockSorteableInstance._onEndHandler(mockEvt)
+
+      expect(updateVisualsSpy).toHaveBeenCalled()
+      expect(announceReorderSpy).toHaveBeenCalled()
+      expect(focusIfExistsSpy).not.toHaveBeenCalled()
+
+      announceReorderSpy.mockRestore()
+      focusIfExistsSpy.mockRestore()
     })
   })
 
@@ -355,6 +537,189 @@ describe('PageReorder Class', () => {
       expect(announceReorderSpy).not.toHaveBeenCalled()
       expect(mockFocusIfExists).not.toHaveBeenCalled()
     })
+
+    test('should do nothing if event target is not an Element', () => {
+      if (!pageReorderInstance || !container) throw new Error('Setup fail')
+      const moveItemInDomSpy = jest.spyOn(pageReorderInstance, 'moveItemInDom')
+      const mockEvent = {
+        target: document.createTextNode('text'), // Not an element
+        preventDefault: jest.fn()
+      }
+      pageReorderInstance.handleButtonClick(
+        /** @type {MouseEvent} */ (/** @type {any} */ (mockEvent))
+      )
+      expect(mockEvent.preventDefault).not.toHaveBeenCalled()
+      expect(moveItemInDomSpy).not.toHaveBeenCalled()
+    })
+
+    test('should do nothing if button is not an HTMLButtonElement (e.g., closest returns null)', () => {
+      if (!pageReorderInstance || !container) throw new Error('Setup fail')
+      const moveItemInDomSpy = jest.spyOn(pageReorderInstance, 'moveItemInDom')
+      // Simulate a click on an element that won't find a button with .reorder-button-js
+      const nonButtonTarget = container.querySelector('.page-title') // Click on title
+      if (!(nonButtonTarget instanceof HTMLElement))
+        throw new Error('Setup fail')
+
+      const mockEvent = {
+        target: nonButtonTarget,
+        preventDefault: jest.fn()
+      }
+      pageReorderInstance.handleButtonClick(
+        /** @type {MouseEvent} */ (/** @type {any} */ (mockEvent))
+      )
+      expect(mockEvent.preventDefault).not.toHaveBeenCalled()
+      expect(moveItemInDomSpy).not.toHaveBeenCalled()
+    })
+
+    test('should do nothing if itemToMove is not HTMLLIElement', () => {
+      if (!pageReorderInstance || !container) throw new Error('Setup fail')
+      const moveItemInDomSpy = jest.spyOn(pageReorderInstance, 'moveItemInDom')
+
+      const buttonOutsideLi = document.createElement('button')
+      buttonOutsideLi.classList.add('reorder-button-js')
+      container.appendChild(buttonOutsideLi)
+
+      const mockEvent = {
+        target: buttonOutsideLi,
+        preventDefault: jest.fn()
+      }
+      pageReorderInstance.handleButtonClick(
+        /** @type {MouseEvent} */ (/** @type {any} */ (mockEvent))
+      )
+      expect(mockEvent.preventDefault).toHaveBeenCalled()
+      expect(moveItemInDomSpy).not.toHaveBeenCalled()
+      container.removeChild(buttonOutsideLi)
+    })
+
+    test('should do nothing if container is null when itemToMove is checked', () => {
+      if (!pageReorderInstance || !container) throw new Error()
+      const moveItemInDomSpy = jest.spyOn(pageReorderInstance, 'moveItemInDom')
+      const upButton = container.querySelector(
+        '[data-id="page2"] .js-reorderable-list-up'
+      )
+      if (!(upButton instanceof HTMLButtonElement)) throw new Error()
+
+      const originalContainer = pageReorderInstance.container
+      pageReorderInstance.container = null
+
+      const mockEvent = { target: upButton, preventDefault: jest.fn() }
+      pageReorderInstance.handleButtonClick(
+        /** @type {MouseEvent} */ (/** @type {any} */ (mockEvent))
+      )
+      expect(mockEvent.preventDefault).toHaveBeenCalled()
+      expect(moveItemInDomSpy).not.toHaveBeenCalled()
+      pageReorderInstance.container = originalContainer
+    })
+  })
+
+  describe('focusAfterMove scenarios via handleButtonClick', () => {
+    beforeEach(() => {
+      setupHTML()
+      container = document.getElementById('pages-container')
+      if (container instanceof HTMLOListElement) {
+        pageReorderInstance = initPageReorder(container)
+      } else {
+        throw new Error()
+      }
+      jest.clearAllMocks()
+    })
+
+    afterEach(() => {
+      jest.restoreAllMocks()
+    })
+
+    test('Case 1: Up button clicked, Up button on moved item focusable', () => {
+      if (!container || !pageReorderInstance) throw new Error()
+      const itemToMove = /** @type {HTMLLIElement} */ (
+        container.querySelector('[data-id="page3"]') // Item 3 moves to pos 2
+      )
+      const upButton = /** @type {HTMLButtonElement | null} */ (
+        itemToMove.querySelector('.js-reorderable-list-up')
+      )
+      if (!upButton) throw new Error()
+
+      const focusSpy = jest.spyOn(upButton, 'focus')
+
+      upButton.click()
+
+      expect(focusSpy).toHaveBeenCalledTimes(1)
+    })
+
+    test('Case 2: Up button clicked, Up button hidden, Down button focusable', () => {
+      if (!container || !pageReorderInstance) throw new Error()
+      const itemToMove = /** @type {HTMLLIElement} */ (
+        container.querySelector('[data-id="page2"]') // Item 2 moves to pos 1
+      )
+      const upButton = /** @type {HTMLButtonElement | null} */ (
+        itemToMove.querySelector('.js-reorderable-list-up')
+      )
+      const downButton = /** @type {HTMLButtonElement | null} */ (
+        itemToMove.querySelector('.js-reorderable-list-down')
+      )
+      if (!upButton || !downButton) throw new Error()
+
+      const focusSpy = jest.spyOn(downButton, 'focus')
+
+      upButton.click()
+
+      expect(focusSpy).toHaveBeenCalledTimes(1)
+    })
+
+    test('Case 3: Down button clicked, Down button on moved item focusable', () => {
+      if (!container || !pageReorderInstance) throw new Error()
+      const itemToMove = /** @type {HTMLLIElement} */ (
+        container.querySelector('[data-id="page1"]') // Item 1 moves to pos 2
+      )
+      const downButton = /** @type {HTMLButtonElement | null} */ (
+        itemToMove.querySelector('.js-reorderable-list-down')
+      )
+      if (!downButton) throw new Error()
+
+      const focusSpy = jest.spyOn(downButton, 'focus')
+
+      downButton.click()
+
+      expect(focusSpy).toHaveBeenCalledTimes(1)
+    })
+
+    test('Case 4: Down button clicked, Down button hidden, Up button focusable', () => {
+      if (!container || !pageReorderInstance) throw new Error()
+      const itemToMove = /** @type {HTMLLIElement} */ (
+        container.querySelector('[data-id="page2"]') // Item 2 moves to pos 3
+      )
+      const downButton = /** @type {HTMLButtonElement | null} */ (
+        itemToMove.querySelector('.js-reorderable-list-down')
+      )
+      const upButton = /** @type {HTMLButtonElement | null} */ (
+        itemToMove.querySelector('.js-reorderable-list-up')
+      )
+      if (!upButton || !downButton) throw new Error()
+
+      const focusSpy = jest.spyOn(upButton, 'focus')
+
+      downButton.click()
+
+      expect(focusSpy).toHaveBeenCalledTimes(1)
+    })
+
+    test('Case 5 (Else): Moved item focused if its buttons are missing/unfocusable', () => {
+      if (!pageReorderInstance) throw new Error()
+      const movedItemWithNoButtons = document.createElement('li')
+      movedItemWithNoButtons.dataset.id = 'special'
+      movedItemWithNoButtons.setAttribute('tabindex', '-1')
+      document.body.appendChild(movedItemWithNoButtons)
+
+      const focusSpy = jest.spyOn(movedItemWithNoButtons, 'focus')
+
+      pageReorderInstance.focusAfterMove(movedItemWithNoButtons, true)
+      expect(focusSpy).toHaveBeenCalledTimes(1)
+
+      focusSpy.mockClear()
+      pageReorderInstance.focusAfterMove(movedItemWithNoButtons, false)
+      expect(focusSpy).toHaveBeenCalledTimes(1)
+
+      document.body.removeChild(movedItemWithNoButtons)
+    })
   })
 
   test('updateVisuals should update page numbers and aria-labels', () => {
@@ -385,6 +750,58 @@ describe('PageReorder Class', () => {
     expect(downButton2?.getAttribute('aria-label')).toBe(
       'Button, Move page: Down, Page 2 of 3: Page Two Title'
     )
+  })
+
+  test('updateVisuals should return early if container is null', () => {
+    if (!pageReorderInstance) throw new Error('Setup fail')
+    const querySelectorAllSpy = jest.spyOn(
+      PageReorderModule,
+      'querySelectorAllHelper'
+    )
+    const originalContainer = pageReorderInstance.container
+    pageReorderInstance.container = null
+    pageReorderInstance.updateVisuals()
+    expect(querySelectorAllSpy).not.toHaveBeenCalled()
+    pageReorderInstance.container = originalContainer
+    querySelectorAllSpy.mockRestore()
+  })
+
+  test('updateVisuals should handle item missing page-number element', () => {
+    if (!pageReorderInstance || !container) throw new Error()
+    const firstItem = /** @type {HTMLElement} */ (container.children[0])
+    const numberElement = firstItem.querySelector('.page-number')
+    const titleElement = firstItem.querySelector('.page-title')
+    const originalTitle = titleElement?.textContent // Should be "Page One Title"
+
+    if (numberElement) {
+      numberElement.remove() // Remove the page number element
+    }
+
+    pageReorderInstance.updateVisuals() // Call the function
+
+    // Check that it didn't throw and other things are still updated (e.g., aria-label for buttons)
+    const upButton1 = firstItem.querySelector('.js-reorderable-list-up')
+    expect(upButton1?.getAttribute('aria-label')).toContain(originalTitle)
+    // Check that the (now non-existent) numberElement was not attempted to be updated
+    // No direct assertion here, but lack of error is key.
+    // And the page number in aria-label should still be correct based on index
+    // Update the regex to match the actual title from setupHTML
+    expect(upButton1?.getAttribute('aria-label')).toMatch(
+      /Page 1 of \d+: Page One Title/ // Corrected Title
+    )
+
+    // Restore for other tests if necessary by re-running setupHTML or adding it back
+    // Re-setting up HTML is cleaner than trying to add the element back perfectly
+    setupHTML()
+    container = document.getElementById('pages-container')
+    if (container instanceof HTMLOListElement) {
+      pageReorderInstance = initPageReorder(container)
+    } else {
+      // Handle case where container might not be found after reset, maybe throw?
+      throw new Error(
+        'Failed to re-initialize container after setupHTML reset.'
+      )
+    }
   })
 
   test('updateMoveButtons should show/hide buttons correctly', () => {
@@ -423,6 +840,20 @@ describe('PageReorder Class', () => {
       'inline-block'
     )
     expect(/** @type {HTMLElement} */ (item3Down)?.style.display).toBe('none')
+  })
+
+  test('updateMoveButtons should return early if container is null', () => {
+    if (!pageReorderInstance) throw new Error('Setup fail')
+    const querySelectorAllSpy = jest.spyOn(
+      PageReorderModule,
+      'querySelectorAllHelper'
+    )
+    const originalContainer = pageReorderInstance.container
+    pageReorderInstance.container = null
+    pageReorderInstance.updateMoveButtons()
+    expect(querySelectorAllSpy).not.toHaveBeenCalled()
+    pageReorderInstance.container = originalContainer // Restore
+    querySelectorAllSpy.mockRestore()
   })
 
   test('updateMoveButtons should hide buttons on fixed item', () => {
@@ -476,6 +907,33 @@ describe('PageReorder Class', () => {
     expect(pageOrderInput.value).toBe('page2,page1,page3')
   })
 
+  test('updateHiddenPageOrderData should return early if container is null', () => {
+    if (!pageReorderInstance || !pageOrderInput) throw new Error('Setup fail')
+    const originalValue = pageOrderInput.value
+    const originalContainer = pageReorderInstance.container
+    pageReorderInstance.container = null
+    pageReorderInstance.updateHiddenPageOrderData()
+    expect(pageOrderInput.value).toBe(originalValue)
+    pageReorderInstance.container = originalContainer
+  })
+
+  test('updateHiddenPageOrderData should return early if pageOrderInput is null', () => {
+    if (!pageReorderInstance || !pageOrderInput) throw new Error('Setup fail')
+    const originalContainer = pageReorderInstance.container
+    const querySelectorAllSpy = jest.spyOn(
+      PageReorderModule,
+      'querySelectorAllHelper'
+    )
+
+    const originalPageOrderInput = pageReorderInstance.pageOrderInput
+    pageReorderInstance.pageOrderInput = null
+    pageReorderInstance.updateHiddenPageOrderData()
+    expect(querySelectorAllSpy).not.toHaveBeenCalled()
+    pageReorderInstance.pageOrderInput = originalPageOrderInput
+    pageReorderInstance.container = originalContainer
+    querySelectorAllSpy.mockRestore()
+  })
+
   test('announceReorder should update live region and clear it later', () => {
     const item = container?.querySelector('[data-id="page2"]')
     if (!item) {
@@ -490,6 +948,149 @@ describe('PageReorder Class', () => {
 
     jest.advanceTimersByTime(5100)
     expect(announcementRegion?.textContent).toBe('')
+  })
+
+  test('announceReorder should return early if announcementRegion is null', () => {
+    if (!pageReorderInstance || !container || !announcementRegion)
+      throw new Error('Setup fail')
+    const item = container.querySelector('[data-id="page2"]')
+    if (!item) throw new Error('Setup fail')
+
+    const originalText = announcementRegion.textContent
+    const originalRegion = pageReorderInstance.announcementRegion
+    pageReorderInstance.announcementRegion = null
+
+    jest.spyOn(global, 'clearTimeout')
+
+    // @ts-expect-error TS doesn't recognise clearTimeout as a Jest mock here, but it is at runtime
+    pageReorderInstance.announceReorder(item, 1)
+    expect(announcementRegion.textContent).toBe(originalText)
+    expect(clearTimeout).not.toHaveBeenCalled()
+
+    pageReorderInstance.announcementRegion = originalRegion
+    jest.restoreAllMocks()
+  })
+
+  test('announceReorder should return early if container is null', () => {
+    if (!pageReorderInstance || !announcementRegion)
+      throw new Error('Setup fail')
+    const item = document.createElement('li')
+    item.innerHTML = '<h2 class="page-title">Test</h2>'
+
+    const originalText = announcementRegion.textContent
+    const originalContainer = pageReorderInstance.container
+    pageReorderInstance.container = null
+
+    jest.spyOn(global, 'clearTimeout')
+
+    pageReorderInstance.announceReorder(item, 1)
+    expect(announcementRegion.textContent).toBe(originalText)
+    expect(clearTimeout).not.toHaveBeenCalled()
+
+    pageReorderInstance.container = originalContainer
+    jest.restoreAllMocks()
+  })
+
+  describe('findMoveTarget', () => {
+    test('should return null target and insertBeforeItem when trying to move first item up', () => {
+      if (!container || !pageReorderInstance) throw new Error('Setup failed')
+      const firstItem = /** @type {HTMLElement} */ (container.children[0])
+      const { targetItem, insertBeforeItem } =
+        pageReorderInstance.findMoveTarget(firstItem, true)
+      expect(targetItem).toBeNull()
+      expect(insertBeforeItem).toBeNull()
+    })
+
+    test('should return null target and insertBeforeItem when trying to move last item down', () => {
+      if (!container || !pageReorderInstance) throw new Error('Setup failed')
+      const items = container.children
+      const lastItem = /** @type {HTMLElement} */ (items[items.length - 1])
+      const { targetItem, insertBeforeItem } =
+        pageReorderInstance.findMoveTarget(lastItem, false)
+      expect(targetItem).toBeNull()
+      expect(insertBeforeItem).toBeNull()
+    })
+
+    test('should correctly identify target and insertBeforeItem when moving item up', () => {
+      if (!container || !pageReorderInstance) throw new Error('Setup failed')
+      const secondItem = /** @type {HTMLElement} */ (container.children[1]) // page2
+      const firstItem = /** @type {HTMLElement} */ (container.children[0]) // page1
+      const { targetItem, insertBeforeItem } =
+        pageReorderInstance.findMoveTarget(secondItem, true) // Move page2 up
+      expect(targetItem).toBe(firstItem)
+      expect(insertBeforeItem).toBe(firstItem)
+    })
+
+    test('should correctly identify target and insertBeforeItem when moving item down', () => {
+      if (!container || !pageReorderInstance) throw new Error('Setup failed')
+      const firstItem = /** @type {HTMLElement} */ (container.children[0]) // page1
+      const secondItem = /** @type {HTMLElement} */ (container.children[1]) // page2
+      const thirdItem = /** @type {HTMLElement} */ (container.children[2]) // page3
+      const { targetItem, insertBeforeItem } =
+        pageReorderInstance.findMoveTarget(firstItem, false) // Move page1 down
+      expect(targetItem).toBe(secondItem)
+      expect(insertBeforeItem).toBe(thirdItem)
+    })
+
+    describe('with fixed item at the end', () => {
+      beforeEach(() => {
+        setupHTML(true)
+        container = document.getElementById('pages-container')
+        if (container instanceof HTMLOListElement) {
+          pageReorderInstance = initPageReorder(container)
+        } else {
+          throw new Error()
+        }
+      })
+
+      test('should return null when trying to move last movable item down (towards fixed item)', () => {
+        if (!container || !pageReorderInstance) throw new Error()
+
+        const lastMovableItem = /** @type {HTMLElement} */ (
+          container.querySelector('[data-id="page3"]')
+        )
+        const { targetItem, insertBeforeItem } =
+          pageReorderInstance.findMoveTarget(lastMovableItem, false)
+
+        expect(targetItem).toBeNull()
+        expect(insertBeforeItem).toBeNull()
+      })
+
+      test('should correctly find target when moving item up, skipping fixed item', () => {
+        if (!container || !pageReorderInstance) throw new Error()
+
+        const page2Item = /** @type {HTMLElement} */ (
+          container.querySelector('[data-id="page2"]')
+        )
+        const page1Item = /** @type {HTMLElement} */ (
+          container.querySelector('[data-id="page1"]')
+        )
+
+        const { targetItem, insertBeforeItem } =
+          pageReorderInstance.findMoveTarget(page2Item, true)
+        expect(targetItem).toBe(page1Item)
+        expect(insertBeforeItem).toBe(page1Item)
+      })
+
+      test('should correctly find target when moving item down, with fixed item further down', () => {
+        if (!container || !pageReorderInstance) throw new Error()
+
+        const page1Item = /** @type {HTMLElement} */ (
+          container.querySelector('[data-id="page1"]')
+        )
+        const page2Item = /** @type {HTMLElement} */ (
+          container.querySelector('[data-id="page2"]')
+        )
+        const page3Item = /** @type {HTMLElement} */ (
+          container.querySelector('[data-id="page3"]')
+        )
+
+        const { targetItem, insertBeforeItem } =
+          pageReorderInstance.findMoveTarget(page1Item, false) // Moving page1 down
+        expect(targetItem).toBe(page2Item) // The item to move past
+        expect(insertBeforeItem).toBe(page3Item) // Insert before page3
+      })
+    })
   })
 })
 
@@ -660,5 +1261,43 @@ describe('Helper Functions', () => {
       const svgElement = document.getElementById('mySvg')
       expect(() => focusIfExists(svgElement)).not.toThrow()
     })
+  })
+})
+
+describe('Module Initialisation', () => {
+  /**
+   * @type {jest.SpyInstance<PageReorder | null, [container: Element], any>}
+   */
+  let initPageReorderSpy
+
+  beforeEach(() => {
+    initPageReorderSpy = jest.spyOn(PageReorderModule, 'initPageReorder')
+    document.body.innerHTML = ''
+  })
+
+  afterEach(() => {
+    initPageReorderSpy.mockRestore()
+  })
+
+  test('initPageReorder (module) should not initialize if container is not HTMLElement', () => {
+    const notAnElement = document.createTextNode('text')
+    // @ts-expect-error testing invalid type
+    const result = PageReorderModule.initPageReorder(notAnElement)
+    expect(result).toBeNull()
+  })
+
+  test('initPageReorder (module) should not initialize if data-module is incorrect', () => {
+    const div = document.createElement('div')
+    div.dataset.module = 'wrong-module'
+    document.body.appendChild(div)
+    const result = PageReorderModule.initPageReorder(div)
+    expect(result).toBeNull()
+  })
+
+  test('initPageReorder (module) should not initialize if data-module is missing', () => {
+    const div = document.createElement('div')
+    document.body.appendChild(div)
+    const result = PageReorderModule.initPageReorder(div)
+    expect(result).toBeNull()
   })
 })
