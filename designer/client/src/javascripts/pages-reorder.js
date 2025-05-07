@@ -27,13 +27,13 @@ export function querySelectorAllHelper(rootElement, selector) {
  * @param {Element | null} elem
  */
 export function focusIfExists(elem) {
-  if (elem instanceof HTMLElement) {
-    const style = window.getComputedStyle(elem)
-    if (style.display !== 'none' && style.visibility !== 'hidden') {
-      if (typeof elem.focus === 'function') {
-        elem.focus()
-      }
-    }
+  if (
+    elem instanceof HTMLElement &&
+    typeof elem.focus === 'function' &&
+    window.getComputedStyle(elem).display !== 'none' &&
+    window.getComputedStyle(elem).visibility !== 'hidden'
+  ) {
+    elem.focus()
   }
 }
 
@@ -54,10 +54,16 @@ export class PageReorder {
   jsButtonSelector = '.reorder-button-js'
   /** @type {string} */
   noJsButtonSelector = '.reorder-button-no-js'
+  /** @type {string} */
+  panelFocusClass = 'pages-reorder-panel-focus'
   /** @type {Sortable | null} */
   sortableInstance = null
   /** @type {number | undefined} */
   announceTimeout = undefined
+  /** @type {number} */
+  announceDisplayTimeMs = 150
+  /** @type {number} */
+  announceClearTimeMs = 5000
 
   /**
    * @param {Element} containerElement
@@ -82,7 +88,9 @@ export class PageReorder {
   }
 
   init() {
-    if (!this.container) return
+    if (!this.container) {
+      return
+    }
 
     this.container.classList.add('js-enabled')
 
@@ -94,7 +102,10 @@ export class PageReorder {
   }
 
   initSortable() {
-    if (!this.container) return
+    if (!this.container) {
+      return
+    }
+
     this.sortableInstance = Sortable.create(this.container, {
       animation: 150,
       ghostClass: 'sortable-ghost',
@@ -108,7 +119,10 @@ export class PageReorder {
   }
 
   initButtonListeners() {
-    if (!this.container) return
+    if (!this.container) {
+      return
+    }
+
     this.container.addEventListener('click', (event) =>
       this.handleButtonClick(event)
     )
@@ -133,14 +147,14 @@ export class PageReorder {
         if (this.container) {
           const currentlyFocusedItems = querySelectorAllHelper(
             this.container,
-            '.pages-reorder-panel-focus'
+            `.${this.panelFocusClass}`
           )
           currentlyFocusedItems.forEach((item) => {
-            item.classList.remove('pages-reorder-panel-focus')
+            item.classList.remove(this.panelFocusClass)
           })
         }
 
-        movedItem.classList.add('pages-reorder-panel-focus')
+        movedItem.classList.add(this.panelFocusClass)
       }
     } else {
       this.updateVisuals()
@@ -153,11 +167,11 @@ export class PageReorder {
 
         if (this.container) {
           this.container
-            .querySelectorAll('.pages-reorder-panel-focus')
-            .forEach((el) => el.classList.remove('pages-reorder-panel-focus'))
+            .querySelectorAll(`.${this.panelFocusClass}`)
+            .forEach((el) => el.classList.remove(this.panelFocusClass))
         }
 
-        movedItem.classList.add('pages-reorder-panel-focus')
+        movedItem.classList.add(this.panelFocusClass)
       }
     }
   }
@@ -172,22 +186,25 @@ export class PageReorder {
     let targetItem = moveUp
       ? itemToMove.previousElementSibling
       : itemToMove.nextElementSibling
+
     while (targetItem?.matches(this.checkAnswersItemSelector)) {
       targetItem = moveUp
         ? targetItem.previousElementSibling
         : targetItem.nextElementSibling
     }
 
-    if (!targetItem && !moveUp)
+    if (!targetItem && !moveUp) {
       return { targetItem: null, insertBeforeItem: null }
-    if (!targetItem && moveUp)
+    }
+    if (!targetItem && moveUp) {
       return { targetItem: null, insertBeforeItem: null }
+    }
 
     let insertBeforeItem = null
     if (moveUp) {
       insertBeforeItem = targetItem
-    } else if (targetItem) {
-      insertBeforeItem = targetItem.nextElementSibling
+    } else {
+      insertBeforeItem = targetItem?.nextElementSibling ?? null
     }
 
     return { targetItem, insertBeforeItem }
@@ -198,59 +215,165 @@ export class PageReorder {
    * @param {MouseEvent} event
    */
   handleButtonClick(event) {
-    if (!(event.target instanceof Element)) return
+    if (!(event.target instanceof Element)) {
+      return
+    }
 
     const button = event.target.closest(`button${this.jsButtonSelector}`)
-    if (!(button instanceof HTMLButtonElement)) return
+    if (!(button instanceof HTMLButtonElement)) {
+      return
+    }
 
     event.preventDefault()
 
     const itemToMove = button.closest(this.listItemSelector)
-    if (!(itemToMove instanceof HTMLLIElement) || !this.container) return
+    if (!(itemToMove instanceof HTMLLIElement) || !this.container) {
+      return
+    }
 
-    const isUpButton = button.classList.contains('js-reorderable-list-up')
+    const isUpButtonOriginallyClicked = button.classList.contains(
+      'js-reorderable-list-up'
+    )
 
     const { targetItem, insertBeforeItem } = this.findMoveTarget(
       itemToMove,
-      isUpButton
+      isUpButtonOriginallyClicked
     )
 
     if (targetItem && insertBeforeItem !== itemToMove) {
-      if (insertBeforeItem) {
-        this.container.insertBefore(itemToMove, insertBeforeItem)
-      } else {
-        const fixedItem = querySelectorHelper(
-          this.container,
-          this.checkAnswersItemSelector
-        )
-        if (fixedItem) {
-          this.container.insertBefore(itemToMove, fixedItem)
-        } else {
-          this.container.appendChild(itemToMove)
-        }
-      }
+      this.moveItemInDom(itemToMove, insertBeforeItem)
+      this.updatePanelFocus(itemToMove)
 
       this.updateVisuals()
       this.updateMoveButtons()
       this.updateHiddenPageOrderData()
+      this.announceSuccessfulMove(itemToMove)
+      this.focusAfterMove(itemToMove, isUpButtonOriginallyClicked)
+    }
+  }
 
-      const allItems = Array.from(
-        querySelectorAllHelper(this.container, this.listItemSelector)
+  /**
+   * Moves the item in the DOM.
+   * @param {HTMLLIElement} itemToMove
+   * @param {Element | null} insertBeforeItem
+   */
+  moveItemInDom(itemToMove, insertBeforeItem) {
+    if (!this.container) return
+
+    if (insertBeforeItem) {
+      this.container.insertBefore(itemToMove, insertBeforeItem)
+    } else {
+      const fixedItem = querySelectorHelper(
+        this.container,
+        this.checkAnswersItemSelector
       )
-      const newIndex = allItems.indexOf(itemToMove)
-      if (newIndex !== -1) {
-        this.announceReorder(itemToMove, newIndex + 1)
+      if (fixedItem) {
+        this.container.insertBefore(itemToMove, fixedItem)
+      } else {
+        this.container.appendChild(itemToMove)
       }
-      focusIfExists(button)
+    }
+  }
+
+  /**
+   * Updates the focus highlight class on panels.
+   * @param {HTMLLIElement} movedItem
+   */
+  updatePanelFocus(movedItem) {
+    if (!this.container) return
+
+    const currentlyFocusedItemsNodeList = querySelectorAllHelper(
+      this.container,
+      `.${this.panelFocusClass}`
+    )
+    currentlyFocusedItemsNodeList.forEach((item) => {
+      item.classList.remove(this.panelFocusClass)
+    })
+
+    if (movedItem instanceof HTMLElement) {
+      movedItem.classList.add(this.panelFocusClass)
+      movedItem.setAttribute('tabindex', '-1')
+    }
+  }
+
+  /**
+   * Announces the successful move and updates related data.
+   * @param {HTMLLIElement} movedItem
+   */
+  announceSuccessfulMove(movedItem) {
+    if (!this.container) return
+
+    const allItemsNodeList = querySelectorAllHelper(
+      this.container,
+      this.listItemSelector
+    )
+    const allItems = Array.from(allItemsNodeList)
+    const newIndex = allItems.indexOf(movedItem)
+    if (newIndex !== -1) {
+      this.announceReorder(movedItem, newIndex + 1)
+    }
+  }
+
+  /**
+   * Focuses the appropriate element after a move operation.
+   * @param {HTMLLIElement} movedItem
+   * @param {boolean} wasUpButtonClick
+   */
+  focusAfterMove(movedItem, wasUpButtonClick) {
+    const upButtonOnMovedItem = querySelectorHelper(
+      movedItem,
+      `.js-reorderable-list-up`
+    )
+    const downButtonOnMovedItem = querySelectorHelper(
+      movedItem,
+      `.js-reorderable-list-down`
+    )
+
+    let focusedSuccessfully = false
+    if (wasUpButtonClick) {
+      if (
+        upButtonOnMovedItem &&
+        window.getComputedStyle(upButtonOnMovedItem).display !== 'none'
+      ) {
+        focusIfExists(upButtonOnMovedItem)
+        focusedSuccessfully = true
+      } else if (
+        downButtonOnMovedItem &&
+        window.getComputedStyle(downButtonOnMovedItem).display !== 'none'
+      ) {
+        focusIfExists(downButtonOnMovedItem)
+        focusedSuccessfully = true
+      }
+    } else if (
+      downButtonOnMovedItem &&
+      window.getComputedStyle(downButtonOnMovedItem).display !== 'none'
+    ) {
+      focusIfExists(downButtonOnMovedItem)
+      focusedSuccessfully = true
+    } else if (
+      upButtonOnMovedItem &&
+      window.getComputedStyle(upButtonOnMovedItem).display !== 'none'
+    ) {
+      focusIfExists(upButtonOnMovedItem)
+      focusedSuccessfully = true
+    }
+
+    if (!focusedSuccessfully) {
+      focusIfExists(movedItem)
     }
   }
 
   updateVisuals() {
-    if (!this.container) return
+    if (!this.container) {
+      return
+    }
+
     const items = querySelectorAllHelper(this.container, this.listItemSelector)
     const totalItems = items.length
     items.forEach((item, index) => {
-      if (!(item instanceof HTMLElement)) return
+      if (!(item instanceof HTMLElement)) {
+        return
+      }
 
       const numberElement = querySelectorHelper(item, '.page-number')
       if (numberElement) {
@@ -286,7 +409,9 @@ export class PageReorder {
   }
 
   updateMoveButtons() {
-    if (!this.container) return
+    if (!this.container) {
+      return
+    }
 
     const itemsNodeList = querySelectorAllHelper(
       this.container,
@@ -367,15 +492,17 @@ export class PageReorder {
     const currentMovableIndex = movableItems.indexOf(item)
 
     if (upButtonElem) {
-      upButtonElem.style.display = this.shouldShowButton(
+      upButtonElem.style.display =
         currentMovableIndex === 0
-      )
+          ? this.getHideButtonStyle()
+          : this.getShowButtonStyle()
     }
 
     if (downButtonElem) {
-      downButtonElem.style.display = this.shouldShowButton(
+      downButtonElem.style.display =
         currentMovableIndex === movableItemCount - 1
-      )
+          ? this.getHideButtonStyle()
+          : this.getShowButtonStyle()
     }
   }
 
@@ -385,21 +512,35 @@ export class PageReorder {
    * @param {HTMLElement|null} downButton
    */
   hideButtons(upButton, downButton) {
-    if (upButton) upButton.style.display = 'none'
-    if (downButton) downButton.style.display = 'none'
+    if (upButton) {
+      upButton.style.display = this.getHideButtonStyle()
+    }
+
+    if (downButton) {
+      downButton.style.display = this.getHideButtonStyle()
+    }
   }
 
   /**
-   * Determines button display style
-   * @param {boolean} shouldHide
+   * Returns the display style for hiding a button.
    * @returns {string}
    */
-  shouldShowButton(shouldHide) {
-    return shouldHide ? 'none' : 'inline-block'
+  getHideButtonStyle() {
+    return 'none'
+  }
+
+  /**
+   * Returns the display style for showing a button.
+   * @returns {string}
+   */
+  getShowButtonStyle() {
+    return 'inline-block'
   }
 
   updateHiddenPageOrderData() {
-    if (!this.container || !this.pageOrderInput) return
+    if (!this.container || !this.pageOrderInput) {
+      return
+    }
 
     const items = querySelectorAllHelper(this.container, this.listItemSelector)
     /** @type {string[]} */
@@ -422,7 +563,9 @@ export class PageReorder {
    * @param {number} newPosition - The new 1-based position of the item.
    */
   announceReorder(movedItem, newPosition) {
-    if (!this.announcementRegion || !this.container) return
+    if (!this.announcementRegion || !this.container) {
+      return
+    }
 
     const titleElement = querySelectorHelper(movedItem, this.pageTitleSelector)
     const pageTitle = titleElement?.textContent?.trim() ?? 'Item'
@@ -444,19 +587,30 @@ export class PageReorder {
           ) {
             this.announcementRegion.textContent = ''
           }
-        }, 5000)
+        }, this.announceClearTimeMs)
       }
-    }, 150)
+    }, this.announceDisplayTimeMs)
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  const container = querySelectorHelper(document, '#pages-container')
+/**
+ * Initializes the page reorder functionality for matching containers.
+ * @param {Element} container - The container to initialize page reordering on.
+ * @returns {PageReorder|null} The PageReorder instance or null if not applicable.
+ */
+export function initPageReorder(container) {
   if (
     container instanceof HTMLElement &&
     container.dataset.module === 'pages-reorder'
   ) {
-    // eslint-disable-next-line no-new
-    new PageReorder(container)
+    return new PageReorder(container)
+  }
+  return null
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const container = querySelectorHelper(document, '#pages-container')
+  if (container) {
+    initPageReorder(container)
   }
 })
