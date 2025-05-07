@@ -1,12 +1,12 @@
 import { questionDetailsStubPanels } from '~/src/javascripts/preview/__stubs__/question.js'
-import { listsElementToMap } from '~/src/javascripts/preview/list.js'
 import {
-  Radio,
-  RadioEventListeners,
-  RadioQuestionElements
-} from '~/src/javascripts/preview/radio.js'
+  List,
+  ListEventListeners,
+  ListQuestionElements,
+  listsElementToMap
+} from '~/src/javascripts/preview/list.js'
 import { setupPreview } from '~/src/javascripts/preview.js'
-class EmptyRadioQuestionElements extends RadioQuestionElements {
+class EmptyListQuestionElements extends ListQuestionElements {
   get values() {
     // @ts-expect-error - inheritance not working properly in linting
     const baseValues = super.values
@@ -60,10 +60,10 @@ jest.mock(
     '</div>'
 )
 
-describe('radio', () => {
-  const radio1Id = '414d82a3-4cab-416a-bd54-6b86fbd51120'
-  const radio1 = /** @type {ListElement} */ ({
-    id: radio1Id,
+describe('list', () => {
+  const list1Id = '414d82a3-4cab-416a-bd54-6b86fbd51120'
+  const list1 = /** @type {ListElement} */ ({
+    id: list1Id,
     text: 'Treasure Hunting',
     value: 'Treasure Hunting',
     label: {
@@ -71,9 +71,9 @@ describe('radio', () => {
       text: 'Treasure Hunting'
     }
   })
-  const radio2Id = '801385a4-81e6-4171-96c3-6c6727d97f22'
-  const radio2 = /** @type {ListElement} */ ({
-    id: radio2Id,
+  const list2Id = '801385a4-81e6-4171-96c3-6c6727d97f22'
+  const list2 = /** @type {ListElement} */ ({
+    id: list2Id,
     text: 'Rescuing the princess',
     value: 'Rescuing the princess',
     label: {
@@ -81,9 +81,9 @@ describe('radio', () => {
       text: 'Rescuing the princess'
     }
   })
-  const radio3Id = 'e6e3f621-b875-4ca3-a054-cca9149149dd'
-  const radio3 = /** @type {ListElement} */ ({
-    id: radio3Id,
+  const list3Id = 'e6e3f621-b875-4ca3-a054-cca9149149dd'
+  const list3 = /** @type {ListElement} */ ({
+    id: list3Id,
     text: 'Saving a city',
     value: 'Saving a city',
     label: {
@@ -91,9 +91,9 @@ describe('radio', () => {
       text: 'Saving a city'
     }
   })
-  const radio4Id = 'd71b3909-582f-4e90-b6f5-490b89a6eb8f'
-  const radio4 = {
-    id: radio4Id,
+  const list4Id = 'd71b3909-582f-4e90-b6f5-490b89a6eb8f'
+  const list4 = {
+    id: list4Id,
     text: 'Defeating the baron',
     value: 'Defeating the baron',
     label: {
@@ -104,23 +104,23 @@ describe('radio', () => {
   const baronListItemId = 'd71b3909-582f-4e90-b6f5-490b89a6eb8f'
 
   /**
-   * @type {RadioQuestionElements}
+   * @type {ListQuestionElements}
    */
-  let questionElements = new RadioQuestionElements()
+  let questionElements = new ListQuestionElements()
   /**
-   * @type {EmptyRadioQuestionElements}
+   * @type {EmptyListQuestionElements}
    */
   let emptyQuestionElements
 
   beforeEach(() => {
     document.body.innerHTML = questionDetailsStubPanels
-    questionElements = new RadioQuestionElements()
-    emptyQuestionElements = new EmptyRadioQuestionElements()
+    questionElements = new ListQuestionElements()
+    emptyQuestionElements = new EmptyListQuestionElements()
   })
 
   const expectedList = [
     {
-      id: radio1Id,
+      id: list1Id,
       text: 'Treasure Hunting',
       value: 'Treasure Hunting',
       label: {
@@ -129,7 +129,7 @@ describe('radio', () => {
       }
     },
     {
-      id: radio2Id,
+      id: list2Id,
       text: 'Rescuing the princess',
       value: 'Rescuing the princess',
       label: {
@@ -138,7 +138,7 @@ describe('radio', () => {
       }
     },
     {
-      id: radio3Id,
+      id: list3Id,
       text: 'Saving a city',
       value: 'Saving a city',
       label: {
@@ -147,7 +147,7 @@ describe('radio', () => {
       }
     },
     {
-      id: radio4Id,
+      id: list4Id,
       text: 'Defeating the baron',
       value: 'Defeating the baron',
       label: {
@@ -160,15 +160,14 @@ describe('radio', () => {
   describe('integration', () => {
     it('should setup', () => {
       document.body.innerHTML = ''
-      const preview = /** @type {Radio} */ (setupPreview('radiosfield'))
+      const preview = /** @type {List} */ (
+        setupPreview('radiosfield-non-sortable')
+      )
       expect(preview.renderInput.fieldset.legend.text).toBe('Question')
-    })
-    it('test', () => {
-      expect(true).toBe(true)
     })
   })
 
-  describe('RadioQuestionElements', () => {
+  describe('ListQuestionElements', () => {
     it('should get all correct defaults', () => {
       expect(questionElements.values).toEqual({
         question: 'Which quest would you like to pick?',
@@ -177,23 +176,21 @@ describe('radio', () => {
         shortDesc: 'your quest',
         items: expectedList
       })
-      const radioText = /** @type {HTMLInputElement} */ (
+      const listText = /** @type {HTMLInputElement} */ (
         document.getElementById('radioText')
       )
-      expect(RadioQuestionElements.getUpdateData(radioText)).toBeDefined()
-      expect(RadioQuestionElements.getUpdateData(radioText)).not.toBeNull()
+      expect(ListQuestionElements.getUpdateData(listText)).toBeDefined()
+      expect(ListQuestionElements.getUpdateData(listText)).not.toBeNull()
       const listItem = questionElements.listElements[2]
       expect(listItem).toBeDefined()
       listItem.dataset.hint = 'hint 1'
-      expect(RadioQuestionElements.getListElementValues(listItem).hint).toEqual(
-        {
-          text: 'hint 1'
-        }
-      )
+      expect(ListQuestionElements.getListElementValues(listItem).hint).toEqual({
+        text: 'hint 1'
+      })
       const newElement = document.createElement('li')
       newElement.dataset.text = 'A custom adventure'
       newElement.dataset.val = 'A custom adventure'
-      expect(RadioQuestionElements.getListElementValues(newElement)).toEqual({
+      expect(ListQuestionElements.getListElementValues(newElement)).toEqual({
         id: 'new',
         text: 'A custom adventure',
         label: {
@@ -205,17 +202,17 @@ describe('radio', () => {
     })
   })
 
-  describe('RadioEventListeners', () => {
+  describe('ListEventListeners', () => {
     const mockEvent = /** @type {Event} */ ({})
     describe('editPanelListeners', () => {
-      it('should update the Radio class when listeners are called', () => {
-        const preview = /** @type {Radio} */ (Radio.setupPreview())
-        const radioEventListeners = new RadioEventListeners(
+      it('should update the List class when listeners are called', () => {
+        const preview = /** @type {List} */ (List.setupPreview())
+        const listEventListeners = new ListEventListeners(
           preview,
           questionElements,
           questionElements.listElements
         )
-        expect(radioEventListeners.editFieldHasFocus()).toBe(false)
+        expect(listEventListeners.editFieldHasFocus()).toBe(false)
         expect(preview.list[0]).toEqual({
           hint: undefined,
           id: '414d82a3-4cab-416a-bd54-6b86fbd51120',
@@ -234,18 +231,18 @@ describe('radio', () => {
           hintInputListener,
           hintFocusListener,
           hintBlurListener
-        ] = radioEventListeners.editPanelListeners
-        const radioTextTarget = questionElements.listText
-        radioTextTarget.value = 'Extreme Treasure Hunting'
+        ] = listEventListeners.editPanelListeners
+        const listTextTarget = questionElements.listText
+        listTextTarget.value = 'Extreme Treasure Hunting'
         const [, textInputListenerElement] = textInputListener
-        const [, radioTextHighlightHandler] = textFocusListener
-        const [, radioTextBlurHandler] = textBlurListener
-        const [, radioHintInputHandler] = hintInputListener
-        const [, radioHintHighlightHandler] = hintFocusListener
-        const [, radioHintBlurHandler] = hintBlurListener
+        const [, listTextHighlightHandler] = textFocusListener
+        const [, listTextBlurHandler] = textBlurListener
+        const [, listHintInputHandler] = hintInputListener
+        const [, listHintHighlightHandler] = hintFocusListener
+        const [, listHintBlurHandler] = hintBlurListener
 
-        textInputListenerElement(radioTextTarget, mockEvent)
-        radioTextHighlightHandler(radioTextTarget, mockEvent)
+        textInputListenerElement(listTextTarget, mockEvent)
+        listTextHighlightHandler(listTextTarget, mockEvent)
         expect(preview.list[0]).toEqual({
           hint: undefined,
           id: '414d82a3-4cab-416a-bd54-6b86fbd51120',
@@ -256,10 +253,10 @@ describe('radio', () => {
           text: 'Extreme Treasure Hunting',
           value: 'Treasure Hunting'
         })
-        radioTextBlurHandler(radioTextTarget, mockEvent)
-        const radioHint = questionElements.listHint
-        radioHint.value = 'Looking for gold'
-        radioHintInputHandler(radioHint, mockEvent)
+        listTextBlurHandler(listTextTarget, mockEvent)
+        const listHint = questionElements.listHint
+        listHint.value = 'Looking for gold'
+        listHintInputHandler(listHint, mockEvent)
         expect(preview.list[0]).toEqual({
           hint: {
             text: 'Looking for gold',
@@ -273,8 +270,8 @@ describe('radio', () => {
           text: 'Extreme Treasure Hunting',
           value: 'Treasure Hunting'
         })
-        radioHintHighlightHandler(radioHint, mockEvent)
-        radioHintBlurHandler(radioHint, mockEvent)
+        listHintHighlightHandler(listHint, mockEvent)
+        listHintBlurHandler(listHint, mockEvent)
         expect(preview.list[0]).toEqual({
           hint: {
             text: 'Looking for gold',
@@ -291,10 +288,10 @@ describe('radio', () => {
       })
     })
 
-    describe('radioHighlightListeners', () => {
-      it('should update the Radio class when listeners are called', () => {
-        const preview = /** @type {Radio} */ (Radio.setupPreview())
-        const radioEventListeners = new RadioEventListeners(
+    describe('listHighlightListeners', () => {
+      it('should update the List class when listeners are called', () => {
+        const preview = /** @type {List} */ (List.setupPreview())
+        const listEventListeners = new ListEventListeners(
           preview,
           questionElements,
           questionElements.listElements
@@ -311,7 +308,7 @@ describe('radio', () => {
         })
 
         const [mouseOverItem, mouseOutItem] =
-          radioEventListeners.listHighlightListeners
+          listEventListeners.listHighlightListeners
         const listElement = /** @type {HTMLInputElement} */ (
           questionElements.listElements[0]
         )
@@ -346,56 +343,56 @@ describe('radio', () => {
     })
   })
 
-  describe('Radio class', () => {
+  describe('List class', () => {
     it('should update', () => {
-      const preview = Radio.setupPreview()
+      const preview = List.setupPreview()
       expect(preview.afterInput).toEqual({})
     })
 
     it('should delete an element', () => {
-      const radio = new Radio(emptyQuestionElements)
-      radio.push(structuredClone(radio1))
-      expect(radio.list).toEqual([radio1])
-      radio.delete(radio1Id)
-      expect(radio.list).toEqual([])
-      expect(radio.afterInput.afterInputs?.html).toContain('No items added yet')
+      const list = new List(emptyQuestionElements)
+      list.push(structuredClone(list1))
+      expect(list.list).toEqual([list1])
+      list.delete(list1Id)
+      expect(list.list).toEqual([])
+      expect(list.afterInput.afterInputs?.html).toContain('No items added yet')
     })
 
     it('should edit list text', () => {
       const expectedList = [
         {
-          ...radio2,
+          ...list2,
           text: 'Rescuing the princess 👸',
-          label: { ...radio2.label, text: 'Rescuing the princess 👸' }
+          label: { ...list2.label, text: 'Rescuing the princess 👸' }
         }
       ]
-      const radio = new Radio(emptyQuestionElements)
-      radio.push(structuredClone(radio2))
-      radio.updateText(radio2Id, 'Rescuing the princess 👸')
-      expect(radio.list).toEqual(expectedList)
+      const list = new List(emptyQuestionElements)
+      list.push(structuredClone(list2))
+      list.updateText(list2Id, 'Rescuing the princess 👸')
+      expect(list.list).toEqual(expectedList)
     })
 
     it('should add an element', () => {
-      const radio = new Radio(emptyQuestionElements)
-      radio.push(structuredClone(radio1))
-      expect(radio.list).toEqual([radio1])
+      const list = new List(emptyQuestionElements)
+      list.push(structuredClone(list1))
+      expect(list.list).toEqual([list1])
     })
 
     it('should edit list value', () => {
-      const radio = new Radio(emptyQuestionElements)
-      radio.push(structuredClone(radio2))
-      radio.updateValue(radio2Id, 'princess-rescuing')
-      expect(radio.list).toEqual([{ ...radio2, value: 'princess-rescuing' }])
+      const list = new List(emptyQuestionElements)
+      list.push(structuredClone(list2))
+      list.updateValue(list2Id, 'princess-rescuing')
+      expect(list.list).toEqual([{ ...list2, value: 'princess-rescuing' }])
     })
 
     it('should edit hint', () => {
       const expectedHint = 'When you want to rescue a princess'
-      const radio = new Radio(emptyQuestionElements)
-      radio.push(structuredClone(radio2))
-      radio.updateHint(radio2Id, expectedHint)
-      expect(radio.list).toEqual([
+      const list = new List(emptyQuestionElements)
+      list.push(structuredClone(list2))
+      list.updateHint(list2Id, expectedHint)
+      expect(list.list).toEqual([
         {
-          ...radio2,
+          ...list2,
           hint: {
             classes: '',
             text: 'When you want to rescue a princess'
@@ -405,14 +402,14 @@ describe('radio', () => {
     })
 
     it('should return the correct model', () => {
-      const radio = new Radio(emptyQuestionElements)
-      radio.push(radio1)
-      radio.push(radio2)
-      radio.push(radio3)
-      radio.push(radio4)
-      expect(radio.renderInput).toEqual({
-        id: 'radioInput',
-        name: 'radioInputField',
+      const list = new List(emptyQuestionElements)
+      list.push(list1)
+      list.push(list2)
+      list.push(list3)
+      list.push(list4)
+      expect(list.renderInput).toEqual({
+        id: 'listInput',
+        name: 'listInputField',
         fieldset: {
           legend: {
             text: 'Which quest would you like to pick?',
@@ -429,7 +426,7 @@ describe('radio', () => {
     })
 
     it('should highlight', () => {
-      const preview = Radio.setupPreview()
+      const preview = List.setupPreview()
       preview.highlight = `${baronListItemId}-hint`
       expect(preview.list[3]).toMatchObject({
         hint: { text: 'Hint text' }
@@ -437,7 +434,7 @@ describe('radio', () => {
     })
 
     it('should handle edge cases', () => {
-      const preview = /** @type {Radio} */ (Radio.setupPreview())
+      const preview = /** @type {List} */ (List.setupPreview())
       expect(preview.list).toEqual(expectedList)
       preview.updateValue(undefined, 'new-value')
       preview.updateValue('b40e1a4f-9777-463a-a657-83f9da39e69e', 'New Text')
@@ -455,5 +452,4 @@ describe('radio', () => {
 
 /**
  * @import { ListElement } from '@defra/forms-model'
- * @import { QuestionBaseModel } from '~/src/javascripts/preview/question.js'
  */

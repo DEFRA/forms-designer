@@ -4,6 +4,7 @@ import '~/src/views/components/date-input.njk'
 
 import { DateInput } from '~/src/javascripts/preview/date-input.js'
 import { Question } from '~/src/javascripts/preview/question.js'
+import { Radio } from '~/src/javascripts/preview/radio'
 import { RadioSortable } from '~/src/javascripts/preview/radio-sortable'
 import { Textfield } from '~/src/javascripts/preview/textfield.js'
 
@@ -35,6 +36,8 @@ export function setupPreview(questionType) {
     preview = Textfield.setupPreview()
   } else if (questionType === 'datepartsfield') {
     preview = DateInput.setupPreview()
+  } else if (questionType === 'radiosfield-non-sortable') {
+    preview = Radio.setupPreview()
   } else if (questionType === 'radiosfield') {
     preview = RadioSortable.setupPreview()
   } else {

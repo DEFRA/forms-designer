@@ -7,6 +7,7 @@ import {
 import { DateInput } from '~/src/javascripts/preview/date-input'
 import { Question } from '~/src/javascripts/preview/question'
 import { Radio } from '~/src/javascripts/preview/radio'
+import { RadioSortable } from '~/src/javascripts/preview/radio-sortable'
 import { Textfield } from '~/src/javascripts/preview/textfield'
 
 jest.mock('~/src/javascripts/preview/nunjucks.js', () => {
@@ -33,7 +34,11 @@ jest.mock(
 )
 jest.mock(
   '~/src/views/components/radios.njk',
-  () => '<div class="govuk-inset-text"></div>'
+  () =>
+    '<div class="govuk-inset-text"></div>' +
+    '<button id="edit-options-button">Re-order</button>' +
+    '<button id="add-option-button">Add item</button>' +
+    '<div id="options-container"></div'
 )
 
 jest.mock(
@@ -64,9 +69,16 @@ describe('preview', () => {
       expect(res).toBeInstanceOf(DateInput)
     })
 
-    it('should setup preview for Radiosfield', () => {
-      const res = setupPreview('radiosfield')
+    it('should setup preview for Radiosfield-NonSortable', () => {
+      const res = setupPreview('radiosfield-non-sortable')
       expect(res).toBeInstanceOf(Radio)
+    })
+
+    it('should setup preview for Radiosfield', () => {
+      document.body.innerHTML =
+        questionDetailsLeftPanelHTML + questionDetailsPreviewTabsHTML
+      const res = setupPreview('radiosfield')
+      expect(res).toBeInstanceOf(RadioSortable)
     })
 
     it('should setup preview for other', () => {

@@ -8,8 +8,8 @@ const DefaultListConst = {
   TextElementId: 'radioText',
   HintElementId: 'radioHint',
   Template: 'radios.njk',
-  Input: 'radioInput',
-  RenderName: 'radioInputField'
+  Input: 'listInput',
+  RenderName: 'listInputField'
 }
 
 export class ListQuestionElements extends QuestionElements {
