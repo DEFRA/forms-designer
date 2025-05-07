@@ -101,49 +101,49 @@ describe('PageReorder Class', () => {
             </div>
           </li>
           <li class="app-reorderable-list__item" data-id="page2">
-             <div class="govuk-summary-card pages-reorder-panel">
-               <div class="govuk-summary-card__title-wrapper">
-                 <span class="govuk-body page-number">Page 2</span>
-                 <h2 class="govuk-summary-card__title page-title">Page Two Title</h2>
-                 <div class="govuk-button-group">
-                   <button type="submit" name="movement" class="reorder-button-no-js">Up</button>
-                   <button type="submit" name="movement" class="reorder-button-no-js">Down</button>
-                   <button class="app-button govuk-button govuk-button--secondary js-reorderable-list-up reorder-button-js" type="button" style="display: none;">Up</button>
-                   <button class="app-button govuk-button govuk-button--secondary js-reorderable-list-down reorder-button-js" type="button" style="display: none;">Down</button>
-                 </div>
-               </div>
-             </div>
+              <div class="govuk-summary-card pages-reorder-panel">
+                <div class="govuk-summary-card__title-wrapper">
+                  <span class="govuk-body page-number">Page 2</span>
+                  <h2 class="govuk-summary-card__title page-title">Page Two Title</h2>
+                  <div class="govuk-button-group">
+                    <button type="submit" name="movement" class="reorder-button-no-js">Up</button>
+                    <button type="submit" name="movement" class="reorder-button-no-js">Down</button>
+                    <button class="app-button govuk-button govuk-button--secondary js-reorderable-list-up reorder-button-js" type="button" style="display: none;">Up</button>
+                    <button class="app-button govuk-button govuk-button--secondary js-reorderable-list-down reorder-button-js" type="button" style="display: none;">Down</button>
+                  </div>
+                </div>
+              </div>
           </li>
           <li class="app-reorderable-list__item" data-id="page3">
-             <div class="govuk-summary-card pages-reorder-panel">
-               <div class="govuk-summary-card__title-wrapper">
-                 <span class="govuk-body page-number">Page 3</span>
-                 <h2 class="govuk-summary-card__title page-title">Page Three Title</h2>
-                 <div class="govuk-button-group">
-                   <button type="submit" name="movement" class="reorder-button-no-js">Up</button>
-                   <button type="submit" name="movement" class="reorder-button-no-js">Down</button>
-                   <button class="app-button govuk-button govuk-button--secondary js-reorderable-list-up reorder-button-js" type="button" style="display: none;">Up</button>
-                   <button class="app-button govuk-button govuk-button--secondary js-reorderable-list-down reorder-button-js" type="button" style="display: none;">Down</button>
-                 </div>
-               </div>
-             </div>
+              <div class="govuk-summary-card pages-reorder-panel">
+                <div class="govuk-summary-card__title-wrapper">
+                  <span class="govuk-body page-number">Page 3</span>
+                  <h2 class="govuk-summary-card__title page-title">Page Three Title</h2>
+                  <div class="govuk-button-group">
+                    <button type="submit" name="movement" class="reorder-button-no-js">Up</button>
+                    <button type="submit" name="movement" class="reorder-button-no-js">Down</button>
+                    <button class="app-button govuk-button govuk-button--secondary js-reorderable-list-up reorder-button-js" type="button" style="display: none;">Up</button>
+                    <button class="app-button govuk-button govuk-button--secondary js-reorderable-list-down reorder-button-js" type="button" style="display: none;">Down</button>
+                  </div>
+                </div>
+              </div>
           </li>
           ${
             includeFixed
               ? `
           <li class="app-reorderable-list__item check-answers-item" data-id="fixedPage">
-             <div class="govuk-summary-card pages-reorder-panel">
-               <div class="govuk-summary-card__title-wrapper">
-                 <span class="govuk-body page-number">Page 4</span>
-                 <h2 class="govuk-summary-card__title page-title">Check Answers</h2>
-                 <div class="govuk-button-group">
+              <div class="govuk-summary-card pages-reorder-panel">
+                <div class="govuk-summary-card__title-wrapper">
+                  <span class="govuk-body page-number">Page 4</span>
+                  <h2 class="govuk-summary-card__title page-title">Check Answers</h2>
+                  <div class="govuk-button-group">
                     <button type="submit" name="movement" class="reorder-button-no-js" style="visibility: hidden;">Up</button>
                     <button type="submit" name="movement" class="reorder-button-no-js" style="visibility: hidden;">Down</button>
                     <button class="app-button govuk-button govuk-button--secondary js-reorderable-list-up reorder-button-js" type="button" style="display: none;">Up</button>
                     <button class="app-button govuk-button govuk-button--secondary js-reorderable-list-down reorder-button-js" type="button" style="display: none;">Down</button>
-                 </div>
-               </div>
-             </div>
+                  </div>
+                </div>
+              </div>
           </li>
           `
               : ''
