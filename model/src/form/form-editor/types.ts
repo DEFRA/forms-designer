@@ -409,3 +409,20 @@ export interface FormEditorCheckbox {
     value?: string
   }
 }
+
+export interface BaseSettings {
+  question: string
+  hintText: string
+  optional: boolean
+  shortDesc: string
+  items?: ListElement[]
+}
+
+export interface QuestionElements {
+  readonly values: BaseSettings
+  setPreviewHTML(value: string): void
+}
+
+export interface ListElements extends QuestionElements {
+  afterInputsHTML: string
+}

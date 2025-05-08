@@ -1,6 +1,6 @@
 import {
   Question,
-  QuestionElements
+  QuestionDomElements
 } from '~/src/javascripts/preview/question.js'
 
 export class PhoneNumber extends Question {
@@ -11,8 +11,9 @@ export class PhoneNumber extends Question {
    * @returns {PhoneNumber}
    */
   static setupPreview() {
-    const address = new PhoneNumber(new QuestionElements())
-    address.render()
+    const questionElements = new QuestionDomElements()
+    const address = new PhoneNumber(questionElements)
+    address.init(questionElements)
 
     return address
   }

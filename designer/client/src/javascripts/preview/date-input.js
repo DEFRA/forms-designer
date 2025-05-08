@@ -1,6 +1,6 @@
 import {
   Question,
-  QuestionElements
+  QuestionDomElements
 } from '~/src/javascripts/preview/question.js'
 
 export class DateInput extends Question {
@@ -20,9 +20,9 @@ export class DateInput extends Question {
   }
 
   static setupPreview() {
-    const elements = new QuestionElements()
+    const elements = new QuestionDomElements()
     const dateInputField = new DateInput(elements)
-    dateInputField.render()
+    dateInputField.init(elements)
 
     return dateInputField
   }

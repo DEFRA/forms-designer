@@ -1,6 +1,6 @@
 import {
   Question,
-  QuestionElements
+  QuestionDomElements
 } from '~/src/javascripts/preview/question.js'
 
 export class EmailAddress extends Question {
@@ -11,8 +11,9 @@ export class EmailAddress extends Question {
    * @returns {EmailAddress}
    */
   static setupPreview() {
-    const email = new EmailAddress(new QuestionElements())
-    email.render()
+    const questionElements = new QuestionDomElements()
+    const email = new EmailAddress(questionElements)
+    email.init(questionElements)
 
     return email
   }

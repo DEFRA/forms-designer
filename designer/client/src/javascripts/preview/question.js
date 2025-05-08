@@ -1,15 +1,9 @@
 import njk from '~/src/javascripts/preview/nunjucks.js'
 
 /**
- * @typedef BaseSettings
- * @property {string} question -
- * @property {string} hintText -
- * @property {boolean} optional -
- * @property {string} shortDesc -
- * @property {ListElement[]} [items] -
+ * @implements {QuestionElements}
  */
-
-export class QuestionElements {
+export class QuestionDomElements {
   constructor() {
     const questionEl = /** @type {HTMLInputElement | null} */ (
       document.getElementById('question')
@@ -96,7 +90,7 @@ export class QuestionElements {
 export class EventListeners {
   /**
    * @param {Question} question
-   * @param {QuestionElements} baseElements
+   * @param {QuestionDomElements} baseElements
    */
   constructor(question, baseElements) {
     /**
@@ -297,15 +291,6 @@ export class Question {
      * @private
      */
     this._optional = optional
-
-    const listeners = new EventListeners(this, htmlElements)
-    listeners.setupListeners()
-
-    /**
-     * @type {EventListeners}
-     * @protected
-     */
-    this._listeners = listeners
   }
 
   /**
@@ -454,16 +439,28 @@ export class Question {
   }
 
   /**
+   * @param {QuestionDomElements} questionElements
+   * @protected
+   */
+  init(questionElements) {
+    this._listeners = new EventListeners(this, questionElements)
+    this._listeners.setupListeners()
+    this.render()
+  }
+
+  /**
    * @returns {Question}
    */
   static setupPreview() {
-    const question = new Question(new QuestionElements())
-    question.render()
+    const questionElements = new QuestionDomElements()
+    const question = new Question(questionElements)
+
+    question.init(questionElements)
 
     return question
   }
 }
 
 /**
- * @import { ListElement, ListItemReadonly } from '@defra/forms-model'
+ * @import { ListElement, ListItemReadonly, BaseSettings, QuestionElements } from '@defra/forms-model'
  */

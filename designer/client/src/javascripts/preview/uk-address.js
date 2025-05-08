@@ -1,6 +1,6 @@
 import {
   Question,
-  QuestionElements
+  QuestionDomElements
 } from '~/src/javascripts/preview/question.js'
 
 export class UkAddress extends Question {
@@ -11,8 +11,9 @@ export class UkAddress extends Question {
    * @returns {UkAddress}
    */
   static setupPreview() {
-    const address = new UkAddress(new QuestionElements())
-    address.render()
+    const questionElements = new QuestionDomElements()
+    const address = new UkAddress(questionElements)
+    address.init(questionElements)
 
     return address
   }

@@ -3,10 +3,13 @@ import '~/src/views/components/inset.njk'
 import {
   EventListeners,
   Question,
-  QuestionElements
+  QuestionDomElements
 } from '~/src/javascripts/preview/question.js'
 
-export class RadioQuestionElements extends QuestionElements {
+/**
+ * @implements {ListElements}
+ */
+export class RadioQuestionElements extends QuestionDomElements {
   /** @type {HTMLInputElement[]} */
   editLinks
   /** @type {HTMLElement[]} */
@@ -128,8 +131,8 @@ export class RadioEventListeners extends EventListeners {
    */
   constructor(question, radioElements, listElements) {
     super(question, radioElements)
-    this.listElements = listElements
     this._radioElements = radioElements
+    this.listElements = listElements
     this._radioQuestion = question
   }
 
@@ -315,7 +318,7 @@ export function listsElementToMap(listElements) {
 
 export class Radio extends Question {
   _questionTemplate = 'radios.njk'
-  /** @type {RadioQuestionElements} */
+  /** @type {ListElements} */
   _radioElements
 
   /**
@@ -326,20 +329,12 @@ export class Radio extends Question {
   _list
 
   /**
-   * @param {RadioQuestionElements} radioElements
+   * @param {ListElements} listElements
    */
-  constructor(radioElements) {
-    super(radioElements)
-    const listeners = new RadioEventListeners(this, radioElements, [])
-    listeners.setupListeners()
-
-    /**
-     * @type {EventListeners}
-     * @private
-     */
-    this._listeners = listeners
-    this._list = listsElementToMap(radioElements.values.items)
-    this._radioElements = radioElements
+  constructor(listElements) {
+    super(listElements)
+    this._list = listsElementToMap(listElements.values.items)
+    this._radioElements = listElements
   }
 
   get afterInput() {
@@ -487,10 +482,25 @@ export class Radio extends Question {
     }
   }
 
+  /**
+   * @param {RadioQuestionElements} listDomElements
+   */
+  init(listDomElements) {
+    const listeners = new RadioEventListeners(this, listDomElements, [])
+    listeners.setupListeners()
+
+    /**
+     * @type {EventListeners}
+     * @private
+     */
+    this._listeners = listeners
+    this.render()
+  }
+
   static setupPreview() {
     const elements = new RadioQuestionElements()
     const radioField = new Radio(elements)
-    radioField.render()
+    radioField.init(elements)
 
     return radioField
   }
@@ -498,5 +508,5 @@ export class Radio extends Question {
 
 /**
  * @import {ListenerRow} from '~/src/javascripts/preview/question.js'
- * @import { ListElement, ListItemReadonly } from '@defra/forms-model'
+ * @import { ListElement, ListItemReadonly, ListElements } from '@defra/forms-model'
  */
