@@ -3,9 +3,11 @@ import '~/src/views/components/radios.njk'
 import '~/src/views/components/date-input.njk'
 import '~/src/views/components/ukaddressfield.njk'
 import '~/src/views/components/telephonenumberfield.njk'
+import '~/src/views/components/emailaddressfield.njk'
 
 import { Address } from '~/src/javascripts/preview/address.js'
 import { DateInput } from '~/src/javascripts/preview/date-input.js'
+import { Email } from '~/src/javascripts/preview/email.js'
 import { PhoneNumber } from '~/src/javascripts/preview/phoneNumber.js'
 import { Question } from '~/src/javascripts/preview/question.js'
 import { Radio } from '~/src/javascripts/preview/radio.js'
@@ -27,7 +29,7 @@ export function showHideForJs() {
 }
 
 /**
- * @param {'textfield'|'datepartsfield'|'radiosfield'|'ukaddressfield'|'telephonenumberfield'|'unknown'} questionType
+ * @param {'textfield'|'datepartsfield'|'radiosfield'|'ukaddressfield'|'telephonenumberfield'|'emailaddressfield'|'unknown'} questionType
  * @returns {Question|Radio|DateInput|Textfield}
  */
 export function setupPreview(questionType) {
@@ -43,6 +45,8 @@ export function setupPreview(questionType) {
     preview = Radio.setupPreview()
   } else if (questionType === 'ukaddressfield') {
     preview = Address.setupPreview()
+  } else if (questionType === 'emailaddressfield') {
+    preview = Email.setupPreview()
   } else if (questionType === 'telephonenumberfield') {
     preview = PhoneNumber.setupPreview()
   } else {

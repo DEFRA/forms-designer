@@ -8,6 +8,7 @@ import { setupPreview } from '~/src/javascripts/preview.js'
 jest.mock('~/src/javascripts/preview/nunjucks.js')
 jest.mock('~/src/views/components/ukaddressfield.njk', () => '')
 jest.mock('~/src/views/components/telephonenumberfield.njk', () => '')
+jest.mock('~/src/views/components/emailaddressfield.njk', () => '')
 jest.mock('~/src/views/components/inset.njk', () => '')
 jest.mock('~/src/views/components/textfield.njk', () => '')
 jest.mock('~/src/views/components/radios.njk', () => '')

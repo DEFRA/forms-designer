@@ -22,6 +22,7 @@ jest.mock(
 )
 jest.mock('~/src/views/components/ukaddressfield.njk', () => '')
 jest.mock('~/src/views/components/telephonenumberfield.njk', () => '')
+jest.mock('~/src/views/components/emailaddressfield.njk', () => '')
 jest.mock('~/src/views/components/inset.njk', () => '')
 jest.mock('~/src/views/components/textfield.njk', () => '')
 jest.mock('~/src/views/components/radios.njk', () => '')

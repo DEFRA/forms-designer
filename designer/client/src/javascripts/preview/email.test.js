@@ -2,7 +2,7 @@ import {
   questionDetailsLeftPanelHTML,
   questionDetailsPreviewHTML
 } from '~/src/javascripts/preview/__stubs__/question.js'
-import { Address } from '~/src/javascripts/preview/address.js'
+import { Email } from '~/src/javascripts/preview/email.js'
 import { setupPreview } from '~/src/javascripts/preview.js'
 
 jest.mock('~/src/javascripts/preview/nunjucks.js')
@@ -14,17 +14,17 @@ jest.mock('~/src/views/components/textfield.njk', () => '')
 jest.mock('~/src/views/components/radios.njk', () => '')
 jest.mock('~/src/views/components/date-input.njk', () => '')
 
-describe('address', () => {
-  describe('Address', () => {
+describe('email', () => {
+  describe('Email', () => {
     it('should create class', () => {
       document.body.innerHTML =
         questionDetailsLeftPanelHTML + questionDetailsPreviewHTML
-      const res = setupPreview('ukaddressfield')
-      expect(res).toBeInstanceOf(Address)
+      const res = setupPreview('emailaddressfield')
+      expect(res).toBeInstanceOf(Email)
       expect(res).toBeDefined()
       expect(res.renderInput).toEqual({
-        id: 'addressField',
-        name: 'addressField',
+        id: 'emailAddressField',
+        name: 'emailAddressField',
         label: {
           text: 'Which quest would you like to pick?',
           classes: 'govuk-label--l'
