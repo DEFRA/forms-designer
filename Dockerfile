@@ -65,6 +65,8 @@ COPY --from=productionBuild --chown=node:node /home/node/app/designer/package.js
 COPY --from=productionBuild --chown=node:node /home/node/app/designer/client/dist ./designer/client/dist
 COPY --from=productionBuild --chown=node:node /home/node/app/designer/server/dist ./designer/server/dist
 
+# we're doing this because we've already built it but don't need it
+# TODO: we need a better solution
 RUN touch ./designer/precompile-govuk-components.js
 
 
