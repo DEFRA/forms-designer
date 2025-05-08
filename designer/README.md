@@ -116,3 +116,7 @@ npm run build --workspace=model
 3. In VS Code, press `Cmd + Shift + P` (Mac) or `Ctrl + Shift + P` (Windows/Linux) and search for "Developer: Reload Window"
 
 This might be needed as the model package needs to be rebuilt to generate new TypeScript type definitions and compiled JavaScript files. Without these steps, you may see TS errors about missing types, especially after rebasing with main.
+
+# Nunjucks Client build
+
+A number of nunjucks files are precompiled as part of the client. The dependency designer/client/src/assets/nunjucks/govuk-components.js is expected as part of the build, but this is created whenever `npm i` is run, as a postinstall script so run `npm i` if it's missing.

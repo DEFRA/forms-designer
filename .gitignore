@@ -10,6 +10,7 @@ coverage
 .cache
 /dist/
 */dist/
+designer/client/src/assets/nunjucks/govuk-components.js
 
 .env
 
