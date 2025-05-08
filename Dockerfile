@@ -18,6 +18,8 @@ WORKDIR /home/node/app
 
 COPY --chown=node:node ./packag*.json ./
 COPY --chown=node:node ./designer/package.json ./designer/
+COPY --chown=node:node ./designer/bin/precompile.js ./designer/bin/
+COPY --chown=node:node ./designer/precompile-govuk-components.js ./designer/
 COPY --chown=node:node ./model/package.json ./model/
 
 RUN npm ci
