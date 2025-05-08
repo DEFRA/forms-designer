@@ -38,6 +38,8 @@ export function mapPageData(definition, pageOrder, focus) {
  * @param {{ button: string | undefined, pageId: string | undefined } | undefined } focus
  */
 export function pagesReorderViewModel(metadata, definition, pageOrder, focus) {
+  const formTitle = metadata.title
+  const pageHeading = 'Re-order pages'
   const formPath = formOverviewPath(metadata.slug)
   const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
 
@@ -52,13 +54,14 @@ export function pagesReorderViewModel(metadata, definition, pageOrder, focus) {
   ]
 
   return {
-    ...baseModelFields(metadata.slug, 'Re-order pages'),
+    ...baseModelFields(
+      metadata.slug,
+      `${pageHeading} - ${formTitle}`,
+      pageHeading
+    ),
     ...mapPageData(definition, pageOrder, focus),
     formSlug: metadata.slug,
     navigation,
-    pageHeading: {
-      text: 'Re-order pages'
-    },
     pageCaption: {
       text: definition.name
     },

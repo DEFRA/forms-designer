@@ -223,6 +223,7 @@ export function questionDetailsViewModel(
     questionType
   )
 
+  const formTitle = metadata.title
   const questionFieldsOverride = /** @type {ComponentDef} */ (
     state?.questionDetails ?? details.question
   )
@@ -247,12 +248,14 @@ export function questionDetailsViewModel(
   const urlPageBase = editorv2Path(metadata.slug, `page/${pageId}`)
   const deleteUrl = `${urlPageBase}/delete/${questionId}`
   const changeTypeUrl = `${urlPageBase}/question/${questionId}/type/${stateId}`
+  const pageHeading = details.pageTitle
+  const pageTitle = `Edit question ${details.questionNum} - ${formTitle}`
 
   return {
     listDetails: getListDetails(state, questionFieldsOverride),
     state,
     enhancedFields: enhancedFieldList,
-    ...baseModelFields(metadata.slug, details.pageTitle),
+    ...baseModelFields(metadata.slug, pageTitle, pageHeading),
     name: details.question.name || randomId(),
     questionId,
     basePageFields,

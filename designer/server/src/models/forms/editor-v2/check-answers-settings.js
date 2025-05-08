@@ -71,7 +71,7 @@ export function checkAnswersSettingsViewModel(
   validation,
   notification
 ) {
-  const pageTitle = metadata.title
+  const formTitle = metadata.title
   const formPath = formOverviewPath(metadata.slug)
   const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
   const { formValues, formErrors } = validation ?? {}
@@ -90,14 +90,20 @@ export function checkAnswersSettingsViewModel(
   const needDeclarationVal =
     formValues?.needDeclaration ?? `${stringHasValue(declarationTextVal)}`
 
+  const pageHeading = 'Page settings'
+
   return {
-    ...baseModelFields(metadata.slug, pageTitle),
+    ...baseModelFields(
+      metadata.slug,
+      `${pageHeading} - ${formTitle}`,
+      formTitle
+    ),
     fields: {
       ...settingsFields(needDeclarationVal, declarationTextVal, validation)
     },
-    cardTitle: 'Page settings',
+    cardTitle: pageHeading,
     cardCaption: 'Check answers',
-    cardHeading: 'Page settings',
+    cardHeading: pageHeading,
     navigation,
     errorList: buildErrorList(formErrors),
     formErrors: validation?.formErrors,

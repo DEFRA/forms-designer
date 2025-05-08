@@ -123,7 +123,7 @@ export function questionsViewModel(
   validation,
   notification
 ) {
-  const pageTitle = metadata.title
+  const formTitle = metadata.title
   const formPath = formOverviewPath(metadata.slug)
   const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
   const { formValues, formErrors } = validation ?? {}
@@ -144,12 +144,17 @@ export function questionsViewModel(
   const guidanceTextVal = formValues?.guidanceText ?? guidanceTextFallback
 
   const baseUrl = editorv2Path(metadata.slug, `page/${pageId}`)
+  const pageHeading = `Page ${pageIdx + 1}`
 
   return {
-    ...baseModelFields(metadata.slug, pageTitle),
+    ...baseModelFields(
+      metadata.slug,
+      `${pageHeading} - ${formTitle}`,
+      formTitle
+    ),
     fields: { ...questionsFields(pageHeadingVal, guidanceTextVal, validation) },
     cardTitle: `Page ${pageIdx + 1} overview`,
-    cardCaption: `Page ${pageIdx + 1}`,
+    cardCaption: pageHeading,
     navigation,
     baseUrl,
     errorList: buildErrorList(formErrors),
