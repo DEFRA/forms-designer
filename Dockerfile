@@ -64,7 +64,6 @@ COPY --from=productionBuild --chown=node:node /home/node/app/model/dist ./model/
 COPY --from=productionBuild --chown=node:node /home/node/app/designer/package.json ./designer/package.json
 COPY --from=productionBuild --chown=node:node /home/node/app/designer/client/dist ./designer/client/dist
 COPY --from=productionBuild --chown=node:node /home/node/app/designer/server/dist ./designer/server/dist
-COPY --from=productionBuild --chown=node:node /home/node/app/designer/bin/precompile.js ./designer/bin/
 
 RUN touch ./designer/precompile-govuk-components.js
 
