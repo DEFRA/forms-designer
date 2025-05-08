@@ -1,4 +1,6 @@
 import {} from '~/src/javascripts/application'
+import { ComponentType } from '@defra/forms-model'
+
 import { setupPreview, showHideForJs } from '~/src/javascripts/preview'
 import {
   questionDetailsLeftPanelHTML,
@@ -7,7 +9,7 @@ import {
 import { DateInput } from '~/src/javascripts/preview/date-input'
 import { Question } from '~/src/javascripts/preview/question'
 import { Radio } from '~/src/javascripts/preview/radio'
-import { Textfield } from '~/src/javascripts/preview/textfield'
+import { ShortAnswer } from '~/src/javascripts/preview/short-answer.js'
 
 jest.mock('~/src/javascripts/preview/nunjucks.js')
 
@@ -31,21 +33,22 @@ jest.mock('~/src/views/components/date-input.njk', () => '')
 describe('preview', () => {
   describe('setupPreview', () => {
     it('should setup preview for Textfield', () => {
-      const res = setupPreview('textfield')
-      expect(res).toBeInstanceOf(Textfield)
+      const res = setupPreview(ComponentType.TextField)
+      expect(res).toBeInstanceOf(ShortAnswer)
     })
 
     it('should setup preview for DatePartsField', () => {
-      const res = setupPreview('datepartsfield')
+      const res = setupPreview(ComponentType.DatePartsField)
       expect(res).toBeInstanceOf(DateInput)
     })
 
     it('should setup preview for Radiosfield', () => {
-      const res = setupPreview('radiosfield')
+      const res = setupPreview(ComponentType.RadiosField)
       expect(res).toBeInstanceOf(Radio)
     })
 
     it('should setup preview for unknown', () => {
+      // @ts-expect-error - Fallback value, which is not an enum
       const res = setupPreview('unknown')
       expect(res).toBeInstanceOf(Question)
     })

@@ -1,3 +1,5 @@
+import { ComponentType } from '@defra/forms-model'
+
 import { questionDetailsStubPanels } from '~/src/javascripts/preview/__stubs__/question.js'
 import {
   Radio,
@@ -163,7 +165,9 @@ describe('radio', () => {
   describe('integration', () => {
     it('should setup', () => {
       document.body.innerHTML = ''
-      const preview = /** @type {Radio} */ (setupPreview('radiosfield'))
+      const preview = /** @type {Radio} */ (
+        setupPreview(ComponentType.RadiosField)
+      )
       expect(preview.renderInput.fieldset.legend.text).toBe('Question')
     })
     it('test', () => {

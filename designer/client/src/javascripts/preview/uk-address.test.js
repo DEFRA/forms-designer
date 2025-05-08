@@ -1,8 +1,10 @@
+import { ComponentType } from '@defra/forms-model'
+
 import {
   questionDetailsLeftPanelHTML,
   questionDetailsPreviewHTML
 } from '~/src/javascripts/preview/__stubs__/question.js'
-import { Address } from '~/src/javascripts/preview/address.js'
+import { UkAddress } from '~/src/javascripts/preview/uk-address.js'
 import { setupPreview } from '~/src/javascripts/preview.js'
 
 jest.mock('~/src/javascripts/preview/nunjucks.js')
@@ -19,8 +21,8 @@ describe('address', () => {
     it('should create class', () => {
       document.body.innerHTML =
         questionDetailsLeftPanelHTML + questionDetailsPreviewHTML
-      const res = setupPreview('ukaddressfield')
-      expect(res).toBeInstanceOf(Address)
+      const res = setupPreview(ComponentType.UkAddressField)
+      expect(res).toBeInstanceOf(UkAddress)
       expect(res).toBeDefined()
       expect(res.renderInput).toEqual({
         id: 'addressField',

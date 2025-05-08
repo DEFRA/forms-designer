@@ -3,15 +3,15 @@ import {
   QuestionElements
 } from '~/src/javascripts/preview/question.js'
 
-export class Email extends Question {
+export class EmailAddress extends Question {
   _questionTemplate = 'emailaddressfield.njk'
   _fieldName = 'emailAddressField'
 
   /**
-   * @returns {Email}
+   * @returns {EmailAddress}
    */
   static setupPreview() {
-    const email = new Email(new QuestionElements())
+    const email = new EmailAddress(new QuestionElements())
     email.render()
 
     return email

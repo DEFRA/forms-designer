@@ -3,15 +3,15 @@ import {
   QuestionElements
 } from '~/src/javascripts/preview/question.js'
 
-export class Address extends Question {
+export class UkAddress extends Question {
   _questionTemplate = 'ukaddressfield.njk'
   _fieldName = 'addressField'
 
   /**
-   * @returns {Address}
+   * @returns {UkAddress}
    */
   static setupPreview() {
-    const address = new Address(new QuestionElements())
+    const address = new UkAddress(new QuestionElements())
     address.render()
 
     return address

@@ -1,8 +1,10 @@
+import { ComponentType } from '@defra/forms-model'
+
 import {
   questionDetailsLeftPanelHTML,
   questionDetailsPreviewHTML
 } from '~/src/javascripts/preview/__stubs__/question.js'
-import { Email } from '~/src/javascripts/preview/email.js'
+import { PhoneNumber } from '~/src/javascripts/preview/phone-number.js'
 import { setupPreview } from '~/src/javascripts/preview.js'
 
 jest.mock('~/src/javascripts/preview/nunjucks.js')
@@ -14,17 +16,17 @@ jest.mock('~/src/views/components/textfield.njk', () => '')
 jest.mock('~/src/views/components/radios.njk', () => '')
 jest.mock('~/src/views/components/date-input.njk', () => '')
 
-describe('email', () => {
-  describe('Email', () => {
+describe('phone number', () => {
+  describe('PhoneNumber', () => {
     it('should create class', () => {
       document.body.innerHTML =
         questionDetailsLeftPanelHTML + questionDetailsPreviewHTML
-      const res = setupPreview('emailaddressfield')
-      expect(res).toBeInstanceOf(Email)
+      const res = setupPreview(ComponentType.TelephoneNumberField)
+      expect(res).toBeInstanceOf(PhoneNumber)
       expect(res).toBeDefined()
       expect(res.renderInput).toEqual({
-        id: 'emailAddressField',
-        name: 'emailAddressField',
+        id: 'phoneNumberField',
+        name: 'phoneNumberField',
         label: {
           text: 'Which quest would you like to pick?',
           classes: 'govuk-label--l'
