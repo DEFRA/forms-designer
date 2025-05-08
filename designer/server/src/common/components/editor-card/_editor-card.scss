@@ -84,10 +84,6 @@ $defra-brand-colour: govuk-organisation-colour(department-for-environment-food-r
   margin: 0;
 }
 
-.govuk-radios__item label {
-  text-transform: capitalize;
-}
-
 .app-reorderable-list .app-reorderable-list__item:hover,
 .app-reorderable-list__item:hover .fauxlabel {
   background-color: #ffffff;

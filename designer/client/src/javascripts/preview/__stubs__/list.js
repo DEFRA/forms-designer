@@ -69,8 +69,8 @@ export const list1HTML = `
         </p>
       </div>
       <div class="govuk-button-group govuk-!-margin-bottom-0">
-        <a class="govuk-button govuk-button--secondary js-reorderable-list-up govuk-!-margin-bottom-1" style="display: none">Up</a>
-        <a class="govuk-button govuk-button--secondary js-reorderable-list-down govuk-!-margin-bottom-1" style="display: none">Down</a>
+        <a class="govuk-button govuk-button--secondary js-reorderable-list-up govuk-!-margin-bottom-1" id="mid-range-up" style="display: none">Up</a>
+        <a class="govuk-button govuk-button--secondary js-reorderable-list-down govuk-!-margin-bottom-1" id="low-range-down" style="display: none">Down</a>
       </div>
       <div class="edit-item" style="cursor: default;">
         <ul class="govuk-summary-list__actions-list" style="cursor: default;">

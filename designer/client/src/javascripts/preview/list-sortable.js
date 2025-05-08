@@ -191,6 +191,7 @@ export class ListSortableEventListeners extends ListEventListeners {
       },
       () => {
         this._listQuestion.resyncPreviewAfterReorder()
+        this._listSortableElements.updateMoveButtons()
       }
     )
 

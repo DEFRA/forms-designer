@@ -227,20 +227,33 @@ describe('list-sortable', () => {
           '<button id="add-option-button">Add item</button>' +
           list1HTML
         const listSortable = new ListSortableQuestionElements()
-        /*
-        listSortable.handleReorder(new Event('dummy event'))
-        const listContainer = document.getElementById('options-container')
-        const allChildren = listContainer?.querySelectorAll('*')
-        let cursorCount = 0
-        allChildren?.forEach((child) => {
-          const style = window.getComputedStyle(child)
-          if (style.getPropertyValue('cursor') === 'move') {
-            cursorCount++
-          }
-        })
-        expect(cursorCount).toBe(41)
-        */
-        expect(listSortable).toBeDefined()
+        const hiddenCount = document.querySelectorAll(
+          '.reorder-button-hidden'
+        ).length
+        expect(hiddenCount).toBe(0)
+        listSortable.updateMoveButtons()
+        const hiddenCountAfter = document.querySelectorAll(
+          '.reorder-button-hidden'
+        ).length
+        expect(hiddenCountAfter).toBe(2)
+      })
+    })
+
+    describe('setMoveFocus', () => {
+      it('should focus button', () => {
+        document.body.innerHTML =
+          '<button id="edit-options-button">Re-order</button>' +
+          '<button id="add-option-button">Add item</button>' +
+          list1HTML
+        const listSortable = new ListSortableQuestionElements()
+        const currentFocus = document.activeElement
+        expect(currentFocus?.tagName).toBe('BODY')
+        const upButtonInMidRange = /** @type {HTMLElement} */ (
+          document.getElementById('mid-range-up')
+        )
+        listSortable.setMoveFocus(upButtonInMidRange)
+        const currentFocusAfter = document.activeElement
+        expect(currentFocusAfter?.id).toBe('mid-range-up')
       })
     })
   })
