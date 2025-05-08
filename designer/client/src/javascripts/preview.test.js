@@ -1,4 +1,6 @@
 import {} from '~/src/javascripts/application'
+import { ComponentType } from '@defra/forms-model'
+
 import { setupPreview, showHideForJs } from '~/src/javascripts/preview'
 import {
   questionDetailsLeftPanelHTML,
@@ -7,21 +9,9 @@ import {
 import { DateInput } from '~/src/javascripts/preview/date-input'
 import { Question } from '~/src/javascripts/preview/question'
 import { Radio } from '~/src/javascripts/preview/radio'
-import { RadioSortable } from '~/src/javascripts/preview/radio-sortable'
-import { Textfield } from '~/src/javascripts/preview/textfield'
+import { ShortAnswer } from '~/src/javascripts/preview/short-answer.js'
 
-jest.mock('~/src/javascripts/preview/nunjucks.js', () => {
-  return {
-    /**
-     * @param {string} _template
-     * @param {{ model: QuestionBaseModel }} _context
-     * @returns {string}
-     */
-    render(_template, _context) {
-      return '****UPDATED****'
-    }
-  }
-})
+jest.mock('~/src/javascripts/preview/nunjucks.js')
 
 jest.mock(
   '~/src/views/components/inset.njk',
@@ -32,57 +22,34 @@ jest.mock(
   () =>
     '<input class="govuk-input" id="question" name="question" type="text" value="What is your answer?">'
 )
-jest.mock(
-  '~/src/views/components/radios.njk',
-  () =>
-    '<div class="govuk-inset-text"></div>' +
-    '<button id="edit-options-button">Re-order</button>' +
-    '<button id="add-option-button">Add item</button>' +
-    '<div id="options-container"></div'
-)
-
-jest.mock(
-  '~/src/views/components/date-input.njk',
-  () =>
-    '<div class="govuk-date-input" id="dateInput">' +
-    '  <div class="govuk-date-input__item">' +
-    '    <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dateInput-day" name="day" type="text" inputmode="numeric">' +
-    '  </div>' +
-    '  <div class="govuk-date-input__item">' +
-    '    <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dateInput-month" name="month" type="text" inputmode="numeric">' +
-    '  </div>' +
-    '  <div class="govuk-date-input__item">' +
-    '    <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="dateInput-year" name="year" type="text" inputmode="numeric">' +
-    '  </div>' +
-    '</div>'
-)
+jest.mock('~/src/views/components/ukaddressfield.njk', () => '')
+jest.mock('~/src/views/components/telephonenumberfield.njk', () => '')
+jest.mock('~/src/views/components/emailaddressfield.njk', () => '')
+jest.mock('~/src/views/components/inset.njk', () => '')
+jest.mock('~/src/views/components/textfield.njk', () => '')
+jest.mock('~/src/views/components/radios.njk', () => '')
+jest.mock('~/src/views/components/date-input.njk', () => '')
 
 describe('preview', () => {
   describe('setupPreview', () => {
     it('should setup preview for Textfield', () => {
-      const res = setupPreview('textfield')
-      expect(res).toBeInstanceOf(Textfield)
+      const res = setupPreview(ComponentType.TextField)
+      expect(res).toBeInstanceOf(ShortAnswer)
     })
 
     it('should setup preview for DatePartsField', () => {
-      const res = setupPreview('datepartsfield')
+      const res = setupPreview(ComponentType.DatePartsField)
       expect(res).toBeInstanceOf(DateInput)
     })
 
-    it('should setup preview for Radiosfield-NonSortable', () => {
-      const res = setupPreview('radiosfield-non-sortable')
+    it('should setup preview for Radiosfield', () => {
+      const res = setupPreview(ComponentType.RadiosField)
       expect(res).toBeInstanceOf(Radio)
     })
 
-    it('should setup preview for Radiosfield', () => {
-      document.body.innerHTML =
-        questionDetailsLeftPanelHTML + questionDetailsPreviewTabsHTML
-      const res = setupPreview('radiosfield')
-      expect(res).toBeInstanceOf(RadioSortable)
-    })
-
-    it('should setup preview for other', () => {
-      const res = setupPreview('other')
+    it('should setup preview for unknown', () => {
+      // @ts-expect-error - Fallback value, which is not an enum
+      const res = setupPreview('unknown')
       expect(res).toBeInstanceOf(Question)
     })
   })

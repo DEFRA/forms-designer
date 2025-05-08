@@ -1,3 +1,5 @@
+import { ComponentType } from '@defra/forms-model'
+
 import {
   list1HTML,
   listEmptyHTML
@@ -15,48 +17,14 @@ import {
 import { List } from '~/src/javascripts/preview/list.js'
 import { setupPreview } from '~/src/javascripts/preview.js'
 
-jest.mock('~/src/javascripts/preview/nunjucks.js', () => {
-  return {
-    /**
-     * @param {string} _template
-     * @param {{ model: QuestionBaseModel }} _context
-     * @returns {string}
-     */
-    render(_template, _context) {
-      return '****UPDATED****'
-    }
-  }
-})
-
-jest.mock(
-  '~/src/views/components/inset.njk',
-  () => '<div class="govuk-inset-text"></div>'
-)
-jest.mock(
-  '~/src/views/components/textfield.njk',
-  () =>
-    '<input class="govuk-input" id="question" name="question" type="text" value="What is your answer?">'
-)
-jest.mock(
-  '~/src/views/components/radios.njk',
-  () => '<div class="govuk-inset-text"></div>'
-)
-
-jest.mock(
-  '~/src/views/components/date-input.njk',
-  () =>
-    '<div class="govuk-date-input" id="dateInput">' +
-    '  <div class="govuk-date-input__item">' +
-    '    <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dateInput-day" name="day" type="text" inputmode="numeric">' +
-    '  </div>' +
-    '  <div class="govuk-date-input__item">' +
-    '    <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dateInput-month" name="month" type="text" inputmode="numeric">' +
-    '  </div>' +
-    '  <div class="govuk-date-input__item">' +
-    '    <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="dateInput-year" name="year" type="text" inputmode="numeric">' +
-    '  </div>' +
-    '</div>'
-)
+jest.mock('~/src/javascripts/preview/nunjucks.js')
+jest.mock('~/src/views/components/ukaddressfield.njk', () => '')
+jest.mock('~/src/views/components/telephonenumberfield.njk', () => '')
+jest.mock('~/src/views/components/emailaddressfield.njk', () => '')
+jest.mock('~/src/views/components/inset.njk', () => '')
+jest.mock('~/src/views/components/textfield.njk', () => '')
+jest.mock('~/src/views/components/radios.njk', () => '')
+jest.mock('~/src/views/components/date-input.njk', () => '')
 
 describe('list-sortable', () => {
   const list1Id = '414d82a3-4cab-416a-bd54-6b86fbd51120'
@@ -117,7 +85,9 @@ describe('list-sortable', () => {
     it('should setup', () => {
       document.body.innerHTML =
         questionDetailsLeftPanelHTML + questionDetailsPreviewTabsHTML
-      const preview = /** @type {ListSortable} */ (setupPreview('radiosfield'))
+      const preview = /** @type {ListSortable} */ (
+        setupPreview(ComponentType.RadiosField)
+      )
       expect(preview.renderInput.fieldset.legend.text).toBe(
         'Which quest would you like to pick?'
       )
@@ -240,20 +210,52 @@ describe('list-sortable', () => {
     })
 
     describe('setMoveFocus', () => {
-      it('should focus button', () => {
+      it('should focus button if button remains visible - move down', () => {
         document.body.innerHTML =
           '<button id="edit-options-button">Re-order</button>' +
           '<button id="add-option-button">Add item</button>' +
           list1HTML
         const listSortable = new ListSortableQuestionElements()
-        const currentFocus = document.activeElement
-        expect(currentFocus?.tagName).toBe('BODY')
-        const upButtonInMidRange = /** @type {HTMLElement} */ (
-          document.getElementById('mid-range-up')
+        const downButtonFirstRow = /** @type {HTMLElement} */ (
+          document.getElementById('first-row-down')
         )
-        listSortable.setMoveFocus(upButtonInMidRange)
-        const currentFocusAfter = document.activeElement
-        expect(currentFocusAfter?.id).toBe('mid-range-up')
+        jest.spyOn(downButtonFirstRow, 'focus')
+        listSortable.setMoveFocus(downButtonFirstRow)
+        expect(downButtonFirstRow.focus).toHaveBeenCalled()
+      })
+
+      it('should focus button if button remains visible - move up', () => {
+        document.body.innerHTML =
+          '<button id="edit-options-button">Re-order</button>' +
+          '<button id="add-option-button">Add item</button>' +
+          list1HTML
+        const listSortable = new ListSortableQuestionElements()
+        const upButtonLastRow = /** @type {HTMLElement} */ (
+          document.getElementById('row-3-up')
+        )
+        jest.spyOn(upButtonLastRow, 'focus')
+        listSortable.setMoveFocus(upButtonLastRow)
+        expect(upButtonLastRow.focus).toHaveBeenCalled()
+      })
+
+      it('should focus on sibling button if button becomes hidden', () => {
+        document.body.innerHTML =
+          '<button id="edit-options-button">Re-order</button>' +
+          '<button id="add-option-button">Add item</button>' +
+          list1HTML
+        const listSortable = new ListSortableQuestionElements()
+        const downButtonLastRow = /** @type {HTMLElement} */ (
+          document.getElementById('last-row-down')
+        )
+        const upButtonLastRow = /** @type {HTMLElement} */ (
+          document.getElementById('last-row-up')
+        )
+        jest.spyOn(downButtonLastRow, 'focus')
+        jest.spyOn(upButtonLastRow, 'focus')
+        downButtonLastRow.classList.add('reorder-button-hidden')
+        listSortable.setMoveFocus(downButtonLastRow)
+        expect(downButtonLastRow.focus).not.toHaveBeenCalled()
+        expect(upButtonLastRow.focus).toHaveBeenCalled()
       })
     })
   })
@@ -344,22 +346,40 @@ describe('list-sortable', () => {
       })
     })
 
-    describe('ListSortable class', () => {
-      it('should resync preview after reorder', () => {
+    describe('configureMoveButtonListeners', () => {
+      it('should attach button listeners', () => {
         document.body.innerHTML =
-          '<button id="edit-options-button">Done</button>' +
-          '<button id="add-option-button">Add item</button>' +
-          listEmptyHTML
-        const preview = ListSortable.setupPreview()
-        expect(preview._list.size).toBe(0)
-        document.body.innerHTML =
-          '<button id="edit-options-button">Done</button>' +
+          '<button id="edit-options-button">Re-order</button>' +
           '<button id="add-option-button">Add item</button>' +
           list1HTML
-        const preview2 = ListSortable.setupPreview()
-        preview.resyncPreviewAfterReorder()
-        expect(preview2._list.size).toBe(4)
+        ListSortable.setupPreview()
+        const reorderButton = /** @type {HTMLElement} */ (
+          document.getElementById('edit-options-button')
+        )
+        reorderButton.click()
+        const upButtonLastRow = /** @type {HTMLElement} */ (
+          document.getElementById('last-row-up')
+        )
+        expect(upButtonLastRow).toBeDefined()
       })
+    })
+  })
+
+  describe('ListSortable class', () => {
+    it('should resync preview after reorder', () => {
+      document.body.innerHTML =
+        '<button id="edit-options-button">Done</button>' +
+        '<button id="add-option-button">Add item</button>' +
+        listEmptyHTML
+      const preview = ListSortable.setupPreview()
+      expect(preview._list.size).toBe(0)
+      document.body.innerHTML =
+        '<button id="edit-options-button">Done</button>' +
+        '<button id="add-option-button">Add item</button>' +
+        list1HTML
+      const preview2 = ListSortable.setupPreview()
+      preview.resyncPreviewAfterReorder()
+      expect(preview2._list.size).toBe(4)
     })
   })
 })

@@ -2,7 +2,7 @@ import {
   questionDetailsLeftPanelHTML,
   questionDetailsPreviewHTML
 } from '~/src/javascripts/preview/__stubs__/question'
-import { Textfield } from '~/src/javascripts/preview/textfield.js'
+import { ShortAnswer } from '~/src/javascripts/preview/short-answer.js'
 
 jest.mock('~/src/javascripts/preview/nunjucks.js', () => {
   return {
@@ -51,7 +51,7 @@ describe('textfield', () => {
   it('should create class', () => {
     document.body.innerHTML =
       questionDetailsLeftPanelHTML + questionDetailsPreviewHTML
-    const res = Textfield.setupPreview()
+    const res = ShortAnswer.setupPreview()
     expect(res).toBeDefined()
   })
 })
