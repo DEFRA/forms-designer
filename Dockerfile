@@ -16,6 +16,8 @@ EXPOSE ${PORT} ${PORT_DEBUG}
 
 WORKDIR /home/node/app
 
+RUN mkdir -p ./designer/client/src/assets/nunjucks
+
 COPY --chown=node:node ./packag*.json ./
 COPY --chown=node:node ./designer/package.json ./designer/
 COPY --chown=node:node ./designer/bin/precompile.js ./designer/bin/
