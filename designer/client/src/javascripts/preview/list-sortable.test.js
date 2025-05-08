@@ -209,6 +209,99 @@ describe('list-sortable', () => {
       })
     })
 
+    describe('move up or down', () => {
+      const mockResync = jest.fn()
+      // @ts-expect-error - time consuming to mock all class methods
+      const mockListenerClass = /** @type {ListSortableEventListeners} */ ({
+        _listQuestion: {
+          resyncPreviewAfterReorder: mockResync
+        },
+        _listSortableElements: {
+          updateMoveButtons: jest.fn(),
+          setMoveFocus: jest.fn()
+        }
+      })
+      it('should move up if correct class', () => {
+        document.body.innerHTML =
+          '<button id="edit-options-button">Re-order</button>' +
+          '<button id="add-option-button">Add item</button>' +
+          list1HTML
+        const preview = ListSortable.setupPreview()
+        const upButtons = Array.from(
+          document.querySelectorAll('.js-reorderable-list-up')
+        )
+        const upButton = /** @type {HTMLElement} */ (
+          upButtons.find((x) => x.id === 'last-row-up')
+        )
+        expect(upButtons.findIndex((x) => x.id === 'last-row-up')).toBe(3)
+        preview._listElements.moveUp(mockListenerClass, upButton)
+        const upButtonsAfter = Array.from(
+          document.querySelectorAll('.js-reorderable-list-up')
+        )
+        expect(upButtonsAfter.findIndex((x) => x.id === 'last-row-up')).toBe(2)
+        expect(mockResync).toHaveBeenCalled()
+      })
+
+      it('should not move up if incorrect class', () => {
+        document.body.innerHTML =
+          '<button id="edit-options-button">Re-order</button>' +
+          '<button id="add-option-button">Add item</button>' +
+          list1HTML
+        const preview = ListSortable.setupPreview()
+        const upButtons = Array.from(
+          document.querySelectorAll('.js-reorderable-list-up')
+        )
+        const upButton = /** @type {HTMLElement} */ (
+          upButtons.find((x) => x.id === 'last-row-up')
+        )
+        expect(upButtons.findIndex((x) => x.id === 'last-row-up')).toBe(3)
+        upButton.classList.remove('js-reorderable-list-up')
+        preview._listElements.moveUp(mockListenerClass, upButton)
+        expect(mockResync).not.toHaveBeenCalled()
+      })
+
+      it('should move down if correct class', () => {
+        document.body.innerHTML =
+          '<button id="edit-options-button">Re-order</button>' +
+          '<button id="add-option-button">Add item</button>' +
+          list1HTML
+        const preview = ListSortable.setupPreview()
+        const downButtons = Array.from(
+          document.querySelectorAll('.js-reorderable-list-down')
+        )
+        const downButton = /** @type {HTMLElement} */ (
+          downButtons.find((x) => x.id === 'first-row-down')
+        )
+        expect(downButtons.findIndex((x) => x.id === 'first-row-down')).toBe(0)
+        preview._listElements.moveDown(mockListenerClass, downButton)
+        const downButtonsAfter = Array.from(
+          document.querySelectorAll('.js-reorderable-list-down')
+        )
+        expect(
+          downButtonsAfter.findIndex((x) => x.id === 'first-row-down')
+        ).toBe(1)
+        expect(mockResync).toHaveBeenCalled()
+      })
+
+      it('should not move down if incorrect class', () => {
+        document.body.innerHTML =
+          '<button id="edit-options-button">Re-order</button>' +
+          '<button id="add-option-button">Add item</button>' +
+          list1HTML
+        const preview = ListSortable.setupPreview()
+        const downButtons = Array.from(
+          document.querySelectorAll('.js-reorderable-list-down')
+        )
+        const downButton = /** @type {HTMLElement} */ (
+          downButtons.find((x) => x.id === 'first-row-down')
+        )
+        expect(downButtons.findIndex((x) => x.id === 'first-row-down')).toBe(0)
+        downButton.classList.remove('js-reorderable-list-down')
+        preview._listElements.moveDown(mockListenerClass, downButton)
+        expect(mockResync).not.toHaveBeenCalled()
+      })
+    })
+
     describe('setMoveFocus', () => {
       it('should focus button if button remains visible - move down', () => {
         document.body.innerHTML =

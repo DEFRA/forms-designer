@@ -161,6 +161,40 @@ export class ListSortableQuestionElements extends ListQuestionElements {
     this.editOptionsButton.classList.add('govuk-button--inverse')
     this.setStyleOnChildren(elements, false)
   }
+
+  /**
+   * @param {ListSortableEventListeners} listenerClass
+   * @param {HTMLElement} target
+   */
+  moveUp(listenerClass, target) {
+    if (target.classList.contains('js-reorderable-list-up')) {
+      const item = target.closest('.app-reorderable-list__item')
+      const prevItem = item?.previousElementSibling
+      if (prevItem && item.parentNode) {
+        item.parentNode.insertBefore(item, prevItem)
+      }
+      listenerClass._listQuestion.resyncPreviewAfterReorder()
+      listenerClass._listSortableElements.updateMoveButtons()
+      listenerClass._listSortableElements.setMoveFocus(target)
+    }
+  }
+
+  /**
+   * @param {ListSortableEventListeners} listenerClass
+   * @param {HTMLElement} target
+   */
+  moveDown(listenerClass, target) {
+    if (target.classList.contains('js-reorderable-list-down')) {
+      const item = target.closest('.app-reorderable-list__item')
+      const nextItem = item?.nextElementSibling
+      if (nextItem && item.parentNode) {
+        item.parentNode.insertBefore(nextItem, item)
+      }
+      listenerClass._listQuestion.resyncPreviewAfterReorder()
+      listenerClass._listSortableElements.updateMoveButtons()
+      listenerClass._listSortableElements.setMoveFocus(target)
+    }
+  }
 }
 
 export class ListSortableEventListeners extends ListEventListeners {
@@ -209,49 +243,28 @@ export class ListSortableEventListeners extends ListEventListeners {
 
   configureMoveButtonListeners() {
     const allMoveButtons = this._listSortableElements.getAllMoveButtons()
-    if (!this._listSortableElements.isReordering()) {
-      // Add all move button listeners
-      allMoveButtons.forEach((button) => {
-        if (button.textContent === 'Up') {
-          this.inputEventListener(
-            button,
-            (target, e) => {
-              e.preventDefault()
-              if (target.classList.contains('js-reorderable-list-up')) {
-                const item = target.closest('.app-reorderable-list__item')
-                const prevItem = item?.previousElementSibling
-                if (prevItem && item.parentNode) {
-                  item.parentNode.insertBefore(item, prevItem)
-                }
-                this._listQuestion.resyncPreviewAfterReorder()
-                this._listSortableElements.updateMoveButtons()
-                this._listSortableElements.setMoveFocus(target)
-              }
-            },
-            'click'
-          )
-        }
-        if (button.textContent === 'Down') {
-          this.inputEventListener(
-            button,
-            (target, e) => {
-              e.preventDefault()
-              if (target.classList.contains('js-reorderable-list-down')) {
-                const item = target.closest('.app-reorderable-list__item')
-                const nextItem = item?.nextElementSibling
-                if (nextItem && item.parentNode) {
-                  item.parentNode.insertBefore(nextItem, item)
-                }
-                this._listQuestion.resyncPreviewAfterReorder()
-                this._listSortableElements.updateMoveButtons()
-                this._listSortableElements.setMoveFocus(target)
-              }
-            },
-            'click'
-          )
-        }
-      })
+    if (this._listSortableElements.isReordering()) {
+      return
     }
+    // Add all move button listeners
+    allMoveButtons.forEach((button) => {
+      const buttonText = button.textContent
+      if (buttonText === 'Up' || buttonText === 'Down') {
+        this.inputEventListener(
+          button,
+          buttonText === 'Up'
+            ? (target, e) => {
+                e.preventDefault()
+                this._listSortableElements.moveUp(this, target)
+              }
+            : (target, e) => {
+                e.preventDefault()
+                this._listSortableElements.moveDown(this, target)
+              },
+          'click'
+        )
+      }
+    })
   }
 }
 
