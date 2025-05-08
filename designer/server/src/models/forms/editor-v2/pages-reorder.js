@@ -62,9 +62,6 @@ export function pagesReorderViewModel(metadata, definition, pageOrder, focus) {
     ...mapPageData(definition, pageOrder, focus),
     formSlug: metadata.slug,
     navigation,
-    // pageHeading: {
-    //   text: pageHeading
-    // },
     pageCaption: {
       text: definition.name
     },
