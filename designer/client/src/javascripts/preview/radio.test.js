@@ -1,3 +1,5 @@
+import { ComponentType } from '@defra/forms-model'
+
 import { questionDetailsStubPanels } from '~/src/javascripts/preview/__stubs__/question.js'
 import {
   Radio,
@@ -29,6 +31,9 @@ jest.mock('~/src/javascripts/preview/nunjucks.js', () => {
     }
   }
 })
+jest.mock('~/src/views/components/telephonenumberfield.njk', () => '')
+jest.mock('~/src/views/components/emailaddressfield.njk', () => '')
+jest.mock('~/src/views/components/ukaddressfield.njk', () => '')
 
 jest.mock(
   '~/src/views/components/inset.njk',
@@ -160,7 +165,9 @@ describe('radio', () => {
   describe('integration', () => {
     it('should setup', () => {
       document.body.innerHTML = ''
-      const preview = /** @type {Radio} */ (setupPreview('radiosfield'))
+      const preview = /** @type {Radio} */ (
+        setupPreview(ComponentType.RadiosField)
+      )
       expect(preview.renderInput.fieldset.legend.text).toBe('Question')
     })
     it('test', () => {
