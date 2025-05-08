@@ -265,6 +265,11 @@ export class Question {
    * @protected
    */
   _highlight = null
+  /**
+   * @type {string}
+   * @protected
+   */
+  _fieldName = 'inputField'
 
   /**
    * @param {QuestionElements} htmlElements
@@ -362,8 +367,8 @@ export class Question {
    */
   get renderInput() {
     return {
-      id: 'inputField',
-      name: 'inputField',
+      id: this._fieldName,
+      name: this._fieldName,
       label: this.label,
       hint: this.hint
     }

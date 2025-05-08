@@ -29,6 +29,7 @@ jest.mock('~/src/javascripts/preview/nunjucks.js', () => {
     }
   }
 })
+jest.mock('~/src/views/components/telephonenumberfield.njk', () => '')
 jest.mock('~/src/views/components/ukaddressfield.njk', () => '')
 
 jest.mock(
