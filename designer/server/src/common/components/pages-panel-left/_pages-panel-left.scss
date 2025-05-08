@@ -32,3 +32,13 @@ $defra-brand-colour: govuk-organisation-colour(department-for-environment-food-r
     }
   }
 }
+
+.reorder-button-hidden {
+  visibility: hidden;
+}
+
+.app-reorderable-list__item:focus-within {
+  border-top: 2px solid $govuk-focus-colour;
+  border-right: 2px solid $govuk-focus-colour;
+  border-bottom: 2px solid $govuk-focus-colour;
+}

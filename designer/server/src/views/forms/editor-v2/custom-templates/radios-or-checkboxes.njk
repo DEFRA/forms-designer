@@ -97,21 +97,13 @@
               {% endif %}
             </div>
 
-            {% set upAuto = "autofocus" if isFocus and (state.lastMoveDirection == "up" or isLast) else "" %}
-            {% set downAuto = "autofocus" if isFocus and (state.lastMoveDirection == "down" or isFirst) else "" %}
-
             {% set ariaLabelUp = "Button, Move " + item.text + ": up, " + item.text + " is currently option " + loop.index + " of " + itemsCount + " options." %}
             {% set ariaLabelDown = "Button, Move " + item.text + ": down, " + item.text + " is currently option " + loop.index + " of " + itemsCount + " options." %}
             {% set ariaAlert = "The list has been reordered, " + item.text + " is now option " + loop.index + " of " + itemsCount + " options." if isFocus else "" %}
 
-            <div class="govuk-button-group" id="reorder-button-group">
-              {% if not isFirst %}
-                <a href="?action=move&id={{ item.id }}&direction=up" class="govuk-button govuk-button--secondary" {{ upAuto }} aria-label="{{ ariaLabelUp }}" style="display: none">Up</a>
-              {% endif %}
-
-              {% if not isLast %}
-                <a href="?action=move&id={{ item.id }}&direction=down"  class="govuk-button govuk-button--secondary" {{ downAuto }} aria-label="{{ ariaLabelDown }}" style="display: none">Down</a>
-              {% endif %}
+            <div class="govuk-button-group govuk-!-margin-bottom-0">
+                <a href="?action=move&id={{ item.id }}&direction=up" class="govuk-button govuk-button--secondary js-reorderable-list-up govuk-!-margin-bottom-1" style="display: none" aria-label="{{ ariaLabelUp }}">Up</a>
+                <a href="?action=move&id={{ item.id }}&direction=down"  class="govuk-button govuk-button--secondary js-reorderable-list-down govuk-!-margin-bottom-1" style="display: none" aria-label="{{ ariaLabelDown }}">Down</a>
             </div>
 
             <div class="edit-item">

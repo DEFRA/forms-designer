@@ -12,6 +12,10 @@ export const list1HTML = `
           Option 1
         </p>
       </div>
+      <div class="govuk-button-group govuk-!-margin-bottom-0">
+        <a class="govuk-button govuk-button--secondary js-reorderable-list-up govuk-!-margin-bottom-1" style="display: none">Up</a>
+        <a class="govuk-button govuk-button--secondary js-reorderable-list-down govuk-!-margin-bottom-1" style="display: none">Down</a>
+      </div>
       <div class="edit-item" style="cursor: default;">
         <ul class="govuk-summary-list__actions-list" style="cursor: default;">
           <li class="govuk-summary-list__actions-list-item" style="cursor: default;">
@@ -35,6 +39,10 @@ export const list1HTML = `
         <p class="govuk-body fauxlabel option-label-display" id="option-2-label-display" style="cursor: default;">
           Option 2
         </p>
+      </div>
+      <div class="govuk-button-group govuk-!-margin-bottom-0">
+        <a class="govuk-button govuk-button--secondary js-reorderable-list-up govuk-!-margin-bottom-1" style="display: none">Up</a>
+        <a class="govuk-button govuk-button--secondary js-reorderable-list-down govuk-!-margin-bottom-1" style="display: none">Down</a>
       </div>
       <div class="edit-item" style="cursor: default;">
         <ul class="govuk-summary-list__actions-list" style="cursor: default;">
@@ -60,6 +68,10 @@ export const list1HTML = `
           Option 3
         </p>
       </div>
+      <div class="govuk-button-group govuk-!-margin-bottom-0">
+        <a class="govuk-button govuk-button--secondary js-reorderable-list-up govuk-!-margin-bottom-1" style="display: none">Up</a>
+        <a class="govuk-button govuk-button--secondary js-reorderable-list-down govuk-!-margin-bottom-1" style="display: none">Down</a>
+      </div>
       <div class="edit-item" style="cursor: default;">
         <ul class="govuk-summary-list__actions-list" style="cursor: default;">
           <li class="govuk-summary-list__actions-list-item" style="cursor: default;">
@@ -84,6 +96,10 @@ export const list1HTML = `
           Option 4
         </p>
         <p class="govuk-hint govuk-!-margin-top-0 govuk-!-margin-bottom-0" style="cursor: default;">hint 4</p>
+      </div>
+      <div class="govuk-button-group govuk-!-margin-bottom-0">
+        <a class="govuk-button govuk-button--secondary js-reorderable-list-up govuk-!-margin-bottom-1" style="display: none">Up</a>
+        <a class="govuk-button govuk-button--secondary js-reorderable-list-down govuk-!-margin-bottom-1" style="display: none">Down</a>
       </div>
       <div class="edit-item" style="cursor: default;">
         <ul class="govuk-summary-list__actions-list" style="cursor: default;">

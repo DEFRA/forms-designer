@@ -6,6 +6,8 @@ import {
   ListQuestionElements
 } from '~/src/javascripts/preview/list'
 
+const REORDER_BUTTON_HIDDEN = 'reorder-button-hidden'
+
 export class ListSortableQuestionElements extends ListQuestionElements {
   /** @type {HTMLElement} */
   editOptionsButton
@@ -77,7 +79,7 @@ export class ListSortableQuestionElements extends ListQuestionElements {
 
   getAllMoveButtons() {
     return /** @type {HTMLElement[]} */ (
-      Array.from(this.sortableContainer.querySelectorAll('a .govuk-button'))
+      Array.from(this.sortableContainer.querySelectorAll('a.govuk-button'))
     )
   }
 
@@ -112,6 +114,33 @@ export class ListSortableQuestionElements extends ListQuestionElements {
     })
   }
 
+  updateMoveButtons() {
+    const allMoveButtons = this.getAllMoveButtons()
+    allMoveButtons.forEach((button, idx) => {
+      if (idx === 0 || idx === allMoveButtons.length - 1) {
+        button.classList.add(REORDER_BUTTON_HIDDEN)
+      } else {
+        button.classList.remove(REORDER_BUTTON_HIDDEN)
+      }
+    })
+  }
+
+  /**
+   * @param {HTMLElement} source
+   */
+  setMoveFocus(source) {
+    if (source.classList.contains(REORDER_BUTTON_HIDDEN)) {
+      const nearButton = /** @type { HTMLElement | null } */ (
+        source.nextElementSibling ?? source.previousElementSibling
+      )
+      if (nearButton) {
+        nearButton.focus()
+      }
+      return
+    }
+    source.focus()
+  }
+
   /**
    * @param {HTMLElement[]} elements
    */
@@ -120,6 +149,7 @@ export class ListSortableQuestionElements extends ListQuestionElements {
     this.editOptionsButton.textContent = 'Done'
     this.editOptionsButton.classList.remove('govuk-button--inverse')
     this.setStyleOnChildren(elements, true)
+    this.updateMoveButtons()
   }
 
   /**
@@ -178,14 +208,24 @@ export class ListSortableEventListeners extends ListEventListeners {
 
   configureMoveButtonListeners() {
     const allMoveButtons = this._listSortableElements.getAllMoveButtons()
-    if (this._listSortableElements.isReordering()) {
+    if (!this._listSortableElements.isReordering()) {
       // Add all move button listeners
       allMoveButtons.forEach((button) => {
         if (button.textContent === 'Up') {
           this.inputEventListener(
             button,
-            (_e) => {
-              // console.log('up', e)
+            (target, e) => {
+              e.preventDefault()
+              if (target.classList.contains('js-reorderable-list-up')) {
+                const item = target.closest('.app-reorderable-list__item')
+                const prevItem = item?.previousElementSibling
+                if (prevItem && item.parentNode) {
+                  item.parentNode.insertBefore(item, prevItem)
+                }
+                this._listQuestion.resyncPreviewAfterReorder()
+                this._listSortableElements.updateMoveButtons()
+                this._listSortableElements.setMoveFocus(target)
+              }
             },
             'click'
           )
@@ -193,15 +233,23 @@ export class ListSortableEventListeners extends ListEventListeners {
         if (button.textContent === 'Down') {
           this.inputEventListener(
             button,
-            (_e) => {
-              // console.log('down', e)
+            (target, e) => {
+              e.preventDefault()
+              if (target.classList.contains('js-reorderable-list-down')) {
+                const item = target.closest('.app-reorderable-list__item')
+                const nextItem = item?.nextElementSibling
+                if (nextItem && item.parentNode) {
+                  item.parentNode.insertBefore(nextItem, item)
+                }
+                this._listQuestion.resyncPreviewAfterReorder()
+                this._listSortableElements.updateMoveButtons()
+                this._listSortableElements.setMoveFocus(target)
+              }
             },
             'click'
           )
         }
       })
-    } else {
-      // Remove all move button listeners
     }
   }
 }
