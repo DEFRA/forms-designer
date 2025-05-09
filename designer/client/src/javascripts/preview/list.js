@@ -162,7 +162,7 @@ export class ListEventListeners extends EventListeners {
    * @returns {ListenerRow[]}
    */
   get editPanelListeners() {
-    const editPanelListener1 = /** @type {ListenerRow} */ ([
+    const listTextInputListener = /** @type {ListenerRow} */ ([
       this._listElements.listText,
       /**
        * @param {HTMLInputElement} target
@@ -173,7 +173,7 @@ export class ListEventListeners extends EventListeners {
       },
       'input'
     ])
-    const editPanelListener2 = /** @type {ListenerRow} */ ([
+    const listTextFocusListener = /** @type {ListenerRow} */ ([
       this._listElements.listText,
       /**
        * @param {HTMLInputElement} target
@@ -184,7 +184,7 @@ export class ListEventListeners extends EventListeners {
       },
       'focus'
     ])
-    const editPanelListener3 = /** @type {ListenerRow} */ ([
+    const listTextBlurListener = /** @type {ListenerRow} */ ([
       this._listElements.listText,
       /**
        * @param {HTMLInputElement} _target
@@ -194,7 +194,7 @@ export class ListEventListeners extends EventListeners {
       },
       'blur'
     ])
-    const editPanelListener4 = /** @type {ListenerRow} */ ([
+    const listHintInputListener = /** @type {ListenerRow} */ ([
       this._listElements.listHint,
       /**
        * @param {HTMLInputElement} target
@@ -205,7 +205,7 @@ export class ListEventListeners extends EventListeners {
       },
       'input'
     ])
-    const editPanelListener5 = /** @type {ListenerRow} */ ([
+    const listHintFocusListener = /** @type {ListenerRow} */ ([
       this._listElements.listHint,
       /**
        * @param {HTMLInputElement} target
@@ -216,7 +216,7 @@ export class ListEventListeners extends EventListeners {
       },
       'focus'
     ])
-    const editPanelListener6 = /** @type {ListenerRow} */ ([
+    const listHintBlurListener = /** @type {ListenerRow} */ ([
       this._listElements.listHint,
       /**
        * @param {HTMLInputElement} _target
@@ -228,12 +228,12 @@ export class ListEventListeners extends EventListeners {
     ])
 
     return [
-      editPanelListener1,
-      editPanelListener2,
-      editPanelListener3,
-      editPanelListener4,
-      editPanelListener5,
-      editPanelListener6
+      listTextInputListener,
+      listTextFocusListener,
+      listTextBlurListener,
+      listHintInputListener,
+      listHintFocusListener,
+      listHintBlurListener
     ]
   }
 
