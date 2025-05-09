@@ -26,7 +26,9 @@
     "server:watch": "NODE_ENV=development tsx watch --clear-screen=false --enable-source-maps --env-file=.env --exclude \"**/*.test.*\" --include \"../model/dist/**/!(*.test).js\"",
     "server:watch:dev": "npm run server:watch -- ./server/src/index.ts",
     "server:watch:debug": "npm run server:watch -- --inspect-wait ./server/src/index.ts",
+    "precompile": "node precompile-govuk-components.js",
     "prestart": "npm run build",
+    "postinstall": "npm run precompile",
     "start": "NODE_ENV=${NODE_ENV:-production} node --enable-source-maps ./server/dist/index.js"
   },
   "dependencies": {
