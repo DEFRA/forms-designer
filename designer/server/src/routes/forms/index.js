@@ -5,6 +5,7 @@ import contactPhone from '~/src/routes/forms/contact/phone.js'
 import create from '~/src/routes/forms/create.js'
 import edit from '~/src/routes/forms/edit.js'
 import editorCheckAnswersSettings from '~/src/routes/forms/editor-v2/check-answers-settings.js'
+import editorError from '~/src/routes/forms/editor-v2/error.js'
 import editorGuidance from '~/src/routes/forms/editor-v2/guidance.js'
 import editorListItemDelete from '~/src/routes/forms/editor-v2/list-item-delete.js'
 import editorMigrate from '~/src/routes/forms/editor-v2/migrate.js'
@@ -15,6 +16,7 @@ import editorQuestionDetails from '~/src/routes/forms/editor-v2/question-details
 import editorQuestionDelete from '~/src/routes/forms/editor-v2/question-or-page-delete.js'
 import editorQuestion from '~/src/routes/forms/editor-v2/question-type.js'
 import editorQuestions from '~/src/routes/forms/editor-v2/questions.js'
+import editorState from '~/src/routes/forms/editor-v2/state.js'
 import formLifecycle from '~/src/routes/forms/form-lifecycle.js'
 import library from '~/src/routes/forms/library.js'
 import notificationEmail from '~/src/routes/forms/notification-email.js'
@@ -34,8 +36,10 @@ export default [
   editorQuestionDelete,
   editorQuestionDetails,
   editorQuestions,
+  editorState,
   editorListItemDelete,
   editorCheckAnswersSettings,
+  editorError,
   library,
   formLifecycle,
   contactPhone,

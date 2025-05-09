@@ -1,5 +1,6 @@
 import Sortable from 'sortablejs'
 
+import { addPathToEditorBaseUrl } from '~/src/javascripts/preview/helper'
 import {
   List,
   ListEventListeners,
@@ -235,6 +236,9 @@ export class ListSortableEventListeners extends ListEventListeners {
         (_target, e) => {
           this._listSortableElements.handleReorder(e)
           this.configureMoveButtonListeners()
+          if (this._listSortableElements.isReordering()) {
+            this._listQuestion.updateStateInSession()
+          }
         },
         'click'
       ]
@@ -287,6 +291,9 @@ export class ListSortable extends List {
     listeners.setupListeners()
   }
 
+  /**
+   * @returns {Map<string, ListElement>}
+   */
   resyncPreviewAfterReorder() {
     const listElements = this._listElements.sortableContainer.children
     const listElementsOptions = /** @type {HTMLInputElement[]} */ (
@@ -298,6 +305,36 @@ export class ListSortable extends List {
     )
     this._list = this.createListFromElements(newList)
     this.render()
+    return this._list
+  }
+
+  updateStateInSession() {
+    const url = addPathToEditorBaseUrl(window.location.href, '/state/', true)
+
+    const listElements = Array.from(this._list).map(([_name, value]) => ({
+      id: value.id,
+      text: value.text,
+      hint: value.hint?.text ? { text: value.hint.text } : undefined,
+      value: value.value
+    }))
+
+    fetch(url, {
+      method: 'POST',
+      body: JSON.stringify({ listItems: listElements }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then((resp) => {
+        if (resp.status !== 200) {
+          this._listElements.redirectToErrorPage()
+          return
+        }
+        return 'ok'
+      })
+      .catch((_err) => {
+        this._listElements.redirectToErrorPage()
+      })
   }
 
   static setupPreview() {

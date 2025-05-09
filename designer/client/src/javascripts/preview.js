@@ -11,7 +11,7 @@ import { DateInput } from '~/src/javascripts/preview/date-input.js'
 import { EmailAddress } from '~/src/javascripts/preview/email-address.js'
 import { PhoneNumber } from '~/src/javascripts/preview/phone-number.js'
 import { Question } from '~/src/javascripts/preview/question.js'
-import { Radio } from '~/src/javascripts/preview/radio.js'
+import { RadioSortable } from '~/src/javascripts/preview/radio-sortable.js'
 import { ShortAnswer } from '~/src/javascripts/preview/short-answer.js'
 import { UkAddress } from '~/src/javascripts/preview/uk-address.js'
 
@@ -32,11 +32,11 @@ export function showHideForJs() {
 
 /**
  * @param {ComponentType} componentType
- * @returns {Question|Radio|DateInput|ShortAnswer}
+ * @returns {Question|RadioSortable|DateInput|ShortAnswer}
  */
 export function setupPreview(componentType) {
   /**
-   * @type {Question|Radio|DateInput|ShortAnswer|PhoneNumber}
+   * @type {Question|RadioSortable|DateInput|ShortAnswer|PhoneNumber}
    */
   let preview
   if (componentType === ComponentType.TextField) {
@@ -44,7 +44,7 @@ export function setupPreview(componentType) {
   } else if (componentType === ComponentType.DatePartsField) {
     preview = DateInput.setupPreview()
   } else if (componentType === ComponentType.RadiosField) {
-    preview = Radio.setupPreview()
+    preview = RadioSortable.setupPreview()
   } else if (componentType === ComponentType.UkAddressField) {
     preview = UkAddress.setupPreview()
   } else if (componentType === ComponentType.EmailAddressField) {

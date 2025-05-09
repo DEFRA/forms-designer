@@ -474,5 +474,50 @@ describe('list-sortable', () => {
       preview.resyncPreviewAfterReorder()
       expect(preview2._list.size).toBe(4)
     })
+
+    it('updateStateInSession should call API to sync state', () => {
+      // @ts-expect-error - Response type
+      jest
+        .spyOn(global, 'fetch')
+        .mockImplementation((str) => Promise.resolve(str))
+      document.body.innerHTML =
+        '<button id="edit-options-button">Done</button>' +
+        '<button id="add-option-button">Add item</button>' +
+        list1HTML
+      const preview = ListSortable.setupPreview()
+      expect(preview._list.size).toBe(4)
+      preview.updateStateInSession()
+      expect(global.fetch).toHaveBeenCalledWith(expect.anything(), {
+        body: JSON.stringify({
+          listItems: [
+            {
+              id: 'dc96bf7a-07a0-4f5b-ba6d-c5c4c9d381de',
+              text: 'Option 1',
+              value: 'option-1'
+            },
+            {
+              id: '21e58240-5d0a-4e52-8003-3d99f318beb8',
+              text: 'Option 2',
+              value: 'option-2'
+            },
+            {
+              id: '80c4cb93-f079-4836-93f9-509e683e5004',
+              text: 'Option 3',
+              value: 'option-3'
+            },
+            {
+              id: 'ade6652f-b67e-4665-bf07-66f03877b5c6',
+              text: 'Option 4',
+              hint: { text: 'hint 4' },
+              value: 'option-4'
+            }
+          ]
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        method: 'POST'
+      })
+    })
   })
 })

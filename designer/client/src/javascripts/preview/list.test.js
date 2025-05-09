@@ -1,5 +1,6 @@
 import { ComponentType } from '@defra/forms-model'
 
+import { list1HTML } from '~/src/javascripts/preview/__stubs__/list'
 import { questionDetailsStubPanels } from '~/src/javascripts/preview/__stubs__/question.js'
 import {
   List,
@@ -8,6 +9,7 @@ import {
   listsElementToMap
 } from '~/src/javascripts/preview/list.js'
 import { setupPreview } from '~/src/javascripts/preview.js'
+
 class EmptyListQuestionElements extends ListQuestionElements {
   get values() {
     // @ts-expect-error - inheritance not working properly in linting
@@ -19,51 +21,14 @@ class EmptyListQuestionElements extends ListQuestionElements {
   }
 }
 
-jest.mock('~/src/javascripts/preview/nunjucks.js', () => {
-  return {
-    /**
-     * @param {string} _template
-     * @param {{ model: QuestionBaseModel }} _context
-     * @returns {string}
-     */
-    render(_template, _context) {
-      return '****UPDATED****'
-    }
-  }
-})
+jest.mock('~/src/javascripts/preview/nunjucks.js')
+jest.mock('~/src/views/components/ukaddressfield.njk', () => '')
 jest.mock('~/src/views/components/telephonenumberfield.njk', () => '')
 jest.mock('~/src/views/components/emailaddressfield.njk', () => '')
-jest.mock('~/src/views/components/ukaddressfield.njk', () => '')
-
-jest.mock(
-  '~/src/views/components/inset.njk',
-  () => '<div class="govuk-inset-text"></div>'
-)
-jest.mock(
-  '~/src/views/components/textfield.njk',
-  () =>
-    '<input class="govuk-input" id="question" name="question" type="text" value="What is your answer?">'
-)
-jest.mock(
-  '~/src/views/components/radios.njk',
-  () => '<div class="govuk-inset-text"></div>'
-)
-
-jest.mock(
-  '~/src/views/components/date-input.njk',
-  () =>
-    '<div class="govuk-date-input" id="dateInput">' +
-    '  <div class="govuk-date-input__item">' +
-    '    <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dateInput-day" name="day" type="text" inputmode="numeric">' +
-    '  </div>' +
-    '  <div class="govuk-date-input__item">' +
-    '    <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dateInput-month" name="month" type="text" inputmode="numeric">' +
-    '  </div>' +
-    '  <div class="govuk-date-input__item">' +
-    '    <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="dateInput-year" name="year" type="text" inputmode="numeric">' +
-    '  </div>' +
-    '</div>'
-)
+jest.mock('~/src/views/components/inset.njk', () => '')
+jest.mock('~/src/views/components/textfield.njk', () => '')
+jest.mock('~/src/views/components/radios.njk', () => '')
+jest.mock('~/src/views/components/date-input.njk', () => '')
 
 describe('list', () => {
   const list1Id = '414d82a3-4cab-416a-bd54-6b86fbd51120'
@@ -164,7 +129,7 @@ describe('list', () => {
 
   describe('integration', () => {
     it('should setup', () => {
-      document.body.innerHTML = ''
+      document.body.innerHTML = list1HTML
       const preview = /** @type {Radio} */ (
         setupPreview(ComponentType.RadiosField)
       )
