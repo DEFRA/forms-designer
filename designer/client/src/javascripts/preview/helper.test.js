@@ -1,6 +1,7 @@
 import {
   addPathToEditorBaseUrl,
   hideHtmlElement,
+  showHideHtmlElement,
   showHtmlElement
 } from '~/src/javascripts/preview/helper.js'
 
@@ -72,6 +73,22 @@ describe('helper', () => {
       const elem = document.getElementById('test-element-missing')
       hideHtmlElement(elem)
       expect(elem).toBeNull()
+    })
+
+    it('should show element if show', () => {
+      document.body.innerHTML =
+        '<div id="test-element" style="display: none">some text</div>'
+      const elem = document.getElementById('test-element')
+      showHideHtmlElement(elem, true)
+      expect(elem?.style.display).toBe('block')
+    })
+
+    it('should hide element if not show', () => {
+      document.body.innerHTML =
+        '<div id="test-element" style="display: block">some text</div>'
+      const elem = document.getElementById('test-element')
+      showHideHtmlElement(elem, false)
+      expect(elem?.style.display).toBe('none')
     })
   })
 })

@@ -34,3 +34,15 @@ export function showHtmlElement(el) {
     el.style.display = 'block'
   }
 }
+
+/**
+ * @param { HTMLElement | null } el
+ * @param {boolean} show
+ */
+export function showHideHtmlElement(el, show) {
+  if (show) {
+    showHtmlElement(el)
+  } else {
+    hideHtmlElement(el)
+  }
+}

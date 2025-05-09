@@ -3,6 +3,7 @@ import Sortable from 'sortablejs'
 import {
   addPathToEditorBaseUrl,
   hideHtmlElement,
+  showHideHtmlElement,
   showHtmlElement
 } from '~/src/javascripts/preview/helper'
 import {
@@ -105,18 +106,10 @@ export class ListSortableQuestionElements extends ListQuestionElements {
         if (child.tagName === 'A') {
           if (child.classList.contains('govuk-button')) {
             // Show/hide up/down buttons
-            if (inReorderMode) {
-              showHtmlElement(child)
-            } else {
-              hideHtmlElement(child)
-            }
+            showHideHtmlElement(child, inReorderMode)
           } else {
             // Show/hide edit/delete links
-            if (inReorderMode) {
-              hideHtmlElement(child)
-            } else {
-              showHtmlElement(child)
-            }
+            showHideHtmlElement(child, !inReorderMode)
           }
         } else {
           child.style.cursor = cursorStyle
