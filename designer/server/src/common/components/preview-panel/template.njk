@@ -1,3 +1,5 @@
+{% from "preview-error-panel/macro.njk" import appPreviewErrorPanel %}
+
 <div id="preview-container-inner">
   <!-- Before content -->
   <div id="before-content" class="preview-before-content">
@@ -25,7 +27,6 @@
         </p>
 
         <!-- Question Content Here -->
-
         <div class="border-left-container-shorttext" id="question-preview-content">
         {%- include "./templates/" + params.questionType | lower + ".njk" -%}
         </div>
@@ -40,31 +41,10 @@
         </p>
         <!-- Error Messages Content -->
         <div class="govuk-error-summary" data-disable-auto-focus="true">
-          <h2 class="govuk-error-summary__title">There is a problem</h2>
-          <ul class="govuk-list govuk-error-summary__list">
-            <!-- Error messages -->
-            <li>
-              <a id="empty-input-error-shorttext" class="govuk-error-message">
-                <span class="govuk-visually-hidden">Error:</span>
-                Enter <span id="error-dynamic-text" style="text-transform: lowercase;">[Short description]</span>
-              </a>
-            </li>
-            <h3 class="govuk-heading-s">If you set answer limits:</h3>
-            <li>
-              <a id="too-long-input-error-shorttext" class="govuk-error-message">
-                <span class="govuk-visually-hidden">Error:</span>
-                <span id="error-dynamic-text-long">[Short description]</span> must be
-                <span id="max-length">[max length]</span> characters or less
-              </a>
-            </li>
-            <li>
-              <a id="too-short-input-error-shorttext" class="govuk-error-message">
-                <span class="govuk-visually-hidden">Error:</span>
-                <span id="error-dynamic-text-short">[Short description]</span> must be
-                <span id="min-length">[min length]</span> characters or more
-              </a>
-            </li>
-          </ul>
+            {% call appPreviewErrorPanel({
+
+            }) %}
+            {% endcall %}
           <a href="#edit-page" class="govuk-skip-link" style="margin-bottom: 30px!important;" data-module="govuk-skip-link" data-govuk-skip-link-init="">
             Skip to edit page
           </a>

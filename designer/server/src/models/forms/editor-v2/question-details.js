@@ -1,3 +1,4 @@
+// import { TextField } from '@defra/forms-engine-plugin'
 import { randomId } from '@defra/forms-model'
 
 import { QuestionTypeDescriptions } from '~/src/common/constants/editor.js'
@@ -250,6 +251,13 @@ export function questionDetailsViewModel(
   const changeTypeUrl = `${urlPageBase}/question/${questionId}/type/${stateId}`
   const pageHeading = details.pageTitle
   const pageTitle = `Edit question ${details.questionNum} - ${formTitle}`
+
+  // const textfield = new TextField({
+  //   title: 'Dummy',
+  //   name: 'dummy',
+  //   options: { required: false }
+  // }, {})
+  // console.log('errormodel', textfield.getAllPossibleErrors())
 
   return {
     listDetails: getListDetails(state, questionFieldsOverride),
