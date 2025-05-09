@@ -30,7 +30,7 @@
         {% set focusClass = " pages-reorder-panel-focus" if isFocus else "" %}
 
         <li class="app-reorderable-list__item reorder-panel{{ focusClass }}" data-index="{{ loop.index }}" data-id="{{ item.id }}" data-val="{{ item.value }}" data-text="{{ item.text }}" data-hint="{{ item.hint.text }}">
-          <div class="app-reorderable-list__wrapper">
+          <div class="app-reorderable-list__wrapper list-item">
             <div class="app-reorderable-list__content">
               <p class="govuk-body fauxlabel option-label-display" id="option-{{ loop.index }}-label-display">
                 {{ item.text }}
@@ -83,7 +83,7 @@
         {% set isFocus = state.lastMovedId == item.id %}
         {% set focusClass = " pages-reorder-panel-focus" if isFocus else "" %}
         <li class="app-reorderable-list__item" data-index="{{ loop.index }}" data-id="{{ item.id }}" data-val="{{ item.value }}" data-text="{{ item.text }}" data-hint="{{ item.hint.text }}">
-          <div class="app-reorderable-list__wrapper">
+          <div class="app-reorderable-list__wrapper list-item">
             {% if loop.index == listDetails.rowNumBeingEdited %}
               <div class="app-reorderable-list__content">
                 {%- include "../../../../views/forms/editor-v2/custom-templates/radio-or-checkbox-edit.njk" -%}
@@ -130,7 +130,7 @@
     {% if state.editRow.expanded %}
       {% if listDetails.rowNumBeingEdited == state.listItems.length + 1 %}
         <li class="app-reorderable-list__item" data-index="{{ loop.index }}" data-id="{{ item.id }}" data-val="{{ item.value }}" data-text="{{ item.text }}" data-hint="{{ item.hint.text }}">
-          <div class="app-reorderable-list__wrapper">
+          <div class="app-reorderable-list__wrapper list-item">
             <div class="app-reorderable-list__content">
               {%- include "../../../../views/forms/editor-v2/custom-templates/radio-or-checkbox-edit.njk" -%}
             </div>
