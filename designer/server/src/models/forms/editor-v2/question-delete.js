@@ -86,6 +86,7 @@ export function deleteQuestionConfirmationPageViewModel(
   pageId,
   questionId
 ) {
+  const formTitle = metadata.title
   const formPath = formOverviewPath(metadata.slug)
   const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
 
@@ -96,7 +97,7 @@ export function deleteQuestionConfirmationPageViewModel(
     determineDetails(components, page, questionId)
 
   return {
-    ...baseModelFields(metadata.slug, pageTitle),
+    ...baseModelFields(metadata.slug, `${pageTitle} - ${formTitle}`, formTitle),
     navigation,
     pageHeading: {
       text: metadata.title
@@ -135,21 +136,24 @@ export function deleteListItemConfirmationPageViewModel(
   stateId,
   itemId
 ) {
+  const formTitle = metadata.title
   const formPath = formOverviewPath(metadata.slug)
   const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
-
   const listItem = state?.listItems?.find((x) => x.id === itemId)
-
-  const pageTitle = 'Are you sure you want to delete this item?'
+  const pageHeading = 'Are you sure you want to delete this item?'
 
   return {
-    ...baseModelFields(metadata.slug, pageTitle),
+    ...baseModelFields(
+      metadata.slug,
+      `${pageHeading} - ${formTitle}`,
+      pageHeading
+    ),
     navigation,
     pageHeading: {
       text: metadata.title
     },
     bodyCaptionText: `List item: ${listItem?.text}`,
-    bodyHeadingText: pageTitle,
+    bodyHeadingText: pageHeading,
     bodyText: 'You cannot recover deleted items',
     buttons: [
       {

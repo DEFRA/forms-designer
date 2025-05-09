@@ -67,7 +67,7 @@ export function guidanceViewModel(
   validation,
   notification
 ) {
-  const pageTitle = metadata.title
+  const formTitle = metadata.title
   const formPath = formOverviewPath(metadata.slug)
   const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
   const { formValues, formErrors } = validation ?? {}
@@ -86,13 +86,15 @@ export function guidanceViewModel(
   )
 
   const guidanceTextVal = formValues?.guidanceText ?? guidanceComponent?.content
+  const cardHeading = 'Edit guidance page'
+  const pageTitle = `${cardHeading} - ${formTitle}`
 
   return {
-    ...baseModelFields(metadata.slug, pageTitle),
+    ...baseModelFields(metadata.slug, pageTitle, formTitle),
     fields: { ...guidanceFields(pageHeadingVal, guidanceTextVal, validation) },
     cardTitle: `Page settings`,
     cardCaption: `Page ${pageNum}`,
-    cardHeading: 'Edit guidance page',
+    cardHeading,
     navigation,
     errorList: buildErrorList(formErrors),
     formErrors: validation?.formErrors,

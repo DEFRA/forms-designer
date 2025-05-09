@@ -9,12 +9,13 @@ import { formOverviewPath } from '~/src/models/links.js'
  * @param {FormMetadata} metadata
  */
 export function migrateConfirmationPageViewModel(metadata) {
+  const formTitle = metadata.title
   const formPath = formOverviewPath(metadata.slug)
   const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
   const pageTitle = 'Do you want to migrate this form to version 2?'
 
   return {
-    ...baseModelFields(metadata.slug, pageTitle),
+    ...baseModelFields(metadata.slug, `${pageTitle} - ${formTitle}`, formTitle),
     navigation,
     pageHeading: {
       text: metadata.title

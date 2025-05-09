@@ -189,7 +189,9 @@ export function pagesViewModel(metadata, definition, notification) {
     })
   }
 
-  const pageTitle = 'Add and edit pages'
+  const pageHeading = 'Add and edit pages'
+  const pageCaption = metadata.title
+  const pageTitle = `${pageHeading} - ${pageCaption}`
   const pageListModel = {
     ...mapPageData(metadata.slug, definition),
     pageTitle,
@@ -197,10 +199,10 @@ export function pagesViewModel(metadata, definition, notification) {
     previewBaseUrl,
     navigation,
     pageHeading: {
-      text: pageTitle
+      text: pageHeading
     },
     pageCaption: {
-      text: definition.name
+      text: pageCaption
     },
     pageActions,
     notification

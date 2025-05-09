@@ -87,8 +87,9 @@ export function getFormSpecificNavigation(
 /**
  * @param {string} slug
  * @param {string} pageTitle
+ * @param {string} pageHeading
  */
-export function baseModelFields(slug, pageTitle) {
+export function baseModelFields(slug, pageTitle, pageHeading) {
   return {
     backLink: {
       href: editorv2Path(slug, 'pages'),
@@ -96,7 +97,7 @@ export function baseModelFields(slug, pageTitle) {
     },
     pageTitle,
     pageHeading: {
-      text: pageTitle,
+      text: pageHeading,
       size: 'large'
     },
     useNewMasthead: true

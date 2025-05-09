@@ -162,7 +162,7 @@ const result = schema.validate(
     managerUrl: process.env.MANAGER_URL,
     submissionUrl: process.env.SUBMISSION_URL,
     previewUrl: process.env.PREVIEW_URL,
-    serviceName: 'Submit a form to Defra',
+    serviceName: 'Forms designer',
     serviceVersion: process.env.SERVICE_VERSION,
     log: {
       enabled: process.env.LOG_ENABLED,

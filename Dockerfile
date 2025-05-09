@@ -16,9 +16,14 @@ EXPOSE ${PORT} ${PORT_DEBUG}
 
 WORKDIR /home/node/app
 
+
 COPY --chown=node:node ./packag*.json ./
 COPY --chown=node:node ./designer/package.json ./designer/
+COPY --chown=node:node ./designer/bin/precompile.js ./designer/bin/
+COPY --chown=node:node ./designer/precompile-govuk-components.js ./designer/
 COPY --chown=node:node ./model/package.json ./model/
+
+RUN mkdir -p ./designer/client/src/assets/nunjucks
 
 RUN npm ci
 
@@ -50,6 +55,7 @@ LABEL uk.gov.defra.ffc.parent-image=defradigital/node:${PARENT_VERSION}
 
 WORKDIR /home/node/app
 
+
 COPY --from=productionBuild --chown=node:node /home/node/app/packag*.json ./
 
 COPY --from=productionBuild --chown=node:node /home/node/app/model/package.json ./model/
@@ -58,6 +64,11 @@ COPY --from=productionBuild --chown=node:node /home/node/app/model/dist ./model/
 COPY --from=productionBuild --chown=node:node /home/node/app/designer/package.json ./designer/package.json
 COPY --from=productionBuild --chown=node:node /home/node/app/designer/client/dist ./designer/client/dist
 COPY --from=productionBuild --chown=node:node /home/node/app/designer/server/dist ./designer/server/dist
+
+# we're doing this because we've already built it but don't need it
+# TODO: we need a better solution
+RUN touch ./designer/precompile-govuk-components.js
+
 
 RUN npm ci --omit=dev
 

@@ -12,16 +12,21 @@ import { formOverviewPath } from '~/src/models/links.js'
  * @param {ValidationFailure<FormEditor>} [validation]
  */
 export function pageViewModel(metadata, editor, validation) {
-  const pageTitle = 'What kind of page do you need?'
+  const formTitle = metadata.title
+  const pageHeading = 'What kind of page do you need?'
   const formPath = formOverviewPath(metadata.slug)
   const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
   const { formValues, formErrors } = validation ?? {}
 
   return {
-    ...baseModelFields(metadata.slug, pageTitle),
+    ...baseModelFields(
+      metadata.slug,
+      `${pageHeading} - ${formTitle}`,
+      pageHeading
+    ),
     navigation,
     pageCaption: {
-      text: metadata.title
+      text: formTitle
     },
     pageClasses:
       'govuk-grid-column-full govuk-grid-column-one-half-from-desktop',
