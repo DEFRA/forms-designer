@@ -354,6 +354,12 @@ export interface QuestionSessionState {
   lastMoveDirection?: string
 }
 
+export interface GovukFieldItem {
+  text?: string
+  value?: string
+  checked?: boolean
+}
+
 export interface GovukField {
   id?: string
   name?: string
@@ -370,11 +376,24 @@ export interface GovukField {
     isPageHeading?: boolean
   }
   hint?: { text?: string; html?: string; classes?: string }
-  items?: { text?: string; value?: string; checked?: boolean }[]
+  items?: GovukFieldItem[]
   rows?: number
   type?: string
   customTemplate?: string
 }
+
+export type GovukFieldQuestionOptional = Omit<GovukField, 'name' | 'items'> & {
+  name: 'questionOptional'
+  items: [
+    {
+      text?: string
+      value?: string
+      checked: boolean
+    }
+  ]
+}
+
+export type GovukStringField = Omit<GovukField, 'value'> & { value: string }
 
 export interface FormEditorGovukField {
   question?: GovukField
