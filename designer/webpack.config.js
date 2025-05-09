@@ -4,7 +4,7 @@ import CopyPlugin from 'copy-webpack-plugin'
 import resolvePkg from 'resolve'
 import TerserPlugin from 'terser-webpack-plugin'
 import webpack from 'webpack'
-import WebpackAssetsManifest from 'webpack-assets-manifest'
+import { WebpackAssetsManifest } from 'webpack-assets-manifest'
 
 const { EnvironmentPlugin } = webpack
 const { NODE_ENV = 'development', REACT_LOG_LEVEL } = process.env
