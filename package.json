@@ -28,8 +28,6 @@
     "lint:scss": "stylelint --cache --cache-location .cache/stylelint --cache-strategy content --color --ignore-path .gitignore --max-warnings 0 \"**/*.scss\"",
     "lint:types": "tsc --build tsconfig.json",
     "prepare": "husky || true",
-    "precompile": "node designer/precompile-govuk-components.js",
-    "postinstall": "npm run precompile",
     "start": "npm run start --workspace designer",
     "test": "jest --color --coverage --verbose",
     "test:watch": "jest --color --watch"
@@ -62,7 +60,7 @@
     "global-jsdom": "^26.0.0",
     "husky": "^9.1.7",
     "jest": "^29.7.0",
-    "jsdom": "^26.0.0",
+    "jsdom": "^26.1.0",
     "lint-staged": "^15.5.0",
     "postcss": "^8.4.49",
     "postcss-scss": "^4.0.9",

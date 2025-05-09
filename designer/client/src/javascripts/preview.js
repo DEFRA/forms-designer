@@ -9,34 +9,32 @@ import { ComponentType } from '@defra/forms-model'
 
 import { DateInput } from '~/src/javascripts/preview/date-input.js'
 import { EmailAddress } from '~/src/javascripts/preview/email-address.js'
+import {
+  hideHtmlElement,
+  showHtmlElement
+} from '~/src/javascripts/preview/helper'
 import { PhoneNumber } from '~/src/javascripts/preview/phone-number.js'
 import { Question } from '~/src/javascripts/preview/question.js'
-import { Radio } from '~/src/javascripts/preview/radio.js'
+import { RadioSortable } from '~/src/javascripts/preview/radio-sortable.js'
 import { ShortAnswer } from '~/src/javascripts/preview/short-answer.js'
 import { UkAddress } from '~/src/javascripts/preview/uk-address.js'
 
 export function showHideForJs() {
   const previewPanel = document.getElementById('preview-panel')
-  if (previewPanel) {
-    previewPanel.style = 'display: block'
-  }
+  showHtmlElement(previewPanel)
   const previewErrorsButton = document.getElementById('preview-error-messages')
-  if (previewErrorsButton) {
-    previewErrorsButton.style = 'display: none'
-  }
+  hideHtmlElement(previewErrorsButton)
   const previewPageButton = document.getElementById('preview-page')
-  if (previewPageButton) {
-    previewPageButton.style = 'display: none'
-  }
+  hideHtmlElement(previewPageButton)
 }
 
 /**
  * @param {ComponentType} componentType
- * @returns {Question|Radio|DateInput|ShortAnswer}
+ * @returns {Question|RadioSortable|DateInput|ShortAnswer}
  */
 export function setupPreview(componentType) {
   /**
-   * @type {Question|Radio|DateInput|ShortAnswer|PhoneNumber}
+   * @type {Question|RadioSortable|DateInput|ShortAnswer|PhoneNumber}
    */
   let preview
   if (componentType === ComponentType.TextField) {
@@ -44,7 +42,7 @@ export function setupPreview(componentType) {
   } else if (componentType === ComponentType.DatePartsField) {
     preview = DateInput.setupPreview()
   } else if (componentType === ComponentType.RadiosField) {
-    preview = Radio.setupPreview()
+    preview = RadioSortable.setupPreview()
   } else if (componentType === ComponentType.UkAddressField) {
     preview = UkAddress.setupPreview()
   } else if (componentType === ComponentType.EmailAddressField) {
