@@ -5,7 +5,10 @@ import {
   type FormEditorInputCheckAnswersSettings,
   type FormEditorInputPage,
   type FormEditorInputPageSettings,
-  type FormEditorInputQuestion
+  type FormEditorInputQuestion,
+  type GovukField,
+  type GovukFieldQuestionOptional,
+  type GovukStringField
 } from '~/src/form/form-editor/types.js'
 
 export enum QuestionTypeSubGroup {
@@ -559,3 +562,21 @@ export const formEditorInputPageSettingsSchema =
     .keys(formEditorInputPageSettingsKeys)
     .required()
     .description('Settings for page content and display in the form editor')
+
+export function govukFieldValueIsString(
+  govukField: GovukField
+): govukField is GovukStringField {
+  return ['question', 'hintText', 'shortDescription'].includes(
+    `${govukField.name}`
+  )
+}
+
+export function govukFieldIsQuestionOptional(
+  govukField: GovukField
+): govukField is GovukFieldQuestionOptional {
+  if (govukField.name !== 'questionOptional') {
+    return false
+  }
+  const checkedValue = govukField.items?.[0].checked
+  return typeof checkedValue === 'boolean'
+}
