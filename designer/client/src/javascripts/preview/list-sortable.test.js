@@ -476,9 +476,9 @@ describe('list-sortable', () => {
     })
 
     it('updateStateInSession should call API to sync state', () => {
-      // @ts-expect-error - Response type
       jest
         .spyOn(global, 'fetch')
+        // @ts-expect-error - Response type
         .mockImplementation((str) => Promise.resolve(str))
       document.body.innerHTML =
         '<button id="edit-options-button">Done</button>' +
