@@ -9,6 +9,8 @@ import {
 
 const REORDER_BUTTON_HIDDEN = 'reorder-button-hidden'
 
+const OK_200 = 200
+
 export class ListSortableQuestionElements extends ListQuestionElements {
   /** @type {HTMLElement} */
   editOptionsButton
@@ -326,14 +328,15 @@ export class ListSortable extends List {
       }
     })
       .then((resp) => {
-        if (resp.status !== 200) {
+        if (resp.status !== OK_200) {
           this._listElements.redirectToErrorPage()
-          return
+          return 'error'
         }
         return 'ok'
       })
       .catch((_err) => {
         this._listElements.redirectToErrorPage()
+        return 'error'
       })
   }
 
