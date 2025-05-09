@@ -9,6 +9,10 @@ import { ComponentType } from '@defra/forms-model'
 
 import { DateInput } from '~/src/javascripts/preview/date-input.js'
 import { EmailAddress } from '~/src/javascripts/preview/email-address.js'
+import {
+  hideHtmlElement,
+  showHtmlElement
+} from '~/src/javascripts/preview/helper'
 import { PhoneNumber } from '~/src/javascripts/preview/phone-number.js'
 import { Question } from '~/src/javascripts/preview/question.js'
 import { RadioSortable } from '~/src/javascripts/preview/radio-sortable.js'
@@ -17,17 +21,11 @@ import { UkAddress } from '~/src/javascripts/preview/uk-address.js'
 
 export function showHideForJs() {
   const previewPanel = document.getElementById('preview-panel')
-  if (previewPanel) {
-    previewPanel.style = 'display: block'
-  }
+  showHtmlElement(previewPanel)
   const previewErrorsButton = document.getElementById('preview-error-messages')
-  if (previewErrorsButton) {
-    previewErrorsButton.style = 'display: none'
-  }
+  hideHtmlElement(previewErrorsButton)
   const previewPageButton = document.getElementById('preview-page')
-  if (previewPageButton) {
-    previewPageButton.style = 'display: none'
-  }
+  hideHtmlElement(previewPageButton)
 }
 
 /**

@@ -1,6 +1,10 @@
 import Sortable from 'sortablejs'
 
-import { addPathToEditorBaseUrl } from '~/src/javascripts/preview/helper'
+import {
+  addPathToEditorBaseUrl,
+  hideHtmlElement,
+  showHtmlElement
+} from '~/src/javascripts/preview/helper'
 import {
   List,
   ListEventListeners,
@@ -98,15 +102,24 @@ export class ListSortableQuestionElements extends ListQuestionElements {
         Array.from(item.getElementsByTagName('*'))
       )
       children.forEach((child) => {
-        child.style.cursor = cursorStyle
         if (child.tagName === 'A') {
           if (child.classList.contains('govuk-button')) {
             // Show/hide up/down buttons
-            child.style = inReorderMode ? 'display: block' : 'display:none'
+            if (inReorderMode) {
+              showHtmlElement(child)
+            } else {
+              hideHtmlElement(child)
+            }
           } else {
             // Show/hide edit/delete links
-            child.style = inReorderMode ? 'display: none' : 'display:block'
+            if (inReorderMode) {
+              hideHtmlElement(child)
+            } else {
+              showHtmlElement(child)
+            }
           }
+        } else {
+          child.style.cursor = cursorStyle
         }
       })
       if (inReorderMode) {
@@ -148,7 +161,7 @@ export class ListSortableQuestionElements extends ListQuestionElements {
    * @param {HTMLElement[]} elements
    */
   setButtonsForReorderMode(elements) {
-    this.addItemButton.style = 'display: none'
+    hideHtmlElement(this.addItemButton)
     this.editOptionsButton.textContent = 'Done'
     this.editOptionsButton.classList.remove('govuk-button--inverse')
     this.setStyleOnChildren(elements, true)
@@ -159,7 +172,7 @@ export class ListSortableQuestionElements extends ListQuestionElements {
    * @param {HTMLElement[]} elements
    */
   setButtonsWhenReorderingDone(elements) {
-    this.addItemButton.style = 'display: block'
+    showHtmlElement(this.addItemButton)
     this.editOptionsButton.textContent = 'Re-order'
     this.editOptionsButton.classList.add('govuk-button--inverse')
     this.setStyleOnChildren(elements, false)

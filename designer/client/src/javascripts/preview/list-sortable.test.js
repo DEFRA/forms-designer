@@ -186,7 +186,7 @@ describe('list-sortable', () => {
             cursorCount++
           }
         })
-        expect(cursorCount).toBe(45)
+        expect(cursorCount).toBe(53)
       })
     })
 
