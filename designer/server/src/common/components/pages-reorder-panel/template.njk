@@ -1,12 +1,28 @@
-{% set cardTitle = "Page " + params.pageNum + ": " + params.pageTitle %}
 {% set focusClass = " pages-reorder-panel-focus" if params.isFocus else "" %}
-{% set upHidden = "-hidden" if params.isFirstRow else "" %}
-{% set downHidden = "-hidden" if params.isLastRow else "" %}
-{% set upAuto = "autofocus" if params.isFocus and (params.prevFocusDirection == "up" or params.isLastRow) else "" %}
-{% set downAuto = "autofocus" if params.isFocus and (params.prevFocusDirection == "down" or params.isFirstRow) else "" %}
+{% set upHiddenClass = "-hidden" if params.isFirst else "" %}
+{% set downHiddenClass = "-hidden" if params.isLast else "" %}
 
-{% set ariaLabelUp = "Button, move page up, Page " + params.pageNum + " of " + params.totalPages + " : " + params.pageTitle + "." %}
-{% set ariaLabelDown = "Button, move page down, Page " + params.pageNum + " of " + params.totalPages + " : " + params.pageTitle + "." %}
+{% set autoFocusUpButton = false %}
+{% set autoFocusDownButton = false %}
+
+{% if params.isFocus %}
+  {% if params.prevFocusDirection == "up" %}
+    {% if not params.isFirst %}
+      {% set autoFocusUpButton = true %}
+    {% elif params.isFirst and not params.isLast %}
+      {% set autoFocusDownButton = true %}
+    {% endif %}
+  {% elif params.prevFocusDirection == "down" %}
+    {% if not params.isLast %}
+      {% set autoFocusDownButton = true %}
+    {% elif params.isLast and not params.isFirst %}
+      {% set autoFocusUpButton = true %}
+    {% endif %}
+  {% endif %}
+{% endif %}
+
+{% set ariaLabelUp = "Button, Move page: Up, Page " + params.pageNum + " of " + params.totalPages + ": " + params.pageTitle %}
+{% set ariaLabelDown = "Button, Move page: Down, Page " + params.pageNum + " of " + params.totalPages + ": " + params.pageTitle %}
 {% set ariaAlert = "The list of pages has been reordered, " + params.pageTitle + " is now page " + params.pageNum + " of " + params.totalPages + ". " if params.isFocus else "" %}
 
 {% if params.isFocus %}
@@ -21,16 +37,16 @@
 {% set ariaTags = "aria-live=alert" if params.isFocus else "" %}
 {% set ariaContent = "<p class='govuk-visually-hidden'>The list of pages has been reordered, " + params.pageTitle + " is now page " + params.pageNum + " of " + params.totalPages + ".</p>" if params.isFocus else "" %}
 
-<li>
-  <div class="govuk-summary-card pages-reorder-panel{{ focusClass }}">
-    <div class="govuk-summary-card__title-wrapper">
-      <h2 class="govuk-summary-card__title">
-        {{ cardTitle }}
-      </h2>
-      <div class="govuk-button-group">
-        <button type="submit" name="movement" id="focus-up-{{ params.pageId }}" class="govuk-button govuk-button--secondary reorder-button{{ upHidden }}" {{ upAuto }} value="up|{{ params.pageId }}" aria-label="{{ ariaLabelUp }}">Up</button>
-        <button type="submit" name="movement" id="focus-down-{{ params.pageId }}" class="govuk-button govuk-button--secondary reorder-button{{ downHidden }}" {{ downAuto }} value="down|{{ params.pageId }}" aria-label="{{ ariaLabelDown }}">Down</button>
-      </div>
+<li class="{{ params.itemClasses }} pages-reorder-panel{{ focusClass }}" data-id="{{ params.dataId }}">
+  <div class="govuk-summary-card__title-wrapper">
+    <h2 class="govuk-summary-card__title page-title" style="display: inline;">
+      <span class="page-number">Page {{ params.pageNum }}</span>: {{ params.pageTitle }}
+    </h2>
+    <div class="govuk-button-group">
+      <button type="submit" name="movement" id="focus-up-{{ params.pageId }}" class="govuk-button govuk-button--secondary reorder-button{{ upHiddenClass }} reorder-button-no-js" {% if autoFocusUpButton %}autofocus{% endif %} value="up|{{ params.pageId }}" aria-label="{{ ariaLabelUp }}">Up</button>
+      <button type="submit" name="movement" id="focus-down-{{ params.pageId }}" class="govuk-button govuk-button--secondary reorder-button{{ downHiddenClass }} reorder-button-no-js" {% if autoFocusDownButton %}autofocus{% endif %} value="down|{{ params.pageId }}" aria-label="{{ ariaLabelDown }}">Down</button>
+      <button class="app-button govuk-button govuk-button--secondary js-reorderable-list-up reorder-button-js" type="button" aria-label="Button, Move page: Up, Page {{ params.pageNum }} of {{ params.totalPages }}: {{ params.pageTitle }}" style="display: none; width: 80px;">Up</button>
+      <button class="app-button govuk-button govuk-button--secondary js-reorderable-list-down reorder-button-js" type="button" aria-label="Button, Move page: Down, Page {{ params.pageNum }} of {{ params.totalPages }}: {{ params.pageTitle }}" style="display: none; width: 80px;">Down</button>
     </div>
   </div>
 </li>

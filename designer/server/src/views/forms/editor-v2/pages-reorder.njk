@@ -16,32 +16,39 @@
       backLink: backLink
     }) %}
 
-    {% for page in pages %}
-      <div class="govuk-grid-row page-row">
-        <div class="govuk-grid-column-full">
-        <ol>
-        {{ appPagesReorderPanel({
-          formName: name,
-          pageNum: loop.index,
-          totalPages: pages.length,
-          pageId: page.id,
-          pageTitle: page.title,
-          actions: page.actions,
-          isFocus: page.isFocus,
-          prevFocusDirection: page.prevFocusDirection,
-          isFirstRow: loop.first,
-          isLastRow: loop.last
-          }) }}
-          </ol>
-        </div>
-      </div>
-    {% endfor %}
+    <div class="govuk-visually-hidden" id="reorder-announcement" aria-live="polite" aria-atomic="true"></div>
 
-    <input type="hidden" name="pageOrder" value="{{ pageOrder }}" />
+    <ol class="app-reorderable-list" id="pages-container" data-module="pages-reorder">
+      {% for page in pages %}
+        {% set isFixed = page.isCheckAnswersPage | default(false) %}
+        {% set itemClasses = "app-reorderable-list__item" %}
+        {% if isFixed %}
+            {% set itemClasses = itemClasses + " check-answers-item" %}
+        {% endif %}
+
+        {{ appPagesReorderPanel({
+            pageNum: loop.index,
+            pageTitle: page.title,
+            pageId: page.id,
+            totalPages: pages.length,
+            isFixed: isFixed,
+            isFirst: loop.first,
+            isLast: loop.last,
+            isFocus: page.isFocus,
+            prevFocusDirection: page.prevFocusDirection,
+            itemClasses: itemClasses,
+            dataId: page.id
+          })
+        }}
+      {% endfor %}
+    </ol>
+
+    <input type="hidden" name="pageOrder" id="pageOrder" value="{{ pageOrder }}" />
   </form>
 {% endcall %}
 {% endblock %}
 
 {% block mainEnd %}
   {{ super() }}
+  <script type="module" src="{{ getAssetPath("pages-reorder.js") }}"></script>
 {% endblock %}
