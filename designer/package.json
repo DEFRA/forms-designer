@@ -117,7 +117,7 @@
     "source-map-loader": "^5.0.0",
     "style-loader": "^4.0.0",
     "terser-webpack-plugin": "^5.3.14",
-    "tsx": "^4.19.2",
+    "tsx": "^4.19.4",
     "webpack": "~5.98.0",
     "webpack-assets-manifest": "^5.2.1",
     "webpack-cli": "^6.0.1"
