@@ -1,6 +1,6 @@
 {
   "name": "@defra/forms-model",
-  "version": "3.0.445",
+  "version": "3.0.446",
   "description": "A hapi plugin providing the model for Defra forms",
   "homepage": "https://github.com/DEFRA/forms-designer/tree/main/model#readme",
   "repository": {
@@ -22,7 +22,7 @@
     "test:watch": "jest --color --watch"
   },
   "dependencies": {
-    "marked": "^15.0.9",
+    "marked": "^15.0.11",
     "nanoid": "^5.0.7",
     "slug": "^10.0.0",
     "uuid": "^11.1.0"
@@ -30,7 +30,7 @@
   "devDependencies": {
     "@types/slug": "^5.0.9",
     "joi": "^17.13.3",
-    "joi-to-json": "^4.3.1",
+    "joi-to-json": "^4.3.2",
     "tsc-alias": "^1.8.11"
   },
   "peerDependencies": {

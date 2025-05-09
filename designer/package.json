@@ -1,6 +1,6 @@
 {
   "name": "@defra/forms-designer",
-  "version": "3.0.445",
+  "version": "3.0.446",
   "private": true,
   "description": "Defra forms designer",
   "homepage": "https://github.com/DEFRA/forms-designer/tree/main/designer#readme",
@@ -26,14 +26,16 @@
     "server:watch": "NODE_ENV=development tsx watch --clear-screen=false --enable-source-maps --env-file=.env --exclude \"**/*.test.*\" --include \"../model/dist/**/!(*.test).js\"",
     "server:watch:dev": "npm run server:watch -- ./server/src/index.ts",
     "server:watch:debug": "npm run server:watch -- --inspect-wait ./server/src/index.ts",
+    "precompile": "node precompile-govuk-components.js",
     "prestart": "npm run build",
+    "postinstall": "npm run precompile",
     "start": "NODE_ENV=${NODE_ENV:-production} node --enable-source-maps ./server/dist/index.js"
   },
   "dependencies": {
     "@babel/plugin-syntax-import-attributes": "^7.25.6",
     "@babel/preset-react": "^7.26.3",
     "@dagrejs/dagre": "^1.1.4",
-    "@defra/forms-model": "^3.0.445",
+    "@defra/forms-model": "^3.0.446",
     "@defra/hapi-tracing": "^1.0.0",
     "@elastic/ecs-pino-format": "^1.5.0",
     "@hapi/basic": "^7.0.2",
@@ -76,7 +78,7 @@
     "http-status-codes": "^2.3.0",
     "i18next": "^24.2.3",
     "i18next-http-backend": "^3.0.2",
-    "ioredis": "^5.6.0",
+    "ioredis": "^5.6.1",
     "joi": "^17.13.3",
     "lodash": "^4.17.21",
     "luxon": "^3.6.1",
@@ -117,7 +119,7 @@
     "source-map-loader": "^5.0.0",
     "style-loader": "^4.0.0",
     "terser-webpack-plugin": "^5.3.14",
-    "tsx": "^4.19.2",
+    "tsx": "^4.19.4",
     "webpack": "~5.98.0",
     "webpack-assets-manifest": "^5.2.1",
     "webpack-cli": "^6.0.1"

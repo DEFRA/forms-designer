@@ -27,7 +27,9 @@
         <!-- Question Content Here -->
 
         <div class="border-left-container-shorttext" id="question-preview-content">
-        {%- include "./templates/" + params.questionType | lower + ".njk" -%}
+<!--           include "params.questionType | lower + "-test.njk" -->
+          {{ params.questionType | lower + ".njk" }}
+{%- include "textfield-test.njk" -%}
         </div>
       </div>
 

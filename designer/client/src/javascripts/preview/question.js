@@ -1,3 +1,4 @@
+import { addPathToEditorBaseUrl } from '~/src/javascripts/preview/helper'
 import njk from '~/src/javascripts/preview/nunjucks.js'
 
 /**
@@ -76,6 +77,11 @@ export class QuestionDomElements {
     if (this.preview) {
       this.preview.innerHTML = value
     }
+  }
+
+  redirectToErrorPage() {
+    const errorUrl = addPathToEditorBaseUrl(window.location.href, '/error')
+    window.location.href = errorUrl
   }
 }
 
