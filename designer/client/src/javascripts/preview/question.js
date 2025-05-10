@@ -2,6 +2,13 @@ import { addPathToEditorBaseUrl } from '~/src/javascripts/preview/helper'
 import njk from '~/src/javascripts/preview/nunjucks.js'
 
 /**
+ * @class QuestionDomElements
+ * @classdesc
+ * This class is responsible for interaction with the Document Object Model
+ * and provides an interface for external interactions.  QuestionDomElements
+ * gives external access to the dom elements, QuestionElements is a reduced
+ * interface for use with the Question class which hides the DOM and just
+ * returns the values
  * @implements {QuestionElements}
  */
 export class QuestionDomElements {
@@ -93,6 +100,14 @@ export class QuestionDomElements {
  * ]} ListenerRow
  */
 
+/**
+ * @class EventListeners
+ * @classdesc
+ * This class is responsible for setting up the event listeners on the DOM and for
+ * orchestrating the resulting actions.  It has direct access to the DOM elements through
+ * the QuestionDomElements class and to the model renderer Question class.  It is not
+ * responsible for the rendering.
+ */
 export class EventListeners {
   /**
    * @param {Question} question
@@ -160,7 +175,7 @@ export class EventListeners {
    * @returns {ListenerRow[]}
    */
   get listeners() {
-    const row1 = /** @type {ListenerRow} */ ([
+    const questionText = /** @type {ListenerRow} */ ([
       this.baseElements.question,
       /**
        * @param {HTMLInputElement} target
@@ -171,7 +186,7 @@ export class EventListeners {
       'input'
     ])
 
-    const row2 = /** @type {ListenerRow} */ ([
+    const hintText = /** @type {ListenerRow} */ ([
       this.baseElements.hintText,
       /**
        * @param {HTMLInputElement} target
@@ -182,7 +197,7 @@ export class EventListeners {
       'input'
     ])
 
-    const row3 = /** @type {ListenerRow} */ ([
+    const optionalCheckbox = /** @type {ListenerRow} */ ([
       this.baseElements.optional,
       /**
        * @param {HTMLInputElement} target
@@ -192,7 +207,12 @@ export class EventListeners {
       },
       'change'
     ])
-    return [row1, row2, row3, ...this.highlightListeners]
+    return [
+      questionText,
+      hintText,
+      optionalCheckbox,
+      ...this.highlightListeners
+    ]
   }
 
   setupListeners() {
@@ -254,6 +274,16 @@ export class EventListeners {
  * }} NJK
  */
 
+/**
+ * @class Question
+ * @classdesc
+ * A data object that has access to the underlying data via the QuestionElements object interface
+ * and the templating mechanism to render the HTML for the data.
+ *
+ * It does not have access to the DOM, but has access to QuestionElements.setPreviewHTML to update
+ * the HTML.  Question classes should only be responsible data and rendering as are reused in the
+ * server side.
+ */
 export class Question {
   /**
    * @type {string}
