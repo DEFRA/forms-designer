@@ -437,9 +437,34 @@ export interface BaseSettings {
   items: ListElement[]
 }
 
+export interface DefaultComponent {
+  id?: string
+  text: string
+  classes: string
+}
+
+export interface GovukFieldset {
+  legend: DefaultComponent
+}
+
+export interface QuestionBaseModel {
+  id?: string
+  name?: string
+  label?: DefaultComponent
+  hint?: DefaultComponent
+  fieldset?: GovukFieldset
+  readonly items?: ListItemReadonly[]
+  text?: string
+  formGroup?: { afterInputs: { html: string } }
+}
+
 export interface QuestionElements {
   readonly values: BaseSettings
   setPreviewHTML(value: string): void
+}
+
+export interface QuestionRenderer {
+  render(questionTemplate: string, questionBaseModel: QuestionBaseModel): void
 }
 
 export interface ListElements extends QuestionElements {
