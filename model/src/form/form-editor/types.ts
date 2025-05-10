@@ -437,11 +437,16 @@ export interface BaseSettings {
   items?: ListElement[]
 }
 
+export interface ListSettings extends BaseSettings {
+  items: ListElement[]
+}
+
 export interface QuestionElements {
   readonly values: BaseSettings
   setPreviewHTML(value: string): void
 }
 
 export interface ListElements extends QuestionElements {
+  readonly values: ListSettings
   afterInputsHTML: string
 }
