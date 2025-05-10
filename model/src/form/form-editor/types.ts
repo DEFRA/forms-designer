@@ -467,6 +467,10 @@ export interface QuestionRenderer {
   render(questionTemplate: string, questionBaseModel: QuestionBaseModel): void
 }
 
+export interface RenderContext {
+  model: QuestionBaseModel
+}
+
 export interface ListElements extends QuestionElements {
   afterInputsHTML: string
 }

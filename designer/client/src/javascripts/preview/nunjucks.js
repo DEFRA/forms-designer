@@ -12,4 +12,21 @@ njk.PrecompiledLoader.prototype.resolve = function patchedResolve(from, to) {
 // @ts-expect-error
 window.nunjucks = njk
 
-export default njk
+/**
+ * @typedef {(
+ *    name: string,
+ *    ctx: RenderContext
+ * ) => string} NJKRender
+ */
+
+/**
+ * @typedef {{
+ *   render: NJKRender
+ * }} NJK
+ */
+
+export const NJK = /** @type {NJK} */ (njk)
+
+/**
+ * @import {RenderContext} from '@defra/forms-model'
+ */
