@@ -434,10 +434,6 @@ export interface BaseSettings {
   hintText: string
   optional: boolean
   shortDesc: string
-  items?: ListElement[]
-}
-
-export interface ListSettings extends BaseSettings {
   items: ListElement[]
 }
 
@@ -447,6 +443,5 @@ export interface QuestionElements {
 }
 
 export interface ListElements extends QuestionElements {
-  readonly values: ListSettings
   afterInputsHTML: string
 }

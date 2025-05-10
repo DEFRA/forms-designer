@@ -8,14 +8,14 @@ import {
 import {
   List,
   ListEventListeners,
-  ListQuestionElements
+  ListQuestionDomElements
 } from '~/src/javascripts/preview/list'
 
 const REORDER_BUTTON_HIDDEN = 'reorder-button-hidden'
 
 const OK_200 = 200
 
-export class ListSortableQuestionElements extends ListQuestionElements {
+export class ListSortableQuestionElements extends ListQuestionDomElements {
   /** @type {HTMLElement} */
   editOptionsButton
   /** @type {HTMLElement} */
@@ -263,7 +263,7 @@ export class ListSortableEventListeners extends ListEventListeners {
           this._listSortableElements.handleReorder(e)
           this.configureMoveButtonListeners()
           if (this._listSortableElements.isReordering()) {
-            this._listQuestion.updateStateInSession()
+            this.updateStateInSession()
           }
         },
         'click'
@@ -296,53 +296,12 @@ export class ListSortableEventListeners extends ListEventListeners {
       }
     })
   }
-}
 
-export class ListSortable extends List {
-  /**
-   * @param {ListSortableQuestionElements} listSortableQuestionElements
-   */
-  constructor(listSortableQuestionElements) {
-    super(listSortableQuestionElements)
-    const items = /** @type {ListElement[]} */ (
-      listSortableQuestionElements.values.items
-    )
-    this._list = this.createListFromElements(items)
-    this._listElements = listSortableQuestionElements
-    const listeners = new ListSortableEventListeners(
-      this,
-      listSortableQuestionElements,
-      []
-    )
-    listeners.setupListeners()
-  }
-
-  /**
-   * @returns {Map<string, ListElement>}
-   */
-  resyncPreviewAfterReorder() {
-    const listElements = this._listElements.sortableContainer.children
-    const listElementsOptions = /** @type {HTMLInputElement[]} */ (
-      Array.from(listElements)
-    )
-    const newList = listElementsOptions.map(
-      // eslint-disable-next-line @typescript-eslint/unbound-method
-      ListQuestionElements.getListElementValues
-    )
-    this._list = this.createListFromElements(newList)
-    this.render()
-    return this._list
-  }
-
+  // TODO: could be moved into an api class
   updateStateInSession() {
     const url = addPathToEditorBaseUrl(window.location.href, '/state/', true)
 
-    const listElements = Array.from(this._list).map(([_name, value]) => ({
-      id: value.id,
-      text: value.text,
-      hint: value.hint?.text ? { text: value.hint.text } : undefined,
-      value: value.value
-    }))
+    const listElements = this._listQuestion.listElementObjects
 
     fetch(url, {
       method: 'POST',
@@ -363,13 +322,65 @@ export class ListSortable extends List {
         return 'error'
       })
   }
+}
+
+export class ListSortable extends List {
+  /**
+   * @param {ListSortableQuestionElements} listSortableQuestionElements
+   */
+  constructor(listSortableQuestionElements) {
+    super(listSortableQuestionElements)
+    const items = /** @type {ListElement[]} */ (
+      listSortableQuestionElements.values.items
+    )
+    this._list = this.createListFromElements(items)
+    this._listElements = listSortableQuestionElements
+  }
+
+  /**
+   * @returns {Map<string, ListElement>}
+   */
+  resyncPreviewAfterReorder() {
+    const newList = this._listElements.values.items
+    this._list = this.createListFromElements(newList)
+    this.render()
+    return this._list
+  }
+
+  get listElementObjects() {
+    return Array.from(this._list).map(([, value]) => ({
+      id: value.id,
+      text: value.text,
+      hint: value.hint?.text ? { text: value.hint.text } : undefined,
+      value: value.value
+    }))
+  }
+
+  /**
+   * @param {ListSortableQuestionElements} listSortableQuestionElements
+   */
+  init(listSortableQuestionElements) {
+    const listeners = new ListSortableEventListeners(
+      this,
+      listSortableQuestionElements,
+      []
+    )
+    listeners.setupListeners()
+
+    /**
+     * @type {ListEventListeners}
+     * @private
+     */
+    this._listeners = listeners
+    this.render()
+  }
 
   static setupPreview() {
     const elements = new ListSortableQuestionElements()
-    const radio = new ListSortable(elements)
-    radio.render()
+    const listSortable = new ListSortable(elements)
+    listSortable.init(elements)
 
-    return radio
+    return listSortable
   }
 }
 

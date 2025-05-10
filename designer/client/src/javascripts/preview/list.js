@@ -1,7 +1,7 @@
 import {
   EventListeners,
   Question,
-  QuestionElements
+  QuestionDomElements
 } from '~/src/javascripts/preview/question.js'
 
 const DefaultListConst = {
@@ -12,7 +12,10 @@ const DefaultListConst = {
   RenderName: 'listInputField'
 }
 
-export class ListQuestionElements extends QuestionElements {
+/**
+ * @implements {ListElements}
+ */
+export class ListQuestionDomElements extends QuestionDomElements {
   /** @type {HTMLInputElement[]} */
   editLinks
   /** @type {HTMLElement[]} */
@@ -77,10 +80,10 @@ export class ListQuestionElements extends QuestionElements {
    */
   static getUpdateData(el) {
     const updateElement = /** @type {HTMLInputElement} */ (
-      ListQuestionElements.getParentUpdateElement(el)
+      ListQuestionDomElements.getParentUpdateElement(el)
     )
     return /** @type {ListElement} */ (
-      ListQuestionElements.getListElementValues(updateElement)
+      ListQuestionDomElements.getListElementValues(updateElement)
     )
   }
 
@@ -115,7 +118,7 @@ export class ListQuestionElements extends QuestionElements {
     return {
       ...baseValues,
       // eslint-disable-next-line @typescript-eslint/unbound-method
-      items: this.listElements.map(ListQuestionElements.getListElementValues)
+      items: this.listElements.map(ListQuestionDomElements.getListElementValues)
     }
   }
 }
@@ -123,7 +126,7 @@ export class ListQuestionElements extends QuestionElements {
 export class ListEventListeners extends EventListeners {
   /** @type {HTMLElement[]} */
   listElements
-  /** @type {ListQuestionElements} */
+  /** @type {ListQuestionDomElements} */
   _listElements
   /** @type {List} */
   _listQuestion
@@ -133,7 +136,7 @@ export class ListEventListeners extends EventListeners {
   /**
    *
    * @param {List} question
-   * @param {ListQuestionElements} listQuestionElements
+   * @param {ListQuestionDomElements} listQuestionElements
    * @param {HTMLElement[]} listElements
    */
   constructor(question, listQuestionElements, listElements) {
@@ -168,7 +171,7 @@ export class ListEventListeners extends EventListeners {
        * @param {HTMLInputElement} target
        */
       (target) => {
-        const { id } = ListQuestionElements.getUpdateData(target)
+        const { id } = ListQuestionDomElements.getUpdateData(target)
         this._listQuestion.updateText(id, target.value)
       },
       'input'
@@ -179,7 +182,7 @@ export class ListEventListeners extends EventListeners {
        * @param {HTMLInputElement} target
        */
       (target) => {
-        const { id } = ListQuestionElements.getUpdateData(target)
+        const { id } = ListQuestionDomElements.getUpdateData(target)
         this._question.highlight = `${id}-label`
       },
       'focus'
@@ -200,7 +203,7 @@ export class ListEventListeners extends EventListeners {
        * @param {HTMLInputElement} target
        */
       (target) => {
-        const { id } = ListQuestionElements.getUpdateData(target)
+        const { id } = ListQuestionDomElements.getUpdateData(target)
         this._listQuestion.updateHint(id, target.value)
       },
       'input'
@@ -211,7 +214,7 @@ export class ListEventListeners extends EventListeners {
        * @param {HTMLInputElement} target
        */
       (target) => {
-        const { id } = ListQuestionElements.getUpdateData(target)
+        const { id } = ListQuestionDomElements.getUpdateData(target)
         this._question.highlight = `${id}-hint`
       },
       'focus'
@@ -284,7 +287,11 @@ export class ListEventListeners extends EventListeners {
     return []
   }
 
-  get listeners() {
+  /**
+   * @returns {ListenerRow[]}
+   * @protected
+   */
+  _getListeners() {
     const editLinkListeners = /** @type {ListenerRow[]} */ ([])
     /* TODO - implement edit link and delete link listeners
         this.listElements.map(
@@ -305,6 +312,7 @@ export class ListEventListeners extends EventListeners {
     const customListeners = this.customListeners
 
     return editPanelListeners
+      .concat(super._getListeners())
       .concat(highlightListeners)
       .concat(editLinkListeners)
       .concat(customListeners)
@@ -335,7 +343,7 @@ export class List extends Question {
    * @protected
    */
   _questionTemplate = DefaultListConst.Template
-  /** @type {ListQuestionElements} */
+  /** @type {ListElements} */
   _listElements
   listRenderId = DefaultListConst.Input
   listRenderName = DefaultListConst.RenderName
@@ -347,17 +355,14 @@ export class List extends Question {
   _list
 
   /**
-   * @param {ListQuestionElements} listQuestionElements
+   * @param {ListElements} listElements
    */
-  constructor(listQuestionElements) {
-    super(listQuestionElements)
-    const listeners = new ListEventListeners(this, listQuestionElements, [])
-    listeners.setupListeners()
-    const items = /** @type {ListElement[]} */ (
-      listQuestionElements.values.items
-    )
+  constructor(listElements) {
+    super(listElements)
+
+    const items = /** @type {ListElement[]} */ (listElements.values.items)
     this._list = this.createListFromElements(items)
-    this._listElements = listQuestionElements
+    this._listElements = listElements
   }
 
   get renderInput() {
@@ -500,8 +505,22 @@ export class List extends Question {
     }
   }
 
+  /**
+   * @param {ListQuestionDomElements} listQuestionElements
+   */
+  init(listQuestionElements) {
+    const listeners = new ListEventListeners(this, listQuestionElements, [])
+    listeners.setupListeners()
+    /**
+     * @type {ListEventListeners}
+     * @private
+     */
+    this._listeners = listeners
+    this.render()
+  }
+
   static setupPreview() {
-    const elements = new ListQuestionElements()
+    const elements = new ListQuestionDomElements()
     const list = new List(elements)
     list.render()
 
@@ -511,5 +530,5 @@ export class List extends Question {
 
 /**
  * @import {ListenerRow} from '~/src/javascripts/preview/question.js'
- * @import { ListElement, ListItemReadonly } from '@defra/forms-model'
+ * @import { ListElement, ListItemReadonly, ListElements } from '@defra/forms-model'
  */

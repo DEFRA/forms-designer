@@ -65,7 +65,8 @@ export class QuestionDomElements {
       hintText,
       optional,
       question,
-      shortDesc
+      shortDesc,
+      items: []
     })
   }
 
@@ -171,10 +172,10 @@ export class EventListeners {
   }
 
   /**
-   * @protected
    * @returns {ListenerRow[]}
+   * @protected
    */
-  get listeners() {
+  _getListeners() {
     const questionText = /** @type {ListenerRow} */ ([
       this.baseElements.question,
       /**
@@ -213,6 +214,14 @@ export class EventListeners {
       optionalCheckbox,
       ...this.highlightListeners
     ]
+  }
+
+  /**
+   * @protected
+   * @returns {ListenerRow[]}
+   */
+  get listeners() {
+    return this._getListeners()
   }
 
   setupListeners() {

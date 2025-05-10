@@ -456,24 +456,6 @@ describe('list-sortable', () => {
         expect(upButtonLastRow).toBeDefined()
       })
     })
-  })
-
-  describe('ListSortable class', () => {
-    it('should resync preview after reorder', () => {
-      document.body.innerHTML =
-        '<button id="edit-options-button">Done</button>' +
-        '<button id="add-option-button">Add item</button>' +
-        listEmptyHTML
-      const preview = ListSortable.setupPreview()
-      expect(preview._list.size).toBe(0)
-      document.body.innerHTML =
-        '<button id="edit-options-button">Done</button>' +
-        '<button id="add-option-button">Add item</button>' +
-        list1HTML
-      const preview2 = ListSortable.setupPreview()
-      preview.resyncPreviewAfterReorder()
-      expect(preview2._list.size).toBe(4)
-    })
 
     it('updateStateInSession should call API to sync state', () => {
       jest
@@ -484,9 +466,13 @@ describe('list-sortable', () => {
         '<button id="edit-options-button">Done</button>' +
         '<button id="add-option-button">Add item</button>' +
         list1HTML
-      const preview = ListSortable.setupPreview()
+      const elements = new ListSortableQuestionElements()
+      const preview = new ListSortable(elements)
       expect(preview._list.size).toBe(4)
-      preview.updateStateInSession()
+      const listeners = new ListSortableEventListeners(preview, elements, [])
+      listeners.setupListeners()
+
+      listeners.updateStateInSession()
       expect(global.fetch).toHaveBeenCalledWith(expect.anything(), {
         body: JSON.stringify({
           listItems: [
@@ -518,6 +504,24 @@ describe('list-sortable', () => {
         },
         method: 'POST'
       })
+    })
+  })
+
+  describe('ListSortable class', () => {
+    it('should resync preview after reorder', () => {
+      document.body.innerHTML =
+        '<button id="edit-options-button">Done</button>' +
+        '<button id="add-option-button">Add item</button>' +
+        listEmptyHTML
+      const preview = ListSortable.setupPreview()
+      expect(preview._list.size).toBe(0)
+      document.body.innerHTML =
+        '<button id="edit-options-button">Done</button>' +
+        '<button id="add-option-button">Add item</button>' +
+        list1HTML
+      const preview2 = ListSortable.setupPreview()
+      preview.resyncPreviewAfterReorder()
+      expect(preview2._list.size).toBe(4)
     })
   })
 })

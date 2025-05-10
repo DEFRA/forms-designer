@@ -5,12 +5,12 @@ import { questionDetailsStubPanels } from '~/src/javascripts/preview/__stubs__/q
 import {
   List,
   ListEventListeners,
-  ListQuestionElements,
+  ListQuestionDomElements,
   listsElementToMap
 } from '~/src/javascripts/preview/list.js'
 import { setupPreview } from '~/src/javascripts/preview.js'
 
-class EmptyListQuestionElements extends ListQuestionElements {
+class EmptyListQuestionElements extends ListQuestionDomElements {
   get values() {
     // @ts-expect-error - inheritance not working properly in linting
     const baseValues = super.values
@@ -74,9 +74,9 @@ describe('list', () => {
   const baronListItemId = 'd71b3909-582f-4e90-b6f5-490b89a6eb8f'
 
   /**
-   * @type {ListQuestionElements}
+   * @type {ListQuestionDomElements}
    */
-  let questionElements = new ListQuestionElements()
+  let questionElements = new ListQuestionDomElements()
   /**
    * @type {EmptyListQuestionElements}
    */
@@ -84,7 +84,7 @@ describe('list', () => {
 
   beforeEach(() => {
     document.body.innerHTML = questionDetailsStubPanels
-    questionElements = new ListQuestionElements()
+    questionElements = new ListQuestionDomElements()
     emptyQuestionElements = new EmptyListQuestionElements()
   })
 
@@ -149,18 +149,20 @@ describe('list', () => {
       const listText = /** @type {HTMLInputElement} */ (
         document.getElementById('radioText')
       )
-      expect(ListQuestionElements.getUpdateData(listText)).toBeDefined()
-      expect(ListQuestionElements.getUpdateData(listText)).not.toBeNull()
+      expect(ListQuestionDomElements.getUpdateData(listText)).toBeDefined()
+      expect(ListQuestionDomElements.getUpdateData(listText)).not.toBeNull()
       const listItem = questionElements.listElements[2]
       expect(listItem).toBeDefined()
       listItem.dataset.hint = 'hint 1'
-      expect(ListQuestionElements.getListElementValues(listItem).hint).toEqual({
+      expect(
+        ListQuestionDomElements.getListElementValues(listItem).hint
+      ).toEqual({
         text: 'hint 1'
       })
       const newElement = document.createElement('li')
       newElement.dataset.text = 'A custom adventure'
       newElement.dataset.val = 'A custom adventure'
-      expect(ListQuestionElements.getListElementValues(newElement)).toEqual({
+      expect(ListQuestionDomElements.getListElementValues(newElement)).toEqual({
         id: 'new',
         text: 'A custom adventure',
         label: {

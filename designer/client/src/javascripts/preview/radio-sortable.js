@@ -12,10 +12,29 @@ export class RadioSortableEventListeners extends ListSortableEventListeners {}
 export class RadioSortable extends ListSortable {
   _questionTemplate = 'radios.njk'
 
+  /**
+   * @param {RadioSortableQuestionElements} listSortableQuestionElements
+   */
+  init(listSortableQuestionElements) {
+    const listeners = new RadioSortableEventListeners(
+      this,
+      listSortableQuestionElements,
+      []
+    )
+    listeners.setupListeners()
+
+    /**
+     * @type {RadioSortableEventListeners}
+     * @private
+     */
+    this._listeners = listeners
+    this.render()
+  }
+
   static setupPreview() {
     const elements = new RadioSortableQuestionElements()
     const radio = new RadioSortable(elements)
-    radio.render()
+    radio.init(elements)
 
     return radio
   }

@@ -2,10 +2,10 @@ import '~/src/views/components/inset.njk'
 import {
   List,
   ListEventListeners,
-  ListQuestionElements
+  ListQuestionDomElements
 } from '~/src/javascripts/preview/list.js'
 
-export class RadioQuestionElements extends ListQuestionElements {}
+export class RadioQuestionDomElements extends ListQuestionDomElements {}
 
 export class RadioEventListeners extends ListEventListeners {}
 
@@ -18,14 +18,13 @@ export class Radio extends List {
   _questionTemplate = 'radios.njk'
 
   /**
-   * @param {RadioQuestionElements} listDomElements
+   * @param {RadioQuestionDomElements} listDomElements
    */
   init(listDomElements) {
     const listeners = new RadioEventListeners(this, listDomElements, [])
     listeners.setupListeners()
-
     /**
-     * @type {EventListeners}
+     * @type {RadioEventListeners}
      * @private
      */
     this._listeners = listeners
@@ -33,7 +32,7 @@ export class Radio extends List {
   }
 
   static setupPreview() {
-    const elements = new RadioQuestionElements()
+    const elements = new RadioQuestionDomElements()
     const radio = new Radio(elements)
     radio.init(elements)
 
