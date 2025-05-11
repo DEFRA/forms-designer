@@ -463,12 +463,16 @@ export interface QuestionElements {
   setPreviewHTML(value: string): void
 }
 
-export interface QuestionRenderer {
-  render(questionTemplate: string, questionBaseModel: QuestionBaseModel): void
-}
-
 export interface RenderContext {
   model: QuestionBaseModel
+}
+
+export interface HTMLBuilder {
+  buildHTML(questionTemplate: string, renderContext: RenderContext): string
+}
+
+export interface QuestionRenderer {
+  render(questionTemplate: string, questionBaseModel: QuestionBaseModel): void
 }
 
 export interface ListElements extends QuestionElements {
