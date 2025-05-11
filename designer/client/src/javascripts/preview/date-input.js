@@ -1,7 +1,4 @@
-import {
-  Question,
-  QuestionDomElements
-} from '~/src/javascripts/preview/question.js'
+import { Question } from '~/src/javascripts/preview/question.js'
 
 export class DateInput extends Question {
   /**
@@ -17,13 +14,5 @@ export class DateInput extends Question {
       fieldset: this.fieldSet,
       hint: this.hint
     }
-  }
-
-  static setupPreview() {
-    const elements = new QuestionDomElements()
-    const dateInputField = new DateInput(elements)
-    dateInputField.init(elements)
-
-    return dateInputField
   }
 }

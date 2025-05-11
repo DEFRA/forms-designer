@@ -1,27 +1,18 @@
-import { ComponentType } from '@defra/forms-model'
-
 import {
   questionDetailsLeftPanelHTML,
   questionDetailsPreviewHTML
 } from '~/src/javascripts/preview/__stubs__/question.js'
 import { EmailAddress } from '~/src/javascripts/preview/email-address.js'
-import { setupPreview } from '~/src/javascripts/preview.js'
+import { SetupPreview } from '~/src/javascripts/setup-preview.js'
 
-jest.mock('~/src/javascripts/preview/nunjucks.js')
-jest.mock('~/src/views/components/ukaddressfield.njk', () => '')
-jest.mock('~/src/views/components/telephonenumberfield.njk', () => '')
-jest.mock('~/src/views/components/emailaddressfield.njk', () => '')
-jest.mock('~/src/views/components/inset.njk', () => '')
-jest.mock('~/src/views/components/textfield.njk', () => '')
-jest.mock('~/src/views/components/radios.njk', () => '')
-jest.mock('~/src/views/components/date-input.njk', () => '')
+jest.mock('~/src/javascripts/preview/nunjucks-renderer.js')
 
 describe('email', () => {
   describe('Email', () => {
     it('should create class', () => {
       document.body.innerHTML =
         questionDetailsLeftPanelHTML + questionDetailsPreviewHTML
-      const res = setupPreview(ComponentType.EmailAddressField)
+      const res = SetupPreview.EmailAddress()
       expect(res).toBeInstanceOf(EmailAddress)
       expect(res).toBeDefined()
       expect(res.renderInput).toEqual({

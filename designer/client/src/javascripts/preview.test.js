@@ -1,4 +1,3 @@
-import {} from '~/src/javascripts/application'
 import { ComponentType } from '@defra/forms-model'
 
 import { setupPreview, showHideForJs } from '~/src/javascripts/preview'
@@ -20,6 +19,8 @@ jest.mock('~/src/views/components/inset.njk', () => '')
 jest.mock('~/src/views/components/textfield.njk', () => '')
 jest.mock('~/src/views/components/radios.njk', () => '')
 jest.mock('~/src/views/components/date-input.njk', () => '')
+
+jest.mock('~/src/javascripts/preview/nunjucks-renderer.js')
 
 describe('preview', () => {
   describe('setupPreview', () => {

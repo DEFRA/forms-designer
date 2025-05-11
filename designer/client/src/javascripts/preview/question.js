@@ -1,6 +1,3 @@
-import { addPathToEditorBaseUrl } from '~/src/javascripts/preview/helper'
-import njk from '~/src/javascripts/preview/nunjucks.js'
-
 /**
  * @class QuestionDomElements
  * @classdesc
@@ -85,11 +82,6 @@ export class QuestionDomElements {
     if (this.preview) {
       this.preview.innerHTML = value
     }
-  }
-
-  redirectToErrorPage() {
-    const errorUrl = addPathToEditorBaseUrl(window.location.href, '/error')
-    window.location.href = errorUrl
   }
 }
 
@@ -232,58 +224,6 @@ export class EventListeners {
 }
 
 /**
- * @typedef {{
- *   id?: string
- *   text: string
- *   classes: string
- * }} DefaultComponent
- */
-
-/**
- * @typedef {{
- *   legend: DefaultComponent
- * }} FieldSet
- */
-
-/**
- * @readonly
- * @typedef {string} readonlyString
- */
-
-/**
- * @readonly
- * @typedef {DefaultComponent} readonlyDefaultComponent
- */
-
-/**
- * @typedef {{
- *   id?: string
- *   name?: string
- *   label?: DefaultComponent
- *   hint?: DefaultComponent
- *   fieldset?: FieldSet
- *   items?: ReadonlyArray<ListItemReadonly>
- *   text?: string
- *   formGroup?: { afterInputs: { html: string }}
- * }} QuestionBaseModel
- */
-
-/**
- * @typedef {(
- *    name: string,
- *    ctx: {
- *      model: QuestionBaseModel
- *    }
- * ) => string} NJKRender
- */
-
-/**
- * @typedef {{
- *   render: NJKRender
- * }} NJK
- */
-
-/**
  * @class Question
  * @classdesc
  * A data object that has access to the underlying data via the QuestionElements object interface
@@ -309,11 +249,17 @@ export class Question {
    * @protected
    */
   _fieldName = 'inputField'
+  /**
+   * @type {QuestionRenderer}
+   * @protected
+   */
+  _questionRenderer
 
   /**
    * @param {QuestionElements} htmlElements
+   * @param {QuestionRenderer} questionRenderer
    */
-  constructor(htmlElements) {
+  constructor(htmlElements, questionRenderer) {
     const { question, hintText, optional } = htmlElements.values
 
     /**
@@ -336,6 +282,12 @@ export class Question {
      * @private
      */
     this._optional = optional
+    /**
+     *
+     * @type {QuestionRenderer}
+     * @protected
+     */
+    this._questionRenderer = questionRenderer
   }
 
   /**
@@ -365,7 +317,7 @@ export class Question {
 
   /**
    * @protected
-   * @type {FieldSet}
+   * @type {GovukFieldset}
    */
   get fieldSet() {
     return {
@@ -404,26 +356,8 @@ export class Question {
     }
   }
 
-  /**
-   * @returns {NJKRender}
-   */
-  static get _renderHelper() {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const NJK = /** @type {NJK} */ (njk)
-    return NJK.render
-  }
-
-  _render() {
-    const html = Question._renderHelper(this._questionTemplate, {
-      model: this.renderInput
-    })
-
-    this._htmlElements.setPreviewHTML(html)
-  }
-
   render() {
-    // debounce?
-    this._render()
+    this._questionRenderer.render(this._questionTemplate, this.renderInput)
   }
 
   /**
@@ -485,27 +419,14 @@ export class Question {
 
   /**
    * @param {QuestionDomElements} questionElements
-   * @protected
    */
   init(questionElements) {
     this._listeners = new EventListeners(this, questionElements)
     this._listeners.setupListeners()
     this.render()
   }
-
-  /**
-   * @returns {Question}
-   */
-  static setupPreview() {
-    const questionElements = new QuestionDomElements()
-    const question = new Question(questionElements)
-
-    question.init(questionElements)
-
-    return question
-  }
 }
 
 /**
- * @import { ListElement, ListItemReadonly, BaseSettings, QuestionElements } from '@defra/forms-model'
+ * @import { ListElement, ListItemReadonly, BaseSettings, QuestionElements, QuestionBaseModel, GovukFieldset, DefaultComponent, QuestionRenderer } from '@defra/forms-model'
  */

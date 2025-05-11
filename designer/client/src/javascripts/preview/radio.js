@@ -1,4 +1,3 @@
-import '~/src/views/components/inset.njk'
 import {
   List,
   ListEventListeners,
@@ -29,14 +28,6 @@ export class Radio extends List {
      */
     this._listeners = listeners
     this.render()
-  }
-
-  static setupPreview() {
-    const elements = new RadioQuestionDomElements()
-    const radio = new Radio(elements)
-    radio.init(elements)
-
-    return radio
   }
 }
 

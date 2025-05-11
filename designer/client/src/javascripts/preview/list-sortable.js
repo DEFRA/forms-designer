@@ -25,8 +25,11 @@ export class ListSortableQuestionElements extends ListQuestionDomElements {
   /** @type { Sortable | undefined } */
   sortableInstance
 
-  constructor() {
-    super()
+  /**
+   * @param {HTMLBuilder} htmlBuilder
+   */
+  constructor(htmlBuilder) {
+    super(htmlBuilder)
     const editOptionsButton = /** @type {HTMLElement} */ (
       document.getElementById('edit-options-button')
     )
@@ -327,9 +330,10 @@ export class ListSortableEventListeners extends ListEventListeners {
 export class ListSortable extends List {
   /**
    * @param {ListSortableQuestionElements} listSortableQuestionElements
+   * @param {QuestionRenderer} questionRenderer
    */
-  constructor(listSortableQuestionElements) {
-    super(listSortableQuestionElements)
+  constructor(listSortableQuestionElements, questionRenderer) {
+    super(listSortableQuestionElements, questionRenderer)
     const items = /** @type {ListElement[]} */ (
       listSortableQuestionElements.values.items
     )
@@ -374,18 +378,10 @@ export class ListSortable extends List {
     this._listeners = listeners
     this.render()
   }
-
-  static setupPreview() {
-    const elements = new ListSortableQuestionElements()
-    const listSortable = new ListSortable(elements)
-    listSortable.init(elements)
-
-    return listSortable
-  }
 }
 
 /**
- * @import { ListElement } from '@defra/forms-model'
+ * @import { ListElement, QuestionRenderer, HTMLBuilder } from '@defra/forms-model'
  * @import { ListenerRow } from '~/src/javascripts/preview/question.js'
  * @import { SortableEvent, SortableOptions } from 'sortablejs'
  */

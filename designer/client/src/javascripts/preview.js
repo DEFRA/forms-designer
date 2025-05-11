@@ -7,17 +7,11 @@ import '~/src/views/components/emailaddressfield.njk'
 
 import { ComponentType } from '@defra/forms-model'
 
-import { DateInput } from '~/src/javascripts/preview/date-input.js'
-import { EmailAddress } from '~/src/javascripts/preview/email-address.js'
 import {
   hideHtmlElement,
   showHtmlElement
 } from '~/src/javascripts/preview/helper'
-import { PhoneNumber } from '~/src/javascripts/preview/phone-number.js'
-import { Question } from '~/src/javascripts/preview/question.js'
-import { RadioSortable } from '~/src/javascripts/preview/radio-sortable.js'
-import { ShortAnswer } from '~/src/javascripts/preview/short-answer.js'
-import { UkAddress } from '~/src/javascripts/preview/uk-address.js'
+import { SetupPreview } from '~/src/javascripts/setup-preview.js'
 
 export function showHideForJs() {
   const previewPanel = document.getElementById('preview-panel')
@@ -38,21 +32,31 @@ export function setupPreview(componentType) {
    */
   let preview
   if (componentType === ComponentType.TextField) {
-    preview = ShortAnswer.setupPreview()
+    preview = SetupPreview.ShortAnswer()
   } else if (componentType === ComponentType.DatePartsField) {
-    preview = DateInput.setupPreview()
+    preview = SetupPreview.DateInput()
   } else if (componentType === ComponentType.RadiosField) {
-    preview = RadioSortable.setupPreview()
+    preview = SetupPreview.RadioSortable()
   } else if (componentType === ComponentType.UkAddressField) {
-    preview = UkAddress.setupPreview()
+    preview = SetupPreview.UkAddress()
   } else if (componentType === ComponentType.EmailAddressField) {
-    preview = EmailAddress.setupPreview()
+    preview = SetupPreview.EmailAddress()
   } else if (componentType === ComponentType.TelephoneNumberField) {
-    preview = PhoneNumber.setupPreview()
+    preview = SetupPreview.PhoneNumber()
   } else {
-    preview = Question.setupPreview()
+    preview = SetupPreview.Question()
   }
   showHideForJs()
 
   return preview
 }
+
+/**
+ * @import { DateInput } from '~/src/javascripts/preview/date-input.js'
+ * @import { Question } from '~/src/javascripts/preview/question.js'
+ * @import { ShortAnswer } from '~/src/javascripts/preview/short-answer.js'
+ * @import { UkAddress } from '~/src/javascripts/preview/uk-address.js'
+ * @import { EmailAddress } from '~/src/javascripts/preview/email-address.js'
+ * @import { PhoneNumber } from '~/src/javascripts/preview/phone-number.js'
+ * @import { RadioSortable } from '~/src/javascripts/preview/radio-sortable.js'
+ */

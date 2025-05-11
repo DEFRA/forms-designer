@@ -1,4 +1,3 @@
-import '~/src/views/components/inset.njk'
 import {
   ListSortable,
   ListSortableEventListeners,
@@ -29,13 +28,5 @@ export class RadioSortable extends ListSortable {
      */
     this._listeners = listeners
     this.render()
-  }
-
-  static setupPreview() {
-    const elements = new RadioSortableQuestionElements()
-    const radio = new RadioSortable(elements)
-    radio.init(elements)
-
-    return radio
   }
 }

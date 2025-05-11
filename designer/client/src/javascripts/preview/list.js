@@ -1,3 +1,4 @@
+import { addPathToEditorBaseUrl } from '~/src/javascripts/preview/helper.js'
 import {
   EventListeners,
   Question,
@@ -31,7 +32,10 @@ export class ListQuestionDomElements extends QuestionDomElements {
   listTextElementId = DefaultListConst.TextElementId
   listHintElementId = DefaultListConst.HintElementId
 
-  constructor() {
+  /**
+   * @param {HTMLBuilder} htmlBuilder
+   */
+  constructor(htmlBuilder) {
     super()
     const editElements = document.querySelectorAll(
       '#options-container .edit-option-link'
@@ -59,7 +63,7 @@ export class ListQuestionDomElements extends QuestionDomElements {
     this.listText = listText
     this.listHint = listHint
     this.updateElement = updateElement
-    this.afterInputsHTML = Question._renderHelper('inset.njk', {
+    this.afterInputsHTML = htmlBuilder.buildHTML('inset.njk', {
       model: {
         text: 'No items added yet.'
       }
@@ -120,6 +124,11 @@ export class ListQuestionDomElements extends QuestionDomElements {
       // eslint-disable-next-line @typescript-eslint/unbound-method
       items: this.listElements.map(ListQuestionDomElements.getListElementValues)
     }
+  }
+
+  redirectToErrorPage() {
+    const errorUrl = addPathToEditorBaseUrl(window.location.href, '/error')
+    window.location.href = errorUrl
   }
 }
 
@@ -356,9 +365,10 @@ export class List extends Question {
 
   /**
    * @param {ListElements} listElements
+   * @param {QuestionRenderer} questionRenderer
    */
-  constructor(listElements) {
-    super(listElements)
+  constructor(listElements, questionRenderer) {
+    super(listElements, questionRenderer)
 
     const items = /** @type {ListElement[]} */ (listElements.values.items)
     this._list = this.createListFromElements(items)
@@ -518,17 +528,9 @@ export class List extends Question {
     this._listeners = listeners
     this.render()
   }
-
-  static setupPreview() {
-    const elements = new ListQuestionDomElements()
-    const list = new List(elements)
-    list.render()
-
-    return list
-  }
 }
 
 /**
  * @import {ListenerRow} from '~/src/javascripts/preview/question.js'
- * @import { ListElement, ListItemReadonly, ListElements } from '@defra/forms-model'
+ * @import { ListElement, ListItemReadonly, ListElements, QuestionRenderer, HTMLBuilder } from '@defra/forms-model'
  */
