@@ -1,6 +1,8 @@
 import { NunjucksRenderer } from '~/src/javascripts/preview/nunjucks-renderer.js'
 import { NJK } from '~/src/javascripts/preview/nunjucks.js'
 
+jest.mock('~/src/views/components/inset.njk', () => '')
+
 jest.mock('~/src/javascripts/preview/nunjucks.js', () => ({
   NJK: {
     render: jest.fn().mockReturnValue('*** rendered ***')

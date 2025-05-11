@@ -1,4 +1,5 @@
 import { NJK } from '~/src/javascripts/preview/nunjucks.js'
+import '~/src/views/components/inset.njk'
 
 /**
  * @implements {QuestionRenderer}
@@ -27,8 +28,7 @@ export class NunjucksRenderer {
      * @type {RenderContext}
      */
     const renderContext = { model: questionBaseModel }
-    const html = NJK.render(questionTemplate, renderContext)
-
+    const html = NunjucksRenderer.buildHTML(questionTemplate, renderContext)
     this._questionElements.setPreviewHTML(html)
   }
 
@@ -38,6 +38,15 @@ export class NunjucksRenderer {
    */
   render(questionTemplate, questionBaseModel) {
     this._render(questionTemplate, questionBaseModel)
+  }
+
+  /**
+   * @param {string} questionTemplate
+   * @param {RenderContext} renderContext
+   * @returns {string}
+   */
+  static buildHTML(questionTemplate, renderContext) {
+    return NJK.render(questionTemplate, renderContext)
   }
 }
 
