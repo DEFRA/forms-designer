@@ -16,9 +16,9 @@ export class NunjucksRenderer {
   }
 
   /**
-   * @param {string} questionTemplate
-   * @param {RenderContext} renderContext
    * @returns {string}
+   * @param {string} _questionTemplate
+   * @param {RenderContext} _renderContext
    */
   static buildHTML(_questionTemplate, _renderContext) {
     return '**** BUILT HTML ****'
