@@ -86,5 +86,17 @@ export class QuestionPreviewElements {
 }
 
 /**
- * @import { GovukField, ListElement, QuestionElements } from '@defra/forms-model'
+ * @implements {QuestionRenderer}
+ */
+export class EmptyRender {
+  /**
+   * @param {string} _questionBaseModel
+   */
+  render(_questionBaseModel) {
+    // do nothing
+  }
+}
+
+/**
+ * @import { GovukField, ListElement, QuestionElements, QuestionRenderer } from '@defra/forms-model'
  */
