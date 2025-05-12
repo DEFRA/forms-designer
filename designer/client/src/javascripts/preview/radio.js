@@ -2,7 +2,7 @@ import {
   List,
   ListEventListeners,
   ListQuestionDomElements
-} from '~/src/javascripts/preview/list.js'
+} from '@defra/forms-designer/client/src/javascripts/preview/list.js'
 
 export class RadioQuestionDomElements extends ListQuestionDomElements {}
 

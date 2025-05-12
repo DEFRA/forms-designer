@@ -1,4 +1,3 @@
-import { Question } from '@defra/forms-designer/client/src/javascripts/preview/question.js'
 import { randomId } from '@defra/forms-model'
 
 import { QuestionTypeDescriptions } from '~/src/common/constants/editor.js'
@@ -22,10 +21,7 @@ import {
 } from '~/src/models/forms/editor-v2/common.js'
 import { enhancedFieldsPerComponentType } from '~/src/models/forms/editor-v2/enhanced-fields.js'
 import { getFieldComponentType } from '~/src/models/forms/editor-v2/page-fields.js'
-import {
-  EmptyRender,
-  QuestionPreviewElements
-} from '~/src/models/forms/editor-v2/question-details/preview.js'
+import { getPreviewModel } from '~/src/models/forms/editor-v2/question-details/preview.js'
 import {
   advancedSettingsFields,
   enhancedFields
@@ -255,9 +251,7 @@ export function questionDetailsViewModel(
   const changeTypeUrl = `${urlPageBase}/question/${questionId}/type/${stateId}`
   const pageHeading = details.pageTitle
   const pageTitle = `Edit question ${details.questionNum} - ${formTitle}`
-  const questionElements = new QuestionPreviewElements(basePageFields)
-  const previewModel = new Question(questionElements, new EmptyRender())
-  const model = previewModel.renderInput
+  const model = getPreviewModel(basePageFields, questionType)
   return {
     listDetails: getListDetails(state, questionFieldsOverride),
     state,

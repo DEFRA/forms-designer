@@ -225,6 +225,7 @@ describe('list-sortable', () => {
           upButtons.find((x) => x.id === 'last-row-up')
         )
         expect(upButtons.findIndex((x) => x.id === 'last-row-up')).toBe(3)
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         preview._listElements.moveUp(mockListenerClass, upButton)
         const upButtonsAfter = Array.from(
           document.querySelectorAll('.js-reorderable-list-up')
@@ -247,6 +248,7 @@ describe('list-sortable', () => {
         )
         expect(upButtons.findIndex((x) => x.id === 'last-row-up')).toBe(3)
         upButton.classList.remove('js-reorderable-list-up')
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         preview._listElements.moveUp(mockListenerClass, upButton)
         expect(mockResync).not.toHaveBeenCalled()
       })
@@ -264,6 +266,7 @@ describe('list-sortable', () => {
           downButtons.find((x) => x.id === 'first-row-down')
         )
         expect(downButtons.findIndex((x) => x.id === 'first-row-down')).toBe(0)
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         preview._listElements.moveDown(mockListenerClass, downButton)
         const downButtonsAfter = Array.from(
           document.querySelectorAll('.js-reorderable-list-down')
@@ -288,6 +291,7 @@ describe('list-sortable', () => {
         )
         expect(downButtons.findIndex((x) => x.id === 'first-row-down')).toBe(0)
         downButton.classList.remove('js-reorderable-list-down')
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         preview._listElements.moveDown(mockListenerClass, downButton)
         expect(mockResync).not.toHaveBeenCalled()
       })

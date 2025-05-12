@@ -2,7 +2,7 @@ import {
   ListSortable,
   ListSortableEventListeners,
   ListSortableQuestionElements
-} from '~/src/javascripts/preview/list-sortable'
+} from '@defra/forms-designer/client/src/javascripts/preview/list-sortable'
 
 export class RadioSortableQuestionElements extends ListSortableQuestionElements {}
 

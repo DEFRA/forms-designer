@@ -1,15 +1,14 @@
-import Sortable from 'sortablejs'
-
 import {
   addPathToEditorBaseUrl,
   hideHtmlElement,
   showHtmlElement
-} from '~/src/javascripts/preview/helper'
+} from '@defra/forms-designer/client/src/javascripts/preview/helper'
 import {
   List,
   ListEventListeners,
   ListQuestionDomElements
-} from '~/src/javascripts/preview/list'
+} from '@defra/forms-designer/client/src/javascripts/preview/list'
+import Sortable from 'sortablejs'
 
 const REORDER_BUTTON_HIDDEN = 'reorder-button-hidden'
 
@@ -329,16 +328,14 @@ export class ListSortableEventListeners extends ListEventListeners {
 
 export class ListSortable extends List {
   /**
-   * @param {ListSortableQuestionElements} listSortableQuestionElements
+   * @param {ListElements} listElements
    * @param {QuestionRenderer} questionRenderer
    */
-  constructor(listSortableQuestionElements, questionRenderer) {
-    super(listSortableQuestionElements, questionRenderer)
-    const items = /** @type {ListElement[]} */ (
-      listSortableQuestionElements.values.items
-    )
+  constructor(listElements, questionRenderer) {
+    super(listElements, questionRenderer)
+    const items = /** @type {ListElement[]} */ (listElements.values.items)
     this._list = this.createListFromElements(items)
-    this._listElements = listSortableQuestionElements
+    this._listElements = listElements
   }
 
   /**
@@ -381,7 +378,7 @@ export class ListSortable extends List {
 }
 
 /**
- * @import { ListElement, QuestionRenderer, HTMLBuilder } from '@defra/forms-model'
+ * @import { ListElement, QuestionRenderer, HTMLBuilder, ListElements } from '@defra/forms-model'
  * @import { ListenerRow } from '~/src/javascripts/preview/question.js'
  * @import { SortableEvent, SortableOptions } from 'sortablejs'
  */

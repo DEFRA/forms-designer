@@ -1,9 +1,9 @@
-import { addPathToEditorBaseUrl } from '~/src/javascripts/preview/helper.js'
+import { addPathToEditorBaseUrl } from '@defra/forms-designer/client/src/javascripts/preview/helper.js'
 import {
   EventListeners,
   Question,
   QuestionDomElements
-} from '~/src/javascripts/preview/question.js'
+} from '@defra/forms-designer/client/src/javascripts/preview/question.js'
 
 const DefaultListConst = {
   TextElementId: 'radioText',

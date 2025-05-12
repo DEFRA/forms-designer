@@ -1,6 +1,9 @@
+import { ComponentType } from '@defra/forms-model'
+
 import {
   QuestionPreviewElements,
   getCheckedValue,
+  getPreviewModel,
   getValueAsString
 } from '~/src/models/forms/editor-v2/question-details/preview.js'
 
@@ -111,8 +114,171 @@ describe('preview', () => {
       expect(previewElements).toEqual(previewElements2)
     })
   })
+
+  describe('getPreviewModel', () => {
+    /**
+     * @type {GovukField[]}
+     */
+    const basePageFields = [
+      question,
+      hintText,
+      questionOptional,
+      shortDescription
+    ]
+
+    it('should get ShortAnswer', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        ComponentType.TextField
+      )
+      const expectedBaseModel = /** @type {QuestionBaseModel} */ ({
+        hint: {
+          classes: '',
+          text: ''
+        },
+        id: 'inputField',
+        label: {
+          classes: 'govuk-label--l',
+          text: 'Short answer (optional)'
+        },
+        name: 'inputField'
+      })
+      expect(previewModel).toEqual(expectedBaseModel)
+    })
+
+    it('should get Question', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        // @ts-expect-error - unknown component type
+        'unknown'
+      )
+      const expectedBaseModel = /** @type {QuestionBaseModel} */ ({
+        hint: {
+          classes: '',
+          text: ''
+        },
+        id: 'inputField',
+        label: {
+          classes: 'govuk-label--l',
+          text: 'Short answer (optional)'
+        },
+        name: 'inputField'
+      })
+      expect(previewModel).toEqual(expectedBaseModel)
+    })
+
+    it('should get DateInput', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        ComponentType.DatePartsField
+      )
+      const expectedBaseModel = /** @type {QuestionBaseModel} */ ({
+        fieldset: {
+          legend: {
+            classes: 'govuk-fieldset__legend--l',
+            text: 'Short answer (optional)'
+          }
+        },
+        hint: {
+          classes: '',
+          text: ''
+        },
+        id: 'dateInput',
+        name: 'dateInputField'
+      })
+      expect(previewModel).toEqual(expectedBaseModel)
+    })
+
+    it('should get EmailAddress', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        ComponentType.EmailAddressField
+      )
+      const expectedBaseModel = /** @type {QuestionBaseModel} */ ({
+        hint: {
+          classes: '',
+          text: ''
+        },
+        id: 'emailAddressField',
+        label: {
+          classes: 'govuk-label--l',
+          text: 'Short answer (optional)'
+        },
+        name: 'emailAddressField'
+      })
+      expect(previewModel).toEqual(expectedBaseModel)
+    })
+
+    it('should get UkAddress', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        ComponentType.UkAddressField
+      )
+      const expectedBaseModel = /** @type {QuestionBaseModel} */ ({
+        hint: {
+          classes: '',
+          text: ''
+        },
+        id: 'addressField',
+        label: {
+          classes: 'govuk-label--l',
+          text: 'Short answer (optional)'
+        },
+        name: 'addressField'
+      })
+      expect(previewModel).toEqual(expectedBaseModel)
+    })
+
+    it('should get PhoneNumber', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        ComponentType.TelephoneNumberField
+      )
+      const expectedBaseModel = /** @type {QuestionBaseModel} */ ({
+        hint: {
+          classes: '',
+          text: ''
+        },
+        id: 'phoneNumberField',
+        label: {
+          classes: 'govuk-label--l',
+          text: 'Short answer (optional)'
+        },
+        name: 'phoneNumberField'
+      })
+      expect(previewModel).toEqual(expectedBaseModel)
+    })
+
+    it('should get RadioSortable', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        ComponentType.RadiosField
+      )
+      const expectedBaseModel = /** @type {QuestionBaseModel} */ ({
+        fieldset: {
+          legend: {
+            classes: 'govuk-fieldset__legend--l',
+            text: 'Short answer (optional)'
+          }
+        },
+        formGroup: {
+          afterInputs: {
+            html: '<div class="govuk-inset-text">No items added yet.</div>'
+          }
+        },
+        hint: {
+          classes: '',
+          text: ''
+        },
+        id: 'listInput',
+        items: [],
+        name: 'listInputField'
+      })
+      expect(previewModel).toEqual(expectedBaseModel)
+    })
+  })
 })
 
 /**
- * @import {GovukField} from '@defra/forms-model'
+ * @import { GovukField, QuestionBaseModel } from '@defra/forms-model'
  */

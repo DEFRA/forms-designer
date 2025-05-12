@@ -1,4 +1,4 @@
-import { Question } from '~/src/javascripts/preview/question.js'
+import { Question } from '@defra/forms-designer/client/src/javascripts/preview/question.js'
 
 export class DateInput extends Question {
   /**
