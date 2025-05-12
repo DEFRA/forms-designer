@@ -74,6 +74,53 @@ const formDefinition = {
   lists: []
 }
 
+/**
+ * @satisfies {FormDefinition}
+ */
+const formDefinitionRepeater = {
+  name: 'Test form',
+  pages: [
+    {
+      id: 'p1',
+      path: '/page-one',
+      title: 'Page one',
+      section: 'section',
+      components: [
+        {
+          id: 'c1',
+          type: ComponentType.TextField,
+          name: 'textField',
+          title: 'This is your first field',
+          hint: 'Help text',
+          options: {},
+          schema: {}
+        }
+      ],
+      next: [{ path: '/summary' }],
+      controller: ControllerType.Repeat,
+      repeat: {
+        options: {
+          name: 'EdRRjo',
+          title: 'Children'
+        },
+        schema: {
+          min: 2,
+          max: 3
+        }
+      }
+    },
+    {
+      id: 'p2',
+      title: 'Summary',
+      path: '/summary',
+      controller: ControllerType.Summary
+    }
+  ],
+  conditions: [],
+  sections: [],
+  lists: []
+}
+
 const questionDetails = {
   title: 'What is your name?',
   name: 'what-is-your-name',
@@ -711,6 +758,78 @@ describe('editor.js', () => {
         expectedOptionsGuidance
       )
       expect(mockedPostJson).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('setRepeaterSetting', () => {
+    const pageRequestUrl = new URL(
+      `./${formId}/definition/draft/pages/12345`,
+      formsEndpoint
+    )
+
+    test('updates repeater options and schema', async () => {
+      mockedPatchJson.mockResolvedValueOnce({
+        response: createMockResponse(),
+        body: {}
+      })
+
+      await setPageSettings(formId, token, 'p1', formDefinition, {
+        pageHeading: 'Page one',
+        repeater: 'true',
+        minItems: 2,
+        maxItems: 5,
+        questionSetName: 'Cows'
+      })
+
+      const expectedOptionsRepeater = {
+        payload: {
+          controller: ControllerType.Repeat,
+          repeat: {
+            options: {
+              name: expect.any(String),
+              title: 'Cows'
+            },
+            schema: {
+              min: 2,
+              max: 5
+            }
+          },
+          title: '',
+          path: '/this-is-your-first-field'
+        },
+        headers: { Authorization: `Bearer ${token}` }
+      }
+
+      expect(mockedPatchJson).toHaveBeenCalledWith(
+        pageRequestUrl,
+        expectedOptionsRepeater
+      )
+    })
+
+    test('clears repeater options and schema', async () => {
+      mockedPatchJson.mockResolvedValueOnce({
+        response: createMockResponse(),
+        body: {}
+      })
+
+      await setPageSettings(formId, token, 'p1', formDefinitionRepeater, {
+        pageHeading: 'Page one'
+      })
+
+      const expectedOptionsRepeater = {
+        payload: {
+          controller: null,
+          repeat: null,
+          title: '',
+          path: '/this-is-your-first-field'
+        },
+        headers: { Authorization: `Bearer ${token}` }
+      }
+
+      expect(mockedPatchJson).toHaveBeenCalledWith(
+        pageRequestUrl,
+        expectedOptionsRepeater
+      )
     })
   })
 
