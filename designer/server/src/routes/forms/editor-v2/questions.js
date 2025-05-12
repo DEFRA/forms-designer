@@ -51,7 +51,8 @@ export const schema = Joi.object().keys({
     is: 'true',
     then: Joi.required().messages({
       'any.required':
-        'Enter the minimum number of times someone can answer these questions'
+        'Enter the minimum number of times someone can answer these questions',
+      'number.min': 'Enter a number greater than or equal to 1'
     })
   }),
   maxItems: maxItemsSchema.label('Max').when('repeater', {
@@ -59,14 +60,15 @@ export const schema = Joi.object().keys({
     then: Joi.number().min(Joi.ref('minItems')).required().messages({
       'any.required':
         'Enter the maximum number of times someone can answer these questions',
-      'number.min': 'Max must be greater than or equal to Min'
+      'number.min':
+        'The maximum number cannot be lower than the minimum number',
+      'number.max': 'Enter a number less than or equal to 25'
     })
   }),
   questionSetName: questionSetNameSchema.when('repeater', {
     is: 'true',
     then: Joi.required().messages({
-      'string.empty': 'Enter a name for this set of questions',
-      'any.required': 'Enter a name for this set of questions'
+      'string.empty': 'Enter a name for this set of questions'
     }),
     otherwise: Joi.allow('')
   })
