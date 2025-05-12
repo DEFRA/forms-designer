@@ -28,8 +28,18 @@ import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
  * @param {ValidationFailure<FormEditor>} [validation]
  */
 function questionsFields(pageHeadingSettings, repeaterSettings, validation) {
+  return {
+    ...questionsHeadingFields(pageHeadingSettings, validation),
+    ...questionsRepeaterFields(repeaterSettings, validation)
+  }
+}
+
+/**
+ * @param {{ pageHeadingVal: string | undefined, guidanceTextVal: string | undefined }} [pageHeadingSettings]
+ * @param {ValidationFailure<FormEditor>} [validation]
+ */
+function questionsHeadingFields(pageHeadingSettings, validation) {
   const { pageHeadingVal, guidanceTextVal } = pageHeadingSettings ?? {}
-  const { minItems, maxItems, questionSetName } = repeaterSettings ?? {}
   const { formValues } = validation ?? {}
 
   return {
@@ -72,7 +82,19 @@ function questionsFields(pageHeadingSettings, repeaterSettings, validation) {
       rows: 3,
       value: guidanceTextVal,
       ...insertValidationErrors(validation?.formErrors.guidanceText)
-    },
+    }
+  }
+}
+
+/**
+ * @param {{ minItems: number | undefined, maxItems: number | undefined, questionSetName: string | undefined }} [repeaterSettings]
+ * @param {ValidationFailure<FormEditor>} [validation]
+ */
+function questionsRepeaterFields(repeaterSettings, validation) {
+  const { minItems, maxItems, questionSetName } = repeaterSettings ?? {}
+  const { formValues } = validation ?? {}
+
+  return {
     repeater: {
       name: 'repeater',
       id: 'repeater',
