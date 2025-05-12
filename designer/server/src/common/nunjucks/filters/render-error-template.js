@@ -3,6 +3,15 @@ import Joi from 'joi'
 import { expandTemplate } from '~/src/common/nunjucks/render.js'
 
 /**
+ * @param {string} type
+ * @param {string} part
+ * @returns {string}
+ */
+function spanTag(type, part) {
+  return `<span class="error-preview-${type}">${part}</span>`
+}
+
+/**
  * @param {string} templateStr
  * @param {string} type
  */
@@ -12,11 +21,9 @@ function insertTags(templateStr, type) {
   const resultParts = []
   for (const part of parts) {
     if (part.includes('#label')) {
-      resultParts.push(
-        `<span class="error-preview-short-desc">{{${part}}}</span>`
-      )
+      resultParts.push(spanTag('short-desc', part))
     } else if (part.includes('#limit')) {
-      resultParts.push(`<span class="error-preview-${type}">{{${part}}}</span>`)
+      resultParts.push(spanTag(type, part))
     } else if (part !== '{{' && part !== '}}') {
       resultParts.push(part)
     }
