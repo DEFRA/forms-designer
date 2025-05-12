@@ -280,19 +280,23 @@ export class ListSortableEventListeners extends ListEventListeners {
     allMoveButtons.forEach((button) => {
       const buttonText = button.textContent
       if (buttonText === 'Up' || buttonText === 'Down') {
-        this.inputEventListener(
-          button,
-          buttonText === 'Up'
-            ? (target, e) => {
-                e.preventDefault()
-                this._listSortableElements.moveUp(this, target)
-              }
-            : (target, e) => {
-                e.preventDefault()
-                this._listSortableElements.moveDown(this, target)
-              },
-          'click'
-        )
+        const existingListener = button.dataset.clickHandler
+        if (!existingListener) {
+          this.inputEventListener(
+            button,
+            buttonText === 'Up'
+              ? (target, e) => {
+                  e.preventDefault()
+                  this._listSortableElements.moveUp(this, target)
+                }
+              : (target, e) => {
+                  e.preventDefault()
+                  this._listSortableElements.moveDown(this, target)
+                },
+            'click'
+          )
+          button.dataset.clickHandler = 'set'
+        }
       }
     })
   }
