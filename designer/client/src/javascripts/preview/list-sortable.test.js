@@ -353,13 +353,14 @@ describe('list-sortable', () => {
     })
 
     describe('announceReorder', () => {
-      it('should focus button if button remains visible - move down', async () => {
+      it('should announce, then clear announcement fater a timeout', async () => {
         document.body.innerHTML =
           '<div class="govuk-visually-hidden" id="reorder-announcement" aria-live="polite" aria-atomic="true"></div>' +
           '<button id="edit-options-button">Re-order</button>' +
           '<button id="add-option-button">Add item</button>' +
           list1HTML
         const listSortable = new ListSortableQuestionElements()
+        listSortable.announceClearTimeMs = 1000
         const announcementRegion = /** @type {HTMLElement} */ (
           document.getElementById('reorder-announcement')
         )
@@ -368,10 +369,28 @@ describe('list-sortable', () => {
         )
         expect(announcementRegion.textContent).toBe('')
         listSortable.announceReorder(upButtonLastRow)
-        await new Promise((_resolve) => setTimeout(_resolve, 2000))
+        await new Promise((_resolve) => setTimeout(_resolve, 500))
         expect(announcementRegion.textContent).toBe(
           'List reordered, Option 4 is now option 4 of 4.'
         )
+        await new Promise((_resolve) => setTimeout(_resolve, 1000))
+        expect(announcementRegion.textContent).toBe('')
+      })
+
+      it('should ignore if no announcement region', async () => {
+        document.body.innerHTML =
+          '<button id="edit-options-button">Re-order</button>' +
+          '<button id="add-option-button">Add item</button>' +
+          list1HTML
+        const listSortable = new ListSortableQuestionElements()
+        listSortable.announceClearTimeMs = 1000
+        listSortable.announceReorder(
+          /** @type {HTMLElement} */ (
+            document.getElementById('edit-options-button')
+          )
+        )
+        await new Promise((_resolve) => setTimeout(_resolve, 500))
+        expect(listSortable.announcementRegion).toBeNull()
       })
     })
   })
