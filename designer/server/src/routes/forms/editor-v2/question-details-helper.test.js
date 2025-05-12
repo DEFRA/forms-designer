@@ -2,6 +2,7 @@ import { getQuestionSessionState } from '~/src/lib/session-helper.js'
 import {
   handleEnhancedActionOnGet,
   handleEnhancedActionOnPost,
+  repositionListItem,
   setEditRowState
 } from '~/src/routes/forms/editor-v2/question-details-helper.js'
 
@@ -546,6 +547,12 @@ describe('Editor v2 question-details route helper', () => {
         isReordering: false
       })
     )
+  })
+
+  describe('repositionListItem', () => {
+    test('should handle zero items in list', () => {
+      expect(repositionListItem([], 'up', 'itemId')).toEqual([])
+    })
   })
 })
 

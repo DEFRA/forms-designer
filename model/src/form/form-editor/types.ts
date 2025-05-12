@@ -194,17 +194,17 @@ export interface FormEditor {
   /**
    * The display text of the radio item
    */
-  radioText: string
+  radioText?: string
 
   /**
    * The hint of the radio item
    */
-  radioHint: string
+  radioHint?: string
 
   /**
    * The value of the radio item
    */
-  radioValue: string
+  radioValue?: string
 
   /**
    * The list name to be applied to a field (if applicable)
