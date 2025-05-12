@@ -15,7 +15,7 @@
   "types": "dist/types/index.d.ts",
   "scripts": {
     "build": "npm run build:types && npm run build:node && npm run build:schemas",
-    "build:node": "babel --delete-dir-on-start --extensions \".ts\" --extensions \".js\" --ignore \"**/*.test.*\" --copy-files --no-copy-ignored --source-maps --out-dir ./dist/module ./src",
+    "build:node": "babel --delete-dir-on-start --extensions \".ts,.js\" --ignore \"**/*.test.*\" --copy-files --no-copy-ignored --source-maps --out-dir ./dist/module ./src",
     "build:types": "tsc --build --force tsconfig.build.json && tsc-alias --project tsconfig.build.json",
     "build:schemas": "node scripts/generate-schemas.js",
     "test": "jest --color --coverage --verbose",
