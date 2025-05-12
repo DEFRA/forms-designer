@@ -27,7 +27,7 @@ import {
   reorderPages,
   resolvePageHeading,
   setCheckAnswersDeclaration,
-  setPageHeadingAndGuidance,
+  setPageSettings,
   updateQuestion
 } from '~/src/lib/editor.js'
 import {
@@ -554,7 +554,7 @@ describe('editor.js', () => {
           headers: { Authorization: `Bearer ${token}` }
         }
 
-        await setPageHeadingAndGuidance(formId, token, 'p1', formDefinition, {
+        await setPageSettings(formId, token, 'p1', formDefinition, {
           pageHeading: 'My new page title'
         })
 
@@ -578,13 +578,10 @@ describe('editor.js', () => {
           headers: { Authorization: `Bearer ${token}` }
         }
 
-        await setPageHeadingAndGuidance(
-          formId,
-          token,
-          '12345',
-          formDefinition,
-          { pageHeading: 'My new page title', pageHeadingAndGuidance: 'true' }
-        )
+        await setPageSettings(formId, token, '12345', formDefinition, {
+          pageHeading: 'My new page title',
+          pageHeadingAndGuidance: 'true'
+        })
 
         expect(mockedPatchJson).toHaveBeenCalledWith(
           pageRequestUrl,
@@ -620,17 +617,11 @@ describe('editor.js', () => {
           headers: { Authorization: `Bearer ${token}` }
         }
 
-        await setPageHeadingAndGuidance(
-          formId,
-          token,
-          '12345',
-          formDefinition,
-          {
-            pageHeading: 'My new page title',
-            pageHeadingAndGuidance: 'true',
-            guidanceText: 'Some guidance'
-          }
-        )
+        await setPageSettings(formId, token, '12345', formDefinition, {
+          pageHeading: 'My new page title',
+          pageHeadingAndGuidance: 'true',
+          guidanceText: 'Some guidance'
+        })
 
         expect(mockedPatchJson).toHaveBeenCalledWith(
           pageRequestUrl,
@@ -667,7 +658,7 @@ describe('editor.js', () => {
         headers: { Authorization: `Bearer ${token}` }
       }
 
-      await setPageHeadingAndGuidance(
+      await setPageSettings(
         formId,
         token,
         '12345',
@@ -705,7 +696,7 @@ describe('editor.js', () => {
         headers: { Authorization: `Bearer ${token}` }
       }
 
-      await setPageHeadingAndGuidance(
+      await setPageSettings(
         formId,
         token,
         '12345',

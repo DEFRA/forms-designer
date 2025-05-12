@@ -10,7 +10,7 @@ import {
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
 import { createServer } from '~/src/createServer.js'
 import { buildBoom409 } from '~/src/lib/__stubs__/editor.js'
-import { setPageHeadingAndGuidance } from '~/src/lib/editor.js'
+import { setPageSettings } from '~/src/lib/editor.js'
 import { addErrorsToSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { auth } from '~/test/fixtures/auth.js'
@@ -19,6 +19,16 @@ import { renderResponse } from '~/test/helpers/component-helpers.js'
 jest.mock('~/src/lib/editor.js')
 jest.mock('~/src/lib/error-helper.js')
 jest.mock('~/src/lib/forms.js')
+
+const payload = {
+  pageHeadingAndGuidance: 'true',
+  pageHeading: 'New page heading',
+  guidanceText: 'New guidance text',
+  repeater: 'true',
+  minItems: 2,
+  maxItems: 5,
+  questionSetName: 'Cows'
+}
 
 describe('Editor v2 questions routes', () => {
   /** @type {Server} */
@@ -127,7 +137,11 @@ describe('Editor v2 questions routes', () => {
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
-      new Joi.ValidationError('Enter a page heading', [], undefined),
+      new Joi.ValidationError(
+        'Enter a page heading. Min is required. Max is required. questionSetName is required',
+        [],
+        undefined
+      ),
       'questionsValidationFailure'
     )
   })
@@ -137,7 +151,7 @@ describe('Editor v2 questions routes', () => {
     jest
       .mocked(forms.getDraftFormDefinition)
       .mockResolvedValueOnce(testFormDefinitionWithNoQuestions)
-    jest.mocked(setPageHeadingAndGuidance).mockImplementationOnce(() => {
+    jest.mocked(setPageSettings).mockImplementationOnce(() => {
       throw buildBoom409(
         'Duplicate page path',
         ApiErrorCode.DuplicatePagePathPage
@@ -148,11 +162,7 @@ describe('Editor v2 questions routes', () => {
       method: 'post',
       url: '/library/my-form-slug/editor-v2/page/p1/questions',
       auth,
-      payload: {
-        pageHeadingAndGuidance: 'true',
-        pageHeading: 'New page heading',
-        guidanceText: 'New guidance text'
-      }
+      payload
     }
 
     const {
@@ -179,7 +189,7 @@ describe('Editor v2 questions routes', () => {
     jest
       .mocked(forms.getDraftFormDefinition)
       .mockResolvedValueOnce(testFormDefinitionWithNoQuestions)
-    jest.mocked(setPageHeadingAndGuidance).mockImplementationOnce(() => {
+    jest.mocked(setPageSettings).mockImplementationOnce(() => {
       throw buildBoom409('Some other error boom message')
     })
 
@@ -187,11 +197,7 @@ describe('Editor v2 questions routes', () => {
       method: 'post',
       url: '/library/my-form-slug/editor-v2/page/p1/questions',
       auth,
-      payload: {
-        pageHeadingAndGuidance: 'true',
-        pageHeading: 'New page heading',
-        guidanceText: 'New guidance text'
-      }
+      payload
     }
 
     const {
@@ -211,7 +217,7 @@ describe('Editor v2 questions routes', () => {
 
   test('POST - should throw if not boom 409 from API', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
-    jest.mocked(setPageHeadingAndGuidance).mockImplementationOnce(() => {
+    jest.mocked(setPageSettings).mockImplementationOnce(() => {
       throw new Error('Some other API error')
     })
 
@@ -219,11 +225,7 @@ describe('Editor v2 questions routes', () => {
       method: 'post',
       url: '/library/my-form-slug/editor-v2/page/1/questions',
       auth,
-      payload: {
-        pageHeadingAndGuidance: 'true',
-        pageHeading: 'New page heading',
-        guidanceText: 'New guidance text'
-      }
+      payload
     }
 
     const {
@@ -243,11 +245,7 @@ describe('Editor v2 questions routes', () => {
       method: 'post',
       url: '/library/my-form-slug/editor-v2/page/p1/questions',
       auth,
-      payload: {
-        pageHeadingAndGuidance: 'true',
-        pageHeading: 'New page heading',
-        guidanceText: 'New guidance text'
-      }
+      payload
     }
 
     const {
@@ -258,16 +256,12 @@ describe('Editor v2 questions routes', () => {
     expect(headers.location).toBe(
       '/library/my-form-slug/editor-v2/page/p1/questions'
     )
-    expect(setPageHeadingAndGuidance).toHaveBeenCalledWith(
+    expect(setPageSettings).toHaveBeenCalledWith(
       testFormMetadata.id,
       expect.anything(),
       'p1',
       expect.anything(),
-      {
-        guidanceText: 'New guidance text',
-        pageHeading: 'New page heading',
-        pageHeadingAndGuidance: 'true'
-      }
+      payload
     )
   })
 
@@ -281,11 +275,7 @@ describe('Editor v2 questions routes', () => {
       method: 'post',
       url: '/library/my-form-slug/editor-v2/page/p3/questions',
       auth,
-      payload: {
-        pageHeadingAndGuidance: 'true',
-        pageHeading: 'New page heading',
-        guidanceText: 'New guidance text'
-      }
+      payload
     }
 
     const {

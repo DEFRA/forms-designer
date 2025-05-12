@@ -1,7 +1,11 @@
 import {
   guidanceTextSchema,
+  maxItemsSchema,
+  minItemsSchema,
   pageHeadingAndGuidanceSchema,
-  pageHeadingSchema
+  pageHeadingSchema,
+  questionSetNameSchema,
+  repeaterSchema
 } from '@defra/forms-model'
 import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
@@ -9,7 +13,7 @@ import Joi from 'joi'
 
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
-import { setPageHeadingAndGuidance } from '~/src/lib/editor.js'
+import { setPageSettings } from '~/src/lib/editor.js'
 import { checkBoomError } from '~/src/lib/error-boom-helper.js'
 import {
   getValidationErrorsFromSession,
@@ -41,7 +45,31 @@ export const schema = Joi.object().keys({
       '*': 'Enter a page heading'
     })
   }),
-  guidanceText: guidanceTextSchema.optional().allow('')
+  guidanceText: guidanceTextSchema.optional().allow(''),
+  repeater: repeaterSchema,
+  minItems: minItemsSchema.label('Min').when('repeater', {
+    is: 'true',
+    then: Joi.required().messages({
+      'any.required':
+        'Enter the minimum number of times someone can answer these questions'
+    })
+  }),
+  maxItems: maxItemsSchema.label('Max').when('repeater', {
+    is: 'true',
+    then: Joi.number().min(Joi.ref('minItems')).required().messages({
+      'any.required':
+        'Enter the maximum number of times someone can answer these questions',
+      'number.min': 'Max must be greater than or equal to Min'
+    })
+  }),
+  questionSetName: questionSetNameSchema.when('repeater', {
+    is: 'true',
+    then: Joi.required().messages({
+      'string.empty': 'Enter a name for this set of questions',
+      'any.required': 'Enter a name for this set of questions'
+    }),
+    otherwise: Joi.allow('')
+  })
 })
 
 export default [
@@ -129,13 +157,7 @@ export default [
           )
         }
 
-        await setPageHeadingAndGuidance(
-          metadata.id,
-          token,
-          pageId,
-          definition,
-          payload
-        )
+        await setPageSettings(metadata.id, token, pageId, definition, payload)
 
         yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
 
@@ -155,6 +177,13 @@ export default [
       validate: {
         payload: schema,
         failAction: (request, h, error) => {
+          if (error && error instanceof Joi.ValidationError) {
+            // Filter out "ref" errors
+            error.details = error.details.filter(
+              (err) => err.type !== 'any.ref'
+            )
+          }
+
           return redirectWithErrors(request, h, error, errorKey)
         }
       },

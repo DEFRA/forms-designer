@@ -52,7 +52,13 @@ const serverOptions = (): ServerOptions => {
       },
       validate: {
         options: {
-          abortEarly: false
+          abortEarly: false,
+          errors: {
+            wrap: {
+              array: false,
+              label: false
+            }
+          }
         }
       },
       security: {
