@@ -1,7 +1,7 @@
-import { type Page } from '~/src/index.js'
+import { type PageRepeat } from '~/src/index.js'
 
 export type PatchPageFields = Partial<
-  Pick<Page, 'title' | 'path' | 'controller'>
+  Pick<PageRepeat, 'title' | 'path' | 'controller' | 'repeat'>
 >
 
 export interface AddComponentQueryOptions {
