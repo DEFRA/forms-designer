@@ -13,6 +13,7 @@ import {
   stringHasValue
 } from '~/src/lib/utils.js'
 import {
+  GOVUK_INPUT_WIDTH_2,
   GOVUK_LABEL__M,
   SAVE_AND_CONTINUE,
   baseModelFields,
@@ -99,24 +100,24 @@ function questionsFields(pageHeadingSettings, repeaterSettings, validation) {
       minItems: {
         label: {
           text: 'Min',
-          classes: 'govuk-label--m'
+          classes: GOVUK_LABEL__M
         },
         id: 'minItems',
         name: 'minItems',
         inputmode: 'numeric',
-        classes: 'govuk-input--width-2',
+        classes: GOVUK_INPUT_WIDTH_2,
         value: minItems,
         ...insertValidationErrors(validation?.formErrors.minItems)
       },
       maxItems: {
         label: {
           text: 'Max',
-          classes: 'govuk-label--m'
+          classes: GOVUK_LABEL__M
         },
         id: 'maxItems',
         name: 'maxItems',
         inputmode: 'numeric',
-        classes: 'govuk-input--width-2',
+        classes: GOVUK_INPUT_WIDTH_2,
         value: maxItems,
         ...insertValidationErrors(validation?.formErrors.maxItems)
       }
@@ -124,7 +125,7 @@ function questionsFields(pageHeadingSettings, repeaterSettings, validation) {
     questionSetName: {
       label: {
         text: 'Give the responses an identifiable name or label',
-        classes: 'govuk-label--m'
+        classes: GOVUK_LABEL__M
       },
       hint: {
         text: 'Use a word to describe what these questions are asking about. For example, ‘Cow’, ‘Pet’. This will be used to categorise the answers, for example ‘Cow 1’, ‘Cow 2’.'
