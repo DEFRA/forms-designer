@@ -300,7 +300,9 @@ export async function setPageSettings(
         }
       }
     })
-  } else if (isCurrentlyRepeater) {
+  }
+
+  if (isCurrentlyRepeater && !repeater) {
     // Unset the controller and repeat options
     Object.assign(requestPayload, {
       controller: null,
