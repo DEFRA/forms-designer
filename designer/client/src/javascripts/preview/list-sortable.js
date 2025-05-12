@@ -11,6 +11,7 @@ import {
   ListQuestionElements
 } from '~/src/javascripts/preview/list'
 
+const APP_REORDERABLE_LIST_ITEM = '.app-reorderable-list__item'
 const REORDER_BUTTON_HIDDEN = 'reorder-button-hidden'
 
 const OK_200 = 200
@@ -207,7 +208,7 @@ export class ListSortableQuestionElements extends ListQuestionElements {
    */
   moveUp(listenerClass, target) {
     if (target.classList.contains('js-reorderable-list-up')) {
-      const item = target.closest('.app-reorderable-list__item')
+      const item = target.closest(APP_REORDERABLE_LIST_ITEM)
       const prevItem = item?.previousElementSibling
       if (prevItem && item.parentNode) {
         item.parentNode.insertBefore(item, prevItem)
@@ -224,7 +225,7 @@ export class ListSortableQuestionElements extends ListQuestionElements {
    */
   moveDown(listenerClass, target) {
     if (target.classList.contains('js-reorderable-list-down')) {
-      const item = target.closest('.app-reorderable-list__item')
+      const item = target.closest(APP_REORDERABLE_LIST_ITEM)
       const nextItem = item?.nextElementSibling
       if (nextItem && item.parentNode) {
         item.parentNode.insertBefore(nextItem, item)
@@ -245,11 +246,11 @@ export class ListSortableQuestionElements extends ListQuestionElements {
     }
 
     const listItem = /** @type { HTMLElement | null } */ (
-      movedItem.closest('.app-reorderable-list__item')
+      movedItem.closest(APP_REORDERABLE_LIST_ITEM)
     )
     const listItems = /** @type {HTMLElement[]} */ (
       Array.from(
-        this.sortableContainer.querySelectorAll('.app-reorderable-list__item')
+        this.sortableContainer.querySelectorAll(APP_REORDERABLE_LIST_ITEM)
       )
     )
     const newPositionIdx = listItems.findIndex(

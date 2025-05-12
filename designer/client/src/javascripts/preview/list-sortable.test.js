@@ -353,19 +353,25 @@ describe('list-sortable', () => {
     })
 
     describe('announceReorder', () => {
-      // TODO - change test for announcement
-      it('should focus button if button remains visible - move down', () => {
+      it('should focus button if button remains visible - move down', async () => {
         document.body.innerHTML =
+          '<div class="govuk-visually-hidden" id="reorder-announcement" aria-live="polite" aria-atomic="true"></div>' +
           '<button id="edit-options-button">Re-order</button>' +
           '<button id="add-option-button">Add item</button>' +
           list1HTML
         const listSortable = new ListSortableQuestionElements()
-        const downButtonFirstRow = /** @type {HTMLElement} */ (
-          document.getElementById('first-row-down')
+        const announcementRegion = /** @type {HTMLElement} */ (
+          document.getElementById('reorder-announcement')
         )
-        jest.spyOn(downButtonFirstRow, 'focus')
-        listSortable.setMoveFocus(downButtonFirstRow)
-        expect(downButtonFirstRow.focus).toHaveBeenCalled()
+        const upButtonLastRow = /** @type {HTMLElement} */ (
+          document.getElementById('last-row-up')
+        )
+        expect(announcementRegion.textContent).toBe('')
+        listSortable.announceReorder(upButtonLastRow)
+        await new Promise((_resolve) => setTimeout(_resolve, 2000))
+        expect(announcementRegion.textContent).toBe(
+          'List reordered, Option 4 is now option 4 of 4.'
+        )
       })
     })
   })
