@@ -1,4 +1,7 @@
-import { type ListElement, type ListItemReadonly } from '~/src/index.js'
+import {
+  type ListElement,
+  type ListItemReadonly
+} from '~/src/form/form-editor/types.js'
 
 export interface BaseSettings {
   question: string

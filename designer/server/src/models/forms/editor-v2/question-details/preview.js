@@ -76,6 +76,8 @@ export class QuestionPreviewElements {
         this._optional = getCheckedValue(field)
       } else if (field.name === 'shortDescription') {
         this._shortDesc = getValueAsString(field)
+      } else {
+        // sonarlint
       }
     })
   }
@@ -192,8 +194,8 @@ export const models = {
  */
 export function getPreviewModel(govukFields, componentType) {
   const questionOrListElements = new QuestionPreviewElements(govukFields)
-  let QuestionConstructor =
-    /** @type {(question: ListElements) => Question} */ (models.Question)
+  /** @type {(question: ListElements) => Question} */
+  let QuestionConstructor
 
   if (componentType === ComponentType.TextField) {
     QuestionConstructor = models.ShortAnswer
@@ -207,6 +209,10 @@ export function getPreviewModel(govukFields, componentType) {
     QuestionConstructor = models.PhoneNumber
   } else if (componentType === ComponentType.RadiosField) {
     QuestionConstructor = models.Radio
+  } else {
+    QuestionConstructor = /** @type {(question: ListElements) => Question} */ (
+      models.Question
+    )
   }
 
   const question = QuestionConstructor(questionOrListElements)
