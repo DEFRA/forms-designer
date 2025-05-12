@@ -42,7 +42,11 @@
         <!-- Error Messages Content -->
         <div class="govuk-error-summary" data-disable-auto-focus="true">
             {% call appPreviewErrorPanel({
-
+              errorTemplates: params.errorTemplates,
+              fieldDetails: {
+                extraFields: params.extraFields,
+                basePageFields: params.basePageFields
+              }
             }) %}
             {% endcall %}
           <a href="#edit-page" class="govuk-skip-link" style="margin-bottom: 30px!important;" data-module="govuk-skip-link" data-govuk-skip-link-init="">

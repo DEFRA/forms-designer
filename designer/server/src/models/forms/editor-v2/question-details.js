@@ -1,4 +1,4 @@
-// import { TextField } from '@defra/forms-engine-plugin'
+import { createComponent } from '@defra/forms-engine-plugin'
 import { randomId } from '@defra/forms-model'
 
 import { QuestionTypeDescriptions } from '~/src/common/constants/editor.js'
@@ -252,12 +252,22 @@ export function questionDetailsViewModel(
   const pageHeading = details.pageTitle
   const pageTitle = `Edit question ${details.questionNum} - ${formTitle}`
 
-  // const textfield = new TextField({
-  //   title: 'Dummy',
-  //   name: 'dummy',
-  //   options: { required: false }
-  // }, {})
-  // console.log('errormodel', textfield.getAllPossibleErrors())
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+  const component = createComponent(
+    {
+      type: questionType,
+      title: 'Dummy',
+      name: 'dummy',
+      options: { required: true }
+    },
+    {}
+  )
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const errorTemplates =
+    'getAllPossibleErrors' in component
+      ? // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+        component.getAllPossibleErrors()
+      : { baseErrors: [], advancedSettingsErrors: [] }
 
   return {
     listDetails: getListDetails(state, questionFieldsOverride),
@@ -269,6 +279,8 @@ export function questionDetailsViewModel(
     basePageFields,
     uploadFields,
     extraFields,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    errorTemplates,
     cardTitle: `Question ${details.questionNum}`,
     cardCaption: `Page ${details.pageNum}`,
     cardHeading: `Edit question ${details.questionNum}`,

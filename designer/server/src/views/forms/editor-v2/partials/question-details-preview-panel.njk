@@ -3,7 +3,11 @@
 {% call appPreviewPanel({
     questionType: questionType,
     previewPageUrl: previewPageUrl,
-    previewErrorsUrl: previewErrorsUrl
+    previewErrorsUrl: previewErrorsUrl,
+    errorTemplates: errorTemplates,
+    extraFields: extraFields,
+    basePageFields: basePageFields
+
   }) %}
 {% endcall %}
 
