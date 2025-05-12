@@ -351,6 +351,23 @@ describe('list-sortable', () => {
         expect(upButtonLastRow.focus).toHaveBeenCalled()
       })
     })
+
+    describe('announceReorder', () => {
+      // TODO - change test for announcement
+      it('should focus button if button remains visible - move down', () => {
+        document.body.innerHTML =
+          '<button id="edit-options-button">Re-order</button>' +
+          '<button id="add-option-button">Add item</button>' +
+          list1HTML
+        const listSortable = new ListSortableQuestionElements()
+        const downButtonFirstRow = /** @type {HTMLElement} */ (
+          document.getElementById('first-row-down')
+        )
+        jest.spyOn(downButtonFirstRow, 'focus')
+        listSortable.setMoveFocus(downButtonFirstRow)
+        expect(downButtonFirstRow.focus).toHaveBeenCalled()
+      })
+    })
   })
 
   describe('ListSortableEventListeners', () => {
