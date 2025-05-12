@@ -5,7 +5,7 @@
   <li>
     <a id="empty-input-error-shorttext" class="govuk-error-message">
       <span class="govuk-visually-hidden">Error:</span>
-      {{ baseError | renderErrorTemplate(params.fieldDetails) | safe }}
+      {{ baseError | renderErrorTemplate(params.fieldDetails, params.questionType) | safe }}
     </a>
   </li>
   {% endfor %}
@@ -15,7 +15,7 @@
     <li>
       <a id="too-long-input-error-shorttext" class="govuk-error-message">
         <span class="govuk-visually-hidden">Error:</span>
-        {{ advancedSettingsError | renderErrorTemplate(params.fieldDetails) | safe }}
+        {{ advancedSettingsError | renderErrorTemplate(params.fieldDetails, params.questionType) | safe }}
       </a>
     </li>
     {% endfor %}

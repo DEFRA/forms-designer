@@ -1,41 +1,14 @@
 import Joi from 'joi'
 
 import { expandTemplate } from '~/src/common/nunjucks/render.js'
-
-/**
- * @param {string} type
- * @param {string} part
- * @returns {string}
- */
-function spanTag(type, part) {
-  return `<span class="error-preview-${type}">${part}</span>`
-}
-
-/**
- * @param {string} templateStr
- * @param {string} type
- */
-function insertTags(templateStr, type) {
-  const delimiterRegex = /({{|}})/
-  const parts = templateStr.split(delimiterRegex)
-  const resultParts = []
-  for (const part of parts) {
-    if (part.includes('#label')) {
-      resultParts.push(spanTag('short-desc', part))
-    } else if (part.includes('#limit')) {
-      resultParts.push(spanTag(type, part))
-    } else if (part !== '{{' && part !== '}}') {
-      resultParts.push(part)
-    }
-  }
-  return resultParts.join('')
-}
+import { determineLimit, insertTags } from '~/src/lib/error-preview-helper.js'
 
 /**
  * @param {{ type: string, template: Joi.JoiExpression }} template - error template
  * @param {{ basePageFields: { name?: string, id?: string, label?: { text: string }, value?: string }[], extraFields: GovukField[] }} viewModel
+ * @param {ComponentType} questionType
  */
-export function renderErrorTemplate(template, viewModel) {
+export function renderErrorTemplate(template, viewModel, questionType) {
   const shortDescriptionField = viewModel.basePageFields.find(
     (x) => x.id === 'shortDescription'
   )
@@ -53,15 +26,15 @@ export function renderErrorTemplate(template, viewModel) {
       functions: template.template._functions
     })
   }
-  // console.log('template.temp', newTemplate)
+
   const renderedText = expandTemplate(newTemplate, {
     label: shortDescriptionField?.value,
-    limit: '15'
+    limit: determineLimit(template.type, viewModel.extraFields, questionType)
   })
   return renderedText
 }
 
 /**
- * @import { GovukField } from '@defra/forms-model'
+ * @import { ComponentType, GovukField } from '@defra/forms-model'
  * @import { JoiExpression } from 'joi'
  */

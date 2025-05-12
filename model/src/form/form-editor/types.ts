@@ -409,3 +409,8 @@ export interface FormEditorCheckbox {
     value?: string
   }
 }
+
+export type AdvancedFieldMappingsType = Record<
+  ComponentType,
+  Record<string, string>
+>
