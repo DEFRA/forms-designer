@@ -263,17 +263,14 @@ export function questionsViewModel(
 
   const pageHeadingSettings = { pageHeadingVal, guidanceTextVal }
   const repeaterSettings = { minItems, maxItems, questionSetName }
+  const cardTitle = `Page ${pageIdx + 1} overview`
 
   return {
-    ...baseModelFields(
-      metadata.slug,
-      `${pageHeading} - ${formTitle}`,
-      formTitle
-    ),
+    ...baseModelFields(metadata.slug, `${cardTitle} - ${formTitle}`, formTitle),
     fields: {
       ...questionsFields(pageHeadingSettings, repeaterSettings, validation)
     },
-    cardTitle: `Page ${pageIdx + 1} overview`,
+    cardTitle,
     cardCaption: pageHeading,
     navigation,
     baseUrl,
