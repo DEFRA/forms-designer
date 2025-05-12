@@ -3,7 +3,7 @@ import {
   QuestionRendererStub,
   baseElements
 } from '~/src/form/form-editor/__stubs__/preview.js'
-import { DateInput } from '~/src/form/form-editor/preview/date-input.js'
+import { DateInputQuestion } from '~/src/form/form-editor/preview/date-input.js'
 
 describe('date-input', () => {
   it('should create class', () => {
@@ -11,7 +11,7 @@ describe('date-input', () => {
       new QuestionPreviewElements(baseElements)
     )
     const renderer = new QuestionRendererStub(jest.fn())
-    const dateInput = new DateInput(elements, renderer)
+    const dateInput = new DateInputQuestion(elements, renderer)
     expect(dateInput.renderInput).toEqual({
       id: 'dateInput',
       name: 'dateInputField',

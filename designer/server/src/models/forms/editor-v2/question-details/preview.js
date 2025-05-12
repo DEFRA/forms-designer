@@ -1,15 +1,15 @@
-import { DateInput } from '@defra/forms-designer/client/src/javascripts/preview/date-input.js'
-import { EmailAddress } from '@defra/forms-designer/client/src/javascripts/preview/email-address.js'
-import { ListSortable } from '@defra/forms-designer/client/src/javascripts/preview/list-sortable.js'
-import { List } from '@defra/forms-designer/client/src/javascripts/preview/list.js'
-import { PhoneNumber } from '@defra/forms-designer/client/src/javascripts/preview/phone-number.js'
-import { Question } from '@defra/forms-designer/client/src/javascripts/preview/question.js'
-import { RadioSortable } from '@defra/forms-designer/client/src/javascripts/preview/radio-sortable.js'
-import { Radio } from '@defra/forms-designer/client/src/javascripts/preview/radio.js'
-import { ShortAnswer } from '@defra/forms-designer/client/src/javascripts/preview/short-answer.js'
-import { UkAddress } from '@defra/forms-designer/client/src/javascripts/preview/uk-address.js'
 import {
   ComponentType,
+  DateInputQuestion,
+  EmailAddressQuestion,
+  ListQuestion,
+  ListSortableQuestion,
+  PhoneNumberQuestion,
+  Question,
+  RadioQuestion,
+  RadioSortableQuestion,
+  ShortAnswerQuestion,
+  UkAddressQuestion,
   govukFieldIsQuestionOptional,
   govukFieldValueIsString
 } from '@defra/forms-model'
@@ -125,64 +125,64 @@ export const models = {
    * @returns {Question}
    */
   ShortAnswer: (questionElements) => {
-    return new ShortAnswer(questionElements, emptyRender)
+    return new ShortAnswerQuestion(questionElements, emptyRender)
   },
 
   /**
    * @param {QuestionElements} questionElements
-   * @returns {DateInput}
+   * @returns {Question}
    */
   DateInput: (questionElements) => {
-    return new DateInput(questionElements, emptyRender)
+    return new DateInputQuestion(questionElements, emptyRender)
   },
   /**
    * @param {QuestionElements} questionElements
    * @returns {Question}
    */
   EmailAddress: (questionElements) => {
-    return new EmailAddress(questionElements, emptyRender)
+    return new EmailAddressQuestion(questionElements, emptyRender)
   },
   /**
    * @param {QuestionElements} questionElements
    * @returns {Question}
    */
   UkAddress: (questionElements) => {
-    return new UkAddress(questionElements, emptyRender)
+    return new UkAddressQuestion(questionElements, emptyRender)
   },
   /**
    * @param {QuestionElements} questionElements
    * @returns {Question}
    */
   PhoneNumber: (questionElements) => {
-    return new PhoneNumber(questionElements, emptyRender)
+    return new PhoneNumberQuestion(questionElements, emptyRender)
   },
   /**
    * @param {ListElements} listElements
    * @returns {Question}
    */
   List: (listElements) => {
-    return new List(listElements, emptyRender)
+    return new ListQuestion(listElements, emptyRender)
   },
   /**
    * @param {ListElements} listElements
    * @returns {Question}
    */
   Radio: (listElements) => {
-    return new Radio(listElements, emptyRender)
+    return new RadioQuestion(listElements, emptyRender)
   },
   /**
    * @param {ListElements} listElements
    * @returns {Question}
    */
   ListSortable: (listElements) => {
-    return new ListSortable(listElements, emptyRender)
+    return new ListSortableQuestion(listElements, emptyRender)
   },
   /**
    * @param {ListElements} listElements
    * @returns {Question}
    */
   RadioSortable: (listElements) => {
-    return new RadioSortable(listElements, emptyRender)
+    return new RadioSortableQuestion(listElements, emptyRender)
   }
 }
 
@@ -193,7 +193,7 @@ export const models = {
 export function getPreviewModel(govukFields, componentType) {
   const questionOrListElements = new QuestionPreviewElements(govukFields)
   let QuestionConstructor =
-    /** @type {(question: QuestionElements) => Question} */ (models.Question)
+    /** @type {(question: ListElements) => Question} */ (models.Question)
 
   if (componentType === ComponentType.TextField) {
     QuestionConstructor = models.ShortAnswer
@@ -213,6 +213,5 @@ export function getPreviewModel(govukFields, componentType) {
   return question.renderInput
 }
 /**
- * @import { GovukField, ListElement, ListElements, QuestionElements, QuestionRenderer, QuestionBaseModel, GovukField } from '@defra/forms-model'
- * @import { ListSortable, ListSortableQuestionElements } from '@defra/forms-designer/client/src/javascripts/preview/list-sortable.js'
+ * @import { ListElement, ListElements, QuestionElements, QuestionRenderer, QuestionBaseModel, GovukField } from '@defra/forms-model'
  */

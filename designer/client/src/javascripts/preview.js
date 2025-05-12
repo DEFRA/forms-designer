@@ -23,12 +23,16 @@ export function showHideForJs() {
 }
 
 /**
+ * @typedef { Question | DateInputQuestion | EmailAddressQuestion | PhoneNumberQuestion | RadioSortableQuestion | ShortAnswerQuestion | UkAddressQuestion } PreviewQuestion
+ */
+
+/**
  * @param {ComponentType} componentType
- * @returns {Question|RadioSortable|DateInput|ShortAnswer}
+ * @returns {PreviewQuestion}
  */
 export function setupPreview(componentType) {
   /**
-   * @type {Question|RadioSortable|DateInput|ShortAnswer|PhoneNumber}
+   * @type {PreviewQuestion}
    */
   let preview
   if (componentType === ComponentType.TextField) {
@@ -48,15 +52,11 @@ export function setupPreview(componentType) {
   }
   showHideForJs()
 
+  preview.render()
+
   return preview
 }
 
 /**
- * @import { DateInput } from '~/src/javascripts/preview/date-input.js'
- * @import { Question } from '~/src/javascripts/preview/question.js'
- * @import { ShortAnswer } from '~/src/javascripts/preview/short-answer.js'
- * @import { UkAddress } from '~/src/javascripts/preview/uk-address.js'
- * @import { EmailAddress } from '~/src/javascripts/preview/email-address.js'
- * @import { PhoneNumber } from '~/src/javascripts/preview/phone-number.js'
- * @import { RadioSortable } from '~/src/javascripts/preview/radio-sortable.js'
+ * @import { Question, DateInputQuestion, EmailAddressQuestion, PhoneNumberQuestion, RadioSortableQuestion, ShortAnswerQuestion, UkAddressQuestion } from '@defra/forms-model'
  */

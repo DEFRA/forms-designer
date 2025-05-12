@@ -1,119 +1,135 @@
-import { DateInput } from '~/src/javascripts/preview/date-input.js'
-import { EmailAddress } from '~/src/javascripts/preview/email-address.js'
 import {
-  ListSortable,
+  DateInputQuestion,
+  EmailAddressQuestion,
+  ListQuestion,
+  ListSortableQuestion,
+  PhoneNumberQuestion,
+  Question,
+  RadioQuestion,
+  RadioSortableQuestion,
+  ShortAnswerQuestion,
+  UkAddressQuestion
+} from '@defra/forms-model'
+
+import {
+  ListSortableEventListeners,
   ListSortableQuestionElements
 } from '~/src/javascripts/preview/list-sortable.js'
 import {
-  List,
+  ListEventListeners,
   ListQuestionDomElements
 } from '~/src/javascripts/preview/list.js'
 import { NunjucksRenderer } from '~/src/javascripts/preview/nunjucks-renderer.js'
-import { PhoneNumber } from '~/src/javascripts/preview/phone-number.js'
 import {
-  Question,
+  EventListeners,
   QuestionDomElements
 } from '~/src/javascripts/preview/question.js'
 import {
-  RadioSortable,
+  RadioSortableEventListeners,
   RadioSortableQuestionElements
 } from '~/src/javascripts/preview/radio-sortable.js'
 import {
-  Radio,
+  RadioEventListeners,
   RadioQuestionDomElements
 } from '~/src/javascripts/preview/radio.js'
-import { ShortAnswer } from '~/src/javascripts/preview/short-answer.js'
-import { UkAddress } from '~/src/javascripts/preview/uk-address.js'
 
 export const SetupPreview = {
-  /**
-   * @returns {Question}
-   */
   Question() {
     const questionElements = new QuestionDomElements()
     const nunjucksRenderer = new NunjucksRenderer(questionElements)
     const question = new Question(questionElements, nunjucksRenderer)
-
-    question.init(questionElements)
+    const listeners = new EventListeners(question, questionElements)
+    listeners.setupListeners()
 
     return question
   },
-  /**
-   * @returns {ShortAnswer}
-   */
   ShortAnswer() {
     const questionElements = new QuestionDomElements()
     const nunjucksRenderer = new NunjucksRenderer(questionElements)
-    const textfield = new ShortAnswer(questionElements, nunjucksRenderer)
-
-    textfield.init(questionElements)
+    const textfield = new ShortAnswerQuestion(
+      questionElements,
+      nunjucksRenderer
+    )
+    const listeners = new EventListeners(textfield, questionElements)
+    listeners.setupListeners()
 
     return textfield
   },
-  /**
-   * @returns {DateInput}
-   */
   DateInput() {
     const questionElements = new QuestionDomElements()
     const nunjucksRenderer = new NunjucksRenderer(questionElements)
-    const dateInputField = new DateInput(questionElements, nunjucksRenderer)
-    dateInputField.init(questionElements)
+    const dateInputField = new DateInputQuestion(
+      questionElements,
+      nunjucksRenderer
+    )
+    const listeners = new EventListeners(dateInputField, questionElements)
+    listeners.setupListeners()
 
     return dateInputField
   },
   EmailAddress() {
     const questionElements = new QuestionDomElements()
     const nunjucksRenderer = new NunjucksRenderer(questionElements)
-    const email = new EmailAddress(questionElements, nunjucksRenderer)
-    email.init(questionElements)
+    const email = new EmailAddressQuestion(questionElements, nunjucksRenderer)
+    const listeners = new EventListeners(email, questionElements)
+    listeners.setupListeners()
 
     return email
   },
   UkAddress() {
     const questionElements = new QuestionDomElements()
     const nunjucksRenderer = new NunjucksRenderer(questionElements)
-    const address = new UkAddress(questionElements, nunjucksRenderer)
-    address.init(questionElements)
+    const address = new UkAddressQuestion(questionElements, nunjucksRenderer)
+    const listeners = new EventListeners(address, questionElements)
+    listeners.setupListeners()
 
     return address
   },
   PhoneNumber() {
     const questionElements = new QuestionDomElements()
     const nunjucksRenderer = new NunjucksRenderer(questionElements)
-    const address = new PhoneNumber(questionElements, nunjucksRenderer)
-    address.init(questionElements)
+    const phoneNumber = new PhoneNumberQuestion(
+      questionElements,
+      nunjucksRenderer
+    )
+    const listeners = new EventListeners(phoneNumber, questionElements)
+    listeners.setupListeners()
 
-    return address
+    return phoneNumber
   },
   List() {
     const elements = new ListQuestionDomElements(NunjucksRenderer)
     const nunjucksRenderer = new NunjucksRenderer(elements)
-    const list = new List(elements, nunjucksRenderer)
-    list.render()
+    const list = new ListQuestion(elements, nunjucksRenderer)
+    const listeners = new ListEventListeners(list, elements, [])
+    listeners.setupListeners()
 
     return list
   },
   Radio() {
     const elements = new RadioQuestionDomElements(NunjucksRenderer)
     const nunjucksRenderer = new NunjucksRenderer(elements)
-    const radio = new Radio(elements, nunjucksRenderer)
-    radio.init(elements)
+    const radio = new RadioQuestion(elements, nunjucksRenderer)
+    const listeners = new RadioEventListeners(radio, elements, [])
+    listeners.setupListeners()
 
     return radio
   },
   ListSortable() {
     const elements = new ListSortableQuestionElements(NunjucksRenderer)
     const nunjucksRenderer = new NunjucksRenderer(elements)
-    const listSortable = new ListSortable(elements, nunjucksRenderer)
-    listSortable.init(elements)
+    const listSortable = new ListSortableQuestion(elements, nunjucksRenderer)
+    const listeners = new ListSortableEventListeners(listSortable, elements, [])
+    listeners.setupListeners()
 
     return listSortable
   },
   RadioSortable() {
     const elements = new RadioSortableQuestionElements(NunjucksRenderer)
     const nunjucksRenderer = new NunjucksRenderer(elements)
-    const radio = new RadioSortable(elements, nunjucksRenderer)
-    radio.init(elements)
+    const radio = new RadioSortableQuestion(elements, nunjucksRenderer)
+    const listeners = new RadioSortableEventListeners(radio, elements, [])
+    listeners.setupListeners()
 
     return radio
   }

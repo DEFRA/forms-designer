@@ -1,14 +1,14 @@
+import Sortable from 'sortablejs'
+
 import {
   addPathToEditorBaseUrl,
   hideHtmlElement,
   showHtmlElement
-} from '@defra/forms-designer/client/src/javascripts/preview/helper'
+} from '~/src/javascripts/preview/helper'
 import {
-  List,
   ListEventListeners,
   ListQuestionDomElements
-} from '@defra/forms-designer/client/src/javascripts/preview/list'
-import Sortable from 'sortablejs'
+} from '~/src/javascripts/preview/list'
 
 const REORDER_BUTTON_HIDDEN = 'reorder-button-hidden'
 
@@ -229,12 +229,12 @@ export class ListSortableQuestionElements extends ListQuestionDomElements {
 export class ListSortableEventListeners extends ListEventListeners {
   /** @type {ListSortableQuestionElements} */
   _listSortableElements
-  /** @type {ListSortable} */
+  /** @type {ListSortableQuestion} */
   _listQuestion
 
   /**
    *
-   * @param {ListSortable} question
+   * @param {ListSortableQuestion} question
    * @param {ListSortableQuestionElements} listQuestionElements
    * @param {HTMLElement[]} listElements
    */
@@ -326,59 +326,7 @@ export class ListSortableEventListeners extends ListEventListeners {
   }
 }
 
-export class ListSortable extends List {
-  /**
-   * @param {ListElements} listElements
-   * @param {QuestionRenderer} questionRenderer
-   */
-  constructor(listElements, questionRenderer) {
-    super(listElements, questionRenderer)
-    const items = /** @type {ListElement[]} */ (listElements.values.items)
-    this._list = this.createListFromElements(items)
-    this._listElements = listElements
-  }
-
-  /**
-   * @returns {Map<string, ListElement>}
-   */
-  resyncPreviewAfterReorder() {
-    const newList = this._listElements.values.items
-    this._list = this.createListFromElements(newList)
-    this.render()
-    return this._list
-  }
-
-  get listElementObjects() {
-    return Array.from(this._list).map(([, value]) => ({
-      id: value.id,
-      text: value.text,
-      hint: value.hint?.text ? { text: value.hint.text } : undefined,
-      value: value.value
-    }))
-  }
-
-  /**
-   * @param {ListSortableQuestionElements} listSortableQuestionElements
-   */
-  init(listSortableQuestionElements) {
-    const listeners = new ListSortableEventListeners(
-      this,
-      listSortableQuestionElements,
-      []
-    )
-    listeners.setupListeners()
-
-    /**
-     * @type {ListEventListeners}
-     * @private
-     */
-    this._listeners = listeners
-    this.render()
-  }
-}
-
 /**
- * @import { ListElement, QuestionRenderer, HTMLBuilder, ListElements } from '@defra/forms-model'
- * @import { ListenerRow } from '~/src/javascripts/preview/question.js'
+ * @import { ListElement, QuestionRenderer, HTMLBuilder, ListElements, ListSortableQuestion, ListenerRow } from '@defra/forms-model'
  * @import { SortableEvent, SortableOptions } from 'sortablejs'
  */

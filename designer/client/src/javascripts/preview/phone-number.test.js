@@ -1,8 +1,9 @@
+import { PhoneNumberQuestion } from '@defra/forms-model'
+
 import {
   questionDetailsLeftPanelHTML,
   questionDetailsPreviewHTML
 } from '~/src/javascripts/preview/__stubs__/question.js'
-import { PhoneNumber } from '~/src/javascripts/preview/phone-number.js'
 import { SetupPreview } from '~/src/javascripts/setup-preview.js'
 
 jest.mock('~/src/javascripts/preview/nunjucks-renderer.js')
@@ -13,7 +14,7 @@ describe('phone number', () => {
       document.body.innerHTML =
         questionDetailsLeftPanelHTML + questionDetailsPreviewHTML
       const res = SetupPreview.PhoneNumber()
-      expect(res).toBeInstanceOf(PhoneNumber)
+      expect(res).toBeInstanceOf(PhoneNumberQuestion)
       expect(res).toBeDefined()
       expect(res.renderInput).toEqual({
         id: 'phoneNumberField',

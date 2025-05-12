@@ -1,4 +1,10 @@
-import { ComponentType } from '@defra/forms-model'
+import {
+  ComponentType,
+  DateInputQuestion,
+  Question,
+  RadioSortableQuestion,
+  ShortAnswerQuestion
+} from '@defra/forms-model'
 
 import { setupPreview, showHideForJs } from '~/src/javascripts/preview'
 import { list1HTML } from '~/src/javascripts/preview/__stubs__/list'
@@ -6,10 +12,6 @@ import {
   questionDetailsLeftPanelHTML,
   questionDetailsPreviewTabsHTML
 } from '~/src/javascripts/preview/__stubs__/question'
-import { DateInput } from '~/src/javascripts/preview/date-input'
-import { Question } from '~/src/javascripts/preview/question'
-import { RadioSortable } from '~/src/javascripts/preview/radio-sortable'
-import { ShortAnswer } from '~/src/javascripts/preview/short-answer.js'
 
 jest.mock('~/src/javascripts/preview/nunjucks.js')
 jest.mock('~/src/views/components/ukaddressfield.njk', () => '')
@@ -26,18 +28,18 @@ describe('preview', () => {
   describe('setupPreview', () => {
     it('should setup preview for Textfield', () => {
       const res = setupPreview(ComponentType.TextField)
-      expect(res).toBeInstanceOf(ShortAnswer)
+      expect(res).toBeInstanceOf(ShortAnswerQuestion)
     })
 
     it('should setup preview for DatePartsField', () => {
       const res = setupPreview(ComponentType.DatePartsField)
-      expect(res).toBeInstanceOf(DateInput)
+      expect(res).toBeInstanceOf(DateInputQuestion)
     })
 
     it('should setup preview for Radiosfield', () => {
       document.body.innerHTML = list1HTML
       const res = setupPreview(ComponentType.RadiosField)
-      expect(res).toBeInstanceOf(RadioSortable)
+      expect(res).toBeInstanceOf(RadioSortableQuestion)
     })
 
     it('should setup preview for unknown', () => {

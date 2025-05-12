@@ -1,3 +1,5 @@
+import { ListSortableQuestion } from '@defra/forms-model'
+
 import {
   list1HTML,
   listEmptyHTML
@@ -8,7 +10,6 @@ import {
   questionDetailsStubPanels
 } from '~/src/javascripts/preview/__stubs__/question.js'
 import {
-  ListSortable,
   ListSortableEventListeners,
   ListSortableQuestionElements
 } from '~/src/javascripts/preview/list-sortable'
@@ -78,7 +79,9 @@ describe('list-sortable', () => {
     it('should setup', () => {
       document.body.innerHTML =
         questionDetailsLeftPanelHTML + questionDetailsPreviewTabsHTML
-      const preview = /** @type {ListSortable} */ (SetupPreview.RadioSortable())
+      const preview = /** @type {ListSortableQuestion} */ (
+        SetupPreview.RadioSortable()
+      )
       expect(preview.renderInput.fieldset.legend.text).toBe(
         'Which quest would you like to pick?'
       )
@@ -217,7 +220,9 @@ describe('list-sortable', () => {
           '<button id="edit-options-button">Re-order</button>' +
           '<button id="add-option-button">Add item</button>' +
           list1HTML
-        const preview = SetupPreview.ListSortable()
+        const listSortableQuestionElements = new ListSortableQuestionElements(
+          NunjucksRenderer
+        )
         const upButtons = Array.from(
           document.querySelectorAll('.js-reorderable-list-up')
         )
@@ -225,8 +230,7 @@ describe('list-sortable', () => {
           upButtons.find((x) => x.id === 'last-row-up')
         )
         expect(upButtons.findIndex((x) => x.id === 'last-row-up')).toBe(3)
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        preview._listElements.moveUp(mockListenerClass, upButton)
+        listSortableQuestionElements.moveUp(mockListenerClass, upButton)
         const upButtonsAfter = Array.from(
           document.querySelectorAll('.js-reorderable-list-up')
         )
@@ -239,7 +243,9 @@ describe('list-sortable', () => {
           '<button id="edit-options-button">Re-order</button>' +
           '<button id="add-option-button">Add item</button>' +
           list1HTML
-        const preview = SetupPreview.ListSortable()
+        const listSortableQuestionElements = new ListSortableQuestionElements(
+          NunjucksRenderer
+        )
         const upButtons = Array.from(
           document.querySelectorAll('.js-reorderable-list-up')
         )
@@ -248,8 +254,7 @@ describe('list-sortable', () => {
         )
         expect(upButtons.findIndex((x) => x.id === 'last-row-up')).toBe(3)
         upButton.classList.remove('js-reorderable-list-up')
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        preview._listElements.moveUp(mockListenerClass, upButton)
+        listSortableQuestionElements.moveUp(mockListenerClass, upButton)
         expect(mockResync).not.toHaveBeenCalled()
       })
 
@@ -258,7 +263,9 @@ describe('list-sortable', () => {
           '<button id="edit-options-button">Re-order</button>' +
           '<button id="add-option-button">Add item</button>' +
           list1HTML
-        const preview = SetupPreview.ListSortable()
+        const listSortableQuestionElements = new ListSortableQuestionElements(
+          NunjucksRenderer
+        )
         const downButtons = Array.from(
           document.querySelectorAll('.js-reorderable-list-down')
         )
@@ -266,8 +273,7 @@ describe('list-sortable', () => {
           downButtons.find((x) => x.id === 'first-row-down')
         )
         expect(downButtons.findIndex((x) => x.id === 'first-row-down')).toBe(0)
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        preview._listElements.moveDown(mockListenerClass, downButton)
+        listSortableQuestionElements.moveDown(mockListenerClass, downButton)
         const downButtonsAfter = Array.from(
           document.querySelectorAll('.js-reorderable-list-down')
         )
@@ -282,7 +288,9 @@ describe('list-sortable', () => {
           '<button id="edit-options-button">Re-order</button>' +
           '<button id="add-option-button">Add item</button>' +
           list1HTML
-        const preview = SetupPreview.ListSortable()
+        const listSortableQuestionElements = new ListSortableQuestionElements(
+          NunjucksRenderer
+        )
         const downButtons = Array.from(
           document.querySelectorAll('.js-reorderable-list-down')
         )
@@ -291,8 +299,7 @@ describe('list-sortable', () => {
         )
         expect(downButtons.findIndex((x) => x.id === 'first-row-down')).toBe(0)
         downButton.classList.remove('js-reorderable-list-down')
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        preview._listElements.moveDown(mockListenerClass, downButton)
+        listSortableQuestionElements.moveDown(mockListenerClass, downButton)
         expect(mockResync).not.toHaveBeenCalled()
       })
     })
@@ -352,7 +359,9 @@ describe('list-sortable', () => {
     const mockEvent = /** @type {Event} */ ({})
     describe('editPanelListeners', () => {
       it('should update the List class when listeners are called', () => {
-        const preview = /** @type {ListSortable} */ (SetupPreview.List())
+        const preview = /** @type {ListSortableQuestion} */ (
+          SetupPreview.List()
+        )
         const listEventListeners = new ListSortableEventListeners(
           preview,
           questionElements,
@@ -462,8 +471,8 @@ describe('list-sortable', () => {
         '<button id="add-option-button">Add item</button>' +
         list1HTML
       const elements = new ListSortableQuestionElements(NunjucksRenderer)
-      const preview = new ListSortable(elements, nunjucksRenderer)
-      expect(preview._list.size).toBe(4)
+      const preview = new ListSortableQuestion(elements, nunjucksRenderer)
+      expect(preview.listElementObjects).toHaveLength(4)
       const listeners = new ListSortableEventListeners(preview, elements, [])
       listeners.setupListeners()
 
@@ -509,18 +518,14 @@ describe('list-sortable', () => {
         '<button id="add-option-button">Add item</button>' +
         listEmptyHTML
       const preview = SetupPreview.ListSortable()
-      expect(preview._list.size).toBe(0)
+      expect(preview.listElementObjects).toHaveLength(0)
       document.body.innerHTML =
         '<button id="edit-options-button">Done</button>' +
         '<button id="add-option-button">Add item</button>' +
         list1HTML
       const preview2 = SetupPreview.ListSortable()
       preview.resyncPreviewAfterReorder()
-      expect(preview2._list.size).toBe(4)
+      expect(preview2.listElementObjects).toHaveLength(4)
     })
   })
 })
-
-/**
- * @import { List } from '~/src/javascripts/preview/list.js'
- */

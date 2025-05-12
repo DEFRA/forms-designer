@@ -1,7 +1,8 @@
+import { ListQuestion } from '@defra/forms-model'
+
 import { list1HTML } from '~/src/javascripts/preview/__stubs__/list'
 import { questionDetailsStubPanels } from '~/src/javascripts/preview/__stubs__/question.js'
 import {
-  List,
   ListEventListeners,
   ListQuestionDomElements,
   listsElementToMap
@@ -135,7 +136,7 @@ describe('list', () => {
   describe('integration', () => {
     it('should setup', () => {
       document.body.innerHTML = list1HTML
-      const preview = /** @type {Radio} */ (SetupPreview.List())
+      const preview = /** @type {RadioQuestion} */ (SetupPreview.List())
       expect(preview.renderInput.fieldset.legend.text).toBe('Question')
     })
   })
@@ -181,7 +182,7 @@ describe('list', () => {
     const mockEvent = /** @type {Event} */ ({})
     describe('editPanelListeners', () => {
       it('should update the List class when listeners are called', () => {
-        const preview = /** @type {List} */ (SetupPreview.List())
+        const preview = /** @type {ListQuestion} */ (SetupPreview.List())
         const listEventListeners = new ListEventListeners(
           preview,
           questionElements,
@@ -265,7 +266,7 @@ describe('list', () => {
 
     describe('listHighlightListeners', () => {
       it('should update the List class when listeners are called', () => {
-        const preview = /** @type {List} */ (SetupPreview.List())
+        const preview = /** @type {ListQuestion} */ (SetupPreview.List())
         const listEventListeners = new ListEventListeners(
           preview,
           questionElements,
@@ -319,59 +320,8 @@ describe('list', () => {
   })
 
   describe('List class', () => {
-    it('should delete an element', () => {
-      const list = new List(emptyQuestionElements, emptyListRenderer)
-      list.push(structuredClone(list1))
-      expect(list.list).toEqual([list1])
-      list.delete(list1Id)
-      expect(list.list).toEqual([])
-    })
-
-    it('should edit list text', () => {
-      const expectedList = [
-        {
-          ...list2,
-          text: 'Rescuing the princess 👸',
-          label: { ...list2.label, text: 'Rescuing the princess 👸' }
-        }
-      ]
-      const list = new List(emptyQuestionElements, emptyListRenderer)
-      list.push(structuredClone(list2))
-      list.updateText(list2Id, 'Rescuing the princess 👸')
-      expect(list.list).toEqual(expectedList)
-    })
-
-    it('should add an element', () => {
-      const list = new List(emptyQuestionElements, emptyListRenderer)
-      list.push(structuredClone(list1))
-      expect(list.list).toEqual([list1])
-    })
-
-    it('should edit list value', () => {
-      const list = new List(emptyQuestionElements, emptyListRenderer)
-      list.push(structuredClone(list2))
-      list.updateValue(list2Id, 'princess-rescuing')
-      expect(list.list).toEqual([{ ...list2, value: 'princess-rescuing' }])
-    })
-
-    it('should edit hint', () => {
-      const expectedHint = 'When you want to rescue a princess'
-      const list = new List(emptyQuestionElements, emptyListRenderer)
-      list.push(structuredClone(list2))
-      list.updateHint(list2Id, expectedHint)
-      expect(list.list).toEqual([
-        {
-          ...list2,
-          hint: {
-            classes: '',
-            text: 'When you want to rescue a princess'
-          }
-        }
-      ])
-    })
-
     it('should return the correct model', () => {
-      const list = new List(emptyQuestionElements, emptyListRenderer)
+      const list = new ListQuestion(emptyQuestionElements, emptyListRenderer)
       const expectedModel = {
         id: 'listInput',
         name: 'listInputField',
@@ -425,6 +375,5 @@ describe('list', () => {
 })
 
 /**
- * @import { ListElement, HTMLBuilder } from '@defra/forms-model'
- * @import { Radio } from '~/src/javascripts/preview/radio.js'
+ * @import { ListElement, HTMLBuilder, RadioQuestion } from '@defra/forms-model'
  */

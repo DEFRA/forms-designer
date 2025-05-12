@@ -1,6 +1,6 @@
 import { Question } from '~/src/form/form-editor/preview/question.js'
 
-export class DateInput extends Question {
+export class DateInputQuestion extends Question {
   /**
    * @type {string}
    * @protected

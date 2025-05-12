@@ -1,8 +1,9 @@
+import { EmailAddressQuestion } from '@defra/forms-model'
+
 import {
   questionDetailsLeftPanelHTML,
   questionDetailsPreviewHTML
 } from '~/src/javascripts/preview/__stubs__/question.js'
-import { EmailAddress } from '~/src/javascripts/preview/email-address.js'
 import { SetupPreview } from '~/src/javascripts/setup-preview.js'
 
 jest.mock('~/src/javascripts/preview/nunjucks-renderer.js')
@@ -13,7 +14,7 @@ describe('email', () => {
       document.body.innerHTML =
         questionDetailsLeftPanelHTML + questionDetailsPreviewHTML
       const res = SetupPreview.EmailAddress()
-      expect(res).toBeInstanceOf(EmailAddress)
+      expect(res).toBeInstanceOf(EmailAddressQuestion)
       expect(res).toBeDefined()
       expect(res.renderInput).toEqual({
         id: 'emailAddressField',
