@@ -215,7 +215,6 @@ export function questionDetailsViewModel(
   state
 ) {
   const questionType = state?.questionType
-
   const details = getDetails(
     metadata,
     definition,
@@ -223,7 +222,6 @@ export function questionDetailsViewModel(
     questionId,
     questionType
   )
-
   const formTitle = metadata.title
   const questionFieldsOverride = /** @type {ComponentDef} */ (
     state?.questionDetails ?? details.question
@@ -251,7 +249,6 @@ export function questionDetailsViewModel(
   const changeTypeUrl = `${urlPageBase}/question/${questionId}/type/${stateId}`
   const pageHeading = details.pageTitle
   const pageTitle = `Edit question ${details.questionNum} - ${formTitle}`
-  const model = getPreviewModel(basePageFields, state, questionType)
   return {
     listDetails: getListDetails(state, questionFieldsOverride),
     state,
@@ -269,7 +266,7 @@ export function questionDetailsViewModel(
     errorList,
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
-    model,
+    model: getPreviewModel(basePageFields, state, questionType),
     questionType: questionFieldsOverride.type,
     questionTypeDesc: QuestionTypeDescriptions.find(
       (x) => x.type === questionFieldsOverride.type
