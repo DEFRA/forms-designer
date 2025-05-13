@@ -13,7 +13,7 @@ describe('phone number', () => {
     it('should create class', () => {
       document.body.innerHTML =
         questionDetailsLeftPanelHTML + questionDetailsPreviewHTML
-      const res = SetupPreview.PhoneNumber()
+      const res = SetupPreview.TelephoneNumberField()
       expect(res).toBeInstanceOf(PhoneNumberQuestion)
       expect(res).toBeDefined()
       expect(res.renderInput).toEqual({

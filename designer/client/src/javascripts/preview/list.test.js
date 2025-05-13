@@ -136,7 +136,7 @@ describe('list', () => {
   describe('integration', () => {
     it('should setup', () => {
       document.body.innerHTML = list1HTML
-      const preview = /** @type {RadioQuestion} */ (SetupPreview.List())
+      const preview = /** @type {RadioQuestion} */ (SetupPreview.ListSortable())
       expect(preview.renderInput.fieldset.legend.text).toBe('Question')
     })
   })
@@ -182,7 +182,9 @@ describe('list', () => {
     const mockEvent = /** @type {Event} */ ({})
     describe('editPanelListeners', () => {
       it('should update the List class when listeners are called', () => {
-        const preview = /** @type {ListQuestion} */ (SetupPreview.List())
+        const preview = /** @type {ListQuestion} */ (
+          SetupPreview.ListSortable()
+        )
         const listEventListeners = new ListEventListeners(
           preview,
           questionElements,
@@ -266,7 +268,9 @@ describe('list', () => {
 
     describe('listHighlightListeners', () => {
       it('should update the List class when listeners are called', () => {
-        const preview = /** @type {ListQuestion} */ (SetupPreview.List())
+        const preview = /** @type {ListQuestion} */ (
+          SetupPreview.ListSortable()
+        )
         const listEventListeners = new ListEventListeners(
           preview,
           questionElements,
@@ -350,7 +354,7 @@ describe('list', () => {
     })
 
     it('should highlight', () => {
-      const preview = SetupPreview.List()
+      const preview = SetupPreview.ListSortable()
       preview.highlight = `${baronListItemId}-hint`
       expect(preview.list[3]).toMatchObject({
         hint: { text: 'Hint text' }
@@ -358,7 +362,7 @@ describe('list', () => {
     })
 
     it('should handle edge cases', () => {
-      const preview = SetupPreview.List()
+      const preview = SetupPreview.ListSortable()
       expect(preview.list).toEqual(expectedList)
       preview.updateValue(undefined, 'new-value')
       preview.updateValue('b40e1a4f-9777-463a-a657-83f9da39e69e', 'New Text')

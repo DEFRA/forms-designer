@@ -10,7 +10,7 @@ describe('date-input', () => {
   it('should create class', () => {
     document.body.innerHTML =
       questionDetailsLeftPanelHTML + questionDetailsPreviewHTML
-    const res = SetupPreview.DateInput()
+    const res = SetupPreview.DatePartsField()
     expect(res.renderInput).toEqual({
       id: 'dateInput',
       name: 'dateInputField',

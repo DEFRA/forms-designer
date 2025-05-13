@@ -36,17 +36,17 @@ export function setupPreview(componentType) {
    */
   let preview
   if (componentType === ComponentType.TextField) {
-    preview = SetupPreview.ShortAnswer()
+    preview = SetupPreview.TextField()
   } else if (componentType === ComponentType.DatePartsField) {
-    preview = SetupPreview.DateInput()
+    preview = SetupPreview.DatePartsField()
   } else if (componentType === ComponentType.RadiosField) {
-    preview = SetupPreview.RadioSortable()
+    preview = SetupPreview.RadiosField()
   } else if (componentType === ComponentType.UkAddressField) {
-    preview = SetupPreview.UkAddress()
+    preview = SetupPreview.UkAddressField()
   } else if (componentType === ComponentType.EmailAddressField) {
-    preview = SetupPreview.EmailAddress()
+    preview = SetupPreview.EmailAddressField()
   } else if (componentType === ComponentType.TelephoneNumberField) {
-    preview = SetupPreview.PhoneNumber()
+    preview = SetupPreview.TelephoneNumberField()
   } else {
     preview = SetupPreview.Question()
   }

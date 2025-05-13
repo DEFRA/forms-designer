@@ -82,7 +82,7 @@ describe('list-sortable', () => {
       document.body.innerHTML =
         questionDetailsLeftPanelHTML + questionDetailsPreviewTabsHTML
       const preview = /** @type {ListSortableQuestion} */ (
-        SetupPreview.RadioSortable()
+        SetupPreview.RadiosField()
       )
       expect(preview.renderInput.fieldset.legend.text).toBe(
         'Which quest would you like to pick?'
@@ -457,7 +457,7 @@ describe('list-sortable', () => {
     describe('editPanelListeners', () => {
       it('should update the List class when listeners are called', () => {
         const preview = /** @type {ListSortableQuestion} */ (
-          SetupPreview.List()
+          SetupPreview.ListSortable()
         )
         const listEventListeners = new ListSortableEventListeners(
           preview,

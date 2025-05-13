@@ -13,7 +13,7 @@ describe('address', () => {
     it('should create class', () => {
       document.body.innerHTML =
         questionDetailsLeftPanelHTML + questionDetailsPreviewHTML
-      const res = SetupPreview.UkAddress()
+      const res = SetupPreview.UkAddressField()
       expect(res).toBeInstanceOf(UkAddressQuestion)
       expect(res).toBeDefined()
       expect(res.renderInput).toEqual({

@@ -13,7 +13,7 @@ describe('email', () => {
     it('should create class', () => {
       document.body.innerHTML =
         questionDetailsLeftPanelHTML + questionDetailsPreviewHTML
-      const res = SetupPreview.EmailAddress()
+      const res = SetupPreview.EmailAddressField()
       expect(res).toBeInstanceOf(EmailAddressQuestion)
       expect(res).toBeDefined()
       expect(res.renderInput).toEqual({

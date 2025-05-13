@@ -10,7 +10,7 @@ describe('ShortAnswer', () => {
   it('should create class', () => {
     document.body.innerHTML =
       questionDetailsLeftPanelHTML + questionDetailsPreviewHTML
-    const res = SetupPreview.ShortAnswer()
+    const res = SetupPreview.TextField()
     expect(res).toBeDefined()
   })
 })
