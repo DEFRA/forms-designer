@@ -663,5 +663,119 @@ describe('list-sortable', () => {
         method: 'POST'
       })
     })
+
+    it('updateStateInSession should handle successful API call', async () => {
+      jest
+        .spyOn(global, 'fetch')
+        // @ts-expect-error - Response type
+        .mockImplementation(() => Promise.resolve({ status: 200 }))
+
+      // eslint-disable-next-line no-global-assign
+      window = Object.create(window)
+      const url = 'http://localhost:3000/'
+      Object.defineProperty(window, 'location', {
+        value: {
+          href: url
+        },
+        writable: true // possibility to override
+      })
+
+      document.body.innerHTML =
+        '<button id="edit-options-button">Done</button>' +
+        '<button id="add-option-button">Add item</button>' +
+        list1HTML
+      const preview = ListSortable.setupPreview()
+      expect(preview._list.size).toBe(4)
+      preview.updateStateInSession()
+      await new Promise((_resolve) => setTimeout(_resolve, 1000))
+      expect(global.fetch).toHaveBeenCalledWith(expect.anything(), {
+        body: JSON.stringify({
+          listItems: [
+            {
+              id: 'dc96bf7a-07a0-4f5b-ba6d-c5c4c9d381de',
+              text: 'Option 1',
+              value: 'option-1'
+            },
+            {
+              id: '21e58240-5d0a-4e52-8003-3d99f318beb8',
+              text: 'Option 2',
+              value: 'option-2'
+            },
+            {
+              id: '80c4cb93-f079-4836-93f9-509e683e5004',
+              text: 'Option 3',
+              value: 'option-3'
+            },
+            {
+              id: 'ade6652f-b67e-4665-bf07-66f03877b5c6',
+              text: 'Option 4',
+              hint: { text: 'hint 4' },
+              value: 'option-4'
+            }
+          ]
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        method: 'POST'
+      })
+    })
+
+    it('updateStateInSession should handle failed API call with error code being returned', async () => {
+      jest
+        .spyOn(global, 'fetch')
+        // @ts-expect-error - Response type
+        .mockImplementation(() => Promise.resolve({ status: 500 }))
+
+      // eslint-disable-next-line no-global-assign
+      window = Object.create(window)
+      const url = 'http://localhost:3000/'
+      Object.defineProperty(window, 'location', {
+        value: {
+          href: url
+        },
+        writable: true // possibility to override
+      })
+
+      document.body.innerHTML =
+        '<button id="edit-options-button">Done</button>' +
+        '<button id="add-option-button">Add item</button>' +
+        list1HTML
+      const preview = ListSortable.setupPreview()
+      expect(preview._list.size).toBe(4)
+      preview.updateStateInSession()
+      await new Promise((_resolve) => setTimeout(_resolve, 1000))
+      expect(window.location.href).toBe(
+        'http://localhost:3000//editor-v2/error'
+      )
+    })
+
+    it('updateStateInSession should handle thrown API call error', async () => {
+      jest
+        .spyOn(global, 'fetch')
+        .mockImplementation(() => Promise.reject(new Error('api error')))
+
+      // eslint-disable-next-line no-global-assign
+      window = Object.create(window)
+      const url = 'http://localhost:3000/'
+      Object.defineProperty(window, 'location', {
+        value: {
+          href: url
+        },
+        writable: true // possibility to override
+      })
+
+      document.body.innerHTML =
+        '<button id="edit-options-button">Done</button>' +
+        '<button id="add-option-button">Add item</button>' +
+        list1HTML
+      const preview = ListSortable.setupPreview()
+      expect(preview._list.size).toBe(4)
+      preview.updateStateInSession()
+      await new Promise((_resolve) => setTimeout(_resolve, 1000))
+      expect(window.location.href).toBe(
+        'http://localhost:3000//editor-v2/error'
+      )
+    })
   })
 })
