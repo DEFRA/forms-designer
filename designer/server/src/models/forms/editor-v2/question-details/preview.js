@@ -1,13 +1,10 @@
 import {
-  ComponentType,
   DateInputQuestion,
   EmailAddressQuestion,
   ListQuestion,
-  ListSortableQuestion,
   PhoneNumberQuestion,
   Question,
   RadioQuestion,
-  RadioSortableQuestion,
   ShortAnswerQuestion,
   UkAddressQuestion,
   govukFieldIsQuestionOptional,
@@ -138,79 +135,150 @@ export class EmptyRender {
 
 const emptyRender = new EmptyRender()
 
-export const models = {
-  /**
-   * @param {QuestionElements} questionElements
-   * @returns {Question}
-   */
-  Question: (questionElements) => {
-    return new Question(questionElements, emptyRender)
-  },
-  /**
-   * @param {QuestionElements} questionElements
-   * @returns {Question}
-   */
-  ShortAnswer: (questionElements) => {
-    return new ShortAnswerQuestion(questionElements, emptyRender)
-  },
+export const ModelFactory =
+  /** @type {Record<ComponentType|'Question', (q: ListElements) => Question>} */ ({
+    /**
+     * @param {QuestionElements} questionElements
+     * @returns {Question}
+     */
+    TextField: (questionElements) => {
+      return new ShortAnswerQuestion(questionElements, emptyRender)
+    },
+    /**
+     * @param {QuestionElements} questionElements
+     * @returns {Question}
+     */
+    Question: (questionElements) => {
+      return new Question(questionElements, emptyRender)
+    },
+    /**
+     * @param {QuestionElements} questionElements
+     * @returns {Question}
+     */
+    MultilineTextField: (questionElements) => {
+      return new Question(questionElements, emptyRender)
+    },
+    /**
+     * @param {QuestionElements} questionElements
+     * @returns {Question}
+     */
+    YesNoField: (questionElements) => {
+      return new Question(questionElements, emptyRender)
+    },
+    /**
+     * @param {QuestionElements} questionElements
+     * @returns {Question}
+     */
+    MonthYearField: (questionElements) => {
+      return new Question(questionElements, emptyRender)
+    },
+    /**
+     * @param {ListElements} questionElements
+     * @returns {Question}
+     */
+    SelectField: (questionElements) => {
+      return new Question(questionElements, emptyRender)
+    },
+    /**
+     * @param {QuestionElements} questionElements
+     * @returns {Question}
+     */
+    NumberField: (questionElements) => {
+      return new Question(questionElements, emptyRender)
+    },
+    /**
+     * @param {ListElements} questionElements
+     * @returns {Question}
+     */
+    AutocompleteField: (questionElements) => {
+      return new ListQuestion(questionElements, emptyRender)
+    },
+    /**
+     * @param {ListElements} questionElements
+     * @returns {Question}
+     */
+    CheckboxesField: (questionElements) => {
+      return new ListQuestion(questionElements, emptyRender)
+    },
 
-  /**
-   * @param {QuestionElements} questionElements
-   * @returns {Question}
-   */
-  DateInput: (questionElements) => {
-    return new DateInputQuestion(questionElements, emptyRender)
-  },
-  /**
-   * @param {QuestionElements} questionElements
-   * @returns {Question}
-   */
-  EmailAddress: (questionElements) => {
-    return new EmailAddressQuestion(questionElements, emptyRender)
-  },
-  /**
-   * @param {QuestionElements} questionElements
-   * @returns {Question}
-   */
-  UkAddress: (questionElements) => {
-    return new UkAddressQuestion(questionElements, emptyRender)
-  },
-  /**
-   * @param {QuestionElements} questionElements
-   * @returns {Question}
-   */
-  PhoneNumber: (questionElements) => {
-    return new PhoneNumberQuestion(questionElements, emptyRender)
-  },
-  /**
-   * @param {ListElements} listElements
-   * @returns {Question}
-   */
-  List: (listElements) => {
-    return new ListQuestion(listElements, emptyRender)
-  },
-  /**
-   * @param {ListElements} listElements
-   * @returns {Question}
-   */
-  Radio: (listElements) => {
-    return new RadioQuestion(listElements, emptyRender)
-  },
-  /**
-   * @param {ListElements} listElements
-   * @returns {Question}
-   */
-  ListSortable: (listElements) => {
-    return new ListSortableQuestion(listElements, emptyRender)
-  },
-  /**
-   * @param {ListElements} listElements
-   * @returns {Question}
-   */
-  RadioSortable: (listElements) => {
-    return new RadioSortableQuestion(listElements, emptyRender)
-  }
-}
+    /**
+     * @param {QuestionElements} questionElements
+     * @returns {Question}
+     */
+    DatePartsField: (questionElements) => {
+      return new DateInputQuestion(questionElements, emptyRender)
+    },
+    /**
+     * @param {QuestionElements} questionElements
+     * @returns {Question}
+     */
+    EmailAddressField: (questionElements) => {
+      return new EmailAddressQuestion(questionElements, emptyRender)
+    },
+    /**
+     * @param {QuestionElements} questionElements
+     * @returns {Question}
+     */
+    UkAddressField: (questionElements) => {
+      return new UkAddressQuestion(questionElements, emptyRender)
+    },
+    /**
+     * @param {QuestionElements} questionElements
+     * @returns {Question}
+     */
+    TelephoneNumberField: (questionElements) => {
+      return new PhoneNumberQuestion(questionElements, emptyRender)
+    },
+    /**
+     * @param {ListElements} listElements
+     * @returns {Question}
+     */
+    RadiosField: (listElements) => {
+      return new RadioQuestion(listElements, emptyRender)
+    },
+    /**
+     * @param {QuestionElements} questionElements
+     * @returns {Question}
+     */
+    Html: (questionElements) => {
+      return new Question(questionElements, emptyRender)
+    },
+    /**
+     * @param {QuestionElements} questionElements
+     * @returns {Question}
+     */
+    InsetText: (questionElements) => {
+      return new Question(questionElements, emptyRender)
+    },
+    /**
+     * @param {QuestionElements} questionElements
+     * @returns {Question}
+     */
+    Details: (questionElements) => {
+      return new Question(questionElements, emptyRender)
+    },
+    /**
+     * @param {QuestionElements} questionElements
+     * @returns {Question}
+     */
+    List: (questionElements) => {
+      return new Question(questionElements, emptyRender)
+    },
+    /**
+     * @param {QuestionElements} questionElements
+     * @returns {Question}
+     */
+    Markdown: (questionElements) => {
+      return new Question(questionElements, emptyRender)
+    },
+    /**
+     * @param {QuestionElements} questionElements
+     * @returns {Question}
+     */
+    FileUploadField: (questionElements) => {
+      return new Question(questionElements, emptyRender)
+    }
+  })
 
 /**
  * @param {GovukField[]} govukFields
@@ -219,30 +287,15 @@ export const models = {
  */
 export function getPreviewModel(govukFields, state, componentType) {
   const questionOrListElements = new QuestionPreviewElements(govukFields, state)
-  /** @type {(question: ListElements) => Question} */
-  let QuestionConstructor
+  let QuestionConstructor = ModelFactory.Question
 
-  if (componentType === ComponentType.TextField) {
-    QuestionConstructor = models.ShortAnswer
-  } else if (componentType === ComponentType.DatePartsField) {
-    QuestionConstructor = models.DateInput
-  } else if (componentType === ComponentType.EmailAddressField) {
-    QuestionConstructor = models.EmailAddress
-  } else if (componentType === ComponentType.UkAddressField) {
-    QuestionConstructor = models.UkAddress
-  } else if (componentType === ComponentType.TelephoneNumberField) {
-    QuestionConstructor = models.PhoneNumber
-  } else if (componentType === ComponentType.RadiosField) {
-    QuestionConstructor = models.Radio
-  } else {
-    QuestionConstructor = /** @type {(question: ListElements) => Question} */ (
-      models.Question
-    )
+  if (componentType) {
+    QuestionConstructor = ModelFactory[componentType]
   }
 
   const question = QuestionConstructor(questionOrListElements)
   return question.renderInput
 }
 /**
- * @import { ListElement, ListElements, QuestionElements, QuestionRenderer, QuestionBaseModel, GovukField, QuestionSessionState } from '@defra/forms-model'
+ * @import { ListElement, ListElements, QuestionElements, QuestionRenderer, QuestionBaseModel, GovukField, QuestionSessionState, ComponentType } from '@defra/forms-model'
  */

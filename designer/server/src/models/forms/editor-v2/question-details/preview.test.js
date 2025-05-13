@@ -192,7 +192,20 @@ describe('preview', () => {
       shortDescription
     ]
 
-    it('should get ShortAnswer', () => {
+    const expectedQuestionModel = /** @type {QuestionBaseModel} */ ({
+      hint: {
+        classes: '',
+        text: ''
+      },
+      id: 'inputField',
+      label: {
+        classes: 'govuk-label--l',
+        text: 'Short answer (optional)'
+      },
+      name: 'inputField'
+    })
+
+    it('should get TextField', () => {
       const previewModel = getPreviewModel(
         basePageFields,
         {},
@@ -213,29 +226,186 @@ describe('preview', () => {
       expect(previewModel).toEqual(expectedBaseModel)
     })
 
+    it('should get MultilineTextField', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        {},
+        ComponentType.MultilineTextField
+      )
+
+      expect(previewModel).toEqual(expectedQuestionModel)
+    })
+
+    it('should get YesNoField', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        {},
+        ComponentType.YesNoField
+      )
+
+      expect(previewModel).toEqual(expectedQuestionModel)
+    })
+
+    it('should get MonthYearField', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        {},
+        ComponentType.MonthYearField
+      )
+
+      expect(previewModel).toEqual(expectedQuestionModel)
+    })
+
+    it('should get SelectField', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        {},
+        ComponentType.SelectField
+      )
+
+      expect(previewModel).toEqual(expectedQuestionModel)
+    })
+
+    it('should get NumberField', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        {},
+        ComponentType.NumberField
+      )
+
+      expect(previewModel).toEqual(expectedQuestionModel)
+    })
+
+    it('should get Html', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        {},
+        ComponentType.Html
+      )
+
+      expect(previewModel).toEqual(expectedQuestionModel)
+    })
+
+    it('should get InsetText', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        {},
+        ComponentType.InsetText
+      )
+
+      expect(previewModel).toEqual(expectedQuestionModel)
+    })
+
+    it('should get Details', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        {},
+        ComponentType.Details
+      )
+
+      expect(previewModel).toEqual(expectedQuestionModel)
+    })
+
+    it('should get List', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        {},
+        ComponentType.List
+      )
+
+      expect(previewModel).toEqual(expectedQuestionModel)
+    })
+
+    it('should get Markdown', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        {},
+        ComponentType.Markdown
+      )
+
+      expect(previewModel).toEqual(expectedQuestionModel)
+    })
+
+    it('should get FileUploadField', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        {},
+        ComponentType.FileUploadField
+      )
+
+      expect(previewModel).toEqual(expectedQuestionModel)
+    })
+
+    it('should get AutocompleteField', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        {},
+        ComponentType.AutocompleteField
+      )
+
+      expect(previewModel).toEqual({
+        fieldset: {
+          legend: {
+            classes: 'govuk-fieldset__legend--l',
+            text: 'Short answer (optional)'
+          }
+        },
+        formGroup: {
+          afterInputs: {
+            html: '<div class="govuk-inset-text">No items added yet.</div>'
+          }
+        },
+        hint: {
+          classes: '',
+          text: ''
+        },
+        id: 'listInput',
+        items: [],
+        name: 'listInputField'
+      })
+    })
+
+    it('should get CheckboxesField', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        {},
+        ComponentType.CheckboxesField
+      )
+
+      expect(previewModel).toEqual({
+        fieldset: {
+          legend: {
+            classes: 'govuk-fieldset__legend--l',
+            text: 'Short answer (optional)'
+          }
+        },
+        formGroup: {
+          afterInputs: {
+            html: '<div class="govuk-inset-text">No items added yet.</div>'
+          }
+        },
+        hint: {
+          classes: '',
+          text: ''
+        },
+        id: 'listInput',
+        items: [],
+        name: 'listInputField'
+      })
+    })
+
     it('should get Question', () => {
       const previewModel = getPreviewModel(
         basePageFields,
         {},
         // @ts-expect-error - unknown component type
-        'unknown'
+        'Question'
       )
-      const expectedBaseModel = /** @type {QuestionBaseModel} */ ({
-        hint: {
-          classes: '',
-          text: ''
-        },
-        id: 'inputField',
-        label: {
-          classes: 'govuk-label--l',
-          text: 'Short answer (optional)'
-        },
-        name: 'inputField'
-      })
-      expect(previewModel).toEqual(expectedBaseModel)
+
+      expect(previewModel).toEqual(expectedQuestionModel)
     })
 
-    it('should get DateInput', () => {
+    it('should get DatePartsField', () => {
       const previewModel = getPreviewModel(
         basePageFields,
         {},
