@@ -136,7 +136,9 @@ describe('list', () => {
   describe('integration', () => {
     it('should setup', () => {
       document.body.innerHTML = list1HTML
-      const preview = /** @type {RadioQuestion} */ (SetupPreview.ListSortable())
+      const preview = /** @type {ListSortableQuestion} */ (
+        SetupPreview.ListSortable()
+      )
       expect(preview.renderInput.fieldset.legend.text).toBe('Question')
     })
   })
@@ -354,7 +356,9 @@ describe('list', () => {
     })
 
     it('should highlight', () => {
-      const preview = SetupPreview.ListSortable()
+      const preview = /** @type {ListSortableQuestion} */ (
+        SetupPreview.ListSortable()
+      )
       preview.highlight = `${baronListItemId}-hint`
       expect(preview.list[3]).toMatchObject({
         hint: { text: 'Hint text' }
@@ -362,7 +366,9 @@ describe('list', () => {
     })
 
     it('should handle edge cases', () => {
-      const preview = SetupPreview.ListSortable()
+      const preview = /** @type {ListSortableQuestion} */ (
+        SetupPreview.ListSortable()
+      )
       expect(preview.list).toEqual(expectedList)
       preview.updateValue(undefined, 'new-value')
       preview.updateValue('b40e1a4f-9777-463a-a657-83f9da39e69e', 'New Text')
@@ -379,5 +385,5 @@ describe('list', () => {
 })
 
 /**
- * @import { ListElement, HTMLBuilder, RadioQuestion } from '@defra/forms-model'
+ * @import { ListElement, HTMLBuilder, RadioQuestion, ListSortableQuestion } from '@defra/forms-model'
  */
