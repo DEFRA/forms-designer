@@ -27,7 +27,7 @@ export const SetupPreview = {
   /**
    * @returns {Question}
    */
-  Question() {
+  Question: () => {
     const questionElements = new QuestionDomElements()
     const nunjucksRenderer = new NunjucksRenderer(questionElements)
     const question = new Question(questionElements, nunjucksRenderer)
@@ -39,7 +39,7 @@ export const SetupPreview = {
   /**
    * @returns {ShortAnswerQuestion}
    */
-  TextField() {
+  TextField: () => {
     const questionElements = new QuestionDomElements()
     const nunjucksRenderer = new NunjucksRenderer(questionElements)
     const textfield = new ShortAnswerQuestion(
@@ -54,7 +54,7 @@ export const SetupPreview = {
   /**
    * @returns {DateInputQuestion}
    */
-  DatePartsField() {
+  DatePartsField: () => {
     const questionElements = new QuestionDomElements()
     const nunjucksRenderer = new NunjucksRenderer(questionElements)
     const dateInputField = new DateInputQuestion(
@@ -69,7 +69,7 @@ export const SetupPreview = {
   /**
    * @returns {EmailAddressQuestion}
    */
-  EmailAddressField() {
+  EmailAddressField: () => {
     const questionElements = new QuestionDomElements()
     const nunjucksRenderer = new NunjucksRenderer(questionElements)
     const email = new EmailAddressQuestion(questionElements, nunjucksRenderer)
@@ -81,7 +81,7 @@ export const SetupPreview = {
   /**
    * @returns {UkAddressQuestion}
    */
-  UkAddressField() {
+  UkAddressField: () => {
     const questionElements = new QuestionDomElements()
     const nunjucksRenderer = new NunjucksRenderer(questionElements)
     const address = new UkAddressQuestion(questionElements, nunjucksRenderer)
@@ -93,7 +93,7 @@ export const SetupPreview = {
   /**
    * @returns {PhoneNumberQuestion}
    */
-  TelephoneNumberField() {
+  TelephoneNumberField: () => {
     const questionElements = new QuestionDomElements()
     const nunjucksRenderer = new NunjucksRenderer(questionElements)
     const phoneNumber = new PhoneNumberQuestion(
@@ -108,7 +108,7 @@ export const SetupPreview = {
   /**
    * @returns {RadioSortableQuestion}
    */
-  RadiosField() {
+  RadiosField: () => {
     const elements = new RadioSortableQuestionElements(NunjucksRenderer)
     const nunjucksRenderer = new NunjucksRenderer(elements)
     const radio = new RadioSortableQuestion(elements, nunjucksRenderer)
@@ -117,7 +117,7 @@ export const SetupPreview = {
 
     return radio
   },
-  ListSortable() {
+  ListSortable: () => {
     const elements = new ListSortableQuestionElements(NunjucksRenderer)
     const nunjucksRenderer = new NunjucksRenderer(elements)
     const listSortable = new ListSortableQuestion(elements, nunjucksRenderer)

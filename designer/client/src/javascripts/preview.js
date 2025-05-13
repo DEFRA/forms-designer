@@ -34,12 +34,22 @@ export function setupPreview(componentType) {
   /**
    * @type {PreviewQuestion}
    */
-  let preview = SetupPreview[componentType]
-
-  if (!preview) {
+  let preview
+  if (componentType === ComponentType.TextField) {
+    preview = SetupPreview.TextField()
+  } else if (componentType === ComponentType.DatePartsField) {
+    preview = SetupPreview.DatePartsField()
+  } else if (componentType === ComponentType.RadiosField) {
+    preview = SetupPreview.RadiosField()
+  } else if (componentType === ComponentType.UkAddressField) {
+    preview = SetupPreview.UkAddressField()
+  } else if (componentType === ComponentType.EmailAddressField) {
+    preview = SetupPreview.EmailAddressField()
+  } else if (componentType === ComponentType.TelephoneNumberField) {
+    preview = SetupPreview.TelephoneNumberField()
+  } else {
     preview = SetupPreview.Question()
   }
-
   showHideForJs()
 
   preview.render()
