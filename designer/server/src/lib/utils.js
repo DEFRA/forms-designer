@@ -56,6 +56,15 @@ export function stringHasValue(str) {
 }
 
 /**
+ *
+ * @param {number | undefined} num
+ * @returns {boolean}
+ */
+export function numberHasValue(num) {
+  return typeof num === 'number'
+}
+
+/**
  * @param {ErrorDetailsItem | undefined} formField
  */
 export function insertValidationErrors(formField) {

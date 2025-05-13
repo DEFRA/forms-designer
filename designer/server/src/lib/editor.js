@@ -244,21 +244,28 @@ export async function insertUpdateOrDeleteGuidance(
 }
 
 /**
- * Set page heading and/or guidance text
+ * Update page settings including heading and/or guidance text and repeater options
  * @param {string} formId
  * @param {string} token
  * @param {string} pageId
  * @param {FormDefinition} definition
  * @param {Partial<FormEditorInputPageSettings>} payload
  */
-export async function setPageHeadingAndGuidance(
+export async function setPageSettings(
   formId,
   token,
   pageId,
   definition,
   payload
 ) {
-  const { pageHeading, guidanceText } = payload
+  const {
+    pageHeading,
+    guidanceText,
+    repeater,
+    minItems,
+    maxItems,
+    questionSetName
+  } = payload
 
   const page = getPageFromDefinition(definition, pageId)
   const components = hasComponents(page) ? page.components : []
@@ -268,12 +275,44 @@ export async function setPageHeadingAndGuidance(
   const pageHeadingForCall = isExpanded ? pageHeading : ''
   const pagePathForCall = `/${slugify(resolvePageHeading(page, pageHeadingForCall, components))}`
 
+  const requestPayload = {
+    title: pageHeadingForCall,
+    path: pagePathForCall
+  }
+
+  const isCurrentlyRepeater = page?.controller === ControllerType.Repeat
+
+  if (repeater) {
+    const repeatName = isCurrentlyRepeater
+      ? page.repeat.options.name
+      : randomId()
+
+    Object.assign(requestPayload, {
+      controller: ControllerType.Repeat,
+      repeat: {
+        options: {
+          name: repeatName,
+          title: questionSetName
+        },
+        schema: {
+          min: minItems,
+          max: maxItems
+        }
+      }
+    })
+  }
+
+  if (isCurrentlyRepeater && !repeater) {
+    // Unset the controller and repeat options
+    Object.assign(requestPayload, {
+      controller: null,
+      repeat: null
+    })
+  }
+
   // Update page heading
   await patchJsonByType(buildRequestUrl(formId, `pages/${pageId}`), {
-    payload: {
-      title: pageHeadingForCall,
-      path: pagePathForCall
-    },
+    payload: requestPayload,
     ...getHeaders(token)
   })
 

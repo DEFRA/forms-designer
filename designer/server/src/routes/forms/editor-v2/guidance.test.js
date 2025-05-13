@@ -9,10 +9,7 @@ import {
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
 import { createServer } from '~/src/createServer.js'
 import { buildBoom409 } from '~/src/lib/__stubs__/editor.js'
-import {
-  addPageAndFirstQuestion,
-  setPageHeadingAndGuidance
-} from '~/src/lib/editor.js'
+import { addPageAndFirstQuestion, setPageSettings } from '~/src/lib/editor.js'
 import { addErrorsToSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { addOrUpdateGuidance } from '~/src/routes/forms/editor-v2/guidance.js'
@@ -91,7 +88,7 @@ describe('Editor v2 guidance routes', () => {
   test('POST - should error if duplicate page path', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     jest.mocked(forms.getDraftFormDefinition).mockResolvedValueOnce(testForm)
-    jest.mocked(setPageHeadingAndGuidance).mockImplementationOnce(() => {
+    jest.mocked(setPageSettings).mockImplementationOnce(() => {
       throw buildBoom409(
         'Duplicate page path',
         ApiErrorCode.DuplicatePagePathPage
@@ -130,7 +127,7 @@ describe('Editor v2 guidance routes', () => {
   test('POST - should error if other boom error', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     jest.mocked(forms.getDraftFormDefinition).mockResolvedValueOnce(testForm)
-    jest.mocked(setPageHeadingAndGuidance).mockImplementationOnce(() => {
+    jest.mocked(setPageSettings).mockImplementationOnce(() => {
       throw buildBoom409('Other boom error')
     })
 
@@ -162,7 +159,7 @@ describe('Editor v2 guidance routes', () => {
   test('POST - should throw if not a boom error', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     jest.mocked(forms.getDraftFormDefinition).mockResolvedValueOnce(testForm)
-    jest.mocked(setPageHeadingAndGuidance).mockImplementationOnce(() => {
+    jest.mocked(setPageSettings).mockImplementationOnce(() => {
       throw Error('Other error')
     })
 
@@ -228,7 +225,7 @@ describe('Editor v2 guidance routes', () => {
         title: 'New page heading'
       }
     )
-    expect(setPageHeadingAndGuidance).not.toHaveBeenCalled()
+    expect(setPageSettings).not.toHaveBeenCalled()
   })
 
   test('POST - should save existing guidance and redirect to same page if valid payload', async () => {
@@ -263,7 +260,7 @@ describe('Editor v2 guidance routes', () => {
     expect(headers.location).toBe(
       '/library/my-form-slug/editor-v2/page/p1/guidance/c1'
     )
-    expect(setPageHeadingAndGuidance).toHaveBeenCalledWith(
+    expect(setPageSettings).toHaveBeenCalledWith(
       testFormMetadata.id,
       expect.anything(),
       'p1',

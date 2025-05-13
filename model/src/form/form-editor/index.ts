@@ -227,6 +227,27 @@ export const guidanceTextSchema = Joi.string()
   .trim()
   .description('Guidance text to assist users in completing the page')
 
+export const repeaterSchema = Joi.string()
+  .trim()
+  .optional()
+  .description(
+    'Combined min/max items and question set name for the repeater page'
+  )
+
+export const minItemsSchema = Joi.number()
+  .empty('')
+  .min(1)
+  .description('The minimum number of repeater items')
+
+export const maxItemsSchema = Joi.number()
+  .empty('')
+  .max(25)
+  .description('The maximum number of repeater items')
+
+export const questionSetNameSchema = Joi.string()
+  .trim()
+  .description('The repeater question set name')
+
 export const needDeclarationSchema = Joi.string()
   .trim()
   .required()

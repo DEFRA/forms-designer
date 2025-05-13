@@ -9,6 +9,7 @@ export const BACK_TO_ADD_AND_EDIT_PAGES = 'Back to add and edit pages'
 export const SAVE_AND_CONTINUE = 'Save and continue'
 export const SAVE = 'Save'
 export const GOVUK_LABEL__M = 'govuk-label--m'
+export const GOVUK_INPUT_WIDTH_2 = 'govuk-input--width-2'
 export const GOVUK_INPUT_WIDTH_3 = 'govuk-input--width-3'
 export const CHANGES_SAVED_SUCCESSFULLY = 'Changes saved successfully'
 
