@@ -265,7 +265,9 @@ describe('list-sortable', () => {
           '<button id="edit-options-button">Re-order</button>' +
           '<button id="add-option-button">Add item</button>' +
           listSingleEntryUpHTML
-        const preview = SetupPreview.ListSortable()
+        const listSortableQuestionElements = new ListSortableQuestionElements(
+          NunjucksRenderer
+        )
         const upButtons = Array.from(
           document.querySelectorAll('.js-reorderable-list-up')
         )
@@ -273,7 +275,7 @@ describe('list-sortable', () => {
           upButtons.find((x) => x.id === 'first-row-up')
         )
         expect(upButtons.findIndex((x) => x.id === 'first-row-up')).toBe(0)
-        preview._listElements.moveUp(mockListenerClass, upButton)
+        listSortableQuestionElements.moveUp(mockListenerClass, upButton)
         const upButtonsAfter = Array.from(
           document.querySelectorAll('.js-reorderable-list-up')
         )
@@ -331,7 +333,9 @@ describe('list-sortable', () => {
           '<button id="edit-options-button">Re-order</button>' +
           '<button id="add-option-button">Add item</button>' +
           listSingleEntryDownHTML
-        const preview = SetupPreview.ListSortable()
+        const listSortableQuestionElements = new ListSortableQuestionElements(
+          NunjucksRenderer
+        )
         const downButtons = Array.from(
           document.querySelectorAll('.js-reorderable-list-down')
         )
@@ -339,7 +343,7 @@ describe('list-sortable', () => {
           downButtons.find((x) => x.id === 'first-row-down')
         )
         expect(downButtons.findIndex((x) => x.id === 'first-row-down')).toBe(0)
-        preview._listElements.moveDown(mockListenerClass, downButton)
+        listSortableQuestionElements.moveDown(mockListenerClass, downButton)
         expect(mockResync).toHaveBeenCalled()
       })
     })
@@ -674,9 +678,14 @@ describe('list-sortable', () => {
         '<button id="edit-options-button">Done</button>' +
         '<button id="add-option-button">Add item</button>' +
         list1HTML
-      const preview = SetupPreview.ListSortable()
-      expect(preview._list.size).toBe(4)
-      SetupPreview.ListSortable()
+      const elements = new ListSortableQuestionElements(NunjucksRenderer)
+      const preview = new ListSortableQuestion(elements, nunjucksRenderer)
+      expect(preview.listElementObjects).toHaveLength(4)
+      const listeners = new ListSortableEventListeners(preview, elements, [])
+      listeners.setupListeners()
+
+      listeners.updateStateInSession()
+
       await new Promise((_resolve) => setTimeout(_resolve, 1000))
       expect(global.fetch).toHaveBeenCalledWith(expect.anything(), {
         body: JSON.stringify({
@@ -731,9 +740,13 @@ describe('list-sortable', () => {
         '<button id="edit-options-button">Done</button>' +
         '<button id="add-option-button">Add item</button>' +
         list1HTML
-      const preview = SetupPreview.ListSortable()
-      expect(preview._list.size).toBe(4)
-      preview.updateStateInSession()
+      const elements = new ListSortableQuestionElements(NunjucksRenderer)
+      const preview = new ListSortableQuestion(elements, nunjucksRenderer)
+      expect(preview.listElementObjects).toHaveLength(4)
+      const listeners = new ListSortableEventListeners(preview, elements, [])
+      listeners.setupListeners()
+
+      listeners.updateStateInSession()
       await new Promise((_resolve) => setTimeout(_resolve, 1000))
       expect(window.location.href).toBe(
         'http://localhost:3000//editor-v2/error'
@@ -759,9 +772,13 @@ describe('list-sortable', () => {
         '<button id="edit-options-button">Done</button>' +
         '<button id="add-option-button">Add item</button>' +
         list1HTML
-      const preview = SetupPreview.ListSortable()
-      expect(preview._list.size).toBe(4)
-      preview.updateStateInSession()
+      const elements = new ListSortableQuestionElements(NunjucksRenderer)
+      const preview = new ListSortableQuestion(elements, nunjucksRenderer)
+      expect(preview.listElementObjects).toHaveLength(4)
+      const listeners = new ListSortableEventListeners(preview, elements, [])
+      listeners.setupListeners()
+
+      listeners.updateStateInSession()
       await new Promise((_resolve) => setTimeout(_resolve, 1000))
       expect(window.location.href).toBe(
         'http://localhost:3000//editor-v2/error'
