@@ -1,9 +1,21 @@
-import { ComponentType } from '@defra/forms-model'
+import {
+  ComponentType,
+  DateInputQuestion,
+  EmailAddressQuestion,
+  ListQuestion,
+  LongAnswerQuestion,
+  PhoneNumberQuestion,
+  Question,
+  RadioSortableQuestion,
+  ShortAnswerQuestion,
+  UkAddressQuestion
+} from '@defra/forms-model'
 
 import {
   QuestionPreviewElements,
   getCheckedValue,
   getListFromState,
+  getPreviewConstructor,
   getPreviewModel,
   getValueAsString
 } from '~/src/models/forms/editor-v2/question-details/preview.js'
@@ -77,6 +89,16 @@ describe('preview', () => {
     ]
   }
 
+  /**
+   * @type {GovukField[]}
+   */
+  const basePageFields = [
+    question,
+    hintText,
+    questionOptional,
+    shortDescription
+  ]
+
   describe('getValueAsString', () => {
     it('should return value given question', () => {
       expect(getValueAsString(question)).toBe('Short answer')
@@ -137,16 +159,6 @@ describe('preview', () => {
   })
 
   describe('QuestionPreviewElements', () => {
-    /**
-     * @type {GovukField[]}
-     */
-    const basePageFields = [
-      question,
-      hintText,
-      questionOptional,
-      shortDescription
-    ]
-
     it('should create the correct preview elements', () => {
       const previewElements = new QuestionPreviewElements(basePageFields, {})
       expect(previewElements.values).toEqual({
@@ -181,6 +193,182 @@ describe('preview', () => {
     })
   })
 
+  describe('getPreviewConstructor', () => {
+    const previewElements = new QuestionPreviewElements(basePageFields, {})
+
+    it('should get TextField', () => {
+      const previewModel = getPreviewConstructor(
+        ComponentType.TextField,
+        previewElements
+      )
+
+      expect(previewModel).toBeInstanceOf(ShortAnswerQuestion)
+    })
+
+    it('should get MultilineTextField', () => {
+      const previewModel = getPreviewConstructor(
+        ComponentType.MultilineTextField,
+        previewElements
+      )
+
+      expect(previewModel).toBeInstanceOf(LongAnswerQuestion)
+    })
+
+    it('should get YesNoField', () => {
+      const previewModel = getPreviewConstructor(
+        ComponentType.YesNoField,
+        previewElements
+      )
+
+      expect(previewModel).toBeInstanceOf(Question)
+    })
+
+    it('should get MonthYearField', () => {
+      const previewModel = getPreviewConstructor(
+        ComponentType.MonthYearField,
+        previewElements
+      )
+
+      expect(previewModel).toBeInstanceOf(DateInputQuestion)
+    })
+
+    it('should get SelectField', () => {
+      const previewModel = getPreviewConstructor(
+        ComponentType.SelectField,
+        previewElements
+      )
+
+      expect(previewModel).toBeInstanceOf(ListQuestion)
+    })
+
+    it('should get NumberField', () => {
+      const previewModel = getPreviewConstructor(
+        ComponentType.NumberField,
+        previewElements
+      )
+
+      expect(previewModel).toBeInstanceOf(Question)
+    })
+
+    it('should get Html', () => {
+      const previewModel = getPreviewConstructor(
+        ComponentType.Html,
+        previewElements
+      )
+
+      expect(previewModel).toBeInstanceOf(Question)
+    })
+
+    it('should get InsetText', () => {
+      const previewModel = getPreviewConstructor(
+        ComponentType.InsetText,
+        previewElements
+      )
+
+      expect(previewModel).toBeInstanceOf(Question)
+    })
+
+    it('should get Details', () => {
+      const previewModel = getPreviewConstructor(
+        ComponentType.Details,
+        previewElements
+      )
+
+      expect(previewModel).toBeInstanceOf(Question)
+    })
+
+    it('should get List', () => {
+      const previewModel = getPreviewConstructor(
+        ComponentType.List,
+        previewElements
+      )
+
+      expect(previewModel).toBeInstanceOf(Question)
+    })
+
+    it('should get Markdown', () => {
+      const previewModel = getPreviewConstructor(
+        ComponentType.Markdown,
+        previewElements
+      )
+
+      expect(previewModel).toBeInstanceOf(Question)
+    })
+
+    it('should get FileUploadField', () => {
+      const previewModel = getPreviewConstructor(
+        ComponentType.FileUploadField,
+        previewElements
+      )
+
+      expect(previewModel).toBeInstanceOf(Question)
+    })
+
+    it('should get AutocompleteField', () => {
+      const previewModel = getPreviewConstructor(
+        ComponentType.AutocompleteField,
+        previewElements
+      )
+
+      expect(previewModel).toBeInstanceOf(ListQuestion)
+    })
+
+    it('should get CheckboxesField', () => {
+      const previewModel = getPreviewConstructor(
+        ComponentType.CheckboxesField,
+        previewElements
+      )
+
+      expect(previewModel).toBeInstanceOf(ListQuestion)
+    })
+
+    it('should get Question', () => {
+      const previewModel = getPreviewConstructor('Question', previewElements)
+
+      expect(previewModel).toBeInstanceOf(Question)
+    })
+
+    it('should get DatePartsField', () => {
+      const previewModel = getPreviewConstructor(
+        ComponentType.DatePartsField,
+        previewElements
+      )
+      expect(previewModel).toBeInstanceOf(DateInputQuestion)
+    })
+
+    it('should get EmailAddress', () => {
+      const previewModel = getPreviewConstructor(
+        ComponentType.EmailAddressField,
+        previewElements
+      )
+      expect(previewModel).toBeInstanceOf(EmailAddressQuestion)
+    })
+
+    it('should get UkAddress', () => {
+      const previewModel = getPreviewConstructor(
+        ComponentType.UkAddressField,
+        previewElements
+      )
+      expect(previewModel).toBeInstanceOf(UkAddressQuestion)
+    })
+
+    it('should get PhoneNumber', () => {
+      const previewModel = getPreviewConstructor(
+        ComponentType.TelephoneNumberField,
+        previewElements
+      )
+      expect(previewModel).toBeInstanceOf(PhoneNumberQuestion)
+    })
+
+    it('should get RadioSortable', () => {
+      const previewModel = getPreviewConstructor(
+        ComponentType.RadiosField,
+        previewElements
+      )
+      expect(previewModel).toBeInstanceOf(RadioSortableQuestion)
+    })
+  })
+
   describe('getPreviewModel', () => {
     /**
      * @type {GovukField[]}
@@ -203,6 +391,45 @@ describe('preview', () => {
         text: 'Short answer (optional)'
       },
       name: 'inputField'
+    })
+
+    const fieldSetModelBase = /** @type {QuestionBaseModel} */ ({
+      hint: {
+        classes: '',
+        text: ''
+      },
+      id: '',
+      name: '',
+      fieldset: {
+        legend: {
+          classes: 'govuk-fieldset__legend--l',
+          text: 'Short answer (optional)'
+        }
+      }
+    })
+
+    const formGroupBase = {
+      formGroup: {
+        afterInputs: {
+          html: '<div class="govuk-inset-text">No items added yet.</div>'
+        }
+      }
+    }
+
+    const listModelBase = /** @type {QuestionBaseModel} */ ({
+      fieldset: {
+        legend: {
+          classes: 'govuk-fieldset__legend--l',
+          text: 'Short answer (optional)'
+        }
+      },
+      hint: {
+        classes: '',
+        text: ''
+      },
+      id: 'listInput',
+      items: [],
+      name: 'listInputField'
     })
 
     it('should get TextField', () => {
@@ -233,7 +460,11 @@ describe('preview', () => {
         ComponentType.MultilineTextField
       )
 
-      expect(previewModel).toEqual(expectedQuestionModel)
+      expect(previewModel).toEqual({
+        ...expectedQuestionModel,
+        id: 'longAnswerField',
+        name: 'longAnswerField'
+      })
     })
 
     it('should get YesNoField', () => {
@@ -253,7 +484,11 @@ describe('preview', () => {
         ComponentType.MonthYearField
       )
 
-      expect(previewModel).toEqual(expectedQuestionModel)
+      expect(previewModel).toEqual({
+        ...fieldSetModelBase,
+        id: 'dateInput',
+        name: 'dateInputField'
+      })
     })
 
     it('should get SelectField', () => {
@@ -263,7 +498,7 @@ describe('preview', () => {
         ComponentType.SelectField
       )
 
-      expect(previewModel).toEqual(expectedQuestionModel)
+      expect(previewModel).toEqual({ ...listModelBase, ...formGroupBase })
     })
 
     it('should get NumberField', () => {
@@ -373,24 +608,8 @@ describe('preview', () => {
       )
 
       expect(previewModel).toEqual({
-        fieldset: {
-          legend: {
-            classes: 'govuk-fieldset__legend--l',
-            text: 'Short answer (optional)'
-          }
-        },
-        formGroup: {
-          afterInputs: {
-            html: '<div class="govuk-inset-text">No items added yet.</div>'
-          }
-        },
-        hint: {
-          classes: '',
-          text: ''
-        },
-        id: 'listInput',
-        items: [],
-        name: 'listInputField'
+        ...listModelBase,
+        ...formGroupBase
       })
     })
 
@@ -411,21 +630,11 @@ describe('preview', () => {
         {},
         ComponentType.DatePartsField
       )
-      const expectedBaseModel = /** @type {QuestionBaseModel} */ ({
-        fieldset: {
-          legend: {
-            classes: 'govuk-fieldset__legend--l',
-            text: 'Short answer (optional)'
-          }
-        },
-        hint: {
-          classes: '',
-          text: ''
-        },
+      expect(previewModel).toEqual({
+        ...fieldSetModelBase,
         id: 'dateInput',
         name: 'dateInputField'
       })
-      expect(previewModel).toEqual(expectedBaseModel)
     })
 
     it('should get EmailAddress', () => {
@@ -497,27 +706,7 @@ describe('preview', () => {
         {},
         ComponentType.RadiosField
       )
-      const expectedBaseModel = /** @type {QuestionBaseModel} */ ({
-        fieldset: {
-          legend: {
-            classes: 'govuk-fieldset__legend--l',
-            text: 'Short answer (optional)'
-          }
-        },
-        formGroup: {
-          afterInputs: {
-            html: '<div class="govuk-inset-text">No items added yet.</div>'
-          }
-        },
-        hint: {
-          classes: '',
-          text: ''
-        },
-        id: 'listInput',
-        items: [],
-        name: 'listInputField'
-      })
-      expect(previewModel).toEqual(expectedBaseModel)
+      expect(previewModel).toEqual({ ...listModelBase, ...formGroupBase })
     })
 
     it('should get RadioSortable with list items', () => {
@@ -526,18 +715,8 @@ describe('preview', () => {
         questionSessionState,
         ComponentType.RadiosField
       )
-      const expectedBaseModel = /** @type {QuestionBaseModel} */ ({
-        fieldset: {
-          legend: {
-            classes: 'govuk-fieldset__legend--l',
-            text: 'Short answer (optional)'
-          }
-        },
-        hint: {
-          classes: '',
-          text: ''
-        },
-        id: 'listInput',
+      expect(previewModel).toEqual({
+        ...listModelBase,
         items: [
           {
             id: 'c0f36d53-7591-4a5b-93a3-22d492a80bd6',
@@ -566,10 +745,8 @@ describe('preview', () => {
             text: 'Lithium',
             value: '3'
           }
-        ],
-        name: 'listInputField'
+        ]
       })
-      expect(previewModel).toEqual(expectedBaseModel)
     })
   })
 })
