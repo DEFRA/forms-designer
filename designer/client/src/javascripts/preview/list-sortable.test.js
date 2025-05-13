@@ -265,7 +265,7 @@ describe('list-sortable', () => {
           '<button id="edit-options-button">Re-order</button>' +
           '<button id="add-option-button">Add item</button>' +
           listSingleEntryUpHTML
-        const preview = ListSortable.setupPreview()
+        const preview = SetupPreview.ListSortable()
         const upButtons = Array.from(
           document.querySelectorAll('.js-reorderable-list-up')
         )
@@ -331,7 +331,7 @@ describe('list-sortable', () => {
           '<button id="edit-options-button">Re-order</button>' +
           '<button id="add-option-button">Add item</button>' +
           listSingleEntryDownHTML
-        const preview = ListSortable.setupPreview()
+        const preview = SetupPreview.ListSortable()
         const downButtons = Array.from(
           document.querySelectorAll('.js-reorderable-list-down')
         )
@@ -398,7 +398,7 @@ describe('list-sortable', () => {
           '<button id="edit-options-button">Re-order</button>' +
           '<button id="add-option-button">Add item</button>' +
           listSingleEntryDownHTML
-        const listSortable = new ListSortableQuestionElements()
+        const listSortable = new ListSortableQuestionElements(NunjucksRenderer)
         const downButtonFirstRow = /** @type {HTMLElement} */ (
           document.getElementById('first-row-down')
         )
@@ -416,7 +416,7 @@ describe('list-sortable', () => {
           '<button id="edit-options-button">Re-order</button>' +
           '<button id="add-option-button">Add item</button>' +
           list1HTML
-        const listSortable = new ListSortableQuestionElements()
+        const listSortable = new ListSortableQuestionElements(NunjucksRenderer)
         listSortable.announceClearTimeMs = 1000
         const announcementRegion = /** @type {HTMLElement} */ (
           document.getElementById('reorder-announcement')
@@ -439,7 +439,7 @@ describe('list-sortable', () => {
           '<button id="edit-options-button">Re-order</button>' +
           '<button id="add-option-button">Add item</button>' +
           list1HTML
-        const listSortable = new ListSortableQuestionElements()
+        const listSortable = new ListSortableQuestionElements(NunjucksRenderer)
         listSortable.announceClearTimeMs = 1000
         listSortable.announceReorder(
           /** @type {HTMLElement} */ (
@@ -562,7 +562,7 @@ describe('list-sortable', () => {
           '<button id="edit-options-button">Done</button>' +
           '<button id="add-option-button">Add item</button>' +
           list1HTML
-        ListSortable.setupPreview()
+        SetupPreview.ListSortable()
         const reorderButton = /** @type {HTMLElement} */ (
           document.getElementById('edit-options-button')
         )
@@ -593,7 +593,7 @@ describe('list-sortable', () => {
           x.textContent = 'Not up or down'
         })
 
-        ListSortable.setupPreview()
+        SetupPreview.ListSortable()
         const reorderButton = /** @type {HTMLElement} */ (
           document.getElementById('edit-options-button')
         )
@@ -674,9 +674,9 @@ describe('list-sortable', () => {
         '<button id="edit-options-button">Done</button>' +
         '<button id="add-option-button">Add item</button>' +
         list1HTML
-      const preview = ListSortable.setupPreview()
+      const preview = SetupPreview.ListSortable()
       expect(preview._list.size).toBe(4)
-      preview.updateStateInSession()
+      SetupPreview.ListSortable()
       await new Promise((_resolve) => setTimeout(_resolve, 1000))
       expect(global.fetch).toHaveBeenCalledWith(expect.anything(), {
         body: JSON.stringify({
@@ -731,7 +731,7 @@ describe('list-sortable', () => {
         '<button id="edit-options-button">Done</button>' +
         '<button id="add-option-button">Add item</button>' +
         list1HTML
-      const preview = ListSortable.setupPreview()
+      const preview = SetupPreview.ListSortable()
       expect(preview._list.size).toBe(4)
       preview.updateStateInSession()
       await new Promise((_resolve) => setTimeout(_resolve, 1000))
@@ -759,7 +759,7 @@ describe('list-sortable', () => {
         '<button id="edit-options-button">Done</button>' +
         '<button id="add-option-button">Add item</button>' +
         list1HTML
-      const preview = ListSortable.setupPreview()
+      const preview = SetupPreview.ListSortable()
       expect(preview._list.size).toBe(4)
       preview.updateStateInSession()
       await new Promise((_resolve) => setTimeout(_resolve, 1000))
