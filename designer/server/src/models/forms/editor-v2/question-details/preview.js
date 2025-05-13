@@ -308,5 +308,5 @@ export function getPreviewModel(govukFields, state, componentType) {
   return question.renderInput
 }
 /**
- * @import { ListElement, ListElements, QuestionElements, QuestionRenderer, QuestionBaseModel, GovukField, QuestionSessionState, ComponentType } from '@defra/forms-model'
+ * @import { ListElement, ListElements, QuestionElements, QuestionRenderer, QuestionBaseModel, GovukField, QuestionSessionState, ComponentType, PreviewQuestion } from '@defra/forms-model'
  */
