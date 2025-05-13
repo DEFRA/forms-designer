@@ -8,17 +8,11 @@ import '~/src/views/components/emailaddressfield.njk'
 import { ComponentType } from '@defra/forms-model'
 
 import { ErrorPreview } from '~/src/javascripts/error-preview/error-preview'
-import { DateInput } from '~/src/javascripts/preview/date-input.js'
-import { EmailAddress } from '~/src/javascripts/preview/email-address.js'
 import {
   hideHtmlElement,
   showHtmlElement
 } from '~/src/javascripts/preview/helper'
-import { PhoneNumber } from '~/src/javascripts/preview/phone-number.js'
-import { Question } from '~/src/javascripts/preview/question.js'
-import { RadioSortable } from '~/src/javascripts/preview/radio-sortable.js'
-import { ShortAnswer } from '~/src/javascripts/preview/short-answer.js'
-import { UkAddress } from '~/src/javascripts/preview/uk-address.js'
+import { SetupPreview } from '~/src/javascripts/setup-preview.js'
 
 export function showHideForJs() {
   const previewPanel = document.getElementById('preview-panel')
@@ -30,30 +24,34 @@ export function showHideForJs() {
 }
 
 /**
+ * @typedef { Question | DateInputQuestion | EmailAddressQuestion | PhoneNumberQuestion | RadioSortableQuestion | ShortAnswerQuestion | UkAddressQuestion } PreviewQuestion
+ */
+
+/**
  * @param {ComponentType} componentType
- * @returns {Question|RadioSortable|DateInput|ShortAnswer}
+ * @returns {PreviewQuestion}
  */
 export function setupPreview(componentType) {
   /**
-   * @type {Question|RadioSortable|DateInput|ShortAnswer|PhoneNumber}
+   * @type {PreviewQuestion}
    */
   let preview
   let errorPreview
   if (componentType === ComponentType.TextField) {
-    preview = ShortAnswer.setupPreview()
+    preview = SetupPreview.TextField()
   } else if (componentType === ComponentType.DatePartsField) {
-    preview = DateInput.setupPreview()
+    preview = SetupPreview.DatePartsField()
   } else if (componentType === ComponentType.RadiosField) {
-    preview = RadioSortable.setupPreview()
+    preview = SetupPreview.RadiosField()
   } else if (componentType === ComponentType.UkAddressField) {
-    preview = UkAddress.setupPreview()
+    preview = SetupPreview.UkAddressField()
   } else if (componentType === ComponentType.EmailAddressField) {
-    preview = EmailAddress.setupPreview()
+    preview = SetupPreview.EmailAddressField()
   } else if (componentType === ComponentType.TelephoneNumberField) {
-    preview = PhoneNumber.setupPreview()
+    preview = SetupPreview.TelephoneNumberField()
   } else {
-    preview = Question.setupPreview()
     errorPreview = ErrorPreview.setupPreview(ComponentType.TextField)
+    preview = SetupPreview.Question()
   }
 
   if (!errorPreview) {
@@ -62,5 +60,11 @@ export function setupPreview(componentType) {
 
   showHideForJs()
 
+  preview.render()
+
   return preview
 }
+
+/**
+ * @import { Question, DateInputQuestion, EmailAddressQuestion, PhoneNumberQuestion, RadioSortableQuestion, ShortAnswerQuestion, UkAddressQuestion } from '@defra/forms-model'
+ */

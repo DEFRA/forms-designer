@@ -2,19 +2,17 @@ import {
   questionDetailsLeftPanelHTML,
   questionDetailsPreviewHTML
 } from '~/src/javascripts/preview/__stubs__/question'
-import {
-  Question,
-  QuestionElements
-} from '~/src/javascripts/preview/question.js'
+import { QuestionDomElements } from '~/src/javascripts/preview/question.js'
+import { SetupPreview } from '~/src/javascripts/setup-preview.js'
 
-jest.mock('~/src/javascripts/preview/nunjucks.js')
+jest.mock('~/src/javascripts/preview/nunjucks-renderer.js')
 
 describe('question', () => {
   describe('QuestionElements', () => {
     it('should find elements', () => {
       document.body.innerHTML =
         questionDetailsLeftPanelHTML + questionDetailsPreviewHTML
-      const res = new QuestionElements()
+      const res = new QuestionDomElements()
       expect(res).toBeDefined()
       expect(res.question).toBeDefined()
       expect(res.hintText).toBeDefined()
@@ -26,7 +24,7 @@ describe('question', () => {
     it('should set preview if found', () => {
       document.body.innerHTML =
         questionDetailsLeftPanelHTML + questionDetailsPreviewHTML
-      const res = new QuestionElements()
+      const res = new QuestionDomElements()
       expect(res.preview).toBeDefined()
       const html = '<div id="preview">123</div>'
       res.setPreviewHTML(html)
@@ -35,7 +33,7 @@ describe('question', () => {
 
     it('should not set preview if not found', () => {
       document.body.innerHTML = questionDetailsLeftPanelHTML
-      const res = new QuestionElements()
+      const res = new QuestionDomElements()
       expect(res.preview).toBeNull()
       const html = '<div id="preview">123</div>'
       res.setPreviewHTML(html)
@@ -47,7 +45,7 @@ describe('question', () => {
     it('should create class', () => {
       document.body.innerHTML =
         questionDetailsLeftPanelHTML + questionDetailsPreviewHTML
-      const res = new Question(new QuestionElements())
+      const res = SetupPreview.Question()
       expect(res).toBeDefined()
       expect(res.renderInput).toEqual({
         id: 'inputField',
@@ -71,7 +69,7 @@ describe('question', () => {
     it('should handle changed values', () => {
       document.body.innerHTML =
         questionDetailsLeftPanelHTML + questionDetailsPreviewHTML
-      const res = new Question(new QuestionElements())
+      const res = SetupPreview.Question()
       expect(res.titleText).toBe('Which quest would you like to pick?')
       expect(res.question).toBe('Which quest would you like to pick?')
       expect(res.hintText).toBe('Choose one adventure that best suits you.')
@@ -88,7 +86,7 @@ describe('question', () => {
     it('should handle missing values', () => {
       document.body.innerHTML =
         questionDetailsLeftPanelHTML + questionDetailsPreviewHTML
-      const res = new Question(new QuestionElements())
+      const res = SetupPreview.Question()
       res.question = ''
       expect(res.titleText).toBe('Question')
       res.hintText = ''
@@ -108,7 +106,7 @@ describe('question', () => {
     })
 
     it('should highlight', () => {
-      const preview = Question.setupPreview()
+      const preview = SetupPreview.Question()
       preview.highlight = `hintText`
       expect(preview).toMatchObject({
         hint: { text: 'Hint text' }

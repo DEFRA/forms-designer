@@ -2,16 +2,30 @@
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 {% from "govuk/components/textarea/macro.njk" import govukTextarea %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
+{% from "govuk/components/hint/macro.njk" import govukHint %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
 
 {% set pageHeadingAndGuidanceHtml %}
-{{ govukInput(fields.pageHeading) }}
-{{ govukTextarea(fields.guidanceText) }}
-{%- include "../../../../views/forms/editor-v2/partials/markdown-help.njk" -%}
+  {{ govukInput(fields.pageHeading) }}
+  {{ govukTextarea(fields.guidanceText) }}
+  {%- include "../../../../views/forms/editor-v2/partials/markdown-help.njk" -%}
+{% endset -%}
+
+{% set repeaterHtml %}
+  {% call govukFieldset(fields.repeaterRange.fieldset) %}
+    {{ govukHint(fields.repeaterRange.hint) }}
+    {{ govukInput(fields.repeaterRange.minItems) }}
+    {{ govukInput(fields.repeaterRange.maxItems) }}
+  {% endcall %}
+  {{ govukInput(fields.questionSetName) }}
 {% endset -%}
 
 <h1 class="govuk-heading-l">Settings</h1>
+<h2 class="govuk-heading-m">Page heading and guidance text</h2>
 
 {{ govukCheckboxes(fields.pageHeadingAndGuidance | setConditionalAttribute("true", pageHeadingAndGuidanceHtml)) }}
+{{ govukCheckboxes(fields.repeater | setConditionalAttribute("true", repeaterHtml)) }}
 
 {{ govukButton({
   text: 'Save changes'

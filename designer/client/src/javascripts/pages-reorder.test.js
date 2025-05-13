@@ -270,6 +270,7 @@ describe('PageReorder Class', () => {
     // eslint-disable-next-line jest/unbound-method
     const createSpy = Sortable.create
     // @ts-expect-error TS doesn't recognise createSpy as a Jest mock here, but it is at runtime
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     createSpy.mockClear()
 
     const originalContainer = pageReorderInstance.container
@@ -354,6 +355,7 @@ describe('PageReorder Class', () => {
         newIndex: undefined,
         oldIndex: 1
       }
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       const mockInstance = /** @type {any} */ (Sortable)._getMockInstance()
 
       if (!pageReorderInstance) {
@@ -440,6 +442,7 @@ describe('PageReorder Class', () => {
         newIndex: 0,
         oldIndex: 1
       }
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       const mockSorteableInstance = /** @type {any} */ (
         Sortable
       )._getMockInstance()

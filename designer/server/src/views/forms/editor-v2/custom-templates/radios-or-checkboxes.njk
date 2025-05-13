@@ -7,6 +7,8 @@
 {% set radioHintIdx = 2 %}
 {% set radioValueIdx = 3 %}
 
+<div class="govuk-visually-hidden" id="reorder-announcement" aria-live="polite" aria-atomic="true"></div>
+
 <div class="govuk-form-group" id="list-items">
   <h2 class="govuk-heading-m" tabindex="-1">
     <svg class="govuk-!-margin-right-1" style="position: relative; top: -1px; vertical-align: middle;" width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -77,6 +79,7 @@
   {% else %}
     <ol class="app-reorderable-list js-enabled" id="options-container" data-module="reorderable-list">
     {% if state.listItems | length or state.editRow.expanded %}
+      {% set itemsCount = state.listItems | length %}
       {% for item in state.listItems %}
         {% set isFirst = loop.first %}
         {% set isLast = loop.last %}

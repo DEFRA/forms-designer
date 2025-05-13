@@ -72,6 +72,26 @@ export interface FormEditor {
   guidanceText: string
 
   /**
+   * The value of checkbox to reveal repeater section
+   */
+  repeater: string
+
+  /**
+   * The maximum number of repeater items
+   */
+  minItems: number
+
+  /**
+   * The minimum number of repeater items
+   */
+  maxItems: number
+
+  /**
+   * The repeater question set name
+   */
+  questionSetName: string
+
+  /**
    * The value of radio to reveal declaration text field
    */
   needDeclaration: string
@@ -194,17 +214,17 @@ export interface FormEditor {
   /**
    * The display text of the radio item
    */
-  radioText: string
+  radioText?: string
 
   /**
    * The hint of the radio item
    */
-  radioHint: string
+  radioHint?: string
 
   /**
    * The value of the radio item
    */
-  radioValue: string
+  radioValue?: string
 
   /**
    * The list name to be applied to a field (if applicable)
@@ -277,7 +297,13 @@ export type FormEditorInputQuestion = Pick<
 
 export type FormEditorInputPageSettings = Pick<
   FormEditor,
-  'pageHeadingAndGuidance' | 'pageHeading' | 'guidanceText'
+  | 'pageHeadingAndGuidance'
+  | 'pageHeading'
+  | 'guidanceText'
+  | 'repeater'
+  | 'minItems'
+  | 'maxItems'
+  | 'questionSetName'
 >
 
 export type FormEditorInputGuidancePage = Pick<
@@ -354,6 +380,12 @@ export interface QuestionSessionState {
   lastMoveDirection?: string
 }
 
+export interface GovukFieldItem {
+  text?: string
+  value?: string
+  checked?: boolean
+}
+
 export interface GovukField {
   id?: string
   name?: string
@@ -370,11 +402,24 @@ export interface GovukField {
     isPageHeading?: boolean
   }
   hint?: { text?: string; html?: string; classes?: string }
-  items?: { text?: string; value?: string; checked?: boolean }[]
+  items?: GovukFieldItem[]
   rows?: number
   type?: string
   customTemplate?: string
 }
+
+export type GovukFieldQuestionOptional = Omit<GovukField, 'name' | 'items'> & {
+  name: 'questionOptional'
+  items: [
+    {
+      text?: string
+      value?: string
+      checked: boolean
+    }
+  ]
+}
+
+export type GovukStringField = Omit<GovukField, 'value'> & { value: string }
 
 export interface FormEditorGovukField {
   question?: GovukField

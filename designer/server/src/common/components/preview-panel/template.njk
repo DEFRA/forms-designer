@@ -28,7 +28,8 @@
 
         <!-- Question Content Here -->
         <div class="border-left-container-shorttext" id="question-preview-content">
-        {%- include "./templates/" + params.questionType | lower + ".njk" -%}
+          {% set model = params.model %}
+          {%- include params.questionType | lower + ".njk" -%}
         </div>
       </div>
 

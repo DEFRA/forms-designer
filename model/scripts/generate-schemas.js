@@ -79,9 +79,6 @@ export function getSchemaMap() {
     'form-submit-record-schema': 'formSubmitRecordSchema',
     'form-submit-recordset-schema': 'formSubmitRecordsetSchema',
 
-    // Form manager schemas
-    'patch-page-schema': 'patchPageSchema',
-
     // Section schemas
     'question-schema': 'questionSchema',
 

@@ -9,10 +9,7 @@ import Joi from 'joi'
 
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
-import {
-  addPageAndFirstQuestion,
-  setPageHeadingAndGuidance
-} from '~/src/lib/editor.js'
+import { addPageAndFirstQuestion, setPageSettings } from '~/src/lib/editor.js'
 import { checkBoomError } from '~/src/lib/error-boom-helper.js'
 import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
@@ -84,7 +81,7 @@ export async function addOrUpdateGuidance(
       finalQuestionId: newComponentId ?? 'unknown'
     }
   } else {
-    await setPageHeadingAndGuidance(formId, token, pageId, definition, {
+    await setPageSettings(formId, token, pageId, definition, {
       ...payload,
       pageHeadingAndGuidance: 'true'
     })

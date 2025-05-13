@@ -1,6 +1,6 @@
 {
   "name": "@defra/forms-model",
-  "version": "3.0.445",
+  "version": "3.0.449",
   "description": "A hapi plugin providing the model for Defra forms",
   "homepage": "https://github.com/DEFRA/forms-designer/tree/main/model#readme",
   "repository": {
@@ -15,14 +15,14 @@
   "types": "dist/types/index.d.ts",
   "scripts": {
     "build": "npm run build:types && npm run build:node && npm run build:schemas",
-    "build:node": "babel --delete-dir-on-start --extensions \".ts\" --ignore \"**/*.test.*\" --copy-files --no-copy-ignored --source-maps --out-dir ./dist/module ./src",
+    "build:node": "babel --delete-dir-on-start --extensions \".ts,.js\" --ignore \"**/*.test.*\" --copy-files --no-copy-ignored --source-maps --out-dir ./dist/module ./src",
     "build:types": "tsc --build --force tsconfig.build.json && tsc-alias --project tsconfig.build.json",
     "build:schemas": "node scripts/generate-schemas.js",
     "test": "jest --color --coverage --verbose",
     "test:watch": "jest --color --watch"
   },
   "dependencies": {
-    "marked": "^15.0.9",
+    "marked": "^15.0.11",
     "nanoid": "^5.0.7",
     "slug": "^10.0.0",
     "uuid": "^11.1.0"

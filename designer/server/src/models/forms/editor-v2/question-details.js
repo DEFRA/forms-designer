@@ -22,6 +22,7 @@ import {
 } from '~/src/models/forms/editor-v2/common.js'
 import { enhancedFieldsPerComponentType } from '~/src/models/forms/editor-v2/enhanced-fields.js'
 import { getFieldComponentType } from '~/src/models/forms/editor-v2/page-fields.js'
+import { getPreviewModel } from '~/src/models/forms/editor-v2/question-details/preview.js'
 import {
   advancedSettingsFields,
   enhancedFields
@@ -71,6 +72,31 @@ export function hasDataOrErrorForDisplay(
   }
 
   return false
+}
+
+/**
+ * @param { ComponentType | undefined } questionType
+ */
+export function getErrorTemplates(questionType) {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+  const component = createComponent(
+    {
+      type: questionType,
+      title: 'Dummy',
+      name: 'dummy',
+      options: { required: true }
+    },
+    {}
+  )
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const errorTemplates =
+    'getAllPossibleErrors' in component
+      ? // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+        component.getAllPossibleErrors()
+      : { baseErrors: [], advancedSettingsErrors: [] }
+
+  return errorTemplates
 }
 
 /**
@@ -215,15 +241,8 @@ export function questionDetailsViewModel(
   state
 ) {
   const questionType = state?.questionType
-
-  const details = getDetails(
-    metadata,
-    definition,
-    pageId,
-    questionId,
-    questionType
-  )
-
+  // prettier-ignore
+  const details = getDetails(metadata, definition, pageId, questionId, questionType)
   const formTitle = metadata.title
   const questionFieldsOverride = /** @type {ComponentDef} */ (
     state?.questionDetails ?? details.question
@@ -251,23 +270,7 @@ export function questionDetailsViewModel(
   const changeTypeUrl = `${urlPageBase}/question/${questionId}/type/${stateId}`
   const pageHeading = details.pageTitle
   const pageTitle = `Edit question ${details.questionNum} - ${formTitle}`
-
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-  const component = createComponent(
-    {
-      type: questionType,
-      title: 'Dummy',
-      name: 'dummy',
-      options: { required: true }
-    },
-    {}
-  )
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const errorTemplates =
-    'getAllPossibleErrors' in component
-      ? // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-        component.getAllPossibleErrors()
-      : { baseErrors: [], advancedSettingsErrors: [] }
+  const errorTemplates = getErrorTemplates(questionType)
 
   return {
     listDetails: getListDetails(state, questionFieldsOverride),
@@ -288,6 +291,7 @@ export function questionDetailsViewModel(
     errorList,
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
+    model: getPreviewModel(basePageFields, state, questionType),
     questionType: questionFieldsOverride.type,
     questionTypeDesc: QuestionTypeDescriptions.find(
       (x) => x.type === questionFieldsOverride.type

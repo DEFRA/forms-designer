@@ -5,7 +5,10 @@ import {
   type FormEditorInputCheckAnswersSettings,
   type FormEditorInputPage,
   type FormEditorInputPageSettings,
-  type FormEditorInputQuestion
+  type FormEditorInputQuestion,
+  type GovukField,
+  type GovukFieldQuestionOptional,
+  type GovukStringField
 } from '~/src/form/form-editor/types.js'
 
 export enum QuestionTypeSubGroup {
@@ -226,6 +229,27 @@ export const pageHeadingSchema = Joi.string()
 export const guidanceTextSchema = Joi.string()
   .trim()
   .description('Guidance text to assist users in completing the page')
+
+export const repeaterSchema = Joi.string()
+  .trim()
+  .optional()
+  .description(
+    'Combined min/max items and question set name for the repeater page'
+  )
+
+export const minItemsSchema = Joi.number()
+  .empty('')
+  .min(1)
+  .description('The minimum number of repeater items')
+
+export const maxItemsSchema = Joi.number()
+  .empty('')
+  .max(25)
+  .description('The maximum number of repeater items')
+
+export const questionSetNameSchema = Joi.string()
+  .trim()
+  .description('The repeater question set name')
 
 export const needDeclarationSchema = Joi.string()
   .trim()
@@ -559,3 +583,21 @@ export const formEditorInputPageSettingsSchema =
     .keys(formEditorInputPageSettingsKeys)
     .required()
     .description('Settings for page content and display in the form editor')
+
+export function govukFieldValueIsString(
+  govukField: GovukField
+): govukField is GovukStringField {
+  return ['question', 'hintText', 'shortDescription'].includes(
+    `${govukField.name}`
+  )
+}
+
+export function govukFieldIsQuestionOptional(
+  govukField: GovukField
+): govukField is GovukFieldQuestionOptional {
+  if (govukField.name !== 'questionOptional') {
+    return false
+  }
+  const checkedValue = govukField.items?.[0].checked
+  return typeof checkedValue === 'boolean'
+}

@@ -6,16 +6,16 @@ import {
   showHtmlElement
 } from '~/src/javascripts/preview/helper'
 import {
-  List,
   ListEventListeners,
-  ListQuestionElements
+  ListQuestionDomElements
 } from '~/src/javascripts/preview/list'
 
+const APP_REORDERABLE_LIST_ITEM = '.app-reorderable-list__item'
 const REORDER_BUTTON_HIDDEN = 'reorder-button-hidden'
 
 const OK_200 = 200
 
-export class ListSortableQuestionElements extends ListQuestionElements {
+export class ListSortableQuestionElements extends ListQuestionDomElements {
   /** @type {HTMLElement} */
   editOptionsButton
   /** @type {HTMLElement} */
@@ -24,9 +24,20 @@ export class ListSortableQuestionElements extends ListQuestionElements {
   sortableContainer
   /** @type { Sortable | undefined } */
   sortableInstance
+  /** @type { HTMLElement | undefined } */
+  announcementRegion
+  /** @type {ReturnType<typeof setTimeout> | undefined} */
+  announceTimeout = undefined
+  /** @type {number} */
+  announceDisplayTimeMs = 150
+  /** @type {number} */
+  announceClearTimeMs = 5000
 
-  constructor() {
-    super()
+  /**
+   * @param {HTMLBuilder} htmlBuilder
+   */
+  constructor(htmlBuilder) {
+    super(htmlBuilder)
     const editOptionsButton = /** @type {HTMLElement} */ (
       document.getElementById('edit-options-button')
     )
@@ -36,10 +47,14 @@ export class ListSortableQuestionElements extends ListQuestionElements {
     const sortableContainer = /** @type {HTMLElement} */ (
       document.getElementById('options-container')
     )
+    const announcementRegion = /** @type {HTMLElement} */ (
+      document.getElementById('reorder-announcement')
+    )
 
     this.editOptionsButton = editOptionsButton
     this.addItemButton = addItemButton
     this.sortableContainer = sortableContainer
+    this.announcementRegion = announcementRegion
   }
 
   isReordering() {
@@ -195,7 +210,7 @@ export class ListSortableQuestionElements extends ListQuestionElements {
    */
   moveUp(listenerClass, target) {
     if (target.classList.contains('js-reorderable-list-up')) {
-      const item = target.closest('.app-reorderable-list__item')
+      const item = target.closest(APP_REORDERABLE_LIST_ITEM)
       const prevItem = item?.previousElementSibling
       if (prevItem && item.parentNode) {
         item.parentNode.insertBefore(item, prevItem)
@@ -212,7 +227,7 @@ export class ListSortableQuestionElements extends ListQuestionElements {
    */
   moveDown(listenerClass, target) {
     if (target.classList.contains('js-reorderable-list-down')) {
-      const item = target.closest('.app-reorderable-list__item')
+      const item = target.closest(APP_REORDERABLE_LIST_ITEM)
       const nextItem = item?.nextElementSibling
       if (nextItem && item.parentNode) {
         item.parentNode.insertBefore(nextItem, item)
@@ -222,17 +237,59 @@ export class ListSortableQuestionElements extends ListQuestionElements {
       listenerClass._listSortableElements.setMoveFocus(target)
     }
   }
+
+  /**
+   * Announces the reorder action to screen readers via the live region.
+   * @param {HTMLElement} movedItem - The list item that was moved.
+   */
+  announceReorder(movedItem) {
+    if (!this.announcementRegion) {
+      return
+    }
+
+    const listItem = /** @type { HTMLElement | null } */ (
+      movedItem.closest(APP_REORDERABLE_LIST_ITEM)
+    )
+    const listItems = /** @type {HTMLElement[]} */ (
+      Array.from(
+        this.sortableContainer.querySelectorAll(APP_REORDERABLE_LIST_ITEM)
+      )
+    )
+    const newPositionIdx = listItems.findIndex(
+      (x) => x.dataset.id === listItem?.dataset.id
+    )
+
+    const optionTitle = listItem?.dataset.text?.trim() ?? 'Item'
+    const totalItems = listItems.length
+
+    const message = `List reordered, ${optionTitle} is now option ${newPositionIdx + 1} of ${totalItems}.`
+
+    clearTimeout(this.announceTimeout)
+    this.announceTimeout = setTimeout(() => {
+      if (this.announcementRegion) {
+        this.announcementRegion.textContent = message
+        setTimeout(() => {
+          if (
+            this.announcementRegion &&
+            this.announcementRegion.textContent === message
+          ) {
+            this.announcementRegion.textContent = ''
+          }
+        }, this.announceClearTimeMs)
+      }
+    }, this.announceDisplayTimeMs)
+  }
 }
 
 export class ListSortableEventListeners extends ListEventListeners {
   /** @type {ListSortableQuestionElements} */
   _listSortableElements
-  /** @type {ListSortable} */
+  /** @type {ListSortableQuestion} */
   _listQuestion
 
   /**
    *
-   * @param {ListSortable} question
+   * @param {ListSortableQuestion} question
    * @param {ListSortableQuestionElements} listQuestionElements
    * @param {HTMLElement[]} listElements
    */
@@ -250,9 +307,10 @@ export class ListSortableEventListeners extends ListEventListeners {
       () => {
         // Do nothing
       },
-      () => {
+      (e) => {
         this._listQuestion.resyncPreviewAfterReorder()
         this._listSortableElements.updateMoveButtons()
+        this._listSortableElements.announceReorder(e.item)
       }
     )
 
@@ -263,7 +321,7 @@ export class ListSortableEventListeners extends ListEventListeners {
           this._listSortableElements.handleReorder(e)
           this.configureMoveButtonListeners()
           if (this._listSortableElements.isReordering()) {
-            this._listQuestion.updateStateInSession()
+            this.updateStateInSession()
           }
         },
         'click'
@@ -280,69 +338,34 @@ export class ListSortableEventListeners extends ListEventListeners {
     allMoveButtons.forEach((button) => {
       const buttonText = button.textContent
       if (buttonText === 'Up' || buttonText === 'Down') {
-        this.inputEventListener(
-          button,
-          buttonText === 'Up'
-            ? (target, e) => {
-                e.preventDefault()
-                this._listSortableElements.moveUp(this, target)
-              }
-            : (target, e) => {
-                e.preventDefault()
-                this._listSortableElements.moveDown(this, target)
-              },
-          'click'
-        )
+        const existingListener = button.dataset.clickHandler
+        if (!existingListener) {
+          this.inputEventListener(
+            button,
+            buttonText === 'Up'
+              ? (target, e) => {
+                  e.preventDefault()
+                  this._listSortableElements.moveUp(this, target)
+                  this._listSortableElements.announceReorder(target)
+                }
+              : (target, e) => {
+                  e.preventDefault()
+                  this._listSortableElements.moveDown(this, target)
+                  this._listSortableElements.announceReorder(target)
+                },
+            'click'
+          )
+          button.dataset.clickHandler = 'set'
+        }
       }
     })
   }
-}
 
-export class ListSortable extends List {
-  /**
-   * @param {ListSortableQuestionElements} listSortableQuestionElements
-   */
-  constructor(listSortableQuestionElements) {
-    super(listSortableQuestionElements)
-    const items = /** @type {ListElement[]} */ (
-      listSortableQuestionElements.values.items
-    )
-    this._list = this.createListFromElements(items)
-    this._listElements = listSortableQuestionElements
-    const listeners = new ListSortableEventListeners(
-      this,
-      listSortableQuestionElements,
-      []
-    )
-    listeners.setupListeners()
-  }
-
-  /**
-   * @returns {Map<string, ListElement>}
-   */
-  resyncPreviewAfterReorder() {
-    const listElements = this._listElements.sortableContainer.children
-    const listElementsOptions = /** @type {HTMLInputElement[]} */ (
-      Array.from(listElements)
-    )
-    const newList = listElementsOptions.map(
-      // eslint-disable-next-line @typescript-eslint/unbound-method
-      ListQuestionElements.getListElementValues
-    )
-    this._list = this.createListFromElements(newList)
-    this.render()
-    return this._list
-  }
-
+  // TODO: could be moved into an api class
   updateStateInSession() {
     const url = addPathToEditorBaseUrl(window.location.href, '/state/', true)
 
-    const listElements = Array.from(this._list).map(([_name, value]) => ({
-      id: value.id,
-      text: value.text,
-      hint: value.hint?.text ? { text: value.hint.text } : undefined,
-      value: value.value
-    }))
+    const listElements = this._listQuestion.listElementObjects
 
     fetch(url, {
       method: 'POST',
@@ -363,18 +386,9 @@ export class ListSortable extends List {
         return 'error'
       })
   }
-
-  static setupPreview() {
-    const elements = new ListSortableQuestionElements()
-    const radio = new ListSortable(elements)
-    radio.render()
-
-    return radio
-  }
 }
 
 /**
- * @import { ListElement } from '@defra/forms-model'
- * @import { ListenerRow } from '~/src/javascripts/preview/question.js'
+ * @import { ListElement, QuestionRenderer, HTMLBuilder, ListElements, ListSortableQuestion, ListenerRow } from '@defra/forms-model'
  * @import { SortableEvent, SortableOptions } from 'sortablejs'
  */

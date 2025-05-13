@@ -1,6 +1,12 @@
 import { ValidationError } from 'joi'
 
-import { autoCompleteOptionsSchema, customValidator } from '~/src/index.js'
+import {
+  autoCompleteOptionsSchema,
+  customValidator,
+  govukFieldIsQuestionOptional,
+  govukFieldValueIsString,
+  type GovukField
+} from '~/src/index.js'
 
 describe('index', () => {
   describe('customValidator', () => {
@@ -93,6 +99,93 @@ describe('index', () => {
         { text: 'Polish', value: 'Polish' },
         { text: 'Ukrainian', value: 'Ukrainian' }
       ])
+    })
+  })
+
+  describe('govukFields', () => {
+    const questionOptionalField: GovukField = {
+      name: 'questionOptional',
+      id: 'questionOptional',
+      classes: 'govuk-checkboxes--small',
+      items: [
+        {
+          value: 'true',
+          text: 'Make this question optional',
+          checked: false
+        }
+      ]
+    }
+
+    const questionField: GovukField = {
+      name: 'question',
+      id: 'question',
+      label: {
+        text: 'Question',
+        classes: 'govuk-label--m'
+      },
+      value: 'Short answer'
+    }
+
+    const hintTextField: GovukField = {
+      name: 'hintText',
+      id: 'hintText',
+      label: {
+        text: 'Hint text (optional)',
+        classes: 'govuk-label--m'
+      },
+      rows: 3,
+      value: ''
+    }
+
+    const shortDescriptionField: GovukField = {
+      id: 'shortDescription',
+      name: 'shortDescription',
+      idPrefix: 'shortDescription',
+      label: {
+        text: 'Short description',
+        classes: 'govuk-label--m'
+      },
+      hint: {
+        text: "Enter a short description for this question like 'Licence period'. Short descriptions are used in error messages and on the check your answers page."
+      },
+      value: 'Short answer'
+    }
+
+    describe('govukFieldValueIsString', () => {
+      it('should return true given question field', () => {
+        expect(govukFieldValueIsString(questionField)).toBe(true)
+      })
+
+      it('should return true given hintText field', () => {
+        expect(govukFieldValueIsString(hintTextField)).toBe(true)
+      })
+
+      it('should return true given shortDescription field', () => {
+        expect(govukFieldValueIsString(shortDescriptionField)).toBe(true)
+      })
+
+      it('should return false given non-text field', () => {
+        expect(govukFieldValueIsString(questionOptionalField)).toBe(false)
+      })
+    })
+
+    describe('govukFieldIsQuestionOptional', () => {
+      it('should return true if it is a questionOptional field', () => {
+        expect(govukFieldIsQuestionOptional(questionOptionalField)).toBe(true)
+      })
+
+      it('should return false if it is not a questionOptional field', () => {
+        expect(govukFieldIsQuestionOptional(hintTextField)).toBe(false)
+      })
+
+      it('should return false if it is not a valid questionOptional field', () => {
+        expect(
+          govukFieldIsQuestionOptional({
+            ...questionOptionalField,
+            items: undefined
+          })
+        ).toBe(false)
+      })
     })
   })
 })

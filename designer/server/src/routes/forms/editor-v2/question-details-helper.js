@@ -196,7 +196,7 @@ function handleSaveItem(request, state, stateId) {
             text: payload.radioHint
           }
         : undefined,
-      value: payload.radioValue,
+      value: payload.radioValue !== '' ? payload.radioValue : payload.radioText,
       id: randomUUID()
     })
   }
