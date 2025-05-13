@@ -72,6 +72,26 @@ export interface FormEditor {
   guidanceText: string
 
   /**
+   * The value of checkbox to reveal repeater section
+   */
+  repeater: string
+
+  /**
+   * The maximum number of repeater items
+   */
+  minItems: number
+
+  /**
+   * The minimum number of repeater items
+   */
+  maxItems: number
+
+  /**
+   * The repeater question set name
+   */
+  questionSetName: string
+
+  /**
    * The value of radio to reveal declaration text field
    */
   needDeclaration: string
@@ -277,7 +297,13 @@ export type FormEditorInputQuestion = Pick<
 
 export type FormEditorInputPageSettings = Pick<
   FormEditor,
-  'pageHeadingAndGuidance' | 'pageHeading' | 'guidanceText'
+  | 'pageHeadingAndGuidance'
+  | 'pageHeading'
+  | 'guidanceText'
+  | 'repeater'
+  | 'minItems'
+  | 'maxItems'
+  | 'questionSetName'
 >
 
 export type FormEditorInputGuidancePage = Pick<

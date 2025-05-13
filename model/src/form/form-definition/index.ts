@@ -361,7 +361,7 @@ const repeatSchema = Joi.object<RepeatSchema>()
       .description('Maximum number of repetitions allowed')
   })
 
-const pageRepeatSchema = Joi.object<Repeat>()
+export const pageRepeatSchema = Joi.object<Repeat>()
   .description('Complete configuration for a repeatable page')
   .keys({
     options: repeatOptions
