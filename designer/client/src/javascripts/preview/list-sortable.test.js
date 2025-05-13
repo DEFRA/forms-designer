@@ -2,7 +2,9 @@ import { ComponentType } from '@defra/forms-model'
 
 import {
   list1HTML,
-  listEmptyHTML
+  listEmptyHTML,
+  listSingleEntryDownHTML,
+  listSingleEntryUpHTML
 } from '~/src/javascripts/preview/__stubs__/list'
 import {
   questionDetailsLeftPanelHTML,
@@ -260,6 +262,27 @@ describe('list-sortable', () => {
         expect(mockResync).not.toHaveBeenCalled()
       })
 
+      it('should not error for move up if no siblings', () => {
+        document.body.innerHTML =
+          '<button id="edit-options-button">Re-order</button>' +
+          '<button id="add-option-button">Add item</button>' +
+          listSingleEntryUpHTML
+        const preview = ListSortable.setupPreview()
+        const upButtons = Array.from(
+          document.querySelectorAll('.js-reorderable-list-up')
+        )
+        const upButton = /** @type {HTMLElement} */ (
+          upButtons.find((x) => x.id === 'first-row-up')
+        )
+        expect(upButtons.findIndex((x) => x.id === 'first-row-up')).toBe(0)
+        preview._listElements.moveUp(mockListenerClass, upButton)
+        const upButtonsAfter = Array.from(
+          document.querySelectorAll('.js-reorderable-list-up')
+        )
+        expect(upButtonsAfter.findIndex((x) => x.id === 'first-row-up')).toBe(0)
+        expect(mockResync).toHaveBeenCalled()
+      })
+
       it('should move down if correct class', () => {
         document.body.innerHTML =
           '<button id="edit-options-button">Re-order</button>' +
@@ -299,6 +322,23 @@ describe('list-sortable', () => {
         downButton.classList.remove('js-reorderable-list-down')
         preview._listElements.moveDown(mockListenerClass, downButton)
         expect(mockResync).not.toHaveBeenCalled()
+      })
+
+      it('should not error if down has no siblings', () => {
+        document.body.innerHTML =
+          '<button id="edit-options-button">Re-order</button>' +
+          '<button id="add-option-button">Add item</button>' +
+          listSingleEntryDownHTML
+        const preview = ListSortable.setupPreview()
+        const downButtons = Array.from(
+          document.querySelectorAll('.js-reorderable-list-down')
+        )
+        const downButton = /** @type {HTMLElement} */ (
+          downButtons.find((x) => x.id === 'first-row-down')
+        )
+        expect(downButtons.findIndex((x) => x.id === 'first-row-down')).toBe(0)
+        preview._listElements.moveDown(mockListenerClass, downButton)
+        expect(mockResync).toHaveBeenCalled()
       })
     })
 
@@ -349,6 +389,21 @@ describe('list-sortable', () => {
         listSortable.setMoveFocus(downButtonLastRow)
         expect(downButtonLastRow.focus).not.toHaveBeenCalled()
         expect(upButtonLastRow.focus).toHaveBeenCalled()
+      })
+
+      it('should not error if no sibling', () => {
+        document.body.innerHTML =
+          '<button id="edit-options-button">Re-order</button>' +
+          '<button id="add-option-button">Add item</button>' +
+          listSingleEntryDownHTML
+        const listSortable = new ListSortableQuestionElements()
+        const downButtonFirstRow = /** @type {HTMLElement} */ (
+          document.getElementById('first-row-down')
+        )
+        jest.spyOn(downButtonFirstRow, 'focus')
+        downButtonFirstRow.classList.add('reorder-button-hidden')
+        listSortable.setMoveFocus(downButtonFirstRow)
+        expect(downButtonFirstRow.focus).not.toHaveBeenCalled()
       })
     })
 
@@ -496,6 +551,53 @@ describe('list-sortable', () => {
           document.getElementById('last-row-up')
         )
         expect(upButtonLastRow).toBeDefined()
+      })
+
+      it('should ignore if not reordering', () => {
+        document.body.innerHTML =
+          '<button id="edit-options-button">Done</button>' +
+          '<button id="add-option-button">Add item</button>' +
+          list1HTML
+        ListSortable.setupPreview()
+        const reorderButton = /** @type {HTMLElement} */ (
+          document.getElementById('edit-options-button')
+        )
+        reorderButton.click()
+        const upButtonLastRow = /** @type {HTMLElement} */ (
+          document.getElementById('last-row-up')
+        )
+        expect(upButtonLastRow.dataset.click).toBeUndefined()
+      })
+
+      it('should ignore if not an up or down button', () => {
+        document.body.innerHTML =
+          '<button id="edit-options-button">Re-order</button>' +
+          '<button id="add-option-button">Add item</button>' +
+          list1HTML
+        const upButtons = /** @type {HTMLElement[]} */ (
+          Array.from(document.getElementsByClassName('js-reorderable-list-up'))
+        )
+        const downButtons = /** @type {HTMLElement[]} */ (
+          Array.from(
+            document.getElementsByClassName('js-reorderable-list-down')
+          )
+        )
+        upButtons.forEach((x) => {
+          x.textContent = 'Not up or down'
+        })
+        downButtons.forEach((x) => {
+          x.textContent = 'Not up or down'
+        })
+
+        ListSortable.setupPreview()
+        const reorderButton = /** @type {HTMLElement} */ (
+          document.getElementById('edit-options-button')
+        )
+        reorderButton.click()
+        const upButtonLastRow = /** @type {HTMLElement} */ (
+          document.getElementById('last-row-up')
+        )
+        expect(upButtonLastRow.dataset.click).toBeUndefined()
       })
     })
   })
