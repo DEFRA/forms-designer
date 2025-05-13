@@ -670,10 +670,13 @@ describe('preview', () => {
           text: ''
         },
         id: 'addressField',
-        label: {
-          classes: 'govuk-label--l',
-          text: 'Short answer (optional)'
+        fieldset: {
+          legend: {
+            classes: 'govuk-fieldset__legend--l',
+            text: 'Short answer (optional)'
+          }
         },
+
         name: 'addressField'
       })
       expect(previewModel).toEqual(expectedBaseModel)
