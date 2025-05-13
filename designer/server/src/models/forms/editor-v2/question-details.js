@@ -215,13 +215,8 @@ export function questionDetailsViewModel(
   state
 ) {
   const questionType = state?.questionType
-  const details = getDetails(
-    metadata,
-    definition,
-    pageId,
-    questionId,
-    questionType
-  )
+  // prettier-ignore
+  const details = getDetails(metadata, definition, pageId, questionId, questionType)
   const formTitle = metadata.title
   const questionFieldsOverride = /** @type {ComponentDef} */ (
     state?.questionDetails ?? details.question
