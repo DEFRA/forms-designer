@@ -3,6 +3,7 @@ import { ComponentType } from '@defra/forms-model'
 import {
   QuestionPreviewElements,
   getCheckedValue,
+  getListFromState,
   getPreviewModel,
   getValueAsString
 } from '~/src/models/forms/editor-v2/question-details/preview.js'
@@ -54,6 +55,28 @@ describe('preview', () => {
     value: 'Short answer'
   }
 
+  const questionSessionState = {
+    questionType: ComponentType.RadiosField,
+    editRow: {},
+    listItems: [
+      {
+        id: 'c0f36d53-7591-4a5b-93a3-22d492a80bd6',
+        text: 'Hydrogen',
+        value: '1'
+      },
+      {
+        id: '6b2ee8a2-0d40-405b-93d9-c9e8ffa0d025',
+        text: 'Helium',
+        value: '2'
+      },
+      {
+        id: 'cff0706e-6755-4c73-9d2a-64db754c7484',
+        text: 'Lithium',
+        value: '3'
+      }
+    ]
+  }
+
   describe('getValueAsString', () => {
     it('should return value given question', () => {
       expect(getValueAsString(question)).toBe('Short answer')
@@ -73,6 +96,46 @@ describe('preview', () => {
     })
   })
 
+  describe('getListFromState', () => {
+    it('should return a list if there is one', () => {
+      expect(getListFromState(questionSessionState)).toEqual([
+        {
+          id: 'c0f36d53-7591-4a5b-93a3-22d492a80bd6',
+          text: 'Hydrogen',
+          value: '1',
+          label: {
+            text: 'Hydrogen',
+            classes: ''
+          }
+        },
+        {
+          id: '6b2ee8a2-0d40-405b-93d9-c9e8ffa0d025',
+          text: 'Helium',
+          value: '2',
+          label: {
+            text: 'Helium',
+            classes: ''
+          }
+        },
+        {
+          id: 'cff0706e-6755-4c73-9d2a-64db754c7484',
+          text: 'Lithium',
+          value: '3',
+          label: {
+            text: 'Lithium',
+            classes: ''
+          }
+        }
+      ])
+    })
+    it('should return an empty array if not a list', () => {
+      expect(getListFromState({})).toEqual([])
+    })
+    it('should return an empty array if state is undefined', () => {
+      expect(getListFromState(undefined)).toEqual([])
+    })
+  })
+
   describe('QuestionPreviewElements', () => {
     /**
      * @type {GovukField[]}
@@ -85,7 +148,7 @@ describe('preview', () => {
     ]
 
     it('should create the correct preview elements', () => {
-      const previewElements = new QuestionPreviewElements(basePageFields)
+      const previewElements = new QuestionPreviewElements(basePageFields, {})
       expect(previewElements.values).toEqual({
         question: 'Short answer',
         hintText: '',
@@ -96,7 +159,7 @@ describe('preview', () => {
     })
 
     it('should get defaults', () => {
-      const previewElements = new QuestionPreviewElements([])
+      const previewElements = new QuestionPreviewElements([], {})
       expect(previewElements.values).toEqual({
         question: '',
         hintText: '',
@@ -107,7 +170,10 @@ describe('preview', () => {
     })
 
     it('should do nothing when setPreviewHTML is called', () => {
-      const previewElements = new QuestionPreviewElements(basePageFields)
+      const previewElements = new QuestionPreviewElements(
+        basePageFields,
+        undefined
+      )
       Object.freeze(previewElements)
       const previewElements2 = structuredClone(previewElements)
       previewElements.setPreviewHTML('abc')
@@ -129,6 +195,7 @@ describe('preview', () => {
     it('should get ShortAnswer', () => {
       const previewModel = getPreviewModel(
         basePageFields,
+        {},
         ComponentType.TextField
       )
       const expectedBaseModel = /** @type {QuestionBaseModel} */ ({
@@ -149,6 +216,7 @@ describe('preview', () => {
     it('should get Question', () => {
       const previewModel = getPreviewModel(
         basePageFields,
+        {},
         // @ts-expect-error - unknown component type
         'unknown'
       )
@@ -170,6 +238,7 @@ describe('preview', () => {
     it('should get DateInput', () => {
       const previewModel = getPreviewModel(
         basePageFields,
+        {},
         ComponentType.DatePartsField
       )
       const expectedBaseModel = /** @type {QuestionBaseModel} */ ({
@@ -192,6 +261,7 @@ describe('preview', () => {
     it('should get EmailAddress', () => {
       const previewModel = getPreviewModel(
         basePageFields,
+        {},
         ComponentType.EmailAddressField
       )
       const expectedBaseModel = /** @type {QuestionBaseModel} */ ({
@@ -212,6 +282,7 @@ describe('preview', () => {
     it('should get UkAddress', () => {
       const previewModel = getPreviewModel(
         basePageFields,
+        {},
         ComponentType.UkAddressField
       )
       const expectedBaseModel = /** @type {QuestionBaseModel} */ ({
@@ -232,6 +303,7 @@ describe('preview', () => {
     it('should get PhoneNumber', () => {
       const previewModel = getPreviewModel(
         basePageFields,
+        {},
         ComponentType.TelephoneNumberField
       )
       const expectedBaseModel = /** @type {QuestionBaseModel} */ ({
@@ -252,6 +324,7 @@ describe('preview', () => {
     it('should get RadioSortable', () => {
       const previewModel = getPreviewModel(
         basePageFields,
+        {},
         ComponentType.RadiosField
       )
       const expectedBaseModel = /** @type {QuestionBaseModel} */ ({
@@ -272,6 +345,58 @@ describe('preview', () => {
         },
         id: 'listInput',
         items: [],
+        name: 'listInputField'
+      })
+      expect(previewModel).toEqual(expectedBaseModel)
+    })
+
+    it('should get RadioSortable with list items', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        questionSessionState,
+        ComponentType.RadiosField
+      )
+      const expectedBaseModel = /** @type {QuestionBaseModel} */ ({
+        fieldset: {
+          legend: {
+            classes: 'govuk-fieldset__legend--l',
+            text: 'Short answer (optional)'
+          }
+        },
+        hint: {
+          classes: '',
+          text: ''
+        },
+        id: 'listInput',
+        items: [
+          {
+            id: 'c0f36d53-7591-4a5b-93a3-22d492a80bd6',
+            label: {
+              classes: '',
+              text: 'Hydrogen'
+            },
+            text: 'Hydrogen',
+            value: '1'
+          },
+          {
+            id: '6b2ee8a2-0d40-405b-93d9-c9e8ffa0d025',
+            label: {
+              classes: '',
+              text: 'Helium'
+            },
+            text: 'Helium',
+            value: '2'
+          },
+          {
+            id: 'cff0706e-6755-4c73-9d2a-64db754c7484',
+            label: {
+              classes: '',
+              text: 'Lithium'
+            },
+            text: 'Lithium',
+            value: '3'
+          }
+        ],
         name: 'listInputField'
       })
       expect(previewModel).toEqual(expectedBaseModel)

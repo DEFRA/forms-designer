@@ -251,7 +251,7 @@ export function questionDetailsViewModel(
   const changeTypeUrl = `${urlPageBase}/question/${questionId}/type/${stateId}`
   const pageHeading = details.pageTitle
   const pageTitle = `Edit question ${details.questionNum} - ${formTitle}`
-  const model = getPreviewModel(basePageFields, questionType)
+  const model = getPreviewModel(basePageFields, state, questionType)
   return {
     listDetails: getListDetails(state, questionFieldsOverride),
     state,
@@ -270,7 +270,6 @@ export function questionDetailsViewModel(
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
     model,
-    json: JSON.stringify(model),
     questionType: questionFieldsOverride.type,
     questionTypeDesc: QuestionTypeDescriptions.find(
       (x) => x.type === questionFieldsOverride.type

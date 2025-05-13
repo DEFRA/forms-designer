@@ -37,6 +37,28 @@ export function getCheckedValue(govukField) {
 }
 
 /**
+ * Gets a list from QuestionSessionState
+ * @param {QuestionSessionState|undefined} state
+ * @returns {ListElement[]}
+ */
+export function getListFromState(state) {
+  return (
+    state?.listItems?.map((item) => {
+      const text = item.text ?? ''
+      return {
+        id: item.id ?? '',
+        text,
+        value: item.value ?? '',
+        label: {
+          classes: '',
+          text
+        }
+      }
+    }) ?? []
+  )
+}
+
+/**
  * @implements {ListElements}
  */
 export class QuestionPreviewElements {
@@ -65,8 +87,9 @@ export class QuestionPreviewElements {
   /**
    *
    * @param {GovukField[]} basePageFields
+   * @param {QuestionSessionState|undefined} state
    */
-  constructor(basePageFields) {
+  constructor(basePageFields, state) {
     basePageFields.forEach((field) => {
       if (field.name === 'question') {
         this._question = getValueAsString(field)
@@ -80,6 +103,7 @@ export class QuestionPreviewElements {
         // sonarlint
       }
     })
+    this._items = getListFromState(state)
   }
 
   get values() {
@@ -190,10 +214,11 @@ export const models = {
 
 /**
  * @param {GovukField[]} govukFields
+ * @param {QuestionSessionState|undefined} state
  * @param {ComponentType|undefined} componentType
  */
-export function getPreviewModel(govukFields, componentType) {
-  const questionOrListElements = new QuestionPreviewElements(govukFields)
+export function getPreviewModel(govukFields, state, componentType) {
+  const questionOrListElements = new QuestionPreviewElements(govukFields, state)
   /** @type {(question: ListElements) => Question} */
   let QuestionConstructor
 
@@ -219,5 +244,5 @@ export function getPreviewModel(govukFields, componentType) {
   return question.renderInput
 }
 /**
- * @import { ListElement, ListElements, QuestionElements, QuestionRenderer, QuestionBaseModel, GovukField } from '@defra/forms-model'
+ * @import { ListElement, ListElements, QuestionElements, QuestionRenderer, QuestionBaseModel, GovukField, QuestionSessionState } from '@defra/forms-model'
  */
