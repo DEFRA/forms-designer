@@ -2,6 +2,7 @@ import {
   DateInputQuestion,
   EmailAddressQuestion,
   ListSortableQuestion,
+  LongAnswerQuestion,
   PhoneNumberQuestion,
   Question,
   RadioSortableQuestion,
@@ -44,6 +45,18 @@ export const SetupPreview =
       const questionElements = new QuestionDomElements()
       const nunjucksRenderer = new NunjucksRenderer(questionElements)
       const textfield = new ShortAnswerQuestion(
+        questionElements,
+        nunjucksRenderer
+      )
+      const listeners = new EventListeners(textfield, questionElements)
+      listeners.setupListeners()
+
+      return textfield
+    },
+    MultilineTextField: () => {
+      const questionElements = new QuestionDomElements()
+      const nunjucksRenderer = new NunjucksRenderer(questionElements)
+      const textfield = new LongAnswerQuestion(
         questionElements,
         nunjucksRenderer
       )

@@ -1,6 +1,7 @@
 import {
   ComponentType,
   DateInputQuestion,
+  LongAnswerQuestion,
   Question,
   RadioSortableQuestion,
   ShortAnswerQuestion
@@ -34,6 +35,11 @@ describe('preview', () => {
     it('should setup preview for DatePartsField', () => {
       const res = setupPreview(ComponentType.DatePartsField)
       expect(res).toBeInstanceOf(DateInputQuestion)
+    })
+
+    it('should setup preview for MultilineTextField', () => {
+      const res = setupPreview(ComponentType.MultilineTextField)
+      expect(res).toBeInstanceOf(LongAnswerQuestion)
     })
 
     it('should setup preview for Radiosfield', () => {
