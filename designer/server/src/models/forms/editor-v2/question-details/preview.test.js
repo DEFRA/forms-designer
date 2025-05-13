@@ -1,0 +1,579 @@
+import { ComponentType } from '@defra/forms-model'
+
+import {
+  QuestionPreviewElements,
+  getCheckedValue,
+  getListFromState,
+  getPreviewModel,
+  getValueAsString
+} from '~/src/models/forms/editor-v2/question-details/preview.js'
+
+describe('preview', () => {
+  const question = {
+    name: 'question',
+    id: 'question',
+    label: {
+      text: 'Question',
+      classes: 'govuk-label--m'
+    },
+    value: 'Short answer'
+  }
+  const hintText = {
+    name: 'hintText',
+    id: 'hintText',
+    label: {
+      text: 'Hint text (optional)',
+      classes: 'govuk-label--m'
+    },
+    rows: 3,
+    value: ''
+  }
+
+  const questionOptional = {
+    name: 'questionOptional',
+    id: 'questionOptional',
+    classes: 'govuk-checkboxes--small',
+    items: [
+      {
+        value: 'true',
+        text: 'Make this question optional',
+        checked: true
+      }
+    ]
+  }
+  const shortDescription = {
+    id: 'shortDescription',
+    name: 'shortDescription',
+    idPrefix: 'shortDescription',
+    label: {
+      text: 'Short description',
+      classes: 'govuk-label--m'
+    },
+    hint: {
+      text: "Enter a short description for this question like 'Licence period'. Short descriptions are used in error messages and on the check your answers page."
+    },
+    value: 'Short answer'
+  }
+
+  const questionSessionState = {
+    questionType: ComponentType.RadiosField,
+    editRow: {},
+    listItems: [
+      {
+        id: 'c0f36d53-7591-4a5b-93a3-22d492a80bd6',
+        text: 'Hydrogen',
+        value: '1'
+      },
+      {
+        id: '6b2ee8a2-0d40-405b-93d9-c9e8ffa0d025',
+        text: 'Helium',
+        value: '2'
+      },
+      {
+        id: 'cff0706e-6755-4c73-9d2a-64db754c7484',
+        text: 'Lithium',
+        value: '3'
+      }
+    ]
+  }
+
+  describe('getValueAsString', () => {
+    it('should return value given question', () => {
+      expect(getValueAsString(question)).toBe('Short answer')
+    })
+    it('should return empty string given questionOptional', () => {
+      expect(getValueAsString(questionOptional)).toBe('')
+    })
+  })
+
+  describe('getCheckedValue', () => {
+    it('should return checked value given questionOptional', () => {
+      expect(getCheckedValue(questionOptional)).toBe(true)
+    })
+
+    it('should return false given not questionOptional', () => {
+      expect(getCheckedValue(shortDescription)).toBe(false)
+    })
+  })
+
+  describe('getListFromState', () => {
+    it('should return a list if there is one', () => {
+      expect(getListFromState(questionSessionState)).toEqual([
+        {
+          id: 'c0f36d53-7591-4a5b-93a3-22d492a80bd6',
+          text: 'Hydrogen',
+          value: '1',
+          label: {
+            text: 'Hydrogen',
+            classes: ''
+          }
+        },
+        {
+          id: '6b2ee8a2-0d40-405b-93d9-c9e8ffa0d025',
+          text: 'Helium',
+          value: '2',
+          label: {
+            text: 'Helium',
+            classes: ''
+          }
+        },
+        {
+          id: 'cff0706e-6755-4c73-9d2a-64db754c7484',
+          text: 'Lithium',
+          value: '3',
+          label: {
+            text: 'Lithium',
+            classes: ''
+          }
+        }
+      ])
+    })
+    it('should return an empty array if not a list', () => {
+      expect(getListFromState({})).toEqual([])
+    })
+    it('should return an empty array if state is undefined', () => {
+      expect(getListFromState(undefined)).toEqual([])
+    })
+  })
+
+  describe('QuestionPreviewElements', () => {
+    /**
+     * @type {GovukField[]}
+     */
+    const basePageFields = [
+      question,
+      hintText,
+      questionOptional,
+      shortDescription
+    ]
+
+    it('should create the correct preview elements', () => {
+      const previewElements = new QuestionPreviewElements(basePageFields, {})
+      expect(previewElements.values).toEqual({
+        question: 'Short answer',
+        hintText: '',
+        optional: true,
+        shortDesc: 'Short answer',
+        items: []
+      })
+    })
+
+    it('should get defaults', () => {
+      const previewElements = new QuestionPreviewElements([], {})
+      expect(previewElements.values).toEqual({
+        question: '',
+        hintText: '',
+        optional: false,
+        shortDesc: '',
+        items: []
+      })
+    })
+
+    it('should do nothing when setPreviewHTML is called', () => {
+      const previewElements = new QuestionPreviewElements(
+        basePageFields,
+        undefined
+      )
+      Object.freeze(previewElements)
+      const previewElements2 = structuredClone(previewElements)
+      previewElements.setPreviewHTML('abc')
+      expect(previewElements).toEqual(previewElements2)
+    })
+  })
+
+  describe('getPreviewModel', () => {
+    /**
+     * @type {GovukField[]}
+     */
+    const basePageFields = [
+      question,
+      hintText,
+      questionOptional,
+      shortDescription
+    ]
+
+    const expectedQuestionModel = /** @type {QuestionBaseModel} */ ({
+      hint: {
+        classes: '',
+        text: ''
+      },
+      id: 'inputField',
+      label: {
+        classes: 'govuk-label--l',
+        text: 'Short answer (optional)'
+      },
+      name: 'inputField'
+    })
+
+    it('should get TextField', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        {},
+        ComponentType.TextField
+      )
+      const expectedBaseModel = /** @type {QuestionBaseModel} */ ({
+        hint: {
+          classes: '',
+          text: ''
+        },
+        id: 'inputField',
+        label: {
+          classes: 'govuk-label--l',
+          text: 'Short answer (optional)'
+        },
+        name: 'inputField'
+      })
+      expect(previewModel).toEqual(expectedBaseModel)
+    })
+
+    it('should get MultilineTextField', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        {},
+        ComponentType.MultilineTextField
+      )
+
+      expect(previewModel).toEqual(expectedQuestionModel)
+    })
+
+    it('should get YesNoField', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        {},
+        ComponentType.YesNoField
+      )
+
+      expect(previewModel).toEqual(expectedQuestionModel)
+    })
+
+    it('should get MonthYearField', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        {},
+        ComponentType.MonthYearField
+      )
+
+      expect(previewModel).toEqual(expectedQuestionModel)
+    })
+
+    it('should get SelectField', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        {},
+        ComponentType.SelectField
+      )
+
+      expect(previewModel).toEqual(expectedQuestionModel)
+    })
+
+    it('should get NumberField', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        {},
+        ComponentType.NumberField
+      )
+
+      expect(previewModel).toEqual(expectedQuestionModel)
+    })
+
+    it('should get Html', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        {},
+        ComponentType.Html
+      )
+
+      expect(previewModel).toEqual(expectedQuestionModel)
+    })
+
+    it('should get InsetText', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        {},
+        ComponentType.InsetText
+      )
+
+      expect(previewModel).toEqual(expectedQuestionModel)
+    })
+
+    it('should get Details', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        {},
+        ComponentType.Details
+      )
+
+      expect(previewModel).toEqual(expectedQuestionModel)
+    })
+
+    it('should get List', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        {},
+        ComponentType.List
+      )
+
+      expect(previewModel).toEqual(expectedQuestionModel)
+    })
+
+    it('should get Markdown', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        {},
+        ComponentType.Markdown
+      )
+
+      expect(previewModel).toEqual(expectedQuestionModel)
+    })
+
+    it('should get FileUploadField', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        {},
+        ComponentType.FileUploadField
+      )
+
+      expect(previewModel).toEqual(expectedQuestionModel)
+    })
+
+    it('should get AutocompleteField', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        {},
+        ComponentType.AutocompleteField
+      )
+
+      expect(previewModel).toEqual({
+        fieldset: {
+          legend: {
+            classes: 'govuk-fieldset__legend--l',
+            text: 'Short answer (optional)'
+          }
+        },
+        formGroup: {
+          afterInputs: {
+            html: '<div class="govuk-inset-text">No items added yet.</div>'
+          }
+        },
+        hint: {
+          classes: '',
+          text: ''
+        },
+        id: 'listInput',
+        items: [],
+        name: 'listInputField'
+      })
+    })
+
+    it('should get CheckboxesField', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        {},
+        ComponentType.CheckboxesField
+      )
+
+      expect(previewModel).toEqual({
+        fieldset: {
+          legend: {
+            classes: 'govuk-fieldset__legend--l',
+            text: 'Short answer (optional)'
+          }
+        },
+        formGroup: {
+          afterInputs: {
+            html: '<div class="govuk-inset-text">No items added yet.</div>'
+          }
+        },
+        hint: {
+          classes: '',
+          text: ''
+        },
+        id: 'listInput',
+        items: [],
+        name: 'listInputField'
+      })
+    })
+
+    it('should get Question', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        {},
+        // @ts-expect-error - unknown component type
+        'Question'
+      )
+
+      expect(previewModel).toEqual(expectedQuestionModel)
+    })
+
+    it('should get DatePartsField', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        {},
+        ComponentType.DatePartsField
+      )
+      const expectedBaseModel = /** @type {QuestionBaseModel} */ ({
+        fieldset: {
+          legend: {
+            classes: 'govuk-fieldset__legend--l',
+            text: 'Short answer (optional)'
+          }
+        },
+        hint: {
+          classes: '',
+          text: ''
+        },
+        id: 'dateInput',
+        name: 'dateInputField'
+      })
+      expect(previewModel).toEqual(expectedBaseModel)
+    })
+
+    it('should get EmailAddress', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        {},
+        ComponentType.EmailAddressField
+      )
+      const expectedBaseModel = /** @type {QuestionBaseModel} */ ({
+        hint: {
+          classes: '',
+          text: ''
+        },
+        id: 'emailAddressField',
+        label: {
+          classes: 'govuk-label--l',
+          text: 'Short answer (optional)'
+        },
+        name: 'emailAddressField'
+      })
+      expect(previewModel).toEqual(expectedBaseModel)
+    })
+
+    it('should get UkAddress', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        {},
+        ComponentType.UkAddressField
+      )
+      const expectedBaseModel = /** @type {QuestionBaseModel} */ ({
+        hint: {
+          classes: '',
+          text: ''
+        },
+        id: 'addressField',
+        label: {
+          classes: 'govuk-label--l',
+          text: 'Short answer (optional)'
+        },
+        name: 'addressField'
+      })
+      expect(previewModel).toEqual(expectedBaseModel)
+    })
+
+    it('should get PhoneNumber', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        {},
+        ComponentType.TelephoneNumberField
+      )
+      const expectedBaseModel = /** @type {QuestionBaseModel} */ ({
+        hint: {
+          classes: '',
+          text: ''
+        },
+        id: 'phoneNumberField',
+        label: {
+          classes: 'govuk-label--l',
+          text: 'Short answer (optional)'
+        },
+        name: 'phoneNumberField'
+      })
+      expect(previewModel).toEqual(expectedBaseModel)
+    })
+
+    it('should get RadioSortable', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        {},
+        ComponentType.RadiosField
+      )
+      const expectedBaseModel = /** @type {QuestionBaseModel} */ ({
+        fieldset: {
+          legend: {
+            classes: 'govuk-fieldset__legend--l',
+            text: 'Short answer (optional)'
+          }
+        },
+        formGroup: {
+          afterInputs: {
+            html: '<div class="govuk-inset-text">No items added yet.</div>'
+          }
+        },
+        hint: {
+          classes: '',
+          text: ''
+        },
+        id: 'listInput',
+        items: [],
+        name: 'listInputField'
+      })
+      expect(previewModel).toEqual(expectedBaseModel)
+    })
+
+    it('should get RadioSortable with list items', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        questionSessionState,
+        ComponentType.RadiosField
+      )
+      const expectedBaseModel = /** @type {QuestionBaseModel} */ ({
+        fieldset: {
+          legend: {
+            classes: 'govuk-fieldset__legend--l',
+            text: 'Short answer (optional)'
+          }
+        },
+        hint: {
+          classes: '',
+          text: ''
+        },
+        id: 'listInput',
+        items: [
+          {
+            id: 'c0f36d53-7591-4a5b-93a3-22d492a80bd6',
+            label: {
+              classes: '',
+              text: 'Hydrogen'
+            },
+            text: 'Hydrogen',
+            value: '1'
+          },
+          {
+            id: '6b2ee8a2-0d40-405b-93d9-c9e8ffa0d025',
+            label: {
+              classes: '',
+              text: 'Helium'
+            },
+            text: 'Helium',
+            value: '2'
+          },
+          {
+            id: 'cff0706e-6755-4c73-9d2a-64db754c7484',
+            label: {
+              classes: '',
+              text: 'Lithium'
+            },
+            text: 'Lithium',
+            value: '3'
+          }
+        ],
+        name: 'listInputField'
+      })
+      expect(previewModel).toEqual(expectedBaseModel)
+    })
+  })
+})
+
+/**
+ * @import { GovukField, QuestionBaseModel } from '@defra/forms-model'
+ */

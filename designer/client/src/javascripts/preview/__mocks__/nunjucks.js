@@ -10,5 +10,5 @@ export default {
 }
 
 /**
- * @import { QuestionBaseModel } from '~/src/javascripts/preview/question.js'
+ * @import { QuestionBaseModel } from '@defra/forms-model'
  */

@@ -21,6 +21,7 @@ import {
 } from '~/src/models/forms/editor-v2/common.js'
 import { enhancedFieldsPerComponentType } from '~/src/models/forms/editor-v2/enhanced-fields.js'
 import { getFieldComponentType } from '~/src/models/forms/editor-v2/page-fields.js'
+import { getPreviewModel } from '~/src/models/forms/editor-v2/question-details/preview.js'
 import {
   advancedSettingsFields,
   enhancedFields
@@ -214,15 +215,8 @@ export function questionDetailsViewModel(
   state
 ) {
   const questionType = state?.questionType
-
-  const details = getDetails(
-    metadata,
-    definition,
-    pageId,
-    questionId,
-    questionType
-  )
-
+  // prettier-ignore
+  const details = getDetails(metadata, definition, pageId, questionId, questionType)
   const formTitle = metadata.title
   const questionFieldsOverride = /** @type {ComponentDef} */ (
     state?.questionDetails ?? details.question
@@ -250,7 +244,6 @@ export function questionDetailsViewModel(
   const changeTypeUrl = `${urlPageBase}/question/${questionId}/type/${stateId}`
   const pageHeading = details.pageTitle
   const pageTitle = `Edit question ${details.questionNum} - ${formTitle}`
-
   return {
     listDetails: getListDetails(state, questionFieldsOverride),
     state,
@@ -268,6 +261,7 @@ export function questionDetailsViewModel(
     errorList,
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
+    model: getPreviewModel(basePageFields, state, questionType),
     questionType: questionFieldsOverride.type,
     questionTypeDesc: QuestionTypeDescriptions.find(
       (x) => x.type === questionFieldsOverride.type

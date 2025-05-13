@@ -1,4 +1,4 @@
-import { ComponentType } from '@defra/forms-model'
+import { ListSortableQuestion } from '@defra/forms-model'
 
 import {
   list1HTML,
@@ -12,21 +12,13 @@ import {
   questionDetailsStubPanels
 } from '~/src/javascripts/preview/__stubs__/question.js'
 import {
-  ListSortable,
   ListSortableEventListeners,
   ListSortableQuestionElements
 } from '~/src/javascripts/preview/list-sortable'
-import { List } from '~/src/javascripts/preview/list.js'
-import { setupPreview } from '~/src/javascripts/preview.js'
+import { NunjucksRenderer } from '~/src/javascripts/preview/nunjucks-renderer.js'
+import { SetupPreview } from '~/src/javascripts/setup-preview.js'
 
-jest.mock('~/src/javascripts/preview/nunjucks.js')
-jest.mock('~/src/views/components/ukaddressfield.njk', () => '')
-jest.mock('~/src/views/components/telephonenumberfield.njk', () => '')
-jest.mock('~/src/views/components/emailaddressfield.njk', () => '')
-jest.mock('~/src/views/components/inset.njk', () => '')
-jest.mock('~/src/views/components/textfield.njk', () => '')
-jest.mock('~/src/views/components/radios.njk', () => '')
-jest.mock('~/src/views/components/date-input.njk', () => '')
+jest.mock('~/src/javascripts/preview/nunjucks-renderer.js')
 
 describe('list-sortable', () => {
   const list1Id = '414d82a3-4cab-416a-bd54-6b86fbd51120'
@@ -37,11 +29,13 @@ describe('list-sortable', () => {
   /**
    * @type {ListSortableQuestionElements}
    */
-  let questionElements = new ListSortableQuestionElements()
+  let questionElements = new ListSortableQuestionElements(NunjucksRenderer)
+  let nunjucksRenderer = new NunjucksRenderer(questionElements)
 
   beforeEach(() => {
     document.body.innerHTML = questionDetailsStubPanels
-    questionElements = new ListSortableQuestionElements()
+    questionElements = new ListSortableQuestionElements(NunjucksRenderer)
+    nunjucksRenderer = new NunjucksRenderer(questionElements)
   })
 
   const expectedList = [
@@ -87,8 +81,8 @@ describe('list-sortable', () => {
     it('should setup', () => {
       document.body.innerHTML =
         questionDetailsLeftPanelHTML + questionDetailsPreviewTabsHTML
-      const preview = /** @type {ListSortable} */ (
-        setupPreview(ComponentType.RadiosField)
+      const preview = /** @type {ListSortableQuestion} */ (
+        SetupPreview.RadiosField()
       )
       expect(preview.renderInput.fieldset.legend.text).toBe(
         'Which quest would you like to pick?'
@@ -140,14 +134,14 @@ describe('list-sortable', () => {
       it('should return true', () => {
         document.body.innerHTML =
           '<button id="edit-options-button">Re-order</button>' + list1HTML
-        const listSortable = new ListSortableQuestionElements()
+        const listSortable = new ListSortableQuestionElements(NunjucksRenderer)
         expect(listSortable.isReordering()).toBeTruthy()
       })
 
       it('should return false', () => {
         document.body.innerHTML =
           '<button id="edit-options-button">Done</button>'
-        const listSortable = new ListSortableQuestionElements()
+        const listSortable = new ListSortableQuestionElements(NunjucksRenderer)
         expect(listSortable.isReordering()).toBeFalsy()
       })
     })
@@ -158,7 +152,7 @@ describe('list-sortable', () => {
           '<button id="edit-options-button">Re-order</button>' +
           '<button id="add-option-button">Add item</button>' +
           list1HTML
-        const listSortable = new ListSortableQuestionElements()
+        const listSortable = new ListSortableQuestionElements(NunjucksRenderer)
         listSortable.handleReorder(new Event('dummy event'))
         const listContainer = document.getElementById('options-container')
         const allChildren = listContainer?.querySelectorAll('*')
@@ -177,7 +171,7 @@ describe('list-sortable', () => {
           '<button id="edit-options-button">Done</button>' +
           '<button id="add-option-button">Add item</button>' +
           list1HTML
-        const listSortable = new ListSortableQuestionElements()
+        const listSortable = new ListSortableQuestionElements(NunjucksRenderer)
         listSortable.handleReorder(new Event('dummy event'))
         const listContainer = document.getElementById('options-container')
         const allChildren = listContainer?.querySelectorAll('*')
@@ -198,7 +192,7 @@ describe('list-sortable', () => {
           '<button id="edit-options-button">Re-order</button>' +
           '<button id="add-option-button">Add item</button>' +
           list1HTML
-        const listSortable = new ListSortableQuestionElements()
+        const listSortable = new ListSortableQuestionElements(NunjucksRenderer)
         const hiddenCount = document.querySelectorAll(
           '.reorder-button-hidden'
         ).length
@@ -228,7 +222,9 @@ describe('list-sortable', () => {
           '<button id="edit-options-button">Re-order</button>' +
           '<button id="add-option-button">Add item</button>' +
           list1HTML
-        const preview = ListSortable.setupPreview()
+        const listSortableQuestionElements = new ListSortableQuestionElements(
+          NunjucksRenderer
+        )
         const upButtons = Array.from(
           document.querySelectorAll('.js-reorderable-list-up')
         )
@@ -236,7 +232,7 @@ describe('list-sortable', () => {
           upButtons.find((x) => x.id === 'last-row-up')
         )
         expect(upButtons.findIndex((x) => x.id === 'last-row-up')).toBe(3)
-        preview._listElements.moveUp(mockListenerClass, upButton)
+        listSortableQuestionElements.moveUp(mockListenerClass, upButton)
         const upButtonsAfter = Array.from(
           document.querySelectorAll('.js-reorderable-list-up')
         )
@@ -249,7 +245,9 @@ describe('list-sortable', () => {
           '<button id="edit-options-button">Re-order</button>' +
           '<button id="add-option-button">Add item</button>' +
           list1HTML
-        const preview = ListSortable.setupPreview()
+        const listSortableQuestionElements = new ListSortableQuestionElements(
+          NunjucksRenderer
+        )
         const upButtons = Array.from(
           document.querySelectorAll('.js-reorderable-list-up')
         )
@@ -258,7 +256,7 @@ describe('list-sortable', () => {
         )
         expect(upButtons.findIndex((x) => x.id === 'last-row-up')).toBe(3)
         upButton.classList.remove('js-reorderable-list-up')
-        preview._listElements.moveUp(mockListenerClass, upButton)
+        listSortableQuestionElements.moveUp(mockListenerClass, upButton)
         expect(mockResync).not.toHaveBeenCalled()
       })
 
@@ -267,7 +265,9 @@ describe('list-sortable', () => {
           '<button id="edit-options-button">Re-order</button>' +
           '<button id="add-option-button">Add item</button>' +
           listSingleEntryUpHTML
-        const preview = ListSortable.setupPreview()
+        const listSortableQuestionElements = new ListSortableQuestionElements(
+          NunjucksRenderer
+        )
         const upButtons = Array.from(
           document.querySelectorAll('.js-reorderable-list-up')
         )
@@ -275,7 +275,7 @@ describe('list-sortable', () => {
           upButtons.find((x) => x.id === 'first-row-up')
         )
         expect(upButtons.findIndex((x) => x.id === 'first-row-up')).toBe(0)
-        preview._listElements.moveUp(mockListenerClass, upButton)
+        listSortableQuestionElements.moveUp(mockListenerClass, upButton)
         const upButtonsAfter = Array.from(
           document.querySelectorAll('.js-reorderable-list-up')
         )
@@ -288,7 +288,9 @@ describe('list-sortable', () => {
           '<button id="edit-options-button">Re-order</button>' +
           '<button id="add-option-button">Add item</button>' +
           list1HTML
-        const preview = ListSortable.setupPreview()
+        const listSortableQuestionElements = new ListSortableQuestionElements(
+          NunjucksRenderer
+        )
         const downButtons = Array.from(
           document.querySelectorAll('.js-reorderable-list-down')
         )
@@ -296,7 +298,7 @@ describe('list-sortable', () => {
           downButtons.find((x) => x.id === 'first-row-down')
         )
         expect(downButtons.findIndex((x) => x.id === 'first-row-down')).toBe(0)
-        preview._listElements.moveDown(mockListenerClass, downButton)
+        listSortableQuestionElements.moveDown(mockListenerClass, downButton)
         const downButtonsAfter = Array.from(
           document.querySelectorAll('.js-reorderable-list-down')
         )
@@ -311,7 +313,9 @@ describe('list-sortable', () => {
           '<button id="edit-options-button">Re-order</button>' +
           '<button id="add-option-button">Add item</button>' +
           list1HTML
-        const preview = ListSortable.setupPreview()
+        const listSortableQuestionElements = new ListSortableQuestionElements(
+          NunjucksRenderer
+        )
         const downButtons = Array.from(
           document.querySelectorAll('.js-reorderable-list-down')
         )
@@ -320,7 +324,7 @@ describe('list-sortable', () => {
         )
         expect(downButtons.findIndex((x) => x.id === 'first-row-down')).toBe(0)
         downButton.classList.remove('js-reorderable-list-down')
-        preview._listElements.moveDown(mockListenerClass, downButton)
+        listSortableQuestionElements.moveDown(mockListenerClass, downButton)
         expect(mockResync).not.toHaveBeenCalled()
       })
 
@@ -329,7 +333,9 @@ describe('list-sortable', () => {
           '<button id="edit-options-button">Re-order</button>' +
           '<button id="add-option-button">Add item</button>' +
           listSingleEntryDownHTML
-        const preview = ListSortable.setupPreview()
+        const listSortableQuestionElements = new ListSortableQuestionElements(
+          NunjucksRenderer
+        )
         const downButtons = Array.from(
           document.querySelectorAll('.js-reorderable-list-down')
         )
@@ -337,7 +343,7 @@ describe('list-sortable', () => {
           downButtons.find((x) => x.id === 'first-row-down')
         )
         expect(downButtons.findIndex((x) => x.id === 'first-row-down')).toBe(0)
-        preview._listElements.moveDown(mockListenerClass, downButton)
+        listSortableQuestionElements.moveDown(mockListenerClass, downButton)
         expect(mockResync).toHaveBeenCalled()
       })
     })
@@ -348,7 +354,7 @@ describe('list-sortable', () => {
           '<button id="edit-options-button">Re-order</button>' +
           '<button id="add-option-button">Add item</button>' +
           list1HTML
-        const listSortable = new ListSortableQuestionElements()
+        const listSortable = new ListSortableQuestionElements(NunjucksRenderer)
         const downButtonFirstRow = /** @type {HTMLElement} */ (
           document.getElementById('first-row-down')
         )
@@ -362,7 +368,7 @@ describe('list-sortable', () => {
           '<button id="edit-options-button">Re-order</button>' +
           '<button id="add-option-button">Add item</button>' +
           list1HTML
-        const listSortable = new ListSortableQuestionElements()
+        const listSortable = new ListSortableQuestionElements(NunjucksRenderer)
         const upButtonLastRow = /** @type {HTMLElement} */ (
           document.getElementById('row-3-up')
         )
@@ -376,7 +382,7 @@ describe('list-sortable', () => {
           '<button id="edit-options-button">Re-order</button>' +
           '<button id="add-option-button">Add item</button>' +
           list1HTML
-        const listSortable = new ListSortableQuestionElements()
+        const listSortable = new ListSortableQuestionElements(NunjucksRenderer)
         const downButtonLastRow = /** @type {HTMLElement} */ (
           document.getElementById('last-row-down')
         )
@@ -396,7 +402,7 @@ describe('list-sortable', () => {
           '<button id="edit-options-button">Re-order</button>' +
           '<button id="add-option-button">Add item</button>' +
           listSingleEntryDownHTML
-        const listSortable = new ListSortableQuestionElements()
+        const listSortable = new ListSortableQuestionElements(NunjucksRenderer)
         const downButtonFirstRow = /** @type {HTMLElement} */ (
           document.getElementById('first-row-down')
         )
@@ -414,7 +420,7 @@ describe('list-sortable', () => {
           '<button id="edit-options-button">Re-order</button>' +
           '<button id="add-option-button">Add item</button>' +
           list1HTML
-        const listSortable = new ListSortableQuestionElements()
+        const listSortable = new ListSortableQuestionElements(NunjucksRenderer)
         listSortable.announceClearTimeMs = 1000
         const announcementRegion = /** @type {HTMLElement} */ (
           document.getElementById('reorder-announcement')
@@ -437,7 +443,7 @@ describe('list-sortable', () => {
           '<button id="edit-options-button">Re-order</button>' +
           '<button id="add-option-button">Add item</button>' +
           list1HTML
-        const listSortable = new ListSortableQuestionElements()
+        const listSortable = new ListSortableQuestionElements(NunjucksRenderer)
         listSortable.announceClearTimeMs = 1000
         listSortable.announceReorder(
           /** @type {HTMLElement} */ (
@@ -454,7 +460,9 @@ describe('list-sortable', () => {
     const mockEvent = /** @type {Event} */ ({})
     describe('editPanelListeners', () => {
       it('should update the List class when listeners are called', () => {
-        const preview = /** @type {ListSortable} */ (List.setupPreview())
+        const preview = /** @type {ListSortableQuestion} */ (
+          SetupPreview.ListSortable()
+        )
         const listEventListeners = new ListSortableEventListeners(
           preview,
           questionElements,
@@ -542,7 +550,7 @@ describe('list-sortable', () => {
           '<button id="edit-options-button">Re-order</button>' +
           '<button id="add-option-button">Add item</button>' +
           list1HTML
-        ListSortable.setupPreview()
+        SetupPreview.ListSortable()
         const reorderButton = /** @type {HTMLElement} */ (
           document.getElementById('edit-options-button')
         )
@@ -558,7 +566,7 @@ describe('list-sortable', () => {
           '<button id="edit-options-button">Done</button>' +
           '<button id="add-option-button">Add item</button>' +
           list1HTML
-        ListSortable.setupPreview()
+        SetupPreview.ListSortable()
         const reorderButton = /** @type {HTMLElement} */ (
           document.getElementById('edit-options-button')
         )
@@ -589,7 +597,7 @@ describe('list-sortable', () => {
           x.textContent = 'Not up or down'
         })
 
-        ListSortable.setupPreview()
+        SetupPreview.ListSortable()
         const reorderButton = /** @type {HTMLElement} */ (
           document.getElementById('edit-options-button')
         )
@@ -599,24 +607,6 @@ describe('list-sortable', () => {
         )
         expect(upButtonLastRow.dataset.click).toBeUndefined()
       })
-    })
-  })
-
-  describe('ListSortable class', () => {
-    it('should resync preview after reorder', () => {
-      document.body.innerHTML =
-        '<button id="edit-options-button">Done</button>' +
-        '<button id="add-option-button">Add item</button>' +
-        listEmptyHTML
-      const preview = ListSortable.setupPreview()
-      expect(preview._list.size).toBe(0)
-      document.body.innerHTML =
-        '<button id="edit-options-button">Done</button>' +
-        '<button id="add-option-button">Add item</button>' +
-        list1HTML
-      const preview2 = ListSortable.setupPreview()
-      preview.resyncPreviewAfterReorder()
-      expect(preview2._list.size).toBe(4)
     })
 
     it('updateStateInSession should call API to sync state', () => {
@@ -628,9 +618,13 @@ describe('list-sortable', () => {
         '<button id="edit-options-button">Done</button>' +
         '<button id="add-option-button">Add item</button>' +
         list1HTML
-      const preview = ListSortable.setupPreview()
-      expect(preview._list.size).toBe(4)
-      preview.updateStateInSession()
+      const elements = new ListSortableQuestionElements(NunjucksRenderer)
+      const preview = new ListSortableQuestion(elements, nunjucksRenderer)
+      expect(preview.listElementObjects).toHaveLength(4)
+      const listeners = new ListSortableEventListeners(preview, elements, [])
+      listeners.setupListeners()
+
+      listeners.updateStateInSession()
       expect(global.fetch).toHaveBeenCalledWith(expect.anything(), {
         body: JSON.stringify({
           listItems: [
@@ -684,9 +678,14 @@ describe('list-sortable', () => {
         '<button id="edit-options-button">Done</button>' +
         '<button id="add-option-button">Add item</button>' +
         list1HTML
-      const preview = ListSortable.setupPreview()
-      expect(preview._list.size).toBe(4)
-      preview.updateStateInSession()
+      const elements = new ListSortableQuestionElements(NunjucksRenderer)
+      const preview = new ListSortableQuestion(elements, nunjucksRenderer)
+      expect(preview.listElementObjects).toHaveLength(4)
+      const listeners = new ListSortableEventListeners(preview, elements, [])
+      listeners.setupListeners()
+
+      listeners.updateStateInSession()
+
       await new Promise((_resolve) => setTimeout(_resolve, 1000))
       expect(global.fetch).toHaveBeenCalledWith(expect.anything(), {
         body: JSON.stringify({
@@ -741,9 +740,13 @@ describe('list-sortable', () => {
         '<button id="edit-options-button">Done</button>' +
         '<button id="add-option-button">Add item</button>' +
         list1HTML
-      const preview = ListSortable.setupPreview()
-      expect(preview._list.size).toBe(4)
-      preview.updateStateInSession()
+      const elements = new ListSortableQuestionElements(NunjucksRenderer)
+      const preview = new ListSortableQuestion(elements, nunjucksRenderer)
+      expect(preview.listElementObjects).toHaveLength(4)
+      const listeners = new ListSortableEventListeners(preview, elements, [])
+      listeners.setupListeners()
+
+      listeners.updateStateInSession()
       await new Promise((_resolve) => setTimeout(_resolve, 1000))
       expect(window.location.href).toBe(
         'http://localhost:3000//editor-v2/error'
@@ -769,13 +772,35 @@ describe('list-sortable', () => {
         '<button id="edit-options-button">Done</button>' +
         '<button id="add-option-button">Add item</button>' +
         list1HTML
-      const preview = ListSortable.setupPreview()
-      expect(preview._list.size).toBe(4)
-      preview.updateStateInSession()
+      const elements = new ListSortableQuestionElements(NunjucksRenderer)
+      const preview = new ListSortableQuestion(elements, nunjucksRenderer)
+      expect(preview.listElementObjects).toHaveLength(4)
+      const listeners = new ListSortableEventListeners(preview, elements, [])
+      listeners.setupListeners()
+
+      listeners.updateStateInSession()
       await new Promise((_resolve) => setTimeout(_resolve, 1000))
       expect(window.location.href).toBe(
         'http://localhost:3000//editor-v2/error'
       )
+    })
+  })
+
+  describe('ListSortable class', () => {
+    it('should resync preview after reorder', () => {
+      document.body.innerHTML =
+        '<button id="edit-options-button">Done</button>' +
+        '<button id="add-option-button">Add item</button>' +
+        listEmptyHTML
+      const preview = SetupPreview.ListSortable()
+      expect(preview.listElementObjects).toHaveLength(0)
+      document.body.innerHTML =
+        '<button id="edit-options-button">Done</button>' +
+        '<button id="add-option-button">Add item</button>' +
+        list1HTML
+      const preview2 = SetupPreview.ListSortable()
+      preview.resyncPreviewAfterReorder()
+      expect(preview2.listElementObjects).toHaveLength(4)
     })
   })
 })

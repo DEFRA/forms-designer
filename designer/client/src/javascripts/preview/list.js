@@ -1,8 +1,8 @@
+import { addPathToEditorBaseUrl } from '@defra/forms-designer/client/src/javascripts/preview/helper.js'
 import {
   EventListeners,
-  Question,
-  QuestionElements
-} from '~/src/javascripts/preview/question.js'
+  QuestionDomElements
+} from '@defra/forms-designer/client/src/javascripts/preview/question.js'
 
 const DefaultListConst = {
   TextElementId: 'radioText',
@@ -12,11 +12,12 @@ const DefaultListConst = {
   RenderName: 'listInputField'
 }
 
-export class ListQuestionElements extends QuestionElements {
+/**
+ * @implements {ListElements}
+ */
+export class ListQuestionDomElements extends QuestionDomElements {
   /** @type {HTMLInputElement[]} */
   editLinks
-  /** @type {HTMLElement[]} */
-  listElements
   /** @type { HTMLInputElement | undefined } */
   updateElement
   /** @type {HTMLInputElement} */
@@ -27,8 +28,15 @@ export class ListQuestionElements extends QuestionElements {
   afterInputsHTML
   listTextElementId = DefaultListConst.TextElementId
   listHintElementId = DefaultListConst.HintElementId
+  /**
+   * @type {HTMLCollection}
+   */
+  listElementCollection
 
-  constructor() {
+  /**
+   * @param {HTMLBuilder} htmlBuilder
+   */
+  constructor(htmlBuilder) {
     super()
     const editElements = document.querySelectorAll(
       '#options-container .edit-option-link'
@@ -45,22 +53,37 @@ export class ListQuestionElements extends QuestionElements {
 
     // we could document.createElement update element if need be
 
-    const listElements = document.getElementById('options-container')?.children
-
+    const optionsContainer =
+      /** @type {HTMLInputElement} */
+      (
+        document.getElementById('options-container') ??
+          document.createElement('div')
+      )
+    /**
+     * @type {HTMLCollection}
+     */
+    this.listElementCollection = optionsContainer.children
     this.editLinks = /** @type {HTMLInputElement[]} */ (
       Array.from(editElements)
     )
-    this.listElements = /** @type {HTMLInputElement[]} */ (
-      Array.from(listElements ?? [])
-    )
+
     this.listText = listText
     this.listHint = listHint
     this.updateElement = updateElement
-    this.afterInputsHTML = Question._renderHelper('inset.njk', {
+    this.afterInputsHTML = htmlBuilder.buildHTML('inset.njk', {
       model: {
         text: 'No items added yet.'
       }
     })
+  }
+
+  /**
+   * @returns {HTMLInputElement[]}
+   */
+  get listElements() {
+    return /** @type {HTMLInputElement[]} */ (
+      Array.from(this.listElementCollection)
+    )
   }
 
   /**
@@ -77,10 +100,10 @@ export class ListQuestionElements extends QuestionElements {
    */
   static getUpdateData(el) {
     const updateElement = /** @type {HTMLInputElement} */ (
-      ListQuestionElements.getParentUpdateElement(el)
+      ListQuestionDomElements.getParentUpdateElement(el)
     )
     return /** @type {ListElement} */ (
-      ListQuestionElements.getListElementValues(updateElement)
+      ListQuestionDomElements.getListElementValues(updateElement)
     )
   }
 
@@ -115,25 +138,30 @@ export class ListQuestionElements extends QuestionElements {
     return {
       ...baseValues,
       // eslint-disable-next-line @typescript-eslint/unbound-method
-      items: this.listElements.map(ListQuestionElements.getListElementValues)
+      items: this.listElements.map(ListQuestionDomElements.getListElementValues)
     }
+  }
+
+  redirectToErrorPage() {
+    const errorUrl = addPathToEditorBaseUrl(window.location.href, '/error')
+    window.location.href = errorUrl
   }
 }
 
 export class ListEventListeners extends EventListeners {
   /** @type {HTMLElement[]} */
   listElements
-  /** @type {ListQuestionElements} */
+  /** @type {ListQuestionDomElements} */
   _listElements
-  /** @type {List} */
+  /** @type {ListQuestion} */
   _listQuestion
   listTextElementId = DefaultListConst.TextElementId
   listHintElementId = DefaultListConst.HintElementId
 
   /**
    *
-   * @param {List} question
-   * @param {ListQuestionElements} listQuestionElements
+   * @param {ListQuestion} question
+   * @param {ListQuestionDomElements} listQuestionElements
    * @param {HTMLElement[]} listElements
    */
   constructor(question, listQuestionElements, listElements) {
@@ -168,7 +196,7 @@ export class ListEventListeners extends EventListeners {
        * @param {HTMLInputElement} target
        */
       (target) => {
-        const { id } = ListQuestionElements.getUpdateData(target)
+        const { id } = ListQuestionDomElements.getUpdateData(target)
         this._listQuestion.updateText(id, target.value)
       },
       'input'
@@ -179,7 +207,7 @@ export class ListEventListeners extends EventListeners {
        * @param {HTMLInputElement} target
        */
       (target) => {
-        const { id } = ListQuestionElements.getUpdateData(target)
+        const { id } = ListQuestionDomElements.getUpdateData(target)
         this._question.highlight = `${id}-label`
       },
       'focus'
@@ -200,7 +228,7 @@ export class ListEventListeners extends EventListeners {
        * @param {HTMLInputElement} target
        */
       (target) => {
-        const { id } = ListQuestionElements.getUpdateData(target)
+        const { id } = ListQuestionDomElements.getUpdateData(target)
         this._listQuestion.updateHint(id, target.value)
       },
       'input'
@@ -211,7 +239,7 @@ export class ListEventListeners extends EventListeners {
        * @param {HTMLInputElement} target
        */
       (target) => {
-        const { id } = ListQuestionElements.getUpdateData(target)
+        const { id } = ListQuestionDomElements.getUpdateData(target)
         this._question.highlight = `${id}-hint`
       },
       'focus'
@@ -284,7 +312,11 @@ export class ListEventListeners extends EventListeners {
     return []
   }
 
-  get listeners() {
+  /**
+   * @returns {ListenerRow[]}
+   * @protected
+   */
+  _getListeners() {
     const editLinkListeners = /** @type {ListenerRow[]} */ ([])
     /* TODO - implement edit link and delete link listeners
         this.listElements.map(
@@ -305,6 +337,7 @@ export class ListEventListeners extends EventListeners {
     const customListeners = this.customListeners
 
     return editPanelListeners
+      .concat(super._getListeners())
       .concat(highlightListeners)
       .concat(editLinkListeners)
       .concat(customListeners)
@@ -329,187 +362,6 @@ export function listsElementToMap(listElements) {
   return new Map(entries)
 }
 
-export class List extends Question {
-  /**
-   * @type {string}
-   * @protected
-   */
-  _questionTemplate = DefaultListConst.Template
-  /** @type {ListQuestionElements} */
-  _listElements
-  listRenderId = DefaultListConst.Input
-  listRenderName = DefaultListConst.RenderName
-
-  /**
-   * @type {Map<string, ListElement>}
-   * @protected
-   */
-  _list
-
-  /**
-   * @param {ListQuestionElements} listQuestionElements
-   */
-  constructor(listQuestionElements) {
-    super(listQuestionElements)
-    const listeners = new ListEventListeners(this, listQuestionElements, [])
-    listeners.setupListeners()
-    const items = /** @type {ListElement[]} */ (
-      listQuestionElements.values.items
-    )
-    this._list = this.createListFromElements(items)
-    this._listElements = listQuestionElements
-  }
-
-  get renderInput() {
-    const afterInputs =
-      /** @type {{ formGroup?: { afterInputs: { html: string } } }} */ (
-        this.list.length
-          ? {}
-          : {
-              formGroup: {
-                afterInputs: {
-                  html: this._listElements.afterInputsHTML
-                }
-              }
-            }
-      )
-
-    return {
-      id: this.listRenderId,
-      name: this.listRenderName,
-      fieldset: this.fieldSet,
-      hint: this.hint,
-      items: this.list,
-      ...afterInputs
-    }
-  }
-
-  /**
-   *
-   * @param {ListElement} listElement
-   */
-  push(listElement) {
-    this._list.set(listElement.id, listElement)
-    this.render()
-  }
-
-  /**
-   * @param {string} key
-   */
-  delete(key) {
-    this._list.delete(key)
-    this.render()
-  }
-
-  /**
-   * @param {ListElement[]} listElements
-   * @returns {Map<string, ListElement>}
-   */
-  createListFromElements(listElements) {
-    this._list = listsElementToMap(listElements)
-    return this._list
-  }
-
-  /**
-   * @returns {ListItemReadonly[]}
-   * @readonly
-   */
-  get list() {
-    const iterator = /** @type {MapIterator<ListElement>} */ (
-      this._list.values()
-    )
-    return Array.from(iterator).map((listItem) => {
-      const hintText =
-        this._highlight === `${listItem.id}-hint` && !listItem.hint?.text.length
-          ? 'Hint text'
-          : (listItem.hint?.text ?? '')
-
-      const hint = {
-        hint: hintText
-          ? {
-              text: hintText,
-              classes: this.getHighlight(listItem.id + '-hint')
-            }
-          : undefined
-      }
-
-      const text = listItem.text.length ? listItem.text : 'Item text'
-
-      return {
-        ...listItem,
-        text,
-        ...hint,
-        label: {
-          text: listItem.text,
-          classes: this.getHighlight(listItem.id + '-label')
-        }
-      }
-    })
-  }
-
-  /**
-   *
-   * @param {string | undefined} id
-   * @param {string} text
-   */
-  updateText(id, text) {
-    if (!id) {
-      return
-    }
-
-    const listItem = this._list.get(id)
-    if (listItem) {
-      listItem.text = text
-      this.render()
-    }
-  }
-
-  /**
-   *
-   * @param {string | undefined} id
-   * @param {string} hint
-   */
-  updateHint(id, hint) {
-    if (!id) {
-      return
-    }
-
-    const listItem = this._list.get(id)
-    if (listItem) {
-      listItem.hint = {
-        ...listItem.hint,
-        text: hint
-      }
-      this.render()
-    }
-  }
-
-  /**
-   * @param {string | undefined} id
-   * @param {string} value
-   */
-  updateValue(id, value) {
-    if (!id) {
-      return
-    }
-
-    const listItem = this._list.get(id)
-    if (listItem) {
-      listItem.value = value
-      this.render()
-    }
-  }
-
-  static setupPreview() {
-    const elements = new ListQuestionElements()
-    const list = new List(elements)
-    list.render()
-
-    return list
-  }
-}
-
 /**
- * @import {ListenerRow} from '~/src/javascripts/preview/question.js'
- * @import { ListElement, ListItemReadonly } from '@defra/forms-model'
+ * @import { ListenerRow, ListQuestion, ListElement, ListItemReadonly, ListElements, QuestionRenderer, HTMLBuilder } from '@defra/forms-model'
  */

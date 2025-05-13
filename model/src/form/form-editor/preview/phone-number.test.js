@@ -1,24 +1,20 @@
-import { EmailAddressQuestion } from '@defra/forms-model'
-
 import {
-  questionDetailsLeftPanelHTML,
-  questionDetailsPreviewHTML
-} from '~/src/javascripts/preview/__stubs__/question.js'
-import { SetupPreview } from '~/src/javascripts/setup-preview.js'
+  QuestionPreviewElements,
+  QuestionRendererStub,
+  baseElements
+} from '~/src/form/form-editor/__stubs__/preview.js'
+import { PhoneNumberQuestion } from '~/src/form/form-editor/preview/phone-number.js'
 
-jest.mock('~/src/javascripts/preview/nunjucks-renderer.js')
-
-describe('email', () => {
-  describe('Email', () => {
+describe('phone number', () => {
+  const renderer = new QuestionRendererStub(jest.fn())
+  const questionElements = new QuestionPreviewElements(baseElements)
+  describe('PhoneNumber', () => {
     it('should create class', () => {
-      document.body.innerHTML =
-        questionDetailsLeftPanelHTML + questionDetailsPreviewHTML
-      const res = SetupPreview.EmailAddressField()
-      expect(res).toBeInstanceOf(EmailAddressQuestion)
+      const res = new PhoneNumberQuestion(questionElements, renderer)
       expect(res).toBeDefined()
       expect(res.renderInput).toEqual({
-        id: 'emailAddressField',
-        name: 'emailAddressField',
+        id: 'phoneNumberField',
+        name: 'phoneNumberField',
         label: {
           text: 'Which quest would you like to pick?',
           classes: 'govuk-label--l'

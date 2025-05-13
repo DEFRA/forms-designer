@@ -1,20 +1,17 @@
-import { EmailAddressQuestion } from '@defra/forms-model'
-
 import {
-  questionDetailsLeftPanelHTML,
-  questionDetailsPreviewHTML
-} from '~/src/javascripts/preview/__stubs__/question.js'
-import { SetupPreview } from '~/src/javascripts/setup-preview.js'
-
-jest.mock('~/src/javascripts/preview/nunjucks-renderer.js')
+  QuestionPreviewElements,
+  QuestionRendererStub,
+  baseElements
+} from '~/src/form/form-editor/__stubs__/preview.js'
+import { EmailAddressQuestion } from '~/src/form/form-editor/preview/email-address.js'
 
 describe('email', () => {
+  const renderer = new QuestionRendererStub(jest.fn())
   describe('Email', () => {
     it('should create class', () => {
-      document.body.innerHTML =
-        questionDetailsLeftPanelHTML + questionDetailsPreviewHTML
-      const res = SetupPreview.EmailAddressField()
-      expect(res).toBeInstanceOf(EmailAddressQuestion)
+      const elements = new QuestionPreviewElements(baseElements)
+      const res = new EmailAddressQuestion(elements, renderer)
+
       expect(res).toBeDefined()
       expect(res.renderInput).toEqual({
         id: 'emailAddressField',

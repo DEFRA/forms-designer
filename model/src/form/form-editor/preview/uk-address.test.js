@@ -1,21 +1,16 @@
-import { UkAddressQuestion } from '@defra/forms-model'
-
 import {
-  questionDetailsLeftPanelHTML,
-  questionDetailsPreviewHTML
-} from '~/src/javascripts/preview/__stubs__/question.js'
-import { SetupPreview } from '~/src/javascripts/setup-preview.js'
-
-jest.mock('~/src/javascripts/preview/nunjucks-renderer.js')
+  QuestionPreviewElements,
+  QuestionRendererStub,
+  baseElements
+} from '~/src/form/form-editor/__stubs__/preview.js'
+import { UkAddressQuestion } from '~/src/form/form-editor/preview/uk-address.js'
 
 describe('address', () => {
   describe('Address', () => {
     it('should create class', () => {
-      document.body.innerHTML =
-        questionDetailsLeftPanelHTML + questionDetailsPreviewHTML
-      const res = SetupPreview.UkAddressField()
-      expect(res).toBeInstanceOf(UkAddressQuestion)
-      expect(res).toBeDefined()
+      const elements = new QuestionPreviewElements(baseElements)
+      const renderer = new QuestionRendererStub(jest.fn())
+      const res = new UkAddressQuestion(elements, renderer)
       expect(res.renderInput).toEqual({
         id: 'addressField',
         name: 'addressField',
