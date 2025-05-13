@@ -414,3 +414,12 @@ export type AdvancedFieldMappingsType = Record<
   ComponentType,
   Record<string, string>
 >
+
+export type HTMLElementOrNull = HTMLElement | null
+
+export type HTMLInputElementOrNull = HTMLInputElement | null
+
+export interface ErrorPreviewFieldMappingDef {
+  min?: { fieldName: string; placeholder: string }
+  max?: { fieldName: string; placeholder: string }
+}

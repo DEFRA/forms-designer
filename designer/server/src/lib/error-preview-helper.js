@@ -22,8 +22,8 @@ const fieldMappings = /** @type {AdvancedFieldMappingsType } */ ({
   },
   YesNoField: {},
   DatePartsField: {
-    dateMin: 'dateMin',
-    dateMax: 'dateMax'
+    dateMin: 'maxPast',
+    dateMax: 'maxFuture'
   },
   MonthYearField: {
     dateMin: 'dateMin',
@@ -159,6 +159,7 @@ export function getNumberLimits(fields, questionType, propertyName) {
  * @returns { string | number }
  */
 export function getDateLimits(fields, questionType, propertyName) {
+  // console.log('date', propertyName)
   if (propertyName === 'dateMin') {
     return getFieldProperty(
       fields,
@@ -223,19 +224,18 @@ export function determineLimit(type, fields, questionType) {
     return getFieldProperty(fields, questionType, 'max', '[max length]')
   }
 
-  /*
   if (type.startsWith('number')) {
-    return getNumberLimits(component, type)
+    return getNumberLimits(fields, questionType, type)
   }
 
   if (type.startsWith('date')) {
-    return getDateLimits(component, type)
+    return getDateLimits(fields, questionType, type)
   }
 
-  if (type.startsWith('files')) {
-    return getFileLimits(component, type)
-  }
-  */
+  // if (type.startsWith('files')) {
+  //   return getFileLimits(component, type)
+  // }
+
   return '[unknown]'
 }
 
@@ -258,7 +258,7 @@ export function insertTags(templateStr, type) {
   const resultParts = []
   for (const part of parts) {
     if (part.includes('#label') || part.includes('#title')) {
-      resultParts.push(spanTag('short-desc', part))
+      resultParts.push(spanTag('shortDescription', part))
     } else if (part.includes('#limit')) {
       resultParts.push(spanTag(type, part))
     } else if (part !== '{{' && part !== '}}') {

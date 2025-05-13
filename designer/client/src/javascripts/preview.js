@@ -7,6 +7,7 @@ import '~/src/views/components/emailaddressfield.njk'
 
 import { ComponentType } from '@defra/forms-model'
 
+import { ErrorPreview } from '~/src/javascripts/error-preview/error-preview'
 import { DateInput } from '~/src/javascripts/preview/date-input.js'
 import { EmailAddress } from '~/src/javascripts/preview/email-address.js'
 import {
@@ -37,6 +38,7 @@ export function setupPreview(componentType) {
    * @type {Question|RadioSortable|DateInput|ShortAnswer|PhoneNumber}
    */
   let preview
+  let errorPreview
   if (componentType === ComponentType.TextField) {
     preview = ShortAnswer.setupPreview()
   } else if (componentType === ComponentType.DatePartsField) {
@@ -51,7 +53,13 @@ export function setupPreview(componentType) {
     preview = PhoneNumber.setupPreview()
   } else {
     preview = Question.setupPreview()
+    errorPreview = ErrorPreview.setupPreview(ComponentType.TextField)
   }
+
+  if (!errorPreview) {
+    errorPreview = ErrorPreview.setupPreview(componentType)
+  }
+
   showHideForJs()
 
   return preview
