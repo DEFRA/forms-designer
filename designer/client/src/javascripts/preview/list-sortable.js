@@ -11,6 +11,7 @@ import {
   ListQuestionElements
 } from '~/src/javascripts/preview/list'
 
+const APP_REORDERABLE_LIST_ITEM = '.app-reorderable-list__item'
 const REORDER_BUTTON_HIDDEN = 'reorder-button-hidden'
 
 const OK_200 = 200
@@ -24,6 +25,14 @@ export class ListSortableQuestionElements extends ListQuestionElements {
   sortableContainer
   /** @type { Sortable | undefined } */
   sortableInstance
+  /** @type { HTMLElement | undefined } */
+  announcementRegion
+  /** @type {ReturnType<typeof setTimeout> | undefined} */
+  announceTimeout = undefined
+  /** @type {number} */
+  announceDisplayTimeMs = 150
+  /** @type {number} */
+  announceClearTimeMs = 5000
 
   constructor() {
     super()
@@ -36,10 +45,14 @@ export class ListSortableQuestionElements extends ListQuestionElements {
     const sortableContainer = /** @type {HTMLElement} */ (
       document.getElementById('options-container')
     )
+    const announcementRegion = /** @type {HTMLElement} */ (
+      document.getElementById('reorder-announcement')
+    )
 
     this.editOptionsButton = editOptionsButton
     this.addItemButton = addItemButton
     this.sortableContainer = sortableContainer
+    this.announcementRegion = announcementRegion
   }
 
   isReordering() {
@@ -195,7 +208,7 @@ export class ListSortableQuestionElements extends ListQuestionElements {
    */
   moveUp(listenerClass, target) {
     if (target.classList.contains('js-reorderable-list-up')) {
-      const item = target.closest('.app-reorderable-list__item')
+      const item = target.closest(APP_REORDERABLE_LIST_ITEM)
       const prevItem = item?.previousElementSibling
       if (prevItem && item.parentNode) {
         item.parentNode.insertBefore(item, prevItem)
@@ -212,7 +225,7 @@ export class ListSortableQuestionElements extends ListQuestionElements {
    */
   moveDown(listenerClass, target) {
     if (target.classList.contains('js-reorderable-list-down')) {
-      const item = target.closest('.app-reorderable-list__item')
+      const item = target.closest(APP_REORDERABLE_LIST_ITEM)
       const nextItem = item?.nextElementSibling
       if (nextItem && item.parentNode) {
         item.parentNode.insertBefore(nextItem, item)
@@ -221,6 +234,48 @@ export class ListSortableQuestionElements extends ListQuestionElements {
       listenerClass._listSortableElements.updateMoveButtons()
       listenerClass._listSortableElements.setMoveFocus(target)
     }
+  }
+
+  /**
+   * Announces the reorder action to screen readers via the live region.
+   * @param {HTMLElement} movedItem - The list item that was moved.
+   */
+  announceReorder(movedItem) {
+    if (!this.announcementRegion) {
+      return
+    }
+
+    const listItem = /** @type { HTMLElement | null } */ (
+      movedItem.closest(APP_REORDERABLE_LIST_ITEM)
+    )
+    const listItems = /** @type {HTMLElement[]} */ (
+      Array.from(
+        this.sortableContainer.querySelectorAll(APP_REORDERABLE_LIST_ITEM)
+      )
+    )
+    const newPositionIdx = listItems.findIndex(
+      (x) => x.dataset.id === listItem?.dataset.id
+    )
+
+    const optionTitle = listItem?.dataset.text?.trim() ?? 'Item'
+    const totalItems = listItems.length
+
+    const message = `List reordered, ${optionTitle} is now option ${newPositionIdx + 1} of ${totalItems}.`
+
+    clearTimeout(this.announceTimeout)
+    this.announceTimeout = setTimeout(() => {
+      if (this.announcementRegion) {
+        this.announcementRegion.textContent = message
+        setTimeout(() => {
+          if (
+            this.announcementRegion &&
+            this.announcementRegion.textContent === message
+          ) {
+            this.announcementRegion.textContent = ''
+          }
+        }, this.announceClearTimeMs)
+      }
+    }, this.announceDisplayTimeMs)
   }
 }
 
@@ -250,9 +305,10 @@ export class ListSortableEventListeners extends ListEventListeners {
       () => {
         // Do nothing
       },
-      () => {
+      (e) => {
         this._listQuestion.resyncPreviewAfterReorder()
         this._listSortableElements.updateMoveButtons()
+        this._listSortableElements.announceReorder(e.item)
       }
     )
 
@@ -288,10 +344,12 @@ export class ListSortableEventListeners extends ListEventListeners {
               ? (target, e) => {
                   e.preventDefault()
                   this._listSortableElements.moveUp(this, target)
+                  this._listSortableElements.announceReorder(target)
                 }
               : (target, e) => {
                   e.preventDefault()
                   this._listSortableElements.moveDown(this, target)
+                  this._listSortableElements.announceReorder(target)
                 },
             'click'
           )

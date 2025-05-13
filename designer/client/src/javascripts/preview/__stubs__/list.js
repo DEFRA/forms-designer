@@ -118,3 +118,63 @@ export const list1HTML = `
     </div>
   </li>
 </ol>`
+
+export const listSingleEntryDownHTML = `
+<ol class="app-reorderable-list js-enabled" id="options-container" data-module="reorderable-list">
+  <li class="app-reorderable-list__item" data-index="1" data-id="dc96bf7a-07a0-4f5b-ba6d-c5c4c9d381de" data-val="option-1" data-text="Option 1" data-hint="" style="cursor: default;">
+    <div class="app-reorderable-list__wrapper" style="cursor: default;">
+      <div class="app-reorderable-list__content" style="cursor: default;">
+        <p class="govuk-body fauxlabel option-label-display" id="option-1-label-display" style="cursor: default;">
+          Option 1
+        </p>
+      </div>
+      <div class="govuk-button-group govuk-!-margin-bottom-0">
+        <a class="govuk-button govuk-button--secondary js-reorderable-list-down govuk-!-margin-bottom-1" style="display: none" id="first-row-down">Down</a>
+      </div>
+      <div class="edit-item" style="cursor: default;">
+        <ul class="govuk-summary-list__actions-list" style="cursor: default;">
+          <li class="govuk-summary-list__actions-list-item" style="cursor: default;">
+            <a class="govuk-link govuk-link--no-visited-state edit-option-link" href="?action=edit&amp;id=dc96bf7a-07a0-4f5b-ba6d-c5c4c9d381de" style="cursor: default;">
+              Edit<span class="govuk-visually-hidden" style="cursor: default;">option 1</span>
+            </a>
+          </li>
+          <li class="govuk-summary-list__actions-list-item" style="cursor: default;">
+            <a class="govuk-link govuk-link--no-visited-state govuk-link--destructive delete-option-link" href="?action=delete&amp;id=dc96bf7a-07a0-4f5b-ba6d-c5c4c9d381de" style="cursor: default;">
+              Delete<span class="govuk-visually-hidden" style="cursor: default;"> list item</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </li>
+</ol>`
+
+export const listSingleEntryUpHTML = `
+<ol class="app-reorderable-list js-enabled" id="options-container" data-module="reorderable-list">
+  <li class="app-reorderable-list__item" data-index="1" data-id="dc96bf7a-07a0-4f5b-ba6d-c5c4c9d381de" data-val="option-1" data-text="Option 1" data-hint="" style="cursor: default;">
+    <div class="app-reorderable-list__wrapper" style="cursor: default;">
+      <div class="app-reorderable-list__content" style="cursor: default;">
+        <p class="govuk-body fauxlabel option-label-display" id="option-1-label-display" style="cursor: default;">
+          Option 1
+        </p>
+      </div>
+      <div class="govuk-button-group govuk-!-margin-bottom-0">
+        <a class="govuk-button govuk-button--secondary js-reorderable-list-up govuk-!-margin-bottom-1" style="display: none" id="first-row-up">Up</a>
+      </div>
+      <div class="edit-item" style="cursor: default;">
+        <ul class="govuk-summary-list__actions-list" style="cursor: default;">
+          <li class="govuk-summary-list__actions-list-item" style="cursor: default;">
+            <a class="govuk-link govuk-link--no-visited-state edit-option-link" href="?action=edit&amp;id=dc96bf7a-07a0-4f5b-ba6d-c5c4c9d381de" style="cursor: default;">
+              Edit<span class="govuk-visually-hidden" style="cursor: default;">option 1</span>
+            </a>
+          </li>
+          <li class="govuk-summary-list__actions-list-item" style="cursor: default;">
+            <a class="govuk-link govuk-link--no-visited-state govuk-link--destructive delete-option-link" href="?action=delete&amp;id=dc96bf7a-07a0-4f5b-ba6d-c5c4c9d381de" style="cursor: default;">
+              Delete<span class="govuk-visually-hidden" style="cursor: default;"> list item</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </li>
+</ol>`

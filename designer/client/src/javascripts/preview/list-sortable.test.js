@@ -2,7 +2,9 @@ import { ComponentType } from '@defra/forms-model'
 
 import {
   list1HTML,
-  listEmptyHTML
+  listEmptyHTML,
+  listSingleEntryDownHTML,
+  listSingleEntryUpHTML
 } from '~/src/javascripts/preview/__stubs__/list'
 import {
   questionDetailsLeftPanelHTML,
@@ -260,6 +262,27 @@ describe('list-sortable', () => {
         expect(mockResync).not.toHaveBeenCalled()
       })
 
+      it('should not error for move up if no siblings', () => {
+        document.body.innerHTML =
+          '<button id="edit-options-button">Re-order</button>' +
+          '<button id="add-option-button">Add item</button>' +
+          listSingleEntryUpHTML
+        const preview = ListSortable.setupPreview()
+        const upButtons = Array.from(
+          document.querySelectorAll('.js-reorderable-list-up')
+        )
+        const upButton = /** @type {HTMLElement} */ (
+          upButtons.find((x) => x.id === 'first-row-up')
+        )
+        expect(upButtons.findIndex((x) => x.id === 'first-row-up')).toBe(0)
+        preview._listElements.moveUp(mockListenerClass, upButton)
+        const upButtonsAfter = Array.from(
+          document.querySelectorAll('.js-reorderable-list-up')
+        )
+        expect(upButtonsAfter.findIndex((x) => x.id === 'first-row-up')).toBe(0)
+        expect(mockResync).toHaveBeenCalled()
+      })
+
       it('should move down if correct class', () => {
         document.body.innerHTML =
           '<button id="edit-options-button">Re-order</button>' +
@@ -299,6 +322,23 @@ describe('list-sortable', () => {
         downButton.classList.remove('js-reorderable-list-down')
         preview._listElements.moveDown(mockListenerClass, downButton)
         expect(mockResync).not.toHaveBeenCalled()
+      })
+
+      it('should not error if down has no siblings', () => {
+        document.body.innerHTML =
+          '<button id="edit-options-button">Re-order</button>' +
+          '<button id="add-option-button">Add item</button>' +
+          listSingleEntryDownHTML
+        const preview = ListSortable.setupPreview()
+        const downButtons = Array.from(
+          document.querySelectorAll('.js-reorderable-list-down')
+        )
+        const downButton = /** @type {HTMLElement} */ (
+          downButtons.find((x) => x.id === 'first-row-down')
+        )
+        expect(downButtons.findIndex((x) => x.id === 'first-row-down')).toBe(0)
+        preview._listElements.moveDown(mockListenerClass, downButton)
+        expect(mockResync).toHaveBeenCalled()
       })
     })
 
@@ -349,6 +389,63 @@ describe('list-sortable', () => {
         listSortable.setMoveFocus(downButtonLastRow)
         expect(downButtonLastRow.focus).not.toHaveBeenCalled()
         expect(upButtonLastRow.focus).toHaveBeenCalled()
+      })
+
+      it('should not error if no sibling', () => {
+        document.body.innerHTML =
+          '<button id="edit-options-button">Re-order</button>' +
+          '<button id="add-option-button">Add item</button>' +
+          listSingleEntryDownHTML
+        const listSortable = new ListSortableQuestionElements()
+        const downButtonFirstRow = /** @type {HTMLElement} */ (
+          document.getElementById('first-row-down')
+        )
+        jest.spyOn(downButtonFirstRow, 'focus')
+        downButtonFirstRow.classList.add('reorder-button-hidden')
+        listSortable.setMoveFocus(downButtonFirstRow)
+        expect(downButtonFirstRow.focus).not.toHaveBeenCalled()
+      })
+    })
+
+    describe('announceReorder', () => {
+      it('should announce, then clear announcement fater a timeout', async () => {
+        document.body.innerHTML =
+          '<div class="govuk-visually-hidden" id="reorder-announcement" aria-live="polite" aria-atomic="true"></div>' +
+          '<button id="edit-options-button">Re-order</button>' +
+          '<button id="add-option-button">Add item</button>' +
+          list1HTML
+        const listSortable = new ListSortableQuestionElements()
+        listSortable.announceClearTimeMs = 1000
+        const announcementRegion = /** @type {HTMLElement} */ (
+          document.getElementById('reorder-announcement')
+        )
+        const upButtonLastRow = /** @type {HTMLElement} */ (
+          document.getElementById('last-row-up')
+        )
+        expect(announcementRegion.textContent).toBe('')
+        listSortable.announceReorder(upButtonLastRow)
+        await new Promise((_resolve) => setTimeout(_resolve, 500))
+        expect(announcementRegion.textContent).toBe(
+          'List reordered, Option 4 is now option 4 of 4.'
+        )
+        await new Promise((_resolve) => setTimeout(_resolve, 1000))
+        expect(announcementRegion.textContent).toBe('')
+      })
+
+      it('should ignore if no announcement region', async () => {
+        document.body.innerHTML =
+          '<button id="edit-options-button">Re-order</button>' +
+          '<button id="add-option-button">Add item</button>' +
+          list1HTML
+        const listSortable = new ListSortableQuestionElements()
+        listSortable.announceClearTimeMs = 1000
+        listSortable.announceReorder(
+          /** @type {HTMLElement} */ (
+            document.getElementById('edit-options-button')
+          )
+        )
+        await new Promise((_resolve) => setTimeout(_resolve, 500))
+        expect(listSortable.announcementRegion).toBeNull()
       })
     })
   })
@@ -455,6 +552,53 @@ describe('list-sortable', () => {
         )
         expect(upButtonLastRow).toBeDefined()
       })
+
+      it('should ignore if not reordering', () => {
+        document.body.innerHTML =
+          '<button id="edit-options-button">Done</button>' +
+          '<button id="add-option-button">Add item</button>' +
+          list1HTML
+        ListSortable.setupPreview()
+        const reorderButton = /** @type {HTMLElement} */ (
+          document.getElementById('edit-options-button')
+        )
+        reorderButton.click()
+        const upButtonLastRow = /** @type {HTMLElement} */ (
+          document.getElementById('last-row-up')
+        )
+        expect(upButtonLastRow.dataset.click).toBeUndefined()
+      })
+
+      it('should ignore if not an up or down button', () => {
+        document.body.innerHTML =
+          '<button id="edit-options-button">Re-order</button>' +
+          '<button id="add-option-button">Add item</button>' +
+          list1HTML
+        const upButtons = /** @type {HTMLElement[]} */ (
+          Array.from(document.getElementsByClassName('js-reorderable-list-up'))
+        )
+        const downButtons = /** @type {HTMLElement[]} */ (
+          Array.from(
+            document.getElementsByClassName('js-reorderable-list-down')
+          )
+        )
+        upButtons.forEach((x) => {
+          x.textContent = 'Not up or down'
+        })
+        downButtons.forEach((x) => {
+          x.textContent = 'Not up or down'
+        })
+
+        ListSortable.setupPreview()
+        const reorderButton = /** @type {HTMLElement} */ (
+          document.getElementById('edit-options-button')
+        )
+        reorderButton.click()
+        const upButtonLastRow = /** @type {HTMLElement} */ (
+          document.getElementById('last-row-up')
+        )
+        expect(upButtonLastRow.dataset.click).toBeUndefined()
+      })
     })
   })
 
@@ -518,6 +662,120 @@ describe('list-sortable', () => {
         },
         method: 'POST'
       })
+    })
+
+    it('updateStateInSession should handle successful API call', async () => {
+      jest
+        .spyOn(global, 'fetch')
+        // @ts-expect-error - Response type
+        .mockImplementation(() => Promise.resolve({ status: 200 }))
+
+      // eslint-disable-next-line no-global-assign
+      window = Object.create(window)
+      const url = 'http://localhost:3000/'
+      Object.defineProperty(window, 'location', {
+        value: {
+          href: url
+        },
+        writable: true // possibility to override
+      })
+
+      document.body.innerHTML =
+        '<button id="edit-options-button">Done</button>' +
+        '<button id="add-option-button">Add item</button>' +
+        list1HTML
+      const preview = ListSortable.setupPreview()
+      expect(preview._list.size).toBe(4)
+      preview.updateStateInSession()
+      await new Promise((_resolve) => setTimeout(_resolve, 1000))
+      expect(global.fetch).toHaveBeenCalledWith(expect.anything(), {
+        body: JSON.stringify({
+          listItems: [
+            {
+              id: 'dc96bf7a-07a0-4f5b-ba6d-c5c4c9d381de',
+              text: 'Option 1',
+              value: 'option-1'
+            },
+            {
+              id: '21e58240-5d0a-4e52-8003-3d99f318beb8',
+              text: 'Option 2',
+              value: 'option-2'
+            },
+            {
+              id: '80c4cb93-f079-4836-93f9-509e683e5004',
+              text: 'Option 3',
+              value: 'option-3'
+            },
+            {
+              id: 'ade6652f-b67e-4665-bf07-66f03877b5c6',
+              text: 'Option 4',
+              hint: { text: 'hint 4' },
+              value: 'option-4'
+            }
+          ]
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        method: 'POST'
+      })
+    })
+
+    it('updateStateInSession should handle failed API call with error code being returned', async () => {
+      jest
+        .spyOn(global, 'fetch')
+        // @ts-expect-error - Response type
+        .mockImplementation(() => Promise.resolve({ status: 500 }))
+
+      // eslint-disable-next-line no-global-assign
+      window = Object.create(window)
+      const url = 'http://localhost:3000/'
+      Object.defineProperty(window, 'location', {
+        value: {
+          href: url
+        },
+        writable: true // possibility to override
+      })
+
+      document.body.innerHTML =
+        '<button id="edit-options-button">Done</button>' +
+        '<button id="add-option-button">Add item</button>' +
+        list1HTML
+      const preview = ListSortable.setupPreview()
+      expect(preview._list.size).toBe(4)
+      preview.updateStateInSession()
+      await new Promise((_resolve) => setTimeout(_resolve, 1000))
+      expect(window.location.href).toBe(
+        'http://localhost:3000//editor-v2/error'
+      )
+    })
+
+    it('updateStateInSession should handle thrown API call error', async () => {
+      jest
+        .spyOn(global, 'fetch')
+        .mockImplementation(() => Promise.reject(new Error('api error')))
+
+      // eslint-disable-next-line no-global-assign
+      window = Object.create(window)
+      const url = 'http://localhost:3000/'
+      Object.defineProperty(window, 'location', {
+        value: {
+          href: url
+        },
+        writable: true // possibility to override
+      })
+
+      document.body.innerHTML =
+        '<button id="edit-options-button">Done</button>' +
+        '<button id="add-option-button">Add item</button>' +
+        list1HTML
+      const preview = ListSortable.setupPreview()
+      expect(preview._list.size).toBe(4)
+      preview.updateStateInSession()
+      await new Promise((_resolve) => setTimeout(_resolve, 1000))
+      expect(window.location.href).toBe(
+        'http://localhost:3000//editor-v2/error'
+      )
     })
   })
 })
