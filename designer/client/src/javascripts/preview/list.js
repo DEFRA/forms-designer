@@ -18,8 +18,6 @@ const DefaultListConst = {
 export class ListQuestionDomElements extends QuestionDomElements {
   /** @type {HTMLInputElement[]} */
   editLinks
-  /** @type {HTMLElement[]} */
-  listElements
   /** @type { HTMLInputElement | undefined } */
   updateElement
   /** @type {HTMLInputElement} */
@@ -30,6 +28,10 @@ export class ListQuestionDomElements extends QuestionDomElements {
   afterInputsHTML
   listTextElementId = DefaultListConst.TextElementId
   listHintElementId = DefaultListConst.HintElementId
+  /**
+   * @type {HTMLCollection}
+   */
+  listElementCollection
 
   /**
    * @param {HTMLBuilder} htmlBuilder
@@ -51,14 +53,20 @@ export class ListQuestionDomElements extends QuestionDomElements {
 
     // we could document.createElement update element if need be
 
-    const listElements = document.getElementById('options-container')?.children
-
+    const optionsContainer =
+      /** @type {HTMLInputElement} */
+      (
+        document.getElementById('options-container') ??
+          document.createElement('div')
+      )
+    /**
+     * @type {HTMLCollection}
+     */
+    this.listElementCollection = optionsContainer.children
     this.editLinks = /** @type {HTMLInputElement[]} */ (
       Array.from(editElements)
     )
-    this.listElements = /** @type {HTMLInputElement[]} */ (
-      Array.from(listElements ?? [])
-    )
+
     this.listText = listText
     this.listHint = listHint
     this.updateElement = updateElement
@@ -67,6 +75,15 @@ export class ListQuestionDomElements extends QuestionDomElements {
         text: 'No items added yet.'
       }
     })
+  }
+
+  /**
+   * @returns {HTMLInputElement[]}
+   */
+  get listElements() {
+    return /** @type {HTMLInputElement[]} */ (
+      Array.from(this.listElementCollection)
+    )
   }
 
   /**
