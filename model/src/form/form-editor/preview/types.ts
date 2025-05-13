@@ -1,3 +1,12 @@
+import { type DateInputQuestion } from '~/src/form/form-editor/preview/date-input.js'
+import { type EmailAddressQuestion } from '~/src/form/form-editor/preview/email-address.js'
+import { type ListSortableQuestion } from '~/src/form/form-editor/preview/list-sortable.js'
+import { type LongAnswerQuestion } from '~/src/form/form-editor/preview/long-answer.js'
+import { type PhoneNumberQuestion } from '~/src/form/form-editor/preview/phone-number.js'
+import { type Question } from '~/src/form/form-editor/preview/question.js'
+import { type RadioSortableQuestion } from '~/src/form/form-editor/preview/radio-sortable.js'
+import { type ShortAnswerQuestion } from '~/src/form/form-editor/preview/short-answer.js'
+import { type UkAddressQuestion } from '~/src/form/form-editor/preview/uk-address.js'
 import {
   type ListElement,
   type ListItemReadonly
@@ -58,3 +67,14 @@ export interface QuestionRenderer {
 export interface ListElements extends QuestionElements {
   afterInputsHTML: string
 }
+
+export type PreviewQuestion =
+  | DateInputQuestion
+  | EmailAddressQuestion
+  | ListSortableQuestion
+  | LongAnswerQuestion
+  | PhoneNumberQuestion
+  | Question
+  | RadioSortableQuestion
+  | ShortAnswerQuestion
+  | UkAddressQuestion
