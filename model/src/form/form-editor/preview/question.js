@@ -5,7 +5,7 @@
  * and the templating mechanism to render the HTML for the data.
  *
  * It does not have access to the DOM, but has access to QuestionElements.setPreviewHTML to update
- * the HTML.  Question classes should only be responsible data and rendering as are reused in the
+ * the HTML.  Question classes should only be responsible for data and rendering as are reused in the
  * server side.
  */
 export class Question {
