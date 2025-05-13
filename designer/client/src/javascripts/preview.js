@@ -1,4 +1,5 @@
 import '~/src/views/components/textfield.njk'
+import '~/src/views/components/textarea.njk'
 import '~/src/views/components/radios.njk'
 import '~/src/views/components/date-input.njk'
 import '~/src/views/components/ukaddressfield.njk'
