@@ -4,19 +4,19 @@ describe('Error-preview-help functions', () => {
   describe('insertTags', () => {
     test('should handle simple label', () => {
       expect(insertTags('Select {{#label}}', 'required')).toBe(
-        'Select <span class="error-preview-short-desc">{{#label}}</span>'
+        'Select <span class="error-preview-shortDescription">{{#label}}</span>'
       )
     })
 
     test('should handle simple title', () => {
       expect(insertTags('Select {{#title}}', 'required')).toBe(
-        'Select <span class="error-preview-short-desc">{{#title}}</span>'
+        'Select <span class="error-preview-shortDescription">{{#title}}</span>'
       )
     })
 
     test('should handle label with function', () => {
       expect(insertTags('Enter {{lowerFirst(#label)}}', 'required')).toBe(
-        'Enter <span class="error-preview-short-desc">{{lowerFirst(#label)}}</span>'
+        'Enter <span class="error-preview-shortDescription" data-templatefunc="lowerFirst">{{lowerFirst(#label)}}</span>'
       )
     })
 
@@ -27,7 +27,7 @@ describe('Error-preview-help functions', () => {
           'min'
         )
       ).toBe(
-        '<span class="error-preview-short-desc">{{#label}}</span> must have less than <span class="error-preview-min">{{#limit}}</span> characters'
+        '<span class="error-preview-shortDescription">{{#label}}</span> must have less than <span class="error-preview-min">{{#limit}}</span> characters'
       )
     })
   })
