@@ -3,18 +3,19 @@ import {
   QuestionRendererStub,
   baseElements
 } from '~/src/form/form-editor/__stubs__/preview.js'
-import { DateInputQuestion } from '~/src/form/form-editor/preview/date-input.js'
+import { FieldsetQuestion } from '~/src/form/form-editor/preview/fieldset-question.js'
 
-describe('date-input', () => {
+describe('fieldset-question', () => {
   it('should create class', () => {
     const elements = /** @type {QuestionElements} */ (
       new QuestionPreviewElements(baseElements)
     )
+    class DummyFieldsetClass extends FieldsetQuestion {}
     const renderer = new QuestionRendererStub(jest.fn())
-    const dateInput = new DateInputQuestion(elements, renderer)
+    const dateInput = new DummyFieldsetClass(elements, renderer)
     expect(dateInput.renderInput).toEqual({
-      id: 'dateInput',
-      name: 'dateInput',
+      id: 'inputField',
+      name: 'inputField',
       fieldset: {
         legend: {
           classes: 'govuk-fieldset__legend--l',

@@ -14,7 +14,7 @@ describe('month-year', () => {
     const dateInput = new MonthYearQuestion(elements, renderer)
     expect(dateInput.renderInput).toEqual({
       id: 'monthYear',
-      name: 'monthYearField',
+      name: 'monthYear',
       fieldset: {
         legend: {
           classes: 'govuk-fieldset__legend--l',

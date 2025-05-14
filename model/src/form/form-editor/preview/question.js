@@ -120,6 +120,13 @@ export class Question {
   }
 
   /**
+   * @returns {Partial<QuestionBaseModel>}
+   */
+  get customRenderFields() {
+    return {}
+  }
+
+  /**
    * @type {QuestionBaseModel}
    */
   get renderInput() {
@@ -127,7 +134,8 @@ export class Question {
       id: this._fieldName,
       name: this._fieldName,
       label: this.label,
-      hint: this.hint
+      hint: this.hint,
+      ...this.customRenderFields
     }
   }
 

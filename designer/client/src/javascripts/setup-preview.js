@@ -9,7 +9,8 @@ import {
   Question,
   RadioSortableQuestion,
   ShortAnswerQuestion,
-  UkAddressQuestion
+  UkAddressQuestion,
+  YesNoQuestion
 } from '@defra/forms-model'
 
 import {
@@ -135,6 +136,21 @@ export const SetupPreview =
       listeners.setupListeners()
 
       return address
+    },
+    /**
+     * @returns {UkAddressQuestion}
+     */
+    YesNoField: () => {
+      const questionElements = new QuestionDomElements()
+      const nunjucksRenderer = new NunjucksRenderer(questionElements)
+      const yesNoQuestion = new YesNoQuestion(
+        questionElements,
+        nunjucksRenderer
+      )
+      const listeners = new EventListeners(yesNoQuestion, questionElements)
+      listeners.setupListeners()
+
+      return yesNoQuestion
     },
     /**
      * @returns {PhoneNumberQuestion}

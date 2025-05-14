@@ -10,6 +10,7 @@ import {
   RadioSortableQuestion,
   ShortAnswerQuestion,
   UkAddressQuestion,
+  YesNoQuestion,
   govukFieldIsQuestionOptional,
   govukFieldValueIsString
 } from '@defra/forms-model'
@@ -166,7 +167,7 @@ export const ModelFactory =
      * @returns {Question}
      */
     YesNoField: (questionElements) => {
-      return new Question(questionElements, emptyRender)
+      return new YesNoQuestion(questionElements, emptyRender)
     },
     /**
      * @param {QuestionElements} questionElements

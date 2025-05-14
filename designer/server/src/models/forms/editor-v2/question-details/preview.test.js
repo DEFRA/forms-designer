@@ -10,7 +10,8 @@ import {
   Question,
   RadioSortableQuestion,
   ShortAnswerQuestion,
-  UkAddressQuestion
+  UkAddressQuestion,
+  YesNoQuestion
 } from '@defra/forms-model'
 
 import {
@@ -222,7 +223,7 @@ describe('preview', () => {
         previewElements
       )
 
-      expect(previewModel).toBeInstanceOf(Question)
+      expect(previewModel).toBeInstanceOf(YesNoQuestion)
     })
 
     it('should get MonthYearField', () => {
@@ -469,16 +470,6 @@ describe('preview', () => {
       })
     })
 
-    it('should get YesNoField', () => {
-      const previewModel = getPreviewModel(
-        basePageFields,
-        {},
-        ComponentType.YesNoField
-      )
-
-      expect(previewModel).toEqual(expectedQuestionModel)
-    })
-
     it('should get MonthYearField', () => {
       const previewModel = getPreviewModel(
         basePageFields,
@@ -499,7 +490,7 @@ describe('preview', () => {
           }
         ],
         id: 'monthYear',
-        name: 'monthYearField'
+        name: 'monthYear'
       })
     })
 
@@ -648,7 +639,7 @@ describe('preview', () => {
       expect(previewModel).toEqual({
         ...fieldSetModelBase,
         id: 'dateInput',
-        name: 'dateInputField'
+        name: 'dateInput'
       })
     })
 
