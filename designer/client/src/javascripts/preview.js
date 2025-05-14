@@ -33,9 +33,10 @@ export function setupPreview(componentType) {
     (SetupPreview[componentType] ?? SetupPreview.Question)
 
   const preview = PreviewConstructor()
-  ErrorPreview.setupPreview(componentType)
 
   showHideForJs()
+
+  ErrorPreview.setupPreview(componentType)
 
   preview.render()
 
