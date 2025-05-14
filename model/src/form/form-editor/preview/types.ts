@@ -8,6 +8,7 @@ import { type RadioSortableQuestion } from '~/src/form/form-editor/preview/radio
 import { type ShortAnswerQuestion } from '~/src/form/form-editor/preview/short-answer.js'
 import { type UkAddressQuestion } from '~/src/form/form-editor/preview/uk-address.js'
 import {
+  type DateItem,
   type ListElement,
   type ListItemReadonly
 } from '~/src/form/form-editor/types.js'
@@ -36,9 +37,10 @@ export interface QuestionBaseModel {
   label?: DefaultComponent
   hint?: DefaultComponent
   fieldset?: GovukFieldset
-  readonly items?: ListItemReadonly[]
+  readonly items?: ListItemReadonly[] | DateItem[]
   text?: string
   formGroup?: { afterInputs: { html: string } }
+  type?: 'text' | 'number'
 }
 
 export type ListenerRow = [

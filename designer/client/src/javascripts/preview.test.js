@@ -2,6 +2,8 @@ import {
   ComponentType,
   DateInputQuestion,
   LongAnswerQuestion,
+  MonthYearQuestion,
+  NumberOnlyQuestion,
   Question,
   RadioSortableQuestion,
   ShortAnswerQuestion
@@ -23,6 +25,7 @@ jest.mock('~/src/views/components/textfield.njk', () => '')
 jest.mock('~/src/views/components/textarea.njk', () => '')
 jest.mock('~/src/views/components/radios.njk', () => '')
 jest.mock('~/src/views/components/date-input.njk', () => '')
+jest.mock('~/src/views/components/monthyearfield.njk', () => '')
 
 jest.mock('~/src/javascripts/preview/nunjucks-renderer.js')
 
@@ -31,6 +34,10 @@ describe('preview', () => {
     it('should setup preview for Textfield', () => {
       const res = setupPreview(ComponentType.TextField)
       expect(res).toBeInstanceOf(ShortAnswerQuestion)
+    })
+    it('should setup preview for NumberField', () => {
+      const res = setupPreview(ComponentType.NumberField)
+      expect(res).toBeInstanceOf(NumberOnlyQuestion)
     })
 
     it('should setup preview for DatePartsField', () => {
@@ -47,6 +54,12 @@ describe('preview', () => {
       document.body.innerHTML = list1HTML
       const res = setupPreview(ComponentType.RadiosField)
       expect(res).toBeInstanceOf(RadioSortableQuestion)
+    })
+
+    it('should setup preview for MonthYearField', () => {
+      document.body.innerHTML = list1HTML
+      const res = setupPreview(ComponentType.MonthYearField)
+      expect(res).toBeInstanceOf(MonthYearQuestion)
     })
 
     it('should setup preview for unknown', () => {

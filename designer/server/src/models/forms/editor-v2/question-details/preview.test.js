@@ -4,6 +4,8 @@ import {
   EmailAddressQuestion,
   ListQuestion,
   LongAnswerQuestion,
+  MonthYearQuestion,
+  NumberOnlyQuestion,
   PhoneNumberQuestion,
   Question,
   RadioSortableQuestion,
@@ -229,7 +231,7 @@ describe('preview', () => {
         previewElements
       )
 
-      expect(previewModel).toBeInstanceOf(DateInputQuestion)
+      expect(previewModel).toBeInstanceOf(MonthYearQuestion)
     })
 
     it('should get SelectField', () => {
@@ -247,7 +249,7 @@ describe('preview', () => {
         previewElements
       )
 
-      expect(previewModel).toBeInstanceOf(Question)
+      expect(previewModel).toBeInstanceOf(NumberOnlyQuestion)
     })
 
     it('should get Html', () => {
@@ -486,8 +488,18 @@ describe('preview', () => {
 
       expect(previewModel).toEqual({
         ...fieldSetModelBase,
-        id: 'dateInput',
-        name: 'dateInputField'
+        items: [
+          {
+            name: 'month',
+            classes: 'govuk-input--width-2'
+          },
+          {
+            name: 'year',
+            classes: 'govuk-input--width-4'
+          }
+        ],
+        id: 'monthYear',
+        name: 'monthYearField'
       })
     })
 
@@ -508,7 +520,10 @@ describe('preview', () => {
         ComponentType.NumberField
       )
 
-      expect(previewModel).toEqual(expectedQuestionModel)
+      expect(previewModel).toEqual({
+        ...expectedQuestionModel,
+        type: 'number'
+      })
     })
 
     it('should get Html', () => {
