@@ -3,6 +3,7 @@ import {
   DateInputQuestion,
   LongAnswerQuestion,
   MonthYearQuestion,
+  NumberOnlyQuestion,
   Question,
   RadioSortableQuestion,
   ShortAnswerQuestion
@@ -33,6 +34,10 @@ describe('preview', () => {
     it('should setup preview for Textfield', () => {
       const res = setupPreview(ComponentType.TextField)
       expect(res).toBeInstanceOf(ShortAnswerQuestion)
+    })
+    it('should setup preview for NumberField', () => {
+      const res = setupPreview(ComponentType.NumberField)
+      expect(res).toBeInstanceOf(NumberOnlyQuestion)
     })
 
     it('should setup preview for DatePartsField', () => {

@@ -4,6 +4,7 @@ import {
   ListSortableQuestion,
   LongAnswerQuestion,
   MonthYearQuestion,
+  NumberOnlyQuestion,
   PhoneNumberQuestion,
   Question,
   RadioSortableQuestion,
@@ -53,6 +54,21 @@ export const SetupPreview =
       listeners.setupListeners()
 
       return textfield
+    },
+    /**
+     * @returns {NumberOnlyQuestion}
+     */
+    NumberField: () => {
+      const questionElements = new QuestionDomElements()
+      const nunjucksRenderer = new NunjucksRenderer(questionElements)
+      const numberField = new NumberOnlyQuestion(
+        questionElements,
+        nunjucksRenderer
+      )
+      const listeners = new EventListeners(numberField, questionElements)
+      listeners.setupListeners()
+
+      return numberField
     },
     MultilineTextField: () => {
       const questionElements = new QuestionDomElements()

@@ -4,6 +4,7 @@ import {
   ListQuestion,
   LongAnswerQuestion,
   MonthYearQuestion,
+  NumberOnlyQuestion,
   PhoneNumberQuestion,
   Question,
   RadioSortableQuestion,
@@ -186,7 +187,7 @@ export const ModelFactory =
      * @returns {Question}
      */
     NumberField: (questionElements) => {
-      return new Question(questionElements, emptyRender)
+      return new NumberOnlyQuestion(questionElements, emptyRender)
     },
     /**
      * @param {ListElements} questionElements

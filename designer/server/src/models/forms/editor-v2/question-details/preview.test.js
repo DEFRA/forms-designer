@@ -5,6 +5,7 @@ import {
   ListQuestion,
   LongAnswerQuestion,
   MonthYearQuestion,
+  NumberOnlyQuestion,
   PhoneNumberQuestion,
   Question,
   RadioSortableQuestion,
@@ -248,7 +249,7 @@ describe('preview', () => {
         previewElements
       )
 
-      expect(previewModel).toBeInstanceOf(Question)
+      expect(previewModel).toBeInstanceOf(NumberOnlyQuestion)
     })
 
     it('should get Html', () => {
@@ -519,7 +520,10 @@ describe('preview', () => {
         ComponentType.NumberField
       )
 
-      expect(previewModel).toEqual(expectedQuestionModel)
+      expect(previewModel).toEqual({
+        ...expectedQuestionModel,
+        type: 'number'
+      })
     })
 
     it('should get Html', () => {
