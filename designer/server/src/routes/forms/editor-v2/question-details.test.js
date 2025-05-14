@@ -463,6 +463,7 @@ describe('Editor v2 question details routes', () => {
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       new Joi.ValidationError(
         'name is required. The question type is missing. Enter a question. Enter a short description',
         [],
@@ -498,6 +499,7 @@ describe('Editor v2 question details routes', () => {
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       new Joi.ValidationError(
         'Minimum length must be a positive whole number',
         [],
@@ -534,6 +536,7 @@ describe('Editor v2 question details routes', () => {
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       new Joi.ValidationError(
         'Minimum length must be less than or equal to maximum length',
         [],
@@ -571,6 +574,7 @@ describe('Editor v2 question details routes', () => {
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       new Joi.ValidationError(
         'At least 2 items are required for a list',
         [],
@@ -615,6 +619,7 @@ describe('Editor v2 question details routes', () => {
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       new Joi.ValidationError(
         'Question or page heading already exists in this form',
         [],
@@ -656,6 +661,7 @@ describe('Editor v2 question details routes', () => {
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       new Joi.ValidationError('Some other boom error', [], undefined),
       'questionDetailsValidationFailure'
     )
@@ -732,6 +738,7 @@ describe('Editor v2 question details routes', () => {
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       new Joi.ValidationError('Enter a short description', [], undefined),
       'questionDetailsValidationFailure'
     )
