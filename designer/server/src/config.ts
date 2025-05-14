@@ -73,9 +73,15 @@ const schema = joi.object<Config>({
     .valid('development', 'test', 'production')
     .default('development'),
   appDir: joi.string().default(import.meta.dirname),
-  clientSrc: joi
-    .string()
-    .default(resolve(import.meta.dirname, '../../client/src')),
+  clientSrc: joi.string().when('env', {
+    is: 'development',
+    then: joi
+      .string()
+      .default(resolve(import.meta.dirname, '../../client/src')),
+    otherwise: joi
+      .string()
+      .default(resolve(import.meta.dirname, '../../client/dist'))
+  }),
   clientDir: joi.string().when('env', {
     is: 'test',
     then: joi
