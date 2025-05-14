@@ -1,11 +1,10 @@
 import '~/src/views/components/textfield.njk'
+import '~/src/views/components/textarea.njk'
 import '~/src/views/components/radios.njk'
 import '~/src/views/components/date-input.njk'
 import '~/src/views/components/ukaddressfield.njk'
 import '~/src/views/components/telephonenumberfield.njk'
 import '~/src/views/components/emailaddressfield.njk'
-
-import { ComponentType } from '@defra/forms-model'
 
 import { ErrorPreview } from '~/src/javascripts/error-preview/error-preview'
 import {
@@ -24,39 +23,17 @@ export function showHideForJs() {
 }
 
 /**
- * @typedef { Question | DateInputQuestion | EmailAddressQuestion | PhoneNumberQuestion | RadioSortableQuestion | ShortAnswerQuestion | UkAddressQuestion } PreviewQuestion
- */
-
-/**
  * @param {ComponentType} componentType
  * @returns {PreviewQuestion}
  */
 export function setupPreview(componentType) {
-  /**
-   * @type {PreviewQuestion}
-   */
-  let preview
-  let errorPreview
-  if (componentType === ComponentType.TextField) {
-    preview = SetupPreview.TextField()
-  } else if (componentType === ComponentType.DatePartsField) {
-    preview = SetupPreview.DatePartsField()
-  } else if (componentType === ComponentType.RadiosField) {
-    preview = SetupPreview.RadiosField()
-  } else if (componentType === ComponentType.UkAddressField) {
-    preview = SetupPreview.UkAddressField()
-  } else if (componentType === ComponentType.EmailAddressField) {
-    preview = SetupPreview.EmailAddressField()
-  } else if (componentType === ComponentType.TelephoneNumberField) {
-    preview = SetupPreview.TelephoneNumberField()
-  } else {
-    errorPreview = ErrorPreview.setupPreview(ComponentType.TextField)
-    preview = SetupPreview.Question()
-  }
+  const PreviewConstructor =
+    /** @type {() => PreviewQuestion} */
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    (SetupPreview[componentType] ?? SetupPreview.Question)
 
-  if (!errorPreview) {
-    errorPreview = ErrorPreview.setupPreview(componentType)
-  }
+  const preview = PreviewConstructor()
+  ErrorPreview.setupPreview(componentType)
 
   showHideForJs()
 
@@ -66,5 +43,5 @@ export function setupPreview(componentType) {
 }
 
 /**
- * @import { Question, DateInputQuestion, EmailAddressQuestion, PhoneNumberQuestion, RadioSortableQuestion, ShortAnswerQuestion, UkAddressQuestion } from '@defra/forms-model'
+ * @import { PreviewQuestion, ComponentType } from '@defra/forms-model'
  */

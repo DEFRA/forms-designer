@@ -238,6 +238,10 @@ export default /** @type {Configuration} */ ({
           to: 'assets'
         },
         {
+          from: join(import.meta.dirname, 'client/src/views'),
+          to: 'views'
+        },
+        {
           from: 'i18n/translations',
           to: 'assets/translations'
         }

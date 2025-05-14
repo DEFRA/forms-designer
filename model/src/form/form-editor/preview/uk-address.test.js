@@ -14,9 +14,11 @@ describe('address', () => {
       expect(res.renderInput).toEqual({
         id: 'addressField',
         name: 'addressField',
-        label: {
-          text: 'Which quest would you like to pick?',
-          classes: 'govuk-label--l'
+        fieldset: {
+          legend: {
+            classes: 'govuk-fieldset__legend--l',
+            text: 'Which quest would you like to pick?'
+          }
         },
         hint: {
           text: 'Choose one adventure that best suits you.',

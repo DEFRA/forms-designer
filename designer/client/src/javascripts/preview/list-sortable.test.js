@@ -792,13 +792,17 @@ describe('list-sortable', () => {
         '<button id="edit-options-button">Done</button>' +
         '<button id="add-option-button">Add item</button>' +
         listEmptyHTML
-      const preview = SetupPreview.ListSortable()
+      const preview = /** @type {ListSortableQuestion} */ (
+        SetupPreview.ListSortable()
+      )
       expect(preview.listElementObjects).toHaveLength(0)
       document.body.innerHTML =
         '<button id="edit-options-button">Done</button>' +
         '<button id="add-option-button">Add item</button>' +
         list1HTML
-      const preview2 = SetupPreview.ListSortable()
+      const preview2 = /** @type {ListSortableQuestion} */ (
+        SetupPreview.ListSortable()
+      )
       preview.resyncPreviewAfterReorder()
       expect(preview2.listElementObjects).toHaveLength(4)
     })
