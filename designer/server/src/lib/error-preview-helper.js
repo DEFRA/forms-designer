@@ -2,7 +2,8 @@ import {
   ComponentType,
   allDocumentTypes,
   allImageTypes,
-  allTabularDataTypes
+  allTabularDataTypes,
+  allowedErrorTemplateFunctions
 } from '@defra/forms-model'
 
 const fieldMappings = /** @type {AdvancedFieldMappingsType } */ ({
@@ -63,7 +64,9 @@ export function getFieldProperty(
   const fieldname = mapping[propertyName]
   const field = fields.find((x) => x.name === fieldname)
 
-  const propVal = field?.value
+  const propVal = /** @type {string | number | undefined | null } */ (
+    field?.value
+  )
   return propVal ?? fallbackText
 }
 
@@ -159,7 +162,6 @@ export function getNumberLimits(fields, questionType, propertyName) {
  * @returns { string | number }
  */
 export function getDateLimits(fields, questionType, propertyName) {
-  // console.log('date', propertyName)
   if (propertyName === 'dateMin') {
     return getFieldProperty(
       fields,
@@ -240,12 +242,27 @@ export function determineLimit(type, fields, questionType) {
 }
 
 /**
+ * Return a data attribute if the template includes a function (from the allowed list)
+ * @param {string} part
+ * @returns {string}
+ */
+export function getFunctionAttribute(part) {
+  for (const func of allowedErrorTemplateFunctions) {
+    if (part.includes(`${func}(`)) {
+      return ` data-templatefunc="${func}"`
+    }
+  }
+  return ''
+}
+
+/**
  * @param {string} type
  * @param {string} part
  * @returns {string}
  */
 export function spanTag(type, part) {
-  return `<span class="error-preview-${type}">{{${part}}}</span>`
+  const functionAttribute = getFunctionAttribute(part)
+  return `<span class="error-preview-${type}"${functionAttribute}>{{${part}}}</span>`
 }
 
 /**
@@ -254,6 +271,7 @@ export function spanTag(type, part) {
  */
 export function insertTags(templateStr, type) {
   const delimiterRegex = /({{|}})/
+
   const parts = templateStr.split(delimiterRegex)
   const resultParts = []
   for (const part of parts) {

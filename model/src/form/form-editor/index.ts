@@ -601,3 +601,6 @@ export function govukFieldIsQuestionOptional(
   const checkedValue = govukField.items?.[0].checked
   return typeof checkedValue === 'boolean'
 }
+
+// A list of allowed template funtions for use within error message templates
+export const allowedErrorTemplateFunctions = ['lowerFirst']

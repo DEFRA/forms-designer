@@ -1,8 +1,11 @@
+import { allowedErrorTemplateFunctions } from '@defra/forms-model'
+import lowerFirst from 'lodash/lowerFirst.js'
+
 import { fieldMappings } from '~/src/javascripts/error-preview/field-mappings'
 
 export class ErrorPreviewDomElements {
   /**
-   * @param {ErrorPreviewFieldMappingDef} advancedFieldDefs
+   * @param { ErrorPreviewFieldMappingDef | undefined } advancedFieldDefs
    */
   constructor(advancedFieldDefs) {
     const shortDescEl = /** @type {HTMLInputElement | null} */ (
@@ -24,7 +27,9 @@ export class ErrorPreviewDomElements {
     this.shortDescTargets = shortDescTargetEls
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    const fieldEntries = Object.entries(advancedFieldDefs)
+    const fieldEntries = advancedFieldDefs
+      ? Object.entries(advancedFieldDefs)
+      : []
 
     /**
      * @type {{ id: string, source: HTMLInputElement, target: HTMLInputElement, placeholder: string }[] }
@@ -63,6 +68,32 @@ export class ErrorPreviewDomElements {
   }
 
   /**
+   * Handle lowerFirst, including taking into account if text is a placeholder (starting with '[')
+   * @param {string} elemText
+   */
+  lowerFirstEnhanced(elemText) {
+    if (elemText.length > 1 && elemText.startsWith('[')) {
+      return `[${lowerFirst(elemText.substring(1))}`
+    }
+    return lowerFirst(elemText)
+  }
+
+  /**
+   * @param { HTMLInputElement | null } elem
+   * @param {string} newText
+   */
+  applyTemplateFunction(elem, newText) {
+    const func = elem?.dataset.templatefunc ?? ''
+    if (allowedErrorTemplateFunctions.includes(func)) {
+      if (func === 'lowerFirst') {
+        return this.lowerFirstEnhanced(newText)
+      }
+    }
+
+    return newText
+  }
+
+  /**
    * @param { HTMLInputElement | null } source
    * @param {HTMLInputElementOrNull[]} targets
    * @param {string} placeholder
@@ -70,8 +101,12 @@ export class ErrorPreviewDomElements {
   updateText(source, targets, placeholder) {
     targets.forEach((elem) => {
       if (elem) {
-        elem.textContent =
-          source && source.value !== '' ? source.value : placeholder
+        const sourceText = source?.value ?? ''
+        const newText = sourceText !== '' ? sourceText : placeholder
+        const newTextFinal = elem.dataset.templatefunc
+          ? this.applyTemplateFunction(elem, newText)
+          : newText
+        elem.textContent = newTextFinal
       }
     })
   }
@@ -122,7 +157,7 @@ export class ErrorPreviewEventListeners {
     const shortDescListeners = [
       /** @type {ListenerRow} */ ([
         this.baseElements.shortDesc,
-        (_target) => {
+        () => {
           this.baseElements.addHighlights(
             this.baseElements.shortDesc,
             this.baseElements.shortDescTargets
@@ -132,7 +167,7 @@ export class ErrorPreviewEventListeners {
       ]),
       /** @type {ListenerRow} */ ([
         this.baseElements.shortDesc,
-        (_target) => {
+        () => {
           this.baseElements.removeHighlights(
             this.baseElements.shortDesc,
             this.baseElements.shortDescTargets
@@ -146,14 +181,14 @@ export class ErrorPreviewEventListeners {
       (element) => {
         const focusRow = /** @type {ListenerRow} */ ([
           element.source,
-          (_target) => {
+          () => {
             this.baseElements.addHighlights(element.source, [element.target])
           },
           'focus'
         ])
         const blurRow = /** @type {ListenerRow} */ ([
           element.source,
-          (_target) => {
+          () => {
             this.baseElements.removeHighlights(element.source, [element.target])
           },
           'blur'
@@ -254,6 +289,5 @@ export class ErrorPreview {
 }
 
 /**
- * @import { ComponentType, ErrorPreviewFieldMappingDef, HTMLElementOrNull, HTMLInputElementOrNull } from '@defra/forms-model'
- * @import { ListenerRow } from '~/src/javascripts/preview/question.js'
+ * @import { ComponentType, ErrorPreviewFieldMappingDef, HTMLElementOrNull, HTMLInputElementOrNull, ListenerRow } from '@defra/forms-model'
  */

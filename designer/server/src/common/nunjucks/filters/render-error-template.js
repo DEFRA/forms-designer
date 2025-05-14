@@ -29,6 +29,7 @@ export function renderErrorTemplate(template, viewModel, questionType) {
 
   const renderedText = expandTemplate(newTemplate, {
     label: shortDescriptionField?.value,
+    title: shortDescriptionField?.value,
     limit: determineLimit(template.type, viewModel.extraFields, questionType)
   })
   return renderedText
