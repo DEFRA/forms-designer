@@ -122,6 +122,9 @@ describe('Editor v2 question details routes', () => {
     jest
       .mocked(getQuestionSessionState)
       .mockReturnValueOnce(simpleSessionTextField)
+    jest
+      .mocked(buildQuestionSessionState)
+      .mockReturnValueOnce(simpleSessionTextField)
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     jest
       .mocked(forms.getDraftFormDefinition)
@@ -169,6 +172,9 @@ describe('Editor v2 question details routes', () => {
   test('GET - should hide preview error message button and preview page button if question not saved yet', async () => {
     jest
       .mocked(getQuestionSessionState)
+      .mockReturnValueOnce(simpleSessionTextField)
+    jest
+      .mocked(buildQuestionSessionState)
       .mockReturnValueOnce(simpleSessionTextField)
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
 
