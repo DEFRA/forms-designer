@@ -6,6 +6,15 @@ export const fieldMappings =
       min: { fieldName: 'minLength', placeholder: '[min length]' },
       max: { fieldName: 'maxLength', placeholder: '[max length]' }
     },
+    [ComponentType.MultilineTextField]: {
+      min: { fieldName: 'minLength', placeholder: '[min length]' },
+      max: { fieldName: 'maxLength', placeholder: '[max length]' }
+    },
+    [ComponentType.NumberField]: {
+      numberMin: { fieldName: 'min', placeholder: '[lowest number]' },
+      numberMax: { fieldName: 'max', placeholder: '[highest number]' },
+      numberPrecision: { fieldName: 'precision', placeholder: '[precision]' }
+    },
     [ComponentType.DatePartsField]: {
       dateMin: { fieldName: 'maxPast', placeholder: '[max days in the past]' },
       dateMax: {

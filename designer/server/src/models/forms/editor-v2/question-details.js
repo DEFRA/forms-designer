@@ -84,7 +84,8 @@ export function getErrorTemplates(questionType) {
       type: questionType,
       title: 'Dummy',
       name: 'dummy',
-      options: { required: true }
+      options: { required: true },
+      schema: {}
     },
     {}
   )
