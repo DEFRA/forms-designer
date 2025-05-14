@@ -52,18 +52,16 @@ export class ErrorPreviewDomElements {
   }
 
   /**
-   * @param { HTMLInputElement | null } el
    * @param {HTMLElementOrNull[]} targets
    */
-  addHighlights(el, targets) {
+  addHighlights(targets) {
     targets.forEach((elem) => elem?.classList.add('highlight'))
   }
 
   /**
-   * @param { HTMLInputElement | null } el
    * @param {HTMLElementOrNull[]} targets
    */
-  removeHighlights(el, targets) {
+  removeHighlights(targets) {
     targets.forEach((elem) => elem?.classList.remove('highlight'))
   }
 
@@ -158,20 +156,14 @@ export class ErrorPreviewEventListeners {
       /** @type {ListenerRow} */ ([
         this.baseElements.shortDesc,
         () => {
-          this.baseElements.addHighlights(
-            this.baseElements.shortDesc,
-            this.baseElements.shortDescTargets
-          )
+          this.baseElements.addHighlights(this.baseElements.shortDescTargets)
         },
         'focus'
       ]),
       /** @type {ListenerRow} */ ([
         this.baseElements.shortDesc,
         () => {
-          this.baseElements.removeHighlights(
-            this.baseElements.shortDesc,
-            this.baseElements.shortDescTargets
-          )
+          this.baseElements.removeHighlights(this.baseElements.shortDescTargets)
         },
         'blur'
       ])
@@ -182,14 +174,14 @@ export class ErrorPreviewEventListeners {
         const focusRow = /** @type {ListenerRow} */ ([
           element.source,
           () => {
-            this.baseElements.addHighlights(element.source, [element.target])
+            this.baseElements.addHighlights([element.target])
           },
           'focus'
         ])
         const blurRow = /** @type {ListenerRow} */ ([
           element.source,
           () => {
-            this.baseElements.removeHighlights(element.source, [element.target])
+            this.baseElements.removeHighlights([element.target])
           },
           'blur'
         ])
