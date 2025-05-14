@@ -2,9 +2,10 @@ import {
   DateInputQuestion,
   EmailAddressQuestion,
   ListQuestion,
+  LongAnswerQuestion,
   PhoneNumberQuestion,
   Question,
-  RadioQuestion,
+  RadioSortableQuestion,
   ShortAnswerQuestion,
   UkAddressQuestion,
   govukFieldIsQuestionOptional,
@@ -156,7 +157,7 @@ export const ModelFactory =
      * @returns {Question}
      */
     MultilineTextField: (questionElements) => {
-      return new Question(questionElements, emptyRender)
+      return new LongAnswerQuestion(questionElements, emptyRender)
     },
     /**
      * @param {QuestionElements} questionElements
@@ -170,14 +171,14 @@ export const ModelFactory =
      * @returns {Question}
      */
     MonthYearField: (questionElements) => {
-      return new Question(questionElements, emptyRender)
+      return new DateInputQuestion(questionElements, emptyRender)
     },
     /**
      * @param {ListElements} questionElements
      * @returns {Question}
      */
     SelectField: (questionElements) => {
-      return new Question(questionElements, emptyRender)
+      return new ListQuestion(questionElements, emptyRender)
     },
     /**
      * @param {QuestionElements} questionElements
@@ -234,7 +235,7 @@ export const ModelFactory =
      * @returns {Question}
      */
     RadiosField: (listElements) => {
-      return new RadioQuestion(listElements, emptyRender)
+      return new RadioSortableQuestion(listElements, emptyRender)
     },
     /**
      * @param {QuestionElements} questionElements
@@ -281,21 +282,31 @@ export const ModelFactory =
   })
 
 /**
- * @param {GovukField[]} govukFields
- * @param {QuestionSessionState|undefined} state
- * @param {ComponentType|undefined} componentType
+ * @param {ComponentType|undefined|'Question'} componentType
+ * @param {QuestionPreviewElements} questionOrListElements
+ * @returns {Question}
  */
-export function getPreviewModel(govukFields, state, componentType) {
-  const questionOrListElements = new QuestionPreviewElements(govukFields, state)
+export function getPreviewConstructor(componentType, questionOrListElements) {
   let QuestionConstructor = ModelFactory.Question
 
   if (componentType) {
     QuestionConstructor = ModelFactory[componentType]
   }
 
-  const question = QuestionConstructor(questionOrListElements)
+  return QuestionConstructor(questionOrListElements)
+}
+
+/**
+ * @param {GovukField[]} govukFields
+ * @param {QuestionSessionState|undefined} state
+ * @param {ComponentType|undefined} componentType
+ */
+export function getPreviewModel(govukFields, state, componentType) {
+  const questionOrListElements = new QuestionPreviewElements(govukFields, state)
+
+  const question = getPreviewConstructor(componentType, questionOrListElements)
   return question.renderInput
 }
 /**
- * @import { ListElement, ListElements, QuestionElements, QuestionRenderer, QuestionBaseModel, GovukField, QuestionSessionState, ComponentType } from '@defra/forms-model'
+ * @import { ListElement, ListElements, QuestionElements, QuestionRenderer, QuestionBaseModel, GovukField, QuestionSessionState, ComponentType, PreviewQuestion } from '@defra/forms-model'
  */

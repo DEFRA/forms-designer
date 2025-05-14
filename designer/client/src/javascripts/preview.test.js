@@ -1,6 +1,7 @@
 import {
   ComponentType,
   DateInputQuestion,
+  LongAnswerQuestion,
   Question,
   RadioSortableQuestion,
   ShortAnswerQuestion
@@ -19,6 +20,7 @@ jest.mock('~/src/views/components/telephonenumberfield.njk', () => '')
 jest.mock('~/src/views/components/emailaddressfield.njk', () => '')
 jest.mock('~/src/views/components/inset.njk', () => '')
 jest.mock('~/src/views/components/textfield.njk', () => '')
+jest.mock('~/src/views/components/textarea.njk', () => '')
 jest.mock('~/src/views/components/radios.njk', () => '')
 jest.mock('~/src/views/components/date-input.njk', () => '')
 
@@ -34,6 +36,11 @@ describe('preview', () => {
     it('should setup preview for DatePartsField', () => {
       const res = setupPreview(ComponentType.DatePartsField)
       expect(res).toBeInstanceOf(DateInputQuestion)
+    })
+
+    it('should setup preview for MultilineTextField', () => {
+      const res = setupPreview(ComponentType.MultilineTextField)
+      expect(res).toBeInstanceOf(LongAnswerQuestion)
     })
 
     it('should setup preview for Radiosfield', () => {

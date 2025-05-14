@@ -1,10 +1,10 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 
 <fieldset class="govuk-fieldset">
-  <legend class="govuk-fieldset__legend govuk-fieldset__legend--l" id="question-label-output">
-    {{ model.label.text }}
+  <legend class="govuk-fieldset__legend {{ model.fieldset.legend.classes }}" id="question-label-output">
+    {{ model.fieldset.legend.text }}
   </legend>
-  <div class="govuk-hint" id="hint-text-output">{{ model.hint.text }}</div>
+  <div class="govuk-hint {{ model.hint.classes }}" id="hint-text-output">{{ model.hint.text }}</div>
   {{ govukInput({
     label: {
       text: "Address line 1"

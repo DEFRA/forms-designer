@@ -1,11 +1,10 @@
 import '~/src/views/components/textfield.njk'
+import '~/src/views/components/textarea.njk'
 import '~/src/views/components/radios.njk'
 import '~/src/views/components/date-input.njk'
 import '~/src/views/components/ukaddressfield.njk'
 import '~/src/views/components/telephonenumberfield.njk'
 import '~/src/views/components/emailaddressfield.njk'
-
-import { ComponentType } from '@defra/forms-model'
 
 import {
   hideHtmlElement,
@@ -23,33 +22,17 @@ export function showHideForJs() {
 }
 
 /**
- * @typedef { Question | DateInputQuestion | EmailAddressQuestion | PhoneNumberQuestion | RadioSortableQuestion | ShortAnswerQuestion | UkAddressQuestion } PreviewQuestion
- */
-
-/**
  * @param {ComponentType} componentType
  * @returns {PreviewQuestion}
  */
 export function setupPreview(componentType) {
-  /**
-   * @type {PreviewQuestion}
-   */
-  let preview
-  if (componentType === ComponentType.TextField) {
-    preview = SetupPreview.TextField()
-  } else if (componentType === ComponentType.DatePartsField) {
-    preview = SetupPreview.DatePartsField()
-  } else if (componentType === ComponentType.RadiosField) {
-    preview = SetupPreview.RadiosField()
-  } else if (componentType === ComponentType.UkAddressField) {
-    preview = SetupPreview.UkAddressField()
-  } else if (componentType === ComponentType.EmailAddressField) {
-    preview = SetupPreview.EmailAddressField()
-  } else if (componentType === ComponentType.TelephoneNumberField) {
-    preview = SetupPreview.TelephoneNumberField()
-  } else {
-    preview = SetupPreview.Question()
-  }
+  const PreviewConstructor =
+    /** @type {() => PreviewQuestion} */
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    (SetupPreview[componentType] ?? SetupPreview.Question)
+
+  const preview = PreviewConstructor()
+
   showHideForJs()
 
   preview.render()
@@ -58,5 +41,5 @@ export function setupPreview(componentType) {
 }
 
 /**
- * @import { Question, DateInputQuestion, EmailAddressQuestion, PhoneNumberQuestion, RadioSortableQuestion, ShortAnswerQuestion, UkAddressQuestion } from '@defra/forms-model'
+ * @import { Question, DateInputQuestion, EmailAddressQuestion, PhoneNumberQuestion, RadioSortableQuestion, ShortAnswerQuestion, UkAddressQuestion, PreviewQuestion, ComponentType } from '@defra/forms-model'
  */
