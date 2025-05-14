@@ -4,6 +4,7 @@ import {
   EmailAddressQuestion,
   ListQuestion,
   LongAnswerQuestion,
+  MonthYearQuestion,
   PhoneNumberQuestion,
   Question,
   RadioSortableQuestion,
@@ -229,7 +230,7 @@ describe('preview', () => {
         previewElements
       )
 
-      expect(previewModel).toBeInstanceOf(DateInputQuestion)
+      expect(previewModel).toBeInstanceOf(MonthYearQuestion)
     })
 
     it('should get SelectField', () => {
@@ -486,8 +487,18 @@ describe('preview', () => {
 
       expect(previewModel).toEqual({
         ...fieldSetModelBase,
-        id: 'dateInput',
-        name: 'dateInputField'
+        items: [
+          {
+            name: 'month',
+            classes: 'govuk-input--width-2'
+          },
+          {
+            name: 'year',
+            classes: 'govuk-input--width-4'
+          }
+        ],
+        id: 'monthYear',
+        name: 'monthYearField'
       })
     })
 

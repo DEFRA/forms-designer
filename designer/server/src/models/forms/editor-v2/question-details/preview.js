@@ -3,6 +3,7 @@ import {
   EmailAddressQuestion,
   ListQuestion,
   LongAnswerQuestion,
+  MonthYearQuestion,
   PhoneNumberQuestion,
   Question,
   RadioSortableQuestion,
@@ -171,7 +172,7 @@ export const ModelFactory =
      * @returns {Question}
      */
     MonthYearField: (questionElements) => {
-      return new DateInputQuestion(questionElements, emptyRender)
+      return new MonthYearQuestion(questionElements, emptyRender)
     },
     /**
      * @param {ListElements} questionElements

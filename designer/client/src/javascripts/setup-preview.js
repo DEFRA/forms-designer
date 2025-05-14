@@ -3,6 +3,7 @@ import {
   EmailAddressQuestion,
   ListSortableQuestion,
   LongAnswerQuestion,
+  MonthYearQuestion,
   PhoneNumberQuestion,
   Question,
   RadioSortableQuestion,
@@ -72,6 +73,21 @@ export const SetupPreview =
       const questionElements = new QuestionDomElements()
       const nunjucksRenderer = new NunjucksRenderer(questionElements)
       const dateInputField = new DateInputQuestion(
+        questionElements,
+        nunjucksRenderer
+      )
+      const listeners = new EventListeners(dateInputField, questionElements)
+      listeners.setupListeners()
+
+      return dateInputField
+    },
+    /**
+     * @returns {MonthYearQuestion}
+     */
+    MonthYearField: () => {
+      const questionElements = new QuestionDomElements()
+      const nunjucksRenderer = new NunjucksRenderer(questionElements)
+      const dateInputField = new MonthYearQuestion(
         questionElements,
         nunjucksRenderer
       )
