@@ -1,4 +1,4 @@
-import { createComponent } from '@defra/forms-engine-plugin'
+import { createComponent } from '@defra/forms-engine-plugin/helpers.js'
 import { randomId } from '@defra/forms-model'
 
 import { QuestionTypeDescriptions } from '~/src/common/constants/editor.js'
