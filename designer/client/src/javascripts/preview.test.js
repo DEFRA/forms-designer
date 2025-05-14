@@ -6,7 +6,8 @@ import {
   NumberOnlyQuestion,
   Question,
   RadioSortableQuestion,
-  ShortAnswerQuestion
+  ShortAnswerQuestion,
+  YesNoQuestion
 } from '@defra/forms-model'
 
 import { setupPreview, showHideForJs } from '~/src/javascripts/preview'
@@ -54,6 +55,12 @@ describe('preview', () => {
       document.body.innerHTML = list1HTML
       const res = setupPreview(ComponentType.RadiosField)
       expect(res).toBeInstanceOf(RadioSortableQuestion)
+    })
+
+    it('should setup preview for YesNo', () => {
+      document.body.innerHTML = list1HTML
+      const res = setupPreview(ComponentType.YesNoField)
+      expect(res).toBeInstanceOf(YesNoQuestion)
     })
 
     it('should setup preview for MonthYearField', () => {

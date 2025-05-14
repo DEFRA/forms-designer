@@ -376,7 +376,7 @@ export interface QuestionSessionState {
     radioId?: string
     radioText?: string
     radioHint?: string
-    radioValue?: string
+    radioValue?: string | boolean
     expanded?: boolean
   }
   listItems?: ListItem[]
