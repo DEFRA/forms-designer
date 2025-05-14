@@ -9,11 +9,13 @@
  * server side.
  */
 export class Question {
+  static PATH = ''
+
   /**
    * @type {string}
    * @protected
    */
-  _questionTemplate = 'textfield.njk'
+  _questionTemplate = Question.PATH + 'textfield.njk'
   /**
    * @type { string|null }
    * @protected
