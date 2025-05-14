@@ -40,6 +40,7 @@ export interface QuestionBaseModel {
   readonly items?: ListItemReadonly[] | DateItem[]
   text?: string
   formGroup?: { afterInputs: { html: string } }
+  type?: 'text' | 'number'
 }
 
 export type ListenerRow = [
