@@ -24,7 +24,17 @@ describe('month-year', () => {
       hint: {
         classes: '',
         text: 'Choose one adventure that best suits you.'
-      }
+      },
+      items: [
+        {
+          name: 'month',
+          classes: 'govuk-input--width-2'
+        },
+        {
+          name: 'year',
+          classes: 'govuk-input--width-4'
+        }
+      ]
     })
   })
 })

@@ -12,7 +12,11 @@ export class MonthYearQuestion extends Question {
       id: 'monthYear',
       name: 'monthYearField',
       fieldset: this.fieldSet,
-      hint: this.hint
+      hint: this.hint,
+      items: [
+        { name: 'month', classes: 'govuk-input--width-2' },
+        { name: 'year', classes: 'govuk-input--width-4' }
+      ]
     }
   }
 }

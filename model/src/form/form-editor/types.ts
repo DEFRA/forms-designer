@@ -364,6 +364,11 @@ export interface ListItemReadonly extends ListElement {
   readonly label: ListLabel
 }
 
+export interface DateItem {
+  name: string
+  classes: string
+}
+
 export interface QuestionSessionState {
   questionType?: ComponentType
   questionDetails?: Partial<ComponentDef>
