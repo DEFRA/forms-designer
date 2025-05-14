@@ -28,10 +28,20 @@ describe('YesNoQuestion', () => {
       },
       items: [
         {
+          id: 'yesNo-yes',
+          label: {
+            classes: '',
+            text: 'Yes'
+          },
           text: 'Yes',
           value: true
         },
         {
+          id: 'yesNo-no',
+          label: {
+            classes: '',
+            text: 'No'
+          },
           text: 'No',
           value: false
         }
