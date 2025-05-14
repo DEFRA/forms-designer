@@ -13,7 +13,7 @@ describe('date-input', () => {
     const res = SetupPreview.DatePartsField()
     expect(res.renderInput).toEqual({
       id: 'dateInput',
-      name: 'dateInputField',
+      name: 'dateInput',
       fieldset: {
         legend: {
           classes: 'govuk-fieldset__legend--l',
