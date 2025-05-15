@@ -1,4 +1,5 @@
 import {
+  CheckboxSortableQuestion,
   ComponentType,
   DateInputQuestion,
   EmailAddressQuestion,
@@ -322,7 +323,7 @@ describe('preview', () => {
         previewElements
       )
 
-      expect(previewModel).toBeInstanceOf(ListQuestion)
+      expect(previewModel).toBeInstanceOf(CheckboxSortableQuestion)
     })
 
     it('should get Question', () => {
@@ -615,7 +616,9 @@ describe('preview', () => {
 
       expect(previewModel).toEqual({
         ...listModelBase,
-        ...formGroupBase
+        ...formGroupBase,
+        id: 'checkboxField',
+        name: 'checkboxField'
       })
     })
 

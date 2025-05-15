@@ -1,3 +1,4 @@
+export * from '~/src/form/form-editor/preview/checkbox-sortable.js'
 export * from '~/src/form/form-editor/preview/date-input.js'
 export * from '~/src/form/form-editor/preview/email-address.js'
 export * from '~/src/form/form-editor/preview/list.js'

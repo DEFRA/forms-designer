@@ -1,4 +1,5 @@
 import {
+  CheckboxSortableQuestion,
   DateInputQuestion,
   EmailAddressQuestion,
   ListQuestion,
@@ -199,10 +200,10 @@ export const ModelFactory =
     },
     /**
      * @param {ListElements} questionElements
-     * @returns {Question}
+     * @returns {CheckboxSortableQuestion}
      */
     CheckboxesField: (questionElements) => {
-      return new ListQuestion(questionElements, emptyRender)
+      return new CheckboxSortableQuestion(questionElements, emptyRender)
     },
 
     /**

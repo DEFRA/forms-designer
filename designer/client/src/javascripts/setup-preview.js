@@ -1,4 +1,5 @@
 import {
+  CheckboxSortableQuestion,
   DateInputQuestion,
   EmailAddressQuestion,
   ListSortableQuestion,
@@ -175,6 +176,18 @@ export const SetupPreview =
       const nunjucksRenderer = new NunjucksRenderer(elements)
       const radio = new RadioSortableQuestion(elements, nunjucksRenderer)
       const listeners = new RadioSortableEventListeners(radio, elements, [])
+      listeners.setupListeners()
+
+      return radio
+    },
+    /**
+     * @returns {CheckboxSortableQuestion}
+     */
+    CheckboxesField: () => {
+      const elements = new ListSortableQuestionElements(NunjucksRenderer)
+      const nunjucksRenderer = new NunjucksRenderer(elements)
+      const radio = new CheckboxSortableQuestion(elements, nunjucksRenderer)
+      const listeners = new ListSortableEventListeners(radio, elements, [])
       listeners.setupListeners()
 
       return radio

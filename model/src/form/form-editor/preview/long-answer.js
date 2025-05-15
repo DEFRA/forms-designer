@@ -5,7 +5,7 @@ export class LongAnswerQuestion extends Question {
    * @type {string}
    * @protected
    */
-  _questionTemplate = 'textarea.njk'
+  _questionTemplate = Question.PATH + 'textarea.njk'
   /**
    * @type {string}
    * @protected

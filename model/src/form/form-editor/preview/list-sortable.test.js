@@ -1,44 +1,12 @@
 import {
   QuestionPreviewElements,
   QuestionRendererStub,
-  baseElements as baseElementsBase
+  listElementsStub
 } from '~/src/form/form-editor/__stubs__/preview.js'
 import { ListSortableQuestion } from '~/src/form/form-editor/preview/list-sortable.js'
 
 describe('list-sortable', () => {
-  const list1Id = '414d82a3-4cab-416a-bd54-6b86fbd51120'
-  const list2Id = '801385a4-81e6-4171-96c3-6c6727d97f22'
-  const list3Id = 'e6e3f621-b875-4ca3-a054-cca9149149dd'
-  const list4Id = 'd71b3909-582f-4e90-b6f5-490b89a6eb8f'
-  const baseElements = /** @type {BaseSettings} */ ({
-    ...baseElementsBase,
-    items: [
-      {
-        label: { text: 'Treasure Hunting' },
-        text: 'Treasure Hunting',
-        value: 'Treasure Hunting',
-        id: list1Id
-      },
-      {
-        label: { text: 'Rescuing the princess' },
-        text: 'Rescuing the princess',
-        value: 'Rescuing the princess',
-        id: list2Id
-      },
-      {
-        label: { text: 'Saving a city' },
-        text: 'Saving a city',
-        value: 'Saving a city',
-        id: list3Id
-      },
-      {
-        label: { text: 'Defeating the baron' },
-        text: 'Defeating the baron',
-        value: 'Defeating the baron',
-        id: list4Id
-      }
-    ]
-  })
+  const { baseElements } = listElementsStub
   const renderer = new QuestionRendererStub(jest.fn())
   /**
    * @type {ListElements}

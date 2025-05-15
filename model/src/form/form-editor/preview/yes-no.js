@@ -1,11 +1,12 @@
 import { FieldsetQuestion } from '~/src/form/form-editor/preview/fieldset-question.js'
+import { Question } from '~/src/index.js'
 
 export class YesNoQuestion extends FieldsetQuestion {
   /**
    * @type {string}
    * @protected
    */
-  _questionTemplate = 'radios.njk'
+  _questionTemplate = Question.PATH + 'radios.njk'
   _fieldName = 'yesNo'
 
   /**
