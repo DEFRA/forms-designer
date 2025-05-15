@@ -139,7 +139,7 @@ describe('list', () => {
       const preview = /** @type {ListSortableQuestion} */ (
         SetupPreview.ListSortable()
       )
-      expect(preview.renderInput.fieldset.legend.text).toBe('Question')
+      expect(preview.renderInput.fieldset?.legend.text).toBe('Question')
     })
   })
 

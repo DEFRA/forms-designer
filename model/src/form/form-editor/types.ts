@@ -350,7 +350,7 @@ export interface ListElement extends ListItem {
   readonly id: string
   text: string
   value: string | boolean
-  label: ListLabel
+  label?: ListLabel
 }
 
 export interface ReadonlyHint {
@@ -361,7 +361,7 @@ export interface ListItemReadonly extends ListElement {
   readonly text: string
   readonly hint?: ReadonlyHint
   readonly value: string | boolean
-  readonly label: ListLabel
+  readonly label?: ListLabel
 }
 
 export interface DateItem {

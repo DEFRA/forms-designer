@@ -55,6 +55,16 @@ export class ListQuestion extends Question {
     this._listElements = listElements
   }
 
+  /**
+   * @returns {{
+   *  formGroup?: {afterInputs: {html: string}};
+   *  hint: DefaultComponent;
+   *  name: string;
+   *  fieldset?: GovukFieldset;
+   *  id: string;
+   *  items: ListItemReadonly[]
+   * }}
+   */
   get renderInput() {
     const afterInputs =
       /** @type {{ formGroup?: { afterInputs: { html: string } } }} */ (
@@ -198,5 +208,5 @@ export class ListQuestion extends Question {
 
 /**
  * @import { ListElement, ListItemReadonly } from '~/src/form/form-editor/types.js'
- * @import { ListenerRow, ListElements, QuestionRenderer, HTMLBuilder } from '~/src/form/form-editor/preview/types.js'
+ * @import { ListenerRow, ListElements, QuestionRenderer, HTMLBuilder, DefaultComponent, GovukFieldset } from '~/src/form/form-editor/preview/types.js'
  */
