@@ -1,5 +1,5 @@
 import { NJK } from '~/src/javascripts/preview/nunjucks.js'
-import '~/src/views/components/inset.njk'
+import '~/src/views/preview-components/inset.njk'
 
 /**
  * @implements {QuestionRenderer}

@@ -1,12 +1,12 @@
-import '~/src/views/components/checkboxesfield.njk'
-import '~/src/views/components/textfield.njk'
-import '~/src/views/components/textarea.njk'
-import '~/src/views/components/radios.njk'
-import '~/src/views/components/date-input.njk'
-import '~/src/views/components/monthyearfield.njk'
-import '~/src/views/components/ukaddressfield.njk'
-import '~/src/views/components/telephonenumberfield.njk'
-import '~/src/views/components/emailaddressfield.njk'
+import '~/src/views/preview-components/checkboxesfield.njk'
+import '~/src/views/preview-components/textfield.njk'
+import '~/src/views/preview-components/textarea.njk'
+import '~/src/views/preview-components/radios.njk'
+import '~/src/views/preview-components/date-input.njk'
+import '~/src/views/preview-components/monthyearfield.njk'
+import '~/src/views/preview-components/ukaddressfield.njk'
+import '~/src/views/preview-components/telephonenumberfield.njk'
+import '~/src/views/preview-components/emailaddressfield.njk'
 
 import {
   hideHtmlElement,

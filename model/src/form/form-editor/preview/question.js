@@ -9,7 +9,7 @@
  * server side.
  */
 export class Question {
-  static PATH = ''
+  static PATH = 'preview-components/'
 
   /**
    * @type {string}

@@ -3,7 +3,7 @@ import { Question } from '~/src/form/form-editor/preview/question.js'
 const DefaultListConst = {
   TextElementId: 'radioText',
   HintElementId: 'radioHint',
-  Template: 'radios.njk',
+  Template: Question.PATH + 'radios.njk',
   Input: 'listInput',
   RenderName: 'listInputField'
 }

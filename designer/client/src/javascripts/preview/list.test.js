@@ -350,7 +350,7 @@ describe('list', () => {
       expect(list.renderInput).toEqual(expectedModel)
       // @ts-expect-error - Mock made available on NunjucksRenderMock
       expect(emptyListRenderer._renderMock).toHaveBeenCalledWith(
-        'radios.njk',
+        'preview-components/radios.njk',
         expectedModel
       )
     })

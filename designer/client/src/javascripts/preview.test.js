@@ -19,16 +19,16 @@ import {
 } from '~/src/javascripts/preview/__stubs__/question'
 
 jest.mock('~/src/javascripts/preview/nunjucks.js')
-jest.mock('~/src/views/components/ukaddressfield.njk', () => '')
-jest.mock('~/src/views/components/telephonenumberfield.njk', () => '')
-jest.mock('~/src/views/components/emailaddressfield.njk', () => '')
-jest.mock('~/src/views/components/inset.njk', () => '')
-jest.mock('~/src/views/components/textfield.njk', () => '')
-jest.mock('~/src/views/components/textarea.njk', () => '')
-jest.mock('~/src/views/components/radios.njk', () => '')
-jest.mock('~/src/views/components/checkboxesfield.njk', () => '')
-jest.mock('~/src/views/components/date-input.njk', () => '')
-jest.mock('~/src/views/components/monthyearfield.njk', () => '')
+jest.mock('~/src/views/preview-components/ukaddressfield.njk', () => '')
+jest.mock('~/src/views/preview-components/telephonenumberfield.njk', () => '')
+jest.mock('~/src/views/preview-components/emailaddressfield.njk', () => '')
+jest.mock('~/src/views/preview-components/inset.njk', () => '')
+jest.mock('~/src/views/preview-components/textfield.njk', () => '')
+jest.mock('~/src/views/preview-components/textarea.njk', () => '')
+jest.mock('~/src/views/preview-components/radios.njk', () => '')
+jest.mock('~/src/views/preview-components/checkboxesfield.njk', () => '')
+jest.mock('~/src/views/preview-components/date-input.njk', () => '')
+jest.mock('~/src/views/preview-components/monthyearfield.njk', () => '')
 
 jest.mock('~/src/javascripts/preview/nunjucks-renderer.js')
 

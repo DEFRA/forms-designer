@@ -217,7 +217,7 @@ describe('list', () => {
       list.push(list4)
       expect(list.renderInput).toEqual(expectedModel)
       expect(renderer.renderMock).toHaveBeenCalledWith(
-        'radios.njk',
+        'preview-components/radios.njk',
         expectedModel
       )
     })

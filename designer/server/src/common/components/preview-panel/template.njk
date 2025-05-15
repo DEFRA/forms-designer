@@ -27,7 +27,7 @@
         <!-- Question Content Here -->
         <div class="border-left-container-shorttext" id="question-preview-content">
           {% set model = params.model %}
-          {%- include params.questionType | lower + ".njk" -%}
+          {%- include 'preview-components/' + params.questionType | lower + ".njk" -%}
         </div>
       </div>
 

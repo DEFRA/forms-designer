@@ -3,11 +3,12 @@ import {
   EventListeners,
   QuestionDomElements
 } from '@defra/forms-designer/client/src/javascripts/preview/question.js'
+import { Question } from '@defra/forms-model'
 
 const DefaultListConst = {
   TextElementId: 'radioText',
   HintElementId: 'radioHint',
-  Template: 'radios.njk',
+  Template: Question.PATH + 'radios.njk',
   Input: 'listInput',
   RenderName: 'listInputField'
 }
@@ -75,7 +76,8 @@ export class ListQuestionDomElements extends QuestionDomElements {
     this.listText = listText
     this.listHint = listHint
     this.updateElement = updateElement
-    this.afterInputsHTML = htmlBuilder.buildHTML('inset.njk', {
+    const path = Question.PATH + 'inset.njk'
+    this.afterInputsHTML = htmlBuilder.buildHTML(path, {
       model: {
         text: 'No items added yet.'
       }
