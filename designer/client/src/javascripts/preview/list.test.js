@@ -155,8 +155,8 @@ describe('list', () => {
       const listText = /** @type {HTMLInputElement} */ (
         document.getElementById('radioText')
       )
-      expect(ListQuestionDomElements.getUpdateData(listText)).toBeDefined()
-      expect(ListQuestionDomElements.getUpdateData(listText)).not.toBeNull()
+      expect(questionElements.getUpdateData(listText)).toBeDefined()
+      expect(questionElements.getUpdateData(listText)).not.toBeNull()
       const listItem = questionElements.listElements[2]
       expect(listItem).toBeDefined()
       listItem.dataset.hint = 'hint 1'

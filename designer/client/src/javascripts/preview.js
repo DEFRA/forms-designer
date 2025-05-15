@@ -1,3 +1,4 @@
+import '~/src/views/components/checkboxesfield.njk'
 import '~/src/views/components/textfield.njk'
 import '~/src/views/components/textarea.njk'
 import '~/src/views/components/radios.njk'
