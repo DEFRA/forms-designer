@@ -52,6 +52,7 @@ export type ListenerRow = [
 export interface QuestionElements {
   readonly values: BaseSettings
   setPreviewHTML(value: string): void
+  setPreviewDOM(element: HTMLElement): void
 }
 
 export interface RenderContext {

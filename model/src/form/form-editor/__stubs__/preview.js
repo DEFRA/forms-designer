@@ -85,6 +85,13 @@ export class QuestionPreviewElements {
   setPreviewHTML(_value) {
     // Not implemented for server side render
   }
+
+  /**
+   * @param {HTMLElement} _value
+   */
+  setPreviewDOM(_value) {
+    // Not implemented for server side render
+  }
 }
 
 export const baseElements = /** @type {BaseSettings} */ ({

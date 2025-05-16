@@ -17,8 +17,14 @@ describe('AutoCompleteQuestion', () => {
       id: 'autoCompleteField',
       name: 'autoCompleteField',
       label: {
-        classes: 'govuk-label--l',
-        text: 'Which quest would you like to pick?'
+        classes: '',
+        text: 'Start typing to select an option'
+      },
+      fieldset: {
+        legend: {
+          classes: 'govuk-fieldset__legend--l',
+          text: 'Which quest would you like to pick?'
+        }
       },
       hint: {
         classes: '',
@@ -26,18 +32,22 @@ describe('AutoCompleteQuestion', () => {
       },
       items: [
         {
+          id: 'Treasure Hunting',
           text: 'Treasure Hunting',
           value: 'Treasure Hunting'
         },
         {
+          id: 'Rescuing the princess',
           text: 'Rescuing the princess',
           value: 'Rescuing the princess'
         },
         {
+          id: 'Saving a city',
           text: 'Saving a city',
           value: 'Saving a city'
         },
         {
+          id: 'Defeating the baron',
           text: 'Defeating the baron',
           value: 'Defeating the baron'
         }
