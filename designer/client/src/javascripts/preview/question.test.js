@@ -9,6 +9,13 @@ jest.mock('~/src/javascripts/preview/nunjucks-renderer.js')
 
 describe('question', () => {
   describe('QuestionElements', () => {
+    const textNode = document.createTextNode('123')
+    const innerEl = document.createElement('span')
+    innerEl.appendChild(textNode)
+    const el = document.createElement('div')
+    el.classList.add('preview')
+    el.appendChild(innerEl)
+
     it('should find elements', () => {
       document.body.innerHTML =
         questionDetailsLeftPanelHTML + questionDetailsPreviewHTML
@@ -39,6 +46,26 @@ describe('question', () => {
       expect(res.preview).toBeNull()
       const html = '<div id="preview">123</div>'
       res.setPreviewHTML(html)
+      expect(res.preview?.innerHTML).toBeUndefined()
+    })
+
+    it('should setPreviewDOM', () => {
+      document.body.innerHTML =
+        questionDetailsLeftPanelHTML + questionDetailsPreviewHTML
+      const res = new QuestionDomElements()
+      expect(res.preview).toBeDefined()
+
+      res.setPreviewDOM(el)
+      expect(res.preview?.innerHTML).toBe(
+        `<div id="question-preview-inner"><div class="preview"><span>123</span></div></div>`
+      )
+    })
+
+    it('should not set preview dom if not found', () => {
+      document.body.innerHTML = questionDetailsLeftPanelHTML
+      const res = new QuestionDomElements()
+      expect(res.preview).toBeNull()
+      res.setPreviewDOM(el)
       expect(res.preview?.innerHTML).toBeUndefined()
     })
   })

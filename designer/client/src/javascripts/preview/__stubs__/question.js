@@ -310,7 +310,7 @@ export const questionDetailsLeftPanelHTML =
   questionDetailsLeftPanelBuilder(listItemsHTML)
 
 export const questionDetailsPreviewHTML =
-  '<div class="border-left-container-shorttext" id="question-preview-content"></div>'
+  '<div class="border-left-container-shorttext" id="question-preview-content"><div id="question-preview-inner"></div></div>'
 
 /**
  *
