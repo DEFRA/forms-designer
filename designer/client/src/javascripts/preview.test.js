@@ -15,7 +15,10 @@ import {
 import { setupPreview, showHideForJs } from '~/src/javascripts/preview'
 import { list1HTML } from '~/src/javascripts/preview/__stubs__/list'
 import {
+  buildQuestionStubPanels,
+  questionDetailsLeftPanelBuilder,
   questionDetailsLeftPanelHTML,
+  questionDetailsPreviewHTML,
   questionDetailsPreviewTabsHTML
 } from '~/src/javascripts/preview/__stubs__/question'
 
@@ -68,7 +71,17 @@ describe('preview', () => {
     })
 
     it('should setup preview for AutoCompleteField', () => {
-      document.body.innerHTML = list1HTML
+      const autocompleteTextarea = `
+    <textarea class="govuk-textarea" id="autoCompleteOptions" name="autoCompleteOptions" rows="5" aria-describedby="autoCompleteOptions-hint">Hydrogen:1
+Helium:2
+Lithium:3
+Beryllium:4
+</textarea>`
+
+      document.body.innerHTML = buildQuestionStubPanels(
+        questionDetailsLeftPanelBuilder(autocompleteTextarea),
+        questionDetailsPreviewHTML
+      )
       const res = setupPreview(ComponentType.AutocompleteField)
       expect(res).toBeInstanceOf(AutocompleteQuestion)
     })

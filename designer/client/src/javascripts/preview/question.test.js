@@ -28,7 +28,9 @@ describe('question', () => {
       expect(res.preview).toBeDefined()
       const html = '<div id="preview">123</div>'
       res.setPreviewHTML(html)
-      expect(res.preview?.innerHTML).toBe(html)
+      expect(res.preview?.innerHTML).toBe(
+        `<div id="question-preview-inner">${html}</div>`
+      )
     })
 
     it('should not set preview if not found', () => {

@@ -149,7 +149,7 @@ export class EmptyRender {
 const emptyRender = new EmptyRender()
 
 export const ModelFactory =
-  /** @type {Record<ComponentType|'Question', (q: ListElements) => Question>} */ ({
+  /** @type {Record<ComponentType|'Question', (q: ListElements|AutocompleteElements) => Question>} */ ({
     /**
      * @param {QuestionElements} questionElements
      * @returns {Question}
@@ -200,7 +200,7 @@ export const ModelFactory =
       return new NumberOnlyQuestion(questionElements, emptyRender)
     },
     /**
-     * @param {ListElements} questionElements
+     * @param {AutocompleteElements} questionElements
      * @returns {Question}
      */
     AutocompleteField: (questionElements) => {
@@ -320,5 +320,5 @@ export function getPreviewModel(govukFields, state, componentType) {
   return question.renderInput
 }
 /**
- * @import { ListElement, ListElements, QuestionElements, QuestionRenderer, QuestionBaseModel, GovukField, QuestionSessionState, ComponentType, PreviewQuestion } from '@defra/forms-model'
+ * @import { AutocompleteElements, ListElement, ListElements, QuestionElements, QuestionRenderer, QuestionBaseModel, GovukField, QuestionSessionState, ComponentType, PreviewQuestion } from '@defra/forms-model'
  */

@@ -22,7 +22,6 @@ export class AutocompleteRenderer extends NunjucksRenderer {
       document.createElement('div')
     )
     autoCompletePreviewContainer.innerHTML = html.trim()
-
     const autoCompleteField =
       autoCompletePreviewContainer.querySelector('#autoCompleteField')
 
