@@ -240,8 +240,17 @@ export class EventListeners {
       questionText,
       hintText,
       optionalCheckbox,
-      ...this.highlightListeners
+      ...this.highlightListeners,
+      ...this._customListeners
     ]
+  }
+
+  /**
+   * @returns {ListenerRow[]}
+   * @protected
+   */
+  get _customListeners() {
+    return []
   }
 
   /**

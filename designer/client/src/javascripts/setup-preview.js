@@ -16,7 +16,10 @@ import {
 } from '@defra/forms-model'
 
 import { AutocompleteRenderer } from '~/src/javascripts/preview/autocomplete-renderer.js'
-import { AutocompleteDOMElements } from '~/src/javascripts/preview/autocomplete.js'
+import {
+  AutocompleteDOMElements,
+  AutocompleteListeners
+} from '~/src/javascripts/preview/autocomplete.js'
 import {
   ListSortableEventListeners,
   ListSortableQuestionElements
@@ -205,7 +208,10 @@ export const SetupPreview =
         elements,
         nunjucksRenderer
       )
-      const listeners = new EventListeners(autocompleteQuestion, elements)
+      const listeners = new AutocompleteListeners(
+        autocompleteQuestion,
+        elements
+      )
       listeners.setupListeners()
 
       return autocompleteQuestion

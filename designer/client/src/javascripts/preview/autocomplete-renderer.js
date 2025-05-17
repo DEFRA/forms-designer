@@ -27,6 +27,7 @@ export class AutocompleteRenderer extends NunjucksRenderer {
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
     accessibleAutocomplete.enhanceSelectElement({
+      defaultValue: '',
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       selectElement: autoCompleteField
     })

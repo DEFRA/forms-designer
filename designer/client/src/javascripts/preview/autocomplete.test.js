@@ -28,12 +28,9 @@ Beryllium:4
     it('should return the list elements', () => {
       document.body.innerHTML = buildDom(autocompleteTextarea)
       const autocompleteElements = new AutocompleteDOMElements()
-      expect(autocompleteElements.values.items).toEqual([
-        { text: 'Hydrogen', value: '1' },
-        { text: 'Helium', value: '2' },
-        { text: 'Lithium', value: '3' },
-        { text: 'Beryllium', value: '4' }
-      ])
+      expect(autocompleteElements.autocompleteOptions).toBe(
+        'Hydrogen:1\nHelium:2\nLithium:3\nBeryllium:4\n'
+      )
     })
   })
 })

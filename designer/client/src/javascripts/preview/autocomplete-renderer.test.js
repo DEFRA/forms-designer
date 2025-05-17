@@ -97,6 +97,7 @@ describe('nunjucks-renderer', () => {
       expect(NJK.render).toHaveBeenCalledWith(template, { model })
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       expect(accessibleAutocomplete.enhanceSelectElement).toHaveBeenCalledWith({
+        defaultValue: '',
         selectElement: expect.any(HTMLSelectElement)
       })
       expect(mockSetPreviewDOM).toHaveBeenCalledWith(expect.any(HTMLDivElement))
