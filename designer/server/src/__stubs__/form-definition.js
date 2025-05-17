@@ -769,5 +769,75 @@ export const testFormDefinitionWithOneQuestionNoPageTitle = {
 }
 
 /**
+ * @satisfies {FormDefinition}
+ */
+export const testFormDefinitionWithRepeater = {
+  name: 'Test form',
+  pages: [
+    {
+      id: 'p1',
+      path: '/pizza',
+      title: 'Pizza',
+      controller: ControllerType.Repeat,
+      repeat: {
+        schema: { min: 1, max: 5 },
+        options: { title: 'Pizza', name: 'xdGhbu' }
+      },
+      section: 'section',
+      components: [
+        {
+          id: 'q1',
+          type: ComponentType.TextField,
+          name: 'toppings',
+          title: 'Toppings',
+          options: {},
+          schema: {}
+        }
+      ],
+      next: [{ path: '/summary' }]
+    },
+    {
+      id: 'p2',
+      path: '/page-two',
+      title: 'Page two',
+      section: 'section',
+      components: [
+        {
+          id: 'q1',
+          type: ComponentType.TextField,
+          name: 'textField',
+          title: 'This is your first question - page two',
+          hint: 'Help text',
+          options: {},
+          schema: {}
+        },
+        {
+          id: 'q2',
+          type: ComponentType.TextField,
+          name: 'textField',
+          title: 'This is your second question - page two',
+          hint: 'Help text',
+          options: {
+            required: false
+          },
+          schema: {}
+        }
+      ],
+      next: [{ path: '/summary' }]
+    },
+    {
+      id: 'p3',
+      title: 'Summary',
+      path: '/summary',
+      controller: ControllerType.Summary,
+      components: []
+    }
+  ],
+  conditions: [],
+  sections: [],
+  lists: []
+}
+
+/**
  * @import { FormDefinition, PageQuestion, PageSummary, TextFieldComponent, FileUploadFieldComponent, AutocompleteFieldComponent, List, Item, RadiosFieldComponent, CheckboxesFieldComponent } from '@defra/forms-model'
  */

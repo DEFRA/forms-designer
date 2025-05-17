@@ -5,6 +5,7 @@ import {
   testFormDefinitionWithExistingSummaryDeclaration,
   testFormDefinitionWithNoPages,
   testFormDefinitionWithNoQuestions,
+  testFormDefinitionWithRepeater,
   testFormDefinitionWithTwoPagesAndQuestions,
   testFormDefinitionWithTwoQuestions
 } from '~/src/__stubs__/form-definition.js'
@@ -71,9 +72,11 @@ describe('editor-v2 - pages model', () => {
       const resPageSummaryQuestions = mapQuestionRows(
         testFormDefinitionWithTwoPagesAndQuestions.pages[2]
       )
-
       const resPageSummaryExistingMarkdown = mapQuestionRows(
         testFormDefinitionWithExistingSummaryDeclaration.pages[1]
+      )
+      const resPageSummaryRepeater = mapQuestionRows(
+        testFormDefinitionWithRepeater.pages[0]
       )
 
       expect(resPageOneQuestions).toHaveLength(2)
@@ -121,6 +124,17 @@ describe('editor-v2 - pages model', () => {
         value: {
           html: '<pre class="break-on-newlines"><p class="govuk-body">Declaration text</p></pre>',
           classes: 'with-ellipsis'
+        }
+      })
+
+      expect(resPageSummaryRepeater).toHaveLength(2)
+
+      expect(resPageSummaryRepeater[1]).toEqual({
+        key: {
+          text: 'People can answer'
+        },
+        value: {
+          text: 'More than once'
         }
       })
     })
