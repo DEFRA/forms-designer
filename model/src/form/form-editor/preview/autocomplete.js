@@ -21,20 +21,12 @@ export class AutocompleteQuestion extends ListQuestion {
     }))
   }
 
-  get label() {
-    return {
-      classes: '',
-      text: 'Start typing to select an option'
-    }
-  }
-
   get renderInput() {
     return {
       id: this._fieldName,
       name: this._fieldName,
       attributes: { 'data-module': 'govuk-accessible-autocomplete' },
       hint: this.hint,
-      fieldset: this.fieldSet,
       label: this.label,
       items: this.autoCompleteList
     }

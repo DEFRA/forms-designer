@@ -17,14 +17,8 @@ describe('AutoCompleteQuestion', () => {
       id: 'autoCompleteField',
       name: 'autoCompleteField',
       label: {
-        classes: '',
-        text: 'Start typing to select an option'
-      },
-      fieldset: {
-        legend: {
-          classes: 'govuk-fieldset__legend--l',
-          text: 'Which quest would you like to pick?'
-        }
+        classes: 'govuk-label--l',
+        text: 'Which quest would you like to pick?'
       },
       hint: {
         classes: '',
