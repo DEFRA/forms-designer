@@ -24,7 +24,7 @@ export class AutocompleteQuestion extends Question {
   }
 
   get autoCompleteList() {
-    return this._autocompleteList
+    return [{ id: '', value: '', text: '' }, ...this._autocompleteList]
   }
 
   /**
@@ -44,6 +44,7 @@ export class AutocompleteQuestion extends Question {
           value
         })
       )
+      this.render()
     }
   }
 

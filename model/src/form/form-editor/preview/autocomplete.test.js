@@ -33,6 +33,7 @@ describe('AutoCompleteQuestion', () => {
         text: 'Choose one adventure that best suits you.'
       },
       items: [
+        { id: '', text: '', value: '' },
         {
           id: 'Treasure Hunting',
           text: 'Treasure Hunting',
