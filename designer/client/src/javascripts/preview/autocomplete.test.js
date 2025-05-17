@@ -54,10 +54,16 @@ Beryllium:4
         autocomplete,
         autocompleteElements
       )
+      // @ts-expect-error accessing a protected method to test implementation
       const listeners = autocompleteListener.listeners
-      const [optionsEl, listenerFn] = listeners.pop()
+      const [optionsEl, listenerFn] = /** @type {ListenerRow} */ (
+        listeners.pop()
+      )
+      if (!optionsEl) {
+        throw new Error('test failed')
+      }
       optionsEl.value = 'Hydrogen:1\nHelium:2\nLithium:3\nBeryllium:4\nBoron:5'
-      listenerFn(optionsEl)
+      listenerFn(optionsEl, /** @type {Event} */ ({}))
       expect(autocomplete.autoCompleteList).toEqual([
         { id: '', text: '', value: '' },
         { id: 'Hydrogen', text: 'Hydrogen', value: '1' },
@@ -69,3 +75,7 @@ Beryllium:4
     })
   })
 })
+
+/**
+ * @import { ListenerRow } from '@defra/forms-model'
+ */
