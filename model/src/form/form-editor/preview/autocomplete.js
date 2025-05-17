@@ -1,24 +1,50 @@
-import { ListQuestion } from '~/src/form/form-editor/preview/list.js'
-import { Question } from '~/src/index.js'
+import { autoCompleteOptionsSchema } from '~/src/form/form-editor/index.js'
+import { Question } from '~/src/form/form-editor/preview/question.js'
 
-export class AutocompleteQuestion extends ListQuestion {
+export class AutocompleteQuestion extends Question {
   _questionTemplate = Question.PATH + 'autocompletefield.njk'
   /**
    * @type {string}
    * @protected
    */
   _fieldName = 'autoCompleteField'
+  /**
+   * @type {ListElement[]}
+   * @private
+   */
+  _autocompleteList = []
+
+  /**
+   * @param {AutocompleteElements} autocompleteElements
+   * @param {QuestionRenderer} questionRenderer
+   */
+  constructor(autocompleteElements, questionRenderer) {
+    super(autocompleteElements, questionRenderer)
+    this.setAutocompleteList(autocompleteElements.autocompleteOptions)
+  }
 
   get autoCompleteList() {
-    const iterator = /** @type {MapIterator<ListElement>} */ (
-      this._list.values()
-    )
+    return this._autocompleteList
+  }
 
-    return Array.from(iterator).map(({ text, value }) => ({
-      id: `${value}`,
-      text,
-      value
-    }))
+  /**
+   * @param {string} listHTML
+   */
+  setAutocompleteList(listHTML) {
+    const validationResult =
+      /** @type {ValidationResult<{text: string, value: string}[]>} */ (
+        autoCompleteOptionsSchema.validate(listHTML)
+      )
+
+    if (!validationResult.error) {
+      this._autocompleteList = validationResult.value.map(
+        ({ text, value }) => ({
+          id: text,
+          text,
+          value
+        })
+      )
+    }
   }
 
   get renderInput() {
@@ -34,5 +60,7 @@ export class AutocompleteQuestion extends ListQuestion {
 }
 
 /**
+ * @import { ValidationResult } from 'joi'
  * @import { ListElement } from '~/src/form/form-editor/types.js'
+ * @import { AutocompleteElements, QuestionRenderer } from '~/src/form/form-editor/preview/types.js'
  */

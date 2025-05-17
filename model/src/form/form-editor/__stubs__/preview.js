@@ -94,6 +94,19 @@ export class QuestionPreviewElements {
   }
 }
 
+/**
+ * @implements {AutocompleteElements}
+ */
+export class AutocompletePreviewElements extends QuestionPreviewElements {
+  /**
+   * @param {BaseSettings & {autocompleteOptions: string}} elements
+   */
+  constructor({ autocompleteOptions, ...elements }) {
+    super(elements)
+    this.autocompleteOptions = autocompleteOptions
+  }
+}
+
 export const baseElements = /** @type {BaseSettings} */ ({
   items: [],
   optional: false,
@@ -147,5 +160,5 @@ export const listElementsStub = {
 
 /**
  * @import { ListElement } from  '~/src/form/form-editor/types.js'
- * @import { BaseSettings, ListElements, RenderContext, QuestionBaseModel, QuestionElements, QuestionRenderer } from  '~/src/form/form-editor/preview/types.js'
+ * @import { BaseSettings, ListElements, RenderContext, QuestionBaseModel, QuestionElements, QuestionRenderer, AutocompleteElements } from  '~/src/form/form-editor/preview/types.js'
  */

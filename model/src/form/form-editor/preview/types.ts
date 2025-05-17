@@ -55,6 +55,9 @@ export interface QuestionElements {
   setPreviewHTML(value: string): void
   setPreviewDOM(element: HTMLElement): void
 }
+export interface AutocompleteElements extends QuestionElements {
+  autocompleteOptions: string
+}
 
 export interface RenderContext {
   model: QuestionBaseModel

@@ -1,5 +1,5 @@
 import {
-  QuestionPreviewElements,
+  AutocompletePreviewElements,
   QuestionRendererStub,
   listElementsStub
 } from '~/src/form/form-editor/__stubs__/preview.js'
@@ -8,8 +8,16 @@ import { AutocompleteQuestion } from '~/src/form/form-editor/preview/autocomplet
 describe('AutoCompleteQuestion', () => {
   it('should create class', () => {
     const { baseElements } = listElementsStub
-    const elements = /** @type {ListElements} */ (
-      new QuestionPreviewElements(baseElements)
+    const { items: _removedItems, ...baseElementsWithoutItems } = baseElements
+    const elements = new AutocompletePreviewElements({
+      autocompleteOptions:
+        'Treasure Hunting\nRescuing the princess\nSaving a city\nDefeating the baron',
+      ...baseElementsWithoutItems,
+      items: []
+    })
+
+    expect(elements.autocompleteOptions).toBe(
+      'Treasure Hunting\nRescuing the princess\nSaving a city\nDefeating the baron'
     )
     const renderer = new QuestionRendererStub(jest.fn())
     const autoCompleteQuestion = new AutocompleteQuestion(elements, renderer)
