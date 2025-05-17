@@ -1,4 +1,5 @@
 import {
+  AutocompleteQuestion,
   CheckboxSortableQuestion,
   DateInputQuestion,
   EmailAddressQuestion,
@@ -124,6 +125,13 @@ export class QuestionPreviewElements {
   setPreviewHTML(_value) {
     // Not implemented for server side render
   }
+
+  /**
+   * @param {HTMLElement} _value
+   */
+  setPreviewDOM(_value) {
+    // Not implemented for server side render
+  }
 }
 
 /**
@@ -196,7 +204,7 @@ export const ModelFactory =
      * @returns {Question}
      */
     AutocompleteField: (questionElements) => {
-      return new ListQuestion(questionElements, emptyRender)
+      return new AutocompleteQuestion(questionElements, emptyRender)
     },
     /**
      * @param {ListElements} questionElements

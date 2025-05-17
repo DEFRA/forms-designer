@@ -16,6 +16,7 @@ describe('nunjucks-renderer', () => {
   })
 
   const mockSetPreviewHTML = jest.fn()
+  const mockSetPreviewDOM = jest.fn()
   /**
    * @implements {QuestionElements}
    */
@@ -36,6 +37,13 @@ describe('nunjucks-renderer', () => {
      */
     setPreviewHTML(value) {
       mockSetPreviewHTML(value)
+    }
+
+    /**
+     * @param {HTMLElement} element
+     */
+    setPreviewDOM(element) {
+      mockSetPreviewDOM(element)
     }
   }
   /**

@@ -1,4 +1,5 @@
 import {
+  AutocompleteQuestion,
   CheckboxSortableQuestion,
   ComponentType,
   DateInputQuestion,
@@ -19,6 +20,7 @@ import {
 } from '~/src/javascripts/preview/__stubs__/question'
 
 jest.mock('~/src/javascripts/preview/nunjucks.js')
+jest.mock('~/src/views/preview-components/autocompletefield.njk', () => '')
 jest.mock('~/src/views/preview-components/ukaddressfield.njk', () => '')
 jest.mock('~/src/views/preview-components/telephonenumberfield.njk', () => '')
 jest.mock('~/src/views/preview-components/emailaddressfield.njk', () => '')
@@ -63,6 +65,12 @@ describe('preview', () => {
       document.body.innerHTML = list1HTML
       const res = setupPreview(ComponentType.CheckboxesField)
       expect(res).toBeInstanceOf(CheckboxSortableQuestion)
+    })
+
+    it('should setup preview for AutoCompleteField', () => {
+      document.body.innerHTML = list1HTML
+      const res = setupPreview(ComponentType.AutocompleteField)
+      expect(res).toBeInstanceOf(AutocompleteQuestion)
     })
 
     it('should setup preview for YesNo', () => {

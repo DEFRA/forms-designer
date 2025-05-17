@@ -1,3 +1,4 @@
+import '~/src/views/preview-components/autocompletefield.njk'
 import '~/src/views/preview-components/checkboxesfield.njk'
 import '~/src/views/preview-components/textfield.njk'
 import '~/src/views/preview-components/textarea.njk'

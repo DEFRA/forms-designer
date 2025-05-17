@@ -1,4 +1,5 @@
 import {
+  AutocompleteQuestion,
   CheckboxSortableQuestion,
   ComponentType,
   DateInputQuestion,
@@ -314,7 +315,7 @@ describe('preview', () => {
         previewElements
       )
 
-      expect(previewModel).toBeInstanceOf(ListQuestion)
+      expect(previewModel).toBeInstanceOf(AutocompleteQuestion)
     })
 
     it('should get CheckboxesField', () => {
@@ -586,24 +587,26 @@ describe('preview', () => {
       )
 
       expect(previewModel).toEqual({
+        id: 'autoCompleteField',
+        name: 'autoCompleteField',
+        attributes: {
+          'data-module': 'govuk-accessible-autocomplete'
+        },
         fieldset: {
           legend: {
             classes: 'govuk-fieldset__legend--l',
             text: 'Short answer (optional)'
           }
         },
-        formGroup: {
-          afterInputs: {
-            html: '<div class="govuk-inset-text">No items added yet.</div>'
-          }
+        label: {
+          classes: '',
+          text: 'Start typing to select an option'
         },
         hint: {
           classes: '',
           text: ''
         },
-        id: 'listInput',
-        items: [],
-        name: 'listInputField'
+        items: []
       })
     })
 

@@ -7,7 +7,7 @@ import '~/src/views/preview-components/inset.njk'
 export class NunjucksRenderer {
   /**
    * @type {QuestionElements}
-   * @private
+   * @protected
    */
   _questionElements
 
@@ -21,7 +21,7 @@ export class NunjucksRenderer {
   /**
    * @param {string} questionTemplate
    * @param {QuestionBaseModel} questionBaseModel
-   * @private
+   * @protected
    */
   _render(questionTemplate, questionBaseModel) {
     /**
