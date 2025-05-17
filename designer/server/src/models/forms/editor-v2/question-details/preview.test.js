@@ -592,21 +592,15 @@ describe('preview', () => {
         attributes: {
           'data-module': 'govuk-accessible-autocomplete'
         },
-        fieldset: {
-          legend: {
-            classes: 'govuk-fieldset__legend--l',
-            text: 'Short answer (optional)'
-          }
-        },
         label: {
-          classes: '',
-          text: 'Start typing to select an option'
+          classes: 'govuk-label--l',
+          text: 'Short answer (optional)'
         },
         hint: {
           classes: '',
           text: ''
         },
-        items: []
+        items: [{ id: '', text: '', value: '' }]
       })
     })
 
