@@ -72,6 +72,22 @@ describe('preview', () => {
     value: 'Short answer'
   }
 
+  const autocompleteOptions = {
+    id: 'autoCompleteOptions',
+    name: 'autoCompleteOptions',
+    idPrefix: 'autoCompleteOptions',
+    label: {
+      text: 'Add each option on a new line',
+      classes: 'govuk-label--s',
+      isPageHeading: false
+    },
+    hint: {
+      text: 'To optionally set an input value for each item, separate the option text and value with a colon (e.g English:en-gb)'
+    },
+    customTemplate: 'auto-complete-options',
+    value: 'Hydrogen:1\r\n' + 'Helium:2\r\n' + 'Lithium:3\r\n'
+  }
+
   const questionSessionState = {
     questionType: ComponentType.RadiosField,
     editRow: {},
@@ -110,6 +126,11 @@ describe('preview', () => {
     })
     it('should return empty string given questionOptional', () => {
       expect(getValueAsString(questionOptional)).toBe('')
+    })
+    it('should return value as string given _autocompleteOptions', () => {
+      expect(getValueAsString(autocompleteOptions)).toBe(
+        'Hydrogen:1\r\n' + 'Helium:2\r\n' + 'Lithium:3\r\n'
+      )
     })
   })
 
@@ -195,6 +216,16 @@ describe('preview', () => {
       const previewElements2 = structuredClone(previewElements)
       previewElements.setPreviewHTML('abc')
       expect(previewElements).toEqual(previewElements2)
+    })
+
+    it('should get autocomplete options', () => {
+      const previewElements = new QuestionPreviewElements(
+        [...basePageFields, autocompleteOptions],
+        {}
+      )
+      expect(previewElements.autocompleteOptions).toBe(
+        'Hydrogen:1\r\n' + 'Helium:2\r\n' + 'Lithium:3\r\n'
+      )
     })
   })
 

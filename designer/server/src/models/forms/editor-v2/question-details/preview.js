@@ -63,6 +63,7 @@ export function getListFromState(state) {
 
 /**
  * @implements {ListElements}
+ * @implements {AutocompleteElements}
  */
 export class QuestionPreviewElements {
   /**
@@ -84,6 +85,10 @@ export class QuestionPreviewElements {
    * @private
    */
   _items = []
+  /**
+   * @type {string}
+   */
+  autocompleteOptions = ''
 
   afterInputsHTML = '<div class="govuk-inset-text">No items added yet.</div>'
 
@@ -102,6 +107,8 @@ export class QuestionPreviewElements {
         this._optional = getCheckedValue(field)
       } else if (field.name === 'shortDescription') {
         this._shortDesc = getValueAsString(field)
+      } else if (field.name === 'autoCompleteOptions') {
+        this.autocompleteOptions = getValueAsString(field)
       } else {
         // sonarlint
       }
