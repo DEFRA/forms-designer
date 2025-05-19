@@ -106,6 +106,16 @@ export function baseModelFields(slug, pageTitle, pageHeading) {
 }
 
 /**
+ * Builds a live form URL based on its slug.
+ * @param {string} slug - The unique identifier for the form.
+ */
+export function buildFormUrl(slug) {
+  const encodedSlug = encodeURIComponent(slug)
+
+  return `${config.previewUrl}/form/${encodedSlug}`
+}
+
+/**
  * Builds a URL for previewing a form based on its slug and status.
  * @param {string} slug - The unique identifier for the form.
  * @param {FormStatus} status - The current status of the form.

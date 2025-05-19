@@ -6,7 +6,10 @@ import { getUserSession } from '~/src/common/helpers/auth/get-user-session.js'
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
 import { buildNavigation } from '~/src/common/nunjucks/context/build-navigation.js'
 import config from '~/src/config.js'
-import { buildPreviewUrl } from '~/src/models/forms/editor-v2/common.js'
+import {
+  buildFormUrl,
+  buildPreviewUrl
+} from '~/src/models/forms/editor-v2/common.js'
 
 const logger = createLogger()
 const { cdpEnvironment, phase, serviceName, serviceVersion } = config
@@ -47,6 +50,7 @@ export async function context(request) {
     isFormsUser: credentials?.scope?.includes(SCOPE_READ) ?? false, // isAuthorized may be true if no scopes are required for the route
     authedUser: credentials?.user,
     helpers: {
+      buildFormUrl,
       buildPreviewUrl
     }
   }

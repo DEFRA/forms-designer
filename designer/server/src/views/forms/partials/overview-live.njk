@@ -20,7 +20,7 @@
 {% endset %}
 
 {% set formLink %}
-  {% set linkHref = previewUrl + "/" + form.slug | urlencode %}
+  {% set linkHref = helpers.buildFormUrl(form.slug) %}
   <a href="{{ linkHref }}" class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noreferrer noopener">
     {{ linkHref }} (opens in a new tab)
   </a>
