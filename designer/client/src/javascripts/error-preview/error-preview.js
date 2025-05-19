@@ -1,7 +1,17 @@
-import { allowedErrorTemplateFunctions } from '@defra/forms-model'
+import {
+  ComponentType,
+  allowedErrorTemplateFunctions
+} from '@defra/forms-model'
 import lowerFirst from 'lodash/lowerFirst.js'
 
 import { fieldMappings } from '~/src/javascripts/error-preview/field-mappings'
+import { updateFileUploadErrorText } from '~/src/javascripts/error-preview/file-upload/error-display'
+import { setupFileTypeListeners } from '~/src/javascripts/error-preview/file-upload/file-type-handler'
+import {
+  setupFileUploadValidation,
+  setupFormSubmissionCleanup
+} from '~/src/javascripts/error-preview/file-upload/validations'
+import { updateFileUploadVisibility } from '~/src/javascripts/error-preview/file-upload/visibility'
 
 export class ErrorPreviewDomElements {
   /**
@@ -38,11 +48,14 @@ export class ErrorPreviewDomElements {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const fieldDetails =
         /** @type {{ fieldName: string, placeholder: string }} */ (field[1])
+
+      const source = /** @type {HTMLInputElement} */ (
+        document.getElementById(fieldDetails.fieldName)
+      )
+
       return {
         id: field[0],
-        source: /** @type {HTMLInputElement} */ (
-          document.getElementById(fieldDetails.fieldName)
-        ),
+        source,
         target: /** @type {HTMLInputElement} */ (
           document.getElementsByClassName(`error-preview-${field[0]}`)[0]
         ),
@@ -218,14 +231,22 @@ export class ErrorPreviewEventListeners {
         return [
           field.source,
           /**
-           * @param {HTMLInputElement} _target
+           * @param {HTMLInputElement} target
            */
-          (_target) => {
+          (target) => {
             this.baseElements.updateText(
               field.source,
               [field.target],
               field.placeholder
             )
+
+            if (
+              target.id === 'minFiles' ||
+              target.id === 'maxFiles' ||
+              target.id === 'exactFiles'
+            ) {
+              updateFileUploadErrorText(target.id, target.value)
+            }
           },
           'input'
         ]
@@ -235,9 +256,49 @@ export class ErrorPreviewEventListeners {
     return [...advanced, shortDesc, ...this.highlightListeners]
   }
 
+  /**
+   * Updates the visibility of error messages based on field changes
+   * @param {{ id: string, source: HTMLInputElement }} field
+   * @private
+   */
+  _updateErrorVisibility(field) {
+    const minFilesInput = document.getElementById('minFiles')
+    const maxFilesInput = document.getElementById('maxFiles')
+    const exactFilesInput = document.getElementById('exactFiles')
+    const minLengthInput = document.getElementById('minLength')
+
+    // Handle file upload field visibility if this is a file field
+    if (
+      field.source === minFilesInput ||
+      field.source === maxFilesInput ||
+      field.source === exactFilesInput
+    ) {
+      updateFileUploadVisibility(field)
+    }
+
+    // Handle text field min/max if this is a text field
+    if (field.source === minLengthInput) {
+      updateFileUploadVisibility(field)
+    }
+  }
+
   setupListeners() {
     for (const [el, cb, type] of this.listeners) {
       this.inputEventListener(el, cb, type)
+    }
+
+    const minLengthInput = /** @type {HTMLInputElement | null} */ (
+      document.getElementById('minLength')
+    )
+    if (minLengthInput) {
+      this._updateErrorVisibility({ id: 'min', source: minLengthInput })
+    }
+
+    const minFilesInput = /** @type {HTMLInputElement | null} */ (
+      document.getElementById('minFiles')
+    )
+    if (minFilesInput) {
+      this._updateErrorVisibility({ id: 'min', source: minFilesInput })
     }
   }
 }
@@ -276,10 +337,26 @@ export class ErrorPreview {
       new ErrorPreviewDomElements(advancedFields)
     )
 
+    if (componentType === ComponentType.FileUploadField) {
+      // Set up file type handling
+      setupFileTypeListeners()
+
+      // Set up form submission cleanup
+      setupFormSubmissionCleanup()
+    }
+
     return question
+  }
+
+  /**
+   * Set up file upload validation helper
+   * @static
+   */
+  static setupFileUploadValidation() {
+    setupFileUploadValidation()
   }
 }
 
 /**
- * @import { ComponentType, ErrorPreviewFieldMappingDef, HTMLElementOrNull, HTMLInputElementOrNull, ListenerRow } from '@defra/forms-model'
+ * @import { ErrorPreviewFieldMappingDef, HTMLElementOrNull, HTMLInputElementOrNull, ListenerRow } from '@defra/forms-model'
  */

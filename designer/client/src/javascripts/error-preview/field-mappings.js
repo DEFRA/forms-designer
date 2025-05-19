@@ -21,6 +21,15 @@ export const fieldMappings =
         fieldName: 'maxFuture',
         placeholder: '[max days in the future]'
       }
+    },
+    [ComponentType.FileUploadField]: {
+      min: { fieldName: 'minFiles', placeholder: '[min file count]' },
+      max: { fieldName: 'maxFiles', placeholder: '[max file count]' },
+      length: { fieldName: 'exactFiles', placeholder: '[exact file count]' },
+      filesMimes: {
+        fieldName: 'accept',
+        placeholder: '[files types you accept]'
+      }
     }
   })
 

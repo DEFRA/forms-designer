@@ -42,7 +42,12 @@ const fieldMappings = /** @type {AdvancedFieldMappingsType } */ ({
   Details: {},
   List: {},
   Markdown: {},
-  FileUploadField: {}
+  FileUploadField: {
+    min: 'minFiles',
+    max: 'maxFiles',
+    length: 'exactFiles',
+    accept: 'accept'
+  }
 })
 
 /**
@@ -211,13 +216,78 @@ export function getFileLimits(component, type) {
 }
 */
 /**
- * Determine the limit (if any) relevant to the error type
+ * Get file upload limit values
+ * @param {string} type
+ * @param {GovukField[]} fields
+ * @returns {string|number}
+ */
+function getFileUploadLimit(type, fields) {
+  if (type === 'min' || type === 'filesMin' || type === 'array.min') {
+    return getFieldProperty(
+      fields,
+      ComponentType.FileUploadField,
+      'min',
+      '[min file count]'
+    )
+  }
+
+  if (type === 'max' || type === 'filesMax' || type === 'array.max') {
+    return getFieldProperty(
+      fields,
+      ComponentType.FileUploadField,
+      'max',
+      '[max file count]'
+    )
+  }
+
+  if (type === 'length' || type === 'filesExact' || type === 'array.length') {
+    return getFieldProperty(
+      fields,
+      ComponentType.FileUploadField,
+      'length',
+      '[exact file count]'
+    )
+  }
+
+  return getFileTypesLimit(fields)
+}
+
+/**
+ * Get file types limit
+ * @param {GovukField[]} fields
+ * @returns {string}
+ */
+function getFileTypesLimit(fields) {
+  const acceptField = fields.find((f) => f.name === 'accept')
+  if (acceptField?.value) {
+    const acceptValue =
+      typeof acceptField.value === 'object'
+        ? JSON.stringify(acceptField.value)
+        : String(acceptField.value)
+    return lookupFileTypes(acceptValue)
+  }
+
+  if (fields.find((f) => f.name === 'images')?.value) return 'image files'
+  if (fields.find((f) => f.name === 'documents')?.value) return 'document files'
+
+  return '[files types you accept]'
+}
+
+/**
+ * Determine the limit relevant to the error type
  * @param {string} type
  * @param {GovukField[]} fields
  * @param {ComponentType} questionType
- * @returns { number | string }
+ * @returns {number|string}
  */
 export function determineLimit(type, fields, questionType) {
+  if (questionType === ComponentType.FileUploadField) {
+    if (type === 'filesMimes' || type.includes('mime')) {
+      return getFileTypesLimit(fields)
+    }
+    return getFileUploadLimit(type, fields)
+  }
+
   if (type === 'min' && isTypeForMinMax(questionType)) {
     return getFieldProperty(fields, questionType, 'min', '[min length]')
   }
@@ -226,17 +296,9 @@ export function determineLimit(type, fields, questionType) {
     return getFieldProperty(fields, questionType, 'max', '[max length]')
   }
 
-  if (type.startsWith('number')) {
+  if (type.startsWith('number'))
     return getNumberLimits(fields, questionType, type)
-  }
-
-  if (type.startsWith('date')) {
-    return getDateLimits(fields, questionType, type)
-  }
-
-  // if (type.startsWith('files')) {
-  //   return getFileLimits(component, type)
-  // }
+  if (type.startsWith('date')) return getDateLimits(fields, questionType, type)
 
   return '[unknown]'
 }

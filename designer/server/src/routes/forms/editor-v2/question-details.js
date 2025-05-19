@@ -206,6 +206,23 @@ export function overrideStateIfJsEnabled(request) {
 }
 
 /**
+ * @param {FormEditorInputQuestion} payload
+ * @returns {FormEditorInputQuestion}
+ */
+function enforceFileUploadFieldExclusivity(payload) {
+  if (payload.questionType === ComponentType.FileUploadField) {
+    const exactFiles = payload.exactFiles
+
+    if (exactFiles && exactFiles !== '') {
+      payload.minFiles = ''
+      payload.maxFiles = ''
+    }
+  }
+
+  return payload
+}
+
+/**
  * @param {string} formId
  * @param {string} token
  * @param {FormDefinition} definition
@@ -360,8 +377,12 @@ export default [
         )
       const { token } = auth.credentials
 
+      const fileUploadLimitsPayload = enforceFileUploadFieldExclusivity(
+        /** @type {FormEditorInputQuestion} */ (payload)
+      )
+
       const questionDetails = {
-        ...mapQuestionDetails(payload),
+        ...mapQuestionDetails(fileUploadLimitsPayload),
         id: questionId !== 'new' ? questionId : undefined
       }
 
@@ -408,7 +429,7 @@ export default [
           pageId,
           questionId,
           questionDetails,
-          getListItems(payload, state)
+          getListItems(fileUploadLimitsPayload, state)
         )
 
         yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
@@ -448,7 +469,7 @@ export default [
 ]
 
 /**
- * @import { ComponentDef, FormDefinition, FormEditorInputQuestionDetails, Item, ListItem, QuestionSessionState } from '@defra/forms-model'
+ * @import { ComponentDef, FormDefinition, FormEditorInputQuestionDetails, Item, ListItem, QuestionSessionState, FormEditorInputQuestion } from '@defra/forms-model'
  * @import Boom from '@hapi/boom'
  * @import { Request, ResponseToolkit, ServerRoute } from '@hapi/hapi'
  */
