@@ -15,7 +15,7 @@ export function SubMenu({ overview }: Readonly<Props>) {
   const fileInput = useRef<HTMLInputElement>(null)
 
   const { href: formPreviewLink } = new URL(
-    `/preview/draft/${meta.slug}`,
+    `/form/preview/draft/${meta.slug}`,
     previewUrl
   )
 
