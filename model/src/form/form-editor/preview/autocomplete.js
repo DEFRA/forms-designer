@@ -20,7 +20,15 @@ export class AutocompleteQuestion extends Question {
    */
   constructor(autocompleteElements, questionRenderer) {
     super(autocompleteElements, questionRenderer)
-    this.setAutocompleteList(autocompleteElements.autocompleteOptions)
+
+    if (autocompleteElements.autocompleteOptions) {
+      // handle interactive (client-side JS) autocomplete options
+      this.setAutocompleteList(autocompleteElements.autocompleteOptions)
+    } else {
+      // handle non-interactive (server-side) autocomplete options
+      const listItems = autocompleteElements.values.items
+      this.setAutocompleteListFromParsed(listItems)
+    }
   }
 
   get autoCompleteList() {
@@ -46,6 +54,14 @@ export class AutocompleteQuestion extends Question {
       )
       this.render()
     }
+  }
+
+  /**
+   * @param {AutocompleteElements['values']['items']} listItems
+   */
+  setAutocompleteListFromParsed(listItems) {
+    this._autocompleteList = listItems
+    this.render()
   }
 
   get renderInput() {

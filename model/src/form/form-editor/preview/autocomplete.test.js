@@ -115,6 +115,49 @@ describe('AutoCompleteQuestion', () => {
       attributes: { 'data-module': 'govuk-accessible-autocomplete' }
     })
   })
+
+  it('should safely handle invalid options for non-js', () => {
+    const { baseElements } = listElementsStub
+    const { items: _removedItems, ...baseElementsWithoutItems } = baseElements
+    const elements = new AutocompletePreviewElements({
+      autocompleteOptions: '',
+      ...baseElementsWithoutItems,
+      items: [
+        { id: '534534', text: 'hi', value: 'hello' },
+        { id: '345435', text: 'bye', value: 'goodbye' }
+      ]
+    })
+
+    const renderer = new QuestionRendererStub(jest.fn())
+    const autoCompleteQuestion = new AutocompleteQuestion(elements, renderer)
+
+    expect(autoCompleteQuestion.renderInput).toEqual({
+      id: 'autoCompleteField',
+      name: 'autoCompleteField',
+      label: {
+        classes: 'govuk-label--l',
+        text: 'Which quest would you like to pick?'
+      },
+      hint: {
+        classes: '',
+        text: 'Choose one adventure that best suits you.'
+      },
+      items: [
+        { id: '', text: '', value: '' },
+        {
+          id: '534534',
+          text: 'hi',
+          value: 'hello'
+        },
+        {
+          id: '345435',
+          text: 'bye',
+          value: 'goodbye'
+        }
+      ],
+      attributes: { 'data-module': 'govuk-accessible-autocomplete' }
+    })
+  })
 })
 
 /**
