@@ -1,4 +1,4 @@
-import { randomId } from '@defra/forms-model'
+import { FormStatus, randomId } from '@defra/forms-model'
 
 import { QuestionTypeDescriptions } from '~/src/common/constants/editor.js'
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
@@ -237,7 +237,7 @@ export function questionDetailsViewModel(
   )
   const extraFieldNames = extraFields.map((field) => field.name ?? 'unknown')
   const errorList = buildErrorList(validation?.formErrors)
-  const previewPageUrl = `${buildPreviewUrl(metadata.slug)}${details.pagePath}?force`
+  const previewPageUrl = `${buildPreviewUrl(metadata.slug, FormStatus.Draft)}${details.pagePath}?force`
   const previewErrorsUrl = `${buildPreviewErrorsUrl(metadata.slug)}${details.pagePath}/${questionFieldsOverride.id}`
   const urlPageBase = editorv2Path(metadata.slug, `page/${pageId}`)
   const deleteUrl = `${urlPageBase}/delete/${questionId}`
