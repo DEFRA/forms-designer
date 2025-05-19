@@ -118,10 +118,13 @@ export function buildPreviewUrl(slug, status) {
 }
 
 /**
- * @param {string} slug
+ * Builds a URL for previewing error messages for a question based on its slug.
+ * @param {string} slug - The unique identifier for the form.
  */
 export function buildPreviewErrorsUrl(slug) {
-  return `${config.previewUrl}/error-preview/draft/${slug}`
+  const encodedSlug = encodeURIComponent(slug)
+
+  return `${config.previewUrl}/error-preview/draft/${encodedSlug}`
 }
 
 /**
