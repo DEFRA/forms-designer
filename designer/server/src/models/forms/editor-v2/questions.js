@@ -1,6 +1,7 @@
 import {
   ComponentType,
   ControllerType,
+  FormStatus,
   hasComponents,
   isFormType
 } from '@defra/forms-model'
@@ -283,7 +284,7 @@ export function questionsViewModel(
       (comp) => comp.type === ComponentType.FileUploadField
     ),
     notification,
-    previewPageUrl: `${buildPreviewUrl(metadata.slug)}${page.path}?force`
+    previewPageUrl: `${buildPreviewUrl(metadata.slug, FormStatus.Draft)}${page.path}?force`
   }
 }
 

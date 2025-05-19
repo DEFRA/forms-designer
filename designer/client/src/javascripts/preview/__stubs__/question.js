@@ -280,7 +280,7 @@ export function questionDetailsLeftPanelBuilder(listItemsHTML) {
       <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
       <div class="govuk-button-group govuk-!-margin-top-6">
-        <a class="govuk-button govuk-button--inverse" data-module="govuk-button" href="/preview/draft/form-to-go-live/pick-your-quest?force" id="preview-page" role="button" target="_blank">
+        <a class="govuk-button govuk-button--inverse" data-module="govuk-button" href="/form/preview/draft/form-to-go-live/pick-your-quest?force" id="preview-page" role="button" target="_blank">
           <span class="icon-wrapper">
             <!-- Your SVG icon -->
             <svg width="24" height="17" viewBox="0 0 24 17" fill="none" xmlns="http://www.w3.org/2000/svg">

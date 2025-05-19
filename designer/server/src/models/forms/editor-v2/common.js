@@ -106,17 +106,35 @@ export function baseModelFields(slug, pageTitle, pageHeading) {
 }
 
 /**
- * @param {string} slug
+ * Builds a live form URL based on its slug.
+ * @param {string} slug - The unique identifier for the form.
  */
-export function buildPreviewUrl(slug) {
-  return `${config.previewUrl}/preview/draft/${slug}`
+export function buildFormUrl(slug) {
+  const encodedSlug = encodeURIComponent(slug)
+
+  return `${config.previewUrl}/form/${encodedSlug}`
 }
 
 /**
- * @param {string} slug
+ * Builds a URL for previewing a form based on its slug and status.
+ * @param {string} slug - The unique identifier for the form.
+ * @param {FormStatus} status - The current status of the form.
+ */
+export function buildPreviewUrl(slug, status) {
+  const encodedSlug = encodeURIComponent(slug)
+  const encodedStatus = encodeURIComponent(status)
+
+  return `${config.previewUrl}/form/preview/${encodedStatus}/${encodedSlug}`
+}
+
+/**
+ * Builds a URL for previewing error messages for a question based on its slug.
+ * @param {string} slug - The unique identifier for the form.
  */
 export function buildPreviewErrorsUrl(slug) {
-  return `${config.previewUrl}/error-preview/draft/${slug}`
+  const encodedSlug = encodeURIComponent(slug)
+
+  return `${config.previewUrl}/error-preview/draft/${encodedSlug}`
 }
 
 /**
@@ -141,5 +159,5 @@ export function tickBoxes(items, selectedItems) {
 }
 
 /**
- * @import { ComponentDef, FormMetadata, FormDefinition } from '@defra/forms-model'
+ * @import { ComponentDef, FormMetadata, FormDefinition, FormStatus } from '@defra/forms-model'
  */
