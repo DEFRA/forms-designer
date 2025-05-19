@@ -9,7 +9,7 @@
  * server side.
  */
 export class Question {
-  static PATH = ''
+  static PATH = 'preview-components/'
 
   /**
    * @type {string}
@@ -33,6 +33,12 @@ export class Question {
   _questionRenderer
 
   /**
+   * @type {QuestionElements}
+   * @private
+   */
+  _htmlElements
+
+  /**
    * @param {QuestionElements} htmlElements
    * @param {QuestionRenderer} questionRenderer
    */
@@ -41,7 +47,7 @@ export class Question {
 
     /**
      * @type {QuestionElements}
-     * @private
+     * @protected
      */
     this._htmlElements = htmlElements
     /**

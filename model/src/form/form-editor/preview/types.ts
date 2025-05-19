@@ -1,3 +1,4 @@
+import { type AutocompleteQuestion } from '~/src/form/form-editor/preview/autocomplete.js'
 import { type DateInputQuestion } from '~/src/form/form-editor/preview/date-input.js'
 import { type EmailAddressQuestion } from '~/src/form/form-editor/preview/email-address.js'
 import { type ListSortableQuestion } from '~/src/form/form-editor/preview/list-sortable.js'
@@ -52,6 +53,10 @@ export type ListenerRow = [
 export interface QuestionElements {
   readonly values: BaseSettings
   setPreviewHTML(value: string): void
+  setPreviewDOM(element: HTMLElement): void
+}
+export interface AutocompleteElements extends QuestionElements {
+  autocompleteOptions: string
 }
 
 export interface RenderContext {
@@ -80,3 +85,4 @@ export type PreviewQuestion =
   | RadioSortableQuestion
   | ShortAnswerQuestion
   | UkAddressQuestion
+  | AutocompleteQuestion

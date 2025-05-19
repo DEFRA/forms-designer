@@ -13,8 +13,8 @@ describe('CheckboxSortableQuestion', () => {
       new QuestionPreviewElements(baseElements)
     )
     const renderer = new QuestionRendererStub(jest.fn())
-    const dateInput = new CheckboxSortableQuestion(elements, renderer)
-    expect(dateInput.renderInput).toEqual({
+    const checkbox = new CheckboxSortableQuestion(elements, renderer)
+    expect(checkbox.renderInput).toEqual({
       id: 'checkboxField',
       name: 'checkboxField',
       fieldset: {

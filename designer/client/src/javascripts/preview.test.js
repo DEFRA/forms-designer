@@ -1,4 +1,5 @@
 import {
+  AutocompleteQuestion,
   CheckboxSortableQuestion,
   ComponentType,
   DateInputQuestion,
@@ -14,21 +15,25 @@ import {
 import { setupPreview, showHideForJs } from '~/src/javascripts/preview'
 import { list1HTML } from '~/src/javascripts/preview/__stubs__/list'
 import {
+  buildQuestionStubPanels,
+  questionDetailsLeftPanelBuilder,
   questionDetailsLeftPanelHTML,
+  questionDetailsPreviewHTML,
   questionDetailsPreviewTabsHTML
 } from '~/src/javascripts/preview/__stubs__/question'
 
 jest.mock('~/src/javascripts/preview/nunjucks.js')
-jest.mock('~/src/views/components/ukaddressfield.njk', () => '')
-jest.mock('~/src/views/components/telephonenumberfield.njk', () => '')
-jest.mock('~/src/views/components/emailaddressfield.njk', () => '')
-jest.mock('~/src/views/components/inset.njk', () => '')
-jest.mock('~/src/views/components/textfield.njk', () => '')
-jest.mock('~/src/views/components/textarea.njk', () => '')
-jest.mock('~/src/views/components/radios.njk', () => '')
-jest.mock('~/src/views/components/checkboxesfield.njk', () => '')
-jest.mock('~/src/views/components/date-input.njk', () => '')
-jest.mock('~/src/views/components/monthyearfield.njk', () => '')
+jest.mock('~/src/views/preview-components/autocompletefield.njk', () => '')
+jest.mock('~/src/views/preview-components/ukaddressfield.njk', () => '')
+jest.mock('~/src/views/preview-components/telephonenumberfield.njk', () => '')
+jest.mock('~/src/views/preview-components/emailaddressfield.njk', () => '')
+jest.mock('~/src/views/preview-components/inset.njk', () => '')
+jest.mock('~/src/views/preview-components/textfield.njk', () => '')
+jest.mock('~/src/views/preview-components/textarea.njk', () => '')
+jest.mock('~/src/views/preview-components/radios.njk', () => '')
+jest.mock('~/src/views/preview-components/checkboxesfield.njk', () => '')
+jest.mock('~/src/views/preview-components/date-input.njk', () => '')
+jest.mock('~/src/views/preview-components/monthyearfield.njk', () => '')
 
 jest.mock('~/src/javascripts/preview/nunjucks-renderer.js')
 
@@ -63,6 +68,22 @@ describe('preview', () => {
       document.body.innerHTML = list1HTML
       const res = setupPreview(ComponentType.CheckboxesField)
       expect(res).toBeInstanceOf(CheckboxSortableQuestion)
+    })
+
+    it('should setup preview for AutoCompleteField', () => {
+      const autocompleteTextarea = `
+    <textarea class="govuk-textarea" id="autoCompleteOptions" name="autoCompleteOptions" rows="5" aria-describedby="autoCompleteOptions-hint">Hydrogen:1
+Helium:2
+Lithium:3
+Beryllium:4
+</textarea>`
+
+      document.body.innerHTML = buildQuestionStubPanels(
+        questionDetailsLeftPanelBuilder(autocompleteTextarea),
+        questionDetailsPreviewHTML
+      )
+      const res = setupPreview(ComponentType.AutocompleteField)
+      expect(res).toBeInstanceOf(AutocompleteQuestion)
     })
 
     it('should setup preview for YesNo', () => {

@@ -9,6 +9,8 @@
  * @implements {QuestionElements}
  */
 export class QuestionDomElements {
+  static WRAPPER_ID = 'question-preview-inner'
+
   constructor() {
     const questionEl = /** @type {HTMLInputElement | null} */ (
       document.getElementById('question')
@@ -24,6 +26,9 @@ export class QuestionDomElements {
     )
     const previewEl = /** @type {HTMLElement | null} */ (
       document.getElementById('question-preview-content')
+    )
+    const previewInnerEl = /** @type {HTMLElement | null} */ (
+      previewEl?.querySelector(`#${QuestionDomElements.WRAPPER_ID}`) ?? null
     )
 
     /**
@@ -46,6 +51,10 @@ export class QuestionDomElements {
      * @type {HTMLElement|null}
      */
     this.preview = previewEl
+    /**
+     * @type {HTMLElement|null}
+     */
+    this.previewInner = previewInnerEl
   }
 
   /**
@@ -76,11 +85,46 @@ export class QuestionDomElements {
   }
 
   /**
+   * @param {HTMLElement} node
+   * @returns {HTMLDivElement}
+   * @private
+   */
+  _wrapNode(node) {
+    const wrapper = document.createElement('div')
+    wrapper.id = QuestionDomElements.WRAPPER_ID
+    wrapper.appendChild(node)
+    return wrapper
+  }
+
+  /**
+   * @param {string} html
+   * @returns {string}
+   * @private
+   */
+  _wrapHTML(html) {
+    return `<div id="question-preview-inner">${html}</div>`
+  }
+
+  /**
    * @param {string} value
    */
   setPreviewHTML(value) {
     if (this.preview) {
-      this.preview.innerHTML = value
+      this.preview.innerHTML = this._wrapHTML(value)
+    }
+  }
+
+  /**
+   * @param {HTMLElement} element
+   */
+  setPreviewDOM(element) {
+    if (this.preview) {
+      const container = /** @type {HTMLElement} */ (this.previewInner)
+      const newContainer = /** @type {HTMLDivElement} */ (
+        this._wrapNode(element)
+      )
+      this.preview.replaceChild(newContainer, container)
+      this.previewInner = newContainer
     }
   }
 }
@@ -196,8 +240,17 @@ export class EventListeners {
       questionText,
       hintText,
       optionalCheckbox,
-      ...this.highlightListeners
+      ...this.highlightListeners,
+      ...this._customListeners
     ]
+  }
+
+  /**
+   * @returns {ListenerRow[]}
+   * @protected
+   */
+  get _customListeners() {
+    return []
   }
 
   /**

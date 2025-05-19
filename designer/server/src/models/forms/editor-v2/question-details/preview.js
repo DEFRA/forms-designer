@@ -1,4 +1,5 @@
 import {
+  AutocompleteQuestion,
   CheckboxSortableQuestion,
   DateInputQuestion,
   EmailAddressQuestion,
@@ -124,6 +125,13 @@ export class QuestionPreviewElements {
   setPreviewHTML(_value) {
     // Not implemented for server side render
   }
+
+  /**
+   * @param {HTMLElement} _value
+   */
+  setPreviewDOM(_value) {
+    // Not implemented for server side render
+  }
 }
 
 /**
@@ -141,7 +149,7 @@ export class EmptyRender {
 const emptyRender = new EmptyRender()
 
 export const ModelFactory =
-  /** @type {Record<ComponentType|'Question', (q: ListElements) => Question>} */ ({
+  /** @type {Record<ComponentType|'Question', (q: ListElements|AutocompleteElements) => Question>} */ ({
     /**
      * @param {QuestionElements} questionElements
      * @returns {Question}
@@ -192,11 +200,11 @@ export const ModelFactory =
       return new NumberOnlyQuestion(questionElements, emptyRender)
     },
     /**
-     * @param {ListElements} questionElements
+     * @param {AutocompleteElements} questionElements
      * @returns {Question}
      */
     AutocompleteField: (questionElements) => {
-      return new ListQuestion(questionElements, emptyRender)
+      return new AutocompleteQuestion(questionElements, emptyRender)
     },
     /**
      * @param {ListElements} questionElements
@@ -312,5 +320,5 @@ export function getPreviewModel(govukFields, state, componentType) {
   return question.renderInput
 }
 /**
- * @import { ListElement, ListElements, QuestionElements, QuestionRenderer, QuestionBaseModel, GovukField, QuestionSessionState, ComponentType, PreviewQuestion } from '@defra/forms-model'
+ * @import { AutocompleteElements, ListElement, ListElements, QuestionElements, QuestionRenderer, QuestionBaseModel, GovukField, QuestionSessionState, ComponentType, PreviewQuestion } from '@defra/forms-model'
  */

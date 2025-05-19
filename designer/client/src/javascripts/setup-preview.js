@@ -1,4 +1,5 @@
 import {
+  AutocompleteQuestion,
   CheckboxSortableQuestion,
   DateInputQuestion,
   EmailAddressQuestion,
@@ -14,6 +15,11 @@ import {
   YesNoQuestion
 } from '@defra/forms-model'
 
+import { AutocompleteRenderer } from '~/src/javascripts/preview/autocomplete-renderer.js'
+import {
+  AutocompleteDOMElements,
+  AutocompleteListeners
+} from '~/src/javascripts/preview/autocomplete.js'
 import {
   ListSortableEventListeners,
   ListSortableQuestionElements
@@ -191,6 +197,24 @@ export const SetupPreview =
       listeners.setupListeners()
 
       return radio
+    },
+    /**
+     * @returns {AutocompleteQuestion}
+     */
+    AutocompleteField: () => {
+      const elements = new AutocompleteDOMElements()
+      const nunjucksRenderer = new AutocompleteRenderer(elements)
+      const autocompleteQuestion = new AutocompleteQuestion(
+        elements,
+        nunjucksRenderer
+      )
+      const listeners = new AutocompleteListeners(
+        autocompleteQuestion,
+        elements
+      )
+      listeners.setupListeners()
+
+      return autocompleteQuestion
     },
     /**
      * @returns {ListSortableQuestion}

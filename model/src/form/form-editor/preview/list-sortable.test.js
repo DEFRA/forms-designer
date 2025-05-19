@@ -20,7 +20,7 @@ describe('list-sortable', () => {
   describe('integration', () => {
     it('should setup', () => {
       const preview = new ListSortableQuestion(questionElements, renderer)
-      expect(preview.renderInput.fieldset.legend.text).toBe(
+      expect(preview.renderInput.fieldset?.legend.text).toBe(
         'Which quest would you like to pick?'
       )
     })

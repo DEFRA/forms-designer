@@ -85,6 +85,26 @@ export class QuestionPreviewElements {
   setPreviewHTML(_value) {
     // Not implemented for server side render
   }
+
+  /**
+   * @param {HTMLElement} _value
+   */
+  setPreviewDOM(_value) {
+    // Not implemented for server side render
+  }
+}
+
+/**
+ * @implements {AutocompleteElements}
+ */
+export class AutocompletePreviewElements extends QuestionPreviewElements {
+  /**
+   * @param {BaseSettings & {autocompleteOptions: string}} elements
+   */
+  constructor({ autocompleteOptions, ...elements }) {
+    super(elements)
+    this.autocompleteOptions = autocompleteOptions
+  }
 }
 
 export const baseElements = /** @type {BaseSettings} */ ({
@@ -140,5 +160,5 @@ export const listElementsStub = {
 
 /**
  * @import { ListElement } from  '~/src/form/form-editor/types.js'
- * @import { BaseSettings, ListElements, RenderContext, QuestionBaseModel, QuestionElements, QuestionRenderer } from  '~/src/form/form-editor/preview/types.js'
+ * @import { BaseSettings, ListElements, RenderContext, QuestionBaseModel, QuestionElements, QuestionRenderer, AutocompleteElements } from  '~/src/form/form-editor/preview/types.js'
  */

@@ -1,4 +1,5 @@
 @use "../govuk-frontend" as *;
+@import "accessible-autocomplete";
 
 $defra-brand-colour: govuk-organisation-colour(department-for-environment-food-rural-affairs);
 
