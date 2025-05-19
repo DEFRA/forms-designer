@@ -9,6 +9,7 @@ import {
   Question,
   RadioSortableQuestion,
   ShortAnswerQuestion,
+  SupportingEvidenceQuestion,
   YesNoQuestion
 } from '@defra/forms-model'
 
@@ -34,6 +35,7 @@ jest.mock('~/src/views/preview-components/radios.njk', () => '')
 jest.mock('~/src/views/preview-components/checkboxesfield.njk', () => '')
 jest.mock('~/src/views/preview-components/date-input.njk', () => '')
 jest.mock('~/src/views/preview-components/monthyearfield.njk', () => '')
+jest.mock('~/src/views/preview-components/fileuploadfield.njk', () => '')
 
 jest.mock('~/src/javascripts/preview/nunjucks-renderer.js')
 
@@ -96,6 +98,12 @@ Beryllium:4
       document.body.innerHTML = list1HTML
       const res = setupPreview(ComponentType.MonthYearField)
       expect(res).toBeInstanceOf(MonthYearQuestion)
+    })
+
+    it('should setup preview for SupportingEvidenceQuestion', () => {
+      document.body.innerHTML = list1HTML
+      const res = setupPreview(ComponentType.FileUploadField)
+      expect(res).toBeInstanceOf(SupportingEvidenceQuestion)
     })
 
     it('should setup preview for unknown', () => {

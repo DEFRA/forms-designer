@@ -12,6 +12,7 @@ import {
   Question,
   RadioSortableQuestion,
   ShortAnswerQuestion,
+  SupportingEvidenceQuestion,
   UkAddressQuestion,
   YesNoQuestion
 } from '@defra/forms-model'
@@ -275,6 +276,15 @@ describe('preview', () => {
       )
 
       expect(previewModel).toBeInstanceOf(ListQuestion)
+    })
+
+    it('should get SupportingEvidenceQuestion', () => {
+      const previewModel = getPreviewConstructor(
+        ComponentType.FileUploadField,
+        previewElements
+      )
+
+      expect(previewModel).toBeInstanceOf(SupportingEvidenceQuestion)
     })
 
     it('should get NumberField', () => {
@@ -607,7 +617,11 @@ describe('preview', () => {
         ComponentType.FileUploadField
       )
 
-      expect(previewModel).toEqual(expectedQuestionModel)
+      expect(previewModel).toEqual({
+        ...expectedQuestionModel,
+        id: 'supportingEvidence',
+        name: 'supportingEvidence'
+      })
     })
 
     it('should get AutocompleteField', () => {

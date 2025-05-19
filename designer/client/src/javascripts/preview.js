@@ -7,6 +7,7 @@ import '~/src/views/preview-components/date-input.njk'
 import '~/src/views/preview-components/monthyearfield.njk'
 import '~/src/views/preview-components/ukaddressfield.njk'
 import '~/src/views/preview-components/telephonenumberfield.njk'
+import '~/src/views/preview-components/fileuploadfield.njk'
 import '~/src/views/preview-components/emailaddressfield.njk'
 
 import {

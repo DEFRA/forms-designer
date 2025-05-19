@@ -11,6 +11,7 @@ import {
   Question,
   RadioSortableQuestion,
   ShortAnswerQuestion,
+  SupportingEvidenceQuestion,
   UkAddressQuestion,
   YesNoQuestion,
   govukFieldIsQuestionOptional,
@@ -296,7 +297,7 @@ export const ModelFactory =
      * @returns {Question}
      */
     FileUploadField: (questionElements) => {
-      return new Question(questionElements, emptyRender)
+      return new SupportingEvidenceQuestion(questionElements, emptyRender)
     }
   })
 
