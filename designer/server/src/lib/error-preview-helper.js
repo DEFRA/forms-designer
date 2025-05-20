@@ -313,21 +313,15 @@ export function spanTag(type, part) {
  * @param {string} type
  */
 export function insertTags(templateStr, type) {
-  const delimiterRegex = /({{|}})/
-  const parts = templateStr.split(delimiterRegex)
-  const resultParts = []
-  for (const part of parts) {
-    if (part.includes('#label') || part.includes('#title')) {
-      resultParts.push(spanTag('shortDescription', part))
-    } else if (part.includes('#limit')) {
-      resultParts.push(spanTag(type, part))
-    } else if (part !== '{{' && part !== '}}') {
-      resultParts.push(part)
-    } else {
-      resultParts.push(part)
+  const delimiterRegex = /{{([^}]+)}}/g
+  return templateStr.replace(delimiterRegex, (match, content) => {
+    if (content.includes('#label') || content.includes('#title')) {
+      return `<span class="error-preview-shortDescription"${getFunctionAttribute(content)}>{{${content}}}</span>`
+    } else if (content.includes('#limit')) {
+      return `<span class="error-preview-${type}">{{${content}}}</span>`
     }
-  }
-  return resultParts.join('')
+    return match
+  })
 }
 
 /**
