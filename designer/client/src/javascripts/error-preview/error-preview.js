@@ -7,10 +7,7 @@ import lowerFirst from 'lodash/lowerFirst.js'
 import { fieldMappings } from '~/src/javascripts/error-preview/field-mappings'
 import { updateFileUploadErrorText } from '~/src/javascripts/error-preview/file-upload/error-display'
 import { setupFileTypeListeners } from '~/src/javascripts/error-preview/file-upload/file-type-handler'
-import {
-  setupFileUploadValidation,
-  setupFormSubmissionCleanup
-} from '~/src/javascripts/error-preview/file-upload/validations'
+import { setupFileUploadValidation } from '~/src/javascripts/error-preview/file-upload/validations'
 import { updateFileUploadVisibility } from '~/src/javascripts/error-preview/file-upload/visibility'
 
 export class ErrorPreviewDomElements {
@@ -247,6 +244,10 @@ export class ErrorPreviewEventListeners {
             ) {
               updateFileUploadErrorText(target.id, target.value)
             }
+
+            if (target.id === 'minLength' || target.id === 'maxLength') {
+              this._updateTextFieldErrorMessages()
+            }
           },
           'input'
         ]
@@ -265,9 +266,13 @@ export class ErrorPreviewEventListeners {
     const minFilesInput = document.getElementById('minFiles')
     const maxFilesInput = document.getElementById('maxFiles')
     const exactFilesInput = document.getElementById('exactFiles')
-    const minLengthInput = document.getElementById('minLength')
+    const minLengthInput = /** @type {HTMLInputElement | null} */ (
+      document.getElementById('minLength')
+    )
+    const maxLengthInput = /** @type {HTMLInputElement | null} */ (
+      document.getElementById('maxLength')
+    )
 
-    // Handle file upload field visibility if this is a file field
     if (
       field.source === minFilesInput ||
       field.source === maxFilesInput ||
@@ -276,8 +281,7 @@ export class ErrorPreviewEventListeners {
       updateFileUploadVisibility(field)
     }
 
-    // Handle text field min/max if this is a text field
-    if (field.source === minLengthInput) {
+    if (field.source === minLengthInput || field.source === maxLengthInput) {
       updateFileUploadVisibility(field)
     }
   }
@@ -287,12 +291,7 @@ export class ErrorPreviewEventListeners {
       this.inputEventListener(el, cb, type)
     }
 
-    const minLengthInput = /** @type {HTMLInputElement | null} */ (
-      document.getElementById('minLength')
-    )
-    if (minLengthInput) {
-      this._updateErrorVisibility({ id: 'min', source: minLengthInput })
-    }
+    this._updateTextFieldErrorMessages()
 
     const minFilesInput = /** @type {HTMLInputElement | null} */ (
       document.getElementById('minFiles')
@@ -300,6 +299,124 @@ export class ErrorPreviewEventListeners {
     if (minFilesInput) {
       this._updateErrorVisibility({ id: 'min', source: minFilesInput })
     }
+  }
+
+  /**
+   * Updates placeholder spans with values from inputs
+   * @private
+   */
+  _updateMinMaxPlaceholders() {
+    const minLengthInput = /** @type {HTMLInputElement | null} */ (
+      document.getElementById('minLength')
+    )
+    const maxLengthInput = /** @type {HTMLInputElement | null} */ (
+      document.getElementById('maxLength')
+    )
+
+    if (!minLengthInput || !maxLengthInput) return
+
+    const minValue = minLengthInput.value
+    const maxValue = maxLengthInput.value
+
+    const minPlaceholderSpans = document.querySelectorAll('.error-preview-min')
+    const maxPlaceholderSpans = document.querySelectorAll('.error-preview-max')
+
+    minPlaceholderSpans.forEach((span) => {
+      span.textContent = minValue || '[min length]'
+    })
+
+    maxPlaceholderSpans.forEach((span) => {
+      span.textContent = maxValue || '[max length]'
+    })
+
+    return { minValue, maxValue }
+  }
+
+  /**
+   * Updates the text in combined min/max error messages
+   * @param {string} minValue - The minimum length value
+   * @param {string} maxValue - The maximum length value
+   * @private
+   */
+  _updateCombinedErrorMessages(minValue, maxValue) {
+    const combinedErrorMessages = Array.from(
+      document.querySelectorAll('.govuk-error-message')
+    ).filter(
+      (el) =>
+        el.textContent?.includes('between') &&
+        el.textContent.includes('characters')
+    )
+
+    combinedErrorMessages.forEach((errorMsg) => {
+      // Find the last text node (the part that contains "between X and Y characters")
+      const nodes = Array.from(errorMsg.childNodes)
+      const shortDescNode = errorMsg.querySelector(
+        '.error-preview-shortDescription'
+      )
+      const lastNode = nodes[nodes.length - 1]
+
+      if (lastNode.nodeType === Node.TEXT_NODE) {
+        const newText = ` must be between ${minValue || '[min length]'} and ${maxValue || '[max length]'} characters`
+        lastNode.textContent = newText
+      } else if (shortDescNode) {
+        // If we can't find the text node but can find the short description,
+        // we'll update the entire HTML after the short description
+        const shortDescHTML = shortDescNode.outerHTML
+        const remainingHTML = errorMsg.innerHTML.split(shortDescHTML)[1] || ''
+
+        errorMsg.innerHTML = errorMsg.innerHTML.replace(
+          remainingHTML,
+          ` must be between ${minValue || '[min length]'} and ${maxValue || '[max length]'} characters`
+        )
+      }
+    })
+  }
+
+  /**
+   * Controls visibility of error messages based on which inputs have values
+   * @param {string} minValue - The minimum length value
+   * @param {string} maxValue - The maximum length value
+   * @private
+   */
+  _updateErrorVisibilityForTextFields(minValue, maxValue) {
+    const hasMin = minValue && minValue !== '0'
+    const hasMax = maxValue && maxValue !== '0'
+
+    const allErrorMessages = document.querySelectorAll('.govuk-error-message')
+
+    allErrorMessages.forEach((msg) => {
+      const htmlMsg = /** @type {HTMLElement} */ (msg)
+      const text = htmlMsg.textContent ?? ''
+
+      const isMinOnly = text.includes('or more') && !text.includes('between')
+      const isMaxOnly = text.includes('or less') && !text.includes('between')
+      const isCombined = text.includes('between') && text.includes('characters')
+
+      if (isMinOnly) {
+        htmlMsg.style.display = hasMin && !hasMax ? '' : 'none'
+      }
+      if (isMaxOnly) {
+        htmlMsg.style.display = hasMax && !hasMin ? '' : 'none'
+      }
+      if (isCombined) {
+        htmlMsg.style.display = hasMin && hasMax ? '' : 'none'
+      }
+    })
+  }
+
+  /**
+   * Main function that updates all min/max error message text and visibility
+   * @private
+   */
+  _updateTextFieldErrorMessages() {
+    const result = this._updateMinMaxPlaceholders()
+    if (!result) return
+
+    const { minValue, maxValue } = result
+    if (!minValue && !maxValue) return
+
+    this._updateCombinedErrorMessages(minValue, maxValue)
+    this._updateErrorVisibilityForTextFields(minValue, maxValue)
   }
 }
 
@@ -330,7 +447,6 @@ export class ErrorPreview {
    * @returns {ErrorPreview}
    */
   static setupPreview(componentType) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const advancedFields = fieldMappings[componentType]
 
     const question = new ErrorPreview(
@@ -338,11 +454,7 @@ export class ErrorPreview {
     )
 
     if (componentType === ComponentType.FileUploadField) {
-      // Set up file type handling
       setupFileTypeListeners()
-
-      // Set up form submission cleanup
-      setupFormSubmissionCleanup()
     }
 
     return question
