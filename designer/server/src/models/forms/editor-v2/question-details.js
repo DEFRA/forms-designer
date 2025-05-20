@@ -78,16 +78,17 @@ export function hasDataOrErrorForDisplay(
  * @param { ComponentType | undefined } questionType
  */
 export function getErrorTemplates(questionType) {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-  const component = createComponent(
-    {
-      type: questionType,
-      title: 'Dummy',
-      name: 'dummy',
-      options: { required: true },
-      schema: {}
-    },
-    {}
+  const component = /** @type {any} */ (
+    createComponent(
+      {
+        type: questionType,
+        title: 'Dummy',
+        name: 'dummy',
+        options: { required: true },
+        schema: {}
+      },
+      {}
+    )
   )
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

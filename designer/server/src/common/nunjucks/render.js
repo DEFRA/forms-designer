@@ -67,6 +67,5 @@ export function expandTemplate(template, local = {}) {
 }
 
 /**
- * @import { MacroOptions, RenderOptions } from '~/src/common/nunjucks/types.js'
- * @import { JoiExpression } from 'joi'
+ * @import { MacroOptions, RenderOptions, JoiExpression } from '~/src/common/nunjucks/types.js'
  */

@@ -4,7 +4,7 @@ import { expandTemplate } from '~/src/common/nunjucks/render.js'
 import { determineLimit, insertTags } from '~/src/lib/error-preview-helper.js'
 
 /**
- * @param {{ type: string, template: Joi.JoiExpression }} template - error template
+ * @param {{ type: string, template: JoiExpression }} template - error template
  * @param {{ basePageFields: { name?: string, id?: string, label?: { text: string }, value?: string }[], extraFields: GovukField[] }} viewModel
  * @param {ComponentType} questionType
  */
@@ -15,16 +15,19 @@ export function renderErrorTemplate(template, viewModel, questionType) {
 
   /** @type { string | JoiExpression } */
   let newTemplate
-  /** @type { string | JoiExpression } */
   if (typeof template.template === 'string') {
     // Handle simple string template
     newTemplate = insertTags(template.template, template.type)
   } else {
     // Handle Joi.expression template
-    const templateStr = insertTags(template.template.source, template.type)
-    newTemplate = Joi.expression(templateStr, {
-      functions: template.template._functions
-    })
+    const templateObj = /** @type {JoiExpressionReturn} */ (template.template)
+    const templateStr = insertTags(templateObj.source, template.type)
+    newTemplate = Joi.expression(
+      templateStr,
+      /** @type {any} */ ({
+        functions: templateObj._functions
+      })
+    )
   }
 
   const renderedText = expandTemplate(newTemplate, {
@@ -37,5 +40,5 @@ export function renderErrorTemplate(template, viewModel, questionType) {
 
 /**
  * @import { ComponentType, GovukField } from '@defra/forms-model'
- * @import { JoiExpression } from 'joi'
+ * @import { JoiExpression, JoiExpressionReturn } from '~/src/common/nunjucks/types.js'
  */
