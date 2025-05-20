@@ -11,6 +11,7 @@ import {
   Question,
   RadioSortableQuestion,
   ShortAnswerQuestion,
+  SupportingEvidenceQuestion,
   UkAddressQuestion,
   YesNoQuestion
 } from '@defra/forms-model'
@@ -131,6 +132,24 @@ export const SetupPreview =
       listeners.setupListeners()
 
       return email
+    },
+    /**
+     * @returns {SupportingEvidenceQuestion}
+     */
+    FileUploadField: () => {
+      const questionElements = new QuestionDomElements()
+      const nunjucksRenderer = new NunjucksRenderer(questionElements)
+      const supportingEvidenceQuestion = new SupportingEvidenceQuestion(
+        questionElements,
+        nunjucksRenderer
+      )
+      const listeners = new EventListeners(
+        supportingEvidenceQuestion,
+        questionElements
+      )
+      listeners.setupListeners()
+
+      return supportingEvidenceQuestion
     },
     /**
      * @returns {UkAddressQuestion}
