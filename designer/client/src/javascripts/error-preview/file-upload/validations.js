@@ -67,33 +67,3 @@ export function setupFileUploadValidation() {
 
   updateValidationState()
 }
-
-/**
- * Set up form submission cleanup for file upload fields
- */
-export function setupFormSubmissionCleanup() {
-  const form = document.querySelector('form')
-  if (form) {
-    form.addEventListener('submit', function () {
-      const minFiles = /** @type {HTMLInputElement | null} */ (
-        document.getElementById('minFiles')
-      )
-      const maxFiles = /** @type {HTMLInputElement | null} */ (
-        document.getElementById('maxFiles')
-      )
-      const exactFiles = /** @type {HTMLInputElement | null} */ (
-        document.getElementById('exactFiles')
-      )
-
-      if (minFiles && maxFiles && exactFiles) {
-        const hasExact = exactFiles.value !== ''
-        const hasMinMax = minFiles.value !== '' || maxFiles.value !== ''
-
-        if (hasExact && hasMinMax) {
-          minFiles.value = ''
-          maxFiles.value = ''
-        }
-      }
-    })
-  }
-}

@@ -189,33 +189,6 @@ export function getDateLimits(fields, questionType, propertyName) {
 }
 
 /**
- * @param {ComponentDef} component
- * @param {string} type
- * @returns { string | number }
- */
-/*
-export function getFileLimits(component, type) {
-  if (type === 'filesMin') {
-    return getSchemaProperty(component, 'min', '[min file count]')
-  }
-
-  if (type === 'filesMax') {
-    return getSchemaProperty(component, 'max', '[max file count]')
-  }
-
-  if (type === 'filesExact') {
-    return getSchemaProperty(component, 'length', '[exact file count]')
-  }
-
-  if (type === 'filesMimes') {
-    const accept = getOptionsProperty(component, 'accept', '')
-    return lookupFileTypes(typeof accept === 'string' ? accept : '')
-  }
-
-  return '[unknown]'
-}
-*/
-/**
  * Get file upload limit values
  * @param {string} type
  * @param {GovukField[]} fields
