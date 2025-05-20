@@ -3,7 +3,9 @@
  */
 export function updateFileTypes() {
   const fileTypeSpans = document.querySelectorAll('.error-preview-filesMimes')
-  if (fileTypeSpans.length === 0) return
+  if (fileTypeSpans.length === 0) {
+    return
+  }
 
   /** @type {string[]} */
   const selectedTypes = []

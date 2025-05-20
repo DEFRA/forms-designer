@@ -240,8 +240,12 @@ function getFileTypesLimit(fields) {
     return lookupFileTypes(acceptValue)
   }
 
-  if (fields.find((f) => f.name === 'images')?.value) return 'image files'
-  if (fields.find((f) => f.name === 'documents')?.value) return 'document files'
+  if (fields.find((f) => f.name === 'images')?.value) {
+    return 'image files'
+  }
+  if (fields.find((f) => f.name === 'documents')?.value) {
+    return 'document files'
+  }
 
   return '[files types you accept]'
 }
@@ -269,9 +273,13 @@ export function determineLimit(type, fields, questionType) {
     return getFieldProperty(fields, questionType, 'max', '[max length]')
   }
 
-  if (type.startsWith('number'))
+  if (type.startsWith('number')) {
     return getNumberLimits(fields, questionType, type)
-  if (type.startsWith('date')) return getDateLimits(fields, questionType, type)
+  }
+
+  if (type.startsWith('date')) {
+    return getDateLimits(fields, questionType, type)
+  }
 
   return '[unknown]'
 }
@@ -306,7 +314,6 @@ export function spanTag(type, part) {
  */
 export function insertTags(templateStr, type) {
   const delimiterRegex = /({{|}})/
-
   const parts = templateStr.split(delimiterRegex)
   const resultParts = []
   for (const part of parts) {
@@ -315,6 +322,8 @@ export function insertTags(templateStr, type) {
     } else if (part.includes('#limit')) {
       resultParts.push(spanTag(type, part))
     } else if (part !== '{{' && part !== '}}') {
+      resultParts.push(part)
+    } else {
       resultParts.push(part)
     }
   }

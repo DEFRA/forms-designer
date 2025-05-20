@@ -10,6 +10,8 @@ import { setupFileTypeListeners } from '~/src/javascripts/error-preview/file-upl
 import { setupFileUploadValidation } from '~/src/javascripts/error-preview/file-upload/validations'
 import { updateFileUploadVisibility } from '~/src/javascripts/error-preview/file-upload/visibility'
 
+const MIN_LENGTH_PLACEHOLDER = '[min length]'
+const MAX_LENGTH_PLACEHOLDER = '[max length]'
 export class ErrorPreviewDomElements {
   /**
    * @param { ErrorPreviewFieldMappingDef | undefined } advancedFieldDefs
@@ -313,7 +315,9 @@ export class ErrorPreviewEventListeners {
       document.getElementById('maxLength')
     )
 
-    if (!minLengthInput || !maxLengthInput) return
+    if (!minLengthInput || !maxLengthInput) {
+      return
+    }
 
     const minValue = minLengthInput.value
     const maxValue = maxLengthInput.value
@@ -322,11 +326,11 @@ export class ErrorPreviewEventListeners {
     const maxPlaceholderSpans = document.querySelectorAll('.error-preview-max')
 
     minPlaceholderSpans.forEach((span) => {
-      span.textContent = minValue || '[min length]'
+      span.textContent = minValue || MIN_LENGTH_PLACEHOLDER
     })
 
     maxPlaceholderSpans.forEach((span) => {
-      span.textContent = maxValue || '[max length]'
+      span.textContent = maxValue || MAX_LENGTH_PLACEHOLDER
     })
 
     return { minValue, maxValue }
@@ -356,18 +360,19 @@ export class ErrorPreviewEventListeners {
       const lastNode = nodes[nodes.length - 1]
 
       if (lastNode.nodeType === Node.TEXT_NODE) {
-        const newText = ` must be between ${minValue || '[min length]'} and ${maxValue || '[max length]'} characters`
+        const newText = ` must be between ${minValue || MIN_LENGTH_PLACEHOLDER} and ${maxValue || MAX_LENGTH_PLACEHOLDER} characters`
         lastNode.textContent = newText
       } else if (shortDescNode) {
         // If we can't find the text node but can find the short description,
         // we'll update the entire HTML after the short description
         const shortDescHTML = shortDescNode.outerHTML
         const remainingHTML = errorMsg.innerHTML.split(shortDescHTML)[1] || ''
-
         errorMsg.innerHTML = errorMsg.innerHTML.replace(
           remainingHTML,
-          ` must be between ${minValue || '[min length]'} and ${maxValue || '[max length]'} characters`
+          ` must be between ${minValue || MIN_LENGTH_PLACEHOLDER} and ${maxValue || MAX_LENGTH_PLACEHOLDER} characters`
         )
+      } else {
+        errorMsg.innerHTML += ` must be between ${minValue || MIN_LENGTH_PLACEHOLDER} and ${maxValue || MAX_LENGTH_PLACEHOLDER} characters`
       }
     })
   }
@@ -379,8 +384,8 @@ export class ErrorPreviewEventListeners {
    * @private
    */
   _updateErrorVisibilityForTextFields(minValue, maxValue) {
-    const hasMin = minValue && minValue !== '0'
-    const hasMax = maxValue && maxValue !== '0'
+    const hasMin = Boolean(minValue && minValue !== '0')
+    const hasMax = Boolean(maxValue && maxValue !== '0')
 
     const allErrorMessages = document.querySelectorAll('.govuk-error-message')
 
@@ -392,16 +397,31 @@ export class ErrorPreviewEventListeners {
       const isMaxOnly = text.includes('or less') && !text.includes('between')
       const isCombined = text.includes('between') && text.includes('characters')
 
-      if (isMinOnly) {
-        htmlMsg.style.display = hasMin && !hasMax ? '' : 'none'
-      }
-      if (isMaxOnly) {
-        htmlMsg.style.display = hasMax && !hasMin ? '' : 'none'
-      }
-      if (isCombined) {
-        htmlMsg.style.display = hasMin && hasMax ? '' : 'none'
-      }
+      htmlMsg.style.display = this._getMessageDisplayValue(
+        isMinOnly,
+        isMaxOnly,
+        isCombined,
+        hasMin,
+        hasMax
+      )
     })
+  }
+
+  /**
+   * Determines the display value for error messages based on their type and available values
+   * @param {boolean} isMinOnly - Whether the message is for minimum length only
+   * @param {boolean} isMaxOnly - Whether the message is for maximum length only
+   * @param {boolean} isCombined - Whether the message is for combined min/max
+   * @param {boolean} hasMin - Whether a minimum value is available
+   * @param {boolean} hasMax - Whether a maximum value is available
+   * @returns {string} The display value ('none' or '')
+   * @private
+   */
+  _getMessageDisplayValue(isMinOnly, isMaxOnly, isCombined, hasMin, hasMax) {
+    if (isMinOnly && hasMin && !hasMax) return ''
+    if (isMaxOnly && hasMax && !hasMin) return ''
+    if (isCombined && hasMin && hasMax) return ''
+    return 'none'
   }
 
   /**
@@ -410,10 +430,14 @@ export class ErrorPreviewEventListeners {
    */
   _updateTextFieldErrorMessages() {
     const result = this._updateMinMaxPlaceholders()
-    if (!result) return
+    if (!result) {
+      return
+    }
 
     const { minValue, maxValue } = result
-    if (!minValue && !maxValue) return
+    if (!minValue && !maxValue) {
+      return
+    }
 
     this._updateCombinedErrorMessages(minValue, maxValue)
     this._updateErrorVisibilityForTextFields(minValue, maxValue)
