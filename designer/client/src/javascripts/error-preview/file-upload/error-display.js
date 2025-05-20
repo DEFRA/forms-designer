@@ -22,7 +22,9 @@ export function updateFieldErrorText(
   value,
   defaultValue
 ) {
-  if (currentFieldId !== targetFieldId) return
+  if (currentFieldId !== targetFieldId) {
+    return
+  }
 
   const text = element.textContent ?? ''
   const hasPattern = textPatterns.some((pattern) => text.includes(pattern))

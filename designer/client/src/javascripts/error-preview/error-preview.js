@@ -94,12 +94,9 @@ export class ErrorPreviewDomElements {
    */
   applyTemplateFunction(elem, newText) {
     const func = elem?.dataset.templatefunc ?? ''
-    if (allowedErrorTemplateFunctions.includes(func)) {
-      if (func === 'lowerFirst') {
-        return this.lowerFirstEnhanced(newText)
-      }
+    if (allowedErrorTemplateFunctions.includes(func) && func === 'lowerFirst') {
+      return this.lowerFirstEnhanced(newText)
     }
-
     return newText
   }
 
@@ -316,7 +313,7 @@ export class ErrorPreviewEventListeners {
     )
 
     if (!minLengthInput || !maxLengthInput) {
-      return
+      return { minValue: '', maxValue: '' }
     }
 
     const minValue = minLengthInput.value
@@ -418,9 +415,15 @@ export class ErrorPreviewEventListeners {
    * @private
    */
   _getMessageDisplayValue(isMinOnly, isMaxOnly, isCombined, hasMin, hasMax) {
-    if (isMinOnly && hasMin && !hasMax) return ''
-    if (isMaxOnly && hasMax && !hasMin) return ''
-    if (isCombined && hasMin && hasMax) return ''
+    if (isMinOnly && hasMin && !hasMax) {
+      return ''
+    }
+    if (isMaxOnly && hasMax && !hasMin) {
+      return ''
+    }
+    if (isCombined && hasMin && hasMax) {
+      return ''
+    }
     return 'none'
   }
 
@@ -430,9 +433,6 @@ export class ErrorPreviewEventListeners {
    */
   _updateTextFieldErrorMessages() {
     const result = this._updateMinMaxPlaceholders()
-    if (!result) {
-      return
-    }
 
     const { minValue, maxValue } = result
     if (!minValue && !maxValue) {

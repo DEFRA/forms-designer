@@ -319,8 +319,9 @@ export function insertTags(templateStr, type) {
       return `<span class="error-preview-shortDescription"${getFunctionAttribute(content)}>{{${content}}}</span>`
     } else if (content.includes('#limit')) {
       return `<span class="error-preview-${type}">{{${content}}}</span>`
+    } else {
+      return match
     }
-    return match
   })
 }
 
