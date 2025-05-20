@@ -307,9 +307,9 @@ export const componentSchemaV2 = componentSchema
       .trim()
       .uuid()
       .default(() => uuidV4())
-      .description('Auto-generated unique identifier for the component')
+      .description('Unique identifier for the component')
   })
-  .description('Enhanced component schema for V2 forms with auto-generated IDs')
+  .description('Component schema for V2 forms')
 
 const nextSchema = Joi.object<Link>()
   .description('Navigation link defining where to go after completing a page')
@@ -477,32 +477,25 @@ export const pageSchema = Joi.object<Page>()
  */
 export const pageSchemaV2 = pageSchema
   .append({
-    title: Joi.string()
-      .trim()
-      .allow('')
-      .required()
-      .description('Page title with enhanced support for empty titles in V2')
-  })
-  .description(
-    'Enhanced page schema for V2 forms with support for empty titles'
-  )
-
-export const pageSchemaPayloadV2 = pageSchemaV2
-  .keys({
     id: Joi.string()
       .trim()
       .uuid()
       .default(() => uuidV4())
-      .description('Auto-generated unique identifier for the page'),
+      .description('Unique identifier for the page'),
+    title: Joi.string()
+      .trim()
+      .allow('')
+      .required()
+      .description(
+        'Page title displayed at the top of the page (with support for empty titles in V2)'
+      ),
     components: Joi.array<ComponentDef>()
       .items(componentSchemaV2)
       .unique('name')
-      .unique('id', { ignoreUndefined: true })
-      .description('Components with auto-generated IDs')
+      .unique('id')
+      .description('Components schema for V2 forms')
   })
-  .description(
-    'Page schema for payload data with auto-generated IDs for pages and components'
-  )
+  .description('Page schema for V2 forms')
 
 const baseListItemSchema = Joi.object<Item>()
   .description('Base schema for list items with common properties')
@@ -605,7 +598,7 @@ export const listSchema = Joi.object<List>()
   })
 
 /**
- * v2 Joi schema for Lists
+ * V2 Joi schema for Lists
  */
 export const listSchemaV2 = listSchema
   .keys({
@@ -613,9 +606,9 @@ export const listSchemaV2 = listSchema
       .trim()
       .uuid()
       .default(() => uuidV4())
-      .description('Auto-generated unique identifier for the list')
+      .description('Unique identifier for the list')
   })
-  .description('Enhanced list schema for V2 forms with auto-generated IDs')
+  .description('List schema for V2 forms')
 
 const feedbackSchema = Joi.object<FormDefinition['feedback']>()
   .description('Feedback configuration for the form')
@@ -696,18 +689,9 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
       .description('Path of the first page to show when starting the form'),
     pages: Joi.array<Page>()
       .required()
-      .when('engine', {
-        is: 'V2',
-        then: Joi.array<Page>()
-          .items(pageSchemaV2)
-          .description('Pages using V2 schema with enhanced features'),
-        otherwise: Joi.array<Page>()
-          .items(pageSchema)
-          .description('Pages using standard V1 schema')
-      })
-      .unique('path')
-      .unique('id', { ignoreUndefined: true })
-      .description('All pages within the form'),
+      .items(pageSchema)
+      .description('Pages schema for V1 forms')
+      .unique('path'),
     sections: Joi.array<Section>()
       .items(sectionsSchema)
       .unique('name')
@@ -749,24 +733,22 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
       .description('Configuration for submission output format')
   })
 
-export const formDefinitionV2PayloadSchema = formDefinitionSchema
+export const formDefinitionV2Schema = formDefinitionSchema
   .keys({
     pages: Joi.array<Page>()
-      .items(pageSchemaPayloadV2)
+      .items(pageSchemaV2)
       .required()
       .unique('path')
-      .unique('id', { ignoreUndefined: true })
-      .description('Pages with auto-generated IDs for V2 forms'),
+      .unique('id')
+      .description('Pages schema for V2 forms'),
     lists: Joi.array<List>()
       .items(listSchemaV2)
       .unique('name')
       .unique('title')
-      .unique('id', { ignoreUndefined: true })
-      .description('Lists with auto-generated IDs for V2 forms')
+      .unique('id')
+      .description('Lists schema for V2 forms')
   })
-  .description(
-    'Enhanced form definition schema for V2 payloads with auto-generated IDs'
-  )
+  .description('Form definition schema for V2')
 
 // Maintain compatibility with legacy named export
 // E.g. `import { Schema } from '@defra/forms-model'`

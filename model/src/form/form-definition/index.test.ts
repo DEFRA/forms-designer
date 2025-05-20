@@ -7,7 +7,7 @@ import {
 } from '~/src/components/types.js'
 import {
   formDefinitionSchema,
-  formDefinitionV2PayloadSchema
+  formDefinitionV2Schema
 } from '~/src/form/form-definition/index.js'
 import {
   type FormDefinition,
@@ -341,7 +341,7 @@ describe('Form definition schema', () => {
       }
 
       it('should add ids to pages and components if one is missing', () => {
-        const validated = formDefinitionV2PayloadSchema.validate(definition)
+        const validated = formDefinitionV2Schema.validate(definition)
 
         expect(validated.error).toBeUndefined()
         expect(validated.value).toMatchObject({
@@ -383,7 +383,7 @@ describe('Form definition schema', () => {
       })
 
       it('should not validate if there are duplicate list ids', () => {
-        const validated = formDefinitionV2PayloadSchema.validate({
+        const validated = formDefinitionV2Schema.validate({
           ...definition,
           lists: [
             {
