@@ -1,14 +1,14 @@
 import { Question } from '~/src/form/form-editor/preview/question.js'
 
-export class LongAnswerQuestion extends Question {
+export class SupportingEvidenceQuestion extends Question {
   /**
    * @type {string}
    * @protected
    */
-  _questionTemplate = Question.PATH + 'textarea.njk'
+  _questionTemplate = Question.PATH + 'fileuploadfield.njk'
   /**
    * @type {string}
    * @protected
    */
-  _fieldName = 'longAnswerField'
+  _fieldName = 'supportingEvidence'
 }

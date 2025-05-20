@@ -464,7 +464,7 @@ export const customValidator = Joi.extend((joi: Joi.Root) => {
 }) as CustomValidator
 
 export const autoCompleteOptionsSchema = customValidator
-  .dsv<{ text: string; value: string }>()
+  .dsv<{ text: string; value: string }[]>()
   .row(/\r?\n/)
   .col(':')
   .keys(['text', 'value'])
@@ -587,9 +587,12 @@ export const formEditorInputPageSettingsSchema =
 export function govukFieldValueIsString(
   govukField: GovukField
 ): govukField is GovukStringField {
-  return ['question', 'hintText', 'shortDescription'].includes(
-    `${govukField.name}`
-  )
+  return [
+    'question',
+    'hintText',
+    'shortDescription',
+    'autoCompleteOptions'
+  ].includes(`${govukField.name}`)
 }
 
 export function govukFieldIsQuestionOptional(

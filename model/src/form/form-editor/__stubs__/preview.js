@@ -85,6 +85,26 @@ export class QuestionPreviewElements {
   setPreviewHTML(_value) {
     // Not implemented for server side render
   }
+
+  /**
+   * @param {HTMLElement} _value
+   */
+  setPreviewDOM(_value) {
+    // Not implemented for server side render
+  }
+}
+
+/**
+ * @implements {AutocompleteElements}
+ */
+export class AutocompletePreviewElements extends QuestionPreviewElements {
+  /**
+   * @param {BaseSettings & {autocompleteOptions: string}} elements
+   */
+  constructor({ autocompleteOptions, ...elements }) {
+    super(elements)
+    this.autocompleteOptions = autocompleteOptions
+  }
 }
 
 export const baseElements = /** @type {BaseSettings} */ ({
@@ -95,7 +115,50 @@ export const baseElements = /** @type {BaseSettings} */ ({
   shortDesc: ''
 })
 
+const list1Id = '414d82a3-4cab-416a-bd54-6b86fbd51120'
+const list2Id = '801385a4-81e6-4171-96c3-6c6727d97f22'
+const list3Id = 'e6e3f621-b875-4ca3-a054-cca9149149dd'
+const list4Id = 'd71b3909-582f-4e90-b6f5-490b89a6eb8f'
+
+const listElementsBase = /** @type {BaseSettings} */ ({
+  ...baseElements,
+  items: [
+    {
+      label: { text: 'Treasure Hunting' },
+      text: 'Treasure Hunting',
+      value: 'Treasure Hunting',
+      id: list1Id
+    },
+    {
+      label: { text: 'Rescuing the princess' },
+      text: 'Rescuing the princess',
+      value: 'Rescuing the princess',
+      id: list2Id
+    },
+    {
+      label: { text: 'Saving a city' },
+      text: 'Saving a city',
+      value: 'Saving a city',
+      id: list3Id
+    },
+    {
+      label: { text: 'Defeating the baron' },
+      text: 'Defeating the baron',
+      value: 'Defeating the baron',
+      id: list4Id
+    }
+  ]
+})
+
+export const listElementsStub = {
+  list1Id,
+  list2Id,
+  list3Id,
+  list4Id,
+  baseElements: listElementsBase
+}
+
 /**
  * @import { ListElement } from  '~/src/form/form-editor/types.js'
- * @import { BaseSettings, ListElements, RenderContext, QuestionBaseModel, QuestionElements, QuestionRenderer } from  '~/src/form/form-editor/preview/types.js'
+ * @import { BaseSettings, ListElements, RenderContext, QuestionBaseModel, QuestionElements, QuestionRenderer, AutocompleteElements } from  '~/src/form/form-editor/preview/types.js'
  */

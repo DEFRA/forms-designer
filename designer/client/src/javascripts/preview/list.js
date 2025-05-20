@@ -3,11 +3,12 @@ import {
   EventListeners,
   QuestionDomElements
 } from '@defra/forms-designer/client/src/javascripts/preview/question.js'
+import { Question } from '@defra/forms-model'
 
 const DefaultListConst = {
   TextElementId: 'radioText',
   HintElementId: 'radioHint',
-  Template: 'radios.njk',
+  Template: Question.PATH + 'radios.njk',
   Input: 'listInput',
   RenderName: 'listInputField'
 }
@@ -28,6 +29,11 @@ export class ListQuestionDomElements extends QuestionDomElements {
   afterInputsHTML
   listTextElementId = DefaultListConst.TextElementId
   listHintElementId = DefaultListConst.HintElementId
+  /**
+   * @type {string}
+   * @protected
+   */
+  _updateElement = '#add-option-form'
   /**
    * @type {HTMLCollection}
    */
@@ -70,7 +76,8 @@ export class ListQuestionDomElements extends QuestionDomElements {
     this.listText = listText
     this.listHint = listHint
     this.updateElement = updateElement
-    this.afterInputsHTML = htmlBuilder.buildHTML('inset.njk', {
+    const path = Question.PATH + 'inset.njk'
+    this.afterInputsHTML = htmlBuilder.buildHTML(path, {
       model: {
         text: 'No items added yet.'
       }
@@ -96,11 +103,32 @@ export class ListQuestionDomElements extends QuestionDomElements {
 
   /**
    * @param {HTMLInputElement} el
+   * @returns {Element}
+   */
+  getParentUpdateElement(el) {
+    return /** @type {Element} */ (el.closest(this._updateElement))
+  }
+
+  /**
+   * @param {HTMLInputElement} el
    * @returns {{ id?: string }}
    */
   static getUpdateData(el) {
     const updateElement = /** @type {HTMLInputElement} */ (
       ListQuestionDomElements.getParentUpdateElement(el)
+    )
+    return /** @type {ListElement} */ (
+      ListQuestionDomElements.getListElementValues(updateElement)
+    )
+  }
+
+  /**
+   * @param {HTMLInputElement} el
+   * @returns {{ id?: string }}
+   */
+  getUpdateData(el) {
+    const updateElement = /** @type {HTMLInputElement} */ (
+      this.getParentUpdateElement(el)
     )
     return /** @type {ListElement} */ (
       ListQuestionDomElements.getListElementValues(updateElement)
@@ -196,7 +224,7 @@ export class ListEventListeners extends EventListeners {
        * @param {HTMLInputElement} target
        */
       (target) => {
-        const { id } = ListQuestionDomElements.getUpdateData(target)
+        const { id } = this._listElements.getUpdateData(target)
         this._listQuestion.updateText(id, target.value)
       },
       'input'
@@ -207,7 +235,7 @@ export class ListEventListeners extends EventListeners {
        * @param {HTMLInputElement} target
        */
       (target) => {
-        const { id } = ListQuestionDomElements.getUpdateData(target)
+        const { id } = this._listElements.getUpdateData(target)
         this._question.highlight = `${id}-label`
       },
       'focus'
@@ -228,7 +256,7 @@ export class ListEventListeners extends EventListeners {
        * @param {HTMLInputElement} target
        */
       (target) => {
-        const { id } = ListQuestionDomElements.getUpdateData(target)
+        const { id } = this._listElements.getUpdateData(target)
         this._listQuestion.updateHint(id, target.value)
       },
       'input'
@@ -239,7 +267,7 @@ export class ListEventListeners extends EventListeners {
        * @param {HTMLInputElement} target
        */
       (target) => {
-        const { id } = ListQuestionDomElements.getUpdateData(target)
+        const { id } = this._listElements.getUpdateData(target)
         this._question.highlight = `${id}-hint`
       },
       'focus'

@@ -1,18 +1,19 @@
-import { Question } from '~/src/form/form-editor/preview/question.js'
+import { FieldsetQuestion } from '~/src/form/form-editor/preview/fieldset-question.js'
+import { Question } from '~/src/index.js'
 
-export class MonthYearQuestion extends Question {
+export class MonthYearQuestion extends FieldsetQuestion {
   /**
    * @type {string}
    * @protected
    */
-  _questionTemplate = 'monthyearfield.njk'
+  _questionTemplate = Question.PATH + 'monthyearfield.njk'
+  _fieldName = 'monthYear'
 
-  get renderInput() {
+  /**
+   * @returns {Partial<QuestionBaseModel>}
+   */
+  get customRenderFields() {
     return {
-      id: 'monthYear',
-      name: 'monthYearField',
-      fieldset: this.fieldSet,
-      hint: this.hint,
       items: [
         { name: 'month', classes: 'govuk-input--width-2' },
         { name: 'year', classes: 'govuk-input--width-4' }
@@ -20,3 +21,6 @@ export class MonthYearQuestion extends Question {
     }
   }
 }
+/**
+ * @import { QuestionBaseModel } from '~/src/form/form-editor/preview/types.js'
+ */

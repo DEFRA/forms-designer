@@ -17,6 +17,6 @@ export default function (source) {
 
   return precompileString(source, {
     env,
-    name
+    name: 'preview-components/' + name
   })
 }

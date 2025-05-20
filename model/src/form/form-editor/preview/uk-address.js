@@ -1,20 +1,9 @@
-import { Question } from '~/src/form/form-editor/preview/question.js'
+import { FieldsetQuestion } from '~/src/form/form-editor/preview/fieldset-question.js'
+import { Question } from '~/src/index.js'
 
-export class UkAddressQuestion extends Question {
-  _questionTemplate = 'ukaddressfield.njk'
+export class UkAddressQuestion extends FieldsetQuestion {
+  _questionTemplate = Question.PATH + 'ukaddressfield.njk'
   _fieldName = 'addressField'
-
-  /**
-   * @type {QuestionBaseModel}
-   */
-  get renderInput() {
-    return {
-      id: this._fieldName,
-      name: this._fieldName,
-      fieldset: this.fieldSet,
-      hint: this.hint
-    }
-  }
 }
 
 /**

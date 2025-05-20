@@ -1,6 +1,7 @@
 import {
   ComponentType,
   ControllerType,
+  FormStatus,
   hasComponents,
   hasComponentsEvenIfNoNext,
   isFormType
@@ -79,11 +80,20 @@ export function mapQuestionRows(page) {
 
   const isSummary = page.controller === ControllerType.Summary
 
-  return components.map((comp, idx) =>
+  const rows = components.map((comp, idx) =>
     comp.type === ComponentType.Markdown
       ? mapMarkdown(comp, isSummary)
       : mapQuestion(comp, idx)
   )
+
+  if (page.controller === ControllerType.Repeat) {
+    rows.push({
+      key: { text: 'People can answer' },
+      value: { text: 'More than once' }
+    })
+  }
+
+  return rows
 }
 
 /**
@@ -154,7 +164,7 @@ export function hideFirstGuidance(page) {
 export function pagesViewModel(metadata, definition, notification) {
   const formPath = formOverviewPath(metadata.slug)
   const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
-  const previewBaseUrl = buildPreviewUrl(metadata.slug)
+  const previewBaseUrl = buildPreviewUrl(metadata.slug, FormStatus.Draft)
 
   const pageActions = [
     {

@@ -1,7 +1,7 @@
 import { NunjucksRenderer } from '~/src/javascripts/preview/nunjucks-renderer.js'
 import { NJK } from '~/src/javascripts/preview/nunjucks.js'
 
-jest.mock('~/src/views/components/inset.njk', () => '')
+jest.mock('~/src/views/preview-components/inset.njk', () => '')
 
 jest.mock('~/src/javascripts/preview/nunjucks.js', () => ({
   NJK: {
@@ -16,6 +16,7 @@ describe('nunjucks-renderer', () => {
   })
 
   const mockSetPreviewHTML = jest.fn()
+  const mockSetPreviewDOM = jest.fn()
   /**
    * @implements {QuestionElements}
    */
@@ -36,6 +37,13 @@ describe('nunjucks-renderer', () => {
      */
     setPreviewHTML(value) {
       mockSetPreviewHTML(value)
+    }
+
+    /**
+     * @param {HTMLElement} element
+     */
+    setPreviewDOM(element) {
+      mockSetPreviewDOM(element)
     }
   }
   /**

@@ -338,7 +338,7 @@ export interface ListItem {
   hint?: {
     text: string
   }
-  value?: string
+  value?: string | boolean
 }
 
 export interface ListLabel {
@@ -349,8 +349,8 @@ export interface ListLabel {
 export interface ListElement extends ListItem {
   readonly id: string
   text: string
-  value: string
-  label: ListLabel
+  value: string | boolean
+  label?: ListLabel
 }
 
 export interface ReadonlyHint {
@@ -360,8 +360,8 @@ export interface ReadonlyHint {
 export interface ListItemReadonly extends ListElement {
   readonly text: string
   readonly hint?: ReadonlyHint
-  readonly value: string
-  readonly label: ListLabel
+  readonly value: string | boolean
+  readonly label?: ListLabel
 }
 
 export interface DateItem {
@@ -376,7 +376,7 @@ export interface QuestionSessionState {
     radioId?: string
     radioText?: string
     radioHint?: string
-    radioValue?: string
+    radioValue?: string | boolean
     expanded?: boolean
   }
   listItems?: ListItem[]

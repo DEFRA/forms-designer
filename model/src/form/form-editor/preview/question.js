@@ -9,11 +9,13 @@
  * server side.
  */
 export class Question {
+  static PATH = 'preview-components/'
+
   /**
    * @type {string}
    * @protected
    */
-  _questionTemplate = 'textfield.njk'
+  _questionTemplate = Question.PATH + 'textfield.njk'
   /**
    * @type { string|null }
    * @protected
@@ -31,6 +33,12 @@ export class Question {
   _questionRenderer
 
   /**
+   * @type {QuestionElements}
+   * @private
+   */
+  _htmlElements
+
+  /**
    * @param {QuestionElements} htmlElements
    * @param {QuestionRenderer} questionRenderer
    */
@@ -39,7 +47,7 @@ export class Question {
 
     /**
      * @type {QuestionElements}
-     * @private
+     * @protected
      */
     this._htmlElements = htmlElements
     /**
@@ -120,6 +128,13 @@ export class Question {
   }
 
   /**
+   * @returns {Partial<QuestionBaseModel>}
+   */
+  get customRenderFields() {
+    return {}
+  }
+
+  /**
    * @type {QuestionBaseModel}
    */
   get renderInput() {
@@ -127,7 +142,8 @@ export class Question {
       id: this._fieldName,
       name: this._fieldName,
       label: this.label,
-      hint: this.hint
+      hint: this.hint,
+      ...this.customRenderFields
     }
   }
 

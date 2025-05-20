@@ -84,7 +84,7 @@ describe('list-sortable', () => {
       const preview = /** @type {ListSortableQuestion} */ (
         SetupPreview.RadiosField()
       )
-      expect(preview.renderInput.fieldset.legend.text).toBe(
+      expect(preview.renderInput.fieldset?.legend.text).toBe(
         'Which quest would you like to pick?'
       )
     })

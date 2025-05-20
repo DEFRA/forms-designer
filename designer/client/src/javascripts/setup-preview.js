@@ -1,4 +1,6 @@
 import {
+  AutocompleteQuestion,
+  CheckboxSortableQuestion,
   DateInputQuestion,
   EmailAddressQuestion,
   ListSortableQuestion,
@@ -9,9 +11,16 @@ import {
   Question,
   RadioSortableQuestion,
   ShortAnswerQuestion,
-  UkAddressQuestion
+  SupportingEvidenceQuestion,
+  UkAddressQuestion,
+  YesNoQuestion
 } from '@defra/forms-model'
 
+import { AutocompleteRenderer } from '~/src/javascripts/preview/autocomplete-renderer.js'
+import {
+  AutocompleteDOMElements,
+  AutocompleteListeners
+} from '~/src/javascripts/preview/autocomplete.js'
 import {
   ListSortableEventListeners,
   ListSortableQuestionElements
@@ -125,6 +134,24 @@ export const SetupPreview =
       return email
     },
     /**
+     * @returns {SupportingEvidenceQuestion}
+     */
+    FileUploadField: () => {
+      const questionElements = new QuestionDomElements()
+      const nunjucksRenderer = new NunjucksRenderer(questionElements)
+      const supportingEvidenceQuestion = new SupportingEvidenceQuestion(
+        questionElements,
+        nunjucksRenderer
+      )
+      const listeners = new EventListeners(
+        supportingEvidenceQuestion,
+        questionElements
+      )
+      listeners.setupListeners()
+
+      return supportingEvidenceQuestion
+    },
+    /**
      * @returns {UkAddressQuestion}
      */
     UkAddressField: () => {
@@ -135,6 +162,21 @@ export const SetupPreview =
       listeners.setupListeners()
 
       return address
+    },
+    /**
+     * @returns {UkAddressQuestion}
+     */
+    YesNoField: () => {
+      const questionElements = new QuestionDomElements()
+      const nunjucksRenderer = new NunjucksRenderer(questionElements)
+      const yesNoQuestion = new YesNoQuestion(
+        questionElements,
+        nunjucksRenderer
+      )
+      const listeners = new EventListeners(yesNoQuestion, questionElements)
+      listeners.setupListeners()
+
+      return yesNoQuestion
     },
     /**
      * @returns {PhoneNumberQuestion}
@@ -162,6 +204,36 @@ export const SetupPreview =
       listeners.setupListeners()
 
       return radio
+    },
+    /**
+     * @returns {CheckboxSortableQuestion}
+     */
+    CheckboxesField: () => {
+      const elements = new ListSortableQuestionElements(NunjucksRenderer)
+      const nunjucksRenderer = new NunjucksRenderer(elements)
+      const radio = new CheckboxSortableQuestion(elements, nunjucksRenderer)
+      const listeners = new ListSortableEventListeners(radio, elements, [])
+      listeners.setupListeners()
+
+      return radio
+    },
+    /**
+     * @returns {AutocompleteQuestion}
+     */
+    AutocompleteField: () => {
+      const elements = new AutocompleteDOMElements()
+      const nunjucksRenderer = new AutocompleteRenderer(elements)
+      const autocompleteQuestion = new AutocompleteQuestion(
+        elements,
+        nunjucksRenderer
+      )
+      const listeners = new AutocompleteListeners(
+        autocompleteQuestion,
+        elements
+      )
+      listeners.setupListeners()
+
+      return autocompleteQuestion
     },
     /**
      * @returns {ListSortableQuestion}

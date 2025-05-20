@@ -1,18 +1,10 @@
+import { FieldsetQuestion } from '~/src/form/form-editor/preview/fieldset-question.js'
 import { Question } from '~/src/form/form-editor/preview/question.js'
-
-export class DateInputQuestion extends Question {
+export class DateInputQuestion extends FieldsetQuestion {
   /**
    * @type {string}
    * @protected
    */
-  _questionTemplate = 'date-input.njk'
-
-  get renderInput() {
-    return {
-      id: 'dateInput',
-      name: 'dateInputField',
-      fieldset: this.fieldSet,
-      hint: this.hint
-    }
-  }
+  _questionTemplate = Question.PATH + 'date-input.njk'
+  _fieldName = 'dateInput'
 }

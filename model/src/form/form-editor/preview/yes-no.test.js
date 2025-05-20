@@ -3,18 +3,19 @@ import {
   QuestionRendererStub,
   baseElements
 } from '~/src/form/form-editor/__stubs__/preview.js'
-import { DateInputQuestion } from '~/src/form/form-editor/preview/date-input.js'
+import { YesNoQuestion } from '~/src/form/form-editor/preview/yes-no.js'
 
-describe('date-input', () => {
+describe('YesNoQuestion', () => {
   it('should create class', () => {
     const elements = /** @type {QuestionElements} */ (
       new QuestionPreviewElements(baseElements)
     )
     const renderer = new QuestionRendererStub(jest.fn())
-    const dateInput = new DateInputQuestion(elements, renderer)
+    const dateInput = new YesNoQuestion(elements, renderer)
     expect(dateInput.renderInput).toEqual({
-      id: 'dateInput',
-      name: 'dateInput',
+      id: 'yesNo',
+      name: 'yesNo',
+      type: 'boolean',
       fieldset: {
         legend: {
           classes: 'govuk-fieldset__legend--l',
@@ -24,7 +25,27 @@ describe('date-input', () => {
       hint: {
         classes: '',
         text: 'Choose one adventure that best suits you.'
-      }
+      },
+      items: [
+        {
+          id: 'yesNo-yes',
+          label: {
+            classes: '',
+            text: 'Yes'
+          },
+          text: 'Yes',
+          value: true
+        },
+        {
+          id: 'yesNo-no',
+          label: {
+            classes: '',
+            text: 'No'
+          },
+          text: 'No',
+          value: false
+        }
+      ]
     })
   })
 })

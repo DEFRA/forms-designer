@@ -139,7 +139,7 @@ describe('list', () => {
       const preview = /** @type {ListSortableQuestion} */ (
         SetupPreview.ListSortable()
       )
-      expect(preview.renderInput.fieldset.legend.text).toBe('Question')
+      expect(preview.renderInput.fieldset?.legend.text).toBe('Question')
     })
   })
 
@@ -155,8 +155,8 @@ describe('list', () => {
       const listText = /** @type {HTMLInputElement} */ (
         document.getElementById('radioText')
       )
-      expect(ListQuestionDomElements.getUpdateData(listText)).toBeDefined()
-      expect(ListQuestionDomElements.getUpdateData(listText)).not.toBeNull()
+      expect(questionElements.getUpdateData(listText)).toBeDefined()
+      expect(questionElements.getUpdateData(listText)).not.toBeNull()
       const listItem = questionElements.listElements[2]
       expect(listItem).toBeDefined()
       listItem.dataset.hint = 'hint 1'
@@ -350,7 +350,7 @@ describe('list', () => {
       expect(list.renderInput).toEqual(expectedModel)
       // @ts-expect-error - Mock made available on NunjucksRenderMock
       expect(emptyListRenderer._renderMock).toHaveBeenCalledWith(
-        'radios.njk',
+        'preview-components/radios.njk',
         expectedModel
       )
     })

@@ -2,14 +2,10 @@ import { Question } from '~/src/form/form-editor/preview/question.js'
 
 export class NumberOnlyQuestion extends Question {
   /**
-   * @type {QuestionBaseModel}
+   * @returns {Partial<QuestionBaseModel>}
    */
-  get renderInput() {
+  get customRenderFields() {
     return {
-      id: this._fieldName,
-      name: this._fieldName,
-      label: this.label,
-      hint: this.hint,
       type: 'number'
     }
   }

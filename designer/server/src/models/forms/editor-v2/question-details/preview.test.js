@@ -1,4 +1,6 @@
 import {
+  AutocompleteQuestion,
+  CheckboxSortableQuestion,
   ComponentType,
   DateInputQuestion,
   EmailAddressQuestion,
@@ -10,7 +12,9 @@ import {
   Question,
   RadioSortableQuestion,
   ShortAnswerQuestion,
-  UkAddressQuestion
+  SupportingEvidenceQuestion,
+  UkAddressQuestion,
+  YesNoQuestion
 } from '@defra/forms-model'
 
 import {
@@ -69,6 +73,22 @@ describe('preview', () => {
     value: 'Short answer'
   }
 
+  const autocompleteOptions = {
+    id: 'autoCompleteOptions',
+    name: 'autoCompleteOptions',
+    idPrefix: 'autoCompleteOptions',
+    label: {
+      text: 'Add each option on a new line',
+      classes: 'govuk-label--s',
+      isPageHeading: false
+    },
+    hint: {
+      text: 'To optionally set an input value for each item, separate the option text and value with a colon (e.g English:en-gb)'
+    },
+    customTemplate: 'auto-complete-options',
+    value: 'Hydrogen:1\r\n' + 'Helium:2\r\n' + 'Lithium:3\r\n'
+  }
+
   const questionSessionState = {
     questionType: ComponentType.RadiosField,
     editRow: {},
@@ -107,6 +127,11 @@ describe('preview', () => {
     })
     it('should return empty string given questionOptional', () => {
       expect(getValueAsString(questionOptional)).toBe('')
+    })
+    it('should return value as string given _autocompleteOptions', () => {
+      expect(getValueAsString(autocompleteOptions)).toBe(
+        'Hydrogen:1\r\n' + 'Helium:2\r\n' + 'Lithium:3\r\n'
+      )
     })
   })
 
@@ -193,6 +218,16 @@ describe('preview', () => {
       previewElements.setPreviewHTML('abc')
       expect(previewElements).toEqual(previewElements2)
     })
+
+    it('should get autocomplete options', () => {
+      const previewElements = new QuestionPreviewElements(
+        [...basePageFields, autocompleteOptions],
+        {}
+      )
+      expect(previewElements.autocompleteOptions).toBe(
+        'Hydrogen:1\r\n' + 'Helium:2\r\n' + 'Lithium:3\r\n'
+      )
+    })
   })
 
   describe('getPreviewConstructor', () => {
@@ -222,7 +257,7 @@ describe('preview', () => {
         previewElements
       )
 
-      expect(previewModel).toBeInstanceOf(Question)
+      expect(previewModel).toBeInstanceOf(YesNoQuestion)
     })
 
     it('should get MonthYearField', () => {
@@ -241,6 +276,15 @@ describe('preview', () => {
       )
 
       expect(previewModel).toBeInstanceOf(ListQuestion)
+    })
+
+    it('should get SupportingEvidenceQuestion', () => {
+      const previewModel = getPreviewConstructor(
+        ComponentType.FileUploadField,
+        previewElements
+      )
+
+      expect(previewModel).toBeInstanceOf(SupportingEvidenceQuestion)
     })
 
     it('should get NumberField', () => {
@@ -312,7 +356,7 @@ describe('preview', () => {
         previewElements
       )
 
-      expect(previewModel).toBeInstanceOf(ListQuestion)
+      expect(previewModel).toBeInstanceOf(AutocompleteQuestion)
     })
 
     it('should get CheckboxesField', () => {
@@ -321,7 +365,7 @@ describe('preview', () => {
         previewElements
       )
 
-      expect(previewModel).toBeInstanceOf(ListQuestion)
+      expect(previewModel).toBeInstanceOf(CheckboxSortableQuestion)
     })
 
     it('should get Question', () => {
@@ -469,16 +513,6 @@ describe('preview', () => {
       })
     })
 
-    it('should get YesNoField', () => {
-      const previewModel = getPreviewModel(
-        basePageFields,
-        {},
-        ComponentType.YesNoField
-      )
-
-      expect(previewModel).toEqual(expectedQuestionModel)
-    })
-
     it('should get MonthYearField', () => {
       const previewModel = getPreviewModel(
         basePageFields,
@@ -499,7 +533,7 @@ describe('preview', () => {
           }
         ],
         id: 'monthYear',
-        name: 'monthYearField'
+        name: 'monthYear'
       })
     })
 
@@ -583,7 +617,11 @@ describe('preview', () => {
         ComponentType.FileUploadField
       )
 
-      expect(previewModel).toEqual(expectedQuestionModel)
+      expect(previewModel).toEqual({
+        ...expectedQuestionModel,
+        id: 'supportingEvidence',
+        name: 'supportingEvidence'
+      })
     })
 
     it('should get AutocompleteField', () => {
@@ -594,24 +632,20 @@ describe('preview', () => {
       )
 
       expect(previewModel).toEqual({
-        fieldset: {
-          legend: {
-            classes: 'govuk-fieldset__legend--l',
-            text: 'Short answer (optional)'
-          }
+        id: 'autoCompleteField',
+        name: 'autoCompleteField',
+        attributes: {
+          'data-module': 'govuk-accessible-autocomplete'
         },
-        formGroup: {
-          afterInputs: {
-            html: '<div class="govuk-inset-text">No items added yet.</div>'
-          }
+        label: {
+          classes: 'govuk-label--l',
+          text: 'Short answer (optional)'
         },
         hint: {
           classes: '',
           text: ''
         },
-        id: 'listInput',
-        items: [],
-        name: 'listInputField'
+        items: [{ id: '', text: '', value: '' }]
       })
     })
 
@@ -624,7 +658,9 @@ describe('preview', () => {
 
       expect(previewModel).toEqual({
         ...listModelBase,
-        ...formGroupBase
+        ...formGroupBase,
+        id: 'checkboxField',
+        name: 'checkboxField'
       })
     })
 
@@ -648,7 +684,7 @@ describe('preview', () => {
       expect(previewModel).toEqual({
         ...fieldSetModelBase,
         id: 'dateInput',
-        name: 'dateInputField'
+        name: 'dateInput'
       })
     })
 

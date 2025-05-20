@@ -38,6 +38,10 @@ import {
   handleEnhancedActionOnPost
 } from '~/src/routes/forms/editor-v2/question-details-helper.js'
 
+/**
+ * `/library/{slug}/editor-v2/page/{pageId}/question/{questionId}/details/{stateId?}`
+ * @type {string}
+ */
 export const ROUTE_FULL_PATH_QUESTION_DETAILS = `/library/{slug}/editor-v2/page/{pageId}/question/{questionId}/details/{stateId?}`
 
 const errorKey = sessionNames.validationFailure.editorQuestionDetails
