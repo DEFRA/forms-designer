@@ -1,5 +1,5 @@
 import { createComponent } from '@defra/forms-engine-plugin/helpers.js'
-import { FormStatus, randomId } from '@defra/forms-model'
+import { ComponentType, FormStatus, randomId } from '@defra/forms-model'
 
 import { QuestionTypeDescriptions } from '~/src/common/constants/editor.js'
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
@@ -78,17 +78,15 @@ export function hasDataOrErrorForDisplay(
  * @param { ComponentType | undefined } questionType
  */
 export function getErrorTemplates(questionType) {
-  const component = /** @type {any} */ (
-    createComponent(
-      {
-        type: questionType,
-        title: 'Dummy',
-        name: 'dummy',
-        options: { required: true },
-        schema: {}
-      },
-      {}
-    )
+  const component = createComponent(
+    /** @type {ComponentDef} */ ({
+      type: questionType ?? ComponentType.Html,
+      title: 'Dummy',
+      name: 'dummy',
+      options: { required: true },
+      schema: {}
+    }),
+    {}
   )
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -310,6 +308,6 @@ export function questionDetailsViewModel(
 }
 
 /**
- * @import { ComponentType, ComponentDef, QuestionSessionState, FormMetadata, FormDefinition, FormEditor, GovukField, InputFieldsComponentsDef, TextFieldComponent } from '@defra/forms-model'
+ * @import { ComponentDef, QuestionSessionState, FormMetadata, FormDefinition, FormEditor, GovukField, InputFieldsComponentsDef, TextFieldComponent } from '@defra/forms-model'
  * @import { ErrorDetailsItem, ValidationFailure } from '~/src/common/helpers/types.js'
  */

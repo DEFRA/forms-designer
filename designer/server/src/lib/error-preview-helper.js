@@ -313,7 +313,7 @@ export function spanTag(type, part) {
  * @param {string} type
  */
 export function insertTags(templateStr, type) {
-  const delimiterRegex = /{{([^}]+)}}/g
+  const delimiterRegex = /{{([^{}]*)}}/g
   return templateStr.replace(delimiterRegex, (match, content) => {
     if (content.includes('#label') || content.includes('#title')) {
       return `<span class="error-preview-shortDescription"${getFunctionAttribute(content)}>{{${content}}}</span>`
