@@ -282,7 +282,7 @@ describe('Form definition schema', () => {
   })
 
   describe('Form Definition', () => {
-    describe('formDefinitionV2PayloadSchema', () => {
+    describe('formDefinitionV2Schema', () => {
       const component1 = buildNumberFieldComponent({
         id: undefined,
         name: 'year',

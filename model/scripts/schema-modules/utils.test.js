@@ -11,8 +11,8 @@ describe('Utils', () => {
     it('should convert kebab-case to Title Case', () => {
       expect(toTitleCase('test-schema')).toBe('Test Schema')
       expect(toTitleCase('component-schema-v2')).toBe('Component Schema V2')
-      expect(toTitleCase('form-definition-v2-payload-schema')).toBe(
-        'Form Definition V2 Payload Schema'
+      expect(toTitleCase('form-definition-v2-schema')).toBe(
+        'Form Definition V2 Schema'
       )
     })
   })
