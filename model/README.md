@@ -68,7 +68,7 @@ Available schema files include:
 ##### Form Definition Schemas
 
 - `form-definition-schema.json` - Full form definition validation
-- `form-definition-v2-payload-schema.json` - Form definition v2 payload validation
+- `form-definition-v2-schema.json` - Full form definition V2 validation
 
 ##### Component Schemas
 
@@ -79,7 +79,6 @@ Available schema files include:
 
 - `page-schema.json` - Page validation
 - `page-schema-v2.json` - Page validation (v2)
-- `page-schema-payload-v2.json` - Page payload validation (v2)
 
 ##### List Schemas
 

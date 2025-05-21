@@ -819,7 +819,6 @@ describe('editor.js', () => {
       const expectedOptionsRepeater = {
         payload: {
           controller: null,
-          repeat: null,
           title: '',
           path: '/this-is-your-first-field'
         },
