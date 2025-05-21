@@ -208,5 +208,5 @@ export class ListQuestion extends Question {
 
 /**
  * @import { ListElement, ListItemReadonly } from '~/src/form/form-editor/types.js'
- * @import { ListenerRow, ListElements, QuestionRenderer, HTMLBuilder, DefaultComponent, GovukFieldset } from '~/src/form/form-editor/preview/types.js'
+ * @import { ListElements, QuestionRenderer, DefaultComponent, GovukFieldset } from '~/src/form/form-editor/preview/types.js'
  */
