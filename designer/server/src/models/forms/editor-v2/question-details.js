@@ -1,3 +1,4 @@
+import { YesNoField } from '@defra/forms-engine-plugin/engine/components/YesNoField.js'
 import { createComponent } from '@defra/forms-engine-plugin/helpers.js'
 import { ComponentType, FormStatus, randomId } from '@defra/forms-model'
 
@@ -78,6 +79,12 @@ export function hasDataOrErrorForDisplay(
  * @param { ComponentType | undefined } questionType
  */
 export function getErrorTemplates(questionType) {
+  if (questionType === ComponentType.YesNoField) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return YesNoField.getAllPossibleErrors()
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const component = createComponent(
     /** @type {ComponentDef} */ ({
       type: questionType ?? ComponentType.Html,
