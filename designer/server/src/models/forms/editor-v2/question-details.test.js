@@ -9,11 +9,13 @@ import { getSelectedFileTypesFromCSVMimeTypes } from '~/src/models/forms/editor-
 import {
   getDetails,
   getEnhancedFields,
+  getErrorTemplates,
   getExtraFields,
   getListDetails,
   hasDataOrErrorForDisplay,
   mapToQuestionDetails,
-  overrideFormValuesForEnhancedAction
+  overrideFormValuesForEnhancedAction,
+  questionDetailsViewModel
 } from '~/src/models/forms/editor-v2/question-details.js'
 
 const fieldNames = ['minLength', 'maxLength', 'regex', 'classes']
@@ -517,6 +519,148 @@ describe('editor-v2 - question details model', () => {
         list: 'listname',
         rowNumBeingEdited: 2
       })
+    })
+  })
+
+  describe('getErrorTemplates', () => {
+    test('should get error templates for YesNoField', () => {
+      const result = getErrorTemplates(ComponentType.YesNoField)
+      expect(result).toBeDefined()
+      expect(result.baseErrors).toBeDefined()
+    })
+
+    test('should get error templates for TextField', () => {
+      const result = getErrorTemplates(ComponentType.TextField)
+      expect(result).toBeDefined()
+      expect(result).toHaveProperty('baseErrors')
+      expect(result).toHaveProperty('advancedSettingsErrors')
+    })
+
+    test('should handle undefined questionType', () => {
+      const result = getErrorTemplates(undefined)
+      expect(result).toBeDefined()
+      expect(result).toHaveProperty('baseErrors')
+    })
+  })
+
+  describe('questionDetailsViewModel', () => {
+    test('should return view model for basic question', () => {
+      const metadata = {
+        id: '12345',
+        slug: 'test-form',
+        title: 'Test Form',
+        organisation: 'Defra',
+        teamName: 'Forms Team',
+        teamEmail: 'test@example.com',
+        draft: {
+          createdAt: new Date(),
+          createdBy: { id: '123', displayName: 'Test User' },
+          updatedAt: new Date(),
+          updatedBy: { id: '123', displayName: 'Test User' }
+        },
+        createdBy: { id: '123', displayName: 'Test User' },
+        createdAt: new Date(),
+        updatedBy: { id: '123', displayName: 'Test User' },
+        updatedAt: new Date()
+      }
+
+      const pageId = 'page-id'
+      const questionId = 'question-id'
+      const stateId = 'state-id'
+
+      const definition = buildDefinition({
+        name: 'Test Form',
+        pages: [
+          buildQuestionPage({
+            id: pageId,
+            title: 'Test Page',
+            path: '/test-page',
+            components: [
+              buildFileUploadComponent({
+                id: questionId,
+                name: 'upload',
+                title: 'Upload a file',
+                type: ComponentType.FileUploadField
+              })
+            ]
+          })
+        ]
+      })
+
+      const result = questionDetailsViewModel(
+        metadata,
+        definition,
+        pageId,
+        questionId,
+        stateId
+      )
+
+      expect(result).toBeDefined()
+      expect(result.cardTitle).toBe('Question 1')
+      expect(result.cardCaption).toBe('Page 1')
+      expect(result.navigation).toBeDefined()
+      expect(result.previewPageUrl).toContain('/test-page')
+      expect(result.questionType).toBe(ComponentType.FileUploadField)
+    })
+
+    test('should handle state with questionType override', () => {
+      const metadata = {
+        id: '12345',
+        slug: 'test-form',
+        title: 'Test Form',
+        organisation: 'Defra',
+        teamName: 'Forms Team',
+        teamEmail: 'test@example.com',
+        draft: {
+          createdAt: new Date(),
+          createdBy: { id: '123', displayName: 'Test User' },
+          updatedAt: new Date(),
+          updatedBy: { id: '123', displayName: 'Test User' }
+        },
+        createdBy: { id: '123', displayName: 'Test User' },
+        createdAt: new Date(),
+        updatedBy: { id: '123', displayName: 'Test User' },
+        updatedAt: new Date()
+      }
+
+      const pageId = 'page-id'
+      const questionId = 'question-id'
+      const stateId = 'state-id'
+
+      const definition = buildDefinition({
+        name: 'Test Form',
+        pages: [
+          buildQuestionPage({
+            id: pageId,
+            title: 'Test Page',
+            path: '/test-page',
+            components: [
+              buildFileUploadComponent({
+                id: questionId,
+                name: 'upload',
+                title: 'Upload a file'
+              })
+            ]
+          })
+        ]
+      })
+
+      const state = {
+        questionType: ComponentType.TextField
+      }
+
+      const result = questionDetailsViewModel(
+        metadata,
+        definition,
+        pageId,
+        questionId,
+        stateId,
+        undefined,
+        state
+      )
+
+      expect(result).toBeDefined()
+      expect(result.questionType).toBe(ComponentType.TextField)
     })
   })
 })
