@@ -33,7 +33,7 @@ export function getSchemaMap() {
   return {
     // Form definition schemas
     'form-definition-schema': 'formDefinitionSchema',
-    'form-definition-v2-payload-schema': 'formDefinitionV2PayloadSchema',
+    'form-definition-v2-schema': 'formDefinitionV2Schema',
 
     // Component schemas
     'component-schema': 'componentSchema',
@@ -42,7 +42,6 @@ export function getSchemaMap() {
     // Page schemas
     'page-schema': 'pageSchema',
     'page-schema-v2': 'pageSchemaV2',
-    'page-schema-payload-v2': 'pageSchemaPayloadV2',
 
     // List schemas
     'list-schema': 'listSchema',

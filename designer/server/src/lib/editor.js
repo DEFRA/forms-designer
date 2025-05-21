@@ -303,10 +303,9 @@ export async function setPageSettings(
   }
 
   if (isCurrentlyRepeater && !repeater) {
-    // Unset the controller and repeat options
+    // Unset the controller (repeat options will be stripped)
     Object.assign(requestPayload, {
-      controller: null,
-      repeat: null
+      controller: null
     })
   }
 
