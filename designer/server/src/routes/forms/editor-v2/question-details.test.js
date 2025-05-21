@@ -37,7 +37,10 @@ import {
   getQuestionSessionState,
   setQuestionSessionState
 } from '~/src/lib/session-helper.js'
-import { handleEnhancedActionOnGet } from '~/src/routes/forms/editor-v2/question-details-helper.js'
+import {
+  enforceFileUploadFieldExclusivity,
+  handleEnhancedActionOnGet
+} from '~/src/routes/forms/editor-v2/question-details-helper.js'
 import {
   getListItems,
   saveList
@@ -50,7 +53,11 @@ jest.mock('~/src/lib/error-helper.js')
 jest.mock('~/src/lib/editor.js')
 jest.mock('~/src/lib/session-helper.js')
 jest.mock('~/src/lib/list.js')
-jest.mock('~/src/routes/forms/editor-v2/question-details-helper.js')
+jest.mock('~/src/routes/forms/editor-v2/question-details-helper.js', () => ({
+  handleEnhancedActionOnGet: jest.fn(),
+  handleEnhancedActionOnPost: jest.fn(),
+  enforceFileUploadFieldExclusivity: jest.fn((payload) => payload)
+}))
 
 describe('Editor v2 question details routes', () => {
   /** @type {Server} */
@@ -64,6 +71,9 @@ describe('Editor v2 question details routes', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    jest
+      .mocked(enforceFileUploadFieldExclusivity)
+      .mockImplementation((payload) => payload)
   })
 
   /**
