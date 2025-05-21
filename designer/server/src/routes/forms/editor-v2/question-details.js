@@ -34,6 +34,7 @@ import * as viewModel from '~/src/models/forms/editor-v2/question-details.js'
 import { editorv2Path } from '~/src/models/links.js'
 import { getFormPage } from '~/src/routes/forms/editor-v2/helpers.js'
 import {
+  enforceFileUploadFieldExclusivity,
   handleEnhancedActionOnGet,
   handleEnhancedActionOnPost
 } from '~/src/routes/forms/editor-v2/question-details-helper.js'
@@ -207,23 +208,6 @@ export function overrideStateIfJsEnabled(request) {
     }
   }
   return undefined
-}
-
-/**
- * @param {FormEditorInputQuestion} payload
- * @returns {FormEditorInputQuestion}
- */
-function enforceFileUploadFieldExclusivity(payload) {
-  if (payload.questionType === ComponentType.FileUploadField) {
-    const exactFiles = payload.exactFiles
-
-    if (exactFiles && exactFiles !== '') {
-      payload.minFiles = ''
-      payload.maxFiles = ''
-    }
-  }
-
-  return payload
 }
 
 /**

@@ -1,5 +1,6 @@
 import { randomUUID } from 'crypto'
 
+import { ComponentType } from '@defra/forms-model'
 import Joi from 'joi'
 
 import {
@@ -279,7 +280,24 @@ export function handleEnhancedActionOnPost(request, stateId, questionDetails) {
 }
 
 /**
- * @import { ComponentDef,  FormEditorInputQuestionDetails, QuestionSessionState, ListItem } from '@defra/forms-model'
+ * @param {FormEditorInputQuestion} payload
+ * @returns {FormEditorInputQuestion}
+ */
+export function enforceFileUploadFieldExclusivity(payload) {
+  if (payload.questionType === ComponentType.FileUploadField) {
+    const exactFiles = payload.exactFiles
+
+    if (exactFiles && exactFiles !== '') {
+      payload.minFiles = ''
+      payload.maxFiles = ''
+    }
+  }
+
+  return payload
+}
+
+/**
+ * @import { ComponentDef,  FormEditorInputQuestionDetails, FormEditorInputQuestion,  QuestionSessionState, ListItem } from '@defra/forms-model'
  * @import { Request, RequestQuery } from '@hapi/hapi'
  * @import { Yar } from '@hapi/yar'
  */
