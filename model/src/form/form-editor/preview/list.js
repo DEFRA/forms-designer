@@ -117,7 +117,6 @@ export class ListQuestion extends Question {
 
   /**
    * @returns {ListItemReadonly[]}
-   * @readonly
    */
   get list() {
     const iterator = /** @type {MapIterator<ListElement>} */ (
