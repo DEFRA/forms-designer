@@ -4,10 +4,18 @@ import {
   panelHTML,
   shortDescInputHTML
 } from '~/src/javascripts/error-preview/__stubs__/error-preview'
-import { ErrorPreviewDomElements } from '~/src/javascripts/error-preview/error-preview'
+import {
+  ErrorPreview,
+  ErrorPreviewDomElements,
+  ErrorPreviewEventListeners
+} from '~/src/javascripts/error-preview/error-preview'
 import { fieldMappings } from '~/src/javascripts/error-preview/field-mappings'
+import { setupFileTypeListeners } from '~/src/javascripts/error-preview/file-upload/file-type-handler'
+import { setupFileUploadValidation } from '~/src/javascripts/error-preview/file-upload/validations'
 
 jest.mock('~/src/javascripts/preview/nunjucks-renderer.js')
+jest.mock('~/src/javascripts/error-preview/file-upload/file-type-handler')
+jest.mock('~/src/javascripts/error-preview/file-upload/validations')
 
 describe('error-preview', () => {
   describe('ErrorPreviewDomElements', () => {
@@ -80,6 +88,186 @@ describe('error-preview', () => {
       res.updateText(sourceElem, targets, '[placeholder]')
       expect(targets[0].textContent).toBe('[placeholder]')
       expect(targets[targets.length - 1].textContent).toBe('[placeholder]')
+    })
+
+    it('should apply lowerFirst template function', () => {
+      document.body.innerHTML = shortDescInputHTML + panelHTML
+      const res = new ErrorPreviewDomElements(undefined)
+
+      const elemWithFunc = document.createElement('input')
+      elemWithFunc.dataset.templatefunc = 'lowerFirst'
+
+      const elemWithoutFunc = document.createElement('input')
+
+      const result1 = res.applyTemplateFunction(elemWithFunc, 'TestValue')
+      expect(result1).toBe('testValue')
+
+      const result2 = res.applyTemplateFunction(elemWithFunc, '[TestValue]')
+      expect(result2).toBe('[testValue]')
+
+      const result3 = res.applyTemplateFunction(elemWithoutFunc, 'TestValue')
+      expect(result3).toBe('TestValue')
+    })
+
+    it('should handle lowerFirstEnhanced correctly', () => {
+      document.body.innerHTML = shortDescInputHTML + panelHTML
+      const res = new ErrorPreviewDomElements(undefined)
+
+      expect(res.lowerFirstEnhanced('TestValue')).toBe('testValue')
+
+      expect(res.lowerFirstEnhanced('[TestValue]')).toBe('[testValue]')
+
+      expect(res.lowerFirstEnhanced('T')).toBe('t')
+
+      expect(res.lowerFirstEnhanced('[')).toBe('[')
+    })
+  })
+
+  describe('ErrorPreviewEventListeners', () => {
+    it('should add event listener to element', () => {
+      document.body.innerHTML = shortDescInputHTML + panelHTML
+      const baseElements = new ErrorPreviewDomElements(
+        fieldMappings[ComponentType.TextField]
+      )
+      const mockErrorPreview = /** @type {ErrorPreview} */ (
+        /** @type {unknown} */ ({
+          _updateTextFieldErrorMessages: jest.fn()
+        })
+      )
+      const listeners = new ErrorPreviewEventListeners(
+        mockErrorPreview,
+        baseElements
+      )
+
+      const mockElement = document.createElement('input')
+      const addEventListenerSpy = jest.spyOn(mockElement, 'addEventListener')
+      const mockCallback = jest.fn()
+
+      // @ts-expect-error - accessing protected method for testing
+      listeners.inputEventListener(mockElement, mockCallback, 'input')
+
+      expect(addEventListenerSpy).toHaveBeenCalledWith(
+        'input',
+        expect.any(Function)
+      )
+    })
+
+    it('should determine correct display value for error messages', () => {
+      document.body.innerHTML = shortDescInputHTML + panelHTML
+      const baseElements = new ErrorPreviewDomElements(
+        fieldMappings[ComponentType.TextField]
+      )
+      const mockErrorPreview = /** @type {ErrorPreview} */ (
+        /** @type {unknown} */ ({
+          _updateTextFieldErrorMessages: jest.fn()
+        })
+      )
+      const listeners = new ErrorPreviewEventListeners(
+        mockErrorPreview,
+        baseElements
+      )
+
+      expect(
+        // @ts-expect-error - accessing protected method for testing
+        listeners._getMessageDisplayValue(true, false, false, true, false)
+      ).toBe('')
+      expect(
+        // @ts-expect-error - accessing protected method for testing
+        listeners._getMessageDisplayValue(false, true, false, false, true)
+      ).toBe('')
+      expect(
+        // @ts-expect-error - accessing protected method for testing
+        listeners._getMessageDisplayValue(false, false, true, true, true)
+      ).toBe('')
+      expect(
+        // @ts-expect-error - accessing protected method for testing
+        listeners._getMessageDisplayValue(true, false, false, false, false)
+      ).toBe('none')
+      expect(
+        // @ts-expect-error - accessing protected method for testing
+        listeners._getMessageDisplayValue(false, true, false, false, false)
+      ).toBe('none')
+      expect(
+        // @ts-expect-error - accessing protected method for testing
+        listeners._getMessageDisplayValue(false, false, true, true, false)
+      ).toBe('none')
+      expect(
+        // @ts-expect-error - accessing protected method for testing
+        listeners._getMessageDisplayValue(false, false, true, false, true)
+      ).toBe('none')
+    })
+
+    it('should have expected listeners', () => {
+      document.body.innerHTML = shortDescInputHTML + panelHTML
+      const baseElements = new ErrorPreviewDomElements(
+        fieldMappings[ComponentType.TextField]
+      )
+      const mockErrorPreview = /** @type {ErrorPreview} */ (
+        /** @type {unknown} */ ({
+          _updateTextFieldErrorMessages: jest.fn()
+        })
+      )
+      const listeners = new ErrorPreviewEventListeners(
+        mockErrorPreview,
+        baseElements
+      )
+
+      // @ts-expect-error - accessing protected property for testing
+      const listenersList = listeners.listeners
+
+      // Confirm we have listeners for both advanced fields and shortDesc
+      expect(listenersList.length).toBeGreaterThan(0)
+
+      // @ts-expect-error - accessing protected property for testing
+      const highlightListeners = listeners.highlightListeners
+      expect(highlightListeners.length).toBeGreaterThan(0)
+    })
+  })
+
+  describe('ErrorPreview', () => {
+    beforeEach(() => {
+      jest.clearAllMocks()
+    })
+
+    it('should create an instance with event listeners', () => {
+      document.body.innerHTML = shortDescInputHTML + panelHTML
+      const baseElements = new ErrorPreviewDomElements(
+        fieldMappings[ComponentType.TextField]
+      )
+
+      const errorPreview = new ErrorPreview(baseElements)
+
+      expect(errorPreview).toBeDefined()
+      // @ts-expect-error - accessing protected property for testing
+      expect(errorPreview._htmlElements).toBe(baseElements)
+      // @ts-expect-error - accessing protected property for testing
+      expect(errorPreview._listeners).toBeDefined()
+    })
+
+    it('should set up preview for a component type', () => {
+      document.body.innerHTML = shortDescInputHTML + panelHTML
+
+      const errorPreview = ErrorPreview.setupPreview(ComponentType.TextField)
+
+      expect(errorPreview).toBeDefined()
+      // @ts-expect-error - accessing protected property for testing
+      expect(errorPreview._htmlElements).toBeDefined()
+    })
+
+    it('should set up file upload preview for file upload component', () => {
+      document.body.innerHTML = shortDescInputHTML + panelHTML
+
+      ErrorPreview.setupPreview(ComponentType.FileUploadField)
+
+      expect(setupFileTypeListeners).toHaveBeenCalled()
+    })
+
+    it('should set up file upload validation', () => {
+      document.body.innerHTML = shortDescInputHTML + panelHTML
+
+      ErrorPreview.setupFileUploadValidation()
+
+      expect(setupFileUploadValidation).toHaveBeenCalled()
     })
   })
 })

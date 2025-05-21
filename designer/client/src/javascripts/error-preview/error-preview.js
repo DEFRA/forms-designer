@@ -415,12 +415,15 @@ export class ErrorPreviewEventListeners {
    * @private
    */
   _getMessageDisplayValue(isMinOnly, isMaxOnly, isCombined, hasMin, hasMax) {
-    if (isMinOnly && hasMin && !hasMax) {
+    // Show min-only message when min is set (regardless of max)
+    if (isMinOnly && hasMin) {
       return ''
     }
-    if (isMaxOnly && hasMax && !hasMin) {
+    // Show max-only message when max is set (regardless of min)
+    if (isMaxOnly && hasMax) {
       return ''
     }
+    // Show combined message when both are set
     if (isCombined && hasMin && hasMax) {
       return ''
     }
