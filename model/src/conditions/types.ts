@@ -24,7 +24,8 @@ export interface Condition2ValueData {
 
 export interface Condition2RefValueData {
   type: ConditionType.Ref
-  listItemId: string
+  listId: string
+  itemId: string
 }
 
 export interface RelativeDateValueData {
@@ -48,6 +49,7 @@ export interface ConditionData {
 }
 
 export interface Condition2Data {
+  id: string
   componentId: string
   operator: OperatorName
   value: Condition2RefValueData | Condition2ValueData | RelativeDateValueData
@@ -60,6 +62,7 @@ export interface ConditionRefData {
 }
 
 export interface Condition2RefData {
+  id: string
   conditionId: string
 }
 
