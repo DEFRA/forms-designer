@@ -241,9 +241,12 @@ describe('error-preview', () => {
       const mockCallback = jest.fn()
 
       let eventHandler
-      mockElement.addEventListener = jest.fn((type, handler) => {
-        eventHandler = handler
-      })
+      // Cast the mock function to match addEventListener's expected signature
+      mockElement.addEventListener = /** @type {any} */ (
+        jest.fn((type, handler) => {
+          eventHandler = handler
+        })
+      )
 
       // @ts-expect-error - accessing protected method for testing
       listeners.inputEventListener(mockElement, mockCallback, 'input')
