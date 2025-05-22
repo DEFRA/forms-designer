@@ -299,18 +299,7 @@ describe('error-preview', () => {
     let mockErrorPreview
 
     beforeEach(() => {
-      document.body.innerHTML =
-        shortDescInputHTML +
-        panelHTML +
-        '<input id="minLength" />' +
-        '<input id="maxLength" />' +
-        '<input id="minFiles" />' +
-        '<input id="maxFiles" />' +
-        '<input id="exactFiles" />' +
-        '<span class="error-preview-min"></span>' +
-        '<span class="error-preview-max"></span>' +
-        '<div class="govuk-error-message">Text must be between <span class="error-preview-shortDescription">Field</span> and X characters</div>'
-
+      // Simplified beforeEach, specific HTML will be set in tests
       baseElements = new ErrorPreviewDomElements(
         fieldMappings[ComponentType.TextField]
       )
@@ -321,6 +310,13 @@ describe('error-preview', () => {
     })
 
     it('should update min/max placeholders', () => {
+      document.body.innerHTML =
+        shortDescInputHTML + // Assuming this provides a basic structure
+        panelHTML +
+        '<input id="minLength" />' +
+        '<input id="maxLength" />' +
+        '<span class="error-preview-min"></span>' +
+        '<span class="error-preview-max"></span>'
       const minInput = /** @type {HTMLInputElement | null} */ (
         document.getElementById('minLength')
       )
@@ -348,27 +344,59 @@ describe('error-preview', () => {
       })
     })
 
-    it('should update combined error messages', () => {
+    it('should update combined error messages when last node is text', () => {
       document.body.innerHTML = `
         <div class="govuk-error-message">
-          Text must be <span class="error-preview-shortDescription">Field</span> between X and Y characters
+          Original prefix <span class="error-preview-shortDescription">Field</span> must be between X and Y characters
         </div>
       `
       const errorMsg = document.querySelector('.govuk-error-message')
-      const textNode = document.createTextNode(' between X and Y characters')
-      errorMsg?.appendChild(textNode)
 
       // @ts-expect-error - accessing protected method for testing
       listeners._updateCombinedErrorMessages('5', '10')
 
-      expect(
-        errorMsg?.innerHTML.includes('5') ??
-          errorMsg?.innerHTML.includes('10') ??
-          errorMsg?.textContent?.includes('between 5 and 10 characters')
-      ).toBeTruthy()
+      expect(errorMsg?.textContent).toContain(
+        ' must be between 5 and 10 characters'
+      )
+      expect(errorMsg?.textContent).not.toContain('between X and Y characters')
+    })
+
+    it('should update combined error messages targeting remainingHTML when shortDescNode exists but last node is not text', () => {
+      document.body.innerHTML =
+        '<div class="govuk-error-message">Prefix text <span class="error-preview-shortDescription">My Field</span> must be between X and Y characters <span>old suffix</span></div>'
+      const errorMsg = document.querySelector('.govuk-error-message')
+
+      // @ts-expect-error - accessing protected method for testing
+      listeners._updateCombinedErrorMessages('7', '12')
+
+      expect(errorMsg?.innerHTML).toBe(
+        'Prefix text <span class="error-preview-shortDescription">My Field</span> must be between 7 and 12 characters'
+      )
+      expect(errorMsg?.innerHTML).not.toContain('<span>old suffix</span>')
+      expect(errorMsg?.innerHTML).not.toContain('between X and Y characters')
+    })
+
+    it('should append to combined error messages when shortDescNode does not exist and last node is not text', () => {
+      document.body.innerHTML =
+        '<div class="govuk-error-message">Message will be between X and Y characters and has <b>other elements</b></div>'
+      const errorMsg = document.querySelector('.govuk-error-message')
+
+      // @ts-expect-error - accessing protected method for testing
+      listeners._updateCombinedErrorMessages('3', '8')
+
+      expect(errorMsg?.innerHTML).toContain(
+        'Message will be between X and Y characters and has <b>other elements</b>'
+      )
+      expect(errorMsg?.innerHTML).toContain(
+        'must be between 3 and 8 characters'
+      )
+      expect(errorMsg?.innerHTML).toContain(
+        '<b>other elements</b> must be between 3 and 8 characters'
+      )
     })
 
     it('should update error visibility based on field values', () => {
+      document.body.innerHTML = '<div class="govuk-error-message">Error</div>'
       const errorMsgs = document.querySelectorAll('.govuk-error-message')
       Array.from(errorMsgs).forEach((msg) => {
         Object.defineProperty(msg, 'style', {
@@ -379,14 +407,55 @@ describe('error-preview', () => {
         })
       })
 
-      // @ts-expect-error - accessing protected method for testing
-      jest.spyOn(listeners, '_getMessageDisplayValue').mockReturnValue('none')
+      jest
+        .spyOn(/** @type {any} */ (listeners), '_getMessageDisplayValue')
+        .mockReturnValue('none')
 
       // @ts-expect-error - accessing protected method for testing
       listeners._updateErrorVisibilityForTextFields('5', '10')
 
       // @ts-expect-error - accessing private method for testing
       expect(listeners._getMessageDisplayValue).toHaveBeenCalled()
+    })
+
+    it('should update text field error messages', () => {
+      document.body.innerHTML = `
+        <input id="minLength" />
+        <input id="maxLength" />
+        <div class="govuk-error-message"></div> 
+      `
+      jest
+        .spyOn(/** @type {any} */ (listeners), '_updateMinMaxPlaceholders')
+        .mockReturnValue({
+          minValue: '5',
+          maxValue: '10'
+        })
+      jest
+        .spyOn(/** @type {any} */ (listeners), '_updateCombinedErrorMessages')
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        .mockImplementation(() => {})
+      jest
+        .spyOn(
+          /** @type {any} */ (listeners),
+          '_updateErrorVisibilityForTextFields'
+        )
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        .mockImplementation(() => {})
+
+      // @ts-expect-error - accessing protected method for testing
+      listeners._updateTextFieldErrorMessages()
+
+      // @ts-expect-error - accessing private method for testing
+      expect(listeners._updateMinMaxPlaceholders).toHaveBeenCalled()
+      // @ts-expect-error - accessing private method for testing
+      expect(listeners._updateCombinedErrorMessages).toHaveBeenCalledWith(
+        '5',
+        '10'
+      )
+      expect(
+        // @ts-expect-error - accessing private method for testing
+        listeners._updateErrorVisibilityForTextFields
+      ).toHaveBeenCalledWith('5', '10')
     })
   })
 
