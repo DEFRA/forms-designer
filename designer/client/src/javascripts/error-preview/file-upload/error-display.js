@@ -73,7 +73,7 @@ export function updateFileUploadErrorText(fieldId, value) {
       el,
       fieldId,
       'minFiles',
-      ['upload ' + MIN_FILES_PLACEHOLDER + ' files', 'upload [unknown] files'],
+      [`upload ${MIN_FILES_PLACEHOLDER} files`, 'upload [unknown] files'],
       /\[min file count\]|\[unknown\]/g,
       value,
       MIN_FILES_PLACEHOLDER
@@ -83,7 +83,7 @@ export function updateFileUploadErrorText(fieldId, value) {
       el,
       fieldId,
       'maxFiles',
-      ['only upload ' + MAX_FILES_PLACEHOLDER, 'only upload [unknown]'],
+      [`only upload ${MAX_FILES_PLACEHOLDER}`, 'only upload [unknown]'],
       /\[max file count\]|\[unknown\]/g,
       value,
       MAX_FILES_PLACEHOLDER
@@ -93,7 +93,7 @@ export function updateFileUploadErrorText(fieldId, value) {
       el,
       fieldId,
       'exactFiles',
-      ['exactly ' + EXACT_FILES_PLACEHOLDER, 'exactly [unknown]'],
+      [`exactly ${EXACT_FILES_PLACEHOLDER}`, 'exactly [unknown]'],
       /\[exact file count\]|\[unknown\]/g,
       value,
       EXACT_FILES_PLACEHOLDER

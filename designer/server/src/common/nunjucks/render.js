@@ -44,8 +44,8 @@ export function view(viewPath, options) {
  * @returns {JoiExpression}
  */
 export function createJoiExpression(expr) {
-  // TODO - work out why type is not valid
-  return /** @type {JoiExpression} */ (Joi.expression(expr))
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  return Joi.expression(expr)
 }
 
 /**

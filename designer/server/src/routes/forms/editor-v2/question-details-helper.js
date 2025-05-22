@@ -85,11 +85,10 @@ export function paramsValidForMove(id, direction) {
 
 /**
  * Handle delete action
- * @param {any} state - Current state
  * @param {string|undefined} id - Item ID
  * @returns {string} - redirect URL
  */
-function handleDeleteAction(state, id) {
+function handleDeleteAction(id) {
   return `/delete-list-item/${id}`
 }
 
@@ -206,7 +205,7 @@ export function handleEnhancedActionOnGet(yar, stateId, query) {
   }
 
   const actionHandlers = {
-    [ListAction.Delete]: () => handleDeleteAction(state, id),
+    [ListAction.Delete]: () => handleDeleteAction(id),
     [ListAction.Edit]: () => handleEditAction(state, yar, stateId, id),
     [ListAction.Cancel]: () => handleCancelAction(state, yar, stateId),
     [ListAction.Reorder]: () => handleReorderAction(state, yar, stateId),
