@@ -222,6 +222,169 @@ describe('error-preview', () => {
       const highlightListeners = listeners.highlightListeners
       expect(highlightListeners.length).toBeGreaterThan(0)
     })
+
+    it('should handle input event callbacks correctly', () => {
+      document.body.innerHTML = shortDescInputHTML + panelHTML
+      const baseElements = new ErrorPreviewDomElements(
+        fieldMappings[ComponentType.TextField]
+      )
+      const mockErrorPreview = /** @type {ErrorPreview} */ (
+        /** @type {unknown} */ ({
+          _updateTextFieldErrorMessages: jest.fn()
+        })
+      )
+      const listeners = new ErrorPreviewEventListeners(
+        mockErrorPreview,
+        baseElements
+      )
+      const mockElement = document.createElement('input')
+      const mockCallback = jest.fn()
+
+      let eventHandler
+      mockElement.addEventListener = jest.fn((type, handler) => {
+        eventHandler = handler
+      })
+
+      // @ts-expect-error - accessing protected method for testing
+      listeners.inputEventListener(mockElement, mockCallback, 'input')
+
+      const mockEvent = { target: mockElement }
+      // @ts-expect-error - eventHandler is definitely set by our mock implementation!
+      eventHandler(mockEvent)
+
+      expect(mockCallback).toHaveBeenCalled()
+    })
+
+    it('should call highlight functions when adding event listeners', () => {
+      document.body.innerHTML = shortDescInputHTML + panelHTML
+      const baseElements = new ErrorPreviewDomElements(
+        fieldMappings[ComponentType.TextField]
+      )
+
+      const addSpy = jest.spyOn(baseElements, 'addHighlights')
+      const removeSpy = jest.spyOn(baseElements, 'removeHighlights')
+
+      const mockErrorPreview = /** @type {ErrorPreview} */ (
+        /** @type {unknown} */ ({ _updateTextFieldErrorMessages: jest.fn() })
+      )
+      const listeners = new ErrorPreviewEventListeners(
+        mockErrorPreview,
+        baseElements
+      )
+
+      // @ts-expect-error - accessing protected property for testing
+      const highlightListeners = listeners.highlightListeners
+
+      const shortDescFocusCallback = highlightListeners[0][1]
+      shortDescFocusCallback(
+        document.createElement('input'),
+        new Event('focus')
+      )
+
+      const shortDescBlurCallback = highlightListeners[1][1]
+      shortDescBlurCallback(document.createElement('input'), new Event('blur'))
+
+      expect(addSpy).toHaveBeenCalled()
+      expect(removeSpy).toHaveBeenCalled()
+    })
+  })
+
+  describe('ErrorPreviewEventListeners complex functions', () => {
+    let baseElements
+    /** @type {ErrorPreviewEventListeners} */
+    let listeners
+    let mockErrorPreview
+
+    beforeEach(() => {
+      document.body.innerHTML =
+        shortDescInputHTML +
+        panelHTML +
+        '<input id="minLength" />' +
+        '<input id="maxLength" />' +
+        '<input id="minFiles" />' +
+        '<input id="maxFiles" />' +
+        '<input id="exactFiles" />' +
+        '<span class="error-preview-min"></span>' +
+        '<span class="error-preview-max"></span>' +
+        '<div class="govuk-error-message">Text must be between <span class="error-preview-shortDescription">Field</span> and X characters</div>'
+
+      baseElements = new ErrorPreviewDomElements(
+        fieldMappings[ComponentType.TextField]
+      )
+      mockErrorPreview = /** @type {ErrorPreview} */ (
+        /** @type {unknown} */ ({ _updateTextFieldErrorMessages: jest.fn() })
+      )
+      listeners = new ErrorPreviewEventListeners(mockErrorPreview, baseElements)
+    })
+
+    it('should update min/max placeholders', () => {
+      const minInput = /** @type {HTMLInputElement | null} */ (
+        document.getElementById('minLength')
+      )
+      const maxInput = /** @type {HTMLInputElement | null} */ (
+        document.getElementById('maxLength')
+      )
+      if (minInput) minInput.value = '5'
+      if (maxInput) maxInput.value = '10'
+
+      // @ts-expect-error - accessing protected method for testing
+      const result = listeners._updateMinMaxPlaceholders()
+
+      expect(result.minValue).toBe('5')
+      expect(result.maxValue).toBe('10')
+
+      const minSpans = document.querySelectorAll('.error-preview-min')
+      const maxSpans = document.querySelectorAll('.error-preview-max')
+
+      minSpans.forEach((span) => {
+        expect(span.textContent).toBe('5')
+      })
+
+      maxSpans.forEach((span) => {
+        expect(span.textContent).toBe('10')
+      })
+    })
+
+    it('should update combined error messages', () => {
+      document.body.innerHTML = `
+        <div class="govuk-error-message">
+          Text must be <span class="error-preview-shortDescription">Field</span> between X and Y characters
+        </div>
+      `
+      const errorMsg = document.querySelector('.govuk-error-message')
+      const textNode = document.createTextNode(' between X and Y characters')
+      errorMsg?.appendChild(textNode)
+
+      // @ts-expect-error - accessing protected method for testing
+      listeners._updateCombinedErrorMessages('5', '10')
+
+      expect(
+        errorMsg?.innerHTML.includes('5') ??
+          errorMsg?.innerHTML.includes('10') ??
+          errorMsg?.textContent?.includes('between 5 and 10 characters')
+      ).toBeTruthy()
+    })
+
+    it('should update error visibility based on field values', () => {
+      const errorMsgs = document.querySelectorAll('.govuk-error-message')
+      Array.from(errorMsgs).forEach((msg) => {
+        Object.defineProperty(msg, 'style', {
+          value: {
+            display: ''
+          },
+          writable: true
+        })
+      })
+
+      // @ts-expect-error - accessing protected method for testing
+      jest.spyOn(listeners, '_getMessageDisplayValue').mockReturnValue('none')
+
+      // @ts-expect-error - accessing protected method for testing
+      listeners._updateErrorVisibilityForTextFields('5', '10')
+
+      // @ts-expect-error - accessing private method for testing
+      expect(listeners._getMessageDisplayValue).toHaveBeenCalled()
+    })
   })
 
   describe('ErrorPreview', () => {
