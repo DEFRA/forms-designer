@@ -84,6 +84,110 @@ export function paramsValidForMove(id, direction) {
 }
 
 /**
+ * Handle delete action
+ * @param {any} state - Current state
+ * @param {string|undefined} id - Item ID
+ * @returns {string} - redirect URL
+ */
+function handleDeleteAction(state, id) {
+  return `/delete-list-item/${id}`
+}
+
+/**
+ * Handle edit action
+ * @param {QuestionSessionState} state - Current state
+ * @param {Yar} yar - Yar session
+ * @param {string} stateId - State ID
+ * @param {string|undefined} id - Item ID
+ * @returns {string} - redirect anchor
+ */
+function handleEditAction(state, yar, stateId, id) {
+  const itemForEdit = state.listItems?.find((x) => x.id === id)
+
+  setQuestionSessionState(yar, stateId, {
+    ...state,
+    editRow: setEditRowState(itemForEdit, true)
+  })
+  return '#add-option-form'
+}
+
+/**
+ * Handle cancel action
+ * @param {QuestionSessionState} state - Current state
+ * @param {Yar} yar - Yar session
+ * @param {string} stateId - State ID
+ * @returns {string} - redirect anchor
+ */
+function handleCancelAction(state, yar, stateId) {
+  setQuestionSessionState(yar, stateId, {
+    ...state,
+    editRow: setEditRowState(undefined, false)
+  })
+  return radiosSectionListItemsAnchor
+}
+
+/**
+ * Handle reorder action
+ * @param {QuestionSessionState} state - Current state
+ * @param {Yar} yar - Yar session
+ * @param {string} stateId - State ID
+ * @returns {string} - redirect anchor
+ */
+function handleReorderAction(state, yar, stateId) {
+  const newState = {
+    questionType: state.questionType,
+    questionDetails: state.questionDetails,
+    editRow: { expanded: false },
+    listItems: state.listItems,
+    isReordering: true
+  }
+  setQuestionSessionState(yar, stateId, newState)
+  return radiosSectionListItemsAnchor
+}
+
+/**
+ * Handle move action
+ * @param {QuestionSessionState} state - Current state
+ * @param {Yar} yar - Yar session
+ * @param {string} stateId - State ID
+ * @param {string|undefined} id - Item ID
+ * @param {string|undefined} direction - Move direction
+ * @returns {string} - redirect anchor
+ */
+function handleMoveAction(state, yar, stateId, id, direction) {
+  if (paramsValidForMove(id, direction)) {
+    const newList = repositionListItem(
+      state.listItems ?? [],
+      String(direction),
+      String(id)
+    )
+    setQuestionSessionState(yar, stateId, {
+      ...state,
+      listItems: newList,
+      lastMovedId: String(id),
+      lastMoveDirection: String(direction)
+    })
+  }
+  return '#'
+}
+
+/**
+ * Handle done reordering action
+ * @param {QuestionSessionState} state - Current state
+ * @param {Yar} yar - Yar session
+ * @param {string} stateId - State ID
+ * @returns {string} - redirect anchor
+ */
+function handleDoneReorderingAction(state, yar, stateId) {
+  setQuestionSessionState(yar, stateId, {
+    ...state,
+    isReordering: false,
+    editRow: { expanded: false }
+  })
+  return radiosSectionListItemsAnchor
+}
+
+/**
  * @param {Yar} yar
  * @param {string} stateId
  * @param {RequestQuery} query
@@ -101,64 +205,22 @@ export function handleEnhancedActionOnGet(yar, stateId, query) {
     throw new Error('Invalid session contents')
   }
 
-  if (action === ListAction.Delete) {
-    return `/delete-list-item/${id}`
+  const actionHandlers = {
+    [ListAction.Delete]: () => handleDeleteAction(state, id),
+    [ListAction.Edit]: () => handleEditAction(state, yar, stateId, id),
+    [ListAction.Cancel]: () => handleCancelAction(state, yar, stateId),
+    [ListAction.Reorder]: () => handleReorderAction(state, yar, stateId),
+    [ListAction.Move]: () =>
+      handleMoveAction(state, yar, stateId, id, direction),
+    [ListAction.DoneReordering]: () =>
+      handleDoneReorderingAction(state, yar, stateId)
   }
 
-  if (action === ListAction.Edit) {
-    const itemForEdit = state.listItems?.find((x) => x.id === id)
-
-    setQuestionSessionState(yar, stateId, {
-      ...state,
-      editRow: setEditRowState(itemForEdit, true)
-    })
-    return '#add-option-form'
-  }
-
-  if (action === ListAction.Cancel) {
-    setQuestionSessionState(yar, stateId, {
-      ...state,
-      editRow: setEditRowState(undefined, false)
-    })
-    return radiosSectionListItemsAnchor
-  }
-
-  if (action === ListAction.Reorder) {
-    const newState = {
-      questionType: state.questionType,
-      questionDetails: state.questionDetails,
-      editRow: { expanded: false },
-      listItems: state.listItems,
-      isReordering: true
-    }
-    setQuestionSessionState(yar, stateId, newState)
-    return radiosSectionListItemsAnchor
-  }
-
-  if (action === ListAction.Move) {
-    if (paramsValidForMove(id, direction)) {
-      const newList = repositionListItem(
-        state.listItems ?? [],
-        String(direction),
-        String(id)
-      )
-      setQuestionSessionState(yar, stateId, {
-        ...state,
-        listItems: newList,
-        lastMovedId: String(id),
-        lastMoveDirection: String(direction)
-      })
-    }
-    return '#'
-  }
-
-  if (action === ListAction.DoneReordering) {
-    setQuestionSessionState(yar, stateId, {
-      ...state,
-      isReordering: false,
-      editRow: { expanded: false }
-    })
-    return radiosSectionListItemsAnchor
+  const handler = actionHandlers[action]
+  // its not always truthy here as it could be undefined
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (handler) {
+    return handler()
   }
 
   return undefined
