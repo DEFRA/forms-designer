@@ -422,7 +422,7 @@ describe('error-preview', () => {
       document.body.innerHTML = `
         <input id="minLength" />
         <input id="maxLength" />
-        <div class="govuk-error-message"></div> 
+        <div class="govuk-error-message"></div>
       `
       jest
         .spyOn(/** @type {any} */ (listeners), '_updateMinMaxPlaceholders')
