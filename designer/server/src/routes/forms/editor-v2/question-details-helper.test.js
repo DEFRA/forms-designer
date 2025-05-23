@@ -1,5 +1,6 @@
 import { getQuestionSessionState } from '~/src/lib/session-helper.js'
 import {
+  enforceFileUploadFieldExclusivity,
   handleEnhancedActionOnGet,
   handleEnhancedActionOnPost,
   repositionListItem,
@@ -554,10 +555,72 @@ describe('Editor v2 question-details route helper', () => {
       expect(repositionListItem([], 'up', 'itemId')).toEqual([])
     })
   })
+
+  describe('enforceFileUploadFieldExclusivity', () => {
+    test('should clear minFiles and maxFiles when exactFiles has a value', () => {
+      const payload = /** @type {FormEditorInputQuestion} */ ({
+        questionType: 'FileUploadField',
+        exactFiles: '5',
+        minFiles: '2',
+        maxFiles: '10'
+      })
+
+      const result = enforceFileUploadFieldExclusivity(payload)
+
+      expect(result.minFiles).toBe('')
+      expect(result.maxFiles).toBe('')
+      expect(result.exactFiles).toBe('5')
+      expect(result).toBe(payload)
+    })
+
+    test('should not modify minFiles and maxFiles when exactFiles is empty', () => {
+      const payload = /** @type {FormEditorInputQuestion} */ ({
+        questionType: 'FileUploadField',
+        exactFiles: '',
+        minFiles: '2',
+        maxFiles: '10'
+      })
+
+      const result = enforceFileUploadFieldExclusivity(payload)
+
+      expect(result.minFiles).toBe('2')
+      expect(result.maxFiles).toBe('10')
+      expect(result.exactFiles).toBe('')
+    })
+
+    test('should not modify minFiles and maxFiles when exactFiles is undefined', () => {
+      const payload = /** @type {FormEditorInputQuestion} */ ({
+        questionType: 'FileUploadField',
+        minFiles: '2',
+        maxFiles: '10'
+      })
+
+      const result = enforceFileUploadFieldExclusivity(payload)
+
+      expect(result.minFiles).toBe('2')
+      expect(result.maxFiles).toBe('10')
+      expect(result.exactFiles).toBeUndefined()
+    })
+
+    test('should not modify payload when questionType is not FileUploadField', () => {
+      const payload = /** @type {FormEditorInputQuestion} */ ({
+        questionType: 'TextField',
+        exactFiles: '5',
+        minFiles: '2',
+        maxFiles: '10'
+      })
+
+      const result = enforceFileUploadFieldExclusivity(payload)
+
+      expect(result.minFiles).toBe('2')
+      expect(result.maxFiles).toBe('10')
+      expect(result.exactFiles).toBe('5')
+    })
+  })
 })
 
 /**
- * @import { FormEditorInputQuestionDetails } from '@defra/forms-model'
+ * @import { FormEditorInputQuestionDetails, FormEditorInputQuestion } from '@defra/forms-model'
  * @import { Request } from '@hapi/hapi'
  * @import { Yar } from '@hapi/yar'
  */

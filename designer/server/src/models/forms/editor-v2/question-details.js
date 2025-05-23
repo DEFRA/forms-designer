@@ -1,4 +1,6 @@
-import { FormStatus, randomId } from '@defra/forms-model'
+import { YesNoField } from '@defra/forms-engine-plugin/engine/components/YesNoField.js'
+import { createComponent } from '@defra/forms-engine-plugin/helpers.js'
+import { ComponentType, FormStatus, randomId } from '@defra/forms-model'
 
 import { QuestionTypeDescriptions } from '~/src/common/constants/editor.js'
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
@@ -71,6 +73,37 @@ export function hasDataOrErrorForDisplay(
   }
 
   return false
+}
+
+/**
+ * @param { ComponentType | undefined } questionType
+ */
+export function getErrorTemplates(questionType) {
+  if (questionType === ComponentType.YesNoField) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return YesNoField.getAllPossibleErrors()
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const component = createComponent(
+    /** @type {ComponentDef} */ ({
+      type: questionType ?? ComponentType.Html,
+      title: 'Dummy',
+      name: 'dummy',
+      options: { required: true },
+      schema: {}
+    }),
+    {}
+  )
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const errorTemplates =
+    'getAllPossibleErrors' in component
+      ? // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+        component.getAllPossibleErrors()
+      : { baseErrors: [], advancedSettingsErrors: [] }
+
+  return errorTemplates
 }
 
 /**
@@ -244,6 +277,8 @@ export function questionDetailsViewModel(
   const changeTypeUrl = `${urlPageBase}/question/${questionId}/type/${stateId}`
   const pageHeading = details.pageTitle
   const pageTitle = `Edit question ${details.questionNum} - ${formTitle}`
+  const errorTemplates = getErrorTemplates(questionType)
+
   return {
     listDetails: getListDetails(state, questionFieldsOverride),
     state,
@@ -254,6 +289,8 @@ export function questionDetailsViewModel(
     basePageFields,
     uploadFields,
     extraFields,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    errorTemplates,
     cardTitle: `Question ${details.questionNum}`,
     cardCaption: `Page ${details.pageNum}`,
     cardHeading: `Edit question ${details.questionNum}`,
@@ -278,6 +315,6 @@ export function questionDetailsViewModel(
 }
 
 /**
- * @import { ComponentType, ComponentDef, QuestionSessionState, FormMetadata, FormDefinition, FormEditor, GovukField, InputFieldsComponentsDef, TextFieldComponent } from '@defra/forms-model'
+ * @import { ComponentDef, QuestionSessionState, FormMetadata, FormDefinition, FormEditor, GovukField, InputFieldsComponentsDef, TextFieldComponent } from '@defra/forms-model'
  * @import { ErrorDetailsItem, ValidationFailure } from '~/src/common/helpers/types.js'
  */

@@ -1,3 +1,5 @@
+import Joi from 'joi'
+
 import { environment } from '~/src/common/nunjucks/environment.js'
 
 /**
@@ -38,5 +40,32 @@ export function view(viewPath, options) {
 }
 
 /**
- * @import { MacroOptions, RenderOptions } from '~/src/common/nunjucks/types.js'
+ * @param {string} expr
+ * @returns {JoiExpression}
+ */
+export function createJoiExpression(expr) {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  return Joi.expression(expr)
+}
+
+/**
+ * Render a Joi template (expression) or tokenised string to generate complete error message
+ * @param { JoiExpression | string } template
+ * @param {{ label?: string, limit?: number | string, title?: string }} [local]
+ * @returns {string}
+ */
+export function expandTemplate(template, local = {}) {
+  const options = { errors: { escapeHtml: false } }
+  const prefs = { errors: { wrap: { label: false } } }
+
+  const templateExpression =
+    typeof template === 'string' ? createJoiExpression(template) : template
+
+  // @ts-expect-error Joi types are messed up
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
+  return templateExpression.render('', {}, prefs, local, options)
+}
+
+/**
+ * @import { MacroOptions, RenderOptions, JoiExpression } from '~/src/common/nunjucks/types.js'
  */

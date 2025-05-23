@@ -6,5 +6,5 @@
     }
   },
   "include": ["**/*.cjs", "**/*.js", "**/*.mjs", "**/*.ts"],
-  "exclude": ["dist/**/*", "scripts"]
+  "exclude": ["dist/**/*", "scripts", "coverage/**/*"]
 }

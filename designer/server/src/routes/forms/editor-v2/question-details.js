@@ -34,6 +34,7 @@ import * as viewModel from '~/src/models/forms/editor-v2/question-details.js'
 import { editorv2Path } from '~/src/models/links.js'
 import { getFormPage } from '~/src/routes/forms/editor-v2/helpers.js'
 import {
+  enforceFileUploadFieldExclusivity,
   handleEnhancedActionOnGet,
   handleEnhancedActionOnPost
 } from '~/src/routes/forms/editor-v2/question-details-helper.js'
@@ -364,8 +365,12 @@ export default [
         )
       const { token } = auth.credentials
 
+      const fileUploadLimitsPayload = enforceFileUploadFieldExclusivity(
+        /** @type {FormEditorInputQuestion} */ (payload)
+      )
+
       const questionDetails = {
-        ...mapQuestionDetails(payload),
+        ...mapQuestionDetails(fileUploadLimitsPayload),
         id: questionId !== 'new' ? questionId : undefined
       }
 
@@ -412,7 +417,7 @@ export default [
           pageId,
           questionId,
           questionDetails,
-          getListItems(payload, state)
+          getListItems(fileUploadLimitsPayload, state)
         )
 
         yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
@@ -452,7 +457,7 @@ export default [
 ]
 
 /**
- * @import { ComponentDef, FormDefinition, FormEditorInputQuestionDetails, Item, ListItem, QuestionSessionState } from '@defra/forms-model'
+ * @import { ComponentDef, FormDefinition, FormEditorInputQuestionDetails, Item, ListItem, QuestionSessionState, FormEditorInputQuestion } from '@defra/forms-model'
  * @import Boom from '@hapi/boom'
  * @import { Request, ResponseToolkit, ServerRoute } from '@hapi/hapi'
  */

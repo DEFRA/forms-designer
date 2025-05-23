@@ -1,0 +1,5 @@
+@use "../govuk-frontend" as *;
+
+.govuk-error-message .highlight {
+  color: govuk-colour("black");
+}

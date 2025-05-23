@@ -37,7 +37,10 @@ import {
   getQuestionSessionState,
   setQuestionSessionState
 } from '~/src/lib/session-helper.js'
-import { handleEnhancedActionOnGet } from '~/src/routes/forms/editor-v2/question-details-helper.js'
+import {
+  enforceFileUploadFieldExclusivity,
+  handleEnhancedActionOnGet
+} from '~/src/routes/forms/editor-v2/question-details-helper.js'
 import {
   getListItems,
   saveList
@@ -50,7 +53,11 @@ jest.mock('~/src/lib/error-helper.js')
 jest.mock('~/src/lib/editor.js')
 jest.mock('~/src/lib/session-helper.js')
 jest.mock('~/src/lib/list.js')
-jest.mock('~/src/routes/forms/editor-v2/question-details-helper.js')
+jest.mock('~/src/routes/forms/editor-v2/question-details-helper.js', () => ({
+  handleEnhancedActionOnGet: jest.fn(),
+  handleEnhancedActionOnPost: jest.fn(),
+  enforceFileUploadFieldExclusivity: jest.fn((payload) => payload)
+}))
 
 describe('Editor v2 question details routes', () => {
   /** @type {Server} */
@@ -64,6 +71,9 @@ describe('Editor v2 question details routes', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    jest
+      .mocked(enforceFileUploadFieldExclusivity)
+      .mockImplementation((payload) => payload)
   })
 
   /**
@@ -122,6 +132,9 @@ describe('Editor v2 question details routes', () => {
     jest
       .mocked(getQuestionSessionState)
       .mockReturnValueOnce(simpleSessionTextField)
+    jest
+      .mocked(buildQuestionSessionState)
+      .mockReturnValueOnce(simpleSessionTextField)
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     jest
       .mocked(forms.getDraftFormDefinition)
@@ -169,6 +182,9 @@ describe('Editor v2 question details routes', () => {
   test('GET - should hide preview error message button and preview page button if question not saved yet', async () => {
     jest
       .mocked(getQuestionSessionState)
+      .mockReturnValueOnce(simpleSessionTextField)
+    jest
+      .mocked(buildQuestionSessionState)
       .mockReturnValueOnce(simpleSessionTextField)
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
 
@@ -457,6 +473,7 @@ describe('Editor v2 question details routes', () => {
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       new Joi.ValidationError(
         'name is required. The question type is missing. Enter a question. Enter a short description',
         [],
@@ -492,6 +509,7 @@ describe('Editor v2 question details routes', () => {
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       new Joi.ValidationError(
         'Minimum length must be a positive whole number',
         [],
@@ -528,6 +546,7 @@ describe('Editor v2 question details routes', () => {
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       new Joi.ValidationError(
         'Minimum length must be less than or equal to maximum length',
         [],
@@ -565,6 +584,7 @@ describe('Editor v2 question details routes', () => {
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       new Joi.ValidationError(
         'At least 2 items are required for a list',
         [],
@@ -609,6 +629,7 @@ describe('Editor v2 question details routes', () => {
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       new Joi.ValidationError(
         'Question or page heading already exists in this form',
         [],
@@ -650,6 +671,7 @@ describe('Editor v2 question details routes', () => {
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       new Joi.ValidationError('Some other boom error', [], undefined),
       'questionDetailsValidationFailure'
     )
@@ -726,6 +748,7 @@ describe('Editor v2 question details routes', () => {
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       new Joi.ValidationError('Enter a short description', [], undefined),
       'questionDetailsValidationFailure'
     )
