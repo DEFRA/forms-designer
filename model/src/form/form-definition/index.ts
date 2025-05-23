@@ -4,6 +4,7 @@ import { v4 as uuidV4 } from 'uuid'
 import { ComponentType } from '~/src/components/enums.js'
 import { type ComponentDef } from '~/src/components/types.js'
 import {
+  type Condition2GroupData,
   type ConditionData,
   type ConditionFieldData,
   type ConditionGroupData,
@@ -13,6 +14,7 @@ import {
   type RelativeDateValueData
 } from '~/src/conditions/types.js'
 import {
+  type Condition2Wrapper,
   type ConditionWrapper,
   type Event,
   type EventOptions,
@@ -196,6 +198,20 @@ const conditionWrapperSchema = Joi.object<ConditionWrapper>()
       .required()
       .description('The complete condition definition')
   })
+
+export const conditionWrapperSchemaV2 = Joi.object<Condition2Wrapper>()
+  .description('Container for a named condition with its definition')
+  .keys({
+    name: Joi.string()
+      .trim()
+      .description('Unique identifier for the condition'),
+    displayName: Joi.string()
+      .trim()
+      .description('Human-readable name for display in the UI'),
+    coordinator: Joi.string().trim(),
+    conditions: Joi.array<Condition2GroupData>()
+  })
+  .description('Condition schema for V2 forms')
 
 export const componentSchema = Joi.object<ComponentDef>()
   .description('Form component definition specifying UI element behavior')
@@ -493,7 +509,18 @@ export const pageSchemaV2 = pageSchema
       .items(componentSchemaV2)
       .unique('name')
       .unique('id')
-      .description('Components schema for V2 forms')
+      .description('Components schema for V2 forms'),
+    condition: Joi.string()
+      .trim()
+      .valid(
+        Joi.ref('/conditions', {
+          in: true,
+          adjust: (conditions: Condition2Wrapper[]) =>
+            conditions.map((condition) => condition.name)
+        })
+      )
+      .optional()
+      .description('Optional condition that determines if this page is shown')
   })
   .description('Page schema for V2 forms')
 
@@ -746,7 +773,12 @@ export const formDefinitionV2Schema = formDefinitionSchema
       .unique('name')
       .unique('title')
       .unique('id')
-      .description('Lists schema for V2 forms')
+      .description('Lists schema for V2 forms'),
+    conditions: Joi.array<Condition2Wrapper>()
+      .items(conditionWrapperSchemaV2)
+      .unique('id')
+      .unique('displayName')
+      .description('Named conditions used for form logic')
   })
   .description('Form definition schema for V2')
 
