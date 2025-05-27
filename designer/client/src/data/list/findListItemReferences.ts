@@ -7,6 +7,7 @@ import {
   type List
 } from '@defra/forms-model'
 
+import { isConditionWrapper } from '~/src/data/condition/findCondition.js'
 import { findListReferences } from '~/src/data/list/findListReferences.js'
 
 /**
@@ -37,7 +38,7 @@ export function findListItemReferences(
 function flattenConditions(data: FormDefinition) {
   const { conditions: wrappers } = data
 
-  return wrappers.flatMap((wrapper) => {
+  return wrappers.filter(isConditionWrapper).flatMap((wrapper) => {
     const model = wrapper.value
     const conditions = model.conditions
     const conditionFields = conditions

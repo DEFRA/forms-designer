@@ -6,6 +6,7 @@ import {
 } from '@defra/forms-model'
 
 import { getFields } from '~/src/data/component/fields.js'
+import { isConditionWrapper } from '~/src/data/condition/findCondition.js'
 
 /**
  * Update conditions to keep display text in sync with the component and section titles
@@ -22,19 +23,21 @@ export function fixupConditions(data: FormDefinition) {
   }
 
   // Determine if any of the conditions need fixing
-  const hasConditionsChanged = data.conditions.some((wrapper) => {
-    return wrapper.value.conditions.some((condition) => {
-      if (hasConditionField(condition)) {
-        return checkCondition(condition)
-      } else if (hasConditionGroup(condition)) {
-        return condition.conditions
-          .filter((condition) => hasConditionField(condition))
-          .some(checkCondition)
-      }
+  const hasConditionsChanged = data.conditions
+    .filter(isConditionWrapper)
+    .some((wrapper) => {
+      return wrapper.value.conditions.some((condition) => {
+        if (hasConditionField(condition)) {
+          return checkCondition(condition)
+        } else if (hasConditionGroup(condition)) {
+          return condition.conditions
+            .filter((condition) => hasConditionField(condition))
+            .some(checkCondition)
+        }
 
-      return false
+        return false
+      })
     })
-  })
 
   if (!hasConditionsChanged) {
     return data
@@ -53,7 +56,7 @@ export function fixupConditions(data: FormDefinition) {
     }
   }
 
-  conditions.forEach((condition) => {
+  conditions.filter(isConditionWrapper).forEach((condition) => {
     condition.value.conditions.forEach((condition) => {
       if (hasConditionField(condition)) {
         fixupCondition(condition)
