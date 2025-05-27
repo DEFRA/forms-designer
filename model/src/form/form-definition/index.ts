@@ -439,7 +439,13 @@ export const componentSchema = Joi.object<ComponentDef>()
 
 export const componentSchemaV2 = componentSchema
   .keys({
-    id: idSchema.description('Unique identifier for the component')
+    id: idSchema.description('Unique identifier for the component'),
+    list: Joi.string()
+      .valid(listIdRef)
+      .optional()
+      .description(
+        'List id reference to a predefined list of options for select components'
+      )
   })
   .description('Component schema for V2 forms')
 

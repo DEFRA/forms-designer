@@ -552,15 +552,14 @@ describe('Form definition schema', () => {
           ...definition,
           lists: [
             {
-              ...list,
-              id: '04fc2b13-ef4f-4e05-8433-bfa82bb2f0b8'
+              ...list
             },
             {
               items: [],
               name: 'ADxeWb',
               title: 'String List',
               type: 'string',
-              id: '04fc2b13-ef4f-4e05-8433-bfa82bb2f0b8'
+              id: '14ec8ab5-05a0-4b00-b866-d40146077d7a'
             }
           ]
         })
