@@ -175,7 +175,7 @@ export interface Condition2Wrapper {
 export interface FormDefinition {
   engine?: Engine
   pages: Page[]
-  conditions: ConditionWrapper[] | Condition2Wrapper[]
+  conditions: (ConditionWrapper | Condition2Wrapper)[]
   lists: List[]
   sections: Section[]
   startPage?: string
