@@ -4,7 +4,11 @@ import { v4 as uuidV4 } from 'uuid'
 import { ComponentType } from '~/src/components/enums.js'
 import { type ComponentDef } from '~/src/components/types.js'
 import {
+  type Condition2Data,
   type Condition2GroupData,
+  type Condition2ListItemRefValueData as Condition2ListItemRefData,
+  type Condition2RefData,
+  type Condition2StringValueData,
   type ConditionData,
   type ConditionFieldData,
   type ConditionGroupData,
@@ -30,6 +34,41 @@ import {
   type RepeatSchema,
   type Section
 } from '~/src/form/form-definition/types.js'
+import { hasComponents } from '~/src/pages/helpers.js'
+
+const idSchema = Joi.string().uuid().required()
+
+const conditionIdRef = Joi.ref('/conditions', {
+  in: true,
+  adjust: (conditions: Condition2Wrapper[]) =>
+    conditions.map((condition) => condition.name)
+})
+
+const componentIdRefSchema = Joi.ref('/pages', {
+  in: true,
+  adjust: (pages: Page[]) =>
+    pages.flatMap((page) =>
+      hasComponents(page)
+        ? page.components
+            .filter((component) => component.id)
+            .map((component) => component.id)
+        : []
+    )
+})
+
+const listIdRef = Joi.ref('/lists', {
+  in: true,
+  adjust: (lists: List[]) =>
+    lists.filter((list) => list.id).map((list) => list.id)
+})
+
+const listItemIdRef = Joi.ref('/lists', {
+  in: true,
+  adjust: (lists: List[]) =>
+    lists.flatMap((list) =>
+      list.items.filter((item) => item.id).map((item) => item.id)
+    )
+})
 
 const sectionsSchema = Joi.object<Section>()
   .description('A form section grouping related pages together')
@@ -86,13 +125,48 @@ const conditionValueSchema = Joi.object<ConditionValueData>()
       .description('Human-readable version of the value for display purposes')
   })
 
+const condition2StringValueDataSchema = Joi.object<Condition2StringValueData>()
+  .description('String value specification for a condition')
+  .keys({
+    type: Joi.string()
+      .trim()
+      .valid('StringValue')
+      .required()
+      .description('Type of the condition value, should be "StringValue"'),
+    value: Joi.string()
+      .trim()
+      .required()
+      .description('The actual value to compare against')
+  })
+
+const condition2ListItemRefDataSchema = Joi.object<Condition2ListItemRefData>()
+  .description('List item ref specification for a condition')
+  .keys({
+    type: Joi.string()
+      .trim()
+      .valid('ListItemRef')
+      .required()
+      .description('Type of the condition value, should be "ListItemRef"'),
+    listId: Joi.string()
+      .valid(listIdRef)
+      .trim()
+      .required()
+      .description('The id of the list'),
+    itemId: Joi.string()
+      .trim()
+      .valid(listItemIdRef)
+      .required()
+      .description('The id of the list item')
+  })
+
 const relativeDateValueSchema = Joi.object<RelativeDateValueData>()
   .description('Relative date specification for date-based conditions')
   .keys({
     type: Joi.string()
       .trim()
+      .valid('RelativeDate')
       .required()
-      .description('Data type identifier, should be "RelativeDate"'),
+      .description('Type of the condition value, should be "RelativeDate"'),
     period: Joi.string()
       .trim()
       .required()
@@ -100,7 +174,7 @@ const relativeDateValueSchema = Joi.object<RelativeDateValueData>()
     unit: Joi.string()
       .trim()
       .required()
-      .description('Time unit (e.g., days, weeks, months, years)'),
+      .description('Time unit (e.g. days, weeks, months, years)'),
     direction: Joi.string()
       .trim()
       .required()
@@ -126,6 +200,17 @@ const conditionRefSchema = Joi.object<ConditionRefData>()
       )
   })
 
+const condition2RefDataSchema = Joi.object<Condition2RefData>()
+  .description('Reference to a named condition defined elsewhere')
+  .keys({
+    id: idSchema.description('Unique identifier for the referenced condition'),
+    conditionId: Joi.string()
+      .trim()
+      .required()
+      .valid(conditionIdRef)
+      .description('Name of the referenced condition')
+  })
+
 const conditionSchema = Joi.object<ConditionData>()
   .description('Condition definition specifying a logical comparison')
   .keys({
@@ -146,6 +231,34 @@ const conditionSchema = Joi.object<ConditionData>()
       .optional()
       .description(
         'Logical operator connecting this condition with others (AND, OR)'
+      )
+  })
+
+const condition2DataSchema = Joi.object<Condition2Data>()
+  .description('Condition definition')
+  .keys({
+    id: idSchema.description(
+      'Unique identifier used to reference this condition'
+    ),
+    componentId: Joi.string()
+      .trim()
+      .valid(componentIdRefSchema)
+      .required()
+      .description(
+        'Reference to the component id being evaluated in this condition'
+      ),
+    operator: Joi.string()
+      .trim()
+      .required()
+      .description('Comparison operator (equals, greaterThan, contains, etc.)'),
+    value: Joi.alternatives()
+      .try(
+        condition2StringValueDataSchema,
+        condition2ListItemRefDataSchema,
+        relativeDateValueSchema
+      )
+      .description(
+        'Value to compare the field against, either fixed or relative date'
       )
   })
 
@@ -208,8 +321,16 @@ export const conditionWrapperSchemaV2 = Joi.object<Condition2Wrapper>()
     displayName: Joi.string()
       .trim()
       .description('Human-readable name for display in the UI'),
-    coordinator: Joi.string().trim(),
+    coordinator: Joi.string()
+      .optional()
+      .description(
+        'Logical operator connecting this condition with others (AND, OR)'
+      ),
     conditions: Joi.array<Condition2GroupData>()
+      .items(
+        Joi.alternatives().try(condition2DataSchema, condition2RefDataSchema)
+      )
+      .description('Array of conditions or condition references')
   })
   .description('Condition schema for V2 forms')
 
@@ -512,13 +633,7 @@ export const pageSchemaV2 = pageSchema
       .description('Components schema for V2 forms'),
     condition: Joi.string()
       .trim()
-      .valid(
-        Joi.ref('/conditions', {
-          in: true,
-          adjust: (conditions: Condition2Wrapper[]) =>
-            conditions.map((condition) => condition.name)
-        })
-      )
+      .valid(conditionIdRef)
       .optional()
       .description('Optional condition that determines if this page is shown')
   })
@@ -776,7 +891,7 @@ export const formDefinitionV2Schema = formDefinitionSchema
       .description('Lists schema for V2 forms'),
     conditions: Joi.array<Condition2Wrapper>()
       .items(conditionWrapperSchemaV2)
-      .unique('id')
+      .unique('name')
       .unique('displayName')
       .description('Named conditions used for form logic')
   })

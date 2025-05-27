@@ -17,13 +17,13 @@ export interface ConditionValueData {
   display: string
 }
 
-export interface Condition2ValueData {
-  type: ConditionType.Value
+export interface Condition2StringValueData {
+  type: ConditionType.StringValue
   value: string
 }
 
-export interface Condition2RefValueData {
-  type: ConditionType.Ref
+export interface Condition2ListItemRefValueData {
+  type: ConditionType.ListItemRef
   listId: string
   itemId: string
 }
@@ -52,7 +52,10 @@ export interface Condition2Data {
   id: string
   componentId: string
   operator: OperatorName
-  value: Condition2RefValueData | Condition2ValueData | RelativeDateValueData
+  value:
+    | Condition2ListItemRefValueData
+    | Condition2StringValueData
+    | RelativeDateValueData
 }
 
 export interface ConditionRefData {
