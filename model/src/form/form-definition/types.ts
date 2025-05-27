@@ -4,7 +4,6 @@ import {
   type Condition2GroupData,
   type ConditionsModelData
 } from '~/src/conditions/types.js'
-import { formDefinitionSchema } from '~/src/form/form-definition/index.js'
 import { type ControllerPath, type ControllerType } from '~/src/pages/enums.js'
 
 export enum Engine {
@@ -172,7 +171,6 @@ export interface Condition2Wrapper {
 
 /**
  * Interface for `formDefinitionSchema` Joi schema
- * @see {@link formDefinitionSchema}
  */
 export interface FormDefinition {
   engine?: Engine
