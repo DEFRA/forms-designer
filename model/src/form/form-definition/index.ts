@@ -36,7 +36,9 @@ import {
 } from '~/src/form/form-definition/types.js'
 import { hasComponents } from '~/src/pages/helpers.js'
 
-const idSchema = Joi.string().uuid().required()
+const idSchemaOptional = Joi.string().uuid()
+
+const idSchema = idSchemaOptional.default(() => uuidV4())
 
 const conditionIdRef = Joi.ref('/conditions', {
   in: true,
@@ -338,11 +340,7 @@ export const conditionWrapperSchemaV2 = Joi.object<Condition2Wrapper>()
 export const componentSchema = Joi.object<ComponentDef>()
   .description('Form component definition specifying UI element behavior')
   .keys({
-    id: Joi.string()
-      .trim()
-      .uuid()
-      .optional()
-      .description('Unique identifier for the component'),
+    id: idSchemaOptional.description('Unique identifier for the component'),
     type: Joi.string<ComponentType>()
       .trim()
       .required()
@@ -441,11 +439,7 @@ export const componentSchema = Joi.object<ComponentDef>()
 
 export const componentSchemaV2 = componentSchema
   .keys({
-    id: Joi.string()
-      .trim()
-      .uuid()
-      .default(() => uuidV4())
-      .description('Unique identifier for the component')
+    id: idSchema.description('Unique identifier for the component')
   })
   .description('Component schema for V2 forms')
 
@@ -556,11 +550,7 @@ const eventsSchema = Joi.object<Events>()
 export const pageSchema = Joi.object<Page>()
   .description('Form page definition specifying content and behavior')
   .keys({
-    id: Joi.string()
-      .trim()
-      .uuid()
-      .optional()
-      .description('Unique identifier for the page'),
+    id: idSchemaOptional.description('Unique identifier for the page'),
     path: Joi.string()
       .trim()
       .required()
@@ -615,11 +605,7 @@ export const pageSchema = Joi.object<Page>()
  */
 export const pageSchemaV2 = pageSchema
   .append({
-    id: Joi.string()
-      .trim()
-      .uuid()
-      .default(() => uuidV4())
-      .description('Unique identifier for the page'),
+    id: idSchema.description('Unique identifier for the page'),
     title: Joi.string()
       .trim()
       .allow('')
@@ -643,10 +629,7 @@ export const pageSchemaV2 = pageSchema
 const baseListItemSchema = Joi.object<Item>()
   .description('Base schema for list items with common properties')
   .keys({
-    id: Joi.string()
-      .trim()
-      .uuid()
-      .default(() => uuidV4()),
+    id: idSchema.description('Unique identifier for the list item'),
     text: Joi.string()
       .trim()
       .allow('')
@@ -674,10 +657,7 @@ const baseListItemSchema = Joi.object<Item>()
     hint: Joi.object<Item['hint']>()
       .optional()
       .keys({
-        id: Joi.string()
-          .trim()
-          .uuid()
-          .default(() => uuidV4()),
+        id: idSchema,
         text: Joi.string().trim()
       })
       .description('Optional hint text to be shown on list item')
@@ -703,11 +683,7 @@ const numberListItemSchema = baseListItemSchema
 export const listSchema = Joi.object<List>()
   .description('Reusable list of options for select components')
   .keys({
-    id: Joi.string()
-      .trim()
-      .uuid()
-      .optional()
-      .description('Unique identifier for the list'),
+    id: idSchemaOptional.description('Unique identifier for the list'),
     name: Joi.string()
       .trim()
       .required()
@@ -745,11 +721,7 @@ export const listSchema = Joi.object<List>()
  */
 export const listSchemaV2 = listSchema
   .keys({
-    id: Joi.string()
-      .trim()
-      .uuid()
-      .default(() => uuidV4())
-      .description('Unique identifier for the list')
+    id: idSchema.description('Unique identifier for the list')
   })
   .description('List schema for V2 forms')
 
