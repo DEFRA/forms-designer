@@ -6,7 +6,7 @@ import { type ComponentDef } from '~/src/components/types.js'
 import {
   type Condition2Data,
   type Condition2GroupData,
-  type Condition2ListItemRefValueData as Condition2ListItemRefData,
+  type Condition2ListItemRefValueData,
   type Condition2RefData,
   type Condition2StringValueData,
   type ConditionData,
@@ -139,27 +139,28 @@ const condition2StringValueDataSchema = Joi.object<Condition2StringValueData>()
       .description('The actual value to compare against')
   })
 
-const condition2ListItemRefDataSchema = Joi.object<Condition2ListItemRefData>()
-  .description('List item ref specification for a condition')
-  .keys({
-    type: Joi.string()
-      .trim()
-      .valid('ListItemRef')
-      .required()
-      .description('Type of the condition value, should be "ListItemRef"'),
-    listId: Joi.string()
-      .valid(listIdRef)
-      .trim()
-      .required()
-      .description('The id of the list'),
-    itemId: Joi.string()
-      .trim()
-      .valid(listItemIdRef)
-      .required()
-      .description('The id of the list item')
-  })
+const condition2ListItemRefDataSchema =
+  Joi.object<Condition2ListItemRefValueData>()
+    .description('List item ref specification for a condition')
+    .keys({
+      type: Joi.string()
+        .trim()
+        .valid('ListItemRef')
+        .required()
+        .description('Type of the condition value, should be "ListItemRef"'),
+      listId: Joi.string()
+        .valid(listIdRef)
+        .trim()
+        .required()
+        .description('The id of the list'),
+      itemId: Joi.string()
+        .trim()
+        .valid(listItemIdRef)
+        .required()
+        .description('The id of the list item')
+    })
 
-const relativeDateValueSchema = Joi.object<RelativeDateValueData>()
+const relativeDateValueDataSchema = Joi.object<RelativeDateValueData>()
   .description('Relative date specification for date-based conditions')
   .keys({
     type: Joi.string()
@@ -222,7 +223,7 @@ const conditionSchema = Joi.object<ConditionData>()
       .required()
       .description('Comparison operator (equals, greaterThan, contains, etc.)'),
     value: Joi.alternatives()
-      .try(conditionValueSchema, relativeDateValueSchema)
+      .try(conditionValueSchema, relativeDateValueDataSchema)
       .description(
         'Value to compare the field against, either fixed or relative date'
       ),
@@ -255,7 +256,7 @@ const condition2DataSchema = Joi.object<Condition2Data>()
       .try(
         condition2StringValueDataSchema,
         condition2ListItemRefDataSchema,
-        relativeDateValueSchema
+        relativeDateValueDataSchema
       )
       .description(
         'Value to compare the field against, either fixed or relative date'
