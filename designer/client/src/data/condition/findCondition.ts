@@ -19,7 +19,7 @@ export function findCondition(
 
   if (isCondition2Wrapper(condition)) {
     throw Error(
-      `Condition should not be a Condition2Wrapper '${conditionName}'`
+      `Expected ConditionWrapper but found Condition2Wrapper for condition named '${conditionName}'`
     )
   }
 
