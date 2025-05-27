@@ -1,6 +1,8 @@
 export enum ConditionType {
   Value = 'Value',
-  RelativeDate = 'RelativeDate'
+  RelativeDate = 'RelativeDate',
+  StringValue = 'StringValue',
+  ListItemRef = 'ListItemRef'
 }
 
 export enum Coordinator {

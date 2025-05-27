@@ -17,6 +17,17 @@ export interface ConditionValueData {
   display: string
 }
 
+export interface Condition2StringValueData {
+  type: ConditionType.StringValue
+  value: string
+}
+
+export interface Condition2ListItemRefValueData {
+  type: ConditionType.ListItemRef
+  listId: string
+  itemId: string
+}
+
 export interface RelativeDateValueData {
   type: ConditionType.RelativeDate
   period: string
@@ -37,15 +48,32 @@ export interface ConditionData {
   coordinator?: Coordinator
 }
 
+export interface Condition2Data {
+  id: string
+  componentId: string
+  operator: OperatorName
+  value:
+    | Condition2ListItemRefValueData
+    | Condition2StringValueData
+    | RelativeDateValueData
+}
+
 export interface ConditionRefData {
   conditionName: string
   conditionDisplayName: string
   coordinator?: Coordinator
 }
 
+export interface Condition2RefData {
+  id: string
+  conditionId: string
+}
+
 export interface ConditionGroupData {
   conditions: (ConditionData | ConditionRefData | ConditionGroupData)[]
 }
+
+export type Condition2GroupData = (Condition2Data | Condition2RefData)[]
 
 export interface ConditionsModelData extends ConditionGroupData {
   name: string

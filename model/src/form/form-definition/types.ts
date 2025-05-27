@@ -1,6 +1,9 @@
 import { type ComponentDef } from '~/src/components/types.js'
-import { type ConditionsModelData } from '~/src/conditions/types.js'
-import { formDefinitionSchema } from '~/src/form/form-definition/index.js'
+import { type Coordinator } from '~/src/conditions/enums.js'
+import {
+  type Condition2GroupData,
+  type ConditionsModelData
+} from '~/src/conditions/types.js'
 import { type ControllerPath, type ControllerType } from '~/src/pages/enums.js'
 
 export enum Engine {
@@ -159,14 +162,20 @@ export interface ConditionWrapper {
   value: ConditionsModelData
 }
 
+export interface Condition2Wrapper {
+  name: string
+  displayName: string
+  coordinator?: Coordinator
+  conditions: Condition2GroupData
+}
+
 /**
  * Interface for `formDefinitionSchema` Joi schema
- * @see {@link formDefinitionSchema}
  */
 export interface FormDefinition {
   engine?: Engine
   pages: Page[]
-  conditions: ConditionWrapper[]
+  conditions: (ConditionWrapper | Condition2Wrapper)[]
   lists: List[]
   sections: Section[]
   startPage?: string

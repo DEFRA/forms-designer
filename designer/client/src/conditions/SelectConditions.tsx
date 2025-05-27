@@ -24,6 +24,7 @@ import {
 import { DataContext } from '~/src/context/DataContext.js'
 import { type FieldDef } from '~/src/data/component/fields.js'
 import { getFieldsTo } from '~/src/data/component/fields.js'
+import { isConditionWrapper } from '~/src/data/condition/findCondition.js'
 import { hasConditions } from '~/src/data/definition/hasConditions.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 
@@ -92,10 +93,10 @@ export class SelectConditions extends Component<Props, State> {
 
   conditionsForPath(path?: string) {
     const { data } = this.context
-
+    const conditions = data.conditions.filter(isConditionWrapper)
     const fields = Object.values(this.fieldsForPath(path))
     const conditionsForPath: ConditionWrapper[] = []
-    const conditionsByTypeMap = conditionsByType(data.conditions)
+    const conditionsByTypeMap = conditionsByType(conditions)
 
     fields.forEach((field) => {
       this.handleConditions(

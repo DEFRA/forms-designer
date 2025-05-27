@@ -4,6 +4,11 @@ import { v4 as uuidV4 } from 'uuid'
 import { ComponentType } from '~/src/components/enums.js'
 import { type ComponentDef } from '~/src/components/types.js'
 import {
+  type Condition2Data,
+  type Condition2GroupData,
+  type Condition2ListItemRefValueData,
+  type Condition2RefData,
+  type Condition2StringValueData,
   type ConditionData,
   type ConditionFieldData,
   type ConditionGroupData,
@@ -13,6 +18,7 @@ import {
   type RelativeDateValueData
 } from '~/src/conditions/types.js'
 import {
+  type Condition2Wrapper,
   type ConditionWrapper,
   type Event,
   type EventOptions,
@@ -28,6 +34,43 @@ import {
   type RepeatSchema,
   type Section
 } from '~/src/form/form-definition/types.js'
+import { hasComponents } from '~/src/pages/helpers.js'
+
+const idSchemaOptional = Joi.string().uuid()
+
+const idSchema = idSchemaOptional.default(() => uuidV4())
+
+const conditionIdRef = Joi.ref('/conditions', {
+  in: true,
+  adjust: (conditions: Condition2Wrapper[]) =>
+    conditions.map((condition) => condition.name)
+})
+
+const componentIdRefSchema = Joi.ref('/pages', {
+  in: true,
+  adjust: (pages: Page[]) =>
+    pages.flatMap((page) =>
+      hasComponents(page)
+        ? page.components
+            .filter((component) => component.id)
+            .map((component) => component.id)
+        : []
+    )
+})
+
+const listIdRef = Joi.ref('/lists', {
+  in: true,
+  adjust: (lists: List[]) =>
+    lists.filter((list) => list.id).map((list) => list.id)
+})
+
+const listItemIdRef = Joi.ref('/lists', {
+  in: true,
+  adjust: (lists: List[]) =>
+    lists.flatMap((list) =>
+      list.items.filter((item) => item.id).map((item) => item.id)
+    )
+})
 
 const sectionsSchema = Joi.object<Section>()
   .description('A form section grouping related pages together')
@@ -84,13 +127,49 @@ const conditionValueSchema = Joi.object<ConditionValueData>()
       .description('Human-readable version of the value for display purposes')
   })
 
-const relativeDateValueSchema = Joi.object<RelativeDateValueData>()
+const condition2StringValueDataSchema = Joi.object<Condition2StringValueData>()
+  .description('String value specification for a condition')
+  .keys({
+    type: Joi.string()
+      .trim()
+      .valid('StringValue')
+      .required()
+      .description('Type of the condition value, should be "StringValue"'),
+    value: Joi.string()
+      .trim()
+      .required()
+      .description('The actual value to compare against')
+  })
+
+const condition2ListItemRefDataSchema =
+  Joi.object<Condition2ListItemRefValueData>()
+    .description('List item ref specification for a condition')
+    .keys({
+      type: Joi.string()
+        .trim()
+        .valid('ListItemRef')
+        .required()
+        .description('Type of the condition value, should be "ListItemRef"'),
+      listId: Joi.string()
+        .valid(listIdRef)
+        .trim()
+        .required()
+        .description('The id of the list'),
+      itemId: Joi.string()
+        .trim()
+        .valid(listItemIdRef)
+        .required()
+        .description('The id of the list item')
+    })
+
+const relativeDateValueDataSchema = Joi.object<RelativeDateValueData>()
   .description('Relative date specification for date-based conditions')
   .keys({
     type: Joi.string()
       .trim()
+      .valid('RelativeDate')
       .required()
-      .description('Data type identifier, should be "RelativeDate"'),
+      .description('Type of the condition value, should be "RelativeDate"'),
     period: Joi.string()
       .trim()
       .required()
@@ -98,7 +177,7 @@ const relativeDateValueSchema = Joi.object<RelativeDateValueData>()
     unit: Joi.string()
       .trim()
       .required()
-      .description('Time unit (e.g., days, weeks, months, years)'),
+      .description('Time unit (e.g. days, weeks, months, years)'),
     direction: Joi.string()
       .trim()
       .required()
@@ -124,6 +203,17 @@ const conditionRefSchema = Joi.object<ConditionRefData>()
       )
   })
 
+const condition2RefDataSchema = Joi.object<Condition2RefData>()
+  .description('Reference to a named condition defined elsewhere')
+  .keys({
+    id: idSchema.description('Unique identifier for the referenced condition'),
+    conditionId: Joi.string()
+      .trim()
+      .required()
+      .valid(conditionIdRef)
+      .description('Name of the referenced condition')
+  })
+
 const conditionSchema = Joi.object<ConditionData>()
   .description('Condition definition specifying a logical comparison')
   .keys({
@@ -135,7 +225,7 @@ const conditionSchema = Joi.object<ConditionData>()
       .required()
       .description('Comparison operator (equals, greaterThan, contains, etc.)'),
     value: Joi.alternatives()
-      .try(conditionValueSchema, relativeDateValueSchema)
+      .try(conditionValueSchema, relativeDateValueDataSchema)
       .description(
         'Value to compare the field against, either fixed or relative date'
       ),
@@ -144,6 +234,34 @@ const conditionSchema = Joi.object<ConditionData>()
       .optional()
       .description(
         'Logical operator connecting this condition with others (AND, OR)'
+      )
+  })
+
+const condition2DataSchema = Joi.object<Condition2Data>()
+  .description('Condition definition')
+  .keys({
+    id: idSchema.description(
+      'Unique identifier used to reference this condition'
+    ),
+    componentId: Joi.string()
+      .trim()
+      .valid(componentIdRefSchema)
+      .required()
+      .description(
+        'Reference to the component id being evaluated in this condition'
+      ),
+    operator: Joi.string()
+      .trim()
+      .required()
+      .description('Comparison operator (equals, greaterThan, contains, etc.)'),
+    value: Joi.alternatives()
+      .try(
+        condition2StringValueDataSchema,
+        condition2ListItemRefDataSchema,
+        relativeDateValueDataSchema
+      )
+      .description(
+        'Value to compare the field against, either fixed or relative date'
       )
   })
 
@@ -197,14 +315,32 @@ const conditionWrapperSchema = Joi.object<ConditionWrapper>()
       .description('The complete condition definition')
   })
 
+export const conditionWrapperSchemaV2 = Joi.object<Condition2Wrapper>()
+  .description('Container for a named condition with its definition')
+  .keys({
+    name: Joi.string()
+      .trim()
+      .description('Unique identifier for the condition'),
+    displayName: Joi.string()
+      .trim()
+      .description('Human-readable name for display in the UI'),
+    coordinator: Joi.string()
+      .optional()
+      .description(
+        'Logical operator connecting this condition with others (AND, OR)'
+      ),
+    conditions: Joi.array<Condition2GroupData>()
+      .items(
+        Joi.alternatives().try(condition2DataSchema, condition2RefDataSchema)
+      )
+      .description('Array of conditions or condition references')
+  })
+  .description('Condition schema for V2 forms')
+
 export const componentSchema = Joi.object<ComponentDef>()
   .description('Form component definition specifying UI element behavior')
   .keys({
-    id: Joi.string()
-      .trim()
-      .uuid()
-      .optional()
-      .description('Unique identifier for the component'),
+    id: idSchemaOptional.description('Unique identifier for the component'),
     type: Joi.string<ComponentType>()
       .trim()
       .required()
@@ -303,11 +439,13 @@ export const componentSchema = Joi.object<ComponentDef>()
 
 export const componentSchemaV2 = componentSchema
   .keys({
-    id: Joi.string()
-      .trim()
-      .uuid()
-      .default(() => uuidV4())
-      .description('Unique identifier for the component')
+    id: idSchema.description('Unique identifier for the component'),
+    list: Joi.string()
+      .valid(listIdRef)
+      .optional()
+      .description(
+        'List id reference to a predefined list of options for select components'
+      )
   })
   .description('Component schema for V2 forms')
 
@@ -418,11 +556,7 @@ const eventsSchema = Joi.object<Events>()
 export const pageSchema = Joi.object<Page>()
   .description('Form page definition specifying content and behavior')
   .keys({
-    id: Joi.string()
-      .trim()
-      .uuid()
-      .optional()
-      .description('Unique identifier for the page'),
+    id: idSchemaOptional.description('Unique identifier for the page'),
     path: Joi.string()
       .trim()
       .required()
@@ -477,11 +611,7 @@ export const pageSchema = Joi.object<Page>()
  */
 export const pageSchemaV2 = pageSchema
   .append({
-    id: Joi.string()
-      .trim()
-      .uuid()
-      .default(() => uuidV4())
-      .description('Unique identifier for the page'),
+    id: idSchema.description('Unique identifier for the page'),
     title: Joi.string()
       .trim()
       .allow('')
@@ -493,17 +623,19 @@ export const pageSchemaV2 = pageSchema
       .items(componentSchemaV2)
       .unique('name')
       .unique('id')
-      .description('Components schema for V2 forms')
+      .description('Components schema for V2 forms'),
+    condition: Joi.string()
+      .trim()
+      .valid(conditionIdRef)
+      .optional()
+      .description('Optional condition that determines if this page is shown')
   })
   .description('Page schema for V2 forms')
 
 const baseListItemSchema = Joi.object<Item>()
   .description('Base schema for list items with common properties')
   .keys({
-    id: Joi.string()
-      .trim()
-      .uuid()
-      .default(() => uuidV4()),
+    id: idSchema.description('Unique identifier for the list item'),
     text: Joi.string()
       .trim()
       .allow('')
@@ -531,10 +663,7 @@ const baseListItemSchema = Joi.object<Item>()
     hint: Joi.object<Item['hint']>()
       .optional()
       .keys({
-        id: Joi.string()
-          .trim()
-          .uuid()
-          .default(() => uuidV4()),
+        id: idSchema,
         text: Joi.string().trim()
       })
       .description('Optional hint text to be shown on list item')
@@ -560,11 +689,7 @@ const numberListItemSchema = baseListItemSchema
 export const listSchema = Joi.object<List>()
   .description('Reusable list of options for select components')
   .keys({
-    id: Joi.string()
-      .trim()
-      .uuid()
-      .optional()
-      .description('Unique identifier for the list'),
+    id: idSchemaOptional.description('Unique identifier for the list'),
     name: Joi.string()
       .trim()
       .required()
@@ -602,11 +727,7 @@ export const listSchema = Joi.object<List>()
  */
 export const listSchemaV2 = listSchema
   .keys({
-    id: Joi.string()
-      .trim()
-      .uuid()
-      .default(() => uuidV4())
-      .description('Unique identifier for the list')
+    id: idSchema.description('Unique identifier for the list')
   })
   .description('List schema for V2 forms')
 
@@ -746,7 +867,12 @@ export const formDefinitionV2Schema = formDefinitionSchema
       .unique('name')
       .unique('title')
       .unique('id')
-      .description('Lists schema for V2 forms')
+      .description('Lists schema for V2 forms'),
+    conditions: Joi.array<Condition2Wrapper>()
+      .items(conditionWrapperSchemaV2)
+      .unique('name')
+      .unique('displayName')
+      .description('Named conditions used for form logic')
   })
   .description('Form definition schema for V2')
 
