@@ -1,14 +1,9 @@
-import { Engine } from '@defra/forms-model'
-import { StatusCodes } from 'http-status-codes'
-
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import * as forms from '~/src/lib/forms.js'
-import * as viewModel from '~/src/models/forms/editor-v2/pages.js'
-import { editorv2Path } from '~/src/models/links.js'
+import * as viewModel from '~/src/models/forms/editor-v2/conditions.js'
 
-export const ROUTE_PATH_PAGES = 'pages'
-export const ROUTE_FULL_PATH_PAGES = '/library/{slug}/editor-v2/pages'
+export const ROUTE_FULL_PATH_CONDITIONS = '/library/{slug}/editor-v2/conditions'
 
 const notificationKey = sessionNames.successNotification
 
@@ -18,7 +13,7 @@ export default [
    */
   ({
     method: 'GET',
-    path: ROUTE_FULL_PATH_PAGES,
+    path: ROUTE_FULL_PATH_CONDITIONS,
     async handler(request, h) {
       const { params, auth, yar } = request
       const { token } = auth.credentials
@@ -29,20 +24,14 @@ export default [
 
       const definition = await forms.getDraftFormDefinition(formId, token)
 
-      if (definition.engine !== Engine.V2) {
-        return h
-          .redirect(editorv2Path(slug, 'migrate'))
-          .code(StatusCodes.SEE_OTHER)
-      }
-
       // Saved banner
       const notification = /** @type {string[] | undefined} */ (
         yar.flash(notificationKey).at(0)
       )
 
       return h.view(
-        'forms/editor-v2/pages',
-        viewModel.pagesViewModel(metadata, definition, notification)
+        'forms/editor-v2/conditions',
+        viewModel.conditionsViewModel(metadata, definition, notification)
       )
     },
     options: {

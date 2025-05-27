@@ -38,5 +38,5 @@ export function migrateConfirmationPageViewModel(metadata) {
 }
 
 /**
- * @import { FormDefinition, FormMetadata } from '@defra/forms-model'
+ * @import { FormMetadata } from '@defra/forms-model'
  */
