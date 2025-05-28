@@ -2,6 +2,7 @@ import {
   hasConditionField,
   hasConditionName,
   hasNestedCondition,
+  isConditionWrapper,
   isDuplicateCondition,
   type ConditionWrapper
 } from '@defra/forms-model'
@@ -24,7 +25,6 @@ import {
 import { DataContext } from '~/src/context/DataContext.js'
 import { type FieldDef } from '~/src/data/component/fields.js'
 import { getFieldsTo } from '~/src/data/component/fields.js'
-import { isConditionWrapper } from '~/src/data/condition/findCondition.js'
 import { hasConditions } from '~/src/data/definition/hasConditions.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 

@@ -14,6 +14,12 @@ export function toPresentationString(
   return `${condition.coordinatorString()}${condition.conditionString()}`
 }
 
+export function toPresentationHtml(
+  condition: Condition | ConditionRef | ConditionGroup
+) {
+  return `${condition.coordinatorHtml()}${condition.conditionString()}`
+}
+
 export function toExpression(
   condition: Condition | ConditionRef | ConditionGroup
 ) {

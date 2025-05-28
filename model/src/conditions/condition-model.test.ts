@@ -30,6 +30,7 @@ describe('condition model', () => {
 
     test('should return an empty presentation string', () => {
       expect(underTest.toPresentationString()).toBe('')
+      expect(underTest.toPresentationHtml()).toBe('')
     })
 
     test('should not have conditions', () => {
@@ -69,6 +70,7 @@ describe('condition model', () => {
 
     test('should return a human readable presentation string', () => {
       expect(underTest.toPresentationString()).toBe("'Badger' is 'Monkeys'")
+      expect(underTest.toPresentationHtml()).toBe("'Badger' is 'Monkeys'")
     })
 
     test('should return a valid expression string', () => {
@@ -157,6 +159,9 @@ describe('condition model', () => {
     test('should return a human readable presentation string with all properties', () => {
       expect(underTest.toPresentationString()).toBe(
         "'Badger' is 'Monkeys' and 'Monkeys' is not 'Giraffes' and 'Squiffy' is not 'Donkeys'"
+      )
+      expect(underTest.toPresentationHtml()).toBe(
+        "'Badger' is 'Monkeys' <strong>AND</strong> 'Monkeys' is not 'Giraffes' <strong>AND</strong> 'Squiffy' is not 'Donkeys'"
       )
     })
 
@@ -248,6 +253,9 @@ describe('condition model', () => {
     test('should return a human readable presentation string with all properties', () => {
       expect(underTest.toPresentationString()).toBe(
         "'Badger' is 'Monkeys' or 'Monkeys' is not 'Giraffes' or 'Squiffy' is not 'Donkeys'"
+      )
+      expect(underTest.toPresentationHtml()).toBe(
+        "'Badger' is 'Monkeys' <strong>OR</strong> 'Monkeys' is not 'Giraffes' <strong>OR</strong> 'Squiffy' is not 'Donkeys'"
       )
     })
 

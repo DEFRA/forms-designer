@@ -1,4 +1,8 @@
-import { ConditionsModel, type ConditionWrapper } from '@defra/forms-model'
+import {
+  ConditionsModel,
+  isConditionWrapper,
+  type ConditionWrapper
+} from '@defra/forms-model'
 import { useContext, useState, type MouseEvent } from 'react'
 
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
@@ -6,7 +10,6 @@ import { RenderInPortal } from '~/src/components/RenderInPortal/RenderInPortal.j
 import { InlineConditions } from '~/src/conditions/InlineConditions.jsx'
 import { DataContext } from '~/src/context/DataContext.js'
 import { getFields } from '~/src/data/component/fields.js'
-import { isConditionWrapper } from '~/src/data/condition/findCondition.js'
 import { i18n } from '~/src/i18n/i18n.jsx'
 
 function useConditionsEditor() {

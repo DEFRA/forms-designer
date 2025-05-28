@@ -1,12 +1,12 @@
 import {
   hasConditionField,
   hasConditionGroup,
+  isConditionWrapper,
   type ConditionData,
   type FormDefinition
 } from '@defra/forms-model'
 
 import { getFields } from '~/src/data/component/fields.js'
-import { isConditionWrapper } from '~/src/data/condition/findCondition.js'
 
 /**
  * Update conditions to keep display text in sync with the component and section titles

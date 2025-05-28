@@ -20,6 +20,10 @@ export class ConditionGroup {
     return this.conditions[0].coordinatorString()
   }
 
+  coordinatorHtml(): string {
+    return this.conditions[0].coordinatorHtml()
+  }
+
   conditionString(): string {
     const copy = [...this.conditions]
     copy.splice(0, 1)

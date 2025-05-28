@@ -22,7 +22,8 @@ describe('Migration', () => {
   beforeEach(() => {
     model = {
       getListById: jest.fn(),
-      getComponentById: jest.fn()
+      getComponentById: jest.fn(),
+      getConditionById: jest.fn()
     }
   })
 
@@ -103,7 +104,7 @@ describe('Migration', () => {
             value: {
               type: ConditionType.Value,
               value: 'test',
-              display: 'Condition value: test'
+              display: 'test'
             },
             coordinator: undefined
           }
@@ -364,16 +365,15 @@ describe('Migration', () => {
         ]
       }
 
-      const component: ComponentDef = {
-        id: 'component1',
-        name: 'testComponent',
-        title: 'Test Component',
-        type: ComponentType.TextField,
-        options: {},
-        schema: {}
+      const condition: ConditionWrapperV2 = {
+        name: 'testCondition',
+        displayName: 'Test condition',
+        coordinator: Coordinator.OR,
+        conditions: []
       }
 
-      model.getComponentById = jest.fn().mockReturnValue(component)
+      model.getComponentById = jest.fn().mockReturnValue(condition)
+      model.getConditionById = jest.fn().mockReturnValue(condition)
 
       const result = convertConditionWrapperFromV2(conditionWrapper, model)
 
@@ -384,13 +384,13 @@ describe('Migration', () => {
           name: 'testWrapper',
           conditions: [
             {
-              conditionName: 'testComponent',
-              conditionDisplayName: 'Test Component',
-              coordinator: Coordinator.OR
+              conditionName: 'testCondition',
+              conditionDisplayName: 'Test condition',
+              coordinator: undefined
             },
             {
-              conditionName: 'testComponent',
-              conditionDisplayName: 'Test Component',
+              conditionName: 'testCondition',
+              conditionDisplayName: 'Test condition',
               coordinator: Coordinator.OR
             }
           ]
