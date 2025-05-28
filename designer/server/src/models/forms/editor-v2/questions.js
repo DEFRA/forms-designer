@@ -2,6 +2,7 @@ import {
   ComponentType,
   ControllerType,
   FormStatus,
+  canSetRepeater,
   hasComponents,
   isFormType
 } from '@defra/forms-model'
@@ -24,14 +25,25 @@ import {
 import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
 
 /**
+ * @param {Page} page
  * @param {{ pageHeadingVal: string | undefined, guidanceTextVal: string | undefined }} [pageHeadingSettings]
  * @param {{ minItems: number | undefined, maxItems: number | undefined, questionSetName: string | undefined }} [repeaterSettings]
  * @param {ValidationFailure<FormEditor>} [validation]
  */
-function questionsFields(pageHeadingSettings, repeaterSettings, validation) {
+function questionsFields(
+  page,
+  pageHeadingSettings,
+  repeaterSettings,
+  validation
+) {
+  const repeaterFields = canSetRepeater(page)
+    ? {
+        ...questionsRepeaterFields(repeaterSettings, validation)
+      }
+    : {}
   return {
     ...questionsHeadingFields(pageHeadingSettings, validation),
-    ...questionsRepeaterFields(repeaterSettings, validation)
+    ...repeaterFields
   }
 }
 
@@ -269,7 +281,12 @@ export function questionsViewModel(
   return {
     ...baseModelFields(metadata.slug, `${cardTitle} - ${formTitle}`, formTitle),
     fields: {
-      ...questionsFields(pageHeadingSettings, repeaterSettings, validation)
+      ...questionsFields(
+        page,
+        pageHeadingSettings,
+        repeaterSettings,
+        validation
+      )
     },
     cardTitle,
     cardCaption: pageHeading,
@@ -289,6 +306,6 @@ export function questionsViewModel(
 }
 
 /**
- * @import { ComponentDef, FormMetadata, FormDefinition, FormEditor, MarkdownComponent } from '@defra/forms-model'
+ * @import { ComponentDef, FormMetadata, FormDefinition, FormEditor, MarkdownComponent, Page } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

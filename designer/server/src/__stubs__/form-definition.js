@@ -35,6 +35,37 @@ export function buildSummaryPage(partialSummaryPage = {}) {
 }
 
 /**
+ *
+ * @param {Partial<PageFileUpload>} partialFileUploadPage
+ * @returns {PageFileUpload}
+ */
+export function buildFileUploadPage(partialFileUploadPage = {}) {
+  return /** @type {PageFileUpload} */ ({
+    id: '85e5c8da-88f5-4009-a821-7d7de1364318',
+    title: '',
+    path: '/supporting-evidence',
+    components: [
+      buildFileUploadComponent({
+        type: ComponentType.FileUploadField,
+        title: 'Supporting Evidence',
+        name: 'yBpZQO',
+        shortDescription: 'Supporting evidence',
+        hint: '',
+        options: {
+          required: true,
+          accept:
+            'application/pdf,application/msword,image/jpeg,application/vnd.ms-excel,text/csv'
+        },
+        id: '4189b8a1-1a04-4f74-a7a0-dd23012a0ee0'
+      })
+    ],
+    controller: ControllerType.FileUpload,
+    next: [],
+    ...partialFileUploadPage
+  })
+}
+
+/**
  * @param {Partial<TextFieldComponent>} partialTextField
  * @returns {TextFieldComponent}
  */
@@ -839,5 +870,43 @@ export const testFormDefinitionWithRepeater = {
 }
 
 /**
- * @import { FormDefinition, PageQuestion, PageSummary, TextFieldComponent, FileUploadFieldComponent, AutocompleteFieldComponent, List, Item, RadiosFieldComponent, CheckboxesFieldComponent } from '@defra/forms-model'
+ *
+ * @param {Partial<FormMetadata>} partialMetaData
+ * @returns {FormMetadata}
+ */
+export function buildMetaData(partialMetaData = {}) {
+  return {
+    id: '681b184463c68bf6b99e2c62',
+    slug: 'chemistry',
+    title: 'Chemistry',
+    organisation: 'Defra',
+    teamName: 'Forms Team',
+    teamEmail: 'name@example.gov.uk',
+    draft: {
+      createdAt: '2025-05-07T08:22:28.035Z',
+      createdBy: {
+        id: '84305e4e-1f52-43d0-a123-9c873b0abb35',
+        displayName: 'Internal User'
+      },
+      updatedAt: '2025-05-20T13:00:54.794Z',
+      updatedBy: {
+        id: '84305e4e-1f52-43d0-a123-9c873b0abb35',
+        displayName: 'Internal User'
+      }
+    },
+    createdBy: {
+      id: '84305e4e-1f52-43d0-a123-9c873b0abb35',
+      displayName: 'Internal User'
+    },
+    createdAt: '2025-05-07T08:22:28.035Z',
+    updatedBy: {
+      id: '84305e4e-1f52-43d0-a123-9c873b0abb35',
+      displayName: 'Internal User'
+    },
+    updatedAt: '2025-05-20T13:00:54.794Z',
+    ...partialMetaData
+  }
+}
+/**
+ * @import { FormMetadata, FormDefinition, PageQuestion, PageSummary, PageFileUpload, TextFieldComponent, FileUploadFieldComponent, AutocompleteFieldComponent, List, Item, RadiosFieldComponent, CheckboxesFieldComponent } from '@defra/forms-model'
  */
