@@ -6,6 +6,7 @@ import {
   type PageQuestion,
   type PageRepeat
 } from '~/src/form/form-definition/types.js'
+import { ComponentType } from '~/src/index.js'
 import {
   ControllerNames,
   ControllerTypes
@@ -112,4 +113,21 @@ export function controllerNameFromPath(nameOrPath?: ControllerType | string) {
 
   const options = ControllerTypes.find(({ path }) => path === nameOrPath)
   return options?.name
+}
+
+export function canSetRepeater(
+  page: Page
+): page is Exclude<PageFileUpload, Page> {
+  if (page.controller === ControllerType.FileUpload) {
+    return false
+  }
+  if (
+    hasComponents(page) &&
+    page.components.some(
+      (component) => component.type === ComponentType.FileUploadField
+    )
+  ) {
+    return false
+  }
+  return true
 }

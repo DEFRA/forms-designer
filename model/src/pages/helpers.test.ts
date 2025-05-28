@@ -1,6 +1,12 @@
-import { ControllerTypes } from '~/src/pages/controller-types.js'
-import { ControllerType } from '~/src/pages/enums.js'
 import {
+  type Page,
+  type PageFileUpload,
+  type PageQuestion
+} from '~/src/form/form-definition/types.js'
+import { ComponentType, ControllerType } from '~/src/index.js'
+import { ControllerTypes } from '~/src/pages/controller-types.js'
+import {
+  canSetRepeater,
   controllerNameFromPath,
   getPageDefaults,
   hasComponents,
@@ -143,5 +149,85 @@ describe('helpers', () => {
         expect(controllerNameFromPath(path)).toEqual(name)
       }
     )
+  })
+
+  describe('canSetRepeater', () => {
+    it('should not allow repeater to be set if page is an upload page', () => {
+      const page: PageFileUpload = {
+        id: '85e5c8da-88f5-4009-a821-7d7de1364318',
+        title: '',
+        path: '/supporting-evidence',
+        components: [
+          {
+            type: ComponentType.FileUploadField,
+            title: 'Supporting Evidenceadfadf',
+            name: 'yBpZQO',
+            shortDescription: 'Supporting evidence',
+            hint: 'Hint text',
+            options: {
+              required: true,
+              accept:
+                'application/pdf,application/msword,image/jpeg,application/vnd.ms-excel,text/csv'
+            },
+            schema: {},
+            id: '4189b8a1-1a04-4f74-a7a0-dd23012a0ee0'
+          }
+        ],
+        controller: ControllerType.FileUpload,
+        next: []
+      }
+      expect(canSetRepeater(page)).toBe(false)
+    })
+
+    it('should not allow repeater to be set if file upload component exists - defensive', () => {
+      const page: Page = {
+        id: '85e5c8da-88f5-4009-a821-7d7de1364318',
+        title: '',
+        path: '/supporting-evidence',
+        components: [
+          {
+            type: ComponentType.FileUploadField,
+            title: 'Supporting Evidenceadfadf',
+            name: 'yBpZQO',
+            shortDescription: 'Supporting evidence',
+            hint: 'Hint text',
+            options: {
+              required: true,
+              accept:
+                'application/pdf,application/msword,image/jpeg,application/vnd.ms-excel,text/csv'
+            },
+            schema: {},
+            id: '4189b8a1-1a04-4f74-a7a0-dd23012a0ee0'
+          }
+        ],
+        next: []
+      }
+      expect(canSetRepeater(page)).toBe(false)
+    })
+
+    it('should allow repeater to be set on a standard page', () => {
+      const page: PageQuestion = {
+        title: 'sdsfdf',
+        path: '/sdsfdf',
+        components: [
+          {
+            type: ComponentType.CheckboxesField,
+            title: 'What is your favourite adventure?',
+            name: 'jnUjwa',
+            shortDescription: 'Your favourite adventure',
+            hint: '',
+            list: 'sQlrSm',
+            options: {
+              required: true
+            },
+            id: '590c50e0-04a3-4e95-80c9-c21a61a0f557'
+          }
+        ],
+        next: [],
+        id: '0f711e08-3801-444d-8e37-a88867c48f04'
+      }
+
+      expect(canSetRepeater(page)).toBe(true)
+    })
   })
 })
