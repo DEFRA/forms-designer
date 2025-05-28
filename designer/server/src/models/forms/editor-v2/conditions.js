@@ -25,7 +25,9 @@ export function buildConditionsTable(slug, definition) {
   )
 
   /** @todo remove this filter when V1 is deprecated */
-  const v2Conditions = conditions.filter(isConditionWrapperV2)
+  const v2Conditions = conditions
+    .filter(isConditionWrapperV2)
+    .sort((a, b) => a.displayName.localeCompare(b.displayName))
 
   /** @type {RuntimeFormModel} */
   const accessors = {
