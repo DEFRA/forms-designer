@@ -1,6 +1,12 @@
 import { ComponentType } from '~/src/components/enums.js'
 import { type ComponentDef } from '~/src/components/types.js'
-import { ConditionType, OperatorName } from '~/src/conditions/enums.js'
+import {
+  ConditionType,
+  Coordinator,
+  DateDirections,
+  DateUnits,
+  OperatorName
+} from '~/src/conditions/enums.js'
 import {
   convertConditionWrapperFromV2,
   type RuntimeFormModel
@@ -130,7 +136,7 @@ describe('Migration', () => {
     ).toThrow('Component not found')
   })
 
-  describe('Ref tests for lists', () => {
+  describe('ref tests for lists', () => {
     test('convertConditionWrapperFromV2 converts a list item ref condition correctly', () => {
       const conditionWrapper: ConditionWrapperV2 = {
         name: 'testWrapper',
@@ -278,6 +284,118 @@ describe('Migration', () => {
       expect(() =>
         convertConditionWrapperFromV2(conditionWrapper, model)
       ).toThrow('List item not found')
+    })
+  })
+
+  describe('relative date conditions', () => {
+    test('convertConditionWrapperFromV2 converts a relative date condition correctly', () => {
+      const conditionWrapper: ConditionWrapperV2 = {
+        name: 'testWrapper',
+        displayName: 'Test Wrapper',
+        conditions: [
+          {
+            id: 'condition1',
+            componentId: 'component1',
+            operator: OperatorName.IsAfter,
+            value: {
+              type: ConditionType.RelativeDate,
+              period: '7',
+              unit: DateUnits.DAYS,
+              direction: DateDirections.FUTURE
+            }
+          }
+        ]
+      }
+
+      const component: ComponentDef = {
+        id: 'component1',
+        name: 'testComponent',
+        title: 'Test Component',
+        type: ComponentType.DatePartsField,
+        options: {}
+      }
+
+      model.getComponentById = jest.fn().mockReturnValue(component)
+
+      const result = convertConditionWrapperFromV2(conditionWrapper, model)
+
+      expect(result).toEqual({
+        name: 'testWrapper',
+        displayName: 'Test Wrapper',
+        value: {
+          name: 'testWrapper',
+          conditions: [
+            {
+              field: {
+                name: 'testComponent',
+                type: ComponentType.DatePartsField,
+                display: 'Test Component'
+              },
+              operator: OperatorName.IsAfter,
+              value: {
+                type: ConditionType.RelativeDate,
+                period: '7',
+                unit: DateUnits.DAYS,
+                direction: DateDirections.FUTURE
+              },
+              coordinator: undefined
+            }
+          ]
+        }
+      })
+    })
+  })
+
+  describe('ref tests for conditions', () => {
+    test('convertConditionWrapperFromV2 converts a condition ref correctly', () => {
+      const conditionWrapper: ConditionWrapperV2 = {
+        name: 'testWrapper',
+        displayName: 'Test Wrapper',
+        coordinator: Coordinator.OR,
+        conditions: [
+          {
+            id: 'c1ec4d73-d0f7-4d1a-8e33-222e60376e69',
+            conditionId: 'condition1'
+          },
+          {
+            id: '7a3820bd-a95f-4f90-88a5-20dad9bb8372',
+            conditionId: 'condition2'
+          }
+        ]
+      }
+
+      const component: ComponentDef = {
+        id: 'component1',
+        name: 'testComponent',
+        title: 'Test Component',
+        type: ComponentType.TextField,
+        options: {},
+        schema: {}
+      }
+
+      model.getComponentById = jest.fn().mockReturnValue(component)
+
+      const result = convertConditionWrapperFromV2(conditionWrapper, model)
+
+      expect(result).toEqual({
+        name: 'testWrapper',
+        displayName: 'Test Wrapper',
+        value: {
+          name: 'testWrapper',
+          conditions: [
+            {
+              conditionName: 'testComponent',
+              conditionDisplayName: 'Test Component',
+              coordinator: Coordinator.OR
+            },
+            {
+              conditionName: 'testComponent',
+              conditionDisplayName: 'Test Component',
+              coordinator: Coordinator.OR
+            }
+          ]
+        }
+      })
     })
   })
 })
