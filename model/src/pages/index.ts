@@ -6,6 +6,7 @@ export {
 export { PageTypes } from '~/src/pages/page-types.js'
 
 export {
+  canSetRepeater,
   controllerNameFromPath,
   getPageDefaults,
   hasComponents,
