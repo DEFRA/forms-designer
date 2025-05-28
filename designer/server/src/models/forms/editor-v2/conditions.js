@@ -5,7 +5,7 @@ import {
   buildPreviewUrl,
   getFormSpecificNavigation
 } from '~/src/models/forms/editor-v2/common.js'
-import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
+import { formOverviewPath } from '~/src/models/links.js'
 
 /**
  * @param {string} slug
@@ -16,7 +16,8 @@ export function buildConditionsTable(slug, definition) {
   const editBaseUrl = `/library/${slug}/editor-v2/condition/`
 
   return {
-    firstCellIsHeader: true,
+    firstCellIsHeader: false,
+    classes: 'app-conditions-table',
     head: [{ text: 'Condition' }, { text: 'Used in' }, { text: 'Actions' }],
     rows: conditions.map((condition) => {
       return [
@@ -31,7 +32,7 @@ export function buildConditionsTable(slug, definition) {
             .join(', ')
         },
         {
-          html: `<a class="govuk-link" href="${editBaseUrl}${condition.id}/edit">Edit</a>&nbsp;<a class="govuk-link" href="${editBaseUrl}${condition.id}/delete">Delete</a>`
+          html: `<a class="govuk-link govuk-link--no-visited-state" href="${editBaseUrl}${condition.id}/edit">Edit</a>&nbsp;<span class="app-vertical-divider">|</span>&nbsp;<a class="govuk-link govuk-link--no-visited-state" href="${editBaseUrl}${condition.id}/delete">Delete</a>`
         }
       ]
     })
@@ -47,16 +48,6 @@ export function conditionsViewModel(metadata, definition, notification) {
   const formPath = formOverviewPath(metadata.slug)
   const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
   const previewBaseUrl = buildPreviewUrl(metadata.slug, FormStatus.Draft)
-
-  const pageActions = [
-    {
-      text: 'Create new condition',
-      href: editorv2Path(metadata.slug, 'condition'),
-      classes: 'govuk-button--inverse',
-      attributes: /** @type {string | null} */ (null)
-    }
-  ]
-
   const pageHeading = 'Manage conditions'
   const pageCaption = metadata.title
   const pageTitle = `${pageHeading} - ${pageCaption}`
@@ -70,7 +61,6 @@ export function conditionsViewModel(metadata, definition, notification) {
     pageCaption: {
       text: pageCaption
     },
-    pageActions,
     notification,
     summaryTable: buildConditionsTable(metadata.slug, definition)
   }
