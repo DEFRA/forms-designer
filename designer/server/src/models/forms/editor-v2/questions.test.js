@@ -1,3 +1,5 @@
+import { Engine } from '@defra/forms-model'
+
 import {
   buildDefinition,
   buildFileUploadPage,
@@ -38,7 +40,7 @@ describe('editor-v2 - questions model', () => {
     it('should not show repeater option if page type is FileUpload controller', () => {
       const definition = buildDefinition({
         pages: [buildFileUploadPage({ id: pageId }), buildSummaryPage()],
-        engine: 'V2'
+        engine: Engine.V2
       })
 
       const modelResult = questionsViewModel(metadata, definition, pageId)
@@ -48,7 +50,7 @@ describe('editor-v2 - questions model', () => {
     it('should show repeater option if page type is FileUpload controller', () => {
       const definition = buildDefinition({
         pages: [buildQuestionPage({ id: pageId }), buildSummaryPage()],
-        engine: 'V2'
+        engine: Engine.V2
       })
       const modelResult = questionsViewModel(metadata, definition, pageId)
       expect(modelResult.fields.repeater).toBeDefined()

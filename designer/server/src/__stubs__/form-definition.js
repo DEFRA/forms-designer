@@ -883,12 +883,12 @@ export function buildMetaData(partialMetaData = {}) {
     teamName: 'Forms Team',
     teamEmail: 'name@example.gov.uk',
     draft: {
-      createdAt: '2025-05-07T08:22:28.035Z',
+      createdAt: new Date('2025-05-07T08:22:28.035Z'),
       createdBy: {
         id: '84305e4e-1f52-43d0-a123-9c873b0abb35',
         displayName: 'Internal User'
       },
-      updatedAt: '2025-05-20T13:00:54.794Z',
+      updatedAt: new Date('2025-05-20T13:00:54.794Z'),
       updatedBy: {
         id: '84305e4e-1f52-43d0-a123-9c873b0abb35',
         displayName: 'Internal User'
@@ -898,12 +898,12 @@ export function buildMetaData(partialMetaData = {}) {
       id: '84305e4e-1f52-43d0-a123-9c873b0abb35',
       displayName: 'Internal User'
     },
-    createdAt: '2025-05-07T08:22:28.035Z',
+    createdAt: new Date('2025-05-07T08:22:28.035Z'),
     updatedBy: {
       id: '84305e4e-1f52-43d0-a123-9c873b0abb35',
       displayName: 'Internal User'
     },
-    updatedAt: '2025-05-20T13:00:54.794Z',
+    updatedAt: new Date('2025-05-20T13:00:54.794Z'),
     ...partialMetaData
   }
 }

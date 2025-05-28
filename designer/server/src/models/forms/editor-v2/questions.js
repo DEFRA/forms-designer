@@ -42,6 +42,7 @@ function questionsFields(
       }
     : {}
   return {
+    repeater: undefined,
     ...questionsHeadingFields(pageHeadingSettings, validation),
     ...repeaterFields
   }
