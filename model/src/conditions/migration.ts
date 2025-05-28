@@ -4,83 +4,87 @@ import {
 } from '~/src/components/types.js'
 import { ConditionType, type Coordinator } from '~/src/conditions/enums.js'
 import {
-  type Condition2Data,
-  type Condition2RefData,
-  type Condition2RefValueData,
-  type Condition2ValueData,
   type ConditionData,
+  type ConditionDataV2,
+  type ConditionListItemRefValueDataV2,
   type ConditionRefData,
+  type ConditionRefDataV2,
+  type ConditionStringValueDataV2,
   type ConditionValueData,
   type RelativeDateValueData
 } from '~/src/conditions/types.js'
 import {
-  type Condition2Wrapper,
   type ConditionWrapper,
+  type ConditionWrapperV2,
   type List
 } from '~/src/form/form-definition/types.js'
 
-function isCondition2RefValueData(
-  value: Condition2RefValueData | Condition2ValueData | RelativeDateValueData
-): value is Condition2RefValueData {
-  return value.type === ConditionType.Ref
+function isConditionListItemRefValueDataV2(
+  value:
+    | ConditionListItemRefValueDataV2
+    | ConditionStringValueDataV2
+    | RelativeDateValueData
+): value is ConditionListItemRefValueDataV2 {
+  return value.type === ConditionType.ListItemRef
 }
 
-function isCondition2ValueData(
-  value: Condition2RefValueData | Condition2ValueData | RelativeDateValueData
-): value is Condition2ValueData {
-  return value.type === ConditionType.Value
+function isConditionStringValueDataV2(
+  value:
+    | ConditionListItemRefValueDataV2
+    | ConditionStringValueDataV2
+    | RelativeDateValueData
+): value is ConditionStringValueDataV2 {
+  return value.type === ConditionType.StringValue
 }
 
-function getListItemValue(
-  model: RuntimeFormModel,
-  listId: string,
-  itemId: string
-) {
+function getListItem(model: RuntimeFormModel, listId: string, itemId: string) {
   const foundList = model.getListById(listId)
 
   if (!foundList) {
     throw Error('List not found')
   }
 
-  return foundList.items.find((item) => item.id === itemId)?.value
-}
+  const item = foundList.items.find((item) => item.id === itemId)
 
-function createConditionValueDataFromRef(
-  value: Condition2RefValueData,
-  model: RuntimeFormModel
-): ConditionValueData {
-  const refValue = getListItemValue(model, value.listId, value.itemId)
-
-  if (!refValue) {
+  if (!item) {
     throw Error('List item not found')
   }
 
+  return item
+}
+
+function createConditionValueDataFromListItemRefV2(
+  value: ConditionListItemRefValueDataV2,
+  model: RuntimeFormModel
+): ConditionValueData {
+  const refValue = getListItem(model, value.listId, value.itemId)
+
   return {
-    display: 'foobar',
+    display: refValue.text,
     type: ConditionType.Value,
-    value: refValue.toString()
+    value: refValue.value.toString()
   }
 }
 
-function createConditionValueDataFromV2(
-  value: Condition2ValueData
+function createConditionValueDataFromStringValueDataV2(
+  value: ConditionStringValueDataV2
 ): ConditionValueData {
   return {
-    type: value.type,
+    type: ConditionType.Value,
     value: value.value,
-    display: 'foobar'
+    display: `Condition value: ${value.value}`
   }
 }
 
-function isCondition2Data(
-  condition: Condition2Data | Condition2RefData
-): condition is Condition2Data {
+function isConditionDataV2(
+  condition: ConditionDataV2 | ConditionRefDataV2
+): condition is ConditionDataV2 {
   return 'componentId' in condition
 }
 
-function convertCondition2Data(
+function convertConditionDataV2(
   model: RuntimeFormModel,
-  condition: Condition2Data,
+  condition: ConditionDataV2,
   coordinator: Coordinator | undefined
 ): ConditionData {
   const component = model.getComponentById(condition.componentId)
@@ -90,10 +94,10 @@ function convertCondition2Data(
   }
 
   let newValue
-  if (isCondition2RefValueData(condition.value)) {
-    newValue = createConditionValueDataFromRef(condition.value, model)
-  } else if (isCondition2ValueData(condition.value)) {
-    newValue = createConditionValueDataFromV2(condition.value)
+  if (isConditionListItemRefValueDataV2(condition.value)) {
+    newValue = createConditionValueDataFromListItemRefV2(condition.value, model)
+  } else if (isConditionStringValueDataV2(condition.value)) {
+    newValue = createConditionValueDataFromStringValueDataV2(condition.value)
   } else {
     newValue = condition.value
   }
@@ -110,9 +114,9 @@ function convertCondition2Data(
   }
 }
 
-function convertCondition2RefData(
+function convertConditionRefDataFromV2(
   model: RuntimeFormModel,
-  condition: Condition2RefData,
+  condition: ConditionRefDataV2,
   coordinator: Coordinator | undefined
 ): ConditionRefData {
   const component = model.getComponentById(condition.conditionId)
@@ -128,8 +132,8 @@ function convertCondition2RefData(
   }
 }
 
-export function convertCondition2Wrapper(
-  conditionWrapper: Condition2Wrapper,
+export function convertConditionWrapperFromV2(
+  conditionWrapper: ConditionWrapperV2,
   model: RuntimeFormModel
 ): ConditionWrapper {
   let coordinator
@@ -148,10 +152,14 @@ export function convertCondition2Wrapper(
       conditions: conditionWrapper.conditions.map((condition) => {
         let newCondition: ConditionData | ConditionRefData
 
-        if (isCondition2Data(condition)) {
-          newCondition = convertCondition2Data(model, condition, coordinator)
+        if (isConditionDataV2(condition)) {
+          newCondition = convertConditionDataV2(model, condition, coordinator)
         } else {
-          newCondition = convertCondition2RefData(model, condition, coordinator)
+          newCondition = convertConditionRefDataFromV2(
+            model,
+            condition,
+            coordinator
+          )
         }
 
         return newCondition

@@ -1,6 +1,6 @@
 import {
-  type Condition2Wrapper,
   type ConditionWrapper,
+  type ConditionWrapperV2,
   type FormDefinition
 } from '@defra/forms-model'
 
@@ -17,23 +17,23 @@ export function findCondition(
     throw Error(`Condition not found with name '${conditionName}'`)
   }
 
-  if (isCondition2Wrapper(condition)) {
+  if (isConditionWrapperV2(condition)) {
     throw Error(
-      `Expected ConditionWrapper but found Condition2Wrapper for condition named '${conditionName}'`
+      `Expected ConditionWrapper but found ConditionWrapperV2 for condition named '${conditionName}'`
     )
   }
 
   return condition
 }
 
-export function isCondition2Wrapper(
-  wrapper: ConditionWrapper | Condition2Wrapper
-): wrapper is Condition2Wrapper {
-  return Array.isArray((wrapper as Condition2Wrapper).conditions)
+export function isConditionWrapperV2(
+  wrapper: ConditionWrapper | ConditionWrapperV2
+): wrapper is ConditionWrapperV2 {
+  return Array.isArray((wrapper as ConditionWrapperV2).conditions)
 }
 
 export function isConditionWrapper(
-  wrapper: ConditionWrapper | Condition2Wrapper
+  wrapper: ConditionWrapper | ConditionWrapperV2
 ): wrapper is ConditionWrapper {
-  return !isCondition2Wrapper(wrapper)
+  return !isConditionWrapperV2(wrapper)
 }

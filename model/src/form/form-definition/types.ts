@@ -1,7 +1,7 @@
 import { type ComponentDef } from '~/src/components/types.js'
 import { type Coordinator } from '~/src/conditions/enums.js'
 import {
-  type Condition2GroupData,
+  type ConditionGroupDataV2,
   type ConditionsModelData
 } from '~/src/conditions/types.js'
 import { type ControllerPath, type ControllerType } from '~/src/pages/enums.js'
@@ -162,11 +162,11 @@ export interface ConditionWrapper {
   value: ConditionsModelData
 }
 
-export interface Condition2Wrapper {
+export interface ConditionWrapperV2 {
   name: string
   displayName: string
   coordinator?: Coordinator
-  conditions: Condition2GroupData
+  conditions: ConditionGroupDataV2
 }
 
 /**
@@ -175,7 +175,7 @@ export interface Condition2Wrapper {
 export interface FormDefinition {
   engine?: Engine
   pages: Page[]
-  conditions: (ConditionWrapper | Condition2Wrapper)[]
+  conditions: (ConditionWrapper | ConditionWrapperV2)[]
   lists: List[]
   sections: Section[]
   startPage?: string

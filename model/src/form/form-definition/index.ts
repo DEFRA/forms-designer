@@ -4,22 +4,22 @@ import { v4 as uuidV4 } from 'uuid'
 import { ComponentType } from '~/src/components/enums.js'
 import { type ComponentDef } from '~/src/components/types.js'
 import {
-  type Condition2Data,
-  type Condition2GroupData,
-  type Condition2ListItemRefValueData,
-  type Condition2RefData,
-  type Condition2StringValueData,
   type ConditionData,
+  type ConditionDataV2,
   type ConditionFieldData,
   type ConditionGroupData,
+  type ConditionGroupDataV2,
+  type ConditionListItemRefValueDataV2,
   type ConditionRefData,
+  type ConditionRefDataV2,
+  type ConditionStringValueDataV2,
   type ConditionValueData,
   type ConditionsModelData,
   type RelativeDateValueData
 } from '~/src/conditions/types.js'
 import {
-  type Condition2Wrapper,
   type ConditionWrapper,
+  type ConditionWrapperV2,
   type Event,
   type EventOptions,
   type Events,
@@ -42,7 +42,7 @@ const idSchema = idSchemaOptional.default(() => uuidV4())
 
 const conditionIdRef = Joi.ref('/conditions', {
   in: true,
-  adjust: (conditions: Condition2Wrapper[]) =>
+  adjust: (conditions: ConditionWrapperV2[]) =>
     conditions.map((condition) => condition.name)
 })
 
@@ -127,7 +127,7 @@ const conditionValueSchema = Joi.object<ConditionValueData>()
       .description('Human-readable version of the value for display purposes')
   })
 
-const condition2StringValueDataSchema = Joi.object<Condition2StringValueData>()
+const condition2StringValueDataSchema = Joi.object<ConditionStringValueDataV2>()
   .description('String value specification for a condition')
   .keys({
     type: Joi.string()
@@ -142,7 +142,7 @@ const condition2StringValueDataSchema = Joi.object<Condition2StringValueData>()
   })
 
 const condition2ListItemRefDataSchema =
-  Joi.object<Condition2ListItemRefValueData>()
+  Joi.object<ConditionListItemRefValueDataV2>()
     .description('List item ref specification for a condition')
     .keys({
       type: Joi.string()
@@ -203,7 +203,7 @@ const conditionRefSchema = Joi.object<ConditionRefData>()
       )
   })
 
-const condition2RefDataSchema = Joi.object<Condition2RefData>()
+const condition2RefDataSchema = Joi.object<ConditionRefDataV2>()
   .description('Reference to a named condition defined elsewhere')
   .keys({
     id: idSchema.description('Unique identifier for the referenced condition'),
@@ -237,7 +237,7 @@ const conditionSchema = Joi.object<ConditionData>()
       )
   })
 
-const condition2DataSchema = Joi.object<Condition2Data>()
+const condition2DataSchema = Joi.object<ConditionDataV2>()
   .description('Condition definition')
   .keys({
     id: idSchema.description(
@@ -315,7 +315,7 @@ const conditionWrapperSchema = Joi.object<ConditionWrapper>()
       .description('The complete condition definition')
   })
 
-export const conditionWrapperSchemaV2 = Joi.object<Condition2Wrapper>()
+export const conditionWrapperSchemaV2 = Joi.object<ConditionWrapperV2>()
   .description('Container for a named condition with its definition')
   .keys({
     name: Joi.string()
@@ -329,7 +329,7 @@ export const conditionWrapperSchemaV2 = Joi.object<Condition2Wrapper>()
       .description(
         'Logical operator connecting this condition with others (AND, OR)'
       ),
-    conditions: Joi.array<Condition2GroupData>()
+    conditions: Joi.array<ConditionGroupDataV2>()
       .items(
         Joi.alternatives().try(condition2DataSchema, condition2RefDataSchema)
       )
@@ -868,7 +868,7 @@ export const formDefinitionV2Schema = formDefinitionSchema
       .unique('title')
       .unique('id')
       .description('Lists schema for V2 forms'),
-    conditions: Joi.array<Condition2Wrapper>()
+    conditions: Joi.array<ConditionWrapperV2>()
       .items(conditionWrapperSchemaV2)
       .unique('name')
       .unique('displayName')

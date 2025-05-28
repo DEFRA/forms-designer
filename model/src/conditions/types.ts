@@ -17,12 +17,12 @@ export interface ConditionValueData {
   display: string
 }
 
-export interface Condition2StringValueData {
+export interface ConditionStringValueDataV2 {
   type: ConditionType.StringValue
   value: string
 }
 
-export interface Condition2ListItemRefValueData {
+export interface ConditionListItemRefValueDataV2 {
   type: ConditionType.ListItemRef
   listId: string
   itemId: string
@@ -48,13 +48,13 @@ export interface ConditionData {
   coordinator?: Coordinator
 }
 
-export interface Condition2Data {
+export interface ConditionDataV2 {
   id: string
   componentId: string
   operator: OperatorName
   value:
-    | Condition2ListItemRefValueData
-    | Condition2StringValueData
+    | ConditionListItemRefValueDataV2
+    | ConditionStringValueDataV2
     | RelativeDateValueData
 }
 
@@ -64,7 +64,7 @@ export interface ConditionRefData {
   coordinator?: Coordinator
 }
 
-export interface Condition2RefData {
+export interface ConditionRefDataV2 {
   id: string
   conditionId: string
 }
@@ -73,7 +73,7 @@ export interface ConditionGroupData {
   conditions: (ConditionData | ConditionRefData | ConditionGroupData)[]
 }
 
-export type Condition2GroupData = (Condition2Data | Condition2RefData)[]
+export type ConditionGroupDataV2 = (ConditionDataV2 | ConditionRefDataV2)[]
 
 export interface ConditionsModelData extends ConditionGroupData {
   name: string
