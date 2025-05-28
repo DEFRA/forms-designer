@@ -13,7 +13,7 @@ import {
   formDefinitionV2Schema
 } from '~/src/form/form-definition/index.js'
 import {
-  type Condition2Wrapper,
+  type ConditionWrapperV2,
   type FormDefinition,
   type List,
   type PageQuestion,
@@ -27,10 +27,10 @@ import {
   DateDirections,
   DateUnits,
   OperatorName,
-  type Condition2Data,
-  type Condition2ListItemRefValueData,
-  type Condition2RefData,
-  type Condition2StringValueData,
+  type ConditionDataV2,
+  type ConditionListItemRefValueDataV2,
+  type ConditionRefDataV2,
+  type ConditionStringValueDataV2,
   type RelativeDateValueData
 } from '~/src/index.js'
 
@@ -382,7 +382,7 @@ describe('Form definition schema', () => {
         components: []
       }
 
-      const stringValueConditionData: Condition2StringValueData = {
+      const stringValueConditionData: ConditionStringValueDataV2 = {
         type: ConditionType.StringValue,
         value: 'Enrique Chase'
       }
@@ -394,62 +394,62 @@ describe('Form definition schema', () => {
         direction: DateDirections.FUTURE
       }
 
-      const listItemRefConditionData: Condition2ListItemRefValueData = {
+      const listItemRefConditionData: ConditionListItemRefValueDataV2 = {
         type: ConditionType.ListItemRef,
         listId: '14ec8ab5-05a0-4b00-b866-d40146077d7a',
         itemId: 'a9dd35af-187e-4027-b8b1-e58a4aab3a82'
       }
 
-      const stringValueData: Condition2Data = {
+      const stringValueData: ConditionDataV2 = {
         id: '923086db-02d1-4e80-9d7c-ca1b20101de9',
         componentId: 'd8115721-7b71-4587-8a93-6499d3a3f94c',
         operator: OperatorName.Is,
         value: stringValueConditionData
       }
 
-      const relativeDateData: Condition2Data = {
+      const relativeDateData: ConditionDataV2 = {
         id: '43c2fc24-de68-4495-80f8-485bc8e5384b',
         componentId: '91c22b37-75a0-4d59-8879-6b9790e694f7',
         operator: OperatorName.IsLessThan,
         value: relativeDateConditionData
       }
 
-      const listItemRefData: Condition2Data = {
+      const listItemRefData: ConditionDataV2 = {
         id: '8a85e45a-c577-4748-a095-3a86d782b336',
         componentId: '69272c34-5acb-42cd-b9fe-38ad58e3a524',
         operator: OperatorName.Is,
         value: listItemRefConditionData
       }
 
-      const stringValueCondition: Condition2Wrapper = {
+      const stringValueCondition: ConditionWrapperV2 = {
         name: 'ab1bbaae-bf0e-4577-8416-8a8c83da1fb9',
         displayName: 'isFullNameEnriqueChase',
         conditions: [stringValueData]
       }
 
-      const relativeDateCondition: Condition2Wrapper = {
+      const relativeDateCondition: ConditionWrapperV2 = {
         name: '193a413b-65d3-42bd-bddb-d02ca100c749',
         displayName: 'isDueDateWithin7Days',
         conditions: [relativeDateData]
       }
 
-      const listItemRefCondition: Condition2Wrapper = {
+      const listItemRefCondition: ConditionWrapperV2 = {
         name: '7baf03ce-e0d8-47a5-9010-fbe461031399',
         displayName: 'isFaveColourRed',
         conditions: [listItemRefData]
       }
 
-      const fullNameConditionRefData: Condition2RefData = {
+      const fullNameConditionRefData: ConditionRefDataV2 = {
         id: 'a436ef0b-15f3-432b-9219-e16f309a6502',
         conditionId: stringValueCondition.name
       }
 
-      const faveColourRefData: Condition2RefData = {
+      const faveColourRefData: ConditionRefDataV2 = {
         id: 'a1903a7e-6fd0-499a-92ce-aa9f4b75b103',
         conditionId: listItemRefCondition.name
       }
 
-      const conditionRefCondition: Condition2Wrapper = {
+      const conditionRefCondition: ConditionWrapperV2 = {
         name: 'dc1e112f-2855-42d0-830c-bd5d2332975c',
         displayName: 'isEnriqueChaseAndFaveColourRed',
         coordinator: Coordinator.AND,
