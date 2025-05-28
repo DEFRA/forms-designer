@@ -17,7 +17,7 @@ export class ConditionAbstract {
 
   coordinatorHtml(): string {
     return this.coordinator
-      ? `<strong>${this.coordinator.toUpperCase()}</strong> `
+      ? `<span class="govuk-!-font-weight-bold">${this.coordinator.toUpperCase()}</span> `
       : ''
   }
 

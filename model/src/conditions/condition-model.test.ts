@@ -161,7 +161,7 @@ describe('condition model', () => {
         "'Badger' is 'Monkeys' and 'Monkeys' is not 'Giraffes' and 'Squiffy' is not 'Donkeys'"
       )
       expect(underTest.toPresentationHtml()).toBe(
-        "'Badger' is 'Monkeys' <strong>AND</strong> 'Monkeys' is not 'Giraffes' <strong>AND</strong> 'Squiffy' is not 'Donkeys'"
+        "'Badger' is 'Monkeys' <span class=\"govuk-!-font-weight-bold\">AND</span> 'Monkeys' is not 'Giraffes' <span class=\"govuk-!-font-weight-bold\">AND</span> 'Squiffy' is not 'Donkeys'"
       )
     })
 
@@ -255,7 +255,7 @@ describe('condition model', () => {
         "'Badger' is 'Monkeys' or 'Monkeys' is not 'Giraffes' or 'Squiffy' is not 'Donkeys'"
       )
       expect(underTest.toPresentationHtml()).toBe(
-        "'Badger' is 'Monkeys' <strong>OR</strong> 'Monkeys' is not 'Giraffes' <strong>OR</strong> 'Squiffy' is not 'Donkeys'"
+        "'Badger' is 'Monkeys' <span class=\"govuk-!-font-weight-bold\">OR</span> 'Monkeys' is not 'Giraffes' <span class=\"govuk-!-font-weight-bold\">OR</span> 'Squiffy' is not 'Donkeys'"
       )
     })
 

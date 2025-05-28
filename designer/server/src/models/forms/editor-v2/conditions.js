@@ -54,7 +54,7 @@ export function buildConditionsTable(slug, definition) {
 
       return [
         {
-          html: `<strong>${condition.displayName}</strong><p>${ConditionsModel.from(conditionAsV1.value).toPresentationHtml()}</p>`
+          html: `<span class="govuk-!-font-weight-bold">${condition.displayName}</span><p>${ConditionsModel.from(conditionAsV1.value).toPresentationHtml()}</p>`
         },
         {
           text: usedIn
