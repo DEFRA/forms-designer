@@ -11,12 +11,8 @@
 
 // Manage conditions
 .app-conditions-table {
-  .govuk-table__head {
-    tr.govuk-table__row {
-      th.govuk-table__header {
-        height: 50px;
-        vertical-align: middle;
-      }
-    }
+  .govuk-table__header {
+    height: 50px;
+    vertical-align: middle;
   }
 }
