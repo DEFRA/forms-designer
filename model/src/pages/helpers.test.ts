@@ -1,3 +1,4 @@
+import { type PageRepeat } from '~/dist/types/index.js'
 import {
   type Page,
   type PageFileUpload,
@@ -13,7 +14,8 @@ import {
   hasComponentsEvenIfNoNext,
   hasFormComponents,
   hasNext,
-  hasRepeater
+  hasRepeater,
+  omitFileUploadComponent
 } from '~/src/pages/helpers.js'
 import { PageTypes } from '~/src/pages/page-types.js'
 
@@ -228,6 +230,103 @@ describe('helpers', () => {
       }
 
       expect(canSetRepeater(page)).toBe(true)
+    })
+  })
+
+  describe('omitFileUploadComponent', () => {
+    it('should return true if page is a repeater page', () => {
+      const page: PageRepeat = {
+        title: 'Repeater Page',
+        path: '/repeater-page',
+        components: [
+          {
+            type: ComponentType.TextField,
+            title: 'Simple text field',
+            name: 'IHAIzC',
+            shortDescription: 'Your simple text field',
+            hint: '',
+            options: {},
+            schema: {},
+            id: 'ee83413e-31b6-4158-98e0-4611479582ce'
+          }
+        ],
+        next: [],
+        id: '32888028-61db-40fc-b255-80bc67829d31',
+        controller: ControllerType.Repeat,
+        repeat: {
+          options: { name: 'fawfed', title: 'Simple question responses' },
+          schema: { min: 1, max: 3 }
+        }
+      }
+      expect(omitFileUploadComponent(page)).toBe(true)
+    })
+    it('should return true if a file upload component already exists', () => {
+      const page: PageFileUpload = {
+        title: 'Supporting evidence',
+        path: '/file-upload',
+        components: [
+          {
+            type: ComponentType.FileUploadField,
+            title: 'What is your favourite adventure?',
+            name: 'jnUjwa',
+            shortDescription: 'Your favourite adventure',
+            hint: '',
+            options: {
+              required: true
+            },
+            schema: {},
+            id: '590c50e0-04a3-4e95-80c9-c21a61a0f557'
+          }
+        ],
+        next: [],
+        controller: ControllerType.FileUpload,
+        id: '0f711e08-3801-444d-8e37-a88867c48f04'
+      }
+      expect(omitFileUploadComponent(page)).toBe(true)
+    })
+    it('should return true if more than one components exist', () => {
+      const page: PageQuestion = {
+        title: 'Empty page',
+        path: '/empty-page',
+        components: [
+          {
+            type: ComponentType.TextField,
+            title: 'Simple text field',
+            name: 'IHAIzC',
+            shortDescription: 'Your simple text field',
+            hint: '',
+            options: {},
+            schema: {},
+            id: 'ee83413e-31b6-4158-98e0-4611479582ce'
+          },
+          {
+            type: ComponentType.TextField,
+            title: 'Simple text field 2',
+            name: 'IHAIzD',
+            shortDescription: 'Your simple text field',
+            hint: '',
+            options: {},
+            schema: {},
+            id: 'c02ba468-61a3-43f8-bd6a-768bf906d402'
+          }
+        ],
+        next: [],
+        id: '0f711e08-3801-444d-8e37-a88867c48f04'
+      }
+      expect(omitFileUploadComponent(page)).toBe(true)
+    })
+    it('should return false no components exist', () => {
+      const page: PageQuestion = {
+        title: 'Empty page',
+        path: '/empty-page',
+        components: [],
+        next: [],
+        id: '0f711e08-3801-444d-8e37-a88867c48f04'
+      }
+      expect(omitFileUploadComponent(page)).toBe(false)
+    })
+    it('should return true if page is undefined', () => {
+      expect(omitFileUploadComponent(undefined)).toBe(false)
     })
   })
 })

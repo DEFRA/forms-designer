@@ -131,3 +131,28 @@ export function canSetRepeater(
   }
   return true
 }
+
+/**
+ * High level check for whether file upload component should be omitted
+ * @param { Page | undefined } page
+ * @returns {boolean}
+ */
+export function omitFileUploadComponent(page: Page | undefined) {
+  if (page?.controller === ControllerType.Repeat) {
+    return true
+  }
+  if (!hasComponents(page)) {
+    return false
+  }
+  if (page.components.length > 1) {
+    return true
+  }
+  if (
+    page.components.some(
+      (component) => component.type === ComponentType.FileUploadField
+    )
+  ) {
+    return true
+  }
+  return false
+}

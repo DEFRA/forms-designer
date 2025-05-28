@@ -14,7 +14,8 @@ export {
   hasFormComponents,
   hasNext,
   hasRepeater,
-  isControllerName
+  isControllerName,
+  omitFileUploadComponent
 } from '~/src/pages/helpers.js'
 
 export { ControllerPath, ControllerType } from '~/src/pages/enums.js'
