@@ -27,7 +27,12 @@ export {
   toPresentationString
 } from '~/src/conditions/helpers.js'
 
-export { convertConditionWrapperFromV2 } from '~/src/conditions/migration.js'
+export {
+  convertConditionWrapperFromV2,
+  isConditionWrapper,
+  isConditionWrapperV2,
+  type RuntimeFormModel
+} from '~/src/conditions/migration.js'
 
 export {
   ConditionType,

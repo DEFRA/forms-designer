@@ -7,6 +7,7 @@ import {
   hasConditionGroup,
   hasConditionName,
   toExpression,
+  toPresentationHtml,
   toPresentationString
 } from '~/src/conditions/helpers.js'
 import {
@@ -163,6 +164,12 @@ export class ConditionsModel {
   toPresentationString() {
     return this.#groupedConditions
       .map((condition) => toPresentationString(condition))
+      .join(' ')
+  }
+
+  toPresentationHtml() {
+    return this.#groupedConditions
+      .map((condition) => toPresentationHtml(condition))
       .join(' ')
   }
 

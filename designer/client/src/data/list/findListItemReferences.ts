@@ -2,12 +2,12 @@ import {
   ConditionType,
   hasConditionField,
   hasConditionGroup,
+  isConditionWrapper,
   type FormDefinition,
   type Item,
   type List
 } from '@defra/forms-model'
 
-import { isConditionWrapper } from '~/src/data/condition/findCondition.js'
 import { findListReferences } from '~/src/data/list/findListReferences.js'
 
 /**

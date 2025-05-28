@@ -15,6 +15,12 @@ export class ConditionAbstract {
     return this.coordinator ? `${this.coordinator} ` : ''
   }
 
+  coordinatorHtml(): string {
+    return this.coordinator
+      ? `<span class="govuk-!-font-weight-bold">${this.coordinator.toUpperCase()}</span> `
+      : ''
+  }
+
   getCoordinator(): Coordinator | undefined {
     return this.coordinator
   }

@@ -72,7 +72,7 @@ function createConditionValueDataFromStringValueDataV2(
   return {
     type: ConditionType.Value,
     value: value.value,
-    display: `Condition value: ${value.value}`
+    display: value.value
   }
 }
 
@@ -119,17 +119,29 @@ function convertConditionRefDataFromV2(
   condition: ConditionRefDataV2,
   coordinator: Coordinator | undefined
 ): ConditionRefData {
-  const component = model.getComponentById(condition.conditionId)
+  const refCondition = model.getConditionById(condition.conditionId)
 
-  if (!component) {
+  if (!refCondition) {
     throw Error('Component not found')
   }
 
   return {
-    conditionName: component.name,
-    conditionDisplayName: component.title,
+    conditionName: refCondition.name,
+    conditionDisplayName: refCondition.displayName,
     coordinator
   }
+}
+
+export function isConditionWrapperV2(
+  wrapper: ConditionWrapper | ConditionWrapperV2
+): wrapper is ConditionWrapperV2 {
+  return Array.isArray((wrapper as ConditionWrapperV2).conditions)
+}
+
+export function isConditionWrapper(
+  wrapper: ConditionWrapper | ConditionWrapperV2
+): wrapper is ConditionWrapper {
+  return !isConditionWrapperV2(wrapper)
 }
 
 export function convertConditionWrapperFromV2(
@@ -149,7 +161,7 @@ export function convertConditionWrapperFromV2(
     displayName: conditionWrapper.displayName,
     value: {
       name: conditionWrapper.name,
-      conditions: conditionWrapper.conditions.map((condition) => {
+      conditions: conditionWrapper.conditions.map((condition, index) => {
         let newCondition: ConditionData | ConditionRefData
 
         if (isConditionDataV2(condition)) {
@@ -158,7 +170,7 @@ export function convertConditionWrapperFromV2(
           newCondition = convertConditionRefDataFromV2(
             model,
             condition,
-            coordinator
+            index > 0 ? coordinator : undefined
           )
         }
 
@@ -173,4 +185,5 @@ export function convertConditionWrapperFromV2(
 export interface RuntimeFormModel {
   getListById: (listId: string) => List | undefined
   getComponentById: (componentId: string) => ComponentDef | undefined
+  getConditionById: (conditionId: string) => ConditionWrapperV2 | undefined
 }
