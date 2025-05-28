@@ -66,6 +66,38 @@ export function buildFileUploadPage(partialFileUploadPage = {}) {
 }
 
 /**
+ *
+ * @param {Partial<PageRepeat>} partialRepeaterPage
+ * @returns {PageRepeat}
+ */
+export function buildRepeaterPage(partialRepeaterPage = {}) {
+  return {
+    title: 'Repeater Page',
+    path: '/repeater-page',
+    components: [
+      {
+        type: ComponentType.TextField,
+        title: 'Simple text field',
+        name: 'IHAIzC',
+        shortDescription: 'Your simple text field',
+        hint: '',
+        options: {},
+        schema: {},
+        id: 'ee83413e-31b6-4158-98e0-4611479582ce'
+      }
+    ],
+    next: [],
+    id: '32888028-61db-40fc-b255-80bc67829d31',
+    controller: ControllerType.Repeat,
+    repeat: {
+      options: { name: 'fawfed', title: 'Simple question responses' },
+      schema: { min: 1, max: 3 }
+    },
+    ...partialRepeaterPage
+  }
+}
+
+/**
  * @param {Partial<TextFieldComponent>} partialTextField
  * @returns {TextFieldComponent}
  */
@@ -908,5 +940,5 @@ export function buildMetaData(partialMetaData = {}) {
   }
 }
 /**
- * @import { FormMetadata, FormDefinition, PageQuestion, PageSummary, PageFileUpload, TextFieldComponent, FileUploadFieldComponent, AutocompleteFieldComponent, List, Item, RadiosFieldComponent, CheckboxesFieldComponent } from '@defra/forms-model'
+ * @import { FormMetadata, FormDefinition, PageQuestion, PageSummary, PageFileUpload, PageRepeat, TextFieldComponent, FileUploadFieldComponent, AutocompleteFieldComponent, List, Item, RadiosFieldComponent, CheckboxesFieldComponent } from '@defra/forms-model'
  */
