@@ -170,7 +170,7 @@ export function convertConditionWrapperFromV2(
   return newConditionWrapper
 }
 
-interface RuntimeFormModel {
+export interface RuntimeFormModel {
   getListById: (listId: string) => List | undefined
   getComponentById: (componentId: string) => ComponentDef | undefined
 }
