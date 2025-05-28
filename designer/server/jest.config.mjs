@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-restricted-imports
-import { projectDefaults } from '../../jest.config.js'
+import { projectDefaults } from '../../jest.config.mjs'
 
 /**
  * Jest project config

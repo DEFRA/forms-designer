@@ -33,7 +33,7 @@ export default {
             {
               statusCode,
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-              data: response.data,
+              data: response.data ?? request.url,
               message: response.message,
               stack_trace: response.stack
             },

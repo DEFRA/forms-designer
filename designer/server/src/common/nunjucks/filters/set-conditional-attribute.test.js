@@ -1,4 +1,4 @@
-import { setConditionalAttribute } from '~/src/common/nunjucks/filters/index.js'
+import { setConditionalAttribute } from '~/src/common/nunjucks/filters/set-conditional-attribute.js'
 
 describe('setConditionalAttribute', () => {
   const elem = {
