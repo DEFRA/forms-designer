@@ -148,7 +148,7 @@ export function convertConditionWrapperFromV2(
     name: conditionWrapper.name,
     displayName: conditionWrapper.displayName,
     value: {
-      name: 'foo',
+      name: conditionWrapper.name,
       conditions: conditionWrapper.conditions.map((condition) => {
         let newCondition: ConditionData | ConditionRefData
 

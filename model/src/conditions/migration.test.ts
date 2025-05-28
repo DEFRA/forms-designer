@@ -85,7 +85,7 @@ describe('Migration', () => {
       name: 'testWrapper',
       displayName: 'Test Wrapper',
       value: {
-        name: 'foo',
+        name: 'testWrapper',
         conditions: [
           {
             field: {
@@ -181,7 +181,7 @@ describe('Migration', () => {
         name: 'testWrapper',
         displayName: 'Test Wrapper',
         value: {
-          name: 'foo',
+          name: 'testWrapper',
           conditions: [
             {
               field: {
