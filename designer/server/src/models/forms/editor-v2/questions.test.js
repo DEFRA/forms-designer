@@ -1,12 +1,12 @@
 import { Engine } from '@defra/forms-model'
-
 import {
   buildDefinition,
   buildFileUploadPage,
   buildMetaData,
   buildQuestionPage,
   buildSummaryPage
-} from '~/src/__stubs__/form-definition.js'
+} from '@defra/forms-model/stubs'
+
 import {
   hasUnderlyingHeadingData,
   questionsViewModel

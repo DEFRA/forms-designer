@@ -1,10 +1,10 @@
 import { ComponentType } from '@defra/forms-model'
-
 import {
   buildQuestionPage,
   buildRepeaterPage,
   buildTextFieldComponent
-} from '~/src/__stubs__/form-definition.js'
+} from '@defra/forms-model/stubs'
+
 import { filterQuestionTypes } from '~/src/models/forms/editor-v2/question-type.js'
 
 const testQuestionTypeItems = /** @type {FormEditorCheckbox[]} */ ([
