@@ -2,6 +2,7 @@ import { ComponentType } from '~/src/components/enums.js'
 import {
   type AutocompleteFieldComponent,
   type CheckboxesFieldComponent,
+  type DatePartsFieldComponent,
   type FileUploadFieldComponent,
   type NumberFieldComponent,
   type RadiosFieldComponent,
@@ -179,5 +180,30 @@ export function buildNumberFieldComponent(
     schema: {},
     ...partialComponent,
     type: ComponentType.NumberField
+  }
+}
+
+export function buildDateComponent(
+  partialComponent: Partial<DatePartsFieldComponent>
+): DatePartsFieldComponent {
+  return {
+    name: 'bcdefg',
+    title: 'Default title',
+    options: {},
+    ...partialComponent,
+    type: ComponentType.DatePartsField
+  }
+}
+
+export function buildRadiosComponent(
+  partialComponent: Partial<RadiosFieldComponent>
+): RadiosFieldComponent {
+  return {
+    name: 'cdefgh',
+    title: 'Default title',
+    options: {},
+    list: 'Default list Id ref',
+    ...partialComponent,
+    type: ComponentType.RadiosField
   }
 }

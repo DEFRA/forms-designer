@@ -1,6 +1,11 @@
 import { ValidationError } from 'joi'
 
-import { buildNumberFieldComponent } from '~/src/__stubs__/components.js'
+import {
+  buildDateComponent,
+  buildNumberFieldComponent,
+  buildRadiosComponent,
+  buildTextFieldComponent
+} from '~/src/__stubs__/components.js'
 import { buildQuestionPage } from '~/src/__stubs__/pages.js'
 import { ComponentType } from '~/src/components/enums.js'
 import { type ComponentDef } from '~/src/components/types.js'
