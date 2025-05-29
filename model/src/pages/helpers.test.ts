@@ -233,6 +233,26 @@ describe('helpers', () => {
 
       expect(canSetRepeater(page)).toBe(true)
     })
+
+    it('should allow repeater to be set on a standard page with PageController type', () => {
+      const page = buildQuestionPage({
+        controller: ControllerType.Page,
+        title: 'sdsfdf',
+        path: '/sdsfdf',
+        components: [
+          buildCheckboxComponent({
+            type: ComponentType.CheckboxesField,
+            title: 'What is your favourite adventure?',
+            name: 'jnUjwa',
+            shortDescription: 'Your favourite adventure'
+          })
+        ],
+        next: [],
+        id: '0f711e08-3801-444d-8e37-a88867c48f04'
+      })
+
+      expect(canSetRepeater(page)).toBe(true)
+    })
   })
 
   describe('omitFileUploadComponent', () => {

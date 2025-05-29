@@ -118,7 +118,7 @@ export function controllerNameFromPath(nameOrPath?: ControllerType | string) {
 export function canSetRepeater(
   page: Page
 ): page is Exclude<PageFileUpload, Page> {
-  if (page.controller === ControllerType.FileUpload) {
+  if (page.controller && page.controller !== ControllerType.Page) {
     return false
   }
   if (
