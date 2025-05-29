@@ -1,13 +1,14 @@
 import { ValidationError } from 'joi'
 
-import { ComponentType } from '~/src/components/enums.js'
 import {
-  type ComponentDef,
-  type DatePartsFieldComponent,
-  type NumberFieldComponent,
-  type RadiosFieldComponent,
-  type TextFieldComponent
-} from '~/src/components/types.js'
+  buildDateComponent,
+  buildNumberFieldComponent,
+  buildRadiosComponent,
+  buildTextFieldComponent
+} from '~/src/__stubs__/components.js'
+import { buildQuestionPage } from '~/src/__stubs__/pages.js'
+import { ComponentType } from '~/src/components/enums.js'
+import { type ComponentDef } from '~/src/components/types.js'
 import {
   formDefinitionSchema,
   formDefinitionV2Schema
@@ -33,69 +34,6 @@ import {
   type ConditionStringValueDataV2,
   type RelativeDateValueData
 } from '~/src/index.js'
-
-const buildQuestionPage = (
-  partialQuestion: Partial<PageQuestion>
-): PageQuestion => {
-  return {
-    title: 'Question Page',
-    path: '/question-page',
-    components: [],
-    next: [],
-    ...partialQuestion
-  }
-}
-
-const buildNumberFieldComponent = (
-  partialComponent: Partial<NumberFieldComponent>
-): NumberFieldComponent => {
-  return {
-    name: 'year',
-    title: 'Year',
-    options: {},
-    schema: {},
-    ...partialComponent,
-    type: ComponentType.NumberField
-  }
-}
-
-const buildTextFieldComponent = (
-  partialComponent: Partial<TextFieldComponent>
-): TextFieldComponent => {
-  return {
-    name: 'abcdef',
-    title: 'Default title',
-    options: {},
-    schema: {},
-    ...partialComponent,
-    type: ComponentType.TextField
-  }
-}
-
-const buildDateComponent = (
-  partialComponent: Partial<DatePartsFieldComponent>
-): DatePartsFieldComponent => {
-  return {
-    name: 'bcdefg',
-    title: 'Default title',
-    options: {},
-    ...partialComponent,
-    type: ComponentType.DatePartsField
-  }
-}
-
-const buildRadiosComponent = (
-  partialComponent: Partial<RadiosFieldComponent>
-): RadiosFieldComponent => {
-  return {
-    name: 'cdefgh',
-    title: 'Default title',
-    options: {},
-    list: 'Default list Id ref',
-    ...partialComponent,
-    type: ComponentType.RadiosField
-  }
-}
 
 describe('Form definition schema', () => {
   let page: PageQuestion

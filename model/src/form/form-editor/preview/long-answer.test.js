@@ -28,5 +28,5 @@ describe('Long Answer', () => {
 })
 
 /**
- * @import { QuestionElements } from '@defra/forms-model'
+ * @import { QuestionElements } from '~/src/form/form-editor/preview/types.js'
  */
