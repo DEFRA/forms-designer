@@ -42,5 +42,5 @@ describe('list-sortable', () => {
 })
 
 /**
- * @import { List, ListElements, BaseSettings } from '@defra/forms-model'
+ * @import { ListElements, BaseSettings } from '~/src/form/form-editor/preview/types.js'
  */
