@@ -1,4 +1,8 @@
-import { ConditionsModel, type ConditionWrapper } from '@defra/forms-model'
+import {
+  ConditionsModel,
+  isConditionWrapper,
+  type ConditionWrapper
+} from '@defra/forms-model'
 import { useContext, useState, type MouseEvent } from 'react'
 
 import { Flyout } from '~/src/components/Flyout/Flyout.jsx'
@@ -61,7 +65,7 @@ export function ConditionsEdit({ path }: Readonly<Props>) {
     cancelInlineCondition
   } = useConditionsEditor()
   const { data } = useContext(DataContext)
-  const { conditions } = data
+  const conditions = data.conditions.filter(isConditionWrapper)
   const fieldInputs = getFields(data)
 
   return (

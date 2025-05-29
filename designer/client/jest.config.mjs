@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-restricted-imports
-import { projectDefaults } from '../../jest.config.js'
+import { projectDefaults } from '../../jest.config.mjs'
 
 /**
  * Jest project config
@@ -30,7 +30,9 @@ export default {
     `node_modules/(?!${[
       '@xgovformbuilder/govuk-react-jsx/.*',
       'nanoid', // Supports ESM only
-      'slug' // Supports ESM only
+      'slug', // Supports ESM only
+      '@defra/forms-engine-plugin',
+      '@defra/forms-model'
     ].join('|')}/)`
   ]
 }

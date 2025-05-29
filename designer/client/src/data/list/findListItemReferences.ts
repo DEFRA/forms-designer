@@ -2,6 +2,7 @@ import {
   ConditionType,
   hasConditionField,
   hasConditionGroup,
+  isConditionWrapper,
   type FormDefinition,
   type Item,
   type List
@@ -37,7 +38,7 @@ export function findListItemReferences(
 function flattenConditions(data: FormDefinition) {
   const { conditions: wrappers } = data
 
-  return wrappers.flatMap((wrapper) => {
+  return wrappers.filter(isConditionWrapper).flatMap((wrapper) => {
     const model = wrapper.value
     const conditions = model.conditions
     const conditionFields = conditions

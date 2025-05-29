@@ -1,4 +1,4 @@
-import { type FormDefinition } from '@defra/forms-model'
+import { isConditionWrapperV2, type FormDefinition } from '@defra/forms-model'
 
 /**
  * Find condition by name
@@ -11,6 +11,12 @@ export function findCondition(
 
   if (!condition) {
     throw Error(`Condition not found with name '${conditionName}'`)
+  }
+
+  if (isConditionWrapperV2(condition)) {
+    throw Error(
+      `Expected ConditionWrapper but found ConditionWrapperV2 for condition named '${conditionName}'`
+    )
   }
 
   return condition

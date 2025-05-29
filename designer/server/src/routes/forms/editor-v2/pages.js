@@ -29,7 +29,7 @@ export default [
 
       const definition = await forms.getDraftFormDefinition(formId, token)
 
-      if (definition.engine === Engine.V1) {
+      if (definition.engine !== Engine.V2) {
         return h
           .redirect(editorv2Path(slug, 'migrate'))
           .code(StatusCodes.SEE_OTHER)

@@ -6,6 +6,7 @@
 @use "components/masthead";
 @use "components/pages-panel-left";
 @use "components/pages-reorder-panel";
+@use "components/preview-error-panel";
 @use "components/preview-panel";
 @use "components/service-header";
 @use "components/sorting";
@@ -19,3 +20,4 @@
 
 @use "helpers";
 @use "editor";
+@use "editor2";

@@ -8,32 +8,35 @@ import {
 } from '~/src/conditions/types.js'
 import { type ConditionWrapper } from '~/src/form/form-definition/types.js'
 
-export function toPresentationString(
-  condition: Condition | ConditionRef | ConditionGroup
-) {
+type ConditionType = Condition | ConditionRef | ConditionGroup
+type ConditionDataType = ConditionGroupData | ConditionData | ConditionRefData
+
+export function toPresentationString(condition: ConditionType) {
   return `${condition.coordinatorString()}${condition.conditionString()}`
 }
 
-export function toExpression(
-  condition: Condition | ConditionRef | ConditionGroup
-) {
+export function toPresentationHtml(condition: ConditionType) {
+  return `${condition.coordinatorHtml()}${condition.conditionString()}`
+}
+
+export function toExpression(condition: ConditionType) {
   return `${condition.coordinatorString()}${condition.conditionExpression()}`
 }
 
 export const hasConditionField = (
-  condition?: ConditionGroupData | ConditionData | ConditionRefData
+  condition?: ConditionDataType
 ): condition is ConditionData => {
   return !!condition && 'field' in condition
 }
 
 export const hasConditionGroup = (
-  condition?: ConditionGroupData | ConditionData | ConditionRefData
+  condition?: ConditionDataType
 ): condition is ConditionGroupData => {
   return !!condition && 'conditions' in condition
 }
 
 export const hasConditionName = (
-  condition?: ConditionGroupData | ConditionData | ConditionRefData
+  condition?: ConditionDataType
 ): condition is ConditionRefData => {
   return !!condition && 'conditionName' in condition
 }

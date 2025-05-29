@@ -10,6 +10,7 @@ import '~/src/views/preview-components/telephonenumberfield.njk'
 import '~/src/views/preview-components/fileuploadfield.njk'
 import '~/src/views/preview-components/emailaddressfield.njk'
 
+import { ErrorPreview } from '~/src/javascripts/error-preview/error-preview'
 import {
   hideHtmlElement,
   showHtmlElement
@@ -39,11 +40,13 @@ export function setupPreview(componentType) {
 
   showHideForJs()
 
+  ErrorPreview.setupPreview(componentType)
+
   preview.render()
 
   return preview
 }
 
 /**
- * @import { Question, DateInputQuestion, EmailAddressQuestion, PhoneNumberQuestion, RadioSortableQuestion, ShortAnswerQuestion, UkAddressQuestion, PreviewQuestion, ComponentType } from '@defra/forms-model'
+ * @import { PreviewQuestion, ComponentType } from '@defra/forms-model'
  */

@@ -2,6 +2,7 @@ import {
   hasConditionField,
   hasConditionName,
   hasNestedCondition,
+  isConditionWrapper,
   isDuplicateCondition,
   type ConditionWrapper
 } from '@defra/forms-model'
@@ -92,10 +93,10 @@ export class SelectConditions extends Component<Props, State> {
 
   conditionsForPath(path?: string) {
     const { data } = this.context
-
+    const conditions = data.conditions.filter(isConditionWrapper)
     const fields = Object.values(this.fieldsForPath(path))
     const conditionsForPath: ConditionWrapper[] = []
-    const conditionsByTypeMap = conditionsByType(data.conditions)
+    const conditionsByTypeMap = conditionsByType(conditions)
 
     fields.forEach((field) => {
       this.handleConditions(
