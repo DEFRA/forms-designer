@@ -137,7 +137,7 @@ export function canSetRepeater(
  * @param { Page | undefined } page
  * @returns {boolean}
  */
-export function omitFileUploadComponent(page: Page | undefined) {
+export function omitFileUploadComponent(page: Page | undefined): boolean {
   if (page?.controller === ControllerType.Repeat) {
     return true
   }

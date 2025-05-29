@@ -134,8 +134,11 @@ export function filterQuestionTypes(
 ) {
   const formComponents = componentsSoFar.filter((c) => isFormType(c.type))
   const formComponentCount = formComponents.length
+  const shouldOmitFileUploadComponent = /** @type {boolean} */ (
+    omitFileUploadComponent(page)
+  )
   const preventFileUpload =
-    omitFileUploadComponent(page) ||
+    shouldOmitFileUploadComponent ||
     (formComponentCount === 1 && questionId === 'new')
 
   return preventFileUpload
