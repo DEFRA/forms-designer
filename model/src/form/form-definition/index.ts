@@ -2,7 +2,11 @@ import Joi, { type LanguageMessages } from 'joi'
 import { v4 as uuidV4 } from 'uuid'
 
 import { ComponentType } from '~/src/components/enums.js'
-import { type ComponentDef } from '~/src/components/types.js'
+import {
+  type ComponentDef,
+  type ContentComponentsDef,
+  type FileUploadFieldComponent
+} from '~/src/components/types.js'
 import {
   type ConditionData,
   type ConditionDataV2,
@@ -34,6 +38,7 @@ import {
   type RepeatSchema,
   type Section
 } from '~/src/form/form-definition/types.js'
+import { ControllerType } from '~/src/pages/enums.js'
 import { hasComponents } from '~/src/pages/helpers.js'
 
 const idSchemaOptional = Joi.string().uuid()
@@ -449,6 +454,26 @@ export const componentSchemaV2 = componentSchema
   })
   .description('Component schema for V2 forms')
 
+export const fileUploadComponentSchema = componentSchemaV2.keys({
+  type: Joi.string<ComponentType.FileUploadField>()
+    .trim()
+    .valid(ComponentType.FileUploadField)
+    .required()
+    .description('Component that can only be a FileUploadField')
+})
+
+export const contentComponentSchema = componentSchemaV2.keys({
+  type: Joi.string<ComponentType>()
+    .trim()
+    .valid(ComponentType.Details)
+    .valid(ComponentType.Html)
+    .valid(ComponentType.Markdown)
+    .valid(ComponentType.InsetText)
+    .valid(ComponentType.List)
+    .required()
+    .description('Content only component type (Details, Html, Markdown, etc.)')
+})
+
 export const repeaterComponentSchema = componentSchema.keys({
   type: Joi.string<Exclude<ComponentType, ComponentType.FileUploadField>>()
     .trim()
@@ -569,6 +594,19 @@ const eventsSchema = Joi.object<Events>()
       .description('Event handler triggered when the page data is saved')
   })
 
+export const pageUploadComponentsSchema = Joi.array<
+  FileUploadFieldComponent | ContentComponentsDef
+>()
+  .items(
+    fileUploadComponentSchema.required(),
+    contentComponentSchema.optional()
+  )
+  .unique('name')
+  .unique('id')
+  .min(1)
+  .max(2)
+  .description('Components allowed on Page Upload schema')
+
 /**
  * `/status` is a special route for providing a user's application status.
  *  It should not be configured via the designer.
@@ -647,12 +685,20 @@ export const pageSchemaV2 = pageSchema
         'Page title displayed at the top of the page (with support for empty titles in V2)'
       ),
     components: Joi.when('controller', {
-      is: Joi.string().trim().valid('RepeatPageController').required(),
-      then: Joi.array<ComponentDef>()
-        .items(repeaterComponentSchemaV2)
-        .unique('name')
-        .unique('id')
-        .description('UI components displayed on repeat page'),
+      switch: [
+        {
+          is: Joi.string().trim().valid(ControllerType.Repeat).required(),
+          then: Joi.array<ComponentDef>()
+            .items(repeaterComponentSchemaV2)
+            .unique('name')
+            .unique('id')
+            .description('UI components displayed on repeat page')
+        },
+        {
+          is: Joi.string().trim().valid(ControllerType.FileUpload).required(),
+          then: pageUploadComponentsSchema
+        }
+      ],
       otherwise: Joi.array<ComponentDef>()
         .items(componentSchemaV2)
         .unique('name')
