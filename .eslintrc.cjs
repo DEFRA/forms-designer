@@ -68,12 +68,12 @@ module.exports = {
           }
         ],
 
-        // Only show warnings for missing types
-        '@typescript-eslint/no-unsafe-argument': 'warn',
-        '@typescript-eslint/no-unsafe-assignment': 'warn',
-        '@typescript-eslint/no-unsafe-call': 'warn',
-        '@typescript-eslint/no-unsafe-member-access': 'warn',
-        '@typescript-eslint/no-unsafe-return': 'warn',
+        // Don't show eslint warnings for types - let TS handle
+        '@typescript-eslint/no-unsafe-argument': 'off',
+        '@typescript-eslint/no-unsafe-assignment': 'off',
+        '@typescript-eslint/no-unsafe-call': 'off',
+        '@typescript-eslint/no-unsafe-member-access': 'off',
+        '@typescript-eslint/no-unsafe-return': 'off',
 
         // Check type support for template string implicit `.toString()`
         '@typescript-eslint/restrict-template-expressions': [
