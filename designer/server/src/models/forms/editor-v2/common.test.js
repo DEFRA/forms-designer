@@ -1,14 +1,10 @@
 import {
-  buildDefinition,
-  buildQuestionPage,
-  buildSummaryPage,
   testFormDefinitionWithNoQuestions,
   testFormDefinitionWithSinglePage,
   testFormDefinitionWithTwoQuestions,
   testFormDefinitionWithoutSummary
 } from '~/src/__stubs__/form-definition.js'
 import {
-  findPage,
   getPageNum,
   getQuestionNum,
   getQuestionsOnPage,
@@ -32,29 +28,6 @@ describe('editor-v2 - model', () => {
     test('should return page number if proper page id - when no summary page', () => {
       const pageNum = getPageNum(testFormDefinitionWithoutSummary, 'p1')
       expect(pageNum).toBe(1)
-    })
-  })
-
-  describe('findPage', () => {
-    const pageId = '674012d9-8089-4333-a59c-3811ac4581ae'
-    const summaryPage = buildSummaryPage()
-
-    it('should get page if page exists with same id', () => {
-      const page = buildQuestionPage({ id: pageId })
-      const definition = buildDefinition({
-        pages: [page, summaryPage]
-      })
-      expect(findPage(definition, pageId)).toEqual(page)
-    })
-
-    it('should return undefined if page does not exist with same id', () => {
-      const page = buildQuestionPage({
-        id: '726ba00b-e3e5-44e1-ae65-8ae61c82cb5c'
-      })
-      const definition = buildDefinition({
-        pages: [page, summaryPage]
-      })
-      expect(findPage(definition, pageId)).toBeUndefined()
     })
   })
 

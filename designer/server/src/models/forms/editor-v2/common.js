@@ -157,16 +157,6 @@ export function tickBoxes(items, selectedItems) {
       : []
   )
 }
-
-/**
- * @param {FormDefinition} definition
- * @param {string} pageId
- * @returns { undefined | Page }
- */
-export function findPage({ pages }, pageId) {
-  return pages.find((page) => page.id === pageId)
-}
-
 /**
  * @import { ComponentDef, FormMetadata, FormDefinition, FormStatus, Page } from '@defra/forms-model'
  */
