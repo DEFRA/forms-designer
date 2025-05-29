@@ -3,6 +3,12 @@
   "version": "3.0.458",
   "description": "A hapi plugin providing the model for Defra forms",
   "homepage": "https://github.com/DEFRA/forms-designer/tree/main/model#readme",
+  "exports": {
+    ".": {
+      "import": "index.js"
+    },
+    "./stubs": "stubs.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/DEFRA/forms-designer.git",
