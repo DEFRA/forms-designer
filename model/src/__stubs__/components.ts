@@ -17,19 +17,15 @@ import { type Item, type List } from '~/src/form/form-definition/types.js'
 export function buildTextFieldComponent(
   partialTextField: Partial<TextFieldComponent> = {}
 ): TextFieldComponent {
-  const textFieldComponent: TextFieldComponent = {
+  return {
     id: '407dd0d7-cce9-4f43-8e1f-7d89cb698875',
     name: 'TextField',
     title: 'Text field',
-    type: ComponentType.TextField,
     hint: '',
     options: {},
-    schema: {}
-  }
-
-  return {
-    ...textFieldComponent,
-    ...partialTextField
+    schema: {},
+    ...partialTextField,
+    type: ComponentType.TextField
   }
 }
 
@@ -38,19 +34,15 @@ export function buildTextFieldComponent(
  * @returns {FileUploadFieldComponent}
  */
 export function buildFileUploadComponent(
-  partialFileUploadField: Partial<FileUploadFieldComponent>
+  partialFileUploadField: Partial<FileUploadFieldComponent> = {}
 ): FileUploadFieldComponent {
-  const fileUploadFieldComponent: FileUploadFieldComponent = {
+  return {
     name: 'FileUploadField',
-    type: ComponentType.FileUploadField,
     title: 'File Upload Field',
     options: {},
-    schema: {}
-  }
-
-  return {
-    ...fileUploadFieldComponent,
-    ...partialFileUploadField
+    schema: {},
+    ...partialFileUploadField,
+    type: ComponentType.FileUploadField
   }
 }
 
@@ -62,17 +54,13 @@ export function buildFileUploadComponent(
 export function buildAutoCompleteComponent(
   partialAutoCompleteField: Partial<AutocompleteFieldComponent>
 ): AutocompleteFieldComponent {
-  const autocompleteComponent: AutocompleteFieldComponent = {
+  return {
     name: 'AutoCompleteField',
     title: 'What languages do you speak?',
-    type: ComponentType.AutocompleteField,
     list: 'AutoCompleteList',
-    options: {}
-  }
-
-  return {
-    ...autocompleteComponent,
-    ...partialAutoCompleteField
+    options: {},
+    ...partialAutoCompleteField,
+    type: ComponentType.AutocompleteField
   }
 }
 
@@ -83,17 +71,13 @@ export function buildAutoCompleteComponent(
 export function buildRadioComponent(
   partialListComponent: Partial<RadiosFieldComponent> = {}
 ): RadiosFieldComponent {
-  const radioFieldComponent: RadiosFieldComponent = {
+  return {
     name: 'RadioField',
     title: 'Which country do you live in?',
-    type: ComponentType.RadiosField,
     list: 'RadioList',
-    options: {}
-  }
-
-  return {
-    ...radioFieldComponent,
-    ...partialListComponent
+    options: {},
+    ...partialListComponent,
+    type: ComponentType.RadiosField
   }
 }
 
@@ -104,17 +88,13 @@ export function buildRadioComponent(
 export function buildCheckboxComponent(
   partialListComponent: Partial<CheckboxesFieldComponent>
 ): CheckboxesFieldComponent {
-  const checkboxesFieldComponent: CheckboxesFieldComponent = {
+  return {
     name: 'FellowshipOfTheRing',
     title: 'Which are your favourite characters from the fellowship?',
-    type: ComponentType.CheckboxesField,
     list: 'CheckboxList',
-    options: {}
-  }
-
-  return {
-    ...checkboxesFieldComponent,
-    ...partialListComponent
+    options: {},
+    ...partialListComponent,
+    type: ComponentType.CheckboxesField
   }
 }
 
