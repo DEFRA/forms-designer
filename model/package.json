@@ -3,11 +3,17 @@
   "version": "3.0.458",
   "description": "A hapi plugin providing the model for Defra forms",
   "homepage": "https://github.com/DEFRA/forms-designer/tree/main/model#readme",
+  "types": "dist/types/index.d.ts",
+  "main": "dist/module/index.js",
   "exports": {
     ".": {
-      "import": "index.js"
+      "import": "./dist/module/index.js",
+      "types": "./dist/types/index.d.ts"
     },
-    "./stubs": "stubs.js"
+    "./stubs": {
+      "import": "./dist/module/stubs.js",
+      "types": "./dist/types/stubs.d.ts"
+    }
   },
   "repository": {
     "type": "git",
@@ -17,8 +23,6 @@
   "license": "OGL-UK-3.0",
   "sideEffects": false,
   "type": "module",
-  "main": "dist/module/index.js",
-  "types": "dist/types/index.d.ts",
   "scripts": {
     "build": "npm run build:types && npm run build:node && npm run build:schemas",
     "build:node": "babel --delete-dir-on-start --extensions \".ts,.js\" --ignore \"**/*.test.*\" --copy-files --no-copy-ignored --source-maps --out-dir ./dist/module ./src",

@@ -1,6 +1,6 @@
-import { ComponentType, type ComponentDef } from '@defra/forms-model'
-
+import { ComponentType } from '~/src/components/enums.js'
 import { hasContent, hasContentField } from '~/src/components/helpers.js'
+import { type ComponentDef } from '~/src/components/types.js'
 
 describe('Type guards', () => {
   describe('hasContent', () => {

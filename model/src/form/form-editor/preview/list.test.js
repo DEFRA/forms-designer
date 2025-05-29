@@ -248,5 +248,6 @@ describe('list', () => {
 })
 
 /**
- * @import { ListElement, HTMLBuilder, ListElements, BaseSettings} from '@defra/forms-model'
+ * @import {ListElement} from '~/src/form/form-editor/types.js'
+ * @import { HTMLBuilder, ListElements, BaseSettings } from '~/src/form/form-editor/preview/types.js'
  */

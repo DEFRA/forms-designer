@@ -281,6 +281,21 @@ describe('Form definition schema', () => {
     })
   })
 
+  // describe('Page level validation', () => {
+  //   describe('FileUpload controller', () => {
+  //     it('should not allow input fields', () => {
+  //       const fileUploadPage: PageFileUpload = {}
+  //
+  //       // export type ContentComponentsDef =
+  //       //     | DetailsComponent
+  //       //     | HtmlComponent
+  //       //     | MarkdownComponent
+  //       //     | InsetTextComponent
+  //       //     | ListComponent
+  //     })
+  //   })
+  // })
+
   describe('Form Definition', () => {
     describe('formDefinitionV2Schema', () => {
       const component1 = buildNumberFieldComponent({

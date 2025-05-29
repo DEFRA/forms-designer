@@ -1,4 +1,12 @@
-import { type PageRepeat } from '~/dist/types/index.js'
+import {
+  buildCheckboxComponent,
+  buildTextFieldComponent
+} from '~/src/__stubs__/components.js'
+import {
+  buildFileUploadPage,
+  buildQuestionPage,
+  buildRepeaterPage
+} from '~/src/__stubs__/pages.js'
 import {
   type Page,
   type PageFileUpload,
@@ -208,26 +216,20 @@ describe('helpers', () => {
     })
 
     it('should allow repeater to be set on a standard page', () => {
-      const page: PageQuestion = {
+      const page = buildQuestionPage({
         title: 'sdsfdf',
         path: '/sdsfdf',
         components: [
-          {
+          buildCheckboxComponent({
             type: ComponentType.CheckboxesField,
             title: 'What is your favourite adventure?',
             name: 'jnUjwa',
-            shortDescription: 'Your favourite adventure',
-            hint: '',
-            list: 'sQlrSm',
-            options: {
-              required: true
-            },
-            id: '590c50e0-04a3-4e95-80c9-c21a61a0f557'
-          }
+            shortDescription: 'Your favourite adventure'
+          })
         ],
         next: [],
         id: '0f711e08-3801-444d-8e37-a88867c48f04'
-      }
+      })
 
       expect(canSetRepeater(page)).toBe(true)
     })
@@ -235,71 +237,25 @@ describe('helpers', () => {
 
   describe('omitFileUploadComponent', () => {
     it('should return true if page is a repeater page', () => {
-      const page: PageRepeat = {
-        title: 'Repeater Page',
-        path: '/repeater-page',
-        components: [
-          {
-            type: ComponentType.TextField,
-            title: 'Simple text field',
-            name: 'IHAIzC',
-            shortDescription: 'Your simple text field',
-            hint: '',
-            options: {},
-            schema: {},
-            id: 'ee83413e-31b6-4158-98e0-4611479582ce'
-          }
-        ],
-        next: [],
-        id: '32888028-61db-40fc-b255-80bc67829d31',
-        controller: ControllerType.Repeat,
-        repeat: {
-          options: { name: 'fawfed', title: 'Simple question responses' },
-          schema: { min: 1, max: 3 }
-        }
-      }
+      const page = buildRepeaterPage()
       expect(omitFileUploadComponent(page)).toBe(true)
     })
     it('should return true if a file upload component already exists', () => {
-      const page: PageFileUpload = {
-        title: 'Supporting evidence',
-        path: '/file-upload',
-        components: [
-          {
-            type: ComponentType.FileUploadField,
-            title: 'What is your favourite adventure?',
-            name: 'jnUjwa',
-            shortDescription: 'Your favourite adventure',
-            hint: '',
-            options: {
-              required: true
-            },
-            schema: {},
-            id: '590c50e0-04a3-4e95-80c9-c21a61a0f557'
-          }
-        ],
-        next: [],
-        controller: ControllerType.FileUpload,
-        id: '0f711e08-3801-444d-8e37-a88867c48f04'
-      }
+      const page = buildFileUploadPage()
       expect(omitFileUploadComponent(page)).toBe(true)
     })
     it('should return true if more than one components exist', () => {
-      const page: PageQuestion = {
+      const page: PageQuestion = buildQuestionPage({
         title: 'Empty page',
         path: '/empty-page',
         components: [
-          {
-            type: ComponentType.TextField,
+          buildTextFieldComponent({
+            id: 'ee83413e-31b6-4158-98e0-4611479582ce',
             title: 'Simple text field',
             name: 'IHAIzC',
-            shortDescription: 'Your simple text field',
-            hint: '',
-            options: {},
-            schema: {},
-            id: 'ee83413e-31b6-4158-98e0-4611479582ce'
-          },
-          {
+            shortDescription: 'Your simple text field'
+          }),
+          buildTextFieldComponent({
             type: ComponentType.TextField,
             title: 'Simple text field 2',
             name: 'IHAIzD',
@@ -308,11 +264,9 @@ describe('helpers', () => {
             options: {},
             schema: {},
             id: 'c02ba468-61a3-43f8-bd6a-768bf906d402'
-          }
-        ],
-        next: [],
-        id: '0f711e08-3801-444d-8e37-a88867c48f04'
-      }
+          })
+        ]
+      })
       expect(omitFileUploadComponent(page)).toBe(true)
     })
     it('should return false no components exist', () => {
