@@ -1,10 +1,9 @@
 import { ValidationError } from 'joi'
 
+import { buildNumberFieldComponent } from '~/src/__stubs__/components.js'
+import { buildQuestionPage } from '~/src/__stubs__/pages.js'
 import { ComponentType } from '~/src/components/enums.js'
-import {
-  type ComponentDef,
-  type NumberFieldComponent
-} from '~/src/components/types.js'
+import { type ComponentDef } from '~/src/components/types.js'
 import {
   formDefinitionSchema,
   formDefinitionV2Schema
@@ -16,31 +15,6 @@ import {
   type PageSummary
 } from '~/src/form/form-definition/types.js'
 import { ControllerPath, ControllerType } from '~/src/index.js'
-
-const buildQuestionPage = (
-  partialQuestion: Partial<PageQuestion>
-): PageQuestion => {
-  return {
-    title: 'Question Page',
-    path: '/question-page',
-    components: [],
-    next: [],
-    ...partialQuestion
-  }
-}
-
-const buildNumberFieldComponent = (
-  partialComponent: Partial<NumberFieldComponent>
-): NumberFieldComponent => {
-  return {
-    name: 'year',
-    title: 'Year',
-    options: {},
-    schema: {},
-    ...partialComponent,
-    type: ComponentType.NumberField
-  }
-}
 
 describe('Form definition schema', () => {
   let page: PageQuestion
@@ -280,21 +254,6 @@ describe('Form definition schema', () => {
       })
     })
   })
-
-  // describe('Page level validation', () => {
-  //   describe('FileUpload controller', () => {
-  //     it('should not allow input fields', () => {
-  //       const fileUploadPage: PageFileUpload = {}
-  //
-  //       // export type ContentComponentsDef =
-  //       //     | DetailsComponent
-  //       //     | HtmlComponent
-  //       //     | MarkdownComponent
-  //       //     | InsetTextComponent
-  //       //     | ListComponent
-  //     })
-  //   })
-  // })
 
   describe('Form Definition', () => {
     describe('formDefinitionV2Schema', () => {

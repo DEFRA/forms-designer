@@ -3,6 +3,7 @@ import {
   type AutocompleteFieldComponent,
   type CheckboxesFieldComponent,
   type FileUploadFieldComponent,
+  type NumberFieldComponent,
   type RadiosFieldComponent,
   type TextFieldComponent
 } from '~/src/components/types.js'
@@ -165,5 +166,18 @@ export function buildList(partialList: Partial<List> = {}): List {
       })
     ],
     ...partialList
+  }
+}
+
+export function buildNumberFieldComponent(
+  partialComponent: Partial<NumberFieldComponent>
+): NumberFieldComponent {
+  return {
+    name: 'year',
+    title: 'Year',
+    options: {},
+    schema: {},
+    ...partialComponent,
+    type: ComponentType.NumberField
   }
 }
