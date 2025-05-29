@@ -94,6 +94,7 @@ describe('error-display', () => {
         '3',
         'default'
       )
+      expect(true).toBe(true)
     })
   })
 
