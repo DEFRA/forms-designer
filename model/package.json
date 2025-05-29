@@ -8,10 +8,12 @@
   "exports": {
     ".": {
       "import": "./dist/module/index.js",
+      "default": "./dist/module/index.js",
       "types": "./dist/types/index.d.ts"
     },
     "./stubs": {
       "import": "./dist/module/stubs.js",
+      "default": "./dist/module/stubs.js",
       "types": "./dist/types/stubs.d.ts"
     }
   },
