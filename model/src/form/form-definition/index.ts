@@ -449,6 +449,26 @@ export const componentSchemaV2 = componentSchema
   })
   .description('Component schema for V2 forms')
 
+export const repeaterComponentSchema = componentSchema.keys({
+  type: Joi.string<Exclude<ComponentType, ComponentType.FileUploadField>>()
+    .trim()
+    .disallow('FileUploadField')
+    .required()
+    .description(
+      'Component type (TextField, RadioButtons, DateField, etc., disallows FileUploadField)'
+    )
+})
+
+export const repeaterComponentSchemaV2 = componentSchemaV2.keys({
+  type: Joi.string<Exclude<ComponentType, ComponentType.FileUploadField>>()
+    .trim()
+    .disallow('FileUploadField')
+    .required()
+    .description(
+      'Component type (TextField, RadioButtons, DateField, etc., disallows FileUploadField)'
+    )
+})
+
 const nextSchema = Joi.object<Link>()
   .description('Navigation link defining where to go after completing a page')
   .keys({
@@ -573,10 +593,17 @@ export const pageSchema = Joi.object<Page>()
       .trim()
       .optional()
       .description('Custom controller class name for special page behavior'),
-    components: Joi.array<ComponentDef>()
-      .items(componentSchema)
-      .unique('name')
-      .description('UI components displayed on this page'),
+    components: Joi.when('controller', {
+      is: Joi.string().trim().valid('RepeatPageController').required(),
+      then: Joi.array<ComponentDef>()
+        .items(repeaterComponentSchema)
+        .unique('name')
+        .description('UI components displayed on repeat page'),
+      otherwise: Joi.array<ComponentDef>()
+        .items(componentSchema)
+        .unique('name')
+        .description('UI components displayed on this page')
+    }),
     repeat: Joi.when('controller', {
       is: Joi.string().trim().valid('RepeatPageController').required(),
       then: pageRepeatSchema
@@ -619,11 +646,19 @@ export const pageSchemaV2 = pageSchema
       .description(
         'Page title displayed at the top of the page (with support for empty titles in V2)'
       ),
-    components: Joi.array<ComponentDef>()
-      .items(componentSchemaV2)
-      .unique('name')
-      .unique('id')
-      .description('Components schema for V2 forms'),
+    components: Joi.when('controller', {
+      is: Joi.string().trim().valid('RepeatPageController').required(),
+      then: Joi.array<ComponentDef>()
+        .items(repeaterComponentSchemaV2)
+        .unique('name')
+        .unique('id')
+        .description('UI components displayed on repeat page'),
+      otherwise: Joi.array<ComponentDef>()
+        .items(componentSchemaV2)
+        .unique('name')
+        .unique('id')
+        .description('Components schema for V2 forms')
+    }),
     condition: Joi.string()
       .trim()
       .valid(conditionIdRef)

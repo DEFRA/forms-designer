@@ -2,16 +2,19 @@ import { ValidationError } from 'joi'
 
 import {
   buildDateComponent,
+  buildFileUploadComponent,
   buildNumberFieldComponent,
   buildRadiosComponent,
   buildTextFieldComponent
 } from '~/src/__stubs__/components.js'
-import { buildQuestionPage } from '~/src/__stubs__/pages.js'
+import { buildQuestionPage, buildRepeaterPage } from '~/src/__stubs__/pages.js'
 import { ComponentType } from '~/src/components/enums.js'
 import { type ComponentDef } from '~/src/components/types.js'
 import {
   formDefinitionSchema,
-  formDefinitionV2Schema
+  formDefinitionV2Schema,
+  pageSchema,
+  pageSchemaV2
 } from '~/src/form/form-definition/index.js'
 import {
   type ConditionWrapperV2,
@@ -505,6 +508,37 @@ describe('Form definition schema', () => {
         expect(validated.error).toEqual(
           new ValidationError('"lists[1]" contains a duplicate value', [], {})
         )
+      })
+    })
+  })
+
+  describe('Page level validation', () => {
+    describe('Upload rules', () => {
+      it('should not allow repeat pages with file upload file', () => {
+        const page = buildRepeaterPage({
+          components: [buildFileUploadComponent()]
+        })
+        const result = pageSchema.validate(page, { abortEarly: false })
+        const result2 = pageSchemaV2.validate(page, { abortEarly: false })
+        expect(result.error).toBeDefined()
+        expect(result2.error).toBeDefined()
+        const expectedValidationError = new ValidationError(
+          '"components[0].type" contains an invalid value',
+          [],
+          page
+        )
+        expect(result.error).toEqual(expectedValidationError)
+        expect(result2.error).toEqual(expectedValidationError)
+      })
+
+      it('should allow normal page', () => {
+        const page = buildRepeaterPage({
+          components: [buildTextFieldComponent()]
+        })
+        const result = pageSchema.validate(page, { abortEarly: false })
+        const result2 = pageSchemaV2.validate(page, { abortEarly: false })
+        expect(result.error).toBeUndefined()
+        expect(result2.error).toBeUndefined()
       })
     })
   })
