@@ -1,0 +1,42 @@
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
+
+{% set source = params.source %}
+
+<form class="form" method="post">
+  {% call govukFieldset({
+    legend: {
+      text: params.legendText,
+      classes: "govuk-fieldset__legend--s",
+      isPageHeading: false
+    }
+  }) %}
+    <div class="govuk-form-group">
+      <label class="govuk-label" for="sort">{{ source.label.text }}</label>
+      <select class="govuk-select" id="{{ source.id }}" name="{{ source.name }}">
+        {% for item in source.items %}
+          {% if item.group %}
+            <optgroup label="Page {{ item.number }}: {{ item.page.title }}">
+              {% for component in item.components %}
+                <option value="{{ component.title }}">{{ component.title }}</option>
+              {% endfor %}
+            </optgroup>
+          {% else %}
+            {% for component in item.components %}
+              <option value="{{ component.id }}">Page {{ item.number }}: {{ component.title }}</option>
+            {% endfor %}
+          {% endif %}
+        {% endfor %}
+      </select>
+    </div>
+    {{ govukSelect() }}
+    {{ govukInput() }}
+  {% endcall %}
+
+  {{ govukButton({
+    text: 'Save and continue'
+  }) }}
+</form>

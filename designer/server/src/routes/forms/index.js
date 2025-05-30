@@ -5,6 +5,7 @@ import contactPhone from '~/src/routes/forms/contact/phone.js'
 import create from '~/src/routes/forms/create.js'
 import edit from '~/src/routes/forms/edit.js'
 import editorCheckAnswersSettings from '~/src/routes/forms/editor-v2/check-answers-settings.js'
+import editorCondition from '~/src/routes/forms/editor-v2/condition.js'
 import editorConditions from '~/src/routes/forms/editor-v2/conditions.js'
 import editorError from '~/src/routes/forms/editor-v2/error.js'
 import editorGuidance from '~/src/routes/forms/editor-v2/guidance.js'
@@ -40,6 +41,7 @@ export default [
   editorState,
   editorListItemDelete,
   editorCheckAnswersSettings,
+  editorCondition,
   editorConditions,
   editorError,
   library,
