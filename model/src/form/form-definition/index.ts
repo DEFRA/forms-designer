@@ -844,9 +844,10 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
       .default('V1')
       .description('Form engine version to use (V1 or V2)'),
     schema: Joi.number()
+      .integer()
       .valid(SchemaVersion.V1)
       .default(SchemaVersion.V1)
-      .description('Form schema version to use (V1 or V2)'),
+      .description('Form schema version to use (1 or 2)'),
     name: Joi.string()
       .trim()
       .allow('')
@@ -907,7 +908,10 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
 
 export const formDefinitionV2Schema = formDefinitionSchema
   .keys({
-    schema: Joi.number().valid(SchemaVersion.V2),
+    schema: Joi.number()
+      .integer()
+      .valid(SchemaVersion.V2)
+      .description('Form schema version to use (2)'),
     pages: Joi.array<Page>()
       .items(pageSchemaV2)
       .required()
