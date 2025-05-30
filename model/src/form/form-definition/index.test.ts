@@ -599,27 +599,19 @@ describe('Form definition schema', () => {
     })
 
     describe('Upload rules', () => {
-      it('should not allow repeat pages with file upload file', () => {
-        const page = buildRepeaterPage({
-          components: [buildFileUploadComponent()]
-        })
-        const result = pageSchema.validate(page, { abortEarly: false })
-        const result2 = pageSchemaV2.validate(page, { abortEarly: false })
-        expect(result.error).toBeDefined()
-        expect(result2.error).toBeDefined()
-        const expectedValidationError = new ValidationError(
-          '"components[0].type" contains an invalid value',
-          [],
-          page
-        )
-        expect(result.error).toEqual(expectedValidationError)
-        expect(result2.error).toEqual(expectedValidationError)
-      })
-
       it('should allow single content field with FileUploadPage', () => {
         const component = buildFileUploadComponent()
         const page = buildFileUploadPage({
           components: [component, buildMarkdownComponent({ content: 'test' })]
+        })
+        const result = pageSchemaV2.validate(page)
+        expect(result.error).toBeUndefined()
+      })
+
+      it('should allow single content field with FileUploadPage content first', () => {
+        const component = buildFileUploadComponent()
+        const page = buildFileUploadPage({
+          components: [buildMarkdownComponent({ content: 'test' }), component]
         })
         const result = pageSchemaV2.validate(page)
         expect(result.error).toBeUndefined()
