@@ -1,7 +1,9 @@
 import {
   ComponentType,
   hasComponents,
+  hasComponentsEvenIfNoNext,
   hasListField,
+  isConditionWrapperV2,
   isFormType
 } from '@defra/forms-model'
 import { getTraceId } from '@defra/hapi-tracing'
@@ -282,7 +284,29 @@ export function requiresPageTitle(page) {
 }
 
 /**
+ * Creates runtime form model accessors for condition processing
+ * @param {FormDefinition} definition
+ * @returns {RuntimeFormModel}
+ */
+export function createRuntimeFormModel(definition) {
+  const { pages, conditions, lists } = definition
+  const components = pages.flatMap((page) =>
+    hasComponentsEvenIfNoNext(page) ? page.components : []
+  )
+
+  const v2Conditions = conditions.filter(isConditionWrapperV2)
+
+  return {
+    getListById: (listId) => lists.find((list) => list.id === listId),
+    getComponentById: (componentId) =>
+      components.find((component) => component.id === componentId),
+    getConditionById: (conditionId) =>
+      v2Conditions.find((condition) => condition.id === conditionId)
+  }
+}
+
+/**
  * @import { ErrorDetailsItem } from '~/src/common/helpers/types.js'
- * @import { ComponentDef, FormDefinition, List, Page, QuestionSessionState, ListComponentsDef } from '@defra/forms-model'
+ * @import { ComponentDef, FormDefinition, List, Page, QuestionSessionState, ListComponentsDef, RuntimeFormModel } from '@defra/forms-model'
  * @import Wreck from '@hapi/wreck'
  */

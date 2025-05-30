@@ -1,10 +1,20 @@
 import { YesNoField } from '@defra/forms-engine-plugin/engine/components/YesNoField.js'
 import { createComponent } from '@defra/forms-engine-plugin/helpers.js'
-import { ComponentType, FormStatus, randomId } from '@defra/forms-model'
+import {
+  ComponentType,
+  ConditionsModel,
+  FormStatus,
+  convertConditionWrapperFromV2,
+  isConditionWrapperV2,
+  randomId
+} from '@defra/forms-model'
 
 import { QuestionTypeDescriptions } from '~/src/common/constants/editor.js'
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
-import { getPageFromDefinition } from '~/src/lib/utils.js'
+import {
+  createRuntimeFormModel,
+  getPageFromDefinition
+} from '~/src/lib/utils.js'
 import { advancedSettingsPerComponentType } from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
 import {
   getFieldList,
@@ -77,14 +87,13 @@ export function hasDataOrErrorForDisplay(
 
 /**
  * @param { ComponentType | undefined } questionType
+ * @returns {{ baseErrors: any[], advancedSettingsErrors: any[] }}
  */
 export function getErrorTemplates(questionType) {
   if (questionType === ComponentType.YesNoField) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return YesNoField.getAllPossibleErrors()
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const component = createComponent(
     /** @type {ComponentDef} */ ({
       type: questionType ?? ComponentType.Html,
@@ -96,11 +105,9 @@ export function getErrorTemplates(questionType) {
     {}
   )
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const errorTemplates =
     'getAllPossibleErrors' in component
-      ? // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-        component.getAllPossibleErrors()
+      ? component.getAllPossibleErrors()
       : { baseErrors: [], advancedSettingsErrors: [] }
 
   return errorTemplates
@@ -241,7 +248,7 @@ export function getListDetails(state, questionFields) {
  * @param {string} questionId
  * @param {string} stateId
  * @param {ValidationFailure<FormEditor>} [validation]
- * @param {QuestionSessionState} [state]
+ * @param {{ state?: QuestionSessionState, currentTab?: string, conditionsValidation?: ValidationFailure<any> }} [options]
  */
 export function questionDetailsViewModel(
   metadata,
@@ -250,8 +257,9 @@ export function questionDetailsViewModel(
   questionId,
   stateId,
   validation,
-  state
+  options = {}
 ) {
+  const { state, currentTab = 'question', conditionsValidation } = options
   const questionType = state?.questionType
   // prettier-ignore
   const details = getDetails(metadata, definition, pageId, questionId, questionType)
@@ -284,6 +292,42 @@ export function questionDetailsViewModel(
   const pageTitle = `Edit question ${details.questionNum} - ${formTitle}`
   const errorTemplates = getErrorTemplates(questionType)
 
+  const page = definition.pages.find((p) => p.id === pageId)
+  const pageCondition = page?.condition
+  const pageConditionDetails = pageCondition
+    ? definition.conditions.find((c) => c.name === pageCondition)
+    : null
+
+  let pageConditionPresentationString = null
+  if (pageConditionDetails) {
+    const accessors = createRuntimeFormModel(definition)
+
+    const conditionAsV1 = convertConditionWrapperFromV2(
+      /** @type {ConditionWrapperV2} */ (pageConditionDetails),
+      accessors
+    )
+    pageConditionPresentationString = ConditionsModel.from(
+      conditionAsV1.value
+    ).toPresentationString()
+  }
+
+  const v2Conditions = definition.conditions
+    .filter(isConditionWrapperV2)
+    .sort((a, b) => a.displayName.localeCompare(b.displayName))
+
+  const tabs = [
+    {
+      id: 'question',
+      label: 'Question',
+      active: currentTab === 'question'
+    },
+    {
+      id: 'conditions',
+      label: 'Conditions',
+      active: currentTab === 'conditions'
+    }
+  ]
+
   return {
     listDetails: getListDetails(state, questionFieldsOverride),
     state,
@@ -291,10 +335,10 @@ export function questionDetailsViewModel(
     ...baseModelFields(metadata.slug, pageTitle, pageHeading),
     name: details.question.name || randomId(),
     questionId,
+    stateId,
     basePageFields,
     uploadFields,
     extraFields,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     errorTemplates,
     cardTitle: `Question ${details.questionNum}`,
     cardCaption: `Page ${details.pageNum}`,
@@ -315,11 +359,24 @@ export function questionDetailsViewModel(
     deleteUrl,
     isOpen: hasDataOrErrorForDisplay(extraFieldNames, errorList, extraFields),
     getFieldType: (/** @type {GovukField} */ field) =>
-      getFieldComponentType(field)
+      getFieldComponentType(field),
+    tabs,
+    currentTab,
+    pageCondition,
+    pageConditionDetails,
+    pageConditionPresentationString,
+    allConditions: v2Conditions,
+    conditionsManagerPath: editorv2Path(metadata.slug, 'conditions'),
+    pageConditionsApiUrl: editorv2Path(
+      metadata.slug,
+      `page/${pageId}/conditions`
+    ),
+    conditionsFormErrors: conditionsValidation?.formErrors,
+    conditionsFormValues: conditionsValidation?.formValues
   }
 }
 
 /**
- * @import { ComponentDef, QuestionSessionState, FormMetadata, FormDefinition, FormEditor, GovukField, InputFieldsComponentsDef, TextFieldComponent } from '@defra/forms-model'
+ * @import { ComponentDef, QuestionSessionState, FormMetadata, FormDefinition, FormEditor, GovukField, InputFieldsComponentsDef, TextFieldComponent, ConditionWrapperV2 } from '@defra/forms-model'
  * @import { ErrorDetailsItem, ValidationFailure } from '~/src/common/helpers/types.js'
  */

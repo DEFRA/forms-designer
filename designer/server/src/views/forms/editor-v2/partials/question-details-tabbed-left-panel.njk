@@ -1,0 +1,107 @@
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "grid-layout/macro.njk" import appGridLayout %}
+{% from "editor-card/macro.njk" import appEditorCard %}
+{% from "icon-button/macro.njk" import appIconButton %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% call appEditorCard({
+  title: cardTitle,
+  caption: cardCaption,
+  heading: cardHeading,
+  errorList: errorList
+}) %}
+
+  <!-- Tabs Navigation -->
+  <div class="govuk-tabs" data-module="govuk-tabs">
+    <h2 class="govuk-tabs__title">Contents</h2>
+    <ul class="govuk-tabs__list" role="tablist">
+      {% for tab in tabs %}
+        <li class="govuk-tabs__list-item{% if tab.active %} govuk-tabs__list-item--selected{% endif %}" role="presentation">
+          <a class="govuk-tabs__tab" 
+             href="#tab-{{ tab.id }}" 
+             id="tab_tab-{{ tab.id }}" 
+             role="tab" 
+             aria-controls="tab-{{ tab.id }}"
+             {% if tab.active %}aria-selected="true" tabindex="0"{% else %}aria-selected="false" tabindex="-1"{% endif %}>
+            {{ tab.label }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+
+    <!-- Question Tab Panel -->
+    <div class="govuk-tabs__panel{% if currentTab !== 'question' %} govuk-tabs__panel--hidden{% endif %}" 
+         id="tab-question" 
+         role="tabpanel" 
+         aria-labelledby="tab_tab-question">
+      
+      <form class="form" method="post" id="question-form">
+        {%- include "forms/editor-v2/partials/question-details-base.njk" -%}
+
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+        <h2 class="govuk-heading-m">Question settings</h2>
+
+        {{ govukSummaryList({
+          rows: [
+          {
+            key: {
+              text: 'Type of information'
+            },
+            value: {
+              text: questionTypeDesc
+            },
+            actions: {
+              items: [
+                {
+                  href: changeTypeUrl,
+                  text: 'Change',
+                  visuallyHiddenText: 'type of question',
+                  classes: 'govuk-link--no-visited-state'
+                }
+              ]
+            }
+          }]
+        }) }}
+
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+
+        <div class="govuk-button-group govuk-!-margin-top-6">
+          {% if questionId != 'new' %}
+            {{ appIconButton({
+              label: "Preview page",
+              href: previewPageUrl,
+              id: "preview-page"
+            }) }}
+          {% endif %}
+
+          {{ govukButton({
+            text: 'Save and continue'
+          }) }}
+
+          {% if questionId != 'new' %}
+            <a href="{{ deleteUrl }}" class="govuk-link govuk-link--no-visited-state">
+              Delete question
+            </a>
+          {% endif %}
+        </div>
+      </form>
+    </div>
+
+    <!-- Conditions Tab Panel -->
+    <div class="govuk-tabs__panel{% if currentTab !== 'conditions' %} govuk-tabs__panel--hidden{% endif %}" 
+         id="tab-conditions" 
+         role="tabpanel" 
+         aria-labelledby="tab_tab-conditions">
+      
+      {%- include "forms/editor-v2/partials/question-conditions-panel.njk" -%}
+    </div>
+
+  </div>
+
+{% endcall %}
+
+<script>
+  // Initialize GOV.UK tabs
+  import { Tabs } from 'govuk-frontend'
+  new Tabs(document.querySelector('[data-module="govuk-tabs"]'))
+</script> 

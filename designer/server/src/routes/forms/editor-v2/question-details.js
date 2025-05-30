@@ -280,6 +280,8 @@ export default [
       const { token } = auth.credentials
       const { slug, pageId, questionId, stateId } = params
 
+      const currentTab = /** @type {string} */ (query.tab) ?? 'question'
+
       // Form metadata and page components
       const { page, metadata, definition } = await getFormPage(
         slug,
@@ -309,7 +311,19 @@ export default [
         )
       }
 
-      const validation = getValidationErrorsFromSession(yar, errorKey)
+      const validation =
+        /** @type {ValidationFailure<FormEditor> | undefined} */ (
+          getValidationErrorsFromSession(yar, errorKey)
+        )
+
+      // Also check for conditions validation errors
+      const conditionsValidation =
+        /** @type {ValidationFailure<any> | undefined} */ (
+          getValidationErrorsFromSession(
+            yar,
+            sessionNames.validationFailure.editorPageConditions
+          )
+        )
 
       const state = buildQuestionSessionState(
         yar,
@@ -341,7 +355,7 @@ export default [
           questionId,
           stateId,
           validation,
-          state
+          { state, currentTab, conditionsValidation }
         )
       )
     },
@@ -461,7 +475,8 @@ export default [
 ]
 
 /**
- * @import { ComponentDef, FormDefinition, FormEditorInputQuestionDetails, Item, ListItem, QuestionSessionState, FormEditorInputQuestion } from '@defra/forms-model'
+ * @import { ComponentDef, FormDefinition, FormEditorInputQuestionDetails, Item, ListItem, QuestionSessionState, FormEditorInputQuestion, FormEditor } from '@defra/forms-model'
  * @import Boom from '@hapi/boom'
  * @import { Request, ResponseToolkit, ServerRoute } from '@hapi/hapi'
+ * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

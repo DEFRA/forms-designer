@@ -5,63 +5,91 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 
-{% call appEditorCard({
-  title: cardTitle,
-  caption: cardCaption,
-  heading: cardHeading,
-  errorList: errorList
-}) %}
-  <form class="form" method="post" id="question-form">
+<!-- Add Tabs Navigation at top level -->
+<div class="govuk-tabs" data-module="govuk-tabs">
+  <h2 class="govuk-tabs__title">Contents</h2>
+  <ul class="govuk-tabs__list" role="tablist">
+    <li class="govuk-tabs__list-item{{ ' govuk-tabs__list-item--selected' if currentTab == 'question' }}" role="presentation">
+      <a class="govuk-tabs__tab" href="#tab-question" id="tab_tab-question" role="tab" aria-controls="tab-question" aria-selected="{{ 'true' if currentTab == 'question' else 'false' }}" tabindex="{{ '0' if currentTab == 'question' else '-1' }}">
+        Question
+      </a>
+    </li>
+    <li class="govuk-tabs__list-item{{ ' govuk-tabs__list-item--selected' if currentTab == 'conditions' }}" role="presentation">
+      <a class="govuk-tabs__tab" href="#tab-conditions" id="tab_tab-conditions" role="tab" aria-controls="tab-conditions" aria-selected="{{ 'true' if currentTab == 'conditions' else 'false' }}" tabindex="{{ '0' if currentTab == 'conditions' else '-1' }}">
+        Conditions
+      </a>
+    </li>
+  </ul>
 
-  {%- include "../../../../views/forms/editor-v2/partials/question-details-base.njk" -%}
+  <!-- Question Tab Panel -->
+  <div class="govuk-tabs__panel{{ ' govuk-tabs__panel--hidden' if currentTab != 'question' }}" id="tab-question" role="tabpanel" aria-labelledby="tab_tab-question">
+    {% call appEditorCard({
+      title: cardTitle,
+      caption: cardCaption,
+      heading: cardHeading,
+      errorList: errorList
+    }) %}
+      <form class="form" method="post" id="question-form">
+        {%- include "../../../../views/forms/editor-v2/partials/question-details-base.njk" -%}
 
-  <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-  <h2 class="govuk-heading-m">Question settings</h2>
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+        <h2 class="govuk-heading-m">Question settings</h2>
 
-  {{ govukSummaryList({
-    rows: [
-    {
-      key: {
-        text: 'Type of information'
-      },
-      value: {
-        text: questionTypeDesc
-      },
-      actions: {
-        items: [
+        {{ govukSummaryList({
+          rows: [
           {
-            href: changeTypeUrl,
-            text: 'Change',
-            visuallyHiddenText: 'type of question',
-            classes: 'govuk-link--no-visited-state'
-          }
-        ]
-      }
-    }]
-    }) }}
+            key: {
+              text: 'Type of information'
+            },
+            value: {
+              text: questionTypeDesc
+            },
+            actions: {
+              items: [
+                {
+                  href: changeTypeUrl,
+                  text: 'Change',
+                  visuallyHiddenText: 'type of question',
+                  classes: 'govuk-link--no-visited-state'
+                }
+              ]
+            }
+          }]
+          }) }}
 
-    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+          <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
-    <div class="govuk-button-group govuk-!-margin-top-6">
-      {% if questionId != 'new' %}
-        {{ appIconButton({
-          label: "Preview page",
-          href: previewPageUrl,
-          id: "preview-page"
-        }) }}
-      {% endif %}
+          <div class="govuk-button-group govuk-!-margin-top-6">
+            {% if questionId != 'new' %}
+              {{ appIconButton({
+                label: "Preview page",
+                href: previewPageUrl,
+                id: "preview-page"
+              }) }}
+            {% endif %}
 
-      {{ govukButton({
-        text: 'Save and continue'
-      }) }}
+            {{ govukButton({
+              text: 'Save and continue'
+            }) }}
 
-      {% if questionId != 'new' %}
-        <a href="{{ deleteUrl }}" class="govuk-link govuk-link--no-visited-state">
-          Delete question
-        </a>
-      {% endif %}
-    </div>
+            {% if questionId != 'new' %}
+              <a href="{{ deleteUrl }}" class="govuk-link govuk-link--no-visited-state">
+                Delete question
+              </a>
+            {% endif %}
+          </div>
+      </form>
+    {% endcall %}
+  </div>
 
-  </form>
+  <!-- Conditions Tab Panel -->
+  <div class="govuk-tabs__panel{{ ' govuk-tabs__panel--hidden' if currentTab != 'conditions' }}" id="tab-conditions" role="tabpanel" aria-labelledby="tab_tab-conditions">
+    {% call appEditorCard({
+      title: "Page conditions",
+      caption: cardCaption
+    }) %}
+      {%- include "../../../../views/forms/editor-v2/partials/question-conditions-panel.njk" -%}
+    {% endcall %}
+  </div>
 
-{% endcall %}
+</div>

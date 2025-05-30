@@ -1,0 +1,99 @@
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+<input type="hidden" id="formId" value="{{ formId }}">
+<input type="hidden" id="pageId" value="{{ pageId }}">
+
+<h2 class="govuk-heading-l">Control who can see this question based on previous answers</h2>
+
+{% if allConditions and allConditions.length > 0 %}
+  {# Show existing condition if one is attached #}
+  {% if pageCondition and pageConditionDetails %}
+    {% set conditionCount = 1 %}
+    <div style="background-color: white; border-left: 4px solid #00703c; padding: 20px; margin-bottom: 24px;">
+      <h3 class="govuk-heading-m" style="margin-top: 0;">{{ conditionCount }} added condition{{ 's' if conditionCount != 1 else '' }}</h3>
+      <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <div style="flex: 1;">
+          <h4 class="govuk-heading-s govuk-!-margin-bottom-2">{{ pageConditionDetails.displayName }}</h4>
+          <p class="govuk-body govuk-!-margin-bottom-0">{{ pageConditionPresentationString or "'How do you want to receive your order?' is 'delivery'" }}</p>
+        </div>
+        <div style="margin-left: 20px; flex-shrink: 0;">
+          <a href="#" class="govuk-link govuk-link--no-visited-state" onclick="document.getElementById('remove-condition-form').submit(); return false;">
+            Delete
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    {# Hidden form for removing condition #}
+    <form id="remove-condition-form" method="post" action="{{ pageConditionsApiUrl }}?questionId={{ questionId }}&stateId={{ stateId }}" style="display: none;">
+      <input type="hidden" name="action" value="remove">
+    </form>
+  {% endif %}
+
+  {# Always show add condition section #}
+  <div class="govuk-form-group">
+    <fieldset class="govuk-fieldset">
+      <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+        <h3 class="govuk-heading-m">{% if pageCondition %}Add another condition{% else %}Add a condition{% endif %}</h3>
+      </legend>
+      <div class="govuk-radios govuk-radios--conditional" data-module="govuk-radios" id="page-condition-radios">
+        <div class="govuk-radios__item">
+          <input class="govuk-radios__input" id="conditionChoiceAddExisting" name="conditionChoice" type="radio" value="addExisting" data-aria-controls="conditional-conditionChoiceAddExisting" checked>
+          <label class="govuk-label govuk-radios__label" for="conditionChoiceAddExisting">
+            Add an existing condition
+          </label>
+        </div>
+        <div class="govuk-radios__conditional" id="conditional-conditionChoiceAddExisting">
+          <form method="post" action="{{ pageConditionsApiUrl }}?questionId={{ questionId }}&stateId={{ stateId }}">
+            <input type="hidden" name="action" value="add">
+            <div class="govuk-form-group{% if conditionsFormErrors.conditionName %} govuk-form-group--error{% endif %}">
+              <label class="govuk-label" for="selectPageCondition">
+                Select an existing condition
+              </label>
+              {% if conditionsFormErrors.conditionName %}
+                <p id="selectPageCondition-error" class="govuk-error-message">
+                  <span class="govuk-visually-hidden">Error:</span>
+                  {{ conditionsFormErrors.conditionName.text }}
+                </p>
+              {% endif %}
+              <select class="govuk-select{% if conditionsFormErrors.conditionName %} govuk-select--error{% endif %}" id="selectPageCondition" name="conditionName"{% if conditionsFormErrors.conditionName %} aria-describedby="selectPageCondition-error"{% endif %}>
+                <option value="">Select existing condition</option>
+                {# Sort conditions alphabetically by displayName for user-friendliness #}
+                {% for condition in allConditions | sort(false, false, 'displayName') %}
+                  {# Don't show the condition that's already applied #}
+                  {% if condition.name !== pageCondition %}
+                    <option value="{{ condition.name }}"{% if conditionsFormValues.conditionName == condition.name %} selected{% endif %}>{{ condition.displayName }}</option>
+                  {% endif %}
+                {% endfor %}
+              </select>
+            </div>
+            <button type="submit" class="govuk-button govuk-!-margin-top-3" data-module="govuk-button">
+              Add existing condition
+            </button>
+          </form>
+        </div>
+
+        <div class="govuk-radios__item">
+          <input class="govuk-radios__input" id="conditionChoiceCreateNew" name="conditionChoice" type="radio" value="createNew" data-aria-controls="conditional-conditionChoiceCreateNew">
+          <label class="govuk-label govuk-radios__label" for="conditionChoiceCreateNew">
+            Create condition
+          </label>
+        </div>
+        <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-conditionChoiceCreateNew">
+          <p class="govuk-body">
+            Go to the <a href="{{ conditionsManagerPath }}" class="govuk-link">conditions manager</a> and create a condition.
+          </p>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  
+  {{ govukInsetText({
+    html: '<h3 class="govuk-heading-s">Advanced conditions</h3><p class="govuk-body">Create, edit and combine conditions or reuse conditions in the <a href="' + conditionsManagerPath + '" class="govuk-link">conditions manager</a>.</p>'
+  }) }}
+{% else %}
+  <p class="govuk-body">No conditions have been created. Go to the 
+    <a href="{{ conditionsManagerPath }}" class="govuk-link">conditions manager</a> and create a condition.
+  </p>
+{% endif %} 

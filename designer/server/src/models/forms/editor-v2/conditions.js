@@ -2,10 +2,10 @@ import {
   ConditionsModel,
   FormStatus,
   convertConditionWrapperFromV2,
-  hasComponentsEvenIfNoNext,
   isConditionWrapperV2
 } from '@defra/forms-model'
 
+import { createRuntimeFormModel } from '~/src/lib/utils.js'
 import {
   baseModelFields,
   buildPreviewUrl,
@@ -18,25 +18,15 @@ import { formOverviewPath } from '~/src/models/links.js'
  * @param {FormDefinition} definition
  */
 export function buildConditionsTable(slug, definition) {
-  const { pages, conditions, lists } = definition
+  const { pages, conditions } = definition
   const editBaseUrl = `/library/${slug}/editor-v2/condition/`
-  const components = pages.flatMap((page) =>
-    hasComponentsEvenIfNoNext(page) ? page.components : []
-  )
 
   /** @todo remove this filter when V1 is deprecated */
   const v2Conditions = conditions
     .filter(isConditionWrapperV2)
     .sort((a, b) => a.displayName.localeCompare(b.displayName))
 
-  /** @type {RuntimeFormModel} */
-  const accessors = {
-    getListById: (listId) => lists.find((list) => list.id === listId),
-    getComponentById: (componentId) =>
-      components.find((component) => component.id === componentId),
-    getConditionById: (conditionId) =>
-      v2Conditions.find((condition) => condition.id === conditionId)
-  }
+  const accessors = createRuntimeFormModel(definition)
 
   return {
     firstCellIsHeader: false,
