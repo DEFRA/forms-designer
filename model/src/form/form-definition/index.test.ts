@@ -2,16 +2,34 @@ import { ValidationError } from 'joi'
 
 import {
   buildDateComponent,
+  buildDetailsComponent,
+  buildEmailAddressFieldComponent,
+  buildFileUploadComponent,
+  buildHtmlComponent,
+  buildInsetTextComponent,
+  buildMarkdownComponent,
+  buildMonthYearFieldComponent,
+  buildMultilineTextFieldComponent,
   buildNumberFieldComponent,
   buildRadiosComponent,
-  buildTextFieldComponent
+  buildTelephoneNumberFieldComponent,
+  buildTextFieldComponent,
+  buildUkAddressFieldComponent
 } from '~/src/__stubs__/components.js'
-import { buildQuestionPage } from '~/src/__stubs__/pages.js'
+import {
+  buildFileUploadPage,
+  buildQuestionPage,
+  buildRepeaterPage
+} from '~/src/__stubs__/pages.js'
 import { ComponentType } from '~/src/components/enums.js'
 import { type ComponentDef } from '~/src/components/types.js'
 import {
+  contentComponentSchema,
+  fileUploadComponentSchema,
   formDefinitionSchema,
-  formDefinitionV2Schema
+  formDefinitionV2Schema,
+  pageSchema,
+  pageSchemaV2
 } from '~/src/form/form-definition/index.js'
 import {
   type ConditionWrapperV2,
@@ -272,6 +290,66 @@ describe('Form definition schema', () => {
         expect(result.error?.details[0].message).toMatch(/pattern/)
       })
     })
+
+    describe('Content only validation', () => {
+      describe('ContentComponentsDef - validate', () => {
+        it.each([
+          [ComponentType.Details, buildDetailsComponent()],
+          [ComponentType.Html, buildHtmlComponent()],
+          [ComponentType.Markdown, buildMarkdownComponent()],
+          [ComponentType.InsetText, buildInsetTextComponent()]
+        ])('should permit content fields - %s', (componentType, component) => {
+          const { error } = contentComponentSchema.validate(component)
+          expect(error).toBeUndefined()
+        })
+      })
+
+      describe('InputFieldsComponentsDef - fail validation', () => {
+        it.each([
+          [ComponentType.TextField, buildTextFieldComponent()],
+          [ComponentType.EmailAddressField, buildEmailAddressFieldComponent()],
+          [ComponentType.NumberField, buildNumberFieldComponent()],
+          [
+            ComponentType.MultilineTextField,
+            buildMultilineTextFieldComponent()
+          ],
+          [
+            ComponentType.TelephoneNumberField,
+            buildTelephoneNumberFieldComponent()
+          ],
+          [ComponentType.MonthYearField, buildMonthYearFieldComponent()],
+          [ComponentType.DatePartsField, buildDateComponent()],
+          [ComponentType.UkAddressField, buildUkAddressFieldComponent()],
+          [ComponentType.FileUploadField, buildFileUploadComponent()]
+        ])(
+          'should not permit input fields - %s',
+          (componentType, component) => {
+            const { error } = contentComponentSchema.validate(component)
+            expect(error).toEqual(
+              new ValidationError(
+                '"type" must be one of [Details, Html, Markdown, InsetText, List]',
+                [],
+                component
+              )
+            )
+          }
+        )
+      })
+    })
+    describe('FileUploadController components', () => {
+      it('should allow a FileUploadComponent', () => {
+        const component = buildFileUploadComponent()
+        const result = fileUploadComponentSchema.validate(component)
+        expect(result.error).toBeUndefined()
+      })
+      it('should not allow a QuestionComponent', () => {
+        const component = buildTextFieldComponent()
+        const result = fileUploadComponentSchema.validate(component)
+        expect(result.error).toEqual(
+          new ValidationError('"type" must be [FileUploadField]', [], component)
+        )
+      })
+    })
   })
 
   describe('Form Definition', () => {
@@ -504,6 +582,77 @@ describe('Form definition schema', () => {
 
         expect(validated.error).toEqual(
           new ValidationError('"lists[1]" contains a duplicate value', [], {})
+        )
+      })
+    })
+  })
+
+  describe('Page level validation', () => {
+    it('should allow normal page', () => {
+      const page = buildRepeaterPage({
+        components: [buildTextFieldComponent()]
+      })
+      const result = pageSchema.validate(page, { abortEarly: false })
+      const result2 = pageSchemaV2.validate(page, { abortEarly: false })
+      expect(result.error).toBeUndefined()
+      expect(result2.error).toBeUndefined()
+    })
+
+    describe('Upload rules', () => {
+      it('should allow single content field with FileUploadPage', () => {
+        const component = buildFileUploadComponent()
+        const page = buildFileUploadPage({
+          components: [component, buildMarkdownComponent({ content: 'test' })]
+        })
+        const result = pageSchemaV2.validate(page)
+        expect(result.error).toBeUndefined()
+      })
+
+      it('should allow single content field with FileUploadPage content first', () => {
+        const component = buildFileUploadComponent()
+        const page = buildFileUploadPage({
+          components: [buildMarkdownComponent({ content: 'test' }), component]
+        })
+        const result = pageSchemaV2.validate(page)
+        expect(result.error).toBeUndefined()
+      })
+
+      it('should not allow input fields with FileUploadPage', () => {
+        const component = buildFileUploadComponent()
+        const page = buildFileUploadPage({
+          components: [component, buildTextFieldComponent()]
+        })
+        const result = pageSchemaV2.validate(page)
+        expect(result.error).toBeDefined()
+        expect(result.error).toEqual(
+          new ValidationError(
+            '"components[1]" does not match any of the allowed types',
+            [],
+            component
+          )
+        )
+      })
+
+      it('should not allow more than two components', () => {
+        const component = buildFileUploadComponent()
+        const page = buildFileUploadPage({
+          components: [
+            component,
+            buildMarkdownComponent(),
+            buildMarkdownComponent({
+              id: '1a43443c-e2bb-409a-a9d1-c0d3f4dbed9a',
+              name: 'component 3'
+            })
+          ]
+        })
+        const result = pageSchemaV2.validate(page)
+        expect(result.error).toBeDefined()
+        expect(result.error).toEqual(
+          new ValidationError(
+            '"components[2]" does not match any of the allowed types',
+            [],
+            component
+          )
         )
       })
     })

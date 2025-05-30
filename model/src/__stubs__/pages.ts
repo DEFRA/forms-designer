@@ -33,13 +33,13 @@ export function buildQuestionPage(
 export function buildSummaryPage(
   partialSummaryPage: Partial<PageSummary> = {}
 ): PageSummary {
-  const pageSummary: PageSummary = {
+  return {
     id: '449a45f6-4541-4a46-91bd-8b8931b07b50',
     title: 'Summary page',
+    ...partialSummaryPage,
     path: ControllerPath.Summary,
     controller: ControllerType.Summary
   }
-  return { ...pageSummary, ...partialSummaryPage }
 }
 
 /**
@@ -50,7 +50,7 @@ export function buildSummaryPage(
 export function buildFileUploadPage(
   partialFileUploadPage: Partial<PageFileUpload> = {}
 ): PageFileUpload {
-  const fileUploadPage: PageFileUpload = {
+  return {
     id: '85e5c8da-88f5-4009-a821-7d7de1364318',
     title: '',
     path: '/supporting-evidence',
@@ -69,13 +69,9 @@ export function buildFileUploadPage(
         id: '4189b8a1-1a04-4f74-a7a0-dd23012a0ee0'
       })
     ],
-    controller: ControllerType.FileUpload,
-    next: []
-  }
-
-  return {
-    ...fileUploadPage,
-    ...partialFileUploadPage
+    next: [],
+    ...partialFileUploadPage,
+    controller: ControllerType.FileUpload
   }
 }
 
@@ -87,7 +83,7 @@ export function buildFileUploadPage(
 export function buildRepeaterPage(
   partialRepeaterPage: Partial<PageRepeat> = {}
 ): PageRepeat {
-  const repeaterPage: PageRepeat = {
+  return {
     title: 'Repeater Page',
     path: '/repeater-page',
     components: [
@@ -104,15 +100,11 @@ export function buildRepeaterPage(
     ],
     next: [],
     id: '32888028-61db-40fc-b255-80bc67829d31',
-    controller: ControllerType.Repeat,
     repeat: {
       options: { name: 'fawfed', title: 'Simple question responses' },
       schema: { min: 1, max: 3 }
-    }
-  }
-
-  return {
-    ...repeaterPage,
-    ...partialRepeaterPage
+    },
+    ...partialRepeaterPage,
+    controller: ControllerType.Repeat
   }
 }
