@@ -34,7 +34,7 @@
     "test:watch": "jest --color --watch"
   },
   "dependencies": {
-    "marked": "^15.0.11",
+    "marked": "^15.0.12",
     "nanoid": "^5.0.7",
     "slug": "^10.0.0",
     "uuid": "^11.1.0"
