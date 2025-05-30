@@ -202,6 +202,42 @@ export function overviewViewModel(metadata, notification) {
 
   const navigation = getFormSpecificNavigation(formPath, metadata, 'Overview')
 
+  const v1Buttons = [
+    {
+      text: 'Edit draft (new editor)',
+      classes: 'govuk-button--secondary-defra-quiet'
+    },
+    {
+      text: 'Edit draft (legacy editor)',
+      classes: 'govuk-button--secondary-quiet'
+    },
+    {
+      text: 'Make draft live',
+      attributes: {
+        formaction: `${formPath}/make-draft-live`
+      }
+    }
+  ]
+
+  const v2Buttons = [
+    {
+      text: 'Edit draft',
+      classes: 'govuk-button--secondary-quiet'
+    },
+    {
+      text: 'Make draft live',
+      attributes: {
+        formaction: `${formPath}/make-draft-live`
+      }
+    }
+  ]
+
+  const showV2Buttons = true
+
+  // TODO: add functionality
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  const draftButtons = showV2Buttons ? v2Buttons : v1Buttons
+
   return {
     backLink: formsLibraryBackLink,
     navigation,
@@ -232,18 +268,7 @@ export function overviewViewModel(metadata, notification) {
       // Adjust buttons when draft is available
       buttons: !metadata.draft
         ? [{ text: 'Create draft to edit' }]
-        : [
-            {
-              text: 'Edit draft',
-              classes: 'govuk-button--secondary-quiet'
-            },
-            {
-              text: 'Make draft live',
-              attributes: {
-                formaction: `${formPath}/make-draft-live`
-              }
-            }
-          ],
+        : draftButtons,
       links: !metadata.live
         ? [
             {
