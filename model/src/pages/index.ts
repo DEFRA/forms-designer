@@ -6,6 +6,7 @@ export {
 export { PageTypes } from '~/src/pages/page-types.js'
 
 export {
+  canSetRepeater,
   controllerNameFromPath,
   getPageDefaults,
   hasComponents,
@@ -13,7 +14,8 @@ export {
   hasFormComponents,
   hasNext,
   hasRepeater,
-  isControllerName
+  isControllerName,
+  omitFileUploadComponent
 } from '~/src/pages/helpers.js'
 
 export { ControllerPath, ControllerType } from '~/src/pages/enums.js'

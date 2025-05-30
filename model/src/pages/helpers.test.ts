@@ -1,13 +1,29 @@
-import { ControllerTypes } from '~/src/pages/controller-types.js'
-import { ControllerType } from '~/src/pages/enums.js'
 import {
+  buildCheckboxComponent,
+  buildTextFieldComponent
+} from '~/src/__stubs__/components.js'
+import {
+  buildFileUploadPage,
+  buildQuestionPage,
+  buildRepeaterPage
+} from '~/src/__stubs__/pages.js'
+import {
+  type Page,
+  type PageFileUpload,
+  type PageQuestion
+} from '~/src/form/form-definition/types.js'
+import { ComponentType, ControllerType } from '~/src/index.js'
+import { ControllerTypes } from '~/src/pages/controller-types.js'
+import {
+  canSetRepeater,
   controllerNameFromPath,
   getPageDefaults,
   hasComponents,
   hasComponentsEvenIfNoNext,
   hasFormComponents,
   hasNext,
-  hasRepeater
+  hasRepeater,
+  omitFileUploadComponent
 } from '~/src/pages/helpers.js'
 import { PageTypes } from '~/src/pages/page-types.js'
 
@@ -143,5 +159,148 @@ describe('helpers', () => {
         expect(controllerNameFromPath(path)).toEqual(name)
       }
     )
+  })
+
+  describe('canSetRepeater', () => {
+    it('should not allow repeater to be set if page is an upload page', () => {
+      const page: PageFileUpload = {
+        id: '85e5c8da-88f5-4009-a821-7d7de1364318',
+        title: '',
+        path: '/supporting-evidence',
+        components: [
+          {
+            type: ComponentType.FileUploadField,
+            title: 'Supporting Evidenceadfadf',
+            name: 'yBpZQO',
+            shortDescription: 'Supporting evidence',
+            hint: 'Hint text',
+            options: {
+              required: true,
+              accept:
+                'application/pdf,application/msword,image/jpeg,application/vnd.ms-excel,text/csv'
+            },
+            schema: {},
+            id: '4189b8a1-1a04-4f74-a7a0-dd23012a0ee0'
+          }
+        ],
+        controller: ControllerType.FileUpload,
+        next: []
+      }
+      expect(canSetRepeater(page)).toBe(false)
+    })
+
+    it('should not allow repeater to be set if file upload component exists - defensive', () => {
+      const page: Page = {
+        id: '85e5c8da-88f5-4009-a821-7d7de1364318',
+        title: '',
+        path: '/supporting-evidence',
+        components: [
+          {
+            type: ComponentType.FileUploadField,
+            title: 'Supporting Evidenceadfadf',
+            name: 'yBpZQO',
+            shortDescription: 'Supporting evidence',
+            hint: 'Hint text',
+            options: {
+              required: true,
+              accept:
+                'application/pdf,application/msword,image/jpeg,application/vnd.ms-excel,text/csv'
+            },
+            schema: {},
+            id: '4189b8a1-1a04-4f74-a7a0-dd23012a0ee0'
+          }
+        ],
+        next: []
+      }
+      expect(canSetRepeater(page)).toBe(false)
+    })
+
+    it('should allow repeater to be set on a standard page', () => {
+      const page = buildQuestionPage({
+        title: 'sdsfdf',
+        path: '/sdsfdf',
+        components: [
+          buildCheckboxComponent({
+            type: ComponentType.CheckboxesField,
+            title: 'What is your favourite adventure?',
+            name: 'jnUjwa',
+            shortDescription: 'Your favourite adventure'
+          })
+        ],
+        next: [],
+        id: '0f711e08-3801-444d-8e37-a88867c48f04'
+      })
+
+      expect(canSetRepeater(page)).toBe(true)
+    })
+
+    it('should allow repeater to be set on a standard page with PageController type', () => {
+      const page = buildQuestionPage({
+        controller: ControllerType.Page,
+        title: 'sdsfdf',
+        path: '/sdsfdf',
+        components: [
+          buildCheckboxComponent({
+            type: ComponentType.CheckboxesField,
+            title: 'What is your favourite adventure?',
+            name: 'jnUjwa',
+            shortDescription: 'Your favourite adventure'
+          })
+        ],
+        next: [],
+        id: '0f711e08-3801-444d-8e37-a88867c48f04'
+      })
+
+      expect(canSetRepeater(page)).toBe(true)
+    })
+  })
+
+  describe('omitFileUploadComponent', () => {
+    it('should return true if page is a repeater page', () => {
+      const page = buildRepeaterPage()
+      expect(omitFileUploadComponent(page)).toBe(true)
+    })
+    it('should return true if a file upload component already exists', () => {
+      const page = buildFileUploadPage()
+      expect(omitFileUploadComponent(page)).toBe(true)
+    })
+    it('should return true if more than one components exist', () => {
+      const page: PageQuestion = buildQuestionPage({
+        title: 'Empty page',
+        path: '/empty-page',
+        components: [
+          buildTextFieldComponent({
+            id: 'ee83413e-31b6-4158-98e0-4611479582ce',
+            title: 'Simple text field',
+            name: 'IHAIzC',
+            shortDescription: 'Your simple text field'
+          }),
+          buildTextFieldComponent({
+            type: ComponentType.TextField,
+            title: 'Simple text field 2',
+            name: 'IHAIzD',
+            shortDescription: 'Your simple text field',
+            hint: '',
+            options: {},
+            schema: {},
+            id: 'c02ba468-61a3-43f8-bd6a-768bf906d402'
+          })
+        ]
+      })
+      expect(omitFileUploadComponent(page)).toBe(true)
+    })
+    it('should return false no components exist', () => {
+      const page: PageQuestion = {
+        title: 'Empty page',
+        path: '/empty-page',
+        components: [],
+        next: [],
+        id: '0f711e08-3801-444d-8e37-a88867c48f04'
+      }
+      expect(omitFileUploadComponent(page)).toBe(false)
+    })
+    it('should return true if page is undefined', () => {
+      expect(omitFileUploadComponent(undefined)).toBe(false)
+    })
   })
 })

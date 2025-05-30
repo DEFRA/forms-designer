@@ -25,7 +25,10 @@
 <h2 class="govuk-heading-m">Page heading and guidance text</h2>
 
 {{ govukCheckboxes(fields.pageHeadingAndGuidance | setConditionalAttribute("true", pageHeadingAndGuidanceHtml)) }}
-{{ govukCheckboxes(fields.repeater | setConditionalAttribute("true", repeaterHtml)) }}
+
+{% if fields.repeater %}
+  {{ govukCheckboxes(fields.repeater | setConditionalAttribute("true", repeaterHtml)) }}
+{% endif %}
 
 {{ govukButton({
   text: 'Save changes'

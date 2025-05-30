@@ -1,11 +1,15 @@
 import {
   ComponentType,
   QuestionTypeSubGroup,
-  isFormType
+  isFormType,
+  omitFileUploadComponent
 } from '@defra/forms-model'
 
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
-import { insertValidationErrors } from '~/src/lib/utils.js'
+import {
+  getPageFromDefinition,
+  insertValidationErrors
+} from '~/src/lib/utils.js'
 import {
   SAVE_AND_CONTINUE,
   baseModelFields,
@@ -120,18 +124,23 @@ const listSubItems = [
  * @param {string} questionId
  * @param {FormEditorCheckbox[]} questionTypes
  * @param {ComponentDef[]} componentsSoFar
+ * @param {Page|undefined} page
  */
 export function filterQuestionTypes(
   questionId,
   questionTypes,
-  componentsSoFar
+  componentsSoFar,
+  page
 ) {
   const formComponents = componentsSoFar.filter((c) => isFormType(c.type))
   const formComponentCount = formComponents.length
+  const shouldOmitFileUploadComponent = /** @type {boolean} */ (
+    omitFileUploadComponent(page)
+  )
   const preventFileUpload =
-    formComponents.some((x) => x.type === ComponentType.FileUploadField) ||
-    formComponentCount > 1 ||
+    shouldOmitFileUploadComponent ||
     (formComponentCount === 1 && questionId === 'new')
+
   return preventFileUpload
     ? questionTypes.filter((q) => q.value !== ComponentType.FileUploadField)
     : questionTypes
@@ -210,7 +219,7 @@ export function questionTypeViewModel(
   const pageNum = getPageNum(definition, pageId)
   const questionNum = getQuestionNum(definition, pageId, questionId)
   const pageHeading = 'What information do you need from users?'
-
+  const page = getPageFromDefinition(definition, pageId)
   return {
     ...baseModelFields(
       metadata.slug,
@@ -231,7 +240,8 @@ export function questionTypeViewModel(
         items: filterQuestionTypes(
           questionId,
           questionTypeRadioItems,
-          getQuestionsOnPage(definition, pageId)
+          getQuestionsOnPage(definition, pageId),
+          page
         ),
         ...insertValidationErrors(validation?.formErrors.questionType)
       },
@@ -242,6 +252,6 @@ export function questionTypeViewModel(
 }
 
 /**
- * @import { ComponentDef, FormEditorCheckbox, FormMetadata, FormDefinition, FormEditor } from '@defra/forms-model'
+ * @import { ComponentDef, FormEditorCheckbox, FormMetadata, FormDefinition, FormEditor, Page } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */
