@@ -157,7 +157,6 @@ export function tickBoxes(items, selectedItems) {
       : []
   )
 }
-
 /**
- * @import { ComponentDef, FormMetadata, FormDefinition, FormStatus } from '@defra/forms-model'
+ * @import { ComponentDef, FormMetadata, FormDefinition, FormStatus, Page } from '@defra/forms-model'
  */

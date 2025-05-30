@@ -6,6 +6,7 @@ import {
   type PageQuestion,
   type PageRepeat
 } from '~/src/form/form-definition/types.js'
+import { ComponentType } from '~/src/index.js'
 import {
   ControllerNames,
   ControllerTypes
@@ -112,4 +113,41 @@ export function controllerNameFromPath(nameOrPath?: ControllerType | string) {
 
   const options = ControllerTypes.find(({ path }) => path === nameOrPath)
   return options?.name
+}
+
+function includesFileUploadField(components: ComponentDef[]): boolean {
+  return components.some(
+    (component) => component.type === ComponentType.FileUploadField
+  )
+}
+
+export function canSetRepeater(page: Page): boolean {
+  if (page.controller && page.controller !== ControllerType.Page) {
+    return false
+  }
+  if (hasComponents(page) && includesFileUploadField(page.components)) {
+    return false
+  }
+  return true
+}
+
+/**
+ * High level check for whether file upload component should be omitted
+ * @param { Page | undefined } page
+ * @returns {boolean}
+ */
+export function omitFileUploadComponent(page: Page | undefined): boolean {
+  if (page?.controller === ControllerType.Repeat) {
+    return true
+  }
+  if (!hasComponents(page)) {
+    return false
+  }
+  if (page.components.length > 1) {
+    return true
+  }
+  if (includesFileUploadField(page.components)) {
+    return true
+  }
+  return false
 }

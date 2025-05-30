@@ -1,4 +1,9 @@
 import { ComponentType } from '@defra/forms-model'
+import {
+  buildQuestionPage,
+  buildRepeaterPage,
+  buildTextFieldComponent
+} from '@defra/forms-model/stubs'
 
 import { filterQuestionTypes } from '~/src/models/forms/editor-v2/question-type.js'
 
@@ -36,41 +41,56 @@ const testQuestionTypeItems = /** @type {FormEditorCheckbox[]} */ ([
 describe('editor-v2 - question type model', () => {
   describe('filterQuestionTypes', () => {
     test('should return full list if no components and new question', () => {
-      const res = filterQuestionTypes('new', testQuestionTypeItems, [])
+      const res = filterQuestionTypes(
+        'new',
+        testQuestionTypeItems,
+        [],
+        undefined
+      )
       expect(res).toHaveLength(4)
       expect(res[2].text).toBe('Supporting evidence')
     })
 
     test('should omit file upload if some components and new question', () => {
-      const res = filterQuestionTypes('new', testQuestionTypeItems, [
-        {
-          name: '',
-          title: '',
-          type: ComponentType.TextField,
-          schema: {},
-          options: {}
-        }
-      ])
+      const res = filterQuestionTypes(
+        'new',
+        testQuestionTypeItems,
+        [
+          {
+            name: '',
+            title: '',
+            type: ComponentType.TextField,
+            schema: {},
+            options: {}
+          }
+        ],
+        undefined
+      )
       expect(res).toHaveLength(3)
       expect(res[2].text).toBe('Email address')
     })
 
     test('should omit file upload if already a file upload component and new question', () => {
-      const res = filterQuestionTypes('new', testQuestionTypeItems, [
-        {
-          name: '',
-          title: '',
-          type: ComponentType.FileUploadField,
-          schema: {},
-          options: {}
-        }
-      ])
+      const res = filterQuestionTypes(
+        'new',
+        testQuestionTypeItems,
+        [
+          {
+            name: '',
+            title: '',
+            type: ComponentType.FileUploadField,
+            schema: {},
+            options: {}
+          }
+        ],
+        undefined
+      )
       expect(res).toHaveLength(3)
       expect(res[2].text).toBe('Email address')
     })
 
     test('should omit file upload if some components and existing question', () => {
-      const res = filterQuestionTypes('123', testQuestionTypeItems, [
+      const componentsSoFar = /** @type {ComponentDef[]} */ ([
         {
           name: '',
           title: '',
@@ -86,6 +106,28 @@ describe('editor-v2 - question type model', () => {
           options: {}
         }
       ])
+      const res = filterQuestionTypes(
+        '123',
+        testQuestionTypeItems,
+        componentsSoFar,
+        buildQuestionPage({
+          components: componentsSoFar
+        })
+      )
+      expect(res).toHaveLength(3)
+      expect(res[2].text).toBe('Email address')
+    })
+
+    test('should omit file upload if page is repeater page', () => {
+      const textFieldComponent = buildTextFieldComponent()
+      const res = filterQuestionTypes(
+        '123',
+        testQuestionTypeItems,
+        [textFieldComponent],
+        buildRepeaterPage({
+          components: [textFieldComponent]
+        })
+      )
       expect(res).toHaveLength(3)
       expect(res[2].text).toBe('Email address')
     })
@@ -93,5 +135,5 @@ describe('editor-v2 - question type model', () => {
 })
 
 /**
- * @import { FormEditorCheckbox } from '@defra/forms-model'
+ * @import { FormEditorCheckbox, ComponentDef } from '@defra/forms-model'
  */

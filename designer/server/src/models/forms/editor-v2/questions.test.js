@@ -1,4 +1,16 @@
-import { hasUnderlyingHeadingData } from '~/src/models/forms/editor-v2/questions.js'
+import { Engine } from '@defra/forms-model'
+import {
+  buildDefinition,
+  buildFileUploadPage,
+  buildMetaData,
+  buildQuestionPage,
+  buildSummaryPage
+} from '@defra/forms-model/stubs'
+
+import {
+  hasUnderlyingHeadingData,
+  questionsViewModel
+} from '~/src/models/forms/editor-v2/questions.js'
 
 describe('editor-v2 - questions model', () => {
   describe('hasUnderlyingData', () => {
@@ -18,6 +30,30 @@ describe('editor-v2 - questions model', () => {
       expect(hasUnderlyingHeadingData(undefined, '')).toBeFalsy()
       expect(hasUnderlyingHeadingData('', undefined)).toBeFalsy()
       expect(hasUnderlyingHeadingData('', '')).toBeFalsy()
+    })
+  })
+
+  describe('questionsViewModel', () => {
+    const metadata = buildMetaData()
+    const pageId = '85e5c8da-88f5-4009-a821-7d7de1364318'
+
+    it('should not show repeater option if page type is FileUpload controller', () => {
+      const definition = buildDefinition({
+        pages: [buildFileUploadPage({ id: pageId }), buildSummaryPage()],
+        engine: Engine.V2
+      })
+
+      const modelResult = questionsViewModel(metadata, definition, pageId)
+      expect(modelResult.fields.repeater).toBeUndefined()
+    })
+
+    it('should show repeater option if page type is FileUpload controller', () => {
+      const definition = buildDefinition({
+        pages: [buildQuestionPage({ id: pageId }), buildSummaryPage()],
+        engine: Engine.V2
+      })
+      const modelResult = questionsViewModel(metadata, definition, pageId)
+      expect(modelResult.fields.repeater).toBeDefined()
     })
   })
 })
