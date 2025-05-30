@@ -316,7 +316,6 @@ export default [
           getValidationErrorsFromSession(yar, errorKey)
         )
 
-      // Also check for conditions validation errors
       const conditionsValidation =
         /** @type {ValidationFailure<any> | undefined} */ (
           getValidationErrorsFromSession(

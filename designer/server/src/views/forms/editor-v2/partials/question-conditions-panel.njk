@@ -7,17 +7,16 @@
 <h2 class="govuk-heading-l">Control who can see this question based on previous answers</h2>
 
 {% if allConditions and allConditions.length > 0 %}
-  {# Show existing condition if one is attached #}
   {% if pageCondition and pageConditionDetails %}
     {% set conditionCount = 1 %}
-    <div style="background-color: white; border-left: 4px solid #00703c; padding: 20px; margin-bottom: 24px;">
-      <h3 class="govuk-heading-m" style="margin-top: 0;">{{ conditionCount }} added condition{{ 's' if conditionCount != 1 else '' }}</h3>
-      <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-        <div style="flex: 1;">
+    <div class="app-condition-applied govuk-!-margin-bottom-6">
+      <h3 class="govuk-heading-m govuk-!-margin-top-0">{{ conditionCount }} added condition{{ 's' if conditionCount != 1 else '' }}</h3>
+      <div class="app-condition-applied__content">
+        <div class="app-condition-applied__details">
           <h4 class="govuk-heading-s govuk-!-margin-bottom-2">{{ pageConditionDetails.displayName }}</h4>
           <p class="govuk-body govuk-!-margin-bottom-0">{{ pageConditionPresentationString or "'How do you want to receive your order?' is 'delivery'" }}</p>
         </div>
-        <div style="margin-left: 20px; flex-shrink: 0;">
+        <div class="app-condition-applied__actions">
           <a href="#" class="govuk-link govuk-link--no-visited-state" onclick="document.getElementById('remove-condition-form').submit(); return false;">
             Delete
           </a>
@@ -25,13 +24,11 @@
       </div>
     </div>
     
-    {# Hidden form for removing condition #}
     <form id="remove-condition-form" method="post" action="{{ pageConditionsApiUrl }}?questionId={{ questionId }}&stateId={{ stateId }}" style="display: none;">
       <input type="hidden" name="action" value="remove">
     </form>
   {% endif %}
 
-  {# Always show add condition section #}
   <div class="govuk-form-group">
     <fieldset class="govuk-fieldset">
       <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
@@ -59,9 +56,7 @@
               {% endif %}
               <select class="govuk-select{% if conditionsFormErrors.conditionName %} govuk-select--error{% endif %}" id="selectPageCondition" name="conditionName"{% if conditionsFormErrors.conditionName %} aria-describedby="selectPageCondition-error"{% endif %}>
                 <option value="">Select existing condition</option>
-                {# Sort conditions alphabetically by displayName for user-friendliness #}
                 {% for condition in allConditions | sort(false, false, 'displayName') %}
-                  {# Don't show the condition that's already applied #}
                   {% if condition.name !== pageCondition %}
                     <option value="{{ condition.name }}"{% if conditionsFormValues.conditionName == condition.name %} selected{% endif %}>{{ condition.displayName }}</option>
                   {% endif %}

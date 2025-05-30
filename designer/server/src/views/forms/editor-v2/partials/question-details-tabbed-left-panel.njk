@@ -11,7 +11,6 @@
   errorList: errorList
 }) %}
 
-  <!-- Tabs Navigation -->
   <div class="govuk-tabs" data-module="govuk-tabs">
     <h2 class="govuk-tabs__title">Contents</h2>
     <ul class="govuk-tabs__list" role="tablist">
@@ -28,8 +27,7 @@
         </li>
       {% endfor %}
     </ul>
-
-    <!-- Question Tab Panel -->
+->
     <div class="govuk-tabs__panel{% if currentTab !== 'question' %} govuk-tabs__panel--hidden{% endif %}" 
          id="tab-question" 
          role="tabpanel" 
@@ -87,7 +85,6 @@
       </form>
     </div>
 
-    <!-- Conditions Tab Panel -->
     <div class="govuk-tabs__panel{% if currentTab !== 'conditions' %} govuk-tabs__panel--hidden{% endif %}" 
          id="tab-conditions" 
          role="tabpanel" 
@@ -101,7 +98,6 @@
 {% endcall %}
 
 <script>
-  // Initialize GOV.UK tabs
   import { Tabs } from 'govuk-frontend'
   new Tabs(document.querySelector('[data-module="govuk-tabs"]'))
 </script> 

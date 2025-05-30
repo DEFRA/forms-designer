@@ -1,3 +1,5 @@
+@use "govuk-frontend" as *;
+
 // Components
 .app-vertical-divider {
   color: #b1b4b6;
@@ -14,5 +16,27 @@
   .govuk-table__header {
     height: 50px;
     vertical-align: middle;
+  }
+}
+
+.app-condition-applied {
+  background-color: govuk-colour("white");
+  border-left: 4px solid #00703c;
+  padding: govuk-spacing(4);
+  margin-bottom: govuk-spacing(6);
+
+  &__content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  &__details {
+    flex: 1;
+  }
+
+  &__actions {
+    margin-left: govuk-spacing(4);
+    flex-shrink: 0;
   }
 }
