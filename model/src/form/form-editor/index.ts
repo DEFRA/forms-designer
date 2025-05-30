@@ -606,4 +606,4 @@ export function govukFieldIsQuestionOptional(
 }
 
 // A list of allowed template funtions for use within error message templates
-export const allowedErrorTemplateFunctions = ['lowerFirst']
+export const allowedErrorTemplateFunctions = ['lowerFirst', 'capitalise']

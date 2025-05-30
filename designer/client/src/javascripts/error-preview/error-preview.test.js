@@ -61,7 +61,11 @@ describe('error-preview', () => {
     })
 
     it('should updateText if source has a non-empty text value', () => {
-      document.body.innerHTML = shortDescInputHTML + panelHTML
+      // Create custom HTML without template functions
+      document.body.innerHTML = `
+        <input id="shortDescription" />
+        <span class="error-preview-shortDescription"></span>
+      `
       const advancedFields = fieldMappings[ComponentType.TextField]
       const res = new ErrorPreviewDomElements(advancedFields)
       expect(res).toBeDefined()
@@ -71,8 +75,9 @@ describe('error-preview', () => {
       const sourceElem = document.createElement('input')
       sourceElem.value = 'sourcetext'
       res.updateText(sourceElem, targets, '[placeholder]')
-      expect(targets[0].textContent).toBe('sourcetext')
-      expect(targets[targets.length - 1].textContent).toBe('sourcetext')
+      // Now these should be capitalized since they don't have template functions
+      expect(targets[0].textContent).toBe('Sourcetext')
+      expect(targets[targets.length - 1].textContent).toBe('Sourcetext')
     })
 
     it('should updateText with placeholder if source has an empty text value', () => {
@@ -120,6 +125,107 @@ describe('error-preview', () => {
       expect(res.lowerFirstEnhanced('T')).toBe('t')
 
       expect(res.lowerFirstEnhanced('[')).toBe('[')
+    })
+
+    it('should apply capitalise template function', () => {
+      document.body.innerHTML = shortDescInputHTML + panelHTML
+      const res = new ErrorPreviewDomElements(undefined)
+
+      const elemWithFunc = document.createElement('input')
+      elemWithFunc.dataset.templatefunc = 'capitalise'
+
+      const elemWithoutFunc = document.createElement('input')
+
+      const result1 = res.applyTemplateFunction(elemWithFunc, 'testValue')
+      expect(result1).toBe('Testvalue')
+
+      const result2 = res.applyTemplateFunction(elemWithFunc, 'TEST VALUE')
+      expect(result2).toBe('Test value')
+
+      const result3 = res.applyTemplateFunction(elemWithFunc, 'enter age')
+      expect(result3).toBe('Enter age')
+
+      const result4 = res.applyTemplateFunction(elemWithoutFunc, 'TestValue')
+      expect(result4).toBe('TestValue')
+    })
+
+    it('should apply capitalize by default for error-preview-shortDescription elements without template function', () => {
+      document.body.innerHTML = shortDescInputHTML + panelHTML
+      const res = new ErrorPreviewDomElements(undefined)
+
+      const shortDescElem = document.createElement('span')
+      shortDescElem.classList.add('error-preview-shortDescription')
+
+      const regularElem = document.createElement('span')
+
+      const sourceElem = document.createElement('input')
+      sourceElem.value = 'enter age'
+
+      res.updateText(
+        sourceElem,
+        [/** @type {HTMLInputElement} */ (shortDescElem)],
+        '[placeholder]'
+      )
+      res.updateText(
+        sourceElem,
+        [/** @type {HTMLInputElement} */ (regularElem)],
+        '[placeholder]'
+      )
+
+      expect(shortDescElem.textContent).toBe('Enter age')
+
+      expect(regularElem.textContent).toBe('enter age')
+    })
+
+    it('should not override template function with default capitalize behavior', () => {
+      document.body.innerHTML = shortDescInputHTML + panelHTML
+      const res = new ErrorPreviewDomElements(undefined)
+
+      const elemWithBoth = document.createElement('span')
+      elemWithBoth.classList.add('error-preview-shortDescription')
+      elemWithBoth.dataset.templatefunc = 'lowerFirst'
+
+      const sourceElem = document.createElement('input')
+      sourceElem.value = 'Enter Age'
+
+      res.updateText(
+        sourceElem,
+        [/** @type {HTMLInputElement} */ (elemWithBoth)],
+        '[placeholder]'
+      )
+
+      expect(elemWithBoth.textContent).toBe('enter Age')
+    })
+
+    it('should apply capitalize to placeholder text for shortDescription elements', () => {
+      document.body.innerHTML = shortDescInputHTML + panelHTML
+      const res = new ErrorPreviewDomElements(undefined)
+
+      const shortDescElem = document.createElement('span')
+      shortDescElem.classList.add('error-preview-shortDescription')
+
+      const sourceElem = document.createElement('input')
+      sourceElem.value = ''
+
+      res.updateText(
+        sourceElem,
+        [/** @type {HTMLInputElement} */ (shortDescElem)],
+        'default placeholder'
+      )
+
+      expect(shortDescElem.textContent).toBe('Default placeholder')
+    })
+
+    it('should handle unknown template functions', () => {
+      document.body.innerHTML = shortDescInputHTML + panelHTML
+      const res = new ErrorPreviewDomElements(undefined)
+
+      const elemWithUnknownFunc = document.createElement('input')
+      elemWithUnknownFunc.dataset.templatefunc = 'unknownFunction'
+
+      const result = res.applyTemplateFunction(elemWithUnknownFunc, 'TestValue')
+
+      expect(result).toBe('TestValue')
     })
   })
 

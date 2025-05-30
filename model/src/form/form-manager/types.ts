@@ -5,6 +5,7 @@ export interface PatchPageFields {
   path?: string
   controller?: ControllerType | null
   repeat?: Repeat
+  condition?: string | null
 }
 
 export interface AddComponentQueryOptions {
