@@ -11,6 +11,11 @@ export enum Engine {
   V2 = 'V2'
 }
 
+export enum SchemaVersion {
+  V1 = 1,
+  V2 = 2
+}
+
 export interface Link {
   path: string
   condition?: string
@@ -174,6 +179,7 @@ export interface ConditionWrapperV2 {
  */
 export interface FormDefinition {
   engine?: Engine
+  schema?: SchemaVersion
   pages: Page[]
   conditions: (ConditionWrapper | ConditionWrapperV2)[]
   lists: List[]
