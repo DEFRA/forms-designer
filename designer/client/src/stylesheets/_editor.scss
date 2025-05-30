@@ -615,7 +615,10 @@ p code {
   padding-bottom: 0;
 }
 
-.govuk-button--secondary-defra-quiet {
+.govuk-button--secondary-defra-quiet,
+.govuk-button--secondary-defra-quiet:link,
+.govuk-button--secondary-defra-quiet:hover,
+.govuk-button--secondary-defra-quiet:visited {
   color: $defra-brand-colour;
   border-color: $defra-brand-colour;
 }
