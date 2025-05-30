@@ -796,6 +796,11 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
       .allow('V1', 'V2')
       .default('V1')
       .description('Form engine version to use (V1 or V2)'),
+    schema: Joi.string()
+      .trim()
+      .allow('V1', 'V2')
+      .default('V1')
+      .description('Form schema version to use (V1 or V2)'),
     name: Joi.string()
       .trim()
       .allow('')
