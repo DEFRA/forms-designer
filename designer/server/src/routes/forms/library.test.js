@@ -769,29 +769,6 @@ describe('Forms library routes', () => {
     })
 
     describe('Live buttons in side bar', () => {
-      it.skip('should show "Edit draft" and "Make draft live" when draft exists in v1', async () => {
-        jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
-        jest
-          .mocked(forms.getDraftFormDefinition)
-          .mockResolvedValueOnce(formDefinition)
-
-        const options = {
-          method: 'GET',
-          url: '/library/my-form-slug',
-          auth
-        }
-
-        await renderResponse(server, options)
-
-        const $card = document.querySelector('.app-form-card')
-        const $buttons = $card?.querySelectorAll('.govuk-button')
-
-        expect($buttons).toHaveLength(2)
-        expect($buttons?.[0]).toHaveTextContent('Edit draft (new editor)')
-        expect($buttons?.[1]).toHaveTextContent('Edit draft (legacy editor)')
-        expect($buttons?.[2]).toHaveTextContent('Make draft live')
-      })
-
       it('should show "Edit draft" and "Make draft live" when draft exists in v2', async () => {
         jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
         jest

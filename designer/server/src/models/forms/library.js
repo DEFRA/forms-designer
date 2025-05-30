@@ -1,3 +1,5 @@
+import { SchemaVersion } from '@defra/forms-model'
+
 import { buildEntry } from '~/src/common/nunjucks/context/build-navigation.js'
 import config from '~/src/config.js'
 import * as forms from '~/src/lib/forms.js'
@@ -194,18 +196,23 @@ function buildPaginationPages(
 
 /**
  * @param {FormMetadata} metadata
+ * @param { FormDefinition|undefined } formDefinition
  * @param {string} [notification] - success notification to display
  */
-export function overviewViewModel(metadata, notification) {
+export function overviewViewModel(metadata, formDefinition, notification) {
   const pageTitle = metadata.title
   const formPath = formOverviewPath(metadata.slug)
+  const editorV1Path = `${formPath}/editor`
+  const editorV2Path = `${formPath}/editor-v2/pages`
 
   const navigation = getFormSpecificNavigation(formPath, metadata, 'Overview')
 
   const v1Buttons = [
     {
       text: 'Edit draft (new editor)',
-      classes: 'govuk-button--secondary-defra-quiet'
+      classes:
+        'govuk-button--secondary-quiet govuk-button--secondary-defra-quiet',
+      href: editorV2Path
     },
     {
       text: 'Edit draft (legacy editor)',
@@ -232,7 +239,9 @@ export function overviewViewModel(metadata, notification) {
     }
   ]
 
-  const showV2Buttons = true
+  const showV2Buttons = formDefinition?.schema === SchemaVersion.V2
+  const formAction =
+    formDefinition?.schema === SchemaVersion.V2 ? editorV2Path : editorV1Path
 
   // TODO: add functionality
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -261,7 +270,7 @@ export function overviewViewModel(metadata, notification) {
             method: 'POST'
           }
         : {
-            action: `${formPath}/editor`,
+            action: formAction,
             method: 'GET'
           }),
 
