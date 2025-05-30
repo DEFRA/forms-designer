@@ -1,6 +1,6 @@
 {
   "name": "@defra/forms-designer",
-  "version": "3.0.463",
+  "version": "3.0.465",
   "private": true,
   "description": "Defra forms designer",
   "homepage": "https://github.com/DEFRA/forms-designer/tree/main/designer#readme",
@@ -36,7 +36,7 @@
     "@babel/preset-react": "^7.26.3",
     "@dagrejs/dagre": "^1.1.4",
     "@defra/forms-engine-plugin": "^0.1.22",
-    "@defra/forms-model": "^3.0.463",
+    "@defra/forms-model": "^3.0.465",
     "@defra/hapi-tracing": "^1.0.0",
     "@elastic/ecs-pino-format": "^1.5.0",
     "@hapi/basic": "^7.0.2",
