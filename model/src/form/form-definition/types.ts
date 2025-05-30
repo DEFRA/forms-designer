@@ -12,8 +12,8 @@ export enum Engine {
 }
 
 export enum SchemaVersion {
-  V1 = '1',
-  V2 = '2'
+  V1 = 1,
+  V2 = 2
 }
 
 export interface Link {
