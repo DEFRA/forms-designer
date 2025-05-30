@@ -1,7 +1,10 @@
+import { slugSchema } from '@defra/forms-model'
+import Joi from 'joi'
+
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
-import * as forms from '~/src/lib/forms.js'
 import * as viewModel from '~/src/models/forms/editor-v2/conditions.js'
+import { getForm } from '~/src/routes/forms/editor-v2/helpers.js'
 
 export const ROUTE_FULL_PATH_CONDITIONS = '/library/{slug}/editor-v2/conditions'
 
@@ -19,10 +22,8 @@ export default [
       const { token } = auth.credentials
       const { slug } = params
 
-      const metadata = await forms.get(slug, token)
-      const formId = metadata.id
-
-      const definition = await forms.getDraftFormDefinition(formId, token)
+      // Get form metadata and definition
+      const { metadata, definition } = await getForm(slug, token)
 
       // Saved banner
       const notification = /** @type {string[] | undefined} */ (
@@ -41,6 +42,11 @@ export default [
           entity: 'user',
           scope: [`+${scopes.SCOPE_WRITE}`]
         }
+      },
+      validate: {
+        params: Joi.object().keys({
+          slug: slugSchema
+        })
       }
     }
   })
