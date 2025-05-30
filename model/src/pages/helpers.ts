@@ -115,18 +115,17 @@ export function controllerNameFromPath(nameOrPath?: ControllerType | string) {
   return options?.name
 }
 
-export function canSetRepeater(
-  page: Page
-): page is Exclude<PageFileUpload, Page> {
+function includesFileUploadField(components: ComponentDef[]): boolean {
+  return components.some(
+    (component) => component.type === ComponentType.FileUploadField
+  )
+}
+
+export function canSetRepeater(page: Page): boolean {
   if (page.controller && page.controller !== ControllerType.Page) {
     return false
   }
-  if (
-    hasComponents(page) &&
-    page.components.some(
-      (component) => component.type === ComponentType.FileUploadField
-    )
-  ) {
+  if (hasComponents(page) && includesFileUploadField(page.components)) {
     return false
   }
   return true
@@ -147,11 +146,7 @@ export function omitFileUploadComponent(page: Page | undefined): boolean {
   if (page.components.length > 1) {
     return true
   }
-  if (
-    page.components.some(
-      (component) => component.type === ComponentType.FileUploadField
-    )
-  ) {
+  if (includesFileUploadField(page.components)) {
     return true
   }
   return false
