@@ -2,6 +2,7 @@ import {
   ComponentType,
   allowedErrorTemplateFunctions
 } from '@defra/forms-model'
+import capitalize from 'lodash/capitalize.js'
 import lowerFirst from 'lodash/lowerFirst.js'
 
 import { fieldMappings } from '~/src/javascripts/error-preview/field-mappings'
@@ -94,8 +95,13 @@ export class ErrorPreviewDomElements {
    */
   applyTemplateFunction(elem, newText) {
     const func = elem?.dataset.templatefunc ?? ''
-    if (allowedErrorTemplateFunctions.includes(func) && func === 'lowerFirst') {
-      return this.lowerFirstEnhanced(newText)
+    if (allowedErrorTemplateFunctions.includes(func)) {
+      if (func === 'lowerFirst') {
+        return this.lowerFirstEnhanced(newText)
+      }
+      if (func === 'capitalise') {
+        return capitalize(newText)
+      }
     }
     return newText
   }
@@ -110,9 +116,17 @@ export class ErrorPreviewDomElements {
       if (elem) {
         const sourceText = source?.value ?? ''
         const newText = sourceText !== '' ? sourceText : placeholder
-        const newTextFinal = elem.dataset.templatefunc
+        let newTextFinal = elem.dataset.templatefunc
           ? this.applyTemplateFunction(elem, newText)
           : newText
+
+        if (
+          !elem.dataset.templatefunc &&
+          elem.classList.contains('error-preview-shortDescription')
+        ) {
+          newTextFinal = capitalize(newText)
+        }
+
         elem.textContent = newTextFinal
       }
     })
