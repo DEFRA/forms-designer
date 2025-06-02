@@ -18,7 +18,7 @@ export function migrateConfirmationPageViewModel(metadata, formDefinition) {
     formDefinition,
     'Editor'
   )
-  const pageTitle = 'Do you want to migrate this form to version 2?'
+  const pageTitle = 'Are you sure you want to switch to the new editor?'
 
   return {
     ...baseModelFields(metadata.slug, `${pageTitle} - ${formTitle}`, formTitle),
@@ -27,11 +27,12 @@ export function migrateConfirmationPageViewModel(metadata, formDefinition) {
       text: metadata.title
     },
     bodyHeadingText: pageTitle,
-    bodyText:
-      'In order to use the new editor, this form needs to be migrated to version 2. <br><br> Migrating this form will mean it cannot be used within the old editor. This operation is irreversible.',
+    bodyWarning: {
+      text: "You won't be able to use the old editor for this form after switching."
+    },
     buttons: [
       {
-        text: 'Migrate',
+        text: 'Switch to new editor',
         classes: 'govuk-button--primary'
       },
       {
