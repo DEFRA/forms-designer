@@ -438,35 +438,35 @@ describe('Form definition schema', () => {
       }
 
       const stringValueCondition: ConditionWrapperV2 = {
-        name: 'ab1bbaae-bf0e-4577-8416-8a8c83da1fb9',
+        id: 'ab1bbaae-bf0e-4577-8416-8a8c83da1fb9',
         displayName: 'isFullNameEnriqueChase',
         conditions: [stringValueData]
       }
 
       const relativeDateCondition: ConditionWrapperV2 = {
-        name: '193a413b-65d3-42bd-bddb-d02ca100c749',
+        id: '193a413b-65d3-42bd-bddb-d02ca100c749',
         displayName: 'isDueDateWithin7Days',
         conditions: [relativeDateData]
       }
 
       const listItemRefCondition: ConditionWrapperV2 = {
-        name: '7baf03ce-e0d8-47a5-9010-fbe461031399',
+        id: '7baf03ce-e0d8-47a5-9010-fbe461031399',
         displayName: 'isFaveColourRed',
         conditions: [listItemRefData]
       }
 
       const fullNameConditionRefData: ConditionRefDataV2 = {
         id: 'a436ef0b-15f3-432b-9219-e16f309a6502',
-        conditionId: stringValueCondition.name
+        conditionId: stringValueCondition.id
       }
 
       const faveColourRefData: ConditionRefDataV2 = {
         id: 'a1903a7e-6fd0-499a-92ce-aa9f4b75b103',
-        conditionId: listItemRefCondition.name
+        conditionId: listItemRefCondition.id
       }
 
       const conditionRefCondition: ConditionWrapperV2 = {
-        name: 'dc1e112f-2855-42d0-830c-bd5d2332975c',
+        id: 'dc1e112f-2855-42d0-830c-bd5d2332975c',
         displayName: 'isEnriqueChaseAndFaveColourRed',
         coordinator: Coordinator.AND,
         conditions: [fullNameConditionRefData, faveColourRefData]
