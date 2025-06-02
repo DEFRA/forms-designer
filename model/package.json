@@ -36,7 +36,7 @@
   "dependencies": {
     "marked": "^15.0.12",
     "nanoid": "^5.0.7",
-    "slug": "^10.0.0",
+    "slug": "^11.0.0",
     "uuid": "^11.1.0"
   },
   "devDependencies": {
