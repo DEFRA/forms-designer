@@ -163,7 +163,12 @@ export function hideFirstGuidance(page) {
  */
 export function pagesViewModel(metadata, definition, notification) {
   const formPath = formOverviewPath(metadata.slug)
-  const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
+  const navigation = getFormSpecificNavigation(
+    formPath,
+    metadata,
+    definition,
+    'Editor'
+  )
   const previewBaseUrl = buildPreviewUrl(metadata.slug, FormStatus.Draft)
 
   const pageActions = [

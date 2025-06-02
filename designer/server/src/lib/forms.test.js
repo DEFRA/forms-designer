@@ -1,4 +1,5 @@
-import { FormStatus } from '@defra/forms-model'
+import { FormStatus, SchemaVersion } from '@defra/forms-model'
+import { buildDefinition } from '@defra/forms-model/stubs'
 
 import config from '~/src/config.js'
 import { createServer } from '~/src/createServer.js'
@@ -345,6 +346,9 @@ describe('Forms library routes', () => {
 
     it('Form overview has live buttons in side bar', async () => {
       jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+      jest
+        .mocked(forms.getDraftFormDefinition)
+        .mockResolvedValueOnce(buildDefinition({ schema: SchemaVersion.V2 }))
 
       const options = {
         method: 'get',

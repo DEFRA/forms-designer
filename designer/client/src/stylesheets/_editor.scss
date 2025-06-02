@@ -614,3 +614,11 @@ p code {
   min-height: govuk-em(600px, $context-font-size: 16);
   padding-bottom: 0;
 }
+
+.govuk-button--secondary-defra-quiet,
+.govuk-button--secondary-defra-quiet:link,
+.govuk-button--secondary-defra-quiet:hover,
+.govuk-button--secondary-defra-quiet:visited {
+  color: $defra-brand-colour;
+  border-color: $defra-brand-colour;
+}

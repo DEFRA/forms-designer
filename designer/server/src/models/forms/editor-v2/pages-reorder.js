@@ -41,7 +41,12 @@ export function pagesReorderViewModel(metadata, definition, pageOrder, focus) {
   const formTitle = metadata.title
   const pageHeading = 'Re-order pages'
   const formPath = formOverviewPath(metadata.slug)
-  const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
+  const navigation = getFormSpecificNavigation(
+    formPath,
+    metadata,
+    definition,
+    'Editor'
+  )
 
   const pageActions = [
     {

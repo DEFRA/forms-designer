@@ -67,11 +67,13 @@ export function getQuestion(definition, pageId, questionId) {
  * a page, that page will have isActive:true set.
  * @param {string} formPath
  * @param {FormMetadata} _metadata
+ * @param {FormDefinition} _formDefinition
  * @param {string} activePage
  */
 export function getFormSpecificNavigation(
   formPath,
   _metadata,
+  _formDefinition,
   activePage = ''
 ) {
   const navigationItems = [
