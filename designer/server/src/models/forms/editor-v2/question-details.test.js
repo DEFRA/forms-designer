@@ -656,7 +656,7 @@ describe('editor-v2 - question details model', () => {
         questionId,
         stateId,
         undefined,
-        state
+        { state }
       )
 
       expect(result).toBeDefined()

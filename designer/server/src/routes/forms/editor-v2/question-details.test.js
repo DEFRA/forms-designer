@@ -150,7 +150,8 @@ describe('Editor v2 question details routes', () => {
 
     const $mastheadHeading = container.getByText('Test form')
     const $cardTitle = container.getByText('Question 1')
-    const $cardCaption = container.getByText('Page 1')
+    const $cardCaptions = container.getAllByText('Page 1')
+    const $cardCaption = $cardCaptions[0]
     const $cardHeading = container.getByText('Edit question 1')
 
     const $actions = container.getAllByRole('button')
@@ -208,7 +209,8 @@ describe('Editor v2 question details routes', () => {
 
     const $mastheadHeading = container.getByText('Test form')
     const $cardTitle = container.getByText('Question 2')
-    const $cardCaption = container.getByText('Page 1')
+    const $cardCaptions = container.getAllByText('Page 1')
+    const $cardCaption = $cardCaptions[0]
     const $cardHeading = container.getByText('Edit question 2')
 
     const $actions = container.getAllByRole('button')
@@ -267,7 +269,8 @@ describe('Editor v2 question details routes', () => {
 
     const $mastheadHeading = container.getByText('Test form')
     const $cardTitle = container.getByText('Question 1')
-    const $cardCaption = container.getByText('Page 1')
+    const $cardCaptions = container.getAllByText('Page 1')
+    const $cardCaption = $cardCaptions[0]
     const $cardHeading = container.getByText('Edit question 1')
 
     const $actions = container.getAllByRole('button')
@@ -318,7 +321,8 @@ describe('Editor v2 question details routes', () => {
 
     const $mastheadHeading = container.getByText('Test form')
 
-    const $cardCaption = container.getByText('Page 1')
+    const $cardCaptions = container.getAllByText('Page 1')
+    const $cardCaption = $cardCaptions[0]
 
     const $actions = container.getAllByRole('button')
 

@@ -16,23 +16,23 @@
     <ul class="govuk-tabs__list" role="tablist">
       {% for tab in tabs %}
         <li class="govuk-tabs__list-item{% if tab.active %} govuk-tabs__list-item--selected{% endif %}" role="presentation">
-          <a class="govuk-tabs__tab" 
-             href="#tab-{{ tab.id }}" 
-             id="tab_tab-{{ tab.id }}" 
-             role="tab" 
-             aria-controls="tab-{{ tab.id }}"
-             {% if tab.active %}aria-selected="true" tabindex="0"{% else %}aria-selected="false" tabindex="-1"{% endif %}>
+          <a class="govuk-tabs__tab"
+            href="#tab-{{ tab.id }}"
+            id="tab_tab-{{ tab.id }}"
+            role="tab"
+            aria-controls="tab-{{ tab.id }}"
+            {% if tab.active %}aria-selected="true" tabindex="0"{% else %}aria-selected="false" tabindex="-1"{% endif %}>
             {{ tab.label }}
           </a>
         </li>
       {% endfor %}
     </ul>
-->
-    <div class="govuk-tabs__panel{% if currentTab !== 'question' %} govuk-tabs__panel--hidden{% endif %}" 
-         id="tab-question" 
-         role="tabpanel" 
-         aria-labelledby="tab_tab-question">
-      
+
+    <div class="govuk-tabs__panel{% if currentTab !== 'question' %} govuk-tabs__panel--hidden{% endif %}"
+        id="tab-question"
+        role="tabpanel"
+        aria-labelledby="tab_tab-question">
+
       <form class="form" method="post" id="question-form">
         {%- include "forms/editor-v2/partials/question-details-base.njk" -%}
 
@@ -85,11 +85,11 @@
       </form>
     </div>
 
-    <div class="govuk-tabs__panel{% if currentTab !== 'conditions' %} govuk-tabs__panel--hidden{% endif %}" 
-         id="tab-conditions" 
-         role="tabpanel" 
-         aria-labelledby="tab_tab-conditions">
-      
+    <div class="govuk-tabs__panel{% if currentTab !== 'conditions' %} govuk-tabs__panel--hidden{% endif %}"
+        id="tab-conditions"
+        role="tabpanel"
+        aria-labelledby="tab_tab-conditions">
+
       {%- include "forms/editor-v2/partials/question-conditions-panel.njk" -%}
     </div>
 
@@ -100,4 +100,4 @@
 <script>
   import { Tabs } from 'govuk-frontend'
   new Tabs(document.querySelector('[data-module="govuk-tabs"]'))
-</script> 
+</script>

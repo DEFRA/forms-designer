@@ -23,7 +23,7 @@
         </div>
       </div>
     </div>
-    
+
     <form id="remove-condition-form" method="post" action="{{ pageConditionsApiUrl }}?questionId={{ questionId }}&stateId={{ stateId }}" style="display: none;">
       <input type="hidden" name="action" value="remove">
     </form>
@@ -83,12 +83,12 @@
       </div>
     </fieldset>
   </div>
-  
+
   {{ govukInsetText({
     html: '<h3 class="govuk-heading-s">Advanced conditions</h3><p class="govuk-body">Create, edit and combine conditions or reuse conditions in the <a href="' + conditionsManagerPath + '" class="govuk-link">conditions manager</a>.</p>'
   }) }}
 {% else %}
-  <p class="govuk-body">No conditions have been created. Go to the 
+  <p class="govuk-body">No conditions have been created. Go to the
     <a href="{{ conditionsManagerPath }}" class="govuk-link">conditions manager</a> and create a condition.
   </p>
-{% endif %} 
+{% endif %}
