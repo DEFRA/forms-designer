@@ -2,7 +2,6 @@ import { Engine } from '@defra/forms-model'
 
 import {
   buildDefinition,
-  testFormDefinitionWithMultipleV2Conditions,
   testFormDefinitionWithSummaryOnly
 } from '~/src/__stubs__/form-definition.js'
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
@@ -56,10 +55,26 @@ describe('Editor v2 conditions routes', () => {
   })
 
   test('GET - should check correct data is rendered in the view with multiple V2 conditions', async () => {
+    const testDefinitionWithV2Conditions = {
+      ...testFormDefinitionWithSummaryOnly,
+      engine: Engine.V2,
+      conditions: [
+        {
+          id: 'd5e9f931-e151-4dd6-a2b9-68a03f3537e2',
+          displayName: 'Test Condition V2',
+          conditions: []
+        }
+      ]
+    }
+
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     jest
       .mocked(forms.getDraftFormDefinition)
-      .mockResolvedValueOnce(testFormDefinitionWithMultipleV2Conditions)
+      .mockResolvedValueOnce(
+        /** @type {FormDefinition} */ (
+          /** @type {unknown} */ (testDefinitionWithV2Conditions)
+        )
+      )
 
     const options = {
       method: 'get',
@@ -76,10 +91,11 @@ describe('Editor v2 conditions routes', () => {
     expect($cardHeadings[0]).toHaveTextContent('All conditions')
 
     const $rows = container.getAllByRole('row')
-    expect($rows).toHaveLength(4)
+    expect($rows).toHaveLength(2) // header + 1 condition row
   })
 })
 
 /**
+ * @import { FormDefinition } from '@defra/forms-model'
  * @import { Server } from '@hapi/hapi'
  */

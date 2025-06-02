@@ -294,7 +294,9 @@ export function createRuntimeFormModel(definition) {
     hasComponentsEvenIfNoNext(page) ? page.components : []
   )
 
-  const v2Conditions = conditions.filter(isConditionWrapperV2)
+  const v2Conditions = /** @type {ConditionWrapperV2[]} */ (
+    conditions.filter(isConditionWrapperV2)
+  )
 
   return {
     getListById: (listId) => lists.find((list) => list.id === listId),
@@ -307,6 +309,6 @@ export function createRuntimeFormModel(definition) {
 
 /**
  * @import { ErrorDetailsItem } from '~/src/common/helpers/types.js'
- * @import { ComponentDef, FormDefinition, List, Page, QuestionSessionState, ListComponentsDef, RuntimeFormModel } from '@defra/forms-model'
+ * @import { ComponentDef, FormDefinition, List, Page, QuestionSessionState, ListComponentsDef, RuntimeFormModel, ConditionWrapperV2 } from '@defra/forms-model'
  * @import Wreck from '@hapi/wreck'
  */

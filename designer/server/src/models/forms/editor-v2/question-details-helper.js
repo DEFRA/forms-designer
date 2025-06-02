@@ -23,7 +23,9 @@ export function getPageConditionDetails(definition, pageId) {
   const pageCondition = page?.condition
   const pageConditionDetails = pageCondition
     ? /** @type {ConditionWrapperV2 | undefined} */ (
-        definition.conditions.find((c) => c.name === pageCondition)
+        definition.conditions
+          .filter(isConditionWrapperV2)
+          .find((c) => c.id === pageCondition)
       )
     : undefined
 
