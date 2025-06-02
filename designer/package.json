@@ -87,7 +87,7 @@
     "nanoid": "^5.0.7",
     "nunjucks": "^3.2.4",
     "path-webpack": "^0.0.3",
-    "pino": "^9.6.0",
+    "pino": "^9.7.0",
     "prismjs": "^1.30.0",
     "proxy-agent": "^6.5.0",
     "react": "^18.3.1",
