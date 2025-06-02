@@ -113,10 +113,10 @@ export function buildQuestionSessionState(
   }
 
   const component = getComponentFromDefinition(definition, pageId, questionId)
-  const listName = /** @type { ListComponentsDef | undefined } */ (component)
+  const listId = /** @type { ListComponentsDef | undefined } */ (component)
     ?.list
-  const items = listName
-    ? (definition.lists.find((x) => x.name === listName)?.items ?? [])
+  const items = listId
+    ? (definition.lists.find((x) => x.id === listId)?.items ?? [])
     : []
 
   const newState = /** @type { QuestionSessionState} */ ({

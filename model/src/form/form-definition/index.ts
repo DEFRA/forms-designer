@@ -455,6 +455,17 @@ export const componentSchemaV2 = componentSchema
   })
   .description('Component schema for V2 forms')
 
+export const componentPayloadSchemaV2 = componentSchema
+  .keys({
+    id: idSchema.description('Unique identifier for the component'),
+    list: Joi.string()
+      .optional()
+      .description(
+        'List id reference to a predefined list of options for select components'
+      )
+  })
+  .description('Payload schema for component for V2 forms')
+
 export const fileUploadComponentSchema = componentSchemaV2.keys({
   type: Joi.string<ComponentType.FileUploadField>()
     .trim()
@@ -678,6 +689,24 @@ export const pageSchemaV2 = pageSchema
       .description('Optional condition that determines if this page is shown')
   })
   .description('Page schema for V2 forms')
+
+export const pagePayloadSchemaV2 = pageSchemaV2
+  .append({
+    components: Joi.when('controller', {
+      switch: [
+        {
+          is: Joi.string().trim().valid(ControllerType.FileUpload).required(),
+          then: pageUploadComponentsSchema
+        }
+      ],
+      otherwise: Joi.array<ComponentDef>()
+        .items(componentPayloadSchemaV2)
+        .unique('name')
+        .unique('id')
+        .description('Components schema for V2 forms')
+    })
+  })
+  .description('Payload Page schema for V2 forms')
 
 const baseListItemSchema = Joi.object<Item>()
   .description('Base schema for list items with common properties')
