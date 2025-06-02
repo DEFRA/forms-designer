@@ -42,9 +42,12 @@ describe('Editor v2 migrate routes', () => {
 
     expect($mainHeading).toHaveTextContent('Test form')
     expect($subHeadings[0]).toHaveTextContent(
-      'Do you want to migrate this form to version 2?'
+      'Are you sure you want to switch to the new editor?'
     )
-    expect($buttons[2]).toHaveAccessibleName('Migrate')
+    container.getByText(
+      "You won't be able to use the old editor for this form after switching."
+    )
+    expect($buttons[2]).toHaveAccessibleName('Switch to new editor')
     expect($buttons[3]).toHaveAccessibleName('Cancel')
     expect($buttons[3]).toHaveAttribute('href', '/library/my-form-slug')
   })

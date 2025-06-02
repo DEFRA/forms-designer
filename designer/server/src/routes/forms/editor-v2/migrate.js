@@ -22,10 +22,14 @@ export default [
       const { slug } = params
 
       const metadata = await forms.get(slug, token)
+      const formDefinition = await forms.getDraftFormDefinition(
+        metadata.id,
+        token
+      )
 
       return h.view(
         CONFIRMATION_PAGE_VIEW,
-        viewModel.migrateConfirmationPageViewModel(metadata)
+        viewModel.migrateConfirmationPageViewModel(metadata, formDefinition)
       )
     },
     options: {
