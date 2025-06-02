@@ -88,7 +88,12 @@ export function deleteQuestionConfirmationPageViewModel(
 ) {
   const formTitle = metadata.title
   const formPath = formOverviewPath(metadata.slug)
-  const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
+  const navigation = getFormSpecificNavigation(
+    formPath,
+    metadata,
+    definition,
+    'Editor'
+  )
 
   const page = getPageFromDefinition(definition, pageId)
   const components = hasComponents(page) ? page.components : []
@@ -123,6 +128,7 @@ export function deleteQuestionConfirmationPageViewModel(
  * Model to represent confirmation page dialog for a given form.
  * @param { QuestionSessionState | undefined } state
  * @param {FormMetadata} metadata
+ * @param {FormDefinition} definition
  * @param {string} pageId
  * @param {string} questionId
  * @param {string} stateId
@@ -131,6 +137,7 @@ export function deleteQuestionConfirmationPageViewModel(
 export function deleteListItemConfirmationPageViewModel(
   state,
   metadata,
+  definition,
   pageId,
   questionId,
   stateId,
@@ -138,7 +145,12 @@ export function deleteListItemConfirmationPageViewModel(
 ) {
   const formTitle = metadata.title
   const formPath = formOverviewPath(metadata.slug)
-  const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
+  const navigation = getFormSpecificNavigation(
+    formPath,
+    metadata,
+    definition,
+    'Editor'
+  )
   const listItem = state?.listItems?.find((x) => x.id === itemId)
   const pageHeading = 'Are you sure you want to delete this item?'
 

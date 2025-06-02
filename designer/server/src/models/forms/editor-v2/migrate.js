@@ -7,11 +7,17 @@ import { formOverviewPath } from '~/src/models/links.js'
 /**
  * Model to represent confirmation page dialog for a given form.
  * @param {FormMetadata} metadata
+ * @param {FormDefinition} formDefinition
  */
-export function migrateConfirmationPageViewModel(metadata) {
+export function migrateConfirmationPageViewModel(metadata, formDefinition) {
   const formTitle = metadata.title
   const formPath = formOverviewPath(metadata.slug)
-  const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
+  const navigation = getFormSpecificNavigation(
+    formPath,
+    metadata,
+    formDefinition,
+    'Editor'
+  )
   const pageTitle = 'Do you want to migrate this form to version 2?'
 
   return {
@@ -38,5 +44,5 @@ export function migrateConfirmationPageViewModel(metadata) {
 }
 
 /**
- * @import { FormMetadata } from '@defra/forms-model'
+ * @import { FormMetadata, FormDefinition } from '@defra/forms-model'
  */

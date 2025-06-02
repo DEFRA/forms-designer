@@ -85,6 +85,7 @@ describe('Forms Library Models', () => {
         const navigation = getFormSpecificNavigation(
           formPath,
           metadataWithDraft,
+          formDefinitionV1,
           'Overview'
         )
 
@@ -95,10 +96,28 @@ describe('Forms Library Models', () => {
         ])
       })
 
+      it('includes V2 Editor link', () => {
+        const navigation = getFormSpecificNavigation(
+          formPath,
+          metadataWithDraft,
+          formDefinitionV2,
+          'Overview'
+        )
+
+        expect(navigation).toEqual([
+          buildEntry('Forms library', formsLibraryPath, { isActive: false }),
+          buildEntry('Overview', formPath, { isActive: true }),
+          buildEntry('Editor', `${formPath}/editor-v2/pages`, {
+            isActive: false
+          })
+        ])
+      })
+
       it('shows Editor page as active when activePage is "Editor"', () => {
         const navigation = getFormSpecificNavigation(
           formPath,
           metadataWithDraft,
+          formDefinitionV1,
           'Editor'
         )
 
@@ -108,6 +127,23 @@ describe('Forms Library Models', () => {
           buildEntry('Editor', `${formPath}/editor`, { isActive: true })
         ])
       })
+
+      it('shows EditorV2 page as active when activePage is "Editor" and schema is v2', () => {
+        const navigation = getFormSpecificNavigation(
+          formPath,
+          metadataWithDraft,
+          formDefinitionV2,
+          'Editor'
+        )
+
+        expect(navigation).toEqual([
+          buildEntry('Forms library', formsLibraryPath, { isActive: false }),
+          buildEntry('Overview', formPath, { isActive: false }),
+          buildEntry('Editor', `${formPath}/editor-v2/pages`, {
+            isActive: true
+          })
+        ])
+      })
     })
 
     describe('without draft', () => {
@@ -115,6 +151,7 @@ describe('Forms Library Models', () => {
         const navigation = getFormSpecificNavigation(
           formPath,
           metadataWithLive,
+          undefined,
           'Overview'
         )
 
@@ -128,6 +165,7 @@ describe('Forms Library Models', () => {
         const navigation = getFormSpecificNavigation(
           formPath,
           metadataWithLive,
+          undefined,
           'Editor'
         )
 
@@ -143,6 +181,7 @@ describe('Forms Library Models', () => {
         const navigation = getFormSpecificNavigation(
           formPath,
           metadataWithDraft,
+          formDefinitionV1,
           'NonExistingPage'
         )
 
@@ -158,7 +197,8 @@ describe('Forms Library Models', () => {
       it('shows no navigation item as active when activePage is defaulted', () => {
         const navigation = getFormSpecificNavigation(
           formPath,
-          metadataWithDraft
+          metadataWithDraft,
+          formDefinitionV1
         )
 
         expect(navigation).toEqual([
@@ -184,6 +224,7 @@ describe('Forms Library Models', () => {
           navigation: getFormSpecificNavigation(
             formPath,
             metadataWithDraft,
+            formDefinitionV1,
             'Overview'
           ),
           backLink: {
@@ -237,6 +278,7 @@ describe('Forms Library Models', () => {
           navigation: getFormSpecificNavigation(
             formPath,
             metadataWithDraft,
+            formDefinitionV2,
             'Overview'
           ),
           backLink: {
@@ -279,7 +321,7 @@ describe('Forms Library Models', () => {
         const notificationMessage = 'Form updated successfully'
         const viewModel = overviewViewModel(
           metadataWithLive,
-          formDefinitionV1,
+          undefined,
           notificationMessage
         )
 
@@ -287,6 +329,7 @@ describe('Forms Library Models', () => {
           navigation: getFormSpecificNavigation(
             formPath,
             metadataWithLive,
+            undefined,
             'Overview'
           ),
           backLink: {
@@ -328,6 +371,7 @@ describe('Forms Library Models', () => {
         navigation: getFormSpecificNavigation(
           formPath,
           metadataWithDraft,
+          undefined,
           'Editor'
         ),
         formDefinition: mockDefinition,

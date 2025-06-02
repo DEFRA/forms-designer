@@ -22,6 +22,7 @@ export default [
       const { yar } = request
       const { token } = request.auth.credentials
       const form = await forms.get(request.params.slug, token)
+      const formDefinition = await forms.getDraftFormDefinition(form.id, token)
 
       const formPromotionValidationFailure = yar.flash(sessionNames.errorList)
 
@@ -29,6 +30,7 @@ export default [
         CONFIRMATION_PAGE_VIEW,
         formLifecycle.makeDraftLiveConfirmationPageViewModel(
           form,
+          formDefinition,
           formPromotionValidationFailure
         )
       )
@@ -128,6 +130,7 @@ export default [
       const { yar } = request
       const { token } = request.auth.credentials
       const form = await forms.get(request.params.slug, token)
+      const formDefinition = await forms.getDraftFormDefinition(form.id, token)
 
       const deletionValidationFailure = yar.flash(sessionNames.errorList)
 
@@ -135,6 +138,7 @@ export default [
         CONFIRMATION_PAGE_VIEW,
         formLifecycle.deleteDraftConfirmationPageViewModel(
           form,
+          formDefinition,
           deletionValidationFailure
         )
       )
@@ -160,6 +164,7 @@ export default [
       const { token } = request.auth.credentials
 
       const form = await forms.get(request.params.slug, token)
+      const formDefinition = await forms.getDraftFormDefinition(form.id, token)
 
       try {
         // Currently we don't support leaving the metadata widowed with no form definitions.
@@ -181,7 +186,11 @@ export default [
 
           return h.view(
             CONFIRMATION_PAGE_VIEW,
-            formLifecycle.deleteDraftConfirmationPageViewModel(form, errorList)
+            formLifecycle.deleteDraftConfirmationPageViewModel(
+              form,
+              formDefinition,
+              errorList
+            )
           )
         }
 

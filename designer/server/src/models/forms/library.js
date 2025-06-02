@@ -205,7 +205,12 @@ export function overviewViewModel(metadata, formDefinition, notification) {
   const editorV1Path = `${formPath}/editor`
   const editorV2Path = `${formPath}/editor-v2/pages`
 
-  const navigation = getFormSpecificNavigation(formPath, metadata, 'Overview')
+  const navigation = getFormSpecificNavigation(
+    formPath,
+    metadata,
+    formDefinition,
+    'Overview'
+  )
 
   const v1Buttons = [
     {
@@ -300,7 +305,12 @@ export function editorViewModel(metadata, definition) {
   const pageTitle = metadata.title
   const formPath = formOverviewPath(metadata.slug)
 
-  const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
+  const navigation = getFormSpecificNavigation(
+    formPath,
+    metadata,
+    definition,
+    'Editor'
+  )
 
   return {
     backLink: formOverviewBackLink(metadata.slug),
@@ -321,16 +331,26 @@ export function editorViewModel(metadata, definition) {
  * a page, that page will have isActive:true set.
  * @param {string} formPath
  * @param {FormMetadata} metadata
+ * @param { FormDefinition | undefined } draftFormDefinition
  * @param {string} activePage
  */
-export function getFormSpecificNavigation(formPath, metadata, activePage = '') {
+export function getFormSpecificNavigation(
+  formPath,
+  metadata,
+  draftFormDefinition,
+  activePage = ''
+) {
   const navigationItems = [
     ['Forms library', formsLibraryPath],
     ['Overview', formPath]
   ]
 
   if (metadata.draft) {
-    navigationItems.push(['Editor', `${formPath}/editor`])
+    const draftEditorLink =
+      draftFormDefinition?.schema === SchemaVersion.V2
+        ? `${formPath}/editor-v2/pages`
+        : `${formPath}/editor`
+    navigationItems.push(['Editor', draftEditorLink])
   }
 
   return navigationItems.map((item) =>

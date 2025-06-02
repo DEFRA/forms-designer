@@ -73,7 +73,12 @@ export function checkAnswersSettingsViewModel(
 ) {
   const formTitle = metadata.title
   const formPath = formOverviewPath(metadata.slug)
-  const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
+  const navigation = getFormSpecificNavigation(
+    formPath,
+    metadata,
+    definition,
+    'Editor'
+  )
   const { formValues, formErrors } = validation ?? {}
 
   const page = getPageFromDefinition(definition, pageId)
