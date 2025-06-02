@@ -2,6 +2,7 @@ import { ComponentType } from '@defra/forms-model'
 
 import {
   testFormDefinitionWithRadioQuestionAndList,
+  testFormDefinitionWithRadioQuestionAndmislinkedList,
   testFormDefinitionWithTwoPagesAndQuestions
 } from '~/src/__stubs__/form-definition.js'
 import {
@@ -185,6 +186,27 @@ describe('Session functions', () => {
           { id: expect.any(String), text: 'Red', value: 'red' },
           { id: expect.any(String), text: 'Green', value: 'green' }
         ],
+        questionType: 'RadiosField'
+      }
+      expect(mockSet).toHaveBeenCalledWith(
+        'questionSessionState-123',
+        expectedState
+      )
+      expect(res).toEqual(expectedState)
+    })
+
+    test('should handle mis-linked list', () => {
+      mockGet.mockReturnValue({ questionType: ComponentType.RadiosField })
+      const res = buildQuestionSessionState(
+        mockYar,
+        '123',
+        testFormDefinitionWithRadioQuestionAndmislinkedList,
+        'p1',
+        'q1'
+      )
+      const expectedState = {
+        editRow: {},
+        listItems: [],
         questionType: 'RadiosField'
       }
       expect(mockSet).toHaveBeenCalledWith(

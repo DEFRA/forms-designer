@@ -738,6 +738,50 @@ export const testFormDefinitionWithRadioQuestionAndList = {
 /**
  * @satisfies {FormDefinition}
  */
+export const testFormDefinitionWithRadioQuestionAndmislinkedList = {
+  name: 'Test form',
+  pages: [
+    {
+      id: 'p1',
+      path: '/radio-question',
+      title: 'Radio question',
+      section: 'section',
+      components: [
+        {
+          id: 'q1',
+          type: ComponentType.RadiosField,
+          name: 'radio-field',
+          title: 'Select a colour',
+          options: {},
+          list: 'my-list-guid'
+        }
+      ],
+      next: [{ path: '/summary' }]
+    },
+    {
+      id: 'p2',
+      title: 'Summary',
+      path: '/summary',
+      controller: ControllerType.Summary,
+      components: []
+    }
+  ],
+  conditions: [],
+  sections: [],
+  lists: [
+    {
+      id: 'my-list-guid-invalid',
+      name: 'my-list',
+      title: 'my list title',
+      type: 'string',
+      items: []
+    }
+  ]
+}
+
+/**
+ * @satisfies {FormDefinition}
+ */
 export const testFormDefinitionWithOneQuestionNoPageTitle = {
   name: 'Test form',
   pages: [
