@@ -195,22 +195,13 @@ function buildPaginationPages(
 }
 
 /**
- * @param {FormMetadata} metadata
- * @param { FormDefinition|undefined } formDefinition
- * @param {string} [notification] - success notification to display
+ * @param {string} formPath
+ * @param { FormDefinition | undefined } formDefinition
  */
-export function overviewViewModel(metadata, formDefinition, notification) {
-  const pageTitle = metadata.title
-  const formPath = formOverviewPath(metadata.slug)
+function overviewCTA(formPath, formDefinition) {
   const editorV1Path = `${formPath}/editor`
   const editorV2Path = `${formPath}/editor-v2/pages`
-
-  const navigation = getFormSpecificNavigation(
-    formPath,
-    metadata,
-    formDefinition,
-    'Overview'
-  )
+  const isV2Schema = formDefinition?.schema === SchemaVersion.V2
 
   const v1Buttons = [
     {
@@ -244,13 +235,24 @@ export function overviewViewModel(metadata, formDefinition, notification) {
     }
   ]
 
-  const showV2Buttons = formDefinition?.schema === SchemaVersion.V2
-  const formAction =
-    formDefinition?.schema === SchemaVersion.V2 ? editorV2Path : editorV1Path
+  return {
+    draftButtons: isV2Schema ? v2Buttons : v1Buttons,
+    formAction: isV2Schema ? editorV2Path : editorV1Path
+  }
+}
 
-  // TODO: add functionality
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  const draftButtons = showV2Buttons ? v2Buttons : v1Buttons
+/**
+ * @param {FormMetadata} metadata
+ * @param { FormDefinition|undefined } formDef
+ * @param {string} [notification] - success notification to display
+ */
+export function overviewViewModel(metadata, formDef, notification) {
+  const pageTitle = metadata.title
+  const formPath = formOverviewPath(metadata.slug)
+
+  // prettier-ignore
+  const navigation = getFormSpecificNavigation(formPath, metadata, formDef, 'Overview')
+  const { formAction, draftButtons } = overviewCTA(formPath, formDef)
 
   return {
     backLink: formsLibraryBackLink,
