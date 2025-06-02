@@ -889,8 +889,7 @@ describe('Editor v2 question details routes', () => {
       '/library/my-form-slug/editor-v2/page/123456/questions'
     )
     const [, , , question] = addQuestionMock.mock.calls[0]
-    // TODO: When forms runner is updated move to id
-    expect(question).toMatchObject({ list: name })
+    expect(question).toMatchObject({ list: listId })
   })
 
   describe('saveList', () => {
@@ -940,7 +939,7 @@ describe('Editor v2 question details routes', () => {
         { type: ComponentType.RadiosField },
         []
       )
-      expect(res).toBe(listName)
+      expect(res).toBe(listId)
     })
 
     test('should return list name if list saved, even if no entries', async () => {
@@ -951,7 +950,7 @@ describe('Editor v2 question details routes', () => {
         { type: ComponentType.RadiosField },
         undefined
       )
-      expect(res).toBe(listName)
+      expect(res).toBe(listId)
     })
 
     test('should return undefined if failed to save', async () => {

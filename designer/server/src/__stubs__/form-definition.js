@@ -705,7 +705,7 @@ export const testFormDefinitionWithRadioQuestionAndList = {
           name: 'radio-field',
           title: 'Select a colour',
           options: {},
-          list: 'my-list'
+          list: 'my-list-guid'
         }
       ],
       next: [{ path: '/summary' }]
@@ -722,7 +722,7 @@ export const testFormDefinitionWithRadioQuestionAndList = {
   sections: [],
   lists: [
     {
-      id: 'my-list-id',
+      id: 'my-list-guid',
       name: 'my-list',
       title: 'my list title',
       type: 'string',
