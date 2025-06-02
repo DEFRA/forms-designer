@@ -87,7 +87,7 @@ export default [
 
         if (action === 'add' && conditionName) {
           await setPageCondition(formId, token, pageId, conditionName)
-        } else if (action === 'remove') {
+        } else {
           await setPageCondition(formId, token, pageId, null)
         }
 

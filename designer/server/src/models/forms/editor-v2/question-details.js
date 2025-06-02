@@ -1,20 +1,10 @@
 import { YesNoField } from '@defra/forms-engine-plugin/engine/components/YesNoField.js'
 import { createComponent } from '@defra/forms-engine-plugin/helpers.js'
-import {
-  ComponentType,
-  ConditionsModel,
-  FormStatus,
-  convertConditionWrapperFromV2,
-  isConditionWrapperV2,
-  randomId
-} from '@defra/forms-model'
+import { ComponentType, randomId } from '@defra/forms-model'
 
 import { QuestionTypeDescriptions } from '~/src/common/constants/editor.js'
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
-import {
-  createRuntimeFormModel,
-  getPageFromDefinition
-} from '~/src/lib/utils.js'
+import { getPageFromDefinition } from '~/src/lib/utils.js'
 import { advancedSettingsPerComponentType } from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
 import {
   getFieldList,
@@ -24,8 +14,6 @@ import {
 import {
   SAVE_AND_CONTINUE,
   baseModelFields,
-  buildPreviewErrorsUrl,
-  buildPreviewUrl,
   getFormSpecificNavigation,
   getPageNum,
   getQuestion,
@@ -38,7 +26,13 @@ import {
   advancedSettingsFields,
   enhancedFields
 } from '~/src/models/forms/editor-v2/question-details-advanced-settings.js'
-import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
+import {
+  getConditionsData,
+  getPageConditionDetails,
+  getTabsConfiguration,
+  getUrlsConfiguration
+} from '~/src/models/forms/editor-v2/question-details-helper.js'
+import { formOverviewPath } from '~/src/models/links.js'
 
 const zeroIsValidForFields = [
   'maxFuture',
@@ -261,12 +255,18 @@ export function questionDetailsViewModel(
 ) {
   const { state, currentTab = 'question', conditionsValidation } = options
   const questionType = state?.questionType
-  // prettier-ignore
-  const details = getDetails(metadata, definition, pageId, questionId, questionType)
+  const details = getDetails(
+    metadata,
+    definition,
+    pageId,
+    questionId,
+    questionType
+  )
   const formTitle = metadata.title
   const questionFieldsOverride = /** @type {ComponentDef} */ (
     state?.questionDetails ?? details.question
   )
+
   const basePageFields = getFieldList(
     /** @type {InputFieldsComponentsDef} */ (questionFieldsOverride),
     questionType,
@@ -281,52 +281,28 @@ export function questionDetailsViewModel(
   const enhancedFieldList = /** @type {GovukField[]} */ (
     getEnhancedFields(questionFieldsOverride, validation)
   )
+
   const extraFieldNames = extraFields.map((field) => field.name ?? 'unknown')
   const errorList = buildErrorList(validation?.formErrors)
-  const previewPageUrl = `${buildPreviewUrl(metadata.slug, FormStatus.Draft)}${details.pagePath}?force`
-  const previewErrorsUrl = `${buildPreviewErrorsUrl(metadata.slug)}${details.pagePath}/${questionFieldsOverride.id}`
-  const urlPageBase = editorv2Path(metadata.slug, `page/${pageId}`)
-  const deleteUrl = `${urlPageBase}/delete/${questionId}`
-  const changeTypeUrl = `${urlPageBase}/question/${questionId}/type/${stateId}`
-  const pageHeading = details.pageTitle
-  const pageTitle = `Edit question ${details.questionNum} - ${formTitle}`
   const errorTemplates = getErrorTemplates(questionType)
 
-  const page = definition.pages.find((p) => p.id === pageId)
-  const pageCondition = page?.condition
-  const pageConditionDetails = pageCondition
-    ? definition.conditions.find((c) => c.name === pageCondition)
-    : null
+  const pageHeading = details.pageTitle
+  const pageTitle = `Edit question ${details.questionNum} - ${formTitle}`
 
-  let pageConditionPresentationString = null
-  if (pageConditionDetails) {
-    const accessors = createRuntimeFormModel(definition)
+  const urls = getUrlsConfiguration(
+    metadata.slug,
+    pageId,
+    questionId,
+    stateId,
+    details.pagePath,
+    questionFieldsOverride.id
+  )
 
-    const conditionAsV1 = convertConditionWrapperFromV2(
-      /** @type {ConditionWrapperV2} */ (pageConditionDetails),
-      accessors
-    )
-    pageConditionPresentationString = ConditionsModel.from(
-      conditionAsV1.value
-    ).toPresentationString()
-  }
+  const conditionDetails = getPageConditionDetails(definition, pageId)
 
-  const v2Conditions = definition.conditions
-    .filter(isConditionWrapperV2)
-    .sort((a, b) => a.displayName.localeCompare(b.displayName))
+  const allConditions = getConditionsData(definition)
 
-  const tabs = [
-    {
-      id: 'question',
-      label: 'Question',
-      active: currentTab === 'question'
-    },
-    {
-      id: 'conditions',
-      label: 'Conditions',
-      active: currentTab === 'conditions'
-    }
-  ]
+  const tabs = getTabsConfiguration(currentTab)
 
   return {
     listDetails: getListDetails(state, questionFieldsOverride),
@@ -352,25 +328,23 @@ export function questionDetailsViewModel(
     questionTypeDesc: QuestionTypeDescriptions.find(
       (x) => x.type === questionFieldsOverride.type
     )?.description,
-    changeTypeUrl,
+    changeTypeUrl: urls.changeTypeUrl,
     buttonText: SAVE_AND_CONTINUE,
-    previewPageUrl,
-    previewErrorsUrl,
-    deleteUrl,
+    previewPageUrl: urls.previewPageUrl,
+    previewErrorsUrl: urls.previewErrorsUrl,
+    deleteUrl: urls.deleteUrl,
     isOpen: hasDataOrErrorForDisplay(extraFieldNames, errorList, extraFields),
     getFieldType: (/** @type {GovukField} */ field) =>
       getFieldComponentType(field),
     tabs,
     currentTab,
-    pageCondition,
-    pageConditionDetails,
-    pageConditionPresentationString,
-    allConditions: v2Conditions,
-    conditionsManagerPath: editorv2Path(metadata.slug, 'conditions'),
-    pageConditionsApiUrl: editorv2Path(
-      metadata.slug,
-      `page/${pageId}/conditions`
-    ),
+    pageCondition: conditionDetails.pageCondition,
+    pageConditionDetails: conditionDetails.pageConditionDetails,
+    pageConditionPresentationString:
+      conditionDetails.pageConditionPresentationString,
+    allConditions,
+    conditionsManagerPath: urls.conditionsManagerPath,
+    pageConditionsApiUrl: urls.pageConditionsApiUrl,
     conditionsFormErrors: conditionsValidation?.formErrors,
     conditionsFormValues: conditionsValidation?.formValues
   }
