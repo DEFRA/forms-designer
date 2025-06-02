@@ -46,9 +46,7 @@ export default [
         const model = await library.listViewModel(token, listOptions)
 
         if (author === 'all') {
-          if (!model.search) {
-            model.search = {}
-          }
+          model.search ??= {}
           model.search.author = 'all'
         }
 
