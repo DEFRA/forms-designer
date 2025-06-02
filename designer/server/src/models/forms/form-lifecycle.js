@@ -5,13 +5,18 @@ import { formOverviewPath } from '~/src/models/links.js'
 /**
  * Model to represent confirmation page dialog for a given form.
  * @param {FormMetadata} form
+ * @param {FormDefinition} formDefinition
  * @param {ErrorDetailsItem[]} errorList - list of errors to display to the user
  */
-export function makeDraftLiveConfirmationPageViewModel(form, errorList) {
+export function makeDraftLiveConfirmationPageViewModel(
+  form,
+  formDefinition,
+  errorList
+) {
   const pageTitle = 'Are you sure you want to make the draft live?'
 
   const formPath = formOverviewPath(form.slug)
-  const navigation = getFormSpecificNavigation(formPath, form)
+  const navigation = getFormSpecificNavigation(formPath, form, formDefinition)
 
   return {
     navigation,
@@ -50,13 +55,18 @@ export function makeDraftLiveConfirmationPageViewModel(form, errorList) {
 /**
  * Model to represent confirmation page dialog for a given form.
  * @param {FormMetadata} form
+ * @param {FormDefinition} formDefinition
  * @param {ErrorDetailsItem[]} errorList - list of errors to display to the user
  */
-export function deleteDraftConfirmationPageViewModel(form, errorList) {
+export function deleteDraftConfirmationPageViewModel(
+  form,
+  formDefinition,
+  errorList
+) {
   const pageTitle = 'Are you sure you want to delete this form?'
 
   const formPath = formOverviewPath(form.slug)
-  const navigation = getFormSpecificNavigation(formPath, form)
+  const navigation = getFormSpecificNavigation(formPath, form, formDefinition)
 
   return {
     navigation,
@@ -85,6 +95,6 @@ export function deleteDraftConfirmationPageViewModel(form, errorList) {
 }
 
 /**
- * @import { FormMetadata } from '@defra/forms-model'
+ * @import { FormMetadata, FormDefinition } from '@defra/forms-model'
  * @import { ErrorDetailsItem } from '~/src/common/helpers/types.js'
  */

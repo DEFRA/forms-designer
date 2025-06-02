@@ -151,7 +151,12 @@ export function getDetails(
 
   return {
     pageTitle: metadata.title,
-    navigation: getFormSpecificNavigation(formPath, metadata, 'Editor'),
+    navigation: getFormSpecificNavigation(
+      formPath,
+      metadata,
+      definition,
+      'Editor'
+    ),
     question: questionOverride,
     questionNum,
     pageNum,

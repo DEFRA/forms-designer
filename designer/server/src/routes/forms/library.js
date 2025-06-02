@@ -112,6 +112,10 @@ export default [
 
         // Retrieve form by slug
         const form = await forms.get(params.slug, token)
+        let definition
+        if (form.draft) {
+          definition = await forms.getDraftFormDefinition(form.id, token)
+        }
 
         const titleActionItems = []
         if (!form.live) {
@@ -124,6 +128,7 @@ export default [
 
         const model = library.overviewViewModel(
           form,
+          definition,
           yar.flash(sessionNames.successNotification).at(0)
         )
 

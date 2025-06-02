@@ -8,14 +8,20 @@ import { formOverviewPath } from '~/src/models/links.js'
 
 /**
  * @param {FormMetadata} metadata
+ * @param {FormDefinition} formDefinition
  * @param {Partial<FormEditor>} [editor]
  * @param {ValidationFailure<FormEditor>} [validation]
  */
-export function pageViewModel(metadata, editor, validation) {
+export function pageViewModel(metadata, formDefinition, editor, validation) {
   const formTitle = metadata.title
   const pageHeading = 'What kind of page do you need?'
   const formPath = formOverviewPath(metadata.slug)
-  const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
+  const navigation = getFormSpecificNavigation(
+    formPath,
+    metadata,
+    formDefinition,
+    'Editor'
+  )
   const { formValues, formErrors } = validation ?? {}
 
   return {
@@ -59,6 +65,6 @@ export function pageViewModel(metadata, editor, validation) {
 }
 
 /**
- * @import { FormMetadata, FormEditor } from '@defra/forms-model'
+ * @import { FormMetadata, FormEditor, FormDefinition } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

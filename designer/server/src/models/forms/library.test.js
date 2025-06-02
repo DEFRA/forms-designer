@@ -1,4 +1,5 @@
-import { FormStatus } from '@defra/forms-model'
+import { FormStatus, SchemaVersion } from '@defra/forms-model'
+import { buildDefinition } from '@defra/forms-model/stubs'
 
 import { buildEntry } from '~/src/common/nunjucks/context/build-navigation.js'
 import * as forms from '~/src/lib/forms.js'
@@ -25,12 +26,12 @@ describe('Forms Library Models', () => {
   }
 
   const now = new Date()
-
+  const FORM_ID = '661e4ca5039739ef2902b214'
   /**
    * @satisfies {FormMetadata}
    */
   const metadataWithDraft = {
-    id: '661e4ca5039739ef2902b214',
+    id: FORM_ID,
     slug: formSlug,
     title: 'Test Form',
     organisation: 'Defra',
@@ -53,7 +54,7 @@ describe('Forms Library Models', () => {
    * @satisfies {FormMetadata}
    */
   const metadataWithLive = {
-    id: '661e4ca5039739ef2902b214',
+    id: FORM_ID,
     slug: formSlug,
     title: 'Test Form',
     organisation: 'Defra',
@@ -72,12 +73,19 @@ describe('Forms Library Models', () => {
     }
   }
 
+  const formDefinitionV1 = buildDefinition()
+
+  const formDefinitionV2 = buildDefinition({
+    schema: SchemaVersion.V2
+  })
+
   describe('getFormSpecificNavigation', () => {
     describe('with draft existing', () => {
       it('includes Editor link', () => {
         const navigation = getFormSpecificNavigation(
           formPath,
           metadataWithDraft,
+          formDefinitionV1,
           'Overview'
         )
 
@@ -88,10 +96,28 @@ describe('Forms Library Models', () => {
         ])
       })
 
+      it('includes V2 Editor link', () => {
+        const navigation = getFormSpecificNavigation(
+          formPath,
+          metadataWithDraft,
+          formDefinitionV2,
+          'Overview'
+        )
+
+        expect(navigation).toEqual([
+          buildEntry('Forms library', formsLibraryPath, { isActive: false }),
+          buildEntry('Overview', formPath, { isActive: true }),
+          buildEntry('Editor', `${formPath}/editor-v2/pages`, {
+            isActive: false
+          })
+        ])
+      })
+
       it('shows Editor page as active when activePage is "Editor"', () => {
         const navigation = getFormSpecificNavigation(
           formPath,
           metadataWithDraft,
+          formDefinitionV1,
           'Editor'
         )
 
@@ -101,6 +127,23 @@ describe('Forms Library Models', () => {
           buildEntry('Editor', `${formPath}/editor`, { isActive: true })
         ])
       })
+
+      it('shows EditorV2 page as active when activePage is "Editor" and schema is v2', () => {
+        const navigation = getFormSpecificNavigation(
+          formPath,
+          metadataWithDraft,
+          formDefinitionV2,
+          'Editor'
+        )
+
+        expect(navigation).toEqual([
+          buildEntry('Forms library', formsLibraryPath, { isActive: false }),
+          buildEntry('Overview', formPath, { isActive: false }),
+          buildEntry('Editor', `${formPath}/editor-v2/pages`, {
+            isActive: true
+          })
+        ])
+      })
     })
 
     describe('without draft', () => {
@@ -108,6 +151,7 @@ describe('Forms Library Models', () => {
         const navigation = getFormSpecificNavigation(
           formPath,
           metadataWithLive,
+          undefined,
           'Overview'
         )
 
@@ -121,6 +165,7 @@ describe('Forms Library Models', () => {
         const navigation = getFormSpecificNavigation(
           formPath,
           metadataWithLive,
+          undefined,
           'Editor'
         )
 
@@ -136,6 +181,7 @@ describe('Forms Library Models', () => {
         const navigation = getFormSpecificNavigation(
           formPath,
           metadataWithDraft,
+          formDefinitionV1,
           'NonExistingPage'
         )
 
@@ -151,7 +197,8 @@ describe('Forms Library Models', () => {
       it('shows no navigation item as active when activePage is defaulted', () => {
         const navigation = getFormSpecificNavigation(
           formPath,
-          metadataWithDraft
+          metadataWithDraft,
+          formDefinitionV1
         )
 
         expect(navigation).toEqual([
@@ -169,6 +216,7 @@ describe('Forms Library Models', () => {
         const notificationMessage = 'Form updated successfully'
         const viewModel = overviewViewModel(
           metadataWithDraft,
+          formDefinitionV1,
           notificationMessage
         )
 
@@ -176,6 +224,7 @@ describe('Forms Library Models', () => {
           navigation: getFormSpecificNavigation(
             formPath,
             metadataWithDraft,
+            formDefinitionV1,
             'Overview'
           ),
           backLink: {
@@ -189,6 +238,60 @@ describe('Forms Library Models', () => {
           notification: notificationMessage,
           formManage: {
             action: `${formPath}/editor`,
+            method: 'GET',
+            buttons: [
+              {
+                text: 'Edit draft (new editor)',
+                classes:
+                  'govuk-button--secondary-quiet govuk-button--secondary-defra-quiet',
+                href: `${formPath}/editor-v2/pages`
+              },
+              {
+                text: 'Edit draft (legacy editor)',
+                classes: 'govuk-button--secondary-quiet'
+              },
+              {
+                text: 'Make draft live',
+                attributes: {
+                  formaction: `${formPath}/make-draft-live`
+                }
+              }
+            ],
+            links: [
+              {
+                text: 'Delete draft',
+                href: `${formPath}/delete-draft`
+              }
+            ]
+          }
+        })
+      })
+      it('returns correct view model structure for V2 schema', () => {
+        const notificationMessage = 'Form updated successfully'
+        const viewModel = overviewViewModel(
+          metadataWithDraft,
+          formDefinitionV2,
+          notificationMessage
+        )
+
+        expect(viewModel).toMatchObject({
+          navigation: getFormSpecificNavigation(
+            formPath,
+            metadataWithDraft,
+            formDefinitionV2,
+            'Overview'
+          ),
+          backLink: {
+            href: formsLibraryPath,
+            text: 'Back to forms library'
+          },
+          pageHeading: {
+            text: metadataWithDraft.title,
+            size: 'large'
+          },
+          notification: notificationMessage,
+          formManage: {
+            action: `${formPath}/editor-v2/pages`,
             method: 'GET',
             buttons: [
               {
@@ -218,6 +321,7 @@ describe('Forms Library Models', () => {
         const notificationMessage = 'Form updated successfully'
         const viewModel = overviewViewModel(
           metadataWithLive,
+          undefined,
           notificationMessage
         )
 
@@ -225,6 +329,7 @@ describe('Forms Library Models', () => {
           navigation: getFormSpecificNavigation(
             formPath,
             metadataWithLive,
+            undefined,
             'Overview'
           ),
           backLink: {
@@ -266,6 +371,7 @@ describe('Forms Library Models', () => {
         navigation: getFormSpecificNavigation(
           formPath,
           metadataWithDraft,
+          undefined,
           'Editor'
         ),
         formDefinition: mockDefinition,
