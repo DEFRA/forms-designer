@@ -168,7 +168,7 @@ export interface ConditionWrapper {
 }
 
 export interface ConditionWrapperV2 {
-  name: string
+  id: string
   displayName: string
   coordinator?: Coordinator
   conditions: ConditionGroupDataV2

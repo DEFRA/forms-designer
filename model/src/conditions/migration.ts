@@ -126,7 +126,7 @@ function convertConditionRefDataFromV2(
   }
 
   return {
-    conditionName: refCondition.name,
+    conditionName: refCondition.id,
     conditionDisplayName: refCondition.displayName,
     coordinator
   }
@@ -157,10 +157,10 @@ export function convertConditionWrapperFromV2(
   }
 
   const newConditionWrapper: ConditionWrapper = {
-    name: conditionWrapper.name,
+    name: conditionWrapper.id,
     displayName: conditionWrapper.displayName,
     value: {
-      name: conditionWrapper.name,
+      name: conditionWrapper.id,
       conditions: conditionWrapper.conditions.map((condition, index) => {
         let newCondition: ConditionData | ConditionRefData
 
