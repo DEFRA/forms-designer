@@ -35,7 +35,7 @@ export function buildConditionsTable(slug, definition) {
     getComponentById: (componentId) =>
       components.find((component) => component.id === componentId),
     getConditionById: (conditionId) =>
-      v2Conditions.find((condition) => condition.name === conditionId)
+      v2Conditions.find((condition) => condition.id === conditionId)
   }
 
   return {
@@ -46,13 +46,13 @@ export function buildConditionsTable(slug, definition) {
       const conditionAsV1 = convertConditionWrapperFromV2(condition, accessors)
       const usedIn = pages
         .map((page, index) => ({ page, index }))
-        .filter(({ page }) => page.condition === condition.name)
+        .filter(({ page }) => page.condition === condition.id)
         .map(({ index }) => `Page ${index + 1}`)
         .join(', ')
 
       const linkClasses = 'govuk-link govuk-link--no-visited-state'
-      const editLink = `<a class="${linkClasses}" href="${editBaseUrl}${condition.name}/edit">Edit</a>`
-      const deleteLink = `<a class="${linkClasses}" href="${editBaseUrl}${condition.name}/delete">Delete</a>`
+      const editLink = `<a class="${linkClasses}" href="${editBaseUrl}${condition.id}/edit">Edit</a>`
+      const deleteLink = `<a class="${linkClasses}" href="${editBaseUrl}${condition.id}/delete">Delete</a>`
 
       return [
         {

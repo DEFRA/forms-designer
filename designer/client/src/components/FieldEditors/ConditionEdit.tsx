@@ -1,4 +1,4 @@
-import { hasConditionSupport } from '@defra/forms-model'
+import { hasConditionSupport, isConditionWrapper } from '@defra/forms-model'
 import { useContext } from 'react'
 
 import { DataContext } from '~/src/context/DataContext.js'
@@ -42,7 +42,7 @@ export function ConditionEdit() {
         }
       >
         <option value="">{i18n('fieldEdit.conditions.option')}</option>
-        {conditions.map((condition) => (
+        {conditions.filter(isConditionWrapper).map((condition) => (
           <option key={condition.name} value={condition.name}>
             {condition.displayName}
           </option>

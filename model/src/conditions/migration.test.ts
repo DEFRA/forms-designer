@@ -29,7 +29,7 @@ describe('Migration', () => {
 
   test('convertConditionWrapperFromV2 throws error when coordinator is missing for multiple conditions', () => {
     const conditionWrapper: ConditionWrapperV2 = {
-      name: 'testWrapper',
+      id: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
       displayName: 'Test Wrapper',
       conditions: [
         {
@@ -60,7 +60,7 @@ describe('Migration', () => {
 
   test('convertConditionWrapperFromV2 converts a single condition correctly', () => {
     const conditionWrapper: ConditionWrapperV2 = {
-      name: 'testWrapper',
+      id: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
       displayName: 'Test Wrapper',
       conditions: [
         {
@@ -89,10 +89,10 @@ describe('Migration', () => {
     const result = convertConditionWrapperFromV2(conditionWrapper, model)
 
     expect(result).toEqual({
-      name: 'testWrapper',
+      name: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
       displayName: 'Test Wrapper',
       value: {
-        name: 'testWrapper',
+        name: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
         conditions: [
           {
             field: {
@@ -115,7 +115,7 @@ describe('Migration', () => {
 
   test('convertConditionWrapperFromV2 throws error when component is not found', () => {
     const conditionWrapper: ConditionWrapperV2 = {
-      name: 'testWrapper',
+      id: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
       displayName: 'Test Wrapper',
       conditions: [
         {
@@ -140,7 +140,7 @@ describe('Migration', () => {
   describe('ref tests for lists', () => {
     test('convertConditionWrapperFromV2 converts a list item ref condition correctly', () => {
       const conditionWrapper: ConditionWrapperV2 = {
-        name: 'testWrapper',
+        id: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
         displayName: 'Test Wrapper',
         conditions: [
           {
@@ -185,10 +185,10 @@ describe('Migration', () => {
       const result = convertConditionWrapperFromV2(conditionWrapper, model)
 
       expect(result).toEqual({
-        name: 'testWrapper',
+        name: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
         displayName: 'Test Wrapper',
         value: {
-          name: 'testWrapper',
+          name: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
           conditions: [
             {
               field: {
@@ -211,7 +211,7 @@ describe('Migration', () => {
 
     test('convertConditionWrapperFromV2 throws error when list is not found', () => {
       const conditionWrapper: ConditionWrapperV2 = {
-        name: 'testWrapper',
+        id: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
         displayName: 'Test Wrapper',
         conditions: [
           {
@@ -246,7 +246,7 @@ describe('Migration', () => {
 
     test('convertConditionWrapperFromV2 throws error when list item is not found', () => {
       const conditionWrapper: ConditionWrapperV2 = {
-        name: 'testWrapper',
+        id: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
         displayName: 'Test Wrapper',
         conditions: [
           {
@@ -291,7 +291,7 @@ describe('Migration', () => {
   describe('relative date conditions', () => {
     test('convertConditionWrapperFromV2 converts a relative date condition correctly', () => {
       const conditionWrapper: ConditionWrapperV2 = {
-        name: 'testWrapper',
+        id: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
         displayName: 'Test Wrapper',
         conditions: [
           {
@@ -321,10 +321,10 @@ describe('Migration', () => {
       const result = convertConditionWrapperFromV2(conditionWrapper, model)
 
       expect(result).toEqual({
-        name: 'testWrapper',
+        name: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
         displayName: 'Test Wrapper',
         value: {
-          name: 'testWrapper',
+          name: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
           conditions: [
             {
               field: {
@@ -350,7 +350,7 @@ describe('Migration', () => {
   describe('ref tests for conditions', () => {
     test('convertConditionWrapperFromV2 converts a condition ref correctly', () => {
       const conditionWrapper: ConditionWrapperV2 = {
-        name: 'testWrapper',
+        id: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
         displayName: 'Test Wrapper',
         coordinator: Coordinator.OR,
         conditions: [
@@ -366,7 +366,7 @@ describe('Migration', () => {
       }
 
       const condition: ConditionWrapperV2 = {
-        name: 'testCondition',
+        id: '1f7473dd-45b1-4f7e-b9bf-ea4595d6f642',
         displayName: 'Test condition',
         coordinator: Coordinator.OR,
         conditions: []
@@ -378,18 +378,18 @@ describe('Migration', () => {
       const result = convertConditionWrapperFromV2(conditionWrapper, model)
 
       expect(result).toEqual({
-        name: 'testWrapper',
+        name: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
         displayName: 'Test Wrapper',
         value: {
-          name: 'testWrapper',
+          name: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
           conditions: [
             {
-              conditionName: 'testCondition',
+              conditionName: '1f7473dd-45b1-4f7e-b9bf-ea4595d6f642',
               conditionDisplayName: 'Test condition',
               coordinator: undefined
             },
             {
-              conditionName: 'testCondition',
+              conditionName: '1f7473dd-45b1-4f7e-b9bf-ea4595d6f642',
               conditionDisplayName: 'Test condition',
               coordinator: Coordinator.OR
             }

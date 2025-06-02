@@ -1,5 +1,6 @@
 import {
   ConditionsModel,
+  isConditionWrapper,
   randomId,
   type Condition,
   type ConditionGroup,
@@ -97,11 +98,13 @@ export class InlineConditions extends Component<Props, State> {
 
     const fieldInputs = getFieldsTo(data, path)
 
-    const conditionsInputs: FieldDef[] = data.conditions.map((condition) => ({
-      label: condition.displayName,
-      name: condition.name,
-      type: 'Condition'
-    }))
+    const conditionsInputs: FieldDef[] = data.conditions
+      .filter(isConditionWrapper)
+      .map((condition) => ({
+        label: condition.displayName,
+        name: condition.name,
+        type: 'Condition'
+      }))
 
     return fieldInputs
       .concat(conditionsInputs)

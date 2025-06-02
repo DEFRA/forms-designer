@@ -1,5 +1,10 @@
 import { graphlib, layout, type GraphEdge, type Node } from '@dagrejs/dagre'
-import { Engine, hasNext, type FormDefinition } from '@defra/forms-model'
+import {
+  Engine,
+  hasNext,
+  isConditionWrapper,
+  type FormDefinition
+} from '@defra/forms-model'
 
 import { logger } from '~/src/common/helpers/logging/logger.js'
 import { findPage } from '~/src/data/page/findPage.js'
@@ -75,9 +80,9 @@ export const getLayout = (data: FormDefinition, el: HTMLDivElement) => {
       page.next.forEach((next) => {
         try {
           const pageNext = findPage(data, next.path)
-          const condition = conditions.find(
-            ({ name }) => name === next.condition
-          )
+          const condition = conditions
+            .filter(isConditionWrapper)
+            .find(({ name }) => name === next.condition)
 
           g.setEdge(page.path, pageNext.path, {
             label: condition?.displayName,
