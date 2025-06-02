@@ -43,7 +43,7 @@
     "@types/slug": "^5.0.9",
     "joi": "^17.13.3",
     "joi-to-json": "^4.3.2",
-    "tsc-alias": "^1.8.11"
+    "tsc-alias": "^1.8.16"
   },
   "peerDependencies": {
     "joi": "^17.0.0"
