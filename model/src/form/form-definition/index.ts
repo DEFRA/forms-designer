@@ -22,6 +22,7 @@ import {
   type RelativeDateValueData
 } from '~/src/conditions/types.js'
 import {
+  SchemaVersion,
   type ConditionWrapper,
   type ConditionWrapperV2,
   type Event,
@@ -842,11 +843,11 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
       .allow('V1', 'V2')
       .default('V1')
       .description('Form engine version to use (V1 or V2)'),
-    schema: Joi.string()
-      .trim()
-      .allow('V1', 'V2')
-      .default('V1')
-      .description('Form schema version to use (V1 or V2)'),
+    schema: Joi.number()
+      .integer()
+      .valid(SchemaVersion.V1)
+      .default(SchemaVersion.V1)
+      .description('Form schema version to use (1 or 2)'),
     name: Joi.string()
       .trim()
       .allow('')
@@ -907,6 +908,10 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
 
 export const formDefinitionV2Schema = formDefinitionSchema
   .keys({
+    schema: Joi.number()
+      .integer()
+      .valid(SchemaVersion.V2)
+      .description('Form schema version to use (2)'),
     pages: Joi.array<Page>()
       .items(pageSchemaV2)
       .required()
