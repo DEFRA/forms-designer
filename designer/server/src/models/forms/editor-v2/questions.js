@@ -2,9 +2,9 @@ import {
   ComponentType,
   ControllerType,
   FormStatus,
-  canSetRepeater,
   hasComponents,
-  isFormType
+  isFormType,
+  showRepeaterSettings
 } from '@defra/forms-model'
 
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
@@ -36,7 +36,7 @@ function questionsFields(
   repeaterSettings,
   validation
 ) {
-  const repeaterFields = canSetRepeater(page)
+  const repeaterFields = showRepeaterSettings(page)
     ? {
         ...questionsRepeaterFields(repeaterSettings, validation)
       }

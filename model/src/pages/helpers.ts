@@ -121,8 +121,10 @@ function includesFileUploadField(components: ComponentDef[]): boolean {
   )
 }
 
-export function canSetRepeater(page: Page): boolean {
-  if (page.controller && page.controller !== ControllerType.Page) {
+const SHOW_REPEATER_CONTROLLERS = [ControllerType.Page, ControllerType.Repeat]
+
+export function showRepeaterSettings(page: Page): boolean {
+  if (page.controller && !SHOW_REPEATER_CONTROLLERS.includes(page.controller)) {
     return false
   }
   if (hasComponents(page) && includesFileUploadField(page.components)) {
