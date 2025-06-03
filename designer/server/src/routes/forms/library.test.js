@@ -1,4 +1,5 @@
-import { FormStatus } from '@defra/forms-model'
+import { FormStatus, SchemaVersion } from '@defra/forms-model'
+import { buildDefinition } from '@defra/forms-model/stubs'
 
 import config from '~/src/config.js'
 import { createServer } from '~/src/createServer.js'
@@ -59,16 +60,14 @@ describe('Forms library routes', () => {
     updatedBy: author
   }
 
-  /**
-   * @satisfies {FormDefinition}
-   */
-  const formDefinition = {
+  const formDefinition = buildDefinition({
+    name: 'Test form'
+  })
+
+  const formDefinitionV2 = buildDefinition({
     name: 'Test form',
-    pages: [],
-    conditions: [],
-    sections: [],
-    lists: []
-  }
+    schema: SchemaVersion.V2
+  })
 
   describe('Forms library list page', () => {
     describe('Without pagination', () => {
@@ -770,8 +769,11 @@ describe('Forms library routes', () => {
     })
 
     describe('Live buttons in side bar', () => {
-      it('should show "Edit draft" and "Make draft live" when draft exists', async () => {
+      it('should show "Edit draft" and "Make draft live" when draft exists in v2', async () => {
         jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+        jest
+          .mocked(forms.getDraftFormDefinition)
+          .mockResolvedValueOnce(formDefinitionV2)
 
         const options = {
           method: 'GET',

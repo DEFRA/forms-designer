@@ -2,9 +2,9 @@ import {
   ComponentType,
   ControllerType,
   FormStatus,
-  canSetRepeater,
   hasComponents,
-  isFormType
+  isFormType,
+  showRepeaterSettings
 } from '@defra/forms-model'
 
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
@@ -36,7 +36,7 @@ function questionsFields(
   repeaterSettings,
   validation
 ) {
-  const repeaterFields = canSetRepeater(page)
+  const repeaterFields = showRepeaterSettings(page)
     ? {
         ...questionsRepeaterFields(repeaterSettings, validation)
       }
@@ -247,7 +247,12 @@ export function questionsViewModel(
 ) {
   const formTitle = metadata.title
   const formPath = formOverviewPath(metadata.slug)
-  const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
+  const navigation = getFormSpecificNavigation(
+    formPath,
+    metadata,
+    definition,
+    'Editor'
+  )
   const { formValues, formErrors } = validation ?? {}
 
   const pageIdx = definition.pages.findIndex((x) => x.id === pageId)

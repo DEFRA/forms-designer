@@ -1057,7 +1057,6 @@ export const testFormDefinitionWithMultipleV2Conditions = {
     {
       id: 'c685ae47-a134-485a-a819-b6271644722e',
       displayName: 'isBobAndFaveColourRedV2',
-      name: '7ae768b6-1bc5-4a9b-911a-d813e5614e8e',
       coordinator: Coordinator.AND,
       conditions: [
         {
@@ -1069,28 +1068,6 @@ export const testFormDefinitionWithMultipleV2Conditions = {
           conditionId: '4a82930a-b8f5-498c-adae-6158bb2aeeb5'
         }
       ]
-    },
-    {
-      displayName: 'isFaveAnimalMonkey',
-      name: 'b4bcd680-b9b5-4d1e-a42f-5b5f8c91f551',
-      value: {
-        name: 'isFaveAnimalMonkey',
-        conditions: [
-          {
-            field: {
-              name: 'nUaCCW',
-              type: ComponentType.RadiosField,
-              display: 'What is your favourite animal'
-            },
-            operator: OperatorName.Contains,
-            value: {
-              type: ConditionType.Value,
-              value: 'monkey',
-              display: 'Monkey'
-            }
-          }
-        ]
-      }
     }
   ],
   sections: [

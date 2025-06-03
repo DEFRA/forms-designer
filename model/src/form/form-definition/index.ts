@@ -49,7 +49,7 @@ const idSchema = idSchemaOptional.default(() => uuidV4())
 const conditionIdRef = Joi.ref('/conditions', {
   in: true,
   adjust: (conditions: ConditionWrapperV2[]) =>
-    conditions.map((condition) => condition.name)
+    conditions.map((condition) => condition.id)
 })
 
 const componentIdRefSchema = Joi.ref('/pages', {
@@ -133,21 +133,22 @@ const conditionValueSchema = Joi.object<ConditionValueData>()
       .description('Human-readable version of the value for display purposes')
   })
 
-const condition2StringValueDataSchema = Joi.object<ConditionStringValueDataV2>()
-  .description('String value specification for a condition')
-  .keys({
-    type: Joi.string()
-      .trim()
-      .valid('StringValue')
-      .required()
-      .description('Type of the condition value, should be "StringValue"'),
-    value: Joi.string()
-      .trim()
-      .required()
-      .description('The actual value to compare against')
-  })
+const conditionStringValueDataSchemaV2 =
+  Joi.object<ConditionStringValueDataV2>()
+    .description('String value specification for a condition')
+    .keys({
+      type: Joi.string()
+        .trim()
+        .valid('StringValue')
+        .required()
+        .description('Type of the condition value, should be "StringValue"'),
+      value: Joi.string()
+        .trim()
+        .required()
+        .description('The actual value to compare against')
+    })
 
-const condition2ListItemRefDataSchema =
+const conditionListItemRefDataSchemaV2 =
   Joi.object<ConditionListItemRefValueDataV2>()
     .description('List item ref specification for a condition')
     .keys({
@@ -209,7 +210,7 @@ const conditionRefSchema = Joi.object<ConditionRefData>()
       )
   })
 
-const condition2RefDataSchema = Joi.object<ConditionRefDataV2>()
+const conditionRefDataSchemaV2 = Joi.object<ConditionRefDataV2>()
   .description('Reference to a named condition defined elsewhere')
   .keys({
     id: idSchema.description('Unique identifier for the referenced condition'),
@@ -243,7 +244,7 @@ const conditionSchema = Joi.object<ConditionData>()
       )
   })
 
-const condition2DataSchema = Joi.object<ConditionDataV2>()
+const conditionDataSchemaV2 = Joi.object<ConditionDataV2>()
   .description('Condition definition')
   .keys({
     id: idSchema.description(
@@ -262,8 +263,8 @@ const condition2DataSchema = Joi.object<ConditionDataV2>()
       .description('Comparison operator (equals, greaterThan, contains, etc.)'),
     value: Joi.alternatives()
       .try(
-        condition2StringValueDataSchema,
-        condition2ListItemRefDataSchema,
+        conditionStringValueDataSchemaV2,
+        conditionListItemRefDataSchemaV2,
         relativeDateValueDataSchema
       )
       .description(
@@ -324,9 +325,7 @@ const conditionWrapperSchema = Joi.object<ConditionWrapper>()
 export const conditionWrapperSchemaV2 = Joi.object<ConditionWrapperV2>()
   .description('Container for a named condition with its definition')
   .keys({
-    name: Joi.string()
-      .trim()
-      .description('Unique identifier for the condition'),
+    id: idSchema.description('Unique identifier for the condition'),
     displayName: Joi.string()
       .trim()
       .description('Human-readable name for display in the UI'),
@@ -337,7 +336,7 @@ export const conditionWrapperSchemaV2 = Joi.object<ConditionWrapperV2>()
       ),
     conditions: Joi.array<ConditionGroupDataV2>()
       .items(
-        Joi.alternatives().try(condition2DataSchema, condition2RefDataSchema)
+        Joi.alternatives().try(conditionDataSchemaV2, conditionRefDataSchemaV2)
       )
       .description('Array of conditions or condition references')
   })
@@ -955,7 +954,7 @@ export const formDefinitionV2Schema = formDefinitionSchema
       .description('Lists schema for V2 forms'),
     conditions: Joi.array<ConditionWrapperV2>()
       .items(conditionWrapperSchemaV2)
-      .unique('name')
+      .unique('id')
       .unique('displayName')
       .description('Named conditions used for form logic')
   })

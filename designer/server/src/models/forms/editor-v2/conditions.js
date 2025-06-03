@@ -76,7 +76,12 @@ export function buildConditionsTable(slug, definition) {
  */
 export function conditionsViewModel(metadata, definition, notification) {
   const formPath = formOverviewPath(metadata.slug)
-  const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
+  const navigation = getFormSpecificNavigation(
+    formPath,
+    metadata,
+    definition,
+    'Editor'
+  )
   const previewBaseUrl = buildPreviewUrl(metadata.slug, FormStatus.Draft)
   const pageHeading = 'Manage conditions'
   const pageCaption = metadata.title

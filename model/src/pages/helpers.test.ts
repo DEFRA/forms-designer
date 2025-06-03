@@ -15,7 +15,6 @@ import {
 import { ComponentType, ControllerType } from '~/src/index.js'
 import { ControllerTypes } from '~/src/pages/controller-types.js'
 import {
-  canSetRepeater,
   controllerNameFromPath,
   getPageDefaults,
   hasComponents,
@@ -23,7 +22,8 @@ import {
   hasFormComponents,
   hasNext,
   hasRepeater,
-  omitFileUploadComponent
+  omitFileUploadComponent,
+  showRepeaterSettings
 } from '~/src/pages/helpers.js'
 import { PageTypes } from '~/src/pages/page-types.js'
 
@@ -161,7 +161,7 @@ describe('helpers', () => {
     )
   })
 
-  describe('canSetRepeater', () => {
+  describe('showRepeaterSettings', () => {
     it('should not allow repeater to be set if page is an upload page', () => {
       const page: PageFileUpload = {
         id: '85e5c8da-88f5-4009-a821-7d7de1364318',
@@ -186,7 +186,7 @@ describe('helpers', () => {
         controller: ControllerType.FileUpload,
         next: []
       }
-      expect(canSetRepeater(page)).toBe(false)
+      expect(showRepeaterSettings(page)).toBe(false)
     })
 
     it('should not allow repeater to be set if file upload component exists - defensive', () => {
@@ -212,7 +212,7 @@ describe('helpers', () => {
         ],
         next: []
       }
-      expect(canSetRepeater(page)).toBe(false)
+      expect(showRepeaterSettings(page)).toBe(false)
     })
 
     it('should allow repeater to be set on a standard page', () => {
@@ -231,7 +231,7 @@ describe('helpers', () => {
         id: '0f711e08-3801-444d-8e37-a88867c48f04'
       })
 
-      expect(canSetRepeater(page)).toBe(true)
+      expect(showRepeaterSettings(page)).toBe(true)
     })
 
     it('should allow repeater to be set on a standard page with PageController type', () => {
@@ -251,7 +251,26 @@ describe('helpers', () => {
         id: '0f711e08-3801-444d-8e37-a88867c48f04'
       })
 
-      expect(canSetRepeater(page)).toBe(true)
+      expect(showRepeaterSettings(page)).toBe(true)
+    })
+
+    it('should allow repeater to be set on a Repeater page', () => {
+      const page = buildRepeaterPage({
+        title: 'sdsfdf',
+        path: '/sdsfdf',
+        components: [
+          buildCheckboxComponent({
+            type: ComponentType.CheckboxesField,
+            title: 'What is your favourite adventure?',
+            name: 'jnUjwa',
+            shortDescription: 'Your favourite adventure'
+          })
+        ],
+        next: [],
+        id: '0f711e08-3801-444d-8e37-a88867c48f04'
+      })
+
+      expect(showRepeaterSettings(page)).toBe(true)
     })
   })
 

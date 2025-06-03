@@ -1,4 +1,4 @@
-import { hasListField } from '@defra/forms-model'
+import { hasListField, isConditionWrapper } from '@defra/forms-model'
 // @ts-expect-error -- No types available
 import { Input, Textarea } from '@xgovformbuilder/govuk-react-jsx'
 import { useContext, type FormEvent, type MouseEvent } from 'react'
@@ -145,7 +145,7 @@ export function ListItemEdit() {
             onChange={handleConditionChange}
           >
             <option value="">{i18n('list.item.conditionsOption')}</option>
-            {conditions.map((condition) => (
+            {conditions.filter(isConditionWrapper).map((condition) => (
               <option key={condition.name} value={condition.name}>
                 {condition.displayName}
               </option>

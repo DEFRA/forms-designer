@@ -1,3 +1,5 @@
+import { SchemaVersion } from '@defra/forms-model'
+
 import { buildEntry } from '~/src/common/nunjucks/context/build-navigation.js'
 import config from '~/src/config.js'
 import * as forms from '~/src/lib/forms.js'
@@ -193,14 +195,64 @@ function buildPaginationPages(
 }
 
 /**
+ * @param {string} formPath
+ * @param { FormDefinition | undefined } formDefinition
+ */
+function overviewCTA(formPath, formDefinition) {
+  const editorV1Path = `${formPath}/editor`
+  const editorV2Path = `${formPath}/editor-v2/pages`
+  const isV2Schema = formDefinition?.schema === SchemaVersion.V2
+
+  const v1Buttons = [
+    {
+      text: 'Edit draft (new editor)',
+      classes:
+        'govuk-button--secondary-quiet govuk-button--secondary-defra-quiet',
+      href: editorV2Path
+    },
+    {
+      text: 'Edit draft (legacy editor)',
+      classes: 'govuk-button--secondary-quiet'
+    },
+    {
+      text: 'Make draft live',
+      attributes: {
+        formaction: `${formPath}/make-draft-live`
+      }
+    }
+  ]
+
+  const v2Buttons = [
+    {
+      text: 'Edit draft',
+      classes: 'govuk-button--secondary-quiet'
+    },
+    {
+      text: 'Make draft live',
+      attributes: {
+        formaction: `${formPath}/make-draft-live`
+      }
+    }
+  ]
+
+  return {
+    draftButtons: isV2Schema ? v2Buttons : v1Buttons,
+    formAction: isV2Schema ? editorV2Path : editorV1Path
+  }
+}
+
+/**
  * @param {FormMetadata} metadata
+ * @param { FormDefinition|undefined } formDef
  * @param {string} [notification] - success notification to display
  */
-export function overviewViewModel(metadata, notification) {
+export function overviewViewModel(metadata, formDef, notification) {
   const pageTitle = metadata.title
   const formPath = formOverviewPath(metadata.slug)
 
-  const navigation = getFormSpecificNavigation(formPath, metadata, 'Overview')
+  // prettier-ignore
+  const navigation = getFormSpecificNavigation(formPath, metadata, formDef, 'Overview')
+  const { formAction, draftButtons } = overviewCTA(formPath, formDef)
 
   return {
     backLink: formsLibraryBackLink,
@@ -225,25 +277,14 @@ export function overviewViewModel(metadata, notification) {
             method: 'POST'
           }
         : {
-            action: `${formPath}/editor`,
+            action: formAction,
             method: 'GET'
           }),
 
       // Adjust buttons when draft is available
       buttons: !metadata.draft
         ? [{ text: 'Create draft to edit' }]
-        : [
-            {
-              text: 'Edit draft',
-              classes: 'govuk-button--secondary-quiet'
-            },
-            {
-              text: 'Make draft live',
-              attributes: {
-                formaction: `${formPath}/make-draft-live`
-              }
-            }
-          ],
+        : draftButtons,
       links: !metadata.live
         ? [
             {
@@ -266,7 +307,12 @@ export function editorViewModel(metadata, definition) {
   const pageTitle = metadata.title
   const formPath = formOverviewPath(metadata.slug)
 
-  const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
+  const navigation = getFormSpecificNavigation(
+    formPath,
+    metadata,
+    definition,
+    'Editor'
+  )
 
   return {
     backLink: formOverviewBackLink(metadata.slug),
@@ -287,16 +333,26 @@ export function editorViewModel(metadata, definition) {
  * a page, that page will have isActive:true set.
  * @param {string} formPath
  * @param {FormMetadata} metadata
+ * @param { FormDefinition | undefined } draftFormDefinition
  * @param {string} activePage
  */
-export function getFormSpecificNavigation(formPath, metadata, activePage = '') {
+export function getFormSpecificNavigation(
+  formPath,
+  metadata,
+  draftFormDefinition,
+  activePage = ''
+) {
   const navigationItems = [
     ['Forms library', formsLibraryPath],
     ['Overview', formPath]
   ]
 
   if (metadata.draft) {
-    navigationItems.push(['Editor', `${formPath}/editor`])
+    const draftEditorLink =
+      draftFormDefinition?.schema === SchemaVersion.V2
+        ? `${formPath}/editor-v2/pages`
+        : `${formPath}/editor`
+    navigationItems.push(['Editor', draftEditorLink])
   }
 
   return navigationItems.map((item) =>
