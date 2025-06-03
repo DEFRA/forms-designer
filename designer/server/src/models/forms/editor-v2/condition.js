@@ -42,7 +42,7 @@ export function buildConditionEditor(slug, definition, state, condition) {
     })
 
   const legendText = `${condition ? 'Edit' : 'Create new'} condition`
-  const { selectedComponentId, selectedOperator } = state ?? {}
+  const { selectedComponentId, selectedOperator, displayName } = state ?? {}
 
   const component = {
     id: 'componentId',
@@ -87,11 +87,24 @@ export function buildConditionEditor(slug, definition, state, condition) {
       }
     : undefined
 
+  const displayNameField = {
+    id: 'displayName',
+    name: 'displayName',
+    label: {
+      text: 'Condition name'
+    },
+    value: displayName,
+    hint: {
+      text: "Condition names help you to identify conditions in your form, for example, 'Not a farmer'. Users will not see condition names."
+    }
+  }
+
   return {
     legendText,
     component,
     operator,
     value: undefined,
+    displayNameField,
     confirmSelectComponentAction
   }
 }
@@ -119,6 +132,7 @@ export function conditionViewModel(
   const pageHeading = 'Manage conditions'
   const pageCaption = metadata.title
   const pageTitle = `${pageHeading} - ${pageCaption}`
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { formValues, formErrors } = validation ?? {}
 
   return {
@@ -155,6 +169,7 @@ export function conditionViewModel(
  * @typedef {object} ConditionPageState
  * @property {string} [selectedComponentId] - The component id
  * @property {string} [selectedOperator] - The operator
+ * @property {string} [displayName] - The condition display name
  */
 
 /**

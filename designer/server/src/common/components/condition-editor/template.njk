@@ -7,6 +7,7 @@
 {% set component = params.component %}
 {% set operator = params.operator %}
 {% set value = params.value %}
+{% set displayName = params.displayNameField %}
 
 {% set operatorHtml %}
   {% if operator %}
@@ -51,6 +52,7 @@
     </div>
     {{ operatorHtml | safe }}
     {{ valueHtml | safe }}
+    {{ govukInput(displayName) }}
   {% endcall %}
 
   {{ govukButton({
