@@ -705,7 +705,7 @@ export const testFormDefinitionWithRadioQuestionAndList = {
           name: 'radio-field',
           title: 'Select a colour',
           options: {},
-          list: 'my-list'
+          list: 'my-list-guid'
         }
       ],
       next: [{ path: '/summary' }]
@@ -722,7 +722,7 @@ export const testFormDefinitionWithRadioQuestionAndList = {
   sections: [],
   lists: [
     {
-      id: 'my-list-id',
+      id: 'my-list-guid',
       name: 'my-list',
       title: 'my list title',
       type: 'string',
@@ -731,6 +731,50 @@ export const testFormDefinitionWithRadioQuestionAndList = {
         { text: 'Red', value: 'red' },
         { text: 'Green', value: 'green' }
       ]
+    }
+  ]
+}
+
+/**
+ * @satisfies {FormDefinition}
+ */
+export const testFormDefinitionWithRadioQuestionAndMislinkedList = {
+  name: 'Test form',
+  pages: [
+    {
+      id: 'p1',
+      path: '/radio-question',
+      title: 'Radio question',
+      section: 'section',
+      components: [
+        {
+          id: 'q1',
+          type: ComponentType.RadiosField,
+          name: 'radio-field',
+          title: 'Select a colour',
+          options: {},
+          list: 'my-list-guid'
+        }
+      ],
+      next: [{ path: '/summary' }]
+    },
+    {
+      id: 'p2',
+      title: 'Summary',
+      path: '/summary',
+      controller: ControllerType.Summary,
+      components: []
+    }
+  ],
+  conditions: [],
+  sections: [],
+  lists: [
+    {
+      id: 'my-list-guid-invalid',
+      name: 'my-list',
+      title: 'my list title',
+      type: 'string',
+      items: []
     }
   ]
 }
@@ -934,6 +978,28 @@ export const testFormDefinitionWithMultipleV2Conditions = {
       ]
     },
     {
+      displayName: 'isBob',
+      name: 'LoaWPy',
+      value: {
+        name: 'isBob',
+        conditions: [
+          {
+            field: {
+              name: 'RRwYht',
+              type: ComponentType.TextField,
+              display: 'What is your full name'
+            },
+            operator: OperatorName.Is,
+            value: {
+              type: ConditionType.Value,
+              value: 'Bob',
+              display: 'Bob'
+            }
+          }
+        ]
+      }
+    },
+    {
       id: '4a82930a-b8f5-498c-adae-6158bb2aeeb5',
       displayName: 'isFaveColourRedV2',
       conditions: [
@@ -949,7 +1015,47 @@ export const testFormDefinitionWithMultipleV2Conditions = {
       ]
     },
     {
-      id: '7ae768b6-1bc5-4a9b-911a-d813e5614e8e',
+      displayName: 'isFaveColourRed',
+      name: 'SxzrgR',
+      value: {
+        name: 'isFaveColourRed',
+        conditions: [
+          {
+            field: {
+              name: 'nUaCCW',
+              type: ComponentType.RadiosField,
+              display: 'What is your favourite color'
+            },
+            operator: OperatorName.Is,
+            value: {
+              type: ConditionType.Value,
+              value: 'red',
+              display: 'Red'
+            }
+          }
+        ]
+      }
+    },
+    {
+      displayName: 'isBobAndFaveColourRed',
+      name: 'drFGth',
+      value: {
+        name: 'isBobAndFaveColourRed',
+        conditions: [
+          {
+            conditionName: 'isBob',
+            conditionDisplayName: 'isBob'
+          },
+          {
+            conditionName: 'isFaveColourRed',
+            conditionDisplayName: 'isFaveColourRed',
+            coordinator: Coordinator.AND
+          }
+        ]
+      }
+    },
+    {
+      id: 'c685ae47-a134-485a-a819-b6271644722e',
       displayName: 'isBobAndFaveColourRedV2',
       coordinator: Coordinator.AND,
       conditions: [

@@ -145,7 +145,7 @@ describe('utils', () => {
       })
       const autoCompleteComponent = buildAutoCompleteComponent({
         id: 'af1ed4f1-ef37-4e35-a5da-210f9e5fc336',
-        list: list.name
+        list: list.id
       })
       const page = buildQuestionPage({
         components: [autoCompleteComponent]

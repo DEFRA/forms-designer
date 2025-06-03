@@ -1,4 +1,9 @@
-import { ComponentType, hasComponents, isFormType } from '@defra/forms-model'
+import {
+  ComponentType,
+  hasComponents,
+  hasListField,
+  isFormType
+} from '@defra/forms-model'
 import { getTraceId } from '@defra/hapi-tracing'
 import slug from 'slug'
 
@@ -167,10 +172,10 @@ export function getListFromComponent(component, definition) {
   if (!component) {
     return undefined
   }
-  const listName = 'list' in component ? component.list : undefined
+  const listId = hasListField(component) ? component.list : undefined
 
-  if (listName) {
-    return definition.lists.find((list) => list.name === listName)
+  if (listId) {
+    return definition.lists.find((list) => list.id === listId)
   }
 
   return undefined
@@ -211,7 +216,7 @@ export function findUniquelyMappedList(definition, pageId, componentId) {
     (currentComponent) =>
       isListComponent(currentComponent) &&
       currentComponent.id !== id &&
-      currentComponent.list === list.name
+      currentComponent.list === list.id
   )
   const listIsNotUnique = definition.pages.some(
     isFulfilledOnPageComponent(predicate)
