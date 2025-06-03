@@ -7,6 +7,7 @@ import {
 import upperFirst from 'lodash/upperFirst.js'
 
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
+import { insertValidationErrors } from '~/src/lib/utils.js'
 import {
   BACK_TO_MANAGE_CONDITIONS,
   buildPreviewUrl,
@@ -21,10 +22,17 @@ import { editorFormPath, formOverviewPath } from '~/src/models/links.js'
 /**
  * @param {string} slug
  * @param {FormDefinition} definition
+ * @param { ValidationFailure<FormEditor> | undefined } validation
  * @param {ConditionPageState} [state]
  * @param {ConditionWrapperV2} [condition]
  */
-export function buildConditionEditor(slug, definition, state, condition) {
+export function buildConditionEditor(
+  slug,
+  definition,
+  validation,
+  state,
+  condition
+) {
   const componentItems = definition.pages
     .map(withPageNumbers)
     .filter(({ page }) => withConditionSupport(page))
@@ -51,7 +59,8 @@ export function buildConditionEditor(slug, definition, state, condition) {
       text: 'Select a question'
     },
     items: componentItems,
-    value: selectedComponentId
+    value: selectedComponentId,
+    ...insertValidationErrors(validation?.formErrors.componentId)
   }
 
   const confirmSelectComponentAction = editorFormPath(
@@ -83,7 +92,8 @@ export function buildConditionEditor(slug, definition, state, condition) {
             html: `<button class="govuk-button govuk-!-margin-bottom-0" name="confirmSelectOperator" type="submit"
       value="true" formaction="${confirmSelectOperatorAction}">Select</button>`
           }
-        }
+        },
+        ...insertValidationErrors(validation?.formErrors.operator)
       }
     : undefined
 
@@ -96,7 +106,8 @@ export function buildConditionEditor(slug, definition, state, condition) {
     value: displayName,
     hint: {
       text: "Condition names help you to identify conditions in your form, for example, 'Not a farmer'. Users will not see condition names."
-    }
+    },
+    ...insertValidationErrors(validation?.formErrors.displayName)
   }
 
   return {
@@ -159,6 +170,7 @@ export function conditionViewModel(
     conditionEditor: buildConditionEditor(
       formSlug,
       definition,
+      validation,
       state,
       condition
     )
