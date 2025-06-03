@@ -22,6 +22,7 @@ import {
   buildPreviewUrl,
   getFormSpecificNavigation
 } from '~/src/models/forms/editor-v2/common.js'
+import { getPageConditionDetails } from '~/src/models/forms/editor-v2/page-conditions.js'
 import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
 
 /**
@@ -164,7 +165,7 @@ function questionsRepeaterFields(repeaterSettings, validation) {
         classes: GOVUK_LABEL__M
       },
       hint: {
-        text: 'Use a word to describe what these questions are asking about. For example, ‘Cow’, ‘Pet’. This will be used to categorise the answers, for example ‘Cow 1’, ‘Cow 2’.'
+        text: "Use a word to describe what these questions are asking about. For example, 'Cow', 'Pet'. This will be used to categorise the answers, for example 'Cow 1', 'Cow 2'."
       },
       id: 'questionSetName',
       name: 'questionSetName',
@@ -232,6 +233,76 @@ function mapQuestionRows(components, baseUrl) {
 }
 
 /**
+ * Extract page data from definition
+ * @param {FormDefinition} definition
+ * @param {string} pageId
+ * @returns {{ pageIdx: number, page: Page, components: ComponentDef[] }}
+ */
+function extractPageData(definition, pageId) {
+  const pageIdx = definition.pages.findIndex((x) => x.id === pageId)
+  const page = definition.pages[pageIdx]
+  const components = hasComponents(page) ? page.components : []
+
+  return { pageIdx, page, components }
+}
+
+/**
+ * Extract heading and guidance values
+ * @param {Page} page
+ * @param {ComponentDef[]} components
+ * @param {FormEditor} [formValues]
+ * @returns {{ pageHeadingVal: string, guidanceTextVal: string }}
+ */
+function extractHeadingAndGuidance(page, components, formValues) {
+  const pageHeadingVal = formValues?.pageHeading ?? page.title
+
+  const guidanceComponent = /** @type { MarkdownComponent | undefined } */ (
+    components.find((comp, idx) => {
+      return comp.type === ComponentType.Markdown && idx === 0
+    })
+  )
+
+  const guidanceTextFallback = guidanceComponent?.content ?? ''
+  const guidanceTextVal = formValues?.guidanceText ?? guidanceTextFallback
+
+  return { pageHeadingVal, guidanceTextVal }
+}
+
+/**
+ * Extract repeater settings from page
+ * @param {Page} page
+ * @param {FormEditor} [formValues]
+ * @returns {{ minItems: number | undefined, maxItems: number | undefined, questionSetName: string | undefined }}
+ */
+function extractRepeaterSettings(page, formValues) {
+  const repeater = page.controller === ControllerType.Repeat
+  const repeatOptions = repeater ? page.repeat.options : undefined
+  const repeatSchema = repeater ? page.repeat.schema : undefined
+  const minItems = formValues?.minItems ?? repeatSchema?.min
+  const maxItems = formValues?.maxItems ?? repeatSchema?.max
+  const questionSetName = formValues?.questionSetName ?? repeatOptions?.title
+
+  return { minItems, maxItems, questionSetName }
+}
+
+/**
+ * Build basic view model data
+ * @param {FormMetadata} metadata
+ * @param {number} pageIdx
+ * @param {string} pageId
+ * @returns {{ baseUrl: string, pageHeading: string, cardTitle: string, formTitle: string, formPath: string }}
+ */
+function buildViewModelData(metadata, pageIdx, pageId) {
+  const formTitle = metadata.title
+  const formPath = formOverviewPath(metadata.slug)
+  const baseUrl = editorv2Path(metadata.slug, `page/${pageId}`)
+  const pageHeading = `Page ${pageIdx + 1}`
+  const cardTitle = `Page ${pageIdx + 1} overview`
+
+  return { baseUrl, pageHeading, cardTitle, formTitle, formPath }
+}
+
+/**
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  * @param {string} pageId
@@ -245,44 +316,34 @@ export function questionsViewModel(
   validation,
   notification
 ) {
-  const formTitle = metadata.title
-  const formPath = formOverviewPath(metadata.slug)
+  const { formValues, formErrors } = validation ?? {}
+
+  const { pageIdx, page, components } = extractPageData(definition, pageId)
+
+  const { pageHeadingVal, guidanceTextVal } = extractHeadingAndGuidance(
+    page,
+    components,
+    formValues
+  )
+
+  const { minItems, maxItems, questionSetName } = extractRepeaterSettings(
+    page,
+    formValues
+  )
+
+  const { baseUrl, pageHeading, cardTitle, formTitle, formPath } =
+    buildViewModelData(metadata, pageIdx, pageId)
+
+  const pageHeadingSettings = { pageHeadingVal, guidanceTextVal }
+  const repeaterSettings = { minItems, maxItems, questionSetName }
+
   const navigation = getFormSpecificNavigation(
     formPath,
     metadata,
     definition,
     'Editor'
   )
-  const { formValues, formErrors } = validation ?? {}
-
-  const pageIdx = definition.pages.findIndex((x) => x.id === pageId)
-  const page = definition.pages[pageIdx]
-  const components = hasComponents(page) ? page.components : []
-
-  const pageHeadingVal = formValues?.pageHeading ?? page.title
-
-  const guidanceComponent = /** @type { MarkdownComponent | undefined } */ (
-    components.find((comp, idx) => {
-      return comp.type === ComponentType.Markdown && idx === 0
-    })
-  )
-
-  const guidanceTextFallback = guidanceComponent?.content ?? ''
-  const guidanceTextVal = formValues?.guidanceText ?? guidanceTextFallback
-
-  const baseUrl = editorv2Path(metadata.slug, `page/${pageId}`)
-  const pageHeading = `Page ${pageIdx + 1}`
-
-  const repeater = page.controller === ControllerType.Repeat
-  const repeatOptions = repeater ? page.repeat.options : undefined
-  const repeatSchema = repeater ? page.repeat.schema : undefined
-  const minItems = formValues?.minItems ?? repeatSchema?.min
-  const maxItems = formValues?.maxItems ?? repeatSchema?.max
-  const questionSetName = formValues?.questionSetName ?? repeatOptions?.title
-
-  const pageHeadingSettings = { pageHeadingVal, guidanceTextVal }
-  const repeaterSettings = { minItems, maxItems, questionSetName }
-  const cardTitle = `Page ${pageIdx + 1} overview`
+  const conditionDetails = getPageConditionDetails(definition, pageId)
 
   return {
     ...baseModelFields(metadata.slug, `${cardTitle} - ${formTitle}`, formTitle),
@@ -298,6 +359,8 @@ export function questionsViewModel(
     cardCaption: pageHeading,
     navigation,
     baseUrl,
+    currentTab: 'overview',
+    pageTitle: pageHeading,
     errorList: buildErrorList(formErrors),
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
@@ -307,7 +370,14 @@ export function questionsViewModel(
       (comp) => comp.type === ComponentType.FileUploadField
     ),
     notification,
-    previewPageUrl: `${buildPreviewUrl(metadata.slug, FormStatus.Draft)}${page.path}?force`
+    previewPageUrl: `${buildPreviewUrl(metadata.slug, FormStatus.Draft)}${page.path}?force`,
+    pageCondition: conditionDetails.pageCondition,
+    pageConditionDetails: conditionDetails.pageConditionDetails,
+    pageConditionPresentationString:
+      conditionDetails.pageConditionPresentationString,
+    hasPageCondition: Boolean(
+      conditionDetails.pageCondition && conditionDetails.pageConditionDetails
+    )
   }
 }
 
