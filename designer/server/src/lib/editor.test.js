@@ -27,6 +27,7 @@ import {
   reorderPages,
   resolvePageHeading,
   setCheckAnswersDeclaration,
+  setPageCondition,
   setPageSettings,
   updateQuestion
 } from '~/src/lib/editor.js'
@@ -1061,6 +1062,57 @@ describe('editor.js', () => {
         await expect(
           deleteQuestion(formId, token, '12345', '67890', formDefinition)
         ).rejects.toThrow(testError)
+      })
+    })
+  })
+
+  describe('setPageCondition', () => {
+    const requestUrl = new URL(
+      `./${formId}/definition/draft/pages/12345`,
+      formsEndpoint
+    )
+
+    describe('when patchJsonByType succeeds', () => {
+      test('sets page condition when conditionName is provided', async () => {
+        const expectedOptions = {
+          payload: {
+            condition: 'test-condition-name'
+          },
+          headers: { Authorization: `Bearer ${token}` }
+        }
+
+        mockedPatchJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: {}
+        })
+
+        await setPageCondition(formId, token, '12345', 'test-condition-name')
+
+        expect(mockedPatchJson).toHaveBeenCalledWith(
+          requestUrl,
+          expectedOptions
+        )
+      })
+
+      test('removes page condition when conditionName is null', async () => {
+        const expectedOptions = {
+          payload: {
+            condition: null
+          },
+          headers: { Authorization: `Bearer ${token}` }
+        }
+
+        mockedPatchJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: {}
+        })
+
+        await setPageCondition(formId, token, '12345', null)
+
+        expect(mockedPatchJson).toHaveBeenCalledWith(
+          requestUrl,
+          expectedOptions
+        )
       })
     })
   })
