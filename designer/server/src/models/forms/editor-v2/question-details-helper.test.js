@@ -28,7 +28,7 @@ describe('question-details-helper', () => {
         ],
         conditions: [
           {
-            name: 'condition1',
+            id: 'condition1',
             displayName: 'Condition 1',
             conditions: []
           }
@@ -93,7 +93,7 @@ describe('question-details-helper', () => {
 
       expect(result.pageCondition).toBe('condition1')
       expect(result.pageConditionDetails).toEqual({
-        name: 'condition1',
+        id: 'condition1',
         displayName: 'Condition 1',
         conditions: []
       })
@@ -122,17 +122,17 @@ describe('question-details-helper', () => {
         /** @type {unknown} */ ({
           conditions: [
             {
-              name: 'v2-condition-z',
+              id: 'v2-condition-z',
               displayName: 'Z Condition',
               conditions: []
             },
             {
-              name: 'v1-condition',
+              id: 'v1-condition',
               displayName: 'V1 Condition'
               // Missing 'conditions' property makes it V1
             },
             {
-              name: 'v2-condition-a',
+              id: 'v2-condition-a',
               displayName: 'A Condition',
               conditions: []
             }
@@ -155,17 +155,17 @@ describe('question-details-helper', () => {
         /** @type {unknown} */ ({
           conditions: [
             {
-              name: 'condition-c',
+              id: 'condition-c',
               displayName: 'Charlie',
               conditions: []
             },
             {
-              name: 'condition-a',
+              id: 'condition-a',
               displayName: 'Alpha',
               conditions: []
             },
             {
-              name: 'condition-b',
+              id: 'condition-b',
               displayName: 'Bravo',
               conditions: []
             }
