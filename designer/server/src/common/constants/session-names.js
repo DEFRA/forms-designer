@@ -28,6 +28,9 @@ export const sessionNames = {
     editorQuestion: /** @type {const} */ ('questionValidationFailure'),
     editorQuestionDetails: /** @type {const} */ (
       'questionDetailsValidationFailure'
+    ),
+    editorPageConditions: /** @type {const} */ (
+      'pageConditionsValidationFailure'
     )
   },
   successNotification: /** @type {const} */ ('successNotification'),
