@@ -12,9 +12,9 @@ import { addErrorsToSession } from '~/src/lib/error-helper.js'
  */
 export function redirectWithErrors(request, h, error, errorKey, anchor = '') {
   addErrorsToSession(request, error, errorKey)
-  const { pathname: redirectTo } = request.url
+  const { pathname: redirectTo, search } = request.url
   return h
-    .redirect(`${redirectTo}${anchor}`)
+    .redirect(`${redirectTo}${search || ''}${anchor}`)
     .code(StatusCodes.SEE_OTHER)
     .takeover()
 }

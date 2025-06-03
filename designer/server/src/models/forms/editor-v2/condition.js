@@ -1,36 +1,33 @@
 import {
-  ConditionsModel,
   FormStatus,
-  convertConditionWrapperFromV2,
+  getOperatorNames,
   hasComponentsEvenIfNoNext,
-  hasConditionSupport,
-  hasFormField,
-  isConditionWrapperV2,
-  isFormType
+  hasConditionSupport
 } from '@defra/forms-model'
+import upperFirst from 'lodash/upperFirst.js'
 
+import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import {
   BACK_TO_MANAGE_CONDITIONS,
-  baseModelFields,
   buildPreviewUrl,
   getFormSpecificNavigation
 } from '~/src/models/forms/editor-v2/common.js'
-import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
+import {
+  withConditionSupport,
+  withPageNumbers
+} from '~/src/models/forms/editor-v2/pages-helper.js'
+import { editorFormPath, formOverviewPath } from '~/src/models/links.js'
 
 /**
  * @param {string} slug
  * @param {FormDefinition} definition
+ * @param {ConditionPageState} [state]
+ * @param {ConditionWrapperV2} [condition]
  */
-export function buildConditionEditor(definition, legendText, condition, pageId) {
-  const sourceId = 'componentId'
-  const sourceLabel = 'Select a question'
-  const pages = definition.pages.map((page, index) => ({ page, number: index + 1 }))
-  const sourceItems = pages
-    .filter(
-      ({ page }) =>
-        hasComponentsEvenIfNoNext(page) &&
-        page.components.some(hasConditionSupport)
-    )
+export function buildConditionEditor(slug, definition, state, condition) {
+  const componentItems = definition.pages
+    .map(withPageNumbers)
+    .filter(({ page }) => withConditionSupport(page))
     .map(({ page, number }) => {
       const components = hasComponentsEvenIfNoNext(page)
         ? page.components.filter(hasConditionSupport)
@@ -44,43 +41,89 @@ export function buildConditionEditor(definition, legendText, condition, pageId) 
       }
     })
 
+  const legendText = `${condition ? 'Edit' : 'Create new'} condition`
+  const { selectedComponentId, selectedOperator } = state ?? {}
+
+  const component = {
+    id: 'componentId',
+    name: 'componentId',
+    label: {
+      text: 'Select a question'
+    },
+    items: componentItems,
+    value: selectedComponentId
+  }
+
+  const confirmSelectComponentAction = editorFormPath(
+    slug,
+    `condition/set-component${condition ? `/${condition.id}` : ''}`
+  )
+  const confirmSelectOperatorAction = editorFormPath(
+    slug,
+    `condition/set-operator${condition ? `/${condition.id}` : ''}?componentId=${selectedComponentId}`
+  )
+
+  const operator = selectedComponentId
+    ? {
+        id: 'operator',
+        name: 'operator',
+        label: {
+          text: 'Condition type'
+        },
+        items: [{ text: 'Select a condition type', value: '' }].concat(
+          ...getOperatorNames(
+            componentItems
+              .flatMap(({ components }) => components)
+              .find((c) => c.id === selectedComponentId)?.type
+          ).map((value) => ({ text: upperFirst(value), value }))
+        ),
+        value: selectedOperator,
+        formGroup: {
+          afterInput: {
+            html: `<button class="govuk-button govuk-!-margin-bottom-0" name="confirmSelectOperator" type="submit"
+      value="true" formaction="${confirmSelectOperatorAction}">Select</button>`
+          }
+        }
+      }
+    : undefined
+
   return {
     legendText,
-    source: {
-      id: sourceId,
-      name: sourceId,
-      label: {
-        text: sourceLabel
-      },
-      items: sourceItems
-    },
-    operator: {},
-    value: {}
+    component,
+    operator,
+    value: undefined,
+    confirmSelectComponentAction
   }
 }
 
 /**
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
+ * @param {ConditionPageState} [state]
  * @param {ConditionWrapperV2} [condition]
  * @param {string[]} [notification]
+ * @param {ValidationFailure<FormEditor>} [validation]
  */
 export function conditionViewModel(
   metadata,
   definition,
+  state,
   condition,
-  notification
+  notification,
+  validation
 ) {
-  const formPath = formOverviewPath(metadata.slug)
+  const formSlug = metadata.slug
+  const formPath = formOverviewPath(formSlug)
   const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
   const previewBaseUrl = buildPreviewUrl(metadata.slug, FormStatus.Draft)
-  const pageHeading = `${condition ? 'Edit' : 'Create new'} condition`
+  const pageHeading = 'Manage conditions'
   const pageCaption = metadata.title
   const pageTitle = `${pageHeading} - ${pageCaption}`
+  const { formValues, formErrors } = validation ?? {}
 
   return {
     backLink: {
-      href: editorv2Path(metadata.slug, 'conditions'),
+      href: editorFormPath(metadata.slug, 'conditions'),
       text: BACK_TO_MANAGE_CONDITIONS
     },
     pageTitle,
@@ -89,17 +132,32 @@ export function conditionViewModel(
       size: 'large'
     },
     useNewMasthead: true,
-    formSlug: metadata.slug,
+    formSlug,
     previewBaseUrl,
     navigation,
     pageCaption: {
       text: pageCaption
     },
+    errorList: buildErrorList(formErrors),
+    formErrors: validation?.formErrors,
+    formValues: validation?.formValues,
     notification,
-    conditionEditor: buildConditionEditor(definition, pageHeading)
+    conditionEditor: buildConditionEditor(
+      formSlug,
+      definition,
+      state,
+      condition
+    )
   }
 }
 
 /**
- * @import { FormMetadata, FormDefinition, RuntimeFormModel, ConditionWrapperV2 } from '@defra/forms-model'
+ * @typedef {object} ConditionPageState
+ * @property {string} [selectedComponentId] - The component id
+ * @property {string} [selectedOperator] - The operator
+ */
+
+/**
+ * @import { FormMetadata, FormDefinition, FormEditor, ConditionWrapperV2 } from '@defra/forms-model'
+ * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */
