@@ -14,6 +14,7 @@ import {
 import { uniquelyMappedListsStubs } from '~/src/__stubs__/list.js'
 import config from '~/src/config.js'
 import {
+  createRuntimeFormModel,
   findPageUniquelyMappedLists,
   findUniquelyMappedList,
   getComponentFromDefinition,
@@ -170,6 +171,22 @@ describe('utils', () => {
       expect(foundList).toBeUndefined()
     })
 
+    it('should return undefined when component references non-existent list', () => {
+      const autoCompleteComponent = buildAutoCompleteComponent({
+        id: 'af1ed4f1-ef37-4e35-a5da-210f9e5fc336',
+        list: 'NonExistentList'
+      })
+      const page = buildQuestionPage({
+        components: [autoCompleteComponent]
+      })
+      const definition = buildDefinition({
+        pages: [page],
+        lists: [] // No lists in definition
+      })
+      const foundList = getListFromComponent(autoCompleteComponent, definition)
+      expect(foundList).toBeUndefined()
+    })
+
     it('should return undefined component is undefined', () => {
       expect(getListFromComponent(undefined, buildDefinition())).toBeUndefined()
     })
@@ -285,6 +302,58 @@ describe('utils', () => {
           'e36fdaad-1395-4efe-bfec-ceae7efaf8e3'
         )
       ).toEqual([])
+    })
+  })
+
+  describe('createRuntimeFormModel', () => {
+    const list = buildList({
+      id: 'test-list-id',
+      name: 'TestList'
+    })
+    const component = buildTextFieldComponent({
+      id: 'test-component-id'
+    })
+    const page = buildQuestionPage({
+      components: [component]
+    })
+    const definition = buildDefinition({
+      pages: [page],
+      lists: [list],
+      conditions: []
+    })
+
+    it('should return runtime model with getListById accessor', () => {
+      const runtimeModel = createRuntimeFormModel(definition)
+
+      expect(runtimeModel.getListById('test-list-id')).toEqual(list)
+    })
+
+    it('should return undefined when list not found by id', () => {
+      const runtimeModel = createRuntimeFormModel(definition)
+
+      expect(runtimeModel.getListById('non-existent-id')).toBeUndefined()
+    })
+
+    it('should return runtime model with getComponentById accessor', () => {
+      const runtimeModel = createRuntimeFormModel(definition)
+
+      expect(runtimeModel.getComponentById('test-component-id')).toEqual(
+        component
+      )
+    })
+
+    it('should return undefined when component not found by id', () => {
+      const runtimeModel = createRuntimeFormModel(definition)
+
+      expect(runtimeModel.getComponentById('non-existent-id')).toBeUndefined()
+    })
+
+    it('should return runtime model with getConditionById accessor', () => {
+      const runtimeModel = createRuntimeFormModel(definition)
+
+      expect(
+        runtimeModel.getConditionById('non-existent-condition')
+      ).toBeUndefined()
     })
   })
 })
