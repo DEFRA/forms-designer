@@ -337,12 +337,38 @@ export function questionDetailsViewModel(
     currentTab
   })
 
+  return buildQuestionDetailsViewModel(
+    { details, fieldData, errorInfo, pageInfo, viewModelData },
+    { state, questionFieldsOverride, questionType },
+    { questionId, stateId, metadataSlug: metadata.slug, currentTab },
+    conditionsValidation
+  )
+}
+
+/**
+ * Builds the final question details view model object
+ * @param {{ details: any, fieldData: any, errorInfo: any, pageInfo: any, viewModelData: any }} dataObjects
+ * @param {{ state: any, questionFieldsOverride: ComponentDef, questionType: ComponentType | undefined }} questionData
+ * @param {{ questionId: string, stateId: string, metadataSlug: string, currentTab: string }} identifiers
+ * @param {ValidationFailure<any> | undefined} conditionsValidation
+ * @returns {object}
+ */
+function buildQuestionDetailsViewModel(
+  dataObjects,
+  questionData,
+  identifiers,
+  conditionsValidation
+) {
+  const { details, fieldData, errorInfo, pageInfo, viewModelData } = dataObjects
+  const { state, questionFieldsOverride, questionType } = questionData
+  const { questionId, stateId, metadataSlug, currentTab } = identifiers
+
   return {
     listDetails: getListDetails(state, questionFieldsOverride),
     state,
     enhancedFields: fieldData.enhancedFields,
-    ...baseModelFields(metadata.slug, pageInfo.pageTitle, pageInfo.pageHeading),
-    name: details.question.name || randomId(),
+    ...baseModelFields(metadataSlug, pageInfo.pageTitle, pageInfo.pageHeading),
+    name: details?.question?.name ?? randomId(),
     questionId,
     stateId,
     basePageFields: fieldData.basePageFields,
