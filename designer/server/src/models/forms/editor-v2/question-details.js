@@ -264,7 +264,7 @@ function getQuestionFieldsData(
     validation,
     state
   )
-  const enhancedFields = /** @type {GovukField[]} */ (
+  const enhancedFieldList = /** @type {GovukField[]} */ (
     getEnhancedFields(questionFieldsOverride, processedValidation)
   )
 
@@ -272,7 +272,7 @@ function getQuestionFieldsData(
     basePageFields,
     uploadFields,
     extraFields,
-    enhancedFields,
+    enhancedFields: enhancedFieldList,
     processedValidation
   }
 }
