@@ -4,7 +4,21 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
 
-{% set source = params.source %}
+{% set component = params.component %}
+{% set operator = params.operator %}
+{% set value = params.value %}
+
+{% set operatorHtml %}
+  {% if operator %}
+    {{ govukSelect(operator) }}
+  {% endif %}
+{% endset %}
+
+{% set valueHtml %}
+  {% if value %}
+    {{ govukSelect() }}
+  {% endif %}
+{% endset %}
 
 <form class="form" method="post">
   {% call govukFieldset({
@@ -15,25 +29,28 @@
     }
   }) %}
     <div class="govuk-form-group">
-      <label class="govuk-label" for="sort">{{ source.label.text }}</label>
-      <select class="govuk-select" id="{{ source.id }}" name="{{ source.name }}">
-        {% for item in source.items %}
+      <label class="govuk-label" for="{{ component.id }}">{{ component.label.text }}</label>
+      <select class="govuk-select" id="{{ component.id }}" name="{{ component.name }}">
+        <option value="">Select a question</option>
+        {% for item in component.items %}
           {% if item.group %}
             <optgroup label="Page {{ item.number }}: {{ item.page.title }}">
-              {% for component in item.components %}
-                <option value="{{ component.title }}">{{ component.title }}</option>
+              {% for question in item.components %}
+                <option value="{{ question.id }}" {{ 'selected' if component.value == question.id }}>{{ question.title }}</option>
               {% endfor %}
             </optgroup>
           {% else %}
-            {% for component in item.components %}
-              <option value="{{ component.id }}">Page {{ item.number }}: {{ component.title }}</option>
+            {% for question in item.components %}
+              <option value="{{ question.id }}" {{ 'selected' if component.value == question.id }}>Page {{ item.number }}: {{ question.title }}</option>
             {% endfor %}
           {% endif %}
         {% endfor %}
       </select>
+      <button class="govuk-button govuk-!-margin-bottom-0" name="confirmSelectComponent" type="submit"
+        value="true" formaction="{{ params.confirmSelectComponentAction }}">Select</button>
     </div>
-    {{ govukSelect() }}
-    {{ govukInput() }}
+    {{ operatorHtml | safe }}
+    {{ valueHtml | safe }}
   {% endcall %}
 
   {{ govukButton({

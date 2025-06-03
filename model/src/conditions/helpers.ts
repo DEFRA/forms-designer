@@ -64,7 +64,7 @@ export const getConditionV2 = (
 ) => {
   const condition = definition.conditions
     .filter(isConditionWrapperV2)
-    .find((condition) => condition.name === conditionId)
+    .find((condition) => condition.id === conditionId)
 
   if (!condition) {
     throw Boom.notFound(`Condition '${conditionId}' not found in form`)
