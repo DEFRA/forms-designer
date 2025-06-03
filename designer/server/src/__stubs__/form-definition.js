@@ -738,7 +738,7 @@ export const testFormDefinitionWithRadioQuestionAndList = {
 /**
  * @satisfies {FormDefinition}
  */
-export const testFormDefinitionWithRadioQuestionAndmislinkedList = {
+export const testFormDefinitionWithRadioQuestionAndMislinkedList = {
   name: 'Test form',
   pages: [
     {
@@ -963,7 +963,7 @@ export const testFormDefinitionWithMultipleV2Conditions = {
   ],
   conditions: [
     {
-      name: 'd5e9f931-e151-4dd6-a2b9-68a03f3537e2',
+      id: 'd5e9f931-e151-4dd6-a2b9-68a03f3537e2',
       displayName: 'isBobV2',
       conditions: [
         {
@@ -1000,7 +1000,7 @@ export const testFormDefinitionWithMultipleV2Conditions = {
       }
     },
     {
-      name: '4a82930a-b8f5-498c-adae-6158bb2aeeb5',
+      id: '4a82930a-b8f5-498c-adae-6158bb2aeeb5',
       displayName: 'isFaveColourRedV2',
       conditions: [
         {
@@ -1055,6 +1055,7 @@ export const testFormDefinitionWithMultipleV2Conditions = {
       }
     },
     {
+      id: 'c685ae47-a134-485a-a819-b6271644722e',
       displayName: 'isBobAndFaveColourRedV2',
       name: '7ae768b6-1bc5-4a9b-911a-d813e5614e8e',
       coordinator: Coordinator.AND,

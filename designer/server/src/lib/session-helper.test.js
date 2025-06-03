@@ -2,7 +2,7 @@ import { ComponentType } from '@defra/forms-model'
 
 import {
   testFormDefinitionWithRadioQuestionAndList,
-  testFormDefinitionWithRadioQuestionAndmislinkedList,
+  testFormDefinitionWithRadioQuestionAndMislinkedList,
   testFormDefinitionWithTwoPagesAndQuestions
 } from '~/src/__stubs__/form-definition.js'
 import {
@@ -200,7 +200,7 @@ describe('Session functions', () => {
       const res = buildQuestionSessionState(
         mockYar,
         '123',
-        testFormDefinitionWithRadioQuestionAndmislinkedList,
+        testFormDefinitionWithRadioQuestionAndMislinkedList,
         'p1',
         'q1'
       )
