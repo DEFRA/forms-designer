@@ -1,4 +1,9 @@
-import { ComponentType, ControllerType, Engine } from '@defra/forms-model'
+import {
+  ComponentType,
+  ControllerType,
+  Engine,
+  SchemaVersion
+} from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 
 import {
@@ -27,6 +32,7 @@ describe('Editor v2 pages routes', () => {
 
   const testForm = buildDefinition({
     ...testFormDefinitionWithSummaryOnly,
+    schema: SchemaVersion.V2,
     engine: Engine.V2
   })
 
@@ -102,7 +108,8 @@ describe('Editor v2 pages routes', () => {
           controller: ControllerType.Summary
         }
       ],
-      engine: Engine.V2
+      engine: Engine.V2,
+      schema: SchemaVersion.V2
     })
 
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
@@ -137,10 +144,11 @@ describe('Editor v2 pages routes', () => {
     expect($actions[3]).toHaveTextContent('Re-order pages')
   })
 
-  test('GET - should redirect to migration to v2 if draft definition is v1', async () => {
+  test('GET - should redirect to migration to v2 if draft definition schema is v1', async () => {
     const v1Definition = buildDefinition({
       ...testFormDefinitionWithSinglePage,
-      engine: Engine.V1
+      engine: Engine.V2,
+      schema: SchemaVersion.V1
     })
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     jest

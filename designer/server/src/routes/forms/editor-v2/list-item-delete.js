@@ -25,12 +25,17 @@ export default [
       const { slug, pageId, questionId, stateId, itemId } = params
 
       const metadata = await forms.get(slug, token)
+      const formDefinition = await forms.getDraftFormDefinition(
+        metadata.id,
+        token
+      )
 
       return h.view(
         CONFIRMATION_PAGE_VIEW,
         viewModel.deleteListItemConfirmationPageViewModel(
           getQuestionSessionState(yar, stateId),
           metadata,
+          formDefinition,
           pageId,
           questionId,
           stateId,

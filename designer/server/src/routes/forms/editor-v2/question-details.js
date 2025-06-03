@@ -90,7 +90,11 @@ export async function saveList(
     return undefined
   }
 
-  const listMapped = buildListFromDetails(questionDetails, listItems ?? [])
+  const listMapped = buildListFromDetails(
+    questionDetails,
+    listItems ?? [],
+    definition
+  )
 
   const { list, status } = await upsertList(
     formId,
@@ -99,7 +103,7 @@ export async function saveList(
     listMapped
   )
 
-  return status === 'created' ? list.name : undefined
+  return status === 'created' ? list.id : undefined
 }
 
 /**
@@ -207,7 +211,7 @@ async function saveQuestion(
   listItems
 ) {
   // Create or update the list (if this is a Component that uses a List)
-  const listName = await saveList(
+  const listId = await saveList(
     formId,
     definition,
     token,
@@ -215,8 +219,8 @@ async function saveQuestion(
     listItems
   )
 
-  const questDetailsWithList = listName
-    ? { ...questionDetails, list: listName }
+  const questDetailsWithList = listId
+    ? { ...questionDetails, list: listId }
     : questionDetails
 
   if (pageId === 'new') {

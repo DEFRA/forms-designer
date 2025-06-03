@@ -35,12 +35,16 @@ export default [
 
       // Form metadata, validation errors
       const metadata = await forms.get(slug, token)
+      const formDefinition = await forms.getDraftFormDefinition(
+        metadata.id,
+        token
+      )
 
       const validation = getValidationErrorsFromSession(yar, errorKey)
 
       return h.view(
         'forms/question-radios',
-        viewModel.pageViewModel(metadata, {}, validation)
+        viewModel.pageViewModel(metadata, formDefinition, {}, validation)
       )
     },
     options: {

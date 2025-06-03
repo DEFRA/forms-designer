@@ -40,6 +40,10 @@
         </p>
       {% endif %}
 
+      {% if bodyWarning %}
+        {{ govukWarningText(bodyWarning) }}
+      {% endif %}
+
       <div class="govuk-button-group">
         {% for button in buttons %}
           {{ govukButton(button) }}
