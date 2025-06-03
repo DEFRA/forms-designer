@@ -113,7 +113,11 @@ export async function saveList(
     return undefined
   }
 
-  const listMapped = buildListFromDetails(questionDetails, listItems ?? [])
+  const listMapped = buildListFromDetails(
+    questionDetails,
+    listItems ?? [],
+    definition
+  )
 
   const { list, status } = await upsertList(
     formId,

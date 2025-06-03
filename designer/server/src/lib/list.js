@@ -23,13 +23,17 @@ const putJsonByListType =
  * Maps FormEditorInputQuestion payload to AutoComplete Component
  * @param {Partial<FormEditorInputQuestion>} questionDetails
  * @param {Item[]} listItems
+ * @param {FormDefinition} definition
  * @returns {Partial<List>}
  */
-export function buildListFromDetails(questionDetails, listItems) {
+export function buildListFromDetails(questionDetails, listItems, definition) {
+  const listId = stringHasValue(questionDetails.list)
+    ? questionDetails.list
+    : undefined
+  const existingList = definition.lists.find((x) => x.id === listId)
   return {
-    name: stringHasValue(questionDetails.list)
-      ? questionDetails.list
-      : randomId(),
+    id: existingList ? existingList.id : undefined,
+    name: existingList ? existingList.name : randomId(),
     title: `List for question ${questionDetails.name}`,
     type: 'string',
     items: listItems.map((item) => {
@@ -110,9 +114,7 @@ export async function deleteList(formId, listId, token) {
  * @returns {Promise<{ id: string; list: List; status: 'updated' | 'created' }>}
  */
 export async function upsertList(formId, definition, token, upsertedList) {
-  const foundList = definition.lists.find(
-    (list) => list.name === upsertedList.name
-  )
+  const foundList = definition.lists.find((list) => list.id === upsertedList.id)
 
   if (foundList) {
     return updateList(formId, foundList.id, token, {

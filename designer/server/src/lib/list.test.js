@@ -30,7 +30,7 @@ describe('list.js', () => {
   describe('buildListFromDetails', () => {
     it('should build a list from details', () => {
       const payload = {
-        list: 'listname',
+        list: listId,
         name: 'questionname'
       }
       const listItems = [
@@ -38,13 +38,26 @@ describe('list.js', () => {
         { text: 'German', value: 'de-De' }
       ]
 
-      expect(buildListFromDetails(payload, listItems)).toEqual({
+      const definition = buildDefinition({
+        lists: [
+          {
+            id: listId,
+            name: 'listname',
+            items: listItems,
+            title: 'List for question questionname',
+            type: 'string'
+          }
+        ]
+      })
+
+      expect(buildListFromDetails(payload, listItems, definition)).toEqual({
+        id: listId,
         title: 'List for question questionname',
         name: 'listname',
         type: 'string',
         items: [
-          { text: 'English', value: 'en-gb' },
-          { text: 'German', value: 'de-De' }
+          { text: 'English', value: 'en-gb', id: undefined, hint: undefined },
+          { text: 'German', value: 'de-De', id: undefined, hint: undefined }
         ]
       })
     })
@@ -58,7 +71,19 @@ describe('list.js', () => {
         { text: 'German', value: 'de-De' }
       ]
 
-      expect(buildListFromDetails(payload, listItems)).toEqual({
+      const definition = buildDefinition({
+        lists: [
+          {
+            id: listId,
+            name: 'listname',
+            items: listItems,
+            title: 'List for question questionname',
+            type: 'string'
+          }
+        ]
+      })
+
+      expect(buildListFromDetails(payload, listItems, definition)).toEqual({
         title: 'List for question q-name',
         name: expect.any(String),
         type: 'string',

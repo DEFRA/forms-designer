@@ -378,7 +378,7 @@ describe('Editor v2 question details routes', () => {
               id: 'c1',
               name: 'autoComplete',
               title: 'Which country do you live in?',
-              list: listName
+              list: listId
             })
           ]
         })
