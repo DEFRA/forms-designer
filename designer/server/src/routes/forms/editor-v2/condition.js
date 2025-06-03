@@ -45,7 +45,7 @@ export const schema = Joi.object().keys({
 
 export default [
   /**
-   * @satisfies {ServerRoute<{ Params: { slug: string, conditionId?: string }, Query: { componentId?: string } }>}
+   * @satisfies {ServerRoute<{ Params: { slug: string, conditionId?: string }, Query: { componentId?: string, operator?: string } }>}
    */
   ({
     method: 'GET',
@@ -55,7 +55,7 @@ export default [
       const { params, query, auth } = request
       const { token } = auth.credentials
       const { slug, conditionId } = params
-      const { componentId } = query
+      const { componentId, operator } = query
 
       // Get form metadata and definition
       const { metadata, definition } = await getForm(slug, token)
@@ -75,7 +75,7 @@ export default [
         viewModel.conditionViewModel(
           metadata,
           definition,
-          { selectedComponentId: componentId },
+          { selectedComponentId: componentId, selectedOperator: operator },
           condition,
           notification,
           validation
@@ -96,7 +96,8 @@ export default [
           conditionId: idSchema.optional()
         }),
         query: Joi.object().keys({
-          componentId: idSchema.optional()
+          componentId: idSchema.optional(),
+          operator: operatorSchema.optional()
         })
       }
     }
@@ -136,7 +137,7 @@ export default [
   /**
    * @satisfies {ServerRoute<{ Params: { slug: string, conditionId?: string }, Payload: { componentId: string } }>}
    */
-  ;({
+  ({
     method: 'POST',
     path: ROUTE_PATH_CONDITION_SET_COMPONENT_ID,
     handler(request, h) {
@@ -188,63 +189,63 @@ export default [
       }
     }
   }),
-    /**
-     * @satisfies {ServerRoute<{ Params: { slug: string, conditionId?: string }, Payload: { operator: string }, Query: { componentId: string } }>}
-     */
-    ({
-      method: 'POST',
-      path: ROUTE_PATH_CONDITION_SET_OPERATOR,
-      handler(request, h) {
-        const { payload, params, query } = request
-        const { slug, conditionId } = params
-        const { componentId } = query
-        const { operator } = payload
+  /**
+   * @satisfies {ServerRoute<{ Params: { slug: string, conditionId?: string }, Payload: { operator: string }, Query: { componentId: string } }>}
+   */
+  ({
+    method: 'POST',
+    path: ROUTE_PATH_CONDITION_SET_OPERATOR,
+    handler(request, h) {
+      const { payload, params, query } = request
+      const { slug, conditionId } = params
+      const { componentId } = query
+      const { operator } = payload
 
-        // Redirect POST to GET without resubmit on back button
-        return h
-          .redirect(
-            editorFormPath(
-              slug,
-              `condition${conditionId ? `/${conditionId}` : ''}?componentId=${componentId}&operator=${operator}`
-            )
+      // Redirect POST to GET without resubmit on back button
+      return h
+        .redirect(
+          editorFormPath(
+            slug,
+            `condition${conditionId ? `/${conditionId}` : ''}?componentId=${componentId}&operator=${operator}`
           )
-          .code(StatusCodes.SEE_OTHER)
-      },
-      options: {
-        validate: {
-          payload: Joi.object()
-            .keys({
-              operator: schema.extract('operator'),
-              confirmSelectOperator: Joi.boolean().required().allow(true)
-            })
-            .options({ stripUnknown: true }),
-          failAction: (request, h, error) => {
-            const { params, query } = request
-            const { slug, conditionId } = params
-            const { componentId } = query
+        )
+        .code(StatusCodes.SEE_OTHER)
+    },
+    options: {
+      validate: {
+        payload: Joi.object()
+          .keys({
+            operator: schema.extract('operator'),
+            confirmSelectOperator: Joi.boolean().required().allow(true)
+          })
+          .options({ stripUnknown: true }),
+        failAction: (request, h, error) => {
+          const { params, query } = request
+          const { slug, conditionId } = params
+          const { componentId } = query
 
-            addErrorsToSession(request, error, errorKey)
+          addErrorsToSession(request, error, errorKey)
 
-            return h
-              .redirect(
-                editorFormPath(
-                  slug,
-                  `condition${conditionId ? `/${conditionId}` : ''}?componentId=${componentId}`
-                )
+          return h
+            .redirect(
+              editorFormPath(
+                slug,
+                `condition${conditionId ? `/${conditionId}` : ''}?componentId=${componentId}`
               )
-              .code(StatusCodes.SEE_OTHER)
-              .takeover()
-          }
-        },
-        auth: {
-          mode: 'required',
-          access: {
-            entity: 'user',
-            scope: [`+${scopes.SCOPE_WRITE}`]
-          }
+            )
+            .code(StatusCodes.SEE_OTHER)
+            .takeover()
+        }
+      },
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${scopes.SCOPE_WRITE}`]
         }
       }
-    })
+    }
+  })
 ]
 
 /**
