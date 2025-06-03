@@ -1,0 +1,27 @@
+{% set component = params %}
+{% set questionGroupErrorClass = 'govuk-form-group--error' if component.errorMessage %}
+{% set questionGroupErrorHtml = '<p id="componentId-error" class="govuk-error-message"><span class="govuk-visually-hidden">Error:</span>' + component.errorMessage.text + '</p>' if component.errorMessage %}
+{% set questionGroupErrorSelectClass = 'govuk-select--error' if component.errorMessage %}
+
+<div class="govuk-form-group {{questionGroupErrorClass}}">
+  <label class="govuk-label" for="{{ component.id }}">{{ component.label.text }}</label>
+  {{ questionGroupErrorHtml | safe }}
+  <select class="govuk-select {{questionGroupErrorSelectClass}}" id="{{ component.id }}" name="{{ component.name }}">
+    <option value="">Select a question</option>
+    {% for item in component.items %}
+      {% if item.group %}
+        <optgroup label="Page {{ item.number }}: {{ item.page.title }}">
+          {% for question in item.components %}
+            <option value="{{ question.id }}" {{ 'selected' if component.value == question.id }}>{{ question.title }}</option>
+          {% endfor %}
+        </optgroup>
+      {% else %}
+        {% for question in item.components %}
+          <option value="{{ question.id }}" {{ 'selected' if component.value == question.id }}>Page {{ item.number }}: {{ question.title }}</option>
+        {% endfor %}
+      {% endif %}
+    {% endfor %}
+  </select>
+  <button class="govuk-button govuk-!-margin-bottom-0" name="confirmSelectComponent" type="submit"
+    value="true" formaction="{{ params.confirmSelectComponentAction }}">Select</button>
+</div>

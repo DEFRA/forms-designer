@@ -8,19 +8,27 @@ import {
   addErrorsToSession,
   getValidationErrorsFromSession
 } from '~/src/lib/error-helper.js'
-import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
+import {
+  redirectWithAnchorOrUrl,
+  redirectWithErrors
+} from '~/src/lib/redirect-helper.js'
+import {
+  createQuestionSessionState,
+  getQuestionSessionState
+} from '~/src/lib/session-helper.js'
 import * as viewModel from '~/src/models/forms/editor-v2/condition.js'
 import { editorFormPath } from '~/src/models/links.js'
 import { getForm } from '~/src/routes/forms/editor-v2/helpers.js'
 
-export const ROUTE_PATH_CONDITION = `/library/{slug}/editor-v2/condition/{conditionId?}`
-export const ROUTE_PATH_CONDITION_SET_COMPONENT_ID = `/library/{slug}/editor-v2/condition/set-component/{conditionId?}`
-export const ROUTE_PATH_CONDITION_SET_OPERATOR = `/library/{slug}/editor-v2/condition/set-operator/{conditionId?}`
+export const ROUTE_PATH_CONDITION = `/library/{slug}/editor-v2/condition/{conditionId}/{stateId?}`
+export const ROUTE_PATH_CONDITION_SET_COMPONENT_ID = `/library/{slug}/editor-v2/condition/set-component/{conditionId}`
+export const ROUTE_PATH_CONDITION_SET_OPERATOR = `/library/{slug}/editor-v2/condition/set-operator/{conditionId}`
 
 const errorKey = sessionNames.validationFailure.editorPage
 const notificationKey = sessionNames.successNotification
 
-const idSchema = Joi.string().uuid().required()
+const idSchema = Joi.string().uuid().valid('new').required()
+const stateIdSchema = Joi.string().optional()
 const operatorSchema = Joi.string()
   .valid(...Object.values(OperatorName))
   .required()
@@ -45,7 +53,7 @@ export const schema = Joi.object().keys({
 
 export default [
   /**
-   * @satisfies {ServerRoute<{ Params: { slug: string, conditionId?: string }, Query: { componentId?: string, operator?: string } }>}
+   * @satisfies {ServerRoute<{ Params: { slug: string, conditionId: string, stateId?: string } }>}
    */
   ({
     method: 'GET',
@@ -54,8 +62,22 @@ export default [
       const { yar } = request
       const { params, query, auth } = request
       const { token } = auth.credentials
-      const { slug, conditionId } = params
-      const { componentId, operator } = query
+      const { slug, conditionId, stateId } = params
+      const { operator } = query
+
+      // Set up session if not yet exists
+      if (!stateId || !getQuestionSessionState(yar, stateId)) {
+        const newStateId = createQuestionSessionState(yar)
+        return redirectWithAnchorOrUrl(
+          h,
+          slug,
+          conditionId,
+          '',
+          newStateId,
+          '',
+          `condition/${conditionId}/${newStateId}`
+        )
+      }
 
       // Get form metadata and definition
       const { metadata, definition } = await getForm(slug, token)
@@ -66,16 +88,17 @@ export default [
         yar.flash(notificationKey).at(0)
       )
 
-      const condition = conditionId
-        ? getConditionV2(definition, conditionId)
-        : undefined
+      const condition =
+        conditionId && conditionId !== 'new'
+          ? getConditionV2(definition, conditionId)
+          : undefined
 
       return h.view(
         'forms/editor-v2/condition',
         viewModel.conditionViewModel(
           metadata,
           definition,
-          { selectedComponentId: componentId, selectedOperator: operator },
+          { selectedComponentId: undefined, selectedOperator: operator },
           condition,
           notification,
           validation
@@ -93,11 +116,8 @@ export default [
       validate: {
         params: Joi.object().keys({
           slug: slugSchema,
-          conditionId: idSchema.optional()
-        }),
-        query: Joi.object().keys({
-          componentId: idSchema.optional(),
-          operator: operatorSchema.optional()
+          conditionId: idSchema.optional(),
+          stateId: stateIdSchema
         })
       }
     }
@@ -110,7 +130,8 @@ export default [
     path: ROUTE_PATH_CONDITION,
     handler(request, h) {
       const { payload, params } = request
-      const { slug, conditionId } = params
+      const { slug /* conditionId */ } = params
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { componentId, operator } = payload
 
       // Redirect POST to GET without resubmit on back button

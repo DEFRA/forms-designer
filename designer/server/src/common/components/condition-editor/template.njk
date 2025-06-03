@@ -3,6 +3,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
+{% from "select-with-opt-group/macro.njk" import appSelectWithOptGroup %}
 
 {% set component = params.component %}
 {% set operator = params.operator %}
@@ -29,27 +30,7 @@
       isPageHeading: false
     }
   }) %}
-    <div class="govuk-form-group">
-      <label class="govuk-label" for="{{ component.id }}">{{ component.label.text }}</label>
-      <select class="govuk-select" id="{{ component.id }}" name="{{ component.name }}">
-        <option value="">Select a question</option>
-        {% for item in component.items %}
-          {% if item.group %}
-            <optgroup label="Page {{ item.number }}: {{ item.page.title }}">
-              {% for question in item.components %}
-                <option value="{{ question.id }}" {{ 'selected' if component.value == question.id }}>{{ question.title }}</option>
-              {% endfor %}
-            </optgroup>
-          {% else %}
-            {% for question in item.components %}
-              <option value="{{ question.id }}" {{ 'selected' if component.value == question.id }}>Page {{ item.number }}: {{ question.title }}</option>
-            {% endfor %}
-          {% endif %}
-        {% endfor %}
-      </select>
-      <button class="govuk-button govuk-!-margin-bottom-0" name="confirmSelectComponent" type="submit"
-        value="true" formaction="{{ params.confirmSelectComponentAction }}">Select</button>
-    </div>
+    {{ appSelectWithOptGroup(component) }}
     {{ operatorHtml | safe }}
     {{ valueHtml | safe }}
     {{ govukInput(displayName) }}
