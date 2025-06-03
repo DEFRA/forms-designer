@@ -34,8 +34,8 @@ export function getPageConditionDetails(definition, pageId) {
   let pageConditionPresentationString = null
   if (pageConditionDetails) {
     const { pages, conditions, lists } = definition
-    const components = pages.flatMap((page) =>
-      hasComponentsEvenIfNoNext(page) ? page.components : []
+    const components = pages.flatMap((p) =>
+      hasComponentsEvenIfNoNext(p) ? p.components : []
     )
 
     const v2Conditions = /** @type {ConditionWrapperV2[]} */ (
