@@ -351,7 +351,7 @@ export function questionDetailsViewModel(
  * @param {{ state: any, questionFieldsOverride: ComponentDef, questionType: ComponentType | undefined }} questionData
  * @param {{ questionId: string, stateId: string, metadataSlug: string, currentTab: string }} identifiers
  * @param {ValidationFailure<any> | undefined} conditionsValidation
- * @returns {object}
+ * @returns {{ questionType: ComponentType, [key: string]: any }}
  */
 function buildQuestionDetailsViewModel(
   dataObjects,
