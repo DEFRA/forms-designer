@@ -1,8 +1,12 @@
+import { ComponentType } from '@defra/forms-model'
 import { describe, expect, test } from '@jest/globals'
 
 import {
   getConditionsData,
   getPageConditionDetails,
+  getQuestionErrorInfo,
+  getQuestionPageInfo,
+  getQuestionViewModelData,
   getTabsConfiguration,
   getUrlsConfiguration
 } from '~/src/models/forms/editor-v2/question-details-helper.js'
@@ -299,8 +303,138 @@ describe('question-details-helper', () => {
       )
     })
   })
+
+  describe('getQuestionErrorInfo', () => {
+    const mockGetErrorTemplates = jest.fn()
+    const mockHasDataOrErrorForDisplay = jest.fn()
+
+    beforeEach(() => {
+      mockGetErrorTemplates.mockReturnValue({
+        baseErrors: [],
+        advancedSettingsErrors: []
+      })
+      mockHasDataOrErrorForDisplay.mockReturnValue(false)
+    })
+
+    test('handles empty extraFields and undefined validation', () => {
+      const result = getQuestionErrorInfo(
+        [],
+        undefined,
+        ComponentType.TextField,
+        mockGetErrorTemplates,
+        mockHasDataOrErrorForDisplay
+      )
+
+      expect(result.extraFieldNames).toEqual([])
+      expect(result.errorList).toEqual([])
+      expect(result.isOpen).toBe(false)
+      expect(mockGetErrorTemplates).toHaveBeenCalledWith(
+        ComponentType.TextField
+      )
+    })
+
+    test('extracts field names and handles validation errors', () => {
+      const extraFields = [
+        { name: 'field1' },
+        { name: undefined },
+        { name: 'field2' }
+      ]
+      const validation = /** @type {ValidationFailure<FormEditor>} */ (
+        /** @type {unknown} */ ({
+          formErrors: { field1: { text: 'Error' } },
+          formValues: {}
+        })
+      )
+      mockHasDataOrErrorForDisplay.mockReturnValue(true)
+
+      const result = getQuestionErrorInfo(
+        extraFields,
+        validation,
+        undefined,
+        mockGetErrorTemplates,
+        mockHasDataOrErrorForDisplay
+      )
+
+      expect(result.extraFieldNames).toEqual(['field1', 'unknown', 'field2'])
+      expect(result.isOpen).toBe(true)
+    })
+  })
+
+  describe('getQuestionPageInfo', () => {
+    test('generates correct page information', () => {
+      const details = { pageTitle: 'Form Title', questionNum: 3, pageNum: 2 }
+      const formTitle = 'Test Form'
+
+      const result = getQuestionPageInfo(details, formTitle)
+
+      expect(result).toEqual({
+        pageHeading: 'Form Title',
+        pageTitle: 'Edit question 3 - Test Form',
+        cardTitle: 'Question 3',
+        cardCaption: 'Page 2',
+        cardHeading: 'Edit question 3'
+      })
+    })
+
+    test('handles missing details properties', () => {
+      const details = {}
+      const formTitle = 'Test Form'
+
+      const result = getQuestionPageInfo(details, formTitle)
+
+      expect(result.pageTitle).toContain('undefined - Test Form')
+      expect(result.cardTitle).toContain('undefined')
+    })
+  })
+
+  describe('getQuestionViewModelData', () => {
+    const mockDefinition = {
+      pages: [],
+      conditions: [],
+      lists: [],
+      sections: []
+    }
+
+    test('combines all configuration data', () => {
+      const config = {
+        metadataSlug: 'test-form',
+        pageId: 'page1',
+        questionId: 'q1',
+        stateId: 'state1',
+        pagePath: '/path',
+        questionFieldsOverrideId: 'field1',
+        currentTab: 'question'
+      }
+
+      const result = getQuestionViewModelData(mockDefinition, config)
+
+      expect(result).toHaveProperty('urls')
+      expect(result).toHaveProperty('conditionDetails')
+      expect(result).toHaveProperty('allConditions')
+      expect(result).toHaveProperty('tabs')
+      expect(result.tabs[0].active).toBe(true)
+    })
+
+    test('handles undefined optional config properties', () => {
+      const config = {
+        metadataSlug: 'test',
+        pageId: 'page1',
+        questionId: 'q1',
+        stateId: 'state1',
+        pagePath: undefined,
+        questionFieldsOverrideId: undefined,
+        currentTab: 'conditions'
+      }
+
+      const result = getQuestionViewModelData(mockDefinition, config)
+
+      expect(result.urls.previewPageUrl).toContain('undefined')
+      expect(result.tabs[1].active).toBe(true)
+    })
+  })
 })
 
 /**
- * @import { FormDefinition } from '@defra/forms-model'
+ * @import { FormDefinition, FormEditor } from '@defra/forms-model'
+ * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

@@ -3,7 +3,6 @@ import { createComponent } from '@defra/forms-engine-plugin/helpers.js'
 import { ComponentType, randomId } from '@defra/forms-model'
 
 import { QuestionTypeDescriptions } from '~/src/common/constants/editor.js'
-import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { getPageFromDefinition } from '~/src/lib/utils.js'
 import { advancedSettingsPerComponentType } from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
 import {
@@ -27,10 +26,9 @@ import {
   enhancedFields
 } from '~/src/models/forms/editor-v2/question-details-advanced-settings.js'
 import {
-  getConditionsData,
-  getPageConditionDetails,
-  getTabsConfiguration,
-  getUrlsConfiguration
+  getQuestionErrorInfo,
+  getQuestionPageInfo,
+  getQuestionViewModelData
 } from '~/src/models/forms/editor-v2/question-details-helper.js'
 import { formOverviewPath } from '~/src/models/links.js'
 
@@ -236,6 +234,50 @@ export function getListDetails(state, questionFields) {
 }
 
 /**
+ * Gets all field-related data for question details
+ * @param {ComponentDef} questionFieldsOverride
+ * @param {ComponentType | undefined} questionType
+ * @param {ValidationFailure<FormEditor> | undefined} validation
+ * @param {FormDefinition} definition
+ * @param {QuestionSessionState | undefined} state
+ * @returns {{ basePageFields: any[], uploadFields: any, extraFields: GovukField[], enhancedFields: GovukField[], processedValidation: ValidationFailure<FormEditor> | undefined }}
+ */
+function getQuestionFieldsData(
+  questionFieldsOverride,
+  questionType,
+  validation,
+  definition,
+  state
+) {
+  const basePageFields = getFieldList(
+    /** @type {InputFieldsComponentsDef} */ (questionFieldsOverride),
+    questionType,
+    validation,
+    definition
+  )
+  const uploadFields = getFileUploadFields(questionFieldsOverride, validation)
+  const extraFields = /** @type {GovukField[]} */ (
+    getExtraFields(questionFieldsOverride, validation)
+  )
+
+  const processedValidation = overrideFormValuesForEnhancedAction(
+    validation,
+    state
+  )
+  const enhancedFields = /** @type {GovukField[]} */ (
+    getEnhancedFields(questionFieldsOverride, processedValidation)
+  )
+
+  return {
+    basePageFields,
+    uploadFields,
+    extraFields,
+    enhancedFields,
+    processedValidation
+  }
+}
+
+/**
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  * @param {string} pageId
@@ -267,84 +309,75 @@ export function questionDetailsViewModel(
     state?.questionDetails ?? details.question
   )
 
-  const basePageFields = getFieldList(
-    /** @type {InputFieldsComponentsDef} */ (questionFieldsOverride),
+  const fieldData = getQuestionFieldsData(
+    questionFieldsOverride,
     questionType,
     validation,
-    definition
-  )
-  const uploadFields = getFileUploadFields(questionFieldsOverride, validation)
-  const extraFields = /** @type {GovukField[]} */ (
-    getExtraFields(questionFieldsOverride, validation)
-  )
-  validation = overrideFormValuesForEnhancedAction(validation, state)
-  const enhancedFieldList = /** @type {GovukField[]} */ (
-    getEnhancedFields(questionFieldsOverride, validation)
+    definition,
+    state
   )
 
-  const extraFieldNames = extraFields.map((field) => field.name ?? 'unknown')
-  const errorList = buildErrorList(validation?.formErrors)
-  const errorTemplates = getErrorTemplates(questionType)
+  const errorInfo = getQuestionErrorInfo(
+    fieldData.extraFields,
+    fieldData.processedValidation,
+    questionType,
+    getErrorTemplates,
+    hasDataOrErrorForDisplay
+  )
 
-  const pageHeading = details.pageTitle
-  const pageTitle = `Edit question ${details.questionNum} - ${formTitle}`
+  const pageInfo = getQuestionPageInfo(details, formTitle)
 
-  const urls = getUrlsConfiguration(
-    metadata.slug,
+  const viewModelData = getQuestionViewModelData(definition, {
+    metadataSlug: metadata.slug,
     pageId,
     questionId,
     stateId,
-    details.pagePath,
-    questionFieldsOverride.id
-  )
-
-  const conditionDetails = getPageConditionDetails(definition, pageId)
-
-  const allConditions = getConditionsData(definition)
-
-  const tabs = getTabsConfiguration(currentTab)
+    pagePath: details.pagePath,
+    questionFieldsOverrideId: questionFieldsOverride.id,
+    currentTab
+  })
 
   return {
     listDetails: getListDetails(state, questionFieldsOverride),
     state,
-    enhancedFields: enhancedFieldList,
-    ...baseModelFields(metadata.slug, pageTitle, pageHeading),
+    enhancedFields: fieldData.enhancedFields,
+    ...baseModelFields(metadata.slug, pageInfo.pageTitle, pageInfo.pageHeading),
     name: details.question.name || randomId(),
     questionId,
     stateId,
-    basePageFields,
-    uploadFields,
-    extraFields,
-    errorTemplates,
-    cardTitle: `Question ${details.questionNum}`,
-    cardCaption: `Page ${details.pageNum}`,
-    cardHeading: `Edit question ${details.questionNum}`,
+    basePageFields: fieldData.basePageFields,
+    uploadFields: fieldData.uploadFields,
+    extraFields: fieldData.extraFields,
+    errorTemplates: errorInfo.errorTemplates,
+    cardTitle: pageInfo.cardTitle,
+    cardCaption: pageInfo.cardCaption,
+    cardHeading: pageInfo.cardHeading,
     navigation: details.navigation,
-    errorList,
-    formErrors: validation?.formErrors,
-    formValues: validation?.formValues,
-    model: getPreviewModel(basePageFields, state, questionType),
+    errorList: errorInfo.errorList,
+    formErrors: fieldData.processedValidation?.formErrors,
+    formValues: fieldData.processedValidation?.formValues,
+    model: getPreviewModel(fieldData.basePageFields, state, questionType),
     questionType: questionFieldsOverride.type,
     questionTypeDesc: QuestionTypeDescriptions.find(
       (x) => x.type === questionFieldsOverride.type
     )?.description,
-    changeTypeUrl: urls.changeTypeUrl,
+    changeTypeUrl: viewModelData.urls.changeTypeUrl,
     buttonText: SAVE_AND_CONTINUE,
-    previewPageUrl: urls.previewPageUrl,
-    previewErrorsUrl: urls.previewErrorsUrl,
-    deleteUrl: urls.deleteUrl,
-    isOpen: hasDataOrErrorForDisplay(extraFieldNames, errorList, extraFields),
+    previewPageUrl: viewModelData.urls.previewPageUrl,
+    previewErrorsUrl: viewModelData.urls.previewErrorsUrl,
+    deleteUrl: viewModelData.urls.deleteUrl,
+    isOpen: errorInfo.isOpen,
     getFieldType: (/** @type {GovukField} */ field) =>
       getFieldComponentType(field),
-    tabs,
+    tabs: viewModelData.tabs,
     currentTab,
-    pageCondition: conditionDetails.pageCondition,
-    pageConditionDetails: conditionDetails.pageConditionDetails,
+    pageCondition: viewModelData.conditionDetails.pageCondition,
+    pageConditionDetails: viewModelData.conditionDetails.pageConditionDetails,
     pageConditionPresentationString:
-      conditionDetails.pageConditionPresentationString,
-    allConditions,
-    conditionsManagerPath: urls.conditionsManagerPath,
-    pageConditionsApiUrl: urls.pageConditionsApiUrl,
+      viewModelData.conditionDetails.pageConditionPresentationString,
+    allConditions: viewModelData.allConditions,
+    conditionsManagerPath: viewModelData.urls.conditionsManagerPath,
+    pageConditionsApiUrl: viewModelData.urls.pageConditionsApiUrl,
     conditionsFormErrors: conditionsValidation?.formErrors,
     conditionsFormValues: conditionsValidation?.formValues
   }

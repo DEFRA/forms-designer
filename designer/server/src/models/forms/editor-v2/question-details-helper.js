@@ -5,6 +5,7 @@ import {
   isConditionWrapperV2
 } from '@defra/forms-model'
 
+import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { createRuntimeFormModel } from '~/src/lib/utils.js'
 import {
   buildPreviewErrorsUrl,
@@ -120,5 +121,99 @@ export function getUrlsConfiguration(
 }
 
 /**
- * @import { FormDefinition, ConditionWrapperV2 } from '@defra/forms-model'
+ * Gets error-related information for question details
+ * @param {GovukField[]} extraFields
+ * @param {ValidationFailure<FormEditor> | undefined} validation
+ * @param {ComponentType | undefined} questionType
+ * @param {Function} getErrorTemplates
+ * @param {Function} hasDataOrErrorForDisplay
+ * @returns {{ extraFieldNames: string[], errorList: any[], errorTemplates: any, isOpen: boolean }}
+ */
+export function getQuestionErrorInfo(
+  extraFields,
+  validation,
+  questionType,
+  getErrorTemplates,
+  hasDataOrErrorForDisplay
+) {
+  const extraFieldNames = extraFields.map((field) => field.name ?? 'unknown')
+  const errorList = buildErrorList(validation?.formErrors)
+  const errorTemplates = getErrorTemplates(questionType)
+  const isOpen = hasDataOrErrorForDisplay(
+    extraFieldNames,
+    errorList,
+    extraFields
+  )
+
+  return {
+    extraFieldNames,
+    errorList,
+    errorTemplates,
+    isOpen
+  }
+}
+
+/**
+ * Gets page information (titles, headings, etc.) for question details
+ * @param {any} details
+ * @param {string} formTitle
+ * @returns {{ pageHeading: string, pageTitle: string, cardTitle: string, cardCaption: string, cardHeading: string }}
+ */
+export function getQuestionPageInfo(details, formTitle) {
+  const pageHeading = details.pageTitle
+  const pageTitle = `Edit question ${details.questionNum} - ${formTitle}`
+  const cardTitle = `Question ${details.questionNum}`
+  const cardCaption = `Page ${details.pageNum}`
+  const cardHeading = `Edit question ${details.questionNum}`
+
+  return {
+    pageHeading,
+    pageTitle,
+    cardTitle,
+    cardCaption,
+    cardHeading
+  }
+}
+
+/**
+ * Gets view model configuration data (URLs, conditions, tabs, etc.)
+ * @param {FormDefinition} definition
+ * @param {{ metadataSlug: string, pageId: string, questionId: string, stateId: string, pagePath: string | undefined, questionFieldsOverrideId: string | undefined, currentTab: string }} config
+ * @returns {{ urls: any, conditionDetails: any, allConditions: any[], tabs: any[] }}
+ */
+export function getQuestionViewModelData(definition, config) {
+  const {
+    metadataSlug,
+    pageId,
+    questionId,
+    stateId,
+    pagePath,
+    questionFieldsOverrideId,
+    currentTab
+  } = config
+
+  const urls = getUrlsConfiguration(
+    metadataSlug,
+    pageId,
+    questionId,
+    stateId,
+    pagePath,
+    questionFieldsOverrideId
+  )
+
+  const conditionDetails = getPageConditionDetails(definition, pageId)
+  const allConditions = getConditionsData(definition)
+  const tabs = getTabsConfiguration(currentTab)
+
+  return {
+    urls,
+    conditionDetails,
+    allConditions,
+    tabs
+  }
+}
+
+/**
+ * @import { FormDefinition, ConditionWrapperV2, ComponentType, GovukField, FormEditor } from '@defra/forms-model'
+ * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */
