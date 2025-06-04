@@ -1,4 +1,4 @@
-{% set component = params %}
+{% set component = params.component %}
 {% set questionGroupErrorClass = 'govuk-form-group--error' if component.errorMessage %}
 {% set questionGroupErrorHtml = '<p id="componentId-error" class="govuk-error-message"><span class="govuk-visually-hidden">Error:</span>' + component.errorMessage.text + '</p>' if component.errorMessage %}
 {% set questionGroupErrorSelectClass = 'govuk-select--error' if component.errorMessage %}

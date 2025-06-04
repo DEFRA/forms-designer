@@ -1,3 +1,5 @@
+import { randomUUID } from 'crypto'
+
 import { OperatorName, getConditionV2, slugSchema } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
@@ -13,21 +15,22 @@ import {
   redirectWithErrors
 } from '~/src/lib/redirect-helper.js'
 import {
-  createQuestionSessionState,
-  getQuestionSessionState
+  createConditionSessionState,
+  getConditionSessionState,
+  setConditionSessionState
 } from '~/src/lib/session-helper.js'
 import * as viewModel from '~/src/models/forms/editor-v2/condition.js'
 import { editorFormPath } from '~/src/models/links.js'
 import { getForm } from '~/src/routes/forms/editor-v2/helpers.js'
 
 export const ROUTE_PATH_CONDITION = `/library/{slug}/editor-v2/condition/{conditionId}/{stateId?}`
-export const ROUTE_PATH_CONDITION_SET_COMPONENT_ID = `/library/{slug}/editor-v2/condition/set-component/{conditionId}`
-export const ROUTE_PATH_CONDITION_SET_OPERATOR = `/library/{slug}/editor-v2/condition/set-operator/{conditionId}`
+export const ROUTE_PATH_CONDITION_SET_COMPONENT_ID = `/library/{slug}/editor-v2/condition/{conditionId}/{stateId}/set-component`
+export const ROUTE_PATH_CONDITION_SET_OPERATOR = `/library/{slug}/editor-v2/condition/{conditionId}/{stateId}/set-operator`
 
 const errorKey = sessionNames.validationFailure.editorPage
 const notificationKey = sessionNames.successNotification
 
-const idSchema = Joi.string().uuid().valid('new').required()
+const idSchema = Joi.string().required() //  .uuid().valid('new').required()
 const stateIdSchema = Joi.string().optional()
 const operatorSchema = Joi.string()
   .valid(...Object.values(OperatorName))
@@ -40,16 +43,66 @@ export const schema = Joi.object().keys({
   operator: operatorSchema.messages({
     '*': 'Select a condition type'
   }),
-  // value: pageTypeSchema.messages({
-  //   '*': 'Enter a value'
-  // }),
-  // displayName: pageTypeSchema.messages({
-  //   '*': 'Enter a value'
-  // })
   displayName: Joi.string().required().messages({
     '*': 'Enter condition name'
   })
 })
+
+/**
+ * @param {Yar} yar
+ * @param {string} stateId
+ * @param {FormDefinition} definition
+ * @param {string} conditionId
+ * @returns {ConditionSessionState}
+ */
+export function buildSessionState(yar, stateId, definition, conditionId) {
+  const state = getConditionSessionState(yar, stateId)
+  if (!state?.id) {
+    const newState = {
+      id: conditionId,
+      stateId,
+      conditionWrapper:
+        conditionId && conditionId !== 'new'
+          ? getConditionV2(definition, conditionId)
+          : undefined
+    }
+    setConditionSessionState(yar, stateId, newState)
+    return newState
+  }
+  return state
+}
+
+/**
+ * @param {ConditionSessionState} sessionState
+ * @param {{ componentId: string, operator: OperatorName, value: ConditionListItemRefValueDataV2 | ConditionStringValueDataV2 | RelativeDateValueData }} payload
+ * @param {string} displayName
+ */
+export function applyConditionStateChange(sessionState, payload, displayName) {
+  const conditionIdx = 0
+  // TODO - find condition for update based on id
+
+  // TODO - handle type ConditionRefDataV2
+  if (sessionState.conditionWrapper) {
+    sessionState.conditionWrapper.displayName = displayName
+    sessionState.conditionWrapper.conditions[conditionIdx] =
+      /** @type {ConditionDataV2} */ ({
+        ...sessionState.conditionWrapper.conditions[conditionIdx],
+        ...payload
+      })
+  } else {
+    sessionState.conditionWrapper = {
+      id: randomUUID(),
+      displayName,
+      conditions: [
+        {
+          id: randomUUID(),
+          ...payload
+        }
+      ]
+    }
+  }
+  return sessionState
+}
 
 export default [
   /**
@@ -60,14 +113,13 @@ export default [
     path: ROUTE_PATH_CONDITION,
     async handler(request, h) {
       const { yar } = request
-      const { params, query, auth } = request
+      const { params, auth } = request
       const { token } = auth.credentials
       const { slug, conditionId, stateId } = params
-      const { operator } = query
 
       // Set up session if not yet exists
-      if (!stateId || !getQuestionSessionState(yar, stateId)) {
-        const newStateId = createQuestionSessionState(yar)
+      if (!stateId || !getConditionSessionState(yar, stateId)) {
+        const newStateId = createConditionSessionState(yar)
         return redirectWithAnchorOrUrl(
           h,
           slug,
@@ -88,18 +140,19 @@ export default [
         yar.flash(notificationKey).at(0)
       )
 
-      const condition =
-        conditionId && conditionId !== 'new'
-          ? getConditionV2(definition, conditionId)
-          : undefined
+      const sessionState = buildSessionState(
+        yar,
+        stateId,
+        definition,
+        conditionId
+      )
 
       return h.view(
         'forms/editor-v2/condition',
         viewModel.conditionViewModel(
           metadata,
           definition,
-          { selectedComponentId: undefined, selectedOperator: operator },
-          condition,
+          sessionState,
           notification,
           validation
         )
@@ -123,7 +176,7 @@ export default [
     }
   }),
   /**
-   * @satisfies {ServerRoute<{ Params: { slug: string, conditionId?: string }, Payload: { componentId?: string, operator?: string } }>}
+   * @satisfies {ServerRoute<{ Params: { slug: string, conditionId?: string }, Payload: { componentId?: string, operator?: string, displayName?: string } }>}
    */
   ({
     method: 'POST',
@@ -132,7 +185,7 @@ export default [
       const { payload, params } = request
       const { slug /* conditionId */ } = params
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { componentId, operator } = payload
+      const { componentId, operator, displayName } = payload
 
       // Redirect POST to GET without resubmit on back button
       return h
@@ -156,24 +209,29 @@ export default [
     }
   }),
   /**
-   * @satisfies {ServerRoute<{ Params: { slug: string, conditionId?: string }, Payload: { componentId: string } }>}
+   * @satisfies {ServerRoute<{ Params: { slug: string, conditionId: string, stateId: string }, Payload: { componentId: string, displayName: string } }>}
    */
   ({
     method: 'POST',
     path: ROUTE_PATH_CONDITION_SET_COMPONENT_ID,
     handler(request, h) {
-      const { payload, params } = request
-      const { slug, conditionId } = params
-      const { componentId } = payload
+      const { payload, params, yar } = request
+      const { slug, conditionId, stateId } = params
+      const { componentId, displayName } = payload
+
+      const sessionState = getConditionSessionState(yar, stateId) ?? {}
+
+      const newState = applyConditionStateChange(
+        sessionState,
+        { componentId },
+        displayName
+      )
+
+      setConditionSessionState(yar, stateId, newState)
 
       // Redirect POST to GET without resubmit on back button
       return h
-        .redirect(
-          editorFormPath(
-            slug,
-            `condition${conditionId ? `/${conditionId}` : ''}?componentId=${componentId}`
-          )
-        )
+        .redirect(editorFormPath(slug, `condition/${conditionId}/${stateId}`))
         .code(StatusCodes.SEE_OTHER)
     },
     options: {
@@ -181,21 +239,19 @@ export default [
         payload: Joi.object()
           .keys({
             componentId: schema.extract('componentId'),
-            confirmSelectComponent: Joi.boolean().required().allow(true)
+            confirmSelectComponent: Joi.boolean().required().allow(true),
+            displayName: schema.extract('displayName').optional().allow('')
           })
           .options({ stripUnknown: true }),
         failAction: (request, h, error) => {
           const { params } = request
-          const { slug, conditionId } = params
+          const { slug, conditionId, stateId } = params
 
           addErrorsToSession(request, error, errorKey)
 
           return h
             .redirect(
-              editorFormPath(
-                slug,
-                `condition${conditionId ? `/${conditionId}` : ''}`
-              )
+              editorFormPath(slug, `condition/${conditionId}/${stateId}`)
             )
             .code(StatusCodes.SEE_OTHER)
             .takeover()
@@ -211,25 +267,29 @@ export default [
     }
   }),
   /**
-   * @satisfies {ServerRoute<{ Params: { slug: string, conditionId?: string }, Payload: { operator: string }, Query: { componentId: string } }>}
+   * @satisfies {ServerRoute<{ Params: { slug: string, conditionId?: string, stateId: string }, Payload: { operator: string, displayName: string }, Query: { componentId: string } }>}
    */
   ({
     method: 'POST',
     path: ROUTE_PATH_CONDITION_SET_OPERATOR,
     handler(request, h) {
-      const { payload, params, query } = request
-      const { slug, conditionId } = params
-      const { componentId } = query
-      const { operator } = payload
+      const { payload, params, yar } = request
+      const { slug, conditionId, stateId } = params
+      const { operator, displayName } = payload
+
+      const sessionState = getConditionSessionState(yar, stateId) ?? {}
+
+      const newState = applyConditionStateChange(
+        sessionState,
+        { operator },
+        displayName
+      )
+
+      setConditionSessionState(yar, stateId, newState)
 
       // Redirect POST to GET without resubmit on back button
       return h
-        .redirect(
-          editorFormPath(
-            slug,
-            `condition${conditionId ? `/${conditionId}` : ''}?componentId=${componentId}&operator=${operator}`
-          )
-        )
+        .redirect(editorFormPath(slug, `condition/${conditionId}/${stateId}`))
         .code(StatusCodes.SEE_OTHER)
     },
     options: {
@@ -237,22 +297,19 @@ export default [
         payload: Joi.object()
           .keys({
             operator: schema.extract('operator'),
-            confirmSelectOperator: Joi.boolean().required().allow(true)
+            confirmSelectOperator: Joi.boolean().required().allow(true),
+            displayName: schema.extract('displayName').optional().allow('')
           })
           .options({ stripUnknown: true }),
         failAction: (request, h, error) => {
-          const { params, query } = request
-          const { slug, conditionId } = params
-          const { componentId } = query
+          const { params } = request
+          const { slug, conditionId, stateId } = params
 
           addErrorsToSession(request, error, errorKey)
 
           return h
             .redirect(
-              editorFormPath(
-                slug,
-                `condition${conditionId ? `/${conditionId}` : ''}?componentId=${componentId}`
-              )
+              editorFormPath(slug, `condition/${conditionId}/${stateId}`)
             )
             .code(StatusCodes.SEE_OTHER)
             .takeover()
@@ -270,5 +327,7 @@ export default [
 ]
 
 /**
+ * @import { ConditionDataV2, ConditionListItemRefValueDataV2, ConditionStringValueDataV2, RelativeDateValueData, ConditionSessionState, FormDefinition } from '@defra/forms-model'
  * @import { ServerRoute } from '@hapi/hapi'
+ * @import { Yar } from '@hapi/yar'
  */
