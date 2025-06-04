@@ -1,6 +1,6 @@
 import { type ComponentType } from '~/src/components/enums.js'
 import { type ComponentDef } from '~/src/components/types.js'
-import { type Item } from '~/src/index.js'
+import { type ConditionWrapperV2, type Item } from '~/src/index.js'
 
 /**
  * Interface for `FormEditor` Joi schema
@@ -383,6 +383,12 @@ export interface QuestionSessionState {
   isReordering?: boolean
   lastMovedId?: string
   lastMoveDirection?: string
+}
+
+export interface ConditionSessionState {
+  id?: string
+  stateId?: string
+  conditionWrapper?: ConditionWrapperV2
 }
 
 export interface GovukFieldItem {

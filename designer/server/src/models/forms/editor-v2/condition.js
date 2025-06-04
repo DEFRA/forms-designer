@@ -1,5 +1,4 @@
 import {
-  FormStatus,
   getOperatorNames,
   hasComponentsEvenIfNoNext,
   hasConditionSupport
@@ -10,7 +9,6 @@ import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { insertValidationErrors } from '~/src/lib/utils.js'
 import {
   BACK_TO_MANAGE_CONDITIONS,
-  buildPreviewUrl,
   getFormSpecificNavigation
 } from '~/src/models/forms/editor-v2/common.js'
 import {
@@ -23,16 +21,9 @@ import { editorFormPath, formOverviewPath } from '~/src/models/links.js'
  * @param {string} slug
  * @param {FormDefinition} definition
  * @param { ValidationFailure<FormEditor> | undefined } validation
- * @param {ConditionPageState} [state]
- * @param {ConditionWrapperV2} [condition]
+ * @param {ConditionSessionState} state
  */
-export function buildConditionEditor(
-  slug,
-  definition,
-  validation,
-  state,
-  condition
-) {
+export function buildConditionEditor(slug, definition, validation, state) {
   const componentItems = definition.pages
     .map(withPageNumbers)
     .filter(({ page }) => withConditionSupport(page))
@@ -49,8 +40,11 @@ export function buildConditionEditor(
       }
     })
 
-  const legendText = `${condition ? 'Edit' : 'Create new'} condition`
-  const { selectedComponentId, selectedOperator, displayName } = state ?? {}
+  const legendText = `${state.id ? 'Edit' : 'Create new'} condition`
+  const { id, conditionWrapper } = state
+
+  // TODO - handling multiple conditions
+  const firstCondition = conditionWrapper?.conditions[0]
 
   const component = {
     id: 'componentId',
@@ -59,43 +53,49 @@ export function buildConditionEditor(
       text: 'Select a question'
     },
     items: componentItems,
-    value: selectedComponentId,
+    value:
+      firstCondition && 'componentId' in firstCondition
+        ? firstCondition.componentId
+        : undefined,
     ...insertValidationErrors(validation?.formErrors.componentId)
   }
 
   const confirmSelectComponentAction = editorFormPath(
     slug,
-    `condition/set-component${condition ? `/${condition.id}` : ''}`
-  )
-  const confirmSelectOperatorAction = editorFormPath(
-    slug,
-    `condition/set-operator${condition ? `/${condition.id}` : ''}?componentId=${selectedComponentId}`
+    `condition/${id}/${state.stateId}/set-component`
   )
 
-  const operator = selectedComponentId
-    ? {
-        id: 'operator',
-        name: 'operator',
-        label: {
-          text: 'Condition type'
-        },
-        items: [{ text: 'Select a condition type', value: '' }].concat(
-          ...getOperatorNames(
-            componentItems
-              .flatMap(({ components }) => components)
-              .find((c) => c.id === selectedComponentId)?.type
-          ).map((value) => ({ text: upperFirst(value), value }))
-        ),
-        value: selectedOperator,
-        formGroup: {
-          afterInput: {
-            html: `<button class="govuk-button govuk-!-margin-bottom-0" name="confirmSelectOperator" type="submit"
+  const confirmSelectOperatorAction = editorFormPath(
+    slug,
+    `condition/${id}/${state.stateId}/set-operator`
+  )
+
+  const operator =
+    firstCondition && 'componentId' in firstCondition
+      ? {
+          id: 'operator',
+          name: 'operator',
+          label: {
+            text: 'Condition type'
+          },
+          items: [{ text: 'Select a condition type', value: '' }].concat(
+            ...getOperatorNames(
+              componentItems
+                .flatMap(({ components }) => components)
+                .find((c) => c.id === firstCondition.componentId)?.type
+            ).map((value) => ({ text: upperFirst(value), value }))
+          ),
+          value:
+            'operator' in firstCondition ? firstCondition.operator : undefined,
+          formGroup: {
+            afterInput: {
+              html: `<button class="govuk-button govuk-!-margin-bottom-0" name="confirmSelectOperator" type="submit"
       value="true" formaction="${confirmSelectOperatorAction}">Select</button>`
-          }
-        },
-        ...insertValidationErrors(validation?.formErrors.operator)
-      }
-    : undefined
+            }
+          },
+          ...insertValidationErrors(validation?.formErrors.operator)
+        }
+      : undefined
 
   const displayNameField = {
     id: 'displayName',
@@ -103,7 +103,7 @@ export function buildConditionEditor(
     label: {
       text: 'Condition name'
     },
-    value: displayName,
+    value: conditionWrapper?.displayName,
     hint: {
       text: "Condition names help you to identify conditions in your form, for example, 'Not a farmer'. Users will not see condition names."
     },
@@ -123,8 +123,7 @@ export function buildConditionEditor(
 /**
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
- * @param {ConditionPageState} [state]
- * @param {ConditionWrapperV2} [condition]
+ * @param {ConditionSessionState} state
  * @param {string[]} [notification]
  * @param {ValidationFailure<FormEditor>} [validation]
  */
@@ -132,14 +131,12 @@ export function conditionViewModel(
   metadata,
   definition,
   state,
-  condition,
   notification,
   validation
 ) {
   const formSlug = metadata.slug
   const formPath = formOverviewPath(formSlug)
-  const navigation = getFormSpecificNavigation(formPath, metadata, 'Editor')
-  const previewBaseUrl = buildPreviewUrl(metadata.slug, FormStatus.Draft)
+  const navigation = getFormSpecificNavigation(formPath, metadata, definition)
   const pageHeading = 'Manage conditions'
   const pageCaption = metadata.title
   const pageTitle = `${pageHeading} - ${pageCaption}`
@@ -158,7 +155,6 @@ export function conditionViewModel(
     },
     useNewMasthead: true,
     formSlug,
-    previewBaseUrl,
     navigation,
     pageCaption: {
       text: pageCaption
@@ -171,8 +167,7 @@ export function conditionViewModel(
       formSlug,
       definition,
       validation,
-      state,
-      condition
+      state
     )
   }
 }
@@ -185,6 +180,6 @@ export function conditionViewModel(
  */
 
 /**
- * @import { FormMetadata, FormDefinition, FormEditor, ConditionWrapperV2 } from '@defra/forms-model'
+ * @import { ConditionSessionState, FormMetadata, FormDefinition, FormEditor, ConditionWrapperV2 } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */
