@@ -978,28 +978,6 @@ export const testFormDefinitionWithMultipleV2Conditions = {
       ]
     },
     {
-      displayName: 'isBob',
-      name: 'LoaWPy',
-      value: {
-        name: 'isBob',
-        conditions: [
-          {
-            field: {
-              name: 'RRwYht',
-              type: ComponentType.TextField,
-              display: 'What is your full name'
-            },
-            operator: OperatorName.Is,
-            value: {
-              type: ConditionType.Value,
-              value: 'Bob',
-              display: 'Bob'
-            }
-          }
-        ]
-      }
-    },
-    {
       id: '4a82930a-b8f5-498c-adae-6158bb2aeeb5',
       displayName: 'isFaveColourRedV2',
       conditions: [
@@ -1013,46 +991,6 @@ export const testFormDefinitionWithMultipleV2Conditions = {
           }
         }
       ]
-    },
-    {
-      displayName: 'isFaveColourRed',
-      name: 'SxzrgR',
-      value: {
-        name: 'isFaveColourRed',
-        conditions: [
-          {
-            field: {
-              name: 'nUaCCW',
-              type: ComponentType.RadiosField,
-              display: 'What is your favourite color'
-            },
-            operator: OperatorName.Is,
-            value: {
-              type: ConditionType.Value,
-              value: 'red',
-              display: 'Red'
-            }
-          }
-        ]
-      }
-    },
-    {
-      displayName: 'isBobAndFaveColourRed',
-      name: 'drFGth',
-      value: {
-        name: 'isBobAndFaveColourRed',
-        conditions: [
-          {
-            conditionName: 'isBob',
-            conditionDisplayName: 'isBob'
-          },
-          {
-            conditionName: 'isFaveColourRed',
-            conditionDisplayName: 'isFaveColourRed',
-            coordinator: Coordinator.AND
-          }
-        ]
-      }
     },
     {
       id: 'c685ae47-a134-485a-a819-b6271644722e',
