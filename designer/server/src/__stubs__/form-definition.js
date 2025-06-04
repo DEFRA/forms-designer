@@ -965,7 +965,7 @@ export const testFormDefinitionWithMultipleV2Conditions = {
     {
       id: 'd5e9f931-e151-4dd6-a2b9-68a03f3537e2',
       displayName: 'isBobV2',
-      conditions: [
+      items: [
         {
           id: 'bd071563-1261-4e5c-ab30-05dde59b86f6',
           componentId: '154271c2-79a2-4b59-b535-d210a13dbfe9',
@@ -978,31 +978,9 @@ export const testFormDefinitionWithMultipleV2Conditions = {
       ]
     },
     {
-      displayName: 'isBob',
-      name: 'LoaWPy',
-      value: {
-        name: 'isBob',
-        conditions: [
-          {
-            field: {
-              name: 'RRwYht',
-              type: ComponentType.TextField,
-              display: 'What is your full name'
-            },
-            operator: OperatorName.Is,
-            value: {
-              type: ConditionType.Value,
-              value: 'Bob',
-              display: 'Bob'
-            }
-          }
-        ]
-      }
-    },
-    {
       id: '4a82930a-b8f5-498c-adae-6158bb2aeeb5',
       displayName: 'isFaveColourRedV2',
-      conditions: [
+      items: [
         {
           id: '7ccd81c7-6c44-4de2-9c2b-fc917b7e9f35',
           componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
@@ -1015,50 +993,10 @@ export const testFormDefinitionWithMultipleV2Conditions = {
       ]
     },
     {
-      displayName: 'isFaveColourRed',
-      name: 'SxzrgR',
-      value: {
-        name: 'isFaveColourRed',
-        conditions: [
-          {
-            field: {
-              name: 'nUaCCW',
-              type: ComponentType.RadiosField,
-              display: 'What is your favourite color'
-            },
-            operator: OperatorName.Is,
-            value: {
-              type: ConditionType.Value,
-              value: 'red',
-              display: 'Red'
-            }
-          }
-        ]
-      }
-    },
-    {
-      displayName: 'isBobAndFaveColourRed',
-      name: 'drFGth',
-      value: {
-        name: 'isBobAndFaveColourRed',
-        conditions: [
-          {
-            conditionName: 'isBob',
-            conditionDisplayName: 'isBob'
-          },
-          {
-            conditionName: 'isFaveColourRed',
-            conditionDisplayName: 'isFaveColourRed',
-            coordinator: Coordinator.AND
-          }
-        ]
-      }
-    },
-    {
       id: 'c685ae47-a134-485a-a819-b6271644722e',
       displayName: 'isBobAndFaveColourRedV2',
       coordinator: Coordinator.AND,
-      conditions: [
+      items: [
         {
           id: 'f54fcebc-f103-451f-8356-1a08f1f32f56',
           conditionId: 'd5e9f931-e151-4dd6-a2b9-68a03f3537e2'

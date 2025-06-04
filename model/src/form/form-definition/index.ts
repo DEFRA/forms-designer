@@ -158,13 +158,19 @@ const conditionListItemRefDataSchemaV2 =
         .required()
         .description('Type of the condition value, should be "ListItemRef"'),
       listId: Joi.string()
-        .valid(listIdRef)
         .trim()
         .required()
+        .when('/lists', {
+          is: Joi.exist(),
+          then: Joi.valid(listIdRef)
+        })
         .description('The id of the list'),
       itemId: Joi.string()
         .trim()
-        .valid(listItemIdRef)
+        .when('/lists', {
+          is: Joi.exist(),
+          then: Joi.valid(listItemIdRef)
+        })
         .required()
         .description('The id of the list item')
     })
@@ -217,7 +223,10 @@ const conditionRefDataSchemaV2 = Joi.object<ConditionRefDataV2>()
     conditionId: Joi.string()
       .trim()
       .required()
-      .valid(conditionIdRef)
+      .when('/conditions', {
+        is: Joi.exist(),
+        then: Joi.valid(conditionIdRef)
+      })
       .description('Name of the referenced condition')
   })
 
@@ -252,8 +261,12 @@ const conditionDataSchemaV2 = Joi.object<ConditionDataV2>()
     ),
     componentId: Joi.string()
       .trim()
-      .valid(componentIdRefSchema)
+      .valid()
       .required()
+      .when('/pages', {
+        is: Joi.exist(),
+        then: Joi.valid(componentIdRefSchema)
+      })
       .description(
         'Reference to the component id being evaluated in this condition'
       ),
@@ -334,7 +347,7 @@ export const conditionWrapperSchemaV2 = Joi.object<ConditionWrapperV2>()
       .description(
         'Logical operator connecting this condition with others (AND, OR)'
       ),
-    conditions: Joi.array<ConditionGroupDataV2>()
+    items: Joi.array<ConditionGroupDataV2>()
       .items(
         Joi.alternatives().try(conditionDataSchemaV2, conditionRefDataSchemaV2)
       )
@@ -446,7 +459,10 @@ export const componentSchemaV2 = componentSchema
   .keys({
     id: idSchema.description('Unique identifier for the component'),
     list: Joi.string()
-      .valid(listIdRef)
+      .when('/lists', {
+        is: Joi.exist(),
+        then: Joi.valid(listIdRef)
+      })
       .optional()
       .description(
         'List id reference to a predefined list of options for select components'
@@ -683,7 +699,10 @@ export const pageSchemaV2 = pageSchema
     }),
     condition: Joi.string()
       .trim()
-      .valid(conditionIdRef)
+      .when('/conditions', {
+        is: Joi.exist(),
+        then: Joi.valid(conditionIdRef)
+      })
       .optional()
       .description('Optional condition that determines if this page is shown')
   })
