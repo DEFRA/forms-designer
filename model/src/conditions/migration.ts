@@ -135,7 +135,7 @@ function convertConditionRefDataFromV2(
 export function isConditionWrapperV2(
   wrapper: ConditionWrapper | ConditionWrapperV2
 ): wrapper is ConditionWrapperV2 {
-  return Array.isArray((wrapper as ConditionWrapperV2).conditions)
+  return Array.isArray((wrapper as ConditionWrapperV2).items)
 }
 
 export function isConditionWrapper(
@@ -150,7 +150,7 @@ export function convertConditionWrapperFromV2(
 ): ConditionWrapper {
   let coordinator
 
-  if (conditionWrapper.conditions.length > 1 && !conditionWrapper.coordinator) {
+  if (conditionWrapper.items.length > 1 && !conditionWrapper.coordinator) {
     throw new Error('Coordinator is required for multiple conditions')
   } else {
     coordinator = conditionWrapper.coordinator
@@ -161,7 +161,7 @@ export function convertConditionWrapperFromV2(
     displayName: conditionWrapper.displayName,
     value: {
       name: conditionWrapper.id,
-      conditions: conditionWrapper.conditions.map((condition, index) => {
+      conditions: conditionWrapper.items.map((condition, index) => {
         let newCondition: ConditionData | ConditionRefData
 
         if (isConditionDataV2(condition)) {

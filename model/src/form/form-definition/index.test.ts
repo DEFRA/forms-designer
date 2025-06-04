@@ -440,19 +440,19 @@ describe('Form definition schema', () => {
       const stringValueCondition: ConditionWrapperV2 = {
         id: 'ab1bbaae-bf0e-4577-8416-8a8c83da1fb9',
         displayName: 'isFullNameEnriqueChase',
-        conditions: [stringValueData]
+        items: [stringValueData]
       }
 
       const relativeDateCondition: ConditionWrapperV2 = {
         id: '193a413b-65d3-42bd-bddb-d02ca100c749',
         displayName: 'isDueDateWithin7Days',
-        conditions: [relativeDateData]
+        items: [relativeDateData]
       }
 
       const listItemRefCondition: ConditionWrapperV2 = {
         id: '7baf03ce-e0d8-47a5-9010-fbe461031399',
         displayName: 'isFaveColourRed',
-        conditions: [listItemRefData]
+        items: [listItemRefData]
       }
 
       const fullNameConditionRefData: ConditionRefDataV2 = {
@@ -469,7 +469,7 @@ describe('Form definition schema', () => {
         id: 'dc1e112f-2855-42d0-830c-bd5d2332975c',
         displayName: 'isEnriqueChaseAndFaveColourRed',
         coordinator: Coordinator.AND,
-        conditions: [fullNameConditionRefData, faveColourRefData]
+        items: [fullNameConditionRefData, faveColourRefData]
       }
 
       const list: List = {
