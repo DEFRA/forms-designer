@@ -993,7 +993,7 @@ export const testFormDefinitionWithMultipleV2Conditions = {
       ]
     },
     {
-      id: '7ae768b6-1bc5-4a9b-911a-d813e5614e8e',
+      id: 'c685ae47-a134-485a-a819-b6271644722e',
       displayName: 'isBobAndFaveColourRedV2',
       coordinator: Coordinator.AND,
       items: [
