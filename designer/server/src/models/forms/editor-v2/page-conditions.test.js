@@ -319,6 +319,10 @@ describe('page-conditions model', () => {
       expect(result).toHaveProperty('pageId', pageId)
       expect(result).toHaveProperty('cardTitle', 'Page 1')
       expect(result).toHaveProperty('cardCaption', 'Page 1')
+      expect(result).toHaveProperty(
+        'pageSpecificHeading',
+        'Page 1: Farm Details'
+      )
       expect(result).toHaveProperty('currentTab', 'conditions')
       expect(result).toHaveProperty('baseUrl')
       expect(result).toHaveProperty('backLink')
@@ -545,6 +549,65 @@ describe('page-conditions model', () => {
       expect(result.pageCondition).toBeUndefined()
       expect(result.pageConditionDetails).toBeUndefined()
       expect(result.pageConditionPresentationString).toBeNull()
+    })
+
+    it('should generate correct pageSpecificHeading when page has a title', () => {
+      const result = pageConditionsViewModel(metadata, baseDefinition, pageId)
+
+      expect(result).toHaveProperty(
+        'pageSpecificHeading',
+        'Page 1: Farm Details'
+      )
+    })
+
+    it('should generate correct pageSpecificHeading when page has no title', () => {
+      const definitionWithUntitledPage = buildDefinition({
+        pages: [
+          buildQuestionPage({
+            id: pageId,
+            title: undefined,
+            components: [testComponent]
+          }),
+          buildSummaryPage()
+        ],
+        conditions: [mockConditionV2],
+        engine: Engine.V2
+      })
+
+      const result = pageConditionsViewModel(
+        metadata,
+        definitionWithUntitledPage,
+        pageId
+      )
+
+      expect(result).toHaveProperty('pageSpecificHeading', 'Page 1')
+    })
+
+    it('should generate correct pageSpecificHeading for different page numbers', () => {
+      const multiPageDefinition = buildDefinition({
+        pages: [
+          buildQuestionPage({ id: 'land-details', title: 'Land Details' }),
+          buildQuestionPage({ id: pageId, title: 'Farm Operations' }),
+          buildQuestionPage({
+            id: 'environmental-impact',
+            title: 'Environmental Impact Assessment'
+          }),
+          buildSummaryPage()
+        ],
+        conditions: [mockConditionV2],
+        engine: Engine.V2
+      })
+
+      const result = pageConditionsViewModel(
+        metadata,
+        multiPageDefinition,
+        pageId
+      )
+
+      expect(result).toHaveProperty(
+        'pageSpecificHeading',
+        'Page 2: Farm Operations'
+      )
     })
   })
 })
