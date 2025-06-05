@@ -6,7 +6,10 @@ import {
 import upperFirst from 'lodash/upperFirst.js'
 
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
-import { insertValidationErrors } from '~/src/lib/utils.js'
+import {
+  getListFromComponent,
+  insertValidationErrors
+} from '~/src/lib/utils.js'
 import {
   BACK_TO_MANAGE_CONDITIONS,
   getFormSpecificNavigation
@@ -17,6 +20,108 @@ import {
 } from '~/src/models/forms/editor-v2/pages-helper.js'
 import { editorFormPath, formOverviewPath } from '~/src/models/links.js'
 
+/**
+ * @param {number} idx
+ * @param { string | undefined } id
+ * @param {{ page: Page, number: number, components: ConditionalComponentsDef[], group: boolean }[]} componentItems
+ * @param { ConditionDataV2 | ConditionRefDataV2 } condition
+ * @param { ValidationFailure<FormEditor> | undefined } validation
+ * @param {string} slug
+ * @param {ConditionSessionState} state
+ * @param {FormDefinition} definition
+ */
+export function buildConditionsFields(
+  idx,
+  id,
+  componentItems,
+  condition,
+  validation,
+  slug,
+  state,
+  definition
+) {
+  const idField = {
+    id: 'id',
+    name: `conditions[${idx}][id]`,
+    value: condition.id
+  }
+
+  const component = {
+    id: 'componentId',
+    name: `conditions[${idx}][componentId]`,
+    label: {
+      text: 'Select a question'
+    },
+    items: componentItems,
+    value: 'componentId' in condition ? condition.componentId : undefined,
+    ...insertValidationErrors(validation?.formErrors.componentId)
+  }
+
+  const confirmSelectComponentAction = editorFormPath(
+    slug,
+    `condition/${id}/${state.stateId}/set-component`
+  )
+
+  const confirmSelectOperatorAction = editorFormPath(
+    slug,
+    `condition/${id}/${state.stateId}/set-operator`
+  )
+
+  // TODO - handle REF as well as component
+  const selectedComponent =
+    'componentId' in condition
+      ? componentItems
+          .flatMap(({ components }) => components)
+          .find((c) => c.id === condition.componentId)
+      : undefined
+
+  const operator = {
+    id: 'operator',
+    name: `conditions[${idx}][operator]`,
+    label: {
+      text: 'Condition type'
+    },
+    items: [{ text: 'Select a condition type', value: '' }].concat(
+      ...getOperatorNames(selectedComponent?.type).map((value) => ({
+        text: upperFirst(value),
+        value
+      }))
+    ),
+    value: 'operator' in condition ? condition.operator : undefined,
+    formGroup: {
+      afterInput: {
+        html: `<button class="govuk-button govuk-!-margin-bottom-0" name="confirmSelectOperator" type="submit"
+    value="true" formaction="${confirmSelectOperatorAction}">Select</button>`
+      }
+    },
+    ...insertValidationErrors(validation?.formErrors.operator)
+  }
+
+  const value =
+    'operator' in condition
+      ? {
+          id: 'value',
+          name: `conditions[${idx}][value]`,
+          fieldset: {
+            legend: {
+              text: 'Select a value'
+            }
+          },
+          classes: 'govuk-radios--small',
+          value: 'value' in condition ? condition.value : undefined,
+          items: getListFromComponent(selectedComponent, definition)?.items,
+          ...insertValidationErrors(validation?.formErrors.value)
+        }
+      : undefined
+
+  return {
+    component,
+    operator,
+    value,
+    idField,
+    confirmSelectComponentAction
+  }
+}
 /**
  * @param {string} slug
  * @param {FormDefinition} definition
@@ -43,59 +148,25 @@ export function buildConditionEditor(slug, definition, validation, state) {
   const legendText = `${state.id ? 'Edit' : 'Create new'} condition`
   const { id, conditionWrapper } = state
 
-  // TODO - handling multiple conditions
-  const firstCondition = conditionWrapper?.conditions[0]
-
-  const component = {
-    id: 'componentId',
-    name: 'componentId',
-    label: {
-      text: 'Select a question'
-    },
-    items: componentItems,
-    value:
-      firstCondition && 'componentId' in firstCondition
-        ? firstCondition.componentId
-        : undefined,
-    ...insertValidationErrors(validation?.formErrors.componentId)
+  const conditionFieldsList = []
+  let idx = 0
+  for (const condition of conditionWrapper?.conditions ?? [
+    /** @type {ConditionDataV2} */ ({})
+  ]) {
+    conditionFieldsList.push(
+      buildConditionsFields(
+        idx,
+        id,
+        componentItems,
+        condition,
+        validation,
+        slug,
+        state,
+        definition
+      )
+    )
+    idx++
   }
-
-  const confirmSelectComponentAction = editorFormPath(
-    slug,
-    `condition/${id}/${state.stateId}/set-component`
-  )
-
-  const confirmSelectOperatorAction = editorFormPath(
-    slug,
-    `condition/${id}/${state.stateId}/set-operator`
-  )
-
-  const operator =
-    firstCondition && 'componentId' in firstCondition
-      ? {
-          id: 'operator',
-          name: 'operator',
-          label: {
-            text: 'Condition type'
-          },
-          items: [{ text: 'Select a condition type', value: '' }].concat(
-            ...getOperatorNames(
-              componentItems
-                .flatMap(({ components }) => components)
-                .find((c) => c.id === firstCondition.componentId)?.type
-            ).map((value) => ({ text: upperFirst(value), value }))
-          ),
-          value:
-            'operator' in firstCondition ? firstCondition.operator : undefined,
-          formGroup: {
-            afterInput: {
-              html: `<button class="govuk-button govuk-!-margin-bottom-0" name="confirmSelectOperator" type="submit"
-      value="true" formaction="${confirmSelectOperatorAction}">Select</button>`
-            }
-          },
-          ...insertValidationErrors(validation?.formErrors.operator)
-        }
-      : undefined
 
   const displayNameField = {
     id: 'displayName',
@@ -112,11 +183,8 @@ export function buildConditionEditor(slug, definition, validation, state) {
 
   return {
     legendText,
-    component,
-    operator,
-    value: undefined,
-    displayNameField,
-    confirmSelectComponentAction
+    conditionFieldsList,
+    displayNameField
   }
 }
 
@@ -180,6 +248,6 @@ export function conditionViewModel(
  */
 
 /**
- * @import { ConditionSessionState, FormMetadata, FormDefinition, FormEditor, ConditionWrapperV2 } from '@defra/forms-model'
+ * @import { ConditionalComponentsDef, ConditionDataV2, ConditionRefDataV2, ConditionSessionState, FormMetadata, FormDefinition, FormEditor, Page } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */
