@@ -434,5 +434,23 @@ export async function deleteQuestion(
 }
 
 /**
+ * Set or remove a page condition
+ * @param {string} formId
+ * @param {string} token
+ * @param {string} pageId
+ * @param {string | null} conditionName - null to remove condition
+ */
+export async function setPageCondition(formId, token, pageId, conditionName) {
+  const payload = conditionName
+    ? { condition: conditionName }
+    : { condition: null }
+
+  await patchJsonByType(buildRequestUrl(formId, `pages/${pageId}`), {
+    payload,
+    ...getHeaders(token)
+  })
+}
+
+/**
  * @import { ComponentDef, FormEditorInputCheckAnswersSettings, FormEditorInputPageSettings, FormDefinition, Item, List, ListComponentsDef, Page, QuestionSessionState } from '@defra/forms-model'
  */
