@@ -31,7 +31,7 @@ describe('Migration', () => {
     const conditionWrapper: ConditionWrapperV2 = {
       id: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
       displayName: 'Test Wrapper',
-      conditions: [
+      items: [
         {
           id: 'condition1',
           componentId: 'component1',
@@ -62,7 +62,7 @@ describe('Migration', () => {
     const conditionWrapper: ConditionWrapperV2 = {
       id: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
       displayName: 'Test Wrapper',
-      conditions: [
+      items: [
         {
           id: 'condition1',
           componentId: 'component1',
@@ -117,7 +117,7 @@ describe('Migration', () => {
     const conditionWrapper: ConditionWrapperV2 = {
       id: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
       displayName: 'Test Wrapper',
-      conditions: [
+      items: [
         {
           id: 'condition1',
           componentId: 'nonExistentComponent',
@@ -142,7 +142,7 @@ describe('Migration', () => {
       const conditionWrapper: ConditionWrapperV2 = {
         id: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
         displayName: 'Test Wrapper',
-        conditions: [
+        items: [
           {
             id: 'condition1',
             componentId: 'component1',
@@ -213,7 +213,7 @@ describe('Migration', () => {
       const conditionWrapper: ConditionWrapperV2 = {
         id: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
         displayName: 'Test Wrapper',
-        conditions: [
+        items: [
           {
             id: 'condition1',
             componentId: 'component1',
@@ -248,7 +248,7 @@ describe('Migration', () => {
       const conditionWrapper: ConditionWrapperV2 = {
         id: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
         displayName: 'Test Wrapper',
-        conditions: [
+        items: [
           {
             id: 'condition1',
             componentId: 'component1',
@@ -293,7 +293,7 @@ describe('Migration', () => {
       const conditionWrapper: ConditionWrapperV2 = {
         id: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
         displayName: 'Test Wrapper',
-        conditions: [
+        items: [
           {
             id: 'condition1',
             componentId: 'component1',
@@ -353,7 +353,7 @@ describe('Migration', () => {
         id: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
         displayName: 'Test Wrapper',
         coordinator: Coordinator.OR,
-        conditions: [
+        items: [
           {
             id: 'c1ec4d73-d0f7-4d1a-8e33-222e60376e69',
             conditionId: 'condition1'
@@ -369,7 +369,7 @@ describe('Migration', () => {
         id: '1f7473dd-45b1-4f7e-b9bf-ea4595d6f642',
         displayName: 'Test condition',
         coordinator: Coordinator.OR,
-        conditions: []
+        items: []
       }
 
       model.getComponentById = jest.fn().mockReturnValue(condition)
