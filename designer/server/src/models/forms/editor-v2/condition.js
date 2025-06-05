@@ -150,7 +150,7 @@ export function buildConditionEditor(slug, definition, validation, state) {
 
   const conditionFieldsList = []
   let idx = 0
-  for (const condition of conditionWrapper?.conditions ?? [
+  for (const condition of conditionWrapper?.items ?? [
     /** @type {ConditionDataV2} */ ({})
   ]) {
     conditionFieldsList.push(
