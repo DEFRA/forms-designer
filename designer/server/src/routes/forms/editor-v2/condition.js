@@ -72,7 +72,7 @@ export function buildSessionState(yar, stateId, definition, conditionId) {
           ? getConditionV2(definition, conditionId)
           : /** @type {ConditionWrapperV2} */ ({
               id: randomUUID(),
-              conditions: [{ id: randomUUID() }]
+              items: [{ id: randomUUID() }]
             })
     }
     setConditionSessionState(yar, stateId, newState)
@@ -93,16 +93,16 @@ export function applyConditionStateChange(sessionState, payload, displayName) {
   // TODO - handle type ConditionRefDataV2
   if (sessionState.conditionWrapper) {
     sessionState.conditionWrapper.displayName = displayName
-    sessionState.conditionWrapper.conditions[conditionIdx] =
+    sessionState.conditionWrapper.items[conditionIdx] =
       /** @type {ConditionDataV2} */ ({
-        ...sessionState.conditionWrapper.conditions[conditionIdx],
+        ...sessionState.conditionWrapper.items[conditionIdx],
         ...payload
       })
   } else {
     sessionState.conditionWrapper = {
       id: randomUUID(),
       displayName,
-      conditions: [
+      items: [
         {
           id: randomUUID(),
           ...payload
@@ -207,7 +207,7 @@ export default [
 
       if (parsed.addCondition) {
         // @ts-expect-error - dynamic parse so enforcing type is problematic
-        parsed.conditions.push(
+        parsed.items.push(
           /** @type {ConditionDataV2} */ ({
             id: randomUUID()
           })
@@ -228,7 +228,7 @@ export default [
         ...state,
         conditionWrapper: {
           ...state?.conditionWrapper,
-          conditions: parsed.conditions,
+          items: parsed.items,
           displayName,
           coordinator
         }

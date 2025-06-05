@@ -22,53 +22,47 @@ import { editorFormPath, formOverviewPath } from '~/src/models/links.js'
 
 /**
  * @param {number} idx
- * @param { string | undefined } id
  * @param {{ page: Page, number: number, components: ConditionalComponentsDef[], group: boolean }[]} componentItems
- * @param { ConditionDataV2 | ConditionRefDataV2 } condition
+ * @param { ConditionDataV2 | ConditionRefDataV2 } item
  * @param { ValidationFailure<FormEditor> | undefined } validation
- * @param {string} slug
- * @param {ConditionSessionState} state
  * @param {FormDefinition} definition
  */
 export function buildConditionsFields(
   idx,
-  id,
   componentItems,
-  condition,
+  item,
   validation,
-  slug,
-  state,
   definition
 ) {
   const idField = {
     id: 'id',
-    name: `conditions[${idx}][id]`,
-    value: condition.id
+    name: `items[${idx}][id]`,
+    value: item.id
   }
 
   const component = {
     id: 'componentId',
-    name: `conditions[${idx}][componentId]`,
+    name: `items[${idx}][componentId]`,
     label: {
       text: 'Select a question'
     },
     items: componentItems,
-    value: 'componentId' in condition ? condition.componentId : undefined,
+    value: 'componentId' in item ? item.componentId : undefined,
     ...insertValidationErrors(validation?.formErrors.componentId)
   }
 
   // TODO - handle REF as well as component
   const selectedComponent =
-    'componentId' in condition
+    'componentId' in item
       ? componentItems
           .flatMap(({ components }) => components)
-          .find((c) => c.id === condition.componentId)
+          .find((c) => c.id === item.componentId)
       : undefined
 
   const operator = component.value
     ? {
         id: 'operator',
-        name: `conditions[${idx}][operator]`,
+        name: `items[${idx}][operator]`,
         label: {
           text: 'Condition type'
         },
@@ -78,7 +72,7 @@ export function buildConditionsFields(
             value
           }))
         ),
-        value: 'operator' in condition ? condition.operator : undefined,
+        value: 'operator' in item ? item.operator : undefined,
         formGroup: {
           afterInput: {
             html: `<button class="govuk-button govuk-!-margin-bottom-0" name="confirmSelectOperator" type="submit"
@@ -90,17 +84,17 @@ export function buildConditionsFields(
     : undefined
 
   const value =
-    'operator' in condition && component.value
+    'operator' in item && component.value && item.operator.length
       ? {
           id: 'value',
-          name: `conditions[${idx}][value]`,
+          name: `items[${idx}][value]`,
           fieldset: {
             legend: {
               text: 'Select a value'
             }
           },
           classes: 'govuk-radios--small',
-          value: 'value' in condition ? condition.value : undefined,
+          value: 'value' in item ? item.value : undefined,
           items: getListFromComponent(selectedComponent, definition)?.items,
           ...insertValidationErrors(validation?.formErrors.value)
         }
@@ -137,19 +131,16 @@ export function buildConditionEditor(slug, definition, validation, state) {
     })
 
   const legendText = `${state.id !== 'new' ? 'Edit' : 'Create new'} condition`
-  const { id, conditionWrapper } = state
+  const { conditionWrapper } = state
 
   const conditionFieldsList = (
-    conditionWrapper?.conditions ?? [/** @type {ConditionDataV2} */ ({})]
-  ).map((condition, idx) => {
+    conditionWrapper?.items ?? [/** @type {ConditionDataV2} */ ({})]
+  ).map((item, idx) => {
     return buildConditionsFields(
       idx,
-      id,
       componentItems,
-      condition,
+      item,
       validation,
-      slug,
-      state,
       definition
     )
   })
