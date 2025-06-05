@@ -173,6 +173,11 @@ export interface FormMetadata {
    * The date the form was last updated
    */
   updatedAt: FormMetadataState['updatedAt']
+
+  /**
+   * Is Authentication required to access the form
+   */
+  authRequired?: boolean
 }
 
 export type FormByIdInput = Pick<FormMetadata, 'id'>
