@@ -82,35 +82,31 @@ export function buildSessionState(yar, stateId, definition, conditionId) {
 }
 
 /**
- * @param {ConditionSessionState} sessionState
- * @param {{ componentId: string, operator: OperatorName, value: ConditionListItemRefValueDataV2 | ConditionStringValueDataV2 | RelativeDateValueData }} payload
- * @param {string} displayName
+ * @param {{ componentId?: string, operator?: string, displayName?: string, addCondition?: boolean, coordinator?: string }} payload
+ * @returns {ConditionWrapperV2}
  */
-export function applyConditionStateChange(sessionState, payload, displayName) {
-  const conditionIdx = 0
-  // TODO - find condition for update based on id
-
-  // TODO - handle type ConditionRefDataV2
-  if (sessionState.conditionWrapper) {
-    sessionState.conditionWrapper.displayName = displayName
-    sessionState.conditionWrapper.items[conditionIdx] =
-      /** @type {ConditionDataV2} */ ({
-        ...sessionState.conditionWrapper.items[conditionIdx],
-        ...payload
-      })
-  } else {
-    sessionState.conditionWrapper = {
-      id: randomUUID(),
-      displayName,
-      items: [
-        {
-          id: randomUUID(),
-          ...payload
-        }
-      ]
+export function parsePayloadAsQueryString(payload) {
+  const payloadAsQueryStringArray = Object.entries(payload).map(
+    ([key, value]) => {
+      return `${key}=${value}`
     }
+  )
+
+  const payloadAsQueryString = payloadAsQueryStringArray.join('&')
+  const resAsUnknown = /** @type {unknown} */ (qs.parse(payloadAsQueryString))
+  return /** @type {ConditionWrapperV2} */ (resAsUnknown)
+}
+
+/**
+ * Removes a property if it exists (** side-effects **)
+ * @param {any} obj
+ * @param {string} propName
+ */
+export function removePropertyIfExists(obj, propName) {
+  if (obj[propName]) {
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+    delete obj[propName]
   }
-  return sessionState
 }
 
 export default [
@@ -185,7 +181,7 @@ export default [
     }
   }),
   /**
-   * @satisfies {ServerRoute<{ Params: { slug: string, conditionId: string, stateId: string }, Payload: { componentId?: string, operator?: string, displayName?: string, addCondition?: boolean, coordinator?: string } }>}
+   * @satisfies {ServerRoute<{ Params: { slug: string, conditionId: string, stateId: string }, Payload: { componentId?: string, operator?: string, displayName?: string, addCondition?: boolean, coordinator?: string, confirmSelectComponent?: boolean, confirmSelectOperator?: boolean } }>}
    */
   ({
     method: 'POST',
@@ -193,34 +189,31 @@ export default [
     handler(request, h) {
       const { payload, params, yar } = request
       const { slug, conditionId, stateId } = params
-      const { coordinator, displayName } = payload
+      const {
+        coordinator,
+        displayName,
+        addCondition,
+        confirmSelectComponent,
+        confirmSelectOperator
+      } = payload
 
-      const payloadAsQueryStringArray = Object.entries(payload).map(
-        ([key, value]) => {
-          return `${key}=${value}`
-        }
-      )
+      const parsedPayload = parsePayloadAsQueryString(payload)
 
-      const payloadAsQueryString = payloadAsQueryStringArray.join('&')
-
-      const parsed = qs.parse(payloadAsQueryString)
-
-      if (parsed.addCondition) {
-        // @ts-expect-error - dynamic parse so enforcing type is problematic
-        parsed.items.push(
+      if (addCondition) {
+        parsedPayload.items.push(
           /** @type {ConditionDataV2} */ ({
             id: randomUUID()
           })
         )
-        delete parsed.addCondition
+        removePropertyIfExists(parsedPayload, 'addCondition')
       }
 
-      if (parsed.confirmSelectComponent) {
-        delete parsed.confirmSelectComponent
+      if (confirmSelectComponent) {
+        removePropertyIfExists(parsedPayload, 'confirmSelectComponent')
       }
 
-      if (parsed.confirmSelectOperator) {
-        delete parsed.confirmSelectComponent
+      if (confirmSelectOperator) {
+        removePropertyIfExists(parsedPayload, 'confirmSelectComponent')
       }
 
       const state = getConditionSessionState(yar, stateId)
@@ -228,7 +221,7 @@ export default [
         ...state,
         conditionWrapper: {
           ...state?.conditionWrapper,
-          items: parsed.items,
+          items: parsedPayload.items,
           displayName,
           coordinator
         }
