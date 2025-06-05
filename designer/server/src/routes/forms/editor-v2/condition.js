@@ -7,10 +7,7 @@ import qs from 'qs'
 
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
-import {
-  addErrorsToSession,
-  getValidationErrorsFromSession
-} from '~/src/lib/error-helper.js'
+import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
 import { redirectWithAnchorOrUrl } from '~/src/lib/redirect-helper.js'
 import {
   createConditionSessionState,
@@ -188,7 +185,7 @@ export default [
     }
   }),
   /**
-   * @satisfies {ServerRoute<{ Params: { slug: string, conditionId: string, stateId: string }, Payload: { componentId?: string, operator?: string, displayName?: string, addCondition?: boolean } }>}
+   * @satisfies {ServerRoute<{ Params: { slug: string, conditionId: string, stateId: string }, Payload: { componentId?: string, operator?: string, displayName?: string, addCondition?: boolean, coordinator?: string } }>}
    */
   ({
     method: 'POST',
@@ -196,8 +193,7 @@ export default [
     handler(request, h) {
       const { payload, params, yar } = request
       const { slug, conditionId, stateId } = params
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { componentId, operator, displayName, addCondition } = payload
+      const { coordinator, displayName } = payload
 
       const payloadAsQueryStringArray = Object.entries(payload).map(
         ([key, value]) => {
@@ -210,6 +206,7 @@ export default [
       const parsed = qs.parse(payloadAsQueryString)
 
       if (parsed.addCondition) {
+        // @ts-expect-error - dynamic parse so enforcing type is problematic
         parsed.conditions.push(
           /** @type {ConditionDataV2} */ ({
             id: randomUUID()
@@ -218,17 +215,26 @@ export default [
         delete parsed.addCondition
       }
 
-      if (addCondition) {
-        const state = getConditionSessionState(yar, stateId)
-        const newState = {
-          ...state,
-          conditionWrapper: {
-            ...state?.conditionWrapper,
-            conditions: parsed.conditions
-          }
-        }
-        setConditionSessionState(yar, stateId, newState)
+      if (parsed.confirmSelectComponent) {
+        delete parsed.confirmSelectComponent
       }
+
+      if (parsed.confirmSelectOperator) {
+        delete parsed.confirmSelectComponent
+      }
+
+      const state = getConditionSessionState(yar, stateId)
+      const newState = {
+        ...state,
+        conditionWrapper: {
+          ...state?.conditionWrapper,
+          conditions: parsed.conditions,
+          displayName,
+          coordinator
+        }
+      }
+      // @ts-expect-error - dynamic parse so enforcing type is problematic
+      setConditionSessionState(yar, stateId, newState)
 
       // Redirect POST to GET without resubmit on back button
       return h
@@ -242,121 +248,6 @@ export default [
       //     return redirectWithErrors(request, h, error, errorKey)
       //   }
       // },
-      auth: {
-        mode: 'required',
-        access: {
-          entity: 'user',
-          scope: [`+${scopes.SCOPE_WRITE}`]
-        }
-      }
-    }
-  }),
-  /**
-   * @satisfies {ServerRoute<{ Params: { slug: string, conditionId: string, stateId: string }, Payload: { componentId: string, displayName: string } }>}
-   */
-  ({
-    method: 'POST',
-    path: ROUTE_PATH_CONDITION_SET_COMPONENT_ID,
-    handler(request, h) {
-      const { payload, params, yar } = request
-      const { slug, conditionId, stateId } = params
-      const { componentId, displayName } = payload
-
-      const sessionState = getConditionSessionState(yar, stateId) ?? {}
-
-      const newState = applyConditionStateChange(
-        sessionState,
-        { componentId },
-        displayName
-      )
-
-      setConditionSessionState(yar, stateId, newState)
-
-      // Redirect POST to GET without resubmit on back button
-      return h
-        .redirect(editorFormPath(slug, `condition/${conditionId}/${stateId}`))
-        .code(StatusCodes.SEE_OTHER)
-    },
-    options: {
-      validate: {
-        payload: Joi.object()
-          .keys({
-            componentId: schema.extract('componentId'),
-            confirmSelectComponent: Joi.boolean().required().allow(true),
-            displayName: schema.extract('displayName').optional().allow('')
-          })
-          .options({ stripUnknown: true }),
-        failAction: (request, h, error) => {
-          const { params } = request
-          const { slug, conditionId, stateId } = params
-          addErrorsToSession(request, error, errorKey)
-
-          return h
-            .redirect(
-              editorFormPath(slug, `condition/${conditionId}/${stateId}`)
-            )
-            .code(StatusCodes.SEE_OTHER)
-            .takeover()
-        }
-      },
-      auth: {
-        mode: 'required',
-        access: {
-          entity: 'user',
-          scope: [`+${scopes.SCOPE_WRITE}`]
-        }
-      }
-    }
-  }),
-  /**
-   * @satisfies {ServerRoute<{ Params: { slug: string, conditionId?: string, stateId: string }, Payload: { operator: string, displayName: string }, Query: { componentId: string } }>}
-   */
-  ({
-    method: 'POST',
-    path: ROUTE_PATH_CONDITION_SET_OPERATOR,
-    handler(request, h) {
-      const { payload, params, yar } = request
-      const { slug, conditionId, stateId } = params
-      const { operator, displayName } = payload
-
-      const sessionState = getConditionSessionState(yar, stateId) ?? {}
-
-      const newState = applyConditionStateChange(
-        sessionState,
-        { operator },
-        displayName
-      )
-
-      setConditionSessionState(yar, stateId, newState)
-
-      // Redirect POST to GET without resubmit on back button
-      return h
-        .redirect(editorFormPath(slug, `condition/${conditionId}/${stateId}`))
-        .code(StatusCodes.SEE_OTHER)
-    },
-    options: {
-      validate: {
-        payload: Joi.object()
-          .keys({
-            operator: schema.extract('operator'),
-            confirmSelectOperator: Joi.boolean().required().allow(true),
-            displayName: schema.extract('displayName').optional().allow('')
-          })
-          .options({ stripUnknown: true }),
-        failAction: (request, h, error) => {
-          const { params } = request
-          const { slug, conditionId, stateId } = params
-
-          addErrorsToSession(request, error, errorKey)
-
-          return h
-            .redirect(
-              editorFormPath(slug, `condition/${conditionId}/${stateId}`)
-            )
-            .code(StatusCodes.SEE_OTHER)
-            .takeover()
-        }
-      },
       auth: {
         mode: 'required',
         access: {

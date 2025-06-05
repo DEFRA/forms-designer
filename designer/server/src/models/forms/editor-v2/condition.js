@@ -57,16 +57,6 @@ export function buildConditionsFields(
     ...insertValidationErrors(validation?.formErrors.componentId)
   }
 
-  const confirmSelectComponentAction = editorFormPath(
-    slug,
-    `condition/${id}/${state.stateId}/set-component`
-  )
-
-  const confirmSelectOperatorAction = editorFormPath(
-    slug,
-    `condition/${id}/${state.stateId}/set-operator`
-  )
-
   // TODO - handle REF as well as component
   const selectedComponent =
     'componentId' in condition
@@ -75,30 +65,32 @@ export function buildConditionsFields(
           .find((c) => c.id === condition.componentId)
       : undefined
 
-  const operator = {
-    id: 'operator',
-    name: `conditions[${idx}][operator]`,
-    label: {
-      text: 'Condition type'
-    },
-    items: [{ text: 'Select a condition type', value: '' }].concat(
-      ...getOperatorNames(selectedComponent?.type).map((value) => ({
-        text: upperFirst(value),
-        value
-      }))
-    ),
-    value: 'operator' in condition ? condition.operator : undefined,
-    formGroup: {
-      afterInput: {
-        html: `<button class="govuk-button govuk-!-margin-bottom-0" name="confirmSelectOperator" type="submit"
-    value="true" formaction="${confirmSelectOperatorAction}">Select</button>`
+  const operator = component.value
+    ? {
+        id: 'operator',
+        name: `conditions[${idx}][operator]`,
+        label: {
+          text: 'Condition type'
+        },
+        items: [{ text: 'Select a condition type', value: '' }].concat(
+          ...getOperatorNames(selectedComponent?.type).map((value) => ({
+            text: upperFirst(value),
+            value
+          }))
+        ),
+        value: 'operator' in condition ? condition.operator : undefined,
+        formGroup: {
+          afterInput: {
+            html: `<button class="govuk-button govuk-!-margin-bottom-0" name="confirmSelectOperator" type="submit"
+      value="true">Select</button>`
+          }
+        },
+        ...insertValidationErrors(validation?.formErrors.operator)
       }
-    },
-    ...insertValidationErrors(validation?.formErrors.operator)
-  }
+    : undefined
 
   const value =
-    'operator' in condition
+    'operator' in condition && component.value
       ? {
           id: 'value',
           name: `conditions[${idx}][value]`,
@@ -118,8 +110,7 @@ export function buildConditionsFields(
     component,
     operator,
     value,
-    idField,
-    confirmSelectComponentAction
+    idField
   }
 }
 /**
@@ -145,34 +136,30 @@ export function buildConditionEditor(slug, definition, validation, state) {
       }
     })
 
-  const legendText = `${state.id ? 'Edit' : 'Create new'} condition`
+  const legendText = `${state.id !== 'new' ? 'Edit' : 'Create new'} condition`
   const { id, conditionWrapper } = state
 
-  const conditionFieldsList = []
-  let idx = 0
-  for (const condition of conditionWrapper?.conditions ?? [
-    /** @type {ConditionDataV2} */ ({})
-  ]) {
-    conditionFieldsList.push(
-      buildConditionsFields(
-        idx,
-        id,
-        componentItems,
-        condition,
-        validation,
-        slug,
-        state,
-        definition
-      )
+  const conditionFieldsList = (
+    conditionWrapper?.conditions ?? [/** @type {ConditionDataV2} */ ({})]
+  ).map((condition, idx) => {
+    return buildConditionsFields(
+      idx,
+      id,
+      componentItems,
+      condition,
+      validation,
+      slug,
+      state,
+      definition
     )
-    idx++
-  }
+  })
 
   const displayNameField = {
     id: 'displayName',
     name: 'displayName',
     label: {
-      text: 'Condition name'
+      text: 'Condition name',
+      classes: 'govuk-label--m'
     },
     value: conditionWrapper?.displayName,
     hint: {
@@ -181,10 +168,28 @@ export function buildConditionEditor(slug, definition, validation, state) {
     ...insertValidationErrors(validation?.formErrors.displayName)
   }
 
+  const coordinator = {
+    id: 'coordinator',
+    name: 'coordinator',
+    fieldset: {
+      legend: {
+        text: 'How do you want to combine these conditions?',
+        classes: 'govuk-fieldset__legend--m'
+      }
+    },
+    classes: 'govuk-radios--inline',
+    value: conditionWrapper?.coordinator,
+    items: [
+      { text: 'All conditions must be met (AND)', value: 'and' },
+      { text: 'Any condition can be met (OR)', value: 'or' }
+    ]
+  }
+
   return {
     legendText,
     conditionFieldsList,
-    displayNameField
+    displayNameField,
+    coordinator
   }
 }
 

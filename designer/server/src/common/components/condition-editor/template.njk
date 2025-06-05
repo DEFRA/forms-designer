@@ -5,26 +5,42 @@
 {% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
 {% from "select-with-opt-group/macro.njk" import appSelectWithOptGroup %}
 {% from "icon-button/macro.njk" import appIconButton %}
+{% from "editor-card/macro.njk" import appEditorCard %}
 
 <form class="form" method="post">
-  {% for condition in params.conditionFieldsList %}
-    {% call govukFieldset({
-      legend: {
-        text: params.legendText,
-        classes: "govuk-fieldset__legend--s",
-        isPageHeading: false
-      }
-    }) %}
-      <input type="hidden" id="id" name="{{ condition.idField.name }}" value="{{ condition.idField.value }}" />
-      {{ appSelectWithOptGroup(condition) }}
+  {% call govukFieldset({
+    legend: {
+      text: params.legendText,
+      classes: "govuk-fieldset__legend--m",
+      isPageHeading: false
+    }
+  }) %}
+    {% for condition in params.conditionFieldsList %}
+      {% if loop.index == 2 %}
+        {{ govukRadios(params.coordinator)}}
+      {% endif %}
+
+      {% set conditionRowHtml %}
+        <input type="hidden" id="id" name="{{ condition.idField.name }}" value="{{ condition.idField.value }}" />
+        {{ appSelectWithOptGroup(condition) }}
         {% if condition.operator %}
           {{ govukSelect(condition.operator) }}
         {% endif %}
         {% if condition.value %}
           {{ govukRadios(condition.value) }}
         {% endif %}
-    {% endcall %}
-  {% endfor %}
+      {% endset %}
+
+      {% if loop.index > 1 %}
+        {% call appEditorCard(condition) %}
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">Additional condition {{ loop.index0 }}</legend>
+          {{ conditionRowHtml | safe }}
+        {% endcall %}
+      {% else %}
+          {{ conditionRowHtml | safe }}
+      {% endif %}
+    {% endfor %}
+  {% endcall %}
 
   <div class="form-group">
     {{ appIconButton({
@@ -37,9 +53,15 @@
     }) }}
   </div>
 
+  <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+
   {{ govukInput(params.displayNameField) }}
 
-  {{ govukButton({
-    text: 'Save and continue'
-  }) }}
+  <div class="govuk-button-group">
+    {{ govukButton({
+      text: 'Save condition'
+    }) }}
+
+    <a href="../../conditions" class="govuk-link govuk-link--no-visited-state" id="cancel-condition">Cancel</a>
+  </div>
 </form>

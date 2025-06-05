@@ -12,12 +12,13 @@
     description: pageDescription,
     caption: pageCaption,
     actions: pageActions,
-    classes: "govuk-grid-column-full govuk-grid-column-one-half-from-desktop",
+    classes: "govuk-grid-column-full govuk-grid-column-two-thirds-from-desktop",
     backLink: backLink,
     useNewMasthead: true
   }) %}
     {% call appEditorCard({
       caption: cardCaption,
+      classes: 'editor-card-background-very-light-grey',
       errorList: errorList
     }) %}
       {% call appConditionEditor(conditionEditor) %}
