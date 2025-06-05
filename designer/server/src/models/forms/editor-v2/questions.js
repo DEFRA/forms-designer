@@ -165,7 +165,7 @@ function questionsRepeaterFields(repeaterSettings, validation) {
         classes: GOVUK_LABEL__M
       },
       hint: {
-        text: "Use a word to describe what these questions are asking about. For example, 'Cow', 'Pet'. This will be used to categorise the answers, for example 'Cow 1', 'Cow 2'."
+        text: 'Use a word to describe what these questions are asking about. For example, ‘Cow’, ‘Pet’. This will be used to categorise the answers, for example ‘Cow 1’, ‘Cow 2’.'
       },
       id: 'questionSetName',
       name: 'questionSetName',

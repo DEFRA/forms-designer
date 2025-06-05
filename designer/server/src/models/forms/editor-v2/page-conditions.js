@@ -1,16 +1,12 @@
-import {
-  ConditionsModel,
-  convertConditionWrapperFromV2,
-  hasComponentsEvenIfNoNext,
-  isConditionWrapperV2
-} from '@defra/forms-model'
+import { isConditionWrapperV2 } from '@defra/forms-model'
 
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { getPageFromDefinition } from '~/src/lib/utils.js'
 import {
   baseModelFields,
   getFormSpecificNavigation,
-  getPageNum
+  getPageNum,
+  toPresentationStringV2
 } from '~/src/models/forms/editor-v2/common.js'
 import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
 
@@ -33,31 +29,10 @@ export function getPageConditionDetails(definition, pageId) {
 
   let pageConditionPresentationString = null
   if (pageConditionDetails) {
-    const { pages, conditions, lists } = definition
-    const components = pages.flatMap((p) =>
-      hasComponentsEvenIfNoNext(p) ? p.components : []
+    pageConditionPresentationString = toPresentationStringV2(
+      pageConditionDetails,
+      definition
     )
-
-    const v2Conditions = /** @type {ConditionWrapperV2[]} */ (
-      conditions.filter(isConditionWrapperV2)
-    )
-
-    /** @type {RuntimeFormModel} */
-    const accessors = {
-      getListById: (listId) => lists.find((list) => list.id === listId),
-      getComponentById: (componentId) =>
-        components.find((component) => component.id === componentId),
-      getConditionById: (conditionId) =>
-        v2Conditions.find((condition) => condition.id === conditionId)
-    }
-
-    const conditionAsV1 = convertConditionWrapperFromV2(
-      /** @type {ConditionWrapperV2} */ (pageConditionDetails),
-      accessors
-    )
-    pageConditionPresentationString = ConditionsModel.from(
-      conditionAsV1.value
-    ).toPresentationString()
   }
 
   return {
