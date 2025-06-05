@@ -317,7 +317,7 @@ describe('page-conditions model', () => {
         'environmental-permit-application'
       )
       expect(result).toHaveProperty('pageId', pageId)
-      expect(result).toHaveProperty('cardTitle', 'Page 1 overview')
+      expect(result).toHaveProperty('cardTitle', 'Page 1')
       expect(result).toHaveProperty('cardCaption', 'Page 1')
       expect(result).toHaveProperty('currentTab', 'conditions')
       expect(result).toHaveProperty('baseUrl')
@@ -517,7 +517,7 @@ describe('page-conditions model', () => {
         pageId
       )
 
-      expect(result.cardTitle).toBe('Page 2 overview')
+      expect(result.cardTitle).toBe('Page 2')
       expect(result.cardCaption).toBe('Page 2')
     })
 

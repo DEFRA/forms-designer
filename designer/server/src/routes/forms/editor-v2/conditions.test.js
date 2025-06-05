@@ -167,7 +167,7 @@ describe('Editor v2 conditions routes', () => {
           'Select an existing condition'
         )
 
-        expect($mainHeading).toHaveTextContent('Page 1: Farm Details')
+        expect($mainHeading).toHaveTextContent('Test form')
         expect($conditionsSelect).toBeInTheDocument()
         expect(/** @type {HTMLSelectElement} */ ($conditionsSelect).value).toBe(
           ''
@@ -194,7 +194,7 @@ describe('Editor v2 conditions routes', () => {
           name: 'Remove'
         })
 
-        expect($mainHeading).toHaveTextContent('Page 1: Farm Details')
+        expect($mainHeading).toHaveTextContent('Test form')
         expect($conditionDisplay).toBeInTheDocument()
         expect($removeLink).toBeInTheDocument()
       })

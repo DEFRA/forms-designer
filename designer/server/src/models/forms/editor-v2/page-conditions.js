@@ -74,16 +74,16 @@ export function pageConditionsViewModel(
     definition,
     'Editor'
   )
-  const page = getPageFromDefinition(definition, pageId)
   const pageNum = getPageNum(definition, pageId)
   const conditionDetails = getPageConditionDetails(definition, pageId)
   const allConditions = getConditionsData(definition)
   const errorList = buildErrorList(validation?.formErrors)
 
-  const pageHeading = `Page ${pageNum}: ${page?.title ?? 'Untitled page'}`
-  const pageTitle = `Page conditions - ${metadata.title}`
-  const cardTitle = `Page ${pageNum} overview`
+  const cardTitle = `Page ${pageNum}`
   const cardCaption = `Page ${pageNum}`
+  const formTitle = metadata.title
+
+  const pageTitle = `${cardTitle} - ${formTitle}`
 
   const backLink = {
     href: editorv2Path(metadata.slug, `page/${pageId}/questions`),
@@ -97,7 +97,7 @@ export function pageConditionsViewModel(
   )
 
   return {
-    ...baseModelFields(metadata.slug, pageTitle, pageHeading),
+    ...baseModelFields(metadata.slug, pageTitle, formTitle),
     formSlug: metadata.slug,
     pageId,
     cardTitle,
