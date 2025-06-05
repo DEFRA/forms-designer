@@ -11,6 +11,12 @@
       <path d="M1 6H11" stroke="currentColor" stroke-width="2"></path>
     </svg>
     {% endif %}
+    {% if params.icon == 'cross' %}
+    <svg class="govuk-!-margin-right-1" style="position: relative; top: 2px" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10.5 1.5L1.5 10.5" stroke="currentColor" stroke-width="2"></path>
+        <path d="M1.5 1.5L10.5 10.5" stroke="currentColor" stroke-width="2"></path>
+    </svg>
+    {% endif %}
   {% endset %}
 
 {% if not params.type or params.type === 'link' %}

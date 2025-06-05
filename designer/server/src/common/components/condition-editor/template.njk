@@ -33,8 +33,19 @@
 
       {% if loop.index > 1 %}
         {% call appEditorCard(condition) %}
+          <div class="condition-editor-card">
           <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">Additional condition {{ loop.index0 }}</legend>
           {{ conditionRowHtml | safe }}
+              {{ appIconButton({
+                label: "Remove condition",
+                id: 'removeCondition',
+                icon: 'cross',
+                type: 'button',
+                name: 'removeCondition',
+                value: loop.index0,
+                extraClasses: 'govuk-button--warning condition-editor-top-right-button'
+              }) }}
+        </div>
         {% endcall %}
       {% else %}
           {{ conditionRowHtml | safe }}

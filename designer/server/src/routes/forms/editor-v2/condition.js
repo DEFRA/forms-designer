@@ -181,7 +181,7 @@ export default [
     }
   }),
   /**
-   * @satisfies {ServerRoute<{ Params: { slug: string, conditionId: string, stateId: string }, Payload: { componentId?: string, operator?: string, displayName?: string, addCondition?: boolean, coordinator?: string, confirmSelectComponent?: boolean, confirmSelectOperator?: boolean } }>}
+   * @satisfies {ServerRoute<{ Params: { slug: string, conditionId: string, stateId: string }, Payload: { componentId?: string, operator?: string, displayName?: string, addCondition?: boolean, removeCondition?: number, coordinator?: string, confirmSelectComponent?: boolean, confirmSelectOperator?: boolean } }>}
    */
   ({
     method: 'POST',
@@ -194,7 +194,8 @@ export default [
         displayName,
         addCondition,
         confirmSelectComponent,
-        confirmSelectOperator
+        confirmSelectOperator,
+        removeCondition
       } = payload
 
       const parsedPayload = parsePayloadAsQueryString(payload)
@@ -206,6 +207,11 @@ export default [
           })
         )
         removePropertyIfExists(parsedPayload, 'addCondition')
+      }
+
+      if (removeCondition) {
+        parsedPayload.items.splice(removeCondition, 1)
+        removePropertyIfExists(parsedPayload, 'removeCondition')
       }
 
       if (confirmSelectComponent) {
