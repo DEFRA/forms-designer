@@ -4,37 +4,40 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
 {% from "select-with-opt-group/macro.njk" import appSelectWithOptGroup %}
-
-{% set component = params.component %}
-{% set operator = params.operator %}
-{% set value = params.value %}
-{% set displayName = params.displayNameField %}
-
-{% set operatorHtml %}
-  {% if operator %}
-    {{ govukSelect(operator) }}
-  {% endif %}
-{% endset %}
-
-{% set valueHtml %}
-  {% if value %}
-    {{ govukSelect() }}
-  {% endif %}
-{% endset %}
+{% from "icon-button/macro.njk" import appIconButton %}
 
 <form class="form" method="post">
-  {% call govukFieldset({
-    legend: {
-      text: params.legendText,
-      classes: "govuk-fieldset__legend--s",
-      isPageHeading: false
-    }
-  }) %}
-    {{ appSelectWithOptGroup(params) }}
-    {{ operatorHtml | safe }}
-    {{ valueHtml | safe }}
-    {{ govukInput(displayName) }}
-  {% endcall %}
+  {% for condition in params.conditionFieldsList %}
+    {% call govukFieldset({
+      legend: {
+        text: params.legendText,
+        classes: "govuk-fieldset__legend--s",
+        isPageHeading: false
+      }
+    }) %}
+      <input type="hidden" id="id" name="{{ condition.idField.name }}" value="{{ condition.idField.value }}" />
+      {{ appSelectWithOptGroup(condition) }}
+        {% if condition.operator %}
+          {{ govukSelect(condition.operator) }}
+        {% endif %}
+        {% if condition.value %}
+          {{ govukRadios(condition.value) }}
+        {% endif %}
+    {% endcall %}
+  {% endfor %}
+
+  <div class="form-group">
+    {{ appIconButton({
+      label: "Add another condition",
+      id: 'addCondition',
+      icon: 'plus',
+      type: 'button',
+      name: 'addCondition',
+      value: true
+    }) }}
+  </div>
+
+  {{ govukInput(params.displayNameField) }}
 
   {{ govukButton({
     text: 'Save and continue'

@@ -3,6 +3,7 @@ import { randomUUID } from 'crypto'
 import { OperatorName, getConditionV2, slugSchema } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
+import qs from 'qs'
 
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
@@ -10,10 +11,7 @@ import {
   addErrorsToSession,
   getValidationErrorsFromSession
 } from '~/src/lib/error-helper.js'
-import {
-  redirectWithAnchorOrUrl,
-  redirectWithErrors
-} from '~/src/lib/redirect-helper.js'
+import { redirectWithAnchorOrUrl } from '~/src/lib/redirect-helper.js'
 import {
   createConditionSessionState,
   getConditionSessionState,
@@ -36,17 +34,28 @@ const operatorSchema = Joi.string()
   .valid(...Object.values(OperatorName))
   .required()
 
-export const schema = Joi.object().keys({
-  componentId: idSchema.messages({
-    '*': 'Select a question'
-  }),
-  operator: operatorSchema.messages({
-    '*': 'Select a condition type'
-  }),
-  displayName: Joi.string().required().messages({
-    '*': 'Enter condition name'
+export const addConditionSchema = Joi.object()
+  .keys({
+    componentId: idSchema.messages({
+      '*': 'Select a question'
+    }),
+    operator: operatorSchema.messages({
+      '*': 'Select a condition type'
+    }),
+    value: Joi.string().required().messages({
+      '*': 'Select a value'
+    }),
+    addCondition: Joi.boolean().optional()
   })
-})
+  .options({ stripUnknown: true })
+
+export const schema = addConditionSchema.concat(
+  Joi.object().keys({
+    displayName: Joi.string().required().messages({
+      '*': 'Enter condition name'
+    })
+  })
+)
 
 /**
  * @param {Yar} yar
@@ -64,7 +73,10 @@ export function buildSessionState(yar, stateId, definition, conditionId) {
       conditionWrapper:
         conditionId && conditionId !== 'new'
           ? getConditionV2(definition, conditionId)
-          : undefined
+          : /** @type {ConditionWrapperV2} */ ({
+              id: randomUUID(),
+              conditions: [{ id: randomUUID() }]
+            })
     }
     setConditionSessionState(yar, stateId, newState)
     return newState
@@ -176,29 +188,60 @@ export default [
     }
   }),
   /**
-   * @satisfies {ServerRoute<{ Params: { slug: string, conditionId?: string }, Payload: { componentId?: string, operator?: string, displayName?: string } }>}
+   * @satisfies {ServerRoute<{ Params: { slug: string, conditionId: string, stateId: string }, Payload: { componentId?: string, operator?: string, displayName?: string, addCondition?: boolean } }>}
    */
   ({
     method: 'POST',
     path: ROUTE_PATH_CONDITION,
     handler(request, h) {
-      const { payload, params } = request
-      const { slug /* conditionId */ } = params
+      const { payload, params, yar } = request
+      const { slug, conditionId, stateId } = params
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { componentId, operator, displayName } = payload
+      const { componentId, operator, displayName, addCondition } = payload
+
+      const payloadAsQueryStringArray = Object.entries(payload).map(
+        ([key, value]) => {
+          return `${key}=${value}`
+        }
+      )
+
+      const payloadAsQueryString = payloadAsQueryStringArray.join('&')
+
+      const parsed = qs.parse(payloadAsQueryString)
+
+      if (parsed.addCondition) {
+        parsed.conditions.push(
+          /** @type {ConditionDataV2} */ ({
+            id: randomUUID()
+          })
+        )
+        delete parsed.addCondition
+      }
+
+      if (addCondition) {
+        const state = getConditionSessionState(yar, stateId)
+        const newState = {
+          ...state,
+          conditionWrapper: {
+            ...state?.conditionWrapper,
+            conditions: parsed.conditions
+          }
+        }
+        setConditionSessionState(yar, stateId, newState)
+      }
 
       // Redirect POST to GET without resubmit on back button
       return h
-        .redirect(editorFormPath(slug, 'condition'))
+        .redirect(editorFormPath(slug, `condition/${conditionId}/${stateId}`))
         .code(StatusCodes.SEE_OTHER)
     },
     options: {
-      validate: {
-        payload: schema,
-        failAction: (request, h, error) => {
-          return redirectWithErrors(request, h, error, errorKey)
-        }
-      },
+      // validate: {
+      //   payload: addConditionSchema,
+      //   failAction: (request, h, error) => {
+      //     return redirectWithErrors(request, h, error, errorKey)
+      //   }
+      // },
       auth: {
         mode: 'required',
         access: {
@@ -246,7 +289,6 @@ export default [
         failAction: (request, h, error) => {
           const { params } = request
           const { slug, conditionId, stateId } = params
-
           addErrorsToSession(request, error, errorKey)
 
           return h
@@ -327,7 +369,7 @@ export default [
 ]
 
 /**
- * @import { ConditionDataV2, ConditionListItemRefValueDataV2, ConditionStringValueDataV2, RelativeDateValueData, ConditionSessionState, FormDefinition } from '@defra/forms-model'
+ * @import { ConditionDataV2, ConditionListItemRefValueDataV2, ConditionSessionState, ConditionStringValueDataV2, ConditionWrapperV2, RelativeDateValueData, FormDefinition } from '@defra/forms-model'
  * @import { ServerRoute } from '@hapi/hapi'
  * @import { Yar } from '@hapi/yar'
  */
