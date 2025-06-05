@@ -27,7 +27,7 @@ describe('page-conditions model', () => {
   const mockConditionV2 = {
     id: conditionId,
     displayName: 'Show if cattle farming',
-    conditions: [
+    items: [
       {
         id: 'cattle-farm-check',
         componentId,
@@ -182,7 +182,7 @@ describe('page-conditions model', () => {
       const agroForestryCondition = {
         id: 'agroforestry-condition',
         displayName: 'Agroforestry scheme applies',
-        conditions: [
+        items: [
           {
             id: 'agroforestry-check',
             componentId,
@@ -198,7 +198,7 @@ describe('page-conditions model', () => {
       const wildlifeHabitatCondition = {
         id: 'wildlife-habitat-condition',
         displayName: 'Wildlife habitat management required',
-        conditions: [
+        items: [
           {
             id: 'wildlife-habitat-check',
             componentId,
@@ -214,7 +214,7 @@ describe('page-conditions model', () => {
       const organicFarmingCondition = {
         id: 'organic-farming-condition',
         displayName: 'Organic farming certification needed',
-        conditions: [
+        items: [
           {
             id: 'organic-farming-check',
             componentId,
@@ -258,7 +258,7 @@ describe('page-conditions model', () => {
       const sustainableFarmingCondition = {
         id: 'sustainable-farming-scheme',
         displayName: 'Sustainable Farming Incentive applies',
-        conditions: [
+        items: [
           {
             id: 'sfi-eligibility-check',
             componentId,
@@ -285,9 +285,9 @@ describe('page-conditions model', () => {
       const result = getConditionsData(definition)
 
       expect(result).toHaveLength(2)
-      expect(
-        result.every((condition) => Array.isArray(condition.conditions))
-      ).toBe(true)
+      expect(result.every((condition) => Array.isArray(condition.items))).toBe(
+        true
+      )
       expect(result[0].displayName).toBe('Show if cattle farming')
       expect(result[1].displayName).toBe(
         'Sustainable Farming Incentive applies'
@@ -360,7 +360,7 @@ describe('page-conditions model', () => {
         {
           id: 'water-management-condition',
           displayName: 'Water management plan required',
-          conditions: [
+          items: [
             {
               id: 'water-mgmt-check',
               componentId,
@@ -375,7 +375,7 @@ describe('page-conditions model', () => {
         {
           id: 'biodiversity-condition',
           displayName: 'Biodiversity net gain applies',
-          conditions: [
+          items: [
             {
               id: 'biodiversity-check',
               componentId,
@@ -390,7 +390,7 @@ describe('page-conditions model', () => {
         {
           id: 'pesticide-condition',
           displayName: 'Pesticide usage restrictions',
-          conditions: [
+          items: [
             {
               id: 'pesticide-check',
               componentId,

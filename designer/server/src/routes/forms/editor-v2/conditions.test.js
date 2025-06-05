@@ -47,7 +47,7 @@ describe('Editor v2 conditions routes', () => {
   const mockCondition = {
     id: conditionId,
     displayName: 'Show if cattle farming',
-    conditions: [
+    items: [
       {
         id: 'cattle-farm-check',
         componentId,
@@ -190,13 +190,13 @@ describe('Editor v2 conditions routes', () => {
 
         const $mainHeading = container.getByRole('heading', { level: 1 })
         const $conditionDisplay = container.getByText('Show if cattle farming')
-        const $deleteLink = container.getByRole('link', {
-          name: 'Delete'
+        const $removeLink = container.getByRole('link', {
+          name: 'Remove'
         })
 
         expect($mainHeading).toHaveTextContent('Page 1: Farm Details')
         expect($conditionDisplay).toBeInTheDocument()
-        expect($deleteLink).toBeInTheDocument()
+        expect($removeLink).toBeInTheDocument()
       })
     })
 

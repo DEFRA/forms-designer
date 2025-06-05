@@ -47,7 +47,7 @@ describe('editor-v2 - questions model', () => {
     const mockCondition = {
       id: conditionId,
       displayName: 'Show if cattle farming',
-      conditions: [
+      items: [
         {
           id: 'cattle-farm-check',
           componentId,
@@ -179,7 +179,7 @@ describe('editor-v2 - questions model', () => {
         const anotherCondition = {
           id: 'organic-farming-condition',
           displayName: 'Show if organic farming',
-          conditions: [
+          items: [
             {
               id: 'organic-farm-check',
               componentId,
