@@ -1067,5 +1067,5 @@ export const testFormDefinitionWithMultipleV2Conditions = {
 }
 
 /**
- * @import { FormMetadata, FormDefinition, PageQuestion, PageSummary, PageFileUpload, PageRepeat, TextFieldComponent, FileUploadFieldComponent, AutocompleteFieldComponent, List, Item, RadiosFieldComponent, CheckboxesFieldComponent } from '@defra/forms-model'
+ * @import { FormDefinition, PageQuestion, PageSummary, TextFieldComponent, FileUploadFieldComponent, AutocompleteFieldComponent, List, Item, RadiosFieldComponent, CheckboxesFieldComponent } from '@defra/forms-model'
  */
