@@ -1,4 +1,5 @@
 import { randomUUID } from 'crypto'
+import Stream from 'node:stream'
 
 import {
   conditionDataSchemaV2,
@@ -6,6 +7,7 @@ import {
   getConditionV2,
   slugSchema
 } from '@defra/forms-model'
+import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
@@ -169,18 +171,28 @@ export default [
           removeAction: Joi.number().integer().optional()
         }),
         failAction: (request, h, error) => {
-          const { payload, params, yar } = request
+          // Guard for type safety
+          if (
+            typeof request.payload !== 'object' ||
+            request.payload instanceof Stream ||
+            Buffer.isBuffer(request.payload)
+          ) {
+            throw Boom.badRequest(
+              'Unexpected payload data in conditions fail action'
+            )
+          }
+
+          /**
+           *  @type {ConditionWrapperPayload}
+           */
+          const payload = request.payload
+          const { params, yar } = request
           const { slug, conditionId, stateId } = params
-          const { items } = payload
+          const { items = [] } = payload
 
           if (payload.action || payload.removeAction) {
             if (payload.action === 'addCondition') {
-              // @ts-expect-error - dynamic parse so enforcing type is problematic
-              items.push(
-                /** @type {ConditionDataV2} */({
-                  id: randomUUID()
-                })
-              )
+              items.push({ id: randomUUID() })
             } else if (payload.removeAction) {
               items.splice(Number(payload.removeAction), 1)
             }
@@ -224,7 +236,11 @@ export default [
 ]
 
 /**
- * @import { ConditionDataV2, ConditionListItemRefValueDataV2, ConditionSessionState, ConditionStringValueDataV2, ConditionWrapperV2, RelativeDateValueData, FormDefinition } from '@defra/forms-model'
+ * @typedef {Partial<Omit<ConditionWrapperV2, 'items'>> & { action?: string, removeAction?: string, items?: Partial<ConditionDataV2>[] }} ConditionWrapperPayload
+ */
+
+/**
+ * @import { ConditionDataV2, ConditionSessionState, ConditionWrapperV2, FormDefinition } from '@defra/forms-model'
  * @import { ServerRoute } from '@hapi/hapi'
  * @import { Yar } from '@hapi/yar'
  */
