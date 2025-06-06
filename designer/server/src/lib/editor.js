@@ -434,5 +434,25 @@ export async function deleteQuestion(
 }
 
 /**
- * @import { ComponentDef, FormEditorInputCheckAnswersSettings, FormEditorInputPageSettings, FormDefinition, Item, List, ListComponentsDef, Page, QuestionSessionState } from '@defra/forms-model'
+ * Add a condition to a form
+ * @param {string} formId
+ * @param {string} token
+ * @param {ConditionWrapperV2} condition
+ */
+export async function addCondition(formId, token, condition) {
+  const postJsonByType =
+    /** @type {typeof postJson<{ id: string, condition: ConditionWrapperV2, status: 'created' }>} */ (
+      postJson
+    )
+
+  const { body } = await postJsonByType(buildRequestUrl(formId, 'conditions'), {
+    payload: condition,
+    ...getHeaders(token)
+  })
+
+  return body
+}
+
+/**
+ * @import { ComponentDef, FormEditorInputCheckAnswersSettings, FormEditorInputPageSettings, FormDefinition, ConditionWrapperV2, Page } from '@defra/forms-model'
  */
