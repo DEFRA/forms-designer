@@ -1,5 +1,3 @@
-// import Boom from '@hapi/boom'
-
 import { type ConditionGroup } from '~/src/conditions/condition-group.js'
 import { type ConditionRef } from '~/src/conditions/condition-ref.js'
 import { type Condition } from '~/src/conditions/condition.js'

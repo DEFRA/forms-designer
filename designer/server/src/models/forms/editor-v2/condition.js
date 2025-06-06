@@ -211,7 +211,8 @@ export function buildConditionEditor(definition, validation, state) {
     items: [
       { text: 'All conditions must be met (AND)', value: 'and' },
       { text: 'Any condition can be met (OR)', value: 'or' }
-    ]
+    ],
+    ...insertValidationErrors(validation?.formErrors.coordinator)
   }
 
   return {

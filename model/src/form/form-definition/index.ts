@@ -344,6 +344,7 @@ export const conditionWrapperSchemaV2 = Joi.object<ConditionWrapperV2>()
       .description('Human-readable name for display in the UI'),
     coordinator: Joi.string()
       .optional()
+      .when('items', { is: Joi.array().min(2), then: Joi.required() })
       .description(
         'Logical operator connecting this condition with others (AND, OR)'
       ),
@@ -353,6 +354,8 @@ export const conditionWrapperSchemaV2 = Joi.object<ConditionWrapperV2>()
           .try(conditionDataSchemaV2, conditionRefDataSchemaV2)
           .required()
       )
+      .min(1)
+      .max(15)
       .description('Array of conditions or condition references')
   })
   .description('Condition schema for V2 forms')
