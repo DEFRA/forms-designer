@@ -6,6 +6,7 @@
 {% from "select-with-opt-group/macro.njk" import appSelectWithOptGroup %}
 {% from "icon-button/macro.njk" import appIconButton %}
 {% from "editor-card/macro.njk" import appEditorCard %}
+{% from "condition-value-editor/macro.njk" import appConditionValueEditor %}
 
 <form class="form" method="post">
   {% call govukFieldset({
@@ -27,7 +28,7 @@
           {{ govukSelect(condition.operator) }}
         {% endif %}
         {% if condition.value %}
-          {{ govukRadios(condition.value) }}
+          {{ appConditionValueEditor(condition) }}
         {% endif %}
       {% endset %}
 

@@ -1,7 +1,9 @@
 import {
+  ConditionType,
   getOperatorNames,
   hasComponentsEvenIfNoNext,
-  hasConditionSupport
+  hasConditionSupport,
+  hasListField
 } from '@defra/forms-model'
 import upperFirst from 'lodash/upperFirst.js'
 
@@ -20,6 +22,48 @@ import {
 } from '~/src/models/forms/editor-v2/pages-helper.js'
 import { editorFormPath, formOverviewPath } from '~/src/models/links.js'
 
+/**
+ * @param {ConditionType} type
+ * @param {number} idx
+ * @param { ConditionDataV2 | ConditionRefDataV2 } item
+ * @param { ConditionalComponentsDef | undefined } selectedComponent
+ * @param {FormDefinition} definition
+ */
+export function buildValueField(
+  type,
+  idx,
+  item,
+  selectedComponent,
+  definition
+) {
+  switch (type) {
+    case ConditionType.ListItemRef: {
+      return {
+        id: 'value',
+        name: `items[${idx}][value]`,
+        fieldset: {
+          legend: {
+            text: 'Select a value'
+          }
+        },
+        classes: 'govuk-radios--small',
+        value: 'value' in item ? item.value : undefined,
+        items: getListFromComponent(selectedComponent, definition)?.items
+      }
+    }
+
+    case ConditionType.StringValue: {
+      return {
+        id: 'value',
+        name: `items[${idx}][value]`,
+        label: {
+          text: 'Enter a value'
+        },
+        value: 'value' in item ? item.value : undefined
+      }
+    }
+  }
+}
 /**
  * @param {number} idx
  * @param {{ page: Page, number: number, components: ConditionalComponentsDef[], group: boolean }[]} componentItems
@@ -83,37 +127,31 @@ export function buildConditionsFields(
       }
     : undefined
 
+  // TODO - enhance to handle date absolute + relative
+  // TODO - is there an easier/better way to determine the condition type?
+  const conditionType = hasListField(selectedComponent)
+    ? ConditionType.ListItemRef
+    : ConditionType.StringValue
+
   const value =
     'operator' in item && component.value && item.operator.length
-      ? {
-          id: 'value',
-          name: `items[${idx}][value]`,
-          fieldset: {
-            legend: {
-              text: 'Select a value'
-            }
-          },
-          classes: 'govuk-radios--small',
-          value: 'value' in item ? item.value : undefined,
-          items: getListFromComponent(selectedComponent, definition)?.items,
-          ...insertValidationErrors(validation?.formErrors.value)
-        }
+      ? buildValueField(conditionType, idx, item, selectedComponent, definition)
       : undefined
 
   return {
     component,
     operator,
     value,
+    conditionType,
     idField
   }
 }
 /**
- * @param {string} slug
  * @param {FormDefinition} definition
  * @param { ValidationFailure<FormEditor> | undefined } validation
  * @param {ConditionSessionState} state
  */
-export function buildConditionEditor(slug, definition, validation, state) {
+export function buildConditionEditor(definition, validation, state) {
   const componentItems = definition.pages
     .map(withPageNumbers)
     .filter(({ page }) => withConditionSupport(page))
@@ -227,12 +265,7 @@ export function conditionViewModel(
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
     notification,
-    conditionEditor: buildConditionEditor(
-      formSlug,
-      definition,
-      validation,
-      state
-    )
+    conditionEditor: buildConditionEditor(definition, validation, state)
   }
 }
 
