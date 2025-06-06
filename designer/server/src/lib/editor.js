@@ -454,6 +454,29 @@ export async function addCondition(formId, token, condition) {
 }
 
 /**
+ * Update an existing condition in a form
+ * @param {string} formId
+ * @param {string} token
+ * @param {ConditionWrapperV2} condition
+ */
+export async function updateCondition(formId, token, condition) {
+  const putJsonByType =
+    /** @type {typeof postJson<{ id: string, condition: ConditionWrapperV2, status: 'created' }>} */ (
+      putJson
+    )
+
+  const { body } = await putJsonByType(
+    buildRequestUrl(formId, `conditions/${condition.id}`),
+    {
+      payload: condition,
+      ...getHeaders(token)
+    }
+  )
+
+  return body
+}
+
+/**
  * Set or remove a page condition
  * @param {string} formId
  * @param {string} token

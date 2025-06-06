@@ -11,3 +11,5 @@
     {{ govukRadios(params.value) }}
   {% case "RelativeDate" %}
 {% endswitch %}
+<input type="hidden" name="{{ params.conditionTypeName }}" value="{{ params.conditionType }}" />
+<input type="hidden" name="{{ params.listIdName }}" value="{{ params.listId }}" />

@@ -40,26 +40,36 @@ export function buildValueField(
     case ConditionType.ListItemRef: {
       return {
         id: 'value',
-        name: `items[${idx}][value]`,
+        name: `items[${idx}][value][itemId]`,
         fieldset: {
           legend: {
             text: 'Select a value'
           }
         },
         classes: 'govuk-radios--small',
-        value: 'value' in item ? item.value : undefined,
-        items: getListFromComponent(selectedComponent, definition)?.items
+        value:
+          'value' in item && 'itemId' in item.value
+            ? item.value.itemId
+            : undefined,
+        items: getListFromComponent(selectedComponent, definition)?.items.map(
+          (item) => {
+            return { text: item.text, value: item.id }
+          }
+        )
       }
     }
 
     case ConditionType.StringValue: {
       return {
         id: 'value',
-        name: `items[${idx}][value]`,
+        name: `items[${idx}][value][value]`,
         label: {
           text: 'Enter a value'
         },
-        value: 'value' in item ? item.value : undefined
+        value:
+          'value' in item && 'value' in item.value
+            ? item.value.value
+            : undefined
       }
     }
   }
@@ -133,6 +143,18 @@ export function buildConditionsFields(
     ? ConditionType.ListItemRef
     : ConditionType.StringValue
 
+  const listId =
+    conditionType === ConditionType.ListItemRef
+      ? getListFromComponent(selectedComponent, definition)?.id
+      : undefined
+
+  const conditionTypeName = `items[${idx}][value][type]`
+
+  const listIdName =
+    conditionType === ConditionType.ListItemRef
+      ? `items[${idx}][value][listId]`
+      : ''
+
   const value =
     'operator' in item && component.value && item.operator.length
       ? buildValueField(conditionType, idx, item, selectedComponent, definition)
@@ -143,7 +165,10 @@ export function buildConditionsFields(
     operator,
     value,
     conditionType,
-    idField
+    idField,
+    listId,
+    conditionTypeName,
+    listIdName
   }
 }
 /**

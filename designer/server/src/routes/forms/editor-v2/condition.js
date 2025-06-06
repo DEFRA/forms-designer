@@ -13,7 +13,7 @@ import Joi from 'joi'
 
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
-import { addCondition } from '~/src/lib/editor.js'
+import { addCondition, updateCondition } from '~/src/lib/editor.js'
 import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import {
@@ -186,12 +186,17 @@ export default [
     path: ROUTE_PATH_CONDITION,
     async handler(request, h) {
       const { auth, params, payload } = request
-      const { slug } = params
+      const { slug, conditionId } = params
       const { token } = auth.credentials
 
       const metadata = await forms.get(slug, token)
 
-      await addCondition(metadata.id, token, payload)
+      if (conditionId === 'new') {
+        await addCondition(metadata.id, token, payload)
+      } else {
+        payload.id = conditionId
+        await updateCondition(metadata.id, token, payload)
+      }
 
       // Redirect to conditions list page
       return h
