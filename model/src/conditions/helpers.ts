@@ -1,4 +1,4 @@
-import Boom from '@hapi/boom'
+// import Boom from '@hapi/boom'
 
 import { type ConditionGroup } from '~/src/conditions/condition-group.js'
 import { type ConditionRef } from '~/src/conditions/condition-ref.js'
@@ -67,7 +67,7 @@ export const getConditionV2 = (
     .find((condition) => condition.id === conditionId)
 
   if (!condition) {
-    throw Boom.notFound(`Condition '${conditionId}' not found in form`)
+    throw new Error(`Condition '${conditionId}' not found in form`)
   }
 
   return condition
