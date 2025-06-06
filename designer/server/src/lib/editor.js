@@ -434,6 +434,49 @@ export async function deleteQuestion(
 }
 
 /**
+ * Add a condition to a form
+ * @param {string} formId
+ * @param {string} token
+ * @param {ConditionWrapperV2} condition
+ */
+export async function addCondition(formId, token, condition) {
+  const postJsonByType =
+    /** @type {typeof postJson<{ id: string, condition: ConditionWrapperV2, status: 'created' }>} */ (
+      postJson
+    )
+
+  const { body } = await postJsonByType(buildRequestUrl(formId, 'conditions'), {
+    payload: condition,
+    ...getHeaders(token)
+  })
+
+  return body
+}
+
+/**
+ * Update an existing condition in a form
+ * @param {string} formId
+ * @param {string} token
+ * @param {ConditionWrapperV2} condition
+ */
+export async function updateCondition(formId, token, condition) {
+  const putJsonByType =
+    /** @type {typeof postJson<{ id: string, condition: ConditionWrapperV2, status: 'created' }>} */ (
+      putJson
+    )
+
+  const { body } = await putJsonByType(
+    buildRequestUrl(formId, `conditions/${condition.id}`),
+    {
+      payload: condition,
+      ...getHeaders(token)
+    }
+  )
+
+  return body
+}
+
+/**
  * Set or remove a page condition
  * @param {string} formId
  * @param {string} token
@@ -452,5 +495,5 @@ export async function setPageCondition(formId, token, pageId, conditionName) {
 }
 
 /**
- * @import { ComponentDef, FormEditorInputCheckAnswersSettings, FormEditorInputPageSettings, FormDefinition, Item, List, ListComponentsDef, Page, QuestionSessionState } from '@defra/forms-model'
+ * @import { ComponentDef, FormEditorInputCheckAnswersSettings, FormEditorInputPageSettings, FormDefinition, ConditionWrapperV2, Page } from '@defra/forms-model'
  */

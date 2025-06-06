@@ -15,7 +15,10 @@ import {
   getValidationErrorsFromSession
 } from '~/src/lib/error-helper.js'
 import { buildListFromDetails, upsertList } from '~/src/lib/list.js'
-import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
+import {
+  redirectWithAnchorOrUrl,
+  redirectWithErrors
+} from '~/src/lib/redirect-helper.js'
 import {
   buildQuestionSessionState,
   clearQuestionSessionState,
@@ -67,32 +70,6 @@ const preSchema = Joi.object()
     )
   })
   .unknown(true)
-
-/**
- * @param {ResponseToolkit<{ Params: { slug: string, pageId: string, questionId: string, stateId?: string } }> | ResponseToolkit< { Payload: FormEditorInputQuestionDetails }>} h
- * @param {string} slug
- * @param {string} pageId
- * @param {string} questionId
- * @param {string} stateId
- * @param { string | undefined } anchorOrUrl - anchor (starting with '#') or a relative url
- */
-function redirectWithAnchorOrUrl(
-  h,
-  slug,
-  pageId,
-  questionId,
-  stateId,
-  anchorOrUrl
-) {
-  return h
-    .redirect(
-      editorv2Path(
-        slug,
-        `page/${pageId}/question/${questionId}/details/${stateId}${anchorOrUrl}`
-      )
-    )
-    .code(StatusCodes.SEE_OTHER)
-}
 
 /**
  * @param {string} formId

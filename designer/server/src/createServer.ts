@@ -1,3 +1,5 @@
+import Stream from 'node:stream'
+
 import { Engine as CatboxMemory } from '@hapi/catbox-memory'
 import { Engine as CatboxRedis } from '@hapi/catbox-redis'
 import hapi, {
@@ -8,6 +10,7 @@ import hapi, {
 import inert from '@hapi/inert'
 import Wreck from '@hapi/wreck'
 import { ProxyAgent } from 'proxy-agent'
+import qs from 'qs'
 
 import { SCOPE_READ } from '~/src/common/constants/scopes.js'
 import {
@@ -128,6 +131,27 @@ export async function createServer() {
       )
 
       return h.redirect(redirectUrl.toString()).permanent().takeover()
+    }
+
+    return h.continue
+  })
+
+  server.ext('onPostAuth', (request: Request, h: ResponseToolkit) => {
+    const supportedRoutes = [
+      '/library/{slug}/editor-v2/condition/{conditionId}/{stateId?}'
+    ]
+
+    if (
+      request.method === 'post' &&
+      typeof request.payload === 'object' &&
+      supportedRoutes.includes(request.route.path) &&
+      !(request.payload instanceof Stream) &&
+      !Buffer.isBuffer(request.payload)
+    ) {
+      const payload = request.payload as Record<string, string>
+
+      // @ts-expect-error - dynamic parsing
+      request.payload = qs.parse(payload)
     }
 
     return h.continue

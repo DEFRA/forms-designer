@@ -1,0 +1,12 @@
+@use "../govuk-frontend" as *;
+
+.condition-editor-top-right-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.condition-editor-card {
+  position: relative;
+  top: -15px;
+}

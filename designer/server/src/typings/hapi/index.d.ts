@@ -101,6 +101,7 @@ declare module '@hapi/yar' {
   type QuestionType = (typeof sessionNames)['questionType']
   type ReorderPagesKey = (typeof sessionNames)['reorderPages']
   type QuestionSessionStateKey = (typeof sessionNames)['questionSessionState']
+  type ConditionSessionStateKey = (typeof sessionNames)['conditionSessionState']
 
   // Export known validation session keys
   type ValidationSession = (typeof sessionNames)['validationFailure']

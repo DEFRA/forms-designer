@@ -1,6 +1,11 @@
 import { type ComponentType } from '~/src/components/enums.js'
 import { type ComponentDef } from '~/src/components/types.js'
-import { type Item } from '~/src/index.js'
+import {
+  type ConditionWrapperV2,
+  type DateDirections,
+  type DateUnits,
+  type Item
+} from '~/src/index.js'
 
 /**
  * Interface for `FormEditor` Joi schema
@@ -245,6 +250,26 @@ export interface FormEditor {
    * Set to 'true' is Javascript is enabled
    */
   jsEnabled: string
+
+  /**
+   * List item id for conditions
+   */
+  itemId: string
+
+  /**
+   * Relative date period for conditions
+   */
+  period: string
+
+  /**
+   * Relative date unit for conditions
+   */
+  unit: DateUnits
+
+  /**
+   * Relative date direction for conditions
+   */
+  direction: DateDirections
 }
 
 export type FormEditorInputPage = Pick<
@@ -383,6 +408,12 @@ export interface QuestionSessionState {
   isReordering?: boolean
   lastMovedId?: string
   lastMoveDirection?: string
+}
+
+export interface ConditionSessionState {
+  id?: string
+  stateId?: string
+  conditionWrapper?: ConditionWrapperV2
 }
 
 export interface GovukFieldItem {

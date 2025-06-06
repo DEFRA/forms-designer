@@ -111,10 +111,15 @@ export default [
       }
 
       // Set up session if not yet exists
-      // prettier-ignore
       if (!stateId || !getQuestionSessionState(yar, stateId)) {
         const newStateId = createQuestionSessionState(yar)
-        return h.redirect(editorv2Path(slug,`page/${pageId}/question/${questionId}/type/${newStateId}`))
+        return h
+          .redirect(
+            editorv2Path(
+              slug,
+              `page/${pageId}/question/${questionId}/type/${newStateId}`
+            )
+          )
           .code(StatusCodes.SEE_OTHER)
       }
 

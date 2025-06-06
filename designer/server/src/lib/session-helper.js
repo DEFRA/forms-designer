@@ -80,6 +80,63 @@ export function clearQuestionSessionState(yar, stateId) {
   yar.set(questionSessionKey(stateId), undefined)
 }
 
+/**
+ * @param {string} stateId
+ */
+export function conditionSessionKey(stateId) {
+  return /** @type {ConditionSessionStateKey} */ (
+    `${sessionNames.conditionSessionState}-${stateId}`
+  )
+}
+
+/**
+ * @param {Yar} yar
+ */
+export function createConditionSessionState(yar) {
+  const stateId = randomId()
+  yar.set(conditionSessionKey(stateId), {})
+  return stateId
+}
+
+/**
+ * @param {Yar} yar
+ * @param {string} stateId
+ * @param { ConditionSessionState | undefined } model
+ */
+export function setConditionSessionState(yar, stateId, model) {
+  yar.set(conditionSessionKey(stateId), model)
+}
+
+/**
+ * @param {Yar} yar
+ * @param {string} stateId
+ * @param { ConditionSessionState | undefined } model
+ */
+export function mergeConditionSessionState(yar, stateId, model) {
+  const state = yar.get(conditionSessionKey(stateId)) ?? {}
+  yar.set(conditionSessionKey(stateId), {
+    ...state,
+    ...model
+  })
+}
+
+/**
+ * @param {Yar} yar
+ * @param {string} stateId
+ * @returns { ConditionSessionState | undefined }
+ */
+export function getConditionSessionState(yar, stateId) {
+  return yar.get(conditionSessionKey(stateId))
+}
+
+/**
+ * @param {Yar} yar
+ * @param {string} stateId
+ */
+export function clearConditionSessionState(yar, stateId) {
+  yar.set(conditionSessionKey(stateId), undefined)
+}
+
 const componentsSavingLists = [
   ComponentType.CheckboxesField,
   ComponentType.RadiosField
@@ -134,6 +191,6 @@ export function buildQuestionSessionState(
 }
 
 /**
- * @import { QuestionSessionState, FormDefinition, ListComponentsDef } from '@defra/forms-model'
- * @import {QuestionSessionStateKey, Yar } from '@hapi/yar'
+ * @import { ConditionSessionState, QuestionSessionState, FormDefinition, ListComponentsDef } from '@defra/forms-model'
+ * @import { ConditionSessionStateKey, QuestionSessionStateKey, Yar } from '@hapi/yar'
  */

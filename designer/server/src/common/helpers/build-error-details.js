@@ -33,15 +33,15 @@ export function buildErrorDetails(error) {
       return buildListErrorDetail(errors, validationErrorItem)
     }
 
-    if (!context?.key) {
+    if (!context?.label) {
       return errors
     }
 
     return {
       ...errors,
-      [context.key]: {
+      [context.label]: {
         text: message,
-        href: `#${context.key}`
+        href: `#${context.label}`
       }
     }
   }, /** @type {ErrorDetails} */ ({}))

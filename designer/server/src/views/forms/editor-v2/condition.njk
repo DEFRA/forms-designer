@@ -1,0 +1,31 @@
+{% extends "layouts/page.njk" %}
+
+{% from "page-body/macro.njk" import appPageBody %}
+{% from "editor-card/macro.njk" import appEditorCard %}
+{% from "condition-editor/macro.njk" import appConditionEditor %}
+
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% block content %}
+  {% call appPageBody({
+    heading: pageHeading,
+    description: pageDescription,
+    caption: pageCaption,
+    actions: pageActions,
+    classes: "govuk-grid-column-full govuk-grid-column-two-thirds-from-desktop",
+    backLink: backLink,
+    useNewMasthead: true
+  }) %}
+    {% call appEditorCard({
+      caption: cardCaption,
+      classes: 'editor-card-background-very-light-grey',
+      errorList: errorList
+    }) %}
+      {{ appConditionEditor(conditionEditor) }}
+    {% endcall %}
+  {% endcall %}
+{% endblock %}
+
+{% block mainEnd %}
+  {{ super() }}
+{% endblock %}

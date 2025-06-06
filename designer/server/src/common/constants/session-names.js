@@ -5,6 +5,7 @@ export const sessionNames = {
   questionType: /** @type {const} */ ('questionType'),
   reorderPages: /** @type {const} */ ('reorderPages'),
   questionSessionState: /** @type {const} */ ('questionSessionState'),
+  conditionSessionState: /** @type {const} */ ('conditionSessionState'),
   validationFailure: {
     createForm: /** @type {const} */ ('createFormValidationFailure'),
     updateForm: /** @type {const} */ ('updateFormValidationFailure'),

@@ -13,6 +13,11 @@ $defra-brand-colour: govuk-organisation-colour(department-for-environment-food-r
     padding-bottom: 10px;
   }
 
+  &-background-very-light-grey {
+    background-color: #f8f8f8;
+    padding-bottom: 10px;
+  }
+
   &-no-padding-bottom {
     padding-bottom: 0;
   }
