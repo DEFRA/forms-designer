@@ -28,18 +28,20 @@ import { editorFormPath, formOverviewPath } from '~/src/models/links.js'
  * @param { ConditionDataV2 | ConditionRefDataV2 } item
  * @param { ConditionalComponentsDef | undefined } selectedComponent
  * @param {FormDefinition} definition
+ * @param { ValidationFailure<FormEditor> | undefined } validation
  */
 export function buildValueField(
   type,
   idx,
   item,
   selectedComponent,
-  definition
+  definition,
+  validation
 ) {
   switch (type) {
     case ConditionType.ListItemRef: {
       return {
-        id: 'value',
+        id: `items[${idx}].value`,
         name: `items[${idx}][value][itemId]`,
         fieldset: {
           legend: {
@@ -55,7 +57,8 @@ export function buildValueField(
           (item) => {
             return { text: item.text, value: item.id }
           }
-        )
+        ),
+        ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
       }
     }
 
@@ -69,7 +72,8 @@ export function buildValueField(
         value:
           'value' in item && 'value' in item.value
             ? item.value.value
-            : undefined
+            : undefined,
+        ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
       }
     }
   }
@@ -95,14 +99,16 @@ export function buildConditionsFields(
   }
 
   const component = {
-    id: 'componentId',
+    id: `items[${idx}].componentId`,
     name: `items[${idx}][componentId]`,
     label: {
       text: 'Select a question'
     },
     items: componentItems,
     value: 'componentId' in item ? item.componentId : undefined,
-    ...insertValidationErrors(validation?.formErrors.componentId)
+    ...insertValidationErrors(
+      validation?.formErrors[`items[${idx}].componentId`]
+    )
   }
 
   // TODO - handle REF as well as component
@@ -115,7 +121,7 @@ export function buildConditionsFields(
 
   const operator = component.value
     ? {
-        id: 'operator',
+        id: `items[${idx}].operator`,
         name: `items[${idx}][operator]`,
         label: {
           text: 'Condition type'
@@ -133,7 +139,9 @@ export function buildConditionsFields(
       value="confirmSelectOperator">Select</button>`
           }
         },
-        ...insertValidationErrors(validation?.formErrors.operator)
+        ...insertValidationErrors(
+          validation?.formErrors[`items[${idx}].operator`]
+        )
       }
     : undefined
 
@@ -157,7 +165,14 @@ export function buildConditionsFields(
 
   const value =
     'operator' in item && component.value && item.operator.length
-      ? buildValueField(conditionType, idx, item, selectedComponent, definition)
+      ? buildValueField(
+          conditionType,
+          idx,
+          item,
+          selectedComponent,
+          definition,
+          validation
+        )
       : undefined
 
   return {

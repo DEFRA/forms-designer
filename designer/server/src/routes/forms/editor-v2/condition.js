@@ -40,21 +40,25 @@ const stateIdSchema = Joi.string().optional()
 // Custom condition wrapper payload schema that
 // only allows conditions, not condition references
 const conditionWrapperSchema = conditionWrapperSchemaV2.keys({
-  displayName: conditionWrapperSchemaV2.extract('displayName').messages({
-    'string.empty': 'Enter condition name'
-  }),
   coordinator: conditionWrapperSchemaV2.extract('coordinator').messages({
     'any.required': 'Choose how you want to combine conditions'
   }),
-  items: Joi.array()
-    .items(
-      conditionDataSchemaV2.keys({
-        componentId: conditionDataSchemaV2.extract('componentId').messages({
-          'string.empty': 'Select a question for condition {{../key}}'
-        })
+  items: Joi.array().items(
+    conditionDataSchemaV2.keys({
+      componentId: conditionDataSchemaV2.extract('componentId').messages({
+        '*': 'Select a question'
+      }),
+      operator: conditionDataSchemaV2.extract('operator').messages({
+        '*': 'Select a condition type'
+      }),
+      value: conditionDataSchemaV2.extract('value').messages({
+        '*': 'Enter a condition value'
       })
-    )
-    .description('Array of conditions')
+    })
+  ),
+  displayName: conditionWrapperSchemaV2.extract('displayName').messages({
+    'string.empty': 'Enter condition name'
+  })
 })
 
 /**
@@ -258,6 +262,16 @@ export default [
             if (Joi.isError(error)) {
               error.details = error.details.filter((err) => {
                 return err.type !== 'array.includesRequiredUnknowns'
+              })
+
+              error.details.forEach((err) => {
+                if (err.path.length > 1) {
+                  // Must be the a part of a condition item is in error
+                  const idx = err.path.at(1)
+                  if (typeof idx === 'number') {
+                    err.message = `${err.message} for condition ${idx + 1}`
+                  }
+                }
               })
             }
 
