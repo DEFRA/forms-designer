@@ -4,9 +4,8 @@ import { Question } from '~/src/form/form-editor/preview/question.js'
 export class CheckboxSortableQuestion extends ListSortableQuestion {
   /**
    * @type {string}
-   * @protected
    */
-  _questionTemplate = Question.PATH + 'checkboxesfield.njk'
+  questionTemplate = Question.PATH + 'checkboxesfield.njk'
   listRenderId = 'checkboxField'
   listRenderName = 'checkboxField'
 }

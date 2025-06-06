@@ -4,10 +4,9 @@ import { Question } from '~/src/index.js'
 export class MonthYearQuestion extends FieldsetQuestion {
   /**
    * @type {string}
-   * @protected
    */
-  _questionTemplate = Question.PATH + 'monthyearfield.njk'
-  _fieldName = 'monthYear'
+  questionTemplate = Question.PATH + 'monthyearfield.njk'
+  fieldName = 'monthYear'
 
   /**
    * @returns {Partial<QuestionBaseModel>}

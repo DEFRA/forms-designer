@@ -298,7 +298,7 @@ export function questionDetailsViewModel(
     errorTemplates,
     cardTitle: `Question ${details.questionNum}`,
     cardCaption: `Page ${details.pageNum}`,
-    cardHeading: `Edit question ${details.questionNum}`,
+    cardHeading: `Edit question ${details.questionNum} s`,
     navigation: details.navigation,
     errorList,
     formErrors: validation?.formErrors,

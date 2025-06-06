@@ -16,15 +16,18 @@ import {
   YesNoQuestion
 } from '@defra/forms-model'
 
+import { dummyRender } from '~/src/javascripts/preview/__stubs__/render.js'
 import { AutocompleteRenderer } from '~/src/javascripts/preview/autocomplete-renderer.js'
 import {
   AutocompleteDOMElements,
   AutocompleteListeners
 } from '~/src/javascripts/preview/autocomplete.js'
+import { FormsEngineRenderer } from '~/src/javascripts/preview/forms-engine-renderer.js'
 import {
   ListSortableEventListeners,
   ListSortableQuestionElements
 } from '~/src/javascripts/preview/list-sortable.js'
+import { FormsEngineNunjucksRenderer } from '~/src/javascripts/preview/nunjucks-engine-renderer.js'
 import { NunjucksRenderer } from '~/src/javascripts/preview/nunjucks-renderer.js'
 import {
   EventListeners,
@@ -54,7 +57,11 @@ export const SetupPreview =
      */
     TextField: () => {
       const questionElements = new QuestionDomElements()
-      const nunjucksRenderer = new NunjucksRenderer(questionElements)
+      // const nunjucksRenderer = new FormsEngineRenderer(
+      //   questionElements,
+      //   (_question) => Promise.resolve(dummyRender)
+      // )
+      const nunjucksRenderer = new FormsEngineNunjucksRenderer(questionElements)
       const textfield = new ShortAnswerQuestion(
         questionElements,
         nunjucksRenderer

@@ -9,6 +9,7 @@ import {
   NumberOnlyQuestion,
   PhoneNumberQuestion,
   Question,
+  QuestionRenderer,
   RadioSortableQuestion,
   ShortAnswerQuestion,
   SupportingEvidenceQuestion,
@@ -17,6 +18,8 @@ import {
   govukFieldIsQuestionOptional,
   govukFieldValueIsString
 } from '@defra/forms-model'
+
+import { QuestionComponentRenderer } from '~/src/models/forms/editor-v2/question-details/question.js'
 
 /**
  * @param {GovukField} val
@@ -142,14 +145,11 @@ export class QuestionPreviewElements {
   }
 }
 
-/**
- * @implements {QuestionRenderer}
- */
-export class EmptyRender {
+export class EmptyRender extends QuestionRenderer {
   /**
-   * @param {string} _questionBaseModel
+   * @param {Question} _question
    */
-  render(_questionBaseModel) {
+  render(_question) {
     // do nothing
   }
 }
@@ -163,7 +163,8 @@ export const ModelFactory =
      * @returns {Question}
      */
     TextField: (questionElements) => {
-      return new ShortAnswerQuestion(questionElements, emptyRender)
+      const textFieldRenderer = new QuestionComponentRenderer()
+      return new ShortAnswerQuestion(questionElements, textFieldRenderer)
     },
     /**
      * @param {QuestionElements} questionElements
@@ -325,6 +326,11 @@ export function getPreviewModel(govukFields, state, componentType) {
   const questionOrListElements = new QuestionPreviewElements(govukFields, state)
 
   const question = getPreviewConstructor(componentType, questionOrListElements)
+  console.log(
+    '~~~~~~ Chris Debug ~~~~~~ ',
+    'Question.renderInput',
+    question.renderInput
+  )
   return question.renderInput
 }
 /**

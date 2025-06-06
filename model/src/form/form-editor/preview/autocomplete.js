@@ -2,12 +2,12 @@ import { autoCompleteOptionsSchema } from '~/src/form/form-editor/index.js'
 import { Question } from '~/src/form/form-editor/preview/question.js'
 
 export class AutocompleteQuestion extends Question {
-  _questionTemplate = Question.PATH + 'autocompletefield.njk'
+  questionTemplate = Question.PATH + 'autocompletefield.njk'
   /**
    * @type {string}
-   * @protected
+   * @public
    */
-  _fieldName = 'autoCompleteField'
+  fieldName = 'autoCompleteField'
   /**
    * @type {ListElement[]}
    * @private
@@ -50,8 +50,8 @@ export class AutocompleteQuestion extends Question {
 
   get renderInput() {
     return {
-      id: this._fieldName,
-      name: this._fieldName,
+      id: this.fieldName,
+      name: this.fieldName,
       attributes: { 'data-module': 'govuk-accessible-autocomplete' },
       hint: this.hint,
       label: this.label,
@@ -61,7 +61,8 @@ export class AutocompleteQuestion extends Question {
 }
 
 /**
+ * @import { QuestionRenderer } from '~/src/form/form-editor/preview/questionRenderer.js'
  * @import { ValidationResult } from 'joi'
  * @import { ListElement } from '~/src/form/form-editor/types.js'
- * @import { AutocompleteElements, QuestionRenderer } from '~/src/form/form-editor/preview/types.js'
+ * @import { AutocompleteElements } from '~/src/form/form-editor/preview/types.js'
  */

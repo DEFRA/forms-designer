@@ -1,3 +1,5 @@
+import { NunjucksRenderer } from '~/src/javascripts/preview/nunjucks-renderer.js'
+
 /**
  * @class QuestionDomElements
  * @classdesc
@@ -267,6 +269,8 @@ export class EventListeners {
     }
   }
 }
+
+export class QuestionRenderer extends NunjucksRenderer {}
 
 /**
  * @import { ListenerRow, ListElement, ListItemReadonly, BaseSettings, QuestionElements, QuestionBaseModel, GovukFieldset, DefaultComponent, QuestionRenderer, Question } from '@defra/forms-model'

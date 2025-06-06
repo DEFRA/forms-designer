@@ -47,6 +47,9 @@ export default /** @type {Configuration} */ ({
         './javascripts/preview.js'
       ]
     },
+    pagePreview: {
+      import: ['./javascripts/page-preview.js']
+    },
     'pages-reorder': {
       import: ['./javascripts/pages-reorder.js']
     }
@@ -131,7 +134,7 @@ export default /** @type {Configuration} */ ({
         }
       },
       {
-        test: /\.(njk)$/,
+        test: /\.(njk|html)$/,
         loader: 'nunjucks-loader',
         sideEffects: true
       }

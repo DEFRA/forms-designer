@@ -7,8 +7,8 @@ import { Question } from '~/src/form/form-editor/preview/question.js'
 export class FieldsetQuestion extends Question {
   get renderInput() {
     return {
-      id: this._fieldName,
-      name: this._fieldName,
+      id: this.fieldName,
+      name: this.fieldName,
       fieldset: this.fieldSet,
       hint: this.hint,
       ...this.customRenderFields

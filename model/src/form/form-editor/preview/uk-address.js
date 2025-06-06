@@ -2,8 +2,8 @@ import { FieldsetQuestion } from '~/src/form/form-editor/preview/fieldset-questi
 import { Question } from '~/src/index.js'
 
 export class UkAddressQuestion extends FieldsetQuestion {
-  _questionTemplate = Question.PATH + 'ukaddressfield.njk'
-  _fieldName = 'addressField'
+  questionTemplate = Question.PATH + 'ukaddressfield.njk'
+  fieldName = 'addressField'
 }
 
 /**

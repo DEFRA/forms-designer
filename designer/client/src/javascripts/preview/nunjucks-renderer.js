@@ -1,10 +1,11 @@
+import { TextField } from '@defra/forms-engine-plugin/engine/components/TextField.js'
+import { QuestionRenderer } from '@defra/forms-model'
+
 import { NJK } from '~/src/javascripts/preview/nunjucks.js'
+
 import '~/src/views/preview-components/inset.njk'
 
-/**
- * @implements {QuestionRenderer}
- */
-export class NunjucksRenderer {
+export class NunjucksRenderer extends QuestionRenderer {
   /**
    * @type {QuestionElements}
    * @protected
@@ -15,6 +16,7 @@ export class NunjucksRenderer {
    * @param {QuestionElements} questionElements
    */
   constructor(questionElements) {
+    super()
     this._questionElements = questionElements
   }
 
@@ -33,11 +35,10 @@ export class NunjucksRenderer {
   }
 
   /**
-   * @param {string} questionTemplate
-   * @param {QuestionBaseModel} questionBaseModel
+   * @param {Question} question
    */
-  render(questionTemplate, questionBaseModel) {
-    this._render(questionTemplate, questionBaseModel)
+  render(question) {
+    this._render(question.questionTemplate, question.renderInput)
   }
 
   /**

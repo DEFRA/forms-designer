@@ -29,9 +29,8 @@ export function listsElementToMap(listElements) {
 export class ListQuestion extends Question {
   /**
    * @type {string}
-   * @protected
    */
-  _questionTemplate = DefaultListConst.Template
+  questionTemplate = DefaultListConst.Template
   /** @type {ListElements} */
   _listElements
   listRenderId = DefaultListConst.Input
@@ -206,6 +205,7 @@ export class ListQuestion extends Question {
 }
 
 /**
+ * @import { QuestionRenderer } from '~/src/form/form-editor/preview/questionRenderer.js'
  * @import { ListElement, ListItemReadonly } from '~/src/form/form-editor/types.js'
- * @import { ListElements, QuestionRenderer, DefaultComponent, GovukFieldset } from '~/src/form/form-editor/preview/types.js'
+ * @import { ListElements, DefaultComponent, GovukFieldset } from '~/src/form/form-editor/preview/types.js'
  */

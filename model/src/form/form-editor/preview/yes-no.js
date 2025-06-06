@@ -4,10 +4,9 @@ import { Question } from '~/src/index.js'
 export class YesNoQuestion extends FieldsetQuestion {
   /**
    * @type {string}
-   * @protected
    */
-  _questionTemplate = Question.PATH + 'radios.njk'
-  _fieldName = 'yesNo'
+  questionTemplate = Question.PATH + 'radios.njk'
+  fieldName = 'yesNo'
 
   /**
    * @returns {Partial<QuestionBaseModel>}

@@ -2,5 +2,5 @@ import { ListSortableQuestion } from '~/src/form/form-editor/preview/list-sortab
 import { Question } from '~/src/index.js'
 
 export class RadioSortableQuestion extends ListSortableQuestion {
-  _questionTemplate = Question.PATH + 'radios.njk'
+  questionTemplate = Question.PATH + 'radios.njk'
 }

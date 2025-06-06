@@ -1,7 +1,6 @@
-/**
- * @implements {QuestionRenderer}
- */
-export class QuestionRendererStub {
+import { QuestionRenderer } from '~/src/form/form-editor/preview/questionRenderer.js'
+
+export class QuestionRendererStub extends QuestionRenderer {
   /**
    * @type {jest.Mock<void, [string, QuestionBaseModel]>}
    */
@@ -11,15 +10,15 @@ export class QuestionRendererStub {
    * @param {jest.Mock<void, [string, QuestionBaseModel]>} renderMock
    */
   constructor(renderMock) {
+    super()
     this.renderMock = renderMock
   }
 
   /**
-   * @param {string} questionTemplate
-   * @param {QuestionBaseModel} questionBaseModel
+   * @param {Question} question
    */
-  render(questionTemplate, questionBaseModel) {
-    this.renderMock(questionTemplate, questionBaseModel)
+  render(question) {
+    this.renderMock(question.questionTemplate, question.renderInput)
   }
 
   /**
@@ -159,6 +158,7 @@ export const listElementsStub = {
 }
 
 /**
+ * @import { Question } from '~/src/form/form-editor/preview/question.js'
  * @import { ListElement } from  '~/src/form/form-editor/types.js'
- * @import { BaseSettings, ListElements, RenderContext, QuestionBaseModel, QuestionElements, QuestionRenderer, AutocompleteElements } from  '~/src/form/form-editor/preview/types.js'
+ * @import { BaseSettings, ListElements, RenderContext, QuestionBaseModel, QuestionElements, AutocompleteElements } from  '~/src/form/form-editor/preview/types.js'
  */

@@ -13,9 +13,9 @@ export class Question {
 
   /**
    * @type {string}
-   * @protected
+   * @public
    */
-  _questionTemplate = Question.PATH + 'textfield.njk'
+  questionTemplate = Question.PATH + 'textfield.njk'
   /**
    * @type { string|null }
    * @protected
@@ -23,9 +23,9 @@ export class Question {
   _highlight = null
   /**
    * @type {string}
-   * @protected
+   * @public
    */
-  _fieldName = 'inputField'
+  fieldName = 'inputField'
   /**
    * @type {QuestionRenderer}
    * @protected
@@ -44,7 +44,7 @@ export class Question {
    */
   constructor(htmlElements, questionRenderer) {
     const { question, hintText, optional } = htmlElements.values
-
+    console.log('~~~~~~ Chris Debug ~~~~~~ ', 'Question', question)
     /**
      * @type {QuestionElements}
      * @protected
@@ -94,8 +94,22 @@ export class Question {
   get label() {
     return {
       text: this.titleText,
-      classes: 'govuk-label--l' + this.getHighlight('question')
+      classes: this.titleClasses
     }
+  }
+
+  /**
+   * @returns {string}
+   */
+  get titleClasses() {
+    return 'govuk-label--l' + this.getHighlight('question')
+  }
+
+  /**
+   * @returns {string}
+   */
+  get fieldSetClasses() {
+    return 'govuk-fieldset__legend--l' + this.getHighlight('question')
   }
 
   /**
@@ -106,9 +120,13 @@ export class Question {
     return {
       legend: {
         text: this.titleText,
-        classes: 'govuk-fieldset__legend--l' + this.getHighlight('question')
+        classes: this.fieldSetClasses
       }
     }
+  }
+
+  get hintClasses() {
+    return this.getHighlight('hintText')
   }
 
   /**
@@ -123,7 +141,7 @@ export class Question {
 
     return {
       text,
-      classes: this.getHighlight('hintText')
+      classes: this.hintClasses
     }
   }
 
@@ -139,8 +157,8 @@ export class Question {
    */
   get renderInput() {
     return {
-      id: this._fieldName,
-      name: this._fieldName,
+      id: this.fieldName,
+      name: this.fieldName,
       label: this.label,
       hint: this.hint,
       ...this.customRenderFields
@@ -148,7 +166,7 @@ export class Question {
   }
 
   render() {
-    this._questionRenderer.render(this._questionTemplate, this.renderInput)
+    this._questionRenderer.render(this)
   }
 
   /**
@@ -210,6 +228,7 @@ export class Question {
 }
 
 /**
- * @import { ListenerRow, BaseSettings, QuestionElements, QuestionBaseModel, GovukFieldset, DefaultComponent, QuestionRenderer } from '~/src/form/form-editor/preview/types.js'
+ * @import { QuestionRenderer } from '~/src/form/form-editor/preview/questionRenderer.js'
+ * @import { ListenerRow, BaseSettings, QuestionElements, QuestionBaseModel, GovukFieldset, DefaultComponent } from '~/src/form/form-editor/preview/types.js'
  * @import { ListElement, ListItemReadonly } from '~/src/form/form-editor/types.js'
  */
