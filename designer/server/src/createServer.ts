@@ -1,3 +1,5 @@
+import Stream from 'node:stream'
+
 import { Engine as CatboxMemory } from '@hapi/catbox-memory'
 import { Engine as CatboxRedis } from '@hapi/catbox-redis'
 import hapi, {
@@ -7,8 +9,8 @@ import hapi, {
 } from '@hapi/hapi'
 import inert from '@hapi/inert'
 import Wreck from '@hapi/wreck'
-import qs from 'qs'
 import { ProxyAgent } from 'proxy-agent'
+import qs from 'qs'
 
 import { SCOPE_READ } from '~/src/common/constants/scopes.js'
 import {
@@ -25,7 +27,6 @@ import * as nunjucks from '~/src/common/nunjucks/index.js'
 import config from '~/src/config.js'
 import errorPage from '~/src/plugins/errorPage.js'
 import router from '~/src/plugins/router.js'
-import Stream from 'node:stream'
 
 const logger = createLogger()
 
@@ -149,7 +150,7 @@ export async function createServer() {
     ) {
       const payload = request.payload as Record<string, string>
 
-      // @ts-ignore
+      // @ts-expect-error - dynamic parsing
       request.payload = qs.parse(payload)
     }
 
