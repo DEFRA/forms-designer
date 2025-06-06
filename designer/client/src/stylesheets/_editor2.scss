@@ -1,8 +1,123 @@
+@use "govuk-frontend" as *;
+
 // Components
 .app-vertical-divider {
   color: #b1b4b6;
   display: inline-block;
   margin: 0 4px;
+}
+
+.app-condition-applied {
+  background-color: govuk-colour("white");
+  border-left: 4px solid #00703c;
+  padding: govuk-spacing(4);
+  margin-bottom: govuk-spacing(6);
+
+  &__content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  &__details {
+    flex: 1;
+  }
+
+  &__actions {
+    margin-left: govuk-spacing(4);
+    flex-shrink: 0;
+  }
+}
+
+.app-tab-container .editor-card-title {
+  display: inline-block;
+  margin-right: govuk-spacing(4);
+  padding: govuk-spacing(2) 0 govuk-spacing(3);
+  position: relative;
+
+  text-decoration: none;
+  box-shadow: none;
+  text-underline-offset: initial;
+
+  font-weight: bold;
+  color: govuk-colour("black");
+
+  &.app-tab-link {
+    font-weight: normal;
+    color: #1d70b8;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    &:focus {
+      @include govuk-focused-text;
+    }
+  }
+}
+
+// Only show title underline when container is title-only
+.app-tab-container--title-only .editor-card-title:not(.app-tab-link)::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background-color: #00703c;
+}
+
+.app-page-navigation {
+  display: inline-block;
+
+  &__list {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  &__item {
+    margin-right: govuk-spacing(4);
+    position: relative;
+  }
+
+  &__link {
+    color: #1d70b8;
+    text-decoration: none;
+    display: block;
+    padding: govuk-spacing(2) 0 govuk-spacing(3);
+    position: relative;
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    &:focus {
+      @include govuk-focused-text;
+    }
+  }
+}
+
+.app-page-navigation__item--current .app-page-navigation__link {
+  color: govuk-colour("black");
+  font-weight: bold;
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background-color: #00703c;
+  }
+}
+
+.app-tab-container {
+  border-bottom: 1px solid #b1b4b6;
+  margin-bottom: govuk-spacing(4);
 }
 
 //

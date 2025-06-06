@@ -1,15 +1,10 @@
-import {
-  ConditionsModel,
-  FormStatus,
-  convertConditionWrapperFromV2,
-  hasComponentsEvenIfNoNext,
-  isConditionWrapperV2
-} from '@defra/forms-model'
+import { FormStatus, isConditionWrapperV2 } from '@defra/forms-model'
 
 import {
   baseModelFields,
   buildPreviewUrl,
-  getFormSpecificNavigation
+  getFormSpecificNavigation,
+  toPresentationHtmlV2
 } from '~/src/models/forms/editor-v2/common.js'
 import { formOverviewPath } from '~/src/models/links.js'
 
@@ -18,32 +13,19 @@ import { formOverviewPath } from '~/src/models/links.js'
  * @param {FormDefinition} definition
  */
 export function buildConditionsTable(slug, definition) {
-  const { pages, conditions, lists } = definition
+  const { pages, conditions } = definition
   const editBaseUrl = `/library/${slug}/editor-v2/condition/`
-  const components = pages.flatMap((page) =>
-    hasComponentsEvenIfNoNext(page) ? page.components : []
-  )
 
   /** @todo remove this filter when V1 is deprecated */
   const v2Conditions = conditions
     .filter(isConditionWrapperV2)
     .sort((a, b) => a.displayName.localeCompare(b.displayName))
 
-  /** @type {RuntimeFormModel} */
-  const accessors = {
-    getListById: (listId) => lists.find((list) => list.id === listId),
-    getComponentById: (componentId) =>
-      components.find((component) => component.id === componentId),
-    getConditionById: (conditionId) =>
-      v2Conditions.find((condition) => condition.id === conditionId)
-  }
-
   return {
     firstCellIsHeader: false,
     classes: 'app-conditions-table',
     head: [{ text: 'Condition' }, { text: 'Used in' }, { text: 'Actions' }],
     rows: v2Conditions.map((condition) => {
-      const conditionAsV1 = convertConditionWrapperFromV2(condition, accessors)
       const usedIn = pages
         .map((page, index) => ({ page, index }))
         .filter(({ page }) => page.condition === condition.id)
@@ -56,7 +38,7 @@ export function buildConditionsTable(slug, definition) {
 
       return [
         {
-          html: `<span class="govuk-!-font-weight-bold">${condition.displayName}</span><p>${ConditionsModel.from(conditionAsV1.value).toPresentationHtml()}</p>`
+          html: `<span class="govuk-!-font-weight-bold">${condition.displayName}</span><p>${toPresentationHtmlV2(condition, definition)}</p>`
         },
         {
           text: usedIn

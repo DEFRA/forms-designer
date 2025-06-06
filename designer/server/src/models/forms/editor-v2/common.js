@@ -1,4 +1,11 @@
-import { ControllerType, hasComponents } from '@defra/forms-model'
+import {
+  ConditionsModel,
+  ControllerType,
+  convertConditionWrapperFromV2,
+  hasComponents,
+  hasComponentsEvenIfNoNext,
+  isConditionWrapperV2
+} from '@defra/forms-model'
 
 import { buildEntry } from '~/src/common/nunjucks/context/build-navigation.js'
 import config from '~/src/config.js'
@@ -160,6 +167,71 @@ export function tickBoxes(items, selectedItems) {
       : []
   )
 }
+
 /**
- * @import { ComponentDef, FormMetadata, FormDefinition, FormStatus, Page } from '@defra/forms-model'
+ * Gets the presentation string for a V2 condition wrapper
+ * @param {ConditionWrapperV2} conditionWrapper - The V2 condition wrapper
+ * @param {FormDefinition} definition - The form definition containing pages, conditions, and lists
+ * @returns {string} The presentation string for the condition
+ */
+export function toPresentationStringV2(conditionWrapper, definition) {
+  const { pages, conditions, lists } = definition
+  const components = pages.flatMap((p) =>
+    hasComponentsEvenIfNoNext(p) ? p.components : []
+  )
+
+  const v2Conditions = /** @type {ConditionWrapperV2[]} */ (
+    conditions.filter(isConditionWrapperV2)
+  )
+
+  /** @type {RuntimeFormModel} */
+  const accessors = {
+    getListById: (listId) => lists.find((list) => list.id === listId),
+    getComponentById: (componentId) =>
+      components.find((component) => component.id === componentId),
+    getConditionById: (conditionId) =>
+      v2Conditions.find((condition) => condition.id === conditionId)
+  }
+
+  const conditionAsV1 = convertConditionWrapperFromV2(
+    conditionWrapper,
+    accessors
+  )
+  return ConditionsModel.from(conditionAsV1.value).toPresentationString()
+}
+
+/**
+ * Gets the presentation HTML for a V2 condition wrapper
+ * @param {ConditionWrapperV2} conditionWrapper - The V2 condition wrapper
+ * @param {FormDefinition} definition - The form definition containing pages, conditions, and lists
+ * @returns {string} The presentation HTML for the condition
+ */
+export function toPresentationHtmlV2(conditionWrapper, definition) {
+  const { pages, conditions, lists } = definition
+  const components = pages.flatMap((p) =>
+    hasComponentsEvenIfNoNext(p) ? p.components : []
+  )
+
+  const v2Conditions = /** @type {ConditionWrapperV2[]} */ (
+    conditions.filter(isConditionWrapperV2)
+  )
+
+  /** @type {RuntimeFormModel} */
+  const accessors = {
+    getListById: (listId) => lists.find((list) => list.id === listId),
+    getComponentById: (componentId) =>
+      components.find((component) => component.id === componentId),
+    getConditionById: (conditionId) =>
+      v2Conditions.find((condition) => condition.id === conditionId)
+  }
+
+  const conditionAsV1 = convertConditionWrapperFromV2(
+    conditionWrapper,
+    accessors
+  )
+  return ConditionsModel.from(conditionAsV1.value).toPresentationHtml()
+}
+
+/**
+ * @import { ComponentDef, FormMetadata, FormDefinition, FormStatus, Page, ConditionWrapperV2, RuntimeFormModel } from '@defra/forms-model'
  */

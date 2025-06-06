@@ -1,3 +1,10 @@
+import { ConditionType, Coordinator, OperatorName } from '@defra/forms-model'
+import {
+  buildDefinition,
+  buildQuestionPage,
+  buildTextFieldComponent
+} from '@defra/forms-model/stubs'
+
 import {
   testFormDefinitionWithNoQuestions,
   testFormDefinitionWithSinglePage,
@@ -8,7 +15,9 @@ import {
   getPageNum,
   getQuestionNum,
   getQuestionsOnPage,
-  tickBoxes
+  tickBoxes,
+  toPresentationHtmlV2,
+  toPresentationStringV2
 } from '~/src/models/forms/editor-v2/common.js'
 
 describe('editor-v2 - model', () => {
@@ -155,4 +164,209 @@ describe('editor-v2 - model', () => {
       expect(res).toEqual([])
     })
   })
+
+  describe('toPresentationStringV2', () => {
+    const componentId = 'farm-type-field'
+    const testComponent = buildTextFieldComponent({
+      id: componentId,
+      name: 'farmType',
+      title: 'What type of farming do you do?'
+    })
+
+    /** @type {ConditionWrapperV2} */
+    const mockConditionV2 = {
+      id: 'cattle-farm-condition',
+      displayName: 'Show if cattle farming',
+      items: [
+        {
+          id: 'cattle-farm-check',
+          componentId,
+          operator: OperatorName.Is,
+          value: {
+            type: ConditionType.StringValue,
+            value: 'cattle'
+          }
+        }
+      ]
+    }
+
+    it('should return presentation string for valid V2 condition', () => {
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({
+            id: 'farm-details-page',
+            components: [testComponent]
+          })
+        ],
+        conditions: [mockConditionV2],
+        lists: []
+      })
+
+      const result = toPresentationStringV2(mockConditionV2, definition)
+
+      expect(typeof result).toBe('string')
+      expect(result.length).toBeGreaterThan(0)
+    })
+
+    it('should handle conditions with multiple items and coordinator', () => {
+      /** @type {ConditionWrapperV2} */
+      const multipleItemsCondition = {
+        id: 'organic-and-subsidies-condition',
+        displayName: 'Organic farming with subsidies',
+        coordinator: Coordinator.AND,
+        items: [
+          {
+            id: 'organic-farming-check',
+            componentId,
+            operator: OperatorName.Is,
+            value: {
+              type: ConditionType.StringValue,
+              value: 'organic'
+            }
+          },
+          {
+            id: 'subsidy-eligibility-check',
+            componentId,
+            operator: OperatorName.IsNot,
+            value: {
+              type: ConditionType.StringValue,
+              value: 'conventional'
+            }
+          }
+        ]
+      }
+
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({
+            id: 'farm-details-page',
+            components: [testComponent]
+          })
+        ],
+        conditions: [multipleItemsCondition],
+        lists: []
+      })
+
+      const result = toPresentationStringV2(multipleItemsCondition, definition)
+
+      expect(typeof result).toBe('string')
+      expect(result.length).toBeGreaterThan(0)
+    })
+
+    it('should handle conditions with lists', () => {
+      const farmingTypesList = {
+        id: 'farming-types-list',
+        name: 'Farming Types',
+        title: 'Types of farming operations',
+        type: /** @type {const} */ ('string'),
+        items: [
+          { text: 'Cattle farming', value: 'cattle' },
+          { text: 'Crop farming', value: 'crops' }
+        ]
+      }
+
+      /** @type {ConditionWrapperV2} */
+      const conditionWithList = {
+        id: 'farming-type-condition',
+        displayName: 'Show for specific farming types',
+        items: [
+          {
+            id: 'farming-type-check',
+            componentId,
+            operator: OperatorName.Is,
+            value: {
+              type: ConditionType.StringValue,
+              value: 'cattle'
+            }
+          }
+        ]
+      }
+
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({
+            id: 'farm-details-page',
+            components: [testComponent]
+          })
+        ],
+        conditions: [conditionWithList],
+        lists: [farmingTypesList]
+      })
+
+      const result = toPresentationStringV2(conditionWithList, definition)
+
+      expect(typeof result).toBe('string')
+      expect(result.length).toBeGreaterThan(0)
+    })
+  })
+
+  describe('toPresentationHtmlV2', () => {
+    const componentId = 'farm-type-field'
+    const testComponent = buildTextFieldComponent({
+      id: componentId,
+      name: 'farmType',
+      title: 'What type of farming do you do?'
+    })
+
+    /** @type {ConditionWrapperV2} */
+    const mockConditionV2 = {
+      id: 'cattle-farm-condition',
+      displayName: 'Show if cattle farming',
+      items: [
+        {
+          id: 'cattle-farm-check',
+          componentId,
+          operator: OperatorName.Is,
+          value: {
+            type: ConditionType.StringValue,
+            value: 'cattle'
+          }
+        }
+      ]
+    }
+
+    it('should return presentation HTML for valid V2 condition', () => {
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({
+            id: 'farm-details-page',
+            components: [testComponent]
+          })
+        ],
+        conditions: [mockConditionV2],
+        lists: []
+      })
+
+      const result = toPresentationHtmlV2(mockConditionV2, definition)
+
+      expect(typeof result).toBe('string')
+      expect(result.length).toBeGreaterThan(0)
+    })
+
+    it('should return valid output for both string and HTML versions', () => {
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({
+            id: 'farm-details-page',
+            components: [testComponent]
+          })
+        ],
+        conditions: [mockConditionV2],
+        lists: []
+      })
+
+      const stringResult = toPresentationStringV2(mockConditionV2, definition)
+      const htmlResult = toPresentationHtmlV2(mockConditionV2, definition)
+
+      // Both should return valid strings
+      expect(typeof stringResult).toBe('string')
+      expect(typeof htmlResult).toBe('string')
+      expect(stringResult.length).toBeGreaterThan(0)
+      expect(htmlResult.length).toBeGreaterThan(0)
+    })
+  })
 })
+
+/**
+ * @import { ConditionWrapperV2 } from '@defra/forms-model'
+ */
