@@ -72,6 +72,29 @@ export function buildSessionState(yar, stateId, definition, conditionId) {
   return state
 }
 
+/**
+ * @param {Yar} yar
+ * @param {ConditionWrapperPayload} payload
+ * @param {string} stateId
+ * @param {Partial<ConditionDataV2>[]} items
+ */
+export function saveSessionState(yar, payload, stateId, items) {
+  const { coordinator, displayName } = payload
+  const state = getConditionSessionState(yar, stateId)
+  const newState = {
+    ...state,
+    conditionWrapper: {
+      ...state?.conditionWrapper,
+      items,
+      displayName,
+      coordinator
+    }
+  }
+
+  // @ts-expect-error - dynamic parse so enforcing type is problematic
+  setConditionSessionState(yar, stateId, newState)
+}
+
 export default [
   /**
    * @satisfies {ServerRoute<{ Params: { slug: string, conditionId: string, stateId?: string } }>}
@@ -202,20 +225,7 @@ export default [
               items.splice(Number(payload.removeAction), 1)
             }
 
-            const { coordinator, displayName } = payload
-            const state = getConditionSessionState(yar, stateId)
-            const newState = {
-              ...state,
-              conditionWrapper: {
-                ...state?.conditionWrapper,
-                items,
-                displayName,
-                coordinator
-              }
-            }
-
-            // @ts-expect-error - dynamic parse so enforcing type is problematic
-            setConditionSessionState(yar, stateId, newState)
+            saveSessionState(yar, payload, stateId, items)
 
             // Redirect POST to GET without resubmit on back button
             return h
@@ -225,6 +235,7 @@ export default [
               .code(StatusCodes.SEE_OTHER)
               .takeover()
           } else {
+            saveSessionState(yar, payload, stateId, items)
             return redirectWithErrors(request, h, error, errorKey)
           }
         }
