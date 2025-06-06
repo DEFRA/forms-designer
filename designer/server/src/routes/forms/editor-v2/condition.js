@@ -13,7 +13,9 @@ import Joi from 'joi'
 
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
+import { addCondition } from '~/src/lib/editor.js'
 import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
+import * as forms from '~/src/lib/forms.js'
 import {
   redirectWithAnchorOrUrl,
   redirectWithErrors
@@ -147,11 +149,14 @@ export default [
   ({
     method: 'POST',
     path: ROUTE_PATH_CONDITION,
-    handler(request, h) {
-      const { params } = request
+    async handler(request, h) {
+      const { auth, params, payload } = request
       const { slug } = params
+      const { token } = auth.credentials
 
-      // Save the wrapper...
+      const metadata = await forms.get(slug, token)
+
+      await addCondition(metadata.id, token, payload)
 
       // Redirect to conditions list page
       return h
